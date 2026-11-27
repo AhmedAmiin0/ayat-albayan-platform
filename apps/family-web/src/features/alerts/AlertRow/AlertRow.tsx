@@ -1,31 +1,10 @@
-import { alertTarget } from '@ab/client-core';
-import type { PortalKind } from '@ab/shared';
-import { useNavigate } from '@tanstack/react-router';
-import { useClock, dateAndClock, t, cn, Card, useFamilyChatOn } from '@ab/web-kit';
-import { alertLink } from '@/features/alerts/alert-link';
-import type { FamilyAlerts } from '@/features/alerts/alerts-api';
-
-const DAY = { day: 'numeric', month: 'long' } as const;
-
-interface Props {
-  alert: FamilyAlerts['items'][number];
-  kind: PortalKind;
-  tz: string;
-  onRead: (id: string) => void;
-}
+import { t, cn, Card } from '@ab/web-kit';
+import type { Props } from './AlertRow.types';
+import { useAlertRow } from './use-alert-row';
 
 /** One bell row: unread dot, title, body and time; a tap marks it read and opens its page. */
 export function AlertRow({ alert, kind, tz, onRead }: Props) {
-  const navigate = useNavigate();
-  const clock = useClock();
-  const chatOn = useFamilyChatOn();
-  const target = alertTarget(alert);
-  const when = dateAndClock(new Date(alert.created_at), { ...clock, tz }, DAY);
-  const open = () => {
-    if (!alert.read_at) onRead(alert.id);
-    if (target) void navigate(alertLink(target, { kind, chatOn }));
-  };
-  const unread = !alert.read_at;
+  const { when, open, unread } = useAlertRow({ alert, kind, tz, onRead });
   return (
     <li>
       <Card asChild pressable>

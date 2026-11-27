@@ -1,19 +1,11 @@
-import { Icon, Button, t } from '@ab/web-kit';
+import { Icon, Button } from '@ab/web-kit';
 import { rangeOf } from '@/features/schedule/day-text';
-import { MAX_OFFSET, type Week } from '@/features/schedule/use-week';
-
-const S = t.portal.app.schedule;
-
-const WEEK_WORD: readonly (() => string)[] = [
-  () => S.thisWeek,
-  () => S.nextWeek,
-  () => S.laterWeek,
-];
-
-const STEP = 'min-w-11 px-0 sm:min-h-11';
+import { MAX_OFFSET } from '@/features/schedule/use-week';
+import type { WeekBarProps } from './WeekBar.types';
+import { S, WEEK_WORD, STEP } from './week-bar.helpers';
 
 /** Within the lessons the API sends; chevrons follow the reading direction. */
-export function WeekBar({ week }: { week: Week }) {
+export function WeekBar({ week }: WeekBarProps) {
   const word = WEEK_WORD[week.offset] ?? WEEK_WORD[0];
   return (
     <div className="flex items-center justify-between gap-2 rounded-lg bg-sunk p-1">

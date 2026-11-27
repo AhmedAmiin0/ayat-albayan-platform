@@ -1,45 +1,6 @@
-import { confirmedLine, excusedLine, requestChip } from '@ab/client-core';
-import type { PortalLesson } from '@ab/shared';
-import { clockOf, dateText, type ClockOptions } from '@ab/time';
-import { AppText, t, type } from '@ab/mobile-kit';
-
-interface RequestLineProps {
-  lesson: PortalLesson;
-  /** The student's clock. */
-  clock: ClockOptions;
-  /** The words' colour (white on the lapis card, ink-2 on a row). */
-  ink: string;
-  now: Date;
-  student: string;
-}
-
-const A = () => t.portal.actions;
-
-const askedText = (iso: string, clock: ClockOptions): string => {
-  const at = new Date(iso);
-  const day = dateText(at, clock, { weekday: 'long', day: 'numeric', month: 'long' });
-  return A().requestedLine.replace('{when}', `${day}${t.common.listSeparator}${clockOf(at, clock)}`);
-};
-
-/** Null unless the lesson is confirmed. */
-const confirmedText = ({ lesson, now, student }: RequestLineProps): string | null =>
-  confirmedLine(lesson, now) ? A().confirmedLine.replace('{student}', student) : null;
-
-/**
- * What the family's request or excuse left: asked, declined (with the note), excused, or the
- * attendance they confirmed.
- */
-function lineOf(props: RequestLineProps): string | null {
-  const { lesson, clock } = props;
-  const request = lesson.family?.request;
-  const chip = requestChip(lesson);
-  const excused = excusedLine(lesson);
-  if (excused) return A()[excused];
-  if (!request || !chip) return confirmedText(props);
-  if (chip === 'pendingChip') return askedText(request.proposed_starts_at, clock);
-  const note = request.decision_note && A().decisionNote.replace('{note}', request.decision_note);
-  return [A().rejectedChip, note].filter(Boolean).join(' · ');
-}
+import { AppText, type } from '@ab/mobile-kit';
+import type { RequestLineProps } from './RequestLine.types';
+import { lineOf } from './request-line.helpers';
 
 export function RequestLine(props: RequestLineProps) {
   const line = lineOf(props);

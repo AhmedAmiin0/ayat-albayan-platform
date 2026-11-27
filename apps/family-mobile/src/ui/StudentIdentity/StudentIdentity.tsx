@@ -1,14 +1,6 @@
-import type { PortalStudent } from '@ab/shared';
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { AppText, Avatar, Ltr, type, useTheme } from '@ab/mobile-kit';
-
-interface StudentIdentityProps {
-  student: PortalStudent;
-  /** A line under the code (the last report). */
-  children?: ReactNode;
-  name?: string;
-}
+import type { StudentIdentityProps } from './StudentIdentity.types';
 
 export function StudentIdentity({ student, children, name }: StudentIdentityProps) {
   const { color } = useTheme();

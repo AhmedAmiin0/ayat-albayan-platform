@@ -63,9 +63,6 @@
     },
     "typescript/no-unsafe-assignment": {
       "count": 1
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 2
     }
   },
   "src/common/auth/permission.cache.revoke.test.ts": {

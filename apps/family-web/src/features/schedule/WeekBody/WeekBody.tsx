@@ -1,20 +1,13 @@
-import type { WeekDay } from '@ab/client-core';
 import { EmptyState, t } from '@ab/web-kit';
 import { AgendaDay } from '@/features/schedule/agenda';
-import { useJumpToDay, WeekStrip } from '@/features/schedule/strip';
-import type { Week } from '@/features/schedule/use-week';
+import { WeekStrip } from '@/features/schedule/strip';
 import { WeekSummary } from '@/features/schedule/WeekSummary';
-
-interface WeekBodyProps {
-  week: Week;
-  days: WeekDay[];
-  guardian: boolean;
-}
+import type { WeekBodyProps } from './WeekBody.types';
+import { useWeekBody } from './use-week-body';
 
 /** Keyed on the week so it cross-fades and the strip's choice starts empty. */
 export function WeekBody({ week, days, guardian }: WeekBodyProps) {
-  const jump = useJumpToDay();
-  const today = week.strip.find((d) => d.today)?.day;
+  const { jump, today } = useWeekBody({ week });
   return (
     <div className="grid animate-fade-in gap-4">
       <WeekStrip days={week.strip} selected={jump.selected} onJump={jump.jump} />

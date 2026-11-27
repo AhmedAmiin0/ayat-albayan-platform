@@ -1,19 +1,9 @@
-import type { PortalStudent } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { ScreenHeader, BackButton } from '@ab/mobile-kit';
 import { ChildSwitchLink } from '@/nav/ChildSwitchLink';
 import { FamilyBell } from '@/nav/FamilyBell';
-
-interface FamilyHeaderProps {
-  title: string;
-  /** A line under the title. */
-  subtitle?: string;
-  /** A pushed screen shows back and no bell; a tab screen shows the bell. */
-  back?: boolean;
-  /** A tab of a guardian of several: the child in view under the title, a switch. */
-  child?: PortalStudent | null;
-}
+import type { FamilyHeaderProps } from './FamilyHeader.types';
 
 export function FamilyHeader({ title, subtitle, back = false, child }: FamilyHeaderProps) {
   return (

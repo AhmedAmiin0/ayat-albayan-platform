@@ -1,11 +1,9 @@
 import { View } from 'react-native';
 import { AppText, shape, type, useTheme } from '@ab/mobile-kit';
-
-/** rest: the 3:1 input edge; next: the box the next digit goes in; refused: the last try failed. */
-export type BoxLook = 'rest' | 'next' | 'refused';
+import type { BoxLook, CodeBoxProps } from './CodeBox.types';
 
 /** One box of the one-time code (up to 52 wide, 46:56; six fit 312 pt), drawing only. */
-export function CodeBox({ digit, look }: { digit: string; look: BoxLook }) {
+export function CodeBox({ digit, look }: CodeBoxProps) {
   const { color } = useTheme();
   const edge: Record<BoxLook, string> = {
     rest: color.ruleInput,

@@ -1,21 +1,11 @@
-import type { PortalLessonFile } from '@ab/shared';
 import { ErrorLine, InsetGroup, ListRow, Section, t } from '@ab/mobile-kit';
-import { useOpenFile } from '@/report';
 import { LessonFileRow } from '@/recordings/LessonFileRow';
-import { useOpenLessonFile } from '@/recordings/use-assets';
-
-interface LessonFilesProps {
-  studentId: string;
-  reportId: string;
-  files: readonly PortalLessonFile[];
-}
+import type { LessonFilesProps } from './LessonFiles.types';
+import { useLessonFiles } from './use-lesson-files';
 
 /** The report's PDF first, then the files staff shared. */
 export function LessonFiles({ studentId, reportId, files }: LessonFilesProps) {
-  const pdf = useOpenFile();
-  const open = useOpenLessonFile(studentId);
-  // The report's PDF is one of the files.
-  const title = t.lessonFiles.header.replace('{n}', String(files.length + 1));
+  const { pdf, open, title } = useLessonFiles({ studentId, files });
   return (
     <Section title={title}>
       <InsetGroup>
