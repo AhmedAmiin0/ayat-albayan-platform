@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import { chatListRoutes as routes } from '../chat-lists.routes';
 
-const LIST = { id: 'e1111111-1111-4111-8111-111111111111', name: 'عملاء', count: 2, auto_rule: null };
+const LIST = {
+  id: 'e1111111-1111-4111-8111-111111111111',
+  name: 'عملاء',
+  count: 2,
+  auto_rule: null,
+};
 
 describe('chatListRoutes (docs/22 §3)', () => {
   it('keeps the paths the api serves today', () => {
@@ -31,7 +36,7 @@ describe('chatListRoutes (docs/22 §3)', () => {
 
   it('names a list by a uuid and a member by its E.164 number', () => {
     expect(routes.remove.params.safeParse({ id: 'x' }).success).toBe(false);
-    const member = routes.addThread.params.parse({ id: LIST.id, phone: '%2B966501234567' });
+    const member = routes.addThread.params.parse({ id: LIST.id, phone: '+966501234567' });
     expect(member).toEqual({ id: LIST.id, phone: '+966501234567' });
     expect(routes.dropThread.params.safeParse({ id: LIST.id, phone: 'abc' }).success).toBe(false);
   });

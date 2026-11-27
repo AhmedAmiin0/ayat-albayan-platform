@@ -9,8 +9,14 @@ import { routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend: vi.fn(),
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
 const L = t.inbox.lists;
 const PAY = { id: '0c000000-0000-4000-8000-000000000001', name: 'بانتظار الدفع' };
@@ -21,7 +27,7 @@ function open(mode: InboxMode, permissions = ALL) {
   const lists = mode === 'teacher' ? undefined : [PAY];
   routeFetch(apiFetch, [
     ['/threads/%2B966501234567', { ...detail([message({ body: 'السلام عليكم' })]), lists }],
-    ['/chat-lists', [{ ...PAY, count: 1 }]],
+    ['/chat-lists', [{ ...PAY, count: 1, auto_rule: null }]],
     ['/messaging/templates', []],
     ['/messages/gate', { open: true, reason: null, queued: 0 }],
     ['/settings', {}],
@@ -50,18 +56,25 @@ function open(mode: InboxMode, permissions = ALL) {
 
 const item = () => screen.queryByRole('button', { name: L.title, hidden: true });
 
-describe('the open chat\'s «القوائم» (docs/22 §4)', () => {
+describe("the open chat's «القوائم» (docs/22 §4)", () => {
   afterEach(() => apiFetch.mockReset());
 
-  it.each(['admin', 'sales'] as const)('%s: the header shows the chat\'s lists and «المزيد» has «القوائم»', async (mode) => {
-    open(mode);
-    await screen.findByText('السلام عليكم');
-    expect(screen.getByRole('link', { name: PAY.name }).getAttribute('href')).toContain(`list=${PAY.id}`);
-    fireEvent.click(screen.getByRole('button', { name: t.common.more }));
-    fireEvent.click(screen.getByRole('button', { name: L.title }));
-    expect(await screen.findByRole('dialog', { name: L.title })).toBeTruthy();
-    expect((await screen.findByRole<HTMLInputElement>('checkbox', { name: PAY.name })).checked).toBe(true);
-  });
+  it.each(['admin', 'sales'] as const)(
+    "%s: the header shows the chat's lists and «المزيد» has «القوائم»",
+    async (mode) => {
+      open(mode);
+      await screen.findByText('السلام عليكم');
+      expect(screen.getByRole('link', { name: PAY.name }).getAttribute('href')).toContain(
+        `list=${PAY.id}`,
+      );
+      fireEvent.click(screen.getByRole('button', { name: t.common.more }));
+      fireEvent.click(screen.getByRole('button', { name: L.title }));
+      expect(await screen.findByRole('dialog', { name: L.title })).toBeTruthy();
+      expect(
+        (await screen.findByRole<HTMLInputElement>('checkbox', { name: PAY.name })).checked,
+      ).toBe(true);
+    },
+  );
 
   it('without inbox.lists: no «القوائم» entry', async () => {
     open('sales', ['inbox.read', 'inbox.send', 'messages.read']);

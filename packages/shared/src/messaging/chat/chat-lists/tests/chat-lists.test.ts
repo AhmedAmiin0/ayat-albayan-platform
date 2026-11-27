@@ -5,8 +5,8 @@ import {
   chatListNameKey,
   chatListNameSchema,
   chatListPhone,
-  isChatListError,
-} from '../chat-lists';
+  chatListErrorSchema,
+} from '..';
 
 describe('chatListNameSchema', () => {
   it('trims the name and keeps 1–30 characters', () => {
@@ -62,11 +62,11 @@ describe('chatListPhone', () => {
   });
 });
 
-describe('isChatListError', () => {
+describe('chatListErrorSchema', () => {
   it('knows the two 409 codes only', () => {
-    expect(isChatListError('list_name_taken')).toBe(true);
-    expect(isChatListError('list_limit')).toBe(true);
-    expect(isChatListError('not_found')).toBe(false);
-    expect(isChatListError(undefined)).toBe(false);
+    expect(chatListErrorSchema.safeParse('list_name_taken').success).toBe(true);
+    expect(chatListErrorSchema.safeParse('list_limit').success).toBe(true);
+    expect(chatListErrorSchema.safeParse('not_found').success).toBe(false);
+    expect(chatListErrorSchema.safeParse(undefined).success).toBe(false);
   });
 });

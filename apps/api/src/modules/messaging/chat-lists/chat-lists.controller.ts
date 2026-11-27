@@ -1,72 +1,66 @@
-import { chatListBodySchema, type ChatList, type ChatListBody } from '@ab/shared';
-import { Controller, Delete, Get, HttpCode, Patch, Post, Put, UseGuards } from '@nestjs/common';
+import { chatListIdParam, chatListPhoneParam, chatListRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
-import {
-  ListsUserGuard,
-  listIdSchema,
-  listInvalidPhone,
-  listNotFound,
-  listPhoneSchema,
-} from './chat-lists.guard';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { ZodParam } from '@/common/http/zod-inputs';
+import { ListsUserGuard, listInvalidPhone, listNotFound } from './chat-lists.guard';
 import { ChatListsService } from './chat-lists.service';
+
+const byId = { badParam: listNotFound };
 
 /** Shared chat lists (docs/22 §3); teachers get 403; nothing here sends. */
 @ApiTags('inbox')
 @ApiBearerAuth()
 @Permissions('inbox.lists')
 @UseGuards(ListsUserGuard)
-@Controller('chat-lists')
+@Controller()
 export class ChatListsController {
   constructor(private readonly lists: ChatListsService) {}
 
-  @Get()
-  all(): Promise<ChatList[]> {
+  @Route(routes.all)
+  all() {
     return this.lists.all();
   }
 
-  @Post()
+  @Route(routes.create)
   @HttpCode(201)
   create(
-    @ZodBody(chatListBodySchema) body: ChatListBody,
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
     @CurrentUser() user: AuthUser,
-  ): Promise<ChatList> {
+  ) {
     return this.lists.create(body.name, user.id);
   }
 
-  @Patch(':id')
-  rename(
-    @ZodParam('id', listIdSchema, listNotFound) id: string,
-    @ZodBody(chatListBodySchema) body: ChatListBody,
-  ): Promise<ChatList> {
-    return this.lists.rename(id, body.name);
+  @Route(routes.rename)
+  rename(@RouteInput(byId) { params, body }: RouteInputOf<typeof routes.rename>) {
+    return this.lists.rename(params.id, body.name);
   }
 
-  @Delete(':id')
+  @Route(routes.remove)
   @HttpCode(204)
-  async remove(@ZodParam('id', listIdSchema, listNotFound) id: string): Promise<void> {
-    await this.lists.remove(id);
+  async remove(@RouteInput(byId) { params }: RouteInputOf<typeof routes.remove>): Promise<void> {
+    await this.lists.remove(params.id);
   }
 
-  // `id` comes after `phone` on purpose: Nest runs the later param's pipe first, so a bad id (404)
-  // still wins over a bad phone (400), as when the handler checked the id first.
-  @Put(':id/threads/:phone')
+  // Each param keeps its own error (404 id, 400 phone), so they stay on ZodParam. `id` comes after
+  // `phone` on purpose: Nest runs the later param's pipe first, so a bad id still wins.
+  @Route(routes.addThread)
   @HttpCode(204)
   async add(
-    @ZodParam('phone', listPhoneSchema, listInvalidPhone) phone: string,
-    @ZodParam('id', listIdSchema, listNotFound) id: string,
+    @ZodParam('phone', chatListPhoneParam, listInvalidPhone) phone: string,
+    @ZodParam('id', chatListIdParam, listNotFound) id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
     await this.lists.add({ listId: id, phone, by: user.id });
   }
 
-  @Delete(':id/threads/:phone')
+  @Route(routes.dropThread)
   @HttpCode(204)
   async drop(
-    @ZodParam('phone', listPhoneSchema, listInvalidPhone) phone: string,
-    @ZodParam('id', listIdSchema, listNotFound) id: string,
+    @ZodParam('phone', chatListPhoneParam, listInvalidPhone) phone: string,
+    @ZodParam('id', chatListIdParam, listNotFound) id: string,
   ): Promise<void> {
     await this.lists.drop(id, phone);
   }
