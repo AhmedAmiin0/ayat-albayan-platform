@@ -5444,11 +5444,6 @@
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/map/google-map.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 9
-    }
-  },
   "src/modules/platform/google-sync/map/google-map.queries.ts": {
     "typescript/consistent-type-definitions": {
       "count": 2

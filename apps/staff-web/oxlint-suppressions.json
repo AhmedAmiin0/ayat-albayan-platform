@@ -3541,11 +3541,6 @@
       "count": 1
     }
   },
-  "src/features/platform/google-sync/google-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 7
-    }
-  },
   "src/features/platform/google-sync/google-format.ts": {
     "stylistic/max-len": {
       "count": 1
