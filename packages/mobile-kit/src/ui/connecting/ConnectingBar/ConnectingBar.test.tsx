@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
-import { AccessibilityInfo, Animated } from 'react-native';
+import { AccessibilityInfo, Animated, Platform } from 'react-native';
 import { createConnectivity } from '../../../lib/connectivity/connectivity-store';
 import { t } from '../../../lib/i18n/i18n';
 import { ConnectingBar } from './ConnectingBar';
@@ -24,7 +24,10 @@ async function mountBar({ connectingFor }: { connectingFor?: number } = {}) {
   return store;
 }
 const advance = (ms: number) => act(async () => jest.advanceTimersByTime(ms));
-const measure = () => fireEvent(screen.getByTestId('connecting-bar-measure'), 'layout', { nativeEvent: { layout: { height: CARD } } });
+const measure = () =>
+  fireEvent(screen.getByTestId('connecting-bar-measure'), 'layout', {
+    nativeEvent: { layout: { height: CARD } },
+  });
 const height = () => screen.getByTestId('connecting-bar-reveal');
 const heightRuns = () =>
   timing.mock.calls
@@ -103,4 +106,31 @@ test('Reduce Motion: no slide (the height jumps), a 150 ms fade, the dots still'
   );
   await advance(200);
   expect(screen.queryByTestId('connecting-bar')).toBeNull();
+});
+
+const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+const os = Platform.OS;
+afterEach(() => {
+  Platform.OS = os;
+});
+
+async function outageAndBack() {
+  const store = await mountBar();
+  await act(async () => store.reportFailure());
+  await advance(800);
+  await act(async () => store.reportReached());
+}
+
+test('iOS has no live region: each message is said once', async () => {
+  Platform.OS = 'ios';
+  announce.mockClear();
+  await outageAndBack();
+  expect(announce.mock.calls).toEqual([[c.connecting], [c.connected]]);
+});
+
+test('Android leaves it to the live region: nothing is announced', async () => {
+  Platform.OS = 'android';
+  announce.mockClear();
+  await outageAndBack();
+  expect(announce).not.toHaveBeenCalled();
 });

@@ -263,14 +263,6 @@
       "count": 1
     }
   },
-  "src/ui/connecting/CheckBadge/CheckBadge.tsx": {
-    "stylistic/max-len": {
-      "count": 5
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/ui/connecting/ConnectingBar/ConnectingBar.test.tsx": {
     "typescript/no-unnecessary-boolean-literal-compare": {
       "count": 1
