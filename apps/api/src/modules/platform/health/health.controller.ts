@@ -1,10 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import type { RouteResult } from '@ab/core';
+import { Controller } from '@nestjs/common';
 import { Public } from '@/common/auth/decorators';
-import { StorageHealth, type StorageHealthView } from '@/common/storage/probe';
+import { Route } from '@/common/http/route';
+import { StorageHealth } from '@/common/storage/probe';
+import { healthRoutes as routes } from './health.routes';
 
-@ApiTags('health')
-@Controller('health')
+@Controller()
 export class HealthController {
   constructor(private readonly storage: StorageHealth) {}
 
@@ -14,8 +15,8 @@ export class HealthController {
    * never a reason to take a copy out of the balancer.
    */
   @Public()
-  @Get()
-  async check(): Promise<{ status: 'ok'; storage: StorageHealthView }> {
+  @Route(routes.health)
+  async check(): Promise<RouteResult<typeof routes.health>> {
     return { status: 'ok', storage: await this.storage.view() };
   }
 }

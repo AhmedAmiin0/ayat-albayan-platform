@@ -112,11 +112,6 @@
       "count": 1
     }
   },
-  "src/messaging/numbers/views.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/messaging/replies/quick-reply.ts": {
     "complexity": {
       "count": 1
@@ -478,11 +473,6 @@
       "count": 1
     }
   },
-  "src/reports/views.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/sales/academy.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -600,9 +590,6 @@
     },
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/sales/student/student-details.ts": {

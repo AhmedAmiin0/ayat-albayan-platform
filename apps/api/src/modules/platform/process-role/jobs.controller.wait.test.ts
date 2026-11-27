@@ -2,7 +2,14 @@ import type { ModuleRef } from '@nestjs/core';
 import { describe, expect, it } from 'vitest';
 import { BackgroundJob } from '@/config/role/background-job';
 import { internalToken } from '@/config/role/worker-kick';
+import type { KickQuery } from '@/config/role/kick-options';
 import { InternalJobsController } from './jobs.controller';
+
+const kickOf = (name: string, query: KickQuery = {}) => ({
+  params: { name },
+  query,
+  body: undefined,
+});
 
 // docs/42 42-8: the kick answers 202 at once; `?wait=1` after the pass. `?lane=` reaches it.
 
@@ -34,7 +41,7 @@ function route() {
 describe('POST /internal/jobs/:name/kick — 202 (docs/42 42-8)', () => {
   it('answers before the pass ends, with the lane passed on', async () => {
     const { job, controller } = route();
-    await controller.kick('test-kick-wait', internalToken(), { lane: 'chat', wait: '0' });
+    await controller.kick(kickOf('test-kick-wait', { lane: 'chat', wait: '0' }), internalToken());
     expect(job.done).toBe(false);
     expect(job.options).toEqual([{ lane: 'chat' }]);
     job.release();
@@ -43,7 +50,8 @@ describe('POST /internal/jobs/:name/kick — 202 (docs/42 42-8)', () => {
   it('no `wait` (an API copy from before 42-8, mid rolling deploy) answers after the pass', async () => {
     const { job, controller } = route();
     let answered = false;
-    const res = controller.kick('test-kick-wait', internalToken()).then(() => {
+    const kick = kickOf('test-kick-wait');
+    const res = controller.kick(kick, internalToken()).then(() => {
       answered = true;
     });
     await Promise.resolve();
@@ -56,7 +64,8 @@ describe('POST /internal/jobs/:name/kick — 202 (docs/42 42-8)', () => {
   it('?wait=1 answers once the pass is done', async () => {
     const { job, controller } = route();
     let answered = false;
-    const res = controller.kick('test-kick-wait', internalToken(), { wait: '1' }).then(() => {
+    const kick = kickOf('test-kick-wait', { wait: '1' });
+    const res = controller.kick(kick, internalToken()).then(() => {
       answered = true;
     });
     await Promise.resolve();

@@ -67,6 +67,7 @@ export * from './channel/channel-chat.routes';
 export * from './channel/channel-presence.routes';
 export * from './channel/channel-teacher.routes';
 export * from './channel/channel-monitor.routes';
+export * from './channel/channel-message.routes';
 export * from './channel/channel-media';
 export * from './channel/channel-instant';
 export type * from './channel/channel-views';

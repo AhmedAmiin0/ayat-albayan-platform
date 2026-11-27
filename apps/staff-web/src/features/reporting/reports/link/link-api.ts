@@ -84,6 +84,6 @@ export function linkReportApi(token: string): ReportApi {
       send('POST', at(id, 'v2/submit'), body),
     errorText: linkErrorText,
     attachments: true,
-    files: linkFileCalls(base(token)),
+    files: linkFileCalls(token),
   };
 }

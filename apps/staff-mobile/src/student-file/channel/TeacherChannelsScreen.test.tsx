@@ -28,6 +28,7 @@ test('«رسائل الطلاب»: my current students with the last message and
         body: 'متى الحلقة؟',
         sender_role: 'guardian',
         created_at: '2026-10-27T10:00:00.000Z',
+        deleted: false,
       },
     },
     {

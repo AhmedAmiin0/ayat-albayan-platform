@@ -43,12 +43,6 @@ export function channelBubbleActions(input: {
   return mayChange(input.audience, input.mode) ? actions : NONE;
 }
 
-export const channelReadsPath = (input: {
-  audience: ChannelAudience;
-  studentId: string;
-  messageId: string;
-}): string => `${channelMessagePath(input)}/reads`;
-
 /** The API's refusal codes the menus explain in words; anything else is a generic failure. */
 export const CHANNEL_EDIT_ERRORS = [
   'edit_window_closed',

@@ -16,21 +16,21 @@ describe('GET /lessons: «الباقة غير مدفوعة» on upcoming lessons
 
   it('asks UnpaidFlags about upcoming students only and marks the flagged ones', async () => {
     h.lessons.window.mockResolvedValue([
-      lessonRow({ id: 'next', starts_at: '2099-01-02T14:00:00Z' }),
-      lessonRow({ id: 'done', status: 'completed', starts_at: '2026-09-01T14:00:00Z' }),
+      lessonRow({ id: '00000000-0000-4000-8000-000000000e11', starts_at: '2099-01-02T14:00:00Z' }),
+      lessonRow({ id: '00000000-0000-4000-8000-000000000e12', status: 'completed', starts_at: '2026-09-01T14:00:00Z' }),
     ]);
     h.unpaid.studentIds.mockResolvedValue(new Set([STUDENT_ID]));
     const res = await h.call({ method: 'GET', url: `/lessons?${WEEK}` });
     expect(h.unpaid.studentIds).toHaveBeenCalledWith([STUDENT_ID]);
     const body: Body = res.json();
     expect(body.map((l) => [l.id, l.students[0]?.unpaid])).toEqual([
-      ['next', true],
-      ['done', undefined],
+      ['00000000-0000-4000-8000-000000000e11', true],
+      ['00000000-0000-4000-8000-000000000e12', undefined],
     ]);
   });
 
   it('a failed flag lookup still returns the lessons, unflagged', async () => {
-    h.lessons.window.mockResolvedValue([lessonRow({ id: 'next', starts_at: '2099-01-02T14:00:00Z' })]);
+    h.lessons.window.mockResolvedValue([lessonRow({ id: '00000000-0000-4000-8000-000000000e11', starts_at: '2099-01-02T14:00:00Z' })]);
     h.unpaid.studentIds.mockRejectedValue(new Error('db down'));
     const res = await h.call({ method: 'GET', url: `/lessons?${WEEK}` });
     expect(res.statusCode).toBe(200);

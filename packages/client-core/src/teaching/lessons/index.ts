@@ -14,7 +14,6 @@ export {
   teacherConfirmed,
   teacherLessonPaths,
 } from './teacher-actions';
-export { attendanceTableSchema } from './attendance-table-schema';
 export {
   joinPhase,
   lessonPlan,
@@ -32,5 +31,5 @@ export {
   type WayIn,
 } from './teacher-lesson-plan';
 export { nextOpenLesson, pickHero, type Hero, type HeroLesson } from './pick-hero';
-export { teacherStudentHeadSchema } from './teacher-student-head-schema';
 export { SESSION_GROUPS, type SessionGroup } from './session-groups';
+export { lessonListCalls, type LessonListCalls } from './list-calls';

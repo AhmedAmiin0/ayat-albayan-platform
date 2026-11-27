@@ -1,10 +1,8 @@
+import { backupSkippedItemSchema } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
-import { skipWhySchema } from '@/modules/platform/drive-backup/run/skip.schemas';
 import { fail, RECENT_COLUMNS, recentRowSchema, type RecentRow } from './archive-row.schema';
-
-const skippedSchema = z.object({ id: z.string(), size: z.number(), reason: skipWhySchema });
 
 const stateSchema = z.object({
   folder_id: z.string().nullable(),
@@ -15,7 +13,7 @@ const stateSchema = z.object({
   last_run_at: z.string().nullable(),
   last_error: z.string().nullable(),
   /** The last night's skipped objects, named (the first SKIPPED_KEPT), and how many in all. */
-  skipped: z.array(skippedSchema),
+  skipped: z.array(backupSkippedItemSchema),
   skipped_count: z.number().int(),
   /** Objects the last night could not send for lack of room on Drive. */
   waiting: z.number().int(),

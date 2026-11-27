@@ -1,44 +1,23 @@
 import {
-  numberCreateSchema,
-  numberSecretNameSchema,
-  numberSecretSchema,
-  numbersImportSchema,
-  numberUpdateSchema,
+  numbersRoutes as routes,
+  ownTrafficViewSchema,
   type ImportResult,
-  type NumberCreate,
-  type NumberUpdate,
   type NumberView,
   type OwnTrafficView,
 } from '@ab/shared';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-  Put,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { parseOrThrow } from '@/common/http/http';
-import { ZodBody } from '@/common/http/zod-inputs';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { asResponse } from '@/common/http/returns';
 import { NumbersImport } from './import/numbers.import';
 import { NumbersService } from './numbers.service';
 import { OwnNumbers } from './own/own-numbers';
 
-/** :id is a uuid, :name one of the two secret names (anything else is 400). */
-const SECRET_PARAMS = z.object({ id: z.uuid(), name: numberSecretNameSchema });
-
-/** docs/23 §3: reads need settings.read, writes numbers.manage; secrets are write-only. */
-@ApiTags('numbers')
+/** docs/23 §3: secrets are write-only. */
 @ApiBearerAuth()
-@Controller('admin/numbers')
+@Controller()
 export class NumbersController {
   constructor(
     private readonly numbers: NumbersService,
@@ -46,74 +25,64 @@ export class NumbersController {
     private readonly own: OwnNumbers,
   ) {}
 
-  @Get()
-  @Permissions('settings.read')
+  @Route(routes.list)
   list(): Promise<NumberView[]> {
     return this.numbers.list();
   }
 
-  /** Inbound rows from our own numbers in the last 7 days. */
-  @Get('own-traffic')
-  @Permissions('settings.read')
+  @Route(routes.ownTraffic)
   async ownTraffic(): Promise<OwnTrafficView> {
-    return { inbound_7d: await this.own.weekInbound() };
+    return asResponse(ownTrafficViewSchema, { inbound_7d: await this.own.weekInbound() });
   }
 
-  @Post()
+  @Route(routes.create)
   @HttpCode(201)
-  @Permissions('numbers.manage')
   create(
-    @ZodBody(numberCreateSchema) body: NumberCreate,
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
     @CurrentUser() user: AuthUser,
   ): Promise<NumberView> {
     return this.numbers.create(body, user.id);
   }
 
-  /** Dry run: per role, today's values and their source, never a secret. Apply: idempotent. */
-  @Post('import')
+  @Route(routes.import)
   @HttpCode(200)
-  @Permissions('numbers.manage')
   import(
-    @ZodBody(numbersImportSchema) body: z.output<typeof numbersImportSchema>,
+    @RouteInput() { body }: RouteInputOf<typeof routes.import>,
     @CurrentUser() user: AuthUser,
   ): Promise<ImportResult> {
     return this.importer.run(body.dryRun, user.id);
   }
 
-  @Patch(':id')
-  @Permissions('numbers.manage')
+  @Route(routes.update)
   update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodBody(numberUpdateSchema) body: NumberUpdate,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.update>,
     @CurrentUser() user: AuthUser,
   ): Promise<NumberView> {
-    return this.numbers.update(id, body, user.id);
+    return this.numbers.update(params.id, body, user.id);
   }
 
-  @Delete(':id')
+  @Route(routes.remove)
   @HttpCode(204)
-  @Permissions('numbers.manage')
-  remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
-    return this.numbers.remove(id, user.id);
+  remove(
+    @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    return this.numbers.remove(params.id, user.id);
   }
 
-  @Put(':id/secrets/:name')
-  @Permissions('numbers.manage')
+  @Route(routes.setSecret)
   setSecret(
-    @Param() params: unknown,
-    @Body() body: unknown,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.setSecret>,
     @CurrentUser() user: AuthUser,
   ): Promise<NumberView> {
-    const target = {
-      ...parseOrThrow(SECRET_PARAMS, params),
-      value: parseOrThrow(numberSecretSchema, body).value,
-    };
-    return this.numbers.setSecret(target, user.id);
+    return this.numbers.setSecret({ ...params, value: body.value }, user.id);
   }
 
-  @Delete(':id/secrets/:name')
-  @Permissions('numbers.manage')
-  clearSecret(@Param() params: unknown, @CurrentUser() user: AuthUser): Promise<NumberView> {
-    return this.numbers.clearSecret(parseOrThrow(SECRET_PARAMS, params), user.id);
+  @Route(routes.clearSecret)
+  clearSecret(
+    @RouteInput() { params }: RouteInputOf<typeof routes.clearSecret>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<NumberView> {
+    return this.numbers.clearSecret(params, user.id);
   }
 }

@@ -3571,11 +3571,6 @@
       "count": 1
     }
   },
-  "src/ops/numbers/use-numbers.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/ops/reports/AdminReportScreen/AdminReportScreen.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -4757,11 +4752,6 @@
       "count": 1
     }
   },
-  "src/student-file/channel/channel-queries.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/student-file/components/ContactIsSelfCard.tsx": {
     "ab/forbidden-imports": {
       "count": 1
@@ -5186,7 +5176,7 @@
   },
   "src/teacher/lib/queries.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 3
     }
   },
   "src/teacher/report/components/AttachmentsField.tsx": {

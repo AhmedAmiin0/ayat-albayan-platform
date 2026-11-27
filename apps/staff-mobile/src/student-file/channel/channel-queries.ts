@@ -1,7 +1,8 @@
-import { CHANNEL_REFRESH_MS, TEACHER_CHANNELS_PATH } from '@ab/client-core';
-import type { TeacherChannelRow } from '@ab/shared';
+import { CHANNEL_REFRESH_MS, teacherChannelCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { TEACHER_CHANNELS_KEY, useScreenFocused, apiFetch } from '@ab/mobile-kit';
+import { TEACHER_CHANNELS_KEY, useScreenFocused, apiFetch, apiSend } from '@ab/mobile-kit';
+
+const teacherChannels = teacherChannelCalls({ apiFetch, apiSend });
 
 // The teacher's student-message list polls while shown (docs/31 §2).
 
@@ -10,7 +11,7 @@ export function useTeacherChannels(enabled = true) {
   const focused = useScreenFocused();
   return useQuery({
     queryKey: TEACHER_CHANNELS_KEY,
-    queryFn: () => apiFetch<TeacherChannelRow[]>(TEACHER_CHANNELS_PATH),
+    queryFn: teacherChannels.list,
     refetchInterval: focused ? CHANNEL_REFRESH_MS : false,
     enabled,
   });

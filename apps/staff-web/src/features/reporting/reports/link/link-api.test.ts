@@ -59,6 +59,13 @@ describe('the teacher link calls (no session)', () => {
       [`${BASE}/reports/r-1/attachments/a-1/url`, 'GET', false],
     ]);
   });
+
+  it('refuses a signed link without its expiry', async () => {
+    const api = linkReportApi(TOKEN);
+    const bad = { url: 'https://files.example/a' };
+    fetchMock.mockImplementation(() => Promise.resolve(new Response(JSON.stringify(bad))));
+    await expect(api.files.url({ id: 'r-1', attachmentId: 'a-1' })).rejects.toThrow();
+  });
 });
 
 describe('link problems', () => {

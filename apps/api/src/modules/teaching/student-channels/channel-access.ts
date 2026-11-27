@@ -1,5 +1,6 @@
 import { FAMILY_CHAT_OFF, type ChannelSenderRole } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import { isAdmin } from '@/common/auth/roles';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
 import { PortalScopes } from '@/modules/people/portal';
@@ -14,6 +15,11 @@ import { FamilyChatSettings } from './family-chat.settings';
  * the participants' empty closed state (409 channel_not_open on a write) while a monitor still
  * reads.
  */
+/** Moderation and presence of any chat are the admin's alone, not every monitor's (docs/31 §2). */
+export function requireAdmin(user: AuthUser, refusal: string): void {
+  if (!isAdmin(user)) throw forbidden(refusal);
+}
+
 export type ChannelActor =
   | { mode: 'participant'; studentId: string; profileId: string; role: ChannelSenderRole; open: boolean }
   | { mode: 'monitor'; studentId: string; profileId: string; open: boolean };

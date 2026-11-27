@@ -1,46 +1,38 @@
-import {
-  attendanceMonthQuery,
-  type StudentAttendanceTable,
-  type TeacherStudentHead,
-} from '@ab/shared';
-import { Controller, Get, Inject } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { teacherStudentFileRoutes } from '@ab/shared';
+import { Controller, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodParam, ZodQuery } from '@/common/http/zod-inputs';
-import { z } from 'zod';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { TeacherAttendanceService } from './teacher-attendance.service';
 import { TeacherStudentHeadService } from './teacher-file/teacher-student-head.service';
 
+type HeadInput = RouteInputOf<typeof teacherStudentFileRoutes.head>;
+type TableInput = RouteInputOf<typeof teacherStudentFileRoutes.attendance>;
+
 /**
- * docs/46 C5: GET /teachers/me/students/:id/attendance?month=YYYY-MM (self.teacher). Never the
- * admin's /students/:id/attendance (students.read). The static `me` segment wins over
- * `teachers/:id`. docs/47: GET /teachers/me/students/:id is the student file's head.
+ * docs/46 C5, docs/47: the teacher's own student file. Never the admin's /students/:id/attendance.
+ * The static `me` segment wins over `teachers/:id`.
  */
-@ApiTags('teachers')
 @ApiBearerAuth()
-@Permissions('self.teacher')
-@Controller('teachers/me/students')
+@Controller()
 export class TeacherAttendanceController {
   constructor(
     @Inject(TeacherAttendanceService) private readonly attendance: TeacherAttendanceService,
     @Inject(TeacherStudentHeadService) private readonly heads: TeacherStudentHeadService,
   ) {}
 
-  @Get(':id')
-  head(
-    @ZodParam('id', z.uuid()) id: string,
-    @CurrentUser() user: AuthUser,
-  ): Promise<TeacherStudentHead> {
-    return this.heads.head({ profileId: user.id, studentId: id });
+  @Route(teacherStudentFileRoutes.head)
+  async head(@RouteInput() { params }: HeadInput, @CurrentUser() user: AuthUser) {
+    const head = await this.heads.head({ profileId: user.id, studentId: params.id });
+    return asResponse(teacherStudentFileRoutes.head.response, head);
   }
 
-  @Get(':id/attendance')
-  table(
-    @ZodParam('id', z.uuid()) id: string,
-    @ZodQuery(attendanceMonthQuery) query: z.output<typeof attendanceMonthQuery>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<StudentAttendanceTable> {
-    return this.attendance.table({ profileId: user.id, studentId: id, month: query.month });
+  @Route(teacherStudentFileRoutes.attendance)
+  async table(@RouteInput() { params, query }: TableInput, @CurrentUser() user: AuthUser) {
+    const input = { profileId: user.id, studentId: params.id, month: query.month };
+    const table = await this.attendance.table(input);
+    return asResponse(teacherStudentFileRoutes.attendance.response, table);
   }
 }
