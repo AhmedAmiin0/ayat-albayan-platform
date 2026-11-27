@@ -1,6 +1,6 @@
 import type { StudentStatus } from '@ab/catalog';
 import type { Page } from '@ab/core';
-import type { DuplicateStudentBody, StudentListItem, StudentProfile, StudentRef } from '@ab/shared';
+import type { DuplicateStudentBody, StudentListItem, StudentRef } from '@ab/shared';
 import { studentCalls, type StudentCreateBody } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit';
@@ -57,7 +57,7 @@ export const studentStatusCountsQuery = (filters: StudentsFilters) =>
 export const studentQuery = (id: string) =>
   queryOptions({
     queryKey: studentKeys.detail(id),
-    queryFn: () => apiFetch<StudentProfile>(`/students/${id}`),
+    queryFn: () => students.get(id),
   });
 
 export const teacherOptionsQuery = queryOptions({
