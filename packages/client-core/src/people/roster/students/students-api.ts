@@ -6,6 +6,7 @@ import type { StudentCalls } from './students-api.types';
 export function studentCalls(client: ApiClient): StudentCalls {
   const call = callWith(client);
   return {
+    list: (query) => call({ route: studentRoutes.list, query }),
     get: (id) => call({ route: studentRoutes.get, params: { id } }),
     teacherOptions: () => call({ route: studentRoutes.teacherOptions }),
     statusCounts: (query) => call({ route: studentRoutes.statusCounts, query }),
