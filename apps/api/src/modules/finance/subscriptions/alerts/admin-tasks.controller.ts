@@ -2,18 +2,16 @@ import type { Page } from '@ab/core';
 import type { AdminTaskView } from '@ab/money';
 import { adminTaskRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { AdminTasksRepo } from './admin-tasks.repo';
 
 /** Admin tasks raised by the R-SUB-02 alerts: renewal due, package unpaid (S7, S8). */
-@ApiTags('admin-tasks')
 @ApiBearerAuth()
-@Permissions('tasks.manage')
 @Controller()
 export class AdminTasksController {
   constructor(

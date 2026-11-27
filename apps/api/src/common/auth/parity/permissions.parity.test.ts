@@ -89,7 +89,7 @@ describe('system-role parity with the old @Roles table', () => {
   });
 
   it('pricing.read gates the pricing routes only, for admin and sales', () => {
-    const gated = routes.filter((r) => r.permission === 'pricing.read').map((r) => r.key).sort();
+    const gated = routes.filter((r) => permissionKeys(r).join('|') === 'pricing.read').map((r) => r.key).sort();
     expect(gated).toEqual(['catalog', 'list', 'quote'].map((h) => `PricingController.${h}`));
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('pricing.read'))).toEqual(['admin', 'sales']);
   });

@@ -38,3 +38,12 @@ select count(*) from assistant_statements where assistant_id is null or month is
 select count(*) from assistant_statements where status::text not in ('draft', 'approved', 'paid');
 -- count: assistant_statements_method_out_of_enum
 select count(*) from assistant_statements where method is not null and method::text not in ('bank', 'wallet', 'cash', 'other', 'card');
+-- Rows the subscription answer schema would refuse (docs/62 C1).
+-- count: subscriptions_required_null
+select count(*) from subscriptions where student_id is null or duration is null or lessons_total is null or price is null or currency is null or price_source is null or starts_on is null or status is null or created_at is null;
+-- count: subscriptions_price_source_not_object
+select count(*) from subscriptions where not (price_source @> '{}');
+-- count: subscriptions_duration_out_of_enum
+select count(*) from subscriptions where duration not in (30, 45, 60, 90);
+-- count: subscriptions_package_out_of_enum
+select count(*) from subscriptions where package is not null and package::text not in ('trial', '4', '8', '12', '16', '20', '28');

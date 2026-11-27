@@ -1,15 +1,12 @@
 import type { CatalogResponse, PriceListResponse, QuoteResponse } from '@ab/money';
 import { pricingRoutes as routes } from '@ab/shared';
 import { Controller } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { PricingService } from './pricing.service';
 
 /** Staff price calculator (docs/08): the site's catalog and quotes, in the guardian's currency. */
-@ApiTags('pricing')
 @ApiBearerAuth()
-@Permissions('pricing.read')
 @Controller()
 export class PricingController {
   constructor(private readonly pricing: PricingService) {}
