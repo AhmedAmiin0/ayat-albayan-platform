@@ -1,7 +1,10 @@
+import { z } from 'zod';
 import { camelKey } from './camel';
 
 /** The module page / route that writes a key owned outside the generic settings write path (docs/26 §2f, §5). */
-export type SettingOwner = 'messages_gate' | 'communications' | 'google_sync' | 'notifications';
+export const SETTING_OWNERS = ['messages_gate', 'communications', 'google_sync', 'notifications'] as const;
+export const settingOwnerSchema = z.enum(SETTING_OWNERS);
+export type SettingOwner = z.infer<typeof settingOwnerSchema>;
 
 /**
  * Keys owned elsewhere, decided IN CODE (never by a DB column, docs/26 §9 #6). PATCH /settings never
