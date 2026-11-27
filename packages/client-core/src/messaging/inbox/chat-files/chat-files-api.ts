@@ -1,4 +1,4 @@
-import { chatFileRoutes, chatMediaRoutes } from '@ab/shared';
+import { chatFileRoutes, chatFileSendRoutes, chatMediaRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { ChatFileCalls } from './chat-files-api.types';
 
@@ -11,5 +11,7 @@ export function chatFileCalls(client: ApiClient): ChatFileCalls {
     pdfPage: (params) => call({ route: chatFileRoutes.pdfPage, params }),
     media: (params) => call({ route: chatMediaRoutes.list, params }),
     mediaFile: (params) => call({ route: chatMediaRoutes.file, params }),
+    uploadUrl: ({ params, body }) => call({ route: chatFileSendRoutes.uploadUrl, params, body }),
+    send: ({ params, body }) => call({ route: chatFileSendRoutes.send, params, body }),
   };
 }
