@@ -5,6 +5,8 @@ const route = (r: string, permission: unknown, signedIn = false) => ({
   key: 'X.y',
   route: r,
   isPublic: false,
+  routePublic: false,
+  ownPublic: false,
   signedIn,
   permission,
   handlerPermission: permission,

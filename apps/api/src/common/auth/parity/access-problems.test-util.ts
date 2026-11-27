@@ -18,6 +18,16 @@ const hasTwoSources = (route: RouteAccess): boolean =>
 
 const isPublicWithList = (route: RouteAccess): boolean => route.isPublic && hasRouteList(route);
 
+const hasTwoPublicSources = (route: RouteAccess): boolean => route.routePublic && route.ownPublic;
+
+const hasAnyPermission = (route: RouteAccess): boolean =>
+  [route.handlerPermission, route.classPermission, route.routePermissions].some(
+    (source) => source !== undefined,
+  );
+
+const isPublicWithPermission = (route: RouteAccess): boolean =>
+  route.routePublic && hasAnyPermission(route);
+
 const lacksTag = (route: RouteAccess): boolean => route.inDocument && route.tags.length === 0;
 
 const RULES: readonly (readonly [string, (route: RouteAccess) => boolean])[] = [
@@ -25,6 +35,8 @@ const RULES: readonly (readonly [string, (route: RouteAccess) => boolean])[] = [
   ['a key outside the catalog', hasUnknownKey],
   ['permissions from two sources', hasTwoSources],
   ['permissions on a @Public handler', isPublicWithList],
+  ['public from two sources', hasTwoPublicSources],
+  ['a permission on a public route', isPublicWithPermission],
   ['no Swagger tag', lacksTag],
 ];
 
