@@ -8,3 +8,5 @@ export const monthName = (month: string): string =>
     { tz: 'UTC', locale },
     { month: 'long', year: 'numeric' },
   );
+
+export const noMonths = (months: readonly unknown[]): boolean => months.length === 0;

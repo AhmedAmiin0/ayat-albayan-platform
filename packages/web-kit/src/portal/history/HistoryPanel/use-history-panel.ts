@@ -1,3 +1,4 @@
+import { historyMonths, historyRows } from '@ab/client-core';
 import type { PortalHistoryStatus } from '@ab/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -9,7 +10,10 @@ const EMPTY: Record<PortalHistoryStatus, () => [string, string]> = {
   absent: () => [t.portal.absentEmpty, t.portal.absentEmptyHint],
 };
 export function useHistoryPanel({ student, status }: Pick<Props, 'student' | 'status'>) {
-  const query = useInfiniteQuery(portalHistoryQuery({ studentId: student.id, status }));
+  const query = useInfiniteQuery({
+    ...portalHistoryQuery({ studentId: student.id, status }),
+    select: (data) => historyMonths(historyRows(data.pages, status), student.tz),
+  });
   const [title, hint] = EMPTY[status]();
   return { query, title, hint };
 }

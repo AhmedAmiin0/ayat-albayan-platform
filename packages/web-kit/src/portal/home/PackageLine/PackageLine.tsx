@@ -1,14 +1,12 @@
-import { packageSummary } from '@ab/client-core';
-import { useQuery } from '@tanstack/react-query';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { portalPackageQuery } from '@ab/web-kit/portal/api';
 import { amountText, dayText, usedOfText } from '@ab/web-kit/portal/package/package-text';
+import type { PackageLineProps } from './PackageLine.types';
+import { usePackageLine } from './use-package-line';
 
 /** A guardian's only; quiet while loading or without a package. */
-export function PackageLine({ studentId }: { studentId: string }) {
-  const pkg = useQuery(portalPackageQuery(studentId)).data?.package;
-  if (!pkg) return null;
-  const summary = packageSummary(pkg);
+export function PackageLine({ studentId }: PackageLineProps) {
+  const { summary } = usePackageLine({ studentId });
+  if (!summary) return null;
   return (
     <section
       aria-label={t.portal.packageTab}

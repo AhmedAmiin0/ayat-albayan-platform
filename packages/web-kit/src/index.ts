@@ -130,7 +130,7 @@ export * from './portal/package/PackagePanel/PackagePanel';
 export * from './portal/package/package-text';
 export * from './portal/recordings/LessonPage/LessonPage';
 export { RecordingsPanel as PortalRecordingsPanel } from './portal/recordings/RecordingsPanel';
-export * from './portal/report/ReportView/ReportView';
+export { ReportView, type OpenReport } from './portal/report/ReportView';
 export * from './portal/use-family-chat';
 export * from './portal/use-seen-reports';
 export { WebPushToggle } from './push/WebPushToggle';
