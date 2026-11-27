@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../core/http';
-import { SHORT_LINK_GATE_KEY, SHORT_LINKS_KEY, shortLinkQueries } from './short-links-api';
-import { detail, gateView, person } from './short-links.test-util';
+import { ApiError, type ApiClient } from '../../../../core/http';
+import { SHORT_LINK_GATE_KEY, SHORT_LINKS_KEY, shortLinkQueries } from '../short-links-api';
+import { detail, gateView, person } from '../../short-links.test-util';
 
 const clientAnswering = (answer: () => Promise<unknown>) =>
   ({ apiFetch: vi.fn(answer), apiSend: vi.fn() }) as unknown as ApiClient;
