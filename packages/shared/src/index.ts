@@ -42,6 +42,8 @@ export * from './sales/student/student-roster';
 export * from './sales/student/student-package';
 export * from './sales/student/package-cancel';
 export * from './sales/teacher';
+export * from './sales/sales-assign.schemas';
+export * from './sales/sales-assign.routes';
 export * from './sales/student-file';
 export * from './sales/package-cancel';
 export * from './sales/course/course';

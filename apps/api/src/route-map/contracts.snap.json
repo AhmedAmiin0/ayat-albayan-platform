@@ -8231,6 +8231,36 @@
    ]
   }
  },
+ "GET /sales/people": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+     },
+     "name": {
+      "type": "string"
+     },
+     "open_leads": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "open_leads"
+    ],
+    "additionalProperties": false
+   }
+  }
+ },
  "GET /sales/registration-check": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18116,6 +18146,23 @@
    },
    "required": [
     "linked"
+   ],
+   "additionalProperties": false
+  }
+ },
+ "POST /leads/assign-unassigned": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "assigned": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "assigned"
    ],
    "additionalProperties": false
   }
