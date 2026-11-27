@@ -2,7 +2,7 @@ import type { PhoneState } from '@ab/client-core';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { locale, t } from '@ab/mobile-kit';
 import { defaultCountry, nameOf } from '@ab/client-core';
-import type { WhatsAppSignInState } from '@/sign-in/whatsapp/WhatsAppSignIn';
+import type { PhoneStepProps } from './PhoneStep.types';
 import { PhoneStep } from './PhoneStep';
 
 const s = t.familyApp.signIn;
@@ -10,12 +10,14 @@ const saudi = defaultCountry('SA');
 const egypt = defaultCountry('EG');
 const phone = { setCountry: jest.fn(), setTyped: jest.fn() };
 const send = jest.fn(async () => undefined);
-const signOf = (state: PhoneState, flow: { busy: boolean; error: string | null }) =>
-  ({
-    flow,
-    phone: { ...phone, country: saudi, typed: '050', check: { state, e164: null } },
-    send,
-  }) as unknown as WhatsAppSignInState;
+const signOf = (
+  state: PhoneState,
+  flow: { busy: boolean; error: string | null },
+): PhoneStepProps['sign'] => ({
+  flow,
+  phone: { ...phone, country: saudi, typed: '050', check: { state, e164: null } },
+  send,
+});
 const show = (state: PhoneState, flow = { busy: false, error: null as string | null }) =>
   render(<PhoneStep sign={signOf(state, flow)} />);
 const sendButton = () => screen.getByRole('button', { name: t.familyAuth.sendCode });

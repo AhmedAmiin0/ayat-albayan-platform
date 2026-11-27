@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react-native';
+import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { LessonBody } from '@/recordings/LessonBody';
@@ -41,6 +41,8 @@ test('two parts, newest first from the api: the oldest plays first as part 1', a
 test('no report yet: the report pdf asks for no report id', async () => {
   const view = { ...lessonPage(), report_id: null };
   await renderWithQuery(<LessonBody view={view} studentId="s1" />, freshQueryClient());
-  expect(screen.getByText(F.report)).toBeTruthy();
-  expect(screen.getByText(F.reportPdf)).toBeTruthy();
+  mockSend.mockClear();
+  await fireEvent.press(screen.getByText(F.reportPdf));
+  const asked = mockSend.mock.calls.map(([, path]: unknown[]) => path);
+  expect(asked).toEqual(['/portal/students/s1/reports//url']);
 });

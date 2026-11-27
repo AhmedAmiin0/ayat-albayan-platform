@@ -31,7 +31,10 @@ async function show(students: unknown[]) {
 
 beforeEach(async () => {
   closeChildSwitch();
-  await AsyncStorage.setItem(PICKED_CHILD_KEY, JSON.stringify({ profileId: 'g1', studentId: 's2' }));
+  await AsyncStorage.setItem(
+    PICKED_CHILD_KEY,
+    JSON.stringify({ profileId: 'g1', studentId: 's2' }),
+  );
 });
 
 test('a guardian of several: avatar, name and chevron are one button opening the sheet', async () => {
@@ -42,7 +45,6 @@ test('a guardian of several: avatar, name and chevron are one button opening the
   const sheet = await renderHook(() => useChildSwitch());
   expect(sheet.result.current.open).toBe(true);
 });
-
 
 test('an only child: the plain greeting, no switch', async () => {
   await show([yusuf]);
