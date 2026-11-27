@@ -2,6 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
+import { answered } from '@/today/testing/answered';
 import { TeacherScheduleScreen } from '@/teacher/screens/TeacherScheduleScreen/TeacherScheduleScreen';
 
 const mockApiFetch = jest.fn();
@@ -11,7 +12,7 @@ jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('20
 
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 // What the API answers a teacher: no `reschedule` or admin cancel among her lesson's events.
-const mine = lesson({ id: 'l1', allowed_events: ['confirm'] });
+const mine = answered(lesson({ id: 'l1', allowed_events: ['confirm'] }));
 
 beforeEach(() => {
   mockApiFetch.mockReset();

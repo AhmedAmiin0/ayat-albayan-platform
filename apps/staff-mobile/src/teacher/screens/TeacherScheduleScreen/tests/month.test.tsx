@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
+import { answered } from '@/today/testing/answered';
 import { TeacherScheduleScreen } from '@/teacher/screens/TeacherScheduleScreen/TeacherScheduleScreen';
 
 const mockApiFetch = jest.fn();
@@ -15,13 +16,15 @@ jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('20
 
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 // Thursday 1 October (today) and Thursday 15 October, both mid-morning in Riyadh.
-const today = lesson({ id: 'l1', allowed_events: ['confirm'] });
-const later = lesson({
-  id: 'l2',
-  starts_at: '2026-10-15T09:00:00.000Z',
-  ends_at: '2026-10-15T09:45:00.000Z',
-  students: [{ ...today.students[0], id: 's9', name: 'ريم سالم' } as (typeof today.students)[number]],
-});
+const today = answered(lesson({ id: 'l1', allowed_events: ['confirm'] }));
+const later = answered(
+  lesson({
+    id: 'l2',
+    starts_at: '2026-10-15T09:00:00.000Z',
+    ends_at: '2026-10-15T09:45:00.000Z',
+    students: [{ ...today.students[0], id: 's9', name: 'ريم سالم' } as (typeof today.students)[number]],
+  }),
+);
 
 beforeEach(() => {
   mockApiFetch.mockReset();

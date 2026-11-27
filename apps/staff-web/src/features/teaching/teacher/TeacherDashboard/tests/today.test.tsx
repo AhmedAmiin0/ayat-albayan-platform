@@ -20,10 +20,10 @@ const ME: TeacherMe = {
   meeting_link: 'https://meet.jit.si/ayat-abrar', meeting_mode: null, platform_classroom: false, students: [],
 };
 // Saturday 3 Oct, 12:00 Cairo (09:00Z): 16:00 and 18:00 today, one ended at 10:00, Monday's.
-const HERO = lesson({ id: 'h', starts_at: '2026-10-03T13:00:00.000Z' });
-const LATER = lesson({ id: 'l', starts_at: '2026-10-03T15:00:00.000Z', students: [{ ...HERO.students[0], id: 's-9', name: 'جود' } as LessonView['students'][number]] });
-const ENDED = lesson({ id: 'e', starts_at: '2026-10-03T07:00:00.000Z' });
-const MONDAY = lesson({ id: 'm', starts_at: '2026-10-05T13:00:00.000Z' });
+const HERO = answered(lesson({ id: 'h', starts_at: '2026-10-03T13:00:00.000Z' }));
+const LATER = answered(lesson({ id: 'l', starts_at: '2026-10-03T15:00:00.000Z', students: [{ ...HERO.students[0], id: 's-9', name: 'جود' } as LessonView['students'][number]] }));
+const ENDED = answered(lesson({ id: 'e', starts_at: '2026-10-03T07:00:00.000Z' }));
+const MONDAY = answered(lesson({ id: 'm', starts_at: '2026-10-05T13:00:00.000Z' }));
 
 type Lessons = LessonView[] | Error;
 
@@ -83,7 +83,7 @@ describe('TeacherDashboard — the hero and today\'s list (owner 2026-11-14)', (
   });
 
   it('opening a drawer clears the last notice (review: no stale message in the next lesson)', async () => {
-    apiSend.mockResolvedValue(answered(HERO));
+    apiSend.mockResolvedValue(HERO);
     renderDash();
     const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
     fireEvent.click(within(hero).getByRole('button', { name: t.teacherBoard.confirm }));
@@ -101,7 +101,7 @@ describe('TeacherDashboard — the hero and today\'s list (owner 2026-11-14)', (
   });
 
   it('«سأحضر» never refetches /teachers/me', async () => {
-    apiSend.mockResolvedValue(answered(HERO));
+    apiSend.mockResolvedValue(HERO);
     renderDash();
     const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
     const meCalls = () => apiFetch.mock.calls.filter(([p]) => p === '/teachers/me').length;

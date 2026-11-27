@@ -5,6 +5,7 @@ const LESSON = '00000000-0000-4000-8000-000000000001';
 
 describe('teacherLessonRoutes (docs/46 C3, C4)', () => {
   it.each([
+    ['lessons', 'GET /teachers/me/lessons'],
     ['cancel', 'POST /teachers/me/lessons/:id/cancel'],
     ['confirm', 'POST /teachers/me/lessons/:id/confirm-attendance'],
   ] as const)('%s keeps its path, let in by self.teacher, tagged teachers', (key, wire) => {
@@ -26,6 +27,19 @@ describe('teacherLessonRoutes (docs/46 C3, C4)', () => {
 
   it('confirms without a body', () => {
     expect('body' in routes.confirm).toBe(false);
+  });
+
+  it('reads her lessons by a window whose end follows its start', () => {
+    const week = { from: '2026-10-04T00:00:00Z', to: '2026-10-11T00:00:00Z' };
+    expect(routes.lessons.query.parse(week)).toEqual(week);
+    const back = { from: week.to, to: week.from };
+    expect(routes.lessons.query.safeParse(back).success).toBe(false);
+    expect(routes.lessons.query.safeParse({ from: week.from }).success).toBe(false);
+  });
+
+  it('answers her lessons as a list, and refuses a lesson that is no view', () => {
+    expect(routes.lessons.response.parse([])).toEqual([]);
+    expect(routes.lessons.response.safeParse([{ id: LESSON }]).success).toBe(false);
   });
 
   it('answers one lesson view, and refuses a list or a bare id', () => {

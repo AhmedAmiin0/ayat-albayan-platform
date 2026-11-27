@@ -8750,11 +8750,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/teacher-me/teacher-me.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/lessons/teacher-me/teacher-me.repo.ts": {
     "stylistic/max-len": {
       "count": 1
