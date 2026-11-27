@@ -3610,7 +3610,7 @@
   },
   "src/ops/numbers/use-numbers.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/ops/reports/AdminReportScreen/AdminReportScreen.tsx": {
