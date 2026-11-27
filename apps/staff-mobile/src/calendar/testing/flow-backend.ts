@@ -1,4 +1,5 @@
 import type { LessonView, OverviewTeacher } from '@ab/schedule';
+import { teacherFixture } from '@ab/shared/testing';
 import { SLOTS } from '@/teaching/reschedule/fixtures';
 import { muscat, pending } from '@/today/testing/fixtures';
 import { FakeBackend } from '@/test/fake-backend';
@@ -7,7 +8,13 @@ import { abrar, omar } from '@/calendar/overview/overview-fixtures';
 // Week 26 Sep - 2 Oct 2026 (Riyadh, UTC+3); now is Thursday 1 Oct 16:20.
 
 export const NOW = new Date('2026-10-01T13:20:00Z');
-const TEACHER = { id: 't1', display_name_ar: 'أبرار', phone_e164: null, status: 'active', tz: 'Africa/Cairo' };
+const TEACHER = {
+  id: 't1',
+  display_name_ar: 'أبرار',
+  phone_e164: null,
+  status: 'active' as const,
+  tz: 'Africa/Cairo',
+};
 const TEACHERS: OverviewTeacher[] = [
   { ...abrar, windows: [], free: [] },
   { ...omar, windows: [], free: [] },
@@ -24,7 +31,7 @@ export function calendarBackend() {
   const within = (l: LessonView, from = '', to = '9') => l.starts_at >= from && l.starts_at < to;
   const backend = new FakeBackend()
     .on('GET /teachers', () => ({ items: [{ ...TEACHER, active_count: 0, trial_count: 0 }], total: 1, page: 1, pageSize: 25 }))
-    .on('GET /teachers/:id', () => TEACHER)
+    .on('GET /teachers/:id', () => teacherFixture(TEACHER))
     .on('GET /teachers/:id/availability', () => [])
     .on('GET /teachers/:id/time-off', () => [])
     .on('GET /students/status-counts', () => ({ new: 0, trial: 0, pending_subscription: 0, active: 0, pending_renewal: 0, expired: 0, paused: 0, churned: 0 }))
