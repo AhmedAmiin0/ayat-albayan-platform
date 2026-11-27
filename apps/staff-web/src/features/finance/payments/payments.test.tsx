@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { useState } from 'react';
+import { studentListItemFixture } from '@ab/shared/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYMENT, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 import { t } from '@ab/web-kit';
@@ -19,7 +20,7 @@ const SIGNED = { bucket: 'receipts', path: 'sub-1/abc.jpg', token: 'tok', signed
 const file = (type: string, size = 2048) => new File([new Uint8Array(size)], 'receipt.jpg', { type });
 const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSize: 20 });
 
-const STUDENT = { id: 'stu-1', name: 'سهيلة', code: 'AB-0183', guardian_name: 'أم سهيلة' };
+const STUDENT = studentListItemFixture({ id: 'stu-1', guardian_name: 'أم سهيلة' });
 
 /** The route's URL search, held in state. */
 function Harness() {
