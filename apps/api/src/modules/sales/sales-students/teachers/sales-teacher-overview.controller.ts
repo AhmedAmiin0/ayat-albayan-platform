@@ -1,7 +1,6 @@
 import { salesTeacherOverviewRoutes as routes, type SalesTeacherOverview } from '@ab/shared';
 import { Controller, Injectable } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { notFound } from '@/common/http/errors';
 import { asResponse } from '@/common/http/returns';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -23,9 +22,7 @@ export class SalesTeacherOverviewService {
 }
 
 /** docs/16 row 36b: weekly slots in Riyadh and the last 30 days; never money or a link. */
-@ApiTags('sales')
 @ApiBearerAuth()
-@Permissions('self.sales_academy')
 @Controller()
 export class SalesTeacherOverviewController {
   constructor(private readonly service: SalesTeacherOverviewService) {}
