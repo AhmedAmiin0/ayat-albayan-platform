@@ -4,7 +4,7 @@ import type { Gender, PaymentKind, Program, StudentStatus, SubscriptionStatus } 
 import type { TeacherStudentCounts } from '../people/students/student-lists';
 import type { SalesPackageSummary } from './student/student-package';
 import type { RosterAttendance, RosterSlot } from './student/student-roster';
-import type { SalesSubscriptionView } from './views';
+import type { SalesSubscriptionView } from './portal';
 
 // Sales assistant view (docs/16) never carries price, rate, phone or note, except the meet link.
 
