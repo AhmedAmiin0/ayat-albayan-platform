@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isFamilyActionable, portalRequestStatusSchema } from './portal-actions';
+import { isFamilyActionable, portalRequestStatusSchema } from '../portal-actions';
 
 const NOW = new Date('2026-10-02T10:00:00Z');
 const LATER = '2026-10-05T15:00:00.000Z';
