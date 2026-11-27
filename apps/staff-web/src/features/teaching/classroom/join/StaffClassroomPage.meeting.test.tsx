@@ -29,7 +29,7 @@ describe('StaffClassroomPage for an internal meeting (/meeting/:id)', () => {
     apiSend.mockResolvedValue({ url: 'wss://lk', token: 'm', room: 'meeting-m-1', role: 'teacher' });
     const client = open();
     await waitFor(() => expect(client.connect).toHaveBeenCalledWith('wss://lk', 'm'));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/meetings/m-1/join');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/meetings/m-1/join', undefined);
   });
 
   it('410 meeting_ended is worded', async () => {

@@ -1,4 +1,5 @@
 import type { HttpException } from '@nestjs/common';
+import type { MeetingInviteeInput } from '@ab/schedule';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { MEETING_ID, meetingRow, NOW } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
@@ -33,11 +34,6 @@ describe('MeetingCreateService: instant (as before)', () => {
     });
     expect(s.post).not.toHaveBeenCalled();
   });
-
-  it('400 for a bad title or duration', async () => {
-    expect((await fail(s.create.create({ user: TEACHER, body: { title: 'x'.repeat(61) } }, NOW))).getStatus()).toBe(400);
-    expect((await fail(s.create.create({ user: TEACHER, body: { ...SCHEDULED, durationMin: 300 } }, NOW))).getStatus()).toBe(400);
-  });
 });
 
 describe('MeetingCreateService: scheduled with invitees (R-MEET-01/02)', () => {
@@ -52,7 +48,7 @@ describe('MeetingCreateService: scheduled with invitees (R-MEET-01/02)', () => {
   });
 
   it('staff in-app, families by chat inside the window, window_closed with link + text otherwise', async () => {
-    const invitees = [{ kind: 'staff', profileId: STAFF_ID }, { kind: 'student', studentId: STUDENT_A }, { kind: 'student', studentId: STUDENT_B }];
+    const invitees: MeetingInviteeInput[] = [{ kind: 'staff', profileId: STAFF_ID }, { kind: 'student', studentId: STUDENT_A }, { kind: 'student', studentId: STUDENT_B }];
     const r = await s.create.create({ user: SALES, body: { ...SCHEDULED, invitees } }, NOW);
     expect(r.invitees.map((i) => [i.kind, i.status, i.channel, i.error_code])).toEqual([
       ['staff', 'sent', 'in_app', null],
@@ -75,7 +71,7 @@ describe('MeetingCreateService: scheduled with invitees (R-MEET-01/02)', () => {
   });
 
   it('never returns the guardian phone: every result has exactly the public keys', async () => {
-    const invitees = [{ kind: 'student', studentId: STUDENT_A }, { kind: 'phone', phone: '+20 100 000 0103' }];
+    const invitees: MeetingInviteeInput[] = [{ kind: 'student', studentId: STUDENT_A }, { kind: 'phone', phone: '+20 100 000 0103' }];
     const r = await s.create.create({ user: SALES, body: { invitees } }, NOW);
     for (const i of r.invitees) expect(Object.keys(i).sort()).toEqual(RESULT_KEYS);
     expect(JSON.stringify(r)).not.toContain(OPEN_PHONE);

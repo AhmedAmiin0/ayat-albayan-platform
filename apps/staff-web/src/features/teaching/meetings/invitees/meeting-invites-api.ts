@@ -1,6 +1,6 @@
+import { meetingCalls } from '@ab/client-core';
 import type {
   CreateMeeting,
-  MeetingCreateResult,
   MeetingInviteeInput,
   MeetingInviteeOption,
   MeetingInviteeView,
@@ -16,7 +16,7 @@ import { meetingKeys } from '@/features/teaching/meetings/internal/meeting.keys'
 
 /** POST /meetings: instant (no startsAt) or scheduled; one result per invitee. */
 export const createMeetingWith = (body: CreateMeeting) =>
-  apiSend<MeetingCreateResult>('POST', '/meetings', body);
+  meetingCalls({ apiFetch, apiSend }).create(body);
 
 /** PATCH /meetings/:id (creator or admin): a new time and/or duration. */
 export const updateMeeting = ({ id, body }: { id: string; body: UpdateMeeting }) =>

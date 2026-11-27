@@ -5593,7 +5593,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/classroom/sessions/AdminSessions.tsx": {
@@ -5809,9 +5809,6 @@
   "src/features/teaching/meetings/internal/internal-api.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
     }
   },
   "src/features/teaching/meetings/invitees/InviteeSearch.tsx": {
@@ -5843,7 +5840,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 4
     }
   },
   "src/features/teaching/meetings/rows/MeetingRow.tsx": {

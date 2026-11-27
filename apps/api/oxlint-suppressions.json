@@ -7698,21 +7698,13 @@
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.controller.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/zod-inputs": {
-      "count": 9
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.fakes.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/modules/teaching/classroom/internal-meetings/internal-meetings.join.service.ts": {
-    "stylistic/max-len": {
-      "count": 5
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.kick.service.ts": {
@@ -8183,7 +8175,7 @@
   },
   "src/modules/teaching/classroom/meetings/schedule/tests/meeting-create.service.test.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "typescript/use-unknown-in-catch-callback-variable": {
       "count": 1
