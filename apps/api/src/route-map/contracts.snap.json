@@ -177,20 +177,21 @@
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
-    "phone": {
-     "type": "string"
-    },
     "id": {
      "type": "string",
      "format": "uuid",
      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "phone": {
+     "type": "string"
     }
    },
    "required": [
-    "phone",
-    "id"
+    "id",
+    "phone"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /public/teacher-report/:token/reports/:id/attachments/:attachmentId": {
   "params": {
@@ -3623,6 +3624,51 @@
    "required": [
     "search"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "phone_e164": {
+      "type": "string"
+     },
+     "students": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "code": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "name": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "code",
+        "name"
+       ]
+      }
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "phone_e164",
+     "students"
+    ]
+   }
   }
  },
  "GET /people/students/:id": {
@@ -3638,6 +3684,221 @@
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "student": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "code": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name": {
+       "type": "string"
+      },
+      "age": {
+       "type": [
+        "number",
+        "null"
+       ]
+      },
+      "gender": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "male",
+          "female"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "level": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "memorized": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "goal": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "riwaya": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "tz": {
+       "type": "string"
+      },
+      "notes": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "teacher_gender_pref": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "male",
+          "female"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "contact_is_self": {
+       "type": "boolean"
+      },
+      "phone_e164": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "has_login": {
+       "type": "boolean"
+      },
+      "has_records": {
+       "type": "boolean"
+      }
+     },
+     "required": [
+      "id",
+      "code",
+      "name",
+      "age",
+      "gender",
+      "level",
+      "memorized",
+      "goal",
+      "riwaya",
+      "tz",
+      "teacher_gender_pref",
+      "contact_is_self",
+      "phone_e164",
+      "has_login",
+      "has_records"
+     ]
+    },
+    "guardian": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      },
+      "phone_e164": {
+       "type": "string"
+      },
+      "country": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "tz": {
+       "type": "string"
+      },
+      "notes": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "has_login": {
+       "type": "boolean"
+      },
+      "phones": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "phone_e164": {
+          "type": "string"
+         },
+         "is_primary": {
+          "type": "boolean"
+         }
+        },
+        "required": [
+         "phone_e164",
+         "is_primary"
+        ]
+       }
+      },
+      "students": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "code": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "name": {
+          "type": "string"
+         },
+         "contact_is_self": {
+          "type": "boolean"
+         }
+        },
+        "required": [
+         "id",
+         "code",
+         "name",
+         "contact_is_self"
+        ]
+       }
+      }
+     },
+     "required": [
+      "id",
+      "name",
+      "phone_e164",
+      "country",
+      "tz",
+      "has_login",
+      "phones",
+      "students"
+     ]
+    }
+   },
+   "required": [
+    "student",
+    "guardian"
    ]
   }
  },
@@ -10566,6 +10827,18 @@
     }
    },
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
   }
  },
  "PATCH /people/students/:id": {
@@ -10697,6 +10970,18 @@
     }
    },
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
   }
  },
  "PATCH /people/students/:id/contact-self": {
@@ -10726,6 +11011,22 @@
     "contact_is_self"
    ],
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "contact_is_self": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "contact_is_self"
+   ]
   }
  },
  "PATCH /recordings/:id/visibility": {
@@ -19487,6 +19788,25 @@
    "required": [
     "id"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "code": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "code"
+   ]
   }
  },
  "POST /people/students/:id/guardian": {
@@ -19562,6 +19882,22 @@
      "additionalProperties": false
     }
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "guardian_id": {
+     "type": "string"
+    },
+    "student_id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "guardian_id",
+    "student_id"
+   ]
   }
  },
  "POST /people/students/:id/to-guardian": {
@@ -19577,6 +19913,18 @@
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "guardian_id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "guardian_id"
    ]
   }
  },
