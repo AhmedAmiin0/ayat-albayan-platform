@@ -1,7 +1,7 @@
 import { availabilityRoutes as routes, type AvailabilityRow, type TimeOff } from '@ab/shared';
 import { Controller, HttpCode, NotFoundException, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { orNotFound } from '@/common/http/http';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -9,16 +9,13 @@ import { OwnTeacherGuard } from '@/modules/people/teachers/own-teacher.guard';
 import { AvailabilityRepo } from './availability.repo';
 
 /** Weekly grid + time-off (R-TCH-02). Admin for anyone; a teacher only for their own row. */
-@ApiTags('teachers')
 @ApiBearerAuth()
 @UseGuards(OwnTeacherGuard)
-@Permissions('availability.write')
 @Controller()
 export class AvailabilityController {
   constructor(private readonly availability: AvailabilityRepo) {}
 
   @Route(routes.grid)
-  @Permissions('availability.read')
   grid(@RouteInput() { params }: RouteInputOf<typeof routes.grid>): Promise<AvailabilityRow[]> {
     return this.availability.listSlots(params.id);
   }
@@ -34,7 +31,6 @@ export class AvailabilityController {
   }
 
   @Route(routes.timeOff)
-  @Permissions('availability.read')
   timeOff(@RouteInput() { params }: RouteInputOf<typeof routes.timeOff>): Promise<TimeOff[]> {
     return this.availability.listTimeOff(params.id);
   }

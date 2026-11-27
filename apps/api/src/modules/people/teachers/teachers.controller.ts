@@ -1,7 +1,7 @@
 import { teacherRoutes as routes, type Teacher as TeacherView } from '@ab/shared';
 import { Controller, HttpCode, NotFoundException } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { orNotFound } from '@/common/http/http';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -11,9 +11,7 @@ import { TeachersSettings } from './teachers.settings';
 import { TeacherUsernames } from './teacher-username';
 
 /** Admin-only teacher CRUD (R-TCH-01); meeting_mode is written only here (teachers.write: admin). */
-@ApiTags('teachers')
 @ApiBearerAuth()
-@Permissions('teachers.write')
 @Controller()
 export class TeachersController {
   constructor(
@@ -23,7 +21,6 @@ export class TeachersController {
   ) {}
 
   @Route(routes.list)
-  @Permissions('teachers.read')
   async list(@RouteInput() { query }: RouteInputOf<typeof routes.list>) {
     const page = await this.teachers.list(query);
     const auto = await this.academyAuto();
@@ -31,7 +28,6 @@ export class TeachersController {
   }
 
   @Route(routes.get)
-  @Permissions('teachers.read')
   async get(@RouteInput() { params }: RouteInputOf<typeof routes.get>): Promise<TeacherView> {
     return this.view(orNotFound(await this.teachers.get(params.id)));
   }

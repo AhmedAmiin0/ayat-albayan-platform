@@ -1,7 +1,7 @@
 import { studentRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode, Inject } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { DB, type Db } from '@/common/db/db.module';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -15,9 +15,7 @@ import {
 import { StudentsService } from './students.service';
 
 /** Admin-only students CRUD + merge (R-STU-01..05). */
-@ApiTags('students')
 @ApiBearerAuth()
-@Permissions('students.read')
 @Controller()
 export class StudentsController {
   constructor(
@@ -47,7 +45,6 @@ export class StudentsController {
   }
 
   @Route(routes.create)
-  @Permissions('students.write')
   create(
     @RouteInput() { body }: RouteInputOf<typeof routes.create>,
     @CurrentUser() user: AuthUser,
@@ -56,7 +53,6 @@ export class StudentsController {
   }
 
   @Route(routes.update)
-  @Permissions('students.write')
   update(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.update>,
     @CurrentUser() user: AuthUser,
@@ -66,7 +62,6 @@ export class StudentsController {
 
   @Route(routes.remove)
   @HttpCode(204)
-  @Permissions('students.write')
   remove(
     @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
     @CurrentUser() user: AuthUser,
@@ -75,7 +70,6 @@ export class StudentsController {
   }
 
   @Route(routes.merge)
-  @Permissions('students.write')
   merge(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.merge>,
     @CurrentUser() user: AuthUser,
