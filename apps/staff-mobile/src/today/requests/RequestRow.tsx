@@ -1,4 +1,4 @@
-import type { FamilyRequestView } from '@ab/shared';
+import type { FamilyRequestView } from '@ab/schedule';
 import { Pressable, View } from 'react-native';
 import { t, AppText, StatusChip, type, useTheme, type ViewerClock } from '@ab/mobile-kit';
 import { requestChange, requestWho } from './request-text';

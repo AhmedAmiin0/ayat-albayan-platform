@@ -1,4 +1,4 @@
-import type { FamilyRequestView } from '@ab/shared';
+import type { FamilyRequestView } from '@ab/schedule';
 import { t, whenText, type ViewerClock } from '@ab/mobile-kit';
 import { whenIn } from '@/core/lib/clock';
 
@@ -14,7 +14,10 @@ export function requestChange(r: FamilyRequestView, viewer: ViewerClock): string
 
 export function requestAsked(r: FamilyRequestView, viewer: ViewerClock): string {
   const tz = r.students[0]?.tz ?? viewer.tz;
-  return t.lessons.proposal.familyPending.replace('{when}', whenText(r.proposed_starts_at, tz, viewer));
+  return t.lessons.proposal.familyPending.replace(
+    '{when}',
+    whenText(r.proposed_starts_at, tz, viewer),
+  );
 }
 
 /** The lesson's length in minutes (the slot grid books the same length). */

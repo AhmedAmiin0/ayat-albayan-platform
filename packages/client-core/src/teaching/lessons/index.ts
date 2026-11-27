@@ -36,8 +36,10 @@ export { lessonListCalls, type LessonListCalls } from './list-calls';
 export { lessonActionCalls, type LessonActionCalls } from './action-calls';
 export { lessonMoveCalls, type LessonMoveCalls } from './move-calls';
 export {
+  familyRequestCalls,
   proposalDecisionCalls,
   teacherProposalCalls,
+  type FamilyRequestCalls,
   type ProposalDecisionCalls,
   type TeacherProposalCalls,
 } from './proposal-calls';

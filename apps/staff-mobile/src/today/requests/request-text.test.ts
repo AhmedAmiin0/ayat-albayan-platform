@@ -1,4 +1,4 @@
-import type { FamilyRequestView } from '@ab/shared';
+import type { FamilyRequestView } from '@ab/schedule';
 import { requestAsked, requestChange, requestMinutes, requestWho } from './request-text';
 
 const R = {
