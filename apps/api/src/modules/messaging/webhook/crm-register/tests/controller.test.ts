@@ -1,9 +1,12 @@
+import { crmWebhookRoutes } from '@ab/shared';
 import { RequestMethod } from '@nestjs/common';
 import { METHOD_METADATA, PATH_METADATA } from '@nestjs/common/constants';
+import { DECORATORS } from '@nestjs/swagger/dist/constants';
 import { describe, expect, it, vi } from 'vitest';
 import { IS_PUBLIC, PERMISSION } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { AuditService } from '@/common/audit/audit.service';
+import { routeOf } from '@/common/http/route';
 import { CrmWebhookController } from '@/modules/messaging/webhook/crm-register/crm-webhook.controller';
 import { FAKE_SECRET, IDS, registrarKit, TARGET } from './crm-webhook.fakes';
 
@@ -20,15 +23,17 @@ function controllerKit() {
 }
 
 describe('CrmWebhookController', () => {
-  it('is POST /settings/integrations/crm-webhook with settings.write (the secrets PUT’s permission)', () => {
+  it('serves its route object: POST, settings.write on the route, the settings tag', () => {
     const handler = CrmWebhookController.prototype.register;
-    expect(Reflect.getMetadata(PATH_METADATA, CrmWebhookController)).toBe(
-      'settings/integrations/crm-webhook',
-    );
-    expect(Reflect.getMetadata(PERMISSION, CrmWebhookController)).toBe('settings.write');
+    expect(routeOf(handler)).toBe(crmWebhookRoutes.register);
+    expect(Reflect.getMetadata(PATH_METADATA, CrmWebhookController)).toBe('/');
+    expect(Reflect.getMetadata(PATH_METADATA, handler)).toBe('/settings/integrations/crm-webhook');
+    expect(Reflect.getMetadata(METHOD_METADATA, handler)).toBe(RequestMethod.POST);
+    expect(Reflect.getMetadata(PERMISSION, CrmWebhookController)).toBeUndefined();
+    expect(Reflect.getMetadata(PERMISSION, handler)).toEqual(['settings.write']);
+    expect(Reflect.getMetadata(DECORATORS.API_TAGS, handler)).toEqual(['settings']);
     expect(Reflect.getMetadata(IS_PUBLIC, CrmWebhookController)).toBeUndefined();
     expect(Reflect.getMetadata(IS_PUBLIC, handler)).toBeUndefined();
-    expect(Reflect.getMetadata(METHOD_METADATA, handler)).toBe(RequestMethod.POST);
   });
 
   it('answers {data:{id,url,events,replaced}}, never the secret', async () => {
