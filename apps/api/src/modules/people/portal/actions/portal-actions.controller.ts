@@ -4,8 +4,8 @@ import {
   type PortalSlots,
 } from '@ab/shared';
 import { Controller, HttpCode, Inject } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { PortalLessonActions } from './portal-actions.service';
@@ -16,9 +16,7 @@ type Ids = RouteInputOf<typeof routes.confirm>['params'];
 const call = (p: Ids, user: AuthUser) => ({ user, studentId: p.id, lessonId: p.lessonId });
 
 /** Lesson actions on the login's own student, scoped like PortalController. */
-@ApiTags('portal')
 @ApiBearerAuth()
-@Permissions('self.portal')
 @Controller()
 export class PortalLessonActionsController {
   constructor(

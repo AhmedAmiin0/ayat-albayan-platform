@@ -1,7 +1,13 @@
-import type { PortalFileUrl, PortalPrepare, PortalReports } from '@ab/shared';
+import {
+  portalReportsSchema,
+  type PortalFileUrl,
+  type PortalPrepare,
+  type PortalReports,
+} from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 import { BUCKETS, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
@@ -29,7 +35,8 @@ export class PortalReportsService {
     const recordings = recordingByLesson(
       await this.queries.visibleRecordings(rows.map((r) => r.lesson_id)),
     );
-    return { reports: rows.map((r) => toPortalReport(r, recordings)) };
+    const reports = rows.map((r) => toPortalReport(r, recordings));
+    return asResponse(portalReportsSchema, { reports });
   }
 
   /** Never a draft; null without a sent report. */
