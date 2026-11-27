@@ -3607,11 +3607,6 @@
       "count": 1
     }
   },
-  "src/ops/values/hooks/use-config-entries.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/ops/values/hooks/use-description-editor.ts": {
     "typescript/no-confusing-void-expression": {
       "count": 1

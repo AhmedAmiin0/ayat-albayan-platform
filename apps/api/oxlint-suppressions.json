@@ -138,14 +138,6 @@
       "count": 1
     }
   },
-  "src/common/configuration/config-store/io/config-entries.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/common/configuration/config-store/io/config-entries.mapper.ts": {
     "stylistic/max-len": {
       "count": 2
