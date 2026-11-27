@@ -1,16 +1,17 @@
 import { joinWindowConfig, type JoinWindowConfig } from '@ab/schedule';
+import { publicConfigCalls } from '@ab/client-core';
 import {
-  PUBLIC_CONFIG_PATH,
   PUBLIC_CONFIG_QUERY_KEY,
   PUBLIC_CONFIG_STALE_MS,
-  publicConfigSchema,
   uploadMaxBytes,
   withPublicDefaults,
   type PublicSettings,
 } from '@ab/settings';
 import { QueryClient, QueryClientContext, queryOptions, useQuery } from '@tanstack/react-query';
 import { use } from 'react';
-import { apiFetch } from '../http/api';
+import { apiFetch, apiSend } from '../http/api';
+
+const calls = publicConfigCalls({ apiFetch, apiSend });
 
 /**
  * GET /settings/public (no login): the academy settings the apps' buttons follow — the classroom
@@ -19,7 +20,7 @@ import { apiFetch } from '../http/api';
  */
 export const publicConfigQuery = queryOptions({
   queryKey: PUBLIC_CONFIG_QUERY_KEY,
-  queryFn: async () => publicConfigSchema.parse(await apiFetch(PUBLIC_CONFIG_PATH)),
+  queryFn: calls.get,
   staleTime: PUBLIC_CONFIG_STALE_MS,
 });
 

@@ -37,3 +37,4 @@ export {
   type ConfigEntryCalls,
   type ConfigEntryPatch,
 } from './config-entries';
+export { publicConfigCalls, type PublicConfigCalls } from './public-config';
