@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { MediaGlyph } from './MediaGlyphs';
+import { MediaGlyph } from './MediaGlyph';
 
 describe('MediaGlyph', () => {
   it('draws a hidden solid glyph per name and keeps the caller class', () => {

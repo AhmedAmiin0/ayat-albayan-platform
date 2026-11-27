@@ -94,7 +94,7 @@ export * from './components/ui/surface/pill';
 export * from './components/ui/surface/section-header';
 export * from './components/ui/surface/status-mark';
 export * from './components/ui/surface/warn-line';
-export * from './lesson-files/AudioPlayer/AudioPlayer';
+export { AudioPlayer } from './lesson-files/AudioPlayer';
 export * from './lesson-files/file-words';
 export * from './lib/clock';
 export * from './lib/ClockOptions/ClockOptions';

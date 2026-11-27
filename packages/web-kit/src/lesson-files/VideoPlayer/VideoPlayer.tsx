@@ -1,7 +1,7 @@
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
 import { MediaControls } from '@ab/web-kit/lesson-files/MediaControls';
-import { MediaGlyph } from '@ab/web-kit/lesson-files/MediaGlyphs';
+import { MediaGlyph } from '@ab/web-kit/lesson-files/MediaGlyph';
 import type { Props } from './VideoPlayer.types';
 import { MARK } from './video-player.helpers';
 import { useVideoPlayer } from './use-video-player';
