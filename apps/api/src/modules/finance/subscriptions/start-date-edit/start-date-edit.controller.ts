@@ -1,15 +1,13 @@
 import { startDateEditRoutes as routes, type StartDateEditResult } from '@ab/shared';
 import { Controller } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { StartDateEdit } from './start-date-edit.service';
 
 /** Needs subscriptions.edit_terms (not set_start_date alone); never teachers or families. */
-@ApiTags('subscriptions')
 @ApiBearerAuth()
-@Permissions('subscriptions.edit_terms')
 @Controller()
 export class StartDateEditController {
   constructor(private readonly edits: StartDateEdit) {}
