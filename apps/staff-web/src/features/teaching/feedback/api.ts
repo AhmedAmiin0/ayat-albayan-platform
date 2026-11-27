@@ -4,8 +4,7 @@ import { feedbackCalls, publicFeedbackCalls } from '@ab/client-core';
 import { ApiError, apiFetch, apiSend, publicApiFetch, publicApiSend, t } from '@ab/web-kit';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ServerListState } from '@/lib/list/server-list-search';
-import type { FeedbackRowView, FeedbackSubmit, TeacherFeedbackView } from '@ab/shared';
-import type { Page } from '@ab/core';
+import type { FeedbackSubmit } from '@ab/shared';
 import { feedbackKeys } from '@/features/teaching/feedback/keys';
 
 export const FEEDBACK_KEY = feedbackKeys.all;
@@ -42,19 +41,18 @@ export function publicProblem(error: unknown): PublicProblem {
 
 // ---- Admin and teacher ----
 
-/** `?page&pageSize` plus the URL's sort and column filters (their keys are the API's params). */
-const listParams = (s: ServerListState): URLSearchParams =>
-  new URLSearchParams([
-    ['page', String(s.page)],
-    ['pageSize', String(FEEDBACK_PAGE_SIZE)],
-    ...sortFilterParams(s.sort, s.filters),
-  ]);
+/** `page`, `pageSize` plus the URL's sort and column filters (their keys are the API's params). */
+const listQuery = (s: ServerListState) => ({
+  page: s.page,
+  pageSize: FEEDBACK_PAGE_SIZE,
+  ...Object.fromEntries(sortFilterParams(s.sort, s.filters)),
+});
 
 /** GET /feedback (admin): newest first unless sorted; filtered and paged on the server (R-NFR-08). */
 export const feedbackListQuery = (s: ServerListState) =>
   queryOptions({
     queryKey: feedbackKeys.list(s),
-    queryFn: () => apiFetch<Page<FeedbackRowView>>(`/feedback?${listParams(s)}`),
+    queryFn: () => feedback.list(listQuery(s)),
     placeholderData: keepPreviousData,
   });
 
@@ -68,7 +66,7 @@ export const feedbackSummaryQuery = queryOptions({
 export const myFeedbackQuery = (s: ServerListState) =>
   queryOptions({
     queryKey: feedbackKeys.mine(s),
-    queryFn: () => apiFetch<TeacherFeedbackView>(`/teachers/me/feedback?${listParams(s)}`),
+    queryFn: () => feedback.mine(listQuery(s)),
     placeholderData: keepPreviousData,
   });
 

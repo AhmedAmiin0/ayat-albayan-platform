@@ -1,4 +1,4 @@
-import { studentRecordingsRoutes as routes } from '@ab/schedule';
+import { studentRecordingsRoutes } from '@ab/schedule';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { StudentRecordingsApi } from './student-recordings-api.types';
 
@@ -6,11 +6,12 @@ import type { StudentRecordingsApi } from './student-recordings-api.types';
 export function studentRecordingsApi(client: ApiClient): StudentRecordingsApi {
   const call = callWith(client);
   return {
-    list: ({ studentId, query }) => call({ route: routes.list, params: { id: studentId }, query }),
+    list: ({ studentId, query }) =>
+      call({ route: studentRecordingsRoutes.list, params: { id: studentId }, query }),
     recordedLessonIds: (studentId) =>
-      call({ route: routes.recordedLessonIds, params: { id: studentId } }),
+      call({ route: studentRecordingsRoutes.recordedLessonIds, params: { id: studentId } }),
     setVisible: ({ id, visible }) =>
-      call({ route: routes.visibility, params: { id }, body: { visible } }),
-    remove: (id) => call({ route: routes.remove, params: { id } }),
+      call({ route: studentRecordingsRoutes.visibility, params: { id }, body: { visible } }),
+    remove: (id) => call({ route: studentRecordingsRoutes.remove, params: { id } }),
   };
 }
