@@ -981,10 +981,7 @@
   },
   "src/modules/finance/assistant-pay/admin/assistant-pay.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 9
+      "count": 1
     }
   },
   "src/modules/finance/assistant-pay/assistant-pay.module.ts": {
@@ -1082,7 +1079,7 @@
   },
   "src/modules/finance/assistant-pay/shared/assistant-pay.dto.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/assistant-pay/shared/assistant-pay.errors.ts": {
