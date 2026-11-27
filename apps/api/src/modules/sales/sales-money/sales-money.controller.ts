@@ -61,11 +61,8 @@ export class SalesSubscribeController {
 
   @Route(routes.cancel)
   @HttpCode(200)
-  cancel(
-    @RouteInput() { params, body }: RouteInputOf<typeof routes.cancel>,
-    @CurrentUser() user: AuthUser,
-  ) {
-    return this.cancels.cancel(params.id, body, user);
+  cancel(@RouteInput() input: RouteInputOf<typeof routes.cancel>, @CurrentUser() user: AuthUser) {
+    return this.cancels.cancel(input.params.id, input.body, user);
   }
 }
 
