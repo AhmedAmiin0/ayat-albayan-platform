@@ -495,15 +495,12 @@
   },
   "src/features/finance/payments/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 3
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

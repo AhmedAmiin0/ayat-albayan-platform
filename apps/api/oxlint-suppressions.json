@@ -1388,17 +1388,9 @@
       "count": 1
     }
   },
-  "src/modules/finance/payments/payments.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 9
-    }
-  },
   "src/modules/finance/payments/payments.dto.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/payments/payments.list-query.ts": {

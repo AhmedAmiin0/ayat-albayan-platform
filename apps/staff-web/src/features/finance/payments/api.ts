@@ -1,10 +1,20 @@
-import { signedDownloadSchema, type SignedUpload } from '@ab/shared';
-import type { PaymentKind, PaymentMethod } from '@ab/catalog';
-import { paymentAttachmentListSchema, paymentsPageSchema, paymentViewSchema } from '@ab/money';
+import {
+  paymentCalls,
+  type PaymentCreateBody,
+  type PaymentListQuery,
+  type PaymentUpdateBody,
+} from '@ab/client-core';
+import type { PaymentKind } from '@ab/catalog';
+import {
+  PAYMENT_SORT_KEYS,
+  paymentAttachmentListSchema,
+  receiptUploadSchema,
+} from '@ab/money';
 import { RIYADH_TZ, riyadhToday, wallInstant } from '@ab/time';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
-import { sortFilterParams, type SortSearch } from '@/lib/list/list-search';
+import { z } from 'zod';
+import type { SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { PAGE_SIZE } from '@/features/finance/subscriptions/api';
 import { financeFileKeys, moneyKeys } from '@/features/finance/keys';
@@ -12,12 +22,15 @@ import { financeFileKeys, moneyKeys } from '@/features/finance/keys';
 // apps/api/src/modules/payments (docs/11 §7, R-PAY-01).
 export type { PaymentView } from '@ab/money';
 
+const calls = paymentCalls({ apiFetch, apiSend });
+const paymentSortKey = z.enum(PAYMENT_SORT_KEYS);
+
 /** The payments page filters (all optional); from/to are Riyadh days, inclusive. */
 export type PaymentFilters = {
   studentId?: string;
   from?: string;
   to?: string;
-  method?: PaymentMethod;
+  method?: PaymentListQuery['method'];
   kind?: PaymentKind;
 };
 
@@ -28,57 +41,36 @@ export function filterParams(f: PaymentFilters): Record<string, string> {
   );
 }
 
+/** The list query: unset filters left out, `dir` sent only for a descending sort. */
+function listQuery(page: number, f: PaymentFilters, s: SortSearch): PaymentListQuery {
+  const sort = paymentSortKey.safeParse(s.sort).data;
+  const dir = sort && s.dir === 'desc' ? s.dir : undefined;
+  const set = (value?: string) => value || undefined;
+  const filters = { studentId: set(f.studentId), from: set(f.from), to: set(f.to) };
+  return { ...filters, method: f.method, kind: f.kind, sort, dir, page, pageSize: PAGE_SIZE };
+}
+
 /** GET /payments: one page, filtered and (R-NFR-08) sorted server-side; default newest paid first. */
 export const paymentsQuery = (page: number, filters: PaymentFilters = {}, sort: SortSearch = {}) =>
   queryOptions({
     queryKey: moneyKeys.payments({ page, filters, sort }),
-    queryFn: () => {
-      const qs = new URLSearchParams([
-        ...Object.entries(filterParams(filters)),
-        ...sortFilterParams(sort),
-      ]);
-      qs.set('page', String(page));
-      qs.set('pageSize', String(PAGE_SIZE));
-      return apiFetch(`/payments?${qs}`, { schema: paymentsPageSchema });
-    },
+    queryFn: () => calls.list(listQuery(page, filters, sort)),
     placeholderData: keepPreviousData,
   });
 
-export type PaymentPatch = {
-  amount?: number;
-  method?: PaymentMethod;
-  paidAt?: string;
-  note?: string | null;
-};
+export type PaymentPatch = Pick<PaymentUpdateBody, 'amount' | 'method' | 'paidAt' | 'note'>;
 
 /** PATCH /payments/:id (audited; the package status is recomputed). */
-export const updatePayment = (id: string, patch: PaymentPatch) =>
-  apiSend('PATCH', `/payments/${id}`, { body: patch, schema: paymentViewSchema });
+export const updatePayment = (id: string, patch: PaymentPatch) => calls.update(id, patch);
 
 /** DELETE /payments/:id (audited; the receipt is removed). */
-export const deletePayment = (id: string) => apiSend('DELETE', `/payments/${id}`);
+export const deletePayment = calls.remove;
 
-export type RecordPaymentBody = {
-  subscriptionId: string;
-  amount: number;
-  currency: string;
-  kind: PaymentKind;
-  invoiceId?: string;
-  method: PaymentMethod;
-  paidAt: string;
-  receiptPath: string | null;
-  /** Bank only, 0 to 5 uploaded paths; otherwise 400 attachments_not_allowed. */
-  attachments?: string[];
-  note: string | null;
-  /** One per payment form, re-sent on retries (the API returns the payment it already recorded). */
-  clientRequestId: string;
-};
+export type RecordPaymentBody = PaymentCreateBody;
 
-export const recordPayment = (body: RecordPaymentBody) =>
-  apiSend('POST', '/payments', { body, schema: paymentViewSchema });
+export const recordPayment = calls.create;
 
-export const receiptUrl = (paymentId: string) =>
-  apiFetch(`/payments/${paymentId}/receipt`, { schema: signedDownloadSchema });
+export const receiptUrl = calls.receipt;
 
 /** Signed for 1 h. */
 export const attachmentsQuery = (path: string) =>
@@ -97,9 +89,10 @@ export async function uploadReceipt(input: {
   file: File;
 }): Promise<string> {
   const { file } = input;
-  const signed = await apiSend<SignedUpload>('POST', '/payments/receipt-upload-url', {
+  const mime = receiptUploadSchema.shape.mime.parse(file.type);
+  const signed = await calls.receiptUploadUrl({
     subscriptionId: input.subscriptionId,
-    mime: file.type,
+    mime,
     size: file.size,
   });
   const { error } = await uploadSigned(signed, { body: file, contentType: file.type });

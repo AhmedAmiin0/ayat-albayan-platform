@@ -964,11 +964,6 @@
       "count": 2
     }
   },
-  "src/core/lib/receipts/upload-receipt.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/core/lib/stable-handler.ts": {
     "stylistic/max-len": {
       "count": 2

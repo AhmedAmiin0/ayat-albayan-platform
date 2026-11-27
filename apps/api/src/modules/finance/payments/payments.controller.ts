@@ -1,28 +1,23 @@
-import type { SignedDownload, SignedUpload } from '@ab/shared';
-import {
-  paymentCreateSchema,
-  paymentUpdateSchema,
-  receiptUploadSchema,
-  type PaymentAttachmentView,
-  type PaymentsPage,
-  type PaymentView,
-} from '@ab/money';
+import { paymentRoutes as routes, type SignedDownload, type SignedUpload } from '@ab/shared';
+import type { PaymentAttachmentView, PaymentsPage, PaymentView } from '@ab/money';
 import { uploadMaxBytes } from '@ab/settings';
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow, sentOnly } from '@/common/http/http';
-import { paymentFilter, paymentListQuery } from './payments.dto';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { paymentFilter } from './payments.dto';
 import { PaymentsService } from './payments.service';
 import { PaymentsSettings } from './payments.settings';
 import { ReceiptsService } from './attachments/receipts.service';
+
+type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 /** Payments + receipts (P1–P7, R-PAY-01, R-MOB-02). Admin only. */
 @ApiTags('payments')
 @ApiBearerAuth()
 @Permissions('payments.write')
-@Controller('payments')
+@Controller()
 export class PaymentsController {
   constructor(
     private readonly payments: PaymentsService,
@@ -30,57 +25,55 @@ export class PaymentsController {
     private readonly settings: PaymentsSettings,
   ) {}
 
-  @Get()
+  @Route(routes.list)
   @Permissions('payments.read')
-  async list(@Query() query: unknown): Promise<PaymentsPage> {
+  async list(@RouteInput() { query }: In<'list'>): Promise<PaymentsPage> {
     const { academy_timezone: tz } = await this.settings.read();
-    return this.payments.list(paymentFilter(parseOrThrow(paymentListQuery, query), tz));
+    return this.payments.list(paymentFilter(query, tz));
   }
 
-  @Post()
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<PaymentView> {
-    return this.payments.create(parseOrThrow(paymentCreateSchema, body), user.id);
+  @Route(routes.create)
+  create(@RouteInput() { body }: In<'create'>, @CurrentUser() user: AuthUser): Promise<PaymentView> {
+    return this.payments.create(body, user.id);
   }
 
   /** Static segment, declared before `:id`. */
-  @Post('receipt-upload-url')
+  @Route(routes.receiptUploadUrl)
   @HttpCode(200)
-  async receiptUploadUrl(@Body() body: unknown): Promise<SignedUpload> {
-    const input = parseOrThrow(receiptUploadSchema, body);
-    return this.receipts.uploadUrl(input, uploadMaxBytes(await this.settings.read()));
+  async receiptUploadUrl(@RouteInput() { body }: In<'receiptUploadUrl'>): Promise<SignedUpload> {
+    return this.receipts.uploadUrl(body, uploadMaxBytes(await this.settings.read()));
   }
 
-  @Get(':id')
+  @Route(routes.get)
   @Permissions('payments.read')
-  get(@Param('id', ParseUUIDPipe) id: string): Promise<PaymentView> {
-    return this.payments.get(id);
+  get(@RouteInput() { params }: In<'get'>): Promise<PaymentView> {
+    return this.payments.get(params.id);
   }
 
-  @Get(':id/receipt')
+  @Route(routes.receipt)
   @Permissions('payments.read')
-  receipt(@Param('id', ParseUUIDPipe) id: string): Promise<SignedDownload> {
-    return this.payments.receipt(id);
+  receipt(@RouteInput() { params }: In<'receipt'>): Promise<SignedDownload> {
+    return this.payments.receipt(params.id);
   }
 
-  /** The legacy receipt comes first (id 'receipt'), then the files, signed for 1 hour. */
-  @Get(':id/attachments')
+  @Route(routes.attachments)
   @Permissions('payments.read')
-  attachments(@Param('id', ParseUUIDPipe) id: string): Promise<PaymentAttachmentView[]> {
-    return this.payments.attachments(id);
+  attachments(@RouteInput() { params }: In<'attachments'>): Promise<PaymentAttachmentView[]> {
+    return this.payments.attachments(params.id);
   }
 
-  @Patch(':id')
+  /** An optional field the patch leaves out stays out of the parsed body, so it is not touched. */
+  @Route(routes.update)
   update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @RouteInput() { params, body }: In<'update'>,
     @CurrentUser() user: AuthUser,
   ): Promise<PaymentView> {
-    return this.payments.update(id, sentOnly(parseOrThrow(paymentUpdateSchema, body), body), user.id);
+    return this.payments.update(params.id, body, user.id);
   }
 
-  @Delete(':id')
+  @Route(routes.remove)
   @HttpCode(204)
-  async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
-    await this.payments.remove(id, user.id);
+  async remove(@RouteInput() { params }: In<'remove'>, @CurrentUser() user: AuthUser): Promise<void> {
+    await this.payments.remove(params.id, user.id);
   }
 }
