@@ -12,8 +12,9 @@ import { TeacherDashboard } from '@/features/teaching/teacher/TeacherDashboard/T
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 
+const TEACHER = '00000000-0000-4000-8000-0000000000a1';
 const ME: TeacherMe = {
-  id: 't-abrar', display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  id: TEACHER, display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
   meeting_link: null, meeting_mode: null, platform_classroom: false, students: [],
 };
 // Saturday 3 Oct, 12:00 Cairo: one lesson at 16:00 (the hero) and one ended at 10:00.

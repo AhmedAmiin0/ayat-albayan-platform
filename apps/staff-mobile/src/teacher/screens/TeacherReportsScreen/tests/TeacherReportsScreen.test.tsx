@@ -9,8 +9,14 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mob
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (h: string) => mockPush(h) } }));
 
-const student = { id: 's1', code: 'AB-0182', name: 'يوسف أحمد' };
-const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [{ ...student, tz: 'Asia/Riyadh', status: 'active' }] };
+const YUSUF = '00000000-0000-4000-8000-0000000000c1';
+const student = { id: YUSUF, code: 'AB-0182', name: 'يوسف أحمد' };
+const me = {
+  id: '00000000-0000-4000-8000-0000000000a1',
+  display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  meeting_link: null, meeting_mode: null,
+  students: [{ ...student, tz: 'Asia/Riyadh', status: 'active' }],
+};
 const pending: PendingReportView[] = [
   { lesson_id: 'l-new', starts_at: '2026-10-01T13:00:00Z', status: 'scheduled', student, report_id: null },
   { lesson_id: 'l-draft', starts_at: '2026-09-30T13:00:00Z', status: 'scheduled', student: { ...student, id: 's2', name: 'جنى وليد' }, report_id: 'r-d' },
@@ -66,7 +72,7 @@ test('my students: each opens their «سجل التقارير»', async () => {
   await renderWithQuery(<TeacherReportsScreen />);
   await fireEvent.press(await screen.findByRole('tab', { name: t.teacherDash.myStudents }));
   await fireEvent.press(await screen.findByText(t.reports.history));
-  expect(mockPush).toHaveBeenCalledWith('/teacher/reports/student/s1');
+  expect(mockPush).toHaveBeenCalledWith(`/teacher/reports/student/${YUSUF}`);
 });
 
 test('nothing pending and nothing sent yet: each list says so', async () => {

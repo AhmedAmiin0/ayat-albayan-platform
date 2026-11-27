@@ -15,8 +15,9 @@ vi.mock('@tanstack/react-router', async (importOriginal) => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));
 
+const SUHAILA_ID = '00000000-0000-4000-8000-0000000000c1';
 const ME: TeacherMe = {
-  id: 't-abrar',
+  id: '00000000-0000-4000-8000-0000000000a1',
   display_name_ar: 'أبرار',
   gender: 'female',
   programs: ['quran'],
@@ -24,7 +25,7 @@ const ME: TeacherMe = {
   meeting_link: 'https://meet.jit.si/ayat-abrar',
   meeting_mode: null,
   platform_classroom: false,
-  students: [{ id: 's-1', code: 'AB-0183', name: 'سهيلة', tz: 'Asia/Riyadh', status: 'active' }],
+  students: [{ id: SUHAILA_ID, code: 'AB-0183', name: 'سهيلة', tz: 'Asia/Riyadh', status: 'active' }],
 };
 // Saturday 3 Oct, 12:00 Cairo. Today: 16:00 Cairo; later this week: Monday.
 const TODAY = answered(lesson({ id: 'a', starts_at: '2026-10-03T13:00:00.000Z', students: [{ ...SUHAILA, tz: 'Asia/Riyadh' }], meeting_link: null }));

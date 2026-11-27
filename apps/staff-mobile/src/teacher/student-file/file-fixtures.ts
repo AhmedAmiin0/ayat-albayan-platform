@@ -100,7 +100,14 @@ export const fileLog = (over: Partial<StudentAttendanceTable> = {}): StudentAtte
   });
 
 const EMPTY_PAGE = { items: [], total: 0, page: 1, pageSize: 10, series: [] };
-const ME = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
+/** The signed-in teacher's id, as /teachers/me sends it. */
+export const TEACHER_ID = uuid(90);
+const ME = {
+  id: TEACHER_ID,
+  display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  meeting_link: null, meeting_mode: null,
+  students: [],
+};
 
 /** apiFetch answers by path: /teachers/me, the head, the log, pending, the reports page. */
 export function fileAnswers(over: { head?: TeacherStudentHead; pending?: unknown[] } = {}) {
