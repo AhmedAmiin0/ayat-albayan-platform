@@ -3534,11 +3534,6 @@
       "count": 1
     }
   },
-  "src/ops/google-sync/google-status.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/ops/notif-rules/components/EssentialOffSheet.tsx": {
     "max-lines-per-function": {
       "count": 1

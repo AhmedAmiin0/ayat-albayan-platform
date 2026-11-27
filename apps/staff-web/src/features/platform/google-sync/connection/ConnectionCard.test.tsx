@@ -59,7 +59,7 @@ describe('Google connection card', () => {
     expect(apiSend).not.toHaveBeenCalled();
     apiSend.mockResolvedValue(googleStatus({ connection: { ...disconnected } }));
     fireEvent.click(within(dialog).getByRole('button', { name: s.disconnect }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin/google/disconnect'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin/google/disconnect', undefined));
     await waitFor(() => expect(onNote).toHaveBeenCalledWith(s.disconnected));
     expect(await screen.findByText(s.status.disconnected)).toBeTruthy();
   });

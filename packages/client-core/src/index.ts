@@ -69,3 +69,4 @@ export * from './teaching/lesson-files';
 export * from './teaching/lesson-room';
 export * from './teaching/feedback';
 export * from './platform/legal';
+export * from './platform/google-sync';
