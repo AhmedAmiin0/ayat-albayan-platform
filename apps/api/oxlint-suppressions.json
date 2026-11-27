@@ -2215,7 +2215,7 @@
   },
   "src/modules/messaging/calls/http/calls.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/messaging/calls/kapso/calling-line.ts": {

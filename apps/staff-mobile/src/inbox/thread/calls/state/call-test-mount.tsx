@@ -3,7 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { renderWithQuery } from '@/test/query';
 import { CallButton } from '@/inbox/thread/calls/entries/CallButton';
 import { CallProvider } from './CallProvider';
-import { fakeRtc, ringing } from './call-test-kit';
+import { fakeRtc, OUT_ID, ringing } from './call-test-kit';
 
 const metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -11,7 +11,7 @@ const metrics = {
 };
 
 /** Our outbound call as /calls/active lists it once POST /calls answered. */
-export const placed = ringing({ id: 'out1', direction: 'outbound', status: 'connecting', offer_sdp: null });
+export const placed = ringing({ id: OUT_ID, direction: 'outbound', status: 'connecting', offer_sdp: null });
 
 /** The provider (with these fakes) above one phone icon; returns the fakes and the query client. */
 export async function mountCalls(rtc = fakeRtc()) {

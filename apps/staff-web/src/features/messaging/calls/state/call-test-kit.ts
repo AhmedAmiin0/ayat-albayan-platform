@@ -7,13 +7,18 @@ import { useCalls } from './call-context';
 /** The family's name in these tests. */
 export const NAME = 'أم سهيلة';
 
+/** The ringing call's id. */
+export const CALL_ID = 'c0000000-0000-4000-8000-000000000001';
+/** The staff member who took it. */
+export const STAFF_ID = 'a0000000-0000-4000-8000-000000000001';
+
 // Test-only helpers for the calls provider tests (fakes only: no WebRTC, no network).
 
 export const CONFIG: CallConfigView = { enabled: true, available: true, canCall: true, iceServers: [{ urls: ['stun:stun.example.org'] }] };
 
 export function activeRow(patch: Partial<ActiveCallView> = {}): ActiveCallView {
   return {
-    id: 'c1', phone_e164: '+966501234567', direction: 'inbound', status: 'ringing', end_reason: null, display_name: NAME,
+    id: CALL_ID, phone_e164: '+966501234567', direction: 'inbound', status: 'ringing', end_reason: null, display_name: NAME,
     staff_id: null, started_at: '2026-10-26T10:00:00Z', answered_at: null, ended_at: null, duration_seconds: null,
     offer_sdp: 'v=0 their', answer_sdp: null, ...patch,
   };
