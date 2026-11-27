@@ -18,7 +18,10 @@ const rows = [
     key: 'old_offer', meta_name: 'old_offer', status: 'rejected', last_error: 'INVALID_FORMAT',
     created_by: ME,
   }),
-  tpl({ key: 'their_offer', meta_name: 'their_offer', status: 'approved', created_by: 'u-2' }),
+  tpl({
+    key: 'their_offer', meta_name: 'their_offer', status: 'approved',
+    created_by: 'a0000000-0000-4000-8000-000000000002',
+  }),
   tpl({ key: 'seeded_offer', meta_name: 'seeded_offer', status: 'approved' }),
   tpl({ key: 'lesson_reminder', meta_name: 'lesson_reminder', status: 'approved' }),
   tpl({ key: 'quiet', meta_name: 'quiet', status: 'paused' }),

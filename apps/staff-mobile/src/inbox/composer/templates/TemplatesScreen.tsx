@@ -1,5 +1,4 @@
-import type { AuthorTemplate } from '@ab/client-core';
-import { authorMayEdit, editRoute } from '@ab/shared';
+import { authorMayEdit, editRoute, type TemplateView } from '@ab/shared';
 import { router } from 'expo-router';
 import {
   useMeId,
@@ -16,8 +15,8 @@ import { useTemplateList, useTemplateMode } from './templates-api';
 
 /** The admin edits any template Meta lets one edit; an author only their own (authorMayEdit). */
 const MAY_EDIT = {
-  admin: (tpl: AuthorTemplate) => editRoute(tpl.status) !== null,
-  author: (tpl: AuthorTemplate, me: string) => authorMayEdit(tpl, me),
+  admin: (tpl: TemplateView) => editRoute(tpl.status) !== null,
+  author: (tpl: TemplateView, me: string) => authorMayEdit(tpl, me),
 } as const;
 
 /** For sales and admin; `base` is this tree's route prefix. */
@@ -26,7 +25,7 @@ export function TemplatesScreen({ base }: { base: string }) {
   const me = useMeId(true);
   const list = useTemplateList(mode);
   const rows = list.data ?? [];
-  const editOf = (tpl: AuthorTemplate) =>
+  const editOf = (tpl: TemplateView) =>
     MAY_EDIT[mode](tpl, me) ? () => router.push(`${base}/${encodeURIComponent(tpl.key)}`) : undefined;
   return (
     <Screen scroll>

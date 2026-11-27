@@ -1,6 +1,5 @@
-import type { AuthorTemplate } from '@ab/client-core';
 import {
-  editRoute, isCodeBound, nextEditAt,
+  editRoute, isCodeBound, nextEditAt, type TemplateView,
 } from '@ab/shared';
 
 // What the edit form tells and allows, from Meta's rules: a template under
@@ -18,7 +17,7 @@ export interface EditState {
 
 const ROUTE_STAGE: Record<'meta' | 'local', EditStage> = { meta: 'meta', local: 'local' };
 
-export function editState(tpl: AuthorTemplate, now: Date): EditState {
+export function editState(tpl: TemplateView, now: Date): EditState {
   const route = editRoute(tpl.status);
   const limit = { status: tpl.status, edits: tpl.approved_edits ?? [], now };
   const nextAt = nextEditAt(limit);

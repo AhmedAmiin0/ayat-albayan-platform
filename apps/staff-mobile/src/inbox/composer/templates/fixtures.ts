@@ -1,15 +1,16 @@
-import type { AuthorTemplate } from '@ab/client-core';
+import type { TemplateView } from '@ab/shared';
 import type { UserRole } from '@ab/catalog';
 import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
 import { fullAccessMe } from '@/test/staff-me';
 
-export const ME = 'u-1';
+export const ME = 'a0000000-0000-4000-8000-000000000001';
 
-export const tpl = (over: Partial<AuthorTemplate> = {}): AuthorTemplate => ({
+export const tpl = (over: Partial<TemplateView> = {}): TemplateView => ({
   key: 'summer_offer', meta_name: 'summer_offer', language: 'ar', category: 'marketing',
   header_format: null, body_ar: 'عرض خاص يا {{1}} هذا الشهر', footer_ar: null, params: ['var_1'],
-  buttons: [], display: null, status: 'approved', last_error: null, line: 'chat',
+  buttons: [], display: null, status: 'approved', quality: null, meta_id: null,
+  last_checked_at: null, last_error: null, submitted_at: null, line: 'chat',
   sales_starter: true, created_by: null, approved_edits: [],
   ...over,
 });

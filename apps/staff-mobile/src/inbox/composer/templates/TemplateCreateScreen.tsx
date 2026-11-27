@@ -9,7 +9,7 @@ import {
   authorPayload, BodyFields, ButtonsField, CategoryPicker, DraftPreview, EMPTY_DRAFT,
   useTemplateDraft,
 } from '@/inbox/composer/templates/form';
-import { templateApi, templateErrorText, useTemplateSave } from './templates-api';
+import { authoredTemplates, templateErrorText, useTemplateSave } from './templates-api';
 
 const dailyLimit = () => t.templates.author.dailyLimit.replace('{max}', String(AUTHOR_DAILY_LIMIT));
 
@@ -19,7 +19,7 @@ export function TemplateCreateScreen() {
   const [key, setKey] = useState('');
   const [picked, setPicked] = useState<AuthorCategory | null>(null);
   const [invalid, setInvalid] = useState(false);
-  const save = useTemplateSave(templateApi.createAuthored);
+  const save = useTemplateSave(authoredTemplates.create);
   const category = picked ?? suggestedCategory(draft.body);
   const submit = () => {
     const parsed = authorPayload(draft, { key, category });

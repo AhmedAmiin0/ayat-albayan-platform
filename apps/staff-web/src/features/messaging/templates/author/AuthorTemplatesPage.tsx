@@ -1,4 +1,4 @@
-import type { AuthorTemplate } from '@ab/client-core';
+import type { TemplateView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Cartouche, Button, PageHead, Toast, t } from '@ab/web-kit';
@@ -24,9 +24,9 @@ export function AuthorTemplatesPage() {
   const list = useAuthoredTemplates();
   const me = useQuery(meQuery).data?.id;
   const [creating, setCreating] = useState(false);
-  const [editing, setEditing] = useState<AuthorTemplate | null>(null);
+  const [editing, setEditing] = useState<TemplateView | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
-  const done = (text: string) => (tpl: AuthorTemplate) => {
+  const done = (text: string) => (tpl: TemplateView) => {
     setCreating(false);
     setEditing(null);
     setNotice(text.replace('{name}', tpl.key));
