@@ -137,6 +137,9 @@ describe('W6 GET /threads/:phone/messages/:id/file: bubble media for admin and s
 
   it('a bad phone is 400 invalid_phone; a bad message id is 400', async () => {
     expect((await call('sales', `/threads/abc/messages/${M1}/file`)).json()).toMatchObject({ code: 'invalid_phone' });
-    expect((await call('sales', `/threads/${encodeURIComponent(PHONE)}/messages/x/file`)).statusCode).toBe(400);
+    const badId = await call('sales', `/threads/${encodeURIComponent(PHONE)}/messages/x/file`);
+    expect([badId.statusCode, badId.json().code]).toEqual([400, 'validation_failed']);
+    const both = await call('sales', '/threads/abc/messages/x/file?download=1');
+    expect(both.json()).toMatchObject({ code: 'invalid_phone' });
   });
 });

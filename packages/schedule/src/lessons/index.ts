@@ -7,7 +7,6 @@ export * from './proposals/proposals';
 export * from './series/series-days';
 export type * from './overview';
 export * from './teacher-name';
-export type * from './makeup-views';
 export * from './makeup-offer';
 export * from './series/day-times';
 export * from './pick-progress';
