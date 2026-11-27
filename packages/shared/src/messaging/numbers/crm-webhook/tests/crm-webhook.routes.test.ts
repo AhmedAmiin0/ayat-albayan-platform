@@ -28,8 +28,10 @@ describe('crmWebhookRoutes', () => {
   });
 
   it('refuses an answer without its endpoint or with a negative count', () => {
-    const bad = [{}, { data: { ...ANSWER.data, replaced: -1 } }, { data: { ...ANSWER.data, url: 1 } }];
-    for (const answer of bad) expect(routes.register.response.safeParse(answer).success).toBe(false);
+    const negative = { data: { ...ANSWER.data, replaced: -1 } };
+    const bad = [{}, negative, { data: { ...ANSWER.data, url: 1 } }];
+    const refused = bad.filter((answer) => !routes.register.response.safeParse(answer).success);
+    expect(refused).toEqual(bad);
   });
 
   it('names every refusal by its code', () => {
