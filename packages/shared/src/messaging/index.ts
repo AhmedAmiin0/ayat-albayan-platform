@@ -29,6 +29,8 @@ export * from './templates/free-text/free-text';
 export * from './templates/author';
 export * from './templates/teacher-lesson-v3';
 export * from './chat/thread-reopen/thread-reopen';
+export * from './chat/thread-reopen/thread-reopen.schemas';
+export * from './chat/thread-reopen/thread-reopen.routes';
 export * from './chat/ticks';
 export * from './message-actions/whatsapp-send/whatsapp-send';
 export * from './chat/thread-people/thread-people';

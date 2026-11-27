@@ -18075,6 +18075,26 @@
    "required": [
     "phone"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "kapso_reopened": {
+     "type": "boolean"
+    },
+    "template": {
+     "type": "string",
+     "enum": [
+      "window_open",
+      "on_send"
+     ]
+    }
+   },
+   "required": [
+    "kapso_reopened",
+    "template"
+   ]
   }
  },
  "POST /threads/:phone/template": {
