@@ -12,13 +12,13 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: {} }));
 
 const base: ExpenseView = {
-  id: 'e1', month: '2026-09', category: 'ads', amount: 300, currency: 'EGP', note: 'فيسبوك', created_at: '2026-09-02T09:00:00Z',
+  id: '00000000-0000-4000-8000-000000000001', month: '2026-09', category: 'ads', amount: 300, currency: 'EGP', note: 'فيسبوك', created_at: '2026-09-02T09:00:00Z',
   paid_on: '2026-09-02', vendor: 'ميتا', method: null, has_receipt: false, recurring: false, is_draft: false,
 };
 const ROWS = [
   base,
-  { ...base, id: 'e2', category: 'rent', amount: 8000, note: 'المكتب', vendor: null },
-  { ...base, id: 'e3', category: 'tools', amount: 50, note: 'زوم', is_draft: true, recurring: true },
+  { ...base, id: '00000000-0000-4000-8000-000000000002', category: 'rent', amount: 8000, note: 'المكتب', vendor: null },
+  { ...base, id: '00000000-0000-4000-8000-000000000003', category: 'tools', amount: 50, note: 'زوم', is_draft: true, recurring: true },
 ];
 const CATEGORIES = [
   { key: 'ads', label_ar: 'إعلانات', label_en: 'Ads', active: true },

@@ -1240,12 +1240,6 @@
     }
   },
   "src/modules/finance/expenses/expenses.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 8
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -5212,10 +5206,7 @@
   },
   "src/modules/people/teachers/teachers.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/people/teachers/teachers.list.ts": {

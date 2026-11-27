@@ -1391,16 +1391,6 @@
       "count": 1
     }
   },
-  "src/finance/expenses/upload-expense-receipt.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/finance/expenses/use-add-expense.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/finance/finance.en.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -1530,7 +1520,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/finance/shared/receipt-link.ts": {
@@ -3420,14 +3410,6 @@
       "count": 1
     },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/more/teachers/TeacherUsername.tsx": {
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

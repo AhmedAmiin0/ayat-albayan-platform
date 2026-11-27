@@ -69,9 +69,9 @@ export const teacherCreateSchema = z.object({
   tz: timeZone,
 });
 /** `username`: written to the teacher's login profile (docs/30); null clears it. Needs a linked login. */
-export const teacherUpdateSchema = teacherCreateSchema
-  .partial()
-  .extend({ username: username.nullish() });
+export const teacherUpdateSchema = partialOf(teacherCreateSchema).extend({
+  username: username.nullish(),
+});
 
 export type GuardianCreate = z.infer<typeof guardianCreateSchema>;
 export type GuardianUpdate = z.infer<typeof guardianUpdateSchema>;

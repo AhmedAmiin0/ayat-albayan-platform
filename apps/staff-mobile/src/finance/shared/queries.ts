@@ -1,7 +1,6 @@
-import { expenseCategoryCalls } from '@ab/client-core';
+import { expenseCalls, expenseCategoryCalls } from '@ab/client-core';
 import {
   type DashboardResponse,
-  type ExpenseView,
   payoutListSchema,
   type TeacherEarningsSummaryView,
 } from '@ab/money';
@@ -18,10 +17,12 @@ export const usePayouts = (month: string) =>
     queryFn: () => apiFetch(`/payouts?month=${month}`, { schema: payoutListSchema }),
   });
 
+const calls = expenseCalls({ apiFetch, apiSend });
+
 export const useExpenses = (month: string) =>
   useQuery({
     queryKey: listKey('/expenses', { month }),
-    queryFn: () => apiFetch<ExpenseView[]>(`/expenses?month=${month}`),
+    queryFn: () => calls.list({ month }),
   });
 
 const categoryCalls = expenseCategoryCalls({ apiFetch, apiSend });
