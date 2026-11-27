@@ -1,25 +1,9 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '../../core/http';
-import {
-  courseMoveBase,
-  courseMoveErrorCode,
-  courseStopErrorCode,
-  courseStopLessonsText,
-  courseStopPath,
-} from './course-actions';
+import { courseMoveErrorCode, courseStopErrorCode, courseStopLessonsText } from './course-actions';
 
 const fail = (code: unknown) => new ApiError(409, { code });
-
-describe('course actions paths (owner 2026-10-30)', () => {
-  it('builds the profile routes', () => {
-    expect(courseStopPath('s1')).toBe('/students/s1/course-stop');
-    expect(courseMoveBase({ studentId: 's1', kind: 'teacher' })).toBe(
-      '/students/s1/course-teacher',
-    );
-    expect(courseMoveBase({ studentId: 's1', kind: 'times' })).toBe('/students/s1/course-times');
-  });
-});
 
 describe('the stop sheet line (MSA)', () => {
   const words = ar.courseActions.stop.lessons;

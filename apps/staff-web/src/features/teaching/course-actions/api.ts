@@ -31,7 +31,7 @@ const moves = { teacher: teacherMoves, times: courseTimesCalls({ apiFetch, apiSe
 export const courseStopPreviewQuery = (input: Course) =>
   queryOptions({
     queryKey: courseKeys.stopPreview(input),
-    queryFn: () => stops.preview(input),
+    queryFn: () => stops.preview(input.studentId, { subscriptionId: input.subscriptionId }),
   });
 
 export const stopCourse = (studentId: string, body: CourseStopRequest) =>

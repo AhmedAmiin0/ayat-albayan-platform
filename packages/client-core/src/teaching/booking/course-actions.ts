@@ -2,25 +2,9 @@ import type { CourseStopPreview } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
 import { ApiError } from '../../core/http';
 
-// Course actions for web and mobile: API paths, query key and error codes; words are injected.
-
-const student = (studentId: string): string => `/students/${studentId}`;
-
-/** The stop's path, also read without subscriptionId for the current package. */
-export const courseStopPath = (studentId: string): string => `${student(studentId)}/course-stop`;
+// Course actions for web and mobile: query key and error codes; words are injected.
 
 export type CourseMoveKind = 'teacher' | 'times';
-
-interface MoveTarget {
-  studentId: string;
-  kind: CourseMoveKind;
-}
-
-/** A change's base: GET `/change?subscriptionId=`, POST `/change/check` and `/change`. */
-export function courseMoveBase(input: MoveTarget): string {
-  const tail = input.kind === 'teacher' ? 'course-teacher' : 'course-times';
-  return `${student(input.studentId)}/${tail}`;
-}
 
 /** The query key of a student's course actions (invalidate it after a write). */
 export const courseActionsKey = (studentId: string): readonly ['course-actions', string] => [
