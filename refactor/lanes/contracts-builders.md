@@ -18,14 +18,16 @@ A base is a branch that collects the work of several builders and lands on devel
 | 3 | booking | `teaching/booking`, `teaching/scheduling`, `teaching/schedule-notices`, `teaching/course-pause`, `teaching/course-stop` | C1 | `lane/contracts-booking` |
 | 4 | messaging | `messaging/*` | C2 | `lane/contracts-messaging` |
 | 5 | teaching | `teaching/*` except builder 3's five modules | C2 | `lane/contracts-teaching` |
+| 6 | sales | `sales/*` | C2 | `lane/contracts-sales` |
+| 7 | reporting and platform | `reporting/*`, `platform/*` | C2 | `lane/contracts-reporting` |
 
-Not assigned yet: `sales/*`, `reporting/*`, `platform/*` (C2). A builder whose own area has no handler left on plain decorators takes the first of these that no open sub-PR and no sub-branch of another builder touches, on a new sub-branch `lane/contracts-<area>` of the C2 base, and says so in its summary.
+Every API module has a builder. A builder whose own area has no handler left on plain decorators takes the area with the most handlers still on plain decorators that no other builder is working on (no open sub-PR and no sub-branch of another builder touches it), on a new sub-branch `lane/contracts-<area>` of the C2 base, and says so in its summary.
 
 An area is its API modules, their schemas and routes in packages, and the client-core endpoint files and app hooks that call them. A builder never changes a route, schema, controller, endpoint file or hook of another area. In a file two areas share (a package index, a snapshot, a suppressions file) it changes only its own lines. When a route group needs a schema another area owns, it imports it; if that schema does not exist yet, the group waits and the builder names it in its summary.
 
 ## One run
 
-1. **Claim.** Only your own sub-branch and its `wip/` copy count. If either has a newest commit under 100 minutes old whose message lacks the trailer line `Run-State: done`, another run of yours is working: exit. Commits by other builders never stop you.
+1. **Claim.** Only your own sub-branch and its `wip/` copy count. If either has a newest commit under 55 minutes old whose message lacks the trailer line `Run-State: done`, another run of yours is working: exit. A live run pushes at least every 45 minutes, so an older commit without the trailer is a run that stopped early: pick its work up (its `wip/` copies first) and go on. Commits by other builders never stop you.
 2. **Your open sub-PR is red.** A known flake on attempt 1 is rerun once (`gh run rerun <run> --failed`); anything else is found at its root and fixed. No test is weakened, skipped or deleted.
 3. **Your open sub-PR is green: merge it now, in this run.** Do not wait for another CI round and do not require your branch to contain the base's head:
    - `git fetch origin`, check out the base at its newest head, `git merge --no-ff origin/<your sub-branch>`;
@@ -55,6 +57,32 @@ Merges into a base are verified in the session, not by a CI run, so the keeper c
 ## How a route group is done
 
 docs/62 is the spec and the base's own history is the example: a test that pins the routes and the client calls before they exist; then the routes and schemas moved into packages, the controller on `@Route` and `@RouteInput()`, read-route mappers through `asResponse`, the client on `call({ route, … })`; then the lint entries the move freed, pruned. Wire changes are only the rows of docs/62 part 1 §6 marked for the PR the base lands as; anything else is left out and listed in the sub-PR body under «Needs a new go». No new code uses `apiFetch`, `apiSend`, `publicApiFetch` or `publicApiSend` (docs/62 part 3 §3b).
+
+## The shared package's top level is full
+
+`packages/shared/src` holds 13 folders, the most its folder cap allows (`refactor/folder-cap/packages.json`). A fourteenth fails the `refactor` check and costs the sub-PR a run. Put an area's schemas and routes inside the top-level folder that already owns it:
+
+| Area | Folder in `packages/shared/src` |
+|---|---|
+| finance | `finance/` |
+| people | `people/` |
+| booking, scheduling, lessons, classroom, course pause and stop | `schedule/` |
+| feedback, recordings, lesson files, lesson reports | `reports/` |
+| messaging, student channels | `messaging/` |
+| notification rules and push | `notifications/` |
+| sales | `sales/` |
+| platform (settings, translations, google sync, short links) | `settings/`; what is already in `schemas/` stays there |
+
+A new sub-folder inside one of these is fine, within the same cap of 12 code files and 12 sub-folders. Before each push run `node tools/scripts/ci-checks/folder-cap.mjs --strict` in the session, beside the other checks.
+
+## Permissions and tags on the route object
+
+Owner 2026-11-27: each route object carries its permissions and its API tags, and a route with several permissions lets in a caller who has any one of them. The core of it comes in the PR from `feat/route-permissions-tags` into develop. Until that PR is merged, nothing in this section applies.
+
+- **When it is merged:** the keeper of each base merges develop into its base once, in its next run, regenerates as «Generated files» says and verifies. The C2 base takes that one merge too, the only exception to «merges nothing else into it until C1 is on develop».
+- **Every route object you write or touch** after that carries `permissions` (the permission keys of `@ab/catalog`, at least one) and `tags` (the Swagger tag its controller uses today), and its handler loses its own `@Permissions(…)`. A class-level `@Permissions` or `@ApiTags` goes once no handler of that class needs it. `@Public()`, `@SignedIn()`, guards, throttles and `@HttpCode` stay on the handler.
+- **Backfill:** the route objects of your area already on the base get the two fields in your next part, before new route groups.
+- **Proof:** `routes.snap.txt` stays byte-identical. A route whose permission or tag would change is a mistake, not a move.
 
 ## Call files stay plain
 

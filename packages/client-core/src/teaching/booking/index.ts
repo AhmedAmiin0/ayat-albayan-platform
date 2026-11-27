@@ -59,7 +59,9 @@ export {
 } from './course-stop-form';
 export * from './course-card';
 export * from './course-stop-api';
+export * from './schedule-rules-api';
 export * from './course-pause-api';
+export * from './course-change-api';
 export * from './lesson-times';
 export {
   type CourseKey,

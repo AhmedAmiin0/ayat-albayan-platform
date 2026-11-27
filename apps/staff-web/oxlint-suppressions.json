@@ -3129,7 +3129,7 @@
   },
   "src/features/people/teachers/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/people/teachers/availability/AvailabilityDay.tsx": {
@@ -3152,16 +3152,7 @@
     "typescript/consistent-type-definitions": {
       "count": 1
     },
-    "max-lines-per-function": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -3334,14 +3325,6 @@
       "count": 1
     },
     "max-lines-per-function": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    }
-  },
-  "src/features/people/teachers/time-off/TimeOffList.tsx": {
-    "ab/forbidden-imports": {
       "count": 1
     }
   },
@@ -5204,11 +5187,8 @@
     }
   },
   "src/features/teaching/booking/course-change/api.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/teaching/booking/course-change/change-body.ts": {
@@ -5888,7 +5868,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 11
+      "count": 10
     }
   },
   "src/features/teaching/schedule/edit-time/EditTime.captions.test.tsx": {

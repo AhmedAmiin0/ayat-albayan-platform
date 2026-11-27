@@ -1,11 +1,9 @@
-import type { CourseChangeCheck, CourseChangeResult, CourseChangeView } from '@ab/shared';
-import { courseChangeCheckSchema, courseChangeQuerySchema, courseChangeSchema } from '@ab/schedule';
-import { Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { courseChangeRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CourseChange } from './course-change.service';
 import { CourseChangeViews } from './course-change.view';
 
@@ -13,37 +11,33 @@ import { CourseChangeViews } from './course-change.view';
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('lessons.write')
-@Controller('booking/course')
+@Controller()
 export class CourseChangeController {
   constructor(
     private readonly course: CourseChange,
     private readonly views: CourseChangeViews,
   ) {}
 
-  /** 200 CourseChangeView; 404 subscription_not_found / course_not_found; 409 course_finished. */
-  @Get('change')
-  view(
-    @ZodQuery(courseChangeQuerySchema) query: z.output<typeof courseChangeQuerySchema>,
-  ): Promise<CourseChangeView> {
+  @Route(routes.view)
+  view(@RouteInput() { query }: RouteInputOf<typeof routes.view>) {
     return this.views.view(query.subscriptionId);
   }
 
-  /** 200 { conflicts, remaining, endsOn }, nothing written. */
-  @Post('change/check')
+  @Route(routes.check)
   @HttpCode(200)
   check(
-    @ZodBody(courseChangeCheckSchema) body: z.output<typeof courseChangeCheckSchema>,
+    @RouteInput() { body }: RouteInputOf<typeof routes.check>,
     @CurrentUser() user: AuthUser,
-  ): Promise<CourseChangeCheck> {
+  ) {
     return this.course.check(body, { user, role: 'admin' });
   }
 
-  /** 201 CourseChangeResult; codes: CourseChange.change. */
-  @Post('change')
+  /** Codes: CourseChange.change. */
+  @Route(routes.change)
   change(
-    @ZodBody(courseChangeSchema) body: z.output<typeof courseChangeSchema>,
+    @RouteInput() { body }: RouteInputOf<typeof routes.change>,
     @CurrentUser() user: AuthUser,
-  ): Promise<CourseChangeResult> {
+  ) {
     return this.course.change(body, { user, role: 'admin' });
   }
 }
