@@ -1,4 +1,6 @@
-import { LESSON_FILES_KEY, lessonFilesApi, uploadLessonFile, type UploadInput } from '@ab/client-core';
+import {
+  LESSON_FILES_KEY, lessonFilesApi, studentRecordingsApi, uploadLessonFile, type UploadInput,
+} from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Linking } from 'react-native';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
@@ -6,7 +8,9 @@ import { uploadSigned } from '@/core/lib/http/upload-slot';
 
 // Routes and schemas live in @ab/client-core, which the web binds too.
 
-const api = lessonFilesApi({ apiFetch, apiSend });
+const client = { apiFetch, apiSend };
+const api = lessonFilesApi(client);
+const recordings = studentRecordingsApi(client);
 
 // The answer carries 1-hour signed links: `noPersist` keeps them off the disk cache.
 const meta = { noPersist: true };
@@ -24,13 +28,8 @@ export const useFileVisibility = () =>
 
 export const useRemoveFile = () => useMutation({ mutationFn: api.remove, onSuccess: useRefresh() });
 
-/** PATCH /recordings/:id/visibility (recording-visibility.service). */
 export const useRecordingVisibility = () =>
-  useMutation({
-    mutationFn: ({ id, visible }: { id: string; visible: boolean }) =>
-      apiSend('PATCH', `/recordings/${encodeURIComponent(id)}/visibility`, { visible }),
-    onSuccess: useRefresh(),
-  });
+  useMutation({ mutationFn: recordings.setVisible, onSuccess: useRefresh() });
 
 /** A picture or a PDF in the phone's viewer, from a fresh 1-hour link. */
 export const useOpenFile = () =>

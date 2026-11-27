@@ -1,6 +1,9 @@
 export { LESSON_FILES_KEY, lessonFilesApi, type LessonFilesApi } from './lesson-files-api';
 export { portalAssetsApi, type PortalAssetsApi } from './portal-assets-api';
 export {
+  studentRecordingsApi, type StudentRecordingsApi, type StudentRecordingsPageInput,
+} from './student-recordings-api';
+export {
   pickProblem, titleOf, uploadLessonFile,
   type PickedFile, type UploadDeps, type UploadInput, type UploadProblem,
 } from './upload-flow';

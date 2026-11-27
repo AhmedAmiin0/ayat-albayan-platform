@@ -35,7 +35,7 @@ describe('LessonFilesSection', () => {
 
   it('shows the recording to the family through PATCH /recordings/:id/visibility', async () => {
     show();
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue({ id: 'rec-1', visible_to_student: true });
     const boxes = await screen.findAllByRole('checkbox', { name: F.visible });
     fireEvent.click(boxes[0] as HTMLElement);
     await waitFor(() =>

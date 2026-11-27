@@ -1,4 +1,5 @@
-import type { StudentRecordingFilters, StudentRecordingsPage } from '@ab/schedule';
+import { studentRecordingsApi } from '@ab/client-core';
+import type { StudentRecordingFilters } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { recordingKeys } from '@/features/people/keys';
@@ -7,41 +8,36 @@ export const RECORDINGS_KEY = recordingKeys.all;
 
 export const RECORDINGS_PAGE_SIZE = 10;
 
-function queryString(filters: StudentRecordingFilters, page: number, pageSize: number): string {
-  const q = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
-  for (const key of ['from', 'to', 'teacherId', 'status'] as const) if (filters[key]) q.set(key, filters[key]);
-  return q.toString();
-}
+const recordings = studentRecordingsApi({ apiFetch, apiSend });
 
-/** GET /students/:id/recordings (admin, the teacher, an assigned assistant): newest first. */
+/** Admin, the teacher, an assigned assistant: newest first. */
 export const studentRecordingsQuery = (input: {
   studentId: string;
   filters: StudentRecordingFilters;
   page: number;
   pageSize?: number;
-}) =>
-  queryOptions({
-    queryKey: recordingKeys.page({ ...input, pageSize: input.pageSize ?? RECORDINGS_PAGE_SIZE }),
-    queryFn: () =>
-      apiFetch<StudentRecordingsPage>(
-        `/students/${input.studentId}/recordings?${queryString(input.filters, input.page, input.pageSize ?? RECORDINGS_PAGE_SIZE)}`,
-      ),
+}) => {
+  const pageSize = input.pageSize ?? RECORDINGS_PAGE_SIZE;
+  const query = { page: input.page, pageSize, ...input.filters };
+  return queryOptions({
+    queryKey: recordingKeys.page({ ...input, pageSize }),
+    queryFn: () => recordings.list({ studentId: input.studentId, query }),
     placeholderData: keepPreviousData,
     // The signed links last an hour; refetch before they could run out under an open page.
     staleTime: 30 * 60_000,
   });
+};
 
-/** GET /students/:id/recorded-lesson-ids: the lessons with a finished recording (no signed links). */
+/** The lessons with a finished recording (no signed links). */
 export const recordedLessonIdsQuery = (studentId: string) =>
   queryOptions({
     queryKey: recordingKeys.recordedLessonIds(studentId),
-    queryFn: () => apiFetch<string[]>(`/students/${studentId}/recorded-lesson-ids`),
+    queryFn: () => recordings.recordedLessonIds(studentId),
     staleTime: 5 * 60_000,
   });
 
-/** PATCH /recordings/:id/visibility: admin, or the lesson's teacher. */
-export const setRecordingVisible = (input: { id: string; visible: boolean }) =>
-  apiSend<{ id: string; visible_to_student: boolean }>('PATCH', `/recordings/${input.id}/visibility`, { visible: input.visible });
+/** Admin, or the lesson's teacher. */
+export const setRecordingVisible = recordings.setVisible;
 
-/** DELETE /recordings/:id (204): admin only. */
-export const deleteRecording = (id: string) => apiSend('DELETE', `/recordings/${id}`);
+/** Admin only; answers 204. */
+export const deleteRecording = recordings.remove;

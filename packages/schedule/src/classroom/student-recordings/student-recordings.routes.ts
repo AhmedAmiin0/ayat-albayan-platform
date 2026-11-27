@@ -1,4 +1,4 @@
-import { defineRoute, id } from '@ab/core';
+import { defineRoute } from '@ab/core';
 import { z } from 'zod';
 import {
   recordingVisibilityResultSchema,
@@ -7,7 +7,7 @@ import {
   studentRecordingsQuerySchema,
 } from './student-recordings';
 
-const byId = z.object({ id: id() });
+const byId = z.object({ id: z.uuid() });
 
 /** A student's recordings for staff; the services decide per student, DELETE stays admin-only. */
 export const studentRecordingsRoutes = {

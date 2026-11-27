@@ -29,7 +29,7 @@ describe('studentRecordingsRoutes (R-REC)', () => {
     expect(`${route.method} ${route.path}`).toBe(wire);
   });
 
-  it('still answers 400 for an id that is not one, now through the shared id', () => {
+  it('still answers 400 for an id that is not a uuid', () => {
     expect(routes.list.params.safeParse({ id: 'nope' }).success).toBe(false);
     expect(routes.remove.params.parse({ id: ID })).toEqual({ id: ID });
   });
