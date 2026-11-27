@@ -21,8 +21,9 @@ function allowedBefore(access: BeforeAccess, who: Who): boolean {
 
 function allowedAfter(route: RouteAccess, who: Who): boolean {
   if (route.isPublic || route.signedIn) return true;
-  if (who === null || !isPermission(route.permission)) return false;
-  return systemPermissionsOf(who).includes(route.permission);
+  if (who === null) return false;
+  const held = (k: unknown) => isPermission(k) && systemPermissionsOf(who).includes(k);
+  return [route.permission ?? []].flat().some(held);
 }
 
 describe('system-role parity with the old @Roles table', () => {

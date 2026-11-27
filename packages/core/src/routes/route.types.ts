@@ -1,9 +1,15 @@
 import type { z } from 'zod';
 import type { RouteAnswer, RouteMethod } from './route.schemas';
 
+/** A list a route object names at least one entry of, each once. */
+export type RouteList = readonly [string, ...string[]];
+
 /**
- * One API route as both sides read it: method, full path with `:name` params, and the schemas of
- * its inputs and answer. Access rules (permissions, guards, throttles) never live here.
+ * One API route as both sides read it: method, full path with `:name` params, the schemas of its
+ * inputs and answer, the permissions that let a caller in (any one of them), its Swagger tags and
+ * whether it is public (`isPublic`: no sign-in, never beside `permissions`). Guards, throttles,
+ * `@SignedIn` and `@HttpCode` stay on the api handler.
+ * Permission keys are plain strings here; the api's coverage test checks them against the catalog.
  */
 export interface RouteSpec {
   method: RouteMethod;
@@ -12,6 +18,9 @@ export interface RouteSpec {
   query?: z.ZodType<object>;
   body?: z.ZodType;
   response: z.ZodType | RouteAnswer;
+  readonly permissions?: RouteList;
+  readonly tags?: RouteList;
+  readonly isPublic?: true;
 }
 
 export type Route<S extends RouteSpec = RouteSpec> = Readonly<S>;
