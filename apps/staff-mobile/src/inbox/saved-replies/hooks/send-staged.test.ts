@@ -18,7 +18,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 test('staging then sending the file marks a send in that chat', async () => {
   const sends = jest.spyOn(ownSend, 'markOwnSend');
   mockApiSend.mockResolvedValueOnce({ path: 'p/1.pdf', filename: '1.pdf' });
-  mockApiSend.mockResolvedValueOnce(message({ id: 'm-file', status: 'queued' }));
+  mockApiSend.mockResolvedValueOnce(message({ id: 'c1111111-1111-4111-8111-111111111111', status: 'queued' }));
   const wrapper = queryWrapper(createTestQueryClient());
   const { result } = await renderHook(() => useSendStagedFile(PHONE), { wrapper });
   const file = { name: '1.pdf', mime: 'application/pdf', size: 1 } as const;

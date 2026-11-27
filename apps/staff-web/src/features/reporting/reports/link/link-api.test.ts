@@ -47,6 +47,12 @@ describe('the teacher link calls (no session)', () => {
     expect(api.attachments).toBe(true);
   });
 
+  it('refuses a saved report the api answers in a shape the form cannot read', async () => {
+    const bad = { ...reportView(), status: 'sent' };
+    fetchMock.mockImplementation(() => Promise.resolve(new Response(JSON.stringify(bad))));
+    await expect(linkReportApi(TOKEN).saveDraft({ id: 'r-1', body: {} })).rejects.toThrow();
+  });
+
   it('the attachments: remove and open through the token-bound routes, no session', async () => {
     const api = linkReportApi(TOKEN);
     fetchMock.mockImplementation(() => Promise.resolve(new Response(null, { status: 204 })));
@@ -83,7 +89,9 @@ describe('link problems', () => {
 
   it('a refused send says the link expired, else the report error', () => {
     const { errorText } = linkReportApi(TOKEN);
-    expect(errorText(new ApiError(410, { code: 'link_expired' }))).toBe(t.reports.teacherLink.expired);
+    expect(errorText(new ApiError(410, { code: 'link_expired' }))).toBe(
+      t.reports.teacherLink.expired,
+    );
     expect(errorText(new ApiError(429, null))).toBe(t.reports.teacherLink.tooMany);
     const conflict = new ApiError(409, { code: 'version_conflict' });
     expect(errorText(conflict)).toBe(t.reports.error.version_conflict);

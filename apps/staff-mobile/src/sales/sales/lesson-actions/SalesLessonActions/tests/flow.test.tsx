@@ -61,7 +61,7 @@ test('another family\'s lesson (owner 2026-10-28): both actions, no «للاطل
 });
 
 test('cancel without a reason posts {} to her route; the lesson reads cancelled', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l2', status: 'cancelled_by_admin' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', status: 'cancelled_by_admin' });
   await open('سلمى');
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
   expect(screen.getByText(a.cancelTitle)).toBeTruthy();
@@ -84,7 +84,7 @@ test('while the cancel form is open «تأكيد الحلقة» is hidden: «ت�
 });
 
 test('a typed reason is sent trimmed', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l2', status: 'cancelled_by_admin' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', status: 'cancelled_by_admin' });
   await open('سلمى');
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
   await fireEvent.changeText(screen.getByLabelText(a.reason), '  سفر الأسرة ');
@@ -93,7 +93,7 @@ test('a typed reason is sent trimmed', async () => {
 });
 
 test('reschedule: her scoped slots, one lesson only, then the admin\'s success panel', async () => {
-  mockApiSend.mockResolvedValue({ id: 'new', starts_at: SAT_17, status: 'scheduled' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', starts_at: SAT_17, status: 'scheduled' });
   await open('سلمى');
   await fireEvent.press(screen.getByRole('button', { name: a.reschedule }));
   await fireEvent.press(await screen.findByRole('radio', { name: '17:00' }));
@@ -105,7 +105,7 @@ test('reschedule: her scoped slots, one lesson only, then the admin\'s success p
 });
 
 test('«تم» after a move closes «تفاصيل الحلقة» too: no old time with live actions left behind', async () => {
-  mockApiSend.mockResolvedValue({ id: 'new', starts_at: SAT_17, status: 'scheduled' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', starts_at: SAT_17, status: 'scheduled' });
   await open('سلمى');
   await fireEvent.press(screen.getByRole('button', { name: a.reschedule }));
   await fireEvent.press(await screen.findByRole('radio', { name: '17:00' }));

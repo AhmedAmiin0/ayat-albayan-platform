@@ -1,26 +1,17 @@
-import type { Page } from '@ab/core';
-import type { LessonView } from '@ab/schedule';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { Permissions } from '@/common/auth/decorators';
-import { pageQuerySchema } from '@/common/http/http';
-import { ZodQuery } from '@/common/http/zod-inputs';
+import { studentLessonRoutes as routes } from '@ab/schedule';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { LessonViews } from './store/lesson-views';
 
 /** GET /students/:id/lessons — newest first with the lesson number (R-LES-03). Admin only. */
-@ApiTags('students')
 @ApiBearerAuth()
-@Permissions('students.read')
-@Controller('students/:id/lessons')
+@Controller()
 export class StudentLessonsController {
   constructor(private readonly views: LessonViews) {}
 
-  @Get()
-  list(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodQuery(pageQuerySchema) page: z.output<typeof pageQuerySchema>,
-  ): Promise<Page<LessonView>> {
-    return this.views.student(id, page);
+  @Route(routes.list)
+  list(@RouteInput() { params, query }: RouteInputOf<typeof routes.list>) {
+    return this.views.student(params.id, query);
   }
 }
