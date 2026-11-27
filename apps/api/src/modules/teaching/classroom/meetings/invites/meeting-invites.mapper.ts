@@ -56,8 +56,16 @@ export const toInviteeView = (r: InviteeRow): MeetingInviteeView =>
   });
 
 const inviteeOptionsSchema = z.array(meetingInviteeOptionSchema);
-type StaffPick = { id: string; full_name: string; role: string };
-type StudentPick = { id: string; name: string; code: string | null };
+interface StaffPick {
+  id: string;
+  full_name: string;
+  role: string;
+}
+interface StudentPick {
+  id: string;
+  name: string;
+  code: string | null;
+}
 
 const staffOption = (s: StaffPick) => ({
   kind: 'staff' as const,
