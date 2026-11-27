@@ -5865,9 +5865,6 @@
     }
   },
   "src/modules/reporting/exports/exports.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     },
@@ -5907,12 +5904,6 @@
   "src/modules/reporting/exports/finance-exports.controller.ts": {
     "ab/module-boundaries": {
       "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 1
     }
   },
   "src/modules/reporting/exports/finance-exports.queries.ts": {
