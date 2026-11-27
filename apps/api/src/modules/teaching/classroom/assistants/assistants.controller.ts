@@ -1,15 +1,13 @@
 import { assistantsRoutes as routes } from '@ab/schedule';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { AssistantsService } from './assistants.service';
 
 /** The admin assigns assistants per student; an assistant reads only their own sessions. */
-@ApiTags('classroom')
 @ApiBearerAuth()
-@Permissions('assistants.read')
 @Controller()
 export class AssistantsController {
   constructor(private readonly assistants: AssistantsService) {}
@@ -21,7 +19,6 @@ export class AssistantsController {
   }
 
   @Route(routes.mine)
-  @Permissions('self.assistant')
   mine(
     @RouteInput() { query }: RouteInputOf<typeof routes.mine>,
     @CurrentUser() user: AuthUser,
@@ -36,7 +33,6 @@ export class AssistantsController {
 
   @Route(routes.assign)
   @HttpCode(200)
-  @Permissions('assistants.write')
   assign(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.assign>,
     @CurrentUser() user: AuthUser,
@@ -46,7 +42,6 @@ export class AssistantsController {
   }
 
   @Route(routes.remove)
-  @Permissions('assistants.write')
   remove(@RouteInput() { params }: RouteInputOf<typeof routes.remove>) {
     return this.assistants.remove(params.id, params.profileId);
   }
