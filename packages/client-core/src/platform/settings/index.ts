@@ -20,3 +20,4 @@ export type {
   MaintenanceView,
   MaintenanceViewer,
 } from './maintenance';
+export { settingsMetaCalls, type SettingsMetaCalls } from './meta';

@@ -3908,11 +3908,6 @@
       "count": 1
     }
   },
-  "src/features/platform/settings/settings-meta-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/features/platform/settings/values/GroupNav.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
