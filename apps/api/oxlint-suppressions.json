@@ -5266,14 +5266,6 @@
       "count": 1
     }
   },
-  "src/modules/people/users/users.controller.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/zod-inputs": {
-      "count": 7
-    }
-  },
   "src/modules/people/users/users.fakes.ts": {
     "stylistic/max-len": {
       "count": 1

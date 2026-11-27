@@ -7,7 +7,8 @@ import { isFamilyEmail } from './sign-in';
 // Passwords are never part of a view or a log.
 
 export const USER_STATUSES = ['active', 'disabled'] as const;
-export type UserStatus = (typeof USER_STATUSES)[number];
+export const userStatusSchema = z.enum(USER_STATUSES);
+export type UserStatus = z.infer<typeof userStatusSchema>;
 
 /** set = the admin types it; generate = the API makes one, shown once; link = recovery link, shown once. */
 export const CREDENTIAL_MODES = ['set', 'generate', 'link'] as const;
@@ -29,7 +30,7 @@ export const usersListQuery = z.object({
   ...pageQuery({ size: 25 }),
   q: z.preprocess(blank, z.string().trim().max(100).optional()),
   role: z.preprocess(blank, z.enum(USER_ROLES).optional()),
-  status: z.preprocess(blank, z.enum(USER_STATUSES).optional()),
+  status: z.preprocess(blank, userStatusSchema.optional()),
 });
 export type UsersListQuery = z.output<typeof usersListQuery>;
 

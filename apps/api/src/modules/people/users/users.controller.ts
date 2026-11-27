@@ -1,43 +1,24 @@
 import {
-  linkCandidatesQuery,
-  passwordResetSchema,
-  userCreateSchema,
-  userDisableSchema,
-  userUpdateSchema,
-  usersListQuery,
+  usersRoutes as routes,
   type LinkCandidate,
   type UserDetail,
   type UserPage,
   type UserRoleOption,
   type UserWithCredential,
 } from '@ab/shared';
-import {
-  Controller,
-  Delete,
-  Get,
-  Header,
-  HttpCode,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { z } from 'zod';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller, Header, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { UsersCreateService } from './lifecycle/users.create.service';
 import { UsersLifecycleService } from './lifecycle/users.lifecycle.service';
 import { actorOf, UsersService } from './users.service';
 import { UsersUpdateService } from './update/users.update.service';
 
-const uuid = new ParseUUIDPipe();
-
 /** Secrets appear only in the response of create or reset-password. */
-@ApiTags('users')
 @ApiBearerAuth()
-@Controller('users')
+@Controller()
 export class UsersController {
   constructor(
     private readonly users: UsersService,
@@ -46,101 +27,94 @@ export class UsersController {
     private readonly lifecycle: UsersLifecycleService,
   ) {}
 
-  @Get()
-  @Permissions('users.read')
-  list(@ZodQuery(usersListQuery) query: z.output<typeof usersListQuery>): Promise<UserPage> {
+  @Route(routes.list)
+  list(@RouteInput() { query }: RouteInputOf<typeof routes.list>): Promise<UserPage> {
     return this.users.list(query);
   }
 
-  /** System and custom roles; `assignable` = the caller holds every grant of the role. */
-  @Get('role-options')
-  @Permissions('users.read')
+  @Route(routes.roleOptions)
   roleOptions(@CurrentUser() user: AuthUser): Promise<UserRoleOption[]> {
     return this.users.roleOptions(actorOf(user));
   }
 
-  /** Teachers / students / guardians without a login, for the "link to" pickers (teachers.write / students.write / guardians.write of the kind). */
-  @Get('link-candidates')
-  @Permissions('users.write')
+  @Route(routes.linkCandidates)
   candidates(
-    @ZodQuery(linkCandidatesQuery) query: z.output<typeof linkCandidatesQuery>,
+    @RouteInput() { query }: RouteInputOf<typeof routes.linkCandidates>,
     @CurrentUser() user: AuthUser,
   ): Promise<LinkCandidate[]> {
     return this.users.candidates(query, actorOf(user));
   }
 
-  @Get(':id')
-  @Permissions('users.read')
-  read(@Param('id', uuid) id: string): Promise<UserDetail> {
-    return this.users.get(id);
+  @Route(routes.read)
+  read(@RouteInput() { params }: RouteInputOf<typeof routes.read>): Promise<UserDetail> {
+    return this.users.get(params.id);
   }
 
-  /** 409 email_taken / link_taken, 403 permission_not_held, 400 password_* / link_target_not_found. */
-  @Post()
-  @Permissions('users.write')
+  @Route(routes.create)
   @Header('Cache-Control', 'no-store')
   create(
-    @ZodBody(userCreateSchema) body: z.output<typeof userCreateSchema>,
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
     @CurrentUser() user: AuthUser,
   ): Promise<UserWithCredential> {
     return this.creator.create(body, actorOf(user));
   }
 
-  /** 403 permission_not_held / system_admin_only / admin_role_only, 409 role_change_linked / last_admin / self_lockout / email_taken / phone_taken / link_taken, 400 link_not_allowed / link_target_not_found. */
-  @Patch(':id')
-  @Permissions('users.write')
+  /**
+   * 403 permission_not_held / system_admin_only / admin_role_only, 409 role_change_linked /
+   * last_admin / self_lockout / email_taken / phone_taken / link_taken, 400 link_not_allowed /
+   * link_target_not_found.
+   */
+  @Route(routes.update)
   update(
-    @Param('id', uuid) id: string,
-    @ZodBody(userUpdateSchema) body: z.output<typeof userUpdateSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.update>,
     @CurrentUser() user: AuthUser,
   ): Promise<UserDetail> {
-    return this.updater.update(id, body, actorOf(user));
+    return this.updater.update(params.id, body, actorOf(user));
   }
 
-  /** 409 cannot_disable_self / last_admin. Also bans the login and revokes its sessions. */
-  @Post(':id/disable')
+  @Route(routes.disable)
   @HttpCode(200)
-  @Permissions('users.write')
   disable(
-    @Param('id', uuid) id: string,
-    @ZodBody(userDisableSchema, { orEmpty: true }) body: z.output<typeof userDisableSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.disable>,
     @CurrentUser() user: AuthUser,
   ): Promise<UserDetail> {
-    return this.lifecycle.disable(id, body, actorOf(user));
+    return this.lifecycle.disable(params.id, body, actorOf(user));
   }
 
-  /** 409 self_lockout (nobody re-enables themselves). */
-  @Post(':id/enable')
+  @Route(routes.enable)
   @HttpCode(200)
-  @Permissions('users.write')
-  enable(@Param('id', uuid) id: string, @CurrentUser() user: AuthUser): Promise<UserDetail> {
-    return this.lifecycle.enable(id, actorOf(user));
+  enable(
+    @RouteInput() { params }: RouteInputOf<typeof routes.enable>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<UserDetail> {
+    return this.lifecycle.enable(params.id, actorOf(user));
   }
 
-  @Post(':id/reset-password')
+  @Route(routes.resetPassword)
   @HttpCode(200)
-  @Permissions('users.write')
   @Header('Cache-Control', 'no-store')
   resetPassword(
-    @Param('id', uuid) id: string,
-    @ZodBody(passwordResetSchema, { orEmpty: true }) body: z.output<typeof passwordResetSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.resetPassword>,
     @CurrentUser() user: AuthUser,
   ): Promise<UserWithCredential> {
-    return this.lifecycle.resetPassword(id, body, actorOf(user));
+    return this.lifecycle.resetPassword(params.id, body, actorOf(user));
   }
 
-  @Post(':id/sign-out')
+  @Route(routes.signOut)
   @HttpCode(204)
-  @Permissions('users.write')
-  signOut(@Param('id', uuid) id: string, @CurrentUser() user: AuthUser): Promise<void> {
-    return this.lifecycle.signOut(id, actorOf(user));
+  signOut(
+    @RouteInput() { params }: RouteInputOf<typeof routes.signOut>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    return this.lifecycle.signOut(params.id, actorOf(user));
   }
 
-  /** 409 cannot_delete_self / last_admin / users_has_history {references, hint}. */
-  @Delete(':id')
+  @Route(routes.remove)
   @HttpCode(204)
-  @Permissions('users.write')
-  remove(@Param('id', uuid) id: string, @CurrentUser() user: AuthUser): Promise<void> {
-    return this.lifecycle.remove(id, actorOf(user));
+  remove(
+    @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    return this.lifecycle.remove(params.id, actorOf(user));
   }
 }

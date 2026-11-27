@@ -3369,11 +3369,6 @@
       "count": 1
     }
   },
-  "src/features/people/users/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 9
-    }
-  },
   "src/features/people/users/create/CreateUserDialog.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1

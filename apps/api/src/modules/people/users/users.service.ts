@@ -1,13 +1,17 @@
-import type {
-  LinkCandidate,
-  LinkKind,
-  UserDetail,
-  UserPage,
-  UserRoleOption,
-  UsersListQuery,
+import {
+  linkedRecordSchema,
+  userRoleOptionSchema,
+  type LinkCandidate,
+  type LinkKind,
+  type UserDetail,
+  type UserPage,
+  type UserRoleOption,
+  type UsersListQuery,
 } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
+import { z } from 'zod';
 import { notFound } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
 import { UserAccess } from './users.access';
 import { toUserDetail, toUserView } from './users.mapper';
@@ -32,7 +36,7 @@ export class UsersService {
   async list(query: UsersListQuery): Promise<UserPage> {
     const { rows, total } = await this.store.list(query);
     const photos = await this.photos.ofProfiles(rows.map((r) => r.id));
-    const items = rows.map((r) => ({ ...toUserView(r), avatar_url: photos.get(r.id) ?? null }));
+    const items = rows.map((r) => toUserView(r, photos.get(r.id) ?? null));
     return { items, total, page: query.page, pageSize: query.pageSize };
   }
 
@@ -43,21 +47,22 @@ export class UsersService {
   /** The row with its signed photo. */
   async detail(row: UserRow): Promise<UserDetail> {
     const photos = await this.photos.ofProfiles([row.id]);
-    return { ...toUserDetail(row), avatar_url: photos.get(row.id) ?? null };
+    return toUserDetail(row, photos.get(row.id) ?? null);
   }
 
   /** 403 permission_not_held unless the actor holds that table's write permission (students.write…). */
-  candidates(
+  async candidates(
     input: { kind: LinkKind; q?: string | undefined },
     actor: Actor,
   ): Promise<LinkCandidate[]> {
     assertMayList(actor, input.kind);
-    return this.store.candidates(input.kind, input.q);
+    const found = await this.store.candidates(input.kind, input.q);
+    return asResponse(z.array(linkedRecordSchema), found);
   }
 
   async roleOptions(actor: Actor): Promise<UserRoleOption[]> {
     const state = await this.access.state();
-    return state.roles.map((r) => ({
+    const options = state.roles.map((r) => ({
       id: r.id,
       key: r.key,
       name_ar: r.name_ar,
@@ -66,6 +71,7 @@ export class UsersService {
       is_system: r.is_system,
       assignable: canAssign(actor, state, r),
     }));
+    return asResponse(z.array(userRoleOptionSchema), options);
   }
 
   /** 404 user_not_found. */

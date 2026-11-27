@@ -5793,14 +5793,6 @@
       "count": 1
     }
   },
-  "src/users/shared/api.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 8
-    }
-  },
   "src/users/shared/errors.ts": {
     "stylistic/max-len": {
       "count": 1
