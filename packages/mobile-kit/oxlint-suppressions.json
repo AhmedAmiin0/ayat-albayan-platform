@@ -346,7 +346,7 @@
   },
   "src/ui/feedback/StatusChip/StatusChip.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/ui/form/Field/Field.tsx": {

@@ -1,15 +1,7 @@
-import type { ReactNode } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { shape, useTheme } from '../../../theme';
-
-interface MenuSheetProps {
-  open: boolean;
-  label: string;
-  testID: string;
-  onClose: () => void;
-  children: ReactNode;
-}
+import type { MenuSheetProps } from './MenuSheet.types';
 
 /** A tap outside closes it; screen readers get a cancel after the rows. */
 export function MenuSheet({ open, label, testID, onClose, children }: MenuSheetProps) {

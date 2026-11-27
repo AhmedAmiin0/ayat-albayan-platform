@@ -1,28 +1,10 @@
-import type { Ref } from 'react';
 import { View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { shape, type, useTheme } from '../../../theme';
 import { ButtonRow } from '../../layout/ButtonRow';
 import { AppText } from '../../primitives/AppText';
 import { Button } from '../../primitives/Button';
-
-interface InlineConfirmProps {
-  message: string;
-  /** Named by its verb; defaults to confirm. */
-  confirmLabel?: string;
-  cancelLabel?: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-  /** While the confirm request runs; pass the confirm label that says so. */
-  busy?: boolean;
-  /**
-   * «danger»: the confirm cancels or deletes something, so it is the outlined danger, not green.
-   * «secondary»: a filled button already leads the section, so the confirm is outlined.
-   */
-  tone?: 'danger' | 'secondary';
-  /** The confirm button, e.g. to move screen-reader focus to it on open. */
-  confirmRef?: Ref<View>;
-}
+import type { InlineConfirmProps } from './InlineConfirm.types';
 
 /** docs/07 §9 and §6: one ButtonRow, confirm first; they stack when they do not fit. */
 export function InlineConfirm(props: InlineConfirmProps) {

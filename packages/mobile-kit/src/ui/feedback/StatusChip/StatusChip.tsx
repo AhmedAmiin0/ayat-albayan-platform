@@ -1,34 +1,9 @@
-import type { Glyph, Tone } from '@ab/money';
 import { View } from 'react-native';
-import { type Palette, shape, type, useTheme } from '../../../theme';
+import { shape, type, useTheme } from '../../../theme';
 import { NuqtaGlyph } from '../../primitives/NuqtaGlyph';
 import { AppText } from '../../primitives/AppText';
-
-/**
- * Foreground + soft background per tone (docs/07 §6). There is no neutral ink: it is ink-2. An unknown tone
- * (a status newer than this bundle, e.g. 'cancelled' on an old OTA) is neutral instead of a crash.
- */
-export function toneColors(color: Palette, tone: Tone): { fg: string; bg: string } {
-  switch (tone) {
-    case 'ok':
-      return { fg: color.ok, bg: color.okSoft };
-    case 'act':
-      return { fg: color.act, bg: color.actSoft };
-    case 'bad':
-      return { fg: color.bad, bg: color.badSoft };
-    case 'neutral':
-    default:
-      return { fg: color.ink2, bg: color.neutralSoft };
-  }
-}
-
-export interface StatusChipProps {
-  tone: Tone;
-  glyph: Glyph;
-  /** The ar.json word, e.g. t.enums.leadStatus[status]. Always shown. */
-  label: string;
-  size?: 'md' | 'sm';
-}
+import type { StatusChipProps } from './StatusChip.types';
+import { toneColors } from './status-chip.helpers';
 
 /** Status is glyph, word and tone (never colour alone); saffron comes only from the maps. */
 export function StatusChip({ tone, glyph, label, size = 'md' }: StatusChipProps) {
