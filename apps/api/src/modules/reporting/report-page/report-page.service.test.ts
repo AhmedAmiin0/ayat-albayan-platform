@@ -87,3 +87,13 @@ describe('ReportPageService.signedIn — the live page for a reader', () => {
     expect(storage.signedDownload).not.toHaveBeenCalled();
   });
 });
+
+describe('ReportPageService answers', () => {
+  it('a page whose signed file link is not a url is 500 response_invalid', async () => {
+    const { service, storage } = setup();
+    storage.signedDownloads.mockResolvedValueOnce(new Map([['r/a.pdf', 'r/a.pdf']]));
+    await expect(
+      service.signedIn({ by: 'public', value: PUBLIC_ID }, user('admin')),
+    ).rejects.toMatchObject({ message: 'response_invalid' });
+  });
+});

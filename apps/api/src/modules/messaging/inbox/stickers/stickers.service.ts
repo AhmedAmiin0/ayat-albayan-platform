@@ -1,4 +1,9 @@
-import { stickerKey, type StickerList, type ThreadStickerSend } from '@ab/shared';
+import {
+  stickerKey,
+  stickerListSchema,
+  type StickerList,
+  type ThreadStickerSend,
+} from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ForwardFiles } from '@/modules/messaging/inbox/files/forward-files';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
@@ -8,6 +13,7 @@ import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { favouriteItems, recentItems } from './sticker-rows';
 import { StickerRepo, type StickerRow } from './sticker.repo';
 import { httpError } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 
 interface FavouriteInput {
   profileId: string;
@@ -40,10 +46,10 @@ export class StickersService {
       this.repo.recent(),
     ]);
     const rows = await this.repo.messages(favourites.map((f) => f.message_id));
-    return {
+    return asResponse(stickerListSchema, {
       favourites: favouriteItems(favourites, { rows, now }),
       recent: recentItems(recent, now),
-    };
+    });
   }
 
   async favourite(input: FavouriteInput): Promise<void> {

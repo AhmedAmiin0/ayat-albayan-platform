@@ -41,4 +41,9 @@ describe('threadForwardRoutes', () => {
     const { results } = routes.forward.response.parse({ results: [replayed] });
     expect(results[0]).not.toHaveProperty('replayed');
   });
+
+  it('lets inbox.send in on every route and tags each inbox', () => {
+    const access = Object.values(routes).map((r) => [r.permissions, r.tags]);
+    expect(access).toEqual(Object.values(routes).map(() => [['inbox.send'], ['inbox']]));
+  });
 });

@@ -74,6 +74,6 @@ describe('TranslationsPage «الترجمات»', () => {
     expect(dialog.getAllByRole('button', { name: t.translations.restore })).toHaveLength(1);
     fireEvent.click(dialog.getByRole('button', { name: t.translations.restore }));
     await screen.findByText(t.translations.restored);
-    expect(apiSend).toHaveBeenCalledWith('DELETE', '/i18n/ar/nav.leads');
+    expect(apiSend).toHaveBeenCalledWith('DELETE', '/i18n/ar/nav.leads', undefined);
   });
 });

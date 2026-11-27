@@ -1998,10 +1998,10 @@
   },
   "src/features/messaging/messaging/api.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/messaging/gate-api.ts": {
@@ -4209,11 +4209,6 @@
       "count": 1
     }
   },
-  "src/features/platform/translations/translations.api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/features/reporting/activity/ActivityPage.tsx": {
     "stylistic/max-len": {
       "count": 3
@@ -5593,7 +5588,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/teaching/classroom/sessions/AdminSessions.tsx": {
@@ -5809,9 +5804,6 @@
   "src/features/teaching/meetings/internal/internal-api.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
     }
   },
   "src/features/teaching/meetings/invitees/InviteeSearch.tsx": {
@@ -5840,10 +5832,7 @@
   },
   "src/features/teaching/meetings/invitees/meeting-invites-api.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 1
     }
   },
   "src/features/teaching/meetings/rows/MeetingRow.tsx": {

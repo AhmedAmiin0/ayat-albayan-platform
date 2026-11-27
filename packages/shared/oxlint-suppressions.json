@@ -48,11 +48,6 @@
       "count": 7
     }
   },
-  "src/messaging/chat/line-views.ts": {
-    "stylistic/max-len": {
-      "count": 8
-    }
-  },
   "src/messaging/chat/linkify.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -661,9 +656,6 @@
   },
   "src/sales/teacher/teacher-overview.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },

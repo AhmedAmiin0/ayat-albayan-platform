@@ -21,8 +21,8 @@ beforeEach(() => {
 describe('invite_limit from the trigger (R-MEET-02)', () => {
   it('two invitees, the second hits the cap: both answered, the second failed with its link, none left pending', async () => {
     s.m.threads.enqueue.mockResolvedValueOnce({ id: 'm1' }).mockRejectedValueOnce(LIMIT);
-    const body = { invitees: [{ kind: 'student', studentId: STUDENT_A }, { kind: 'student', studentId: STUDENT_B }] };
-    const [a, b] = await s.invites.add({ user: TEACHER, id: MEETING_ID, body }, NOW);
+    const body = { invitees: [{ kind: 'student' as const, studentId: STUDENT_A }, { kind: 'student' as const, studentId: STUDENT_B }] };
+    const [a, b] = await s.invites.add({ user: TEACHER, id: MEETING_ID, ...body }, NOW);
     expect(a).toMatchObject({ status: 'sent', channel: 'whatsapp' });
     expect(a?.link).toMatch(/\/m\//);
     expect(b).toMatchObject({ status: 'failed', channel: 'link', error_code: 'invite_limit' });
@@ -37,7 +37,7 @@ describe('invite_limit from the trigger (R-MEET-02)', () => {
     const fam = stored({ meeting_id: MEETING_ID, kind: 'phone', phone_e164: OPEN_PHONE, display_name: OPEN_PHONE, channel: 'whatsapp', status: 'sent' });
     s.m.invitees.byId.mockResolvedValue(fam);
     s.m.threads.enqueue.mockRejectedValue(LIMIT);
-    const r = await s.invites.resend({ user: ADMIN, id: MEETING_ID, inviteeId: fam.id, body: { clientRequestId: REQ } }, NOW);
+    const r = await s.invites.resend({ user: ADMIN, id: MEETING_ID, inviteeId: fam.id, clientRequestId: REQ }, NOW);
     expect(r).toMatchObject({ status: 'failed', error_code: 'invite_limit' });
     expect(r.link).toMatch(/\/m\//);
     expect(s.m.invitees.update).toHaveBeenCalledWith(fam.id, expect.objectContaining({ token_hash: expect.any(String) }));

@@ -1,8 +1,12 @@
-import { threadForwardRoutes as routes, type ForwardResponse, type ForwardResult } from '@ab/shared';
+import {
+  threadForwardRoutes as routes,
+  type ForwardResponse,
+  type ForwardResult,
+} from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import type { SalesScope } from '@/modules/sales/sales';
@@ -46,9 +50,7 @@ interface Forwarded {
 }
 
 /** Copies one message to 1-5 chats via the send path; audited once per forward. */
-@ApiTags('inbox')
 @ApiBearerAuth()
-@Permissions('inbox.read')
 @Controller()
 export class ThreadForwardController {
   constructor(
@@ -59,7 +61,6 @@ export class ThreadForwardController {
 
   @Route(routes.forward)
   @HttpCode(201)
-  @Permissions('inbox.send')
   async forward(
     @RouteInput() { body }: RouteInputOf<typeof routes.forward>,
     @CurrentUser() user: AuthUser,

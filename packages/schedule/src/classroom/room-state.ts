@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { JOIN_ROLES } from './room';
 
 // Live room state from LiveKit join/leave webhooks plus lessons.room_ended_at.
 
@@ -28,6 +29,21 @@ export type LessonRoomState = z.infer<typeof lessonRoomStateSchema>;
 /** POST /lessons/:id/end: when the lesson was ended for everyone (the first call's time). */
 export const lessonEndResultSchema = z.object({ endedAt: z.string() });
 export type LessonEndResult = z.infer<typeof lessonEndResultSchema>;
+
+export const joinRoleSchema = z.enum(JOIN_ROLES);
+
+/** POST /lessons/:id/room/join and the meeting joins: all the web room needs. */
+export const roomJoinResultSchema = z.object({
+  url: z.string(),
+  token: z.string(),
+  room: z.string(),
+  role: joinRoleSchema,
+  /** 'off': recording is not set up, so this room is not recorded (the admin is warned). */
+  recording: z.enum(['on', 'off']).optional(),
+  /** false: a trial lesson: no text chat between the family and the teacher. */
+  chat: z.boolean().optional(),
+});
+export type RoomJoinResult = z.infer<typeof roomJoinResultSchema>;
 
 /** A lesson whose room was ended for everyone: no join or rejoin. */
 export const roomEnded = (lesson: { room_ended_at?: string | null | undefined }): boolean =>

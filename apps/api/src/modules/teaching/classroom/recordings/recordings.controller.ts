@@ -1,16 +1,14 @@
 import { roomModerationRoutes as routes } from '@ab/schedule';
 import { Controller } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { MeetingRecordingListService } from './recording-list.service';
 import { RecordingStarter } from './recording.starter';
 
 /** Recordings of an internal meeting: the admin and the creator; 1-hour links to finished files. */
-@ApiTags('classroom')
 @ApiBearerAuth()
-@Permissions('meetings.read')
 @Controller()
 export class MeetingRecordingsController {
   constructor(private readonly recordings: MeetingRecordingListService) {}
@@ -26,9 +24,7 @@ export class MeetingRecordingsController {
 }
 
 /** Whether rooms can be recorded at all, so the panels can warn that recording is disabled. */
-@ApiTags('classroom')
 @ApiBearerAuth()
-@Permissions('meetings.read')
 @Controller()
 export class RecordingStatusController {
   constructor(private readonly starter: RecordingStarter) {}

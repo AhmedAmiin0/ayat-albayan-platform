@@ -3,7 +3,10 @@ import {
   MEETING_INVITE_CHANNELS,
   MEETING_INVITE_STATUSES,
   MEETING_INVITEE_KINDS,
+  meetingInviteeOptionSchema,
+  meetingInviteeViewSchema,
   meetingState,
+  meetingViewSchema,
   meetingWindow,
   type JoinWindowConfig,
   type MeetingInviteChannel,
@@ -13,7 +16,9 @@ import {
   type MeetingView,
   type MyMeetingInvite,
 } from '@ab/schedule';
+import { z } from 'zod';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { asResponse } from '@/common/http/returns';
 import type { MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { canManageMeeting } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 
@@ -39,15 +44,51 @@ export interface InviteeRow {
   sent_at: string | null;
 }
 
-export const toInviteeView = (r: InviteeRow): MeetingInviteeView => ({
-  id: r.id,
-  kind: asInviteKind(r.kind),
-  display_name: r.display_name,
-  channel: asInviteChannel(r.channel),
-  status: asInviteStatus(r.status),
-  error_code: r.error_code,
-  sent_at: r.sent_at,
+export const toInviteeView = (r: InviteeRow): MeetingInviteeView =>
+  asResponse(meetingInviteeViewSchema, {
+    id: r.id,
+    kind: asInviteKind(r.kind),
+    display_name: r.display_name,
+    channel: asInviteChannel(r.channel),
+    status: asInviteStatus(r.status),
+    error_code: r.error_code,
+    sent_at: r.sent_at,
+  });
+
+const inviteeOptionsSchema = z.array(meetingInviteeOptionSchema);
+interface StaffPick {
+  id: string;
+  full_name: string;
+  role: string;
+}
+interface StudentPick {
+  id: string;
+  name: string;
+  code: string | null;
+}
+
+const staffOption = (s: StaffPick) => ({
+  kind: 'staff' as const,
+  id: s.id,
+  name: s.full_name,
+  role: s.role,
 });
+const studentOption = (s: StudentPick) => ({
+  kind: 'student' as const,
+  id: s.id,
+  name: s.name,
+  code: s.code ?? '',
+});
+
+/** Staff first, then students; a student without a code shows an empty one. Never a phone. */
+export const toInviteeOptions = (picks: {
+  staff: readonly StaffPick[];
+  students: readonly StudentPick[];
+}) =>
+  asResponse(inviteeOptionsSchema, [
+    ...picks.staff.map(staffOption),
+    ...picks.students.map(studentOption),
+  ]);
 
 interface ViewContext {
   user: Pick<AuthUser, 'id' | 'role'>;
@@ -58,7 +99,7 @@ interface ViewContext {
 }
 
 export function toMeetingView(r: MeetingRow, ctx: ViewContext): MeetingView {
-  return {
+  return asResponse(meetingViewSchema, {
     id: r.id,
     title: r.title,
     created_by: r.created_by,
@@ -73,7 +114,7 @@ export function toMeetingView(r: MeetingRow, ctx: ViewContext): MeetingView {
     invitees_count: ctx.counts.get(r.id) ?? 0,
     my_invite: ctx.mine.get(r.id) ?? null,
     can_manage: canManageMeeting(ctx.user, r),
-  };
+  });
 }
 
 const LIST_MAX = 30;

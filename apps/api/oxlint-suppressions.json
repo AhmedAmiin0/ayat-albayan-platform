@@ -2806,7 +2806,7 @@
   },
   "src/modules/messaging/inbox/stickers/stickers.controller.ts": {
     "ab/zod-inputs": {
-      "count": 7
+      "count": 4
     }
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.ts": {
@@ -5771,10 +5771,7 @@
   },
   "src/modules/platform/translations/translations.controller.ts": {
     "ab/zod-inputs": {
-      "count": 5
-    },
-    "typescript/dot-notation": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/platform/translations/translations.http.test.ts": {
@@ -6610,14 +6607,6 @@
   "src/modules/sales/sales-students/shared/sales-student.repo.ts": {
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/modules/sales/sales-students/teachers/sales-teacher-overview.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/modules/sales/sales-students/teachers/sales-teacher-overview.fakes.ts": {
@@ -7698,21 +7687,13 @@
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.controller.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/zod-inputs": {
-      "count": 9
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.fakes.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/modules/teaching/classroom/internal-meetings/internal-meetings.join.service.ts": {
-    "stylistic/max-len": {
-      "count": 5
     }
   },
   "src/modules/teaching/classroom/internal-meetings/internal-meetings.kick.service.ts": {
@@ -8061,14 +8042,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/classroom/meetings/invites/meeting-invites.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 9
-    }
-  },
   "src/modules/teaching/classroom/meetings/invites/meeting-invites.fakes.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -8087,7 +8060,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/modules/teaching/classroom/meetings/invites/tests/meeting-invite.numbers.test.ts": {
@@ -8173,7 +8146,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 13
+      "count": 12
     }
   },
   "src/modules/teaching/classroom/meetings/schedule/meeting-services.fakes.ts": {
@@ -8183,7 +8156,7 @@
   },
   "src/modules/teaching/classroom/meetings/schedule/tests/meeting-create.service.test.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "typescript/use-unknown-in-catch-callback-variable": {
       "count": 1
@@ -9328,11 +9301,6 @@
   "src/modules/teaching/student-channels/controllers/channel.portal.controller.ts": {
     "ab/zod-inputs": {
       "count": 5
-    }
-  },
-  "src/modules/teaching/student-channels/controllers/channel.presence.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/teaching/student-channels/controllers/channel.teacher.controller.ts": {
