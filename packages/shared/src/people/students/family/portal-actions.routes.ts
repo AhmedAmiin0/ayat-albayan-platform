@@ -11,7 +11,7 @@ import {
 const byLesson = z.object({ id: z.uuid(), lessonId: z.uuid() });
 const path = '/portal/students/:id/lessons/:lessonId';
 
-/** The family app sends «أعتذر» with no body when no reason was typed. */
+/** The family app sends its excuse with no body when no reason was typed. */
 const cancelBody = z.preprocess(
   (value: z.input<typeof portalCancelSchema> | undefined) => value ?? {},
   portalCancelSchema,
