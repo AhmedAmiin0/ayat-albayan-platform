@@ -2875,7 +2875,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/people/students/create/CreateStudentDialog/CreateStudentDialog.tsx": {
