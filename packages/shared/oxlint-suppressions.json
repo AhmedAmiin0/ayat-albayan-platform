@@ -488,11 +488,6 @@
       "count": 1
     }
   },
-  "src/reports/views.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/sales/academy.ts": {
     "stylistic/max-len": {
       "count": 3
