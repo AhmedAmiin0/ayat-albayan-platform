@@ -1240,12 +1240,6 @@
     }
   },
   "src/modules/finance/expenses/expenses.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 8
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
