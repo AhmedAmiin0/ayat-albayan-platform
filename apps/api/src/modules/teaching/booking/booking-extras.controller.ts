@@ -1,12 +1,9 @@
-import type { SignedUpload } from '@ab/shared';
-import { invoiceUploadSchema, type InvoiceUpload, type MakeupCandidate } from '@ab/schedule';
+import { bookingExtraRoutes as routes } from '@ab/shared';
 import { uploadMaxBytes } from '@ab/settings';
-import { Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
 import { Permissions } from '@/common/auth/decorators';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
-import { makeupCandidatesQuery } from './booking.dto';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { BookingInvoices } from './invoice/booking.invoice';
 import { BookingSettings } from './booking.settings';
 import { MakeupCandidates } from './core/makeup/makeup-candidates.service';
@@ -15,7 +12,7 @@ import { MakeupCandidates } from './core/makeup/makeup-candidates.service';
 @ApiTags('booking')
 @ApiBearerAuth()
 @Permissions('booking.write')
-@Controller('booking')
+@Controller()
 export class BookingExtrasController {
   constructor(
     private readonly invoices: BookingInvoices,
@@ -23,20 +20,14 @@ export class BookingExtrasController {
     private readonly settings: BookingSettings,
   ) {}
 
-  /** R-SCH-10. */
-  @Get('makeup-candidates')
-  makeupCandidates(
-    @ZodQuery(makeupCandidatesQuery) query: z.output<typeof makeupCandidatesQuery>,
-  ): Promise<MakeupCandidate[]> {
+  @Route(routes.makeupCandidates)
+  makeupCandidates(@RouteInput() { query }: RouteInputOf<typeof routes.makeupCandidates>) {
     return this.makeup.list(query.studentId);
   }
 
-  /** R-PAY-03: a signed PUT for the invoice file; register its path in POST /booking `invoice`. */
-  @Post('invoice-upload-url')
+  @Route(routes.invoiceUploadUrl)
   @HttpCode(200)
-  async invoiceUploadUrl(
-    @ZodBody(invoiceUploadSchema) input: InvoiceUpload,
-  ): Promise<SignedUpload> {
-    return this.invoices.uploadUrl(input, uploadMaxBytes(await this.settings.read()));
+  async invoiceUploadUrl(@RouteInput() { body }: RouteInputOf<typeof routes.invoiceUploadUrl>) {
+    return this.invoices.uploadUrl(body, uploadMaxBytes(await this.settings.read()));
   }
 }

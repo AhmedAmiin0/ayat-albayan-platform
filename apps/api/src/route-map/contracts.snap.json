@@ -491,6 +491,60 @@
    "required": [
     "studentId"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "lesson_id": {
+      "type": "string"
+     },
+     "starts_at": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "scheduled",
+       "confirmed",
+       "completed",
+       "late",
+       "excused",
+       "no_show",
+       "cancelled_by_teacher",
+       "cancelled_by_admin",
+       "rescheduled"
+      ]
+     },
+     "duration_min": {
+      "type": "number"
+     },
+     "teacher": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "display_name_ar": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "display_name_ar"
+      ]
+     }
+    },
+    "required": [
+     "lesson_id",
+     "starts_at",
+     "status",
+     "duration_min",
+     "teacher"
+    ]
+   }
   }
  },
  "GET /booking/outside-slots": {
@@ -8392,6 +8446,30 @@
     "clientRequestId",
     "mime",
     "size"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
    ]
   }
  },

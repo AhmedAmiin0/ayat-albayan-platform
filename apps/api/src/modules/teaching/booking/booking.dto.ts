@@ -44,9 +44,6 @@ export const slotsQuerySchema = gridQuery
 /** The server counts 14 days from its own now. */
 export const outsideSlotsQuerySchema = gridQuery;
 
-/** GET /booking/makeup-candidates?studentId (R-SCH-10). */
-export const makeupCandidatesQuery = z.object({ studentId: z.uuid() });
-
 /** GET /sales/booking/course?studentId (the assistant's course wizard). */
 export const courseQuerySchema = z.object({ studentId: z.uuid() });
 
