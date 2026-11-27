@@ -5,7 +5,14 @@ import { renderWithClient } from '@ab/web-kit/testing/query-render';
 import type { PushEnv } from '@ab/web-kit/push/web-push-support';
 import { WebPushToggle } from './WebPushToggle';
 
-const READY: PushEnv = { hasServiceWorker: true, hasPushManager: true, hasNotification: true, permission: 'default', isIos: false, isStandalone: false };
+const READY: PushEnv = {
+  hasServiceWorker: true,
+  hasPushManager: true,
+  hasNotification: true,
+  permission: 'default',
+  isIos: false,
+  isStandalone: false,
+};
 const env = vi.hoisted(() => ({ current: {} as PushEnv }));
 const push = vi.hoisted(() => ({
   rebindWebPush: vi.fn(),
@@ -13,7 +20,10 @@ const push = vi.hoisted(() => ({
   unsubscribeWebPush: vi.fn(),
 }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/push/web-push-support', async (orig) => ({ ...(await orig<object>()), readPushEnv: () => env.current }));
+vi.mock('@ab/web-kit/push/web-push-support', async (orig) => ({
+  ...(await orig<object>()),
+  readPushEnv: () => env.current,
+}));
 vi.mock('@ab/web-kit/push/web-push', () => push);
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
@@ -76,6 +86,14 @@ describe('WebPushToggle: on / off', () => {
     renderWithClient(<WebPushToggle />);
     fireEvent.click(await screen.findByRole('button', { name: t.bell.push.enable }));
     expect(await screen.findByText(t.bell.push.denied)).toBeTruthy();
+  });
+
+  it('while it works the button says so and waits', async () => {
+    push.subscribeWebPush.mockReturnValue(new Promise(() => undefined));
+    renderWithClient(<WebPushToggle />);
+    fireEvent.click(await screen.findByRole('button', { name: t.bell.push.enable }));
+    const working = await screen.findByRole('button', { name: t.bell.push.working });
+    expect(working.hasAttribute('disabled')).toBe(true);
   });
 
   it('a failure says so and keeps the button', async () => {

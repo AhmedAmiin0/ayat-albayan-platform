@@ -1,14 +1,14 @@
-import { clockOfHhmm } from '@ab/time';
-import { useClock } from '@ab/web-kit/lib/clock';
+import type { ClockOptionsProps } from './ClockOptions.types';
+import { useClockOptions } from './use-clock-options';
 
 /** Values stay the stored 24 h "HH:MM"; pair with `dir={clockDir(useClock())}` on the select. */
-export function ClockOptions({ times }: { times: readonly string[] }) {
-  const clock = useClock();
+export function ClockOptions(props: ClockOptionsProps) {
+  const { options } = useClockOptions(props);
   return (
     <>
-      {times.map((x) => (
-        <option key={x} value={x}>
-          {clockOfHhmm(x, clock.cycle, clock.locale)}
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
         </option>
       ))}
     </>

@@ -582,11 +582,6 @@
       "count": 2
     }
   },
-  "src/push/WebPushToggle/WebPushToggle.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
   "src/push/notifications-api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
