@@ -1,40 +1,41 @@
 import {
-  configDescriptionSchema,
-  configEntryPatchSchema,
+  configEntriesRoutes as routes,
   type ConfigEntriesResponse,
   type ConfigEntryResult,
 } from '@ab/settings';
-import { Body, Controller, Get, Param, Patch, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { parseOrThrow } from '@/common/http/http';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ConfigEntriesService } from './config-entries.service';
 
 /** Settings values (docs/26 §2f): per-key versioned saves; Google rows are base-admin only. */
-@ApiTags('config')
 @ApiBearerAuth()
-@Permissions('settings.read')
-@Controller('config/entries')
+@Controller()
 export class ConfigEntriesController {
   constructor(private readonly entries: ConfigEntriesService) {}
 
-  @Get()
+  @Route(routes.list)
   async list(@CurrentUser() user: AuthUser): Promise<ConfigEntriesResponse> {
-    return { entries: await this.entries.list(user) };
+    return asResponse(routes.list.response, { entries: await this.entries.list(user) });
   }
 
-  /** `{value, expectedVersion, confirmText?}`; value null stores JSON null (= the default). */
-  @Patch(':key')
-  @Permissions('settings.write')
-  update(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ConfigEntryResult> {
-    return this.entries.patch({ key, body: parseOrThrow(configEntryPatchSchema, body), user });
+  @Route(routes.patch)
+  update(
+    @RouteInput() { params: { key }, body }: RouteInputOf<typeof routes.patch>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ConfigEntryResult> {
+    return this.entries.patch({ key, body, user });
   }
 
-  /** `{text | null}`; null = restore the seeded text (and drop the ar override). Audited `describe:<key>`. */
-  @Put(':key/description')
-  @Permissions('settings.write')
-  describe(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ConfigEntryResult> {
-    return this.entries.describe({ key, body: parseOrThrow(configDescriptionSchema, body), user });
+  /** Audited `describe:<key>`; a null text also drops the ar translation override. */
+  @Route(routes.describe)
+  describe(
+    @RouteInput() { params: { key }, body }: RouteInputOf<typeof routes.describe>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ConfigEntryResult> {
+    return this.entries.describe({ key, body, user });
   }
 }

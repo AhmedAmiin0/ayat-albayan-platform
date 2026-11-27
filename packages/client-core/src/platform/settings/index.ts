@@ -31,3 +31,9 @@ export {
   type CustomConfigCalls,
   type CustomConfigSave,
 } from './custom-config';
+export {
+  configEntryCalls,
+  type ConfigDescriptionSave,
+  type ConfigEntryCalls,
+  type ConfigEntryPatch,
+} from './config-entries';
