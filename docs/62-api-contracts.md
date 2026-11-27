@@ -4,7 +4,7 @@ Plan for: «move the request and response zod schemas to packages so they are us
 
 ## Decisions (owner, 2026-11-25)
 
-- **PRs.** Seven PRs to develop, in this order: A, D (below), B, E, C1, F (part 3 §3b: one client function), C2 (§5 of part 1). Part 2's two PRs fold in: the enum tables, `ab/no-typed-value-table` and `guard:mappers` go into **B**; the portal-history pilot (`portal-outcome.ts`, `asResponse`, `toHistoryRow`) goes into **C1**.
+- **PRs.** Seven PRs to develop, in this order: A, D (below), B, E, C1, C2, F (part 3 §3b: one client function) (§5 of part 1). C1 is built by three builders at once (owner 2026-11-27): the branch `lane/contracts-finance-schedule-people` is the base, each builder moves one area (finance, people, booking) through sub-PRs into the base, and the base lands on develop as the one C1 PR. Part 2's two PRs fold in: the enum tables, `ab/no-typed-value-table` and `guard:mappers` go into **B**; the portal-history pilot (`portal-outcome.ts`, `asResponse`, `toHistoryRow`) goes into **C1**.
 - **Wire changes:** approved as one set, exactly the rows marked E, C1 or C2 in part 1 §6 «Intended wire changes» (C1/C2: a bad id answers the standard `validation_failed` body, still 400; undeclared columns are dropped after checking the newest release tag). Any other wire change needs a new go.
 - **Class C:** two PRs, C1 and C2.
 - **Response mismatches: strict.** `asResponse` answers 500 `response_invalid` (paths logged, never values) for a row that does not fit its schema. Client-core parses responses with the shared schemas and throws `bad_response` on a mismatch (docs/36 z14). The `@Returns` interceptor still runs only in tests and e2e.
@@ -731,8 +731,8 @@ Lane branches are named `lane/<name>`, never `refactor/<name>`: CI's `refactor` 
 | B | `lane/api-db-layer` · `refactor(api): one db error path, batched reads, shared jobs and http helpers` | prerequisites 1–3 | Commit 1: an error-path test (status and body) for each repo file that lacks one, about 99 by filename (the PR recounts). Commit 2: `common/db/errors/`, test first. Commit 3: the codemod and its fixtures. Commit 4: codemod output only. Later commits: §3 items 4–11, minus the parts marked E. | by hand, after all checks complete; read commit by commit before the squash | ~330 files |
 | E | `fix/api-paging-errors` · `fix(api): one paging path and error answers` | B and the owner's answer to question 1 | `common/db/page/`. The `SortSpec` key and list fallback. The §2 migration table. The past-end answer and `MAX_PAGE`. The 128 repo-side `new Error` sites, with the other 55 checked one by one. The `peopleErrors` callers moved to the default map. The envelope and `httpError`. The Stripe timeout. `.in()` chunks, the expenses cap and `google-map.queries.ts:56`. Turns on `ab/no-raw-db-error` and `ab/no-hand-paging`. | by hand, owner's go | ~90 files |
 | C1 | `lane/contracts-finance-schedule-people` · `refactor(contracts): finance, booking and people schemas in packages` | B, prerequisite 4 | Commit 1 switches handlers to decorators in place and regenerates the snapshot. Commit 2 moves the schemas and must leave the snapshot byte-identical. Then `@Returns`, the interceptor, `createdIdSchema`, column lists instead of `select('*')`, client-core `x.api`/`x.keys`/`x.query-options` and the app hooks. Prunes suppression entries. The PR body has a «site → failing test» table. | by hand (question 2) | ~200 files |
-| F | `lane/one-api-call` · `refactor(repo): one api call function in place of apiFetch and apiSend` | C1 | Part 3 §3b: the codemod run, the pair deleted, `ab/no-api-pair` on at zero. F0 (`feat/one-api-call`, the function and the codemod, no call site) lands beside C1. | by hand | ~1,600 files, by codemod |
-| C2 | `lane/contracts-messaging-sales-teaching` · `refactor(contracts): messaging, sales, teaching, reporting and platform schemas` | F | The rest, then turns on `ab/contracts-from-packages`, `ab/returns-required` and `ab/no-select-star`. | by hand (question 2) | ~250 files |
+| C2 | `lane/contracts-messaging-sales-teaching` · `refactor(contracts): messaging, sales, teaching, reporting and platform schemas` | C1 | The rest, then turns on `ab/contracts-from-packages`, `ab/returns-required` and `ab/no-select-star`. | by hand (question 2) | ~250 files |
+| F | `lane/one-api-call` · `refactor(repo): one api call function in place of apiFetch and apiSend` | C2 | Part 3 §3b: the codemod run, the pair deleted, `ab/no-api-pair` on at zero. F0 (`feat/one-api-call`, the function and the codemod, no call site) lands beside C1 and C2. | by hand | ~1,600 files, by codemod |
 
 That makes five PRs. E is separate because its changes alter what clients receive, so they need the owner's go. Inside an auto-merged refactor they would ship unreviewed. Kept apart, a revert is one PR.
 
@@ -880,8 +880,8 @@ On the response side:
 | B | ~330 | by hand |
 | E | ~90 | by hand, owner's go |
 | C1 | ~200 | by hand |
-| F | ~1,600, nearly all by codemod | by hand |
 | C2 | ~250 | by hand |
+| F | ~1,600, nearly all by codemod | by hand |
 
 # Part 2 · Enum value maps and schema-driven mappers
 
@@ -1363,8 +1363,8 @@ Owner, 2026-11-27: «i dont want to have apiFetch and apiSend make them one and 
 - **The rule.** Web and phone code talks to the API through one function that takes one object: `call({ … })`. `apiFetch(path, init)` and `apiSend(method, path, body)` go away, and so do their no-login twins `publicApiFetch` and `publicApiSend` (one `publicCall`). `apiBlob` stays: it answers bytes and headers, not JSON.
 - **Two request shapes, one function.**
   - Route form, as §3 defines it: `call({ route, params, query, body })`.
-  - Path form, for a call whose route object does not exist yet: `call({ method, path, body, schema, signal, headers })`. `method` defaults to `GET`. With `schema` the answer is parsed and typed by it; without one the caller names the type, as the generic overloads did. C2 removes the path form from the type when `ab/no-api-path-literal` reaches zero.
-- **Underneath.** `createApiClient` gets one `request({ method, path, body, schema, signal, headers })`, and `callWith(api)` asks through it. What a call does today stays, pinned by tests written first:
+  - Path form, for a call whose route object does not exist yet: `call({ method, path, body, schema, signal, headers })`. `method` defaults to `GET`. With `schema` the answer is parsed and typed by it; without one the caller names the type, as the generic overloads did. C2 turns `ab/no-api-path-literal` on at zero; F then removes the path form from the type when nothing uses it.
+- **Underneath.** `createApiClient` gets one `request({ method, path, body, schema, signal, headers })`, and `callWith(api)` asks through it. Until F, `callWith` also takes a client that has only the pair: the tests of the contracts lanes hand it such a client, and they must keep passing unchanged. What a call does today stays, pinned by tests written first:
   - a read gets its deadline in the kit wrapper (`readTimeoutFor(path)`);
   - a write gets the send deadline and `onStall` in the client;
   - a 204 resolves `undefined`;
@@ -1372,12 +1372,12 @@ Owner, 2026-11-27: «i dont want to have apiFetch and apiSend make them one and 
   - an error answer is the same `ApiError`;
   - the contract snapshot does not change.
 - **Tests.** About 1,240 test files name the pair in a mock, so the tests set the size of this work, not the 722 calls in source. They move to one mock of `call` through one helper in `@ab/testing` (`mockCall()`: the answers a test sets per method and path, and the requests it saw as objects). The codemod rewrites the common shapes (`vi.hoisted` with `vi.mock` of the kit module, `mockImplementation((path) => …)`, `toHaveBeenCalledWith('POST', path, body)`). A test it cannot rewrite safely is listed and done by hand in the same PR; no test is weakened, skipped or deleted.
-- **Open lanes.** Until F merges, no PR adds a new use of the pair: new and converted code calls `call`. A lane branch that F overtakes merges develop and runs `pnpm api:one -- --write` on its own files.
+- **Open lanes.** Until F merges, no PR adds a new use of the pair: new and converted code calls `call`. F runs after the contracts PRs so that it meets no open contracts branch; any other branch it overtakes merges develop and runs `pnpm api:one -- --write` on its own files.
 
 | PR | Branch · title | When | What |
 |---|---|---|---|
-| F0 | `feat/one-api-call` · `feat(client-core): one call function for route and path requests` | now, beside C1 | `request` in the api client, with the pair as thin wrappers over it; the path form of `call`; `call` and `publicCall` exported by both kits; `mockCall` in `@ab/testing`; the codemod `pnpm api:one` (idempotent, `--write`, and the exclude list of files that open PRs touch, as docs/63 §4) with fixture tests. No call site changes. |
-| F | `lane/one-api-call` · `refactor(repo): one api call function in place of apiFetch and apiSend` | after C1 merges, before C2 starts | The codemod's run over every workspace and the hand fixes; the pair, the public pair and the wrappers deleted; lint `ab/no-api-pair` (no import or member named `apiFetch`, `apiSend`, `publicApiFetch` or `publicApiSend`) on at zero; CLAUDE.md rule 1's last sentence; this document's older lines brought in line. About 1,600 files, nearly all by the codemod. |
+| F0 | `feat/one-api-call` · `feat(client-core): one call function for route and path requests` | now, beside C1 and C2 | `request` in the api client, with the pair as thin wrappers over it; the path form of `call`; `call` and `publicCall` exported by both kits; `mockCall` in `@ab/testing`; the codemod `pnpm api:one` (idempotent, `--write`, and the exclude list of files that open PRs touch, as docs/63 §4) with fixture tests. No call site changes. |
+| F | `lane/one-api-call` · `refactor(repo): one api call function in place of apiFetch and apiSend` | after C2 merges, before G starts | The codemod's run over every workspace and the hand fixes; the pair, the public pair and the wrappers deleted; lint `ab/no-api-pair` (no import or member named `apiFetch`, `apiSend`, `publicApiFetch` or `publicApiSend`) on at zero; CLAUDE.md rule 1's last sentence; this document's older lines brought in line. About 1,600 files, nearly all by the codemod. |
 
 ### 4. Types, interfaces, enums and objects
 
