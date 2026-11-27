@@ -20,9 +20,8 @@ describe('the lesson actions of a salesperson', () => {
     const moved = { id: ID, starts_at: AT, status: 'scheduled' };
     const { client, apiSend } = clientAnswering(moved);
     const body = { startsAt: AT, reason: 'سفر' };
-    await expect(salesLessonActionCalls(client).reschedule({ lessonId: ID, body })).resolves.toEqual(
-      moved,
-    );
+    const calls = salesLessonActionCalls(client);
+    await expect(calls.reschedule({ lessonId: ID, body })).resolves.toEqual(moved);
     expect(apiSend).toHaveBeenCalledWith('POST', `${BASE}/reschedule`, body);
   });
 
@@ -43,7 +42,8 @@ describe('the lesson actions of a salesperson', () => {
 
   it('throws bad_response for a status outside the list', async () => {
     const { client } = clientAnswering({ id: ID, status: 'gone' });
-    const failure = await failureOf(salesLessonActionCalls(client).cancel({ lessonId: ID, body: {} }));
+    const calls = salesLessonActionCalls(client);
+    const failure = await failureOf(calls.cancel({ lessonId: ID, body: {} }));
     expect(failure).toMatchObject({ body: { code: 'bad_response' } });
   });
 });

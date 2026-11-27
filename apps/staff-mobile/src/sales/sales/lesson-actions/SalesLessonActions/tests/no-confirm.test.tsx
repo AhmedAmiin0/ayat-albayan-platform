@@ -54,7 +54,7 @@ test('a scheduled lesson reads «مجدولة», never «يحتاج تأكيد»
 });
 
 test('before the end: «ألغتها الإدارة» by default, or the teacher / the student, sent as `by`', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l2', status: 'excused' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', status: 'excused' });
   await open('سلمى');
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
   const admin = radio(t.enums.lessonStatus.cancelled_by_admin);
@@ -65,7 +65,7 @@ test('before the end: «ألغتها الإدارة» by default, or the teacher
 });
 
 test('the default sends by admin with the trimmed reason', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l2', status: 'cancelled_by_admin' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', status: 'cancelled_by_admin' });
   await open('سلمى');
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
   await fireEvent.changeText(screen.getByLabelText(a.reason), ' سفر ');
@@ -75,7 +75,7 @@ test('the default sends by admin with the trimmed reason', async () => {
 });
 
 test('after the end: «إلغاء الحلقة» stays, the teacher or the student only', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l0', status: 'cancelled_by_teacher' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', status: 'cancelled_by_teacher' });
   await open('ريم');
   expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
@@ -85,7 +85,7 @@ test('after the end: «إلغاء الحلقة» stays, the teacher or the stude
 });
 
 test('a held lesson: «تصحيح حالة الحلقة» posts { to }, then says it is done', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l9', status: 'no_show' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', status: 'no_show' });
   await open('هند');
   expect(screen.getByText(c.outcomeTitle)).toBeTruthy();
   expect(screen.queryByRole('button', { name: c.to.completed })).toBeNull();

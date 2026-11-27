@@ -1,5 +1,9 @@
-import type { SalesCancel, SalesLessonMoved, SalesReschedule } from '@ab/shared';
-import type { LessonStatus } from '@ab/catalog';
+import type {
+  SalesCancel,
+  SalesLessonMoved,
+  SalesLessonStatus,
+  SalesReschedule,
+} from '@ab/shared';
 import { CANCEL_STATUS, cancelBySchema, type LessonCorrect } from '@ab/schedule';
 import { z } from 'zod';
 import { Injectable } from '@nestjs/common';
@@ -66,7 +70,7 @@ export class SalesLessonActions {
    * `by` admin (default): before it ends only. teacher / student: before or after it ends, and on
    * a lesson held automatically the admin service's correction (409 not_auto_held otherwise).
    */
-  async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<{ id: string; status: LessonStatus }> {
+  async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<SalesLessonStatus> {
     const by = body.by ?? 'admin';
     await this.scope.assertLesson({ lessonId, now, user: actor, afterEnd: AFTER_END[by] });
     const reason = body.reason ? body.reason : null;
@@ -88,7 +92,7 @@ export class SalesLessonActions {
   async correct(
     { lessonId, body, actor }: Correct,
     now = new Date(),
-  ): Promise<{ id: string; status: LessonStatus }> {
+  ): Promise<SalesLessonStatus> {
     await this.scope.assertLesson({ lessonId, now, user: actor, afterEnd: true });
     await this.lessons.corrections.correct({ lessonId, to: body.to, actor });
     return { id: lessonId, status: body.to };

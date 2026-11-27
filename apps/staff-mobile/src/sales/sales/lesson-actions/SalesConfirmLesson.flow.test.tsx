@@ -34,13 +34,13 @@ const open = async (client = confirmingQueryClient()) => {
 };
 
 test('any scheduled lesson (not hers): «تأكيد الحلقة» beside her move / cancel, then it reads «مؤكدة»', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l3', starts_at: OTHERS.starts_at, status: 'confirmed' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', starts_at: OTHERS.starts_at, status: 'confirmed' });
   await open();
   expect(screen.queryByText(t.lessons.sheet.readOnly)).toBeNull();
   // Move / cancel are any lesson too (docs/16 row 37).
   expect(screen.getByRole('button', { name: a.reschedule })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: a.confirm }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l3/confirm'));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l3/confirm', undefined));
   expect(await screen.findByText(a.confirmed)).toBeTruthy();
   expect(screen.getByText(t.enums.lessonStatus.confirmed)).toBeTruthy();
   expect(screen.queryByRole('button', { name: a.confirm })).toBeNull();

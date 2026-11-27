@@ -1,8 +1,6 @@
-import type { SalesLessonMoved } from '@ab/shared';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, FormAlert, apiSend, t } from '@ab/web-kit';
+import { Button, FormAlert, t } from '@ab/web-kit';
 import { errorCode, lessonErrorText } from '@/features/teaching/schedule';
-import { salesKeys } from '@/features/sales/keys';
+import { useSalesConfirmLesson } from './sales-confirm-api';
 
 /** The confirm's own wording for lesson_ended and invalid_transition; the lessons wording otherwise. */
 export function confirmErrorText(error: unknown): string {
@@ -26,13 +24,7 @@ export function SalesConfirmLesson({
   onConfirmed,
   secondary = false,
 }: SalesConfirmLessonProps) {
-  const client = useQueryClient();
-  const confirm = useMutation({
-    mutationFn: () => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/confirm`),
-    onSuccess: onConfirmed,
-    // A 409 (cancelled or confirmed elsewhere) re-reads the day too, so the stale button and status go.
-    onSettled: () => client.invalidateQueries({ queryKey: salesKeys.schedule }),
-  });
+  const confirm = useSalesConfirmLesson(lessonId, onConfirmed);
   return (
     <div className="grid gap-2">
       {confirm.isError && <FormAlert>{confirmErrorText(confirm.error)}</FormAlert>}

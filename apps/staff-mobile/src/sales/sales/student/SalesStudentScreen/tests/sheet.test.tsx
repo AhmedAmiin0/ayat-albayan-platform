@@ -64,7 +64,7 @@ test('the sheet from «الجدول»: the tapped lesson\'s date, no link line, 
 
 test('cancel from the sheet reads «تفاصيل الطالب» again: the cancelled lesson leaves «الحلقات القادمة»', async () => {
   serve([FRI, SUN], [SUN]);
-  mockApiSend.mockResolvedValue({ id: 'u1', status: 'cancelled_by_admin' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', status: 'cancelled_by_admin' });
   await open(/2 أكتوبر 18:00$/);
   await fireEvent.press(screen.getByRole('button', { name: a.cancel }));
   await fireEvent.press(screen.getByRole('button', { name: a.confirmCancel }));
@@ -79,7 +79,7 @@ test('cancel from the sheet reads «تفاصيل الطالب» again: the cance
 test('reschedule from the sheet reads «تفاصيل الطالب» again: the moved lesson leaves, the new one shows', async () => {
   const moved = upcoming('n1', SAT_17);
   serve([FRI], [moved]);
-  mockApiSend.mockResolvedValue({ id: 'n1', starts_at: SAT_17, status: 'scheduled' });
+  mockApiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000001', starts_at: SAT_17, status: 'scheduled' });
   await open(/2 أكتوبر 18:00$/);
   await fireEvent.press(screen.getByRole('button', { name: a.reschedule }));
   await fireEvent.press(first(await screen.findAllByRole('radio', { name: /^17:00/ })));
