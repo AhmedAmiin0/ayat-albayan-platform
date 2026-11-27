@@ -1,14 +1,13 @@
-import { contactLine } from '@ab/client-core';
-import { usePublicConfig } from '@ab/web-kit/lib/settings/public-config';
 import type { AcademyContactLinkProps } from './AcademyContactLink.types';
 import { CONTACT_TARGET } from '@ab/web-kit/components/legal/legal-look';
+import { useAcademyContactLink } from './use-academy-contact-link';
 
 /**
  * How to reach the academy, from settings.academy_contact (GET /settings/public, the shared
  * query): its email, else its site, as an LTR link; `fallback` when neither is usable.
  */
 export function AcademyContactLink({ fallback }: AcademyContactLinkProps) {
-  const line = contactLine(usePublicConfig().academy_contact);
+  const { line } = useAcademyContactLink();
   return line ? (
     <a
       href={line.href}
