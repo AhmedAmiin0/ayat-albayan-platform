@@ -1,4 +1,4 @@
-import type { SalesScheduleLesson } from '../schedule';
+import type { SalesScheduleLesson } from '../teacher/academy-day.schemas';
 
 // Weekly slots and next lessons; never a meeting link, price or money.
 

@@ -571,11 +571,6 @@
       "count": 2
     }
   },
-  "src/sales/schedule.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/sales/start-date.ts": {
     "complexity": {
       "count": 1

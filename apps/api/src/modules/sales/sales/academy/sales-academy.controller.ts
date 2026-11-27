@@ -1,17 +1,17 @@
 import {
-  salesScheduleQuerySchema,
+  salesAcademyDayRoutes,
   salesStudentsQuerySchema,
-  type SalesScheduleDay,
   type SalesStudentView,
   type SalesSubscriptionHistory,
   type SalesTeacherView,
 } from '@ab/shared';
-import type { AssistantLessonView } from '@ab/schedule';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { SalesAcademyService } from './sales-academy.service';
 import { withMine } from '@/modules/sales/sales/schedule/sales-schedule.mapper';
 import { SalesScheduleService } from '@/modules/sales/sales/schedule/sales-schedule.service';
@@ -20,46 +20,47 @@ import type { Page } from '@ab/core';
 /** docs/16: read-only and whitelisted; rooms are entered via POST /lessons/:id/room/join. */
 @ApiTags('sales')
 @ApiBearerAuth()
-@Controller('sales')
+@Controller()
 export class SalesAcademyController {
   constructor(
     private readonly academy: SalesAcademyService,
     private readonly schedule: SalesScheduleService,
   ) {}
 
-  @Get('subscriptions/:id/history')
+  @Get('sales/subscriptions/:id/history')
   @Permissions('self.sales')
   history(@Param('id', ParseUUIDPipe) id: string): Promise<SalesSubscriptionHistory> {
     return this.academy.history(id);
   }
 
-  @Get('teachers')
+  @Get('sales/teachers')
   @Permissions('self.sales_academy')
   teachers(): Promise<SalesTeacherView[]> {
     return this.schedule.teachers();
   }
 
   /**
-   * `?date=YYYY-MM-DD&teacherId=`: the day's lessons with their meeting link, no note or money (400
-   * on a bad date/id); `mine` on her own students (docs/16 row 37: she may move or cancel those
-   * lessons).
+   * The day's lessons with their meeting link, no note or money; `mine` on her own students
+   * (docs/16 row 37: she may move or cancel those lessons).
    */
-  @Get('schedule')
-  @Permissions('self.sales_academy')
-  async day(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<SalesScheduleDay> {
-    const [day, own] = await Promise.all([this.schedule.day(parseOrThrow(salesScheduleQuerySchema, query)), this.academy.ownStudents(user)]);
-    return { ...day, lessons: day.lessons.map((lesson) => withMine(lesson, own)) };
+  @Route(salesAcademyDayRoutes.day)
+  async day(
+    @RouteInput() { query }: RouteInputOf<typeof salesAcademyDayRoutes.day>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const [day, own] = await Promise.all([this.schedule.day(query), this.academy.ownStudents(user)]);
+    const lessons = day.lessons.map((lesson) => withMine(lesson, own));
+    return asResponse(salesAcademyDayRoutes.day.response, { ...day, lessons });
   }
 
-  @Get('students/all')
+  @Get('sales/students/all')
   @Permissions('self.sales_academy')
   students(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<SalesStudentView>> {
     return this.academy.students(parseOrThrow(salesStudentsQuerySchema, query), user);
   }
 
-  @Get('live')
-  @Permissions('self.sales_academy')
-  live(): Promise<AssistantLessonView[]> {
-    return this.academy.live();
+  @Route(salesAcademyDayRoutes.live)
+  async live() {
+    return asResponse(salesAcademyDayRoutes.live.response, await this.academy.live());
   }
 }
