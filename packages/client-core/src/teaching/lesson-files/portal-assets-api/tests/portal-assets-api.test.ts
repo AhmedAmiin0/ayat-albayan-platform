@@ -19,7 +19,8 @@ describe('portalAssetsApi (R-PRT)', () => {
   it('posts for a lesson file link with no body', async () => {
     const { client, apiSend } = clientAnswering(link);
     await portalAssetsApi(client).lessonFileUrl({ studentId: 'S', fileId: 'F' });
-    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/S/lesson-files/F/url', undefined);
+    const path = '/portal/students/S/lesson-files/F/url';
+    expect(apiSend).toHaveBeenCalledWith('POST', path, undefined);
   });
 
   it('asks for a saving link under the file’s name («تنزيل»)', async () => {
@@ -45,7 +46,10 @@ describe('portalAssetsApi (R-PRT)', () => {
 
   it('throws bad_response on a link without its expiry', async () => {
     const { client } = clientAnswering({ url: 'u' });
-    const call = portalAssetsApi(client).lessonFileUrl({ studentId: 'S', fileId: 'F' });
-    await expect(call).rejects.toMatchObject({ code: 'bad_response' });
+    const failure = await portalAssetsApi(client)
+      .lessonFileUrl({ studentId: 'S', fileId: 'F' })
+      .catch((e: unknown) => e);
+    const path = '/portal/students/S/lesson-files/F/url';
+    expect(failure).toMatchObject({ body: { code: 'bad_response', path } });
   });
 });

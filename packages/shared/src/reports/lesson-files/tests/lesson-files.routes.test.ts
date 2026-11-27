@@ -75,7 +75,8 @@ describe('portalAssetsRoutes (R-PRT)', () => {
   it('needs both ids as uuids on the lesson page', () => {
     const params = portalAssetsRoutes.lesson.params;
     expect(params.safeParse({ id: LESSON, lessonId: 'x' }).success).toBe(false);
-    expect(params.parse({ id: LESSON, lessonId: LESSON })).toEqual({ id: LESSON, lessonId: LESSON });
+    const both = { id: LESSON, lessonId: LESSON };
+    expect(params.parse(both)).toEqual(both);
   });
 
   it('takes an optional download name and refuses a blank one', () => {

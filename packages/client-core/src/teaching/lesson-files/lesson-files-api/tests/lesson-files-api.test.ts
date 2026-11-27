@@ -63,8 +63,11 @@ describe('lessonFilesApi (R-REC)', () => {
 
   it('throws bad_response on a file of an unknown kind', async () => {
     const { client } = clientAnswering({ ...view, kind: 'gift' });
-    const call = lessonFilesApi(client).setVisible({ id: 'F', visible: true });
-    await expect(call).rejects.toBeInstanceOf(ApiError);
-    await expect(call).rejects.toMatchObject({ code: 'bad_response' });
+    const failure = await lessonFilesApi(client)
+      .setVisible({ id: 'F', visible: true })
+      .catch((e: unknown) => e);
+    expect(failure).toBeInstanceOf(ApiError);
+    const path = '/lesson-files/F/visibility';
+    expect(failure).toMatchObject({ body: { code: 'bad_response', path } });
   });
 });

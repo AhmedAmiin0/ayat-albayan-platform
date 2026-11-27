@@ -120,7 +120,8 @@
    "required": [
     "id"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /me/push-tokens/:token": {
   "params": {
@@ -1698,6 +1699,212 @@
    "required": [
     "id"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lesson_id": {
+     "type": "string"
+    },
+    "starts_at": {
+     "type": "string"
+    },
+    "ends_at": {
+     "type": "string"
+    },
+    "students": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "name": {
+        "type": "string"
+       },
+       "code": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "name",
+       "code"
+      ]
+     }
+    },
+    "recordings": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "recording",
+         "done",
+         "failed",
+         "deleted"
+        ]
+       },
+       "started_at": {
+        "type": "string"
+       },
+       "ended_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "duration_seconds": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "size_bytes": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "media": {
+        "type": "string",
+        "enum": [
+         "video",
+         "audio"
+        ]
+       },
+       "visible_to_student": {
+        "type": "boolean"
+       },
+       "url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "status",
+       "started_at",
+       "ended_at",
+       "duration_seconds",
+       "size_bytes",
+       "media",
+       "visible_to_student",
+       "url"
+      ]
+     }
+    },
+    "reports": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "student_name": {
+        "type": "string"
+       },
+       "pdf_ready": {
+        "type": "boolean"
+       },
+       "sent_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "student_name",
+       "pdf_ready",
+       "sent_at"
+      ]
+     }
+    },
+    "files": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "lesson_id": {
+        "type": "string"
+       },
+       "kind": {
+        "type": "string",
+        "enum": [
+         "homework",
+         "voice_note",
+         "whiteboard",
+         "material"
+        ]
+       },
+       "title": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "mime": {
+        "type": "string"
+       },
+       "size": {
+        "type": "number"
+       },
+       "media": {
+        "type": "string",
+        "enum": [
+         "image",
+         "pdf",
+         "audio"
+        ]
+       },
+       "visible_to_family": {
+        "type": "boolean"
+       },
+       "created_at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "lesson_id",
+       "kind",
+       "title",
+       "mime",
+       "size",
+       "media",
+       "visible_to_family",
+       "created_at"
+      ]
+     }
+    }
+   },
+   "required": [
+    "lesson_id",
+    "starts_at",
+    "ends_at",
+    "students",
+    "recordings",
+    "reports",
+    "files"
+   ]
   }
  },
  "GET /people/guardians": {
@@ -1796,20 +2003,208 @@
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
-    "lessonId": {
+    "id": {
      "type": "string",
      "format": "uuid",
      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     },
-    "id": {
+    "lessonId": {
      "type": "string",
      "format": "uuid",
      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     }
    },
    "required": [
-    "lessonId",
-    "id"
+    "id",
+    "lessonId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lesson_id": {
+     "type": "string"
+    },
+    "lesson_starts_at": {
+     "type": "string"
+    },
+    "lesson_ends_at": {
+     "type": "string"
+    },
+    "teacher": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "display_name_ar": {
+         "type": "string"
+        },
+        "display_name_en": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "display_name_ar",
+        "display_name_en"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "report_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "recordings": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "lesson_id": {
+        "type": "string"
+       },
+       "report_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "lesson_starts_at": {
+        "type": "string"
+       },
+       "teacher": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "display_name_ar": {
+            "type": "string"
+           },
+           "display_name_en": {
+            "type": [
+             "string",
+             "null"
+            ]
+           }
+          },
+          "required": [
+           "display_name_ar",
+           "display_name_en"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "duration_seconds": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "size_bytes": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "media": {
+        "type": "string",
+        "enum": [
+         "video",
+         "audio"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "lesson_id",
+       "report_id",
+       "lesson_starts_at",
+       "teacher",
+       "duration_seconds",
+       "size_bytes",
+       "media"
+      ]
+     }
+    },
+    "files": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "lesson_id": {
+        "type": "string"
+       },
+       "kind": {
+        "type": "string",
+        "enum": [
+         "homework",
+         "voice_note",
+         "whiteboard",
+         "material"
+        ]
+       },
+       "title": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "mime": {
+        "type": "string"
+       },
+       "size": {
+        "type": "number"
+       },
+       "media": {
+        "type": "string",
+        "enum": [
+         "image",
+         "pdf",
+         "audio"
+        ]
+       },
+       "created_at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "lesson_id",
+       "kind",
+       "title",
+       "mime",
+       "size",
+       "media",
+       "created_at"
+      ]
+     }
+    }
+   },
+   "required": [
+    "lesson_id",
+    "lesson_starts_at",
+    "lesson_ends_at",
+    "teacher",
+    "report_id",
+    "recordings",
+    "files"
    ]
   }
  },
@@ -1868,6 +2263,92 @@
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "lesson_id": {
+        "type": "string"
+       },
+       "report_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "lesson_starts_at": {
+        "type": "string"
+       },
+       "teacher": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "display_name_ar": {
+            "type": "string"
+           },
+           "display_name_en": {
+            "type": [
+             "string",
+             "null"
+            ]
+           }
+          },
+          "required": [
+           "display_name_ar",
+           "display_name_en"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "duration_seconds": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "size_bytes": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "media": {
+        "type": "string",
+        "enum": [
+         "video",
+         "audio"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "lesson_id",
+       "report_id",
+       "lesson_starts_at",
+       "teacher",
+       "duration_seconds",
+       "size_bytes",
+       "media"
+      ]
+     }
+    }
+   },
+   "required": [
+    "items"
    ]
   }
  },
@@ -5614,6 +6095,64 @@
    },
    "required": [
     "visible"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "lesson_id": {
+     "type": "string"
+    },
+    "kind": {
+     "type": "string",
+     "enum": [
+      "homework",
+      "voice_note",
+      "whiteboard",
+      "material"
+     ]
+    },
+    "title": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "mime": {
+     "type": "string"
+    },
+    "size": {
+     "type": "number"
+    },
+    "media": {
+     "type": "string",
+     "enum": [
+      "image",
+      "pdf",
+      "audio"
+     ]
+    },
+    "visible_to_family": {
+     "type": "boolean"
+    },
+    "created_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "lesson_id",
+    "kind",
+    "title",
+    "mime",
+    "size",
+    "media",
+    "visible_to_family",
+    "created_at"
    ]
   }
  },
@@ -10587,6 +11126,23 @@
    "required": [
     "id"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string",
+     "format": "uri"
+    },
+    "expires_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "url",
+    "expires_at"
+   ]
   }
  },
  "POST /lesson-proposals/:id/approve": {
@@ -10843,6 +11399,64 @@
     "kind",
     "path"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "lesson_id": {
+     "type": "string"
+    },
+    "kind": {
+     "type": "string",
+     "enum": [
+      "homework",
+      "voice_note",
+      "whiteboard",
+      "material"
+     ]
+    },
+    "title": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "mime": {
+     "type": "string"
+    },
+    "size": {
+     "type": "number"
+    },
+    "media": {
+     "type": "string",
+     "enum": [
+      "image",
+      "pdf",
+      "audio"
+     ]
+    },
+    "visible_to_family": {
+     "type": "boolean"
+    },
+    "created_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "lesson_id",
+    "kind",
+    "title",
+    "mime",
+    "size",
+    "media",
+    "visible_to_family",
+    "created_at"
+   ]
   }
  },
  "POST /lessons/:id/files/upload-url": {
@@ -10899,6 +11513,30 @@
     "mime",
     "size",
     "kind"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
    ]
   }
  },
@@ -11761,6 +12399,22 @@
      "maxLength": 160
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string"
+    },
+    "expires_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "url",
+    "expires_at"
+   ]
   }
  },
  "POST /portal/students/:id/lessons/:lessonId/cancel": {
