@@ -4154,14 +4154,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/whatsapp/messages/messages.controller.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/whatsapp/messages/messages.repo.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -4551,11 +4543,6 @@
     },
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/modules/messaging/whatsapp/templates/sync/template-numbers.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/sync/template-submit.ts": {

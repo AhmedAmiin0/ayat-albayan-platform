@@ -2,7 +2,7 @@ import type { MessageView } from '@ab/shared';
 import { View } from 'react-native';
 import { t, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
-import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
+import { useMessageAction } from '@/inbox/thread/hooks/use-message-action';
 
 /** R-MSG-03: the sent-it question comes from the row so it survives closing the app. */
 export function MessageActions({ message: m, phone }: { message: MessageView; phone: string }) {

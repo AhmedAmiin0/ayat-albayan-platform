@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { apiSend, t } from '@ab/web-kit';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
-import { action, button, fakeTab, held, renderBubble } from '@/features/messaging/inbox/messages/whatsapp-send/whatsapp-send.test-util';
+import { action, button, fakeTab, held, HELD_ID, renderBubble } from '@/features/messaging/inbox/messages/whatsapp-send/whatsapp-send.test-util';
 
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
@@ -66,6 +66,6 @@ describe('«أرسل عبر واتساب»: the pending window', () => {
     renderBubble({ app_send_until: PENDING });
     fireEvent.click(button(t.messages.whatsappSend.openAgain) as HTMLElement);
     await waitFor(() => expect(tab.location.replace).toHaveBeenCalled());
-    expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-held/app-send');
+    expect(apiSend).toHaveBeenCalledWith('POST', `/messages/${HELD_ID}/app-send`, undefined);
   });
 });

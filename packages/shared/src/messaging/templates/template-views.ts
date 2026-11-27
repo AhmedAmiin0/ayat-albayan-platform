@@ -49,16 +49,3 @@ export interface TemplateNumberApproval {
   last_error: string | null;
 }
 
-/**
- * GET /messages/gate: can anything go out now (docs/12 §3.1), and if not, which gate is closed —
- * WhatsApp not configured, or the admin's switch (settings.messaging_enabled; the env fuse is gone,
- * docs/23 owner answer 2).
- */
-export interface SendGateView {
-  open: boolean;
-  reason: 'not_configured' | 'switch_off' | null;
-  /** Outbound rows waiting in the queue: they go out the moment the gate opens. */
-  queued: number;
-  /** Set (true) only when WA_ALLOWED_RECIPIENTS restricts sending; its only reader is the web ServerGateNote. */
-  restricted?: boolean;
-}

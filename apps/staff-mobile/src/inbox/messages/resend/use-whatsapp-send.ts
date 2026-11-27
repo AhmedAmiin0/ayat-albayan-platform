@@ -3,7 +3,7 @@ import { type AppSendRefusal, appSendRefusal, type MessageView } from '@ab/share
 import { type MutationState, useMutation, useMutationState } from '@tanstack/react-query';
 import { Linking } from 'react-native';
 import { ApiError, t } from '@ab/mobile-kit';
-import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
+import { useMessageAction } from '@/inbox/thread/hooks/use-message-action';
 
 interface SendVars {
   message: MessageView;

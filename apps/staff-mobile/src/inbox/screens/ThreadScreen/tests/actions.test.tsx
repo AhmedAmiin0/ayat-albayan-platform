@@ -68,7 +68,7 @@ test('«حاول مرة أخرى» puts it back in the queue and the row says so
   await open();
   mockApiFetch.mockResolvedValue(detail([inbound, delivered, retried]));
   await fireEvent.press((await sheetOf()).getByRole('button', { name: t.messages.retry }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/retry');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/retry', undefined);
   expect(await screen.findByRole('button', { name: parkedClock })).toBeTruthy();
   expect(screen.queryByText(word.failed)).toBeNull();
 });
@@ -83,12 +83,13 @@ test('a refused retry says so in the chat’s notice and leaves the row as it wa
 
 test('«أرسلها بنفسك» tells the server first (it holds the row), then opens the API wa.me link', async () => {
   const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
-  const held = { ...failed, error_code: 'handed_off' };
+  const row = { ...failed, id: 'd4444444-4444-4444-8444-444444444444' };
+  const held = { ...row, error_code: 'handed_off' };
   mockApiSend.mockResolvedValue(held);
-  await open();
+  await open([inbound, delivered, row]);
   mockApiFetch.mockResolvedValue(detail([inbound, delivered, held]));
   await fireEvent.press((await sheetOf()).getByRole('button', { name: t.messages.clickToChat }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/hand-off');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/messages/${row.id}/hand-off`, undefined);
   await waitFor(() => expect(openUrl).toHaveBeenCalledWith(failed.click_to_chat));
   expect(mockApiSend.mock.invocationCallOrder[0]).toBeLessThan(
     openUrl.mock.invocationCallOrder[0] ?? 0,
@@ -114,9 +115,9 @@ test('a held row asks from its own state: «أرسلتها بنفسي» records 
   expect(screen.getByText(t.messages.handedOff)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: t.messages.markSentManually }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/sent-manually');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/sent-manually', undefined);
   await fireEvent.press(screen.getByRole('button', { name: t.messages.undoHandOff }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/retry');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/retry', undefined);
 });
 
 test('queued with sending off: a tap on the clock offers sending by hand, no retry; a later one says when it goes', async () => {

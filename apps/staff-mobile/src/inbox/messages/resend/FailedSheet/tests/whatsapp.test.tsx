@@ -13,8 +13,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 // A text the 24 h window stopped offers send via WhatsApp; other failures keep the old actions.
 
+const HELD_ID = 'c3333333-3333-4333-8333-333333333333';
 const held = message({
-  id: 'm-held',
+  id: HELD_ID,
   direction: 'outbound',
   status: 'failed',
   error_code: 'reopen_failed',
@@ -32,7 +33,7 @@ test('a window failure: «أرسل عبر واتساب», no «أرسلها بن
   expect(s.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
   await fireEvent.press(s.getByRole('button', { name: t.messages.whatsappSend.action }));
   await waitFor(() => expect(openURL).toHaveBeenCalled());
-  expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-held/app-send');
+  expect(apiSend).toHaveBeenCalledWith('POST', `/messages/${HELD_ID}/app-send`, undefined);
   expect(props.onClose).toHaveBeenCalled();
 });
 

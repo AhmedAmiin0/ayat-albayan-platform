@@ -1,4 +1,4 @@
-import type { MessageView, ThreadDetail } from '@ab/shared';
+import type { ThreadDetail } from '@ab/shared';
 import { refreshNewest, type TextAnswer, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import {
   infiniteQueryOptions,
@@ -13,7 +13,7 @@ import { useStoredView } from '@/inbox/thread/local/stored-view';
 import { rollback, unanswered } from '@/inbox/thread/send/after-send';
 import { failPinned, pinGeneration, pinnedOf, settlePinned } from '@/inbox/thread/send/pinned-outcome';
 import { echoed, type SendDone, sendBody, type SendInput } from '@/inbox/thread/send/outgoing';
-import { refreshInbox, refreshLists, touchInbox } from './inbox-sync';
+import { refreshLists, touchInbox } from './inbox-sync';
 import {
   appendMessage,
   provisionalMessage,
@@ -126,24 +126,5 @@ export function useSendMessage(phone: string) {
       failPinned(pinned(input, context?.generation), error);
     },
     onSettled: (row, error, { id }) => afterSend(client, phone, { row, error, id }),
-  });
-}
-
-/** app-send gives the row a short pending window (docs/19). */
-type MessageAction = 'retry' | 'sent-manually' | 'hand-off' | 'app-send';
-
-/**
- * POST /messages/:id/retry (failed → queued), /sent-manually (the admin sent it from WhatsApp, so
- * the sender never sends it again) or /hand-off (wa.me opened: held until one of the other two).
- * Not optimistic: the API decides the new state.
- */
-export function useMessageAction(phone: string, action: MessageAction) {
-  const client = useQueryClient();
-  const queryKey = threadKey(phone);
-  return useMutation({
-    mutationFn: (id: string) => apiSend<MessageView>('POST', `/messages/${id}/${action}`),
-    onSuccess: (row) =>
-      client.setQueryData<ThreadCache>(queryKey, (old) => replaceMessage(old, row.id, row)),
-    onSettled: () => refreshInbox(client, phone),
   });
 }

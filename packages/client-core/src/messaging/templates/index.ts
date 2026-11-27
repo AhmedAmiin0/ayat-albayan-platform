@@ -11,5 +11,5 @@ export { crmWebhookCalls, type CrmWebhookCalls } from './crm-webhook';
 export { communicationsCalls, type CommunicationsCalls } from './communications';
 export {
   evolutionCalls, numbersCalls, type EvolutionCalls, type EvolutionConfigSave, type NumbersCalls,
-  type NumberSecretTarget,
+  type NumberSecretTarget, numberTemplateCalls, type NumberTemplateCalls,
 } from './numbers';

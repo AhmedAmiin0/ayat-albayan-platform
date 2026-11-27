@@ -17,3 +17,4 @@ export { appendComposerText } from './composer/draft-store';
 export { MessageSearchRow } from './thread/anchor';
 export { chatMaySend } from './thread/hooks/chat-window';
 export { TemplateCreateScreen, TemplateEditScreen, TemplatesScreen } from './composer/templates';
+export { useSendGate } from './shared/use-send-gate';
