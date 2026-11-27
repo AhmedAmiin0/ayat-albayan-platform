@@ -97,7 +97,7 @@ export * from './components/ui/surface/warn-line';
 export { AudioPlayer } from './lesson-files/AudioPlayer';
 export * from './lesson-files/file-words';
 export * from './lib/clock';
-export * from './lib/ClockOptions/ClockOptions';
+export { ClockOptions } from './lib/ClockOptions';
 export * from './lib/clock-text';
 export * from './lib/http/api';
 export * from './lib/http/api/api';
