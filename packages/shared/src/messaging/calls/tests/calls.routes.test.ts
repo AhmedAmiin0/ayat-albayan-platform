@@ -60,8 +60,9 @@ describe('callsRoutes', () => {
 
   it('acts on a call by its uuid and answers the live call', () => {
     const acts = [routes.accept, routes.reject, routes.end];
-    expect(acts.map((r) => r.params.safeParse({ id: 'm1' }).success)).toEqual([false, false, false]);
-    expect(acts.map((r) => r.params.parse({ id: ID }))).toEqual([{ id: ID }, { id: ID }, { id: ID }]);
+    const fits = (value: object) => acts.map((r) => r.params.safeParse(value).success);
+    expect(fits({ id: 'm1' })).toEqual([false, false, false]);
+    expect(fits({ id: ID })).toEqual([true, true, true]);
     expect(routes.start.response.parse(ACTIVE)).toEqual(ACTIVE);
     expect(routes.accept.body.safeParse({ sdp: 'hello' }).success).toBe(false);
   });

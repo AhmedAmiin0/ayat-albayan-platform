@@ -76,11 +76,13 @@ describe('the call routes through their route objects', () => {
   it('reads the config, the log of one chat or of all, and a number permission', async () => {
     const { api, apiFetch } = answering([CALL]);
     const queries = callQueries(api);
-    await expect(queries.callListQuery({ enabled: true, phone: null }).queryFn()).resolves.toEqual([CALL]);
+    const all = queries.callListQuery({ enabled: true, phone: null });
+    await expect(all.queryFn()).resolves.toEqual([CALL]);
     await queries.callListQuery({ enabled: true, phone: '+966501234567' }).queryFn();
     const permission = { state: 'granted', expires_at: null };
     apiFetch.mockResolvedValueOnce(permission);
-    await expect(queries.callPermissionQuery('+966501234567').queryFn()).resolves.toEqual(permission);
+    const asked = queries.callPermissionQuery('+966501234567');
+    await expect(asked.queryFn()).resolves.toEqual(permission);
     const config = { enabled: false, available: false, canCall: false, iceServers: [] };
     apiFetch.mockResolvedValueOnce(config);
     await expect(queries.callConfigQuery.queryFn()).resolves.toEqual(config);
@@ -96,6 +98,7 @@ describe('the call routes through their route objects', () => {
     const sends = callSends({ client: answering({ id: ID }).api, requestId: () => 'r1' });
     await expect(sends.endCall(ID)).rejects.toBeInstanceOf(ApiError);
     const polls = callQueries(answering([{ ...ACTIVE, status: 'held' }]).api);
-    await expect(polls.activeCallsQuery({ enabled: true, live: false }).queryFn()).rejects.toBeInstanceOf(ApiError);
+    const poll = polls.activeCallsQuery({ enabled: true, live: false });
+    await expect(poll.queryFn()).rejects.toBeInstanceOf(ApiError);
   });
 });

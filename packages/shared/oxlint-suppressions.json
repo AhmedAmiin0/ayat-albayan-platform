@@ -24,11 +24,6 @@
       "count": 1
     }
   },
-  "src/messaging/calls/call-types.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/messaging/chat/chat-files/chat-files.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
