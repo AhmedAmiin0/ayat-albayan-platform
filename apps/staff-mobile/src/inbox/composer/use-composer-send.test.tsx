@@ -25,7 +25,7 @@ function holdText() {
   // A text's answer echoes it (another body would be a replay of a first message).
   mockApiSend.mockImplementation((_m: string, path: string, sent?: { text?: string }) => {
     if (path.endsWith('/stage')) return Promise.resolve({ path: 'out/x.pdf', filename: 'الأسعار.pdf' });
-    if (path.endsWith('/file')) return Promise.resolve(message({ id: 'f1', status: 'queued' }));
+    if (path.endsWith('/file')) return Promise.resolve(message({ id: 'c3333333-3333-4333-8333-333333333333', status: 'queued' }));
     const row = message({ id: 't1', status: 'queued', body: sent?.text ?? null });
     return new Promise((resolve) => (release = () => resolve(row)));
   });
@@ -54,7 +54,7 @@ beforeEach(() => mockApiSend.mockReset());
 
 test('a retry of a failed staged file re-sends the clientRequestId minted when it was staged', async () => {
   mockApiSend.mockRejectedValueOnce(new Error('502')).mockImplementation((_m: string, path: string) =>
-    Promise.resolve(path.endsWith('/stage') ? { path: 'out/x.pdf', filename: 'الأسعار.pdf' } : message({ id: 'f1', status: 'queued' })),
+    Promise.resolve(path.endsWith('/stage') ? { path: 'out/x.pdf', filename: 'الأسعار.pdf' } : message({ id: 'c3333333-3333-4333-8333-333333333333', status: 'queued' })),
   );
   const { result } = await setup(file('stage-1'));
   await act(() => result.current.sendText());

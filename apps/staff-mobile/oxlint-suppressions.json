@@ -1645,9 +1645,6 @@
   "src/inbox/composer/send-file.ts": {
     "complexity": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/inbox/composer/use-composer-send.ts": {
@@ -2418,11 +2415,6 @@
   },
   "src/inbox/saved-replies/editor/ReplyFileField.tsx": {
     "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/inbox/saved-replies/hooks/send-staged.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

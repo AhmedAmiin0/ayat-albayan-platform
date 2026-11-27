@@ -95,4 +95,18 @@ describe('POST /threads/:phone/file-upload-url and /file (owner 2026-10-19 #2)',
   it('another role (a guardian) is stopped by the guard', async () => {
     expect((await t.call({ method: 'POST', url: `${URL}/file`, token: 'guardian', body: sendBody() })).statusCode).toBe(403);
   });
+  it('a teacher on a bad phone is still 403; sales on a bad phone is 400 invalid_phone', async () => {
+    const bad = '/threads/abc/file';
+    const teacher = await t.call({ method: 'POST', url: bad, token: 'teacher', body: sendBody() });
+    const sales = await t.call({ method: 'POST', url: bad, token: 'sales', body: sendBody() });
+    const codes = [teacher.statusCode, teacher.json().code, sales.statusCode, sales.json().code];
+    expect(codes).toEqual([403, 'files_forbidden', 400, 'invalid_phone']);
+  });
+
+  it('a bad body wins over a bad phone on the upload', async () => {
+    const body = { clientRequestId: REQ, mime: 'image/webp', size: 1 };
+    const url = '/threads/abc/file-upload-url';
+    const res = await t.call({ method: 'POST', url, token: 'sales', body });
+    expect([res.statusCode, res.json().code === 'invalid_phone']).toEqual([400, false]);
+  });
 });

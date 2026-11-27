@@ -1,10 +1,12 @@
 import type { MessageView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@ab/mobile-kit';
+import { chatFileCalls } from '@ab/client-core';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { fileSendSteps } from '@/inbox/composer/send-file';
 import { savedReplies } from './api';
-import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 import type { StagedFile } from './use-saved-reply';
+
+const chatFiles = chatFileCalls({ apiFetch, apiSend });
 
 /**
  * A picked reply's attachment, sent after its text: POST /saved-replies/:id/stage copies it as this
@@ -18,11 +20,8 @@ async function sendStagedFile(input: {
   id: string;
 }): Promise<MessageView> {
   const staged = await savedReplies.stage({ id: input.replyId, clientRequestId: input.id });
-  return apiSend<MessageView>('POST', `${threadPath(input.phone)}/file`, {
-    clientRequestId: input.id,
-    path: staged.path,
-    filename: staged.filename,
-  });
+  const body = { clientRequestId: input.id, path: staged.path, filename: staged.filename };
+  return chatFiles.send({ params: { phone: input.phone }, body });
 }
 
 /** As useSendFile (fileSendSteps): the API's row joins the thread at once, then it refetches. */

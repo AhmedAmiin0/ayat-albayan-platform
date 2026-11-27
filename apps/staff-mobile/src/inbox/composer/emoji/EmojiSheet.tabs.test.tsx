@@ -1,3 +1,4 @@
+import { aMessageView } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
@@ -51,7 +52,7 @@ test('GIF without a GIPHY key: the tab says an admin must add it', async () => {
 test('a GIF tap sends it by its GIPHY id and closes the panel', async () => {
   const gif = { id: 'x9', title: 'thanks', preview: 'https://media.giphy.com/x9/200w.gif', width: 200, height: 150 };
   serve({ '/threads/gifs': { configured: true, items: [gif] } });
-  mockApiSend.mockResolvedValue({ id: 'g1', phone_e164: PHONE });
+  mockApiSend.mockResolvedValue(aMessageView({ phone_e164: PHONE, media_mime: 'video/mp4' }));
   const onClose = jest.fn();
   await show(true, onClose);
   await fireEvent.press(screen.getByRole('tab', { name: c.tabs.gif }));
@@ -64,7 +65,7 @@ test('a GIF tap sends it by its GIPHY id and closes the panel', async () => {
 
 test('stickers: favourites then recent; a tap sends that sticker again', async () => {
   serve({ '/threads/stickers': { favourites: [ITEM], recent: [] } });
-  mockApiSend.mockResolvedValue({ id: 's1', phone_e164: PHONE });
+  mockApiSend.mockResolvedValue(aMessageView({ phone_e164: PHONE, media_mime: 'image/webp' }));
   await show();
   await fireEvent.press(screen.getByRole('tab', { name: c.tabs.stickers }));
   expect(await screen.findByText(c.stickerFavourites)).toBeTruthy();
