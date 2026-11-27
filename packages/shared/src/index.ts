@@ -21,7 +21,7 @@ export * from './sales/teacher-filter/teacher-filter';
 export * from './sales/money';
 export * from './sales/money-views';
 export * from './sales/payment-link';
-export * from './sales/registration';
+export * from './sales/registration-check';
 export * from './sales/family-link';
 export * from './sales/start-date';
 export * from './sales/used-before/used-before-edit';

@@ -75,4 +75,9 @@ describe('GET /sales/registration-check (students.check_registration)', () => {
     expect(t.queries.byPhone).not.toHaveBeenCalled();
     expect(t.queries.byName).not.toHaveBeenCalled();
   });
+  it('a child status outside the catalog is a 500 response_invalid', async () => {
+    t.queries.byPhone.mockResolvedValue([row('ياسمين', { status: 'gone' })]);
+    const res = await t.get(PHONE, 'sales');
+    expect([res.statusCode, res.json<{ code: string }>().code]).toEqual([500, 'response_invalid']);
+  });
 });
