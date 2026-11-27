@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
@@ -35,7 +35,7 @@ describe('LessonDrawer — teacher proposals and generated clashes (R-SCH-08, R-
   it('approving a proposal over a clash needs a reason, then moves the lesson', async () => {
     apiSend
       .mockRejectedValueOnce(new ApiError(409, { code: 'conflict', message: 'conflict', conflicts: [CLASH] }))
-      .mockResolvedValueOnce(lesson());
+      .mockResolvedValueOnce(answered(lesson()));
     const { drawer, onDone } = renderDrawer(lesson({ pending_proposal: PENDING }));
     const box = within(drawer).getByRole('region', { name: t.lessons.proposal.title });
     expect(within(box).getByText(/الثلاثاء 6 أكتوبر 18:30/)).toBeTruthy();
@@ -49,7 +49,7 @@ describe('LessonDrawer — teacher proposals and generated clashes (R-SCH-08, R-
   });
 
   it('rejecting only answers the teacher', async () => {
-    apiSend.mockResolvedValue(lesson());
+    apiSend.mockResolvedValue(answered(lesson()));
     const { drawer, onDone } = renderDrawer(lesson({ pending_proposal: PENDING }));
     fireEvent.click(within(drawer).getByRole('button', { name: t.lessons.proposal.reject }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.lessons.proposal.rejected));

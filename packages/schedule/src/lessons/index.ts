@@ -8,6 +8,7 @@ export * from './proposals/proposals';
 export * from './series/series-days';
 export * from './lesson-lists';
 export * from './lesson-actions';
+export * from './lesson-proposals';
 export * from './teacher-name';
 export * from './makeup-offer';
 export * from './series/day-times';
