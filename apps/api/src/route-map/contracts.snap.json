@@ -3346,11 +3346,50 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "state": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "open",
+        "connecting",
+        "close",
+        "refused"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "qr": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "pairing_code": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "state",
+    "qr",
+    "pairing_code"
    ]
   }
  },
@@ -3362,11 +3401,40 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "state": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "open",
+        "connecting",
+        "close",
+        "refused"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "checked_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "state",
+    "checked_at"
    ]
   }
  },
@@ -3378,11 +3446,56 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "synced": {
+     "type": "boolean"
+    },
+    "checked_at": {
+     "type": "string"
+    },
+    "parts": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "instance",
+       "settings",
+       "webhook",
+       "proxy"
+      ]
+     },
+     "additionalProperties": {
+      "type": "string",
+      "enum": [
+       "synced",
+       "drift",
+       "failed",
+       "skipped",
+       "disabled"
+      ]
+     },
+     "required": [
+      "instance",
+      "settings",
+      "webhook",
+      "proxy"
+     ]
+    }
+   },
+   "required": [
+    "synced",
+    "checked_at",
+    "parts"
    ]
   }
  },
@@ -24640,11 +24753,56 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "synced": {
+     "type": "boolean"
+    },
+    "checked_at": {
+     "type": "string"
+    },
+    "parts": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "instance",
+       "settings",
+       "webhook",
+       "proxy"
+      ]
+     },
+     "additionalProperties": {
+      "type": "string",
+      "enum": [
+       "synced",
+       "drift",
+       "failed",
+       "skipped",
+       "disabled"
+      ]
+     },
+     "required": [
+      "instance",
+      "settings",
+      "webhook",
+      "proxy"
+     ]
+    }
+   },
+   "required": [
+    "synced",
+    "checked_at",
+    "parts"
    ]
   }
  },
@@ -42857,7 +43015,7 @@
     "id": {
      "type": "string",
      "format": "uuid",
-     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
     }
    },
    "required": [
@@ -43111,6 +43269,51 @@
      }
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "synced": {
+     "type": "boolean"
+    },
+    "checked_at": {
+     "type": "string"
+    },
+    "parts": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "instance",
+       "settings",
+       "webhook",
+       "proxy"
+      ]
+     },
+     "additionalProperties": {
+      "type": "string",
+      "enum": [
+       "synced",
+       "drift",
+       "failed",
+       "skipped",
+       "disabled"
+      ]
+     },
+     "required": [
+      "instance",
+      "settings",
+      "webhook",
+      "proxy"
+     ]
+    }
+   },
+   "required": [
+    "synced",
+    "checked_at",
+    "parts"
+   ]
   }
  },
  "PUT /admin/numbers/:id/secrets/:name": {

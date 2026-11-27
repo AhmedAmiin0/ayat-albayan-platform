@@ -1,49 +1,47 @@
 import {
-  evolutionConfigSchema, evolutionSyncFailed, type EvolutionConfig, type EvolutionSyncView,
+  evolutionRoutes as routes,
+  evolutionSyncFailed,
+  evolutionSyncSchema,
+  type EvolutionSyncView,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Post, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
-import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { NumbersEvolution } from '@/modules/messaging/numbers';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { asResponse } from '@/common/http/returns';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { CurrentUser } from '@/common/auth/decorators';
 import { evolutionFailure } from './evolution-failure';
 import { syncEvolution } from './evolution-push';
 
-const ID = z.uuid();
-
-/** Saved (zod), pushed and read back; numbers.manage; no secret in a body, answer or log. */
-@ApiTags('numbers')
+/** Saved, pushed and read back; no secret in a body, answer or log. */
 @ApiBearerAuth()
-@Controller('admin/numbers/:id/evolution')
+@Controller()
 export class EvolutionConfigController {
   constructor(private readonly numbers: NumbersEvolution) {}
 
-  /** Save, then push and read back (a save stands even when Evolution is unreachable: 502). */
-  @Put('config')
-  @Permissions('numbers.manage')
+  /** A save stands even when Evolution is unreachable: 502 with saved. */
+  @Route(routes.saveConfig)
   async config(
-    @ZodParam('id', ID) id: string,
-    @ZodBody(evolutionConfigSchema) config: EvolutionConfig,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.saveConfig>,
     @CurrentUser() user: AuthUser,
   ): Promise<EvolutionSyncView> {
-    await this.numbers.saveConfig({ id, config, actorId: user.id });
-    return this.sync(id, { push: true, saved: true });
+    await this.numbers.saveConfig({ id: params.id, config: body, actorId: user.id });
+    return this.sync(params.id, { push: true, saved: true });
   }
 
-  @Post('sync')
+  @Route(routes.push)
   @HttpCode(200)
-  @Permissions('numbers.manage')
-  push(@ZodParam('id', ID) id: string): Promise<EvolutionSyncView> {
-    return this.sync(id, { push: true, saved: false });
+  push(@RouteInput() { params }: RouteInputOf<typeof routes.push>): Promise<EvolutionSyncView> {
+    return this.sync(params.id, { push: true, saved: false });
   }
 
-  /** Read back only: nothing is written to Evolution. */
-  @Get('sync')
-  @Permissions('numbers.manage')
-  verify(@ZodParam('id', ID) id: string): Promise<EvolutionSyncView> {
-    return this.sync(id, { push: false, saved: false });
+  @Route(routes.verify)
+  async verify(
+    @RouteInput() { params }: RouteInputOf<typeof routes.verify>,
+  ): Promise<EvolutionSyncView> {
+    const view = await this.sync(params.id, { push: false, saved: false });
+    return asResponse(evolutionSyncSchema, view);
   }
 
   /** A failure first stores unsynced, so an older synced state never outlives it. */

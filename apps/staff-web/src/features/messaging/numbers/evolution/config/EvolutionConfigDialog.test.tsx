@@ -8,7 +8,12 @@ import { syncView } from '@/features/messaging/numbers/evolution/sync/sync.fixtu
 import { EvolutionConfigDialog } from './EvolutionConfigDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const e = t.numbers.evolution;
 const c = e.config;
@@ -23,7 +28,10 @@ function open(evolution: NumberEvolutionView = evolutionPart()) {
 const field = (dialog: HTMLElement, label: string) =>
   within(dialog).getByLabelText<HTMLInputElement>(label, { exact: false });
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => {
+  apiFetch.mockReset();
+  apiSend.mockReset();
+});
 
 describe('«إعدادات Evolution»', () => {
   it('shows every section with the defaults; no Cloud section on Baileys', () => {
@@ -53,7 +61,7 @@ describe('«إعدادات Evolution»', () => {
     const dialog = open(evolutionPart({ mode: 'cloud' }));
     fireEvent.click(within(dialog).getByRole('button', { name: c.save }));
     expect(within(dialog).getAllByText(c.errors.cloud_needed)).toHaveLength(2);
-    expect(apiFetch).not.toHaveBeenCalled();
+    expect(apiSend).not.toHaveBeenCalled();
     expect(within(dialog).getByText(c.sections.cloud)).toBeTruthy();
     expect(field(dialog, c.cloud.phone_number_id)).toBeTruthy();
     expect(within(dialog).getByLabelText(t.numbers.fields.evolution_cloud_token)).toBeTruthy();
@@ -62,16 +70,10 @@ describe('«إعدادات Evolution»', () => {
   it('saves with PUT …/evolution/config and shows the answer read back', async () => {
     const dialog = open();
     fireEvent.change(field(dialog, c.limits.gap_ms), { target: { value: '5000' } });
-    apiFetch.mockResolvedValue(syncView({ synced: true }));
+    apiSend.mockResolvedValue(syncView({ synced: true }));
     fireEvent.click(within(dialog).getByRole('button', { name: c.save }));
     const config = evolutionConfigSchema.parse({ limits: { gap_ms: 5000 } });
-    await waitFor(() =>
-      expect(apiFetch).toHaveBeenCalledWith(CONFIG_PATH, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(config),
-      }),
-    );
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', CONFIG_PATH, config));
     expect(await within(dialog).findByText(e.sync.synced)).toBeTruthy();
   });
 
@@ -81,7 +83,7 @@ describe('«إعدادات Evolution»', () => {
     fireEvent.click(within(dialog).getByRole('button', { name: c.save }));
     expect(within(dialog).getByText(c.invalid)).toBeTruthy();
     expect(within(dialog).getByText(c.errors.proxy_needed)).toBeTruthy();
-    expect(apiFetch).not.toHaveBeenCalled();
+    expect(apiSend).not.toHaveBeenCalled();
   });
 
   it('no public origin configured: the URL says so; turning events off explains the cost', () => {
@@ -93,7 +95,7 @@ describe('«إعدادات Evolution»', () => {
 
   it('a refusal from Evolution is said in words (502 evolution_unreachable)', async () => {
     const dialog = open();
-    apiFetch.mockRejectedValue(new ApiError(502, { code: 'evolution_unreachable', saved: true }));
+    apiSend.mockRejectedValue(new ApiError(502, { code: 'evolution_unreachable', saved: true }));
     fireEvent.click(within(dialog).getByRole('button', { name: c.save }));
     const words = `${e.errors.savedNotPushed} ${e.errors.evolution_unreachable}`;
     expect(await within(dialog).findByText(words)).toBeTruthy();
