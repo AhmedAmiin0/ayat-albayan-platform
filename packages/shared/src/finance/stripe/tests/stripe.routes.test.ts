@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { stripeRoutes } from '../stripe.routes';
 
 const line = (r: { method: string; path: string }) => `${r.method} ${r.path}`;
-const accessOf = ({ permissions, tags }: { permissions?: unknown; tags?: unknown }) => ({
-  permissions,
-  tags,
-});
+interface Access {
+  permissions?: unknown;
+  tags?: unknown;
+  isPublic?: unknown;
+}
+const accessOf = ({ permissions, tags, isPublic }: Access) => ({ permissions, tags, isPublic });
 
 describe('stripeRoutes (docs/30)', () => {
   it('keeps the paths the api serves today', () => {
@@ -15,12 +17,9 @@ describe('stripeRoutes (docs/30)', () => {
     ]);
   });
 
-  it('tags both as stripe and names no permission: the feature is public, Stripe signs the hook', () => {
+  it('tags both as stripe and marks both public: Stripe signs the hook', () => {
     for (const route of Object.values(stripeRoutes)) {
-      expect(accessOf(route)).toEqual({
-        permissions: undefined,
-        tags: ['stripe'],
-      });
+      expect(accessOf(route)).toEqual({ permissions: undefined, tags: ['stripe'], isPublic: true });
     }
   });
 

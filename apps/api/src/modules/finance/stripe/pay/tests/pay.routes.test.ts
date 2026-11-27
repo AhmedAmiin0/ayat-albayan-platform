@@ -1,14 +1,17 @@
 import { describe, expect, it } from 'vitest';
+import { OWN_PUBLIC } from '@/common/auth/decorators';
 import { routeOf } from '@/common/http/route';
 import { PayController } from '@/modules/finance/stripe/pay/pay.controller';
 import { payPageRoutes } from '@/modules/finance/stripe/pay/pay.routes';
 
 const line = (r: { method: string; path: string }) => `${r.method} ${r.path}`;
 const handler = (name: 'get' | 'go' | 'done' | 'cancelled') => PayController.prototype[name];
-const accessOf = ({ permissions, tags }: { permissions?: unknown; tags?: unknown }) => ({
-  permissions,
-  tags,
-});
+interface Access {
+  permissions?: unknown;
+  tags?: unknown;
+  isPublic?: unknown;
+}
+const accessOf = ({ permissions, tags, isPublic }: Access) => ({ permissions, tags, isPublic });
 
 describe('payPageRoutes (docs/30): the pages a browser opens, no client calls them', () => {
   it('keeps the paths the api serves today', () => {
@@ -43,10 +46,14 @@ describe('payPageRoutes (docs/30): the pages a browser opens, no client calls th
     expect(response.safeParse(view).success).toBe(false);
   });
 
-  it('tags every page stripe and names no permission: the pages are public', () => {
+  it('tags every page stripe and marks it public on its route object', () => {
     for (const route of Object.values(payPageRoutes)) {
-      expect(accessOf(route)).toEqual({ permissions: undefined, tags: ['stripe'] });
+      expect(accessOf(route)).toEqual({ permissions: undefined, tags: ['stripe'], isPublic: true });
     }
+  });
+
+  it('leaves the public mark to the route objects, not to the controller', () => {
+    expect(Reflect.getMetadata(OWN_PUBLIC, PayController)).toBeUndefined();
   });
 
   it('reads the link token from the path', () => {
