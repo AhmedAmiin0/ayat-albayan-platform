@@ -11,7 +11,7 @@ export function PasswordInput({
   autoComplete = 'current-password',
   ...field
 }: Props) {
-  const { shown, setShown } = usePasswordInput();
+  const { shown, toggle } = usePasswordInput();
   return (
     <div dir="ltr" className="relative">
       <Input
@@ -28,7 +28,7 @@ export function PasswordInput({
         aria-label={t.auth.showPassword}
         aria-pressed={shown}
         aria-controls={field.id}
-        onClick={() => setShown((s) => !s)}
+        onClick={toggle}
         className="absolute inset-y-0 end-1 my-auto grid size-9 cursor-pointer place-items-center rounded-sm text-ink-2 hover:bg-accent hover:text-lapis aria-pressed:text-lapis max-sm:size-11"
       >
         <Icon name={shown ? 'eye-off' : 'eye'} />

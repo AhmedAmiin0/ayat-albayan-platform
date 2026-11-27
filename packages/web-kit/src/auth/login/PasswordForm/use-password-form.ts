@@ -1,6 +1,6 @@
 import { useForm } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useState, type SubmitEvent } from 'react';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { signIn } from '@ab/web-kit/auth/sign-in';
 import { useLandAfterSignIn } from '@ab/web-kit/auth/use-return-to';
@@ -21,5 +21,9 @@ export function usePasswordForm() {
       else setError(result.error);
     },
   });
-  return { error, form };
+  const submit = (e: SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    void form.handleSubmit();
+  };
+  return { error, form, submit };
 }

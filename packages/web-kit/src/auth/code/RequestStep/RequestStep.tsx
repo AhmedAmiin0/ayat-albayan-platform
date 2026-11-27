@@ -3,6 +3,7 @@ import { Field } from '@ab/web-kit/components/ui/form/Field';
 import { Input } from '@ab/web-kit/components/ui/form/Input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import type { Props } from './RequestStep.types';
+import { submitWhenFilled } from './request-step.helpers';
 
 export function RequestStep({
   label,
@@ -16,14 +17,7 @@ export function RequestStep({
   children,
 }: Props) {
   return (
-    <form
-      noValidate
-      className="grid gap-[22px]"
-      onSubmit={(e) => {
-        e.preventDefault();
-        if (value.trim()) onSubmit();
-      }}
-    >
+    <form noValidate className="grid gap-[22px]" onSubmit={submitWhenFilled(value, onSubmit)}>
       <Field label={label} hint={hint} error={error}>
         {(p) => (
           <Input

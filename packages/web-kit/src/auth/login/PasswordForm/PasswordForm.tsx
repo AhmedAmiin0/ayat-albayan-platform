@@ -13,16 +13,9 @@ import { usePasswordForm } from './use-password-form';
  * through POST /auth/login. `noValidate`: blank fields get the Arabic field error (docs/07 §10).
  */
 export function PasswordForm({ id, label, hint, children }: Props) {
-  const { error, form } = usePasswordForm();
+  const { error, form, submit } = usePasswordForm();
   return (
-    <form
-      noValidate
-      className="grid gap-[22px]"
-      onSubmit={(e) => {
-        e.preventDefault();
-        void form.handleSubmit();
-      }}
-    >
+    <form noValidate className="grid gap-[22px]" onSubmit={submit}>
       <form.Field name="identifier" validators={{ onSubmit: required }}>
         {(field) => (
           <Field id={id} label={label} hint={hint} error={field.state.meta.errors[0]}>

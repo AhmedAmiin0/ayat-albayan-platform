@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { RequestStep } from './RequestStep';
+import { RequestStep } from '@ab/web-kit/auth/code/RequestStep';
 
 const F = t.familyAuth;
 const base = { label: F.phone, onValue: vi.fn(), busy: false };
