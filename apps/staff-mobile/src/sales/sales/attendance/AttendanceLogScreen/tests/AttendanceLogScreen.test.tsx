@@ -8,7 +8,7 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { AttendanceLogScreen } from '@/sales/sales/attendance/AttendanceLogScreen/AttendanceLogScreen';
 import { dayDateOf, monthOf } from '@/sales/sales/attendance/attendance-log-text';
-import { logRow, logTable } from '@/sales/sales/attendance/fixtures';
+import { lessonId, logRow, logTable } from '@/sales/sales/attendance/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
@@ -71,7 +71,7 @@ test('a month without lessons: the empty state under the header', async () => {
 });
 
 test('a lesson the course pause cancelled: «ألغتها الإدارة» with the reason «إيقاف مؤقت»', async () => {
-  const paused = logRow({ lesson_id: 'l4', status: 'cancelled_by_admin', attendance: null, kind: 'cancelled', report_sent: false, report_id: null, cancel_reason: COURSE_PAUSE_REASON });
+  const paused = logRow({ lesson_id: lessonId(4), status: 'cancelled_by_admin', attendance: null, kind: 'cancelled', report_sent: false, report_id: null, cancel_reason: COURSE_PAUSE_REASON });
   mockApiFetch.mockResolvedValue(logTable({ items: [paused] }));
   await inSales(<AttendanceLogScreen />);
   expect(await screen.findByText(w.cancelReason.replace('{reason}', COURSE_PAUSE_REASON))).toBeTruthy();

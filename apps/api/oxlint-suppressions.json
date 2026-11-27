@@ -6386,11 +6386,6 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales-students/attendance/student-attendance.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/sales/sales-students/attendance/student-attendance.fakes.ts": {
     "stylistic/max-len": {
       "count": 2
