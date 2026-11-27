@@ -1,17 +1,11 @@
-import { channelPresenceKey, channelPresencePath } from '@ab/client-core';
-import {
-  channelPresenceSchema,
-  presenceLine,
-  type ChannelPresence,
-  type PresencePeer,
-} from '@ab/shared';
+import { channelPresenceKey } from '@ab/client-core';
+import { presenceLine, type ChannelPresence, type PresencePeer } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '../lib/http/api';
 import { chatStatus } from '../lib/presence/presence-peers';
 import { usePresenceClock } from '../lib/presence/use-presence-clock';
 import { usePresenceWatch } from '../lib/presence/use-presence-watch';
 import { useScreenFocused } from '../ui/connecting/use-screen-focus';
-import type { ChannelRef } from './channel-api';
+import { channelCalls, type ChannelRef } from './channel-api';
 
 /** Last seen moves by the minute at most (the API's throttle): re-read it once a minute. */
 const PRESENCE_REFRESH_MS = 60_000;
@@ -27,8 +21,7 @@ export function useChannelPresence({ audience, studentId }: ChannelRef) {
   const focused = useScreenFocused();
   const query = useQuery({
     queryKey: channelPresenceKey(audience, studentId),
-    queryFn: async () =>
-      channelPresenceSchema.parse(await apiFetch(channelPresencePath(audience, studentId))),
+    queryFn: () => channelCalls[audience].presence(studentId),
     enabled: studentId !== '',
     refetchInterval: focused ? PRESENCE_REFRESH_MS : false,
   });

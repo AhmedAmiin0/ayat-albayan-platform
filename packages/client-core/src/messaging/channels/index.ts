@@ -7,13 +7,11 @@ export {
   type ChannelAudience,
   channelKey,
   channelMessagesPath,
-  channelPresencePath,
   channelReadPath,
   channelUploadPath,
   channelTimeText,
   olderCursor,
   portalUnreadPath,
-  TEACHER_CHANNELS_PATH,
   threadMessages,
 } from './channels';
 export {
@@ -39,7 +37,6 @@ export {
   channelBubbleActions,
   channelEditError,
   channelMessagePath,
-  channelReadsPath,
 } from './channel-edits';
 export {
   channelPresenceKey,
@@ -72,3 +69,14 @@ export {
   channelFileProblem,
   uploadChannelFile,
 } from './thread/upload';
+export {
+  type ChannelCalls,
+  channelCallsByAudience,
+  type ChannelMessageAsk,
+  type ChannelPageAsk,
+  monitorChannelCalls,
+  portalChannelCalls,
+  salesChannelCalls,
+  type TeacherChannelCalls,
+  teacherChannelCalls,
+} from './channel-calls';

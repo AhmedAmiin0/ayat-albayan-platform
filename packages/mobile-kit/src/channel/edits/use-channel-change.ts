@@ -2,7 +2,7 @@ import { apiErrorCode, channelEditError, channelMessagePath } from '@ab/client-c
 import { useMutation } from '@tanstack/react-query';
 import { apiSend } from '../../lib/http/api';
 import { t } from '../../lib/i18n/i18n';
-import { useChannelSettle, type ChannelRef } from '../channel-api';
+import { channelCalls, useChannelSettle, type ChannelRef } from '../channel-api';
 
 /**
  * The API's refusal in words: a window passed, not yours, already deleted, a read-only view, a
@@ -23,7 +23,8 @@ export function useChannelChange(ref: ChannelRef) {
     onSettled: settle,
   });
   const remove = useMutation({
-    mutationFn: (id: string) => apiSend('DELETE', path(id)),
+    mutationFn: (messageId: string) =>
+      channelCalls[ref.audience].remove({ studentId: ref.studentId, messageId }),
     onSettled: settle,
   });
   return { edit, remove };

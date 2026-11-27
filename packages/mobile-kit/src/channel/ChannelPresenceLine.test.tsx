@@ -1,4 +1,3 @@
-import { channelPresencePath } from '@ab/client-core';
 import type { ChannelPresence } from '@ab/shared';
 import { act, screen, waitFor } from '@testing-library/react-native';
 import { t } from '../lib/i18n/i18n';
@@ -35,7 +34,7 @@ test('offline: «آخر ظهور منذ 5 دقائق» under the title, no dot; 
   const when = p.minutes.few.replace('{n}', '5');
   expect(await screen.findByText(p.lastSeen.replace('{when}', when))).toBeTruthy();
   expect(screen.queryByTestId('presence-dot')).toBeNull();
-  expect(mockApiFetch).toHaveBeenCalledWith(channelPresencePath('teacher', 's1'));
+  expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/channels/s1/presence');
 });
 
 test('online on the socket: «متصل الآن» with the dot; gone again: last seen', async () => {

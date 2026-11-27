@@ -1,13 +1,15 @@
-import { channelKey, channelPollMs, channelMessagesPath, olderCursor } from '@ab/client-core';
+import { channelCallsByAudience, channelKey, channelPollMs, olderCursor } from '@ab/client-core';
 import type { ChannelAudience } from '@ab/client-core';
-import { channelPageSchema } from '@ab/shared';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch } from '../lib/http/api';
+import { apiFetch, apiSend } from '../lib/http/api';
 import { useScreenFocused } from '../ui/connecting/use-screen-focus';
 
 // The student channel on the phone (docs/31 §2), the same for the teacher, the family and the
 // monitors: the thread has its socket (use-channel-live) and polls only as the fallback
 // (channelPollMs).
+
+/** Each audience's reads of a chat on its own route table. */
+export const channelCalls = channelCallsByAudience({ apiFetch, apiSend });
 
 export interface ChannelRef {
   audience: ChannelAudience;
@@ -22,10 +24,7 @@ export function useChannel({ audience, studentId }: ChannelRef, live = false) {
   const focused = useScreenFocused();
   return useInfiniteQuery({
     queryKey: channelKey(audience, studentId),
-    queryFn: async ({ pageParam }) => {
-      const path = channelMessagesPath({ audience, studentId, before: pageParam });
-      return channelPageSchema.parse(await apiFetch(path));
-    },
+    queryFn: ({ pageParam }) => channelCalls[audience].page({ studentId, before: pageParam }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: olderCursor,
     refetchInterval: focused ? channelPollMs(live) : false,
