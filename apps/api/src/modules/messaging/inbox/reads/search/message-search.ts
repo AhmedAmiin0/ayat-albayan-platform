@@ -1,4 +1,10 @@
-import { messageMatches, searchCursor, type MessageSearchPage } from '@ab/shared';
+import {
+  messageMatches,
+  messageSearchPageSchema,
+  searchCursor,
+  type MessageSearchPage,
+} from '@ab/shared';
+import { asResponse } from '@/common/http/returns';
 import { hitOf, texts } from './chat-search';
 import type { MessageSearchRow } from './message-search.repo';
 
@@ -23,5 +29,8 @@ export function messageSearchPage(
   const items = page
     .filter((r) => messageMatches(texts(r), input.q))
     .map((r) => ({ ...hitOf(r, input.q), phone_e164: r.phone_e164, display_name: r.display_name }));
-  return { items, next_cursor: more ? searchCursor(last) : null };
+  return asResponse(messageSearchPageSchema, {
+    items,
+    next_cursor: more ? searchCursor(last) : null,
+  });
 }
