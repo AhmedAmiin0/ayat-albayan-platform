@@ -1,104 +1,12 @@
-import type { PaymentKind, PaymentMethod, PayoutStatus } from '@ab/catalog';
-import type { AssistantCommissionStatus, AssistantCommissionType } from './commission';
-import type { AssistantCommissionKind } from './kind';
-import type { CurrencyTotals, StatementLineKind } from './statement';
+import type { PaymentKind, PaymentMethod } from '@ab/catalog';
+import type { AssistantCommissionStatus } from './commission';
+import type { AssistantTermsView } from './schemas';
+import type { CurrencyTotals } from './statement';
+import type { AssistantStatementView } from './statement-view.schemas';
 import type { WalletTotals } from './wallet';
 
 // Assistant (base role sales) responses: snake_case, instants ISO UTC, months and days
 // YYYY-MM-01 / YYYY-MM-DD. Amounts are per currency; nothing here sums across currencies.
-
-/** GET /assistant-pay/terms (admin) and the `terms` of /sales/me/earnings. */
-export interface AssistantTermsView {
-  assistant_id: string;
-  commission: {
-    type: AssistantCommissionType;
-    value: number;
-    currency: string | null;
-    starts_on: string;
-  } | null;
-  salary: { amount: number; currency: string; starts_on: string } | null;
-  /** Renewal commission share now; 0 while renewal commission is off (renewalShareNow). */
-  renewal_share_percent: number;
-}
-
-/**
- * GET /assistant-pay/terms rows: every assistant with their terms (both null until an admin sets
- * them).
- */
-export interface AssistantTermsRow extends AssistantTermsView {
-  name: string;
-}
-
-/** POST /assistant-pay/brought-by. */
-export interface BroughtByResult {
-  changed: number;
-}
-
-/**
- * GET /assistant-pay/brought-by/:studentId: who brought a student and when (both null when nobody
- * did).
- */
-export interface BroughtByView {
-  assistant: { id: string; name: string } | null;
-  brought_at: string | null;
-}
-
-/** GET /assistant-pay/commissions (admin ledger, all assistants). */
-export interface AssistantCommissionView {
-  id: string;
-  assistant: { id: string; name: string };
-  student: { id: string; code: string; name: string };
-  subscription_id: string | null;
-  /**
-   * 'first' (once per student) or 'renewal' (each later package, at share_percent of the normal
-   * commission).
-   */
-  kind: AssistantCommissionKind;
-  /**
-   * The share of the normal commission it was earned at: 100 for a first, the setting at earn time
-   * for a renewal.
-   */
-  share_percent: number;
-  type: AssistantCommissionType;
-  /** The term's value when it was earned: percent points, or the fixed amount. */
-  rate: number;
-  base_amount: number;
-  base_currency: string;
-  amount: number;
-  currency: string;
-  earned_at: string;
-  status: AssistantCommissionStatus;
-  void_reason: string | null;
-  voided_at: string | null;
-  statement_id: string | null;
-}
-
-export interface AssistantStatementLineView {
-  kind: StatementLineKind;
-  amount: number;
-  currency: string;
-  /** commission lines: the student; adjustment lines: the reason. */
-  student: { code: string; name: string } | null;
-  /** Commission lines: commission or renewal commission; null on the other lines. */
-  commission_kind: AssistantCommissionKind | null;
-  reason: string | null;
-}
-
-/** GET /assistant-pay/statements rows and details; a salesperson's own in /sales/me/earnings. */
-export interface AssistantStatementView {
-  id: string;
-  assistant: { id: string; name: string };
-  month: string;
-  status: PayoutStatus;
-  /** Frozen with the statement: {currency: {salary, commissions, adjustments, total}}. */
-  totals: Record<string, CurrencyTotals>;
-  lines: AssistantStatementLineView[];
-  approved_at: string | null;
-  paid_at: string | null;
-  method: PaymentMethod | null;
-  note: string | null;
-  has_receipt: boolean;
-}
 
 /** GET /sales/me/students: the students this assistant brought, newest first. */
 export interface MyStudentRow {
