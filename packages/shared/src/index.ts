@@ -59,6 +59,7 @@ export * from './finance/receivables';
 export * from './finance/expenses';
 export * from './finance/earnings';
 export * from './finance/payouts';
+export * from './finance/assistant-pay';
 export * from './finance/payments';
 export * from './finance/admin-tasks';
 export * from './notifications';
