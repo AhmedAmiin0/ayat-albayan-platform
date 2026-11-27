@@ -2,10 +2,6 @@ import { NO_REACTIONS, nextReaction, REACTION_EMOJIS, type MessageReactions, typ
 
 // Pure: the apps own the request, the cache and the UI.
 
-/** PUT {emoji, clientRequestId}: ours on that message (null removes it). */
-export const reactionPath = (phone: string, messageId: string): string =>
-  `/threads/${encodeURIComponent(phone)}/messages/${messageId}/reaction`;
-
 /** What a tap on `tapped` asks for: our current emoji again removes it. */
 export const tappedReaction = (r: MessageReactions | undefined, tapped: string): string | null =>
   nextReaction(r?.ours ?? null, tapped);

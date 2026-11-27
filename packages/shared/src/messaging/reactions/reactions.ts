@@ -1,7 +1,5 @@
 import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
-import type { MessageStatus } from '@ab/catalog';
-import type { MessageView } from '../chat/views';
 import { isPayloadOfType, lenientText, parseOrNull, payloadOfType } from '../payload';
 
 // WhatsApp message reactions: hold a message to react. WhatsApp is 1:1: one
@@ -40,17 +38,6 @@ export interface MessageReactions {
   theirs: string | null;
   ours: string | null;
   ours_by: string | null;
-}
-
-/**
- * The PUT's answer: the reacted message as it is now, and how the send went (a failed one is
- * already reverted).
- */
-export interface ReactionResult {
-  message: MessageView;
-  status: MessageStatus;
-  error_code: string | null;
-  error_text: string | null;
 }
 
 export const NO_REACTIONS: MessageReactions = { theirs: null, ours: null, ours_by: null };

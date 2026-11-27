@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { MessageView } from '../chat/views';
+import type { MessageView } from '../chat/message-view';
 import { withMarks } from './message-marks';
 
 const view = {
