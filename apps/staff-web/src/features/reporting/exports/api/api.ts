@@ -1,3 +1,5 @@
+import { routePath } from '@ab/core';
+import { exportRoutes } from '@ab/shared';
 import { apiBlob, errorCode } from '@ab/web-kit';
 import type { ExportKind, ExportRequest } from './api.types';
 
@@ -6,7 +8,7 @@ import type { ExportKind, ExportRequest } from './api.types';
 
 export function exportPath({ kind, params = {} }: ExportRequest): string {
   const query = new URLSearchParams(params).toString();
-  return `/exports/${kind}.csv${query ? `?${query}` : ''}`;
+  return `${routePath(exportRoutes[kind])}${query ? `?${query}` : ''}`;
 }
 
 /** The server's file name, else `<kind>.csv`. */

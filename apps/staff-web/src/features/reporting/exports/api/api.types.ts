@@ -1,11 +1,6 @@
-export type ExportKind =
-  | 'students'
-  | 'lessons'
-  | 'payments'
-  | 'payouts'
-  | 'expenses'
-  | 'teacher-ledger'
-  | 'receivables';
+import type { exportRoutes } from '@ab/shared';
+
+export type ExportKind = keyof typeof exportRoutes;
 
 export interface ExportRequest {
   kind: ExportKind;
