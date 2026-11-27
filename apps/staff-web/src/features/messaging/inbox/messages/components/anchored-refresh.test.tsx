@@ -63,6 +63,7 @@ function MoveButton() {
 
 describe('bubble actions refresh an anchored window', () => {
   it('«حذف من المنصة» (useHide)', async () => {
+    apiSend.mockResolvedValue(undefined);
     const client = mount(<HideButton />);
     fireEvent.click(screen.getByRole('button', { name: 'hide' }));
     await waitFor(() => expect(refreshed(client)).toBe(true));

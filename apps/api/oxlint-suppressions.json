@@ -2624,11 +2624,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/hide/message-hide.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/messaging/inbox/people/thread-people.mapper.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1

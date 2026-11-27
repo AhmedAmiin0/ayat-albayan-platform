@@ -5,7 +5,6 @@ import {
   channelEditError,
   channelMessagePath,
   channelReadsPath,
-  threadHidePath,
 } from '../channel-edits';
 
 const at = '2026-10-30T10:00:00.000Z';
@@ -43,7 +42,6 @@ describe('channel edit / delete for the clients', () => {
     expect(channelReadsPath({ audience: 'admin', studentId: 's', messageId: 'm' })).toBe(
       '/students/s/channel/messages/m/reads',
     );
-    expect(threadHidePath('+966501234567', 'm')).toBe('/threads/%2B966501234567/messages/m/hide');
   });
 
   it("the sender's windows (sales too); the admin deletes any; a deleted bubble nothing", () => {

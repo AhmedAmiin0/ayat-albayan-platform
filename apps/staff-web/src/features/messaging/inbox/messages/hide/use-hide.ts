@@ -1,11 +1,13 @@
-import { threadHidePath } from '@ab/client-core';
+import { messageHideCalls } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 
+const hides = messageHideCalls({ apiFetch, apiSend });
+
 /**
- * POST hides, DELETE shows again; the open chat re-reads after either. Nothing goes to WhatsApp.
+ * Hiding and showing again; the open chat re-reads after either. Nothing goes to WhatsApp.
  */
 export function useHide(phone: string) {
   const client = useQueryClient();
@@ -15,11 +17,11 @@ export function useHide(phone: string) {
       refreshAnchored(client, phone),
     ]);
   const hide = useMutation({
-    mutationFn: (id: string) => apiSend<unknown>('POST', threadHidePath(phone, id)),
+    mutationFn: (messageId: string) => hides.hide({ phone, messageId }),
     onSuccess: refresh,
   });
   const unhide = useMutation({
-    mutationFn: (id: string) => apiSend<unknown>('DELETE', threadHidePath(phone, id)),
+    mutationFn: (messageId: string) => hides.unhide({ phone, messageId }),
     onSuccess: refresh,
   });
   return { hide, unhide, failed: hide.isError || unhide.isError };

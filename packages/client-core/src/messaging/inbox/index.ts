@@ -73,3 +73,4 @@ export {
   type SavedReplyStageInput,
   type SavedReplyStep,
 } from './saved-replies';
+export { messageHideCalls, type MessageHideCalls } from './message-hide';

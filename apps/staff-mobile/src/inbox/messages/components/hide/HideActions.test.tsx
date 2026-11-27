@@ -45,7 +45,7 @@ test("sales hides after a confirm that says it stays on the customer's phone", a
   expect(m.getByText(new RegExp(t.inbox.hide.body))).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
   await fireEvent.press(m.getByRole('button', { name: t.inbox.hide.confirm }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', PATH));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', PATH, undefined));
 });
 
 test('a teacher gets no «حذف من المنصة»', async () => {
@@ -62,7 +62,7 @@ test('hidden: the placeholder with who, never the text; the admin shows it again
   const m = await menu(hidden);
   expect(m.queryByRole('button', { name: t.inbox.hide.action })).toBeNull();
   await fireEvent.press(m.getByRole('button', { name: t.inbox.hide.unhide }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('DELETE', PATH));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('DELETE', PATH, undefined));
 });
 
 test("hidden, for sales: the placeholder and no menu at all («إظهار» is the admin's)", async () => {

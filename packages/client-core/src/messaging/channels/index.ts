@@ -40,7 +40,6 @@ export {
   channelEditError,
   channelMessagePath,
   channelReadsPath,
-  threadHidePath,
 } from './channel-edits';
 export {
   channelPresenceKey,

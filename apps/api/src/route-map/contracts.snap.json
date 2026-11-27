@@ -297,6 +297,27 @@
    ]
   }
  },
+ "DELETE /threads/:phone/messages/:messageId/hide": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    },
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "phone",
+    "messageId"
+   ]
+  },
+  "response": "empty"
+ },
  "GET /admin-tasks": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18861,6 +18882,27 @@
    ]
   }
  },
+ "POST /threads/:phone/messages/:messageId/hide": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    },
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "phone",
+    "messageId"
+   ]
+  },
+  "response": "empty"
+ },
  "POST /threads/:phone/rating": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18900,6 +18942,26 @@
    },
    "required": [
     "phone"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "kapso_reopened": {
+     "type": "boolean"
+    },
+    "template": {
+     "type": "string",
+     "enum": [
+      "window_open",
+      "on_send"
+     ]
+    }
+   },
+   "required": [
+    "kapso_reopened",
+    "template"
    ]
   }
  },

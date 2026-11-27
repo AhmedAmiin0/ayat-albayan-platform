@@ -2006,11 +2006,6 @@
       "count": 1
     }
   },
-  "src/inbox/messages/components/hide/use-hide-message.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/inbox/messages/copy-download/CopySheet.tsx": {
     "max-lines-per-function": {
       "count": 1
