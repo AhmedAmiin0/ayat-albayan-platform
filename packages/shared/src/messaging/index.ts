@@ -37,7 +37,7 @@ export * from './chat/thread-people/thread-people';
 export * from './lesson/timing/timing';
 export * from './lesson/trial-chat';
 export * from './chat/unavailable';
-export * from './stickers/stickers';
+export * from './stickers';
 export * from './markers/chat-markers';
 export * from './markers/marker-notes';
 export * from './markers/echo-payload';
