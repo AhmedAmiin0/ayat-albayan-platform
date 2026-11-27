@@ -5799,7 +5799,7 @@
   },
   "src/modules/reporting/dashboard/dashboard.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/zod-inputs": {
       "count": 1

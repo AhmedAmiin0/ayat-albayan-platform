@@ -1,6 +1,8 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { dashboardRoutes as routes, type DashboardResponse, type DashboardWork } from '@ab/money';
+import { Controller, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '@/common/auth/decorators';
+import { Route } from '@/common/http/route';
 import { DashboardService } from './dashboard.service';
 import { parseRange } from './range';
 
@@ -8,19 +10,20 @@ import { parseRange } from './range';
 @ApiTags('dashboard')
 @ApiBearerAuth()
 @Permissions('dashboard.read')
-@Controller('dashboard')
+@Controller()
 export class DashboardController {
   constructor(private readonly dashboard: DashboardService) {}
 
-  /** D1 `?from&to` (Riyadh days, inclusive, ≤ a year): counts from statuses, money in the reporting currency. */
-  @Get('summary')
-  summary(@Query() query: unknown) {
+  // parseRange keeps the range's own 400 codes (invalid_range, range_too_large), which
+  // @RouteInput() would answer as validation_failed.
+  @Route(routes.summary)
+  summary(@Query() query: unknown): Promise<DashboardResponse> {
     return this.dashboard.summary(parseRange(query));
   }
 
   /** The admin's queue behind the KPI strip: pending reports, unpaid packages, open tasks. */
-  @Get('work')
-  work() {
+  @Route(routes.work)
+  work(): Promise<DashboardWork> {
     return this.dashboard.queue();
   }
 }

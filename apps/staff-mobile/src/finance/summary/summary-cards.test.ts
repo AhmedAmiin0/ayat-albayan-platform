@@ -15,7 +15,7 @@ test('before anything loads every card is a dash; a loss is marked', () => {
 });
 
 test('the totals use the API reporting currency, not a hard-coded one; receivables carry their own', () => {
-  const sar = { ...finance, currency: 'SAR' } as DashboardResponse['finance'];
+  const sar = { ...finance, currency: 'SAR' };
   expect(summaryCards(sar, undefined, undefined).slice(0, 4).every((c) => c.value.endsWith('ر.س'))).toBe(true);
   expect(summaryCards(undefined, undefined, owed).map((c) => c.value)).toEqual([...Array(5).fill('—'), '⁦20⁩ ر.س']);
 });
