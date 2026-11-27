@@ -1,6 +1,5 @@
 import type { PublicPaymentLink } from '@ab/shared';
 import { Controller, Header, Ip, Param, Redirect, Req, Res, UseGuards } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { Route } from '@/common/http/route';
 import { notFound } from '@/common/http/errors';
 import { stripeLiveAllowed } from '@/config/env/env.stripe';
@@ -16,7 +15,6 @@ import { appCookie, appPlatform, appReturnUrl, fromApp } from './pay-return';
 import { html, isLinkToken, wantsJson, type HtmlReply, type PayRequest } from './pay-reply';
 
 /** Public pages (docs/30): no personal data beyond the first name; rate-limited; 404 when off. */
-@Public()
 @UseGuards(StripeEnabledGuard)
 @Controller()
 export class PayController {

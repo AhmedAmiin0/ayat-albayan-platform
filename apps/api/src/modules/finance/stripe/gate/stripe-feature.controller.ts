@@ -1,12 +1,10 @@
 import { stripeRoutes as routes, type StripeFeature } from '@ab/shared';
 import { Controller, Header } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { Route } from '@/common/http/route';
 import { loadEnv } from '@/config/env/env';
 import { stripeReady } from '@/config/env/env.stripe';
 
 /** True only when online payment is on and both keys are saved; needs FEATURE_STRIPE. */
-@Public()
 @Controller()
 export class StripeFeatureController {
   @Route(routes.feature)
