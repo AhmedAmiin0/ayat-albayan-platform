@@ -41,6 +41,7 @@ describe('meNotificationRoutes and webPushRoutes', () => {
 
   it('mark the given ids, or every unread row when none are given', () => {
     const { body, response } = meNotificationRoutes.read;
+    expect(body.parse(undefined)).toBeUndefined();
     expect(body.parse({})).toEqual({});
     expect(body.parse({ ids: [ROW.id] })).toEqual({ ids: [ROW.id] });
     expect(body.safeParse({ ids: [] }).success).toBe(false);
