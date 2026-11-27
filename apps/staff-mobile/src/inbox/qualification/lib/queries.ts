@@ -1,6 +1,6 @@
 import type { FollowUpNote, LeadView } from '@ab/shared';
 import type { Page } from '@ab/core';
-import type { AcademySettings } from '@ab/settings';
+import { settingsCalls } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey, t } from '@ab/mobile-kit';
 import { patchCached } from '@/core/lib/query/paging';
@@ -71,11 +71,13 @@ export function saveErrorText(error: unknown): string {
   return isOffline(error) ? t.leads.mobile.offline : t.common.error;
 }
 
-/** How many follow-ups the settings send (follow_up_hours); undefined until /settings loads. */
+const settings = settingsCalls({ apiFetch, apiSend });
+
+/** How many follow-ups the settings send; undefined until a valid /settings answer loads. */
 export function useFollowUpTotal(): number | undefined {
   const { data } = useQuery({
     queryKey: pathKey('/settings'),
-    queryFn: () => apiFetch<AcademySettings>('/settings'),
+    queryFn: () => settings.view(),
     staleTime: 60 * 60 * 1000,
   });
   return data?.follow_up_hours.length;
