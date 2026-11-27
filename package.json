@@ -44,6 +44,7 @@
     "guard:mappers": "node tools/scripts/ci-checks/lint/mappers/gate.mjs",
     "units:fold": "node tools/scripts/units/fold.ts",
     "components": "node tools/scripts/units/components/components.ts",
+    "api:one": "node tools/scripts/units/api-one/api-one.ts",
     "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs",
     "imports:extensionless": "node tools/scripts/imports/extensionless.mjs",
     "imports:kit-entries": "node tools/scripts/imports/kit-entries.mjs",
