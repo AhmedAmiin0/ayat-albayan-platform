@@ -1,17 +1,14 @@
 import type { InvoiceView } from '@ab/schedule';
 import { invoiceRoutes as routes, type InvoiceRecentPage, type SignedDownload } from '@ab/shared';
 import { Controller } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { recentFilter } from './invoices.dto';
 import { InvoicesService } from './invoices.service';
 import { InvoicesSettings } from './invoices.settings';
 
 /** Invoices of bookings (R-PAY-03). Admin only: a teacher never sees a payment proof (rule 9). */
-@ApiTags('invoices')
 @ApiBearerAuth()
-@Permissions('invoices.read')
 @Controller()
 export class InvoicesController {
   constructor(

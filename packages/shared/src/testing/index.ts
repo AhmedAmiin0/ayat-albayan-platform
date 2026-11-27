@@ -6,3 +6,4 @@ export * from './reports';
 export * from './golden-sweep';
 export * from './teachers';
 export * from './course-pause';
+export * from './students';

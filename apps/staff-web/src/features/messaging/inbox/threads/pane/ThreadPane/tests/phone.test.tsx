@@ -1,3 +1,4 @@
+import { studentRowFixture } from '@ab/shared/testing';
 import type { ThreadDetail } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -91,7 +92,7 @@ describe('ThreadPane on phones (< 640px): the side panel is a full-screen sheet'
     const form = within(screen.getByRole('dialog', { name: t.inbox.registerStudent }));
     apiSend.mockImplementation(async () => {
       page = FAMILY_PAGE;
-      return { id: 's1', code: 'AB-0001', name: 'عمر', status: 'trial' };
+      return studentRowFixture({ id: 's1', code: 'AB-0001', name: 'عمر', status: 'trial' });
     });
     fireEvent.click(form.getByRole('button', { name: t.common.save }));
     const sheet = within(await screen.findByRole('dialog', { name: t.inbox.subscriptionSheet }));

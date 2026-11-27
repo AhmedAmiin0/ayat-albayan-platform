@@ -46,7 +46,7 @@ export * from './messaging/templates';
 export * from './teaching/teacher-home';
 export * from './teaching/room-host';
 export * from './people/portal';
-export * from './people/teacher-students';
+export * from './people/roster';
 export * from './people/presence';
 export * from './people/guardians';
 export * from './people/teachers';

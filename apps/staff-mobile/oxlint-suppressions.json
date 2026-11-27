@@ -3294,22 +3294,10 @@
     },
     "ab/no-restricted-syntax": {
       "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/more/availability/WeeklyAvailability.tsx": {
     "no-nested-ternary": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -3328,12 +3316,6 @@
       "count": 1
     },
     "complexity": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     },
     "typescript/no-useless-default-assignment": {
@@ -5039,9 +5021,6 @@
   },
   "src/students/list/use-student-list-data.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/no-untyped-api-calls": {
       "count": 2
     }
   },
