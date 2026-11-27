@@ -7,4 +7,3 @@ export const staffPhotoErrorSchema = z.enum([
   'avatar_too_large',
   'avatar_path',
 ]);
-export type StaffPhotoError = z.infer<typeof staffPhotoErrorSchema>;
