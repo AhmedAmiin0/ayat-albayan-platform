@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../../core/http';
-import { peopleEditCalls } from './people-edit-api';
+import { ApiError, type ApiClient } from '../../../../core/http';
+import { peopleEditCalls } from '../people-edit-api';
 
 const ID = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
 const GID = '8b3e4d0a-2f2c-4e0a-9c73-4c8d2b8f1a33';

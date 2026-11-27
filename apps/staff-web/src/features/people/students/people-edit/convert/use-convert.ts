@@ -8,19 +8,15 @@ import {
 import type { PeopleEditView } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@ab/web-kit';
-import {
-  guardianToStudent,
-  setContactSelf,
-  studentToGuardian,
-} from '@/features/people/students/people-edit/api';
+import { peopleWrites } from '@/features/people/students/people-edit/api';
 import { usePeopleWrite } from '@/features/people/students/people-edit/use-people-write';
 
 export function useConvert(view: PeopleEditView, onDone: PeopleDone): ConvertModel {
   const [pending, setPending] = useState<Conversion | null>(null);
   const done = convertDone(view, onDone, t.peopleEdit);
-  const self = usePeopleWrite(setContactSelf, done.self);
-  const toStudent = usePeopleWrite(guardianToStudent, done.toStudent);
-  const toGuardian = usePeopleWrite(studentToGuardian, done.toGuardian);
+  const self = usePeopleWrite(peopleWrites.setContactSelf, done.self);
+  const toStudent = usePeopleWrite(peopleWrites.guardianToStudent, done.toStudent);
+  const toGuardian = usePeopleWrite(peopleWrites.studentToGuardian, done.toGuardian);
   const writes = { self, toStudent, toGuardian };
   return convertModel({ view, pending, ask: setPending, writes, text: t.peopleEdit });
 }

@@ -3,7 +3,7 @@ import type { PeopleEditView } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@ab/mobile-kit';
 import {
-  moveFamily,
+  peopleWrites,
   useFamilySearch,
   usePeopleWrite,
 } from '@/students/people-edit/people-edit-api';
@@ -14,7 +14,7 @@ export function useAttach(view: PeopleEditView, onDone: (notice: string) => void
   const [fresh, setFresh] = useState(() => emptyFamily(view.guardian.tz));
   const [invalid, setInvalid] = useState<string[]>([]);
   const found = useFamilySearch(search.trim()).data;
-  const move = usePeopleWrite(moveFamily, () => onDone(t.peopleEdit.moved));
+  const move = usePeopleWrite(peopleWrites.moveFamily, () => onDone(t.peopleEdit.moved));
   return attachModel({
     view,
     state: { search, choice, fresh, invalid },
