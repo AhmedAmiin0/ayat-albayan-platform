@@ -1,18 +1,15 @@
 import { callsRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode, Param } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import type { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { Route } from '@/common/http/route';
+import { Route, type RouteInputOf } from '@/common/http/route';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
 import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
 import { CallAccess } from '@/modules/messaging/calls/access/call-access';
 import { CallPermissions } from '@/modules/messaging/calls/flow/call-permission.service';
-
-type RequestBody = z.output<typeof routes.permissionRequest.body>;
 
 /** The request is a staff send through the outbox, audited (docs/28 §3.1). */
 @ApiBearerAuth()
@@ -34,7 +31,9 @@ export class CallPermissionController {
   @HttpCode(201)
   async request(
     @Param('phone') raw: string,
-    @ZodBody(routes.permissionRequest.body) { clientRequestId }: RequestBody,
+    @ZodBody(routes.permissionRequest.body) {
+      clientRequestId,
+    }: RouteInputOf<typeof routes.permissionRequest>['body'],
     @CurrentUser() user: AuthUser,
   ) {
     const actor = await this.access.actor(user);
