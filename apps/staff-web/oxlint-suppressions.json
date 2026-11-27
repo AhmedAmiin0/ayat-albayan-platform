@@ -2472,11 +2472,6 @@
       "count": 2
     }
   },
-  "src/features/people/account/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 6
-    }
-  },
   "src/features/people/account/avatar-file.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -2849,11 +2844,6 @@
       "count": 1
     },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/features/people/staff-photo/api.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

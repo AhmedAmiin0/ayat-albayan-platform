@@ -5,16 +5,31 @@ import { profileFixture, savedProfile } from '@/test/account';
 import { renderWithQuery } from '@/test/query';
 import { AccountScreen } from '@/account/screens/AccountScreen/AccountScreen';
 
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: jest.fn(), apiSend: jest.fn() }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  apiFetch: jest.fn(),
+  apiSend: jest.fn(),
+}));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: jest.fn(() => true) } }));
-jest.mock('expo-image-picker', () => ({ launchCameraAsync: jest.fn(), launchImageLibraryAsync: jest.fn() }));
+jest.mock('expo-image-picker', () => ({
+  launchCameraAsync: jest.fn(),
+  launchImageLibraryAsync: jest.fn(),
+}));
 const mockUpload = jest.fn(async (path: string) => ({ data: { path }, error: null }));
-jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } } }));
+jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
+  supabase: { storage: { from: () => ({ uploadToSignedUrl: mockUpload }) } },
+}));
 
 const send = jest.mocked(apiSend);
 const a = t.account.avatar;
 const signed = { bucket: 'avatars', path: 'u1/avatar-1.jpg', token: 'tok', signed_url: 'http://x' };
-const photo = { uri: 'file:///cache/me.jpg', width: 600, height: 600, base64: 'aGVsbG8=', mimeType: 'image/jpeg' };
+const photo = {
+  uri: 'file:///cache/me.jpg',
+  width: 600,
+  height: 600,
+  base64: 'aGVsbG8=',
+  mimeType: 'image/jpeg',
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -28,7 +43,9 @@ test('R-ACC-05: initials, pick from the gallery, preview, upload-url then PUT /m
   const saved = savedProfile({ avatar_url: 'https://cdn/avatar.jpg' });
   send.mockResolvedValueOnce(signed).mockResolvedValueOnce(saved);
   const { client } = await renderWithQuery(<AccountScreen home="/more" />);
-  expect(await screen.findByTestId('avatar-initials', { includeHiddenElements: true })).toBeTruthy();
+  expect(
+    await screen.findByTestId('avatar-initials', { includeHiddenElements: true }),
+  ).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: a.library }));
   expect(await screen.findByText(a.preview)).toBeTruthy();
   expect(screen.getByTestId('avatar-photo').props.source).toEqual({ uri: photo.uri });
@@ -38,9 +55,13 @@ test('R-ACC-05: initials, pick from the gallery, preview, upload-url then PUT /m
     ['POST', '/me/avatar/upload-url', { mime: 'image/jpeg', size: 5 }],
     ['PUT', '/me/avatar', { path: signed.path }],
   ]);
-  expect(mockUpload).toHaveBeenCalledWith(signed.path, 'tok', expect.any(ArrayBuffer), { contentType: 'image/jpeg' });
+  expect(mockUpload).toHaveBeenCalledWith(signed.path, 'tok', expect.any(ArrayBuffer), {
+    contentType: 'image/jpeg',
+  });
   expect(client.getQueryData(PROFILE_KEY)).toEqual(saved);
-  expect(screen.getByTestId('avatar-photo').props.source).toEqual({ uri: 'https://cdn/avatar.jpg' });
+  expect(screen.getByTestId('avatar-photo').props.source).toEqual({
+    uri: 'https://cdn/avatar.jpg',
+  });
 });
 
 test('the API refusing the type shows at the photo; «إلغاء» drops the preview', async () => {
@@ -59,7 +80,7 @@ test('«إزالة الصورة» sends DELETE /me/avatar and goes back to the i
   send.mockResolvedValueOnce(profileFixture);
   await renderWithQuery(<AccountScreen home="/more" />);
   await fireEvent.press(await screen.findByRole('button', { name: a.remove }));
-  expect(send).toHaveBeenCalledWith('DELETE', '/me/avatar');
+  expect(send).toHaveBeenCalledWith('DELETE', '/me/avatar', undefined);
   expect(await screen.findByText(t.account.toast.avatarRemoved)).toBeTruthy();
   expect(screen.getByTestId('avatar-initials', { includeHiddenElements: true })).toBeTruthy();
 });

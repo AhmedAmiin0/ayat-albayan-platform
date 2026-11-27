@@ -24,7 +24,7 @@
   },
   "src/account/hooks/account-api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 2
     }
   },
   "src/account/lib/avatar.ts": {

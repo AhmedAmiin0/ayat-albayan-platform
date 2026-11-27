@@ -3,7 +3,7 @@ import type { AccountProfile } from '@ab/shared';
 // Account fixtures (R-ACC-01).
 
 export const profileFixture: AccountProfile = {
-  id: 'u1',
+  id: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11',
   full_name: 'Huda Salem',
   email: 'huda@example.com',
   phone_e164: '+966501234567',
