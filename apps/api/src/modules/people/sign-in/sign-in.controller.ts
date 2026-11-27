@@ -5,7 +5,6 @@ import {
   type PasswordSession,
 } from '@ab/shared';
 import { Controller, HttpCode, Inject, Ip } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { FamilyCodeService } from './flows/family-code.service';
 import { PasswordService } from './flows/password.service';
@@ -19,7 +18,6 @@ type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
  * rate-limited (429 too_many_requests). The code request / forgot routes answer 202 whatever
  * exists.
  */
-@Public()
 @Controller()
 export class SignInController {
   constructor(
