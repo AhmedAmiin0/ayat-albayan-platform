@@ -1,5 +1,5 @@
 export { portalLessonSends, portalSlotsQuery } from './lesson-sends';
-export type { FamilyLessonInput, FamilySlotsInput, PortalLessonSends } from './lesson-sends.types';
+export type { FamilyLessonInput, FamilySlotsInput, PortalLessonSends } from './lesson-sends';
 export {
   confirmedLine,
   declineLine,

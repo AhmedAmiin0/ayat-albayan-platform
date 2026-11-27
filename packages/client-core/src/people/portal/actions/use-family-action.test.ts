@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError } from '../../../core/http';
 import { PORTAL_KEY } from '../portal-api';
-import type { PortalLessonSends } from './lesson-sends.types';
+import type { PortalLessonSends } from './lesson-sends';
 import { createUseFamilyAction, type FamilyActionPorts } from './use-family-action';
 
 const words = { errors: { group_lesson: 'جماعية' } as never, failed: 'تعذّر' };
