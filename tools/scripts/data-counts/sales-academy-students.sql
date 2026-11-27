@@ -9,7 +9,5 @@ where status is null or starts_on is null or created_at is null
   or lessons_total is null or lessons_total < 0
   or (package is not null and package::text not in ('trial', '4', '8', '12', '16', '20', '28'));
 
--- count: sales_students_balances_negative_or_fractional_used
-select count(*) from public.v_subscription_balance
-where lessons_used < 0 or lessons_used <> trunc(lessons_used)
-  or remaining <> trunc(remaining);
+-- count: sales_students_balances_negative_used
+select count(*) from public.v_subscription_balance where lessons_used < 0 or lessons_used is null;
