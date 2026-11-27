@@ -1,23 +1,12 @@
-import { chatSearchPageSchema, type ChatSearchHit, type ChatSearchPage } from '@ab/shared';
+import type { ChatSearchHit, ChatSearchPage } from '@ab/shared';
 
 // In-chat search for web and mobile; hits are newest first.
 
 /** How long typing pauses before the search runs. */
 export const CHAT_SEARCH_DEBOUNCE_MS = 300;
 
-/** GET /threads/:phone/search: `+` never raw in the path, the words always encoded. */
-export function chatSearchPath(phone: string, q: string, cursor?: string): string {
-  const params = new URLSearchParams({ q });
-  if (cursor) params.set('cursor', cursor);
-  return `/threads/${encodeURIComponent(phone)}/search?${params.toString()}`;
-}
-
 /** Outside ['threads']: a send's invalidation never reruns the search. */
 export const chatSearchKey = (phone: string, q: string) => ['chat-search', phone, q] as const;
-
-/** The API's answer, checked (rule 12). */
-export const parseChatSearchPage = (raw: unknown): ChatSearchPage =>
-  chatSearchPageSchema.parse(raw);
 
 export function searchHits(pages: readonly ChatSearchPage[] | undefined): {
   hits: ChatSearchHit[];

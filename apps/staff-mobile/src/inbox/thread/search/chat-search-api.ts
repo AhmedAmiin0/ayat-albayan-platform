@@ -1,7 +1,9 @@
-import { chatSearchPages, needsSearchPage, searchHits } from '@ab/client-core';
+import { chatSearchPages, inboxSearchCalls, needsSearchPage, searchHits } from '@ab/client-core';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useEffectEvent } from 'react';
-import { apiFetch } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
+
+const searches = inboxSearchCalls({ apiFetch, apiSend });
 
 interface Asked {
   phone: string;
@@ -14,7 +16,7 @@ interface Asked {
 }
 
 export function useChatSearchResults({ phone, q, typing, index }: Asked) {
-  const query = useInfiniteQuery(chatSearchPages(phone, q, (path) => apiFetch(path)));
+  const query = useInfiniteQuery(chatSearchPages(phone, q, searches));
   const { hits, total } = searchHits(typing ? undefined : query.data?.pages);
   const more = useEffectEvent(() => {
     const idle = query.hasNextPage && !query.isFetchingNextPage;

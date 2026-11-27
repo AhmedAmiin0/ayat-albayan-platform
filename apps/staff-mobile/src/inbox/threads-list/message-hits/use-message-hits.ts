@@ -1,7 +1,9 @@
-import { messageHits, messageSearchPages } from '@ab/client-core';
+import { inboxSearchCalls, messageHits, messageSearchPages } from '@ab/client-core';
 import { searchesMessages, type MessageSearchHit } from '@ab/shared';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { apiFetch } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
+
+const searches = inboxSearchCalls({ apiFetch, apiSend });
 
 /** What the chats list knows of the global search. */
 export interface MessageHitsState {
@@ -18,7 +20,7 @@ export interface MessageHitsState {
 /** docs/37 NEW 1: never persisted to disk and never polled; SearchField already debounces. */
 export function useMessageHits(q: string): MessageHitsState {
   const query = useInfiniteQuery({
-    ...messageSearchPages(q, (path) => apiFetch(path)),
+    ...messageSearchPages(q, searches),
     meta: { noPersist: true },
   });
   const asked = searchesMessages(q);

@@ -1,6 +1,8 @@
-import { chatSearchPages } from '@ab/client-core';
+import { chatSearchPages, inboxSearchCalls } from '@ab/client-core';
 import { infiniteQueryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
+
+const searches = inboxSearchCalls({ apiFetch, apiSend });
 
 export const chatSearchQuery = (phone: string, q: string) =>
-  infiniteQueryOptions(chatSearchPages(phone, q, (path) => apiFetch(path)));
+  infiniteQueryOptions(chatSearchPages(phone, q, searches));
