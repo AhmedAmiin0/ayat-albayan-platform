@@ -124,9 +124,9 @@ describe('system-role parity with the old @Roles table', () => {
 
   // docs/23 phase 4: notifications.manage gates the rule writes only; the list is settings.read.
   it('notifications.manage gates the two rule PATCH routes only, for the system admin only', () => {
-    const gated = routes.filter((r) => r.permission === 'notifications.manage').map((r) => r.key).sort();
-    expect(gated).toEqual(['RulesAliasController.update', 'RulesController.update']);
-    expect(routes.find((r) => r.key === 'RulesController.overview')?.permission).toBe('settings.read');
+    const gated = routes.filter((r) => permissionKeys(r).includes('notifications.manage'));
+    expect(gated.map((r) => r.key).sort()).toEqual(['RulesAliasController.update', 'RulesController.update']);
+    expect(routes.filter((r) => r.key === 'RulesController.overview').map(permissionKeys)).toEqual([['settings.read']]);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('notifications.manage'))).toEqual(['admin']);
   });
 

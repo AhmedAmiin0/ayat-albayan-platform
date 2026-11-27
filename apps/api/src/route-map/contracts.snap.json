@@ -2948,6 +2948,542 @@
    ]
   }
  },
+ "GET /admin/notifications": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "entries": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "key": {
+        "type": "string",
+        "enum": [
+         "booking_confirmation",
+         "lesson_reminder",
+         "lesson_reminder_24h",
+         "teacher_lesson_reminder",
+         "lesson_join_link",
+         "teacher_new_student",
+         "report_ready",
+         "renewal_due",
+         "follow_up_slots",
+         "lesson_rating",
+         "lesson_rescheduled",
+         "lesson_cancelled",
+         "course_paused",
+         "course_resumed",
+         "lesson_join_link_manual",
+         "lesson_rating_manual",
+         "lesson_feedback_request",
+         "inbox_templates",
+         "meeting_invite_text",
+         "meeting_cancel_text",
+         "lesson_starting",
+         "report_sent",
+         "lesson_live",
+         "lesson_request_declined",
+         "new_lead",
+         "new_message",
+         "lesson_needs_confirmation",
+         "report_submitted",
+         "payment_due",
+         "reminder_failed",
+         "new_student",
+         "meeting_invite",
+         "google_sync_alert",
+         "channel_message",
+         "commission_earned",
+         "payment_received"
+        ]
+       },
+       "audience": {
+        "type": "string",
+        "enum": [
+         "guardian",
+         "teacher",
+         "lead",
+         "staff"
+        ]
+       },
+       "also_to": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "enum": [
+          "guardian",
+          "teacher",
+          "lead",
+          "staff"
+         ]
+        }
+       },
+       "channels": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "enum": [
+          "whatsapp",
+          "bell",
+          "push"
+         ]
+        }
+       },
+       "automatic": {
+        "type": "boolean"
+       },
+       "manual": {
+        "type": "boolean"
+       },
+       "essential": {
+        "type": "boolean"
+       },
+       "locked": {
+        "type": "boolean"
+       },
+       "state": {
+        "type": "string",
+        "enum": [
+         "on",
+         "off",
+         "manual"
+        ]
+       },
+       "blocker": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "not_configured",
+           "messaging_off",
+           "auto_off",
+           "row_off",
+           "template_not_approved",
+           "classroom_off"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "templates": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "key": {
+           "type": "string"
+          },
+          "status": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "not_submitted",
+              "pending",
+              "approved",
+              "rejected",
+              "paused",
+              "disabled",
+              "missing"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "line": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "notifications",
+              "chat"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          }
+         },
+         "required": [
+          "key",
+          "status",
+          "line"
+         ]
+        }
+       },
+       "lines": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "enum": [
+          "notifications",
+          "chat"
+         ]
+        }
+       },
+       "timing": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "key": {
+            "type": "string",
+            "enum": [
+             "reminder_minutes_before",
+             "renewal_alert_remaining",
+             "follow_up_hours"
+            ]
+           },
+           "value": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "key",
+           "value"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "approval": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "all",
+           "some",
+           "none"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "rule": {
+        "type": "object",
+        "properties": {
+         "key": {
+          "type": "string",
+          "enum": [
+           "booking_confirmation",
+           "lesson_reminder",
+           "lesson_reminder_24h",
+           "teacher_lesson_reminder",
+           "lesson_join_link",
+           "teacher_new_student",
+           "report_ready",
+           "renewal_due",
+           "follow_up_slots",
+           "lesson_rating",
+           "lesson_rescheduled",
+           "lesson_cancelled",
+           "course_paused",
+           "course_resumed",
+           "lesson_join_link_manual",
+           "lesson_rating_manual",
+           "lesson_feedback_request",
+           "inbox_templates",
+           "meeting_invite_text",
+           "meeting_cancel_text",
+           "lesson_starting",
+           "report_sent",
+           "lesson_live",
+           "lesson_request_declined",
+           "new_lead",
+           "new_message",
+           "lesson_needs_confirmation",
+           "report_submitted",
+           "payment_due",
+           "reminder_failed",
+           "new_student",
+           "meeting_invite",
+           "google_sync_alert",
+           "channel_message",
+           "commission_earned",
+           "payment_received"
+          ]
+         },
+         "enabled": {
+          "type": "boolean"
+         },
+         "channels": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "enum": [
+            "whatsapp",
+            "bell",
+            "push"
+           ]
+          }
+         },
+         "timing": {
+          "anyOf": [
+           {
+            "anyOf": [
+             {
+              "type": "object",
+              "properties": {
+               "minutes_before": {
+                "type": "integer",
+                "minimum": 5,
+                "maximum": 720
+               }
+              },
+              "required": [
+               "minutes_before"
+              ]
+             },
+             {
+              "type": "object",
+              "properties": {
+               "send_at_local": {
+                "anyOf": [
+                 {
+                  "type": "string",
+                  "enum": [
+                   "06:00",
+                   "08:00",
+                   "10:00",
+                   "12:00",
+                   "14:00",
+                   "16:00",
+                   "18:00",
+                   "19:00",
+                   "20:00",
+                   "21:00",
+                   "22:00"
+                  ]
+                 },
+                 {
+                  "type": "null"
+                 }
+                ]
+               }
+              },
+              "required": [
+               "send_at_local"
+              ]
+             },
+             {
+              "type": "object",
+              "properties": {
+               "minutes_before": {
+                "anyOf": [
+                 {
+                  "type": "integer",
+                  "minimum": 5,
+                  "maximum": 720
+                 },
+                 {
+                  "type": "null"
+                 }
+                ]
+               }
+              },
+              "required": [
+               "minutes_before"
+              ]
+             },
+             {
+              "type": "object",
+              "properties": {
+               "hours": {
+                "minItems": 1,
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                 "type": "integer",
+                 "minimum": 1,
+                 "maximum": 720
+                }
+               },
+               "slots_from_hours": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 168
+               },
+               "slots_to_days": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 30
+               }
+              },
+              "required": [
+               "hours",
+               "slots_from_hours",
+               "slots_to_days"
+              ]
+             }
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "number_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "editable": {
+          "type": "boolean"
+         },
+         "optional_channels": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "enum": [
+            "whatsapp",
+            "bell",
+            "push"
+           ]
+          }
+         },
+         "updated_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "updated_by": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         }
+        },
+        "required": [
+         "key",
+         "enabled",
+         "channels",
+         "timing",
+         "number_id",
+         "editable",
+         "optional_channels",
+         "updated_at",
+         "updated_by"
+        ]
+       }
+      },
+      "required": [
+       "key",
+       "audience",
+       "channels",
+       "automatic",
+       "manual",
+       "essential",
+       "locked",
+       "state",
+       "blocker",
+       "templates",
+       "lines",
+       "timing"
+      ]
+     }
+    },
+    "lines": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "line": {
+        "type": "string",
+        "enum": [
+         "notifications",
+         "chat"
+        ]
+       },
+       "display_phone_e164": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "verified_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "checked_at": {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       }
+      },
+      "required": [
+       "line",
+       "display_phone_e164",
+       "verified_name",
+       "checked_at"
+      ]
+     }
+    },
+    "mode": {
+     "type": "string",
+     "enum": [
+      "legacy",
+      "module"
+     ]
+    },
+    "reach": {
+     "type": "object",
+     "properties": {
+      "guardian": {
+       "type": "number"
+      },
+      "teacher": {
+       "type": "number"
+      },
+      "lead": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "guardian",
+      "teacher",
+      "lead"
+     ]
+    }
+   },
+   "required": [
+    "entries",
+    "lines"
+   ]
+  }
+ },
  "GET /admin/numbers": {
   "response": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -25515,6 +26051,1024 @@
   "response": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "string"
+  }
+ },
+ "PATCH /admin/communications/notifications/:key": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "key"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "enabled": {
+     "type": "boolean"
+    },
+    "channels": {
+     "minItems": 1,
+     "maxItems": 3,
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "whatsapp",
+       "bell",
+       "push"
+      ]
+     }
+    },
+    "timing": {},
+    "number_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "confirmText": {}
+   },
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string",
+     "enum": [
+      "booking_confirmation",
+      "lesson_reminder",
+      "lesson_reminder_24h",
+      "teacher_lesson_reminder",
+      "lesson_join_link",
+      "teacher_new_student",
+      "report_ready",
+      "renewal_due",
+      "follow_up_slots",
+      "lesson_rating",
+      "lesson_rescheduled",
+      "lesson_cancelled",
+      "course_paused",
+      "course_resumed",
+      "lesson_join_link_manual",
+      "lesson_rating_manual",
+      "lesson_feedback_request",
+      "inbox_templates",
+      "meeting_invite_text",
+      "meeting_cancel_text",
+      "lesson_starting",
+      "report_sent",
+      "lesson_live",
+      "lesson_request_declined",
+      "new_lead",
+      "new_message",
+      "lesson_needs_confirmation",
+      "report_submitted",
+      "payment_due",
+      "reminder_failed",
+      "new_student",
+      "meeting_invite",
+      "google_sync_alert",
+      "channel_message",
+      "commission_earned",
+      "payment_received"
+     ]
+    },
+    "audience": {
+     "type": "string",
+     "enum": [
+      "guardian",
+      "teacher",
+      "lead",
+      "staff"
+     ]
+    },
+    "also_to": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "guardian",
+       "teacher",
+       "lead",
+       "staff"
+      ]
+     }
+    },
+    "channels": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "whatsapp",
+       "bell",
+       "push"
+      ]
+     }
+    },
+    "automatic": {
+     "type": "boolean"
+    },
+    "manual": {
+     "type": "boolean"
+    },
+    "essential": {
+     "type": "boolean"
+    },
+    "locked": {
+     "type": "boolean"
+    },
+    "state": {
+     "type": "string",
+     "enum": [
+      "on",
+      "off",
+      "manual"
+     ]
+    },
+    "blocker": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "not_configured",
+        "messaging_off",
+        "auto_off",
+        "row_off",
+        "template_not_approved",
+        "classroom_off"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "templates": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "key": {
+        "type": "string"
+       },
+       "status": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "not_submitted",
+           "pending",
+           "approved",
+           "rejected",
+           "paused",
+           "disabled",
+           "missing"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "line": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "notifications",
+           "chat"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       }
+      },
+      "required": [
+       "key",
+       "status",
+       "line"
+      ]
+     }
+    },
+    "lines": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "notifications",
+       "chat"
+      ]
+     }
+    },
+    "timing": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "key": {
+         "type": "string",
+         "enum": [
+          "reminder_minutes_before",
+          "renewal_alert_remaining",
+          "follow_up_hours"
+         ]
+        },
+        "value": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "key",
+        "value"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "approval": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "all",
+        "some",
+        "none"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "rule": {
+     "type": "object",
+     "properties": {
+      "key": {
+       "type": "string",
+       "enum": [
+        "booking_confirmation",
+        "lesson_reminder",
+        "lesson_reminder_24h",
+        "teacher_lesson_reminder",
+        "lesson_join_link",
+        "teacher_new_student",
+        "report_ready",
+        "renewal_due",
+        "follow_up_slots",
+        "lesson_rating",
+        "lesson_rescheduled",
+        "lesson_cancelled",
+        "course_paused",
+        "course_resumed",
+        "lesson_join_link_manual",
+        "lesson_rating_manual",
+        "lesson_feedback_request",
+        "inbox_templates",
+        "meeting_invite_text",
+        "meeting_cancel_text",
+        "lesson_starting",
+        "report_sent",
+        "lesson_live",
+        "lesson_request_declined",
+        "new_lead",
+        "new_message",
+        "lesson_needs_confirmation",
+        "report_submitted",
+        "payment_due",
+        "reminder_failed",
+        "new_student",
+        "meeting_invite",
+        "google_sync_alert",
+        "channel_message",
+        "commission_earned",
+        "payment_received"
+       ]
+      },
+      "enabled": {
+       "type": "boolean"
+      },
+      "channels": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "enum": [
+         "whatsapp",
+         "bell",
+         "push"
+        ]
+       }
+      },
+      "timing": {
+       "anyOf": [
+        {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "minutes_before": {
+             "type": "integer",
+             "minimum": 5,
+             "maximum": 720
+            }
+           },
+           "required": [
+            "minutes_before"
+           ]
+          },
+          {
+           "type": "object",
+           "properties": {
+            "send_at_local": {
+             "anyOf": [
+              {
+               "type": "string",
+               "enum": [
+                "06:00",
+                "08:00",
+                "10:00",
+                "12:00",
+                "14:00",
+                "16:00",
+                "18:00",
+                "19:00",
+                "20:00",
+                "21:00",
+                "22:00"
+               ]
+              },
+              {
+               "type": "null"
+              }
+             ]
+            }
+           },
+           "required": [
+            "send_at_local"
+           ]
+          },
+          {
+           "type": "object",
+           "properties": {
+            "minutes_before": {
+             "anyOf": [
+              {
+               "type": "integer",
+               "minimum": 5,
+               "maximum": 720
+              },
+              {
+               "type": "null"
+              }
+             ]
+            }
+           },
+           "required": [
+            "minutes_before"
+           ]
+          },
+          {
+           "type": "object",
+           "properties": {
+            "hours": {
+             "minItems": 1,
+             "maxItems": 5,
+             "type": "array",
+             "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 720
+             }
+            },
+            "slots_from_hours": {
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 168
+            },
+            "slots_to_days": {
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 30
+            }
+           },
+           "required": [
+            "hours",
+            "slots_from_hours",
+            "slots_to_days"
+           ]
+          }
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "number_id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "editable": {
+       "type": "boolean"
+      },
+      "optional_channels": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "enum": [
+         "whatsapp",
+         "bell",
+         "push"
+        ]
+       }
+      },
+      "updated_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "updated_by": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      }
+     },
+     "required": [
+      "key",
+      "enabled",
+      "channels",
+      "timing",
+      "number_id",
+      "editable",
+      "optional_channels",
+      "updated_at",
+      "updated_by"
+     ]
+    }
+   },
+   "required": [
+    "key",
+    "audience",
+    "channels",
+    "automatic",
+    "manual",
+    "essential",
+    "locked",
+    "state",
+    "blocker",
+    "templates",
+    "lines",
+    "timing"
+   ]
+  }
+ },
+ "PATCH /admin/notifications/:key": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "key"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "enabled": {
+     "type": "boolean"
+    },
+    "channels": {
+     "minItems": 1,
+     "maxItems": 3,
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "whatsapp",
+       "bell",
+       "push"
+      ]
+     }
+    },
+    "timing": {},
+    "number_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "confirmText": {}
+   },
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string",
+     "enum": [
+      "booking_confirmation",
+      "lesson_reminder",
+      "lesson_reminder_24h",
+      "teacher_lesson_reminder",
+      "lesson_join_link",
+      "teacher_new_student",
+      "report_ready",
+      "renewal_due",
+      "follow_up_slots",
+      "lesson_rating",
+      "lesson_rescheduled",
+      "lesson_cancelled",
+      "course_paused",
+      "course_resumed",
+      "lesson_join_link_manual",
+      "lesson_rating_manual",
+      "lesson_feedback_request",
+      "inbox_templates",
+      "meeting_invite_text",
+      "meeting_cancel_text",
+      "lesson_starting",
+      "report_sent",
+      "lesson_live",
+      "lesson_request_declined",
+      "new_lead",
+      "new_message",
+      "lesson_needs_confirmation",
+      "report_submitted",
+      "payment_due",
+      "reminder_failed",
+      "new_student",
+      "meeting_invite",
+      "google_sync_alert",
+      "channel_message",
+      "commission_earned",
+      "payment_received"
+     ]
+    },
+    "audience": {
+     "type": "string",
+     "enum": [
+      "guardian",
+      "teacher",
+      "lead",
+      "staff"
+     ]
+    },
+    "also_to": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "guardian",
+       "teacher",
+       "lead",
+       "staff"
+      ]
+     }
+    },
+    "channels": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "whatsapp",
+       "bell",
+       "push"
+      ]
+     }
+    },
+    "automatic": {
+     "type": "boolean"
+    },
+    "manual": {
+     "type": "boolean"
+    },
+    "essential": {
+     "type": "boolean"
+    },
+    "locked": {
+     "type": "boolean"
+    },
+    "state": {
+     "type": "string",
+     "enum": [
+      "on",
+      "off",
+      "manual"
+     ]
+    },
+    "blocker": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "not_configured",
+        "messaging_off",
+        "auto_off",
+        "row_off",
+        "template_not_approved",
+        "classroom_off"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "templates": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "key": {
+        "type": "string"
+       },
+       "status": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "not_submitted",
+           "pending",
+           "approved",
+           "rejected",
+           "paused",
+           "disabled",
+           "missing"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "line": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "notifications",
+           "chat"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       }
+      },
+      "required": [
+       "key",
+       "status",
+       "line"
+      ]
+     }
+    },
+    "lines": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "notifications",
+       "chat"
+      ]
+     }
+    },
+    "timing": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "key": {
+         "type": "string",
+         "enum": [
+          "reminder_minutes_before",
+          "renewal_alert_remaining",
+          "follow_up_hours"
+         ]
+        },
+        "value": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "key",
+        "value"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "approval": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "all",
+        "some",
+        "none"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "rule": {
+     "type": "object",
+     "properties": {
+      "key": {
+       "type": "string",
+       "enum": [
+        "booking_confirmation",
+        "lesson_reminder",
+        "lesson_reminder_24h",
+        "teacher_lesson_reminder",
+        "lesson_join_link",
+        "teacher_new_student",
+        "report_ready",
+        "renewal_due",
+        "follow_up_slots",
+        "lesson_rating",
+        "lesson_rescheduled",
+        "lesson_cancelled",
+        "course_paused",
+        "course_resumed",
+        "lesson_join_link_manual",
+        "lesson_rating_manual",
+        "lesson_feedback_request",
+        "inbox_templates",
+        "meeting_invite_text",
+        "meeting_cancel_text",
+        "lesson_starting",
+        "report_sent",
+        "lesson_live",
+        "lesson_request_declined",
+        "new_lead",
+        "new_message",
+        "lesson_needs_confirmation",
+        "report_submitted",
+        "payment_due",
+        "reminder_failed",
+        "new_student",
+        "meeting_invite",
+        "google_sync_alert",
+        "channel_message",
+        "commission_earned",
+        "payment_received"
+       ]
+      },
+      "enabled": {
+       "type": "boolean"
+      },
+      "channels": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "enum": [
+         "whatsapp",
+         "bell",
+         "push"
+        ]
+       }
+      },
+      "timing": {
+       "anyOf": [
+        {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "minutes_before": {
+             "type": "integer",
+             "minimum": 5,
+             "maximum": 720
+            }
+           },
+           "required": [
+            "minutes_before"
+           ]
+          },
+          {
+           "type": "object",
+           "properties": {
+            "send_at_local": {
+             "anyOf": [
+              {
+               "type": "string",
+               "enum": [
+                "06:00",
+                "08:00",
+                "10:00",
+                "12:00",
+                "14:00",
+                "16:00",
+                "18:00",
+                "19:00",
+                "20:00",
+                "21:00",
+                "22:00"
+               ]
+              },
+              {
+               "type": "null"
+              }
+             ]
+            }
+           },
+           "required": [
+            "send_at_local"
+           ]
+          },
+          {
+           "type": "object",
+           "properties": {
+            "minutes_before": {
+             "anyOf": [
+              {
+               "type": "integer",
+               "minimum": 5,
+               "maximum": 720
+              },
+              {
+               "type": "null"
+              }
+             ]
+            }
+           },
+           "required": [
+            "minutes_before"
+           ]
+          },
+          {
+           "type": "object",
+           "properties": {
+            "hours": {
+             "minItems": 1,
+             "maxItems": 5,
+             "type": "array",
+             "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 720
+             }
+            },
+            "slots_from_hours": {
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 168
+            },
+            "slots_to_days": {
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 30
+            }
+           },
+           "required": [
+            "hours",
+            "slots_from_hours",
+            "slots_to_days"
+           ]
+          }
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "number_id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "editable": {
+       "type": "boolean"
+      },
+      "optional_channels": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "enum": [
+         "whatsapp",
+         "bell",
+         "push"
+        ]
+       }
+      },
+      "updated_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "updated_by": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      }
+     },
+     "required": [
+      "key",
+      "enabled",
+      "channels",
+      "timing",
+      "number_id",
+      "editable",
+      "optional_channels",
+      "updated_at",
+      "updated_by"
+     ]
+    }
+   },
+   "required": [
+    "key",
+    "audience",
+    "channels",
+    "automatic",
+    "manual",
+    "essential",
+    "locked",
+    "state",
+    "blocker",
+    "templates",
+    "lines",
+    "timing"
+   ]
   }
  },
  "PATCH /admin/numbers/:id": {
