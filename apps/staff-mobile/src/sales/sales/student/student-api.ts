@@ -1,9 +1,7 @@
 import {
   courseActionsKey,
-  parsePackageCancelCheck,
-  postPackageCancel,
+  salesPackageCancelCalls,
   salesPackageCancelKey,
-  salesPackageCancelPath,
   salesStudentFileCalls,
 } from '@ab/client-core';
 import type { SalesCourseView, SalesStudentDetails } from '@ab/shared';
@@ -13,6 +11,7 @@ import { useSalesCourse } from '@/sales-course';
 import { openDownload } from '@/core/lib/http/open-signed';
 
 const studentFile = salesStudentFileCalls({ apiFetch, apiSend });
+const packageCancel = salesPackageCancelCalls({ apiFetch, apiSend });
 
 /** GET /sales/students/:id — one of my students: subscriptions, attendance and sent reports (404 otherwise). */
 export const useSalesStudent = (id: string) =>
@@ -62,10 +61,10 @@ export const usePackageCancelCheck = (input: {
   subscriptionId: string | null;
   enabled: boolean;
 }) => {
-  const path = salesPackageCancelPath(input.subscriptionId ?? '');
+  const id = input.subscriptionId ?? '';
   return useQuery({
-    queryKey: salesPackageCancelKey(input.subscriptionId ?? ''),
-    queryFn: async () => parsePackageCancelCheck(await apiFetch(path)),
+    queryKey: salesPackageCancelKey(id),
+    queryFn: () => packageCancel.check(id),
     enabled: input.enabled && input.subscriptionId !== null,
     retry: false,
   });
@@ -73,7 +72,7 @@ export const usePackageCancelCheck = (input: {
 
 /** POST { reason? }: the 409s are said by CancelPackage. */
 export const cancelAnyPackage = (subscriptionId: string, body: { reason?: string }) =>
-  postPackageCancel(apiFetch, subscriptionId, body);
+  packageCancel.cancel({ subscriptionId, body });
 
 /** The same keys the subscription cancel makes stale: actions, student, sales, lessons, money. */
 export const packageCancelStale = (studentId: string): QueryKey[] => [

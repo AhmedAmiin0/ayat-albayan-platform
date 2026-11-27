@@ -42,6 +42,7 @@ export * from './sales/student/student-package';
 export * from './sales/student/package-cancel';
 export * from './sales/teacher';
 export * from './sales/student-file';
+export * from './sales/package-cancel';
 export * from './sales/course/course';
 export * from './sales/course/course-follow';
 export * from './sales/course/course-change';
