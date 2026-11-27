@@ -16,7 +16,7 @@ export const courseKeys: CourseKeys = {
     kind,
     subscriptionId,
   ],
-  current: (studentId, path) => [...courseActionsKey(studentId), 'current', path],
+  current: (studentId, source) => [...courseActionsKey(studentId), 'current', source],
   teachers: (studentId) => [...courseActionsKey(studentId), 'teachers'],
   card: (studentId, tree) => [...courseCardKey(studentId), tree],
   extend: ({ studentId, subscriptionId }) => [

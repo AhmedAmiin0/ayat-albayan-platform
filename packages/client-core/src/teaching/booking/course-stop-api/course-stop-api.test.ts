@@ -36,9 +36,15 @@ const clientAnswering = (answer: unknown) => {
 describe('course stop calls', () => {
   it("reads the stop sheet of the student's named package", async () => {
     const { client, apiFetch } = clientAnswering(PREVIEW);
-    const ref = { studentId: STUDENT, subscriptionId: SUB };
-    await expect(courseStopCalls(client).preview(ref)).resolves.toEqual(PREVIEW);
+    const calls = courseStopCalls(client);
+    await expect(calls.preview(STUDENT, { subscriptionId: SUB })).resolves.toEqual(PREVIEW);
     expect(apiFetch).toHaveBeenCalledWith(`/students/${STUDENT}/course-stop?subscriptionId=${SUB}`);
+  });
+
+  it('reads the current package without a name', async () => {
+    const { client, apiFetch } = clientAnswering(PREVIEW);
+    await expect(courseStopCalls(client).preview(STUDENT, {})).resolves.toEqual(PREVIEW);
+    expect(apiFetch).toHaveBeenCalledWith(`/students/${STUDENT}/course-stop`);
   });
 
   it('POSTs the stop body unchanged and answers what it did', async () => {
@@ -52,7 +58,7 @@ describe('course stop calls', () => {
     const { owe: _owe, ...noOwe } = PREVIEW;
     const { client } = clientAnswering(noOwe);
     const failure = await courseStopCalls(client)
-      .preview({ studentId: STUDENT, subscriptionId: SUB })
+      .preview(STUDENT, { subscriptionId: SUB })
       .catch((e: unknown) => e);
     expect(failure).toBeInstanceOf(ApiError);
     expect(failure).toMatchObject({ body: { code: 'bad_response' } });

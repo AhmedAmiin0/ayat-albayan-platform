@@ -12,14 +12,12 @@ export {
 } from './course-pause';
 export {
   courseActionsKey,
-  courseMoveBase,
   type CourseMoveErrorCode,
   courseMoveErrorCode,
   type CourseMoveKind,
   type CourseStopErrorCode,
   courseStopErrorCode,
   courseStopLessonsText,
-  courseStopPath,
   type StopWords,
 } from './course-actions';
 export {
