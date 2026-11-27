@@ -6,6 +6,7 @@ import type { Mock } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { entriesFixture } from '@/test/entries-fixture';
 import { SETTINGS } from '@/test/settings-fixture';
+import { googleStatus } from '@/features/platform/settings/hub/hub-test-utils';
 import type { ValuesSearch } from './values-search';
 import { ValuesView } from './ValuesView';
 
@@ -52,7 +53,10 @@ export function renderValues(apiFetch: Mock, fx: ValuesFixture = {}) {
     ['/config/meta', { meta: {} }],
     ['/config/entries', entriesFixture(fx.entries)],
     ['/config/custom', fx.custom ?? []],
-    ['/admin/google/status', { settings: fx.google ?? { enabled: false, mode: 'dry_run', window_days: 60 } }],
+    [
+      '/admin/google/status',
+      googleStatus({ settings: fx.google ?? { enabled: false, mode: 'dry_run', window_days: 60 } }),
+    ],
   ]);
   const routed = apiFetch.getMockImplementation();
   if ((fx.settingsState || fx.customState) && routed) {

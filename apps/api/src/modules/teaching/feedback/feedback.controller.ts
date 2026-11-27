@@ -1,7 +1,7 @@
 import { feedbackRoutes as routes, type FeedbackListQuery } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { FeedbackReadService } from './read/feedback.read.service';
@@ -13,9 +13,7 @@ const filterAndPage = ({ page, pageSize, ...filter }: FeedbackListQuery) => ({
 });
 
 /** The static teachers/me route wins over teachers/:id in Fastify's router. */
-@ApiTags('feedback')
 @ApiBearerAuth()
-@Permissions('feedback.read')
 @Controller()
 export class FeedbackController {
   constructor(
@@ -26,7 +24,6 @@ export class FeedbackController {
   /** 409 template_not_approved, lesson_not_eligible or already_submitted; 503 not_configured. */
   @Route(routes.request)
   @HttpCode(200)
-  @Permissions('feedback.write')
   request(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.request>,
     @CurrentUser() user: AuthUser,
@@ -47,7 +44,6 @@ export class FeedbackController {
 
   /** A teacher's own rows and average; contact phone and guardian are never in them. */
   @Route(routes.mine)
-  @Permissions('self.teacher')
   mine(@RouteInput() { query }: RouteInputOf<typeof routes.mine>, @CurrentUser() user: AuthUser) {
     return this.reads.mine(user, filterAndPage(query));
   }

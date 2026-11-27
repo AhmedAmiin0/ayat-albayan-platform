@@ -6,8 +6,7 @@ import { t, Button, ErrorLine, FormLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { pickReceipt, type Receipt } from '@/core/lib/receipts/receipt';
 import { openIcon } from '@/core/ui/actions';
-import { openSigned } from '@/core/lib/http/open-signed';
-import { reportErrorText, uploadAttachment } from '@/teacher/report/hooks/api';
+import { openAttachment, reportErrorText, uploadAttachment } from '@/teacher/report/hooks/api';
 
 export interface AttachmentsFieldProps {
   reportId: string;
@@ -58,7 +57,7 @@ export function AttachmentsField({
           variant="secondary"
           icon={openIcon}
           label={`${fileLabel(f)} · ${t.reports.openFile}`}
-          onPress={() => void openSigned(`/reports/${reportId}/attachments/${f.id}/url`).catch(() => setLocal(t.common.error))}
+          onPress={() => void openAttachment(reportId, f.id).catch(() => setLocal(t.common.error))}
         />
       ))}
       {editable ? (

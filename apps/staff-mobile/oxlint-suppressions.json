@@ -1751,12 +1751,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/inbox/leads/detail/LeadAssign.test.tsx": {
@@ -1795,9 +1789,6 @@
   },
   "src/inbox/leads/detail/use-sales-people.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -3357,9 +3348,6 @@
     },
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/more/teachers/TeacherCountLinks.tsx": {
@@ -3531,11 +3519,6 @@
       "count": 1
     }
   },
-  "src/ops/google-sync/google-status.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/ops/notif-rules/components/EssentialOffSheet.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -3612,7 +3595,7 @@
   },
   "src/ops/numbers/use-numbers.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/ops/reports/AdminReportScreen/AdminReportScreen.tsx": {
@@ -4603,7 +4586,7 @@
       "count": 3
     },
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 4
     }
   },
   "src/sales/sales/lib/sales-href.ts": {
@@ -5267,7 +5250,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     }
   },
   "src/teacher/report/hooks/use-scroll-to-invalid.ts": {

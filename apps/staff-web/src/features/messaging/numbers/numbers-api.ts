@@ -1,18 +1,18 @@
+import { communicationsCalls } from '@ab/client-core';
 import type {
-  CommsSourceView,
   ImportResult,
   NumberCreate,
   NumberSecretName,
   NumberUpdate,
   NumberView,
   OwnTrafficView,
-  ParityView,
   TemplateNumberSyncView,
 } from '@ab/shared';
-import type { CommsSource } from '@ab/settings';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
+
+const communications = communicationsCalls({ apiFetch, apiSend });
 
 /** GET /admin/numbers (settings.read): every number; secrets as «set / not set» only. */
 export const numbersQuery = queryOptions({
@@ -26,10 +26,10 @@ export const ownTrafficQuery = queryOptions({
   queryFn: () => apiFetch<OwnTrafficView>('/admin/numbers/own-traffic'),
 });
 
-/** GET /admin/communications/parity (settings.read): legacy vs module, role by role. */
+/** Legacy vs module, role by role. */
 export const parityQuery = queryOptions({
   queryKey: NUMBERS_QUERY_KEYS.parity,
-  queryFn: () => apiFetch<ParityView>('/admin/communications/parity'),
+  queryFn: communications.parity,
 });
 
 export const createNumber = (body: NumberCreate) => apiSend<NumberView>('POST', '/admin/numbers', body);
@@ -51,8 +51,8 @@ export const clearNumberSecret = (input: { id: string; name: NumberSecretName })
 /** POST /admin/numbers/import: dryRun true previews, false applies (idempotent). */
 export const importNumbers = (dryRun: boolean) => apiSend<ImportResult>('POST', '/admin/numbers/import', { dryRun });
 
-/** POST /admin/communications/source: 409 parity_not_empty while a difference remains (to module). */
-export const setCommsSource = (source: CommsSource) => apiSend<CommsSourceView>('POST', '/admin/communications/source', { source });
+/** 409 parity_not_empty while a difference remains (to module). */
+export const setCommsSource = communications.setSource;
 
 /** POST /admin/numbers/:id/templates/sync (templates.manage): that number's WABA list → its approvals. */
 export const syncNumberTemplates = (id: string) =>
