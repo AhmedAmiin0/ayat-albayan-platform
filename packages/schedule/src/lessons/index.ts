@@ -1,6 +1,6 @@
 export * from './chargeable';
-export * from './conflicts.schemas';
-export type * from './conflicts';
+export * from './conflicts/conflicts.schemas';
+export type * from './conflicts/conflicts';
 export * from './state-machine/state-machine';
 export * from './series/time-edit';
 export type * from './views';

@@ -1,5 +1,5 @@
 import type { Attendance, Gender, LessonStatus, Program, ReportStatus, StudentStatus } from '@ab/catalog';
-import type { Conflict } from './conflicts.schemas';
+import type { Conflict } from './conflicts';
 import type { LessonEvent } from './state-machine';
 import type { LessonTimeEditView, TimeEditMode } from './series/time-edit';
 import type { TeacherMeetingMode } from '../classroom/meeting-mode';
