@@ -6,7 +6,7 @@ import {
   chatListNameSchema,
   chatListPhone,
   isChatListError,
-} from './chat-lists';
+} from '../chat-lists';
 
 describe('chatListNameSchema', () => {
   it('trims the name and keeps 1–30 characters', () => {
