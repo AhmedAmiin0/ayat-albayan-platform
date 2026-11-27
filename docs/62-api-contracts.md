@@ -1332,14 +1332,14 @@ Starting point on develop `6992a7fed`: 587 routes in `apps/api/src/route-map/rou
   - Core imports only zod: no Nest, no fetch, no TanStack.
 - **Route tables** live next to their schemas, in the package part 1 §1 «Where they live» names for that domain: `packages/<owner>/src/<domain>/<feature>/<feature>.routes.ts`, for example `leadRoutes` in `packages/shared/src/sales/leads/`. No new package edge.
 - **Paths** are the full paths the route map prints today, with `:name` params. A route with no JSON body in its answer says so: `response: 'empty'` (204), `'file'` (a stream or download) or `'redirect'`.
-- **What stays out of a route object:** permissions, guards, throttles, success status and anything about access. Route objects ship in every client bundle and describe only the wire; access rules stay in the api.
+- **Access on a route object:** a route object carries `permissions` (any one of them lets a caller in) and `tags` (its Swagger tags), each a non-empty list without duplicates. Guards, throttles, `@Public`, `@SignedIn` and `@HttpCode` stay on the handler. `@Route` sets the handler's permission metadata and `ApiTags` from them; a handler or class `@Permissions` beside a route object's `permissions`, or `permissions` on a `@Public` handler, fails `permissions.coverage.test.ts`, which also checks every key against the `@ab/catalog` catalog. The route map prints several keys joined with `|`.
 - **Routes no client calls** (webhooks, the HTML pay page, provider callbacks) get api-local route objects in their module, built with the same `defineRoute`. Their payload schemas stay in the api («What stays in the api», part 1 §1).
 
 ### 2. The api side
 
-- `@Route(route)` method decorator in `apps/api/src/common/http/route/` (tests first). It applies the HTTP method and full path, and `@Returns(route.response)` for JSON answers.
+- `@Route(route)` method decorator in `apps/api/src/common/http/route/` (tests first). It applies the HTTP method and full path, the route's `permissions` and `tags`, and `@Returns(route.response)` for JSON answers.
 - `@RouteInput()` parameter decorator: parses `params`, `query` and `body` with the route's own schemas through the existing `ZodParams` / `ZodQuery` / `ZodBody` pipes. It hands the handler one typed `{ params, query, body }`, so no schema is named twice. A route whose bad `:param` answers its own error passes it as `@RouteInput({ badParam: () => notFound('<code>') })`, like `ZodParam`'s third argument.
-- Controllers move their path from `@Controller('<prefix>')` plus `@Get(':id')` to `@Controller()` plus `@Route(xRoutes.get)`. Class names, handler names, `@Permissions`, guards and `@HttpCode` stay, so `routes.snap.txt` stays byte-identical.
+- Controllers move their path from `@Controller('<prefix>')` plus `@Get(':id')` to `@Controller()` plus `@Route(xRoutes.get)`. Class names, handler names, guards and `@HttpCode` stay; `@Permissions` and `@ApiTags` move onto the route object (§1 «Access on a route object»), and `routes.snap.txt` stays byte-identical.
 - Lint `ab/route-from-contract` turns on in C2, at zero, with no exemption: a handler in a `*.controller.ts` takes its method and path from `@Route`, never from `@Get`/`@Post`/`@Put`/`@Patch`/`@Delete` with a path.
 
 ### 3. The client side

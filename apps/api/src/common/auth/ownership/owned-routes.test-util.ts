@@ -1,6 +1,6 @@
 import { systemResolver } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
-import type { RouteAccess } from '@/common/auth/parity/route-walk.test-util';
+import { permissionKeys, type RouteAccess } from '@/common/auth/parity/route-walk.test-util';
 import type { OwnedRouteTests } from './ownership.schemas';
 import type { RouteMapDiff } from './owned-routes.types';
 
@@ -22,7 +22,8 @@ export function ownedRoutes(
   routes: readonly RouteAccess[],
   held: ReadonlySet<unknown>,
 ): string[] {
-  const reached = (r: RouteAccess) => !r.isPublic && (r.signedIn || held.has(r.permission));
+  const holds = (r: RouteAccess) => permissionKeys(r).some((key) => held.has(key));
+  const reached = (r: RouteAccess) => !r.isPublic && (r.signedIn || holds(r));
   const owned = routes.filter((r) => hasParam(r) && reached(r)).map((r) => r.route);
   return [...new Set(owned)].sort();
 }

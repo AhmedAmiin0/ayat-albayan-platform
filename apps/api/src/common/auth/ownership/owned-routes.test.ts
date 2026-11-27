@@ -7,6 +7,11 @@ const route = (r: string, permission: unknown, signedIn = false) => ({
   isPublic: false,
   signedIn,
   permission,
+  handlerPermission: permission,
+  classPermission: undefined,
+  routePermissions: undefined,
+  tags: ['x'],
+  inDocument: true,
 });
 
 describe('ownedRoutes', () => {
@@ -37,6 +42,16 @@ describe('ownedRoutes', () => {
     expect(ownedRoutes([route('GET /reports/:id/page', undefined, true)], held)).toEqual([
       'GET /reports/:id/page',
     ]);
+  });
+
+  it('keeps an id route when a scoped login holds any one key of its list', () => {
+    const r = route('GET /teacher/lessons/:id', ['roles.manage', 'self.teacher']);
+    expect(ownedRoutes([r], held)).toEqual(['GET /teacher/lessons/:id']);
+  });
+
+  it('drops an id route whose list holds no key of a scoped login', () => {
+    const r = route('DELETE /roles/:id', ['roles.manage', 'settings.write']);
+    expect(ownedRoutes([r], held)).toEqual([]);
   });
 
   it('lists a route once when two handlers share it', () => {
