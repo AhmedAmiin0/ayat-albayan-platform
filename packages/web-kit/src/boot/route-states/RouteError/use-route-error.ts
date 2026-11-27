@@ -1,6 +1,9 @@
 import { useRouter } from '@tanstack/react-router';
+import type { RouteErrorProps } from './RouteError.types';
 
-export function useRouteError() {
+export function useRouteError({ home }: Pick<RouteErrorProps, 'home'>) {
   const router = useRouter();
-  return { router };
+  const retry = () => void router.invalidate();
+  const goHome = () => void router.navigate({ href: home });
+  return { retry, goHome };
 }
