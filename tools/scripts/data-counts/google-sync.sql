@@ -19,3 +19,13 @@ select count(*) from public.google_sync_items where attempts is null or attempts
 -- count: google_account_unknown_status
 select count(*) from public.google_account
 where status is null or status not in ('disconnected', 'connected', 'error');
+
+-- count: teachers_unknown_calendar_owner
+select count(*) from public.teachers
+where calendar_owner is null or calendar_owner not in ('script', 'platform');
+
+-- count: google_teacher_calendars_no_confirmed_at
+select count(*) from public.google_teacher_calendars where confirmed_at is null;
+
+-- count: google_student_files_no_confirmed_at
+select count(*) from public.google_student_files where confirmed_at is null;

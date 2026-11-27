@@ -1,20 +1,13 @@
-import { googleAdminCalls } from '@ab/client-core';
-import type {
-  GoogleStudentMapInput,
-  GoogleStudentMapRow,
-  GoogleTeacherMapRow,
-  TeacherCalendarOwner,
-  TeacherCalendarView,
-} from '@ab/catalog';
+import { googleAdminCalls, googleMapCalls } from '@ab/client-core';
+import type { GoogleStudentMapInput, TeacherCalendarOwner } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { googleKeys } from '@/features/platform/keys';
 
 // The Google sync admin API (docs/24 §3): every route needs a signed-in admin.
 
-const BASE = '/admin/google';
-
 const google = googleAdminCalls({ apiFetch, apiSend });
+const map = googleMapCalls({ apiFetch, apiSend });
 
 /** GET /admin/google/status: connection, settings, drive, discovery, counts. */
 export const googleStatusQuery = queryOptions({
@@ -25,14 +18,14 @@ export const googleStatusQuery = queryOptions({
 /** GET /admin/google/teachers: one row per active teacher. */
 export const googleTeachersQuery = queryOptions({
   queryKey: googleKeys.teachers(),
-  queryFn: () => apiFetch<GoogleTeacherMapRow[]>(`${BASE}/teachers`),
+  queryFn: () => map.teachers(),
 });
 
 /** GET /admin/google/students?q=: trial/active students (max 200). */
 export const googleStudentsQuery = (q: string) =>
   queryOptions({
     queryKey: googleKeys.studentSearch(q),
-    queryFn: () => apiFetch<GoogleStudentMapRow[]>(`${BASE}/students?q=${encodeURIComponent(q)}`),
+    queryFn: () => map.students({ q }),
   });
 
 /** GET /admin/google/items: the last 100 sync items, newest first. */
@@ -53,12 +46,12 @@ export const discoverGoogle = google.discover;
 export const putGoogleDrive = google.drive;
 
 export const putTeacherCalendar = (input: { teacherId: string; calendarId: string | null }) =>
-  apiSend<GoogleTeacherMapRow[]>('PUT', `${BASE}/teachers/${input.teacherId}`, { calendar_id: input.calendarId });
+  map.setTeacher({ id: input.teacherId }, { calendar_id: input.calendarId });
 
 export const putStudentFolder = (input: { studentId: string; body: GoogleStudentMapInput }) =>
-  apiSend<GoogleStudentMapRow>('PUT', `${BASE}/students/${input.studentId}`, input.body);
+  map.setStudent({ id: input.studentId }, input.body);
 
-export const deleteStudentFolder = (studentId: string) => apiSend<GoogleStudentMapRow>('DELETE', `${BASE}/students/${studentId}`);
+export const deleteStudentFolder = (studentId: string) => map.unsetStudent({ id: studentId });
 
 export const retryGoogleItem = (id: string) => google.retry({ id });
 
@@ -67,13 +60,10 @@ export const reconcileGoogle = google.reconcile;
 export const teacherCalendarQuery = (teacherId: string) =>
   queryOptions({
     queryKey: googleKeys.teacherCalendar(teacherId),
-    queryFn: () => apiFetch<TeacherCalendarView>(`${BASE}/teachers/${teacherId}/calendar-owner`),
+    queryFn: () => map.calendarOwner({ id: teacherId }),
   });
 
 export const putTeacherCalendarOwner = (input: {
   teacherId: string;
   owner: TeacherCalendarOwner;
-}) =>
-  apiSend<TeacherCalendarView>('PUT', `${BASE}/teachers/${input.teacherId}/calendar-owner`, {
-    owner: input.owner,
-  });
+}) => map.setCalendarOwner({ id: input.teacherId }, { owner: input.owner });

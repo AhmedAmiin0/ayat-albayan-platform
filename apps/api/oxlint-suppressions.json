@@ -5434,11 +5434,6 @@
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/map/google-map.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 9
-    }
-  },
   "src/modules/platform/google-sync/map/google-map.queries.ts": {
     "typescript/consistent-type-definitions": {
       "count": 2
@@ -6693,14 +6688,6 @@
     },
     "ab/forbidden-imports": {
       "count": 1
-    }
-  },
-  "src/modules/sales/sales/sales.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/sales/sales/sales.fakes.ts": {
