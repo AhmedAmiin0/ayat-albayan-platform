@@ -2,8 +2,8 @@ import { myEarningRoutes as routes, type SignedDownload } from '@ab/shared';
 import type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView } from '@ab/money';
 import type { Page } from '@ab/core';
 import { Controller } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -16,9 +16,7 @@ type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
  * The signed-in teacher's own earnings (read only). The teacher id always comes from the token
  * (profile → teachers row), never from the URL: there is no way to ask for someone else's.
  */
-@ApiTags('teachers')
 @ApiBearerAuth()
-@Permissions('self.teacher')
 @Controller()
 export class TeacherMyEarningsController {
   constructor(

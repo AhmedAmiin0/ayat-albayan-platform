@@ -13,6 +13,8 @@ import { z } from 'zod';
 import { signedDownloadSchema, signedUploadSchema } from '../../reports';
 
 const byId = z.object({ id: id() });
+const read = { permissions: ['payments.read'], tags: ['payments'] } as const;
+const write = { permissions: ['payments.write'], tags: ['payments'] } as const;
 
 /** Ranges are local days in the academy's zone, inclusive (docs/11 §3). */
 export const paymentListQuery = z
@@ -35,30 +37,35 @@ export const paymentRoutes = {
     path: '/payments',
     query: paymentListQuery,
     response: paymentsPageSchema,
+    ...read,
   }),
   create: defineRoute({
     method: 'POST',
     path: '/payments',
     body: paymentCreateSchema,
     response: paymentViewSchema,
+    ...write,
   }),
   receiptUploadUrl: defineRoute({
     method: 'POST',
     path: '/payments/receipt-upload-url',
     body: receiptUploadSchema,
     response: signedUploadSchema,
+    ...write,
   }),
   get: defineRoute({
     method: 'GET',
     path: '/payments/:id',
     params: byId,
     response: paymentViewSchema,
+    ...read,
   }),
   receipt: defineRoute({
     method: 'GET',
     path: '/payments/:id/receipt',
     params: byId,
     response: signedDownloadSchema,
+    ...read,
   }),
   /** The legacy receipt comes first (id 'receipt'), then the files, signed for 1 hour. */
   attachments: defineRoute({
@@ -66,6 +73,7 @@ export const paymentRoutes = {
     path: '/payments/:id/attachments',
     params: byId,
     response: paymentAttachmentListSchema,
+    ...read,
   }),
   update: defineRoute({
     method: 'PATCH',
@@ -73,6 +81,13 @@ export const paymentRoutes = {
     params: byId,
     body: paymentUpdateSchema,
     response: paymentViewSchema,
+    ...write,
   }),
-  remove: defineRoute({ method: 'DELETE', path: '/payments/:id', params: byId, response: 'empty' }),
+  remove: defineRoute({
+    method: 'DELETE',
+    path: '/payments/:id',
+    params: byId,
+    response: 'empty',
+    ...write,
+  }),
 };
