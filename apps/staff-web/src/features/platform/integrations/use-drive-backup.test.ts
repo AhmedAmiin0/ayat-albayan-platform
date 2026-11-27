@@ -65,7 +65,7 @@ describe('the Drive backup status line (docs/45 §5)', () => {
 
   it.each([1, 2, 5, 12, 100])('the file count in Arabic count forms: %i', (objects) => {
     const sizes = { bytes_raw: GB, bytes_compressed: GB };
-    const last = { label: '2026-11-07', objects, ...sizes };
+    const last = { label: '2026-11-07', finished_at: null, objects, skipped: 0, ...sizes };
     expect(backupLines(view({ last }))[0]).toContain(`(${counted(b.files, objects)})`);
   });
 
