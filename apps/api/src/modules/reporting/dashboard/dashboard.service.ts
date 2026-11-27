@@ -1,6 +1,13 @@
 import { LEAD_STATUSES, LESSON_STATUSES } from '@ab/catalog';
-import type { DateRangeQuery } from '@ab/money';
+import {
+  dashboardResponseSchema,
+  dashboardWorkSchema,
+  type DashboardResponse,
+  type DashboardWork,
+  type DateRangeQuery,
+} from '@ab/money';
 import { Injectable } from '@nestjs/common';
+import { asResponse } from '@/common/http/returns';
 import { countBy, teacherLoad } from './dashboard.mapper';
 import { DashboardQueries } from './dashboard.queries';
 import { DashboardSettings } from './dashboard.settings';
@@ -8,7 +15,6 @@ import { FinanceService } from './finance/finance.service';
 import { rangeWindow } from './range';
 import { pendingList, taskList, unpaidList } from './work/work.mapper';
 import { WorkQueries } from './work/work.queries';
-import type { DashboardResponse, DashboardWork } from '@ab/money';
 
 /** GET /dashboard/summary and /dashboard/work (R-RPT-01, R-RPT-02). */
 @Injectable()
@@ -40,18 +46,24 @@ export class DashboardService {
         this.counts.teachers(),
         this.counts.loadStudents(),
       ]);
-    return {
+    return asResponse(dashboardResponseSchema, {
       range,
-      funnel: countBy(LEAD_STATUSES, leads.map((l) => l.status)),
+      funnel: countBy(
+        LEAD_STATUSES,
+        leads.map((l) => l.status),
+      ),
       active_students: active,
-      lessons_by_status: countBy(LESSON_STATUSES, lessons.map((l) => l.status)),
+      lessons_by_status: countBy(
+        LESSON_STATUSES,
+        lessons.map((l) => l.status),
+      ),
       needs_confirmation: needs,
       pending_reports: pendingList(pending).total,
       unpaid_subscriptions: unpaid,
       open_tasks: tasks,
       teacher_load: teacherLoad({ teachers, lessons, students }),
       finance: await this.money.finance({ range, leads }),
-    };
+    });
   }
 
   async queue(now = new Date()): Promise<DashboardWork> {
@@ -60,12 +72,14 @@ export class DashboardService {
       this.work.unpaid(),
       this.work.openTasks(),
     ]);
-    const subjectIds = tasks.filter((t) => t.subject_type === 'subscription').map((t) => t.subject_id);
+    const subjectIds = tasks
+      .filter((t) => t.subject_type === 'subscription')
+      .map((t) => t.subject_id);
     const subjects = await this.work.taskSubjects([...new Set(subjectIds)]);
-    return {
+    return asResponse(dashboardWorkSchema, {
       pending_reports: pendingList(pending),
       unpaid: unpaidList(unpaid),
       tasks: taskList(tasks, subjects),
-    };
+    });
   }
 }

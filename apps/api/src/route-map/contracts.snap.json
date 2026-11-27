@@ -771,6 +771,625 @@
    }
   }
  },
+ "GET /dashboard/summary": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "from": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "to": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    }
+   },
+   "required": [
+    "from",
+    "to"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "range": {
+     "type": "object",
+     "properties": {
+      "from": {
+       "type": "string",
+       "format": "date",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+      },
+      "to": {
+       "type": "string",
+       "format": "date",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+      }
+     },
+     "required": [
+      "from",
+      "to"
+     ]
+    },
+    "funnel": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "new",
+       "contacted",
+       "interested_no_slot",
+       "trial_booked",
+       "trial_done",
+       "converted",
+       "no_reply",
+       "lost"
+      ]
+     },
+     "additionalProperties": {
+      "type": "number"
+     },
+     "required": [
+      "new",
+      "contacted",
+      "interested_no_slot",
+      "trial_booked",
+      "trial_done",
+      "converted",
+      "no_reply",
+      "lost"
+     ]
+    },
+    "active_students": {
+     "type": "number"
+    },
+    "lessons_by_status": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "scheduled",
+       "confirmed",
+       "completed",
+       "late",
+       "excused",
+       "no_show",
+       "cancelled_by_teacher",
+       "cancelled_by_admin",
+       "rescheduled"
+      ]
+     },
+     "additionalProperties": {
+      "type": "number"
+     },
+     "required": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    },
+    "needs_confirmation": {
+     "type": "number"
+    },
+    "pending_reports": {
+     "type": "number"
+    },
+    "unpaid_subscriptions": {
+     "type": "number"
+    },
+    "open_tasks": {
+     "type": "number"
+    },
+    "teacher_load": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "teacher_id": {
+        "type": "string"
+       },
+       "display_name_ar": {
+        "type": "string"
+       },
+       "lessons": {
+        "type": "number"
+       },
+       "students": {
+        "type": "number"
+       },
+       "max_students": {
+        "type": [
+         "number",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "teacher_id",
+       "display_name_ar",
+       "lessons",
+       "students",
+       "max_students"
+      ]
+     }
+    },
+    "finance": {
+     "type": "object",
+     "properties": {
+      "currency": {
+       "type": "string"
+      },
+      "revenue": {
+       "type": "number"
+      },
+      "teacher_cost": {
+       "type": "number"
+      },
+      "expenses": {
+       "type": "number"
+      },
+      "gross_margin": {
+       "type": "number"
+      },
+      "by_source": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "source": {
+          "type": "string",
+          "enum": [
+           "facebook_ad",
+           "instagram_ad",
+           "whatsapp_direct",
+           "referral",
+           "other",
+           "unknown"
+          ]
+         },
+         "leads": {
+          "type": "number"
+         },
+         "converted": {
+          "type": "number"
+         },
+         "revenue": {
+          "type": "number"
+         },
+         "teacher_cost": {
+          "type": "number"
+         },
+         "gross_margin": {
+          "type": "number"
+         }
+        },
+        "required": [
+         "source",
+         "leads",
+         "converted",
+         "revenue",
+         "teacher_cost",
+         "gross_margin"
+        ]
+       }
+      },
+      "fx_date": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "fx_missing": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "by_month": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "month": {
+          "type": "string"
+         },
+         "revenue": {
+          "type": "number"
+         },
+         "teacher_cost": {
+          "type": "number"
+         },
+         "expenses": {
+          "type": "number"
+         },
+         "gross_margin": {
+          "type": "number"
+         }
+        },
+        "required": [
+         "month",
+         "revenue",
+         "teacher_cost",
+         "expenses",
+         "gross_margin"
+        ]
+       }
+      },
+      "expenses_by_category": {
+       "type": "object",
+       "propertyNames": {
+        "type": "string"
+       },
+       "additionalProperties": {
+        "type": "number"
+       }
+      },
+      "fx_rates": {
+       "type": "object",
+       "propertyNames": {
+        "type": "string"
+       },
+       "additionalProperties": {
+        "type": "number"
+       }
+      },
+      "unrated_lessons": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "currency",
+      "revenue",
+      "teacher_cost",
+      "expenses",
+      "gross_margin",
+      "by_source",
+      "fx_date",
+      "fx_missing",
+      "by_month",
+      "expenses_by_category",
+      "fx_rates",
+      "unrated_lessons"
+     ]
+    }
+   },
+   "required": [
+    "range",
+    "funnel",
+    "active_students",
+    "lessons_by_status",
+    "needs_confirmation",
+    "pending_reports",
+    "unpaid_subscriptions",
+    "open_tasks",
+    "teacher_load",
+    "finance"
+   ]
+  }
+ },
+ "GET /dashboard/work": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "pending_reports": {
+     "type": "object",
+     "properties": {
+      "total": {
+       "type": "number"
+      },
+      "items": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "lesson_id": {
+          "type": "string"
+         },
+         "starts_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         "status": {
+          "type": "string",
+          "enum": [
+           "scheduled",
+           "confirmed",
+           "completed",
+           "late",
+           "excused",
+           "no_show",
+           "cancelled_by_teacher",
+           "cancelled_by_admin",
+           "rescheduled"
+          ]
+         },
+         "teacher": {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string"
+           },
+           "display_name_ar": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "display_name_ar"
+          ]
+         },
+         "student": {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string"
+           },
+           "code": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "code",
+           "name"
+          ]
+         }
+        },
+        "required": [
+         "lesson_id",
+         "starts_at",
+         "status",
+         "teacher",
+         "student"
+        ]
+       }
+      }
+     },
+     "required": [
+      "total",
+      "items"
+     ]
+    },
+    "unpaid": {
+     "type": "object",
+     "properties": {
+      "total": {
+       "type": "number"
+      },
+      "items": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "student": {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string"
+           },
+           "code": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "id",
+           "code",
+           "name"
+          ]
+         },
+         "package": {
+          "anyOf": [
+           {
+            "type": "string",
+            "enum": [
+             "4",
+             "8",
+             "12",
+             "16",
+             "20",
+             "28",
+             "trial"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "lessons_total": {
+          "type": "number"
+         },
+         "price": {
+          "type": "number"
+         },
+         "paid": {
+          "type": "number"
+         },
+         "owed": {
+          "type": "number"
+         },
+         "reason": {
+          "type": "string",
+          "enum": [
+           "owes",
+           "renewal_due"
+          ]
+         },
+         "currency": {
+          "type": "string"
+         },
+         "starts_on": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+         }
+        },
+        "required": [
+         "id",
+         "student",
+         "package",
+         "lessons_total",
+         "price",
+         "paid",
+         "owed",
+         "reason",
+         "currency",
+         "starts_on"
+        ]
+       }
+      }
+     },
+     "required": [
+      "total",
+      "items"
+     ]
+    },
+    "tasks": {
+     "type": "object",
+     "properties": {
+      "total": {
+       "type": "number"
+      },
+      "items": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "kind": {
+          "type": "string",
+          "enum": [
+           "renewal_due",
+           "subscription_unpaid"
+          ]
+         },
+         "subject_type": {
+          "type": "string"
+         },
+         "subject_id": {
+          "type": "string"
+         },
+         "student": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "id": {
+              "type": "string"
+             },
+             "code": {
+              "type": "string"
+             },
+             "name": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "id",
+             "code",
+             "name"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "title": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "due_at": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "done_at": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "created_at": {
+          "type": "string"
+         },
+         "balance": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "used": {
+              "type": "number"
+             },
+             "total": {
+              "type": "number"
+             }
+            },
+            "required": [
+             "used",
+             "total"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         }
+        },
+        "required": [
+         "id",
+         "kind",
+         "subject_type",
+         "subject_id",
+         "student",
+         "title",
+         "due_at",
+         "done_at",
+         "created_at",
+         "balance"
+        ]
+       }
+      }
+     },
+     "required": [
+      "total",
+      "items"
+     ]
+    }
+   },
+   "required": [
+    "pending_reports",
+    "unpaid",
+    "tasks"
+   ]
+  }
+ },
  "GET /expense-categories": {
   "response": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",

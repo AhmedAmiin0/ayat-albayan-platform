@@ -31,6 +31,8 @@ describe('dashboard calls', () => {
 
   it('refuses a work queue that misses a list', async () => {
     const { client } = clientAnswering({ ...WORK, tasks: undefined });
-    await expect(dashboardCalls(client).work()).rejects.toMatchObject({ body: { code: 'bad_response' } });
+    await expect(dashboardCalls(client).work()).rejects.toMatchObject({
+      body: { code: 'bad_response' },
+    });
   });
 });

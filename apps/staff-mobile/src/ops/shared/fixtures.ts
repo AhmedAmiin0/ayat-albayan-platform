@@ -5,15 +5,9 @@ import {
   type ReportView,
 } from '@ab/shared';
 import { SETTING_DEFAULTS, type AcademySettings } from '@ab/settings';
-import type { DashboardCounts, DashboardWork } from '@ab/money';
+import type { DashboardWork } from '@ab/money';
 
-export const summary: DashboardCounts = {
-  active_students: 41,
-  needs_confirmation: 3,
-  pending_reports: 2,
-  unpaid_subscriptions: 0,
-  open_tasks: 1,
-};
+export { summary } from './dashboard-summary.fixture';
 
 const sara = { id: 's1', code: 'AB-0182', name: 'سارة أحمد' };
 
@@ -78,8 +72,19 @@ export const settings: AcademySettings = {
 
 /** GET /admin/notifications under `settings` (automatic off), one kept number. */
 export const catalogue: NotificationsOverview = {
-  entries: catalogueViews({ settings, gateReason: null, templates: new Map([['report_ready', { status: 'approved', line: 'notifications' }]]) }),
-  lines: [{ line: 'notifications', display_phone_e164: '+966551234567', verified_name: null, checked_at: '2026-10-22T08:00:00Z' }],
+  entries: catalogueViews({
+    settings,
+    gateReason: null,
+    templates: new Map([['report_ready', { status: 'approved', line: 'notifications' }]]),
+  }),
+  lines: [
+    {
+      line: 'notifications',
+      display_phone_e164: '+966551234567',
+      verified_name: null,
+      checked_at: '2026-10-22T08:00:00Z',
+    },
+  ],
 };
 
 export const activityRow = (over: Partial<ActivityView> = {}): ActivityView => ({
