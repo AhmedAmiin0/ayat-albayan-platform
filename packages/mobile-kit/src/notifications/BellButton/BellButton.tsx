@@ -2,15 +2,9 @@ import { Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { shape, useTheme } from '../../theme';
 import { BellBadge } from '../BellBadge';
-import { bellBadge, bellLabel } from '../notifications-cache';
-import { useNotifications } from '../use-notifications';
-
-export interface BellButtonProps {
-  /** Opens the app's notifications screen (each app routes it). */
-  onPress: () => void;
-  /** A round button (the calm Today header's 44pt circle): the pressed wash takes the circle. */
-  round?: boolean;
-}
+import { bellLabel } from '../notifications-cache';
+import type { BellButtonProps } from './BellButton.types';
+import { useBellButton } from './use-bell-button';
 
 /**
  * The bell in a Today header (R-NOT-01): a 44pt button with the unread count («9+» above nine) at
@@ -18,8 +12,7 @@ export interface BellButtonProps {
  */
 export function BellButton({ onPress, round = false }: BellButtonProps) {
   const { color } = useTheme();
-  const unread = useNotifications().data?.unread ?? 0;
-  const badge = bellBadge(unread);
+  const { unread, badge } = useBellButton();
   return (
     <Pressable
       accessibilityRole="button"
