@@ -1,39 +1,12 @@
-import type { PaymentKind, PaymentMethod, PayoutStatus } from '@ab/catalog';
+import type { PaymentKind, PaymentMethod } from '@ab/catalog';
 import type { AssistantCommissionStatus } from './commission';
-import type { AssistantCommissionKind } from './kind';
 import type { AssistantTermsView } from './schemas';
-import type { CurrencyTotals, StatementLineKind } from './statement';
+import type { CurrencyTotals } from './statement';
+import type { AssistantStatementView } from './statement-view.schemas';
 import type { WalletTotals } from './wallet';
 
 // Assistant (base role sales) responses: snake_case, instants ISO UTC, months and days
 // YYYY-MM-01 / YYYY-MM-DD. Amounts are per currency; nothing here sums across currencies.
-
-export interface AssistantStatementLineView {
-  kind: StatementLineKind;
-  amount: number;
-  currency: string;
-  /** commission lines: the student; adjustment lines: the reason. */
-  student: { code: string; name: string } | null;
-  /** Commission lines: commission or renewal commission; null on the other lines. */
-  commission_kind: AssistantCommissionKind | null;
-  reason: string | null;
-}
-
-/** GET /assistant-pay/statements rows and details; a salesperson's own in /sales/me/earnings. */
-export interface AssistantStatementView {
-  id: string;
-  assistant: { id: string; name: string };
-  month: string;
-  status: PayoutStatus;
-  /** Frozen with the statement: {currency: {salary, commissions, adjustments, total}}. */
-  totals: Record<string, CurrencyTotals>;
-  lines: AssistantStatementLineView[];
-  approved_at: string | null;
-  paid_at: string | null;
-  method: PaymentMethod | null;
-  note: string | null;
-  has_receipt: boolean;
-}
 
 /** GET /sales/me/students: the students this assistant brought, newest first. */
 export interface MyStudentRow {
