@@ -655,11 +655,6 @@
       "count": 1
     }
   },
-  "src/features/finance/payouts/api.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "src/features/finance/payouts/list/PayoutActions.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
