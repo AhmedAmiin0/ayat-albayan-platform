@@ -6986,11 +6986,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/booking/course-change/course-change.fakes.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/booking/course-change/course-change.lessons.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -7299,16 +7294,6 @@
   "src/modules/teaching/booking/plan/tests/slots.service.test.ts": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/modules/teaching/booking/profile/course-move.routes.ts": {
-    "ab/zod-inputs": {
-      "count": 6
-    }
-  },
-  "src/modules/teaching/booking/profile/profile-course.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/modules/teaching/booking/sales/booking/sales-booking.ownership.ts": {

@@ -16,12 +16,10 @@ export {
   type CourseMoveErrorCode,
   courseMoveErrorCode,
   type CourseMoveKind,
-  courseMoveViewPath,
   type CourseStopErrorCode,
   courseStopErrorCode,
   courseStopLessonsText,
   courseStopPath,
-  courseTeacherOptionsPath,
   type StopWords,
 } from './course-actions';
 export {
@@ -62,6 +60,7 @@ export * from './course-stop-api';
 export * from './schedule-rules-api';
 export * from './course-pause-api';
 export * from './course-change-api';
+export * from './course-move-api';
 export * from './trial-date-api';
 export * from './booking-api';
 export * from './lesson-times';

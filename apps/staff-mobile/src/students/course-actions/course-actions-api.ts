@@ -2,14 +2,13 @@ import {
   courseActionsKey,
   courseKeys,
   courseMoveBase,
-  courseMoveViewPath,
   courseStopCalls,
   courseStopPath,
-  courseTeacherOptionsPath,
+  courseTeacherCalls,
+  courseTimesCalls,
   type CourseMoveKind,
 } from '@ab/client-core';
 import type { CourseStopPreview, CourseStopRequest, ProfileCourseView } from '@ab/shared';
-import type { BookingTeacherOption } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
@@ -17,6 +16,8 @@ import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 // The same routes in the admin and sales trees, each with its own key; shared with web.
 
 const stops = courseStopCalls({ apiFetch, apiSend });
+const teacherMoves = courseTeacherCalls({ apiFetch, apiSend });
+const moves = { teacher: teacherMoves, times: courseTimesCalls({ apiFetch, apiSend }) };
 
 export interface SubRef {
   studentId: string;
@@ -103,14 +104,14 @@ export const useStopPreview = (sub: SubRef) =>
 export const useMoveView = (sub: SubRef & { kind: CourseMoveKind }) =>
   useQuery({
     queryKey: courseKeys.move(sub, sub.kind),
-    queryFn: () => apiFetch<ProfileCourseView>(courseMoveViewPath(sub)),
+    queryFn: () => moves[sub.kind].view(sub.studentId, { subscriptionId: sub.subscriptionId }),
   });
 
 /** GET …/course-teacher/teachers: the student's program and gender preference. */
 export const useTeacherOptions = (studentId: string) =>
   useQuery({
     queryKey: courseKeys.teachers(studentId),
-    queryFn: () => apiFetch<BookingTeacherOption[]>(courseTeacherOptionsPath(studentId)),
+    queryFn: () => teacherMoves.teachers(studentId),
   });
 
 function useRefresh(studentId: string) {
