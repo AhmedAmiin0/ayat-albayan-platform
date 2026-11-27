@@ -2,6 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { SLOTS, SUN_17 } from '@/teaching/reschedule/fixtures';
 import { renderWithQuery } from '@/test/query';
+import { answered } from './testing/answered';
 import { done, lesson, pending } from './testing/fixtures';
 import { TodayScreen } from './screens/TodayScreen';
 
@@ -49,7 +50,8 @@ test('an open lesson’s sheet offers «غيّر الموعد»; a held lesson�
 
 test('«غيّر الموعد» in the details opens the reschedule sheet; the move lands and Today refetches', async () => {
   serve([pending]);
-  const moved = lesson({ id: 'new', starts_at: SUN_17, ends_at: '2026-10-04T14:45:00.000Z' });
+  const ends_at = '2026-10-04T14:45:00.000Z';
+  const moved = answered(lesson({ id: 'new', starts_at: SUN_17, ends_at }));
   mockApiSend.mockResolvedValue(moved);
   await renderWithQuery(<TodayScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));

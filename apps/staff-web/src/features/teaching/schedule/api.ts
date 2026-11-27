@@ -8,7 +8,6 @@ import type { LessonTimeEdit } from '@ab/schedule';
 import type {
   CancelRequest,
   Conflict,
-  LessonView,
   RescheduleRequest,
   SlotsResponse,
   StatusRouteEvent,

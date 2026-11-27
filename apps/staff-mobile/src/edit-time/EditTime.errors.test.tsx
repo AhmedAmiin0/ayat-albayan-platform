@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { EditTimeSheet } from './components/EditTimeSheet';
-import { GRID, NOW, SAT_17, upcoming } from './testing/fixtures';
+import { GRID, NOW, result, SAT_17, upcoming } from './testing/fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -84,7 +84,7 @@ test('offline: says it is not sure the time changed, and a retry is allowed', as
   mockApiSend.mockRejectedValueOnce(new TypeError('Network request failed'));
   await pickAndSave();
   expect(await screen.findByText(t.editTime.offline)).toBeTruthy();
-  mockApiSend.mockResolvedValue({ lesson: upcoming, notified: 0, payout: 'none', pdf_refresh: false });
+  mockApiSend.mockResolvedValue(result());
   await fireEvent.press(screen.getByRole('button', { name: t.editTime.submit }));
   expect(await screen.findByText(t.editTime.saved)).toBeTruthy();
 });

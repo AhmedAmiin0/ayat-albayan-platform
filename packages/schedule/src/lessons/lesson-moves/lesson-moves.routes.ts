@@ -1,10 +1,11 @@
 import { defineRoute } from '@ab/core';
 import { z } from 'zod';
-import { lessonTimeEditSchema, timeEditResultSchema } from '../../schemas/lesson-time';
 import {
+  lessonTimeEditSchema,
   rescheduleRequestSchema,
   ruleCancelRequestSchema,
-} from '../../schemas/scheduling/scheduling';
+  timeEditResultSchema,
+} from '../../schemas';
 import { lessonViewSchema } from '../lesson-view';
 import { ruleCancelResultSchema } from './lesson-moves.schemas';
 
