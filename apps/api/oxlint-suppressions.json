@@ -1030,9 +1030,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/finance/assistant-pay/my/my.earnings.test.ts": {

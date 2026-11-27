@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { ASSISTANT_COMMISSION_KINDS } from './kind';
 import { statementLineKindSchema } from './statement';
 
-const currencyTotalsSchema = z.object({
+export const currencyTotalsSchema = z.object({
   salary: z.number(),
   commissions: z.number(),
   adjustments: z.number(),

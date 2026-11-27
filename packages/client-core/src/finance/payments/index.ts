@@ -6,3 +6,4 @@ export * from './payouts-api';
 export * from './my-payouts-api';
 export * from './payments-api';
 export * from './assistant-pay-api';
+export * from './my-sales-api';
