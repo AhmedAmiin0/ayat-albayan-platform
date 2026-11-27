@@ -13,6 +13,8 @@ export const availabilityRoutes = {
     path: '/teachers/:id/availability',
     params: byTeacher,
     response: z.array(availabilityRowSchema),
+    permissions: ['availability.read'],
+    tags: ['teachers'],
   }),
   replaceGrid: defineRoute({
     method: 'PUT',
@@ -20,12 +22,16 @@ export const availabilityRoutes = {
     params: byTeacher,
     body: availabilityReplaceSchema,
     response: z.array(availabilityRowSchema),
+    permissions: ['availability.write'],
+    tags: ['teachers'],
   }),
   timeOff: defineRoute({
     method: 'GET',
     path: '/teachers/:id/time-off',
     params: byTeacher,
     response: z.array(timeOffViewSchema),
+    permissions: ['availability.read'],
+    tags: ['teachers'],
   }),
   addTimeOff: defineRoute({
     method: 'POST',
@@ -33,6 +39,8 @@ export const availabilityRoutes = {
     params: byTeacher,
     body: timeOffCreateSchema,
     response: timeOffViewSchema,
+    permissions: ['availability.write'],
+    tags: ['teachers'],
   }),
   editTimeOff: defineRoute({
     method: 'PUT',
@@ -40,11 +48,15 @@ export const availabilityRoutes = {
     params: byTimeOff,
     body: timeOffCreateSchema,
     response: timeOffViewSchema,
+    permissions: ['availability.write'],
+    tags: ['teachers'],
   }),
   removeTimeOff: defineRoute({
     method: 'DELETE',
     path: '/teachers/:id/time-off/:timeOffId',
     params: byTimeOff,
     response: 'empty',
+    permissions: ['availability.write'],
+    tags: ['teachers'],
   }),
 };
