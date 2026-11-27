@@ -32,13 +32,23 @@ describe('settings data access', () => {
     expect(settingsQuery.queryKey).toEqual(['settings']);
     const queryFn = settingsQuery.queryFn;
     if (typeof queryFn !== 'function') throw new Error('no queryFn');
-    await expect(Promise.resolve(queryFn({} as never))).resolves.toBe(SETTING_DEFAULTS);
+    await expect(Promise.resolve(queryFn({} as never))).resolves.toEqual(SETTING_DEFAULTS);
     expect(apiFetch).toHaveBeenCalledWith('/settings');
   });
 
+  it('settingsQuery refuses settings outside the shared schema', async () => {
+    apiFetch.mockResolvedValue({ ...SETTING_DEFAULTS, reminder_minutes_before: 1 });
+    const queryFn = settingsQuery.queryFn;
+    if (typeof queryFn !== 'function') throw new Error('no queryFn');
+    await expect(Promise.resolve(queryFn({} as never))).rejects.toMatchObject({
+      body: { code: 'bad_response' },
+    });
+  });
+
   it('updateSettings sends PATCH /settings with the body as given', async () => {
-    apiSend.mockResolvedValue(SETTING_DEFAULTS);
-    await expect(updateSettings({ salesAutoAssign: true })).resolves.toBe(SETTING_DEFAULTS);
+    const answer = { ...SETTING_DEFAULTS, saved: ['sales_auto_assign'], moved: [], invalid: [] };
+    apiSend.mockResolvedValue(answer);
+    await expect(updateSettings({ salesAutoAssign: true })).resolves.toEqual(answer);
     expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { salesAutoAssign: true });
   });
 });

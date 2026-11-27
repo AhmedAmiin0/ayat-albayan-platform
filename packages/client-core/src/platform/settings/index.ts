@@ -21,6 +21,7 @@ export type {
   MaintenanceViewer,
 } from './maintenance';
 export { settingsMetaCalls, type SettingsMetaCalls } from './meta';
+export { settingsCalls, type SettingsCalls } from './academy';
 export {
   integrationCalls,
   type IntegrationCalls,

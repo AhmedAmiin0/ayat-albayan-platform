@@ -6180,11 +6180,6 @@
       "count": 1
     }
   },
-  "src/lib/settings/settings-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/lib/settings/use-setting-switch.test.tsx": {
     "stylistic/max-len": {
       "count": 1
