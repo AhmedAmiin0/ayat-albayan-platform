@@ -1,16 +1,18 @@
 import {
   channelPostSchema,
+  channelSeatRoutes as seatRoutes,
   channelReadSchema,
   type ChannelMessageView,
   type ChannelPost,
   type ChannelSeat,
   type ChannelUnread,
 } from '@ab/shared';
-import { Controller, Delete, Get, HttpCode, Inject, Post, Put } from '@nestjs/common';
+import { Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { ChannelAccess } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelService } from '@/modules/teaching/student-channels/channel.service';
@@ -30,7 +32,7 @@ const id = z.uuid();
 @ApiTags('student-channels')
 @ApiBearerAuth()
 @Permissions('self.sales')
-@Controller('sales/students/:id/channel')
+@Controller()
 export class SalesChannelController {
   constructor(
     @Inject(ChannelAccess) private readonly access: ChannelAccess,
@@ -38,7 +40,7 @@ export class SalesChannelController {
     @Inject(ChannelSeatService) private readonly seats: ChannelSeatService,
   ) {}
 
-  @Post('messages')
+  @Post('sales/students/:id/channel/messages')
   async post(
     @ZodParam('id', id) studentId: string,
     @ZodBody(channelPostSchema) body: ChannelPost,
@@ -47,7 +49,7 @@ export class SalesChannelController {
     return this.channels.post(await this.access.assistantWriter(user, studentId), body);
   }
 
-  @Post('read')
+  @Post('sales/students/:id/channel/read')
   @HttpCode(204)
   async read(
     @ZodParam('id', id) studentId: string,
@@ -57,7 +59,7 @@ export class SalesChannelController {
     await this.channels.read(await this.access.assistantWriter(user, studentId), body.at);
   }
 
-  @Get('unread')
+  @Get('sales/students/:id/channel/unread')
   async unread(
     @ZodParam('id', id) studentId: string,
     @CurrentUser() user: AuthUser,
@@ -65,29 +67,29 @@ export class SalesChannelController {
     return this.channels.unread(await this.access.assistant(user, studentId));
   }
 
-  @Get('seat')
-  async seat(
-    @ZodParam('id', id) studentId: string,
+  @Route(seatRoutes.view)
+  seat(
+    @RouteInput() { params }: RouteInputOf<typeof seatRoutes.view>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelSeat> {
-    return this.seats.view(user.id, studentId);
+    return this.seats.view(user.id, params.id);
   }
 
   /** Take the seat: free, or I brought the student; 409 channel_seat_taken otherwise. */
-  @Put('seat')
-  async takeSeat(
-    @ZodParam('id', id) studentId: string,
+  @Route(seatRoutes.take)
+  takeSeat(
+    @RouteInput() { params }: RouteInputOf<typeof seatRoutes.take>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelSeat> {
-    return this.seats.take(user.id, studentId);
+    return this.seats.take(user.id, params.id);
   }
 
-  @Delete('seat')
+  @Route(seatRoutes.leave)
   @HttpCode(204)
   async leaveSeat(
-    @ZodParam('id', id) studentId: string,
+    @RouteInput() { params }: RouteInputOf<typeof seatRoutes.leave>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.seats.leave(user.id, studentId);
+    await this.seats.leave(user.id, params.id);
   }
 }
