@@ -1,8 +1,8 @@
-import type { PortalMonth } from '@ab/shared';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
+import type { MonthCountsProps } from './MonthCounts.types';
 
 /** The student's calendar month; an older API sends nothing. */
-export function MonthCounts({ month }: { month: PortalMonth | undefined }) {
+export function MonthCounts({ month }: MonthCountsProps) {
   if (!month) return null;
   return (
     <p className="flex flex-wrap items-center gap-2 text-sm" aria-label={t.portal.thisMonth}>

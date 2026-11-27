@@ -1,11 +1,11 @@
 import { signedAmount } from '@ab/client-core';
-import type { PortalPayment } from '@ab/shared';
 import { moneyText } from '@ab/web-kit/lib/money-text';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { dayText } from '@ab/web-kit/portal/package/package-text';
+import type { PaymentsListProps } from './PaymentsList.types';
 
 /** Newest first; a refund is a minus; hidden when there are none. */
-export function PaymentsList({ payments }: { payments: PortalPayment[] }) {
+export function PaymentsList({ payments }: PaymentsListProps) {
   if (payments.length === 0) return null;
   return (
     <section aria-label={t.portal.payments} className="grid gap-2">
@@ -20,7 +20,9 @@ export function PaymentsList({ payments }: { payments: PortalPayment[] }) {
               <span className="font-semibold">{dayText(p.paid_at.slice(0, 10))}</span>
               <span className="text-xs text-ink-3">{t.enums.paymentKind[p.kind]}</span>
             </span>
-            <bdi className="font-semibold tabular-nums">{moneyText(signedAmount(p), p.currency)}</bdi>
+            <bdi className="font-semibold tabular-nums">
+              {moneyText(signedAmount(p), p.currency)}
+            </bdi>
           </li>
         ))}
       </ul>
