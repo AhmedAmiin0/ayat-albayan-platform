@@ -1,19 +1,18 @@
-import { rescheduleRequestSchema, type LessonView } from '@ab/schedule';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { lessonMoveRoutes } from '@ab/schedule';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { RescheduleOneService } from './reschedule-one.service';
 import { RescheduleRuleService } from './reschedule-rule.service';
 
+type RescheduleIn = RouteInputOf<typeof lessonMoveRoutes.reschedule>;
+
 /** POST /lessons/:id/reschedule (docs/10 route 8, R-SCH-07): one occurrence or the whole rule. */
-@ApiTags('lessons')
 @ApiBearerAuth()
-@Permissions('lessons.write')
-@Controller('lessons')
+@Controller()
 export class LessonRescheduleController {
   constructor(
     private readonly views: LessonViews,
@@ -22,17 +21,14 @@ export class LessonRescheduleController {
   ) {}
 
   /** The new lesson (for `rule`, the new rule's first lesson). */
-  @Post(':id/reschedule')
+  @Route(lessonMoveRoutes.reschedule)
   @HttpCode(200)
-  async reschedule(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodBody(rescheduleRequestSchema) req: z.output<typeof rescheduleRequestSchema>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<LessonView> {
+  async reschedule(@RouteInput() { params, body }: RescheduleIn, @CurrentUser() user: AuthUser) {
+    const input = { lessonId: params.id, actor: user };
     const newId =
-      req.scope === 'one'
-        ? await this.one.reschedule({ lessonId: id, body: req, actor: user })
-        : await this.rule.reschedule({ lessonId: id, body: req, actor: user });
+      body.scope === 'one'
+        ? await this.one.reschedule({ ...input, body })
+        : await this.rule.reschedule({ ...input, body });
     return this.views.one(newId, 'admin');
   }
 }
