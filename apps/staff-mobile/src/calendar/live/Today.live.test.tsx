@@ -3,6 +3,7 @@ import { t } from '@ab/mobile-kit';
 import { TeacherTodayScreen } from '@/teacher/screens/TeacherTodayScreen';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
+import { answered } from '@/today/testing/answered';
 import { lesson } from '@/today/testing/fixtures';
 import TodayRoute from '../../../app/(tabs)/index';
 
@@ -14,12 +15,14 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 // 1 Oct 2026, 16:10 Riyadh / Cairo: a 16:00 lesson is running, a 16:20 one is about to start.
-const running = lesson({ id: 'run', status: 'confirmed' });
-const next = lesson({
-  id: 'next',
-  starts_at: '2026-10-01T13:20:00.000Z',
-  ends_at: '2026-10-01T14:05:00.000Z',
-});
+const running = answered(lesson({ id: 'run', status: 'confirmed' }));
+const next = answered(
+  lesson({
+    id: 'next',
+    starts_at: '2026-10-01T13:20:00.000Z',
+    ends_at: '2026-10-01T14:05:00.000Z',
+  }),
+);
 const me = { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 
 beforeEach(() => {
