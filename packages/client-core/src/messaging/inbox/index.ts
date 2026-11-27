@@ -74,3 +74,4 @@ export {
   type SavedReplyStep,
 } from './saved-replies';
 export { messageHideCalls, type MessageHideCalls } from './message-hide';
+export { threadForwardCalls, type ThreadForwardCalls } from './thread-forward';

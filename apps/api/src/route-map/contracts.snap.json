@@ -314,6 +314,47 @@
    ]
   }
  },
+ "DELETE /students/:id/assistants/:profileId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "profileId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id",
+    "profileId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "profile_id": {
+      "type": "string"
+     },
+     "full_name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "profile_id",
+     "full_name"
+    ]
+   }
+  }
+ },
  "DELETE /threads/:phone/messages/:messageId/hide": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -518,6 +559,98 @@
    "required": [
     "id"
    ]
+  }
+ },
+ "GET /assistants": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "profile_id": {
+      "type": "string"
+     },
+     "full_name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "profile_id",
+     "full_name"
+    ]
+   }
+  }
+ },
+ "GET /assistants/me/lessons": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "from": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+    },
+    "to": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+    }
+   },
+   "required": [
+    "from",
+    "to"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "lesson_id": {
+      "type": "string"
+     },
+     "starts_at": {
+      "type": "string"
+     },
+     "ends_at": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "scheduled",
+       "confirmed",
+       "completed",
+       "late",
+       "excused",
+       "no_show",
+       "cancelled_by_teacher",
+       "cancelled_by_admin",
+       "rescheduled"
+      ]
+     },
+     "teacher_name": {
+      "type": "string"
+     },
+     "student_names": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    },
+    "required": [
+     "lesson_id",
+     "starts_at",
+     "ends_at",
+     "status",
+     "teacher_name",
+     "student_names"
+    ]
+   }
   }
  },
  "GET /booking/course/change": {
@@ -3615,6 +3748,48 @@
    ]
   }
  },
+ "GET /public/feedback/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacherName": {
+     "type": "string"
+    },
+    "kind": {
+     "type": "string",
+     "enum": [
+      "trial",
+      "subscription"
+     ]
+    },
+    "contactPhone": {
+     "type": "string"
+    },
+    "alreadySubmitted": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "teacherName",
+    "kind",
+    "contactPhone",
+    "alreadySubmitted"
+   ]
+  }
+ },
  "GET /public/report-pages/:publicId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -5078,6 +5253,41 @@
      "type": "string",
      "maxLength": 100
     }
+   }
+  }
+ },
+ "GET /students/:id/assistants": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "profile_id": {
+      "type": "string"
+     },
+     "full_name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "profile_id",
+     "full_name"
+    ]
    }
   }
  },
@@ -13941,6 +14151,63 @@
    ]
   }
  },
+ "POST /public/feedback/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "rating": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "recommend": {
+     "type": "string",
+     "enum": [
+      "yes",
+      "maybe",
+      "no"
+     ]
+    },
+    "note": {
+     "type": "string",
+     "maxLength": 2000
+    },
+    "contactPhone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "rating",
+    "recommend"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "submitted": {
+     "type": "boolean",
+     "const": true
+    }
+   },
+   "required": [
+    "submitted"
+   ]
+  }
+ },
  "POST /public/report-pages/:publicId/code": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19063,6 +19330,55 @@
    ]
   }
  },
+ "POST /students/:id/assistants": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "profileId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "profileId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "profile_id": {
+      "type": "string"
+     },
+     "full_name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "profile_id",
+     "full_name"
+    ]
+   }
+  }
+ },
  "POST /students/:id/course-extend": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -19963,6 +20279,70 @@
     "messageId",
     "targets",
     "clientRequestId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "results": {
+     "type": "array",
+     "items": {
+      "oneOf": [
+       {
+        "type": "object",
+        "properties": {
+         "phone": {
+          "type": "string"
+         },
+         "sent": {
+          "type": "boolean",
+          "const": true
+         },
+         "message_id": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "phone",
+         "sent",
+         "message_id"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "phone": {
+          "type": "string"
+         },
+         "sent": {
+          "type": "boolean",
+          "const": false
+         },
+         "reason": {
+          "type": "string",
+          "enum": [
+           "session_closed",
+           "not_your_thread",
+           "own_thread_read_only",
+           "line_not_configured",
+           "files_forbidden",
+           "send_failed"
+          ]
+         }
+        },
+        "required": [
+         "phone",
+         "sent",
+         "reason"
+        ]
+       }
+      ]
+     }
+    }
+   },
+   "required": [
+    "results"
    ]
   }
  },

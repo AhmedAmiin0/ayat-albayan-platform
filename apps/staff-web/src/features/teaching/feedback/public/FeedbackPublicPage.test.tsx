@@ -73,7 +73,7 @@ describe('FeedbackPublicPage (no login)', () => {
   });
 
   it('shows the thanks screen after a send', async () => {
-    fetchMock.mockImplementation(async (_url: string, init?: RequestInit) => (init?.method === 'POST' ? new Response(null, { status: 204 }) : json(200, OK)));
+    fetchMock.mockImplementation(async (_url: string, init?: RequestInit) => (init?.method === 'POST' ? json(200, { submitted: true }) : json(200, OK)));
     open();
     fireEvent.click(await screen.findByRole('radio', { name: t.feedback.rowRating.replace('{n}', '4') }));
     fireEvent.click(screen.getByRole('radio', { name: t.enums.feedbackRecommend.yes }));

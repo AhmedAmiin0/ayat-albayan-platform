@@ -3,39 +3,18 @@ import { waSendKind } from '../chat/chat-files';
 import {
   canForward,
   canReply,
-  FORWARD_MAX_TARGETS,
   isUnavailableQuote,
   mediaKindOf,
   quoteIcon,
   quoteKindOf,
   quoteLine,
   quoteSnippet,
-  threadForwardSchema,
   UNAVAILABLE_QUOTE,
 } from './reply-forward';
 import { threadFileSendSchema, threadTextSchema } from '../schemas';
 
 const ID = '00000000-0000-4000-8000-000000000001';
 const REQ = '00000000-0000-4000-8000-000000000002';
-const phones = (n: number) => Array.from({ length: n }, (_, i) => `+2010000000${i}`);
-
-describe('threadForwardSchema', () => {
-  it('takes one to five distinct E.164 targets', () => {
-    expect(threadForwardSchema.safeParse({ messageId: ID, targets: phones(1), clientRequestId: REQ }).success).toBe(true);
-    expect(threadForwardSchema.safeParse({ messageId: ID, targets: phones(FORWARD_MAX_TARGETS), clientRequestId: REQ }).success).toBe(true);
-  });
-
-  it('refuses none, six, a duplicate, a free-text number or no request id', () => {
-    const bad = [
-      { messageId: ID, targets: [], clientRequestId: REQ },
-      { messageId: ID, targets: phones(6), clientRequestId: REQ },
-      { messageId: ID, targets: ['+201000000001', '+201000000001'], clientRequestId: REQ },
-      { messageId: ID, targets: ['01000000001'], clientRequestId: REQ },
-      { messageId: ID, targets: phones(1) },
-    ];
-    for (const body of bad) expect(threadForwardSchema.safeParse(body).success).toBe(false);
-  });
-});
 
 describe('replyToMessageId on the send bodies', () => {
   it('is an optional uuid on a text and a file', () => {

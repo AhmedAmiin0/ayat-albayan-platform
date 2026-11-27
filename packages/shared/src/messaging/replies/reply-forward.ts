@@ -1,5 +1,3 @@
-import { z } from 'zod';
-import { clientRequestId, E164_RE } from '@ab/core';
 import { baseMime } from '../../schemas/chat-media';
 import { isPdfMime } from '../chat/chat-files';
 import type { MessageDirection } from '@ab/catalog';
@@ -10,18 +8,6 @@ import type { MessageDirection } from '@ab/catalog';
 export const FORWARD_MAX_TARGETS = 5;
 /** How much of the quoted text the API sends; the clients show its first line. */
 export const QUOTE_BODY_MAX = 200;
-
-/** POST /threads/forward: one message copied to 1–5 other chats; the id makes a retry return the same rows. */
-export const threadForwardSchema = z.object({
-  messageId: z.uuid(),
-  targets: z
-    .array(z.string().regex(E164_RE))
-    .min(1)
-    .max(FORWARD_MAX_TARGETS)
-    .refine((t) => new Set(t).size === t.length, { message: 'duplicate_target' }),
-  clientRequestId,
-});
-export type ThreadForward = z.infer<typeof threadForwardSchema>;
 
 /** The message a bubble answers, as the bubble shows it (same chat only). */
 export interface MessageQuote {
@@ -46,25 +32,6 @@ export type ReplyQuote = MessageQuote | UnavailableQuote;
 export const UNAVAILABLE_QUOTE: UnavailableQuote = { unavailable: true };
 
 export const isUnavailableQuote = (q: ReplyQuote): q is UnavailableQuote => 'unavailable' in q;
-
-/** Why a forward target got nothing (the send path's own error codes). */
-export type ForwardSkip =
-  | 'session_closed'
-  | 'not_your_thread'
-  | 'own_thread_read_only'
-  | 'line_not_configured'
-  | 'files_forbidden'
-  | 'send_failed';
-
-/** One target of a forward: the copy queued (its message id), or skipped and why. */
-export type ForwardResult =
-  | { phone: string; sent: true; message_id: string }
-  | { phone: string; sent: false; reason: ForwardSkip };
-
-/** POST /threads/forward's answer, in the order of the request's targets. */
-export interface ForwardResponse {
-  results: ForwardResult[];
-}
 
 type Quotable = { replyable?: boolean; template_key: string | null };
 

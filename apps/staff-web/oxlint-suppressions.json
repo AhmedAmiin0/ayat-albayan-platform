@@ -1145,11 +1145,6 @@
       "count": 3
     }
   },
-  "src/features/messaging/inbox/api/api.forward.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/api/api.ts": {
     "complexity": {
       "count": 1
@@ -5724,9 +5719,6 @@
     },
     "ab/no-untyped-api-calls": {
       "count": 2
-    },
-    "typescript/dot-notation": {
-      "count": 6
     }
   },
   "src/features/teaching/feedback/public/FeedbackForm.test.tsx": {

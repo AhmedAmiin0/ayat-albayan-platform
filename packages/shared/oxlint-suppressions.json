@@ -145,16 +145,8 @@
       "count": 1
     }
   },
-  "src/messaging/replies/reply-forward.test.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/messaging/replies/reply-forward.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     },
     "ab/module-boundaries": {

@@ -75,6 +75,15 @@ docs/62 is the spec and the base's own history is the example: a test that pins 
 
 A new sub-folder inside one of these is fine, within the same cap of 12 code files and 12 sub-folders. Before each push run `node tools/scripts/ci-checks/folder-cap.mjs --strict` in the session, beside the other checks.
 
+## Permissions and tags on the route object
+
+Owner 2026-11-27: each route object carries its permissions and its API tags, and a route with several permissions lets in a caller who has any one of them. The core of it comes in the PR from `feat/route-permissions-tags` into develop. Until that PR is merged, nothing in this section applies.
+
+- **When it is merged:** the keeper of each base merges develop into its base once, in its next run, regenerates as «Generated files» says and verifies. The C2 base takes that one merge too, the only exception to «merges nothing else into it until C1 is on develop».
+- **Every route object you write or touch** after that carries `permissions` (the permission keys of `@ab/catalog`, at least one) and `tags` (the Swagger tag its controller uses today), and its handler loses its own `@Permissions(…)`. A class-level `@Permissions` or `@ApiTags` goes once no handler of that class needs it. `@SignedIn()`, guards, throttles and `@HttpCode` stay on the handler. Once `RouteSpec` on develop has `isPublic` (a follow-up to the same PR), a public route says `isPublic: true` on its route object instead of `@Public()` on its handler, and carries no `permissions`; until then `@Public()` stays.
+- **Backfill:** the route objects of your area already on the base get the two fields in your next part, before new route groups.
+- **Proof:** `routes.snap.txt` stays byte-identical. A route whose permission or tag would change is a mistake, not a move.
+
 ## Call files stay plain
 
 A call file (`x-api.ts` in client-core) is read by people who did not write it. Keep it a flat list.

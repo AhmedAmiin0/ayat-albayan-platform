@@ -2,6 +2,7 @@ import type { AssistantLessonView } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pgError, rows } from '@/common/db/errors';
+import { toAssistantLesson } from './assistants.mapper';
 import type { LessonRef } from './assistants.repo';
 
 /** Lesson rows of an assistant's students between two instants, with the names (service role). */
@@ -27,7 +28,7 @@ export class AssistantLessonsRepo {
     if (students.error) throw pgError(students.error);
     const teacherName = new Map(teachers.data.map((t) => [t.id, t.display_name_ar]));
     const studentName = new Map(students.data.map((s) => [s.id, s.name]));
-    return lessons.map((l) => ({
+    return lessons.map((l) => toAssistantLesson({
       lesson_id: l.id,
       starts_at: l.starts_at,
       ends_at: l.ends_at,
