@@ -8,6 +8,7 @@ import { ChatActionsProvider } from '@/features/messaging/inbox/shared/ChatActio
 import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ResendAsk } from './ResendAsk';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
@@ -62,7 +63,7 @@ describe('ResendAsk', () => {
       text: ar.inbox.resend.text,
       clientRequestId: expect.any(String),
     });
-    answer(message({ id: 'srv', direction: 'outbound', body: ar.inbox.resend.text }));
+    answer(sentText({ id: uid('srv'), body: ar.inbox.resend.text }));
     await waitFor(() => expect(screen.queryByTestId('resend-text')).toBeNull());
   });
 

@@ -1,4 +1,11 @@
-import type { MessageView, TemplateView, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
+import type {
+  MessageView,
+  TemplateView,
+  TextSendAnswer,
+  ThreadDetail,
+  ThreadPeople,
+  ThreadView,
+} from '@ab/shared';
 import { provisionalMessage, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 import type { ThreadListCache } from '@/inbox/thread/hooks/thread-list-cache';
 
@@ -36,6 +43,18 @@ export const thread: ThreadView = {
 export function message(fields: Partial<MessageView> & { id: string }): MessageView {
   return { ...provisionalMessage({ id: fields.id, phone: PHONE, body: '' }), ...fields };
 }
+
+/** A text send's answer: its row and whether its request id replayed the first one. */
+export function sentText(fields: Partial<TextSendAnswer> & { id: string }): TextSendAnswer {
+  return { replayed: false, same_request: false, ...message(fields) };
+}
+
+const hexOf = (label: string): string =>
+  Array.from(label, (c) => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+
+/** A fixed uuid named by a short label (at most 6 ascii characters), so ids stay readable. */
+export const uid = (label: string): string =>
+  `00000000-0000-4000-8000-${hexOf(label).padStart(12, '0').slice(-12)}`;
 
 export const inbound = message({
   id: 'm1',

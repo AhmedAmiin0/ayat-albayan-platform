@@ -2,11 +2,12 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
-import { message, PHONE, template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { PHONE, template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { SEND_UNCONFIRMED } from '@ab/client-core';
 import { ReopenBar } from '@/features/messaging/inbox/composer/reopen/ReopenBar/ReopenBar';
+import { sentRow, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -70,7 +71,7 @@ describe('ReopenBar: «أرسِل الآن داخل قالب»', () => {
 
   it('opens academy_message with the draft, previews it normalised, sends it as the reopen', async () => {
     show();
-    apiSend.mockResolvedValue(message({ id: 'm-r', direction: 'outbound', status: 'queued' }));
+    apiSend.mockResolvedValue(sentRow({ id: uid('m-r'), status: 'queued' }));
     fireEvent.click(await screen.findByRole('button', { name: t.inbox.reopenBar.carry }));
     const box = await screen.findByLabelText(t.inbox.composer.freeText);
     expect((box as HTMLTextAreaElement).value).toBe('سطر أول\n\nسطر   ثانٍ');

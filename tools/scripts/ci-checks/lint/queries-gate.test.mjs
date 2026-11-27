@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { compare, isQueries } from './queries-gate.mjs';
+import { compare, isQueries, LIST_OPTIONS } from './queries-gate.mjs';
 
 const text = (body) => () => body;
 
@@ -21,4 +21,8 @@ test('compare: a new queries file is added (fails); a listed one that is gone is
     fixed: ['b.queries.ts'],
   });
   assert.deepEqual(compare(listed, listed), { added: [], fixed: [] });
+});
+
+test('the tracked file list is read with room for a repository far past 1 MiB of paths', () => {
+  assert.ok(LIST_OPTIONS.maxBuffer >= 1 << 28);
 });

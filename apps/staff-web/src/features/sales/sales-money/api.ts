@@ -1,9 +1,7 @@
 import type {
   SalesCourseView,
   SalesFamilyView,
-  SalesMoneySubscriptionView,
   SalesPaymentView,
-  SalesQuoteView,
   SalesReceiptCopied,
   SignedUpload,
 } from '@ab/shared';
@@ -11,7 +9,7 @@ import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import { pathKey, salesChatReceiptCalls } from '@ab/client-core';
+import { pathKey, salesChatReceiptCalls, salesSubscribeCalls } from '@ab/client-core';
 import { myMoneyKeys, salesMoneyKeys, salesSubscriptionKeys } from '@/features/sales/keys';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): /sales/money/*,
@@ -20,6 +18,7 @@ import { myMoneyKeys, salesMoneyKeys, salesSubscriptionKeys } from '@/features/s
 
 export type Bind = { phone?: string };
 const chatReceipts = salesChatReceiptCalls({ apiFetch, apiSend });
+const subscribe = salesSubscribeCalls({ apiFetch, apiSend });
 
 /** Every sales money read lives under it (family, chat receipts, quotes). */
 export const SALES_MONEY_KEY = salesMoneyKeys.all;
@@ -49,8 +48,14 @@ export const chatReceiptFileQuery = (studentId: string, messageId: string, bind:
 
 export type SalesQuoteBody = Bind & { studentId: string; pricing: SubscriptionPricing };
 
-export const quoteSalesSubscription = (body: SalesQuoteBody) =>
-  apiSend<SalesQuoteView>('POST', '/sales/subscriptions/quote', body);
+/** GET /sales/subscriptions/teachers: the active teachers she may pick, names only. */
+export const salesTeachersQuery = queryOptions({
+  queryKey: salesSubscriptionKeys.teachers(),
+  queryFn: () => subscribe.teachers(),
+  staleTime: 5 * 60_000,
+});
+
+export const quoteSalesSubscription = (body: SalesQuoteBody) => subscribe.quote(body);
 
 /** Never a price; `startsOn` needs subscriptions.set_start_date; used lessons only when started. */
 export type SalesSubscriptionBody = SalesQuoteBody & {
@@ -64,12 +69,11 @@ export type SalesSubscriptionBody = SalesQuoteBody & {
   clientRequestId: string;
 };
 
-export const createSalesSubscription = (body: SalesSubscriptionBody) =>
-  apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', body);
+export const createSalesSubscription = (body: SalesSubscriptionBody) => subscribe.create(body);
 
 /** Cancels a package made by mistake: only when nothing is paid and no lessons. */
 export const cancelSalesSubscription = (id: string, body: { reason?: string }) =>
-  apiSend<SalesMoneySubscriptionView>('POST', `/sales/subscriptions/${id}/cancel`, body);
+  subscribe.cancel({ subscriptionId: id, body });
 
 /** Never kind, method or invoiceId (always a bank payment); 0 to 5 optional attachment paths. */
 export type SalesPaymentBody = Bind & {

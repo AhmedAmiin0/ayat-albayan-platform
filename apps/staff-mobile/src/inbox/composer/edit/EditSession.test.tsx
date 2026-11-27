@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, message, sentText, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { setComposerText } from '@/inbox/composer/draft-store';
 
@@ -22,15 +22,16 @@ jest.mock('expo-router', () => ({
 const PHONE = '+966552147730';
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
 const ME = { id: 'u1', role: 'sales', permissions: ['inbox.read', 'inbox.send'] };
+const OWN_ID = uid('o1');
 const own = message({
-  id: 'o1', status: 'delivered', body: 'الحلقة غدًا', replyable: true, sent_by_id: 'u1',
+  id: OWN_ID, status: 'delivered', body: 'الحلقة غدًا', replyable: true, sent_by_id: 'u1',
   created_at: minutesAgo(9),
 });
-const FIX = message({ id: 'c1', body: 'تصحيح: بعد غد', corrects_id: 'o1' });
+const FIX = sentText({ id: uid('c1'), body: 'تصحيح: بعد غد', corrects_id: OWN_ID });
 const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 const strip = () => screen.queryByTestId('edit-strip');
 const pickEdit = async () => {
-  await fireEvent(await screen.findByTestId('bubble-o1'), 'longPress');
+  await fireEvent(await screen.findByTestId(`bubble-${OWN_ID}`), 'longPress');
   const menu = within(screen.getByTestId('message-menu'));
   await fireEvent.press(menu.getByRole('button', { name: t.inbox.correction.action }));
 };

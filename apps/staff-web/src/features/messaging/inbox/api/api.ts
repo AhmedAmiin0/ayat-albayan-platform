@@ -15,7 +15,7 @@ import {
   liveInterval,
   messageStatusCalls,
   offPathKeys,
-  type TextAnswer,
+  threadSendCalls,
 } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend, env } from '@ab/web-kit';
@@ -29,6 +29,7 @@ import { inboxLeadKeys, threadKeys } from '@/features/messaging/inbox/api/keys';
 
 const chatFiles = chatFileCalls({ apiFetch, apiSend });
 const messageStatus = messageStatusCalls({ apiFetch, apiSend });
+const sends = threadSendCalls({ apiFetch, apiSend });
 
 export const THREADS_PAGE_SIZE = 30;
 /** New WhatsApp messages arrive by webhook; the open chat polls for them with a delta (10 s; e2e 1 s). */
@@ -78,14 +79,11 @@ export const threadFileDownload = (phone: string, messageId: string) =>
 /** H3; `replyToMessageId`: the message of this chat it answers (else 400 reply_not_in_thread). */
 /** The row, and whether its request id replayed the FIRST one (TextAnswer). */
 export const sendText = ({ phone, ...body }: ThreadText & { phone: string }) =>
-  apiSend<TextAnswer>('POST', `${threadPath(phone)}/text`, body);
+  sends.text({ params: { phone }, body });
 
 /** Meta 132018: every body value normalised (free-text.ts) before it goes. */
 export const sendTemplate = ({ phone, params, ...body }: ThreadTemplate & { phone: string }) =>
-  apiSend<MessageView>('POST', `${threadPath(phone)}/template`, {
-    ...body,
-    params: normaliseTemplateParams(params),
-  });
+  sends.template({ params: { phone }, body: { ...body, params: normaliseTemplateParams(params) } });
 
 /** Rates the guardian's latest lesson that took place (migration 195). */
 export const sendRating = ({ phone, ...body }: ThreadRating & { phone: string }) =>

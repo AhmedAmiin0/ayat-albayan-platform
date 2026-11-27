@@ -6262,10 +6262,10 @@
   },
   "src/modules/sales/sales-money/sales-money.controller.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     },
     "ab/zod-inputs": {
-      "count": 7
+      "count": 3
     }
   },
   "src/modules/sales/sales-money/sales-money.service.ts": {
@@ -8580,11 +8580,6 @@
   "src/modules/teaching/lessons/overview/tests/overview.repo.always.test.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/modules/teaching/lessons/proposals/lesson-proposals.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 3
     }
   },
   "src/modules/teaching/lessons/proposals/lesson-proposals.repo.ts": {

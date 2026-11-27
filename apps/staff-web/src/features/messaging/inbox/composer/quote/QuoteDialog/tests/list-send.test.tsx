@@ -12,6 +12,7 @@ import {
   shownText,
   showSheet,
 } from '@/features/messaging/inbox/composer/quote/testing/quote-sheet';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -47,10 +48,9 @@ afterEach(() => {
 });
 
 it('«أرسل العرض» posts the whole list as one chat text', async () => {
-  apiSend.mockImplementation(async (_m: string, _p: string, b: { text: string }) => ({
-    id: 'm1',
-    body: b.text,
-  }));
+  apiSend.mockImplementation(async (_m: string, _p: string, b: { text: string }) =>
+    sentText({ id: uid('m1'), body: b.text }),
+  );
   const { onClose } = await showList();
   press(q.send);
   await waitFor(() => expect(onClose).toHaveBeenCalled());

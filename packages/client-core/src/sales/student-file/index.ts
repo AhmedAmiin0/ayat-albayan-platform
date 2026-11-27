@@ -11,3 +11,10 @@ export type {
   SalesChatReceiptPick,
   SalesChatScope,
 } from './chat-receipts-api.types';
+export { salesSubscribeCalls } from './subscribe-api';
+export type {
+  SalesQuoteBody,
+  SalesSubscribeCalls,
+  SalesSubscriptionBody,
+  SalesSubscriptionCancel,
+} from './subscribe-api.types';

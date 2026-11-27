@@ -1,49 +1,11 @@
-import type {
-  Duration,
-  PackageSize,
-  PaymentKind,
-  PaymentMethod,
-  StudentStatus,
-  SubscriptionStatus,
-} from '@ab/catalog';
-import type { Quote } from '@ab/money';
+import type { PaymentKind, PaymentMethod, StudentStatus } from '@ab/catalog';
 import type { RenewalPricing } from '@ab/money';
 import type { ThreadFile, ThreadMediaItem } from '../messaging';
+import type { SalesMoneySubscriptionView, SalesStudentRef } from './student-file';
 
 // Whitelisted responses of the salesperson's money endpoints (docs/16): only her student and the package
 // she is creating or paying, never the fx internals (rate, provider, date), the quote source, notes or
 // another family's data.
-
-/** The quote she tells the family: the price to transfer, nothing about how it was converted. */
-export type SalesQuoteView = Pick<
-  Quote,
-  'package' | 'lessons' | 'duration' | 'currency' | 'discount' | 'afterDiscount' | 'perLesson'
->;
-
-export interface SalesStudentRef {
-  id: string;
-  code: string;
-  name: string;
-}
-
-/** A package of her student: what it costs, what was paid, what is still due. */
-export interface SalesMoneySubscriptionView {
-  id: string;
-  student: SalesStudentRef;
-  /** null = a custom lesson count. */
-  package: PackageSize | null;
-  duration: Duration;
-  lessons_total: number;
-  /** Taken before the platform; absent from older APIs. */
-  lessons_used_before?: number;
-  price: number;
-  currency: string;
-  starts_on: string;
-  status: SubscriptionStatus;
-  paid: number;
-  /** max(0, price − paid). */
-  due: number;
-}
 
 /** The transfer she recorded and the student's status right after it. */
 export interface SalesPaymentView {
@@ -75,12 +37,6 @@ export interface SalesFamilyStudent extends SalesStudentRef {
   renewal: RenewalPricing;
   /** students.teacher_id (the trial's teacher until she picks another), the picker's default. */
   teacher_id: string | null;
-}
-
-/** The active teachers offered (names only). */
-export interface SalesTeacherOption {
-  id: string;
-  name: string;
 }
 
 export interface SalesFamilyView {

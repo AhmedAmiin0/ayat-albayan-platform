@@ -29,3 +29,4 @@ export const customConfigUpsertSchema = z.object({
   isPublic: z.boolean().default(false),
 });
 export type CustomConfigUpsert = z.infer<typeof customConfigUpsertSchema>;
+export type CustomConfigUpsertInput = z.input<typeof customConfigUpsertSchema>;

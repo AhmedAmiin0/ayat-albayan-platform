@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, message, sentText, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
@@ -109,7 +109,7 @@ test('the text goes with replyToMessageId; its row shows the quote at once; succ
   });
   expect(await screen.findByTestId('quote-m1')).toBeTruthy();
   expect(strip()).toBeTruthy();
-  answer(message({ id: 'srv', body: 'أهلًا بك', status: 'sent' }));
+  answer(sentText({ id: uid('srv'), body: 'أهلًا بك', status: 'sent' }));
   await waitFor(() => expect(strip()).toBeNull());
 });
 

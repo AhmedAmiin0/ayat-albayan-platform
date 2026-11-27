@@ -1,5 +1,5 @@
 import type { Duration, PackageSize } from '@ab/catalog';
-import type { SalesQuoteView, SalesStudentRef } from '../money-views';
+import type { SalesQuoteView, SalesStudentRef } from '../student-file';
 import type { PaymentLinkKind, PaymentLinkStatus } from './schemas';
 
 /** One payment link as its assistant (or an admin) sees it. */

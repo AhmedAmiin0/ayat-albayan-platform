@@ -11,6 +11,7 @@ import { detail, message, PHONE, thread } from '@/features/messaging/inbox/testi
 import { clearAllDrafts, draftGeneration, getDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { ownSendGeneration } from '@/features/messaging/inbox/composer/lib/own-send';
 import { type Sent, useTextSend } from '@/features/messaging/inbox/composer/lib/use-text-send/use-text-send';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 // docs/44 BUG3 (web): the text shows at once as a queued bubble, the API's row takes its place,
 // and only the open chat's newest page is read again (docs/43 AU4), never every ['threads'] query.
@@ -25,7 +26,8 @@ const LIST = ['threads', 'list', 'page=1'];
 const at = (minute: number) => `2026-11-06T08:${String(minute).padStart(2, '0')}:00Z`;
 const row = (id: string, minute: number) => message({ id, created_at: at(minute) });
 const older = (m: MessageView): ThreadDetail => ({ ...detail([m]), has_more: true });
-const server = message({ id: 's1', direction: 'outbound', status: 'queued', body: 'وصلت', created_at: at(50) });
+const SERVER = uid('s1');
+const server = sentText({ id: SERVER, body: 'وصلت', created_at: at(50) });
 /** A send started now (the tab-memory generations of this moment). */
 const sending = (): Sent => ({
   ...{ phone: PHONE, text: 'وصلت', clientRequestId: ID },
@@ -80,7 +82,7 @@ describe('useTextSend: an optimistic send', () => {
     await waitFor(() => expect(s.cached()?.pages[0]?.messages.at(-1)?.status).toBe('sent'));
     expect(paths()).toEqual([PATH]);
     expect(s.cached()?.pages).toHaveLength(5);
-    expect(s.ids()).toEqual(['m01', 'm10', 'm20', 'm30', 'm40', 's1']);
+    expect(s.ids()).toEqual(['m01', 'm10', 'm20', 'm30', 'm40', SERVER]);
   });
 
   it('no double row when a read brought the server row in before the answer', async () => {
@@ -100,7 +102,7 @@ describe('useTextSend: an optimistic send', () => {
     act(() => answer(server));
     await waitFor(() => expect(s.hooks.settled).toHaveBeenCalled());
     await waitFor(() => expect(paths()).toEqual([PATH]));
-    expect(s.ids().filter((id) => id === 's1' || id === ID)).toEqual(['s1']);
+    expect(s.ids().filter((id) => id === SERVER || id === ID)).toEqual([SERVER]);
   });
 
   it('a refused send (4xx) takes the row out and puts the text back with its key', async () => {

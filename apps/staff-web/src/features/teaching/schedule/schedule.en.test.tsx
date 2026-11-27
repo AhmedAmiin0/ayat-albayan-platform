@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { conflictText } from './reschedule/ConflictNotice';
-import { JOUD, lesson, SUHAILA } from './lesson/lesson-fixture';
+import { answered, JOUD, lesson, SUHAILA } from './lesson/lesson-fixture';
 import { LessonDetails } from './lesson/LessonDetails';
 import { studentNames } from './lesson/lessons';
 import { ProposalsPanel } from './reschedule/proposals/ProposalsPanel';
@@ -18,7 +18,7 @@ vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({ ...(await orig<object>
 const PENDING = { id: 'p1', proposed_starts_at: '2026-10-05T15:00:00.000Z', note: null, created_at: '2026-10-03T08:00:00.000Z' };
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  apiFetch: vi.fn(async () => [lesson({ pending_proposal: PENDING })]),
+  apiFetch: vi.fn(async () => [answered(lesson({ pending_proposal: PENDING }))]),
 }));
 
 const ARABIC = /[؀-ۿ]/;

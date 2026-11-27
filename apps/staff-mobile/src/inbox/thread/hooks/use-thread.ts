@@ -1,5 +1,5 @@
 import type { ThreadDetail } from '@ab/shared';
-import { refreshNewest, type TextAnswer, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
+import { refreshNewest, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import {
   infiniteQueryOptions,
   type QueryClient,
@@ -7,12 +7,13 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/mobile-kit';
+import { apiFetch } from '@ab/mobile-kit';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { useStoredView } from '@/inbox/thread/local/stored-view';
 import { rollback, unanswered } from '@/inbox/thread/send/after-send';
 import { failPinned, pinGeneration, pinnedOf, settlePinned } from '@/inbox/thread/send/pinned-outcome';
-import { echoed, type SendDone, sendBody, type SendInput } from '@/inbox/thread/send/outgoing';
+import { echoed, type SendDone, type SendInput } from '@/inbox/thread/send/outgoing';
+import { sendOut } from '@/inbox/thread/send/send-out';
 import { refreshLists, touchInbox } from './inbox-sync';
 import {
   appendMessage,
@@ -101,8 +102,7 @@ export function useSendMessage(phone: string) {
   return useMutation({
     // One key per chat so the composer and the quote sheet see each other's in-flight send.
     mutationKey: sendKey(phone),
-    mutationFn: (input: SendInput) =>
-      apiSend<TextAnswer>('POST', `${threadPath(phone)}/${input.out.kind}`, sendBody(input)),
+    mutationFn: (input: SendInput) => sendOut(phone, input),
     onMutate: async ({ out, id, pin }) => {
       const generation = pinGeneration(pin);
       markOwnSend(phone);

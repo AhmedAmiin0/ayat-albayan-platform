@@ -34,3 +34,9 @@ export { nextOpenLesson, pickHero, type Hero, type HeroLesson } from './pick-her
 export { SESSION_GROUPS, type SessionGroup } from './session-groups';
 export { lessonListCalls, type LessonListCalls } from './list-calls';
 export { lessonActionCalls, type LessonActionCalls } from './action-calls';
+export {
+  proposalDecisionCalls,
+  teacherProposalCalls,
+  type ProposalDecisionCalls,
+  type TeacherProposalCalls,
+} from './proposal-calls';
