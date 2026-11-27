@@ -1,7 +1,7 @@
-import type { ApiClient } from '../../core/http';
-import { pathKey } from '../../core/keys';
-import { adminTemplateCalls } from './admin-templates-api';
-import { authoredTemplateCalls } from './authored-templates-api';
+import type { ApiClient } from '../../../core/http';
+import { pathKey } from '../../../core/keys';
+import { adminTemplateCalls } from '../admin-templates-api';
+import { authoredTemplateCalls } from '../authored-templates-api';
 import type { TemplateListMode, TemplateQueries } from './templates-api.types';
 
 const ALL = '/messaging/templates';

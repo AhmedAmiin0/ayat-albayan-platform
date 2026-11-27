@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiClient } from '../../core/http';
-import { adminTemplateCalls } from './admin-templates-api';
-import { authoredTemplateCalls } from './authored-templates-api';
+import type { ApiClient } from '../../../core/http';
+import { adminTemplateCalls } from '../admin-templates-api';
+import { authoredTemplateCalls } from '../authored-templates-api';
 import { TEMPLATES_KEY, templateQueries } from './templates-api';
 
 const view = {

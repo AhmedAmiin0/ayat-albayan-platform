@@ -1,7 +1,7 @@
 import { templateViewSchema } from '@ab/shared';
 import { z } from 'zod';
 import { callWith, type ApiClient } from '../../core/http';
-import type { AdminTemplateCalls } from './templates-api.types';
+import type { AdminTemplateCalls } from './templates-api';
 
 const ALL = '/messaging/templates';
 const listSchema = z.array(templateViewSchema);

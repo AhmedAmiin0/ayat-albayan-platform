@@ -1,6 +1,6 @@
 import { authoredTemplateRoutes, templateViewSchema } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
-import type { AuthoredTemplateCalls } from './templates-api.types';
+import type { AuthoredTemplateCalls } from './templates-api';
 
 const AUTHORED = '/messaging/templates/authored';
 

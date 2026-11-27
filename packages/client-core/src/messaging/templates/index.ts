@@ -4,7 +4,7 @@ export { authoredTemplateCalls } from './authored-templates-api';
 export type {
   AdminTemplateCalls, AuthoredTemplateCalls, TemplateEditCall, TemplateListMode,
   TemplateListQuery, TemplateQueries,
-} from './templates-api.types';
+} from './templates-api';
 export { templateErrorWords } from './template-errors';
 export { bodyVarCount, draftParams, previewParams, retexted } from './template-draft';
 export { lineCheckCalls, type LineCheckCalls } from './line-check';

@@ -2,9 +2,7 @@ import { id, instant } from '@ab/core';
 import { TEMPLATE_CATEGORIES, TEMPLATE_STATUSES, WA_LINES } from '@ab/catalog';
 import { z } from 'zod';
 import { QUICK_REPLY_INTENTS } from '../../replies/quick-reply';
-import {
-  templateButtonKindSchema, templateHeaderKindSchema,
-} from '../template-block/template-block';
+import { templateButtonKindSchema, templateHeaderKindSchema } from '../template-block';
 
 /** message_templates.buttons: a link with its {{1}} suffix, or a quick reply and its tap. */
 export const templateButtonSchema = z.discriminatedUnion('type', [
