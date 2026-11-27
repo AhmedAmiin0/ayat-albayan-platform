@@ -42,7 +42,12 @@ const COURSE: BookedCourse = {
 };
 
 export const VIEW: ProfileCourseView = {
-  student: { id: 's1', name: 'سهيلة', code: 'AB-0183', tz: 'Asia/Riyadh' },
+  student: {
+    id: '1b000000-0000-4000-8000-000000000001',
+    name: 'سهيلة',
+    code: 'AB-0183',
+    tz: 'Asia/Riyadh',
+  },
   course: COURSE,
   nextLesson: { startsOn: '2026-10-04', startsAt: SUN },
 };
