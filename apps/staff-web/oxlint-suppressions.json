@@ -4209,11 +4209,6 @@
       "count": 1
     }
   },
-  "src/features/platform/translations/translations.api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/features/reporting/activity/ActivityPage.tsx": {
     "stylistic/max-len": {
       "count": 3

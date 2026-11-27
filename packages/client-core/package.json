@@ -24,6 +24,7 @@
   "dependencies": {
     "@ab/catalog": "workspace:*",
     "@ab/core": "workspace:*",
+    "@ab/i18n": "workspace:*",
     "@ab/money": "workspace:*",
     "@ab/schedule": "workspace:*",
     "@ab/settings": "workspace:*",

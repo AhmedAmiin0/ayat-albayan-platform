@@ -37,6 +37,7 @@ export * from './messaging/live-rejoin';
 export * from './platform/settings';
 export * from './platform/short-links';
 export * from './platform/translation-overrides';
+export * from './platform/translations';
 export * from './messaging/chat-send';
 export * from './people/people-edit';
 export * from './teaching/lessons';

@@ -1,6 +1,7 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { translationRoutes } from '@ab/i18n';
 import { messagingRoot } from '@/common/infra/test-root';
 import { TranslationsModule } from './translations.module';
 import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
@@ -105,4 +106,21 @@ describe('/i18n — dynamic translations', () => {
     expect(queries.remove).toHaveBeenCalledWith('ar', 'nav.leads');
     expect((await call('DELETE', '/i18n/ar/nav.leads')).statusCode).toBe(401);
   });
+
+  it('a bad locale, query or value answers the validation_failed envelope', async () => {
+    const bad = [
+      await call('PUT', '/i18n/fr/nav.leads', { token: 'admin', payload: { value: 'x' } }),
+      await call('DELETE', '/i18n/fr/nav.leads', { token: 'admin' }),
+      await call('GET', '/i18n/keys?page=0', { token: 'admin' }),
+      await call('PUT', '/i18n/en/nav.leads', { token: 'admin', payload: {} }),
+    ];
+    const answers = bad.map((r) => [r.statusCode, r.json<{ message: string }>().message]);
+    expect(answers).toEqual(Array.from({ length: 4 }, () => [400, 'validation_failed']));
+  });
+
+  it('GET keys answers rows that fit the shared page schema', async () => {
+    const res = await call('GET', '/i18n/keys?search=leads', { token: 'admin' });
+    expect(translationRoutes.keys.response.safeParse(res.json()).success).toBe(true);
+  });
 });
+
