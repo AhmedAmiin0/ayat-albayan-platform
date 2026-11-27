@@ -1,67 +1,10 @@
-import { packageSummary, reportAt, type ChildSummary } from '@ab/client-core';
-import type { PortalMonth, PortalPackage } from '@ab/shared';
-import { dateText } from '@ab/time';
-import { Link } from '@tanstack/react-router';
-import { Icon, Dot, Pill, t, locale, amountText, usedOfText } from '@ab/web-kit';
-
-const DAY = { day: 'numeric', month: 'long' } as const;
-const LINE = 'flex flex-wrap items-center gap-x-3 gap-y-1';
-const LABEL = 'text-xs text-ink-3';
-
-/** Formatted on the family's clock. */
-const lastLine = (summary: ChildSummary, tz: string): string => {
-  const last = summary.lastReport;
-  if (!last) return t.portal.app.children.noReport;
-  const day = dateText(new Date(reportAt(last)), { tz, locale }, DAY);
-  return t.portal.app.children.lastReport.replace('{date}', day);
-};
-
-function MonthDots({ month }: { month: PortalMonth }) {
-  return (
-    <p className={LINE}>
-      <span className={LABEL}>{t.portal.thisMonth}</span>
-      <Dot tone="ok" className="tabular-nums">
-        {t.portal.monthAttended.replace('{n}', String(month.attended))}
-      </Dot>
-      <Dot tone="neutral" className="tabular-nums">
-        {t.portal.monthAbsent.replace('{n}', String(month.absent))}
-      </Dot>
-    </p>
-  );
-}
-
-const PACKAGE_LINK =
-  'ab-press -mx-2 flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 rounded-md px-2 ' +
-  'transition-[transform,background-color] duration-(--duration-press) ease-ink hover:bg-sunk';
-
-/** The amount due is the one pill that asks the family to act. */
-function PackageFigure({ pkg, studentId }: { pkg: PortalPackage; studentId: string }) {
-  const summary = packageSummary(pkg);
-  return (
-    <Link to="/package/$studentId" params={{ studentId }} className={PACKAGE_LINK}>
-      <span className={LABEL}>{t.portal.packageTab}</span>
-      <span className="text-sm font-semibold tabular-nums">{usedOfText(summary)}</span>
-      {summary.amountDue && (
-        <Pill tone="act">
-          {`${t.portal.amountDue}: ${amountText(summary.amountDue)}`}
-        </Pill>
-      )}
-      <Icon name="chevron-left" className="ms-auto size-4 text-ink-3" />
-    </Link>
-  );
-}
-
-interface Props {
-  summary: ChildSummary;
-  /** A guardian's (seesMoney) live package; null for a child's own login or without one. */
-  pkg: PortalPackage | null;
-  tz: string;
-  /** The student whose package the line opens. */
-  studentId: string;
-}
+import { MonthDots } from './MonthDots';
+import { PackageFigure } from './PackageFigure';
+import { lastLine } from './summary-figures.helpers';
+import type { SummaryFiguresProps } from './SummaryFigures.types';
 
 /** The card's quiet lines under the next lesson: the last report, this month, the package. */
-export function SummaryFigures({ summary, pkg, tz, studentId }: Props) {
+export function SummaryFigures({ summary, pkg, tz, studentId }: SummaryFiguresProps) {
   return (
     <div className="grid gap-2 border-t border-rule pt-3">
       <p className="text-sm text-ink-2">{lastLine(summary, tz)}</p>
