@@ -18,7 +18,6 @@ export const threadPageQuerySchema = z
     for (const code of onePageMode(q)) ctx.addIssue({ code: 'custom', message: code });
   })
   .transform(({ after: _after, ...q }) => ({ mode: 'page' as const, ...q }));
-export type ThreadPageQuery = z.output<typeof threadPageQuerySchema>;
 
 /** `pending=<uuid>,<uuid>`: the client's outgoing rows whose status may still move. */
 const pendingIds = z
@@ -37,7 +36,6 @@ export const threadDeltaQuerySchema = z
     around: z.never().optional(),
   })
   .transform(({ around: _around, ...q }) => ({ mode: 'delta' as const, ...q }));
-export type ThreadDeltaQuery = z.output<typeof threadDeltaQuerySchema>;
 
 /** GET /threads/:phone: `after` alone makes it a delta (docs/12 §4 H2). */
 export const threadDetailQuerySchema = z.union([threadDeltaQuerySchema, threadPageQuerySchema]);

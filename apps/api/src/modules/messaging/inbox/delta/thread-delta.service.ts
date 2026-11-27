@@ -1,4 +1,12 @@
-import { DELTA_OVERLAP_MS, PENDING_WINDOW_MS, type MessageView, type ThreadDelta, type ThreadDeltaWindow, type ThreadView } from '@ab/shared';
+import {
+  DELTA_OVERLAP_MS,
+  PENDING_WINDOW_MS,
+  type MessageView,
+  type ThreadDelta,
+  type ThreadDeltaWindow,
+  type ThreadDetailQuery,
+  type ThreadView,
+} from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { MessageViews, type ThreadMessageRow } from '@/modules/messaging/whatsapp';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
@@ -10,13 +18,9 @@ import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { DeltaRepo } from './delta.repo';
 
 /** GET /threads/:phone?after=: `after` = created_at of the newest row the client holds. */
-export interface ThreadDeltaQuery {
+export type ThreadDeltaQuery = Omit<Extract<ThreadDetailQuery, { mode: 'delta' }>, 'mode'> & {
   phone: string;
-  after: string;
-  /** The client's outgoing rows still moving (≤ PENDING_IDS_MAX uuids). */
-  pending: readonly string[];
-  limit: number;
-}
+};
 
 /** Who reads: the admin, a salesperson (redacted like her pages) or a teacher (own families only). */
 export type DeltaCaller = { kind: 'admin' } | { kind: 'sales' } | { kind: 'teacher'; scope: TeacherScope };
