@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
-import { message, PHONE, template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { PHONE, template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { getDraft, setDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
 import { SEND_UNCONFIRMED } from '@ab/client-core';

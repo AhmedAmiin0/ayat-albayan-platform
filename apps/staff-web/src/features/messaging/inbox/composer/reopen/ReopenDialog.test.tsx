@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
-import { message, PHONE, template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { PHONE, template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ReopenDialog } from './ReopenDialog';
 import { sentRow, uid } from '@/features/messaging/inbox/testing/sent-fixture';

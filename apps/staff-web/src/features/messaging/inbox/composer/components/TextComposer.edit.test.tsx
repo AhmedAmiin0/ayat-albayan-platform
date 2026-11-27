@@ -3,7 +3,6 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { clearTabMemories } from '@/features/messaging/inbox/shared/tab-memory';
-import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import {
   box,
   editBar,

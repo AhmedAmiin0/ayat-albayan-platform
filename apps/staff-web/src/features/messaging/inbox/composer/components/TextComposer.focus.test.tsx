@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { clearDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
-import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { TextComposer } from './TextComposer';
 import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
