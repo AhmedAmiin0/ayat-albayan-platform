@@ -6,6 +6,6 @@ export type OptionsRender = (open: (() => void) | null) => ReactNode;
 export interface OptionsTriggerProps {
   /** Opens the menu; null when the lesson offers nothing. */
   open: (() => void) | null;
-  /** The caller's own trigger; without one, the «خيارات الحلقة» button. */
+  /** The caller's own trigger; without one, the lesson options button. */
   render: OptionsRender | undefined;
 }
