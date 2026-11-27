@@ -25,6 +25,7 @@ export * from './sales/job-applicants';
 export * from './sales/registration-check';
 export * from './sales/used-before';
 export * from './sales/teacher-overview';
+export * from './sales/family-link';
 export * from './people/assistants';
 export * from './reporting/dashboard';
 export * from './teaching/reports';

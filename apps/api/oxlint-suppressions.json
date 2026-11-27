@@ -6263,11 +6263,6 @@
       "count": 2
     }
   },
-  "src/modules/sales/leads/lead-family.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/sales/leads/lead-family.service.test.ts": {
     "stylistic/max-len": {
       "count": 1

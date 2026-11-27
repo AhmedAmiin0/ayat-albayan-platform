@@ -13724,6 +13724,49 @@
    ]
   }
  },
+ "POST /leads/:id/link-family": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "code": {
+     "type": "string",
+     "pattern": "^AB-\\d{4,}$"
+    }
+   },
+   "required": [
+    "code"
+   ],
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "linked": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "linked"
+   ],
+   "additionalProperties": false
+  }
+ },
  "POST /lesson-files/:id/url": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
