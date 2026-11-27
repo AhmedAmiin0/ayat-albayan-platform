@@ -13,6 +13,7 @@ export interface MergeStudents {
 }
 
 export interface StudentCalls {
+  list: (query: RouteQuery<Routes['list']>) => Answer<'list'>;
   get: (id: string) => Answer<'get'>;
   teacherOptions: () => Answer<'teacherOptions'>;
   statusCounts: (filters: RouteQuery<Routes['statusCounts']>) => Answer<'statusCounts'>;

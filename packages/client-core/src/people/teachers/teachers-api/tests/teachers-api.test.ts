@@ -1,8 +1,8 @@
 import type { TeacherCreate } from '@ab/shared';
 import { teacherFixture } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../../core/http';
-import { teacherCalls } from './teachers-api';
+import { ApiError, type ApiClient } from '../../../../core/http';
+import { teacherCalls } from '../teachers-api';
 
 const ID = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
 const teacher = teacherFixture({ id: ID });

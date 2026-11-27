@@ -2873,9 +2873,6 @@
   "src/features/people/students/api.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/features/people/students/create/CreateStudentDialog/CreateStudentDialog.tsx": {
@@ -3124,11 +3121,6 @@
       "count": 1
     },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/features/people/teachers/api.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

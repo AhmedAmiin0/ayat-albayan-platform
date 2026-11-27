@@ -1,6 +1,5 @@
 import type { StudentStatus } from '@ab/catalog';
-import type { Page } from '@ab/core';
-import type { DuplicateStudentBody, StudentListItem, StudentRef } from '@ab/shared';
+import type { DuplicateStudentBody, StudentRef } from '@ab/shared';
 import { studentCalls } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit';
@@ -32,16 +31,16 @@ export const studentListQuery = (search: string, page: number, view: StudentList
       ...view.sort,
       columns: view.columns,
     }),
-    queryFn: () => {
-      const qs = new URLSearchParams([
-        ['search', search],
-        ['page', String(page)],
-        ['pageSize', String(PAGE_SIZE)],
-        ...filterParams(view.filters ?? {}),
-        ...sortFilterParams(view.sort ?? {}, view.columns),
-      ]);
-      return apiFetch<Page<StudentListItem>>(`/students?${qs}`);
-    },
+    queryFn: () =>
+      students.list(
+        Object.fromEntries([
+          ['search', search],
+          ['page', String(page)],
+          ['pageSize', String(PAGE_SIZE)],
+          ...filterParams(view.filters ?? {}),
+          ...sortFilterParams(view.sort ?? {}, view.columns),
+        ]),
+      ),
     placeholderData: keepPreviousData,
   });
 

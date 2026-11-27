@@ -1,7 +1,6 @@
 import { availabilityCalls, teacherCalls } from '@ab/client-core';
 import type { AvailabilitySlot, TimeOffCreate } from '@ab/schedule';
-import type { TeacherCreate, TeacherListRow } from '@ab/shared';
-import type { Page } from '@ab/core';
+import type { TeacherCreate } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { sortFilterParams } from '@/lib/list/list-search';
@@ -17,14 +16,14 @@ const availability = availabilityCalls({ apiFetch, apiSend });
 export const teachersPageQuery = ({ page, sort, filters }: ListUrlState) =>
   queryOptions({
     queryKey: teacherKeys.list({ page, sort, filters }),
-    queryFn: () => {
-      const qs = new URLSearchParams([
-        ['page', String(page)],
-        ['pageSize', String(PAGE_SIZE)],
-        ...sortFilterParams(sort, filters),
-      ]);
-      return apiFetch<Page<TeacherListRow>>(`/teachers?${qs}`);
-    },
+    queryFn: () =>
+      teachers.list(
+        Object.fromEntries([
+          ['page', String(page)],
+          ['pageSize', String(PAGE_SIZE)],
+          ...sortFilterParams(sort, filters),
+        ]),
+      ),
     placeholderData: keepPreviousData,
   });
 

@@ -1,10 +1,10 @@
 import type { StudentRecordingView } from '@ab/schedule';
-import type { TeacherChoice } from './RecordingFiltersBar';
+import type { TeacherChoice } from '@/student-file/recordings/RecordingFiltersBar';
 import { recording } from '@/student-file/testing/fixtures';
 import { renderHook } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { mergeChoices, useTeacherChoices } from './teacher-choices';
+import { mergeChoices, useTeacherChoices } from '@/student-file/recordings/teacher-choices/teacher-choices';
 
 test('every active teacher plus the ones on the loaded rows, once each', () => {
   const rows = [recording(), recording({ id: 'r2', teacher: { id: 't9', display_name_ar: 'سلمى', display_name_en: null } }), recording({ id: 'r3', teacher: null })];

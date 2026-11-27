@@ -1,6 +1,7 @@
 import { STUDENT_STATUSES } from '@ab/catalog';
 import {
   studentStatusCountsSchema,
+  type StudentListItemView,
   type StudentProfileView,
   type StudentRowView,
   type StudentStatusCountsView,
@@ -48,6 +49,26 @@ export const studentRowFixture = (over: Partial<StudentRowView> = {}): StudentRo
   teacher_id: TEACHER_ID,
   tz: 'Asia/Riyadh',
   updated_at: STAMP,
+  ...over,
+});
+
+/** One GET /students row: an active student with a guardian and no teacher, `over` on top. */
+export const studentListItemFixture = (
+  over: Partial<StudentListItemView> = {},
+): StudentListItemView => ({
+  id: '11111111-1111-4111-8111-111111111111',
+  code: 'AB-0183',
+  name: 'سهيلة',
+  status: 'active',
+  program: 'quran',
+  tz: 'Asia/Riyadh',
+  created_at: STAMP,
+  package_remaining: null,
+  has_weekly: false,
+  guardian_name: 'أم سهيلة',
+  guardian_phone: '+966501234567',
+  teacher_name: null,
+  is_test: false,
   ...over,
 });
 

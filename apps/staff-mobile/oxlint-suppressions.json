@@ -4886,17 +4886,8 @@
       "count": 2
     }
   },
-  "src/student-file/recordings/teacher-choices.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
+  "src/student-file/recordings/teacher-choices/teacher-choices.ts": {
     "ab/no-restricted-syntax": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
