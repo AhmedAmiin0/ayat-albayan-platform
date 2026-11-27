@@ -1,10 +1,10 @@
-import type { AcademySettings } from '@ab/settings';
+import { settingsCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
-const PATH = '/settings';
+const calls = settingsCalls({ apiFetch, apiSend });
 
 /** Values save one key at a time. */
 export function useSettings() {
-  return useQuery({ queryKey: pathKey(PATH), queryFn: () => apiFetch<AcademySettings>(PATH) });
+  return useQuery({ queryKey: pathKey('/settings'), queryFn: () => calls.view() });
 }

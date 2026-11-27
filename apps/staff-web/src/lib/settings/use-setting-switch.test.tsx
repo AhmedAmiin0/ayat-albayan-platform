@@ -9,6 +9,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const NEXT: AcademySettings = { ...SETTING_DEFAULTS, sales_auto_assign: true };
+const ANSWER = { ...NEXT, saved: ['sales_auto_assign'], moved: [], invalid: [] };
 
 function setup(opts?: SettingSwitchOptions) {
   const client = new QueryClient({
@@ -26,7 +27,7 @@ afterEach(() => apiSend.mockReset());
 
 describe('useSettingSwitch', () => {
   it('one PATCH /settings, the answer into [settings], then onSaved; no other key is invalidated', async () => {
-    apiSend.mockResolvedValue(NEXT);
+    apiSend.mockResolvedValue(ANSWER);
     const order: string[] = [];
     const onSaved = vi.fn(() => {
       order.push('saved');
@@ -40,20 +41,20 @@ describe('useSettingSwitch', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(apiSend).toHaveBeenCalledTimes(1);
     expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { salesAutoAssign: true });
-    expect(set).toHaveBeenCalledWith(['settings'], NEXT);
-    expect(client.getQueryData(['settings'])).toEqual(NEXT);
-    expect(onSaved).toHaveBeenCalledWith(NEXT);
+    expect(set).toHaveBeenCalledWith(['settings'], ANSWER);
+    expect(client.getQueryData(['settings'])).toEqual(ANSWER);
+    expect(onSaved).toHaveBeenCalledWith(ANSWER);
     expect(order).toEqual(['set', 'saved']);
     // Today's behaviour, pinned: the switches never refresh ['config','meta'] or ['settings','public'].
     expect(invalidate).not.toHaveBeenCalled();
   });
 
   it('works without options and waits for an async onSaved before settling', async () => {
-    apiSend.mockResolvedValue(NEXT);
+    apiSend.mockResolvedValue(ANSWER);
     const plain = setup();
     act(() => plain.result.current.mutate({ feedbackMode: 'link' }));
     await waitFor(() => expect(plain.result.current.isSuccess).toBe(true));
-    expect(plain.client.getQueryData(['settings'])).toEqual(NEXT);
+    expect(plain.client.getQueryData(['settings'])).toEqual(ANSWER);
     let release: () => void = () => undefined;
     const onSaved = vi.fn(
       () =>

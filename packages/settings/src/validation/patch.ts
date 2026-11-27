@@ -32,13 +32,6 @@ export interface SettingsPatchSplit {
   issues: SettingsPatchIssue[];
 }
 
-/** The PATCH /settings answer: the full settings after the write, plus the per-key lists. */
-export type SettingsPatchResult = AcademySettings & {
-  saved: SettingKey[];
-  moved: string[];
-  invalid: SettingKey[];
-};
-
 const registryKeyOf = (field: string): SettingKey | null =>
   Object.hasOwn(SETTING_KEY_OF, field) ? SETTING_KEY_OF[field as SettingField] : null;
 

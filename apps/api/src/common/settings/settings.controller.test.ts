@@ -54,6 +54,13 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     expect((await call('GET', 'teacher')).statusCode).toBe(403);
   });
 
+  it('a stored value the shared schema refuses is a 500 response_invalid, never the value', async () => {
+    settings.all.mockResolvedValue({ ...SETTING_DEFAULTS, reminder_minutes_before: 721 });
+    const res = await call('GET');
+    expect(res.statusCode).toBe(500);
+    expect(res.json().code).toBe('response_invalid');
+  });
+
   it('PATCH writes only the given keys and audits before/after', async () => {
     const after = { ...SETTING_DEFAULTS, late_cancel_hours: 24 };
     settings.all.mockResolvedValueOnce(SETTING_DEFAULTS).mockResolvedValue(after);

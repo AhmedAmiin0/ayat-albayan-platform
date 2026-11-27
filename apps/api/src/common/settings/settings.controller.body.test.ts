@@ -1,12 +1,12 @@
+import { settingsRoutes } from '@ab/settings';
 import { BadRequestException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { bodyPipeOf } from '@/common/http/zod-inputs.test-util';
-import { SettingsController } from './settings.controller';
+import { ZodPipe } from '@/common/http/zod-inputs';
 
-// docs/36 z3: the PATCH /settings body is parsed by `settingsPatchBodySchema` (@ZodBody) before
-// the handler; a non-object is the same 400 as before (`validation_failed`, one
-// `expected_object` issue).
-const pipe = bodyPipeOf(SettingsController, 'update');
+// docs/36 z3: the route's body (the pipe @RouteInput() runs) takes any object; a non-object is the
+// same 400 as before (`validation_failed`, one `expected_object` issue).
+const bodyPipe = new ZodPipe(settingsRoutes.update.body);
+const pipe = (raw: unknown): Promise<unknown> => bodyPipe.transform(raw);
 
 const rejection = async (raw: unknown): Promise<unknown> => {
   try {

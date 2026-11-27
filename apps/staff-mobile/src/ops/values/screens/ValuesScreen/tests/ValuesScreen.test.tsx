@@ -7,6 +7,8 @@ import { labelOf } from '@/ops/values/lib/value-text';
 import { valuesAnswer, WRITER } from '@/ops/values/testing/values-fixtures';
 import { ValuesScreen } from '@/ops/values/screens/ValuesScreen/ValuesScreen';
 
+const lists = (saved: string[], moved: string[] = []) => ({ saved, moved, invalid: [] });
+
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -41,7 +43,7 @@ test('a group chip switches the table to that group', async () => {
 });
 
 test('the sheet saves only its own key and shows «تم حفظ القيمة»', async () => {
-  mockApiSend.mockResolvedValue({ ...settings, booking_horizon_weeks: 8 });
+  mockApiSend.mockResolvedValue({ ...settings, booking_horizon_weeks: 8, ...lists(['booking_horizon_weeks']) });
   await renderWithQuery(<ValuesScreen />);
   await fireEvent.press(await row(labelOf('booking_horizon_weeks')));
   expect(screen.getByText(t.settings.hints.bookingHorizonWeeks)).toBeTruthy();
@@ -65,7 +67,7 @@ test('a bad number is refused in the sheet; nothing is sent', async () => {
 });
 
 test('a `{saved, moved}` answer naming the key says «تُدار من صفحة أخرى»', async () => {
-  mockApiSend.mockResolvedValue({ saved: [], moved: ['booking_horizon_weeks'] });
+  mockApiSend.mockResolvedValue({ ...settings, ...lists([], ['booking_horizon_weeks']) });
   await renderWithQuery(<ValuesScreen />);
   await fireEvent.press(await row(labelOf('booking_horizon_weeks')));
   await fireEvent.changeText(screen.getByLabelText(labelOf('booking_horizon_weeks')), '8');
