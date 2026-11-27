@@ -25,7 +25,7 @@ An area is its API modules, their schemas and routes in packages, and the client
 
 ## One run
 
-1. **Claim.** Only your own sub-branch and its `wip/` copy count. If either has a newest commit under 100 minutes old whose message lacks the trailer line `Run-State: done`, another run of yours is working: exit. Commits by other builders never stop you.
+1. **Claim.** Only your own sub-branch and its `wip/` copy count. If either has a newest commit under 55 minutes old whose message lacks the trailer line `Run-State: done`, another run of yours is working: exit. A live run pushes at least every 45 minutes, so an older commit without the trailer is a run that stopped early: pick its work up (its `wip/` copies first) and go on. Commits by other builders never stop you.
 2. **Your open sub-PR is red.** A known flake on attempt 1 is rerun once (`gh run rerun <run> --failed`); anything else is found at its root and fixed. No test is weakened, skipped or deleted.
 3. **Your open sub-PR is green: merge it now, in this run.** Do not wait for another CI round and do not require your branch to contain the base's head:
    - `git fetch origin`, check out the base at its newest head, `git merge --no-ff origin/<your sub-branch>`;
