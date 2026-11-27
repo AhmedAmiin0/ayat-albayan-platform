@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { ListRow } from '../../layout/ListRow';
-import { InsetCell, InsetGroup, InsetSeparator, useInset } from './Inset';
+import { InsetCell, InsetGroup, InsetSeparator, useInset } from '.';
 import { AppText } from '../../primitives/AppText';
 
 function Probe() {

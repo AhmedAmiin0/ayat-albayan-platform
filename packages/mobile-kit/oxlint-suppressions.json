@@ -447,13 +447,5 @@
     "typescript/no-unnecessary-condition": {
       "count": 1
     }
-  },
-  "src/ui/surface/Inset/Inset.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/no-restricted-syntax": {
-      "count": 3
-    }
   }
 }
