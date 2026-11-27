@@ -5013,19 +5013,8 @@
     }
   },
   "src/modules/people/students/students.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
-  "src/modules/people/students/students.dto.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/modules/people/students/students.filters.ts": {

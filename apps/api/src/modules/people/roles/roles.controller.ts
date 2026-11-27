@@ -6,16 +6,14 @@ import {
   type StaffUserView,
 } from '@ab/catalog';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { RolesService } from './roles.service';
 
 /** All behind roles.manage. */
-@ApiTags('roles')
 @ApiBearerAuth()
-@Permissions('roles.manage')
 @Controller()
 export class RolesController {
   constructor(private readonly roles: RolesService) {}
@@ -76,9 +74,7 @@ export class RolesController {
 }
 
 /** The staff users (every profile but guardians and students) and the role each holds. */
-@ApiTags('roles')
 @ApiBearerAuth()
-@Permissions('roles.manage')
 @Controller()
 export class StaffUsersController {
   constructor(private readonly roles: RolesService) {}

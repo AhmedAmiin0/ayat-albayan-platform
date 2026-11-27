@@ -8,14 +8,13 @@ import { peopleErrors } from '@/modules/people/guardians/http';
 import { maybe, pgError, rows } from '@/common/db/errors';
 import { applySort } from '@/common/db/list-sort';
 import { applyStudentFilters } from './students.filters';
+import type { StudentListItemView, StudentProfileView } from '@ab/shared';
 import {
   studentNameOrCodeFilter,
   studentPhoneOrCodeFilter,
   toListItem,
   toProfile,
-  type StudentListItem,
   type StudentListRow,
-  type StudentProfile,
 } from './students.mapper';
 import {
   applyStudentColumnFilters,
@@ -39,7 +38,10 @@ type StudentListQuery = PeopleListQuery &
  * status, teacher, program, package, weekly lesson, tz (R-STU-01), the column text filters and
  * an allowlisted sort, newest first by default (R-NFR-08).
  */
-export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<StudentListItem>> {
+export async function listStudents(
+  db: Db,
+  q: StudentListQuery,
+): Promise<Page<StudentListItemView>> {
   const base = db.from('v_student_list').select(LIST_COLUMNS, { count: 'exact' });
   let query = applySort(
     applyStudentColumnFilters(applyStudentFilters(base, q), q),
@@ -58,7 +60,7 @@ export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<St
     db,
     data.map((r) => r.id),
   );
-  const items = data.map((r) => ({ ...toListItem(r), is_test: tests.has(r.id) }));
+  const items = data.map((r) => toListItem({ ...r, is_test: tests.has(r.id) }));
   return { items, total: count ?? 0, page: q.page, pageSize: q.pageSize };
 }
 
@@ -110,7 +112,7 @@ export async function countStudentsByStatus(db: Db, f: StudentListFilters): Prom
 }
 
 /** Profile with guardian (+ siblings) and teacher (R-STU-04, R-STU-05). */
-export async function getStudentProfile(db: Db, id: string): Promise<StudentProfile> {
+export async function getStudentProfile(db: Db, id: string): Promise<StudentProfileView> {
   const data = maybe(
     await db
       .from('students')

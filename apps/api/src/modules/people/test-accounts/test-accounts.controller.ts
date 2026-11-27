@@ -1,20 +1,18 @@
 import { testAccountRoutes as routes, type TestFlagResult } from '@ab/shared';
 import { Controller, Inject } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { TestAccountsService } from './test-accounts.service';
 
 /** users.write; 404, 409, 400. */
-@ApiTags('users')
 @ApiBearerAuth()
 @Controller()
 export class UserTestController {
   constructor(@Inject(TestAccountsService) private readonly accounts: TestAccountsService) {}
 
   @Route(routes.user)
-  @Permissions('users.write')
   set(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.user>,
     @CurrentUser() user: AuthUser,
@@ -25,14 +23,12 @@ export class UserTestController {
 }
 
 /** students.write; 404, 409. */
-@ApiTags('students')
 @ApiBearerAuth()
 @Controller()
 export class StudentTestController {
   constructor(@Inject(TestAccountsService) private readonly accounts: TestAccountsService) {}
 
   @Route(routes.student)
-  @Permissions('students.write')
   set(
     @RouteInput() { params, body }: RouteInputOf<typeof routes.student>,
     @CurrentUser() user: AuthUser,
