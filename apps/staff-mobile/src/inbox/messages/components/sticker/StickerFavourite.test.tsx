@@ -44,7 +44,8 @@ test('a saved sticker (same sha256): «أزل من المفضلة» drops it', a
   mockApiFetch.mockResolvedValue(listOf([{ message_id: 'other', phone: PHONE, key: 'sha:abc=' }]));
   await show();
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.sticker.unfavourite }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('DELETE', `/threads/stickers/favourites/${M1}`));
+  const path = `/threads/stickers/favourites/${M1}`;
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('DELETE', path, undefined));
 });
 
 test('nothing for a photo, nor in teacher mode', async () => {
