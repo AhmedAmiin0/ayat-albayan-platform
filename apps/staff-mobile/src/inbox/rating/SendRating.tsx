@@ -1,4 +1,5 @@
-import type { MessageView, TemplateView, ThreadView } from '@ab/shared';
+import type { TemplateView, ThreadView } from '@ab/shared';
+import { lessonRatingCalls } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { View } from 'react-native';
@@ -18,10 +19,10 @@ import { requestId } from '@/core/lib/http/request-id';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { refreshInbox } from '@/inbox/thread/hooks/inbox-sync';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
-import { threadPath } from '@/inbox/thread/hooks/thread-cache';
 import { ratingApproved, ratingDone, ratingError } from './rating-words';
 
 const TEMPLATES = '/messaging/templates';
+const ratings = lessonRatingCalls({ apiFetch, apiSend });
 
 /** Idempotent: one request id per confirmed attempt kept across retries (rule 8). */
 export function SendRating({ thread }: { thread: Pick<ThreadView, 'phone_e164' | 'guardian_id' | 'display_name'> }) {
@@ -37,7 +38,7 @@ export function SendRating({ thread }: { thread: Pick<ThreadView, 'phone_e164' |
   });
   const id = useRef(requestId());
   const send = useMutation({
-    mutationFn: () => apiSend<MessageView>('POST', `${threadPath(thread.phone_e164)}/rating`, { clientRequestId: id.current }),
+    mutationFn: () => ratings.send({ phone: thread.phone_e164 }, { clientRequestId: id.current }),
     onMutate: () => markOwnSend(thread.phone_e164),
     onSuccess: (row) => {
       // A row Meta refused is a finished attempt: asking again is a new one.

@@ -1,7 +1,11 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { lessonRatingRoutes } from '@ab/shared';
 import { messagingRoot } from '@/common/infra/test-root';
+import { routeOf } from '@/common/http/route';
+import { PERMISSION } from '@/common/auth/decorators';
+import { RatingController } from './rating.controller';
 import { LessonRatingModule } from './lesson-rating.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
@@ -86,6 +90,12 @@ describe('POST /threads/:phone/rating', () => {
     expect((await call({})).statusCode).toBe(400);
     expect((await call({ clientRequestId: REQ }, 'teacher')).statusCode).toBe(403);
     expect(m.outbox.send).not.toHaveBeenCalled();
+  });
+
+  it('is served from its shared route object, its permission on the route alone', () => {
+    const handler = RatingController.prototype.send;
+    expect(routeOf(handler)).toBe(lessonRatingRoutes.send);
+    expect(Reflect.getMetadata(PERMISSION, RatingController)).toBeUndefined();
   });
 
   it('a bad :phone is 400 invalid_phone; a bad body still wins over it', async () => {

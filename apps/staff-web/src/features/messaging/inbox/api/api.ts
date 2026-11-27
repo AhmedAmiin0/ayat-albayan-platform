@@ -2,7 +2,6 @@ import {
   normaliseTemplateParams,
   type FollowUpNote,
   type LeadQualification,
-  type MessageView,
   type ThreadDetail,
   type ThreadRating,
   type ThreadTemplate,
@@ -12,6 +11,7 @@ import {
 import type { LeadStatus } from '@ab/catalog';
 import {
   chatFileCalls,
+  lessonRatingCalls,
   liveInterval,
   messageStatusCalls,
   offPathKeys,
@@ -28,6 +28,7 @@ import { inboxLeadKeys, threadKeys } from '@/features/messaging/inbox/api/keys';
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
 const chatFiles = chatFileCalls({ apiFetch, apiSend });
+const ratings = lessonRatingCalls({ apiFetch, apiSend });
 const messageStatus = messageStatusCalls({ apiFetch, apiSend });
 const sends = threadSendCalls({ apiFetch, apiSend });
 
@@ -87,7 +88,7 @@ export const sendTemplate = ({ phone, params, ...body }: ThreadTemplate & { phon
 
 /** Rates the guardian's latest lesson that took place (migration 195). */
 export const sendRating = ({ phone, ...body }: ThreadRating & { phone: string }) =>
-  apiSend<MessageView>('POST', `${threadPath(phone)}/rating`, body);
+  ratings.send({ phone }, body);
 
 /** M1: a failed row goes back to the queue (attempts 0). */
 export const retryMessage = messageStatus.retry;

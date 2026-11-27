@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
+import { aMessageView } from '@ab/shared/testing';
 import { ApiError, t } from '@ab/web-kit';
 import { detail, message, PHONE, template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
@@ -61,7 +62,7 @@ describe('thread header: the 24 h window', () => {
 describe('«إرسال تقييم الحلقة»', () => {
   it('sends with a request id and says it went', async () => {
     renderThread({ lastInboundAgoMs: 30 * HOUR });
-    apiSend.mockResolvedValue(message({ id: 'm-out', direction: 'outbound', status: 'sent', template_key: 'lesson_rating' }));
+    apiSend.mockResolvedValue(aMessageView({ phone_e164: PHONE, status: 'sent', template_key: 'lesson_rating' }));
     const button = await screen.findByRole('button', { name: t.inbox.rating.send });
     await waitFor(() => expect((button as HTMLButtonElement).disabled).toBe(false));
     fireEvent.click(button);
