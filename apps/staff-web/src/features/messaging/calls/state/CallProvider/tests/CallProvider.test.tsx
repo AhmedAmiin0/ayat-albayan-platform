@@ -1,3 +1,4 @@
+import { aMessageView } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
@@ -84,7 +85,7 @@ describe('calling a chat', () => {
     mount([['/calls/config', CONFIG], ['/calls/active', []], ['/calls/permission/', { state: 'request', expires_at: null }]]);
     fireEvent.click(await screen.findByRole('button', { name: 'probe' }));
     expect(await screen.findByText(t.calls.permission.requestHint)).toBeTruthy();
-    apiSend.mockResolvedValue({ id: 'm1' });
+    apiSend.mockResolvedValue(aMessageView({ phone_e164: '+966501234567' }));
     fireEvent.click(screen.getByRole('button', { name: t.calls.permission.request }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/calls/permission/%2B966501234567/request', expect.objectContaining({ clientRequestId: expect.any(String) })));
     expect(await screen.findByText(t.calls.permission.requestSent)).toBeTruthy();
