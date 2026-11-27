@@ -11,7 +11,9 @@ import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 // create, a reschedule or a cancel refreshes the list.
 
 /** POST /meetings: instant (no startsAt) or scheduled, with invitees; clientRequestId makes a retry safe. */
-export const createMeetingWith = (body: CreateMeeting) => meetingCalls({ apiFetch, apiSend }).create(body);
+const meetings = meetingCalls({ apiFetch, apiSend });
+
+export const createMeetingWith = (body: CreateMeeting) => meetings.create(body);
 
 /** PATCH /meetings/:id (creator or admin): a new time and/or length. 204. */
 export const updateMeeting = ({ id, body }: { id: string; body: UpdateMeeting }) => apiSend('PATCH', `/meetings/${id}`, body);
