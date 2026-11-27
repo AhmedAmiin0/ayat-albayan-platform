@@ -1,23 +1,12 @@
-import {
-  ACCOUNT_ERRORS,
-  type AvatarSet,
-  type AvatarUpload,
-  type SignedUpload,
-  type StaffPhotoView,
-} from '@ab/shared';
+import { ACCOUNT_ERRORS, type StaffPhotoView } from '@ab/shared';
 import { ApiError, apiSend, t } from '@ab/mobile-kit';
-import { uploadPhoto } from '@/account/hooks/account-api';
+import { staffPhotoSteps, uploadPhoto } from '@/account/hooks/account-api';
 import type { PickedAvatar } from '@/account/lib/avatar';
 
 // Admin write of a staff photo; same three steps as the own photo; answers StaffPhotoView.
 
-const pathSteps = (base: string) => ({
-  uploadUrl: (body: AvatarUpload) => apiSend<SignedUpload>('POST', `${base}/upload-url`, body),
-  set: (body: AvatarSet) => apiSend<StaffPhotoView>('PUT', base, body),
-});
-
 export const uploadStaffPhoto = (base: string, avatar: PickedAvatar) =>
-  uploadPhoto(pathSteps(base), avatar);
+  uploadPhoto(staffPhotoSteps(base), avatar);
 
 export const removeStaffPhoto = (base: string) => apiSend<StaffPhotoView>('DELETE', base);
 
