@@ -6,7 +6,7 @@ export type * from './views';
 export * from './lesson-view';
 export * from './proposals/proposals';
 export * from './series/series-days';
-export type * from './overview';
+export * from './lesson-lists';
 export * from './teacher-name';
 export type * from './makeup-views';
 export * from './makeup-offer';
