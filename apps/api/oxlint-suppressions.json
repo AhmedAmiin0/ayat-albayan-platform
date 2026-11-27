@@ -6075,7 +6075,7 @@
   },
   "src/modules/reporting/reports/report-entry.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/reporting/reports/report-row.ts": {
