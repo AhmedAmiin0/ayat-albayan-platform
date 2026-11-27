@@ -10,3 +10,5 @@ export {
   type ReopenFields,
   WINDOW_CLOSED,
 } from './thread-reopen';
+export * from './thread-reopen.schemas';
+export * from './thread-reopen.routes';

@@ -8,18 +8,8 @@ import { localDate } from '../../lesson/timing.day-before';
 /** The day the dedupe counts in. */
 export const REOPEN_TZ = 'Asia/Riyadh';
 
-/**
- * POST /threads/:phone/reopen's answer, kept for app builds older than 2026-11-07 that call it on
- * open: the window is still open, or the starter goes on the first send. It never queues anything.
- */
-export type ReopenTemplateOutcome = 'window_open' | 'on_send';
-
-/** POST /threads/:phone/reopen (old clients only). */
-export interface ThreadReopenView {
-  /** Always false since 2026-11-07 (the hold reopens Kapso's record on send). */
-  kapso_reopened: boolean;
-  template: ReopenTemplateOutcome;
-}
+/** The window is still open, or the starter goes on the first send; nothing is ever queued. */
+export const REOPEN_TEMPLATE_OUTCOMES = ['window_open', 'on_send'] as const;
 
 /**
  * `reopen:<E.164>:<Asia/Riyadh date>`: a second send the same day queues no second template. A later try the

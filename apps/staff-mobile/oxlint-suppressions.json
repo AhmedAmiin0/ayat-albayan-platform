@@ -2006,11 +2006,6 @@
       "count": 1
     }
   },
-  "src/inbox/messages/components/hide/use-hide-message.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/inbox/messages/copy-download/CopySheet.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -2463,14 +2458,9 @@
       "count": 1
     }
   },
-  "src/inbox/saved-replies/hooks/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 5
-    }
-  },
   "src/inbox/saved-replies/hooks/send-staged.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/saved-replies/hooks/use-saved-reply/use-saved-reply.ts": {

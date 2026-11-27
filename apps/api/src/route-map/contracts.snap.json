@@ -258,7 +258,8 @@
    "required": [
     "id"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /settings/integrations/secrets/:key": {
   "params": {
@@ -295,6 +296,27 @@
     "key"
    ]
   }
+ },
+ "DELETE /threads/:phone/messages/:messageId/hide": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    },
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "phone",
+    "messageId"
+   ]
+  },
+  "response": "empty"
  },
  "GET /admin-tasks": {
   "query": {
@@ -4058,6 +4080,79 @@
    ]
   }
  },
+ "GET /saved-replies": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "scope": {
+      "type": "string",
+      "enum": [
+       "shared",
+       "mine"
+      ]
+     },
+     "title": {
+      "type": "string"
+     },
+     "body": {
+      "type": "string"
+     },
+     "attachment": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "name": {
+          "type": "string"
+         },
+         "mime": {
+          "type": "string",
+          "enum": [
+           "image/jpeg",
+           "image/png",
+           "application/pdf"
+          ]
+         },
+         "size": {
+          "type": "number"
+         }
+        },
+        "required": [
+         "name",
+         "mime",
+         "size"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "position": {
+      "type": "number"
+     },
+     "updated_at": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "scope",
+     "title",
+     "body",
+     "attachment",
+     "position",
+     "updated_at"
+    ]
+   }
+  }
+ },
  "GET /short-links": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -7272,6 +7367,117 @@
    },
    "required": [
     "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "title": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 60
+    },
+    "body": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 4096
+    },
+    "attachment": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "path": {
+         "type": "string",
+         "minLength": 1,
+         "maxLength": 300
+        },
+        "name": {
+         "type": "string",
+         "minLength": 1,
+         "maxLength": 200,
+         "pattern": "^[^/\\\\\\p{Cc}]+$"
+        }
+       },
+       "required": [
+        "path",
+        "name"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "scope": {
+     "type": "string",
+     "enum": [
+      "shared",
+      "mine"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "body": {
+     "type": "string"
+    },
+    "attachment": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "mime": {
+         "type": "string",
+         "enum": [
+          "image/jpeg",
+          "image/png",
+          "application/pdf"
+         ]
+        },
+        "size": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "name",
+        "mime",
+        "size"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "position": {
+     "type": "number"
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "scope",
+    "title",
+    "body",
+    "attachment",
+    "position",
+    "updated_at"
    ]
   }
  },
@@ -16616,6 +16822,74 @@
     "title",
     "body"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "scope": {
+     "type": "string",
+     "enum": [
+      "shared",
+      "mine"
+     ]
+    },
+    "title": {
+     "type": "string"
+    },
+    "body": {
+     "type": "string"
+    },
+    "attachment": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "name": {
+         "type": "string"
+        },
+        "mime": {
+         "type": "string",
+         "enum": [
+          "image/jpeg",
+          "image/png",
+          "application/pdf"
+         ]
+        },
+        "size": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "name",
+        "mime",
+        "size"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "position": {
+     "type": "number"
+    },
+    "updated_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "scope",
+    "title",
+    "body",
+    "attachment",
+    "position",
+    "updated_at"
+   ]
   }
  },
  "POST /saved-replies/:id/move": {
@@ -16648,6 +16922,77 @@
    "required": [
     "direction"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "scope": {
+      "type": "string",
+      "enum": [
+       "shared",
+       "mine"
+      ]
+     },
+     "title": {
+      "type": "string"
+     },
+     "body": {
+      "type": "string"
+     },
+     "attachment": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "name": {
+          "type": "string"
+         },
+         "mime": {
+          "type": "string",
+          "enum": [
+           "image/jpeg",
+           "image/png",
+           "application/pdf"
+          ]
+         },
+         "size": {
+          "type": "number"
+         }
+        },
+        "required": [
+         "name",
+         "mime",
+         "size"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "position": {
+      "type": "number"
+     },
+     "updated_at": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "scope",
+     "title",
+     "body",
+     "attachment",
+     "position",
+     "updated_at"
+    ]
+   }
   }
  },
  "POST /saved-replies/:id/stage": {
@@ -16678,6 +17023,22 @@
    "required": [
     "clientRequestId"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "path": {
+     "type": "string"
+    },
+    "filename": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "path",
+    "filename"
+   ]
   }
  },
  "POST /saved-replies/attachment-upload-url": {
@@ -16702,6 +17063,30 @@
    "required": [
     "mime",
     "size"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
    ]
   }
  },
@@ -18596,6 +18981,27 @@
    ]
   }
  },
+ "POST /threads/:phone/messages/:messageId/hide": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    },
+    "messageId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "phone",
+    "messageId"
+   ]
+  },
+  "response": "empty"
+ },
  "POST /threads/:phone/rating": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18635,6 +19041,26 @@
    },
    "required": [
     "phone"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "kapso_reopened": {
+     "type": "boolean"
+    },
+    "template": {
+     "type": "string",
+     "enum": [
+      "window_open",
+      "on_send"
+     ]
+    }
+   },
+   "required": [
+    "kapso_reopened",
+    "template"
    ]
   }
  },

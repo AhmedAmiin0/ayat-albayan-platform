@@ -193,14 +193,6 @@
       "count": 1
     }
   },
-  "src/messaging/replies/saved-replies.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
   "src/messaging/replies/saved-reply-text/saved-reply-text.ts": {
     "stylistic/max-len": {
       "count": 2

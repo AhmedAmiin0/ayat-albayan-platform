@@ -15,7 +15,7 @@ describe('«حذف من المنصة» in the bubble menu', () => {
   afterEach(() => apiSend.mockReset());
 
   it('admin and sales get it; the confirm says it stays on the customer’s phone; POST hides', async () => {
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(undefined);
     showLog(M, SALES);
     openMenu();
     fireEvent.click(screen.getByRole('button', { name: h.action }));
@@ -23,7 +23,11 @@ describe('«حذف من المنصة» in the bubble menu', () => {
     expect(screen.getByText(h.body)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: h.confirm }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/threads/%2B966501234567/messages/m1/hide'),
+      expect(apiSend).toHaveBeenCalledWith(
+        'POST',
+        '/threads/%2B966501234567/messages/m1/hide',
+        undefined,
+      ),
     );
   });
 
