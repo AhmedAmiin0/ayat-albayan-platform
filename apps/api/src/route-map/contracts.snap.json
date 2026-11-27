@@ -4944,6 +4944,90 @@
    ]
   }
  },
+ "GET /public/student/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "first_name": {
+     "type": "string"
+    },
+    "lesson": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "starts_at": {
+         "type": "string"
+        },
+        "ends_at": {
+         "type": "string"
+        },
+        "teacher_name": {
+         "type": "string"
+        },
+        "window": {
+         "type": "object",
+         "properties": {
+          "state": {
+           "type": "string",
+           "enum": [
+            "early",
+            "open",
+            "closed"
+           ]
+          },
+          "opens_at": {
+           "type": "string"
+          },
+          "closes_at": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "state",
+          "opens_at",
+          "closes_at"
+         ]
+        }
+       },
+       "required": [
+        "id",
+        "starts_at",
+        "ends_at",
+        "teacher_name",
+        "window"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "first_name",
+    "lesson"
+   ]
+  }
+ },
  "GET /public/teacher-report/:token": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -14605,6 +14689,51 @@
    ]
   }
  },
+ "POST /lessons/:id/room/open": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "state": {
+     "type": "string",
+     "enum": [
+      "early",
+      "open",
+      "closed"
+     ]
+    },
+    "opens_at": {
+     "type": "string"
+    },
+    "closes_at": {
+     "type": "string"
+    },
+    "room_opened_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "state",
+    "opens_at",
+    "closes_at",
+    "room_opened_at"
+   ]
+  }
+ },
  "POST /lessons/:id/room/participants/:identity/mute": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -21631,6 +21760,34 @@
     "clientRequestId"
    ],
    "additionalProperties": false
+  }
+ },
+ "POST /students/:id/join-link": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "url"
+   ]
   }
  },
  "POST /students/:id/merge": {
