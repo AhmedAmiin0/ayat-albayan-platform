@@ -20,4 +20,9 @@ describe('meetingRoutes (R-MEET-01)', () => {
     expect(response.parse({ lessonId: 'l-1' })).toEqual({ lessonId: 'l-1' });
     expect(response.safeParse({ id: 'l-1' }).success).toBe(false);
   });
+
+  it('lets in a lesson writer, under the booking tag', () => {
+    const { permissions, tags } = meetingRoutes.instant;
+    expect({ permissions, tags }).toEqual({ permissions: ['lessons.write'], tags: ['booking'] });
+  });
 });
