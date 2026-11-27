@@ -6464,11 +6464,6 @@
       "count": 3
     }
   },
-  "src/modules/sales/sales-registration/sales-registration.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/sales/sales-registration/sales-registration.fakes.ts": {
     "stylistic/max-len": {
       "count": 2
