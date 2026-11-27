@@ -1406,6 +1406,25 @@
    ]
   }
  },
+ "GET /auth/code/status": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "available": {
+     "type": "boolean"
+    },
+    "staff": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "available",
+    "staff"
+   ]
+  }
+ },
  "GET /booking/course/change": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15370,7 +15389,8 @@
    "required": [
     "phone"
    ]
-  }
+  },
+  "response": "empty"
  },
  "POST /auth/code/verify": {
   "body": {
@@ -15389,6 +15409,24 @@
    "required": [
     "phone",
     "code"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token_hash": {
+     "type": "string",
+     "minLength": 1
+    },
+    "type": {
+     "type": "string",
+     "const": "magiclink"
+    }
+   },
+   "required": [
+    "token_hash",
+    "type"
    ]
   }
  },
@@ -15412,6 +15450,35 @@
     "username",
     "password"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "access_token": {
+     "type": "string",
+     "minLength": 1
+    },
+    "refresh_token": {
+     "type": "string",
+     "minLength": 1
+    },
+    "expires_in": {
+     "type": "number"
+    },
+    "expires_at": {
+     "type": [
+      "number",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "access_token",
+    "refresh_token",
+    "expires_in",
+    "expires_at"
+   ]
   }
  },
  "POST /auth/password/forgot": {
@@ -15428,7 +15495,8 @@
    "required": [
     "identifier"
    ]
-  }
+  },
+  "response": "empty"
  },
  "POST /auth/password/reset": {
   "body": {
@@ -15453,7 +15521,8 @@
     "code",
     "password"
    ]
-  }
+  },
+  "response": "empty"
  },
  "POST /auth/staff-code/request": {
   "body": {
@@ -15469,7 +15538,8 @@
    "required": [
     "phone"
    ]
-  }
+  },
+  "response": "empty"
  },
  "POST /auth/staff-code/verify": {
   "body": {
@@ -15488,6 +15558,24 @@
    "required": [
     "phone",
     "code"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token_hash": {
+     "type": "string",
+     "minLength": 1
+    },
+    "type": {
+     "type": "string",
+     "const": "magiclink"
+    }
+   },
+   "required": [
+    "token_hash",
+    "type"
    ]
   }
  },
@@ -29795,7 +29883,8 @@
     "email",
     "password"
    ]
-  }
+  },
+  "response": "empty"
  },
  "PUT /messages/gate/auto": {
   "body": {

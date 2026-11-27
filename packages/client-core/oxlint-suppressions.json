@@ -11,9 +11,6 @@
     "complexity": {
       "count": 1
     },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 2
     }

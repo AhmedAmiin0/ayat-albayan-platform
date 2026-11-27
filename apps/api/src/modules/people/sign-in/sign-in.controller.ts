@@ -1,22 +1,19 @@
 import {
-  codeRequestSchema,
-  codeVerifySchema,
-  forgotSchema,
-  loginSchema,
-  resetSchema,
+  signInRoutes as routes,
   type CodeSession,
   type CodeStatus,
   type PasswordSession,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Inject, Ip, Post } from '@nestjs/common';
-import { z } from 'zod';
+import { Controller, HttpCode, Inject, Ip } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { FamilyCodeService } from './flows/family-code.service';
 import { PasswordService } from './flows/password.service';
 import { TeacherCodeService } from './flows/teacher-code.service';
 import { SignInSettings } from './sign-in.settings';
+
+type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 /**
  * Family accounts (docs/30 §6): public routes, each zod-validated by its packages/shared schema and
@@ -25,7 +22,7 @@ import { SignInSettings } from './sign-in.settings';
  */
 @ApiTags('auth')
 @Public()
-@Controller('auth')
+@Controller()
 export class SignInController {
   constructor(
     private readonly family: FamilyCodeService,
@@ -38,7 +35,7 @@ export class SignInController {
    * Which sign-in / forgot screens to show: family codes (`available`) and staff codes (`staff`:
    * the teacher's code sign-in and the staff reset, docs/46 A1) can be sent now.
    */
-  @Get('code/status')
+  @Route(routes.status)
   async status(): Promise<CodeStatus> {
     const [available, staff] = await Promise.all([this.family.available(), this.family.staff()]);
     return { available, staff };
@@ -47,66 +44,45 @@ export class SignInController {
   /**
    * A teacher's code (docs/46 A2): 202 whatever exists, the code goes to the phone on file (D2).
    */
-  @Post('staff-code/request')
+  @Route(routes.staffRequest)
   @HttpCode(202)
-  staffRequest(
-    @ZodBody(codeRequestSchema) body: z.output<typeof codeRequestSchema>,
-    @Ip() ip: string,
-  ): Promise<void> {
+  staffRequest(@RouteInput() { body }: In<'staffRequest'>, @Ip() ip: string): Promise<void> {
     return this.teachers.request(body, ip);
   }
 
-  @Post('staff-code/verify')
+  @Route(routes.staffVerify)
   @HttpCode(200)
-  staffVerify(
-    @ZodBody(codeVerifySchema) body: z.output<typeof codeVerifySchema>,
-    @Ip() ip: string,
-  ): Promise<CodeSession> {
+  staffVerify(@RouteInput() { body }: In<'staffVerify'>, @Ip() ip: string): Promise<CodeSession> {
     return this.teachers.verify(body, ip);
   }
 
-  @Post('code/request')
+  @Route(routes.request)
   @HttpCode(202)
-  request(
-    @ZodBody(codeRequestSchema) body: z.output<typeof codeRequestSchema>,
-    @Ip() ip: string,
-  ): Promise<void> {
+  request(@RouteInput() { body }: In<'request'>, @Ip() ip: string): Promise<void> {
     return this.family.request(body, ip);
   }
 
-  @Post('code/verify')
+  @Route(routes.verify)
   @HttpCode(200)
-  verify(
-    @ZodBody(codeVerifySchema) body: z.output<typeof codeVerifySchema>,
-    @Ip() ip: string,
-  ): Promise<CodeSession> {
+  verify(@RouteInput() { body }: In<'verify'>, @Ip() ip: string): Promise<CodeSession> {
     return this.family.verify(body, ip);
   }
 
-  @Post('login')
+  @Route(routes.login)
   @HttpCode(200)
-  login(
-    @ZodBody(loginSchema) body: z.output<typeof loginSchema>,
-    @Ip() ip: string,
-  ): Promise<PasswordSession> {
+  login(@RouteInput() { body }: In<'login'>, @Ip() ip: string): Promise<PasswordSession> {
     return this.passwords.login(body, ip);
   }
 
-  @Post('password/forgot')
+  @Route(routes.forgot)
   @HttpCode(202)
-  forgot(
-    @ZodBody(forgotSchema) body: z.output<typeof forgotSchema>,
-    @Ip() ip: string,
-  ): Promise<void> {
+  forgot(@RouteInput() { body }: In<'forgot'>, @Ip() ip: string): Promise<void> {
     return this.passwords.forgot(body, ip);
   }
 
-  @Post('password/reset')
+  @Route(routes.reset)
   @HttpCode(204)
-  async reset(
-    @ZodBody(resetSchema) body: z.output<typeof resetSchema>,
-    @Ip() ip: string,
-  ): Promise<void> {
+  async reset(@RouteInput() { body }: In<'reset'>, @Ip() ip: string): Promise<void> {
     await this.passwords.reset(body, ip, this.settings.config.passwordMinLength);
   }
 }
