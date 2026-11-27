@@ -18,8 +18,6 @@ export function routeOf(handler: unknown): RouteSpec | undefined {
   return ROUTES.get(handler);
 }
 
-const isMethod = (value: unknown): value is object => typeof value === 'function';
-
 /**
  * A handler's own @Permissions is kept, whatever the decorator order, so it never equals the
  * route's list and the coverage test reports the two sources.
@@ -27,7 +25,7 @@ const isMethod = (value: unknown): value is object => typeof value === 'function
 const grant =
   (permissions: RouteList): MethodDecorator =>
   (_target, _key, { value }) => {
-    if (!isMethod(value) || Reflect.hasOwnMetadata(PERMISSION, value)) return;
+    if (typeof value !== 'function' || Reflect.hasOwnMetadata(PERMISSION, value)) return;
     Reflect.defineMetadata(PERMISSION, permissions, value);
   };
 

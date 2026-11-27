@@ -82,8 +82,8 @@ function accessOf(reflector: Reflector, { cls, name, handler }: Walked): RouteAc
   return {
     key: `${cls.name}.${name}`,
     route: routeOf(cls, handler),
-    isPublic: reflector.getAllAndOverride<boolean>(IS_PUBLIC, targets) === true,
-    signedIn: reflector.getAllAndOverride<boolean>(SIGNED_IN, targets) === true,
+    isPublic: reflector.getAllAndOverride<boolean | undefined>(IS_PUBLIC, targets) === true,
+    signedIn: reflector.getAllAndOverride<boolean | undefined>(SIGNED_IN, targets) === true,
     permission: reflector.getAllAndOverride<unknown>(PERMISSION, targets),
     handlerPermission: Reflect.getMetadata(PERMISSION, handler),
     classPermission: Reflect.getMetadata(PERMISSION, cls),
