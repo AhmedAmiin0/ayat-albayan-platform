@@ -5,8 +5,8 @@ import {
 } from '@ab/shared';
 import type { AssistantStatementView } from '@ab/money';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { StatementsService } from './statements.service';
@@ -18,27 +18,22 @@ type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
  * currency, draft -> approved -> paid. Every transition answers 409 invalid_transition when repeated.
  * approve, reopen and unpay need assistantpay.approve; reading and generating need read / write.
  */
-@ApiTags('assistant-pay')
 @ApiBearerAuth()
-@Permissions('assistantpay.write')
 @Controller()
 export class AssistantStatementsController {
   constructor(private readonly statements: StatementsService) {}
 
   @Route(routes.list)
-  @Permissions('assistantpay.read')
   list(@RouteInput() { query }: In<'list'>): Promise<AssistantStatementView[]> {
     return this.statements.list(query);
   }
 
   @Route(routes.get)
-  @Permissions('assistantpay.read')
   get(@RouteInput() { params }: In<'get'>): Promise<AssistantStatementView> {
     return this.statements.get(params.id);
   }
 
   @Route(routes.receipt)
-  @Permissions('assistantpay.read')
   receipt(@RouteInput() { params }: In<'receipt'>): Promise<SignedDownload> {
     return this.statements.receipt(params.id);
   }
@@ -56,7 +51,6 @@ export class AssistantStatementsController {
   /** 409 empty_statement when it has no lines. */
   @Route(routes.approve)
   @HttpCode(200)
-  @Permissions('assistantpay.approve')
   approve(
     @RouteInput() { params }: In<'approve'>,
     @CurrentUser() user: AuthUser,
@@ -67,7 +61,6 @@ export class AssistantStatementsController {
   /** approved -> draft. Takes back an approval, so it needs the approver's permission. */
   @Route(routes.reopen)
   @HttpCode(200)
-  @Permissions('assistantpay.approve')
   reopen(
     @RouteInput() { params }: In<'reopen'>,
     @CurrentUser() user: AuthUser,
@@ -88,7 +81,6 @@ export class AssistantStatementsController {
   /** paid -> approved, with a reason. Reverses a payout, so it needs assistantpay.approve. */
   @Route(routes.unpay)
   @HttpCode(200)
-  @Permissions('assistantpay.approve')
   unpay(
     @RouteInput() { params, body }: In<'unpay'>,
     @CurrentUser() user: AuthUser,

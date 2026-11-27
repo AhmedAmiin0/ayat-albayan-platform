@@ -1143,11 +1143,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/assistant-pay/statements/statements.permissions.test.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/modules/finance/assistant-pay/statements/statements.repo.ts": {
     "stylistic/max-len": {
       "count": 1

@@ -2,8 +2,8 @@ import { paymentRoutes as routes, type SignedDownload, type SignedUpload } from 
 import type { PaymentAttachmentView, PaymentsPage, PaymentView } from '@ab/money';
 import { uploadMaxBytes } from '@ab/settings';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { paymentFilter } from './payments.dto';
@@ -14,9 +14,7 @@ import { ReceiptsService } from './attachments/receipts.service';
 type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 /** Payments + receipts (P1–P7, R-PAY-01, R-MOB-02). Admin only. */
-@ApiTags('payments')
 @ApiBearerAuth()
-@Permissions('payments.write')
 @Controller()
 export class PaymentsController {
   constructor(
@@ -26,7 +24,6 @@ export class PaymentsController {
   ) {}
 
   @Route(routes.list)
-  @Permissions('payments.read')
   async list(@RouteInput() { query }: In<'list'>): Promise<PaymentsPage> {
     const { academy_timezone: tz } = await this.settings.read();
     return this.payments.list(paymentFilter(query, tz));
@@ -45,19 +42,16 @@ export class PaymentsController {
   }
 
   @Route(routes.get)
-  @Permissions('payments.read')
   get(@RouteInput() { params }: In<'get'>): Promise<PaymentView> {
     return this.payments.get(params.id);
   }
 
   @Route(routes.receipt)
-  @Permissions('payments.read')
   receipt(@RouteInput() { params }: In<'receipt'>): Promise<SignedDownload> {
     return this.payments.receipt(params.id);
   }
 
   @Route(routes.attachments)
-  @Permissions('payments.read')
   attachments(@RouteInput() { params }: In<'attachments'>): Promise<PaymentAttachmentView[]> {
     return this.payments.attachments(params.id);
   }

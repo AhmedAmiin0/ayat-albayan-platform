@@ -7,8 +7,8 @@ import type {
   BroughtByView,
 } from '@ab/money';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CorrectionsService } from '@/modules/finance/assistant-pay/statements/corrections.service';
@@ -20,9 +20,7 @@ type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
  * The admin side of the assistants' pay (R-ASST-02, R-ASST-03, R-ASST-05): terms per assistant, the
  * commission ledger, voiding, adjustments and attribution. Statements: AssistantStatementsController.
  */
-@ApiTags('assistant-pay')
 @ApiBearerAuth()
-@Permissions('assistantpay.write')
 @Controller()
 export class AssistantPayController {
   constructor(
@@ -31,13 +29,11 @@ export class AssistantPayController {
   ) {}
 
   @Route(routes.list)
-  @Permissions('assistantpay.read')
   list(): Promise<AssistantTermsRow[]> {
     return this.terms.list();
   }
 
   @Route(routes.get)
-  @Permissions('assistantpay.read')
   get(@RouteInput() { params }: In<'get'>): Promise<AssistantTermsView> {
     return this.terms.get(params.assistantId);
   }
@@ -52,13 +48,11 @@ export class AssistantPayController {
   }
 
   @Route(routes.broughtByOf)
-  @Permissions('assistantpay.read')
   broughtByOf(@RouteInput() { params }: In<'broughtByOf'>): Promise<BroughtByView> {
     return this.terms.broughtBy(params.studentId);
   }
 
   @Route(routes.ledger)
-  @Permissions('assistantpay.read')
   ledger(@RouteInput() { query }: In<'ledger'>): Promise<AssistantCommissionView[]> {
     return this.corrections.ledger(query);
   }
