@@ -1,20 +1,12 @@
-import type { BottomTabBarProps } from 'expo-router/js-tabs';
-import { I18nManager, Platform, useWindowDimensions, View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
-import { useTheme } from '../../../theme';
-import { BAR_HEIGHT, BAR_SIDE, barBottom } from '../../layout/tab-bar-inset';
+import { BAR_HEIGHT, BAR_SIDE } from '../../layout/tab-bar-inset';
 import { GlassGradient } from '../../primitives/GlassGradient';
-import { useA11yPref } from '../../primitives/use-a11y-pref';
-import type { TabItem } from '../AppNativeTabs';
 import { TabEdge } from '../TabEdge';
 import { TabPill } from '../TabPill';
 import { TabRoutes } from '../TabRoutes';
-import { usePillOffset } from '../use-pill-offset';
-import { useReportBarHeight } from '../use-report-bar-height';
-
-interface GlassTabBarProps extends BottomTabBarProps {
-  tabs: readonly TabItem[];
-}
+import type { GlassTabBarProps } from './GlassTabBar.types';
+import { useGlassTabBar } from './use-glass-tab-bar';
 
 /**
  * The bottom tabs as a floating glass capsule «like iOS» (docs/29 §7): 20pt from
@@ -26,16 +18,7 @@ interface GlassTabBarProps extends BottomTabBarProps {
  * Transparency: an opaque fill.
  */
 export function GlassTabBar({ state, navigation, insets, tabs }: GlassTabBarProps) {
-  const { color, glass } = useTheme();
-  const width = useWindowDimensions().width;
-  const opaque = useA11yPref('reduceTransparency');
-  const reduceMotion = useA11yPref('reduceMotion');
-  const bottom = barBottom(insets.bottom);
-  const tabWidth = (width - 2 * BAR_SIDE - 8) / state.routes.length;
-  const x = usePillOffset({ index: state.index, tabWidth, rtl: I18nManager.isRTL, reduceMotion });
-  useReportBarHeight(bottom + BAR_HEIGHT);
-  const sheen = glass.sheen;
-
+  const { color, glass, opaque, bottom, tabWidth, x, sheen } = useGlassTabBar({ state, insets });
   return (
     <>
       <TabEdge bottom={bottom} />
