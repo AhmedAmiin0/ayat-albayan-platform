@@ -532,11 +532,6 @@
       "count": 1
     }
   },
-  "src/sales/course/course-follow.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/sales/course/course-picks.test.ts": {
     "stylistic/max-len": {
       "count": 2

@@ -4,7 +4,10 @@ import type { BookedCourse } from './booked-course.schemas';
 
 // A booked course's weekdays and times, so renewal can continue them or a change edit them; pure.
 
-/** The first day a renewal's course may start: after the previous one's last day, never before its subscription. */
+/**
+ * The first day a renewal's course may start: after the previous one's last day, never before its
+ * subscription.
+ */
 export function continueFrom(previous: Pick<BookedCourse, 'endsOn'>, startsOn: string): string {
   const after = addLocalDays(previous.endsOn, 1);
   return after > startsOn ? after : startsOn;
@@ -19,7 +22,7 @@ export interface PrefillInput {
   now: string;
 }
 
-/** A prefilled pick: its instant and the day's own time, carried as is (never re-read from the instant). */
+/** A prefilled pick: its instant and the day's own time, never re-read from the instant. */
 export interface PrefilledPick {
   at: string;
   weekday: number;
@@ -30,7 +33,8 @@ const WEEK_MS = 7 * 86_400_000;
 
 /**
  * Each of `days` on its first local date on or after `from` at its time in `tz`, moved on by whole
- * weeks until it is after `now` (a `from` weeks in the past still lands in the coming week). Sorted.
+ * weeks until it is after `now` (a `from` weeks in the past still lands in the coming week).
+ * Sorted.
  */
 export function prefillDays({ days, from, tz, now }: PrefillInput): PrefilledPick[] {
   const start = weekdayOfDate(from);
