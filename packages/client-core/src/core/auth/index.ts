@@ -16,6 +16,6 @@ export {
   type SignInApi,
   type SignInError,
 } from './sign-in';
-export { meLocaleOf, meLocalePath, meLocaleSend } from './locale';
+export { meLocaleOf, meLocaleSend } from './locale';
 export { meQueryOptions } from './me-query';
 export type { MeQuery } from './me-query';

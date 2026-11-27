@@ -5,9 +5,6 @@ import { callWith, type ApiClient } from '../http';
 
 // Locale comes from GET /auth/me or GET /portal/me and is written back with PATCH /me/locale.
 
-/** PATCH: the signed-in login's own language (any role, guardians and students too). */
-export const meLocalePath = accountRoutes.locale.path;
-
 const answerLocale = z.object({ locale: z.enum(LOCALES).nullable() });
 
 /**
