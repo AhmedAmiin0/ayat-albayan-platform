@@ -9471,14 +9471,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-recordings/student-recordings.controller.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/teaching/student-recordings/student-recordings.fakes.ts": {
     "no-nested-ternary": {
       "count": 1
