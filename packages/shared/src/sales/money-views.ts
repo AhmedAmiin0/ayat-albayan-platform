@@ -8,6 +8,7 @@ import type {
 } from '@ab/catalog';
 import type { Quote } from '@ab/money';
 import type { RenewalPricing } from '@ab/money';
+import type { ThreadFile, ThreadMediaItem } from '../messaging';
 
 // Whitelisted responses of the salesperson's money endpoints (docs/16): only her student and the package
 // she is creating or paying, never the fx internals (rate, provider, date), the quote source, notes or
@@ -87,21 +88,10 @@ export interface SalesFamilyView {
 }
 
 /** One image / PDF the family sent in its chat (metadata only; the file through /:messageId). */
-export interface SalesChatReceipt {
-  message_id: string;
-  created_at: string;
-  mime: string;
-  caption: string | null;
-  /** Too old to fetch from WhatsApp and never saved: it cannot be used. */
-  expired: boolean;
-}
+export type SalesChatReceipt = ThreadMediaItem;
 
 /** A short-lived signed URL of one chat file (a thumbnail). */
-export interface SalesChatReceiptFile {
-  url: string;
-  expires_at: string;
-  mime: string;
-}
+export type SalesChatReceiptFile = ThreadFile;
 
 /** The receipt path to send with POST /sales/payments. */
 export interface SalesReceiptCopied {
