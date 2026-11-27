@@ -82,7 +82,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 9
+      "count": 4
     }
   },
   "src/classroom/api/moderation-api.ts": {

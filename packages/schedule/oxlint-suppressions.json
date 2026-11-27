@@ -40,11 +40,6 @@
       "count": 3
     }
   },
-  "src/classroom/schemas.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/student-recordings/student-recordings.ts": {
     "stylistic/max-len": {
       "count": 1
