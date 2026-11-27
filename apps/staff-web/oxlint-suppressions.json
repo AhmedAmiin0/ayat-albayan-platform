@@ -4260,11 +4260,6 @@
       "count": 1
     }
   },
-  "src/features/reporting/dashboard/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/features/reporting/dashboard/finance/ExpensesByCategory.tsx": {
     "stylistic/max-len": {
       "count": 1
