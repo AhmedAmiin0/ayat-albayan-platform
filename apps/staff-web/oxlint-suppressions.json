@@ -341,14 +341,8 @@
     }
   },
   "src/features/finance/expenses/api.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 7
     }
   },
   "src/features/finance/expenses/expense-columns.tsx": {

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { PAYMENT_METHODS } from '@ab/catalog';
-import { localDate, optionalText } from '@ab/core';
+import { ALL_PAYMENT_METHODS, PAYMENT_METHODS } from '@ab/catalog';
+import { id, localDate, optionalText, partialOf } from '@ab/core';
 import { currencyIso, monthParam, moneyAmount, RECEIPT_MAX_BYTES, RECEIPT_MIMES } from './schemas';
 
 // Expenses (R-RPT-02, issue E4). The category is a key of expense_categories
@@ -23,27 +23,21 @@ const fields = {
   note: optionalText,
 };
 
+const expenseFieldsSchema = z.object({
+  ...fields,
+  month: monthParam.optional(),
+  currency: currencyIso.default('EGP'),
+});
+
 /** POST /expenses. The owner's tracker is in EGP. */
-export const expenseCreateSchema = z
-  .object({ ...fields, month: monthParam.optional(), currency: currencyIso.default('EGP') })
-  .refine((e) => e.month !== undefined || (e.paidOn !== undefined && e.paidOn !== null), {
-    message: 'month_required',
-    path: ['month'],
-  });
+export const expenseCreateSchema = expenseFieldsSchema.refine(
+  (e) => e.month !== undefined || (e.paidOn !== undefined && e.paidOn !== null),
+  { message: 'month_required', path: ['month'] },
+);
 
 /** PATCH /expenses/:id. `isDraft: false` confirms a recurring draft. */
-export const expenseUpdateSchema = z.object({
-  month: monthParam.optional(),
-  category: expenseCategoryKey.optional(),
-  amount: moneyAmount.optional(),
-  currency: currencyIso.optional(),
-  paidOn: fields.paidOn,
-  vendor: fields.vendor,
-  method: fields.method,
-  receiptPath: fields.receiptPath,
-  recurring: z.boolean().optional(),
+export const expenseUpdateSchema = partialOf(expenseFieldsSchema).extend({
   isDraft: z.literal(false).optional(),
-  note: optionalText,
 });
 
 /** POST /expense-categories: the admin adds a category. */
@@ -67,13 +61,52 @@ export const expenseReceiptUploadSchema = z.object({
   size: z.int().min(1).max(RECEIPT_MAX_BYTES, { message: 'receipt_too_large' }),
 });
 
-/** GET /expenses?month= or ?year= (the 12-month view). */
-export const expenseListQuery = z.union([
-  z.object({ month: monthParam }),
-  z.object({ year: z.string().regex(/^\d{4}$/, 'invalid_year') }),
-]);
+/** GET /expenses/year?year=: the 12-month table. */
+export const expenseYearQuery = z.object({ year: z.string().regex(/^\d{4}$/, 'invalid_year') });
+
+/** GET /expenses?month= or ?year=. */
+export const expenseListQuery = z.union([z.object({ month: monthParam }), expenseYearQuery]);
+
+/** One expense as the api answers it; `category` is any key of expense_categories. */
+export const expenseViewSchema = z.object({
+  id: id(),
+  month: monthParam,
+  category: z.string(),
+  amount: z.number(),
+  currency: z.string(),
+  note: z.string().nullable(),
+  created_at: z.string(),
+  paid_on: z.string().nullable(),
+  vendor: z.string().nullable(),
+  method: z.enum(ALL_PAYMENT_METHODS).nullable(),
+  has_receipt: z.boolean(),
+  recurring: z.boolean(),
+  /** A recurring copy pre-created for the month, not counted until confirmed. */
+  is_draft: z.boolean(),
+});
+
+/** GET /expenses/year: 12 months in the reporting currency (confirmed expenses only). */
+export const expenseYearViewSchema = z.object({
+  year: z.string(),
+  currency: z.string(),
+  months: z.array(
+    z.object({
+      month: z.string(),
+      total: z.number(),
+      by_category: z.record(z.string(), z.number()),
+    }),
+  ),
+  categories: z.array(z.string()),
+  total: z.number(),
+  /** Currencies with no stored rate: their amounts are left out. */
+  fx_missing: z.array(z.string()),
+  fx_date: z.string().nullable(),
+});
 
 export type ExpenseCreate = z.output<typeof expenseCreateSchema>;
+export type ExpenseCreateInput = z.input<typeof expenseCreateSchema>;
 export type ExpenseUpdate = z.output<typeof expenseUpdateSchema>;
 export type ExpenseCategoryCreate = z.output<typeof expenseCategoryCreateSchema>;
 export type ExpenseCategoryView = z.infer<typeof expenseCategoryViewSchema>;
+export type ExpenseView = z.infer<typeof expenseViewSchema>;
+export type ExpenseYearView = z.infer<typeof expenseYearViewSchema>;

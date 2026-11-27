@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import ar from '../../../i18n/ar.json' with { type: 'json' };
+import ar from '../../../../i18n/ar.json' with { type: 'json' };
 import { formatAmount, offerText, quote, type QuoteOptions } from '@ab/money';
 
 const base = {

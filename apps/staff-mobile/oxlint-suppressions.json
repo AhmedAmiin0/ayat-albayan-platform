@@ -1391,16 +1391,6 @@
       "count": 1
     }
   },
-  "src/finance/expenses/upload-expense-receipt.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/finance/expenses/use-add-expense.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/finance/finance.en.test.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -1530,7 +1520,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/finance/shared/receipt-link.ts": {
