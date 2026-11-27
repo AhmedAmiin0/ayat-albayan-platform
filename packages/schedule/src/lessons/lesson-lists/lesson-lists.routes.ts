@@ -1,13 +1,11 @@
 import { defineRoute } from '@ab/core';
-import { z } from 'zod';
-import { lessonViewSchema } from '../lesson-view';
+import { lessonViewListSchema as lessons } from '../lesson-view';
 import {
   lessonDayQuerySchema,
   lessonWindowQuerySchema,
   scheduleOverviewSchema,
 } from './lesson-lists.schemas';
 
-const lessons = z.array(lessonViewSchema);
 const reads = { permissions: ['lessons.read'], tags: ['lessons'] } as const;
 
 /** Admin lists across teachers (docs/10 routes 1, 2): every status, by starts_at (R-SCH-01). */

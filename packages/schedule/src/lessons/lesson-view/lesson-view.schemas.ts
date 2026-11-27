@@ -120,3 +120,5 @@ export const lessonViewSchema = lessonExtrasSchema.extend({
   pending_proposal: lessonProposalViewSchema.nullable(),
 });
 export type LessonView = z.infer<typeof lessonViewSchema>;
+
+export const lessonViewListSchema = z.array(lessonViewSchema);

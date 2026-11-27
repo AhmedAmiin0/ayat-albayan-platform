@@ -18,7 +18,8 @@ describe('lessonListCalls (R-SCH-01, R-SCH-09)', () => {
     await expect(lessonListCalls(client).list({ from: FROM, to: TO })).resolves.toEqual([]);
     const path = apiFetch.mock.calls[0]?.[0] ?? '';
     expect(path.split('?')[0]).toBe('/lessons');
-    expect(Object.fromEntries(new URLSearchParams(path.split('?')[1]))).toEqual({ from: FROM, to: TO });
+    const query = Object.fromEntries(new URLSearchParams(path.split('?')[1]));
+    expect(query).toEqual({ from: FROM, to: TO });
   });
 
   it('reads one local day in its zone, the zone encoded', async () => {

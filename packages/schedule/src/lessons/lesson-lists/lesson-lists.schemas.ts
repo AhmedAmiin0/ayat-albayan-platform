@@ -3,13 +3,17 @@ import { id, instant, localDate, timeZone } from '@ab/core';
 import { z } from 'zod';
 import { lessonViewSchema } from '../lesson-view';
 
-// GET /lessons/overview (R-SCH-09 all-teachers calendar): every teacher with their weekly windows,
-// time off, load and free time, plus the lessons of the window, in one payload. Instants are ISO UTC.
+// GET /lessons/overview (R-SCH-09 all-teachers calendar): every teacher with their weekly
+// windows, time off, load and free time, plus the lessons of the window, in one payload.
+// Instants are ISO UTC.
 
 /** `?from&to[&teacherId]`: the window [from, to); the api also caps it at 31 days. */
 export const lessonWindowQuerySchema = z
   .object({ from: instant, to: instant, teacherId: z.uuid().optional() })
-  .refine((q) => Date.parse(q.to) > Date.parse(q.from), { message: 'to_before_from', path: ['to'] });
+  .refine((q) => Date.parse(q.to) > Date.parse(q.from), {
+    message: 'to_before_from',
+    path: ['to'],
+  });
 export type LessonWindowQuery = z.input<typeof lessonWindowQuerySchema>;
 
 /** `?date&tz`: one local day; no tz means the academy's. */

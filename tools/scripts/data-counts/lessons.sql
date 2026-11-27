@@ -23,3 +23,12 @@ where requested_by is not null and requested_by::text not in ('teacher', 'family
 
 -- count: schedule_rules_weekday_out_of_range
 select count(*) from public.schedule_rules where not (byday <@ '{0,1,2,3,4,5,6}');
+
+-- count: teachers_unknown_gender_or_status
+select count(*) from public.teachers
+where gender is null or gender::text not in ('male', 'female')
+   or status::text not in ('active', 'inactive');
+
+-- count: teachers_unknown_program
+select count(*) from public.teachers
+where programs is null or not (programs::text[] <@ '{quran,arabic,islamic_studies}');
