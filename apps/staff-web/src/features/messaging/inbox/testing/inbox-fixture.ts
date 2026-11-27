@@ -84,7 +84,15 @@ export function pupil(
     starts_on: '2026-09-01',
   };
   const subscription = sub === null ? null : { ...package8, ...sub };
-  return { id: 's-1', name: 'سهيلة', code: 'AB-0183', teacher_name: 'أبرار', status: 'active', subscription, ...patch };
+  return {
+    id: 's-1',
+    name: 'سهيلة',
+    code: 'AB-0183',
+    teacher_name: 'أبرار',
+    status: 'active',
+    subscription,
+    ...patch,
+  };
 }
 
 export function template(patch: Partial<TemplateView> = {}): TemplateView {

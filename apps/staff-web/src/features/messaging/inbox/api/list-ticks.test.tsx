@@ -8,6 +8,8 @@ import { threadsQuery } from './api';
 import { threadQuery } from './thread-query';
 import { useThreads, useTicksInLists } from './list-ticks';
 
+const M2 = 'd0000000-0000-4000-8000-000000000012';
+
 // docs/43 §2 (the owner's «pending in the list»), web: a list row follows its chat's tick.
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -15,13 +17,13 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 const LIST = threadsQuery({ page: 1 }).queryKey;
 const page = (last_status: MessageStatus) => ({
-  items: [thread({ last_message_id: 'm2', last_status })],
+  items: [thread({ last_message_id: M2, last_status })],
   total: 1,
   page: 1,
   pageSize: 30,
 });
 const chat = (status: MessageStatus) => ({
-  pages: [detail([message({ id: 'm2', direction: 'outbound', status })])],
+  pages: [detail([message({ id: M2, direction: 'outbound', status })])],
   pageParams: [null],
 });
 
@@ -75,7 +77,7 @@ describe('useTicksInLists: the open chat writes its ticks into every older cache
       initialProps: { data: chat('queued') },
     });
 
-  it('lifts the row at once, keeping the list\'s time and its stale mark', async () => {
+  it("lifts the row at once, keeping the list's time and its stale mark", async () => {
     const { client, wrapper } = setup();
     client.setQueryData(LIST, page('queued'), { updatedAt: 1000 });
     await client.invalidateQueries({ queryKey: LIST, refetchType: 'none' });

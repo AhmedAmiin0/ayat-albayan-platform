@@ -7,7 +7,14 @@ describe('threadListQuery', () => {
   });
 
   it('sends every filter of the URL and the unread order descending', () => {
-    const s = { page: 1, q: 'أم', unread: true, sort: 'unread', f_status: 'new', list: 'l1' } as const;
+    const s = {
+      page: 1,
+      q: 'أم',
+      unread: true,
+      sort: 'unread',
+      f_status: 'new',
+      list: 'l1',
+    } as const;
     expect(threadListQuery(s)).toEqual({
       page: 1,
       pageSize: 30,
@@ -21,7 +28,11 @@ describe('threadListQuery', () => {
   });
 
   it('keeps the name order in its own direction', () => {
-    expect(threadListQuery({ page: 1, sort: 'name' })).toEqual({ page: 1, pageSize: 30, sort: 'name' });
+    expect(threadListQuery({ page: 1, sort: 'name' })).toEqual({
+      page: 1,
+      pageSize: 30,
+      sort: 'name',
+    });
   });
 });
 
