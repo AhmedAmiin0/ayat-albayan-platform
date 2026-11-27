@@ -6,11 +6,11 @@ import {
 } from '@ab/catalog';
 import { Controller } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { CurrentUser } from '@/common/auth/decorators';
-import type { AuthUser } from '@/common/auth/verify-token';
-import { asResponse } from '@/common/http/returns';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { asResponse } from '@/common/http/returns';
 import { AdminUser, requireAdmin } from '@/modules/platform/google-sync/admin/admin-only';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { CurrentUser } from '@/common/auth/decorators';
 import { GoogleMapService } from './google-map.service';
 import { TeacherCalendarService } from './teacher-calendar.service';
 
