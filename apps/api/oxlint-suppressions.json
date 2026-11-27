@@ -9200,11 +9200,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/controllers/channel.edits.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 7
-    }
-  },
   "src/modules/teaching/student-channels/student-channels.migration.test.ts": {
     "stylistic/max-len": {
       "count": 1
