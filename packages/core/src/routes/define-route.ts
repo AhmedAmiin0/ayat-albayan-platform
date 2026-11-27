@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { pathParamNames } from './route-path';
-import { routeMethodSchema } from './route.schemas';
+import { routeMethodSchema, routePublicSchema } from './route.schemas';
 import type { Route, RouteSpec } from './route.types';
 
 const LISTS = ['permissions', 'tags'] as const;
@@ -30,10 +30,19 @@ function checkLists(spec: RouteSpec): void {
   throw new Error(`${labelOf(spec)}: ${bad.join(', ')} must be a non-empty list without duplicates`);
 }
 
+const isPublicWithPermissions = (spec: RouteSpec): boolean =>
+  routePublicSchema.parse(spec).isPublic === true && spec.permissions !== undefined;
+
+function checkPublic(spec: RouteSpec): void {
+  if (!isPublicWithPermissions(spec)) return;
+  throw new Error(`${labelOf(spec)}: a public route cannot name permissions`);
+}
+
 /** A frozen route object, typed by its own schemas (docs/62 part 3 §1). */
 export function defineRoute<const S extends RouteSpec>(spec: S): Route<S> {
   routeMethodSchema.parse(spec.method);
   checkParams(spec);
   checkLists(spec);
+  checkPublic(spec);
   return Object.freeze({ ...spec });
 }
