@@ -1,6 +1,6 @@
 import { routePath } from '@ab/core';
 import { describe, expect, it } from 'vitest';
-import { courseTeacherRoutes, courseTimesRoutes } from './course-move.routes';
+import { courseTeacherRoutes, courseTimesRoutes } from '../course-move.routes';
 
 const STUDENT = 'e1111111-1111-4111-8111-111111111111';
 const SUB = 'e2222222-2222-4222-8222-222222222222';

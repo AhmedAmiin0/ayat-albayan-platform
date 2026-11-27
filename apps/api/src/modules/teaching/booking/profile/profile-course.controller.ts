@@ -38,8 +38,4 @@ export class CourseTeacherController extends courseMoveRoutes(courseTeacherRoute
 @ApiBearerAuth()
 @Permissions('courses.reschedule')
 @Controller()
-export class CourseTimesController extends courseMoveRoutes(courseTimesRoutes) {
-  constructor(course: ProfileCourse) {
-    super(course);
-  }
-}
+export class CourseTimesController extends courseMoveRoutes(courseTimesRoutes) {}

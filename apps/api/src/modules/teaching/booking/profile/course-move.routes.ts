@@ -1,9 +1,9 @@
 import type { courseTeacherRoutes, courseTimesRoutes } from '@ab/shared';
-import { HttpCode } from '@nestjs/common';
+import { HttpCode, Injectable } from '@nestjs/common';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import type { ProfileCourse } from './profile-course.service';
+import { ProfileCourse } from './profile-course.service';
 
 type MoveRoutes = typeof courseTimesRoutes | typeof courseTeacherRoutes;
 
@@ -12,6 +12,7 @@ type MoveRoutes = typeof courseTimesRoutes | typeof courseTeacherRoutes;
  * route table and its permission (CourseTeacherController, CourseTimesController).
  */
 export function courseMoveRoutes(routes: MoveRoutes) {
+  @Injectable()
   abstract class CourseMoveRoutes {
     constructor(protected readonly course: ProfileCourse) {}
 

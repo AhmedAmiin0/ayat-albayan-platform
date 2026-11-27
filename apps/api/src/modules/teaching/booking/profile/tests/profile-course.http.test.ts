@@ -1,6 +1,14 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { VIEW } from '@/modules/teaching/booking/course-change/course-change.fakes';
-import { BODY, profileApp, RESULT, S1, SALES, SUB_ID, T_NEW } from '@/modules/teaching/booking/profile/profile-course.fakes';
+import {
+  BODY,
+  profileApp,
+  RESULT,
+  S1,
+  SALES,
+  SUB_ID,
+  T_NEW,
+} from '@/modules/teaching/booking/profile/profile-course.fakes';
 
 type App = Awaited<ReturnType<typeof profileApp>>;
 const TIMES = `/students/${S1}/course-times/change`;

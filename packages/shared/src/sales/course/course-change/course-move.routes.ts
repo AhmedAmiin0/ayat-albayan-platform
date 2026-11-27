@@ -12,7 +12,7 @@ import {
   courseChangeCheckResultSchema,
   courseChangeResultSchema,
   profileCourseViewSchema,
-} from '../../sales/course/course-change';
+} from './course-change.schemas';
 
 const byStudent = z.object({ id: z.uuid() });
 
