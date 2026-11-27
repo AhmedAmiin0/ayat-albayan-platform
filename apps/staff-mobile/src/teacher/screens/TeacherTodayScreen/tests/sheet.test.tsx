@@ -37,7 +37,7 @@ test('row → sheet → «إلغاء الحلقة» POSTs the reason; the notice
   await fireEvent.changeText(screen.getByLabelText(new RegExp(w.reason)), 'سفر');
   await fireEvent.press(screen.getByRole('button', { name: w.cancelSubmit }));
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/evening/cancel', {
+    expect(mockApiSend).toHaveBeenCalledWith('POST', `/teachers/me/lessons/${evening.id}/cancel`, {
       reason: 'سفر',
     }),
   );
@@ -63,7 +63,7 @@ test('the ended lesson: its row lead and ONE sheet button, to «اليوم»’s
   expect(more).toHaveLength(0);
   if (!sheet) throw new Error('no report button in the sheet');
   await fireEvent.press(sheet);
-  expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
+  expect(mockPush).toHaveBeenCalledWith(`/teacher/today/report/${held.id}`);
 });
 
 test('an excused lesson that started: its row leads with the report, shown once', async () => {

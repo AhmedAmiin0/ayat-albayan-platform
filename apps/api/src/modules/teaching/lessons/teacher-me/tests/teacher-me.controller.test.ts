@@ -54,6 +54,14 @@ describe('GET /teachers/me, /teachers/me/lessons — teacher self-service (R-TCH
     expect(res.json()[0].allowed_events).toEqual(['confirm', 'complete', 'mark_late', 'excuse', 'mark_no_show']);
   });
 
+  it('a window that ends before it starts is 400 validation_failed; nothing read', async () => {
+    const back = 'from=2026-10-11T00:00:00Z&to=2026-10-04T00:00:00Z';
+    const url = `/teachers/me/lessons?${back}`;
+    const res = await h.call({ method: 'GET', url, token: 'teacher' });
+    expect([res.statusCode, res.json().code]).toEqual([400, 'validation_failed']);
+    expect(h.lessons.window).not.toHaveBeenCalled();
+  });
+
   it('admins and guardians get 403 on the teacher routes; 400 range_too_large still applies', async () => {
     expect((await h.call({ method: 'GET', url: '/teachers/me' })).statusCode).toBe(403);
     expect((await h.call({ method: 'GET', url: '/teachers/me', token: 'guardian' })).statusCode).toBe(403);

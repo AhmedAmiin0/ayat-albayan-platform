@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError, type ApiClient } from '../../../../core/http';
-import { threadSyncCalls } from '../thread-sync-api';
+import { threadReadCalls } from '../thread-reads-api';
 
 const ID = 'c0000000-0000-4000-8000-000000000001';
 const CURSOR = `2026-11-06T10:00:00.000001+00:00~${ID}`;
@@ -13,10 +13,10 @@ const clientAnswering = (answer: unknown) => {
   return { client, apiFetch };
 };
 
-describe('thread sync calls', () => {
+describe('thread read calls: sync', () => {
   it('asks a first sync with the limit only, a later one from the encoded cursor', async () => {
     const { client, apiFetch } = clientAnswering(ANSWER);
-    const calls = threadSyncCalls(client);
+    const calls = threadReadCalls(client);
     await expect(calls.sync({ limit: 200 })).resolves.toEqual(ANSWER);
     await calls.sync({ since: CURSOR, limit: 200 });
     expect(apiFetch.mock.calls).toEqual([
@@ -27,7 +27,7 @@ describe('thread sync calls', () => {
 
   it('refuses an answer with no cursor or scope', async () => {
     const { cursor: _cursor, scope: _scope, ...bare } = ANSWER;
-    const calls = threadSyncCalls(clientAnswering(bare).client);
+    const calls = threadReadCalls(clientAnswering(bare).client);
     await expect(calls.sync({ limit: 200 })).rejects.toBeInstanceOf(ApiError);
   });
 });

@@ -7,8 +7,14 @@ import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend: vi.fn(),
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
 const LEAD = thread({ unread_count: 2 });
 const GUARDIAN = thread({
@@ -19,7 +25,7 @@ const GUARDIAN = thread({
   lead_id: null,
   lead_status: null,
   lead_source: null,
-  guardian_id: 'g-1',
+  guardian_id: 'd0000000-0000-4000-8000-000000000021',
   subscribed: true,
 });
 
@@ -35,7 +41,9 @@ afterEach(() => apiFetch.mockReset());
 describe('InboxPage thread list (R-LEAD-02)', () => {
   it('lists threads: unread lead first, a guardian by phone with «أنت:», no tags on either', async () => {
     renderInbox({ q: 'سهيلة', page: 1 });
-    const lead = await screen.findByRole('link', { name: new RegExp(t.inbox.openThread.replace('{name}', 'أم سهيلة')) });
+    const lead = await screen.findByRole('link', {
+      name: new RegExp(t.inbox.openThread.replace('{name}', 'أم سهيلة')),
+    });
     expect(lead.getAttribute('aria-label')).toContain(t.inbox.unread.two);
     expect(lead.getAttribute('href')).toContain('phone=%2B966501234567');
     expect(lead.getAttribute('href')).toContain('q=');
@@ -77,7 +85,12 @@ describe('InboxPage thread list (R-LEAD-02)', () => {
   });
 
   it('a thread whose last send failed says so on the row (the admin’s turn); a named row shows no phone', async () => {
-    const failed = thread({ display_name: 'أم نور', last_direction: 'outbound', last_status: 'failed', last_body: 'تذكير' });
+    const failed = thread({
+      display_name: 'أم نور',
+      last_direction: 'outbound',
+      last_status: 'failed',
+      last_body: 'تذكير',
+    });
     renderInbox({ page: 1 }, [failed]);
     const row = await screen.findByRole('link', { name: new RegExp(t.inbox.failedLast) });
     expect(within(row).getByText(t.enums.messageStatus.failed)).toBeTruthy();

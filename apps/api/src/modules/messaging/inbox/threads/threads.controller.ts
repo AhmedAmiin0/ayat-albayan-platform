@@ -1,11 +1,13 @@
 import {
   PENDING_IDS_MAX,
   sendsAllTemplates,
+  threadReadRoutes as chats,
   threadSendRoutes as sends,
   type MessageView,
   type TextSendAnswer,
+  type ThreadView,
 } from '@ab/shared';
-import { phoneE164 } from '@ab/core';
+import { phoneE164, type Page } from '@ab/core';
 import { Controller, Get, HttpCode, Param, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -13,14 +15,13 @@ import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { Route, type RouteInputOf } from '@/common/http/route';
-import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { invalidPhone, phoneParam } from './phone-param';
 import { onePageMode } from '@/modules/messaging/inbox/reads/page-mode';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
-import { threadListQuery } from './threads.list';
 import { recordSend, type SendAudit } from '@/modules/messaging/inbox/send/send-audit';
 import { ThreadSendService } from '@/modules/messaging/inbox/send/thread-send.service';
 
@@ -65,12 +66,11 @@ export class ThreadsController {
     private readonly audit: AuditService,
   ) {}
 
-  @Get('threads')
-  @Permissions('inbox.read')
+  @Route(chats.list)
   list(
-    @ZodQuery(threadListQuery) query: z.output<typeof threadListQuery>,
+    @RouteInput() { query }: RouteInputOf<typeof chats.list>,
     @CurrentUser() user: AuthUser,
-  ) {
+  ): Promise<Page<ThreadView>> {
     return this.reads.list(query, user);
   }
 

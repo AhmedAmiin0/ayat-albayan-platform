@@ -6,19 +6,45 @@ import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend: vi.fn(),
+}));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
 }));
 
 // Invented families (no tags; a green ring subscribed, a gray one renewal due).
 const family = (name: string, phone: string, tags: object) =>
-  thread({ display_name: name, phone_e164: phone, lead_id: null, lead_status: null, guardian_id: `g-${name}`, ...tags });
+  thread({
+    display_name: name,
+    phone_e164: phone,
+    lead_id: null,
+    lead_status: null,
+    guardian_id: `d0000000-0000-4000-8000-00000000003${phone.slice(-1)}`,
+    ...tags,
+  });
 
 const ITEMS = [
-  family('أم ليان', '+966501110001', { badge: 'expired', unpaid: false, subscribed: false, ring: 'renewal' }),
-  family('أم يوسف', '+966501110002', { badge: 'subscribed', unpaid: true, subscribed: true, ring: 'subscribed' }),
-  family('أم جود', '+966501110003', { badge: 'none', unpaid: false, subscribed: false, ring: null }),
+  family('أم ليان', '+966501110001', {
+    badge: 'expired',
+    unpaid: false,
+    subscribed: false,
+    ring: 'renewal',
+  }),
+  family('أم يوسف', '+966501110002', {
+    badge: 'subscribed',
+    unpaid: true,
+    subscribed: true,
+    ring: 'subscribed',
+  }),
+  family('أم جود', '+966501110003', {
+    badge: 'none',
+    unpaid: false,
+    subscribed: false,
+    ring: null,
+  }),
   thread({ display_name: 'أبو مالك', phone_e164: '+966551234008', lead_status: 'converted' }),
 ];
 
@@ -44,7 +70,9 @@ afterEach(() => apiFetch.mockReset());
 
 describe('chat list rows: no tags, the family state is the avatar ring', () => {
   it('no row carries a status, source, role, package or money chip', async () => {
-    routeFetch(apiFetch, [['/threads?', { items: ITEMS, total: ITEMS.length, page: 1, pageSize: 30 }]]);
+    routeFetch(apiFetch, [
+      ['/threads?', { items: ITEMS, total: ITEMS.length, page: 1, pageSize: 30 }],
+    ]);
     renderWithClient(<InboxPage search={{ page: 1 }} onSearch={vi.fn()} />);
     for (const name of ['أم ليان', 'أم يوسف', 'أم جود', 'أبو مالك']) {
       const row = within(await link(name));
@@ -53,12 +81,16 @@ describe('chat list rows: no tags, the family state is the avatar ring', () => {
   });
 
   it('green ring subscribed, gray ring renewal, none otherwise; the label says it', async () => {
-    routeFetch(apiFetch, [['/threads?', { items: ITEMS, total: ITEMS.length, page: 1, pageSize: 30 }]]);
+    routeFetch(apiFetch, [
+      ['/threads?', { items: ITEMS, total: ITEMS.length, page: 1, pageSize: 30 }],
+    ]);
     renderWithClient(<InboxPage search={{ page: 1 }} onSearch={vi.fn()} />);
     expect(await ringOf('أم يوسف')).toBe('subscribed');
     expect((await link('أم يوسف')).querySelector('[data-ring]')?.className).toContain('border-ok');
     expect(await ringOf('أم ليان')).toBe('renewal');
-    expect((await link('أم ليان')).querySelector('[data-ring]')?.className).toContain('border-rule-input');
+    expect((await link('أم ليان')).querySelector('[data-ring]')?.className).toContain(
+      'border-rule-input',
+    );
     expect(await ringOf('أم جود')).toBe('none');
     expect(await ringOf('أبو مالك')).toBe('none');
     expect((await link('أم يوسف')).getAttribute('aria-label')).toContain(t.inbox.ring.subscribed);

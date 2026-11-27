@@ -18,7 +18,7 @@ jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('20
 
 const w = t.teacherBoard;
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
-const ahead = lesson({ id: 'l1', status: 'confirmed' });
+const ahead = answered(lesson({ id: 'l1', status: 'confirmed' }));
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -47,7 +47,7 @@ test('«تفاصيل الحلقة» of a lesson ahead: «سأحضر» posts conf
   await waitFor(() =>
     expect(mockApiSend).toHaveBeenCalledWith(
       'POST',
-      '/teachers/me/lessons/l1/confirm-attendance',
+      `/teachers/me/lessons/${ahead.id}/confirm-attendance`,
       undefined,
     ),
   );
@@ -62,7 +62,7 @@ test('«إلغاء الحلقة» in the sheet: the reason form, then the teache
   await fireEvent.changeText(screen.getByLabelText(new RegExp(w.reason)), 'سفر');
   await fireEvent.press(screen.getByRole('button', { name: w.cancelSubmit }));
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/l1/cancel', {
+    expect(mockApiSend).toHaveBeenCalledWith('POST', `/teachers/me/lessons/${ahead.id}/cancel`, {
       reason: 'سفر',
     }),
   );

@@ -4,7 +4,7 @@ import { QueryClient, type QueryKey } from '@tanstack/react-query';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { threadsQuery } from '@/features/messaging/inbox/api/api';
 import { patchLiveCaches } from '@/features/messaging/inbox/api/live-patch/live-patch';
-import { heldRead, live, msg, PHONE, thread } from '@/features/messaging/inbox/api/patch-fixtures';
+import { heldRead, listRow, live, msg, PHONE } from '@/features/messaging/inbox/api/patch-fixtures';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 
 // docs/44 K1: the live patch is visual only and no read is folded. The patch cancels no read (a
@@ -20,7 +20,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
 const KEY = threadQuery(PHONE).queryKey;
 const LIST = threadsQuery({ page: 1 });
 const page = (...messages: MessageView[]) => ({ messages, has_more: false }) as ThreadDetail;
-const list = (...items: ThreadView[]) => ({ items, total: items.length });
+const list = (...items: ThreadView[]) => ({ items, total: items.length, page: 1, pageSize: 30 });
 const first = (client: QueryClient) => client.getQueryData(KEY)?.pages[0]?.messages[0];
 const listed = (client: QueryClient) => client.getQueryData(LIST.queryKey)?.items[0]?.last_status;
 /** The event's re-read, as live.ts runs it. */
@@ -62,15 +62,15 @@ it('an older chat read in flight is never cancelled by a patch; the re-read supe
 
 it('a list read in flight is never cancelled by a patch; the re-read supersedes it', async () => {
   const client = new QueryClient();
-  mockApiFetch.mockResolvedValueOnce(list(thread('a', 'sent')));
+  mockApiFetch.mockResolvedValueOnce(list(listRow('sent')));
   await client.query(LIST);
   const old = await inFlight(client, LIST.queryKey);
   const cancel = vi.spyOn(client, 'cancelQueries');
   patchLiveCaches(client, PHONE, [live('a', 'delivered')]);
   expect(cancel).not.toHaveBeenCalled();
-  mockApiFetch.mockResolvedValueOnce(list(thread('a', 'read')));
+  mockApiFetch.mockResolvedValueOnce(list(listRow('read')));
   const fresh = reread(client, LIST.queryKey);
-  old.resolve(list(thread('a', 'sent')));
+  old.resolve(list(listRow('sent')));
   await Promise.all([fresh, old.done]);
   expect(listed(client)).toBe('read');
 });

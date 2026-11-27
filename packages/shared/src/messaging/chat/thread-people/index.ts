@@ -1,5 +1,1 @@
-export {
-  type FamilyRingField,
-  type SubscriptionBadge,
-  type ThreadPeople,
-} from './thread-people';
+export { type ThreadPeople } from './thread-people';

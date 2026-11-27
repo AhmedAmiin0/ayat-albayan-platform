@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { canSubmit, checkTemplateHealth, lineSyncErrorText, moveTemplateLine, otherLine, templateErrorText } from './api';
+import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { checked } from './lines/template-lines-fixture';
 import { phonesOf } from './lines/use-template-lines';
 
@@ -19,7 +20,7 @@ describe('template routes per number (owner 2026-10-18)', () => {
   });
 
   it('move patches the row’s line', async () => {
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue({ template: template({ key: 'a b' }), sync: null });
     await moveTemplateLine({ key: 'a b', line: 'notifications' });
     expect(apiSend).toHaveBeenCalledWith('PATCH', '/messaging/templates/a%20b/line', { line: 'notifications' });
   });

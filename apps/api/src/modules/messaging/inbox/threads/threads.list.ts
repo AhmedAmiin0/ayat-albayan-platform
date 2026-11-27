@@ -1,15 +1,11 @@
-import { LEAD_STATUSES, type LeadStatus } from '@ab/catalog';
-import { listSortShape, type ListSort } from '@ab/core';
-import { z } from 'zod';
+import type { LeadStatus } from '@ab/catalog';
+import type { ListSort } from '@ab/core';
+import type { ThreadSortKey } from '@ab/shared';
 import type { SortSpec } from '@/common/db/list-sort';
 import type { Db } from '@/common/db/db.module';
-import { pageQuerySchema } from '@/common/http/http';
 import { phoneList } from '@/modules/messaging/numbers';
 
 // H1 list order and filters (R-LEAD-02, R-NFR-08). No `sort` = newest message first (the old order).
-
-const THREAD_SORT_KEYS = ['unread', 'name'] as const;
-export type ThreadSortKey = (typeof THREAD_SORT_KEYS)[number];
 
 /** Unnamed numbers sort last; ties go to the newest message. */
 export const THREAD_SORT: SortSpec<ThreadSortKey> = {
@@ -20,15 +16,6 @@ export const THREAD_SORT: SortSpec<ThreadSortKey> = {
   fallback: [{ column: 'last_message_at', ascending: false }],
   key: 'phone_e164',
 };
-
-/** GET /threads query: page, search, unread, `sort`/`dir`, the lead's status and a chat list (docs/22). */
-export const threadListQuery = pageQuerySchema.extend({
-  search: z.string().trim().max(100).optional(),
-  list: z.string().trim().max(100).optional(),
-  unread: z.enum(['true', 'false']).optional().transform((v) => v === 'true'),
-  status: z.enum(LEAD_STATUSES).optional(),
-  ...listSortShape(THREAD_SORT_KEYS),
-});
 
 export interface ThreadListFilter extends ListSort<ThreadSortKey> {
   page: number;

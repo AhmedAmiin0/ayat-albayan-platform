@@ -1,3 +1,5 @@
+import type { z } from 'zod';
+import type { messageNoteSchema, ThreadView } from '../chat/thread-reads/thread-view.schemas';
 import type { MessageDirection } from '@ab/catalog';
 import { adWelcomeOf } from './chat-markers';
 import type { HiddenMark } from '../message-actions/hidden';
@@ -9,7 +11,7 @@ import { payloadTypeOf } from '../payload';
 // (Kapso's «errors» echo), or a message the WhatsApp Business app sent that the API cannot read
 // («unsupported»).
 
-export type MessageNote = 'deleted' | 'ad_welcome' | 'unsupported';
+export type MessageNote = z.infer<typeof messageNoteSchema>;
 
 export interface NoteWords {
   deleted: string;
@@ -60,6 +62,4 @@ export interface MessageMarks extends HiddenMark, CorrectionMark {
 }
 
 /** ThreadView's: the last message shows a note instead of its content. Absent = none. */
-export interface ThreadNote {
-  last_note?: MessageNote | null;
-}
+export type ThreadNote = Pick<ThreadView, 'last_note'>;

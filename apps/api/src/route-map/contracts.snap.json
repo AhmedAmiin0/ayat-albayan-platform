@@ -22421,6 +22421,581 @@
    ]
   }
  },
+ "GET /teachers/me/lessons": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "from": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "to": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "from",
+    "to"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "rule_byday": {
+      "anyOf": [
+       {
+        "type": "array",
+        "items": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 6
+        }
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "trial": {
+      "type": "boolean"
+     },
+     "course_subscription_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "makeup": {
+      "type": "boolean"
+     },
+     "makeup_of": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "starts_at": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "starts_at"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "auto_held": {
+      "type": "boolean"
+     },
+     "platform_classroom": {
+      "type": "boolean"
+     },
+     "teacher_confirmed_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "room_opened_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "room": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "liveSince": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "endedAt": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "inRoom": {
+          "type": "array",
+          "items": {
+           "type": "object",
+           "properties": {
+            "name": {
+             "type": "string"
+            },
+            "role": {
+             "type": "string",
+             "enum": [
+              "teacher",
+              "student",
+              "guardian",
+              "staff",
+              "guest"
+             ]
+            }
+           },
+           "required": [
+            "role"
+           ]
+          }
+         }
+        },
+        "required": [
+         "liveSince",
+         "endedAt",
+         "inRoom"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "instant": {
+      "type": "boolean"
+     },
+     "time_edit_mode": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "move",
+         "correct"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "time_edit": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "at": {
+          "type": "string"
+         },
+         "reason": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "was": {
+          "type": "object",
+          "properties": {
+           "starts_at": {
+            "type": "string"
+           },
+           "ends_at": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "starts_at",
+           "ends_at"
+          ]
+         }
+        },
+        "required": [
+         "at",
+         "reason",
+         "was"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+     },
+     "rule_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "teacher": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "display_name_ar": {
+        "type": "string"
+       },
+       "display_name_en": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "tz": {
+        "type": "string"
+       },
+       "avatar_url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "display_name_ar",
+       "tz"
+      ]
+     },
+     "starts_at": {
+      "type": "string"
+     },
+     "ends_at": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "scheduled",
+       "confirmed",
+       "completed",
+       "late",
+       "excused",
+       "no_show",
+       "cancelled_by_teacher",
+       "cancelled_by_admin",
+       "rescheduled"
+      ]
+     },
+     "meeting_link": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "cancel_reason": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "override_reason": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "confirmed_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "rescheduled_from_id": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "students": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        "code": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "tz": {
+         "type": "string"
+        },
+        "attendance": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "on_time",
+            "late",
+            "excused",
+            "absent"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "chargeable": {
+         "type": "boolean"
+        },
+        "seq": {
+         "anyOf": [
+          {
+           "type": "integer",
+           "minimum": -9007199254740991,
+           "maximum": 9007199254740991
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "unpaid": {
+         "type": "boolean"
+        },
+        "makeup": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "lesson_id": {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            "starts_at": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "lesson_id",
+            "starts_at"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "report": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "id": {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            "status": {
+             "type": "string",
+             "enum": [
+              "draft",
+              "submitted"
+             ]
+            },
+            "submitted_at": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "sent_at": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "can_edit": {
+             "type": "boolean"
+            },
+            "edit_until": {
+             "type": [
+              "string",
+              "null"
+             ]
+            }
+           },
+           "required": [
+            "id",
+            "status"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        }
+       },
+       "required": [
+        "id",
+        "code",
+        "name",
+        "tz",
+        "attendance",
+        "chargeable",
+        "seq"
+       ]
+      }
+     },
+     "allowed_events": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "enum": [
+        "confirm",
+        "complete",
+        "mark_late",
+        "excuse",
+        "mark_no_show",
+        "cancel_by_teacher",
+        "cancel_by_admin",
+        "reschedule"
+       ]
+      }
+     },
+     "conflicts": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "teacher_busy",
+          "student_busy",
+          "outside_availability",
+          "time_off"
+         ]
+        },
+        "startsAt": {
+         "type": "string"
+        },
+        "endsAt": {
+         "type": "string"
+        },
+        "lessonId": {
+         "type": "string"
+        },
+        "studentId": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "kind",
+        "startsAt",
+        "endsAt"
+       ]
+      }
+     },
+     "pending_proposal": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "proposed_starts_at": {
+          "type": "string"
+         },
+         "note": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "created_at": {
+          "type": "string"
+         },
+         "requested_by": {
+          "type": "string",
+          "enum": [
+           "teacher",
+           "family"
+          ]
+         }
+        },
+        "required": [
+         "id",
+         "proposed_starts_at",
+         "note",
+         "created_at"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "rule_id",
+     "teacher",
+     "starts_at",
+     "ends_at",
+     "status",
+     "meeting_link",
+     "cancel_reason",
+     "override_reason",
+     "confirmed_at",
+     "rescheduled_from_id",
+     "students",
+     "allowed_events",
+     "conflicts",
+     "pending_proposal"
+    ]
+   }
+  }
+ },
  "GET /teachers/me/pending-reports": {
   "response": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -23496,6 +24071,395 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "last_note": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "deleted",
+           "ad_welcome",
+           "unsupported"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "ring": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "subscribed",
+           "renewal"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "badge": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "subscribed",
+           "expired",
+           "none"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "unpaid": {
+        "type": "boolean"
+       },
+       "last_unsupported": {
+        "type": "boolean"
+       },
+       "last_inbound_line": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "notifications",
+           "chat",
+           "calls"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_chat_inbound_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_notifications_inbound_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reply_line": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "notifications",
+           "chat"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reactable": {
+        "type": "boolean"
+       },
+       "try_after_window": {
+        "type": "boolean"
+       },
+       "reopen_choice": {
+        "type": "string",
+        "enum": [
+         "template",
+         "wait"
+        ]
+       },
+       "reopen_sent": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           "template_key": {
+            "type": "string"
+           },
+           "status": {
+            "type": "string",
+            "enum": [
+             "queued",
+             "sent",
+             "delivered",
+             "read",
+             "failed",
+             "sent_manually"
+            ]
+           }
+          },
+          "required": [
+           "id",
+           "template_key",
+           "status"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reopen_template": {
+        "type": "string"
+       },
+       "phone_e164": {
+        "type": "string"
+       },
+       "display_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "last_message_id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "last_direction": {
+        "type": "string",
+        "enum": [
+         "inbound",
+         "outbound"
+        ]
+       },
+       "last_body": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "last_template_key": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "last_status": {
+        "type": "string",
+        "enum": [
+         "queued",
+         "sent",
+         "delivered",
+         "read",
+         "failed",
+         "sent_manually"
+        ]
+       },
+       "last_media_mime": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "last_message_at": {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       },
+       "last_inbound_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "unread_count": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+       },
+       "lead_id": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "lead_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "lead_status": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "new",
+           "contacted",
+           "interested_no_slot",
+           "trial_booked",
+           "trial_done",
+           "converted",
+           "no_reply",
+           "lost"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "lead_source": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "facebook_ad",
+           "instagram_ad",
+           "whatsapp_direct",
+           "referral",
+           "other"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "guardian_id": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "guardian_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "guardian_tz": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "teacher_id": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "teacher_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "session_open": {
+        "type": "boolean"
+       },
+       "subscribed": {
+        "type": "boolean"
+       }
+      },
+      "required": [
+       "phone_e164",
+       "display_name",
+       "last_message_id",
+       "last_direction",
+       "last_body",
+       "last_template_key",
+       "last_status",
+       "last_media_mime",
+       "last_message_at",
+       "last_inbound_at",
+       "unread_count",
+       "lead_id",
+       "lead_name",
+       "lead_status",
+       "lead_source",
+       "guardian_id",
+       "guardian_name",
+       "guardian_tz",
+       "teacher_id",
+       "teacher_name",
+       "session_open",
+       "subscribed"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
   }
  },
  "GET /threads/:phone": {
@@ -26460,9 +27424,377 @@
    "required": [
     "body"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    },
+    "meta_name": {
+     "type": "string"
+    },
+    "language": {
+     "type": "string"
+    },
+    "category": {
+     "type": "string",
+     "enum": [
+      "utility",
+      "marketing",
+      "authentication"
+     ]
+    },
+    "header_format": {
+     "anyOf": [
+      {
+       "type": "string",
+       "const": "document"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "body_ar": {
+     "type": "string"
+    },
+    "footer_ar": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "params": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "buttons": {
+     "type": "array",
+     "items": {
+      "oneOf": [
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "const": "url"
+         },
+         "url": {
+          "type": "string"
+         },
+         "text": {
+          "type": "string"
+         },
+         "example": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "type",
+         "url"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "const": "quick_reply"
+         },
+         "text": {
+          "type": "string"
+         },
+         "intent": {
+          "type": "string",
+          "enum": [
+           "confirm",
+           "reschedule",
+           "stop",
+           "rate_excellent",
+           "rate_good",
+           "rate_needs_work"
+          ]
+         }
+        },
+        "required": [
+         "type",
+         "text",
+         "intent"
+        ]
+       }
+      ]
+     }
+    },
+    "display": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "header": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "type": {
+             "type": "string",
+             "enum": [
+              "text",
+              "image",
+              "video",
+              "document",
+              "location"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "type"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "enum": [
+             "quick_reply",
+             "url",
+             "phone_number",
+             "copy_code"
+            ]
+           },
+           "text": {
+            "type": "string"
+           },
+           "url": {
+            "type": "string"
+           },
+           "phone": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "text"
+          ]
+         }
+        }
+       },
+       "required": [
+        "header",
+        "buttons"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "not_submitted",
+      "pending",
+      "approved",
+      "rejected",
+      "paused",
+      "disabled",
+      "missing"
+     ]
+    },
+    "quality": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meta_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "last_checked_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_error": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "submitted_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "line": {
+     "type": "string",
+     "enum": [
+      "notifications",
+      "chat"
+     ]
+    },
+    "sales_starter": {
+     "type": "boolean"
+    },
+    "number_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "numbers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "number_id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "not_submitted",
+         "pending",
+         "approved",
+         "rejected",
+         "paused",
+         "disabled",
+         "missing"
+        ]
+       },
+       "last_checked_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_error": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "number_id",
+       "status",
+       "last_checked_at",
+       "last_error"
+      ]
+     }
+    },
+    "crm_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "crm_language": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "approved_edits": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+     }
+    }
+   },
+   "required": [
+    "key",
+    "meta_name",
+    "language",
+    "category",
+    "header_format",
+    "body_ar",
+    "footer_ar",
+    "params",
+    "buttons",
+    "status",
+    "quality",
+    "meta_id",
+    "last_checked_at",
+    "last_error",
+    "submitted_at",
+    "line",
+    "sales_starter"
+   ]
   }
  },
  "PATCH /messaging/templates/:key/line": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "key"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -26478,9 +27810,544 @@
    "required": [
     "line"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "template": {
+     "type": "object",
+     "properties": {
+      "key": {
+       "type": "string"
+      },
+      "meta_name": {
+       "type": "string"
+      },
+      "language": {
+       "type": "string"
+      },
+      "category": {
+       "type": "string",
+       "enum": [
+        "utility",
+        "marketing",
+        "authentication"
+       ]
+      },
+      "header_format": {
+       "anyOf": [
+        {
+         "type": "string",
+         "const": "document"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "body_ar": {
+       "type": "string"
+      },
+      "footer_ar": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "params": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "buttons": {
+       "type": "array",
+       "items": {
+        "oneOf": [
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "const": "url"
+           },
+           "url": {
+            "type": "string"
+           },
+           "text": {
+            "type": "string"
+           },
+           "example": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "url"
+          ]
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "const": "quick_reply"
+           },
+           "text": {
+            "type": "string"
+           },
+           "intent": {
+            "type": "string",
+            "enum": [
+             "confirm",
+             "reschedule",
+             "stop",
+             "rate_excellent",
+             "rate_good",
+             "rate_needs_work"
+            ]
+           }
+          },
+          "required": [
+           "type",
+           "text",
+           "intent"
+          ]
+         }
+        ]
+       }
+      },
+      "display": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "header": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "type": {
+               "type": "string",
+               "enum": [
+                "text",
+                "image",
+                "video",
+                "document",
+                "location"
+               ]
+              },
+              "text": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "type"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "buttons": {
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "type": {
+              "type": "string",
+              "enum": [
+               "quick_reply",
+               "url",
+               "phone_number",
+               "copy_code"
+              ]
+             },
+             "text": {
+              "type": "string"
+             },
+             "url": {
+              "type": "string"
+             },
+             "phone": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "type",
+             "text"
+            ]
+           }
+          }
+         },
+         "required": [
+          "header",
+          "buttons"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "not_submitted",
+        "pending",
+        "approved",
+        "rejected",
+        "paused",
+        "disabled",
+        "missing"
+       ]
+      },
+      "quality": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "meta_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "last_checked_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "last_error": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "submitted_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "line": {
+       "type": "string",
+       "enum": [
+        "notifications",
+        "chat"
+       ]
+      },
+      "sales_starter": {
+       "type": "boolean"
+      },
+      "number_id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "numbers": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "number_id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "status": {
+          "type": "string",
+          "enum": [
+           "not_submitted",
+           "pending",
+           "approved",
+           "rejected",
+           "paused",
+           "disabled",
+           "missing"
+          ]
+         },
+         "last_checked_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "last_error": {
+          "type": [
+           "string",
+           "null"
+          ]
+         }
+        },
+        "required": [
+         "number_id",
+         "status",
+         "last_checked_at",
+         "last_error"
+        ]
+       }
+      },
+      "crm_name": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "crm_language": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "created_by": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "approved_edits": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       }
+      }
+     },
+     "required": [
+      "key",
+      "meta_name",
+      "language",
+      "category",
+      "header_format",
+      "body_ar",
+      "footer_ar",
+      "params",
+      "buttons",
+      "status",
+      "quality",
+      "meta_id",
+      "last_checked_at",
+      "last_error",
+      "submitted_at",
+      "line",
+      "sales_starter"
+     ]
+    },
+    "sync": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "line": {
+         "type": "string",
+         "enum": [
+          "notifications",
+          "chat"
+         ]
+        },
+        "configured": {
+         "type": "boolean"
+        },
+        "provider": {
+         "type": "string",
+         "enum": [
+          "meta",
+          "kapso",
+          "crm",
+          "evolution"
+         ]
+        },
+        "waba_id": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "phone_number_id": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "ok": {
+         "type": "boolean"
+        },
+        "error": {
+         "type": "string"
+        },
+        "message": {
+         "type": "string"
+        },
+        "checked_at": {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        "meta_count": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        },
+        "synced": {
+         "type": "integer",
+         "minimum": -9007199254740991,
+         "maximum": 9007199254740991
+        },
+        "imported": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "skipped": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "name": {
+            "type": "string"
+           },
+           "reason": {
+            "anyOf": [
+             {
+              "type": "object",
+              "properties": {
+               "code": {
+                "type": "string",
+                "const": "category"
+               },
+               "category": {
+                "type": "string"
+               }
+              },
+              "required": [
+               "code",
+               "category"
+              ]
+             },
+             {
+              "type": "object",
+              "properties": {
+               "code": {
+                "type": "string",
+                "const": "too_many_vars"
+               },
+               "max": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+               }
+              },
+              "required": [
+               "code",
+               "max"
+              ]
+             },
+             {
+              "type": "object",
+              "properties": {
+               "code": {
+                "type": "string",
+                "enum": [
+                 "bad_key",
+                 "media_header",
+                 "no_body",
+                 "named_vars",
+                 "button_value",
+                 "key_taken"
+                ]
+               }
+              },
+              "required": [
+               "code"
+              ]
+             }
+            ]
+           }
+          },
+          "required": [
+           "name",
+           "reason"
+          ]
+         }
+        }
+       },
+       "required": [
+        "line",
+        "configured",
+        "provider",
+        "waba_id",
+        "phone_number_id",
+        "ok",
+        "checked_at",
+        "meta_count",
+        "synced",
+        "imported",
+        "skipped"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "template",
+    "sync"
+   ]
   }
  },
  "PATCH /messaging/templates/:key/starter": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "key"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -26490,6 +28357,362 @@
     }
    },
    "required": [
+    "sales_starter"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    },
+    "meta_name": {
+     "type": "string"
+    },
+    "language": {
+     "type": "string"
+    },
+    "category": {
+     "type": "string",
+     "enum": [
+      "utility",
+      "marketing",
+      "authentication"
+     ]
+    },
+    "header_format": {
+     "anyOf": [
+      {
+       "type": "string",
+       "const": "document"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "body_ar": {
+     "type": "string"
+    },
+    "footer_ar": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "params": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "buttons": {
+     "type": "array",
+     "items": {
+      "oneOf": [
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "const": "url"
+         },
+         "url": {
+          "type": "string"
+         },
+         "text": {
+          "type": "string"
+         },
+         "example": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "type",
+         "url"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "const": "quick_reply"
+         },
+         "text": {
+          "type": "string"
+         },
+         "intent": {
+          "type": "string",
+          "enum": [
+           "confirm",
+           "reschedule",
+           "stop",
+           "rate_excellent",
+           "rate_good",
+           "rate_needs_work"
+          ]
+         }
+        },
+        "required": [
+         "type",
+         "text",
+         "intent"
+        ]
+       }
+      ]
+     }
+    },
+    "display": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "header": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "type": {
+             "type": "string",
+             "enum": [
+              "text",
+              "image",
+              "video",
+              "document",
+              "location"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "type"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "enum": [
+             "quick_reply",
+             "url",
+             "phone_number",
+             "copy_code"
+            ]
+           },
+           "text": {
+            "type": "string"
+           },
+           "url": {
+            "type": "string"
+           },
+           "phone": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "text"
+          ]
+         }
+        }
+       },
+       "required": [
+        "header",
+        "buttons"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "not_submitted",
+      "pending",
+      "approved",
+      "rejected",
+      "paused",
+      "disabled",
+      "missing"
+     ]
+    },
+    "quality": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meta_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "last_checked_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_error": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "submitted_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "line": {
+     "type": "string",
+     "enum": [
+      "notifications",
+      "chat"
+     ]
+    },
+    "sales_starter": {
+     "type": "boolean"
+    },
+    "number_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "numbers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "number_id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "not_submitted",
+         "pending",
+         "approved",
+         "rejected",
+         "paused",
+         "disabled",
+         "missing"
+        ]
+       },
+       "last_checked_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_error": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "number_id",
+       "status",
+       "last_checked_at",
+       "last_error"
+      ]
+     }
+    },
+    "crm_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "crm_language": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "approved_edits": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+     }
+    }
+   },
+   "required": [
+    "key",
+    "meta_name",
+    "language",
+    "category",
+    "header_format",
+    "body_ar",
+    "footer_ar",
+    "params",
+    "buttons",
+    "status",
+    "quality",
+    "meta_id",
+    "last_checked_at",
+    "last_error",
+    "submitted_at",
+    "line",
     "sales_starter"
    ]
   }
@@ -45796,6 +48019,376 @@
     "line",
     "category",
     "body"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    },
+    "meta_name": {
+     "type": "string"
+    },
+    "language": {
+     "type": "string"
+    },
+    "category": {
+     "type": "string",
+     "enum": [
+      "utility",
+      "marketing",
+      "authentication"
+     ]
+    },
+    "header_format": {
+     "anyOf": [
+      {
+       "type": "string",
+       "const": "document"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "body_ar": {
+     "type": "string"
+    },
+    "footer_ar": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "params": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "buttons": {
+     "type": "array",
+     "items": {
+      "oneOf": [
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "const": "url"
+         },
+         "url": {
+          "type": "string"
+         },
+         "text": {
+          "type": "string"
+         },
+         "example": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "type",
+         "url"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "const": "quick_reply"
+         },
+         "text": {
+          "type": "string"
+         },
+         "intent": {
+          "type": "string",
+          "enum": [
+           "confirm",
+           "reschedule",
+           "stop",
+           "rate_excellent",
+           "rate_good",
+           "rate_needs_work"
+          ]
+         }
+        },
+        "required": [
+         "type",
+         "text",
+         "intent"
+        ]
+       }
+      ]
+     }
+    },
+    "display": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "header": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "type": {
+             "type": "string",
+             "enum": [
+              "text",
+              "image",
+              "video",
+              "document",
+              "location"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "type"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "enum": [
+             "quick_reply",
+             "url",
+             "phone_number",
+             "copy_code"
+            ]
+           },
+           "text": {
+            "type": "string"
+           },
+           "url": {
+            "type": "string"
+           },
+           "phone": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "text"
+          ]
+         }
+        }
+       },
+       "required": [
+        "header",
+        "buttons"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "not_submitted",
+      "pending",
+      "approved",
+      "rejected",
+      "paused",
+      "disabled",
+      "missing"
+     ]
+    },
+    "quality": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meta_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "last_checked_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_error": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "submitted_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "line": {
+     "type": "string",
+     "enum": [
+      "notifications",
+      "chat"
+     ]
+    },
+    "sales_starter": {
+     "type": "boolean"
+    },
+    "number_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "numbers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "number_id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "not_submitted",
+         "pending",
+         "approved",
+         "rejected",
+         "paused",
+         "disabled",
+         "missing"
+        ]
+       },
+       "last_checked_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_error": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "number_id",
+       "status",
+       "last_checked_at",
+       "last_error"
+      ]
+     }
+    },
+    "crm_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "crm_language": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "approved_edits": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+     }
+    }
+   },
+   "required": [
+    "key",
+    "meta_name",
+    "language",
+    "category",
+    "header_format",
+    "body_ar",
+    "footer_ar",
+    "params",
+    "buttons",
+    "status",
+    "quality",
+    "meta_id",
+    "last_checked_at",
+    "last_error",
+    "submitted_at",
+    "line",
+    "sales_starter"
+   ]
+  }
+ },
+ "POST /messaging/templates/:key/submit": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "key"
    ]
   },
   "response": {
@@ -68008,6 +70601,18 @@
   }
  },
  "PUT /messaging/templates/:key/crm-name": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "key"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -68039,9 +70644,377 @@
     "crm_name",
     "crm_language"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    },
+    "meta_name": {
+     "type": "string"
+    },
+    "language": {
+     "type": "string"
+    },
+    "category": {
+     "type": "string",
+     "enum": [
+      "utility",
+      "marketing",
+      "authentication"
+     ]
+    },
+    "header_format": {
+     "anyOf": [
+      {
+       "type": "string",
+       "const": "document"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "body_ar": {
+     "type": "string"
+    },
+    "footer_ar": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "params": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "buttons": {
+     "type": "array",
+     "items": {
+      "oneOf": [
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "const": "url"
+         },
+         "url": {
+          "type": "string"
+         },
+         "text": {
+          "type": "string"
+         },
+         "example": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "type",
+         "url"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "const": "quick_reply"
+         },
+         "text": {
+          "type": "string"
+         },
+         "intent": {
+          "type": "string",
+          "enum": [
+           "confirm",
+           "reschedule",
+           "stop",
+           "rate_excellent",
+           "rate_good",
+           "rate_needs_work"
+          ]
+         }
+        },
+        "required": [
+         "type",
+         "text",
+         "intent"
+        ]
+       }
+      ]
+     }
+    },
+    "display": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "header": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "type": {
+             "type": "string",
+             "enum": [
+              "text",
+              "image",
+              "video",
+              "document",
+              "location"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "type"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "enum": [
+             "quick_reply",
+             "url",
+             "phone_number",
+             "copy_code"
+            ]
+           },
+           "text": {
+            "type": "string"
+           },
+           "url": {
+            "type": "string"
+           },
+           "phone": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "text"
+          ]
+         }
+        }
+       },
+       "required": [
+        "header",
+        "buttons"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "not_submitted",
+      "pending",
+      "approved",
+      "rejected",
+      "paused",
+      "disabled",
+      "missing"
+     ]
+    },
+    "quality": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meta_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "last_checked_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_error": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "submitted_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "line": {
+     "type": "string",
+     "enum": [
+      "notifications",
+      "chat"
+     ]
+    },
+    "sales_starter": {
+     "type": "boolean"
+    },
+    "number_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "numbers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "number_id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "not_submitted",
+         "pending",
+         "approved",
+         "rejected",
+         "paused",
+         "disabled",
+         "missing"
+        ]
+       },
+       "last_checked_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_error": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "number_id",
+       "status",
+       "last_checked_at",
+       "last_error"
+      ]
+     }
+    },
+    "crm_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "crm_language": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "approved_edits": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+     }
+    }
+   },
+   "required": [
+    "key",
+    "meta_name",
+    "language",
+    "category",
+    "header_format",
+    "body_ar",
+    "footer_ar",
+    "params",
+    "buttons",
+    "status",
+    "quality",
+    "meta_id",
+    "last_checked_at",
+    "last_error",
+    "submitted_at",
+    "line",
+    "sales_starter"
+   ]
   }
  },
  "PUT /messaging/templates/:key/crm-status": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "key"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -68057,9 +71030,377 @@
    "required": [
     "status"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    },
+    "meta_name": {
+     "type": "string"
+    },
+    "language": {
+     "type": "string"
+    },
+    "category": {
+     "type": "string",
+     "enum": [
+      "utility",
+      "marketing",
+      "authentication"
+     ]
+    },
+    "header_format": {
+     "anyOf": [
+      {
+       "type": "string",
+       "const": "document"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "body_ar": {
+     "type": "string"
+    },
+    "footer_ar": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "params": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "buttons": {
+     "type": "array",
+     "items": {
+      "oneOf": [
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "const": "url"
+         },
+         "url": {
+          "type": "string"
+         },
+         "text": {
+          "type": "string"
+         },
+         "example": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "type",
+         "url"
+        ]
+       },
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "const": "quick_reply"
+         },
+         "text": {
+          "type": "string"
+         },
+         "intent": {
+          "type": "string",
+          "enum": [
+           "confirm",
+           "reschedule",
+           "stop",
+           "rate_excellent",
+           "rate_good",
+           "rate_needs_work"
+          ]
+         }
+        },
+        "required": [
+         "type",
+         "text",
+         "intent"
+        ]
+       }
+      ]
+     }
+    },
+    "display": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "header": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "type": {
+             "type": "string",
+             "enum": [
+              "text",
+              "image",
+              "video",
+              "document",
+              "location"
+             ]
+            },
+            "text": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "type"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "buttons": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "enum": [
+             "quick_reply",
+             "url",
+             "phone_number",
+             "copy_code"
+            ]
+           },
+           "text": {
+            "type": "string"
+           },
+           "url": {
+            "type": "string"
+           },
+           "phone": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "text"
+          ]
+         }
+        }
+       },
+       "required": [
+        "header",
+        "buttons"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "not_submitted",
+      "pending",
+      "approved",
+      "rejected",
+      "paused",
+      "disabled",
+      "missing"
+     ]
+    },
+    "quality": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "meta_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "last_checked_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_error": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "submitted_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "line": {
+     "type": "string",
+     "enum": [
+      "notifications",
+      "chat"
+     ]
+    },
+    "sales_starter": {
+     "type": "boolean"
+    },
+    "number_id": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "numbers": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "number_id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "not_submitted",
+         "pending",
+         "approved",
+         "rejected",
+         "paused",
+         "disabled",
+         "missing"
+        ]
+       },
+       "last_checked_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_error": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "number_id",
+       "status",
+       "last_checked_at",
+       "last_error"
+      ]
+     }
+    },
+    "crm_name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "crm_language": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "approved_edits": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+     }
+    }
+   },
+   "required": [
+    "key",
+    "meta_name",
+    "language",
+    "category",
+    "header_format",
+    "body_ar",
+    "footer_ar",
+    "params",
+    "buttons",
+    "status",
+    "quality",
+    "meta_id",
+    "last_checked_at",
+    "last_error",
+    "submitted_at",
+    "line",
+    "sales_starter"
+   ]
   }
  },
  "PUT /messaging/templates/:key/number": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "key"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -68079,6 +71420,374 @@
    },
    "required": [
     "number_id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "template": {
+     "type": "object",
+     "properties": {
+      "key": {
+       "type": "string"
+      },
+      "meta_name": {
+       "type": "string"
+      },
+      "language": {
+       "type": "string"
+      },
+      "category": {
+       "type": "string",
+       "enum": [
+        "utility",
+        "marketing",
+        "authentication"
+       ]
+      },
+      "header_format": {
+       "anyOf": [
+        {
+         "type": "string",
+         "const": "document"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "body_ar": {
+       "type": "string"
+      },
+      "footer_ar": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "params": {
+       "type": "array",
+       "items": {
+        "type": "string"
+       }
+      },
+      "buttons": {
+       "type": "array",
+       "items": {
+        "oneOf": [
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "const": "url"
+           },
+           "url": {
+            "type": "string"
+           },
+           "text": {
+            "type": "string"
+           },
+           "example": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "type",
+           "url"
+          ]
+         },
+         {
+          "type": "object",
+          "properties": {
+           "type": {
+            "type": "string",
+            "const": "quick_reply"
+           },
+           "text": {
+            "type": "string"
+           },
+           "intent": {
+            "type": "string",
+            "enum": [
+             "confirm",
+             "reschedule",
+             "stop",
+             "rate_excellent",
+             "rate_good",
+             "rate_needs_work"
+            ]
+           }
+          },
+          "required": [
+           "type",
+           "text",
+           "intent"
+          ]
+         }
+        ]
+       }
+      },
+      "display": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "header": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "type": {
+               "type": "string",
+               "enum": [
+                "text",
+                "image",
+                "video",
+                "document",
+                "location"
+               ]
+              },
+              "text": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "type"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "buttons": {
+           "type": "array",
+           "items": {
+            "type": "object",
+            "properties": {
+             "type": {
+              "type": "string",
+              "enum": [
+               "quick_reply",
+               "url",
+               "phone_number",
+               "copy_code"
+              ]
+             },
+             "text": {
+              "type": "string"
+             },
+             "url": {
+              "type": "string"
+             },
+             "phone": {
+              "type": "string"
+             }
+            },
+            "required": [
+             "type",
+             "text"
+            ]
+           }
+          }
+         },
+         "required": [
+          "header",
+          "buttons"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "not_submitted",
+        "pending",
+        "approved",
+        "rejected",
+        "paused",
+        "disabled",
+        "missing"
+       ]
+      },
+      "quality": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "meta_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "last_checked_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "last_error": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "submitted_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "line": {
+       "type": "string",
+       "enum": [
+        "notifications",
+        "chat"
+       ]
+      },
+      "sales_starter": {
+       "type": "boolean"
+      },
+      "number_id": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "numbers": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "number_id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "status": {
+          "type": "string",
+          "enum": [
+           "not_submitted",
+           "pending",
+           "approved",
+           "rejected",
+           "paused",
+           "disabled",
+           "missing"
+          ]
+         },
+         "last_checked_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "last_error": {
+          "type": [
+           "string",
+           "null"
+          ]
+         }
+        },
+        "required": [
+         "number_id",
+         "status",
+         "last_checked_at",
+         "last_error"
+        ]
+       }
+      },
+      "crm_name": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "crm_language": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "created_by": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "uuid",
+         "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "approved_edits": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       }
+      }
+     },
+     "required": [
+      "key",
+      "meta_name",
+      "language",
+      "category",
+      "header_format",
+      "body_ar",
+      "footer_ar",
+      "params",
+      "buttons",
+      "status",
+      "quality",
+      "meta_id",
+      "last_checked_at",
+      "last_error",
+      "submitted_at",
+      "line",
+      "sales_starter"
+     ]
+    },
+    "not_approved_on_number": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "template",
+    "not_approved_on_number"
    ]
   }
  },
