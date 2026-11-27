@@ -24,7 +24,7 @@ describe('feedback calls (R-FBK)', () => {
   it('reads the admin page with its paging, sort and filters in order', async () => {
     const page = { items: [], total: 0, page: 2, pageSize: 20 };
     const { client, apiFetch } = clientAnswering(page);
-    const query = { page: 2, pageSize: 20, sort: 'rating', dir: 'desc', kind: 'trial' };
+    const query = { page: 2, pageSize: 20, sort: 'rating', dir: 'desc', kind: 'trial' } as const;
     await expect(feedbackCalls(client).list(query)).resolves.toEqual(page);
     expect(apiFetch).toHaveBeenCalledWith(
       '/feedback?page=2&pageSize=20&sort=rating&dir=desc&kind=trial',
