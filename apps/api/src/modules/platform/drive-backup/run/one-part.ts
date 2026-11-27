@@ -7,7 +7,7 @@ import type { RunDeps } from './backup-store.port';
 import { uploadPart } from './part-upload';
 import { isStorageFull } from './quota';
 import { soloWhy } from './read-error';
-import type { SkipWhy } from './skip.schemas';
+import type { SkipWhy } from '@ab/shared';
 
 interface OnePart {
   deps: RunDeps;

@@ -9,6 +9,7 @@ export * from '@ab/schedule';
 export * from './messaging';
 export * from './reports';
 export * from './schemas';
+export * from './settings/backup';
 export * from './people/students/student-lists';
 export * from './people/students';
 export type * from './people/teachers';

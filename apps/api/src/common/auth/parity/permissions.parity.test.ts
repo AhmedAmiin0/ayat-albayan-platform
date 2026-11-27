@@ -133,8 +133,8 @@ describe('system-role parity with the old @Roles table', () => {
   // docs/23 phase 3: numbers.manage gates the numbers writes and the comms_source switch; reads are
   // settings.read.
   it('numbers.manage gates the numbers writes and the source switch only, for the system admin only', () => {
-    const gated = routes.filter((r) => r.permission === 'numbers.manage').map((r) => r.key).sort();
-    expect(gated).toEqual([
+    const gated = routes.filter((r) => permissionKeys(r).includes('numbers.manage'));
+    expect(gated.map((r) => r.key).sort()).toEqual([
       'CommunicationsController.setSource',
       // Every Evolution option, saved and pushed to the instance.
       'EvolutionConfigController.config', 'EvolutionConfigController.push', 'EvolutionConfigController.verify',
@@ -144,7 +144,7 @@ describe('system-role parity with the old @Roles table', () => {
       'NumbersEvolutionController.qr', 'NumbersEvolutionController.state',
     ]);
     const reads = routes.filter((r) => r.key === 'NumbersController.list' || r.key === 'CommunicationsController.parity');
-    expect(reads.map((r) => r.permission)).toEqual(['settings.read', 'settings.read']);
+    expect(reads.map(permissionKeys)).toEqual([['settings.read'], ['settings.read']]);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('numbers.manage'))).toEqual(['admin']);
   });
 });

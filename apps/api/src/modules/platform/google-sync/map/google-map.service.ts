@@ -1,4 +1,4 @@
-import type { GoogleStudentMapInput, GoogleStudentMapRow, GoogleTeacherMapRow } from '@ab/shared';
+import type { GoogleStudentMapInput, GoogleStudentMapRow, GoogleTeacherMapRow } from '@ab/catalog';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { readDiscovery } from './discovery';
 import { GoogleData } from '@/modules/platform/google-sync/google-data';

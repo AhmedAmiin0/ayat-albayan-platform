@@ -11,7 +11,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 
 // Lesson 16:00-16:45 Riyadh (13:00Z): opens 12:45Z, closes 15:45Z.
-const row = lesson({ id: 'l-1' });
+const LESSON_ID = '0a5c2b1e-6c3e-4d61-9a43-1b2f9b8e7d10';
+const row = lesson({ id: LESSON_ID });
+const JOIN = { url: 'wss://lk', token: 'tok', room: 'lesson-x', role: 'teacher' };
 const at = (iso: string) => jest.setSystemTime(new Date(iso));
 const button = () => screen.getByRole('button', { name: t.classroom.enter });
 const off = () => button().props.accessibilityState.disabled as boolean;
@@ -57,12 +59,12 @@ test('the minute timer opens it when the time comes, and is cleared on unmount',
 
 test('a press asks the API for this lesson, then opens the web classroom', async () => {
   at('2026-10-01T13:00:00.000Z');
-  mockApiSend.mockResolvedValue({});
+  mockApiSend.mockResolvedValue(JOIN);
   await render(<JoinClassroomButton lesson={row} />);
   await fireEvent.press(button());
   await waitFor(() => expect(openURL).toHaveBeenCalledTimes(1));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/room/join');
-  expect(openURL).toHaveBeenCalledWith('https://app.ayatalbayan.com/classroom/l-1');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/lessons/${LESSON_ID}/room/join`, undefined);
+  expect(openURL).toHaveBeenCalledWith(`https://app.ayatalbayan.com/classroom/${LESSON_ID}`);
 });
 
 test.each([
@@ -84,8 +86,8 @@ test.each([
 
 test('a double press makes one call', async () => {
   at('2026-10-01T13:00:00.000Z');
-  let finish: () => void = () => undefined;
-  mockApiSend.mockReturnValue(new Promise<void>((resolve) => (finish = resolve)));
+  let finish: (answer: typeof JOIN) => void = () => undefined;
+  mockApiSend.mockReturnValue(new Promise<typeof JOIN>((resolve) => (finish = resolve)));
   await render(<JoinClassroomButton lesson={row} />);
   const press = button().props.onClick as () => void;
   await act(async () => {
@@ -94,7 +96,7 @@ test('a double press makes one call', async () => {
   });
   expect(mockApiSend).toHaveBeenCalledTimes(1);
   expect(screen.getByText(t.classroom.joining)).toBeTruthy();
-  await act(async () => finish());
+  await act(async () => finish(JOIN));
   await waitFor(() => expect(openURL).toHaveBeenCalledTimes(1));
 });
 

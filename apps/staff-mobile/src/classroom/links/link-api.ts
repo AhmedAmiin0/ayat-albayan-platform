@@ -1,13 +1,14 @@
-import type { JoinLinkResult, JoinLinkUrl } from '@ab/schedule';
-import { ApiError, apiSend, t } from '@ab/mobile-kit';
+import { lessonJoinCalls, type JoinLinkSend } from '@ab/client-core';
+import { ApiError, apiFetch, apiSend, t } from '@ab/mobile-kit';
 import { joinError } from './join-text';
 
-/** POST /lessons/:id/join-link (admin): the family's one-lesson link, sent to the guardian on WhatsApp. */
-export const sendJoinLink = ({ lessonId, studentId }: { lessonId: string; studentId: string }) =>
-  apiSend<JoinLinkResult>('POST', `/lessons/${lessonId}/join-link`, { studentId });
+const joins = lessonJoinCalls({ apiFetch, apiSend });
 
-/** POST /lessons/:id/join-link/url (admin or the lesson's teacher): a fresh guest URL, nothing is sent. */
-export const joinLinkUrl = (lessonId: string) => apiSend<JoinLinkUrl>('POST', `/lessons/${lessonId}/join-link/url`);
+/** Admin: the family's one-lesson link, sent to the guardian on WhatsApp. */
+export const sendJoinLink = (send: JoinLinkSend) => joins.sendLink(send);
+
+/** Admin or the lesson's teacher: a fresh guest URL, nothing is sent. */
+export const joinLinkUrl = (lessonId: string) => joins.linkUrl(lessonId);
 
 /** The words for a refused send/copy: 409 template gate, 403, 404 and the 503 gate by their `code`. */
 export function linkError(error: unknown): string {

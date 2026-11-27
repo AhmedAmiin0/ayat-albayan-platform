@@ -1,15 +1,10 @@
+import type { BackupStatusView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
 import { storageEnv } from '@/config/env/env.storage';
 import { GoogleConnection } from '@/modules/platform/google-sync';
 import { BackupStateRepo } from '@/modules/platform/drive-backup/db/backup-state.repo';
-import {
-  type BackupStatusView,
-  lastArchive,
-  lowQuota,
-  quotaView,
-  skippedView,
-} from './backup-view';
+import { lastArchive, lowQuota, quotaView, skippedView } from './backup-view';
 
 /** The status line: settings and readiness, the last archive, the last error, Drive's quota. */
 @Injectable()

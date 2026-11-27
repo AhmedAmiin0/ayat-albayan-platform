@@ -1,18 +1,22 @@
-import type { GoogleSyncItemView } from '@ab/catalog';
-import { ConflictException, Controller, Get, NotFoundException, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import {
+  googleAdminRoutes as routes,
+  type GoogleReconcile,
+  type GoogleSyncItemView,
+} from '@ab/catalog';
+import { ConflictException, Controller, NotFoundException } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { requireAdmin } from './admin-only';
 import { GoogleItemsQueries } from '@/modules/platform/google-sync/sync/google-items.queries';
 import { GoogleLogQueries } from './google-log.queries';
 import { GoogleSyncJob } from '@/modules/platform/google-sync/sync/google-sync.job';
 
 /** docs/24 §3. */
-@ApiTags('google-sync')
 @ApiBearerAuth()
-@Permissions('settings.write')
-@Controller('admin/google')
+@Controller()
 export class GoogleItemsController {
   constructor(
     private readonly log: GoogleLogQueries,
@@ -20,25 +24,29 @@ export class GoogleItemsController {
     private readonly job: GoogleSyncJob,
   ) {}
 
-  @Get('items')
-  @Permissions('settings.read')
-  list(@CurrentUser() user: AuthUser): Promise<GoogleSyncItemView[]> {
+  @Route(routes.items)
+  async list(@CurrentUser() user: AuthUser): Promise<GoogleSyncItemView[]> {
     requireAdmin(user);
-    return this.log.recent(100);
+    return asResponse(routes.items.response, await this.log.recent(100));
   }
 
-  @Post('items/:id/retry')
-  async retry(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<GoogleSyncItemView> {
+  @Route(routes.retry)
+  async retry(
+    @RouteInput() { params }: RouteInputOf<typeof routes.retry>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<GoogleSyncItemView> {
     requireAdmin(user);
-    if (!(await this.items.retry(id))) throw new ConflictException({ message: 'not_retryable' });
+    if (!(await this.items.retry(params.id))) {
+      throw new ConflictException({ message: 'not_retryable' });
+    }
     void this.job.kick();
-    const row = await this.log.one(id);
+    const row = await this.log.one(params.id);
     if (!row) throw new NotFoundException();
-    return row;
+    return asResponse(routes.retry.response, row);
   }
 
-  @Post('reconcile')
-  async reconcile(@CurrentUser() user: AuthUser): Promise<{ queued: number }> {
+  @Route(routes.reconcile)
+  async reconcile(@CurrentUser() user: AuthUser): Promise<GoogleReconcile> {
     requireAdmin(user);
     return { queued: await this.job.reconcile() };
   }

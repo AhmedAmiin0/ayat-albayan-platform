@@ -125,6 +125,8 @@ describe('GET /threads/:phone/messages/:id/pdf/:page: a PDF page under the file 
 
   it('a page outside 1..30 or not a number is 400; past the PDF\'s own pages is 400 page_out_of_range', async () => {
     for (const page of ['0', '31', 'x', '1.5']) expect((await call('admin', `${BASE}/pdf/${page}`)).statusCode).toBe(400);
+    const both = await call('admin', `/threads/abc/messages/${M1}/pdf/0`);
+    expect(both.json()).toMatchObject({ code: 'invalid_phone' });
     const res = await call('admin', `${BASE}/pdf/13`);
     expect([res.statusCode, res.json().code]).toEqual([400, 'page_out_of_range']);
   });

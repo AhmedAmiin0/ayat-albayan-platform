@@ -44,7 +44,8 @@ describe('a number’s secrets (write-only)', () => {
     expect(apiSend).not.toHaveBeenCalled();
     apiSend.mockResolvedValue(numberView());
     fireEvent.click(within(dialog).getByRole('button', { name: n.secret.clear }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/admin/numbers/num-1/secrets/access_token'));
+    const path = '/admin/numbers/num-1/secrets/access_token';
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', path, undefined));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   });
 });

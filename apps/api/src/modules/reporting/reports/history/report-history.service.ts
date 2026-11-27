@@ -1,14 +1,24 @@
-import type { PendingReportView, StudentReportsResponse } from '@ab/shared';
+import {
+  pendingReportViewSchema,
+  studentReportsResponseSchema,
+  type PendingReportView,
+  type StudentReportsResponse,
+} from '@ab/shared';
 import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { PageQuery } from '@/common/http/http';
+import { asResponse } from '@/common/http/returns';
 import { ReportAccess } from '@/modules/reporting/reports/shared/report-access';
 import { ReportsSettings } from '@/modules/reporting/reports/shared/reports.settings';
 import { historyResponse, pendingViews } from './report-history.mapper';
 import { ReportHistoryQueries } from './report-history.queries';
 import { isAdmin } from '@/common/auth/roles';
 
-type HistoryInput = { studentId: string; page: PageQuery; user: AuthUser };
+interface HistoryInput {
+  studentId: string;
+  page: PageQuery;
+  user: AuthUser;
+}
 
 /** A student's report history + grade series (R5) and a teacher's missing reports (R11). */
 @Injectable()
@@ -37,12 +47,14 @@ export class ReportHistoryService {
     ]);
     const minutes = settings.report_teacher_edit_minutes;
     const reader = { role: user.role, teacherId, now: new Date(), minutes };
-    return historyResponse({ rows, lessons, seq, page, window: reader });
+    const history = historyResponse({ rows, lessons, seq, page, window: reader });
+    return asResponse(studentReportsResponseSchema, history);
   }
 
   /** R11 (R-TCH-03): oldest first. */
   async pending(user: AuthUser): Promise<PendingReportView[]> {
     const teacherId = await this.access.teacherId(user);
-    return pendingViews(await this.queries.pending(teacherId, new Date()));
+    const views = pendingViews(await this.queries.pending(teacherId, new Date()));
+    return asResponse(pendingReportViewSchema.array(), views);
   }
 }

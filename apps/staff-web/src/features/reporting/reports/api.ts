@@ -1,16 +1,19 @@
-import type {
-  PendingReportView,
-  ReportAttachmentView,
-  ReportFormResponse,
-  SignedDownload,
-  SignedUpload,
-  StudentReportsResponse,
-  DraftBody,
-  ReportV2DraftBody,
-  ReportV2SubmitBody,
-  SubmitBody,
+import {
+  attachmentUploadSchema,
+  type ReportAttachmentView,
+  type ReportFormResponse,
+  type DraftBody,
+  type ReportV2DraftBody,
+  type ReportV2SubmitBody,
+  type SubmitBody,
 } from '@ab/shared';
-import { reportCalls, reportErrorWords, TEACHER_REFRESH_MS } from '@ab/client-core';
+import {
+  reportAttachmentCalls,
+  reportCalls,
+  reportErrorWords,
+  reportHistoryCalls,
+  TEACHER_REFRESH_MS,
+} from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend, t } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
@@ -19,6 +22,8 @@ import { reportKeys } from '@/features/reporting/keys';
 // Report routes (docs/11 §4 R1–R12). Commands camelCase, responses snake_case.
 
 export const REPORTS_KEY = reportKeys.all;
+
+const history = reportHistoryCalls({ apiFetch, apiSend });
 
 /** R1: GET /lessons/:id/report-form — creates the drafts on first open. */
 export const reportFormQuery = (lessonId: string) =>
@@ -34,13 +39,13 @@ export const reportFormQuery = (lessonId: string) =>
 export const studentReportsQuery = (studentId: string, page: number) =>
   queryOptions({
     queryKey: reportKeys.student(studentId, page),
-    queryFn: () => apiFetch<StudentReportsResponse>(`/students/${studentId}/reports?page=${page}&pageSize=10`),
+    queryFn: () => history.student({ id: studentId }, { page, pageSize: 10 }),
   });
 
-/** R11: polled every 30 s with her lessons (docs/48). */
+/** R11: polled every 30 s with the teacher's lessons (docs/48). */
 export const pendingReportsQuery = queryOptions({
   queryKey: reportKeys.pending(),
-  queryFn: () => apiFetch<PendingReportView[]>('/teachers/me/pending-reports'),
+  queryFn: () => history.pending(),
   refetchInterval: TEACHER_REFRESH_MS,
 });
 
@@ -63,11 +68,13 @@ export const retryPdf = (id: string) => reports.retryPdf({ id });
 
 export const pdfUrl = (id: string) => reports.pdf({ id });
 
-export const attachmentUrl = ({ id, attachmentId }: { id: string; attachmentId: string }) =>
-  apiFetch<SignedDownload>(`/reports/${id}/attachments/${attachmentId}/url`);
+const attachments = reportAttachmentCalls({ apiFetch, apiSend });
 
-export const removeAttachment = ({ id, attachmentId }: { id: string; attachmentId: string }) =>
-  apiSend('DELETE', `/reports/${id}/attachments/${attachmentId}`);
+export const attachmentUrl = (params: { id: string; attachmentId: string }) =>
+  attachments.url(params);
+
+export const removeAttachment = (params: { id: string; attachmentId: string }) =>
+  attachments.remove(params);
 
 /** R7 → Storage signed upload → R8. The API checks the path is the report's and exists. */
 export async function uploadAttachment({
@@ -77,11 +84,11 @@ export async function uploadAttachment({
   id: string;
   file: File;
 }): Promise<ReportAttachmentView> {
-  const meta = { mime: file.type, size: file.size };
-  const slot = await apiSend<SignedUpload>('POST', `/reports/${id}/attachments/upload-url`, meta);
+  const meta = attachmentUploadSchema.parse({ mime: file.type, size: file.size });
+  const slot = await attachments.uploadUrl({ id }, meta);
   const { error } = await uploadSigned(slot, { body: file, contentType: file.type });
   if (error) throw new ApiError(400, { code: 'attachment_path' });
-  return apiSend<ReportAttachmentView>('POST', `/reports/${id}/attachments`, { ...meta, path: slot.path });
+  return attachments.register({ id }, { ...meta, path: slot.path });
 }
 
 /**

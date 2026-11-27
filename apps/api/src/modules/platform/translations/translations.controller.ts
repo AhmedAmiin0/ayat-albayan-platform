@@ -8,7 +8,7 @@ import {
 } from '@ab/i18n';
 import { Controller, Get, Headers, HttpCode, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions, Public } from '@/common/auth/decorators';
+import { CurrentUser, Public } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { asResponse } from '@/common/http/returns';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -49,14 +49,12 @@ export class TranslationsController {
   }
 
   @ApiBearerAuth()
-  @Permissions('translations.manage')
   @Route(routes.keys)
   keys(@RouteInput() { query }: RouteInputOf<typeof routes.keys>): TranslationKeysPage {
     return asResponse(translationKeysPageSchema, this.translations.keys(query));
   }
 
   @ApiBearerAuth()
-  @Permissions('translations.manage')
   @Route(routes.save)
   @HttpCode(204)
   async save(
@@ -67,7 +65,6 @@ export class TranslationsController {
   }
 
   @ApiBearerAuth()
-  @Permissions('translations.manage')
   @Route(routes.restore)
   @HttpCode(204)
   async restore(@RouteInput() { params }: RouteInputOf<typeof routes.restore>): Promise<void> {

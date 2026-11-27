@@ -49,6 +49,13 @@ describe('translationRoutes', () => {
     }
   });
 
+  it('lets in a translations manager under the i18n tag on every route', () => {
+    for (const route of Object.values(routes)) {
+      expect(route.permissions).toEqual(['translations.manage']);
+      expect(route.tags).toEqual(['i18n']);
+    }
+  });
+
   it('answers nothing to a save or a restore', () => {
     expect([routes.save.response, routes.restore.response]).toEqual(['empty', 'empty']);
   });

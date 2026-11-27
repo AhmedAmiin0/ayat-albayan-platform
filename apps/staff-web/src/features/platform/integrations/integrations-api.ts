@@ -1,4 +1,4 @@
-import { crmWebhookCalls } from '@ab/client-core';
+import { backupCalls, crmWebhookCalls } from '@ab/client-core';
 import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey } from '@ab/catalog';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -28,6 +28,5 @@ export const registerCrmWebhook = crmWebhookCalls({ apiFetch, apiSend }).registe
 export const probeStorage = (): Promise<unknown> =>
   apiSend('POST', '/settings/integrations/storage-probe');
 
-/** GET /settings/integrations/storage-backup: the Drive backup's status line (docs/45 §5). */
-export const fetchStorageBackup = (): Promise<unknown> =>
-  apiFetch('/settings/integrations/storage-backup');
+/** The Drive backup's status line (docs/45 §5). */
+export const fetchStorageBackup = backupCalls({ apiFetch, apiSend }).status;

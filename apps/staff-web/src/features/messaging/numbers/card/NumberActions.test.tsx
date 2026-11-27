@@ -59,7 +59,7 @@ describe('a number’s buttons', () => {
     expect(apiSend).not.toHaveBeenCalled();
     apiSend.mockResolvedValue(undefined);
     fireEvent.click(within(dialog).getByRole('button', { name: a.delete }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/admin/numbers/num-2'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/admin/numbers/num-2', undefined));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   });
 });
