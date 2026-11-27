@@ -34,7 +34,8 @@ async function respond(opts: ApiClientOptions, path: string, init: RequestInit):
   headers.set(UPLOAD_CAPABILITY_HEADER, UPLOAD_SLOT_V2);
   if (token) headers.set('Authorization', `Bearer ${token}`);
   const send = opts.fetch ?? fetch;
-  const res = await send(`${opts.baseUrl()}${path}`, { ...init, headers });
+  const credentials = opts.credentials ? { credentials: opts.credentials } : {};
+  const res = await send(`${opts.baseUrl()}${path}`, { ...init, headers, ...credentials });
   if (!res.ok) throw new ApiError(res.status, (await readJson(res)) ?? null);
   return res;
 }

@@ -1,14 +1,7 @@
-import type {
-  DraftBody,
-  ReportFormResponse,
-  ReportV2DraftBody,
-  ReportV2SubmitBody,
-  ReportView,
-  SubmitBody,
-} from '@ab/shared';
+import { teacherLinkRoutes as routes, type ReportFormResponse } from '@ab/shared';
 import { reportErrorCode } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, publicApiFetch, publicApiSend, type SendMethod, t } from '@ab/web-kit';
+import { ApiError, publicApiFetch, publicCall, t } from '@ab/web-kit';
 import { reportErrorText } from '@/features/reporting/reports/api';
 import type { ReportApi } from '@/features/reporting/reports/report-api';
 import { linkFileCalls } from './link-files';
@@ -29,7 +22,8 @@ const BY_STATUS: Record<number, LinkProblem> = { 404: 'invalid', 410: 'expired',
 const SEND_BY_STATUS: Record<number, LinkProblem> = { 429: 'too_many' };
 
 const statusOf = (error: unknown) => (error instanceof ApiError ? error.status : 0);
-const codeProblem = (error: unknown): LinkProblem | undefined => BY_CODE[reportErrorCode(error) ?? ''];
+const codeProblem = (error: unknown): LinkProblem | undefined =>
+  BY_CODE[reportErrorCode(error) ?? ''];
 
 /** Opening the link: its own codes first, else the status (404 wrong, 410 expired, 429 wait). */
 export function linkProblem(error: unknown): LinkProblem {
@@ -55,13 +49,6 @@ function linkErrorText(error: unknown): string {
   return problem ? linkProblemText(problem) : reportErrorText(error);
 }
 
-interface Sent<B> {
-  id: string;
-  body: B;
-}
-const send = (method: SendMethod, path: string, body: unknown): Promise<ReportView> =>
-  publicApiSend(method, path, body);
-
 const base = (token: string) => `/public/teacher-report/${encodeURIComponent(token)}`;
 
 /** GET /public/teacher-report/:token: the lesson's report form, as GET /lessons/:id/report-form. */
@@ -75,13 +62,14 @@ export const linkReportFormQuery = (token: string) =>
 
 /** The form's calls bound to the link's token, the teacher's attachments included. */
 export function linkReportApi(token: string): ReportApi {
-  const at = (id: string, step: string) => `${base(token)}/reports/${id}/${step}`;
   return {
-    saveDraft: ({ id, body }: Sent<DraftBody>) => send('PUT', at(id, 'draft'), body),
-    submitReport: ({ id, body }: Sent<SubmitBody>) => send('POST', at(id, 'submit'), body),
-    saveDraftV2: ({ id, body }: Sent<ReportV2DraftBody>) => send('PUT', at(id, 'v2/draft'), body),
-    submitReportV2: ({ id, body }: Sent<ReportV2SubmitBody>) =>
-      send('POST', at(id, 'v2/submit'), body),
+    saveDraft: ({ id, body }) => publicCall({ route: routes.draft, params: { token, id }, body }),
+    submitReport: ({ id, body }) =>
+      publicCall({ route: routes.submit, params: { token, id }, body }),
+    saveDraftV2: ({ id, body }) =>
+      publicCall({ route: routes.draftV2, params: { token, id }, body }),
+    submitReportV2: ({ id, body }) =>
+      publicCall({ route: routes.submitV2, params: { token, id }, body }),
     errorText: linkErrorText,
     attachments: true,
     files: linkFileCalls(token),
