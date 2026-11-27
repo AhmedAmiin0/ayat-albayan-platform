@@ -63,6 +63,7 @@ export * from './finance/payouts';
 export * from './finance/assistant-pay';
 export * from './finance/payments';
 export * from './finance/admin-tasks';
+export * from './finance/subscriptions';
 export * from './notifications';
 export * from './messaging/numbers';
 export * from './reports/stored-path';
