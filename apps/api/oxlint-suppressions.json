@@ -4199,7 +4199,7 @@
   },
   "src/modules/messaging/whatsapp/messages/wa-json.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/numbers/media-client.ts": {
