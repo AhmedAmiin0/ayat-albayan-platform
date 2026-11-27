@@ -4,6 +4,7 @@
   "type": "module",
   "exports": {
     "./jest": "./jest.cjs",
+    "./mock-call": "./src/mock-call/index.ts",
     "./page-golden": "./src/page-golden/index.ts",
     "./presence-realtime": "./src/presence-realtime/index.ts",
     "./vitest": "./src/vitest.ts"
