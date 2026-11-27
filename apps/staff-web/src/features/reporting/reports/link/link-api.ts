@@ -1,4 +1,4 @@
-import { teacherLinkRoutes as routes, type ReportFormResponse } from '@ab/shared';
+import { teacherLinkRoutes, type ReportFormResponse } from '@ab/shared';
 import { reportErrorCode } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, publicApiFetch, publicCall, t } from '@ab/web-kit';
@@ -63,13 +63,14 @@ export const linkReportFormQuery = (token: string) =>
 /** The form's calls bound to the link's token, the teacher's attachments included. */
 export function linkReportApi(token: string): ReportApi {
   return {
-    saveDraft: ({ id, body }) => publicCall({ route: routes.draft, params: { token, id }, body }),
+    saveDraft: ({ id, body }) =>
+      publicCall({ route: teacherLinkRoutes.draft, params: { token, id }, body }),
     submitReport: ({ id, body }) =>
-      publicCall({ route: routes.submit, params: { token, id }, body }),
+      publicCall({ route: teacherLinkRoutes.submit, params: { token, id }, body }),
     saveDraftV2: ({ id, body }) =>
-      publicCall({ route: routes.draftV2, params: { token, id }, body }),
+      publicCall({ route: teacherLinkRoutes.draftV2, params: { token, id }, body }),
     submitReportV2: ({ id, body }) =>
-      publicCall({ route: routes.submitV2, params: { token, id }, body }),
+      publicCall({ route: teacherLinkRoutes.submitV2, params: { token, id }, body }),
     errorText: linkErrorText,
     attachments: true,
     files: linkFileCalls(token),

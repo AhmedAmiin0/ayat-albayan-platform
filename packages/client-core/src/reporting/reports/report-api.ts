@@ -1,4 +1,4 @@
-import { reportRoutes as routes } from '@ab/shared';
+import { reportRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
 import type { ReportCalls } from './report-api.types';
 
@@ -6,12 +6,12 @@ import type { ReportCalls } from './report-api.types';
 export function reportCalls(client: ApiClient): ReportCalls {
   const call = callWith(client);
   return {
-    get: (params) => call({ route: routes.get, params }),
-    draft: (params, body) => call({ route: routes.draft, params, body }),
-    submit: (params, body) => call({ route: routes.submit, params, body }),
-    pdf: (params) => call({ route: routes.pdf, params }),
-    retryPdf: (params) => call({ route: routes.retryPdf, params }),
-    draftV2: (params, body) => call({ route: routes.draftV2, params, body }),
-    submitV2: (params, body) => call({ route: routes.submitV2, params, body }),
+    get: (params) => call({ route: reportRoutes.get, params }),
+    draft: (params, body) => call({ route: reportRoutes.draft, params, body }),
+    submit: (params, body) => call({ route: reportRoutes.submit, params, body }),
+    pdf: (params) => call({ route: reportRoutes.pdf, params }),
+    retryPdf: (params) => call({ route: reportRoutes.retryPdf, params }),
+    draftV2: (params, body) => call({ route: reportRoutes.draftV2, params, body }),
+    submitV2: (params, body) => call({ route: reportRoutes.submitV2, params, body }),
   };
 }
