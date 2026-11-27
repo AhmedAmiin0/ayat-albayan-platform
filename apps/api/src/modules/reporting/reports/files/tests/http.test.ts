@@ -96,4 +96,10 @@ describe('report PDF (R6, R12) and attachments (R7–R10; R-REP-02/03)', () => {
     expect((await h.call({ method: 'GET', url: `${BASE}/attachments/${ATTACHMENT_ID}/url` })).json()).toEqual(SIGNED);
     expect((await h.call({ method: 'GET', url: `${BASE}/attachments/${ATTACHMENT_ID}/url`, token: 'other' })).statusCode).toBe(403);
   });
+
+  it('refuses an attachment id that is not a uuid before reading anything', async () => {
+    const res = await h.call({ method: 'DELETE', url: `${BASE}/attachments/a-1` });
+    expect(res.statusCode).toBe(400);
+    expect(h.files.get).not.toHaveBeenCalled();
+  });
 });

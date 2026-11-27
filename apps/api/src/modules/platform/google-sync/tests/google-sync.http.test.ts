@@ -121,6 +121,15 @@ describe('/admin/google (docs/24): admins only', () => {
     expect(data.settings.write).not.toHaveBeenCalled();
   });
 
+  it('refuses a retry of a non-uuid id (400) and a log row outside the view (500)', async () => {
+    const retry = { method: 'POST', url: '/admin/google/items/x/retry', token: 'admin' };
+    expect((await call(retry)).statusCode).toBe(400);
+    log.recent.mockResolvedValueOnce([{ id: 'x', kind: 'lost' }]);
+    const res = await call({ method: 'GET', url: '/admin/google/items', token: 'admin' });
+    expect(res.statusCode).toBe(500);
+    expect(res.json()).toMatchObject({ code: 'response_invalid' });
+  });
+
   it('the public callback always redirects to the settings page; a forged state never connects', async () => {
     const res = await call({ method: 'GET', url: '/integrations/google/callback?code=x&state=forged' });
     expect(res.statusCode).toBe(302);
