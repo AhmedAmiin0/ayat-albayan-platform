@@ -16,6 +16,9 @@ const byMeeting = z.object({ id: z.uuid() });
 const byParticipant = byMeeting.extend({ identity: z.string() });
 /** Any text: the api answers 404 link_invalid itself, after its rate limit. */
 const byLink = z.object({ token: z.string() });
+const tags = ['classroom'] as const;
+const reads = { permissions: ['meetings.read'], tags } as const;
+const writes = { permissions: ['meetings.write'], tags } as const;
 
 /** Internal meetings (R-MEET-01/02): staff routes, then the link's door with no login. */
 export const meetingRoomRoutes = {
@@ -25,40 +28,57 @@ export const meetingRoomRoutes = {
     path: '/meetings',
     body: createMeetingSchema.default({}),
     response: meetingCreateResultSchema,
+    ...writes,
   }),
   /** Created or invited (an admin: all): the coming scheduled ones first, then the newest. */
-  list: defineRoute({ method: 'GET', path: '/meetings', response: z.array(meetingViewSchema) }),
+  list: defineRoute({
+    method: 'GET',
+    path: '/meetings',
+    response: z.array(meetingViewSchema),
+    ...reads,
+  }),
   byLink: defineRoute({
     method: 'GET',
     path: '/meetings/by-link/:token',
     params: byLink,
     response: meetingIdSchema,
+    ...reads,
   }),
-  end: defineRoute({ method: 'POST', path: '/meetings/:id/end', params: byMeeting, response: 'empty' }),
+  end: defineRoute({
+    method: 'POST',
+    path: '/meetings/:id/end',
+    params: byMeeting,
+    response: 'empty',
+    ...writes,
+  }),
   /** A fresh link; the previous one stops working. */
   newLink: defineRoute({
     method: 'POST',
     path: '/meetings/:id/link',
     params: byMeeting,
     response: meetingCreatedSchema,
+    ...writes,
   }),
   join: defineRoute({
     method: 'POST',
     path: '/meetings/:id/join',
     params: byMeeting,
     response: roomJoinResultSchema,
+    ...writes,
   }),
   remove: defineRoute({
     method: 'POST',
     path: '/meetings/:id/participants/:identity/remove',
     params: byParticipant,
     response: 'empty',
+    ...writes,
   }),
   publicView: defineRoute({
     method: 'GET',
     path: '/public/meetings/:token',
     params: byLink,
     response: publicMeetingViewSchema,
+    tags,
   }),
   guestJoin: defineRoute({
     method: 'POST',
@@ -66,5 +86,6 @@ export const meetingRoomRoutes = {
     params: byLink,
     body: guestJoinSchema,
     response: roomJoinResultSchema,
+    tags,
   }),
 };
