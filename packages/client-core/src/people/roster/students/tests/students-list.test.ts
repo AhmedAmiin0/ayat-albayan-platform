@@ -23,6 +23,13 @@ describe('student list read (R-STU-01, R-NFR-08)', () => {
     );
   });
 
+  it('hands the read signal on, so a superseded search frees its read', async () => {
+    const { client, apiFetch } = clientAnswering(emptyPage);
+    const abort = new AbortController();
+    await studentCalls(client).list({ page: 2, pageSize: 50 }, abort.signal);
+    expect(apiFetch).toHaveBeenCalledWith('/students?page=2&pageSize=50', { signal: abort.signal });
+  });
+
   it('sends no empty search', async () => {
     const { client, apiFetch } = clientAnswering(emptyPage);
     await studentCalls(client).list({ search: '', page: 1, pageSize: 20 });

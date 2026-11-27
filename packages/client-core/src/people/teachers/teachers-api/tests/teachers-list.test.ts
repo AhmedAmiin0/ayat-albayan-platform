@@ -20,6 +20,13 @@ describe('teacher list read (R-TCH-01, R-NFR-08)', () => {
     );
   });
 
+  it('hands the read signal on, so a closed list frees its read', async () => {
+    const { client, apiFetch } = clientAnswering(emptyPage);
+    const abort = new AbortController();
+    await teacherCalls(client).list({ page: 2, pageSize: 25 }, abort.signal);
+    expect(apiFetch).toHaveBeenCalledWith('/teachers?page=2&pageSize=25', { signal: abort.signal });
+  });
+
   it('leaves blank filters out of the query', async () => {
     const { client, apiFetch } = clientAnswering(emptyPage);
     await teacherCalls(client).list({ page: 1, phone: '' });
