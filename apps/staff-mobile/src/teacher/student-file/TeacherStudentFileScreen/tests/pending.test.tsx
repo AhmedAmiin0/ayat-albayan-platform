@@ -4,7 +4,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { refreshAfterSubmit } from '@/teacher/report/hooks/api';
 import { renderWithQuery } from '@/test/query';
-import { fileAnswers, fileLog } from '@/teacher/student-file/file-fixtures';
+import { fileAnswers, fileLog, LESSON, STUDENT_ID } from '@/teacher/student-file/file-fixtures';
 import { TeacherStudentFileScreen } from '@/teacher/student-file/TeacherStudentFileScreen/TeacherStudentFileScreen';
 
 const mockApiFetch = jest.fn();
@@ -20,7 +20,7 @@ jest.mock('expo-router', () => ({
     canDismiss: () => true,
     replace: jest.fn(),
   },
-  useLocalSearchParams: () => ({ id: 's1' }),
+  useLocalSearchParams: () => ({ id: '30000000-0000-4000-8000-000000000008' }),
 }));
 jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-11-11T12:00:00Z') }));
 jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
@@ -29,14 +29,14 @@ const pending = (lessonId: string, studentId: string): PendingReportView => ({
   lesson_id: lessonId,
   starts_at: '2026-11-06T15:00:00Z',
   status: 'scheduled',
-  student: { id: studentId, code: 'AB-0182', name: studentId === 's1' ? 'يوسف أحمد' : 'سلمى' },
+  student: { id: studentId, code: 'AB-0182', name: studentId === STUDENT_ID ? 'يوسف أحمد' : 'سلمى' },
   report_id: null,
 });
 
 beforeEach(() => jest.clearAllMocks());
 
 test('this student’s pending reports only, each opening its form', async () => {
-  const rows = [pending('l-write', 's1'), pending('l-other', 's9')];
+  const rows = [pending(LESSON.write, STUDENT_ID), pending('l-other', 's9')];
   mockApiFetch.mockImplementation(fileAnswers({ pending: rows }));
   await renderWithQuery(<TeacherStudentFileScreen />);
   expect(await screen.findByText(counted(t.reports.pendingCount, 1))).toBeTruthy();
@@ -44,11 +44,11 @@ test('this student’s pending reports only, each opening its form', async () =>
   const [first] = screen.getAllByText(t.reports.open);
   if (!first) throw new Error('no pending row');
   await fireEvent.press(first);
-  expect(mockPush).toHaveBeenCalledWith('/teacher/reports/l-write');
+  expect(mockPush).toHaveBeenCalledWith(`/teacher/reports/${LESSON.write}`);
 });
 
 test('many pending: the oldest two rows under the full count, so the lessons keep the screen', async () => {
-  const rows = ['p1', 'p2', 'p3', 'p4'].map((id) => pending(id, 's1'));
+  const rows = ['p1', 'p2', 'p3', 'p4'].map((id) => pending(id, STUDENT_ID));
   mockApiFetch.mockImplementation(fileAnswers({ pending: rows }));
   await renderWithQuery(<TeacherStudentFileScreen />);
   expect(await screen.findByText(counted(t.reports.pendingCount, 4))).toBeTruthy();
@@ -63,7 +63,7 @@ test('after a submit and back, the row reads «تعديل التقرير» (refr
     if (!submitted || !p.includes('/attendance')) return file(p);
     const log = fileLog();
     const items = log.items.map((r) =>
-      r.lesson_id === 'l-write'
+      r.lesson_id === LESSON.write
         ? { ...r, report_sent: true, report: { status: 'submitted', submitted_at: null, sent_at: null, can_edit: true, edit_until: '2026-11-11T12:30:00Z' } }
         : r,
     );

@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { studentsApp } from '@/modules/sales/sales-students/sales-students.fakes';
-import { HELD_REPORT, lessonRow, NOW, STUDENT } from '@/modules/sales/sales-students/attendance/student-attendance.fakes';
+import { lessonRow, NOW, STORED_HELD_REPORT, STUDENT, uuidOf } from '@/modules/sales/sales-students/attendance/student-attendance.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
 const TEACHER_ROW = '7e000000-0000-4000-8000-000000000001';
@@ -24,7 +24,7 @@ describe('GET /teachers/me/students/:id/attendance — her own «سجل الحض
   afterEach(() => vi.useRealTimers());
 
   it('only her lessons with the student, the month in HER zone; her reading of auto-held', async () => {
-    t.attendance.lessons.mockResolvedValue([lessonRow('auto', '2026-10-27T15:00:00+00:00')]);
+    t.attendance.lessons.mockResolvedValue([lessonRow(uuidOf('auto'), '2026-10-27T15:00:00+00:00')]);
     const res = await t.call('GET', url(STUDENT), { token: 'teacher' });
     expect(res.statusCode).toBe(200);
     expect(t.me.me).toHaveBeenCalledWith('t1');
@@ -40,9 +40,9 @@ describe('GET /teachers/me/students/:id/attendance — her own «سجل الحض
   it('one-lesson reasons show, hers and the admin\'s (docs/47); a series-end text never', async () => {
     const ended = { package: '8' as const, ends_on: '2026-10-01', tz: 'Asia/Riyadh' };
     t.attendance.lessons.mockResolvedValue([
-      lessonRow('a', '2026-10-11T15:00:00+00:00', { status: 'cancelled_by_admin', cancel_reason: 'إداري' }),
-      lessonRow('b', '2026-10-13T15:00:00+00:00', { status: 'cancelled_by_teacher', cancel_reason: 'سفر' }),
-      lessonRow('c', '2026-10-09T15:00:00+00:00', {
+      lessonRow(uuidOf('a'), '2026-10-11T15:00:00+00:00', { status: 'cancelled_by_admin', cancel_reason: 'إداري' }),
+      lessonRow(uuidOf('b'), '2026-10-13T15:00:00+00:00', { status: 'cancelled_by_teacher', cancel_reason: 'سفر' }),
+      lessonRow(uuidOf('c'), '2026-10-09T15:00:00+00:00', {
         status: 'cancelled_by_admin', cancel_reason: 'استرداد', rule: ended,
       }),
     ]);
@@ -52,10 +52,10 @@ describe('GET /teachers/me/students/:id/attendance — her own «سجل الحض
 
   it('her report per row: edit inside the window (settings minutes), null when none', async () => {
     t.attendance.lessons.mockResolvedValue([
-      lessonRow('held', '2026-10-28T09:00:00+00:00', { attendance: 'on_time' }),
-      lessonRow('open', '2026-10-27T09:00:00+00:00', { attendance: 'on_time' }),
+      lessonRow(uuidOf('held'), '2026-10-28T09:00:00+00:00', { attendance: 'on_time' }),
+      lessonRow(uuidOf('open'), '2026-10-27T09:00:00+00:00', { attendance: 'on_time' }),
     ]);
-    t.attendance.reports.mockResolvedValue([{ ...HELD_REPORT, submitted_at: '2026-10-28T09:45:00Z' }]);
+    t.attendance.reports.mockResolvedValue([{ ...STORED_HELD_REPORT, submitted_at: '2026-10-28T09:45:00Z' }]);
     const items = (await t.call('GET', url(STUDENT), { token: 'teacher' })).json().items;
     expect(items[0].report).toMatchObject({ can_edit: true, edit_until: '2026-10-28T10:15:00.000Z' });
     expect(items[1].report).toBeNull();
