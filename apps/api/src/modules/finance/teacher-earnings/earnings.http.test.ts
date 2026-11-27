@@ -81,8 +81,8 @@ describe('teacher earnings routes (admin)', () => {
     expect(m.storage.signedUpload).toHaveBeenCalledWith({ bucket: 'receipts', path: expect.stringMatching(new RegExp(`^${TEACHER}/.+\\.png$`)), file: { mime: 'image/png', size: 10 } });
     expect((await call({ method: 'POST', url: `/teacher-earnings/${TEACHER}/receipt-upload-url`, body: { mime: 'text/html', size: 10 } })).statusCode).toBe(400);
     m.earnings.payment.mockResolvedValue(paymentRow({ receipt_path: `${TEACHER}/a.png` }));
-    m.storage.signedDownload.mockResolvedValue({ url: 'u', expires_at: 'e' });
-    expect((await call({ method: 'GET', url: `/teacher-earnings/payments/${PAYMENT}/receipt` })).json()).toEqual({ url: 'u', expires_at: 'e' });
+    m.storage.signedDownload.mockResolvedValue({ url: 'https://files.example/r.pdf', expires_at: 'e' });
+    expect((await call({ method: 'GET', url: `/teacher-earnings/payments/${PAYMENT}/receipt` })).json()).toEqual({ url: 'https://files.example/r.pdf', expires_at: 'e' });
   });
 
   it('POST resync: all teachers or one', async () => {
