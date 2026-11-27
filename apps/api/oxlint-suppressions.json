@@ -7601,9 +7601,6 @@
   "src/modules/teaching/classroom/classroom.controller.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/teaching/classroom/classroom.fakes.ts": {

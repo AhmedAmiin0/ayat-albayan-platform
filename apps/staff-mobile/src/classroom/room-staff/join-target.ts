@@ -3,10 +3,6 @@ import type { RoomKind, RoomTarget } from '@ab/mobile-kit/room';
 
 const KINDS: readonly RoomKind[] = ['lesson', 'meeting'];
 
-/** The join endpoint the web room uses too (no new route): it answers {url, token, room, role}. */
-export const joinPath = (target: RoomTarget): string =>
-  target.kind === 'lesson' ? `/lessons/${target.id}/room/join` : `/meetings/${target.id}/join`;
-
 /** Used for open-in-browser, and as the path when the app cannot hold the room. */
 export const roomWebUrl = (target: RoomTarget): string =>
   target.kind === 'lesson' ? classroomUrl(target.id) : meetingUrl(target.id);

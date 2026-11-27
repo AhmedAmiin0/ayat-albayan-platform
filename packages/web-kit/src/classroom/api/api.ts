@@ -1,10 +1,10 @@
-import { assistantsApi, type AssistantPick } from '@ab/client-core';
-import type {
-  JoinLinkResult,
-  JoinLinkUrl,
-  LessonView,
-  RoomJoinResult,
-} from '@ab/schedule';
+import {
+  assistantsApi,
+  lessonJoinCalls,
+  type AssistantPick,
+  type JoinLinkSend,
+} from '@ab/client-core';
+import type { LessonView, RoomJoinResult } from '@ab/schedule';
 import { addCalendarDays, localDateIn, wallToUtc } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend, publicApiSend } from '@ab/web-kit/lib/http/api';
@@ -13,6 +13,7 @@ import { viewerZone } from '@ab/web-kit/lib/clock-text';
 export const CLASSROOM_KEY = ['classroom'] as const;
 
 const assistants = assistantsApi({ apiFetch, apiSend });
+const joins = lessonJoinCalls({ apiFetch, apiSend });
 
 /** A public join: the link, and the name typed on the page (none when the link names the student). */
 interface GuestJoinInput {
@@ -20,8 +21,8 @@ interface GuestJoinInput {
   name?: string;
 }
 
-/** POST /lessons/:id/room/join: staff, with their own login. A fresh identity per call. */
-export const joinRoom = (lessonId: string) => apiSend<RoomJoinResult>('POST', `/lessons/${lessonId}/room/join`);
+/** Staff, with their own login. A fresh identity per call. */
+export const joinRoom = (lessonId: string) => joins.join(lessonId);
 
 /**
  * POST /public/join/:linkToken: the guest's name, never the staff session token. No name for a
@@ -30,12 +31,11 @@ export const joinRoom = (lessonId: string) => apiSend<RoomJoinResult>('POST', `/
 export const joinAsGuest = ({ linkToken, name }: GuestJoinInput): Promise<RoomJoinResult> =>
   publicApiSend<RoomJoinResult>('POST', `/public/join/${encodeURIComponent(linkToken)}`, { name });
 
-/** POST /lessons/:id/join-link (admin): the family's one-lesson link, by WhatsApp. */
-export const sendJoinLink = ({ lessonId, studentId }: { lessonId: string; studentId: string }) =>
-  apiSend<JoinLinkResult>('POST', `/lessons/${lessonId}/join-link`, { studentId });
+/** Admin: the family's one-lesson link, by WhatsApp. */
+export const sendJoinLink = (send: JoinLinkSend) => joins.sendLink(send);
 
-/** POST /lessons/:id/join-link/url (admin or the lesson's teacher): the guest URL to copy. */
-export const copyJoinLinkUrl = (lessonId: string) => apiSend<JoinLinkUrl>('POST', `/lessons/${lessonId}/join-link/url`);
+/** Admin or the lesson's teacher: the guest URL to copy. */
+export const copyJoinLinkUrl = (lessonId: string) => joins.linkUrl(lessonId);
 
 /** GET /assistants (admin): every assistant login. */
 export const assistantsQuery = queryOptions({

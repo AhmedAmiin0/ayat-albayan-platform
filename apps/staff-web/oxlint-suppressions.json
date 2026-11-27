@@ -5573,9 +5573,6 @@
   "src/features/teaching/classroom/join/staff-link.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/features/teaching/classroom/sessions/AdminSessions.tsx": {
