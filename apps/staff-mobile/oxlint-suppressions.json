@@ -2907,7 +2907,7 @@
   },
   "src/inbox/thread/hooks/use-thread.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/thread/live/inbox-live.test.tsx": {
