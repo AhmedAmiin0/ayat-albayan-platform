@@ -3,11 +3,20 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
-import { JOUD, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { ABRAR, JOUD, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
 import { setConfirmationRequired } from '@ab/web-kit/testing';
 
 const apiSend = vi.hoisted(() => vi.fn());
+const UUID = '00000000-0000-4000-8000-000000000001';
+/** The API names every row by uuid; the confirm's answer is parsed strictly. */
+const confirmedView = lesson({
+  id: UUID,
+  status: 'confirmed',
+  rule_id: null,
+  teacher: { ...ABRAR, id: UUID },
+  students: [{ ...SUHAILA, id: UUID }],
+});
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
 
 function renderDrawer(l: LessonView) {
@@ -39,11 +48,11 @@ describe('LessonDrawer details and actions (R-SCH-01, R-SCH-03)', () => {
   });
 
   it('confirm is the one primary; it posts and reports «تم تأكيد الحلقة»', async () => {
-    apiSend.mockResolvedValue(lesson({ status: 'confirmed' }));
+    apiSend.mockResolvedValue(confirmedView);
     const { onDone } = renderDrawer(lesson({ id: 'l-9' }));
     fireEvent.click(screen.getByRole('button', { name: t.lessons.event.confirm }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.lessons.confirmed));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-9/confirm');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-9/confirm', undefined);
   });
 
   it('records attendance after the start, and words an invalid transition', async () => {
