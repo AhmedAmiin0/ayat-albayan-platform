@@ -9,4 +9,4 @@ where direction = 'inbound' and media_mime is not null and created_at is null;
 
 -- count: chat_media_blank_mime
 select count(*) from public.messages
-where direction = 'inbound' and media_mime is not null and trim(media_mime) = '';
+where direction = 'inbound' and media_mime = '';
