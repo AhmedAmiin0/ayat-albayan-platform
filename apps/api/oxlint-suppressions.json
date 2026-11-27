@@ -2806,7 +2806,7 @@
   },
   "src/modules/messaging/inbox/stickers/stickers.controller.ts": {
     "ab/zod-inputs": {
-      "count": 7
+      "count": 4
     }
   },
   "src/modules/messaging/inbox/teacher-threads/teacher-scope.ts": {
@@ -5771,10 +5771,7 @@
   },
   "src/modules/platform/translations/translations.controller.ts": {
     "ab/zod-inputs": {
-      "count": 5
-    },
-    "typescript/dot-notation": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/platform/translations/translations.http.test.ts": {
@@ -6610,14 +6607,6 @@
   "src/modules/sales/sales-students/shared/sales-student.repo.ts": {
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/modules/sales/sales-students/teachers/sales-teacher-overview.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/modules/sales/sales-students/teachers/sales-teacher-overview.fakes.ts": {

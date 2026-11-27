@@ -1,4 +1,4 @@
-import type { GifList, ThreadGifSend } from '@ab/shared';
+import { gifListSchema, type GifList, type ThreadGifSend } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { BUCKETS } from '@/common/storage/storage.paths';
@@ -14,6 +14,7 @@ import {
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { Giphy } from './giphy';
 import { httpError } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 
 const GIF_MIME = 'video/mp4';
 
@@ -38,7 +39,7 @@ export class GifService {
   async list(q: string | undefined): Promise<GifList> {
     const giphy = this.giphy();
     if (!giphy) return { configured: false, items: [] };
-    return { configured: true, items: await giphy.list(q) };
+    return asResponse(gifListSchema, { configured: true, items: await giphy.list(q) });
   }
 
   /** The line first, as a text's (chatLine: 409 / 503), then GIPHY, then the queue. */

@@ -40,7 +40,7 @@ export * from './sales/student/student-schedule';
 export * from './sales/student/student-roster';
 export * from './sales/student/student-package';
 export * from './sales/student/package-cancel';
-export * from './sales/teacher/teacher-overview';
+export * from './sales/teacher';
 export * from './sales/course/course';
 export * from './sales/course/course-follow';
 export * from './sales/course/course-change';

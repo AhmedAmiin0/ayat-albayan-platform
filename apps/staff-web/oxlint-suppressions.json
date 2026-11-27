@@ -1998,10 +1998,10 @@
   },
   "src/features/messaging/messaging/api.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/features/messaging/messaging/gate-api.ts": {
@@ -4206,11 +4206,6 @@
       "count": 1
     },
     "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/features/platform/translations/translations.api.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

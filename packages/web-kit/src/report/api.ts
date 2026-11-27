@@ -1,20 +1,20 @@
-import { portalQueries } from '@ab/client-core';
-import { reportPageViewSchema, type ReportPageView } from '@ab/shared';
+import { portalQueries, reportPageCalls } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+
+const pages = reportPageCalls({ apiFetch, apiSend });
 
 /** TanStack key of a report's live page. */
 export const reportPageKey = (publicId: string) => ['report-page', publicId] as const;
 
 /**
  * GET /report-pages/:publicId with the browser's session: the report's readers
- * only (admin, the teacher, the family, the owning assistant); 401 / 404 for anyone else. Parsed
- * with the shared schema (rule 12).
+ * only (admin, the teacher, the family, the owning assistant); 401 / 404 for anyone else.
  */
 export const reportPageQuery = (publicId: string) =>
-  queryOptions<ReportPageView>({
+  queryOptions({
     queryKey: reportPageKey(publicId),
-    queryFn: async () => reportPageViewSchema.parse(await apiFetch(`/report-pages/${publicId}`)),
+    queryFn: () => pages.byPublicId({ publicId }),
     retry: false,
   });
 

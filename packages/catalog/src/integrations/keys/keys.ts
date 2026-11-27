@@ -95,7 +95,8 @@ export const INTEGRATION_KEYS: readonly IntegrationKeyDef[] = (
  * or a self-hosted Evolution API instance (a number's driver only: module mode).
  */
 export const WA_PROVIDERS = ['meta', 'kapso', 'crm', 'evolution'] as const;
-export type WaProvider = (typeof WA_PROVIDERS)[number];
+export const waProviderSchema = z.enum(WA_PROVIDERS);
+export type WaProvider = z.infer<typeof waProviderSchema>;
 /** The drivers a legacy line key (WA_PROVIDER / WA_CHAT_PROVIDER) may be switched to by hand. */
 export const WA_LINE_PROVIDERS = ['meta', 'kapso', 'crm'] as const;
 /** An Evolution instance's engine: Baileys (WhatsApp Web, no 24 h window) or Meta's Cloud API. */
