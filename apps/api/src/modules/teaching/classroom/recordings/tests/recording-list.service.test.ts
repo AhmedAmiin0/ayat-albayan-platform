@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';
 import { ADMIN, ASSISTANT, LESSON_ID, OTHER_TEACHER, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
 import { recordingQueries, recordingRow, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
-import { RecordingListService, recordingView, RecordingViews } from '@/modules/teaching/classroom/recordings/recording-list.service';
+import { RecordingListService, RecordingViews } from '@/modules/teaching/classroom/recordings/recording-list.service';
 import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 
 let rq: ReturnType<typeof recordingQueries>;
@@ -57,11 +57,5 @@ describe('GET /lessons/:id/recordings', () => {
   it('not another teacher, nor an assistant', async () => {
     await expect(list(OTHER_TEACHER)).rejects.toBeInstanceOf(ForbiddenException);
     await expect(list(ASSISTANT)).rejects.toBeInstanceOf(ForbiddenException);
-  });
-});
-
-describe('recordingView', () => {
-  it('an unknown status reads as failed, without a link', () => {
-    expect(recordingView(recordingRow({ status: 'weird' }), 'u')).toMatchObject({ status: 'failed', url: null });
   });
 });

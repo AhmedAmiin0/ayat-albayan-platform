@@ -1,82 +1,58 @@
-import { applicantColumnQueryShape, jobApplicantCreateSchema, jobApplicantUpdateSchema } from '@ab/shared';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { jobApplicantRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { parseOrThrow } from '@/common/http/http';
-import { pageQueryShape } from '@/modules/sales/leads/http';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { APPLICANT_STATUSES } from './applicant-state-machine';
 import { JobApplicantsService } from './job-applicants.service';
-
-/** Paging + `q`, status, column filters and `sort`/`dir` (R-NFR-08). */
-const listQuery = z.object({
-  status: z.preprocess((v) => (v === '' ? undefined : v), z.enum(APPLICANT_STATUSES).optional()),
-  ...pageQueryShape,
-  ...applicantColumnQueryShape,
-});
-// Status moves only via PATCH :id/status; from_lead_id is set only by lead reclassify.
-const createBody = jobApplicantCreateSchema.omit({ status: true, from_lead_id: true });
-const updateBody = jobApplicantUpdateSchema
-  .omit({ status: true, from_lead_id: true })
-  .refine((o) => Object.keys(o).length > 0, { message: 'empty_update' });
-const statusBody = z.object({ status: z.enum(APPLICANT_STATUSES) });
-const uuid = new ParseUUIDPipe();
 
 /** Admin CRUD for job applicants (R-LEAD-04). */
 @ApiTags('job-applicants')
 @ApiBearerAuth()
 @Permissions('applicants.write')
-@Controller('job-applicants')
+@Controller()
 export class JobApplicantsController {
   constructor(private readonly applicants: JobApplicantsService) {}
 
-  @Get()
+  @Route(routes.list)
   @Permissions('applicants.read')
-  list(@Query() query: unknown) {
-    return this.applicants.list(parseOrThrow(listQuery, query));
+  list(@RouteInput() { query }: RouteInputOf<typeof routes.list>) {
+    return this.applicants.list(query);
   }
 
-  @Get(':id')
+  @Route(routes.get)
   @Permissions('applicants.read')
-  get(@Param('id', uuid) id: string) {
-    return this.applicants.get(id);
+  get(@RouteInput() { params }: RouteInputOf<typeof routes.get>) {
+    return this.applicants.get(params.id);
   }
 
-  @Post()
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser) {
-    return this.applicants.create(parseOrThrow(createBody, body), user.id);
-  }
-
-  @Patch(':id')
-  update(@Param('id', uuid) id: string, @Body() body: unknown) {
-    return this.applicants.update(id, parseOrThrow(updateBody, body));
-  }
-
-  @Patch(':id/status')
-  changeStatus(
-    @Param('id', uuid) id: string,
-    @Body() body: unknown,
+  @Route(routes.create)
+  create(
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
     @CurrentUser() user: AuthUser,
   ) {
-    const { status } = parseOrThrow(statusBody, body);
-    return this.applicants.changeStatus({ id, to: status, actorId: user.id });
+    return this.applicants.create(body, user.id);
   }
 
-  @Delete(':id')
+  @Route(routes.update)
+  update(@RouteInput() { params, body }: RouteInputOf<typeof routes.update>) {
+    return this.applicants.update(params.id, body);
+  }
+
+  @Route(routes.changeStatus)
+  changeStatus(
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.changeStatus>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.applicants.changeStatus({ id: params.id, to: body.status, actorId: user.id });
+  }
+
+  @Route(routes.remove)
   @HttpCode(204)
-  remove(@Param('id', uuid) id: string, @CurrentUser() user: AuthUser) {
-    return this.applicants.remove({ id, actorId: user.id });
+  remove(
+    @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.applicants.remove({ id: params.id, actorId: user.id });
   }
 }

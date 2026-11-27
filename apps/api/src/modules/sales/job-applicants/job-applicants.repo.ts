@@ -1,15 +1,20 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
+import type { JobApplicantListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { readPage } from '@/common/db/page';
 import { guardianSearchFilter } from '@/modules/people/guardians/guardians.mapper';
-import { throwIfDbError, type PageQuery } from '@/modules/sales/leads/http';
+import { throwIfDbError } from '@/modules/sales/leads/http';
 import type { ApplicantStatus } from './applicant-state-machine';
-import { APPLICANT_SORT, applyApplicantFilters, type ApplicantColumnQuery } from './job-applicants.list';
+import { APPLICANT_SORT, applyApplicantFilters } from './job-applicants.list';
 
 export type JobApplicantRow = Tables<'job_applicants'>;
 
-export type ApplicantListFilter = PageQuery & ApplicantColumnQuery & { status?: ApplicantStatus | undefined };
+export type ApplicantListFilter = JobApplicantListQuery;
+
+/** Every column the applicant answer names (jobApplicantViewSchema). */
+const COLUMNS =
+  'id, phone_e164, name, status, cv_url, recitation_url, notes, from_lead_id, created_by, created_at, updated_at';
 
 export interface ApplicantMove {
   id: string;
@@ -25,7 +30,7 @@ export class JobApplicantsRepo {
   async findById(id: string): Promise<JobApplicantRow | null> {
     const { data, error } = await this.db
       .from('job_applicants')
-      .select('*')
+      .select(COLUMNS)
       .eq('id', id)
       .maybeSingle();
     throwIfDbError(error);
@@ -35,7 +40,7 @@ export class JobApplicantsRepo {
   async findByPhone(phone: string): Promise<JobApplicantRow | null> {
     const { data, error } = await this.db
       .from('job_applicants')
-      .select('*')
+      .select(COLUMNS)
       .eq('phone_e164', phone)
       .maybeSingle();
     throwIfDbError(error);
@@ -44,7 +49,11 @@ export class JobApplicantsRepo {
 
   /** Always starts at the default status 'new'; 23505 (phone exists) → 409. */
   async insert(row: Omit<TablesInsert<'job_applicants'>, 'status'>): Promise<JobApplicantRow> {
-    const { data, error } = await this.db.from('job_applicants').insert(row).select('*').single();
+    const { data, error } = await this.db
+      .from('job_applicants')
+      .insert(row)
+      .select(COLUMNS)
+      .single();
     throwIfDbError(error);
     return data;
   }
@@ -54,7 +63,7 @@ export class JobApplicantsRepo {
       .from('job_applicants')
       .update(patch)
       .eq('id', id)
-      .select('*')
+      .select(COLUMNS)
       .maybeSingle();
     throwIfDbError(error);
     return data;
@@ -67,7 +76,7 @@ export class JobApplicantsRepo {
       .update({ status: to })
       .eq('id', id)
       .eq('status', from)
-      .select('*')
+      .select(COLUMNS)
       .maybeSingle();
     throwIfDbError(error);
     return data;
@@ -81,7 +90,7 @@ export class JobApplicantsRepo {
   async list(f: ApplicantListFilter): Promise<{ items: JobApplicantRow[]; total: number }> {
     const search = f.q ? guardianSearchFilter(f.q) : null;
     const read = () => {
-      const all = this.db.from('job_applicants').select('*', { count: 'exact' });
+      const all = this.db.from('job_applicants').select(COLUMNS, { count: 'exact' });
       let query = applyApplicantFilters(all, f);
       if (f.status) query = query.eq('status', f.status);
       return search ? query.or(search) : query;

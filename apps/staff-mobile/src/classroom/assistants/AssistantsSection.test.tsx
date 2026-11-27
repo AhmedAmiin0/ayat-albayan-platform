@@ -35,7 +35,7 @@ test('lists the assigned assistants; «إزالة» deletes one and refreshes th
     return mine;
   });
   await fireEvent.press(screen.getByRole('button', { name: `${A.remove} سارة` }));
-  expect(mockApiSend).toHaveBeenCalledWith('DELETE', '/students/s-1/assistants/p1');
+  expect(mockApiSend).toHaveBeenCalledWith('DELETE', '/students/s-1/assistants/p1', undefined);
   expect(await screen.findByText(A.none)).toBeTruthy();
 });
 

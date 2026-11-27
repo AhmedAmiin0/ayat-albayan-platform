@@ -1,48 +1,44 @@
-import type { LessonRecordingView } from '@ab/schedule';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { participantIdentitySchema, roomModerationRoutes as routes } from '@ab/schedule';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { notFound } from '@/common/http/errors';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { KickService } from './kick.service';
+import { participantNotFound } from './participant-param';
 import { RecordingListService } from '@/modules/teaching/classroom/recordings/recording-list.service';
-
-/** LiveKit identities the API mints: `<role>-<12 hex>` (newIdentity). */
-const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
-const identitySchema = z.string().regex(IDENTITY);
-const participantNotFound = () => notFound('participant_not_found');
 
 /** Classroom moderation and recordings, staff side (the services decide who, per lesson). */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('classroom.kick')
-@Controller('lessons/:id')
+@Controller()
 export class ModerationController {
   constructor(
     private readonly kicks: KickService,
     private readonly recordings: RecordingListService,
   ) {}
 
+  // The identity keeps its own 404 on ZodParam; it comes before @RouteInput because Nest runs the
+  // later param's pipe first, so a bad id still answers 400 first.
   /** 204; 404 participant_not_found, 403 cannot_remove, 503, 502 LiveKit refused. */
-  @Post('room/participants/:identity/remove')
+  @Route(routes.removeFromLesson)
   @HttpCode(204)
   async remove(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodParam('identity', identitySchema, participantNotFound) identity: string,
+    @ZodParam('identity', participantIdentitySchema, participantNotFound) identity: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.removeFromLesson>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.kicks.remove({ user, lessonId: id, identity });
+    await this.kicks.remove({ user, lessonId: params.id, identity });
   }
 
-  /** The lesson's recordings, newest first, with 1-hour links to the finished files. */
-  @Get('recordings')
+  @Route(routes.lessonRecordings)
   @Permissions('recordings.read')
   recordingsOf(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.lessonRecordings>,
     @CurrentUser() user: AuthUser,
-  ): Promise<LessonRecordingView[]> {
-    return this.recordings.list({ user, lessonId: id });
+  ) {
+    return this.recordings.list({ user, lessonId: params.id });
   }
 }

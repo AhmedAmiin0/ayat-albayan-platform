@@ -108,6 +108,23 @@
    ]
   }
  },
+ "DELETE /job-applicants/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
+ },
  "DELETE /lesson-files/:id": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -295,6 +312,47 @@
    "required": [
     "key"
    ]
+  }
+ },
+ "DELETE /students/:id/assistants/:profileId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "profileId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id",
+    "profileId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "profile_id": {
+      "type": "string"
+     },
+     "full_name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "profile_id",
+     "full_name"
+    ]
+   }
   }
  },
  "DELETE /threads/:phone/messages/:messageId/hide": {
@@ -518,6 +576,98 @@
    "required": [
     "id"
    ]
+  }
+ },
+ "GET /assistants": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "profile_id": {
+      "type": "string"
+     },
+     "full_name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "profile_id",
+     "full_name"
+    ]
+   }
+  }
+ },
+ "GET /assistants/me/lessons": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "from": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+    },
+    "to": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+    }
+   },
+   "required": [
+    "from",
+    "to"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "lesson_id": {
+      "type": "string"
+     },
+     "starts_at": {
+      "type": "string"
+     },
+     "ends_at": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "scheduled",
+       "confirmed",
+       "completed",
+       "late",
+       "excused",
+       "no_show",
+       "cancelled_by_teacher",
+       "cancelled_by_admin",
+       "rescheduled"
+      ]
+     },
+     "teacher_name": {
+      "type": "string"
+     },
+     "student_names": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    },
+    "required": [
+     "lesson_id",
+     "starts_at",
+     "ends_at",
+     "status",
+     "teacher_name",
+     "student_names"
+    ]
+   }
   }
  },
  "GET /booking/course/change": {
@@ -1768,6 +1918,291 @@
    ]
   }
  },
+ "GET /job-applicants": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "reviewing",
+      "interview",
+      "accepted",
+      "rejected"
+     ]
+    },
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 25,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 100
+    },
+    "q": {
+     "type": "string"
+    },
+    "sort": {
+     "type": "string",
+     "enum": [
+      "name",
+      "phone",
+      "status",
+      "cv",
+      "recitation",
+      "notes",
+      "created_at"
+     ]
+    },
+    "dir": {
+     "type": "string",
+     "enum": [
+      "asc",
+      "desc"
+     ]
+    },
+    "name": {
+     "type": "string",
+     "maxLength": 100
+    },
+    "phone": {
+     "type": "string",
+     "maxLength": 100
+    },
+    "cv": {
+     "type": "string",
+     "enum": [
+      "yes",
+      "no"
+     ]
+    },
+    "recitation": {
+     "type": "string",
+     "enum": [
+      "yes",
+      "no"
+     ]
+    },
+    "notes": {
+     "type": "string",
+     "maxLength": 100
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "phone_e164": {
+        "type": "string"
+       },
+       "name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "new",
+         "reviewing",
+         "interview",
+         "accepted",
+         "rejected"
+        ]
+       },
+       "cv_url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "recitation_url": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "notes": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "from_lead_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_by": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_at": {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       },
+       "updated_at": {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       }
+      },
+      "required": [
+       "id",
+       "phone_e164",
+       "name",
+       "status",
+       "cv_url",
+       "recitation_url",
+       "notes",
+       "from_lead_id",
+       "created_by",
+       "created_at",
+       "updated_at"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
+ "GET /job-applicants/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "reviewing",
+      "interview",
+      "accepted",
+      "rejected"
+     ]
+    },
+    "cv_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "recitation_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "from_lead_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "updated_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   },
+   "required": [
+    "id",
+    "phone_e164",
+    "name",
+    "status",
+    "cv_url",
+    "recitation_url",
+    "notes",
+    "from_lead_id",
+    "created_by",
+    "created_at",
+    "updated_at"
+   ]
+  }
+ },
  "GET /join/:token": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2003,6 +2438,122 @@
     "reports",
     "files"
    ]
+  }
+ },
+ "GET /lessons/:id/recordings": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "recording",
+       "done",
+       "failed"
+      ]
+     },
+     "started_at": {
+      "type": "string"
+     },
+     "ended_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "status",
+     "started_at",
+     "ended_at",
+     "url"
+    ]
+   }
+  }
+ },
+ "GET /meetings/:id/recordings": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "recording",
+       "done",
+       "failed"
+      ]
+     },
+     "started_at": {
+      "type": "string"
+     },
+     "ended_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "status",
+     "started_at",
+     "ended_at",
+     "url"
+    ]
+   }
   }
  },
  "GET /people/guardians": {
@@ -3330,6 +3881,48 @@
    ]
   }
  },
+ "GET /public/feedback/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacherName": {
+     "type": "string"
+    },
+    "kind": {
+     "type": "string",
+     "enum": [
+      "trial",
+      "subscription"
+     ]
+    },
+    "contactPhone": {
+     "type": "string"
+    },
+    "alreadySubmitted": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "teacherName",
+    "kind",
+    "contactPhone",
+    "alreadySubmitted"
+   ]
+  }
+ },
  "GET /public/report-pages/:publicId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3609,6 +4202,20 @@
     "total",
     "currency",
     "fx_missing"
+   ]
+  }
+ },
+ "GET /recordings/status": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "configured": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "configured"
    ]
   }
  },
@@ -4718,6 +5325,41 @@
      "type": "string",
      "maxLength": 100
     }
+   }
+  }
+ },
+ "GET /students/:id/assistants": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "profile_id": {
+      "type": "string"
+     },
+     "full_name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "profile_id",
+     "full_name"
+    ]
    }
   }
  },
@@ -6655,6 +7297,269 @@
     "source",
     "notes",
     "profile_id",
+    "created_by",
+    "created_at",
+    "updated_at"
+   ]
+  }
+ },
+ "PATCH /job-applicants/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "name": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "cv_url": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uri"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "recitation_url": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uri"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "notes": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "reviewing",
+      "interview",
+      "accepted",
+      "rejected"
+     ]
+    },
+    "cv_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "recitation_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "from_lead_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "updated_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   },
+   "required": [
+    "id",
+    "phone_e164",
+    "name",
+    "status",
+    "cv_url",
+    "recitation_url",
+    "notes",
+    "from_lead_id",
+    "created_by",
+    "created_at",
+    "updated_at"
+   ]
+  }
+ },
+ "PATCH /job-applicants/:id/status": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "reviewing",
+      "interview",
+      "accepted",
+      "rejected"
+     ]
+    }
+   },
+   "required": [
+    "status"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "reviewing",
+      "interview",
+      "accepted",
+      "rejected"
+     ]
+    },
+    "cv_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "recitation_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "from_lead_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "updated_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   },
+   "required": [
+    "id",
+    "phone_e164",
+    "name",
+    "status",
+    "cv_url",
+    "recitation_url",
+    "notes",
+    "from_lead_id",
     "created_by",
     "created_at",
     "updated_at"
@@ -11879,6 +12784,145 @@
    }
   }
  },
+ "POST /job-applicants": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone_e164": {
+     "type": "string"
+    },
+    "name": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "cv_url": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uri"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "recitation_url": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uri"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "notes": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "phone_e164"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "reviewing",
+      "interview",
+      "accepted",
+      "rejected"
+     ]
+    },
+    "cv_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "recitation_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "from_lead_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "updated_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   },
+   "required": [
+    "id",
+    "phone_e164",
+    "name",
+    "status",
+    "cv_url",
+    "recitation_url",
+    "notes",
+    "from_lead_id",
+    "created_by",
+    "created_at",
+    "updated_at"
+   ]
+  }
+ },
  "POST /lesson-files/:id/url": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -12029,6 +13073,18 @@
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "endedAt": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "endedAt"
    ]
   }
  },
@@ -12463,20 +13519,96 @@
    ]
   }
  },
+ "POST /lessons/:id/room/participants/:identity/mute": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "identity": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "identity"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "source": {
+     "type": "string",
+     "enum": [
+      "microphone",
+      "camera"
+     ]
+    }
+   },
+   "required": [
+    "source"
+   ]
+  },
+  "response": "empty"
+ },
  "POST /lessons/:id/room/participants/:identity/remove": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
-    "identity": {
+    "id": {
      "type": "string",
-     "pattern": "^[a-z]+-[0-9a-f]{12}$"
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "identity": {
+     "type": "string"
     }
    },
    "required": [
+    "id",
     "identity"
    ]
-  }
+  },
+  "response": "empty"
+ },
+ "POST /lessons/:id/room/participants/:identity/share": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "identity": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "identity"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "allow": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "allow"
+   ]
+  },
+  "response": "empty"
  },
  "POST /lessons/:id/status": {
   "body": {
@@ -12614,6 +13746,43 @@
    ]
   }
  },
+ "POST /meetings/:id/participants/:identity/mute": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "identity": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "identity"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "source": {
+     "type": "string",
+     "enum": [
+      "microphone",
+      "camera"
+     ]
+    }
+   },
+   "required": [
+    "source"
+   ]
+  },
+  "response": "empty"
+ },
  "POST /meetings/:id/participants/:identity/remove": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -12628,6 +13797,39 @@
     "identity"
    ]
   }
+ },
+ "POST /meetings/:id/participants/:identity/share": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "identity": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "identity"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "allow": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "allow"
+   ]
+  },
+  "response": "empty"
  },
  "POST /messages/:id/app-send": {
   "params": {
@@ -13319,6 +14521,63 @@
    "required": [
     "id",
     "lessonId"
+   ]
+  }
+ },
+ "POST /public/feedback/:token": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "token": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "token"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "rating": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 5
+    },
+    "recommend": {
+     "type": "string",
+     "enum": [
+      "yes",
+      "maybe",
+      "no"
+     ]
+    },
+    "note": {
+     "type": "string",
+     "maxLength": 2000
+    },
+    "contactPhone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "rating",
+    "recommend"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "submitted": {
+     "type": "boolean",
+     "const": true
+    }
+   },
+   "required": [
+    "submitted"
    ]
   }
  },
@@ -18442,6 +19701,55 @@
     "name",
     "tz"
    ]
+  }
+ },
+ "POST /students/:id/assistants": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "profileId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "profileId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "profile_id": {
+      "type": "string"
+     },
+     "full_name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "profile_id",
+     "full_name"
+    ]
+   }
   }
  },
  "POST /students/:id/course-extend": {

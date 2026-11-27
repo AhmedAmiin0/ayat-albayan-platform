@@ -1,27 +1,37 @@
-import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
+import { participantIdentitySchema, roomModerationRoutes as routes } from '@ab/schedule';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { ZodParam } from '@/common/http/zod-inputs';
 import { MuteLimit } from './mute-limit';
 import { MeetingMuteService, MuteService } from './mute.service';
-import { targetOf } from './share-grant.controller';
+import { participantNotFound } from './participant-param';
+
+// The identity keeps its own 404 on ZodParam; it comes before @RouteInput because Nest runs the
+// later param's pipe first, so a bad body or id still answers 400 first.
 
 /** 204; 400, 403 cannot_mute, 404 participant_not_found, 429, 503, 502. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('classroom.moderate')
-@Controller('lessons/:id/room/participants/:identity/mute')
+@Controller()
 export class LessonMuteController {
   constructor(
     private readonly mutes: MuteService,
     private readonly limit: MuteLimit,
   ) {}
 
-  @Post()
+  @Route(routes.muteInLesson)
   @HttpCode(204)
-  async mute(@Param() params: Record<string, string>, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
+  async mute(
+    @ZodParam('identity', participantIdentitySchema, participantNotFound) identity: string,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.muteInLesson>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
     this.limit.assert(user);
-    await this.mutes.lesson({ user, body, ...(await targetOf(params)) });
+    await this.mutes.lesson({ user, id: params.id, identity, source: body.source });
   }
 }
 
@@ -29,17 +39,21 @@ export class LessonMuteController {
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('meetings.write')
-@Controller('meetings/:id/participants/:identity/mute')
+@Controller()
 export class MeetingMuteController {
   constructor(
     private readonly mutes: MeetingMuteService,
     private readonly limit: MuteLimit,
   ) {}
 
-  @Post()
+  @Route(routes.muteInMeeting)
   @HttpCode(204)
-  async mute(@Param() params: Record<string, string>, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
+  async mute(
+    @ZodParam('identity', participantIdentitySchema, participantNotFound) identity: string,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.muteInMeeting>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
     this.limit.assert(user);
-    await this.mutes.meeting({ user, body, ...(await targetOf(params)) });
+    await this.mutes.meeting({ user, id: params.id, identity, source: body.source });
   }
 }

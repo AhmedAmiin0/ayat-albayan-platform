@@ -2,6 +2,7 @@ import type { AssistantView } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { done, maybe, rows } from '@/common/db/errors';
+import { toAssistantView } from './assistants.mapper';
 
 export interface LessonRef {
   lesson_id: string;
@@ -16,7 +17,7 @@ export class AssistantsRepo {
   /** Every login with role = assistant, for the admin's picker. */
   async allAssistants(): Promise<AssistantView[]> {
     const data = rows(await this.db.from('profiles').select('id, full_name').eq('role', 'assistant').order('full_name'));
-    return data.map((p) => ({ profile_id: p.id, full_name: p.full_name }));
+    return data.map(toAssistantView);
   }
 
   async forStudent(studentId: string): Promise<AssistantView[]> {
