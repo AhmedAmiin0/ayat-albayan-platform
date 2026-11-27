@@ -4,6 +4,7 @@ import {
   salesStudentsQuerySchema,
   type SalesStudentView,
 } from '@ab/shared';
+import type { Page } from '@ab/core';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -11,10 +12,9 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import { asResponse } from '@/common/http/returns';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { SalesAcademyService } from './sales-academy.service';
 import { withMine } from '@/modules/sales/sales/schedule/sales-schedule.mapper';
 import { SalesScheduleService } from '@/modules/sales/sales/schedule/sales-schedule.service';
-import type { Page } from '@ab/core';
+import { SalesAcademyService } from './sales-academy.service';
 
 /** docs/16: read-only and whitelisted; rooms are entered via POST /lessons/:id/room/join. */
 @ApiTags('sales')
