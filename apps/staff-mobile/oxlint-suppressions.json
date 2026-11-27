@@ -640,7 +640,7 @@
   },
   "src/calendar/lib/queries.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     }
   },
   "src/calendar/overview/TeacherHeader.tsx": {
@@ -4774,17 +4774,6 @@
       "count": 1
     }
   },
-  "src/student-file/components/ContactIsSelfCard.tsx": {
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
   "src/student-file/components/JoinLinkCard.tsx": {
     "stylistic/max-len": {
       "count": 2
@@ -5172,7 +5161,7 @@
   },
   "src/teacher/lib/queries.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 3
     }
   },
   "src/teacher/report/components/AttachmentsField.tsx": {
