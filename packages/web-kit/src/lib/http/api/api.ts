@@ -32,6 +32,14 @@ const publicClient = createApiClient({
   clientTag: () => WEB_CLIENT_TAG,
 });
 
+// The report page's code gate: the public client that also sends and keeps the report's cookie.
+const cookieClient = createApiClient({
+  baseUrl: () => env.apiUrl,
+  accessToken: () => Promise.resolve(null),
+  clientTag: () => WEB_CLIENT_TAG,
+  credentials: 'include',
+});
+
 /**
  * One request to the API with the session's token (docs/62 part 3 §3b). A read with no answer
  * within readTimeoutFor(path) rejects as no answer and frees its request (docs/43 AU9).
@@ -44,6 +52,9 @@ export const call = callWith(
 
 /** call() for a signed-link page: no Authorization header, whoever is signed in. */
 export const publicCall = callWith(publicClient);
+
+/** publicCall() that sends and keeps cookies (credentials: 'include'). */
+export const cookieCall = callWith(cookieClient);
 
 // docs/62 part 3 §3b F deletes the pair and its public twins below.
 /**

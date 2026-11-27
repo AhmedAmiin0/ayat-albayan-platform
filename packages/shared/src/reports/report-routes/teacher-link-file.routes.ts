@@ -6,8 +6,8 @@ import {
   signedUploadSchema,
 } from '../page-access';
 import { attachmentRegisterSchema, attachmentUploadSchema } from '../schema/schema';
+import { teacherLinkReportParamsSchema as byReport } from './teacher-link.schemas';
 
-const byReport = z.object({ token: z.string().min(1).max(100), id: z.uuid() });
 const byFile = byReport.extend({ attachmentId: z.uuid() });
 const tags = ['reports'] as const;
 const base = '/public/teacher-report/:token/reports/:id/attachments';
