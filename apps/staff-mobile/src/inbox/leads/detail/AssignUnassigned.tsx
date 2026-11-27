@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { apiSend, t, pathKey, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
+import { t, pathKey, type, useTheme, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
+import { assignAllUnassigned } from './use-sales-people';
 
 /** Spreads every ownerless lead over the salespeople; asks first since it moves many rows. */
 export function AssignUnassigned({ owners }: { owners: number }) {
@@ -10,7 +11,7 @@ export function AssignUnassigned({ owners }: { owners: number }) {
   const client = useQueryClient();
   const [asking, setAsking] = useState(false);
   const run = useMutation({
-    mutationFn: () => apiSend<{ assigned: number }>('POST', '/leads/assign-unassigned'),
+    mutationFn: assignAllUnassigned,
     // Settled, not success: the API assigns lead by lead, so even a 504 on a big backlog moved some.
     onSettled: () => {
       setAsking(false);

@@ -1,52 +1,47 @@
+import { LESSON_STATUSES, PACKAGE_SIZES, SUBSCRIPTION_STATUSES } from '@ab/catalog';
+import { joinWindowViewSchema } from '@ab/schedule';
 import { z } from 'zod';
-import type { JoinWindow } from '@ab/schedule';
-import type { LessonStatus, PackageSize, SubscriptionStatus } from '@ab/catalog';
 
-/** GET /sales/subscriptions rows: who and which package, never a price, currency, fx rate or note. */
-export interface SalesSubscriptionView {
-  id: string;
-  student: { id: string; code: string; name: string };
-  package: PackageSize | null;
-  status: SubscriptionStatus;
-  starts_on: string;
-  lessons_total: number;
-}
+/** A row of GET /sales/subscriptions: who and which package, never a price, fx rate or note. */
+export const salesSubscriptionViewSchema = z.object({
+  id: z.string(),
+  student: z.object({ id: z.string(), code: z.string(), name: z.string() }),
+  package: z.enum(PACKAGE_SIZES).nullable(),
+  status: z.enum(SUBSCRIPTION_STATUSES),
+  starts_on: z.string(),
+  lessons_total: z.int().nonnegative(),
+});
+export type SalesSubscriptionView = z.infer<typeof salesSubscriptionViewSchema>;
 
-/** GET /sales/meetings rows: a trial lesson booked from one of the salesperson's leads. */
-export interface SalesMeetingView {
-  lesson_id: string;
-  starts_at: string;
-  ends_at: string;
-  status: LessonStatus;
-  teacher_name: string | null;
-  lead_or_student_name: string | null;
-  joinable_window: JoinWindow;
-}
+/** A row of GET /sales/meetings: a trial lesson booked from one of the salesperson's leads. */
+export const salesMeetingViewSchema = z.object({
+  lesson_id: z.string(),
+  starts_at: z.string(),
+  ends_at: z.string(),
+  status: z.enum(LESSON_STATUSES),
+  teacher_name: z.string().nullable(),
+  lead_or_student_name: z.string().nullable(),
+  joinable_window: joinWindowViewSchema,
+});
+export type SalesMeetingView = z.infer<typeof salesMeetingViewSchema>;
 
-/** GET /sales/people (admin picker): a salesperson and how many leads they are working. */
-export interface SalesPersonView {
-  id: string;
-  name: string;
-  open_leads: number;
-}
+export const SALES_SUBSCRIPTION_KINDS = ['pending', 'confirmed'] as const;
+export const salesSubscriptionKindSchema = z.enum(SALES_SUBSCRIPTION_KINDS);
+export type SalesSubscriptionKind = z.infer<typeof salesSubscriptionKindSchema>;
 
-export const salesSubscriptionsQuerySchema = z.object({ kind: z.enum(['pending', 'confirmed']) });
-/** GET /sales/subscriptions?kind=: my pending or my confirmed subscriptions. */
-export type SalesSubscriptionKind = z.output<typeof salesSubscriptionsQuerySchema>['kind'];
+export const salesSubscriptionsQuerySchema = z.object({ kind: salesSubscriptionKindSchema });
 
 const DAY_MS = 86_400_000;
+const instant = z.iso.datetime({ offset: true });
+const spanOf = (q: { from: string; to: string }) => Date.parse(q.to) - Date.parse(q.from);
+
 /** ISO instants, at most 31 days apart. */
 export const salesMeetingsQuerySchema = z
-  .object({ from: z.iso.datetime({ offset: true }), to: z.iso.datetime({ offset: true }) })
-  .refine(
-    (q) =>
-      Date.parse(q.to) >= Date.parse(q.from) &&
-      Date.parse(q.to) - Date.parse(q.from) <= 31 * DAY_MS,
-    {
-      message: 'range_too_long',
-      path: ['to'],
-    },
-  );
+  .object({ from: instant, to: instant })
+  .refine((q) => spanOf(q) >= 0 && spanOf(q) <= 31 * DAY_MS, {
+    message: 'range_too_long',
+    path: ['to'],
+  });
 
 /** POST /leads/:id/assign: a sales profile id, or null to unassign. */
 export const leadAssignSchema = z.object({ profileId: z.uuid().nullable() });
