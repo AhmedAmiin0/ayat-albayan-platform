@@ -4,7 +4,10 @@ import { AppText } from '../../../ui/primitives/AppText';
 import { NuqtaGlyph } from '../../../ui/primitives/NuqtaGlyph';
 import type { AuthAlertProps } from './AuthAlert.types';
 
-/** The §10 inline alert of the sign-in screens (docs/07): soft fill, glyph, word; read out politely. */
+/**
+ * The §10 inline alert of the sign-in screens (docs/07): soft fill, glyph, word; read out
+ * politely.
+ */
 export function AuthAlert({ text, tone = 'bad' }: AuthAlertProps) {
   const { color } = useTheme();
   const ink = tone === 'bad' ? color.bad : color.ok;
