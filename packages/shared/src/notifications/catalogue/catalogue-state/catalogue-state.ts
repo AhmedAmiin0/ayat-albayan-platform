@@ -6,7 +6,7 @@ import type {
   NotificationBlocker,
   NotificationEntryView,
   NotificationTemplateView,
-} from '../catalogue-views';
+} from '../../rules';
 import { approvalOf, timingOf } from '../catalogue-timing';
 import type { EffectiveRule } from '../../rules.types';
 
