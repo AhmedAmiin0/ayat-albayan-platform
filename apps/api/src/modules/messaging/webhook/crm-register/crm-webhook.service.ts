@@ -1,14 +1,10 @@
+import type { CrmWebhookResult } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { IntegrationConfigService } from '@/common/configuration/integrations/integration-config.service';
 import { lineEnvs, loadEnv, type CrmLineEnv, type WhatsappEnv } from '@/config/env/env';
 import { crmFetch, type CrmConn, type FetchLike } from '@/modules/messaging/whatsapp';
 import { CRM_WEBHOOK_ERRORS, crmStep } from './crm-webhook.errors';
-import {
-  crmBaseSchema,
-  type CrmCreated,
-  type CrmEndpoint,
-  type CrmWebhookResult,
-} from './crm-webhook.schemas';
+import { crmBaseSchema, type CrmCreated, type CrmEndpoint } from './crm-webhook.schemas';
 import { createEndpoint, deleteEndpoint, listEndpoints, receiverUrl } from './crm-webhooks.client';
 
 /** What the registrar reads: the notifications line, the API's public URL and the CRM fetch. */

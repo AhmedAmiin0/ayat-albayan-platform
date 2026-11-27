@@ -19,6 +19,13 @@ describe('webhookRoutes', () => {
     expect(deliveries.map((r) => r.response)).toEqual(['empty', 'empty', 'empty', 'empty']);
   });
 
+  it('tags every callback webhooks and asks no permission of the caller', () => {
+    for (const route of Object.values(routes)) {
+      expect(route.tags).toEqual(['webhooks']);
+      expect(route).not.toHaveProperty('permissions');
+    }
+  });
+
   it('leaves each payload to its controller, parsed after the signature check', () => {
     for (const route of Object.values(routes)) expect(route).not.toHaveProperty('body');
   });
