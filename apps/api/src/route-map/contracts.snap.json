@@ -203,6 +203,23 @@
    ]
   }
  },
+ "DELETE /roles/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
+ },
  "DELETE /sales/students/:id/channel/messages/:messageId": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -1694,6 +1711,146 @@
    ]
   }
  },
+ "GET /permissions": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "area": {
+      "type": "string",
+      "enum": [
+       "people",
+       "students",
+       "teachers",
+       "schedule",
+       "classroom",
+       "reports",
+       "messaging",
+       "finance",
+       "system",
+       "self"
+      ]
+     },
+     "keys": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "enum": [
+        "leads.read",
+        "leads.write",
+        "leads.assign",
+        "leads.link_family",
+        "applicants.read",
+        "applicants.write",
+        "students.read",
+        "students.write",
+        "students.balance",
+        "students.check_registration",
+        "guardians.read",
+        "guardians.write",
+        "people.edit",
+        "students.attach_guardian",
+        "people.switch_role",
+        "assistants.read",
+        "assistants.write",
+        "teachers.read",
+        "teachers.write",
+        "availability.read",
+        "availability.write",
+        "dashboard.read",
+        "lessons.read",
+        "lessons.status",
+        "lessons.write",
+        "booking.write",
+        "lessons.reschedule",
+        "lessons.cancel",
+        "lessons.confirm",
+        "courses.pause",
+        "subscriptions.stop",
+        "subscriptions.refund",
+        "students.change_teacher",
+        "courses.reschedule",
+        "pricing.read",
+        "tasks.manage",
+        "classroom.join",
+        "classroom.kick",
+        "classroom.moderate",
+        "classroom.host",
+        "classroom.links",
+        "recordings.read",
+        "recordings.manage",
+        "meetings.read",
+        "meetings.write",
+        "reports.read",
+        "reports.write",
+        "reports.resend",
+        "feedback.read",
+        "feedback.write",
+        "inbox.read",
+        "inbox.send",
+        "inbox.media",
+        "inbox.lists",
+        "saved_replies.manage",
+        "messages.read",
+        "messages.manage",
+        "templates.manage",
+        "templates.send_all",
+        "templates.author",
+        "short_links.manage",
+        "short_links.all",
+        "student_channels.monitor",
+        "payments.read",
+        "payments.write",
+        "subscriptions.read",
+        "subscriptions.write",
+        "subscriptions.set_start_date",
+        "subscriptions.edit_terms",
+        "sales.renew_any",
+        "invoices.read",
+        "receivables.read",
+        "payouts.read",
+        "payouts.write",
+        "payouts.approve",
+        "assistantpay.read",
+        "assistantpay.write",
+        "assistantpay.approve",
+        "earnings.read",
+        "earnings.write",
+        "expenses.read",
+        "expenses.write",
+        "exports.read",
+        "settings.read",
+        "settings.write",
+        "numbers.manage",
+        "notifications.manage",
+        "activity.read",
+        "roles.manage",
+        "notifications.push",
+        "translations.manage",
+        "users.read",
+        "users.write",
+        "self.teacher",
+        "self.sales",
+        "self.sales_students",
+        "self.sales_payments",
+        "self.sales_earnings",
+        "self.sales_academy",
+        "self.sales_money",
+        "self.assistant",
+        "self.portal"
+       ]
+      }
+     }
+    },
+    "required": [
+     "area",
+     "keys"
+    ]
+   }
+  }
+ },
  "GET /portal/students/:id/channel/messages/:messageId/reads": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3024,6 +3181,208 @@
    "required": [
     "id"
    ]
+  }
+ },
+ "GET /roles": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "key": {
+      "type": "string"
+     },
+     "name_ar": {
+      "type": "string"
+     },
+     "name_en": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "base_role": {
+      "type": "string",
+      "enum": [
+       "admin",
+       "teacher",
+       "guardian",
+       "assistant",
+       "sales",
+       "student"
+      ]
+     },
+     "is_system": {
+      "type": "boolean"
+     },
+     "permissions": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "enum": [
+        "leads.read",
+        "leads.write",
+        "leads.assign",
+        "leads.link_family",
+        "applicants.read",
+        "applicants.write",
+        "students.read",
+        "students.write",
+        "students.balance",
+        "students.check_registration",
+        "guardians.read",
+        "guardians.write",
+        "people.edit",
+        "students.attach_guardian",
+        "people.switch_role",
+        "assistants.read",
+        "assistants.write",
+        "teachers.read",
+        "teachers.write",
+        "availability.read",
+        "availability.write",
+        "dashboard.read",
+        "lessons.read",
+        "lessons.status",
+        "lessons.write",
+        "booking.write",
+        "lessons.reschedule",
+        "lessons.cancel",
+        "lessons.confirm",
+        "courses.pause",
+        "subscriptions.stop",
+        "subscriptions.refund",
+        "students.change_teacher",
+        "courses.reschedule",
+        "pricing.read",
+        "tasks.manage",
+        "classroom.join",
+        "classroom.kick",
+        "classroom.moderate",
+        "classroom.host",
+        "classroom.links",
+        "recordings.read",
+        "recordings.manage",
+        "meetings.read",
+        "meetings.write",
+        "reports.read",
+        "reports.write",
+        "reports.resend",
+        "feedback.read",
+        "feedback.write",
+        "inbox.read",
+        "inbox.send",
+        "inbox.media",
+        "inbox.lists",
+        "saved_replies.manage",
+        "messages.read",
+        "messages.manage",
+        "templates.manage",
+        "templates.send_all",
+        "templates.author",
+        "short_links.manage",
+        "short_links.all",
+        "student_channels.monitor",
+        "payments.read",
+        "payments.write",
+        "subscriptions.read",
+        "subscriptions.write",
+        "subscriptions.set_start_date",
+        "subscriptions.edit_terms",
+        "sales.renew_any",
+        "invoices.read",
+        "receivables.read",
+        "payouts.read",
+        "payouts.write",
+        "payouts.approve",
+        "assistantpay.read",
+        "assistantpay.write",
+        "assistantpay.approve",
+        "earnings.read",
+        "earnings.write",
+        "expenses.read",
+        "expenses.write",
+        "exports.read",
+        "settings.read",
+        "settings.write",
+        "numbers.manage",
+        "notifications.manage",
+        "activity.read",
+        "roles.manage",
+        "notifications.push",
+        "translations.manage",
+        "users.read",
+        "users.write",
+        "self.teacher",
+        "self.sales",
+        "self.sales_students",
+        "self.sales_payments",
+        "self.sales_earnings",
+        "self.sales_academy",
+        "self.sales_money",
+        "self.assistant",
+        "self.portal"
+       ]
+      }
+     },
+     "users": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     }
+    },
+    "required": [
+     "id",
+     "key",
+     "name_ar",
+     "name_en",
+     "base_role",
+     "is_system",
+     "permissions",
+     "users"
+    ]
+   }
+  }
+ },
+ "GET /roles/staff-users": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "full_name": {
+      "type": "string"
+     },
+     "role": {
+      "type": "string",
+      "enum": [
+       "admin",
+       "teacher",
+       "guardian",
+       "assistant",
+       "sales",
+       "student"
+      ]
+     },
+     "role_id": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "full_name",
+     "role",
+     "role_id"
+    ]
+   }
   }
  },
  "GET /sales/booking/outside-slots": {
@@ -6504,6 +6863,20 @@
   }
  },
  "PATCH /roles/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -6627,6 +7000,166 @@
      }
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "key": {
+     "type": "string"
+    },
+    "name_ar": {
+     "type": "string"
+    },
+    "name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "base_role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "is_system": {
+     "type": "boolean"
+    },
+    "permissions": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "leads.read",
+       "leads.write",
+       "leads.assign",
+       "leads.link_family",
+       "applicants.read",
+       "applicants.write",
+       "students.read",
+       "students.write",
+       "students.balance",
+       "students.check_registration",
+       "guardians.read",
+       "guardians.write",
+       "people.edit",
+       "students.attach_guardian",
+       "people.switch_role",
+       "assistants.read",
+       "assistants.write",
+       "teachers.read",
+       "teachers.write",
+       "availability.read",
+       "availability.write",
+       "dashboard.read",
+       "lessons.read",
+       "lessons.status",
+       "lessons.write",
+       "booking.write",
+       "lessons.reschedule",
+       "lessons.cancel",
+       "lessons.confirm",
+       "courses.pause",
+       "subscriptions.stop",
+       "subscriptions.refund",
+       "students.change_teacher",
+       "courses.reschedule",
+       "pricing.read",
+       "tasks.manage",
+       "classroom.join",
+       "classroom.kick",
+       "classroom.moderate",
+       "classroom.host",
+       "classroom.links",
+       "recordings.read",
+       "recordings.manage",
+       "meetings.read",
+       "meetings.write",
+       "reports.read",
+       "reports.write",
+       "reports.resend",
+       "feedback.read",
+       "feedback.write",
+       "inbox.read",
+       "inbox.send",
+       "inbox.media",
+       "inbox.lists",
+       "saved_replies.manage",
+       "messages.read",
+       "messages.manage",
+       "templates.manage",
+       "templates.send_all",
+       "templates.author",
+       "short_links.manage",
+       "short_links.all",
+       "student_channels.monitor",
+       "payments.read",
+       "payments.write",
+       "subscriptions.read",
+       "subscriptions.write",
+       "subscriptions.set_start_date",
+       "subscriptions.edit_terms",
+       "sales.renew_any",
+       "invoices.read",
+       "receivables.read",
+       "payouts.read",
+       "payouts.write",
+       "payouts.approve",
+       "assistantpay.read",
+       "assistantpay.write",
+       "assistantpay.approve",
+       "earnings.read",
+       "earnings.write",
+       "expenses.read",
+       "expenses.write",
+       "exports.read",
+       "settings.read",
+       "settings.write",
+       "numbers.manage",
+       "notifications.manage",
+       "activity.read",
+       "roles.manage",
+       "notifications.push",
+       "translations.manage",
+       "users.read",
+       "users.write",
+       "self.teacher",
+       "self.sales",
+       "self.sales_students",
+       "self.sales_payments",
+       "self.sales_earnings",
+       "self.sales_academy",
+       "self.sales_money",
+       "self.assistant",
+       "self.portal"
+      ]
+     }
+    },
+    "users": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "id",
+    "key",
+    "name_ar",
+    "name_en",
+    "base_role",
+    "is_system",
+    "permissions",
+    "users"
+   ]
   }
  },
  "PATCH /sales/payments/:id/amount": {
@@ -7806,6 +8339,20 @@
   }
  },
  "PATCH /users/:id/role": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -7817,6 +8364,38 @@
     }
    },
    "required": [
+    "role_id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "full_name": {
+     "type": "string"
+    },
+    "role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "role_id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id",
+    "full_name",
+    "role",
     "role_id"
    ]
   }
@@ -13635,6 +14214,342 @@
     "name_ar",
     "base_role",
     "permissions"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "key": {
+     "type": "string"
+    },
+    "name_ar": {
+     "type": "string"
+    },
+    "name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "base_role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "is_system": {
+     "type": "boolean"
+    },
+    "permissions": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "leads.read",
+       "leads.write",
+       "leads.assign",
+       "leads.link_family",
+       "applicants.read",
+       "applicants.write",
+       "students.read",
+       "students.write",
+       "students.balance",
+       "students.check_registration",
+       "guardians.read",
+       "guardians.write",
+       "people.edit",
+       "students.attach_guardian",
+       "people.switch_role",
+       "assistants.read",
+       "assistants.write",
+       "teachers.read",
+       "teachers.write",
+       "availability.read",
+       "availability.write",
+       "dashboard.read",
+       "lessons.read",
+       "lessons.status",
+       "lessons.write",
+       "booking.write",
+       "lessons.reschedule",
+       "lessons.cancel",
+       "lessons.confirm",
+       "courses.pause",
+       "subscriptions.stop",
+       "subscriptions.refund",
+       "students.change_teacher",
+       "courses.reschedule",
+       "pricing.read",
+       "tasks.manage",
+       "classroom.join",
+       "classroom.kick",
+       "classroom.moderate",
+       "classroom.host",
+       "classroom.links",
+       "recordings.read",
+       "recordings.manage",
+       "meetings.read",
+       "meetings.write",
+       "reports.read",
+       "reports.write",
+       "reports.resend",
+       "feedback.read",
+       "feedback.write",
+       "inbox.read",
+       "inbox.send",
+       "inbox.media",
+       "inbox.lists",
+       "saved_replies.manage",
+       "messages.read",
+       "messages.manage",
+       "templates.manage",
+       "templates.send_all",
+       "templates.author",
+       "short_links.manage",
+       "short_links.all",
+       "student_channels.monitor",
+       "payments.read",
+       "payments.write",
+       "subscriptions.read",
+       "subscriptions.write",
+       "subscriptions.set_start_date",
+       "subscriptions.edit_terms",
+       "sales.renew_any",
+       "invoices.read",
+       "receivables.read",
+       "payouts.read",
+       "payouts.write",
+       "payouts.approve",
+       "assistantpay.read",
+       "assistantpay.write",
+       "assistantpay.approve",
+       "earnings.read",
+       "earnings.write",
+       "expenses.read",
+       "expenses.write",
+       "exports.read",
+       "settings.read",
+       "settings.write",
+       "numbers.manage",
+       "notifications.manage",
+       "activity.read",
+       "roles.manage",
+       "notifications.push",
+       "translations.manage",
+       "users.read",
+       "users.write",
+       "self.teacher",
+       "self.sales",
+       "self.sales_students",
+       "self.sales_payments",
+       "self.sales_earnings",
+       "self.sales_academy",
+       "self.sales_money",
+       "self.assistant",
+       "self.portal"
+      ]
+     }
+    },
+    "users": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "id",
+    "key",
+    "name_ar",
+    "name_en",
+    "base_role",
+    "is_system",
+    "permissions",
+    "users"
+   ]
+  }
+ },
+ "POST /roles/:id/reset": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "key": {
+     "type": "string"
+    },
+    "name_ar": {
+     "type": "string"
+    },
+    "name_en": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "base_role": {
+     "type": "string",
+     "enum": [
+      "admin",
+      "teacher",
+      "guardian",
+      "assistant",
+      "sales",
+      "student"
+     ]
+    },
+    "is_system": {
+     "type": "boolean"
+    },
+    "permissions": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "leads.read",
+       "leads.write",
+       "leads.assign",
+       "leads.link_family",
+       "applicants.read",
+       "applicants.write",
+       "students.read",
+       "students.write",
+       "students.balance",
+       "students.check_registration",
+       "guardians.read",
+       "guardians.write",
+       "people.edit",
+       "students.attach_guardian",
+       "people.switch_role",
+       "assistants.read",
+       "assistants.write",
+       "teachers.read",
+       "teachers.write",
+       "availability.read",
+       "availability.write",
+       "dashboard.read",
+       "lessons.read",
+       "lessons.status",
+       "lessons.write",
+       "booking.write",
+       "lessons.reschedule",
+       "lessons.cancel",
+       "lessons.confirm",
+       "courses.pause",
+       "subscriptions.stop",
+       "subscriptions.refund",
+       "students.change_teacher",
+       "courses.reschedule",
+       "pricing.read",
+       "tasks.manage",
+       "classroom.join",
+       "classroom.kick",
+       "classroom.moderate",
+       "classroom.host",
+       "classroom.links",
+       "recordings.read",
+       "recordings.manage",
+       "meetings.read",
+       "meetings.write",
+       "reports.read",
+       "reports.write",
+       "reports.resend",
+       "feedback.read",
+       "feedback.write",
+       "inbox.read",
+       "inbox.send",
+       "inbox.media",
+       "inbox.lists",
+       "saved_replies.manage",
+       "messages.read",
+       "messages.manage",
+       "templates.manage",
+       "templates.send_all",
+       "templates.author",
+       "short_links.manage",
+       "short_links.all",
+       "student_channels.monitor",
+       "payments.read",
+       "payments.write",
+       "subscriptions.read",
+       "subscriptions.write",
+       "subscriptions.set_start_date",
+       "subscriptions.edit_terms",
+       "sales.renew_any",
+       "invoices.read",
+       "receivables.read",
+       "payouts.read",
+       "payouts.write",
+       "payouts.approve",
+       "assistantpay.read",
+       "assistantpay.write",
+       "assistantpay.approve",
+       "earnings.read",
+       "earnings.write",
+       "expenses.read",
+       "expenses.write",
+       "exports.read",
+       "settings.read",
+       "settings.write",
+       "numbers.manage",
+       "notifications.manage",
+       "activity.read",
+       "roles.manage",
+       "notifications.push",
+       "translations.manage",
+       "users.read",
+       "users.write",
+       "self.teacher",
+       "self.sales",
+       "self.sales_students",
+       "self.sales_payments",
+       "self.sales_earnings",
+       "self.sales_academy",
+       "self.sales_money",
+       "self.assistant",
+       "self.portal"
+      ]
+     }
+    },
+    "users": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "id",
+    "key",
+    "name_ar",
+    "name_en",
+    "base_role",
+    "is_system",
+    "permissions",
+    "users"
    ]
   }
  },

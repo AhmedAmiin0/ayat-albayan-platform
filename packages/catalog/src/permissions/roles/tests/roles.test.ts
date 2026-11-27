@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import type { z } from 'zod';
-import { isPermission, PERMISSIONS, permissionSchema, type Permission } from '../catalog';
-import { HOME_BY_ROLE, isUserRole, USER_ROLES, userRoleSchema, type UserRole } from './roles';
+import { isPermission, PERMISSIONS, permissionSchema, type Permission } from '../../catalog';
+import { HOME_BY_ROLE, isUserRole, USER_ROLES, userRoleSchema, type UserRole } from '../roles';
 
 describe('roles', () => {
   it('accepts every known role', () => {
