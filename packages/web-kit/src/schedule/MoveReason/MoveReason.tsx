@@ -2,19 +2,8 @@ import { Field } from '@ab/web-kit/components/ui/form/Field';
 import { controlClass } from '@ab/web-kit/components/ui/form/Input';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { cn } from '@ab/web-kit/lib/utils';
-
-/** The API's limit for a move reason (packages/schedule moveReasonSchema). */
-const MAX = 500;
-
-export interface MoveReasonProps {
-  value: string;
-  onChange: (value: string) => void;
-  /** Default move-reason label; the family's or the answer's own words otherwise. */
-  label?: string;
-  /** Default: the teacher reads it in the student file. */
-  hint?: string;
-  placeholder?: string;
-}
+import type { MoveReasonProps } from './MoveReason.types';
+import { MAX } from './move-reason.helpers';
 
 /** docs/47: free text the teacher reads in the student file, said so under the field. */
 export function MoveReason({ value, onChange, label, hint, placeholder }: MoveReasonProps) {
