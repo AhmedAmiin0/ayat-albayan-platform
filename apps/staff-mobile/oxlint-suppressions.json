@@ -4768,11 +4768,6 @@
       "count": 1
     }
   },
-  "src/student-file/channel/channel-queries.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/student-file/components/ContactIsSelfCard.tsx": {
     "ab/forbidden-imports": {
       "count": 1

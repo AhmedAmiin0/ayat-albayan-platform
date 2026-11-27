@@ -3,7 +3,7 @@ import type { ChannelMessageView } from '@ab/shared';
 import { z } from 'zod';
 import { ApiError, apiSend } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { ChannelRef } from '@ab/web-kit/components/channel/api';
+import { channelCalls, type ChannelRef } from '@ab/web-kit/components/channel/api';
 
 // PATCH and DELETE of a channel message; the API checks every rule.
 
@@ -14,8 +14,8 @@ interface MessageRef extends ChannelRef {
 export const editChannelMessage = (ref: MessageRef & { body: string }) =>
   apiSend<ChannelMessageView>('PATCH', channelMessagePath(ref), { body: ref.body });
 
-export const deleteChannelMessage = (ref: MessageRef) =>
-  apiSend<ChannelMessageView>('DELETE', channelMessagePath(ref));
+export const deleteChannelMessage = ({ audience, ...ask }: MessageRef) =>
+  channelCalls[audience].remove(ask);
 
 /** The API's error body: only its code is read. */
 const refusalSchema = z.object({ code: z.string() });

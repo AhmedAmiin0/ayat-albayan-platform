@@ -63,7 +63,7 @@ test('after 15 minutes only delete, asked first (DELETE)', async () => {
   expect(menu.getByText(inText(a.deleteBody))).toBeTruthy();
   await fireEvent.press(menu.getByRole('button', { name: a.deleteConfirm }));
   const path = '/teachers/me/channels/s1/messages/m1';
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('DELETE', path));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('DELETE', path, undefined));
 });
 
 test('a refusal is said in words (the window just closed)', async () => {
@@ -80,7 +80,11 @@ test("the admin deletes anyone's message (moderation), asked first", async () =>
   expect(menu.getByText(inText(a.moderateBody))).toBeTruthy();
   await fireEvent.press(menu.getByRole('button', { name: a.deleteConfirm }));
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('DELETE', '/students/s1/channel/messages/m1'),
+    expect(mockApiSend).toHaveBeenCalledWith(
+      'DELETE',
+      '/students/s1/channel/messages/m1',
+      undefined,
+    ),
   );
 });
 

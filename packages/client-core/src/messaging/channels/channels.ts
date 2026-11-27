@@ -40,10 +40,6 @@ export function channelMessagesPath(input: { audience: ChannelAudience; studentI
   return input.before ? `${path}?before=${encodeURIComponent(input.before)}` : path;
 }
 
-/** GET …/presence: the chat's people this viewer may see online (docs/33). */
-export const channelPresencePath = (audience: ChannelAudience, studentId: string): string =>
-  `${BASE[audience](studentId)}/presence`;
-
 /** POST …/read (participants only). */
 export const channelReadPath = (audience: ChannelAudience, studentId: string): string => `${BASE[audience](studentId)}/read`;
 
@@ -53,8 +49,7 @@ export const channelUploadPath = (audience: ChannelAudience, studentId: string):
 
 export const channelKey = (audience: ChannelAudience, studentId: string) => ['channel', audience, studentId] as const;
 
-/** The teacher's list and the family's unread badge. */
-export const TEACHER_CHANNELS_PATH = '/teachers/me/channels';
+/** The family's unread badge. */
 export const portalUnreadPath = (studentId: string): string => `/portal/students/${studentId}/channel/unread`;
 
 /** The next `before` of an infinite thread: the last page's oldest message, while more exist. */

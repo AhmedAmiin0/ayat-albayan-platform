@@ -1,7 +1,6 @@
-import { channelPresenceKey, channelPresencePath, type ChannelAudience } from '@ab/client-core';
-import { channelPresenceSchema } from '@ab/shared';
+import { channelPresenceKey, type ChannelAudience } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit/lib/http/api';
+import { channelCalls } from '@ab/web-kit/components/channel/api';
 
 // The chat header's presence (docs/33): last seen from the API, online now from the socket
 // (use-presence-watch).
@@ -20,7 +19,6 @@ export interface PresenceChat {
 export const channelPresenceQuery = ({ audience, studentId }: PresenceChat, now: Date) =>
   queryOptions({
     queryKey: [...channelPresenceKey(audience, studentId), now.getTime()],
-    queryFn: async () =>
-      channelPresenceSchema.parse(await apiFetch(channelPresencePath(audience, studentId))),
+    queryFn: () => channelCalls[audience].presence(studentId),
     placeholderData: keepPreviousData,
   });

@@ -1,4 +1,5 @@
 import {
+  channelCallsByAudience,
   channelKey,
   channelPollMs,
   channelMessagesPath,
@@ -6,21 +7,22 @@ import {
   olderCursor,
   pathKey,
   portalUnreadPath,
-  TEACHER_CHANNELS_PATH,
+  teacherChannelCalls,
   type ChannelAudience,
 } from '@ab/client-core';
-import {
-  channelMessageViewSchema,
-  channelPageSchema,
-  type ChannelAttachmentInput,
-  type TeacherChannelRow,
-} from '@ab/shared';
+import { channelMessageViewSchema, type ChannelAttachmentInput } from '@ab/shared';
 import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { env } from '@ab/web-kit/lib/http/env';
 
 // The student channel (docs/31 §2). Lists and badges poll while the window has focus; the thread
 // has its socket (use-channel-live) and polls only as the fallback.
+const client = { apiFetch, apiSend };
+
+/** Each audience's reads of a chat on its own route table. */
+export const channelCalls = channelCallsByAudience(client);
+const teacherChannels = teacherChannelCalls(client);
+
 const poll = () => (document.hasFocus() ? env.inboxRefreshMs : false);
 
 export interface ChannelRef {
@@ -32,12 +34,7 @@ export interface ChannelRef {
 export const channelQuery = ({ audience, studentId }: ChannelRef, live = false) =>
   infiniteQueryOptions({
     queryKey: channelKey(audience, studentId),
-    queryFn: async ({ pageParam }) => {
-      const before = pageParam || undefined;
-      return channelPageSchema.parse(
-        await apiFetch(channelMessagesPath({ audience, studentId, before })),
-      );
-    },
+    queryFn: ({ pageParam }) => channelCalls[audience].page({ studentId, before: pageParam }),
     initialPageParam: '',
     getNextPageParam: olderCursor,
     refetchInterval: () => (document.hasFocus() ? channelPollMs(live) : false),
@@ -75,6 +72,6 @@ export const channelCountKeys = (studentId: string): readonly (readonly string[]
 
 export const teacherChannelsQuery = queryOptions({
   queryKey: ['channel', 'teacher', 'list'],
-  queryFn: () => apiFetch<TeacherChannelRow[]>(TEACHER_CHANNELS_PATH),
+  queryFn: teacherChannels.list,
   refetchInterval: poll,
 });

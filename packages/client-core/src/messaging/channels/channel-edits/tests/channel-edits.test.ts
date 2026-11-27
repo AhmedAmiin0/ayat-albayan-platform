@@ -1,11 +1,6 @@
 import type { ChannelMessageView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import {
-  channelBubbleActions,
-  channelEditError,
-  channelMessagePath,
-  channelReadsPath,
-} from '../channel-edits';
+import { channelBubbleActions, channelEditError, channelMessagePath } from '../channel-edits';
 
 const at = '2026-10-30T10:00:00.000Z';
 const msg = (over: Partial<ChannelMessageView> = {}): ChannelMessageView => ({
@@ -35,12 +30,6 @@ describe('channel edit / delete for the clients', () => {
     );
     expect(channelMessagePath({ audience: 'sales', studentId: 's', messageId: 'm' })).toBe(
       '/sales/students/s/channel/messages/m',
-    );
-    expect(channelReadsPath({ audience: 'portal', studentId: 's', messageId: 'm' })).toBe(
-      '/portal/students/s/channel/messages/m/reads',
-    );
-    expect(channelReadsPath({ audience: 'admin', studentId: 's', messageId: 'm' })).toBe(
-      '/students/s/channel/messages/m/reads',
     );
   });
 
