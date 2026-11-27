@@ -2,9 +2,8 @@ import {
   courseActionsKey,
   courseCardCalls,
   courseKeys,
+  coursePauseCalls,
   coursePauseKey,
-  courseResumePreviewPath,
-  parseResumePreview,
   pauseKeys,
   readLessonAt,
   type CardTree,
@@ -17,6 +16,7 @@ import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 // Calls, paths and keys are shared with web through @ab/client-core.
 
 const calls = courseCardCalls({ apiFetch, apiSend });
+const pauses = coursePauseCalls({ apiFetch, apiSend });
 
 /** GET the card: the admin's route or the assistant's (any student). */
 export const useCourseCard = (input: { studentId: string; tree: CardTree }) =>
@@ -48,8 +48,7 @@ export const useExtendPreview = (input: { studentId: string; subscriptionId: str
 export const useResumePreview = (input: { studentId: string; enabled: boolean }) =>
   useQuery({
     queryKey: pauseKeys.resume(input.studentId),
-    queryFn: async () =>
-      parseResumePreview(await apiFetch(courseResumePreviewPath(input.studentId))),
+    queryFn: () => pauses.resumePreview(input.studentId),
     enabled: input.enabled,
   });
 

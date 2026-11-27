@@ -7,11 +7,7 @@ export {
   type CoursePauseErrorCode,
   coursePauseErrorCode,
   coursePauseKey,
-  coursePausePath,
-  coursePausePreviewPath,
   coursePausePreviewText,
-  coursePauseResumePath,
-  coursePauseUntilPath,
   type PreviewWords,
 } from './course-pause';
 export {
@@ -63,6 +59,7 @@ export {
 } from './course-stop-form';
 export * from './course-card';
 export * from './course-stop-api';
+export * from './course-pause-api';
 export * from './lesson-times';
 export {
   type CourseKey,

@@ -5032,9 +5032,6 @@
   "src/students/course-pause/course-pause-api.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 5
     }
   },
   "src/students/list/StudentFilterBar.test.tsx": {

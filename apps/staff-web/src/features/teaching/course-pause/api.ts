@@ -1,29 +1,14 @@
-import {
-  courseActionsKey,
-  coursePauseKey,
-  courseResumePreviewPath,
-  parseResumePreview,
-  coursePausePath,
-  coursePausePreviewPath,
-  coursePauseResumePath,
-  coursePauseUntilPath,
-  pauseKeys,
-} from '@ab/client-core';
-import type {
-  CoursePausePreview,
-  CoursePauseResult,
-  CoursePauseStart,
-  CoursePauseState,
-} from '@ab/shared';
+import { courseActionsKey, coursePauseCalls, coursePauseKey, pauseKeys } from '@ab/client-core';
+import type { CoursePauseStart } from '@ab/shared';
 import { keepPreviousData, queryOptions, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 
-// Paths and the key come from @ab/client-core, the same as mobile.
+const pauses = coursePauseCalls({ apiFetch, apiSend });
 
 export const coursePauseQuery = (studentId: string) =>
   queryOptions({
     queryKey: coursePauseKey(studentId),
-    queryFn: () => apiFetch<CoursePauseState>(coursePausePath(studentId)),
+    queryFn: () => pauses.state(studentId),
   });
 
 /** The lessons the window would take the student out of. */
@@ -34,7 +19,7 @@ export const coursePausePreviewQuery = (input: {
 }) =>
   queryOptions({
     queryKey: pauseKeys.preview(input),
-    queryFn: () => apiFetch<CoursePausePreview>(coursePausePreviewPath(input)),
+    queryFn: () => pauses.preview(input),
     placeholderData: keepPreviousData,
   });
 
@@ -42,21 +27,19 @@ export const coursePausePreviewQuery = (input: {
 export const resumePreviewQuery = (studentId: string) =>
   queryOptions({
     queryKey: pauseKeys.resume(studentId),
-    queryFn: async () => parseResumePreview(await apiFetch(courseResumePreviewPath(studentId))),
+    queryFn: () => pauses.resumePreview(studentId),
     retry: false,
   });
 
 export const startCoursePause = (studentId: string, body: CoursePauseStart) =>
-  apiSend<CoursePauseResult>('POST', coursePausePath(studentId), body);
+  pauses.start(studentId, body);
 
 export const changePauseUntil = (studentId: string, untilDate: string | null) =>
-  apiSend<CoursePauseResult>('PATCH', coursePauseUntilPath(studentId), { untilDate });
+  pauses.until(studentId, untilDate);
 
 /** A package row's resume passes subscriptionId for its pause; the banner passes none. */
 export const resumeCoursePause = (studentId: string, subscriptionId?: string) =>
-  subscriptionId
-    ? apiSend<CoursePauseResult>('POST', coursePauseResumePath(studentId), { subscriptionId })
-    : apiSend<CoursePauseResult>('POST', coursePauseResumePath(studentId));
+  pauses.resume(studentId, subscriptionId);
 
 /**
  * After any write: the pause state, the student (file and lists: the status chip) and the money (the

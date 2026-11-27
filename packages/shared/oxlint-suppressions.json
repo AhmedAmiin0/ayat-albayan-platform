@@ -379,14 +379,6 @@
       "count": 1
     }
   },
-  "src/people/students/course-pause.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    },
-    "typescript/no-deprecated": {
-      "count": 1
-    }
-  },
   "src/people/students/portal.ts": {
     "stylistic/max-len": {
       "count": 1

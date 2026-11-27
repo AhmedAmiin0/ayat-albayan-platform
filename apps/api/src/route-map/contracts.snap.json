@@ -4685,7 +4685,165 @@
    ]
   }
  },
+ "GET /students/:id/course-pause": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "open": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "from_date": {
+         "type": "string"
+        },
+        "until_date": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "reason": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "created_at": {
+         "type": "string"
+        },
+        "created_by_name": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "resumed_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "extended_days": {
+         "type": [
+          "number",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "id",
+        "from_date",
+        "until_date",
+        "reason",
+        "created_at",
+        "created_by_name",
+        "resumed_at",
+        "extended_days"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "history": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "from_date": {
+        "type": "string"
+       },
+       "until_date": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_at": {
+        "type": "string"
+       },
+       "created_by_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "resumed_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "extended_days": {
+        "type": [
+         "number",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "from_date",
+       "until_date",
+       "reason",
+       "created_at",
+       "created_by_name",
+       "resumed_at",
+       "extended_days"
+      ]
+     }
+    }
+   },
+   "required": [
+    "open",
+    "history"
+   ]
+  }
+ },
  "GET /students/:id/course-pause/preview": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -4701,6 +4859,41 @@
      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "from_date": {
+     "type": "string"
+    },
+    "until_date": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "lessons": {
+     "type": "number"
+    },
+    "starts": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "extend_days": {
+     "type": [
+      "number",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "from_date",
+    "until_date",
+    "lessons"
+   ]
   }
  },
  "GET /students/:id/course-pause/resume-preview": {
@@ -4716,6 +4909,27 @@
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "back": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "extendDays": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "back",
+    "extendDays"
    ]
   }
  },
@@ -8817,6 +9031,20 @@
   }
  },
  "PATCH /students/:id/course-pause/until": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -8838,6 +9066,85 @@
     "untilDate"
    ],
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "pause": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "from_date": {
+       "type": "string"
+      },
+      "until_date": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "reason": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "created_at": {
+       "type": "string"
+      },
+      "created_by_name": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "resumed_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "extended_days": {
+       "type": [
+        "number",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "id",
+      "from_date",
+      "until_date",
+      "reason",
+      "created_at",
+      "created_by_name",
+      "resumed_at",
+      "extended_days"
+     ]
+    },
+    "cancelled": {
+     "type": "number"
+    },
+    "left": {
+     "type": "number"
+    },
+    "reopened": {
+     "type": "number"
+    },
+    "conflicts": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "pause",
+    "cancelled",
+    "left",
+    "reopened",
+    "conflicts"
+   ]
   }
  },
  "PATCH /students/:id/test": {
@@ -19588,6 +19895,20 @@
   }
  },
  "POST /students/:id/course-pause": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -19622,9 +19943,102 @@
     }
    },
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "pause": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "from_date": {
+       "type": "string"
+      },
+      "until_date": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "reason": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "created_at": {
+       "type": "string"
+      },
+      "created_by_name": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "resumed_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "extended_days": {
+       "type": [
+        "number",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "id",
+      "from_date",
+      "until_date",
+      "reason",
+      "created_at",
+      "created_by_name",
+      "resumed_at",
+      "extended_days"
+     ]
+    },
+    "cancelled": {
+     "type": "number"
+    },
+    "left": {
+     "type": "number"
+    },
+    "reopened": {
+     "type": "number"
+    },
+    "conflicts": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "pause",
+    "cancelled",
+    "left",
+    "reopened",
+    "conflicts"
+   ]
   }
  },
  "POST /students/:id/course-pause/resume": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -19636,6 +20050,85 @@
     }
    },
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "pause": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "from_date": {
+       "type": "string"
+      },
+      "until_date": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "reason": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "created_at": {
+       "type": "string"
+      },
+      "created_by_name": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "resumed_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "extended_days": {
+       "type": [
+        "number",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "id",
+      "from_date",
+      "until_date",
+      "reason",
+      "created_at",
+      "created_by_name",
+      "resumed_at",
+      "extended_days"
+     ]
+    },
+    "cancelled": {
+     "type": "number"
+    },
+    "left": {
+     "type": "number"
+    },
+    "reopened": {
+     "type": "number"
+    },
+    "conflicts": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "pause",
+    "cancelled",
+    "left",
+    "reopened",
+    "conflicts"
+   ]
   }
  },
  "POST /students/:id/course-stop": {
