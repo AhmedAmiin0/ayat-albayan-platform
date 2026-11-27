@@ -97,7 +97,9 @@ export const assistantTermsViewSchema = z.object({
 });
 
 /** GET /assistant-pay/terms: every assistant, both parts null until an admin sets them. */
-export const assistantTermsListSchema = z.array(assistantTermsViewSchema.extend({ name: z.string() }));
+export const assistantTermsListSchema = z.array(
+  assistantTermsViewSchema.extend({ name: z.string() }),
+);
 
 /** GET /assistant-pay/brought-by/:studentId: both null when nobody brought the student. */
 export const broughtByViewSchema = z.object({
