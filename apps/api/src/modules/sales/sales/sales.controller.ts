@@ -15,7 +15,10 @@ export class SalesController {
   constructor(private readonly sales: SalesService) {}
 
   @Route(salesPortalRoutes.subscriptions)
-  async subscriptions(@RouteInput() { query }: Input<'subscriptions'>, @CurrentUser() user: AuthUser) {
+  async subscriptions(
+    @RouteInput() { query }: Input<'subscriptions'>,
+    @CurrentUser() user: AuthUser,
+  ) {
     const rows = await this.sales.subscriptions(user, query.kind);
     return asResponse(salesPortalRoutes.subscriptions.response, rows);
   }

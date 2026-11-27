@@ -12,10 +12,12 @@ type App = Awaited<ReturnType<typeof salesApp>>;
 const RANGE = 'from=2026-10-01T00:00:00Z&to=2026-10-31T00:00:00Z';
 const SUBS = '/sales/subscriptions?kind=pending';
 const MEETINGS = `/sales/meetings?${RANGE}`;
-const codeOf = (res: { statusCode: number; json: <T>() => T }) => [
-  res.statusCode,
-  res.json<{ code?: string; message?: string }>(),
-];
+type Answer = Awaited<ReturnType<App['call']>>;
+interface ErrorBody {
+  code?: string;
+  message?: string;
+}
+const codeOf = (res: Answer) => [res.statusCode, res.json<ErrorBody>()];
 
 describe('/sales/subscriptions and /sales/meetings served from their route objects', () => {
   let t: App;
@@ -29,7 +31,11 @@ describe('/sales/subscriptions and /sales/meetings served from their route objec
   });
 
   it('a kind outside the list answers the validation_failed envelope; nothing read', async () => {
-    const res = await t.call({ method: 'GET', url: '/sales/subscriptions?kind=x', token: 'salesA' });
+    const res = await t.call({
+      method: 'GET',
+      url: '/sales/subscriptions?kind=x',
+      token: 'salesA',
+    });
     expect(codeOf(res)).toEqual([400, expect.objectContaining({ message: 'validation_failed' })]);
     expect(t.sales.subscriptions).not.toHaveBeenCalled();
   });

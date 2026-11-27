@@ -15,7 +15,7 @@ export type * from './people/teachers';
 export * from './sales/pick-sales';
 export * from './sales/job-applicants';
 export * from './sales/views';
-export * from './sales/portal';
+export * from './sales/sales-portal.routes';
 export * from './sales/academy';
 export * from './sales/schedule';
 export * from './sales/teacher-filter/teacher-filter';

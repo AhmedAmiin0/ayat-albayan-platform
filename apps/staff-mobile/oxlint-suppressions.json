@@ -4626,7 +4626,7 @@
       "count": 3
     },
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 4
     }
   },
   "src/sales/sales/lib/sales-href.ts": {

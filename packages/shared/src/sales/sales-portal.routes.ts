@@ -5,7 +5,7 @@ import {
   salesMeetingViewSchema,
   salesSubscriptionsQuerySchema,
   salesSubscriptionViewSchema,
-} from './sales-portal.schemas';
+} from './views';
 
 const ACCESS = { permissions: ['self.sales'], tags: ['sales'] } as const;
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { salesPortalRoutes } from '../sales-portal.routes';
+import { salesPortalRoutes } from './sales-portal.routes';
 
 const SUB = {
   id: 'sub-1',
