@@ -13,6 +13,7 @@ import {
 
 const byStudent = z.object({ id: z.uuid() });
 const path = '/students/:id/course-pause';
+const access = { permissions: ['courses.pause'], tags: ['course-pause'] } as const;
 
 /** Clients may send these writes with no body at all (the banner's resume). */
 const orEmpty = <S extends z.ZodType>(schema: S) =>
@@ -20,19 +21,27 @@ const orEmpty = <S extends z.ZodType>(schema: S) =>
 
 /** Pausing a student's course (docs/11 §7b), written once for the api and its clients. */
 export const coursePauseRoutes = {
-  state: defineRoute({ method: 'GET', path, params: byStudent, response: coursePauseStateSchema }),
+  state: defineRoute({
+    method: 'GET',
+    path,
+    params: byStudent,
+    response: coursePauseStateSchema,
+    ...access,
+  }),
   preview: defineRoute({
     method: 'GET',
     path: `${path}/preview`,
     params: byStudent,
     query: coursePausePreviewQuery,
     response: coursePausePreviewSchema,
+    ...access,
   }),
   resumePreview: defineRoute({
     method: 'GET',
     path: `${path}/resume-preview`,
     params: byStudent,
     response: courseResumePreviewSchema,
+    ...access,
   }),
   /** Riyadh dates; an empty body pauses from today until resumed. */
   start: defineRoute({
@@ -41,6 +50,7 @@ export const coursePauseRoutes = {
     params: byStudent,
     body: orEmpty(coursePauseStartSchema),
     response: coursePauseResultSchema,
+    ...access,
   }),
   until: defineRoute({
     method: 'PATCH',
@@ -48,6 +58,7 @@ export const coursePauseRoutes = {
     params: byStudent,
     body: orEmpty(coursePauseUntilSchema),
     response: coursePauseResultSchema,
+    ...access,
   }),
   /** Lessons back from today, package dates moved by the paused days. */
   resume: defineRoute({
@@ -56,5 +67,6 @@ export const coursePauseRoutes = {
     params: byStudent,
     body: orEmpty(coursePauseResumeSchema),
     response: coursePauseResultSchema,
+    ...access,
   }),
 };

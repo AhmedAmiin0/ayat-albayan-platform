@@ -1,7 +1,7 @@
 import { salesBookingRoutes } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
@@ -17,9 +17,7 @@ type Input<K extends keyof typeof salesBookingRoutes> = RouteInputOf<
  * them as the actor so they are recorded as the one who brought the student. Trials only: no
  * price, no invoice, no custom meeting link (assertBookingScope), whatever the switch.
  */
-@ApiTags('booking')
 @ApiBearerAuth()
-@Permissions('self.sales')
 @Controller()
 export class SalesBookingController {
   constructor(private readonly booking: SalesBookingService) {}
@@ -38,9 +36,7 @@ export class SalesBookingController {
 }
 
 /** The teachers and the slot grid of the assistant's wizard: the admin's, scoped. */
-@ApiTags('booking')
 @ApiBearerAuth()
-@Permissions('self.sales')
 @Controller()
 export class SalesBookingOptionsController {
   constructor(private readonly options: SalesBookingOptions) {}

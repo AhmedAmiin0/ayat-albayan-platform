@@ -20,4 +20,13 @@ describe('scheduleRuleRoutes (R-SCH-02)', () => {
     expect(response.safeParse({ ...SUMMARY, inserted: -1 }).success).toBe(false);
     expect(response.safeParse({ ...SUMMARY, rules: 1.5 }).success).toBe(false);
   });
+
+  it('lets in a lesson writer on both routes, under the schedule rules tag', () => {
+    const access = Object.values(scheduleRuleRoutes).map(({ permissions, tags }) => ({
+      permissions,
+      tags,
+    }));
+    const one = { permissions: ['lessons.write'], tags: ['schedule-rules'] };
+    expect(access).toEqual([one, one]);
+  });
 });

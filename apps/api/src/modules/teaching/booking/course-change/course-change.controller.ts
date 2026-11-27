@@ -1,16 +1,14 @@
 import { courseChangeRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CourseChange } from './course-change.service';
 import { CourseChangeViews } from './course-change.view';
 
 /** Same CourseChange as the assistant's route; any student; override with a reason allowed. */
-@ApiTags('booking')
 @ApiBearerAuth()
-@Permissions('lessons.write')
 @Controller()
 export class CourseChangeController {
   constructor(
@@ -25,10 +23,7 @@ export class CourseChangeController {
 
   @Route(routes.check)
   @HttpCode(200)
-  check(
-    @RouteInput() { body }: RouteInputOf<typeof routes.check>,
-    @CurrentUser() user: AuthUser,
-  ) {
+  check(@RouteInput() { body }: RouteInputOf<typeof routes.check>, @CurrentUser() user: AuthUser) {
     return this.course.check(body, { user, role: 'admin' });
   }
 

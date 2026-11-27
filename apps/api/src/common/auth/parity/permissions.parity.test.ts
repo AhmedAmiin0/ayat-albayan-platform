@@ -1,6 +1,13 @@
 import { isPermission, systemPermissionsOf, USER_ROLES, type UserRole } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { accessBefore, isGatedBy, walkRoutes, type BeforeAccess, type RouteAccess } from './route-walk.test-util';
+import {
+  accessBefore,
+  isGatedBy,
+  permissionKeys,
+  walkRoutes,
+  type BeforeAccess,
+  type RouteAccess,
+} from './route-walk.test-util';
 
 // THE safety net of dynamic roles: for every endpoint, each of the five system roles (and a user
 // with no role) is admitted or refused exactly as under the old @Roles metadata, frozen in
@@ -103,7 +110,7 @@ describe('system-role parity with the old @Roles table', () => {
 
   // Course pause has its own routes only, admin and sales (docs/16 row 37c).
   it('courses.pause gates exactly the course pause routes, for admin and sales', () => {
-    const keys = routes.filter((r) => r.permission === 'courses.pause').map((r) => r.key).sort();
+    const keys = routes.filter((r) => permissionKeys(r).join('|') === 'courses.pause').map((r) => r.key).sort();
     // Resume previews what it does before acting (resumePreview).
     const handlers = ['preview', 'resume', 'resumePreview', 'start', 'state', 'until'];
     expect(keys).toEqual(handlers.map((h) => `CoursePauseController.${h}`));
