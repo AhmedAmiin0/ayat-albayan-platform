@@ -6457,20 +6457,12 @@
       "count": 2
     }
   },
-  "src/modules/sales/sales-students/lessons/sales-lesson-actions.controller.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/zod-inputs": {
-      "count": 5
-    }
-  },
   "src/modules/sales/sales-students/lessons/sales-lesson-actions.service.ts": {
     "typescript/consistent-type-definitions": {
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/sales/sales-students/lessons/tests/sales-lesson-actions.http.test.ts": {

@@ -1,8 +1,6 @@
 import { z } from 'zod';
 import type { Attendance, LessonStatus, Program, StudentStatus } from '@ab/catalog';
 import type { ReportSummaryView } from '../../reports';
-import { instant } from '@ab/core';
-import { moveReasonSchema } from '../../schemas';
 import { isCancelledLesson } from '@ab/schedule';
 import type { SalesHistoryEntry } from '../academy';
 import type { SalesPackageSummary } from './student-package';
@@ -76,26 +74,6 @@ export interface SalesStudentDetails {
   package?: SalesPackageSummary | null;
   /** The guardian's name and siblings; absent in an old cache. */
   family?: SalesStudentFamily;
-}
-
-/** POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override. */
-export const salesRescheduleSchema = z.strictObject({
-  startsAt: instant,
-  reason: moveReasonSchema,
-});
-/** Teacher or student cancels may come after the lesson ended and correct an auto-held one. */
-export const salesCancelSchema = z.strictObject({
-  reason: z.string().trim().max(500).optional(),
-  by: z.enum(['admin', 'teacher', 'student']).optional(),
-});
-export type SalesReschedule = z.infer<typeof salesRescheduleSchema>;
-export type SalesCancel = z.infer<typeof salesCancelSchema>;
-
-/** What a sales reschedule answers: the new lesson's id, time and status (no admin LessonView). */
-export interface SalesLessonMoved {
-  id: string;
-  starts_at: string;
-  status: LessonStatus;
 }
 
 const HELD: readonly LessonStatus[] = ['completed', 'late'];

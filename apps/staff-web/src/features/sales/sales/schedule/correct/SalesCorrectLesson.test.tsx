@@ -16,8 +16,8 @@ const NOW = new Date('2026-10-12T16:00:00.000Z');
 const c = t.lessons.correct;
 const a = t.sales.lessonActions;
 // 15:00–15:30Z: ended an half hour before NOW.
-const ENDED = scheduleLesson({ id: 'l-9', status: 'scheduled' });
-const AUTO_HELD = scheduleLesson({ id: 'l-9', status: 'completed' });
+const ENDED = scheduleLesson({ id: 'a1000000-0000-4000-8000-000000000009', status: 'scheduled' });
+const AUTO_HELD = scheduleLesson({ id: 'a1000000-0000-4000-8000-000000000009', status: 'completed' });
 
 function open(lesson: SalesScheduleLesson, confirmation = false) {
   renderWithQuery(<SalesLessonDrawer lesson={lesson} now={NOW} onClose={vi.fn()} />, confirmation);
@@ -31,14 +31,14 @@ afterEach(() => {
 
 describe('sales «لم تنعقد؟» (11-02) and «تصحيح حالة الحلقة» (11-03)', () => {
   it('a held lesson: the three other statuses; «غائب» posts { to }, then says it is done', async () => {
-    apiSend.mockResolvedValue({ id: 'l-9', status: 'no_show' });
+    apiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000009', status: 'no_show' });
     const drawer = open(AUTO_HELD);
     expect(within(drawer).getByText(c.outcomeHint)).toBeTruthy();
     expect(within(drawer).queryByText(t.lessons.sheet.readOnly)).toBeNull();
     expect(within(drawer).queryByRole('button', { name: c.to.completed })).toBeNull();
     fireEvent.click(within(drawer).getByRole('button', { name: c.to.no_show }));
     fireEvent.click(within(drawer).getByRole('button', { name: c.confirm }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-9/correct', { to: 'no_show' }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/a1000000-0000-4000-8000-000000000009/correct', { to: 'no_show' }));
     expect(await within(drawer).findByText(c.done)).toBeTruthy();
   });
 
@@ -60,7 +60,7 @@ describe('sales «لم تنعقد؟» (11-02) and «تصحيح حالة الحل
   });
 
   it('no confirmation required: a lesson still to come offers «لم تنعقد؟», never «تأكيد»', async () => {
-    apiSend.mockResolvedValue({ id: 'l-9', status: 'cancelled_by_teacher' });
+    apiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000009', status: 'cancelled_by_teacher' });
     renderWithQuery(<SalesLessonDrawer lesson={ENDED} now={new Date('2026-10-12T14:00:00.000Z')} onClose={vi.fn()} />);
     const drawer = screen.getByRole('dialog', { name: 'سهيلة' });
     expect(within(drawer).queryByRole('button', { name: a.confirm })).toBeNull();
@@ -69,6 +69,6 @@ describe('sales «لم تنعقد؟» (11-02) and «تصحيح حالة الحل
     fireEvent.click(within(drawer).getByRole('button', { name: t.lessons.back }));
     fireEvent.click(within(drawer).getByRole('button', { name: c.byTeacher }));
     fireEvent.click(within(drawer).getByRole('button', { name: a.confirmCancel }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-9/cancel', { by: 'teacher' }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/a1000000-0000-4000-8000-000000000009/cancel', { by: 'teacher' }));
   });
 });

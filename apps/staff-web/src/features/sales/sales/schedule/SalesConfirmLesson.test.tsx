@@ -15,7 +15,7 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
 const NOW = new Date('2026-10-12T14:00:00.000Z');
 const a = t.sales.lessonActions;
 // Another family's lesson (sales confirms any lesson), scheduled, 15:00–15:30Z.
-const LESSON = scheduleLesson({ id: 'l-9', status: 'scheduled' });
+const LESSON = scheduleLesson({ id: 'a1000000-0000-4000-8000-000000000009', status: 'scheduled' });
 
 function open(lesson = LESSON) {
   // Confirm exists only while the academy requires a confirmation.
@@ -33,11 +33,11 @@ afterEach(() => {
 
 describe('sales «تأكيد الحلقة» in the lesson drawer', () => {
   it('scheduled, not ended, with lessons.confirm: confirms, then reads «مؤكدة»', async () => {
-    apiSend.mockResolvedValue({ id: 'l-9', starts_at: LESSON.starts_at, status: 'confirmed' });
+    apiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-000000000009', starts_at: LESSON.starts_at, status: 'confirmed' });
     const drawer = open();
     expect(within(drawer).queryByText(t.lessons.sheet.readOnly)).toBeNull();
     fireEvent.click(within(drawer).getByRole('button', { name: a.confirm }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-9/confirm'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/a1000000-0000-4000-8000-000000000009/confirm', undefined));
     expect(await within(drawer).findByText(a.confirmed)).toBeTruthy();
     expect(within(drawer).getByText(t.enums.lessonStatus.confirmed)).toBeTruthy();
     expect(within(drawer).queryByRole('button', { name: a.confirm })).toBeNull();
