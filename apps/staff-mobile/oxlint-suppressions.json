@@ -788,10 +788,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 2
