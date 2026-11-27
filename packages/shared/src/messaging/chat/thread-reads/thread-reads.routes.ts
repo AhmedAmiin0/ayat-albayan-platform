@@ -1,6 +1,9 @@
-import { defineRoute } from '@ab/core';
+import { defineRoute, phoneE164 } from '@ab/core';
+import { z } from 'zod';
 import { threadSyncQuerySchema, threadSyncSchema } from '../../thread-sync';
+import { threadDetailQuerySchema } from './thread-detail-query.schemas';
 import { threadListQuerySchema, threadPageSchema } from './thread-list.schemas';
+import { threadDeltaSchema, threadDetailSchema } from './thread-page.schemas';
 
 const reader = { permissions: ['inbox.read'], tags: ['inbox'] } as const;
 
@@ -23,6 +26,18 @@ export const threadReadRoutes = {
     path: '/threads',
     query: threadListQuerySchema,
     response: threadPageSchema,
+    ...reader,
+  }),
+  /**
+   * 200; a page of the chat, or with `after` only what changed since (~2 reads); 400
+   * invalid_phone. Reading stamps the chat's new inbound rows read.
+   */
+  detail: defineRoute({
+    method: 'GET',
+    path: '/threads/:phone',
+    params: z.object({ phone: phoneE164 }),
+    query: threadDetailQuerySchema,
+    response: z.union([threadDetailSchema, threadDeltaSchema]),
     ...reader,
   }),
 };
