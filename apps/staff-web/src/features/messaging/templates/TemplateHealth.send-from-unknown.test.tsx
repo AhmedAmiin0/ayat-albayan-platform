@@ -16,7 +16,7 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
 
 const s = t.templates.sendFrom;
 const NAME = t.templates.names.booking_confirmation_plain;
-const GONE = template({ number_id: 'n-gone', numbers: [] });
+const GONE = template({ number_id: '00000000-0000-4000-8000-0000000000f0', numbers: [] });
 
 function renderWith(numbers = [numberView()]) {
   routeFetch(apiFetch, [
@@ -48,13 +48,13 @@ describe('template health — «يُرسل من» with an unknown number', () =>
 
   it('editable: the missing number is its own disabled option, selected; a stopped number is marked', async () => {
     perms.list = ['settings.read', 'templates.manage'];
-    renderWith([numberView(), numberView({ id: 'n-off', label: 'Off line', enabled: false, is_default: false })]);
+    renderWith([numberView(), numberView({ id: '00000000-0000-4000-8000-0000000000f1', label: 'Off line', enabled: false, is_default: false })]);
     const select = await screen.findByRole('combobox', { name: s.labelFor.replace('{name}', NAME) });
     const options = await within(select).findAllByRole('option');
     const texts = options.map((o) => o.textContent);
     expect(texts[1]).toBe(s.unknownNumber);
     expect((options[1] as HTMLOptionElement).disabled).toBe(true);
-    expect((select as HTMLSelectElement).value).toBe('n-gone');
+    expect((select as HTMLSelectElement).value).toBe('00000000-0000-4000-8000-0000000000f0');
     const off = s.option.replace('{label}', 'Off line').replace('{role}', t.numbers.purpose.notifications);
     expect(texts).toContain(`${off} ${s.disabledMark}`);
     expect(screen.getAllByText(`${s.header}:`, { exact: false }).length).toBeGreaterThan(0);

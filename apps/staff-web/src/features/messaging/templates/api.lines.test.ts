@@ -10,12 +10,12 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 afterEach(() => apiSend.mockReset());
 
 describe('template routes per number (owner 2026-10-18)', () => {
-  it('health posts the line when given, nothing for both', async () => {
+  it('health posts the line when given, an empty body for both', async () => {
     apiSend.mockResolvedValue({ lines: [], templates: [] });
     await checkTemplateHealth('chat');
     expect(apiSend).toHaveBeenLastCalledWith('POST', '/messaging/templates/health', { line: 'chat' });
     await checkTemplateHealth();
-    expect(apiSend).toHaveBeenLastCalledWith('POST', '/messaging/templates/health');
+    expect(apiSend).toHaveBeenLastCalledWith('POST', '/messaging/templates/health', {});
   });
 
   it('move patches the row’s line', async () => {
