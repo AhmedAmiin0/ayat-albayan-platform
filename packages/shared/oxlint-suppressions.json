@@ -560,11 +560,6 @@
       "count": 1
     }
   },
-  "src/sales/payment-link/views.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/sales/pick-sales.ts": {
     "stylistic/max-len": {
       "count": 1
