@@ -1,17 +1,16 @@
 import {
   courseActionsKey,
   courseKeys,
-  courseMoveBase,
   courseStopCalls,
-  courseStopPath,
   courseTeacherCalls,
   courseTimesCalls,
   type CourseMoveKind,
 } from '@ab/client-core';
-import type { CourseStopPreview, CourseStopRequest, ProfileCourseView } from '@ab/shared';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { CourseStopRequest } from '@ab/shared';
+import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+import { currentSource, readCurrentPackage } from './move-calls';
 
 // The same routes in the admin and sales trees, each with its own key; shared with web.
 
@@ -30,17 +29,6 @@ interface Keys {
   times: boolean;
 }
 
-/** The first GET the viewer may call without subscriptionId (the server's current package). */
-function currentPath(studentId: string, keys: Keys): string | null {
-  if (keys.stop) return courseStopPath(studentId);
-  if (keys.times) return `${courseMoveBase({ studentId, kind: 'times' })}/change`;
-  if (keys.teacher) return `${courseMoveBase({ studentId, kind: 'teacher' })}/change`;
-  return null;
-}
-
-const idOf = (data: CourseStopPreview | ProfileCourseView): string =>
-  'course' in data ? data.course.subscriptionId : data.subscriptionId;
-
 /** The current package: its id, null = none (404, or no key to ask), undefined = not known yet. */
 type CurrentPackage = string | null | undefined;
 
@@ -57,19 +45,18 @@ export function useCurrentPackage(input: {
   given: string | null | undefined;
   keys: Keys;
 }) {
-  const path = input.given ? null : currentPath(input.studentId, input.keys);
+  const source = input.given ? null : currentSource(input.keys);
   const current = useQuery({
-    queryKey: courseKeys.current(input.studentId, path),
-    queryFn: () => apiFetch<CourseStopPreview | ProfileCourseView>(path ?? ''),
-    enabled: path !== null,
+    queryKey: courseKeys.current(input.studentId, source),
+    queryFn: source === null ? skipToken : () => readCurrentPackage(input.studentId, source),
   });
-  const idOfAnswer = (data: typeof current.data, error: unknown): CurrentPackage => {
-    if (input.given || path === null) return input.given ?? null;
-    if (data) return idOf(data);
+  const idOfAnswer = (data: string | undefined, error: unknown): CurrentPackage => {
+    if (input.given || source === null) return input.given ?? null;
+    if (data) return data;
     return noPackage(error) ? null : undefined;
   };
   const settle = async (): Promise<CurrentPackage> => {
-    if (path === null) return idOfAnswer(undefined, null);
+    if (source === null) return idOfAnswer(undefined, null);
     const answer = await current.refetch();
     return idOfAnswer(answer.data, answer.error);
   };
@@ -97,7 +84,7 @@ export function useHeldPackage(current: string | null, keep: boolean): string | 
 export const useStopPreview = (sub: SubRef) =>
   useQuery({
     queryKey: courseKeys.stopPreview(sub),
-    queryFn: () => stops.preview(sub),
+    queryFn: () => stops.preview(sub.studentId, { subscriptionId: sub.subscriptionId }),
   });
 
 /** GET …/course-teacher|course-times/change?subscriptionId=: the course and its next lesson. */

@@ -6,8 +6,7 @@ import type { CourseStopCalls } from './course-stop-api.types';
 export function courseStopCalls(client: ApiClient): CourseStopCalls {
   const call = callWith(client);
   return {
-    preview: ({ studentId, subscriptionId }) =>
-      call({ route: routes.preview, params: { id: studentId }, query: { subscriptionId } }),
+    preview: (id, query) => call({ route: routes.preview, params: { id }, query }),
     stop: (studentId, body) => call({ route: routes.stop, params: { id: studentId }, body }),
   };
 }

@@ -1,9 +1,18 @@
 import { SUB_ID } from '@/sales-course/testing/fixtures';
-import { teacherChangeCalls, timesChangeCalls } from './move-calls';
+import { ApiError } from '@ab/mobile-kit';
+import { serve, stopPreview, SUB } from './fixtures';
+import {
+  currentSource,
+  readCurrentPackage,
+  teacherChangeCalls,
+  timesChangeCalls,
+} from './move-calls';
 
 const mockApiSend = jest.fn();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 
@@ -20,7 +29,10 @@ const body = {
 const check = { conflicts: [], remaining: 5, endsOn: '2026-10-21' };
 const saved = { subscriptionId: SUB_ID, ruleIds: [SUB_ID], endsOn: '2026-10-21' };
 
-afterEach(() => mockApiSend.mockReset());
+afterEach(() => {
+  mockApiSend.mockReset();
+  mockApiFetch.mockReset();
+});
 
 test('new times are checked and saved on the student course-times routes', async () => {
   mockApiSend.mockResolvedValueOnce(check).mockResolvedValueOnce(saved);
@@ -37,7 +49,10 @@ test('a teacher move sends the new teacher with the check and the change', async
   const calls = teacherChangeCalls(STUDENT, TEACHER);
   const path = `/students/${STUDENT}/course-teacher/change`;
   await calls.check(body);
-  expect(mockApiSend).toHaveBeenLastCalledWith('POST', `${path}/check`, { ...body, teacherId: TEACHER });
+  expect(mockApiSend).toHaveBeenLastCalledWith('POST', `${path}/check`, {
+    ...body,
+    teacherId: TEACHER,
+  });
   await calls.change(body);
   expect(mockApiSend).toHaveBeenLastCalledWith('POST', path, { ...body, teacherId: TEACHER });
 });
@@ -49,4 +64,28 @@ test('the two tables and two teachers never share a cached check', () => {
     teacherChangeCalls(STUDENT, SUB_ID).key,
   ];
   expect(new Set(keys).size).toBe(3);
+});
+
+test('the current package is read from the first route the viewer may call', () => {
+  expect(currentSource({ stop: true, times: true, teacher: true })).toBe('stop');
+  expect(currentSource({ stop: false, times: true, teacher: true })).toBe('times');
+  expect(currentSource({ stop: false, times: false, teacher: true })).toBe('teacher');
+  expect(currentSource({ stop: false, times: false, teacher: false })).toBeNull();
+});
+
+test.each(['stop', 'times', 'teacher'] as const)(
+  'the %s route answers the current package without a subscription id',
+  async (source) => {
+    mockApiFetch.mockImplementation(serve());
+    await expect(readCurrentPackage('s1', source)).resolves.toBe(SUB);
+    expect(mockApiFetch).toHaveBeenCalledWith(expect.not.stringContaining('subscriptionId'));
+  },
+);
+
+test('a current package answer the route does not describe fails with bad_response', async () => {
+  const { owe: _owe, ...noOwe } = stopPreview();
+  mockApiFetch.mockResolvedValue(noOwe);
+  const failure = await readCurrentPackage('s1', 'stop').catch((e: unknown) => e);
+  expect(failure).toBeInstanceOf(ApiError);
+  expect(failure).toMatchObject({ body: { code: 'bad_response' } });
 });
