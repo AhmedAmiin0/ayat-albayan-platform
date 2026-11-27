@@ -1,1 +1,4 @@
-export { InsetCell, InsetGroup, InsetSeparator, useInset } from './Inset';
+export { InsetCell } from './InsetCell';
+export { InsetGroup } from './InsetGroup';
+export { InsetSeparator } from './InsetSeparator';
+export { useInset } from './use-inset';

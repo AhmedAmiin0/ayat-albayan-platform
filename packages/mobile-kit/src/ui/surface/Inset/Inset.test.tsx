@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { ListRow } from '../../layout/ListRow';
-import { InsetGroup, useInset } from './Inset';
+import { InsetCell, InsetGroup, InsetSeparator, useInset } from '.';
 import { AppText } from '../../primitives/AppText';
 
 function Probe() {
@@ -34,4 +34,29 @@ test('alone: a ListRow keeps its own fill and hairline; an empty group renders n
   expect(screen.getByText('alone')).toBeTruthy();
   expect(screen.getByRole('button', { name: /خارج/ })).toHaveStyle({ borderBottomWidth: 1 });
   expect(screen.queryByTestId('empty')).toBeNull();
+});
+
+test('a virtualised cell: the first rounds the top, the last the bottom, rows know they are inset', async () => {
+  await render(
+    <>
+      <InsetCell place={{ first: true, last: false }}>
+        <Probe />
+      </InsetCell>
+      <InsetCell place={{ first: false, last: true }}>
+        <AppText>last</AppText>
+      </InsetCell>
+    </>,
+  );
+  const [top, bottom] = screen.getAllByTestId('inset-cell');
+  expect(top).toHaveStyle({ borderTopLeftRadius: 20, borderBottomLeftRadius: 0 });
+  expect(bottom).toHaveStyle({ borderTopLeftRadius: 0, borderBottomRightRadius: 20 });
+  expect(screen.getByText('inset')).toBeTruthy();
+});
+
+test('a separator keeps the side edges and draws the inset rule', async () => {
+  await render(<InsetSeparator />);
+  expect(screen.toJSON()).toMatchObject({
+    props: { style: expect.objectContaining({ borderLeftWidth: expect.any(Number) }) },
+    children: [{ props: { style: expect.objectContaining({ marginHorizontal: 16 }) } }],
+  });
 });

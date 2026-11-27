@@ -1,0 +1,1 @@
+export { InsetCell } from './InsetCell';

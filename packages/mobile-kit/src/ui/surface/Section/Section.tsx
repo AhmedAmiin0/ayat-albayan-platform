@@ -1,10 +1,10 @@
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { type, useTheme } from '../../../theme';
 import { AppText } from '../../primitives/AppText';
+import type { SectionProps } from './Section.types';
 
 /** A titled block inside a screen: 14pt ink-2 heading, then its content. */
-export function Section({ title, children }: { title: string; children: ReactNode }) {
+export function Section({ title, children }: SectionProps) {
   const { color } = useTheme();
   return (
     <View style={{ gap: 8 }}>
