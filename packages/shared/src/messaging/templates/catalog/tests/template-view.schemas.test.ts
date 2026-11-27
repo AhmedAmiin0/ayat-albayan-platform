@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { templateViewSchema } from '..';
-import { aTemplateView } from './template-view.builder';
+import { aTemplateView } from '../../../../testing/templates';
 
 const parses = (v: unknown) => templateViewSchema.safeParse(v).success;
 

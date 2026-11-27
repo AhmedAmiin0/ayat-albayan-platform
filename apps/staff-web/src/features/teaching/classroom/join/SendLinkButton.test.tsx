@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import type { TemplateStatus } from '@ab/catalog';
+import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { JOUD, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError, t } from '@ab/web-kit';
 import { SendLinkButton } from './SendLinkButton';
@@ -9,8 +11,8 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-function open(l: ReturnType<typeof lesson>, status = 'approved') {
-  apiFetch.mockResolvedValue([{ key: 'lesson_join_link', status }]);
+function open(l: ReturnType<typeof lesson>, status: TemplateStatus = 'approved') {
+  apiFetch.mockResolvedValue([template({ key: 'lesson_join_link', status })]);
   render(
     <QueryClientProvider client={new QueryClient()}>
       <SendLinkButton lesson={l} />

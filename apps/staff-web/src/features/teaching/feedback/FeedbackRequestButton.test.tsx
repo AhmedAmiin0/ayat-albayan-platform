@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import type { TemplateStatus } from '@ab/catalog';
+import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { JOUD, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError, t } from '@ab/web-kit';
 import { FeedbackRequestButton } from './FeedbackRequestButton';
@@ -13,9 +15,9 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   apiSend,
 }));
 
-const tpl = (status: string) => [{ key: 'lesson_feedback_request', status }];
+const tpl = (status: TemplateStatus) => [template({ key: 'lesson_feedback_request', status })];
 
-function open(l: ReturnType<typeof lesson>, status = 'approved') {
+function open(l: ReturnType<typeof lesson>, status: TemplateStatus = 'approved') {
   apiFetch.mockResolvedValue(tpl(status));
   render(
     <QueryClientProvider client={new QueryClient()}>

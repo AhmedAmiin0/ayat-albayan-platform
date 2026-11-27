@@ -3,7 +3,7 @@ import {
   templateHealthViewSchema, templateLineViewSchema, templateMoveViewSchema, templateSkipSchema,
 } from '..';
 import { aLineSync } from './template-sync.builder';
-import { aTemplateView } from './template-view.builder';
+import { aTemplateView } from '../../../../testing/templates';
 
 const FACTS = {
   line: 'chat', configured: true, provider: 'meta', waba_id: '1', phone_number_id: '2',

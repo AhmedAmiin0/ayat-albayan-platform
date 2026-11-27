@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { templateCatalogRoutes as catalog } from '..';
 import { aLineSync } from './template-sync.builder';
-import { aTemplateView } from './template-view.builder';
+import { aTemplateView } from '../../../../testing/templates';
 
 const line = (r: { method: string; path: string }) => `${r.method} ${r.path}`;
 const FACTS = {
