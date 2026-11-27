@@ -61,7 +61,7 @@ export const messageViewSchema = z.object({
   read_at: at,
   sent_manually_at: at,
   app_send_until: at.optional(),
-  /** @deprecated Read sender_name (D4); still filled for old mobile builds and cached rows. */
+  /** Old: read sender_name (D4); still filled for old mobile builds and cached rows. */
   sent_by_teacher_name: text.optional(),
   sender_name: text.optional(),
   automatic: z.boolean().optional(),
