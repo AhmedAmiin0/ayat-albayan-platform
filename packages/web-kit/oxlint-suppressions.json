@@ -316,16 +316,6 @@
       "count": 2
     }
   },
-  "src/components/channel/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/components/channel/edit/edit-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/components/ui/display/avatar.tsx": {
     "stylistic/max-len": {
       "count": 2

@@ -173,11 +173,6 @@
       "count": 1
     }
   },
-  "src/messaging/channels/channels.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
   "src/messaging/channels/teacher-pick.ts": {
     "complexity": {
       "count": 1

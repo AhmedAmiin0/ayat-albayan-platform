@@ -22,9 +22,13 @@ const page: ChannelPage = channelPage({
 const posts = () => mockApiSend.mock.calls.filter(([m, p]) => m === 'POST' && p === PATH);
 const lastPost = () => posts().at(-1)?.[2] as Record<string, unknown>;
 
+/** The API's answers: the stored message for a send, nothing (204) for a read mark. */
+const stored = channelMessage({ id: 'm2', body: 'السلام عليكم', mine: true });
+const answerOf = (path: string) => Promise.resolve(path === PATH ? stored : undefined);
+
 beforeEach(() => {
   mockApiFetch.mockReset().mockResolvedValue(page);
-  mockApiSend.mockReset().mockResolvedValue({});
+  mockApiSend.mockReset().mockImplementation((_m: string, path: string) => answerOf(path));
 });
 
 const open = async () => {
@@ -38,13 +42,13 @@ const open = async () => {
 test('words typed while a send is on its way stay in the box', async () => {
   let answer: (v: unknown) => void = () => undefined;
   mockApiSend.mockImplementation((_m: string, path: string) =>
-    path === PATH ? new Promise((r) => (answer = r)) : Promise.resolve({}),
+    path === PATH ? new Promise((r) => (answer = r)) : answerOf(path),
   );
   const box = await open();
   await fireEvent.changeText(box, 'السلام عليكم');
   await fireEvent.press(screen.getByRole('button', { name: c.send }));
   await fireEvent.changeText(box, 'السلام عليكم ورحمة الله');
-  await act(async () => answer({}));
+  await act(async () => answer(stored));
   await waitFor(() => expect(screen.getByDisplayValue('ورحمة الله')).toBeTruthy());
 });
 

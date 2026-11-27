@@ -1,10 +1,9 @@
-import { channelReadPath } from '@ab/client-core';
+import { channelWriterOf } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { apiSend } from '../lib/http/api';
 import { useAppActive } from '../lib/presence/use-app-active';
 import { useScreenFocused } from '../ui/connecting/use-screen-focus';
-import { TEACHER_CHANNELS_KEY, type ChannelRef } from './channel-api';
+import { channelWrites, TEACHER_CHANNELS_KEY, type ChannelRef } from './channel-api';
 
 interface Mark {
   /** The thread's mode is 'write' (channelMode): a monitor or a closed chat never marks. */
@@ -28,7 +27,7 @@ export function useMarkRead(ref: ChannelRef, { enabled, at }: Mark): void {
   const { audience, studentId } = ref;
   useEffect(() => {
     if (!seen) return;
-    apiSend('POST', channelReadPath(audience, studentId), { at: seen }).then(
+    channelWrites[channelWriterOf(audience)].read({ studentId, at: seen }).then(
       () => client.invalidateQueries({ queryKey: TEACHER_CHANNELS_KEY }),
       () => undefined,
     );

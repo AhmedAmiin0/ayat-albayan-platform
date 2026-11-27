@@ -1,10 +1,14 @@
 import type {
   ChannelMessageView,
+  channelPostSchema,
+  channelUploadSchema,
   ChannelPage,
   ChannelPresence,
   ChannelReads,
+  SignedUpload,
   TeacherChannelRow,
 } from '@ab/shared';
+import type { z } from 'zod';
 
 export interface ChannelPageAsk {
   studentId: string;
@@ -27,4 +31,32 @@ export interface ChannelCalls {
 
 export interface TeacherChannelCalls extends ChannelCalls {
   list: () => Promise<TeacherChannelRow[]>;
+}
+
+export interface ChannelPostAsk {
+  studentId: string;
+  post: z.input<typeof channelPostSchema>;
+}
+
+export interface ChannelReadAsk {
+  studentId: string;
+  /** The newest message shown; the API reads up to now when absent. */
+  at?: string | undefined;
+}
+
+export interface ChannelSlotAsk {
+  studentId: string;
+  file: z.input<typeof channelUploadSchema>;
+}
+
+export interface ChannelEditAsk extends ChannelMessageAsk {
+  body: string;
+}
+
+/** A participant's writes in a student chat: send, read mark, file slot and edit. */
+export interface ChannelWriteCalls {
+  post: (ask: ChannelPostAsk) => Promise<ChannelMessageView>;
+  read: (ask: ChannelReadAsk) => Promise<undefined>;
+  upload: (ask: ChannelSlotAsk) => Promise<SignedUpload>;
+  edit: (ask: ChannelEditAsk) => Promise<ChannelMessageView>;
 }

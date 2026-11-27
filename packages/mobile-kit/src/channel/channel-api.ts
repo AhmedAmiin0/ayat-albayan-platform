@@ -1,4 +1,10 @@
-import { channelCallsByAudience, channelKey, channelPollMs, olderCursor } from '@ab/client-core';
+import {
+  channelCallsByAudience,
+  channelKey,
+  channelPollMs,
+  channelWritesByAudience,
+  olderCursor,
+} from '@ab/client-core';
 import type { ChannelAudience } from '@ab/client-core';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '../lib/http/api';
@@ -10,6 +16,9 @@ import { useScreenFocused } from '../ui/connecting/use-screen-focus';
 
 /** Each audience's reads of a chat on its own route table. */
 export const channelCalls = channelCallsByAudience({ apiFetch, apiSend });
+
+/** Each writer's send, read mark, file slot and edit (the monitor has none). */
+export const channelWrites = channelWritesByAudience({ apiFetch, apiSend });
 
 export interface ChannelRef {
   audience: ChannelAudience;
