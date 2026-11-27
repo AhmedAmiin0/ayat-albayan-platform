@@ -658,9 +658,6 @@
   "src/features/finance/payouts/api.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/features/finance/payouts/list/PayoutActions.tsx": {
@@ -962,13 +959,13 @@
   },
   "src/features/finance/teacher-earnings/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 3
     },
     "ab/no-untyped-api-calls": {
-      "count": 7
+      "count": 2
     }
   },
   "src/features/finance/teacher-earnings/fixtures.ts": {
@@ -5642,7 +5639,7 @@
   },
   "src/features/teaching/course-actions/api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 2
     }
   },
   "src/features/teaching/course-pause/ChangeUntilDialog.tsx": {

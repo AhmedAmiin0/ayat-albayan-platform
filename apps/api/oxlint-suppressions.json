@@ -1997,14 +1997,6 @@
       "count": 2
     }
   },
-  "src/modules/finance/teacher-earnings/earnings.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 13
-    }
-  },
   "src/modules/finance/teacher-earnings/earnings.errors.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -2018,9 +2010,6 @@
   "src/modules/finance/teacher-earnings/earnings.mine.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 3
     }
   },
   "src/modules/finance/teacher-earnings/earnings.mine.http.test.ts": {
@@ -8464,11 +8453,6 @@
     },
     "stylistic/max-len": {
       "count": 8
-    }
-  },
-  "src/modules/teaching/course-stop/course-stop.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/teaching/feedback/feedback.controller.ts": {

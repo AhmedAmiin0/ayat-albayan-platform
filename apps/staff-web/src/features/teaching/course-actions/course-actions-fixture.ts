@@ -1,4 +1,4 @@
-import type { BookedCourse, ProfileCourseView } from '@ab/shared';
+import type { BookedCourse, CourseStopResult, ProfileCourseView } from '@ab/shared';
 import type { BookingTeacherOption } from '@ab/schedule';
 import type { Mock } from 'vitest';
 
@@ -12,6 +12,16 @@ export const MON = '2026-10-05T15:00:00.000Z';
 export const SUB = '7d3c2b1a-0f9e-4d8c-8b7a-6a5b4c3d2e1f';
 export const OLD_T = '1a000000-0000-4000-8000-000000000001';
 export const NEW_T = '1a000000-0000-4000-8000-000000000002';
+
+/** A stop's answer with nothing cancelled and no refund. */
+export const STOPPED: CourseStopResult = {
+  subscriptionId: SUB,
+  cancelledLessons: 0,
+  endedRules: 0,
+  studentStatus: 'churned',
+  stoppedAt: NOW,
+  refund: null,
+};
 
 const COURSE: BookedCourse = {
   days: [

@@ -4743,6 +4743,20 @@
   }
  },
  "GET /students/:id/course-stop": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -4753,6 +4767,132 @@
      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string"
+    },
+    "futureLessons": {
+     "type": "number"
+    },
+    "futureStarts": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "activeRules": {
+     "type": "number"
+    },
+    "paid": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string"
+    },
+    "refund": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "paid": {
+         "type": "number"
+        },
+        "perLesson": {
+         "type": "number"
+        },
+        "attended": {
+         "type": "number"
+        },
+        "ratePercent": {
+         "type": "number"
+        },
+        "charged": {
+         "type": "number"
+        },
+        "refund": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "paid",
+        "perLesson",
+        "attended",
+        "ratePercent",
+        "charged",
+        "refund"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "refundUnavailable": {
+     "type": "boolean"
+    },
+    "owe": {
+     "type": "object",
+     "properties": {
+      "charged": {
+       "type": "number"
+      },
+      "price": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "charged",
+      "price"
+     ]
+    },
+    "stopped": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "at": {
+         "type": "string"
+        },
+        "by": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "reason": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "at",
+        "by",
+        "reason"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "futureLessons",
+    "activeRules",
+    "paid",
+    "currency",
+    "refund",
+    "refundUnavailable",
+    "owe",
+    "stopped"
+   ]
   }
  },
  "GET /students/:id/lessons": {
@@ -4896,6 +5036,540 @@
    },
    "required": [
     "id"
+   ]
+  }
+ },
+ "GET /teacher-earnings/:teacherId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "teacherId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "earned": {
+     "type": "number"
+    },
+    "paid": {
+     "type": "number"
+    },
+    "outstanding": {
+     "type": "number"
+    },
+    "overpaid": {
+     "type": "number"
+    },
+    "sessions": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "unpaid_sessions": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "teacher": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "display_name_ar": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "display_name_ar"
+     ]
+    },
+    "currency": {
+     "type": "string",
+     "const": "EGP"
+    }
+   },
+   "required": [
+    "earned",
+    "paid",
+    "outstanding",
+    "overpaid",
+    "sessions",
+    "unpaid_sessions",
+    "teacher",
+    "currency"
+   ]
+  }
+ },
+ "GET /teacher-earnings/:teacherId/payments": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "teacherId"
+   ]
+  },
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "method": {
+     "type": "string",
+     "enum": [
+      "bank",
+      "wallet",
+      "cash",
+      "other"
+     ]
+    },
+    "voided": {
+     "type": "string",
+     "enum": [
+      "true",
+      "false"
+     ]
+    },
+    "note": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 100
+    },
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 25,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 100
+    },
+    "sort": {
+     "type": "string",
+     "enum": [
+      "paid_at",
+      "amount",
+      "method"
+     ]
+    },
+    "dir": {
+     "type": "string",
+     "enum": [
+      "asc",
+      "desc"
+     ]
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "teacher_id": {
+        "type": "string"
+       },
+       "amount": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string",
+        "const": "EGP"
+       },
+       "method": {
+        "type": "string",
+        "enum": [
+         "bank",
+         "wallet",
+         "cash",
+         "other",
+         "card"
+        ]
+       },
+       "paid_at": {
+        "type": "string"
+       },
+       "note": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "has_receipt": {
+        "type": "boolean"
+       },
+       "payout_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sessions": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "voided_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "void_reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "teacher_id",
+       "amount",
+       "currency",
+       "method",
+       "paid_at",
+       "note",
+       "has_receipt",
+       "payout_id",
+       "sessions",
+       "voided_at",
+       "void_reason"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
+ "GET /teacher-earnings/:teacherId/sessions": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "teacherId"
+   ]
+  },
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "status": {
+     "type": "string",
+     "enum": [
+      "earned",
+      "partially_paid",
+      "paid",
+      "unpaid"
+     ]
+    },
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 25,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 100
+    },
+    "sort": {
+     "type": "string",
+     "enum": [
+      "starts_at",
+      "minutes",
+      "amount",
+      "paid_amount",
+      "status"
+     ]
+    },
+    "dir": {
+     "type": "string",
+     "enum": [
+      "asc",
+      "desc"
+     ]
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "lesson_id": {
+        "type": "string"
+       },
+       "starts_at": {
+        "type": "string"
+       },
+       "minutes": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "rate": {
+        "type": "number"
+       },
+       "amount": {
+        "type": "number"
+       },
+       "paid_amount": {
+        "type": "number"
+       },
+       "outstanding": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string",
+        "const": "EGP"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "earned",
+         "partially_paid",
+         "paid"
+        ]
+       },
+       "students": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      },
+      "required": [
+       "id",
+       "lesson_id",
+       "starts_at",
+       "minutes",
+       "rate",
+       "amount",
+       "paid_amount",
+       "outstanding",
+       "currency",
+       "status",
+       "students"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
+ "GET /teacher-earnings/payments/:id/receipt": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string",
+     "format": "uri"
+    },
+    "expires_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "url",
+    "expires_at"
+   ]
+  }
+ },
+ "GET /teacher-earnings/summary": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "currency": {
+     "type": "string",
+     "const": "EGP"
+    },
+    "rows": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "teacher": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "display_name_ar": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "display_name_ar"
+        ]
+       },
+       "sessions": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "earned": {
+        "type": "number"
+       },
+       "paid": {
+        "type": "number"
+       },
+       "owed": {
+        "type": "number"
+       },
+       "unpaid_sessions": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "oldest_unpaid_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "teacher",
+       "sessions",
+       "earned",
+       "paid",
+       "owed",
+       "unpaid_sessions",
+       "oldest_unpaid_at"
+      ]
+     }
+    },
+    "totals": {
+     "type": "object",
+     "properties": {
+      "earned": {
+       "type": "number"
+      },
+      "paid": {
+       "type": "number"
+      },
+      "owed": {
+       "type": "number"
+      },
+      "teachers_owed": {
+       "type": "integer",
+       "minimum": -9007199254740991,
+       "maximum": 9007199254740991
+      }
+     },
+     "required": [
+      "earned",
+      "paid",
+      "owed",
+      "teachers_owed"
+     ]
+    }
+   },
+   "required": [
+    "currency",
+    "rows",
+    "totals"
    ]
   }
  },
@@ -5523,6 +6197,399 @@
    "required": [
     "studentId",
     "messageId"
+   ]
+  }
+ },
+ "GET /teachers/me/earnings": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "earned": {
+     "type": "number"
+    },
+    "paid": {
+     "type": "number"
+    },
+    "outstanding": {
+     "type": "number"
+    },
+    "overpaid": {
+     "type": "number"
+    },
+    "sessions": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "unpaid_sessions": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "teacher": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "display_name_ar": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "display_name_ar"
+     ]
+    },
+    "currency": {
+     "type": "string",
+     "const": "EGP"
+    }
+   },
+   "required": [
+    "earned",
+    "paid",
+    "outstanding",
+    "overpaid",
+    "sessions",
+    "unpaid_sessions",
+    "teacher",
+    "currency"
+   ]
+  }
+ },
+ "GET /teachers/me/earnings/payments": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "method": {
+     "type": "string",
+     "enum": [
+      "bank",
+      "wallet",
+      "cash",
+      "other"
+     ]
+    },
+    "voided": {
+     "type": "string",
+     "enum": [
+      "true",
+      "false"
+     ]
+    },
+    "note": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 100
+    },
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 25,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 100
+    },
+    "sort": {
+     "type": "string",
+     "enum": [
+      "paid_at",
+      "amount",
+      "method"
+     ]
+    },
+    "dir": {
+     "type": "string",
+     "enum": [
+      "asc",
+      "desc"
+     ]
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "teacher_id": {
+        "type": "string"
+       },
+       "amount": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string",
+        "const": "EGP"
+       },
+       "method": {
+        "type": "string",
+        "enum": [
+         "bank",
+         "wallet",
+         "cash",
+         "other",
+         "card"
+        ]
+       },
+       "paid_at": {
+        "type": "string"
+       },
+       "note": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "has_receipt": {
+        "type": "boolean"
+       },
+       "payout_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "sessions": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "voided_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "void_reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "teacher_id",
+       "amount",
+       "currency",
+       "method",
+       "paid_at",
+       "note",
+       "has_receipt",
+       "payout_id",
+       "sessions",
+       "voided_at",
+       "void_reason"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
+ "GET /teachers/me/earnings/payments/:id/receipt": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string",
+     "format": "uri"
+    },
+    "expires_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "url",
+    "expires_at"
+   ]
+  }
+ },
+ "GET /teachers/me/earnings/sessions": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "status": {
+     "type": "string",
+     "enum": [
+      "earned",
+      "partially_paid",
+      "paid",
+      "unpaid"
+     ]
+    },
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 25,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 100
+    },
+    "sort": {
+     "type": "string",
+     "enum": [
+      "starts_at",
+      "minutes",
+      "amount",
+      "paid_amount",
+      "status"
+     ]
+    },
+    "dir": {
+     "type": "string",
+     "enum": [
+      "asc",
+      "desc"
+     ]
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "lesson_id": {
+        "type": "string"
+       },
+       "starts_at": {
+        "type": "string"
+       },
+       "minutes": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "rate": {
+        "type": "number"
+       },
+       "amount": {
+        "type": "number"
+       },
+       "paid_amount": {
+        "type": "number"
+       },
+       "outstanding": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string",
+        "const": "EGP"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "earned",
+         "partially_paid",
+         "paid"
+        ]
+       },
+       "students": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      },
+      "required": [
+       "id",
+       "lesson_id",
+       "starts_at",
+       "minutes",
+       "rate",
+       "amount",
+       "paid_amount",
+       "outstanding",
+       "currency",
+       "status",
+       "students"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
    ]
   }
  },
@@ -18709,6 +19776,20 @@
   }
  },
  "POST /students/:id/course-stop": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -18794,6 +19875,71 @@
     "clientRequestId"
    ],
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscriptionId": {
+     "type": "string"
+    },
+    "cancelledLessons": {
+     "type": "number"
+    },
+    "endedRules": {
+     "type": "number"
+    },
+    "studentStatus": {
+     "type": "string",
+     "enum": [
+      "new",
+      "trial",
+      "pending_subscription",
+      "active",
+      "pending_renewal",
+      "expired",
+      "paused",
+      "churned"
+     ]
+    },
+    "stoppedAt": {
+     "type": "string"
+    },
+    "refund": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "amount": {
+         "type": "number"
+        },
+        "card": {
+         "type": "number"
+        },
+        "manual": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "amount",
+        "card",
+        "manual"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "subscriptionId",
+    "cancelledLessons",
+    "endedRules",
+    "studentStatus",
+    "stoppedAt",
+    "refund"
+   ]
   }
  },
  "POST /students/:id/merge": {
@@ -18809,6 +19955,380 @@
    },
    "required": [
     "merged_id"
+   ]
+  }
+ },
+ "POST /teacher-earnings/:teacherId/payments": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "teacherId"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "amount": {
+     "type": "number",
+     "exclusiveMinimum": 0,
+     "maximum": 9999999999
+    },
+    "method": {
+     "type": "string",
+     "enum": [
+      "bank",
+      "wallet",
+      "cash",
+      "other"
+     ]
+    },
+    "paidAt": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "earningIds": {
+     "minItems": 1,
+     "maxItems": 500,
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     }
+    },
+    "receiptPath": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "note": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "clientRequestId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "amount",
+    "method",
+    "paidAt",
+    "clientRequestId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "payment": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "teacher_id": {
+       "type": "string"
+      },
+      "amount": {
+       "type": "number"
+      },
+      "currency": {
+       "type": "string",
+       "const": "EGP"
+      },
+      "method": {
+       "type": "string",
+       "enum": [
+        "bank",
+        "wallet",
+        "cash",
+        "other",
+        "card"
+       ]
+      },
+      "paid_at": {
+       "type": "string"
+      },
+      "note": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "has_receipt": {
+       "type": "boolean"
+      },
+      "payout_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "sessions": {
+       "type": "integer",
+       "minimum": -9007199254740991,
+       "maximum": 9007199254740991
+      },
+      "voided_at": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "void_reason": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "id",
+      "teacher_id",
+      "amount",
+      "currency",
+      "method",
+      "paid_at",
+      "note",
+      "has_receipt",
+      "payout_id",
+      "sessions",
+      "voided_at",
+      "void_reason"
+     ]
+    },
+    "replayed": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "payment",
+    "replayed"
+   ]
+  }
+ },
+ "POST /teacher-earnings/:teacherId/receipt-upload-url": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "teacherId"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "mime": {
+     "type": "string",
+     "enum": [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/heic",
+      "application/pdf"
+     ]
+    },
+    "size": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10485760
+    }
+   },
+   "required": [
+    "mime",
+    "size"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
+   ]
+  }
+ },
+ "POST /teacher-earnings/payments/:id/void": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "reason": {
+     "type": "string",
+     "minLength": 3,
+     "maxLength": 500
+    }
+   },
+   "required": [
+    "reason"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "teacher_id": {
+     "type": "string"
+    },
+    "amount": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string",
+     "const": "EGP"
+    },
+    "method": {
+     "type": "string",
+     "enum": [
+      "bank",
+      "wallet",
+      "cash",
+      "other",
+      "card"
+     ]
+    },
+    "paid_at": {
+     "type": "string"
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "has_receipt": {
+     "type": "boolean"
+    },
+    "payout_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "sessions": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "voided_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "void_reason": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "teacher_id",
+    "amount",
+    "currency",
+    "method",
+    "paid_at",
+    "note",
+    "has_receipt",
+    "payout_id",
+    "sessions",
+    "voided_at",
+    "void_reason"
+   ]
+  }
+ },
+ "POST /teacher-earnings/resync": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lessons": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "lessons"
    ]
   }
  },

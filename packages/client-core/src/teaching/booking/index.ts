@@ -25,7 +25,6 @@ export {
   courseStopErrorCode,
   courseStopLessonsText,
   courseStopPath,
-  courseStopPreviewPath,
   courseTeacherOptionsPath,
   type StopWords,
 } from './course-actions';
@@ -63,6 +62,7 @@ export {
   type StopMoneyProblem,
 } from './course-stop-form';
 export * from './course-card';
+export * from './course-stop-api';
 export * from './lesson-times';
 export {
   type CourseKey,

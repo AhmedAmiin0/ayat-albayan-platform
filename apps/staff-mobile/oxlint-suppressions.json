@@ -1170,21 +1170,6 @@
       "count": 2
     }
   },
-  "src/earnings/hooks/queries.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/earnings/hooks/upload-receipt.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/earnings/hooks/use-pay-teacher.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/earnings/lib/earnings-errors.ts": {
     "complexity": {
       "count": 1
@@ -1520,7 +1505,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/finance/shared/receipt-link.ts": {
@@ -5028,7 +5013,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 5
+      "count": 3
     }
   },
   "src/students/course-pause/CoursePauseBanner.tsx": {
