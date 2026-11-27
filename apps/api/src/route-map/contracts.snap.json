@@ -9840,6 +9840,224 @@
    }
   }
  },
+ "GET /settings/integrations/storage-backup": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "data": {
+     "type": "object",
+     "properties": {
+      "enabled": {
+       "type": "boolean"
+      },
+      "ready": {
+       "type": "object",
+       "properties": {
+        "minio": {
+         "type": "boolean"
+        },
+        "google": {
+         "type": "boolean"
+        }
+       },
+       "required": [
+        "minio",
+        "google"
+       ]
+      },
+      "last": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "label": {
+           "type": "string",
+           "format": "date",
+           "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "finished_at": {
+           "anyOf": [
+            {
+             "type": "string",
+             "format": "date-time",
+             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "objects": {
+           "type": "integer",
+           "minimum": 0,
+           "maximum": 9007199254740991
+          },
+          "skipped": {
+           "type": "integer",
+           "minimum": 0,
+           "maximum": 9007199254740991
+          },
+          "bytes_raw": {
+           "type": "number",
+           "minimum": 0
+          },
+          "bytes_compressed": {
+           "type": "number",
+           "minimum": 0
+          }
+         },
+         "required": [
+          "label",
+          "finished_at",
+          "objects",
+          "skipped",
+          "bytes_raw",
+          "bytes_compressed"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "last_run_at": {
+       "anyOf": [
+        {
+         "type": "string",
+         "format": "date-time",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "last_error": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "quota": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "limit": {
+           "anyOf": [
+            {
+             "type": "number",
+             "minimum": 0
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "usage": {
+           "type": "number",
+           "minimum": 0
+          },
+          "free": {
+           "anyOf": [
+            {
+             "type": "number",
+             "minimum": 0
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "at": {
+           "type": "string",
+           "format": "date-time",
+           "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+         },
+         "required": [
+          "limit",
+          "usage",
+          "free",
+          "at"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "low_quota": {
+       "type": "boolean"
+      },
+      "skipped": {
+       "type": "object",
+       "properties": {
+        "count": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 9007199254740991
+        },
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string"
+           },
+           "size": {
+            "type": "number",
+            "minimum": 0
+           },
+           "reason": {
+            "type": "string",
+            "enum": [
+             "too_large",
+             "read_failed",
+             "changed",
+             "upload_failed"
+            ]
+           }
+          },
+          "required": [
+           "id",
+           "size",
+           "reason"
+          ]
+         }
+        }
+       },
+       "required": [
+        "count",
+        "items"
+       ]
+      },
+      "waiting": {
+       "type": "integer",
+       "minimum": 0,
+       "maximum": 9007199254740991
+      }
+     },
+     "required": [
+      "enabled",
+      "ready",
+      "last",
+      "last_run_at",
+      "last_error",
+      "quota",
+      "low_quota",
+      "skipped",
+      "waiting"
+     ]
+    }
+   },
+   "required": [
+    "data"
+   ]
+  }
+ },
  "GET /short-links": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",

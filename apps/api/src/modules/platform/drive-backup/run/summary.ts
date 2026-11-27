@@ -1,17 +1,9 @@
+import { skipWhySchema, type BackupSkippedItem, type SkipWhy } from '@ab/shared';
 import { objectId } from '@/modules/platform/drive-backup/plan/parts';
 import type { ListedObject } from '@/modules/platform/drive-backup/source/backup-source.port';
 import type { PartDone } from './one-part';
 import { z } from 'zod';
-import { skipReasonSchema, skipWhySchema, type SkipWhy } from './skip.schemas';
-
-
-/** A skipped object, named in the admin status and the alert. */
-export interface SkippedItem {
-  /** `bucket/key`. */
-  id: string;
-  size: number;
-  reason: SkipWhy;
-}
+import { skipReasonSchema } from './skip.schemas';
 
 export interface RunSummary {
   label: string;
@@ -19,7 +11,7 @@ export interface RunSummary {
   objects: number;
   rawBytes: number;
   compressedBytes: number;
-  skipped: SkippedItem[];
+  skipped: BackupSkippedItem[];
   /** Objects not sent tonight: Drive's free space above the 2 GB reserve was too small. */
   waiting: number;
 }
@@ -34,13 +26,13 @@ export const emptySummary = (label: string): RunSummary => ({
   waiting: 0,
 });
 
-const item = (o: { bucket: string; key: string; size: number }, reason: SkipWhy): SkippedItem => ({
+const item = (o: { bucket: string; key: string; size: number }, reason: SkipWhy): BackupSkippedItem => ({
   id: objectId(o),
   size: o.size,
   reason,
 });
 
-export const tooLargeItems = (list: readonly ListedObject[]): SkippedItem[] =>
+export const tooLargeItems = (list: readonly ListedObject[]): BackupSkippedItem[] =>
   list.map((o) => item(o, 'too_large'));
 
 /** What a skip inside a part means for the admins: a vanished object is not named (it is gone). */
