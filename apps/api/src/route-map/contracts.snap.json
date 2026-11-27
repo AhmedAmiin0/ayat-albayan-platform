@@ -1315,6 +1315,74 @@
    ]
   }
  },
+ "GET /admin/jobs": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "data": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "every_ms": {
+        "type": "integer",
+        "exclusiveMinimum": 0,
+        "maximum": 9007199254740991
+       },
+       "last_ok_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_error_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_error": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "stale": {
+        "type": "boolean"
+       }
+      },
+      "required": [
+       "name",
+       "every_ms",
+       "last_ok_at",
+       "last_error_at",
+       "last_error",
+       "stale"
+      ]
+     }
+    }
+   },
+   "required": [
+    "data"
+   ]
+  }
+ },
  "GET /admin/numbers/:id/evolution/qr": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -3393,6 +3461,45 @@
     "updated_at",
     "students",
     "phones"
+   ]
+  }
+ },
+ "GET /health": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "status": {
+     "type": "string",
+     "const": "ok"
+    },
+    "storage": {
+     "type": "object",
+     "properties": {
+      "driver": {
+       "type": "string",
+       "enum": [
+        "supabase",
+        "minio"
+       ]
+      },
+      "status": {
+       "type": "string",
+       "enum": [
+        "ok",
+        "down"
+       ]
+      }
+     },
+     "required": [
+      "driver",
+      "status"
+     ]
+    }
+   },
+   "required": [
+    "status",
+    "storage"
    ]
   }
  },
@@ -6474,6 +6581,98 @@
    },
    "required": [
     "code"
+   ]
+  }
+ },
+ "GET /ready": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "status": {
+     "type": "string",
+     "enum": [
+      "ok",
+      "degraded",
+      "down"
+     ]
+    },
+    "checks": {
+     "type": "object",
+     "properties": {
+      "database": {
+       "type": "object",
+       "properties": {
+        "status": {
+         "type": "string",
+         "enum": [
+          "ok",
+          "degraded",
+          "down",
+          "off"
+         ]
+        },
+        "ms": {
+         "type": "number",
+         "minimum": 0
+        }
+       },
+       "required": [
+        "status",
+        "ms"
+       ]
+      },
+      "redis": {
+       "type": "object",
+       "properties": {
+        "status": {
+         "type": "string",
+         "enum": [
+          "ok",
+          "degraded",
+          "down",
+          "off"
+         ]
+        }
+       },
+       "required": [
+        "status"
+       ]
+      },
+      "jobs": {
+       "type": "object",
+       "properties": {
+        "status": {
+         "type": "string",
+         "enum": [
+          "ok",
+          "degraded",
+          "down",
+          "off"
+         ]
+        },
+        "stale": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 9007199254740991
+        }
+       },
+       "required": [
+        "status",
+        "stale"
+       ]
+      }
+     },
+     "required": [
+      "database",
+      "redis",
+      "jobs"
+     ]
+    }
+   },
+   "required": [
+    "status",
+    "checks"
    ]
   }
  },
