@@ -1,17 +1,11 @@
 import { Image, Platform, Pressable, View } from 'react-native';
-import { t } from '../../lib/i18n/i18n';
-import { type, useTheme } from '../../theme';
-import { AppText } from '../primitives/AppText';
-import { TabBadge } from './TabBadge';
-import { TAB_ICONS, type TabIconName } from './tab-icons';
-
-interface GlassTabProps {
-  title: string;
-  icon: TabIconName;
-  badge?: string;
-  focused: boolean;
-  onPress: () => void;
-}
+import { type } from '../../../theme';
+import { AppText } from '../../primitives/AppText';
+import { TabBadge } from '../TabBadge';
+import { TAB_ICONS } from '../tab-icons';
+import { pressStyle } from './glass-tab.helpers';
+import type { GlassTabProps } from './GlassTab.types';
+import { useGlassTab } from './use-glass-tab';
 
 /**
  * One tab of the capsule (54pt: a 24pt icon over an 11pt label, docs/29 §7). iOS reads it as a
@@ -23,11 +17,7 @@ interface GlassTabProps {
  * iOS a long press also shows the large content viewer.
  */
 export function GlassTab({ title, icon, badge, focused, onPress }: GlassTabProps) {
-  const { name, color } = useTheme();
-  // An idle tab: ink-3 on the light capsule, ink-2 on the dark one.
-  const idle = { light: color.ink3, dark: color.ink2 }[name];
-  const tint = focused ? color.lapis : idle;
-  const label = badge ? t.mobileNav.tabUnread.replace('{title}', title).replace('{n}', badge) : title;
+  const { tint, label } = useGlassTab({ title, badge, focused });
   return (
     <Pressable
       accessibilityRole={Platform.OS === 'ios' ? 'button' : 'tab'}
@@ -36,14 +26,7 @@ export function GlassTab({ title, icon, badge, focused, onPress }: GlassTabProps
       accessibilityShowsLargeContentViewer
       accessibilityLargeContentTitle={title}
       onPress={onPress}
-      style={({ pressed }) => ({
-        flex: 1,
-        height: 54,
-        alignItems: 'center',
-        justifyContent: 'center',
-        opacity: pressed ? 0.6 : 1,
-        transform: [{ scale: pressed ? 0.96 : 1 }],
-      })}
+      style={pressStyle}
     >
       <View style={{ width: 24, height: 24 }}>
         <Image source={TAB_ICONS[icon]} style={{ width: 24, height: 24, tintColor: tint }} />
