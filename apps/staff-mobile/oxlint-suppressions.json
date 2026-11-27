@@ -2845,14 +2845,6 @@
       "count": 1
     }
   },
-  "src/inbox/thread/components/GateNote.tsx": {
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/inbox/thread/components/HeaderStudents.tsx": {
     "no-nested-ternary": {
       "count": 1
@@ -2926,7 +2918,7 @@
   },
   "src/inbox/thread/hooks/use-thread.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/thread/live/inbox-live.test.tsx": {
@@ -3435,12 +3427,6 @@
   "src/ops/comms/SendState.tsx": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/ops/comms/WhatIsSent.tsx": {
