@@ -82,3 +82,9 @@ export {
   type MessageReactionCalls,
   type ReactionInput,
 } from './reaction-calls';
+export {
+  threadSendCalls,
+  type TemplateSendInput,
+  type TextSendInput,
+  type ThreadSendCalls,
+} from './thread-send';

@@ -7,3 +7,4 @@ export * from './correction/correction';
 export * from './message-hide';
 export * from './thread-forward';
 export * from './inbox-search';
+export * from './thread-send';

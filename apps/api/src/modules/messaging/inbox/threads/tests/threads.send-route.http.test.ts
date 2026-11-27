@@ -10,6 +10,8 @@ const URL = `/threads/${encodeURIComponent(PHONE)}`;
 const REQ = 'c0000000-0000-4000-8000-000000000001';
 const FRESH = new Date(Date.now() - 3_600_000).toISOString();
 const PARAMS = { '1': 'ياسمين', '2': 'الأحد 16:00', button: 'ayat-room' };
+const MESSAGE = 'a0000000-0000-4000-8000-000000000009';
+const LEAD = 'a0000000-0000-4000-8000-000000000001';
 
 describe('text and template sends on their shared route objects', () => {
   let t: App;
@@ -19,8 +21,10 @@ describe('text and template sends on their shared route objects', () => {
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH }));
-    t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9' }));
+    t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, lead_id: LEAD }));
+    t.queries.enqueue.mockImplementation(async (row: object) =>
+      messageRow({ lesson_id: null, ...row, id: MESSAGE }),
+    );
     t.templates.get.mockResolvedValue(templateRow());
   });
 
