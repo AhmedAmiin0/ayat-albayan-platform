@@ -2,13 +2,19 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
+import { studentListItemFixture } from '@ab/shared/testing';
 import { InstantLessonDialog } from './InstantLessonDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-const STUDENT = { id: 's-1', code: 'AB-0001', name: 'سهيلة محمد', status: 'active', program: 'quran', tz: 'Asia/Riyadh', created_at: '', guardian_name: 'أم سهيلة', guardian_phone: '', teacher_name: null };
+const STUDENT = studentListItemFixture({
+  id: 's-1',
+  code: 'AB-0001',
+  name: 'سهيلة محمد',
+  guardian_phone: '',
+});
 const TEACHER_ID = 'e8888888-8888-4888-8888-888888888881';
 const TEACHER = {
   id: TEACHER_ID,

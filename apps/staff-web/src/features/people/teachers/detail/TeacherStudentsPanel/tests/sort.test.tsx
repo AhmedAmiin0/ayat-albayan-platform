@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { studentListItemFixture } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { clearAllFilters, openFilters } from '@/test/open-filters';
@@ -10,15 +11,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
-const ROW = {
-  id: 's1',
-  code: 'AB-0183',
-  name: 'سهيلة',
-  status: 'active',
-  program: 'quran',
-  package_remaining: 3,
-  has_weekly: true,
-};
+const ROW = studentListItemFixture({ id: 's1', package_remaining: 3, has_weekly: true });
 const COUNTS = {
   new: 0,
   trial: 0,
