@@ -1,7 +1,7 @@
 import { courseTeacherRoutes, courseTimesRoutes } from '@ab/shared';
 import { Controller } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
@@ -11,9 +11,7 @@ import { ProfileCourse } from './profile-course.service';
 const optionsRoute = courseTeacherRoutes.teachers;
 
 /** students.change_teacher (migration 990); own students while SalesOwnershipRule enforces. */
-@ApiTags('course-actions')
 @ApiBearerAuth()
-@Permissions('students.change_teacher')
 @Controller()
 export class CourseTeacherController extends courseMoveRoutes(courseTeacherRoutes) {
   constructor(
@@ -34,8 +32,6 @@ export class CourseTeacherController extends courseMoveRoutes(courseTeacherRoute
 }
 
 /** courses.reschedule (migration 990); the remaining lessons keep their count and teacher. */
-@ApiTags('course-actions')
 @ApiBearerAuth()
-@Permissions('courses.reschedule')
 @Controller()
 export class CourseTimesController extends courseMoveRoutes(courseTimesRoutes) {}

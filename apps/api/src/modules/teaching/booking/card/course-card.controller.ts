@@ -1,14 +1,10 @@
 import { courseCardRoutes as routes } from '@ab/shared';
 import { Controller, Inject } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CourseCards } from './course-card.service';
 
-/** students.read. */
-@ApiTags('course-actions')
 @ApiBearerAuth()
-@Permissions('students.read')
 @Controller()
 export class CourseCardController {
   constructor(@Inject(CourseCards) private readonly cards: CourseCards) {}
@@ -20,9 +16,7 @@ export class CourseCardController {
 }
 
 /** self.sales_academy, any student, as GET /sales/students/:id. */
-@ApiTags('course-actions')
 @ApiBearerAuth()
-@Permissions('self.sales_academy')
 @Controller()
 export class SalesCourseCardController {
   constructor(@Inject(CourseCards) private readonly cards: CourseCards) {}

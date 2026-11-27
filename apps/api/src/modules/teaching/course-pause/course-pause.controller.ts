@@ -1,16 +1,14 @@
 import { coursePauseRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CoursePausePreviews } from './preview/course-pause.preview';
 import { CoursePauseService } from './course-pause.service';
 
 /** Course pause (docs/11 §7b): courses.pause for any student; a pause queues no message. */
-@ApiTags('course-pause')
 @ApiBearerAuth()
-@Permissions('courses.pause')
 @Controller()
 export class CoursePauseController {
   constructor(
