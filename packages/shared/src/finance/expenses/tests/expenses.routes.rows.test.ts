@@ -52,8 +52,8 @@ describe('expenseRoutes: expenses', () => {
     expect(expenseRoutes.year.response.parse(year)).toEqual(year);
   });
 
-  it('answers a category the admin added', () => {
-    const added = { ...expense, category: 'fuel' };
+  it('answers a category the admin added and the stored card method', () => {
+    const added = { ...expense, category: 'fuel', method: 'card' };
     expect(expenseRoutes.update.response.parse(added)).toEqual(added);
   });
 
@@ -61,7 +61,6 @@ describe('expenseRoutes: expenses', () => {
     ['a missing draft flag', { ...expense, is_draft: undefined }],
     ['an amount sent as text', { ...expense, amount: '1500' }],
     ['an unknown method', { ...expense, method: 'cheque' }],
-    ['the card method', { ...expense, method: 'card' }],
   ])('refuses an expense with %s', (_name, answer) => {
     expect(expenseRoutes.create.response.safeParse(answer).success).toBe(false);
   });
