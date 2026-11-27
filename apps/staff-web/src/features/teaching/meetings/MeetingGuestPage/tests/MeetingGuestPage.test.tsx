@@ -11,6 +11,7 @@ vi.stubGlobal('fetch', fetchMock);
 const L = t.meetings.internal.guest;
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status });
 const TOKEN = 'tok-43';
+const page = (title: string, state: string) => ({ title, state, starts_at: null, opens_at: null });
 
 function open() {
   const client = fakeClient();
@@ -31,7 +32,7 @@ describe('MeetingGuestPage /m/:token', () => {
   });
 
   it('shows the title, then joins as a guest with the typed name', async () => {
-    fetchMock.mockResolvedValueOnce(json(200, { title: 'اجتماع الإدارة', state: 'open' }));
+    fetchMock.mockResolvedValueOnce(json(200, page('اجتماع الإدارة', 'open')));
     fetchMock.mockResolvedValueOnce(json(200, { url: 'wss://lk', token: 'g', room: 'meeting-1', role: 'guest' }));
     const client = open();
     await waitFor(() => expect(screen.getByText('اجتماع الإدارة')).toBeTruthy());
@@ -45,7 +46,7 @@ describe('MeetingGuestPage /m/:token', () => {
   });
 
   it('an ended meeting says so, with no form', async () => {
-    fetchMock.mockResolvedValue(json(200, { title: 'x', state: 'ended' }));
+    fetchMock.mockResolvedValue(json(200, page('x', 'ended')));
     open();
     await waitFor(() => expect(screen.getByText(L.ended)).toBeTruthy());
     expect(screen.queryByRole('button', { name: t.classroom.guest.join })).toBeNull();
@@ -56,7 +57,7 @@ describe('MeetingGuestPage /m/:token', () => {
     open();
     await waitFor(() => expect(screen.getByText(L.invalid)).toBeTruthy());
     cleanup();
-    fetchMock.mockResolvedValueOnce(json(200, { title: 'x', state: 'open' }));
+    fetchMock.mockResolvedValueOnce(json(200, page('x', 'open')));
     fetchMock.mockResolvedValueOnce(json(410, { code: 'meeting_ended' }));
     open();
     await waitFor(() => expect(screen.getByRole('button', { name: t.classroom.guest.join })).toBeTruthy());

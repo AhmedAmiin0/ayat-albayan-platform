@@ -1,10 +1,16 @@
-import { lessonRoomSends, roomModerationApi, type RoomModerationApi } from '@ab/client-core';
+import {
+  lessonRoomSends,
+  meetingCalls,
+  roomModerationApi,
+  type RoomModerationApi,
+} from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { CLASSROOM_KEY } from './api';
 
 const room = lessonRoomSends({ apiFetch, apiSend });
 const moderation = roomModerationApi({ apiFetch, apiSend });
+const meetings = meetingCalls({ apiFetch, apiSend });
 
 const ROOM_PREFIX = 'lesson-';
 const MEETING_PREFIX = 'meeting-';
@@ -28,7 +34,7 @@ export const removeParticipant = (who: { lessonId: string; identity: string }) =
 
 /** POST /meetings/:id/participants/:identity/remove: disconnects someone (no lasting block). */
 export const removeMeetingParticipant = (who: { meetingId: string; identity: string }) =>
-  apiSend('POST', `/meetings/${who.meetingId}/participants/${encodeURIComponent(who.identity)}/remove`);
+  meetings.remove(who);
 
 /** An internal meeting only disconnects, no lasting block; `lessonId` null means no removal. */
 export function kickScope(room: string): {
