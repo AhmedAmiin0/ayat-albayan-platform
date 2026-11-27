@@ -28,7 +28,7 @@ export const numbersRoutes = {
     method: 'POST', path: '/admin/numbers', body: numberCreateSchema,
     response: numberViewSchema, ...MANAGE,
   }),
-  /** 200; a dry run shows each role's values and source, never a secret; the apply is idempotent. */
+  /** 200; a dry run shows each role's values and source, never a secret; applies are idempotent. */
   import: defineRoute({
     method: 'POST', path: '/admin/numbers/import', body: numbersImportSchema,
     response: importResultSchema, ...MANAGE,
