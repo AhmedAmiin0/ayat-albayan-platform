@@ -7,5 +7,5 @@ select count(*) from public.wa_line_health
 where line::text not in ('notifications', 'chat') or checked_at is null;
 
 -- count: notification_rules_unknown_channel
-select count(*) from public.notification_rules r, unnest(coalesce(r.channels, '{}')) as c
-where c not in ('whatsapp', 'bell', 'push');
+select count(*) from public.notification_rules
+where channels is not null and not (channels <@ array['whatsapp', 'bell', 'push']);
