@@ -9,15 +9,9 @@ import { useCodeEntry } from './use-code-entry';
 
 /** The six digits from WhatsApp; a right code calls onVerified, a wrong one says so. */
 export function CodeEntry({ publicId, onVerified }: CodeEntryProps) {
-  const { g, code, setCode, verify } = useCodeEntry({ onVerified });
+  const { g, code, setCode, verify, submit } = useCodeEntry({ publicId, onVerified });
   return (
-    <form
-      className="grid gap-2"
-      onSubmit={(e) => {
-        e.preventDefault();
-        verify.mutate({ publicId, code });
-      }}
-    >
+    <form className="grid gap-2" onSubmit={submit}>
       <p className="text-sm text-ink-2">{g.sent}</p>
       <Label htmlFor="report-code">{g.code}</Label>
       <Input
