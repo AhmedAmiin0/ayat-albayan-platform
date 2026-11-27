@@ -1,15 +1,13 @@
 import { courseStopRoutes as routes } from '@ab/shared';
 import { Controller } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CourseStop } from './course-stop.service';
 
 /** subscriptions.stop (migration 990); 404, 409 already_cancelled or has_future_lessons, 400. */
-@ApiTags('course-actions')
 @ApiBearerAuth()
-@Permissions('subscriptions.stop')
 @Controller()
 export class CourseStopController {
   constructor(private readonly stops: CourseStop) {}
