@@ -9,7 +9,8 @@ import {
   type PasswordSession,
   type ResetBody,
 } from '@ab/shared';
-import { ApiError, callWith, type ApiClient } from '../http';
+import { apiErrorCode, callWith, type ApiClient } from '../http';
+import { signInErrorSchema, type SignInError } from './sign-in-errors.schemas';
 
 // Family accounts (docs/30 §6): the public sign-in routes as web and mobile call them. Sessions are
 // finished by the app's own supabase client (verifyOtp / setSession).
@@ -69,36 +70,8 @@ export function signInApi(client: ApiClient): SignInApi {
  */
 export const isEmailIdentifier = (identifier: string): boolean => identifier.includes('@');
 
-/**
- * The familyAuth.errors keys a sign-in failure maps to (anything unknown: null, the caller's
- * generic text).
- */
-export const SIGN_IN_ERRORS = [
-  'invalid_code',
-  'invalid_credentials',
-  'phone_belongs_to_staff',
-  'too_many_requests',
-  'codes_unavailable',
-] as const;
-export type SignInError =
-  | (typeof SIGN_IN_ERRORS)[number]
-  | 'password_too_short'
-  | 'password_too_long'
-  | 'password_blank';
-
-/** The API's `code` of a sign-in failure, or null. */
+/** The API's `code` of a sign-in failure the screens translate, or null. */
 export function signInError(e: unknown): SignInError | null {
-  if (
-    !(e instanceof ApiError) ||
-    typeof e.body !== 'object' ||
-    e.body === null ||
-    !('code' in e.body)
-  )
-    return null;
-  const code = e.body.code;
-  if (typeof code !== 'string') return null;
-  if ((SIGN_IN_ERRORS as readonly string[]).includes(code)) return code as SignInError;
-  return code === 'password_too_short' || code === 'password_too_long' || code === 'password_blank'
-    ? code
-    : null;
+  const parsed = signInErrorSchema.safeParse(apiErrorCode(e));
+  return parsed.success ? parsed.data : null;
 }
