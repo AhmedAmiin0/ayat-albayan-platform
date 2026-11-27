@@ -6,7 +6,7 @@ import {
   messageStatusSchema,
 } from '@ab/catalog';
 import { pageOf } from '@ab/core';
-import { LESSON_RATINGS } from '../messaging/lesson/rating';
+import { LESSON_RATINGS } from '../messaging';
 
 const personSchema = z.object({ id: z.string(), name: z.string() });
 

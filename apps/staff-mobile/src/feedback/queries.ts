@@ -2,7 +2,7 @@ import { feedbackCalls } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import type { FeedbackRowView } from './types';
+import type { FeedbackRowView, TeacherFeedbackView } from './types';
 
 const feedback = feedbackCalls({ apiFetch, apiSend });
 
@@ -16,7 +16,8 @@ export function useFeedbackSummary() {
 
 /** GET /teachers/me/feedback: only my rows (no contact number, no guardian) and my average. */
 export function useMyFeedback() {
-  return useQuery({ queryKey: pathKey('/teachers/me/feedback'), queryFn: () => feedback.mine() });
+  const path = '/teachers/me/feedback';
+  return useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<TeacherFeedbackView>(path) });
 }
 
 /**
