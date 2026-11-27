@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { feedbackRoutes } from './feedback.routes';
+import { feedbackPublicRoutes, feedbackRoutes } from './feedback.routes';
 
 const row = {
   id: 'f1',
@@ -80,5 +80,36 @@ describe('feedbackRoutes (R-FBK)', () => {
     expect(feedbackRoutes.request.response.parse(answer)).toEqual(answer);
     const bad = { ...answer, message_status: 'lost' };
     expect(feedbackRoutes.request.response.safeParse(bad).success).toBe(false);
+  });
+});
+
+describe('feedbackPublicRoutes (R-FBK, no login)', () => {
+  const form = { teacherName: 'أبرار', kind: 'trial', contactPhone: '', alreadySubmitted: false };
+
+  it.each([
+    ['form', 'GET /public/feedback/:token'],
+    ['submit', 'POST /public/feedback/:token'],
+  ] as const)('%s keeps the path the api serves today', (key, wire) => {
+    const route = feedbackPublicRoutes[key];
+    expect(`${route.method} ${route.path}`).toBe(wire);
+  });
+
+  it('takes any token text: a wrong one is the service\'s 404, never a 400', () => {
+    expect(feedbackPublicRoutes.form.params.parse({ token: 'a.b.c' })).toEqual({ token: 'a.b.c' });
+  });
+
+  it('answers the form with the teacher, the kind and the phone only', () => {
+    expect(feedbackPublicRoutes.form.response.parse({ ...form, note: 'x' })).toEqual(form);
+    const bad = { ...form, kind: 'gift' };
+    expect(feedbackPublicRoutes.form.response.safeParse(bad).success).toBe(false);
+  });
+
+  it('sends one answer and hears it was saved', () => {
+    const body = { rating: 5, recommend: 'yes', note: 'جزاكم الله خيرًا' };
+    expect(feedbackPublicRoutes.submit.body.safeParse(body).success).toBe(true);
+    expect(feedbackPublicRoutes.submit.body.safeParse({ rating: 9 }).success).toBe(false);
+    expect(feedbackPublicRoutes.submit.response.parse({ submitted: true })).toEqual({
+      submitted: true,
+    });
   });
 });
