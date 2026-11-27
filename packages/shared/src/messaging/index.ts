@@ -61,6 +61,7 @@ export * from './channel/channel';
 export * from './channel/channel.schemas';
 export * from './channel/channel-seat.routes';
 export * from './channel/channel-sales.routes';
+export * from './channel/channel-presence.routes';
 export * from './channel/channel-media';
 export * from './channel/channel-instant';
 export type * from './channel/channel-views';
