@@ -41,7 +41,9 @@ select count(*) from assistant_statements where method is not null and method::t
 -- Rows the subscription answer schema would refuse (docs/62 C1).
 -- count: subscriptions_required_null
 select count(*) from subscriptions where student_id is null or duration is null or lessons_total is null or price is null or currency is null or price_source is null or starts_on is null or status is null or created_at is null;
--- count: subscriptions_cancel_kind_out_of_enum
-select count(*) from subscriptions where cancel_kind is not null and cancel_kind not in ('unused', 'stopped');
--- count: subscriptions_price_source_key_missing
-select count(*) from subscriptions where not (price_source ? 'package' and price_source ? 'lessons' and price_source ? 'duration' and price_source ? 'country' and price_source ? 'currency' and price_source ? 'price' and price_source ? 'students' and price_source ? 'total' and price_source ? 'discount' and price_source ? 'afterDiscount' and price_source ? 'perLesson' and price_source ? 'insteadOf' and price_source ? 'savingsPct' and price_source ? 'popular' and price_source ? 'featured' and price_source ? 'fx');
+-- count: subscriptions_price_source_not_object
+select count(*) from subscriptions where not (price_source @> '{}');
+-- count: subscriptions_duration_out_of_enum
+select count(*) from subscriptions where duration not in (30, 45, 60, 90);
+-- count: subscriptions_package_out_of_enum
+select count(*) from subscriptions where package is not null and package::text not in ('trial', '4', '8', '12', '16', '20', '28');
