@@ -11,7 +11,7 @@ const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) =>
 const REQ = '00000000-0000-4000-8000-0000000000bb';
 const family = stored({ meeting_id: MEETING_ID, kind: 'student', student_id: STUDENT_A, phone_e164: OPEN_PHONE, display_name: 'أم سهيلة', channel: 'link', status: 'window_closed' });
 const staff = stored({ meeting_id: MEETING_ID, kind: 'staff', profile_id: STAFF_ID, display_name: 'مريم', channel: 'in_app', status: 'sent' });
-const resend = (inviteeId: string, user = TEACHER) => s.invites.resend({ user, id: MEETING_ID, inviteeId, body: { clientRequestId: REQ } }, NOW);
+const resend = (inviteeId: string, user = TEACHER) => s.invites.resend({ user, id: MEETING_ID, inviteeId, clientRequestId: REQ }, NOW);
 
 beforeEach(() => {
   s = meetingServices();
@@ -52,11 +52,11 @@ describe('MeetingInvitesService.resend (R-MEET-02)', () => {
 describe('MeetingInvitesService.add (R-MEET-02)', () => {
   it('skips who is already invited; 400 past 30 invitees', async () => {
     s.m.invitees.forMeeting.mockResolvedValue([family]);
-    const body = { invitees: [{ kind: 'phone', phone: OPEN_PHONE }, { kind: 'phone', phone: CLOSED_PHONE }] };
-    const r = await s.invites.add({ user: ADMIN, id: MEETING_ID, body }, NOW);
+    const body = { invitees: [{ kind: 'phone' as const, phone: OPEN_PHONE }, { kind: 'phone' as const, phone: CLOSED_PHONE }] };
+    const r = await s.invites.add({ user: ADMIN, id: MEETING_ID, ...body }, NOW);
     expect(r).toHaveLength(1);
     s.m.invitees.forMeeting.mockResolvedValue(Array.from({ length: 30 }, () => family));
-    const e = await fail(s.invites.add({ user: ADMIN, id: MEETING_ID, body: { invitees: [{ kind: 'phone', phone: '+201000000104' }] } }, NOW));
+    const e = await fail(s.invites.add({ user: ADMIN, id: MEETING_ID, invitees: [{ kind: 'phone', phone: '+201000000104' }] }, NOW));
     expect(e.getResponse()).toMatchObject({ code: 'too_many_invitees' });
   });
 
@@ -73,11 +73,11 @@ describe('MeetingInvitesService.options (R-MEET-02)', () => {
       { id: STAFF_ID, full_name: 'مريم', role: 'teacher', tz: 'UTC' },
       { id: SALES.id, full_name: 'أنا', role: 'sales', tz: 'UTC' },
     ]);
-    s.m.picks.students.mockResolvedValue([{ id: 's1', name: 'سهيلة', code: 'AB-0001', guardian: { id: 'g', name: 'x', phone_e164: OPEN_PHONE, tz: 'UTC' } }]);
+    s.m.picks.students.mockResolvedValue([{ id: STUDENT_A, name: 'سهيلة', code: 'AB-0001', guardian: { id: 'g', name: 'x', phone_e164: OPEN_PHONE, tz: 'UTC' } }]);
     const out = await s.invites.options(SALES, { q: 'م' });
     expect(out).toEqual([
       { kind: 'staff', id: STAFF_ID, name: 'مريم', role: 'teacher' },
-      { kind: 'student', id: 's1', name: 'سهيلة', code: 'AB-0001' },
+      { kind: 'student', id: STUDENT_A, name: 'سهيلة', code: 'AB-0001' },
     ]);
     expect(s.m.picks.students).toHaveBeenCalledWith({ scope: { kind: 'all' }, q: 'م' });
   });

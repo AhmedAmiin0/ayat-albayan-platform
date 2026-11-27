@@ -1,8 +1,5 @@
 import {
-  addMeetingInviteesSchema,
-  meetingInviteeOptionsQuerySchema,
-  resendMeetingInviteSchema,
-  type MeetingInviteeOption,
+  type MeetingInviteeInput,
   type MeetingInviteeView,
   type MeetingInviteResult,
   mayInvitePhones,
@@ -10,7 +7,6 @@ import {
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
-import { parseOrThrow } from '@/common/http/http';
 import { InternalMeetingsService } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.service';
 import { MeetingInviteFlow } from './meeting-invite.flow';
 import { visibleView } from './meeting-invite.policy';
@@ -18,7 +14,7 @@ import { inviteSubject, resendDedupKey } from './meeting-invite.text';
 import { MeetingInviteeRepo } from './meeting-invitee.repo';
 import { MeetingInviteeResolver } from './meeting-invitee.resolver';
 import { MeetingInviteesRepo } from './meeting-invitees.repo';
-import { toInviteeView } from './meeting-invites.mapper';
+import { toInviteeOptions, toInviteeView } from './meeting-invites.mapper';
 
 /** What MeetingInvitesService reads (one injectable, so constructors stay at ≤ 3 params). */
 @Injectable()
@@ -47,8 +43,11 @@ export class MeetingInvitesService {
     return (await this.deps.invitees.forMeeting(t.id)).map((r) => visibleView(toInviteeView(r), seesAll));
   }
 
-  async add(t: Target & { body: unknown }, now = new Date()): Promise<MeetingInviteResult[]> {
-    const { invitees } = parseOrThrow(addMeetingInviteesSchema, t.body);
+  async add(
+    t: Target & { invitees: MeetingInviteeInput[] },
+    now = new Date(),
+  ): Promise<MeetingInviteResult[]> {
+    const { invitees } = t;
     const { row, win } = await this.meetings.managedOpen(t, now);
     const resolved = await this.deps.resolver.resolve({ user: t.user, invitees });
     const policy = await this.deps.resolver.policy(t.user);
@@ -56,8 +55,11 @@ export class MeetingInvitesService {
   }
 
   /** Resend: a retried request id whose text was already queued sends and rotates nothing. */
-  async resend(t: Target & { inviteeId: string; body: unknown }, now = new Date()): Promise<MeetingInviteResult> {
-    const { clientRequestId } = parseOrThrow(resendMeetingInviteSchema, t.body);
+  async resend(
+    t: Target & { inviteeId: string; clientRequestId: string },
+    now = new Date(),
+  ): Promise<MeetingInviteResult> {
+    const { clientRequestId } = t;
     const { row, win } = await this.meetings.managedOpen(t, now);
     const invitee = await this.deps.invitees.byId(row.id, t.inviteeId);
     if (!invitee || invitee.status === 'cancelled') throw notFound('invitee_not_found');
@@ -77,16 +79,12 @@ export class MeetingInvitesService {
     return result;
   }
 
-  async options(user: AuthUser, query: unknown): Promise<MeetingInviteeOption[]> {
-    const { q } = parseOrThrow(meetingInviteeOptionsQuerySchema, query);
+  async options(user: AuthUser, { q }: { q?: string }) {
     const scope = await this.deps.resolver.scopeOf(user);
     const [staff, students] = await Promise.all([
       this.deps.picks.staff({ ...(q ? { q } : {}) }),
       this.deps.picks.students({ scope, ...(q ? { q } : {}) }),
     ]);
-    return [
-      ...staff.filter((s) => s.id !== user.id).map((s): MeetingInviteeOption => ({ kind: 'staff', id: s.id, name: s.full_name, role: s.role })),
-      ...students.map((s): MeetingInviteeOption => ({ kind: 'student', id: s.id, name: s.name, code: s.code ?? '' })),
-    ];
+    return toInviteeOptions({ staff: staff.filter((s) => s.id !== user.id), students });
   }
 }

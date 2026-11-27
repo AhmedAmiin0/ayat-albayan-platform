@@ -1,5 +1,10 @@
-import type { ActiveCallView, CallConfigView, CallPermissionView, CallView, MessageView } from '@ab/shared';
-import type { ApiClient } from '../../core/http';
+import {
+  callsRoutes as routes,
+  type ActiveCallView,
+  type MessageView,
+  type StartCallInput,
+} from '@ab/shared';
+import { callWith, type ApiClient } from '../../core/http';
 
 // WhatsApp voice calls (docs/28 §4), the routes both apps use. Everything but /calls/config answers 404
 // while the setting is off, so every other query is enabled only once the config says `enabled`. The
@@ -24,15 +29,22 @@ interface CallsApiDeps {
 
 const enc = encodeURIComponent;
 
+/** One chat's last 50 calls, or the newest 100 of the whole log. */
+const listQuery = (phone: string | null) => (phone ? { phone, limit: 50 } : { limit: 100 });
+
 /** The steps of a call (each sent once: a failed connect is never retried). */
 export function callSends({ client, requestId }: CallsApiDeps) {
+  const call = callWith(client);
   return {
-    startCall: (body: { phone: string; sdp: string; clientRequestId: string }) => client.apiSend<ActiveCallView>('POST', '/calls', body),
-    acceptCall: (id: string, sdp: string) => client.apiSend<ActiveCallView>('POST', `/calls/${enc(id)}/accept`, { sdp }),
-    rejectCall: (id: string) => client.apiSend<ActiveCallView>('POST', `/calls/${enc(id)}/reject`),
-    endCall: (id: string) => client.apiSend<ActiveCallView>('POST', `/calls/${enc(id)}/end`),
+    startCall: (body: StartCallInput) => call({ route: routes.start, body }),
+    acceptCall: (id: string, sdp: string) =>
+      call({ route: routes.accept, params: { id }, body: { sdp } }),
+    rejectCall: (id: string) => call({ route: routes.reject, params: { id } }),
+    endCall: (id: string) => call({ route: routes.end, params: { id } }),
     requestCallPermission: (phone: string) =>
-      client.apiSend<MessageView>('POST', `/calls/permission/${enc(phone)}/request`, { clientRequestId: requestId() }),
+      client.apiSend<MessageView>('POST', `/calls/permission/${enc(phone)}/request`, {
+        clientRequestId: requestId(),
+      }),
   };
 }
 
@@ -40,10 +52,11 @@ export type CallSends = ReturnType<typeof callSends>;
 
 /** The calls queries: the config, the active calls, a chat's calls (or the whole log) and a number's permission. */
 export function callQueries(client: ApiClient) {
+  const call = callWith(client);
   return {
     callConfigQuery: {
       queryKey: [...CALLS_KEY, 'config'],
-      queryFn: () => client.apiFetch<CallConfigView>('/calls/config'),
+      queryFn: () => call({ route: routes.config }),
       staleTime: 60_000,
       retry: false,
     },
@@ -52,7 +65,7 @@ export function callQueries(client: ApiClient) {
       queryKey: [...CALLS_KEY, 'active'],
       queryFn: async (): Promise<ActivePoll> => {
         const startedAt = Date.now();
-        return { startedAt, rows: await client.apiFetch<ActiveCallView[]>('/calls/active') };
+        return { startedAt, rows: await call({ route: routes.active }) };
       },
       enabled: input.enabled,
       refetchInterval: input.enabled && input.polling !== false ? (input.live ? LIVE_POLL_MS : ACTIVE_POLL_MS) : (false as const),
@@ -61,14 +74,14 @@ export function callQueries(client: ApiClient) {
     /** One chat's calls (merged into its messages), or the whole calls log when `phone` is null. */
     callListQuery: (input: { enabled: boolean; phone: string | null }) => ({
       queryKey: [...CALLS_KEY, 'list', input.phone ?? 'all'],
-      queryFn: () => client.apiFetch<CallView[]>(input.phone ? `/calls?phone=${enc(input.phone)}&limit=50` : '/calls?limit=100'),
+      queryFn: () => call({ route: routes.list, query: listQuery(input.phone) }),
       enabled: input.enabled,
       refetchInterval: input.enabled ? 10_000 : (false as const),
       retry: false,
     }),
     callPermissionQuery: (phone: string) => ({
       queryKey: [...CALLS_KEY, 'permission', phone],
-      queryFn: () => client.apiFetch<CallPermissionView>(`/calls/permission/${enc(phone)}`),
+      queryFn: () => call({ route: routes.permission, params: { phone } }),
       staleTime: 0,
       retry: false,
     }),

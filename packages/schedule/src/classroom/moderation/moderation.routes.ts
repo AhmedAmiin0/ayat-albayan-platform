@@ -10,6 +10,10 @@ const byParticipant = byRoom.extend({ identity: z.string() });
 const recordings = z.array(lessonRecordingViewSchema);
 const lessonParticipant = '/lessons/:id/room/participants/:identity';
 const meetingParticipant = '/meetings/:id/participants/:identity';
+const tags = ['classroom'] as const;
+const meetingReads = { permissions: ['meetings.read'], tags } as const;
+const meetingWrites = { permissions: ['meetings.write'], tags } as const;
+const moderates = { permissions: ['classroom.moderate'], tags } as const;
 
 /** Staff controls in a lesson or meeting room, and its recordings; the writes answer 204. */
 export const roomModerationRoutes = {
@@ -18,6 +22,7 @@ export const roomModerationRoutes = {
     path: `${lessonParticipant}/remove`,
     params: byParticipant,
     response: 'empty',
+    permissions: ['classroom.kick'], tags,
   }),
   muteInLesson: defineRoute({
     method: 'POST',
@@ -25,6 +30,7 @@ export const roomModerationRoutes = {
     params: byParticipant,
     body: muteSchema,
     response: 'empty',
+    ...moderates,
   }),
   muteInMeeting: defineRoute({
     method: 'POST',
@@ -32,6 +38,7 @@ export const roomModerationRoutes = {
     params: byParticipant,
     body: muteSchema,
     response: 'empty',
+    ...meetingWrites,
   }),
   shareInLesson: defineRoute({
     method: 'POST',
@@ -39,6 +46,7 @@ export const roomModerationRoutes = {
     params: byParticipant,
     body: shareGrantSchema,
     response: 'empty',
+    ...moderates,
   }),
   shareInMeeting: defineRoute({
     method: 'POST',
@@ -46,6 +54,7 @@ export const roomModerationRoutes = {
     params: byParticipant,
     body: shareGrantSchema,
     response: 'empty',
+    ...meetingWrites,
   }),
   /** Newest first, with 1-hour links to the finished files. */
   lessonRecordings: defineRoute({
@@ -53,17 +62,20 @@ export const roomModerationRoutes = {
     path: '/lessons/:id/recordings',
     params: byRoom,
     response: recordings,
+    permissions: ['recordings.read'], tags,
   }),
   meetingRecordings: defineRoute({
     method: 'GET',
     path: '/meetings/:id/recordings',
     params: byRoom,
     response: recordings,
+    ...meetingReads,
   }),
   recordingStatus: defineRoute({
     method: 'GET',
     path: '/recordings/status',
     response: recordingStatusSchema,
+    ...meetingReads,
   }),
   /** Idempotent: the first end's time. */
   endLesson: defineRoute({
@@ -71,5 +83,6 @@ export const roomModerationRoutes = {
     path: '/lessons/:id/end',
     params: byRoom,
     response: lessonEndResultSchema,
+    permissions: ['classroom.host'], tags,
   }),
 };

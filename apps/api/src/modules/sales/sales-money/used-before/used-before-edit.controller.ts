@@ -1,7 +1,7 @@
 import { usedBeforeRoutes as routes } from '@ab/shared';
 import { Controller } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { asResponse } from '@/common/http/returns';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -9,9 +9,7 @@ import { UsedBeforeEdit } from '@/modules/finance/subscriptions';
 import { UsedBeforeAccess } from './used-before-access';
 
 /** Needs subscriptions.edit_terms; never teachers or families; own students only if enforced. */
-@ApiTags('subscriptions')
 @ApiBearerAuth()
-@Permissions('subscriptions.edit_terms')
 @Controller()
 export class UsedBeforeEditController {
   constructor(

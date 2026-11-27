@@ -65,7 +65,7 @@ describe('InternalMeetingsList — the creator manages a scheduled meeting', () 
     const dialog = screen.getByRole('dialog', { name: M.cancel });
     expect(within(dialog).getByText(M.cancelConfirm)).toBeTruthy();
     fireEvent.click(within(dialog).getByRole('button', { name: M.cancel }));
-    await waitFor(() => expect(api.send).toHaveBeenCalledWith('POST', '/meetings/m-1/cancel'));
+    await waitFor(() => expect(api.send).toHaveBeenCalledWith('POST', '/meetings/m-1/cancel', undefined));
   });
 
   it('«المدعوون» lists the statuses; «أعد الإرسال» shows the new link to copy with its text', async () => {

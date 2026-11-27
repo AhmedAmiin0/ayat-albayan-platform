@@ -66,7 +66,7 @@ test('cancel asks first, then POSTs /cancel; a refusal reads its line', async ()
   expect(screen.getByText(M.cancelConfirm)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
   await press(M.cancel);
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/s1/cancel'));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/s1/cancel', undefined));
   await waitFor(() => expect(lists()).toBe(2));
 });
 

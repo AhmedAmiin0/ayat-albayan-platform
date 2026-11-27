@@ -1,7 +1,7 @@
 import { meetingRoomRoutes as routes, type RoomJoinResult } from '@ab/schedule';
 import { Body, Controller, HttpCode, Injectable, Ip, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions, Public } from '@/common/auth/decorators';
+import { CurrentUser, Public } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { mintedIdentity } from '@/modules/teaching/classroom/moderation/participant-param';
@@ -24,9 +24,7 @@ export class InternalMeetingRoutes {
 }
 
 /** Internal meetings, staff side (R-MEET-01/02): the creator or an admin ends it. */
-@ApiTags('classroom')
 @ApiBearerAuth()
-@Permissions('meetings.write')
 @Controller()
 export class InternalMeetingsController {
   constructor(
@@ -45,14 +43,12 @@ export class InternalMeetingsController {
   }
 
   @Route(routes.list)
-  @Permissions('meetings.read')
   list(@CurrentUser() user: AuthUser) {
     return this.routes.lists.list(user);
   }
 
   /** A signed-in staff member who opens /m/<token> enters as staff. 404 link_invalid. */
   @Route(routes.byLink)
-  @Permissions('meetings.read')
   byLink(@RouteInput() { params }: In<'byLink'>, @CurrentUser() user: AuthUser) {
     return this.joins.idByLink({ user, token: params.token });
   }
@@ -90,7 +86,6 @@ export class InternalMeetingsController {
 }
 
 /** The link's door (no login): the token in the path is the whole credential. */
-@ApiTags('classroom')
 @Public()
 @Controller()
 export class InternalMeetingsPublicController {
@@ -104,6 +99,7 @@ export class InternalMeetingsPublicController {
 
   // The name stays unparsed here: the rate limit (429) and LiveKit (503) answer before it does.
   /** {name} → a guest token; 404 link_invalid, 410 meeting_ended, 429, 400, 503. */
+  @ApiTags('classroom')
   @Post('public/meetings/:token/join')
   @HttpCode(200)
   join(
