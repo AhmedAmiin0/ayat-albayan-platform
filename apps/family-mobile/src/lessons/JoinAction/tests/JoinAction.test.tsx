@@ -53,3 +53,12 @@ test('a refused link says so', async () => {
   await fireEvent.press(screen.getByRole('button', { name: t.portal.join }));
   expect(await screen.findByText(t.portal.app.lesson.joinFailed)).toBeTruthy();
 });
+
+test('a short row before the window: no hint and no button', async () => {
+  await renderWithQuery(
+    <JoinAction lesson={lesson(now, 30)} student={student()} now={now} short />,
+    freshQueryClient(),
+  );
+  expect(screen.queryByText(/يُتاح الدخول من/)).toBeNull();
+  expect(screen.queryByRole('button', { name: t.portal.join })).toBeNull();
+});

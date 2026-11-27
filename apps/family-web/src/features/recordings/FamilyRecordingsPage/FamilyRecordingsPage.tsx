@@ -1,15 +1,21 @@
 import { Icon, Button, t, PortalRecordingsPanel as RecordingsPanel } from '@ab/web-kit';
 import { StudentOf } from '@/features/recordings/StudentOf';
-import { useLessonNav } from '@/features/recordings/use-lesson-nav';
+import type { FamilyRecordingsPageProps } from './FamilyRecordingsPage.types';
+import { useFamilyRecordingsPage } from './use-family-recordings-page';
 
-export function FamilyRecordingsPage({ studentId }: { studentId: string }) {
-  const nav = useLessonNav(studentId);
+export function FamilyRecordingsPage({ studentId }: FamilyRecordingsPageProps) {
+  const { nav } = useFamilyRecordingsPage({ studentId });
   return (
     <StudentOf studentId={studentId}>
       {(student) => (
         <section aria-labelledby="recordings-title" className="grid animate-fade-up gap-4">
-          <Button type="button" variant="secondary" size="sm" className="justify-self-start"
-            onClick={nav.back}>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            className="justify-self-start"
+            onClick={nav.back}
+          >
             <Icon name="chevron-right" />
             {t.common.back}
           </Button>

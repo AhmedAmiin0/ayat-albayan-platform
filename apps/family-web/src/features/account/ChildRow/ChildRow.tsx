@@ -1,19 +1,10 @@
-import type { PortalStudent } from '@ab/shared';
 import { Avatar, Icon, Ltr, Card, Dot, t } from '@ab/web-kit';
-import { useChildTeacher } from '@/features/account/use-child-teacher';
-
-interface Props {
-  student: PortalStudent;
-  /** The child's name, or a self label for a guardian who studies. */
-  label: string;
-  /** This child is the one the pages show now. */
-  current: boolean;
-  onChoose: () => void;
-}
+import type { Props } from './ChildRow.types';
+import { useChildRow } from './use-child-row';
 
 /** A tap makes the pages this child's. */
 export function ChildRow({ student, label, current, onChoose }: Props) {
-  const teacher = useChildTeacher(student.id);
+  const { teacher } = useChildRow({ student });
   return (
     <Card asChild pressable>
       <button

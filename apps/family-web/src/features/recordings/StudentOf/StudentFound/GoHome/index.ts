@@ -1,0 +1,1 @@
+export { GoHome } from './GoHome';

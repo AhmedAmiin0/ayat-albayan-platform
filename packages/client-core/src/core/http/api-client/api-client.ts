@@ -4,16 +4,21 @@ import { ApiError, readJson } from '../api-error';
 import { CLIENT_HEADER } from '../client-header';
 import { withDeadline } from '../deadline';
 import { sendTimeoutFor } from '../timeouts';
+import { isRead } from '../timeouts';
 import type {
   ApiBlob,
   ApiClient,
   ApiClientOptions,
+  ApiRequest,
   BlobClient,
+  Requester,
   SchemaInit,
+  SchemaRequest,
   SendMethod,
   SendOptions,
 } from './api-client.types';
 import { parseResponse } from './parse-response';
+import { requestInit } from './request-init';
 import { sendParts } from './send-options';
 
 const ignore = (): void => undefined;
@@ -35,23 +40,38 @@ async function respond(opts: ApiClientOptions, path: string, init: RequestInit):
 }
 
 /** fetch against the Nest API with the access token and the client tag (`X-AB-Client`). */
-export function createApiClient(opts: ApiClientOptions): ApiClient & BlobClient {
-  const request = async (path: string, init: RequestInit): Promise<unknown> =>
-    readJson(await respond(opts, path, init));
-
-  function apiFetch<S extends z.ZodType>(path: string, init: SchemaInit<S>): Promise<z.output<S>>;
-  function apiFetch<T>(path: string, init?: RequestInit): Promise<T>;
-  async function apiFetch(path: string, init: FetchInit = {}): Promise<unknown> {
-    const { schema, ...rest } = init;
-    const body = await request(path, rest);
+export function createApiClient(opts: ApiClientOptions): ApiClient & Requester & BlobClient {
+  async function exchange(path: string, init: RequestInit, schema?: z.ZodType): Promise<unknown> {
+    const body = await readJson(await respond(opts, path, init));
     return schema === undefined ? body : parseResponse(schema, body, path);
   }
 
   /**
-   * JSON mutation helper for TanStack Query `mutationFn`s. Resolves undefined on 204. Bounded
-   * (docs/43 AU10): no answer within sendTimeoutFor(path), token included, rejects as no answer
-   * (`TypeError`) and aborts the fetch; isNoAnswer tells that from the API's refusal.
+   * Resolves undefined on 204. A write is bounded (docs/43 AU10): no answer within
+   * sendTimeoutFor(path), token included, rejects as no answer (`TypeError`) and aborts the fetch;
+   * isNoAnswer tells that from the API's refusal. A read's deadline is the kit's.
    */
+  function request<S extends z.ZodType>(request: SchemaRequest<S>): Promise<z.output<S>>;
+  function request<T = unknown>(request: ApiRequest): Promise<T>;
+  function request(request: ApiRequest): Promise<unknown> {
+    const init = requestInit(request);
+    const run = (signal: AbortSignal | null | undefined): Promise<unknown> =>
+      exchange(request.path, { ...init, signal }, request.schema);
+    if (isRead(init)) return run(request.signal);
+    const timeoutMs = sendTimeoutFor(request.path);
+    const onTimeout = opts.onStall ?? ignore;
+    return withDeadline(run, { signal: request.signal, onTimeout, timeoutMs });
+  }
+
+  // docs/62 part 3 §3b F deletes it: sends init as given, with no deadline of its own.
+  function apiFetch<S extends z.ZodType>(path: string, init: SchemaInit<S>): Promise<z.output<S>>;
+  function apiFetch<T>(path: string, init?: RequestInit): Promise<T>;
+  function apiFetch(path: string, init: FetchInit = {}): Promise<unknown> {
+    const { schema, ...rest } = init;
+    return exchange(path, rest, schema);
+  }
+
+  // docs/62 part 3 §3b F deletes it: the third argument is a body or `{ body, schema }`.
   function apiSend<S extends z.ZodType>(
     method: SendMethod,
     path: string,
@@ -59,15 +79,7 @@ export function createApiClient(opts: ApiClientOptions): ApiClient & BlobClient 
   ): Promise<z.output<S>>;
   function apiSend<T = void>(method: SendMethod, path: string, body?: unknown): Promise<T>;
   function apiSend(method: SendMethod, path: string, arg?: unknown): Promise<unknown> {
-    const { body, schema } = sendParts(arg);
-    const init: FetchInit = { method, schema };
-    if (body !== undefined) {
-      init.headers = { 'Content-Type': 'application/json' };
-      init.body = JSON.stringify(body);
-    }
-    const send = (signal: AbortSignal) => apiFetch(path, { ...init, signal });
-    const timeoutMs = sendTimeoutFor(path);
-    return withDeadline(send, { onTimeout: opts.onStall ?? ignore, timeoutMs });
+    return request({ method, path, ...sendParts(arg) });
   }
 
   /** A file (CSV export…): its bytes and headers. No deadline: a large export takes its time. */
@@ -76,5 +88,5 @@ export function createApiClient(opts: ApiClientOptions): ApiClient & BlobClient 
     return { blob: await res.blob(), headers: res.headers };
   }
 
-  return { apiBlob, apiFetch, apiSend };
+  return { apiBlob, apiFetch, apiSend, request };
 }

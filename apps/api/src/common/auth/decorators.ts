@@ -17,8 +17,8 @@ export const SignedIn = () => SetMetadata(SIGNED_IN, true);
 
 /**
  * The one permission a route needs (dynamic roles; defence in depth on top of RLS,
- * rule 9). On a class it is the default; a handler's own @Permissions overrides it. Every
- * non-public route has exactly one (permissions.coverage.test.ts).
+ * rule 9). On a class it is the default; a handler's own @Permissions overrides it. A route
+ * object's `permissions` replace both, never beside them (permissions.coverage.test.ts).
  */
 export const Permissions = (permission: Permission) => SetMetadata(PERMISSION, permission);
 
