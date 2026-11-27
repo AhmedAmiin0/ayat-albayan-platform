@@ -1,6 +1,6 @@
 import { counted } from '@ab/core';
+import type { BackupStatusView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { z } from 'zod';
 import { usePermissions } from '@/features/people/auth';
 import { t } from '@ab/web-kit';
 import { fetchStorageBackup } from './integrations-api';
@@ -10,50 +10,19 @@ const b = t.integrations.driveBackup;
 const MB = 1024 * 1024;
 const GB = 1024 * MB;
 
-/** GET /settings/integrations/storage-backup (api backup-view.ts). */
-const viewSchema = z.object({
-  enabled: z.boolean(),
-  ready: z.object({ minio: z.boolean(), google: z.boolean() }),
-  last: z
-    .object({
-      label: z.string(),
-      objects: z.number(),
-      bytes_raw: z.number(),
-      bytes_compressed: z.number(),
-    })
-    .nullable(),
-  last_error: z.string().nullable(),
-  quota: z.object({ limit: z.number().nullable(), free: z.number().nullable() }).nullable(),
-  low_quota: z.boolean(),
-  /** The last night's skipped objects (api run/summary.ts): the count and the first ones named. */
-  skipped: z.object({
-    count: z.number(),
-    items: z.array(
-      z.object({
-        id: z.string(),
-        size: z.number(),
-        reason: z.enum(['too_large', 'read_failed', 'changed', 'upload_failed']),
-      }),
-    ),
-  }),
-  /** Objects the last night could not send: Drive's free space under the 2 GB reserve. */
-  waiting: z.number(),
-});
-export type DriveBackupView = z.infer<typeof viewSchema>;
-
 export function bytesText(bytes: number): string {
   if (bytes >= GB) return b.sizeGb.replace('{n}', (bytes / GB).toFixed(1));
   return b.sizeMb.replace('{n}', String(Math.max(0, Math.round(bytes / MB))));
 }
 
 /** Why it does not run yet, or null when it is on and ready. */
-const STATE: [(v: DriveBackupView) => boolean, string][] = [
+const STATE: [(v: BackupStatusView) => boolean, string][] = [
   [(v) => !v.enabled, b.off],
   [(v) => !v.ready.minio, b.needsMinio],
   [(v) => !v.ready.google, b.needsGoogle],
 ];
 
-function lastLine(v: DriveBackupView): string {
+function lastLine(v: BackupStatusView): string {
   const last = v.last;
   if (!last) return b.none;
   return b.last
@@ -63,14 +32,14 @@ function lastLine(v: DriveBackupView): string {
     .replace('{compressed}', bytesText(last.bytes_compressed));
 }
 
-function quotaLine(q: DriveBackupView['quota']): string | null {
+function quotaLine(q: BackupStatusView['quota']): string | null {
   if (!q) return null;
   const { free, limit } = q;
   if (free === null || limit === null) return b.quotaUnlimited;
   return b.quota.replace('{free}', bytesText(free)).replace('{limit}', bytesText(limit));
 }
 
-export function skippedLines(v: DriveBackupView): string[] {
+export function skippedLines(v: BackupStatusView): string[] {
   const { count, items } = v.skipped;
   if (count === 0) return [];
   const named = items.map((i) =>
@@ -83,18 +52,18 @@ export function skippedLines(v: DriveBackupView): string[] {
 }
 
 /** Null when nothing waits. */
-export const waitingLine = (v: DriveBackupView): string | null =>
+export const waitingLine = (v: BackupStatusView): string | null =>
   v.waiting > 0 ? counted(b.waiting, v.waiting) : null;
 
 /** The status line's sentences, in order (empty ones dropped). */
-export function backupLines(v: DriveBackupView): string[] {
+export function backupLines(v: BackupStatusView): string[] {
   const blocked = STATE.find(([when]) => when(v))?.[1] ?? null;
   const error = v.last_error ? b.error.replace('{error}', v.last_error) : null;
   const lines = [blocked, lastLine(v), error, quotaLine(v.quota), b.note];
   return lines.filter((l): l is string => l !== null);
 }
 
-/** The API's gate on GET /settings/integrations/storage-backup (backup-status.controller.ts). */
+/** The API's gate on the status route (backupRoutes.status). */
 const READ_PERMISSION = 'settings.write';
 
 /** Only requested for permitted users, avoiding a false load error; a 4xx is not retried. */
@@ -102,7 +71,7 @@ export function useDriveBackup() {
   const allowed = usePermissions().can(READ_PERMISSION);
   const query = useQuery({
     queryKey: driveBackupKeys.backup(),
-    queryFn: async () => viewSchema.parse(await fetchStorageBackup()),
+    queryFn: async () => (await fetchStorageBackup()).data,
     enabled: allowed,
     retry: false,
   });

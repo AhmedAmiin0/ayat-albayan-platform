@@ -16,7 +16,14 @@ const GB = 1024 ** 3;
 const answer = {
   enabled: true,
   ready: { minio: true, google: true },
-  last: { label: '2026-11-07', objects: 3, bytes_raw: 2 * GB, bytes_compressed: GB },
+  last: {
+    label: '2026-11-07',
+    finished_at: '2026-11-07T01:10:00Z',
+    objects: 3,
+    skipped: 0,
+    bytes_raw: 2 * GB,
+    bytes_compressed: GB,
+  },
   last_error: null,
   quota: { limit: 15 * GB, free: GB, usage: 14 * GB, at: '2026-11-07T01:00:00Z' },
   low_quota: true,
@@ -33,7 +40,7 @@ afterEach(() => {
 
 describe('<DriveBackupStatus> under «التخزين»', () => {
   it('reads GET /settings/integrations/storage-backup and warns under 2 GB free', async () => {
-    apiFetch.mockResolvedValue(answer);
+    apiFetch.mockResolvedValue({ data: answer });
     renderWithClient(<DriveBackupStatus />);
     expect((await screen.findByRole('alert')).textContent).toContain(b.lowQuota);
     expect(screen.getByText(b.note)).toBeTruthy();
@@ -43,10 +50,7 @@ describe('<DriveBackupStatus> under «التخزين»', () => {
   it('objects waiting for room, and the skipped ones by name', async () => {
     const items = [{ id: 'reports/bad.pdf', size: 1024, reason: 'read_failed' }];
     apiFetch.mockResolvedValue({
-      ...answer,
-      low_quota: false,
-      waiting: 2,
-      skipped: { count: 1, items },
+      data: { ...answer, low_quota: false, waiting: 2, skipped: { count: 1, items } },
     });
     renderWithClient(<DriveBackupStatus />);
     expect((await screen.findByRole('alert')).textContent).toContain(b.waiting.two);
@@ -55,7 +59,8 @@ describe('<DriveBackupStatus> under «التخزين»', () => {
 
   it('a big object Drive refused is named as an upload failure, not a MinIO one', async () => {
     const items = [{ id: 'recordings/r.mp4', size: 2 * GB, reason: 'upload_failed' }];
-    apiFetch.mockResolvedValue({ ...answer, low_quota: false, skipped: { count: 1, items } });
+    const data = { ...answer, low_quota: false, skipped: { count: 1, items } };
+    apiFetch.mockResolvedValue({ data });
     renderWithClient(<DriveBackupStatus />);
     const line = await screen.findByText(/recordings\/r\.mp4/);
     expect(line.textContent).toContain(b.skipReasons.upload_failed);

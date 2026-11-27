@@ -1,14 +1,9 @@
-import { joinPath, parseTarget, roomRoute, roomWebUrl } from './join-target';
+import { parseTarget, roomRoute, roomWebUrl } from './join-target';
 import { roomMode } from './room-mode';
 
 const ID = '0a5c2b1e-6c3e-4d61-9a43-1b2f9b8e7d10';
 const lesson = { kind: 'lesson', id: ID } as const;
 const meeting = { kind: 'meeting', id: ID } as const;
-
-test('the web room join endpoints, unchanged', () => {
-  expect(joinPath(lesson)).toBe(`/lessons/${ID}/room/join`);
-  expect(joinPath(meeting)).toBe(`/meetings/${ID}/join`);
-});
 
 test('the browser fallback is the web page of the same room', () => {
   expect(roomWebUrl(lesson)).toBe(`https://app.ayatalbayan.com/classroom/${ID}`);

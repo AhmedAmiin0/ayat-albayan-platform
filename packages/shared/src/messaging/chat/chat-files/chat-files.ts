@@ -1,5 +1,4 @@
 import { counted, type PluralForm } from '@ab/core';
-import type { SignedDownload } from '../../../reports';
 import { z } from 'zod';
 import { baseMime } from '../../../schemas/chat-media';
 
@@ -73,15 +72,6 @@ const PDF_MIME = 'application/pdf';
 export const isPdfMime = (mime: string | null): boolean => baseMime(mime) === PDF_MIME;
 /** The preview's last page (GET …/pdf/:page refuses more); the file itself keeps them all. */
 export const PDF_PREVIEW_PAGES = 30;
-
-/**
- * GET /threads/:phone/messages/:id/pdf/:page: that page as a signed JPEG (1 h), with the PDF's page
- * count and size. Page 1 is the bubble's thumb and the descriptor.
- */
-export type ThreadPdfPage = SignedDownload & { page: number; pages: number; bytes: number };
-
-/** GET /threads/:phone/messages/:id/file and …/media/:id: the file signed, and its type. */
-export type ThreadFile = SignedDownload & { mime: string };
 
 /** The strings of inbox.pdf (ar.json / en.json) the meta line reads. */
 export type PdfMetaStrings = {

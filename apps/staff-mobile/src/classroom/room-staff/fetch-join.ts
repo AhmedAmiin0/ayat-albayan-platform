@@ -1,21 +1,22 @@
-import { roomJoinResultSchema } from '@ab/client-core';
+import { lessonJoinCalls, meetingCalls } from '@ab/client-core';
 import type { RoomJoinResult } from '@ab/schedule';
-import { credentialsOf, type RoomCredentials, type RoomTarget } from '@ab/mobile-kit/room';
-import { joinPath } from './join-target';
-import { apiSend } from '@ab/mobile-kit';
+import { credentialsOf, type RoomCredentials, type RoomKind, type RoomTarget } from '@ab/mobile-kit/room';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 
-const post: (method: 'POST', path: string) => Promise<unknown> = apiSend;
+const lessons = lessonJoinCalls({ apiFetch, apiSend });
+const meetings = meetingCalls({ apiFetch, apiSend });
 
-/**
- * POST the room's join endpoint (the web room's own); a refusal throws the ApiError with its code
- * (410 lesson_ended: ended for everyone). The answer is checked where the token is used.
- */
-export const sendJoin = (target: RoomTarget): Promise<unknown> => post('POST', joinPath(target));
+/** The web room's own join routes; each answer is parsed, as the room needs its token and role. */
+const JOIN_BY_KIND: Record<RoomKind, (id: string) => Promise<RoomJoinResult>> = {
+  lesson: lessons.join,
+  meeting: meetings.join,
+};
 
-/** The join answer, checked at the boundary (the room needs its token and role). */
-export const joinAnswer = (answer: unknown): RoomJoinResult => roomJoinResultSchema.parse(answer);
+/** A refusal throws the ApiError with its code (410 lesson_ended: ended for everyone). */
+export const sendJoin = (target: RoomTarget): Promise<RoomJoinResult> =>
+  JOIN_BY_KIND[target.kind](target.id);
 
 /** The join again from inside the room (a retry, or no token handed over by the press). */
 export async function fetchJoin(target: RoomTarget): Promise<RoomCredentials> {
-  return credentialsOf(joinAnswer(await sendJoin(target)));
+  return credentialsOf(await sendJoin(target));
 }

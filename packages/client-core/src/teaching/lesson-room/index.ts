@@ -20,3 +20,4 @@ export {
   type LessonRoomCalls,
   type StudentLinkCalls,
 } from './room-calls';
+export { lessonJoinCalls, type JoinLinkSend, type LessonJoinCalls } from './join-calls';

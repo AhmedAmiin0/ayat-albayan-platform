@@ -1,8 +1,8 @@
+import type { BackupSkippedItem } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { PushService } from '@/common/push/push.service';
 import { ar } from '@/common/infra/i18n/server-text';
 import { DriveBackupAlerts } from './drive-backup.alerts';
-import type { SkippedItem } from './run/summary';
 
 const now = new Date('2026-11-10T01:00:00Z');
 const why = ar.integrations.driveBackup.skipReasons;
@@ -18,7 +18,7 @@ describe('the backup’s alerts (bell only, once a day per subject)', () => {
   it('skipped: counted in Arabic forms, the first names given with size and why', async () => {
     const t = setup();
     const keys = ['reports/a', 'reports/b', 'reports/c', 'reports/d', 'reports/e', 'reports/f'];
-    const items: SkippedItem[] = keys.map((id) => ({ id, size: 3 * 1024 ** 2, reason: 'changed' }));
+    const items: BackupSkippedItem[] = keys.map((id) => ({ id, size: 3 * 1024 ** 2, reason: 'changed' }));
     items[0] = { id: 'recordings/r.mp4', size: 5 * 1024 ** 3, reason: 'too_large' };
     await t.alerts.skipped({ items, now });
     expect(t.said().subject).toBe('drive_backup:skipped:2026-11-10');

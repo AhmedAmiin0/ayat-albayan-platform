@@ -8,6 +8,7 @@ import { renderWithQuery } from '@/test/query';
 import { AssistantHomeScreen } from './AssistantHomeScreen';
 
 const mockApiFetch = jest.fn();
+const LESSON_ID = '0a5c2b1e-6c3e-4d61-9a43-1b2f9b8e7d10';
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
@@ -18,7 +19,7 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 // 16:00 Riyadh on 2026-10-01: the lesson below is running.
 const row = (over: object) => ({
-  lesson_id: 'l1',
+  lesson_id: LESSON_ID,
   starts_at: '2026-10-01T13:00:00.000Z',
   ends_at: '2026-10-01T13:45:00.000Z',
   status: 'confirmed',
@@ -48,11 +49,11 @@ test('today first: the lessons they assist (open ones only) for the Riyadh day',
 test('«ادخل الحلقة» asks the API for the room, then opens the classroom in the browser', async () => {
   const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
   mockApiFetch.mockResolvedValue([row({})]);
-  mockApiSend.mockResolvedValue({});
+  mockApiSend.mockResolvedValue({ url: 'wss://lk', token: 'tok', room: 'r', role: 'assistant' });
   await renderWithQuery(<AssistantHomeScreen can={all} />);
   await fireEvent.press(await screen.findByRole('button', { name: t.classroom.enter }));
-  await waitFor(() => expect(openURL).toHaveBeenCalledWith('https://app.ayatalbayan.com/classroom/l1'));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l1/room/join');
+  await waitFor(() => expect(openURL).toHaveBeenCalledWith(`https://app.ayatalbayan.com/classroom/${LESSON_ID}`));
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/lessons/${LESSON_ID}/room/join`, undefined);
   openURL.mockRestore();
 });
 

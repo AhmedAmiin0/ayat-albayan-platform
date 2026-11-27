@@ -2,7 +2,7 @@ import type { ReportSummaryView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import { fileAnswers } from '@/teacher/student-file/file-fixtures';
+import { fileAnswers, LESSON, STUDENT_ID } from '@/teacher/student-file/file-fixtures';
 import { TeacherStudentFileScreen } from '@/teacher/student-file/TeacherStudentFileScreen/TeacherStudentFileScreen';
 
 const mockApiFetch = jest.fn();
@@ -18,14 +18,14 @@ jest.mock('expo-router', () => ({
     canDismiss: () => true,
     replace: jest.fn(),
   },
-  useLocalSearchParams: () => ({ id: 's1' }),
+  useLocalSearchParams: () => ({ id: '30000000-0000-4000-8000-000000000008' }),
 }));
 jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-11-11T12:00:00Z') }));
 jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 
 const report: ReportSummaryView = {
   id: 'r1',
-  lesson_id: 'l-edit',
+  lesson_id: LESSON.edit,
   starts_at: '2026-11-10T15:00:00Z',
   lesson_no: 5,
   teacher: { id: 't-abrar', display_name_ar: 'أبرار' },
@@ -41,7 +41,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   const file = fileAnswers();
   mockApiFetch.mockImplementation(async (p: string) =>
-    p.startsWith('/students/s1/reports')
+    p.startsWith(`/students/${STUDENT_ID}/reports`)
       ? { items: [report], total: 1, page: 1, pageSize: 10, series: [] }
       : file(p),
   );
@@ -54,7 +54,7 @@ test('«التقارير»: read only once chosen; her own report opens its form
   expect(reads()).toHaveLength(0);
   await fireEvent.press(tab);
   await fireEvent.press(await screen.findByText(new RegExp(t.enums.grade.excellent)));
-  expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/reports?page=1&pageSize=10');
-  expect(mockPush).toHaveBeenCalledWith('/teacher/reports/l-edit');
+  expect(mockApiFetch).toHaveBeenCalledWith(`/students/${STUDENT_ID}/reports?page=1&pageSize=10`);
+  expect(mockPush).toHaveBeenCalledWith(`/teacher/reports/${LESSON.edit}`);
   expect(screen.getByText(t.mobileStudentFile.recordings.button)).toBeTruthy();
 });

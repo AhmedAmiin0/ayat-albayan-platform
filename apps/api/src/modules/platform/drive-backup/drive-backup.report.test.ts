@@ -1,7 +1,8 @@
+import type { BackupSkippedItem } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { DriveBackupData } from './drive-backup.data';
 import { reportNight } from './drive-backup.report';
-import { emptySummary, type SkippedItem } from './run/summary';
+import { emptySummary } from './run/summary';
 
 function setup() {
   const state = { save: vi.fn() };
@@ -29,7 +30,7 @@ describe('the night’s report', () => {
 
   it('skipped objects are named on the status line (the first 50) and in the alert', async () => {
     const t = setup();
-    const items: SkippedItem[] = Array.from({ length: 60 }, (_, i) => ({
+    const items: BackupSkippedItem[] = Array.from({ length: 60 }, (_, i) => ({
       id: `reports/${i}`,
       size: 1,
       reason: 'read_failed',

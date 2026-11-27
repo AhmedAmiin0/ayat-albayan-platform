@@ -1,15 +1,15 @@
+import type { BackupSkippedItem } from '@ab/shared';
 import { counted } from '@ab/core';
 import { Inject, Injectable } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
 import { PushService } from '@/common/push/push.service';
 import { dayLabel } from '@/modules/platform/drive-backup/plan/labels';
 import { sizeText } from '@/modules/platform/drive-backup/run/quota';
-import type { SkippedItem } from '@/modules/platform/drive-backup/run/summary';
 
 /** At most this many names in the skipped alert (the rest only counted). */
 const NAMES_SHOWN = 5;
 
-const itemText = (t: SkippedItem): string =>
+const itemText = (t: BackupSkippedItem): string =>
   ar.googleSync.alerts.backupSkippedItem
     .replace('{name}', t.id)
     .replace('{size}', sizeText(t.size))
@@ -35,7 +35,7 @@ export class DriveBackupAlerts {
   }
 
   /** Objects not backed up tonight, named (the first few): size and why; retried every night. */
-  skipped(input: { items: readonly SkippedItem[]; now: Date }): Promise<void> {
+  skipped(input: { items: readonly BackupSkippedItem[]; now: Date }): Promise<void> {
     const names = input.items.slice(0, NAMES_SHOWN).map(itemText).join('، ');
     const text = counted(ar.googleSync.alerts.backupSkipped, input.items.length);
     return this.tell(`skipped:${dayLabel(input.now)}`, text.replace('{names}', names));

@@ -11,7 +11,7 @@ const PHONE = '+966552147730';
 const CRM_LINK = 'https://crm.example.com/storage/v1/object/public/chat-media/a/1.jpg';
 let n = 0;
 const msg = (over: Partial<MediaMessage> = {}): MediaMessage => ({
-  id: `m${String(++n)}`,
+  id: `00000000-0000-4000-8000-${String(++n).padStart(12, '0')}`,
   phone_e164: PHONE,
   direction: 'inbound',
   media_id: 'meta-1',
@@ -57,6 +57,11 @@ describe('ThreadMediaService pickers: photos and PDFs, never a sticker', () => {
     expect(shown).toEqual([[file.id, 'application/pdf', 'فاتورة.pdf']]);
     const asked = expect.objectContaining({ phone: PHONE, limit: 12 });
     expect(queries.receipts).toHaveBeenCalledWith(asked);
+  });
+
+  it('a row the clients cannot read is 500 response_invalid, never sent half-checked', async () => {
+    queries.receipts.mockResolvedValue([pdf({ id: 'm-old' })]);
+    expect(await codeOf(service.list(PHONE))).toEqual([500, 'response_invalid']);
   });
 
   it('a stored copy with no media id (imported) is listed and signed as stored, nothing fetched', async () => {

@@ -3,7 +3,6 @@ export * from './rules';
 export * from './schema/schema';
 export * from './teacher-list';
 export type * from './views';
-export type * from './teacher-views';
 export * from './page';
 export * from './page-access';
 export * from './quran';

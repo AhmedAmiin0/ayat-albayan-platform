@@ -1,29 +1,27 @@
 import {
-  channelUploadSchema,
+  channelMonitorMessageRoutes,
+  channelPortalMessageRoutes,
+  channelSalesMessageRoutes,
+  channelTeacherMessageRoutes,
   type ChannelReads,
-  type ChannelUpload,
   type SignedUpload,
 } from '@ab/shared';
-import { Controller, Get, Inject, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam, ZodParams } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ChannelAccess } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelMedia } from '@/modules/teaching/student-channels/media/channel-media.service';
 import { ChannelReadsService } from '@/modules/teaching/student-channels/reads/channel-reads.service';
 
-const id = z.uuid();
-const teacherIds = z.object({ studentId: z.uuid(), messageId: z.uuid() });
-const studentIds = z.object({ id: z.uuid(), messageId: z.uuid() });
-type TeacherIds = z.output<typeof teacherIds>;
-type StudentIds = z.output<typeof studentIds>;
-const READS = 'messages/:messageId/reads';
-const UPLOAD = 'attachments/upload-url';
+type Teacher<K extends keyof typeof channelTeacherMessageRoutes> = RouteInputOf<
+  (typeof channelTeacherMessageRoutes)[K]
+>;
+type Upload = RouteInputOf<typeof channelPortalMessageRoutes.upload>;
+type Reads = RouteInputOf<typeof channelPortalMessageRoutes.reads>;
 
 /** Chat upgrade (docs/31 §2): participants upload media; anyone let in sees message read info. */
-@ApiTags('student-channels')
 @ApiBearerAuth()
 @Controller()
 export class ChannelFilesController {
@@ -33,69 +31,59 @@ export class ChannelFilesController {
     @Inject(ChannelReadsService) private readonly reads: ChannelReadsService,
   ) {}
 
-  @Post(`teachers/me/channels/:studentId/${UPLOAD}`)
-  @Permissions('self.teacher')
+  @Route(channelTeacherMessageRoutes.upload)
   async teacherUpload(
-    @ZodParam('studentId', id) studentId: string,
-    @ZodBody(channelUploadSchema) file: ChannelUpload,
+    @RouteInput() { params, body }: Teacher<'upload'>,
     @CurrentUser() user: AuthUser,
   ): Promise<SignedUpload> {
-    return this.media.uploadUrl(await this.access.teacher(user, studentId), file);
+    return this.media.uploadUrl(await this.access.teacher(user, params.studentId), body);
   }
 
-  @Post(`portal/students/:id/channel/${UPLOAD}`)
-  @Permissions('self.portal')
+  @Route(channelPortalMessageRoutes.upload)
   async familyUpload(
-    @ZodParam('id', id) studentId: string,
-    @ZodBody(channelUploadSchema) file: ChannelUpload,
+    @RouteInput() { params, body }: Upload,
     @CurrentUser() user: AuthUser,
   ): Promise<SignedUpload> {
-    return this.media.uploadUrl(await this.access.family(user, studentId), file);
+    return this.media.uploadUrl(await this.access.family(user, params.id), body);
   }
 
-  @Post(`sales/students/:id/channel/${UPLOAD}`)
-  @Permissions('self.sales')
+  @Route(channelSalesMessageRoutes.upload)
   async salesUpload(
-    @ZodParam('id', id) studentId: string,
-    @ZodBody(channelUploadSchema) file: ChannelUpload,
+    @RouteInput() { params, body }: Upload,
     @CurrentUser() user: AuthUser,
   ): Promise<SignedUpload> {
-    return this.media.uploadUrl(await this.access.assistant(user, studentId), file);
+    return this.media.uploadUrl(await this.access.assistant(user, params.id), body);
   }
 
-  @Get(`teachers/me/channels/:studentId/${READS}`)
-  @Permissions('self.teacher')
+  @Route(channelTeacherMessageRoutes.reads)
   async teacherReads(
-    @ZodParams(teacherIds) p: TeacherIds,
+    @RouteInput() { params }: Teacher<'reads'>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelReads> {
-    return this.reads.reads(await this.access.teacher(user, p.studentId), p.messageId);
+    return this.reads.reads(await this.access.teacher(user, params.studentId), params.messageId);
   }
 
-  @Get(`portal/students/:id/channel/${READS}`)
-  @Permissions('self.portal')
+  @Route(channelPortalMessageRoutes.reads)
   async familyReads(
-    @ZodParams(studentIds) p: StudentIds,
+    @RouteInput() { params }: Reads,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelReads> {
-    return this.reads.reads(await this.access.family(user, p.id), p.messageId);
+    return this.reads.reads(await this.access.family(user, params.id), params.messageId);
   }
 
-  @Get(`sales/students/:id/channel/${READS}`)
-  @Permissions('self.sales')
+  @Route(channelSalesMessageRoutes.reads)
   async salesReads(
-    @ZodParams(studentIds) p: StudentIds,
+    @RouteInput() { params }: Reads,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelReads> {
-    return this.reads.reads(await this.access.assistant(user, p.id), p.messageId);
+    return this.reads.reads(await this.access.assistant(user, params.id), params.messageId);
   }
 
-  @Get(`students/:id/channel/${READS}`)
-  @Permissions('student_channels.monitor')
+  @Route(channelMonitorMessageRoutes.reads)
   async monitorReads(
-    @ZodParams(studentIds) p: StudentIds,
+    @RouteInput() { params }: Reads,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelReads> {
-    return this.reads.reads(await this.access.monitor(user, p.id), p.messageId);
+    return this.reads.reads(await this.access.monitor(user, params.id), params.messageId);
   }
 }
