@@ -1,9 +1,10 @@
 import { View } from 'react-native';
 import { type, useTheme } from '../../theme';
 import { AppText } from '../../ui/primitives/AppText';
+import type { BellBadgeProps } from './BellBadge.types';
 
 /** The bell's unread count at its top corner, hidden from screen readers (the name says it). */
-export function BellBadge({ text }: { text: string }) {
+export function BellBadge({ text }: BellBadgeProps) {
   const { color } = useTheme();
   return (
     <View

@@ -1,1 +1,2 @@
-export { BellButton, type BellButtonProps } from './BellButton';
+export { BellButton } from './BellButton';
+export type { BellButtonProps } from './BellButton.types';
