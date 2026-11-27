@@ -11,17 +11,18 @@ const view: ShortLinkGateView = {
   needs: 'sign_in_or_code',
   codesAvailable: true,
 };
+const asked = { params: { code: 'Mg12Cd34Ef' }, query: undefined, body: undefined };
 const serving = (answer: object) =>
   new GatePublicController({ view: async () => answer } as unknown as GateService);
 
 describe('GET /public/short-links/:code', () => {
   it('answers the gate view', async () => {
-    expect(await serving(view).view({ params: { code: 'Mg12Cd34Ef' } })).toEqual(view);
+    expect(await serving(view).view(asked)).toEqual(view);
   });
 
   it('a view outside the shared schema is a 500 response_invalid', async () => {
     const odd = serving({ ...view, state: 'closed' });
-    await expect(odd.view({ params: { code: 'Mg12Cd34Ef' } })).rejects.toMatchObject({
+    await expect(odd.view(asked)).rejects.toMatchObject({
       response: { code: 'response_invalid' },
     });
   });
