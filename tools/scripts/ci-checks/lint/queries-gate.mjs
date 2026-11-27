@@ -12,6 +12,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const ROOTS = ['apps', 'packages', 'e2e'];
 const NAME = /queries\.tsx?$/;
 const CLASS = /\bclass \w+Queries\b/;
+/** The path list outgrew execFileSync's 1 MiB default buffer (ENOBUFS). */
+export const LIST_OPTIONS = { encoding: 'utf8', maxBuffer: 1 << 28 };
 
 /** True when `path` (with its `read()` text) is a queries file: by name, or by a `class XQueries`. */
 export function isQueries(path, read) {
@@ -28,7 +30,7 @@ export function compare(now, listed) {
 
 function main(args) {
   const root = fileURLToPath(new URL('../../../..', import.meta.url));
-  const tracked = execFileSync('git', ['ls-files', '--', ...ROOTS], { cwd: root, encoding: 'utf8' });
+  const tracked = execFileSync('git', ['ls-files', '--', ...ROOTS], { cwd: root, ...LIST_OPTIONS });
   const paths = tracked.split('\n').filter((p) => p !== '' && existsSync(join(root, p)));
   const now = paths.filter((p) => isQueries(p, () => readFileSync(join(root, p), 'utf8'))).sort();
   const file = join(root, 'refactor', 'guards', 'queries.json');
