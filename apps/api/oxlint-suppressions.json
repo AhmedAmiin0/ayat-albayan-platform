@@ -2904,9 +2904,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/messaging/inbox/threads/threads.list.ts": {

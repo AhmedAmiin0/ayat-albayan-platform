@@ -9,14 +9,13 @@ import {
   type ThreadView,
 } from '@ab/shared';
 import type { Page } from '@ab/core';
-import { Controller, HttpCode, Param } from '@nestjs/common';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { ZodBody } from '@/common/http/zod-inputs';
-import { invalidPhone, phoneParam } from './phone-param';
+import { invalidPhone } from './phone-param';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
@@ -63,20 +62,19 @@ export class ThreadsController {
   @Route(sends.text)
   @HttpCode(201)
   async text(
-    @Param('phone') raw: string,
-    @ZodBody(sends.text.body) input: RouteInputOf<typeof sends.text>['body'],
+    @RouteInput({ badParam: invalidPhone }) input: RouteInputOf<typeof sends.text>,
     @CurrentUser() user: AuthUser,
   ): Promise<TextSendAnswer> {
     const { scope, sales } = await this.scopes(user);
     const sent = await this.sends.text({
-      phone: phoneParam(raw),
-      input,
+      phone: input.params.phone,
+      input: input.body,
       actorId: user.id,
       scope,
       sales,
       role: user.role,
     });
-    const action = input.correctsId ? 'thread_correction' : 'thread_text';
+    const action = input.body.correctsId ? 'thread_correction' : 'thread_text';
     const view = await this.audited({ sent, action, user, scope, sales });
     // `replayed`: the first row came back (docs/44 M1); `same_request`: it is this correction.
     return { ...view, replayed: sent.replayed, same_request: sent.sameRequest === true };
@@ -85,15 +83,14 @@ export class ThreadsController {
   @Route(sends.template)
   @HttpCode(201)
   async template(
-    @Param('phone') raw: string,
-    @ZodBody(sends.template.body) input: RouteInputOf<typeof sends.template>['body'],
+    @RouteInput({ badParam: invalidPhone }) input: RouteInputOf<typeof sends.template>,
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
     const { scope, sales } = await this.scopes(user);
     const restricted = !sendsAllTemplates(user);
     const sent = await this.sends.template({
-      phone: phoneParam(raw),
-      input,
+      phone: input.params.phone,
+      input: input.body,
       actorId: user.id,
       scope,
       sales,
