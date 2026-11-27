@@ -3,6 +3,7 @@ export * from './conflicts';
 export * from './state-machine/state-machine';
 export * from './series/time-edit';
 export type * from './views';
+export * from './lesson-view';
 export * from './proposals/proposals';
 export * from './series/series-days';
 export type * from './overview';

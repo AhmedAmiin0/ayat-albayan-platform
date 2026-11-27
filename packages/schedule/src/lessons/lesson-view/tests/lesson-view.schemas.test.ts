@@ -24,7 +24,7 @@ const view = {
   confirmed_at: null,
   rescheduled_from_id: null,
   students: [student],
-  allowed_events: ['confirm', 'cancel'],
+  allowed_events: ['confirm', 'cancel_by_admin'],
   conflicts: [],
   pending_proposal: null,
 };

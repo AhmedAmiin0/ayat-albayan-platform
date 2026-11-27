@@ -1,5 +1,5 @@
 import type { Gender, Program, TeacherStatus } from '@ab/catalog';
-import type { LessonView } from './views';
+import type { LessonView } from './lesson-view';
 
 // GET /lessons/overview (R-SCH-09 all-teachers calendar): every teacher with their weekly windows,
 // time off, load and free time, plus the lessons of the window, in one payload. Instants are ISO UTC.
