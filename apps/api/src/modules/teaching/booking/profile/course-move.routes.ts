@@ -1,59 +1,45 @@
-import type { ProfileCourseView } from '@ab/shared';
-import { profileCourseQuerySchema } from '@ab/schedule';
-import type { CourseChangeCheck, CourseChangeResult } from '@ab/shared';
-import { Body, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
-import type { z } from 'zod';
+import type { courseTeacherRoutes, courseTimesRoutes } from '@ab/shared';
+import { HttpCode, Injectable } from '@nestjs/common';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
-import type { CourseMove } from '@/modules/teaching/booking/course-change/course-change.service';
-import type { ProfileCourse } from './profile-course.service';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { ProfileCourse } from './profile-course.service';
 
-/** The check's and the change's bodies of one profile action (times, or teacher). */
-interface MoveSchemas {
-  check: z.ZodType<CourseMove>;
-  change: z.ZodType<CourseMove & { clientRequestId: string }>;
-}
+type MoveRoutes = typeof courseTimesRoutes | typeof courseTeacherRoutes;
 
 /**
- * GET change, POST change/check and POST change of a profile course action: the
- * subclass names the route and the key (CourseTeacherController, CourseTimesController).
+ * The course, its check and its change of one profile course action; the subclass names the
+ * route table and its permission (CourseTeacherController, CourseTimesController).
  */
-export abstract class CourseMoveRoutes {
-  constructor(
-    protected readonly course: ProfileCourse,
-    private readonly schemas: MoveSchemas,
-  ) {}
+export function courseMoveRoutes(routes: MoveRoutes) {
+  @Injectable()
+  abstract class CourseMoveRoutes {
+    constructor(protected readonly course: ProfileCourse) {}
 
-  /** Absent means the current package. */
-  @Get('change')
-  view(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Query() query: unknown,
-    @CurrentUser() user: AuthUser,
-  ): Promise<ProfileCourseView> {
-    return this.course.view(id, parseOrThrow(profileCourseQuerySchema, query).subscriptionId, user);
-  }
+    @Route(routes.view)
+    view(
+      @RouteInput() { params, query }: RouteInputOf<MoveRoutes['view']>,
+      @CurrentUser() user: AuthUser,
+    ) {
+      return this.course.view(params.id, query.subscriptionId, user);
+    }
 
-  /** 200 { conflicts, remaining, endsOn }, nothing written. */
-  @Post('change/check')
-  @HttpCode(200)
-  check(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
-    @CurrentUser() user: AuthUser,
-  ): Promise<CourseChangeCheck> {
-    return this.course.check({ studentId: id, body: parseOrThrow(this.schemas.check, body), user });
-  }
+    @Route(routes.check)
+    @HttpCode(200)
+    check(
+      @RouteInput() { params, body }: RouteInputOf<MoveRoutes['check']>,
+      @CurrentUser() user: AuthUser,
+    ) {
+      return this.course.check({ studentId: params.id, body, user });
+    }
 
-  /** 201 CourseChangeResult; a retry with the same clientRequestId returns the first change. */
-  @Post('change')
-  change(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
-    @CurrentUser() user: AuthUser,
-  ): Promise<CourseChangeResult> {
-    const parsed = parseOrThrow(this.schemas.change, body);
-    return this.course.change({ studentId: id, body: parsed, user });
+    @Route(routes.change)
+    change(
+      @RouteInput() { params, body }: RouteInputOf<MoveRoutes['change']>,
+      @CurrentUser() user: AuthUser,
+    ) {
+      return this.course.change({ studentId: params.id, body, user });
+    }
   }
+  return CourseMoveRoutes;
 }

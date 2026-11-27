@@ -1,8 +1,8 @@
 import { notesFreeSchema, peopleEditRoutes as routes, type PeopleEditView } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -16,9 +16,7 @@ import { isAdmin } from '@/common/auth/roles';
 const notesRule = (user: AuthUser): z.ZodType => (isAdmin(user) ? z.object({}) : notesFreeSchema);
 
 /** people.edit only, never students.write; admin-only fields and notes are refused with 400. */
-@ApiTags('people')
 @ApiBearerAuth()
-@Permissions('people.edit')
 @Controller()
 export class PeopleEditController {
   constructor(

@@ -6,14 +6,13 @@ import {
   type StopDone,
   courseMoveBase,
   courseMoveErrorCode,
-  courseMoveViewPath,
   courseStopCalls,
-  courseTeacherOptionsPath,
+  courseTeacherCalls,
+  courseTimesCalls,
   type CourseMoveKind,
   type StopMoneyAsk,
 } from '@ab/client-core';
-import type { CourseStopRequest, CourseStopResult, ProfileCourseView } from '@ab/shared';
-import type { BookingTeacherOption } from '@ab/schedule';
+import type { CourseStopRequest, CourseStopResult } from '@ab/shared';
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t, apiFetch, apiSend } from '@ab/web-kit';
@@ -28,6 +27,8 @@ interface Course {
 }
 
 const stops = courseStopCalls({ apiFetch, apiSend });
+const teacherMoves = courseTeacherCalls({ apiFetch, apiSend });
+const moves = { teacher: teacherMoves, times: courseTimesCalls({ apiFetch, apiSend }) };
 
 export const courseStopPreviewQuery = (input: Course) =>
   queryOptions({
@@ -41,13 +42,14 @@ export const stopCourse = (studentId: string, body: CourseStopRequest) =>
 export const profileCourseQuery = (input: Course & { kind: CourseMoveKind }) =>
   queryOptions({
     queryKey: courseKeys.move(input, input.kind),
-    queryFn: () => apiFetch<ProfileCourseView>(courseMoveViewPath(input)),
+    queryFn: () =>
+      moves[input.kind].view(input.studentId, { subscriptionId: input.subscriptionId }),
   });
 
 export const courseTeachersQuery = (studentId: string) =>
   queryOptions({
     queryKey: courseKeys.teachers(studentId),
-    queryFn: () => apiFetch<BookingTeacherOption[]>(courseTeacherOptionsPath(studentId)),
+    queryFn: () => teacherMoves.teachers(studentId),
   });
 
 const OWN = new Set([

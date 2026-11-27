@@ -2,11 +2,11 @@ import type { BookingRequest } from '@ab/shared';
 import { guardianCalls, type BookingMode } from '@ab/client-core';
 import { courseDraftSavedSchema } from '@ab/shared';
 import { PACKAGE_SIZES, type Gender, type PackageSize, type Program } from '@ab/catalog';
-import type { BookingResult, BookingTeacherOption, Conflict } from '@ab/schedule';
+import type { BookingResult } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { BOOKING_KINDS, type BookingKind } from './draft/contract';
-import { bookingBase } from './mode';
+import { bookingCallsOf } from './mode';
 import { guardianKeys } from '@/features/people/keys';
 import { bookingKeys } from './booking.keys';
 
@@ -17,11 +17,10 @@ export const bookingTeachersQuery = (
   f: { program: Program; gender: Gender | null },
   mode: BookingMode = 'admin',
 ) => {
-  const params = new URLSearchParams({ program: f.program });
-  if (f.gender) params.set('gender', f.gender);
+  const query = { program: f.program, gender: f.gender ?? undefined };
   return queryOptions({
-    queryKey: bookingKeys.teachers(mode, params.toString()),
-    queryFn: () => apiFetch<BookingTeacherOption[]>(`${bookingBase(mode)}/teachers?${params}`),
+    queryKey: bookingKeys.teachers(mode, JSON.stringify(query)),
+    queryFn: () => bookingCallsOf[mode].teachers(query),
   });
 };
 
@@ -45,7 +44,7 @@ async function saveCourseDraft(body: BookingRequest): Promise<BookingResult | nu
  * course (`hold`) is saved as a draft instead: null.
  */
 export const createBooking = (body: BookingRequest, mode: BookingMode = 'admin', hold = false) =>
-  hold ? saveCourseDraft(body) : apiSend<BookingResult>('POST', bookingBase(mode), body);
+  hold ? saveCourseDraft(body) : bookingCallsOf[mode].book(body);
 
 /** Whole-series clashes (R-SCH-04) incl. after DST; keyed without idempotency key and invoice. */
 export const bookingCheckQuery = (body: BookingRequest, mode: BookingMode = 'admin') => {
@@ -55,7 +54,7 @@ export const bookingCheckQuery = (body: BookingRequest, mode: BookingMode = 'adm
   delete key.meetingLink; // nor the link: typing it never re-checks
   return queryOptions({
     queryKey: bookingKeys.check(mode, JSON.stringify(key)),
-    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', `${bookingBase(mode)}/check`, body),
+    queryFn: () => bookingCallsOf[mode].check(body),
     retry: false,
   });
 };

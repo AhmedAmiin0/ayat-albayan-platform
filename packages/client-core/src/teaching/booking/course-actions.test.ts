@@ -2,12 +2,11 @@ import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '../../core/http';
 import {
+  courseMoveBase,
   courseMoveErrorCode,
-  courseMoveViewPath,
   courseStopErrorCode,
   courseStopLessonsText,
   courseStopPath,
-  courseTeacherOptionsPath,
 } from './course-actions';
 
 const fail = (code: unknown) => new ApiError(409, { code });
@@ -15,13 +14,10 @@ const fail = (code: unknown) => new ApiError(409, { code });
 describe('course actions paths (owner 2026-10-30)', () => {
   it('builds the profile routes', () => {
     expect(courseStopPath('s1')).toBe('/students/s1/course-stop');
-    expect(courseMoveViewPath({ studentId: 's1', kind: 'teacher', subscriptionId: 'p1' })).toBe(
-      '/students/s1/course-teacher/change?subscriptionId=p1',
+    expect(courseMoveBase({ studentId: 's1', kind: 'teacher' })).toBe(
+      '/students/s1/course-teacher',
     );
-    expect(courseMoveViewPath({ studentId: 's1', kind: 'times', subscriptionId: 'p1' })).toBe(
-      '/students/s1/course-times/change?subscriptionId=p1',
-    );
-    expect(courseTeacherOptionsPath('s1')).toBe('/students/s1/course-teacher/teachers');
+    expect(courseMoveBase({ studentId: 's1', kind: 'times' })).toBe('/students/s1/course-times');
   });
 });
 

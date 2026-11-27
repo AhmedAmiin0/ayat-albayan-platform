@@ -1,6 +1,6 @@
 import {
-  codeSessionSchema,
-  codeStatusSchema,
+  accountSetupRoutes,
+  signInRoutes,
   type AccountSetup,
   type CodeSession,
   type CodeStatus,
@@ -9,7 +9,7 @@ import {
   type PasswordSession,
   type ResetBody,
 } from '@ab/shared';
-import { ApiError, type ApiClient } from '../http';
+import { ApiError, callWith, type ApiClient } from '../http';
 
 // Family accounts (docs/30 §6): the public sign-in routes as web and mobile call them. Sessions are
 // finished by the app's own supabase client (verifyOtp / setSession).
@@ -40,27 +40,26 @@ export interface SignInApi {
   reset(body: ResetBody): Promise<void>;
 }
 
-/** A verify answer, parsed (rule 12): only the token hash and its type ever leave the API. */
-const asSession = (body: unknown): CodeSession => codeSessionSchema.parse(body);
-
-export function signInApi(client: Pick<ApiClient, 'apiFetch' | 'apiSend'>): SignInApi {
+/** The public sign-in calls; every answer is parsed with its route's schema (rule 12). */
+export function signInApi(client: ApiClient): SignInApi {
+  const call = callWith(client);
   const familyCodes: CodeRoutes = {
-    request: (phone) => client.apiSend('POST', '/auth/code/request', { phone }),
-    verify: (body) => client.apiSend('POST', '/auth/code/verify', body).then(asSession),
+    request: (phone) => call({ route: signInRoutes.request, body: { phone } }),
+    verify: (body) => call({ route: signInRoutes.verify, body }),
   };
   return {
-    codeStatus: () => client.apiFetch('/auth/code/status').then((r) => codeStatusSchema.parse(r)),
+    codeStatus: () => call({ route: signInRoutes.status }),
     requestCode: familyCodes.request,
     verifyCode: familyCodes.verify,
     familyCodes,
     staffCodes: {
-      request: (phone) => client.apiSend('POST', '/auth/staff-code/request', { phone }),
-      verify: (body) => client.apiSend('POST', '/auth/staff-code/verify', body).then(asSession),
+      request: (phone) => call({ route: signInRoutes.staffRequest, body: { phone } }),
+      verify: (body) => call({ route: signInRoutes.staffVerify, body }),
     },
-    setupAccount: (body) => client.apiSend('PUT', '/me/setup', body),
-    login: (body) => client.apiSend<PasswordSession>('POST', '/auth/login', body),
-    forgot: (body) => client.apiSend('POST', '/auth/password/forgot', body),
-    reset: (body) => client.apiSend('POST', '/auth/password/reset', body),
+    setupAccount: (body) => call({ route: accountSetupRoutes.setup, body }),
+    login: (body) => call({ route: signInRoutes.login, body }),
+    forgot: (body) => call({ route: signInRoutes.forgot, body }),
+    reset: (body) => call({ route: signInRoutes.reset, body }),
   };
 }
 
@@ -82,7 +81,10 @@ export const SIGN_IN_ERRORS = [
   'codes_unavailable',
 ] as const;
 export type SignInError =
-  (typeof SIGN_IN_ERRORS)[number] | 'password_too_short' | 'password_too_long' | 'password_blank';
+  | (typeof SIGN_IN_ERRORS)[number]
+  | 'password_too_short'
+  | 'password_too_long'
+  | 'password_blank';
 
 /** The API's `code` of a sign-in failure, or null. */
 export function signInError(e: unknown): SignInError | null {

@@ -54,15 +54,21 @@ describe('FamilyPanel (docs/30 §1, §7)', () => {
     click(F.sendCode);
     expect((await screen.findByRole('status')).textContent).toBe(F.codeSent);
     expect(apiSend).toHaveBeenCalledWith('POST', '/auth/code/request', { phone: '+201001234567' });
-    fireEvent.paste(screen.getByLabelText(F.codeDigit.replace('{n}', '1')), { clipboardData: { getData: () => '123456' } });
+    fireEvent.paste(screen.getByLabelText(F.codeDigit.replace('{n}', '1')), {
+      clipboardData: { getData: () => '123456' },
+    });
     click(F.verify);
     await waitFor(() => expect(navigate).toHaveBeenCalledWith({ href: '/portal' }));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/auth/code/verify', { phone: '+201001234567', code: '123456' });
+    expect(apiSend).toHaveBeenCalledWith('POST', '/auth/code/verify', {
+      phone: '+201001234567',
+      code: '123456',
+    });
     expect(auth.verifyOtp).toHaveBeenCalledWith({ type: 'magiclink', token_hash: 'hash' });
   });
 
   it('a wrong number never asks for a code; an incomplete code is caught before the API', async () => {
     status(true);
+    apiSend.mockResolvedValue(undefined);
     renderPanel();
     fireEvent.change(await screen.findByLabelText(F.phone), { target: { value: '12' } });
     click(F.sendCode);
@@ -92,7 +98,12 @@ describe('FamilyPanel (docs/30 §1, §7)', () => {
 
   it('«الدخول باسم المستخدم»: the student code + password through POST /auth/login', async () => {
     status(true);
-    apiSend.mockResolvedValue({ access_token: 'at', refresh_token: 'rt', expires_in: 1, expires_at: null });
+    apiSend.mockResolvedValue({
+      access_token: 'at',
+      refresh_token: 'rt',
+      expires_in: 1,
+      expires_at: null,
+    });
     auth.setSession.mockResolvedValue({ error: null });
     renderPanel();
     fireEvent.click(await screen.findByRole('button', { name: F.withUsername }));
@@ -100,7 +111,12 @@ describe('FamilyPanel (docs/30 §1, §7)', () => {
     fireEvent.change(screen.getByLabelText(F.username), { target: { value: 'ab-1234' } });
     fireEvent.change(screen.getByLabelText(t.auth.password), { target: { value: 'secret-123' } });
     click(t.auth.submit);
-    await waitFor(() => expect(auth.setSession).toHaveBeenCalledWith({ access_token: 'at', refresh_token: 'rt' }));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/auth/login', { username: 'ab-1234', password: 'secret-123' });
+    await waitFor(() =>
+      expect(auth.setSession).toHaveBeenCalledWith({ access_token: 'at', refresh_token: 'rt' }),
+    );
+    expect(apiSend).toHaveBeenCalledWith('POST', '/auth/login', {
+      username: 'ab-1234',
+      password: 'secret-123',
+    });
   });
 });
