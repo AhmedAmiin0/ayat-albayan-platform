@@ -49,7 +49,9 @@ describe('mySalesCalls: the signed-in assistant', () => {
 
   it('throws bad_response for a payment of an unknown method', async () => {
     const { client } = clientAnswering([{ ...payment, method: 'cheque' }]);
-    const error: unknown = await mySalesCalls(client).payments().catch((e: unknown) => e);
+    const error: unknown = await mySalesCalls(client)
+      .payments()
+      .catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ApiError);
     expect(error).toMatchObject({ body: { code: 'bad_response' } });
   });
