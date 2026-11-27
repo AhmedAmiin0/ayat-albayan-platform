@@ -16,14 +16,19 @@ const row = (over: Partial<JobApplicantView>): JobApplicantView => ({
   cv_url: 'https://example.com/cv.pdf',
   recitation_url: null,
   notes: null,
+  from_lead_id: null,
+  created_by: null,
   created_at: '2026-09-28T10:00:00+00:00',
+  updated_at: '2026-09-28T10:00:00+00:00',
   ...over,
 });
 
-function renderList(items: JobApplicantView[]) {
+const noRetry = { defaultOptions: { queries: { retry: false } } };
+
+function renderList(items: unknown[]) {
   apiFetch.mockResolvedValue({ items, total: items.length, page: 1, pageSize: 25 });
   render(
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider client={new QueryClient(noRetry)}>
       <JobApplicantsList search={{ page: 1, sort: {}, filters: {} }} onSearch={vi.fn()} />
     </QueryClientProvider>,
   );
@@ -47,11 +52,10 @@ describe('JobApplicantsList (R-LEAD-04)', () => {
     expect(apiFetch).toHaveBeenCalledWith('/job-applicants?page=1&pageSize=25');
   });
 
-  // A value that will never get an ar.json label.
-  it('shows a status without an ar.json label as its raw value', async () => {
-    renderList([row({ status: 'not_a_status' })]);
-    const raw = await screen.findByText('not_a_status');
-    expect(raw.closest('[data-tone]')?.getAttribute('data-tone')).toBe('neutral');
+  // The answer is parsed strictly (docs/62 Decisions): a status outside the pipeline is refused.
+  it('shows the error for a status outside the pipeline', async () => {
+    renderList([{ ...row({}), status: 'not_a_status' }]);
+    expect((await screen.findByRole('alert')).textContent).toBe(t.common.error);
   });
 
   it('shows the Arabic empty state', async () => {

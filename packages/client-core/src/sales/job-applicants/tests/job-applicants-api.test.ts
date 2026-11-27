@@ -29,7 +29,7 @@ describe('job applicant calls', () => {
   it('reads one page with its sort and filters', async () => {
     const page = { items: [APPLICANT], total: 1, page: 2, pageSize: 25 };
     const { client, apiFetch } = clientAnswering(page);
-    const query = { page: 2, pageSize: 25, sort: 'name', dir: 'desc', cv: 'yes' };
+    const query = { page: 2, pageSize: 25, sort: 'name', dir: 'desc', cv: 'yes' } as const;
     await expect(jobApplicantCalls(client).list(query)).resolves.toEqual(page);
     expect(apiFetch).toHaveBeenCalledWith(
       '/job-applicants?page=2&pageSize=25&sort=name&dir=desc&cv=yes',
