@@ -47,7 +47,8 @@
     "api:one": "node tools/scripts/units/api-one/api-one.ts",
     "imports:absolute": "node tools/scripts/imports/absolute-imports.mjs",
     "imports:extensionless": "node tools/scripts/imports/extensionless.mjs",
-    "imports:kit-entries": "node tools/scripts/imports/kit-entries.mjs"
+    "imports:kit-entries": "node tools/scripts/imports/kit-entries.mjs",
+    "shared-types:inventory": "node tools/scripts/units/shared-types/inventory.mjs"
   },
   "devDependencies": {
     "@ab/config": "workspace:*",
