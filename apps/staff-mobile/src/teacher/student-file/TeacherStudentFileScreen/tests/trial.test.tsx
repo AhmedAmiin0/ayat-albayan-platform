@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import { fileAnswers, head } from '@/teacher/student-file/file-fixtures';
+import { fileAnswers, head, STUDENT_ID } from '@/teacher/student-file/file-fixtures';
 import { TeacherStudentFileScreen } from '@/teacher/student-file/TeacherStudentFileScreen/TeacherStudentFileScreen';
 
 const mockApiFetch = jest.fn();
@@ -17,7 +17,7 @@ jest.mock('expo-router', () => ({
     canDismiss: () => true,
     replace: jest.fn(),
   },
-  useLocalSearchParams: () => ({ id: 's1' }),
+  useLocalSearchParams: () => ({ id: '30000000-0000-4000-8000-000000000008' }),
 }));
 jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-11-11T12:00:00Z') }));
 jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
@@ -42,7 +42,7 @@ test('an active student’s file: name, code and status, the course; no note', a
 test('a student who is not hers (404): «غير مسموح»', async () => {
   const file = fileAnswers();
   mockApiFetch.mockImplementation(async (p: string) => {
-    if (p === '/teachers/me/students/s1') throw new ApiError(404, { code: 'student_not_found' });
+    if (p === `/teachers/me/students/${STUDENT_ID}`) throw new ApiError(404, { code: 'student_not_found' });
     return file(p);
   });
   await renderWithQuery(<TeacherStudentFileScreen />);

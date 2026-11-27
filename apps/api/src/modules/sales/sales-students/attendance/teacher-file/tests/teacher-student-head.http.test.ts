@@ -6,6 +6,7 @@ import {
   STUDENT,
   STUDENT_HEAD,
   TEACHER_ROW,
+  uuidOf,
 } from '@/modules/sales/sales-students/attendance/student-attendance.fakes';
 
 type App = Awaited<ReturnType<typeof studentsApp>>;
@@ -40,8 +41,8 @@ describe('GET /teachers/me/students/:id — the student file head (docs/47)', ()
 
   it('her student → 200 {id, code, name, status, course, upcoming}', async () => {
     t.attendance.lessons.mockResolvedValue([
-      lessonRow('later', '2026-11-02T15:00:00+00:00', { status: 'scheduled' }),
-      lessonRow('next', '2026-10-29T15:00:00+00:00', { status: 'cancelled_by_admin', cancel_reason: 'عطلة' }),
+      lessonRow(uuidOf('later'), '2026-11-02T15:00:00+00:00', { status: 'scheduled' }),
+      lessonRow(uuidOf('next'), '2026-10-29T15:00:00+00:00', { status: 'cancelled_by_admin', cancel_reason: 'عطلة' }),
     ]);
     const res = await t.call('GET', url(STUDENT), { token: 'teacher' });
     expect(res.statusCode).toBe(200);
@@ -52,7 +53,7 @@ describe('GET /teachers/me/students/:id — the student file head (docs/47)', ()
       starts_on: '2026-10-01', stopped_at: null, ended_at: null, projected_end_at: null,
       lessons_total: 8, lessons_used: 3, lessons_remaining: 5,
     });
-    expect(body.upcoming.map((r: { lesson_id: string }) => r.lesson_id)).toEqual(['next', 'later']);
+    expect(body.upcoming.map((r: { lesson_id: string }) => r.lesson_id)).toEqual([uuidOf('next'), uuidOf('later')]);
     expect(body.upcoming[0]).toMatchObject({ kind: null, cancel_reason: 'عطلة' });
     const to = new Date(NOW.getTime() + 14 * 86_400_000);
     const window = { from: NOW, to, teacherId: TEACHER_ROW };

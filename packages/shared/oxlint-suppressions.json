@@ -122,11 +122,6 @@
       "count": 1
     }
   },
-  "src/messaging/numbers/views.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/messaging/replies/quick-reply.ts": {
     "complexity": {
       "count": 1
@@ -605,9 +600,6 @@
     },
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/sales/student/student-details.ts": {

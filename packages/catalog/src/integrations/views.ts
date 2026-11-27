@@ -1,7 +1,4 @@
-import type { IntegrationGroup, IntegrationKey } from './keys';
-
-/** Where the value in use comes from: the database, the server env, or nowhere. */
-export type IntegrationSource = 'db' | 'env' | 'unset';
+import type { IntegrationGroup, IntegrationKey, IntegrationSource } from './keys';
 
 /** One row of GET /settings/integrations. A secret's `value` is ALWAYS null. */
 export interface IntegrationConfigItem {

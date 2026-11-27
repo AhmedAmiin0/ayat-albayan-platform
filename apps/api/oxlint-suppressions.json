@@ -3227,11 +3227,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/numbers/numbers.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 5
-    }
-  },
   "src/modules/messaging/numbers/numbers.effects.order.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -5460,12 +5455,6 @@
   "src/modules/platform/google-sync/oauth/google-callback.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 3
     }
   },
   "src/modules/platform/google-sync/oauth/google-connection.ts": {
@@ -5696,7 +5685,7 @@
       "count": 3
     },
     "ab/zod-inputs": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/platform/process-role/process-role.module.ts": {

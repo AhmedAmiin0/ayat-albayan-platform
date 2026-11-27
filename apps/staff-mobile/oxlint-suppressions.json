@@ -3587,11 +3587,6 @@
       "count": 1
     }
   },
-  "src/ops/numbers/use-numbers.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/ops/reports/AdminReportScreen/AdminReportScreen.tsx": {
     "stylistic/max-len": {
       "count": 1

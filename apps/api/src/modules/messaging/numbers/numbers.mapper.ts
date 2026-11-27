@@ -5,10 +5,12 @@ import {
   type LineCheckView,
   type NumberEvolutionView,
   type NumberHealth,
+  numberViewSchema,
   type NumberView,
 } from '@ab/shared';
 import { EVOLUTION_MODES, WA_PROVIDERS, type WaProvider } from '@ab/catalog';
 import type { Json } from '@ab/db';
+import { asResponse } from '@/common/http/returns';
 import { evolutionHookOf } from '@/config/env/whatsapp/env.evolution';
 import { displayE164 } from '@/modules/messaging/whatsapp/lines/line-health.store';
 import type { NumberRow } from './numbers.repo';
@@ -49,7 +51,7 @@ export function healthOf(raw: Json | null): NumberHealth | null {
 export function numberView(row: NumberRow, status: SecretStatus): NumberView {
   const s = status.get(row.id) ?? {};
   const state = (at: string | undefined) => ({ set: at !== undefined, updated_at: at ?? null });
-  return {
+  return asResponse(numberViewSchema, {
     id: row.id,
     label: row.label,
     purpose: row.purpose,
@@ -72,7 +74,7 @@ export function numberView(row: NumberRow, status: SecretStatus): NumberView {
       evolution_proxy_password: state(s.evolution_proxy_password),
     },
     evolution: evolutionOf(row),
-  };
+  });
 }
 
 /** The health view as the jsonb column stores it. */

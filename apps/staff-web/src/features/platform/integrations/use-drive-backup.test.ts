@@ -1,23 +1,26 @@
 import { counted } from '@ab/core';
+import type { BackupStatusView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { t } from '@ab/web-kit';
-import {
-  backupLines,
-  bytesText,
-  skippedLines,
-  waitingLine,
-  type DriveBackupView,
-} from './use-drive-backup';
+import { backupLines, bytesText, skippedLines, waitingLine } from './use-drive-backup';
 
 const b = t.integrations.driveBackup;
 const GB = 1024 ** 3;
 
-const view = (over: Partial<DriveBackupView> = {}): DriveBackupView => ({
+const view = (over: Partial<BackupStatusView> = {}): BackupStatusView => ({
   enabled: true,
   ready: { minio: true, google: true },
-  last: { label: '2026-11-07', objects: 12, bytes_raw: 3 * GB, bytes_compressed: GB },
+  last: {
+    label: '2026-11-07',
+    finished_at: '2026-11-07T01:10:00Z',
+    objects: 12,
+    skipped: 0,
+    bytes_raw: 3 * GB,
+    bytes_compressed: GB,
+  },
+  last_run_at: '2026-11-07T01:00:00Z',
   last_error: null,
-  quota: { limit: 15 * GB, free: 9 * GB },
+  quota: { limit: 15 * GB, usage: 6 * GB, free: 9 * GB, at: '2026-11-07T01:00:00Z' },
   low_quota: false,
   skipped: { count: 0, items: [] },
   waiting: 0,
@@ -52,7 +55,7 @@ describe('the Drive backup status line (docs/45 §5)', () => {
       view({
         last: null,
         last_error: '403 storageQuotaExceeded',
-        quota: { limit: null, free: null },
+        quota: { limit: null, usage: GB, free: null, at: '2026-11-07T01:00:00Z' },
       }),
     );
     expect(lines).toContain(b.none);
@@ -62,7 +65,7 @@ describe('the Drive backup status line (docs/45 §5)', () => {
 
   it.each([1, 2, 5, 12, 100])('the file count in Arabic count forms: %i', (objects) => {
     const sizes = { bytes_raw: GB, bytes_compressed: GB };
-    const last = { label: '2026-11-07', objects, ...sizes };
+    const last = { label: '2026-11-07', finished_at: null, objects, skipped: 0, ...sizes };
     expect(backupLines(view({ last }))[0]).toContain(`(${counted(b.files, objects)})`);
   });
 
