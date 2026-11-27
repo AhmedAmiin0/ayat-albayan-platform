@@ -1,5 +1,10 @@
-import { lessonActionCalls, proposalDecisionCalls, type BookingMode } from '@ab/client-core';
-import type { LessonTimeEdit, TimeEditResult } from '@ab/schedule';
+import {
+  lessonActionCalls,
+  lessonMoveCalls,
+  proposalDecisionCalls,
+  type BookingMode,
+} from '@ab/client-core';
+import type { LessonTimeEdit } from '@ab/schedule';
 import type {
   CancelRequest,
   Conflict,
@@ -86,12 +91,14 @@ export const setLessonStatus = ({ id, event }: { id: string; event: StatusRouteE
 export const cancelLesson = ({ id, body }: { id: string; body: CancelRequest }) =>
   actions.cancel({ id }, body);
 
+const moves = lessonMoveCalls({ apiFetch, apiSend });
+
 export const rescheduleLesson = ({ id, body }: { id: string; body: RescheduleRequest }) =>
-  apiSend<LessonView>('POST', `/lessons/${id}/reschedule`, body);
+  moves.reschedule({ id }, body);
 
 /** Admin only (R-SCH-11): the same lesson with a new start and length. */
 export const editLessonTime = ({ id, body }: { id: string; body: LessonTimeEdit }) =>
-  apiSend<TimeEditResult>('PATCH', `/lessons/${id}/time`, body);
+  moves.editTime({ id }, body);
 
 const proposals = proposalDecisionCalls({ apiFetch, apiSend });
 

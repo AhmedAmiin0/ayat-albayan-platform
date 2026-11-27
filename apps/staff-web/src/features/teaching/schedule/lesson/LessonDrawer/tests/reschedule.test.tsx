@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -59,7 +59,7 @@ describe('LessonDrawer reschedule (R-SCH-07, journey 4)', () => {
           conflicts: [{ kind: 'teacher_busy', startsAt: BUSY, endsAt: BUSY }],
         }),
       )
-      .mockResolvedValueOnce(lesson({ id: 'l-2', starts_at: FREE }));
+      .mockResolvedValueOnce(answered(lesson({ id: 'l-2', starts_at: FREE })));
     const { onDone, onClose } = renderDrawer();
     fireEvent.click(screen.getByRole('button', { name: t.lessons.event.reschedule }));
     const slotsCall = String(apiFetch.mock.calls.find(([p]) => String(p).startsWith('/booking/slots'))?.[0]);
@@ -84,7 +84,7 @@ describe('LessonDrawer reschedule (R-SCH-07, journey 4)', () => {
   it('can book over the conflict with a reason', async () => {
     apiSend
       .mockRejectedValueOnce(new ApiError(409, { code: 'conflict', conflicts: [{ kind: 'time_off', startsAt: BUSY, endsAt: BUSY }] }))
-      .mockResolvedValueOnce(lesson({ id: 'l-2', starts_at: BUSY }));
+      .mockResolvedValueOnce(answered(lesson({ id: 'l-2', starts_at: BUSY })));
     const { onDone } = renderDrawer();
     fireEvent.click(screen.getByRole('button', { name: t.lessons.event.reschedule }));
     await pick(t.enums.weekday[1]);

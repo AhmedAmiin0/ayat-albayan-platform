@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer';
 
 // Test data only: the drawer opened on the time edit.
@@ -15,7 +15,12 @@ export const SCHEDULED = lesson({ id: 'l-1', starts_at: '2026-10-04T14:00:00.000
 /** A completed 45-minute lesson this morning, 10:00, which the edit corrects. */
 export const HELD = lesson({ id: 'l-9', status: 'completed', starts_at: '2026-10-03T07:00:00.000Z', time_edit_mode: 'correct' });
 
-export const SAVED: TimeEditResult = { lesson: SCHEDULED, notified: 0, payout: 'none', pdf_refresh: false };
+export const SAVED: TimeEditResult = {
+  lesson: answered(SCHEDULED),
+  notified: 0,
+  payout: 'none',
+  pdf_refresh: false,
+};
 
 /** Fake only `Date`, so promises and Testing Library's polling keep running. */
 export function fakeNow(): void {
