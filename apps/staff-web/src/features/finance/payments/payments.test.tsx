@@ -1,5 +1,3 @@
-import { paymentViewSchema } from '@ab/money';
-import { signedDownloadSchema } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { useState } from 'react';
@@ -110,7 +108,7 @@ describe('PaymentsPage', () => {
     fireEvent.click(within(row).getByRole('button', { name: t.payments.viewReceipt }));
     const dialog = await screen.findByRole('dialog', { name: t.payments.receipt });
     expect((await within(dialog).findByRole('img')).getAttribute('src')).toBe('https://signed/receipt.jpg');
-    expect(apiFetch).toHaveBeenCalledWith('/payments/pay-1/receipt', { schema: signedDownloadSchema });
+    expect(apiFetch).toHaveBeenCalledWith('/payments/pay-1/receipt');
   });
 
   it('records a payment: search the student, their open package is chosen', async () => {
@@ -128,7 +126,7 @@ describe('PaymentsPage', () => {
     apiSend.mockResolvedValue(PAYMENT);
     fireEvent.click(within(dialog).getByRole('button', { name: t.payments.record }));
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/payments', { body: expect.objectContaining({ subscriptionId: 'sub-1', amount: 145 }), schema: paymentViewSchema }),
+      expect(apiSend).toHaveBeenCalledWith('POST', '/payments', expect.objectContaining({ subscriptionId: 'sub-1', amount: 145 })),
     );
     expect(await screen.findByText(t.payments.saved)).toBeTruthy();
   });
@@ -139,6 +137,6 @@ describe('PaymentsPage', () => {
     const dialog = await screen.findByRole('dialog', { name: t.finance.deletePaymentTitle });
     apiSend.mockResolvedValue(undefined);
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.delete }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/payments/pay-1'));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/payments/pay-1', undefined));
   });
 });

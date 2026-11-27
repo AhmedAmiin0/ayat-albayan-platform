@@ -34,7 +34,7 @@ async function typeAndReview(text: string) {
 
 beforeEach(() => {
   mockApiSend.mockReset();
-  mockApiSend.mockResolvedValue(undefined);
+  mockApiSend.mockResolvedValue(payment());
 });
 
 test('new amount → old → new confirm → PATCH { amount } only; the lists refetch', async () => {
