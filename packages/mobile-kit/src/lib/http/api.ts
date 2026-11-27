@@ -1,4 +1,6 @@
 import {
+  boundReads,
+  callWith,
   createApiClient,
   markSending,
   parseResponse,
@@ -41,6 +43,15 @@ const client = createApiClient({
 
 type ReadInit = RequestInit & { schema?: z.ZodType };
 
+/**
+ * One request to the API with the session's token (docs/62 part 3 §3b). A read with no answer
+ * within readTimeoutFor(path) rejects as no answer and tells the connection state (docs/43 AU9).
+ */
+export const call = callWith(
+  boundReads(client, (send, init, path) => withReadDeadline(send, init, readTimeoutFor(path))),
+);
+
+// docs/62 part 3 §3b F deletes the pair below.
 /**
  * fetch against the Nest API with the current Supabase access token and the client tag
  * (`X-AB-Client`); with a `schema` the answer is parsed and a mismatch is ApiError bad_response.

@@ -1,17 +1,8 @@
-import { portalViewer, readsOwn, type ChildTab } from '@ab/client-core';
-import type { PortalKind, PortalStudent } from '@ab/shared';
+import { portalViewer, readsOwn } from '@ab/client-core';
 import { t } from '@ab/web-kit';
 import { ChildBody, ChildHead } from '@/features/children';
 import { NextLessonCard } from '@/features/next-lesson';
-
-interface Props {
-  /** The student in view: a student's own, an only child, or the child a guardian picked. */
-  student: PortalStudent;
-  kind: PortalKind;
-  /** The `?tab=` asked for, and the switch. */
-  tab?: ChildTab;
-  onTab: (tab: ChildTab) => void;
-}
+import type { Props } from './HomePage.types';
 
 /** docs/50 §6: next lesson first; a guardian sees the child's page, switched from the top. */
 export function HomePage({ student, kind, tab, onTab }: Props) {

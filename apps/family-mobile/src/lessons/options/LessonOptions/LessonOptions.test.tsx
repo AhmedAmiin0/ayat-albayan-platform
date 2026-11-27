@@ -57,10 +57,16 @@ test('«أعتذر»: the package line first, then the excuse with its reason', 
 
 test('a waiting request offers «سحب الطلب» instead of asking again', async () => {
   const request = {
-    id: 'r', status: 'pending' as const, proposed_starts_at: '2026-11-18T14:30:00.000Z',
-    note: null, decision_note: null, decided_at: null,
+    id: 'r',
+    status: 'pending' as const,
+    proposed_starts_at: '2026-11-18T14:30:00.000Z',
+    note: null,
+    decision_note: null,
+    decided_at: null,
   };
-  await show(lesson(now, 24 * 60, { status: 'scheduled', family: { group: false, counts: false, request } }));
+  await show(
+    lesson(now, 24 * 60, { status: 'scheduled', family: { group: false, counts: false, request } }),
+  );
   await fireEvent.press(screen.getByRole('button', { name: A.menuTitle }));
   expect(screen.queryByRole('button', { name: A.request })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: A.withdraw }));
@@ -69,7 +75,11 @@ test('a waiting request offers «سحب الطلب» instead of asking again', a
 
 test('«اطلب موعدًا آخر»: a free start of the week, a note, «أرسل الطلب»', async () => {
   const free = '2026-11-18T14:30:00.000Z';
-  mockFetch.mockResolvedValue({ tz: 'Asia/Riyadh', step_min: 45, slots: [{ starts_at: free, ends_at: free }] });
+  mockFetch.mockResolvedValue({
+    tz: 'Asia/Riyadh',
+    step_min: 45,
+    slots: [{ starts_at: free, ends_at: free }],
+  });
   await show();
   await fireEvent.press(screen.getByRole('button', { name: A.menuTitle }));
   await fireEvent.press(screen.getByRole('button', { name: A.request }));
@@ -82,7 +92,9 @@ test('«اطلب موعدًا آخر»: a free start of the week, a note, «أر
 });
 
 test('a refused action says why, in the family’s words', async () => {
-  mockSend.mockRejectedValue(new (jest.requireActual('@ab/mobile-kit').ApiError)(409, { code: 'lesson_started' }));
+  mockSend.mockRejectedValue(
+    new (jest.requireActual('@ab/mobile-kit').ApiError)(409, { code: 'lesson_started' }),
+  );
   await show();
   await fireEvent.press(screen.getByRole('button', { name: A.menuTitle }));
   await fireEvent.press(screen.getByRole('button', { name: A.confirm }));
@@ -90,11 +102,27 @@ test('a refused action says why, in the family’s words', async () => {
 });
 
 test('a started lesson has no options', async () => {
-  await show(lesson(now, -5, { status: 'scheduled', family: { group: false, counts: true, request: null } }));
+  await show(
+    lesson(now, -5, { status: 'scheduled', family: { group: false, counts: true, request: null } }),
+  );
   expect(screen.queryByRole('button', { name: A.menuTitle })).toBeNull();
 });
 
 test('a group lesson has no options: the academy changes it', async () => {
-  await show(lesson(now, 24 * 60, { status: 'scheduled', family: { group: true, counts: false, request: null } }));
+  await show(
+    lesson(now, 24 * 60, {
+      status: 'scheduled',
+      family: { group: true, counts: false, request: null },
+    }),
+  );
   expect(screen.queryByRole('button', { name: A.menuTitle })).toBeNull();
+});
+
+test('closing the menu sends nothing and shows the options button again', async () => {
+  await show();
+  await fireEvent.press(screen.getByRole('button', { name: A.menuTitle }));
+  await fireEvent.press(screen.getByLabelText(t.common.cancel, { includeHiddenElements: true }));
+  expect(screen.queryByRole('button', { name: A.confirm })).toBeNull();
+  expect(screen.getByRole('button', { name: A.menuTitle })).toBeTruthy();
+  expect(mockSend).not.toHaveBeenCalled();
 });

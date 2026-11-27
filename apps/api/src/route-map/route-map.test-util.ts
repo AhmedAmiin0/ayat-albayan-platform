@@ -20,6 +20,7 @@ const pathsSchema = z.union([z.string(), z.array(z.string())]).default('');
 const guardsSchema = z.array(z.unknown()).default([]);
 const flagSchema = z.boolean().default(false);
 const textSchema = z.union([z.string(), z.number()]).optional();
+const permissionSchema = z.union([z.string(), z.array(z.string())]).optional();
 
 const meta = <T extends z.ZodType>(schema: T, key: string, target: Target): z.output<T> =>
   schema.parse(Reflect.getMetadata(key, target));
@@ -42,12 +43,12 @@ function guardsOf(targets: Target[]): string {
   return all.length === 0 ? '-' : all.map(nameOf).join(',');
 }
 
-/** What the AuthGuard reads: public, signed-in, the one permission. */
+/** What the AuthGuard reads: public, signed-in, the permissions (`a|b`: any one of them). */
 function authOf(targets: Target[]): string {
   const access = [
     override(flagSchema, IS_PUBLIC, targets) ? 'public' : '',
     override(flagSchema, SIGNED_IN, targets) ? 'signed-in' : '',
-    override(textSchema, PERMISSION, targets) ?? '',
+    [override(permissionSchema, PERMISSION, targets) ?? []].flat().join('|'),
   ].filter((s) => s !== '');
   return access.join('+') || '-';
 }
@@ -85,11 +86,15 @@ export async function appControllers(): Promise<ControllerClass[]> {
   return classes;
 }
 
+/** One line per route of these controllers, sorted. */
+export function routeLines(classes: ControllerClass[]): string[] {
+  return classes.flatMap(handlersOf).map(lineOf).sort();
+}
+
 /**
  * Every route of AppModule as one line, sorted: METHOD path, the auth metadata, the route's own
  * guards, its @HttpCode and Controller.handler.
  */
 export async function routeMap(): Promise<string[]> {
-  const classes = await appControllers();
-  return classes.flatMap(handlersOf).map(lineOf).sort();
+  return routeLines(await appControllers());
 }

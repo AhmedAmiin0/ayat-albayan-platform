@@ -1,31 +1,14 @@
-import { useState } from 'react';
 import { Modal, Pressable, View } from 'react-native';
-import { AppText, locale, shape, t, type, useTheme } from '@ab/mobile-kit';
-import { type Country, orderCountries, searchCountries } from '@ab/client-core';
-import { phoneRegion } from '@/sign-in/phone/countries';
+import { AppText, shape, t, type, useTheme } from '@ab/mobile-kit';
 import { CountryList } from '@/sign-in/phone/CountryList';
 import { CountrySearch } from '@/sign-in/phone/CountrySearch';
-
-interface CountryPickerProps {
-  open: boolean;
-  current: Country;
-  onPick: (country: Country) => void;
-  onClose: () => void;
-}
+import type { CountryPickerProps } from './CountryPicker.types';
+import { useCountryPicker } from './use-country-picker';
 
 /** The phone's own and the academy's usual countries first; searchable; virtualised. */
 export function CountryPicker({ open, current, onPick, onClose }: CountryPickerProps) {
   const { color } = useTheme();
-  const [query, setQuery] = useState('');
-  const shown = searchCountries(orderCountries(phoneRegion(), locale), query);
-  const close = () => {
-    setQuery('');
-    onClose();
-  };
-  const pick = (country: Country) => {
-    setQuery('');
-    onPick(country);
-  };
+  const { query, setQuery, shown, close, pick } = useCountryPicker({ onPick, onClose });
   return (
     <Modal visible={open} transparent animationType="slide" onRequestClose={close}>
       <Pressable

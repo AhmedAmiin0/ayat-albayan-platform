@@ -36,6 +36,13 @@ describe('RecordingQueries for meetings (migration 212)', () => {
       ['status', 'recording'],
     ]);
   });
+
+  it('lists only the columns the recording view reads', async () => {
+    const f = fakeDb({ lesson_recordings: [{ data: [] }] });
+    await new RecordingRepo(f.db).forTarget(meetingTarget('M'));
+    const select = f.calls.find((c) => c.method === 'select')?.args;
+    expect(select).toEqual(['id, status, started_at, ended_at, file_path']);
+  });
 });
 
 describe('RecordingRepo error paths: the answer a failed query gives today', () => {

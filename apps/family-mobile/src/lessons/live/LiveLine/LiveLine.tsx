@@ -1,9 +1,9 @@
-import type { LiveRoom } from '@ab/client-core';
 import { View } from 'react-native';
 import { AppText, type, useTheme } from '@ab/mobile-kit';
 import { liveText } from '@/lessons/live/live-text';
+import type { LiveLineProps } from './LiveLine.types';
 
-export function LiveLine({ live }: { live: LiveRoom }) {
+export function LiveLine({ live }: LiveLineProps) {
   const { color } = useTheme();
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>

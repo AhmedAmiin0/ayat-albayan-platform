@@ -13,6 +13,21 @@ const LEADS = [
   { id: 'l2', status: 'new', source: 'facebook_ad' },
 ];
 
+const FINANCE = {
+  currency: 'SAR',
+  revenue: 145,
+  teacher_cost: 0,
+  expenses: 0,
+  gross_margin: 145,
+  by_source: [],
+  fx_date: null,
+  fx_missing: [],
+  by_month: [],
+  expenses_by_category: {},
+  fx_rates: { SAR: 1 },
+  unrated_lessons: 0,
+};
+
 function service(required = true) {
   const counts = {
     leads: vi.fn().mockResolvedValue(LEADS),
@@ -25,23 +40,56 @@ function service(required = true) {
     loadStudents: vi.fn().mockResolvedValue([{ id: 's1', teacher_id: 't1' }]),
   };
   const pending = [
-    { lesson_id: 'L', student: SUHAILA, lesson: { starts_at: '2026-10-01T16:00:00Z', status: 'completed', teacher: { id: 't1', display_name_ar: 'أبرار' } } },
+    {
+      lesson_id: 'L',
+      student: SUHAILA,
+      lesson: {
+        starts_at: '2026-10-01T16:00:00Z',
+        status: 'completed',
+        teacher: { id: 't1', display_name_ar: 'أبرار' },
+      },
+    },
   ];
   const work = {
     pendingReports: vi.fn().mockResolvedValue(pending),
     unpaid: vi.fn().mockResolvedValue([]),
     openTasks: vi.fn().mockResolvedValue([
-      { id: 'k', kind: 'renewal_due', subject_type: 'subscription', subject_id: 'sub1', title: null, due_at: null, done_at: null, created_at: 'x' },
-      { id: 'k2', kind: 'renewal_due', subject_type: 'subscription', subject_id: 'sub1', title: null, due_at: null, done_at: null, created_at: 'y' },
+      {
+        id: 'k',
+        kind: 'renewal_due',
+        subject_type: 'subscription',
+        subject_id: 'sub1',
+        title: null,
+        due_at: null,
+        done_at: null,
+        created_at: 'x',
+      },
+      {
+        id: 'k2',
+        kind: 'renewal_due',
+        subject_type: 'subscription',
+        subject_id: 'sub1',
+        title: null,
+        due_at: null,
+        done_at: null,
+        created_at: 'y',
+      },
     ]),
-    taskSubjects: vi.fn().mockResolvedValue([{ id: 'sub1', student: SUHAILA, balance: { lessons_total: 4, lessons_used: 2 } }]),
+    taskSubjects: vi
+      .fn()
+      .mockResolvedValue([
+        { id: 'sub1', student: SUHAILA, balance: { lessons_total: 4, lessons_used: 2 } },
+      ]),
   };
-  const money = { finance: vi.fn().mockResolvedValue({ currency: 'SAR', revenue: 145 }) };
+  const money = { finance: vi.fn().mockResolvedValue(FINANCE) };
   const svc = new DashboardService(
     counts as unknown as DashboardQueries,
     work as unknown as WorkQueries,
     money as unknown as FinanceService,
-    readerOf(DashboardSettings, { reporting_currency: 'SAR', lesson_confirmation_required: required }),
+    readerOf(DashboardSettings, {
+      reporting_currency: 'SAR',
+      lesson_confirmation_required: required,
+    }),
   );
   return { svc, counts, work, money };
 }
@@ -60,11 +108,22 @@ describe('DashboardService.summary (R-RPT-01)', () => {
       open_tasks: 1,
     });
     expect(s.lessons_by_status).toMatchObject({ completed: 1, scheduled: 0 });
-    expect(s.teacher_load).toEqual([{ teacher_id: 't1', display_name_ar: 'أبرار', lessons: 1, students: 1, max_students: 10 }]);
-    expect(s.finance).toEqual({ currency: 'SAR', revenue: 145 });
+    expect(s.teacher_load).toEqual([
+      { teacher_id: 't1', display_name_ar: 'أبرار', lessons: 1, students: 1, max_students: 10 },
+    ]);
+    expect(s.finance).toEqual(FINANCE);
     expect(money.finance).toHaveBeenCalledWith({ range, leads: LEADS });
     expect(counts.needsConfirmation).toHaveBeenCalledWith(NOW);
     expect(counts.leads.mock.calls[0]?.[0].from.toISOString()).toBe('2026-08-31T21:00:00.000Z');
+  });
+});
+
+describe('DashboardService answers', () => {
+  it('a summary whose finance misses its months is 500 response_invalid', async () => {
+    const { svc, money } = service();
+    money.finance.mockResolvedValue({ ...FINANCE, by_month: undefined });
+    const range = { from: '2026-10-01', to: '2026-10-02' };
+    await expect(svc.summary(range, NOW)).rejects.toMatchObject({ message: 'response_invalid' });
   });
 });
 

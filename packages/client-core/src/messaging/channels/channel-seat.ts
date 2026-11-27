@@ -1,5 +1,5 @@
-import { CHANNEL_SEAT_TAKEN, channelSeatSchema, type ChannelSeat } from '@ab/shared';
-import { apiErrorCode, type ApiClient } from '../../core/http';
+import { CHANNEL_SEAT_TAKEN, channelSeatRoutes as seatRoutes, type ChannelSeat } from '@ab/shared';
+import { apiErrorCode, callWith, type ApiClient } from '../../core/http';
 
 // One assistant seat per student chat (any assistant may take it, one at a time; the one who
 // brought the student has priority), the same for web and mobile: plain TanStack Query options
@@ -43,11 +43,6 @@ interface ChannelSeats {
   ) => { take: SeatMutation<ChannelSeat>; leave: SeatMutation<void> };
 }
 
-const seatPath = (studentId: string): string =>
-  `/sales/students/${encodeURIComponent(studentId)}/channel/seat`;
-
-const parse = (r: unknown): ChannelSeat => channelSeatSchema.parse(r);
-
 /** A former assistant's seat reads as free (holder null), so a holder here is a colleague. */
 const takeState = (seat: ChannelSeat): SeatState => (seat.holder ? 'takeover' : 'take');
 
@@ -77,13 +72,13 @@ export const seatErrorText = (e: unknown, words: SeatErrorWords): string =>
 
 /** `done` re-reads the seat after a take-over or leave. */
 export function channelSeats(client: ApiClient): ChannelSeats {
-  const take = (studentId: string): Promise<ChannelSeat> =>
-    client.apiSend('PUT', seatPath(studentId)).then(parse);
-  const leave = (studentId: string): Promise<void> => client.apiSend('DELETE', seatPath(studentId));
+  const call = callWith(client);
+  const take = (id: string) => call({ route: seatRoutes.take, params: { id } });
+  const leave = (id: string) => call({ route: seatRoutes.leave, params: { id } });
   return {
     seatQuery: (studentId: string) => ({
       queryKey: channelSeatKey(studentId),
-      queryFn: () => client.apiFetch(seatPath(studentId)).then(parse),
+      queryFn: () => call({ route: seatRoutes.view, params: { id: studentId } }),
       staleTime: SEAT_STALE_MS,
       // A refusal or an odd answer is shown as no cell at once, never asked again per row.
       retry: false as const,

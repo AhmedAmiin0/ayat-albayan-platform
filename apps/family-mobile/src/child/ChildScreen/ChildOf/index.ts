@@ -1,0 +1,1 @@
+export { ChildOf } from './ChildOf';

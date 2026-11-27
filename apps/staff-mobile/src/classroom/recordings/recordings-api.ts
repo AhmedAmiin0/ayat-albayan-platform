@@ -1,8 +1,15 @@
-import type { LessonRecordingView, RecordingStatus } from '@ab/schedule';
+import { roomModerationApi, type RoomModerationApi } from '@ab/client-core';
 import { queryOptions, useQuery, type QueryClient } from '@tanstack/react-query';
 import { Linking } from 'react-native';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { recordingsPath, type RecordingSource } from './recording-format';
+
+const api = roomModerationApi({ apiFetch, apiSend });
+
+const RECORDINGS: Record<RecordingSource['kind'], RoomModerationApi['lessonRecordings']> = {
+  lesson: api.lessonRecordings,
+  meeting: api.meetingRecordings,
+};
 
 // The list carries 1-hour signed URLs, so `noPersist` keeps it off the disk cache (lib/query-client).
 const meta = { noPersist: true };
@@ -10,7 +17,7 @@ const meta = { noPersist: true };
 const recordingsQuery = (source: RecordingSource) =>
   queryOptions({
     queryKey: pathKey(recordingsPath(source)),
-    queryFn: () => apiFetch<LessonRecordingView[]>(recordingsPath(source)),
+    queryFn: () => RECORDINGS[source.kind](source.id),
     meta,
   });
 
@@ -20,7 +27,7 @@ export const useRecordings = (source: RecordingSource) => useQuery(recordingsQue
 export function useRecordingStatus() {
   return useQuery({
     queryKey: pathKey('/recordings/status'),
-    queryFn: () => apiFetch<RecordingStatus>('/recordings/status'),
+    queryFn: () => api.recordingStatus(),
   });
 }
 

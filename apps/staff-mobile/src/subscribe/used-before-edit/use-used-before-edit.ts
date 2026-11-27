@@ -1,4 +1,5 @@
-import { usedBeforeEditOffered, usedBeforeStateSchema } from '@ab/shared';
+import { usedBeforeCalls } from '@ab/client-core';
+import { usedBeforeEditOffered } from '@ab/shared';
 import { riyadhToday } from '@ab/time';
 import { useMutation, useQuery, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { z } from 'zod';
@@ -34,12 +35,13 @@ export function editErrorText(error: unknown): string {
 }
 
 const statePath = (id: string): string => `/subscriptions/${id}/lessons-used-before`;
+const usedBefore = usedBeforeCalls({ apiFetch, apiSend });
 
 /** GET …/lessons-used-before: the stored number, the stepper's last value, why it is refused. */
 export function useUsedBeforeState(id: string) {
   return useQuery({
     queryKey: pathKey(statePath(id)),
-    queryFn: async () => usedBeforeStateSchema.parse(await apiFetch(statePath(id))),
+    queryFn: () => usedBefore.state(id),
   });
 }
 
@@ -57,8 +59,7 @@ export function useUsedBeforeEdit(id: string, stale: readonly QueryKey[]) {
     Promise.all(keys.map((queryKey) => client.invalidateQueries({ queryKey })));
   const state = pathKey(statePath(id));
   return useMutation({
-    mutationFn: (lessonsUsedBefore: number) =>
-      apiSend('PATCH', statePath(id), { lessonsUsedBefore }),
+    mutationFn: (lessonsUsedBefore: number) => usedBefore.edit({ id, lessonsUsedBefore }),
     onSuccess: () => refresh([...stale, state]),
     onError: (error) => (changedElsewhere(error) ? refresh([state]) : undefined),
   });

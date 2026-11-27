@@ -18,7 +18,7 @@ describe('moderation api', () => {
 
   it('removes by identity (url-encoded)', async () => {
     await removeParticipant({ lessonId: 'L1', identity: 'guest:a b' });
-    expect(api.send).toHaveBeenCalledWith('POST', '/lessons/L1/room/participants/guest%3Aa%20b/remove');
+    expect(api.send).toHaveBeenCalledWith('POST', '/lessons/L1/room/participants/guest%3Aa%20b/remove', undefined);
   });
 
   it('an internal meeting room: its id, and «إخراج» through the meeting route', async () => {
