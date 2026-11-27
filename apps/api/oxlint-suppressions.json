@@ -1569,11 +1569,6 @@
       "count": 2
     }
   },
-  "src/modules/finance/stripe/links/payment-links.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/finance/stripe/links/payment-links.mapper.ts": {
     "stylistic/max-len": {
       "count": 1
