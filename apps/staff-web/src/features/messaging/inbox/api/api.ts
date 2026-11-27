@@ -10,7 +10,13 @@ import {
   type ThreadView,
 } from '@ab/shared';
 import type { LeadStatus } from '@ab/catalog';
-import { chatFileCalls, liveInterval, offPathKeys, type TextAnswer } from '@ab/client-core';
+import {
+  chatFileCalls,
+  liveInterval,
+  messageStatusCalls,
+  offPathKeys,
+  type TextAnswer,
+} from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend, env } from '@ab/web-kit';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
@@ -22,6 +28,7 @@ import { inboxLeadKeys, threadKeys } from '@/features/messaging/inbox/api/keys';
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
 const chatFiles = chatFileCalls({ apiFetch, apiSend });
+const messageStatus = messageStatusCalls({ apiFetch, apiSend });
 
 export const THREADS_PAGE_SIZE = 30;
 /** New WhatsApp messages arrive by webhook; the open chat polls for them with a delta (10 s; e2e 1 s). */
@@ -85,15 +92,13 @@ export const sendRating = ({ phone, ...body }: ThreadRating & { phone: string })
   apiSend<MessageView>('POST', `${threadPath(phone)}/rating`, body);
 
 /** M1: a failed row goes back to the queue (attempts 0). */
-export const retryMessage = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/retry`);
+export const retryMessage = messageStatus.retry;
 
 /** M3: the admin opened wa.me; the sender holds the row until they confirm (M2) or put it back (M1). */
-export const handOffMessage = (id: string) =>
-  apiSend<MessageView>('POST', `/messages/${id}/hand-off`);
+export const handOffMessage = messageStatus.handOff;
 
 /** M2: the admin sent it from WhatsApp by hand (R-MSG-03); the sender never resends it. */
-export const markSentManually = (id: string) =>
-  apiSend<MessageView>('POST', `/messages/${id}/sent-manually`);
+export const markSentManually = messageStatus.sentManually;
 
 /** GET /leads returns every column; the inbox panel needs these beyond the list row. */
 export type InboxLead = LeadView & {

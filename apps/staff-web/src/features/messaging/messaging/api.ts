@@ -1,15 +1,16 @@
-import { lineCheckCalls } from '@ab/client-core';
-import type { LineCheckView, SendGateView } from '@ab/shared';
+import { lineCheckCalls, messageStatusCalls } from '@ab/client-core';
+import type { LineCheckView } from '@ab/shared';
 import { queryOptions, skipToken } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { messagingKeys } from '@/features/messaging/keys';
 
 const lines = lineCheckCalls({ apiFetch, apiSend });
+const status = messageStatusCalls({ apiFetch, apiSend });
 
 /** GET /messages/gate: the effective send gate (env, WhatsApp config, kill switch) and the queue. */
 export const sendGateQuery = queryOptions({
   queryKey: messagingKeys.sendGate(),
-  queryFn: () => apiFetch<SendGateView>('/messages/gate'),
+  queryFn: status.gate,
 });
 
 /** Both WhatsApp lines as their provider reports them now (admin); never prefetched. */

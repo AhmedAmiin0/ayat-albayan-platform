@@ -1,8 +1,11 @@
+import { messageStatusCalls } from '@ab/client-core';
 import { appSendRefusal } from '@ab/shared';
-import { ApiError, apiSend, t } from '@ab/web-kit';
+import { ApiError, apiFetch, apiSend, t } from '@ab/web-kit';
+
+const messageStatus = messageStatusCalls({ apiFetch, apiSend });
 
 /** Keeps the platform off the row for 10 min (app_send_until); a repeat extends it (docs/19). */
-export const startAppSend = (id: string) => apiSend('POST', `/messages/${id}/app-send`);
+export const startAppSend = messageStatus.appSend;
 
 const REFUSALS = {
   sending: () => t.messages.alreadySending,

@@ -1,11 +1,11 @@
-import { communicationsCalls, numbersCalls } from '@ab/client-core';
-import type { TemplateNumberSyncView } from '@ab/shared';
+import { communicationsCalls, numberTemplateCalls, numbersCalls } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { NUMBERS_QUERY_KEYS } from '@/lib/settings/query-keys';
 
 const communications = communicationsCalls({ apiFetch, apiSend });
 const numbers = numbersCalls({ apiFetch, apiSend });
+const numberTemplates = numberTemplateCalls({ apiFetch, apiSend });
 
 /** Every number; secrets as «set / not set» only. */
 export const numbersQuery = queryOptions({
@@ -39,6 +39,5 @@ export const importNumbers = numbers.import;
 /** 409 parity_not_empty while a difference remains (to module). */
 export const setCommsSource = communications.setSource;
 
-/** POST /admin/numbers/:id/templates/sync (templates.manage): that number's WABA list → its approvals. */
-export const syncNumberTemplates = (id: string) =>
-  apiSend<TemplateNumberSyncView>('POST', `/admin/numbers/${encodeURIComponent(id)}/templates/sync`);
+/** Template managers only: that number's WABA list becomes its approvals. */
+export const syncNumberTemplates = numberTemplates.sync;
