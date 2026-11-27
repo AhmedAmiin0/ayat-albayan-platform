@@ -1,4 +1,4 @@
-import type { BookingMode } from '@ab/client-core';
+import { lessonActionCalls, type BookingMode } from '@ab/client-core';
 import type { LessonTimeEdit, TimeEditResult } from '@ab/schedule';
 import type {
   CancelRequest,
@@ -76,13 +76,15 @@ export const syncSchedule = () =>
     '/schedule-rules/refresh',
   );
 
-export const confirmLesson = (id: string) => apiSend<LessonView>('POST', `/lessons/${id}/confirm`);
+const actions = lessonActionCalls({ apiFetch, apiSend });
+
+export const confirmLesson = (id: string) => actions.confirm({ id });
 
 export const setLessonStatus = ({ id, event }: { id: string; event: StatusRouteEvent }) =>
-  apiSend<LessonView>('POST', `/lessons/${id}/status`, { event });
+  actions.status({ id }, { event });
 
 export const cancelLesson = ({ id, body }: { id: string; body: CancelRequest }) =>
-  apiSend<LessonView[]>('POST', `/lessons/${id}/cancel`, body);
+  actions.cancel({ id }, body);
 
 export const rescheduleLesson = ({ id, body }: { id: string; body: RescheduleRequest }) =>
   apiSend<LessonView>('POST', `/lessons/${id}/reschedule`, body);
