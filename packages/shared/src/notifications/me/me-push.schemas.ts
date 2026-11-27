@@ -2,7 +2,7 @@ import { anyPushKindSchema } from '@ab/catalog';
 import { id, instant, pageOf } from '@ab/core';
 import { z } from 'zod';
 
-/** A bell row; `data` keeps only the string fields the push carried, untrusted (webNotificationPath). */
+/** A bell row; `data` holds only the push's string fields, untrusted (webNotificationPath). */
 export const notificationItemSchema = z.object({
   id: id(),
   kind: anyPushKindSchema,
