@@ -9250,10 +9250,10 @@
   },
   "src/modules/teaching/scheduling/rules/rule-extend.service.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/scheduling/rules/rule-projection.repo.ts": {
@@ -9274,11 +9274,6 @@
       "count": 1
     },
     "typescript/dot-notation": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/scheduling/rules/schedule-rules.controller.ts": {
-    "ab/zod-inputs": {
       "count": 1
     }
   },
