@@ -6720,14 +6720,6 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales/sales.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/sales/sales/sales.fakes.ts": {
     "stylistic/max-len": {
       "count": 4

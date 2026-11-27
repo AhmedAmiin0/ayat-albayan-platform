@@ -28,6 +28,7 @@ export * from './sales/teacher-overview';
 export * from './sales/family-link';
 export * from './sales/student-file';
 export * from './sales/package-cancel';
+export * from './sales/portal';
 export * from './people/assistants';
 export * from './reporting/dashboard';
 export * from './reporting/report-page';

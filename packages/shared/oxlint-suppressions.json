@@ -646,11 +646,6 @@
       "count": 1
     }
   },
-  "src/sales/views.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/schemas/feedback.ts": {
     "ab/module-boundaries": {
       "count": 1

@@ -1,15 +1,18 @@
 import type { Page } from '@ab/core';
 import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
-import type { SalesPersonView, SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
+import { salesPortalCalls } from '@ab/client-core';
+import type { SalesPersonView, SalesSubscriptionKind } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { myMoneyKeys, salesKeys, salesSubscriptionKeys } from '@/features/sales/keys';
+
+const salesPortal = salesPortalCalls({ apiFetch, apiSend });
 
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
 export const salesSubscriptionsQuery = (kind: SalesSubscriptionKind) =>
   queryOptions({
     queryKey: salesSubscriptionKeys.list(kind),
-    queryFn: () => apiFetch<SalesSubscriptionView[]>(`/sales/subscriptions?kind=${kind}`),
+    queryFn: () => salesPortal.subscriptions(kind),
   });
 
 // The assistant's own pages (R-ASST-06). The API answers only for the caller: students they brought,
