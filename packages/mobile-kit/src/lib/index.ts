@@ -11,7 +11,7 @@ export { useAppearancePref } from './appearance/useAppearancePref';
 export { clockCycle, setClockPref, useClockCycle, useClockPref } from './clock/clock-store';
 export { phoneTz } from './clock/phone-tz';
 export { isNetworkError } from './connectivity/network-error';
-export { ApiError, apiFetch, apiSend, type SendMethod, toQueryString } from './http/api';
+export { ApiError, apiFetch, apiSend, call, type SendMethod, toQueryString } from './http/api';
 export { supabase } from './http/supabase';
 export { refreshOverrides } from './i18n/i18n-overrides';
 export { t } from './i18n/i18n';

@@ -15,6 +15,13 @@ export interface ApiRequest {
   headers?: HeadersInit | undefined;
 }
 
+/** A kit's read deadline around one send; `init` carries the method and the caller signal. */
+export type ReadBound = (
+  send: (init: RequestInit) => Promise<unknown>,
+  init: RequestInit,
+  path: string,
+) => Promise<unknown>;
+
 /** A request whose answer is parsed with `schema`. */
 export type SchemaRequest<S extends z.ZodType> = ApiRequest & { schema: S };
 
