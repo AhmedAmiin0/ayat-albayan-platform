@@ -3,7 +3,7 @@ import type { GoogleStudentMapRow, GoogleTeacherMapRow, TeacherCalendarView } fr
 const AT = '2026-11-27T10:00:00.123456+00:00';
 
 export const TEACHER_ID = '5d1e2f3a-4b5c-4d6e-8f70-8192a3b4c5d6';
-export const STUDENT_ID = '6e2f3a4b-5c6d-4e7f-8a81-92a3b4c5d6e7';
+const STUDENT_ID = '6e2f3a4b-5c6d-4e7f-8a81-92a3b4c5d6e7';
 
 export const aTeacherRow = (): GoogleTeacherMapRow => ({
   teacher_id: TEACHER_ID,
