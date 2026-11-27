@@ -1,3 +1,4 @@
+import { teacherOptionFixture } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { ApiError, t } from '@ab/mobile-kit';
@@ -23,7 +24,10 @@ function serve(items = [recording(), recording({ id: 'r2', status: 'deleted', ur
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/auth/me') return { permissions };
     if (path === '/students/s1') return { name: 'هدى' };
-    if (path === '/students/teacher-options') return [{ id: 't1', display_name_ar: 'أبرار' }, { id: 't2', display_name_ar: 'منى' }];
+    if (path === '/students/teacher-options') return [
+        teacherOptionFixture({ id: 't1', display_name_ar: 'أبرار' }),
+        teacherOptionFixture({ id: 't2', display_name_ar: 'منى' }),
+      ];
     if (path.startsWith('/students/s1/recordings')) return recordingsPage(items);
     throw new ApiError(404);
   });
