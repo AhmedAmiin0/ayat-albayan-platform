@@ -94,7 +94,8 @@ describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)
     next();
     fireEvent.click(await screen.findByRole('button', { name: t.booking.submit }));
     expect(await screen.findByText(t.booking.booked)).toBeTruthy();
-    expect(registerDrafts.get(PHONE)).toBeUndefined();
+    // The wizard reports progress from an effect, which can run after the panel paints.
+    await waitFor(() => expect(registerDrafts.get(PHONE)).toBeUndefined());
   });
 
   it('a saved first lesson now past: reopening lands on the slot step with no slot (review M3)', async () => {
