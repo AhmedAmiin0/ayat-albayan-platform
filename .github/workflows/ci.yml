@@ -383,6 +383,9 @@ jobs:
       # Rule 16: one folder per component with its local hook; new and regressed components fail, and
       # every offender in a finished (STRICT) workspace (docs/63 §3).
       - run: pnpm guard:components
+      # A response mapper this branch adds returns its package type through asResponse, never a
+      # hand copy of the fields (docs/62 part 2 §4, guard B). Diff-scoped: no baseline.
+      - run: pnpm guard:mappers
       # On a PR: every suppressions file per file and per rule against the base branch's (docs/59), and the
       # refactor/guards and refactor/folder-cap baselines: only shrink, never a new entry or file.
       - run: pnpm guard:lint
