@@ -8,5 +8,4 @@ export {
   isIntegrationPlainKey,
   WA_LINE_PROVIDERS,
   type WaProvider,
-  waProviderSchema,
 } from './keys';
