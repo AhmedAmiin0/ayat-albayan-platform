@@ -2845,11 +2845,6 @@
       "count": 1
     }
   },
-  "src/features/people/roles/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 6
-    }
-  },
   "src/features/people/roles/role-form.ts": {
     "stylistic/max-len": {
       "count": 2

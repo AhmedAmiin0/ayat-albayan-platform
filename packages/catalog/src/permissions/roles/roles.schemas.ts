@@ -1,6 +1,11 @@
 import { z } from 'zod';
-import type { UserRole } from './roles';
-import { GRANTABLE_PERMISSIONS, type Permission } from '../catalog';
+import { userRoleSchema, type UserRole } from './roles';
+import {
+  GRANTABLE_PERMISSIONS,
+  PERMISSION_AREAS,
+  permissionSchema,
+  type Permission,
+} from '../catalog';
 
 // A role's base_role (its scope) is fixed at creation; only its names and grants change later.
 
@@ -30,23 +35,33 @@ export type RoleUpdate = z.output<typeof roleUpdateSchema>;
 
 export const roleAssignSchema = z.object({ role_id: z.uuid() });
 
-export interface RoleView {
-  id: string;
+export const roleViewSchema = z.object({
+  id: z.string(),
   /** System roles: the user_role value; custom roles: 'custom-…'. */
-  key: string;
-  name_ar: string;
-  name_en: string | null;
-  base_role: UserRole;
-  is_system: boolean;
+  key: z.string(),
+  name_ar: z.string(),
+  name_en: z.string().nullable(),
+  base_role: userRoleSchema,
+  is_system: z.boolean(),
   /** Grantable keys only (self.* follow the base role). The system admin: always all of them. */
-  permissions: Permission[];
+  permissions: z.array(permissionSchema),
   /** Users holding the role (a null profiles.role_id counts for its system role). */
-  users: number;
-}
+  users: z.number().int().nonnegative(),
+});
+export type RoleView = z.infer<typeof roleViewSchema>;
 
-export interface StaffUserView {
-  id: string;
-  full_name: string;
-  role: UserRole;
-  role_id: string;
-}
+export const staffUserViewSchema = z.object({
+  id: z.string(),
+  full_name: z.string(),
+  role: userRoleSchema,
+  /** '' when no role holds the profile. */
+  role_id: z.string(),
+});
+export type StaffUserView = z.infer<typeof staffUserViewSchema>;
+
+/** One section of the permission matrix. */
+export const permissionGroupSchema = z.object({
+  area: z.enum(PERMISSION_AREAS),
+  keys: z.array(permissionSchema),
+});
+export type PermissionGroup = z.infer<typeof permissionGroupSchema>;

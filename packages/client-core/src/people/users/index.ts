@@ -11,3 +11,4 @@ export { userChecks, type FieldKey, type FormErrors, type UserCheckText } from '
 export { tidyUsername, usernameApiError, usernameChange, type TeacherUsernameText, type UsernameChange } from './teacher-username';
 export type * from './users-view';
 export { recordView, roleSection, teacherModes, withRole } from './form-sections';
+export { roleCalls, type RoleCalls } from './roles-api';
