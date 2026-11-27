@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { componentReports } from '../check.mjs';
+import { STRICT, WORKSPACES } from '../scope.mjs';
 import { treeOf } from '../tree.mjs';
 
 const reports = (files) => componentReports(treeOf(new Map(Object.entries(files))));
@@ -62,4 +63,10 @@ test('check 9: an expo-router file is a re-export or one element, plus ErrorBoun
       ?.failures.map((f) => f.check),
     [9],
   );
+});
+
+test('STRICT names the finished family apps, only known workspaces, each once', () => {
+  assert.ok(STRICT.includes('apps/family-web') && STRICT.includes('apps/family-mobile'));
+  assert.ok(STRICT.every((ws) => WORKSPACES.includes(ws)));
+  assert.equal(new Set(STRICT).size, STRICT.length);
 });

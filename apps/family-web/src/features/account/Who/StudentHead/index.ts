@@ -1,0 +1,1 @@
+export { StudentHead } from './StudentHead';

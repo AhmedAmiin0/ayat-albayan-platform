@@ -1,14 +1,6 @@
 import { View } from 'react-native';
 import { AppText, Avatar, raisedCard, shape, type, useTheme } from '@ab/mobile-kit';
-
-interface ProfileHeroProps {
-  name: string;
-  line: string;
-  /** The signed photo URL, else null (the initials). */
-  photo: string | null;
-  /** A student's id, so their initials keep the tone of their home card; else the name. */
-  seed: string | null;
-}
+import type { ProfileHeroProps } from './ProfileHero.types';
 
 /** The profile's head: the photo or initials in a gold ring, the name, who signed in. */
 export function ProfileHero({ name, line, photo, seed }: ProfileHeroProps) {

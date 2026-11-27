@@ -1,12 +1,6 @@
 import { View } from 'react-native';
 import { AppText, type, useTheme } from '@ab/mobile-kit';
-
-interface DateTileProps {
-  weekday: string;
-  day: string;
-  /** Today's tile is filled (canvas Schedule). */
-  strong?: boolean;
-}
+import type { DateTileProps } from './DateTile.types';
 
 /** A day at the inline-start of a row: the weekday over its number. */
 export function DateTile({ weekday, day, strong = false }: DateTileProps) {

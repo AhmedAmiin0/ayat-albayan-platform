@@ -1,0 +1,1 @@
+export { GuardianHead } from './GuardianHead';
