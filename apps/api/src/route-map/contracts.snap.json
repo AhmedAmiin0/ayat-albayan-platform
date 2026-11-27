@@ -3397,7 +3397,8 @@
    "required": [
     "token"
    ]
-  }
+  },
+  "response": "redirect"
  },
  "GET /lessons/:id/files": {
   "params": {
@@ -5856,6 +5857,9 @@
     "configured"
    ]
   }
+ },
+ "GET /report-link/legacy/*": {
+  "response": "redirect"
  },
  "GET /report-pages/:publicId": {
   "params": {
@@ -18568,6 +18572,9 @@
     "lessonId"
    ]
   }
+ },
+ "POST /livekit/webhook": {
+  "response": "empty"
  },
  "POST /me/avatar/upload-url": {
   "body": {
