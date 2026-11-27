@@ -1,2 +1,3 @@
+export * from './template-sync.schemas';
 export * from './template-view.schemas';
-export { authoredTemplateRoutes } from './templates.routes';
+export { authoredTemplateRoutes, templateCatalogRoutes } from './templates.routes';
