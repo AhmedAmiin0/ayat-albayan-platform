@@ -2,7 +2,7 @@ import type { ThreadView } from '@ab/shared';
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { threadsQuery } from '@/features/messaging/inbox/api/api';
-import { heldRead, thread } from '@/features/messaging/inbox/api/patch-fixtures';
+import { heldRead, listRow } from '@/features/messaging/inbox/api/patch-fixtures';
 import { rereadList } from '@/features/messaging/inbox/api/reread/reread';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
@@ -16,7 +16,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
 }));
 
 const LIST = threadsQuery({ page: 1 });
-const list = (...items: ThreadView[]) => ({ items, total: items.length });
+const list = (...items: ThreadView[]) => ({ items, total: items.length, page: 1, pageSize: 30 });
 const listed = (client: QueryClient) => client.getQueryData(LIST.queryKey)?.items[0]?.last_status;
 
 /** The list counts as on screen (the re-read's type: 'active'). */
@@ -37,8 +37,8 @@ it('an event during the first load: joined, then exactly one more read after it'
   rereadList(client);
   rereadList(client); // a second event during the same load: still one more read
   expect(mockApiFetch).toHaveBeenCalledTimes(1);
-  mockApiFetch.mockResolvedValue(list(thread('a', 'delivered')));
-  firstLoad.resolve(list(thread('a', 'sent')));
+  mockApiFetch.mockResolvedValue(list(listRow('delivered')));
+  firstLoad.resolve(list(listRow('sent')));
   await opening;
   await vi.waitFor(() => expect(listed(client)).toBe('delivered'));
   await new Promise((r) => setTimeout(r, 0));
@@ -47,7 +47,7 @@ it('an event during the first load: joined, then exactly one more read after it'
 
 it('a shown list with data: one read now, cancelling an older one, nothing chained', async () => {
   const client = new QueryClient();
-  mockApiFetch.mockResolvedValueOnce(list(thread('a', 'sent')));
+  mockApiFetch.mockResolvedValueOnce(list(listRow('sent')));
   await client.query(LIST);
   shown(client);
   const refetch = vi.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);

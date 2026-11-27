@@ -23496,6 +23496,395 @@
      ]
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "last_note": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "deleted",
+           "ad_welcome",
+           "unsupported"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "ring": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "subscribed",
+           "renewal"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "badge": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "subscribed",
+           "expired",
+           "none"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "unpaid": {
+        "type": "boolean"
+       },
+       "last_unsupported": {
+        "type": "boolean"
+       },
+       "last_inbound_line": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "notifications",
+           "chat",
+           "calls"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_chat_inbound_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "last_notifications_inbound_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reply_line": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "notifications",
+           "chat"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reactable": {
+        "type": "boolean"
+       },
+       "try_after_window": {
+        "type": "boolean"
+       },
+       "reopen_choice": {
+        "type": "string",
+        "enum": [
+         "template",
+         "wait"
+        ]
+       },
+       "reopen_sent": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           "template_key": {
+            "type": "string"
+           },
+           "status": {
+            "type": "string",
+            "enum": [
+             "queued",
+             "sent",
+             "delivered",
+             "read",
+             "failed",
+             "sent_manually"
+            ]
+           }
+          },
+          "required": [
+           "id",
+           "template_key",
+           "status"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reopen_template": {
+        "type": "string"
+       },
+       "phone_e164": {
+        "type": "string"
+       },
+       "display_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "last_message_id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "last_direction": {
+        "type": "string",
+        "enum": [
+         "inbound",
+         "outbound"
+        ]
+       },
+       "last_body": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "last_template_key": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "last_status": {
+        "type": "string",
+        "enum": [
+         "queued",
+         "sent",
+         "delivered",
+         "read",
+         "failed",
+         "sent_manually"
+        ]
+       },
+       "last_media_mime": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "last_message_at": {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       },
+       "last_inbound_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "unread_count": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+       },
+       "lead_id": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "lead_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "lead_status": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "new",
+           "contacted",
+           "interested_no_slot",
+           "trial_booked",
+           "trial_done",
+           "converted",
+           "no_reply",
+           "lost"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "lead_source": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "facebook_ad",
+           "instagram_ad",
+           "whatsapp_direct",
+           "referral",
+           "other"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "guardian_id": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "guardian_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "guardian_tz": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "teacher_id": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "teacher_name": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "session_open": {
+        "type": "boolean"
+       },
+       "subscribed": {
+        "type": "boolean"
+       }
+      },
+      "required": [
+       "phone_e164",
+       "display_name",
+       "last_message_id",
+       "last_direction",
+       "last_body",
+       "last_template_key",
+       "last_status",
+       "last_media_mime",
+       "last_message_at",
+       "last_inbound_at",
+       "unread_count",
+       "lead_id",
+       "lead_name",
+       "lead_status",
+       "lead_source",
+       "guardian_id",
+       "guardian_name",
+       "guardian_tz",
+       "teacher_id",
+       "teacher_name",
+       "session_open",
+       "subscribed"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
   }
  },
  "GET /threads/:phone": {

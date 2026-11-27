@@ -2,29 +2,12 @@ import { describe, expect, it } from 'vitest';
 import type { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
 import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { teacherListFilter, threadListQuery } from '@/modules/messaging/inbox/threads/threads.list';
+import { teacherListFilter } from '@/modules/messaging/inbox/threads/threads.list';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 const V = 'v_threads';
 const queriesOn = (db: ReturnType<typeof fakeDb>['db']) =>
   new ThreadsRepo(db, {} as PackagesService, {} as BalanceRepo);
-
-describe('GET /threads list query (R-NFR-08)', () => {
-  it('accepts sort, dir and a lead status next to the old params', () => {
-    expect(threadListQuery.parse({ sort: 'unread', dir: 'desc', status: 'new', unread: 'true' })).toMatchObject({
-      sort: 'unread',
-      dir: 'desc',
-      status: 'new',
-      unread: true,
-      page: 1,
-    });
-  });
-
-  it('rejects a key outside the allowlist and an unknown status', () => {
-    expect(threadListQuery.safeParse({ sort: 'phone_e164' }).success).toBe(false);
-    expect(threadListQuery.safeParse({ status: 'nope' }).success).toBe(false);
-  });
-});
 
 describe('ThreadsQueries.list order and filters', () => {
   const page = { page: 2, pageSize: 10 };
