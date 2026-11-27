@@ -364,11 +364,6 @@
       "count": 2
     }
   },
-  "src/booking/invoice/invoice-upload.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/booking/makeup/MakeupAction/MakeupAction.tsx": {
     "react/purity": {
       "count": 1

@@ -41,3 +41,10 @@ test('Storage refuses: InvoiceUploadError; the API unreachable: its error, nothi
   await expect(uploadInvoice(REQ, receipt)).rejects.toBeInstanceOf(TypeError);
   expect(mockUpload).not.toHaveBeenCalled();
 });
+
+test('a signed upload the route does not describe fails with bad_response, nothing uploaded', async () => {
+  send.mockResolvedValue({ bucket: 'invoices', path: signed.path });
+  const failure = await uploadInvoice(REQ, receipt).catch((e: unknown) => e);
+  expect(failure).toMatchObject({ body: { code: 'bad_response' } });
+  expect(mockUpload).not.toHaveBeenCalled();
+});
