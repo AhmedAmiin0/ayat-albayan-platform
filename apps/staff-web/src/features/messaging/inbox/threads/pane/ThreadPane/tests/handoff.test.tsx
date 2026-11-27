@@ -12,7 +12,15 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const LINK = 'https://wa.me/966501234567?text=x';
-const FAILED = message({ id: 'm-f', direction: 'outbound', status: 'failed', body: 'تذكير بالحلقة', error_code: '131049', click_to_chat: LINK });
+const FAILED = message({
+  id: 'e5555555-5555-4555-8555-555555555555',
+  lead_id: null,
+  direction: 'outbound',
+  status: 'failed',
+  body: 'تذكير بالحلقة',
+  error_code: '131049',
+  click_to_chat: LINK,
+});
 
 // The tab the click opens right away (a later window.open is popup-blocked); wa.me goes in it only
 // once the server holds the row.
@@ -52,7 +60,7 @@ describe('«أرسلها بنفسك من واتساب» (R-MSG-03)', () => {
   it('tells the server first, then opens wa.me in the tab (the row is held: no second send)', async () => {
     apiSend.mockResolvedValue({ ...FAILED, error_code: 'handed_off' });
     await clickToChat();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-f/hand-off');
+    expect(apiSend).toHaveBeenCalledWith('POST', `/messages/${FAILED.id}/hand-off`, undefined);
     await waitFor(() => expect(tab.location.replace).toHaveBeenCalledWith(LINK));
     expect(tab.close).not.toHaveBeenCalled();
   });

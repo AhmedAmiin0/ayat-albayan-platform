@@ -18,7 +18,7 @@ describe('«أرسلتها» while pending', () => {
     vi.mocked(apiSend).mockResolvedValue(message({ ...held, status: 'sent_manually' }));
     renderBubble({ app_send_until: PENDING });
     fireEvent.click(button(t.messages.whatsappSend.sentIt) as HTMLElement);
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-held/sent-manually'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `/messages/${held.id}/sent-manually`, undefined));
   });
 
   it('not on the plain offer', () => {
@@ -42,8 +42,8 @@ describe('unconfirmed: «هل أرسلتها من واتساب؟»', () => {
     vi.mocked(apiSend).mockResolvedValue(message({ ...held, status: 'sent_manually' }));
     renderBubble(unconfirmed);
     fireEvent.click(button(t.messages.whatsappSend.yes) as HTMLElement);
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-held/sent-manually'));
-    expect(apiSend).not.toHaveBeenCalledWith('POST', '/messages/m-held/retry');
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `/messages/${held.id}/sent-manually`, undefined));
+    expect(apiSend).not.toHaveBeenCalledWith('POST', `/messages/${held.id}/retry`, undefined);
   });
 
   it('tapped again (pending): «جارٍ الإرسال من واتساب…» with «أرسلتها», no question', () => {

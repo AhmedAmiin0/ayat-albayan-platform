@@ -10,7 +10,8 @@ import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/sha
 
 export const NOW = new Date('2026-11-06T12:00:00Z');
 export const held: Partial<MessageView> = {
-  id: 'm-held',
+  id: 'c3333333-3333-4333-8333-333333333333',
+  lead_id: null,
   direction: 'outbound',
   status: 'queued',
   error_code: 'awaiting_reply',

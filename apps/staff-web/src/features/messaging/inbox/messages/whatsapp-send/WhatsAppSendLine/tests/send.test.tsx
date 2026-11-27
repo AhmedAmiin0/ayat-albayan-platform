@@ -39,7 +39,7 @@ describe('«أرسل عبر واتساب» in the web bubble: app-send, then ope
     renderBubble({});
     fireEvent.click(action() as HTMLElement);
     await waitFor(() => expect(tab.location.replace).toHaveBeenCalled());
-    expect(apiSend).toHaveBeenCalledExactlyOnceWith('POST', '/messages/m-held/app-send');
+    expect(apiSend).toHaveBeenCalledExactlyOnceWith('POST', `/messages/${held.id}/app-send`, undefined);
     const started = vi.mocked(apiSend).mock.invocationCallOrder[0] ?? Infinity;
     expect(started).toBeLessThan(tab.location.replace.mock.invocationCallOrder[0] ?? 0);
     const url = new URL(String(tab.location.replace.mock.calls[0]?.[0]));

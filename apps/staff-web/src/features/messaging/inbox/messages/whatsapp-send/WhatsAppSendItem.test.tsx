@@ -16,7 +16,8 @@ const base = {
   waitingKeys: new Set<string>(),
 };
 const held = message({
-  id: 'm-held',
+  id: 'c3333333-3333-4333-8333-333333333333',
+  lead_id: null,
   direction: 'outbound',
   status: 'failed',
   error_code: 'reopen_failed',
@@ -37,7 +38,7 @@ it('the menu item calls app-send, then opens WhatsApp Web', async () => {
   const menu = screen.getByRole('button', { name: t.inbox.copy.label }).parentElement;
   fireEvent.click(within(menu as HTMLElement).getByRole('button', { name: t.messages.whatsappSend.action }));
   await waitFor(() => expect(tab.location.replace).toHaveBeenCalled());
-  expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-held/app-send');
+  expect(apiSend).toHaveBeenCalledWith('POST', `/messages/${held.id}/app-send`, undefined);
   expect(String(tab.location.replace.mock.calls[0]?.[0])).toMatch(/^https:\/\/web\.whatsapp\.com\/send\?phone=/);
   open.mockRestore();
 });

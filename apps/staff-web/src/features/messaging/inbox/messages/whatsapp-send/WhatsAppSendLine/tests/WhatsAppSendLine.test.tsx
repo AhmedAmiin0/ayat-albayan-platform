@@ -66,6 +66,6 @@ describe('«أرسل عبر واتساب»: the pending window', () => {
     renderBubble({ app_send_until: PENDING });
     fireEvent.click(button(t.messages.whatsappSend.openAgain) as HTMLElement);
     await waitFor(() => expect(tab.location.replace).toHaveBeenCalled());
-    expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-held/app-send');
+    expect(apiSend).toHaveBeenCalledWith('POST', `/messages/${held.id}/app-send`, undefined);
   });
 });
