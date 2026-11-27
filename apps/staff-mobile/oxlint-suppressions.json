@@ -3627,19 +3627,7 @@
     }
   },
   "src/ops/reports/AdminReportScreen/AdminReportScreen.tsx": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
-    "typescript/no-useless-default-assignment": {
       "count": 1
     }
   },
