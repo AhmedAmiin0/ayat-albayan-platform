@@ -5363,22 +5363,12 @@
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/admin/google-admin.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/platform/google-sync/admin/google-admin.service.ts": {
     "complexity": {
       "count": 2
     },
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/modules/platform/google-sync/admin/google-items.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/modules/platform/google-sync/admin/google-log.queries.ts": {

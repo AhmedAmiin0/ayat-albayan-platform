@@ -1,4 +1,4 @@
-import type { Database, Json } from '@ab/db';
+import type { Database } from '@ab/db';
 import { GOOGLE_SYNC_KINDS, GOOGLE_SYNC_STATES, type GooglePlannedRequest, type GoogleSkipReason, type GoogleSyncKind, type GoogleSyncState } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
@@ -39,7 +39,7 @@ function patchOf(r: ItemResult): ItemUpdate {
       return { ...done, state: 'gone', last_error: r.error, skip_reason: null };
     case 'skipped':
       return {
-        ...done, state: 'skipped', skip_reason: r.reason, planned: (r.planned ?? null) as Json, last_error: null,
+        ...done, state: 'skipped', skip_reason: r.reason, planned: r.planned ?? null, last_error: null,
         ...(r.googleId !== undefined ? { google_id: r.googleId } : {}), ...(r.parentId !== undefined ? { google_parent_id: r.parentId } : {}),
       };
     case 'failed':

@@ -1,4 +1,8 @@
-import { googleAdminRoutes as routes, type GoogleConnectUrl, type GoogleStatusView } from '@ab/catalog';
+import {
+  googleAdminRoutes as routes,
+  type GoogleConnectUrl,
+  type GoogleStatusView,
+} from '@ab/catalog';
 import { Controller } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/auth/decorators';

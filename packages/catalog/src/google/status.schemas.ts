@@ -56,7 +56,11 @@ export const googleStatusViewSchema = z.object({
   discovery: googleDiscoveryViewSchema.nullable(),
   counts: z.record(z.enum(GOOGLE_SYNC_STATES), count),
   /** Items skipped because a teacher or a student is not mapped yet. */
-  warnings: z.object({ teacher_unmapped: count, student_unmapped: count, drive_unconfirmed: count }),
+  warnings: z.object({
+    teacher_unmapped: count,
+    student_unmapped: count,
+    drive_unconfirmed: count,
+  }),
   /** The calendars a live write will touch, for its confirmation. */
   targets: z.object({ main_calendar: z.string(), teacher_calendars: z.array(z.string()) }),
   last_run_at: instant.nullable(),

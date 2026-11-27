@@ -4,12 +4,28 @@ const AT = '2026-11-27T10:00:00.000Z';
 
 export const aStatus = (): GoogleStatusView => ({
   configured: true,
-  connection: { status: 'connected', email: 'academy@example.com', scopes: [], connected_at: AT, last_error: null },
+  connection: {
+    status: 'connected',
+    email: 'academy@example.com',
+    scopes: [],
+    connected_at: AT,
+    last_error: null,
+  },
   settings: { enabled: true, mode: 'dry_run', window_days: 60 },
   redirect_uri: 'https://api.example.com/google/callback',
   scopes: ['https://www.googleapis.com/auth/calendar.events'],
-  drive: { root_folder_id: null, root_folder_name: null, summary_sheet_id: null, confirmed_at: null },
-  discovery: { at: AT, calendars: [{ id: 'c1@group.calendar.google.com', name: 'A' }], root_folder: null, summary_sheet: null },
+  drive: {
+    root_folder_id: null,
+    root_folder_name: null,
+    summary_sheet_id: null,
+    confirmed_at: null,
+  },
+  discovery: {
+    at: AT,
+    calendars: [{ id: 'c1@group.calendar.google.com', name: 'A' }],
+    root_folder: null,
+    summary_sheet: null,
+  },
   counts: { pending: 1, synced: 2, gone: 0, failed: 0, skipped: 3 },
   warnings: { teacher_unmapped: 0, student_unmapped: 1, drive_unconfirmed: 0 },
   targets: { main_calendar: 'academy@example.com', teacher_calendars: [] },
