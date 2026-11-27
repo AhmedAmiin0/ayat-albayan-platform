@@ -6,7 +6,8 @@ import { useSendStagedFile } from '@/inbox/saved-replies/hooks/send-staged';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { refreshInbox, refreshLists, touchInbox } from './inbox-sync';
 import { useForward } from './use-forward';
-import { useMessageAction, useSendMessage } from './use-thread';
+import { useMessageAction } from './use-message-action';
+import { useSendMessage } from './use-thread';
 import { ApiError } from '@ab/client-core';
 
 // Every way a chat sends (text, template, quote, file, saved reply, forward, retry) goes
