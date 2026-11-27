@@ -133,7 +133,7 @@ export { RecordingsPanel as PortalRecordingsPanel } from './portal/recordings/Re
 export * from './portal/report/ReportView/ReportView';
 export * from './portal/use-family-chat';
 export * from './portal/use-seen-reports';
-export * from './push/WebPushToggle/WebPushToggle';
+export { WebPushToggle } from './push/WebPushToggle';
 export * from './push/notifications-api';
 export * from './push/web-push';
 export * from './report';
