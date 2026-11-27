@@ -5774,10 +5774,7 @@
   },
   "src/modules/platform/translations/translations.controller.ts": {
     "ab/zod-inputs": {
-      "count": 5
-    },
-    "typescript/dot-notation": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/platform/translations/translations.http.test.ts": {
