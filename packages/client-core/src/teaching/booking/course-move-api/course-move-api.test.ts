@@ -29,7 +29,9 @@ describe('course move calls', () => {
     expect(apiFetch).toHaveBeenCalledWith(
       `/students/${STUDENT}/course-times/change?subscriptionId=${SUB}`,
     );
-    await courseTeacherCalls(client).view(STUDENT, {}).catch(() => null);
+    await courseTeacherCalls(client)
+      .view(STUDENT, {})
+      .catch(() => null);
     expect(apiFetch).toHaveBeenLastCalledWith(`/students/${STUDENT}/course-teacher/change`);
   });
 

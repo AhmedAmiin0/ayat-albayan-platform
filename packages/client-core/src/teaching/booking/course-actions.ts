@@ -22,15 +22,6 @@ export function courseMoveBase(input: MoveTarget): string {
   return `${student(input.studentId)}/${tail}`;
 }
 
-export function courseMoveViewPath(input: MoveTarget & { subscriptionId: string }): string {
-  const q = encodeURIComponent(input.subscriptionId);
-  return `${courseMoveBase(input)}/change?subscriptionId=${q}`;
-}
-
-/** Offered teachers match the student's program and gender preference. */
-export const courseTeacherOptionsPath = (studentId: string): string =>
-  `${student(studentId)}/course-teacher/teachers`;
-
 /** The query key of a student's course actions (invalidate it after a write). */
 export const courseActionsKey = (studentId: string): readonly ['course-actions', string] => [
   'course-actions',

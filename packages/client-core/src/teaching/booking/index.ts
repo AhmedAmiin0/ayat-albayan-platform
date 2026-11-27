@@ -16,12 +16,10 @@ export {
   type CourseMoveErrorCode,
   courseMoveErrorCode,
   type CourseMoveKind,
-  courseMoveViewPath,
   type CourseStopErrorCode,
   courseStopErrorCode,
   courseStopLessonsText,
   courseStopPath,
-  courseTeacherOptionsPath,
   type StopWords,
 } from './course-actions';
 export {

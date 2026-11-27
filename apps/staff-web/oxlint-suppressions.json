@@ -5620,11 +5620,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/course-actions/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/features/teaching/course-pause/ChangeUntilDialog.tsx": {
     "stylistic/max-len": {
       "count": 2
