@@ -32,7 +32,8 @@ test('source, owner and order go to GET /leads as the web sends them', async () 
   await fireEvent.press(screen.getByRole('radio', { name: t.enums.leadSource.facebook_ad }));
   await waitFor(() => expect(lastLeadsCall()).toContain('source=facebook_ad'));
   await fireEvent.press(await screen.findByRole('radio', { name: 'سارة' }));
-  await waitFor(() => expect(lastLeadsCall()).toContain('assignee=p1'));
+  const sara = 'assignee=5a1a0000-0000-4000-8000-000000000001';
+  await waitFor(() => expect(lastLeadsCall()).toContain(sara));
   await fireEvent.press(screen.getByRole('radio', { name: t.leads.sort.newest }));
   await waitFor(() => expect(lastLeadsCall()).toMatch(/sort=created_at&dir=desc|dir=desc&sort=created_at/));
   expect(screen.getByRole('button', { name: t.mobileLeads.filterCount.replace('{n}', '3') })).toBeTruthy();

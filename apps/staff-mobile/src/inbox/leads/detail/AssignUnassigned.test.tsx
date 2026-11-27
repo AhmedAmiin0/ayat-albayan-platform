@@ -30,7 +30,9 @@ test('confirm: POST assign-unassigned, say how many, refetch leads and salespeop
   await renderWithQuery(<AssignUnassigned owners={2} />, client);
   await ask();
   await fireEvent.press(screen.getByRole('button', { name: t.sales.assign.assignAll }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/leads/assign-unassigned'));
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/leads/assign-unassigned', undefined),
+  );
   expect(await screen.findByText(t.sales.assign.assignedN.replace('{n}', '4'))).toBeTruthy();
   expect(invalidate).toHaveBeenCalledWith({ queryKey: leadKeys.all });
   expect(invalidate).toHaveBeenCalledWith({ queryKey: pathKey('/sales/people') });

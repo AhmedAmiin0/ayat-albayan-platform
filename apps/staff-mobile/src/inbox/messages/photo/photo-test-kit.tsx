@@ -16,7 +16,7 @@ export const pdfPage = (page: number, fields: Partial<ThreadPdfPage> = {}): Thre
   expires_at: signed().expires_at,
   page,
   pages: 12,
-  bytes: 1.2 * 1024 * 1024,
+  bytes: Math.round(1.2 * 1024 * 1024),
   ...fields,
 });
 // The i18n literal scan reads this file (a .tsx that is not a test): a Latin name.

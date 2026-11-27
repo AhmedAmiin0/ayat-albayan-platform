@@ -3,7 +3,7 @@ import { Linking } from 'react-native';
 import { handOff, type RoomTarget, liveKitNative } from '@ab/mobile-kit/room';
 import { roomRoute, roomWebUrl, type RoomEntry } from './join-target';
 import { roomMode } from './room-mode';
-import { joinAnswer, sendJoin } from './fetch-join';
+import { sendJoin } from './fetch-join';
 import { usePublicConfig } from '@/core/lib/query/public-config';
 
 /** settings.meetings_in_app (public, default on): rooms open inside the app (docs/35). */
@@ -29,7 +29,7 @@ export async function openRoom(target: RoomTarget, inApp: boolean, options: Open
     await Linking.openURL(roomWebUrl(target));
     return;
   }
-  handOff(target, joinAnswer(answer));
+  handOff(target, answer);
   if (options.closeSheet) {
     options.closeSheet();
     await afterSheet();

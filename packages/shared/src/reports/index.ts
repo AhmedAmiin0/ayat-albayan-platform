@@ -10,3 +10,4 @@ export * from './quran';
 export * from './v2';
 export * from './lesson-files';
 export * from './page-routes';
+export * from './report-routes';

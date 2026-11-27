@@ -1,13 +1,14 @@
-import type {
-  DraftBody,
-  ReportAttachmentView,
-  ReportFormResponse,
-  ReportView,
-  SignedUpload,
-  SubmitBody,
+import {
+  attachmentUploadSchema,
+  type DraftBody,
+  type ReportAttachmentView,
+  type ReportFormResponse,
+  type ReportView,
+  type SubmitBody,
 } from '@ab/shared';
-import { reportErrorWords } from '@ab/client-core';
+import { reportAttachmentCalls, reportCalls, reportErrorWords } from '@ab/client-core';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
+import { Linking } from 'react-native';
 import { ApiError, apiFetch, apiSend, t, pathKey } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { Receipt } from '@/core/lib/receipts/receipt';
@@ -53,17 +54,27 @@ export async function refreshAfterSubmit(client: QueryClient): Promise<void> {
   ]);
 }
 
-export const saveDraft = (id: string, body: DraftBody) => apiSend<ReportView>('PUT', `/reports/${id}/draft`, body);
+const reports = reportCalls({ apiFetch, apiSend });
 
-export const submitReport = (id: string, body: SubmitBody) => apiSend<ReportView>('POST', `/reports/${id}/submit`, body);
+export const saveDraft = (id: string, body: DraftBody) => reports.draft({ id }, body);
+
+export const submitReport = (id: string, body: SubmitBody) => reports.submit({ id }, body);
+
+const attachments = reportAttachmentCalls({ apiFetch, apiSend });
 
 /** R7 → Storage signed upload (the bytes, as the receipts do) → R8 register. */
 export async function uploadAttachment(id: string, file: Receipt): Promise<ReportAttachmentView> {
-  const meta = { mime: file.mime, size: file.size };
-  const slot = await apiSend<SignedUpload>('POST', `/reports/${id}/attachments/upload-url`, meta);
+  const meta = attachmentUploadSchema.parse({ mime: file.mime, size: file.size });
+  const slot = await attachments.uploadUrl({ id }, meta);
   const { error } = await uploadSigned(slot, { body: file.bytes, contentType: file.mime });
   if (error) throw new ApiError(400, { code: 'attachment_path' });
-  return apiSend<ReportAttachmentView>('POST', `/reports/${id}/attachments`, { ...meta, path: slot.path });
+  return attachments.register({ id }, { ...meta, path: slot.path });
+}
+
+/** R10: opens one file through its 1 h signed link. */
+export async function openAttachment(id: string, attachmentId: string): Promise<void> {
+  const { url } = await attachments.url({ id, attachmentId });
+  await Linking.openURL(url);
 }
 
 const errorWords = reportErrorWords(() => ({

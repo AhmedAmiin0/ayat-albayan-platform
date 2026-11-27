@@ -1,9 +1,12 @@
-import type { NumberView, ParityView } from '@ab/shared';
+import { communicationsCalls } from '@ab/client-core';
+import type { NumberView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 export const NUMBERS_PATH = '/admin/numbers';
 export const PARITY_PATH = '/admin/communications/parity';
+
+const communications = communicationsCalls({ apiFetch, apiSend });
 
 /** GET /admin/numbers (settings.read): read-only on the phone (docs/23 §3 phase 3). */
 export function useNumbers() {
@@ -13,10 +16,10 @@ export function useNumbers() {
   });
 }
 
-/** GET /admin/communications/parity (settings.read): the source in use and the differences. */
+/** The source in use and the differences (settings.read). */
 export function useParity() {
   return useQuery({
     queryKey: pathKey(PARITY_PATH),
-    queryFn: () => apiFetch<ParityView>(PARITY_PATH),
+    queryFn: communications.parity,
   });
 }

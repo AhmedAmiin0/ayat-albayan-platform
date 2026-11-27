@@ -6,6 +6,7 @@ import { t } from '@ab/web-kit';
 import { StudentReportsPage } from '@/features/reporting/reports/history/StudentReportsPage/StudentReportsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
+const PDF_LINK = { url: 'https://x/pdf', expires_at: '2026-10-03T14:00:00Z' };
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
@@ -46,7 +47,7 @@ const DATA: StudentReportsResponse = {
 };
 
 function renderPage(data: StudentReportsResponse, role: 'admin' | 'teacher' = 'admin') {
-  apiFetch.mockImplementation((path: string) => (path.startsWith('/students/s-1/reports') ? Promise.resolve(data) : Promise.resolve({ url: 'https://x/pdf' })));
+  apiFetch.mockImplementation((path: string) => (path.startsWith('/students/s-1/reports') ? Promise.resolve(data) : Promise.resolve(PDF_LINK)));
   render(
     <QueryClientProvider
       client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}

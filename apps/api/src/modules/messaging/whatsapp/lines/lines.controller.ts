@@ -1,7 +1,6 @@
 import { lineCheckRoutes as routes, type LineCheckView } from '@ab/shared';
 import { Controller, HttpCode, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { Route } from '@/common/http/route';
 import { NumbersHealth } from '@/modules/messaging/numbers/lines/numbers.health';
 import { LineHealthStore } from './line-health.store';
@@ -14,7 +13,6 @@ import { TemplateManagerGuard } from '@/modules/messaging/whatsapp/templates/cat
  * row (the activity log records the POST). The last good number per line is kept (LineHealthStore), and
  * each checked phone id's result on its number rows (NumbersHealth, docs/23 phase 3).
  */
-@ApiTags('messaging')
 @ApiBearerAuth()
 @Controller()
 export class LinesController {
@@ -27,7 +25,6 @@ export class LinesController {
   /** Always [notifications, chat]; an unconfigured line answers configured:false and makes no request. */
   @Route(routes.check)
   @HttpCode(200)
-  @Permissions('templates.manage')
   @UseGuards(TemplateManagerGuard)
   async check(): Promise<LineCheckView[]> {
     const views = await this.lines.check();

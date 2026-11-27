@@ -3107,11 +3107,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/numbers/communications/communications.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/numbers/communications/communications.service.test.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -5331,22 +5326,12 @@
       "count": 1
     }
   },
-  "src/modules/platform/google-sync/admin/google-admin.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/platform/google-sync/admin/google-admin.service.ts": {
     "complexity": {
       "count": 2
     },
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/modules/platform/google-sync/admin/google-items.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/modules/platform/google-sync/admin/google-log.queries.ts": {
@@ -5420,11 +5405,6 @@
   "src/modules/platform/google-sync/map/discovery.ts": {
     "complexity": {
       "count": 1
-    }
-  },
-  "src/modules/platform/google-sync/map/google-map.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 9
     }
   },
   "src/modules/platform/google-sync/map/google-map.queries.ts": {
@@ -6001,11 +5981,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/files/report-attachments.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 8
-    }
-  },
   "src/modules/reporting/reports/files/report-attachments.queries.ts": {
     "typescript/consistent-type-definitions": {
       "count": 2
@@ -6071,14 +6046,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/modules/reporting/reports/reports.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 7
     }
   },
   "src/modules/reporting/reports/shared/report-access.ts": {
@@ -6197,11 +6164,6 @@
       "count": 5
     }
   },
-  "src/modules/reporting/reports/v2/report-v2.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/reporting/reports/v2/report-v2.mapper.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -6225,11 +6187,6 @@
   },
   "src/modules/sales/job-applicants/job-applicants.repo.ts": {
     "ab/module-boundaries": {
-      "count": 2
-    }
-  },
-  "src/modules/sales/leads/lead-family.controller.ts": {
-    "ab/zod-inputs": {
       "count": 2
     }
   },
@@ -6491,7 +6448,7 @@
   },
   "src/modules/sales/sales-students/details/sales-student.controller.ts": {
     "ab/zod-inputs": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/sales/sales-students/details/sales-student.mapper.ts": {
@@ -6704,14 +6661,6 @@
     },
     "ab/forbidden-imports": {
       "count": 1
-    }
-  },
-  "src/modules/sales/sales/sales.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/sales/sales/sales.fakes.ts": {
@@ -7620,9 +7569,6 @@
   "src/modules/teaching/classroom/classroom.controller.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/teaching/classroom/classroom.fakes.ts": {
@@ -7771,11 +7717,6 @@
   },
   "src/modules/teaching/classroom/join/room-join.service.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/classroom/join/room-open.controller.ts": {
-    "ab/zod-inputs": {
       "count": 1
     }
   },
@@ -8232,7 +8173,7 @@
   },
   "src/modules/teaching/classroom/student-link/student-link.controller.ts": {
     "ab/zod-inputs": {
-      "count": 4
+      "count": 2
     }
   },
   "src/modules/teaching/classroom/student-link/student-link.fakes.ts": {
@@ -9251,34 +9192,9 @@
       "count": 1
     }
   },
-  "src/modules/teaching/student-channels/controllers/channel-page.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/student-channels/controllers/channel.edits.controller.ts": {
     "ab/zod-inputs": {
       "count": 7
-    }
-  },
-  "src/modules/teaching/student-channels/controllers/channel.monitor.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
-  "src/modules/teaching/student-channels/controllers/channel.portal.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 5
-    }
-  },
-  "src/modules/teaching/student-channels/controllers/channel.presence.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
-  "src/modules/teaching/student-channels/controllers/channel.teacher.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/teaching/student-channels/student-channels.migration.test.ts": {

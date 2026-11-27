@@ -12,14 +12,16 @@ vi.mock('@ab/web-kit/lib/http/supabase', () => ({
 }));
 
 const T = t.googleSync.teacherCalendar;
-const VIEW = { teacher_id: 't1', owner: 'script', changed_at: null, managed: 4, script_event_present: 2 };
+const TEACHER = '7f3a4b5c-6d7e-4f80-9a12-b3c4d5e6f701';
+const PATH = `/admin/google/teachers/${TEACHER}/calendar-owner`;
+const VIEW = { teacher_id: TEACHER, owner: 'script', changed_at: null, managed: 4, script_event_present: 2 };
 
 function show(role: string) {
   routeFetch(apiFetch, [
     ['/auth/me', { id: 'u1', email: null, role, permissions: ['settings.read', 'settings.write'] }],
-    ['/admin/google/teachers/t1/calendar-owner', VIEW],
+    [PATH, VIEW],
   ]);
-  renderWithClient(<TeacherCalendarOwner teacherId="t1" />);
+  renderWithClient(<TeacherCalendarOwner teacherId={TEACHER} />);
 }
 
 afterEach(() => {
@@ -41,7 +43,7 @@ describe('TeacherCalendarOwner («تقويم المعلم», docs/24)', () => {
     apiSend.mockResolvedValue({ ...VIEW, owner: 'platform', changed_at: '2026-10-28T08:00:00Z' });
     show('admin');
     fireEvent.click(await screen.findByRole('radio', { name: T.platform }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/admin/google/teachers/t1/calendar-owner', { owner: 'platform' }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', PATH, { owner: 'platform' }));
     expect(await screen.findByRole('status')).toHaveProperty('textContent', T.saved);
     expect(screen.getByRole('radio', { name: T.platform })).toHaveProperty('checked', true);
   });
@@ -50,6 +52,6 @@ describe('TeacherCalendarOwner («تقويم المعلم», docs/24)', () => {
     show('assistant');
     await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/auth/me'));
     expect(screen.queryByRole('radio')).toBeNull();
-    expect(apiFetch).not.toHaveBeenCalledWith('/admin/google/teachers/t1/calendar-owner');
+    expect(apiFetch).not.toHaveBeenCalledWith(PATH);
   });
 });

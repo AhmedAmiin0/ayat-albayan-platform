@@ -114,7 +114,7 @@
   },
   "src/messaging/numbers/views.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     }
   },
   "src/messaging/replies/quick-reply.ts": {
@@ -480,7 +480,7 @@
   },
   "src/reports/views.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/sales/academy.ts": {
@@ -514,14 +514,6 @@
   "src/sales/course/course.ts": {
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/sales/family-link.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/sales/money-views.ts": {
@@ -641,11 +633,6 @@
   },
   "src/sales/teacher/teacher-overview.ts": {
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/sales/views.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },

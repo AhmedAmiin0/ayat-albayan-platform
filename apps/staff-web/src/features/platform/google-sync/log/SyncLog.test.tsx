@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { googleItems } from '@/features/platform/google-sync/google.fixture';
+import { FAILING_ITEM_ID, googleItems } from '@/features/platform/google-sync/google.fixture';
 import { renderGoogle } from '@/features/platform/google-sync/google-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -39,7 +39,8 @@ describe('sync log', () => {
     const row = await rowOf('Student One 2026-10-22');
     apiSend.mockResolvedValue({ ...googleItems()[0], state: 'pending' });
     fireEvent.click(within(row).getByRole('button', { name: s.retry }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin/google/items/item-1/retry'));
+    const retried = `/admin/google/items/${FAILING_ITEM_ID}/retry`;
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', retried, undefined));
     await waitFor(() => expect(onNote).toHaveBeenCalledWith(s.retried));
     await waitFor(() => expect(apiFetch.mock.calls.filter(([p]) => p === '/admin/google/items')).toHaveLength(2));
   });
@@ -50,7 +51,7 @@ describe('sync log', () => {
     await rowOf('Student One 2026-10-22');
     apiSend.mockResolvedValue({ queued: 4 });
     fireEvent.click(screen.getByRole('button', { name: s.reconcile }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin/google/reconcile'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin/google/reconcile', undefined));
     await waitFor(() => expect(onNote).toHaveBeenCalledWith(s.reconciled.replace('{n}', '4')));
   });
 

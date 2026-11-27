@@ -1,41 +1,32 @@
-import {
-  salesPackageIdSchema,
-  type SalesPackageCancelCheck,
-  type SalesPackageCancelled,
-} from '@ab/shared';
-import { subscriptionCancelSchema, type SubscriptionCancel } from '@ab/money';
-import { Controller, Get, HttpCode, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { salesPackageCancelRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { AnyPackageCancel } from './any-package-cancel.service';
 
-/** subscriptions.stop (migration 990), never subscriptions.write; own students only if enforced. */
-@ApiTags('sales')
+/** Own students only if the ownership rule is enforced. */
 @ApiBearerAuth()
-@Permissions('subscriptions.stop')
-@Controller('sales/packages')
+@Controller()
 export class AnyPackageCancelController {
   constructor(private readonly cancels: AnyPackageCancel) {}
 
-  /** Whether the button shows: the POST's 409 code, or null. 404 subscription_not_found. */
-  @Get(':id/cancel')
-  check(
-    @ZodParam('id', salesPackageIdSchema) id: string,
+  @Route(routes.check)
+  async check(
+    @RouteInput() { params }: RouteInputOf<typeof routes.check>,
     @CurrentUser() user: AuthUser,
-  ): Promise<SalesPackageCancelCheck> {
-    return this.cancels.check(id, user);
+  ) {
+    return asResponse(routes.check.response, await this.cancels.check(params.id, user));
   }
 
-  /** 409 already_cancelled, has_payments, has_lessons or has_commission. */
-  @Post(':id/cancel')
+  @Route(routes.cancel)
   @HttpCode(200)
   cancel(
-    @ZodParam('id', salesPackageIdSchema) id: string,
-    @ZodBody(subscriptionCancelSchema, { orEmpty: true }) body: SubscriptionCancel,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.cancel>,
     @CurrentUser() user: AuthUser,
-  ): Promise<SalesPackageCancelled> {
-    return this.cancels.cancel(id, body, user);
+  ) {
+    return this.cancels.cancel(params.id, body, user);
   }
 }

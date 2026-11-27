@@ -1,5 +1,4 @@
 import type { IntegrationSource, NumberPurpose, WaLine, WaProvider } from '@ab/catalog';
-import type { CommsSource } from '@ab/settings';
 import type { NumberEvolutionView } from './evolution';
 
 // Numbers (docs/23 §3): no view ever carries a token or secret value, only set or not with a date.
@@ -87,57 +86,6 @@ export interface ImportResult {
   dry_run: boolean;
   changed: boolean;
   roles: ImportRoleView[];
-}
-
-export const PARITY_FIELDS = [
-  'configured', 'provider', 'phone_number_id', 'waba_id', 'app_id', 'api_base', 'api_version',
-  'access_token', 'app_secret', 'webhook_phone_number_id',
-] as const;
-export type ParityField = (typeof PARITY_FIELDS)[number];
-export const SECRET_PARITY_FIELDS: readonly ParityField[] = ['access_token', 'app_secret'];
-
-/** missing = only one side has a value. */
-export type ParityState = 'same' | 'different' | 'missing';
-
-export interface ParityCell {
-  field: ParityField;
-  state: ParityState;
-  /** Plain fields: the value; secrets: 'set' or null (never the value). */
-  legacy: string | null;
-  module: string | null;
-}
-
-export interface ParityRoleView {
-  role: WaLine;
-  /** The role's default enabled number in module mode, if any. */
-  number_id: string | null;
-  number_label: string | null;
-  fields: ParityCell[];
-}
-
-/** GET /admin/communications/parity. The switch to module is refused while `differences` is non-empty. */
-export interface ParityView {
-  source: CommsSource;
-  roles: ParityRoleView[];
-  differences: { role: WaLine; field: ParityField; state: Exclude<ParityState, 'same'> }[];
-  /**
-   * docs/23b decision 5: per legacy-mapped notification rule, each part where the module path (the rule)
-   * and the legacy path (the settings keys) disagree; values JSON-encoded. The switch to module is
-   * refused while this or `differences` is non-empty. Optional only for older API builds.
-   */
-  rules?: RuleParityDiff[];
-}
-
-export interface RuleParityDiff {
-  key: string;
-  field: 'enabled' | 'timing';
-  legacy: string;
-  module: string;
-}
-
-/** POST /admin/communications/source → the source now in use. */
-export interface CommsSourceView {
-  source: CommsSource;
 }
 
 /**
