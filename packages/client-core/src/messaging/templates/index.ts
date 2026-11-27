@@ -9,3 +9,4 @@ export { bodyVarCount, draftParams, previewParams, retexted } from './template-d
 export { lineCheckCalls, type LineCheckCalls } from './line-check';
 export { crmWebhookCalls, type CrmWebhookCalls } from './crm-webhook';
 export { communicationsCalls, type CommunicationsCalls } from './communications';
+export { numbersCalls, type NumbersCalls, type NumberSecretTarget } from './numbers';

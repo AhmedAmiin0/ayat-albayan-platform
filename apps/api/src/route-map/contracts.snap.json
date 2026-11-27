@@ -98,6 +98,583 @@
    ]
   }
  },
+ "DELETE /admin/numbers/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": "empty"
+ },
+ "DELETE /admin/numbers/:id/secrets/:name": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "name": {
+     "type": "string",
+     "enum": [
+      "access_token",
+      "app_secret",
+      "evolution_token",
+      "evolution_cloud_token",
+      "evolution_proxy_password"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "name"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "label": {
+     "type": "string"
+    },
+    "purpose": {
+     "type": "string",
+     "enum": [
+      "notifications",
+      "chat",
+      "calls"
+     ]
+    },
+    "provider": {
+     "type": "string",
+     "enum": [
+      "meta",
+      "kapso",
+      "crm",
+      "evolution"
+     ]
+    },
+    "phone_number_id": {
+     "type": "string"
+    },
+    "waba_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "app_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "display_phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "enabled": {
+     "type": "boolean"
+    },
+    "is_default": {
+     "type": "boolean"
+    },
+    "fallback_rank": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "health": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "ok": {
+         "type": "boolean"
+        },
+        "status": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "quality_rating": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "verified_name": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "gaps": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "errors": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "ok",
+        "status",
+        "quality_rating",
+        "verified_name",
+        "gaps",
+        "errors"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "checked_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    },
+    "secrets": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "access_token",
+       "app_secret",
+       "evolution_token",
+       "evolution_cloud_token",
+       "evolution_proxy_password"
+      ]
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "set": {
+        "type": "boolean"
+       },
+       "updated_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "set",
+       "updated_at"
+      ]
+     },
+     "required": [
+      "access_token",
+      "app_secret",
+      "evolution_token",
+      "evolution_cloud_token",
+      "evolution_proxy_password"
+     ]
+    },
+    "evolution": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mode": {
+         "type": "string",
+         "enum": [
+          "baileys",
+          "cloud"
+         ]
+        },
+        "auto_sends": {
+         "type": "boolean"
+        },
+        "state": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "open",
+            "connecting",
+            "close",
+            "refused"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "state_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "config": {
+         "type": "object",
+         "properties": {
+          "behaviour": {
+           "default": {
+            "reject_call": false,
+            "msg_call": "",
+            "groups_ignore": true,
+            "read_messages": false,
+            "read_status": false,
+            "sync_full_history": false
+           },
+           "type": "object",
+           "properties": {
+            "reject_call": {
+             "default": false,
+             "type": "boolean"
+            },
+            "msg_call": {
+             "default": "",
+             "type": "string",
+             "maxLength": 500
+            },
+            "groups_ignore": {
+             "default": true,
+             "type": "boolean"
+            },
+            "read_messages": {
+             "default": false,
+             "type": "boolean"
+            },
+            "read_status": {
+             "default": false,
+             "type": "boolean"
+            },
+            "sync_full_history": {
+             "default": false,
+             "type": "boolean"
+            }
+           }
+          },
+          "webhook": {
+           "default": {
+            "enabled": true,
+            "origin": "internal",
+            "events": [
+             "MESSAGES_UPSERT",
+             "MESSAGES_UPDATE",
+             "SEND_MESSAGE",
+             "CONNECTION_UPDATE",
+             "QRCODE_UPDATED"
+            ]
+           },
+           "type": "object",
+           "properties": {
+            "enabled": {
+             "default": true,
+             "type": "boolean"
+            },
+            "origin": {
+             "default": "internal",
+             "type": "string",
+             "enum": [
+              "internal",
+              "public"
+             ]
+            },
+            "events": {
+             "default": [
+              "MESSAGES_UPSERT",
+              "MESSAGES_UPDATE",
+              "SEND_MESSAGE",
+              "CONNECTION_UPDATE",
+              "QRCODE_UPDATED"
+             ],
+             "minItems": 1,
+             "maxItems": 29,
+             "type": "array",
+             "items": {
+              "type": "string",
+              "enum": [
+               "APPLICATION_STARTUP",
+               "QRCODE_UPDATED",
+               "MESSAGES_SET",
+               "MESSAGES_UPSERT",
+               "MESSAGES_EDITED",
+               "MESSAGES_UPDATE",
+               "MESSAGES_DELETE",
+               "SEND_MESSAGE",
+               "SEND_MESSAGE_UPDATE",
+               "CONTACTS_SET",
+               "CONTACTS_UPSERT",
+               "CONTACTS_UPDATE",
+               "PRESENCE_UPDATE",
+               "CHATS_SET",
+               "CHATS_UPSERT",
+               "CHATS_UPDATE",
+               "CHATS_DELETE",
+               "GROUPS_UPSERT",
+               "GROUP_UPDATE",
+               "GROUP_PARTICIPANTS_UPDATE",
+               "CONNECTION_UPDATE",
+               "LABELS_EDIT",
+               "LABELS_ASSOCIATION",
+               "CALL",
+               "REMOVE_INSTANCE",
+               "LOGOUT_INSTANCE",
+               "INSTANCE_CREATE",
+               "INSTANCE_DELETE",
+               "STATUS_INSTANCE"
+              ]
+             }
+            }
+           }
+          },
+          "proxy": {
+           "default": {
+            "enabled": false,
+            "host": "",
+            "port": null,
+            "protocol": "http",
+            "username": ""
+           },
+           "type": "object",
+           "properties": {
+            "enabled": {
+             "default": false,
+             "type": "boolean"
+            },
+            "host": {
+             "default": "",
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^[A-Za-z0-9.-]{1,100}$"
+              },
+              {
+               "type": "string",
+               "const": ""
+              }
+             ]
+            },
+            "port": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "integer",
+               "minimum": 1,
+               "maximum": 65535
+              },
+              {
+               "type": "null"
+              }
+             ]
+            },
+            "protocol": {
+             "default": "http",
+             "type": "string",
+             "enum": [
+              "http",
+              "https",
+              "socks4",
+              "socks5"
+             ]
+            },
+            "username": {
+             "default": "",
+             "type": "string",
+             "maxLength": 100
+            }
+           }
+          },
+          "sending": {
+           "default": {
+            "link_preview": false
+           },
+           "type": "object",
+           "properties": {
+            "link_preview": {
+             "default": false,
+             "type": "boolean"
+            }
+           }
+          },
+          "limits": {
+           "default": {
+            "gap_ms": 3000,
+            "daily_cap": 60,
+            "error_trip": 3
+           },
+           "type": "object",
+           "properties": {
+            "gap_ms": {
+             "default": 3000,
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 60000
+            },
+            "daily_cap": {
+             "default": 60,
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 10000
+            },
+            "error_trip": {
+             "default": 3,
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 50
+            }
+           }
+          },
+          "cloud": {
+           "default": {
+            "phone_number_id": null,
+            "business_id": null
+           },
+           "type": "object",
+           "properties": {
+            "phone_number_id": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^\\d{1,32}$"
+              },
+              {
+               "type": "null"
+              }
+             ]
+            },
+            "business_id": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^\\d{1,32}$"
+              },
+              {
+               "type": "null"
+              }
+             ]
+            }
+           }
+          }
+         }
+        },
+        "sync": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "synced": {
+             "type": "boolean"
+            },
+            "checked_at": {
+             "type": "string"
+            },
+            "parts": {
+             "type": "object",
+             "propertyNames": {
+              "type": "string",
+              "enum": [
+               "instance",
+               "settings",
+               "webhook",
+               "proxy"
+              ]
+             },
+             "additionalProperties": {
+              "type": "string",
+              "enum": [
+               "synced",
+               "drift",
+               "failed",
+               "skipped",
+               "disabled"
+              ]
+             },
+             "required": [
+              "instance",
+              "settings",
+              "webhook",
+              "proxy"
+             ]
+            }
+           },
+           "required": [
+            "synced",
+            "checked_at",
+            "parts"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "hook_url": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mode",
+        "auto_sends",
+        "state",
+        "state_at",
+        "config",
+        "sync",
+        "hook_url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "label",
+    "purpose",
+    "provider",
+    "phone_number_id",
+    "waba_id",
+    "app_id",
+    "display_phone_e164",
+    "enabled",
+    "is_default",
+    "fallback_rank",
+    "health",
+    "checked_at",
+    "updated_at",
+    "secrets",
+    "evolution"
+   ]
+  }
+ },
  "DELETE /chat-lists/:id": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2154,6 +2731,544 @@
    ]
   }
  },
+ "GET /admin/numbers": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "label": {
+      "type": "string"
+     },
+     "purpose": {
+      "type": "string",
+      "enum": [
+       "notifications",
+       "chat",
+       "calls"
+      ]
+     },
+     "provider": {
+      "type": "string",
+      "enum": [
+       "meta",
+       "kapso",
+       "crm",
+       "evolution"
+      ]
+     },
+     "phone_number_id": {
+      "type": "string"
+     },
+     "waba_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "app_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "display_phone_e164": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "enabled": {
+      "type": "boolean"
+     },
+     "is_default": {
+      "type": "boolean"
+     },
+     "fallback_rank": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+     },
+     "health": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "ok": {
+          "type": "boolean"
+         },
+         "status": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "quality_rating": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "verified_name": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "gaps": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         },
+         "errors": {
+          "type": "number"
+         }
+        },
+        "required": [
+         "ok",
+         "status",
+         "quality_rating",
+         "verified_name",
+         "gaps",
+         "errors"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "checked_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "updated_at": {
+      "type": "string"
+     },
+     "secrets": {
+      "type": "object",
+      "propertyNames": {
+       "type": "string",
+       "enum": [
+        "access_token",
+        "app_secret",
+        "evolution_token",
+        "evolution_cloud_token",
+        "evolution_proxy_password"
+       ]
+      },
+      "additionalProperties": {
+       "type": "object",
+       "properties": {
+        "set": {
+         "type": "boolean"
+        },
+        "updated_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "set",
+        "updated_at"
+       ]
+      },
+      "required": [
+       "access_token",
+       "app_secret",
+       "evolution_token",
+       "evolution_cloud_token",
+       "evolution_proxy_password"
+      ]
+     },
+     "evolution": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "mode": {
+          "type": "string",
+          "enum": [
+           "baileys",
+           "cloud"
+          ]
+         },
+         "auto_sends": {
+          "type": "boolean"
+         },
+         "state": {
+          "anyOf": [
+           {
+            "type": "string",
+            "enum": [
+             "open",
+             "connecting",
+             "close",
+             "refused"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "state_at": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "config": {
+          "type": "object",
+          "properties": {
+           "behaviour": {
+            "default": {
+             "reject_call": false,
+             "msg_call": "",
+             "groups_ignore": true,
+             "read_messages": false,
+             "read_status": false,
+             "sync_full_history": false
+            },
+            "type": "object",
+            "properties": {
+             "reject_call": {
+              "default": false,
+              "type": "boolean"
+             },
+             "msg_call": {
+              "default": "",
+              "type": "string",
+              "maxLength": 500
+             },
+             "groups_ignore": {
+              "default": true,
+              "type": "boolean"
+             },
+             "read_messages": {
+              "default": false,
+              "type": "boolean"
+             },
+             "read_status": {
+              "default": false,
+              "type": "boolean"
+             },
+             "sync_full_history": {
+              "default": false,
+              "type": "boolean"
+             }
+            }
+           },
+           "webhook": {
+            "default": {
+             "enabled": true,
+             "origin": "internal",
+             "events": [
+              "MESSAGES_UPSERT",
+              "MESSAGES_UPDATE",
+              "SEND_MESSAGE",
+              "CONNECTION_UPDATE",
+              "QRCODE_UPDATED"
+             ]
+            },
+            "type": "object",
+            "properties": {
+             "enabled": {
+              "default": true,
+              "type": "boolean"
+             },
+             "origin": {
+              "default": "internal",
+              "type": "string",
+              "enum": [
+               "internal",
+               "public"
+              ]
+             },
+             "events": {
+              "default": [
+               "MESSAGES_UPSERT",
+               "MESSAGES_UPDATE",
+               "SEND_MESSAGE",
+               "CONNECTION_UPDATE",
+               "QRCODE_UPDATED"
+              ],
+              "minItems": 1,
+              "maxItems": 29,
+              "type": "array",
+              "items": {
+               "type": "string",
+               "enum": [
+                "APPLICATION_STARTUP",
+                "QRCODE_UPDATED",
+                "MESSAGES_SET",
+                "MESSAGES_UPSERT",
+                "MESSAGES_EDITED",
+                "MESSAGES_UPDATE",
+                "MESSAGES_DELETE",
+                "SEND_MESSAGE",
+                "SEND_MESSAGE_UPDATE",
+                "CONTACTS_SET",
+                "CONTACTS_UPSERT",
+                "CONTACTS_UPDATE",
+                "PRESENCE_UPDATE",
+                "CHATS_SET",
+                "CHATS_UPSERT",
+                "CHATS_UPDATE",
+                "CHATS_DELETE",
+                "GROUPS_UPSERT",
+                "GROUP_UPDATE",
+                "GROUP_PARTICIPANTS_UPDATE",
+                "CONNECTION_UPDATE",
+                "LABELS_EDIT",
+                "LABELS_ASSOCIATION",
+                "CALL",
+                "REMOVE_INSTANCE",
+                "LOGOUT_INSTANCE",
+                "INSTANCE_CREATE",
+                "INSTANCE_DELETE",
+                "STATUS_INSTANCE"
+               ]
+              }
+             }
+            }
+           },
+           "proxy": {
+            "default": {
+             "enabled": false,
+             "host": "",
+             "port": null,
+             "protocol": "http",
+             "username": ""
+            },
+            "type": "object",
+            "properties": {
+             "enabled": {
+              "default": false,
+              "type": "boolean"
+             },
+             "host": {
+              "default": "",
+              "anyOf": [
+               {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9.-]{1,100}$"
+               },
+               {
+                "type": "string",
+                "const": ""
+               }
+              ]
+             },
+             "port": {
+              "default": null,
+              "anyOf": [
+               {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 65535
+               },
+               {
+                "type": "null"
+               }
+              ]
+             },
+             "protocol": {
+              "default": "http",
+              "type": "string",
+              "enum": [
+               "http",
+               "https",
+               "socks4",
+               "socks5"
+              ]
+             },
+             "username": {
+              "default": "",
+              "type": "string",
+              "maxLength": 100
+             }
+            }
+           },
+           "sending": {
+            "default": {
+             "link_preview": false
+            },
+            "type": "object",
+            "properties": {
+             "link_preview": {
+              "default": false,
+              "type": "boolean"
+             }
+            }
+           },
+           "limits": {
+            "default": {
+             "gap_ms": 3000,
+             "daily_cap": 60,
+             "error_trip": 3
+            },
+            "type": "object",
+            "properties": {
+             "gap_ms": {
+              "default": 3000,
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 60000
+             },
+             "daily_cap": {
+              "default": 60,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000
+             },
+             "error_trip": {
+              "default": 3,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+             }
+            }
+           },
+           "cloud": {
+            "default": {
+             "phone_number_id": null,
+             "business_id": null
+            },
+            "type": "object",
+            "properties": {
+             "phone_number_id": {
+              "default": null,
+              "anyOf": [
+               {
+                "type": "string",
+                "pattern": "^\\d{1,32}$"
+               },
+               {
+                "type": "null"
+               }
+              ]
+             },
+             "business_id": {
+              "default": null,
+              "anyOf": [
+               {
+                "type": "string",
+                "pattern": "^\\d{1,32}$"
+               },
+               {
+                "type": "null"
+               }
+              ]
+             }
+            }
+           }
+          }
+         },
+         "sync": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "synced": {
+              "type": "boolean"
+             },
+             "checked_at": {
+              "type": "string"
+             },
+             "parts": {
+              "type": "object",
+              "propertyNames": {
+               "type": "string",
+               "enum": [
+                "instance",
+                "settings",
+                "webhook",
+                "proxy"
+               ]
+              },
+              "additionalProperties": {
+               "type": "string",
+               "enum": [
+                "synced",
+                "drift",
+                "failed",
+                "skipped",
+                "disabled"
+               ]
+              },
+              "required": [
+               "instance",
+               "settings",
+               "webhook",
+               "proxy"
+              ]
+             }
+            },
+            "required": [
+             "synced",
+             "checked_at",
+             "parts"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "hook_url": {
+          "type": [
+           "string",
+           "null"
+          ]
+         }
+        },
+        "required": [
+         "mode",
+         "auto_sends",
+         "state",
+         "state_at",
+         "config",
+         "sync",
+         "hook_url"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "label",
+     "purpose",
+     "provider",
+     "phone_number_id",
+     "waba_id",
+     "app_id",
+     "display_phone_e164",
+     "enabled",
+     "is_default",
+     "fallback_rank",
+     "health",
+     "checked_at",
+     "updated_at",
+     "secrets",
+     "evolution"
+    ]
+   }
+  }
+ },
  "GET /admin/numbers/:id/evolution/qr": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2199,6 +3314,22 @@
    },
    "required": [
     "id"
+   ]
+  }
+ },
+ "GET /admin/numbers/own-traffic": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "inbound_7d": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "inbound_7d"
    ]
   }
  },
@@ -11405,6 +12536,51 @@
    }
   }
  },
+ "GET /script-relay/api/v1/me": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "data": {
+     "type": "object",
+     "properties": {
+      "account": {
+       "type": "object",
+       "properties": {
+        "name": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "name"
+       ]
+      },
+      "key": {
+       "type": "object",
+       "properties": {
+        "scopes": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        }
+       },
+       "required": [
+        "scopes"
+       ]
+      }
+     },
+     "required": [
+      "account",
+      "key"
+     ]
+    }
+   },
+   "required": [
+    "data"
+   ]
+  }
+ },
  "GET /short-links": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -15788,6 +16964,20 @@
   }
  },
  "PATCH /admin/numbers/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
@@ -15869,6 +17059,539 @@
      "type": "boolean"
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "label": {
+     "type": "string"
+    },
+    "purpose": {
+     "type": "string",
+     "enum": [
+      "notifications",
+      "chat",
+      "calls"
+     ]
+    },
+    "provider": {
+     "type": "string",
+     "enum": [
+      "meta",
+      "kapso",
+      "crm",
+      "evolution"
+     ]
+    },
+    "phone_number_id": {
+     "type": "string"
+    },
+    "waba_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "app_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "display_phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "enabled": {
+     "type": "boolean"
+    },
+    "is_default": {
+     "type": "boolean"
+    },
+    "fallback_rank": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "health": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "ok": {
+         "type": "boolean"
+        },
+        "status": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "quality_rating": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "verified_name": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "gaps": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "errors": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "ok",
+        "status",
+        "quality_rating",
+        "verified_name",
+        "gaps",
+        "errors"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "checked_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    },
+    "secrets": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "access_token",
+       "app_secret",
+       "evolution_token",
+       "evolution_cloud_token",
+       "evolution_proxy_password"
+      ]
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "set": {
+        "type": "boolean"
+       },
+       "updated_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "set",
+       "updated_at"
+      ]
+     },
+     "required": [
+      "access_token",
+      "app_secret",
+      "evolution_token",
+      "evolution_cloud_token",
+      "evolution_proxy_password"
+     ]
+    },
+    "evolution": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mode": {
+         "type": "string",
+         "enum": [
+          "baileys",
+          "cloud"
+         ]
+        },
+        "auto_sends": {
+         "type": "boolean"
+        },
+        "state": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "open",
+            "connecting",
+            "close",
+            "refused"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "state_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "config": {
+         "type": "object",
+         "properties": {
+          "behaviour": {
+           "default": {
+            "reject_call": false,
+            "msg_call": "",
+            "groups_ignore": true,
+            "read_messages": false,
+            "read_status": false,
+            "sync_full_history": false
+           },
+           "type": "object",
+           "properties": {
+            "reject_call": {
+             "default": false,
+             "type": "boolean"
+            },
+            "msg_call": {
+             "default": "",
+             "type": "string",
+             "maxLength": 500
+            },
+            "groups_ignore": {
+             "default": true,
+             "type": "boolean"
+            },
+            "read_messages": {
+             "default": false,
+             "type": "boolean"
+            },
+            "read_status": {
+             "default": false,
+             "type": "boolean"
+            },
+            "sync_full_history": {
+             "default": false,
+             "type": "boolean"
+            }
+           }
+          },
+          "webhook": {
+           "default": {
+            "enabled": true,
+            "origin": "internal",
+            "events": [
+             "MESSAGES_UPSERT",
+             "MESSAGES_UPDATE",
+             "SEND_MESSAGE",
+             "CONNECTION_UPDATE",
+             "QRCODE_UPDATED"
+            ]
+           },
+           "type": "object",
+           "properties": {
+            "enabled": {
+             "default": true,
+             "type": "boolean"
+            },
+            "origin": {
+             "default": "internal",
+             "type": "string",
+             "enum": [
+              "internal",
+              "public"
+             ]
+            },
+            "events": {
+             "default": [
+              "MESSAGES_UPSERT",
+              "MESSAGES_UPDATE",
+              "SEND_MESSAGE",
+              "CONNECTION_UPDATE",
+              "QRCODE_UPDATED"
+             ],
+             "minItems": 1,
+             "maxItems": 29,
+             "type": "array",
+             "items": {
+              "type": "string",
+              "enum": [
+               "APPLICATION_STARTUP",
+               "QRCODE_UPDATED",
+               "MESSAGES_SET",
+               "MESSAGES_UPSERT",
+               "MESSAGES_EDITED",
+               "MESSAGES_UPDATE",
+               "MESSAGES_DELETE",
+               "SEND_MESSAGE",
+               "SEND_MESSAGE_UPDATE",
+               "CONTACTS_SET",
+               "CONTACTS_UPSERT",
+               "CONTACTS_UPDATE",
+               "PRESENCE_UPDATE",
+               "CHATS_SET",
+               "CHATS_UPSERT",
+               "CHATS_UPDATE",
+               "CHATS_DELETE",
+               "GROUPS_UPSERT",
+               "GROUP_UPDATE",
+               "GROUP_PARTICIPANTS_UPDATE",
+               "CONNECTION_UPDATE",
+               "LABELS_EDIT",
+               "LABELS_ASSOCIATION",
+               "CALL",
+               "REMOVE_INSTANCE",
+               "LOGOUT_INSTANCE",
+               "INSTANCE_CREATE",
+               "INSTANCE_DELETE",
+               "STATUS_INSTANCE"
+              ]
+             }
+            }
+           }
+          },
+          "proxy": {
+           "default": {
+            "enabled": false,
+            "host": "",
+            "port": null,
+            "protocol": "http",
+            "username": ""
+           },
+           "type": "object",
+           "properties": {
+            "enabled": {
+             "default": false,
+             "type": "boolean"
+            },
+            "host": {
+             "default": "",
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^[A-Za-z0-9.-]{1,100}$"
+              },
+              {
+               "type": "string",
+               "const": ""
+              }
+             ]
+            },
+            "port": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "integer",
+               "minimum": 1,
+               "maximum": 65535
+              },
+              {
+               "type": "null"
+              }
+             ]
+            },
+            "protocol": {
+             "default": "http",
+             "type": "string",
+             "enum": [
+              "http",
+              "https",
+              "socks4",
+              "socks5"
+             ]
+            },
+            "username": {
+             "default": "",
+             "type": "string",
+             "maxLength": 100
+            }
+           }
+          },
+          "sending": {
+           "default": {
+            "link_preview": false
+           },
+           "type": "object",
+           "properties": {
+            "link_preview": {
+             "default": false,
+             "type": "boolean"
+            }
+           }
+          },
+          "limits": {
+           "default": {
+            "gap_ms": 3000,
+            "daily_cap": 60,
+            "error_trip": 3
+           },
+           "type": "object",
+           "properties": {
+            "gap_ms": {
+             "default": 3000,
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 60000
+            },
+            "daily_cap": {
+             "default": 60,
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 10000
+            },
+            "error_trip": {
+             "default": 3,
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 50
+            }
+           }
+          },
+          "cloud": {
+           "default": {
+            "phone_number_id": null,
+            "business_id": null
+           },
+           "type": "object",
+           "properties": {
+            "phone_number_id": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^\\d{1,32}$"
+              },
+              {
+               "type": "null"
+              }
+             ]
+            },
+            "business_id": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^\\d{1,32}$"
+              },
+              {
+               "type": "null"
+              }
+             ]
+            }
+           }
+          }
+         }
+        },
+        "sync": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "synced": {
+             "type": "boolean"
+            },
+            "checked_at": {
+             "type": "string"
+            },
+            "parts": {
+             "type": "object",
+             "propertyNames": {
+              "type": "string",
+              "enum": [
+               "instance",
+               "settings",
+               "webhook",
+               "proxy"
+              ]
+             },
+             "additionalProperties": {
+              "type": "string",
+              "enum": [
+               "synced",
+               "drift",
+               "failed",
+               "skipped",
+               "disabled"
+              ]
+             },
+             "required": [
+              "instance",
+              "settings",
+              "webhook",
+              "proxy"
+             ]
+            }
+           },
+           "required": [
+            "synced",
+            "checked_at",
+            "parts"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "hook_url": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mode",
+        "auto_sends",
+        "state",
+        "state_at",
+        "config",
+        "sync",
+        "hook_url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "label",
+    "purpose",
+    "provider",
+    "phone_number_id",
+    "waba_id",
+    "app_id",
+    "display_phone_e164",
+    "enabled",
+    "is_default",
+    "fallback_rank",
+    "health",
+    "checked_at",
+    "updated_at",
+    "secrets",
+    "evolution"
+   ]
   }
  },
  "PATCH /admin/users/:id/test": {
@@ -19881,6 +21604,539 @@
     "purpose",
     "phone_number_id"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "label": {
+     "type": "string"
+    },
+    "purpose": {
+     "type": "string",
+     "enum": [
+      "notifications",
+      "chat",
+      "calls"
+     ]
+    },
+    "provider": {
+     "type": "string",
+     "enum": [
+      "meta",
+      "kapso",
+      "crm",
+      "evolution"
+     ]
+    },
+    "phone_number_id": {
+     "type": "string"
+    },
+    "waba_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "app_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "display_phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "enabled": {
+     "type": "boolean"
+    },
+    "is_default": {
+     "type": "boolean"
+    },
+    "fallback_rank": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "health": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "ok": {
+         "type": "boolean"
+        },
+        "status": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "quality_rating": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "verified_name": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "gaps": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "errors": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "ok",
+        "status",
+        "quality_rating",
+        "verified_name",
+        "gaps",
+        "errors"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "checked_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    },
+    "secrets": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "access_token",
+       "app_secret",
+       "evolution_token",
+       "evolution_cloud_token",
+       "evolution_proxy_password"
+      ]
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "set": {
+        "type": "boolean"
+       },
+       "updated_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "set",
+       "updated_at"
+      ]
+     },
+     "required": [
+      "access_token",
+      "app_secret",
+      "evolution_token",
+      "evolution_cloud_token",
+      "evolution_proxy_password"
+     ]
+    },
+    "evolution": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mode": {
+         "type": "string",
+         "enum": [
+          "baileys",
+          "cloud"
+         ]
+        },
+        "auto_sends": {
+         "type": "boolean"
+        },
+        "state": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "open",
+            "connecting",
+            "close",
+            "refused"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "state_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "config": {
+         "type": "object",
+         "properties": {
+          "behaviour": {
+           "default": {
+            "reject_call": false,
+            "msg_call": "",
+            "groups_ignore": true,
+            "read_messages": false,
+            "read_status": false,
+            "sync_full_history": false
+           },
+           "type": "object",
+           "properties": {
+            "reject_call": {
+             "default": false,
+             "type": "boolean"
+            },
+            "msg_call": {
+             "default": "",
+             "type": "string",
+             "maxLength": 500
+            },
+            "groups_ignore": {
+             "default": true,
+             "type": "boolean"
+            },
+            "read_messages": {
+             "default": false,
+             "type": "boolean"
+            },
+            "read_status": {
+             "default": false,
+             "type": "boolean"
+            },
+            "sync_full_history": {
+             "default": false,
+             "type": "boolean"
+            }
+           }
+          },
+          "webhook": {
+           "default": {
+            "enabled": true,
+            "origin": "internal",
+            "events": [
+             "MESSAGES_UPSERT",
+             "MESSAGES_UPDATE",
+             "SEND_MESSAGE",
+             "CONNECTION_UPDATE",
+             "QRCODE_UPDATED"
+            ]
+           },
+           "type": "object",
+           "properties": {
+            "enabled": {
+             "default": true,
+             "type": "boolean"
+            },
+            "origin": {
+             "default": "internal",
+             "type": "string",
+             "enum": [
+              "internal",
+              "public"
+             ]
+            },
+            "events": {
+             "default": [
+              "MESSAGES_UPSERT",
+              "MESSAGES_UPDATE",
+              "SEND_MESSAGE",
+              "CONNECTION_UPDATE",
+              "QRCODE_UPDATED"
+             ],
+             "minItems": 1,
+             "maxItems": 29,
+             "type": "array",
+             "items": {
+              "type": "string",
+              "enum": [
+               "APPLICATION_STARTUP",
+               "QRCODE_UPDATED",
+               "MESSAGES_SET",
+               "MESSAGES_UPSERT",
+               "MESSAGES_EDITED",
+               "MESSAGES_UPDATE",
+               "MESSAGES_DELETE",
+               "SEND_MESSAGE",
+               "SEND_MESSAGE_UPDATE",
+               "CONTACTS_SET",
+               "CONTACTS_UPSERT",
+               "CONTACTS_UPDATE",
+               "PRESENCE_UPDATE",
+               "CHATS_SET",
+               "CHATS_UPSERT",
+               "CHATS_UPDATE",
+               "CHATS_DELETE",
+               "GROUPS_UPSERT",
+               "GROUP_UPDATE",
+               "GROUP_PARTICIPANTS_UPDATE",
+               "CONNECTION_UPDATE",
+               "LABELS_EDIT",
+               "LABELS_ASSOCIATION",
+               "CALL",
+               "REMOVE_INSTANCE",
+               "LOGOUT_INSTANCE",
+               "INSTANCE_CREATE",
+               "INSTANCE_DELETE",
+               "STATUS_INSTANCE"
+              ]
+             }
+            }
+           }
+          },
+          "proxy": {
+           "default": {
+            "enabled": false,
+            "host": "",
+            "port": null,
+            "protocol": "http",
+            "username": ""
+           },
+           "type": "object",
+           "properties": {
+            "enabled": {
+             "default": false,
+             "type": "boolean"
+            },
+            "host": {
+             "default": "",
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^[A-Za-z0-9.-]{1,100}$"
+              },
+              {
+               "type": "string",
+               "const": ""
+              }
+             ]
+            },
+            "port": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "integer",
+               "minimum": 1,
+               "maximum": 65535
+              },
+              {
+               "type": "null"
+              }
+             ]
+            },
+            "protocol": {
+             "default": "http",
+             "type": "string",
+             "enum": [
+              "http",
+              "https",
+              "socks4",
+              "socks5"
+             ]
+            },
+            "username": {
+             "default": "",
+             "type": "string",
+             "maxLength": 100
+            }
+           }
+          },
+          "sending": {
+           "default": {
+            "link_preview": false
+           },
+           "type": "object",
+           "properties": {
+            "link_preview": {
+             "default": false,
+             "type": "boolean"
+            }
+           }
+          },
+          "limits": {
+           "default": {
+            "gap_ms": 3000,
+            "daily_cap": 60,
+            "error_trip": 3
+           },
+           "type": "object",
+           "properties": {
+            "gap_ms": {
+             "default": 3000,
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 60000
+            },
+            "daily_cap": {
+             "default": 60,
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 10000
+            },
+            "error_trip": {
+             "default": 3,
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 50
+            }
+           }
+          },
+          "cloud": {
+           "default": {
+            "phone_number_id": null,
+            "business_id": null
+           },
+           "type": "object",
+           "properties": {
+            "phone_number_id": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^\\d{1,32}$"
+              },
+              {
+               "type": "null"
+              }
+             ]
+            },
+            "business_id": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^\\d{1,32}$"
+              },
+              {
+               "type": "null"
+              }
+             ]
+            }
+           }
+          }
+         }
+        },
+        "sync": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "synced": {
+             "type": "boolean"
+            },
+            "checked_at": {
+             "type": "string"
+            },
+            "parts": {
+             "type": "object",
+             "propertyNames": {
+              "type": "string",
+              "enum": [
+               "instance",
+               "settings",
+               "webhook",
+               "proxy"
+              ]
+             },
+             "additionalProperties": {
+              "type": "string",
+              "enum": [
+               "synced",
+               "drift",
+               "failed",
+               "skipped",
+               "disabled"
+              ]
+             },
+             "required": [
+              "instance",
+              "settings",
+              "webhook",
+              "proxy"
+             ]
+            }
+           },
+           "required": [
+            "synced",
+            "checked_at",
+            "parts"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "hook_url": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mode",
+        "auto_sends",
+        "state",
+        "state_at",
+        "config",
+        "sync",
+        "hook_url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "label",
+    "purpose",
+    "provider",
+    "phone_number_id",
+    "waba_id",
+    "app_id",
+    "display_phone_e164",
+    "enabled",
+    "is_default",
+    "fallback_rank",
+    "health",
+    "checked_at",
+    "updated_at",
+    "secrets",
+    "evolution"
+   ]
   }
  },
  "POST /admin/numbers/:id/evolution/sync": {
@@ -19910,6 +22166,141 @@
    },
    "required": [
     "dryRun"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "dry_run": {
+     "type": "boolean"
+    },
+    "changed": {
+     "type": "boolean"
+    },
+    "roles": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "role": {
+        "type": "string",
+        "enum": [
+         "notifications",
+         "chat"
+        ]
+       },
+       "action": {
+        "type": "string",
+        "enum": [
+         "create",
+         "exists",
+         "unconfigured"
+        ]
+       },
+       "number_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "fields": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "field": {
+           "type": "string",
+           "enum": [
+            "provider",
+            "phone_number_id",
+            "waba_id",
+            "app_id",
+            "access_token",
+            "app_secret"
+           ]
+          },
+          "secret": {
+           "type": "boolean"
+          },
+          "source": {
+           "type": "string",
+           "enum": [
+            "db",
+            "env",
+            "unset"
+           ]
+          },
+          "value": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "field",
+          "secret",
+          "source",
+          "value"
+         ]
+        }
+       },
+       "secrets_to_copy": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "enum": [
+          "access_token",
+          "app_secret",
+          "evolution_token",
+          "evolution_cloud_token",
+          "evolution_proxy_password"
+         ]
+        }
+       },
+       "not_importable": {
+        "type": "object",
+        "properties": {
+         "reason": {
+          "type": "string",
+          "const": "invalid_id"
+         },
+         "fields": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "enum": [
+            "provider",
+            "phone_number_id",
+            "waba_id",
+            "app_id",
+            "access_token",
+            "app_secret"
+           ]
+          }
+         }
+        },
+        "required": [
+         "reason",
+         "fields"
+        ]
+       }
+      },
+      "required": [
+       "role",
+       "action",
+       "number_id",
+       "fields",
+       "secrets_to_copy"
+      ]
+     }
+    }
+   },
+   "required": [
+    "dry_run",
+    "changed",
+    "roles"
    ]
   }
  },
@@ -33542,6 +35933,35 @@
    }
   }
  },
+ "POST /script-relay/api/v1/messages": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "data": {
+     "type": "object",
+     "properties": {
+      "message_id": {
+       "type": "string"
+      },
+      "whatsapp_message_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     },
+     "required": [
+      "message_id",
+      "whatsapp_message_id"
+     ]
+    }
+   },
+   "required": [
+    "data"
+   ]
+  }
+ },
  "POST /settings/integrations/crm-webhook": {
   "response": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -37444,6 +39864,580 @@
      }
     }
    }
+  }
+ },
+ "PUT /admin/numbers/:id/secrets/:name": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "name": {
+     "type": "string",
+     "enum": [
+      "access_token",
+      "app_secret",
+      "evolution_token",
+      "evolution_cloud_token",
+      "evolution_proxy_password"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "name"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "value": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 4096
+    }
+   },
+   "required": [
+    "value"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "label": {
+     "type": "string"
+    },
+    "purpose": {
+     "type": "string",
+     "enum": [
+      "notifications",
+      "chat",
+      "calls"
+     ]
+    },
+    "provider": {
+     "type": "string",
+     "enum": [
+      "meta",
+      "kapso",
+      "crm",
+      "evolution"
+     ]
+    },
+    "phone_number_id": {
+     "type": "string"
+    },
+    "waba_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "app_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "display_phone_e164": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "enabled": {
+     "type": "boolean"
+    },
+    "is_default": {
+     "type": "boolean"
+    },
+    "fallback_rank": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "health": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "ok": {
+         "type": "boolean"
+        },
+        "status": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "quality_rating": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "verified_name": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "gaps": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "errors": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "ok",
+        "status",
+        "quality_rating",
+        "verified_name",
+        "gaps",
+        "errors"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "checked_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "updated_at": {
+     "type": "string"
+    },
+    "secrets": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string",
+      "enum": [
+       "access_token",
+       "app_secret",
+       "evolution_token",
+       "evolution_cloud_token",
+       "evolution_proxy_password"
+      ]
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "set": {
+        "type": "boolean"
+       },
+       "updated_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "set",
+       "updated_at"
+      ]
+     },
+     "required": [
+      "access_token",
+      "app_secret",
+      "evolution_token",
+      "evolution_cloud_token",
+      "evolution_proxy_password"
+     ]
+    },
+    "evolution": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "mode": {
+         "type": "string",
+         "enum": [
+          "baileys",
+          "cloud"
+         ]
+        },
+        "auto_sends": {
+         "type": "boolean"
+        },
+        "state": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "open",
+            "connecting",
+            "close",
+            "refused"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "state_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "config": {
+         "type": "object",
+         "properties": {
+          "behaviour": {
+           "default": {
+            "reject_call": false,
+            "msg_call": "",
+            "groups_ignore": true,
+            "read_messages": false,
+            "read_status": false,
+            "sync_full_history": false
+           },
+           "type": "object",
+           "properties": {
+            "reject_call": {
+             "default": false,
+             "type": "boolean"
+            },
+            "msg_call": {
+             "default": "",
+             "type": "string",
+             "maxLength": 500
+            },
+            "groups_ignore": {
+             "default": true,
+             "type": "boolean"
+            },
+            "read_messages": {
+             "default": false,
+             "type": "boolean"
+            },
+            "read_status": {
+             "default": false,
+             "type": "boolean"
+            },
+            "sync_full_history": {
+             "default": false,
+             "type": "boolean"
+            }
+           }
+          },
+          "webhook": {
+           "default": {
+            "enabled": true,
+            "origin": "internal",
+            "events": [
+             "MESSAGES_UPSERT",
+             "MESSAGES_UPDATE",
+             "SEND_MESSAGE",
+             "CONNECTION_UPDATE",
+             "QRCODE_UPDATED"
+            ]
+           },
+           "type": "object",
+           "properties": {
+            "enabled": {
+             "default": true,
+             "type": "boolean"
+            },
+            "origin": {
+             "default": "internal",
+             "type": "string",
+             "enum": [
+              "internal",
+              "public"
+             ]
+            },
+            "events": {
+             "default": [
+              "MESSAGES_UPSERT",
+              "MESSAGES_UPDATE",
+              "SEND_MESSAGE",
+              "CONNECTION_UPDATE",
+              "QRCODE_UPDATED"
+             ],
+             "minItems": 1,
+             "maxItems": 29,
+             "type": "array",
+             "items": {
+              "type": "string",
+              "enum": [
+               "APPLICATION_STARTUP",
+               "QRCODE_UPDATED",
+               "MESSAGES_SET",
+               "MESSAGES_UPSERT",
+               "MESSAGES_EDITED",
+               "MESSAGES_UPDATE",
+               "MESSAGES_DELETE",
+               "SEND_MESSAGE",
+               "SEND_MESSAGE_UPDATE",
+               "CONTACTS_SET",
+               "CONTACTS_UPSERT",
+               "CONTACTS_UPDATE",
+               "PRESENCE_UPDATE",
+               "CHATS_SET",
+               "CHATS_UPSERT",
+               "CHATS_UPDATE",
+               "CHATS_DELETE",
+               "GROUPS_UPSERT",
+               "GROUP_UPDATE",
+               "GROUP_PARTICIPANTS_UPDATE",
+               "CONNECTION_UPDATE",
+               "LABELS_EDIT",
+               "LABELS_ASSOCIATION",
+               "CALL",
+               "REMOVE_INSTANCE",
+               "LOGOUT_INSTANCE",
+               "INSTANCE_CREATE",
+               "INSTANCE_DELETE",
+               "STATUS_INSTANCE"
+              ]
+             }
+            }
+           }
+          },
+          "proxy": {
+           "default": {
+            "enabled": false,
+            "host": "",
+            "port": null,
+            "protocol": "http",
+            "username": ""
+           },
+           "type": "object",
+           "properties": {
+            "enabled": {
+             "default": false,
+             "type": "boolean"
+            },
+            "host": {
+             "default": "",
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^[A-Za-z0-9.-]{1,100}$"
+              },
+              {
+               "type": "string",
+               "const": ""
+              }
+             ]
+            },
+            "port": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "integer",
+               "minimum": 1,
+               "maximum": 65535
+              },
+              {
+               "type": "null"
+              }
+             ]
+            },
+            "protocol": {
+             "default": "http",
+             "type": "string",
+             "enum": [
+              "http",
+              "https",
+              "socks4",
+              "socks5"
+             ]
+            },
+            "username": {
+             "default": "",
+             "type": "string",
+             "maxLength": 100
+            }
+           }
+          },
+          "sending": {
+           "default": {
+            "link_preview": false
+           },
+           "type": "object",
+           "properties": {
+            "link_preview": {
+             "default": false,
+             "type": "boolean"
+            }
+           }
+          },
+          "limits": {
+           "default": {
+            "gap_ms": 3000,
+            "daily_cap": 60,
+            "error_trip": 3
+           },
+           "type": "object",
+           "properties": {
+            "gap_ms": {
+             "default": 3000,
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 60000
+            },
+            "daily_cap": {
+             "default": 60,
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 10000
+            },
+            "error_trip": {
+             "default": 3,
+             "type": "integer",
+             "minimum": 1,
+             "maximum": 50
+            }
+           }
+          },
+          "cloud": {
+           "default": {
+            "phone_number_id": null,
+            "business_id": null
+           },
+           "type": "object",
+           "properties": {
+            "phone_number_id": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^\\d{1,32}$"
+              },
+              {
+               "type": "null"
+              }
+             ]
+            },
+            "business_id": {
+             "default": null,
+             "anyOf": [
+              {
+               "type": "string",
+               "pattern": "^\\d{1,32}$"
+              },
+              {
+               "type": "null"
+              }
+             ]
+            }
+           }
+          }
+         }
+        },
+        "sync": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "synced": {
+             "type": "boolean"
+            },
+            "checked_at": {
+             "type": "string"
+            },
+            "parts": {
+             "type": "object",
+             "propertyNames": {
+              "type": "string",
+              "enum": [
+               "instance",
+               "settings",
+               "webhook",
+               "proxy"
+              ]
+             },
+             "additionalProperties": {
+              "type": "string",
+              "enum": [
+               "synced",
+               "drift",
+               "failed",
+               "skipped",
+               "disabled"
+              ]
+             },
+             "required": [
+              "instance",
+              "settings",
+              "webhook",
+              "proxy"
+             ]
+            }
+           },
+           "required": [
+            "synced",
+            "checked_at",
+            "parts"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "hook_url": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "mode",
+        "auto_sends",
+        "state",
+        "state_at",
+        "config",
+        "sync",
+        "hook_url"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "label",
+    "purpose",
+    "provider",
+    "phone_number_id",
+    "waba_id",
+    "app_id",
+    "display_phone_e164",
+    "enabled",
+    "is_default",
+    "fallback_rank",
+    "health",
+    "checked_at",
+    "updated_at",
+    "secrets",
+    "evolution"
+   ]
   }
  },
  "PUT /chat-lists/:id/threads/:phone": {
