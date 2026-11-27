@@ -1,8 +1,9 @@
-import { REGISTRATION_NAME_MIN, searchChars, type RegistrationCheckView } from '@ab/shared';
+import { registrationCheckCalls } from '@ab/client-core';
+import { REGISTRATION_NAME_MIN, searchChars } from '@ab/shared';
 import { normalizePhone } from '@ab/core';
 import type { RegistrationCheckBy, RegistrationCheckQuery } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { ApiError, apiFetch, toQueryString, t } from '@ab/mobile-kit';
+import { ApiError, apiFetch, apiSend, t } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
 
 // The registration check (docs/16 row 23): is this family / child already a student?
@@ -25,10 +26,10 @@ export function searchOf(by: RegistrationCheckBy, text: string): SearchResult {
   return phone.ok ? { search: { by, phone: phone.e164 } } : { error: 'invalid_phone' };
 }
 
-function checkPath(search: RegistrationCheckQuery): string {
-  const params = search.by === 'phone' ? { phone: search.phone } : { q: search.q };
-  return `/sales/registration-check${toQueryString(params)}`;
-}
+const registration = registrationCheckCalls({ apiFetch, apiSend });
+
+const queryOf = (search: RegistrationCheckQuery) =>
+  search.by === 'phone' ? { phone: search.phone } : { q: search.q };
 
 const known = (code: unknown): code is CheckErrorCode =>
   typeof code === 'string' && Object.prototype.hasOwnProperty.call(t.registrationCheck.error, code);
@@ -56,7 +57,7 @@ export function checkErrorText(error: unknown): string {
 export function useRegistrationCheck(search: RegistrationCheckQuery | null) {
   return useQuery({
     queryKey: salesKeys.registrationCheck(search),
-    queryFn: () => apiFetch<RegistrationCheckView>(search ? checkPath(search) : ''),
+    queryFn: () => registration.check(search ? queryOf(search) : {}),
     enabled: search !== null,
     staleTime: 0,
   });

@@ -1,4 +1,4 @@
-import type { UsedBeforeState } from '@ab/shared';
+import type { UsedBeforeEditResult, UsedBeforeState } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { UsedBeforeEdit } from './UsedBeforeEdit';
@@ -13,6 +13,10 @@ export const PATH = '/subscriptions/sub1/lessons-used-before';
 export const stateOf = (over: Partial<UsedBeforeState> = {}): UsedBeforeState => ({
   subscription_id: 'sub1', lessons_used_before: 1, max: 5, blocked: null, ...over,
 });
+
+export const RESULT: UsedBeforeEditResult = {
+  subscription_id: 'sub1', lessons_total: 8, lessons_used_before: 2, lessons_used: 3, remaining: 5,
+};
 
 export const show = (sub: EditablePackage = SUB, client = createTestQueryClient()) =>
   renderWithQuery(<UsedBeforeEdit sub={sub} stale={[['sales']]} />, client);
