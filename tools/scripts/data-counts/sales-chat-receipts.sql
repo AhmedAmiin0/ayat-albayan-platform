@@ -5,4 +5,4 @@ where direction = 'inbound' and media_mime is not null and created_at is null;
 
 -- count: sales_chat_receipts_blank_mime
 select count(*) from public.messages
-where direction = 'inbound' and media_mime is not null and btrim(media_mime) = '';
+where direction = 'inbound' and media_mime is not null and media_mime = '';
