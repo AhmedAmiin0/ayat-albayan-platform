@@ -58,6 +58,23 @@ Merges into a base are verified in the session, not by a CI run, so the keeper c
 
 docs/62 is the spec and the base's own history is the example: a test that pins the routes and the client calls before they exist; then the routes and schemas moved into packages, the controller on `@Route` and `@RouteInput()`, read-route mappers through `asResponse`, the client on `call({ route, … })`; then the lint entries the move freed, pruned. Wire changes are only the rows of docs/62 part 1 §6 marked for the PR the base lands as; anything else is left out and listed in the sub-PR body under «Needs a new go». No new code uses `apiFetch`, `apiSend`, `publicApiFetch` or `publicApiSend` (docs/62 part 3 §3b).
 
+## The shared package's top level is full
+
+`packages/shared/src` holds 13 folders, the most its folder cap allows (`refactor/folder-cap/packages.json`). A fourteenth fails the `refactor` check and costs the sub-PR a run. Put an area's schemas and routes inside the top-level folder that already owns it:
+
+| Area | Folder in `packages/shared/src` |
+|---|---|
+| finance | `finance/` |
+| people | `people/` |
+| booking, scheduling, lessons, classroom, course pause and stop | `schedule/` |
+| feedback, recordings, lesson files, lesson reports | `reports/` |
+| messaging, student channels | `messaging/` |
+| notification rules and push | `notifications/` |
+| sales | `sales/` |
+| platform (settings, translations, google sync, short links) | `settings/`; what is already in `schemas/` stays there |
+
+A new sub-folder inside one of these is fine, within the same cap of 12 code files and 12 sub-folders. Before each push run `node tools/scripts/ci-checks/folder-cap.mjs --strict` in the session, beside the other checks.
+
 ## Call files stay plain
 
 A call file (`x-api.ts` in client-core) is read by people who did not write it. Keep it a flat list.
