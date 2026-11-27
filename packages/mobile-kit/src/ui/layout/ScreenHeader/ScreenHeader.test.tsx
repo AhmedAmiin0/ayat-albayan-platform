@@ -38,3 +38,10 @@ test('leading sits before the title (the inline-start), the mark stays at the en
   expect(first?.props.children).toBe('back');
   expect(screen.getByTestId('mark-small', { includeHiddenElements: true })).toBeTruthy();
 });
+
+test('a count the API returned follows the title; none while it loads', async () => {
+  await render(<ScreenHeader title="الطلاب" count={107} />);
+  expect(screen.getByText(' · 107')).toBeTruthy();
+  await render(<ScreenHeader title="الطلاب" />);
+  expect(screen.queryByText(/ · /)).toBeNull();
+});

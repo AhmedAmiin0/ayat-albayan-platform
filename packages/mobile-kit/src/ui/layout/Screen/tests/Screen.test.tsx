@@ -1,8 +1,9 @@
 import { render, screen, within } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { FullScreenProvider, Screen } from '../Screen';
+import { FullScreenProvider } from '../full-screen-context';
+import { Screen } from '../Screen';
 
-// The safe-area host gets every edge as additive / off (SafeAreaView turns the edges list into that).
+// The safe-area host gets every edge as additive / off: SafeAreaView turns the list into that.
 const bottom = () => screen.toJSON()?.props.edges?.bottom;
 
 test('scroll: the rows sit in a ScrollView, so the last one («تسجيل الخروج») can always be reached', async () => {
@@ -48,4 +49,13 @@ test('the bottom safe area: off in a tab screen (the tab bar owns it), on for a 
   );
   expect(bottom()).toBe('additive');
   expect(screen.toJSON()?.props.edges?.top).toBe('additive');
+});
+
+test('blocks sit 16pt apart; a chat and a list keep the tight 8pt rhythm', async () => {
+  await render(<Screen>{<Text>row</Text>}</Screen>);
+  expect(screen.getByTestId('screen-body')).toHaveStyle({ gap: 16, paddingHorizontal: 16 });
+  await render(<Screen list>{<Text>row</Text>}</Screen>);
+  expect(screen.getByTestId('screen-body')).toHaveStyle({ gap: 8 });
+  await render(<Screen chat>{<Text>row</Text>}</Screen>);
+  expect(screen.getByTestId('screen-body')).toHaveStyle({ gap: 8 });
 });

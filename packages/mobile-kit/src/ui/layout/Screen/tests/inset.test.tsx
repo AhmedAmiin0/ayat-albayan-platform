@@ -6,7 +6,7 @@ import { Screen } from '../Screen';
 
 // The floating tab bar reaches 100pt up from the screen's bottom here (its gap + the capsule).
 const underBar = (ui: ReactElement) =>
-  render(<BottomTabBarHeightContext.Provider value={100}>{ui}</BottomTabBarHeightContext.Provider>);
+  render(<BottomTabBarHeightContext value={100}>{ui}</BottomTabBarHeightContext>);
 const row = <Text>row</Text>;
 
 test('default: the content stops above the bar, so nothing is ever covered', async () => {
@@ -21,7 +21,9 @@ test('list: the frame adds nothing, its list runs under the bar and pads itself'
 
 test('scroll: the rows run under the bar and the last one ends 24pt above it', async () => {
   await underBar(<Screen scroll>{row}</Screen>);
-  expect(screen.getByTestId('screen-scroll').props.contentContainerStyle).toMatchObject({ paddingBottom: 124 });
+  expect(screen.getByTestId('screen-scroll').props.contentContainerStyle).toMatchObject({
+    paddingBottom: 124,
+  });
 });
 
 test('chat: no bar inset (a chat hides the bar)', async () => {

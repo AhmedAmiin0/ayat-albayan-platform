@@ -1,1 +1,2 @@
-export { FullScreenProvider, Screen } from './Screen';
+export { FullScreenProvider } from './full-screen-context';
+export { Screen } from './Screen';
