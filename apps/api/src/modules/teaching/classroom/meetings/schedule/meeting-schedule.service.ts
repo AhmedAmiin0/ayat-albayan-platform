@@ -1,8 +1,7 @@
-import { meetingState, updateMeetingSchema } from '@ab/schedule';
+import { meetingState, type UpdateMeeting } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ar } from '@/common/infra/i18n/server-text';
-import { parseOrThrow } from '@/common/http/http';
 import { meetingEnded } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.join.service';
 import { InternalMeetingsRepo, type MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { InternalMeetingsService } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.service';
@@ -44,8 +43,8 @@ export class MeetingScheduleService {
     private readonly deps: MeetingScheduleDeps,
   ) {}
 
-  async update(input: { user: AuthUser; id: string; body: unknown }, now = new Date()): Promise<void> {
-    const patch = parseOrThrow(updateMeetingSchema, input.body);
+  async update(input: { user: AuthUser; id: string; patch: UpdateMeeting }, now = new Date()): Promise<void> {
+    const { patch } = input;
     const { row } = await this.meetings.managedOpen(input, now);
     const times = rescheduleTimes(row, patch, now);
     const title = patch.title ?? row.title;

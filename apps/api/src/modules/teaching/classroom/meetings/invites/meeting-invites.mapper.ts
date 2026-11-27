@@ -3,6 +3,8 @@ import {
   MEETING_INVITE_CHANNELS,
   MEETING_INVITE_STATUSES,
   MEETING_INVITEE_KINDS,
+  meetingInviteeOptionSchema,
+  meetingInviteeViewSchema,
   meetingState,
   meetingViewSchema,
   meetingWindow,
@@ -14,6 +16,7 @@ import {
   type MeetingView,
   type MyMeetingInvite,
 } from '@ab/schedule';
+import { z } from 'zod';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { asResponse } from '@/common/http/returns';
 import type { MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
@@ -41,15 +44,28 @@ export interface InviteeRow {
   sent_at: string | null;
 }
 
-export const toInviteeView = (r: InviteeRow): MeetingInviteeView => ({
-  id: r.id,
-  kind: asInviteKind(r.kind),
-  display_name: r.display_name,
-  channel: asInviteChannel(r.channel),
-  status: asInviteStatus(r.status),
-  error_code: r.error_code,
-  sent_at: r.sent_at,
-});
+export const toInviteeView = (r: InviteeRow): MeetingInviteeView =>
+  asResponse(meetingInviteeViewSchema, {
+    id: r.id,
+    kind: asInviteKind(r.kind),
+    display_name: r.display_name,
+    channel: asInviteChannel(r.channel),
+    status: asInviteStatus(r.status),
+    error_code: r.error_code,
+    sent_at: r.sent_at,
+  });
+
+const inviteeOptionsSchema = z.array(meetingInviteeOptionSchema);
+
+/** Staff first, then students; a student without a code shows an empty one. Never a phone. */
+export const toInviteeOptions = (picks: {
+  staff: readonly { id: string; full_name: string; role: string }[];
+  students: readonly { id: string; name: string; code: string | null }[];
+}) =>
+  asResponse(inviteeOptionsSchema, [
+    ...picks.staff.map((s) => ({ kind: 'staff' as const, id: s.id, name: s.full_name, role: s.role })),
+    ...picks.students.map((s) => ({ kind: 'student' as const, id: s.id, name: s.name, code: s.code ?? '' })),
+  ]);
 
 interface ViewContext {
   user: Pick<AuthUser, 'id' | 'role'>;
