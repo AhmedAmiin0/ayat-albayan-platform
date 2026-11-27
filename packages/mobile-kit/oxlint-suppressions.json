@@ -26,11 +26,6 @@
       "count": 1
     }
   },
-  "src/auth/forgot/AuthAlert/AuthAlert.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/auth/forgot/auth-errors.ts": {
     "stylistic/max-len": {
       "count": 1
