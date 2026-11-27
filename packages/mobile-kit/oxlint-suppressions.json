@@ -357,14 +357,6 @@
       "count": 1
     }
   },
-  "src/ui/layout/KeyboardFrame/KeyboardFrame.test.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/ui/layout/KeyboardFrame/KeyboardFrame.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
@@ -376,40 +368,6 @@
     },
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/ui/layout/Screen/Screen.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 4
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/ui/layout/Screen/tests/Screen.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/ui/layout/Screen/tests/inset.test.tsx": {
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/ui/layout/ScreenHeader/ScreenHeader.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/ui/layout/tab-bar-inset.ts": {
-    "ab/no-restricted-syntax": {
-      "count": 1
     }
   },
   "src/ui/motion/use-pulse.ts": {

@@ -1,5 +1,5 @@
 import { BottomTabBarHeightContext } from 'expo-router/js-tabs';
-import { useContext } from 'react';
+import { use } from 'react';
 
 /** The floating capsule: 4 + 54 tab + 4 (docs/29 §7). */
 export const BAR_HEIGHT = 62;
@@ -20,4 +20,4 @@ export const BAR_SIDE = 20;
  * (GlassTabBar), the tab navigator hands it to every screen; useBottomTabBarHeight() would throw
  * outside the tabs.
  */
-export const useTabBarInset = () => useContext(BottomTabBarHeightContext) ?? 0;
+export const useTabBarInset = () => use(BottomTabBarHeightContext) ?? 0;

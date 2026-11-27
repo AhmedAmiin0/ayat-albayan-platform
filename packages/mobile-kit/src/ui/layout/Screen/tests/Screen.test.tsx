@@ -1,8 +1,9 @@
 import { render, screen, within } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { FullScreenProvider, Screen } from '../Screen';
+import { FullScreenProvider } from '../full-screen-context';
+import { Screen } from '../Screen';
 
-// The safe-area host gets every edge as additive / off (SafeAreaView turns the edges list into that).
+// The safe-area host gets every edge as additive / off: SafeAreaView turns the list into that.
 const bottom = () => screen.toJSON()?.props.edges?.bottom;
 
 test('scroll: the rows sit in a ScrollView, so the last one («تسجيل الخروج») can always be reached', async () => {
