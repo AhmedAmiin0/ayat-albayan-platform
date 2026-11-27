@@ -130,9 +130,6 @@
   "src/lessons/views.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/module-boundaries": {
-      "count": 1
     }
   },
   "src/schemas/booking-extras.ts": {

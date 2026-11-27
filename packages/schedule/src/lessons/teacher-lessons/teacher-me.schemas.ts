@@ -1,7 +1,7 @@
 import { GENDERS, PROGRAMS, STUDENT_STATUSES } from '@ab/catalog';
 import { id } from '@ab/core';
 import { z } from 'zod';
-import { TEACHER_MEETING_MODES } from '../../classroom/meeting-mode';
+import { TEACHER_MEETING_MODES } from '../../classroom';
 
 /** One of her students: assigned to her or on one of her active rules. */
 export const teacherMeStudentSchema = z.object({
