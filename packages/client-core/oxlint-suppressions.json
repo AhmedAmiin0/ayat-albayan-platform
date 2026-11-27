@@ -7,14 +7,6 @@
       "count": 2
     }
   },
-  "src/core/auth/sign-in.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 2
-    }
-  },
   "src/core/errors/chat-list-errors.ts": {
     "complexity": {
       "count": 1

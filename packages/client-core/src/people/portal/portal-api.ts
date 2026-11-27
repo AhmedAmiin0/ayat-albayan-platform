@@ -42,13 +42,6 @@ export interface PortalHistoryInput {
   status: PortalHistoryStatus;
 }
 
-/** GET …/history: the status always, the cursor only when given. */
-export function portalHistoryPath(input: PortalHistoryInput, cursor?: string): string {
-  const params = new URLSearchParams({ status: input.status });
-  if (cursor) params.set('cursor', cursor);
-  return `${routePath(routes.history, { id: input.studentId })}?${params.toString()}`;
-}
-
 /** A plain read: spread into useQuery. */
 export interface PortalRead<T> {
   queryKey: string[];

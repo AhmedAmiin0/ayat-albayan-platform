@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError } from '../http';
 import { isEmailIdentifier, signInApi, signInError } from './sign-in';
+import { signInErrorSchema } from './sign-in-errors.schemas';
 
 describe('signInApi (docs/30 §6)', () => {
   it('calls the public routes with their bodies', async () => {
@@ -55,6 +56,26 @@ describe('signInApi (docs/30 §6)', () => {
     expect(signInError(new ApiError(500, { code: 'boom' }))).toBeNull();
     expect(signInError(new ApiError(500, null))).toBeNull();
     expect(signInError(new Error('x'))).toBeNull();
+  });
+
+  it('reads the code only from a string code of an api error', () => {
+    expect(signInError(new ApiError(400, { code: 'password_blank' }))).toBe('password_blank');
+    expect(signInError(new ApiError(400, { code: 7 }))).toBeNull();
+    expect(signInError(new ApiError(400, 'invalid_code'))).toBeNull();
+    expect(signInError({ body: { code: 'invalid_code' } })).toBeNull();
+  });
+
+  it('names every failure the sign-in screens translate', () => {
+    expect(signInErrorSchema.options).toEqual([
+      'invalid_code',
+      'invalid_credentials',
+      'phone_belongs_to_staff',
+      'too_many_requests',
+      'codes_unavailable',
+      'password_too_short',
+      'password_too_long',
+      'password_blank',
+    ]);
   });
 });
 
