@@ -1,3 +1,4 @@
+import type { StorageProbeResult } from '@ab/catalog';
 import { randomUUID } from 'node:crypto';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
@@ -7,12 +8,6 @@ import type { Http } from '@/common/infra/http/http.types';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { minioStore } from '@/common/storage/store/s3-client';
 import type { ObjectStore } from '@/common/storage/store/object-store';
-
-/** POST /settings/integrations/storage-probe answers. */
-export interface StorageProbeResult {
-  ok: true;
-  ms: number;
-}
 
 type ProbeCode = 'storage_not_configured' | 'storage_probe_failed' | 'storage_public_failed';
 

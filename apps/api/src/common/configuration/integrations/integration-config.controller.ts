@@ -1,5 +1,6 @@
 import {
   INTEGRATION_SECRET_KEYS,
+  integrationRoutes as routes,
   integrationSecretCheck,
   integrationSecretSchema,
   integrationValuesSchema,
@@ -7,10 +8,12 @@ import {
   type IntegrationPlainKey,
   type IntegrationSecretKey,
 } from '@ab/catalog';
-import { Body, Controller, Delete, Get, Put } from '@nestjs/common';
+import { Body, Controller, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { parseOrThrow } from '@/common/http/http';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ZodParam } from '@/common/http/zod-inputs';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -37,26 +40,23 @@ const secretCheck = (key: IntegrationSecretKey): z.ZodType<string> =>
   SERVER_SECRET_CHECKS[key] ?? integrationSecretCheck(key);
 
 /** Integration keys kept in the DB; secrets go to Vault, never in a response, log or audit. */
-@ApiTags('settings')
 @ApiBearerAuth()
-@Permissions('settings.read')
-@Controller('settings/integrations')
+@Controller()
 export class IntegrationConfigController {
   constructor(
     private readonly config: IntegrationConfigService,
     private readonly audit: AuditService,
   ) {}
 
-  @Get()
-  list(): Promise<IntegrationConfigItem[]> {
-    return this.config.items();
+  @Route(routes.list)
+  async list(): Promise<IntegrationConfigItem[]> {
+    return asResponse(routes.list.response, await this.config.items());
   }
 
   /** Plain keys only; null or blank clears a key (the env value applies again). 400 names the key. */
-  @Put()
-  @Permissions('settings.write')
+  @Route(routes.saveValues)
   async put(
-    @Body() body: unknown,
+    @RouteInput() { body }: RouteInputOf<typeof routes.saveValues>,
     @CurrentUser() user: AuthUser,
   ): Promise<IntegrationConfigItem[]> {
     const { values } = parseOrThrow(valuesBody, body);
@@ -67,9 +67,13 @@ export class IntegrationConfigController {
     return this.config.items();
   }
 
-  /** A key's own format is checked too: a live Stripe key is 400 stripe_live_key_refused (test). */
-  @Put('secrets/:key')
+  /**
+   * A key's own format is checked too: a live Stripe key is 400 stripe_live_key_refused (test).
+   * Kept off its route object: there the body is read first, so a bad key would no longer win.
+   */
+  @Put('settings/integrations/secrets/:key')
   @Permissions('settings.write')
+  @ApiTags('settings')
   async putSecret(
     @ZodParam('key', secretKey) key: IntegrationSecretKey,
     @Body() body: unknown,
@@ -81,12 +85,12 @@ export class IntegrationConfigController {
     return this.config.items();
   }
 
-  @Delete('secrets/:key')
-  @Permissions('settings.write')
+  @Route(routes.clearSecret)
   async clearSecret(
-    @ZodParam('key', secretKey) key: IntegrationSecretKey,
+    @RouteInput() { params }: RouteInputOf<typeof routes.clearSecret>,
     @CurrentUser() user: AuthUser,
   ): Promise<IntegrationConfigItem[]> {
+    const key = parseOrThrow(secretKey, params.key);
     if (await this.config.clearSecret(key))
       await this.record(user, { action: `secret_clear:${key}`, keys: [key] });
     return this.config.items();
