@@ -7126,7 +7126,8 @@
    "required": [
     "code"
    ]
-  }
+  },
+  "response": "redirect"
  },
  "GET /ready": {
   "response": {
