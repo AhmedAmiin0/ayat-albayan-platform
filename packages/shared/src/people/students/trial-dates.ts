@@ -2,71 +2,17 @@ import {
   DURATIONS,
   type Attendance,
   type Duration,
-  type Gender,
   type LessonStatus,
-  type Program,
   type StudentStatus,
 } from '@ab/catalog';
 import { isCancelledLesson } from '@ab/schedule';
 import { isNotSubscribed } from './status-flow';
+import type { TrialHistory, TrialOutcome } from './trial-date';
 
 // A new free trial for a student with no running subscription, and the trial history; pure.
 
-/** moved: a newer date replaced it; awaiting: its time passed, nothing recorded yet. */
-export const TRIAL_OUTCOMES = [
-  'upcoming',
-  'awaiting',
-  'attended',
-  'absent',
-  'cancelled',
-  'moved',
-] as const;
-export type TrialOutcome = (typeof TRIAL_OUTCOMES)[number];
-
 /** From this many dates on (the new one included) the form warns; never a block. */
 export const TRIAL_DATE_WARN_FROM = 3;
-
-/** One trial-history row, newest pick first; times are UTC instants. */
-export interface TrialDateRow {
-  lesson_id: string;
-  starts_at: string;
-  ends_at: string;
-  teacher: { id: string; name: string } | null;
-  outcome: TrialOutcome;
-  /** Who picked it (lessons.created_by); null for imported rows. */
-  picked_by: string | null;
-  /** When it was picked (lessons.created_at). */
-  picked_at: string;
-  /** The older date this one replaced (lessons.rescheduled_from_id). */
-  moved_from_id: string | null;
-}
-
-/** GET {base}/trial-dates?studentId= */
-export interface TrialHistory {
-  student_id: string;
-  status: StudentStatus;
-  /** The family's (guardian's) zone, shown next to the viewer's when they differ. */
-  family_tz: string;
-  /** A new date may be picked: the student has no running subscription (canPickTrialDate). */
-  allowed: boolean;
-  count: number;
-  items: TrialDateRow[];
-  /** The trial a new date would move: scheduled / confirmed and still ahead; null = a new lesson. */
-  upcoming_id: string | null;
-  /** What the wizard prefills (the teacher filters and the rule's zone); optional for older answers. */
-  program?: Program;
-  teacher_gender_pref?: Gender | null;
-  student_tz?: string;
-}
-
-/** POST {base}/trial-date 201: the new trial lesson, and the one it moved (null = none was ahead). */
-export interface TrialDateResult {
-  lesson_id: string;
-  starts_at: string;
-  ends_at: string;
-  teacher_id: string;
-  moved_from_id: string | null;
-}
 
 /** new / trial / pending_subscription: a subscriber changes their course instead (409 trial_date_subscribed). */
 export const canPickTrialDate = (status: StudentStatus | null | undefined): boolean =>

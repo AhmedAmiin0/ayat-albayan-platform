@@ -5689,13 +5689,10 @@
   },
   "src/trial-date/lib/queries.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
     }
   },
   "src/trial-date/lib/trial-date-body.ts": {

@@ -1,4 +1,4 @@
-import type { BookingRequest, OutsideSlotsResponse } from '@ab/shared';
+import { bookingBodySchema, type BookingRequest, type OutsideSlotsResponse } from '@ab/shared';
 import type { BookingResult, BookingTeacherOption, Conflict, SlotsResponse } from '@ab/schedule';
 import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -9,7 +9,6 @@ import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { clientRequest } from './core/booking.payload';
 import { outsideSlotsQuerySchema, slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
 import { BookingService } from './core/booking.service';
-import { bookingBodySchema } from './plan/package-size';
 import { SlotsService } from './plan/slots.service';
 import { TeacherOptionsService } from './teacher/teacher-options.service';
 

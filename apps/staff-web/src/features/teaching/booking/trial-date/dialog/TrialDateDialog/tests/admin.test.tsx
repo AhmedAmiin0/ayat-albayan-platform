@@ -11,11 +11,11 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const STUDENT = { id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183' };
-const DONE = { lesson_id: 'new-1', starts_at: SLOT, ends_at: SLOT, teacher_id: ABRAR.id, moved_from_id: UPCOMING_ID };
+const DONE = { lesson_id: '8e3f0a4d-5f6a-4b7c-8d9e-0f1a2b3c4d5e', starts_at: SLOT, ends_at: SLOT, teacher_id: ABRAR.id, moved_from_id: UPCOMING_ID };
 const CONFLICT = new ApiError(409, { code: 'conflict', conflicts: [{ kind: 'teacher_busy', startsAt: SLOT, endsAt: SLOT }] });
 
 async function toReview(answers: unknown[], count = 1) {
-  const items = Array.from({ length: count }, (_, i) => ({ ...history().items[0], lesson_id: i === 0 ? UPCOMING_ID : `old-${i}` }));
+  const items = Array.from({ length: count }, (_, i) => ({ ...history().items[0], lesson_id: i === 0 ? UPCOMING_ID : `00000000-0000-4000-8000-00000000000${i}` }));
   routeTrialFetch(apiFetch, { base: '/booking', history: history({ items: items as ReturnType<typeof history>['items'] }) });
   routeTrialSend(apiSend, { base: '/booking', answers });
   const onClose = vi.fn();

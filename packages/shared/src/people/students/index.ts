@@ -1,5 +1,6 @@
 export * from './status-flow/status-flow';
 export * from './trial-dates';
+export * from './trial-date';
 export * from './portal';
 export * from './family';
 export * from './portal-family';

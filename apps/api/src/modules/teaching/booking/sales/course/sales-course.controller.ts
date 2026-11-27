@@ -1,10 +1,9 @@
 import type { CourseChangeCheck, CourseChangeResult, SalesCourseView } from '@ab/shared';
 import { courseChangeCheckSchema, courseChangeSchema } from '@ab/schedule';
-import type { BookingRequest, CourseDraftSaved } from '@ab/shared';
+import { bookingBodySchema, type BookingRequest, type CourseDraftSaved } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Post, Put, Query } from '@nestjs/common';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { clientRequest } from '@/modules/teaching/booking/core/booking.payload';
-import { bookingBodySchema } from '@/modules/teaching/booking/plan/package-size';
 import { CourseDrafts } from '@/modules/teaching/booking/sales/course-draft/course-draft.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

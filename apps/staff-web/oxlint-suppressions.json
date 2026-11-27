@@ -5456,9 +5456,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
     }
   },
   "src/features/teaching/booking/trial-date/dialog/TrialDateDialog/TrialDateDialog.tsx": {
