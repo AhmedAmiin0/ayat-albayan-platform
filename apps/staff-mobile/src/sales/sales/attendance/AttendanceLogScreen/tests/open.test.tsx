@@ -7,7 +7,7 @@ import { renderWithQuery } from '@/test/query';
 import { openDownload } from '@/core/lib/http/open-signed';
 import { AttendanceLogScreen } from '@/sales/sales/attendance/AttendanceLogScreen/AttendanceLogScreen';
 import { dayDateOf } from '@/sales/sales/attendance/attendance-log-text';
-import { logTable } from '@/sales/sales/attendance/fixtures';
+import { lessonId, logTable, REPORT_ID } from '@/sales/sales/attendance/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
@@ -35,7 +35,7 @@ test('her student: only the row with a sent report is a button, and it opens tha
   const rows = await screen.findAllByRole('button', { name: openLabel });
   expect(rows).toHaveLength(1);
   await fireEvent.press(rows[0] ?? screen.getByText(w.sent));
-  expect(mockApiFetch).toHaveBeenCalledWith('/sales/students/st1/reports/rep1/pdf');
+  expect(mockApiFetch).toHaveBeenCalledWith(`/sales/students/st1/reports/${REPORT_ID}/pdf`);
   expect(openDownload).toHaveBeenCalledTimes(1);
 });
 
@@ -61,7 +61,7 @@ test('the admin tree: the admin\'s route, and a sent report opens the admin\'s r
   await renderWithQuery(<AttendanceLogScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: openLabel }));
   expect(mockApiFetch).toHaveBeenCalledWith('/students/st1/attendance');
-  expect(router.push).toHaveBeenCalledWith('/students/reports/view/rep1');
+  expect(router.push).toHaveBeenCalledWith(`/students/reports/view/${REPORT_ID}`);
 });
 
 test('rows are keyed by lesson id (FlashList recycles by key)', async () => {
@@ -72,7 +72,7 @@ test('rows are keyed by lesson id (FlashList recycles by key)', async () => {
   const keyOf = list.props.keyExtractor as
     | ((row: { lesson_id: string }, i: number) => string)
     | undefined;
-  expect(logTable().items.map((r, i) => keyOf?.(r, i))).toEqual(['l1', 'l2', 'l3']);
+  expect(logTable().items.map((r, i) => keyOf?.(r, i))).toEqual([1, 2, 3].map(lessonId));
 });
 
 test('loading, then an unknown student (404) says so; another failure the load error with retry', async () => {

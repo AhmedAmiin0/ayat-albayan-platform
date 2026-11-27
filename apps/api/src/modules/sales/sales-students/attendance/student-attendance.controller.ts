@@ -1,40 +1,44 @@
-import type { StudentAttendanceTable } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { salesStudentFileRoutes, studentAttendanceRoutes } from '@ab/shared';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { SalesStudentScope } from '@/modules/sales/sales-students/shared/sales-student-scope';
 import { monthOf, StudentAttendanceService } from './student-attendance.service';
 
+type SalesInput = RouteInputOf<typeof salesStudentFileRoutes.attendance>;
+type AdminInput = RouteInputOf<typeof studentAttendanceRoutes.table>;
+
 /** Any student; `mine` lets a sent report open; month is in Riyadh. */
-@ApiTags('sales')
 @ApiBearerAuth()
-@Permissions('self.sales_academy')
-@Controller('sales/students')
+@Controller()
 export class SalesStudentAttendanceController {
   constructor(
     private readonly scope: SalesStudentScope,
     private readonly attendance: StudentAttendanceService,
   ) {}
 
-  @Get(':id/attendance')
-  async table(@Param('id', ParseUUIDPipe) id: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<StudentAttendanceTable> {
+  @Route(salesStudentFileRoutes.attendance)
+  async table(@RouteInput() { params, query }: SalesInput, @CurrentUser() user: AuthUser) {
     const month = monthOf(query, new Date());
-    const { mine } = await this.scope.access(user, id);
-    return this.attendance.table(id, { month, mine });
+    const { mine } = await this.scope.access(user, params.id);
+    const table = await this.attendance.table(params.id, { month, mine });
+    return asResponse(salesStudentFileRoutes.attendance.response, table);
   }
 }
 
-/** The same table on the admin's student file (GET /students/:id): students.read. */
-@ApiTags('students')
+/** The same table on the admin's student file (GET /students/:id). */
 @ApiBearerAuth()
-@Permissions('students.read')
-@Controller('students')
+@Controller()
 export class StudentAttendanceController {
   constructor(private readonly attendance: StudentAttendanceService) {}
 
-  @Get(':id/attendance')
-  table(@Param('id', ParseUUIDPipe) id: string, @Query() query: unknown): Promise<StudentAttendanceTable> {
-    return this.attendance.table(id, { month: monthOf(query, new Date()), mine: true });
+  @Route(studentAttendanceRoutes.table)
+  async table(@RouteInput() { params, query }: AdminInput) {
+    const month = monthOf(query, new Date());
+    const table = await this.attendance.table(params.id, { month, mine: true });
+    return asResponse(studentAttendanceRoutes.table.response, table);
   }
 }

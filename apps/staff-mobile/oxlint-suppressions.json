@@ -4490,9 +4490,6 @@
   "src/sales/sales/attendance/attendance-log-api.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/sales/sales/components/AllStudentRow/AllStudentRow.tsx": {

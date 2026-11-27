@@ -72,3 +72,10 @@ export const studentAttendanceTableSchema = z.strictObject({
   mine: z.boolean(),
 });
 export type StudentAttendanceTable = z.infer<typeof studentAttendanceTableSchema>;
+
+/**
+ * `?month=YYYY-MM`, the current Riyadh month when absent. The format is judged by the service so a
+ * malformed month keeps answering 400 invalid_month.
+ */
+export const attendanceMonthInput = z.object({ month: z.string().optional() });
+export type AttendanceMonthInput = z.infer<typeof attendanceMonthInput>;
