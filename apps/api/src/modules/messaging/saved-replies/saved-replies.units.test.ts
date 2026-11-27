@@ -30,11 +30,10 @@ describe('guard', () => {
     expect([managesShared(as('admin')), managesShared(as('sales'))]).toEqual([true, false]);
   });
 
-  it('a malformed id is 404', async () => {
-    for (const method of ['update', 'remove', 'move', 'stage'] as const) {
-      const pipe = paramPipeOf(SavedRepliesController, { method, name: 'id' });
-      await expect(pipe('x')).rejects.toMatchObject({ status: 404 });
-    }
+  // remove, move and stage read :id through @RouteInput(byId): saved-replies.access.http.test.ts.
+  it('a malformed id on the edit is 404', async () => {
+    const pipe = paramPipeOf(SavedRepliesController, { method: 'update', name: 'id' });
+    await expect(pipe('x')).rejects.toMatchObject({ status: 404 });
   });
 });
 

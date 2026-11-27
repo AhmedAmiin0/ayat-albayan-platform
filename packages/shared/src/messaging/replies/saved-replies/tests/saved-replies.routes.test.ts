@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { savedReplyRoutes as routes } from '../saved-replies.routes';
+import { savedReplyRoutes as routes } from '..';
 
 const ID = 'e1111111-1111-4111-8111-111111111111';
 const REPLY = {

@@ -57,6 +57,16 @@ describe('an assistant without saved_replies.manage', () => {
     expect([gone.statusCode, gone.json<{ code: string }>().code]).toEqual([404, 'saved_reply_not_found']);
   });
 
+  it('move / stage with a good body: a malformed :id is 404', async () => {
+    const request = '0f8fad5b-d9cb-469f-a165-70867728950e';
+    const bodies = { move: { direction: 'up' }, stage: { clientRequestId: request } };
+    for (const [step, body] of Object.entries(bodies)) {
+      const res = await t.call({ method: 'POST', url: `/saved-replies/nope/${step}`, body });
+      const answer = [res.statusCode, res.json<{ code: string }>().code];
+      expect(answer).toEqual([404, 'saved_reply_not_found']);
+    }
+  });
+
   it('even the admin cannot reach an assistant\'s personal reply', async () => {
     const res = await t.call({ method: 'PATCH', url: `/saved-replies/${HERS}`, body: { title: 'ج' } });
     expect(res.statusCode).toBe(404);
