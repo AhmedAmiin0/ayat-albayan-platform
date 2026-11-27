@@ -1,8 +1,9 @@
-import type { CommsSourceView, ParityView } from '@ab/shared';
+import { parityViewSchema, type CommsSourceView, type ParityView } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
 import type { CommsSource } from '@ab/settings';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
+import { asResponse } from '@/common/http/returns';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
 import { envFrom } from '@/config/env/env';
 import { kickConfigReload } from '@/config/role/worker-kick';
@@ -37,7 +38,7 @@ export class CommunicationsService {
     const numbers: Partial<Record<WaLine, { id: string; label: string }>> = {};
     for (const n of defaults) numbers[n.purpose] = { id: n.id, label: n.label };
     const roles = parityRoles({ legacy: envFrom(null), module: envFrom(overlay.values), numbers });
-    return { source, roles, differences: differences(roles), rules };
+    return asResponse(parityViewSchema, { source, roles, differences: differences(roles), rules });
   }
 
   async setSource(source: CommsSource, actorId: string): Promise<CommsSourceView> {

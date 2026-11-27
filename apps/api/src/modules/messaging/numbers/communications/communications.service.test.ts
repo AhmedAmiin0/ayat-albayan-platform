@@ -8,7 +8,7 @@ import type { NumbersSettings } from '@/modules/messaging/numbers/numbers.settin
 
 // The read switch (docs/23 §2e step 5, docs/23b decision 5): module refused while the numbers or the
 // rules parity differs; legacy always allowed, after copying the rules into the legacy keys.
-function setup(opts: { source: 'legacy' | 'module'; moduleValues: Record<string, string>; rules?: RuleParityDiff[] }) {
+function setup(opts: { source: 'legacy' | 'module'; moduleValues: Record<string, string>; rules?: readonly object[] }) {
   let source = opts.source;
   const order: string[] = [];
   const settings = {
@@ -122,5 +122,14 @@ describe('POST /admin/communications/source', () => {
     expect(view.source).toBe('legacy');
     expect(view.differences).toEqual([{ role: 'notifications', field: 'webhook_phone_number_id', state: 'missing' }]);
     expect(view.rules).toEqual([RULE_DIFF]);
+  });
+
+  it('answers 500 response_invalid, never the bad parity, when a rule part is unknown', async () => {
+    const bad = { ...RULE_DIFF, field: 'channels' };
+    const t = setup({ source: 'legacy', moduleValues: {}, rules: [bad] });
+    await expect(t.svc.parity()).rejects.toMatchObject({
+      status: 500,
+      response: { code: 'response_invalid' },
+    });
   });
 });

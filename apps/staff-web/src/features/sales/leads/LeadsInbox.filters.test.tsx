@@ -23,7 +23,7 @@ const ROW = {
   last_outbound_at: null,
   created_at: '2026-09-28T10:00:00+00:00',
 };
-const SARA = { id: '22222222-2222-4222-8222-222222222222', name: 'سارة' };
+const SARA = { id: '22222222-2222-4222-8222-222222222222', name: 'سارة', open_leads: 0 };
 const chipName = (label: string, value: string) =>
   t.table.removeFilter.replace('{filter}', t.table.activeFilter.replace('{label}', label).replace('{value}', value));
 

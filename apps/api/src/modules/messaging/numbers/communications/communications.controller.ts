@@ -1,34 +1,29 @@
-import { commsSourceSchema, type CommsSourceView, type ParityView } from '@ab/shared';
-import { Controller, Get, HttpCode, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { communicationsRoutes as routes, type CommsSourceView, type ParityView } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CommunicationsService } from './communications.service';
 
 /**
- * docs/23 §2e steps 4–5: GET parity (settings.read; ids and «same / different / missing», never a
- * secret value) and the comms_source switch (numbers.manage; module refused with 409 parity_not_empty
- * while parity is non-empty, legacy always allowed). The switch never opens the send gate.
+ * docs/23 §2e steps 4–5: parity shows ids and «same / different / missing», never a secret value;
+ * the switch never opens the send gate.
  */
-@ApiTags('numbers')
 @ApiBearerAuth()
-@Controller('admin/communications')
+@Controller()
 export class CommunicationsController {
   constructor(private readonly comms: CommunicationsService) {}
 
-  @Get('parity')
-  @Permissions('settings.read')
+  @Route(routes.parity)
   parity(): Promise<ParityView> {
     return this.comms.parity();
   }
 
-  @Post('source')
+  @Route(routes.source)
   @HttpCode(200)
-  @Permissions('numbers.manage')
   setSource(
-    @ZodBody(commsSourceSchema) body: z.output<typeof commsSourceSchema>,
+    @RouteInput() { body }: RouteInputOf<typeof routes.source>,
     @CurrentUser() user: AuthUser,
   ): Promise<CommsSourceView> {
     return this.comms.setSource(body.source, user.id);

@@ -1,14 +1,14 @@
 import type {
   SalesScheduleDay,
   SalesSubscriptionKind,
-  SalesSubscriptionView,
   SalesSubscriptionHistory,
   SalesTeacherView,
 } from '@ab/shared';
 import type { AssistantLessonView } from '@ab/schedule';
 import { riyadhToday } from '@ab/time';
+import { salesPortalCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
 
 // The salesperson's pages (docs/16, web parity with apps/staff-web/src/features/sales): read-only, no money.
@@ -19,12 +19,13 @@ const LIVE_REFRESH_MS = 60_000;
 /** A body that is not a list (an older API, a stub) reads as an empty list rather than crashing. */
 const asList = <T>(data: T[]): T[] => (Array.isArray(data) ? data : []);
 
+const salesPortal = salesPortalCalls({ apiFetch, apiSend });
+
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
 export const useSalesSubscriptions = (kind: SalesSubscriptionKind) =>
   useQuery({
     queryKey: salesKeys.subscriptions(kind),
-    queryFn: () => apiFetch<SalesSubscriptionView[]>(`/sales/subscriptions?kind=${kind}`),
-    select: asList,
+    queryFn: () => salesPortal.subscriptions(kind),
   });
 
 /** GET /sales/subscriptions/:id/history — one of my confirmed subscriptions and its student's history. */

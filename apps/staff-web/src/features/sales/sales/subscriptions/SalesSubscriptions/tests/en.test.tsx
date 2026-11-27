@@ -19,7 +19,8 @@ function Harness() {
 
 describe('SalesSubscriptions, English', () => {
   it('two separate tabs, a row and an empty confirmed list read in English', async () => {
-    const row = { id: 'p1', student: { id: 's1', code: 'AB-0183', name: 'Suhaila' }, package: '8 lessons', status: 'unpaid', starts_on: null, lessons_total: 8 };
+    const row = { id: 'p1', student: { id: 's1', code: 'AB-0183', name: 'Suhaila' }, package: '8', status: 'unpaid',
+      starts_on: '2026-10-01', lessons_total: 8 };
     apiFetch.mockImplementation(async (path: string) => (path.endsWith('confirmed') ? [] : [row]));
     render(
       <QueryClientProvider client={new QueryClient()}>

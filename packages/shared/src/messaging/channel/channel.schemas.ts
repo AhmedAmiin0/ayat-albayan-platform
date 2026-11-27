@@ -5,12 +5,9 @@ import type {
   ChannelPage,
   ChannelReads,
   ChannelSenderLabel,
+  TeacherChannelRow,
 } from './channel-views';
-import {
-  CHANNEL_CLOSED_REASONS,
-  CHANNEL_SENDER_ROLES,
-  type ChannelClosedReason,
-} from './channel';
+import { CHANNEL_CLOSED_REASONS, CHANNEL_SENDER_ROLES, type ChannelClosedReason } from './channel';
 
 // The apps' parse of the channel's answers (docs/36 Z-5). Typed by the views, so a field added
 // there fails to compile here until the schema reads it too. Lenient on purpose (an app and the
@@ -75,6 +72,22 @@ export const channelPageSchema: z.ZodType<ChannelPage> = z.object({
     .array(z.object({ name: z.string().catch(''), role: senderRole, me: z.boolean().catch(false) }))
     .catch([]),
   my_last_read_at: z.string().nullable().catch(null),
+});
+
+/** GET /teachers/me/channels: one row per current student. */
+export const teacherChannelRowSchema: z.ZodType<TeacherChannelRow> = z.object({
+  student_id: z.string(),
+  student_name: z.string(),
+  student_code: z.string(),
+  last_message: z
+    .object({
+      body: z.string(),
+      sender_role: senderRole,
+      created_at: z.string(),
+      deleted: z.boolean(),
+    })
+    .nullable(),
+  unread: z.number(),
 });
 
 /** GET …/messages/:messageId/reads. */
