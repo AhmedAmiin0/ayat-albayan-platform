@@ -8,5 +8,6 @@ export * from './student-lesson';
 export * from './internal-meetings';
 export * from './meeting-invites';
 export * from './student-recordings';
+export * from './assistants';
 export * from './meeting-mode';
 export * from './room-state';
