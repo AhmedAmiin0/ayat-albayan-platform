@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';
 import { student } from '@/portal/portal.fixtures';
-import { PrepareCard } from './PrepareCard';
+import { PrepareCard } from '@/lessons/PrepareCard/PrepareCard';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
