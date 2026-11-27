@@ -2,6 +2,7 @@ import { coursePausePreviewText } from '@ab/client-core';
 import { daysBefore } from '@ab/shared';
 import { addDays, riyadhToday } from '@ab/time';
 import { fireEvent, screen, within } from '@testing-library/react';
+import { coursePauseResultFixture } from '@ab/shared/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ApiError, t } from '@ab/web-kit';
@@ -33,17 +34,6 @@ function open() {
   const confirm = () => dialog.getByRole<HTMLButtonElement>('button', { name: words.confirm });
   return { dialog, set, confirm, onDone };
 }
-
-const PAUSE_VIEW = {
-  id: 'p1',
-  from_date: '2026-12-01',
-  until_date: null,
-  reason: null,
-  created_at: '2026-11-27T08:00:00Z',
-  created_by_name: null,
-  resumed_at: null,
-  extended_days: null,
-};
 
 describe('CoursePauseSheet', () => {
   beforeEach(() => {
@@ -78,13 +68,7 @@ describe('CoursePauseSheet', () => {
     const { set, confirm, onDone } = open();
     set(words.until, addDays(today, 10));
     set(words.reason, '  سفر الأسرة ');
-    apiSend.mockResolvedValue({
-      pause: PAUSE_VIEW,
-      cancelled: 2,
-      left: 0,
-      reopened: 0,
-      conflicts: 0,
-    });
+    apiSend.mockResolvedValue(coursePauseResultFixture({ cancelled: 2 }));
     fireEvent.click(confirm());
     await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(words.done));
     expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-pause', {

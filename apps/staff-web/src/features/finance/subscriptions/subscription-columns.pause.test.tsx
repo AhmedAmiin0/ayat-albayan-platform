@@ -1,6 +1,7 @@
 import { riyadhToday } from '@ab/time';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import { coursePauseResultFixture } from '@ab/shared/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { WEEKLY } from './money-fixture';
@@ -43,17 +44,6 @@ async function rowOf(name: string) {
   return within((await screen.findByText(name)).closest('tr') as HTMLElement);
 }
 
-const PAUSE_VIEW = {
-  id: 'p1',
-  from_date: '2026-12-01',
-  until_date: null,
-  reason: null,
-  created_at: '2026-11-27T08:00:00Z',
-  created_by_name: null,
-  resumed_at: null,
-  extended_days: null,
-};
-
 describe('subscription rows: the course pause', () => {
   beforeEach(() => {
     apiFetch.mockReset();
@@ -75,13 +65,7 @@ describe('subscription rows: the course pause', () => {
     const row = await rowOf('ياسمين');
     fireEvent.click(row.getByRole('button', { name: t.coursePause.resume }));
     const dialog = within(await screen.findByRole('dialog', { name: t.coursePause.resumeTitle }));
-    apiSend.mockResolvedValue({
-      pause: PAUSE_VIEW,
-      cancelled: 0,
-      left: 0,
-      reopened: 2,
-      conflicts: 0,
-    });
+    apiSend.mockResolvedValue(coursePauseResultFixture({ reopened: 2 }));
     fireEvent.click(dialog.getByRole('button', { name: t.coursePause.resumeConfirm }));
     expect(await screen.findByText(t.coursePause.resumed)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledWith('POST', '/students/stu-2/course-pause/resume', {
