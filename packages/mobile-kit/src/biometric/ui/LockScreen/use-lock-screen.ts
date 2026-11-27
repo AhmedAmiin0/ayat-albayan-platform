@@ -8,6 +8,7 @@ import { bioLock } from '../../core/bio-lock';
 import { useDissolve } from '../use-dissolve';
 
 const firstName = (full: string | undefined) => full?.trim().split(/\s+/)[0] ?? '';
+
 export function useLockScreen() {
   const bottom = useSafeAreaInsets().bottom + space[6];
   const dissolve = useDissolve();
@@ -21,5 +22,7 @@ export function useLockScreen() {
     setLeaving(true);
     void signOutDevice().finally(() => setLeaving(false));
   };
-  return { bottom, dissolve, leaving, name, B, open, other };
+  const prompt = () => void bioLock.autoPrompt().then(open);
+  const unlock = () => void bioLock.unlock().then(open);
+  return { bottom, dissolve, leaving, name, B, other, prompt, unlock };
 }
