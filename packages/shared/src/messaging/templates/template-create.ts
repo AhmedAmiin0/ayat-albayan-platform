@@ -90,3 +90,5 @@ export const templateCreateSchema = z.object({
 });
 
 export type TemplateCreateInput = z.output<typeof templateCreateSchema>;
+/** The create body as a client sends it, its defaults left out. */
+export type TemplateCreateBody = z.input<typeof templateCreateSchema>;
