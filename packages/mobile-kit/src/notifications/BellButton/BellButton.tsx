@@ -1,8 +1,7 @@
 import { Pressable } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { shape, useTheme } from '../../theme';
+import { useTheme } from '../../theme';
 import { BellBadge } from '../BellBadge';
-import { bellLabel } from '../notifications-cache';
 import type { BellButtonProps } from './BellButton.types';
 import { useBellButton } from './use-bell-button';
 
@@ -10,22 +9,15 @@ import { useBellButton } from './use-bell-button';
  * The bell in a Today header (R-NOT-01): a 44pt button with the unread count («9+» above nine) at
  * its top corner. The spoken name carries the count; the drawn badge is hidden from it.
  */
-export function BellButton({ onPress, round = false }: BellButtonProps) {
+export function BellButton({ onPress, round }: BellButtonProps) {
   const { color } = useTheme();
-  const { unread, badge } = useBellButton();
+  const { badge, label, pressStyle } = useBellButton({ round });
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={bellLabel(unread)}
+      accessibilityLabel={label}
       onPress={onPress}
-      style={({ pressed }) => ({
-        width: shape.control.touch,
-        height: shape.control.touch,
-        borderRadius: round ? shape.control.touch / 2 : shape.radius.md,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: pressed ? color.lapisWash : 'transparent',
-      })}
+      style={pressStyle}
     >
       <Svg
         viewBox="0 0 24 24"
