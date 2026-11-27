@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { googleTeachers } from '@/features/platform/google-sync/google.fixture';
+import { googleTeachers, TEACHER_A, TEACHER_B } from '@/features/platform/google-sync/google.fixture';
 import { renderGoogle } from '@/features/platform/google-sync/google-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -27,7 +27,7 @@ describe('teacher ↔ calendar mapping', () => {
     apiSend.mockResolvedValue(saved);
     fireEvent.click(within(row).getByRole('button', { name: t.googleSync.common.confirm }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('PUT', '/admin/google/teachers/teacher-1', { calendar_id: 'fake-cal-a@group.calendar.example' }),
+      expect(apiSend).toHaveBeenCalledWith('PUT', `/admin/google/teachers/${TEACHER_A}`, { calendar_id: 'fake-cal-a@group.calendar.example' }),
     );
     await waitFor(() => expect(onNote).toHaveBeenCalledWith(t.googleSync.common.saved));
     const after = await rowOf('Teacher A');
@@ -45,7 +45,7 @@ describe('teacher ↔ calendar mapping', () => {
     fireEvent.change(select, { target: { value: none.value } });
     apiSend.mockResolvedValue(googleTeachers());
     fireEvent.click(confirm);
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/admin/google/teachers/teacher-2', { calendar_id: null }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', `/admin/google/teachers/${TEACHER_B}`, { calendar_id: null }));
   });
 
   it('lists only the discovered calendars as choices', async () => {

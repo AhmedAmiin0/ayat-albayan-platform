@@ -1,8 +1,5 @@
-import {
-  TEACHER_CALENDAR_OWNERS,
-  type TeacherCalendarOwner as Owner,
-  type TeacherCalendarView,
-} from '@ab/catalog';
+import { TEACHER_CALENDAR_OWNERS, type TeacherCalendarOwner as Owner } from '@ab/catalog';
+import { googleMapCalls } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   useIsAdmin,
@@ -16,6 +13,8 @@ import {
 } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 
+const map = googleMapCalls({ apiFetch, apiSend });
+
 const fill = (template: string, n: number) => template.replace('{n}', String(n));
 
 /** docs/24: base-role admins only; the API refuses everyone else too. */
@@ -25,12 +24,12 @@ export function TeacherCalendarOwner({ teacherId }: { teacherId: string }) {
   const path = `/admin/google/teachers/${teacherId}/calendar-owner`;
   const query = useQuery({
     queryKey: pathKey(path),
-    queryFn: () => apiFetch<TeacherCalendarView>(path),
+    queryFn: () => map.calendarOwner({ id: teacherId }),
     enabled: admin,
   });
   const client = useQueryClient();
   const save = useMutation({
-    mutationFn: (owner: Owner) => apiSend<TeacherCalendarView>('PUT', path, { owner }),
+    mutationFn: (owner: Owner) => map.setCalendarOwner({ id: teacherId }, { owner }),
     onSuccess: (view) => client.setQueryData(pathKey(path), view),
   });
   if (!admin) return null;
