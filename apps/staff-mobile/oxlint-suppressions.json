@@ -4321,9 +4321,6 @@
   "src/sales-subscribe/payment-link/link-api.ts": {
     "stylistic/max-len": {
       "count": 4
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 5
     }
   },
   "src/sales-subscribe/payment-link/link-text.ts": {

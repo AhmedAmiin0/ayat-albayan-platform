@@ -42,7 +42,7 @@ test('«إلغاء الرابط» asks first, then POSTs the cancel', async () =
   expect(screen.getByText(pl.cancelConfirm)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
   await fireEvent.press(screen.getByRole('button', { name: pl.cancel }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/payment-links/l-1/cancel'));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/payment-links/l-1/cancel', undefined));
 });
 
 test('a link no longer open: the 409 in her words', async () => {

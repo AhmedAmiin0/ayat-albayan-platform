@@ -1,8 +1,7 @@
 import {
-  portalHistoryQuerySchema,
+  portalRoutes as routes,
   type PortalFileUrl,
   type PortalHistory,
-  type PortalHistoryQuery,
   type PortalHome,
   type PortalLessons,
   type PortalPackageView,
@@ -10,12 +9,11 @@ import {
   type PortalRoomLink,
 } from '@ab/shared';
 import type { RoomJoinResult } from '@ab/schedule';
-import { Controller, Get, HttpCode, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, HttpCode, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodParam, ZodQuery } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { PortalHistoryService } from './history/portal-history.service';
 import { PortalHomeService } from './home/portal-home.service';
 import { PortalLessonsService } from './lessons/portal-lessons.service';
@@ -24,6 +22,8 @@ import { PortalReportsService } from './reports/portal-reports.service';
 
 const UUID = new ParseUUIDPipe();
 
+type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
+
 /**
  * The family portal (docs/31): a guardian login (their students) or a student login (itself),
  * through the self.portal scope key that only those base roles carry. Every :id is resolved by
@@ -31,10 +31,8 @@ const UUID = new ParseUUIDPipe();
  * internal reasons, teacher contacts or other families; money only on the package of a guardian or
  * an adult student (docs/50).
  */
-@ApiTags('portal')
 @ApiBearerAuth()
-@Permissions('self.portal')
-@Controller('portal')
+@Controller()
 export class PortalController {
   constructor(
     @Inject(PortalHomeService) private readonly home: PortalHomeService,
@@ -42,74 +40,90 @@ export class PortalController {
     @Inject(PortalHistoryService) private readonly past: PortalHistoryService,
   ) {}
 
-  @Get('me')
+  @Route(routes.home)
   me(@CurrentUser() user: AuthUser): Promise<PortalHome> {
     return this.home.home(user);
   }
 
-  @Get('students/:id/lessons')
-  upcoming(@Param('id', UUID) studentId: string, @CurrentUser() user: AuthUser): Promise<PortalLessons> {
-    return this.lessons.upcoming({ user, studentId });
+  @Route(routes.lessons)
+  upcoming(
+    @RouteInput() { params }: Input<'lessons'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PortalLessons> {
+    return this.lessons.upcoming({ user, studentId: params.id });
   }
 
-  /** docs/50 §5: a keyset page of past lessons, newest first. */
-  @Get('students/:id/history')
+  @Route(routes.history)
   history(
-    @ZodParam('id', z.uuid()) studentId: string,
-    @ZodQuery(portalHistoryQuerySchema) query: PortalHistoryQuery,
+    @RouteInput() { params, query }: Input<'history'>,
     @CurrentUser() user: AuthUser,
   ): Promise<PortalHistory> {
-    return this.past.history({ user, studentId, query });
+    return this.past.history({ user, studentId: params.id, query });
   }
 
-  @Post('students/:id/lessons/:lessonId/join')
+  /** The classroom join answer has no shared schema yet, so this handler keeps its decorators. */
+  @Post('portal/students/:id/lessons/:lessonId/join')
+  @ApiTags('portal')
+  @Permissions('self.portal')
   @HttpCode(200)
-  join(@Param('id', UUID) studentId: string, @Param('lessonId', UUID) lessonId: string, @CurrentUser() user: AuthUser): Promise<RoomJoinResult> {
+  join(
+    @Param('id', UUID) studentId: string,
+    @Param('lessonId', UUID) lessonId: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<RoomJoinResult> {
     return this.lessons.join({ user, studentId, lessonId });
   }
 
-  /** A signed link with no second sign-in, until the room closes. */
-  @Post('students/:id/lessons/:lessonId/room-link')
+  @Route(routes.roomLink)
   @HttpCode(200)
   roomLink(
-    @ZodParam('id', z.uuid()) studentId: string,
-    @ZodParam('lessonId', z.uuid()) lessonId: string,
+    @RouteInput() { params }: Input<'roomLink'>,
     @CurrentUser() user: AuthUser,
   ): Promise<PortalRoomLink> {
-    return this.lessons.roomLink({ user, studentId, lessonId });
+    return this.lessons.roomLink({ user, studentId: params.id, lessonId: params.lessonId });
   }
 }
 
 /** Same scope key and scoping as PortalController. */
-@ApiTags('portal')
 @ApiBearerAuth()
-@Permissions('self.portal')
-@Controller('portal')
+@Controller()
 export class PortalRecordsController {
   constructor(
     @Inject(PortalReportsService) private readonly reports: PortalReportsService,
     @Inject(PortalPackageService) private readonly packages: PortalPackageService,
   ) {}
 
-  @Get('students/:id/reports')
-  reportList(@Param('id', UUID) studentId: string, @CurrentUser() user: AuthUser): Promise<PortalReports> {
-    return this.reports.list({ user, studentId });
+  @Route(routes.reports)
+  reportList(
+    @RouteInput() { params }: Input<'reports'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PortalReports> {
+    return this.reports.list({ user, studentId: params.id });
   }
 
-  @Post('students/:id/reports/:reportId/url')
+  @Route(routes.reportUrl)
   @HttpCode(200)
-  reportUrl(@Param('id', UUID) studentId: string, @Param('reportId', UUID) id: string, @CurrentUser() user: AuthUser): Promise<PortalFileUrl> {
-    return this.reports.reportUrl({ user, studentId, id });
+  reportUrl(
+    @RouteInput() { params }: Input<'reportUrl'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PortalFileUrl> {
+    return this.reports.reportUrl({ user, studentId: params.id, id: params.reportId });
   }
 
-  @Post('students/:id/recordings/:recordingId/url')
+  @Route(routes.recordingUrl)
   @HttpCode(200)
-  recordingUrl(@Param('id', UUID) studentId: string, @Param('recordingId', UUID) id: string, @CurrentUser() user: AuthUser): Promise<PortalFileUrl> {
-    return this.reports.recordingUrl({ user, studentId, id });
+  recordingUrl(
+    @RouteInput() { params }: Input<'recordingUrl'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PortalFileUrl> {
+    return this.reports.recordingUrl({ user, studentId: params.id, id: params.recordingId });
   }
 
-  @Get('students/:id/package')
-  currentPackage(@Param('id', UUID) studentId: string, @CurrentUser() user: AuthUser): Promise<PortalPackageView> {
-    return this.packages.current({ user, studentId });
+  @Route(routes.package)
+  currentPackage(
+    @RouteInput() { params }: Input<'package'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PortalPackageView> {
+    return this.packages.current({ user, studentId: params.id });
   }
 }
