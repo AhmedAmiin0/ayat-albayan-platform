@@ -20,4 +20,9 @@ describe('threadReopenRoutes', () => {
     const queued = { kapso_reopened: false, template: 'queued' };
     expect(routes.reopen.response.safeParse(queued).success).toBe(false);
   });
+
+  it('lets inbox.send in on every route and tags each inbox', () => {
+    const access = Object.values(routes).map((r) => [r.permissions, r.tags]);
+    expect(access).toEqual(Object.values(routes).map(() => [['inbox.send'], ['inbox']]));
+  });
 });

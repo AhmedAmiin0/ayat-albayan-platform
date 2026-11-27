@@ -3,7 +3,13 @@ import { stickerPanelRoutes as routes } from '..';
 
 const ID = '00000000-0000-4000-8000-000000000001';
 const ITEM = { message_id: ID, phone: '+966500000001', key: 'sha:Zm9v' };
-const GIF = { id: 'abc123', title: 'شكرا', preview: 'https://media.giphy.com/a.gif', width: 200, height: 112 };
+const GIF = {
+  id: 'abc123',
+  title: 'شكرا',
+  preview: 'https://media.giphy.com/a.gif',
+  width: 200,
+  height: 112,
+};
 
 describe('stickerPanelRoutes', () => {
   it('keeps the paths of today', () => {
@@ -40,5 +46,10 @@ describe('stickerPanelRoutes', () => {
     expect(routes.gifs.response.parse(list)).toEqual(list);
     const noSize = { configured: true, items: [{ ...GIF, width: 0 }] };
     expect(routes.gifs.response.safeParse(noSize).success).toBe(false);
+  });
+
+  it('lets inbox.read in on every route and tags each inbox', () => {
+    const access = Object.values(routes).map((r) => [r.permissions, r.tags]);
+    expect(access).toEqual(Object.values(routes).map(() => [['inbox.read'], ['inbox']]));
   });
 });
