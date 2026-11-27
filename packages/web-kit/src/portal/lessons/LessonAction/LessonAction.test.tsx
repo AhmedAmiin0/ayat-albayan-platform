@@ -25,7 +25,7 @@ describe('LessonAction «ادخل الحلقة»', () => {
     show({});
     fireEvent.click(screen.getByRole('button', { name: t.portal.join }));
     await vi.waitFor(() => expect(onJoined).toHaveBeenCalledWith(room));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lessons/l1/join');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lessons/l1/join', undefined);
   });
 
   it('our classroom says «تُسجَّل هذه الجلسة» before the join, as every other door into the room', () => {

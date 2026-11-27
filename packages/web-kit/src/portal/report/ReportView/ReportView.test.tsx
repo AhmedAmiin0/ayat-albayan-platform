@@ -38,7 +38,8 @@ describe('ReportView «تقرير الحلقة»', () => {
     expect(apiFetch).toHaveBeenCalledWith('/report-pages/by-report/r1');
     fireEvent.click(screen.getByRole('button', { name: t.portal.openRecording }));
     await vi.waitFor(() => expect(tab.location.href).toBe('https://files.example.org/rec'));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/rec1/url');
+    const recording = '/portal/students/s1/recordings/rec1/url';
+    expect(apiSend).toHaveBeenCalledWith('POST', recording, undefined);
     fireEvent.click(screen.getByRole('button', { name: t.portal.backToLessons }));
     expect(onBack).toHaveBeenCalled();
   });
@@ -57,7 +58,7 @@ describe('ReportView «تقرير الحلقة»', () => {
     show();
     fireEvent.click(await screen.findByRole('button', { name: t.portal.openPdf }));
     expect(await screen.findByText(t.portal.fileFailed)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/reports/r1/url');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/reports/r1/url', undefined);
     expect(tab.close).toHaveBeenCalled();
   });
 
