@@ -1,31 +1,23 @@
 import {
   familySearchKey,
   type MoveBody,
+  peopleEditCalls,
   peopleEditErrorText,
   peopleEditKey,
-  peopleEditPaths as P,
 } from '@ab/client-core';
-import {
-  convertedStudentSchema,
-  familyOptionsSchema,
-  familyReplySchema,
-  peopleEditViewSchema,
-  type PeopleGuardianPatch,
-  type PeopleStudentPatch,
-} from '@ab/shared';
+import type { PeopleGuardianPatch, PeopleStudentPatch } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, type SendMethod, t, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, t, pathKey } from '@ab/mobile-kit';
 
 // The /people endpoints for the assistant and the admin; shared via @ab/client-core.
 
-const send = (method: SendMethod, path: string, body?: unknown): Promise<unknown> =>
-  apiSend(method, path, body);
+const people = peopleEditCalls({ apiFetch, apiSend });
 
 /** GET /people/students/:id, once a sheet is open. */
 export const usePeopleEditView = (studentId: string, enabled: boolean) =>
   useQuery({
     queryKey: peopleEditKey(studentId),
-    queryFn: async () => peopleEditViewSchema.parse(await apiFetch(P.student(studentId))),
+    queryFn: () => people.view(studentId),
     enabled,
   });
 
@@ -33,24 +25,22 @@ export const usePeopleEditView = (studentId: string, enabled: boolean) =>
 export const useFamilySearch = (search: string) =>
   useQuery({
     queryKey: familySearchKey(search),
-    queryFn: async () => familyOptionsSchema.parse(await apiFetch(P.families(search))),
+    queryFn: () => people.families(search),
     enabled: search.length >= 2,
   });
 
 export const saveStudent = (input: { id: string; patch: PeopleStudentPatch }) =>
-  send('PATCH', P.student(input.id), input.patch);
+  people.editStudent(input.id, input.patch);
 export const saveFamily = (input: { id: string; patch: PeopleGuardianPatch }) =>
-  send('PATCH', P.guardian(input.id), input.patch);
+  people.editGuardian(input.id, input.patch);
 export const removeSecondPhone = (input: { guardianId: string; phone: string }) =>
-  send('DELETE', P.secondPhone(input.guardianId, input.phone));
-export const moveFamily = async (input: { studentId: string; body: MoveBody }) =>
-  familyReplySchema.parse(await send('POST', P.move(input.studentId), input.body));
+  people.removePhone({ id: input.guardianId, phone: input.phone });
+export const moveFamily = (input: { studentId: string; body: MoveBody }) =>
+  people.move(input.studentId, input.body);
 export const setContactSelf = (input: { studentId: string; value: boolean }) =>
-  send('PATCH', P.contactSelf(input.studentId), { contact_is_self: input.value });
-export const guardianToStudent = async (guardianId: string) =>
-  convertedStudentSchema.parse(await send('POST', P.toStudent(guardianId)));
-export const studentToGuardian = async (studentId: string) =>
-  familyReplySchema.parse(await send('POST', P.toGuardian(studentId)));
+  people.contactSelf(input.studentId, { contact_is_self: input.value });
+export const guardianToStudent = (guardianId: string) => people.toStudent(guardianId);
+export const studentToGuardian = (studentId: string) => people.toGuardian(studentId);
 
 /** The API's refusal in MSA, the generic sentence for anything else. */
 const peopleErrorText = (e: unknown): string => peopleEditErrorText(e, t.peopleEdit.errors);

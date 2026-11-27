@@ -25,7 +25,7 @@ async function open() {
 
 describe('«ربط بولي أمر آخر»', () => {
   it('searches, picks a family, confirms and moves the student only', async () => {
-    apiSend.mockResolvedValue({ guardian_id: 'g2' });
+    apiSend.mockResolvedValue({ student_id: 's1', guardian_id: 'g2' });
     fireEvent.change(await open(), { target: { value: 'AB-0190' } });
     fireEvent.click(await screen.findByRole('radio', { name: 'أبو خالد' }));
     expect(screen.getByRole('status').textContent).toContain('أبو خالد');
@@ -40,7 +40,7 @@ describe('«ربط بولي أمر آخر»', () => {
   });
 
   it('a new guardian by number: parsed to E.164 before it is offered', async () => {
-    apiSend.mockResolvedValue({ guardian_id: 'g3' });
+    apiSend.mockResolvedValue({ student_id: 's1', guardian_id: 'g3' });
     await open();
     const fields = screen.getAllByLabelText(E.fields.name);
     fireEvent.change(fields[fields.length - 1] as HTMLElement, { target: { value: 'أبو سهيلة' } });

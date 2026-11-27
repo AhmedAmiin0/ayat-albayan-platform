@@ -1,61 +1,50 @@
 import {
   familySearchKey,
   type MoveBody,
+  peopleEditCalls,
   peopleEditErrorText,
   peopleEditKey,
-  peopleEditPaths as P,
 } from '@ab/client-core';
-import {
-  convertedStudentSchema,
-  familyOptionsSchema,
-  familyReplySchema,
-  peopleEditViewSchema,
-  type PeopleGuardianPatch,
-  type PeopleStudentPatch,
-} from '@ab/shared';
+import type { PeopleGuardianPatch, PeopleStudentPatch } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { meQuery } from '@/features/people/auth';
-import { apiFetch, apiSend, type SendMethod, t } from '@ab/web-kit';
+import { apiFetch, apiSend, t } from '@ab/web-kit';
 
 // Needs people.edit, students.attach_guardian or people.switch_role.
 
-/** apiSend whose JSON answer is parsed by the caller's schema (never a type argument). */
-const send = (method: SendMethod, path: string, body?: unknown): Promise<unknown> =>
-  apiSend(method, path, body);
+const people = peopleEditCalls({ apiFetch, apiSend });
 
 export const peopleEditQuery = (studentId: string) =>
   queryOptions({
     queryKey: peopleEditKey(studentId),
-    queryFn: async () => peopleEditViewSchema.parse(await apiFetch(P.student(studentId))),
+    queryFn: () => people.view(studentId),
   });
 
 export const familySearchQuery = (search: string) =>
   queryOptions({
     queryKey: familySearchKey(search),
-    queryFn: async () => familyOptionsSchema.parse(await apiFetch(P.families(search))),
+    queryFn: () => people.families(search),
     enabled: search.length >= 2,
   });
 
 export const saveStudent = (input: { id: string; patch: PeopleStudentPatch }) =>
-  apiSend('PATCH', P.student(input.id), input.patch);
+  people.editStudent(input.id, input.patch);
 
 export const saveFamily = (input: { id: string; patch: PeopleGuardianPatch }) =>
-  apiSend('PATCH', P.guardian(input.id), input.patch);
+  people.editGuardian(input.id, input.patch);
 
 export const removeSecondPhone = (input: { guardianId: string; phone: string }) =>
-  apiSend('DELETE', P.secondPhone(input.guardianId, input.phone));
+  people.removePhone({ id: input.guardianId, phone: input.phone });
 
-export const moveFamily = async (input: { studentId: string; body: MoveBody }) =>
-  familyReplySchema.parse(await send('POST', P.move(input.studentId), input.body));
+export const moveFamily = (input: { studentId: string; body: MoveBody }) =>
+  people.move(input.studentId, input.body);
 
 export const setContactSelf = (input: { studentId: string; value: boolean }) =>
-  apiSend('PATCH', P.contactSelf(input.studentId), { contact_is_self: input.value });
+  people.contactSelf(input.studentId, { contact_is_self: input.value });
 
-export const guardianToStudent = async (guardianId: string) =>
-  convertedStudentSchema.parse(await send('POST', P.toStudent(guardianId)));
+export const guardianToStudent = (guardianId: string) => people.toStudent(guardianId);
 
-export const studentToGuardian = async (studentId: string) =>
-  familyReplySchema.parse(await send('POST', P.toGuardian(studentId)));
+export const studentToGuardian = (studentId: string) => people.toGuardian(studentId);
 
 const ME = JSON.stringify(meQuery.queryKey);
 

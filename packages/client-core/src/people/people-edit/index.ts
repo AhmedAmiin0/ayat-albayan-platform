@@ -1,8 +1,9 @@
+export { peopleEditCalls } from './people-edit-api';
+export type { PeopleEditCalls } from './people-edit-api';
 export {
   familySearchKey,
   PEOPLE_EDIT_KEY,
   peopleEditKey,
-  peopleEditPaths,
 } from './people-edit-paths';
 export { peopleEditErrorText, type PeopleEditErrorText } from './people-edit-errors';
 export { roleActions, toGuardianHint, type RoleActions } from './people-edit-actions';
