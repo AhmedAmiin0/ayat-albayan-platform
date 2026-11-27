@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { shape, type } from '../../../theme';
 import { ltr } from '../../primitives/Ltr';
 import { ListRowTitle } from './ListRowTitle';
+import { titleParts } from './list-row-title.helpers';
 
 const flat = (style: unknown): Record<string, unknown> =>
   Object.assign({}, ...[style].flat(Infinity));
@@ -27,4 +28,10 @@ test('with a link: the header (lg, bold, one line) is a 44pt spoken link', async
     .toBeGreaterThanOrEqual(shape.control.touch);
   await fireEvent.press(target);
   expect(onPress).toHaveBeenCalledTimes(1);
+});
+
+test('the header link dims while a finger is down', () => {
+  const { pressStyle } = titleParts({ title: 'سهيلة' });
+  expect(pressStyle({ pressed: true })).toMatchObject({ opacity: 0.6 });
+  expect(pressStyle({ pressed: false })).toMatchObject({ opacity: 1 });
 });

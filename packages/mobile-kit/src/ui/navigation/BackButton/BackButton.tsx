@@ -2,14 +2,7 @@ import { t } from '../../../lib/i18n/i18n';
 import { useTheme } from '../../../theme';
 import { Chevron } from '../../primitives/Chevron';
 import { IconButton } from '../../primitives/IconButton';
-
-interface BackButtonProps {
-  onPress: () => void;
-  /** Work in flight (a wizard booking): not pressable until it settles. */
-  busy?: boolean;
-  disabled?: boolean;
-  testID?: string;
-}
+import type { BackButtonProps } from './BackButton.types';
 
 /** Chevron points to the inline-start; named back for screen readers. */
 export function BackButton({ onPress, busy = false, disabled = false, testID }: BackButtonProps) {
