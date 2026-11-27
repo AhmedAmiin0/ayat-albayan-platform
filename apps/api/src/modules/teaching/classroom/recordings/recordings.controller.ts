@@ -1,8 +1,9 @@
-import type { LessonRecordingView, RecordingStatus } from '@ab/schedule';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { roomModerationRoutes as routes } from '@ab/schedule';
+import { Controller } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { MeetingRecordingListService } from './recording-list.service';
 import { RecordingStarter } from './recording.starter';
 
@@ -10,14 +11,17 @@ import { RecordingStarter } from './recording.starter';
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('meetings.read')
-@Controller('meetings/:id/recordings')
+@Controller()
 export class MeetingRecordingsController {
   constructor(private readonly recordings: MeetingRecordingListService) {}
 
   /** Newest first; 404 meeting_not_found, 403 anyone but an admin or the creator. */
-  @Get()
-  list(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<LessonRecordingView[]> {
-    return this.recordings.list({ user, id });
+  @Route(routes.meetingRecordings)
+  list(
+    @RouteInput() { params }: RouteInputOf<typeof routes.meetingRecordings>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.recordings.list({ user, id: params.id });
   }
 }
 
@@ -25,12 +29,12 @@ export class MeetingRecordingsController {
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('meetings.read')
-@Controller('recordings/status')
+@Controller()
 export class RecordingStatusController {
   constructor(private readonly starter: RecordingStarter) {}
 
-  @Get()
-  status(): RecordingStatus {
+  @Route(routes.recordingStatus)
+  status() {
     return { configured: this.starter.configured };
   }
 }

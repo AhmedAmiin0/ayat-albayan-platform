@@ -3,14 +3,12 @@ import {
   JOIN_ROLES,
   lessonRoomName,
   meetingRoomName,
-  muteSchema,
   type JoinRole,
   type MuteSource,
 } from '@ab/schedule';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
-import { parseOrThrow } from '@/common/http/http';
 import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { meetingRoleOf, roleOfIdentity } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
@@ -24,15 +22,14 @@ interface MuteInput {
   /** The lesson id, or the internal meeting id. */
   id: string;
   identity: string;
-  body: unknown;
+  source: MuteSource;
 }
 
 const cannotMute = (): HttpException => new HttpException({ code: 'cannot_mute', message: 'cannot_mute' }, HttpStatus.FORBIDDEN);
 const asJoinRole = (role: string): JoinRole | null => JOIN_ROLES.find((r) => r === role) ?? null;
 
-function checkBody(livekit: LivekitApi, body: unknown): MuteSource {
+function assertConfigured(livekit: LivekitApi): void {
   if (!livekit.configured) throw notConfigured();
-  return parseOrThrow(muteSchema, body).source;
 }
 
 async function applyMute(livekit: LivekitApi, input: { room: string; identity: string; source: MuteSource }): Promise<void> {
@@ -56,7 +53,8 @@ export class MuteService {
 
   /** 204; 400 body, 404 participant_not_found, 403 cannot_mute, 503, 502. */
   async lesson(input: MuteInput): Promise<void> {
-    const source = checkBody(this.livekit, input.body);
+    assertConfigured(this.livekit);
+    const { source } = input;
     const { lesson, role } = await this.roles.resolve(input.user, input.id);
     const target = await this.moderation.participant(lesson.id, input.identity);
     if (!target) throw notFound('participant_not_found');
@@ -75,7 +73,8 @@ export class MeetingMuteService {
 
   /** 204; 400, 404 meeting_not_found / participant_not_found, 403, 503, 502. */
   async meeting(input: MuteInput): Promise<void> {
-    const source = checkBody(this.livekit, input.body);
+    assertConfigured(this.livekit);
+    const { source } = input;
     const meeting = await this.meetings.byId(input.id);
     if (!meeting) throw notFound('meeting_not_found');
     const role = meetingRoleOf(input.user, meeting);
