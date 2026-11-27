@@ -26,3 +26,8 @@ export {
   type IntegrationCalls,
   type IntegrationSecretSave,
 } from './integrations';
+export {
+  customConfigCalls,
+  type CustomConfigCalls,
+  type CustomConfigSave,
+} from './custom-config';

@@ -4,11 +4,6 @@
       "count": 1
     }
   },
-  "src/custom-config/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
   "src/custom-config/public-config.ts": {
     "stylistic/max-len": {
       "count": 2
