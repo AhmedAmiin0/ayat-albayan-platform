@@ -6,11 +6,11 @@ import {
 } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { CurrentUser } from '@/common/auth/decorators';
-import type { AuthUser } from '@/common/auth/verify-token';
+import { NumbersEvolution } from '@/modules/messaging/numbers';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { asResponse } from '@/common/http/returns';
-import { NumbersEvolution } from '@/modules/messaging/numbers';
+import type { AuthUser } from '@/common/auth/verify-token';
+import { CurrentUser } from '@/common/auth/decorators';
 import { evolutionFailure } from './evolution-failure';
 import { syncEvolution } from './evolution-push';
 
