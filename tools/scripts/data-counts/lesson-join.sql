@@ -1,5 +1,4 @@
 -- Counts the rows the family link lookup schema would refuse (docs/62 Decisions).
--- count: lesson_join_links_lesson_not_uuid
-select count(*) from public.lesson_join_links l
-join public.lessons s on s.id = l.lesson_id
-where s.id::text !~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
+-- The lesson id is a uuid column, so only a link that names no lesson could fail it.
+-- count: lesson_join_links_without_lesson
+select count(*) from public.lesson_join_links where lesson_id is null;
