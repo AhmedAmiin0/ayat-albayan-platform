@@ -75,13 +75,4 @@ describe('salesCourseRoutes (R-ASST-01)', () => {
     expect(response.parse(draft)).toEqual(draft);
     expect(response.safeParse({ state: 'booked' }).success).toBe(false);
   });
-
-  it('lets the assistant in by her money permission, under the booking tag', () => {
-    const access = Object.values(salesCourseRoutes).map(({ permissions, tags }) => ({
-      permissions,
-      tags,
-    }));
-    const one = { permissions: ['self.sales_money'], tags: ['booking'] };
-    expect(access).toEqual([one, one, one, one]);
-  });
 });

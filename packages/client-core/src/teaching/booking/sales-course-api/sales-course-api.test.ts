@@ -42,7 +42,9 @@ describe('the assistant course calls (R-ASST-01)', () => {
 
   it('throws bad_response for a view with a block reason it does not know', async () => {
     const { client } = clientAnswering({ ...VIEW, blocked: 'unpaid' });
-    const failure = await salesCourseCalls(client).view(STUDENT).catch((e: unknown) => e);
+    const failure = await salesCourseCalls(client)
+      .view(STUDENT)
+      .catch((e: unknown) => e);
     expect(failure).toBeInstanceOf(ApiError);
     expect(failure).toMatchObject({ body: { code: 'bad_response' } });
   });

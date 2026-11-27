@@ -8,6 +8,7 @@ import {
   courseTeacherRoutes,
   courseTimesRoutes,
 } from '../../sales/course/course-change';
+import { salesCourseRoutes } from '../../sales/course/sales-course';
 import { bookingRoutes, salesBookingRoutes } from '../booking';
 import { bookingExtraRoutes } from '../booking-extras';
 
@@ -40,6 +41,7 @@ const tables = [
   table('trial date', trialDateRoutes, ['booking.write', 'booking']),
   table('sales trial date', salesTrialDateRoutes, ['self.sales', 'booking']),
   table('course change', courseChangeRoutes, ['lessons.write', 'booking']),
+  table('sales course', salesCourseRoutes, ['self.sales_money', 'booking']),
   table('course times', courseTimesRoutes, ['courses.reschedule', 'course-actions']),
   table('course teacher', courseTeacherRoutes, ['students.change_teacher', 'course-actions']),
   table('course stop', courseStopRoutes, ['subscriptions.stop', 'course-actions']),
