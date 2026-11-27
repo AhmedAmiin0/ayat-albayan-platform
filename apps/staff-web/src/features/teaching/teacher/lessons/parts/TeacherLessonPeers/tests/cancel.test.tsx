@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError, t } from '@ab/web-kit';
 import { TeacherLessonCard } from '@/features/teaching/teacher/lessons/TeacherLessonCard';
 
@@ -41,7 +41,7 @@ describe('TeacherLessonPeers — «إلغاء الحلقة» (docs/46 C3, D3)', 
   });
 
   it('with a reason: her own route, one lesson, then the toast', async () => {
-    apiSend.mockResolvedValue({ ...AHEAD, status: 'cancelled_by_teacher' });
+    apiSend.mockResolvedValue(answered({ ...AHEAD, status: 'cancelled_by_teacher' }));
     const { dialog, onDone } = openCancel();
     fireEvent.change(within(dialog).getByLabelText(new RegExp(w.reason)), { target: { value: ' مرض ' } });
     fireEvent.click(within(dialog).getByRole('button', { name: w.cancelSubmit }));

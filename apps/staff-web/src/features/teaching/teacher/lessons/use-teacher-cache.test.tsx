@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { teacherKeys } from '@/features/people/keys';
 import { lessonKeys } from '@/features/teaching/schedule';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError } from '@ab/web-kit';
 import { useTeacherCancel } from './use-teacher-cancel';
 import { useTeacherConfirm } from './use-teacher-confirm';
@@ -50,7 +50,7 @@ describe('useTeacherConfirm (optimistic)', () => {
     await waitFor(() => expect(rowOf(client, HOME)?.teacher_confirmed_at).toBeTruthy());
     expect(rowOf(client, WEEK)?.teacher_confirmed_at).toBeTruthy();
     expect(rowOf(client, OTHER)?.teacher_confirmed_at ?? null).toBeNull();
-    act(() => answer({ ...AHEAD, teacher_confirmed_at: '2099-10-01T00:00:00.000Z' }));
+    act(() => answer(answered({ ...AHEAD, teacher_confirmed_at: '2099-10-01T00:00:00.000Z' })));
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(invalidate).toHaveBeenCalledWith({ queryKey: lessonKeys.all });
     expect(touchedMe(invalidate)).toBe(false);
@@ -69,7 +69,9 @@ describe('useTeacherConfirm (optimistic)', () => {
 
 describe('useTeacherCancel (write-through)', () => {
   it('the answer closes the cached row; no /teachers/me refetch', async () => {
-    apiSend.mockResolvedValue({ ...AHEAD, status: 'cancelled_by_teacher', cancel_reason: 'سفر' });
+    apiSend.mockResolvedValue(
+      answered({ ...AHEAD, status: 'cancelled_by_teacher', cancel_reason: 'سفر' }),
+    );
     const { client, invalidate, wrapper } = setup();
     const { result } = renderHook(() => useTeacherCancel('b'), { wrapper });
     act(() => result.current.mutate({ reason: 'سفر' }));
@@ -82,6 +84,15 @@ describe('useTeacherCancel (write-through)', () => {
 
   it('a refusal never flashes a closed row', async () => {
     apiSend.mockRejectedValue(new ApiError(409, { code: 'lesson_started', message: 'x' }));
+    const { client, wrapper } = setup();
+    const { result } = renderHook(() => useTeacherCancel('b'), { wrapper });
+    act(() => result.current.mutate({ reason: 'سفر' }));
+    await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(rowOf(client, HOME)?.status).toBe('scheduled');
+  });
+
+  it('an answer that is no lesson fails and patches nothing', async () => {
+    apiSend.mockResolvedValue({ id: 'b', status: 'cancelled_by_teacher', cancel_reason: 'سفر' });
     const { client, wrapper } = setup();
     const { result } = renderHook(() => useTeacherCancel('b'), { wrapper });
     act(() => result.current.mutate({ reason: 'سفر' }));
