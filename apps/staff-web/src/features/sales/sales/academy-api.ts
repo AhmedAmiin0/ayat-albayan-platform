@@ -1,10 +1,6 @@
-import type {
-  SalesStudentView,
-  SalesSubscriptionHistory,
-  SalesTeacherView,
-} from '@ab/shared';
+import type { SalesStudentView } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { salesAcademyDayCalls } from '@ab/client-core';
+import { salesAcademyDayCalls, salesAcademyListCalls } from '@ab/client-core';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { salesKeys, salesSubscriptionKeys } from '@/features/sales/keys';
 
@@ -14,6 +10,7 @@ export const ALL_STUDENTS_PAGE_SIZE = 25;
 /** The running lessons are re-read every minute: one ends, another starts. */
 const LIVE_REFRESH_MS = 60_000;
 const academyDay = salesAcademyDayCalls({ apiFetch, apiSend });
+const academyLists = salesAcademyListCalls({ apiFetch, apiSend });
 
 export interface Paged<T> {
   items: T[];
@@ -25,7 +22,7 @@ export interface Paged<T> {
 /** GET /sales/teachers — every active teacher with the students they teach. */
 export const salesTeachersQuery = queryOptions({
   queryKey: salesKeys.teachers(),
-  queryFn: () => apiFetch<SalesTeacherView[]>('/sales/teachers'),
+  queryFn: () => academyLists.teachers(),
 });
 
 /** GET /sales/students/all?page&pageSize&search — every student, one page. */
@@ -63,5 +60,5 @@ export const salesScheduleQuery = (q: { date: string; teacherId?: string | undef
 export const subscriptionHistoryQuery = (id: string) =>
   queryOptions({
     queryKey: salesSubscriptionKeys.history(id),
-    queryFn: () => apiFetch<SalesSubscriptionHistory>(`/sales/subscriptions/${id}/history`),
+    queryFn: () => academyLists.history(id),
   });

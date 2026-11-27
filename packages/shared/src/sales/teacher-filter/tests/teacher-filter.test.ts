@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PROGRAMS } from '@ab/catalog';
-import type { SalesTeacherView } from '../../academy';
+import type { SalesTeacherView } from '../../teacher/academy-lists.schemas';
 import { canSalesConfirm, filterSalesTeachers, isRunningLesson, isTeacherFilterOn, NO_TEACHER_FILTER, teacherPrograms } from '../teacher-filter';
 
 const tc = (over: Partial<SalesTeacherView>): SalesTeacherView => ({

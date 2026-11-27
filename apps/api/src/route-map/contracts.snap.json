@@ -18139,6 +18139,234 @@
    }
   }
  },
+ "GET /sales/subscriptions/:id/history": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscription_id": {
+     "type": "string"
+    },
+    "student": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "code": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "code",
+      "name"
+     ]
+    },
+    "subscriptions": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "package": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "4",
+           "8",
+           "12",
+           "16",
+           "20",
+           "28",
+           "trial"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "trial",
+         "active",
+         "paused",
+         "expired",
+         "unpaid",
+         "cancelled"
+        ]
+       },
+       "starts_on": {
+        "type": "string"
+       },
+       "lessons_total": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+       },
+       "renews_on": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "ended_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_at": {
+        "type": "string"
+       },
+       "lessons_used": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+       },
+       "lessons_remaining": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "lessons_used_before": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+       },
+       "status_changes": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "at": {
+           "type": "string"
+          },
+          "from": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "trial",
+              "active",
+              "paused",
+              "expired",
+              "unpaid",
+              "cancelled"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "to": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "trial",
+              "active",
+              "paused",
+              "expired",
+              "unpaid",
+              "cancelled"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          }
+         },
+         "required": [
+          "at",
+          "from",
+          "to"
+         ]
+        }
+       },
+       "payments": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": "string"
+          },
+          "paid_at": {
+           "type": "string"
+          },
+          "kind": {
+           "type": "string",
+           "enum": [
+            "payment",
+            "refund"
+           ]
+          },
+          "amount": {
+           "type": "number"
+          },
+          "currency": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "id",
+          "paid_at",
+          "kind",
+          "amount",
+          "currency"
+         ]
+        }
+       }
+      },
+      "required": [
+       "id",
+       "package",
+       "status",
+       "starts_on",
+       "lessons_total",
+       "renews_on",
+       "ended_at",
+       "created_at",
+       "lessons_used",
+       "lessons_remaining",
+       "status_changes",
+       "payments"
+      ]
+     }
+    }
+   },
+   "required": [
+    "subscription_id",
+    "student",
+    "subscriptions"
+   ]
+  }
+ },
  "GET /sales/subscriptions/teachers": {
   "response": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18158,6 +18386,145 @@
     "required": [
      "id",
      "name"
+    ]
+   }
+  }
+ },
+ "GET /sales/teachers": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "name_en": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "gender": {
+      "type": "string",
+      "enum": [
+       "male",
+       "female"
+      ]
+     },
+     "programs": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "enum": [
+        "quran",
+        "arabic",
+        "islamic_studies"
+       ]
+      }
+     },
+     "lessons_today": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     },
+     "live_now": {
+      "type": "boolean"
+     },
+     "active_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     },
+     "trial_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     },
+     "meeting_link": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "platform_classroom": {
+      "type": "boolean"
+     },
+     "avatar_url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "students": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "code": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "program": {
+         "type": "string",
+         "enum": [
+          "quran",
+          "arabic",
+          "islamic_studies"
+         ]
+        },
+        "status": {
+         "type": "string",
+         "enum": [
+          "new",
+          "trial",
+          "pending_subscription",
+          "active",
+          "pending_renewal",
+          "expired",
+          "paused",
+          "churned"
+         ]
+        },
+        "next_lesson_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "id",
+        "code",
+        "name",
+        "program",
+        "status",
+        "next_lesson_at"
+       ]
+      }
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "name_en",
+     "gender",
+     "programs",
+     "lessons_today",
+     "live_now",
+     "active_count",
+     "trial_count",
+     "meeting_link",
+     "students"
     ]
    }
   }

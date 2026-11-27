@@ -41,33 +41,40 @@ export async function salesLessonsBetween(db: Db, input: { own: SalesOwnership }
   return [...byId.values()].filter((r) => inSalesScope(r, input.own)).sort((a, b) => a.starts_at.localeCompare(b.starts_at));
 }
 
+/** By the rule (booked from a lead) or by a student (inner join on lesson_students). */
+interface MeetingFilter {
+  column: 'rule_id' | 'lesson_students.student_id';
+  ids: string[];
+}
+
+async function meetingsWhere(
+  db: Db,
+  filter: MeetingFilter,
+  range: Range,
+): Promise<SalesLessonRow[]> {
+  return rows(await db
+    .from('lessons')
+    .select(select(filter.column !== 'rule_id'))
+    .in(filter.column, filter.ids)
+    .gte('starts_at', range.from)
+    .lte('starts_at', range.to)
+    .in('status', [...MEETING_STATUSES])
+    .overrideTypes<SalesLessonRow[], { merge: false }>());
+}
+
 async function bookedFromLeads(db: Db, input: { own: SalesOwnership } & Range): Promise<SalesLessonRow[]> {
   if (input.own.leadIds.length === 0) return [];
   const rules = await db.from('schedule_rules').select('id').in('created_from_lead_id', input.own.leadIds);
   if (rules.error) throw pgError(rules.error);
   if (rules.data.length === 0) return [];
-  const data = rows(await db
-    .from('lessons')
-    .select(select(false))
-    .in('rule_id', rules.data.map((r) => r.id))
-    .gte('starts_at', input.from)
-    .lte('starts_at', input.to)
-    .in('status', [...MEETING_STATUSES])
-    .overrideTypes<SalesLessonRow[], { merge: false }>());
-  return data;
+  const filter: MeetingFilter = { column: 'rule_id', ids: rules.data.map((r) => r.id) };
+  return meetingsWhere(db, filter, input);
 }
 
 async function trialsOfStudents(db: Db, input: { own: SalesOwnership } & Range): Promise<SalesLessonRow[]> {
   if (input.own.studentIds.length === 0) return [];
-  const data = rows(await db
-    .from('lessons')
-    .select(select(true))
-    .in('lesson_students.student_id', input.own.studentIds)
-    .gte('starts_at', input.from)
-    .lte('starts_at', input.to)
-    .in('status', [...MEETING_STATUSES])
-    .overrideTypes<SalesLessonRow[], { merge: false }>());
-  return data;
+  const filter: MeetingFilter = { column: 'lesson_students.student_id', ids: input.own.studentIds };
+  return meetingsWhere(db, filter, input);
 }
 
 /** Is this lesson one of the salesperson's (room join)? Same rule as the list; any status. */
