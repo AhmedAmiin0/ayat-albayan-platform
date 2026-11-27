@@ -1,29 +1,26 @@
-import { meetingCalls } from '@ab/client-core';
-import type {
-  CreateMeeting,
-  MeetingInviteeOption,
-  UpdateMeeting,
-} from '@ab/schedule';
+import { meetingCalls, meetingInviteCalls } from '@ab/client-core';
+import type { CreateMeeting, UpdateMeeting } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 // Scheduled meetings and invitations (R-MEET-01..03). Every key sits under ['meetings'], so a
 // create, a reschedule or a cancel refreshes the list.
 
-/** POST /meetings: instant (no startsAt) or scheduled, with invitees; clientRequestId makes a retry safe. */
 const meetings = meetingCalls({ apiFetch, apiSend });
+const invites = meetingInviteCalls({ apiFetch, apiSend });
 
+/** Instant (no startsAt) or scheduled, with invitees; clientRequestId makes a retry safe. */
 export const createMeetingWith = (body: CreateMeeting) => meetings.create(body);
 
-/** PATCH /meetings/:id (creator or admin): a new time and/or length. 204. */
-export const updateMeeting = ({ id, body }: { id: string; body: UpdateMeeting }) => apiSend('PATCH', `/meetings/${id}`, body);
+/** Creator or admin: a new time and/or length. 204. */
+export const updateMeeting = (input: { id: string; body: UpdateMeeting }) => invites.update(input);
 
-/** POST /meetings/:id/cancel (creator or admin): the invitees' links stop working. 204. */
-export const cancelMeeting = (id: string) => apiSend('POST', `/meetings/${id}/cancel`);
+/** Creator or admin: the invitees' links stop working. 204. */
+export const cancelMeeting = (id: string) => invites.cancel(id);
 
-/** GET /meetings/invitee-options?q=: staff by name and role, students by name and code (never a phone). */
+/** Staff by name and role, students by name and code (never a phone). */
 export const useInviteeOptions = (q: string) =>
   useQuery({
     queryKey: [...pathKey('/meetings/invitee-options'), q],
-    queryFn: () => apiFetch<MeetingInviteeOption[]>(`/meetings/invitee-options${toQueryString({ q })}`),
+    queryFn: () => invites.options(q),
   });

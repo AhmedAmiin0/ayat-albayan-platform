@@ -1,5 +1,5 @@
 import type { RouteBody, RouteResult } from '@ab/core';
-import type { meetingRoomRoutes } from '@ab/schedule';
+import type { meetingInviteRoutes, meetingRoomRoutes } from '@ab/schedule';
 
 type Routes = typeof meetingRoomRoutes;
 type Answer<K extends keyof Routes> = Promise<RouteResult<Routes[K]>>;
@@ -32,4 +32,26 @@ export interface GuestMeetingJoin {
 export interface PublicMeetingCalls {
   view: (linkToken: string) => Answer<'publicView'>;
   join: (input: GuestMeetingJoin) => Answer<'guestJoin'>;
+}
+
+type Invites = typeof meetingInviteRoutes;
+type InviteAnswer<K extends keyof Invites> = Promise<RouteResult<Invites[K]>>;
+
+export interface MeetingInviteResend {
+  meetingId: string;
+  inviteeId: string;
+  /** One per click: a retry reuses it, so a queued text is sent once. */
+  clientRequestId: string;
+}
+
+/** Scheduled meetings and their invitees, for the creator or an admin. */
+export interface MeetingInviteCalls {
+  /** Staff by name and role, students by name and code; never a phone. */
+  options: (q: string) => InviteAnswer<'inviteeOptions'>;
+  update: (input: { id: string; body: RouteBody<Invites['update']> }) => Promise<void>;
+  /** The invitees' personal links stop working. */
+  cancel: (meetingId: string) => Promise<void>;
+  invitees: (meetingId: string) => InviteAnswer<'invitees'>;
+  add: (input: { id: string } & RouteBody<Invites['add']>) => InviteAnswer<'add'>;
+  resend: (input: MeetingInviteResend) => InviteAnswer<'resend'>;
 }

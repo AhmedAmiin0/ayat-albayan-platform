@@ -30,7 +30,7 @@ describe('meetingInviteCalls (R-MEET-01..03)', () => {
     await expect(meetingInviteCalls(client).options('ل ي')).resolves.toEqual([option]);
     await meetingInviteCalls(client).options('');
     expect(apiFetch.mock.calls.map(([path]) => path)).toEqual([
-      '/meetings/invitee-options?q=%D9%84+%D9%8A',
+      '/meetings/invitee-options?q=%D9%84%20%D9%8A',
       '/meetings/invitee-options',
     ]);
   });
