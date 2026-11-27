@@ -34,32 +34,27 @@ const clientAnswering = (answer: unknown) => {
   return { client, apiFetch, apiSend };
 };
 
-describe('teacherEarningCalls: whose earnings', () => {
+describe('teacherEarningCalls: one named teacher', () => {
   it('reads a named teacher under /teacher-earnings/:teacherId', async () => {
     const { client, apiFetch } = clientAnswering(balance);
     await expect(teacherEarningCalls(client).balance(TEACHER)).resolves.toEqual(balance);
     expect(apiFetch).toHaveBeenCalledWith(`/teacher-earnings/${TEACHER}`);
   });
 
-  it('reads the signed-in teacher under /teachers/me/earnings', async () => {
+  it('reads a named teacher payments with the query', async () => {
     const { client, apiFetch } = clientAnswering(page);
     const query = { sort: 'amount', page: 2, pageSize: 20 } as const;
-    await expect(teacherEarningCalls(client).payments(undefined, query)).resolves.toEqual(page);
+    await expect(teacherEarningCalls(client).payments(TEACHER, query)).resolves.toEqual(page);
     expect(apiFetch).toHaveBeenCalledWith(
-      '/teachers/me/earnings/payments?sort=amount&page=2&pageSize=20',
+      `/teacher-earnings/${TEACHER}/payments?sort=amount&page=2&pageSize=20`,
     );
   });
 
-  it('reads a receipt through the admin path or the teacher own path', async () => {
+  it('reads a receipt through the admin path', async () => {
     const link = { url: 'https://files.example/r.pdf', expires_at: '2026-10-01T08:05:00Z' };
     const { client, apiFetch } = clientAnswering(link);
-    const calls = teacherEarningCalls(client);
-    await calls.receipt(TEACHER, PAYMENT);
-    await calls.receipt(undefined, PAYMENT);
-    expect(apiFetch.mock.calls).toEqual([
-      [`/teacher-earnings/payments/${PAYMENT}/receipt`],
-      [`/teachers/me/earnings/payments/${PAYMENT}/receipt`],
-    ]);
+    await expect(teacherEarningCalls(client).receipt(PAYMENT)).resolves.toEqual(link);
+    expect(apiFetch).toHaveBeenCalledWith(`/teacher-earnings/payments/${PAYMENT}/receipt`);
   });
 
   it('refuses a balance without its teacher', async () => {
