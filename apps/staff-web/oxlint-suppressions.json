@@ -4487,7 +4487,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/sales/leads/list/AssignUnassignedButton.tsx": {
