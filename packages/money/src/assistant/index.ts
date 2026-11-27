@@ -8,4 +8,4 @@ export * from './statement';
 export * from './statement-view.schemas';
 export * from './terms-dates';
 export * from './wallet';
-export type * from './views';
+export * from './my-view.schemas';

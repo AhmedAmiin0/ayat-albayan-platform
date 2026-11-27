@@ -1,3 +1,4 @@
+import { mySalesRoutes as routes } from '@ab/shared';
 import type { Page } from '@ab/core';
 import type {
   MyCommissionRow,
@@ -6,15 +7,15 @@ import type {
   MyStudentRow,
   PaymentAttachmentView,
 } from '@ab/money';
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { pageQuerySchema, parseOrThrow } from '@/common/http/http';
-import {
-  PaymentAttachments,
-} from '@/modules/finance/payments/attachments/payment-attachments.service';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { PaymentAttachments } from '@/modules/finance/payments/attachments/payment-attachments.service';
 import { MyService } from './my.service';
+
+type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 /**
  * The assistant's own pages (R-ASST-04, R-ASST-06): the students they brought, their earnings and the
@@ -22,44 +23,47 @@ import { MyService } from './my.service';
  */
 @ApiTags('sales')
 @ApiBearerAuth()
-@Controller('sales/me')
+@Controller()
 export class MyController {
   constructor(
     private readonly my: MyService,
     private readonly attachments: PaymentAttachments,
   ) {}
 
-  @Get('students')
+  @Route(routes.students)
   @Permissions('self.sales_students')
   students(@CurrentUser() user: AuthUser): Promise<MyStudentRow[]> {
     return this.my.students(user);
   }
 
-  @Get('earnings')
+  @Route(routes.earnings)
   @Permissions('self.sales_earnings')
   earnings(@CurrentUser() user: AuthUser): Promise<MyEarnings> {
     return this.my.earnings(user);
   }
 
-  /** My commissions, newest first (pageSize <= 100); always the caller's own, whatever the query */
-  @Get('commissions')
+  /** Always the caller's own, whatever the query. */
+  @Route(routes.commissions)
   @Permissions('self.sales_earnings')
   commissions(
-    @Query() query: unknown,
+    @RouteInput() { query }: In<'commissions'>,
     @CurrentUser() user: AuthUser,
   ): Promise<Page<MyCommissionRow>> {
-    return this.my.commissions(user, parseOrThrow(pageQuerySchema, query));
+    return this.my.commissions(user, query);
   }
 
-  @Get('payments')
+  @Route(routes.payments)
   @Permissions('self.sales_payments')
   payments(@CurrentUser() user: AuthUser): Promise<MyPaymentRow[]> {
     return this.my.payments(user);
   }
 
-  @Get('payments/:id/attachments')
+  @Route(routes.paymentAttachments)
   @Permissions('self.sales_payments')
-  paymentAttachments(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<PaymentAttachmentView[]> {
-    return this.attachments.ownViews(id, user.id);
+  paymentAttachments(
+    @RouteInput() { params }: In<'paymentAttachments'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PaymentAttachmentView[]> {
+    return this.attachments.ownViews(params.id, user.id);
   }
 }
