@@ -1,28 +1,22 @@
-import {
-  cancelRequestSchema,
-  lessonCorrectSchema,
-  lessonStatusRequestSchema,
-  type LessonView,
-} from '@ab/schedule';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { lessonActionRoutes as routes } from '@ab/schedule';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { LessonCancelService } from './lesson-cancel.service';
 import { LessonStatusService } from './lesson-status.service';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { OutcomeCorrection } from '@/modules/teaching/lessons/auto-held/outcome-correction';
 
+type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
+
 /**
  * Confirm, attendance outcome and cancel (docs/10 routes 6, 7, 9). R-SCH-03, R-SCH-07, R-SCH-08.
  * A teacher may confirm / record outcomes of their own lessons only (LessonAccess → 403).
  */
-@ApiTags('lessons')
 @ApiBearerAuth()
-@Permissions('lessons.status')
-@Controller('lessons')
+@Controller()
 export class LessonActionsController {
   constructor(
     private readonly views: LessonViews,
@@ -31,49 +25,34 @@ export class LessonActionsController {
     private readonly corrections: OutcomeCorrection,
   ) {}
 
-  @Post(':id/confirm')
+  @Route(routes.confirm)
   @HttpCode(200)
-  async confirm(
-    @Param('id', ParseUUIDPipe) id: string,
-    @CurrentUser() user: AuthUser,
-  ): Promise<LessonView> {
-    return this.views.one(await this.status.confirm({ lessonId: id, actor: user }), user.role);
+  async confirm(@RouteInput() { params }: In<'confirm'>, @CurrentUser() user: AuthUser) {
+    const lessonId = await this.status.confirm({ lessonId: params.id, actor: user });
+    return this.views.one(lessonId, user.role);
   }
 
-  @Post(':id/status')
+  @Route(routes.status)
   @HttpCode(200)
-  async changeStatus(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodBody(lessonStatusRequestSchema) req: z.output<typeof lessonStatusRequestSchema>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<LessonView> {
-    const lessonId = await this.status.changeStatus({ ...req, lessonId: id, actor: user });
+  async changeStatus(@RouteInput() { params, body }: In<'status'>, @CurrentUser() user: AuthUser) {
+    const lessonId = await this.status.changeStatus({ ...body, lessonId: params.id, actor: user });
     return this.views.one(lessonId, user.role);
   }
 
   /** Every lesson cancelled (one, or this and the rest of its rule). */
-  @Post(':id/cancel')
+  @Route(routes.cancel)
   @HttpCode(200)
-  @Permissions('lessons.write')
-  async cancel(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodBody(cancelRequestSchema) req: z.output<typeof cancelRequestSchema>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<LessonView[]> {
-    const ids = await this.cancels.cancel({ lessonId: id, body: req, actor: user });
+  async cancel(@RouteInput() { params, body }: In<'cancel'>, @CurrentUser() user: AuthUser) {
+    const ids = await this.cancels.cancel({ lessonId: params.id, body, actor: user });
     return this.views.many(ids, 'admin');
   }
 
   /** Ended lesson still open, or one the job settled; 409 not_auto_held, earning_paid. */
-  @Post(':id/correct')
+  @Route(routes.correct)
   @HttpCode(200)
-  @Permissions('lessons.write')
-  async correct(
-    @ZodParam('id', z.uuid()) id: string,
-    @ZodBody(lessonCorrectSchema) req: z.output<typeof lessonCorrectSchema>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<LessonView> {
-    const lessonId = await this.corrections.correct({ lessonId: id, to: req.to, actor: user });
+  async correct(@RouteInput() { params, body }: In<'correct'>, @CurrentUser() user: AuthUser) {
+    const input = { lessonId: params.id, to: body.to, actor: user };
+    const lessonId = await this.corrections.correct(input);
     return this.views.one(lessonId, 'admin');
   }
 }

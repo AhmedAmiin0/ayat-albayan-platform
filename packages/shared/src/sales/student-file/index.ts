@@ -1,3 +1,4 @@
+export * from './attendance.routes';
 export * from './attendance.schemas';
 export * from './student-file.routes';
 export * from './teacher-student.routes';

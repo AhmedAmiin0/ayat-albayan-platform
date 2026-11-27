@@ -6386,11 +6386,6 @@
       "count": 1
     }
   },
-  "src/modules/sales/sales-students/attendance/student-attendance.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/sales/sales-students/attendance/student-attendance.fakes.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -8733,11 +8728,6 @@
       "count": 1
     }
   },
-  "src/modules/teaching/lessons/status/lesson-actions.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 3
-    }
-  },
   "src/modules/teaching/lessons/status/lesson-cancel.service.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -8828,11 +8818,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/lessons/student-lessons.controller.ts": {
-    "ab/zod-inputs": {
       "count": 1
     }
   },

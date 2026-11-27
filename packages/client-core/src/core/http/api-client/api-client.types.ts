@@ -41,6 +41,8 @@ export interface ApiClientOptions {
   clientTag: () => string;
   /** The transport; mobile wraps fetch to report reachability. Default: global fetch. */
   fetch?: (url: string, init: RequestInit) => Promise<Response>;
+  /** Sent on every request; 'include' keeps a cookie the API sets on another origin. */
+  credentials?: RequestCredentials;
   /** A write passed its deadline (mobile tells its connection state). Default: nothing. */
   onStall?: (stage: StallStage) => void;
 }

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CORRECT_TO } from '../lessons';
+import { CORRECT_TO } from './lesson-outcome';
 
 /**
  * POST /lessons/:id/correct (lessons.write) and /sales/lessons/:id/correct (lessons.cancel):

@@ -4,6 +4,7 @@ export {
   apiFetch,
   apiSend,
   call,
+  cookieCall,
   publicCall,
   publicApiFetch,
   publicApiSend,
