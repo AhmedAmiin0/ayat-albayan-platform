@@ -2547,17 +2547,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/thread-file.controller.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 3
-    }
-  },
   "src/modules/messaging/inbox/files/thread-forward.controller.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -2583,14 +2572,6 @@
       "count": 1
     },
     "typescript/prefer-nullish-coalescing": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/inbox/files/thread-media.controller.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
       "count": 1
     }
   },

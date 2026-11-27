@@ -1,5 +1,4 @@
-import type { ThreadFile } from '@ab/shared';
-import type { ThreadMediaItem } from '@ab/schedule';
+import { threadMediaItemSchema, type ThreadFile, type ThreadMediaItem } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
@@ -8,6 +7,7 @@ import { baseMime, chatServable, InboundMedia, type InboundFile, mediaExpired, s
 import { isCrmHistoryRow, receiptMime, receiptName } from '@/modules/messaging/whatsapp';
 import { downloadName } from './download-name';
 import { httpError } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 
 const DAY_MS = 86_400_000;
 /** The picker looks back this far and shows this many files. */
@@ -40,7 +40,8 @@ export class ThreadMediaService {
       const caption = (isCrmHistoryRow(m) ? null : m.body) ?? receiptName(m);
       const created = new Date(m.created_at).toISOString();
       const expired = mediaExpired(m, now);
-      return [{ message_id: m.id, created_at: created, mime, caption, expired }];
+      const item = { message_id: m.id, created_at: created, mime, caption, expired };
+      return [asResponse(threadMediaItemSchema, item)];
     });
   }
 

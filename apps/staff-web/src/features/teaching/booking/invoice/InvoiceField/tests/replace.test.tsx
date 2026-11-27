@@ -19,7 +19,7 @@ vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: (
 
 const PHONE = '+966501234567';
 const GOOD: InvoiceDraft = { source: 'upload', path: 'req-1/a.png', name: 'first.png', mime: 'image/png', preview: 'blob:first' };
-const PHOTO: ThreadMediaItem = { message_id: 'm-1', created_at: '2026-10-02T10:00:00.000Z', mime: 'image/jpeg', caption: null, expired: false };
+const PHOTO: ThreadMediaItem = { message_id: 'a1111111-1111-4111-8111-111111111111', created_at: '2026-10-02T10:00:00.000Z', mime: 'image/jpeg', caption: null, expired: false };
 const file = (type: string, name = 'inv.png') => new File([new Uint8Array(10)], name, { type });
 
 /** The field with its value held by a parent, as the wizard does; `seen` records every onChange. */
@@ -46,7 +46,7 @@ describe('InvoiceField: replacing and removing (R-PAY-03)', () => {
     URL.createObjectURL = vi.fn(() => 'blob:second');
     apiSend.mockResolvedValue({ bucket: 'invoices', path: 'req-1/b.png', token: 'tok', signed_url: 'https://x' });
     apiFetch.mockImplementation(async (path: string) =>
-      path.endsWith('/media') ? [PHOTO] : { url: 'https://signed/m-1', mime: 'image/jpeg', expires_at: '2026-10-03T10:00:00.000Z' },
+      path.endsWith('/media') ? [PHOTO] : { url: 'https://signed/photo', mime: 'image/jpeg', expires_at: '2026-10-03T10:00:00.000Z' },
     );
   });
   afterEach(() => {

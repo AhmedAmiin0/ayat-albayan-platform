@@ -1,14 +1,12 @@
-import type { ThreadFile, ThreadPdfPage } from '@ab/shared';
+import type { ThreadFile } from '@ab/shared';
 import { queryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
-import { offPathKeys, pdfPageRetryable } from '@ab/client-core';
-import { ApiError, apiFetch } from '@ab/mobile-kit';
-import { threadPath } from '@/inbox/thread/hooks/thread-cache';
+import { chatFileCalls, offPathKeys, pdfPageRetryable } from '@ab/client-core';
+import { ApiError, apiFetch, apiSend } from '@ab/mobile-kit';
 import { threadKeys } from '@/core/lib/keys';
 
-/** GET /threads/:phone/messages/:id/file (W6, docs/20). */
-export const threadFilePath = (phone: string, messageId: string): string =>
-  `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file`;
+/** A bubble's file and a PDF's pages (W6, docs/20). */
+const chatFiles = chatFileCalls({ apiFetch, apiSend });
 
 /**
  * The API signs for an hour (SIGNED_URL_SECONDS.ui); a URL is re-signed 5 minutes before it ends.
@@ -52,7 +50,7 @@ export const threadFileQuery = (phone: string, messageId: string) =>
   queryOptions({
     ...SIGNED_QUERY,
     queryKey: offPathKeys.threadFile(phone, messageId),
-    queryFn: () => apiFetch<ThreadFile>(threadFilePath(phone, messageId)),
+    queryFn: () => chatFiles.file({ phone, messageId }),
     retry: false,
     retryOnMount: false,
   });
@@ -68,11 +66,7 @@ export function useThreadFile(phone: string, messageId: string): () => Promise<T
 
 /** Never cached: a fresh signed URL each tap, saved under the file's name. */
 export const fetchDownload = (phone: string, messageId: string): Promise<ThreadFile> =>
-  apiFetch<ThreadFile>(`${threadFilePath(phone, messageId)}?download=1`);
-
-/** GET /threads/:phone/messages/:id/pdf/:page: one page of a chat PDF as a signed JPEG. */
-export const pdfPagePath = (phone: string, messageId: string, page: number): string =>
-  `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/pdf/${page}`;
+  chatFiles.download({ phone, messageId });
 
 /**
  * A 4xx: an answer that ends there (the PDF bubble then shows today's opener or a note, never
@@ -90,7 +84,7 @@ export const pdfPageQuery = (phone: string, messageId: string, page: number) =>
   queryOptions({
     ...SIGNED_QUERY,
     queryKey: threadKeys.pdfPage(phone, messageId, page),
-    queryFn: () => apiFetch<ThreadPdfPage>(pdfPagePath(phone, messageId, page)),
+    queryFn: () => chatFiles.pdfPage({ phone, messageId, page }),
     // A busy slot or failed render (503) is worth another try; pdf_unavailable (no sandbox) and a
     // 4xx not.
     retry: (failures, e) => failures < 3 && pdfPageRetryable(e),

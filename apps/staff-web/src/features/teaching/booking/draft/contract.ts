@@ -8,7 +8,7 @@ export type {
   InvoiceInput,
   InvoiceView,
   MakeupCandidate,
-  ThreadMediaItem,
 } from '@ab/schedule';
+export type { ThreadMediaItem } from '@ab/shared';
 
 export const isMakeup = (lesson: Pick<LessonView, 'makeup'>): boolean => lesson.makeup === true;

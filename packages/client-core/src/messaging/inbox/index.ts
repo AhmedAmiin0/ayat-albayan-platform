@@ -77,3 +77,4 @@ export { messageHideCalls, type MessageHideCalls } from './message-hide';
 export { threadForwardCalls, type ThreadForwardCalls } from './thread-forward';
 export { inboxSearchCalls, type InboxSearchCalls } from './inbox-search';
 export { stickerPanelCalls, type StickerPanelCalls } from './sticker-panel';
+export { chatFileCalls, type ChatFileCalls } from './chat-files';

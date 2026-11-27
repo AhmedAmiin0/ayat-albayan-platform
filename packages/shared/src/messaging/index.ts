@@ -17,6 +17,8 @@ export * from './reactions/reactions';
 export * from './templates/restricted-templates';
 export * from './schemas';
 export * from './chat/chat-files/chat-files';
+export * from './chat/chat-files/chat-files.routes';
+export * from './chat/chat-files/chat-files.schemas';
 export * from './chat/chat-lists';
 export * from './chat/crm-names';
 export * from './chat/linkify';
