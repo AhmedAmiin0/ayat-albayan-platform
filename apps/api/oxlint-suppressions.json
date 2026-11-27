@@ -63,9 +63,6 @@
     },
     "typescript/no-unsafe-assignment": {
       "count": 1
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 2
     }
   },
   "src/common/auth/permission.cache.revoke.test.ts": {
@@ -981,10 +978,7 @@
   },
   "src/modules/finance/assistant-pay/admin/assistant-pay.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 9
+      "count": 1
     }
   },
   "src/modules/finance/assistant-pay/assistant-pay.module.ts": {
@@ -1033,9 +1027,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/finance/assistant-pay/my/my.earnings.test.ts": {
@@ -1076,11 +1067,6 @@
     }
   },
   "src/modules/finance/assistant-pay/my/my.service.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/finance/assistant-pay/shared/assistant-pay.dto.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -1129,10 +1115,7 @@
   },
   "src/modules/finance/assistant-pay/statements/assistant-statements.controller.ts": {
     "stylistic/max-len": {
-      "count": 5
-    },
-    "ab/zod-inputs": {
-      "count": 11
+      "count": 2
     }
   },
   "src/modules/finance/assistant-pay/statements/corrections.service.ts": {

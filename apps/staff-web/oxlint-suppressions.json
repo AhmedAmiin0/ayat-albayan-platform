@@ -2551,13 +2551,13 @@
   },
   "src/features/people/assistants/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 5
     },
     "ab/no-untyped-api-calls": {
-      "count": 11
+      "count": 5
     }
   },
   "src/features/people/assistants/commissions/CommissionLedger.test.tsx": {
@@ -4872,7 +4872,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 8
+      "count": 4
     }
   },
   "src/features/sales/sales/live/SalesLive.tsx": {

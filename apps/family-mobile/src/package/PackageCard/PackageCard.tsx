@@ -1,21 +1,13 @@
 import { packageSummary } from '@ab/client-core';
-import type { PortalPackage } from '@ab/shared';
 import { subscriptionStatusStyle } from '@ab/money';
 import { View } from 'react-native';
 import { AppText, StatusChip, raisedCard, t, type, useTheme } from '@ab/mobile-kit';
 import { DueBox } from '@/package/DueBox';
-import { dayDate } from '@/package/package-text';
 import { UsedBar } from '@/package/UsedBar';
+import type { PackageCardProps } from './PackageCard.types';
+import { factsOf } from './package-card.helpers';
 
-/** The renewal date is shown only when known. */
-const factsOf = (pkg: PortalPackage) => [
-  { label: t.portal.app.package.start, value: dayDate(pkg.starts_on) },
-  ...(pkg.renews_on
-    ? [{ label: t.portal.app.package.renewal, value: dayDate(pkg.renews_on) }]
-    : []),
-];
-
-export function PackageCard({ pkg }: { pkg: PortalPackage }) {
+export function PackageCard({ pkg }: PackageCardProps) {
   const { color } = useTheme();
   const s = packageSummary(pkg);
   const P = t.portal.app.package;

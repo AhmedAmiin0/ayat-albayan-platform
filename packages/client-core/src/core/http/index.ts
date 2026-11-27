@@ -1,14 +1,20 @@
 export { ApiError, readJson } from './api-error';
 export { apiErrorCode, pdfPageRetryable } from './api-error-code';
 export {
+  boundReads,
   createApiClient,
   parseResponse,
   sendParts,
   type ApiBlob,
   type ApiClient,
   type ApiClientOptions,
+  type ApiRequest,
+  type ReadBound,
   type BlobClient,
+  type Requester,
+  type RequestMethod,
   type SchemaInit,
+  type SchemaRequest,
   type SendMethod,
   type SendOptions,
 } from './api-client';

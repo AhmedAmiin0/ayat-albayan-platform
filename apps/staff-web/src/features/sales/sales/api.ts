@@ -1,5 +1,4 @@
-import type { Page } from '@ab/core';
-import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
+import { mySalesCalls } from '@ab/client-core';
 import type { SalesPersonView, SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -12,19 +11,21 @@ export const salesSubscriptionsQuery = (kind: SalesSubscriptionKind) =>
     queryFn: () => apiFetch<SalesSubscriptionView[]>(`/sales/subscriptions?kind=${kind}`),
   });
 
+const mine = mySalesCalls({ apiFetch, apiSend });
+
 // The assistant's own pages (R-ASST-06). The API answers only for the caller: students they brought,
 // payments they recorded, their commission and statements. Amounts stay per currency.
 
 /** GET /sales/me/students — the students I brought, newest first; no price, only «paid or not». */
 export const myStudentsQuery = queryOptions({
   queryKey: myMoneyKeys.students(),
-  queryFn: () => apiFetch<MyStudentRow[]>('/sales/me/students'),
+  queryFn: () => mine.students(),
 });
 
 /** GET /sales/me/earnings — my terms, this month so far, commissions earned and my statements. */
 export const myEarningsQuery = queryOptions({
   queryKey: myMoneyKeys.earnings(),
-  queryFn: () => apiFetch<MyEarnings>('/sales/me/earnings'),
+  queryFn: () => mine.earnings(),
 });
 
 /** Both wallet queries sit under this key, so one invalidation refreshes the page. */
@@ -35,14 +36,14 @@ export const MY_COMMISSIONS_PAGE_SIZE = 20;
 export const myCommissionsQuery = (page: number) =>
   queryOptions({
     queryKey: myMoneyKeys.commissions(page),
-    queryFn: () => apiFetch<Page<MyCommissionRow>>(`/sales/me/commissions?page=${page}&pageSize=${MY_COMMISSIONS_PAGE_SIZE}`),
+    queryFn: () => mine.commissions({ page, pageSize: MY_COMMISSIONS_PAGE_SIZE }),
     placeholderData: keepPreviousData,
   });
 
 /** GET /sales/me/payments — only the payments I recorded. */
 export const myPaymentsQuery = queryOptions({
   queryKey: myMoneyKeys.payments(),
-  queryFn: () => apiFetch<MyPaymentRow[]>('/sales/me/payments'),
+  queryFn: () => mine.payments(),
 });
 
 /** PATCH /sales/payments/:id/amount (subscriptions.edit_terms): a payment, never card. */
@@ -60,4 +61,5 @@ export const assignLead = ({ leadId, profileId }: { leadId: string; profileId: s
   apiSend<unknown>('POST', `/leads/${leadId}/assign`, { profileId });
 
 /** POST /leads/assign-unassigned (admin): spread every ownerless lead over the salespeople. */
-export const assignUnassigned = () => apiSend<{ assigned: number }>('POST', '/leads/assign-unassigned');
+export const assignUnassigned = () =>
+  apiSend<{ assigned: number }>('POST', '/leads/assign-unassigned');

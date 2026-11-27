@@ -3,10 +3,13 @@ import { join } from 'node:path';
 import { METHOD_METADATA, PATH_METADATA } from '@nestjs/common/constants';
 import { RequestMethod } from '@nestjs/common';
 import { DiscoveryModule, DiscoveryService, MetadataScanner, Reflector } from '@nestjs/core';
+import { DECORATORS } from '@nestjs/swagger/dist/constants';
 import { Test } from '@nestjs/testing';
+import { z } from 'zod';
 import { AppModule } from '@/app.module';
 import { PERMISSION_RESOLVER, systemResolver } from '@/common/auth/auth.guard';
 import { IS_PUBLIC, PERMISSION, SIGNED_IN } from '@/common/auth/decorators';
+import { routeOf as routeObjectOf } from '@/common/http/route';
 
 /** One controller handler as the AuthGuard sees it. key = 'StudentsController.list'. */
 export interface RouteAccess {
@@ -15,8 +18,16 @@ export interface RouteAccess {
   route: string;
   isPublic: boolean;
   signedIn: boolean;
-  /** Raw metadata: the coverage test checks it is one catalog key. */
+  /** Raw metadata the guard reads: one catalog key, or the route object's list. */
   permission: unknown;
+  /** Each source on its own: the handler's metadata, its class's, the route object's list. */
+  handlerPermission: unknown;
+  classPermission: unknown;
+  routePermissions: readonly string[] | undefined;
+  /** Swagger tags of the handler and its class together. */
+  tags: string[];
+  /** Not hidden from the OpenAPI document by @ApiExcludeController or @ApiExcludeEndpoint. */
+  inDocument: boolean;
 }
 
 /** 'public' | 'signed-in' | the roles @Roles admitted, sorted — the table frozen before the change. */
@@ -39,6 +50,49 @@ function routeOf(cls: object, handler: object): string {
   return `${verb} /${parts.join('/')}`;
 }
 
+/** The keys the guard accepts, any one of which lets a caller in: one key, a list, or none. */
+export const permissionKeys = (route: Pick<RouteAccess, 'permission'>): unknown[] =>
+  [route.permission ?? []].flat();
+
+const tagsSchema = z.array(z.string()).default([]);
+
+const classOutSchema = z.tuple([z.boolean()]).optional();
+const endpointOutSchema = z.object({ disable: z.boolean() }).optional();
+
+const tagsOf = (targets: object[]): string[] =>
+  targets.flatMap((t) => tagsSchema.parse(Reflect.getMetadata(DECORATORS.API_TAGS, t)));
+
+const isClassOut = (cls: object): boolean =>
+  classOutSchema.parse(Reflect.getMetadata(DECORATORS.API_EXCLUDE_CONTROLLER, cls))?.[0] === true;
+
+const isEndpointOut = (handler: object): boolean =>
+  endpointOutSchema.parse(Reflect.getMetadata(DECORATORS.API_EXCLUDE_ENDPOINT, handler))
+    ?.disable === true;
+
+type Target = Parameters<Reflector['getAllAndOverride']>[1][number];
+
+interface Walked {
+  cls: Target;
+  name: string;
+  handler: Target;
+}
+
+function accessOf(reflector: Reflector, { cls, name, handler }: Walked): RouteAccess {
+  const targets = [handler, cls];
+  return {
+    key: `${cls.name}.${name}`,
+    route: routeOf(cls, handler),
+    isPublic: reflector.getAllAndOverride<boolean | undefined>(IS_PUBLIC, targets) === true,
+    signedIn: reflector.getAllAndOverride<boolean | undefined>(SIGNED_IN, targets) === true,
+    permission: reflector.getAllAndOverride<unknown>(PERMISSION, targets),
+    handlerPermission: Reflect.getMetadata(PERMISSION, handler),
+    classPermission: Reflect.getMetadata(PERMISSION, cls),
+    routePermissions: routeObjectOf(handler)?.permissions,
+    tags: tagsOf(targets),
+    inDocument: !isClassOut(cls) && !isEndpointOut(handler),
+  };
+}
+
 function isHandler(value: unknown): value is (...args: unknown[]) => unknown {
   return typeof value === 'function' && Reflect.getMetadata(METHOD_METADATA, value) !== undefined;
 }
@@ -58,14 +112,7 @@ export async function walkRoutes(): Promise<RouteAccess[]> {
     for (const name of scanner.getAllMethodNames(proto)) {
       const handler: unknown = Reflect.get(proto, name);
       if (!isHandler(handler)) continue;
-      const targets = [handler, cls];
-      out.push({
-        key: `${cls.name}.${name}`,
-        route: routeOf(cls, handler),
-        isPublic: reflector.getAllAndOverride<boolean>(IS_PUBLIC, targets) === true,
-        signedIn: reflector.getAllAndOverride<boolean>(SIGNED_IN, targets) === true,
-        permission: reflector.getAllAndOverride<unknown>(PERMISSION, targets),
-      });
+      out.push(accessOf(reflector, { cls, name, handler }));
     }
   }
   await mod.close();

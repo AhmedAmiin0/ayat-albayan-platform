@@ -1,21 +1,14 @@
-import { dayTile, isNewReport, reportAt } from '@ab/client-core';
-import type { PortalReport, PortalStudent } from '@ab/shared';
+import { dayTile, reportAt } from '@ab/client-core';
 import { View } from 'react-native';
-import { t, } from '@ab/mobile-kit';
+import { t } from '@ab/mobile-kit';
 import { DateTile, NewMark, PressCard, RowText } from '@/ui';
 import { teacherText } from '@/lessons';
 import { openReport } from '@/nav';
-import { useFamilyClock, useSeenReports } from '@/portal';
-
-interface ReportRowProps {
-  report: PortalReport;
-  student: PortalStudent;
-}
+import type { ReportRowProps } from './ReportRow.types';
+import { useReportRow } from './use-report-row';
 
 export function ReportRow({ report, student }: ReportRowProps) {
-  const clock = { ...useFamilyClock(), tz: student.tz };
-  const fresh = isNewReport(report.id, useSeenReports());
-  const link = { studentId: student.id, reportId: report.id, recordingId: report.recording_id };
+  const { clock, fresh, link } = useReportRow({ report, student });
   return (
     <PressCard label={t.portal.openReport} onPress={() => openReport(link)}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>

@@ -1,22 +1,20 @@
-import {
-  assistantAdjustmentSchema,
-  assistantReasonSchema,
-  assistantTermsSchema,
-  broughtBySchema,
-  type AssistantCommissionView,
-  type AssistantTermsRow,
-  type AssistantTermsView,
-  type BroughtByResult,
-  type BroughtByView,
+import { assistantPayRoutes as routes } from '@ab/shared';
+import type {
+  AssistantCommissionView,
+  AssistantTermsRow,
+  AssistantTermsView,
+  BroughtByResult,
+  BroughtByView,
 } from '@ab/money';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put, Query } from '@nestjs/common';
+import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
-import { commissionsQuery } from '@/modules/finance/assistant-pay/shared/assistant-pay.dto';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CorrectionsService } from '@/modules/finance/assistant-pay/statements/corrections.service';
 import { TermsService } from '@/modules/finance/assistant-pay/terms/terms.service';
+
+type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 /**
  * The admin side of the assistants' pay (R-ASST-02, R-ASST-03, R-ASST-05): terms per assistant, the
@@ -25,72 +23,70 @@ import { TermsService } from '@/modules/finance/assistant-pay/terms/terms.servic
 @ApiTags('assistant-pay')
 @ApiBearerAuth()
 @Permissions('assistantpay.write')
-@Controller('assistant-pay')
+@Controller()
 export class AssistantPayController {
   constructor(
     private readonly terms: TermsService,
     private readonly corrections: CorrectionsService,
   ) {}
 
-  @Get('terms')
+  @Route(routes.list)
   @Permissions('assistantpay.read')
   list(): Promise<AssistantTermsRow[]> {
     return this.terms.list();
   }
 
-  @Get('terms/:assistantId')
+  @Route(routes.get)
   @Permissions('assistantpay.read')
-  get(@Param('assistantId', ParseUUIDPipe) assistantId: string): Promise<AssistantTermsView> {
-    return this.terms.get(assistantId);
+  get(@RouteInput() { params }: In<'get'>): Promise<AssistantTermsView> {
+    return this.terms.get(params.assistantId);
   }
 
   /** Replaces both parts (null clears one). 404 assistant_not_found. */
-  @Put('terms/:assistantId')
+  @Route(routes.setTerms)
   set(
-    @Param('assistantId', ParseUUIDPipe) assistantId: string,
-    @Body() body: unknown,
+    @RouteInput() { params, body }: In<'setTerms'>,
     @CurrentUser() user: AuthUser,
   ): Promise<AssistantTermsView> {
-    return this.terms.set({
-      assistantId,
-      terms: parseOrThrow(assistantTermsSchema, body),
-      actorId: user.id,
-    });
+    return this.terms.set({ assistantId: params.assistantId, terms: body, actorId: user.id });
   }
 
-  @Get('brought-by/:studentId')
+  @Route(routes.broughtByOf)
   @Permissions('assistantpay.read')
-  broughtByOf(@Param('studentId', ParseUUIDPipe) studentId: string): Promise<BroughtByView> {
-    return this.terms.broughtBy(studentId);
+  broughtByOf(@RouteInput() { params }: In<'broughtByOf'>): Promise<BroughtByView> {
+    return this.terms.broughtBy(params.studentId);
   }
 
-  @Get('commissions')
+  @Route(routes.ledger)
   @Permissions('assistantpay.read')
-  ledger(@Query() query: unknown): Promise<AssistantCommissionView[]> {
-    return this.corrections.ledger(parseOrThrow(commissionsQuery, query));
+  ledger(@RouteInput() { query }: In<'ledger'>): Promise<AssistantCommissionView[]> {
+    return this.corrections.ledger(query);
   }
 
   /** 404 commission_not_found, 409 already_voided, 400 reason_required. */
-  @Post('commissions/:id/void')
+  @Route(routes.void)
   @HttpCode(200)
-  voidCommission(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<{ id: string }> {
-    const { reason } = parseOrThrow(assistantReasonSchema, body);
-    return this.corrections.voidCommission({ commissionId: id, reason, actorId: user.id });
+  voidCommission(
+    @RouteInput() { params, body }: In<'void'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<{ id: string }> {
+    const { reason } = body;
+    return this.corrections.voidCommission({ commissionId: params.id, reason, actorId: user.id });
   }
 
   /** A signed amount carried into the next open statement; 404 assistant_not_found. */
-  @Post('adjustments')
-  adjust(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<{ id: string }> {
-    return this.corrections.adjust({
-      ...parseOrThrow(assistantAdjustmentSchema, body),
-      actorId: user.id,
-    });
+  @Route(routes.adjust)
+  adjust(@RouteInput() { body }: In<'adjust'>, @CurrentUser() user: AuthUser): Promise<{ id: string }> {
+    return this.corrections.adjust({ ...body, actorId: user.id });
   }
 
-  /** One student or many (at most 500); assistantId null clears it. 404 student_not_found, 400 invalid_assistant, 409 commission_exists. */
-  @Post('brought-by')
+  /**
+   * One student or many (at most 500); assistantId null clears it. 404 student_not_found, 400
+   * invalid_assistant, 409 commission_exists.
+   */
+  @Route(routes.broughtBy)
   @HttpCode(200)
-  broughtBy(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<BroughtByResult> {
-    return this.corrections.broughtBy(parseOrThrow(broughtBySchema, body), user.id);
+  broughtBy(@RouteInput() { body }: In<'broughtBy'>, @CurrentUser() user: AuthUser): Promise<BroughtByResult> {
+    return this.corrections.broughtBy(body, user.id);
   }
 }

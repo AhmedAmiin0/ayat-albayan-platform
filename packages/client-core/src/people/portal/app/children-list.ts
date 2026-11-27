@@ -12,3 +12,8 @@ export function familyChildren(me: Pick<PortalHome, 'students'>): PortalStudent[
   const self = (s: SelfFlag): number => (s.contact_is_self ? 0 : 1);
   return [...me.students].sort((a, b) => self(a) - self(b));
 }
+
+export const studentOf = (
+  me: Pick<PortalHome, 'students'> | undefined,
+  id: string,
+): PortalStudent | null => me?.students.find((s) => s.id === id) ?? null;

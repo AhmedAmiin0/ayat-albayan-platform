@@ -1,43 +1,11 @@
-import { reportMonths } from '@ab/client-core';
-import type { PortalReport, PortalStudent } from '@ab/shared';
-import { localDateIn } from '@ab/time';
-import { View } from 'react-native';
-import { EmptyState, t, useNow } from '@ab/mobile-kit';
-import { Figure, LoadState, MonthSection } from '@/ui';
-import { useChildReports } from '@/portal';
-import { ReportRow } from '@/report/ReportRow';
-
-interface ReportMonthsProps {
-  reports: readonly PortalReport[];
-  student: PortalStudent;
-}
-
-/** This month's count on top, then the reports under their month. */
-function ReportMonths({ reports, student }: ReportMonthsProps) {
-  const thisMonth = localDateIn(useNow(), student.tz).slice(0, 7);
-  const R = t.portal.app.reports;
-  const months = reportMonths(reports, student.tz);
-  if (months.length === 0) return <EmptyState title={R.empty} />;
-  const count = months.find((m) => m.month === thisMonth)?.rows.length ?? 0;
-  return (
-    <>
-      <View style={{ flexDirection: 'row' }}>
-        <Figure tone="ok" value={String(count)} label={R.thisMonth} />
-      </View>
-      {months.map(({ month, rows }) => (
-        <MonthSection key={month} month={month}>
-          {rows.map((report) => (
-            <ReportRow key={report.id} report={report} student={student} />
-          ))}
-        </MonthSection>
-      ))}
-    </>
-  );
-}
+import { LoadState } from '@/ui';
+import type { OwnReportsProps } from './OwnReports.types';
+import { ReportMonths } from './ReportMonths';
+import { useOwnReports } from './use-own-reports';
 
 /** The student's own sent reports, newest first. */
-export function OwnReports({ student }: { student: PortalStudent }) {
-  const reports = useChildReports(student.id);
+export function OwnReports({ student }: OwnReportsProps) {
+  const { reports } = useOwnReports({ student });
   return (
     <LoadState query={reports}>
       {(data) => <ReportMonths reports={data.reports} student={student} />}

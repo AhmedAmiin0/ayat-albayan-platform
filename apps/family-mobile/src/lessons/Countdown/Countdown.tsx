@@ -1,15 +1,7 @@
 import { lessonClock, lessonClockText } from '@ab/client-core';
-import type { PortalLesson } from '@ab/shared';
 import { View } from 'react-native';
 import { AppText, t, type, useTheme } from '@ab/mobile-kit';
-
-interface CountdownProps {
-  lesson: PortalLesson;
-  /** The screen's clock, ticking every second. */
-  now: Date;
-  /** The child's page: the timer is the card's main figure (canvas Child). */
-  big?: boolean;
-}
+import type { CountdownProps } from './Countdown.types';
 
 /** A timer, never read out every second. */
 export function Countdown({ lesson, now, big = false }: CountdownProps) {

@@ -20,6 +20,13 @@ export { PERMISSION_RESOLVER, systemResolver } from './permissions';
 export const TOKEN_VERIFIER = Symbol('TOKEN_VERIFIER');
 export type TokenVerifier = (token: string) => Promise<AuthUser>;
 
+/** One key (@Permissions) or the list of a route object, of which any one lets a caller in. */
+type NeededPermission = Permission | readonly Permission[] | undefined;
+
+/** No metadata, or an empty list, admits nobody. */
+const holdsAnyOf = (held: readonly Permission[], needed: NeededPermission): boolean =>
+  [needed ?? []].flat().some((key) => held.includes(key));
+
 interface AuthRequest {
   headers: Record<string, string | string[] | undefined>;
   user?: AuthUser;
@@ -27,7 +34,8 @@ interface AuthRequest {
 
 /**
  * Global guard (R-AUTH-01): verifies the Supabase JWT, resolves the user's permissions from their
- * role (PERMISSION_RESOLVER, cached) onto req.user, then enforces @Permissions(). @Public skips
+ * role (PERMISSION_RESOLVER, cached) onto req.user, then enforces the route's permissions: its
+ * own list (any one key lets a caller in) or the single key of @Permissions(). @Public skips
  * everything; @SignedIn needs a valid token only. A route with neither and no permission is
  * refused (fail closed; the coverage test keeps that from happening). isTest: profiles.is_test
  * (the resolver's, false on any doubt), for the four checks a test account may skip (docs/56).
@@ -53,8 +61,8 @@ export class AuthGuard implements CanActivate {
     req.user = { ...user, permissions, isTest: await this.isTest(user) };
 
     if (signedIn) return true;
-    const needed = this.reflector.getAllAndOverride<Permission | undefined>(PERMISSION, targets);
-    if (!needed || !permissions.includes(needed)) throw new ForbiddenException();
+    const needed = this.reflector.getAllAndOverride<NeededPermission>(PERMISSION, targets);
+    if (!holdsAnyOf(permissions, needed)) throw new ForbiddenException();
     return true;
   }
 

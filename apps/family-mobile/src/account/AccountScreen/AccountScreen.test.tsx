@@ -27,9 +27,10 @@ const child = {
   tz: 'Asia/Riyadh',
   contact_is_self: false,
 };
+let mockMe: unknown = { kind: 'guardian', students: [child], renew_url: null };
 const mockAnswer = (path: string): unknown => {
   const answers: Record<string, unknown> = {
-    '/portal/me': { kind: 'guardian', students: [child], renew_url: null },
+    '/portal/me': mockMe,
     '/me/profile': { id: 'g1', full_name: 'أم سارة', role: {} },
   };
   return (
@@ -39,6 +40,7 @@ const mockAnswer = (path: string): unknown => {
 
 beforeEach(async () => {
   jest.clearAllMocks();
+  mockMe = { kind: 'guardian', students: [child], renew_url: null };
   await AsyncStorage.clear();
 });
 
@@ -82,4 +84,11 @@ test('the privacy policy and the deletion page, on «حسابي» for guardians 
   const privacy = screen.getByRole('button', { name: new RegExp(t.legal.links.privacy) });
   const deletion = screen.getByRole('button', { name: new RegExp(t.legal.links.deleteAccount) });
   expect([privacy, deletion].every(Boolean)).toBe(true);
+});
+
+test('an adult who is their own contact: the password section and the student push hint', async () => {
+  mockMe = { kind: 'student', students: [{ ...child, contact_is_self: true }], renew_url: null };
+  await show();
+  expect(await screen.findByText(t.account.password.title)).toBeTruthy();
+  expect(screen.getByText(t.portal.app.account.pushStudent)).toBeTruthy();
 });

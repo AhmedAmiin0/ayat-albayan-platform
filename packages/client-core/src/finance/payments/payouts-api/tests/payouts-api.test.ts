@@ -24,12 +24,15 @@ const clientAnswering = (answer: unknown) => {
 };
 
 describe('payoutCalls: reads', () => {
-  it('reads a month of payouts and the signed-in teacher own ones', async () => {
+  it('reads a month of payouts', async () => {
     const { client, apiFetch } = clientAnswering([payout]);
     await expect(payoutCalls(client).month('2026-09')).resolves.toEqual([payout]);
     expect(apiFetch).toHaveBeenCalledWith('/payouts?month=2026-09');
-    await payoutCalls(client).mine();
-    expect(apiFetch).toHaveBeenLastCalledWith('/teachers/me/payouts');
+  });
+
+  it('has no read of the signed-in teacher own payouts', () => {
+    const { client } = clientAnswering([payout]);
+    expect(Object.keys(payoutCalls(client))).not.toContain('mine');
   });
 
   it('reads a payout receipt link', async () => {

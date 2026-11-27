@@ -177,20 +177,21 @@
    "$schema": "https://json-schema.org/draft/2020-12/schema",
    "type": "object",
    "properties": {
-    "phone": {
-     "type": "string"
-    },
     "id": {
      "type": "string",
      "format": "uuid",
      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    },
+    "phone": {
+     "type": "string"
     }
    },
    "required": [
-    "phone",
-    "id"
+    "id",
+    "phone"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /public/teacher-report/:token/reports/:id/attachments/:attachmentId": {
   "params": {
@@ -549,6 +550,859 @@
    },
    "required": [
     "id"
+   ]
+  }
+ },
+ "GET /assistant-pay/brought-by/:studentId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "studentId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "studentId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "assistant": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "id",
+        "name"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "brought_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "assistant",
+    "brought_at"
+   ]
+  }
+ },
+ "GET /assistant-pay/commissions": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "assistantId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "earned",
+      "voided"
+     ]
+    },
+    "from": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "to": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "assistant": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "name": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "name"
+      ]
+     },
+     "student": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "name": {
+        "type": "string"
+       },
+       "code": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "name",
+       "code"
+      ]
+     },
+     "subscription_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "first",
+       "renewal"
+      ]
+     },
+     "share_percent": {
+      "type": "number"
+     },
+     "type": {
+      "type": "string",
+      "enum": [
+       "percent",
+       "fixed"
+      ]
+     },
+     "rate": {
+      "type": "number"
+     },
+     "base_amount": {
+      "type": "number"
+     },
+     "base_currency": {
+      "type": "string"
+     },
+     "amount": {
+      "type": "number"
+     },
+     "currency": {
+      "type": "string"
+     },
+     "earned_at": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "earned",
+       "voided"
+      ]
+     },
+     "void_reason": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "voided_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "statement_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "assistant",
+     "student",
+     "subscription_id",
+     "kind",
+     "share_percent",
+     "type",
+     "rate",
+     "base_amount",
+     "base_currency",
+     "amount",
+     "currency",
+     "earned_at",
+     "status",
+     "void_reason",
+     "voided_at",
+     "statement_id"
+    ]
+   }
+  }
+ },
+ "GET /assistant-pay/statements": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "assistantId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "month": {
+     "type": "string",
+     "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "draft",
+      "approved",
+      "paid"
+     ]
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "assistant": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "name": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "name"
+      ]
+     },
+     "month": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "draft",
+       "approved",
+       "paid"
+      ]
+     },
+     "totals": {
+      "type": "object",
+      "propertyNames": {
+       "type": "string"
+      },
+      "additionalProperties": {
+       "type": "object",
+       "properties": {
+        "salary": {
+         "type": "number"
+        },
+        "commissions": {
+         "type": "number"
+        },
+        "adjustments": {
+         "type": "number"
+        },
+        "total": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "salary",
+        "commissions",
+        "adjustments",
+        "total"
+       ]
+      }
+     },
+     "lines": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "kind": {
+         "type": "string",
+         "enum": [
+          "salary",
+          "commission",
+          "adjustment"
+         ]
+        },
+        "amount": {
+         "type": "number"
+        },
+        "currency": {
+         "type": "string"
+        },
+        "student": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "name": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "name"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "commission_kind": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "first",
+            "renewal"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "reason": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "kind",
+        "amount",
+        "currency",
+        "student",
+        "commission_kind",
+        "reason"
+       ]
+      }
+     },
+     "approved_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "paid_at": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "method": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "bank",
+         "wallet",
+         "cash",
+         "other",
+         "card"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "note": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "has_receipt": {
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "id",
+     "assistant",
+     "month",
+     "status",
+     "totals",
+     "lines",
+     "approved_at",
+     "paid_at",
+     "method",
+     "note",
+     "has_receipt"
+    ]
+   }
+  }
+ },
+ "GET /assistant-pay/statements/:id": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "assistant": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "name"
+     ]
+    },
+    "month": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "draft",
+      "approved",
+      "paid"
+     ]
+    },
+    "totals": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "salary": {
+        "type": "number"
+       },
+       "commissions": {
+        "type": "number"
+       },
+       "adjustments": {
+        "type": "number"
+       },
+       "total": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "salary",
+       "commissions",
+       "adjustments",
+       "total"
+      ]
+     }
+    },
+    "lines": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "salary",
+         "commission",
+         "adjustment"
+        ]
+       },
+       "amount": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string"
+       },
+       "student": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "code": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "code",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "commission_kind": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "first",
+           "renewal"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "kind",
+       "amount",
+       "currency",
+       "student",
+       "commission_kind",
+       "reason"
+      ]
+     }
+    },
+    "approved_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "paid_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "method": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "bank",
+        "wallet",
+        "cash",
+        "other",
+        "card"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "has_receipt": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "assistant",
+    "month",
+    "status",
+    "totals",
+    "lines",
+    "approved_at",
+    "paid_at",
+    "method",
+    "note",
+    "has_receipt"
+   ]
+  }
+ },
+ "GET /assistant-pay/statements/:id/receipt": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string",
+     "format": "uri"
+    },
+    "expires_at": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "url",
+    "expires_at"
+   ]
+  }
+ },
+ "GET /assistant-pay/terms": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "assistant_id": {
+      "type": "string"
+     },
+     "commission": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "type": {
+          "type": "string",
+          "enum": [
+           "percent",
+           "fixed"
+          ]
+         },
+         "value": {
+          "type": "number"
+         },
+         "currency": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "starts_on": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "type",
+         "value",
+         "currency",
+         "starts_on"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "salary": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "amount": {
+          "type": "number"
+         },
+         "currency": {
+          "type": "string"
+         },
+         "starts_on": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "amount",
+         "currency",
+         "starts_on"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "renewal_share_percent": {
+      "type": "number"
+     },
+     "name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "assistant_id",
+     "commission",
+     "salary",
+     "renewal_share_percent",
+     "name"
+    ]
+   }
+  }
+ },
+ "GET /assistant-pay/terms/:assistantId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "assistantId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "assistantId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "assistant_id": {
+     "type": "string"
+    },
+    "commission": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "type": {
+         "type": "string",
+         "enum": [
+          "percent",
+          "fixed"
+         ]
+        },
+        "value": {
+         "type": "number"
+        },
+        "currency": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "starts_on": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "type",
+        "value",
+        "currency",
+        "starts_on"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "salary": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "amount": {
+         "type": "number"
+        },
+        "currency": {
+         "type": "string"
+        },
+        "starts_on": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "amount",
+        "currency",
+        "starts_on"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "renewal_share_percent": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "assistant_id",
+    "commission",
+    "salary",
+    "renewal_share_percent"
    ]
   }
  },
@@ -2985,6 +3839,51 @@
    "required": [
     "search"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "phone_e164": {
+      "type": "string"
+     },
+     "students": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "code": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "name": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "code",
+        "name"
+       ]
+      }
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "phone_e164",
+     "students"
+    ]
+   }
   }
  },
  "GET /people/students/:id": {
@@ -3000,6 +3899,221 @@
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "student": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "code": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "name": {
+       "type": "string"
+      },
+      "age": {
+       "type": [
+        "number",
+        "null"
+       ]
+      },
+      "gender": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "male",
+          "female"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "level": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "memorized": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "goal": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "riwaya": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "tz": {
+       "type": "string"
+      },
+      "notes": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "teacher_gender_pref": {
+       "anyOf": [
+        {
+         "type": "string",
+         "enum": [
+          "male",
+          "female"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "contact_is_self": {
+       "type": "boolean"
+      },
+      "phone_e164": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "has_login": {
+       "type": "boolean"
+      },
+      "has_records": {
+       "type": "boolean"
+      }
+     },
+     "required": [
+      "id",
+      "code",
+      "name",
+      "age",
+      "gender",
+      "level",
+      "memorized",
+      "goal",
+      "riwaya",
+      "tz",
+      "teacher_gender_pref",
+      "contact_is_self",
+      "phone_e164",
+      "has_login",
+      "has_records"
+     ]
+    },
+    "guardian": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      },
+      "phone_e164": {
+       "type": "string"
+      },
+      "country": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "tz": {
+       "type": "string"
+      },
+      "notes": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "has_login": {
+       "type": "boolean"
+      },
+      "phones": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "phone_e164": {
+          "type": "string"
+         },
+         "is_primary": {
+          "type": "boolean"
+         }
+        },
+        "required": [
+         "phone_e164",
+         "is_primary"
+        ]
+       }
+      },
+      "students": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "code": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "name": {
+          "type": "string"
+         },
+         "contact_is_self": {
+          "type": "boolean"
+         }
+        },
+        "required": [
+         "id",
+         "code",
+         "name",
+         "contact_is_self"
+        ]
+       }
+      }
+     },
+     "required": [
+      "id",
+      "name",
+      "phone_e164",
+      "country",
+      "tz",
+      "has_login",
+      "phones",
+      "students"
+     ]
+    }
+   },
+   "required": [
+    "student",
+    "guardian"
    ]
   }
  },
@@ -3263,6 +4377,41 @@
    "required": [
     "from",
     "to"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "tz": {
+     "type": "string"
+    },
+    "step_min": {
+     "type": "number"
+    },
+    "slots": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "starts_at": {
+        "type": "string"
+       },
+       "ends_at": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "starts_at",
+       "ends_at"
+      ]
+     }
+    }
+   },
+   "required": [
+    "tz",
+    "step_min",
+    "slots"
    ]
   }
  },
@@ -5204,6 +6353,722 @@
     "items",
     "upcoming_id"
    ]
+  }
+ },
+ "GET /sales/me/commissions": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 25,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 100
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "student": {
+        "type": "object",
+        "properties": {
+         "code": {
+          "type": "string"
+         },
+         "name": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "code",
+         "name"
+        ]
+       },
+       "kind": {
+        "type": "string",
+        "enum": [
+         "first",
+         "renewal"
+        ]
+       },
+       "share_percent": {
+        "type": "number"
+       },
+       "amount": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string"
+       },
+       "earned_at": {
+        "type": "string"
+       },
+       "method": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "bank",
+           "wallet",
+           "cash",
+           "other",
+           "card"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "state": {
+        "type": "string",
+        "enum": [
+         "due",
+         "in_statement",
+         "paid",
+         "voided"
+        ]
+       },
+       "statement_month": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "void_reason": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "payment_voided",
+           "student_merged"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "student",
+       "kind",
+       "share_percent",
+       "amount",
+       "currency",
+       "earned_at",
+       "method",
+       "state",
+       "statement_month",
+       "void_reason"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize"
+   ]
+  }
+ },
+ "GET /sales/me/earnings": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "terms": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "assistant_id": {
+         "type": "string"
+        },
+        "commission": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "type": {
+             "type": "string",
+             "enum": [
+              "percent",
+              "fixed"
+             ]
+            },
+            "value": {
+             "type": "number"
+            },
+            "currency": {
+             "type": [
+              "string",
+              "null"
+             ]
+            },
+            "starts_on": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "type",
+            "value",
+            "currency",
+            "starts_on"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "salary": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "amount": {
+             "type": "number"
+            },
+            "currency": {
+             "type": "string"
+            },
+            "starts_on": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "amount",
+            "currency",
+            "starts_on"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "renewal_share_percent": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "assistant_id",
+        "commission",
+        "salary",
+        "renewal_share_percent"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "this_month": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "salary": {
+        "type": "number"
+       },
+       "commissions": {
+        "type": "number"
+       },
+       "adjustments": {
+        "type": "number"
+       },
+       "total": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "salary",
+       "commissions",
+       "adjustments",
+       "total"
+      ]
+     }
+    },
+    "commissions_total": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {
+      "type": "number"
+     }
+    },
+    "wallet": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "due": {
+        "type": "number"
+       },
+       "paid": {
+        "type": "number"
+       },
+       "this_month": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "due",
+       "paid",
+       "this_month"
+      ]
+     }
+    },
+    "statements": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "assistant": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "name": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "name"
+        ]
+       },
+       "month": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "draft",
+         "approved",
+         "paid"
+        ]
+       },
+       "totals": {
+        "type": "object",
+        "propertyNames": {
+         "type": "string"
+        },
+        "additionalProperties": {
+         "type": "object",
+         "properties": {
+          "salary": {
+           "type": "number"
+          },
+          "commissions": {
+           "type": "number"
+          },
+          "adjustments": {
+           "type": "number"
+          },
+          "total": {
+           "type": "number"
+          }
+         },
+         "required": [
+          "salary",
+          "commissions",
+          "adjustments",
+          "total"
+         ]
+        }
+       },
+       "lines": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "kind": {
+           "type": "string",
+           "enum": [
+            "salary",
+            "commission",
+            "adjustment"
+           ]
+          },
+          "amount": {
+           "type": "number"
+          },
+          "currency": {
+           "type": "string"
+          },
+          "student": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "code": {
+               "type": "string"
+              },
+              "name": {
+               "type": "string"
+              }
+             },
+             "required": [
+              "code",
+              "name"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "commission_kind": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "first",
+              "renewal"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "reason": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "kind",
+          "amount",
+          "currency",
+          "student",
+          "commission_kind",
+          "reason"
+         ]
+        }
+       },
+       "approved_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "paid_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "method": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "bank",
+           "wallet",
+           "cash",
+           "other",
+           "card"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "note": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "has_receipt": {
+        "type": "boolean"
+       }
+      },
+      "required": [
+       "id",
+       "assistant",
+       "month",
+       "status",
+       "totals",
+       "lines",
+       "approved_at",
+       "paid_at",
+       "method",
+       "note",
+       "has_receipt"
+      ]
+     }
+    }
+   },
+   "required": [
+    "terms",
+    "this_month",
+    "commissions_total",
+    "wallet",
+    "statements"
+   ]
+  }
+ },
+ "GET /sales/me/payments": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "student": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "code": {
+        "type": "string"
+       },
+       "name": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "id",
+       "code",
+       "name"
+      ]
+     },
+     "kind": {
+      "type": "string",
+      "enum": [
+       "payment",
+       "refund"
+      ]
+     },
+     "amount": {
+      "type": "number"
+     },
+     "currency": {
+      "type": "string"
+     },
+     "method": {
+      "type": "string",
+      "enum": [
+       "bank",
+       "wallet",
+       "cash",
+       "other",
+       "card"
+      ]
+     },
+     "paid_at": {
+      "type": "string"
+     },
+     "note": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "student",
+     "kind",
+     "amount",
+     "currency",
+     "method",
+     "paid_at",
+     "note"
+    ]
+   }
+  }
+ },
+ "GET /sales/me/payments/:id/attachments": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "mime": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "size": {
+      "type": [
+       "number",
+       "null"
+      ]
+     },
+     "url": {
+      "type": "string"
+     },
+     "expires_at": {
+      "type": "string"
+     },
+     "legacy": {
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "id",
+     "mime",
+     "size",
+     "url",
+     "expires_at",
+     "legacy"
+    ]
+   }
+  }
+ },
+ "GET /sales/me/students": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "code": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "brought_at": {
+      "type": "string"
+     },
+     "guardian_phone": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "first_subscription_paid": {
+      "type": "boolean"
+     },
+     "commission": {
+      "anyOf": [
+       {
+        "type": "object",
+        "properties": {
+         "amount": {
+          "type": "number"
+         },
+         "currency": {
+          "type": "string"
+         },
+         "status": {
+          "type": "string",
+          "enum": [
+           "earned",
+           "voided"
+          ]
+         },
+         "earned_at": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "amount",
+         "currency",
+         "status",
+         "earned_at"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "renewal_commissions": {
+      "type": "number"
+     }
+    },
+    "required": [
+     "id",
+     "code",
+     "name",
+     "brought_at",
+     "guardian_phone",
+     "first_subscription_paid",
+     "commission",
+     "renewal_commissions"
+    ]
+   }
   }
  },
  "GET /sales/packages/:id/cancel": {
@@ -10616,6 +12481,18 @@
     }
    },
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
   }
  },
  "PATCH /people/students/:id": {
@@ -10747,6 +12624,18 @@
     }
    },
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
   }
  },
  "PATCH /people/students/:id/contact-self": {
@@ -10776,6 +12665,22 @@
     "contact_is_self"
    ],
    "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "contact_is_self": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "contact_is_self"
+   ]
   }
  },
  "PATCH /recordings/:id/visibility": {
@@ -12647,6 +14552,1280 @@
    },
    "required": [
     "dryRun"
+   ]
+  }
+ },
+ "POST /assistant-pay/adjustments": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "assistantId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "amount": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string",
+     "pattern": "^[A-Z]{3}$"
+    },
+    "reason": {
+     "type": "string",
+     "minLength": 3,
+     "maxLength": 500
+    },
+    "requestId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "assistantId",
+    "amount",
+    "currency",
+    "reason"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  }
+ },
+ "POST /assistant-pay/brought-by": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "studentIds": {
+     "minItems": 1,
+     "maxItems": 500,
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     }
+    },
+    "assistantId": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "broughtAt": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   },
+   "required": [
+    "studentIds",
+    "assistantId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "changed": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "changed"
+   ]
+  }
+ },
+ "POST /assistant-pay/commissions/:id/void": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "reason": {
+     "type": "string",
+     "minLength": 3,
+     "maxLength": 500
+    }
+   },
+   "required": [
+    "reason"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  }
+ },
+ "POST /assistant-pay/receipt-upload-url": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "mime": {
+     "type": "string",
+     "enum": [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/heic",
+      "application/pdf"
+     ]
+    },
+    "size": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10485760
+    },
+    "assistantId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "mime",
+    "size",
+    "assistantId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "bucket": {
+     "type": "string"
+    },
+    "path": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "signed_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "bucket",
+    "path",
+    "token",
+    "signed_url"
+   ]
+  }
+ },
+ "POST /assistant-pay/statements": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "assistantId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "month": {
+     "type": "string",
+     "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+    }
+   },
+   "required": [
+    "assistantId",
+    "month"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "assistant": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "name"
+     ]
+    },
+    "month": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "draft",
+      "approved",
+      "paid"
+     ]
+    },
+    "totals": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "salary": {
+        "type": "number"
+       },
+       "commissions": {
+        "type": "number"
+       },
+       "adjustments": {
+        "type": "number"
+       },
+       "total": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "salary",
+       "commissions",
+       "adjustments",
+       "total"
+      ]
+     }
+    },
+    "lines": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "salary",
+         "commission",
+         "adjustment"
+        ]
+       },
+       "amount": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string"
+       },
+       "student": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "code": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "code",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "commission_kind": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "first",
+           "renewal"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "kind",
+       "amount",
+       "currency",
+       "student",
+       "commission_kind",
+       "reason"
+      ]
+     }
+    },
+    "approved_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "paid_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "method": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "bank",
+        "wallet",
+        "cash",
+        "other",
+        "card"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "has_receipt": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "assistant",
+    "month",
+    "status",
+    "totals",
+    "lines",
+    "approved_at",
+    "paid_at",
+    "method",
+    "note",
+    "has_receipt"
+   ]
+  }
+ },
+ "POST /assistant-pay/statements/:id/approve": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "assistant": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "name"
+     ]
+    },
+    "month": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "draft",
+      "approved",
+      "paid"
+     ]
+    },
+    "totals": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "salary": {
+        "type": "number"
+       },
+       "commissions": {
+        "type": "number"
+       },
+       "adjustments": {
+        "type": "number"
+       },
+       "total": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "salary",
+       "commissions",
+       "adjustments",
+       "total"
+      ]
+     }
+    },
+    "lines": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "salary",
+         "commission",
+         "adjustment"
+        ]
+       },
+       "amount": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string"
+       },
+       "student": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "code": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "code",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "commission_kind": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "first",
+           "renewal"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "kind",
+       "amount",
+       "currency",
+       "student",
+       "commission_kind",
+       "reason"
+      ]
+     }
+    },
+    "approved_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "paid_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "method": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "bank",
+        "wallet",
+        "cash",
+        "other",
+        "card"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "has_receipt": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "assistant",
+    "month",
+    "status",
+    "totals",
+    "lines",
+    "approved_at",
+    "paid_at",
+    "method",
+    "note",
+    "has_receipt"
+   ]
+  }
+ },
+ "POST /assistant-pay/statements/:id/pay": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "paidAt": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "method": {
+     "type": "string",
+     "enum": [
+      "bank",
+      "wallet",
+      "cash",
+      "other"
+     ]
+    },
+    "note": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "receiptPath": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "assistant": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "name"
+     ]
+    },
+    "month": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "draft",
+      "approved",
+      "paid"
+     ]
+    },
+    "totals": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "salary": {
+        "type": "number"
+       },
+       "commissions": {
+        "type": "number"
+       },
+       "adjustments": {
+        "type": "number"
+       },
+       "total": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "salary",
+       "commissions",
+       "adjustments",
+       "total"
+      ]
+     }
+    },
+    "lines": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "salary",
+         "commission",
+         "adjustment"
+        ]
+       },
+       "amount": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string"
+       },
+       "student": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "code": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "code",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "commission_kind": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "first",
+           "renewal"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "kind",
+       "amount",
+       "currency",
+       "student",
+       "commission_kind",
+       "reason"
+      ]
+     }
+    },
+    "approved_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "paid_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "method": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "bank",
+        "wallet",
+        "cash",
+        "other",
+        "card"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "has_receipt": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "assistant",
+    "month",
+    "status",
+    "totals",
+    "lines",
+    "approved_at",
+    "paid_at",
+    "method",
+    "note",
+    "has_receipt"
+   ]
+  }
+ },
+ "POST /assistant-pay/statements/:id/reopen": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "assistant": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "name"
+     ]
+    },
+    "month": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "draft",
+      "approved",
+      "paid"
+     ]
+    },
+    "totals": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "salary": {
+        "type": "number"
+       },
+       "commissions": {
+        "type": "number"
+       },
+       "adjustments": {
+        "type": "number"
+       },
+       "total": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "salary",
+       "commissions",
+       "adjustments",
+       "total"
+      ]
+     }
+    },
+    "lines": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "salary",
+         "commission",
+         "adjustment"
+        ]
+       },
+       "amount": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string"
+       },
+       "student": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "code": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "code",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "commission_kind": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "first",
+           "renewal"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "kind",
+       "amount",
+       "currency",
+       "student",
+       "commission_kind",
+       "reason"
+      ]
+     }
+    },
+    "approved_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "paid_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "method": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "bank",
+        "wallet",
+        "cash",
+        "other",
+        "card"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "has_receipt": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "assistant",
+    "month",
+    "status",
+    "totals",
+    "lines",
+    "approved_at",
+    "paid_at",
+    "method",
+    "note",
+    "has_receipt"
+   ]
+  }
+ },
+ "POST /assistant-pay/statements/:id/unpay": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "reason": {
+     "type": "string",
+     "minLength": 3,
+     "maxLength": 500
+    }
+   },
+   "required": [
+    "reason"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "assistant": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "name"
+     ]
+    },
+    "month": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "draft",
+      "approved",
+      "paid"
+     ]
+    },
+    "totals": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {
+      "type": "object",
+      "properties": {
+       "salary": {
+        "type": "number"
+       },
+       "commissions": {
+        "type": "number"
+       },
+       "adjustments": {
+        "type": "number"
+       },
+       "total": {
+        "type": "number"
+       }
+      },
+      "required": [
+       "salary",
+       "commissions",
+       "adjustments",
+       "total"
+      ]
+     }
+    },
+    "lines": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "kind": {
+        "type": "string",
+        "enum": [
+         "salary",
+         "commission",
+         "adjustment"
+        ]
+       },
+       "amount": {
+        "type": "number"
+       },
+       "currency": {
+        "type": "string"
+       },
+       "student": {
+        "anyOf": [
+         {
+          "type": "object",
+          "properties": {
+           "code": {
+            "type": "string"
+           },
+           "name": {
+            "type": "string"
+           }
+          },
+          "required": [
+           "code",
+           "name"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "commission_kind": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "first",
+           "renewal"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "reason": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "kind",
+       "amount",
+       "currency",
+       "student",
+       "commission_kind",
+       "reason"
+      ]
+     }
+    },
+    "approved_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "paid_at": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "method": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "bank",
+        "wallet",
+        "cash",
+        "other",
+        "card"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "note": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "has_receipt": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "id",
+    "assistant",
+    "month",
+    "status",
+    "totals",
+    "lines",
+    "approved_at",
+    "paid_at",
+    "method",
+    "note",
+    "has_receipt"
    ]
   }
  },
@@ -18397,6 +21576,25 @@
    "required": [
     "id"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "code": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "code"
+   ]
   }
  },
  "POST /people/students/:id/guardian": {
@@ -18472,6 +21670,22 @@
      "additionalProperties": false
     }
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "guardian_id": {
+     "type": "string"
+    },
+    "student_id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "guardian_id",
+    "student_id"
+   ]
   }
  },
  "POST /people/students/:id/to-guardian": {
@@ -18487,6 +21701,18 @@
    },
    "required": [
     "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "guardian_id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "guardian_id"
    ]
   }
  },
@@ -18681,6 +21907,37 @@
      "maxLength": 500
     }
    }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lesson_id": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    },
+    "counts": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "lesson_id",
+    "status",
+    "counts"
+   ]
   }
  },
  "POST /portal/students/:id/lessons/:lessonId/confirm": {
@@ -18702,6 +21959,37 @@
    "required": [
     "id",
     "lessonId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lesson_id": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    },
+    "counts": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "lesson_id",
+    "status",
+    "counts"
    ]
   }
  },
@@ -18742,6 +22030,37 @@
    },
    "required": [
     "startsAt"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lesson_id": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    },
+    "counts": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "lesson_id",
+    "status",
+    "counts"
    ]
   }
  },
@@ -18786,6 +22105,37 @@
    "required": [
     "id",
     "lessonId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "lesson_id": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "scheduled",
+      "confirmed",
+      "completed",
+      "late",
+      "excused",
+      "no_show",
+      "cancelled_by_teacher",
+      "cancelled_by_admin",
+      "rescheduled"
+     ]
+    },
+    "counts": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "lesson_id",
+    "status",
+    "counts"
    ]
   }
  },
@@ -27188,6 +30538,189 @@
      }
     }
    }
+  }
+ },
+ "PUT /assistant-pay/terms/:assistantId": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "assistantId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "assistantId"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "commission": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "type": {
+         "type": "string",
+         "enum": [
+          "percent",
+          "fixed"
+         ]
+        },
+        "value": {
+         "type": "number",
+         "exclusiveMinimum": 0,
+         "maximum": 9999999999
+        },
+        "currency": {
+         "anyOf": [
+          {
+           "type": "string",
+           "pattern": "^[A-Z]{3}$"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "startsOn": {
+         "type": "string",
+         "format": "date",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+        }
+       },
+       "required": [
+        "type",
+        "value",
+        "startsOn"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "salary": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "amount": {
+         "type": "number",
+         "exclusiveMinimum": 0,
+         "maximum": 9999999999
+        },
+        "currency": {
+         "type": "string",
+         "pattern": "^[A-Z]{3}$"
+        },
+        "startsOn": {
+         "type": "string",
+         "format": "date",
+         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+        }
+       },
+       "required": [
+        "amount",
+        "currency",
+        "startsOn"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "commission",
+    "salary"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "assistant_id": {
+     "type": "string"
+    },
+    "commission": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "type": {
+         "type": "string",
+         "enum": [
+          "percent",
+          "fixed"
+         ]
+        },
+        "value": {
+         "type": "number"
+        },
+        "currency": {
+         "type": [
+          "string",
+          "null"
+         ]
+        },
+        "starts_on": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "type",
+        "value",
+        "currency",
+        "starts_on"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "salary": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "amount": {
+         "type": "number"
+        },
+        "currency": {
+         "type": "string"
+        },
+        "starts_on": {
+         "type": "string"
+        }
+       },
+       "required": [
+        "amount",
+        "currency",
+        "starts_on"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "renewal_share_percent": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "assistant_id",
+    "commission",
+    "salary",
+    "renewal_share_percent"
+   ]
   }
  },
  "PUT /chat-lists/:id/threads/:phone": {

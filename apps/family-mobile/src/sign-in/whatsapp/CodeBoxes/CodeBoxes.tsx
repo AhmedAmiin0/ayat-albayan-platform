@@ -1,26 +1,14 @@
-import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { t } from '@ab/mobile-kit';
-import { type BoxLook, CodeBox } from '@/sign-in/whatsapp/CodeBox';
-import { CODE_LENGTH, codeDigits } from '@ab/client-core';
-
-interface CodeBoxesProps {
-  value: string;
-  onChange: (code: string) => void;
-  /** The last try was refused: the boxes' edge says so. */
-  refused: boolean;
-}
-
-const BOXES = Array.from({ length: CODE_LENGTH }, (_, i) => i);
+import { CodeBox } from '@/sign-in/whatsapp/CodeBox';
+import { codeDigits } from '@ab/client-core';
+import type { CodeBoxesProps } from './CodeBoxes.types';
+import { BOXES } from './code-boxes.helpers';
+import { useCodeBoxes } from './use-code-boxes';
 
 /** One near-invisible real input over six boxes so paste and OS autofill fill every box. */
 export function CodeBoxes({ value, onChange, refused }: CodeBoxesProps) {
-  const [focused, setFocused] = useState(true);
-  const look = (i: number): BoxLook => {
-    const here = focused && i === Math.min(value.length, CODE_LENGTH - 1);
-    const ring: BoxLook = here ? 'next' : 'rest';
-    return refused ? 'refused' : ring;
-  };
+  const { setFocused, look } = useCodeBoxes({ value, refused });
   return (
     <View style={{ direction: 'ltr' }}>
       <View

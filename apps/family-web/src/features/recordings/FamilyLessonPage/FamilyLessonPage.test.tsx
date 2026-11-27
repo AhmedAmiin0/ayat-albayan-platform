@@ -37,6 +37,8 @@ describe('`/lesson/<id>` and `/recordings/<id>` (the app’s lesson and recordin
     answer();
     renderAt(<FamilyLessonPage lessonId="L1" studentId="other" />);
     expect(await screen.findByText(t.common.notFound)).toBeTruthy();
+    const home = screen.getByRole('link', { name: t.familyWeb.routeError.home });
+    expect(home.getAttribute('href')).toBe('/portal');
     expect(apiFetch).not.toHaveBeenCalledWith('/portal/students/other/lessons/L1/files');
   });
 
