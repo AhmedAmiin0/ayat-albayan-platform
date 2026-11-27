@@ -7,6 +7,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { PRICES, PROFILE, REPLIES } from '@/features/messaging/inbox/saved-replies/lib/fixture';
 import { ReplyComposer } from '@/features/messaging/inbox/saved-replies/components/ReplyComposer/ReplyComposer';
 import { setStaged } from '@/features/messaging/inbox/saved-replies/lib/staged-store';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -25,7 +26,7 @@ function show() {
 }
 const FILE_ROW = 'c3333333-3333-4333-8333-333333333333';
 const fileRow = message({ id: FILE_ROW, lead_id: null });
-const answer = (path: string) => (path.endsWith('/file') ? fileRow : message({ id: path }));
+const answer = (path: string) => (path.endsWith('/file') ? fileRow : sentText({ id: uid('text') }));
 const answerSend = async (_m: string, path: string) =>
   path.endsWith('/stage') ? STAGED : answer(path);
 const box = () => screen.getByRole<HTMLTextAreaElement>('textbox', { name: t.inbox.composer.messageLabel });

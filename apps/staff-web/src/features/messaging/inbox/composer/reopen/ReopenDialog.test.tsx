@@ -5,6 +5,7 @@ import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { message, PHONE, template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ReopenDialog } from './ReopenDialog';
+import { sentRow, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -51,7 +52,7 @@ describe('ReopenDialog', () => {
 
   it('sends it through the template route with reopen: true, then closes', async () => {
     open();
-    apiSend.mockResolvedValue(message({ id: 'm-r', direction: 'outbound', status: 'queued' }));
+    apiSend.mockResolvedValue(sentRow({ id: uid('m-r'), status: 'queued' }));
     await select();
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
     await waitFor(() => expect(onClose).toHaveBeenCalled());

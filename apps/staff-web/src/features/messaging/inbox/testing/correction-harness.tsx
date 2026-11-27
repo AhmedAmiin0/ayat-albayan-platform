@@ -6,13 +6,14 @@ import { MessageLog } from '@/features/messaging/inbox/messages/components/Messa
 import { TextComposer } from '@/features/messaging/inbox/composer/components/TextComposer';
 import { renderAs, SALES, type Who } from '@/features/messaging/inbox/messages/hide/hide.testing';
 import { message, PHONE } from './inbox-fixture';
+import { uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 /** The signed-in staff member's id (renderAs). */
 export const ME = 'p1';
 
 /** Her own sent text (two lines), WhatsApp knows it. */
 export const OWN = message({
-  id: 'own',
+  id: uid('own'),
   direction: 'outbound',
   status: 'sent',
   body: 'The lesson is at five\nSee you then',

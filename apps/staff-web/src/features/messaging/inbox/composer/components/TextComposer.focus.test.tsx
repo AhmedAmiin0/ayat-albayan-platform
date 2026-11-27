@@ -5,6 +5,7 @@ import { clearDraft } from '@/features/messaging/inbox/composer/lib/draft-store'
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { TextComposer } from './TextComposer';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
@@ -20,7 +21,7 @@ const box = () =>
 
 describe('TextComposer: focus stays in the box (W2)', () => {
   it('after a successful send the box is empty and still focused, ready for the next message', async () => {
-    apiSend.mockResolvedValue(message({ id: 'm-1', direction: 'outbound', status: 'queued' }));
+    apiSend.mockResolvedValue(sentText({ id: uid('m-1'), status: 'queued' }));
     renderWithClient(<TextComposer phone={PHONE} />);
     fireEvent.change(box(), { target: { value: 'السلام عليكم' } });
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.send }));
@@ -38,7 +39,7 @@ describe('TextComposer: focus stays in the box (W2)', () => {
         removeEventListener: vi.fn(),
       })),
     );
-    apiSend.mockResolvedValue(message({ id: 'm-2', direction: 'outbound', status: 'queued' }));
+    apiSend.mockResolvedValue(sentText({ id: uid('m-2'), status: 'queued' }));
     renderWithClient(<TextComposer phone={PHONE} />);
     expect(box().getAttribute('placeholder')).toBe(t.inbox.composer.placeholder);
     fireEvent.change(box(), { target: { value: 'سطر' } });

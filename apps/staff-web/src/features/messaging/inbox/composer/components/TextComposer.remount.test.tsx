@@ -6,6 +6,7 @@ import { clearAllDrafts } from '@/features/messaging/inbox/composer/lib/draft-st
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { clearOwnSends, lastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { TextComposer } from './TextComposer';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
@@ -46,11 +47,11 @@ describe('TextComposer: a remounted box never replays a send (rule 8)', () => {
     show();
     type('الثانية');
     expect(button().disabled).toBe(true); // that chat's send is still in flight
-    resolve(message({ id: 'm-1', direction: 'outbound', status: 'sent' }));
+    resolve(sentText({ id: uid('m-1'), status: 'sent' }));
     await waitFor(() => expect(button().disabled).toBe(false));
     expect(box().value).toBe('الثانية'); // the old box's success never wipes it
-    expect(lastOwnSend(PHONE)).toBe('m-1');
-    apiSend.mockResolvedValueOnce(message({ id: 'm-2', direction: 'outbound', status: 'sent' }));
+    expect(lastOwnSend(PHONE)).toBe(uid('m-1'));
+    apiSend.mockResolvedValueOnce(sentText({ id: uid('m-2'), status: 'sent' }));
     fireEvent.click(button());
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(2));
     expect(sentBody(1).text).toBe('الثانية');
@@ -81,7 +82,7 @@ describe('TextComposer: a remounted box never replays a send (rule 8)', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(2));
     expect(sentBody(1).clientRequestId).not.toBe(sentBody(0).clientRequestId);
     await waitFor(() => expect(button().disabled).toBe(false));
-    apiSend.mockResolvedValueOnce(message({ id: 'm-3', direction: 'outbound', status: 'sent' }));
+    apiSend.mockResolvedValueOnce(sentText({ id: uid('m-3'), status: 'sent' }));
     fireEvent.click(button());
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(3));
     expect(sentBody(2).text).toBe('السلام عليكم ورحمة الله');
