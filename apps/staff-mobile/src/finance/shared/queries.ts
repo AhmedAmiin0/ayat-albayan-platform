@@ -1,10 +1,11 @@
-import { expenseCalls, expenseCategoryCalls } from '@ab/client-core';
+import { expenseCalls, expenseCategoryCalls, teacherEarningCalls } from '@ab/client-core';
 import {
   type DashboardResponse,
   payoutListSchema,
-  type TeacherEarningsSummaryView,
 } from '@ab/money';
 import type { InvoiceView } from '@ab/schedule';
+import { routePath } from '@ab/core';
+import { teacherEarningRoutes } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend, listKey, pathKey } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
@@ -18,6 +19,7 @@ export const usePayouts = (month: string) =>
   });
 
 const calls = expenseCalls({ apiFetch, apiSend });
+const earnings = teacherEarningCalls({ apiFetch, apiSend });
 
 export const useExpenses = (month: string) =>
   useQuery({
@@ -48,7 +50,7 @@ export const useFinanceSummary = (range: { from: string; to: string }) =>
 
 export const useTeacherDues = () =>
   useQuery({
-    queryKey: pathKey('/teacher-earnings/summary'),
-    queryFn: () => apiFetch<TeacherEarningsSummaryView>('/teacher-earnings/summary'),
+    queryKey: pathKey(routePath(teacherEarningRoutes.summary)),
+    queryFn: earnings.summary,
     staleTime: 60_000,
   });

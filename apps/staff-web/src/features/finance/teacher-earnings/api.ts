@@ -1,13 +1,11 @@
-import type { SignedDownload, SignedUpload } from '@ab/shared';
-import type { PaymentMethod } from '@ab/catalog';
-import type { Page } from '@ab/core';
-import type {
-  TeacherEarningsBalanceView,
-  TeacherEarningView,
-  TeacherPaymentResult,
-  TeacherPaymentView,
+import { myEarningRoutes, teacherEarningRoutes } from '@ab/shared';
+import { routePath, type Page } from '@ab/core';
+import {
+  teacherReceiptUploadSchema,
+  type TeacherEarningView,
+  type TeacherPaymentView,
 } from '@ab/money';
-import type { SessionFilter } from '@ab/client-core';
+import { teacherEarningCalls, type SessionFilter } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { moneyKeys } from '@/features/finance/keys';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -21,15 +19,19 @@ export const EARNINGS_PAGE_SIZE = 20;
 /** Admin reads one teacher by id; a teacher always reads their own (the id comes from the token). */
 export type Scope = { kind: 'admin'; teacherId: string } | { kind: 'mine' };
 
-const base = (s: Scope) =>
-  s.kind === 'admin' ? `/teacher-earnings/${s.teacherId}` : '/teachers/me/earnings';
+const calls = teacherEarningCalls({ apiFetch, apiSend });
+const teacherOf = (s: Scope) => (s.kind === 'admin' ? s.teacherId : undefined);
+const listPath = (s: Scope, list: 'sessions' | 'payments') =>
+  s.kind === 'admin'
+    ? routePath(teacherEarningRoutes[list], { teacherId: s.teacherId })
+    : routePath(myEarningRoutes[list]);
 const owner = (s: Scope) => (s.kind === 'admin' ? s.teacherId : 'me');
 export const earningsKey = (s: Scope) => moneyKeys.earnings(owner(s));
 
 export const balanceQuery = (s: Scope) =>
   queryOptions({
     queryKey: moneyKeys.earningsBalance(owner(s)),
-    queryFn: () => apiFetch<TeacherEarningsBalanceView>(base(s)),
+    queryFn: () => calls.balance(teacherOf(s)),
   });
 
 /** One page of sessions, sorted server-side (R-NFR-08); no sort = newest first. */
@@ -44,7 +46,7 @@ export const sessionsQuery = (
       qs.set('page', String(q.page));
       qs.set('pageSize', String(EARNINGS_PAGE_SIZE));
       if (q.status !== 'all') qs.set('status', q.status);
-      return apiFetch<Page<TeacherEarningView>>(`${base(s)}/sessions?${qs}`);
+      return apiFetch<Page<TeacherEarningView>>(`${listPath(s, 'sessions')}?${qs}`);
     },
     placeholderData: keepPreviousData,
   });
@@ -59,31 +61,17 @@ export const paymentsQuery = (s: Scope, q: PaymentsList) =>
       const qs = new URLSearchParams(sortFilterParams(q.sort ?? {}, q.filters));
       qs.set('page', String(q.page));
       qs.set('pageSize', String(EARNINGS_PAGE_SIZE));
-      return apiFetch<Page<TeacherPaymentView>>(`${base(s)}/payments?${qs}`);
+      return apiFetch<Page<TeacherPaymentView>>(`${listPath(s, 'payments')}?${qs}`);
     },
     placeholderData: keepPreviousData,
   });
 
-export type PayBody = {
-  amount: number;
-  method: PaymentMethod;
-  paidAt: string;
-  earningIds?: string[];
-  receiptPath: string | null;
-  note: string | null;
-  /** One per pay dialog, re-sent on retries (the API returns the payment it already recorded). */
-  clientRequestId: string;
-};
-
-export const payTeacher = (teacherId: string, body: PayBody) =>
-  apiSend<TeacherPaymentResult>('POST', `/teacher-earnings/${teacherId}/payments`, body);
+export const payTeacher = calls.record;
 
 /** A wrong transfer is voided with a reason (admin); it stays in the history struck through. */
-export const voidTeacherPayment = (paymentId: string, reason: string) =>
-  apiSend<TeacherPaymentView>('POST', `/teacher-earnings/payments/${paymentId}/void`, { reason });
+export const voidTeacherPayment = calls.voidPayment;
 
-export const receiptUrl = (s: Scope, paymentId: string) =>
-  apiFetch<SignedDownload>(s.kind === 'admin' ? `/teacher-earnings/payments/${paymentId}/receipt` : `${base(s)}/payments/${paymentId}/receipt`);
+export const receiptUrl = (s: Scope, paymentId: string) => calls.receipt(teacherOf(s), paymentId);
 
 /** Straight to the private bucket through a one-off signed URL; the path is then sent with the payment. */
 export async function uploadTeacherReceipt(input: {
@@ -91,10 +79,8 @@ export async function uploadTeacherReceipt(input: {
   file: File;
 }): Promise<string> {
   const { file } = input;
-  const signed = await apiSend<SignedUpload>('POST', `/teacher-earnings/${input.teacherId}/receipt-upload-url`, {
-    mime: file.type,
-    size: file.size,
-  });
+  const slot = teacherReceiptUploadSchema.parse({ mime: file.type, size: file.size });
+  const signed = await calls.receiptUploadUrl(input.teacherId, slot);
   const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return signed.path;
