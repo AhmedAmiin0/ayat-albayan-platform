@@ -2956,9 +2956,6 @@
   "src/inbox/thread/hooks/use-forward.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/inbox/thread/hooks/use-jump.ts": {
