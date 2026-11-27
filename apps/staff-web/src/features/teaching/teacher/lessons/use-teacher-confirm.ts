@@ -1,19 +1,14 @@
-import { confirmAnswerSchema, teacherLessonPaths } from '@ab/client-core';
+import { teacherLessonCalls } from '@ab/client-core';
 import { useMutation, useMutationState, useQueryClient } from '@tanstack/react-query';
 import { LESSONS_KEY } from '@/features/teaching/schedule';
-import { apiSend } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import {
   holdMyLessons,
   patchMyLesson,
   restoreMyLessons,
 } from '@/features/teaching/teacher/patch-my-lesson';
 
-/** apiSend with its reply left unknown, for the schema to parse. */
-const post: (method: 'POST', path: string) => Promise<unknown> = apiSend;
-
-/** The answer's fields the chip reads (rule 12); an unexpected shape is no answer. */
-const confirmAttendance = async (lessonId: string) =>
-  confirmAnswerSchema.safeParse(await post('POST', teacherLessonPaths.confirm(lessonId))).data;
+const lessons = teacherLessonCalls({ apiFetch, apiSend });
 
 /** One key per lesson so the row and the drawer read the same confirm refusal. */
 const confirmKey = (lessonId: string) => ['teacher-confirm', lessonId] as const;
@@ -23,7 +18,7 @@ export function useTeacherConfirm(lessonId: string, onConfirmed?: () => void) {
   const client = useQueryClient();
   return useMutation({
     mutationKey: confirmKey(lessonId),
-    mutationFn: () => confirmAttendance(lessonId),
+    mutationFn: () => lessons.confirm({ id: lessonId }),
     onSuccess: () => onConfirmed?.(),
     onMutate: async () => {
       await holdMyLessons(client);

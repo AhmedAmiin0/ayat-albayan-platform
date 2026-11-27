@@ -4,6 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { answer, evening, held, later } from '@/teacher/today/testing/day-fixtures';
 import { TeacherTodayScreen } from '@/teacher/screens/TeacherTodayScreen/TeacherTodayScreen';
+import { answered } from '@/today/testing/answered';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -28,8 +29,8 @@ beforeEach(() => {
 });
 
 test('row → sheet → «إلغاء الحلقة» POSTs the reason; the notice says it once', async () => {
-  const cancelled = { ...evening, status: 'cancelled_by_teacher', cancel_reason: 'سفر' };
-  mockApiSend.mockResolvedValue(cancelled);
+  const cancelled = { ...evening, status: 'cancelled_by_teacher' as const, cancel_reason: 'سفر' };
+  mockApiSend.mockResolvedValue(answered(cancelled));
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   await fireEvent.press(await openRow('سلمى علي'));
   await fireEvent.press(screen.getByRole('button', { name: w.cancel }));

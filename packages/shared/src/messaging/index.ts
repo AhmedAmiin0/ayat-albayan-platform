@@ -51,6 +51,7 @@ export * from './thread-sync';
 export * from './chat/thread-reads';
 export type * from './chat/views';
 export * from './chat/message-view';
+export * from './chat/lesson-rating';
 export * from './templates/catalog';
 export * from './chat/line-check';
 export * from './replies/saved-replies';

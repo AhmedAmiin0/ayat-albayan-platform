@@ -79,7 +79,7 @@ describe('template health (R-MSG-01, issue C1)', () => {
     expect(apiSend).not.toHaveBeenCalled();
     apiSend.mockResolvedValue({ ...DRAFT, status: 'pending' });
     fireEvent.click(dialog.getByRole('button', { name: t.templates.submitConfirmYes }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/renewal_due/submit'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/renewal_due/submit', undefined));
     expect((await screen.findByRole('status')).textContent).toContain(t.templates.submitted);
     expect(screen.queryByRole('dialog')).toBeNull();
   });
@@ -90,7 +90,7 @@ describe('template health (R-MSG-01, issue C1)', () => {
     await screen.findByText(t.templates.names.report_ready);
     fireEvent.click(rowOf('report_ready').getByRole('button', { name: t.templates.submit }));
     fireEvent.click(screen.getByRole('button', { name: t.templates.submitConfirmYes }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/report_ready/submit'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/report_ready/submit', undefined));
     expect((await screen.findByRole('status')).textContent).toContain(
       t.templates.error.needs_app_id.replace('{line}', t.enums.waLine.notifications).replace('{key}', 'WA_APP_ID'),
     );

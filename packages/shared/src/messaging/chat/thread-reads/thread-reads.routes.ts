@@ -1,5 +1,6 @@
 import { defineRoute } from '@ab/core';
 import { threadSyncQuerySchema, threadSyncSchema } from '../../thread-sync';
+import { threadListQuerySchema, threadPageSchema } from './thread-list.schemas';
 
 const reader = { permissions: ['inbox.read'], tags: ['inbox'] } as const;
 
@@ -14,6 +15,14 @@ export const threadReadRoutes = {
     path: '/threads/sync',
     query: threadSyncQuerySchema,
     response: threadSyncSchema,
+    ...reader,
+  }),
+  /** 200; the caller's chats, never the academy's own numbers (the nav counts read its total). */
+  list: defineRoute({
+    method: 'GET',
+    path: '/threads',
+    query: threadListQuerySchema,
+    response: threadPageSchema,
     ...reader,
   }),
 };

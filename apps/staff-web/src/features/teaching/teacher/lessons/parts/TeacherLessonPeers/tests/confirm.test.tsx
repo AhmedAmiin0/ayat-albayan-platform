@@ -2,7 +2,7 @@ import type { LessonView } from '@ab/schedule';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError, t } from '@ab/web-kit';
 import { TeacherLessonCard } from '@/features/teaching/teacher/lessons/TeacherLessonCard';
 
@@ -51,14 +51,15 @@ describe('TeacherLessonPeers — «سأحضر» (docs/46 C4, docs/48 optimistic)
     const said = { ...AHEAD, teacher_confirmed_at: '2026-10-03T09:00:00.000Z' };
     apiSend.mockImplementation(() => {
       server = said;
-      return Promise.resolve(said);
+      return Promise.resolve(answered(said));
     });
     const onDone = await renderCard();
     fireEvent.click(screen.getByRole('button', { name: w.confirm }));
     expect(await screen.findByText(w.confirmedChip)).toBeTruthy();
     expect(screen.queryByRole('button', { name: w.confirm })).toBeNull();
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(w.confirmedOk));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/b/confirm-attendance');
+    const path = '/teachers/me/lessons/b/confirm-attendance';
+    expect(apiSend).toHaveBeenCalledWith('POST', path, undefined);
   });
 
   it('already confirmed: the chip, no button; cancel still offered', async () => {

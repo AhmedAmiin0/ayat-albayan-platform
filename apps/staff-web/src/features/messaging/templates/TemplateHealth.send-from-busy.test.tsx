@@ -16,7 +16,10 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ pe
 
 const s = t.templates.sendFrom;
 const NAME = t.templates.names.booking_confirmation_plain;
-const SPARE = numberView({ id: 'num-2', label: 'Spare line', is_default: false, fallback_rank: 5 });
+const SPARE_ID = '00000000-0000-4000-8000-0000000000f2';
+const SPARE = numberView({
+  id: SPARE_ID, label: 'Spare line', is_default: false, fallback_rank: 5,
+});
 const BOOKING = template({ number_id: null, numbers: [] });
 
 afterEach(() => {
@@ -35,7 +38,7 @@ describe('template health — «يُرسل من» busy', () => {
     const box = () => screen.getByRole<HTMLSelectElement>('combobox', { name: s.labelFor.replace('{name}', NAME) });
     const select = await screen.findByRole('combobox', { name: s.labelFor.replace('{name}', NAME) });
     await within(select).findByRole('option', { name: s.option.replace('{label}', 'Spare line').replace('{role}', t.numbers.purpose.notifications) });
-    fireEvent.change(select, { target: { value: 'num-2' } });
+    fireEvent.change(select, { target: { value: SPARE_ID } });
     const dialog = screen.getByRole('dialog', { name: s.confirmTitle });
     let settle: (v: unknown) => void = () => undefined;
     apiSend.mockReturnValue(new Promise((done) => (settle = done)));
@@ -47,7 +50,7 @@ describe('template health — «يُرسل من» busy', () => {
     fireEvent.keyDown(dialog, { key: 'Escape' });
     expect(screen.getByRole('dialog', { name: s.confirmTitle })).toBeTruthy();
 
-    settle({ template: { ...BOOKING, number_id: 'num-2' }, not_approved_on_number: true });
+    settle({ template: { ...BOOKING, number_id: SPARE_ID }, not_approved_on_number: true });
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     const toast = await screen.findByText(s.notApproved);
     expect(toast.closest('[role="status"]')?.className).not.toContain('bg-danger-soft');

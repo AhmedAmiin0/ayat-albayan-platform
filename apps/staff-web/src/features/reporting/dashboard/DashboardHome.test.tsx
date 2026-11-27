@@ -24,15 +24,24 @@ const wrap = (ui: ReactNode) =>
     </QueryClientProvider>,
   );
 
-const thread = (n: number): ThreadView =>
-  ({
-    phone_e164: `+96650000000${n}`,
-    display_name: `ولي أمر ${n}`,
-    unread_count: n === 1 ? 2 : 0,
-    last_message_at: '2026-10-05T09:00:00.000Z',
-    last_direction: 'inbound',
-    last_body: `رسالة ${n}`,
-  }) as ThreadView;
+/** The chat row's other fields, as the shared list route reads a whole row. */
+const QUIET = {
+  last_template_key: null, last_status: 'delivered', last_media_mime: null, last_inbound_at: null,
+  lead_id: null, lead_name: null, lead_status: null, lead_source: null, guardian_id: null,
+  guardian_name: null, guardian_tz: null, teacher_id: null, teacher_name: null,
+  session_open: false, subscribed: false,
+} as const;
+
+const thread = (n: number): ThreadView => ({
+  ...QUIET,
+  last_message_id: `d0000000-0000-4000-8000-00000000000${n}`,
+  phone_e164: `+96650000000${n}`,
+  display_name: `ولي أمر ${n}`,
+  unread_count: n === 1 ? 2 : 0,
+  last_message_at: '2026-10-05T09:00:00.000Z',
+  last_direction: 'inbound',
+  last_body: `رسالة ${n}`,
+});
 
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] });
@@ -112,7 +121,7 @@ describe('RecentInbox', () => {
   });
 
   it('the link names our last status, since its label replaces the ticks\' own name', async () => {
-    const ours = { ...thread(1), last_direction: 'outbound', last_status: 'read' } as ThreadView;
+    const ours: ThreadView = { ...thread(1), last_direction: 'outbound', last_status: 'read' };
     apiFetch.mockResolvedValue({ items: [ours], total: 1, page: 1, pageSize: 30 });
     wrap(<RecentInbox />);
     const name = `${t.inbox.openThread.replace('{name}', 'ولي أمر 1')} — ${t.enums.messageStatus.read}`;

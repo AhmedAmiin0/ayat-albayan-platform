@@ -2914,7 +2914,7 @@
   },
   "src/modules/messaging/inbox/threads/threads.list.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/forbidden-imports": {
       "count": 1
@@ -4407,11 +4407,6 @@
   "src/modules/messaging/whatsapp/templates/catalog/template-crm-status.ts": {
     "stylistic/max-len": {
       "count": 5
-    }
-  },
-  "src/modules/messaging/whatsapp/templates/catalog/template-edits.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 6
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template-env.ts": {

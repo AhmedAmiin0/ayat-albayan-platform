@@ -4,6 +4,7 @@ import { ApiError } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { useTeacherCancel, useTeacherConfirm } from '@/teacher/lesson-actions/teacher-lesson-api/teacher-lesson-api';
+import { answered } from '@/today/testing/answered';
 
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -40,7 +41,8 @@ test('«سأحضر» patches her rows before the answer', async () => {
   await act(async () => result.current.mutate());
   await waitFor(() => expect(rowOf(client, TODAY)?.teacher_confirmed_at).toBeTruthy());
   expect(rowOf(client, WEEK)?.teacher_confirmed_at).toBeTruthy();
-  await act(async () => answer({ ...ahead, teacher_confirmed_at: '2026-10-01T12:00:00Z' }));
+  const said = answered({ ...ahead, teacher_confirmed_at: '2026-10-01T12:00:00Z' });
+  await act(async () => answer(said));
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
 });
 
@@ -55,7 +57,9 @@ test('a refused «سأحضر» rolls the rows back', async () => {
 });
 
 test('a landed cancel closes the row and re-reads lessons and /teachers/me', async () => {
-  mockApiSend.mockResolvedValue({ ...ahead, status: 'cancelled_by_teacher', cancel_reason: 'سفر' });
+  mockApiSend.mockResolvedValue(
+    answered({ ...ahead, status: 'cancelled_by_teacher', cancel_reason: 'سفر' }),
+  );
   const { client, invalidate, wrapper } = setup();
   const { result } = await renderHook(() => useTeacherCancel('l1'), { wrapper });
   await act(async () => result.current.mutate({ reason: 'سفر' }));
@@ -68,6 +72,15 @@ test('a landed cancel closes the row and re-reads lessons and /teachers/me', asy
 
 test('a refused cancel never flashes a closed row', async () => {
   mockApiSend.mockRejectedValue(new ApiError(409, { code: 'lesson_started' }));
+  const { client, wrapper } = setup();
+  const { result } = await renderHook(() => useTeacherCancel('l1'), { wrapper });
+  await act(async () => result.current.mutate({ reason: 'سفر' }));
+  await waitFor(() => expect(result.current.isError).toBe(true));
+  expect(rowOf(client, TODAY)?.status).toBe('confirmed');
+});
+
+test('a cancel answer that is no lesson fails and closes nothing', async () => {
+  mockApiSend.mockResolvedValue({ id: 'l1', status: 'cancelled_by_teacher', cancel_reason: 'سفر' });
   const { client, wrapper } = setup();
   const { result } = await renderHook(() => useTeacherCancel('l1'), { wrapper });
   await act(async () => result.current.mutate({ reason: 'سفر' }));

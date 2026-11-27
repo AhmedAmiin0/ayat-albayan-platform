@@ -1,9 +1,9 @@
 import type { TeacherCancelRequest } from '@ab/schedule';
-import { cancelAnswerSchema, confirmAnswerSchema, teacherLessonPaths } from '@ab/client-core';
+import { teacherLessonCalls } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { QueryClient, QueryKey } from '@tanstack/react-query';
 import { z } from 'zod';
-import { isNetworkError, ApiError, apiSend, t, pathKey } from '@ab/mobile-kit';
+import { isNetworkError, ApiError, apiFetch, apiSend, t, pathKey } from '@ab/mobile-kit';
 import { patchCached, type Patch } from '@/core/lib/query/paging';
 
 // docs/46 C3/C4: the teacher's own lesson routes (self.teacher), never the admin's /lessons/:id/*.
@@ -28,9 +28,7 @@ export function teacherActionError(error: unknown): string {
   return ERROR_TEXT[codeOf(error) ?? ''] ?? t.teacherBoard.actionFailed;
 }
 
-/** apiSend with its reply left unknown, for the schema to parse. */
-const post: (method: 'POST', path: string, body?: TeacherCancelRequest) => Promise<unknown> =
-  apiSend;
+const lessons = teacherLessonCalls({ apiFetch, apiSend });
 
 /** Today, the schedule and the board share the ['lessons'] key, so refetch them. */
 function useRefreshLessons() {
@@ -59,8 +57,7 @@ export function useTeacherConfirm(lessonId: string) {
   const refresh = useRefreshLessons();
   return useMutation({
     // The answer bridges the chip until the refetch brings the lesson (confirmedNow).
-    mutationFn: async () =>
-      confirmAnswerSchema.safeParse(await post('POST', teacherLessonPaths.confirm(lessonId))).data,
+    mutationFn: () => lessons.confirm({ id: lessonId }),
     onMutate: async () => {
       await client.cancelQueries({ queryKey: MINE });
       return patchMine(client, { id: lessonId, teacher_confirmed_at: new Date().toISOString() });
@@ -80,10 +77,9 @@ export function useTeacherCancel(lessonId: string) {
   const client = useQueryClient();
   const refresh = useRefreshLessons();
   return useMutation({
-    mutationFn: async (body: TeacherCancelRequest) =>
-      cancelAnswerSchema.safeParse(await post('POST', teacherLessonPaths.cancel(lessonId), body))
-        .data,
-    onSuccess: (answer) => answer && patchMine(client, answer),
+    mutationFn: (body: TeacherCancelRequest) => lessons.cancel({ id: lessonId }, body),
+    onSuccess: ({ status, cancel_reason }) =>
+      patchMine(client, { id: lessonId, status, cancel_reason }),
     onSettled: () =>
       Promise.all([refresh(), client.invalidateQueries({ queryKey: pathKey('/teachers/me') })]),
   });

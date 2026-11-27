@@ -45,7 +45,7 @@ describe('template health: «إرسال إلى ميتا» on a crm line', () => 
     fireEvent.click(row.getByRole('button', { name: t.templates.submit }));
     const dialog = within(screen.getByRole('dialog', { name: t.templates.submit }));
     fireEvent.click(dialog.getByRole('button', { name: t.templates.submitConfirmYes }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/renewal_due/submit'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/renewal_due/submit', undefined));
     expect(apiSend).toHaveBeenCalledTimes(1);
   });
 

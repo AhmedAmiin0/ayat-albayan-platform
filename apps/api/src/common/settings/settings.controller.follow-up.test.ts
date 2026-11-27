@@ -10,6 +10,8 @@ import { SettingsController } from './settings.controller';
 
 const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin', permissions: ['settings.write', 'notifications.manage'] };
 
+const patch = (body: Record<string, unknown>) => ({ params: undefined, query: undefined, body });
+
 function setup() {
   const order: string[] = [];
   const settings = fakeSettings();
@@ -30,7 +32,7 @@ function setup() {
 describe('PATCH /settings with followUpHours (notifications.manage)', () => {
   it('writes the rule first, then the other fields, audits once, keeps the 0.2.0 response shape', async () => {
     const t = setup();
-    const res = await t.ctl.update({ followUpHours: [24, 48], lateCancelHours: 12 }, ADMIN);
+    const res = await t.ctl.update(patch({ followUpHours: [24, 48], lateCancelHours: 12 }), ADMIN);
     expect(t.order).toEqual(['rule', 'settings']);
     expect(t.rules.writeFollowUpHours).toHaveBeenCalledWith([24, 48], ADMIN);
     expect(t.settings.write).toHaveBeenCalledWith({ late_cancel_hours: 12 }, ADMIN.id);
@@ -42,7 +44,7 @@ describe('PATCH /settings with followUpHours (notifications.manage)', () => {
     it(`a refused rule write (${status}) saves nothing else and audits nothing`, async () => {
       const t = setup();
       t.rules.writeFollowUpHours.mockRejectedValueOnce(Object.assign(new Error('rule refused'), { status }));
-      await expect(t.ctl.update({ followUpHours: [24], lateCancelHours: 12 }, ADMIN)).rejects.toThrow('rule refused');
+      await expect(t.ctl.update(patch({ followUpHours: [24], lateCancelHours: 12 }), ADMIN)).rejects.toThrow('rule refused');
       expect(t.settings.write).not.toHaveBeenCalled();
       expect(t.audit.record).not.toHaveBeenCalled();
     });
@@ -51,14 +53,14 @@ describe('PATCH /settings with followUpHours (notifications.manage)', () => {
   it('a failed settings write after the rule was saved is still audited (the rule changed)', async () => {
     const t = setup();
     vi.mocked(t.settings.write).mockRejectedValueOnce(new Error('settings write failed'));
-    await expect(t.ctl.update({ followUpHours: [24], lateCancelHours: 12 }, ADMIN)).rejects.toThrow('settings write failed');
+    await expect(t.ctl.update(patch({ followUpHours: [24], lateCancelHours: 12 }), ADMIN)).rejects.toThrow('settings write failed');
     expect(t.rules.writeFollowUpHours).toHaveBeenCalledTimes(1);
     expect(t.audit.record).toHaveBeenCalledTimes(1);
   });
 
   it('followUpHours alone: only the rule is written, audited once', async () => {
     const t = setup();
-    await t.ctl.update({ followUpHours: [24] }, ADMIN);
+    await t.ctl.update(patch({ followUpHours: [24] }), ADMIN);
     expect(t.settings.write).not.toHaveBeenCalled();
     expect(t.audit.record).toHaveBeenCalledTimes(1);
   });

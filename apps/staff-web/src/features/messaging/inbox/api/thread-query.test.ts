@@ -23,7 +23,7 @@ it("a chat page's read gets the query's signal", async () => {
 });
 
 it("the chats list's read gets the query's signal", async () => {
-  mockApiFetch.mockResolvedValue({ items: [], total: 0 });
+  mockApiFetch.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 30 });
   const client = new QueryClient();
   await client.query(threadsQuery({ page: 1 }));
   const [path, init] = mockApiFetch.mock.calls[0] as [string, RequestInit];

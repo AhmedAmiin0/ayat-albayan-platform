@@ -12,9 +12,9 @@ export {
   sendText,
   setFollowUpPaused,
   threadFileQuery,
-  THREADS_PAGE_SIZE,
   threadsQuery,
 } from './api/api';
+export { THREADS_PAGE_SIZE } from './api/thread-list';
 export { threadQuery } from './api/thread-query';
 export { inboxLeadKeys, isThreadDetail, threadKeys } from './api/keys';
 export {

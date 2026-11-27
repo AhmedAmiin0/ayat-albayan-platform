@@ -2,25 +2,26 @@ import {
   normaliseTemplateParams,
   type FollowUpNote,
   type LeadQualification,
-  type MessageView,
   type ThreadDetail,
   type ThreadRating,
   type ThreadTemplate,
   type ThreadText,
-  type ThreadView,
 } from '@ab/shared';
 import {
   chatFileCalls,
   leadWriteCalls,
+  lessonRatingCalls,
   liveInterval,
   messageStatusCalls,
   offPathKeys,
+  threadReadCalls,
   threadSendCalls,
 } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend, env } from '@ab/web-kit';
 import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { inboxLive } from './live';
+import { threadListKey, threadListQuery } from './thread-list';
 import type { LeadView } from '@ab/shared';
 import type { Page } from '@ab/core';
 import { inboxLeadKeys, threadKeys } from '@/features/messaging/inbox/api/keys';
@@ -29,26 +30,21 @@ import { inboxLeadKeys, threadKeys } from '@/features/messaging/inbox/api/keys';
 
 const chatFiles = chatFileCalls({ apiFetch, apiSend });
 const leadWrites = leadWriteCalls({ apiFetch, apiSend });
+const ratings = lessonRatingCalls({ apiFetch, apiSend });
 const messageStatus = messageStatusCalls({ apiFetch, apiSend });
 const sends = threadSendCalls({ apiFetch, apiSend });
+const reads = threadReadCalls({ apiFetch, apiSend });
 
-export const THREADS_PAGE_SIZE = 30;
 /** New WhatsApp messages arrive by webhook; the open chat polls for them with a delta (10 s; e2e 1 s). */
 export const INBOX_REFRESH_MS = env.inboxRefreshMs;
 /** The inbox's poll: INBOX_FALLBACK_MS while realtime is connected (its events re-read sooner), else the above. */
 export const inboxPollMs = () => liveInterval(inboxLive.isLive(), INBOX_REFRESH_MS);
 
 export const threadsQuery = (s: InboxSearch) => {
-  const params = new URLSearchParams({ page: String(s.page), pageSize: String(THREADS_PAGE_SIZE) });
-  if (s.q) params.set('search', s.q);
-  if (s.unread) params.set('unread', 'true');
-  if (s.sort) params.set('sort', s.sort);
-  if (s.sort === 'unread') params.set('dir', 'desc');
-  if (s.f_status) params.set('status', s.f_status);
-  if (s.list) params.set('list', s.list);
+  const query = threadListQuery(s);
   return queryOptions({
-    queryKey: threadKeys.list(params.toString()),
-    queryFn: ({ signal }) => apiFetch<Page<ThreadView>>(`/threads?${params}`, { signal }),
+    queryKey: threadKeys.list(threadListKey(query)),
+    queryFn: ({ signal }) => reads.list(query, signal),
     placeholderData: keepPreviousData,
     refetchInterval: () => liveInterval(inboxLive.isLive(), env.inboxListRefreshMs),
   });
@@ -88,7 +84,7 @@ export const sendTemplate = ({ phone, params, ...body }: ThreadTemplate & { phon
 
 /** Rates the guardian's latest lesson that took place (migration 195). */
 export const sendRating = ({ phone, ...body }: ThreadRating & { phone: string }) =>
-  apiSend<MessageView>('POST', `${threadPath(phone)}/rating`, body);
+  ratings.send({ phone }, body);
 
 /** M1: a failed row goes back to the queue (attempts 0). */
 export const retryMessage = messageStatus.retry;

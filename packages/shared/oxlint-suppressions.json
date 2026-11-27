@@ -66,11 +66,6 @@
       "count": 1
     }
   },
-  "src/messaging/chat/views.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
   "src/messaging/lesson/meeting-link.ts": {
     "complexity": {
       "count": 1
