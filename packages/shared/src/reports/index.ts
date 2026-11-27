@@ -9,3 +9,4 @@ export * from './page-access';
 export * from './quran';
 export * from './v2';
 export * from './lesson-files';
+export * from './page-routes';

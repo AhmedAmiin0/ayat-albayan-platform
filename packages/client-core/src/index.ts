@@ -26,6 +26,7 @@ export * from './sales/registration-check';
 export * from './sales/used-before';
 export * from './people/assistants';
 export * from './reporting/dashboard';
+export * from './reporting/report-page';
 export * from './teaching/reports';
 export * from './teaching/report-draft';
 export * from './teaching/booking';

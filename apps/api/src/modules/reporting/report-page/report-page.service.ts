@@ -1,7 +1,8 @@
-import type { ReportPageView } from '@ab/shared';
+import { reportPageViewSchema, type ReportPageView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 import { BUCKETS, SIGNED_URL_SECONDS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import { reportFileName } from '@/modules/reporting/report-pdf';
@@ -54,7 +55,8 @@ export class ReportPageService {
 
   /** seconds: how long the files' signed URLs last (the public page: its session's 30 min). */
   async view(found: PageFound, seconds: number = SIGNED_URL_SECONDS.ui): Promise<ReportPageView> {
-    return toPageView({ ...found, urls: await this.urls(found, seconds) });
+    const urls = await this.urls(found, seconds);
+    return asResponse(reportPageViewSchema, toPageView({ ...found, urls }));
   }
 
   private async urls({ row, facts }: PageFound, seconds: number): Promise<PageUrls> {

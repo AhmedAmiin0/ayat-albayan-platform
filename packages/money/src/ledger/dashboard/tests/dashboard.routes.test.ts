@@ -8,6 +8,14 @@ describe('dashboardRoutes', () => {
     expect(lines).toEqual(['GET /dashboard/summary', 'GET /dashboard/work']);
   });
 
+  it('lets in dashboard readers only and files both under the dashboard tag', () => {
+    expect(Object.values(routes).map((r) => r.permissions)).toEqual([
+      ['dashboard.read'],
+      ['dashboard.read'],
+    ]);
+    expect(Object.values(routes).map((r) => r.tags)).toEqual([['dashboard'], ['dashboard']]);
+  });
+
   it('asks for Riyadh days and names a bad range by its own code', () => {
     expect(routes.summary.query.parse({ from: '2026-11-01', to: '2026-11-30' })).toEqual({
       from: '2026-11-01',
