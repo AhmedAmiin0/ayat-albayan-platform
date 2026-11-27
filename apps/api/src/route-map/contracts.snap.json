@@ -6690,6 +6690,12 @@
    ]
   }
  },
+ "GET /webhooks/whatsapp": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "string"
+  }
+ },
  "PATCH /admin/numbers/:id": {
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -13419,6 +13425,259 @@
    "required": [
     "id"
    ]
+  }
+ },
+ "POST /messaging/lines/check": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "line": {
+      "type": "string",
+      "enum": [
+       "notifications",
+       "chat"
+      ]
+     },
+     "configured": {
+      "type": "boolean"
+     },
+     "provider": {
+      "type": "string",
+      "enum": [
+       "meta",
+       "kapso",
+       "crm",
+       "evolution"
+      ]
+     },
+     "gaps": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     },
+     "duplicate_chat_phone": {
+      "type": "boolean"
+     },
+     "kapso_webhook_secret": {
+      "type": "boolean"
+     },
+     "crm_webhook_secret": {
+      "type": "boolean"
+     },
+     "crm_send_scope": {
+      "type": [
+       "boolean",
+       "null"
+      ]
+     },
+     "crm_template_scopes_missing": {
+      "anyOf": [
+       {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "crm_read_scopes_missing": {
+      "anyOf": [
+       {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "meta_ready": {
+      "type": "object",
+      "properties": {
+       "app_secret": {
+        "type": "boolean"
+       },
+       "verify_token": {
+        "type": "boolean"
+       },
+       "app_subscribed": {
+        "type": [
+         "boolean",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "app_secret",
+       "verify_token",
+       "app_subscribed"
+      ]
+     },
+     "phone_number_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "waba_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "app_id": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "display_phone_number": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "verified_name": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "quality_rating": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "status": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "name_status": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "code_verification_status": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "subscribed_apps": {
+      "anyOf": [
+       {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "override_callback_uri": {
+           "type": [
+            "string",
+            "null"
+           ]
+          }
+         },
+         "required": [
+          "id",
+          "name",
+          "override_callback_uri"
+         ]
+        }
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "errors": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "step": {
+         "type": "string",
+         "enum": [
+          "phone",
+          "subscribed_apps",
+          "crm_me"
+         ]
+        },
+        "code": {
+         "type": [
+          "number",
+          "null"
+         ]
+        },
+        "message": {
+         "type": "string"
+        },
+        "credential": {
+         "type": "string",
+         "enum": [
+          "kapso",
+          "crm",
+          "evolution"
+         ]
+        }
+       },
+       "required": [
+        "step",
+        "code",
+        "message"
+       ]
+      }
+     },
+     "checked_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+     }
+    },
+    "required": [
+     "line",
+     "configured",
+     "provider",
+     "gaps",
+     "duplicate_chat_phone",
+     "phone_number_id",
+     "waba_id",
+     "app_id",
+     "display_phone_number",
+     "verified_name",
+     "quality_rating",
+     "status",
+     "name_status",
+     "code_verification_status",
+     "subscribed_apps",
+     "errors",
+     "checked_at"
+    ]
+   }
   }
  },
  "POST /messaging/templates": {
@@ -20457,7 +20716,17 @@
    "required": [
     "instance"
    ]
-  }
+  },
+  "response": "empty"
+ },
+ "POST /webhooks/kapso": {
+  "response": "empty"
+ },
+ "POST /webhooks/wacrm": {
+  "response": "empty"
+ },
+ "POST /webhooks/whatsapp": {
+  "response": "empty"
  },
  "PUT /admin/numbers/:id/evolution/config": {
   "params": {

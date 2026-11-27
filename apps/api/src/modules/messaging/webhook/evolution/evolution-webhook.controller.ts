@@ -1,12 +1,12 @@
 import {
-  Controller, HttpCode, HttpException, HttpStatus, Logger, NotFoundException, Post, Req,
+  Controller, HttpCode, HttpException, HttpStatus, Logger, NotFoundException, Req,
   ServiceUnavailableException, UnauthorizedException,
 } from '@nestjs/common';
-import { EVOLUTION_INSTANCE_RE } from '@ab/catalog';
 import { ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { Public } from '@/common/auth/decorators';
-import { ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { webhookRoutes as routes } from '@/modules/messaging/webhook/shared';
 import { verifyEvolution } from '@/modules/messaging/webhook/parse/webhook.evolution-auth';
 import { parseEvolution } from '@/modules/messaging/webhook/parse/webhook.evolution';
 import { within, RESPONSE_BUDGET_MS } from '@/modules/messaging/webhook/webhook.service';
@@ -19,7 +19,6 @@ const headersSchema = z.looseObject({ 'x-evolution-token': z.string().optional()
 type Headers = z.infer<typeof headersSchema>;
 
 /** A name that is no instance of ours is a 404 like an unknown one (no hint which exist). */
-const INSTANCE = z.string().regex(EVOLUTION_INSTANCE_RE);
 const unknown = () => new NotFoundException();
 /** The numbers config is not loaded yet: retryable, so no family message is lost. */
 const notLoaded = () => new ServiceUnavailableException();
@@ -32,7 +31,7 @@ const notLoaded = () => new ServiceUnavailableException();
  */
 @ApiTags('webhooks')
 @Public()
-@Controller('webhooks/evolution')
+@Controller()
 export class EvolutionWebhookController {
   private readonly log = new Logger(EvolutionWebhookController.name);
   private readonly rate = new EvolutionRate();
@@ -40,12 +39,13 @@ export class EvolutionWebhookController {
   constructor(private readonly evolution: EvolutionWebhookService) {}
 
   /** 429 over budget, 404 unknown (503 before numbers load), 401 bad token, 500 failed item. */
-  @Post(':instance')
+  @Route(routes.evolution)
   @HttpCode(200)
   async receive(
-    @ZodParam('instance', INSTANCE, unknown) instance: string,
+    @RouteInput({ badParam: unknown }) { params }: RouteInputOf<typeof routes.evolution>,
     @Req() req: { body: unknown; headers: unknown },
   ): Promise<void> {
+    const { instance } = params;
     const now = new Date();
     const known = this.authenticated({
       number: evolutionNumber(instance),
