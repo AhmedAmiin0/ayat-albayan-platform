@@ -1,11 +1,10 @@
-import type { ReactNode } from 'react';
 import { Mark } from '@ab/web-kit/components/ui/display/mark';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-
-const S = t.familyApp.signIn;
+import type { BrandLockupProps } from './BrandLockup.types';
 
 /** Header for pages without a shell (docs/50 §5, #748); same emblem in both themes. */
-export function BrandLockup({ children }: { children?: ReactNode }) {
+export function BrandLockup({ children }: BrandLockupProps) {
+  const S = t.familyApp.signIn;
   return (
     <header className="grid justify-items-center gap-3 text-center">
       <span className="grid size-[76px] place-items-center rounded-[17px] bg-brand-tile">
