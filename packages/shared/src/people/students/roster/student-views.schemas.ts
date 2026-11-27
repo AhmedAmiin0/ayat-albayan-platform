@@ -1,6 +1,6 @@
 import { GENDERS, PROGRAMS, STUDENT_STATUSES } from '@ab/catalog';
 import { z } from 'zod';
-import { familyPhoneSchema } from '../../guardians/guardians.schemas';
+import { familyPhoneSchema } from '../../guardians';
 
 export const studentRefSchema = z.object({
   id: z.string(),

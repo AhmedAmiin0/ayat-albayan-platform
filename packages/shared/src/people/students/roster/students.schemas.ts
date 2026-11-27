@@ -7,7 +7,7 @@ import {
   studentCreateSchema,
   studentListFiltersSchema,
 } from '../../schemas';
-import { peopleListQuerySchema } from '../../guardians/guardians.schemas';
+import { peopleListQuerySchema } from '../../guardians';
 
 /** GET /students: search and page, the filters (R-STU-01), the column sort and texts (R-NFR-08). */
 export const studentListQuerySchema = peopleListQuerySchema.extend({
