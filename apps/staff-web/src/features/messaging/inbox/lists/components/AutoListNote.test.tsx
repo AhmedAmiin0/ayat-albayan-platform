@@ -9,12 +9,31 @@ import { ThreadListsDialog } from './ThreadListsDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const L = t.inbox.lists;
-const SUBSCRIBED = { id: '0c000000-0000-4000-8000-000000000011', name: 'مشترك', count: 4, auto_rule: 'subscribed' as const };
-const TEACHERS = { id: '0c000000-0000-4000-8000-000000000012', name: 'معلم', count: 2, auto_rule: 'teachers' as const };
-const HAND = { id: '0c000000-0000-4000-8000-000000000013', name: 'بانتظار الدفع', count: 1, auto_rule: null };
+const SUBSCRIBED = {
+  id: '0c000000-0000-4000-8000-000000000011',
+  name: 'مشترك',
+  count: 4,
+  auto_rule: 'subscribed' as const,
+};
+const TEACHERS = {
+  id: '0c000000-0000-4000-8000-000000000012',
+  name: 'معلم',
+  count: 2,
+  auto_rule: 'teachers' as const,
+};
+const HAND = {
+  id: '0c000000-0000-4000-8000-000000000013',
+  name: 'بانتظار الدفع',
+  count: 1,
+  auto_rule: null,
+};
 const LISTS = [SUBSCRIBED, TEACHERS, HAND];
 
 afterEach(() => {
@@ -46,15 +65,33 @@ describe('automatic lists «تُحدَّث تلقائيًا» (docs/22 «الق�
   it('the thread checklist marks automatic lists, keeps the name as the checkbox name, and still toggles by hand', async () => {
     routeFetch(apiFetch, [['/chat-lists', LISTS]]);
     apiSend.mockResolvedValue(undefined);
-    renderWithClient(<ThreadListsDialog phone="+966501234567" lists={[{ id: SUBSCRIBED.id, name: SUBSCRIBED.name }]} onClose={vi.fn()} />);
+    renderWithClient(
+      <ThreadListsDialog
+        phone="+966501234567"
+        lists={[{ id: SUBSCRIBED.id, name: SUBSCRIBED.name }]}
+        onClose={vi.fn()}
+      />,
+    );
     const box = await screen.findByRole<HTMLInputElement>('checkbox', { name: SUBSCRIBED.name });
     expect(box.checked).toBe(true);
-    expect(box.getAttribute('aria-describedby')).toBe(`auto-chip-${SUBSCRIBED.id} auto-${SUBSCRIBED.id}`);
-    expect(document.getElementById(`auto-${SUBSCRIBED.id}`)?.textContent).toBe(L.autoRule.subscribed);
+    expect(box.getAttribute('aria-describedby')).toBe(
+      `auto-chip-${SUBSCRIBED.id} auto-${SUBSCRIBED.id}`,
+    );
+    expect(document.getElementById(`auto-${SUBSCRIBED.id}`)?.textContent).toBe(
+      L.autoRule.subscribed,
+    );
     expect(screen.getAllByTestId('auto-list-chip')).toHaveLength(2);
-    expect(screen.getByRole<HTMLInputElement>('checkbox', { name: HAND.name }).getAttribute('aria-describedby')).toBeNull();
+    expect(
+      screen
+        .getByRole<HTMLInputElement>('checkbox', { name: HAND.name })
+        .getAttribute('aria-describedby'),
+    ).toBeNull();
     fireEvent.click(box);
-    expect(apiSend).toHaveBeenCalledWith('DELETE', expect.stringContaining(SUBSCRIBED.id));
+    expect(apiSend).toHaveBeenCalledWith(
+      'DELETE',
+      expect.stringContaining(SUBSCRIBED.id),
+      undefined,
+    );
   });
 
   it('«تعديل القائمة» of an automatic list says who is added; rename and delete stay', () => {

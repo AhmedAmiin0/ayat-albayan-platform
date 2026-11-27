@@ -1,11 +1,10 @@
-import { chatListPhone } from '@ab/shared';
+import { chatListIdParam } from '@ab/shared';
 import {
   Injectable,
   type CanActivate,
   type ExecutionContext,
   type HttpException,
 } from '@nestjs/common';
-import { z } from 'zod';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, forbidden, notFound } from '@/common/http/errors';
@@ -37,12 +36,10 @@ export function seesLists(user: AuthUser): boolean {
 }
 
 /** `:id` that is not a uuid cannot name a list: 404 list_not_found (never a 500 from Postgres). */
-export const listIdSchema = z.uuid();
 export const listNotFound = (): HttpException => notFound('list_not_found');
 
 /** True when `raw` can be a list id (GET /threads?list=: anything else is an empty page). */
-export const isListId = (raw: string): boolean => listIdSchema.safeParse(raw).success;
+export const isListId = (raw: string): boolean => chatListIdParam.safeParse(raw).success;
 
 /** `:phone` is url-encoded E.164 («%2B9665…»); anything else is 400 invalid_phone. */
-export const listPhoneSchema = z.string().transform(chatListPhone).pipe(z.string());
 export const listInvalidPhone = (): HttpException => badRequest('invalid_phone');

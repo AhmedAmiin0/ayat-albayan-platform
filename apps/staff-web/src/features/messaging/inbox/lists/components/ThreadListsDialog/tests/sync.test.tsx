@@ -7,7 +7,11 @@ import { ThreadListsDialog } from '@/features/messaging/inbox/lists/components/T
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const PHONE = '+966501234567';
 const PAY = { id: '0c000000-0000-4000-8000-000000000001', name: 'بانتظار الدفع' };
@@ -16,7 +20,9 @@ const box = (n: string) => screen.findByRole<HTMLInputElement>('checkbox', { nam
 const member = (id: string) => `/chat-lists/${id}/threads/%2B966501234567`;
 
 function show(lists: readonly ChatListRef[]) {
-  routeFetch(apiFetch, [['/chat-lists', [PAY, TRIAL].map((l) => ({ ...l, count: 0 }))]]);
+  routeFetch(apiFetch, [
+    ['/chat-lists', [PAY, TRIAL].map((l) => ({ ...l, count: 0, auto_rule: null }))],
+  ]);
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const ui = (l: readonly ChatListRef[]) => (
     <QueryClientProvider client={client}>
@@ -51,7 +57,7 @@ describe('ThreadListsDialog follows the cache and serialises each box', () => {
     expect((await box(TRIAL.name)).checked).toBe(true);
   });
 
-  it('a box with a save in flight keeps the user\'s choice over a stale refetch', async () => {
+  it("a box with a save in flight keeps the user's choice over a stale refetch", async () => {
     const held = heldSends();
     const { rerender } = show([]);
     fireEvent.click(await box(TRIAL.name));

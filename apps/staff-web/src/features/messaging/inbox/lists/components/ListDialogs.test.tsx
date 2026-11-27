@@ -6,10 +6,19 @@ import { CreateListDialog } from './CreateListDialog';
 import { EditListDialog } from './EditListDialog';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend, apiFetch: vi.fn(async () => []) }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiSend,
+  apiFetch: vi.fn(async () => []),
+}));
 
 const L = t.inbox.lists;
-const LIST = { id: '0c000000-0000-4000-8000-000000000001', name: 'بانتظار الدفع', count: 3, auto_rule: null };
+const LIST = {
+  id: '0c000000-0000-4000-8000-000000000001',
+  name: 'بانتظار الدفع',
+  count: 3,
+  auto_rule: null,
+};
 const name = () => screen.getByRole('textbox', { name: new RegExp(L.name) });
 const type = (value: string) => fireEvent.change(name(), { target: { value } });
 
@@ -33,7 +42,7 @@ describe('CreateListDialog «قائمة جديدة»', () => {
   it.each([
     ['list_name_taken', L.nameTaken],
     ['list_limit', L.limit],
-  ])('shows the server\'s %s inline under the name', async (code, text) => {
+  ])("shows the server's %s inline under the name", async (code, text) => {
     apiSend.mockRejectedValue(new ApiError(409, { code, message: code }));
     renderWithClient(<CreateListDialog onClose={vi.fn()} onCreated={vi.fn()} />);
     type('بإنتظار الدفع');
@@ -65,7 +74,7 @@ describe('EditListDialog «تعديل القائمة»', () => {
     expect(screen.getByText(L.deleteNote)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: L.deleteYes }));
     await waitFor(() => expect(onDeleted).toHaveBeenCalled());
-    expect(apiSend).toHaveBeenCalledWith('DELETE', `/chat-lists/${LIST.id}`);
+    expect(apiSend).toHaveBeenCalledWith('DELETE', `/chat-lists/${LIST.id}`, undefined);
   });
 
   it('«إلغاء» in the confirm goes back to the name, nothing deleted', () => {

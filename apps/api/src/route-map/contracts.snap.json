@@ -13,7 +13,8 @@
    "required": [
     "id"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /chat-lists/:id/threads/:phone": {
   "params": {
@@ -33,7 +34,8 @@
     "id",
     "phone"
    ]
-  }
+  },
+  "response": "empty"
  },
  "DELETE /config/custom/:key": {
   "params": {
@@ -687,6 +689,46 @@
    "required": [
     "studentId"
    ]
+  }
+ },
+ "GET /chat-lists": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "count": {
+      "type": "number"
+     },
+     "auto_rule": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "subscribed",
+         "teachers"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "count",
+     "auto_rule"
+    ]
+   }
   }
  },
  "GET /expense-categories": {
@@ -5437,6 +5479,41 @@
    },
    "required": [
     "name"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "count": {
+     "type": "number"
+    },
+    "auto_rule": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "subscribed",
+        "teachers"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "name",
+    "count",
+    "auto_rule"
    ]
   }
  },
@@ -10287,6 +10364,41 @@
    },
    "required": [
     "name"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "name": {
+     "type": "string"
+    },
+    "count": {
+     "type": "number"
+    },
+    "auto_rule": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "subscribed",
+        "teachers"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "id",
+    "name",
+    "count",
+    "auto_rule"
    ]
   }
  },
@@ -18154,7 +18266,8 @@
     "id",
     "phone"
    ]
-  }
+  },
+  "response": "empty"
  },
  "PUT /config/custom/:key": {
   "params": {

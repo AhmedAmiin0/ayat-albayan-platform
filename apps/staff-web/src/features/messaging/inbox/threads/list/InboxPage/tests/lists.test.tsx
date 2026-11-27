@@ -8,15 +8,23 @@ import type { InboxSearch } from '@/features/messaging/inbox/shared/search';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend: vi.fn(),
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({
+  supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } },
+}));
 
 const L = t.inbox.lists;
 const PAY = '0c000000-0000-4000-8000-000000000001';
 const LISTS = [
-  { id: PAY, name: 'بانتظار الدفع', count: 1 },
-  { id: '0c000000-0000-4000-8000-000000000002', name: 'تجريبي', count: 0 },
+  { id: PAY, name: 'بانتظار الدفع', count: 1, auto_rule: null },
+  { id: '0c000000-0000-4000-8000-000000000002', name: 'تجريبي', count: 0, auto_rule: null },
 ];
 
 function show(input: {
@@ -28,7 +36,15 @@ function show(input: {
   const mode = input.mode ?? 'sales';
   const items = input.items ?? [thread()];
   routeFetch(apiFetch, [
-    ['/auth/me', { id: 'u1', email: null, role: mode, permissions: input.permissions ?? ['inbox.read', 'inbox.lists'] }],
+    [
+      '/auth/me',
+      {
+        id: 'u1',
+        email: null,
+        role: mode,
+        permissions: input.permissions ?? ['inbox.read', 'inbox.lists'],
+      },
+    ],
     ['/chat-lists', LISTS],
     ['/threads?', { items, total: items.length, page: 1, pageSize: 30 }],
   ]);
@@ -42,7 +58,8 @@ function show(input: {
 }
 
 const row = () => screen.findByRole('list', { name: L.rowLabel });
-const threadCalls = () => apiFetch.mock.calls.map(([p]) => String(p)).filter((p) => p.startsWith('/threads?'));
+const threadCalls = () =>
+  apiFetch.mock.calls.map(([p]) => String(p)).filter((p) => p.startsWith('/threads?'));
 
 afterEach(() => apiFetch.mockReset());
 
@@ -51,20 +68,28 @@ describe('InboxPage «القوائم» chip row (docs/22 §4)', () => {
     const onSearch = show({ search: { page: 2, q: 'أم' } });
     const chips = within(await row());
     expect(chips.getByRole('button', { name: L.all }).getAttribute('aria-pressed')).toBe('true');
-    expect(chips.getByRole('button', { name: /بانتظار الدفع/ }).getAttribute('aria-pressed')).toBe('false');
+    expect(chips.getByRole('button', { name: /بانتظار الدفع/ }).getAttribute('aria-pressed')).toBe(
+      'false',
+    );
     expect(chips.getAllByRole('button').at(-1)?.textContent).toBe(L.new);
     fireEvent.click(chips.getByRole('button', { name: /بانتظار الدفع/ }));
     expect(onSearch).toHaveBeenCalledWith({ q: 'أم', list: PAY, page: 1 });
   });
 
-  it('asks the API for the URL\'s list, with the other filters; an empty unread page is not «an empty list»', async () => {
+  it("asks the API for the URL's list, with the other filters; an empty unread page is not «an empty list»", async () => {
     show({ search: { page: 1, list: PAY, unread: true }, items: [] });
     expect(await screen.findByText(t.inbox.emptyUnread)).toBeTruthy();
     expect(screen.queryByText(L.empty)).toBeNull();
-    expect(within(await row()).getByRole('button', { name: /بانتظار الدفع/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(
+      within(await row())
+        .getByRole('button', { name: /بانتظار الدفع/ })
+        .getAttribute('aria-pressed'),
+    ).toBe('true');
     expect(threadCalls().at(-1)).toContain(`list=${PAY}`);
     expect(threadCalls().at(-1)).toContain('unread=true');
-    expect(screen.getByRole('button', { name: L.editNamed.replace('{name}', 'بانتظار الدفع') })).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: L.editNamed.replace('{name}', 'بانتظار الدفع') }),
+    ).toBeTruthy();
   });
 
   it('an unknown list id falls back to «الكل» (no list in the request once the lists are known)', async () => {
@@ -77,7 +102,10 @@ describe('InboxPage «القوائم» chip row (docs/22 §4)', () => {
 
   it('lists that fail to load: one quiet line, and the chats are not filtered by a list nobody can see', async () => {
     routeFetch(apiFetch, [
-      ['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: ['inbox.read', 'inbox.lists'] }],
+      [
+        '/auth/me',
+        { id: 'u1', email: null, role: 'sales', permissions: ['inbox.read', 'inbox.lists'] },
+      ],
       ['/threads?', { items: [thread()], total: 1, page: 1, pageSize: 30 }],
     ]);
     renderWithClient(
@@ -98,7 +126,11 @@ describe('InboxPage «القوائم» chip row (docs/22 §4)', () => {
   });
 
   it('is absent in teacher mode and without inbox.lists (the lists are never asked for)', async () => {
-    show({ search: { page: 1, list: PAY }, mode: 'teacher', permissions: ['inbox.read', 'inbox.lists'] });
+    show({
+      search: { page: 1, list: PAY },
+      mode: 'teacher',
+      permissions: ['inbox.read', 'inbox.lists'],
+    });
     await screen.findAllByRole('link');
     expect(screen.queryByRole('list', { name: L.rowLabel })).toBeNull();
     expect(threadCalls().every((p) => !p.includes('list='))).toBe(true);

@@ -6,12 +6,26 @@ import { ThreadListsDialog } from '@/features/messaging/inbox/lists/components/T
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const L = t.inbox.lists;
 const PHONE = '+966501234567';
-const PAY = { id: '0c000000-0000-4000-8000-000000000001', name: 'بانتظار الدفع', count: 1 };
-const TRIAL = { id: '0c000000-0000-4000-8000-000000000002', name: 'تجريبي', count: 0 };
+const PAY = {
+  id: '0c000000-0000-4000-8000-000000000001',
+  name: 'بانتظار الدفع',
+  count: 1,
+  auto_rule: null,
+};
+const TRIAL = {
+  id: '0c000000-0000-4000-8000-000000000002',
+  name: 'تجريبي',
+  count: 0,
+  auto_rule: null,
+};
 const box = (n: string) => screen.findByRole<HTMLInputElement>('checkbox', { name: n });
 
 function show(lists = [PAY, TRIAL]) {
@@ -38,8 +52,16 @@ describe('ThreadListsDialog «القوائم» of one chat (docs/22 §4)', () =>
     fireEvent.click(await box(PAY.name));
     expect((await box(PAY.name)).checked).toBe(false);
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(2));
-    expect(apiSend).toHaveBeenCalledWith('PUT', `/chat-lists/${TRIAL.id}/threads/%2B966501234567`);
-    expect(apiSend).toHaveBeenCalledWith('DELETE', `/chat-lists/${PAY.id}/threads/%2B966501234567`);
+    expect(apiSend).toHaveBeenCalledWith(
+      'PUT',
+      `/chat-lists/${TRIAL.id}/threads/%2B966501234567`,
+      undefined,
+    );
+    expect(apiSend).toHaveBeenCalledWith(
+      'DELETE',
+      `/chat-lists/${PAY.id}/threads/%2B966501234567`,
+      undefined,
+    );
     await act(async () => answers.forEach((a) => a()));
   });
 
@@ -55,13 +77,26 @@ describe('ThreadListsDialog «القوائم» of one chat (docs/22 §4)', () =>
   });
 
   it('«قائمة جديدة» creates a list and adds the chat to it in one go', async () => {
-    const NEW = { id: '0c000000-0000-4000-8000-000000000003', name: 'متابعة', count: 0 };
+    const NEW = {
+      id: '0c000000-0000-4000-8000-000000000003',
+      name: 'متابعة',
+      count: 0,
+      auto_rule: null,
+    };
     apiSend.mockImplementation(async (method: string) => (method === 'POST' ? NEW : undefined));
     show();
     fireEvent.click(await screen.findByRole('button', { name: L.new }));
-    fireEvent.change(screen.getByRole('textbox', { name: new RegExp(L.name) }), { target: { value: 'متابعة' } });
+    fireEvent.change(screen.getByRole('textbox', { name: new RegExp(L.name) }), {
+      target: { value: 'متابعة' },
+    });
     fireEvent.click(screen.getByRole('button', { name: L.create }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', `/chat-lists/${NEW.id}/threads/%2B966501234567`));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith(
+        'PUT',
+        `/chat-lists/${NEW.id}/threads/%2B966501234567`,
+        undefined,
+      ),
+    );
     expect(apiSend).toHaveBeenCalledWith('POST', '/chat-lists', { name: 'متابعة' });
   });
 

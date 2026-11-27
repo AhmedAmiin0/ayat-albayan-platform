@@ -19,14 +19,8 @@
     }
   },
   "src/core/errors/chat-list-errors.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/no-shape-checks": {
-      "count": 1
     }
   },
   "src/core/errors/send-error.ts": {
