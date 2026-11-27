@@ -1,10 +1,7 @@
+import { routePath } from '@ab/core';
 import {
   channelUnreadSchema,
-  portalHistorySchema,
-  portalHomeSchema,
-  portalLessonsSchema,
-  portalPackageViewSchema,
-  portalReportsSchema,
+  portalRoutes as routes,
   reportPageViewSchema,
   type ChannelUnread,
   type PortalHistory,
@@ -15,7 +12,7 @@ import {
   type PortalReports,
   type ReportPageView,
 } from '@ab/shared';
-import type { ApiClient } from '../../core/http';
+import { callWith, type ApiClient } from '../../core/http';
 import { listKey, pathKey } from '../../core/keys';
 import { portalUnreadPath } from '../../messaging/channels';
 
@@ -27,7 +24,6 @@ import { portalUnreadPath } from '../../messaging/channels';
 export const PORTAL_REFRESH_MS = 30_000;
 const ROOT = '/portal';
 const enc = encodeURIComponent;
-const student = (id: string) => `${ROOT}/students/${enc(id)}`;
 
 /** Every portal query sits under this key: one invalidation refreshes the whole portal. */
 export const PORTAL_KEY = pathKey(ROOT);
@@ -50,7 +46,7 @@ export interface PortalHistoryInput {
 export function portalHistoryPath(input: PortalHistoryInput, cursor?: string): string {
   const params = new URLSearchParams({ status: input.status });
   if (cursor) params.set('cursor', cursor);
-  return `${student(input.studentId)}/history?${params.toString()}`;
+  return `${routePath(routes.history, { id: input.studentId })}?${params.toString()}`;
 }
 
 /** A plain read: spread into useQuery. */
@@ -83,21 +79,36 @@ function reader(client: ApiClient) {
   });
 }
 
+/** A route read under its own path's key, re-read when the family comes back. */
+const keyed = <T>(path: string, queryFn: () => Promise<T>): PortalRead<T> => ({
+  queryKey: pathKey(path),
+  queryFn,
+  refetchOnWindowFocus: true,
+});
+
 export function portalQueries(client: ApiClient): PortalQueries {
   const read = reader(client);
+  const call = callWith(client);
+  const of = (studentId: string) => ({ id: studentId });
   return {
     /** GET /portal/me: the login's kind and students. */
-    portalHomeQuery: read(`${ROOT}/me`, portalHomeSchema),
+    portalHomeQuery: keyed(routes.home.path, () => call({ route: routes.home })),
     /** The next 14 days plus prep and this month's counts, re-read every 30 seconds. */
     portalLessonsQuery: (studentId: string) => ({
-      ...read(`${student(studentId)}/lessons`, portalLessonsSchema),
+      ...keyed(routePath(routes.lessons, of(studentId)), () =>
+        call({ route: routes.lessons, params: of(studentId) }),
+      ),
       refetchInterval: PORTAL_REFRESH_MS,
     }),
     portalReportsQuery: (studentId: string) =>
-      read(`${student(studentId)}/reports`, portalReportsSchema),
+      keyed(routePath(routes.reports, of(studentId)), () =>
+        call({ route: routes.reports, params: of(studentId) }),
+      ),
     /** A guardian's or an adult's only: a child's login never asks (403 package_guardian_only). */
     portalPackageQuery: (studentId: string) =>
-      read(`${student(studentId)}/package`, portalPackageViewSchema),
+      keyed(routePath(routes.package, of(studentId)), () =>
+        call({ route: routes.package, params: of(studentId) }),
+      ),
     /** The report's content (GET /report-pages/by-report/:id): a family reads sent ones only. */
     reportPageByIdQuery: (reportId: string) => ({
       ...read(`/report-pages/by-report/${enc(reportId)}`, reportPageViewSchema),
@@ -109,9 +120,13 @@ export function portalQueries(client: ApiClient): PortalQueries {
       refetchInterval: PORTAL_REFRESH_MS,
     }),
     portalHistoryQuery: (input: PortalHistoryInput): PortalHistoryPages => ({
-      queryKey: listKey(`${student(input.studentId)}/history`, { status: input.status }),
-      queryFn: async ({ pageParam }) =>
-        portalHistorySchema.parse(await client.apiFetch(portalHistoryPath(input, pageParam))),
+      queryKey: listKey(routePath(routes.history, of(input.studentId)), { status: input.status }),
+      queryFn: ({ pageParam }) =>
+        call({
+          route: routes.history,
+          params: of(input.studentId),
+          query: { status: input.status, cursor: pageParam },
+        }),
       initialPageParam: undefined,
       getNextPageParam: (last) => last.next_cursor ?? undefined,
       refetchOnWindowFocus: true,

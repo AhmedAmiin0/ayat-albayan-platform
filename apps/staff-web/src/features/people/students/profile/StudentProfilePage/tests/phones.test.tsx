@@ -1,3 +1,4 @@
+import { studentProfileFixture } from '@ab/shared/testing';
 import { formatPhone } from '@ab/core';
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -16,8 +17,14 @@ vi.mock('@/features/people/students/duplicates/SiblingMerge', () => ({ SiblingMe
 // The family's second number in the file's meta line, beside the main one.
 const MAIN = '+966500000001';
 const SECOND = '+966552220000';
-const guardian = (phones?: { phone_e164: string; is_primary: boolean }[]) => ({ id: 'g1', name: 'أم سهيلة', phone_e164: MAIN, ...(phones ? { phones } : {}) });
-const STUDENT = { id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active', meeting_link: null, siblings: [] };
+const guardian = (phones: { phone_e164: string; is_primary: boolean }[] = []) => ({
+  id: 'g1',
+  name: 'أم سهيلة',
+  phone_e164: MAIN,
+  students: [],
+  phones,
+});
+const STUDENT = studentProfileFixture({ id: 's1', teacher: null });
 
 const meta = () => screen.getByText(t.students.code, { selector: 'dt' }).closest('dl');
 const terms = () => [...(meta()?.querySelectorAll('dt') ?? [])].map((d) => d.textContent);
@@ -62,7 +69,7 @@ describe('StudentProfilePage: «الرقم الثاني»', () => {
 
   it.each([
     ['only the main number', guardian([{ phone_e164: MAIN, is_primary: true }])],
-    ['an older API without phones', guardian()],
+    ['an empty phone list', guardian()],
   ])('no row with %s', async (_, g) => {
     renderPage(g);
     expect(await screen.findByRole('link', { name: t.reports.history })).toBeTruthy();

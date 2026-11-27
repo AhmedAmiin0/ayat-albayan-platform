@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../core/http';
+import { ApiError, type ApiClient } from '../../../core/http';
 import { myStudentsCall } from './teacher-students-api';
 
 const student = {

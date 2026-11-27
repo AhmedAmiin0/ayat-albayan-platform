@@ -4826,7 +4826,7 @@
   },
   "src/modules/people/portal/portal.controller.ts": {
     "ab/zod-inputs": {
-      "count": 9
+      "count": 2
     }
   },
   "src/modules/people/portal/portal.fakes.ts": {
@@ -7319,14 +7319,6 @@
   "src/modules/teaching/booking/sales/booking/tests/sales-booking.ownership.test.ts": {
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/modules/teaching/booking/sales/course/sales-course.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 3
     }
   },
   "src/modules/teaching/booking/sales/course/sales-course.repo.ts": {

@@ -1,5 +1,6 @@
 import {
   PORTAL_HISTORY_PAGE,
+  portalHistorySchema,
   type PortalHistory,
   type PortalHistoryQuery,
   type PortalHistoryRow,
@@ -9,6 +10,7 @@ import {
 import { zonedPartsIn } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { asResponse } from '@/common/http/returns';
 import { PortalReportsRepo } from '@/modules/people/portal/reports/portal-reports.repo';
 import { recordingByLesson } from '@/modules/people/portal/reports/portal-reports.mapper';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
@@ -43,7 +45,8 @@ export class PortalHistoryService {
       pick: pickFor(call.query.status),
     };
     const page = await collectPage(source, call.query.cursor ?? now.toISOString(), SIZE);
-    return { rows: await this.rowsOf(studentId, page.rows), next_cursor: page.next_cursor };
+    const rows = await this.rowsOf(studentId, page.rows);
+    return asResponse(portalHistorySchema, { rows, next_cursor: page.next_cursor });
   }
 
   /** This calendar month in the student's clock, up to now. */

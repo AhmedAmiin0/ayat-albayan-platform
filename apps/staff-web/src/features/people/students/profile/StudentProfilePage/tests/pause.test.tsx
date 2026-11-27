@@ -1,3 +1,4 @@
+import { studentProfileFixture } from '@ab/shared/testing';
 import { riyadhToday } from '@ab/time';
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -17,10 +18,11 @@ vi.mock('@/features/finance/subscriptions/balance/BalanceCard/BalanceCard', () =
 vi.mock('@/features/people/students/profile/StudentProfileForm/StudentProfileForm', () => ({ StudentProfileForm: () => null }));
 vi.mock('@/features/people/students/duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
 
-const STUDENT = {
-  id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active', meeting_link: null, siblings: [],
-  guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: '+966500000001' },
-};
+const STUDENT = studentProfileFixture({
+  id: 's1',
+  guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: '+966500000001', students: [], phones: [] },
+  teacher: null,
+});
 const today = riyadhToday();
 const OPEN = { id: 'p1', from_date: today, until_date: null, reason: null, created_at: '', created_by_name: null, resumed_at: null, extended_days: null };
 
