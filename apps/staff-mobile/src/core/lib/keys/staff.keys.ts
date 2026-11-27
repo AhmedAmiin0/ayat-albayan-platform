@@ -8,6 +8,7 @@ const booking = pathKey('/sales/booking');
 
 export const studentKeys: StudentKeys = {
   all: students,
+  one: (id) => [...students, id],
   statusCounts: (filters) => [...students, 'status-counts', filters],
   teacherOptions: () => [...students, 'teacher-options'],
 };
