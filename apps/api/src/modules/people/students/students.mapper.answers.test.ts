@@ -1,6 +1,6 @@
 import type { Tables } from '@ab/db';
 import { describe, expect, it } from 'vitest';
-import { toListItem, toProfile, type StudentListRow } from './students.mapper';
+import { toListItem, toProfile, type StudentListInput } from './students.mapper';
 
 const STAMP = '2026-10-01T00:00:00Z';
 const LINK = 'https://meet.google.com/abc';
@@ -39,7 +39,7 @@ const teacher = { id: 't1', display_name_ar: 'أبرار', display_name_en: null
 
 describe('students answers from complete rows (docs/62 part 2)', () => {
   it('a list row answers every key it carries, flattened', () => {
-    const row: StudentListRow = {
+    const row: StudentListInput = {
       ...ref,
       program: 'quran',
       tz: 'Asia/Riyadh',
@@ -48,6 +48,7 @@ describe('students answers from complete rows (docs/62 part 2)', () => {
       has_weekly: true,
       guardian: { name: 'ام جود', phone_e164: '+966501234567' },
       teacher: { display_name_ar: 'أبرار' },
+      is_test: false,
     };
     expect(toListItem(row)).toEqual({
       ...ref,
@@ -59,6 +60,7 @@ describe('students answers from complete rows (docs/62 part 2)', () => {
       guardian_name: 'ام جود',
       guardian_phone: '+966501234567',
       teacher_name: 'أبرار',
+      is_test: false,
     });
   });
 

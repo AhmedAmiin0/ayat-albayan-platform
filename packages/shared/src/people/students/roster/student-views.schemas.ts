@@ -22,6 +22,7 @@ export const studentListItemSchema = studentRefSchema.extend({
   teacher_name: z.string().nullable(),
   is_test: z.boolean(),
 });
+export type StudentListItemView = z.infer<typeof studentListItemSchema>;
 
 /** Every column of `students`: what POST and PATCH /students answer. */
 export const studentRowSchema = studentRefSchema.extend({
@@ -71,6 +72,7 @@ export const studentProfileSchema = studentRowSchema.extend({
   meeting_link: z.string().nullable(),
   siblings: z.array(studentRefSchema),
 });
+export type StudentProfileView = z.infer<typeof studentProfileSchema>;
 
 export const studentStatusCountsSchema = z.record(z.enum(STUDENT_STATUSES), z.number());
 
