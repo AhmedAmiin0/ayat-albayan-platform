@@ -1,5 +1,5 @@
 import { checkPhone, type Country, defaultCountry, splitInternational } from '@ab/client-core';
-import { authApi, useA11yPref, useCodeSignIn, useStepMotion } from '@ab/mobile-kit';
+import { authApi, useA11yPref, useCodeFlow, useStepMotion } from '@ab/mobile-kit';
 import { useState } from 'react';
 import { feel } from '@/sign-in/feedback';
 import { phoneRegion } from '@/sign-in/phone/countries';
@@ -7,7 +7,7 @@ import type { WhatsAppStep } from './WhatsAppSignIn.types';
 
 /** docs/50 §4: number, then code, then session; each answer gives a haptic. */
 export function useWhatsAppSignIn() {
-  const flow = useCodeSignIn(authApi.familyCodes);
+  const flow = useCodeFlow(authApi.familyCodes);
   const still = useA11yPref('reduceMotion');
   const motion = useStepMotion<WhatsAppStep>('phone', still);
   const [country, setCountry] = useState<Country>(() => defaultCountry(phoneRegion()));

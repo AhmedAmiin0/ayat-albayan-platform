@@ -8,7 +8,7 @@ import { type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
 import { Button } from '../../../ui/primitives/Button';
 import { Field } from '../../../ui/form/Field';
-import { type CodeSignIn as CodeSignInFlow, useCodeSignIn } from '../use-code-sign-in';
+import { type CodeFlow as CodeSignInFlow, useCodeFlow } from '../use-code-flow';
 
 function PhoneStep({ flow, intro }: { flow: CodeSignInFlow; intro: string }) {
   const { color } = useTheme();
@@ -85,7 +85,7 @@ interface CodeSignInProps {
 
 /** docs/46 A8: the person types the code; the auth gate swaps the screen on success. */
 export function CodeSignIn({ codes, intro, children }: CodeSignInProps) {
-  const flow = useCodeSignIn(codes);
+  const flow = useCodeFlow(codes);
   return (
     <>
       {flow.target === null ? (
