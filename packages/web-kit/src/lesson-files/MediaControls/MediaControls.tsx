@@ -2,18 +2,10 @@ import { formatClock } from '@ab/client-core';
 import { Ltr } from '@ab/web-kit/components/ui/display/ltr';
 import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { FormAlert } from '@ab/web-kit/components/ui/form/FormAlert';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { PlayerButtons } from '@ab/web-kit/lesson-files/PlayerButtons';
 import { SeekBar } from '@ab/web-kit/lesson-files/SeekBar';
-import type { HtmlAudio } from '@ab/web-kit/lesson-files/use-html-audio';
-
-const P = t.audioPlayer;
-
-interface Props {
-  player: Pick<HtmlAudio, 'state' | 'controls'>;
-  /** The saved stop the player opened at (0: a new one). */
-  from: number;
-}
+import type { Props } from './MediaControls.types';
+import { P } from './media-controls.helpers';
 
 /** The resume hint fades in once the stop is known. */
 export function MediaControls({ player, from }: Props) {

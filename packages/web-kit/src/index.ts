@@ -94,7 +94,7 @@ export * from './components/ui/surface/pill';
 export * from './components/ui/surface/section-header';
 export * from './components/ui/surface/status-mark';
 export * from './components/ui/surface/warn-line';
-export * from './lesson-files/AudioPlayer/AudioPlayer';
+export { AudioPlayer } from './lesson-files/AudioPlayer';
 export * from './lesson-files/file-words';
 export * from './lib/clock';
 export * from './lib/ClockOptions/ClockOptions';
@@ -133,7 +133,7 @@ export { RecordingsPanel as PortalRecordingsPanel } from './portal/recordings/Re
 export * from './portal/report/ReportView/ReportView';
 export * from './portal/use-family-chat';
 export * from './portal/use-seen-reports';
-export * from './push/WebPushToggle/WebPushToggle';
+export { WebPushToggle } from './push/WebPushToggle';
 export * from './push/notifications-api';
 export * from './push/web-push';
 export * from './report';
