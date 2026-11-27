@@ -1,4 +1,4 @@
-import { reportHistoryRoutes as routes } from '@ab/shared';
+import { reportHistoryRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
 import type { ReportHistoryCalls } from './report-history-api.types';
 
@@ -6,8 +6,8 @@ import type { ReportHistoryCalls } from './report-history-api.types';
 export function reportHistoryCalls(client: ApiClient): ReportHistoryCalls {
   const call = callWith(client);
   return {
-    student: (params, query) => call({ route: routes.student, params, query }),
-    pending: () => call({ route: routes.pending }),
-    mine: (query) => call({ route: routes.mine, query }),
+    student: (params, query) => call({ route: reportHistoryRoutes.student, params, query }),
+    pending: () => call({ route: reportHistoryRoutes.pending }),
+    mine: (query) => call({ route: reportHistoryRoutes.mine, query }),
   };
 }

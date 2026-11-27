@@ -1,4 +1,4 @@
-import { reportAttachmentRoutes as routes } from '@ab/shared';
+import { reportAttachmentRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
 import type { ReportAttachmentCalls } from './report-attachment-api.types';
 
@@ -6,9 +6,9 @@ import type { ReportAttachmentCalls } from './report-attachment-api.types';
 export function reportAttachmentCalls(client: ApiClient): ReportAttachmentCalls {
   const call = callWith(client);
   return {
-    uploadUrl: (params, body) => call({ route: routes.uploadUrl, params, body }),
-    register: (params, body) => call({ route: routes.register, params, body }),
-    remove: (params) => call({ route: routes.remove, params }),
-    url: (params) => call({ route: routes.url, params }),
+    uploadUrl: (params, body) => call({ route: reportAttachmentRoutes.uploadUrl, params, body }),
+    register: (params, body) => call({ route: reportAttachmentRoutes.register, params, body }),
+    remove: (params) => call({ route: reportAttachmentRoutes.remove, params }),
+    url: (params) => call({ route: reportAttachmentRoutes.url, params }),
   };
 }
