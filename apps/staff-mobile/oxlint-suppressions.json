@@ -5202,7 +5202,7 @@
   },
   "src/teacher/lib/queries.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 3
     }
   },
   "src/teacher/report/components/AttachmentsField.tsx": {
