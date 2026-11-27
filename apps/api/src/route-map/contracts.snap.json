@@ -16469,6 +16469,57 @@
    ]
   }
  },
+ "GET /sales/live": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "lesson_id": {
+      "type": "string"
+     },
+     "starts_at": {
+      "type": "string"
+     },
+     "ends_at": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "scheduled",
+       "confirmed",
+       "completed",
+       "late",
+       "excused",
+       "no_show",
+       "cancelled_by_teacher",
+       "cancelled_by_admin",
+       "rescheduled"
+      ]
+     },
+     "teacher_name": {
+      "type": "string"
+     },
+     "student_names": {
+      "type": "array",
+      "items": {
+       "type": "string"
+      }
+     }
+    },
+    "required": [
+     "lesson_id",
+     "starts_at",
+     "ends_at",
+     "status",
+     "teacher_name",
+     "student_names"
+    ]
+   }
+  }
+ },
  "GET /sales/meetings": {
   "query": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -16829,6 +16880,152 @@
     "more"
    ],
    "additionalProperties": false
+  }
+ },
+ "GET /sales/schedule": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "date": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "date": {
+     "type": "string"
+    },
+    "lessons": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "starts_at": {
+        "type": "string"
+       },
+       "ends_at": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "scheduled",
+         "confirmed",
+         "completed",
+         "late",
+         "excused",
+         "no_show",
+         "cancelled_by_teacher",
+         "cancelled_by_admin",
+         "rescheduled"
+        ]
+       },
+       "trial": {
+        "type": "boolean"
+       },
+       "makeup": {
+        "type": "boolean"
+       },
+       "teacher_confirmed_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "meeting_link": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "platform_classroom": {
+        "type": "boolean"
+       },
+       "teacher": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "display_name_ar": {
+          "type": "string"
+         },
+         "display_name_en": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "tz": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "display_name_ar",
+         "display_name_en"
+        ]
+       },
+       "students": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": "string"
+          },
+          "code": {
+           "type": "string"
+          },
+          "name": {
+           "type": "string"
+          },
+          "tz": {
+           "type": "string"
+          },
+          "mine": {
+           "type": "boolean"
+          }
+         },
+         "required": [
+          "id",
+          "code",
+          "name"
+         ]
+        }
+       }
+      },
+      "required": [
+       "id",
+       "starts_at",
+       "ends_at",
+       "status",
+       "trial",
+       "makeup",
+       "teacher",
+       "students"
+      ]
+     }
+    }
+   },
+   "required": [
+    "date",
+    "lessons"
+   ]
   }
  },
  "GET /sales/students/:id/attendance": {

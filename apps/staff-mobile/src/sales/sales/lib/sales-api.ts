@@ -4,9 +4,8 @@ import type {
   SalesSubscriptionHistory,
   SalesTeacherView,
 } from '@ab/shared';
-import type { AssistantLessonView } from '@ab/schedule';
 import { riyadhToday } from '@ab/time';
-import { salesPortalCalls } from '@ab/client-core';
+import { salesAcademyDayCalls, salesPortalCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
@@ -20,6 +19,7 @@ const LIVE_REFRESH_MS = 60_000;
 const asList = <T>(data: T[]): T[] => (Array.isArray(data) ? data : []);
 
 const salesPortal = salesPortalCalls({ apiFetch, apiSend });
+const academyDay = salesAcademyDayCalls({ apiFetch, apiSend });
 
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
 export const useSalesSubscriptions = (kind: SalesSubscriptionKind) =>
@@ -48,18 +48,14 @@ export const useSalesTeachers = () =>
 export const useSalesLive = () =>
   useQuery({
     queryKey: pathKey('/sales/live'),
-    queryFn: () => apiFetch<AssistantLessonView[]>('/sales/live'),
-    select: asList,
+    queryFn: () => academyDay.live(),
     refetchInterval: LIVE_REFRESH_MS,
   });
 
 /** GET /sales/schedule?date&teacherId — one Riyadh day of the academy, read-only, re-read every minute. */
 const salesScheduleQuery = (date: string, teacherId: string) => ({
   queryKey: salesKeys.schedule(date, teacherId),
-  queryFn: () =>
-    apiFetch<SalesScheduleDay>(
-      `/sales/schedule?date=${date}${teacherId ? `&teacherId=${teacherId}` : ''}`,
-    ),
+  queryFn: () => academyDay.day({ date, teacherId: teacherId || undefined }),
   refetchInterval: LIVE_REFRESH_MS,
 });
 
