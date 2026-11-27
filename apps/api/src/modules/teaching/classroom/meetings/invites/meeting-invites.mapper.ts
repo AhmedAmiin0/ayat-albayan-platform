@@ -56,15 +56,30 @@ export const toInviteeView = (r: InviteeRow): MeetingInviteeView =>
   });
 
 const inviteeOptionsSchema = z.array(meetingInviteeOptionSchema);
+type StaffPick = { id: string; full_name: string; role: string };
+type StudentPick = { id: string; name: string; code: string | null };
+
+const staffOption = (s: StaffPick) => ({
+  kind: 'staff' as const,
+  id: s.id,
+  name: s.full_name,
+  role: s.role,
+});
+const studentOption = (s: StudentPick) => ({
+  kind: 'student' as const,
+  id: s.id,
+  name: s.name,
+  code: s.code ?? '',
+});
 
 /** Staff first, then students; a student without a code shows an empty one. Never a phone. */
 export const toInviteeOptions = (picks: {
-  staff: readonly { id: string; full_name: string; role: string }[];
-  students: readonly { id: string; name: string; code: string | null }[];
+  staff: readonly StaffPick[];
+  students: readonly StudentPick[];
 }) =>
   asResponse(inviteeOptionsSchema, [
-    ...picks.staff.map((s) => ({ kind: 'staff' as const, id: s.id, name: s.full_name, role: s.role })),
-    ...picks.students.map((s) => ({ kind: 'student' as const, id: s.id, name: s.name, code: s.code ?? '' })),
+    ...picks.staff.map(staffOption),
+    ...picks.students.map(studentOption),
   ]);
 
 interface ViewContext {

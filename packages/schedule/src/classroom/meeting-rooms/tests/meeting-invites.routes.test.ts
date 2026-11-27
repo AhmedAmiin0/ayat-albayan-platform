@@ -22,7 +22,8 @@ describe('meetingInviteRoutes (R-MEET-01..03)', () => {
   it('refuses a meeting or invitee id that is not a uuid', () => {
     expect(routes.cancel.params.safeParse({ id: 'nope' }).success).toBe(false);
     expect(routes.resend.params.safeParse({ id: ID, inviteeId: 'nope' }).success).toBe(false);
-    expect(routes.resend.params.parse({ id: ID, inviteeId: ID })).toEqual({ id: ID, inviteeId: ID });
+    const both = { id: ID, inviteeId: ID };
+    expect(routes.resend.params.parse(both)).toEqual(both);
   });
 
   it('takes an optional search of at most 60 letters', () => {

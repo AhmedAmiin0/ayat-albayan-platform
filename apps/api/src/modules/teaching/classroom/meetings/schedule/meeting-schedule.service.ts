@@ -43,7 +43,10 @@ export class MeetingScheduleService {
     private readonly deps: MeetingScheduleDeps,
   ) {}
 
-  async update(input: { user: AuthUser; id: string; patch: UpdateMeeting }, now = new Date()): Promise<void> {
+  async update(
+    input: { user: AuthUser; id: string; patch: UpdateMeeting },
+    now = new Date(),
+  ): Promise<void> {
     const { patch } = input;
     const { row } = await this.meetings.managedOpen(input, now);
     const times = rescheduleTimes(row, patch, now);

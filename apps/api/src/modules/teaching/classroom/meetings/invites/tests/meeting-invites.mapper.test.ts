@@ -1,7 +1,14 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { STAFF_ID, STUDENT_A, stored } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
-import { toInviteeOptions, toInviteeView } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.mapper';
+import {
+  STAFF_ID,
+  STUDENT_A,
+  stored,
+} from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
+import {
+  toInviteeOptions,
+  toInviteeView,
+} from '@/modules/teaching/classroom/meetings/invites/meeting-invites.mapper';
 
 const staff = { id: STAFF_ID, full_name: 'مريم', role: 'teacher' };
 const FIELDS = { meeting_id: STAFF_ID, display_name: 'مريم' };

@@ -51,10 +51,12 @@ describe('meetingInviteCalls (R-MEET-01..03)', () => {
     expect(listed.apiFetch).toHaveBeenCalledWith(`/meetings/${ID}/invitees`);
     const added = clientAnswering([result]);
     const invitees = [{ kind: 'phone' as const, phone: '+201000000105' }];
-    await expect(meetingInviteCalls(added.client).add({ id: ID, invitees })).resolves.toEqual([result]);
+    const answer = meetingInviteCalls(added.client).add({ id: ID, invitees });
+    await expect(answer).resolves.toEqual([result]);
     expect(added.apiSend).toHaveBeenCalledWith('POST', `/meetings/${ID}/invitees`, { invitees });
     const resent = clientAnswering(result);
-    await meetingInviteCalls(resent.client).resend({ meetingId: ID, inviteeId: INVITEE, clientRequestId: REQ });
+    const again = { meetingId: ID, inviteeId: INVITEE, clientRequestId: REQ };
+    await meetingInviteCalls(resent.client).resend(again);
     const path = `/meetings/${ID}/invitees/${INVITEE}/resend`;
     expect(resent.apiSend).toHaveBeenCalledWith('POST', path, { clientRequestId: REQ });
     const bad = clientAnswering([{ ...view, status: 'lost' }]);

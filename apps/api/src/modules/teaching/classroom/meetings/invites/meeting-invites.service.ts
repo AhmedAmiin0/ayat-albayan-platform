@@ -43,7 +43,10 @@ export class MeetingInvitesService {
     return (await this.deps.invitees.forMeeting(t.id)).map((r) => visibleView(toInviteeView(r), seesAll));
   }
 
-  async add(t: Target & { invitees: MeetingInviteeInput[] }, now = new Date()): Promise<MeetingInviteResult[]> {
+  async add(
+    t: Target & { invitees: MeetingInviteeInput[] },
+    now = new Date(),
+  ): Promise<MeetingInviteResult[]> {
     const { invitees } = t;
     const { row, win } = await this.meetings.managedOpen(t, now);
     const resolved = await this.deps.resolver.resolve({ user: t.user, invitees });
@@ -52,7 +55,10 @@ export class MeetingInvitesService {
   }
 
   /** Resend: a retried request id whose text was already queued sends and rotates nothing. */
-  async resend(t: Target & { inviteeId: string; clientRequestId: string }, now = new Date()): Promise<MeetingInviteResult> {
+  async resend(
+    t: Target & { inviteeId: string; clientRequestId: string },
+    now = new Date(),
+  ): Promise<MeetingInviteResult> {
     const { clientRequestId } = t;
     const { row, win } = await this.meetings.managedOpen(t, now);
     const invitee = await this.deps.invitees.byId(row.id, t.inviteeId);

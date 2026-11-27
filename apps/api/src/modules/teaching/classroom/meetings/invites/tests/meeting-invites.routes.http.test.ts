@@ -25,15 +25,18 @@ describe('meeting invite route objects', () => {
     expect([res.statusCode, res.json().message]).toEqual([400, 'validation_failed']);
   });
 
-  it('refuses an empty invitee list or a resend without a request id and writes nothing', async () => {
-    const add = await h.call({ method: 'POST', url: `${base}/invitees`, token: 'admin', body: { invitees: [] } });
-    const resend = await h.call({ method: 'POST', url: `${base}/invitees/${MEETING_ID}/resend`, token: 'admin', body: {} });
+  it('refuses no invitees or a resend without a request id, reading nothing', async () => {
+    const post = (url: string, body: object) =>
+      h.call({ method: 'POST', url, token: 'admin', body });
+    const add = await post(`${base}/invitees`, { invitees: [] });
+    const resend = await post(`${base}/invitees/${MEETING_ID}/resend`, {});
     expect([add.statusCode, resend.statusCode]).toEqual([400, 400]);
     expect(h.meetings.byId).not.toHaveBeenCalled();
   });
 
   it('refuses a search longer than 60 letters', async () => {
-    const res = await h.call({ method: 'GET', url: `/meetings/invitee-options?q=${'x'.repeat(61)}`, token: 'admin' });
+    const url = `/meetings/invitee-options?q=${'x'.repeat(61)}`;
+    const res = await h.call({ method: 'GET', url, token: 'admin' });
     expect([res.statusCode, res.json().message]).toEqual([400, 'validation_failed']);
   });
 
