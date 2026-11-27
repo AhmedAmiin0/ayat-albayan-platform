@@ -6257,11 +6257,8 @@
     }
   },
   "src/modules/sales/sales-money/reads/sales-money-reads.controller.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/zod-inputs": {
-      "count": 4
+      "count": 1
     }
   },
   "src/modules/sales/sales-money/reads/sales-money.reads.ts": {

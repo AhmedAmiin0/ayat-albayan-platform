@@ -2,7 +2,7 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
-import { CHAT_RECEIPTS, OPEN_SUB, paymentView, student } from '@/features/sales/sales-money/sales-money-fixture';
+import { CHAT_RECEIPTS, MSG_IMG, OPEN_SUB, paymentView, student } from '@/features/sales/sales-money/sales-money-fixture';
 import { SalesMoneyFlow } from '@/features/sales/sales-money/SalesMoneyFlow';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -16,7 +16,7 @@ const payments = () => apiSend.mock.calls.filter(([, path]) => path === '/sales/
 function open(status: 'active' | 'trial' = 'active') {
   routeFetch(apiFetch, [
     ['/settings', {}],
-    ['/sales/money/chat-receipts/msg-img', { url: 'https://signed/thumb.jpg', expires_at: '2026-10-12T10:00:00Z', mime: 'image/jpeg' }],
+    [`/sales/money/chat-receipts/${MSG_IMG}`, { url: 'https://signed/thumb.jpg', expires_at: '2026-10-12T10:00:00Z', mime: 'image/jpeg' }],
     ['/sales/money/chat-receipts?', CHAT_RECEIPTS],
   ]);
   apiSend.mockImplementation(async (_m: string, path: string) =>
@@ -57,7 +57,7 @@ describe('step 2 «سجّل التحويل البنكي» with attachments from 
     await vi.waitFor(() => expect(document.querySelector('img')?.getAttribute('src')).toBe('https://signed/thumb.jpg'));
     fireEvent.click(dialog.getByRole('button', { name: (n) => n.startsWith('تحويل') }));
     expect(await dialog.findByText(t.salesMoney.attachmentN.replace('{n}', '1'))).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/sales/payments/receipt-from-chat', { subscriptionId: OPEN_SUB.id, messageId: 'msg-img' });
+    expect(apiSend).toHaveBeenCalledWith('POST', '/sales/payments/receipt-from-chat', { subscriptionId: OPEN_SUB.id, messageId: MSG_IMG });
     expect(apiFetch).toHaveBeenCalledWith(`/sales/money/chat-receipts?studentId=${OPEN_SUB.student.id}`);
 
     save();
