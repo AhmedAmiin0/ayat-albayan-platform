@@ -1,4 +1,4 @@
-import type { FeedbackRowView, TeacherFeedbackSummary, TeacherFeedbackView } from '@ab/shared';
+import type { FeedbackRowView, TeacherFeedbackSummary } from '@ab/shared';
 import type { FeedbackKind, FeedbackRecommend } from '@ab/catalog';
 
 // Student feedback: the contract is packages/shared/src/schemas/feedback.ts.
@@ -7,7 +7,6 @@ export type {
   FeedbackRecommend,
   FeedbackRowView,
   TeacherFeedbackSummary,
-  TeacherFeedbackView,
 };
 
 /** What the average card reads: a teacher's average, or none before the first answer. */

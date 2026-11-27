@@ -1,3 +1,4 @@
+import { aMessageView } from '@ab/shared/testing';
 import { QueryClient } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, apiFetch } from '@ab/web-kit';
@@ -63,8 +64,10 @@ describe('uploadChatFile', () => {
 
 describe('sendFile', () => {
   it('POSTs the path, name and caption to the thread', async () => {
-    apiSend.mockResolvedValue({ id: 'm-1' });
-    await sendFile({ phone: PHONE, clientRequestId: 'req-1', path: SIGNED.path, filename: 'صورة.png', caption: 'تفضلي' });
+    const sent = aMessageView({ phone_e164: PHONE, media_mime: 'image/png' });
+    apiSend.mockResolvedValue(sent);
+    const input = { clientRequestId: 'req-1', path: SIGNED.path, filename: 'صورة.png' };
+    await expect(sendFile({ phone: PHONE, ...input, caption: 'تفضلي' })).resolves.toEqual(sent);
     expect(apiSend).toHaveBeenCalledWith('POST', '/threads/%2B966501234567/file', {
       clientRequestId: 'req-1',
       path: SIGNED.path,

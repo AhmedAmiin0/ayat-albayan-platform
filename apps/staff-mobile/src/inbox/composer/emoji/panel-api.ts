@@ -12,7 +12,6 @@ import {
   removeMessage,
   type ThreadCache,
   threadKey,
-  threadPath,
 } from '@/inbox/thread/hooks/thread-cache';
 import { threadKeys } from '@/core/lib/keys';
 
@@ -49,8 +48,13 @@ export function useGifs(q: string) {
 /** What the panel sends: a held sticker again, or a GIPHY GIF (the API fetches its mp4). */
 type PanelSend = { kind: 'sticker'; messageId: string } | { kind: 'gif'; gifId: string };
 
-const bodyOf = (v: PanelSend) =>
-  v.kind === 'sticker' ? { messageId: v.messageId } : { gifId: v.gifId };
+function sendTo(phone: string, v: PanelSend): Promise<MessageView> {
+  const params = { phone };
+  const clientRequestId = requestId();
+  return v.kind === 'sticker'
+    ? panel.sticker({ params, body: { messageId: v.messageId, clientRequestId } })
+    : panel.gif({ params, body: { gifId: v.gifId, clientRequestId } });
+}
 
 /**
  * POST /threads/:phone/sticker | gif: the row shows in the chat at once, with its ticks. The sheet
@@ -59,13 +63,7 @@ const bodyOf = (v: PanelSend) =>
 export function usePanelSend(phone: string, onError: (message: string) => void) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async (v: PanelSend) => {
-      const row: MessageView = await apiSend('POST', `${threadPath(phone)}/${v.kind}`, {
-        ...bodyOf(v),
-        clientRequestId: requestId(),
-      });
-      return row;
-    },
+    mutationFn: (v: PanelSend) => sendTo(phone, v),
     onMutate: () => markOwnSend(phone),
     onSuccess: async (row) => {
       const add = (old: ThreadCache | undefined) => appendMessage(removeMessage(old, row.id), row);

@@ -12,6 +12,8 @@ const uploadToSignedUrl = vi.hoisted(() => vi.fn(async () => ({ error: null })))
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl }) } } }));
 
+const SENT_ID = 'c3333333-3333-4333-8333-333333333333';
+const SENT = message({ id: SENT_ID, lead_id: null, direction: 'outbound', status: 'sent' });
 const SIGNED = { bucket: 'wa-media', path: 'out/u-1/r/abc.pdf', token: 'tok', signed_url: 'https://x' };
 const PDF = new File([new Uint8Array(20)], 'جدول.pdf', { type: 'application/pdf' });
 const ID = '0d9b2c64-1f3e-4b7a-8c5d-6e7f8a9b0c1d';
@@ -53,7 +55,7 @@ afterEach(() => {
 describe('FileComposer answering a message («رد»)', () => {
   it('shows the strip (our sender, the file kind), focuses the caption and sends replyToMessageId', async () => {
     apiSend.mockImplementation(async (_m: string, path: string) =>
-      path.endsWith('/file-upload-url') ? SIGNED : message({ id: 'm-f', direction: 'outbound', status: 'sent' }),
+      path.endsWith('/file-upload-url') ? SIGNED : SENT,
     );
     const cancel = show();
     const strip = screen.getByRole('group', { name: t.inbox.reply.strip });

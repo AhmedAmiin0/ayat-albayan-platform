@@ -1,18 +1,17 @@
 import {
   stickerPanelRoutes as routes,
-  threadGifSendSchema,
-  threadStickerSendSchema,
+  stickerSendRoutes as sends,
   type GifList,
   type MessageView,
   type StickerList,
 } from '@ab/shared';
-import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Controller, HttpCode, Param } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { ZodBody } from '@/common/http/zod-inputs';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
@@ -37,7 +36,8 @@ interface PanelSend {
 }
 
 /**
- * The emoji panel's stickers and GIFs, the admin and sales only: GET
+ * The emoji panel's stickers and GIFs, the admin and sales only (a bad send body is 400 before
+ * the teacher's 403, and that 403 wins over a bad phone): GET
  * /threads/stickers (favourites, then the newest of any chat), PUT / DELETE …/favourites, GET
  * /threads/gifs?q= (GIPHY; `configured: false` until an admin adds the key), and POST
  * /threads/:phone/sticker | gif, audited as `thread_sticker` / `thread_gif`.
@@ -87,30 +87,24 @@ export class StickersController {
     return this.gifs.list(query.q);
   }
 
-  @Post('threads/:phone/sticker')
+  @Route(sends.sticker)
   @HttpCode(201)
-  @Permissions('inbox.send')
-  @ApiTags('inbox')
   sticker(
     @Param('phone') raw: string,
-    @Body() body: unknown,
+    @ZodBody(sends.sticker.body) input: RouteInputOf<typeof sends.sticker>['body'],
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
-    const input = parseOrThrow(threadStickerSendSchema, body);
     const run = (s: SendBase) => this.stickers.send({ ...s, input });
     return this.send({ user, raw }, { action: 'thread_sticker', name: 'sticker.webp', run });
   }
 
-  @Post('threads/:phone/gif')
+  @Route(sends.gif)
   @HttpCode(201)
-  @Permissions('inbox.send')
-  @ApiTags('inbox')
   gif(
     @Param('phone') raw: string,
-    @Body() body: unknown,
+    @ZodBody(sends.gif.body) input: RouteInputOf<typeof sends.gif>['body'],
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
-    const input = parseOrThrow(threadGifSendSchema, body);
     const run = (s: SendBase) => this.gifs.send({ ...s, input });
     return this.send({ user, raw }, { action: 'thread_gif', name: 'gif.mp4', run });
   }

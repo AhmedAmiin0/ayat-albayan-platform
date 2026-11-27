@@ -33,7 +33,7 @@ export const summary: TeacherFeedbackSummary[] = [
   { teacher: { id: 't-abrar', name: 'أبرار' }, avg_rating: 4.5, n: 12, recommend_yes_pct: 83.3 },
 ];
 
-export const page = (items: FeedbackRowView[]) => ({
+export const page = <T>(items: T[]) => ({
   items,
   total: items.length,
   page: 1,

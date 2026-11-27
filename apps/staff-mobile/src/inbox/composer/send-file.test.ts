@@ -2,7 +2,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { ApiError, t } from '@ab/mobile-kit';
 import { ChatFileError, fileError, pdfName, pickChatFile, sendChatFile, type ChatFilePick } from './send-file';
-import { PHONE } from '@/inbox/shared/thread-fixtures';
+import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 
 const mockApiSend = jest.fn();
 const mockUpload = jest.fn();
@@ -19,6 +19,7 @@ const library = jest.mocked(ImagePicker.launchImageLibraryAsync);
 const documents = jest.mocked(DocumentPicker.getDocumentAsync);
 const ID = '0b6f8d1e-6c1a-4a8e-9a57-2f8d1c3b4a5e';
 const MB = 1024 * 1024;
+const ROW = message({ id: 'c1111111-1111-4111-8111-111111111111' });
 const pdf: ChatFilePick = { mime: 'application/pdf', bytes: new ArrayBuffer(3), size: 3, filename: 'خطة.pdf' };
 const signed = { bucket: 'wa-media', path: `out/u1/${ID}/x.pdf`, token: 'tok', signed_url: 'https://s.test/up' };
 const pdfAsset = { name: 'a/b\\خطة الحفظ.pdf', uri: 'file:///cache/plan.pdf', mimeType: 'application/pdf', lastModified: 0 };
@@ -70,8 +71,9 @@ test('pdfName: no separators, at most 200 characters, never empty', () => {
 });
 
 test('send: the signed upload, then the file under the same clientRequestId, no caption', async () => {
-  mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce({ id: 'row' });
-  await expect(sendChatFile({ phone: PHONE, file: pdf, id: ID, maxBytes: 10 * MB })).resolves.toEqual({ id: 'row' });
+  mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce(ROW);
+  const sent = sendChatFile({ phone: PHONE, file: pdf, id: ID, maxBytes: 10 * MB });
+  await expect(sent).resolves.toEqual(ROW);
   expect(mockApiSend).toHaveBeenNthCalledWith(1, 'POST', '/threads/%2B966552147730/file-upload-url', {
     clientRequestId: ID,
     mime: 'application/pdf',

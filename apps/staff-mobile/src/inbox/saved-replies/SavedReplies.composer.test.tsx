@@ -83,7 +83,7 @@ test('tabs and search: «ردودي» shows her own; the search matches the text
 test('the staged file: removable; «أرسل» sends the text, then stages and sends the file', async () => {
   // A text's answer echoes it (another body would be a replay of a first message).
   const row = (path: string, sent?: { text?: string }) =>
-    message({ id: path.endsWith('/file') ? 'f1' : 't1', status: 'queued', body: sent?.text ?? null });
+    message({ id: path.endsWith('/file') ? 'c3333333-3333-4333-8333-333333333333' : 't1', status: 'queued', body: sent?.text ?? null });
   mockApiSend.mockImplementation(async (_m: string, path: string, sent?: { text?: string }) =>
     path.endsWith('/stage') ? { path: 'out/s1/r/x.pdf', filename: 'الأسعار.pdf' } : row(path, sent),
   );
