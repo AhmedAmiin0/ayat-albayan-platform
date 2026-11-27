@@ -53,7 +53,7 @@ test('a signed link never reaches the disk cache (noPersist)', async () => {
 test('a picture opens in the phone’s viewer from a fresh link', async () => {
   await renderWithQuery(<LessonScreen />, freshQueryClient());
   await fireEvent.press(await screen.findByText('صفحة الواجب'));
-  await waitFor(() =>
-    expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lesson-files/f1/url'));
+  const link = '/portal/students/s1/lesson-files/f1/url';
+  await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', link, undefined));
   expect(Linking.openURL).toHaveBeenCalledWith('https://files.example/x');
 });

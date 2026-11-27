@@ -6,7 +6,7 @@ import {
   lessonFileRegisterSchema,
   lessonFileUploadSchema,
   portalLessonFileSchema,
-} from '.';
+} from '..';
 
 describe('lessonFileMediaOf', () => {
   it('reads the top type: image, audio, else pdf', () => {
