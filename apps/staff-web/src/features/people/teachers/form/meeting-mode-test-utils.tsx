@@ -37,7 +37,16 @@ function answer(path: string, o: Required<ShowOptions>): Promise<unknown> {
   if (path === '/settings/integrations') {
     if (o.livekit === 'error') return fail();
     const keys = ['LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET'];
-    return Promise.resolve(keys.map((key, i) => ({ key, set: o.livekit || i === 0, source: 'env' })));
+    const row = (key: string, i: number) => ({
+      key,
+      group: 'livekit',
+      secret: i > 0,
+      value: null,
+      set: o.livekit || i === 0,
+      source: 'env',
+      updated_at: null,
+    });
+    return Promise.resolve(keys.map(row));
   }
   return Promise.resolve([]);
 }

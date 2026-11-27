@@ -1328,6 +1328,136 @@
    "required": [
     "key"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "key": {
+      "type": "string",
+      "enum": [
+       "WA_PROVIDER",
+       "WA_API_BASE",
+       "WA_API_VERSION",
+       "WA_PHONE_NUMBER_ID",
+       "WA_WABA_ID",
+       "WA_APP_ID",
+       "WA_CHAT_PHONE_NUMBER_ID",
+       "WA_CHAT_WABA_ID",
+       "WA_CHAT_APP_ID",
+       "WA_CHAT_PROVIDER",
+       "KAPSO_API_BASE",
+       "KAPSO_API_VERSION",
+       "WACRM_API_BASE",
+       "EVOLUTION_API_BASE",
+       "EVOLUTION_INTERNAL_HOSTS",
+       "WA_ALLOWED_RECIPIENTS",
+       "WA_TEMPLATE_SYNC",
+       "CALLS_STUN_URLS",
+       "CALLS_TURN_URLS",
+       "LIVEKIT_URL",
+       "EXPO_API_BASE",
+       "WEB_PUSH_VAPID_PUBLIC_KEY",
+       "WEB_PUSH_SUBJECT",
+       "FX_API_URL",
+       "GOOGLE_CLIENT_ID",
+       "STRIPE_ENABLED",
+       "STRIPE_MAX_DISCOUNT_PCT",
+       "STORAGE_DRIVER",
+       "MINIO_ENDPOINT",
+       "MINIO_PUBLIC_URL",
+       "MINIO_REGION",
+       "MINIO_BUCKET_PREFIX",
+       "MINIO_ACCESS_KEY",
+       "MINIO_RECORDINGS",
+       "MINIO_DRIVE_BACKUP",
+       "WA_ACCESS_TOKEN",
+       "WA_APP_SECRET",
+       "WA_VERIFY_TOKEN",
+       "WA_CHAT_ACCESS_TOKEN",
+       "WA_CHAT_APP_SECRET",
+       "LIVEKIT_API_KEY",
+       "LIVEKIT_API_SECRET",
+       "EXPO_ACCESS_TOKEN",
+       "WEB_PUSH_VAPID_PRIVATE_KEY",
+       "KAPSO_API_KEY",
+       "KAPSO_WEBHOOK_SECRET",
+       "WACRM_API_KEY",
+       "WACRM_WEBHOOK_SECRET",
+       "EVOLUTION_API_KEY",
+       "GOOGLE_CLIENT_SECRET",
+       "CALLS_TURN_SECRET",
+       "GIPHY_API_KEY",
+       "STRIPE_API_KEY",
+       "STRIPE_WEBHOOK_SECRET",
+       "MINIO_SECRET_KEY"
+      ]
+     },
+     "group": {
+      "type": "string",
+      "enum": [
+       "wa_notifications",
+       "wa_chat",
+       "kapso",
+       "wacrm",
+       "evolution",
+       "wa_safety",
+       "calls",
+       "livekit",
+       "expo",
+       "web_push",
+       "fx",
+       "google",
+       "giphy",
+       "storage",
+       "stripe"
+      ]
+     },
+     "secret": {
+      "type": "boolean"
+     },
+     "value": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "set": {
+      "type": "boolean"
+     },
+     "source": {
+      "type": "string",
+      "enum": [
+       "db",
+       "env",
+       "unset"
+      ]
+     },
+     "updated_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "key",
+     "group",
+     "secret",
+     "value",
+     "set",
+     "source",
+     "updated_at"
+    ]
+   }
   }
  },
  "DELETE /students/:id/assistants/:profileId": {
@@ -16177,6 +16307,138 @@
    "required": [
     "data"
    ]
+  }
+ },
+ "GET /settings/integrations": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "key": {
+      "type": "string",
+      "enum": [
+       "WA_PROVIDER",
+       "WA_API_BASE",
+       "WA_API_VERSION",
+       "WA_PHONE_NUMBER_ID",
+       "WA_WABA_ID",
+       "WA_APP_ID",
+       "WA_CHAT_PHONE_NUMBER_ID",
+       "WA_CHAT_WABA_ID",
+       "WA_CHAT_APP_ID",
+       "WA_CHAT_PROVIDER",
+       "KAPSO_API_BASE",
+       "KAPSO_API_VERSION",
+       "WACRM_API_BASE",
+       "EVOLUTION_API_BASE",
+       "EVOLUTION_INTERNAL_HOSTS",
+       "WA_ALLOWED_RECIPIENTS",
+       "WA_TEMPLATE_SYNC",
+       "CALLS_STUN_URLS",
+       "CALLS_TURN_URLS",
+       "LIVEKIT_URL",
+       "EXPO_API_BASE",
+       "WEB_PUSH_VAPID_PUBLIC_KEY",
+       "WEB_PUSH_SUBJECT",
+       "FX_API_URL",
+       "GOOGLE_CLIENT_ID",
+       "STRIPE_ENABLED",
+       "STRIPE_MAX_DISCOUNT_PCT",
+       "STORAGE_DRIVER",
+       "MINIO_ENDPOINT",
+       "MINIO_PUBLIC_URL",
+       "MINIO_REGION",
+       "MINIO_BUCKET_PREFIX",
+       "MINIO_ACCESS_KEY",
+       "MINIO_RECORDINGS",
+       "MINIO_DRIVE_BACKUP",
+       "WA_ACCESS_TOKEN",
+       "WA_APP_SECRET",
+       "WA_VERIFY_TOKEN",
+       "WA_CHAT_ACCESS_TOKEN",
+       "WA_CHAT_APP_SECRET",
+       "LIVEKIT_API_KEY",
+       "LIVEKIT_API_SECRET",
+       "EXPO_ACCESS_TOKEN",
+       "WEB_PUSH_VAPID_PRIVATE_KEY",
+       "KAPSO_API_KEY",
+       "KAPSO_WEBHOOK_SECRET",
+       "WACRM_API_KEY",
+       "WACRM_WEBHOOK_SECRET",
+       "EVOLUTION_API_KEY",
+       "GOOGLE_CLIENT_SECRET",
+       "CALLS_TURN_SECRET",
+       "GIPHY_API_KEY",
+       "STRIPE_API_KEY",
+       "STRIPE_WEBHOOK_SECRET",
+       "MINIO_SECRET_KEY"
+      ]
+     },
+     "group": {
+      "type": "string",
+      "enum": [
+       "wa_notifications",
+       "wa_chat",
+       "kapso",
+       "wacrm",
+       "evolution",
+       "wa_safety",
+       "calls",
+       "livekit",
+       "expo",
+       "web_push",
+       "fx",
+       "google",
+       "giphy",
+       "storage",
+       "stripe"
+      ]
+     },
+     "secret": {
+      "type": "boolean"
+     },
+     "value": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "set": {
+      "type": "boolean"
+     },
+     "source": {
+      "type": "string",
+      "enum": [
+       "db",
+       "env",
+       "unset"
+      ]
+     },
+     "updated_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "key",
+     "group",
+     "secret",
+     "value",
+     "set",
+     "source",
+     "updated_at"
+    ]
+   }
   }
  },
  "GET /settings/integrations/storage-backup": {
@@ -45329,6 +45591,33 @@
    ]
   }
  },
+ "POST /settings/integrations/storage-probe": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "data": {
+     "type": "object",
+     "properties": {
+      "ok": {
+       "type": "boolean",
+       "const": true
+      },
+      "ms": {
+       "type": "number"
+      }
+     },
+     "required": [
+      "ok",
+      "ms"
+     ]
+    }
+   },
+   "required": [
+    "data"
+   ]
+  }
+ },
  "POST /short-links": {
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -56752,6 +57041,159 @@
     "bringer",
     "canTake"
    ]
+  }
+ },
+ "PUT /settings/integrations": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "values": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {
+      "type": [
+       "string",
+       "null"
+      ]
+     }
+    }
+   },
+   "required": [
+    "values"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "key": {
+      "type": "string",
+      "enum": [
+       "WA_PROVIDER",
+       "WA_API_BASE",
+       "WA_API_VERSION",
+       "WA_PHONE_NUMBER_ID",
+       "WA_WABA_ID",
+       "WA_APP_ID",
+       "WA_CHAT_PHONE_NUMBER_ID",
+       "WA_CHAT_WABA_ID",
+       "WA_CHAT_APP_ID",
+       "WA_CHAT_PROVIDER",
+       "KAPSO_API_BASE",
+       "KAPSO_API_VERSION",
+       "WACRM_API_BASE",
+       "EVOLUTION_API_BASE",
+       "EVOLUTION_INTERNAL_HOSTS",
+       "WA_ALLOWED_RECIPIENTS",
+       "WA_TEMPLATE_SYNC",
+       "CALLS_STUN_URLS",
+       "CALLS_TURN_URLS",
+       "LIVEKIT_URL",
+       "EXPO_API_BASE",
+       "WEB_PUSH_VAPID_PUBLIC_KEY",
+       "WEB_PUSH_SUBJECT",
+       "FX_API_URL",
+       "GOOGLE_CLIENT_ID",
+       "STRIPE_ENABLED",
+       "STRIPE_MAX_DISCOUNT_PCT",
+       "STORAGE_DRIVER",
+       "MINIO_ENDPOINT",
+       "MINIO_PUBLIC_URL",
+       "MINIO_REGION",
+       "MINIO_BUCKET_PREFIX",
+       "MINIO_ACCESS_KEY",
+       "MINIO_RECORDINGS",
+       "MINIO_DRIVE_BACKUP",
+       "WA_ACCESS_TOKEN",
+       "WA_APP_SECRET",
+       "WA_VERIFY_TOKEN",
+       "WA_CHAT_ACCESS_TOKEN",
+       "WA_CHAT_APP_SECRET",
+       "LIVEKIT_API_KEY",
+       "LIVEKIT_API_SECRET",
+       "EXPO_ACCESS_TOKEN",
+       "WEB_PUSH_VAPID_PRIVATE_KEY",
+       "KAPSO_API_KEY",
+       "KAPSO_WEBHOOK_SECRET",
+       "WACRM_API_KEY",
+       "WACRM_WEBHOOK_SECRET",
+       "EVOLUTION_API_KEY",
+       "GOOGLE_CLIENT_SECRET",
+       "CALLS_TURN_SECRET",
+       "GIPHY_API_KEY",
+       "STRIPE_API_KEY",
+       "STRIPE_WEBHOOK_SECRET",
+       "MINIO_SECRET_KEY"
+      ]
+     },
+     "group": {
+      "type": "string",
+      "enum": [
+       "wa_notifications",
+       "wa_chat",
+       "kapso",
+       "wacrm",
+       "evolution",
+       "wa_safety",
+       "calls",
+       "livekit",
+       "expo",
+       "web_push",
+       "fx",
+       "google",
+       "giphy",
+       "storage",
+       "stripe"
+      ]
+     },
+     "secret": {
+      "type": "boolean"
+     },
+     "value": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "set": {
+      "type": "boolean"
+     },
+     "source": {
+      "type": "string",
+      "enum": [
+       "db",
+       "env",
+       "unset"
+      ]
+     },
+     "updated_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "required": [
+     "key",
+     "group",
+     "secret",
+     "value",
+     "set",
+     "source",
+     "updated_at"
+    ]
+   }
   }
  },
  "PUT /settings/integrations/secrets/:key": {

@@ -252,7 +252,7 @@
       "count": 1
     },
     "ab/zod-inputs": {
-      "count": 2
+      "count": 1
     }
   },
   "src/common/configuration/integrations/integration-config.module.ts": {

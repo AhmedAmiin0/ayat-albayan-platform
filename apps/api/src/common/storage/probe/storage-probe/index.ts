@@ -1,1 +1,1 @@
-export { StorageProbe, type StorageProbeResult } from './storage-probe';
+export { StorageProbe } from './storage-probe';

@@ -3450,11 +3450,6 @@
       "count": 1
     }
   },
-  "src/ops/comms/use-line-drivers.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/ops/dashboard/DashboardScreen/DashboardScreen.tsx": {
     "complexity": {
       "count": 1

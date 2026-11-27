@@ -35,11 +35,6 @@
       "count": 1
     }
   },
-  "src/integrations/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
   "src/integrations/keys/keys.ts": {
     "stylistic/max-len": {
       "count": 1
