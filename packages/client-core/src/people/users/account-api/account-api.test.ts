@@ -12,7 +12,12 @@ const profile = {
   avatar_seed: ID,
   role: { base: 'teacher', key: 'teacher', name_ar: null, name_en: 'Teacher' },
 };
-const upload = { bucket: 'avatars', path: `${ID}/a.webp`, token: 't', signed_url: 'https://s.test' };
+const upload = {
+  bucket: 'avatars',
+  path: `${ID}/a.webp`,
+  token: 't',
+  signed_url: 'https://s.test',
+};
 
 const clientAnswering = (answer: unknown) => {
   const apiFetch = vi.fn(async () => answer);
