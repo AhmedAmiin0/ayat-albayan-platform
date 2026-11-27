@@ -1,5 +1,7 @@
 import { QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { isLoaded } from 'expo-font';
 import { Slot } from 'expo-router';
+import { render } from '@testing-library/react-native';
 import { fireEvent, renderRouter, screen } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
@@ -7,6 +9,7 @@ import { freshQueryClient } from '../../../testing/query';
 import { CrashScreen } from './CrashScreen';
 import { restartAfterCrash } from '../restart-after-crash';
 
+jest.mock('expo-font', () => ({ ...jest.requireActual<object>('expo-font'), isLoaded: jest.fn() }));
 jest.mock('../restart-after-crash', () => ({ restartAfterCrash: jest.fn(async () => undefined) }));
 
 interface Lesson {
@@ -59,4 +62,13 @@ test('restored data that fits: the screen renders', async () => {
   await openWithRestored({ id: 'l1', student: { name: 'يوسف' } });
   expect(screen.getByText('يوسف')).toBeTruthy();
   expect(screen.queryByRole('header', { name: t.crash.title })).toBeNull();
+});
+
+test.each([
+  { loaded: true, family: expect.any(String) },
+  { loaded: false, family: undefined },
+])('the Arabic font loaded: $loaded → the title font follows it', async ({ loaded, family }) => {
+  jest.mocked(isLoaded).mockReturnValue(loaded);
+  await render(<CrashScreen error={new Error('x')} retry={jest.fn()} />);
+  expect(screen.getByRole('header', { name: t.crash.title })).toHaveStyle({ fontFamily: family });
 });

@@ -16,7 +16,7 @@ const net: { answers: (ProbeAnswer | null)[]; online: boolean; path: string } = 
   path: '/',
 };
 jest.mock('expo-router', () => ({ usePathname: () => net.path }));
-jest.mock('./RootProviders', () => ({ retryStartup: jest.fn() }));
+jest.mock('./retry-startup', () => ({ retryStartup: jest.fn() }));
 jest.mock('./phone-probes', () => ({
   phoneProbes: {
     api: () => Promise.resolve(net.answers.length > 1 ? net.answers.shift() : net.answers[0]),
@@ -24,7 +24,7 @@ jest.mock('./phone-probes', () => ({
     pause: () => Promise.resolve(),
   },
 }));
-const { retryStartup } = jest.requireMock<{ retryStartup: jest.Mock }>('./RootProviders');
+const { retryStartup } = jest.requireMock<{ retryStartup: jest.Mock }>('./retry-startup');
 
 const ON = { status: 200, body: { maintenance_mode: true } };
 const OFF = { status: 200, body: { maintenance_mode: false } };

@@ -1,18 +1,10 @@
-import { isLoaded } from 'expo-font';
 import { View } from 'react-native';
-import { t } from '../../../lib/i18n/i18n';
 import { type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
 import { RetryButton } from '../../../ui/startup';
 import type { CrashScreenProps } from './CrashScreen.types';
 import { restartAfterCrash } from '../restart-after-crash';
-
-const S = t.crash;
-const TITLE = 22;
-const BODY = type.size.body;
-
-/** A crash in the root layout can come before Noto Sans Arabic is registered (iOS rejects it). */
-const font = (family: string) => (isLoaded(family) ? family : undefined);
+import { S, TITLE, BODY, font } from './crash-screen.helpers';
 
 /** May render outside the root's providers, so it reads nothing from them. */
 export function CrashScreen({ retry }: CrashScreenProps) {

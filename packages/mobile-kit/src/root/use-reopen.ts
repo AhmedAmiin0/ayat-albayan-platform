@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
-import { retryStartup } from './RootProviders';
+import { retryStartup } from './retry-startup';
 
 /**
  * When the cover lifts: the session, /auth/me and the connection again (retryStartup), and every
