@@ -8,7 +8,12 @@ import { t, notificationsQuery } from '@ab/web-kit';
 import { MyWallet } from './MyWallet';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const bellReads = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  call: bellReads,
+}));
 
 const W = t.assistantPortal.wallet;
 const row = (over: Partial<MyCommissionRow> = {}): MyCommissionRow => ({
@@ -24,10 +29,10 @@ let bell: NotificationItem[] = [];
 function open(rows: MyCommissionRow[], over: { total?: number; wallet?: MyEarnings['wallet']; earningsDown?: boolean } = {}) {
   apiFetch.mockImplementation(async (path: string) => {
     if (path.startsWith('/sales/me/commissions')) return { items: rows, total: over.total ?? rows.length, page: 1, pageSize: 20 };
-    if (path.startsWith('/me/notifications')) return { items: bell, total: bell.length, page: 1, pageSize: 20, unread: 0 };
     if (over.earningsDown) throw new Error('down');
     return { ...EARNINGS, wallet: over.wallet ?? EARNINGS.wallet };
   });
+  bellReads.mockImplementation(async () => ({ items: bell, total: bell.length, page: 1, pageSize: 20, unread: 0 }));
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
     <QueryClientProvider client={client}>
@@ -41,6 +46,7 @@ const calls = (prefix: string) =>
 
 afterEach(() => {
   apiFetch.mockReset();
+  bellReads.mockReset();
   bell = [];
 });
 
@@ -100,13 +106,13 @@ describe('MyWallet «العمولات» of «محفظتي»', () => {
   it('a new «عمولة جديدة» on the bell refreshes the wallet; watching the bell adds no request of its own', async () => {
     const client = open([row()]);
     await screen.findByRole('list', { name: W.list });
-    await waitFor(() => expect(calls('/me/notifications')).toBe(1));
+    await waitFor(() => expect(bellReads).toHaveBeenCalledTimes(1));
     const before = { list: calls('/sales/me/commissions'), earnings: calls('/sales/me/earnings') };
     bell = [{ id: 'n1', kind: 'commission_earned', title: '', body: '', data: {}, created_at: '2026-10-29T16:42:15Z', read_at: null }];
     await act(async () => client.refetchQueries({ queryKey: notificationsQuery.queryKey }));
     await waitFor(() => expect(calls('/sales/me/commissions')).toBe(before.list + 1));
     expect(calls('/sales/me/earnings')).toBe(before.earnings + 1);
-    expect(calls('/me/notifications')).toBe(2);
+    expect(bellReads).toHaveBeenCalledTimes(2);
   });
 
   it('the balance failed to load: its own message and retry above the entries', async () => {

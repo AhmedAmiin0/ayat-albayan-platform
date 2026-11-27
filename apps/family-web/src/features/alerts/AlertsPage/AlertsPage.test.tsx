@@ -1,15 +1,16 @@
+import { meNotificationRoutes } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { renderAt } from '@/test/render-at';
 import { AlertsPage } from './AlertsPage';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn(async () => undefined));
+const bellRead = vi.hoisted(() => vi.fn());
+const bellWrite = vi.hoisted(() => vi.fn(async () => undefined));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  apiFetch,
-  apiSend,
+  call: (sent: { route: { method: string } }) =>
+    sent.route.method === 'GET' ? bellRead(sent) : bellWrite(sent),
 }));
 
 const ago = (days: number) => new Date(Date.now() - days * 86_400_000).toISOString();
@@ -24,31 +25,31 @@ const row = (id: string, days: number, read: boolean) => ({
 });
 
 beforeEach(() => {
-  apiFetch.mockReset();
-  apiSend.mockClear();
+  bellRead.mockReset();
+  bellWrite.mockClear();
 });
 
 describe('«الإشعارات» of the family pages', () => {
   it('rows under اليوم / أقدم; «تعليم الكل كمقروء» while any is unread', async () => {
-    apiFetch.mockResolvedValue({ items: [row('a', 0, false), row('b', 30, true)], unread: 1 });
+    bellRead.mockResolvedValue({ items: [row('a', 0, false), row('b', 30, true)], unread: 1 });
     renderAt(<AlertsPage kind="guardian" />);
     expect(await screen.findByRole('region', { name: t.portal.app.alerts.today })).toBeTruthy();
     expect(screen.getByRole('region', { name: t.portal.app.alerts.older })).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.portal.app.alerts.markAll }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', {}));
+    await waitFor(() => expect(bellWrite).toHaveBeenCalledWith({ route: meNotificationRoutes.read, body: {} }));
   });
 
   it('a tap marks the row read', async () => {
-    apiFetch.mockResolvedValue({ items: [row('a', 0, false)], unread: 1 });
+    bellRead.mockResolvedValue({ items: [row('a', 0, false)], unread: 1 });
     renderAt(<AlertsPage kind="guardian" />);
     fireEvent.click(await screen.findByRole('button', { name: /title a/ }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', { ids: ['a'] }),
+      expect(bellWrite).toHaveBeenCalledWith({ route: meNotificationRoutes.read, body: { ids: ['a'] } }),
     );
   });
 
   it('an unread row is told apart by more than a tint: its bar, its dot and a semibold title', async () => {
-    apiFetch.mockResolvedValue({ items: [row('a', 0, false), row('b', 0, true)], unread: 1 });
+    bellRead.mockResolvedValue({ items: [row('a', 0, false), row('b', 0, true)], unread: 1 });
     renderAt(<AlertsPage kind="guardian" />);
     const unread = await screen.findByRole('button', { name: /title a/ });
     const read = screen.getByRole('button', { name: /title b/ });
@@ -58,7 +59,7 @@ describe('«الإشعارات» of the family pages', () => {
   });
 
   it('nothing yet: the empty line', async () => {
-    apiFetch.mockResolvedValue({ items: [], unread: 0 });
+    bellRead.mockResolvedValue({ items: [], unread: 0 });
     renderAt(<AlertsPage kind="student" />);
     expect(await screen.findByText(t.bell.empty)).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.portal.app.alerts.markAll })).toBeNull();

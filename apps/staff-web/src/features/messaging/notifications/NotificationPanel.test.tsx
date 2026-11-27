@@ -1,15 +1,16 @@
+import { meNotificationRoutes } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { ITEM, page, READ_ITEM, renderWithClient } from './notifications-test-kit';
 import { NotificationPanel } from './NotificationPanel';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
+const read = vi.hoisted(() => vi.fn());
+const write = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  apiFetch,
-  apiSend,
+  call: (sent: { route: { method: string } }) =>
+    sent.route.method === 'GET' ? read(sent) : write(sent),
 }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
 vi.mock('@ab/web-kit/auth/me/me', async () => {
@@ -18,14 +19,14 @@ vi.mock('@ab/web-kit/auth/me/me', async () => {
 });
 
 beforeEach(() => {
-  apiFetch.mockReset();
-  apiSend.mockReset();
-  apiSend.mockResolvedValue(undefined);
+  read.mockReset();
+  write.mockReset();
+  write.mockResolvedValue(undefined);
 });
 
 describe('NotificationPanel', () => {
   it('says so when there is nothing yet, with no «mark all»', async () => {
-    apiFetch.mockResolvedValue(page([]));
+    read.mockResolvedValue(page([]));
     renderWithClient(<NotificationPanel onPick={vi.fn()} />);
     expect(await screen.findByText(t.bell.empty)).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.bell.markAll })).toBeNull();
@@ -33,7 +34,7 @@ describe('NotificationPanel', () => {
   });
 
   it('shows the loading state, then the rows', async () => {
-    apiFetch.mockResolvedValue(page([ITEM, READ_ITEM]));
+    read.mockResolvedValue(page([ITEM, READ_ITEM]));
     renderWithClient(<NotificationPanel onPick={vi.fn()} />);
     expect(screen.getByRole('status')).toBeTruthy();
     expect(await screen.findByText(ITEM.title)).toBeTruthy();
@@ -42,7 +43,7 @@ describe('NotificationPanel', () => {
   });
 
   it('a failed load offers a retry that loads again', async () => {
-    apiFetch.mockRejectedValueOnce(new Error('down')).mockResolvedValue(page([ITEM]));
+    read.mockRejectedValueOnce(new Error('down')).mockResolvedValue(page([ITEM]));
     renderWithClient(<NotificationPanel onPick={vi.fn()} />);
     expect((await screen.findByRole('alert')).textContent).toBe(t.bell.loadError);
     fireEvent.click(screen.getByRole('button', { name: t.bell.retry }));
@@ -51,13 +52,13 @@ describe('NotificationPanel', () => {
   });
 
   it('«mark all» posts no ids, then reloads the list and the badge', async () => {
-    apiFetch
+    read
       .mockResolvedValueOnce(page([ITEM]))
       .mockResolvedValue(page([{ ...ITEM, read_at: ITEM.created_at }]));
     renderWithClient(<NotificationPanel onPick={vi.fn()} />);
     fireEvent.click(await screen.findByRole('button', { name: t.bell.markAll }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', {}));
+    await waitFor(() => expect(write).toHaveBeenCalledWith({ route: meNotificationRoutes.read, body: {} }));
     await waitFor(() => expect(screen.queryByRole('button', { name: t.bell.markAll })).toBeNull());
-    expect(apiFetch).toHaveBeenCalledTimes(2);
+    expect(read).toHaveBeenCalledTimes(2);
   });
 });

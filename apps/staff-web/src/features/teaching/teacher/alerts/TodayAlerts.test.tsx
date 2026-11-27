@@ -1,3 +1,4 @@
+import { meNotificationRoutes } from '@ab/shared';
 import { HOME_PREFS_KEY } from '@ab/client-core';
 import type { NotificationsPage } from '@ab/shared';
 import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
@@ -9,9 +10,13 @@ import { t, publicConfigQuery } from '@ab/web-kit';
 import { reloadHomePrefs } from './home-prefs';
 import { TodayAlerts } from './TodayAlerts';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn(() => Promise.resolve(undefined)));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+const read = vi.hoisted(() => vi.fn());
+const write = vi.hoisted(() => vi.fn(() => Promise.resolve(undefined)));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (sent: { route: { method: string } }) =>
+    sent.route.method === 'GET' ? read(sent) : write(sent),
+}));
 vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),
   usePermissions: () => ({ can: () => true }),
@@ -28,7 +33,7 @@ const PAGE: NotificationsPage = {
 };
 
 function renderAlerts(lessons = [SOON, GONE]) {
-  apiFetch.mockImplementation((path: string) => Promise.resolve(path.startsWith('/me/notifications') ? PAGE : []));
+  read.mockResolvedValue(PAGE);
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {} });
   const onOpen = vi.fn();
@@ -46,7 +51,7 @@ describe('TodayAlerts «تنبيهات اليوم» (owner 2026-11-14)', () => {
   afterEach(() => {
     localStorage.clear();
     reloadHomePrefs();
-    apiFetch.mockReset();
+    read.mockReset();
   });
 
   it('lists her lessons alerts, each with one action that opens the lesson', async () => {
@@ -61,11 +66,13 @@ describe('TodayAlerts «تنبيهات اليوم» (owner 2026-11-14)', () => {
   it('marks a bell row read through the bell API', async () => {
     renderAlerts();
     fireEvent.click(await list().findByRole('button', { name: t.teacherAlerts.markRead }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', { ids: ['n-1'] }));
+    await vi.waitFor(() =>
+      expect(write).toHaveBeenCalledWith({ route: meNotificationRoutes.read, body: { ids: ['n-1'] } }),
+    );
   });
 
   it('says «لا تنبيهات اليوم» on a quiet day', async () => {
-    apiFetch.mockResolvedValue([]);
+    read.mockResolvedValue([]);
     renderAlerts([]);
     expect(await list().findByText(t.teacherAlerts.empty)).toBeTruthy();
   });

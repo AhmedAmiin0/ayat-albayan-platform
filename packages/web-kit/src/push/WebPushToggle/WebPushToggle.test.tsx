@@ -1,3 +1,4 @@
+import { mockCall } from '@ab/testing/mock-call';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
@@ -12,15 +13,19 @@ const push = vi.hoisted(() => ({
   subscribeWebPush: vi.fn(),
   unsubscribeWebPush: vi.fn(),
 }));
-const apiFetch = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/push/web-push-support', async (orig) => ({ ...(await orig<object>()), readPushEnv: () => env.current }));
 vi.mock('@ab/web-kit/push/web-push', () => push);
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 beforeEach(() => {
   vi.resetAllMocks();
+  mockApi.reset();
   env.current = READY;
-  apiFetch.mockResolvedValue({ publicKey: 'AQID' });
+  mockApi.answer('GET', '/me/web-push/key', { publicKey: 'AQID' });
   push.rebindWebPush.mockResolvedValue(null);
 });
 
@@ -34,11 +39,11 @@ describe('WebPushToggle: only explains when push cannot be used', () => {
     renderWithClient(<WebPushToggle />);
     expect(screen.getByText(message)).toBeTruthy();
     expect(screen.queryByRole('button')).toBeNull();
-    expect(apiFetch).not.toHaveBeenCalled();
+    expect(mockApi.requests()).toEqual([]);
   });
 
   it('the server has no key: not configured', async () => {
-    apiFetch.mockResolvedValue({ publicKey: null });
+    mockApi.answer('GET', '/me/web-push/key', { publicKey: null });
     renderWithClient(<WebPushToggle />);
     expect(await screen.findByText(t.bell.push.notConfigured)).toBeTruthy();
     expect(screen.queryByRole('button')).toBeNull();
@@ -53,7 +58,7 @@ describe('WebPushToggle: on / off', () => {
     expect(screen.getByText(t.bell.push.off)).toBeTruthy();
     expect(push.subscribeWebPush).not.toHaveBeenCalled();
     fireEvent.click(enable);
-    expect(apiFetch).toHaveBeenCalledWith('/me/web-push/key');
+    expect(mockApi.reads()).toEqual([{ method: 'GET', path: '/me/web-push/key' }]);
     await waitFor(() => expect(push.subscribeWebPush).toHaveBeenCalledWith('AQID'));
     expect(await screen.findByRole('button', { name: t.bell.push.disable })).toBeTruthy();
     expect(screen.getByText(t.bell.push.on)).toBeTruthy();

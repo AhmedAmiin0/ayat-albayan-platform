@@ -1,3 +1,4 @@
+import { mockCall } from '@ab/testing/mock-call';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -11,14 +12,17 @@ import { MenuBar } from './MenuBar';
 import { WideHeader } from '@/components/shell/layout/TopBarLayout';
 
 const granted = vi.hoisted(() => new Set<string>());
-const apiFetch = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
   useRouterState: ({ select }: { select: (s: { location: { pathname: string } }) => string }) =>
     select({ location: { pathname: '/teacher' } }),
   useNavigate: () => vi.fn(),
 }));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }),
 }));
@@ -31,8 +35,8 @@ const settle = () => screen.findByText(t.bell.menuUnread.replace('{n}', '1'));
 beforeEach(() => {
   granted.clear();
   granted.add('notifications.push');
-  apiFetch.mockReset();
-  apiFetch.mockResolvedValue(page([ITEM, READ_ITEM]));
+  mockApi.reset();
+  mockApi.answer('GET', '/me/notifications', page([ITEM, READ_ITEM]));
 });
 
 describe('compact bar (< 900px): ONE button «القائمة»', () => {
@@ -52,9 +56,9 @@ describe('compact bar (< 900px): ONE button «القائمة»', () => {
   });
 
   it('no dot when everything is read', async () => {
-    apiFetch.mockResolvedValue(page([READ_ITEM]));
+    mockApi.answer('GET', '/me/notifications', page([READ_ITEM]));
     renderWithClient(<MenuBar home="/teacher" title={t.nav.dashboard} />);
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalled());
+    await vi.waitFor(() => expect(mockApi.reads()).not.toEqual([]));
     expect(menu().querySelector('[data-testid="menu-dot"]')).toBeNull();
     expect(menu().getAttribute('aria-describedby')).toBeNull();
   });
@@ -64,7 +68,7 @@ describe('compact bar (< 900px): ONE button «القائمة»', () => {
     renderWithClient(<MenuBar home="/teacher" title={t.nav.dashboard} />);
     fireEvent.click(menu());
     expect(
-      apiFetch.mock.calls.filter(([path]) => String(path).startsWith('/me/notifications')),
+      mockApi.reads().filter(({ path }) => path.startsWith('/me/notifications')),
     ).toEqual([]);
     expect(screen.queryByRole('button', { name: t.bell.open })).toBeNull();
   });
