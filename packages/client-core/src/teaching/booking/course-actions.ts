@@ -6,15 +6,8 @@ import { ApiError } from '../../core/http';
 
 const student = (studentId: string): string => `/students/${studentId}`;
 
-/** GET ?subscriptionId= (the stop sheet's preview) and POST (the stop). */
+/** The stop's path, also read without subscriptionId for the current package. */
 export const courseStopPath = (studentId: string): string => `${student(studentId)}/course-stop`;
-export function courseStopPreviewPath(input: {
-  studentId: string;
-  subscriptionId: string;
-}): string {
-  const q = encodeURIComponent(input.subscriptionId);
-  return `${courseStopPath(input.studentId)}?subscriptionId=${q}`;
-}
 
 export type CourseMoveKind = 'teacher' | 'times';
 
@@ -92,7 +85,8 @@ const MOVE_CODES = [
 export type CourseMoveErrorCode = (typeof MOVE_CODES)[number] | 'generic';
 
 function codeOf(error: unknown): unknown {
-  if (!(error instanceof ApiError) || typeof error.body !== 'object' || error.body === null) return undefined;
+  if (!(error instanceof ApiError) || typeof error.body !== 'object' || error.body === null)
+    return undefined;
   return 'code' in error.body ? error.body.code : undefined;
 }
 
