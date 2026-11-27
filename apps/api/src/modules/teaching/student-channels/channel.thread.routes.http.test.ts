@@ -62,7 +62,7 @@ describe('student chat threads served from their route objects (docs/31 §2)', (
     ]);
   });
 
-  it('each audience is refused on the other audiences’ threads', async () => {
+  it('each audience is refused on the threads of the others', async () => {
     const codes = [
       (await t.call('GET', `${PORTAL(ST)}/messages`, 'teacher')).statusCode,
       (await t.call('GET', `${TEACHER}/${ST}/messages`, 'guardian')).statusCode,
