@@ -30,6 +30,7 @@ describe('callsRoutes', () => {
       'POST /calls/:id/reject',
       'POST /calls/:id/end',
       'GET /calls/permission/:phone',
+      'POST /calls/permission/:phone/request',
     ]);
   });
 
@@ -76,10 +77,19 @@ describe('callsRoutes', () => {
     expect(routes.permission.response.safeParse({ ...view, state: 'maybe' }).success).toBe(false);
   });
 
+  it('asks a number for permission once per request id and answers the sent message', () => {
+    expect(routes.permissionRequest.params.safeParse({ phone: 'x' }).success).toBe(false);
+    expect(routes.permissionRequest.body.parse({ clientRequestId: ID })).toEqual({
+      clientRequestId: ID,
+    });
+    expect(routes.permissionRequest.body.safeParse({}).success).toBe(false);
+    expect(routes.permissionRequest.response.safeParse({ id: ID }).success).toBe(false);
+  });
+
   it('lets inbox.read read and inbox.send act, each tagged calls', () => {
     const access = Object.values(routes).map((r) => [r.permissions, r.tags]);
     const read = [['inbox.read'], ['calls']];
     const send = [['inbox.send'], ['calls']];
-    expect(access).toEqual([read, read, read, send, send, send, send, send]);
+    expect(access).toEqual([read, read, read, send, send, send, send, send, send]);
   });
 });

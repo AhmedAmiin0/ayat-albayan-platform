@@ -1,6 +1,12 @@
 import { defineRoute, id, phoneE164 } from '@ab/core';
 import { z } from 'zod';
-import { acceptCallSchema, callListQuerySchema, startCallSchema } from './call-schemas';
+import { messageViewSchema } from '../chat/message-view';
+import {
+  acceptCallSchema,
+  callListQuerySchema,
+  callPermissionRequestSchema,
+  startCallSchema,
+} from './call-schemas';
 import {
   activeCallViewSchema,
   callConfigViewSchema,
@@ -11,6 +17,7 @@ import {
 const read = { permissions: ['inbox.read'], tags: ['calls'] } as const;
 const send = { permissions: ['inbox.send'], tags: ['calls'] } as const;
 const byId = z.object({ id: id() });
+const byPhone = z.object({ phone: phoneE164 });
 
 /**
  * WhatsApp voice calls (docs/28 §4), the scopes of a send from the thread. While
@@ -76,8 +83,17 @@ export const callsRoutes = {
   permission: defineRoute({
     method: 'GET',
     path: '/calls/permission/:phone',
-    params: z.object({ phone: phoneE164 }),
+    params: byPhone,
     response: callPermissionViewSchema,
+    ...send,
+  }),
+  /** 201; the ask goes out through the outbox, a repeated clientRequestId answers the first. */
+  permissionRequest: defineRoute({
+    method: 'POST',
+    path: '/calls/permission/:phone/request',
+    params: byPhone,
+    body: callPermissionRequestSchema,
+    response: messageViewSchema,
     ...send,
   }),
 };

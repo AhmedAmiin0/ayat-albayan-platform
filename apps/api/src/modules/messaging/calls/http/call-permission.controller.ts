@@ -1,9 +1,9 @@
-import { callPermissionRequestSchema, callsRoutes as routes } from '@ab/shared';
-import { Controller, HttpCode, Param, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { callsRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode, Param } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import type { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route } from '@/common/http/route';
 import { ZodBody } from '@/common/http/zod-inputs';
@@ -12,7 +12,7 @@ import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
 import { CallAccess } from '@/modules/messaging/calls/access/call-access';
 import { CallPermissions } from '@/modules/messaging/calls/flow/call-permission.service';
 
-type RequestBody = z.output<typeof callPermissionRequestSchema>;
+type RequestBody = z.output<typeof routes.permissionRequest.body>;
 
 /** The request is a staff send through the outbox, audited (docs/28 §3.1). */
 @ApiBearerAuth()
@@ -30,13 +30,11 @@ export class CallPermissionController {
     return this.permissions.state(await this.access.actor(user), phoneParam(raw));
   }
 
-  @Post('calls/permission/:phone/request')
+  @Route(routes.permissionRequest)
   @HttpCode(201)
-  @Permissions('inbox.send')
-  @ApiTags('calls')
   async request(
     @Param('phone') raw: string,
-    @ZodBody(callPermissionRequestSchema) { clientRequestId }: RequestBody,
+    @ZodBody(routes.permissionRequest.body) { clientRequestId }: RequestBody,
     @CurrentUser() user: AuthUser,
   ) {
     const actor = await this.access.actor(user);
