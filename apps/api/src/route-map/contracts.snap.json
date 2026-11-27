@@ -16021,6 +16021,29 @@
    }
   }
  },
+ "GET /sales/subscriptions/teachers": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+     },
+     "name": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "id",
+     "name"
+    ]
+   }
+  }
+ },
  "GET /sales/teachers/:id/overview": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -45157,6 +45180,507 @@
    }
   },
   "response": "empty"
+ },
+ "POST /sales/subscriptions": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "studentId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "pricing": {
+     "oneOf": [
+      {
+       "type": "object",
+       "properties": {
+        "duration": {
+         "default": 45,
+         "type": "number",
+         "enum": [
+          30,
+          45,
+          60
+         ]
+        },
+        "country": {
+         "type": "string",
+         "pattern": "^[A-Za-z]{2}$"
+        },
+        "discount": {
+         "default": 0,
+         "type": "number",
+         "minimum": 0,
+         "maximum": 100
+        },
+        "tier": {
+         "type": "string",
+         "enum": [
+          "starter",
+          "standard",
+          "premium",
+          "bulk",
+          "weekly",
+          "monthly"
+         ]
+        }
+       },
+       "required": [
+        "tier"
+       ]
+      },
+      {
+       "type": "object",
+       "properties": {
+        "duration": {
+         "default": 45,
+         "type": "number",
+         "enum": [
+          30,
+          45,
+          60
+         ]
+        },
+        "country": {
+         "type": "string",
+         "pattern": "^[A-Za-z]{2}$"
+        },
+        "discount": {
+         "default": 0,
+         "type": "number",
+         "minimum": 0,
+         "maximum": 100
+        },
+        "count": {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 60
+        }
+       },
+       "required": [
+        "count"
+       ]
+      }
+     ]
+    },
+    "startsOn": {
+     "type": "string",
+     "format": "date",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "alreadyStarted": {
+     "type": "boolean"
+    },
+    "lessonsUsedBefore": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 99
+    },
+    "teacherId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "customPrice": {
+     "type": "number",
+     "exclusiveMinimum": 0,
+     "maximum": 9999999999
+    },
+    "clientRequestId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "studentId",
+    "pricing",
+    "clientRequestId"
+   ],
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "student": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "code": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "code",
+      "name"
+     ]
+    },
+    "package": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "4",
+        "8",
+        "12",
+        "16",
+        "20",
+        "28",
+        "trial"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "duration": {
+     "type": "number",
+     "enum": [
+      30,
+      45,
+      60,
+      90
+     ]
+    },
+    "lessons_total": {
+     "type": "number"
+    },
+    "lessons_used_before": {
+     "type": "number"
+    },
+    "price": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string"
+    },
+    "starts_on": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "trial",
+      "active",
+      "paused",
+      "expired",
+      "unpaid",
+      "cancelled"
+     ]
+    },
+    "paid": {
+     "type": "number"
+    },
+    "due": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "id",
+    "student",
+    "package",
+    "duration",
+    "lessons_total",
+    "price",
+    "currency",
+    "starts_on",
+    "status",
+    "paid",
+    "due"
+   ]
+  }
+ },
+ "POST /sales/subscriptions/:id/cancel": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "reason": {
+     "type": "string",
+     "maxLength": 500
+    }
+   },
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "student": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "code": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "code",
+      "name"
+     ]
+    },
+    "package": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "4",
+        "8",
+        "12",
+        "16",
+        "20",
+        "28",
+        "trial"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "duration": {
+     "type": "number",
+     "enum": [
+      30,
+      45,
+      60,
+      90
+     ]
+    },
+    "lessons_total": {
+     "type": "number"
+    },
+    "lessons_used_before": {
+     "type": "number"
+    },
+    "price": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string"
+    },
+    "starts_on": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "trial",
+      "active",
+      "paused",
+      "expired",
+      "unpaid",
+      "cancelled"
+     ]
+    },
+    "paid": {
+     "type": "number"
+    },
+    "due": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "id",
+    "student",
+    "package",
+    "duration",
+    "lessons_total",
+    "price",
+    "currency",
+    "starts_on",
+    "status",
+    "paid",
+    "due"
+   ]
+  }
+ },
+ "POST /sales/subscriptions/quote": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "studentId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "pricing": {
+     "oneOf": [
+      {
+       "type": "object",
+       "properties": {
+        "duration": {
+         "default": 45,
+         "type": "number",
+         "enum": [
+          30,
+          45,
+          60
+         ]
+        },
+        "country": {
+         "type": "string",
+         "pattern": "^[A-Za-z]{2}$"
+        },
+        "discount": {
+         "default": 0,
+         "type": "number",
+         "minimum": 0,
+         "maximum": 100
+        },
+        "tier": {
+         "type": "string",
+         "enum": [
+          "starter",
+          "standard",
+          "premium",
+          "bulk",
+          "weekly",
+          "monthly"
+         ]
+        }
+       },
+       "required": [
+        "tier"
+       ]
+      },
+      {
+       "type": "object",
+       "properties": {
+        "duration": {
+         "default": 45,
+         "type": "number",
+         "enum": [
+          30,
+          45,
+          60
+         ]
+        },
+        "country": {
+         "type": "string",
+         "pattern": "^[A-Za-z]{2}$"
+        },
+        "discount": {
+         "default": 0,
+         "type": "number",
+         "minimum": 0,
+         "maximum": 100
+        },
+        "count": {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 60
+        }
+       },
+       "required": [
+        "count"
+       ]
+      }
+     ]
+    },
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "studentId",
+    "pricing"
+   ],
+   "additionalProperties": false
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "package": {
+     "type": "string",
+     "enum": [
+      "starter",
+      "standard",
+      "premium",
+      "bulk",
+      "weekly",
+      "monthly",
+      "custom"
+     ]
+    },
+    "lessons": {
+     "type": "number"
+    },
+    "duration": {
+     "type": "number"
+    },
+    "currency": {
+     "type": "string",
+     "enum": [
+      "SAR",
+      "AED",
+      "QAR",
+      "KWD",
+      "OMR",
+      "USD"
+     ]
+    },
+    "discount": {
+     "type": "number"
+    },
+    "afterDiscount": {
+     "type": "number"
+    },
+    "perLesson": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "package",
+    "lessons",
+    "duration",
+    "currency",
+    "discount",
+    "afterDiscount",
+    "perLesson"
+   ]
+  }
  },
  "POST /saved-replies": {
   "body": {

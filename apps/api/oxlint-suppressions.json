@@ -6278,10 +6278,10 @@
   },
   "src/modules/sales/sales-money/sales-money.controller.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 4
     },
     "ab/zod-inputs": {
-      "count": 7
+      "count": 3
     }
   },
   "src/modules/sales/sales-money/sales-money.service.ts": {

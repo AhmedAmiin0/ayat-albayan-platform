@@ -1,23 +1,21 @@
 import {
   salesChatReceiptCopySchema,
   salesPaymentCreateSchema,
-  salesQuoteSchema,
   salesReceiptUploadSchema,
-  salesSubscriptionCreateSchema,
-  type SalesMoneySubscriptionView,
+  salesSubscribeRoutes as routes,
   type SalesPaymentView,
-  type SalesQuoteView,
   type SalesReceiptCopied,
-  type SalesTeacherOption,
   type SignedUpload,
 } from '@ab/shared';
-import { paymentAmountSchema, type PaymentAmount, subscriptionCancelSchema } from '@ab/money';
+import { paymentAmountSchema, type PaymentAmount } from '@ab/money';
 import { uploadMaxBytes } from '@ab/settings';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Patch, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { SalesChatReceipts } from './chat';
 import { SalesPackageCancel } from './package-cancel';
 import { SalesPaymentAmount } from './payment-edit';
@@ -28,10 +26,8 @@ import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
 import { z } from 'zod';
 
 /** New package from a sales chat (R-ASST-01, docs/16 row 16), priced by the API from the catalog */
-@ApiTags('sales')
 @ApiBearerAuth()
-@Permissions('self.sales_money')
-@Controller('sales/subscriptions')
+@Controller()
 export class SalesSubscribeController {
   constructor(
     private readonly money: SalesMoney,
@@ -39,31 +35,37 @@ export class SalesSubscribeController {
     private readonly teachers: SalesTeacherAssign,
   ) {}
 
-  @Get('teachers')
-  teacherOptions(): Promise<SalesTeacherOption[]> {
-    return this.teachers.options();
+  @Route(routes.teachers)
+  async teacherOptions() {
+    return asResponse(routes.teachers.response, await this.teachers.options());
   }
 
-  @Post('quote')
+  @Route(routes.quote)
   @HttpCode(200)
-  quote(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesQuoteView> {
-    return this.money.quote(parseOrThrow(salesQuoteSchema, body), user);
+  quote(@RouteInput() { body }: RouteInputOf<typeof routes.quote>, @CurrentUser() user: AuthUser) {
+    return this.money.quote(body, user);
   }
 
   /** The teacher is saved once the package exists; a replay assigns again as a no-op. */
-  @Post()
-  async create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
-    const input = parseOrThrow(salesSubscriptionCreateSchema, body);
-    if (input.teacherId) await this.teachers.ensureActive(input.teacherId);
-    const view = await this.money.subscribe(input, user);
-    if (input.teacherId) await this.teachers.assign({ studentId: input.studentId, teacherId: input.teacherId, actorId: user.id });
+  @Route(routes.create)
+  async create(
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const { teacherId, studentId } = body;
+    if (teacherId) await this.teachers.ensureActive(teacherId);
+    const view = await this.money.subscribe(body, user);
+    if (teacherId) await this.teachers.assign({ studentId, teacherId, actorId: user.id });
     return view;
   }
 
-  @Post(':id/cancel')
+  @Route(routes.cancel)
   @HttpCode(200)
-  cancel(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
-    return this.cancels.cancel(id, parseOrThrow(subscriptionCancelSchema, body ?? {}), user);
+  cancel(
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.cancel>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.cancels.cancel(params.id, body, user);
   }
 }
 

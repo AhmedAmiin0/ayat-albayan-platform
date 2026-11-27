@@ -10,7 +10,7 @@ const ACCESS = { permissions: ['subscriptions.stop'], tags: ['sales'] } as const
 const byId = z.object({ id: id() });
 
 /** A request without a JSON body cancels with no reason. */
-const cancelBody = z.preprocess(
+export const packageCancelBodySchema = z.preprocess(
   (value: SubscriptionCancel | null | undefined) => value ?? {},
   subscriptionCancelSchema,
 );
@@ -31,7 +31,7 @@ export const salesPackageCancelRoutes = {
     method: 'POST',
     path: '/sales/packages/:id/cancel',
     params: byId,
-    body: cancelBody,
+    body: packageCancelBodySchema,
     response: salesPackageCancelledSchema,
   }),
 };

@@ -1,11 +1,13 @@
-import type { SalesMoneySubscriptionView, SalesQuoteView } from '@ab/shared';
-import type { SubscriptionPricing } from '@ab/money';
+import { salesSubscribeCalls } from '@ab/client-core';
+import type { SubscriptionCancel, SubscriptionPricing } from '@ab/money';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { refreshFamily, withOpenPackage } from '@/sales-subscribe/lib/family';
 import { salesKeys } from '@/core/lib/keys';
+
+const subscribe = salesSubscribeCalls({ apiFetch, apiSend });
 
 /** POST /sales/subscriptions/quote: the price she tells the family (no fx details). Keyed by its body. */
 export function useSalesQuote(
@@ -15,12 +17,7 @@ export function useSalesQuote(
 ) {
   return useQuery({
     queryKey: salesKeys.quote(studentId, pricing, bind),
-    queryFn: () =>
-      apiSend<SalesQuoteView>('POST', '/sales/subscriptions/quote', {
-        studentId,
-        pricing,
-        ...bind,
-      }),
+    queryFn: () => subscribe.quote({ studentId, pricing, ...bind }),
     placeholderData: keepPreviousData,
     enabled: studentId !== '',
   });
@@ -49,11 +46,7 @@ export function useSalesCreateSubscription(phone: string) {
   const [clientRequestId] = useState(requestId);
   return useMutation({
     mutationKey: ['sales', 'subscriptions', 'create'],
-    mutationFn: (input: SalesSubscribeInput) =>
-      apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', {
-        ...input,
-        clientRequestId,
-      }),
+    mutationFn: (input: SalesSubscribeInput) => subscribe.create({ ...input, clientRequestId }),
     onSuccess: (sub) => {
       client.setQueryData(salesKeys.family(phone), (f: Parameters<typeof withOpenPackage>[0]) =>
         withOpenPackage(f, sub),
@@ -62,3 +55,7 @@ export function useSalesCreateSubscription(phone: string) {
     onSettled: () => refreshFamily(client, phone),
   });
 }
+
+/** Cancels her own student's unused package made by mistake. */
+export const cancelSalesPackage = (subscriptionId: string) => (body: SubscriptionCancel) =>
+  subscribe.cancel({ subscriptionId, body });
