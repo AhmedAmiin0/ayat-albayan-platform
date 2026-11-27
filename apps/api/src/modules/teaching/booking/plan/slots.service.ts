@@ -4,7 +4,7 @@ import { DAY_MS } from '@ab/time';
 import type { OutsideSlotsResponse } from '@ab/shared';
 import type { Conflict, Occurrence, SlotsResponse, SlotView } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { OutsideSlotsQuery, SlotsQuery } from '@/modules/teaching/booking/booking.dto';
+import type { OutsideSlotsQuery, SlotsQuery } from '@ab/schedule';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { ConflictContext } from './conflict-context';

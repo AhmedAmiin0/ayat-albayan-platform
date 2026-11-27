@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
-import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
+import type { SlotsQuery } from '@ab/schedule';
 import { fakeContext, IDS } from '@/modules/teaching/booking/booking.fakes';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
