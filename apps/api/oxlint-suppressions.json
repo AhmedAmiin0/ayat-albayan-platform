@@ -1546,11 +1546,6 @@
       "count": 5
     }
   },
-  "src/modules/finance/stripe/links/link-deps.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/finance/stripe/links/link-ids.ts": {
     "stylistic/max-len": {
       "count": 2

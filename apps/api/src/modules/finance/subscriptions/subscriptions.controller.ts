@@ -1,20 +1,11 @@
-import type {
-  QuoteResponse,
-  StudentBalanceAnswer,
-  SubscriptionPage,
-  SubscriptionView,
-} from '@ab/money';
-import { studentBalanceRoutes, subscriptionRoutes as routes } from '@ab/shared';
+import type { QuoteResponse, SubscriptionPage, SubscriptionView } from '@ab/money';
+import { subscriptionRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/auth/decorators';
-import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { SubscriptionCancel } from './cancel/subscription-cancel.service';
-import { toTeacherBalance } from './money/balance.teacher';
-import { PackagesService } from './money/packages.service';
-import { StudentAccess } from './student-lifecycle/student-access';
 import { SubscriptionCreator } from './shared/subscription-creator';
 import { SubscriptionsService } from './shared/subscriptions.service';
 import { assertUsedBefore } from './used-before';
@@ -81,26 +72,5 @@ export class SubscriptionsController {
     @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
   ): Promise<void> {
     return this.subs.remove(params.id, user.id);
-  }
-}
-
-/** GET /students/:id/balance (S6, R-SUB-01/03): admin, or the student's teacher. */
-@ApiBearerAuth()
-@Controller()
-export class StudentBalanceController {
-  constructor(
-    private readonly packages: PackagesService,
-    private readonly access: StudentAccess,
-  ) {}
-
-  @Route(studentBalanceRoutes.get)
-  async balance(
-    @RouteInput() { params }: RouteInputOf<typeof studentBalanceRoutes.get>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<StudentBalanceAnswer> {
-    await this.access.check(user, params.id);
-    const balance = await this.packages.studentBalance(params.id);
-    // Permission, not scope: who may see the full package money view (the admin; a teacher not).
-    return can(user, 'subscriptions.read') ? balance : toTeacherBalance(balance);
   }
 }

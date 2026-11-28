@@ -72,22 +72,3 @@ export class RolesController {
     return this.roles.remove(params.id);
   }
 }
-
-/** The staff users (every profile but guardians and students) and the role each holds. */
-@ApiBearerAuth()
-@Controller()
-export class StaffUsersController {
-  constructor(private readonly roles: RolesService) {}
-
-  /**
-   * Sets profiles.role to the role's base role. 400 not_staff, 403 permission_not_held,
-   * 409 last_admin / self_lockout.
-   */
-  @Route(routes.assign)
-  assign(
-    @RouteInput() { params, body }: RouteInputOf<typeof routes.assign>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<StaffUserView> {
-    return this.roles.assign({ userId: params.id, roleId: body.role_id, actorId: user.id });
-  }
-}

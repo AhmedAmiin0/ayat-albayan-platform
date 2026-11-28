@@ -2,14 +2,12 @@ import { errorMessage } from '@ab/core';
 import { ar } from '@/common/infra/i18n/server-text';
 import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/money';
 import { Injectable, Logger } from '@nestjs/common';
-import { PushService } from '@/common/push/push.service';
 import { AlertsRepo } from './alerts.repo';
 import { alertPlan, openTaskKeys, staleTaskKeys, type AlertPlan } from '@/modules/finance/subscriptions/money/packages.plan';
 import { PackagesService, type StudentState } from '@/modules/finance/subscriptions/money/packages.service';
-import { StudentRenewal } from '@/modules/finance/subscriptions/student-lifecycle/student-renewal';
-import { SubscriptionsSettings } from '@/modules/finance/subscriptions/shared/subscriptions.settings';
 import type { StudentTz } from '@/modules/finance/subscriptions/student-lifecycle/student-status.types';
 import type { EvaluateOptions, Outcome, Run, Subject } from './alerts.types';
+import { AlertsEnv } from './alerts.env';
 
 /**
  * R-SUB-02 «2 lessons remaining» → renewal reminder to the guardian + an admin task; at 0 the
@@ -20,15 +18,6 @@ import type { EvaluateOptions, Outcome, Run, Subject } from './alerts.types';
  * every money write (MoneyWrites) and the sweep job. Idempotent: the task and the message carry
  * the same dedup key (rule 8).
  */
-@Injectable()
-export class AlertsEnv {
-  constructor(
-    readonly settings: SubscriptionsSettings,
-    readonly push: PushService,
-    readonly renewal: StudentRenewal,
-  ) {}
-}
-
 @Injectable()
 export class SubscriptionAlertsService {
   private readonly log = new Logger(SubscriptionAlertsService.name);

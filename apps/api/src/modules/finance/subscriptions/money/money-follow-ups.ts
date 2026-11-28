@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CommissionBell } from './commission-bell';
 import { LeadConversion } from '@/modules/finance/subscriptions/student-lifecycle/lead-conversion';
 import { activatesStudent, StudentActivation } from '@/modules/finance/subscriptions/student-lifecycle/student-activation';
-import { StudentDeactivation, type DeletedPayment } from '@/modules/finance/subscriptions/student-lifecycle/student-deactivation';
+import type { DeletedPayment } from '@/modules/finance/subscriptions/student-lifecycle/student-deactivation';
+import { FollowUpEnv } from './follow-up.env';
 
 type Write = {
   entity: string;
@@ -14,15 +14,6 @@ type Write = {
 
 const isDeletedPayment = (row: unknown): row is DeletedPayment =>
   typeof row === 'object' && row !== null && 'id' in row && typeof row.id === 'string' && activatesStudent(row);
-
-/** The deleted payment's revert and the commission bell (max-params). */
-@Injectable()
-export class FollowUpEnv {
-  constructor(
-    readonly revert: StudentDeactivation,
-    readonly commissions: CommissionBell,
-  ) {}
-}
 
 /** New package converts the lead (R-LEAD-01); a payment activates; idempotent on retry. */
 @Injectable()

@@ -1,6 +1,7 @@
 import { profileUpdateSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { accountKit, ME, PASSWORD } from './account.fakes';
+import { accountKit } from './account.fakes';
+import { ME, PASSWORD } from './account.me.fakes';
 import { selfWritable, SELF_WRITABLE } from './account.ports';
 
 // R-ACC-02 / rule 9: a user's own writes reach full_name, phone_e164 and avatar_path only.

@@ -1,6 +1,7 @@
 import { accountSetupSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { accountKit, ME } from './account.fakes';
+import { accountKit } from './account.fakes';
+import { ME } from './account.me.fakes';
 
 const SYNTHETIC = 't-t1@family.invalid';
 const body = accountSetupSchema.parse({ email: 'Teacher@Example.test', password: 'Brand-new-1' });

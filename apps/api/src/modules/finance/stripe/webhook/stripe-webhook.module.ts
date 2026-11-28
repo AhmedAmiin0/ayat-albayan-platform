@@ -8,7 +8,8 @@ import { LinkFulfilment } from './link-fulfilment';
 import { LinkRefunds } from './link-refunds';
 import { StripeEventsRepo } from './stripe-events.repo';
 import { StripeWebhookController } from './stripe-webhook.controller';
-import { StripeWebhookService, WebhookHandlers } from './stripe-webhook.service';
+import { StripeWebhookService } from './stripe-webhook.service';
+import { WebhookHandlers } from './webhook-handlers';
 import { WebhookDeps } from './webhook-deps';
 
 /** Stripe events: a paid link becomes a payment, a refund is recorded, staff are told. */

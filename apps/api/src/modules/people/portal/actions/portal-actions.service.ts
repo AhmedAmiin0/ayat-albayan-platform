@@ -8,17 +8,13 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict, notFound } from '@/common/http/errors';
-import {
-  FamilyRequestService,
-  LessonCancelService,
-  LessonStatusService,
-} from '@/modules/teaching/lessons';
 import { familyOf, isGroupLesson } from '@/modules/people/portal/lessons/portal-lesson-family';
 import {
   PortalLessonsRepo,
   type PortalLessonRow,
 } from '@/modules/people/portal/lessons/portal-lessons.repo';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
+import { PortalActionDeps } from './portal-action.deps';
 
 export interface ActionCall {
   user: AuthUser;
@@ -30,16 +26,6 @@ export interface ActionCall {
 interface OwnLesson {
   student: PortalStudent;
   row: PortalLessonRow;
-}
-
-/** The lesson services the family's buttons reuse (one injectable keeps the constructor small). */
-@Injectable()
-export class PortalActionDeps {
-  constructor(
-    @Inject(LessonStatusService) readonly status: LessonStatusService,
-    @Inject(LessonCancelService) readonly cancels: LessonCancelService,
-    @Inject(FamilyRequestService) readonly requests: FamilyRequestService,
-  ) {}
 }
 
 /** Only an open, unstarted solo lesson; group lessons are the academy's to move or cancel. */

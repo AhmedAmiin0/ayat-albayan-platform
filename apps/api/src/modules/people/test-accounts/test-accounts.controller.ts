@@ -21,19 +21,3 @@ export class UserTestController {
     return this.accounts.set({ kind: 'profile', ...write });
   }
 }
-
-/** students.write; 404, 409. */
-@ApiBearerAuth()
-@Controller()
-export class StudentTestController {
-  constructor(@Inject(TestAccountsService) private readonly accounts: TestAccountsService) {}
-
-  @Route(routes.student)
-  set(
-    @RouteInput() { params, body }: RouteInputOf<typeof routes.student>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<TestFlagResult> {
-    const write = { id: params.id, isTest: body.is_test, actorId: user.id };
-    return this.accounts.set({ kind: 'student', ...write });
-  }
-}

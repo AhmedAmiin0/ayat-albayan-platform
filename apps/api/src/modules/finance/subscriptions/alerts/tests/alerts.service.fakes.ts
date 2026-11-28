@@ -4,7 +4,8 @@ import { readerOf } from '@/common/settings/settings.fakes';
 import type { PackagesService, StudentState } from '@/modules/finance/subscriptions/money/packages.service';
 import { SubscriptionsSettings } from '@/modules/finance/subscriptions/shared/subscriptions.settings';
 import type { AlertsRepo } from '@/modules/finance/subscriptions/alerts/alerts.repo';
-import { SubscriptionAlertsService, type AlertsEnv } from '@/modules/finance/subscriptions/alerts/alerts.service';
+import { SubscriptionAlertsService } from '@/modules/finance/subscriptions/alerts/alerts.service';
+import type { AlertsEnv } from '@/modules/finance/subscriptions/alerts/alerts.env';
 
 export const NOW = new Date('2026-10-02T09:00:00Z');
 export const RECIPIENT = { studentName: 'سهيلة', guardianId: 'g1', phone: '+966500000001' };
