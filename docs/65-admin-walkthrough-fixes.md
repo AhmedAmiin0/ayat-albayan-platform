@@ -50,7 +50,7 @@ The order is U1, U2, then D1 to D10 (numbers and rules before polish), then U3 t
 | D9 | `fix/test-records-out` | `fix(api): keep test records out of dashboard and finance totals` | DATA-6 |
 | D10 | `fix/name-and-date-fallbacks` | `fix(repo): a fallback for empty guardian names and the real application date` | DATA-8, DATA-9 |
 
-Report only, no PR: DATA-5 and DATA-11 (queries run read-only by the owner's side; the rows go to the owner). DATA-12 is fixed in its own PR (`fix/users-role-record`).
+Report only, no PR: DATA-5 and DATA-11 (the queries ran read-only on 2026-11-27 and the rows went to the owner; see «What the read-only reports showed»). DATA-12 is fixed in its own PR (`fix/users-role-record`).
 
 ## Owner decisions, with the default each PR takes until he says otherwise
 
@@ -58,6 +58,7 @@ Report only, no PR: DATA-5 and DATA-11 (queries run read-only by the owner's sid
 |---|---|---|
 | DATA-1 | Is the finance margin accrual (what teachers earned) or cash (what was paid out)? | Accrual stays in the margin. The line is renamed to say «earned», the amount paid shows beside it, and both pages use the same month rule. |
 | DATA-2 | What does a full refund do to the subscription's status? | No automatic status change (refund effects are chosen per case). The fix is the lesson balance and showing «refunded» beside the paid state. |
+| DATA-5 | Should saving a second open package with the same terms for one student ask first? | No new rule. The rows are reported; a duplicate is closed in the app with «cancel duplicate». |
 | DATA-6 | Which records are tests? | Only records already carrying the test flag are left out of totals. The PR reports rows that look like tests; flagging them is the owner's action in the app. |
 | DATA-11 | May lessons be used before a package is paid? | No rule changes. The rows are reported. |
 | T-DATA-5 | Does an absent lesson need a report? | Follow the rule the code and docs already state; if they disagree, report it and change nothing. |
@@ -179,6 +180,21 @@ Report only, no PR: DATA-5 and DATA-11 (queries run read-only by the owner's sid
 **T-DATA-8 Admin and teacher schedules show different sets.** Seen: for one teacher and week the teacher view lists more lessons (cancelled and moved ones included) than the admin schedule. See «Owner decisions».
 
 **T-DATA-9 Attendance may count cancellations as absences (unconfirmed).** Seen: students whose last lesson is cancelled show «Absent 1 · 0%». Verify that the absence is a real earlier lesson; fix the counter if it is not.
+
+## What the read-only reports showed (2026-11-27)
+
+The reports ran read-only on the live data. The rows went to the owner; this section keeps only what a fix needs, with no record named. Each line narrows where its PR should look.
+
+| Item | What the data shows | What it means for the fix |
+|---|---|---|
+| DATA-2 | No single package has more lessons left than it holds. The student in question has several open copies of one package (DATA-5). | Look at the panel's sum over a student's open packages, not at the balance of one package. |
+| DATA-3, T-DATA-4 | Only a few past lessons (about 2 in 100) are still «scheduled» or «confirmed». All come from weekly rules, none has attendance, and none had its room opened. | The step that closes past lessons runs. Find the case it leaves out: a lesson nobody opened or recorded. |
+| DATA-5 | Every duplicate is its own «create» by one sales account, seconds to minutes after the first, each with its own request id; several have a pay link. Some were closed later with the existing «cancel duplicate» action. | Nothing is retried by the system: the form lets the same package be saved again. A question before a second open package with the same terms would stop it (see «Owner decisions»). |
+| DATA-7, T-DATA-3 | The students outside «Subscribed» and «Trial» are exactly those whose status is `expired`. | A missing tab, not a wrong count. |
+| DATA-8 | Every applicant row was written by the sheet import in one batch and never changed since. About half have an empty name. The import keeps the sheet row it came from, but no application date. | «Applied on» shows the import time. The real date has to come from the sheet (a column the import fills), or the label must say «Imported on» until then. |
+| DATA-9 | About a dozen guardian names are punctuation, an emoji, one character, a phone number or a chat handle. All come from the direct WhatsApp source, where the name is the chat profile's. | The fallback at display covers them; validation belongs where a person types a name, and the chat source needs a default when the profile name has no letters. |
+| DATA-6 | The test flag is set on one student and one login. A demo teacher and a meeting titled as a test carry none: teachers and meetings have no test flag. | With the default (only flagged records leave the totals) those two stay in. A flag for teachers and meetings is a migration, so it waits for the owner. |
+| DATA-11 | A few unpaid packages have lessons used. One is a duplicate copy that carries the used lessons while the paid copy carries none; one is a zero-price package shown as «unpaid»; one has more lessons used than it holds. | Used lessons go to the first open package, paid or not. Check that rule against docs/03, and show a zero-price package as something other than «unpaid». |
 
 ## Status
 

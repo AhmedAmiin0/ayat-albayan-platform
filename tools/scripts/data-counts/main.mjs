@@ -18,15 +18,23 @@ const DRIVER_OPTIONS = {
 // A throw inside the driver's own timers never reaches main, and Node would print it.
 export const exitQuietly = (proc) => proc.on('uncaughtException', () => proc.exit(1));
 
-// A database error can quote a row value, so every failure becomes a bare null.
-const countIn = (sql, statement) =>
+// A driver message can quote the url or a row value; its code (a SQLSTATE or a Node error code)
+// cannot, so a failure is reported by its code alone.
+const SAFE_CODE = /^[A-Z0-9_]{2,40}$/;
+
+export const codeOf = (error) => {
+  const code = String(error?.code ?? '');
+  return SAFE_CODE.test(code) ? code : 'unknown';
+};
+
+const countIn = (sql, statement, failed) =>
   sql
     .begin('read only', async (tx) => {
       await tx.unsafe(TIME_LIMIT, [], ONE_STATEMENT);
       return tx.unsafe(statement, [], ONE_STATEMENT);
     })
     .then(countOf)
-    .catch(() => null);
+    .catch(failed);
 
 const readItems = (file, warn) => {
   try {
@@ -42,10 +50,10 @@ const missingUrl = (warn) => {
   return null;
 };
 
-const runAll = async (items, url, connect) => {
+const runAll = async ({ items, url, connect }, failed) => {
   const sql = connect(url, DRIVER_OPTIONS);
   try {
-    return await Promise.all(items.map((item) => countIn(sql, item.sql)));
+    return await Promise.all(items.map((item) => countIn(sql, item.sql, failed)));
   } finally {
     await sql.end().catch(() => undefined);
   }
@@ -54,9 +62,14 @@ const runAll = async (items, url, connect) => {
 export const main = async ({ file, url, connect, write, warn = console.error }) => {
   const items = url ? readItems(file, warn) : missingUrl(warn);
   if (items === null) return 1;
-  // An error from the driver can quote the database url, so a failed connect prints nothing either.
-  const values = await runAll(items, url, connect).catch(() => [null]);
+  const codes = new Set();
+  const failed = (error) => {
+    codes.add(codeOf(error));
+    return null;
+  };
+  const values = await runAll({ items, url, connect }, failed).catch((error) => [failed(error)]);
   const lines = countLines(items, values);
   (lines ?? []).forEach((line) => write(line));
+  codes.forEach((code) => warn(`a count failed: ${code}`));
   return lines === null ? 1 : 0;
 };

@@ -2,9 +2,9 @@
 # /opt/ayat-albayan-staging. Only ayat-lb is published, on localhost: the host Caddy (not in this repo,
 # shared with the CRM) keeps proxying the API domain to 127.0.0.1:3110 unchanged.
 # Never touches the CRM stack in /opt/wacrm. Roll it with roll.sh (one build, one container at a time).
-# Memory (8 GB VPS shared with the CRM): 2 × 512 MB API + 1 GB worker (512 MB Node heap + Chromium PDFs) + 128 MB
-# PDF sandbox + 64 MB LB + 96 MB Redis = 2336 MB ≈ 2.3 GB; with the minio profile (docs/45) + 512 MB MinIO + 64 MB
-# for its one-shot init = 2912 MB. After a deploy, measure (docker stats) the worker's RSS during a report PDF, and
+# Memory (16 GB VPS shared with the CRM): 4 × 512 MB API + 1 GB worker (512 MB Node heap + Chromium PDFs) + 128 MB
+# PDF sandbox + 64 MB LB + 96 MB Redis = 3360 MB ≈ 3.3 GB; with the minio profile (docs/45) + 512 MB MinIO + 64 MB
+# for its one-shot init = 3936 MB. After a deploy, measure (docker stats) the worker's RSS during a report PDF, and
 # ayat-pdf's and an API copy's while a scanned 10 MB chat PDF previews, and adjust.
 name: ayat-albayan-staging
 
@@ -92,8 +92,8 @@ services:
     <<: *app
     environment:
       <<: *api-env
-      # An admin save here also reloads the other copy's config at once (kickConfigReload, docs/09).
-      PEER_URLS: http://ayat-api-b:3000
+      # An admin save here also reloads the other copies' config at once (kickConfigReload, docs/09).
+      PEER_URLS: http://ayat-api-b:3000,http://ayat-api-c:3000,http://ayat-api-d:3000
     volumes:
       - pdf-sock:/run/pdf:ro
     deploy:
@@ -105,7 +105,31 @@ services:
     <<: *app
     environment:
       <<: *api-env
-      PEER_URLS: http://ayat-api-a:3000
+      PEER_URLS: http://ayat-api-a:3000,http://ayat-api-c:3000,http://ayat-api-d:3000
+    volumes:
+      - pdf-sock:/run/pdf:ro
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  ayat-api-c:
+    <<: *app
+    environment:
+      <<: *api-env
+      PEER_URLS: http://ayat-api-a:3000,http://ayat-api-b:3000,http://ayat-api-d:3000
+    volumes:
+      - pdf-sock:/run/pdf:ro
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  ayat-api-d:
+    <<: *app
+    environment:
+      <<: *api-env
+      PEER_URLS: http://ayat-api-a:3000,http://ayat-api-b:3000,http://ayat-api-c:3000
     volumes:
       - pdf-sock:/run/pdf:ro
     deploy:
@@ -166,7 +190,7 @@ services:
           # Threads count too: node's ~12 and one poppler run fit; a fork bomb does not.
           pids: 64
 
-  # Round robin over the two copies with active health checks; a refused connection is retried on the other.
+  # Round robin over the four copies with active health checks; a refused connection is retried on another.
   ayat-lb:
     image: caddy:2.10.2-alpine
     ports:

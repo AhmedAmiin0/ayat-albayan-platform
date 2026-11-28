@@ -291,7 +291,7 @@ jobs:
       contents: read
     env:
       DEST: ${{ vars.DEPLOY_DIR || '/opt/ayat-albayan-staging' }}
-      SSH_HOST: ${{ vars.SSH_HOST || secrets.VPS_HOST || '148.230.116.195' }}
+      SSH_HOST: ${{ vars.SSH_HOST || secrets.VPS_HOST || '189.105.37.140' }}
       SSH_USER: ${{ vars.SSH_USER || secrets.VPS_USER || 'root' }}
     steps:
       - name: Only the staging directory may be deployed to
@@ -394,7 +394,7 @@ jobs:
       # docs/09 «Two API copies + one worker»: the code, the compose file, roll.sh, rollback.sh and the load balancer
       # config go up as *.new. The next step swaps them in with ONE command (the server never pairs a new layout with
       # old code; the previous ones stay as *.old) and rolls: roll.sh builds the image ONCE and rolls ayat-worker →
-      # ayat-pdf → ayat-api-a → ayat-api-b (each healthy first; ayat-lb serves from the other copy; an unhealthy
+      # ayat-pdf → ayat-api-a … ayat-api-d (each healthy first; ayat-lb serves from the other copies; an unhealthy
       # ayat-pdf only warns), reloads ayat-lb only when its validated config changed and prunes this project's old
       # images only (no global prune; the build cache is shared with the CRM and cannot be scoped to one project, so it
       # is left alone).
