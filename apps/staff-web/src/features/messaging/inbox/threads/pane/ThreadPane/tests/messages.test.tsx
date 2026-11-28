@@ -80,7 +80,7 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     const open = screen.getByRole('link', { name: t.inbox.openMedia.replace('{kind}', t.inbox.media.image) });
     expect(open.getAttribute('href')).toBe(PHOTO.media_url);
     // In the viewer's zone (no /auth/me here: the browser's), as the app's reply note reads it.
-    const when = lessonWhenAt(new Date('2026-10-04T14:00:00Z'), { tz: viewerTz(), cycle: '24', locale: 'ar' });
+    const when = lessonWhenAt(new Date('2026-10-04T14:00:00Z'), { tz: viewerTz(), cycle: '12', locale: 'ar' });
     const confirmed = t.inbox.quickReply.confirmed.replace('{when}', when);
     expect(bubble('تمام، هنحضر').getByText(confirmed)).toBeTruthy();
     // An unlinked reply with no lesson to confirm shows no note.

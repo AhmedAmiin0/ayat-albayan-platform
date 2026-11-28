@@ -31,7 +31,7 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-const TRIAL = lesson({ id: 'a', trial: true }); // Sunday 17:00–17:45 Riyadh, Abrar
+const TRIAL = lesson({ id: 'a', trial: true }); // Sunday 5:00 PM–5:45 PM Riyadh, Abrar
 
 function renderDay(search: ScheduleSearch) {
   apiFetch.mockImplementation((path: string) => Promise.resolve(path.startsWith('/lessons/overview') ? overview([TRIAL]) : []));
@@ -72,12 +72,12 @@ describe('DayBoard — one day across every teacher (R-SCH-01)', () => {
     const abrar = await row('أبرار');
     expect(within(abrar).getByRole('link', { name: 'أبرار' }).getAttribute('href')).toBe('/admin/teachers/$teacherId');
     expect(within(abrar).getByText(t.dashboard.ofMax.replace('{n}', '4').replace('{max}', '10'))).toBeTruthy();
-    const chip = within(abrar).getByRole('button', { name: /17:00/ });
+    const chip = within(abrar).getByRole('button', { name: /5:00 م/ });
     expect(within(chip).getByText(t.schedule.trialTag)).toBeTruthy();
     const gaps = within(abrar).getAllByRole('link', { name: /متاح/ });
     expect(gaps.map((g) => g.textContent)).toEqual([
-      `${t.schedule.book}: متاح 16:00 – 17:00`,
-      `${t.schedule.book}: متاح 17:45 – 20:00`,
+      `${t.schedule.book}: متاح 4:00 م – 5:00 م`,
+      `${t.schedule.book}: متاح 5:45 م – 8:00 م`,
     ]);
     expect(gaps[0]?.getAttribute('href')).toBe(
       `/admin/book?teacherId=${guidOf('t-abrar')}&startsAt=2026-10-04T13%3A00%3A00.000Z`,
@@ -86,7 +86,7 @@ describe('DayBoard — one day across every teacher (R-SCH-01)', () => {
 
   it('a chip opens the lesson drawer', async () => {
     renderDay({ day: '2026-10-04' });
-    fireEvent.click(within(await row('أبرار')).getByRole('button', { name: /17:00/ }));
+    fireEvent.click(within(await row('أبرار')).getByRole('button', { name: /5:00 م/ }));
     expect(screen.getByRole('dialog', { name: 'سهيلة' })).toBeTruthy();
   });
 

@@ -7,7 +7,7 @@ import {
 import { PROGRAMS } from '@ab/catalog';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import {
   BackButton,
   EmptyState,
@@ -15,9 +15,8 @@ import {
   Screen,
   ScreenHeader,
   t,
-  useInsetRows,
-  useTabBarInset,
   useTheme,
+  LazyList,
 } from '@ab/mobile-kit';
 import { useSalesTeachers } from '@/sales/sales/lib/sales-api';
 import { SalesTeacherRow } from '@/sales/sales/components/SalesTeacherRow';
@@ -29,9 +28,7 @@ export function SalesTeachersScreen() {
   const [filter, setFilter] = useState(NO_TEACHER_FILTER);
   const all = list.data ?? [];
   const shown = filterSalesTeachers(all, filter);
-  const inset = useTabBarInset();
-  const row = useCallback(({ item }: ListRenderItemInfo<SalesTeacherView>) => <SalesTeacherRow teacher={item} />, []);
-  const cells = useInsetRows(row, shown.length);
+  const row = useCallback(({ item }: { item: SalesTeacherView }) => <SalesTeacherRow teacher={item} />, []);
   const empty = all.length === 0 ? <EmptyState title={t.sales.teachers.empty} /> : <EmptyState title={t.sales.teachers.noMatch} />;
   return (
     <Screen list>
@@ -43,13 +40,11 @@ export function SalesTeachersScreen() {
         leading={<BackButton onPress={() => router.back()} />}
       />
       {all.length > 0 ? <TeacherFiltersBar value={filter} programs={teacherPrograms(all, PROGRAMS)} onChange={setFilter} /> : null}
-      <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 + inset }}
+      <LazyList
         accessibilityLabel={t.sales.teachers.listLabel}
         data={shown}
         keyExtractor={(tc) => tc.id}
-        {...cells}
+        renderItem={row}
         refreshing={list.isRefetching}
         onRefresh={() => void list.refetch()}
         ListEmptyComponent={

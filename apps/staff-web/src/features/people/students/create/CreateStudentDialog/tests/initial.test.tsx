@@ -3,20 +3,31 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { CreateStudentDialog } from '@/features/people/students/create/CreateStudentDialog/CreateStudentDialog';
-import { EMPTY_STUDENT, toCreateBody, type CreateStudentValues } from '@/features/people/students/create/create-student';
+import {
+  EMPTY_STUDENT,
+  toCreateBody,
+  type CreateStudentValues,
+} from '@/features/people/students/create/create-student';
+import { mockCall } from '@ab/testing/mock-call';
 
 const api = vi.hoisted(() => ({ createStudent: vi.fn(), mergeStudents: vi.fn() }));
-vi.mock('@/features/people/students/api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
+vi.mock('@/features/people/students/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...api,
+}));
+const mockApi = mockCall();
+mockApi.onRead(async ({ path }) => {
+  if (path.startsWith('/students/teacher-options')) return [];
+  throw new Error(`unrouted ${path}`);
+});
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  apiFetch: vi.fn(async (path: string) => {
-    if (path.startsWith('/students/teacher-options')) return [];
-    throw new Error(`unrouted ${path}`);
-  }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const SUHAILA = { id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'trial' };
-const duplicate = () => new ApiError(409, { message: 'duplicate_student', guardian_id: 'g1', candidates: [SUHAILA] });
+const duplicate = () =>
+  new ApiError(409, { message: 'duplicate_student', guardian_id: 'g1', candidates: [SUHAILA] });
 const INITIAL: Partial<CreateStudentValues> = {
   name: 'سهيله',
   guardianPhone: '+966501234567',
@@ -29,7 +40,13 @@ function renderDialog() {
   const onDone = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <CreateStudentDialog title="تسجيل الطالب" initial={INITIAL} leadId="lead-1" onClose={vi.fn()} onDone={onDone} />
+      <CreateStudentDialog
+        title="تسجيل الطالب"
+        initial={INITIAL}
+        leadId="lead-1"
+        onClose={vi.fn()}
+        onDone={onDone}
+      />
     </QueryClientProvider>,
   );
   return onDone;
@@ -52,7 +69,11 @@ describe('CreateStudentDialog pre-filled from a lead (R-STU-02, R-LEAD-06)', () 
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.students.created));
     expect(api.createStudent).toHaveBeenCalledWith(
-      expect.objectContaining({ program: 'quran', lead_id: 'lead-1', guardian: expect.objectContaining({ source: 'referral' }) }),
+      expect.objectContaining({
+        program: 'quran',
+        lead_id: 'lead-1',
+        guardian: expect.objectContaining({ source: 'referral' }),
+      }),
     );
   });
 
@@ -62,7 +83,9 @@ describe('CreateStudentDialog pre-filled from a lead (R-STU-02, R-LEAD-06)', () 
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
     fireEvent.click(await screen.findByRole('button', { name: t.students.createAnyway }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.students.created));
-    expect(api.createStudent).toHaveBeenLastCalledWith(expect.objectContaining({ force: true, lead_id: 'lead-1' }));
+    expect(api.createStudent).toHaveBeenLastCalledWith(
+      expect.objectContaining({ force: true, lead_id: 'lead-1' }),
+    );
   });
 
   it('merged into the existing student: the create before the merge carries the lead', async () => {
@@ -73,7 +96,9 @@ describe('CreateStudentDialog pre-filled from a lead (R-STU-02, R-LEAD-06)', () 
     fireEvent.click(await screen.findByRole('button', { name: t.students.merge }));
     fireEvent.click(screen.getByRole('button', { name: t.common.confirm }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.students.mergeDone));
-    expect(api.createStudent).toHaveBeenLastCalledWith(expect.objectContaining({ force: true, lead_id: 'lead-1' }));
+    expect(api.createStudent).toHaveBeenLastCalledWith(
+      expect.objectContaining({ force: true, lead_id: 'lead-1' }),
+    );
   });
 
   it('toCreateBody: lead_id only when a lead is given', () => {

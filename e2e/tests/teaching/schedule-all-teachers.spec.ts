@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { dropTeacher, insertLesson, insertTeacher, setStudentTz } from '../../support/people/admin-extra';
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClock, webClockAt } from '../../support/core/locale';
 import { openFilters, showResults } from '../../support/core/filters';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily } from '../../support/core/schedule';
 
@@ -104,8 +105,8 @@ test.describe('all-teachers week schedule (R-SCH-01/03)', () => {
     const drawer = page.getByRole('dialog', { name: STUDENTS.abrar });
     await expect(drawer).toContainText(NAMES.abrar);
     await expect(drawer).toContainText(/AB-\d{4,}/);
-    await expect(drawer).toContainText(`17:00 ${ar.schedule.viewerTime}`);
-    const london = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(riyadh(SUNDAY, '17:00'));
+    await expect(drawer).toContainText(`${webClock('17:00')} ${ar.schedule.viewerTime}`);
+    const london = webClockAt(riyadh(SUNDAY, '17:00'), 'Europe/London');
     const local = ar.schedule.inCity.replace('{time}', london).replace('{city}', ar.tz['Europe/London']);
     await expect(drawer).toContainText(ar.schedule.studentTime.replace('{time}', local));
     await expect(drawer.getByRole('link', { name: new RegExp(ar.lessons.join) })).toHaveAttribute('href', LINK);

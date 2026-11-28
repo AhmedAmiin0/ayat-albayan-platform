@@ -8,12 +8,10 @@ import {
   Screen,
   ScreenHeader,
   t,
-  useInsetRows,
   usePullRefresh,
-  useTabBarInset,
+  LazyList,
 } from '@ab/mobile-kit';
 import { useCallback, useState } from 'react';
-import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { Note } from '@/core/ui/feedback/Note';
 import { StudentRow } from '@/teacher/components/StudentRow';
 import { useMyStudents } from '@/teacher/lib/students-queries';
@@ -52,12 +50,10 @@ export function TeacherStudentsScreen() {
   // docs/48: the spinner only for her own pull, never a push refetch (no students poll).
   const pull = usePullRefresh(list.refetch);
   const tz = useViewerTz();
-  const inset = useTabBarInset();
   const renderRow = useCallback(
-    ({ item }: ListRenderItemInfo<TeacherStudentView>) => <StudentRow student={item} tz={tz} />,
+    ({ item }: { item: TeacherStudentView }) => <StudentRow student={item} tz={tz} />,
     [tz],
   );
-  const rows = useInsetRows(renderRow, shown?.length ?? 0);
   return (
     <Screen list>
       <ScreenHeader title={t.teacherStudents.title} size="h2" connecting count={shown?.length} />
@@ -67,17 +63,15 @@ export function TeacherStudentsScreen() {
         onChange={setKind}
         accessibilityLabel={t.teacherStudents.kinds}
       />
-      <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 + inset }}
+      <LazyList
         data={shown ?? []}
         keyExtractor={keyOf}
+        renderItem={renderRow}
         refreshing={pull.refreshing}
         onRefresh={pull.onRefresh}
         ListEmptyComponent={
           <StudentsEmpty kind={kind} loaded={!!list.data} failed={list.isError} retry={retry} />
         }
-        {...rows}
       />
     </Screen>
   );

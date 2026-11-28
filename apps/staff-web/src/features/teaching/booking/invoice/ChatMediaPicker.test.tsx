@@ -6,7 +6,7 @@ import { ChatMediaPicker, mediaCardLabel } from './ChatMediaPicker';
 import type { ThreadMediaItem } from '@/features/teaching/booking/draft/contract';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+const C12 = { cycle: '12', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
@@ -38,25 +38,25 @@ afterEach(() => apiFetch.mockReset());
 describe('ChatMediaPicker «من المحادثة» (R-MSG-06)', () => {
   it('lists the family’s files: the photo loads its thumbnail lazily, the PDF is a tile', async () => {
     renderPicker([PHOTO, PDF]);
-    const photo = await screen.findByRole('button', { name: mediaCardLabel(PHOTO, C24) });
+    const photo = await screen.findByRole('button', { name: mediaCardLabel(PHOTO, C12) });
     expect((await screen.findByRole('img')).getAttribute('src')).toBe('https://signed/a1111111-1111-4111-8111-111111111111');
     expect(photo.textContent).toContain('التحويل');
-    expect(screen.getByRole('button', { name: mediaCardLabel(PDF, C24) }).textContent).toContain(t.booking.invoice.pdf);
+    expect(screen.getByRole('button', { name: mediaCardLabel(PDF, C12) }).textContent).toContain(t.booking.invoice.pdf);
     expect(apiFetch).toHaveBeenCalledWith('/threads/%2B966501234567/media/a2222222-2222-4222-8222-222222222222');
   });
 
   it('choosing a photo hands back the message and its preview, a PDF without one', async () => {
     const { onPick } = renderPicker([PHOTO, PDF]);
     await screen.findByRole('img');
-    fireEvent.click(screen.getByRole('button', { name: mediaCardLabel(PHOTO, C24) }));
+    fireEvent.click(screen.getByRole('button', { name: mediaCardLabel(PHOTO, C12) }));
     expect(onPick).toHaveBeenLastCalledWith({ source: 'whatsapp', messageId: 'a1111111-1111-4111-8111-111111111111', mime: 'image/jpeg', preview: 'https://signed/a1111111-1111-4111-8111-111111111111' });
-    fireEvent.click(screen.getByRole('button', { name: mediaCardLabel(PDF, C24) }));
+    fireEvent.click(screen.getByRole('button', { name: mediaCardLabel(PDF, C12) }));
     expect(onPick).toHaveBeenLastCalledWith({ source: 'whatsapp', messageId: 'a2222222-2222-4222-8222-222222222222', mime: 'application/pdf', preview: null });
   });
 
   it('an expired file is disabled with the reason and never fetched', async () => {
     renderPicker([OLD]);
-    const card = await screen.findByRole('button', { name: mediaCardLabel(OLD, C24) });
+    const card = await screen.findByRole('button', { name: mediaCardLabel(OLD, C12) });
     expect(card.hasAttribute('disabled')).toBe(true);
     expect(card.textContent).toContain(t.booking.invoice.expired);
     expect(apiFetch).not.toHaveBeenCalledWith(expect.stringContaining('a3333333-3333-4333-8333-333333333333'));

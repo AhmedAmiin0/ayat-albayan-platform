@@ -30,7 +30,7 @@ describe('schedule screens in English', () => {
         <LessonDetails lesson={lesson()} />
       </QueryClientProvider>,
     );
-    expect(screen.getByText(`Sunday 4 October 17:00 ${en.schedule.viewerTime}`)).toBeTruthy();
+    expect(screen.getByText(`Sunday 4 October 5:00 PM ${en.schedule.viewerTime}`)).toBeTruthy();
   });
 
   it('a time-change request reads old → new, the way LTR text runs', async () => {
@@ -39,7 +39,7 @@ describe('schedule screens in English', () => {
         <ProposalsPanel onOpen={vi.fn()} />
       </QueryClientProvider>,
     );
-    expect(await screen.findByText('Sunday 4 October 17:00 → Monday 5 October 18:00')).toBeTruthy();
+    expect(await screen.findByText('Sunday 4 October 5:00 PM → Monday 5 October 6:00 PM')).toBeTruthy();
   });
 
   it('a clash on the teacher’s clock joins with «, »', () => {

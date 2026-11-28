@@ -4,11 +4,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble/MessageBubble';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  apiFetch: vi.fn(),
-  apiSend: vi.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const block = (over: Partial<MessageTemplateBlock> = {}): MessageTemplateBlock => ({
@@ -22,7 +23,13 @@ function bubble(patch: Partial<MessageView>) {
   renderWithClient(
     <ul>
       <MessageBubble
-        message={message({ direction: 'outbound', status: 'sent', template_key: 'lesson_reminder_meet', body: 'حلقة سلمى اليوم', ...patch })}
+        message={message({
+          direction: 'outbound',
+          status: 'sent',
+          template_key: 'lesson_reminder_meet',
+          body: 'حلقة سلمى اليوم',
+          ...patch,
+        })}
         waitingTemplate={false}
         now={new Date('2026-10-01T12:00:00Z')}
       />
@@ -33,17 +40,29 @@ function bubble(patch: Partial<MessageView>) {
 
 describe('MessageBubble: a template like WhatsApp (owner 2026-10-28)', () => {
   it('the header in bold over the body, the footer in small grey text under it', () => {
-    const b = bubble({ template: block({ header: { type: 'text', text: 'تذكير بالحلقة' }, footer: 'أكاديمية آيات البيان' }) });
+    const b = bubble({
+      template: block({
+        header: { type: 'text', text: 'تذكير بالحلقة' },
+        footer: 'أكاديمية آيات البيان',
+      }),
+    });
     const header = within(b).getByText('تذكير بالحلقة');
     expect(header.className).toContain('font-bold');
     expect(header.getAttribute('dir')).toBe('auto');
     const footer = within(b).getByText('أكاديمية آيات البيان');
     expect(footer.className).toContain('text-ink-3');
-    expect(header.compareDocumentPosition(within(b).getByText('حلقة سلمى اليوم')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(
+      header.compareDocumentPosition(within(b).getByText('حلقة سلمى اليوم')) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
   });
 
   it('a URL button opens its link in a new tab, with the link icon', () => {
-    const b = bubble({ template: block({ buttons: [{ type: 'url', text: 'ادخل الحلقة', url: 'https://meet.google.com/abc' }] }) });
+    const b = bubble({
+      template: block({
+        buttons: [{ type: 'url', text: 'ادخل الحلقة', url: 'https://meet.google.com/abc' }],
+      }),
+    });
     const list = within(b).getByRole('list', { name: 'أزرار القالب' });
     const link = within(list).getByRole('link', { name: 'ادخل الحلقة: يفتح الرابط' });
     expect(link.getAttribute('href')).toBe('https://meet.google.com/abc');
@@ -73,7 +92,11 @@ describe('MessageBubble: a template like WhatsApp (owner 2026-10-28)', () => {
   });
 
   it('the buttons sit right under the time; a failed send’s notes come after them', () => {
-    const b = bubble({ status: 'failed', error_code: '131049', template: block({ buttons: [{ type: 'quick_reply', text: 'تأكيد' }] }) });
+    const b = bubble({
+      status: 'failed',
+      error_code: '131049',
+      template: block({ buttons: [{ type: 'quick_reply', text: 'تأكيد' }] }),
+    });
     const list = within(b).getByRole('list', { name: 'أزرار القالب' });
     expect(list.previousElementSibling?.tagName).toBe('FOOTER');
     expect(list.nextElementSibling?.textContent).toBeTruthy();
@@ -95,13 +118,25 @@ describe('MessageBubble: a template like WhatsApp (owner 2026-10-28)', () => {
 describe('MessageBubble: the family tapped a template button', () => {
   it('their bubble marks the tap over the tapped label', () => {
     const payload = { type: 'button', button: { text: 'تأكيد', payload: 'confirm:l1' } };
-    const b = bubble({ direction: 'inbound', status: 'delivered', template_key: null, body: 'تأكيد', interactive_payload: payload });
+    const b = bubble({
+      direction: 'inbound',
+      status: 'delivered',
+      template_key: null,
+      body: 'تأكيد',
+      interactive_payload: payload,
+    });
     expect(within(b).getByText('ضغطة زرّ')).toBeTruthy();
     expect(within(b).getByText('تأكيد')).toBeTruthy();
   });
 
   it('a typed text has no tap mark', () => {
-    const b = bubble({ direction: 'inbound', status: 'delivered', template_key: null, body: 'تأكيد', interactive_payload: null });
+    const b = bubble({
+      direction: 'inbound',
+      status: 'delivered',
+      template_key: null,
+      body: 'تأكيد',
+      interactive_payload: null,
+    });
     expect(within(b).queryByText('ضغطة زرّ')).toBeNull();
   });
 });

@@ -119,7 +119,7 @@ describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)
     expect(dialog.getByRole('alert').textContent).toContain(t.booking.firstLessonPast);
     // Round 3: the line goes once she picks a new time.
     const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
-    fireEvent.click(await within(sunday).findByRole('button', { name: /17:00/ }));
+    fireEvent.click(await within(sunday).findByRole('button', { name: /5:00 م/ }));
     await waitFor(() => expect(dialog.queryByText(t.booking.firstLessonPast)).toBeNull());
   });
 

@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClockAt } from '../../support/core/locale';
 import { startedToday } from '../../support/finance/money';
 import { addDays, resetAbrar, riyadh, seedFamily, seedLesson, withSql } from '../../support/core/schedule';
 import { apiSubmit } from '../../support/reporting/teacher-extra';
@@ -13,8 +14,8 @@ const OWN_LINK = 'https://meet.jit.si/ayat-e2e-abrar';
 
 /** A lesson's local date and clock on the teacher's Cairo clock. */
 function cairo(at: Date): { day: string; clock: string } {
-  const clock = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Africa/Cairo' });
-  return { day: at.toLocaleDateString('en-CA', { timeZone: 'Africa/Cairo' }), clock: clock.format(at) };
+  const day = at.toLocaleDateString('en-CA', { timeZone: 'Africa/Cairo' });
+  return { day, clock: webClockAt(at, 'Africa/Cairo') };
 }
 
 async function student(tag: string, name: string): Promise<{ id: string; name: string }> {

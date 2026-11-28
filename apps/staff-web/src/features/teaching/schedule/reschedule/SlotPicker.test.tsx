@@ -34,7 +34,7 @@ describe('SlotPicker (R-SCH-06, R-SCH-01)', () => {
 
   it('asks for the rest of this Riyadh week, for the teacher, the duration and the students', async () => {
     renderPicker();
-    await screen.findByRole('button', { name: /17:00/ });
+    await screen.findByRole('button', { name: /5:00 م/ });
     const url = String(apiFetch.mock.calls[0]?.[0]);
     expect(url).toContain('/booking/slots?teacherId=t1');
     expect(url).toContain('from=2026-10-03T10%3A00%3A00.000Z');
@@ -45,22 +45,22 @@ describe('SlotPicker (R-SCH-06, R-SCH-01)', () => {
   it('shows viewer (Riyadh) times big and the student zone small, under the viewer day', async () => {
     renderPicker();
     const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} 4 `) });
-    const free = within(sunday).getByRole('button', { name: /17:00/ });
-    expect(free.textContent).toContain('10:00'); // New York
+    const free = within(sunday).getByRole('button', { name: /5:00 م/ });
+    expect(free.textContent).toContain('10:00 ص'); // New York
     expect(screen.getByText(t.booking.slotLegendViewer.replace('{city}', t.tz['America/New_York']))).toBeTruthy();
   });
 
   it('marks a slot with conflicts «غير متاح» but keeps it pickable', async () => {
     const onPick = renderPicker();
     const busy = await screen.findByRole('button', { name: new RegExp(t.booking.slotBusy) });
-    expect(busy.textContent).toContain('18:00');
+    expect(busy.textContent).toContain('6:00 م');
     fireEvent.click(busy);
     expect(onPick).toHaveBeenCalledWith(BUSY);
   });
 
   it('starts on this week (no going back) and moves a week forward', async () => {
     renderPicker();
-    await screen.findByRole('button', { name: /17:00/ });
+    await screen.findByRole('button', { name: /5:00 م/ });
     expect(screen.getByRole('button', { name: t.schedule.prevWeek }).hasAttribute('disabled')).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: t.schedule.nextWeek }));
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledTimes(2));

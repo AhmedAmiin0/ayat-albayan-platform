@@ -96,18 +96,12 @@ jest.mock('./src/biometric/core/bio-lock', () => {
   return bioLockMock;
 });
 
-// @expo/ui renders SwiftUI / Jetpack Compose views with no jest module: stand-in Views that carry
-// their props, so a test reads them. The BottomSheet shows its children only while presented (the
-// lesson room's participants; the family app's children sheet), so a test reads and dismisses it.
-jest.mock('@expo/ui', () => {
-  const { createElement } = require('react');
-  const { View } = require('react-native');
-  const BottomSheet = ({ isPresented, children, ...props }) =>
-    isPresented ? createElement(View, { testID: 'native-bottom-sheet', ...props }, children) : null;
-  const Host = ({ children, ...props }) => createElement(View, props, children);
-  const RNHostView = ({ children, ...props }) => createElement(View, props, children);
-  return { __esModule: true, BottomSheet, Host, RNHostView };
-});
+// @expo/ui's native views (SwiftUI / Jetpack Compose) have no jest module: stand-ins that carry
+// their props (jest-expo-ui.cjs), so a test reads, types into and dismisses them.
+jest.mock('@expo/ui', () => require('./jest-expo-ui.cjs').universal);
+jest.mock('@expo/ui/swift-ui/modifiers', () => require('./jest-expo-ui.cjs').swiftUiModifiers);
+jest.mock('@expo/ui/jetpack-compose', () => require('./jest-expo-ui.cjs').jetpackCompose);
+jest.mock('@expo/ui/jetpack-compose/modifiers', () => require('./jest-expo-ui.cjs').composeModifiers);
 
 // FlashList measures nothing in jest (zero layout = no rows): a 400×900 window and 100pt rows, as the
 // library's own jestSetup (whose first mock, FlashList → RecyclerView, breaks on 2.0.2: not exported).

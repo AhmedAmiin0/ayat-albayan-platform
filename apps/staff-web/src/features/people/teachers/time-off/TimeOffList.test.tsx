@@ -6,8 +6,8 @@ import { t, locale } from '@ab/web-kit';
 import { formatTimeOff } from './time-off';
 import { TimeOffList } from './TimeOffList';
 
-/** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+/** The web reads every time in 12 h. */
+const C12 = { cycle: '12', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -36,7 +36,7 @@ describe('TimeOffList (R-TCH-02, docs/07 §8)', () => {
 
   it('shows each span with its reason and the device-zone hint', async () => {
     renderList();
-    expect(await screen.findByText(formatTimeOff(OFF.starts_at, OFF.ends_at, C24))).toBeTruthy();
+    expect(await screen.findByText(formatTimeOff(OFF.starts_at, OFF.ends_at, C12))).toBeTruthy();
     expect(screen.getByText(`${t.availability.reason}: سفر`)).toBeTruthy();
     expect(screen.getByText(t.availability.timeOffTzHint)).toBeTruthy();
   });
@@ -49,7 +49,7 @@ describe('TimeOffList (R-TCH-02, docs/07 §8)', () => {
   it('deletes one entry by its named icon button', async () => {
     apiSend.mockResolvedValue(undefined);
     renderList();
-    const span = formatTimeOff(OFF.starts_at, OFF.ends_at, C24);
+    const span = formatTimeOff(OFF.starts_at, OFF.ends_at, C12);
     fireEvent.click(await screen.findByRole('button', { name: `${t.availability.timeOffDelete} ${span}` }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/teachers/t1/time-off/o1', undefined));
   });

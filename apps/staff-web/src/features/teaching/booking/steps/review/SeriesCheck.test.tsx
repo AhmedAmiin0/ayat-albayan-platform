@@ -30,7 +30,7 @@ describe('SeriesCheck — the whole series before «احجز» (R-SCH-04, issue 
     apiSend.mockResolvedValue({ conflicts: [outside] });
     renderCheck();
     expect(await screen.findByText(t.booking.seriesCheck.replace('{n}', '1'))).toBeTruthy();
-    expect(screen.getByText(/عند المعلم\/ة 16:00 بتوقيت القاهرة/)).toBeTruthy();
+    expect(screen.getByText(/عند المعلم\/ة 4:00 م بتوقيت القاهرة/)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledWith('POST', '/booking/check', expect.objectContaining({ studentIds: [STUDENT_ID] }));
   });
 

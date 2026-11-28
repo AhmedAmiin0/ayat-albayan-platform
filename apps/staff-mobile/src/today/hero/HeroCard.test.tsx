@@ -4,14 +4,19 @@ import { t } from '@ab/mobile-kit';
 import { confirmingQueryClient, noConfirmQueryClient, renderWithQuery } from '@/test/query';
 import { lesson, muscat, pending } from '@/today/testing/fixtures';
 import { HeroCard } from './HeroCard';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onRead(() => new Promise(() => undefined));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: () => new Promise(() => undefined),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 // 16:20 Riyadh: the 16:00 lesson runs (inside the join window), the 17:00 one is 40 minutes away.
-beforeEach(() => jest.useFakeTimers({ now: new Date('2026-10-01T13:20:00Z'), advanceTimers: true }));
+beforeEach(() =>
+  jest.useFakeTimers({ now: new Date('2026-10-01T13:20:00Z'), advanceTimers: true }),
+);
 afterEach(() => jest.useRealTimers());
 
 const show = (hero: Parameters<typeof HeroCard>[0]['hero'], client = confirmingQueryClient()) => {
@@ -44,8 +49,15 @@ test('confirmed and not joinable yet: only «التفاصيل»; the lead counts
 });
 
 test('confirm not offered by the API (another role): no «تأكيد الحلقة»', async () => {
-  const noConfirm = lesson({ id: 'n', allowed_events: allowedLessonEvents('scheduled').filter((e) => e !== 'confirm') });
-  await show({ kind: 'next', lesson: { ...noConfirm, starts_at: muscat.starts_at, ends_at: muscat.ends_at }, minutes: 40 }).done;
+  const noConfirm = lesson({
+    id: 'n',
+    allowed_events: allowedLessonEvents('scheduled').filter((e) => e !== 'confirm'),
+  });
+  await show({
+    kind: 'next',
+    lesson: { ...noConfirm, starts_at: muscat.starts_at, ends_at: muscat.ends_at },
+    minutes: 40,
+  }).done;
   expect(screen.queryByRole('button', { name: t.today.confirmLesson })).toBeNull();
 });
 

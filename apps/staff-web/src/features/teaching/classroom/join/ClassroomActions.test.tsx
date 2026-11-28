@@ -4,10 +4,21 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit';
 import { ClassroomActions } from './ClassroomActions';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => []), apiSend: vi.fn() }));
+const mockApi = mockCall();
+mockApi.onRead(async () => []);
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
-const L = lesson({ id: 'l-7', status: 'scheduled', starts_at: '2026-10-03T16:00:00.000Z', minutes: 60 });
+const L = lesson({
+  id: 'l-7',
+  status: 'scheduled',
+  starts_at: '2026-10-03T16:00:00.000Z',
+  minutes: 60,
+});
 
 /** docs/07: no shrink-wrapped multi-word button; each fills the drawer's column. */
 describe('ClassroomActions buttons fill the drawer width', () => {

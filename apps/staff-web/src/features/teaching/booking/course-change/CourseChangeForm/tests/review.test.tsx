@@ -10,7 +10,7 @@ import { currentDaysText, newDaysText } from '@/features/teaching/booking/course
 import { CourseChangeForm } from '@/features/teaching/booking/course-change/CourseChangeForm/CourseChangeForm';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
+const C12 = { cycle: '12', locale, tz: 'Asia/Riyadh' } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -41,9 +41,9 @@ describe('«تغيير أيام الحلقات»: pick, review, save (owner 2026
 
   it('opens with the current days picked, the course’s own lessons not busy (excludeCourse)', async () => {
     await openSales();
-    const sunday = within(await day(0)).getByRole('button', { name: /17:00/ });
+    const sunday = within(await day(0)).getByRole('button', { name: /5:00 م/ });
     expect(sunday.getAttribute('aria-pressed')).toBe('true');
-    expect(within(await day(3)).getByRole('button', { name: /19:30/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(within(await day(3)).getByRole('button', { name: /7:30 م/ }).getAttribute('aria-pressed')).toBe('true');
     const slots = apiFetch.mock.calls.map(([p]) => String(p)).find((p) => p.startsWith('/sales/booking/slots'));
     expect(slots).toContain(`excludeCourse=${COURSE.subscriptionId}`);
     expect(slots).toContain(`studentIds=${CHANGE_VIEW.student.id}`);
@@ -79,17 +79,17 @@ describe('«تغيير أيام الحلقات»: pick, review, save (owner 2026
     routeChangeSend(apiSend, CHECK);
     const onDone = await openSales();
     // Monday 18:00 instead of Sunday: three days until Sunday is removed.
-    fireEvent.click(within(await day(1)).getByRole('button', { name: /18:00/ }));
+    fireEvent.click(within(await day(1)).getByRole('button', { name: /6:00 م/ }));
     expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: t.booking.removeDay.replace('{day}', t.enums.weekday[0]) }));
     fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
     const status = await screen.findByRole('status');
     expect(within(status).getByText(counted(t.booking.courseChange.remaining, 5))).toBeTruthy();
     const lines = within(status).getAllByRole('listitem').map((li) => li.textContent);
-    const newDays = newDaysText({ byday: [1, 3], startTimeLocal: '18:00', dayTimes: [{ weekday: 3, startTimeLocal: '19:30' }] }, COURSE.tz, C24);
+    const newDays = newDaysText({ byday: [1, 3], startTimeLocal: '18:00', dayTimes: [{ weekday: 3, startTimeLocal: '19:30' }] }, COURSE.tz, C12);
     // The current and the new days together, above what is left and the new end.
     expect(lines.slice(0, 3)).toEqual([
-      currentDaysText(COURSE.days, COURSE.tz, C24),
+      currentDaysText(COURSE.days, COURSE.tz, C12),
       newDays,
       counted(t.booking.courseChange.remaining, 5),
     ]);

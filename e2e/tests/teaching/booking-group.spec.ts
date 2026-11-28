@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClock } from '../../support/core/locale';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { lessonsOf, resetAbrar, ruleOf, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
@@ -31,7 +32,7 @@ test.describe('siblings group + multi-day series (R-STU-04)', () => {
     await fillLessonRow(step, 2, { weekday: 3, time: '16:00' });
     const days = step.getByRole('region', { name: new RegExp(ar.booking.pickDays) });
     for (const d of ['0', '3'] as const) {
-      await expect(days.getByText(ar.booking.dayAt.replace('{day}', weekday[d]).replace('{time}', '16:00'))).toBeVisible();
+      await expect(days.getByText(ar.booking.dayAt.replace('{day}', weekday[d]).replace('{time}', webClock('16:00')))).toBeVisible();
     }
     await expect(step.getByText(ar.booking.seriesFree)).toBeVisible(); // 0 conflicts over the whole series
     await next();

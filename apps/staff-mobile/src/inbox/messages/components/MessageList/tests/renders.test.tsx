@@ -4,10 +4,13 @@ import { renderWithQuery } from '@/test/query';
 import { MessageList } from '@/inbox/messages/components/MessageList/MessageList';
 import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onRead(async () => ({ id: 'u1', role: 'admin', permissions: [] }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 // Every bubble draw draws its meta line once: count them by message id.
 const mockDraws = new Map<string, number>();
@@ -32,8 +35,19 @@ const stub = (messages: MessageView[]) =>
     fetchNextPage: jest.fn(),
   }) as unknown as ThreadQuery;
 
-const a = message({ id: 'a', direction: 'inbound', body: 'السلام عليكم', created_at: '2026-10-02T08:00:00Z' });
-const b = message({ id: 'b', direction: 'outbound', body: 'وعليكم السلام', status: 'sent', created_at: '2026-10-02T08:01:00Z' });
+const a = message({
+  id: 'a',
+  direction: 'inbound',
+  body: 'السلام عليكم',
+  created_at: '2026-10-02T08:00:00Z',
+});
+const b = message({
+  id: 'b',
+  direction: 'outbound',
+  body: 'وعليكم السلام',
+  status: 'sent',
+  created_at: '2026-10-02T08:01:00Z',
+});
 
 beforeEach(() => mockDraws.clear());
 
@@ -51,7 +65,12 @@ test('a new message draws its own bubble; the ones already there stay', async ()
   const view = await renderWithQuery(<MessageList phone={PHONE} query={stub([a, b])} />);
   await screen.findByText('وعليكم السلام');
   const before = new Map(mockDraws);
-  const c = message({ id: 'c', direction: 'inbound', body: 'جزاكم الله خيرًا', created_at: '2026-10-02T08:02:00Z' });
+  const c = message({
+    id: 'c',
+    direction: 'inbound',
+    body: 'جزاكم الله خيرًا',
+    created_at: '2026-10-02T08:02:00Z',
+  });
   await view.rerender(<MessageList phone={PHONE} query={stub([a, b, c])} />);
   await screen.findByText('جزاكم الله خيرًا');
   expect(mockDraws.get('c')).toBeGreaterThan(0);

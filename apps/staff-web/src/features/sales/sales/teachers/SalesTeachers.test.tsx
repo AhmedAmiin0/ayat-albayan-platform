@@ -55,7 +55,7 @@ describe('SalesTeachers «المعلمون» (master-detail)', () => {
       ),
     ).toEqual([`${t.studentLists.active}1`, `${t.studentLists.trial}1`, `${t.studentLists.all}3`]);
     expect(within(drawer).getByText('AB-0183').getAttribute('dir')).toBe('ltr');
-    expect(within(drawer).getByText('الاثنين 12 أكتوبر 18:00')).toBeTruthy();
+    expect(within(drawer).getByText('الاثنين 12 أكتوبر 6:00 م')).toBeTruthy();
     expect(within(drawer).queryByText('جود')).toBeNull();
     fireEvent.click(seg(t.studentLists.trial));
     expect(within(drawer).getByText('جود')).toBeTruthy();

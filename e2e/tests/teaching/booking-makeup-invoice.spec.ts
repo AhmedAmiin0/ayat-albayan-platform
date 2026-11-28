@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClock } from '../../support/core/locale';
 import { fillStable } from '../../support/core/fill';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
@@ -43,7 +44,7 @@ async function pickSunday(admin: Page, pkg = false): Promise<void> {
   const step = admin.getByRole('region', { name: ar.booking.steps.slot });
   if (pkg) return fillLessonRow(step, 1, { weekday: 0, time: '16:00' }).then(() => next(admin));
   await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-  await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: /16:00/ }).click();
+  await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: new RegExp(webClock('16:00')) }).click();
   await next(admin);
 }
 async function toSlot(admin: Page, student: string, pkg = false): Promise<void> {

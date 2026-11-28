@@ -1,25 +1,20 @@
 import type { MyStudentRow } from '@ab/money';
-import { FlatList, type ListRenderItemInfo } from 'react-native';
-import { t, useInsetRows, useTabBarInset } from '@ab/mobile-kit';
+import { t, LazyList } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useMyStudents } from '@/sales-money/lib/my-api';
 import { MyStudentItem } from '@/sales-money/components/MyStudentItem';
 
-const renderRow = ({ item }: ListRenderItemInfo<MyStudentRow>) => <MyStudentItem student={item} />;
+const renderRow = ({ item }: { item: MyStudentRow }) => <MyStudentItem student={item} />;
 
 export function MyStudentsView() {
   const list = useMyStudents();
-  const inset = useTabBarInset();
   const S = t.assistantPortal.students;
-  const cells = useInsetRows(renderRow, list.data?.length ?? 0);
   return (
-    <FlatList
+    <LazyList
       accessibilityLabel={S.list}
-      style={{ flex: 1 }}
-      contentContainerStyle={{ paddingBottom: 24 + inset }}
       data={list.data ?? []}
       keyExtractor={(s) => s.id}
-      {...cells}
+      renderItem={renderRow}
       refreshing={list.isRefetching}
       onRefresh={() => void list.refetch()}
       ListEmptyComponent={<LoadState status={list} empty emptyTitle={S.empty} emptyHint={S.emptyHint} />}

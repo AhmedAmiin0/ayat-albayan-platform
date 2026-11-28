@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClock } from '../../support/core/locale';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { lessonsOf, resetAbrar, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
@@ -6,7 +7,7 @@ import { fillLessonRow } from '../../support/teaching/lesson-rows';
 // A time per weekday (R-SCH-06): one schedule_rules row per distinct time, via first_rule_id.
 
 const weekday = ar.enums.weekday;
-const dayAt = (day: '0' | '3', time: string) => ar.booking.dayAt.replace('{day}', weekday[day]).replace('{time}', time);
+const dayAt = (day: '0' | '3', time: string) => ar.booking.dayAt.replace('{day}', weekday[day]).replace('{time}', webClock(time));
 
 test.describe('a package with a different time on each day (R-SCH-06)', () => {
   test('Sunday 16:00 + Wednesday 18:00: two rules, one series, lessons at each day’s time', async ({ asRole, isMobile }) => {

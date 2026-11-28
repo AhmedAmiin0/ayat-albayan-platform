@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
+import { webClock } from '../core/locale';
 import { withSql } from '../core/schedule';
 import { fillLessonRow } from '../teaching/lesson-rows';
 
@@ -20,7 +21,7 @@ export async function bookCourseDays(page: Page, transfer: Locator): Promise<voi
   await expect(step.getByText(B.seriesFree)).toBeVisible(); // a clash would block her (no override)
   await next();
   const review = dialog.getByRole('region', { name: B.steps.review });
-  await expect(review.getByText(B.dayAt.replace('{day}', ar.enums.weekday['0']).replace('{time}', '16:00'))).toBeVisible();
+  await expect(review.getByText(B.dayAt.replace('{day}', ar.enums.weekday['0']).replace('{time}', webClock('16:00')))).toBeVisible();
   await expect(review.getByText(new RegExp(B.courseEnds.few.split('{date}')[0] ?? ''))).toBeVisible();
   await expect(review.getByLabel(B.meetingLink)).toHaveCount(0);
   await dialog.getByRole('button', { name: B.submit }).click();

@@ -7,8 +7,8 @@ import { adjustText, continueText } from '@/features/sales/sales-money/course/co
 import { COURSE_STUDENT_ID, RENEWAL_VIEW, routeCourseSend, routeRenewal } from '@/features/sales/sales-money/course/course-fixture';
 import { SalesCourseDialog } from '@/features/sales/sales-money/course/SalesCourseDialog/SalesCourseDialog';
 
-/** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
+/** The web reads every time in 12 h. */
+const C12 = { cycle: '12', locale, tz: 'Asia/Riyadh' } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -41,8 +41,8 @@ describe('the renewal’s choice in «أيام الحلقات» (owner 2026-10-1
   it('another day count than before: says so, no «تابِع»; «عدّل الأيام السابقة» opens the previous days to add one', async () => {
     routeRenewal(apiFetch, { ...RENEWAL_VIEW, perWeek: 3 });
     openDialog();
-    expect(await screen.findByText(adjustText({ ...RENEWAL_VIEW, perWeek: 3 }, C24))).toBeTruthy();
-    expect(screen.queryByText(continueText(RENEWAL_VIEW, C24))).toBeNull();
+    expect(await screen.findByText(adjustText({ ...RENEWAL_VIEW, perWeek: 3 }, C12))).toBeTruthy();
+    expect(screen.queryByText(continueText(RENEWAL_VIEW, C12))).toBeNull();
     expect(screen.queryByRole('button', { name: t.booking.courseChange.continueSameDays })).toBeNull();
     const adjust = await screen.findByRole('button', { name: t.booking.courseChange.adjustDays });
     await waitFor(() => expect(adjust.hasAttribute('disabled')).toBe(false));

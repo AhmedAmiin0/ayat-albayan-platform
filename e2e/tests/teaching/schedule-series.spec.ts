@@ -1,6 +1,9 @@
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClock } from '../../support/core/locale';
 import { addDays, lessonsOf, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, setAvailability } from '../../support/core/schedule';
 import { openLessonDrawer, ruleStateOf, seedWeeklyRule, weekGrid, weekOf } from '../../support/teaching/schedule-extra';
+
+const FIVE = webClock('17:00');
 
 // Rescheduling this and later lessons (R-SCH-07) ends the old rule and queues ONE confirmation.
 
@@ -31,7 +34,7 @@ test.describe('reschedule a whole series (R-SCH-07)', () => {
     const scope = drawer.getByRole('radio', { name: ar.lessons.scope.rule });
     await scope.check();
     const slots = drawer.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['2']} `) });
-    await slots.getByRole('button', { name: /17:00/ }).click();
+    await slots.getByRole('button', { name: new RegExp(webClock('17:00')) }).click();
     // The repeat days follow the move: Sunday-only becomes Tuesday-only (ByDayPicker).
     await expect(drawer.getByRole('checkbox', { name: ar.enums.weekday['2'] })).toBeChecked();
     await expect(drawer.getByRole('checkbox', { name: ar.enums.weekday['0'] })).not.toBeChecked();
@@ -52,7 +55,7 @@ test.describe('reschedule a whole series (R-SCH-07)', () => {
 
     // The week now shows the Tuesday lesson, and the guardian got one confirmation, not one per lesson.
     await page.goto(`/admin/schedule?week=${weekOf(first)}&teacher=${teacherId}`);
-    await expect(weekGrid(page).getByRole('button', { name: new RegExp(`17:00.*${name}|${name}.*17:00`) })).toHaveCount(1);
+    await expect(weekGrid(page).getByRole('button', { name: new RegExp(`${FIVE}.*${name}|${name}.*${FIVE}`) })).toHaveCount(1);
     await expect.poll(() => queuedFor(family.guardianId)).toEqual([
       expect.objectContaining({ template_key: expect.stringMatching(/^booking_confirmation/), status: 'queued' }),
     ]);

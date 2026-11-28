@@ -1,0 +1,1 @@
+export { ShareLegend } from './ShareLegend';

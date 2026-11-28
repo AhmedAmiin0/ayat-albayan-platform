@@ -115,7 +115,7 @@ describe('AttendanceLog (docs/46 C5)', () => {
   it('a moved row says where it went and why, in her zone (docs/47)', async () => {
     const [, , , moved] = await tableRows(LOG_47);
     const log = t.sales.student.log;
-    expect(within(moved as HTMLElement).getByText(new RegExp(log.movedTo.replace('{when}', 'الثلاثاء 6 أكتوبر 16:00')))).toBeTruthy();
+    expect(within(moved as HTMLElement).getByText(new RegExp(log.movedTo.replace('{when}', 'الثلاثاء 6 أكتوبر 4:00 م')))).toBeTruthy();
     expect(within(moved as HTMLElement).getByText(new RegExp(log.moveReason.replace('{reason}', 'سفر الأسرة')))).toBeTruthy();
   });
 

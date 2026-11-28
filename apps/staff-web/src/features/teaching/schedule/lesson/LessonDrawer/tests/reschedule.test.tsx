@@ -36,7 +36,7 @@ function renderDrawer() {
 
 const pick = async (day: string) => {
   const region = await screen.findByRole('region', { name: new RegExp(`^${day} `) });
-  fireEvent.click(within(region).getByRole('button', { name: /17:00/ }));
+  fireEvent.click(within(region).getByRole('button', { name: /5:00 م/ }));
 };
 
 describe('LessonDrawer reschedule (R-SCH-07, journey 4)', () => {
@@ -69,7 +69,7 @@ describe('LessonDrawer reschedule (R-SCH-07, journey 4)', () => {
     await pick(t.enums.weekday[1]);
     fireEvent.click(screen.getByRole('button', { name: t.lessons.rescheduleSubmit }));
     expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
-    expect(screen.getByText(/المعلم\/ة مشغول\/ة بحلقة أخرى/).textContent).toContain('17:00');
+    expect(screen.getByText(/المعلم\/ة مشغول\/ة بحلقة أخرى/).textContent).toContain('5:00 م');
     expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/reschedule', { scope: 'one', startsAt: BUSY });
 
     fireEvent.click(screen.getByRole('button', { name: t.booking.changeSlot }));

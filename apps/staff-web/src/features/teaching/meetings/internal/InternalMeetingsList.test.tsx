@@ -59,8 +59,8 @@ describe('InternalMeetingsList «الاجتماعات الداخلية»', () =>
       invitees_count: 3,
     });
     open([early]);
-    expect(await screen.findByText(new RegExp(`^${M.scheduledFor.replace('{when}', '.*15:00')}$`))).toBeTruthy();
-    expect(screen.getByText(new RegExp(`^${M.opensAt.replace('{when}', '.*14:45')}$`))).toBeTruthy();
+    expect(await screen.findByText(new RegExp(`^${M.scheduledFor.replace('{when}', '.*3:00 م')}$`))).toBeTruthy();
+    expect(screen.getByText(new RegExp(`^${M.opensAt.replace('{when}', '.*2:45 م')}$`))).toBeTruthy();
     expect(screen.getByText(M.inviteesCount.replace('{n}', '3'))).toBeTruthy();
     expect(screen.queryByRole('link', { name: M.enter })).toBeNull();
     expect(screen.getByRole('button', { name: M.reschedule })).toBeTruthy();

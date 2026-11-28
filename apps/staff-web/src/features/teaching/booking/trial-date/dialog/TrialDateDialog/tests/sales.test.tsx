@@ -25,7 +25,7 @@ async function toReview(answers: unknown[]) {
   next();
   next(); // The last trial's length is kept.
   const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
-  fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
+  fireEvent.click(within(sunday).getByRole('button', { name: /5:00 م/ }));
   next();
 }
 

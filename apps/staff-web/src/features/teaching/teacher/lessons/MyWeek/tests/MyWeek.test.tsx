@@ -24,7 +24,7 @@ const ME: TeacherMe = {
   platform_classroom: false,
   students: [],
 };
-// Sunday 4 Oct, 17:00 Riyadh.
+// Sunday 4 Oct, 5:00 PM Riyadh.
 const SUNDAY = answered(lesson({ id: 'a', starts_at: '2026-10-04T14:00:00.000Z' }));
 const lessonCalls = () => apiFetch.mock.calls.map(([p]) => String(p)).filter((p) => p.startsWith('/teachers/me/lessons'));
 
@@ -47,7 +47,7 @@ describe('«جدولي» — my week (R-TCH-03, R-SCH-08)', () => {
     renderWithClient(<MyWeek />);
     const grid = await screen.findByRole('table', { name: t.schedule.grid });
     expect(lessonCalls()[0]).toBe('/teachers/me/lessons?from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z');
-    fireEvent.click(within(grid).getByRole('button', { name: /17:00/ }));
+    fireEvent.click(within(grid).getByRole('button', { name: /5:00 م/ }));
     const drawer = screen.getByRole('dialog');
     expect(within(drawer).getByRole('link', { name: t.teacherDash.join }).getAttribute('href')).toBe(ME.meeting_link);
   });

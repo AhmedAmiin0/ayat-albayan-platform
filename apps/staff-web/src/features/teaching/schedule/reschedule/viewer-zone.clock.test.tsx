@@ -11,7 +11,7 @@ import { ProposalsPanel } from './proposals/ProposalsPanel';
 // The React Compiler builds these components (vite.config.ts): a time read from the viewer-zone
 // store during render would stay memoised. Each one switches the zone in place (a sign-in's
 // /auth/me answering) and expects the new wall clock without a remount. November: Cairo is
-// UTC+2 again (Riyadh UTC+3), so 14:00Z reads 17:00 → 16:00. test-setup pins Riyadh first.
+// UTC+2 again (Riyadh UTC+3), so 14:00Z reads 5:00 PM → 4:00 PM. test-setup pins Riyadh first.
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -28,10 +28,10 @@ describe('a viewer-zone change re-words the times in place (React Compiler)', ()
   it('ConflictNotice: the clash time and the zone note', () => {
     render(<ConflictNotice conflicts={[busy]} onChangeSlot={vi.fn()} />);
     const line = () => screen.getByRole('listitem').textContent;
-    expect(line()).toContain('17:00');
+    expect(line()).toContain('5:00 م');
     act(() => setViewerPersonTz('Africa/Cairo'));
-    expect(line()).toContain('16:00');
-    expect(line()).not.toContain('17:00');
+    expect(line()).toContain('4:00 م');
+    expect(line()).not.toContain('5:00 م');
     expect(screen.getByText(t.schedule.zoneNote.replace('{city}', t.tz['Africa/Cairo']))).toBeTruthy();
   });
 
@@ -43,11 +43,11 @@ describe('a viewer-zone change re-words the times in place (React Compiler)', ()
       </QueryClientProvider>,
     );
     const row = await screen.findByRole('button');
-    expect(row.textContent).toContain('17:00');
-    expect(row.textContent).toContain('18:00');
+    expect(row.textContent).toContain('5:00 م');
+    expect(row.textContent).toContain('6:00 م');
     act(() => setViewerPersonTz('Africa/Cairo'));
-    expect(row.textContent).toContain('16:00');
-    expect(row.textContent).toContain('17:00');
-    expect(row.textContent).not.toContain('18:00');
+    expect(row.textContent).toContain('4:00 م');
+    expect(row.textContent).toContain('5:00 م');
+    expect(row.textContent).not.toContain('6:00 م');
   });
 });

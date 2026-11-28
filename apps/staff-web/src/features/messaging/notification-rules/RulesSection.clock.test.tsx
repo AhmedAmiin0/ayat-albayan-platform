@@ -1,6 +1,7 @@
-import { act, fireEvent, within } from '@testing-library/react';
+import { fireEvent, within } from '@testing-library/react';
+import { CLOCK_STORAGE_KEY } from '@ab/time';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setClockPref, t } from '@ab/web-kit';
+import { t } from '@ab/web-kit';
 import { findRow, renderRules } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -19,18 +20,15 @@ const unsaved = () => document.querySelector('[data-unsaved="lesson_reminder_24h
 
 afterEach(() => {
   apiFetch.mockReset();
-  act(() => setClockPref('24'));
+  localStorage.removeItem(CLOCK_STORAGE_KEY);
 });
 
-describe('«الإشعارات»: the unsaved timing words follow «تنسيق الوقت»', () => {
-  it('24 h, then a switch to 12 h re-words the draft without a remount', async () => {
-    act(() => setClockPref('24'));
+describe('«الإشعارات»: the unsaved timing words on the web', () => {
+  it('read 12 h even with a saved 24 h choice', async () => {
+    localStorage.setItem(CLOCK_STORAGE_KEY, '24');
     renderRules({ apiFetch });
     const row = await findRow('lesson_reminder_24h');
     fireEvent.change(within(row).getByLabelText(tm.dayBeforeLabel), { target: { value: '20:00' } });
-    expect(unsaved()).toContain(tm.dayBeforeText.replace('{time}', '20:00'));
-
-    act(() => setClockPref('12'));
     expect(unsaved()).toContain(tm.dayBeforeText.replace('{time}', '8:00 م'));
     expect(unsaved()).not.toContain('20:00');
   });

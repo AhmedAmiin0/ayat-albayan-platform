@@ -228,13 +228,7 @@
     }
   },
   "src/components/shell/nav/use-nav-counts.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

@@ -61,7 +61,7 @@ describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
     fireEvent.change(screen.getByLabelText(t.reports.homework), { target: { value: 'سورة الملك' } });
     await act(() => vi.advanceTimersByTimeAsync(1000));
     expect(apiSend).toHaveBeenCalledWith('PUT', '/reports/r-1/draft', expect.objectContaining({ homework: 'سورة الملك' }));
-    expect((await screen.findByText(/حُفظت المسودة/)).textContent).toMatch(/\d\d:\d\d/);
+    expect((await screen.findByText(/حُفظت المسودة/)).textContent).toMatch(/\d{1,2}:\d\d [صم]/);
   });
 
   it('a full form is sent with the version; the page then reads «سُلِّم التقرير»', async () => {

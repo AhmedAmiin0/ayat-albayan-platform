@@ -26,7 +26,7 @@ const OWN = { ...SUHAILA, attendance: 'on_time' as const, report: REPORT };
 export const PAST = lesson({ id: 'a', starts_at: '2026-10-01T13:00:00.000Z', status: 'completed', students: [OWN] });
 export const MISSED = lesson({ id: 'b', starts_at: '2026-10-03T13:00:00.000Z', status: 'no_show' });
 export const NEXT = lesson({ id: 'c', starts_at: '2026-10-07T13:00:00.000Z' });
-export const when = (iso: string) => lessonWhenAt(new Date(iso), { tz: TZ, locale: 'ar', cycle: '24' });
+export const when = (iso: string) => lessonWhenAt(new Date(iso), { tz: TZ, locale: 'ar', cycle: '12' });
 
 /** GET /teachers/me/students?kind= answers: program · level · age per student. */
 export const FACTS = (path: string) =>

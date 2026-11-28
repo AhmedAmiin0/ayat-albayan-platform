@@ -33,6 +33,7 @@ function IdentifierStep({ forgot, mode }: StepProps) {
         ltr
         autoCapitalize="none"
         autoCorrect={false}
+        autoComplete="username"
         textContentType="username"
         value={forgot.identifier}
         onChangeText={forgot.setIdentifier}

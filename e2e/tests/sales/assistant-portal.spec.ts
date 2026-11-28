@@ -8,7 +8,7 @@ import { openNav } from '../../support/core/nav';
 import { resetAbrar, setAvailability, withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/core/users';
 import { stubInbound } from '../../support/core/wa-stub';
-import { AR_LOCALE } from '../../support/core/locale';
+import { AR_LOCALE, webClock } from '../../support/core/locale';
 
 // Assistant portal (R-ASST-01/04/05/06): own students and payments only, no other money.
 
@@ -123,7 +123,7 @@ test.describe('assistant portal', () => {
     await next();
     const step = dialog.getByRole('region', { name: ar.booking.steps.slot });
     await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-    await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: /16:00/ }).click();
+    await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: new RegExp(webClock('16:00')) }).click();
     await next();
     await dialog.getByRole('button', { name: ar.booking.submit }).click();
     await expect(dialog.getByRole('heading', { name: ar.booking.booked })).toBeVisible();

@@ -34,17 +34,17 @@ afterEach(() => {
 });
 
 describe('«المكالمات» at midnight (compiled)', () => {
-  it('one clock for the log: today\'s «23:00» turns into the date without a remount', async () => {
+  it('one clock for the log: today\'s «11:00 م» turns into the date without a remount', async () => {
     const timers = vi.spyOn(globalThis, 'setInterval');
     routeFetch(apiFetch, [['/calls?limit=100', [call(ID1), call(ID2)]]]);
     renderWithClient(<CallsLog />);
     const list = await screen.findByRole('list', { name: t.calls.log.title });
     const firstLine = () => [...list.querySelectorAll('li')].map((li) => li.querySelector('.tabular-nums span')?.textContent);
-    expect(firstLine()).toEqual(['23:00', '23:00']);
+    expect(firstLine()).toEqual(['11:00 م', '11:00 م']);
     expect(minuteTimers(timers)).toBe(1);
     act(() => {
       vi.advanceTimersByTime(2 * 60_000);
     });
-    expect(firstLine().every((text) => text !== '23:00' && (text ?? '').includes('19'))).toBe(true);
+    expect(firstLine().every((text) => text !== '11:00 م' && (text ?? '').includes('19'))).toBe(true);
   });
 });

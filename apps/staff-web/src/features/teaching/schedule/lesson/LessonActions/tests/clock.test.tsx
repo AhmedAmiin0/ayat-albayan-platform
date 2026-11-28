@@ -4,11 +4,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonActions } from '@/features/teaching/schedule/lesson/LessonActions/LessonActions';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  apiFetch: vi.fn(),
-  apiSend: vi.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 // docs/48 web clocks: the outcomes read useNow, not a clock frozen at mount.
