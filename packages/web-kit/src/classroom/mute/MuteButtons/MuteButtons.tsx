@@ -1,12 +1,13 @@
 import { IconButton } from '@ab/web-kit/components/ui/form/IconButton';
 import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
 import type { MuteButtonsProps } from './MuteButtons.types';
-import { LABEL, SOURCES } from './mute-buttons.helpers';
+import { LABEL, mutableSources } from './mute-buttons.helpers';
 
 export function MuteButtons({ tile, mute }: MuteButtonsProps) {
+  const sources = mutableSources(tile, mute);
   return (
     <>
-      {SOURCES.filter((s) => mute.canMute(tile, s)).map((source) => (
+      {sources.map((source) => (
         <IconButton
           key={source}
           label={LABEL[source].of.replace('{name}', tile.name)}
