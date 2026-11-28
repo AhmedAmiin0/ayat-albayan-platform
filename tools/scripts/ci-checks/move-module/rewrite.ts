@@ -2,7 +2,9 @@ import { Project } from 'ts-morph';
 import { formatSpec, resolveSpec, type Resolver } from './resolve.ts';
 import { applyEdits, specifierNodes } from './specifiers.ts';
 
-/** Strings a file must contain to possibly import one of the renamed files (skips parsing the rest). */
+/**
+ * Strings a file must contain to possibly import one of the renamed files (skips parsing the rest).
+ */
 export function needles(renamed: Map<string, string>): string[] {
   const out = new Set(["'.'", "'..'", '".."', '"."', "'./'", '"./"', "'../'", '"../"']);
   for (const from of renamed.keys()) {
@@ -19,7 +21,10 @@ export interface RewriteInput {
   text: string;
 }
 
-/** The file's new text with every specifier pointing at its target's new path (same text = no change). */
+/**
+ * The file's new text with every specifier pointing at its target's new path (same text = no
+ * change).
+ */
 export function rewriteFile(project: Project, r: Resolver, input: RewriteInput): string {
   const { file, text } = input;
   const sf = project.createSourceFile(`/virtual/${file}`, text, { overwrite: true });

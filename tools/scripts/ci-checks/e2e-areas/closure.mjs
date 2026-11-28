@@ -1,8 +1,8 @@
 // Walks over the import graph of graph.mjs.
 
 /**
- * Everyone who imports from `file` or from a barrel that re-exports it (transitively): for a changed
- * barrel, whose re-exports (renamed, re-pointed) change what its consumers get.
+ * Everyone who imports from `file` or from a barrel that re-exports it (transitively): for a
+ * changed barrel, whose re-exports (renamed, re-pointed) change what its consumers get.
  */
 export function barrelConsumers(graph, file) {
   const out = new Set();
@@ -19,7 +19,9 @@ export function barrelConsumers(graph, file) {
   return out;
 }
 
-/** Every file that imports `start` directly or transitively (start included); stops at `stop(file)`. */
+/**
+ * Every file that imports `start` directly or transitively (start included); stops at `stop(file)`.
+ */
 export function reverseClosure(graph, start, stop = () => false) {
   const rev = (graph.rev ??= invert(graph.edges));
   const seen = new Set(start);

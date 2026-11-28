@@ -7,7 +7,10 @@ const SKIP = new Set([
 ]);
 const CODE = /\.[cm]?[jt]sx?$/;
 const TEXT = /\.(md|ya?ml|json)$/;
-/** Never rewritten: the plan (it names the source paths on purpose), the move maps, generated lockfiles. */
+/**
+ * Never rewritten: the plan (it names the source paths on purpose), the move maps, generated
+ * lockfiles.
+ */
 const TEXT_KEEP = [/^docs\/27-refactor-plan\.md$/, /^refactor\/moves\//, /(^|\/)pnpm-lock\.yaml$/, /(^|\/)package\.json$/];
 
 function walk(root: string, dir: string, keep: RegExp): string[] {

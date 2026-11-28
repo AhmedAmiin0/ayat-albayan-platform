@@ -1,5 +1,6 @@
-// Guards for ayat-pdf, the chat PDF sandbox (docs/09 «PDF sandbox»): poppler parses strangers' PDFs there, so it
-// must hold no secret, reach no network and share only its socket with the two API copies.
+// Guards for ayat-pdf, the chat PDF sandbox (docs/09 «PDF sandbox»): poppler parses strangers' PDFs
+// there, so it must hold no secret, reach no network and share only its socket with the two API
+// copies.
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
@@ -50,7 +51,8 @@ test('locked down: read-only root, no capability, no setuid, non-root, tmpfs /tm
 });
 
 test('the socket volume: a 64 KB tmpfs, only ayat-pdf and the API copies (read-only there), never the worker', () => {
-  // Never on the host disk the CRM shares: the one path ayat-pdf can write besides its /tmp, bounded.
+  // Never on the host disk the CRM shares: the one path ayat-pdf can write besides its /tmp,
+  // bounded.
   assert.deepEqual(compose.volumes['pdf-sock'], {
     driver: 'local',
     driver_opts: { type: 'tmpfs', device: 'tmpfs', o: 'size=64k,uid=1000,gid=1000,mode=0700' },

@@ -21,7 +21,9 @@ export interface Target {
 export interface Resolver {
   root: string;
   aliases: Alias[];
-  /** Old paths of every file a move map renames: they resolve even when the file is already gone. */
+  /**
+   * Old paths of every file a move map renames: they resolve even when the file is already gone.
+   */
   renamed: Map<string, string>;
 }
 

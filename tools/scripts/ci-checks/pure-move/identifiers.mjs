@@ -1,7 +1,8 @@
-// Identifier renames a move map lists (`renames: { XQueries: XRepo }`, docs/32 D2): the checker accepts a code
-// hunk whose only change, after paths, is such a name outside strings and comments, as the codemod writes it.
-// The PR writes its own table, so a rename is held to D2's shape and must be fresh: `<X>Queries` → `<X>Repo`
-// (same X), the new name nowhere in the base tree, the old one declared in a file of the diff.
+// Identifier renames a move map lists (`renames: { XQueries: XRepo }`, docs/32 D2): the checker
+// accepts a code hunk whose only change, after paths, is such a name outside strings and comments,
+// as the codemod writes it. The PR writes its own table, so a rename is held to D2's shape and must
+// be fresh: `<X>Queries` → `<X>Repo` (same X), the new name nowhere in the base tree, the old one
+// declared in a file of the diff.
 
 const D2 = /^([A-Z][A-Za-z0-9]*)Queries$/;
 const SKIP = String.raw`'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*"|\x60(?:\\.|[^\x60\\])*\x60|\/\/[^\n]*|\/\*[\s\S]*?\*\/`;
@@ -16,7 +17,10 @@ const parse = (text) => {
   }
 };
 
-/** `{ old → new }` from the renames each move map of the diff ADDS (an edited map's older ones stay off). */
+/**
+ * `{ old → new }` from the renames each move map of the diff ADDS (an edited map's older ones stay
+ * off).
+ */
 export function identifierTable(entries, read) {
   const table = new Map();
   for (const e of entries.filter((x) => MAP.test(x.to) && /^[AMR]/.test(x.status))) {
@@ -38,7 +42,10 @@ export function renameProblems(table, grep, files) {
   ]);
 }
 
-/** A git grep's file list; exit 1 (no match) is an empty list, any other failure throws (fail closed). */
+/**
+ * A git grep's file list; exit 1 (no match) is an empty list, any other failure throws (fail
+ * closed).
+ */
 export function grepFiles(run) {
   try {
     return run().split('\n').filter(Boolean);

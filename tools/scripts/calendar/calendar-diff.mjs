@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 // Google Calendar → calendar-diff.sql (report of where the platform's schedule differs).
 //
-//   1. Google Calendar → Settings → Import & export → Export (a zip of one .ics per calendar); unzip it.
-//   2. node tools/scripts/calendar-diff.mjs <folder or .ics files> [--today YYYY-MM-DD] > calendar-diff.sql
-//   3. run calendar-diff.sql against the database (psql); it only reads, then ROLLBACK.
+//   1. Google Calendar → Settings → Import & export → Export (a zip of one .ics per calendar);
+// unzip it.   2. node tools/scripts/calendar-diff.mjs <folder or .ics files> [--today YYYY-MM-DD] >
+// calendar-diff.sql   3. run calendar-diff.sql against the database (psql); it only reads, then
+// ROLLBACK.
 //
 // The output holds students' names: keep it out of git and delete it when done.
 import { readdirSync, readFileSync, statSync } from 'node:fs';

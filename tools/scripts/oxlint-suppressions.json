@@ -2,9 +2,6 @@
   "calendar/calendar-diff.mjs": {
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "calendar/calendar-ics.mjs": {
@@ -32,11 +29,6 @@
       "count": 2
     }
   },
-  "calendar/calendar.fixture.mjs": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "chat-markers/chat-markers-backfill.mjs": {
     "ab/no-shape-checks": {
       "count": 1
@@ -50,74 +42,20 @@
       "count": 1
     }
   },
-  "ci-checks/compose/compose-pdf.test.mjs": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "ci-checks/compose/compose-roll.test.mjs": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "ci-checks/compose/compose.test.mjs": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "ci-checks/e2e-areas/areas.mjs": {
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-shape-checks": {
       "count": 1
-    }
-  },
-  "ci-checks/e2e-areas/closure.mjs": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "ci-checks/e2e-areas/fixture.mjs": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "ci-checks/e2e-areas/folders.test.mjs": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "ci-checks/e2e-areas/graph.mjs": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "ci-checks/e2e-areas/guard.mjs": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "ci-checks/e2e-areas/i18n.mjs": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
   },
-  "ci-checks/e2e-areas/parse.mjs": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "ci-checks/e2e-areas/plan.mjs": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -128,9 +66,6 @@
     }
   },
   "ci-checks/e2e-shards.mjs": {
-    "stylistic/max-len": {
-      "count": 9
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -138,9 +73,6 @@
   "ci-checks/folder-cap.mjs": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 4
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -170,23 +102,12 @@
     }
   },
   "ci-checks/lint/queries-gate.mjs": {
-    "stylistic/max-len": {
-      "count": 4
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
   },
-  "ci-checks/move-module.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "ci-checks/move-module/files.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -195,9 +116,6 @@
       "count": 1
     },
     "max-depth": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     },
     "ab/no-if-chains": {
@@ -211,9 +129,6 @@
     "max-depth": {
       "count": 3
     },
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -221,9 +136,6 @@
   "ci-checks/move-module/renames.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 7
     },
     "ab/no-shape-checks": {
       "count": 1
@@ -237,29 +149,15 @@
   "ci-checks/move-module/resolve.ts": {
     "complexity": {
       "count": 3
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "ci-checks/move-module/rewrite.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "typescript/no-unsafe-enum-assignment": {
       "count": 1
     }
   },
   "ci-checks/move-module/run.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "ci-checks/move-module/specifiers.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -273,9 +171,6 @@
     "complexity": {
       "count": 2
     },
-    "stylistic/max-len": {
-      "count": 15
-    },
     "ab/no-shape-checks": {
       "count": 8
     }
@@ -286,9 +181,6 @@
     },
     "max-depth": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 7
     },
     "ab/no-if-chains": {
       "count": 1
@@ -302,21 +194,8 @@
       "count": 12
     }
   },
-  "ci-checks/pure-move-ci.test.mjs": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "ci-checks/pure-move-paths.mjs": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "ci-checks/pure-move-suppressions.test.mjs": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -330,9 +209,6 @@
     "no-nested-ternary": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 7
-    },
     "ab/no-if-chains": {
       "count": 3
     }
@@ -344,9 +220,6 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 9
-    },
     "ab/no-shape-checks": {
       "count": 3
     }
@@ -357,9 +230,6 @@
     },
     "complexity": {
       "count": 2
-    },
-    "stylistic/max-len": {
-      "count": 6
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -374,9 +244,6 @@
     "max-depth": {
       "count": 2
     },
-    "stylistic/max-len": {
-      "count": 5
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -390,42 +257,18 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 4
-    },
     "ab/no-shape-checks": {
       "count": 2
-    }
-  },
-  "ci-checks/pure-move/move-e2e.test.mjs": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "ci-checks/release-tags/release-tag.mjs": {
-    "stylistic/max-len": {
-      "count": 8
     }
   },
   "ci-checks/roll-fake.mjs": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 5
     }
   },
   "ci-checks/roll.test.mjs": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "ci-checks/rollback.test.mjs": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "ci-checks/turbo-inputs.test.mjs": {
@@ -455,9 +298,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 8
     }
   },
   "env/write-local-env.mjs": {
@@ -472,29 +312,6 @@
   },
   "seed/clear-demo.fk.test.mjs": {
     "max-depth": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "seed/clear-demo.mjs": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "seed/clear-demo.plan.mjs": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "seed/seed-test-account.auth.mjs": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "seed/seed-test-account.mjs": {
-    "stylistic/max-len": {
       "count": 1
     }
   },

@@ -1,5 +1,6 @@
-// deploy/staging/rollback.sh (docs/09 «Roll back»): back to the previous version with 127.0.0.1:3110 serving,
-// the worker never beside the single container, and only this project's containers and images touched.
+// deploy/staging/rollback.sh (docs/09 «Roll back»): back to the previous version with
+// 127.0.0.1:3110 serving, the worker never beside the single container, and only this project's
+// containers and images touched.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFileSync } from 'node:fs';

@@ -1,10 +1,10 @@
-// Imports and exports of a TypeScript source, by regex (enough for the e2e selection; graph.mjs widens
-// to the whole module whenever a form is not understood).
+// Imports and exports of a TypeScript source, by regex (enough for the e2e selection; graph.mjs
+// widens to the whole module whenever a form is not understood).
 
 /**
- * Every import/re-export of a source: { spec, names, reexport, bare }. names: [{ from, as }] (`a as b`),
- * or null for the whole module (default, namespace, side-effect, dynamic import, export *); bare = a
- * side-effect import (`import './x'`).
+ * Every import/re-export of a source: { spec, names, reexport, bare }. names: [{ from, as }] (`a as
+ * b`), or null for the whole module (default, namespace, side-effect, dynamic import, export *);
+ * bare = a side-effect import (`import './x'`).
  */
 export function parseImports(src) {
   const out = [];

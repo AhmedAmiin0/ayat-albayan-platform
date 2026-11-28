@@ -1,8 +1,8 @@
-// Repositories, not queries (docs/32 R8, D2, correction 14): no new `*queries.ts(x)` file and no new
-// `class XQueries` in apps/, packages/ or e2e/. refactor/guards/queries.json lists the ones that predate
-// the rule; lane R renames them to `x.repo.ts` / `XRepo`. A listed file that is gone or no longer
-// qualifies passes (no PR edits the list for it); ci's «baselines» job drops it on develop
-// (--write), so the list only shrinks.
+// Repositories, not queries (docs/32 R8, D2, correction 14): no new `*queries.ts(x)` file and no
+// new `class XQueries` in apps/, packages/ or e2e/. refactor/guards/queries.json lists the ones
+// that predate the rule; lane R renames them to `x.repo.ts` / `XRepo`. A listed file that is gone
+// or no longer qualifies passes (no PR edits the list for it); ci's «baselines» job drops it on
+// develop (--write), so the list only shrinks.
 // Usage: node tools/scripts/ci-checks/lint/queries-gate.mjs [--write]
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -13,13 +13,18 @@ const ROOTS = ['apps', 'packages', 'e2e'];
 const NAME = /queries\.tsx?$/;
 const CLASS = /\bclass \w+Queries\b/;
 
-/** True when `path` (with its `read()` text) is a queries file: by name, or by a `class XQueries`. */
+/**
+ * True when `path` (with its `read()` text) is a queries file: by name, or by a `class XQueries`.
+ */
 export function isQueries(path, read) {
   if (!/\.tsx?$/.test(path)) return false;
   return NAME.test(path) || CLASS.test(read());
 }
 
-/** `{ added, fixed }`: queries files not in the list, and listed files that are not queries files now. */
+/**
+ * `{ added, fixed }`: queries files not in the list, and listed files that are not queries files
+ * now.
+ */
 export function compare(now, listed) {
   const is = new Set(now);
   const was = new Set(listed);

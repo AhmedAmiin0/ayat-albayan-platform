@@ -1,4 +1,5 @@
-// ci.yml «changes»: only a plain folder move (move-e2e.mjs) with a green pure-move-check skips e2e (docs/32 g1).
+// ci.yml «changes»: only a plain folder move (move-e2e.mjs) with a green pure-move-check skips e2e
+// (docs/32 g1).
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';

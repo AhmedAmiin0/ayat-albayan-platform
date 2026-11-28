@@ -4,7 +4,10 @@ import { applyEdits } from './specifiers.ts';
 
 const IDENT = /^[A-Za-z_$][\w$]*$/;
 
-/** The map's `renames` as a checked table: identifiers only, no chains (`A→B, B→C`), no two olds to one new. */
+/**
+ * The map's `renames` as a checked table: identifiers only, no chains (`A→B, B→C`), no two olds to
+ * one new.
+ */
 export function renameTable(renames: Record<string, string> | undefined): Map<string, string> {
   const table = new Map(Object.entries(renames ?? {}));
   const news = new Set<string>();
@@ -25,10 +28,15 @@ export function mentions(table: Map<string, string>, text: string): boolean {
   return new RegExp(`(?<![\\w$])(?:${[...table.keys()].map(escape).join('|')})(?![\\w$])`).test(text);
 }
 
-/** Workspace specifiers a renamed name may come from; any other bare package keeps its own names. */
+/**
+ * Workspace specifiers a renamed name may come from; any other bare package keeps its own names.
+ */
 const OWN = /^(\.|@\/|@ab\/)/;
 
-/** Refuses a file whose rename would collide (the new name is there already) or reach a package import. */
+/**
+ * Refuses a file whose rename would collide (the new name is there already) or reach a package
+ * import.
+ */
 function guard(sf: SourceFile, table: Map<string, string>, ids: Node[]): void {
   const file = sf.getFilePath();
   const names = new Set(ids.map((n) => n.getText()));
@@ -42,10 +50,10 @@ function guard(sf: SourceFile, table: Map<string, string>, ids: Node[]): void {
 }
 
 /**
- * Renames every identifier named in the table: the declaration, imports and re-exports (barrels), Nest
- * `providers`/`exports` arrays, mock factory keys and every use, matched by name (the table holds unique class
- * names). Strings and comments stay as they are. A file that already has the new name, or imports an old one
- * from a non-workspace package, stops the run.
+ * Renames every identifier named in the table: the declaration, imports and re-exports (barrels),
+ * Nest `providers`/`exports` arrays, mock factory keys and every use, matched by name (the table
+ * holds unique class names). Strings and comments stay as they are. A file that already has the new
+ * name, or imports an old one from a non-workspace package, stops the run.
  */
 export function renameIdentifiers(
   project: Project,
@@ -65,7 +73,10 @@ export function renameIdentifiers(
   return edits.length === 0 ? text : applyEdits(text, edits);
 }
 
-/** `refactor/guards/knip.json` lines (`<path> exports|types <Name>`) follow the renamed names, kept sorted. */
+/**
+ * `refactor/guards/knip.json` lines (`<path> exports|types <Name>`) follow the renamed names, kept
+ * sorted.
+ */
 export function renameGuardNames(table: Map<string, string>, text: string): string {
   const lines = JSON.parse(text) as string[];
   const renamed = lines.map((line) => {

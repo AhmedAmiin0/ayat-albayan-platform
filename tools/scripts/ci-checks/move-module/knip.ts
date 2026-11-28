@@ -33,8 +33,9 @@ function workspaces(text: string): { dir: string; start: number }[] {
 }
 
 /**
- * The root `knip.json` names files relative to their workspace (`"src/main.ts"` under `"apps/api"`):
- * a move inside that workspace rewrites those exact strings, only inside the workspace's own block.
+ * The root `knip.json` names files relative to their workspace (`"src/main.ts"` under
+ * `"apps/api"`): a move inside that workspace rewrites those exact strings, only inside the
+ * workspace's own block.
  */
 export function rewriteKnipWorkspaces(text: string, pairs: [string, string][]): string {
   let out = text;

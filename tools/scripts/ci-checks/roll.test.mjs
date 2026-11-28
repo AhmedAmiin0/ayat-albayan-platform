@@ -1,6 +1,7 @@
-// roll.sh and the deploy that ships it (docs/09 «Two API copies + one worker»): never the new layout on code from
-// before APP_ROLE (every container would run every job), the first switch only hands over the port, and a
-// Caddyfile Caddy refuses never takes 3110 down. Runs the real script against a fake docker (roll-fake.mjs).
+// roll.sh and the deploy that ships it (docs/09 «Two API copies + one worker»): never the new
+// layout on code from before APP_ROLE (every container would run every job), the first switch only
+// hands over the port, and a Caddyfile Caddy refuses never takes 3110 down. Runs the real script
+// against a fake docker (roll-fake.mjs).
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
@@ -71,7 +72,8 @@ test('a reload Caddy refuses fails the roll the same way; first switch: an inval
   assert.ok(!reload.has('.lb.sha256'), 'the stored sum is dropped before the reload: a rollback reloads its file');
   const first = run('roll.sh', { up: ['ayat-api'], fail: ['caddy validate'] });
   assert.notEqual(first.code, 0);
-  // Only the shared cache (ayat-redis, started before every roll) may come up: no sandbox, copy, worker or LB, no stop.
+  // Only the shared cache (ayat-redis, started before every roll) may come up: no sandbox, copy,
+  // worker or LB, no stop.
   const started = ['ayat-pdf', 'ayat-api-a', 'ayat-api-d', 'ayat-worker', 'ayat-lb'].map((svc) => at(first.log, `up -d --no-deps ${svc}`));
   assert.ok(at(first.log, 'stop') < 0 && started.every((i) => i < 0), first.log.join('\n'));
 });

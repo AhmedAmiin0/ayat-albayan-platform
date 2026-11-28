@@ -1,5 +1,6 @@
-// Guards for deploy/staging (docs/09 «Two API copies + one worker»): the VPS also runs the owner's live CRM,
-// so the compose project must stay self-contained, and two API copies must never both run the jobs.
+// Guards for deploy/staging (docs/09 «Two API copies + one worker»): the VPS also runs the owner's
+// live CRM, so the compose project must stay self-contained, and two API copies must never both run
+// the jobs.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { APPS, COPIES, compose, mb, roll, services } from './compose.fixture.mjs';
@@ -78,9 +79,9 @@ test('memory limits fit the 16 GB VPS beside the CRM', () => {
     'ayat-minio': 512,
     'ayat-minio-init': 192,
   });
-  // ≈ 3.3 GB of the 16 GB beside the CRM (the worker's 1 GB: Node heap + Chromium; the PDF sandbox's own 128 MB on
-  // top: the copies keep 512 MB, they hold each preview's PDF and JPEGs, docs/09).
-  // + MinIO and its one-shot init (docs/45; the init needs 192 MB:
+  // ≈ 3.3 GB of the 16 GB beside the CRM (the worker's 1 GB: Node heap + Chromium; the PDF
+  // sandbox's own 128 MB on top: the copies keep 512 MB, they hold each preview's PDF and JPEGs,
+  // docs/09). + MinIO and its one-shot init (docs/45; the init needs 192 MB:
   // Chainguard's mc is OOM-killed at 64 MB):
   // ≈ 4.0 GB, a quarter of the VPS.
   assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 4064);

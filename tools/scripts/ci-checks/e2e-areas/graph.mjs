@@ -1,8 +1,8 @@
 // The import graph of the code e2e runs (web, api, the packages, e2e), for the PR spec selection.
 // Edges are name-precise through barrels: `import { a } from '@ab/shared'` points at the file that
-// declares `a`, not at the whole barrel (every module is imported through its index.ts, so a file-level
-// graph would make every file reach almost every page). A name the parser cannot place points at the
-// barrel and everything it re-exports (wider, never narrower).
+// declares `a`, not at the whole barrel (every module is imported through its index.ts, so a
+// file-level graph would make every file reach almost every page). A name the parser cannot place
+// points at the barrel and everything it re-exports (wider, never narrower).
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, posix } from 'node:path';
 import { ownExports, parseImports } from './parse.mjs';

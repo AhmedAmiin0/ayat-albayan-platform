@@ -12,7 +12,10 @@ const SUPP = 'apps/staff-web/oxlint-suppressions.json';
 const suppressions = (moved, count = 2) =>
   `${JSON.stringify({ 'src/a.ts': { 'ab/module-boundaries': { count: 1 } }, [moved]: { 'ab/module-boundaries': { count } } }, null, 2)}\n`;
 
-/** A repo whose head moves apps/staff-web/src/lib/api.ts to src/core/ with the suppressions file as `edit` writes it. */
+/**
+ * A repo whose head moves apps/staff-web/src/lib/api.ts to src/core/ with the suppressions file as
+ * `edit` writes it.
+ */
 function repo(edit) {
   const dir = mkdtempSync(join(tmpdir(), 'pure-move-supp-'));
   const git = (...a) => execFileSync('git', ['-c', 'user.email=t@t', '-c', 'user.name=t', ...a], { cwd: dir, encoding: 'utf8' });

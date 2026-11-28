@@ -1,5 +1,5 @@
-// clear:demo must refuse rather than quietly detach or cascade-delete app rows. Read every FK into a
-// table it deletes from the migrations, so a new SET NULL / CASCADE reference fails here first.
+// clear:demo must refuse rather than quietly detach or cascade-delete app rows. Read every FK into
+// a table it deletes from the migrations, so a new SET NULL / CASCADE reference fails here first.
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
