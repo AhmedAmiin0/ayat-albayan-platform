@@ -1,10 +1,10 @@
 import { useIsRestoring, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Animated, StyleSheet } from 'react-native';
-import { useA11yPref } from '../primitives/use-a11y-pref';
-import { motion } from '../../theme';
-import { hasSavedData, startupMode } from './startup-mode';
-import { StartupScreen } from './StartupScreen';
+import { useA11yPref } from '../../primitives/use-a11y-pref';
+import { motion } from '../../../theme';
+import { hasSavedData, startupMode } from '../startup-mode';
+import { StartupScreen } from '../StartupScreen';
 
 const HAND_OFF_MS = 280;
 

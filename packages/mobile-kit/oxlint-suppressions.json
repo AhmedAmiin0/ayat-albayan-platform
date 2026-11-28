@@ -410,7 +410,7 @@
       "count": 3
     }
   },
-  "src/ui/startup/StartupEmblem.test.tsx": {
+  "src/ui/startup/StartupEmblem/StartupEmblem.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     },
@@ -418,17 +418,17 @@
       "count": 1
     }
   },
-  "src/ui/startup/StartupOverlay.tsx": {
+  "src/ui/startup/StartupOverlay/StartupOverlay.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
     }
   },
-  "src/ui/startup/StartupScreen.test.tsx": {
+  "src/ui/startup/StartupScreen/StartupScreen.test.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
   },
-  "src/ui/startup/StartupScreen.tsx": {
+  "src/ui/startup/StartupScreen/StartupScreen.tsx": {
     "stylistic/max-len": {
       "count": 1
     }

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { Animated, Easing } from 'react-native';
-import { palette } from '../../theme';
+import { palette } from '../../../theme';
 import { ConnectingRing } from './ConnectingRing';
 
 const timing = jest.spyOn(Animated, 'timing');

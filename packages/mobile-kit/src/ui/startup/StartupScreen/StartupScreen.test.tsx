@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, Animated } from 'react-native';
-import { t } from '../../lib/i18n/i18n';
-import { palette } from '../../theme';
+import { t } from '../../../lib/i18n/i18n';
+import { palette } from '../../../theme';
 import { StartupScreen } from './StartupScreen';
 
 // The branded wait: the status from the start, the 10 s hint and retry in a reserved space, Reduce Motion.
