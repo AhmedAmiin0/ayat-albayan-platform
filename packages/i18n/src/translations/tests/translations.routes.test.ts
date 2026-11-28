@@ -17,6 +17,7 @@ describe('translationRoutes', () => {
       'GET /i18n/keys',
       'PUT /i18n/:locale/:key',
       'DELETE /i18n/:locale/:key',
+      'GET /i18n/:locale/overrides',
     ]);
   });
 
@@ -49,8 +50,8 @@ describe('translationRoutes', () => {
     }
   });
 
-  it('lets in a translations manager under the i18n tag on every route', () => {
-    for (const route of Object.values(routes)) {
+  it('lets in a translations manager under the i18n tag on every editor route', () => {
+    for (const route of [routes.keys, routes.save, routes.restore]) {
       expect(route.permissions).toEqual(['translations.manage']);
       expect(route.tags).toEqual(['i18n']);
     }
@@ -58,5 +59,19 @@ describe('translationRoutes', () => {
 
   it('answers nothing to a save or a restore', () => {
     expect([routes.save.response, routes.restore.response]).toEqual(['empty', 'empty']);
+  });
+
+  it('leaves the overrides read open under the i18n tag', () => {
+    expect(routes.overrides.isPublic).toBe(true);
+    expect(routes.overrides.tags).toEqual(['i18n']);
+    expect(routes.overrides).not.toHaveProperty('permissions');
+  });
+
+  it('reads the overrides of a known locale only, as a map of text', () => {
+    expect(routes.overrides.params.parse({ locale: 'ar' })).toEqual({ locale: 'ar' });
+    expect(routes.overrides.params.safeParse({ locale: 'fr' }).success).toBe(false);
+    const map = { 'nav.leads': 'Prospects' };
+    expect(routes.overrides.response.parse(map)).toEqual(map);
+    expect(routes.overrides.response.safeParse({ 'nav.leads': 3 }).success).toBe(false);
   });
 });
