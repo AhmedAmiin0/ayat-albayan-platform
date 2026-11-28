@@ -15,7 +15,3 @@ where program is null or program::text not in ('quran', 'arabic', 'islamic_studi
 
 -- count: report_form_teachers_without_name_or_tz
 select count(*) from public.teachers where display_name_ar is null or tz is null;
-
--- count: report_form_balances_without_counts
-select count(*) from public.v_subscription_balance
-where lessons_total is null or lessons_used is null or remaining is null;
