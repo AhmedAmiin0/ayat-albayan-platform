@@ -32,7 +32,7 @@ test.describe.serial('assistant statement and own pages (API + DB)', () => {
     const m = money(request, admin);
     p = await makeAssistant('p');
     q = await makeAssistant('q');
-    const startsOn = dayOffset(0); // today in Riyadh: a start day cannot be in the past, nothing is retroactive
+    const startsOn = dayOffset(0); // today in Riyadh: a start day is never in the past
     const terms = { commission: { type: 'percent', value: 10, startsOn }, salary: { amount: 1000, currency: 'SAR', startsOn } };
     await call(request, { token: admin, method: 'PUT', path: `/assistant-pay/terms/${p.id}`, body: terms });
     sar = await family(p.id, 'سارة');

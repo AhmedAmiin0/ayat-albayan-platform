@@ -41,7 +41,7 @@ const E2E_GOOGLE = {
   GOOGLE_REDIRECT_URI: `http://localhost:${API_PORT}/integrations/google/callback`,
   GOOGLE_SYNC_POLL_MS: '1000',
 };
-/** E2E_LINES=single = the production default (no WA_CHAT_* keys): the CI job «e2e (single line)». */
+/** E2E_LINES=single is the production default (no WA_CHAT_* keys): CI job «e2e (single line)». */
 const E2E_WA_CHAT = process.env.E2E_LINES === 'single' ? {} : E2E_WA_CHAT_KEYS;
 
 export default defineConfig({
@@ -120,16 +120,16 @@ export default defineConfig({
         ...E2E_GOOGLE,
         // Set explicitly so a developer shell or .env cannot restrict recipients or stop the sync.
         WA_ALLOWED_RECIPIENTS: '',
-        // Both lines start on meta and no Kapso base: only kapso-driver.spec.ts switches (in the DB).
+        // Both lines start on meta with no Kapso base: only kapso-driver.spec.ts switches (DB).
         WA_PROVIDER: '',
         WA_CHAT_PROVIDER: '',
         KAPSO_API_BASE: '',
         WA_TEMPLATE_SYNC: 'true',
         // One-second sender tick: specs that wait for a send wait ~1 s, not up to 30 s.
         MESSAGE_SENDER_POLL_MS: '1000',
-        // Specs write settings rows with SQL (support/messages.ts setSetting): read them fresh every time.
+        // Specs write settings rows with SQL (support/messages.ts setSetting): read them fresh.
         SETTINGS_CACHE_MS: '0',
-        // Blank = unset: the integration config refresh follows SETTINGS_CACHE_MS, whatever the shell says.
+        // Blank = unset: the integration config refresh follows SETTINGS_CACHE_MS, not the shell.
         INTEGRATION_REFRESH_MS: '',
       },
       reuseExistingServer: !process.env.CI,
@@ -140,7 +140,7 @@ export default defineConfig({
       command: `pnpm exec vite --port ${WEB_PORT} --strictPort`,
       cwd: '../apps/staff-web',
       url: WEB_URL,
-      // The open inbox refreshes every second (10 s in the app): a status chip shows without a 10 s wait.
+      // The open inbox refreshes every second (10 s in the app), so a status chip shows at once.
       env: { VITE_API_URL: `http://localhost:${API_PORT}`, VITE_INBOX_REFRESH_MS: '1000' },
       reuseExistingServer: !process.env.CI,
     },

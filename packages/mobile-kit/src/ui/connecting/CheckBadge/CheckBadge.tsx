@@ -27,14 +27,32 @@ export function CheckBadge({ still }: { still: boolean }) {
       return undefined;
     }
     const pop = (toValue: number, duration: number) =>
-      Animated.timing(scale, { toValue, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true });
-    const draw = Animated.timing(dash, { toValue: 0, duration: DRAW_MS, delay: DRAW_DELAY_MS, easing: Easing.out(Easing.cubic), useNativeDriver: false });
-    const run = Animated.parallel([Animated.sequence([pop(1.12, POP_MS * 0.6), pop(1, POP_MS * 0.4)]), draw]);
+      Animated.timing(scale, {
+        toValue,
+        duration,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      });
+    const draw = Animated.timing(dash, {
+      toValue: 0,
+      duration: DRAW_MS,
+      delay: DRAW_DELAY_MS,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
+    });
+    const run = Animated.parallel([
+      Animated.sequence([pop(1.12, POP_MS * 0.6), pop(1, POP_MS * 0.4)]),
+      draw,
+    ]);
     run.start();
     return () => run.stop();
   }, [still, scale, dash]);
   return (
-    <View testID="check-badge" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+    <View
+      testID="check-badge"
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+    >
       <Animated.View testID="check-badge-pop" style={{ transform: [{ scale }] }}>
         <Svg viewBox={`0 0 ${SIZE} ${SIZE}`} width={SIZE} height={SIZE}>
           <Circle cx={10} cy={10} r={10} fill={color.ok} />
@@ -48,7 +66,10 @@ export function CheckBadge({ still }: { still: boolean }) {
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeDasharray={TICK_LENGTH}
-            strokeDashoffset={dash.interpolate({ inputRange: [0, TRAVEL], outputRange: [0, TICK_LENGTH] })}
+            strokeDashoffset={dash.interpolate({
+              inputRange: [0, TRAVEL],
+              outputRange: [0, TICK_LENGTH],
+            })}
           />
         </Svg>
       </Animated.View>

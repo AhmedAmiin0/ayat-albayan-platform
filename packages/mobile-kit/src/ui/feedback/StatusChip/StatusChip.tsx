@@ -41,7 +41,7 @@ export function StatusChip({ tone, glyph, label, size = 'md' }: StatusChipProps)
       testID={`chip-${tone}`}
       style={{
         alignSelf: 'flex-start',
-        flexShrink: 1, // in a capped slot the word ellipsizes inside the pill instead of overflowing it
+        flexShrink: 1, // in a capped slot the word ellipsizes inside the pill, not past it
         flexDirection: 'row',
         alignItems: 'center',
         gap: 6,

@@ -23,7 +23,7 @@ export async function approveTemplate(): Promise<void> {
       ],
     }),
   });
-  expect([200, 400]).toContain(created.status); // 400 = left over from an earlier run (already exists)
+  expect([200, 400]).toContain(created.status); // 400: an earlier run already made it
   await stubTemplateStatus(TEMPLATE, 'APPROVED');
   await withSql(async (sql) => {
     const rows = await sql`update public.message_templates set status = 'approved' where key = ${TEMPLATE} returning key`;

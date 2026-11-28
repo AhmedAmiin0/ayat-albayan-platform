@@ -20,7 +20,7 @@ export function ErrorState({ onRetry, message = t.common.error }: ErrorStateProp
   return (
     <View style={{ alignItems: 'center', gap: 8, paddingVertical: 32, paddingHorizontal: 24 }}>
       <NuqtaGlyph shape="struck" color={color.bad} size={16} />
-      {/* The alert is the sentence, not the box: an accessible box would swallow the retry button. */}
+      {/* The alert is the sentence, not the box: an accessible box hides the retry button. */}
       <AppText
         accessibilityRole="alert"
         accessibilityLiveRegion="polite"

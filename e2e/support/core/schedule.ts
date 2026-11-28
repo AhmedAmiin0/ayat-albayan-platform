@@ -134,7 +134,7 @@ export async function lessonsOf(studentId: string): Promise<{ starts_at: Date; s
     where ls.student_id = ${studentId} order by l.starts_at`);
 }
 
-/** The rule a booking made for a student: its idempotency key, its link and its in-transaction audit. */
+/** The rule a booking made for a student: its idempotency key, link and in-transaction audit. */
 export async function ruleOf(
   studentId: string,
 ): Promise<{ client_request_id: string | null; meeting_link: string | null; audits: number }[]> {
