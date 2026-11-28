@@ -1,4 +1,4 @@
-import type { AcademySettings, GateCutoverInput, GateSwitchInput } from '@ab/shared';
+import type { AcademySettings, GateCutoverInput, GateSwitchInput } from '@ab/settings';
 
 export interface SendGateCalls {
   sending: (body: GateSwitchInput) => Promise<AcademySettings>;

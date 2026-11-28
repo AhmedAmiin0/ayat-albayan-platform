@@ -1,4 +1,4 @@
-import { gateRoutes } from '@ab/shared';
+import { gateRoutes } from '@ab/settings';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { SendGateCalls } from './send-gate-api.types';
 

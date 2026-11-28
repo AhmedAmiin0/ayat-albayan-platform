@@ -1,4 +1,4 @@
-import { GATE_CONFIRM_TEXT, SETTING_DEFAULTS } from '@ab/shared';
+import { GATE_CONFIRM_TEXT, SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, it, vi } from 'vitest';
 import type { ApiClient } from '../../../../core/http';
 import { sendGateCalls } from '../send-gate-api';
