@@ -42,14 +42,11 @@ jest.mock('@expo/ui/community/datetime-picker', () => {
   return { __esModule: true, default: DateTimePicker, DateTimePicker };
 });
 
-// EAS Observe (src/core/root/observed-root): jest has no native ExpoObserve module. The wrap renders
-// the layout as is; the interactive marker renders a probe so a test can see when it mounts.
-jest.mock('expo-observe', () => {
-  const { createElement } = jest.requireActual('react');
-  const { View } = jest.requireActual('react-native');
-  return {
-    Observe: { configure: jest.fn() },
-    ObserveRoot: { wrap: jest.fn((Layout) => (props) => createElement(Layout, props)) },
-    ObserveInteractiveMarker: () => createElement(View, { testID: 'observe-interactive' }),
-  };
-});
+// EAS Observe (src/core/root/observed-root): jest has no native ExpoObserve module.
+jest.mock('expo-observe', () =>
+  jest.requireActual('@ab/testing/expo-observe').observeModule({
+    fn: jest.fn,
+    createElement: jest.requireActual('react').createElement,
+    View: jest.requireActual('react-native').View,
+  }),
+);

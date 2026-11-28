@@ -1,6 +1,7 @@
 import { render as renderRaw, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { queryClient, pathKey } from '@ab/mobile-kit';
+import { OBSERVE_MARKER as MARKER } from '@ab/testing/expo-observe';
 import { fullAccessMe } from '@/test/staff-me';
 import RootLayout from '../../../../../app/_layout';
 
@@ -24,7 +25,6 @@ jest.mock('expo-router', () => {
   return { Stack };
 });
 
-const MARKER = 'observe-interactive';
 const metrics = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
   insets: { top: 47, left: 0, right: 0, bottom: 34 },
