@@ -1,7 +1,8 @@
 import { reportPageCalls } from '@ab/client-core';
+import { reportPageRoutes } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Linking } from 'react-native';
-import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 
 const pages = reportPageCalls({ apiFetch, apiSend });
 
@@ -11,9 +12,10 @@ interface PageParams {
   reportId?: string;
 }
 
-/** The query key keeps the API path of a report's live page. */
-const reportPagePath = ({ publicId, reportId = '' }: PageParams): string =>
-  publicId ? `/report-pages/${publicId}` : `/report-pages/by-report/${reportId}`;
+const pageKey = ({ publicId, reportId = '' }: PageParams) =>
+  publicId
+    ? reportPageRoutes.byPublicId.key.of({ publicId })
+    : reportPageRoutes.byReportId.key.of({ id: reportId });
 
 const readPage = ({ publicId, reportId = '' }: PageParams) =>
   publicId ? pages.byPublicId({ publicId }) : pages.byReportId({ id: reportId });
@@ -24,9 +26,8 @@ const readPage = ({ publicId, reportId = '' }: PageParams) =>
  * else gets 404.
  */
 export function useReportPage(params: PageParams) {
-  const path = reportPagePath(params);
   return useQuery({
-    queryKey: pathKey(path),
+    queryKey: pageKey(params),
     queryFn: () => readPage(params),
     enabled: Boolean(params.publicId ?? params.reportId),
     retry: false,
