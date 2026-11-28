@@ -336,17 +336,6 @@
       "count": 2
     }
   },
-  "src/ui/form/Field/Field.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/ui/form/Field/tests/Field.test.tsx": {
     "stylistic/max-len": {
       "count": 1

@@ -96,13 +96,8 @@ jest.mock('./src/biometric/core/bio-lock', () => {
   return bioLockMock;
 });
 
-// @expo/ui's BottomSheet is a native sheet (SwiftUI / Jetpack Compose) with no jest module: a
-// stand-in View that shows its children only while presented and carries its props (the lesson
-// room's participants; the family app's children sheet), so a test reads and dismisses it.
-jest.mock('@expo/ui', () => {
-  const { createElement } = require('react');
-  const { View } = require('react-native');
-  const BottomSheet = ({ isPresented, children, ...props }) =>
-    isPresented ? createElement(View, { testID: 'native-bottom-sheet', ...props }, children) : null;
-  return { __esModule: true, BottomSheet };
-});
+// @expo/ui's native views (SwiftUI / Jetpack Compose) have no jest module: stand-ins that carry
+// their props (jest-expo-ui.cjs), so a test reads, types into and dismisses them.
+jest.mock('@expo/ui', () => require('./jest-expo-ui.cjs').universal);
+jest.mock('@expo/ui/swift-ui/modifiers', () => require('./jest-expo-ui.cjs').swiftUiModifiers);
+jest.mock('@expo/ui/jetpack-compose/modifiers', () => require('./jest-expo-ui.cjs').composeModifiers);
