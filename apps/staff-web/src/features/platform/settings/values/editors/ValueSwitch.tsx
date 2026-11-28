@@ -20,6 +20,7 @@ export function ValueSwitch({ checked, onChange, labelledBy, label, disabled }: 
           type="checkbox"
           role="switch"
           checked={checked}
+          aria-checked={checked}
           disabled={disabled}
           aria-labelledby={label ? undefined : labelledBy}
           aria-label={label}

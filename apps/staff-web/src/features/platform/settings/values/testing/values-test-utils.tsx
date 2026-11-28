@@ -44,7 +44,10 @@ function Harness({
   );
 }
 
-export function renderValues(apiFetch: Mock, fx: ValuesFixture = {}) {
+export function renderValues(
+  apiFetch: Mock<(path: string) => Promise<unknown>>,
+  fx: ValuesFixture = {},
+) {
   const settings = { ...SETTINGS, ...fx.settings };
   routeFetch(apiFetch, [
     ['/settings/public', {}],

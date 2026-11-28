@@ -34,7 +34,7 @@ export interface RowSaves {
 async function versionOf(client: QueryClient, key: SettingKey): Promise<number> {
   const hit =
     cachedEntry(client, key) ??
-    (await client.fetchQuery(configEntriesQuery)).entries.find((e) => e.key === key);
+    (await client.query(configEntriesQuery)).entries.find((e) => e.key === key);
   if (!hit) throw new Error(`no entry ${key}`);
   return hit.version;
 }

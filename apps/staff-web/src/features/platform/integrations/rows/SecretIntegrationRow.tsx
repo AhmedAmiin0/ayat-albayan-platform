@@ -95,7 +95,7 @@ export function SecretIntegrationRow({
               onClose={() => setConfirming(false)}
               actions={
                 <>
-                  <Button variant="ghost" autoFocus onClick={() => setConfirming(false)}>{t.common.cancel}</Button>
+                  <Button variant="ghost" data-autofocus onClick={() => setConfirming(false)}>{t.common.cancel}</Button>
                   <Button variant="danger" disabled={clear.isPending} onClick={() => clear.mutate(key)}>{s.clearSecret}</Button>
                 </>
               }
