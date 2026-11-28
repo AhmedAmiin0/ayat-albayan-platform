@@ -1,25 +1,23 @@
-import { FlatList, type ListRenderItemInfo } from 'react-native';
-import { t, useInsetRows } from '@ab/mobile-kit';
+import { t, LazyList } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useAssistants } from '@/assistants/api/api';
 import { AssistantItem } from './AssistantItem';
 import type { AssistantRow } from '@ab/client-core';
 
-const renderRow = ({ item }: ListRenderItemInfo<AssistantRow>) => (
+const renderRow = ({ item }: { item: AssistantRow }) => (
   <AssistantItem assistant={item} />
 );
 
 export function AssistantsList() {
   const list = useAssistants();
-  const cells = useInsetRows(renderRow, list.data?.length ?? 0);
   return (
-    <FlatList
+    <LazyList
       accessibilityLabel={t.assistants.tabs.list}
-      style={{ flex: 1 }}
-      contentContainerStyle={{ paddingBottom: 24 }}
       data={list.data ?? []}
       keyExtractor={(a) => a.id}
-      {...cells}
+      renderItem={renderRow}
+      tabBar={false}
+      endSpace={24}
       refreshing={list.isRefetching}
       onRefresh={() => void list.refetch()}
       ListEmptyComponent={<LoadState status={list} empty emptyTitle={t.assistants.empty} />}

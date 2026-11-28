@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useCallback } from 'react';
-import { ActivityIndicator, FlatList, type ListRenderItemInfo, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { AssistantLessonItem } from '@/classroom/assistants/AssistantLessonItem';
 import { joinableRows } from '@/classroom/assistants/assistant-lessons';
 import {
@@ -10,10 +10,9 @@ import {
   Screen,
   ScreenHeader,
   t,
-  useInsetRows,
   usePullRefresh,
-  useTabBarInset,
   useTheme,
+  LazyList,
 } from '@ab/mobile-kit';
 import { useSalesLive } from '@/sales/sales/lib/sales-api';
 
@@ -25,16 +24,14 @@ export function SalesLiveScreen() {
   const live = useSalesLive();
   const pull = usePullRefresh(live.refetch);
   const rows = joinableRows(live.data ?? []);
-  const inset = useTabBarInset();
   const row = useCallback(
-    ({ item }: ListRenderItemInfo<Row>) => (
+    ({ item }: { item: Row }) => (
       <View style={{ padding: 16 }}>
         <AssistantLessonItem view={item.view} lesson={item.lesson} />
       </View>
     ),
     [],
   );
-  const cells = useInsetRows(row, rows.length);
   return (
     <Screen list>
       <ScreenHeader
@@ -44,12 +41,10 @@ export function SalesLiveScreen() {
         count={live.data ? rows.length : undefined}
         leading={<BackButton onPress={() => router.back()} />}
       />
-      <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 + inset }}
+      <LazyList
         data={rows}
         keyExtractor={(r) => r.view.lesson_id}
-        {...cells}
+        renderItem={row}
         refreshing={pull.refreshing}
         onRefresh={pull.onRefresh}
         ListEmptyComponent={
