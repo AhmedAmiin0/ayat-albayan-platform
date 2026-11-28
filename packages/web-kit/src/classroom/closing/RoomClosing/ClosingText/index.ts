@@ -1,0 +1,1 @@
+export { ClosingText } from './ClosingText';
