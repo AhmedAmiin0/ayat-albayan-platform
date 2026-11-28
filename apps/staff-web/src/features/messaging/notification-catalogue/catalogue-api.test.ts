@@ -7,8 +7,12 @@ import { catalogueQuery } from './catalogue-api';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
-const entries = catalogueViews({ settings: SETTING_DEFAULTS, gateReason: null, templates: new Map() });
-const read = (version: number) => new QueryClient().fetchQuery(catalogueQuery(version));
+const entries = catalogueViews({
+  settings: SETTING_DEFAULTS,
+  gateReason: null,
+  templates: new Map(),
+});
+const read = (version: number) => new QueryClient().query(catalogueQuery(version));
 
 afterEach(() => apiFetch.mockReset());
 

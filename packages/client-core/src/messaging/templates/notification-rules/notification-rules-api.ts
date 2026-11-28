@@ -7,6 +7,7 @@ export function notificationRuleCalls(client: ApiClient): NotificationRuleCalls 
   const call = callWith(client);
   return {
     overview: () => call({ route: notificationRuleRoutes.overview }),
-    update: ({ key, body }) => call({ route: notificationRuleRoutes.update, params: { key }, body }),
+    update: ({ key, body }) =>
+      call({ route: notificationRuleRoutes.update, params: { key }, body }),
   };
 }

@@ -2002,11 +2002,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/notification-catalogue/catalogue-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/features/messaging/notification-catalogue/use-catalogue.ts": {
     "ab/module-boundaries": {
       "count": 2
@@ -2088,9 +2083,6 @@
   },
   "src/features/messaging/notification-rules/rules-api.ts": {
     "complexity": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     },
     "ab/no-shape-checks": {
