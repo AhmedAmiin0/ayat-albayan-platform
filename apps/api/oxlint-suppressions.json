@@ -1728,11 +1728,6 @@
       "count": 4
     }
   },
-  "src/modules/messaging/inbox/threads/thread-lessons.ts": {
-    "ab/forbidden-imports": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/inbox/threads/threads.controller.ts": {
     "ab/zod-inputs": {
       "count": 1

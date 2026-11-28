@@ -1,7 +1,5 @@
 import { PDF_PREVIEW_PAGES } from '@ab/shared';
 
-export { FailedRecently } from './failed-recently';
-
 // The pure part of the chat PDF preview: which pages one request renders, poppler's
 // arguments and outputs, and the per-process map of shared in-flight work.
 
