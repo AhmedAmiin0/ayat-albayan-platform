@@ -2,7 +2,7 @@ import type { ThreadView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import { thread } from '@/inbox/shared/thread-fixtures';
+import { thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadsList } from '@/inbox/threads-list/ThreadsList/ThreadsList';
 
@@ -18,7 +18,7 @@ jest.mock('expo-router', () => ({ router: { push: (h: string) => mockPush(h) } }
 const guardian: ThreadView = {
   ...thread,
   display_name: 'أم يوسف',
-  guardian_id: 'g-1',
+  guardian_id: uid('g1'),
   guardian_name: 'أم يوسف',
   lead_id: null,
   lead_name: null,
