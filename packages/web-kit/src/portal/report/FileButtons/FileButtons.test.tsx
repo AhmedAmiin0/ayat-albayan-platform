@@ -41,7 +41,7 @@ describe('FileButtons', () => {
     renderPortal(<FileButtons studentId="s1" files={[report]} icons />);
     fireEvent.click(screen.getByRole('button', { name: t.portal.openPdf }));
     await vi.waitFor(() => expect(tab.location.href).toBe('https://files.example.org/r1'));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/reports/r1/url');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/reports/r1/url', undefined);
   });
 
   it('a failed link closes the tab and says so', async () => {
