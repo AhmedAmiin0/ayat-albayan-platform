@@ -76,7 +76,8 @@ describe('MenuBar — the compact bar under 900px', () => {
     expect(row).toBe(clock.parentElement);
     expect(row?.previousElementSibling).toBeNull();
     const nav = within(sheet).getByRole('navigation', { name: t.nav.label });
-    expect((row?.compareDocumentPosition(nav) ?? 0) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const position = row?.compareDocumentPosition(nav) ?? 0;
+    expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(within(sheet).getAllByRole('group', { name: t.theme.label })).toHaveLength(1);
     expect(within(theme).getByRole('button', { name: t.theme.dark }).textContent).toBe('');
   });
