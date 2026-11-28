@@ -3,7 +3,7 @@ import { screen, within } from '@testing-library/react-native';
 import { t, palette } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
-import { thread } from '@/inbox/shared/thread-fixtures';
+import { thread, uid } from '@/inbox/shared/thread-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -17,7 +17,7 @@ const family = (phone: string, name: string, ring: ThreadView['ring']): ThreadVi
   ...thread,
   phone_e164: phone,
   display_name: name,
-  guardian_id: `g-${phone}`,
+  guardian_id: uid(`g${phone.slice(-4)}`),
   lead_status: null,
   ring,
 });

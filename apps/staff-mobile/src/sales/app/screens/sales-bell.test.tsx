@@ -18,7 +18,7 @@ function answer(permissions: string[]) {
   mockApiFetch.mockImplementation(async (p: string) => {
     if (p === '/auth/me') return { role: 'sales', permissions };
     if (p.startsWith('/me/notifications')) return page;
-    if (p.startsWith('/threads')) return { items: [thread], total: 1 };
+    if (p.startsWith('/threads')) return { items: [thread], total: 1, page: 1, pageSize: 25 };
     return p.startsWith('/assistant') ? [] : { items: [], total: 0 };
   });
 }

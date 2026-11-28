@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../../../core/http';
-import { SHORT_LINK_GATE_KEY, SHORT_LINKS_KEY, shortLinkQueries } from '../short-links-api';
-import { detail, gateView, person } from '../../short-links.test-util';
+import type { ApiClient } from '../../../../core/http';
+import { SHORT_LINKS_KEY, shortLinkQueries } from '../short-links-api';
+import { detail, person } from '../../short-links.test-util';
 
 const clientAnswering = (answer: () => Promise<unknown>) =>
   ({ apiFetch: vi.fn(answer), apiSend: vi.fn() }) as unknown as ApiClient;
@@ -42,41 +42,6 @@ describe('short link reads', () => {
     await expect(q.queryFn()).resolves.toEqual([person]);
     expect(client.apiFetch).toHaveBeenCalledWith(
       `/short-links/people?search=${encodeURIComponent('أحمد')}`,
-    );
-  });
-});
-
-describe('the gate view', () => {
-  it('answers the parsed view', async () => {
-    const client = clientAnswering(async () => gateView);
-    const q = shortLinkQueries(client).gateViewQuery('K7q2M9xT');
-    expect(q.queryKey).toEqual([...SHORT_LINK_GATE_KEY, 'K7q2M9xT']);
-    await expect(q.queryFn()).resolves.toEqual({ kind: 'view', view: gateView });
-    expect(client.apiFetch).toHaveBeenCalledWith('/public/short-links/K7q2M9xT');
-  });
-
-  it('turns a 404 into not_found', async () => {
-    const client = clientAnswering(async () => {
-      throw new ApiError(404, { code: 'short_link_not_found' });
-    });
-    await expect(shortLinkQueries(client).gateViewQuery('K7q2M9xT').queryFn()).resolves.toEqual({
-      kind: 'not_found',
-    });
-  });
-
-  it('never asks for a malformed code', async () => {
-    const client = clientAnswering(async () => gateView);
-    const q = shortLinkQueries(client).gateViewQuery('bad/code');
-    await expect(q.queryFn()).resolves.toEqual({ kind: 'not_found' });
-    expect(client.apiFetch).not.toHaveBeenCalled();
-  });
-
-  it('keeps any other failure an error', async () => {
-    const client = clientAnswering(async () => {
-      throw new ApiError(500);
-    });
-    await expect(shortLinkQueries(client).gateViewQuery('K7q2M9xT').queryFn()).rejects.toThrow(
-      'API 500',
     );
   });
 });

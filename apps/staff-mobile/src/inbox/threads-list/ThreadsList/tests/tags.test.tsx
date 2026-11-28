@@ -3,7 +3,7 @@ import { screen, within } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
-import { thread } from '@/inbox/shared/thread-fixtures';
+import { thread, uid } from '@/inbox/shared/thread-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -19,7 +19,7 @@ const guardian: ThreadView = {
   ...thread,
   phone_e164: '+966552147731',
   display_name: 'أم إيمان',
-  guardian_id: 'g-1',
+  guardian_id: uid('g1'),
   guardian_name: 'أم إيمان',
   lead_source: 'instagram_ad',
   subscribed: true,

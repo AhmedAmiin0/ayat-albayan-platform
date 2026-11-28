@@ -1,3 +1,4 @@
+import { DECORATORS } from '@nestjs/swagger/dist/constants';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   academyApp,
@@ -5,6 +6,7 @@ import {
   SUB,
   teacherRow,
 } from '@/modules/sales/sales/academy/sales-academy.fakes';
+import { SalesAcademyController } from '@/modules/sales/sales/academy/sales-academy.controller';
 
 type App = Awaited<ReturnType<typeof academyApp>>;
 const INVALID = expect.objectContaining({ code: 'response_invalid' });
@@ -47,5 +49,16 @@ describe('/sales/teachers and the history served from their route objects', () =
     const res = await t.get('/sales/subscriptions/nope/history', 'salesA');
     expect(res.statusCode).toBe(400);
     expect(t.history.studentOf).not.toHaveBeenCalled();
+  });
+});
+
+describe('SalesAcademyController tags', () => {
+  it('carries no class tag: each handler takes its tag from its route object', () => {
+    const { prototype } = SalesAcademyController;
+    expect(Reflect.getMetadata(DECORATORS.API_TAGS, SalesAcademyController)).toBeUndefined();
+    const { history, teachers, day, live, students } = prototype;
+    for (const handler of [history, teachers, day, live, students]) {
+      expect(Reflect.getMetadata(DECORATORS.API_TAGS, handler)).toEqual(['sales']);
+    }
   });
 });

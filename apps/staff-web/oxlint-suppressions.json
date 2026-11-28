@@ -1558,11 +1558,6 @@
       "count": 1
     }
   },
-  "src/features/messaging/inbox/messages/reply-actions/ReplyConfirmButton.tsx": {
-    "ab/forbidden-imports": {
-      "count": 1
-    }
-  },
   "src/features/messaging/inbox/messages/reply-actions/ReplyNoteLine.test.tsx": {
     "stylistic/max-len": {
       "count": 1

@@ -1,7 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
-import { thread } from '@/inbox/shared/thread-fixtures';
+import { thread, uid } from '@/inbox/shared/thread-fixtures';
 import { t } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -17,11 +17,11 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 const ME = { role: 'sales', permissions: ['inbox.read', 'inbox.send', 'messages.read', 'leads.read', 'self.sales'] };
 
 // A family on file whose running package owes money: the payload's flag, as an admin's list carries it.
-const owing = { ...thread, phone_e164: '+966552147731', display_name: 'أم إيمان', guardian_id: 'g-1', lead_status: null, unpaid: true };
+const owing = { ...thread, phone_e164: '+966552147731', display_name: 'أم إيمان', guardian_id: uid('g1'), lead_status: null, unpaid: true };
 const rowOf = (name: string) => within(screen.getByRole('button', { name: new RegExp(name) }));
 
 async function open(base: '' | '/sales') {
-  const threads = { items: [thread, owing], total: 2 };
+  const threads = { items: [thread, owing], total: 2, page: 1, pageSize: 25 };
   mockApiFetch.mockImplementation(async (p: string) => (p === '/auth/me' ? ME : p.startsWith('/threads') ? threads : { items: [], total: 0 }));
   await renderWithQuery(
     <TreeBaseProvider value={base}>

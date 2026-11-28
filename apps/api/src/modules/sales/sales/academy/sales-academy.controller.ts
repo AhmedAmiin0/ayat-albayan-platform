@@ -4,7 +4,7 @@ import {
   salesAcademyStudentRoutes,
 } from '@ab/shared';
 import { Controller } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { asResponse } from '@/common/http/returns';
@@ -14,7 +14,6 @@ import { SalesScheduleService } from '@/modules/sales/sales/schedule/sales-sched
 import { SalesAcademyService } from './sales-academy.service';
 
 /** docs/16: read-only and whitelisted; rooms are entered via POST /lessons/:id/room/join. */
-@ApiTags('sales')
 @ApiBearerAuth()
 @Controller()
 export class SalesAcademyController {

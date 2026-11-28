@@ -1,4 +1,6 @@
+import { DECORATORS } from '@nestjs/swagger/dist/constants';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { LeadsController } from './leads.controller';
 import { applicant, lead, LEAD_ID } from './leads.fakes';
 import { testApp } from './test-app';
 
@@ -76,5 +78,14 @@ describe('LeadsController HTTP (R-LEAD-01, R-LEAD-04)', () => {
   it('L2 PATCH /leads/:id/follow-up needs a boolean', async () => {
     const res = await h.call({ method: 'PATCH', url: `/leads/${LEAD_ID}/follow-up`, body: { paused: 'yes' } });
     expect(res.statusCode).toBe(400);
+  });
+});
+
+describe('LeadsController tags', () => {
+  it('carries no class tag: each handler takes its tag from its route object', () => {
+    expect(Reflect.getMetadata(DECORATORS.API_TAGS, LeadsController)).toBeUndefined();
+    expect(Reflect.getMetadata(DECORATORS.API_TAGS, LeadsController.prototype.list)).toEqual([
+      'leads',
+    ]);
   });
 });
