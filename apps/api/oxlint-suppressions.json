@@ -743,9 +743,6 @@
   "src/common/telemetry/activity/activity.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/common/telemetry/activity/activity.entry.ts": {

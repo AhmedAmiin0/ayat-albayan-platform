@@ -4166,11 +4166,6 @@
       "count": 1
     }
   },
-  "src/features/reporting/activity/activity.api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/features/reporting/dashboard/DashboardPage/DashboardPage.tsx": {
     "ab/module-boundaries": {
       "count": 2

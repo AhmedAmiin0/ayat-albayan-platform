@@ -10,6 +10,7 @@ export * from './messaging';
 export * from './reports';
 export * from './schemas';
 export * from './settings/backup';
+export * from './settings/activity';
 export * from './people/students/student-lists';
 export * from './people/students';
 export type * from './people/teachers';
