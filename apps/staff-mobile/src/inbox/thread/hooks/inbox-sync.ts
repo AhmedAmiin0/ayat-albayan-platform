@@ -7,7 +7,8 @@ import { listsKey } from '@/inbox/lists/lib/use-chat-lists';
 import { changeLists } from '@/inbox/thread/live/list-marks';
 import { nudgeInboxStore } from '@/inbox/thread/local/store-session';
 import { type ThreadCache, threadKey } from './thread-cache';
-import { clearUnread, newestInbound, type ThreadListCache, touchList } from './thread-list-cache';
+import { editLists } from './list-edits';
+import { clearUnread, newestInbound, touchList } from './thread-list-cache';
 import { threadKeys } from '@/core/lib/keys';
 
 // One shared key reaches every tree's chats list (useThreadList) after any send or receive.
@@ -45,13 +46,6 @@ export async function refreshChat(client: QueryClient, phone: string): Promise<v
   await Promise.all(keys.map((queryKey) => client.invalidateQueries({ queryKey })));
 }
 
-/** Reads started before backgrounding may hang and absorb refreshes, so all are cancelled first. */
-export async function resumeInbox(client: QueryClient): Promise<void> {
-  await client.cancelQueries({ queryKey: threadKeys.all });
-  nudgeInboxStore();
-  await refreshInbox(client);
-}
-
 /**
  * A send's row on top of its chat in every cached list at once (WhatsApp-like). A list refetch in
  * flight is cancelled first, so its older answer never lands over the move; refreshInbox confirms
@@ -60,19 +54,6 @@ export async function resumeInbox(client: QueryClient): Promise<void> {
 export async function touchInbox(client: QueryClient, row: MessageView): Promise<void> {
   await client.cancelQueries({ queryKey: threadListKey });
   editLists(client, (old) => touchList(old, row));
-}
-
-type ListEdit = (old: ThreadListCache | undefined) => ThreadListCache | undefined;
-
-/**
- * Every cached list edited in place, keeping its read time: an edit is not a read, so it never
- * hides a change a hidden list missed (list-marks.ts compares that time with its mark).
- */
-function editLists(client: QueryClient, edit: ListEdit): void {
-  for (const [queryKey] of client.getQueriesData<ThreadListCache>({ queryKey: threadListKey })) {
-    const updatedAt = client.getQueryState(queryKey)?.dataUpdatedAt;
-    client.setQueryData<ThreadListCache>(queryKey, edit, { updatedAt });
-  }
 }
 
 /** The API stamped the chat read: its badge goes at once, the counts refetch (not the thread). */

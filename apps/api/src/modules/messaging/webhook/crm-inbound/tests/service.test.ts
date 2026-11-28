@@ -64,8 +64,16 @@ describe('CrmInbound.drain', () => {
       expect.objectContaining({
         waMessageId: WAMID,
         attempts: 3,
-        nextAt: new Date(NOW.getTime() + 240_000),
+        nextAt: new Date(NOW.getTime() + 120_000),
       }),
+    );
+  });
+
+  it('the first failure waits the first step (30 s), not the second', async () => {
+    const k = kit([queued({ attempts: 0 })], down);
+    await k.service.drain(NOW);
+    expect(k.repo.retry).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ attempts: 1, nextAt: new Date(NOW.getTime() + 30_000) }),
     );
   });
 

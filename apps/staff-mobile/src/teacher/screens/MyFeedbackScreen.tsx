@@ -1,6 +1,5 @@
 import { router } from 'expo-router';
-import { FlatList } from 'react-native';
-import { t, BackButton, EmptyState, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
+import { t, BackButton, EmptyState, ErrorState, LazyList, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { AverageCard } from '@/feedback/AverageCard';
 import { FeedbackRow } from '@/feedback/FeedbackRow';
@@ -16,9 +15,11 @@ export function MyFeedbackScreen() {
         title={t.mobile.feedback.title}
         leading={<BackButton onPress={() => router.back()} />}
       />
-      <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ gap: 12, paddingBottom: 24 }}
+      <LazyList
+        inset={false}
+        gap={12}
+        tabBar={false}
+        endSpace={24}
         data={mine?.items ?? []}
         keyExtractor={(row) => row.id}
         renderItem={({ item }) => <FeedbackRow row={item} />}

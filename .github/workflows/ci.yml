@@ -21,6 +21,67 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # Hosted runners have no priority queue, so a PR run without the `priority` label (docs/09
+  # «Priority») waits here while a priority PR or develop has a ci run queued or in progress, at most
+  # 30 minutes, then lets every other job start (they need it). Priority PRs (also a fix/, hotfix/ or
+  # ci/ branch, labelled a moment after this run starts), pushes and manual runs go at once. A read
+  # error ends the wait: it only orders runs, it never blocks one.
+  yield:
+    name: yield to priority
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    env:
+      YIELD: >-
+        ${{ github.event_name == 'pull_request'
+        && !contains(github.event.pull_request.labels.*.name, 'priority')
+        && !startsWith(github.head_ref, 'fix/') && !startsWith(github.head_ref, 'hotfix/')
+        && !startsWith(github.head_ref, 'ci/') }}
+    steps:
+      - if: env.YIELD == 'true'
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - if: env.YIELD == 'true'
+        uses: pnpm/action-setup@v4
+      - if: env.YIELD == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - if: env.YIELD == 'true'
+        uses: ./.github/actions/pnpm-store
+      - if: env.YIELD == 'true'
+        run: pnpm i --frozen-lockfile --filter @ab/scripts
+      - name: Wait while a priority run goes first
+        if: env.YIELD == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -uo pipefail
+          d="$RUNNER_TEMP/yield" && mkdir -p "$d"
+          end=$((SECONDS + 1800))
+          # poll: GitHub Actions has no run-priority event
+          while [ "$SECONDS" -lt "$end" ]; do
+            for s in queued in_progress; do
+              gh api "repos/$REPO/actions/workflows/ci.yml/runs?status=$s&per_page=100" --paginate \
+                --jq '.workflow_runs[] | {id, event, head_branch, head_repository: .head_repository.full_name}'
+            done | jq -s . > "$d/runs.json" || break
+            gh api "repos/$REPO/pulls?state=open&per_page=100" --paginate \
+              --jq '.[] | {number, head: .head.ref, repo: .head.repo.full_name, labels: [.labels[].name]}' \
+              | jq -s . > "$d/pulls.json" || break
+            out=$(node tools/scripts/automerge/ci-yield/cli.ts "$d") || break
+            echo "$out" | sed -n 's/^reason=//p'
+            grep -qx 'wait=true' <<< "$out" || break
+            sleep 60
+          done
+          echo "go"
+
   # Which parts changed. e2e drives both web apps (apps/staff-web, apps/family-web) against the API and database, so a change that only
   # touches the mobile apps (apps/staff-mobile, apps/family-mobile and their shared packages/mobile-kit,
   # which apps/staff-web never imports), docs, the migration tool or other scripts skips the e2e machines; a docs-only change
@@ -33,6 +94,7 @@ jobs:
   # import graph: tools/scripts/ci-checks/e2e-areas/select.mjs) and how many shards they need; anything it
   # does not understand, and every push, = the full suite on 10 shards.
   changes:
+    needs: yield
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -311,6 +373,7 @@ jobs:
   # on any hunk that is not a rename, a module path, a listed identifier rename, a new index.ts barrel, config
   # that only follows moved paths or a baseline entry that follows its moved file. No install, no secrets.
   refactor:
+    needs: yield
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -516,6 +579,7 @@ jobs:
   # gitleaks is a pinned release binary checked by sha256 (no third-party action, no licence); rules and the
   # test-fixture allow-list are in .gitleaks.toml. Findings are redacted in the log. Never skipped, no secrets.
   secret-scan:
+    needs: yield
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -550,7 +614,7 @@ jobs:
           test -z "$BIN" || { echo "::error::keystore files added:"; echo "$BIN"; exit 1; }
 
   check:
-    needs: [changes, verify, guards, refactor, image, secret-scan]
+    needs: [yield, changes, verify, guards, refactor, image, secret-scan]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 2

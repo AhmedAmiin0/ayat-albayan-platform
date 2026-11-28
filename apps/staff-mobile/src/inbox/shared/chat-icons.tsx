@@ -39,7 +39,6 @@ export const ComposeIcon = (p: IconProps) => (
 );
 export const CopyIcon = (p: IconProps) => <Line {...p} d="M9 9h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V10a1 1 0 0 1 1-1ZM16 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" />;
 export const MoreIcon = (p: IconProps) => <Line {...p} d="M12 5h.01M12 12h.01M12 19h.01" />;
-export const CheckIcon = (p: IconProps) => <Line {...p} d="m5 12.5 4.5 4.5L19 7" />;
 export function CheckPersonIcon({ color, size = 22 }: IconProps) {
   return (
     <Svg

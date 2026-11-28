@@ -1,0 +1,1 @@
+export { priceListHtml } from './template';

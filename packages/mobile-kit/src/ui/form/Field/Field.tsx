@@ -1,38 +1,22 @@
-import { useState } from 'react';
-import { TextInput, View, type TextInputProps } from 'react-native';
-import { t } from '../../../lib/i18n/i18n';
-import { shape, type, useTheme } from '../../../theme';
+import { View } from 'react-native';
+import { type, useTheme } from '../../../theme';
 import { AppText } from '../../primitives/AppText';
-import { PasswordToggle } from '../PasswordToggle';
-
-export interface FieldProps extends Omit<TextInputProps, 'style'> {
-  label: string;
-  /** LTR value (email, code, URL): the input is an LTR island in either UI language. */
-  ltr?: boolean;
-  /** A required question of the Google Form: «*» after the label, announced as required. */
-  required?: boolean;
-}
+import type { FieldProps } from './Field.types';
+import { NativeFieldInput } from './NativeFieldInput';
+import { RnFieldInput } from './RnFieldInput';
+import { useField } from './use-field';
 
 /**
  * Label + 16pt input, 44pt tall (docs/07 §4: the iOS zoom floor and mobile touch size).
- * Edge is the 3:1 ruleInput; focus turns it a 2px lapis ring (border + outline, so nothing shifts).
- * The label starts at the inline-start (AppText). Free text aligns by what is typed (no textAlign, no
- * writingDirection: the platform's first-strong rule); an `ltr` field is wrapped in direction 'ltr',
- * and so is a password (its dots and Latin characters start at the left like the identifier's).
- * A `secureTextEntry` field gets the eye toggle at the inline-end (PasswordToggle).
+ * Edge is the 3:1 ruleInput; focus turns it a 2px lapis ring without moving the text.
+ * The label starts at the inline-start (AppText). Free text aligns by what is typed (no textAlign,
+ * no writingDirection); an `ltr` field and a password are LTR islands.
+ * On iOS the input is @expo/ui's native text input; a password or a cursor-tracking field, and
+ * every Android field, keeps React Native's (use-field.ts and field-input.registry.ts say why).
  */
-export function Field({
-  label,
-  ltr = false,
-  required = false,
-  onFocus,
-  onBlur,
-  ...input
-}: FieldProps) {
+export function Field(props: FieldProps) {
   const { color } = useTheme();
-  const [focused, setFocused] = useState(false);
-  const secure = input.secureTextEntry === true;
-  const [shown, setShown] = useState(false);
+  const field = useField(props);
   return (
     <View style={{ gap: 6 }}>
       <AppText
@@ -43,41 +27,13 @@ export function Field({
           color: color.ink2,
         }}
       >
-        {required ? `${label} *` : label}
+        {field.title}
       </AppText>
-      <View style={ltr || secure ? { direction: 'ltr' } : undefined}>
-        <TextInput
-          accessibilityLabel={label}
-          accessibilityHint={required ? t.common.required : undefined}
-          placeholderTextColor={color.ink3}
-          onFocus={(e) => {
-            setFocused(true);
-            onFocus?.(e);
-          }}
-          onBlur={(e) => {
-            setFocused(false);
-            onBlur?.(e);
-          }}
-          style={{
-            minHeight: shape.control.touch,
-            paddingHorizontal: 12,
-            paddingEnd: secure ? shape.control.touch : 12,
-            paddingVertical: 8,
-            borderWidth: 1,
-            borderColor: focused ? color.lapis : color.ruleInput,
-            outlineWidth: focused ? 1 : 0,
-            outlineColor: color.lapis,
-            borderRadius: shape.radius.md,
-            backgroundColor: color.raised,
-            color: color.ink,
-            fontFamily: type.ui[400],
-            fontSize: type.size.base,
-          }}
-          {...input}
-          secureTextEntry={secure && !shown}
-        />
-        {secure ? <PasswordToggle shown={shown} onToggle={() => setShown((s) => !s)} /> : null}
-      </View>
+      {field.native ? (
+        <NativeFieldInput {...field.inputProps} />
+      ) : (
+        <RnFieldInput {...field.inputProps} />
+      )}
     </View>
   );
 }

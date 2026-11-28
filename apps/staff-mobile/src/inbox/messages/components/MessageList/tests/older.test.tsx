@@ -3,18 +3,30 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 import { FlatList } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import { AT_NEWEST, MessageList, OLDER_THRESHOLD } from '@/inbox/messages/components/MessageList/MessageList';
+import {
+  AT_NEWEST,
+  MessageList,
+  OLDER_THRESHOLD,
+} from '@/inbox/messages/components/MessageList/MessageList';
 import { cachedThread, detail, inbound, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
+import { mockCall } from '@ab/testing/mock-call';
 
 // No older-messages button: reaching the top loads the next page.
+const mockApi = mockCall();
+mockApi.onRead(async () => ({ id: 'u1', role: 'admin', permissions: [] }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 type ThreadQuery = ReturnType<typeof useThread>;
-const OLD = message({ id: 'm0', direction: 'inbound', body: 'رسالة قديمة', created_at: '2026-09-29T10:00:00Z' });
+const OLD = message({
+  id: 'm0',
+  direction: 'inbound',
+  body: 'رسالة قديمة',
+  created_at: '2026-09-29T10:00:00Z',
+});
 
 function stub(
   pages: MessageView[][],
@@ -35,7 +47,8 @@ function stub(
   } as unknown as ThreadQuery;
 }
 const show = (query: ThreadQuery) => renderWithQuery(<MessageList phone={PHONE} query={query} />);
-const reachTop = () => fireEvent(screen.getByTestId('message-list'), 'endReached', { distanceFromEnd: 0 });
+const reachTop = () =>
+  fireEvent(screen.getByTestId('message-list'), 'endReached', { distanceFromEnd: 0 });
 
 afterEach(() => jest.restoreAllMocks());
 
@@ -90,9 +103,18 @@ test('a small spinner at the top (the inverted footer) only while the older page
 });
 
 test('older rows arrive without moving the bubbles on screen: appended at the top, no scroll, position kept', async () => {
-  const toOffset = jest.spyOn(FlatList.prototype, 'scrollToOffset').mockImplementation(() => undefined);
-  const toIndex = jest.spyOn(FlatList.prototype, 'scrollToIndex').mockImplementation(() => undefined);
-  const again = message({ id: 'm1b', direction: 'inbound', body: 'وأختها', created_at: '2026-10-02T08:10:00Z' });
+  const toOffset = jest
+    .spyOn(FlatList.prototype, 'scrollToOffset')
+    .mockImplementation(() => undefined);
+  const toIndex = jest
+    .spyOn(FlatList.prototype, 'scrollToIndex')
+    .mockImplementation(() => undefined);
+  const again = message({
+    id: 'm1b',
+    direction: 'inbound',
+    body: 'وأختها',
+    created_at: '2026-10-02T08:10:00Z',
+  });
   const view = await show(stub([[inbound, again]]));
   await view.rerender(<MessageList phone={PHONE} query={stub([[inbound, again], [OLD]])} />);
   const list = screen.getByTestId('message-list');

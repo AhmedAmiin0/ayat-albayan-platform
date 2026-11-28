@@ -31,7 +31,7 @@ ENV NODE_ENV=production \
     PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 RUN npx -y "playwright-core@${PLAYWRIGHT_CORE}" install --with-deps --only-shell chromium \
  && apt-get update \
- && apt-get install -y --no-install-recommends fonts-hosny-amiri ffmpeg poppler-utils util-linux \
+ && apt-get install -y --no-install-recommends fonts-hosny-amiri fonts-noto-color-emoji ffmpeg poppler-utils util-linux \
  && rm -rf /var/lib/apt/lists/* /root/.npm
 # The smoke step renders a one-page PDF through the exact chain, env and pdftoppm flags of
 # pdf-pages.ts pdftoppmArgs (change both together), so a missing tool, flag or a too-small address

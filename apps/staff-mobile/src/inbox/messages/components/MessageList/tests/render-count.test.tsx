@@ -5,10 +5,13 @@ import { MessageList } from '@/inbox/messages/components/MessageList/MessageList
 import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { TOP_DAY_HIDE_MS } from '@/inbox/messages/days/use-top-day';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onRead(async () => ({ id: 'u1', role: 'admin', permissions: [] }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockDraws = { rows: 0, cells: 0 };
 jest.mock('@/inbox/messages/list/MessageRow', () => {

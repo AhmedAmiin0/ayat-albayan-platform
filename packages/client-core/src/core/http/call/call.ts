@@ -9,7 +9,14 @@ import {
 } from '../api-client';
 import { toQueryString } from '../query-string';
 import { askVia } from './ask';
-import type { AnyCallRequest, Ask, Call, CallableRoute, CallRequest } from './call.types';
+import type {
+  AnyCallRequest,
+  Ask,
+  Call,
+  CallableRoute,
+  CallRequest,
+  RouteUrlInput,
+} from './call.types';
 
 const NO_BODY = z.undefined();
 const ANY_BODY = z.unknown();
@@ -34,14 +41,15 @@ const routeShape = z.object({ route: z.object({ method: z.string(), path: z.stri
 const isRouteRequest = (request: AnyCallRequest | ApiRequest): request is AnyCallRequest =>
   routeShape.safeParse(request).success;
 
-function urlOf({ route, params, query }: AnyCallRequest): string {
+/** The route's path with its params filled, then its query string. */
+export function routeUrl({ route, params, query }: RouteUrlInput): string {
   const search = toQueryString(querySchema.parse(query));
   return `${fillRoutePath(route.path, params)}${search}`;
 }
 
 async function askRoute(ask: Ask, request: AnyCallRequest): Promise<unknown> {
   const { route, body, signal } = request;
-  const path = urlOf(request);
+  const path = routeUrl(request);
   const answer = await ask({ method: route.method, path, body, ...(signal ? { signal } : {}) });
   return parseResponse(answerSchema.parse(route.response), answer, path);
 }
