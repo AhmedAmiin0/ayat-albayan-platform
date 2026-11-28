@@ -16,7 +16,7 @@ export const configEntriesQuery = queryOptions({
 
 const keyPath = (key: string) => `/config/entries/${encodeURIComponent(key)}`;
 
-/** PATCH /config/entries/:key with the row's version (409 conflict / owned_by_module, 422, 428, 404). */
+/** PATCH /config/entries/:key with the row's version (409, 422, 428, 404). */
 export const patchConfigEntry = (key: string, body: ConfigEntryPatchInput) =>
   apiSend<ConfigEntryResult>('PATCH', keyPath(key), body);
 
@@ -38,7 +38,7 @@ export function storeEntry(client: QueryClient, entry: ConfigEntry): void {
 
 const NO_ENTRIES: readonly ConfigEntry[] = [];
 
-/** The entries once read (none while loading or after a failed read; the rows then show the code's words). */
+/** The entries once read; none while loading or after a failed read (rows show code words). */
 export function useConfigEntries(): readonly ConfigEntry[] {
   return useQuery(configEntriesQuery).data?.entries ?? NO_ENTRIES;
 }

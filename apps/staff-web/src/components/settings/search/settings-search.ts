@@ -2,7 +2,7 @@ import { matchesQuery } from '@ab/core';
 import { settingDef, type SettingKey } from '@ab/settings';
 import { settingText, textAt } from './setting-text';
 
-/** Does the text contain the search (case, diacritics and alef forms ignored)? An empty search matches. */
+/** Does the text contain the search, ignoring case, diacritics and alef forms? Empty matches. */
 export function matchesText(text: string, query: string): boolean {
   return matchesQuery(text, query);
 }

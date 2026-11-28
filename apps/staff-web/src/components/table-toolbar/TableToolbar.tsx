@@ -34,7 +34,7 @@ function CountBadge({ count }: { count: number }) {
   );
 }
 
-// Applied: the button takes the mint wash, a green edge and a green glyph, so a filtered table reads at a glance.
+// Applied: mint wash, green edge and green glyph, so a filtered table reads at a glance.
 const APPLIED = 'border-lapis bg-accent text-ink enabled:hover:bg-accent [&_svg]:text-lapis';
 
 export function TableToolbar({ search, fields, chips, onClearAll, resultCount, end, compact = false }: TableToolbarProps) {

@@ -2,7 +2,7 @@ import type { Header, ReactTable, RowData } from '@tanstack/react-table';
 import type { ColumnFilterControl } from '@/components/table-toolbar/types';
 import type { DataTableFeatures, DataTableFilters } from './data-table-features';
 
-/** A header's plain text (`header: () => t.x` or a string), for filter labels; else the column id. */
+/** A header's plain text (`header: () => t.x` or a string) as filter label; else the column id. */
 export function headerText<T extends RowData>(header: Header<DataTableFeatures, T>): string {
   const def = header.column.columnDef.header;
   const text: unknown = typeof def === 'function' ? def(header.getContext()) : def;

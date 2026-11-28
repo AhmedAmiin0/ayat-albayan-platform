@@ -24,7 +24,7 @@ export function controlChips(controls: ColumnFilterControl[]): FilterChip[] {
     }));
 }
 
-/** Splits the column controls: the toolbar's search (unless the page brings its own) and the panel's. */
+/** Splits the column controls: the toolbar search (unless the page has its own) and the panel. */
 export function splitControls(controls: ColumnFilterControl[], ownSearch: boolean) {
   const search = ownSearch ? undefined : pickSearch(controls);
   return { search, panel: controls.filter((c) => c !== search) };

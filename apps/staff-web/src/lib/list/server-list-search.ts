@@ -25,7 +25,7 @@ export interface ServerListKeys {
   filters: readonly string[];
 }
 
-/** Route `validateSearch`: page > 1 only, allowlisted sort and filter keys, defaults out of the URL. */
+/** Route `validateSearch`: page > 1 only, allowlisted sort and filter keys, defaults left out. */
 export function parseServerListSearch(
   search: Record<string, unknown>,
   keys: ServerListKeys,

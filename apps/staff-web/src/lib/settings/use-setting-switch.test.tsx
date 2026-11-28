@@ -44,7 +44,7 @@ describe('useSettingSwitch', () => {
     expect(client.getQueryData(['settings'])).toEqual(NEXT);
     expect(onSaved).toHaveBeenCalledWith(NEXT);
     expect(order).toEqual(['set', 'saved']);
-    // Today's behaviour, pinned: the switches never refresh ['config','meta'] or ['settings','public'].
+    // Pinned: the switches never refresh ['config','meta'] or ['settings','public'].
     expect(invalidate).not.toHaveBeenCalled();
   });
 

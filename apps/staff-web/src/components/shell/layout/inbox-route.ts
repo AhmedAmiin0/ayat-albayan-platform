@@ -8,7 +8,7 @@ export function isInboxPath(pathname: string | undefined): boolean {
   return !!pathname && /^\/(admin|sales|teacher)\/inbox\/?$/.test(pathname);
 }
 
-/** The work page's phone padding on the inbox: the chat gets nearly the whole screen (no toast room). */
+/** Phone padding of the work page on the inbox: the chat gets nearly the whole screen. */
 export const INBOX_PAGE = 'max-sm:px-2 max-sm:pt-2 max-sm:pb-1 max-sm:[&>div]:pb-0';
 
 /** From 900px no outer margin and a 12px inset, so the page gets the frame's height and width. */
