@@ -1,19 +1,16 @@
-import { outsideSlotsResponseSchema } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit';
 import { lessonKeys } from '@/features/teaching/schedule';
-import { bookingBase, useBookingMode } from '@/features/teaching/booking/mode';
+import { bookingCallsOf, useBookingMode } from '@/features/teaching/booking/mode';
 import type { OutsideParams } from './OtherTime';
 
-/** The query string: the grid's fields only, never a time from this browser. */
-export function outsideQuery(p: OutsideParams): string {
-  const params = new URLSearchParams({
+/** The grid's fields only, never a time from this browser. */
+export function outsideQuery(p: OutsideParams) {
+  return {
     teacherId: p.teacherId,
-    durationMin: String(p.durationMin),
-  });
-  if (p.studentIds.length > 0) params.set('studentIds', p.studentIds.join(','));
-  if (p.excludeLessonId) params.set('excludeLessonId', p.excludeLessonId);
-  return params.toString();
+    durationMin: p.durationMin,
+    studentIds: p.studentIds.length > 0 ? p.studentIds.join(',') : undefined,
+    excludeLessonId: p.excludeLessonId || undefined,
+  };
 }
 
 /** The server's next 14 days, parsed with the shared schema. */
@@ -21,10 +18,7 @@ export function useOutsideSlots(p: OutsideParams) {
   const mode = useBookingMode();
   const query = outsideQuery(p);
   return useQuery({
-    queryKey: lessonKeys.outsideSlots(mode, query),
-    queryFn: async () =>
-      outsideSlotsResponseSchema.parse(
-        await apiFetch(`${bookingBase(mode)}/outside-slots?${query}`),
-      ),
+    queryKey: lessonKeys.outsideSlots(mode, JSON.stringify(query)),
+    queryFn: () => bookingCallsOf[mode].outsideSlots(query),
   });
 }

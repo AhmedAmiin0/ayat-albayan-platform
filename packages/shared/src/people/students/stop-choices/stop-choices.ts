@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { moneyAmount } from '@ab/money';
 import { fromMinor, toMinor, type StopRefund } from '../stop-refund';
+import type { StopOwe } from './stop-choices.schemas';
 
 // The stop sheet's money choices.
 // No fixed policy: the person stopping the course picks the outcome, the server computes the
@@ -35,13 +36,6 @@ export const stopOweAskSchema = z
   .refine(customNeedsAmount, amountMessage);
 export type StopOweAsk = z.infer<typeof stopOweAskSchema>;
 
-/** The plain stop's numbers (every person who may stop sees them). */
-export interface StopOwe {
-  /** attended × per-lesson price × rate, never above the price (stopRefund's charge). */
-  charged: number;
-  price: number;
-}
-
 type RefundRule = (calc: StopRefund, custom: number) => number;
 const REFUND_BY: Readonly<Record<StopRefundChoice, RefundRule>> = {
   unattended: (calc) => calc.refund,
@@ -50,11 +44,8 @@ const REFUND_BY: Readonly<Record<StopRefundChoice, RefundRule>> = {
 };
 
 /** The refund a choice asks for (custom: the amount typed). */
-export const refundByChoice = (
-  choice: StopRefundChoice,
-  calc: StopRefund,
-  custom = 0,
-): number => REFUND_BY[choice](calc, custom);
+export const refundByChoice = (choice: StopRefundChoice, calc: StopRefund, custom = 0): number =>
+  REFUND_BY[choice](calc, custom);
 
 type OweRule = (owe: StopOwe, custom: number) => number;
 const OWE_BY: Readonly<Record<StopOweChoice, OweRule>> = {

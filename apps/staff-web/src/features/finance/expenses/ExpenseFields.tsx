@@ -1,4 +1,4 @@
-import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
+import { PAYMENT_METHODS } from '@ab/catalog';
 import { CURRENCY_ISOS } from '@ab/money';
 import { CheckField } from '@/components/settings/fields/CheckField';
 import { Field, Input, Select, t } from '@ab/web-kit';
@@ -50,7 +50,7 @@ export function ExpenseFields({ form, set, categories, amountError }: Props) {
       <Field label={t.finance.vendor}>{(p) => <Input {...p} value={form.vendor} onChange={(e) => set({ vendor: e.target.value })} />}</Field>
       <Field label={t.payments.method}>
         {(p) => (
-          <Select {...p} value={form.method} onChange={(e) => set({ method: e.target.value as PaymentMethod | '' })}>
+          <Select {...p} value={form.method} onChange={(e) => set({ method: e.target.value as ExpenseForm['method'] })}>
             <option value="">—</option>
             {PAYMENT_METHODS.map((m) => (
               <option key={m} value={m}>

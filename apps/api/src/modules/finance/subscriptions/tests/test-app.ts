@@ -3,6 +3,7 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import type { DynamicModule, Type } from '@nestjs/common';
 import { Test, type TestingModuleBuilder } from '@nestjs/testing';
+import { ResponseCheckInterceptor } from '@/common/http/returns';
 import { AuditService } from '@/common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
@@ -110,6 +111,7 @@ export async function moneyAppOf(
     .overrideProvider(InboundMediaRepo).useValue(m.mediaQueries);
   const mod = await more(builder).compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true }); // as main.ts
+  app.useGlobalInterceptors(ResponseCheckInterceptor.fromEnv());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   const call = ({ method, url, token = 'admin', body }: InjectArgs) =>

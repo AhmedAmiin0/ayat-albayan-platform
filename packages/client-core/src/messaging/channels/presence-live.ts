@@ -3,8 +3,6 @@
 // people it shows. RLS (migration 985) refuses a track elsewhere and a watch the API would not
 // allow.
 
-export const PRESENCE_SELF_PATH = '/presence/me';
-export const STAFF_PRESENCE_PATH = '/presence/staff';
 export const presenceSelfKey = ['presence', 'me'] as const;
 export const staffPresenceKey = ['presence', 'staff'] as const;
 export const channelPresenceKey = (audience: string, studentId: string) =>

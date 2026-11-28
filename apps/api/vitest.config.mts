@@ -16,6 +16,8 @@ export default mergeConfig(testConfig(), {
       SUPABASE_SERVICE_ROLE_KEY: 'test-service-role-key',
       // No database at boot: the integration-config load is tested on its own (integration-config tests).
       INTEGRATION_CONFIG_FROM_DB: 'false',
+      // ResponseCheckInterceptor.fromEnv() in a test app checks every declared answer.
+      API_CHECK_RESPONSES: '1',
     },
   },
 });

@@ -1,30 +1,28 @@
 import {
   courseActionsKey,
-  courseCardPath,
-  courseExtendPreviewPath,
+  courseCardCalls,
   courseKeys,
+  coursePauseCalls,
   coursePauseKey,
-  courseResumePreviewPath,
-  parseCourseCard,
-  parseExtendPreview,
-  parseResumePreview,
   pauseKeys,
-  postCourseExtend,
   readLessonAt,
   type CardTree,
 } from '@ab/client-core';
 import type { CourseCardLesson } from '@ab/shared';
 import type { LessonView } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
-// Paths, keys and parsers are shared with web through @ab/client-core.
+// Calls, paths and keys are shared with web through @ab/client-core.
+
+const calls = courseCardCalls({ apiFetch, apiSend });
+const pauses = coursePauseCalls({ apiFetch, apiSend });
 
 /** GET the card: the admin's route or the assistant's (any student). */
 export const useCourseCard = (input: { studentId: string; tree: CardTree }) =>
   useQuery({
     queryKey: courseKeys.card(input.studentId, input.tree),
-    queryFn: async () => parseCourseCard(await apiFetch(courseCardPath(input))),
+    queryFn: () => calls.card(input),
     enabled: input.studentId !== '',
   });
 
@@ -43,15 +41,14 @@ export const useCardLesson = (lesson: CourseCardLesson | null) =>
 export const useExtendPreview = (input: { studentId: string; subscriptionId: string }) =>
   useQuery({
     queryKey: courseKeys.extend(input),
-    queryFn: async () => parseExtendPreview(await apiFetch(courseExtendPreviewPath(input))),
+    queryFn: () => calls.extendPreview(input),
   });
 
 /** Only fetched while asking. */
 export const useResumePreview = (input: { studentId: string; enabled: boolean }) =>
   useQuery({
     queryKey: pauseKeys.resume(input.studentId),
-    queryFn: async () =>
-      parseResumePreview(await apiFetch(courseResumePreviewPath(input.studentId))),
+    queryFn: () => pauses.resumePreview(input.studentId),
     enabled: input.enabled,
   });
 
@@ -75,8 +72,7 @@ function useCardRefresh(studentId: string) {
 export function useExtendCourse(studentId: string) {
   const refresh = useCardRefresh(studentId);
   return useMutation({
-    mutationFn: (subscriptionId: string) =>
-      postCourseExtend(apiFetch, { studentId, subscriptionId }),
+    mutationFn: (subscriptionId: string) => calls.extend({ studentId, subscriptionId }),
     onSuccess: refresh,
   });
 }

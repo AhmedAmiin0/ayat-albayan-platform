@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import { studentListItemFixture } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { remainingLabel } from '@/features/people/teachers/detail/teacher-student-columns';
@@ -9,20 +10,13 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
-const ROW = {
+const ROW = studentListItemFixture({
   id: 's1',
-  code: 'AB-0183',
-  name: 'سهيلة',
-  status: 'active',
-  program: 'quran',
-  tz: 'Asia/Riyadh',
-  created_at: '2026-10-01T00:00:00Z',
   guardian_name: 'أم جود',
-  guardian_phone: '+966501234567',
   teacher_name: 'أبرار',
   package_remaining: 3,
   has_weekly: true,
-};
+});
 const COUNTS = {
   new: 1,
   trial: 3,
@@ -50,7 +44,7 @@ describe('TeacherStudentsPanel (R-TCH-03)', () => {
   it('lists her current students (not subscribed yet + subscribed + package ended) with the counts per status', async () => {
     renderPanel();
     expect(await screen.findByText(`1 ${E.new} · 3 ${E.trial} · 12 ${E.active} · 2 ${E.pending_renewal} · 1 ${E.expired} · 5 ${E.churned}`)).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith('/students?search=&page=1&pageSize=20&status=new%2Ctrial%2Cpending_subscription%2Cactive%2Cpending_renewal%2Cexpired&teacher=t1');
+    expect(apiFetch).toHaveBeenCalledWith('/students?page=1&pageSize=20&status=new%2Ctrial%2Cpending_subscription%2Cactive%2Cpending_renewal%2Cexpired&teacher=t1');
     expect(apiFetch).toHaveBeenCalledWith('/students/status-counts?teacher=t1');
     expect(screen.getByText(t.students.count.replace('{n}', '1'))).toBeTruthy();
     expect(screen.getByRole('checkbox', { name: `${E.active}12` })).toHaveProperty('checked', true);
@@ -71,7 +65,7 @@ describe('TeacherStudentsPanel (R-TCH-03)', () => {
   it('«عرض كل الحالات» drops the status filter; the link opens the students page on her', async () => {
     renderPanel();
     fireEvent.click(screen.getByRole('button', { name: t.teachers.studentsShowAll }));
-    expect(apiFetch).toHaveBeenLastCalledWith('/students?search=&page=1&pageSize=20&teacher=t1');
+    expect(apiFetch).toHaveBeenLastCalledWith('/students?page=1&pageSize=20&teacher=t1');
     expect(screen.getByRole('button', { name: t.teachers.studentsShowCurrent })).toBeTruthy();
     expect(screen.getByRole('link', { name: t.teachers.studentsViewAll }).getAttribute('href')).toBe('/admin/students?teacher=t1');
   });

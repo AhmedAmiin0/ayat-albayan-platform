@@ -1,8 +1,8 @@
+import { bookingBodySchema } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
 import { done, maybe, one, pgError } from '@/common/db/errors';
-import { bookingBodySchema } from '@/modules/teaching/booking/plan/package-size';
 import type { CourseDraft } from './course-draft.rules';
 
 /** A stored row: the request is re-parsed as a booking body on every read (rule 12). */

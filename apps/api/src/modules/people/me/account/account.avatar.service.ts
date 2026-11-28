@@ -30,12 +30,12 @@ export class AccountAvatarService {
   /** 400 avatar_path / avatar_type / avatar_too_large; a refused object is deleted. The previous photo goes. */
   async set(user: AuthUser, path: string): Promise<AccountProfile> {
     await this.writer.set(this.slot(user), path);
-    return this.account.profile(user);
+    return this.account.current(user);
   }
 
   async remove(user: AuthUser): Promise<AccountProfile> {
     await this.writer.clear(this.slot(user));
-    return this.account.profile(user);
+    return this.account.current(user);
   }
 
   private slot(user: AuthUser): AvatarSlot {

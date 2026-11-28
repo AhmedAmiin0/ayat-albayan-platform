@@ -7,6 +7,7 @@ import { FormAlert, Dialog, t } from '@ab/web-kit';
 import { courseTeachersQuery, profileCourseQuery, useInvalidateCourseActions } from './api';
 import type { MoveDialogProps } from './ChangeTimesDialog';
 import { MoveFrame } from './MoveFrame';
+import { teacherMoveTarget } from './move-target';
 import { TeacherMove } from './TeacherMove';
 import { TeacherPickStep, type TeacherDraft } from './TeacherPickStep';
 
@@ -32,7 +33,7 @@ function TeacherSteps({ studentId, mode, view, teachers, onDone }: StepsProps) {
   };
   if (moving && teacher) {
     return (
-      <MoveFrame studentId={studentId} kind="teacher" mode={mode} teacherId={teacher.id}>
+      <MoveFrame mode={mode} target={teacherMoveTarget(studentId, teacher.id)}>
         <TeacherMove
           view={view}
           teacher={teacher}

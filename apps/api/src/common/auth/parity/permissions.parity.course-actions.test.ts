@@ -1,6 +1,6 @@
 import { systemPermissionsOf, USER_ROLES } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { walkRoutes, type RouteAccess } from './route-walk.test-util';
+import { permissionKeys, walkRoutes, type RouteAccess } from './route-walk.test-util';
 
 // Student profile course actions: one key each, admin and sales by default, never a teacher.
 describe('the student profile course actions', () => {
@@ -11,7 +11,7 @@ describe('the student profile course actions', () => {
 
   const gated = (key: string) =>
     routes
-      .filter((r) => r.permission === key)
+      .filter((r) => permissionKeys(r).join('|') === key)
       .map((r) => r.key)
       .sort();
 

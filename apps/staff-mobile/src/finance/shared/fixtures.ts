@@ -26,7 +26,7 @@ export const APPROVED: PayoutView = { ...PAYOUT, id: 'p2', teacher: { id: 't2', 
 export const PAID: PayoutView = { ...APPROVED, id: 'p3', teacher: { id: 't3', display_name_ar: 'هدى' }, status: 'paid', paid_at: '2026-10-02T10:00:00Z', method: 'bank', note: 'دفعة أكتوبر', has_receipt: true };
 
 export const EXPENSE = (n: number, patch: Partial<ExpenseView> = {}): ExpenseView => ({
-  id: `x${n}`,
+  id: `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`,
   month: '2026-10',
   category: 'ads',
   amount: 100 * n,

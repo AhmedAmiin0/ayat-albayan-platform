@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { UserRole } from './roles';
 import { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data';
 import { PORTAL_FIXED_GRANTS } from './catalog.portal';
+import type { PermissionGroup } from './roles/roles.schemas';
 
 export { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalog.data';
 
@@ -67,11 +68,6 @@ export function effectivePermissions(input: EffectiveInput): Permission[] {
 /** The system roles' effective sets: what the parity test compares with the old @Roles table. */
 export function systemPermissionsOf(role: UserRole): Permission[] {
   return effectivePermissions({ baseRole: role, granted: defaultGrantsOf(role), allGrantable: role === 'admin' });
-}
-
-export interface PermissionGroup {
-  area: PermissionArea;
-  keys: Permission[];
 }
 
 /** Matrix sections (self.* left out), in PERMISSION_AREAS order. */

@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { t, Button, ltr } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { Note } from '@/more';
-import { removeSecondPhone, usePeopleWrite } from './people-edit-api';
+import { peopleWrites, usePeopleWrite } from './people-edit-api';
 
 const E = t.peopleEdit;
 
@@ -18,7 +18,7 @@ export function SecondPhoneRow({
   onDone: (notice: string) => void;
 }) {
   const [asking, setAsking] = useState(false);
-  const remove = usePeopleWrite(removeSecondPhone, () => onDone(E.saved));
+  const remove = usePeopleWrite(peopleWrites.removeSecondPhone, () => onDone(E.saved));
   const second = guardian.phones.find((p) => !p.is_primary);
   if (!second) return null;
   const phone = ltr(formatPhone(second.phone_e164));

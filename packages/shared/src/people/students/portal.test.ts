@@ -27,6 +27,22 @@ describe('portalHomeSchema guardian', () => {
   });
 });
 
+describe('portalStudentSchema is_test (docs/56)', () => {
+  const kid = {
+    id: 's1',
+    code: 'AB-0001',
+    name: 'سارة',
+    tz: 'Asia/Riyadh',
+    contact_is_self: false,
+  };
+
+  it("keeps the student's test flag, and leaves it out on an older API", () => {
+    const home = (students: unknown[]) => portalHomeSchema.parse({ ...base, students }).students;
+    expect(home([{ ...kid, is_test: true }])[0]?.is_test).toBe(true);
+    expect(home([kid])[0]?.is_test).toBeUndefined();
+  });
+});
+
 describe('portal history enums', () => {
   it('accept each outcome and list and nothing else', () => {
     expect(portalOutcomeSchema.options).toEqual([...PORTAL_OUTCOMES]);

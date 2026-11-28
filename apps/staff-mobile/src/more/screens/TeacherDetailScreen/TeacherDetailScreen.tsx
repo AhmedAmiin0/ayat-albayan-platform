@@ -5,7 +5,6 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
 import {
   ApiError,
-  apiFetch,
   t,
   pathKey,
   Button,
@@ -21,11 +20,11 @@ import {
 import { TeacherContact } from '@/more/teachers/TeacherContact';
 import { TeacherUsername } from '@/more/teachers/TeacherUsername';
 import { TeacherCalendarOwner } from '@/more/teachers/TeacherCalendarOwner';
+import { teachers } from '@/more/teachers/teacher-calls';
 import { TeacherStudentsSection } from '@/more/sections/TeacherStudentsSection';
 import { UpcomingTimeOff } from '@/more/availability/UpcomingTimeOff';
 import { WeeklyAvailability } from '@/more/availability/WeeklyAvailability';
-import { StaffPhotoControl } from '@/account';
-import type { Teacher } from '@ab/shared';
+import { StaffPhotoControl, teacherPhotos } from '@/account';
 
 /** Every query where a new teacher photo must show. */
 const TEACHER_KEYS = [pathKey('/teachers'), pathKey('/sales/teachers')];
@@ -34,7 +33,7 @@ const TEACHER_KEYS = [pathKey('/teachers'), pathKey('/sales/teachers')];
 export function TeacherDetailScreen() {
   const { id = '', status } = useLocalSearchParams<{ id: string; status?: string }>();
   const path = `/teachers/${id}`;
-  const teacher = useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<Teacher>(path) });
+  const teacher = useQuery({ queryKey: pathKey(path), queryFn: () => teachers.get(id) });
   const admin = useIsAdmin();
   const back = <BackButton onPress={() => router.back()} />;
   const data = teacher.data;
@@ -68,7 +67,7 @@ export function TeacherDetailScreen() {
           <StaffPhotoControl
             name={teacherName(data, locale)}
             id={data.id}
-            base={`${path}/avatar`}
+            calls={teacherPhotos}
             photo={data.avatar_url ?? null}
             invalidate={TEACHER_KEYS}
           />

@@ -1,14 +1,22 @@
 import { addCalendarMonths } from '@ab/time';
-import type { AssistantCommissionView, AssistantStatementView, AssistantTermsRow } from '@ab/money';
-import type { AssistantRow, LedgerFilter, StatementFilter } from '@ab/client-core';
+import type { AssistantCommissionView, AssistantStatementView } from '@ab/money';
+import {
+  assistantPayCalls,
+  type AssistantRow,
+  type LedgerFilter,
+  type StatementFilter,
+} from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 
 // apps/api assistant-pay (web apps/staff-web/src/features/assistants/api.ts). Reads need
 // assistantpay.read, writes assistantpay.write, approve/reopen/unpay assistantpay.approve. Per currency.
 
 /** Every query and write of this module lives under it: one invalidation re-reads all (as the web). */
 export const ASSISTANTS_KEY = ['assistant-pay'] as const;
+
+/** The admin calls of this module, shared by its reads and writes. */
+export const calls = assistantPayCalls({ apiFetch, apiSend });
 
 const qs = (params: Record<string, string>): string => {
   const q = Object.entries(params)
@@ -37,8 +45,8 @@ export const useAssistants = () =>
   useQuery({
     queryKey: [...ASSISTANTS_KEY, 'assistants'],
     queryFn: async (): Promise<AssistantRow[]> => {
-      const rows = await apiFetch<AssistantTermsRow[]>('/assistant-pay/terms');
-      return (Array.isArray(rows) ? rows : []).map(({ name, ...terms }) => ({
+      const rows = await calls.terms();
+      return rows.map(({ name, ...terms }) => ({
         id: terms.assistant_id,
         name,
         terms,

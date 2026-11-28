@@ -1,12 +1,9 @@
-import { localeUpdateSchema } from '@ab/shared';
+import { accountRoutes } from '@ab/shared';
 import { LOCALES, type Locale } from '@ab/core';
 import { z } from 'zod';
-import type { ApiClient } from '../http';
+import { callWith, type ApiClient } from '../http';
 
 // Locale comes from GET /auth/me or GET /portal/me and is written back with PATCH /me/locale.
-
-/** PATCH: the signed-in login's own language (any role, guardians and students too). */
-export const meLocalePath = '/me/locale';
 
 const answerLocale = z.object({ locale: z.enum(LOCALES).nullable() });
 
@@ -23,8 +20,7 @@ export function meLocaleOf(me: unknown): Locale | null | undefined {
 /** Writes the login's language; resolves with the stored one (parsed, rule 12). */
 export const meLocaleSend =
   (client: ApiClient) =>
-  (locale: Locale): Promise<Locale> => {
-    const body = localeUpdateSchema.parse({ locale });
-    const answer = client.apiSend('PATCH', meLocalePath, body);
-    return answer.then((r: unknown) => localeUpdateSchema.parse(r).locale);
+  async (locale: Locale): Promise<Locale> => {
+    const answer = await callWith(client)({ route: accountRoutes.locale, body: { locale } });
+    return answer.locale;
   };

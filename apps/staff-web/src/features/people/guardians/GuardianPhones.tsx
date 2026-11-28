@@ -4,7 +4,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Ltr, Button, FormAlert, ApiError, t } from '@ab/web-kit';
 import { STUDENTS_KEY } from '@/features/people/students';
-import { GUARDIANS_KEY, removeGuardianPhone, type GuardianDetail } from './api';
+import type { GuardianDetail } from '@ab/shared';
+import { GUARDIANS_KEY, removeGuardianPhone } from './api';
 
 const G = t.guardians;
 

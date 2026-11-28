@@ -21,7 +21,7 @@ const CONFLICT = new ApiError(409, {
     { kind: 'outside_availability', startsAt: '2026-10-07T14:00:00.000Z', endsAt: '2026-10-07T14:45:00.000Z' },
   ],
 });
-const BOOKED = { rule_id: 'r1', student_ids: ['s'], guardian_ids: ['g'], lessons: [{ id: 'l', starts_at: SLOT, ends_at: SLOT }], message_ids: [] };
+const BOOKED = { rule_id: 'e7777777-7777-4777-8777-777777777771', student_ids: ['e7777777-7777-4777-8777-777777777776'], guardian_ids: ['e7777777-7777-4777-8777-777777777772'], lessons: [{ id: 'e7777777-7777-4777-8777-777777777773', starts_at: SLOT, ends_at: SLOT }], message_ids: [], invoice_id: null };
 
 async function reachReview() {
   apiFetch.mockImplementation(respond);

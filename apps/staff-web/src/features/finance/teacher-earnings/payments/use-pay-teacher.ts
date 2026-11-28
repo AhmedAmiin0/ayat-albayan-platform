@@ -1,10 +1,13 @@
 import { uploadOnce } from '@ab/client-core';
-import { parseAmount } from '@ab/money';
+import { parseAmount, teacherPaymentCreateSchema } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments/api';
 import type { PaymentForm } from '@/features/finance/payments/record/PaymentFields';
 import { earningsKey, payTeacher, uploadTeacherReceipt, type Scope } from '@/features/finance/teacher-earnings/api';
+
+/** The form lists the manual methods only; the platform's card is never a teacher payment. */
+const manualMethod = teacherPaymentCreateSchema.shape.method;
 
 export type PayInput = { form: PaymentForm; file: File | null; earningIds: string[] | undefined };
 
@@ -26,7 +29,7 @@ export function usePayTeacher(teacherId: string, onSaved: (replayed: boolean) =>
       if (amount === null) throw new Error('amount');
       return payTeacher(teacherId, {
         amount,
-        method: form.method,
+        method: manualMethod.parse(form.method),
         paidAt: paidAtFor(form.day),
         ...(earningIds ? { earningIds } : {}),
         receiptPath: await receiptPath(file),

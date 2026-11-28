@@ -1,3 +1,4 @@
+import { studentProfileFixture } from '@ab/shared/testing';
 import type { ReportSummaryView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
@@ -40,7 +41,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockApiFetch.mockImplementation(async (p: string) =>
     p === '/students/s1'
-      ? { id: 's1', name: 'يوسف أحمد' }
+      ? studentProfileFixture({ id: 's1', name: 'يوسف أحمد' })
       : { items: [row], total: 1, page: 1, pageSize: 10, series: [] },
   );
 });

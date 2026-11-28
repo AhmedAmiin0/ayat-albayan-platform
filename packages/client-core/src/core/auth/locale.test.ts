@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { meLocaleOf, meLocalePath, meLocaleSend } from './locale';
+import { meLocaleOf, meLocaleSend } from './locale';
 
 const client = (answer: unknown) => ({
   apiFetch: vi.fn(),
@@ -27,7 +27,7 @@ describe('meLocaleSend', () => {
   it('PATCHes /me/locale with the language and answers the stored one', async () => {
     const c = client({ locale: 'en' });
     await expect(meLocaleSend(c)('en')).resolves.toBe('en');
-    expect(c.apiSend).toHaveBeenCalledWith('PATCH', meLocalePath, { locale: 'en' });
+    expect(c.apiSend).toHaveBeenCalledWith('PATCH', '/me/locale', { locale: 'en' });
   });
 
   it('refuses an answer that is not a language', async () => {

@@ -17,7 +17,11 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ studentId: '44444444-4444-4444-8444-444444444444', name: 'ريم' }),
 }));
 
-const rows = (n: number) => Array.from({ length: n }, (_, i) => trialRow({ lesson_id: `l${i}`, outcome: i === 0 ? 'upcoming' : 'moved' }));
+const lessonId = (i: number) => `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`;
+const rows = (n: number) =>
+  Array.from({ length: n }, (_, i) =>
+    trialRow({ lesson_id: lessonId(i), outcome: i === 0 ? 'upcoming' : 'moved' }),
+  );
 
 async function review(count: number) {
   mockApiFetch.mockImplementation(fakeTrialApi(historyOf(rows(count))).fetch);

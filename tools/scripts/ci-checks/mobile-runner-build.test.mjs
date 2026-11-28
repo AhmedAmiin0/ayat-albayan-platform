@@ -79,6 +79,22 @@ test('the EAS environment is pulled to a private file, loaded in-process, never 
   assert.match(cleanup.run, /rm -rf "\$RUNNER_TEMP\/eas-env"/);
 });
 
+test('the staff runner build writes the Firebase file from the GitHub secret', () => {
+  const write = steps.find((s) => s.name === 'Write the Firebase file for the runner build');
+  assert.ok(write, 'the step exists');
+  assert.ok(steps.indexOf(write) < steps.indexOf(byId('runner')), 'before the build');
+  const STAFF = "inputs.app != 'family' && inputs.profile != 'stripe-test'";
+  assert.equal(write.if, `\${{ inputs.builder == 'github' && ${STAFF} }}`);
+  const SECRET = '${{ secrets.GOOGLE_SERVICES_JSON }}';
+  assert.deepEqual(write.env, { GOOGLE_SERVICES_JSON_SECRET: SECRET });
+  assert.match(write.run, /test -n "\$GOOGLE_SERVICES_JSON_SECRET" \|\| \{ echo "::error::/);
+  const FILE = '$RUNNER_TEMP/google-services.json';
+  assert.ok(write.run.includes(`> "${FILE}"`), 'written outside the checkout');
+  assert.ok(write.run.includes(`GOOGLE_SERVICES_JSON=${FILE}" >> "$GITHUB_ENV"`));
+  const remove = steps.find((s) => s.name === 'Remove the pulled EAS environment');
+  assert.ok(remove.run.includes(`"${FILE}"`), 'removed after the build');
+});
+
 test('the family store build is checked: production API and a real Firebase file', () => {
   assert.match(sh, /"\$APP\/\$PROFILE" = family\/production/);
   assert.match(sh, /"\$\{EXPO_PUBLIC_API_URL:-\}" = https:\/\/api\.ayatalbayan\.com/);

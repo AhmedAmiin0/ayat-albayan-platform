@@ -19,6 +19,8 @@ export const portalStudentSchema = z.object({
   tz: z.string(),
   /** An adult student who is their own contact (docs/30). */
   contact_is_self: z.boolean(),
+  /** students.is_test (docs/56): absent from an older API, which counts as a real student. */
+  is_test: z.boolean().optional(),
 });
 export type PortalStudent = z.infer<typeof portalStudentSchema>;
 

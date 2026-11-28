@@ -1,4 +1,3 @@
-import { payoutGenerateResultSchema, payoutListSchema, payoutViewSchema } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -40,7 +39,7 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     // `td *`: the status filter's <option> has the same text.
     const row = (await screen.findByText(t.enums.payoutStatus.draft, { selector: 'td *' })).closest('tr');
     if (!row) throw new Error('row missing');
-    expect(apiFetch).toHaveBeenCalledWith('/payouts?month=2026-09', { schema: payoutListSchema });
+    expect(apiFetch).toHaveBeenCalledWith('/payouts?month=2026-09');
     expect(within(row).getByText('45 دقيقة: 12 × 70 = 840 ج.م')).toBeTruthy();
     expect(within(row).getByText(t.enums.payoutStatus.draft)).toBeTruthy();
   });
@@ -68,12 +67,12 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     renderPage([PAYOUT, { ...PAYOUT, id: 'po-2', teacher: { id: 't2', display_name_ar: 'سارة' }, status: 'approved' }]);
     apiSend.mockResolvedValue(PAYOUT);
     fireEvent.click(await screen.findByRole('button', { name: t.payouts.approve }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-1/approve', { schema: payoutViewSchema }));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-1/approve', undefined));
     fireEvent.click(screen.getByRole('button', { name: t.payouts.markPaid }));
     expect(apiSend).not.toHaveBeenCalledWith('POST', '/payouts/po-2/pay', expect.anything());
     fireEvent.click(await screen.findByRole('button', { name: t.finance.confirmPaid }));
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-2/pay', { body: expect.objectContaining({ method: 'bank', receiptPath: null }), schema: payoutViewSchema }),
+      expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-2/pay', expect.objectContaining({ method: 'bank', receiptPath: null })),
     );
   });
 
@@ -83,14 +82,14 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     apiSend.mockResolvedValue(PAYOUT);
     fireEvent.click(await screen.findByRole('button', { name: t.finance.reopen }));
     fireEvent.click(within(await screen.findByRole('dialog')).getByRole('button', { name: t.finance.reopen }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-2/reopen', { schema: payoutViewSchema }));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-2/reopen', undefined));
     fireEvent.click(await screen.findByRole('button', { name: t.finance.unpay }));
     const dialog = await screen.findByRole('dialog');
     fireEvent.click(within(dialog).getByRole('button', { name: t.finance.unpay }));
     expect(await within(dialog).findByText(t.finance.reasonRequired)).toBeTruthy();
     fireEvent.change(within(dialog).getByLabelText(t.finance.reason), { target: { value: 'دُفع مرتين' } });
     fireEvent.click(within(dialog).getByRole('button', { name: t.finance.unpay }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-3/unpay', { body: { reason: 'دُفع مرتين' }, schema: payoutViewSchema }));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/po-3/unpay', { reason: 'دُفع مرتين' }));
   });
 
   it('generate lists the teachers skipped for a missing rate', async () => {
@@ -106,7 +105,7 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     const link = await screen.findByRole('link', { name: t.payouts.setRate });
     expect(link.getAttribute('href')).toBe('/admin/teachers/t1');
     expect(link.parentElement?.textContent).toContain('سعر حلقة الـ45 والـ60 دقيقة غير مسجل لـأبرار');
-    expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/2026-09/generate', { schema: payoutGenerateResultSchema });
+    expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/2026-09/generate', undefined);
   });
 
   it('the month picker changes the month', async () => {

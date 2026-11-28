@@ -57,7 +57,7 @@ describe('teachers/me/earnings (a teacher reads only their own)', () => {
     expect(other.statusCode).toBe(404);
     expect(m.storage.signedDownload).not.toHaveBeenCalled();
     m.earnings.payment.mockResolvedValue(paymentRow({ receipt_path: `${TEACHER}/a.png` }));
-    m.storage.signedDownload.mockResolvedValue({ url: 'u', expires_at: 'e' });
+    m.storage.signedDownload.mockResolvedValue({ url: 'https://files.example/r.pdf', expires_at: 'e' });
     expect((await mine(`/payments/${PAYMENT}/receipt`)).statusCode).toBe(200);
   });
 

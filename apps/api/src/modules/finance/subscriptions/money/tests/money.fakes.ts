@@ -32,7 +32,7 @@ export function subRow(patch: Partial<SubRow> = {}): SubRow {
     currency: 'SAR',
     fx_rate: null,
     fx_date: null,
-    price_source: WEEKLY_SA as unknown as SubRow['price_source'],
+    price_source: WEEKLY_SA,
     starts_on: '2026-09-25',
     status: 'unpaid',
     renews_on: null,

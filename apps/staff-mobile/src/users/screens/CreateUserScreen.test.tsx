@@ -76,7 +76,7 @@ test('student: a record must be picked; the body carries linked_id and the typed
   await submit();
   expect(screen.getByText(V.linkRequired)).toBeTruthy();
   await fireEvent.press(await screen.findByRole('button', { name: `يوسف علي ${ltr('AB-0007')}` }));
-  expect(mockApiFetch).toHaveBeenCalledWith('/users/link-candidates?kind=student&q=');
+  expect(mockApiFetch).toHaveBeenCalledWith('/users/link-candidates?kind=student');
   await submit();
   await waitFor(() =>
     expect(mockApiSend).toHaveBeenCalledWith('POST', '/users', {

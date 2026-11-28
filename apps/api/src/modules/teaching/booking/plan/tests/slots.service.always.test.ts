@@ -2,7 +2,7 @@ import { allDayRows } from '@ab/schedule';
 import { RIYADH_TZ } from '@ab/time';
 import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
-import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
+import type { SlotsQuery } from '@ab/schedule';
 import { fakeContext, IDS } from '@/modules/teaching/booking/booking.fakes';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
@@ -43,7 +43,7 @@ describe('SlotsService with teachers available 24/7 (owner 2026-10-12)', () => {
   it('a booked lesson and time off still block the starts they touch', async () => {
     const { service, availability } = setup();
     availability.listBusyLessons.mockResolvedValue([
-      { id: 'T1', starts_at: new Date('2026-10-04T13:00:00Z'), ends_at: new Date('2026-10-04T13:45:00Z') },
+      { id: 'e9999999-9999-4999-8999-999999999991', starts_at: new Date('2026-10-04T13:00:00Z'), ends_at: new Date('2026-10-04T13:45:00Z') },
     ]);
     availability.listTimeOff.mockResolvedValue([{ starts_at: '2026-10-04T00:00:00Z', ends_at: '2026-10-04T01:00:00Z' }]);
     const kinds = byStart((await service.slots(query())).slots);

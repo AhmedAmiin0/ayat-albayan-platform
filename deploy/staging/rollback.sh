@@ -45,7 +45,7 @@ else
   dc build
   stop ayat-worker ayat-lb
   dc up -d
-  stop ayat-api-a ayat-api-b ayat-pdf
+  stop ayat-api-a ayat-api-b ayat-api-c ayat-api-d ayat-pdf
   curl -fsS --retry 60 --retry-delay 2 --retry-all-errors http://127.0.0.1:3110/health
   echo
   docker image prune -f --filter "label=com.docker.compose.project=$PROJECT" >/dev/null

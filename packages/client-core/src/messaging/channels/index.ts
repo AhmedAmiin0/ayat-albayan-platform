@@ -44,13 +44,11 @@ export {
 } from './channel-edits';
 export {
   channelPresenceKey,
-  PRESENCE_SELF_PATH,
   type PresenceChannelLike,
   type PresenceRealtimeLike,
   presenceSelfKey,
   presenceTopic,
   type PresenceWatch,
-  STAFF_PRESENCE_PATH,
   staffPresenceKey,
   trackSelf,
 } from './presence-live';

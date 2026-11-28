@@ -20,7 +20,7 @@ vi.mock('@ab/web-kit/lib/http/supabase', () => ({
 const posts = () =>
   apiSend.mock.calls
     .filter(([, path]) => path === '/payments')
-    .map((c) => (c[2] as { body: Record<string, unknown> }).body);
+    .map((c) => c[2] as Record<string, unknown>);
 const img = (name: string) => new File([new Uint8Array(16)], name, { type: 'image/jpeg' });
 
 function open() {

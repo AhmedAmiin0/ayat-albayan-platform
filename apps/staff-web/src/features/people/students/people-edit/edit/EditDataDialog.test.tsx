@@ -78,8 +78,7 @@ describe('«تعديل البيانات»', () => {
     fireEvent.click(screen.getByRole('button', { name: E.removeSecond }));
     expect(apiSend).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: E.confirm }));
-    await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('DELETE', '/people/guardians/g1/phones/%2B201000000002'),
-    );
+    const path = '/people/guardians/g1/phones/%2B201000000002';
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', path, undefined));
   });
 });

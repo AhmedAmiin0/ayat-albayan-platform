@@ -44,17 +44,29 @@ describe('whoLine and ownStudent', () => {
 });
 
 describe('ownProfileQuery', () => {
-  it('parses /me/profile and drops the role', async () => {
-    const answer = { id: 'p1', ...profile, avatar_url: null, role: { base: null } };
+  const ID = '0b6f1a52-6d1e-4c43-9a37-3c5c8f1e2a10';
+  const role = { base: null, key: null, name_ar: null, name_en: null };
+  const clientAnswering = (answer: unknown) => {
     const apiFetch = vi.fn(async () => answer);
-    const query = ownProfileQuery({ apiFetch } as never);
+    return { apiFetch, client: { apiFetch, apiSend: vi.fn() } };
+  };
+
+  it('reads GET /me/profile through its route and parses it with the shared schema', async () => {
+    const answer = { id: ID, ...profile, avatar_url: null, role };
+    const { apiFetch, client } = clientAnswering(answer);
+    const query = ownProfileQuery(client);
     expect(query.queryKey).toEqual(['me', 'profile']);
-    expect(await query.queryFn()).toEqual({ id: 'p1', ...profile, avatar_url: null });
+    expect(await query.queryFn()).toEqual(answer);
     expect(apiFetch).toHaveBeenCalledWith('/me/profile');
   });
 
   it('refuses an answer without a name', async () => {
-    const apiFetch = vi.fn(async () => ({ id: 'p1' }));
-    await expect(ownProfileQuery({ apiFetch } as never).queryFn()).rejects.toThrow();
+    const { client } = clientAnswering({ id: ID, role });
+    await expect(ownProfileQuery(client).queryFn()).rejects.toThrow();
+  });
+
+  it('refuses an id that is not a uuid', async () => {
+    const { client } = clientAnswering({ id: 'p1', ...profile, avatar_url: null, role });
+    await expect(ownProfileQuery(client).queryFn()).rejects.toThrow();
   });
 });

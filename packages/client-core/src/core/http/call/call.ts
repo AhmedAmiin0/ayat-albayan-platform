@@ -39,9 +39,10 @@ function urlOf({ route, params, query }: AnyCallRequest): string {
   return `${fillRoutePath(route.path, params)}${search}`;
 }
 
-async function askRoute(ask: Ask, { route, body, ...rest }: AnyCallRequest): Promise<unknown> {
-  const path = urlOf({ route, ...rest });
-  const answer = await ask({ method: route.method, path, body });
+async function askRoute(ask: Ask, request: AnyCallRequest): Promise<unknown> {
+  const { route, body, signal } = request;
+  const path = urlOf(request);
+  const answer = await ask({ method: route.method, path, body, ...(signal ? { signal } : {}) });
   return parseResponse(answerSchema.parse(route.response), answer, path);
 }
 

@@ -1,8 +1,15 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import type { StudentUpdate } from '@ab/shared';
+import {
+  studentListItemSchema,
+  studentProfileSchema,
+  type StudentListItemView as StudentListItem,
+  type StudentProfileView as StudentProfile,
+  type StudentCreateRequest,
+  type StudentUpdate,
+} from '@ab/shared';
 import { normalizeArabic } from '@ab/core';
 import { orFilterTerm } from '@/common/db/or-filter';
-import type { StudentCreateRequest } from './students.dto';
+import { asResponse } from '@/common/http/returns';
 
 type Student = Tables<'students'>;
 type Sibling = Pick<Student, 'id' | 'code' | 'name' | 'status'>;
@@ -19,13 +26,8 @@ export type StudentListRow = Pick<
   teacher: { display_name_ar: string } | null;
 };
 
-export type StudentListItem = Omit<StudentListRow, 'guardian' | 'teacher'> & {
-  guardian_name: string;
-  guardian_phone: string;
-  teacher_name: string | null;
-  /** students.is_test (docs/56). */
-  is_test?: boolean;
-};
+/** A v_student_list row with students.is_test (docs/56) read beside it. */
+export type StudentListInput = StudentListRow & { is_test: boolean };
 
 export type StudentProfileRow = Student & {
   /** phones: every family number, the main one (is_primary) and a second one (guardian_phones). */
@@ -36,14 +38,12 @@ export type StudentProfileRow = Student & {
     students: Sibling[];
     phones: { phone_e164: string; is_primary: boolean }[];
   };
-  teacher: { id: string; display_name_ar: string; meeting_link: string | null } | null;
-};
-
-export type StudentProfile = StudentProfileRow & {
-  /** Effective join link: the override, else the teacher's fixed link (R-STU-05, R-LES-02). */
-  meeting_link: string | null;
-  /** Other students of the same guardian — merge candidates on the profile page. */
-  siblings: Sibling[];
+  teacher: {
+    id: string;
+    display_name_ar: string;
+    display_name_en: string | null;
+    meeting_link: string | null;
+  } | null;
 };
 
 type InsertOpts = { dto: StudentCreateRequest; guardianId: string; actorId: string };
@@ -64,21 +64,22 @@ export function toStudentPatch(dto: Omit<StudentUpdate, 'expected_status'>): Tab
   return dto.name === undefined ? dto : { ...dto, name_normalized: normalizeArabic(dto.name) };
 }
 
-export function toListItem({ guardian, teacher, ...row }: StudentListRow): StudentListItem {
-  return {
+export function toListItem({ guardian, teacher, ...row }: StudentListInput): StudentListItem {
+  return asResponse(studentListItemSchema, {
     ...row,
     guardian_name: guardian.name,
     guardian_phone: guardian.phone_e164,
     teacher_name: teacher?.display_name_ar ?? null,
-  };
+  });
 }
 
+/** The join link is the override, else the teacher's fixed link (R-STU-05, R-LES-02). */
 export function toProfile(row: StudentProfileRow): StudentProfile {
-  return {
+  return asResponse(studentProfileSchema, {
     ...row,
     meeting_link: row.meeting_link_override ?? row.teacher?.meeting_link ?? null,
     siblings: row.guardian.students.filter((s) => s.id !== row.id),
-  };
+  });
 }
 
 /** Name is Arabic-normalised so spelling variants match. */

@@ -1,5 +1,5 @@
-import type { SignedUpload } from '@ab/shared';
-import { apiSend } from '@ab/mobile-kit';
+import { paymentCalls } from '@ab/client-core';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { Receipt } from './receipt';
 
@@ -12,7 +12,7 @@ export class ReceiptUploadError extends Error {}
  * `receipts` bucket through the app's own Supabase URL. Resolves the path for POST /payments.
  */
 export async function uploadReceipt(subscriptionId: string, receipt: Receipt): Promise<string> {
-  const signed = await apiSend<SignedUpload>('POST', '/payments/receipt-upload-url', {
+  const signed = await paymentCalls({ apiFetch, apiSend }).receiptUploadUrl({
     subscriptionId,
     mime: receipt.mime,
     size: receipt.size,

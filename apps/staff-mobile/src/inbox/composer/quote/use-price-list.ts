@@ -1,5 +1,5 @@
 import { priceListQueryOptions, type PriceListChoice } from '@ab/client-core';
-import { apiFetch } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 /**
@@ -8,7 +8,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
  */
 export function usePriceList(choice: PriceListChoice, enabled: boolean) {
   return useQuery({
-    ...priceListQueryOptions({ apiFetch }, choice),
+    ...priceListQueryOptions({ apiFetch, apiSend }, choice),
     placeholderData: keepPreviousData,
     enabled,
   });

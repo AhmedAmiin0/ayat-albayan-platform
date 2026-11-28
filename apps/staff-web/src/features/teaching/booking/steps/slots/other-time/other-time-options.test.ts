@@ -45,9 +45,12 @@ describe('«وقت آخر» chips (owner 2026-11-21)', () => {
   });
 
   it('the query has the grid fields only: no time from the browser', () => {
-    expect(outsideQuery({ teacherId: 't', durationMin: 45, studentIds: [] })).toBe(
-      'teacherId=t&durationMin=45',
-    );
+    expect(outsideQuery({ teacherId: 't', durationMin: 45, studentIds: [] })).toEqual({
+      teacherId: 't',
+      durationMin: 45,
+      studentIds: undefined,
+      excludeLessonId: undefined,
+    });
     expect(
       outsideQuery({
         teacherId: 't',
@@ -55,6 +58,6 @@ describe('«وقت آخر» chips (owner 2026-11-21)', () => {
         studentIds: ['a', 'b'],
         excludeLessonId: 'l',
       }),
-    ).toBe('teacherId=t&durationMin=30&studentIds=a%2Cb&excludeLessonId=l');
+    ).toEqual({ teacherId: 't', durationMin: 30, studentIds: 'a,b', excludeLessonId: 'l' });
   });
 });

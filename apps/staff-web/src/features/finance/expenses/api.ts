@@ -1,7 +1,11 @@
-import type { SignedDownload, SignedUpload } from '@ab/shared';
-import type { PaymentMethod } from '@ab/catalog';
+import { expenseCalls, expenseCategoryCalls } from '@ab/client-core';
 import { localizedName, round2 } from '@ab/core';
-import type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/money';
+import {
+  expenseReceiptUploadSchema,
+  type ExpenseCategoryView,
+  type ExpenseCreateInput,
+  type ExpenseView,
+} from '@ab/money';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend, t, locale } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
@@ -10,25 +14,28 @@ import { moneyKeys } from '@/features/finance/keys';
 // apps/api/src/modules/expenses (docs/11 §9 + §13, R-RPT-02, issue E4).
 export type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/money';
 
+const calls = expenseCalls({ apiFetch, apiSend });
+const categoryCalls = expenseCategoryCalls({ apiFetch, apiSend });
+
 export const expensesQuery = (month: string) =>
   queryOptions({
     queryKey: moneyKeys.expenses(month),
-    queryFn: () => apiFetch<ExpenseView[]>(`/expenses?month=${month}`),
+    queryFn: () => calls.list({ month }),
   });
 
 export const expenseYearQuery = (year: string) =>
   queryOptions({
     queryKey: moneyKeys.expenseYear(year),
-    queryFn: () => apiFetch<ExpenseYearView>(`/expenses/year?year=${year}`),
+    queryFn: () => calls.year(year),
   });
 
 export const categoriesQuery = queryOptions({
   queryKey: moneyKeys.expenseCategories(),
-  queryFn: () => apiFetch<ExpenseCategoryView[]>('/expense-categories'),
+  queryFn: categoryCalls.list,
   staleTime: 10 * 60_000,
 });
 
-export const addCategory = (body: { key: string; labelAr: string }) => apiSend<ExpenseCategoryView>('POST', '/expense-categories', body);
+export const addCategory = categoryCalls.add;
 
 /**
  * The table's label in the UI language (English UI: label_en, else the seeded English word, else
@@ -44,32 +51,22 @@ export function categoryLabel(
   return localizedName({ ar: row.label_ar, en: row.label_en?.trim() || seeded }, locale);
 }
 
-export type ExpenseBody = {
-  month: string;
-  category: string;
-  amount: number;
-  currency: string;
-  paidOn: string | null;
-  vendor: string | null;
-  method: PaymentMethod | null;
-  receiptPath?: string | null;
-  recurring: boolean;
-  note: string | null;
-};
+export type ExpenseBody = ExpenseCreateInput;
 
 export const saveExpense = ({ id, body }: { id: string | null; body: ExpenseBody }) =>
-  id ? apiSend<ExpenseView>('PATCH', `/expenses/${id}`, body) : apiSend<ExpenseView>('POST', '/expenses', body);
+  id ? calls.update(id, body) : calls.create(body);
 
 /** A recurring draft becomes a real expense of its month. */
-export const confirmDraft = (id: string) => apiSend<ExpenseView>('PATCH', `/expenses/${id}`, { isDraft: false });
+export const confirmDraft = (id: string) => calls.update(id, { isDraft: false });
 
-export const deleteExpense = (id: string) => apiSend('DELETE', `/expenses/${id}`);
+export const deleteExpense = calls.remove;
 
-export const expenseReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/expenses/${id}/receipt`);
+export const expenseReceiptUrl = calls.receipt;
 
 /** Straight to receipts/expenses/… through a one-off signed URL; the path is then saved with the expense. */
 export async function uploadExpenseReceipt(file: File): Promise<string> {
-  const signed = await apiSend<SignedUpload>('POST', '/expenses/receipt-upload-url', { mime: file.type, size: file.size });
+  const slot = expenseReceiptUploadSchema.parse({ mime: file.type, size: file.size });
+  const signed = await calls.receiptUploadUrl(slot);
   const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return signed.path;

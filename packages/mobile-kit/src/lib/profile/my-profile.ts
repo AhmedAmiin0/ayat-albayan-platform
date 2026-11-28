@@ -1,14 +1,16 @@
-import type { AccountProfile } from '@ab/shared';
+import { accountCalls } from '@ab/client-core';
 import { QueryClient, QueryClientContext, queryOptions, useQuery } from '@tanstack/react-query';
 import { use } from 'react';
-import { apiFetch } from '../http/api';
+import { apiFetch, apiSend } from '../http/api';
 
 /** GET /me/profile (R-ACC-01): the caller's own login, whatever the role. */
 export const PROFILE_KEY = ['me', 'profile'] as const;
 
+const account = accountCalls({ apiFetch, apiSend });
+
 const profileQuery = queryOptions({
   queryKey: PROFILE_KEY,
-  queryFn: () => apiFetch<AccountProfile>('/me/profile'),
+  queryFn: () => account.profile(),
   // The photo URL is signed for an hour: refetch well before it lapses.
   staleTime: 10 * 60_000,
 });

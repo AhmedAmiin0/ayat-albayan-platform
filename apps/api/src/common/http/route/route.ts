@@ -2,6 +2,7 @@ import type { RouteList, RouteMethod, RouteSpec } from '@ab/core';
 import { applyDecorators, Delete, Get, Patch, Post, Put, SetMetadata } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { IS_PUBLIC, PERMISSION } from '@/common/auth/decorators';
+import { declareReturns } from '@/common/http/returns';
 
 const METHODS: Record<RouteMethod, (path: string) => MethodDecorator> = {
   GET: Get,
@@ -41,11 +42,13 @@ const accessOf = ({ permissions, tags, isPublic }: RouteSpec): MethodDecorator[]
 /**
  * Serves a shared route object (docs/62 part 3 §2): its method and full path, under a
  * `@Controller()` without a prefix, its permissions (any one lets a caller in), its Swagger tags
- * and its `isPublic`. Guards, throttles, @SignedIn and @HttpCode stay on the handler.
+ * its `isPublic` and its JSON answer as @Returns does. Guards, throttles, @SignedIn and @HttpCode
+ * stay on the handler.
  */
 export function Route(route: RouteSpec): MethodDecorator {
   const remember: MethodDecorator = (_target, _key, descriptor) => {
     ROUTES.set(descriptor.value, route);
+    declareReturns(descriptor.value, route.response);
   };
   return applyDecorators(METHODS[route.method](route.path), ...accessOf(route), remember);
 }
