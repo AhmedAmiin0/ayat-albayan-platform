@@ -3,8 +3,14 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { NewMeetingMenu } from './NewMeetingMenu';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => []) }));
+const mockApi = mockCall();
+mockApi.onRead(async () => []);
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const show = () =>
   render(
@@ -23,7 +29,9 @@ describe('NewMeetingMenu «اجتماع جديد»', () => {
     expect(items[0]?.textContent).toBe(t.meetings.internal.item);
     expect(items[1]?.textContent).toBe(t.meetingInvites.scheduledItem);
     expect(screen.getByRole('button', { name: t.meetings.startNow })).toBeTruthy();
-    expect(screen.getByRole('link', { name: t.meetings.schedule }).getAttribute('href')).toBe('/admin/book');
+    expect(screen.getByRole('link', { name: t.meetings.schedule }).getAttribute('href')).toBe(
+      '/admin/book',
+    );
   });
 
   it('«ابدأ الآن» opens the instant lesson dialog, and cancel closes it', () => {

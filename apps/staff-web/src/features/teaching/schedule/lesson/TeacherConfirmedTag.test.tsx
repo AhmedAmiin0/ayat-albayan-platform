@@ -6,11 +6,12 @@ import { t } from '@ab/web-kit';
 import { lesson } from './lesson-fixture';
 import { LessonDrawer } from './LessonDrawer';
 import { TeacherConfirmedTag } from './TeacherConfirmedTag';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  apiFetch: vi.fn(),
-  apiSend: vi.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const AHEAD = lesson({ starts_at: '2026-12-06T14:00:00.000Z' });
@@ -19,7 +20,9 @@ describe('«أكّد المعلم الحضور» (docs/46 C4)', () => {
   it('shows only when the teacher said «سأحضر»', () => {
     const { rerender } = render(<TeacherConfirmedTag lesson={AHEAD} />);
     expect(screen.queryByText(t.teacherBoard.teacherConfirmed)).toBeNull();
-    rerender(<TeacherConfirmedTag lesson={{ ...AHEAD, teacher_confirmed_at: '2026-12-01T10:00:00Z' }} />);
+    rerender(
+      <TeacherConfirmedTag lesson={{ ...AHEAD, teacher_confirmed_at: '2026-12-01T10:00:00Z' }} />,
+    );
     expect(screen.getByText(t.teacherBoard.teacherConfirmed)).toBeTruthy();
   });
 

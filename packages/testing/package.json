@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./expo-observe": "./src/expo-observe/index.ts",
     "./jest": "./jest.cjs",
     "./mock-call": "./src/mock-call/index.ts",
     "./page-golden": "./src/page-golden/index.ts",
