@@ -30,7 +30,8 @@ test.describe('dashboard numbers (R-RPT-01/02)', () => {
     expect(d((s) => s.funnel.trial_booked ?? 0)).toBe(1);
     expect(d((s) => s.funnel.converted ?? 0)).toBe(1);
     expect(d((s) => s.unpaid_subscriptions)).toBe(1);
-    expect(d((s) => s.pending_reports)).toBeGreaterThanOrEqual(4); // both packages: a past + a started lesson
+    // both packages: a past + a started lesson
+    expect(d((s) => s.pending_reports)).toBeGreaterThanOrEqual(4);
     expect(week.lessons_by_status.confirmed).toBe(
       (weekBefore.lessons_by_status.confirmed ?? 0) + 1,
     );

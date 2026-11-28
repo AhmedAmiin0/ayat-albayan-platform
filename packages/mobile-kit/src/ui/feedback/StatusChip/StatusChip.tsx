@@ -5,8 +5,9 @@ import { NuqtaGlyph } from '../../primitives/NuqtaGlyph';
 import { AppText } from '../../primitives/AppText';
 
 /**
- * Foreground + soft background per tone (docs/07 §6). There is no neutral ink: it is ink-2. An unknown tone
- * (a status newer than this bundle, e.g. 'cancelled' on an old OTA) is neutral instead of a crash.
+ * Foreground + soft background per tone (docs/07 §6). There is no neutral ink: it is ink-2. An
+ * unknown tone (a status newer than this bundle, e.g. 'cancelled' on an old OTA) is neutral instead
+ * of a crash.
  */
 export function toneColors(color: Palette, tone: Tone): { fg: string; bg: string } {
   switch (tone) {

@@ -4,7 +4,8 @@ import { rolledBack, type Tx } from '../../support/core/rls';
 
 // Reopening an approved statement (migration 20261006000273): the guard and the clean-up follow the
 // statement's own LINES, so a commission that was voided and earned again cannot make it under-pay.
-// Statements are of LAST month (payments made 35 days ago); a month that has not begun cannot be built.
+// Statements are of LAST month (payments made 35 days ago); a month that has not begun cannot be
+// built.
 
 const TERMS = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01' } as const;
 const approve = (tx: Tx, id: string) => tx`select public.approve_assistant_statement(${id}, null)`;
@@ -20,7 +21,8 @@ test.describe('assistant statements: reopen (20261006000273)', () => {
       const last = await lastMonth(tx);
       const { statement_id: s1 } = await generate(tx, a, last);
       await approve(tx, s1);
-      await pay(tx, sub, { amount: 100, kind: 'refund' }); // voided: a reversal (-20) is due this month
+      // voided: a reversal (-20) is due this month
+      await pay(tx, sub, { amount: 100, kind: 'refund' });
       const { statement_id: s2 } = await generate(tx, a, await openMonth(tx, a)); // ... and goes into this month's statement
       expect(one(await tx<{ n: number }[]>`select count(*)::int n from public.assistant_statement_lines
         where statement_id = ${s2} and kind = 'adjustment'`).n).toBe(1);

@@ -10,7 +10,8 @@ test.describe('automatic chat lists (migration 710)', () => {
 
   test('the rules sit on «مشترك» and «معلم», one list per rule; re-running the migration backfills and is idempotent', async () => {
     await rolledBack(async (tx) => {
-      await rerunMigration(tx); // the e2e reset truncates chat_lists: attach / create the two lists again
+      // the e2e reset truncates chat_lists: attach / create the two lists again
+      await rerunMigration(tx);
       const rules = await tx<{ name_key: string; auto_rule: string }[]>`select name_key, auto_rule from public.chat_lists
         where auto_rule is not null order by auto_rule`;
       expect(rules).toEqual([{ name_key: 'مشترك', auto_rule: 'subscribed' }, { name_key: 'معلم', auto_rule: 'teachers' }]);

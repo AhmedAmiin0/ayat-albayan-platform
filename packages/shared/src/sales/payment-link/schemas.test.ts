@@ -20,7 +20,8 @@ describe('payment link commands', () => {
     ).toBe(true);
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, amount: 0 }).success).toBe(false);
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, kind: 'gift' }).success).toBe(false);
-    expect(paymentLinkCreateSchema.safeParse({ ...BODY, kind: undefined }).success).toBe(true); // the API derives it
+    // the API derives it
+    expect(paymentLinkCreateSchema.safeParse({ ...BODY, kind: undefined }).success).toBe(true);
     expect(paymentLinkCreateSchema.safeParse({ ...BODY, price: 1 }).success).toBe(false);
   });
 

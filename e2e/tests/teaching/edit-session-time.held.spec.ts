@@ -45,7 +45,8 @@ test.describe('«عدّل الوقت» — held lessons (R-SCH-11)', () => {
     await fillForm(drawer, { minutes: '60' });
     await expect(drawer.getByText(L.payoutWarn)).toBeVisible();
     await save(drawer);
-    await expect(drawer.getByText(ar.lessons.error.reason_required)).toBeVisible(); // required, asked before any request
+    // required, asked before any request
+    await expect(drawer.getByText(ar.lessons.error.reason_required)).toBeVisible();
     await fillForm(drawer, { reason: 'الحلقة خدت ساعة بدل 45 دقيقة' });
     await save(drawer);
     await expect(drawer.getByText(L.payoutDraft)).toBeVisible();

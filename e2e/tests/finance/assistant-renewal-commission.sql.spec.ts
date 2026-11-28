@@ -80,7 +80,8 @@ test.describe('renewal commission (20261027000750-751)', () => {
       const second = await subscription(tx, s, { price: 200 });
       await pay(tx, second, 200);
       await setShare(tx, 80);
-      await pay(tx, second, 5); // a later payment on it re-runs the rule: still fully paid, kept as earned
+      // a later payment on it re-runs the rule: still fully paid, kept as earned
+      await pay(tx, second, 5);
       expect(await renewalOf(tx, second)).toMatchObject({ amount: '10.00', share_percent: 50 });
       const third = await subscription(tx, s, { price: 200 });
       await pay(tx, third, 200);
@@ -119,7 +120,8 @@ test.describe('renewal commission (20261027000750-751)', () => {
       const kept = await brought(tx, { by: a, phone: '+966500000408', price: 400 });
       await pay(tx, kept.sub, 400);
       const merged = await brought(tx, { by: a, phone: '+966500000409', price: 400 });
-      const payment = await pay(tx, merged.sub, 400); // its own first: 40, dropped by the merge below
+      // its own first: 40, dropped by the merge below
+      const payment = await pay(tx, merged.sub, 400);
       await tx`select public.merge_students(${kept.student}, ${merged.student}, null)`;
       await tx`update public.payments set paid_at = paid_at + interval '1 second' where id = ${payment ?? ''}`; // a later money edit re-runs the rule
       expect(await renewalOf(tx, merged.sub)).toBeUndefined();

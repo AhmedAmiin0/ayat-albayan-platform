@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import { assistant, brought, commissionOf, iso, openMonth, one, paidStatement, pay, renewalOf, student, subscription } from '../../support/sales/assistant';
 import { rolledBack } from '../../support/core/rls';
 
-// Nothing is retroactive, and a re-attributed student's commission (migration 20261006000272) against
-// the real database. Each case is rolled back.
+// Nothing is retroactive, and a re-attributed student's commission (migration 20261006000272)
+// against the real database. Each case is rolled back.
 
 const PERCENT = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01' } as const;
 const FIXED = { commission_type: 'fixed', commission_value: 30, commission_currency: 'EGP', commission_starts_on: '2000-01-01' } as const;
@@ -19,7 +19,8 @@ test.describe('assistant commission: nothing retroactive, re-attribution (202610
       await tx`select public.set_student_brought_by(${kid}, ${a}, null)`; // brought today, paid three days ago
       expect(await commissionOf(tx, kid)).toBeUndefined();
       const second = await subscription(tx, kid, { price: 200 });
-      await pay(tx, second, 200); // the first package was paid before: no first; the second is a renewal
+      // the first package was paid before: no first; the second is a renewal
+      await pay(tx, second, 200);
       expect(await commissionOf(tx, kid)).toBeUndefined();
       expect(await renewalOf(tx, second)).toMatchObject({ amount: '10.00', share_percent: 50 });
     });

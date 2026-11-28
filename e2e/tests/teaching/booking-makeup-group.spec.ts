@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../../support/core/schedule';
-// A makeup is per student (R-SCH-10, migration 173): in a group lesson both children can get theirs, and the
-// lesson says which one is booked. The device upload and the replace/error states of the invoice field are
-// unit-tested (InvoiceField.replace.test.tsx).
+// A makeup is per student (R-SCH-10, migration 173): in a group lesson both children can get
+// theirs, and the lesson says which one is booked. The device upload and the replace/error states
+// of the invoice field are unit-tested (InvoiceField.replace.test.tsx).
 const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
 const next = (p: Page) => p.getByRole('button', { name: ar.booking.next }).click();
 const stamp = () => String(Date.now()).slice(-3);
@@ -14,7 +14,8 @@ async function bookMakeup(admin: Page, o: { child: string; late: boolean }): Pro
   const step = admin.getByRole('region', { name: ar.booking.steps.slot });
   await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
   const slots = step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button');
-  await (o.late ? slots.last() : slots.first()).click(); // the second child takes the last slot: the first child has 16:00
+  // the second child takes the last slot: the first child has 16:00
+  await (o.late ? slots.last() : slots.first()).click();
   await next(admin);
   await admin.getByLabel(ar.booking.invoice.upload).setInputFiles({ name: 'inv.png', mimeType: 'image/png', buffer: PNG });
   await expect(admin.getByRole('button', { name: ar.booking.invoice.remove })).toBeVisible();

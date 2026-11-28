@@ -52,7 +52,8 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     await admin.getByRole('tab', { name: tabs.overview, exact: true }).click();
     await expect(admin.getByText(s.off, { exact: true })).toBeVisible();
     await expect(admin.getByText(s.queued.two, { exact: true })).toBeVisible();
-    await expect(admin.getByText(s.gateNotConfigured)).toHaveCount(0); // WhatsApp is set up (the stub)
+    // WhatsApp is set up (the stub)
+    await expect(admin.getByText(s.gateNotConfigured)).toHaveCount(0);
 
     // Cancel is the way out: nothing changes.
     await admin.getByRole('button', { name: s.enableTitle, exact: true }).click();
@@ -73,7 +74,8 @@ test.describe('settings switches — kill switch and automatic messages', () => 
       .toBe(2);
     expect((await messageState(`+${digits}`)).map((m) => m.status)).toEqual(['sent', 'sent']);
 
-    // OFF asks first too (cancel changes nothing); confirmed, the row is written before the next tick reads it.
+    // OFF asks first too (cancel changes nothing); confirmed, the row is written before the next
+    // tick reads it.
     await admin.getByRole('button', { name: s.disable }).click();
     const off = admin.getByRole('dialog', { name: s.disableTitle });
     await off.getByRole('button', { name: ar.common.cancel }).click();

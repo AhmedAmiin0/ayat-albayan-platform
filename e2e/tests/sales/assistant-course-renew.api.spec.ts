@@ -100,7 +100,8 @@ test.describe.serial('sales: change a course’s days, then continue it on renew
       subscriptionId: first, teacherId: teacher, endsOn: addDays(sunday, 22),
       days: [{ weekday: 1, startTimeLocal: '18:00' }, { weekday: 3, startTimeLocal: '20:00' }],
     });
-    const wednesday = addDays(sunday, 24); // the first Wednesday after the previous course's last Monday
+    // the first Wednesday after the previous course's last Monday
+    const wednesday = addDays(sunday, 24);
     const res = await call<BookingResult>(request, {
       token, method: 'POST', path: '/sales/booking',
       body: {

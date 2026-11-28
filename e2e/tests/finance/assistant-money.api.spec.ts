@@ -8,10 +8,10 @@ import { setSetting } from '../../support/core/messages';
 import { USERS } from '../../support/core/users';
 
 // The money journey of an assistant through the REAL API and database (R-ASST-01, R-ASST-02): she
-// registers a student from her chat (POST /sales/booking, her as the actor), the student is credited
-// to her, and the commission follows the payments: none while partly paid, once when fully paid
-// (each later package a renewal at half), never twice, voided when a payment is deleted. Two terms:
-// 10 percent and a fixed 50 SAR.
+// registers a student from her chat (POST /sales/booking, her as the actor), the student is
+// credited to her, and the commission follows the payments: none while partly paid, once when fully
+// paid (each later package a renewal at half), never twice, voided when a payment is deleted. Two
+// terms: 10 percent and a fixed 50 SAR.
 
 interface Reg { student: string; phone: string }
 const need = <T>(v: T | undefined): T => {
@@ -51,7 +51,8 @@ test.describe.serial('assistant money: registration and commission (API + DB)', 
   };
 
   test('terms: the admin sets 10 percent for A and a fixed 50 SAR for C; an assistant cannot', async ({ request }) => {
-    const startsOn = dayOffset(0); // today in Riyadh: a start day cannot be in the past, nothing is retroactive
+    // today in Riyadh: a start day cannot be in the past, nothing is retroactive
+    const startsOn = dayOffset(0);
     const putA = await call(request, { token: admin, method: 'PUT', path: `/assistant-pay/terms/${need(a).id}`, body: { commission: { type: 'percent', value: 10, startsOn }, salary: { amount: 1000, currency: 'SAR', startsOn } } });
     const putC = await call(request, { token: admin, method: 'PUT', path: `/assistant-pay/terms/${need(c).id}`, body: { commission: { type: 'fixed', value: 50, currency: 'SAR', startsOn }, salary: null } });
     expect([putA.status, putC.status]).toEqual([200, 200]);
