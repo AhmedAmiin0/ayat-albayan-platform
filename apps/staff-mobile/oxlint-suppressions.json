@@ -2292,11 +2292,6 @@
       "count": 3
     }
   },
-  "src/inbox/qualification/lib/queries.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/inbox/rating/SendRating.test.tsx": {
     "stylistic/max-len": {
       "count": 10

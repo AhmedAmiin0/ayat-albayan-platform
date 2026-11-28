@@ -1,9 +1,8 @@
-import type { LeadRowView } from '@ab/shared';
-import { leadRow } from '@ab/shared/testing';
+import type { LeadListItem, LeadRowView } from '@ab/shared';
+import { leadListItem, leadRow } from '@ab/shared/testing';
 import { ApiError } from '@ab/mobile-kit';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { huda, page } from '@/inbox/shared/fixtures';
-import type { LeadProfile } from './queries';
 
 // Test rows in the GET /leads shape (every column the profile reads).
 
@@ -17,16 +16,13 @@ export const QUALIFICATION = {
   preferred_to: '18:00',
 };
 
-export const hudaProfile: LeadProfile = {
+export const hudaProfile: LeadListItem = leadListItem({
   ...huda,
   status: 'no_reply',
   qualification: QUALIFICATION,
-  follow_up_paused: false,
-  follow_up_paused_by: null,
   follow_up_stage: 1,
   next_follow_up_at: '2026-10-04T14:00:00Z',
-  follow_up_note: null,
-};
+});
 
 /** hudaProfile as the lead writes answer it: the whole leads row. */
 export const hudaRow = (patch: Partial<LeadRowView> = {}): LeadRowView =>
@@ -46,7 +42,7 @@ export const hudaRow = (patch: Partial<LeadRowView> = {}): LeadRowView =>
 const FOLLOW_UP_HOURS = [24, 72, 168];
 
 /** GET /leads?q=… (the exact-phone read) and GET /settings, as the lead screen asks for them. */
-export function answer(row: LeadProfile | null) {
+export function answer(row: LeadListItem | null) {
   return async (path: string) => {
     if (path.startsWith('/leads?')) return page(row ? [row] : []);
     if (path === '/settings') return { ...SETTING_DEFAULTS, follow_up_hours: FOLLOW_UP_HOURS };
