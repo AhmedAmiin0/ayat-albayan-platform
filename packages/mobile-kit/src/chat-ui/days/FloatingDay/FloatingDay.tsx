@@ -1,13 +1,7 @@
-import { Animated, type LayoutRectangle } from 'react-native';
+import { Animated } from 'react-native';
 import { DayChip } from '../DayChip';
 import { FLOAT_TOP } from '../top-band';
-
-interface FloatingDayProps {
-  label: string | null;
-  opacity: Animated.Value;
-  /** Its measured box (DayChip with its margins), so the band follows the system font. */
-  onChip?: (layout: LayoutRectangle) => void;
-}
+import type { FloatingDayProps } from './FloatingDay.types';
 
 /**
  * The day of the topmost message while she scrolls (the staff thread's useTopDay), over the top of

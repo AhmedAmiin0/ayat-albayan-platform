@@ -2,14 +2,14 @@ import { Pressable, ScrollView } from 'react-native';
 import { shape, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
 import { EMOJI } from '@ab/client-core';
-
-const GRID = { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' } as const;
+import type { EmojiGridProps } from './EmojiGrid.types';
+import { GRID } from './emoji-grid.helpers';
 
 /**
  * The curated emoji in a wrapping row that mirrors with the phone, each 44pt and
  * named by the emoji itself. One tap = one emoji at the caret.
  */
-export function EmojiGrid({ onPick }: { onPick: (emoji: string) => void }) {
+export function EmojiGrid({ onPick }: EmojiGridProps) {
   const { color } = useTheme();
   return (
     <ScrollView contentContainerStyle={GRID}>

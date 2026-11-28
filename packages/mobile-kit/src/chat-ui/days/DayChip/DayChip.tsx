@@ -2,11 +2,12 @@ import { View } from 'react-native';
 import { shape, type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
 import { CHIP_BORDER, CHIP_MARGIN, CHIP_PAD } from '../top-band';
+import type { DayChipProps } from './DayChip.types';
 
 /**
  * A day separator (as WhatsApp): a small centred chip over the day's first row.
  */
-export function DayChip({ label, testID }: { label: string; testID?: string }) {
+export function DayChip({ label, testID }: DayChipProps) {
   const { color } = useTheme();
   return (
     <View
