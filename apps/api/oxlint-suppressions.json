@@ -3329,11 +3329,6 @@
       "count": 2
     }
   },
-  "src/modules/messaging/saved-replies/saved-replies.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/saved-replies/saved-replies.fakes.ts": {
     "complexity": {
       "count": 1
