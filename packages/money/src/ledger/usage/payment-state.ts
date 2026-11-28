@@ -13,7 +13,7 @@ export function paymentState(input: { paid: number; price: number }): PaymentSta
 
 /** Signed sum of a package's payments in its own currency: a refund counts against it. */
 export function netPaid(rows: readonly { amount: number; kind: 'payment' | 'refund' }[]): number {
-  const cents = rows.reduce((n, r) => n + (r.kind === 'refund' ? -1 : 1) * toCents(Number(r.amount)), 0);
+  const cents = rows.reduce((n, r) => n + (r.kind === 'refund' ? -1 : 1) * toCents(r.amount), 0);
   return fromCents(cents);
 }
 

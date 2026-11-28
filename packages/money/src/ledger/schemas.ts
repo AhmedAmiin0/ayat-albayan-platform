@@ -8,7 +8,7 @@ import {
   DISCOUNT_MAX,
   PACKAGE_IDS,
   PRICING_DURATIONS,
-} from '../pricing/catalog';
+} from '../pricing';
 import { calendarDaysBetween } from '@ab/time';
 
 // Money commands (docs/11 §5-8): only customPrice replaces the catalog-quoted price, never `price`.
@@ -45,8 +45,7 @@ export const subscriptionPricingSchema = z.xor([
   z.object({ ...pricingBase, count: z.int().min(CUSTOM_COUNT_MIN).max(CUSTOM_COUNT_MAX) }),
 ]);
 
-// schema bound; the real one is usedBeforeMax (usedBeforeProblem)
-export const LESSONS_USED_BEFORE_MAX = 99;
+export const LESSONS_USED_BEFORE_MAX = 99; // schema bound; usedBeforeMax is the real one
 /** POST /subscriptions (R-SUB-01). */
 export const subscriptionCreateSchema = z.object({
   studentId: z.uuid(),
@@ -61,7 +60,7 @@ export const subscriptionCreateSchema = z.object({
   customPrice: moneyAmount.optional(),
 });
 
-/** PATCH /subscriptions/:id: no price, size or `paused` (a pause is the course pause, docs/11 §7b; the key is dropped). */
+/** PATCH /subscriptions/:id: no price, size or `paused` (the course pause, docs/11 §7b). */
 export const subscriptionUpdateSchema = z.object({
   renewsOn: localDate.nullable().optional(),
   notes: optionalText,
@@ -75,10 +74,12 @@ export const pastInstant = instant.refine((v) => Date.parse(v) <= Date.now() + 3
 /** A bank transfer holds at most this many attachments per payment, all optional. */
 export const PAYMENT_ATTACHMENTS_MAX = 5;
 /**
- * Paths from the receipt upload URL (receipts/{subscription_id}/…). Accepted ONLY when the method is 'bank'
- * (the API answers 400 attachments_not_allowed otherwise); each must be the package's, uploaded and an image / PDF.
+ * Receipt upload paths (receipts/{subscription_id}/…), only for method 'bank' (else 400
+ * attachments_not_allowed); each must be the package's, uploaded and an image or PDF.
  */
-export const paymentAttachmentPaths = z.array(z.string().min(1).max(200)).max(PAYMENT_ATTACHMENTS_MAX, { message: 'too_many_attachments' });
+export const paymentAttachmentPaths = z
+  .array(z.string().min(1).max(200))
+  .max(PAYMENT_ATTACHMENTS_MAX, { message: 'too_many_attachments' });
 
 /** `currency` may differ from the package's when an fx rate exists; a refund counts as negative. */
 export const paymentCreateSchema = z.object({
@@ -102,14 +103,19 @@ export const paymentCreateSchema = z.object({
 /** PATCH /payments/:id: explicit optionals (a .partial() would re-apply defaults). */
 export const paymentUpdateSchema = z.object({
   amount: moneyAmount.optional(),
-  // a card (Stripe) payment keeps its method on an edit
-  method: z.enum(ALL_PAYMENT_METHODS).optional(),
+  method: z.enum(ALL_PAYMENT_METHODS).optional(), // a card payment keeps its method on an edit
   paidAt: pastInstant.optional(),
   receiptPath: z.string().min(1).nullable().optional(),
   note: optionalText,
 });
 
-export const RECEIPT_MIMES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf'] as const;
+export const RECEIPT_MIMES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/heic',
+  'application/pdf',
+] as const;
 /** Same as the receipts bucket limit (migration 122). */
 export const RECEIPT_MAX_BYTES = 10 * 1024 * 1024;
 
