@@ -1,9 +1,9 @@
 import { IconButton } from '@ab/web-kit/components/ui/form/IconButton';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
+import type { KickButtonProps } from './KickButton.types';
 
-export function KickButton({ tile, onAsk }: { tile: TileView; onAsk: (tile: TileView) => void }) {
+export function KickButton({ tile, onAsk }: KickButtonProps) {
   return (
     <IconButton
       label={t.classroom.kick.actionOf.replace('{name}', tile.name)}
