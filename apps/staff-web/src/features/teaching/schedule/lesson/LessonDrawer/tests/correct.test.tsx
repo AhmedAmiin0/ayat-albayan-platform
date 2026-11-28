@@ -68,6 +68,15 @@ describe('LessonDrawer: no confirmation (owner 2026-11-02) and «تصحيح ال
     }
   });
 
+  it('an answer that is not a lesson is an error, never «done»', async () => {
+    apiSend.mockResolvedValue({ id: 'l-7' });
+    renderDrawer(AUTO_HELD);
+    fireEvent.click(screen.getByRole('button', { name: c.to.excused }));
+    fireEvent.click(screen.getByRole('button', { name: c.confirm }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-7/correct', { to: 'excused' }));
+    expect(screen.queryByText(c.done)).toBeNull();
+  });
+
   it('a 409 not_auto_held reads in the lessons’ words', async () => {
     apiSend.mockRejectedValue(new ApiError(409, { code: 'not_auto_held' }));
     renderDrawer(AUTO_HELD);

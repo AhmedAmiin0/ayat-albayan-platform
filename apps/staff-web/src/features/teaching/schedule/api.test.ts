@@ -1,6 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { QueryClient } from '@tanstack/react-query';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { conflictsOf, errorCode, lessonErrorText, overviewQuery, slotsQuery } from './api';
+import { overview } from './overview-fixture';
+
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+afterEach(() => apiFetch.mockReset());
 
 const FROM = new Date('2026-10-02T21:00:00.000Z');
 const TO = new Date('2026-10-09T21:00:00.000Z');
@@ -60,5 +66,22 @@ describe('query keys', () => {
     const base = { teacherId: 't1', from: FROM, to: TO, durationMin: 45, studentIds: ['a'] };
     expect(String(slotsQuery({ ...base, excludeCourse: 'sub-1' }).queryKey.at(-1))).toContain('excludeCourse=sub-1');
     expect(String(slotsQuery(base).queryKey.at(-1))).not.toContain('excludeCourse');
+  });
+});
+
+describe('GET /lessons/overview through its route object', () => {
+  const read = () => new QueryClient().fetchQuery(overviewQuery({ from: FROM, to: TO }));
+
+  it('asks the window and keeps a well-formed answer', async () => {
+    apiFetch.mockResolvedValue(overview([]));
+    await expect(read()).resolves.toEqual(overview([]));
+    expect(apiFetch).toHaveBeenCalledWith(
+      '/lessons/overview?from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z',
+    );
+  });
+
+  it('rejects an answer that is not an overview', async () => {
+    apiFetch.mockResolvedValue({ teachers: 'none' });
+    await expect(read()).rejects.toMatchObject({ body: { code: 'bad_response' } });
   });
 });
