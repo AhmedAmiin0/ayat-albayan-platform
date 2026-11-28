@@ -16,7 +16,7 @@ import {
   type BalanceView,
   type StudentBalanceView,
 } from '@ab/money';
-import type { BalanceRow } from '@/modules/finance/subscriptions/money/balance.repo';
+import type { BalanceRow } from '@/modules/finance/subscriptions';
 
 export interface PeopleStudentRow {
   id: string;

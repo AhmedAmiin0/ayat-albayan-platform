@@ -76,7 +76,7 @@ export class ReactionRepo {
   async queued(dedupKey: string): Promise<boolean> {
     const { data, error } = await this.db.from('messages').select('id').eq('dedup_key', dedupKey).limit(1);
     if (error) throw pgError(error);
-    return (data ?? []).length > 0;
+    return data.length > 0;
   }
 
   /**

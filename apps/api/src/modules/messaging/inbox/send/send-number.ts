@@ -3,6 +3,7 @@ import { isWaLine, type WaLine } from '@ab/catalog';
 import { Logger } from '@nestjs/common';
 import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { pickSendLine, type SendLineCode } from './send-line';
+import { refused } from './send-refusal';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 /**
@@ -65,9 +66,14 @@ export function pickNumber(input: {
   const byId = new Map(input.numbers.map((n) => [n.id, n]));
   const windows = mergeWindows(numberWindows(input.rows, input.numbers));
   const picked = replyNumber({ windows, now: input.now, canSend: (id) => sendable(byId.get(id)) });
-  if ('code' in picked) return { code: picked.code === 'number_not_configured' ? 'line_not_configured' : 'session_closed' };
+  if (refused(picked)) {
+    const unconfigured = picked.code === 'number_not_configured';
+    return { code: unconfigured ? 'line_not_configured' : 'session_closed' };
+  }
   const n = byId.get(picked.numberId);
-  return n && isWaLine(n.purpose) ? { number_id: n.id, line: n.purpose } : { code: 'line_not_configured' };
+  return n && isWaLine(n.purpose)
+    ? { number_id: n.id, line: n.purpose }
+    : { code: 'line_not_configured' };
 }
 
 /**

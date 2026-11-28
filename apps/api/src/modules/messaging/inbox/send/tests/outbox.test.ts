@@ -13,7 +13,8 @@ function setup(status: 'queued' | 'sent', replayed = false) {
     get: vi.fn(async () => null),
     byDedupKey: vi.fn(async (key: string) => (key === ROW.dedup_key ? messageRow({ id: 'm1', status }) : null)),
   };
-  const sender = { kick: vi.fn(() => new Promise<void>(() => undefined)) }; // a pass that never ends (WhatsApp hangs)
+  // A pass that never ends (WhatsApp hangs).
+  const sender = { kick: vi.fn(() => new Promise<void>(() => undefined)) };
   const views = {
     view: vi.fn(async (r: { id: string; status: string }) => ({ id: r.id, status: r.status })),
   };

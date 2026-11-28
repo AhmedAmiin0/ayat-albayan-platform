@@ -1,11 +1,11 @@
-import { threadReactionSchema, type ReactionResult } from '@ab/shared';
-import { Body, Controller, HttpCode, Param, Put } from '@nestjs/common';
+import { threadReactionSchema, type ReactionResult, type ThreadReaction } from '@ab/shared';
+import { Controller, HttpCode, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
+import { ZodBody, ZodParams } from '@/common/http/zod-inputs';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
 import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
@@ -29,12 +29,10 @@ export class ThreadReactionController {
   @HttpCode(200)
   @Permissions('inbox.send')
   async react(
-    @Param() raw: unknown,
-    @Body() body: unknown,
+    @ZodParams(params) { phone, id }: z.output<typeof params>,
+    @ZodBody(threadReactionSchema) input: ThreadReaction,
     @CurrentUser() user: AuthUser,
   ): Promise<ReactionResult> {
-    const { phone, id } = parseOrThrow(params, raw);
-    const input = parseOrThrow(threadReactionSchema, body);
     const sales = await this.reads.salesScope(user);
     const scope = sales ? null : await this.reads.scope(user);
     const request = {

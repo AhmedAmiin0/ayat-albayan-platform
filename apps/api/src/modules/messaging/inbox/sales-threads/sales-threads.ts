@@ -1,5 +1,5 @@
 import type { MessageView, ThreadLesson, ThreadPeople, ThreadView } from '@ab/shared';
-import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
+import type { ThreadMessageRow } from '@/modules/messaging/whatsapp';
 
 /**
  * Templates whose template_params.button is a signed link (a feedback answer, a classroom entry):

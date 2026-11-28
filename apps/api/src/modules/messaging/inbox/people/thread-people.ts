@@ -1,7 +1,6 @@
 import type { ThreadPeople } from '@ab/shared';
 import type { Db } from '@/common/db/db.module';
-import type { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
-import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
+import type { BalanceRepo, PackagesService } from '@/modules/finance/subscriptions';
 import { rows } from '@/common/db/errors';
 import { familyTags, toThreadStudent, type FamilyTag } from './thread-people.mapper';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
@@ -21,10 +20,15 @@ const STUDENTS = 'id, code, name, status, teacher:teachers(display_name_ar)';
 /** A thread's row, or a number with no message yet (KnownNumber). */
 export type PeopleOf = Pick<ThreadRow, 'guardian_id' | 'guardian_name' | 'lead_id' | 'lead_status'>;
 
+export const guardianOf = (row: PeopleOf | null): ThreadPeople['guardian'] =>
+  row?.guardian_id ? { id: row.guardian_id, name: row.guardian_name ?? '' } : null;
+
+export const leadOf = (row: PeopleOf | null): ThreadPeople['lead'] =>
+  row?.lead_id && row.lead_status ? { id: row.lead_id, status: row.lead_status } : null;
+
 export async function threadPeople(deps: PeopleDeps, row: PeopleOf | null): Promise<ThreadPeople> {
-  const guardian = row?.guardian_id ? { id: row.guardian_id, name: row.guardian_name ?? '' } : null;
-  const lead =
-    row?.lead_id && row.lead_status ? { id: row.lead_id, status: row.lead_status } : null;
+  const guardian = guardianOf(row);
+  const lead = leadOf(row);
   if (!guardian) return { guardian, lead, students: [] };
   const data = rows(
     await deps.db

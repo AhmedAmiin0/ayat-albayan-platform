@@ -2,12 +2,9 @@
 // and MessageViews; the queries, line clients, gate and sender are mocks. `client` = notifications,
 // `chatClient` = chat (docs/12 §13.16), both configured; resetting files re-prime `configured`.
 import type { AuthUser } from '@/common/auth/verify-token';
-import type { ThreadWindow } from './send/send-number';
-import type { ChatListRef, ThreadLesson, ThreadPeople } from '@ab/shared';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { vi } from 'vitest';
 import { messagingRoot } from '@/common/infra/test-root';
 import { InboxModule } from './inbox.module';
 import { LessonRatingModule } from '@/modules/teaching/lesson-rating';
@@ -21,10 +18,7 @@ import { ReopenRequest } from '@/modules/messaging/whatsapp/sender/window/reopen
 import { ReopenPick } from '@/modules/messaging/whatsapp/sender/window/manual-send';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
-import type { ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '@/modules/messaging/whatsapp/whatsapp.types';
-import type { KnownNumber } from './threads/known-number';
-import type { FamilyTag } from './people/thread-people.mapper';
 import { TeacherThreadsRepo } from './teacher-threads/teacher-threads.repo';
 import { ThreadsRepo } from './threads/threads.repo';
 import { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
@@ -34,6 +28,9 @@ import { MessageHideRepo } from './hide/message-hide.repo';
 import { StickerRepo } from '@/modules/messaging/inbox/stickers/sticker.repo';
 import { ChatSearchRepo, MessageSearchRepo } from './reads/search';
 import { InboxSettings, type InboxSettingsValues } from './inbox.settings';
+import { inboxMocks } from './inbox-app.fakes';
+
+export { NO_PEOPLE } from './inbox-app.fakes';
 
 /** The inbox settings at the registry defaults, no DB read (the ring threshold, file size). */
 const inboxSettings = () => ({
@@ -43,8 +40,11 @@ const inboxSettings = () => ({
   }),
 });
 
-export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
-export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
+export const ADMIN: AuthUser = {
+  id: 'a0000000-0000-4000-8000-000000000001',
+  email: null,
+  role: 'admin',
+};
 export const TEACHER: AuthUser = { id: 't1', email: null, role: 'teacher' };
 export const SALES: AuthUser = { id: 's1', email: null, role: 'sales' };
 const USERS: Record<string, AuthUser> = {
@@ -61,63 +61,20 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 
-function mocks() {
-  return {
-    queries: {
-      ...{ list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
-      lessonTeacher: vi.fn(),
-      byDedupKey: vi.fn(async (): Promise<object | null> => null),
-      numberWindows: vi.fn(async (): Promise<ThreadWindow[]> => []),
-      known: vi.fn(async (): Promise<KnownNumber | null> => null),
-      lessons: vi.fn(async (): Promise<ThreadLesson[]> => []),
-      people: vi.fn(async () => NO_PEOPLE),
-      familyTags: vi.fn(async () => new Map<string, FamilyTag>()),
-      unsupported: vi.fn(async <T>(rows: T[]) => rows),
-    },
-    teacher: {
-      ...{ teacher: vi.fn(), phones: vi.fn(), unread: vi.fn(), stampRead: vi.fn() },
-      ...{ myStudentIds: vi.fn(), guardianStudents: vi.fn() },
-    },
-    sales: { ownership: vi.fn() },
-    lists: {
-      ...{ all: vi.fn(), one: vi.fn(), count: vi.fn(), create: vi.fn(), rename: vi.fn(), remove: vi.fn(), add: vi.fn(), drop: vi.fn() },
-      listsOf: vi.fn(async (): Promise<ChatListRef[]> => []),
-    },
-    templates: { all: vi.fn(), get: vi.fn(), update: vi.fn(), approvals: vi.fn(async (): Promise<ApprovalRow[]> => []) },
-    client: { configured: vi.fn(() => true), markRead: vi.fn() },
-    chatClient: { configured: vi.fn(() => true), markRead: vi.fn() },
-    gate: { open: vi.fn() },
-    sender: { kick: vi.fn() },
-    audit: { record: vi.fn() },
-    reopenRequest: {
-      usable: vi.fn(async (): Promise<string | null> => 'template'),
-    },
-    // Plain functions (vi.resetAllMocks keeps them): no reopen read, the thread as it is.
-    reopenPick: { thread: async <T>(view: T): Promise<T> => view, stamp: async () => null },
-    hides: { target: vi.fn(), set: vi.fn(async () => true) },
-    delta: { newer: vi.fn(), pending: vi.fn() },
-    sync: { page: vi.fn(), tombstones: vi.fn() },
-    search: { rows: vi.fn() },
-    messageSearch: { search: vi.fn() },
-    stickers: {
-      ...{ recent: vi.fn(), messages: vi.fn(), favourites: vi.fn() },
-      ...{ save: vi.fn(), drop: vi.fn() },
-    },
-  };
-}
 
 /**
  * `resolve`: the system roles as seeded by default; a test may grant a role more (a DB-edited
  * role).
  */
 export async function inboxApp(resolve: PermissionResolver = systemResolver) {
-  const m = mocks();
+  const m = inboxMocks();
   // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between
   // tests.
   const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
   const root = messagingRoot(InboxModule, LessonRatingModule);
   const mod = await Test.createTestingModule({ imports: [root] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(resolve).overrideProvider(TOKEN_VERIFIER).useValue(verify)
+    .overrideProvider(PERMISSION_RESOLVER).useValue(resolve)
+    .overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(ThreadsRepo).useValue(m.queries)
     .overrideProvider(ThreadMessagesRepo).useValue(m.queries)
     .overrideProvider(ThreadReadsRepo).useValue(m.queries)
@@ -143,7 +100,12 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
-  const call = (input: { method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'; url: string; token?: string; body?: object }) =>
+  const call = (input: {
+    method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+    url: string;
+    token?: string;
+    body?: object;
+  }) =>
     app.inject({
       method: input.method,
       url: input.url,

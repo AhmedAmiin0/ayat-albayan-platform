@@ -40,7 +40,7 @@ export class DeltaRepo {
       .order('id', { ascending: false })
       .limit(q.limit + 1);
     check(error);
-    return data ?? [];
+    return data;
   }
 
   /**
@@ -66,6 +66,6 @@ export class DeltaRepo {
       .order('created_at', { ascending: false })
       .limit(PENDING_LIMIT);
     check(error);
-    return data ?? [];
+    return data;
   }
 }

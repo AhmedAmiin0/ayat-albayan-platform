@@ -32,3 +32,7 @@ export async function reopenStamp(
   if (ask.input.reopen === true) return stampOf(pick, ask);
   return reopensAnyway(ask) ? stampOf(pick, ask).catch(() => null) : null;
 }
+
+/** The row's dedup key: the reopen stamp's (with its expiry), else the send's own. */
+export const reopenFields = (reopen: ReopenStamp | null, key: string) =>
+  reopen ? { dedup_key: reopen.dedup, expires_at: reopen.expiresAt } : { dedup_key: key };

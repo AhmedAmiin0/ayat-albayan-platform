@@ -1,4 +1,10 @@
-import { DELTA_OVERLAP_MS, PENDING_WINDOW_MS, type MessageView, type ThreadDelta, type ThreadDeltaWindow, type ThreadView } from '@ab/shared';
+import {
+  DELTA_OVERLAP_MS,
+  PENDING_WINDOW_MS,
+  type MessageView,
+  type ThreadDelta,
+  type ThreadDeltaWindow,
+} from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { MessageViews, type ThreadMessageRow } from '@/modules/messaging/whatsapp';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
@@ -8,6 +14,7 @@ import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/te
 import { toThreadView } from '@/modules/messaging/inbox/threads/threads.mapper';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { DeltaRepo } from './delta.repo';
+import { hasGap, readNow, windowOf } from './delta-window';
 
 /** GET /threads/:phone?after=: `after` = created_at of the newest row the client holds. */
 export interface ThreadDeltaQuery {
@@ -25,19 +32,6 @@ export type DeltaCaller = { kind: 'admin' } | { kind: 'sales' } | { kind: 'teach
 
 interface Arrived { window: ThreadDeltaWindow; stamped: boolean }
 interface StampInput { q: ThreadDeltaQuery; caller: DeltaCaller; now: Date }
-
-const windowOf = (v: ThreadView, unread: number): ThreadDeltaWindow => ({
-  last_inbound_at: v.last_inbound_at,
-  session_open: v.session_open,
-  unread_count: unread,
-  reply_line: v.reply_line ?? null,
-  last_inbound_line: v.last_inbound_line ?? null,
-  last_chat_inbound_at: v.last_chat_inbound_at ?? null,
-  last_notifications_inbound_at: v.last_notifications_inbound_at ?? null,
-});
-
-const readNow = (views: MessageView[], at: Date): MessageView[] =>
-  views.map((m) => (m.direction === 'inbound' && !m.read_at ? { ...m, read_at: at.toISOString() } : m));
 
 /**
  * The open chat's periodic refresh: rows newer than `after` (and up to
@@ -73,10 +67,7 @@ export class ThreadDeltaService {
       this.render(moving.filter((r) => !shown.has(r.id)), caller),
       this.arrived(fresh, { q, caller, now }),
     ]);
-    // A gap only when the rows past the limit are newer than `after` (the overlap alone never
-    // forces a full read).
-    const gap = rows.length > q.limit && Date.parse(rows[q.limit]?.created_at ?? '') > Date.parse(q.after);
-    const out: ThreadDelta = { messages, has_more: gap, pending };
+    const out: ThreadDelta = { messages, has_more: hasGap(rows, q), pending };
     if (!arrived) return out;
     return {
       ...out,
@@ -112,7 +103,7 @@ export class ThreadDeltaService {
     ]);
     if (!row) return undefined;
     const view = toThreadView(row, now);
-    return { window: windowOf(view, caller.kind === 'teacher' || stamped ? 0 : view.unread_count), stamped };
+    return { window: windowOf(view, caller.kind === 'teacher' || stamped), stamped };
   }
 
   /**

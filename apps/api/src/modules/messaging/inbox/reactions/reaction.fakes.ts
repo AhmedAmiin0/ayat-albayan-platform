@@ -60,14 +60,19 @@ export function reactionHarness(t: ReactionTarget | null = target(), status: 'se
     numberWindows: vi.fn(async () => []),
     get: vi.fn(async () => row),
   };
+  const failed = status === 'failed';
+  const firstSend = (key: string, job: TablesInsert<'messages'>) => {
+    jobs.set(key, job);
+    if (failed) row.our_reaction = t?.our_reaction ?? null;
+  };
   const outbox = {
     send: vi.fn(async (job: TablesInsert<'messages'>) => {
-      const replayed = jobs.has(job.dedup_key ?? '');
-      if (!replayed) jobs.set(job.dedup_key ?? '', job);
-      if (!replayed && status === 'failed') row.our_reaction = t?.our_reaction ?? null;
-      const failed = status === 'failed';
-      const view = toMessageView({ row: messageRow({ id: 'r1', status, error_code: failed ? '131047' : null, template_key: null }), template: null });
-      return { view, replayed };
+      const key = job.dedup_key ?? '';
+      const replayed = jobs.has(key);
+      if (!replayed) firstSend(key, job);
+      const error_code = failed ? '131047' : null;
+      const sent = messageRow({ id: 'r1', status, error_code, template_key: null });
+      return { view: toMessageView({ row: sent, template: null }), replayed };
     }),
   };
   const service = new ThreadReactionService(
