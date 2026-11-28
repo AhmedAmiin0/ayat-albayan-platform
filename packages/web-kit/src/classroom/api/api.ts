@@ -2,11 +2,11 @@ import {
   assistantsApi,
   guestJoinCalls,
   lessonJoinCalls,
+  lessonListCalls,
   type AssistantPick,
   type GuestJoinInput,
   type JoinLinkSend,
 } from '@ab/client-core';
-import type { LessonView } from '@ab/schedule';
 import { addCalendarDays, localDateIn, wallToUtc } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend, publicApiFetch, publicApiSend } from '@ab/web-kit/lib/http/api';
@@ -16,6 +16,7 @@ export const CLASSROOM_KEY = ['classroom'] as const;
 
 const assistants = assistantsApi({ apiFetch, apiSend });
 const joins = lessonJoinCalls({ apiFetch, apiSend });
+const lists = lessonListCalls({ apiFetch, apiSend });
 const guestDoor = guestJoinCalls({ apiFetch: publicApiFetch, apiSend: publicApiSend });
 
 /** Staff, with their own login. A fresh identity per call. */
@@ -81,5 +82,5 @@ export function dayAround(
 export const adminDayQuery = (day: { from: string; to: string }) =>
   queryOptions({
     queryKey: ['lessons', 'classrooms', day.from],
-    queryFn: () => apiFetch<LessonView[]>(`/lessons?${new URLSearchParams(day)}`),
+    queryFn: () => lists.list(day),
   });
