@@ -10,7 +10,6 @@ import { apiErrorText } from '@/features/finance/subscriptions';
 import {
   approvePayout,
   currentMonth,
-  downloadPayoutsCsv,
   generatePayouts,
   payoutReceiptUrl,
   payoutsQuery,
@@ -43,7 +42,7 @@ export function PayoutsPage({ month, onMonth }: Props) {
     onSuccess: (r) => void window.open(r.url, '_blank', 'noopener'),
   });
   const [dialog, setDialog] = useState<PayoutDialog | null>(null);
-  const csv = useMutation({ mutationFn: downloadPayoutsCsv });
+  const csv = useMutation({ mutationFn: () => downloadCsv({ kind: 'payouts', params: { month } }) });
   const ledger = useMutation({ mutationFn: () => downloadCsv({ kind: 'teacher-ledger', params: { month } }) });
   const [approve, openReceipt] = [move.mutate, receipt.mutate];
   const rows = useMemo(() => list.data ?? [], [list.data]);
@@ -77,7 +76,7 @@ export function PayoutsPage({ month, onMonth }: Props) {
           onChange={onMonth}
         />
         <div className="ms-auto flex flex-wrap gap-2.5">
-          <Button type="button" variant="secondary" disabled={rows.length === 0 || csv.isPending} onClick={() => csv.mutate(month)}>
+          <Button type="button" variant="secondary" disabled={rows.length === 0 || csv.isPending} onClick={() => csv.mutate()}>
             {t.payouts.exportCsv}
           </Button>
           <Button type="button" variant="secondary" disabled={ledger.isPending} onClick={() => ledger.mutate()}>
