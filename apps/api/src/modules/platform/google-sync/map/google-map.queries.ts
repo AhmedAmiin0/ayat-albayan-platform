@@ -8,7 +8,7 @@ export type TeacherRow = TeacherNames & {
   id: string;
   calendar: { calendar_id: string; calendar_name: string | null; confirmed_at: string } | null;
 };
-export type StudentRow = {
+export interface StudentRow {
   id: string;
   code: string;
   name: string;
@@ -17,12 +17,12 @@ export type StudentRow = {
     attendance_sheet_id: string | null;
     confirmed_at: string;
   } | null;
-};
-export type StudentFiles = {
+}
+export interface StudentFiles {
   folder_id: string | null;
   attendance_sheet_id: string | null;
   summary_row_hint: number | null;
-};
+}
 
 /** Students the sync may write for: everyone who has (or had) lessons in the platform's sense. */
 const STUDENT_STATUSES = ['trial', 'active', 'pending_subscription', 'pending_renewal', 'paused'] as const;

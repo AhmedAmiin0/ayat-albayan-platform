@@ -3,7 +3,12 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { featureRoot } from '@/common/infra/test-root';
 import { PushModule } from './push.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { NotificationsRepo } from './notifications.repo';
@@ -28,7 +33,12 @@ const ID = '7a8b9c0d-1e2f-4a3b-8c4d-5e6f7a8b9c0d';
 describe('/me/notifications (R-NOT-01)', () => {
   let app: NestFastifyApplication;
   const call = (o: { method: 'GET' | 'POST'; url: string; token?: string; payload?: object }) =>
-    app.inject({ method: o.method, url: o.url, payload: o.payload, headers: { authorization: `Bearer ${o.token ?? 'teacher'}` } });
+    app.inject({
+      method: o.method,
+      url: o.url,
+      payload: o.payload,
+      headers: { authorization: `Bearer ${o.token ?? 'teacher'}` },
+    });
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(PushModule)] })
@@ -50,35 +60,49 @@ describe('/me/notifications (R-NOT-01)', () => {
   });
 
   it('lists the caller’s own rows, whatever the query names', async () => {
-    const res = await call({ method: 'GET', url: `/me/notifications?page=2&pageSize=10&profileId=${ID}` });
+    const res = await call({
+      method: 'GET',
+      url: `/me/notifications?page=2&pageSize=10&profileId=${ID}`,
+    });
     expect(res.statusCode).toBe(200);
-    expect(q.list).toHaveBeenCalledWith(USERS['teacher']?.id, { page: 2, pageSize: 10 });
+    expect(q.list).toHaveBeenCalledWith(USERS.teacher?.id, { page: 2, pageSize: 10 });
     await call({ method: 'GET', url: '/me/notifications', token: 'sales' });
-    expect(q.list).toHaveBeenLastCalledWith(USERS['sales']?.id, { page: 1, pageSize: 20 });
+    expect(q.list).toHaveBeenLastCalledWith(USERS.sales?.id, { page: 1, pageSize: 20 });
   });
 
   it('400 on a bad page size', async () => {
-    expect((await call({ method: 'GET', url: '/me/notifications?pageSize=500' })).statusCode).toBe(400);
+    expect((await call({ method: 'GET', url: '/me/notifications?pageSize=500' })).statusCode).toBe(
+      400,
+    );
     expect(q.list).not.toHaveBeenCalled();
   });
 
   it('marks the given ids or all, always for the caller only', async () => {
-    expect((await call({ method: 'POST', url: '/me/notifications/read', payload: { ids: [ID] } })).statusCode).toBe(204);
-    expect(q.readMine).toHaveBeenCalledWith(USERS['teacher']?.id, [ID]);
+    expect(
+      (await call({ method: 'POST', url: '/me/notifications/read', payload: { ids: [ID] } }))
+        .statusCode,
+    ).toBe(204);
+    expect(q.readMine).toHaveBeenCalledWith(USERS.teacher?.id, [ID]);
     expect((await call({ method: 'POST', url: '/me/notifications/read' })).statusCode).toBe(204);
-    expect(q.readMine).toHaveBeenLastCalledWith(USERS['teacher']?.id, undefined);
+    expect(q.readMine).toHaveBeenLastCalledWith(USERS.teacher?.id, undefined);
   });
 
   it('400 on bad ids or extra fields', async () => {
     for (const payload of [{ ids: [] }, { ids: ['x'] }, { ids: [ID], profileId: ID }]) {
-      expect((await call({ method: 'POST', url: '/me/notifications/read', payload })).statusCode).toBe(400);
+      expect(
+        (await call({ method: 'POST', url: '/me/notifications/read', payload })).statusCode,
+      ).toBe(400);
     }
     expect(q.readMine).not.toHaveBeenCalled();
   });
 
   it('403 without notifications.push (a custom role)', async () => {
-    expect((await call({ method: 'GET', url: '/me/notifications', token: 'noBell' })).statusCode).toBe(403);
-    expect((await call({ method: 'POST', url: '/me/notifications/read', token: 'noBell' })).statusCode).toBe(403);
+    expect(
+      (await call({ method: 'GET', url: '/me/notifications', token: 'noBell' })).statusCode,
+    ).toBe(403);
+    expect(
+      (await call({ method: 'POST', url: '/me/notifications/read', token: 'noBell' })).statusCode,
+    ).toBe(403);
     expect(q.list).not.toHaveBeenCalled();
   });
 

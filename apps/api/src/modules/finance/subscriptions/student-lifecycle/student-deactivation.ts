@@ -8,12 +8,16 @@ import { StudentStatusRepo } from './student-status.repo';
 import { NO_TRIAL, trialFactsOf } from '@/modules/finance/subscriptions/trial/student-trial.plan';
 import { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 
-export type DeletedPayment = { id: string; kind: string; amount: number | string };
-type Ctx = {
+export interface DeletedPayment {
+  id: string;
+  kind: string;
+  amount: number | string;
+}
+interface Ctx {
   payment: DeletedPayment;
   ids: { studentId: string; actorId: string };
   current: StudentStatus;
-};
+}
 
 /**
  * A deleted payment reverts the automatic flip it caused (docs/11 §7): only when the
@@ -51,7 +55,10 @@ export class StudentDeactivation {
     const to = revertTarget({ otherPayment, ended, facts });
     if (to === student.status) return false;
     const move = { studentId: ids.studentId, from: student.status, to };
-    return this.statuses.move(move, { actorId: ids.actorId, after: { via: 'payment_deleted', payment_id: payment.id } });
+    return this.statuses.move(move, {
+      actorId: ids.actorId,
+      after: { via: 'payment_deleted', payment_id: payment.id },
+    });
   }
 
   private async trialFacts(studentId: string): Promise<TrialFacts> {

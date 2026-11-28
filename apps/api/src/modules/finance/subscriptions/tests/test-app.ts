@@ -55,7 +55,7 @@ const verify: TokenVerifier = async (token) => {
 };
 
 export type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
-export type InjectArgs = { method: Method; url: string; token?: 'admin' | 'teacher' | 'salesA' | 'salesB'; body?: object };
+export interface InjectArgs { method: Method; url: string; token?: 'admin' | 'teacher' | 'salesA' | 'salesB'; body?: object }
 
 type More = (b: TestingModuleBuilder) => TestingModuleBuilder;
 const same: More = (b) => b;

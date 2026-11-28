@@ -1,4 +1,9 @@
-import type { GoogleSkipReason, GoogleSyncItemView, GoogleSyncKind, GoogleSyncState } from '@ab/shared';
+import type {
+  GoogleSkipReason,
+  GoogleSyncItemView,
+  GoogleSyncKind,
+  GoogleSyncState,
+} from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '@/common/db/db.module';
@@ -7,7 +12,7 @@ import { TZ } from '@/modules/platform/google-sync/google-format';
 import { pgError } from '@/common/db/errors';
 
 const planned = z.object({ method: z.string(), target: z.string(), summary: z.string() });
-type Raw = {
+interface Raw {
   id: string;
   kind: GoogleSyncKind;
   state: GoogleSyncState;
@@ -19,7 +24,7 @@ type Raw = {
   updated_at: string;
   lesson_id: string | null;
   student_id: string | null;
-};
+}
 
 /** The sync log (GET /admin/google/items): the last 100 rows, each named by its student and date. */
 @Injectable()
@@ -29,7 +34,9 @@ export class GoogleLogQueries {
   async recent(limit = 100): Promise<GoogleSyncItemView[]> {
     const { data, error } = await this.db
       .from('google_sync_items')
-      .select('id, kind, state, skip_reason, google_id, attempts, last_error, planned, updated_at, lesson_id, student_id')
+      .select(
+        'id, kind, state, skip_reason, google_id, attempts, last_error, planned, updated_at, lesson_id, student_id',
+      )
       .order('updated_at', { ascending: false })
       .limit(limit);
     if (error) throw pgError(error);
@@ -39,7 +46,9 @@ export class GoogleLogQueries {
   async one(id: string): Promise<GoogleSyncItemView | null> {
     const { data, error } = await this.db
       .from('google_sync_items')
-      .select('id, kind, state, skip_reason, google_id, attempts, last_error, planned, updated_at, lesson_id, student_id')
+      .select(
+        'id, kind, state, skip_reason, google_id, attempts, last_error, planned, updated_at, lesson_id, student_id',
+      )
       .eq('id', id)
       .maybeSingle();
     if (error) throw pgError(error);
@@ -49,7 +58,12 @@ export class GoogleLogQueries {
   private async view(rows: Raw[]): Promise<GoogleSyncItemView[]> {
     const lessonIds = [...new Set(rows.map((r) => r.lesson_id).filter((x): x is string => !!x))];
     const [lessons, people] = await Promise.all([
-      lessonIds.length ? this.db.from('lessons').select('id, starts_at, lesson_students(student_id)').in('id', lessonIds) : Promise.resolve({ data: [], error: null }),
+      lessonIds.length
+        ? this.db
+            .from('lessons')
+            .select('id, starts_at, lesson_students(student_id)')
+            .in('id', lessonIds)
+        : Promise.resolve({ data: [], error: null }),
       this.studentNames(rows, lessonIds),
     ]);
     if (lessons.error) throw pgError(lessons.error);
@@ -82,7 +96,9 @@ export class GoogleLogQueries {
 
   private async studentNames(rows: Raw[], lessonIds: string[]): Promise<Map<string, string>> {
     const direct = rows.map((r) => r.student_id).filter((x): x is string => !!x);
-    const linked = lessonIds.length ? await this.db.from('lesson_students').select('student_id').in('lesson_id', lessonIds) : { data: [], error: null };
+    const linked = lessonIds.length
+      ? await this.db.from('lesson_students').select('student_id').in('lesson_id', lessonIds)
+      : { data: [], error: null };
     if (linked.error) throw pgError(linked.error);
     const ids = [...new Set([...direct, ...(linked.data ?? []).map((s) => s.student_id)])];
     if (!ids.length) return new Map();

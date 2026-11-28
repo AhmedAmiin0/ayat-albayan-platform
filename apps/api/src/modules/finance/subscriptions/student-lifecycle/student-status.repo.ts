@@ -7,8 +7,15 @@ import { maybe, pgError } from '@/common/db/errors';
 import { readChunked } from '@/common/db/read-all';
 import type { StatusChangeRow } from './student-renewal.plan';
 
-type StatusMove = { studentId: string; from: StudentStatus; to: StudentStatus };
-type MoveAudit = { actorId: string | null; after: Record<string, Json> };
+interface StatusMove {
+  studentId: string;
+  from: StudentStatus;
+  to: StudentStatus;
+}
+interface MoveAudit {
+  actorId: string | null;
+  after: Record<string, Json>;
+}
 interface StudentTzRow {
   status: StudentStatus;
   tz: string;
@@ -30,22 +37,26 @@ export class StudentStatusRepo {
   }
 
   async student(studentId: string): Promise<StudentTzRow | null> {
-    const data = maybe(await this.db.from('students').select('status, tz').eq('id', studentId).maybeSingle());
+    const data = maybe(
+      await this.db.from('students').select('status, tz').eq('id', studentId).maybeSingle(),
+    );
     return data;
   }
 
   /** The newest students status_change audit row (manual or automatic), or null. */
   async lastStatusChange(studentId: string): Promise<StatusChangeRow | null> {
-    const data = maybe(await this.db
-      .from('audit_log')
-      .select('after, at')
-      .eq('entity', 'students')
-      .eq('entity_id', studentId)
-      .eq('action', 'status_change')
-      .order('at', { ascending: false })
-      .order('id', { ascending: false })
-      .limit(1)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('audit_log')
+        .select('after, at')
+        .eq('entity', 'students')
+        .eq('entity_id', studentId)
+        .eq('action', 'status_change')
+        .order('at', { ascending: false })
+        .order('id', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+    );
     return data;
   }
 
@@ -63,13 +74,15 @@ export class StudentStatusRepo {
 
   /** Compare-and-set on the status read; audited only when it changed a row (idempotent, rule 8). */
   async move(m: StatusMove, audit: MoveAudit): Promise<boolean> {
-    const data = maybe(await this.db
-      .from('students')
-      .update({ status: m.to })
-      .eq('id', m.studentId)
-      .eq('status', m.from)
-      .select('id')
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('students')
+        .update({ status: m.to })
+        .eq('id', m.studentId)
+        .eq('status', m.from)
+        .select('id')
+        .maybeSingle(),
+    );
     if (!data) return false;
     const entry = {
       actorId: audit.actorId,

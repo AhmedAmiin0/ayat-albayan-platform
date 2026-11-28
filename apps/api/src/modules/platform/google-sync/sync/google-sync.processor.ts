@@ -1,5 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { classify, errorText, MAX_ATTEMPTS, retryDelayMs } from '@/modules/platform/google-sync/http/backoff';
+import {
+  classify,
+  errorText,
+  MAX_ATTEMPTS,
+  retryDelayMs,
+} from '@/modules/platform/google-sync/http/backoff';
 import { GoogleConnection } from '@/modules/platform/google-sync/oauth/google-connection';
 import { GoogleData } from '@/modules/platform/google-sync/google-data';
 import type { ItemResult, SyncItem } from './google-items.queries';
@@ -9,7 +14,7 @@ import type { WriteCtx } from './write-context';
 /** ponytail: 25 a pass is far above a few dozen lessons and reports a day; the pass loops while full. */
 const BATCH = 25;
 
-type PassSummary = {
+interface PassSummary {
   claimed: number;
   synced: number;
   skipped: number;
@@ -17,7 +22,7 @@ type PassSummary = {
   failed: number;
   retried: number;
   stopped: boolean;
-};
+}
 
 /**
  * One outbox pass (docs/24 §3): nothing while sync is OFF; dry_run plans every item with NO Google
@@ -61,11 +66,16 @@ export class GoogleSyncProcessor {
       if (typeof result === 'string') {
         out.stopped = true;
         for (const rest of claimed.slice(i)) await this.data.items.release(rest);
-        if (result !== 'switched') await (result === 'auth' ? this.connection.authFailed() : this.connection.configFailed());
+        if (result !== 'switched')
+          await (result === 'auth' ? this.connection.authFailed() : this.connection.configFailed());
         break;
       }
       await this.data.items.finish(item, result);
-      if (item.kind === 'report_pdf' && result.state === 'synced') await this.data.items.requeueReportRows({ reportId: item.subject_id, studentId: item.student_id });
+      if (item.kind === 'report_pdf' && result.state === 'synced')
+        await this.data.items.requeueReportRows({
+          reportId: item.subject_id,
+          studentId: item.student_id,
+        });
       out[result.state === 'retry' ? 'retried' : result.state] += 1;
     }
     const ok = ctx.live && !out.stopped && out.claimed > 0;

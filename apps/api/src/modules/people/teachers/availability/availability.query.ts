@@ -2,13 +2,13 @@ import { freeSlots, type TimeRange } from '@ab/schedule';
 import { DAY_MS } from '@ab/time';
 import { Injectable } from '@nestjs/common';
 import { AvailabilityRepo } from './availability.repo';
-export type FreeSlotsQuery = {
+export interface FreeSlotsQuery {
   teacherId: string;
   from: Date;
   to: Date;
   durationMin: number;
   stepMin?: number;
-};
+}
 
 /**
  * Free UTC slots for one teacher: weekly grid − time-off − the teacher's occupying lessons

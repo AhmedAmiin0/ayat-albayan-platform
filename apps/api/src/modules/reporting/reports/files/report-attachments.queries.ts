@@ -5,16 +5,20 @@ import type { ReportAttachmentRow } from '@/modules/reporting/reports/report-row
 
 const COLUMNS = 'id, storage_path, mime, size, created_at' as const;
 
-type NewAttachment = {
+interface NewAttachment {
   report_id: string;
   storage_path: string;
   mime: string;
   size: number;
   /** null: the teacher wrote through their no-login link and has no account. */
   created_by: string | null;
-};
+}
 
-type PdfNameInput = { code: string; startsAt: Date; tz: string };
+interface PdfNameInput {
+  code: string;
+  startsAt: Date;
+  tz: string;
+}
 
 /** report_attachments rows (R-REP-02); the objects live in the report-attachments bucket. */
 @Injectable()
@@ -24,7 +28,11 @@ export class ReportAttachmentsQueries {
   /** What the PDF's file name is made of (reportFileName): code, lesson start, guardian tz. */
   async pdfName(input: { studentId: string; lessonId: string }): Promise<PdfNameInput | null> {
     const [student, lesson] = await Promise.all([
-      this.db.from('students').select('code, guardian:guardians(tz)').eq('id', input.studentId).maybeSingle(),
+      this.db
+        .from('students')
+        .select('code, guardian:guardians(tz)')
+        .eq('id', input.studentId)
+        .maybeSingle(),
       this.db.from('lessons').select('starts_at').eq('id', input.lessonId).maybeSingle(),
     ]);
     if (student.error) throw pgError(student.error);
@@ -44,12 +52,14 @@ export class ReportAttachmentsQueries {
 
   /** The attachment, only when it belongs to that report. */
   async get(reportId: string, id: string): Promise<ReportAttachmentRow | null> {
-    const data = maybe(await this.db
-      .from('report_attachments')
-      .select(COLUMNS)
-      .eq('id', id)
-      .eq('report_id', reportId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('report_attachments')
+        .select(COLUMNS)
+        .eq('id', id)
+        .eq('report_id', reportId)
+        .maybeSingle(),
+    );
     return data;
   }
 

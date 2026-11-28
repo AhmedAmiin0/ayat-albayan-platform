@@ -35,7 +35,7 @@ const LATER = [
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
 function seeded(key: string): string[] {
-  const block = SQL.match(new RegExp(`\\('${key}', array\\[([^\\]]*)\\]\\)`));
+  const block = new RegExp(`\\('${key}', array\\[([^\\]]*)\\]\\)`).exec(SQL);
   return block?.[1] ? [...block[1].matchAll(/'([a-z_.]+)'/g)].map((m) => m[1] ?? '') : [];
 }
 function addedLater(key: string): string[] {

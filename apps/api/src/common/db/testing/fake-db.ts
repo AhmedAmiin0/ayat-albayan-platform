@@ -2,12 +2,16 @@ import type { Db } from '@/common/db/db.module';
 
 // Test helper (not a test): a chainable stand-in for the supabase-js query builder.
 
-export type FakeResult = {
+export interface FakeResult {
   data?: unknown;
   error?: { code?: string; message: string } | null;
   count?: number | null;
-};
-type FakeCall = { table: string; method: string; args: unknown[] };
+}
+interface FakeCall {
+  table: string;
+  method: string;
+  args: unknown[];
+}
 
 /**
  * Every builder method is recorded and chains; awaiting a query on `table` resolves to the

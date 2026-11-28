@@ -8,7 +8,7 @@ import { studentIdsMatching } from '@/common/student-ids';
 import type { PageQuery } from '@/common/http/http';
 import { pgError } from '@/common/db/errors';
 
-export type TeacherReportRow = {
+export interface TeacherReportRow {
   id: string;
   lesson_id: string;
   student_id: string;
@@ -18,10 +18,15 @@ export type TeacherReportRow = {
   submitted_at: string | null;
   pdf_status: PdfStatus | null;
   sent_at: string | null;
-};
-export type ReportStudent = { id: string; code: string | null; name: string };
+}
+export interface ReportStudent {
+  id: string;
+  code: string | null;
+  name: string;
+}
 
-const COLUMNS = 'id, lesson_id, student_id, attendance, grade_overall, status, submitted_at, pdf_status, sent_at' as const;
+const COLUMNS =
+  'id, lesson_id, student_id, attendance, grade_overall, status, submitted_at, pdf_status, sent_at' as const;
 
 /** R-NFR-08: newest submit first by default; empty attendance/grade last; ties by id (stable pages). */
 const TEACHER_REPORT_SORT: SortSpec<TeacherReportSortKey> = {
@@ -64,7 +69,10 @@ export class TeacherReportsQueries {
   /** The page's students (a page is at most 100 rows, so one `in`). */
   async students(ids: readonly string[]): Promise<ReportStudent[]> {
     if (ids.length === 0) return [];
-    const { data, error } = await this.db.from('students').select('id, code, name').in('id', [...new Set(ids)]);
+    const { data, error } = await this.db
+      .from('students')
+      .select('id, code, name')
+      .in('id', [...new Set(ids)]);
     if (error) throw pgError(error);
     return data;
   }

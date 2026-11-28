@@ -1,6 +1,10 @@
 import { UNTAGGED } from './client-tag';
 /** One counted request: the matched route template (never the raw URL) and the parsed client tag. */
-export type UsageHit = { method: string; route: string; client: string };
+export interface UsageHit {
+  method: string;
+  route: string;
+  client: string;
+}
 
 const DEFAULT_MAX_ENTRIES = 500;
 export const OTHER_BUCKET = 'other';
@@ -19,7 +23,9 @@ export class ClientUsageCounter {
   hit(h: UsageHit): void {
     const key = `${h.method} ${h.route} ${h.client}`;
     const keep = this.counts.has(key) || this.counts.size < this.max || h.client === UNTAGGED;
-    const bucket = keep ? key : `${h.method} ${h.route} ${h.client.split('/')[0] ?? ''}/${OTHER_BUCKET}`;
+    const bucket = keep
+      ? key
+      : `${h.method} ${h.route} ${h.client.split('/')[0] ?? ''}/${OTHER_BUCKET}`;
     this.counts.set(bucket, (this.counts.get(bucket) ?? 0) + 1);
   }
 

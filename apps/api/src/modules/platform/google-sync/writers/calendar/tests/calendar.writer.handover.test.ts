@@ -20,7 +20,7 @@ describe('CalendarWriter: imported lessons of a teacher handed over to the platf
     const s = setup(handedOver());
     expect(await s.writer.write(item(), s.live)).toMatchObject({ state: 'synced', parentId: CAL });
     expect(s.google.log).toContain(`listEvents ${CAL}`);
-    expect([...(s.google.events.get(CAL)?.values() ?? [])][0]?.extendedProperties.private['ab_source']).toBe('platform');
+    expect([...(s.google.events.get(CAL)?.values() ?? [])][0]?.extendedProperties.private.ab_source).toBe('platform');
   });
 
   it('duplicate guard: the script event in that slot ⇒ skipped, one admin alert, no write, the script event untouched', async () => {

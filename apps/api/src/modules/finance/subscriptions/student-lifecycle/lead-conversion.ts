@@ -5,7 +5,11 @@ import { DB, type Db } from '@/common/db/db.module';
 import { maybe, pgError, rows } from '@/common/db/errors';
 import { canTransitionLead } from '@ab/catalog';
 
-type LeadRef = { id: string; status: LeadStatus; converted_guardian_id: string | null };
+interface LeadRef {
+  id: string;
+  status: LeadStatus;
+  converted_guardian_id: string | null;
+}
 
 /** Converts the booking's lead, else the guardian phone's (R-LEAD-01); compare-and-set. */
 @Injectable()
@@ -19,29 +23,44 @@ export class LeadConversion {
     const lead = await this.leadOf(studentId);
     if (!lead || !canTransitionLead(lead.lead.status, 'converted')) return;
     const { id, status } = lead.lead;
-    const data = maybe(await this.db
-      .from('leads')
-      .update({ status: 'converted', converted_guardian_id: lead.lead.converted_guardian_id ?? lead.guardianId })
-      .eq('id', id)
-      .eq('status', status)
-      .select('id')
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('leads')
+        .update({
+          status: 'converted',
+          converted_guardian_id: lead.lead.converted_guardian_id ?? lead.guardianId,
+        })
+        .eq('id', id)
+        .eq('status', status)
+        .select('id')
+        .maybeSingle(),
+    );
     if (!data) return;
     const entry = { actorId, entity: 'leads', entityId: id, action: 'status_change' };
-    await this.audit.record({ ...entry, before: { status }, after: { status: 'converted', via: 'subscription' } });
+    await this.audit.record({
+      ...entry,
+      before: { status },
+      after: { status: 'converted', via: 'subscription' },
+    });
   }
 
   private async leadOf(studentId: string): Promise<{ lead: LeadRef; guardianId: string } | null> {
-    const student = await this.db.from('students').select('guardian:guardians(id, phone_e164)').eq('id', studentId).maybeSingle();
+    const student = await this.db
+      .from('students')
+      .select('guardian:guardians(id, phone_e164)')
+      .eq('id', studentId)
+      .maybeSingle();
     if (student.error) throw pgError(student.error);
     const guardian = student.data?.guardian;
     if (!guardian) return null;
-    const data = rows(await this.db
-      .from('leads')
-      .select('id, status, converted_guardian_id')
-      .or(`converted_guardian_id.eq.${guardian.id},phone_e164.eq."${guardian.phone_e164}"`)
-      .order('created_at')
-      .limit(1));
+    const data = rows(
+      await this.db
+        .from('leads')
+        .select('id, status, converted_guardian_id')
+        .or(`converted_guardian_id.eq.${guardian.id},phone_e164.eq."${guardian.phone_e164}"`)
+        .order('created_at')
+        .limit(1),
+    );
     const [lead] = data;
     return lead ? { lead, guardianId: guardian.id } : null;
   }

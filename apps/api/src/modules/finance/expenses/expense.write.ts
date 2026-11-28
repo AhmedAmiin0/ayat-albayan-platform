@@ -36,8 +36,8 @@ const COPY = [
 export function expensePatch(patch: Partial<ExpenseUpdate>): TablesUpdate<'expenses'> {
   const write: Record<string, unknown> = {};
   for (const [from, to] of COPY) if (patch[from] !== undefined) write[to] = patch[from];
-  if (patch.vendor !== undefined) write['vendor'] = patch.vendor?.trim() || null;
-  if (patch.month !== undefined) write['month'] = monthStart(patch.month);
-  else if (patch.paidOn) write['month'] = monthStart(patch.paidOn.slice(0, 7));
+  if (patch.vendor !== undefined) write.vendor = patch.vendor?.trim() || null;
+  if (patch.month !== undefined) write.month = monthStart(patch.month);
+  else if (patch.paidOn) write.month = monthStart(patch.paidOn.slice(0, 7));
   return write;
 }

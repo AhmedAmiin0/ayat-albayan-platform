@@ -11,7 +11,7 @@ import type { Page } from '@ab/core';
 
 export type { SubListQuery } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 
-export type StudentRef = { id: string; code: string | null; name: string };
+export type StudentRef = Pick<Tables<'students'>, 'id' | 'code' | 'name'>;
 export type SubRow = Tables<'subscriptions'> & { student: StudentRef | null };
 
 /** All supabase access for `subscriptions` (service role; the controllers guard). R-SUB-01. */

@@ -37,7 +37,8 @@ const fakeVerify: TokenVerifier = async (token) => {
 // The accountant holds a custom role (base admin) with payments.read only.
 // The teacher is a test account (profiles.is_test, read by the resolver from the database).
 const resolver: PermissionResolver = Object.assign(
-  async (user: AuthUser) => (user.id === ACCOUNTANT ? ['payments.read' as const] : systemResolver(user)),
+  async (user: AuthUser) =>
+    user.id === ACCOUNTANT ? ['payments.read' as const] : systemResolver(user),
   { isTest: async (user: AuthUser) => user.id === TEACHER },
 );
 
@@ -45,12 +46,15 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
-    process.env['SUPABASE_URL'] ??= 'http://127.0.0.1:54321';
+    process.env.SUPABASE_URL ??= 'http://127.0.0.1:54321';
     const imports = [featureRoot(HealthModule, StudentsModule)];
     const mod = await Test.createTestingModule({ imports, controllers: [ProbeController] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
-      .overrideProvider(TOKEN_VERIFIER).useValue(fakeVerify)
-      .overrideProvider(MeZoneRepo).useValue({
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(resolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(fakeVerify)
+      .overrideProvider(MeZoneRepo)
+      .useValue({
         zoneOf: async (id: string) => (id === ACCOUNTANT ? 'Africa/Cairo' : null),
         localeOf: async (id: string) => (id === ACCOUNTANT ? 'en' : null),
       })
@@ -67,7 +71,10 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
   it('GET /health is public', async () => {
     const res = await get('/health');
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ status: 'ok', storage: { driver: 'supabase', status: expect.any(String) } });
+    expect(res.json()).toEqual({
+      status: 'ok',
+      storage: { driver: 'supabase', status: expect.any(String) },
+    });
   });
 
   it('GET /auth/me without a token is 401', async () => {

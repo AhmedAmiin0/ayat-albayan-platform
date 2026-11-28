@@ -19,7 +19,7 @@ function fakeDb(result: {
       return builder;
     };
   }
-  builder['then'] = (resolve: (v: unknown) => unknown) => resolve(result);
+  builder.then = (resolve: (v: unknown) => unknown) => resolve(result);
   const db = {
     from: (table: string) => {
       calls.push(['from', table]);
@@ -30,9 +30,19 @@ function fakeDb(result: {
 }
 
 const row = {
-  id: 'r1', at: '2026-10-05T09:00:00+00:00', actor_id: 'u1', actor_name: 'أحمد', actor_role: 'admin',
-  action: 'expenses.create', method: 'POST', route: '/expenses', entity: 'expenses', entity_id: 'e1',
-  status: 201, duration_ms: 12, meta: { fields: ['amount'] },
+  id: 'r1',
+  at: '2026-10-05T09:00:00+00:00',
+  actor_id: 'u1',
+  actor_name: 'أحمد',
+  actor_role: 'admin',
+  action: 'expenses.create',
+  method: 'POST',
+  route: '/expenses',
+  entity: 'expenses',
+  entity_id: 'e1',
+  status: 201,
+  duration_ms: 12,
+  meta: { fields: ['amount'] },
 };
 
 describe('ActivityQueries.list (GET /activity)', () => {
@@ -50,24 +60,35 @@ describe('ActivityQueries.list (GET /activity)', () => {
   it('applies every filter and the requested sort', async () => {
     const { db, calls } = fakeDb({ data: [], count: 0, error: null });
     const q = activityListQuery.parse({
-      page: '3', pageSize: '10', actor_id: 'a0000000-0000-4000-8000-000000000001', role: 'teacher',
-      action: 'lesson_x', entity: 'lessons', entity_id: 'L1', result: 'error', from: '2026-10-01', to: '2026-10-31',
-      sort: 'status', dir: 'desc',
+      page: '3',
+      pageSize: '10',
+      actor_id: 'a0000000-0000-4000-8000-000000000001',
+      role: 'teacher',
+      action: 'lesson_x',
+      entity: 'lessons',
+      entity_id: 'L1',
+      result: 'error',
+      from: '2026-10-01',
+      to: '2026-10-31',
+      sort: 'status',
+      dir: 'desc',
     });
     await new ActivityRepo(db).list(q);
-    expect(calls).toEqual(expect.arrayContaining([
-      ['eq', 'actor_id', 'a0000000-0000-4000-8000-000000000001'],
-      ['eq', 'actor_role', 'teacher'],
-      ['like', 'action', 'lesson\\_x%'],
-      ['eq', 'entity', 'lessons'],
-      ['eq', 'entity_id', 'L1'],
-      ['gte', 'status', 400],
-      ['gte', 'at', '2026-10-01T00:00:00+03:00'],
-      ['lt', 'at', '2026-11-01T00:00:00+03:00'],
-      ['order', 'status', { ascending: false }],
-      ['order', 'at', { ascending: false }],
-      ['range', 20, 29],
-    ]));
+    expect(calls).toEqual(
+      expect.arrayContaining([
+        ['eq', 'actor_id', 'a0000000-0000-4000-8000-000000000001'],
+        ['eq', 'actor_role', 'teacher'],
+        ['like', 'action', 'lesson\\_x%'],
+        ['eq', 'entity', 'lessons'],
+        ['eq', 'entity_id', 'L1'],
+        ['gte', 'status', 400],
+        ['gte', 'at', '2026-10-01T00:00:00+03:00'],
+        ['lt', 'at', '2026-11-01T00:00:00+03:00'],
+        ['order', 'status', { ascending: false }],
+        ['order', 'at', { ascending: false }],
+        ['range', 20, 29],
+      ]),
+    );
   });
 
   it('result=ok keeps statuses under 400', async () => {

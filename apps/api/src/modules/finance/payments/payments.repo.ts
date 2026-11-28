@@ -17,7 +17,7 @@ export type { PaymentFilter } from './payments.list-query';
 export type PaymentRow = Tables<'payments'> & {
   subscription: { student_id: string; currency: string; status: SubscriptionStatus; cancel_kind: string | null; student: StudentRef | null } | null;
 };
-export type PaymentSubscription = { id: string; student_id: string; currency: string; status: SubscriptionStatus; cancel_kind: string | null };
+export interface PaymentSubscription { id: string; student_id: string; currency: string; status: SubscriptionStatus; cancel_kind: string | null }
 
 /** payment_amount_set's refusals (P0001): net below 0, a concurrent edit won, or deleted since. */
 const AMOUNT_REFUSALS: Record<string, (code: string) => HttpException> = {

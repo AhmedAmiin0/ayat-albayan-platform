@@ -4,7 +4,11 @@ import { notFound } from '@/common/http/errors';
 import { peopleErrors } from './http';
 import { pgError } from '@/common/db/errors';
 
-type SecondNumber = { guardianId: string; phone: string; actorId: string };
+interface SecondNumber {
+  guardianId: string;
+  phone: string;
+  actorId: string;
+}
 
 /**
  * A family's SECOND number (public.guardian_phones). Only POST /leads/:id/link-family adds one;
@@ -21,8 +25,13 @@ export class GuardianPhonesService {
    * phone_not_found for the main number, another family's number or an unknown one.
    */
   async removeSecond({ guardianId, phone, actorId }: SecondNumber): Promise<void> {
-    const { error } = await this.db.rpc('remove_family_phone', { p_guardian: guardianId, p_phone: phone, p_actor: actorId });
-    if (error?.code === 'P0001' && error.message === 'phone_not_found') throw notFound('phone_not_found');
+    const { error } = await this.db.rpc('remove_family_phone', {
+      p_guardian: guardianId,
+      p_phone: phone,
+      p_actor: actorId,
+    });
+    if (error?.code === 'P0001' && error.message === 'phone_not_found')
+      throw notFound('phone_not_found');
     if (error) throw pgError(error, peopleErrors());
   }
 }

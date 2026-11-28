@@ -5,7 +5,12 @@ import { featureRoot } from '@/common/infra/test-root';
 import { CustomConfigModule } from './custom-config.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { CustomConfigService } from './custom-config.service';
 
@@ -20,19 +25,39 @@ const verify: TokenVerifier = async (token) => {
 };
 const custom = { list: vi.fn(), find: vi.fn(), upsert: vi.fn(), remove: vi.fn() };
 const audit = { record: vi.fn() };
-const VIEW = { key: 'promo', value: 'hi', description: null, isPublic: true, updatedAt: '2026-10-05T00:00:00Z', updatedBy: null };
+const VIEW = {
+  key: 'promo',
+  value: 'hi',
+  description: null,
+  isPublic: true,
+  updatedAt: '2026-10-05T00:00:00Z',
+  updatedBy: null,
+};
 
 describe('/config/custom (admin CRUD)', () => {
   let app: NestFastifyApplication;
-  const call = (method: 'GET' | 'PUT' | 'DELETE', url = '/config/custom', opts: { token?: string; payload?: object } = {}) =>
-    app.inject({ method, url, payload: opts.payload, headers: { authorization: `Bearer ${opts.token ?? 'admin'}` } });
+  const call = (
+    method: 'GET' | 'PUT' | 'DELETE',
+    url = '/config/custom',
+    opts: { token?: string; payload?: object } = {},
+  ) =>
+    app.inject({
+      method,
+      url,
+      payload: opts.payload,
+      headers: { authorization: `Bearer ${opts.token ?? 'admin'}` },
+    });
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(CustomConfigModule)] })
-      .overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
-      .overrideProvider(CustomConfigService).useValue(custom)
-      .overrideProvider(AuditService).useValue(audit)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(CustomConfigService)
+      .useValue(custom)
+      .overrideProvider(AuditService)
+      .useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -51,16 +76,36 @@ describe('/config/custom (admin CRUD)', () => {
   });
 
   it('PUT creates an entry and audits it as a create', async () => {
-    const res = await call('PUT', '/config/custom/promo', { payload: { value: 'hi', isPublic: true } });
+    const res = await call('PUT', '/config/custom/promo', {
+      payload: { value: 'hi', isPublic: true },
+    });
     expect(res.statusCode).toBe(200);
-    expect(custom.upsert).toHaveBeenCalledWith('promo', { value: 'hi', isPublic: true }, USERS['admin']?.id);
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'custom_config', entityId: SINGLETON_ENTITY_ID, action: 'create:promo', before: null, after: VIEW }));
+    expect(custom.upsert).toHaveBeenCalledWith(
+      'promo',
+      { value: 'hi', isPublic: true },
+      USERS.admin?.id,
+    );
+    expect(audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        entity: 'custom_config',
+        entityId: SINGLETON_ENTITY_ID,
+        action: 'create:promo',
+        before: null,
+        after: VIEW,
+      }),
+    );
   });
 
   it('PUT over an existing entry audits before and after as an update', async () => {
     custom.find.mockResolvedValue({ ...VIEW, value: 'old' });
     await call('PUT', '/config/custom/promo', { payload: { value: 'hi' } });
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'update:promo', before: { ...VIEW, value: 'old' }, after: VIEW }));
+    expect(audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: 'update:promo',
+        before: { ...VIEW, value: 'old' },
+        after: VIEW,
+      }),
+    );
   });
 
   it.each([
@@ -78,14 +123,18 @@ describe('/config/custom (admin CRUD)', () => {
   it('a bad key wins over a bad body (the key is checked first); DELETE checks it too', async () => {
     const both = await call('PUT', '/config/custom/Bad-Key', { payload: {} });
     expect([both.statusCode, both.json().issues[0].path]).toEqual([400, '']);
-    expect((await call('DELETE', '/config/custom/Bad-Key')).json().message).toBe('validation_failed');
+    expect((await call('DELETE', '/config/custom/Bad-Key')).json().message).toBe(
+      'validation_failed',
+    );
   });
 
   it('DELETE removes and audits; an unknown key is 404 and unaudited', async () => {
     custom.find.mockResolvedValue(VIEW);
     custom.remove.mockResolvedValue(true);
     expect((await call('DELETE', '/config/custom/promo')).statusCode).toBe(204);
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'delete:promo', before: VIEW, after: null }));
+    expect(audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ action: 'delete:promo', before: VIEW, after: null }),
+    );
     audit.record.mockClear();
     custom.find.mockResolvedValue(null);
     expect((await call('DELETE', '/config/custom/promo')).statusCode).toBe(404);

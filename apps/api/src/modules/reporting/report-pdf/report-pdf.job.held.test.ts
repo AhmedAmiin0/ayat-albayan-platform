@@ -1,12 +1,18 @@
 import { describe, expect, it, vi } from 'vitest';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
-import { fakeRulesReader, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import {
+  fakeRulesReader,
+  type FakePolicyInput,
+} from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import { ReportPdfJob } from './report-pdf.job';
 import type { ReportPdfPublisher } from './report-pdf.publisher';
 import type { Finish, ReportPdfQueries } from './report-pdf.queries';
 
 const NOW = new Date('2026-10-02T08:00:00Z');
-type Row = { status: string; version: number };
+interface Row {
+  status: string;
+  version: number;
+}
 
 /** A stateful pdf_status queue (claim / finish compare-and-set) and a dedup'd messages table. */
 function world() {
@@ -15,7 +21,9 @@ function world() {
   const queries = {
     hasWork: vi.fn(async () => true),
     recoverStale: vi.fn(async () => 0),
-    pendingIds: vi.fn(async () => [...rows].filter(([, r]) => r.status === 'pending').map(([id]) => id)),
+    pendingIds: vi.fn(async () =>
+      [...rows].filter(([, r]) => r.status === 'pending').map(([id]) => id),
+    ),
     claim: vi.fn(async (id: string) => {
       const r = rows.get(id);
       if (r?.status !== 'pending') return null;
@@ -33,7 +41,10 @@ function world() {
     }),
   };
   const publisher = {
-    publish: vi.fn(async (id: string) => ({ path: `s/${id}.pdf`, messages: [{ dedup_key: `report_ready:${id}` }] })),
+    publish: vi.fn(async (id: string) => ({
+      path: `s/${id}.pdf`,
+      messages: [{ dedup_key: `report_ready:${id}` }],
+    })),
     close: vi.fn(async () => undefined),
   };
   const rules: FakePolicyInput = { fail: true };
@@ -52,7 +63,9 @@ describe('ReportPdfJob — unread rules hold the report (never failed, never sen
     const summary = await w.job.runOnce(NOW);
     expect(summary).toEqual({ recovered: 0, rendered: 0, failed: 0, skipped: 0, held: 1 });
     expect(w.queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 1, status: 'pending' });
-    expect(w.queries.finish).not.toHaveBeenCalledWith(expect.objectContaining({ status: 'failed' }));
+    expect(w.queries.finish).not.toHaveBeenCalledWith(
+      expect.objectContaining({ status: 'failed' }),
+    );
     expect(w.rows.get('r1')?.status).toBe('pending');
     expect(w.queries.queueMessages).not.toHaveBeenCalled();
     expect(w.publisher.publish).toHaveBeenCalledTimes(1);

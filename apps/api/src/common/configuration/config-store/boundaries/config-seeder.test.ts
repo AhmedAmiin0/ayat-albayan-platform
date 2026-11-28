@@ -25,25 +25,39 @@ describe('runConfigSeed', () => {
   it('sends every SEED_ENTRIES key with REGISTRY_VERSION and NO value field', async () => {
     const { db, rpc } = dbAnswering({ data: { applied: 3, failed: [] } });
     await runConfigSeed(db, log());
-    expect(rpc).toHaveBeenCalledWith('config_seed', expect.objectContaining({ registry_version: REGISTRY_VERSION }));
+    expect(rpc).toHaveBeenCalledWith(
+      'config_seed',
+      expect.objectContaining({ registry_version: REGISTRY_VERSION }),
+    );
     const entries = sentEntries(rpc);
-    expect(entries.map((e) => e['key'])).toEqual(SEED_ENTRIES.map((e) => e.key));
+    expect(entries.map((e) => e.key)).toEqual(SEED_ENTRIES.map((e) => e.key));
     for (const e of entries) {
       expect(e).not.toHaveProperty('value');
-      expect(Object.keys(e).sort()).toEqual(['default_value', 'description_seed', 'is_public', 'key', 'module', 'retired', 'scope', 'value_type']);
+      expect(Object.keys(e).sort()).toEqual([
+        'default_value',
+        'description_seed',
+        'is_public',
+        'key',
+        'module',
+        'retired',
+        'scope',
+        'value_type',
+      ]);
     }
   });
 
   it('description_seed is the BUNDLED Arabic hint (not an override)', async () => {
     const { db, rpc } = dbAnswering({ data: { applied: 0, failed: [] } });
     await runConfigSeed(db, log());
-    const upload = sentEntries(rpc).find((e) => e['key'] === 'upload_max_mb');
-    expect(upload?.['description_seed']).toBe(arBundle.settings.hints.uploadMaxMb.trim());
+    const upload = sentEntries(rpc).find((e) => e.key === 'upload_max_mb');
+    expect(upload?.description_seed).toBe(arBundle.settings.hints.uploadMaxMb.trim());
   });
 
   it('logs applied / failed, and an older-build or locked skip', async () => {
     const l1 = log();
-    expect(await runConfigSeed(dbAnswering({ data: { applied: 2, failed: ['bad'] } }).db, l1)).toEqual({ applied: 2, failed: ['bad'] });
+    expect(
+      await runConfigSeed(dbAnswering({ data: { applied: 2, failed: ['bad'] } }).db, l1),
+    ).toEqual({ applied: 2, failed: ['bad'] });
     expect(l1.warn).toHaveBeenCalledWith(expect.stringContaining('failed: bad'));
     const l2 = log();
     await runConfigSeed(dbAnswering({ data: { skipped: 'older_build', stored: 7 } }).db, l2);
@@ -55,7 +69,9 @@ describe('runConfigSeed', () => {
 
   it('never throws: an RPC error or a thrown call is logged and answered null', async () => {
     const l1 = log();
-    expect(await runConfigSeed(dbAnswering({ error: { message: 'permission denied' } }).db, l1)).toBeNull();
+    expect(
+      await runConfigSeed(dbAnswering({ error: { message: 'permission denied' } }).db, l1),
+    ).toBeNull();
     expect(l1.error).toHaveBeenCalledWith('config seed failed: permission denied');
     const l2 = log();
     expect(await runConfigSeed(dbAnswering(new Error('fetch failed')).db, l2)).toBeNull();

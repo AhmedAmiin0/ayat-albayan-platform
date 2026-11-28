@@ -67,7 +67,7 @@ describe('/settings/integrations («التكاملات»)', () => {
     const res = await call({ method: 'PUT', payload: { values: { WA_WABA_ID: ' w2 ', FX_API_URL: null } } });
     expect(res.statusCode).toBe(200);
     noSecretIn(res.body);
-    expect(q.writePlain).toHaveBeenCalledWith({ WA_WABA_ID: 'w2', FX_API_URL: null }, USERS['admin']?.id);
+    expect(q.writePlain).toHaveBeenCalledWith({ WA_WABA_ID: 'w2', FX_API_URL: null }, USERS.admin?.id);
     expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'integration_config', action: 'update', after: { keys: ['WA_WABA_ID', 'FX_API_URL'] } }));
   });
 

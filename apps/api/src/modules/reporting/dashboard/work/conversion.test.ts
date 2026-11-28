@@ -17,7 +17,10 @@ describe('conversionFrom (R-RPT-02 FX)', () => {
     const c = conversionFrom({
       reporting: 'SAR',
       base: SAR,
-      quotes: [['EGP', rate('EGP', 13, '2026-10-01T00:00:00Z')], ['USD', rate('USD', 0.2667, '2026-09-30T00:00:00Z')]],
+      quotes: [
+        ['EGP', rate('EGP', 13, '2026-10-01T00:00:00Z')],
+        ['USD', rate('USD', 0.2667, '2026-09-30T00:00:00Z')],
+      ],
     });
     expect(c.rates).toEqual({ SAR: 1, EGP: 13, USD: 0.2667 });
     expect(c.date).toBe('2026-09-30T00:00:00Z');
@@ -27,7 +30,7 @@ describe('conversionFrom (R-RPT-02 FX)', () => {
 
   it('reporting EGP: amounts in SAR go through the SAR→EGP rate', () => {
     const c = conversionFrom({ reporting: 'EGP', base: rate('EGP', 13), quotes: [['SAR', SAR]] });
-    expect(c.rates['SAR']).toBeCloseTo(1 / 13);
+    expect(c.rates.SAR).toBeCloseTo(1 / 13);
     expect(round2(convert(c, 100, 'SAR') ?? 0)).toBe(1300);
   });
 
@@ -39,7 +42,14 @@ describe('conversionFrom (R-RPT-02 FX)', () => {
   });
 
   it('no SAR→reporting rate: every other currency is missing', () => {
-    const c = conversionFrom({ reporting: 'EGP', base: null, quotes: [['USD', rate('USD', 0.27)], ['SAR', SAR]] });
+    const c = conversionFrom({
+      reporting: 'EGP',
+      base: null,
+      quotes: [
+        ['USD', rate('USD', 0.27)],
+        ['SAR', SAR],
+      ],
+    });
     expect(c.missing).toEqual(['SAR', 'USD']);
     expect(c.rates).toEqual({ EGP: 1 });
   });

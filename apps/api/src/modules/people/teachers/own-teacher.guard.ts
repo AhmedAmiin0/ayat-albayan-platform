@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable, type CanActivate, type ExecutionContext } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  type CanActivate,
+  type ExecutionContext,
+} from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { TeachersRepo } from './teachers.repo';
 
@@ -19,8 +24,8 @@ export class OwnTeacherGuard implements CanActivate {
     const req = ctx.switchToHttp().getRequest<TeacherRequest>();
     const user = req.user;
     if (user?.role === 'admin') return true;
-    if (user?.role === 'teacher' && req.params['id']) {
-      if ((await this.teachers.idByProfile(user.id)) === req.params['id']) return true;
+    if (user?.role === 'teacher' && req.params.id) {
+      if ((await this.teachers.idByProfile(user.id)) === req.params.id) return true;
     }
     throw new ForbiddenException();
   }

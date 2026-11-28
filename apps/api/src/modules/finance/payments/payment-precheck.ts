@@ -16,7 +16,10 @@ export function notCancelled(row: PaymentRow): PaymentRow {
   return row;
 }
 
-export type Prechecked = { files: CheckedAttachment[]; converted: Converted };
+export interface Prechecked {
+  files: CheckedAttachment[];
+  converted: Converted;
+}
 
 /**
  * Every check a new payment passes before its insert (not a cancelled package, the form's files,
@@ -34,8 +37,10 @@ export async function precheckPayment(
   if (!countsForMoney(sub)) throw conflict('subscription_cancelled');
   const files = await deps.inputs.files.check(sub.id, input);
   if (input.invoiceId) await deps.inputs.checkInvoice(input.invoiceId, sub.student_id);
-  if (input.invoiceId && (await deps.payments.byInvoice(input.invoiceId))) throw conflict('invoice_used');
+  if (input.invoiceId && (await deps.payments.byInvoice(input.invoiceId)))
+    throw conflict('invoice_used');
   const converted = await deps.inputs.convert(input, sub);
-  if (input.kind === 'refund' && converted.amount > (await deps.payments.netPaid(sub.id))) throw conflict('refund_exceeds_paid');
+  if (input.kind === 'refund' && converted.amount > (await deps.payments.netPaid(sub.id)))
+    throw conflict('refund_exceeds_paid');
   return { files, converted };
 }

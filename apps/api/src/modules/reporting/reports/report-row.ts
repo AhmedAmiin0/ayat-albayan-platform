@@ -17,15 +17,15 @@ const REPORT_COLUMNS =
 export const REPORT_SELECT =
   `${REPORT_COLUMNS}, attachments:report_attachments(id, storage_path, mime, size, created_at)` as const;
 
-export type ReportAttachmentRow = {
+export interface ReportAttachmentRow {
   id: string;
   storage_path: string;
   mime: string;
   size: number;
   created_at: string;
-};
+}
 
-export type ReportRow = {
+export interface ReportRow {
   id: string;
   lesson_id: string;
   student_id: string;
@@ -59,21 +59,21 @@ export type ReportRow = {
   /** The v2 form's content (reportContentSchema); null on v1. */
   content: Json | null;
   attachments: ReportAttachmentRow[];
-};
+}
 
 /** The lesson a report belongs to: identity for the form (R-REP-01) and the outcome for a submit. */
 export const REPORT_LESSON_SELECT =
   'id, teacher_id, starts_at, ends_at, status, meeting_link, teacher:teachers(id, display_name_ar, display_name_en, tz), lesson_students(student_id, attendance, chargeable, student:students(id, code, name, tz, program))' as const;
 
-export type ReportLessonStudent = {
+export interface ReportLessonStudent {
   student_id: string;
   attendance: Attendance | null;
   chargeable: boolean;
   /** code is a generated column, typed nullable by the generator; never null in practice. */
   student: { id: string; code: string | null; name: string; tz: string; program: Program } | null;
-};
+}
 
-export type ReportLessonRow = {
+export interface ReportLessonRow {
   id: string;
   teacher_id: string;
   starts_at: string;
@@ -87,4 +87,4 @@ export type ReportLessonRow = {
     tz: string;
   } | null;
   lesson_students: ReportLessonStudent[];
-};
+}

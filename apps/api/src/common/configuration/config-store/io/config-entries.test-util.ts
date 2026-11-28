@@ -6,7 +6,12 @@ import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '@/app.module';
 import { AuditService } from '@/common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeConfigStore } from '@/common/configuration/config-store/config-store.fakes';
@@ -21,8 +26,8 @@ export const USERS: Record<string, AuthUser> = {
 export type Token = keyof typeof USERS;
 
 const EXTRA: Partial<Record<string, Permission[]>> = {
-  [USERS['editor']?.id ?? '']: ['settings.read', 'settings.write'],
-  [USERS['numbers']?.id ?? '']: ['settings.read', 'settings.write', 'numbers.manage'],
+  [USERS.editor?.id ?? '']: ['settings.read', 'settings.write'],
+  [USERS.numbers?.id ?? '']: ['settings.read', 'settings.write', 'numbers.manage'],
 };
 const resolver: PermissionResolver = async (user) => EXTRA[user.id] ?? systemResolver(user);
 const verify: TokenVerifier = async (token) => {

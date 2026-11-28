@@ -4,15 +4,15 @@ import { DB, type Db } from '@/common/db/db.module';
 import { rows } from '@/common/db/errors';
 import { ledgerError } from '@/modules/finance/teacher-earnings/earnings.errors';
 
-export type PayPayoutInput = {
+export interface PayPayoutInput {
   payoutId: string;
   actorId: string;
   paidAt: string;
   method: string | null;
   note: string | null;
   receiptPath: string | null;
-};
-export type SummaryRow = {
+}
+export interface SummaryRow {
   teacher_id: string;
   display_name_ar: string;
   sessions: number;
@@ -21,7 +21,7 @@ export type SummaryRow = {
   owed: number;
   unpaid_sessions: number;
   oldest_unpaid_at: string | null;
-};
+}
 
 /** Correction RPCs of migration 20261005000201, each one transaction with its audit row. */
 @Injectable()
@@ -63,17 +63,22 @@ export class CorrectionsRepo {
   }
 
   async reopenPayout(input: { payoutId: string; actorId: string }): Promise<void> {
-    const { error } = await this.db.rpc('reopen_payout', { p_payout: input.payoutId, p_actor: input.actorId });
+    const { error } = await this.db.rpc('reopen_payout', {
+      p_payout: input.payoutId,
+      p_actor: input.actorId,
+    });
     if (error) throw ledgerError(error);
   }
 
   /** One row per teacher with ledger sessions (few rows: one per teacher). */
   async summary(): Promise<SummaryRow[]> {
-    const data = rows(await this.db
-      .from('v_teacher_earnings_summary')
-      .select('*')
-      .order('owed', { ascending: false })
-      .order('display_name_ar'));
+    const data = rows(
+      await this.db
+        .from('v_teacher_earnings_summary')
+        .select('*')
+        .order('owed', { ascending: false })
+        .order('display_name_ar'),
+    );
     return data;
   }
 }

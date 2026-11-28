@@ -3,7 +3,9 @@ import { CLIENT_HEADER, parseClientTag } from './client-tag';
 import type { UsageHit } from './client-usage.counter';
 
 type Fastify = ReturnType<ReturnType<NestFastifyApplication['getHttpAdapter']>['getInstance']>;
-type HitSink = { hit(h: UsageHit): void };
+interface HitSink {
+  hit(h: UsageHit): void;
+}
 
 /** Route of a request with no matching route (404s): never the raw URL, which may carry ids. */
 export const UNMATCHED_ROUTE = '(unmatched)';

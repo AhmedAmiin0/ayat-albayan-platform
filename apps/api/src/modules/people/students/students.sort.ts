@@ -4,11 +4,11 @@ import type { SortSpec } from '@/common/db/list-sort';
 import { ilikeContains } from '@/common/db/or-filter';
 
 /** Column text filters of GET /students (R-NFR-08), beside the select filters of R-STU-01. */
-export type StudentColumnFilters = {
+export interface StudentColumnFilters {
   code?: string | undefined;
   name?: string | undefined;
   guardian?: string | undefined;
-};
+}
 export type StudentListSort = ListSort<StudentSortKey>;
 
 /**

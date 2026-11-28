@@ -1,7 +1,13 @@
 import type { ExpenseYearView } from '@ab/money';
 import { convert, round2, type Conversion } from '@/modules/reporting/dashboard/work/conversion';
 
-type Row = { month: string; category: string; amount: number; currency: string; is_draft: boolean };
+interface Row {
+  month: string;
+  category: string;
+  amount: number;
+  currency: string;
+  is_draft: boolean;
+}
 
 /**
  * The 12-month table (pure): each confirmed expense converted to the reporting currency and added

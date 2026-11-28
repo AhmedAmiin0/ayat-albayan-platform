@@ -18,7 +18,10 @@ import { EarningsRepo, type PaymentRow } from './earnings.repo';
 import { EarningsReceipts } from './earnings.receipts';
 import type { Page } from '@ab/core';
 
-type Pay = { teacherId: string; actorId: string };
+interface Pay {
+  teacherId: string;
+  actorId: string;
+}
 
 /**
  * Per-session teacher earnings (docs/11 §10): the balance cards, the sessions, the payments, and

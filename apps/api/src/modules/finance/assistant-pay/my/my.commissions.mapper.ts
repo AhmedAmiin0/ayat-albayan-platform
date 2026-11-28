@@ -11,7 +11,11 @@ import {
 export const MY_COMMISSION_SELECT =
   'id, kind, share_percent, amount, currency, earned_at, status, void_reason, student:students(code, name), statement:assistant_statements(status, month), subscription:subscriptions(payments(method, kind, paid_at))';
 
-type PaymentFact = { method: PaymentMethod; kind: PaymentKind; paid_at: string };
+interface PaymentFact {
+  method: PaymentMethod;
+  kind: PaymentKind;
+  paid_at: string;
+}
 
 export interface MyCommissionSource {
   id: string;
@@ -59,7 +63,8 @@ export function toMyCommission(r: MyCommissionSource): MyCommissionRow {
     earned_at: r.earned_at,
     method: paidVia(r.earned_at, r.subscription?.payments ?? []),
     state,
-    statement_month: state === 'in_statement' || state === 'paid' ? (r.statement?.month ?? null) : null,
+    statement_month:
+      state === 'in_statement' || state === 'paid' ? (r.statement?.month ?? null) : null,
     void_reason: state === 'voided' ? voidCode(r.void_reason) : null,
   };
 }

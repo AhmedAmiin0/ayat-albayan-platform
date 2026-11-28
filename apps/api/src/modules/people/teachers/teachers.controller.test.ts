@@ -100,7 +100,7 @@ describe('TeachersController (R-TCH-01)', () => {
       expect.objectContaining({
         phone_e164: '+201001234567',
         status: 'active',
-        created_by: USERS['admin']?.id,
+        created_by: USERS.admin?.id,
       }),
     );
   });

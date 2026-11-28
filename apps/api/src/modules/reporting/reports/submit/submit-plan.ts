@@ -7,7 +7,7 @@ import type { ChangeSet } from '@/modules/teaching/scheduling/change-set';
 import type { FormColumns } from '@/modules/reporting/reports/report.mapper';
 
 /** Payload of public.submit_report (migration 130). snake_case like the columns. */
-export type SubmitPayload = {
+export interface SubmitPayload {
   report_id: string;
   expected_version: number;
   actor: string | null;
@@ -20,9 +20,9 @@ export type SubmitPayload = {
    * v2 reports: the structured content, stored by submit_report_content in the same transaction.
    */
   content?: Json;
-};
+}
 
-export type SubmitPlanInput = {
+export interface SubmitPlanInput {
   report: { id: string; version: number; submitted_at: string | null; student_id: string };
   lesson: { id: string; status: LessonStatus; starts_at: string };
   /** This student's lesson_students row as it is now. */
@@ -34,7 +34,7 @@ export type SubmitPlanInput = {
   now: Date;
   /** settings.late_cancel_hours; null = OFF. */
   lateCancelHours: number | null;
-};
+}
 
 /**
  * What a submit writes (docs/11 §4 R3): the form, the next version (nextVersion: the first submit
@@ -68,7 +68,9 @@ export function submitPayload(input: SubmitPlanInput): SubmitPayload {
  * attendance, so a sibling's report or a corrected one also corrects the lesson (payouts,
  * R-PAY-02).
  */
-export function lessonOutcome(input: SubmitPlanInput): Pick<SubmitPayload, 'lesson_change' | 'student'> {
+export function lessonOutcome(
+  input: SubmitPlanInput,
+): Pick<SubmitPayload, 'lesson_change' | 'student'> {
   const { lesson, now, lateCancelHours } = input;
   const event = ATTENDANCE_EVENT[input.attendance];
   if (isOpenLesson(lesson.status)) {

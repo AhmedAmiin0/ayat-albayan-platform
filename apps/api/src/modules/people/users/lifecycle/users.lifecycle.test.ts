@@ -99,7 +99,7 @@ describe('DELETE /users/:id', () => {
   it('deletes the login and nothing else: the foreign keys release the linked record (no unlink step)', async () => {
     const { lifecycle, store, auth, cache } = setupUsers(people(), [teacherLink]);
     const clear = vi.spyOn(cache, 'clear');
-    store.refs['t1'] = [{ ref_table: 'teachers', ref_column: 'profile_id', kind: 'link', n: 1 }];
+    store.refs.t1 = [{ ref_table: 'teachers', ref_column: 'profile_id', kind: 'link', n: 1 }];
     await lifecycle.remove('t1', ADMIN_ACTOR);
     expect(auth.calls).toEqual(['remove:t1']);
     expect(clear).toHaveBeenCalledTimes(1);
@@ -107,7 +107,7 @@ describe('DELETE /users/:id', () => {
 
   it('refuses with 409 users_has_history, the table counts and a disable hint', async () => {
     const { lifecycle, store, auth } = setupUsers(people());
-    store.refs['t1'] = [{ ref_table: 'lessons', ref_column: 'created_by', kind: 'history', n: 4 }];
+    store.refs.t1 = [{ ref_table: 'lessons', ref_column: 'created_by', kind: 'history', n: 4 }];
     const e = await lifecycle.remove('t1', ADMIN_ACTOR).catch((x: unknown) => x);
     expect(errorCode(e)).toBe('users_has_history');
     expect((e as { getResponse(): unknown }).getResponse()).toMatchObject({ references: [{ table: 'lessons', column: 'created_by', count: 4 }], hint: 'disable_instead' });

@@ -5,7 +5,12 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { featureRoot } from '@/common/infra/test-root';
 import { SettingsModule } from './settings.module';
 import { AuditService } from '@/common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SettingsService } from './settings.service';
 
@@ -23,14 +28,23 @@ const audit = { record: vi.fn() };
 describe('PATCH /settings: retention days and the academy contact', () => {
   let app: NestFastifyApplication;
   const patch = (payload: object) =>
-    app.inject({ method: 'PATCH', url: '/settings', payload, headers: { authorization: 'Bearer admin' } });
+    app.inject({
+      method: 'PATCH',
+      url: '/settings',
+      payload,
+      headers: { authorization: 'Bearer admin' },
+    });
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(SettingsModule)] })
-      .overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
-      .overrideProvider(SettingsService).useValue(settings)
-      .overrideProvider(AuditService).useValue(audit)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(SettingsService)
+      .useValue(settings)
+      .overrideProvider(AuditService)
+      .useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -47,15 +61,22 @@ describe('PATCH /settings: retention days and the academy contact', () => {
     settings.all.mockResolvedValueOnce(SETTING_DEFAULTS).mockResolvedValue(after);
     const res = await patch({ activityRetentionDays: 90, recordingRetentionDays: null });
     expect(res.statusCode).toBe(200);
-    expect(settings.write).toHaveBeenCalledWith({ activity_retention_days: 90, recording_retention_days: null }, USERS['admin']?.id);
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'settings', before: SETTING_DEFAULTS, after }));
+    expect(settings.write).toHaveBeenCalledWith(
+      { activity_retention_days: 90, recording_retention_days: null },
+      USERS.admin?.id,
+    );
+    expect(audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ entity: 'settings', before: SETTING_DEFAULTS, after }),
+    );
   });
 
-  it.each([{ activityRetentionDays: 0 }, { recordingRetentionDays: 0 }, { academyContact: { site: 'not a host' } }, { academyContact: { whatsapp: '+966566101447' } }])(
-    'rejects %j with 400',
-    async (payload) => {
-      expect((await patch(payload)).statusCode).toBe(400);
-      expect(settings.write).not.toHaveBeenCalled();
-    },
-  );
+  it.each([
+    { activityRetentionDays: 0 },
+    { recordingRetentionDays: 0 },
+    { academyContact: { site: 'not a host' } },
+    { academyContact: { whatsapp: '+966566101447' } },
+  ])('rejects %j with 400', async (payload) => {
+    expect((await patch(payload)).statusCode).toBe(400);
+    expect(settings.write).not.toHaveBeenCalled();
+  });
 });

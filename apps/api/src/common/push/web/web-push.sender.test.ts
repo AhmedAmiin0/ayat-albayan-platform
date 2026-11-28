@@ -5,13 +5,13 @@ import { decryptPayload } from './web-push.crypto';
 import { WebPushSender, type WebPushTransport } from './web-push.sender';
 import type { VapidKeys } from './web-push.vapid';
 
-type Sub = {
+interface Sub {
   id: string;
   endpoint: string;
   p256dh: string;
   auth: string;
   session_id?: string | null;
-};
+}
 
 function browser() {
   const ua = createECDH('prime256v1');
@@ -60,7 +60,7 @@ describe('WebPushSender (R-NOT-02)', () => {
     const req = transport.mock.calls[0]?.[0];
     expect(req?.url).toBe(FCM);
     expect(req?.headers).toMatchObject({ 'content-encoding': 'aes128gcm', ttl: '86400' });
-    expect(req?.headers['authorization']).toMatch(/^vapid t=.+, k=.+$/);
+    expect(req?.headers.authorization).toMatch(/^vapid t=.+, k=.+$/);
     const shown = JSON.parse(
       decryptPayload(req?.body ?? Buffer.alloc(0), {
         privateKey: b.ua.getPrivateKey(),

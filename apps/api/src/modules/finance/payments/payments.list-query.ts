@@ -19,15 +19,19 @@ export type PaymentFilter = PageQuery &
 
 /** Sort keys → payments columns (R-NFR-08); the default is newest paid first. */
 export const PAYMENT_SORT: SortSpec<PaymentSortKey> = {
-  columns: { paid_at: { column: 'paid_at' }, amount: { column: 'amount' }, method: { column: 'method' } },
+  columns: {
+    paid_at: { column: 'paid_at' },
+    amount: { column: 'amount' },
+    method: { column: 'method' },
+  },
   fallback: [{ column: 'paid_at', ascending: false }],
 };
 
-type Filterable<Q> = {
+interface Filterable<Q> {
   eq: (c: string, v: string) => Q;
   gte: (c: string, v: string) => Q;
   lt: (c: string, v: string) => Q;
-};
+}
 
 /** The list filters, shared by the page and its totals (embedded package for the student filter). */
 export function filtered<Q extends Filterable<Q>>(q: Q, f: PaymentFilter): Q {

@@ -1,12 +1,23 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { done, maybe, one, pgError, rows } from '@/common/db/errors';
-import type { CodePurpose, CodeStore, LiveCode, NewCode, PhoneStats, Subject } from '@/modules/people/sign-in/sign-in.ports';
+import type {
+  CodePurpose,
+  CodeStore,
+  LiveCode,
+  NewCode,
+  PhoneStats,
+  Subject,
+} from '@/modules/people/sign-in/sign-in.ports';
 
 const DAY_MS = 24 * 3600_000;
 const QUARTER_MS = 15 * 60_000;
 const PURPOSES: readonly CodePurpose[] = [
-  'sign_in', 'reset_password', 'set_password', 'report_view', 'short_link',
+  'sign_in',
+  'reset_password',
+  'set_password',
+  'report_view',
+  'short_link',
 ];
 const asPurpose = (p: string): CodePurpose => PURPOSES.find((x) => x === p) ?? 'sign_in';
 
@@ -17,34 +28,41 @@ export class CodesRepo implements CodeStore {
 
   /** Also drops codes older than a week (spent or dead: nothing reads them after a day). */
   async insert(row: NewCode): Promise<string> {
-    const old = await this.db.from('login_codes').delete().lt('created_at', new Date(Date.now() - 7 * DAY_MS).toISOString());
-    if (old.error) throw pgError(old.error);
-    const data = one(await this.db
+    const old = await this.db
       .from('login_codes')
-      .insert({
-        purpose: row.purpose,
-        subject_kind: row.subject.kind,
-        subject_id: row.subject.id,
-        phone_e164: row.phone,
-        code_hash: row.hash,
-        max_attempts: row.maxAttempts,
-        expires_at: row.expiresAt.toISOString(),
-      })
-      .select('id')
-      .single());
+      .delete()
+      .lt('created_at', new Date(Date.now() - 7 * DAY_MS).toISOString());
+    if (old.error) throw pgError(old.error);
+    const data = one(
+      await this.db
+        .from('login_codes')
+        .insert({
+          purpose: row.purpose,
+          subject_kind: row.subject.kind,
+          subject_id: row.subject.id,
+          phone_e164: row.phone,
+          code_hash: row.hash,
+          max_attempts: row.maxAttempts,
+          expires_at: row.expiresAt.toISOString(),
+        })
+        .select('id')
+        .single(),
+    );
     return data.id;
   }
 
   async latest(subject: Subject, purposes: readonly CodePurpose[]): Promise<LiveCode | null> {
-    const data = maybe(await this.db
-      .from('login_codes')
-      .select('id, purpose, phone_e164')
-      .eq('subject_kind', subject.kind)
-      .eq('subject_id', subject.id)
-      .in('purpose', [...purposes])
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('login_codes')
+        .select('id, purpose, phone_e164')
+        .eq('subject_kind', subject.kind)
+        .eq('subject_id', subject.id)
+        .in('purpose', [...purposes])
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+    );
     return data ? { id: data.id, purpose: asPurpose(data.purpose), phone: data.phone_e164 } : null;
   }
 
@@ -57,7 +75,7 @@ export class CodesRepo implements CodeStore {
   async spend(id: string): Promise<boolean> {
     const { data, error } = await this.db.rpc('login_code_spend', { p_id: id });
     if (error) throw pgError(error);
-    return data === true;
+    return data;
   }
 
   async delivered(id: string, sendError: string | null): Promise<void> {
@@ -67,18 +85,22 @@ export class CodesRepo implements CodeStore {
 
   async failedLastHour(now: Date): Promise<number> {
     const since = new Date(now.getTime() - 3600_000).toISOString();
-    const data = rows(await this.db.from('login_codes').select('attempts, used_at').gte('created_at', since));
+    const data = rows(
+      await this.db.from('login_codes').select('attempts, used_at').gte('created_at', since),
+    );
     return data.reduce((n, r) => n + r.attempts - (r.used_at ? 1 : 0), 0);
   }
 
   /** The phone's codes of the last 24 hours; a spent code's last attempt was the right one. */
   async phoneStats(phone: string, now: Date): Promise<PhoneStats> {
     const since = new Date(now.getTime() - DAY_MS).toISOString();
-    const data = rows(await this.db
-      .from('login_codes')
-      .select('created_at, attempts, used_at')
-      .eq('phone_e164', phone)
-      .gte('created_at', since));
+    const data = rows(
+      await this.db
+        .from('login_codes')
+        .select('created_at, attempts, used_at')
+        .eq('phone_e164', phone)
+        .gte('created_at', since),
+    );
     const quarter = now.getTime() - QUARTER_MS;
     return {
       sentLast15Min: data.filter((r) => new Date(r.created_at).getTime() > quarter).length,

@@ -3,7 +3,12 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { featureRoot } from '@/common/infra/test-root';
 import { MeModule } from './me.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { DB } from '@/common/db/db.module';
 import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
@@ -26,7 +31,9 @@ let app: NestFastifyApplication;
 
 beforeAll(async () => {
   const mod = await Test.createTestingModule({ imports: [featureRoot(MeModule)] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
+    .overrideProvider(TOKEN_VERIFIER)
     .useValue(verify)
     .overrideProvider(DB)
     .useValue(fake.db)
@@ -37,7 +44,12 @@ beforeAll(async () => {
 });
 afterAll(() => app.close());
 
-type Call = { method: 'PUT' | 'DELETE'; url: string; token?: string; body?: object };
+interface Call {
+  method: 'PUT' | 'DELETE';
+  url: string;
+  token?: string;
+  body?: object;
+}
 const call = ({ method, url, token = 'admin', body }: Call) =>
   app.inject({ method, url, headers: { authorization: `Bearer ${token}` }, payload: body });
 
@@ -48,26 +60,43 @@ describe('/me/push-tokens HTTP (R-MOB-01)', () => {
     results.profiles = [{ data: { push_tokens: [] } }, {}];
     const guardian = await call({ method: 'PUT', url: '/me/push-tokens', token: 'guardian', body });
     expect(guardian.statusCode).toBe(200);
-    expect((await call({ method: 'PUT', url: '/me/push-tokens', token: 'nope', body })).statusCode).toBe(401);
+    expect(
+      (await call({ method: 'PUT', url: '/me/push-tokens', token: 'nope', body })).statusCode,
+    ).toBe(401);
   });
 
   it('PUT validates the Expo token format: 400 validation_failed', async () => {
-    const res = await call({ method: 'PUT', url: '/me/push-tokens', body: { token: 'fcm-raw-token' } });
+    const res = await call({
+      method: 'PUT',
+      url: '/me/push-tokens',
+      body: { token: 'fcm-raw-token' },
+    });
     expect(res.statusCode).toBe(400);
     expect(res.json()).toMatchObject({ message: 'validation_failed' });
   });
 
   it('PUT stores the token on the caller’s profile: 200 with the device key to keep', async () => {
     results['rpc:claim_push_device'] = [{ data: 'bound' }];
-    results['profiles'] = [{ data: { push_tokens: [] } }, {}];
+    results.profiles = [{ data: { push_tokens: [] } }, {}];
     const res = await call({ method: 'PUT', url: '/me/push-tokens', body: { token: TOKEN } });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({ deviceKey: expect.stringMatching(/^[\w-]{43}$/) });
-    expect(fake.calls).toContainEqual({ table: 'profiles', method: 'update', args: [{ push_tokens: [TOKEN] }] });
+    expect(fake.calls).toContainEqual({
+      table: 'profiles',
+      method: 'update',
+      args: [{ push_tokens: [TOKEN] }],
+    });
     expect(fake.calls).toContainEqual({
       table: 'rpc:claim_push_device',
       method: 'rpc',
-      args: [{ p_token: TOKEN, p_profile: 'admin-1', p_session: 'sess-1', p_new_hash: expect.stringMatching(/^[0-9a-f]{64}$/) }],
+      args: [
+        {
+          p_token: TOKEN,
+          p_profile: 'admin-1',
+          p_session: 'sess-1',
+          p_new_hash: expect.stringMatching(/^[0-9a-f]{64}$/),
+        },
+      ],
     });
   });
 
@@ -76,24 +105,42 @@ describe('/me/push-tokens HTTP (R-MOB-01)', () => {
     const res = await call({ method: 'PUT', url: '/me/push-tokens', body: { token: TOKEN } });
     expect(res.statusCode).toBe(409);
     expect(res.json()).toMatchObject({ message: 'push_device_in_use' });
-    const bad = await call({ method: 'PUT', url: '/me/push-tokens', body: { token: TOKEN, deviceKey: 'short' } });
+    const bad = await call({
+      method: 'PUT',
+      url: '/me/push-tokens',
+      body: { token: TOKEN, deviceKey: 'short' },
+    });
     expect(bad.statusCode).toBe(400);
   });
 
   it('PUT from a token without a session_id claim is 401 (never bound to nobody)', async () => {
-    const res = await call({ method: 'PUT', url: '/me/push-tokens', token: 'teacher', body: { token: TOKEN } });
+    const res = await call({
+      method: 'PUT',
+      url: '/me/push-tokens',
+      token: 'teacher',
+      body: { token: TOKEN },
+    });
     expect(res.statusCode).toBe(401);
   });
 
   it('DELETE takes the URL-encoded bracketed token: 204', async () => {
-    results['profiles'] = [{ data: { push_tokens: [TOKEN] } }, {}];
+    results.profiles = [{ data: { push_tokens: [TOKEN] } }, {}];
     fake.calls.length = 0;
-    const res = await call({ method: 'DELETE', url: `/me/push-tokens/${encodeURIComponent(TOKEN)}` });
+    const res = await call({
+      method: 'DELETE',
+      url: `/me/push-tokens/${encodeURIComponent(TOKEN)}`,
+    });
     expect(res.statusCode).toBe(204);
-    expect(fake.calls).toContainEqual({ table: 'profiles', method: 'update', args: [{ push_tokens: [] }] });
+    expect(fake.calls).toContainEqual({
+      table: 'profiles',
+      method: 'update',
+      args: [{ push_tokens: [] }],
+    });
   });
 
   it('DELETE with a malformed token is 400', async () => {
-    expect((await call({ method: 'DELETE', url: '/me/push-tokens/not-a-token' })).statusCode).toBe(400);
+    expect((await call({ method: 'DELETE', url: '/me/push-tokens/not-a-token' })).statusCode).toBe(
+      400,
+    );
   });
 });

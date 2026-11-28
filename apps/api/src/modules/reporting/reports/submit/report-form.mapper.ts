@@ -1,17 +1,27 @@
 import type { MemoryView, ReportFormEntry, ReportFormResponse } from '@ab/shared';
 import type { BalanceView } from '@ab/money';
 import { reportView, type ViewContext } from '@/modules/reporting/reports/report.mapper';
-import type { ReportLessonRow, ReportLessonStudent, ReportRow } from '@/modules/reporting/reports/report-row';
+import type {
+  ReportLessonRow,
+  ReportLessonStudent,
+  ReportRow,
+} from '@/modules/reporting/reports/report-row';
 
 export const iso = (at: string) => new Date(at).toISOString();
 
 /** code/program are never null in the DB (generated / not null default); the embed types are looser. */
 function formStudent(s: ReportLessonStudent): ReportFormEntry['student'] {
   const st = s.student;
-  return { id: s.student_id, code: st?.code ?? '', name: st?.name ?? '', tz: st?.tz ?? '', program: st?.program ?? 'quran' };
+  return {
+    id: s.student_id,
+    code: st?.code ?? '',
+    name: st?.name ?? '',
+    tz: st?.tz ?? '',
+    program: st?.program ?? 'quran',
+  };
 }
 
-type FormParts = {
+interface FormParts {
   lesson: ReportLessonRow;
   reports: readonly ReportRow[];
   numbers: ReadonlyMap<string, number>;
@@ -20,7 +30,7 @@ type FormParts = {
   memory: ReadonlyMap<string, MemoryView>;
   ctx: ViewContext;
   block: ReportFormResponse['submit_block'];
-};
+}
 
 /**
  * GET /lessons/:id/report-form (R-REP-01, issue D1): the read-only identity comes only from the

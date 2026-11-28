@@ -65,7 +65,7 @@ describe('AvailabilityController (R-TCH-02)', () => {
     it('a teacher reads their own grid', async () => {
       const res = await call('teacher', { method: 'GET', url: `/teachers/${OWN}/availability` });
       expect(res.statusCode).toBe(200);
-      expect(teachers.idByProfile).toHaveBeenCalledWith(USERS['teacher']?.id);
+      expect(teachers.idByProfile).toHaveBeenCalledWith(USERS.teacher?.id);
     });
 
     it("a teacher cannot read or replace another teacher's grid", async () => {
@@ -97,7 +97,7 @@ describe('AvailabilityController (R-TCH-02)', () => {
       expect(res.statusCode).toBe(200);
       expect(availability.replaceSlots).toHaveBeenCalledWith({
         teacherId: OWN,
-        actorId: USERS['teacher']?.id,
+        actorId: USERS.teacher?.id,
         slots: [SLOT],
       });
     });
@@ -119,7 +119,7 @@ describe('AvailabilityController (R-TCH-02)', () => {
       expect(res.statusCode).toBe(201);
       expect(availability.insertTimeOff).toHaveBeenCalledWith({
         teacherId: OWN,
-        actorId: USERS['teacher']?.id,
+        actorId: USERS.teacher?.id,
         body: OFF_BODY,
       });
     });

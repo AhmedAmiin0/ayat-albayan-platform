@@ -1,10 +1,22 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { A, assistantApp, ID, STUDENT } from '@/modules/finance/assistant-pay/shared/assistant-pay.fakes';
+import {
+  A,
+  assistantApp,
+  ID,
+  STUDENT,
+} from '@/modules/finance/assistant-pay/shared/assistant-pay.fakes';
 
 type App = Awaited<ReturnType<typeof assistantApp>>;
-type Route = { method: 'GET' | 'POST' | 'PUT'; url: string; body?: object };
+interface Route {
+  method: 'GET' | 'POST' | 'PUT';
+  url: string;
+  body?: object;
+}
 const REASON = { reason: 'سبب واضح' };
-const TERMS = { commission: { type: 'percent', value: 10, startsOn: '2026-10-01' }, salary: { amount: 1000, currency: 'SAR', startsOn: '2026-10-01' } };
+const TERMS = {
+  commission: { type: 'percent', value: 10, startsOn: '2026-10-01' },
+  salary: { amount: 1000, currency: 'SAR', startsOn: '2026-10-01' },
+};
 
 /** Every admin route of the assistants' pay, with a body that passes validation: only the guard can refuse it. */
 const ROUTES: Route[] = [
@@ -13,8 +25,16 @@ const ROUTES: Route[] = [
   { method: 'PUT', url: `/assistant-pay/terms/${A}`, body: TERMS },
   { method: 'GET', url: '/assistant-pay/commissions' },
   { method: 'POST', url: `/assistant-pay/commissions/${ID}/void`, body: REASON },
-  { method: 'POST', url: '/assistant-pay/adjustments', body: { assistantId: A, amount: -50, currency: 'SAR', reason: 'خصم' } },
-  { method: 'POST', url: '/assistant-pay/brought-by', body: { studentIds: [STUDENT], assistantId: A } },
+  {
+    method: 'POST',
+    url: '/assistant-pay/adjustments',
+    body: { assistantId: A, amount: -50, currency: 'SAR', reason: 'خصم' },
+  },
+  {
+    method: 'POST',
+    url: '/assistant-pay/brought-by',
+    body: { studentIds: [STUDENT], assistantId: A },
+  },
   { method: 'GET', url: '/assistant-pay/statements' },
   { method: 'GET', url: `/assistant-pay/statements/${ID}` },
   { method: 'GET', url: `/assistant-pay/statements/${ID}/receipt` },
@@ -23,7 +43,11 @@ const ROUTES: Route[] = [
   { method: 'POST', url: `/assistant-pay/statements/${ID}/reopen` },
   { method: 'POST', url: `/assistant-pay/statements/${ID}/pay`, body: {} },
   { method: 'POST', url: `/assistant-pay/statements/${ID}/unpay`, body: REASON },
-  { method: 'POST', url: '/assistant-pay/receipt-upload-url', body: { assistantId: A, mime: 'application/pdf', size: 1000 } },
+  {
+    method: 'POST',
+    url: '/assistant-pay/receipt-upload-url',
+    body: { assistantId: A, mime: 'application/pdf', size: 1000 },
+  },
 ];
 
 describe('/assistant-pay: the admin only (assistantpay.read | write | approve)', () => {

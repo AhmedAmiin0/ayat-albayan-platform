@@ -5,19 +5,22 @@ import { StudentTrialStatus } from '@/modules/finance/subscriptions/trial/studen
 import type { TrialLessonRow } from '@/modules/finance/subscriptions/trial/student-trial.plan';
 import type { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 
-const trialLesson = (student_id: string, status: 'scheduled' | 'completed' | 'no_show'): TrialLessonRow => ({
+const trialLesson = (
+  student_id: string,
+  status: 'scheduled' | 'completed' | 'no_show',
+): TrialLessonRow => ({
   student_id,
   attendance: null,
   chargeable: true,
   lesson: { status, rule_id: 'r1', instant: false, makeup_of_id: null, rule: { package: 'trial' } },
 });
 
-type SetupOpts = {
+interface SetupOpts {
   statuses?: Record<string, string>;
   rows?: TrialLessonRow[];
   moved?: boolean;
   paid?: boolean;
-};
+}
 function setup(o: SetupOpts = {}) {
   const map = o.statuses ?? { s1: 'new' };
   const statuses = {
@@ -38,7 +41,12 @@ function setup(o: SetupOpts = {}) {
   );
   return { s, statuses, queries, listeners };
 }
-type Audited = { from: string; to: string; reason: string; actorId?: string | null };
+interface Audited {
+  from: string;
+  to: string;
+  reason: string;
+  actorId?: string | null;
+}
 const audit = ({ from, to, reason, actorId = 'a1' }: Audited) => [
   { studentId: 's1', from, to },
   { actorId, after: { via: 'trial', from, to, reason } },
@@ -48,7 +56,9 @@ describe('StudentTrialStatus.evaluate: trialMove, compare-and-set and audited (o
   it('new with an open trial lesson → trial (trial_booked)', async () => {
     const t = setup({ rows: [trialLesson('s1', 'scheduled')] });
     expect(await t.s.evaluate(['s1', 's1'], 'a1')).toBe(1);
-    expect(t.statuses.move).toHaveBeenCalledWith(...audit({ from: 'new', to: 'trial', reason: 'trial_booked' }));
+    expect(t.statuses.move).toHaveBeenCalledWith(
+      ...audit({ from: 'new', to: 'trial', reason: 'trial_booked' }),
+    );
     expect(t.queries.lessonsOf).toHaveBeenCalledWith(['s1']);
   });
 
@@ -56,12 +66,18 @@ describe('StudentTrialStatus.evaluate: trialMove, compare-and-set and audited (o
     for (const from of ['new', 'trial']) {
       const t = setup({ statuses: { s1: from }, rows: [trialLesson('s1', 'completed')] });
       await t.s.evaluate(['s1'], 'a1');
-      expect(t.statuses.move).toHaveBeenCalledWith(...audit({ from, to: 'pending_subscription', reason: 'trial_attended' }));
+      expect(t.statuses.move).toHaveBeenCalledWith(
+        ...audit({ from, to: 'pending_subscription', reason: 'trial_attended' }),
+      );
     }
   });
 
   it('attended but already paid → no move; the payment is read only for an attended trial', async () => {
-    const t = setup({ statuses: { s1: 'trial' }, rows: [trialLesson('s1', 'completed')], paid: true });
+    const t = setup({
+      statuses: { s1: 'trial' },
+      rows: [trialLesson('s1', 'completed')],
+      paid: true,
+    });
     expect(await t.s.evaluate(['s1'], 'a1')).toBe(0);
     expect(t.statuses.move).not.toHaveBeenCalled();
     expect(t.statuses.hasPositivePayment).toHaveBeenCalledWith('s1');
@@ -73,11 +89,20 @@ describe('StudentTrialStatus.evaluate: trialMove, compare-and-set and audited (o
   it('trial with its lesson missed and nothing else booked → new (trial_missed)', async () => {
     const t = setup({ statuses: { s1: 'trial' }, rows: [trialLesson('s1', 'no_show')] });
     await t.s.evaluate(['s1'], null);
-    expect(t.statuses.move).toHaveBeenCalledWith(...audit({ from: 'trial', to: 'new', reason: 'trial_missed', actorId: null }));
+    expect(t.statuses.move).toHaveBeenCalledWith(
+      ...audit({ from: 'trial', to: 'new', reason: 'trial_missed', actorId: null }),
+    );
   });
 
   it('subscribed, paused, churned, unknown students or nothing to do: no move', async () => {
-    for (const status of ['pending_subscription', 'active', 'pending_renewal', 'expired', 'paused', 'churned']) {
+    for (const status of [
+      'pending_subscription',
+      'active',
+      'pending_renewal',
+      'expired',
+      'paused',
+      'churned',
+    ]) {
       const t = setup({ statuses: { s1: status }, rows: [trialLesson('s1', 'completed')] });
       expect(await t.s.evaluate(['s1'], 'a1')).toBe(0);
       expect(t.statuses.move).not.toHaveBeenCalled();
@@ -103,7 +128,14 @@ describe('StudentTrialStatus listens to lesson changes (trial lessons only)', ()
     t.s.onModuleInit();
     await t.listeners[0]?.(['L1']);
     expect(t.queries.studentsOfTrialLessons).toHaveBeenCalledWith(['L1']);
-    expect(t.statuses.move).toHaveBeenCalledWith(...audit({ from: 'new', to: 'pending_subscription', reason: 'trial_attended', actorId: null }));
+    expect(t.statuses.move).toHaveBeenCalledWith(
+      ...audit({
+        from: 'new',
+        to: 'pending_subscription',
+        reason: 'trial_attended',
+        actorId: null,
+      }),
+    );
   });
 
   it('a failed lookup is logged, never thrown', async () => {

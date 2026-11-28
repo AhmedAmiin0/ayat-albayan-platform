@@ -10,14 +10,14 @@ import {
 import { z } from 'zod';
 import { reasonText } from '@/modules/finance/assistant-pay/shared/reasons';
 
-type LineRow = {
+interface LineRow {
   kind: string;
   amount: number;
   currency: string;
   commission: { kind: string; student: { code: string | null; name: string } | null } | null;
   /** kind 'reversal': a voided commission taken back (the wallet counts it); 'manual': the admin's +/-. */
   adjustment: { kind: string; reason: string } | null;
-};
+}
 export type StatementRow = Tables<'assistant_statements'> & {
   assistant: { id: string; full_name: string } | null;
   lines: LineRow[];
@@ -40,7 +40,12 @@ export function readTotals(v: Json): Record<string, CurrencyTotals> {
   const out: Record<string, CurrencyTotals> = {};
   for (const [currency, t] of Object.entries(v)) {
     if (typeof t !== 'object' || t === null || Array.isArray(t)) continue;
-    out[currency] = { salary: num(t['salary']), commissions: num(t['commissions']), adjustments: num(t['adjustments']), total: num(t['total']) };
+    out[currency] = {
+      salary: num(t.salary),
+      commissions: num(t.commissions),
+      adjustments: num(t.adjustments),
+      total: num(t.total),
+    };
   }
   return out;
 }
@@ -61,7 +66,11 @@ function toLine(l: LineRow & { kind: StatementLineKind }): AssistantStatementLin
 export function toStatementView(row: StatementRow): AssistantStatementView {
   const lines = row.lines
     .flatMap((l) => (isKind(l.kind) ? [{ ...l, kind: l.kind }] : []))
-    .sort((a, b) => RANK[a.kind] - RANK[b.kind] || (a.commission?.student?.name ?? '').localeCompare(b.commission?.student?.name ?? '', 'ar'))
+    .sort(
+      (a, b) =>
+        RANK[a.kind] - RANK[b.kind] ||
+        (a.commission?.student?.name ?? '').localeCompare(b.commission?.student?.name ?? '', 'ar'),
+    )
     .map(toLine);
   return {
     id: row.id,

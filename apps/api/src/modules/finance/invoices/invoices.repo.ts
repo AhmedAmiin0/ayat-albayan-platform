@@ -6,7 +6,7 @@ import type { SortSpec } from '@/common/db/list-sort';
 import { maybe, pgError } from '@/common/db/errors';
 import type { InvoiceSortKey, RecentFilter } from './invoices.dto';
 
-export type InvoiceRowOut = {
+export interface InvoiceRowOut {
   id: string;
   rule_id: string | null;
   kind: 'package' | 'makeup';
@@ -16,7 +16,7 @@ export type InvoiceRowOut = {
   source: 'upload' | 'whatsapp';
   created_at: string;
   students: { id: string; name: string; code: string }[];
-};
+}
 
 const SELECT =
   'id, rule_id, kind, storage_path, mime, size_bytes, source, created_at, rule:schedule_rules(schedule_rule_students(student:students(id, name, code)))';
@@ -78,20 +78,26 @@ export class InvoicesRepo {
   /** invoice id → the payment recorded from it. */
   async paymentsOf(invoiceIds: readonly string[]): Promise<Map<string, string>> {
     if (invoiceIds.length === 0) return new Map();
-    const { data, error } = await this.db.from('payments').select('id, invoice_id').in('invoice_id', [...invoiceIds]);
+    const { data, error } = await this.db
+      .from('payments')
+      .select('id, invoice_id')
+      .in('invoice_id', [...invoiceIds]);
     if (error) throw pgError(error);
     return new Map(data.flatMap((p) => (p.invoice_id ? [[p.invoice_id, p.id] as const] : [])));
   }
 
   /** The rules a student is on (their bookings). */
   async ruleIdsOf(studentId: string): Promise<string[]> {
-    const { data, error } = await this.db.from('schedule_rule_students').select('rule_id').eq('student_id', studentId);
+    const { data, error } = await this.db
+      .from('schedule_rule_students')
+      .select('rule_id')
+      .eq('student_id', studentId);
     if (error) throw pgError(error);
     return data.map((r) => r.rule_id);
   }
 }
 
-type Fetched = {
+interface Fetched {
   id: string;
   rule_id: string | null;
   kind: 'trial' | 'package' | 'makeup';
@@ -103,7 +109,7 @@ type Fetched = {
   rule: {
     schedule_rule_students: { student: { id: string; name: string; code: string | null } | null }[];
   } | null;
-};
+}
 
 /** A trial never has an invoice (check constraint), so a trial row cannot occur and is skipped. */
 function toRow(r: Fetched): InvoiceRowOut[] {

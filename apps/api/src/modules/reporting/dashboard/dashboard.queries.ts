@@ -9,7 +9,10 @@ import type { Window } from './finance/finance.types';
 
 const HOURS_48 = 48 * 3_600_000;
 
-type CountResult = { count: number | null; error: PostgrestError | null };
+interface CountResult {
+  count: number | null;
+  error: PostgrestError | null;
+}
 
 async function counted(q: PromiseLike<CountResult>): Promise<number> {
   const { count, error } = await q;
@@ -30,7 +33,11 @@ export class DashboardQueries {
   async leads(w: Window) {
     const own = this.own ? await this.own.notIn() : null;
     return readAll((from, to) => {
-      let query = this.db.from('leads').select('id, status, source').gte('created_at', w.from.toISOString()).lt('created_at', w.to.toISOString());
+      let query = this.db
+        .from('leads')
+        .select('id, status, source')
+        .gte('created_at', w.from.toISOString())
+        .lt('created_at', w.to.toISOString());
       if (own) query = query.not('phone_e164', 'in', own);
       return query.order('created_at').order('id').range(from, to);
     });
@@ -52,7 +59,9 @@ export class DashboardQueries {
 
   /** Status active only; pending_renewal and expired are not counted. */
   activeStudents(): Promise<number> {
-    return counted(this.db.from('students').select('id', { count: 'exact', head: true }).eq('status', 'active'));
+    return counted(
+      this.db.from('students').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+    );
   }
 
   /** Scheduled lessons starting in [now, now + 48 h). */
@@ -68,20 +77,29 @@ export class DashboardQueries {
   }
 
   unpaidSubscriptions(): Promise<number> {
-    return counted(this.db.from('subscriptions').select('id', { count: 'exact', head: true }).eq('status', 'unpaid'));
+    return counted(
+      this.db
+        .from('subscriptions')
+        .select('id', { count: 'exact', head: true })
+        .eq('status', 'unpaid'),
+    );
   }
 
   openTasks(): Promise<number> {
-    return counted(this.db.from('admin_tasks').select('id', { count: 'exact', head: true }).is('done_at', null));
+    return counted(
+      this.db.from('admin_tasks').select('id', { count: 'exact', head: true }).is('done_at', null),
+    );
   }
 
   /** Active teachers, by name. */
   async teachers() {
-    const data = rows(await this.db
-      .from('teachers')
-      .select('id, display_name_ar, max_students')
-      .eq('status', 'active')
-      .order('display_name_ar'));
+    const data = rows(
+      await this.db
+        .from('teachers')
+        .select('id, display_name_ar, max_students')
+        .eq('status', 'active')
+        .order('display_name_ar'),
+    );
     return data;
   }
 

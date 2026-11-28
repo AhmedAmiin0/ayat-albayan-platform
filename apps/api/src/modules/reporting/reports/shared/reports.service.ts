@@ -1,4 +1,9 @@
-import { reportBlock, type ReportDraft, type ReportFormResponse, type ReportView } from '@ab/shared';
+import {
+  reportBlock,
+  type ReportDraft,
+  type ReportFormResponse,
+  type ReportView,
+} from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '@/common/http/errors';
 import { formResponse } from '@/modules/reporting/reports/submit/report-form.mapper';
@@ -9,7 +14,11 @@ import { ReportLessonQueries } from './report-lesson.queries';
 import { formColumns, reportView } from '@/modules/reporting/reports/report.mapper';
 import { ReportsQueries } from './reports.queries';
 
-type DraftInput = { id: string; form: Partial<ReportDraft>; user: ReportCaller };
+interface DraftInput {
+  id: string;
+  form: Partial<ReportDraft>;
+  user: ReportCaller;
+}
 
 /** Report form, read and autosave (docs/11 §4 R1, R2, R4; R-REP-01/02/04, issues A7, D1). */
 @Injectable()

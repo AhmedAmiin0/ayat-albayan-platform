@@ -46,10 +46,18 @@ export type StudentProfileRow = Student & {
   } | null;
 };
 
-type InsertOpts = { dto: StudentCreateRequest; guardianId: string; actorId: string };
+interface InsertOpts {
+  dto: StudentCreateRequest;
+  guardianId: string;
+  actorId: string;
+}
 
 /** Request → row: drops request-only keys, adds name_normalized (R-STU-03) and created_by. */
-export function toStudentInsert({ dto, guardianId, actorId }: InsertOpts): TablesInsert<'students'> {
+export function toStudentInsert({
+  dto,
+  guardianId,
+  actorId,
+}: InsertOpts): TablesInsert<'students'> {
   // Request-only keys are dropped by the rest spread (no-unused-vars ignores rest siblings).
   const { guardian, guardian_id, force, lead_id, ...student } = dto;
   return {
@@ -60,7 +68,9 @@ export function toStudentInsert({ dto, guardianId, actorId }: InsertOpts): Table
   };
 }
 
-export function toStudentPatch(dto: Omit<StudentUpdate, 'expected_status'>): TablesUpdate<'students'> {
+export function toStudentPatch(
+  dto: Omit<StudentUpdate, 'expected_status'>,
+): TablesUpdate<'students'> {
   return dto.name === undefined ? dto : { ...dto, name_normalized: normalizeArabic(dto.name) };
 }
 

@@ -55,7 +55,7 @@ export class AuthGuard implements CanActivate {
     if (this.reflector.getAllAndOverride<boolean>(IS_PUBLIC, targets)) return true;
 
     const req = ctx.switchToHttp().getRequest<AuthRequest>();
-    const user = await this.authenticate(req.headers['authorization']);
+    const user = await this.authenticate(req.headers.authorization);
     const signedIn = this.reflector.getAllAndOverride<boolean>(SIGNED_IN, targets);
     const permissions = await this.permissionsOf(user, signedIn);
     req.user = { ...user, permissions, isTest: await this.isTest(user) };
@@ -76,7 +76,9 @@ export class AuthGuard implements CanActivate {
     } catch (e) {
       if (e instanceof AccountDisabledError) throw forbidden('account_disabled');
       if (!signedIn || isAdmin(user)) throw e;
-      this.log.warn(`permissions unavailable for ${user.id}: ${e instanceof Error ? e.message : 'unknown'}`);
+      this.log.warn(
+        `permissions unavailable for ${user.id}: ${e instanceof Error ? e.message : 'unknown'}`,
+      );
       return [];
     }
   }

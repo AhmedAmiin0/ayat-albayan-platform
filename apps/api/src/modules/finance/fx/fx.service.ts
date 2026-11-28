@@ -54,7 +54,8 @@ export class FxService {
 
   /** The rate in force at `at` (a stored rate, else today's); SAR itself is 1. */
   async rateSarAt(quote: string, at: string): Promise<FxRate> {
-    if (quote === 'SAR') return { quote, rate: 1, date: null, provider: 'self', fallback: false, ageHours: null };
+    if (quote === 'SAR')
+      return { quote, rate: 1, date: null, provider: 'self', fallback: false, ageHours: null };
     const stored = await this.queries.atOrBefore(quote, at);
     return stored ? fromRow(stored, false) : this.rateSarTo(quote);
   }
@@ -89,7 +90,7 @@ export class FxService {
 
 /** Rejects provider faults: a SAR→USD rate far from the peg, or a publication time in the future. */
 function plausible(snap: FxSnapshot): FxSnapshot {
-  const usd = snap.rates['USD'];
+  const usd = snap.rates.USD;
   if (usd !== undefined && !(Math.abs(usd * SAR_PER_USD_PEG - 1) <= USD_TOLERANCE)) {
     throw new Error(`fx: implausible SAR→USD rate ${usd}`);
   }

@@ -4,7 +4,7 @@ import { applySort, type Orderable, type SortSpec } from '@/common/db/list-sort/
 /** Records every `.order()` call, like a supabase builder would chain them. */
 class FakeQuery implements Orderable<FakeQuery> {
   calls: [string, unknown][] = [];
-  order(column: string, options?: unknown): FakeQuery {
+  order(column: string, options?: unknown): this {
     this.calls.push([column, options]);
     return this;
   }

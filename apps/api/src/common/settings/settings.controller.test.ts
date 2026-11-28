@@ -6,7 +6,12 @@ import { featureRoot } from '@/common/infra/test-root';
 import { SettingsModule } from './settings.module';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SettingsService } from './settings.service';
 
@@ -25,7 +30,12 @@ const audit = { record: vi.fn() };
 describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH-02)', () => {
   let app: NestFastifyApplication;
   const call = (method: 'GET' | 'PATCH', token = 'admin', payload?: object) =>
-    app.inject({ method, url: '/settings', payload, headers: { authorization: `Bearer ${token}` } });
+    app.inject({
+      method,
+      url: '/settings',
+      payload,
+      headers: { authorization: `Bearer ${token}` },
+    });
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(SettingsModule)] })
@@ -59,7 +69,7 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     settings.all.mockResolvedValueOnce(SETTING_DEFAULTS).mockResolvedValue(after);
     const res = await call('PATCH', 'admin', { lateCancelHours: 24 });
     expect(res.json()).toMatchObject(after);
-    expect(settings.write).toHaveBeenCalledWith({ late_cancel_hours: 24 }, USERS['admin']?.id);
+    expect(settings.write).toHaveBeenCalledWith({ late_cancel_hours: 24 }, USERS.admin?.id);
     expect(audit.record).toHaveBeenCalledWith(
       expect.objectContaining({ entity: 'settings', before: SETTING_DEFAULTS, after }),
     );
@@ -68,12 +78,30 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
   it('PATCH answers the full settings plus saved / moved / invalid', async () => {
     const after = { ...SETTING_DEFAULTS, late_cancel_hours: 24 };
     settings.all.mockResolvedValueOnce(SETTING_DEFAULTS).mockResolvedValue(after);
-    const res = await call('PATCH', 'admin', { lateCancelHours: 24, autoMessagesEnabled: true, bookingHorizonWeeks: 13 });
+    const res = await call('PATCH', 'admin', {
+      lateCancelHours: 24,
+      autoMessagesEnabled: true,
+      bookingHorizonWeeks: 13,
+    });
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ ...after, saved: ['late_cancel_hours'], moved: ['auto_messages_enabled'], invalid: ['booking_horizon_weeks'] });
-    expect(settings.write).toHaveBeenCalledExactlyOnceWith({ late_cancel_hours: 24 }, USERS['admin']?.id);
+    expect(res.json()).toEqual({
+      ...after,
+      saved: ['late_cancel_hours'],
+      moved: ['auto_messages_enabled'],
+      invalid: ['booking_horizon_weeks'],
+    });
+    expect(settings.write).toHaveBeenCalledExactlyOnceWith(
+      { late_cancel_hours: 24 },
+      USERS.admin?.id,
+    );
     expect(audit.record).toHaveBeenCalledWith(
-      expect.objectContaining({ entity: 'settings', entityId: SINGLETON_ENTITY_ID, action: 'update', before: SETTING_DEFAULTS, after }),
+      expect.objectContaining({
+        entity: 'settings',
+        entityId: SINGLETON_ENTITY_ID,
+        action: 'update',
+        before: SETTING_DEFAULTS,
+        after,
+      }),
     );
     expect((await call('PATCH', 'teacher', { lateCancelHours: 24 })).statusCode).toBe(403);
   });
@@ -90,16 +118,18 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     expect((await call('PATCH', 'admin', body)).statusCode).toBe(200);
     expect(settings.write).toHaveBeenCalledWith(
       { renewal_alert_remaining: 3, payout_count_late: true, reporting_currency: 'EGP' },
-      USERS['admin']?.id,
+      USERS.admin?.id,
     );
     expect((await call('PATCH', 'admin', { reportingCurrency: 'sar' })).statusCode).toBe(400);
     expect((await call('PATCH', 'admin', { reportTeacherEditHours: 169 })).statusCode).toBe(400);
   });
 
   it('PATCH validates the new keys from the registry (E.164, min/max)', async () => {
-    expect((await call('PATCH', 'admin', { academyWhatsappE164: '0566101447' })).statusCode).toBe(400);
+    expect((await call('PATCH', 'admin', { academyWhatsappE164: '0566101447' })).statusCode).toBe(
+      400,
+    );
     expect((await call('PATCH', 'admin', { joinOpensBeforeMin: 181 })).statusCode).toBe(400);
     expect((await call('PATCH', 'admin', { joinOpensBeforeMin: 30 })).statusCode).toBe(200);
-    expect(settings.write).toHaveBeenCalledWith({ join_opens_before_min: 30 }, USERS['admin']?.id);
+    expect(settings.write).toHaveBeenCalledWith({ join_opens_before_min: 30 }, USERS.admin?.id);
   });
 });

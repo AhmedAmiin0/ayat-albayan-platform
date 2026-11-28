@@ -26,7 +26,11 @@ export interface SortSpec<K extends string> {
   key?: string;
 }
 
-type OrderOptions = { ascending?: boolean; nullsFirst?: boolean; referencedTable?: string };
+interface OrderOptions {
+  ascending?: boolean;
+  nullsFirst?: boolean;
+  referencedTable?: string;
+}
 
 /** The one builder method we need: supabase-js query builders fit, and so does a test fake. */
 export interface Orderable<T> {

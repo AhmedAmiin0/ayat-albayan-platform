@@ -15,7 +15,10 @@ export type SessionRow = EarningRow & {
 };
 export type PaymentRow = Tables<'teacher_payments'> & { items: { earning_id: string }[] };
 export type MoneyRow = Pick<EarningRow, 'id' | 'amount' | 'paid_amount'>;
-export type RecordResult = { payment_id: string; replayed: boolean };
+export interface RecordResult {
+  payment_id: string;
+  replayed: boolean;
+}
 export type SessionFilter = EarningsListQuery;
 
 // Reads (balance, sessions, allocation) go through the view of migration 183: only sessions of
@@ -31,7 +34,9 @@ export class EarningsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async teacher(id: string): Promise<{ id: string; display_name_ar: string } | null> {
-    const data = maybe(await this.db.from('teachers').select('id, display_name_ar').eq('id', id).maybeSingle());
+    const data = maybe(
+      await this.db.from('teachers').select('id, display_name_ar').eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
@@ -57,7 +62,11 @@ export class EarningsRepo {
   async forPayment(teacherId: string, ids: readonly string[] | undefined): Promise<EarningRow[]> {
     let q = this.db.from(COUNTABLE).select('*').eq('teacher_id', teacherId);
     q = ids ? q.in('id', [...ids]) : q.in('status', [...STATUSES.unpaid]);
-    const { data, error } = await q.order('starts_at').order('id').limit(CHUNK).returns<EarningRow[]>();
+    const { data, error } = await q
+      .order('starts_at')
+      .order('id')
+      .limit(CHUNK)
+      .returns<EarningRow[]>();
     if (error) throw pgError(error);
     return data;
   }
@@ -67,16 +76,20 @@ export class EarningsRepo {
   }
 
   async payment(id: string): Promise<PaymentRow | null> {
-    const data = maybe(await this.db.from('teacher_payments').select(PAYMENT).eq('id', id).maybeSingle());
+    const data = maybe(
+      await this.db.from('teacher_payments').select(PAYMENT).eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
   async byRequest(clientRequestId: string): Promise<PaymentRow | null> {
-    const data = maybe(await this.db
-      .from('teacher_payments')
-      .select(PAYMENT)
-      .eq('client_request_id', clientRequestId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('teacher_payments')
+        .select(PAYMENT)
+        .eq('client_request_id', clientRequestId)
+        .maybeSingle(),
+    );
     return data;
   }
 

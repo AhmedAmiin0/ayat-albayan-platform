@@ -6,7 +6,10 @@ import { StripeClients } from '@/modules/finance/stripe/gate/stripe-clients';
 import { StripeEventsRepo } from './stripe-events.repo';
 import { WebhookHandlers } from './webhook-handlers';
 
-type WebhookPost = { rawBody: Buffer | undefined; signature: string | undefined };
+interface WebhookPost {
+  rawBody: Buffer | undefined;
+  signature: string | undefined;
+}
 
 /**
  * POST /webhooks/stripe (docs/30): the ONLY place a link is fulfilled. The signature is checked
@@ -58,7 +61,12 @@ export class StripeWebhookService {
   private async liveRefused(event: Stripe.Event): Promise<never> {
     const text = `${event.type} ${event.id}`;
     const title = ar.paymentLinks.bell.refusedTitle;
-    await this.handlers.alerts.admins({ subject: `stripe_mode_mismatch:${event.id}`, title, text, link: null });
+    await this.handlers.alerts.admins({
+      subject: `stripe_mode_mismatch:${event.id}`,
+      title,
+      text,
+      link: null,
+    });
     this.log.warn(`stripe live ${event.type} ${event.id}: FEATURE_STRIPE is not live, 503`);
     const code = 'stripe_live_not_enabled';
     throw new HttpException({ code, message: code }, HttpStatus.SERVICE_UNAVAILABLE);

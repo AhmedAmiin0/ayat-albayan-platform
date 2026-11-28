@@ -1,19 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { LeadConversion } from '@/modules/finance/subscriptions/student-lifecycle/lead-conversion';
-import { activatesStudent, StudentActivation } from '@/modules/finance/subscriptions/student-lifecycle/student-activation';
+import {
+  activatesStudent,
+  StudentActivation,
+} from '@/modules/finance/subscriptions/student-lifecycle/student-activation';
 import type { DeletedPayment } from '@/modules/finance/subscriptions/student-lifecycle/student-deactivation';
 import { FollowUpEnv } from './follow-up.env';
 
-type Write = {
+interface Write {
   entity: string;
   entityId?: string;
   action: string;
   before?: unknown;
   after?: unknown;
-};
+}
 
 const isDeletedPayment = (row: unknown): row is DeletedPayment =>
-  typeof row === 'object' && row !== null && 'id' in row && typeof row.id === 'string' && activatesStudent(row);
+  typeof row === 'object' &&
+  row !== null &&
+  'id' in row &&
+  typeof row.id === 'string' &&
+  activatesStudent(row);
 
 /** New package converts the lead (R-LEAD-01); a payment activates; idempotent on retry. */
 @Injectable()

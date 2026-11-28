@@ -7,7 +7,11 @@ import { monthWindow, planPayout, type PayoutAction } from './payouts.plan';
 import { PayoutsRepo, type PayoutRow } from './payouts.repo';
 import { PayoutsSettings } from './payouts.settings';
 
-type Ctx = { teacherId: string; month: string; actorId: string };
+interface Ctx {
+  teacherId: string;
+  month: string;
+  actorId: string;
+}
 
 /** Y2 (R-PAY-02, R-TCH-04, E3): paid lessons in the teacher's tz month; idempotent drafts. */
 @Injectable()

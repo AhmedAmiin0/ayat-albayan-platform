@@ -5,14 +5,14 @@ import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
 import { configEntriesApp, USERS, type Token } from './config-entries.test-util';
 import { configRow } from '@/common/configuration/config-store/config-store.fakes';
 
-type Entry = {
+interface Entry {
   key: string;
   version: number;
   stored: boolean;
   value: unknown;
   updatedAt: string | null;
   updatedByName: string | null;
-};
+}
 
 describe('GET /config/entries, PUT …/description, GET /admin/config/parity', () => {
   let h: Awaited<ReturnType<typeof configEntriesApp>>;
@@ -35,7 +35,13 @@ describe('GET /config/entries, PUT …/description, GET /admin/config/parity', (
   beforeEach(() => {
     h.audit.record.mockClear();
     h.store.describe.mockClear();
-    const snap = { rev: 1, rows: [configRow('upload_max_mb', 4, { version: 7 }), configRow('fx_fresh_hours', null, { updatedBy: null })] };
+    const snap = {
+      rev: 1,
+      rows: [
+        configRow('upload_max_mb', 4, { version: 7 }),
+        configRow('fx_fresh_hours', null, { updatedBy: null }),
+      ],
+    };
     h.store.snapshot.mockResolvedValue(snap);
     h.store.fresh.mockResolvedValue(snap);
     h.store.names.mockResolvedValue(new Map([['admin-1', 'منى']]));
@@ -44,13 +50,28 @@ describe('GET /config/entries, PUT …/description, GET /admin/config/parity', (
   it('every seed key for a base admin; a missing row is version 0 with the default; a teacher is 403', async () => {
     const { entries } = await list();
     expect(entries.map((e) => e.key)).toEqual(SEED_ENTRIES.map((e) => e.key));
-    expect(entries.find((e) => e.key === 'upload_max_mb')).toMatchObject({ value: 4, version: 7, stored: true, updatedByName: 'منى' });
-    expect(entries.find((e) => e.key === 'booking_horizon_weeks')).toMatchObject({ value: 5, version: 0, stored: false, updatedAt: null });
+    expect(entries.find((e) => e.key === 'upload_max_mb')).toMatchObject({
+      value: 4,
+      version: 7,
+      stored: true,
+      updatedByName: 'منى',
+    });
+    expect(entries.find((e) => e.key === 'booking_horizon_weeks')).toMatchObject({
+      value: 5,
+      version: 0,
+      stored: false,
+      updatedAt: null,
+    });
     expect((await list('teacher')).status).toBe(403);
   });
 
   it('a seeded row nobody wrote (JSON null, no writer) shows no «changed by»', async () => {
-    expect((await list()).entries.find((e) => e.key === 'fx_fresh_hours')).toMatchObject({ stored: false, updatedAt: null, updatedByName: null, version: 1 });
+    expect((await list()).entries.find((e) => e.key === 'fx_fresh_hours')).toMatchObject({
+      stored: false,
+      updatedAt: null,
+      updatedByName: null,
+      version: 1,
+    });
   });
 
   it('the Google rows are listed to base admins only', async () => {
@@ -63,10 +84,19 @@ describe('GET /config/entries, PUT …/description, GET /admin/config/parity', (
     const res = await describeKey('upload_max_mb', 'حد حجم الملف');
     expect(res.statusCode).toBe(200);
     expect(res.json().entry.key).toBe('upload_max_mb');
-    expect(h.store.describe).toHaveBeenCalledWith({ key: 'upload_max_mb', text: 'حد حجم الملف', actorId: USERS['admin']?.id });
-    expect(h.audit.record).toHaveBeenCalledWith(expect.objectContaining({
-      entity: 'settings', entityId: SINGLETON_ENTITY_ID, action: 'describe:upload_max_mb', after: { description: 'حد حجم الملف' },
-    }));
+    expect(h.store.describe).toHaveBeenCalledWith({
+      key: 'upload_max_mb',
+      text: 'حد حجم الملف',
+      actorId: USERS.admin?.id,
+    });
+    expect(h.audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        entity: 'settings',
+        entityId: SINGLETON_ENTITY_ID,
+        action: 'describe:upload_max_mb',
+        after: { description: 'حد حجم الملف' },
+      }),
+    );
   });
 
   it('null restores the seeded text; an empty or too long text is 400; unknown key 404', async () => {
@@ -92,6 +122,8 @@ describe('GET /config/entries, PUT …/description, GET /admin/config/parity', (
   it('parity: base admin only; empty on agreeing rows', async () => {
     const res = await h.call({ method: 'GET', url: '/admin/config/parity' });
     expect(res.json()).toEqual({ diffs: [], checkedKeys: SETTING_KEYS.length });
-    expect((await h.call({ method: 'GET', url: '/admin/config/parity', token: 'editor' })).statusCode).toBe(403);
+    expect(
+      (await h.call({ method: 'GET', url: '/admin/config/parity', token: 'editor' })).statusCode,
+    ).toBe(403);
   });
 });
