@@ -192,11 +192,6 @@
       "count": 1
     }
   },
-  "src/common/configuration/custom-config/custom-config.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/common/configuration/custom-config/custom-config.service.test.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -226,9 +221,6 @@
   },
   "src/common/configuration/integrations/integration-config.controller.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
       "count": 1
     }
   },
