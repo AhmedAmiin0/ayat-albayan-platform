@@ -1,4 +1,4 @@
-import { threadForwardRoutes as routes } from '@ab/shared';
+import { threadForwardRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { ThreadForwardCalls } from './thread-forward-api.types';
 
@@ -6,6 +6,6 @@ import type { ThreadForwardCalls } from './thread-forward-api.types';
 export function threadForwardCalls(client: ApiClient): ThreadForwardCalls {
   const call = callWith(client);
   return {
-    forward: (body) => call({ route: routes.forward, body }),
+    forward: (body) => call({ route: threadForwardRoutes.forward, body }),
   };
 }

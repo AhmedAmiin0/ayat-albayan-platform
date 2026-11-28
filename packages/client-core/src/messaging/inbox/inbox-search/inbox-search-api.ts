@@ -1,4 +1,4 @@
-import { inboxSearchRoutes as routes } from '@ab/shared';
+import { inboxSearchRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { InboxSearchCalls } from './inbox-search-api.types';
 
@@ -6,7 +6,7 @@ import type { InboxSearchCalls } from './inbox-search-api.types';
 export function inboxSearchCalls(client: ApiClient): InboxSearchCalls {
   const call = callWith(client);
   return {
-    messages: (query) => call({ route: routes.messages, query }),
-    chat: (params, query) => call({ route: routes.chat, params, query }),
+    messages: (query) => call({ route: inboxSearchRoutes.messages, query }),
+    chat: (params, query) => call({ route: inboxSearchRoutes.chat, params, query }),
   };
 }
