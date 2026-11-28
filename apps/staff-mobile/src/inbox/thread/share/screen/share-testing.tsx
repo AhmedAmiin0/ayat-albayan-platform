@@ -1,6 +1,6 @@
 import type { ThreadView } from '@ab/shared';
 import { type TreeBase, TreeBaseProvider } from '@/core/nav/tree-base';
-import { thread } from '@/inbox/shared/thread-fixtures';
+import { thread, uid } from '@/inbox/shared/thread-fixtures';
 import { type ThreadMode, ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { renderWithQuery } from '@/test/query';
 import { ShareScreen } from './ShareScreen';
@@ -10,14 +10,15 @@ import { ShareScreen } from './ShareScreen';
 export const FAMILY = '+201000000001';
 const OTHER = '+201000000002';
 const OWN = '+201000000009';
+const TEACHER_ID = uid('t1');
 
 const chats: ThreadView[] = [
   { ...thread, phone_e164: FAMILY, display_name: 'Umm Sara', lead_id: null },
   { ...thread, phone_e164: OTHER, display_name: 'Abu Khalid', lead_id: null },
-  { ...thread, phone_e164: OWN, display_name: 'Teacher Noor', teacher_id: 't-1', lead_id: null },
+  { ...thread, phone_e164: OWN, display_name: 'Teacher Noor', teacher_id: TEACHER_ID, lead_id: null },
 ];
 
-export const TEACHER: ThreadMode = { kind: 'teacher', teacherId: 't-1' };
+export const TEACHER: ThreadMode = { kind: 'teacher', teacherId: TEACHER_ID };
 
 /** GET /threads answers the three chats; anything else nothing. */
 export const answerThreads = (path: string): unknown =>
