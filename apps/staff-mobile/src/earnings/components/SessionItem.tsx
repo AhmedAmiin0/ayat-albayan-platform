@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react';
 import { earningStatusStyle, type TeacherEarningView } from '@ab/money';
-import { Pressable, View } from 'react-native';
-import { t, shape, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
+import { View } from 'react-native';
+import { t, type, useTheme, AppText, Checkbox, StatusChip } from '@ab/mobile-kit';
 import { egp, sessionDetail, sessionWhen } from '@/earnings/lib/format';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
@@ -11,31 +11,6 @@ interface SessionItemProps {
   checked?: boolean;
   /** Stable (useCallback): the row hands itself back. */
   onToggle?: (row: TeacherEarningView) => void;
-}
-
-function Tick({ checked, disabled }: { checked: boolean; disabled: boolean }) {
-  const { color } = useTheme();
-  return (
-    <View
-      style={{
-        width: 24,
-        height: 24,
-        borderRadius: shape.radius.sm,
-        borderWidth: 2,
-        borderColor: checked ? color.lapis : color.ruleInput,
-        backgroundColor: checked ? color.lapis : 'transparent',
-        opacity: disabled ? 0.4 : 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      {checked ? (
-        <AppText style={{ color: color.onLapis, fontSize: type.size.sm, lineHeight: 18 }}>
-          ✓
-        </AppText>
-      ) : null}
-    </View>
-  );
 }
 
 /** One session: when, length and students, what it earned and still owes, its status. */
@@ -50,8 +25,7 @@ export const SessionItem = memo(function SessionItem({
   const payable = row.outstanding > 0;
   const toggle = useCallback(() => onToggle?.(row), [onToggle, row]);
   const body = (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 12 }}>
-      {onToggle ? <Tick checked={checked} disabled={!payable} /> : null}
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 }}>
       <View style={{ flex: 1, gap: 2 }}>
         <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink, fontVariant: ['tabular-nums'] }}>
           {sessionWhen(row.starts_at, cycle, tz)}
@@ -68,16 +42,16 @@ export const SessionItem = memo(function SessionItem({
       </View>
     </View>
   );
-  if (!onToggle) return body;
+  if (!onToggle) return <View style={{ paddingHorizontal: 16 }}>{body}</View>;
   return (
-    <Pressable
-      accessibilityRole="checkbox"
-      accessibilityLabel={t.earnings.selectRow.replace('{date}', sessionWhen(row.starts_at, cycle, tz))}
-      accessibilityState={{ checked, disabled: !payable }}
+    <Checkbox
+      label={t.earnings.selectRow.replace('{date}', sessionWhen(row.starts_at, cycle, tz))}
+      checked={checked}
       disabled={!payable}
-      onPress={toggle}
+      onChange={toggle}
+      inset
     >
       {body}
-    </Pressable>
+    </Checkbox>
   );
 });

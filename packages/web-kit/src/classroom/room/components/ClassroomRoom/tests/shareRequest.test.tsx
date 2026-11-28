@@ -4,11 +4,19 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { openRoom } from '@ab/web-kit/classroom/board/board-fixture';
 import { fakeClient, tile, type FakeClient } from '@ab/web-kit/classroom/room/livekit/fake-client';
-import { decodeShare, encodeShare, SHARE_TOPIC, type ShareMessage } from '@ab/web-kit/classroom/share/share-messages';
+import {
+  decodeShare,
+  encodeShare,
+  SHARE_TOPIC,
+  type ShareMessage,
+} from '@ab/web-kit/classroom/share/share-messages';
 import type * as ApiModule from '@ab/web-kit/lib/http/api/api';
 
-const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<typeof ApiModule>()), apiSend }));
+const call = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<typeof ApiModule>()),
+  call,
+}));
 
 const S = t.classroom.shareRequest;
 const guestRoom = () =>
@@ -27,14 +35,14 @@ const deliver = (
 ) => act(() => c.receive({ bytes: encodeShare(msg), topic: SHARE_TOPIC, from }));
 
 describe('«اطلب مشاركة الشاشة»', () => {
-  afterEach(() => apiSend.mockClear());
+  afterEach(() => call.mockClear());
 
   it('a guest asks instead of a share button that would fail; «سماح» arrives as the permission', async () => {
     const c = openRoom('guest', guestRoom());
     expect(screen.queryByRole('button', { name: t.classroom.shareOn })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: S.request }));
     expect(sent(c)).toEqual([{ msg: { t: 'request', what: 'screen' }, to: undefined }]);
-    expect((screen.getByRole<HTMLButtonElement>('button', { name: S.pending })).disabled).toBe(true);
+    expect(screen.getByRole<HTMLButtonElement>('button', { name: S.pending }).disabled).toBe(true);
     act(() => c.push({ shareAllowed: true }));
     expect(await screen.findByText(S.allowed)).toBeTruthy();
     expect(screen.getByRole('button', { name: t.classroom.shareOn })).toBeTruthy();
@@ -51,32 +59,58 @@ describe('«اطلب مشاركة الشاشة»', () => {
   });
 
   it('the teacher sees the request once, «سماح» calls the API, «إيقاف مشاركة» takes it back', async () => {
-    const tiles = [tile({ key: 'me', isLocal: true, role: 'teacher' }), tile({ key: 'guest-1', name: 'سهيلة', role: 'guest' })];
+    const tiles = [
+      tile({ key: 'me', isLocal: true, role: 'teacher' }),
+      tile({ key: 'guest-1', name: 'سهيلة', role: 'guest' }),
+    ];
     const c = openRoom('teacher', fakeClient({ tiles }));
     deliver(c, { t: 'request', what: 'screen' }, { identity: 'guest-1', role: 'guest' });
     deliver(c, { t: 'request', what: 'screen' }, { identity: 'guest-1', role: 'guest' });
     expect(screen.getAllByText(S.asks.replace('{name}', 'سهيلة'))).toHaveLength(1);
     fireEvent.click(screen.getByRole('button', { name: S.allow }));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/L1/room/participants/guest-1/share', { allow: true });
-    act(() => c.push({ tiles: [tiles[0] ?? tile({ key: 'x' }), tile({ key: 'guest-1', name: 'سهيلة', role: 'guest', shareAllowed: true })] }));
+    expect(call).toHaveBeenCalledWith({
+      method: 'POST',
+      path: '/lessons/L1/room/participants/guest-1/share',
+      body: { allow: true },
+    });
+    act(() =>
+      c.push({
+        tiles: [
+          tiles[0] ?? tile({ key: 'x' }),
+          tile({ key: 'guest-1', name: 'سهيلة', role: 'guest', shareAllowed: true }),
+        ],
+      }),
+    );
     fireEvent.click(await screen.findByRole('button', { name: S.stop.replace('{name}', 'سهيلة') }));
-    expect(apiSend).toHaveBeenLastCalledWith('POST', '/lessons/L1/room/participants/guest-1/share', { allow: false });
+    expect(call).toHaveBeenLastCalledWith({
+      method: 'POST',
+      path: '/lessons/L1/room/participants/guest-1/share',
+      body: { allow: false },
+    });
   });
 
   it('«رفض» sends share-denied naming the guest and clears the prompt', async () => {
-    const tiles = [tile({ key: 'me', isLocal: true, role: 'admin' }), tile({ key: 'guest-1', name: 'سهيلة', role: 'guest' })];
+    const tiles = [
+      tile({ key: 'me', isLocal: true, role: 'admin' }),
+      tile({ key: 'guest-1', name: 'سهيلة', role: 'guest' }),
+    ];
     const c = openRoom('admin', fakeClient({ tiles }));
     deliver(c, { t: 'request', what: 'screen' }, { identity: 'guest-1', role: 'guest' });
     fireEvent.click(screen.getByRole('button', { name: S.deny }));
-    expect(sent(c).at(-1)).toEqual({ msg: { t: 'deny', who: 'guest-1', what: 'screen' }, to: undefined });
+    expect(sent(c).at(-1)).toEqual({
+      msg: { t: 'deny', who: 'guest-1', what: 'screen' },
+      to: undefined,
+    });
     await waitFor(() => expect(screen.queryByText(S.asks.replace('{name}', 'سهيلة'))).toBeNull());
-    expect(apiSend).not.toHaveBeenCalled();
+    expect(call).not.toHaveBeenCalled();
   });
 });
 
 describe('share buttons on phones (no getDisplayMedia)', () => {
   const real = navigator.mediaDevices;
-  afterEach(() => Object.defineProperty(navigator, 'mediaDevices', { configurable: true, value: real }));
+  afterEach(() =>
+    Object.defineProperty(navigator, 'mediaDevices', { configurable: true, value: real }),
+  );
 
   it('neither «شارك الشاشة» nor «اطلب مشاركة الشاشة» is offered', () => {
     Object.defineProperty(navigator, 'mediaDevices', { configurable: true, value: {} });

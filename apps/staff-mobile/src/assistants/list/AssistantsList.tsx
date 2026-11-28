@@ -1,6 +1,5 @@
 import { FlatList, type ListRenderItemInfo } from 'react-native';
-import { t } from '@ab/mobile-kit';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
+import { t, useInsetRows } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useAssistants } from '@/assistants/api/api';
 import { AssistantItem } from './AssistantItem';

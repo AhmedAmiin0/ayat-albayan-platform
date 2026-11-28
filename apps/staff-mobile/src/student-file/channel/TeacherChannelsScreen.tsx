@@ -2,8 +2,15 @@ import type { TeacherChannelRow } from '@ab/shared';
 import type { ReactElement } from 'react';
 import { router } from 'expo-router';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
-import { t, EmptyState, Screen, ScreenHeader, useTabBarInset, BackButton } from '@ab/mobile-kit';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
+import {
+  BackButton,
+  EmptyState,
+  Screen,
+  ScreenHeader,
+  t,
+  useInsetRows,
+  useTabBarInset,
+} from '@ab/mobile-kit';
 import { useTeacherChannels } from './channel-queries';
 import { ListWaiting } from './list/ListWaiting';
 import { TeacherChannelItem } from './list/TeacherChannelItem';

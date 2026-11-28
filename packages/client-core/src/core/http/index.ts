@@ -18,7 +18,7 @@ export {
   type SendMethod,
   type SendOptions,
 } from './api-client';
-export { callWith, type CallInput, type CallableRoute } from './call';
+export { callWith, routeUrl, type CallInput, type CallableRoute } from './call';
 export { CLIENT_HEADER } from './client-header';
 export { markSending, noAnswer, type StallStage, withDeadline } from './deadline';
 export { isNoAnswer } from './no-answer';

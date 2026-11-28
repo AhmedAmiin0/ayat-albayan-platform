@@ -1,16 +1,16 @@
 import { router } from 'expo-router';
 import { ActivityIndicator, View } from 'react-native';
 import {
-  t,
-  useTheme,
   BackButton,
   EmptyState,
+  ErrorLine,
   ErrorState,
+  LazyList,
   Screen,
   ScreenHeader,
-  ErrorLine,
+  t,
+  useTheme,
 } from '@ab/mobile-kit';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { AverageCard } from './AverageCard';
 import { FeedbackRow } from './FeedbackRow';
 import { useFeedbackList, useFeedbackSummary } from './queries';

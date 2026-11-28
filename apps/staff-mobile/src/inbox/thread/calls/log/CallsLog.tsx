@@ -3,9 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { type ReactNode, useCallback } from 'react';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
-import { t, EmptyState, ErrorState, ScreenHeader, useTabBarInset } from '@ab/mobile-kit';
+import {
+  EmptyState,
+  ErrorState,
+  ScreenHeader,
+  t,
+  useInsetRows,
+  useTabBarInset,
+} from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { threadLink, useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { callListQuery } from '@/inbox/thread/calls/api/calls-api';
 import { CallsLogRow } from './CallsLogRow';

@@ -3,19 +3,19 @@ import { jobApplicantStatusStyle } from '@ab/money';
 import { useState } from 'react';
 
 import {
-  t,
   EmptyState,
   ErrorState,
-  FilterPills,
   type FilterPill,
+  FilterPills,
+  LazyList,
   Screen,
   ScreenHeader,
+  t,
 } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { ApplicantRow } from '@/more/applicants/ApplicantRow';
 import { applicantParams, applicantSortChoices, type ApplicantStatusFilter } from '@/more/applicants/applicant-params';
 import type { JobApplicant } from '@/core/lib/staff/types';
-import { LazyList } from '@/core/ui/lists/LazyList';
 
 const statusPills = (): FilterPill<ApplicantStatusFilter>[] => [
   { value: 'all', label: t.leads.filterAll },

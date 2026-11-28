@@ -1,35 +1,37 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { REPORT_TIMEOUT_MS, reportSession } from './session-activity';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch }));
+const call = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ call }));
 
 describe('reportSession («سجل النشاط»)', () => {
   beforeEach(() => {
-    apiFetch.mockReset();
+    call.mockReset();
   });
   afterEach(() => {
     vi.useRealTimers();
   });
 
   it('posts the event with no body (no email, no password)', async () => {
-    apiFetch.mockResolvedValue(undefined);
+    call.mockResolvedValue(undefined);
     await reportSession('login-failed');
-    expect(apiFetch).toHaveBeenCalledWith('/activity/session/login-failed', expect.objectContaining({ method: 'POST' }));
-    expect(apiFetch.mock.calls[0]?.[1]).not.toHaveProperty('body');
+    expect(call).toHaveBeenCalledWith(
+      expect.objectContaining({ path: '/activity/session/login-failed', method: 'POST' }),
+    );
+    expect(call.mock.calls[0]?.[0]).not.toHaveProperty('body');
   });
 
   it('never throws when the API is down or refuses', async () => {
-    apiFetch.mockImplementation(() => Promise.reject(new Error('429')));
+    call.mockImplementation(() => Promise.reject(new Error('429')));
     await reportSession('logout');
-    expect(apiFetch).toHaveBeenCalledTimes(1);
+    expect(call).toHaveBeenCalledTimes(1);
   });
 
   it('gives up after the timeout and aborts a request that never answers', async () => {
     vi.useFakeTimers();
     let signal: AbortSignal | undefined;
-    apiFetch.mockImplementation((_path: string, init: RequestInit) => {
-      signal = init.signal ?? undefined;
+    call.mockImplementation((request: { signal?: AbortSignal }) => {
+      signal = request.signal;
       return new Promise(() => undefined);
     });
     let done = false;
