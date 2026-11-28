@@ -56,7 +56,8 @@ export function useQuoteSheet(phone: string) {
   const discount = parseDiscount(selection.discount);
   const asked = askedRounding(discount, rounding);
   const quote = useQuote(selection, { rounding: asked, enabled: mode === 'one' });
-  const list = usePriceList({ country, students, discount, rounding: asked }, mode === 'all');
+  const listChoice = { country, students, discount, rounding: asked };
+  const list = usePriceList(listChoice, mode === 'all');
   const custom = useQuoteCustom(quote.data);
   const one = quote.data ? offerText(quote.data, ar.pricing, custom.total) : null;
   const all = list.data ? priceListText(list.data, ar.pricing) : null;
@@ -74,6 +75,7 @@ export function useQuoteSheet(phone: string) {
     roundable: roundingShows({ discount, mode, customOn: custom.price.on }),
     custom: custom.price,
     offer: offers[mode],
+    listChoice,
   };
 }
 

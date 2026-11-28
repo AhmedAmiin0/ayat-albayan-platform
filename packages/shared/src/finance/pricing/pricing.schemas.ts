@@ -9,6 +9,7 @@ import {
   STUDENTS_MAX,
   STUDENTS_MIN,
 } from '@ab/money';
+import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 
 // Query strings of GET /pricing/* (docs/08 §3): everything arrives as text, hence the coercion.
@@ -55,3 +56,21 @@ export type QuoteQueryInput = z.input<typeof quoteQuerySchema>;
 export const priceListQuerySchema = z.object({ country, ...priced });
 export type PriceListQueryParams = z.output<typeof priceListQuerySchema>;
 export type PriceListQueryInput = z.input<typeof priceListQuerySchema>;
+
+/**
+ * POST /pricing/list-pdf: the list's choice plus the chat file's request id, so the PDF is stored
+ * where a chat file of that request goes and the chat's own file send can queue it.
+ */
+export const priceListPdfBodySchema = priceListQuerySchema.extend({ clientRequestId });
+export type PriceListPdfBody = z.output<typeof priceListPdfBodySchema>;
+export type PriceListPdfBodyInput = z.input<typeof priceListPdfBodySchema>;
+
+export const priceListPdfResponseSchema = z.object({
+  /** The wa-media path the chat file send takes. */
+  path: z.string(),
+  /** A short-lived link to open the PDF before it is sent. */
+  url: z.url(),
+  /** The name the family sees in the chat. */
+  filename: z.string(),
+});
+export type PriceListPdfResponse = z.infer<typeof priceListPdfResponseSchema>;
