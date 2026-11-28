@@ -2,14 +2,13 @@ import type { CallView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { type ReactNode, useCallback } from 'react';
-import { FlatList, type ListRenderItemInfo, View } from 'react-native';
+import { View } from 'react-native';
 import {
   EmptyState,
   ErrorState,
   ScreenHeader,
   t,
-  useInsetRows,
-  useTabBarInset,
+  LazyList,
 } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { threadLink, useThreadMode } from '@/inbox/thread/hooks/thread-mode';
@@ -20,27 +19,23 @@ import { CallsLogRow } from './CallsLogRow';
 export function CallsLog({ switcher }: { switcher?: ReactNode }) {
   const mode = useThreadMode();
   const base = useTreeBase();
-  const inset = useTabBarInset();
   const calls = useQuery(callListQuery({ enabled: true, phone: null }));
   const data = calls.data ?? [];
   const row = useCallback(
-    ({ item }: ListRenderItemInfo<CallView>) => (
+    ({ item }: { item: CallView }) => (
       <CallsLogRow call={item} showsPhone={mode.kind !== 'teacher'} onOpen={() => router.push(inTree(base, threadLink(item.phone_e164, mode)))} />
     ),
     [mode, base],
   );
-  const cells = useInsetRows(row, data.length);
   return (
     <View style={{ flex: 1, gap: 8 }}>
       <ScreenHeader title={t.calls.log.title} size="h2" connecting />
       {switcher}
-      <FlatList
+      <LazyList
         testID="calls-log"
-        style={{ flex: 1 }}
-        contentContainerStyle={{ paddingBottom: 24 + inset }}
         data={data}
         keyExtractor={(c) => c.id}
-        {...cells}
+        renderItem={row}
         refreshing={calls.isRefetching}
         onRefresh={() => void calls.refetch()}
         ListEmptyComponent={
