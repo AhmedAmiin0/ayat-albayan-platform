@@ -1,13 +1,6 @@
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RoomButton } from '@ab/web-kit/classroom/room/components/RoomButton';
-
-interface Props {
-  unread: number;
-  /** The panel shows the chat now. */
-  on: boolean;
-  round: boolean;
-  onClick: () => void;
-}
+import type { Props } from './ChatButton.types';
 
 /** The badge pops in again on each count change; the count is part of the button's name. */
 export function ChatButton({ unread, on, round, onClick }: Props) {
