@@ -33,6 +33,6 @@ export async function claimDevice(
   if (error) throw pgError(error);
   if (data === 'no_session') throw new UnauthorizedException('no_session');
   if (data === 'in_use') throw new ConflictException(DEVICE_IN_USE);
-  if (data !== 'bound' && data !== 'proven') throw new Error(`claim_push_device: ${String(data)}`);
+  if (data !== 'bound' && data !== 'proven') throw new Error(`claim_push_device: ${data}`);
   return data === 'proven' && claim.deviceKey ? claim.deviceKey : fresh;
 }

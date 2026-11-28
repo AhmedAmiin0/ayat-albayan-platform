@@ -1,4 +1,4 @@
-import { type PublicPaymentLink } from '@ab/shared';
+import type { PublicPaymentLink } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
 import { loadEnv } from '@/config/env/env';
 import { stripeKeyIsLive } from '@/config/env/env.stripe';

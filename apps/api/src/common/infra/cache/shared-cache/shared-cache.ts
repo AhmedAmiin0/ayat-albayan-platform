@@ -143,7 +143,7 @@ export class SharedCache implements OnModuleInit, OnModuleDestroy {
       try {
         handler();
       } catch (e) {
-        log.warn(`cache invalidation of ${String(parsed.topic)} failed here: ${e instanceof Error ? e.message : String(e)}`);
+        log.warn(`cache invalidation of ${parsed.topic} failed here: ${e instanceof Error ? e.message : String(e)}`);
       }
     }
   }
