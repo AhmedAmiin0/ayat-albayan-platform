@@ -33,8 +33,8 @@ export interface ThreadPaneProps {
 }
 
 /**
- * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the log, the reply box and beside it (below it under
- * 1280px) the lead's panel or the family's packages; sales gets its chat actions and children line in the
+ * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the log, the reply box and beside it (a sheet from the
+ * header while the thread is under 48rem) the lead's panel or the family's packages; sales gets its chat actions and children line in the
  * header instead. Teacher mode: the log and the reply box only; their own chat with the academy is
  * read-only. Below 900px: a full-screen chat; the panel is a full-screen sheet opened from the header. The
  * sales actions' dialogs sit above that switch (SalesChatFrame), so crossing 900px keeps them.
@@ -88,14 +88,20 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
     </>
   );
   const sheetLabel = isLead ? t.inbox.leadSheet : t.inbox.subscriptionSheet;
-  const sheetOpen = sheet && panel && phoneView;
-  const toast = notice && <Toast {...notice} onDismiss={() => setNotice(null)} />; // inside an open phone sheet
+  const sheetOpen = sheet && panel;
+  const toast = notice && <Toast {...notice} onDismiss={() => setNotice(null)} />; // inside an open sheet
+  const opener = panel && (
+    <ThreadSideSheet compact label={sheetLabel} open={sheet} onOpenChange={setSheet}>
+      {side}
+      {sheetOpen && toast}
+    </ThreadSideSheet>
+  );
   // Until /teachers/me answers, a teacher's number counts as their own (no composer).
   const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
   const line = mode === 'sales' && people && <SalesFamilyLine phone={phone} people={people} lessons={first?.lessons ?? []} />;
   const readOnly = ownThread ? t.inbox.ownThreadReadOnly : access.send ? null : t.inbox.sendNotAllowed;
   const headerProps = { thread: th, listSearch, headingId, badge: admin && people ? threadBadge(people) : null, line, lists: first?.lists, callable: !readOnly };
-  const log = (fill: 'shell' | 'beside' | 'phone') => (
+  const log = (fill: 'shell' | 'phone') => (
     <>
       {(detail.isError || chat.problem) && (
         <p role="status" className="shrink-0 px-3 py-1 text-xs text-danger shell:px-0">
@@ -125,12 +131,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
           {...headerProps}
           action={
             <>
-              {panel && (
-                <ThreadSideSheet compact label={sheetLabel} open={sheet} onOpenChange={setSheet}>
-                  {side}
-                  {sheetOpen && toast}
-                </ThreadSideSheet>
-              )}
+              {opener}
               {actions}
             </>
           }
@@ -140,7 +141,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
         {!sheetOpen && toast}
       </PhoneChat>
     ) : (
-      <ThreadPaneWide labelledBy={headingId} header={<ThreadHeader {...headerProps} action={actions} />} log={log(aside ? 'beside' : 'shell')} reply={reply} aside={aside} side={side} toast={toast} />
+      <ThreadPaneWide labelledBy={headingId} header={<ThreadHeader {...headerProps} action={<>{opener && <span className="@3xl/thread:hidden">{opener}</span>}{actions}</>} />} log={log('shell')} reply={reply} aside={aside} side={side} toast={!sheetOpen && toast} />
     );
   const frame = <SalesChatFrame key={phone} thread={th} lists={first?.lists} compact={phoneView}>{body}</SalesChatFrame>;
   return <ChatActionsProvider thread={th} enabled={!readOnly && !teacherMode}>{frame}</ChatActionsProvider>;

@@ -29,10 +29,14 @@ describe('ThreadPaneWide (docs/65 UX-5)', () => {
     expect(cls).not.toMatch(/(^|\s)xl:/);
   });
 
-  it('below that width the panel folds under the chat, which keeps the full thread width', () => {
-    const cls = gridOf(pane(true))?.className ?? '';
+  it('below that width the panel leaves the pane (it opens as a sheet) and the log is the one scroller', () => {
+    const root = pane(true);
+    const cls = gridOf(root)?.className ?? '';
     expect(cls).not.toMatch(/(^|\s)grid-cols-/);
-    expect(cls).toContain('shell:overflow-y-auto');
+    expect(cls).not.toContain('overflow-y-auto');
+    expect(cls).toContain('shell:grid-rows-[minmax(0,1fr)]');
+    const cell = root.querySelector('[data-thread-side]')?.className.split(' ') ?? [];
+    expect(cell).toEqual(expect.arrayContaining(['hidden', '@3xl/thread:flex']));
   });
 
   it('the panel scrolls inside its cell only while it sits beside the chat', () => {
@@ -45,5 +49,6 @@ describe('ThreadPaneWide (docs/65 UX-5)', () => {
     const cls = gridOf(pane(false))?.className ?? '';
     expect(cls).toContain('shell:grid-rows-[minmax(0,1fr)]');
     expect(cls).not.toContain('@3xl/thread:');
+    expect(pane(false).querySelector('[data-thread-side]')).toBeNull();
   });
 });
