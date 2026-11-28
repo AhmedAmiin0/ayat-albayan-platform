@@ -1,0 +1,95 @@
+import { posix } from 'node:path';
+import type { Project } from 'ts-morph';
+import { resolveSpec, type Resolver } from '../../../../move-module/resolve.ts';
+import { featureOf } from '../../tree/names/feature-of.ts';
+import type { Allowed } from '../../tree/tree.types.ts';
+import type { Layer } from '../../map/index.ts';
+import type { Binding, ModuleRef } from '../apply.types.ts';
+import { kindOf, moduleRefs } from '../barrels/imports.ts';
+
+export interface DeepCtx {
+  project: Project;
+  r: Resolver;
+  layer: Layer;
+  allowed: Allowed;
+  /** The old module regex: a deep import inside one old module was legal and must stay legal. */
+  old: string;
+  oldOf: (file: string) => string;
+  /** `file→target` imports that went through a barrel before the moves. */
+  forced: Set<string>;
+  /** Features with no index yet: every import into them goes through a new one. */
+  open: Set<string>;
+}
+
+export interface DeepImport {
+  start: number;
+  end: number;
+  kind: 'import' | 'export';
+  spec: string;
+  bindings: Binding[];
+  named: boolean;
+  star: boolean;
+  target: string;
+  feature: string;
+}
+
+const INDEX = /\/index\.tsx?$/;
+const within = (file: string, dir: string): boolean => file.startsWith(`${dir}/`);
+
+function oldModule(ctx: DeepCtx, file: string): string | undefined {
+  const rel = posix.relative(ctx.layer.workspace, ctx.oldOf(file));
+  return new RegExp(`^(${ctx.old})/`).exec(`${rel}/`)?.[1];
+}
+
+const isRoute = (ctx: DeepCtx, file: string): boolean =>
+  ctx.layer.routes.some((r) => file === r || within(file, r));
+/** A package's entry re-exports its features through their indexes. */
+const isEntry = (ctx: DeepCtx, file: string): boolean =>
+  !ctx.layer.alias && INDEX.test(file) && posix.dirname(file) === ctx.layer.root;
+
+/** Was legal (inside one old module, or the target sat in no module), crosses a feature now. */
+function wasLegal(ctx: DeepCtx, file: string, target: string): boolean {
+  const to = oldModule(ctx, target);
+  return to === undefined || to === oldModule(ctx, file);
+}
+
+/** Route files, a package entry, imports that went through a pruned barrel, and legal ones. */
+function mustFix(ctx: DeepCtx, file: string, target: string): boolean {
+  const special = isRoute(ctx, file) || isEntry(ctx, file);
+  return special || ctx.forced.has(`${file}→${target}`) || wasLegal(ctx, file, target);
+}
+
+const use = (ref: ModuleRef, at: { target: string; feature: string }): DeepImport => ({
+  start: ref.decl.getStart(),
+  end: ref.decl.getEnd(),
+  kind: kindOf(ref.decl),
+  spec: ref.spec,
+  bindings: ref.bindings,
+  named: ref.named,
+  star: ref.star,
+  ...at,
+});
+
+const targetOf = (ctx: DeepCtx, file: string, spec: string): string =>
+  resolveSpec(ctx.r, file, spec)?.file ?? '';
+const isIndexOf = (target: string, feature: string): boolean =>
+  INDEX.test(target) && posix.dirname(target) === feature;
+
+function deepUse(ctx: DeepCtx, file: string, ref: ModuleRef): DeepImport[] {
+  const target = targetOf(ctx, file, ref.spec);
+  const feature = featureOf(target, ctx);
+  if (feature === undefined || within(file, feature)) return [];
+  const fix = ctx.open.has(feature) || mustFix(ctx, file, target);
+  const fine = isIndexOf(target, feature) || !fix;
+  return fine ? [] : [use(ref, { target, feature })];
+}
+
+/** Imports of `file` that reach inside another feature and have to go through its index. */
+export function deepImports(ctx: DeepCtx, file: string, text: string): DeepImport[] {
+  const sf = ctx.project.createSourceFile(`/virtual/deep/${file}`, text, { overwrite: true });
+  const out = moduleRefs(sf).flatMap((ref) => deepUse(ctx, file, ref));
+  ctx.project.removeSourceFile(sf);
+  return out;
+}
+
+export const bindingKey = (b: Binding): string => `${b.isType ? 'type ' : ''}${b.name}`;

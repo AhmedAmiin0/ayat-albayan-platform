@@ -15,6 +15,6 @@
     "imports/**/*.ts",
     "automerge/**/*.ts",
     "units/**/*.ts",
-    "structure/**/*.ts"
+    "ci-checks/lint/structure/**/*.ts"
   ]
 }
