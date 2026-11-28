@@ -1,52 +1,14 @@
-import { useEffect, useState } from 'react';
-import { Animated, Easing, View } from 'react-native';
+import { Animated, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 import { useTheme } from '../../../theme';
+import { TICK_LENGTH, useBadgePop } from '../use-badge-pop';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const SIZE = 20;
-/**
- * The design's dash travel (24 → 0), mapped onto the tick's real length so it draws over the full
- * 360 ms.
- */
-const TRAVEL = 24;
-const TICK_LENGTH = 11.4;
-const POP_MS = 320;
-const DRAW_MS = 360;
-const DRAW_DELAY_MS = 120;
 
-/** The pop runs on the native driver, the SVG dash cannot; Reduce Motion shows it finished. */
 export function CheckBadge({ still }: { still: boolean }) {
   const { color } = useTheme();
-  const [scale] = useState(() => new Animated.Value(still ? 1 : 0.6));
-  const [dash] = useState(() => new Animated.Value(still ? 0 : TRAVEL));
-  useEffect(() => {
-    if (still) {
-      scale.setValue(1);
-      dash.setValue(0);
-      return undefined;
-    }
-    const pop = (toValue: number, duration: number) =>
-      Animated.timing(scale, {
-        toValue,
-        duration,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      });
-    const draw = Animated.timing(dash, {
-      toValue: 0,
-      duration: DRAW_MS,
-      delay: DRAW_DELAY_MS,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: false,
-    });
-    const run = Animated.parallel([
-      Animated.sequence([pop(1.12, POP_MS * 0.6), pop(1, POP_MS * 0.4)]),
-      draw,
-    ]);
-    run.start();
-    return () => run.stop();
-  }, [still, scale, dash]);
+  const { scale, offset } = useBadgePop(still);
   return (
     <View
       testID="check-badge"
@@ -66,10 +28,7 @@ export function CheckBadge({ still }: { still: boolean }) {
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeDasharray={TICK_LENGTH}
-            strokeDashoffset={dash.interpolate({
-              inputRange: [0, TRAVEL],
-              outputRange: [0, TICK_LENGTH],
-            })}
+            strokeDashoffset={offset}
           />
         </Svg>
       </Animated.View>
