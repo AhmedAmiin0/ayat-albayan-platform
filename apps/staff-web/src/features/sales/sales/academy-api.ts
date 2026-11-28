@@ -1,4 +1,3 @@
-import type { SalesStudentView } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { salesAcademyDayCalls, salesAcademyListCalls } from '@ab/client-core';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -12,13 +11,6 @@ const LIVE_REFRESH_MS = 60_000;
 const academyDay = salesAcademyDayCalls({ apiFetch, apiSend });
 const academyLists = salesAcademyListCalls({ apiFetch, apiSend });
 
-export interface Paged<T> {
-  items: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
-
 /** GET /sales/teachers — every active teacher with the students they teach. */
 export const salesTeachersQuery = queryOptions({
   queryKey: salesKeys.teachers(),
@@ -29,14 +21,12 @@ export const salesTeachersQuery = queryOptions({
 export const salesAllStudentsQuery = (q: { page: number; search: string }) =>
   queryOptions({
     queryKey: salesKeys.allStudents(q),
-    queryFn: () => {
-      const params = new URLSearchParams({
-        page: String(q.page),
-        pageSize: String(ALL_STUDENTS_PAGE_SIZE),
-      });
-      if (q.search) params.set('search', q.search);
-      return apiFetch<Paged<SalesStudentView>>(`/sales/students/all?${params}`);
-    },
+    queryFn: () =>
+      academyLists.students({
+        page: q.page,
+        pageSize: ALL_STUDENTS_PAGE_SIZE,
+        search: q.search || undefined,
+      }),
     placeholderData: keepPreviousData,
   });
 

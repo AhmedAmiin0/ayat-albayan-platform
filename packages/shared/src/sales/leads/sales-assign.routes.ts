@@ -1,5 +1,7 @@
-import { defineRoute } from '@ab/core';
+import { defineRoute, id } from '@ab/core';
 import { z } from 'zod';
+import { leadAssignSchema } from '../views';
+import { leadRowSchema } from './leads.schemas';
 import { salesAssignedCountSchema, salesPersonViewSchema } from './sales-assign.schemas';
 
 const ACCESS = { permissions: ['leads.assign'], tags: ['sales'] } as const;
@@ -18,5 +20,14 @@ export const salesAssignRoutes = {
     method: 'POST',
     path: '/leads/assign-unassigned',
     response: salesAssignedCountSchema,
+  }),
+  /** A salesperson, or null to take the lead back; 400 not_a_salesperson, 404 lead_not_found. */
+  assign: defineRoute({
+    ...ACCESS,
+    method: 'POST',
+    path: '/leads/:id/assign',
+    params: z.object({ id: id() }),
+    body: leadAssignSchema,
+    response: leadRowSchema,
   }),
 };

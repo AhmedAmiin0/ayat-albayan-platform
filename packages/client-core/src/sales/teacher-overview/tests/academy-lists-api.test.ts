@@ -49,4 +49,23 @@ describe('sales academy list calls', () => {
     expect(failure).toBeInstanceOf(ApiError);
     expect(failure).toMatchObject({ body: { code: 'bad_response' } });
   });
+
+  it('reads one page of every student with the page, size and search of today', async () => {
+    const page = { items: [], total: 0, page: 2, pageSize: 25 };
+    const { client, apiFetch } = clientAnswering(page);
+    const query = { page: 2, pageSize: 25, search: 'AB' };
+    await expect(salesAcademyListCalls(client).students(query)).resolves.toEqual(page);
+    expect(apiFetch).toHaveBeenCalledWith('/sales/students/all?page=2&pageSize=25&search=AB');
+  });
+
+  it('throws bad_response for a student row with an unknown status', async () => {
+    const row = { id: 's1', code: 'AB-0101', name: 'ي', status: 'lost', program: 'quran' };
+    const extra = { teacher_name: null, guardian_name: '', guardian_phone: null };
+    const page = { items: [{ ...row, ...extra }], total: 1, page: 1, pageSize: 25 };
+    const { client } = clientAnswering(page);
+    const failure = await salesAcademyListCalls(client)
+      .students({ page: 1, pageSize: 25 })
+      .catch((e: unknown) => e);
+    expect(failure).toMatchObject({ body: { code: 'bad_response' } });
+  });
 });

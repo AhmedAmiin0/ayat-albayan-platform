@@ -2,7 +2,7 @@ import type { TeacherMe } from '@ab/schedule';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit';
 import { MyWeek } from '@/features/teaching/teacher/lessons/MyWeek/MyWeek';
 
@@ -25,7 +25,7 @@ const ME: TeacherMe = {
   students: [],
 };
 // Sunday 4 Oct, 17:00 Riyadh.
-const SUNDAY = lesson({ id: 'a', starts_at: '2026-10-04T14:00:00.000Z' });
+const SUNDAY = answered(lesson({ id: 'a', starts_at: '2026-10-04T14:00:00.000Z' }));
 const lessonCalls = () => apiFetch.mock.calls.map(([p]) => String(p)).filter((p) => p.startsWith('/teachers/me/lessons'));
 
 describe('«جدولي» — my week (R-TCH-03, R-SCH-08)', () => {

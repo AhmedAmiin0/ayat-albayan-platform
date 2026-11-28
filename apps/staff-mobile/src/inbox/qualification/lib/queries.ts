@@ -1,4 +1,11 @@
-import type { FollowUpNote, LeadView } from '@ab/shared';
+import type {
+  FollowUpNote,
+  LeadFollowUp,
+  LeadQualificationPatch,
+  LeadRowView,
+  LeadView,
+} from '@ab/shared';
+import { leadWriteCalls } from '@ab/client-core';
 import type { Page } from '@ab/core';
 import type { AcademySettings } from '@ab/settings';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -49,15 +56,24 @@ interface LeadPatchInput<B> {
   body: B;
 }
 
+const leadWrites = leadWriteCalls({ apiFetch, apiSend });
+
+/** L1: only the changed fields; the API merges them and a null clears one. */
+export const saveQualification = ({ id, body }: LeadPatchInput<LeadQualificationPatch>) =>
+  leadWrites.qualification({ id, patch: body });
+
+/** L2: the admin's pause of this lead's follow-ups. */
+export const savePause = ({ id, body }: LeadPatchInput<LeadFollowUp>) =>
+  leadWrites.followUp({ id, paused: body.paused });
+
 /**
- * PATCH /leads/:id/qualification (L1) or /follow-up (L2). Both answer the whole row: it replaces
- * the lead in every cached list and detail, so the inbox and this screen agree without a refetch.
+ * L1 or L2. Both answer the whole row: it replaces the lead in every cached list and detail, so
+ * the inbox and this screen agree without a refetch.
  */
-export function useLeadPatch<B>(route: 'qualification' | 'follow-up') {
+export function useLeadPatch<B>(send: (input: LeadPatchInput<B>) => Promise<LeadRowView>) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, body }: LeadPatchInput<B>) =>
-      apiSend<LeadProfile>('PATCH', `/leads/${id}/${route}`, body),
+    mutationFn: send,
     onSuccess: (row) => {
       client.setQueriesData({ queryKey: pathKey('/leads') }, (old: unknown) =>
         patchCached(old, { ...row }),

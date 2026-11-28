@@ -1,15 +1,12 @@
 import {
   salesAcademyDayRoutes,
   salesAcademyListRoutes as lists,
-  salesStudentsQuerySchema,
-  type SalesStudentView,
+  salesAcademyStudentRoutes,
 } from '@ab/shared';
-import type { Page } from '@ab/core';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
 import { asResponse } from '@/common/http/returns';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { withMine } from '@/modules/sales/sales/schedule/sales-schedule.mapper';
@@ -50,10 +47,13 @@ export class SalesAcademyController {
     return asResponse(salesAcademyDayRoutes.day.response, { ...day, lessons });
   }
 
-  @Get('sales/students/all')
-  @Permissions('self.sales_academy')
-  students(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<SalesStudentView>> {
-    return this.academy.students(parseOrThrow(salesStudentsQuerySchema, query), user);
+  @Route(salesAcademyStudentRoutes.students)
+  async students(
+    @RouteInput() { query }: RouteInputOf<typeof salesAcademyStudentRoutes.students>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const page = await this.academy.students(query, user);
+    return asResponse(salesAcademyStudentRoutes.students.response, page);
   }
 
   @Route(salesAcademyDayRoutes.live)

@@ -7,9 +7,9 @@ import {
   type ThreadTemplate,
   type ThreadText,
 } from '@ab/shared';
-import type { LeadStatus } from '@ab/catalog';
 import {
   chatFileCalls,
+  leadWriteCalls,
   lessonRatingCalls,
   liveInterval,
   messageStatusCalls,
@@ -29,6 +29,7 @@ import { inboxLeadKeys, threadKeys } from '@/features/messaging/inbox/api/keys';
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
 const chatFiles = chatFileCalls({ apiFetch, apiSend });
+const leadWrites = leadWriteCalls({ apiFetch, apiSend });
 const ratings = lessonRatingCalls({ apiFetch, apiSend });
 const messageStatus = messageStatusCalls({ apiFetch, apiSend });
 const sends = threadSendCalls({ apiFetch, apiSend });
@@ -117,11 +118,8 @@ export const leadByPhoneQuery = (phone: string) =>
     },
   });
 
-export const patchQualification = (input: { id: string; patch: Partial<LeadQualification> }) =>
-  apiSend<InboxLead>('PATCH', `/leads/${input.id}/qualification`, input.patch);
+export const patchQualification = leadWrites.qualification;
 
-export const setFollowUpPaused = (input: { id: string; paused: boolean }) =>
-  apiSend<InboxLead>('PATCH', `/leads/${input.id}/follow-up`, { paused: input.paused });
+export const setFollowUpPaused = leadWrites.followUp;
 
-export const changeLeadStatus = (input: { id: string; status: LeadStatus }) =>
-  apiSend<InboxLead>('PATCH', `/leads/${input.id}/status`, { status: input.status });
+export const changeLeadStatus = leadWrites.changeStatus;

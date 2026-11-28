@@ -8,5 +8,7 @@ export function salesAssignCalls(client: ApiClient): SalesAssignCalls {
   return {
     people: () => call({ route: salesAssignRoutes.people }),
     assignUnassigned: () => call({ route: salesAssignRoutes.assignUnassigned }),
+    assign: ({ leadId, profileId }) =>
+      call({ route: salesAssignRoutes.assign, params: { id: leadId }, body: { profileId } }),
   };
 }

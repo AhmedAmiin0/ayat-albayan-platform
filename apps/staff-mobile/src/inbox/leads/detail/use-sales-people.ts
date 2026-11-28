@@ -18,3 +18,6 @@ export function useSalesPeople(enabled: boolean) {
 
 /** POST /leads/assign-unassigned (admin): every ownerless lead to the then least loaded. */
 export const assignAllUnassigned = () => salesAssign.assignUnassigned();
+
+/** POST /leads/:id/assign (admin): a salesperson, or null to take the lead back. */
+export const assignLead = salesAssign.assign;

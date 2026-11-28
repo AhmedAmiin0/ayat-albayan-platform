@@ -243,7 +243,7 @@
   },
   "src/notifications/catalogue/catalogue-views.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 2
     }
   },
   "src/notifications/catalogue/catalogue.types.ts": {
@@ -274,7 +274,7 @@
   },
   "src/notifications/rules.types.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 6
     },
     "typescript/no-deprecated": {
       "count": 1

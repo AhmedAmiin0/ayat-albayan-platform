@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { leadSortFromValue, leadSortValue, parseLeadSort } from './lead-sort';
+import { leadSortFromValue, leadSortValue, parseLeadSort } from '../lead-sort';
 
 describe('lead list order (R-NFR-08)', () => {
   it('select value ↔ sort, unknown keys → the default order', () => {

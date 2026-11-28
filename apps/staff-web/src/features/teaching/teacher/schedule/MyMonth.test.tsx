@@ -3,7 +3,7 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t, publicConfigQuery } from '@ab/web-kit';
 import { MyMonth } from './MyMonth';
 
@@ -15,8 +15,8 @@ const ME: TeacherMe = {
   meeting_link: null, meeting_mode: null, platform_classroom: false, students: [],
 };
 // Saturday 14 November 2026, 09:00 UTC; lessons at midday on the 14th and the 20th.
-const TODAY = lesson({ id: 'l-1', starts_at: '2026-11-14T12:00:00.000Z' });
-const LATER = lesson({ id: 'l-2', starts_at: '2026-11-20T12:00:00.000Z', students: [{ ...SUHAILA, name: 'جود' }] });
+const TODAY = answered(lesson({ id: 'l-1', starts_at: '2026-11-14T12:00:00.000Z' }));
+const LATER = answered(lesson({ id: 'l-2', starts_at: '2026-11-20T12:00:00.000Z', students: [{ ...SUHAILA, name: 'جود' }] }));
 
 const ANSWERS: [string, unknown][] = [
   ['/teachers/me/lessons', [TODAY, LATER]],

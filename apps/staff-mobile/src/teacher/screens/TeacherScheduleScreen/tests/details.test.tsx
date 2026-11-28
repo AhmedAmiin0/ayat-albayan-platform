@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson, yusuf } from '@/today/testing/fixtures';
+import { answered } from '@/today/testing/answered';
 import { TeacherScheduleScreen } from '@/teacher/screens/TeacherScheduleScreen/TeacherScheduleScreen';
 
 const mockApiFetch = jest.fn();
@@ -12,7 +13,7 @@ jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('20
 
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 // What the API answers a teacher: no reschedule or admin cancel; the lesson started an hour ago.
-const mine = lesson({ id: 'l1', status: 'confirmed', allowed_events: ['complete', 'mark_no_show'], students: [{ ...yusuf, report: null }] });
+const mine = answered(lesson({ id: 'l1', status: 'confirmed', allowed_events: ['complete', 'mark_no_show'], students: [{ ...yusuf, report: null }] }));
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -41,5 +42,5 @@ test('a tap opens my lesson: no confirm, cancel, move or time edit; «ادخل �
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(2);
   expect(screen.getByText(t.lessons.sheet.report.none)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.reports.open }));
-  expect(router.push).toHaveBeenCalledWith('/teacher/reports/l1', { withAnchor: true });
+  expect(router.push).toHaveBeenCalledWith(`/teacher/reports/${mine.id}`, { withAnchor: true });
 });

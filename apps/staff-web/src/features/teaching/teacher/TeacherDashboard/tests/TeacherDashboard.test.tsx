@@ -27,8 +27,8 @@ const ME: TeacherMe = {
   students: [{ id: 's-1', code: 'AB-0183', name: 'سهيلة', tz: 'Asia/Riyadh', status: 'active' }],
 };
 // Saturday 3 Oct, 12:00 Cairo. Today: 16:00 Cairo; later this week: Monday.
-const TODAY = lesson({ id: 'a', starts_at: '2026-10-03T13:00:00.000Z', students: [{ ...SUHAILA, tz: 'Asia/Riyadh' }], meeting_link: null });
-const MONDAY = lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z', status: 'confirmed' });
+const TODAY = answered(lesson({ id: 'a', starts_at: '2026-10-03T13:00:00.000Z', students: [{ ...SUHAILA, tz: 'Asia/Riyadh' }], meeting_link: null }));
+const MONDAY = answered(lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z', status: 'confirmed' }));
 
 const BOARD_CALL = '/teachers/me/lessons?from=2026-09-18T21%3A00%3A00.000Z&to=2026-10-16T21%3A00%3A00.000Z';
 
@@ -93,12 +93,12 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
   });
 
   it('«سأحضر» on the hero posts her own confirm and says so', async () => {
-    apiSend.mockResolvedValue(answered(TODAY));
+    apiSend.mockResolvedValue(TODAY);
     renderDash();
     const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
     fireEvent.click(within(hero).getByRole('button', { name: t.teacherBoard.confirm }));
     await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.teacherBoard.confirmedOk));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/a/confirm-attendance', undefined);
+    expect(apiSend).toHaveBeenCalledWith('POST', `/teachers/me/lessons/${TODAY.id}/confirm-attendance`, undefined);
   });
 
   it('today only (owner 2026-11-14): no tabs, no students board, no pending reports, no week', async () => {

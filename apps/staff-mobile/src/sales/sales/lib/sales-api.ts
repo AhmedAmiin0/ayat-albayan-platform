@@ -2,13 +2,15 @@ import type { SalesScheduleDay, SalesSubscriptionKind } from '@ab/shared';
 import { riyadhToday } from '@ab/time';
 import { salesAcademyDayCalls, salesAcademyListCalls, salesPortalCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, listKey, pathKey } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
+import { usePagedPages } from '@/core/lib/query/use-paged-pages';
 
 // The salesperson's pages (docs/16, web parity with apps/staff-web/src/features/sales): read-only, no money.
 
 /** The running lessons are re-read every minute: one ends, another starts (same as the web). */
 const LIVE_REFRESH_MS = 60_000;
+const ALL_STUDENTS_PAGE_SIZE = 25;
 
 const salesPortal = salesPortalCalls({ apiFetch, apiSend });
 const academyDay = salesAcademyDayCalls({ apiFetch, apiSend });
@@ -27,6 +29,18 @@ export const useSubscriptionHistory = (id: string) =>
     queryKey: pathKey(`/sales/subscriptions/${id}/history`),
     queryFn: () => academyLists.history(id),
     enabled: id !== '',
+  });
+
+/** GET /sales/students/all — every student, a page more as the list scrolls. */
+export const useAllStudents = (search: string) =>
+  usePagedPages({
+    queryKey: listKey('/sales/students/all', { search }),
+    loadPage: (page) =>
+      academyLists.students({
+        page,
+        pageSize: ALL_STUDENTS_PAGE_SIZE,
+        search: search || undefined,
+      }),
   });
 
 /** GET /sales/teachers — every active teacher with the students they teach. */

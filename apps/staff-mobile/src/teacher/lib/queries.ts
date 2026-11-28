@@ -1,8 +1,8 @@
 import { payoutListSchema } from '@ab/money';
-import type { LessonView, TeacherMe } from '@ab/schedule';
-import { reportHistoryCalls, TEACHER_REFRESH_MS } from '@ab/client-core';
+import type { TeacherMe } from '@ab/schedule';
+import { reportHistoryCalls, TEACHER_REFRESH_MS, teacherLessonCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
+import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import type { AvailabilityRow } from '@ab/shared';
 
 // The signed-in teacher's own reads (R-TCH-03, R-TCH-04). Every route is scoped by the session on
@@ -10,6 +10,7 @@ import type { AvailabilityRow } from '@ab/shared';
 
 const ME = '/teachers/me';
 const history = reportHistoryCalls({ apiFetch, apiSend });
+const lessons = teacherLessonCalls({ apiFetch, apiSend });
 
 /** GET /teachers/me: name, tz, link, students. 404 `teacher_not_linked` without a teachers row. */
 export function useTeacherMe(enabled = true) {
@@ -27,7 +28,7 @@ const pollWhen = (live: boolean) => (live ? TEACHER_REFRESH_MS : false);
 export function useMyLessons(window: { from: string; to: string }, live = false) {
   return useQuery({
     queryKey: [...pathKey('/lessons'), 'mine', window],
-    queryFn: () => apiFetch<LessonView[]>(`${ME}/lessons${toQueryString(window)}`),
+    queryFn: () => lessons.lessons(window),
     refetchInterval: pollWhen(live),
   });
 }
