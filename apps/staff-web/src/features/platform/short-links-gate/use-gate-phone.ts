@@ -6,7 +6,7 @@ import type { ShortLinkOpenResult } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { codeOf, emptyCode, type PhoneEntry, usePhoneEntry, useNow } from '@ab/web-kit';
-import { gateSends } from './gate-api';
+import { gateCalls } from './gate-api';
 
 /** What the phone or the code step says went wrong (the shortLinks.gate.errors keys). */
 export type GateError = GatePhoneError | GateCodeError;
@@ -55,7 +55,7 @@ export function useGatePhone({ code, onStep, onResult }: Options): GatePhone {
   const [digits, setDigits] = useState(emptyCode);
   const [error, setError] = useState<GateError | null>(null);
   const start = useMutation({
-    mutationFn: gateSends.otpStart,
+    mutationFn: gateCalls.otpStart,
     onMutate: () => setError(null),
     onSuccess: (_, call) => {
       setSent({ phone: call.phone, at: Date.now() });
@@ -65,7 +65,7 @@ export function useGatePhone({ code, onStep, onResult }: Options): GatePhone {
     onError: (e) => setError(phoneStepError(e)),
   });
   const check = useMutation({
-    mutationFn: gateSends.otpVerify,
+    mutationFn: gateCalls.otpVerify,
     onMutate: () => setError(null),
     onSuccess: onResult,
     onError: (e) => setError(codeStepError(e)),

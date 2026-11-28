@@ -1,9 +1,9 @@
 export {
-  GATE_NOT_FOUND, PEOPLE_SEARCH_MIN, SHORT_LINK_GATE_KEY, SHORT_LINKS_KEY, shortLinkQueries,
-  shortLinkSends,
+  GATE_NOT_FOUND, PEOPLE_SEARCH_MIN, SHORT_LINK_GATE_KEY, SHORT_LINKS_KEY, shortLinkGateCalls,
+  shortLinkQueries, shortLinkSends,
   type GatePhoneCall, type GateVerifyCall, type GateViewResult, type PeopleQuery,
-  type ShortLinkListFilter, type ShortLinkQueries, type ShortLinkQuery, type ShortLinkSends,
-  type ShortLinkUpdateCall,
+  type ShortLinkGateCalls, type ShortLinkListFilter, type ShortLinkQueries, type ShortLinkQuery,
+  type ShortLinkSends, type ShortLinkUpdateCall,
 } from './api';
 export {
   GATE_SCREENS, gateScreen, goneScreen, isDeadEnd, openTarget, outcomeScreen,
