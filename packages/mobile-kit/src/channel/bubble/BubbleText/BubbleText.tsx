@@ -1,9 +1,8 @@
 import { splitLinks } from '@ab/shared';
 import { type, useTheme } from '../../../theme';
-import { AppText } from '../../../ui/primitives/AppText';
 import { ContentText } from '../../../ui/primitives/ContentText';
 import type { BubbleTextProps } from './BubbleText.types';
-import { open } from './bubble-text.helpers';
+import { BubblePart } from './BubblePart';
 
 /**
  * A message's words (the ChatX boards: 15pt Noto, 24 line, ink), aligned by their own language,
@@ -21,20 +20,9 @@ export function BubbleText({ body }: BubbleTextProps) {
         color: color.ink,
       }}
     >
-      {splitLinks(body).map((part, i) =>
-        part.href ? (
-          <AppText
-            key={i}
-            accessibilityRole="link"
-            onPress={() => open(part.href ?? '')}
-            style={{ color: color.lapis, textDecorationLine: 'underline' }}
-          >
-            {part.text}
-          </AppText>
-        ) : (
-          part.text
-        ),
-      )}
+      {splitLinks(body).map((part, i) => (
+        <BubblePart key={i} part={part} />
+      ))}
     </ContentText>
   );
 }
