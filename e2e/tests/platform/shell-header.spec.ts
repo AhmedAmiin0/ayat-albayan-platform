@@ -81,8 +81,7 @@ test('12-hour clocks despite a saved 24-hour choice; the theme switch works', as
   await page.addInitScript(`localStorage.setItem(${JSON.stringify(CLOCK_STORAGE_KEY)}, '24')`);
   await page.setViewportSize({ width: 1440, height: 800 });
   await page.goto('/admin/students');
-  const head = page.locator('[data-running-head]');
-  await expect(head.getByText(ar.runningHead.riyadh)).toHaveText(/\d{1,2}:\d{2} [صم]/);
+  await expect(page.getByText(ar.runningHead.riyadh)).toHaveText(/\d{1,2}:\d{2} [صم]/);
   const row = page.locator('[data-head-end]');
   const theme = row.getByRole('group', { name: ar.theme.label });
   await theme.getByRole('button', { name: ar.theme.dark }).click();
