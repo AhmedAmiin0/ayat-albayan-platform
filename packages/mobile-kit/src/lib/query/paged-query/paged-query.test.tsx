@@ -12,6 +12,7 @@ const query = (over: Partial<InfinitePages<Page>> = {}): InfinitePages<Page> => 
   isFetchingNextPage: false,
   isError: false,
   isPending: false,
+  isLoading: false,
   fetchNextPage: jest.fn(async () => undefined),
   refetch: jest.fn(async () => undefined),
   ...over,
@@ -42,20 +43,33 @@ test('no next page, or one already on its way: the end asks for nothing', async 
 });
 
 test('a pull refetches and spins until it ends', async () => {
-  const q = query();
+  let settle: () => void = () => undefined;
+  const refetch = jest.fn(() => new Promise<void>((resolve) => (settle = resolve)));
+  const q = query({ refetch });
   const { result } = await renderHook(() => usePagedQuery(q, rowsOf));
+  expect(result.current.pulling).toBe(false);
   await act(async () => result.current.refresh());
-  expect(q.refetch).toHaveBeenCalledTimes(1);
+  expect(refetch).toHaveBeenCalledTimes(1);
+  expect(result.current.pulling).toBe(true);
+  await act(async () => settle());
   expect(result.current.pulling).toBe(false);
 });
 
 test('failed only when there are no rows to keep; loading before the first page', async () => {
   const cold = query({ data: undefined, isError: true });
   const warm = query({ isError: true });
-  const first = query({ data: undefined, isPending: true });
+  const first = query({ data: undefined, isPending: true, isLoading: true });
   expect((await renderHook(() => usePagedQuery(cold, rowsOf))).result.current.failed).toBe(true);
   expect((await renderHook(() => usePagedQuery(warm, rowsOf))).result.current.failed).toBe(false);
   expect((await renderHook(() => usePagedQuery(first, rowsOf))).result.current).toEqual(
     expect.objectContaining({ items: [], loading: true, failed: false }),
+  );
+});
+
+test('a disabled read (pending, never fetching) is not loading, so the empty state shows', async () => {
+  const off = query({ data: undefined, hasNextPage: false, isPending: true, isLoading: false });
+  const { result } = await renderHook(() => usePagedQuery(off, rowsOf));
+  expect(result.current).toEqual(
+    expect.objectContaining({ items: [], loading: false, failed: false }),
   );
 });
