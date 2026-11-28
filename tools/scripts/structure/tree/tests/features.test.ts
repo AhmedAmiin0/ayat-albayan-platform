@@ -47,7 +47,10 @@ test('reports a feature without index.ts, a file at domain level and a file in a
 
 test('a package group may hold an index.ts that re-exports its features', () => {
   const pkg = { ...layer, alias: false };
-  const files = [`${R}/messaging/notifications/index.ts`, `${R}/messaging/notifications/bell/index.ts`];
+  const files = [
+    `${R}/messaging/notifications/index.ts`,
+    `${R}/messaging/notifications/bell/index.ts`,
+  ];
   assert.deepEqual(featureProblems(files, pkg, domains), []);
 });
 

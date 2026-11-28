@@ -55,14 +55,19 @@ function domainProblems(s: Scope, dir: string): string[] {
   ];
 }
 
-/** docs/68 rules 1, 2 and 4 for one layer: domains, groups and features by name, each with index.ts. */
+/** docs/68 rules 1, 2 and 4 for one layer: listed domains, groups and features with index.ts. */
 export function featureProblems(
   files: readonly string[],
   layer: Layer,
   domains: readonly Domain[],
 ): string[] {
   const inside = files.filter((f) => f.startsWith(`${layer.root}/`));
-  const s: Scope = { layer, allowed: allowedTree(domains), folders: foldersOf(inside), files: inside };
+  const s: Scope = {
+    layer,
+    allowed: allowedTree(domains),
+    folders: foldersOf(inside),
+    files: inside,
+  };
   const top = [...s.allowed.keys(), ...layer.extras];
   return childDirs(s.folders, layer.root).flatMap((dir) => {
     const name = posix.basename(dir);

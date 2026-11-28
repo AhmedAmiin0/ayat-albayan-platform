@@ -14,8 +14,12 @@ export interface Dropped {
   written: [string, string][];
 }
 
-/** Points every import of a dropped parent barrel at the files behind it, then deletes the barrel. */
-export function dropBarrels(root: string, drops: readonly string[], files: readonly string[]): Dropped {
+/** Points every import of a dropped barrel at the files behind it, then deletes the barrel. */
+export function dropBarrels(
+  root: string,
+  drops: readonly string[],
+  files: readonly string[],
+): Dropped {
   const out: Dropped = { problems: [], written: [] };
   if (drops.length === 0) return out;
   const project = newProject();

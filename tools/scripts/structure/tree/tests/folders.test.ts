@@ -8,7 +8,13 @@ const many = (dir: string, n: number, name = (i: number) => `f${i}.ts`) =>
   Array.from({ length: n }, (_, i) => `${dir}/${name(i)}`);
 
 test('counts code files without tests and sub-folders without __snapshots__', () => {
-  const files = ['r/a/x.ts', 'r/a/x.test.ts', 'r/a/b/y.tsx', 'r/a/__snapshots__/x.snap', 'r/a/c/d/z.md'];
+  const files = [
+    'r/a/x.ts',
+    'r/a/x.test.ts',
+    'r/a/b/y.tsx',
+    'r/a/__snapshots__/x.snap',
+    'r/a/c/d/z.md',
+  ];
   const counts = countUnder(files, 'r');
   assert.deepEqual(counts.get('r/a'), { files: 1, dirs: 2 });
   assert.deepEqual(counts.get('r/a/c'), { files: 0, dirs: 1 });

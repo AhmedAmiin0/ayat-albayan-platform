@@ -30,7 +30,11 @@ function pick(files: readonly string[], rules: readonly Rule[]): Picked {
   return out;
 }
 
-function ruleProblems(files: readonly string[], rules: readonly Rule[], used: Set<number>): string[] {
+function ruleProblems(
+  files: readonly string[],
+  rules: readonly Rule[],
+  used: Set<number>,
+): string[] {
   return rules
     .filter((r) => !used.has(r.index))
     .map((r) => {

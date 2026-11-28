@@ -43,7 +43,12 @@ export function updateBaselines(root: string, moves: Moves): void {
     const table = rekey(parseJson(readFileSync(file, 'utf8'), capSchema), moves);
     const kept = Object.entries(table).filter(([dir, ok]) => {
       const now = countOf(root, dir);
-      return now !== undefined && (now.files > MAX || now.dirs > MAX) && now.files <= ok.files && now.dirs <= ok.dirs;
+      return (
+        now !== undefined &&
+        (now.files > MAX || now.dirs > MAX) &&
+        now.files <= ok.files &&
+        now.dirs <= ok.dirs
+      );
     });
     save(file, Object.fromEntries(kept));
   }

@@ -5,13 +5,14 @@ import type { Allowed } from './tree.types.ts';
 export function allowedTree(domains: readonly Domain[]): Allowed {
   return new Map(
     domains.map((d) => {
-      const groups = new Map(d.groups.map((g) => [g, [] as string[]]));
-      const features: string[] = [];
-      for (const f of d.features) {
-        const [head, tail] = f.split('/');
-        if (tail === undefined) features.push(head);
-        else groups.get(head)?.push(tail);
-      }
+      const split = d.features.map((f) => ({
+        group: f.includes('/') ? f.split('/')[0] : '',
+        name: f.split('/').at(-1) ?? f,
+      }));
+      const groups = new Map(
+        d.groups.map((g) => [g, split.filter((s) => s.group === g).map((s) => s.name)]),
+      );
+      const features = split.filter((s) => s.group === '').map((s) => s.name);
       return [d.domain, { features, groups }];
     }),
   );

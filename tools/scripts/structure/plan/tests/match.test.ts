@@ -29,7 +29,10 @@ test('a glob brings its tests/ and __snapshots__ companions', () => {
 });
 
 test('a file move keeps its name in a folder target and renames into a file target', () => {
-  const [a, b] = rulesOf([move('apps/w/src/a/x.ts', 'apps/w/src/f/'), move('apps/w/src/a/y.ts', 'apps/w/src/f/z.ts')]);
+  const [a, b] = rulesOf([
+    move('apps/w/src/a/x.ts', 'apps/w/src/f/'),
+    move('apps/w/src/a/y.ts', 'apps/w/src/f/z.ts'),
+  ]);
   assert.equal(targetOf(a, 'apps/w/src/a/x.ts'), 'apps/w/src/f/x.ts');
   assert.equal(targetOf(b, 'apps/w/src/a/y.ts'), 'apps/w/src/f/z.ts');
 });

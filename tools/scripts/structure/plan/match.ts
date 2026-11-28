@@ -12,7 +12,8 @@ const dirRule = (m: Move, index: number): Rule => ({
   to: m.to,
   index,
   weight: 2 * depth(m.from.slice(0, -1)),
-  match: (file) => (file.startsWith(m.from) ? posix.join(m.to, file.slice(m.from.length)) : undefined),
+  match: (file) =>
+    file.startsWith(m.from) ? posix.join(m.to, file.slice(m.from.length)) : undefined,
 });
 
 const intoFolder = (to: string, file: string): string =>
@@ -47,13 +48,12 @@ function globRule(m: Move, index: number): Rule {
 const KINDS: [(from: string) => boolean, (m: Move, index: number) => Rule][] = [
   [(from) => from.endsWith('/'), dirRule],
   [(from) => from.includes('*'), globRule],
-  [() => true, fileRule],
 ];
 
 export function rulesOf(moves: readonly Move[]): Rule[] {
   return moves.map((m, i) => {
-    const kind = KINDS.find(([test]) => test(m.from)) ?? KINDS[2];
-    return kind[1](m, i);
+    const make = KINDS.find(([test]) => test(m.from))?.[1] ?? fileRule;
+    return make(m, i);
   });
 }
 

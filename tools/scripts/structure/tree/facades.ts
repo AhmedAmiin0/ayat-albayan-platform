@@ -1,10 +1,11 @@
 import { posix } from 'node:path';
 import type { Domain, Layer } from '../map/index.ts';
 import { allowedTree } from './allowed.ts';
-import { featureOf } from './feature-of.ts';
+import { featureOf, partsOf } from './feature-of.ts';
 import type { Allowed } from './tree.types.ts';
 
-const RE_EXPORT = /export\s+(?:type\s+)?(?:\*(?:\s+as\s+\w+)?|\{[^}]*\})\s+from\s+['"]([^'"]+)['"]/g;
+const RE_EXPORT =
+  /export\s+(?:type\s+)?(?:\*(?:\s+as\s+\w+)?|\{[^}]*\})\s+from\s+['"]([^'"]+)['"]/g;
 const isIndex = (file: string): boolean => /\/index\.tsx?$/.test(file);
 
 function resolve(spec: string, ctx: { file: string; layer: Layer }): string | undefined {
@@ -16,11 +17,14 @@ function resolve(spec: string, ctx: { file: string; layer: Layer }): string | un
 }
 
 /** A domain or group folder: its barrel may only gather what lies below it. */
+const isContainer = (parts: readonly string[], groups: ReadonlySet<string> | undefined): boolean =>
+  parts.length === 1 || (parts.length === 2 && groups?.has(parts[1] ?? '') === true);
+
 function containerOf(dir: string, ctx: { layer: Layer; allowed: Allowed }): string | undefined {
-  const parts = dir.startsWith(`${ctx.layer.root}/`) ? dir.slice(ctx.layer.root.length + 1).split('/') : [];
-  const d = ctx.allowed.get(parts[0] ?? '');
-  const isContainer = d !== undefined && (parts.length === 1 || (parts.length === 2 && d.groups.has(parts[1])));
-  return isContainer ? dir : undefined;
+  const parts = partsOf(dir, ctx.layer.root);
+  const domain = ctx.allowed.get(parts[0] ?? '');
+  const groups = domain === undefined ? undefined : new Set(domain.groups.keys());
+  return domain !== undefined && isContainer(parts, groups) ? dir : undefined;
 }
 
 /** Barrels in a feature that re-export what another feature holds (a facade, rule 23 / docs/68). */
@@ -34,7 +38,7 @@ export function facadeProblems(
     .flatMap((s) => {
       const home = featureOf(s.file, ctx) ?? containerOf(posix.dirname(s.file), ctx);
       if (home === undefined) return [];
-      return [...s.text.matchAll(RE_EXPORT)].flatMap(([, spec]) => {
+      return [...s.text.matchAll(RE_EXPORT)].flatMap(([, spec = '']) => {
         const to = resolve(spec, { file: s.file, layer: scope.layer });
         if (to === undefined || to === home || to.startsWith(`${home}/`)) return [];
         return [`facade: ${s.file} re-exports ${spec} from outside ${home}`];

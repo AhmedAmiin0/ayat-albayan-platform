@@ -15,3 +15,10 @@ export interface Moves {
   before: Set<string>;
   folders: Set<string>;
 }
+
+/** A path a file reads relative to itself: the source text and how to write a new path there. */
+export interface Read {
+  rel: string;
+  snippet: string;
+  put?: (rel: string) => string;
+}

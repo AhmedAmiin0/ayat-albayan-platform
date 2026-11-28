@@ -39,6 +39,8 @@
     "guard:comments": "node tools/scripts/ci-checks/comment-only/gate.mjs",
     "guard:comment-language": "node tools/scripts/ci-checks/comment-only/language/gate.mjs",
     "guard:units": "node tools/scripts/units/guard.ts",
+    "guard:structure": "node tools/scripts/structure/guard.ts",
+    "structure:move": "node tools/scripts/structure/move.ts",
     "guard:move-only": "node tools/scripts/units/move-only/gate.mjs",
     "guard:components": "node tools/scripts/ci-checks/lint/components/gate.mjs",
     "guard:mappers": "node tools/scripts/ci-checks/lint/mappers/gate.mjs",

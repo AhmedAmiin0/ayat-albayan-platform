@@ -17,56 +17,88 @@ interface Ctx {
   lines: Map<string, BarrelLine[]>;
 }
 
-const styleOf = (file: string): 'index' | 'bare' => (/\/index\.tsx?$/.test(file) ? 'index' : 'bare');
+const styleOf = (file: string): 'index' | 'bare' =>
+  /\/index\.tsx?$/.test(file) ? 'index' : 'bare';
 
-function splitRef(ctx: Ctx, file: string, ref: ModuleRef, names: Map<string, Source>): Redirect {
-  const missing = ref.bindings.filter((b) => !names.has(b.name)).map((b) => b.name);
+interface Split {
+  ref: ModuleRef;
+  names: Map<string, Source>;
+}
+
+const specFor = (ctx: Ctx, from: string, target: string): string =>
+  formatSpec(
+    { file: target, style: styleOf(target) },
+    { from, file: target, aliases: ctx.r.aliases },
+  );
+
+/** Each binding with the file and name behind it in the barrel. */
+function located(split: Split): { src: Source; binding: Binding }[] {
+  return split.ref.bindings.flatMap((b) => {
+    const src = split.names.get(b.name);
+    if (src === undefined) return [];
+    const alias = b.alias ?? (src.name === b.name ? undefined : b.name);
+    return [{ src, binding: { name: src.name, alias, isType: b.isType } }];
+  });
+}
+
+function splitRef(ctx: Ctx, file: string, split: Split): Redirect {
+  const { ref } = split;
+  const missing = ref.bindings.filter((b) => !split.names.has(b.name)).map((b) => b.name);
   if (missing.length > 0) {
-    return { text: ref.decl.getText(), problems: [`${file}: ${ref.spec} has no ${missing.join(', ')}`], written: [] };
+    const problems = [`${file}: ${ref.spec} has no ${missing.join(', ')}`];
+    return { text: ref.decl.getText(), problems, written: [] };
   }
   const byFile = new Map<string, Binding[]>();
-  for (const b of ref.bindings) {
-    const src = names.get(b.name) as Source;
-    const alias = b.alias ?? (src.name === b.name ? undefined : b.name);
-    byFile.set(src.file, [...(byFile.get(src.file) ?? []), { name: src.name, alias, isType: b.isType }]);
-  }
-  const lines = [...byFile].map(([target, bindings]) => {
-    const spec = formatSpec({ file: target, style: styleOf(target) }, { from: file, file: target, aliases: ctx.r.aliases });
-    return declText({ kind: kindOf(ref.decl), spec, bindings });
-  });
-  return { text: lines.join('\n'), problems: [], written: [...byFile.keys()].map((t) => [file, t]) };
+  located(split).forEach(({ src, binding }) =>
+    byFile.set(src.file, [...(byFile.get(src.file) ?? []), binding]),
+  );
+  const lines = [...byFile].map(([target, bindings]) =>
+    declText({ kind: kindOf(ref.decl), spec: specFor(ctx, file, target), bindings }),
+  );
+  return {
+    text: lines.join('\n'),
+    problems: [],
+    written: [...byFile.keys()].map((t) => [file, t]),
+  };
 }
 
 /** `export * from '<barrel>'` becomes the barrel's own re-exports, seen from `file`. */
 function expandStar(ctx: Ctx, file: string, barrel: string): Redirect {
   const lines = ctx.lines.get(barrel) ?? [];
-  const text = lines.map((l) => {
-    const spec = formatSpec({ file: l.target, style: styleOf(l.target) }, { from: file, file: l.target, aliases: ctx.r.aliases });
-    return lineText({ kind: 'export', spec, bindings: l.bindings, star: l.star });
-  });
+  const text = lines.map((l) =>
+    lineText({
+      kind: 'export',
+      spec: specFor(ctx, file, l.target),
+      bindings: l.bindings,
+      star: l.star,
+    }),
+  );
   return { text: text.join('\n'), problems: [], written: lines.map((l) => [file, l.target]) };
+}
+
+/** One import of a dropped barrel, rewritten; a default or namespace import is a problem. */
+function redirectRef(ctx: Ctx, file: string, ref: ModuleRef): Redirect | undefined {
+  const target = resolveSpec(ctx.r, file, ref.spec)?.file ?? '';
+  const names = ctx.barrels.get(target);
+  if (names === undefined) return undefined;
+  if (ref.star) return expandStar(ctx, file, target);
+  if (ref.named) return splitRef(ctx, file, { ref, names });
+  const problem = `${file}: default, namespace or * use of dropped barrel ${ref.spec}`;
+  return { text: ref.decl.getText(), problems: [problem], written: [] };
 }
 
 /** The file with every import of a dropped barrel pointed at the files that hold the names. */
 export function redirectFile(ctx: Ctx, file: string, text: string): Redirect {
   const sf = ctx.project.createSourceFile(`/virtual/redirect/${file}`, text, { overwrite: true });
-  const out: Redirect = { text, problems: [], written: [] };
-  const edits: { start: number; end: number; value: string }[] = [];
-  for (const ref of moduleRefs(sf)) {
-    const target = resolveSpec(ctx.r, file, ref.spec)?.file;
-    const names = target === undefined ? undefined : ctx.barrels.get(target);
-    if (names === undefined) continue;
-    if (!ref.named && !ref.star) {
-      out.problems.push(`${file}: default, namespace or * use of dropped barrel ${ref.spec}`);
-      continue;
-    }
-    const split = ref.star ? expandStar(ctx, file, target ?? '') : splitRef(ctx, file, ref, names);
-    out.problems.push(...split.problems);
-    out.written.push(...split.written);
-    edits.push({ start: ref.decl.getStart(), end: ref.decl.getEnd(), value: split.text });
-  }
+  const done = moduleRefs(sf).flatMap((ref) => {
+    const out = redirectRef(ctx, file, ref);
+    return out === undefined ? [] : [{ start: ref.decl.getStart(), end: ref.decl.getEnd(), out }];
+  });
   ctx.project.removeSourceFile(sf);
-  const sorted = edits.sort((a, b) => b.start - a.start);
-  out.text = sorted.reduce((acc, e) => acc.slice(0, e.start) + e.value + acc.slice(e.end), text);
-  return out;
+  const sorted = [...done].sort((a, b) => b.start - a.start);
+  return {
+    text: sorted.reduce((acc, e) => acc.slice(0, e.start) + e.out.text + acc.slice(e.end), text),
+    problems: done.flatMap((d) => d.out.problems),
+    written: done.flatMap((d) => d.out.written),
+  };
 }

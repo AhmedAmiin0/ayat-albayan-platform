@@ -28,8 +28,18 @@ export function fixLayers(run: LayerRun): string[] {
   const allowed = allowedTree(run.domains);
   return LAYER_NAMES.flatMap((name) => {
     const layer = LAYERS[name];
-    const ctx = { project: newProject(), r, layer, allowed, old: BOUNDARIES[name].old, oldOf: run.oldOf, forced: run.forced };
-    const files = run.files.filter((f) => f.startsWith(`${layer.workspace}/`) && CODE.test(f) && !TEST.test(f));
+    const ctx = {
+      project: newProject(),
+      r,
+      layer,
+      allowed,
+      old: BOUNDARIES[name].old,
+      oldOf: run.oldOf,
+      forced: run.forced,
+    };
+    const files = run.files.filter(
+      (f) => f.startsWith(`${layer.workspace}/`) && CODE.test(f) && !TEST.test(f),
+    );
     const work = fixFeatureIndexes(ctx, files);
     work.writes.forEach((text, file) => writeIfChanged(run.root, file, text));
     return work.problems;
@@ -37,12 +47,21 @@ export function fixLayers(run: LayerRun): string[] {
 }
 
 /** Every lint.blocks boundary and path after the moves; edits that no longer apply are problems. */
-export function fixLintBlocks(root: string, ctx: { domains: readonly Domain[]; moves: Moves }): string[] {
+export function fixLintBlocks(
+  root: string,
+  ctx: { domains: readonly Domain[]; moves: Moves },
+): string[] {
   return LAYER_NAMES.flatMap((name) => {
     const { file, edits } = BOUNDARIES[name];
     const edited = editBoundaries(readText(root, file), edits, ctx.domains);
-    const paths = rewriteLintPaths(edited.text, { workspace: posix.dirname(file), moves: ctx.moves });
+    const paths = rewriteLintPaths(edited.text, {
+      workspace: posix.dirname(file),
+      moves: ctx.moves,
+    });
     writeIfChanged(root, file, paths.text);
-    return [...edited.missing.map((m) => `${file}: boundary text not found: ${m.split('\n')[0]}`), ...paths.stale.map((s) => `stale lint path: ${s}`)];
+    return [
+      ...edited.missing.map((m) => `${file}: boundary text not found: ${m.split('\n')[0] ?? ''}`),
+      ...paths.stale.map((s) => `stale lint path: ${s}`),
+    ];
   });
 }

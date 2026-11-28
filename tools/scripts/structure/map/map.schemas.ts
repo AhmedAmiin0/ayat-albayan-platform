@@ -23,7 +23,7 @@ export const moveSchema = z.object({
 });
 export type Move = z.infer<typeof moveSchema>;
 
-/** A parent barrel that would become a child feature's facade: it is removed, its importers follow. */
+/** A barrel that would become a facade: it is removed and its importers follow its names. */
 export const dropSchema = z.object({
   drop: repoPath.regex(/\/index\.ts$/),
   layer: layerNameSchema,

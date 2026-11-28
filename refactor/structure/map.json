@@ -3079,6 +3079,211 @@
    "drop": "apps/staff-mobile/src/ops/index.ts",
    "layer": "staff-mobile",
    "why": "parent barrel; each ops feature exports from its own index.ts"
+  },
+  {
+   "drop": "apps/api/src/modules/messaging/numbers/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at apps/api/src/modules/messaging/numbers/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/api/src/modules/messaging/whatsapp/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at apps/api/src/modules/messaging/whatsapp/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/api/src/modules/sales/sales/index.ts",
+   "layer": "api",
+   "why": "facade: it would land at apps/api/src/modules/sales/assignment/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/api/src/modules/sales/sales-money/index.ts",
+   "layer": "api",
+   "why": "facade: it would land at apps/api/src/modules/sales/money/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/api/src/modules/teaching/classroom/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at apps/api/src/modules/teaching/classroom/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/api/src/modules/teaching/lessons/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at apps/api/src/modules/teaching/lessons/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/api/src/modules/teaching/scheduling/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at apps/api/src/modules/teaching/scheduling/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/shared/src/messaging/message-actions/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/shared/src/messaging/inbox/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/shared/src/messaging/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/shared/src/messaging/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/shared/src/notifications/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/shared/src/messaging/notifications/bell/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/shared/src/people/students/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/shared/src/people/students/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/shared/src/people/schemas/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/shared/src/people/students/schemas/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/shared/src/people/users/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/shared/src/people/users/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/shared/src/reports/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/shared/src/reporting/reports/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/shared/src/schemas/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/shared/src/schemas/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/client-core/src/finance/payments/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/client-core/src/finance/payments/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/client-core/src/people/portal/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/client-core/src/people/portal/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/client-core/src/people/roster/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/client-core/src/people/roster/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/client-core/src/people/family-auth/index.ts",
+   "layer": "client-core",
+   "why": "facade: it would land at packages/client-core/src/people/sign-in/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/client-core/src/people/users/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/client-core/src/people/users/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/client-core/src/teaching/booking/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/client-core/src/teaching/booking/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/client-core/src/teaching/lessons/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at packages/client-core/src/teaching/lessons/index.ts and re-export other features"
+  },
+  {
+   "drop": "packages/client-core/src/messaging/channels/index.ts",
+   "layer": "client-core",
+   "why": "facade: it would land at packages/client-core/src/teaching/student-channels/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-web/src/features/finance/finance/index.ts",
+   "layer": "staff-web",
+   "why": "facade: it would land at apps/staff-web/src/features/finance/invoices/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-web/src/features/messaging/inbox/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at apps/staff-web/src/features/messaging/inbox/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-web/src/features/people/students/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at apps/staff-web/src/features/people/students/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-web/src/features/sales/sales-money/index.ts",
+   "layer": "staff-web",
+   "why": "facade: it would land at apps/staff-web/src/features/sales/money/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-web/src/features/sales/sales/index.ts",
+   "layer": "staff-web",
+   "why": "facade: it would land at apps/staff-web/src/features/sales/students/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-web/src/features/teaching/booking/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at apps/staff-web/src/features/teaching/booking/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-web/src/features/teaching/classroom/index.ts",
+   "layer": "shared",
+   "why": "facade: it would land at apps/staff-web/src/features/teaching/classroom/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-web/src/features/teaching/course-actions/index.ts",
+   "layer": "staff-web",
+   "why": "facade: it would land at apps/staff-web/src/features/teaching/courses/course-change/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-web/src/features/teaching/teacher/index.ts",
+   "layer": "staff-web",
+   "why": "facade: it would land at apps/staff-web/src/features/teaching/teacher-home/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-mobile/src/inbox/index.ts",
+   "layer": "staff-mobile",
+   "why": "facade: it would land at apps/staff-mobile/src/features/messaging/inbox/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-mobile/src/account/index.ts",
+   "layer": "staff-mobile",
+   "why": "facade: it would land at apps/staff-mobile/src/features/people/account/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-mobile/src/student-file/index.ts",
+   "layer": "staff-mobile",
+   "why": "facade: it would land at apps/staff-mobile/src/features/people/students/file/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-mobile/src/students/index.ts",
+   "layer": "staff-mobile",
+   "why": "facade: it would land at apps/staff-mobile/src/features/people/students/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-mobile/src/sales-subscribe/index.ts",
+   "layer": "staff-mobile",
+   "why": "facade: it would land at apps/staff-mobile/src/features/sales/money/subscribe/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-mobile/src/sales/sales/index.ts",
+   "layer": "staff-mobile",
+   "why": "facade: it would land at apps/staff-mobile/src/features/sales/students/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/staff-mobile/src/teaching/index.ts",
+   "layer": "staff-mobile",
+   "why": "facade: it would land at apps/staff-mobile/src/features/teaching/lessons/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/family-mobile/src/switch/index.ts",
+   "layer": "family-mobile",
+   "why": "facade: it would land at apps/family-mobile/src/features/people/portal/family-pick/index.ts and re-export other features"
+  },
+  {
+   "drop": "apps/family-mobile/src/lessons/index.ts",
+   "layer": "family-mobile",
+   "why": "facade: it would land at apps/family-mobile/src/features/people/portal/lessons/index.ts and re-export other features"
   }
  ],
  "splits": [

@@ -36,10 +36,10 @@ const within = (file: string, dir: string): boolean => file.startsWith(`${dir}/`
 
 function oldModule(ctx: DeepCtx, file: string): string | undefined {
   const rel = posix.relative(ctx.layer.workspace, ctx.oldOf(file));
-  return `${rel}/`.match(new RegExp(`^(${ctx.old})/`))?.[1];
+  return new RegExp(`^(${ctx.old})/`).exec(`${rel}/`)?.[1];
 }
 
-/** It was legal before (one old module, a route file or a barrel import) and crosses features now. */
+/** Legal before (one old module, a route file or a barrel import), cross-feature now. */
 function mustFix(ctx: DeepCtx, file: string, target: string): boolean {
   const isRoute = ctx.layer.routes.some((r) => file === r || within(file, r));
   if (isRoute || ctx.forced.has(`${file}→${target}`)) return true;
@@ -58,16 +58,23 @@ const use = (ref: ModuleRef, at: { target: string; feature: string }): DeepImpor
   ...at,
 });
 
+const targetOf = (ctx: DeepCtx, file: string, spec: string): string =>
+  resolveSpec(ctx.r, file, spec)?.file ?? '';
+const isIndexOf = (target: string, feature: string): boolean =>
+  INDEX.test(target) && posix.dirname(target) === feature;
+
+function deepUse(ctx: DeepCtx, file: string, ref: ModuleRef): DeepImport[] {
+  const target = targetOf(ctx, file, ref.spec);
+  const feature = featureOf(target, ctx);
+  if (feature === undefined || within(file, feature)) return [];
+  const fine = isIndexOf(target, feature) || !mustFix(ctx, file, target);
+  return fine ? [] : [use(ref, { target, feature })];
+}
+
 /** Imports of `file` that reach inside another feature and have to go through its index. */
 export function deepImports(ctx: DeepCtx, file: string, text: string): DeepImport[] {
   const sf = ctx.project.createSourceFile(`/virtual/deep/${file}`, text, { overwrite: true });
-  const out = moduleRefs(sf).flatMap((ref) => {
-    const target = resolveSpec(ctx.r, file, ref.spec)?.file;
-    const feature = target === undefined ? undefined : featureOf(target, ctx);
-    if (target === undefined || feature === undefined || within(file, feature)) return [];
-    const isIndex = INDEX.test(target) && posix.dirname(target) === feature;
-    return isIndex || !mustFix(ctx, file, target) ? [] : [use(ref, { target, feature })];
-  });
+  const out = moduleRefs(sf).flatMap((ref) => deepUse(ctx, file, ref));
   ctx.project.removeSourceFile(sf);
   return out;
 }

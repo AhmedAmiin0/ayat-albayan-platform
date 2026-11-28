@@ -3,7 +3,15 @@ import type { FolderCount } from './tree.types.ts';
 
 const CODE = /\.[cm]?[jt]sx?$/;
 const TEST = /\.(test|spec)\.[cm]?[jt]sx?$/;
-const SKIP = new Set(['node_modules', 'dist', 'build', 'coverage', '.turbo', '.expo', '__snapshots__']);
+const SKIP = new Set([
+  'node_modules',
+  'dist',
+  'build',
+  'coverage',
+  '.turbo',
+  '.expo',
+  '__snapshots__',
+]);
 
 export const isCode = (file: string): boolean => CODE.test(file) && !TEST.test(file);
 
@@ -16,8 +24,7 @@ export function foldersOf(files: readonly string[]): Set<string> {
   return out;
 }
 
-
-/** Code files (tests excepted) and sub-folders of every folder under `root`, as folder-cap counts. */
+/** Code files (not tests) and sub-folders of each folder under `root`, as folder-cap counts. */
 export function countUnder(files: readonly string[], root: string): Map<string, FolderCount> {
   const inside = files.filter(
     (f) => f.startsWith(`${root}/`) && !f.split('/').some((s) => SKIP.has(s)),

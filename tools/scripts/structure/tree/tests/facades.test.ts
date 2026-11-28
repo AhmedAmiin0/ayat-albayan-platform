@@ -49,13 +49,21 @@ test('a file at domain or group level belongs to no feature', async () => {
   assert.equal(featureOf(`${R}/finance/loose.ts`, ctx), undefined);
   assert.equal(featureOf(`${R}/messaging/notifications/index.ts`, ctx), undefined);
   assert.equal(featureOf(`${R}/finance/expenses/a/b.ts`, ctx), `${R}/finance/expenses`);
-  assert.equal(featureOf(`${R}/messaging/notifications/bell/x.ts`, ctx), `${R}/messaging/notifications/bell`);
+  assert.equal(
+    featureOf(`${R}/messaging/notifications/bell/x.ts`, ctx),
+    `${R}/messaging/notifications/bell`,
+  );
 });
 
 test('a barrel outside every domain (core/) is not checked; a domain barrel is', () => {
   const text = "export * from '../../other';";
   const core = facadeProblems([{ file: `${R}/core/errors/index.ts`, text }], scope);
   assert.deepEqual(core, []);
-  const domain = facadeProblems([{ file: `${R}/finance/index.ts`, text: "export * from '../messaging/x';" }], scope);
-  assert.deepEqual(domain, [`facade: ${R}/finance/index.ts re-exports ../messaging/x from outside ${R}/finance`]);
+  const domain = facadeProblems(
+    [{ file: `${R}/finance/index.ts`, text: "export * from '../messaging/x';" }],
+    scope,
+  );
+  assert.deepEqual(domain, [
+    `facade: ${R}/finance/index.ts re-exports ../messaging/x from outside ${R}/finance`,
+  ]);
 });

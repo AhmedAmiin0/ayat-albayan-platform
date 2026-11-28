@@ -1,4 +1,4 @@
-// Usage (repo root): node tools/scripts/structure/move.ts [--dry-run [--base <ref>] [--no-typecheck]]
+// Usage (repo root): pnpm structure:move [-- --dry-run [--base <ref>] [--no-typecheck]]
 // Applies refactor/structure/map.json (docs/68): without --dry-run to this checkout, with it to a
 // temporary worktree of <ref> (default HEAD), printing every problem; exit 1 on any.
 import { execFileSync } from 'node:child_process';
@@ -18,8 +18,11 @@ function format(root: string): void {
   const changed = execFileSync('git', ['diff', '--cached', '--name-only', '--diff-filter=AMR'], {
     cwd: root,
     encoding: 'utf8',
-  }).split('\n').filter((f) => /\.(?:[cm]?[jt]sx?|json)$/.test(f));
-  if (changed.length > 0) execFileSync('pnpm', ['exec', 'oxfmt', ...changed], { cwd: root, stdio: 'inherit' });
+  })
+    .split('\n')
+    .filter((f) => /\.(?:[cm]?[jt]sx?|json)$/.test(f));
+  if (changed.length > 0)
+    execFileSync('pnpm', ['exec', 'oxfmt', ...changed], { cwd: root, stdio: 'inherit' });
 }
 
 const problems = args.includes('--dry-run')
@@ -27,7 +30,9 @@ const problems = args.includes('--dry-run')
   : (() => {
       const out = applyStructure(repo, map);
       if (out.applied) format(repo);
-      console.log(`structure: ${out.plan.pairs.length} files moved, ${out.plan.drops.length} barrels dropped`);
+      console.log(
+        `structure: ${out.plan.pairs.length} files moved, ${out.plan.drops.length} barrels dropped`,
+      );
       return out.problems;
     })();
 problems.forEach((p) => console.log(`  ${p}`));

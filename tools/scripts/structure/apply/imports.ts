@@ -36,7 +36,10 @@ export function moduleRefs(sf: SourceFile): ModuleRef[] {
     const spec = decl.getModuleSpecifierValue();
     if (spec === undefined) return [];
     const bindings = Node.isImportDeclaration(decl) ? importBindings(decl) : exportBindings(decl);
-    const star = Node.isExportDeclaration(decl) && !decl.hasNamedExports() && decl.getNamespaceExport() === undefined;
+    const star =
+      Node.isExportDeclaration(decl) &&
+      !decl.hasNamedExports() &&
+      decl.getNamespaceExport() === undefined;
     return [{ decl, spec, bindings, named: splittable(decl) && bindings.length > 0, star }];
   });
 }
@@ -47,15 +50,23 @@ const bindingText = (b: Binding, asType: boolean): string => {
 };
 
 /** `import { a, type B as C } from 'spec';` (or `export …` for a re-export), one line. */
-export function declText(ref: { kind: 'import' | 'export'; spec: string; bindings: Binding[] }): string {
+export function declText(ref: {
+  kind: 'import' | 'export';
+  spec: string;
+  bindings: Binding[];
+}): string {
   const asType = ref.bindings.every((b) => b.isType);
   const names = ref.bindings.map((b) => bindingText(b, asType)).join(', ');
   return `${ref.kind}${asType ? ' type' : ''} { ${names} } from '${ref.spec}';`;
 }
 
 /** `export * from 'spec';` or a named declaration. */
-export const lineText = (line: { kind: 'import' | 'export'; spec: string; bindings: Binding[]; star: boolean }): string =>
-  line.star ? `export * from '${line.spec}';` : declText(line);
+export const lineText = (line: {
+  kind: 'import' | 'export';
+  spec: string;
+  bindings: Binding[];
+  star: boolean;
+}): string => (line.star ? `export * from '${line.spec}';` : declText(line));
 
 export const kindOf = (decl: Decl): 'import' | 'export' =>
   Node.isImportDeclaration(decl) ? 'import' : 'export';
