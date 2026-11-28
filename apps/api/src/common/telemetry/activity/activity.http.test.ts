@@ -57,6 +57,17 @@ describe('activity log over HTTP (money routes, real interceptor and guards)', (
     expect(push).not.toHaveBeenCalled();
   });
 
+  it('a row the page schema refuses is a 500 response_invalid, never the row', async () => {
+    const row = { id: 'a1', at: 'yesterday', actor_id: null, actor_name: 'سهيلة', actor_role: 'admin',
+      action: 'students.create', method: 'POST', route: '/students', entity: null, entity_id: null,
+      status: 201, duration_ms: 3, meta: {} };
+    list.mockResolvedValueOnce({ items: [row], total: 1, page: 1, pageSize: 25 });
+    const res = await call({ method: 'GET', url: '/activity' });
+    expect(res.statusCode).toBe(500);
+    expect(res.json().code).toBe('response_invalid');
+    expect(res.body).not.toContain('سهيلة');
+  });
+
   it('records sign-in and sign-out reported by the web', async () => {
     expect((await call({ method: 'POST', url: '/activity/session/login', token: 'teacher' })).statusCode).toBe(204);
     expect(push).toHaveBeenLastCalledWith(expect.objectContaining({ action: 'authSession.login', actor_role: 'teacher', status: 204 }));

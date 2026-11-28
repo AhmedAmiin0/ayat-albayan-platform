@@ -1,23 +1,22 @@
-import { activityListQuery, type ActivityPage } from '@ab/shared';
-import { Controller, Get, HttpCode, HttpException, HttpStatus, Ip, Post, Query } from '@nestjs/common';
+import { activityRoutes as routes, type ActivityPage } from '@ab/shared';
+import { Controller, HttpCode, HttpException, HttpStatus, Ip, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { parseOrThrow } from '@/common/http/http';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.rate-limit';
-import { CurrentUser, Permissions, Public, SignedIn } from '@/common/auth/decorators';
+import { CurrentUser, Public, SignedIn } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ActivityRepo } from './activity.repo';
 
 /** Admin only, paged, filtered and sorted (R-NFR-08). */
-@ApiTags('activity')
 @ApiBearerAuth()
-@Permissions('activity.read')
-@Controller('activity')
+@Controller()
 export class ActivityController {
   constructor(private readonly activity: ActivityRepo) {}
 
-  @Get()
-  list(@Query() query: unknown): Promise<ActivityPage> {
-    return this.activity.list(parseOrThrow(activityListQuery, query));
+  @Route(routes.list)
+  async list(@RouteInput() { query }: RouteInputOf<typeof routes.list>): Promise<ActivityPage> {
+    return asResponse(routes.list.response, await this.activity.list(query));
   }
 }
 
