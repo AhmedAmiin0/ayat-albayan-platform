@@ -1,4 +1,4 @@
-import type { JobApplicantView, LeadListItem, LeadRowView } from '../sales/leads';
+import type { JobApplicantView, LeadListItem, LeadRowView } from '../../sales/leads';
 
 /** A leads row as the lead writes answer it: a fresh lead nobody owns, follow-ups running. */
 export const leadRow = (patch: Partial<LeadRowView> = {}): LeadRowView => ({

@@ -1,4 +1,4 @@
-import type { MessageView } from '../messaging';
+import type { MessageView } from '../../messaging';
 
 const AT = '2026-11-27T09:30:00.000Z';
 

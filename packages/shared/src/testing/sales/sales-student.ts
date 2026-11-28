@@ -1,7 +1,7 @@
 import type {
   SalesStudentDetails,
   SalesStudentSubscription,
-} from '../sales/student/details-answer.schemas';
+} from '../../sales/student/details-answer.schemas';
 
 const STUDENT = '11111111-1111-4111-8111-111111111111';
 const SUB = 'c1000000-0000-4000-8000-0000000000c1';

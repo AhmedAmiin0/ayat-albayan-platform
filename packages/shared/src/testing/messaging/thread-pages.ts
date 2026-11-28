@@ -1,4 +1,4 @@
-import type { ThreadDelta, ThreadDetail } from '../messaging';
+import type { ThreadDelta, ThreadDetail } from '../../messaging';
 
 /** An empty chat's newest page, as GET /threads/:phone answers it; override what a test needs. */
 export const aThreadDetail = (overrides: Partial<ThreadDetail> = {}): ThreadDetail => ({

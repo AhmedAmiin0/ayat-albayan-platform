@@ -1,6 +1,6 @@
 import { DEFAULT_RENEWAL_PRICING } from '@ab/money';
-import type { SalesFamilyStudent } from '../sales/money-family.schemas';
-import type { SalesMoneySubscriptionView } from '../sales/student-file/subscribe.schemas';
+import type { SalesFamilyStudent } from '../../sales/money-family.schemas';
+import type { SalesMoneySubscriptionView } from '../../sales/student-file/subscribe.schemas';
 
 const STUDENT = '11111111-1111-4111-8111-111111111111';
 const REF = { id: STUDENT, code: 'AB-0183', name: 'سهيلة' };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { threadModeRoutes } from '../messaging';
+import { threadModeRoutes } from '../../messaging';
 import { aMessageView } from './messages';
 import { aThreadDelta, aThreadDetail } from './thread-pages';
 

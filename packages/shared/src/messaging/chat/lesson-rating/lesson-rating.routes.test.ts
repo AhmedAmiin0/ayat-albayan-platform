@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { aMessageView } from '../../../testing/messages';
+import { aMessageView } from '../../../testing/messaging/messages';
 import { lessonRatingRoutes as routes } from '.';
 
 const REQ = '5f0c2c4e-1b2a-4c3d-9e8f-0a1b2c3d4e5f';
