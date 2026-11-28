@@ -1,5 +1,5 @@
 import { lessonWhenText } from '@ab/shared';
-import { fireEvent, screen } from '@testing-library/react-native';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { huda } from '@/inbox/shared/fixtures';
@@ -66,4 +66,14 @@ test('a save that gets no answer says offline and keeps the edit; a refused one,
   expect(await screen.findByText(t.common.error)).toBeTruthy();
   expect(mockApiSend).toHaveBeenCalledTimes(2);
   expect(mockApiSend).toHaveBeenLastCalledWith('PATCH', '/leads/a1/qualification', { goal: 'ختم جزء عم' });
+});
+
+test('a fresh row outside its schema is not taken: the cached one stays, not offline', async () => {
+  mockApiFetch.mockImplementation(answer({ ...hudaProfile, follow_up_stage: 1.5 }));
+  await renderWithQuery(<LeadProfileSection lead={huda} />);
+  const leadsRead = expect.stringMatching(/^\/leads\?/);
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(leadsRead));
+  await act(async () => undefined);
+  expect(screen.queryByDisplayValue('سهيلة')).toBeNull();
+  expect(screen.queryByText(offlineLine)).toBeNull();
 });
