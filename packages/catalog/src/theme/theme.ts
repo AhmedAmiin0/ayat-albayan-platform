@@ -102,7 +102,7 @@ export const type = {
   },
   size: { '2xs': 12, xs: 13, sm: 14, body: 15, base: 16, lg: 18, h4: 20, h3: 23, h2: 28, h1: 32 },
   /** Arabic line-heights: 1.5 for titles, 1.6 for UI text. */
-  lineHeight: (size: number, display = false) => Math.round(size * (display ? 1.5 : 1.6)),
+  lineHeight: (size: number, display = false): number => Math.round(size * (display ? 1.5 : 1.6)),
 };
 
 export const shape = {

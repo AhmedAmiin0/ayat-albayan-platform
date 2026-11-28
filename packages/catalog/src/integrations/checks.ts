@@ -98,6 +98,8 @@ export function integrationValueValid(key: IntegrationPlainKey, value: string): 
   return INTEGRATION_VALUE_CHECKS[key].safeParse(value.trim()).success;
 }
 
+const trimmedOrNull = (value: string | null): string | null => value?.trim() || null;
+
 /**
  * PUT /settings/integrations: plain keys only; a value is trimmed, and null or blank clears the
  * key (the env value applies again). An issue's path names the key, never echoing a secret.
@@ -112,7 +114,7 @@ export const integrationValuesSchema = z.object({
           ctx.addIssue({ code: 'custom', path: [key], message: 'unknown_key' });
           continue;
         }
-        const v = value === null || value.trim() === '' ? null : value.trim();
+        const v = trimmedOrNull(value);
         if (v !== null && !integrationValueValid(key, v)) ctx.addIssue({ code: 'custom', path: [key], message: 'invalid_value' });
         out[key] = v;
       }

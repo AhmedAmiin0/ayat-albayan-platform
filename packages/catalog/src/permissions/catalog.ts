@@ -28,7 +28,7 @@ export function isPermission(value: unknown): value is Permission {
   return permissionSchema.validate(value);
 }
 
-export function isGrantable(value: unknown): value is Permission {
+export function isGrantable(value: string): value is Permission {
   return GRANTABLE_PERMISSIONS.some((p) => p === value);
 }
 

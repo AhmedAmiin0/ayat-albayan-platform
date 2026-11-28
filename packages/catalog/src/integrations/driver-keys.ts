@@ -1,4 +1,4 @@
-import type { WaLine } from '../enums/messaging';
+import type { WaLine } from '../enums';
 import type { IntegrationKey, WaProvider } from './keys';
 import type { IntegrationConfigItem } from './views';
 
@@ -27,7 +27,11 @@ export function driverKeys(provider: WaProvider, line: WaLine): IntegrationKey[]
  * The NAMES of the keys `provider` still lacks on `line`, read from GET /settings/integrations
  * (never a value).
  */
-export function driverMissing(input: { provider: WaProvider; line: WaLine; items: readonly Pick<IntegrationConfigItem, 'key' | 'set'>[] }): IntegrationKey[] {
+export function driverMissing(input: {
+  provider: WaProvider;
+  line: WaLine;
+  items: readonly Pick<IntegrationConfigItem, 'key' | 'set'>[];
+}): IntegrationKey[] {
   const set = new Set(input.items.filter((i) => i.set).map((i) => i.key));
   return driverKeys(input.provider, input.line).filter((k) => !set.has(k));
 }
