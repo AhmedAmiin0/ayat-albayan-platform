@@ -1,4 +1,5 @@
 import type { LeadSource } from '@ab/catalog';
+import type { LeadRow } from './leads.repo';
 
 export interface InboundContact {
   /** Raw WhatsApp / typed phone; normalised to E.164 (rule 7). */
@@ -14,4 +15,9 @@ export interface InboundContact {
 export interface LeadAction {
   id: string;
   actorId: string | null;
+}
+
+/** A GET /leads row before its answer schema reads it: the stored lead and its follower's name. */
+export interface LeadListRow extends LeadRow {
+  assigned_to_name: string | null;
 }

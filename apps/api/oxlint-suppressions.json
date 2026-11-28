@@ -6159,11 +6159,6 @@
       "count": 1
     }
   },
-  "src/modules/sales/leads/leads.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/sales/leads/leads.module.ts": {
     "ab/module-boundaries": {
       "count": 2

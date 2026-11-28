@@ -1,6 +1,5 @@
 export {
   type PageQuery,
-  pageQueryShape,
   throwIfDbError,
 } from './http';
 export { LeadsModule } from './leads.module';

@@ -3,28 +3,23 @@ import { apiFetch, apiSend } from '@ab/web-kit';
 import { sortFilterParams } from '@/lib/list/list-search';
 import type { ListUrlState } from '@/lib/list/list-url';
 import type { LeadSearch } from './types';
-import { jobApplicantCalls, leadWriteCalls } from '@ab/client-core';
-import { jobApplicantListQuerySchema, type LeadView } from '@ab/shared';
-import type { Page } from '@ab/core';
+import { jobApplicantCalls, leadReadCalls, leadWriteCalls } from '@ab/client-core';
+import { jobApplicantListQuerySchema } from '@ab/shared';
 import { applicantKeys, leadKeys } from '@/features/sales/keys';
 
 export const PAGE_SIZE = 25;
 
 const applicants = jobApplicantCalls({ apiFetch, apiSend });
 const leadWrites = leadWriteCalls({ apiFetch, apiSend });
+const leadReads = leadReadCalls({ apiFetch, apiSend });
 
 export const leadsQuery = (s: LeadSearch) =>
   queryOptions({
     queryKey: leadKeys.list(s),
     queryFn: () => {
-      const params = new URLSearchParams({ page: String(s.page), pageSize: String(PAGE_SIZE) });
-      if (s.status) params.set('status', s.status);
-      if (s.source) params.set('source', s.source);
-      if (s.q) params.set('q', s.q);
-      if (s.assignee) params.set('assignee', s.assignee);
-      if (s.sort) params.set('sort', s.sort);
-      if (s.sort && s.dir) params.set('dir', s.dir);
-      return apiFetch<Page<LeadView>>(`/leads?${params}`);
+      const { page, status, source, q, assignee, sort, dir } = s;
+      const query = { page, pageSize: PAGE_SIZE, status, source, q, assignee, sort, dir };
+      return leadReads.list(query);
     },
     // A filter/page switch keeps the old rows (dimmed, aria-busy) until the new page lands.
     placeholderData: keepPreviousData,

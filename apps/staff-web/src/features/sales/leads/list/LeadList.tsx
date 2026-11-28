@@ -1,9 +1,9 @@
 import { EmptyState, t, cn } from '@ab/web-kit';
 import { leadGridClass, LeadListItem } from './LeadListItem';
-import type { LeadView } from '@ab/shared';
+import type { LeadListItem as LeadItem } from '@ab/shared';
 
 export interface LeadListProps {
-  leads: LeadView[];
+  leads: LeadItem[];
   /** Row whose reclassify confirm is open (one at a time: one primary button per screen). */
   confirmId: string | null;
   busy: boolean;
