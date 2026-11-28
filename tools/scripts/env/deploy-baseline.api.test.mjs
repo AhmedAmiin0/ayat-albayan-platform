@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { HttpShapeError, HttpStatusError } from '../http/http-json.mjs';
+import { HttpShapeError } from '../http/http-shape.error.mjs';
+import { HttpStatusError } from '../http/http-status.error.mjs';
 import { deployJobPassed, githubApi, greenRuns } from './deploy-baseline.mjs';
 
 const TOKEN = 'ghs_sentinel_token';

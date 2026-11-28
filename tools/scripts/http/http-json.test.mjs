@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { z } from 'zod';
-import { HttpNetworkError, HttpShapeError, HttpStatusError, httpJson, whereOf } from './http-json.mjs';
+import { HttpNetworkError } from './http-network.error.mjs';
+import { httpJson, whereOf } from './http-json.mjs';
+import { HttpShapeError } from './http-shape.error.mjs';
+import { HttpStatusError } from './http-status.error.mjs';
 
 const URL_ = 'https://secret-host.example/repos/o/r/runs?token=abc&per_page=1';
 

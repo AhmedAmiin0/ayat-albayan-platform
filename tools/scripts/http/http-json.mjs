@@ -3,38 +3,14 @@
 // error body's code only: never the host, the query, a header value or a body (they may hold a
 // key, a password or a family's data). No retries and no timeout (CLI scripts).
 import { z } from 'zod';
+import { HttpNetworkError } from './http-network.error.mjs';
+import { HttpShapeError } from './http-shape.error.mjs';
+import { HttpStatusError } from './http-status.error.mjs';
 
 /** «name METHOD /path»: never the host or the query. */
 export function whereOf(name, call) {
   const path = URL.canParse(call.url) ? new URL(call.url).pathname : '<invalid url>';
   return `${name} ${call.method ?? 'GET'} ${path}`;
-}
-
-/** A non-2xx answer. */
-export class HttpStatusError extends Error {
-  constructor(where, { status, code }) {
-    super(`${where}: HTTP ${status} (${code})`);
-    this.name = 'HttpStatusError';
-    this.status = status;
-    this.code = code;
-  }
-}
-
-/** A 2xx whose body the schema rejects (the body itself is never kept). */
-export class HttpShapeError extends Error {
-  constructor(where, status) {
-    super(`${where}: unexpected response (HTTP ${status})`);
-    this.name = 'HttpShapeError';
-    this.status = status;
-  }
-}
-
-/** No answer at all (DNS, refused, a malformed URL): fetch's own message is not kept. */
-export class HttpNetworkError extends Error {
-  constructor(where) {
-    super(`${where}: request failed`);
-    this.name = 'HttpNetworkError';
-  }
 }
 
 /** The error body's `error_code`, then `code` (Supabase Auth, GitHub); 'unknown' otherwise. */
