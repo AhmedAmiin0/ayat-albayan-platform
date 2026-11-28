@@ -55,7 +55,7 @@ interface OffGraphInput {
   env: Exclude<WhatsappEnv, GraphEnv>;
   checkedAt: string;
   driver: Parameters<typeof crmLineCheck>[0]['driver'];
-  at: { fetch: FetchLike; timeoutMs: number };
+  at: { fetch?: FetchLike; timeoutMs: number };
 }
 
 /** A line with no Graph ids of ours: crm (GET /me) or evolution (connectionState). */

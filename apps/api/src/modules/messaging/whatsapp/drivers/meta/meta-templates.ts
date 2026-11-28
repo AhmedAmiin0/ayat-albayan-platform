@@ -30,6 +30,23 @@ export async function listTemplates(env: GraphEnv, http: Http): Promise<MetaTemp
 }
 
 /**
+ * Where a submit goes: a rejected template Meta already knows is edited in place
+ * (templateEditPath), since creating it again would be a duplicate name; any other is created.
+ */
+export function submitRequest(
+  env: GraphEnv,
+  template: TemplateRow,
+  headerHandle?: string,
+): { path: string; json: unknown } {
+  const payload = submitPayload(template, headerHandle);
+  const knownId = template.status === 'rejected' ? template.meta_id : null;
+  const edit = { category: payload.category, components: payload.components };
+  return knownId
+    ? { path: templateEditPath(env, knownId), json: edit }
+    : { path: `${env.wabaId}/message_templates`, json: payload };
+}
+
+/**
  * Meta's edit of a template it knows (POST /{id}; Kapso: ?hsm_id=, kapso.ts): the components only,
  * the name and the category never change. Back to PENDING.
  */

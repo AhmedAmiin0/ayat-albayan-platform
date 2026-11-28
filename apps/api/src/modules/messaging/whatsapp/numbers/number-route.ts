@@ -71,10 +71,9 @@ export function ruleNumbers(
   numberOf: (entryKey: string) => string | null,
 ): Map<string, string | null> {
   const out = new Map<string, string | null>();
-  for (const entry of NOTIFICATION_CATALOGUE) {
-    if (entry.manual) continue;
-    for (const key of entry.templates) if (!out.has(key)) out.set(key, numberOf(entry.key));
-  }
+  const entries = NOTIFICATION_CATALOGUE.filter((entry) => !entry.manual);
+  const pairs = entries.flatMap((e) => e.templates.map((key): [string, string] => [key, e.key]));
+  for (const [key, entryKey] of pairs) if (!out.has(key)) out.set(key, numberOf(entryKey));
   return out;
 }
 
@@ -116,28 +115,29 @@ export function approvedOn(pass: RoutePass, template: Pick<TemplateRow, 'key' | 
   };
 }
 
-/**
- * The row's number now; null = none can send it (it stays queued, untouched). Sessions never fall
- * back.
- */
+const templateId = (pass: RoutePass, template: TemplateRow): string | null =>
+  routeTemplate({
+    numbers: pass.numbers,
+    ruleNumberId: pass.ruleNumbers.get(template.key) ?? null,
+    templateNumberId: template.number_id,
+    line: template.line,
+    approvedOn: approvedOn(pass, template),
+  });
+
+const sessionId = (pass: RoutePass, row: DueMessage): string | null =>
+  routeSession(pass.numbers, { numberId: row.number_id, line: row.line ?? 'notifications' });
+
+function numberRoute(pass: RoutePass, id: string | null): NumberRoute | null {
+  const n = id === null ? undefined : pass.numbers.find((x) => x.id === id);
+  return n ? { numberId: n.id, line: n.purpose } : null;
+}
+
+/** The row's number now; null = none can send it (it stays queued). Sessions never fall back. */
 export function routeOf(
   pass: RoutePass,
   at: { row: DueMessage; template: TemplateRow | null },
 ): NumberRoute | null {
   const { row, template } = at;
-  let id: string | null;
-  if (row.template_key) {
-    if (!template) return null;
-    id = routeTemplate({
-      numbers: pass.numbers,
-      ruleNumberId: pass.ruleNumbers.get(template.key) ?? null,
-      templateNumberId: template.number_id,
-      line: template.line,
-      approvedOn: approvedOn(pass, template),
-    });
-  } else {
-    id = routeSession(pass.numbers, { numberId: row.number_id, line: row.line ?? 'notifications' });
-  }
-  const n = id === null ? undefined : pass.numbers.find((x) => x.id === id);
-  return n ? { numberId: n.id, line: n.purpose } : null;
+  if (!row.template_key) return numberRoute(pass, sessionId(pass, row));
+  return template ? numberRoute(pass, templateId(pass, template)) : null;
 }

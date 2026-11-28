@@ -4,6 +4,7 @@ import { SAMPLE_REPORT } from '@/modules/messaging/whatsapp/template-review';
 import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
 import { scriptedFetch, STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { nth } from './fixtures/nth';
 
 const HANDLE = RECORDED_UPLOAD.handle.body.h;
 
@@ -20,15 +21,16 @@ describe('HttpWhatsappClient.uploadSample: Resumable Upload API against recorded
     const { c, requests } = client(APP_ENV, RECORDED_UPLOAD.session, RECORDED_UPLOAD.handle);
     expect(c.canUploadSamples()).toBe(true);
     await expect(c.uploadSample(SAMPLE_REPORT)).resolves.toBe(HANDLE);
-    const [start, bytes] = requests;
+    const start = nth(requests, 0);
+    const bytes = nth(requests, 1);
     const length = SAMPLE_REPORT.bytes.byteLength;
-    expect(start?.url).toBe(`http://127.0.0.1:4010/v21.0/stub-app/uploads?file_name=lesson-report-sample.pdf&file_length=${length}&file_type=application%2Fpdf`);
-    expect([start?.init.method, start?.init.body]).toEqual(['POST', undefined]);
-    expect(start?.init.headers).toEqual({ authorization: 'Bearer test-token' });
+    expect(start.url).toBe(`http://127.0.0.1:4010/v21.0/stub-app/uploads?file_name=lesson-report-sample.pdf&file_length=${length}&file_type=application%2Fpdf`);
+    expect([start.init.method, start.init.body]).toEqual(['POST', undefined]);
+    expect(start.init.headers).toEqual({ authorization: 'Bearer test-token' });
     // The session id is the path as Meta gave it, `?sig=` included, never re-encoded.
-    expect(bytes?.url).toBe('http://127.0.0.1:4010/v21.0/upload:8343d89e280548838554f260de294898?sig=stub277cd412');
-    expect(bytes?.init.headers).toEqual({ authorization: 'OAuth test-token', file_offset: '0' });
-    expect(bytes?.init.body).toBe(SAMPLE_REPORT.bytes);
+    expect(bytes.url).toBe('http://127.0.0.1:4010/v21.0/upload:8343d89e280548838554f260de294898?sig=stub277cd412');
+    expect(bytes.init.headers).toEqual({ authorization: 'OAuth test-token', file_offset: '0' });
+    expect(bytes.init.body).toBe(SAMPLE_REPORT.bytes);
   });
 
   it('without WA_APP_ID: canUploadSamples is false and uploadSample throws before any request', async () => {
@@ -66,7 +68,7 @@ describe('HttpWhatsappClient.uploadSample: Resumable Upload API against recorded
       metaId: RECORDED_UPLOAD.createDoc.body.id,
       status: 'PENDING',
     });
-    expect((requests[0]?.body as { components: unknown[] }).components[0]).toEqual({
+    expect((nth(requests, 0).body as { components: unknown[] }).components[0]).toEqual({
       type: 'HEADER',
       format: 'DOCUMENT',
       example: { header_handle: [HANDLE] },

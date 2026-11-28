@@ -19,6 +19,8 @@ const WHITELIST = new Set([
   // Kapso's own conversation record: its Platform API, beside the Meta proxy.
   'modules/messaging/whatsapp/drivers/kapso/kapso-conversations.ts',
   'modules/messaging/whatsapp/lines/lines.check.ts',
+  // The line check's two Graph GETs (out of lines.check.ts, 150-line cap).
+  'modules/messaging/whatsapp/lines/lines.check.graph.ts',
   // The switch preflight (docs/19): one read-only GET of subscribed apps.
   'modules/messaging/whatsapp/lines/lines.check.meta.ts',
   // The script relay (docs/19): the line's current client, its allow-list, the script's own sends.
@@ -59,6 +61,8 @@ const WHITELIST = new Set([
   'modules/messaging/whatsapp/whatsapp.types.ts',
   // Kapso's message history: read-only GETs that store messages sent outside the app.
   'modules/messaging/webhook/external/kapso-history.ts',
+  // Re-exports only: the whitelisted callers in other modules import through the module's index.
+  'modules/messaging/whatsapp/index.ts',
 ]);
 
 const METHODS = 'sendTemplate|sendText|sendDocument|markRead|getMedia|getTemplates|submitTemplate|editTemplate|uploadSample';

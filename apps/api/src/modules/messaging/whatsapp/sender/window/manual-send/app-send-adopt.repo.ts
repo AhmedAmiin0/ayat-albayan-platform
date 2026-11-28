@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { stampDelivered } from '@/modules/messaging/whatsapp/messages/delivered';
+import { stampDelivered } from '@/modules/messaging/whatsapp/messages/delivered.repo';
 import type { HeldRow, TwinRow } from './app-send-adopt';
 
 /** How far back a held text looks for the app's message (the tap, the expiry sweep). */

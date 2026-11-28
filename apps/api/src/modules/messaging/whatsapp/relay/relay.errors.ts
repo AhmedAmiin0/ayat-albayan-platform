@@ -17,6 +17,24 @@ interface RelayFailure {
 export const relayError = (f: Pick<RelayFailure, 'status' | 'code' | 'message'>): HttpException =>
   new HttpException({ error: { message: f.message, code: f.code } }, f.status);
 
+interface Issue {
+  path: PropertyKey[];
+  message: string;
+}
+
+/** A zod issue as the CRM would word it: «<path>: <message>». */
+const issueText = (issue: Issue): string => {
+  const where = issue.path.map(String).join('.');
+  return where ? `${where}: ${issue.message}` : issue.message;
+};
+
+/** The 422 for a body the CRM would refuse, worded from its first issue. */
+export function invalidRequest(issues: readonly Issue[]): HttpException {
+  const first = issues[0];
+  const message = first ? issueText(first) : 'invalid request';
+  return relayError({ status: 422, code: 'invalid_request', message });
+}
+
 type Info = WaError['info'];
 type Rule = readonly [(info: Info) => boolean, (e: WaError) => RelayFailure];
 

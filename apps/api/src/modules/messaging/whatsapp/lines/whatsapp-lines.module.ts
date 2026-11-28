@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { NumbersModule } from '@/modules/messaging/numbers';
+import { LineHealthRepo } from './line-health.repo';
 import { LineHealthStore } from './line-health.store';
 import { LinesCheck } from './lines.check';
 import { LinesController } from './lines.controller';
@@ -8,7 +9,7 @@ import { LinesController } from './lines.controller';
 @Module({
   imports: [NumbersModule],
   controllers: [LinesController],
-  providers: [LinesCheck, LineHealthStore],
+  providers: [LinesCheck, LineHealthRepo, LineHealthStore],
   exports: [LineHealthStore],
 })
 export class WhatsappLinesModule {}

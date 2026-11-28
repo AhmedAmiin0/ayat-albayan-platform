@@ -8,7 +8,9 @@ export { crmFetch } from './drivers/crm/crm.client';
 export { type CrmConn, crmJson } from './drivers/crm/crm-http';
 export { type CrmLookup, crmLookup, CrmLookupError } from './drivers/crm/crm-lookup';
 export type { CrmMessage } from './drivers/crm/crm-lookup.schemas';
-export type { FetchLike } from './drivers/meta/graph';
+export type { FetchLike, GraphConn } from './drivers/meta/graph';
+export { graphHttp, graphSend } from './drivers/meta/graph';
+export { DEFAULT_TIMEOUT_MS } from './whatsapp.client';
 export { SendGate } from './gate/send-gate';
 export { WaError } from './whatsapp.types';
 export { currentRows, displayE164, healthRows, LineHealthStore } from './lines/line-health.store';
@@ -20,6 +22,7 @@ export {
 } from './messages/inbound-media/inbound-media.repo';
 export {
   baseMime,
+  chatServable,
   CRM_NO_MEDIA,
   type InboundFile,
   InboundMedia,
@@ -96,5 +99,6 @@ export type { ApprovalRow, ApprovalWrite, NumberRef } from './templates/catalog/
 export { WhatsappModule } from './whatsapp.module';
 export { ReopenRequest } from './sender/window/reopen-request';
 export { capsOf, windowless } from './drivers/driver-caps';
-export { stampDelivered } from './messages/delivered';
+export { stampDelivered } from './messages/delivered.repo';
 export { ReopenCancel, ReopenPick, type ReopenStamp } from './sender/window/manual-send';
+export { WHATSAPP_LINES, type WhatsappLines } from './whatsapp.types';

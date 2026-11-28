@@ -1,8 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { STUB_WA_ENV, rows } from '@/modules/messaging/whatsapp/gate/send-gate.fakes';
-import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
-import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
+import { gateOver, STUB_WA_ENV, rows } from '@/modules/messaging/whatsapp/gate/send-gate.fakes';
 import { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import type { MessageWorker } from '@/modules/messaging/whatsapp/sender/message.worker';
 import { emptySummary } from '@/modules/messaging/whatsapp/sender/pass';
@@ -20,7 +18,7 @@ const worker = {
 
 function sender(results: Parameters<typeof fakeDb>[0]) {
   const fake = fakeDb(results);
-  const gate = new SendGate(new WhatsappSettings(fake.db), fake.db);
+  const gate = gateOver(fake.db);
   const s = new MessageSender(gate, new SenderRepo(fake.db), worker as unknown as MessageWorker);
   return { ...fake, sender: s };
 }

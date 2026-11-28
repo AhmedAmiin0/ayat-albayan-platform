@@ -1,39 +1,30 @@
-import type { Json } from '@ab/db';
 import {
-  backoff, waSendKind, isRetryableWaError, isWaAuthFailure, MAX_SEND_ATTEMPTS, quickReplyPayload,
-  WINDOW_CLOSED, type TemplateButton, type TemplateParams,
+  backoff, isRetryableWaError, isWaAuthFailure, MAX_SEND_ATTEMPTS, WINDOW_CLOSED,
 } from '@ab/shared';
-import { ar } from '@/common/infra/i18n/server-text';
 import { crmPlan } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
 import { driverCode } from '@/modules/messaging/whatsapp/drivers/driver-codes';
 import { lineDownHold } from './hold/line-down';
 import { paymentHold, type HoldRow } from './hold/payment-hold';
 import { isWindowClosedError } from './window/window-rules';
-import { templateParams } from '@/modules/messaging/whatsapp/messages/wa-json';
-import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The sender's pure decisions (docs/12 §3.3): what to send, what a failure leads to.
 
 /** How long a claimed row is held: a worker that dies mid-send frees it after this. */
 export const CLAIM_LEASE_MS = 2 * 60_000;
-/**
- * error_code written with the claim, before Meta is called (write-ahead; see SenderQueries.claim).
- */
+/** error_code written with the claim, before Meta is called (write-ahead). */
 export const SENDING = 'sending';
-/**
- * error_code of a row Meta may or may not have sent: the admin checks WhatsApp before resending.
- */
+/** error_code of a row Meta may or may not have sent: the admin checks before resending. */
 export const UNCERTAIN = 'uncertain';
-/**
- * error_code while the admin sends it from their own WhatsApp (M3); the UI asks them to confirm.
- */
+/** error_code while the admin sends it from their own WhatsApp (M3), to confirm in the UI. */
 export const HANDED_OFF = 'handed_off';
-/**
- * An expired / revoked token holds the queue this long before the next try (no attempt counted).
- */
+/** An expired / revoked token holds the queue this long before the next try (uncounted). */
 export const AUTH_HOLD_MS = 15 * 60_000;
 export { KAPSO_AUTH, CRM_AUTH, EVOLUTION_AUTH } from '@/modules/messaging/whatsapp/drivers/driver-codes';
 export { CRM_RATE_LIMITED } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
+export { messageLabel } from './plan/message-label';
+export { quickReplyPayloads, readyToSend, reportIdOf } from './plan/send-row';
+export type { Sendable } from './plan/send-row.types';
 const ERROR_TEXT_MAX = 500;
 
 export interface FailurePlan {
@@ -65,7 +56,7 @@ function errorText(error: unknown): string {
 }
 
 /**
- * Meta's throttling and outage codes retry with backoff (1 min, 5 min, …) until MAX_SEND_ATTEMPTS;
+ * Meta's throttling and outage codes retry with backoff (1 min, 5 min, …) up to MAX_SEND_ATTEMPTS;
  * anything else (131026 not on WhatsApp, 132001 template missing, the window closed: Meta 131047 /
  * Kapso 422 = window_closed, bad parameters) fails at once. A timeout / dropped connection
  * (`uncertain`: Meta may have sent it) fails at once too, for the admin to check instead of a
@@ -78,25 +69,52 @@ function errorText(error: unknown): string {
  */
 export function failurePlan(input: PlanInput): FailurePlan {
   const info = input.error instanceof WaError ? input.error.info : null;
-  const at = (ms: number) => new Date(input.now.getTime() + ms).toISOString();
-  const error_text = errorText(input.error);
-  if (info?.uncertain) return { status: 'failed', next_attempt_at: null, error_code: UNCERTAIN, error_text };
-  // Never retried: the worker holds a staff chat text behind the reopen template (window/).
-  const closed = isWindowClosedError(input.error);
-  if (closed) return { ...plain(input.error, error_text), error_code: WINDOW_CLOSED };
-  const held = accountHold({ ...input, info, error_text });
-  if (held) return held;
-  const crm = crmPlan({ info, attempts: input.attempts, now: input.now, error_text, error_code: errorCode(input.error) });
-  if (crm) return crm;
-  const retry = isRetryableWaError(info?.code ?? null) && input.attempts < MAX_SEND_ATTEMPTS;
-  return retry ? { ...plain(input.error, error_text), status: 'queued', next_attempt_at: at(backoff(input.attempts)) } : plain(input.error, error_text);
+  const ctx: HoldInput = { ...input, info, error_text: errorText(input.error) };
+  for (const step of FIRST_MATCH) {
+    const plan = step(ctx);
+    if (plan) return plan;
+  }
+  return retryOrFail(ctx);
 }
 
 /** Failed for good with its code (a retry overrides status and next_attempt_at). */
-const plain = (error: unknown, error_text: string): FailurePlan => ({ status: 'failed', next_attempt_at: null, error_code: errorCode(error), error_text });
+const plain = (error: unknown, error_text: string): FailurePlan => ({
+  status: 'failed',
+  next_attempt_at: null,
+  error_code: errorCode(error),
+  error_text,
+});
 
 /** The account or the line, not the message: a refused credential, an outage, Meta's 131042. */
-interface HoldInput extends PlanInput { info: WaError['info'] | null; error_text: string }
+interface HoldInput extends PlanInput {
+  info: WaError['info'] | null;
+  error_text: string;
+}
+
+type Step = (c: HoldInput) => FailurePlan | null;
+
+const uncertain: Step = (c) =>
+  c.info?.uncertain
+    ? { status: 'failed', next_attempt_at: null, error_code: UNCERTAIN, error_text: c.error_text }
+    : null;
+
+/** Never retried: the worker holds a staff chat text behind the reopen template (window/). */
+const windowClosed: Step = (c) =>
+  isWindowClosedError(c.error)
+    ? { ...plain(c.error, c.error_text), error_code: WINDOW_CLOSED }
+    : null;
+
+const crm: Step = (c) => {
+  const { info, attempts, now, error_text } = c;
+  return crmPlan({ info, attempts, now, error_text, error_code: errorCode(c.error) });
+};
+
+function retryOrFail(c: HoldInput): FailurePlan {
+  const failed = plain(c.error, c.error_text);
+  const retry = isRetryableWaError(c.info?.code ?? null) && c.attempts < MAX_SEND_ATTEMPTS;
+  const next_attempt_at = new Date(c.now.getTime() + backoff(c.attempts)).toISOString();
+  return retry ? { ...failed, status: 'queued', next_attempt_at } : failed;
+}
 
 function accountHold(h: HoldInput): FailurePlan | null {
   const until = new Date(h.now.getTime() + AUTH_HOLD_MS).toISOString();
@@ -105,49 +123,15 @@ function accountHold(h: HoldInput): FailurePlan | null {
 }
 
 /** The token is broken, not the message: back in the queue, this try not counted. */
-function authHold(h: { error: unknown; attempts: number; error_text: string; until: string }): FailurePlan {
+function authHold(h: HoldInput & { until: string }): FailurePlan {
   const attempts = Math.max(0, h.attempts - 1);
-  return { status: 'queued', next_attempt_at: h.until, error_code: errorCode(h.error), error_text: h.error_text, attempts };
+  return {
+    status: 'queued',
+    next_attempt_at: h.until,
+    error_code: errorCode(h.error),
+    error_text: h.error_text,
+    attempts,
+  };
 }
 
-/**
- * Quick-reply payloads by button index: the producer's params.payloads[i], else
- * quickReplyPayload(intent, ref) with ref = lesson ?? lead ?? message id. URL buttons get ''.
- */
-export function quickReplyPayloads(buttons: readonly TemplateButton[], input: { params: TemplateParams; ref: string }): string[] {
-  return buttons.map((b, i) => input.params.payloads?.[i] ?? (b.type === 'quick_reply' ? quickReplyPayload(b.intent, input.ref) : ''));
-}
-
-export interface Sendable {
-  template_key: string | null;
-  template_params: Json | null;
-  body: string | null;
-}
-
-/**
- * false = not yet: a document template whose PDF is not attached yet (the report job points the
- * queued row at it). Such a row is not claimed and no attempt is counted.
- */
-export function readyToSend(row: Sendable, template: TemplateRow | null): boolean {
-  if (!row.template_key) return true;
-  if (!template) return false;
-  return template.header_format !== 'document' || templateParams(row.template_params).document !== undefined;
-}
-
-const REPORT_PREFIX = 'report_ready:';
-
-/** The lesson report a report_ready row delivers: its dedup key is `report_ready:{report id}`. */
-export function reportIdOf(dedupKey: string | null): string | null {
-  return dedupKey?.startsWith(REPORT_PREFIX) ? dedupKey.slice(REPORT_PREFIX.length) || null : null;
-}
-
-const LABEL_TEXT_MAX = 40;
-
-/** The raw key when the template is unknown; the text start for a session message. */
-export function messageLabel(row: { template_key: string | null; body: string | null; media_path?: string | null; media_mime?: string | null }): string {
-  const names: Record<string, string> = ar.templates.names;
-  if (row.template_key) return names[row.template_key] ?? row.template_key;
-  const text = (row.body ?? '').trim();
-  if (!text && row.media_path) return ar.inbox.media[waSendKind(row.media_mime ?? null)];
-  return text.length > LABEL_TEXT_MAX ? `${text.slice(0, LABEL_TEXT_MAX)}…` : text;
-}
+const FIRST_MATCH: readonly Step[] = [uncertain, windowClosed, accountHold, crm];

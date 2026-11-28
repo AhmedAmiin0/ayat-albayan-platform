@@ -5,7 +5,7 @@ import type { MessageDispatch } from '@/modules/messaging/whatsapp/sender/messag
 import { MessageWorker } from '@/modules/messaging/whatsapp/sender/message.worker';
 import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { DueMessage, SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo';
-import { staffAtSend } from '@/modules/messaging/whatsapp/sender/staff-at-send';
+import { DueQueueRepo } from '@/modules/messaging/whatsapp/sender/queue/due-queue.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
 // Review of #172 (PR #175 «Not fixed»): a staff alert queued while the send gate was closed is
@@ -26,7 +26,7 @@ const teacherRow = (over: Partial<DueMessage> = {}) =>
 
 function run(row: DueMessage, teachers: FakeResult) {
   const { db, calls } = fakeDb({ teachers: [teachers] });
-  queries.staffAtSend.mockImplementation((r: DueMessage) => staffAtSend(db, r));
+  queries.staffAtSend.mockImplementation((r: DueMessage) => new DueQueueRepo(db).staffAtSend(r));
   const w = new MessageWorker(
     queries as unknown as SenderRepo,
     dispatch as unknown as MessageDispatch,

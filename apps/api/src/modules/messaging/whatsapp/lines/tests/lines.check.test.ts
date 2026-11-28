@@ -1,19 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { LinesCheck, PHONE_FIELDS } from '@/modules/messaging/whatsapp/lines/lines.check';
-import { CHAT_ENV, LINES_RECORDED as R, routedFetch, stubEnvs, TWO_LINES_ENV } from '@/modules/messaging/whatsapp/whatsapp.lines.fakes';
-import { STUB_ENV, type Recorded } from '@/modules/messaging/whatsapp/whatsapp.fakes';
-
-const N = STUB_ENV.phoneNumberId;
-const C = CHAT_ENV.phoneNumberId;
-const NW = `${STUB_ENV.wabaId}/subscribed_apps`;
-const CW = `${CHAT_ENV.wabaId}/subscribed_apps`;
-
-function checker(routes: Record<string, Recorded | Error>) {
-  const f = routedFetch(routes);
-  const lines = new LinesCheck();
-  lines.fetch = f.fetch;
-  return { lines, requests: f.requests };
-}
+import { CHAT_ENV, LINES_RECORDED as R, stubEnvs, TWO_LINES_ENV } from '@/modules/messaging/whatsapp/whatsapp.lines.fakes';
+import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { C, checker, CW, N, NW } from './fixtures/checker';
 
 describe('LinesCheck (docs/12 §13.9, R-MSG-05)', () => {
   beforeEach(() => stubEnvs(TWO_LINES_ENV));
@@ -44,7 +33,12 @@ describe('LinesCheck (docs/12 §13.9, R-MSG-05)', () => {
   });
 
   it('both configured → phone facts, ids, own app id and subscribed apps (override included), in order', async () => {
-    const { lines } = checker({ [N]: R.phone, [NW]: R.subscribed, [C]: R.chatPhone, [CW]: R.noneSubscribed });
+    const { lines } = checker({
+      [N]: R.phone,
+      [NW]: R.subscribed,
+      [C]: R.chatPhone,
+      [CW]: R.noneSubscribed,
+    });
     const [notifications, chat] = await lines.check();
     expect(notifications).toEqual({
       line: 'notifications', configured: true, provider: 'meta', gaps: [], duplicate_chat_phone: false, phone_number_id: N, waba_id: STUB_ENV.wabaId, app_id: 'app-notifications',
@@ -64,7 +58,12 @@ describe('LinesCheck (docs/12 §13.9, R-MSG-05)', () => {
   });
 
   it('only GETs: the exact fields query, each line with its own token', async () => {
-    const { lines, requests } = checker({ [N]: R.phone, [NW]: R.subscribed, [C]: R.chatPhone, [CW]: R.noneSubscribed });
+    const { lines, requests } = checker({
+      [N]: R.phone,
+      [NW]: R.subscribed,
+      [C]: R.chatPhone,
+      [CW]: R.noneSubscribed,
+    });
     await lines.check();
     const base = `${STUB_ENV.base}/${STUB_ENV.version}`;
     expect(requests.map((r) => r.url).sort()).toEqual(
@@ -77,34 +76,15 @@ describe('LinesCheck (docs/12 §13.9, R-MSG-05)', () => {
     expect(auth(NW)).toMatchObject({ authorization: 'Bearer test-token' });
   });
 
-  it('a 190 on one call becomes an errors[] entry; the other call and the other line still answer', async () => {
-    const { lines } = checker({ [N]: R.badToken, [NW]: R.subscribed, [C]: R.chatPhone, [CW]: R.badToken });
-    const [notifications, chat] = await lines.check();
-    expect(notifications?.errors).toEqual([{ step: 'phone', code: 190, message: 'Invalid OAuth access token.' }]);
-    expect(notifications).toMatchObject({ display_phone_number: null, status: null, subscribed_apps: expect.any(Array) });
-    expect(chat?.errors).toEqual([{ step: 'subscribed_apps', code: 190, message: 'Invalid OAuth access token.' }]);
-    expect(chat).toMatchObject({ display_phone_number: '+1 555-000-2222', subscribed_apps: null });
-  });
-
-  it('errors keep the step order (phone, then subscribed_apps); a rejected fetch is isolated too', async () => {
-    const down = new TypeError('fetch failed');
-    const { lines } = checker({ [N]: R.badToken, [NW]: down, [C]: R.chatPhone, [CW]: R.subscribed });
-    const [notifications, chat] = await lines.check();
-    expect(notifications?.errors.map((e) => [e.step, e.code])).toEqual([['phone', 190], ['subscribed_apps', null]]);
-    expect(notifications?.errors[1]?.message).toBe('WhatsApp request failed');
-    expect(chat?.errors).toEqual([]);
-  });
-
-  it('a body of the wrong shape is a code-null error, not a crash', async () => {
-    const { lines } = checker({ [N]: R.phone, [NW]: { status: 200, body: { data: 'x' } }, [C]: R.chatPhone, [CW]: R.subscribed });
-    const [notifications] = await lines.check();
-    expect(notifications?.errors).toEqual([{ step: 'subscribed_apps', code: null, message: 'Unexpected WhatsApp response' }]);
-  });
-
   it('override_callback_uri: the sibling (Meta) wins; the nested one is read as a fallback', async () => {
     const app = (uri: string) => ({ id: 'a', name: 'A', override_callback_uri: uri });
     const body = { data: [{ whatsapp_business_api_data: app('https://nested.test/x'), override_callback_uri: 'https://sibling.test/x' }, { whatsapp_business_api_data: app('https://nested.test/y') }] };
-    const { lines } = checker({ [N]: R.phone, [NW]: { status: 200, body }, [C]: R.chatPhone, [CW]: R.noneSubscribed });
+    const { lines } = checker({
+      [N]: R.phone,
+      [NW]: { status: 200, body },
+      [C]: R.chatPhone,
+      [CW]: R.noneSubscribed,
+    });
     const [notifications] = await lines.check();
     expect(notifications?.subscribed_apps?.map((a) => a.override_callback_uri)).toEqual(['https://sibling.test/x', 'https://nested.test/y']);
   });
@@ -116,12 +96,19 @@ describe('LinesCheck (docs/12 §13.9, R-MSG-05)', () => {
     const run = lines.check();
     await new Promise((r) => setTimeout(r, 0));
     expect(pending).toHaveLength(4);
-    for (const resolve of pending) resolve(new Response(JSON.stringify({ data: [] }), { status: 200 }));
+    for (const resolve of pending) {
+      resolve(new Response(JSON.stringify({ data: [] }), { status: 200 }));
+    }
     expect(await run).toHaveLength(2);
   });
 
   it('never returns a token or secret; default timeout is 8 s', async () => {
-    const { lines } = checker({ [N]: R.badToken, [NW]: R.subscribed, [C]: R.chatPhone, [CW]: R.subscribed });
+    const { lines } = checker({
+      [N]: R.badToken,
+      [NW]: R.subscribed,
+      [C]: R.chatPhone,
+      [CW]: R.subscribed,
+    });
     const json = JSON.stringify(await lines.check());
     for (const secret of ['test-token', 'chat-token', 'notifications-secret', 'chat-secret']) expect(json).not.toContain(secret);
     expect(new LinesCheck().timeoutMs).toBe(8000);

@@ -3,7 +3,7 @@ import {
   type OnApplicationBootstrap,
 } from '@nestjs/common';
 import { stopWithin } from '@/common/jobs';
-import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import { overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
 import { loadEnv } from '@/config/env/env';
 import type { KickOptions } from '@/config/role/kick-options';
 import { MessageWorker } from './message.worker';
@@ -13,9 +13,12 @@ import { lineOf } from './send-line';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { SenderRepo } from './sender.repo';
 import { onPaceDue } from './pace';
-import { emptySummary, reportPass, type SendSummary } from './pass';
 import {
-  drainLanes, LaneLocks, LaneTickers, pooledKeys, type Lane, type PassItem, type PassRun,
+  emptySummary, reportPass, type NumbersPassInput, type PassNumbers, type PassOptions,
+  type SenderRun, type SendSummary,
+} from './pass';
+import {
+  drainLanes, LaneLocks, LaneTickers, pooledKeys, type PassItem, type PassRun,
 } from './drain';
 import { senderTiming } from './sender-timing';
 import { BackgroundJob } from '@/config/role/background-job';
@@ -25,17 +28,11 @@ const BATCH = 50;
 
 export type { SendSummary } from './pass';
 
-/** A runOnce: its lane (absent = every row, as before the lanes) and whether a kick started it. */
-interface PassOptions { lane?: Lane; kicked?: boolean }
-type SenderRun = PassRun & { lane?: Lane };
-type Numbers = readonly OverlayNumber[] | null;
-
 /**
- * The outbound sender (R-MSG-01/02, docs/12 §3.3): drains due queued `messages` (a session text or
- * an approved template). Gate closed (config or kill switch) → nothing is read, rows wait; it is
- * asked again before every row. Two lanes (docs/42 42-7), each single-flight: `chat` (its own
- * ticker) never waits behind a `main` burst. Safe across instances (each row is claimed by
- * compare-and-set). Module mode (docs/23c) routes each row to a number; legacy is today's pass.
+ * The outbound sender (R-MSG-01/02, docs/12 §3.3): drains due queued `messages`. Gate closed →
+ * nothing is read, rows wait; it is asked again before every row. Two lanes (docs/42 42-7), each
+ * single-flight: `chat` never waits behind a `main` burst. Safe across instances (each row is
+ * claimed by compare-and-set). Module mode (docs/23c) routes each row to a number.
  */
 @BackgroundJob({ name: 'message-sender', kick: 'kick' })
 @Injectable()
@@ -63,10 +60,7 @@ export class MessageSender implements OnApplicationBootstrap, BeforeApplicationS
     await stopWithin(this.tickers);
   }
 
-  /**
-   * Run now (after an enqueue or an admin retry): the named lane, or both. A kick during a lane's
-   * run queues exactly one more of it. `wait` matters only on an API copy (worker-kick).
-   */
+  /** Run now (an enqueue, an admin retry): the named lane, or both; mid-run, exactly one more. */
   kick(options: KickOptions = {}): Promise<void> {
     return this.tickers.kick(options.lane);
   }
@@ -74,22 +68,26 @@ export class MessageSender implements OnApplicationBootstrap, BeforeApplicationS
   /** One pass over the due rows (of `lane`). Never throws. A kick skips the idle probe (42-4). */
   async runOnce(now = new Date(), options: PassOptions = {}): Promise<SendSummary> {
     const summary = emptySummary();
-    try {
-      const gate = await this.gate.switches();
-      if (!gate.open) return summary;
-      // Automatic messages OFF: hold every job-made row first, read by due() or not (unapproved
-      // template).
-      if (!gate.automaticOn) summary.held += await this.queries.holdAutomatic();
-      await this.worker.release(); // held texts the family answered (window/): due again
-      if (!(await this.anyWork(options, now))) return this.report(summary);
-      const run: SenderRun = { summary, paused: new Set<string>(), lane: options.lane };
-      await this.pass(run, now);
-      // A text just held queued its reopen template: one more pass sends it now, not next tick.
-      if (summary.waiting > 0) await this.pass(run, new Date());
-    } catch (e) {
+    const opened = await this.passes(summary, now, options).catch((e: unknown) => {
       this.log.error(`send pass aborted: ${e instanceof Error ? e.message : String(e)}`);
-    }
-    return this.report(summary);
+      return true;
+    });
+    return opened ? this.report(summary) : summary;
+  }
+
+  /** false = the gate is closed: nothing was read, nothing is reported. */
+  private async passes(summary: SendSummary, now: Date, options: PassOptions): Promise<boolean> {
+    const gate = await this.gate.switches();
+    if (!gate.open) return false;
+    // Automatic messages OFF: hold every job-made row first, read by due() or not (unapproved).
+    if (!gate.automaticOn) summary.held += await this.queries.holdAutomatic();
+    await this.worker.release(); // held texts the family answered (window/): due again
+    if (!(await this.anyWork(options, now))) return true;
+    const run: SenderRun = { summary, paused: new Set<string>(), lane: options.lane };
+    await this.pass(run, now);
+    // A text just held queued its reopen template: one more pass sends it now, not next tick.
+    if (summary.waiting > 0) await this.pass(run, new Date());
+    return true;
   }
 
   /** Idle (the usual tick): one cheap read (of its lane) instead of the templates + the queue. */
@@ -112,18 +110,18 @@ export class MessageSender implements OnApplicationBootstrap, BeforeApplicationS
   private async linesPass(run: SenderRun, now: Date): Promise<void> {
     const templates = new Map((await this.queries.approvedTemplates()).map((t) => [t.key, t]));
     const rows = await this.due(run, { keys: [...templates.keys()], now });
+    const chatOn = this.queries.chatConfigured;
     await this.drain(run, null, rows.map((row) => {
       const template = templates.get(row.template_key ?? '') ?? null;
-      return { job: { row, template, now }, pause: lineOf(row, template, this.queries.chatConfigured) };
+      return { job: { row, template, now }, pause: lineOf(row, template, chatOn) };
     }));
   }
 
   /**
    * Module mode (docs/23c): each row's number from routeOf (none = the worker leaves it queued). A
-   * broken token pauses that NUMBER for the rest of the pass; the role's other numbers keep
-   * sending.
+   * broken token pauses that NUMBER for the rest of the pass; the role's other numbers keep going.
    */
-  private async numbersPass(input: { run: SenderRun; now: Date; numbers: readonly OverlayNumber[] }): Promise<void> {
+  private async numbersPass(input: NumbersPassInput): Promise<void> {
     const { run, now } = input;
     if (!this.routes) return;
     const { pass, templates: rows } = await this.routes.pass(input.numbers);
@@ -137,7 +135,7 @@ export class MessageSender implements OnApplicationBootstrap, BeforeApplicationS
   }
 
   /** drain/: lanes by pause key in parallel, the switches read before every row. */
-  private drain(run: PassRun, numbers: Numbers, items: PassItem[]): Promise<void> {
+  private drain(run: PassRun, numbers: PassNumbers, items: PassItem[]): Promise<void> {
     const size = loadEnv().MESSAGE_SENDER_CONCURRENCY;
     const pooled = pooledKeys(numbers);
     const stopping = () => this.tickers.stopping;

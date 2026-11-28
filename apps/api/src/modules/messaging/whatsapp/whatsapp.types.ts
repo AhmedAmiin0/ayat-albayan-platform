@@ -61,9 +61,8 @@ export interface TemplateSend {
 export interface SampleFile { name: string; mime: string; bytes: Uint8Array<ArrayBuffer> }
 
 /**
- * A session file by link; `kind` defaults to document, `filename` is a document's only, an audio
- * takes no caption. `replyTo` = the quoted wamid (Meta's context; the crm driver drops it and
- * `voice`: a CRM line sends files as documents only). */
+ * A session file by link; `filename` is a document's only, an audio takes no caption. The crm
+ * driver drops `replyTo` and `voice`: a CRM line sends files as documents only. */
 export interface MediaSend {
   to: string;
   kind?: WaSendKind;
@@ -71,10 +70,7 @@ export interface MediaSend {
   filename?: string;
   caption?: string | null;
   replyTo?: string | null;
-  /**
-   * An ogg/opus audio as WhatsApp's voice note (mic icon, auto-download); Meta ignores it on other
-   * audio.
-   */
+  /** An ogg/opus audio as a voice note (mic icon, auto-download); Meta ignores other audio. */
   voice?: boolean;
 }
 
@@ -85,10 +81,7 @@ export interface ReactionSend {
   emoji: string | null;
 }
 
-/**
- * Every call throws WaError on a Meta error or a network failure, and WaError with code null and
- * status 0 when WhatsApp is not configured (whatsappEnv(env) === null).
- */
+/** Every call throws WaError; code null and status 0 when WhatsApp is not configured. */
 export interface WhatsappClient {
   configured(): boolean;
   sendTemplate(input: TemplateSend): Promise<WaSent>;
@@ -96,10 +89,7 @@ export interface WhatsappClient {
   sendText(input: { to: string; text: string; replyTo?: string | null }): Promise<WaSent>;
   /** Session image or document by link (a signed Storage URL); same body on both drivers. */
   sendDocument(input: MediaSend): Promise<WaSent>;
-  /**
-   * Interactive call_permission_request (docs/28); Graph drivers only (absent = this driver
-   * cannot).
-   */
+  /** Interactive call_permission_request (docs/28); absent = this driver cannot. */
   sendCallPermissionRequest?(input: { to: string; text: string }): Promise<WaSent>;
   /** A message reaction (Meta and Kapso); absent = this driver cannot (the CRM). */
   sendReaction?(input: ReactionSend): Promise<WaSent>;
@@ -113,7 +103,10 @@ export interface WhatsappClient {
    * Creates the template on Meta (status PENDING). Only ever from the explicit admin route. A
    * document header needs `headerHandle` from uploadSample (Meta's sample for the reviewer).
    */
-  submitTemplate(template: TemplateRow, opts?: { headerHandle?: string }): Promise<{ metaId: string; status: string }>;
+  submitTemplate(
+    template: TemplateRow,
+    opts?: { headerHandle?: string },
+  ): Promise<{ metaId: string; status: string }>;
   /** Edits a template Meta knows (back to PENDING); absent = crm / evolution cannot. */
   editTemplate?(row: TemplateRow, opts?: { headerHandle?: string }): Promise<{ status: string }>;
   canUploadSamples(): boolean; // WA_APP_ID set: the Resumable Upload API is usable
@@ -137,22 +130,13 @@ export class WaError extends Error {
       uncertain?: boolean; // the request may have reached Meta: a resend could duplicate it
       timedOut?: boolean; // the deadline fired (uncertain too): 3 in a row hold the lane
       lineDown?: boolean; // the provider is down or unreachable, nothing sent: the lane is held
-      /**
-       * Kapso refused the line's project key, or the CRM its API key (docs/19): held like Meta's
-       * 190, in its own words.
-       */
+      /** Kapso or the CRM refused the line's key (docs/19): held like Meta's 190. */
       credential?: 'kapso' | 'crm' | 'evolution';
       missingScope?: string; // the scope the CRM's 403 named («templates:read», docs/39)
-      /**
-       * The crm driver's error code («meta_error», «template_malformed», «bad_request», …): fails
-       * at once, never retried.
-       */
+      /** The crm driver's code («meta_error», «bad_request», …): fails at once, no retry. */
       crmCode?: string;
       retryAfterMs?: number; // the CRM's 429: try again after this long, the try not counted
-      /**
-       * The call is not supported by this line's driver (the crm driver: template list / submit /
-       * samples / media).
-       */
+      /** This line's driver does not support the call (crm: templates, samples, media). */
       unsupported?: 'crm' | 'evolution';
       blocked?: 'evolution_auto_off'; // the number's own safety rule, before any call (docs/19)
       template?: string; // crm: the template name sent (a 132001 marks only the key's own name)

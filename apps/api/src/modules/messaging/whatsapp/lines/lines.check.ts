@@ -2,78 +2,21 @@ import type { LineCheckView } from '@ab/shared';
 import { WA_LINES, type WaLine } from '@ab/catalog';
 import { Injectable } from '@nestjs/common';
 import { isGraphEnv, lineEnvs, loadEnv, type WhatsappEnv } from '@/config/env/env';
-import { graphHttp, type FetchLike, type GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';
+import type { FetchLike, GraphConn } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { offGraphCheck } from './lines.check.evolution';
 import { driverOf, type LineDriver } from './lines.check.driver';
+import { appsOf, graphCheck, unconfigured } from './lines.check.graph';
 import { withMetaReady } from './lines.check.meta';
-import { phoneNumberSchema, subscribedAppsSchema } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
-import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-type Phone = Pick<
-  LineCheckView,
-  'display_phone_number' | 'verified_name' | 'quality_rating' | 'status' | 'name_status' | 'code_verification_status'
->;
-type Step = LineCheckView['errors'][number]['step'];
-type Outcome<T> = { ok: true; value: T } | { ok: false; error: LineCheckView['errors'][number] };
-
-export const PHONE_FIELDS = 'display_phone_number,verified_name,quality_rating,status,name_status,code_verification_status';
-
-const NO_PHONE: Phone = {
-  display_phone_number: null,
-  verified_name: null,
-  quality_rating: null,
-  status: null,
-  name_status: null,
-  code_verification_status: null,
-};
+export { PHONE_FIELDS } from './lines.check.graph';
 
 interface LineInput {
   line: WaLine;
   env: WhatsappEnv | null;
   appId: string | null;
   checkedAt: string;
-  /**
-   * The line's driver, the NAMES of what it still lacks, a duplicate chat id, whether Kapso can
-   * deliver inbound (docs/19).
-   */
+  /** The line's driver, the NAMES of what it still lacks, a duplicate chat id (docs/19). */
   driver: LineDriver;
-}
-
-/** A rejected call becomes an errors[] entry; it never hides the other call or line. */
-async function attempt<T>(step: Step, call: () => Promise<T>): Promise<Outcome<T>> {
-  try {
-    return { ok: true, value: await call() };
-  } catch (e) {
-    const code = e instanceof WaError ? e.info.code : null;
-    const tag = e instanceof WaError && e.info.credential ? { credential: e.info.credential } : {};
-    return {
-      ok: false,
-      error: { step, code, message: e instanceof Error ? e.message : String(e), ...tag },
-    };
-  }
-}
-
-async function phoneOf(conn: GraphConn): Promise<Phone> {
-  const path = `${encodeURIComponent(conn.env.phoneNumberId)}?fields=${PHONE_FIELDS}`;
-  const p = await graphHttp(conn).json({ path, schema: phoneNumberSchema });
-  return {
-    display_phone_number: p.display_phone_number ?? null,
-    verified_name: p.verified_name ?? null,
-    quality_rating: p.quality_rating ?? null,
-    status: p.status ?? null,
-    name_status: p.name_status ?? null,
-    code_verification_status: p.code_verification_status ?? null,
-  };
-}
-
-async function appsOf(conn: GraphConn): Promise<NonNullable<LineCheckView['subscribed_apps']>> {
-  const path = `${encodeURIComponent(conn.env.wabaId)}/subscribed_apps`;
-  const body = await graphHttp(conn).json({ path, schema: subscribedAppsSchema });
-  return body.data.map(({ whatsapp_business_api_data: a, override_callback_uri: uri }) => ({
-    id: a?.id ?? null,
-    name: a?.name ?? null,
-    override_callback_uri: uri ?? a?.override_callback_uri ?? null,
-  }));
 }
 
 /**
@@ -84,8 +27,8 @@ async function appsOf(conn: GraphConn): Promise<NonNullable<LineCheckView['subsc
  */
 @Injectable()
 export class LinesCheck {
-  /** Overridable in tests. */
-  fetch: FetchLike = fetch;
+  /** Tests set it; absent, each driver calls through the runtime http client. */
+  fetch?: FetchLike;
   timeoutMs = 8000;
 
   async check(): Promise<LineCheckView[]> {
@@ -113,42 +56,6 @@ export class LinesCheck {
     // crm (GET /me) and evolution (connectionState): no Graph call at all (docs/19).
     if (!isGraphEnv(env)) return offGraphCheck({ ...input, env, at: this });
     const conn: GraphConn = { env, fetch: this.fetch, timeoutMs: this.timeoutMs };
-    // Kapso's Meta proxy has no /{waba}/subscribed_apps (404 on staging, 2026-10-18): its inbound
-    // comes through the Kapso webhook, so a kapso line is not asked (subscribed_apps stays null).
-    const kapso = input.driver.provider === 'kapso';
-    const [phone, apps] = await Promise.all([
-      attempt('phone', () => phoneOf(conn)),
-      kapso ? null : attempt('subscribed_apps', () => appsOf(conn)),
-    ]);
-    const errors = [phone, apps].flatMap((o) => (o && !o.ok ? [o.error] : []));
-    return {
-      line,
-      configured: true,
-      ...input.driver,
-      phone_number_id: env.phoneNumberId,
-      waba_id: env.wabaId,
-      app_id: input.appId,
-      ...(phone.ok ? phone.value : NO_PHONE),
-      subscribed_apps: apps?.ok ? apps.value : null,
-      errors,
-      checked_at: checkedAt,
-    };
+    return graphCheck({ ...input, env }, conn);
   }
-}
-
-function unconfigured(line: WaLine, checkedAt: string): LineCheckView {
-  return {
-    line,
-    configured: false,
-    provider: 'meta',
-    gaps: [],
-    duplicate_chat_phone: false,
-    phone_number_id: null,
-    waba_id: null,
-    app_id: null,
-    ...NO_PHONE,
-    subscribed_apps: null,
-    errors: [],
-    checked_at: checkedAt,
-  };
 }

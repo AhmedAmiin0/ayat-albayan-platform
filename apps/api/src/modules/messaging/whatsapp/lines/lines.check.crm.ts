@@ -2,7 +2,9 @@ import type { LineCheckView } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
 import { z } from 'zod';
 import type { CrmLineEnv } from '@/config/env/env';
+import type { FetchLike } from '@/common/infra/http/failure';
 import { crmJson, type CrmConn } from '@/modules/messaging/whatsapp/drivers/crm/crm-http';
+import { crmFetch } from '@/modules/messaging/whatsapp/drivers/crm/crm.client';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // One read-only GET /me (docs/19), never a test message; Meta fields stay null.
@@ -84,5 +86,12 @@ export async function crmLineCheck(input: CrmCheckInput): Promise<LineCheckView>
   };
 }
 
-/** The crm conn of a line env, for the check. */
-export const crmConn = (env: CrmLineEnv, at: { fetch: CrmConn['fetch']; timeoutMs: number }): CrmConn => ({ env, ...at });
+/** The crm conn of a line env, for the check; no test fetch = the crm driver's runtime fetch. */
+export const crmConn = (
+  env: CrmLineEnv,
+  at: { fetch?: FetchLike; timeoutMs: number },
+): CrmConn => ({
+  env,
+  fetch: at.fetch ?? crmFetch,
+  timeoutMs: at.timeoutMs,
+});

@@ -4,23 +4,28 @@ import { PushService } from '@/common/push/push.service';
 import { LineOutages } from './hold/line-outages';
 import { PAYMENT_HOLD_EXPIRED } from './hold/payment-hold';
 import { PaymentHolds, type HoldAt } from './hold/payment-holds';
+import { deferHeld, heldPlan, liftHolds, lineHoldCheck } from './hold/worker-holds';
+import { dropRow } from './plan/drop-row';
 import { MessageDispatch } from './message.dispatch';
 import { claimRow, sendingAt, UNRECORDED, unrecordedAt, type FailedInput, type PassJob, type SendJob, type SendOutcome } from './message.job';
 import { failurePush, pauseOf, timeoutPause, trySubject, type Pause } from './pause';
-import { failurePlan, readyToSend, SENDING, type FailurePlan } from './send-plan';
-import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
+import { readyToSend, SENDING } from './send-plan';
+import { AUTO_OFF } from './send-stale';
+import { autoHeld } from './plan/automatic';
 import { SenderRepo, type DueMessage } from './sender.repo';
 import { TemplateMissing } from '@/modules/messaging/whatsapp/templates/check/template-missing';
 import { isWindowClosedError, WindowHold } from './window/window-hold';
 import { EvolutionPaceRepo } from './pace';
 import { recordSent, SendClock } from './pass';
 import type { WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
+import type { WaLine } from '@ab/catalog';
 
 export type { PassJob, SendJob } from './message.job';
-/**
- * One queued row (docs/12 §3.3): the window hold (window/), expiry, staleness, auto_off, the
- * 131042 and outage holds (hold/), claim, send, outcome. Never throws; claimed by compare-and-set.
- */
+
+type SendingAt = ReturnType<typeof sendingAt>;
+
+/** One queued row (docs/12 §3.3): the window hold (window/), expiry, staleness, auto_off, the
+ * 131042 and outage holds (hold/), claim, send, outcome. Never throws; claims compare-and-set. */
 @Injectable()
 export class MessageWorker {
   private readonly log = new Logger(MessageWorker.name);
@@ -40,30 +45,32 @@ export class MessageWorker {
     @Optional() private readonly holds?: PaymentHolds,
   ) {}
 
-  async process(job: SendJob): Promise<SendOutcome> {
-    try {
-      return await this.run(job);
-    } catch (e) {
+  process(job: SendJob): Promise<SendOutcome> {
+    return this.run(job).catch((e: unknown): SendOutcome => {
       this.log.error(`message ${job.row.id}: ${e instanceof Error ? e.message : String(e)}`);
       return 'skipped';
-    }
+    });
   }
 
   private async run(job: SendJob): Promise<SendOutcome> {
-    const { row, template, now, route } = job;
-    const { line, via } = sendingAt(job, this.dispatch.multi);
+    const at = sendingAt(job, this.dispatch.multi);
+    return (await this.beforeClaim(job, at.line)) ?? this.claimAndSend(job, at);
+  }
+
+  /** Held for the window, dropped, never recorded, or not now; null = claim and send it. */
+  private async beforeClaim(job: SendJob, line: WaLine): Promise<SendOutcome | null> {
+    const { row, now, route } = job;
     const held = await this.window?.due({ row, now, line, route });
     if (held) return held;
-    const staff = await this.queries.staffAtSend(row);
-    const drop = dropReason(staff ? { ...row, staff } : row, now);
-    if (drop) {
-      await this.queries.expire(row.id, drop);
-      return drop.code;
-    }
+    const drop = await dropRow(this.queries, row, now);
+    if (drop) return drop;
     if (row.error_code === SENDING)
       return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now, line, route });
-    const wait = await this.notNow(job, { line, route, now });
-    if (wait) return wait;
+    return this.notNow(job, { line, route, now });
+  }
+
+  private async claimAndSend(job: SendJob, { line, via }: SendingAt): Promise<SendOutcome> {
+    const { row, template, now, route } = job;
     const deps = { dispatch: this.dispatch, queries: this.queries, pace: this.pace };
     const attempts = await claimRow(deps, { row, now, line, route });
     if (attempts === null) return 'skipped';
@@ -76,8 +83,7 @@ export class MessageWorker {
     }
     const recordDeps = { queries: this.queries, wait: this.wait, log: this.log };
     await clock.record(() => recordSent(recordDeps, { row, sent }));
-    await this.holds?.lift({ line, route, now });
-    await this.outages?.lift({ line, route, now });
+    await liftHolds(this.lineHolds, { line, route, now });
     return clock.end('sent');
   }
 
@@ -88,7 +94,7 @@ export class MessageWorker {
 
   private async failed(input: FailedInput): Promise<SendOutcome> {
     const { row, now, line } = input;
-    const plan = await this.plan(input);
+    const plan = await heldPlan(this.lineHolds, input);
     await this.queries.failure(row.id, plan, ...unrecordedAt(input));
     await this.missing?.check({ key: row.template_key, line, error: input.error, now });
     const pause = pauseOf({ ...input, plan }) ?? (await this.timeouts(input));
@@ -113,37 +119,31 @@ export class MessageWorker {
     return timeoutPause(input);
   }
 
-  /**
-   * Not now: automatic messages OFF ('held'), its PDF not attached yet ('skipped'), or a 131042
-   * line hold ('skipped': deferred; due 48 h ago: fails as 131042, pushed). null = send.
-   */
+  /** Not now: automatic messages OFF ('held'), its PDF not attached ('skipped'), or a line hold
+   * ('skipped': deferred; a 131042 due 48 h ago fails as 131042, pushed). null = send. */
   private async notNow(job: SendJob, at: HoldAt): Promise<SendOutcome | null> {
     const { row } = job;
     // Not left queued: it would go out at a wrong time once the switch is back ON. No push.
-    if (!job.autoOn && isAutomatic(row)) {
+    if (autoHeld(job)) {
       await this.queries.expire(row.id, AUTO_OFF);
       return 'held';
     }
     if (!readyToSend(row, job.template)) return 'skipped';
-    const check = await this.holds?.check(row, at);
-    if (check === 'deferred' || (await this.outages?.check(row, at)) === 'deferred') return 'skipped';
-    if (check !== 'aged') return null;
-    return this.failed({ ...at, row, error: PAYMENT_HOLD_EXPIRED, attempts: row.attempts });
+    const check = await lineHoldCheck(this.lineHolds, row, at);
+    if (check === 'aged') {
+      return this.failed({ ...at, row, error: PAYMENT_HOLD_EXPIRED, attempts: row.attempts });
+    }
+    return check === 'deferred' ? 'skipped' : null;
   }
 
-  /** The failure's plan; a template's 131042 also holds its line with this row as the probe. */
-  private async plan(input: FailedInput): Promise<FailurePlan> {
-    const plan = failurePlan(input);
-    const paid = this.holds ? await this.holds.probe(plan, input) : plan;
-    return this.outages ? this.outages.probe(paid, input) : paid;
+  private get lineHolds(): { holds?: PaymentHolds; outages?: LineOutages } {
+    return { holds: this.holds, outages: this.outages };
   }
 
   release = (): Promise<number> => this.window?.release() ?? Promise.resolve(0);
   /** The pass's later rows of a paused line: deferred in one write while it is held. */
   async deferRest(probe: PassJob, rest: readonly DueMessage[]): Promise<void> {
     const { line } = sendingAt(probe, this.dispatch.multi);
-    const at = { line, route: probe.route, now: probe.now };
-    await this.holds?.deferRest(rest, at);
-    await this.outages?.deferRest(rest, at);
+    await deferHeld(this.lineHolds, rest, { line, route: probe.route, now: probe.now });
   }
 }

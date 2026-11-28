@@ -33,10 +33,7 @@ export const crmFetch: FetchLike = fetch;
  */
 const sentSchema = z.object({ whatsapp_message_id: z.string().min(1) });
 
-/**
- * What callers recognise as «not supported by the crm driver» (template-env, inbound media, number
- * sync).
- */
+/** What callers recognise as «not supported by the crm driver» (templates, media, number sync). */
 export const crmUnsupported = (what: string): WaError =>
   new WaError(`${what} is not supported by the crm driver (templates and media live in the CRM)`, { code: null, status: 0, unsupported: 'crm' });
 
@@ -100,8 +97,11 @@ export class CrmWhatsappClient implements WhatsappClient {
   }
 
   /** The CRM owns the conversation (and its read receipts): nothing to do. */
-  async markRead(): Promise<void> {
-    this.connection();
+  markRead(): Promise<void> {
+    return new Promise((resolve) => {
+      this.connection();
+      resolve();
+    });
   }
 
   /** The CRM's rows after it re-syncs them from Meta (GET templates?sync=1). */

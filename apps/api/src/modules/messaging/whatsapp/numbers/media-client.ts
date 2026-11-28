@@ -67,8 +67,13 @@ function lineSource(msg: MediaOf, from: MediaFrom): MediaSource {
   const number = msg.number ?? null;
   if (!fetches(number)) return { kind: 'crm' };
   const line = messagingLine(msg);
-  const own = number ? from.numbers.client(number.id) : null;
+  const own = number ? numberSource(number, from) : null;
+  return own ?? { kind: 'client', client: from.lines[line], line };
+}
+
+/** The number's own client; in module mode none without one; null = fall back to its line. */
+function numberSource(number: MediaNumber, from: MediaFrom): MediaSource | null {
+  const own = from.numbers.client(number.id);
   if (own) return { kind: 'client', client: own, line: null };
-  if (number && overlayNumbers()) return { kind: 'none' };
-  return { kind: 'client', client: from.lines[line], line };
+  return overlayNumbers() ? { kind: 'none' } : null;
 }

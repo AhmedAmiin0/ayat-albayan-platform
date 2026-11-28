@@ -1,8 +1,8 @@
 import type { SendGateView } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '@/common/db/db.module';
+import { Injectable } from '@nestjs/common';
 import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv, type Env } from '@/config/env/env';
 import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
+import { SendGateRepo } from './send-gate.repo';
 
 /**
  * The one send gate (docs/12 §3.1): WhatsApp configured and the admin's kill switch
@@ -14,7 +14,7 @@ import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings
 export class SendGate {
   constructor(
     private readonly settings: WhatsappSettings,
-    @Inject(DB) private readonly db: Db,
+    private readonly repo: SendGateRepo,
   ) {}
 
   /** Read per call: the integration config may change at runtime. */
@@ -54,7 +54,7 @@ export class SendGate {
    * `restricted` only when WA_ALLOWED_RECIPIENTS is set (docs/12 §13.5): absent otherwise.
    */
   async view(): Promise<SendGateView> {
-    const [state, queued] = await Promise.all([this.state(), this.queuedCount()]);
+    const [state, queued] = await Promise.all([this.state(), this.repo.queuedCount()]);
     return { ...state, queued, ...(allowedRecipients(this.env) ? { restricted: true } : {}) };
   }
 
@@ -63,15 +63,5 @@ export class SendGate {
     if (!whatsappEnv(this.env)) return { open: false, reason: 'not_configured' };
     const on =  (await this.settings.read()).messaging_enabled;
     return on ? { open: true, reason: null } : { open: false, reason: 'switch_off' };
-  }
-
-  private async queuedCount(): Promise<number> {
-    const { count, error } = await this.db
-      .from('messages')
-      .select('id', { count: 'exact', head: true })
-      .eq('direction', 'outbound')
-      .eq('status', 'queued');
-    if (error) throw new Error(`queue count failed: ${error.message}`);
-    return count ?? 0;
   }
 }

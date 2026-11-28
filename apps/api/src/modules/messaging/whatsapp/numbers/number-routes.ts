@@ -1,7 +1,7 @@
 import { gateApprovedKeys } from '@ab/shared';
 import { Injectable, Optional } from '@nestjs/common';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
-import { RulesReader } from '@/modules/messaging/notification-rules/store/rules.reader';
+import { RulesReader } from '@/modules/messaging/notification-rules';
 import { messagingNumbers, routable, ruleNumbers, sendableSomewhere, type RoutePass } from './number-route';
 import { RouteRepo } from './route.repo';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';

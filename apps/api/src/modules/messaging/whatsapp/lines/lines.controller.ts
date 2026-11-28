@@ -2,7 +2,7 @@ import type { LineCheckView } from '@ab/shared';
 import { Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '@/common/auth/decorators';
-import { NumbersHealth } from '@/modules/messaging/numbers/lines/numbers.health';
+import { NumbersHealth } from '@/modules/messaging/numbers';
 import { LineHealthStore } from './line-health.store';
 import { LinesCheck } from './lines.check';
 import { TemplateManagerGuard } from '@/modules/messaging/whatsapp/templates/catalog/template-manager.guard';

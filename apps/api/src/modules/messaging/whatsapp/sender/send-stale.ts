@@ -4,11 +4,11 @@ import {
   followUpKeyCycle,
   isLessonTimed,
   messageExpired,
-  type TemplateKey,
 } from '@ab/shared';
 import type { LeadStatus, LessonStatus } from '@ab/catalog';
-import { REMINDER_KEYS } from '@/modules/messaging/reminders/reminders.repo';
-import { isStaffAlert, staffStale, type StaffAtSend } from '@/modules/messaging/reminders/plan/staff-reachable';
+import { isStaffAlert, staffStale, type StaffAtSend } from '@/modules/messaging/reminders';
+
+export { AUTO_OFF, AUTOMATIC_KEYS, isAutomatic } from './plan/automatic';
 
 // Send-time check of a queued row (docs/12 §3.3): rows wait in the queue while the send gate is
 // closed (until cut-over, after a kill-switch OFF), so what was right to queue may be wrong to
@@ -78,27 +78,38 @@ export type DropInput = StaleInput & {
   staff?: readonly StaffAtSend[];
 };
 
+type Drop = { code: 'expired' | 'stale'; text: string } | null;
+type DropRule = (row: DropInput, now: Date) => Drop;
+
+const expired: DropRule = (row, now) => {
+  const lessonStartsAt = row.lesson?.starts_at ?? null;
+  const input = { templateKey: row.template_key, expiresAt: row.expires_at, lessonStartsAt, now };
+  return messageExpired(input) ? { code: 'expired', text: 'expired before it was sent' } : null;
+};
+
+const staffGone: DropRule = (row) => {
+  const found = row.staff && isStaffAlert(row.template_key) ? row.staff : null;
+  const text = found ? staffStale(found, row.phone_e164 ?? '') : null;
+  return text ? { code: 'stale', text } : null;
+};
+
+const retimed: DropRule = (row) =>
+  newStudentRetimed(row) ? { code: 'stale', text: 'lesson retimed' } : null;
+
+const stale: DropRule = (row) => {
+  const text = staleReason(row);
+  return text ? { code: 'stale', text } : null;
+};
+
+/** First match wins: expired, then a staff alert's teacher, a retimed lesson, stale (above). */
+const DROP_RULES: readonly DropRule[] = [expired, staffGone, retimed, stale];
+
 /**
  * A queued row the worker drops before claiming it: past its send window, a staff alert whose
  * teacher may no longer hear from the academy (staffStale), or stale (above).
  */
-export function dropReason(row: DropInput, now: Date): { code: 'expired' | 'stale'; text: string } | null {
-  const lessonStartsAt = row.lesson?.starts_at ?? null;
-  if (
-    messageExpired({
-      templateKey: row.template_key,
-      expiresAt: row.expires_at,
-      lessonStartsAt,
-      now,
-    })
-  ) {
-    return { code: 'expired', text: 'expired before it was sent' };
-  }
-  const staff = row.staff && isStaffAlert(row.template_key) ? staffStale(row.staff, row.phone_e164 ?? '') : null;
-  if (staff) return { code: 'stale', text: staff };
-  if (newStudentRetimed(row)) return { code: 'stale', text: 'lesson retimed' };
-  const stale = staleReason(row);
-  return stale ? { code: 'stale', text: stale } : null;
+export function dropReason(row: DropInput, now: Date): Drop {
+  return DROP_RULES.reduce<Drop>((found, rule) => found ?? rule(row, now), null);
 }
 
 function followUpStale({ lead, dedup_key }: StaleInput): string | null {
@@ -107,35 +118,4 @@ function followUpStale({ lead, dedup_key }: StaleInput): string | null {
   if (!FOLLOW_UP.includes(lead.status)) return `lead ${lead.status}`;
   const cycle = followUpKeyCycle(dedup_key);
   return cycle !== null && cycle !== followUpCycle(lead) ? 'lead wrote again' : null;
-}
-
-/** Job-queued keys; every other key is sent because someone acted (checked by a test). */
-export const AUTOMATIC_KEYS: readonly TemplateKey[] = [...REMINDER_KEYS, 'follow_up_slots', 'renewal_due', 'lesson_rating'];
-const AUTOMATIC: ReadonlySet<string> = new Set(AUTOMATIC_KEYS);
-
-/** The hold of an automatic row while the switch is OFF (failed, no push). */
-export const AUTO_OFF = { code: 'auto_off', text: 'automatic messages are off in settings' } as const;
-
-interface AutoRow {
-  template_key: string | null;
-  created_by: string | null;
-  dedup_key?: string | null;
-}
-
-/**
- * teacher_lesson_v3 carries the same-day reminder (automatic) and the new-student alert (a
- * booking): the reminder's dedup key names it, so only that one is held while the switch is OFF.
- */
-const isV3Reminder = (row: AutoRow): boolean =>
-  row.template_key === 'teacher_lesson_v3' &&
-  (row.dedup_key ?? '').startsWith('teacher_lesson_reminder:');
-
-/**
- * A job-made row of an automatic kind, held (failed 'auto_off') while
- * settings.auto_messages_enabled is OFF. created_by tells them apart: the jobs leave it null; an
- * admin's inbox send of the same template carries the admin (ThreadSendService) and goes. Booking
- * confirmations and report_ready are never automatic here.
- */
-export function isAutomatic(row: AutoRow): boolean {
-  return row.created_by === null && (AUTOMATIC.has(row.template_key ?? '') || isV3Reminder(row));
 }
