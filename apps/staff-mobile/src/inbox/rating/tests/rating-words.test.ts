@@ -1,7 +1,7 @@
 import type { MessageView, TemplateView } from '@ab/shared';
 import { ApiError, t } from '@ab/mobile-kit';
 import { meetReminder, message, notApproved } from '@/inbox/shared/thread-fixtures';
-import { ratingApproved, ratingDone, ratingError } from './rating-words';
+import { ratingApproved, ratingDone, ratingError } from '@/inbox/rating/rating-words';
 
 const rating = (status: TemplateView['status']): TemplateView => ({ ...meetReminder, key: 'lesson_rating', status });
 

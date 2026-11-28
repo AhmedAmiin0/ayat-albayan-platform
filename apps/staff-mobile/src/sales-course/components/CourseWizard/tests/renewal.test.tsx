@@ -87,6 +87,6 @@ test('a bookable previous teacher: no unavailable line', async () => {
   await renderWithQuery(<CourseScreen />);
   await screen.findByRole('button', { name: t.booking.courseChange.continueSameDays });
   await waitFor(() => expect(mockApiFetch.mock.calls.some((c: unknown[]) => String(c[0]).startsWith('/sales/booking/teachers'))).toBe(true));
+  await waitFor(() => expect(isDisabled(t.booking.courseChange.continueSameDays)).toBe(false));
   expect(screen.queryByText(t.booking.courseChange.teacherUnavailable)).toBeNull();
-  expect(isDisabled(t.booking.courseChange.continueSameDays)).toBe(false);
 });

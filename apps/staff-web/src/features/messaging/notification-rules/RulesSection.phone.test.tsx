@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { findRow, renderRules } from './rules-test-kit';
+import { findRow, renderRules, savedRow } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -52,7 +52,7 @@ describe('«الإشعارات» below 640px', () => {
     const sheet = screen.getByRole('dialog', { name });
     expect(within(sheet).getByRole('switch', { name: r.switchName.replace('{name}', name) })).toBeTruthy();
     fireEvent.change(within(sheet).getByLabelText(r.timing.minutesLabel), { target: { value: '30' } });
-    apiSend.mockResolvedValue(undefined);
+    apiSend.mockResolvedValue(savedRow('lesson_reminder'));
     fireEvent.click(within(sheet).getByRole('button', { name: t.common.save }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/admin/notifications/lesson_reminder', { timing: { minutes_before: 30 } }));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());

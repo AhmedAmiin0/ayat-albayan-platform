@@ -1,5 +1,8 @@
-import { RULE_ERRORS, type NotificationEntryView, type RulePatchInput, type RuleError } from '@ab/shared';
-import { ApiError, apiSend } from '@ab/web-kit';
+import { notificationRuleCalls } from '@ab/client-core';
+import { RULE_ERRORS, type RuleError } from '@ab/shared';
+import { ApiError, apiFetch, apiSend } from '@ab/web-kit';
+
+const rules = notificationRuleCalls({ apiFetch, apiSend });
 
 /** Why a save failed: the contract's errors, or no permission, or anything else. */
 export type RuleFailure = RuleError | 'forbidden' | 'failed';
@@ -13,8 +16,7 @@ export function canManageNotifications(permissions: readonly string[]): boolean 
 }
 
 /** PATCH /admin/notifications/:key with only the fields that changed; answers the updated row. */
-export const patchRule = (input: { key: string; body: RulePatchInput }) =>
-  apiSend<NotificationEntryView>('PATCH', `/admin/notifications/${encodeURIComponent(input.key)}`, input.body);
+export const patchRule = rules.update;
 
 const isRuleError = (v: unknown): v is RuleError => typeof v === 'string' && (RULE_ERRORS as readonly string[]).includes(v);
 
