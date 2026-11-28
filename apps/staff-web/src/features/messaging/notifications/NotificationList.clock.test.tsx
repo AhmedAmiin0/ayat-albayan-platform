@@ -1,15 +1,17 @@
 import { act, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { mockCall, type CallHandler } from '@ab/testing/mock-call';
 import { notificationTime } from './format';
 import { ITEM, page, READ_ITEM, renderWithClient } from './notifications-test-kit';
 import { NotificationList } from './NotificationList';
 
-const apiFetch = vi.hoisted(() => vi.fn());
+const bellRead = vi.fn<CallHandler>();
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  apiFetch,
-  apiSend: vi.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
+mockApi.onRead(bellRead);
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
 vi.mock('@ab/web-kit/auth/me/me', async () => {
   const { pathKey } = await import('@ab/client-core');
@@ -28,12 +30,12 @@ beforeEach(() =>
 );
 afterEach(() => {
   vi.useRealTimers();
-  apiFetch.mockReset();
+  bellRead.mockReset();
 });
 
 it("the bell rows (compiled) age with the panel's one clock (one timer), no remount", async () => {
   const timers = vi.spyOn(globalThis, 'setInterval');
-  apiFetch.mockResolvedValue(page([ITEM, { ...READ_ITEM, created_at: ITEM.created_at }]));
+  bellRead.mockResolvedValue(page([ITEM, { ...READ_ITEM, created_at: ITEM.created_at }]));
   renderWithClient(<NotificationList onPick={vi.fn()} />);
   const rows = () => [...document.querySelectorAll('li time')].map((el) => el.textContent);
   await screen.findByText(ITEM.title);

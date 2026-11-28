@@ -1,22 +1,30 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { mockCall, type CallHandler } from '@ab/testing/mock-call';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { badgeText, NotificationBell } from '@/features/messaging/notifications/NotificationBell/NotificationBell';
 import { ITEM, page, READ_ITEM, renderWithClient } from '@/features/messaging/notifications/notifications-test-kit';
 
 const granted = vi.hoisted(() => new Set<string>());
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const bellRead = vi.fn<CallHandler>();
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
+const BELL_PAGE = { method: 'GET', path: '/me/notifications?page=1&pageSize=20' };
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }) }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
 
 const bell = () => screen.findByRole('button', { name: t.bell.openUnread.replace('{n}', '1') });
 
 beforeEach(() => {
+  mockApi.reset();
+  mockApi.onRead(bellRead);
   granted.clear();
   granted.add('notifications.push');
-  apiFetch.mockReset();
-  apiFetch.mockResolvedValue(page([ITEM, READ_ITEM]));
+  bellRead.mockReset();
+  bellRead.mockResolvedValue(page([ITEM, READ_ITEM]));
 });
 
 describe('NotificationBell', () => {
@@ -24,23 +32,23 @@ describe('NotificationBell', () => {
     granted.clear();
     const { container } = renderWithClient(<NotificationBell />);
     expect(container.innerHTML).toBe('');
-    expect(apiFetch).not.toHaveBeenCalled();
+    expect(bellRead).not.toHaveBeenCalled();
   });
 
   it('names the unread count on the button; the badge is decorative and capped at 9+', async () => {
-    apiFetch.mockResolvedValue(page([ITEM], 12));
+    bellRead.mockResolvedValue(page([ITEM], 12));
     renderWithClient(<NotificationBell />);
     const button = await screen.findByRole('button', { name: t.bell.openUnread.replace('{n}', '12') });
     const badge = button.querySelector('[aria-hidden="true"]:not(svg)');
     expect(badge?.textContent).toBe('9+');
-    expect(apiFetch).toHaveBeenCalledWith('/me/notifications?page=1&pageSize=20');
+    expect(bellRead).toHaveBeenCalledWith(BELL_PAGE);
     expect([badgeText(1), badgeText(9), badgeText(10)]).toEqual(['1', '9', '9+']);
   });
 
   it('no badge and the plain name when everything is read', async () => {
-    apiFetch.mockResolvedValue(page([READ_ITEM]));
+    bellRead.mockResolvedValue(page([READ_ITEM]));
     renderWithClient(<NotificationBell />);
-    await waitFor(() => expect(apiFetch).toHaveBeenCalled());
+    await waitFor(() => expect(bellRead).toHaveBeenCalled());
     const button = screen.getByRole('button', { name: t.bell.open });
     expect(button.querySelector('span')).toBeNull();
   });

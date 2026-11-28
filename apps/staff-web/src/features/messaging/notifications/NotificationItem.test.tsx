@@ -1,14 +1,20 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { mockCall, type CallHandler } from '@ab/testing/mock-call';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { NotificationItem } from './NotificationItem';
 import { ITEM, READ_ITEM, renderWithClient, STUDENT_ID } from './notifications-test-kit';
 
-const apiSend = vi.hoisted(() => vi.fn());
+const bellWrite = vi.fn<CallHandler>();
 const navigate = vi.hoisted(() => vi.fn());
 const role = vi.hoisted(() => ({ current: 'admin' }));
 const me = vi.hoisted(() => () => ({ role: role.current }));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
+const markRead = (body: object) => ({ method: 'POST', path: '/me/notifications/read', body });
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => navigate }));
 vi.mock('@ab/web-kit/auth/me/me', async () => {
   const { pathKey } = await import('@ab/client-core');
@@ -25,8 +31,10 @@ const row = (item = ITEM, onPick = vi.fn()) =>
   );
 
 beforeEach(() => {
-  apiSend.mockReset();
-  apiSend.mockResolvedValue(undefined);
+  mockApi.reset();
+  mockApi.onWrite(bellWrite);
+  bellWrite.mockReset();
+  bellWrite.mockResolvedValue(undefined);
   navigate.mockReset();
   role.current = 'admin';
 });
@@ -47,7 +55,7 @@ describe('NotificationItem', () => {
     row(ITEM, onPick);
     fireEvent.click(screen.getByRole('button'));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', { ids: [ITEM.id] }),
+      expect(bellWrite).toHaveBeenCalledWith(markRead({ ids: [ITEM.id] })),
     );
     expect(navigate).toHaveBeenCalledWith({ href: `/admin/students/${STUDENT_ID}` });
     expect(onPick).toHaveBeenCalled();
@@ -59,7 +67,7 @@ describe('NotificationItem', () => {
     row(msg);
     fireEvent.click(screen.getByRole('button'));
     expect(navigate).toHaveBeenCalledWith({ href: '/teacher/inbox?phone=%2B966500000001' });
-    expect(apiSend).not.toHaveBeenCalled();
+    expect(bellWrite).not.toHaveBeenCalled();
     expect(screen.getByRole('button').textContent).not.toContain(t.bell.unread);
   });
 });

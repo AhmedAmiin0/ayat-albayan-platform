@@ -1,9 +1,9 @@
+import type { WebPushSubscriptionInput } from '@ab/shared';
 import { ConflictException } from '@nestjs/common';
 import { maybe } from '@/common/db/errors';
 import type { Db } from '@/common/db/db.module';
 import { DEVICE_IN_USE, mayClaimDevice } from '@/common/push/expo/push-claim';
 import { liveSessions } from '@/common/push/dispatch/push.sessions';
-import type { WebPushSubscriptionInput } from './web-push.endpoint';
 
 /**
  * PUT /me/web-push: 409 when the endpoint is a browser bound to ANOTHER profile's live session and

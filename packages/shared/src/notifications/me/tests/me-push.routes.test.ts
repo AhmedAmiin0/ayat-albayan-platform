@@ -21,6 +21,7 @@ describe('meNotificationRoutes and webPushRoutes', () => {
       ['GET', '/me/notifications', ...access],
       ['POST', '/me/notifications/read', ...access],
       ['GET', '/me/web-push/key', ...access],
+      ['PUT', '/me/web-push', ...access],
       ['DELETE', '/me/web-push', ...access],
     ]);
   });
@@ -54,6 +55,22 @@ describe('meNotificationRoutes and webPushRoutes', () => {
     expect(response.parse({ publicKey: null })).toEqual({ publicKey: null });
     expect(response.parse({ publicKey: 'BAbc' })).toEqual({ publicKey: 'BAbc' });
     expect(response.safeParse({}).success).toBe(false);
+  });
+
+  it('save this browser, from an allowed push service with well-formed keys only', () => {
+    const { body, response } = webPushRoutes.subscribe;
+    const keys = { p256dh: `B${'A'.repeat(86)}`, auth: 'A'.repeat(22) };
+    const sub = { endpoint: 'https://fcm.googleapis.com/fcm/send/x', expirationTime: null, keys };
+    expect(body.parse(sub)).toEqual(sub);
+    const refused = body.safeParse({ ...sub, endpoint: 'https://127.0.0.1/x' }).error?.issues;
+    expect(refused?.map((i) => [i.path, i.message])).toEqual([
+      [['endpoint'], 'endpoint_not_allowed'],
+    ]);
+    const short = { ...keys, auth: 'short' };
+    const padded = { ...keys, p256dh: `${keys.p256dh}=` };
+    expect(body.safeParse({ ...sub, keys: short }).success).toBe(false);
+    expect(body.safeParse({ ...sub, keys: padded }).success).toBe(false);
+    expect(response).toBe('empty');
   });
 
   it('remove one browser by its endpoint', () => {

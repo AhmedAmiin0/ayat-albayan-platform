@@ -4,6 +4,7 @@ import {
   notificationsPageSchema,
   webPushEndpointQuerySchema,
   webPushKeySchema,
+  webPushSubscriptionSchema,
 } from './me-push.schemas';
 
 const ACCESS = { permissions: ['notifications.push'], tags: ['me'] } as const;
@@ -33,6 +34,14 @@ export const webPushRoutes = {
     method: 'GET',
     path: '/me/web-push/key',
     response: webPushKeySchema,
+  }),
+  /** Idempotent; bound to the caller's session. */
+  subscribe: defineRoute({
+    ...ACCESS,
+    method: 'PUT',
+    path: '/me/web-push',
+    body: webPushSubscriptionSchema,
+    response: 'empty',
   }),
   unsubscribe: defineRoute({
     ...ACCESS,

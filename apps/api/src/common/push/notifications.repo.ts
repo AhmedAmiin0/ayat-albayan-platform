@@ -1,4 +1,9 @@
-import type { NotificationItem, NotificationsPage, NotificationsQuery } from '@ab/shared';
+import type {
+  NotificationItem,
+  NotificationsPage,
+  NotificationsQuery,
+  WebPushSubscriptionInput,
+} from '@ab/shared';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { done, pgError } from '@/common/db/errors';
 import { DB, type Db } from '@/common/db/db.module';
@@ -6,7 +11,6 @@ import type { SortSpec } from '@/common/db/list-sort';
 import { readPage, toPage } from '@/common/db/page';
 import { notificationItem } from './notifications.mapper';
 import { assertBrowserClaim } from './web/web-push.claim';
-import type { WebPushSubscriptionInput } from './web/web-push.endpoint';
 
 /** A retimed lesson's superseded rows (migration 174 appends «:old:<uuid>» to their dedup_key). */
 const SUPERSEDED = '%:old:%';

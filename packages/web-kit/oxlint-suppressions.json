@@ -563,11 +563,6 @@
       "count": 1
     }
   },
-  "src/push/notifications-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/push/sw.test.ts": {
     "typescript/no-implied-eval": {
       "count": 1
@@ -576,11 +571,6 @@
   "src/push/use-web-push.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/push/web-push-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/push/web-push-session.ts": {
