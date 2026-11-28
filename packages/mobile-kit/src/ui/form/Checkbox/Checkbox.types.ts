@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { ViewStyle } from 'react-native';
 
 /** Where the box sits in the row: logical, so «start» is the right edge in Arabic. */
 export type CheckboxSide = 'start' | 'end';
@@ -24,5 +25,12 @@ export interface CheckboxRowLook {
   pressed: boolean;
   disabled: boolean;
   inset: boolean;
+  side: CheckboxSide;
   wash: string;
+}
+
+export interface CheckboxLogic {
+  boxColor: string;
+  onPress: () => void;
+  style: (state: { pressed: boolean }) => ViewStyle;
 }

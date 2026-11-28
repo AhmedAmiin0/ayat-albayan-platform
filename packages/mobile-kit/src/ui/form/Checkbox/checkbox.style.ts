@@ -6,12 +6,13 @@ import type { CheckboxRowLook } from './Checkbox.types';
 const DIMMED = 0.45;
 const BOX = space[5];
 
-/** The 44 pt row; flexDirection 'row' mirrors under RTL by itself. */
-export function rowStyle({ pressed, disabled, inset, wash }: CheckboxRowLook): ViewStyle {
+/** The 44 pt row; 'row' and 'row-reverse' mirror under RTL by themselves. */
+export function rowStyle(look: CheckboxRowLook): ViewStyle {
+  const { pressed, disabled, inset, wash } = look;
   return {
     minHeight: shape.control.touch,
     paddingHorizontal: inset ? space[4] : 0,
-    flexDirection: 'row',
+    flexDirection: look.side === 'end' ? 'row-reverse' : 'row',
     alignItems: 'center',
     gap: space[3],
     opacity: disabled ? DIMMED : 1,
