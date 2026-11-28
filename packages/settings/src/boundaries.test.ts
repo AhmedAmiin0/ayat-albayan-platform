@@ -6,28 +6,51 @@ import { describe, expect, it } from 'vitest';
 // Vite's raw import (vitest): the shared lib has no Node typings, so the sources are read this way.
 declare global {
   interface ImportMeta {
-    glob<T>(pattern: string | string[], options: { query: '?raw'; import: 'default'; eager: true }): Record<string, T>;
+    glob<T>(
+      pattern: string | string[],
+      options: { query: '?raw'; import: 'default'; eager: true },
+    ): Record<string, T>;
   }
 }
 
-const sources = import.meta.glob<string>('./**/*.ts', { query: '?raw', import: 'default', eager: true });
+const sources = import.meta.glob<string>('./**/*.ts', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
 
-const FORBIDDEN = ['custom-config', 'integrations', 'google', 'public-config', 'notifications', 'classroom'];
+const FORBIDDEN = [
+  'custom-config',
+  'integrations',
+  'google',
+  'public-config',
+  'notifications',
+  'classroom',
+];
 
 /** Every module specifier a source imports or re-exports. */
 const specifiers = (source: string): string[] =>
-  [...source.matchAll(/(?:import|export)\s[^'"]*?from\s+['"]([^'"]+)['"]|import\(\s*['"]([^'"]+)['"]\s*\)/g)].map((m) => m[1] ?? m[2] ?? '');
+  [
+    ...source.matchAll(
+      /(?:import|export)\s[^'"]*?from\s+['"]([^'"]+)['"]|import\(\s*['"]([^'"]+)['"]\s*\)/g,
+    ),
+  ].map((m) => m[1] ?? m[2] ?? '');
 
 /** Does the specifier leave src/settings for a forbidden sibling folder (or file)? */
 const forbidden = (path: string, spec: string): boolean => {
   const depth = path.split('/').length - 2;
-  const up = `${'../'.repeat(depth + 1)}`;
-  return spec.startsWith(up) && FORBIDDEN.some((f) => spec.slice(up.length).split('/')[0]?.replace(/\.js$/, '') === f);
+  const up = '../'.repeat(depth + 1);
+  return (
+    spec.startsWith(up) &&
+    FORBIDDEN.some((f) => spec.slice(up.length).split('/')[0]?.replace(/\.js$/, '') === f)
+  );
 };
 
 describe('src/settings boundaries', () => {
   it('scans the settings sources', () => {
-    expect(Object.keys(sources)).toEqual(expect.arrayContaining(['./registry.ts', './layout.ts', './domains/academy.ts']));
+    expect(Object.keys(sources)).toEqual(
+      expect.arrayContaining(['./registry.ts', './layout.ts', './domains/academy.ts']),
+    );
   });
 
   it('imports nothing from custom-config, integrations, google, public-config, notifications or classroom', () => {
@@ -45,6 +68,9 @@ describe('src/settings boundaries', () => {
     expect(forbidden('./domains/academy.ts', '../../classroom/join-window.js')).toBe(true);
     expect(forbidden('./domains/academy.ts', '../defs.js')).toBe(false);
     expect(forbidden('./schema.ts', '../phone.js')).toBe(false);
-    expect(specifiers("import { a } from '../google/x.js';\nexport * from './y.js';")).toEqual(['../google/x.js', './y.js']);
+    expect(specifiers("import { a } from '../google/x.js';\nexport * from './y.js';")).toEqual([
+      '../google/x.js',
+      './y.js',
+    ]);
   });
 });

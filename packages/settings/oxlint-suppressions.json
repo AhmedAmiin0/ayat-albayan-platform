@@ -1,14 +1,4 @@
 {
-  "src/boundaries.test.ts": {
-    "typescript/no-unnecessary-template-expression": {
-      "count": 1
-    }
-  },
-  "src/custom-config/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
   "src/custom-config/public-config.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -86,11 +76,6 @@
   },
   "src/groups.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/index.ts": {
-    "typescript/consistent-type-exports": {
       "count": 1
     }
   },
