@@ -28,7 +28,7 @@ export const salesKeys: SalesKeys = {
   live: () => [...all, 'live'],
   scheduleDay: ({ date, teacherId }) => [...schedule, date, teacherId ?? ''],
   people: () => [...all, 'people'],
-  registrationCheck: (path) => [...all, 'registration-check', path],
+  registrationCheck: (query) => [...all, 'registration-check', query],
 };
 
 export const salesSubscriptionKeys: SalesSubscriptionKeys = {

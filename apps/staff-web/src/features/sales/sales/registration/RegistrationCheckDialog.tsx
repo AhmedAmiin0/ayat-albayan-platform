@@ -1,4 +1,3 @@
-import type { RegistrationCheckView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
 import {
@@ -8,14 +7,14 @@ import {
   FormAlert,
   Input,
   SegmentedControl,
-  apiFetch,
   t,
 } from '@ab/web-kit';
 import { apiErrorText } from '@/features/finance/subscriptions';
 import type { RegistrationCheckBy, RegistrationCheckCode } from '@ab/shared';
 import { checkRequest } from './registration-check';
 import { RegistrationMatches } from './RegistrationMatches';
-import { salesKeys } from '@/features/sales/keys';
+import { registrationCheckQuery } from './registration-check-query';
+import type { RegistrationAsk } from './registration-check.types';
 
 const R = t.registrationCheck;
 
@@ -25,11 +24,11 @@ export interface RegistrationCheckDialogProps {
   onClose: () => void;
 }
 
-type Asked = { by: RegistrationCheckBy; path: string } | null;
+type Asked = { by: RegistrationCheckBy; query: RegistrationAsk } | null;
 
 function firstAsk(phone: string | undefined): Asked {
   const r = phone ? checkRequest('phone', phone) : null;
-  return r?.ok ? { by: r.by, path: r.path } : null;
+  return r?.ok ? { by: r.by, query: r.query } : null;
 }
 
 function serverError(error: unknown): string {
@@ -44,17 +43,12 @@ export function RegistrationCheckDialog({ phone, onClose }: RegistrationCheckDia
   const [value, setValue] = useState({ phone: phone ?? '', name: '' });
   const [invalid, setInvalid] = useState<RegistrationCheckCode | null>(null);
   const [asked, setAsked] = useState<Asked>(() => firstAsk(phone));
-  const answer = useQuery({
-    queryKey: salesKeys.registrationCheck(asked?.path ?? ''),
-    queryFn: () => apiFetch<RegistrationCheckView>(asked?.path ?? ''),
-    enabled: asked !== null,
-    retry: false,
-  });
+  const answer = useQuery(registrationCheckQuery(asked?.query ?? null));
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const r = checkRequest(by, value[by]);
     setInvalid(r.ok ? null : r.code);
-    setAsked(r.ok ? { by: r.by, path: r.path } : null);
+    setAsked(r.ok ? { by: r.by, query: r.query } : null);
   };
   const pick = (next: RegistrationCheckBy) => {
     setBy(next);

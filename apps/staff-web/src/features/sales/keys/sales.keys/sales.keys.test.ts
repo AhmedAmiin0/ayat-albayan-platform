@@ -36,7 +36,7 @@ describe('sales keys', () => {
       '2026-11-25',
       '',
     ]);
-    expect(salesKeys.registrationCheck('/x')).toEqual(['sales', 'registration-check', '/x']);
+    expect(salesKeys.registrationCheck({ q: 'x' })).toEqual(['sales', 'registration-check', { q: 'x' }]);
     expect(salesSubscriptionKeys.history('p1')).toEqual([
       'sales',
       'subscriptions',

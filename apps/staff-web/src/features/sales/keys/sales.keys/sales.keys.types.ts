@@ -17,7 +17,7 @@ export interface SalesKeys {
   live: None;
   scheduleDay: One<ScheduleDayKey>;
   people: None;
-  registrationCheck: One<string>;
+  registrationCheck: One<unknown>;
 }
 
 export interface SalesSubscriptionKeys {

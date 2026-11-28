@@ -1,10 +1,14 @@
-import type { RegistrationCheckView, RegistrationMatch } from '@ab/shared';
+import type { RegistrationMatch } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent, type ReactNode } from 'react';
-import { Ltr, Button, Field, FormAlert, Input, Dialog, apiFetch, t } from '@ab/web-kit';
-import { salesKeys } from '@/features/sales/keys';
-import { checkRequest, RegistrationMatches } from '@/features/sales/sales';
+import { Ltr, Button, Field, FormAlert, Input, Dialog, t } from '@ab/web-kit';
+import {
+  checkRequest,
+  registrationCheckQuery,
+  RegistrationMatches,
+  type RegistrationAsk,
+} from '@/features/sales/sales';
 import {
   linkedText,
   linkFamily,
@@ -38,14 +42,9 @@ export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyD
   const queryClient = useQueryClient();
   const [query, setQuery] = useState('');
   const [invalid, setInvalid] = useState<string | null>(null);
-  const [path, setPath] = useState<string | null>(null);
+  const [asked, setAsked] = useState<RegistrationAsk | null>(null);
   const [picked, setPicked] = useState<RegistrationMatch | null>(null);
-  const answer = useQuery({
-    queryKey: salesKeys.registrationCheck(path ?? ''),
-    queryFn: () => apiFetch<RegistrationCheckView>(path ?? ''),
-    enabled: path !== null,
-    retry: false,
-  });
+  const answer = useQuery(registrationCheckQuery(asked));
   const link = useMutation({
     mutationFn: linkFamily,
     // The toast first: in the admin inbox the lead panel (and this dialog) goes once the thread refetches.
@@ -63,7 +62,7 @@ export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyD
     e.preventDefault();
     const r = checkRequest('name', query);
     setInvalid(r.ok ? null : R.error[r.code]);
-    setPath(r.ok ? r.path : null);
+    setAsked(r.ok ? r.query : null);
     pick(null);
   };
   const action = picked ? (
@@ -121,8 +120,8 @@ export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyD
           </p>
         )}
         {link.isError && <FormAlert>{linkFamilyErrorText(link.error)}</FormAlert>}
-        {path && answer.isError && <FormAlert>{searchErrorText(answer.error)}</FormAlert>}
-        {path && answer.data && (
+        {asked && answer.isError && <FormAlert>{searchErrorText(answer.error)}</FormAlert>}
+        {asked && answer.data && (
           <RegistrationMatches
             view={answer.data}
             by="name"

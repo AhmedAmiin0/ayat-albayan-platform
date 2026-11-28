@@ -1,4 +1,4 @@
-import { registrationCheckRoutes as routes } from '@ab/shared';
+import { registrationCheckRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
 import type { RegistrationCheckCalls } from './registration-check-api.types';
 
@@ -6,6 +6,6 @@ import type { RegistrationCheckCalls } from './registration-check-api.types';
 export function registrationCheckCalls(client: ApiClient): RegistrationCheckCalls {
   const call = callWith(client);
   return {
-    check: (query) => call({ route: routes.check, query }),
+    check: (query) => call({ route: registrationCheckRoutes.check, query }),
   };
 }
