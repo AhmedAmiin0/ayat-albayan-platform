@@ -9,12 +9,16 @@ const col = createColumnHelper<DataTableFeatures, Row>();
 const columns = col.columns([col.accessor('name', { header: () => 'name' })]);
 
 describe('TableBox (a fixed-height table box)', () => {
-  it('takes the rest of the frame, never under 320px, and scrolls inside on both axes', () => {
-    for (const cls of ['h-0', 'flex-auto', 'min-h-[320px]', 'overflow-auto']) expect(tableBoxClass.split(' ')).toContain(cls);
+  const classes = tableBoxClass.split(' ');
+  const FILL = ['tall:h-0', 'tall:flex-auto', 'tall:min-h-60', 'tall:overflow-auto', 'tall:overscroll-contain'];
+
+  it('on a tall window it takes the rest of the frame and scrolls inside on both axes', () => {
+    for (const cls of FILL) expect(classes).toContain(cls);
   });
 
-  it('on phones (stacked card rows) it flows with the page: no scroll box inside the scrolling page', () => {
-    for (const cls of ['max-sm:h-auto', 'max-sm:min-h-0', 'max-sm:overflow-visible']) expect(tableBoxClass.split(' ')).toContain(cls);
+  it('below tall (phones, short windows) it flows with the page: no box inside the frame scroll', () => {
+    const unconditional = classes.filter((c) => /^(?:overflow|min-h|h-0|max-h)/.test(c));
+    expect(unconditional).toEqual([]);
   });
 
   it('centres an empty state in the box', () => {
@@ -24,9 +28,16 @@ describe('TableBox (a fixed-height table box)', () => {
     expect(box.hasAttribute('data-table-box')).toBe(true);
   });
 
+  it('a centred empty state is never a scroller', () => {
+    render(<TableBox center>فارغ</TableBox>);
+    const box = screen.getByText('فارغ');
+    expect(box.className).toContain('tall:overflow-visible');
+    expect(box.className).not.toContain('tall:overflow-auto');
+  });
+
   it('DataTable fill wraps the table in the box; without it the table flows as before', () => {
     const { container, rerender } = render(<DataTable fill columns={columns} data={[{ id: '1', name: 'سارة' }]} />);
-    expect(container.querySelector('[data-table-box]')?.className).toContain('min-h-[320px]');
+    expect(container.querySelector('[data-table-box]')?.className).toContain('tall:overflow-auto');
     rerender(<DataTable columns={columns} data={[{ id: '1', name: 'سارة' }]} />);
     expect(container.querySelector('[data-table-box]')).toBeNull();
   });
