@@ -17,8 +17,8 @@ const WEEK = { from: '2026-09-26T21:00:00.000Z', to: '2026-10-03T21:00:00.000Z',
 async function read(answer: unknown) {
   mockApiFetch.mockReset().mockResolvedValue(answer);
   const client = createTestQueryClient();
-  const hook = () => useWeekLessons(WEEK);
-  const { result } = await renderHook(hook, { wrapper: queryWrapper(client) });
+  const useWeek = () => useWeekLessons(WEEK);
+  const { result } = await renderHook(useWeek, { wrapper: queryWrapper(client) });
   await waitFor(() => expect(result.current.isSuccess || result.current.isError).toBe(true));
   return result;
 }

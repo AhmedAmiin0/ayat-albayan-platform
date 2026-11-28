@@ -18,8 +18,8 @@ const REPLY = { id: ASKED.id, starts_at: ASKED.starts_at, ends_at: ASKED.ends_at
 async function read(answer: unknown) {
   mockApiFetch.mockReset().mockResolvedValue(answer);
   const client = createTestQueryClient();
-  const hook = () => useAdminReplyLesson(REPLY);
-  const { result } = await renderHook(hook, { wrapper: queryWrapper(client) });
+  const useReply = () => useAdminReplyLesson(REPLY);
+  const { result } = await renderHook(useReply, { wrapper: queryWrapper(client) });
   await waitFor(() => expect(result.current.isSuccess || result.current.isError).toBe(true));
   return result;
 }

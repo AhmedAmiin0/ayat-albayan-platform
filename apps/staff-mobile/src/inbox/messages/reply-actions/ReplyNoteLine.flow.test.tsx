@@ -6,6 +6,8 @@ import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery, seedPublicConfig } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { scheduleLesson } from '@/sales/sales/testing/fixtures';
+import { lesson as lessonRow } from '@/today/testing/fixtures';
+import { answered } from '@/today/testing/answered';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
 const mockApiFetch = jest.fn();
@@ -29,8 +31,9 @@ function mockSheet(who: string) {
 jest.mock('@/teaching', () => ({ ...jest.requireActual('@/teaching'), RescheduleSheet: mockSheet('admin') }));
 jest.mock('@/sales/sales', () => ({ ...jest.requireActual('@/sales/sales'), SalesRescheduleSheet: mockSheet('sales') }));
 
+const ROW = answered(lessonRow({ id: 'l-1', starts_at: '2099-10-04T14:00:00.000Z' }));
 const LESSON: ThreadLesson = {
-  id: 'l-1',
+  id: ROW.id,
   starts_at: '2099-10-04T14:00:00Z',
   ends_at: '2099-10-04T15:00:00Z',
   status: 'scheduled',
@@ -62,31 +65,31 @@ beforeEach(() => {
 });
 
 test('«تأجيل الحلقة», admin: «تغيير الموعد» opens the admin sheet on the family’s next lesson; then the note says it moved', async () => {
-  mockApiFetch.mockResolvedValue([{ id: 'l-1' }]);
+  mockApiFetch.mockResolvedValue([ROW]);
   await renderNote(ASK);
   expect(screen.getByText(t.inbox.quickReply.reschedule)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: /^تغيير موعد حلقة/ }));
-  await fireEvent.press(await screen.findByText('admin l-1'));
+  await fireEvent.press(await screen.findByText(`admin ${ROW.id}`));
   expect(mockApiFetch).toHaveBeenCalledWith('/lessons?from=2099-10-04T14%3A00%3A00.000Z&to=2099-10-04T14%3A01%3A00.000Z');
   expect(await screen.findByText(t.inbox.quickReply.rescheduled)).toBeTruthy();
   expect(screen.queryByRole('button', { name: /^تغيير موعد حلقة/ })).toBeNull();
 });
 
 test('«تأجيل الحلقة», sales: her one-lesson sheet, the lesson read from that Riyadh day', async () => {
-  mockApiFetch.mockResolvedValue({ date: '2099-10-04', lessons: [scheduleLesson({ id: 'l-1' })] });
+  mockApiFetch.mockResolvedValue({ date: '2099-10-04', lessons: [scheduleLesson({ id: ROW.id })] });
   await renderNote(ASK, SALES);
   await fireEvent.press(screen.getByRole('button', { name: /^تغيير موعد حلقة/ }));
-  expect(await screen.findByText('sales l-1')).toBeTruthy();
+  expect(await screen.findByText(`sales ${ROW.id}`)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/sales/schedule?date=2099-10-04');
 });
 
 test('«تأجيل الحلقة», sales: a day answer outside its schema opens no sheet', async () => {
-  const lesson = { ...scheduleLesson({ id: 'l-1' }), status: 'gone' };
+  const lesson = { ...scheduleLesson({ id: ROW.id }), status: 'gone' };
   mockApiFetch.mockResolvedValue({ date: '2099-10-04', lessons: [lesson] });
   await renderNote(ASK, SALES);
   await fireEvent.press(screen.getByRole('button', { name: /^تغيير موعد حلقة/ }));
   expect(await screen.findByText(t.inbox.replyAction.notFound)).toBeTruthy();
-  expect(screen.queryByText('sales l-1')).toBeNull();
+  expect(screen.queryByText(`sales ${ROW.id}`)).toBeNull();
 });
 
 test('no right to move: «طلب تغيير الموعد» and no button', async () => {
@@ -96,11 +99,11 @@ test('no right to move: «طلب تغيير الموعد» and no button', async
 });
 
 test('«ايوة»: «تأكيد الحلقة» on its scheduled lesson, never «no lesson was confirmed»', async () => {
-  mockApiSend.mockResolvedValue({ id: 'l-1', status: 'confirmed' });
+  mockApiSend.mockResolvedValue({ id: ROW.id, status: 'confirmed' });
   await renderNote(YES, SALES);
   expect(screen.queryByText(NO)).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: /^تأكيد حلقة/ }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-1/confirm'));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', `/sales/lessons/${ROW.id}/confirm`));
 });
 
 test('«ايوة» without the right to confirm: nothing at all', async () => {
