@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { compare, isQueries } from './queries-gate.mjs';
+import { compare, isQueries, trackedFiles } from './queries-gate.mjs';
 
 const text = (body) => () => body;
 
@@ -21,4 +21,16 @@ test('compare: a new queries file is added (fails); a listed one that is gone is
     fixed: ['b.queries.ts'],
   });
   assert.deepEqual(compare(listed, listed), { added: [], fixed: [] });
+});
+
+test('trackedFiles: lists the roots with room for a file list past the 1 MiB default buffer', () => {
+  const calls = [];
+  const run = (cmd, args, options) => {
+    calls.push({ cmd, args, options });
+    return 'apps/a.ts\n\npackages/b.ts\n';
+  };
+  assert.deepEqual(trackedFiles('/repo', run), ['apps/a.ts', 'packages/b.ts']);
+  assert.deepEqual(calls[0].args, ['ls-files', '--', 'apps', 'packages', 'e2e']);
+  assert.equal(calls[0].options.cwd, '/repo');
+  assert.ok(calls[0].options.maxBuffer >= 1 << 28);
 });
