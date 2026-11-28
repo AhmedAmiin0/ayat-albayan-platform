@@ -12,7 +12,7 @@ const auth = vi.hoisted(() => ({
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch }));
-vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession: vi.fn(async () => undefined) }));
+vi.mock('@ab/web-kit/auth/session-activity/session-activity', () => ({ reportSession: vi.fn(async () => undefined) }));
 vi.mock('@ab/web-kit/push/web-push', () => ({
   forgetWebPush: vi.fn(async () => void order.push('forget')),
 }));

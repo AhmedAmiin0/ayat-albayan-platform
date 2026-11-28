@@ -20,7 +20,6 @@ export * from './auth/reset/ResetFlow/ResetFlow';
 export * from './auth/reset/reset-checks';
 export * from './auth/return-to';
 export * from './auth/session-activity';
-export type { SessionEvent } from './auth/session-activity.types';
 export * from './auth/sign-in';
 export * from './auth/sign-in/sign-in';
 export * from './auth/use-permissions';

@@ -14,7 +14,7 @@ const reportSession = vi.hoisted(() => vi.fn());
 
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch }));
-vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession }));
+vi.mock('@ab/web-kit/auth/session-activity/session-activity', () => ({ reportSession }));
 
 const creds = { email: 'admin@ab.local', password: 'secret-123' };
 
