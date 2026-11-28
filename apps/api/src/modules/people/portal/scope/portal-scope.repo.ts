@@ -23,4 +23,16 @@ export class PortalScopeRepo {
       contact_is_self: s.contact_is_self,
     }));
   }
+
+  /** The ids among these students that are test (students.is_test, docs/56). */
+  async testIdsOf(ids: readonly string[]): Promise<Set<string>> {
+    if (ids.length === 0) return new Set();
+    const { data, error } = await this.db
+      .from('students')
+      .select('id')
+      .in('id', ids)
+      .eq('is_test', true);
+    if (error) throw pgError(error);
+    return new Set(data.map((s) => s.id));
+  }
 }

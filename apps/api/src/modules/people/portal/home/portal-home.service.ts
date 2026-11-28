@@ -21,7 +21,7 @@ export class PortalHomeService {
   /** `locale`: null while the login never chose one (the app keeps its own). */
   async home(user: AuthUser): Promise<PortalHome> {
     const reads = [
-      this.scopes.of(user),
+      this.scopes.withTestFlags(user),
       this.renewUrl(),
       this.me.localeOf(user.id),
       this.guardianOf(user),

@@ -8,8 +8,8 @@ import { portal } from './api';
 export { ownStudent, studentOf } from '@ab/client-core';
 
 /** GET /portal/me: who signed in and their students; re-read when the screen comes back. */
-export function usePortalMe() {
-  return useQuery({ ...portal.portalHomeQuery, subscribed: useScreenFocused() });
+export function usePortalMe(enabled = true) {
+  return useQuery({ ...portal.portalHomeQuery, enabled, subscribed: useScreenFocused() });
 }
 
 /** Own-voice wording for a student or self-contact adult, never for a guardian's child. */
