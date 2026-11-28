@@ -49,17 +49,32 @@ function minutesOf(series) {
 export function toSlots(calendars, today) {
   const slots = new Map();
   const skipped = { mainCalendar: 0, ended: 0, notWeekly: 0, allDay: 0 };
-  for (const cal of calendars) {
-    const teacher = teacherOf(cal.calendar);
-    for (const s of cal.series) {
-      if (!teacher) skipped.mainCalendar += 1;
-      else if (!s.start.time) skipped.allDay += 1;
-      else if (s.rrule && s.rrule.freq !== 'WEEKLY') skipped.notWeekly += 1;
-      else if ((lastDate(s) ?? '9999-12-31') < today) skipped.ended += 1;
-      else addSeries(slots, { teacher, series: s });
-    }
-  }
+  for (const cal of calendars) placeCalendar({ slots, skipped, cal, today });
   return { slots: [...slots.values()], skipped };
+}
+
+function placeCalendar({ slots, skipped, cal, today }) {
+  const teacher = teacherOf(cal.calendar);
+  if (!teacher) {
+    skipped.mainCalendar += cal.series.length;
+    return;
+  }
+  for (const series of cal.series) placeSeries({ slots, skipped, teacher, series, today });
+}
+
+/** Why a teacher's series is left out, in this order; none means it becomes slots. */
+const SKIPS = [
+  ['allDay', (s) => !s.start.time],
+  ['notWeekly', (s) => Boolean(s.rrule) && s.rrule.freq !== 'WEEKLY'],
+  ['ended', (s, today) => (lastDate(s) ?? '9999-12-31') < today],
+];
+
+export const skipReason = (series, today) => SKIPS.find(([, skip]) => skip(series, today))?.[0];
+
+function placeSeries({ slots, skipped, teacher, series, today }) {
+  const reason = skipReason(series, today);
+  if (reason) skipped[reason] += 1;
+  else addSeries(slots, { teacher, series });
 }
 
 function addSeries(slots, { teacher, series }) {

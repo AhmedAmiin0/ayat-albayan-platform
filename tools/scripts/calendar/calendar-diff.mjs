@@ -15,11 +15,14 @@ import { toSlots } from './calendar-slots.mjs';
 
 /** Every .ics under the given paths (folders are walked). */
 export function icsFiles(paths) {
-  return paths.flatMap((p) =>
-    statSync(p).isDirectory()
-      ? icsFiles(readdirSync(p).map((f) => join(p, f)))
-      : p.toLowerCase().endsWith('.ics') ? [p] : [],
-  );
+  return paths.flatMap(icsFilesAt);
+}
+
+const isIcs = (path) => path.toLowerCase().endsWith('.ics');
+
+function icsFilesAt(path) {
+  if (!statSync(path).isDirectory()) return [path].filter(isIcs);
+  return icsFiles(readdirSync(path).map((f) => join(path, f)));
 }
 
 export function parseArgs(argv) {

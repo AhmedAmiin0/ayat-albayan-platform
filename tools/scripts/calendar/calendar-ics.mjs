@@ -43,27 +43,45 @@ export function parseRrule(value) {
 
 /** One .ics file → { calendar, series: [{ summary, start, end, rrule }] }. */
 export function parseIcs(text) {
-  const out = { calendar: null, series: [] };
-  let ev = null;
-  for (const raw of unfold(text)) {
-    const line = parseLine(raw);
-    if (!line) continue;
-    if (line.name === 'X-WR-CALNAME' && !ev) out.calendar = unescapeText(line.value);
-    else if (line.name === 'BEGIN' && line.value === 'VEVENT') ev = { skip: false };
-    else if (line.name === 'END' && line.value === 'VEVENT') {
-      if (ev && !ev.skip && ev.start && ev.summary) out.series.push(ev);
-      ev = null;
-    } else if (ev) readEventLine(ev, line);
-  }
-  out.series = out.series.map(({ skip, ...s }) => s);
-  return out;
+  const state = { calendar: null, series: [], ev: null };
+  for (const line of unfold(text).map(parseLine)) if (line) readLine(state, line);
+  return { calendar: state.calendar, series: state.series.map(({ skip, ...s }) => s) };
 }
 
+const keepEvent = (ev) => Boolean(ev && !ev.skip && ev.start && ev.summary);
+
+function closeEvent(state) {
+  if (keepEvent(state.ev)) state.series.push(state.ev);
+  state.ev = null;
+}
+
+const MARKERS = new Map([
+  ['BEGIN:VEVENT', (state) => (state.ev = { skip: false })],
+  ['END:VEVENT', closeEvent],
+]);
+
+function readLine(state, line) {
+  const marker = MARKERS.get(`${line.name}:${line.value}`);
+  if (marker) return marker(state);
+  return state.ev ? readEventLine(state.ev, line) : readCalendarLine(state, line);
+}
+
+function readCalendarLine(state, line) {
+  if (line.name === 'X-WR-CALNAME') state.calendar = unescapeText(line.value);
+}
+
+const stampOf = (line) => parseStamp(line.value, line.params.TZID ?? null);
+const isCancelled = (line) => line.value.toUpperCase() === 'CANCELLED';
+
+const EVENT_FIELDS = new Map([
+  ['SUMMARY', (ev, line) => (ev.summary = unescapeText(line.value))],
+  ['DTSTART', (ev, line) => (ev.start = stampOf(line))],
+  ['DTEND', (ev, line) => (ev.end = stampOf(line))],
+  ['RRULE', (ev, line) => (ev.rrule = parseRrule(line.value))],
+  ['RECURRENCE-ID', (ev) => (ev.skip = true)],
+  ['STATUS', (ev, line) => (ev.skip ||= isCancelled(line))],
+]);
+
 function readEventLine(ev, line) {
-  if (line.name === 'SUMMARY') ev.summary = unescapeText(line.value);
-  else if (line.name === 'DTSTART') ev.start = parseStamp(line.value, line.params.TZID ?? null);
-  else if (line.name === 'DTEND') ev.end = parseStamp(line.value, line.params.TZID ?? null);
-  else if (line.name === 'RRULE') ev.rrule = parseRrule(line.value);
-  else if (line.name === 'RECURRENCE-ID') ev.skip = true;
-  else if (line.name === 'STATUS' && line.value.toUpperCase() === 'CANCELLED') ev.skip = true;
+  EVENT_FIELDS.get(line.name)?.(ev, line);
 }
