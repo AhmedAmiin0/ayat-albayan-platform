@@ -52,7 +52,7 @@ export class MakeupCandidates {
         starts_at: new Date(l.starts_at).toISOString(),
         status: l.status,
         duration_min: Math.round((Date.parse(l.ends_at) - Date.parse(l.starts_at)) / 60_000),
-        teacher: l.teacher ?? { id: '', display_name_ar: '' },
+        teacher: l.teacher,
       }));
   }
 

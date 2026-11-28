@@ -66,6 +66,6 @@ describe('«انسخ رابط الطالب»', () => {
 
   it('404 for an unknown lesson', async () => {
     q.lesson.mockResolvedValue(null);
-    expect(((await url().catch((e: HttpException) => e)) as HttpException).getStatus()).toBe(404);
+    expect(((await url().catch((e: unknown) => e)) as HttpException).getStatus()).toBe(404);
   });
 });

@@ -25,7 +25,7 @@ import {
 
 let s: MeetingServices;
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 const staff = stored({
   meeting_id: MEETING_ID,
   kind: 'staff',

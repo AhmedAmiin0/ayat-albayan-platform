@@ -30,7 +30,7 @@ const service = (config: typeof CONFIG | null = CONFIG) =>
     ORIGIN,
   );
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 const tokenOf = (url: string) => url.slice(`${ORIGIN}/m/`.length);
 
 beforeEach(() => {

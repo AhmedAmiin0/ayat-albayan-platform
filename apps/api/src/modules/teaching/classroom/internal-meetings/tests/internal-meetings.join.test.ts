@@ -32,7 +32,7 @@ const service = (config: typeof CONFIG | null = CONFIG) =>
     admissionOf({ q: cq, config }),
   );
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 const guest = (svc = service(), token = MEETING_TOKEN) =>
   svc.guest({ token, ip: '9.9.9.9', body: { name: 'ضيف' } }, NOW);
 

@@ -39,7 +39,7 @@ const service = (config: typeof CONFIG | null = CONFIG) =>
 const join = (user = TEACHER, now = OPEN, svc = service()) =>
   svc.join({ user, lessonId: LESSON_ID }, now);
 const code = async (p: Promise<unknown>) =>
-  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+  ((await p.catch((e: unknown) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = queries();
@@ -111,7 +111,7 @@ describe('the window', () => {
   });
 
   it('and are turned away 2 hours after the lesson ends (410)', async () => {
-    const err = (await join(TEACHER, CLOSED).catch((e: HttpException) => e)) as HttpException;
+    const err = (await join(TEACHER, CLOSED).catch((e: unknown) => e)) as HttpException;
     expect(err.getStatus()).toBe(410);
     expect(err.getResponse()).toMatchObject({ code: 'join_closed' });
   });
@@ -138,7 +138,7 @@ describe('the token', () => {
 
   it('503 classroom_not_configured when LIVEKIT_* are not set', async () => {
     const err = (await join(TEACHER, OPEN, service(null)).catch(
-      (e: HttpException) => e,
+      (e: unknown) => e,
     )) as HttpException;
     expect(err.getStatus()).toBe(503);
     expect(err.getResponse()).toMatchObject({ code: 'classroom_not_configured' });

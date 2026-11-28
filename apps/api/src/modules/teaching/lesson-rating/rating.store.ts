@@ -58,7 +58,7 @@ export class RatingStore {
     );
     if (!data) return null;
     const studentIds = data.lesson_students.flatMap((ls) =>
-      ls.student?.guardian_id === tap.guardianId ? [ls.student.id] : [],
+      ls.student.guardian_id === tap.guardianId ? [ls.student.id] : [],
     );
     return {
       teacherId: data.teacher_id,

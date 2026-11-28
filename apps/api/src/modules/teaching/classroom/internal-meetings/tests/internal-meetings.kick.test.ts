@@ -25,7 +25,7 @@ const service = (config: typeof CONFIG | null = CONFIG) =>
     new LivekitApi(config, post),
   );
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 const GUEST = 'guest-0123456789ab';
 
 beforeEach(() => {

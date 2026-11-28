@@ -22,7 +22,7 @@ const service = () =>
     admissionOf({ q: queries(), config: CONFIG }),
   );
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 const at = (iso: string) => new Date(iso);
 let ip = 0;
 const guest = (now: Date) =>

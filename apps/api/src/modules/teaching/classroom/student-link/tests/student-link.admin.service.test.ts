@@ -56,7 +56,7 @@ describe('POST /students/:id/join-link', () => {
 
   it('404 student_not_found', async () => {
     q.student.mockResolvedValue(null);
-    const e = (await issue().catch((x: HttpException) => x)) as HttpException;
+    const e = (await issue().catch((x: unknown) => x)) as HttpException;
     expect(e.getResponse()).toMatchObject({ code: 'student_not_found' });
     expect(q.saveLink).not.toHaveBeenCalled();
   });

@@ -39,7 +39,7 @@ const guestJoin = () =>
     resolverOf(q),
   ).join({ linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } }, OPEN);
 const code = async (p: Promise<unknown>) =>
-  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+  ((await p.catch((e: unknown) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = queries();

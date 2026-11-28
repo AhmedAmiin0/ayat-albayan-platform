@@ -52,8 +52,8 @@ describe('feedback link token', () => {
   });
 
   it('an extended expiry cannot be forged without the secret', () => {
-    const forged = tokenFor(EXP + 86_400).split('.')[0];
-    const sig = tokenFor().split('.')[1];
+    const [forged = ''] = tokenFor(EXP + 86_400).split('.');
+    const [, sig = ''] = tokenFor().split('.');
     expect(verifyToken(SECRET, `${forged}.${sig}`, NOW)).toEqual({
       ok: false,
       reason: 'bad_signature',

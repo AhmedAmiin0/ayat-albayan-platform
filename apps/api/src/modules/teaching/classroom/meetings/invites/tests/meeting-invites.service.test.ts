@@ -8,7 +8,7 @@ import { meetingServices, ORIGIN, type MeetingServices } from '@/modules/teachin
 
 let s: MeetingServices;
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 const REQ = '00000000-0000-4000-8000-0000000000bb';
 const family = stored({
   meeting_id: MEETING_ID,

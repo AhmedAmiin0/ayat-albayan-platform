@@ -68,7 +68,7 @@ export interface BookingPayload {
   /** Required for every kind but trial; the service fills it after the plan is checked. */
   invoice: InvoiceRow | null;
   /** audit_log.after of the 'book' row, written in the same transaction (R-NFR-03). */
-  audit: { after: { [key: string]: Json | undefined } };
+  audit: { after: Record<string, Json | undefined> };
 }
 
 interface LinkInput {

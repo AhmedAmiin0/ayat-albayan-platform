@@ -1,6 +1,7 @@
 import type { BookingRequest } from '@ab/shared';
 import { bookingKindOf } from '@ab/schedule';
 import { HttpException } from '@nestjs/common';
+import { z } from 'zod';
 import { forbidden } from '@/common/http/errors';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
@@ -79,16 +80,11 @@ export function assertOwnStudents(ids: readonly string[], own: BookingOwnership)
   if (own && !all(ids, own.studentIds)) throw forbidden('not_your_student');
 }
 
-interface Candidate {
-  id: string;
-  name: string;
-}
-const isCandidates = (v: unknown): v is Candidate[] =>
-  Array.isArray(v) &&
-  v.every(
-    (c) =>
-      typeof c === 'object' && c !== null && typeof c.id === 'string' && typeof c.name === 'string',
-  );
+const duplicateBody = z.object({
+  code: z.literal('duplicate_student'),
+  candidates: z.array(z.object({ id: z.string(), name: z.string() })).catch([]),
+});
+type Candidate = z.infer<typeof duplicateBody>['candidates'][number];
 
 /**
  * 409 duplicate_student names the guardian's children, as id and name only (never notes or the
@@ -98,19 +94,10 @@ const isCandidates = (v: unknown): v is Candidate[] =>
  */
 export function scopeDuplicates(e: Error, own: BookingOwnership): Error {
   if (!(e instanceof HttpException) || e.getStatus() !== 409) return e;
-  const body = e.getResponse();
-  if (
-    typeof body !== 'object' ||
-    body === null ||
-    !('code' in body) ||
-    body.code !== 'duplicate_student'
-  )
-    return e;
-  const raw = 'candidates' in body ? body.candidates : [];
+  const body = duplicateBody.safeParse(e.getResponse());
+  if (!body.success) return e;
   const mine = (c: Candidate): boolean => !own || own.studentIds.includes(c.id);
-  const candidates = (isCandidates(raw) ? raw : [])
-    .filter(mine)
-    .map(({ id, name }) => ({ id, name }));
+  const candidates = body.data.candidates.filter(mine).map(({ id, name }) => ({ id, name }));
   return new HttpException(
     { code: 'duplicate_student', message: 'duplicate_student', candidates },
     409,

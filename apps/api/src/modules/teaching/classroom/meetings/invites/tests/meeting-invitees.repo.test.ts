@@ -22,7 +22,7 @@ describe('MeetingInviteesQueries (R-MEET-02, migration 414)', () => {
     });
     const e = (await new MeetingInviteesRepo(f.db)
       .insert([row])
-      .catch((x: HttpException) => x)) as HttpException;
+      .catch((x: unknown) => x)) as HttpException;
     expect([e.getStatus(), e.getResponse()]).toEqual([
       400,
       expect.objectContaining({ code: 'too_many_invitees' }),

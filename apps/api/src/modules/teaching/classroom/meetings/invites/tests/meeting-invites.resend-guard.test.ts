@@ -22,7 +22,7 @@ import {
 // A resend reaches only whom add() would let the caller invite (R-MEET-02).
 let s: MeetingServices;
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 const REQ = '00000000-0000-4000-8000-0000000000dd';
 const phoneRow = stored({
   meeting_id: MEETING_ID,

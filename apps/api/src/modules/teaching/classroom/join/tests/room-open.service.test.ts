@@ -24,7 +24,7 @@ const open = (user = TEACHER, now = EARLY) =>
     now,
   );
 const body = async (p: Promise<unknown>) =>
-  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+  ((await p.catch((e: unknown) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = queries();

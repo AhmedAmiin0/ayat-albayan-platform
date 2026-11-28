@@ -15,7 +15,7 @@ const resolver = () =>
   );
 const typed = [{ kind: 'phone' as const, phone: OPEN_PHONE }];
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 const student = {
   id: STUDENT_A,
   name: 'سهيلة',

@@ -43,7 +43,7 @@ export class TeacherAlertRepo {
     if (error) throw pgError(error);
     // The booking's order (the wizard's), not the database's.
     return ids.flatMap((id) =>
-      data.filter((s) => s.id === id).map((s) => ({ id: s.id, name: s.name ?? '', code: s.code })),
+      data.filter((s) => s.id === id).map((s) => ({ id: s.id, name: s.name, code: s.code })),
     );
   }
 

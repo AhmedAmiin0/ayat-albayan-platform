@@ -16,7 +16,7 @@ let lessons: { between: ReturnType<typeof vi.fn> };
 const svc = () =>
   new AssistantsService(q as unknown as AssistantsRepo, lessons as unknown as AssistantLessonsRepo);
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 
 beforeEach(() => {
   q = {

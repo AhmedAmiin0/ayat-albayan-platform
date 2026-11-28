@@ -34,7 +34,7 @@ const service = (config: typeof CONFIG | null = CONFIG) =>
 const kick = (user = ADMIN, identity = 'guest-0123456789ab', svc = service()) =>
   svc.remove({ user, lessonId: LESSON_ID, identity });
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 
 beforeEach(() => {
   mod = moderation();

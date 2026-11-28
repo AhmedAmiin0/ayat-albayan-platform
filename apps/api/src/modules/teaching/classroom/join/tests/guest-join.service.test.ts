@@ -44,7 +44,7 @@ const join = (
     over.now ?? OPEN,
   );
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 
 beforeEach(() => {
   q = queries();

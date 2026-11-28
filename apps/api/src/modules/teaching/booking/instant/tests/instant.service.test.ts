@@ -52,7 +52,7 @@ const req = (over: object = {}) => ({
 });
 const create = (over: object = {}) => service().create({ req: req(over), actorId: 'A1' }, NOW);
 const body = async (p: Promise<unknown>) =>
-  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+  ((await p.catch((e: unknown) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   booking = {

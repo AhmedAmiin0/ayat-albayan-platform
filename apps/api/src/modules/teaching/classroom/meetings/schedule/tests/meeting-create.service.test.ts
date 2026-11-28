@@ -8,7 +8,7 @@ import { meetingServices, ORIGIN, type MeetingServices } from '@/modules/teachin
 
 let s: MeetingServices;
 const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: HttpException) => e)) as HttpException;
+  (await p.catch((e: unknown) => e)) as HttpException;
 const tokenOf = (url: string) => url.slice(`${ORIGIN}/m/`.length);
 const SCHEDULED = { startsAt: '2026-10-06T12:00:00Z', durationMin: 45 };
 const STUDENTS = [

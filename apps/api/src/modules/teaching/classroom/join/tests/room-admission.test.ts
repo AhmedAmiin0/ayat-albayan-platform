@@ -43,7 +43,7 @@ describe('RoomAdmission', () => {
     mod.isBlocked.mockResolvedValue(true);
     const err = (await admission()
       .admit(staff, OPEN)
-      .catch((e: HttpException) => e)) as HttpException;
+      .catch((e: unknown) => e)) as HttpException;
     expect(err.getStatus()).toBe(403);
     expect(err.getResponse()).toMatchObject({ code: 'removed_from_room' });
     expect(mod.isBlocked).toHaveBeenCalledWith(LESSON_ID, { userId: 'u1' });
@@ -93,7 +93,7 @@ describe('RoomAdmission', () => {
   it('503 classroom_not_configured without LiveKit', async () => {
     const err = (await admission(null)
       .admit(staff, OPEN)
-      .catch((e: HttpException) => e)) as HttpException;
+      .catch((e: unknown) => e)) as HttpException;
     expect(err.getStatus()).toBe(503);
   });
 });

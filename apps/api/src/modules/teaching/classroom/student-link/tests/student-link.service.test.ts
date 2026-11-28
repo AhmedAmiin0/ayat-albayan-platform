@@ -25,7 +25,7 @@ const join = (over: { now?: Date; body?: unknown; token?: string } = {}) =>
     over.now ?? OPEN,
   );
 const body = async (p: Promise<unknown>) =>
-  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+  ((await p.catch((e: unknown) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = studentLinkQueries();
@@ -95,7 +95,7 @@ describe('POST /public/student/:token/join', () => {
   it('404 no_lesson when nothing is booked, 400 for a blank name', async () => {
     q.lessonsAhead.mockResolvedValue([]);
     expect(await body(join())).toMatchObject({ code: 'no_lesson' });
-    expect((await join({ body: { name: ' ' } }).catch((e: HttpException) => e)) instanceof HttpException).toBe(true);
+    expect((await join({ body: { name: ' ' } }).catch((e: unknown) => e)) instanceof HttpException).toBe(true);
   });
 
   it('429 after the public join limit (10 joins per link and IP)', async () => {
