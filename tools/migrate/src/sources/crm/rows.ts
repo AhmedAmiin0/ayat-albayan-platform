@@ -1,12 +1,15 @@
 // Typed reads of cached CRM rows (PostgREST JSON, cache/crm/<table>.json) and their SourceRef.
 import type { CrmRow, SourceRef } from '../../types.ts';
 
+const SCALAR_KINDS: ReadonlySet<string> = new Set(['string', 'number', 'boolean', 'bigint']);
+const isScalar = (v: unknown): boolean => SCALAR_KINDS.has(typeof v);
+
 export type CrmTables = Readonly<Record<string, readonly CrmRow[]>>;
 
 /** Trimmed scalar as text, or null when missing, blank or not a scalar. */
 export function text(row: CrmRow, col: string): string | null {
   const v = row[col];
-  if (v === null || v === undefined || typeof v === 'object') return null;
+  if (!isScalar(v)) return null;
   const s = String(v).trim();
   return s === '' ? null : s;
 }

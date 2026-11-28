@@ -1,6 +1,7 @@
 // HEART «subscription» rows → subscription facts (E1/E2). Names are Latin, so the student is found
 // by guardian phone (match.ts). Price comes from FIN «Revenue/Desc» of the same month when exactly
 // one single-person row names the student; otherwise 0 + review (the owner enters it). Pure.
+import { columnText } from '../../db/column-text.ts';
 import type { SourceBundle } from '../../entities/contract.ts';
 import { keys } from '../../keys.ts';
 import { num, phoneCell, text, ymd } from '../../sources/sheets/cells.ts';
@@ -38,7 +39,9 @@ function teacherCheck(o: { ix: StudentIndex; student: NaturalKey; raw: string | 
 
 function unmatched(o: { ix: StudentIndex; phone: string; reason: string }): IssueInput {
   // Several children fit the Latin name (siblings): the owner picks, nothing is rejected.
-  const kids = (o.ix.byPhone.get(o.phone) ?? []).map((s) => `«${s.record.columns.name}»`);
+  const kids = (o.ix.byPhone.get(o.phone) ?? []).map(
+    (s) => `«${columnText(s.record.columns.name)}»`,
+  );
   const ambiguous = o.reason === 'ambiguous';
   return {
     code: 'missing_ref',

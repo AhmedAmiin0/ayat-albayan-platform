@@ -34,7 +34,7 @@ export function crmReaderFromEnv(env: NodeJS.ProcessEnv): CrmReader {
         .order('id', { ascending: true })
         .range(from, from + PAGE - 1);
       if (error) throw new Error(`CRM ${q.spec.table}: ${error.message}`);
-      return (data ?? []) as unknown as CrmRow[];
+      return data as unknown as CrmRow[];
     },
   };
 }

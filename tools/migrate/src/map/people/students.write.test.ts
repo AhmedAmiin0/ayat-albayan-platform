@@ -12,7 +12,7 @@ function fakeTx(o: { taken?: boolean } = {}) {
   const tx: TargetTx = {
     insert: async (spec) => (calls.push(spec), o.taken ? null : 'new-id'),
     update: async (spec) => void calls.push({ update: spec.id, columns: spec.columns }),
-    recordItem: async () => {},
+    recordItem: async () => undefined,
     exec: async (q) => void calls.push(q),
   };
   return { tx, calls };

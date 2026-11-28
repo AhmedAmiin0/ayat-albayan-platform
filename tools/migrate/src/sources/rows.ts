@@ -19,7 +19,9 @@ const scalarCell = (v: unknown): Cell =>
 export function headerNames(row: readonly unknown[]): string[] {
   const seen = new Map<string, number>();
   return row.map((h) => {
-    const text = h === null || h === undefined ? '' : String(h).replace(/\s+/g, ' ').trim();
+    const text = String(cellOf(h) ?? '')
+      .replace(/\s+/g, ' ')
+      .trim();
     if (!text) return '';
     const n = (seen.get(text) ?? 0) + 1;
     seen.set(text, n);
@@ -28,7 +30,7 @@ export function headerNames(row: readonly unknown[]): string[] {
 }
 
 function letterIndex(letter: string): number {
-  return [...letter].reduce((acc, ch) => acc * 26 + (ch.charCodeAt(0) - 64), 0) - 1;
+  return letter.split('').reduce((acc, ch) => acc * 26 + (ch.charCodeAt(0) - 64), 0) - 1;
 }
 
 interface SheetRowsResult {

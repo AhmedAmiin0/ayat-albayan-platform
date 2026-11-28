@@ -46,7 +46,11 @@ const squeeze = (s: string): string => s.replace(/(.)\1+/g, '$1').replace(/h$/, 
 
 export function arabicSkeleton(name: string): string {
   const word = normalizeArabic(name).split(' ')[0] ?? '';
-  return squeeze([...word].map((ch) => AR[ch] ?? '').join(''));
+  return squeeze(
+    Array.from(word)
+      .map((ch) => AR[ch] ?? '')
+      .join(''),
+  );
 }
 
 export function latinSkeleton(name: string): string {
@@ -54,7 +58,7 @@ export function latinSkeleton(name: string): string {
     name
       .toLowerCase()
       .split(/[^a-z]+/)
-      .filter(Boolean)[0] ?? '';
+      .find(Boolean) ?? '';
   for (const [re, to] of LATIN) s = s.replace(re, to);
   return squeeze(s);
 }

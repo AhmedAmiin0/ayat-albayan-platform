@@ -90,7 +90,7 @@ function fakeTx() {
   const tx: TargetTx = {
     insert: async (spec) => (calls.push(spec), spec.returning === null ? null : 'r1'),
     update: async (spec) => void calls.push({ update: spec }),
-    recordItem: async () => {},
+    recordItem: async () => undefined,
     exec: async (q) => void calls.push(q),
   };
   return { tx, calls };

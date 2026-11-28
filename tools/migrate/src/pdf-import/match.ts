@@ -5,6 +5,7 @@
 // in cache/pdf-approved.json (bundle.approvedPdfs). A wrong match sends one child's report PDF to
 // another child's parent.
 import { arabicNameSimilar } from '@ab/core';
+import { columnText } from '../db/column-text.ts';
 import type { SourceBundle } from '../entities/contract.ts';
 import { keys, personName } from '../keys.ts';
 import { splitStudentKey } from '../plan/match/similar.ts';
@@ -38,7 +39,7 @@ function reportRefs(reports: readonly Desired[]): ReportRef[] {
   return reports.flatMap((d) => {
     const student = d.record.refs.student_id;
     const lesson = d.record.refs.lesson_id;
-    const sent = Date.parse(String(d.record.columns.submitted_at ?? ''));
+    const sent = Date.parse(columnText(d.record.columns.submitted_at));
     const sentDay = Number.isNaN(sent) ? '' : riyadhDay(sent);
     return student && lesson
       ? [{ report: d.key, student, lesson, day: lessonDay(lesson.key), sentDay }]

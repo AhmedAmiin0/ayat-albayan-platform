@@ -47,7 +47,7 @@ function withCountryCode(compact: string): PhoneCell {
 
 function egyptian(compact: string): string {
   const trunk = /^(?:\+|00)?200(1[0125]\d{8})$/.exec(compact);
-  if (trunk) return `+20${trunk[1]}`;
+  if (trunk) return `+20${trunk[1] ?? ''}`;
   return /^1[0125]\d{8}$/.test(compact) ? `+20${compact}` : compact;
 }
 
@@ -64,7 +64,8 @@ export function hhmm(v: Cell | undefined): string | null {
   const m = /^(\d{1,2}):(\d{2})(?::\d{2})?$/.exec(text(v) ?? '');
   if (!m) return null;
   const [h, mi] = [Number(m[1]), Number(m[2])];
-  return h < 24 && mi < 60 ? `${String(h).padStart(2, '0')}:${m[2]}` : null;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return h < 24 && mi < 60 ? `${pad(h)}:${pad(mi)}` : null;
 }
 
 /** 'YYYY-MM-DD' prefix of a date or datetime cell, else null. */

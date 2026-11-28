@@ -31,7 +31,7 @@ function target(alive: Set<string>) {
             { t: 'lesson_students', c: 'lesson_id' },
             { t: 'students', c: 'guardian_id' },
           ]
-        : ((params[0] as string[]) ?? []).filter((id) => alive.has(id)).map((id) => ({ id })),
+        : (params[0] as string[]).filter((id) => alive.has(id)).map((id) => ({ id })),
   });
 }
 

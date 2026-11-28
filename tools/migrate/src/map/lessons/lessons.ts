@@ -1,4 +1,5 @@
 // rule_id stays null so generator indexes never see imported rows; lesson number not imported (A5).
+import { columnText } from '../../db/column-text.ts';
 import type { EntityModule, SourceBundle, WriteContext } from '../../entities/contract.ts';
 import { keys } from '../../keys.ts';
 import { accepted } from '../../sources/sheets/issues.ts';
@@ -50,8 +51,8 @@ export async function writeLessonStudent(ctx: WriteContext) {
       text: `update public.lesson_students set attendance = coalesce($3::public.attendance, attendance), chargeable = $4
              where lesson_id = $1 and student_id = $2`,
       params: [
-        String(c.lesson_id),
-        String(c.student_id),
+        columnText(c.lesson_id),
+        columnText(c.student_id),
         typeof c.attendance === 'string' ? c.attendance : null,
         c.chargeable === true,
       ],

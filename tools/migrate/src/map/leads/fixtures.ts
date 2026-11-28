@@ -16,7 +16,7 @@ export function contact(id: string, phone: string, name: string | null = null): 
 interface MessageInput {
   id: string;
   conv: string;
-  sender: 'customer' | 'agent' | 'bot' | string;
+  sender: string;
   at: string;
   text?: string | null;
   type?: string;

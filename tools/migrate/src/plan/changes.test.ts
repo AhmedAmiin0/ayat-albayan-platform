@@ -62,7 +62,7 @@ describe('loadChanges', () => {
     const asked: string[] = [];
     const f = fakeDb({
       select: (text, params) => {
-        asked.push(`${text.includes('"public"."students"')} ${JSON.stringify(params)}`);
+        asked.push(`${String(text.includes('"public"."students"'))} ${JSON.stringify(params)}`);
         return [{ id: 's-1', row: { id: 's-1', age: 8 } }];
       },
     });

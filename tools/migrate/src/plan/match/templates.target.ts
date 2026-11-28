@@ -2,6 +2,7 @@
 // import syncs Meta's own columns onto them by (meta_name, language) (map/templates/write.ts), so
 // the plan says so: such a template is an `update` with its field changes in review.xlsx, never a
 // silent overwrite planned as a `create`. SELECT only; a target without the table plans creates.
+import { columnText } from '../../db/column-text.ts';
 import type { TargetDb } from '../../db/target.ts';
 import { keyId } from '../../keys.ts';
 import { SYNCED } from '../../map/templates/write.ts';
@@ -49,7 +50,7 @@ export async function matchTemplates(o: {
     .select<TemplateRow>({
       text: `select meta_name, language, to_jsonb(t) as row from public.message_templates t
              where meta_name = any($1)`,
-      params: [fresh.map((d) => String(d.record.columns.meta_name))],
+      params: [fresh.map((d) => columnText(d.record.columns.meta_name))],
     })
     .catch((err: unknown) => {
       if ((err as { code?: string }).code === '42P01') return [] as TemplateRow[];

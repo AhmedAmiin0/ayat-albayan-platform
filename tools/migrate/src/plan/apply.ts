@@ -59,7 +59,7 @@ async function applyItem(o: { mod: EntityModule; ctx: WriteContext; runId: strin
   const res: WriteResult =
     ctx.item.action === 'adopt'
       ? { targetId: ctx.item.targetId }
-      : await (mod.write ?? ((c) => defaultWrite(mod, c)))(ctx);
+      : await (mod.write?.(ctx) ?? defaultWrite(mod, ctx));
   await ctx.tx.recordItem({
     entity: mod.entity,
     naturalKey: ctx.item.key.key,

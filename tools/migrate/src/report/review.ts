@@ -81,7 +81,7 @@ export function reviewSheets(plan: ReviewPlan): ReviewSheet[] {
   const rest = (i: RowIssue) => !isPdf(i) && !isMerge(i) && !isDuplicate(i) && !isTeacher(i);
   const summary: Row[] = [['entity', 'create', 'update', 'adopt', 'skip', 'reject', 'review']];
   for (const [entity, c] of Object.entries(plan.counts)) {
-    if (c) summary.push([entity, c.create, c.update, c.adopt, c.skip, c.reject, c.review]);
+    summary.push([entity, c.create, c.update, c.adopt, c.skip, c.reject, c.review]);
   }
   return [
     { sheet: 'summary', data: summary },

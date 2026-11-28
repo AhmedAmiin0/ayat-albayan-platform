@@ -76,11 +76,13 @@ function txOf(sql: Sql): TargetTx {
   };
 }
 
+const ignoreNotice = (): undefined => undefined;
+
 export function createTargetDb(config: TargetConfig): TargetDb {
   const sql = postgres(config.databaseUrl, {
     max: 1,
     ssl: config.ssl ? 'require' : false,
-    onnotice: () => {},
+    onnotice: ignoreNotice,
   });
   return {
     name: config.name,

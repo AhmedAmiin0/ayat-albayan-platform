@@ -41,7 +41,7 @@ function sourceRows(bundle: SourceBundle) {
   ];
 }
 
-const codeId = (p: { phone: string; legacy: number | null }) => `${p.phone}|${p.legacy}`;
+const codeId = (p: { phone: string; legacy: number | null }) => `${p.phone}|${String(p.legacy)}`;
 
 /** The master child this row's AB code names on the same phone, when the spelling differs. */
 function byCode(row: PersonRow, masters: ReadonlyMap<string, Person>): Person | undefined {

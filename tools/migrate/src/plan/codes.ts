@@ -77,6 +77,6 @@ export async function checkCodes(o: {
     text: 'select id::text as id, code_seq::int as code_seq from public.students where code_seq = any($1)',
     params: [codes],
   });
-  const holders = new Map(rows.map((r) => [Number(r.code_seq), r.id]));
+  const holders = new Map(rows.map((r) => [r.code_seq, r.id]));
   return dropTakenCodes({ ...o, holders });
 }
