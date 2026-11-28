@@ -26,6 +26,7 @@ jest.mock('@/teaching', () => ({
   ),
 }));
 
+const MOVED_ID = 'a1000000-0000-4000-8000-000000000001';
 const ROW = answered(lesson({ id: 'l-9', starts_at: '2099-10-04T14:00:00.000Z' }));
 const NEXT = {
   id: ROW.id,
@@ -54,7 +55,7 @@ async function note(body: string) {
 beforeEach(() => jest.clearAllMocks());
 
 test('ReplyConfirmButton: «تأكيد الحلقة» refreshes the anchored window', async () => {
-  mockPost.mockResolvedValue({ id: 'l-9', status: 'confirmed' });
+  mockPost.mockResolvedValue({ id: MOVED_ID, starts_at: NEXT.starts_at, status: 'confirmed' });
   const keys = await note('ايوة');
   await fireEvent.press(screen.getByRole('button', { name: /^تأكيد حلقة/ }));
   await waitFor(() => expect(keys()).toContainEqual([...anchoredThreadPrefix(PHONE)]));
