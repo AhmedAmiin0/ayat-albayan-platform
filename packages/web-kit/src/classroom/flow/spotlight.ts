@@ -25,3 +25,6 @@ export function roomLayout(
 
 /** Nobody else in the room yet: only one's own camera (and nothing shared). */
 export const isAlone = (tiles: readonly TileView[]): boolean => tiles.every((x) => x.isLocal);
+
+export const ownTile = (tiles: readonly TileView[]): TileView | undefined =>
+  tiles.find((x) => x.isLocal);

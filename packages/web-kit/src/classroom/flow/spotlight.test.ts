@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { tile } from '@ab/web-kit/classroom/room/livekit/fake-client';
-import { isAlone, roomLayout } from './spotlight';
+import { isAlone, ownTile, roomLayout } from './spotlight';
 
 const me = tile({ key: 'me', isLocal: true });
 const teacher = tile({ key: 'fatima', role: 'teacher' });
@@ -34,5 +34,13 @@ describe('isAlone', () => {
     expect(isAlone([me])).toBe(true);
     expect(isAlone([])).toBe(true);
     expect(isAlone([me, assistant])).toBe(false);
+  });
+});
+
+describe('ownTile', () => {
+  it("finds one's own camera wherever it sits, and nothing before it is there", () => {
+    expect(ownTile([teacher, me])).toBe(me);
+    expect(ownTile([teacher, assistant])).toBeUndefined();
+    expect(ownTile([])).toBeUndefined();
   });
 });
