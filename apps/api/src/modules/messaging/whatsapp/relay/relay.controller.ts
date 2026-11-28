@@ -1,5 +1,4 @@
 import { Body, Controller, Headers, HttpCode, UseGuards } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { Route } from '@/common/http/route';
 import { relayError } from './relay.errors';
 import { RelayLimit } from './relay.limit';
@@ -27,7 +26,6 @@ function invalid(issues: readonly { path: PropertyKey[]; message: string }[]) {
  * /webhooks/* (no user JWT): authenticated by the notifications line's own CRM API key as a
  * Bearer. Never gated by automatic messages: the script decides what to send.
  */
-@Public()
 @UseGuards(RelayLimit)
 @Controller()
 export class RelayController {
