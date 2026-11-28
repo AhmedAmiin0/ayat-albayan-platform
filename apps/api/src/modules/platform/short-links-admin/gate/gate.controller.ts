@@ -2,7 +2,7 @@ import { shortLinkGateRoutes as routes } from '@ab/shared';
 import { Controller, Header, HttpCode, Inject, Ip, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import type { RouteResult } from '@ab/core';
-import { CurrentUser, Public, SignedIn } from '@/common/auth/decorators';
+import { CurrentUser, SignedIn } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { asResponse } from '@/common/http/returns';
@@ -19,7 +19,6 @@ type Out<K extends keyof typeof routes> = Promise<RouteResult<(typeof routes)[K]
  * target), then a signed-in open or a WhatsApp code. 404 short_link_not_found, 401 invalid_code,
  * 429 too_many_requests. Never cached.
  */
-@Public()
 @UseGuards(GateLimit)
 @Controller()
 export class GatePublicController {
