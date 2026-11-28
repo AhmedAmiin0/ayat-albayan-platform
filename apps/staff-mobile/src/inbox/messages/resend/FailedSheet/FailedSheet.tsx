@@ -1,7 +1,6 @@
 import { canRetryCode, canSendViaWhatsApp, type MessageView } from '@ab/shared';
 import { Linking } from 'react-native';
-import { ApiError, t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
-import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
+import { ApiError, t, type, useTheme, AppText, Button, Sheet } from '@ab/mobile-kit';
 import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
 import { errorLine } from '@/inbox/messages/hooks/message-text';
 import { SheetAnswers } from '@/inbox/messages/resend/AppSendAnswers';
@@ -45,7 +44,7 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
     handOff.mutate(row.id, { onSuccess: () => void Linking.openURL(url), onError: fail });
   };
   return (
-    <MenuSheet open={m !== null} label={t.messages.failedMenu} testID="failed-sheet" onClose={onClose}>
+    <Sheet open={m !== null} label={t.messages.failedMenu} testID="failed-sheet" onClose={onClose}>
       {m && why ? (
         <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 }}>
           {errorLine(m)}
@@ -69,6 +68,6 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
         <SheetAnswers message={m} onAnswer={() => closeThen(sentManually, m)} />
       ) : null}
       <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
-    </MenuSheet>
+    </Sheet>
   );
 }

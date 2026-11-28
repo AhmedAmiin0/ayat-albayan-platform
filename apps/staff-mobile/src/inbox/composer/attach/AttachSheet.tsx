@@ -1,8 +1,16 @@
-import { Animated, Modal, Pressable, StyleSheet, View } from 'react-native';
-import { t, shape, useTheme, AttachTile, CameraIcon, DocumentIcon, EmojiIcon, GalleryIcon } from '@ab/mobile-kit';
+import { View } from 'react-native';
+import {
+  t,
+  useTheme,
+  AttachTile,
+  Sheet,
+  CameraIcon,
+  DocumentIcon,
+  EmojiIcon,
+  GalleryIcon,
+} from '@ab/mobile-kit';
 import { SavedReplyIcon, TemplateIcon } from '@/inbox/shared/chat-icons';
 import type { ChatFileSource } from '@/inbox/composer/send-file';
-import { useSwipeClose } from './use-swipe-close';
 
 interface AttachSheetProps {
   visible: boolean;
@@ -12,23 +20,6 @@ interface AttachSheetProps {
   onReplies?: (() => void) | undefined;
   onEmoji: () => void;
   onClose: () => void;
-}
-
-/** The small bar on top that says «drag me down». */
-function DragHandle() {
-  const { color } = useTheme();
-  return (
-    <View
-      testID="attach-handle"
-      style={{
-        alignSelf: 'center',
-        width: 36,
-        height: 4,
-        borderRadius: 2,
-        backgroundColor: color.ruleInput,
-      }}
-    />
-  );
 }
 
 /** The six tiles in reading order (a wrapping row, so it mirrors with the phone). */
@@ -76,46 +67,16 @@ function Tiles(p: AttachSheetProps) {
   );
 }
 
-/** No cancel button: swipe down, outside tap or Android back closes it. */
+/** No cancel button: a drag down, the scrim or Android back closes it. */
 export function AttachSheet(p: AttachSheetProps) {
-  const { color } = useTheme();
-  const swipe = useSwipeClose(p.onClose);
   return (
-    <Modal
-      testID="attach-modal"
-      visible={p.visible}
-      transparent
-      animationType="fade"
-      onRequestClose={p.onClose}
-      onShow={swipe.reset}
+    <Sheet
+      open={p.visible}
+      onClose={p.onClose}
+      label={t.inbox.composer.attach}
+      testID="attach-sheet"
     >
-      <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-        {/* A sibling, not a parent, so screen readers reach each tile before the scrim. */}
-        <Pressable
-          testID="attach-scrim"
-          accessibilityRole="button"
-          accessibilityLabel={t.common.cancel}
-          onPress={p.onClose}
-          style={[StyleSheet.absoluteFill, { backgroundColor: color.scrim }]}
-        />
-        <Animated.View
-          testID="attach-sheet"
-          {...swipe.handlers}
-          style={{
-            gap: 20,
-            paddingHorizontal: 12,
-            paddingTop: 10,
-            paddingBottom: 32,
-            borderTopStartRadius: shape.radius.lg,
-            borderTopEndRadius: shape.radius.lg,
-            backgroundColor: color.raised,
-            transform: [{ translateY: swipe.translateY }],
-          }}
-        >
-          <DragHandle />
-          <Tiles {...p} />
-        </Animated.View>
-      </View>
-    </Modal>
+      <Tiles {...p} />
+    </Sheet>
   );
 }
