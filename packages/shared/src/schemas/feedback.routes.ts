@@ -46,6 +46,8 @@ export const feedbackRoutes = {
   }),
 };
 
+const publicAccess = { tags, isPublic: true } as const;
+
 /** Any token text: a wrong, expired or used link is the service's 404, 410 or 409, never a 400. */
 const tokenParams = z.object({ token: z.string() });
 
@@ -56,7 +58,7 @@ export const feedbackPublicRoutes = {
     path: '/public/feedback/:token',
     params: tokenParams,
     response: feedbackFormViewSchema,
-    tags,
+    ...publicAccess,
   }),
   /** The body is parsed after the rate limit and the token checks, so those answer first. */
   submit: defineRoute({
@@ -65,6 +67,6 @@ export const feedbackPublicRoutes = {
     params: tokenParams,
     body: feedbackSubmitSchema,
     response: z.object({ submitted: z.literal(true) }),
-    tags,
+    ...publicAccess,
   }),
 };
