@@ -1,6 +1,6 @@
 import { View } from 'react-native';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import type { TodayPageProps } from './TodayPage.types';
+import { LazyList } from '@ab/mobile-kit';
 
 /** The page is one block of cards, so the list holds it as its only row. */
 const ONE_ROW = ['page'] as const;

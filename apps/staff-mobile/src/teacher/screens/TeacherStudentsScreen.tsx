@@ -1,20 +1,20 @@
 import { boardStudents, type TeacherStudentKind, type TeacherStudentView } from '@ab/shared';
 import { useViewerTz } from '@/core/lib/clock';
 import {
-  usePullRefresh,
-  t,
   EmptyState,
   ErrorState,
-  FilterPills,
   type FilterPill,
+  FilterPills,
   Screen,
   ScreenHeader,
+  t,
+  useInsetRows,
+  usePullRefresh,
   useTabBarInset,
 } from '@ab/mobile-kit';
 import { useCallback, useState } from 'react';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
 import { Note } from '@/core/ui/feedback/Note';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { StudentRow } from '@/teacher/components/StudentRow';
 import { useMyStudents } from '@/teacher/lib/students-queries';
 

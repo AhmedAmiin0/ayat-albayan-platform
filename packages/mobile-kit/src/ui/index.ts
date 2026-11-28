@@ -43,6 +43,8 @@ export { Wordmark } from './primitives/Wordmark';
 export { criticalSpring } from './motion/spring';
 export { StepStage } from './motion/StepStage';
 export { type StepDirection, type StepMotion, useStepMotion } from './motion/use-step-motion';
+export { LazyList, type LazyListProps } from './lists/LazyList';
+export { useInsetRows } from './lists/use-inset-rows';
 export { ExpoHost, type ExpoHostProps, NativeSlot } from './surface/ExpoHost';
 export { InsetCell, InsetGroup, InsetSeparator, useInset } from './surface/Inset';
 export { Section } from './surface/Section';
