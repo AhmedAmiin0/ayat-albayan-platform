@@ -2,11 +2,7 @@ import { View } from 'react-native';
 import { AppText } from '../../../ui';
 import { shape, type, useTheme } from '../../../theme';
 import { MicOffIcon } from '../../../ui';
-
-interface TileCaptionProps {
-  name: string;
-  muted: boolean;
-}
+import type { TileCaptionProps } from './TileCaption.types';
 
 /**
  * The name at the tile's foot (start side) with a struck mic while muted, on a SOLID inverse chip:

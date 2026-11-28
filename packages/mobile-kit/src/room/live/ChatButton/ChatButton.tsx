@@ -4,13 +4,8 @@ import { AppText } from '../../../ui';
 import { type, useTheme } from '../../../theme';
 import { RoundButton } from '../../../ui';
 import { ChatIcon } from '../room-icons';
-
-const C = t.mobileRoom.controls;
-
-interface ChatButtonProps {
-  unread: number;
-  onPress: () => void;
-}
+import type { ChatButtonProps } from './ChatButton.types';
+import { C } from './chat-button.helpers';
 
 /** The unread count is in the spoken name too. */
 export function ChatButton({ unread, onPress }: ChatButtonProps) {

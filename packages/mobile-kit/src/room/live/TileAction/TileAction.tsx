@@ -1,12 +1,6 @@
-import type { ReactNode } from 'react';
 import { Pressable } from 'react-native';
 import { useTheme } from '../../../theme';
-
-interface TileActionProps {
-  label: string;
-  onPress: () => void;
-  icon: (ink: string) => ReactNode;
-}
+import type { TileActionProps } from './TileAction.types';
 
 export function TileAction({ label, onPress, icon }: TileActionProps) {
   const { color } = useTheme();

@@ -1,1 +1,2 @@
-export { RoomControls, type RoomControlsActions } from './RoomControls';
+export { RoomControls } from './RoomControls';
+export type { RoomControlsActions } from './RoomControls.types';

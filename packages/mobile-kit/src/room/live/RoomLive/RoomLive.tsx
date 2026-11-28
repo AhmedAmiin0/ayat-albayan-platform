@@ -1,30 +1,10 @@
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import type { AudioOutput } from '../../model/audio-output';
-import type { RoomPlatform, RoomSnapshot } from '../../model/room-types';
 import { t } from '../../../lib/i18n/i18n';
 import { AppText, Notice } from '../../../ui';
 import { type, useTheme } from '../../../theme';
 import { ParticipantGrid } from '../ParticipantGrid';
-import { RoomControls, type RoomControlsActions } from '../RoomControls';
-
-interface LiveControls extends RoomControlsActions {
-  output: AudioOutput | null;
-  front: boolean;
-  switchCamera: () => void;
-  /** The microphone was turned off by the teacher. */
-  mutedByStaff: boolean;
-}
-
-interface RoomLiveProps {
-  snap: RoomSnapshot;
-  Video: RoomPlatform['Video'];
-  controls: LiveControls;
-  /** Null means no chat control. */
-  chatUnread: number | null;
-  /** The panel over the foot: the participants, the leave question, the chat notice. */
-  sheet: ReactNode;
-}
+import { RoomControls } from '../RoomControls';
+import type { RoomLiveProps } from './RoomLive.types';
 
 export function RoomLive({ snap, Video, controls, chatUnread, sheet }: RoomLiveProps) {
   const { color } = useTheme();
