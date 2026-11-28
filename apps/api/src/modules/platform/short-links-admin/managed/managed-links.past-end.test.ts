@@ -14,10 +14,7 @@ describe('ManagedLinksRepo.page', () => {
       rows: [],
       total: 3,
     });
-    expect(rangesOn(fake, T)).toEqual([
-      [30, 39],
-      [0, 0],
-    ]);
+    expect(rangesOn(fake, T)).toEqual([[30, 39], [0, 0]]);
   });
 
   it('newest first, then the id so equal times keep their page', async () => {

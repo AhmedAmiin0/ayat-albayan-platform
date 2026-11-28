@@ -11,7 +11,7 @@ function db(rows: () => { key: string; value: unknown }[]) {
 }
 
 describe('GoogleSettings with Redis (an API copy and the worker)', () => {
-  it("turning the sync OFF on an API copy reaches the worker's cached read at once", async () => {
+  it('turning the sync OFF on an API copy reaches the worker\'s cached read at once', async () => {
     const redis = fakeRedis();
     let enabled = true;
     const rows = () => [{ key: 'google_sync_enabled', value: enabled }];

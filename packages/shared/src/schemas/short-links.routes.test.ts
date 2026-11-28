@@ -66,9 +66,7 @@ describe('shortLinkGateRoutes', () => {
 
   it('keeps the target out of every outcome but open', () => {
     const answer = shortLinkGateRoutes.open.response;
-    expect(answer.parse({ outcome: 'gone', target: 'https://x.test' })).toEqual({
-      outcome: 'gone',
-    });
+    expect(answer.parse({ outcome: 'gone', target: 'https://x.test' })).toEqual({ outcome: 'gone' });
     expect(answer.safeParse({ outcome: 'open' }).success).toBe(false);
   });
 });

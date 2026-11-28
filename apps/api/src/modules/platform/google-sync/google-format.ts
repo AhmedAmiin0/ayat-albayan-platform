@@ -41,39 +41,16 @@ export const DRIVE = {
 
 /** 13 columns A..M; the last is the PDF's Drive link. */
 export const ATTENDANCE_HEADER = [
-  'تاريخ الحلقة',
-  'رقم الحلقة',
-  'المعلمة',
-  'البرنامج',
-  'الحضور',
-  'التسميع',
-  'الحفظ الجديد',
-  'المراجعة',
-  'التقدير العام',
-  'ملاحظات المعلمة',
-  'الواجب',
-  'رابط الاجتماع',
-  'تقرير PDF',
+  'تاريخ الحلقة', 'رقم الحلقة', 'المعلمة', 'البرنامج', 'الحضور', 'التسميع', 'الحفظ الجديد',
+  'المراجعة', 'التقدير العام', 'ملاحظات المعلمة', 'الواجب', 'رابط الاجتماع', 'تقرير PDF',
 ] as const;
 
 /** 8 columns A..H: G is the folder link, H the attendance sheet link. */
 export const SUMMARY_HEADER = [
-  'اسم الطالب',
-  'المعلمة',
-  'البرنامج',
-  'تاريخ أول حلقة',
-  'آخر حلقة',
-  'عدد الحلقات',
-  'مجلد الطالب',
-  'سجل الحضور',
+  'اسم الطالب', 'المعلمة', 'البرنامج', 'تاريخ أول حلقة', 'آخر حلقة', 'عدد الحلقات', 'مجلد الطالب', 'سجل الحضور',
 ] as const;
 
-export const BRAND = {
-  green: '#0C2A1E',
-  gold: '#C2A24A',
-  paper: '#FDF8F0',
-  white: '#FFFFFF',
-} as const;
+export const BRAND = { green: '#0C2A1E', gold: '#C2A24A', paper: '#FDF8F0', white: '#FFFFFF' } as const;
 
 export const MIME = {
   folder: 'application/vnd.google-apps.folder',

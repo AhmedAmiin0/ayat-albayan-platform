@@ -85,14 +85,7 @@ export class GoogleMapService {
     const { studentId, files, actorId } = input;
     if (!(await this.map.student(studentId))) throw new NotFoundException();
     await this.map.setStudent({ studentId, files, actorId });
-    await this.run.audit.record({
-      actorId,
-      entity: 'google_student_files',
-      entityId: studentId,
-      action: files ? 'confirm' : 'remove',
-      before: null,
-      after: files ? { ...files } : null,
-    });
+    await this.run.audit.record({ actorId, entity: 'google_student_files', entityId: studentId, action: files ? 'confirm' : 'remove', before: null, after: files ? { ...files } : null });
     if (files) await this.data.items.requeue('student_unmapped');
     void this.run.job.kick();
     const row = await this.map.student(studentId);

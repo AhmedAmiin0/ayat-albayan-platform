@@ -8,11 +8,7 @@ import { brandStyle } from '@/modules/platform/google-sync/writers/sheets/sheet-
 
 /** A confirmed student's folder and attendance sheet; `null` = not confirmed / no Drive root. */
 type StudentDrive = { folderId: string; sheetId: string };
-type DriveNeed =
-  | { kind: 'ready'; drive: StudentDrive }
-  | { kind: 'create'; folder: boolean; sheet: boolean; rootId: string | null }
-  | { kind: 'unmapped' }
-  | { kind: 'no_root' };
+type DriveNeed = { kind: 'ready'; drive: StudentDrive } | { kind: 'create'; folder: boolean; sheet: boolean; rootId: string | null } | { kind: 'unmapped' } | { kind: 'no_root' };
 
 /** docs/24 §3: each new id is recorded at once, so a retry never makes a twin. */
 @Injectable()
@@ -25,11 +21,7 @@ export class DriveFiles {
   async need(studentId: string): Promise<DriveNeed> {
     const files = await this.map.files(studentId);
     if (!files) return { kind: 'unmapped' };
-    if (files.folder_id && files.attendance_sheet_id)
-      return {
-        kind: 'ready',
-        drive: { folderId: files.folder_id, sheetId: files.attendance_sheet_id },
-      };
+    if (files.folder_id && files.attendance_sheet_id) return { kind: 'ready', drive: { folderId: files.folder_id, sheetId: files.attendance_sheet_id } };
     if (files.folder_id) return { kind: 'create', folder: false, sheet: true, rootId: null };
     const acct = await this.account.get();
     if (!acct.root_folder_id || !acct.drive_confirmed_at) return { kind: 'no_root' };

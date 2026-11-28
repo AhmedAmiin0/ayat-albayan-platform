@@ -1,12 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  eventBody,
-  eventDescription,
-  eventTitle,
-  eventWanted,
-  isOurEvent,
-  type EventLesson,
-} from '@/modules/platform/google-sync/writers/calendar/event-format';
+import { eventBody, eventDescription, eventTitle, eventWanted, isOurEvent, type EventLesson } from '@/modules/platform/google-sync/writers/calendar/event-format';
 
 // docs/24 §1 + §2.3: the script's title/description/location, the platform marker and footer.
 
@@ -28,9 +21,7 @@ describe('event title', () => {
   });
 
   it('adds «(يحتاج تأكيد)» while the lesson is unconfirmed, and «طالب جديد» without a student', () => {
-    expect(eventTitle({ ...LESSON, status: 'scheduled' })).toBe(
-      'حلقة — طالب تجربة · المنصة (يحتاج تأكيد)',
-    );
+    expect(eventTitle({ ...LESSON, status: 'scheduled' })).toBe('حلقة — طالب تجربة · المنصة (يحتاج تأكيد)');
     expect(eventTitle({ ...LESSON, students: [] })).toBe('حلقة — طالب جديد · المنصة');
   });
 });
@@ -52,11 +43,7 @@ describe('event description', () => {
 
   it('main copy adds the student and the family phone under the link line', () => {
     const lines = eventDescription(LESSON, 'main').split('\n');
-    expect(lines.slice(0, 3)).toEqual([
-      'لينك الحلقة: https://meet.google.com/abc-defg-hij',
-      'الطالب: طالب تجربة',
-      'رقم الطالب: +966500000001',
-    ]);
+    expect(lines.slice(0, 3)).toEqual(['لينك الحلقة: https://meet.google.com/abc-defg-hij', 'الطالب: طالب تجربة', 'رقم الطالب: +966500000001']);
   });
 
   it('a trial says so, with no repeat line; no link means no link line', () => {
@@ -78,14 +65,8 @@ describe('event body', () => {
     const body = eventBody(LESSON, 'teacher');
     expect(body.start).toEqual({ dateTime: '2026-10-25T14:00:00.000Z', timeZone: 'Asia/Riyadh' });
     expect(body.end.dateTime).toBe('2026-10-25T14:45:00.000Z');
-    expect(body.reminders).toEqual({
-      useDefault: false,
-      overrides: [{ method: 'popup', minutes: 30 }],
-    });
-    expect(body.extendedProperties.private).toEqual({
-      ab_source: 'platform',
-      ab_lesson_id: 'lesson-1',
-    });
+    expect(body.reminders).toEqual({ useDefault: false, overrides: [{ method: 'popup', minutes: 30 }] });
+    expect(body.extendedProperties.private).toEqual({ ab_source: 'platform', ab_lesson_id: 'lesson-1' });
     expect(body.location).toBe('https://meet.google.com/abc-defg-hij');
     expect(body).not.toHaveProperty('recurrence');
   });
@@ -101,9 +82,7 @@ describe('event body', () => {
   it('recognises only its own events', () => {
     expect(isOurEvent(eventBody(LESSON, 'main'), 'lesson-1')).toBe(true);
     expect(isOurEvent(eventBody(LESSON, 'main'), 'lesson-2')).toBe(false);
-    expect(
-      isOurEvent({ extendedProperties: { private: { ab_lesson_id: 'lesson-1' } } }, 'lesson-1'),
-    ).toBe(false);
+    expect(isOurEvent({ extendedProperties: { private: { ab_lesson_id: 'lesson-1' } } }, 'lesson-1')).toBe(false);
     expect(isOurEvent({}, 'lesson-1')).toBe(false);
   });
 });

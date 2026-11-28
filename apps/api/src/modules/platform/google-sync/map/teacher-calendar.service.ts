@@ -7,12 +7,8 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
 
-const fail = (what: string, error: { message: string }) =>
-  new Error(`google ${what} failed: ${error.message}`);
-const ownerOf = (v: string): TeacherCalendarOwner =>
-  (TEACHER_CALENDAR_OWNERS as readonly string[]).includes(v)
-    ? (v as TeacherCalendarOwner)
-    : 'script';
+const fail = (what: string, error: { message: string }) => new Error(`google ${what} failed: ${error.message}`);
+const ownerOf = (v: string): TeacherCalendarOwner => (TEACHER_CALENDAR_OWNERS as readonly string[]).includes(v) ? (v as TeacherCalendarOwner) : 'script';
 
 /** docs/24: a column write; the DB stamps, audits and queues the teacher's lessons. */
 @Injectable()
@@ -24,11 +20,7 @@ export class TeacherCalendarService {
 
   async view(teacherId: string): Promise<TeacherCalendarView> {
     const [t, c] = await Promise.all([
-      this.db
-        .from('teachers')
-        .select('id, calendar_owner, calendar_owner_changed_at')
-        .eq('id', teacherId)
-        .maybeSingle(),
+      this.db.from('teachers').select('id, calendar_owner, calendar_owner_changed_at').eq('id', teacherId).maybeSingle(),
       this.db.rpc('google_teacher_calendar_counts', { p_teacher_id: teacherId }),
     ]);
     if (t.error) throw fail('teacher read', t.error);

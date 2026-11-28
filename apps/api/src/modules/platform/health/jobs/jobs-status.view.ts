@@ -3,16 +3,14 @@ import { isStale } from '@/common/jobs/beats';
 
 const iso = (ms: number | null): string | null => (ms === null ? null : new Date(ms).toISOString());
 
-const row =
-  (now: number) =>
-  (b: JobBeat): JobStatus => ({
-    name: b.name,
-    every_ms: b.everyMs,
-    last_ok_at: iso(b.lastOkAt),
-    last_error_at: iso(b.lastErrorAt),
-    last_error: b.lastError,
-    stale: isStale(b, now),
-  });
+const row = (now: number) => (b: JobBeat): JobStatus => ({
+  name: b.name,
+  every_ms: b.everyMs,
+  last_ok_at: iso(b.lastOkAt),
+  last_error_at: iso(b.lastErrorAt),
+  last_error: b.lastError,
+  stale: isStale(b, now),
+});
 
 /** Stale jobs first, then by name. */
 const order = (a: JobStatus, b: JobStatus): number =>

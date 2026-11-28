@@ -21,9 +21,7 @@ describe('ArchiveObjectsRepo.covered', () => {
 
   it('stops after one read when the first page is short', async () => {
     const t = fakeDb({ [T]: [{ data: [object(1), object(1)] }] });
-    expect(await new ArchiveObjectsRepo(t.db).covered('f1')).toEqual(
-      new Set([versionId(object(1))]),
-    );
+    expect(await new ArchiveObjectsRepo(t.db).covered('f1')).toEqual(new Set([versionId(object(1))]));
     expect(t.trips).toEqual([T]);
   });
 

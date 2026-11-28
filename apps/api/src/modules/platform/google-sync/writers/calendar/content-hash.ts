@@ -14,7 +14,4 @@ function canonical(value: unknown): unknown {
 }
 
 /** sha256 of what the platform would write: equal to the stored hash ⇒ nothing to send (rule 8). */
-export const contentHash = (value: unknown): string =>
-  createHash('sha256')
-    .update(JSON.stringify(canonical(value)))
-    .digest('hex');
+export const contentHash = (value: unknown): string => createHash('sha256').update(JSON.stringify(canonical(value))).digest('hex');

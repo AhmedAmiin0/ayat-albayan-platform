@@ -83,9 +83,7 @@ describe('short link redirect access', () => {
   it('opens /r/:code from its route object, not from a class or handler mark', () => {
     const go: object = Object(Reflect.get(ShortLinksController.prototype, 'go'));
     expect(Reflect.getOwnMetadata(IS_PUBLIC, ShortLinksController)).toBeUndefined();
-    expect([IS_PUBLIC, OWN_PUBLIC].map((key) => Reflect.getOwnMetadata(key, go))).toEqual([
-      true,
-      undefined,
-    ]);
+    const marks = [IS_PUBLIC, OWN_PUBLIC].map((key) => Reflect.getOwnMetadata(key, go));
+    expect(marks).toEqual([true, undefined]);
   });
 });

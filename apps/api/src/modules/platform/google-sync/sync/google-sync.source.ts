@@ -4,10 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { loadEnv } from '@/config/env/env';
 import { firstWebOrigin } from '@/modules/teaching/classroom/classroom.config';
 import { classroomUrl } from '@/modules/messaging/reminders/plan/reminders.links';
-import type {
-  EventLesson,
-  LessonKind,
-} from '@/modules/platform/google-sync/writers/calendar/event-format';
+import type { EventLesson, LessonKind } from '@/modules/platform/google-sync/writers/calendar/event-format';
 import { GoogleSyncAcademySettings } from './google-sync.settings';
 
 /**
@@ -51,11 +48,9 @@ export interface ReportSource {
 
 const LESSON =
   'id, teacher_id, starts_at, ends_at, status, meeting_link, makeup_of_id, teacher:teachers(display_name_ar, meeting_mode, calendar_owner_changed_at), rule:schedule_rules!lessons_rule_id_fkey(byday, package), lesson_students(student:students(name, guardians(phone_e164)))';
-const REPORT =
-  'id, lesson_id, student_id, teacher_id, status, version, pdf_path, pdf_status, attendance, program, recited, new_memorization, revision, grade_overall, notes, homework';
+const REPORT = 'id, lesson_id, student_id, teacher_id, status, version, pdf_path, pdf_status, attendance, program, recited, new_memorization, revision, grade_overall, notes, homework';
 
-const fail = (what: string, error: { message: string }) =>
-  new Error(`google ${what} read failed: ${error.message}`);
+const fail = (what: string, error: { message: string }) => new Error(`google ${what} read failed: ${error.message}`);
 
 /** Reads with the service role; one lesson or report per call (a handful a minute). */
 @Injectable()
@@ -68,11 +63,7 @@ export class GoogleSyncSource {
   async lesson(lessonId: string): Promise<LessonSource | null> {
     const [l, managed, { meeting_link_auto: auto }] = await Promise.all([
       this.db.from('lessons').select(LESSON).eq('id', lessonId).maybeSingle(),
-      this.db
-        .from('v_calendar_managed_lessons')
-        .select('id, platform_origin')
-        .eq('id', lessonId)
-        .maybeSingle(),
+      this.db.from('v_calendar_managed_lessons').select('id, platform_origin').eq('id', lessonId).maybeSingle(),
       this.settings.read(),
     ]);
     if (l.error) throw fail('lesson', l.error);
@@ -80,8 +71,7 @@ export class GoogleSyncSource {
     if (!l.data) return null;
     const row = l.data;
     const platform = usesPlatform(meetingModeOf(row.teacher?.meeting_mode), auto);
-    const kind: LessonKind =
-      row.rule?.package === 'trial' ? 'trial' : row.makeup_of_id ? 'makeup' : 'package';
+    const kind: LessonKind = row.rule?.package === 'trial' ? 'trial' : row.makeup_of_id ? 'makeup' : 'package';
     const lesson: EventLesson = {
       id: row.id,
       startsAt: row.starts_at,
@@ -113,32 +103,13 @@ export class GoogleSyncSource {
     if (!r.data) return null;
     const rep = r.data;
     const [lesson, student, teacher, seq, imported] = await Promise.all([
-      this.db
-        .from('lessons')
-        .select('starts_at, meeting_link')
-        .eq('id', rep.lesson_id)
-        .maybeSingle(),
+      this.db.from('lessons').select('starts_at, meeting_link').eq('id', rep.lesson_id).maybeSingle(),
       this.db.from('students').select('name, program').eq('id', rep.student_id).maybeSingle(),
       this.db.from('teachers').select('display_name_ar').eq('id', rep.teacher_id).maybeSingle(),
-      this.db
-        .from('v_lesson_sequence')
-        .select('seq')
-        .match({ lesson_id: rep.lesson_id, student_id: rep.student_id })
-        .maybeSingle(),
-      this.db
-        .from('import_items')
-        .select('id')
-        .eq('target_table', 'lesson_reports')
-        .eq('target_id', reportId)
-        .limit(1),
+      this.db.from('v_lesson_sequence').select('seq').match({ lesson_id: rep.lesson_id, student_id: rep.student_id }).maybeSingle(),
+      this.db.from('import_items').select('id').eq('target_table', 'lesson_reports').eq('target_id', reportId).limit(1),
     ]);
-    for (const [what, res] of [
-      ['lesson', lesson],
-      ['student', student],
-      ['teacher', teacher],
-      ['sequence', seq],
-      ['import', imported],
-    ] as const) {
+    for (const [what, res] of [['lesson', lesson], ['student', student], ['teacher', teacher], ['sequence', seq], ['import', imported]] as const) {
       if (res.error) throw fail(what, res.error);
     }
     if (!lesson.data || !student.data) return null;

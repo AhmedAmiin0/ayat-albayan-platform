@@ -47,27 +47,23 @@ export class ManagedLinksRepo {
   }
 
   async byCode(code: string): Promise<ShortLinkRow | null> {
-    const data = maybe(
-      await this.db
-        .from('short_links')
-        .select('*')
-        .eq('kind', MANAGED_KIND)
-        .eq('code', code)
-        .maybeSingle(),
-    );
+    const data = maybe(await this.db
+      .from('short_links')
+      .select('*')
+      .eq('kind', MANAGED_KIND)
+      .eq('code', code)
+      .maybeSingle());
     return data;
   }
 
   async update(code: string, patch: TablesUpdate<'short_links'>): Promise<ShortLinkRow> {
-    const data = one(
-      await this.db
-        .from('short_links')
-        .update(patch)
-        .eq('kind', MANAGED_KIND)
-        .eq('code', code)
-        .select('*')
-        .single(),
-    );
+    const data = one(await this.db
+      .from('short_links')
+      .update(patch)
+      .eq('kind', MANAGED_KIND)
+      .eq('code', code)
+      .select('*')
+      .single());
     return data;
   }
 

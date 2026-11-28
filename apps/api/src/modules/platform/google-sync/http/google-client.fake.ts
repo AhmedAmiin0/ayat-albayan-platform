@@ -55,15 +55,9 @@ export class FakeGoogle implements GoogleClient {
     this.call('getEvent', `${ref.calendarId}/${ref.eventId}`);
     return this.cal(ref.calendarId).get(ref.eventId) ?? null;
   }
-  async listEvents(input: {
-    calendarId: string;
-    timeMin: string;
-    timeMax: string;
-  }): Promise<GoogleListedEvent[]> {
+  async listEvents(input: { calendarId: string; timeMin: string; timeMax: string }): Promise<GoogleListedEvent[]> {
     this.call('listEvents', input.calendarId);
-    return [...this.cal(input.calendarId).values()].filter(
-      (e) => e.end.dateTime > input.timeMin && e.start.dateTime < input.timeMax,
-    );
+    return [...this.cal(input.calendarId).values()].filter((e) => e.end.dateTime > input.timeMin && e.start.dateTime < input.timeMax);
   }
   async insertEvent(input: { calendarId: string; event: GoogleEventBody }) {
     this.call('insertEvent', input.calendarId);
@@ -84,11 +78,7 @@ export class FakeGoogle implements GoogleClient {
   async findFiles(input: { name: string; parentId?: string; mimeType?: string }) {
     this.call('findFiles', input.name);
     return [...this.files.values()].filter(
-      (f) =>
-        !f.trashed &&
-        f.name === input.name &&
-        (!input.parentId || f.parentId === input.parentId) &&
-        (!input.mimeType || f.mimeType === input.mimeType),
+      (f) => !f.trashed && f.name === input.name && (!input.parentId || f.parentId === input.parentId) && (!input.mimeType || f.mimeType === input.mimeType),
     );
   }
   async getFile(fileId: string) {
@@ -102,38 +92,17 @@ export class FakeGoogle implements GoogleClient {
   }
   async createFolder(input: { name: string; parentId: string }) {
     this.call('createFolder', `${input.parentId}/${input.name}`);
-    return this.add({
-      name: input.name,
-      mimeType: MIME.folder,
-      parentId: input.parentId,
-      appProperties: {},
-    });
+    return this.add({ name: input.name, mimeType: MIME.folder, parentId: input.parentId, appProperties: {} });
   }
   async createSpreadsheet(input: { name: string; parentId: string }) {
     this.call('createSpreadsheet', `${input.parentId}/${input.name}`);
-    const made = this.add({
-      name: input.name,
-      mimeType: MIME.sheet,
-      parentId: input.parentId,
-      appProperties: {},
-    });
+    const made = this.add({ name: input.name, mimeType: MIME.sheet, parentId: input.parentId, appProperties: {} });
     this.sheets.set(made.id, []);
     return made;
   }
-  async uploadPdf(input: {
-    name: string;
-    parentId: string;
-    bytes: Uint8Array;
-    appProperties: Record<string, string>;
-  }) {
+  async uploadPdf(input: { name: string; parentId: string; bytes: Uint8Array; appProperties: Record<string, string> }) {
     this.call('uploadPdf', `${input.parentId}/${input.name}`);
-    return this.add({
-      name: input.name,
-      mimeType: MIME.pdf,
-      parentId: input.parentId,
-      appProperties: input.appProperties,
-      bytes: input.bytes,
-    });
+    return this.add({ name: input.name, mimeType: MIME.pdf, parentId: input.parentId, appProperties: input.appProperties, bytes: input.bytes });
   }
   async updatePdf(input: { fileId: string; name: string; bytes: Uint8Array }) {
     this.call('updatePdf', input.fileId);
@@ -175,9 +144,6 @@ export class FakeGoogle implements GoogleClient {
 }
 
 /** One FakeGoogle for every token (tests read `google`), and a fake OAuth. */
-export function fakeFactory(
-  google = new FakeGoogle(),
-  oauth: GoogleOAuth | null = null,
-): GoogleClientFactory & { google: FakeGoogle } {
+export function fakeFactory(google = new FakeGoogle(), oauth: GoogleOAuth | null = null): GoogleClientFactory & { google: FakeGoogle } {
   return { google, client: () => google, oauth: () => oauth };
 }

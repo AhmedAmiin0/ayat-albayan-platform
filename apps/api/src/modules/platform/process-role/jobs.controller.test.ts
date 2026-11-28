@@ -62,15 +62,13 @@ describe('POST /internal/jobs/config-reload/here (a peer API copy)', () => {
 });
 
 describe('internal job access', () => {
-  const handlers = ['kick', 'peerReload'].map((n) =>
-    Object(Reflect.get(InternalJobsController.prototype, n)),
+  const handlers = ['kick', 'peerReload'].map((name): object =>
+    Object(Reflect.get(InternalJobsController.prototype, name)),
   );
+  const marked = (key: string) => handlers.map((h) => Reflect.getOwnMetadata(key, h));
 
   it('is public through its route objects only: the internal token is the check', () => {
-    expect(handlers.map((h) => Reflect.getOwnMetadata(IS_PUBLIC, h))).toEqual([true, true]);
-    expect(handlers.map((h) => Reflect.getOwnMetadata(OWN_PUBLIC, h))).toEqual([
-      undefined,
-      undefined,
-    ]);
+    expect(marked(IS_PUBLIC)).toEqual([true, true]);
+    expect(marked(OWN_PUBLIC)).toEqual([undefined, undefined]);
   });
 });

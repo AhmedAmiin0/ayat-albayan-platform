@@ -8,10 +8,7 @@ import { GoogleApiError } from '@/modules/platform/google-sync/google-client.por
 const optionalText = z.string().optional().catch(undefined);
 
 const apiError = z.looseObject({
-  errors: z
-    .array(z.looseObject({ reason: optionalText }))
-    .optional()
-    .catch(undefined),
+  errors: z.array(z.looseObject({ reason: optionalText })).optional().catch(undefined),
   status: optionalText,
 });
 

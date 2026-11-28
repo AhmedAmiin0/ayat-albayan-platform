@@ -5,20 +5,11 @@ import { matchDate } from '@/modules/platform/google-sync/writers/sheets/attenda
 import { contentHash } from '@/modules/platform/google-sync/writers/calendar/content-hash';
 import { DriveFiles } from './drive-files';
 import { TZ } from '@/modules/platform/google-sync/google-format';
-import type {
-  ItemResult,
-  SyncItem,
-} from '@/modules/platform/google-sync/sync/google-items.queries';
+import type { ItemResult, SyncItem } from '@/modules/platform/google-sync/sync/google-items.queries';
 import { GoogleSyncSource } from '@/modules/platform/google-sync/sync/google-sync.source';
 import { pdfName } from './pdf-name';
 import { localDate } from '@/modules/platform/google-sync/writers/sheets/sheet-dates';
-import {
-  later,
-  planned,
-  synced,
-  type ItemWriter,
-  type WriteCtx,
-} from '@/modules/platform/google-sync/sync/write-context';
+import { later, planned, synced, type ItemWriter, type WriteCtx } from '@/modules/platform/google-sync/sync/write-context';
 
 /** docs/24 §3, §2.5: replaces only a file we uploaded (appProperties); a deleted one is `gone`. */
 @Injectable()
@@ -39,11 +30,7 @@ export class ReportPdfWriter implements ItemWriter {
     const date = localDate(src.startsAt, TZ);
     if (!ctx.live) {
       const target = need.kind === 'ready' ? `drive:${need.drive.folderId}` : 'drive:new-folder';
-      return planned({
-        method: item.google_id ? 'PATCH' : 'POST',
-        target,
-        summary: pdfName({ student: src.studentName, date, alreadyInSheet: false }),
-      });
+      return planned({ method: item.google_id ? 'PATCH' : 'POST', target, summary: pdfName({ student: src.studentName, date, alreadyInSheet: false }) });
     }
     const { google } = ctx;
     const place = await this.drive.ensure({
@@ -52,16 +39,8 @@ export class ReportPdfWriter implements ItemWriter {
       studentName: src.studentName,
     });
     if (!place) return { state: 'skipped', reason: 'drive_unconfirmed' };
-    const rows = await google.readValues({
-      spreadsheetId: place.sheetId,
-      range: 'A2:M',
-      render: 'UNFORMATTED_VALUE',
-    });
-    const name = pdfName({
-      student: src.studentName,
-      date,
-      alreadyInSheet: matchDate(rows, { date, pdfFileId: item.google_id }).kind === 'script',
-    });
+    const rows = await google.readValues({ spreadsheetId: place.sheetId, range: 'A2:M', render: 'UNFORMATTED_VALUE' });
+    const name = pdfName({ student: src.studentName, date, alreadyInSheet: matchDate(rows, { date, pdfFileId: item.google_id }).kind === 'script' });
     const hash = contentHash({ version: src.version, name, folder: place.folderId });
     if (item.google_id) {
       const f = await google.getFile(item.google_id);
@@ -78,12 +57,7 @@ export class ReportPdfWriter implements ItemWriter {
       await google.updatePdf({ fileId: item.google_id, name, bytes });
       return synced({ googleId: item.google_id, parentId: place.folderId, hash });
     }
-    const made = await google.uploadPdf({
-      name,
-      parentId: place.folderId,
-      bytes,
-      appProperties: { ab_source: 'platform', ab_report_id: src.reportId },
-    });
+    const made = await google.uploadPdf({ name, parentId: place.folderId, bytes, appProperties: { ab_source: 'platform', ab_report_id: src.reportId } });
     return synced({ googleId: made.id, parentId: place.folderId, hash });
   }
 }

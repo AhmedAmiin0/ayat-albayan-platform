@@ -1,10 +1,7 @@
 import type { ModuleRef } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  asQueries,
-  fakeQueries,
-} from '@/common/configuration/integrations/integration-config.fakes';
+import { asQueries, fakeQueries } from '@/common/configuration/integrations/integration-config.fakes';
 import { IntegrationConfigService } from '@/common/configuration/integrations/integration-config.service';
 import { setIntegrationOverlay } from '@/common/configuration/integrations/integration-overlay';
 import { DbRulesReader } from '@/modules/messaging/notification-rules';
@@ -34,10 +31,7 @@ function worker(missing: readonly unknown[] = []) {
 
 function stubFetch(): string[] {
   const urls: string[] = [];
-  vi.stubGlobal(
-    'fetch',
-    (url: string) => (urls.push(url), Promise.resolve(new Response(null, { status: 204 }))),
-  );
+  vi.stubGlobal('fetch', (url: string) => (urls.push(url), Promise.resolve(new Response(null, { status: 204 }))));
   return urls;
 }
 
@@ -143,10 +137,7 @@ describe('an admin save on an API copy kicks the worker (kickConfigReload)', () 
     vi.stubEnv('WORKER_URL', 'http://ayat-worker:3000');
     const urls = stubFetch();
     const db = { from: () => ({ upsert: async () => ({ error: null }) }) };
-    await new GoogleSettings(db as never, 30_000).write({
-      values: { enabled: false },
-      actorId: 'admin-1',
-    });
+    await new GoogleSettings(db as never, 30_000).write({ values: { enabled: false }, actorId: 'admin-1' });
     expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/config-reload/kick?wait=0']);
   });
 });

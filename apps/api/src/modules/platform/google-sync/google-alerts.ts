@@ -14,21 +14,13 @@ export class GoogleAlerts {
   /** invalid_grant: the refresh token is dead; the subject carries the day so a later expiry is told again. */
   disconnected(now = new Date()): Promise<void> {
     const reason = ar.googleSync.alerts.disconnected;
-    return this.push.notifyAdmins('google_sync_alert', {
-      subject: `disconnected:${now.toISOString().slice(0, 10)}`,
-      vars: { reason },
-      bellOnly: true,
-    });
+    return this.push.notifyAdmins('google_sync_alert', { subject: `disconnected:${now.toISOString().slice(0, 10)}`, vars: { reason }, bellOnly: true });
   }
 
   /** A teacher's lessons go to the main calendar only until a calendar is confirmed for them. */
   teacherUnmapped(input: { teacherId: string; name: string }): Promise<void> {
     const reason = ar.googleSync.alerts.teacherUnmapped.replace('{name}', input.name);
-    return this.push.notifyAdmins('google_sync_alert', {
-      subject: `teacher:${input.teacherId}`,
-      vars: { reason },
-      bellOnly: true,
-    });
+    return this.push.notifyAdmins('google_sync_alert', { subject: `teacher:${input.teacherId}`, vars: { reason }, bellOnly: true });
   }
 
   /** Once per handover: `since` is in the subject, so a later handover alerts again. */
@@ -39,10 +31,6 @@ export class GoogleAlerts {
   }): Promise<void> {
     const reason = ar.googleSync.alerts.scriptEventPresent.replace('{name}', input.name);
     const subject = `script_calendar:${input.teacherId}:${input.since ?? 'initial'}`;
-    return this.push.notifyAdmins('google_sync_alert', {
-      subject,
-      vars: { reason },
-      bellOnly: true,
-    });
+    return this.push.notifyAdmins('google_sync_alert', { subject, vars: { reason }, bellOnly: true });
   }
 }

@@ -2,13 +2,7 @@ import type { LessonStatus } from '@ab/catalog';
 import { isClosedLesson } from '@ab/schedule';
 import { ar } from '@/common/infra/i18n/server-text';
 import type { GoogleEventBody } from '@/modules/platform/google-sync/google-client.port';
-import {
-  EVENT,
-  isJitsi,
-  PLATFORM_SOURCE,
-  POPUP_MINUTES,
-  TZ,
-} from '@/modules/platform/google-sync/google-format';
+import { EVENT, isJitsi, PLATFORM_SOURCE, POPUP_MINUTES, TZ } from '@/modules/platform/google-sync/google-format';
 
 /** Which copy: the teacher's calendar (no family phone) or the academy's main calendar (with it). */
 export type EventCopy = 'teacher' | 'main';
@@ -32,11 +26,7 @@ export interface EventLesson {
 /** Cancelled or moved lessons have no event (the script deletes both copies for any other status). */
 export const eventWanted = (status: LessonStatus): boolean => !isClosedLesson(status);
 
-const names = (l: EventLesson): string =>
-  l.students
-    .map((s) => s.name.trim())
-    .filter(Boolean)
-    .join('، ') || EVENT.newStudent;
+const names = (l: EventLesson): string => l.students.map((s) => s.name.trim()).filter(Boolean).join('، ') || EVENT.newStudent;
 
 /** Marked as needing confirmation while nobody confirmed it. */
 export function eventTitle(l: EventLesson): string {
@@ -56,12 +46,7 @@ export function eventDescription(l: EventLesson, copy: EventCopy): string {
   const phones = l.students.map((s) => s.phone).filter((p): p is string => !!p);
   const lines = [
     ...(link ? [`${EVENT.link}${link}`] : []),
-    ...(copy === 'main'
-      ? [
-          `${EVENT.student}${names(l)}`,
-          ...(phones.length ? [`${EVENT.studentPhone}${phones.join('، ')}`] : []),
-        ]
-      : []),
+    ...(copy === 'main' ? [`${EVENT.student}${names(l)}`, ...(phones.length ? [`${EVENT.studentPhone}${phones.join('، ')}`] : [])] : []),
     ...(l.kind === 'trial' ? [EVENT.trial] : []),
     `${EVENT.teacher}${l.teacherName}`,
     ...(l.byday?.length && l.kind !== 'trial' ? [`${EVENT.repeat}${repeatOf(l.byday)}`] : []),

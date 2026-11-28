@@ -5,12 +5,7 @@ import { translationRoutes } from '@ab/i18n';
 import { messagingRoot } from '@/common/infra/test-root';
 import { TranslationsModule } from './translations.module';
 import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
-import {
-  PERMISSION_RESOLVER,
-  systemResolver,
-  TOKEN_VERIFIER,
-  type TokenVerifier,
-} from '@/common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { TranslationsQueries } from './translations.queries';
 
@@ -88,45 +83,21 @@ describe('/i18n — dynamic translations', () => {
   });
 
   it('PUT writes a valid override with the admin as author', async () => {
-    const res = await call('PUT', '/i18n/en/nav.leads', {
-      token: 'admin',
-      payload: { value: 'Prospects' },
-    });
+    const res = await call('PUT', '/i18n/en/nav.leads', { token: 'admin', payload: { value: 'Prospects' } });
     expect(res.statusCode).toBe(204);
-    expect(queries.upsert).toHaveBeenCalledWith({
-      locale: 'en',
-      key: 'nav.leads',
-      value: 'Prospects',
-      actorId: USERS['admin']?.id,
-    });
+    expect(queries.upsert).toHaveBeenCalledWith({ locale: 'en', key: 'nav.leads', value: 'Prospects', actorId: USERS['admin']?.id });
     expect(activity.push).toHaveBeenCalledWith(
-      expect.objectContaining({
-        action: 'translations.save',
-        method: 'PUT',
-        route: '/i18n/:locale/:key',
-      }),
+      expect.objectContaining({ action: 'translations.save', method: 'PUT', route: '/i18n/:locale/:key' }),
     );
   });
 
   it('PUT rejects unknown keys (404), dropped placeholders (400), empty values (400), non-admins (403)', async () => {
-    expect(
-      (await call('PUT', '/i18n/en/nav.nope', { token: 'admin', payload: { value: 'x' } }))
-        .statusCode,
-    ).toBe(404);
-    const slots = await call('PUT', '/i18n/en/translations.count', {
-      token: 'admin',
-      payload: { value: 'Total' },
-    });
+    expect((await call('PUT', '/i18n/en/nav.nope', { token: 'admin', payload: { value: 'x' } })).statusCode).toBe(404);
+    const slots = await call('PUT', '/i18n/en/translations.count', { token: 'admin', payload: { value: 'Total' } });
     expect(slots.statusCode).toBe(400);
     expect(slots.json()).toMatchObject({ message: 'placeholders_missing', missing: ['{n}'] });
-    expect(
-      (await call('PUT', '/i18n/en/nav.leads', { token: 'admin', payload: { value: '  ' } }))
-        .statusCode,
-    ).toBe(400);
-    expect(
-      (await call('PUT', '/i18n/en/nav.leads', { token: 'teacher', payload: { value: 'x' } }))
-        .statusCode,
-    ).toBe(403);
+    expect((await call('PUT', '/i18n/en/nav.leads', { token: 'admin', payload: { value: '  ' } })).statusCode).toBe(400);
+    expect((await call('PUT', '/i18n/en/nav.leads', { token: 'teacher', payload: { value: 'x' } })).statusCode).toBe(403);
     expect(queries.upsert).not.toHaveBeenCalled();
   });
 
@@ -152,3 +123,4 @@ describe('/i18n — dynamic translations', () => {
     expect(translationRoutes.keys.response.safeParse(res.json()).success).toBe(true);
   });
 });
+

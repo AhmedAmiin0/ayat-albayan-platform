@@ -25,11 +25,7 @@ describe('GoogleAlerts.scriptStillRunning', () => {
     const push = { notifyAdmins: vi.fn().mockResolvedValue(undefined) };
     const alerts = new GoogleAlerts(push as unknown as PushService);
     await alerts.scriptStillRunning({ teacherId: TEACHER_ID, name: 'Teacher A', since: SINCE });
-    await alerts.scriptStillRunning({
-      teacherId: TEACHER_ID,
-      name: 'Teacher A',
-      since: '2026-11-02T08:00:00.000Z',
-    });
+    await alerts.scriptStillRunning({ teacherId: TEACHER_ID, name: 'Teacher A', since: '2026-11-02T08:00:00.000Z' });
     expect(new Set(subjects(push)).size).toBe(2);
   });
 });

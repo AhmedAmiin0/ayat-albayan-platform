@@ -24,10 +24,7 @@ describe('healthRoutes', () => {
   it('answers liveness with the store, and refuses an unknown driver or state', () => {
     const live = { status: 'ok', storage: { driver: 'minio', status: 'down' } };
     expect(routes.health.response.parse(live)).toEqual(live);
-    const bad = [
-      { driver: 's3', status: 'ok' },
-      { driver: 'supabase', status: 'slow' },
-    ];
+    const bad = [{ driver: 's3', status: 'ok' }, { driver: 'supabase', status: 'slow' }];
     for (const storage of bad) {
       expect(routes.health.response.safeParse({ status: 'ok', storage }).success).toBe(false);
     }

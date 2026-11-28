@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  calendarTeacher,
-  suggestCalendar,
-  suggestFolder,
-} from '@/modules/platform/google-sync/map/suggest';
+import { calendarTeacher, suggestCalendar, suggestFolder } from '@/modules/platform/google-sync/map/suggest';
 
 const CALS = [
   { id: 'cal-mariam@group.calendar.google.com', name: 'آيات البيان — Mariam Adel' },
@@ -18,34 +14,10 @@ describe('teacher ↔ calendar suggestions', () => {
   });
 
   it('prefers the imported calendar id, then the Latin or Arabic name', () => {
-    expect(
-      suggestCalendar(
-        {
-          display_name_ar: 'مريم',
-          display_name_en: null,
-          google_calendar_id: 'cal-mariam@group.calendar.google.com',
-        },
-        CALS,
-      )?.id,
-    ).toBe('cal-mariam@group.calendar.google.com');
-    expect(
-      suggestCalendar(
-        { display_name_ar: 'مريم عادل', display_name_en: 'mariam  adel', google_calendar_id: null },
-        CALS,
-      )?.id,
-    ).toBe('cal-mariam@group.calendar.google.com');
-    expect(
-      suggestCalendar(
-        { display_name_ar: 'ساره احمد', display_name_en: null, google_calendar_id: null },
-        CALS,
-      )?.id,
-    ).toBe('cal-sara@group.calendar.google.com');
-    expect(
-      suggestCalendar(
-        { display_name_ar: 'هدى', display_name_en: 'Huda', google_calendar_id: 'gone@group' },
-        CALS,
-      ),
-    ).toBeNull();
+    expect(suggestCalendar({ display_name_ar: 'مريم', display_name_en: null, google_calendar_id: 'cal-mariam@group.calendar.google.com' }, CALS)?.id).toBe('cal-mariam@group.calendar.google.com');
+    expect(suggestCalendar({ display_name_ar: 'مريم عادل', display_name_en: 'mariam  adel', google_calendar_id: null }, CALS)?.id).toBe('cal-mariam@group.calendar.google.com');
+    expect(suggestCalendar({ display_name_ar: 'ساره احمد', display_name_en: null, google_calendar_id: null }, CALS)?.id).toBe('cal-sara@group.calendar.google.com');
+    expect(suggestCalendar({ display_name_ar: 'هدى', display_name_en: 'Huda', google_calendar_id: 'gone@group' }, CALS)).toBeNull();
   });
 });
 

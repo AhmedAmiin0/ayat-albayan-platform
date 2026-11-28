@@ -53,8 +53,8 @@ describe('the gate routes over http', () => {
 });
 
 describe('gate access', () => {
-  const steps = ['view', 'start', 'verify'].map((n) =>
-    Object(Reflect.get(GatePublicController.prototype, n)),
+  const steps = ['view', 'start', 'verify'].map((name): object =>
+    Object(Reflect.get(GatePublicController.prototype, name)),
   );
   const marked = (key: string) => steps.map((step) => Reflect.getOwnMetadata(key, step));
 

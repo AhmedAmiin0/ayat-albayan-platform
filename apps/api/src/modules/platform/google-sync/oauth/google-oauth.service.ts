@@ -3,24 +3,14 @@ import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
 import { kickConfigReload } from '@/config/role/worker-kick';
 import type { GoogleAccountQueries } from './google-account.queries';
-import {
-  GOOGLE_CLIENT_FACTORY,
-  type GoogleClientFactory,
-} from '@/modules/platform/google-sync/google-client.port';
+import { GOOGLE_CLIENT_FACTORY, type GoogleClientFactory } from '@/modules/platform/google-sync/google-client.port';
 import { GoogleData } from '@/modules/platform/google-sync/google-data';
 import { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
 import { newState, nonceHash, readState, stateKey } from './oauth-state';
 import { orFallback } from '@/common/infra/errors';
 
 /** The callback's outcome, shown by the web as a toast (?google=connected | ?google=error&reason=…). */
-type CallbackOutcome =
-  | 'connected'
-  | 'denied'
-  | 'state'
-  | 'exchange'
-  | 'scopes'
-  | 'not_configured'
-  | 'account';
+type CallbackOutcome = 'connected' | 'denied' | 'state' | 'exchange' | 'scopes' | 'not_configured' | 'account';
 export const GOOGLE_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 
 /** Every https scope must be granted (the openid/email pair comes back as userinfo.email). */
@@ -78,11 +68,7 @@ export class GoogleOAuthService {
     }
     if (!tokens.refreshToken) return 'exchange';
     if (!REQUIRED_SCOPES.every((s) => tokens.scopes.includes(s))) return 'scopes';
-    const email = await orFallback(
-      oauth.email(tokens.accessToken),
-      null,
-      'google account email read',
-    );
+    const email = await orFallback(oauth.email(tokens.accessToken), null, 'google account email read');
     // Another Google account would turn every recorded id into «gone»: only the academy's account (once
     // connected). No email = no proof of the account: refused too. A refused grant is revoked at once.
     const before = (await this.account.get()).email;
@@ -91,24 +77,10 @@ export class GoogleOAuthService {
       return 'account';
     }
     await this.account.setToken(tokens.refreshToken);
-    await this.account.update({
-      status: 'connected',
-      email,
-      scopes: tokens.scopes,
-      connected_at: new Date().toISOString(),
-      connected_by: payload.u,
-      last_error: null,
-    });
+    await this.account.update({ status: 'connected', email, scopes: tokens.scopes, connected_at: new Date().toISOString(), connected_by: payload.u, last_error: null });
     this.run.connection.forget();
     kickConfigReload();
-    await this.run.audit.record({
-      actorId: payload.u,
-      entity: 'google_account',
-      entityId: GOOGLE_ENTITY_ID,
-      action: 'connect',
-      before: null,
-      after: { email },
-    });
+    await this.run.audit.record({ actorId: payload.u, entity: 'google_account', entityId: GOOGLE_ENTITY_ID, action: 'connect', before: null, after: { email } });
     return 'connected';
   }
 
@@ -119,13 +91,6 @@ export class GoogleOAuthService {
     await this.account.update({ status: 'disconnected', last_error: null });
     this.run.connection.forget();
     kickConfigReload();
-    await this.run.audit.record({
-      actorId: userId,
-      entity: 'google_account',
-      entityId: GOOGLE_ENTITY_ID,
-      action: 'disconnect',
-      before: null,
-      after: null,
-    });
+    await this.run.audit.record({ actorId: userId, entity: 'google_account', entityId: GOOGLE_ENTITY_ID, action: 'disconnect', before: null, after: null });
   }
 }

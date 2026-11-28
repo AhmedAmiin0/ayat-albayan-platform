@@ -26,8 +26,7 @@ function caller(stack: string | undefined): string | null {
     .split('\n')
     .slice(1)
     .filter(
-      (l) =>
-        !/roles\.boot|tinyspy|@vitest|[/\\]vitest[/\\]dist|common[/\\]jobs[/\\]ticker\.ts/.test(l),
+      (l) => !/roles\.boot|tinyspy|@vitest|[/\\]vitest[/\\]dist|common[/\\]jobs[/\\]ticker\.ts/.test(l),
     );
   const file = frames[0]?.match(APP)?.[1]?.replaceAll('\\', '/');
   return file && !file.endsWith('.test.ts') ? file : null;

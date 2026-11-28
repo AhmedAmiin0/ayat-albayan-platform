@@ -11,26 +11,16 @@ const handedOver = (lesson = {}) => lessonSource({ origin: false, managed: true 
 function scriptEvent(startsAt = eventLesson().startsAt) {
   const body = eventBody(eventLesson({ startsAt }), 'teacher');
   const description = `المعلم/ة: Teacher A\n\n${EVENT.scriptFooter} — عدّل في الشيت مش هنا.`;
-  return {
-    ...body,
-    summary: 'حلقة — طالب تجربة',
-    description,
-    id: 'ev-script',
-    status: 'confirmed',
-    extendedProperties: { private: {} },
-  };
+  return { ...body, summary: 'حلقة — طالب تجربة', description, id: 'ev-script', status: 'confirmed', extendedProperties: { private: {} } };
 }
-const writes = (log: string[]) =>
-  log.filter((l) => /^(insertEvent|updateEvent|deleteEvent)/.test(l));
+const writes = (log: string[]) => log.filter((l) => /^(insertEvent|updateEvent|deleteEvent)/.test(l));
 
 describe('CalendarWriter: imported lessons of a teacher handed over to the platform', () => {
   it('writes the event of an imported lesson once its teacher is «من المنصة»', async () => {
     const s = setup(handedOver());
     expect(await s.writer.write(item(), s.live)).toMatchObject({ state: 'synced', parentId: CAL });
     expect(s.google.log).toContain(`listEvents ${CAL}`);
-    expect(
-      [...(s.google.events.get(CAL)?.values() ?? [])][0]?.extendedProperties.private['ab_source'],
-    ).toBe('platform');
+    expect([...(s.google.events.get(CAL)?.values() ?? [])][0]?.extendedProperties.private['ab_source']).toBe('platform');
   });
 
   it('duplicate guard: the script event in that slot ⇒ skipped, one admin alert, no write, the script event untouched', async () => {
@@ -38,18 +28,9 @@ describe('CalendarWriter: imported lessons of a teacher handed over to the platf
     const foreign = scriptEvent();
     s.google.events.set(CAL, new Map([[foreign.id, foreign]]));
     const r = await s.writer.write(item(), s.live);
-    expect(r).toEqual({
-      state: 'skipped',
-      reason: 'script_event_present',
-      googleId: null,
-      parentId: null,
-    });
+    expect(r).toEqual({ state: 'skipped', reason: 'script_event_present', googleId: null, parentId: null });
     expect(s.alerts.scriptStillRunning).toHaveBeenCalledOnce();
-    expect(s.alerts.scriptStillRunning).toHaveBeenCalledWith({
-      teacherId: TEACHER_ID,
-      name: 'Teacher A',
-      since: null,
-    });
+    expect(s.alerts.scriptStillRunning).toHaveBeenCalledWith({ teacherId: TEACHER_ID, name: 'Teacher A', since: null });
     expect(writes(s.google.log)).toEqual([]);
     expect(s.google.events.get(CAL)?.get('ev-script')).toEqual(foreign);
   });
@@ -58,28 +39,16 @@ describe('CalendarWriter: imported lessons of a teacher handed over to the platf
     const s = setup(handedOver());
     const mirror = scriptEvent();
     s.google.events.set('primary', new Map([[mirror.id, mirror]]));
-    expect(await s.writer.write(item({ kind: 'main_event' }), s.live)).toMatchObject({
-      state: 'skipped',
-      reason: 'script_event_present',
-    });
+    expect(await s.writer.write(item({ kind: 'main_event' }), s.live)).toMatchObject({ state: 'skipped', reason: 'script_event_present' });
     s.google.events.get('primary')?.delete(mirror.id);
-    expect(await s.writer.write(item({ kind: 'main_event' }), s.live)).toMatchObject({
-      state: 'synced',
-      parentId: 'primary',
-    });
+    expect(await s.writer.write(item({ kind: 'main_event' }), s.live)).toMatchObject({ state: 'synced', parentId: 'primary' });
   });
 
   it('a script event at another time, or a cancelled one, is no duplicate', async () => {
     const s = setup(handedOver());
     const other = { ...scriptEvent('2026-10-25T16:00:00Z'), id: 'ev-other' };
     const cancelled = { ...scriptEvent(), id: 'ev-cancelled', status: 'cancelled' };
-    s.google.events.set(
-      CAL,
-      new Map([
-        [other.id, other],
-        [cancelled.id, cancelled],
-      ]),
-    );
+    s.google.events.set(CAL, new Map([[other.id, other], [cancelled.id, cancelled]]));
     expect(await s.writer.write(item(), s.live)).toMatchObject({ state: 'synced' });
   });
 
@@ -91,11 +60,7 @@ describe('CalendarWriter: imported lessons of a teacher handed over to the platf
 
   it('dry_run plans the POST and calls nothing', async () => {
     const s = setup(handedOver());
-    expect(await s.writer.write(item(), { live: false })).toMatchObject({
-      state: 'skipped',
-      reason: 'dry_run',
-      planned: { method: 'POST' },
-    });
+    expect(await s.writer.write(item(), { live: false })).toMatchObject({ state: 'skipped', reason: 'dry_run', planned: { method: 'POST' } });
     expect(s.google.log).toEqual([]);
   });
 
@@ -112,10 +77,7 @@ describe('CalendarWriter: imported lessons of a teacher handed over to the platf
     );
     expect(r).toMatchObject({ state: 'synced', googleId: null });
     expect([...(s.google.events.get(CAL)?.keys() ?? [])]).toEqual([foreign.id]);
-    expect(await s.writer.write(item(), s.live)).toEqual({
-      state: 'skipped',
-      reason: 'not_platform_origin',
-    });
+    expect(await s.writer.write(item(), s.live)).toEqual({ state: 'skipped', reason: 'not_platform_origin' });
   });
 });
 
@@ -146,12 +108,7 @@ describe('CalendarWriter: an imported lesson moved to another teacher follows th
     s.map.teacherCalendar.mockResolvedValue(OTHER);
     const foreign = scriptEvent();
     s.google.events.set(OTHER, new Map([[foreign.id, foreign]]));
-    expect(await s.writer.write(moved, s.live)).toEqual({
-      state: 'skipped',
-      reason: 'script_event_present',
-      googleId: null,
-      parentId: null,
-    });
+    expect(await s.writer.write(moved, s.live)).toEqual({ state: 'skipped', reason: 'script_event_present', googleId: null, parentId: null });
     expect(s.google.events.get(CAL)?.size).toBe(0);
     expect([...(s.google.events.get(OTHER)?.keys() ?? [])]).toEqual([foreign.id]);
   });

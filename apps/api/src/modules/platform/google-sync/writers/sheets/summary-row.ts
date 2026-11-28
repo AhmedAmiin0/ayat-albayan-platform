@@ -21,16 +21,11 @@ interface SummaryStats {
 }
 
 /** rows = A2:H (sheet row = index + 2). The sheet row of this student, or null. */
-export function findSummaryRow(
-  rows: Rows,
-  s: Pick<SummaryStudent, 'name' | 'folderId'>,
-): number | null {
+export function findSummaryRow(rows: Rows, s: Pick<SummaryStudent, 'name' | 'folderId'>): number | null {
   const byFolder = rows.findIndex((r) => folderIdIn(r[6]) === s.folderId);
   if (byFolder >= 0) return byFolder + 2;
   const name = normalizeArabic(s.name);
-  const byName = name
-    ? rows.findIndex((r) => typeof r[0] === 'string' && normalizeArabic(r[0]) === name)
-    : -1;
+  const byName = name ? rows.findIndex((r) => typeof r[0] === 'string' && normalizeArabic(r[0]) === name) : -1;
   return byName >= 0 ? byName + 2 : null;
 }
 
@@ -77,10 +72,7 @@ export function summaryLinks(
     const folderId = folderIdIn(r[6]);
     const name = typeof r[0] === 'string' ? r[0].trim() : '';
     if (!folderId || !name) return [];
-    const sheet =
-      typeof r[7] === 'string'
-        ? (/\/spreadsheets\/d\/([A-Za-z0-9_-]{10,})/.exec(r[7])?.[1] ?? null)
-        : null;
+    const sheet = typeof r[7] === 'string' ? /\/spreadsheets\/d\/([A-Za-z0-9_-]{10,})/.exec(r[7])?.[1] ?? null : null;
     return [{ name, folderId, sheetId: sheet }];
   });
 }

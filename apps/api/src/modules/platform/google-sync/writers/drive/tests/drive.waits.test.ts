@@ -4,13 +4,7 @@ import type { DriveFiles } from '@/modules/platform/google-sync/writers/drive/dr
 import { FakeGoogle } from '@/modules/platform/google-sync/http/google-client.fake';
 import type { GoogleData } from '@/modules/platform/google-sync/google-data';
 import type { GoogleSyncSource } from '@/modules/platform/google-sync/sync/google-sync.source';
-import {
-  fakeData,
-  item,
-  REPORT_ID,
-  reportSource,
-  STUDENT_ID,
-} from '@/modules/platform/google-sync/google-sync.fakes';
+import { fakeData, item, REPORT_ID, reportSource, STUDENT_ID } from '@/modules/platform/google-sync/google-sync.fakes';
 import { ReportPdfWriter } from '@/modules/platform/google-sync/writers/drive/report-pdf.writer';
 import { SheetRowsWriter } from '@/modules/platform/google-sync/writers/sheets/sheet-rows.writer';
 
@@ -20,10 +14,7 @@ function setup(need: object) {
   const google = new FakeGoogle();
   const data = fakeData();
   const source = { report: vi.fn().mockResolvedValue(reportSource()) };
-  const drive = {
-    need: vi.fn().mockResolvedValue(need),
-    ensure: vi.fn().mockResolvedValue({ folderId: 'F', sheetId: 'S' }),
-  };
+  const drive = { need: vi.fn().mockResolvedValue(need), ensure: vi.fn().mockResolvedValue({ folderId: 'F', sheetId: 'S' }) };
   google.sheets.set('S', []);
   const storage = { download: vi.fn().mockResolvedValue(null) };
   const pdf = new ReportPdfWriter(
@@ -42,31 +33,15 @@ function setup(need: object) {
 describe('waits that cannot end', () => {
   it('a PDF missing in storage throws (counted retry, then failed), not `later`', async () => {
     const s = setup({ kind: 'ready', drive: { folderId: 'F', sheetId: 'S' } });
-    await expect(
-      s.pdf.write(item({ kind: 'report_pdf', subject_id: REPORT_ID }), s.ctx),
-    ).rejects.toThrow('pdf_missing_in_storage');
+    await expect(s.pdf.write(item({ kind: 'report_pdf', subject_id: REPORT_ID }), s.ctx)).rejects.toThrow('pdf_missing_in_storage');
   });
 
   it('the summary row waits for a queued PDF, but fails (re-queued by the PDF) when the PDF is not coming', async () => {
     const s = setup({ kind: 'create', folder: true, sheet: true, rootId: 'R' });
-    const sum = () =>
-      s.rows.write(
-        item({ kind: 'summary_row', subject_id: STUDENT_ID, report_id: REPORT_ID }),
-        s.ctx,
-      );
-    s.data.items.sibling.mockResolvedValue({
-      state: 'pending',
-      google_id: null,
-      google_parent_id: null,
-      skip_reason: null,
-    });
+    const sum = () => s.rows.write(item({ kind: 'summary_row', subject_id: STUDENT_ID, report_id: REPORT_ID }), s.ctx);
+    s.data.items.sibling.mockResolvedValue({ state: 'pending', google_id: null, google_parent_id: null, skip_reason: null });
     expect(await sum()).toMatchObject({ state: 'retry', error: 'sheet_not_ready' });
-    s.data.items.sibling.mockResolvedValue({
-      state: 'failed',
-      google_id: null,
-      google_parent_id: null,
-      skip_reason: null,
-    });
+    s.data.items.sibling.mockResolvedValue({ state: 'failed', google_id: null, google_parent_id: null, skip_reason: null });
     expect(await sum()).toMatchObject({ state: 'failed', error: 'sheet_not_ready' });
     expect(s.data.items.sibling).toHaveBeenCalledWith({ kind: 'report_pdf', subjectId: REPORT_ID });
   });

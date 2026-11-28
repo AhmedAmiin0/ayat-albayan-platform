@@ -3,11 +3,7 @@ import { TtlCache } from '@/common/infra/cache/ttl-cache';
 import { SETTINGS_CACHE_MS } from '@/common/configuration/config-store/config-store.types';
 import { GoogleAccountQueries } from './google-account.queries';
 import { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts';
-import {
-  GOOGLE_CLIENT_FACTORY,
-  type GoogleClient,
-  type GoogleClientFactory,
-} from '@/modules/platform/google-sync/google-client.port';
+import { GOOGLE_CLIENT_FACTORY, type GoogleClient, type GoogleClientFactory } from '@/modules/platform/google-sync/google-client.port';
 
 /** How long the account status + refresh token are reused before Vault is asked again. */
 const CONNECTION_TTL_MS = 10 * 60_000;

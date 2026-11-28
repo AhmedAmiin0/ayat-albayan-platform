@@ -27,12 +27,9 @@ describe('GET /settings/public (no login)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(PublicConfigModule)] })
-      .overrideProvider(PERMISSION_RESOLVER)
-      .useValue(systemResolver)
-      .overrideProvider(SettingsService)
-      .useValue(settings)
-      .overrideProvider(CustomConfigService)
-      .useValue(custom)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
+      .overrideProvider(SettingsService).useValue(settings)
+      .overrideProvider(CustomConfigService).useValue(custom)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -58,17 +55,11 @@ describe('GET /settings/public (no login)', () => {
       { key: 'internal.note', value: 'x', is_public: false },
       { key: 'messaging_enabled', value: 'shadow', is_public: true },
     ]);
-    expect((await get()).json()).toEqual({
-      join_opens_before_min: 10,
-      custom: { promo: { text: 'hi' } },
-    });
+    expect((await get()).json()).toEqual({ join_opens_before_min: 10, custom: { promo: { text: 'hi' } } });
   });
 
   it('serves the registry public subset, defaults filled, and no private setting', async () => {
-    const real = realSettings([
-      { key: 'upload_max_mb', value: 4 },
-      { key: 'messaging_enabled', value: true },
-    ]);
+    const real = realSettings([{ key: 'upload_max_mb', value: 4 }, { key: 'messaging_enabled', value: true }]);
     settings.publicView.mockImplementation(() => real.publicView());
     const body = (await get()).json();
     expect(body).toEqual({ ...PUBLIC_SETTING_DEFAULTS, upload_max_mb: 4, custom: {} });
@@ -77,11 +68,7 @@ describe('GET /settings/public (no login)', () => {
 
   it('a bearer token changes nothing: the route stays public', async () => {
     settings.publicView.mockResolvedValue({ join_opens_before_min: 10 });
-    const res = await app.inject({
-      method: 'GET',
-      url: '/settings/public',
-      headers: { authorization: 'Bearer junk' },
-    });
+    const res = await app.inject({ method: 'GET', url: '/settings/public', headers: { authorization: 'Bearer junk' } });
     expect(res.statusCode).toBe(200);
   });
 });
@@ -89,9 +76,7 @@ describe('GET /settings/public (no login)', () => {
 describe('public settings access', () => {
   it('is open through its route object alone', () => {
     const get: object = Object(Reflect.get(PublicConfigController.prototype, 'get'));
-    expect({
-      open: Reflect.getOwnMetadata(IS_PUBLIC, get),
-      own: Reflect.getOwnMetadata(OWN_PUBLIC, get),
-    }).toEqual({ open: true, own: undefined });
+    expect(Reflect.getOwnMetadata(IS_PUBLIC, get)).toBe(true);
+    expect(Reflect.getOwnMetadata(OWN_PUBLIC, get)).toBeUndefined();
   });
 });

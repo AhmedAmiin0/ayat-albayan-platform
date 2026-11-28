@@ -62,10 +62,7 @@ describe('GoogleSyncProcessor', () => {
     write.mockRejectedValue(new GoogleApiError(400, 'badRequest'));
     s.data.items.claim.mockResolvedValue([item()]);
     await s.p.runOnce();
-    expect(s.data.items.finish.mock.calls.at(-1)?.[1]).toMatchObject({
-      state: 'failed',
-      error: '400 badRequest',
-    });
+    expect(s.data.items.finish.mock.calls.at(-1)?.[1]).toMatchObject({ state: 'failed', error: '400 badRequest' });
   });
 
   it('invalid_grant disconnects once, releases the rest, never loops', async () => {
@@ -83,17 +80,10 @@ describe('GoogleSyncProcessor', () => {
 
 describe('a report PDF that reaches Drive', () => {
   it('re-queues its attendance and summary rows', async () => {
-    const s = setup(
-      vi.fn().mockResolvedValue({ state: 'synced', googleId: 'f1', parentId: 'p', hash: 'h' }),
-    );
-    s.data.items.claim.mockResolvedValue([
-      item({ kind: 'report_pdf', subject_id: 'r1', student_id: 's1' }),
-    ]);
+    const s = setup(vi.fn().mockResolvedValue({ state: 'synced', googleId: 'f1', parentId: 'p', hash: 'h' }));
+    s.data.items.claim.mockResolvedValue([item({ kind: 'report_pdf', subject_id: 'r1', student_id: 's1' })]);
     await s.p.runOnce();
-    expect(s.data.items.requeueReportRows).toHaveBeenCalledWith({
-      reportId: 'r1',
-      studentId: 's1',
-    });
+    expect(s.data.items.requeueReportRows).toHaveBeenCalledWith({ reportId: 'r1', studentId: 's1' });
   });
 });
 
@@ -118,13 +108,9 @@ describe('stopping a live pass', () => {
   });
 
   it('sync turned OFF mid-pass: the rest of the batch is released, never written', async () => {
-    const write = vi
-      .fn()
-      .mockResolvedValue({ state: 'synced', googleId: 'e', parentId: 'c', hash: 'h' });
+    const write = vi.fn().mockResolvedValue({ state: 'synced', googleId: 'e', parentId: 'c', hash: 'h' });
     const s = setup(write);
-    s.data.settings.read
-      .mockResolvedValueOnce({ enabled: true, mode: 'live', window_days: 60 })
-      .mockResolvedValueOnce({ enabled: true, mode: 'live', window_days: 60 })
+    s.data.settings.read.mockResolvedValueOnce({ enabled: true, mode: 'live', window_days: 60 }).mockResolvedValueOnce({ enabled: true, mode: 'live', window_days: 60 })
       .mockResolvedValue({ enabled: false, mode: 'live', window_days: 60 });
     s.data.items.claim.mockResolvedValue([item(), item({ id: 'b' }), item({ id: 'c' })]);
     expect((await s.p.runOnce()).stopped).toBe(true);

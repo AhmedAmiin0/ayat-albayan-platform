@@ -1,14 +1,5 @@
 import type { GoogleEnv } from '@/config/env/env';
-import type {
-  EventRef,
-  GoogleClient,
-  GoogleClientFactory,
-  GoogleEventBody,
-  GoogleOAuth,
-  Rows,
-  ValueRender,
-  CellValue,
-} from '@/modules/platform/google-sync/google-client.port';
+import type { EventRef, GoogleClient, GoogleClientFactory, GoogleEventBody, GoogleOAuth, Rows, ValueRender, CellValue } from '@/modules/platform/google-sync/google-client.port';
 import { GoogleHttp, type GoogleHttpOptions } from './google-http';
 import { CalendarApi } from './google-http.calendar';
 import { DriveApi } from './google-http.drive';

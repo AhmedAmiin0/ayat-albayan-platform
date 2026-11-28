@@ -47,9 +47,7 @@ export class StaleAlerts {
       await this.push.notifyAdmins('google_sync_alert', event);
       this.told.add(b.name);
     } catch (e) {
-      this.log.warn(
-        `stale alert for ${b.name} not raised: ${e instanceof Error ? e.message : String(e)}`,
-      );
+      this.log.warn(`stale alert for ${b.name} not raised: ${e instanceof Error ? e.message : String(e)}`);
     }
   }
 }
