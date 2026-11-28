@@ -81,7 +81,8 @@ describe('compact bar (< 900px): ONE button «القائمة»', () => {
     expect(row.getAttribute('aria-expanded')).toBe('false');
     expect(within(sheet).queryByRole('heading', { name: t.bell.title })).toBeNull();
     fireEvent.click(row);
-    expect(within(sheet).getByRole('heading', { name: t.bell.title })).toBeTruthy();
+    const panel = within(sheet).getByRole('heading', { name: t.bell.title }).closest('section');
+    expect(panel?.innerHTML).not.toMatch(/overflow-y-auto|max-h-/);
     // Opening a row closes the sheet (a search-only navigation keeps the pathname).
     fireEvent.click(await within(sheet).findByRole('button', { name: new RegExp(ITEM.title) }));
     expect(screen.queryByRole('dialog')).toBeNull();

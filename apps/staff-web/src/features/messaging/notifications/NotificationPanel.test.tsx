@@ -60,4 +60,18 @@ describe('NotificationPanel', () => {
     await waitFor(() => expect(screen.queryByRole('button', { name: t.bell.markAll })).toBeNull());
     expect(apiFetch).toHaveBeenCalledTimes(2);
   });
+
+  it('the desktop popover caps its list and scrolls it', async () => {
+    apiFetch.mockResolvedValue(page([ITEM]));
+    const { container } = renderWithClient(<NotificationPanel onPick={vi.fn()} />);
+    await screen.findByText(ITEM.title);
+    expect(container.querySelector('.overflow-y-auto')?.className).toContain('max-h-');
+  });
+
+  it('bare (inside the menu sheet) lets the list flow, so only the sheet body scrolls', async () => {
+    apiFetch.mockResolvedValue(page([ITEM]));
+    const { container } = renderWithClient(<NotificationPanel bare onPick={vi.fn()} />);
+    await screen.findByText(ITEM.title);
+    expect(container.innerHTML).not.toMatch(/overflow-y-auto|max-h-/);
+  });
 });

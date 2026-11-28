@@ -6,10 +6,14 @@ import { NotificationList } from './NotificationList';
 export interface NotificationPanelProps {
   /** Close the panel (a row was opened). */
   onPick: () => void;
+  /** Inside a scrolling sheet: the list flows, so the sheet body stays the only scroller. */
+  bare?: boolean;
 }
 
+const POPOVER = 'max-h-[min(26rem,60dvh)] overflow-y-auto overscroll-contain';
+
 /** R-NOT-01. */
-export function NotificationPanel({ onPick }: NotificationPanelProps) {
+export function NotificationPanel({ onPick, bare = false }: NotificationPanelProps) {
   const unread = useQuery(notificationsQuery).data?.unread ?? 0;
   const markAll = useMarkRead();
   const titleId = useId();
@@ -25,7 +29,7 @@ export function NotificationPanel({ onPick }: NotificationPanelProps) {
           </Button>
         )}
       </header>
-      <div className="max-h-[min(26rem,60dvh)] overflow-y-auto overscroll-contain">
+      <div className={bare ? undefined : POPOVER}>
         <NotificationList onPick={onPick} />
       </div>
       <WebPushToggle />
