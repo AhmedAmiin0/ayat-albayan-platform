@@ -38,7 +38,7 @@ describe('LessonDrawer — teacher proposals and generated clashes (R-SCH-08, R-
       .mockResolvedValueOnce(lesson());
     const { drawer, onDone } = renderDrawer(lesson({ pending_proposal: PENDING }));
     const box = within(drawer).getByRole('region', { name: t.lessons.proposal.title });
-    expect(within(box).getByText(/الثلاثاء 6 أكتوبر 18:30/)).toBeTruthy();
+    expect(within(box).getByText(/الثلاثاء 6 أكتوبر 6:30 م/)).toBeTruthy();
     expect(within(box).getByText(/عندي ظرف/)).toBeTruthy();
     fireEvent.click(within(box).getByRole('button', { name: t.lessons.proposal.approve }));
     expect(await within(box).findByText(t.booking.conflictTitle)).toBeTruthy();
@@ -59,7 +59,7 @@ describe('LessonDrawer — teacher proposals and generated clashes (R-SCH-08, R-
   it('a lesson the daily job generated over a clash says so, with the teacher clock', () => {
     const { drawer } = renderDrawer(lesson({ conflicts: [CLASH] }));
     expect(within(drawer).getByText(t.schedule.generatedConflict)).toBeTruthy();
-    expect(within(drawer).getByText(/عند المعلم\/ة 16:00 بتوقيت القاهرة/)).toBeTruthy();
+    expect(within(drawer).getByText(/عند المعلم\/ة 4:00 م بتوقيت القاهرة/)).toBeTruthy();
   });
 
   it('switching to a form moves focus into it; Esc still closes when focus was lost', () => {

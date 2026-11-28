@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
+import { webClockAt } from '../core/locale';
 import { seedPackageStudent, type PackageSeed } from '../finance/money';
 import { addDays, withSql } from '../core/schedule';
 
@@ -130,7 +131,7 @@ export async function openLessonDrawer(
 ): Promise<Locator> {
   await page.goto(`/admin/schedule?week=${input.week}&teacher=${input.teacherId}`);
   const chips = weekGrid(page).getByRole('button', { name: new RegExp(input.name) });
-  const clock = input.at && new Date(input.at.getTime() + 3 * HOUR).toISOString().slice(11, 16);
+  const clock = input.at && webClockAt(input.at, 'Asia/Riyadh');
   await (clock ? chips.filter({ hasText: clock }) : chips).first().click();
   const drawer = page.getByRole('dialog', { name: input.name });
   await expect(drawer).toBeVisible();

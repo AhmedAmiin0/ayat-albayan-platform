@@ -88,7 +88,7 @@ const firstRow = () => screen.queryByRole('group', { name: rowName(1) });
 /** Sunday 17:00 on the grid of a single lesson (a trial, a makeup). */
 function pickGridSunday(): void {
   const sunday = screen.getByRole('region', { name: SUNDAY });
-  fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
+  fireEvent.click(within(sunday).getByRole('button', { name: /5:00 م/ }));
 }
 
 /**

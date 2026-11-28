@@ -66,14 +66,13 @@ describe('MenuBar — the compact bar under 900px', () => {
     expect(within(nav).getAllByRole('link').map((a) => a.textContent)).toEqual([t.payments.title]);
   });
 
-  it('puts the compact theme and time switches in one row at the top, before the nav', () => {
+  it('puts the compact theme switch in a row at the top, before the nav', () => {
     bar();
     fireEvent.click(screen.getByRole('button', { name: t.nav.menu }));
     const sheet = screen.getByRole('dialog', { name: t.nav.menu });
     const theme = within(sheet).getByRole('group', { name: t.theme.label });
-    const clock = within(sheet).getByRole('group', { name: t.clock.label });
+    expect(within(sheet).queryByRole('group', { name: t.clock.label })).toBeNull();
     const row = theme.parentElement;
-    expect(row).toBe(clock.parentElement);
     expect(row?.previousElementSibling).toBeNull();
     const nav = within(sheet).getByRole('navigation', { name: t.nav.label });
     const position = row?.compareDocumentPosition(nav) ?? 0;

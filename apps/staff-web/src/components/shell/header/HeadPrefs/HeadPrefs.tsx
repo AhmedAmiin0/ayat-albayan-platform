@@ -1,12 +1,11 @@
-import { ClockToggle, ThemeToggle, cn } from '@ab/web-kit';
+import { ThemeToggle, cn } from '@ab/web-kit';
 import type { HeadPrefsProps } from './HeadPrefs.types';
 
-/** The theme and time-format switches, compact, for a header row; the account page keeps labels. */
+/** The compact theme switch for a header row; the web has no time-format switch (12 h only). */
 export function HeadPrefs({ className }: HeadPrefsProps) {
   return (
     <div className={cn('flex shrink-0 items-center gap-1.5', className)}>
       <ThemeToggle size="compact" />
-      <ClockToggle size="compact" />
     </div>
   );
 }

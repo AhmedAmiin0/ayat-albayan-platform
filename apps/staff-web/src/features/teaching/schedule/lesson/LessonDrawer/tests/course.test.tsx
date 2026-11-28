@@ -52,7 +52,7 @@ describe('«تغيير أيام الحلقات» in the admin’s lesson drawer 
     if (!open) throw new Error('no action');
     fireEvent.click(open);
     expect(apiFetch).toHaveBeenCalledWith(`/booking/course/change?subscriptionId=${COURSE.subscriptionId}`);
-    await screen.findAllByRole('button', { name: /17:00/ });
+    await screen.findAllByRole('button', { name: /5:00 م/ });
     await swapSundayForMonday();
     fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
     expect(await screen.findByText(counted(t.booking.courseChange.remaining, 5))).toBeTruthy();
@@ -65,7 +65,7 @@ describe('«تغيير أيام الحلقات» in the admin’s lesson drawer 
   it('«رجوع» goes back to the lesson', async () => {
     openDrawer();
     fireEvent.click(action() ?? document.body);
-    await screen.findAllByRole('button', { name: /17:00/ });
+    await screen.findAllByRole('button', { name: /5:00 م/ });
     fireEvent.click(screen.getByRole('button', { name: t.booking.back }));
     expect(action()).toBeTruthy();
   });

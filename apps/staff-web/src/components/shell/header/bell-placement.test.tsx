@@ -89,11 +89,11 @@ describe('compact bar (< 900px): ONE button «القائمة»', () => {
 });
 
 describe('wide header (≥ 900px) keeps the bell', () => {
-  it('right after the language, theme and time switches, before logout', async () => {
+  it('right after the language and theme switches, before logout; no time switch', async () => {
     renderWithClient(<WideHeader />);
     const bell = await screen.findByRole('button', { name: t.bell.openUnread.replace('{n}', '1') });
     expect(follows(bell, screen.getByRole('button', { name: t.auth.logout }))).toBe(true);
     expect(follows(screen.getByRole('group', { name: t.theme.label }), bell)).toBe(true);
-    expect(follows(screen.getByRole('group', { name: t.clock.label }), bell)).toBe(true);
+    expect(screen.queryByRole('group', { name: t.clock.label })).toBeNull();
   });
 });

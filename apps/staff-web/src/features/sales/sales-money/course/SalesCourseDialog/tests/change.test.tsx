@@ -61,13 +61,13 @@ describe('«تغيير أيام الحلقات» from the sales chat (owner 2026
     fireEvent.click(await changeButton());
     // The picks start on the new set's Sunday 11 October: its week opens, with them pressed.
     const sun11 = await day(0, 11);
-    expect(within(sun11).getByRole('button', { name: /17:00/ }).getAttribute('aria-pressed')).toBe('true');
-    expect(within(await day(3, 14)).getByRole('button', { name: /19:30/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(within(sun11).getByRole('button', { name: /5:00 م/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(within(await day(3, 14)).getByRole('button', { name: /7:30 م/ }).getAttribute('aria-pressed')).toBe('true');
     expect(screen.queryByRole('region', { name: weekdayDay(0, 4) })).toBeNull();
     // Previous week reaches this week: the old Sunday 4 October slot is there, not pressed.
     fireEvent.click(screen.getByRole('button', { name: t.schedule.prevWeek }));
     const sun4 = await day(0, 4);
-    expect(within(sun4).getByRole('button', { name: /17:00/ }).getAttribute('aria-pressed')).toBe('false');
+    expect(within(sun4).getByRole('button', { name: /5:00 م/ }).getAttribute('aria-pressed')).toBe('false');
   });
 
   it('a running course late in the Riyadh week (Friday 9 October) opens on its picks\' week, picks pressed', async () => {
@@ -75,8 +75,8 @@ describe('«تغيير أيام الحلقات» from the sales chat (owner 2026
     routeRenewal(apiFetch, { ...RUNNING, current: { ...CURRENT, startsOn: '2026-09-13', opensOn: '2026-10-09', running: true } });
     openDialog();
     fireEvent.click(await changeButton());
-    expect(within(await day(0, 11)).getByRole('button', { name: /17:00/ }).getAttribute('aria-pressed')).toBe('true');
-    expect(within(await day(3, 14)).getByRole('button', { name: /19:30/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(within(await day(0, 11)).getByRole('button', { name: /5:00 م/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(within(await day(3, 14)).getByRole('button', { name: /7:30 م/ }).getAttribute('aria-pressed')).toBe('true');
   });
 
   it('a course booked ahead offers the change instead of only the refusal, from its own first week, then saves it here', async () => {
@@ -88,8 +88,8 @@ describe('«تغيير أيام الحلقات» from the sales chat (owner 2026
     expect(screen.queryByText(t.booking.courseBlocked.course_exists)).toBeNull();
     fireEvent.click(await changeButton());
     const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
-    expect(within(sunday).getByRole('button', { name: /17:00/ }).getAttribute('aria-pressed')).toBe('true');
-    fireEvent.click(within(sunday).getByRole('button', { name: /18:00/ }));
+    expect(within(sunday).getByRole('button', { name: /5:00 م/ }).getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(within(sunday).getByRole('button', { name: /6:00 م/ }));
     fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
     expect(await screen.findByText(counted(t.booking.courseChange.remaining, 5))).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.booking.courseChange.submit }));

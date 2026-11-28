@@ -5,8 +5,8 @@ import { fullTime } from '@/features/messaging/inbox/format';
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog/MessageLog';
 
-/** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+/** The web reads every time in 12 h. */
+const C12 = { cycle: '12', locale } as const;
 
 // Day separators at every width; each bubble shows the clock only, the full date in its tooltip (W10).
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
@@ -45,7 +45,7 @@ describe('MessageLog day separators (W10)', () => {
     expect(rows).toHaveLength(5);
   });
 
-  it('the bubbles show «HH:MM» without a date; the title and a screen-reader line hold the full date', () => {
+  it('the bubbles show the 12 h time without a date; the title and a screen-reader line hold the full date', () => {
     render(<MessageLog {...base} messages={[Y, T1]} fill="shell" />);
     const times = screen.getAllByRole('article').map((a) => {
       const time = a.querySelector('time');
@@ -53,10 +53,10 @@ describe('MessageLog day separators (W10)', () => {
       return time;
     });
     const shown = (x: Element) => x.querySelector('[aria-hidden="true"]')?.textContent;
-    expect(times.map(shown)).toEqual(['09:05', '08:05']);
-    expect(times[0]?.getAttribute('title')).toBe(fullTime(Y.created_at, C24));
+    expect(times.map(shown)).toEqual(['9:05 ص', '8:05 ص']);
+    expect(times[0]?.getAttribute('title')).toBe(fullTime(Y.created_at, C12));
     // The day separators are aria-hidden: the date is read from the bubble's own <time>.
-    expect(times[0]?.querySelector('.sr-only')?.textContent).toBe(fullTime(Y.created_at, C24));
+    expect(times[0]?.querySelector('.sr-only')?.textContent).toBe(fullTime(Y.created_at, C12));
     const visible = within(screen.getAllByRole('article')[0] as HTMLElement).queryAllByText(/أكتوبر|Oct/);
     expect(visible.every((el) => el.classList.contains('sr-only'))).toBe(true);
   });

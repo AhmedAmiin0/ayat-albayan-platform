@@ -28,7 +28,7 @@ function open(mode: 'admin' | 'sales' = 'sales') {
 }
 
 async function swapAndNext() {
-  fireEvent.click(within(await day(1)).getByRole('button', { name: /18:00/ }));
+  fireEvent.click(within(await day(1)).getByRole('button', { name: /6:00 م/ }));
   const remove = t.booking.removeDay.replace('{day}', t.enums.weekday[0]);
   fireEvent.click(screen.getByRole('button', { name: remove }));
   fireEvent.click(screen.getByRole('button', { name: t.booking.next }));

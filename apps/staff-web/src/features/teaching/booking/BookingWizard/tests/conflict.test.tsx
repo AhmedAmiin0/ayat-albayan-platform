@@ -61,9 +61,9 @@ describe('BookingWizard conflicts (R-SCH-04, issue B3)', () => {
     routeSend(apiSend, [CONFLICT, BOOKED]);
     await reachReview();
     expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
-    expect(screen.getByText(/لدى الطالب حلقة أخرى في هذا الموعد \(الأحد 4 أكتوبر 17:00\)/)).toBeTruthy();
+    expect(screen.getByText(/لدى الطالب حلقة أخرى في هذا الموعد \(الأحد 4 أكتوبر 5:00 م\)/)).toBeTruthy();
     // The teacher's own clock rides along only when it differs: Cairo = Riyadh until 29 Oct.
-    expect(screen.getByText(/خارج المواعيد المتاحة للمعلم\/ة \(الأربعاء 7 أكتوبر 17:00\)/)).toBeTruthy();
+    expect(screen.getByText(/خارج المواعيد المتاحة للمعلم\/ة \(الأربعاء 7 أكتوبر 5:00 م\)/)).toBeTruthy();
     fireEvent.change(screen.getByLabelText(t.booking.overrideReason), { target: { value: 'ولي الأمر موافق' } });
     fireEvent.click(screen.getByRole('button', { name: t.booking.override }));
     await waitFor(() => expect(bookingBodies(apiSend)).toHaveLength(2));

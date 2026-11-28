@@ -56,11 +56,11 @@ describe('OtherTime (web «وقت آخر»)', () => {
     open();
     const days = await screen.findByRole('group', { name: t.booking.otherTimeDay });
     expect(within(days).getAllByRole('radio')).toHaveLength(2);
-    fireEvent.click(screen.getByRole('radio', { name: '12:00' }));
-    fireEvent.click(screen.getByRole('radio', { name: '17:00' }));
+    fireEvent.click(screen.getByRole('radio', { name: '12:00 م' }));
+    fireEvent.click(screen.getByRole('radio', { name: '5:00 م' }));
     expect(onPick.mock.calls.map(([s]) => s)).toEqual([NOON, FIVE]);
     fireEvent.click(within(days).getAllByRole('radio')[1] as HTMLElement);
-    fireEvent.click(screen.getByRole('radio', { name: '00:30' }));
+    fireEvent.click(screen.getByRole('radio', { name: '12:30 ص' }));
     expect(onPick).toHaveBeenLastCalledWith(LATE);
   });
 
@@ -70,7 +70,7 @@ describe('OtherTime (web «وقت آخر»)', () => {
     open();
     const days = await screen.findByRole('group', { name: t.booking.otherTimeDay });
     expect(within(days).getAllByRole('radio')).toHaveLength(1);
-    expect(screen.getByRole('radio', { name: '11:00 · 12:00' })).toBeTruthy();
+    expect(screen.getByRole('radio', { name: '11:00 ص · 12:00 م' })).toBeTruthy();
   });
 
   it('a malformed answer (a free-text time) is an alert, never shown as times', async () => {

@@ -18,7 +18,7 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-const SUNDAY = lesson({ id: 'a', status: 'scheduled' }); // Sun 4 Oct 17:00 Riyadh, Abrar
+const SUNDAY = lesson({ id: 'a', status: 'scheduled' }); // Sun 4 Oct 5:00 PM Riyadh, Abrar
 const MONDAY = lesson({ id: 'b', status: 'confirmed', teacher: FATMA, starts_at: '2026-10-05T10:00:00.000Z' });
 const MOVED = lesson({ id: 'c', status: 'rescheduled', starts_at: '2026-10-06T10:00:00.000Z' });
 
@@ -59,7 +59,7 @@ describe('WeekSchedule (R-SCH-01, R-SCH-03)', () => {
     expect(apiFetch).toHaveBeenCalledWith('/lessons/overview?from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z');
     expect(rowNames(grid)).toEqual(['أبرار', FATMA.display_name_ar, 'نور']);
     const abrar = within(grid).getAllByRole('row')[1] as HTMLElement;
-    expect(within(abrar).getByRole('button', { name: /17:00/ }).textContent).toContain(t.enums.lessonStatus.scheduled);
+    expect(within(abrar).getByRole('button', { name: /5:00 م/ }).textContent).toContain(t.enums.lessonStatus.scheduled);
     expect(within(abrar).getByText(t.dashboard.ofMax.replace('{n}', '4').replace('{max}', '10'))).toBeTruthy();
     expect(within(abrar).getByText(t.schedule.freeTotal.replace('{h}', '3:15'))).toBeTruthy();
   });
@@ -106,9 +106,9 @@ describe('WeekSchedule (R-SCH-01, R-SCH-03)', () => {
 
   it('a chip opens the lesson drawer with the viewer and the student time', async () => {
     renderWeek();
-    fireEvent.click(await screen.findByRole('button', { name: /17:00/ }));
+    fireEvent.click(await screen.findByRole('button', { name: /5:00 م/ }));
     const drawer = screen.getByRole('dialog', { name: 'سهيلة' });
-    expect(within(drawer).getByText(new RegExp(t.schedule.viewerTime)).textContent).toContain('17:00');
+    expect(within(drawer).getByText(new RegExp(t.schedule.viewerTime)).textContent).toContain('5:00 م');
     expect(within(drawer).getByRole('button', { name: t.lessons.event.confirm })).toBeTruthy();
     expect(within(drawer).getByRole('link', { name: new RegExp(t.lessons.join) }).getAttribute('href')).toBe(SUNDAY.meeting_link);
   });

@@ -27,7 +27,7 @@ describe('JoinButton «ادخل الحلقة»', () => {
     at('2026-10-03T15:30:00.000Z');
     render(<JoinButton lesson={L} />);
     expect(screen.getByRole('button', { name: t.classroom.enter })).toHaveProperty('disabled', true);
-    expect(screen.getByText(/\d{2}:\d{2}/)).toBeTruthy();
+    expect(screen.getByText(/\d{1,2}:\d{2} [صم]/)).toBeTruthy();
     expect(screen.queryByRole('link')).toBeNull();
   });
 

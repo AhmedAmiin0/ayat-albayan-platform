@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClock } from '../../support/core/locale';
 import { fillStable } from '../../support/core/fill';
 import { addDays, lessonsOf, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/core/schedule';
 import { setMessaging, stubReset, stubSent, type StubSent } from '../../support/core/wa-stub';
@@ -76,7 +77,7 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
     await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
     const sunday = step.getByRole('region', { name: new RegExp(`^${SUNDAY} `) });
-    await sunday.getByRole('button', { name: /16:00/ }).click();
+    await sunday.getByRole('button', { name: new RegExp(webClock('16:00')) }).click();
     await admin.getByRole('button', { name: ar.booking.next }).click();
     await admin.getByLabel(ar.booking.meetingLink).fill(`https://meet.jit.si/${ROOM}`);
     await admin.getByRole('button', { name: ar.booking.submit }).click();
@@ -100,6 +101,6 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
     ]);
     await admin.goto(`/admin/schedule?week=${week}&teacher=${teacherId}`);
     const grid = admin.getByRole('table', { name: ar.schedule.grid }).or(admin.getByRole('group', { name: ar.schedule.grid })); // table, or the day list on a phone
-    await expect(grid.getByRole('button', { name: new RegExp(`16:00.*${student}`) })).toBeVisible();
+    await expect(grid.getByRole('button', { name: new RegExp(`${webClock('16:00')}.*${student}`) })).toBeVisible();
   });
 });

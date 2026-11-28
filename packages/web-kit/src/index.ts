@@ -69,7 +69,6 @@ export * from './components/ui/form/SegmentedControl';
 export * from './components/ui/form/Select/Select';
 export * from './components/ui/form/TimeZoneSelect/TimeZoneSelect';
 export * from './components/ui/layout/button-row';
-export * from './components/ui/layout/ClockToggle';
 export * from './components/ui/layout/head-actions';
 export * from './components/ui/layout/page';
 export * from './components/ui/layout/pager';

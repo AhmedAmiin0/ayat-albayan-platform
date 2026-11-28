@@ -28,7 +28,7 @@ describe('«عدّل الوقت» next to «غيّر الموعد» (R-SCH-11)',
     });
     render(<LessonTags lesson={edited} />);
     const tag = screen.getByText(t.lessons.timeEdit.tag);
-    expect(tag.getAttribute('title')).toMatch(/كان: .* 16:00/);
+    expect(tag.getAttribute('title')).toMatch(/كان: .* 4:00 م/);
     expect(tag.className).not.toMatch(/\bborder\b/);
   });
 });

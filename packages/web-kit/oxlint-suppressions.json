@@ -500,11 +500,6 @@
       "count": 1
     }
   },
-  "src/lib/clock.ts": {
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/lib/http/api/api.ts": {
     "stylistic/max-len": {
       "count": 1

@@ -94,26 +94,26 @@ describe('AdminLayout sidebar', () => {
     expect(container.querySelector('[data-running-head] [data-bell]')).not.toBeNull();
   });
 
-  it('from 900px the compact theme and time switches sit right before the bell, on one row', () => {
+  it('from 900px the compact theme switch sits right before the bell, with no time switch', () => {
     const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
     const end = container.querySelector('[data-running-head] [data-head-end]');
     expect(end?.className.split(' ')).toEqual(expect.arrayContaining(['hidden', 'shell:flex']));
     expect(container.querySelector('[data-running-head]')?.getAttribute('data-layout')).toBe('fit');
     const theme = screen.getByRole('group', { name: t.theme.label });
-    const clock = screen.getByRole('group', { name: t.clock.label });
-    expect(end?.contains(theme) && end.contains(clock)).toBe(true);
+    expect(end?.contains(theme)).toBe(true);
+    expect(screen.queryByRole('group', { name: t.clock.label })).toBeNull();
     expect(end?.lastElementChild?.hasAttribute('data-bell')).toBe(true);
     expect(screen.getByRole('button', { name: t.theme.dark }).getAttribute('aria-label')).toBe(t.theme.dark);
   });
 
-  it('tabs through the theme, then the time format, then the bell', () => {
+  it('tabs through the theme, then the bell', () => {
     const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
     const buttons = [...(container.querySelector('[data-head-end]')?.querySelectorAll('button') ?? [])];
     const at = (el: Element) => buttons.indexOf(el as HTMLButtonElement);
     const bell = container.querySelector('[data-bell]');
     expect(bell).not.toBeNull();
     expect(at(screen.getByRole('button', { name: t.theme.light }))).toBe(1);
-    expect(at(screen.getByRole('button', { name: t.clock.h24 }))).toBe(5);
+    expect(at(screen.getByRole('button', { name: t.theme.dark }))).toBe(2);
     expect(buttons.at(-1)).toBe(bell);
     expect(buttons.every((b) => b.tabIndex === 0)).toBe(true);
   });

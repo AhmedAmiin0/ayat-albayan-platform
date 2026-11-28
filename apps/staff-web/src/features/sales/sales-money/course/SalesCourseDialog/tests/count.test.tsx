@@ -51,8 +51,8 @@ describe('the assistant’s course: exactly the plan’s days, each with its tim
     next();
 
     const review = within(screen.getByRole('region', { name: t.booking.steps.review }));
-    expect(review.getByText(t.booking.dayAt.replace('{day}', t.enums.weekday[0]).replace('{time}', '17:00'))).toBeTruthy();
-    expect(review.getByText(t.booking.dayAt.replace('{day}', t.enums.weekday[3]).replace('{time}', '19:30'))).toBeTruthy();
+    expect(review.getByText(t.booking.dayAt.replace('{day}', t.enums.weekday[0]).replace('{time}', '5:00 م'))).toBeTruthy();
+    expect(review.getByText(t.booking.dayAt.replace('{day}', t.enums.weekday[3]).replace('{time}', '7:30 م'))).toBeTruthy();
     expect(review.getByText(counted(t.booking.courseEnds, 8).replace('{date}', dateLabel('2026-10-28')))).toBeTruthy();
     expect(review.queryByText(t.booking.meetingLink)).toBeNull();
     expect(review.queryByText(t.booking.invoice.label)).toBeNull();

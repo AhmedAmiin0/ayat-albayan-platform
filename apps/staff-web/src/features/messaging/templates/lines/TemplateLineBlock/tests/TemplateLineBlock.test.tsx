@@ -6,8 +6,8 @@ import { t, locale } from '@ab/web-kit';
 import { lineSync, lineView } from '@/features/messaging/templates/lines/template-lines-fixture';
 import { newerSync, TemplateLineBlock } from '@/features/messaging/templates/lines/TemplateLineBlock/TemplateLineBlock';
 
-/** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+/** The web reads every time in 12 h. */
+const C12 = { cycle: '12', locale } as const;
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
@@ -29,7 +29,7 @@ describe('TemplateLineBlock', () => {
       <TemplateLineBlock line="notifications" facts={lineView('notifications', { last_sync: last })} phone="+20 100 000 0000" onNotice={vi.fn()} />,
     );
     expect(screen.getByText('+20 100 000 0000').closest('bdi')?.getAttribute('dir')).toBe('ltr');
-    expect(screen.getByText(p.lastSync.replace('{time}', fullTime('2026-10-17T06:30:00Z', C24)))).toBeTruthy();
+    expect(screen.getByText(p.lastSync.replace('{time}', fullTime('2026-10-17T06:30:00Z', C12)))).toBeTruthy();
     expect(screen.getByText(p.metaCount).nextElementSibling?.textContent).toBe('12');
     expect(screen.getByText(p.noneImported)).toBeTruthy();
     expect(screen.getByText(t.integrations.options.meta)).toBeTruthy();

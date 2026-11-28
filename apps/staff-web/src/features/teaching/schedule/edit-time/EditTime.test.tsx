@@ -54,7 +54,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
         <LessonDetails lesson={edited} />
       </QueryClientProvider>,
     );
-    expect(screen.getByText(/كان: .* 16:00/)).toBeTruthy();
+    expect(screen.getByText(/كان: .* 4:00 م/)).toBeTruthy();
     expect(
       screen.getByText(t.lessons.timeEdit.reasonLine.replace('{reason}', 'طلب ولي الأمر')),
     ).toBeTruthy();
@@ -73,7 +73,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     pick.day(MONDAY);
     pick.time('18:00');
     pick.duration(60);
-    const line = confirmLine(/الأحد 4 أكتوبر 17:00 \(45 دقيقة\).*5 أكتوبر 18:00 \(60 دقيقة\)/);
+    const line = confirmLine(/الأحد 4 أكتوبر 5:00 م \(45 دقيقة\).*5 أكتوبر 6:00 م \(60 دقيقة\)/);
     expect(line.textContent).toContain(t.schedule.viewerTime);
     expect(screen.getByText(t.lessons.timeEdit.sameLesson)).toBeTruthy();
     expect((screen.getByLabelText<HTMLInputElement>(t.lessons.timeEdit.notify)).checked).toBe(true);
