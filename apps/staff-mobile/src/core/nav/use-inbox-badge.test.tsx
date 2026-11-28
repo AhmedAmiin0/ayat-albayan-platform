@@ -10,10 +10,11 @@ const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 const THREADS = '/threads?unread=true&page=1&pageSize=1';
+const page = (total: number) => ({ items: [], total, page: 1, pageSize: 1 });
 
 beforeEach(() => {
   mockApiFetch.mockReset();
-  mockApiFetch.mockImplementation(async (path: string) => ({ total: path === THREADS ? 3 : 2 }));
+  mockApiFetch.mockImplementation(async (path: string) => page(path === THREADS ? 3 : 2));
 });
 
 const wrapper = (): (({ children }: { children: ReactNode }) => ReactNode) =>
@@ -39,7 +40,7 @@ test('reads nothing and shows no badge when inbox.read is not allowed', async ()
 });
 
 test('zero counts: no badge', async () => {
-  mockApiFetch.mockResolvedValue({ total: 0 });
+  mockApiFetch.mockResolvedValue(page(0));
   const { result } = await renderHook(() => useInboxBadge(() => true), { wrapper: wrapper() });
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(1));
   expect(result.current).toBeUndefined();
@@ -55,7 +56,7 @@ test('a quietly dead socket: the badge still re-reads on its interval', async ()
   try {
     const { result } = await renderHook(() => useInboxBadge(() => true), { wrapper: wrapper() });
     await waitFor(() => expect(result.current).toBe('3'));
-    mockApiFetch.mockResolvedValue({ total: 5 });
+    mockApiFetch.mockResolvedValue(page(5));
     await act(() => jest.advanceTimersByTimeAsync(INBOX_LIST_REFRESH_MS));
     await waitFor(() => expect(result.current).toBe('5'));
     await act(async () => inboxLive.setLive(true));
