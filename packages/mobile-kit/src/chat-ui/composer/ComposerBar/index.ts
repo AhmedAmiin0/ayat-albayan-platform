@@ -1,1 +1,2 @@
-export { ComposerBar, type ComposerBarProps } from './ComposerBar';
+export { ComposerBar } from './ComposerBar';
+export type { ComposerBarProps } from './ComposerBar.types';
