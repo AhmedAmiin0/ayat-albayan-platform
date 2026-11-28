@@ -1,8 +1,8 @@
 import { siteCountry } from '@ab/money';
 import { pricingRoutes, type PriceListQueryInput } from '@ab/shared';
-import { callWith, type ApiClient } from '../../core/http';
+import type { ApiClient } from '../../core/http';
 import type { ListParams } from '../../core/keys';
-import { priceListKeys } from './price-list.keys';
+import { routeQuery } from '../../core/query';
 import type { PriceListChoice, PriceListQuery } from './price-list.types';
 
 /**
@@ -24,10 +24,5 @@ export function priceListParams(choice: PriceListChoice): ListParams & PriceList
  * list while the next one loads.
  */
 export function priceListQueryOptions(client: ApiClient, choice: PriceListChoice): PriceListQuery {
-  const params = priceListParams(choice);
-  const call = callWith(client);
-  return {
-    queryKey: priceListKeys.of(params),
-    queryFn: () => call({ route: pricingRoutes.list, query: params }),
-  };
+  return routeQuery(client, pricingRoutes.list, priceListParams(choice));
 }

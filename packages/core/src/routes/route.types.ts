@@ -23,8 +23,6 @@ export interface RouteSpec {
   readonly isPublic?: true;
 }
 
-export type Route<S extends RouteSpec = RouteSpec> = Readonly<S>;
-
 type InputOf<R, K extends 'params' | 'query' | 'body'> =
   R extends Record<K, infer S extends z.ZodType> ? z.input<S> : undefined;
 
@@ -40,3 +38,18 @@ export type RouteResult<R extends RouteSpec> = R['response'] extends z.ZodType
 /** The `:name` values of a route; a route without params takes none. */
 export type RoutePathArgs<R extends RouteSpec> =
   RouteParams<R> extends undefined ? [] : [params: RouteParams<R>];
+
+type Or<T, Else> = [T] extends [undefined] ? Else : T;
+type NoInput = Partial<Record<string, never>>;
+type Joined<P, Q> = [P] extends [undefined] ? Or<Q, NoInput> : P & Or<Q, unknown>;
+
+/** What a read's cache entry is keyed by: the route's params and query, as one object. */
+export type RouteKeyInput<R extends RouteSpec> = Joined<RouteParams<R>, RouteQuery<R>>;
+
+/** Invalidating `all` reaches every `of` entry of the route and of the paths under it. */
+export interface RouteKey<R extends RouteSpec = RouteSpec> {
+  readonly all: readonly string[];
+  of(input: RouteKeyInput<R>): unknown[];
+}
+
+export type Route<S extends RouteSpec = RouteSpec> = Readonly<S> & { readonly key: RouteKey<S> };

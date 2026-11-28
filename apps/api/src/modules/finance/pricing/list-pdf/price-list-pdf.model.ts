@@ -1,19 +1,8 @@
-import {
-  durationWords,
-  formatAmount,
-  packageWords,
-  siteCountry,
-  type PriceList,
-  type Quote,
-} from '@ab/money';
-import { riyadhToday } from '@ab/time';
+import { flagOf } from '@ab/core';
+import { siteCountry, type PriceList } from '@ab/money';
 import { ar } from '@/common/infra/i18n/server-text';
-import type {
-  PdfModelInput,
-  PdfPriceGroup,
-  PdfPriceRow,
-  PriceListPdfModel,
-} from './price-list-pdf.types';
+import { monthlyCard, tierRows, weeklyCard } from './price-list-pdf.rows';
+import type { PdfModelInput, PriceListPdfModel } from './price-list-pdf.types';
 
 const REGIONS = new Intl.DisplayNames(['ar'], { type: 'region' });
 
@@ -26,35 +15,37 @@ export function countryNameAr(code: string | undefined): string {
   return site === null ? regionName(code) : ar.pricing.countries[site];
 }
 
-/** Prices are read from the list as quote() made them: nothing is priced here. */
-function rowOf(q: Quote, list: PriceList): PdfPriceRow {
-  const unit = ar.pricing.currencies[list.currency];
-  const money = (amount: number) => `${formatAmount(amount)} ${unit}`;
-  const { name, sessions } = packageWords(q, ar.pricing);
-  const before = list.discount > 0 ? money(q.total) : null;
-  return { name, lessons: sessions, before, after: money(q.afterDiscount) };
+function pricedIn(list: PriceList, country: string | undefined): string {
+  const P = ar.pricing;
+  return P.pdf.pricedIn
+    .replace('{country}', countryNameAr(country))
+    .replace('{currency}', P.pdf.currencyNames[list.currency])
+    .replace('{symbol}', P.currencies[list.currency]);
 }
 
-function groupsOf(list: PriceList): PdfPriceGroup[] {
-  const P = ar.pricing;
-  const byDuration = list.groups.map((g) => ({
-    title: P.pdf.duration.replace('{duration}', durationWords(g.duration, P)),
-    rows: g.packages.map((q) => rowOf(q, list)),
-  }));
-  return [...byDuration, { title: P.pdf.weekly, rows: [rowOf(list.weekly, list)] }];
+/** «Prices after X% off — whole package», and for how many students when more than one. */
+function captionOf(list: PriceList): string {
+  const D = ar.pricing.pdf;
+  const pct = String(list.discount);
+  const off = list.discount > 0 ? [D.afterDiscount.replace('{pct}', pct)] : [];
+  const lead = [...off, D.wholePackage].join(' — ');
+  const many = list.students > 1 ? [D.forStudents.replace('{n}', String(list.students))] : [];
+  return [lead, ...many].join(' · ');
 }
 
 export function priceListPdfModel(list: PriceList, at: PdfModelInput): PriceListPdfModel {
-  const P = ar.pricing;
-  const pct = String(list.discount);
-  const discount = list.discount > 0 ? P.pdf.discount.replace('{pct}', pct) : null;
+  const D = ar.pricing.pdf;
+  const discount = list.discount > 0 ? D.discount.replace('{pct}', String(list.discount)) : null;
   return {
-    country: countryNameAr(at.country),
-    currency: `${P.pdf.currencyNames[list.currency]} (${P.currencies[list.currency]})`,
-    issued: riyadhToday(at.now),
+    flag: at.country === undefined ? '' : flagOf(at.country),
+    pricedIn: pricedIn(list, at.country),
+    symbol: ar.pricing.currencies[list.currency],
     discount,
-    students: list.students,
-    groups: groupsOf(list),
-    note: P.trialNote,
+    caption: captionOf(list),
+    durations: list.groups.map((g) => String(g.duration)),
+    rows: tierRows(list),
+    weekly: weeklyCard(list),
+    monthly: monthlyCard(list),
+    contact: at.contact,
   };
 }

@@ -3,7 +3,7 @@ import { studentStatusStyle } from '@ab/money';
 import { router, useLocalSearchParams } from 'expo-router';
 import { pushInTab } from '@/core/nav/back-within';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import {
   BackButton,
   EmptyState,
@@ -14,8 +14,8 @@ import {
   ScreenHeader,
   StatusChip,
   t,
-  useInsetRows,
   useTheme,
+  LazyList,
 } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { KIND_EMPTY } from '@/students/list/student-kinds';
@@ -43,7 +43,7 @@ export function SalesTeacherScreen() {
   const back = <BackButton onPress={() => router.back()} />;
   const rows = teacher ? splitByStatus(teacher.students, kind) : [];
   const row = useCallback(
-    ({ item }: ListRenderItemInfo<SalesTeacherView['students'][number]>) => (
+    ({ item }: { item: SalesTeacherView['students'][number] }) => (
       <ListRow
         onPress={() => pushInTab(studentDetailsHref(base, item.id))}
         accessibilityHint={t.sales.allStudents.detailsHint}
@@ -56,8 +56,6 @@ export function SalesTeacherScreen() {
     ),
     [base, cycle, tz],
   );
-  // The students sit in one inset card inside the gutter (one container rule).
-  const cells = useInsetRows(row, rows.length);
   if (!teacher) {
     return (
       <Screen>
@@ -89,17 +87,17 @@ export function SalesTeacherScreen() {
       {tab !== 'students' ? (
         <TeacherOverviewTab teacherId={teacher.id} view={tab} />
       ) : (
-        <FlatList
-          style={{ flex: 1 }}
-          contentContainerStyle={{ paddingBottom: 24 }}
+        <LazyList
           accessibilityLabel={t.sales.mobile.studentsOf.replace('{name}', name)}
           data={rows}
           ListHeaderComponent={
             <SalesTeacherHeader teacher={teacher} kind={kind} onKind={setKind} />
           }
           keyExtractor={(s) => s.id}
+          renderItem={row}
+          tabBar={false}
+          endSpace={24}
           extraData={cycle}
-          {...cells}
           ListEmptyComponent={
             <EmptyState
               title={teacher.students.length === 0 ? t.sales.teachers.noStudents : KIND_EMPTY[kind]}
