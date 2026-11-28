@@ -5,7 +5,7 @@ import type { SwitchFrameProps } from './SwitchFrame.types';
 
 /** A 56pt settings row: the label, the switch at the end, a note below. */
 export function SwitchFrame({ label, control, note, testID }: SwitchFrameProps) {
-  const ink = useTheme().color.ink;
+  const { color } = useTheme();
   return (
     <View
       testID={testID}
@@ -20,7 +20,12 @@ export function SwitchFrame({ label, control, note, testID }: SwitchFrameProps) 
         }}
       >
         <AppText
-          style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.sm, color: ink }}
+          style={{
+            flexShrink: 1,
+            fontFamily: type.ui[600],
+            fontSize: type.size.sm,
+            color: color.ink,
+          }}
         >
           {label}
         </AppText>
