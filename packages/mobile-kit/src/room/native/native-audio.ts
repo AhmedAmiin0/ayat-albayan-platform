@@ -1,10 +1,5 @@
 import { Platform } from 'react-native';
-import {
-  autoOutput,
-  knownOutputs,
-  nextOutput,
-  type AudioOutput,
-} from '../model/audio-output';
+import { autoOutput, knownOutputs, nextOutput, type AudioOutput } from '../model/audio-output';
 import type { RoomAudio } from '../model/room-types';
 import type { LiveKitNative } from './livekit-native';
 

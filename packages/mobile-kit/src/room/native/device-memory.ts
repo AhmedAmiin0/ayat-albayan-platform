@@ -11,7 +11,10 @@ const decodeJson: (text: string) => unknown = JSON.parse;
 
 const parse = (raw: string | null): MediaWish | null => {
   try {
-    return wishSchema.nullable().catch(null).parse(decodeJson(raw ?? 'null'));
+    return wishSchema
+      .nullable()
+      .catch(null)
+      .parse(decodeJson(raw ?? 'null'));
   } catch {
     return null;
   }

@@ -14,7 +14,13 @@ export interface RoomTarget {
  * The LiveKit connection as the room screen sees it (the client maps LiveKit's events to these).
  */
 export type RoomStatus =
-  'connecting' | 'connected' | 'reconnecting' | 'ended' | 'dropped' | 'removed' | 'duplicate';
+  | 'connecting'
+  | 'connected'
+  | 'reconnecting'
+  | 'ended'
+  | 'dropped'
+  | 'removed'
+  | 'duplicate';
 
 /** One tile of the grid: a participant's camera, or a shared screen (viewing only). */
 export interface RoomTile {

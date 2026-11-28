@@ -1,10 +1,4 @@
-import {
-  mayEndForAll,
-  mayMuteMic,
-  mayRemove,
-  mayStopCam,
-  muteAllTargets,
-} from '@ab/client-core';
+import { mayEndForAll, mayMuteMic, mayRemove, mayStopCam, muteAllTargets } from '@ab/client-core';
 import type { JoinRole, MuteSource } from '@ab/schedule';
 import { useState } from 'react';
 import { classroomError } from '../state/room-failure';
@@ -40,7 +34,10 @@ export function useHostPanel({ host, me, tiles, onEnded }: HostPanelInput) {
     setBusy(true);
     setNotice(null);
     void work
-      .then(() => setNotice(done), (e: unknown) => setNotice(classroomError(e)))
+      .then(
+        () => setNotice(done),
+        (e: unknown) => setNotice(classroomError(e)),
+      )
       .finally(() => {
         setBusy(false);
         setKick(null);

@@ -80,11 +80,7 @@ export function ParticipantTile({ tile, Video, actions }: ParticipantTileProps) 
         borderColor: tile.speaking ? color.gold : 'transparent',
       }}
     >
-      <View
-        accessible
-        accessibilityLabel={tileLabel(tile, name)}
-        style={{ flex: 1 }}
-      >
+      <View accessible accessibilityLabel={tileLabel(tile, name)} style={{ flex: 1 }}>
         {tile.video ? (
           <Video video={tile.video} mirror={mirror} fit={tile.screen ? 'contain' : 'cover'} />
         ) : (
