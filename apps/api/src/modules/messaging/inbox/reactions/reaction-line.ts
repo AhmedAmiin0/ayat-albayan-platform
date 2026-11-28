@@ -3,7 +3,7 @@ import { overlayNumbers } from '@/common/configuration/integrations/numbers-over
 import { lineEnvs, lineProvider, loadEnv } from '@/config/env/env';
 import { capsOf } from '@/modules/messaging/whatsapp';
 import { pickSend } from '@/modules/messaging/inbox/send/send-number';
-import { refused } from '@/modules/messaging/inbox/send/send-refusal';
+import { refused } from '@/modules/messaging/inbox/send/refusal';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
 /**

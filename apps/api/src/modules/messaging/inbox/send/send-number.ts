@@ -3,7 +3,7 @@ import { isWaLine, type WaLine } from '@ab/catalog';
 import { Logger } from '@nestjs/common';
 import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { pickSendLine, type SendLineCode } from './send-line';
-import { refused } from './send-refusal';
+import { refused } from './refusal';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 
 /**

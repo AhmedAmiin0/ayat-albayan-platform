@@ -42,7 +42,7 @@ export function fakeApi(): { [K in keyof CallsApi]: Mock<CallsApi[K]> } {
 
 type FakeThread = { guardian_id: string | null; lead_id: string | null } | null;
 
-export function fakeThreads(thread: FakeThread = { guardian_id: 'g1', lead_id: null }) {
+function fakeThreads(thread: FakeThread = { guardian_id: 'g1', lead_id: null }) {
   const rows = new Map<string, Record<string, unknown>>();
   // A replayed dedup_key returns the first row, flagged (ThreadsQueries.enqueue, rule 8).
   const enqueue = vi.fn(async (row: Record<string, unknown>) => {

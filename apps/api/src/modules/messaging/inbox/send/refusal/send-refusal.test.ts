@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { refused } from '@/modules/messaging/inbox/send/send-refusal';
+import { refused } from '@/modules/messaging/inbox/send/refusal';
 
 describe('refused', () => {
   it('is true for a pick that carries a code', () => {

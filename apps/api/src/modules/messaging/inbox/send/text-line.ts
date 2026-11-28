@@ -4,7 +4,7 @@ import { activeNumberId } from '@/common/configuration/integrations/numbers-over
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { windowless } from '@/modules/messaging/whatsapp';
 import { pickStaffSend } from './chat-first';
-import { refused } from './send-refusal';
+import { refused } from './refusal';
 import type { ThreadWindow } from './send-number';
 import type { SendLineCode } from './send-line';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
