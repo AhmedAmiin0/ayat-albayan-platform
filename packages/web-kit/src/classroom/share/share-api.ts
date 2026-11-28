@@ -1,4 +1,4 @@
-import { apiSend } from '@ab/web-kit/lib/http/api';
+import { call } from '@ab/web-kit/lib/http/api';
 import { lessonIdOfRoom, meetingIdOfRoom } from '@ab/web-kit/classroom/api/moderation-api';
 
 /** Allow or stop one guest's screen share: 204, or an ApiError. */
@@ -19,5 +19,10 @@ function participantsBase(room: string): string | null {
 export function grantShareFor(room: string): GrantShare | null {
   const base = participantsBase(room);
   if (base === null) return null;
-  return ({ identity, allow }) => apiSend('POST', `${base}/${encodeURIComponent(identity)}/share`, { allow });
+  return ({ identity, allow }) =>
+    call({
+      method: 'POST',
+      path: `${base}/${encodeURIComponent(identity)}/share`,
+      body: { allow },
+    });
 }

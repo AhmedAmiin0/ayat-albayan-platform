@@ -2,18 +2,30 @@ import { ApiError } from '@ab/client-core';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { signInErrorText } from './auth-api';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch: vi.fn(), apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const err = (status: number, code: string) => new ApiError(status, { code });
 
 describe('signInErrorText', () => {
   it('maps the API codes to familyAuth.errors', () => {
     expect(signInErrorText(err(401, 'invalid_code'))).toBe(t.familyAuth.errors.invalid_code);
-    expect(signInErrorText(err(401, 'invalid_credentials'))).toBe(t.familyAuth.errors.invalid_credentials);
-    expect(signInErrorText(err(409, 'phone_belongs_to_staff'))).toBe(t.familyAuth.errors.phone_belongs_to_staff);
-    expect(signInErrorText(err(429, 'too_many_requests'))).toBe(t.familyAuth.errors.too_many_requests);
-    expect(signInErrorText(err(503, 'codes_unavailable'))).toBe(t.familyAuth.errors.codes_unavailable);
+    expect(signInErrorText(err(401, 'invalid_credentials'))).toBe(
+      t.familyAuth.errors.invalid_credentials,
+    );
+    expect(signInErrorText(err(409, 'phone_belongs_to_staff'))).toBe(
+      t.familyAuth.errors.phone_belongs_to_staff,
+    );
+    expect(signInErrorText(err(429, 'too_many_requests'))).toBe(
+      t.familyAuth.errors.too_many_requests,
+    );
+    expect(signInErrorText(err(503, 'codes_unavailable'))).toBe(
+      t.familyAuth.errors.codes_unavailable,
+    );
   });
 
   it('password rules reuse the users texts', () => {
