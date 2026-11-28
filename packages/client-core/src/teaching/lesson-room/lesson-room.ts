@@ -19,5 +19,7 @@ export function lessonRoomSends(client: ApiClient): LessonRoomSends {
     },
     remove: ({ lessonId, identity }) =>
       call({ route: routes.removeFromLesson, params: { id: lessonId, identity } }),
+    share: ({ lessonId, identity, allow }) =>
+      call({ route: routes.shareInLesson, params: { id: lessonId, identity }, body: { allow } }),
   };
 }

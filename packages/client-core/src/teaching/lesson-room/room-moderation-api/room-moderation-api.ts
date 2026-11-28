@@ -11,5 +11,7 @@ export function roomModerationApi(client: ApiClient): RoomModerationApi {
     recordingStatus: () => call({ route: routes.recordingStatus }),
     muteInMeeting: ({ meetingId, identity, source }) =>
       call({ route: routes.muteInMeeting, params: { id: meetingId, identity }, body: { source } }),
+    shareInMeeting: ({ meetingId, identity, allow }) =>
+      call({ route: routes.shareInMeeting, params: { id: meetingId, identity }, body: { allow } }),
   };
 }

@@ -14,4 +14,6 @@ export interface LessonRoomSends {
   muteAll: (input: { lessonId: string; identities: readonly string[] }) => Promise<void>;
   /** 204; the person (every link and window of theirs) is kept out of this lesson's room. */
   remove: (input: RoomTargetInput) => Promise<void>;
+  /** 204; 403 cannot_grant_share, 404 participant_not_found. */
+  share: (input: RoomTargetInput & { allow: boolean }) => Promise<void>;
 }
