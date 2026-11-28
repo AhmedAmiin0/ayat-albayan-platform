@@ -59,7 +59,10 @@ export const ALL_PUSH_KINDS = [
   ...PUSH_KINDS,
   ...FAMILY_PUSH_KINDS,
 ] as const;
-/** The two business WhatsApp numbers (docs/12 §13): a template leaves from its registry line (§13.18). */
+/**
+ * The two business WhatsApp numbers (docs/12 §13): a template leaves from its registry line
+ * (§13.18).
+ */
 export const WA_LINES = ['notifications', 'chat'] as const;
 /** Every wa_numbers purpose; `calls` never sends a regular message (docs/28 §10). */
 export const NUMBER_PURPOSES = [

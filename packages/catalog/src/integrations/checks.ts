@@ -10,8 +10,8 @@ import { parseAllowedRecipients } from './recipients';
 import { STORAGE_VALUE_CHECKS } from './storage';
 import { httpsUrl, livekitUrl } from './urls';
 
-// The value checks of the plain keys, consistent with apps/api/src/config/env/env.ts (the API also re-checks
-// every DB value with its own env schema before using it).
+// The value checks of the plain keys, consistent with apps/api/src/config/env/env.ts (the API also
+// re-checks every DB value with its own env schema before using it).
 
 /** integration_config.value: octet_length(value) <= 4096 (ASCII keys and values in practice). */
 export const INTEGRATION_VALUE_MAX = 4096;

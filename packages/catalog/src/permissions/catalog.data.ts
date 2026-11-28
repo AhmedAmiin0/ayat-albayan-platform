@@ -1,7 +1,8 @@
 // The permission catalog (dynamic roles). One stable `resource.action` key per group of API
-// endpoints that had the same @Roles set before (the API's parity test). `grants` = the non-admin system roles holding
-// it by default (seeded in 20261005000220 and later migrations); the system admin holds every grantable permission.
-// Adding one: a row here, its i18n labels (permissions.items), a seed migration for its system roles, @Permissions('…').
+// endpoints that had the same @Roles set before (the API's parity test). `grants` = the non-admin
+// system roles holding it by default (seeded in 20261005000220 and later migrations); the system
+// admin holds every grantable permission. Adding one: a row here, its i18n labels
+// (permissions.items), a seed migration for its system roles, @Permissions('…').
 import { PEOPLE_EDIT_ROWS } from './catalog.people-edit';
 import { SHORT_LINK_ROWS } from './catalog.short-links';
 /** Matrix sections, in display order. `self` is never shown: it follows the base role. */
@@ -78,12 +79,13 @@ export const PERMISSION_ROWS = [
   { key: 'messages.manage', area: 'messaging', grants: [] },
   { key: 'templates.manage', area: 'messaging', grants: [] },
   // Every template from the inbox; without it (or templates.manage) only the
-  // restricted allow-list: free_trial_invite and welcome_greeting by default (restricted-templates.ts).
+  // restricted allow-list: free_trial_invite and welcome_greeting by default
+  // (restricted-templates.ts).
   { key: 'templates.send_all', area: 'messaging', grants: [] },
   { key: 'templates.author', area: 'messaging', grants: ['sales'] },
   ...SHORT_LINK_ROWS,
-  // docs/31 §2: read every student channel (teacher ↔ family), read-only. The admin by default; the owning
-  // assistant reads her own students' channels without it (sales ownership).
+  // docs/31 §2: read every student channel (teacher ↔ family), read-only. The admin by default; the
+  // owning assistant reads her own students' channels without it (sales ownership).
   { key: 'student_channels.monitor', area: 'messaging', grants: [] },
   { key: 'payments.read', area: 'finance', grants: [] },
   { key: 'payments.write', area: 'finance', grants: [] },
@@ -100,7 +102,8 @@ export const PERMISSION_ROWS = [
   { key: 'payouts.read', area: 'finance', grants: [] },
   { key: 'payouts.write', area: 'finance', grants: [] },
   { key: 'payouts.approve', area: 'finance', grants: [] },
-  // The assistant's (base role sales) pay: terms, commission ledger, monthly statements, attribution.
+  // The assistant's (base role sales) pay: terms, commission ledger, monthly statements,
+  // attribution.
   { key: 'assistantpay.read', area: 'finance', grants: [] },
   { key: 'assistantpay.write', area: 'finance', grants: [] },
   { key: 'assistantpay.approve', area: 'finance', grants: [] },
@@ -125,8 +128,9 @@ export const PERMISSION_ROWS = [
   // Scope, not grants: a base role's "my …" pages; every role of that base role holds it.
   { key: 'self.teacher', area: 'self', grants: T },
   { key: 'self.sales', area: 'self', grants: ['sales'] },
-  // The assistant's own pages (sales/me/*): the students they brought, the payments they recorded and
-  // their earnings (terms, commissions, statements). Never grantable: they follow the base role.
+  // The assistant's own pages (sales/me/*): the students they brought, the payments they recorded
+  // and their earnings (terms, commissions, statements). Never grantable: they follow the base
+  // role.
   { key: 'self.sales_students', area: 'self', grants: ['sales'] },
   { key: 'self.sales_payments', area: 'self', grants: ['sales'] },
   { key: 'self.sales_earnings', area: 'self', grants: ['sales'] },
@@ -134,7 +138,8 @@ export const PERMISSION_ROWS = [
   // the lessons running now (read-only, whitelisted). Follows the base role like the keys above.
   { key: 'self.sales_academy', area: 'self', grants: ['sales'] },
   // Her money writes from the chat (docs/16 row 16): subscribe a student she owns and
-  // record the family's bank transfer with its receipt (/sales/subscriptions, /sales/payments, /sales/money).
+  // record the family's bank transfer with its receipt (/sales/subscriptions, /sales/payments,
+  // /sales/money).
   { key: 'self.sales_money', area: 'self', grants: ['sales'] },
   { key: 'self.assistant', area: 'self', grants: ['assistant'] },
   // The family portal (/portal/*, docs/31): guardian or student login; a scope, not a grant (433).

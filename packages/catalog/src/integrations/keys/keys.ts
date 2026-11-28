@@ -103,7 +103,9 @@ export const EVOLUTION_MODES = ['baileys', 'cloud'] as const;
 export const evolutionModeSchema = z.enum(EVOLUTION_MODES);
 export type EvolutionMode = z.infer<typeof evolutionModeSchema>;
 
-/** Plain keys with a fixed set of values: the form renders a select, the API refuses anything else. */
+/**
+ * Plain keys with a fixed set of values: the form renders a select, the API refuses anything else.
+ */
 export const INTEGRATION_ENUMS: Partial<Record<IntegrationPlainKey, readonly string[]>> = {
   WA_PROVIDER: WA_LINE_PROVIDERS,
   WA_CHAT_PROVIDER: WA_LINE_PROVIDERS,
