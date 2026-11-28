@@ -1,4 +1,7 @@
-/** How often a still board is re-sent while shared (a few frames a second is plenty for a still picture). */
+/**
+ * How often a still board is re-sent while shared (a few frames a second is plenty for a still
+ * picture).
+ */
 export const KEEP_FRAMES_MS = 250;
 
 interface FrameTrack {

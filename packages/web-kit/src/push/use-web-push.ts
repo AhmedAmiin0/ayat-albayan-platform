@@ -4,7 +4,9 @@ import { webPushKeyQuery } from './web-push-api';
 import { rebindWebPush, subscribeWebPush, unsubscribeWebPush } from './web-push';
 import { readPushEnv, webPushSupport, type WebPushSupport } from './web-push-support';
 
-/** What the toggle shows: the browser's support, then the server's key, then this browser's state. */
+/**
+ * What the toggle shows: the browser's support, then the server's key, then this browser's state.
+ */
 export type WebPushView = Exclude<WebPushSupport, 'ready'> | 'not-configured' | 'loading' | 'on' | 'off';
 
 export interface WebPushState {

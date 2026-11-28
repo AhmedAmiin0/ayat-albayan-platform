@@ -16,7 +16,10 @@ export interface FieldProps {
   /** Control id; generated when omitted. */
   id?: string;
   hint?: string;
-  /** Adds the « *» mark (aria-hidden, beside the label) and aria-required; pair the form with a RequiredLegend. */
+  /**
+   * Adds the « *» mark (aria-hidden, beside the label) and aria-required; pair the form with a
+   * RequiredLegend.
+   */
   required?: boolean;
   /** Shown under the field (13px cinnabar + struck glyph) and marks the control aria-invalid. */
   error?: string;

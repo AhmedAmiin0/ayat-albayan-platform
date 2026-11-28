@@ -14,7 +14,8 @@ import { WEB_CLIENT_TAG } from '@ab/web-kit/lib/http/client-tag';
 import { env } from '@ab/web-kit/lib/http/env';
 import { supabase } from '@ab/web-kit/lib/http/supabase';
 
-// The one client lives in @ab/client-core (docs/27 E1); this module injects web's env, session and tag.
+// The one client lives in @ab/client-core (docs/27 E1); this module injects web's env, session and
+// tag.
 export { ApiError, type SendMethod } from '@ab/client-core';
 
 type ReadInit = RequestInit & { schema?: z.ZodType };

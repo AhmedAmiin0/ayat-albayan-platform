@@ -34,7 +34,10 @@ const CLOSING: Partial<Record<DisconnectReason, RoomStatus>> = {
 const closingStatus = (reason: DisconnectReason | undefined): RoomStatus =>
   (reason === undefined ? undefined : CLOSING[reason]) ?? 'ended';
 
-/** The real client: one livekit-client Room behind the RoomClient interface (ported from tools/livekit/join.html). */
+/**
+ * The real client: one livekit-client Room behind the RoomClient interface (ported from
+ * tools/livekit/join.html).
+ */
 export function createLivekitRoom(): RoomClient {
   const room = new Room({ adaptiveStream: true, dynacast: true });
   const listeners = new Set<(s: RoomSnapshot) => void>();
@@ -88,7 +91,8 @@ export function createLivekitRoom(): RoomClient {
       await room.connect(url, token);
       room.startAudio().catch(() => undefined);
       const me = room.localParticipant;
-      // Only what the device check left on starts (staff: both); a chosen device is asked for by id.
+      // Only what the device check left on starts (staff: both); a chosen device is asked for by
+      // id.
       const mic = { deviceId: media.micId };
       const cam = { deviceId: media.camId };
       const failures = [

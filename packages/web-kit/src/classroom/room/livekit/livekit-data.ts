@@ -2,7 +2,9 @@ import { roleOfMeta } from '@ab/schedule';
 import { RoomEvent, type Room } from 'livekit-client';
 import type { DataPacketIn, DataSendOptions } from '@ab/web-kit/classroom/room/components/room-types';
 
-/** Reliable data on a topic; `to` limits it to some identities (a sync answer to one late joiner). */
+/**
+ * Reliable data on a topic; `to` limits it to some identities (a sync answer to one late joiner).
+ */
 export function sendData(room: Room, bytes: Uint8Array, opts: DataSendOptions): Promise<void> {
   return room.localParticipant.publishData(new Uint8Array(bytes), {
     reliable: true,

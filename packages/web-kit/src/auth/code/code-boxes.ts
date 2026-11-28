@@ -5,7 +5,10 @@ import { asciiDigits } from '@ab/core';
 
 export const emptyCode = (): string[] => Array.from({ length: LOGIN_CODE_LENGTH }, () => '');
 
-/** The ASCII digits of a typed or pasted text: Arabic-Indic and Persian digits fold, anything else drops. */
+/**
+ * The ASCII digits of a typed or pasted text: Arabic-Indic and Persian digits fold, anything else
+ * drops.
+ */
 export function digitsOf(raw: string): string[] {
   return asciiDigits(raw).replace(/\D/g, '').split('').filter(Boolean);
 }
@@ -24,8 +27,8 @@ export interface BoxesState {
 const last = LOGIN_CODE_LENGTH - 1;
 
 /**
- * Text typed or pasted into box `at`. A whole code fills every box wherever it lands; a digit typed over
- * a filled box replaces it; several digits spill into the next boxes; nothing clears the box.
+ * Text typed or pasted into box `at`. A whole code fills every box wherever it lands; a digit typed
+ * over a filled box replaces it; several digits spill into the next boxes; nothing clears the box.
  */
 export function typeInto(boxes: readonly string[], at: number, raw: string): BoxesState {
   let digits = digitsOf(raw);

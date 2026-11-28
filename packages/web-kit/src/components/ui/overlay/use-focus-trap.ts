@@ -10,7 +10,9 @@ function focusables(root: HTMLElement): HTMLElement[] {
 /** Open traps, innermost last: only it answers keys while focus is lost on <body>. */
 const open: HTMLElement[] = [];
 
-/** Whether this trap owns the key: focus is inside it, or lost on <body> and it is the innermost. */
+/**
+ * Whether this trap owns the key: focus is inside it, or lost on <body> and it is the innermost.
+ */
 function owns(node: HTMLElement): boolean {
   const active = document.activeElement;
   if (active && active !== document.body) return node.contains(active);

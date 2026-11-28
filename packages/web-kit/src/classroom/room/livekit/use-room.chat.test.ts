@@ -4,7 +4,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { fakeClient } from './fake-client';
 import { useRoom } from './use-room';
 
-// Owner, 2026-10-11: no text chat in a trial lesson's room (join.chat false); board data still flows.
+// Owner, 2026-10-11: no text chat in a trial lesson's room (join.chat false); board data still
+// flows.
 const JOIN: RoomJoinResult = { url: 'wss://lk.test', token: 'tok', room: 'lesson-1', role: 'guest' };
 const FROM = { identity: 't', role: 'teacher' } as const;
 const bytes = new Uint8Array([1]);

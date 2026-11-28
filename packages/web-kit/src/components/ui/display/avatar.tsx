@@ -12,7 +12,9 @@ export interface AvatarProps {
   name: string;
   /** The person's id: seeds the tone, so a person keeps one colour on every screen. */
   id?: string | null;
-  /** A signed photo URL or a local preview; null/undefined (or a failed load) shows the initials. */
+  /**
+   * A signed photo URL or a local preview; null/undefined (or a failed load) shows the initials.
+   */
   src?: string | null;
   /** Overrides the accessible name. */
   alt?: string;
@@ -36,7 +38,9 @@ const FRAME = 'relative grid shrink-0 place-items-center overflow-hidden rounded
 /** The circle's accessible name: none when decorative, else `alt`, else the name ('' = none). */
 const labelOf = ({ name, alt, decorative }: AvatarProps): string => (decorative ? '' : (alt ?? name));
 
-/** The initials on the person's tone (`var(--avatar-1…6)`, styles/avatar-tones.css), or the glyph. */
+/**
+ * The initials on the person's tone (`var(--avatar-1…6)`, styles/avatar-tones.css), or the glyph.
+ */
 function Initials({ props, frame }: { props: AvatarProps; frame: string }) {
   const seed = props.id || props.name;
   const tone = avatarTone(seed) + 1;

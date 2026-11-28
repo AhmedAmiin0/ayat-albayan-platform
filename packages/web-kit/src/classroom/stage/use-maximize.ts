@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState, type RefObject } from 'react';
 
-/** `fullscreen`: the Fullscreen API on the stage; `overlay`: a fixed full-viewport layer (iOS Safari, which only fullscreens <video>). */
+/**
+ * `fullscreen`: the Fullscreen API on the stage; `overlay`: a fixed full-viewport layer (iOS
+ * Safari, which only fullscreens <video>).
+ */
 export type MaximizeMode = 'fullscreen' | 'overlay';
 
 export interface FullscreenDocLike {

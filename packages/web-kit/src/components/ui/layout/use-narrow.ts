@@ -39,7 +39,8 @@ export function usePhone(): boolean {
 
 /**
  * True under `shell` (900px): the inbox opens a chat full-screen (PhoneChat) on phones, half-screen
- * windows and tablets, where the page would otherwise scroll instead of the log. Dialogs keep usePhone.
+ * windows and tablets, where the page would otherwise scroll instead of the log. Dialogs keep
+ * usePhone.
  */
 export function useBelowShell(): boolean {
   return useMedia(BELOW_SHELL);

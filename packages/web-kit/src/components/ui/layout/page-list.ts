@@ -1,4 +1,6 @@
-/** Page numbers to show: first, last and a window around `page`; 'gap' renders «…» (only for 2+). */
+/**
+ * Page numbers to show: first, last and a window around `page`; 'gap' renders «…» (only for 2+).
+ */
 export function pageList(page: number, pages: number): (number | 'gap')[] {
   const keep = new Set([1, pages, page - 1, page, page + 1]);
   if (page <= 3) [2, 3].forEach((n) => keep.add(n));

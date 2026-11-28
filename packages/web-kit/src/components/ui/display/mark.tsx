@@ -12,7 +12,9 @@ const SRC = { large: `${BASE}brand/mark.png`, small: `${BASE}brand/mark-small.pn
 const SMALL_MARK_MAX = 32;
 
 export interface MarkProps {
-  /** Rendered size in px (a square box, the emblem is contained); ≤ 32 switches to the Mushaf crop. */
+  /**
+   * Rendered size in px (a square box, the emblem is contained); ≤ 32 switches to the Mushaf crop.
+   */
   size?: number;
   /** Decorative next to the wordmark by default; `labelled` names it. */
   labelled?: boolean;

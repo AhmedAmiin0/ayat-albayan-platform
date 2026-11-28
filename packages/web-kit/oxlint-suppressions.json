@@ -1,8 +1,5 @@
 {
   "public/sw.js": {
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -20,19 +17,11 @@
   "src/auth/code/code-boxes.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/auth/login/PasswordForm/PasswordForm.tsx": {
     "max-lines-per-function": {
       "count": 1
-    }
-  },
-  "src/auth/login/auth-api.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/auth/me/me.ts": {
@@ -52,19 +41,6 @@
   "src/auth/reset/ResetFlow/ResetFlow.tsx": {
     "max-lines-per-function": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/auth/reset/reset-checks.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/auth/session-activity.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/auth/sign-in/sign-in.ts": {
@@ -72,30 +48,14 @@
       "count": 1
     }
   },
-  "src/auth/use-permissions.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/classroom/api/api.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 9
     }
   },
   "src/classroom/api/moderation-api.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-untyped-api-calls": {
       "count": 2
-    }
-  },
-  "src/classroom/board/BoardToolbar/BoardToolbar.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/classroom/board/Whiteboard/Whiteboard.tsx": {
@@ -106,11 +66,6 @@
       "count": 1
     }
   },
-  "src/classroom/board/model/board-frames.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/board/model/draw.test.ts": {
     "typescript/no-base-to-string": {
       "count": 2
@@ -118,9 +73,6 @@
   },
   "src/classroom/board/model/draw.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     },
     "ab/max-params": {
@@ -135,17 +87,9 @@
       "count": 3
     }
   },
-  "src/classroom/board/model/model.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/board/model/reducer/reducer.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     },
     "typescript/switch-exhaustiveness-check": {
       "count": 1
@@ -179,24 +123,11 @@
       "count": 1
     }
   },
-  "src/classroom/room/components/ParticipantGrid/ParticipantGrid.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/room/components/VideoTile/VideoTile.tsx": {
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/components/room-types.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -209,9 +140,6 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 3
     }
@@ -221,17 +149,9 @@
       "count": 5
     }
   },
-  "src/classroom/room/livekit/livekit-data.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/room/livekit/livekit-room/livekit-room.ts": {
     "max-lines-per-function": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     },
     "typescript/no-unsafe-enum-comparison": {
       "count": 1
@@ -239,16 +159,6 @@
   },
   "src/classroom/room/livekit/snapshot/snapshot.ts": {
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/livekit/stage.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/classroom/room/livekit/use-room.chat.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -296,9 +206,6 @@
     }
   },
   "src/classroom/stage/use-maximize.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
@@ -319,24 +226,11 @@
     }
   },
   "src/components/ui/display/avatar.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
   },
   "src/components/ui/display/icon.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/components/ui/display/linked-body.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/components/ui/display/mark.tsx": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -349,15 +243,9 @@
   "src/components/ui/form/Field/Field.tsx": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/components/ui/form/RadioChips/RadioChips.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "typescript/prefer-nullish-coalescing": {
       "count": 1
     }
@@ -368,21 +256,6 @@
     }
   },
   "src/components/ui/form/SegmentedControl/SegmentedControl.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/components/ui/form/Select/Select.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/components/ui/layout/button-row.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/components/ui/layout/page-list.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -430,9 +303,6 @@
     }
   },
   "src/components/ui/layout/use-narrow.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
@@ -479,14 +349,6 @@
   "src/components/ui/overlay/use-focus-trap.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/lib/clock-text.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/lib/clock.ts": {
@@ -495,9 +357,6 @@
     }
   },
   "src/lib/http/api/api.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/unbound-method": {
       "count": 1
     }
@@ -508,9 +367,6 @@
     }
   },
   "src/lib/http/env/env.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-unsafe-assignment": {
       "count": 1
     },
@@ -538,21 +394,8 @@
     }
   },
   "src/lib/settings/public-config.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/no-untyped-api-calls": {
       "count": 1
-    }
-  },
-  "src/lib/utils.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/portal/open-file.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/push/WebPushToggle/WebPushToggle.tsx": {
@@ -567,11 +410,6 @@
   },
   "src/push/sw.test.ts": {
     "typescript/no-implied-eval": {
-      "count": 1
-    }
-  },
-  "src/push/use-web-push.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },

@@ -5,7 +5,9 @@ import type { JoinRole } from '@ab/shared';
  * phone and a laptop draw the same picture. `pts` is flat: [x0, y0, x1, y1, …].
  */
 
-/** Pen colours are theme token names (`--ink`, `--lapis`, …): each viewer resolves its own theme. */
+/**
+ * Pen colours are theme token names (`--ink`, `--lapis`, …): each viewer resolves its own theme.
+ */
 export const PEN_COLORS = ['ink', 'lapis', 'cinnabar', 'saffron', 'gold'] as const;
 export type PenColor = (typeof PEN_COLORS)[number];
 

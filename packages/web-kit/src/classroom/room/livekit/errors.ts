@@ -18,7 +18,9 @@ export function classroomErrorText(error: unknown): string {
 
 const nameOf = (e: unknown): string => (typeof e === 'object' && e !== null && 'name' in e ? String(e.name) : '');
 
-/** Permission denied / no device, worded for the device that failed (getUserMedia and screen share). */
+/**
+ * Permission denied / no device, worded for the device that failed (getUserMedia and screen share).
+ */
 export function mediaErrorText(device: MediaDevice | 'share', error: unknown): string {
   const name = nameOf(error);
   if (name === 'NotFoundError' || name === 'OverconstrainedError' || name === 'DevicesetNotFoundError') return t.classroom.error.device_missing;
