@@ -47,7 +47,7 @@ test('«احجز لهذا الطالب»: books the child on file by id, the lea
   expect(await screen.findByText(t.booking.booked)).toBeTruthy();
   expect(sent(1)).toMatchObject({ studentIds: ['s9'], leadId: 'a1', package: 'trial' });
   expect(sent(1)).not.toHaveProperty('newStudent');
-  expect(sent(1)['clientRequestId']).toBe(sent(0)['clientRequestId']);
+  expect(sent(1).clientRequestId).toBe(sent(0).clientRequestId);
 });
 
 test('«لا، هذا طالب جديد»: the same new student, forced', async () => {

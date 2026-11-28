@@ -8,9 +8,13 @@ export function pushBackend() {
   backend
     .on('GET /lessons/day', () => [])
     .on('GET /settings', () => ({ renewal_alert_remaining: 2, follow_up_hours: [2, 24, 72] }))
-    .on('GET /students/:id', ({ params }) => ({ ...profile, id: params['id'] ?? profile.id, name: listItem().name }))
+    .on('GET /students/:id', ({ params }) => ({
+      ...profile,
+      id: params.id ?? profile.id,
+      name: listItem().name,
+    }))
     .on('GET /students/:id/balance', ({ params }) => ({
-      student_id: params['id'],
+      student_id: params.id,
       remaining: 0,
       current: null,
       packages: [],
@@ -21,7 +25,7 @@ export function pushBackend() {
       return { deviceKey: 'k'.repeat(43) };
     })
     .on('DELETE /me/push-tokens/:token', ({ params }) => {
-      tokens.splice(tokens.indexOf(params['token'] ?? ''), 1);
+      tokens.splice(tokens.indexOf(params.token ?? ''), 1);
     });
   return { backend, tokens };
 }

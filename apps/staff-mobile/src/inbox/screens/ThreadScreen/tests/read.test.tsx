@@ -2,7 +2,15 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
-import { cachedThread, delivered, detail, inbound, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import {
+  cachedThread,
+  delivered,
+  detail,
+  inbound,
+  message,
+  PHONE,
+  thread,
+} from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 import { ticksLabel } from '@/inbox/shared/ticks.helpers';
 
@@ -36,7 +44,9 @@ test('the thread: who it is, their messages and ours with its delivery ticks', a
   expect(screen.getByText(delivered.body ?? '')).toBeTruthy();
   expect(screen.getByLabelText(ticksLabel(word.delivered))).toBeTruthy();
   // Their message carries no ticks: only ours do.
-  expect(screen.getAllByLabelText(new RegExp(`^(${Object.values(word).join('|')})`))).toHaveLength(1);
+  expect(screen.getAllByLabelText(new RegExp(`^(${Object.values(word).join('|')})`))).toHaveLength(
+    1,
+  );
 });
 
 test('a number with no name or messages yet: titled by its phone, empty, the first template only', async () => {
@@ -49,13 +59,22 @@ test('a number with no name or messages yet: titled by its phone, empty, the fir
 });
 
 test('media: the kind as a link once the file is there; unsupported says so', async () => {
-  const photo = message({ id: 'p', direction: 'inbound', media_mime: 'image/jpeg', media_url: 'https://x/p' });
+  const photo = message({
+    id: 'p',
+    direction: 'inbound',
+    media_mime: 'image/jpeg',
+    media_url: 'https://x/p',
+  });
   const odd = message({ id: 'o', direction: 'inbound', body: null });
   const gone = message({
     id: 'g',
     direction: 'inbound',
     body: null,
-    interactive_payload: { type: 'unsupported', errors: [{ code: 131060 }], unsupported: { type: 'unknown' } },
+    interactive_payload: {
+      type: 'unsupported',
+      errors: [{ code: 131060 }],
+      unsupported: { type: 'unknown' },
+    },
   });
   mockApiFetch.mockResolvedValue(detail([photo, odd, gone]));
   await renderWithQuery(<ThreadScreen />);
@@ -76,7 +95,9 @@ test('a guardian’s «تمام» says what it did: the lesson it confirmed; not
   const nothing = message({ id: 'n', direction: 'inbound', body: 'نعم', guardian_id: 'g-1' });
   mockApiFetch.mockResolvedValue(detail([yes, nothing]));
   await renderWithQuery(<ThreadScreen />);
-  expect(await screen.findByText(t.inbox.quickReply.confirmed.replace('{when}', 'الأحد 4 أكتوبر 17:00'))).toBeTruthy();
+  expect(
+    await screen.findByText(t.inbox.quickReply.confirmed.replace('{when}', 'الأحد 4 أكتوبر 17:00')),
+  ).toBeTruthy();
   expect(screen.queryByText('لم تتأكد أي حلقة بهذا الرد')).toBeNull();
 });
 
@@ -87,7 +108,9 @@ test('offline: the saved thread stays, with when it was fetched', async () => {
   await renderWithQuery(<ThreadScreen />, client);
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalled());
   expect(screen.getByText(inbound.body ?? '')).toBeTruthy();
-  expect(await screen.findByText(new RegExp(t.mobile.lastUpdated.replace(' {time}', '')))).toBeTruthy();
+  expect(
+    await screen.findByText(new RegExp(t.mobile.lastUpdated.replace(' {time}', ''))),
+  ).toBeTruthy();
 });
 
 test('nothing saved and no answer: the error with retry, nothing invented', async () => {
@@ -101,14 +124,19 @@ test('pull to refresh asks the API again', async () => {
   mockApiFetch.mockResolvedValue(detail([inbound]));
   const { container } = await renderWithQuery(<ThreadScreen />);
   await screen.findByText(inbound.body ?? '');
-  const [list] = container.queryAll((node) => typeof node.props['onRefresh'] === 'function');
+  const [list] = container.queryAll((node) => typeof node.props.onRefresh === 'function');
   if (!list) throw new Error('no pull-to-refresh on the list');
   await fireEvent(list, 'refresh');
   await waitFor(() => expect(threadCalls()).toHaveLength(2));
 });
 
 test('reaching the top pages back from the oldest loaded message, with no button (owner 2026-10-27)', async () => {
-  const older = message({ id: 'm0', direction: 'inbound', body: 'رسالة قديمة', created_at: '2026-09-29T10:00:00Z' });
+  const older = message({
+    id: 'm0',
+    direction: 'inbound',
+    body: 'رسالة قديمة',
+    created_at: '2026-09-29T10:00:00Z',
+  });
   const pages = [detail([inbound, delivered], { has_more: true }), detail([older])];
   mockApiFetch.mockImplementation(async (path: string) =>
     path.startsWith('/threads') ? pages.shift() : { open: true, reason: null, queued: 0 },
@@ -120,9 +148,13 @@ test('reaching the top pages back from the oldest loaded message, with no button
   expect(await screen.findByText('رسالة قديمة')).toBeTruthy();
   // The last thread fetch (a new bubble may re-read /auth/me for messages.manage after it).
   const threadCalls = mockApiFetch.mock.calls.filter(([p]) => String(p).startsWith('/threads'));
-  expect(threadCalls.at(-1)).toEqual([`/threads/%2B966552147730?before=${encodeURIComponent(inbound.created_at)}&before_id=${inbound.id}`]);
+  expect(threadCalls.at(-1)).toEqual([
+    `/threads/%2B966552147730?before=${encodeURIComponent(inbound.created_at)}&before_id=${inbound.id}`,
+  ]);
   await fireEvent(screen.getByTestId('message-list'), 'endReached');
-  expect(mockApiFetch.mock.calls.filter(([p]) => String(p).startsWith('/threads'))).toHaveLength(threadCalls.length);
+  expect(mockApiFetch.mock.calls.filter(([p]) => String(p).startsWith('/threads'))).toHaveLength(
+    threadCalls.length,
+  );
 });
 
 test('«رجوع» from a push-opened thread lands on the inbox', async () => {

@@ -19,7 +19,7 @@ beforeEach(async () => {
 async function toPaymentForm(backend: ReturnType<typeof paymentBackend>['backend']) {
   const app = await renderApp({ url: '/students', backend });
   await fireEvent.changeText(await screen.findByLabelText(t.students.searchPlaceholder), 'هدى');
-  await waitFor(() => expect(backend.sent('GET /students').at(-1)?.query['search']).toBe('هدى'));
+  await waitFor(() => expect(backend.sent('GET /students').at(-1)?.query.search).toBe('هدى'));
   await fireEvent.press(await screen.findByRole('button', { name: /هدى/ }));
   expect(app.pathname()).toBe('/students/s1');
   expect(await screen.findByText(t.enums.subscriptionStatus.unpaid)).toBeTruthy();
@@ -72,12 +72,16 @@ test('offline: the error line shows, the form keeps its values; retry re-sends t
   expect(await screen.findByText(m.offline)).toBeTruthy();
   expect(app.pathname()).toBe('/students/payment/s1');
   expect(screen.getByLabelText(t.payments.amount).props.value).toBe(String(price));
-  expect(screen.getByRole('radio', { name: t.enums.paymentMethod.bank, checked: true })).toBeTruthy();
+  expect(
+    screen.getByRole('radio', { name: t.enums.paymentMethod.bank, checked: true }),
+  ).toBeTruthy();
   expect(screen.getByLabelText(FIRST)).toBeTruthy();
 
   await fireEvent.press(screen.getByRole('button', { name: m.record }));
   await waitFor(() => expect(app.pathname()).toBe('/students/s1'));
-  const posts = backend.sent('POST /payments').map((c) => c.body as { clientRequestId: string; attachments: string[] });
+  const posts = backend
+    .sent('POST /payments')
+    .map((c) => c.body as { clientRequestId: string; attachments: string[] });
   expect(posts).toHaveLength(2);
   expect(posts[1]?.clientRequestId).toBe(posts[0]?.clientRequestId);
   expect(posts[1]?.attachments).toEqual([SIGNED.path]);

@@ -23,7 +23,10 @@ export function PhoneSection({ profile }: { profile: AccountProfile }) {
   const typed = phone.trim();
 
   const save = () => {
-    if (password === '') return action.reject({ current_password: accountMessage('password_required') });
+    if (password === '') {
+      action.reject({ current_password: accountMessage('password_required') });
+      return;
+    }
     action.submit({ phone_e164: typed === '' ? null : typed, current_password: password });
   };
 

@@ -81,7 +81,7 @@ test('the reference is the calculator price; the link carries the form’s stude
       teacherId: TEACHER,
     }),
   );
-  expect(created()?.['startsOn']).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  expect(created()?.startsOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   expect(created()).toHaveProperty('clientRequestId');
   expect(created()).not.toHaveProperty('phone');
   expect(mockApiSend.mock.calls.some((c: unknown[]) => c[1] === '/sales/subscriptions')).toBe(

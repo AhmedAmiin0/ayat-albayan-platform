@@ -8,9 +8,9 @@ const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'obj
 /** The API's `{ code }`, else the first issue message of a zod `validation_failed` (the web's apiErrorText). */
 function codeOf(body: unknown): string | undefined {
   if (!isRecord(body)) return undefined;
-  if (typeof body['code'] === 'string') return body['code'];
-  const first: unknown = Array.isArray(body['issues']) ? body['issues'][0] : undefined;
-  return isRecord(first) && typeof first['message'] === 'string' ? first['message'] : undefined;
+  if (typeof body.code === 'string') return body.code;
+  const first: unknown = Array.isArray(body.issues) ? body.issues[0] : undefined;
+  return isRecord(first) && typeof first.message === 'string' ? first.message : undefined;
 }
 
 export function assistantsErrorText(error: unknown): string {

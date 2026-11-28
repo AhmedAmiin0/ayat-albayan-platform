@@ -27,7 +27,10 @@ export function StatementButtons({ statement, can, linesOpen, onAction }: Statem
     receipt: t.earnings.viewReceipt,
   };
   const press = (a: StatementAction) => {
-    if (a !== 'receipt') return onAction(a);
+    if (a !== 'receipt') {
+      onAction(a);
+      return;
+    }
     setReceiptError(false);
     openStatementReceipt(statement.id).catch(() => setReceiptError(true));
   };
@@ -35,7 +38,12 @@ export function StatementButtons({ statement, can, linesOpen, onAction }: Statem
     <View style={{ gap: 8 }}>
       <ButtonRow>
         {statementActions(statement, can).map((a) => (
-          <Button key={a} variant={a === 'unpay' ? 'danger' : 'secondary'} label={label[a]} onPress={() => press(a)} />
+          <Button
+            key={a}
+            variant={a === 'unpay' ? 'danger' : 'secondary'}
+            label={label[a]}
+            onPress={() => press(a)}
+          />
         ))}
       </ButtonRow>
       {receiptError ? <ErrorLine message={t.mobileFinance.payouts.receiptFailed} /> : null}

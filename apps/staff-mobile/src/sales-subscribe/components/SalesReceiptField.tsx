@@ -4,7 +4,11 @@ import { View } from 'react-native';
 import { t, Button, ErrorLine, FormLabel } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { AttachmentRow } from '@/payments/receipts/AttachmentRow';
-import { attachmentsFull, withAttachment, withoutAttachment } from '@/payments/receipts/attachments';
+import {
+  attachmentsFull,
+  withAttachment,
+  withoutAttachment,
+} from '@/payments/receipts/attachments';
 import { PhotoButtons } from '@/payments/receipts/PhotoButtons';
 import { ChatReceiptList } from '@/sales-subscribe/receipts/ChatReceiptList';
 import { useCopyChatReceipt } from '@/sales-subscribe/receipts/chat-receipts';
@@ -27,7 +31,10 @@ export function SalesReceiptField({ target, value, onChange }: SalesReceiptField
 
   const fromChat = (item: SalesChatReceipt) => {
     // Already in the list: another copy would only be a second object of the same file.
-    if (value.some((a) => a.kind === 'chat' && a.messageId === item.message_id)) return setBrowsing(false);
+    if (value.some((a) => a.kind === 'chat' && a.messageId === item.message_id)) {
+      setBrowsing(false);
+      return;
+    }
     copy.mutate(
       { subscriptionId: target.subscriptionId, messageId: item.message_id, ...target.bind },
       {
@@ -56,7 +63,11 @@ export function SalesReceiptField({ target, value, onChange }: SalesReceiptField
         <Note>{m.attachmentsMax}</Note>
       ) : (
         <>
-          <Button variant="secondary" label={m.receiptFromChat} onPress={() => setBrowsing((b) => !b)} />
+          <Button
+            variant="secondary"
+            label={m.receiptFromChat}
+            onPress={() => setBrowsing((b) => !b)}
+          />
           {browsing ? (
             <ChatReceiptList
               studentId={target.studentId}

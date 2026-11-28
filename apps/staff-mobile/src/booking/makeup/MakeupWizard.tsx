@@ -18,7 +18,10 @@ import { stepsFor, type Step } from '@/booking/trial/lib/steps';
 import { TeacherStep } from '@/booking/trial/components/TeacherStep';
 import { useBookMakeup } from './use-book-makeup';
 
-type Filter = { program: Program; gender: Gender | null };
+interface Filter {
+  program: Program;
+  gender: Gender | null;
+}
 
 /** R-SCH-10: teacher filter starts at quran because LessonView has no program yet. */
 export function MakeupWizard({ source }: { source: MakeupSource }) {

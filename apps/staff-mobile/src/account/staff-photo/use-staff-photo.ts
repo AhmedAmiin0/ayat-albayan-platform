@@ -41,7 +41,10 @@ export function useStaffPhoto({ id, calls, photo, invalidate }: StaffPhotoOption
     try {
       const picked = await pickAvatar('library');
       if (!picked) return;
-      if (picked.size > AVATAR_MAX_BYTES) return setError(t.account.errors.avatar_too_large);
+      if (picked.size > AVATAR_MAX_BYTES) {
+        setError(t.account.errors.avatar_too_large);
+        return;
+      }
       upload.mutate(picked);
     } catch {
       setError(t.account.errors.permission);

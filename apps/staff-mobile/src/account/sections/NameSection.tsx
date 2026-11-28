@@ -3,7 +3,9 @@ import { useState } from 'react';
 import { t, accountMessage, AccountCard, AccountField, useAccountAction } from '@ab/mobile-kit';
 import { patchProfile } from '@/account/hooks/account-api';
 
-const hint = t.account.name.hint.replace('{min}', String(ACCOUNT_NAME_MIN)).replace('{max}', String(ACCOUNT_NAME_MAX));
+const hint = t.account.name.hint
+  .replace('{min}', String(ACCOUNT_NAME_MIN))
+  .replace('{max}', String(ACCOUNT_NAME_MAX));
 
 /** R-ACC-02: the login's own name; no password needed. */
 export function NameSection({ profile }: { profile: AccountProfile }) {
@@ -12,8 +14,14 @@ export function NameSection({ profile }: { profile: AccountProfile }) {
   const trimmed = name.trim();
 
   const save = () => {
-    if (trimmed.length < ACCOUNT_NAME_MIN) return action.reject({ full_name: accountMessage('name_too_short') });
-    if (trimmed.length > ACCOUNT_NAME_MAX) return action.reject({ full_name: accountMessage('name_too_long') });
+    if (trimmed.length < ACCOUNT_NAME_MIN) {
+      action.reject({ full_name: accountMessage('name_too_short') });
+      return;
+    }
+    if (trimmed.length > ACCOUNT_NAME_MAX) {
+      action.reject({ full_name: accountMessage('name_too_long') });
+      return;
+    }
     action.submit({ full_name: trimmed });
   };
 

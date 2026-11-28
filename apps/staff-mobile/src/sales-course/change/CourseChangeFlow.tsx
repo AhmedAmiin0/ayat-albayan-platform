@@ -1,4 +1,9 @@
-import { changePicks, changePrefillFrom, type BookedCourse, type SalesCourseView } from '@ab/shared';
+import {
+  changePicks,
+  changePrefillFrom,
+  type BookedCourse,
+  type SalesCourseView,
+} from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { bookFailure, dayStartUtc, LessonTimesStep } from '@/booking';
@@ -49,8 +54,11 @@ export function CourseChangeFlow({
     setStep(next);
   };
   const back = () => {
-    if (change.isSuccess) return onDone();
-    return step === 'slot' ? onLeave() : go('slot');
+    if (change.isSuccess) {
+      onDone();
+      return;
+    }
+    step === 'slot' ? onLeave() : go('slot');
   };
   const note = {
     fontFamily: type.ui[500],
@@ -65,7 +73,10 @@ export function CourseChangeFlow({
       return (
         <>
           <AppText style={{ ...note, color: color.ink }}>
-            {t.booking.courseChange.currentDays.replace('{days}', daysText(course.days, course.tz, viewer))}
+            {t.booking.courseChange.currentDays.replace(
+              '{days}',
+              daysText(course.days, course.tz, viewer),
+            )}
           </AppText>
           <AppText style={note}>{t.booking.courseChange.changeHint}</AppText>
           <LessonTimesStep
@@ -75,7 +86,12 @@ export function CourseChangeFlow({
             durationMin={course.durationMin}
             from={from}
             exclude={{ course: course.subscriptionId, studentIds: [student.id] }}
-            multi={{ picks, onChange: setPicks, onNext: () => go('review'), need: course.perWeek ?? course.days.length }}
+            multi={{
+              picks,
+              onChange: setPicks,
+              onNext: () => go('review'),
+              need: course.perWeek ?? course.days.length,
+            }}
           />
         </>
       );

@@ -24,10 +24,16 @@ const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString(
 const openThread = detail([inbound], { thread: { ...thread, last_inbound_at: minutesAgo(5) } });
 const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 
-type Gate = { open: boolean; reason: 'switch_off' | 'not_configured' | null; queued: number };
+interface Gate {
+  open: boolean;
+  reason: 'switch_off' | 'not_configured' | null;
+  queued: number;
+}
 
 async function open(gate: Gate = { open: true, reason: null, queued: 0 }) {
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/messages/gate' ? gate : openThread));
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/messages/gate' ? gate : openThread,
+  );
   const client = createTestQueryClient();
   await renderWithQuery(<ThreadScreen />, client);
   await screen.findByText(inbound.body ?? '');
@@ -57,7 +63,9 @@ test('inside 24 h: free text shows at once as queued, then becomes the API row',
   expect(box().props.value).toBe('');
 
   const after = detail([inbound, message({ id: 'srv', body: 'أهلًا يا أم سلمى', status: 'sent' })]);
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/messages/gate' ? { open: true, reason: null, queued: 0 } : after));
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/messages/gate' ? { open: true, reason: null, queued: 0 } : after,
+  );
   answer(message({ id: 'srv', body: 'أهلًا يا أم سلمى', status: 'sent' }));
   await waitFor(() => expect(cached(client).map((m) => m.id)).toEqual(['m1', 'srv']));
   expect(await screen.findByLabelText(ticksLabel(t.enums.messageStatus.sent))).toBeTruthy();

@@ -10,13 +10,16 @@ import type { EarningsScope } from '@/earnings/lib/scope';
 import { SessionItem } from './SessionItem';
 
 // The sessions and the payments sit in one inset card under the header.
-type Common = { scope: EarningsScope; header: ReactElement };
-type Query = {
+interface Common {
+  scope: EarningsScope;
+  header: ReactElement;
+}
+interface Query {
   isPending: boolean;
   isError: boolean;
   isRefetching: boolean;
   refetch: () => unknown;
-};
+}
 
 function stateOf(q: Query, empty: string): ReactElement {
   if (q.isError) return <ErrorState onRetry={() => void q.refetch()} />;

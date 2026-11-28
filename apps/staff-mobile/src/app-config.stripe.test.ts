@@ -9,13 +9,13 @@ import appConfig from '../app.config';
 // `stripe-test`. Only `stripe-test`'s APP_VARIANT makes a separate app (own package, own name) installable beside
 // the normal one, on its own update channel.
 
-type Profile = {
+interface Profile {
   channel?: string;
   environment?: string;
   distribution?: string;
   env?: Record<string, string>;
   android?: { buildType?: string };
-};
+}
 const profiles: Record<string, Profile> = eas.build;
 
 const configFor = (variant: string | undefined): ExpoConfig => {
@@ -33,15 +33,21 @@ const configFor = (variant: string | undefined): ExpoConfig => {
   }
 };
 
-test.each(['development', 'preview', 'production'])('the %s profile never builds the test variant nor uses its channel', (name) => {
-  const profile = profiles[name];
-  expect(profile).toBeDefined();
-  expect(profile?.env?.APP_VARIANT).not.toBe('stripetest');
-  expect(profile?.channel).not.toBe('stripe-test');
-});
+test.each(['development', 'preview', 'production'])(
+  'the %s profile never builds the test variant nor uses its channel',
+  (name) => {
+    const profile = profiles[name];
+    expect(profile).toBeDefined();
+    expect(profile?.env?.APP_VARIANT).not.toBe('stripetest');
+    expect(profile?.channel).not.toBe('stripe-test');
+  },
+);
 
 test('the normal APK (preview) has the Stripe UI flag, its own channel and the normal app; development and production do not', () => {
-  expect(profiles.preview?.env).toEqual({ EXPO_PUBLIC_FEATURE_STRIPE: '1', ORG_GRADLE_PROJECT_reactNativeArchitectures: 'arm64-v8a' });
+  expect(profiles.preview?.env).toEqual({
+    EXPO_PUBLIC_FEATURE_STRIPE: '1',
+    ORG_GRADLE_PROJECT_reactNativeArchitectures: 'arm64-v8a',
+  });
   expect(profiles.preview?.channel).toBe('preview');
   expect(profiles.development?.env?.EXPO_PUBLIC_FEATURE_STRIPE).toBeUndefined();
   expect(profiles.production?.env?.EXPO_PUBLIC_FEATURE_STRIPE).toBeUndefined();

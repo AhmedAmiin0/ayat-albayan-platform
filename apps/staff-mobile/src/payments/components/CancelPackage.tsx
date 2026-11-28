@@ -4,7 +4,9 @@ import { View } from 'react-native';
 import { ApiError, t, Field, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 
-type CancelBody = { reason?: string };
+interface CancelBody {
+  reason?: string;
+}
 
 interface CancelPackageProps {
   /** POST /subscriptions/:id/cancel (admin) or POST /sales/subscriptions/:id/cancel (her own student's). */
@@ -44,7 +46,10 @@ export function CancelPackage({ cancel, stale, onDone }: CancelPackageProps) {
     <View style={{ gap: 10 }}>
       <Field label={c.reason} value={reason} maxLength={500} onChangeText={setReason} />
       {run.isError ? (
-        <AppText accessibilityRole="alert" style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.bad }}>
+        <AppText
+          accessibilityRole="alert"
+          style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.bad }}
+        >
           {cancelErrorText(run.error)}
         </AppText>
       ) : null}

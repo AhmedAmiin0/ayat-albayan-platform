@@ -6,7 +6,12 @@ import { balanceOf, page, payment, SUB_ID, subscription } from '@/payments/fixtu
 // The students + money API for the student → payment flow. POST /payments adds to the package's
 // `paid`, and a package paid in full turns `active`, so the balance card shows the truth on refetch.
 
-export const SIGNED = { bucket: 'receipts', path: `${SUB_ID}/9f.jpg`, token: 'tok', signed_url: 'http://x/sign' };
+export const SIGNED = {
+  bucket: 'receipts',
+  path: `${SUB_ID}/9f.jpg`,
+  token: 'tok',
+  signed_url: 'http://x/sign',
+};
 
 export function paymentBackend() {
   const state: { sub: SubscriptionView; payments: PaymentView[] } = {
@@ -16,7 +21,7 @@ export function paymentBackend() {
   let nextId = 1;
   const backend = new FakeBackend()
     .on('GET /students', ({ query }) => {
-      const hit = (query['search'] ?? '') === '' || listItem().name.includes(query['search'] ?? '');
+      const hit = (query.search ?? '') === '' || listItem().name.includes(query.search ?? '');
       const items = hit ? [listItem()] : [];
       return { items, total: items.length, page: 1, pageSize: 25 };
     })
@@ -28,7 +33,11 @@ export function paymentBackend() {
     .on('POST /payments', ({ body }) => {
       const input = body as { amount: number; method: PaymentView['method']; receiptPath?: string };
       const paid = state.sub.paid + input.amount;
-      state.sub = { ...state.sub, paid, status: paid >= state.sub.price ? 'active' : state.sub.status };
+      state.sub = {
+        ...state.sub,
+        paid,
+        status: paid >= state.sub.price ? 'active' : state.sub.status,
+      };
       const row = payment({
         id: `pay-${nextId++}`,
         amount: input.amount,

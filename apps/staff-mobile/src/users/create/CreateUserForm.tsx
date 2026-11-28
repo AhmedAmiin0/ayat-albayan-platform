@@ -16,7 +16,9 @@ interface CreateUserFormProps {
   prefill?: Prefill;
 }
 
-type Issued = { credential: IssuedCredential | null };
+interface Issued {
+  credential: IssuedCredential | null;
+}
 
 /** The one-time password or link replaces the form on success. */
 export function CreateUserForm({ onClose, prefill }: CreateUserFormProps) {

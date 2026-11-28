@@ -39,26 +39,48 @@ export function calendarBackend() {
     .on('GET /teachers/:id', () => teacherFixture(TEACHER))
     .on('GET /teachers/:id/availability', () => [])
     .on('GET /teachers/:id/time-off', () => [])
-    .on('GET /students/status-counts', () => ({ new: 0, trial: 0, pending_subscription: 0, active: 0, pending_renewal: 0, expired: 0, paused: 0, churned: 0 }))
+    .on('GET /students/status-counts', () => ({
+      new: 0,
+      trial: 0,
+      pending_subscription: 0,
+      active: 0,
+      pending_renewal: 0,
+      expired: 0,
+      paused: 0,
+      churned: 0,
+    }))
     .on('GET /students', () => ({ items: [], total: 0, page: 1, pageSize: 50 }))
     .on('GET /settings', () => ({ renewal_alert_remaining: 2, follow_up_hours: [2, 24, 72] }))
     .on('GET /lessons', ({ query }) =>
-      state.lessons.filter((l) => l.teacher.id === query['teacherId'] && within(l, query['from'], query['to'])),
+      state.lessons.filter(
+        (l) => l.teacher.id === query.teacherId && within(l, query.from, query.to),
+      ),
     )
     .on('GET /lessons/overview', ({ query }) => ({
-      from: query['from'],
-      to: query['to'],
+      from: query.from,
+      to: query.to,
       teachers: TEACHERS,
-      lessons: state.lessons.filter((l) => within(l, query['from'], query['to'])),
+      lessons: state.lessons.filter((l) => within(l, query.from, query.to)),
     }))
-    .on('GET /lessons/day', ({ query }) => state.lessons.filter((l) => riyadhDate(l.starts_at) === query['date']))
+    .on('GET /lessons/day', ({ query }) =>
+      state.lessons.filter((l) => riyadhDate(l.starts_at) === query.date),
+    )
     .on('GET /booking/slots', () => state.slots)
     .on('POST /lessons/:id/reschedule', ({ params, body }) => {
-      const move = body as { scope: 'one' | 'rule'; startsAt?: string; newRule?: { startsOn: string; startTimeLocal: string } };
+      const move = body as {
+        scope: 'one' | 'rule';
+        startsAt?: string;
+        newRule?: { startsOn: string; startTimeLocal: string };
+      };
       const startsAt = move.startsAt ?? `${move.newRule?.startsOn}T14:00:00.000Z`;
-      const old = state.lessons.find((l) => l.id === params['id']);
+      const old = state.lessons.find((l) => l.id === params.id);
       if (!old) throw new Error('no such lesson');
-      const moved: LessonView = { ...old, starts_at: startsAt, ends_at: new Date(Date.parse(startsAt) + 45 * MINUTE).toISOString(), status: 'scheduled' };
+      const moved: LessonView = {
+        ...old,
+        starts_at: startsAt,
+        ends_at: new Date(Date.parse(startsAt) + 45 * MINUTE).toISOString(),
+        status: 'scheduled',
+      };
       state.lessons = state.lessons.map((l) => (l.id === old.id ? moved : l));
       return moved;
     });

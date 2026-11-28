@@ -8,12 +8,12 @@ function isObject(v: unknown): v is Record<string, unknown> {
 }
 
 function patchOne(item: unknown, patch: Patch): unknown {
-  return isObject(item) && item['id'] === patch.id ? { ...item, ...patch } : item;
+  return isObject(item) && item.id === patch.id ? { ...item, ...patch } : item;
 }
 
 function patchItems(page: unknown, patch: Patch): unknown {
-  if (!isObject(page) || !Array.isArray(page['items'])) return page;
-  return { ...page, items: page['items'].map((i: unknown) => patchOne(i, patch)) };
+  if (!isObject(page) || !Array.isArray(page.items)) return page;
+  return { ...page, items: page.items.map((i: unknown) => patchOne(i, patch)) };
 }
 
 /**
@@ -24,12 +24,12 @@ function patchItems(page: unknown, patch: Patch): unknown {
  */
 export function patchCached(data: unknown, patch: Patch): unknown {
   if (Array.isArray(data)) return data.map((i: unknown) => patchOne(i, patch));
-  if (isObject(data) && Array.isArray(data['pages'])) {
-    return { ...data, pages: data['pages'].map((p: unknown) => patchItems(p, patch)) };
+  if (isObject(data) && Array.isArray(data.pages)) {
+    return { ...data, pages: data.pages.map((p: unknown) => patchItems(p, patch)) };
   }
-  if (isObject(data) && Array.isArray(data['items'])) return patchItems(data, patch);
-  if (isObject(data) && Array.isArray(data['lessons'])) {
-    return { ...data, lessons: data['lessons'].map((l: unknown) => patchOne(l, patch)) };
+  if (isObject(data) && Array.isArray(data.items)) return patchItems(data, patch);
+  if (isObject(data) && Array.isArray(data.lessons)) {
+    return { ...data, lessons: data.lessons.map((l: unknown) => patchOne(l, patch)) };
   }
   return patchOne(data, patch);
 }

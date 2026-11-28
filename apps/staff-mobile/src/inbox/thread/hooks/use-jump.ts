@@ -64,10 +64,14 @@ export function useJump<T extends { id: string }>(
       const page = await older.fetchNextPage({ cancelRefetch: false });
       if (generation.current !== gen) return undefined;
       // A page that failed (fetchNextPage does not throw): stop, it is not «not found».
-      if (page.isFetchNextPageError) return say({ text: t.common.error });
+      if (page.isFetchNextPageError) {
+        say({ text: t.common.error });
+        return;
+      }
       if (threadMessages(page.data).some((m) => m.id === id)) {
         pending.current = id;
-        return rerender();
+        rerender();
+        return;
       }
       if (!page.hasNextPage) break;
     }
@@ -80,8 +84,14 @@ export function useJump<T extends { id: string }>(
     pending.current = null;
     const gen = generation.current;
     const index = rows.findIndex((r) => r.id === id);
-    if (index >= 0) return go(index, id);
-    if (!older.hasNextPage) return missing(notFound);
+    if (index >= 0) {
+      go(index, id);
+      return;
+    }
+    if (!older.hasNextPage) {
+      missing(notFound);
+      return;
+    }
     void seek(id, notFound ?? t.inbox.reply.notFound, gen).catch(() => missing(notFound));
   };
 

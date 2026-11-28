@@ -2,7 +2,13 @@ import { SETTING_DEFAULTS, type SettingKey } from '@ab/settings';
 import { useState } from 'react';
 import { ApiError, t } from '@ab/mobile-kit';
 import { ascii } from '@/ops/shared/ascii-digits';
-import { confirmOf, draftOf, parseDraft, sameValue, type Draft } from '@/ops/values/lib/value-draft';
+import {
+  confirmOf,
+  draftOf,
+  parseDraft,
+  sameValue,
+  type Draft,
+} from '@/ops/values/lib/value-draft';
 import { useSaveValue } from './use-save-value';
 
 /** closing means closing would drop the unsaved edit. */
@@ -48,11 +54,13 @@ export function useValueSheet({ valueKey, saved, onSaved, onClose }: ValueSheetO
         onSuccess: ({ outcome }) => {
           if (outcome === 'moved') {
             setStage('edit');
-            return setNotice(t.mobileValues.owned);
+            setNotice(t.mobileValues.owned);
+            return;
           }
           if (outcome === 'invalid') {
             setStage('edit');
-            return setNotice(t.settings.invalid);
+            setNotice(t.settings.invalid);
+            return;
           }
           onSaved();
           onClose();
@@ -66,15 +74,27 @@ export function useValueSheet({ valueKey, saved, onSaved, onClose }: ValueSheetO
       },
     );
   const submit = () => {
-    if (!parsed.ok) return setError(parsed.error);
-    if (!dirty) return onClose();
-    if (confirm === null) return send(parsed.value);
+    if (!parsed.ok) {
+      setError(parsed.error);
+      return;
+    }
+    if (!dirty) {
+      onClose();
+      return;
+    }
+    if (confirm === null) {
+      send(parsed.value);
+      return;
+    }
     setTypedState('');
     setStage('confirm');
   };
   const confirmSave = () => {
     if (!parsed.ok) return;
-    if (confirm === 'typed' && ascii(typed) !== String(parsed.value)) return setError(t.mobileValues.typedMismatch);
+    if (confirm === 'typed' && ascii(typed) !== String(parsed.value)) {
+      setError(t.mobileValues.typedMismatch);
+      return;
+    }
     send(parsed.value);
   };
   const requestClose = () => (dirty && !save.isPending ? setStage('closing') : onClose());

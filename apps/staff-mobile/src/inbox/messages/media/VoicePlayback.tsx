@@ -53,7 +53,10 @@ export function VoicePlayback({ id, url, kind, onFail, onLongPress }: VoicePlayb
     if (loaded) void player.seekTo(seconds);
   };
   const toggle = () => {
-    if (status.playing) return player.pause();
+    if (status.playing) {
+      player.pause();
+      return;
+    }
     // At the end: from the start again, as WhatsApp.
     if (atEnd(status)) seekTo(0);
     start();

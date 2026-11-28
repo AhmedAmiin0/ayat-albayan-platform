@@ -24,7 +24,7 @@ export function subscribeBackend({ hold = false } = {}) {
     phone === GUARDIAN_PHONE ? family([state.child]) : phone === PHONE ? leadOnly : undefined;
   backend
     .on('GET /threads/:phone', ({ params }) => {
-      const phone = params['phone'] ?? '';
+      const phone = params.phone ?? '';
       const row = rows.find((r) => r.phone_e164 === phone) ?? rows[0];
       return detail(log[phone] ?? [], {
         thread: row ?? detail([]).thread,
@@ -34,11 +34,18 @@ export function subscribeBackend({ hold = false } = {}) {
     .on('GET /students/:id', () => profile)
     .on('GET /booking/teachers', ({ path }) => booking.fetch(path))
     .on('GET /booking/slots', ({ path }) => booking.fetch(path))
-    .on('POST /booking/invoice-upload-url', () => ({ bucket: 'invoices', path: 'req/0b1c.jpg', token: 'tok', signed_url: 'http://x' }))
+    .on('POST /booking/invoice-upload-url', () => ({
+      bucket: 'invoices',
+      path: 'req/0b1c.jpg',
+      token: 'tok',
+      signed_url: 'http://x',
+    }))
     .on('POST /booking', () => booked(SUN_17))
     .on('POST /subscriptions/quote', () => quote)
     .on('POST /subscriptions', () => {
-      state.child = child({ subscription: sub({ status: 'active', due_amount: 0, paid_amount: 180 }) });
+      state.child = child({
+        subscription: sub({ status: 'active', due_amount: 0, paid_amount: 180 }),
+      });
       const now = rows.findIndex((r) => r.phone_e164 === GUARDIAN_PHONE);
       const row = rows[now];
       if (row) rows[now] = { ...row, badge: 'subscribed', ring: 'subscribed' };

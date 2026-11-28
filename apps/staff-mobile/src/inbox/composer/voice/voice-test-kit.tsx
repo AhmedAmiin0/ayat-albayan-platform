@@ -36,7 +36,10 @@ export const rec: FakeRecorder = {
     isRecording: rec.isRecording,
   })),
 };
-type Perm = { granted: boolean; canAskAgain: boolean };
+interface Perm {
+  granted: boolean;
+  canAskAgain: boolean;
+}
 export const perms: { now: Perm; asked: Perm } = {
   now: { granted: true, canAskAgain: true },
   asked: { granted: true, canAskAgain: true },
@@ -94,22 +97,39 @@ export function resetVoice() {
 }
 
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
-const asked = message({ id: 'm1', direction: 'inbound', status: 'delivered', body: 'Please send a voice note', replyable: true, created_at: minutesAgo(9) });
+const asked = message({
+  id: 'm1',
+  direction: 'inbound',
+  status: 'delivered',
+  body: 'Please send a voice note',
+  replyable: true,
+  created_at: minutesAgo(9),
+});
 
 /** The API's row of a sent voice note (a full row: the chat's next read keeps it). */
-export const voiceRow = message({ id: 'v1', direction: 'outbound', status: 'queued', media_mime: 'audio/mp4', body: null });
+export const voiceRow = message({
+  id: 'v1',
+  direction: 'outbound',
+  status: 'queued',
+  media_mime: 'audio/mp4',
+  body: null,
+});
 
 /** The chat with an open window; `mockApiFetch` answers the gate and the thread. */
 export async function openChat(mockApiFetch: jest.Mock) {
   const data = detail([asked], { thread: { ...thread, last_inbound_at: minutesAgo(5) } });
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/messages/gate' ? { open: true, reason: null, queued: 0 } : data));
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/messages/gate' ? { open: true, reason: null, queued: 0 } : data,
+  );
   await renderWithQuery(<ThreadScreen />, createTestQueryClient());
   await screen.findByText(asked.body ?? '');
 }
 
 export async function replyToAsked() {
   await fireEvent(await screen.findByTestId('bubble-m1'), 'longPress');
-  await fireEvent.press(within(screen.getByTestId('message-menu')).getByRole('button', { name: t.inbox.reply.action }));
+  await fireEvent.press(
+    within(screen.getByTestId('message-menu')).getByRole('button', { name: t.inbox.reply.action }),
+  );
 }
 
 const mic = () => screen.getByRole('button', { name: t.inbox.composer.voice.record });

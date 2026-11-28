@@ -25,10 +25,18 @@ import { Note } from '@/more';
 import { RegistrationResults } from '@/registration-check/components/RegistrationResults';
 import { linkFamilyErrorText, useLinkFamily } from '@/registration-check/lib/link-family';
 import type { RegistrationCheckQuery } from '@ab/shared';
-import { checkErrorText, searchOf, useRegistrationCheck } from '@/registration-check/lib/registration-check';
+import {
+  checkErrorText,
+  searchOf,
+  useRegistrationCheck,
+} from '@/registration-check/lib/registration-check';
 
 /** The chat's number and its lead (ThreadView.lead_id), from the chat's «⋮» menu. */
-type Params = { phone?: string; leadId?: string };
+type ParamKey =
+  | 'phone'
+  | 'leadId';
+
+type Params = Partial<Record<ParamKey, string>>;
 
 /** The confirm question with the family's name and code, the code kept left-to-right. */
 const confirmText = (m: RegistrationMatch) =>
@@ -121,7 +129,11 @@ export function LinkFamilyScreen() {
         leading={<BackButton onPress={back} />}
       />
       {can('leads.link_family') && can('students.check_registration') && leadId ? (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 12, paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={{ gap: 12, paddingBottom: 24 }}
+          keyboardShouldPersistTaps="handled"
+        >
           {body}
         </ScrollView>
       ) : null}

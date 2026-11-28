@@ -6,7 +6,9 @@ import { salesKeys } from '@/core/lib/keys';
 // The receipts the family already sent in its WhatsApp chat (R-ASST-04): their list, a short-lived
 // thumbnail per image (fetched only when its row is on screen) and the copy into receipts/. `bind`: the
 // chat's phone for a child not hers (chatBinding, sales.renew_any); nothing for hers.
-type Bind = { phone?: string };
+interface Bind {
+  phone?: string;
+}
 
 const scopeQuery = (studentId: string, bind: Bind) =>
   `studentId=${encodeURIComponent(studentId)}${bind.phone ? `&phone=${encodeURIComponent(bind.phone)}` : ''}`;
