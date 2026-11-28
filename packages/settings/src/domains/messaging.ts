@@ -2,7 +2,9 @@ import type { SettingDef } from '../defs';
 
 const tpl = 'templates.settings';
 
-/** Where the WhatsApp line config comes from (docs/23 §2e): today's keys, or the numbers' records. */
+/**
+ * Where the WhatsApp line config comes from (docs/23 §2e): today's keys, or the numbers' records.
+ */
 export const COMMS_SOURCES = ['legacy', 'module'] as const;
 export type CommsSource = (typeof COMMS_SOURCES)[number];
 
@@ -21,9 +23,10 @@ export const MESSAGING_SETTINGS = {
     type: 'bool', default: false, form: false, labelKey: `${tpl}.crmDone`, hintKey: `${tpl}.crmDoneHint`,
   },
   /**
-   * legacy = the WA_* integration keys (default; an unknown or malformed row reads as legacy); module =
-   * each role's default number (wa_numbers). Seeded by migration 20261023000620. Never written by PATCH
-   * /settings: only POST /admin/communications/source, which refuses `module` while parity differs.
+   * legacy = the WA_* integration keys (default; an unknown or malformed row reads as legacy);
+   * module = each role's default number (wa_numbers). Seeded by migration 20261023000620. Never
+   * written by PATCH /settings: only POST /admin/communications/source, which refuses `module`
+   * while parity differs.
    */
   comms_source: {
     module: 'messaging', group: 'safety', ownedBy: 'communications', reachesFamilies: true,
@@ -31,8 +34,9 @@ export const MESSAGING_SETTINGS = {
     labelKey: 'settings.commsSource', hintKey: 'settings.hints.commsSource',
   },
   /**
-   * In-app WhatsApp voice calls from the chat number (docs/28), built dark: false hides the phone icon
-   * and every /calls route answers 404. The owner turns it on after the Kapso / Meta steps of docs/28 §7.
+   * In-app WhatsApp voice calls from the chat number (docs/28), built dark: false hides the phone
+   * icon and every /calls route answers 404. The owner turns it on after the Kapso / Meta steps of
+   * docs/28 §7.
    */
   whatsapp_calls_enabled: {
     module: 'messaging', group: 'messaging', confirm: 'simple', reachesFamilies: true,

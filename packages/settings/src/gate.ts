@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
-/** The two sending switches with their own routes (docs/26 §2f 26-P0): PUT /messages/gate/{sending|auto}. */
+/**
+ * The two sending switches with their own routes (docs/26 §2f 26-P0): PUT
+ * /messages/gate/{sending|auto}.
+ */
 export const GATE_SWITCHES = ['sending', 'auto'] as const;
 export type GateSwitch = (typeof GATE_SWITCHES)[number];
 
@@ -21,8 +24,8 @@ export const GATE_CONFIRM_TEXT = {
 } as const satisfies Record<GateSwitch, string>;
 
 /**
- * PUT /messages/gate/sending | /messages/gate/auto body. confirmText is not validated here so that OFF
- * is never refused over it; gateConfirmed() accepts only the exact string for ON.
+ * PUT /messages/gate/sending | /messages/gate/auto body. confirmText is not validated here so that
+ * OFF is never refused over it; gateConfirmed() accepts only the exact string for ON.
  */
 export const gateSwitchSchema = z.object({
   on: z.boolean(),

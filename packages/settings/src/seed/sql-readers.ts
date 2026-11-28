@@ -1,7 +1,10 @@
-// Pure helpers over migration text (used by the settings tests that pin SQL ↔ registry; docs/26 §2b):
-// which live SQL objects read public.settings, and which keys they name. No I/O here.
+// Pure helpers over migration text (used by the settings tests that pin SQL ↔ registry; docs/26
+// §2b): which live SQL objects read public.settings, and which keys they name. No I/O here.
 
-/** One live SQL object (function or view) and its body, as the last migration that defines it left it. */
+/**
+ * One live SQL object (function or view) and its body, as the last migration that defines it left
+ * it.
+ */
 export interface SqlObject {
   name: string;
   body: string;
@@ -13,7 +16,10 @@ const DROP_RE = /drop\s+(?:function|view)\s+(?:if\s+exists\s+)?([\w.]+)/gi;
 
 const stripComments = (sql: string): string => sql.replace(/--[^\n]*/g, '');
 
-/** Live definitions: migrations in filename order; a later `create or replace` wins, a `drop` removes. */
+/**
+ * Live definitions: migrations in filename order; a later `create or replace` wins, a `drop`
+ * removes.
+ */
 export function liveSqlObjects(
   migrations: Readonly<Record<string, string>>,
 ): Map<string, SqlObject> {

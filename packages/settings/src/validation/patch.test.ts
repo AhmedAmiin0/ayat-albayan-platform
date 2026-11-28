@@ -80,7 +80,8 @@ describe('splitSettingsPatch', () => {
   });
 
   it('names the inner path of a list issue (not_ascending keeps its wording)', () => {
-    // followUpHours is owned by the notification rules now (moved here); the API's alias validates it this way.
+    // followUpHours is owned by the notification rules now (moved here); the API's alias validates
+    // it this way.
     expect(splitSettingsPatch({ followUpHours: [72, 24] })).toMatchObject({ moved: ['follow_up_hours'], invalid: [], changes: {} });
     const bad = parseSettingField({ field: 'followUpHours', key: 'follow_up_hours', value: [72, 24] });
     expect(bad).toEqual({ ok: false, issues: [{ path: 'followUpHours', message: 'not_ascending' }] });

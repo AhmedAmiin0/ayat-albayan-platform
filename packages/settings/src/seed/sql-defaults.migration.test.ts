@@ -3,7 +3,8 @@ import { GOOGLE_SEED_DEFS } from '../google-defs';
 import { SEED_ENTRIES } from './seed-entries';
 import { liveSqlObjects, sqlSettingsReaders } from './sql-readers';
 
-// Vite's raw import (vitest): the shared lib has no Node typings, so the migrations are read this way.
+// Vite's raw import (vitest): the shared lib has no Node typings, so the migrations are read this
+// way.
 declare global {
   interface ImportMeta {
     glob<T>(pattern: string | string[], options: { query: '?raw'; import: 'default'; eager: true }): Record<string, T>;
@@ -79,7 +80,10 @@ const PINS: Pin[] = [
   },
 ];
 
-/** Known differences today: none. Add `'fn:key'` here (with a comment and a follow-up) rather than changing SQL in a test PR. */
+/**
+ * Known differences today: none. Add `'fn:key'` here (with a comment and a follow-up) rather than
+ * changing SQL in a test PR.
+ */
 const EXPECTED_MISMATCHES: ReadonlySet<string> = new Set<string>();
 
 const entry = (key: string) => SEED_ENTRIES.find((e) => e.key === key);

@@ -32,7 +32,8 @@ export const CLASSROOM_SETTINGS = {
   /**
    * ON: messages carry our classroom link per lesson (family: lesson_join_link, teacher:
    * /classroom/<id>), chosen when the message is queued; lessons.meeting_link is never changed.
-   * OFF (migration 330 seeds it): the teacher's fixed link, as before. Public: the apps hide the fixed link.
+   * OFF (migration 330 seeds it): the teacher's fixed link, as before. Public: the apps hide the
+   * fixed link.
    */
   meeting_link_auto: {
     module: 'classroom', group: 'classroom', confirm: 'simple', reachesFamilies: true,

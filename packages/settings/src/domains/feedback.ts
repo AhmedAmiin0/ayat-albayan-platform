@@ -13,6 +13,9 @@ export const FEEDBACK_SETTINGS = {
   },
 } as const satisfies Record<string, SettingDef>;
 
-/** 'buttons' = lesson_rating after a completed lesson; 'link' = no automatic message (migration 195). */
+/**
+ * 'buttons' = lesson_rating after a completed lesson; 'link' = no automatic message (migration
+ * 195).
+ */
 export const FEEDBACK_MODES = FEEDBACK_SETTINGS.feedback_mode.options;
 export type FeedbackMode = (typeof FEEDBACK_MODES)[number];

@@ -13,7 +13,10 @@ export const settingsPatchBodySchema = z.record(z.string(), z.unknown(), {
 });
 export type SettingsPatchBody = z.infer<typeof settingsPatchBodySchema>;
 
-/** One rejected field, worded like parseOrThrow's 400 (path = the camelCase field, then the inner path). */
+/**
+ * One rejected field, worded like parseOrThrow's 400 (path = the camelCase field, then the inner
+ * path).
+ */
 export interface SettingsPatchIssue {
   path: string;
   message: string;
@@ -51,8 +54,9 @@ export type ParsedSettingField =
   | { ok: false; issues: SettingsPatchIssue[] };
 
 /**
- * One PATCH field validated by its registry def (issue paths = the field, then the inner path). Also
- * used by the API for the owned followUpHours alias (docs/26 §2f: it writes the follow-up rule).
+ * One PATCH field validated by its registry def (issue paths = the field, then the inner path).
+ * Also used by the API for the owned followUpHours alias (docs/26 §2f: it writes the follow-up
+ * rule).
  */
 export function parseSettingField(input: {
   field: string;

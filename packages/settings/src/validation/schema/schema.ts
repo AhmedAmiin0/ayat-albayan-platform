@@ -35,7 +35,9 @@ const SETTING_ZOD: SettingTypeTable<z.ZodType> = {
   json: (def) => orNull(def.nullable, shapeZod(def.shape)),
 };
 
-/** One entry's PATCH field. The follow-up list keeps its 'not_ascending' message (the web names it). */
+/**
+ * One entry's PATCH field. The follow-up list keeps its 'not_ascending' message (the web names it).
+ */
 export function settingZod(def: SettingDef): z.ZodType {
   return byType(SETTING_ZOD, def);
 }
