@@ -609,12 +609,9 @@ jobs:
     # On again (owner, 2026-10-05) now that the suite is fast. To pause it without a code change, set the
     # repository variable RUN_E2E to 'false' (Settings → Secrets and variables → Actions → Variables).
     # A draft PR skips e2e (marking it ready starts a run that has it); pushes are never drafts.
-    # A sub-PR into a contracts base (lane/contracts-*) skips it too: the base's own full runs and its
-    # PR into develop run every spec, and the builders' sub-PRs would otherwise fill the runners.
     if: >-
       needs.changes.outputs.e2e == 'true' && vars.RUN_E2E != 'false'
       && !(github.event_name == 'pull_request' && github.event.pull_request.draft)
-      && !(github.event_name == 'pull_request' && startsWith(github.base_ref, 'lane/contracts-'))
     runs-on: ubuntu-latest
     timeout-minutes: 45
     # The matrix comes from «changes» (plan.mjs): on a PR only the shards its selected specs need, plus
