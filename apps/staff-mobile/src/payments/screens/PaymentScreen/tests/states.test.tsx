@@ -1,8 +1,7 @@
-import { paymentViewSchema } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { balanceOf, OLD_SUB_ID, subscription } from '@/payments/fixtures';
+import { balanceOf, OLD_SUB_ID, payment, subscription } from '@/payments/fixtures';
 import { PaymentScreen } from '@/payments/screens/PaymentScreen/PaymentScreen';
 
 const mockApiFetch = jest.fn();
@@ -86,7 +85,7 @@ test('an older package still owed: both offered, the oldest picked; the paid lin
     status: 'expired',
   });
   mockApiFetch.mockResolvedValue(balanceOf(old, subscription()));
-  mockApiSend.mockResolvedValue({});
+  mockApiSend.mockResolvedValue(payment());
   await renderWithQuery(<PaymentScreen />);
   const oldPill = await screen.findByRole('radio', { name: /27 أغسطس 2026/ });
   expect(oldPill.props.accessibilityState).toMatchObject({ checked: true });
@@ -95,10 +94,7 @@ test('an older package still owed: both offered, the oldest picked; the paid lin
   expect(screen.getByText(/دُفع ⁦0⁩/)).toBeTruthy();
   await fillAndSave();
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', {
-    body: expect.objectContaining({ subscriptionId: subscription().id }),
-    schema: paymentViewSchema,
-  });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', expect.objectContaining({ subscriptionId: subscription().id }));
 });
 
 test('no package yet: the empty state, no form', async () => {

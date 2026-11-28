@@ -11,6 +11,7 @@ import {
 import { AuthModule } from '@/common/auth/auth.module';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import { AuditService } from '@/common/audit/audit.service';
+import { ResponseCheckInterceptor } from '@/common/http/returns';
 import { DB, DbModule } from '@/common/db/db.module';
 import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { GuardianPhonesService } from '@/modules/people/guardians';
@@ -53,7 +54,8 @@ export const mocks = {
   roles: { setSelf: vi.fn(), guardianToStudent: vi.fn(), studentToGuardian: vi.fn() },
 };
 
-export async function peopleApp(): Promise<NestFastifyApplication> {
+/** `checked`: every answer must fit its route's declared schema (else 500). */
+export async function peopleApp({ checked = false } = {}): Promise<NestFastifyApplication> {
   const mod = await Test.createTestingModule({
     imports: [DbModule, AuthModule],
     controllers: [PeopleEditController, PeopleRoleController],
@@ -74,6 +76,7 @@ export async function peopleApp(): Promise<NestFastifyApplication> {
     .useValue(verify)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
+  app.useGlobalInterceptors(new ResponseCheckInterceptor(checked));
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   return app;

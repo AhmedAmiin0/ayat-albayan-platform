@@ -1,12 +1,14 @@
-import type { QuoteResponse, Rounding } from '@ab/money';
+import { pricingCalls } from '@ab/client-core';
+import type { Rounding } from '@ab/money';
+import { pricingRoutes } from '@ab/shared';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { quoteParams, type Selection } from './selection';
 
 /** The rate a USD quote used; null for the site's own currencies. */
 export type { FxRate as QuoteFx, QuoteResponse } from '@ab/money';
 
-const PATH = '/pricing/quote';
+const pricing = pricingCalls({ apiFetch, apiSend });
 
 /** What only the chat's quote sheet asks; the calculator and the package forms pass nothing. */
 interface QuoteAsk {
@@ -24,8 +26,8 @@ interface QuoteAsk {
 export function useQuote(selection: Selection, ask: QuoteAsk = {}) {
   const params = quoteParams(selection, ask.rounding);
   return useQuery({
-    queryKey: [...pathKey(PATH), params],
-    queryFn: () => apiFetch<QuoteResponse>(`${PATH}${toQueryString(params)}`),
+    queryKey: [...pathKey(pricingRoutes.quote.path), params],
+    queryFn: () => pricing.quote(params),
     placeholderData: keepPreviousData,
     enabled: ask.enabled ?? true,
   });

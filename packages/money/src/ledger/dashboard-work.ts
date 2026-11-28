@@ -1,5 +1,5 @@
 import type { LessonStatus, PackageSize } from '@ab/catalog';
-import type { AdminTaskView } from './views';
+import type { AdminTaskView } from './tasks/admin-task.schemas';
 
 // GET /dashboard/work: the admin's queue behind the KPI strip (docs/07 §6).
 

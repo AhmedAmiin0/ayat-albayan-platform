@@ -1,31 +1,26 @@
 import {
-  accountSetupSchema,
-  avatarSetSchema,
-  avatarUploadSchema,
-  emailChangeSchema,
-  localeUpdateSchema,
-  passwordChangeSchema,
-  profileUpdateSchema,
+  accountRoutes as routes,
+  accountSetupRoutes,
   type AccountProfile,
   type LocaleUpdate,
   type SignedUpload,
 } from '@ab/shared';
-import { Controller, Delete, Get, HttpCode, Inject, Patch, Post, Put } from '@nestjs/common';
-import { z } from 'zod';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Controller, HttpCode, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser, SignedIn } from '@/common/auth/decorators';
 import { MeZoneRepo } from '@/common/auth/me-zone.repo';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { AccountAvatarService } from './account.avatar.service';
 import { AccountService } from './account.service';
 import { AccountSetupService } from './account.setup.service';
 
+type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
+
 /** R-ACC-01..05: the caller's own login only, no id in any path; disabled accounts get 403. */
-@ApiTags('me')
 @ApiBearerAuth()
 @SignedIn()
-@Controller('me')
+@Controller()
 export class AccountController {
   constructor(
     private readonly account: AccountService,
@@ -34,10 +29,9 @@ export class AccountController {
     @Inject(MeZoneRepo) private readonly me: MeZoneRepo,
   ) {}
 
-  /** Read back by /auth/me and /portal/me. */
-  @Patch('locale')
+  @Route(routes.locale)
   async setLocale(
-    @ZodBody(localeUpdateSchema) body: LocaleUpdate,
+    @RouteInput() { body }: In<'locale'>,
     @CurrentUser() user: AuthUser,
   ): Promise<LocaleUpdate> {
     await this.me.setLocale(user.id, body.locale);
@@ -45,62 +39,62 @@ export class AccountController {
   }
 
   /** A code-made teacher login's email + password, once (docs/46 A4); 409 setup_done after. */
-  @Put('setup')
+  @Route(accountSetupRoutes.setup)
   @HttpCode(204)
   setup(
-    @ZodBody(accountSetupSchema) body: z.output<typeof accountSetupSchema>,
+    @RouteInput() { body }: RouteInputOf<typeof accountSetupRoutes.setup>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
     return this.firstSetup.setup(user, body);
   }
 
-  @Get('profile')
+  @Route(routes.profile)
   profile(@CurrentUser() user: AuthUser): Promise<AccountProfile> {
     return this.account.profile(user);
   }
 
-  @Patch('profile')
+  @Route(routes.updateProfile)
   updateProfile(
-    @ZodBody(profileUpdateSchema) body: z.output<typeof profileUpdateSchema>,
+    @RouteInput() { body }: In<'updateProfile'>,
     @CurrentUser() user: AuthUser,
   ): Promise<AccountProfile> {
     return this.account.updateProfile(user, body);
   }
 
-  @Put('email')
+  @Route(routes.email)
   changeEmail(
-    @ZodBody(emailChangeSchema) body: z.output<typeof emailChangeSchema>,
+    @RouteInput() { body }: In<'email'>,
     @CurrentUser() user: AuthUser,
   ): Promise<AccountProfile> {
     return this.account.changeEmail(user, body);
   }
 
-  @Put('password')
+  @Route(routes.password)
   @HttpCode(204)
   changePassword(
-    @ZodBody(passwordChangeSchema) body: z.output<typeof passwordChangeSchema>,
+    @RouteInput() { body }: In<'password'>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
     return this.account.changePassword(user, body);
   }
 
-  @Post('avatar/upload-url')
+  @Route(routes.avatarUploadUrl)
   avatarUploadUrl(
-    @ZodBody(avatarUploadSchema) body: z.output<typeof avatarUploadSchema>,
+    @RouteInput() { body }: In<'avatarUploadUrl'>,
     @CurrentUser() user: AuthUser,
   ): Promise<SignedUpload> {
     return this.avatar.uploadUrl(user, body);
   }
 
-  @Put('avatar')
+  @Route(routes.setAvatar)
   setAvatar(
-    @ZodBody(avatarSetSchema) body: z.output<typeof avatarSetSchema>,
+    @RouteInput() { body }: In<'setAvatar'>,
     @CurrentUser() user: AuthUser,
   ): Promise<AccountProfile> {
     return this.avatar.set(user, body.path);
   }
 
-  @Delete('avatar')
+  @Route(routes.removeAvatar)
   removeAvatar(@CurrentUser() user: AuthUser): Promise<AccountProfile> {
     return this.avatar.remove(user);
   }

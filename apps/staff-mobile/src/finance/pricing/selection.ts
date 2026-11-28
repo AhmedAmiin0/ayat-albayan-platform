@@ -10,6 +10,7 @@ import {
   type SiteCountry,
 } from '@ab/money';
 import type { ListParams } from '@ab/mobile-kit';
+import type { QuoteQueryInput } from '@ab/shared';
 
 // The API prices the choice (GET /pricing/quote); pill values are strings, hence `${}`.
 
@@ -45,11 +46,14 @@ const sentRounding = (rounding: Rounding): Rounding | undefined =>
   rounding === DEFAULT_ROUNDING ? undefined : rounding;
 
 /** Query params for /pricing/quote: `tier` xor `count`, and no `country` at all for USD. */
-export function quoteParams(s: Selection, rounding: Rounding = DEFAULT_ROUNDING): ListParams {
-  const custom = s.plan === 'custom';
+export function quoteParams(
+  s: Selection,
+  rounding: Rounding = DEFAULT_ROUNDING,
+): ListParams & QuoteQueryInput {
+  const pick =
+    s.plan === 'custom' ? { tier: undefined, count: s.count } : { tier: s.plan, count: undefined };
   return {
-    tier: custom ? undefined : s.plan,
-    count: custom ? s.count : undefined,
+    ...pick,
     duration: s.duration,
     country: s.country === 'other' ? undefined : s.country,
     students: s.students,

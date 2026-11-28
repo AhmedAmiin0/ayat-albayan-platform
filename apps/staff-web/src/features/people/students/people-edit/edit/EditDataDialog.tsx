@@ -11,7 +11,7 @@ import type { PeopleEditView } from '@ab/shared';
 import type { PeopleDialogProps } from '@/features/people/students/people-edit/dialog-props';
 import { useId, useState, type SubmitEvent } from 'react';
 import { FormAlert, Dialog, t } from '@ab/web-kit';
-import { saveFamily, saveStudent } from '@/features/people/students/people-edit/api';
+import { peopleWrites } from '@/features/people/students/people-edit/api';
 import { DialogActions } from '@/features/people/students/people-edit/DialogActions';
 import { FamilyFields } from './FamilyFields';
 import { SecondPhone } from './SecondPhone';
@@ -34,8 +34,8 @@ async function saveBoth(input: { view: PeopleEditView; initial: Forms; current: 
   const student = studentPatchOf(input.initial.student, input.current.student);
   const family = familyPatchOf(input.initial.family, input.current.family);
   const { student: s, guardian: g } = input.view;
-  if (hasChange(student.patch)) await saveStudent({ id: s.id, patch: student.patch });
-  if (hasChange(family.patch)) await saveFamily({ id: g.id, patch: family.patch });
+  if (hasChange(student.patch)) await peopleWrites.saveStudent({ id: s.id, patch: student.patch });
+  if (hasChange(family.patch)) await peopleWrites.saveFamily({ id: g.id, patch: family.patch });
 }
 
 /** Needs people.edit; admin-only fields (status, program, teacher, link, source) are not here. */

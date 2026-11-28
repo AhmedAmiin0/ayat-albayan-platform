@@ -1,11 +1,15 @@
-import { pendingRequestId, uploadOnce } from '@ab/client-core';
-import type { TeacherPaymentResult } from '@ab/money';
+import { pendingRequestId, teacherEarningCalls, uploadOnce } from '@ab/client-core';
+import { teacherPaymentCreateSchema } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import type { PayInput } from '@/earnings/lib/pay-draft';
 import { uploadTeacherReceipt } from './upload-receipt';
+
+const calls = teacherEarningCalls({ apiFetch, apiSend });
+/** The form lists the manual methods only; the platform's card is never a teacher payment. */
+const manualMethod = teacherPaymentCreateSchema.shape.method;
 
 /**
  * Records a teacher payment: the receipt goes up first (once, a retry after a failed POST does not
@@ -28,10 +32,10 @@ export function usePayTeacher(teacherId: string) {
     mutationKey: ['teacher-earnings', teacherId, 'pay'],
     mutationFn: async (input: PayInput) => {
       const receiptPathValue = await receiptPath(input);
-      return apiSend<TeacherPaymentResult>('POST', `/teacher-earnings/${teacherId}/payments`, {
+      return calls.record(teacherId, {
         clientRequestId: request.current(),
         amount: input.amount,
-        method: input.method,
+        method: manualMethod.parse(input.method),
         paidAt: input.paidAt,
         ...(input.earningIds ? { earningIds: input.earningIds } : {}),
         ...(receiptPathValue ? { receiptPath: receiptPathValue } : {}),

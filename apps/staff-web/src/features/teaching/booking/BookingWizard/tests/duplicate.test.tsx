@@ -16,7 +16,7 @@ vi.mock('@tanstack/react-router', () => ({
 const LEAD = '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d';
 const JOUD = { id: '2d7e9f3c-4e5f-4a6b-9c0d-9e8f7a6b5c4d', code: 'AB-0190', name: 'جود', status: 'trial' };
 const DUPLICATE = new ApiError(409, { code: 'duplicate_student', message: 'duplicate_student', guardian_id: 'g', candidates: [JOUD] });
-const BOOKED = { rule_id: 'r1', student_ids: [JOUD.id], guardian_ids: ['g'], lessons: [{ id: 'l', starts_at: SLOT, ends_at: SLOT }], message_ids: [] };
+const BOOKED = { rule_id: 'e7777777-7777-4777-8777-777777777771', student_ids: [JOUD.id], guardian_ids: ['e7777777-7777-4777-8777-777777777772'], lessons: [{ id: 'e7777777-7777-4777-8777-777777777773', starts_at: SLOT, ends_at: SLOT }], message_ids: [], invoice_id: null };
 
 async function bookFromLead() {
   apiFetch.mockImplementation(respond);

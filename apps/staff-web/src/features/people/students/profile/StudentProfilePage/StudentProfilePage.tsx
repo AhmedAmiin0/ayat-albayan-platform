@@ -76,7 +76,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           {...studentStatusStyle[student.status]}
           label={t.enums.studentStatus[student.status]}
         />
-        <TestChip when={student.is_test === true} />
+        <TestChip when={student.is_test} />
         <HeadActions
           primary={head.primary}
           more={
@@ -95,7 +95,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       </PageHead>
       <PeopleEditActions studentId={student.id} onRemoved={setRemoved} />
       <StudentMeta student={student} />
-      <StudentFamily siblings={student.siblings} contactIsSelf={student.contact_is_self ?? false} />
+      <StudentFamily siblings={student.siblings} contactIsSelf={student.contact_is_self} />
       <TrialDatesSection student={student} />
       <CourseCardPanel studentId={student.id} chatPhone={chatPhone} />
       <BalanceCard student={student} />

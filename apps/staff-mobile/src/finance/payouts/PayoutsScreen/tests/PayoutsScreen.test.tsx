@@ -1,4 +1,3 @@
-import { payoutViewSchema } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
@@ -69,9 +68,7 @@ test('a draft asks once, then POSTs /approve and re-reads the month', async () =
   mockApiFetch.mockResolvedValue([{ ...PAYOUT, status: 'approved' }]);
   await fireEvent.press(screen.getAllByRole('button', { name: t.payouts.approve })[0] as never);
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/payouts/p1/approve', {
-      schema: payoutViewSchema,
-    }),
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/payouts/p1/approve', undefined),
   );
   expect(await screen.findByText(t.mobileFinance.payouts.done.approve)).toBeTruthy();
   expect(await screen.findByRole('button', { name: t.finance.confirmPaid })).toBeTruthy();
@@ -97,9 +94,7 @@ test('reopen an approved month', async () => {
   await fireEvent.press(screen.getByRole('button', { name: t.finance.reopen }));
   await fireEvent.press(screen.getAllByRole('button', { name: t.finance.reopen })[0] as never);
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/payouts/p2/reopen', {
-      schema: payoutViewSchema,
-    }),
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/payouts/p2/reopen', undefined),
   );
 });
 
@@ -114,8 +109,7 @@ test('cancelling a payment needs a reason of 3 letters and sends it', async () =
   await fireEvent.press(screen.getAllByRole('button', { name: t.finance.unpay })[0] as never);
   await waitFor(() =>
     expect(mockApiSend).toHaveBeenCalledWith('POST', '/payouts/p3/unpay', {
-      body: { reason: 'خطأ في المبلغ' },
-      schema: payoutViewSchema,
+      reason: 'خطأ في المبلغ',
     }),
   );
 });

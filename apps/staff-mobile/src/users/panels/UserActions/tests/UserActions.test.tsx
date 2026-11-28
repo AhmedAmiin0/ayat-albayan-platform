@@ -50,18 +50,19 @@ test('enable: asks first, then POST /users/:id/enable', async () => {
   expect(screen.getByText(t.mobileUsers.enableConfirm.replace('{name}', DETAIL.full_name))).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
   await press(t.common.confirm);
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/users/u1/enable', {}));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/users/u1/enable', undefined));
   expect(await screen.findByText(t.users.toast.enabled)).toBeTruthy();
 });
 
 test('sign out everywhere: asks first; cancel sends nothing; confirm POSTs', async () => {
+  mockApiSend.mockResolvedValue(undefined);
   await open();
   await press(A.signOut);
   await press(t.common.cancel);
   expect(mockApiSend).not.toHaveBeenCalled();
   await press(A.signOut);
   await press(t.common.confirm);
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/users/u1/sign-out', {}));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/users/u1/sign-out', undefined));
   expect(await screen.findByText(t.users.toast.signedOut)).toBeTruthy();
 });
 

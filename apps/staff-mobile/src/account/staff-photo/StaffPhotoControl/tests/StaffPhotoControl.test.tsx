@@ -2,6 +2,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ApiError, apiSend, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
+import { teacherPhotos } from '@/account/staff-photo/staff-photo-api';
 import { StaffPhotoControl } from '@/account/staff-photo/StaffPhotoControl/StaffPhotoControl';
 
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiSend: jest.fn() }));
@@ -11,13 +12,14 @@ jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({ supabase: { storage: { fr
 
 const send = jest.mocked(apiSend);
 const s = t.staffPhoto;
-const base = '/teachers/t1/avatar';
+const ID = '00000000-0000-4000-8000-0000000000a1';
+const base = `/teachers/${ID}/avatar`;
 const signed = { bucket: 'avatars', path: 'teachers/t1/avatar-1.jpg', token: 'tok', signed_url: 'http://x' };
 const asset = { uri: 'file:///cache/t1.jpg', width: 600, height: 600, base64: 'aGVsbG8=', mimeType: 'image/jpeg' };
 const KEY = ['teachers'];
 
 const show = (photo: string | null) =>
-  renderWithQuery(<StaffPhotoControl name="هدى سالم" id="t1" base={base} photo={photo} invalidate={[KEY]} />);
+  renderWithQuery(<StaffPhotoControl name="هدى سالم" id={ID} calls={teacherPhotos} photo={photo} invalidate={[KEY]} />);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -54,7 +56,7 @@ test('«حذف الصورة» asks first; cancel sends nothing, confirm DELETEs 
   await fireEvent.press(screen.getByRole('button', { name: s.remove }));
   await fireEvent.press(screen.getByRole('button', { name: s.remove }));
   expect(await screen.findByText(s.removed)).toBeTruthy();
-  expect(send).toHaveBeenCalledWith('DELETE', base);
+  expect(send).toHaveBeenCalledWith('DELETE', base, undefined);
   expect(screen.getByTestId('avatar-initials', { includeHiddenElements: true })).toBeTruthy();
   expect(screen.queryByRole('button', { name: s.remove })).toBeNull();
 });
@@ -65,6 +67,17 @@ test('no photo: no «حذف الصورة»; a student or guardian login reads it
   expect(screen.queryByRole('button', { name: s.remove })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: s.change }));
   expect(await screen.findByText(s.errors.avatar_not_staff)).toBeTruthy();
+});
+
+test('an account code reads its own message; an unknown code reads the generic one', async () => {
+  send
+    .mockRejectedValueOnce(new ApiError(400, { code: 'avatar_too_large' }))
+    .mockRejectedValueOnce(new ApiError(400, { code: 'something_else' }));
+  await show(null);
+  await fireEvent.press(screen.getByRole('button', { name: s.change }));
+  expect(await screen.findByText(t.account.errors.avatar_too_large)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: s.change }));
+  expect(await screen.findByText(s.errors.generic)).toBeTruthy();
 });
 
 test('a cancelled pick sends nothing', async () => {

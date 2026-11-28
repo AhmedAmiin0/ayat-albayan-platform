@@ -38,11 +38,11 @@ test('two parts, newest first from the api: the oldest plays first as part 1', a
   ]);
 });
 
-test('no report yet: the report pdf asks for no report id', async () => {
+test('no report yet: the report pdf sends no request without a report id', async () => {
   const view = { ...lessonPage(), report_id: null };
   await renderWithQuery(<LessonBody view={view} studentId="s1" />, freshQueryClient());
   mockSend.mockClear();
   await fireEvent.press(screen.getByText(F.reportPdf));
   const asked = mockSend.mock.calls.map(([, path]: unknown[]) => path);
-  expect(asked).toEqual(['/portal/students/s1/reports//url']);
+  expect(asked).toEqual([]);
 });

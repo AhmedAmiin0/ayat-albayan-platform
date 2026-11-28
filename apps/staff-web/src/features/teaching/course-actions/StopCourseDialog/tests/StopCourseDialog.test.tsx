@@ -13,7 +13,11 @@ vi.mock('@/features/people/auth', async (orig) => ({
 }));
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
 }));
@@ -35,7 +39,13 @@ function open(stopped: unknown = null) {
   const onDone = vi.fn();
   const chat = { phone: '+201000000000', mode: 'admin' as const };
   renderWithClient(
-    <StopCourseDialog studentId="s1" subscriptionId={SUB} onClose={vi.fn()} onDone={onDone} chat={chat} />,
+    <StopCourseDialog
+      studentId="s1"
+      subscriptionId={SUB}
+      onClose={vi.fn()}
+      onDone={onDone}
+      chat={chat}
+    />,
   );
   const dialog = within(screen.getByRole('dialog', { name: words.title }));
   return { dialog, onDone };
@@ -65,8 +75,9 @@ describe('StopCourseDialog «إلغاء الاشتراك» (owner 2026-10-30)', 
     expect(await dialog.findByText(words.reasonRequired)).toBeTruthy();
     expect(apiSend).not.toHaveBeenCalled();
     fireEvent.change(dialog.getByLabelText(words.reason), { target: { value: '  سفر الأسرة ' } });
+    const stoppedAt = '2026-11-27T10:00:00.000Z';
     const result = { subscriptionId: SUB, cancelledLessons: 4, endedRules: 1, refund: null };
-    apiSend.mockResolvedValue({ ...result, studentStatus: 'churned' });
+    apiSend.mockResolvedValue({ ...result, studentStatus: 'churned', stoppedAt });
     fireEvent.click(confirm() as HTMLButtonElement);
     // The status now, the next step, who was told, chat.
     expect(await screen.findByText(words.done)).toBeTruthy();

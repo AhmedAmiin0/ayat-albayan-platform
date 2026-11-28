@@ -14,3 +14,4 @@ export {
   type TestFlagBody,
   type TestFlagResult,
 } from './test-accounts.schemas';
+export * from './test-accounts.routes';

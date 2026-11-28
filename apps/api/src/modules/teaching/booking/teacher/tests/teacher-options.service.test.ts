@@ -72,7 +72,7 @@ describe('TeacherOptionsService (R-SCH-06, docs/10 §5 #12)', () => {
   it('platform_classroom: the teacher\'s meeting_mode, else the academy default (migration 490)', async () => {
     const { service, options } = setup();
     options.academyAuto.mockResolvedValue(true);
-    options.active.mockResolvedValue([ABRAR, { ...ABRAR, id: 'static', meeting_mode: 'static' }]);
+    options.active.mockResolvedValue([ABRAR, { ...ABRAR, id: 'e9999999-9999-4999-8999-999999999996', meeting_mode: 'static' }]);
     expect((await service.list({ program: 'quran' })).map((t) => t.platform_classroom)).toEqual([true, false]);
     options.academyAuto.mockResolvedValue(false);
     options.active.mockResolvedValue([{ ...ABRAR, meeting_mode: 'platform' }]);

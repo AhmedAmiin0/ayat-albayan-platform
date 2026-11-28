@@ -2,41 +2,9 @@ import type { CourseStopPreview } from '@ab/shared';
 import { counted, type PluralForm } from '@ab/core';
 import { ApiError } from '../../core/http';
 
-// Course actions for web and mobile: API paths, query key and error codes; words are injected.
-
-const student = (studentId: string): string => `/students/${studentId}`;
-
-/** GET ?subscriptionId= (the stop sheet's preview) and POST (the stop). */
-export const courseStopPath = (studentId: string): string => `${student(studentId)}/course-stop`;
-export function courseStopPreviewPath(input: {
-  studentId: string;
-  subscriptionId: string;
-}): string {
-  const q = encodeURIComponent(input.subscriptionId);
-  return `${courseStopPath(input.studentId)}?subscriptionId=${q}`;
-}
+// Course actions for web and mobile: query key and error codes; words are injected.
 
 export type CourseMoveKind = 'teacher' | 'times';
-
-interface MoveTarget {
-  studentId: string;
-  kind: CourseMoveKind;
-}
-
-/** A change's base: GET `/change?subscriptionId=`, POST `/change/check` and `/change`. */
-export function courseMoveBase(input: MoveTarget): string {
-  const tail = input.kind === 'teacher' ? 'course-teacher' : 'course-times';
-  return `${student(input.studentId)}/${tail}`;
-}
-
-export function courseMoveViewPath(input: MoveTarget & { subscriptionId: string }): string {
-  const q = encodeURIComponent(input.subscriptionId);
-  return `${courseMoveBase(input)}/change?subscriptionId=${q}`;
-}
-
-/** Offered teachers match the student's program and gender preference. */
-export const courseTeacherOptionsPath = (studentId: string): string =>
-  `${student(studentId)}/course-teacher/teachers`;
 
 /** The query key of a student's course actions (invalidate it after a write). */
 export const courseActionsKey = (studentId: string): readonly ['course-actions', string] => [
@@ -92,7 +60,8 @@ const MOVE_CODES = [
 export type CourseMoveErrorCode = (typeof MOVE_CODES)[number] | 'generic';
 
 function codeOf(error: unknown): unknown {
-  if (!(error instanceof ApiError) || typeof error.body !== 'object' || error.body === null) return undefined;
+  if (!(error instanceof ApiError) || typeof error.body !== 'object' || error.body === null)
+    return undefined;
   return 'code' in error.body ? error.body.code : undefined;
 }
 

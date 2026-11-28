@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button, Icon, IconButton, apiSend, t, useClock } from '@ab/web-kit';
-import { timeOffQuery } from '@/features/people/teachers/api';
+import { Button, Icon, IconButton, t, useClock } from '@ab/web-kit';
+import { removeTimeOff, timeOffQuery } from '@/features/people/teachers/api';
 import { TimeOffDialog } from './TimeOffDialog';
 import { formatTimeOff } from './time-off';
 
@@ -12,7 +12,7 @@ export function TimeOffList({ teacherId }: { teacherId: string }) {
   const list = useQuery(timeOffQuery(teacherId));
   const [adding, setAdding] = useState(false);
   const remove = useMutation({
-    mutationFn: (id: string) => apiSend('DELETE', `/teachers/${teacherId}/time-off/${id}`),
+    mutationFn: (id: string) => removeTimeOff(teacherId, id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: timeOffQuery(teacherId).queryKey }),
   });
 

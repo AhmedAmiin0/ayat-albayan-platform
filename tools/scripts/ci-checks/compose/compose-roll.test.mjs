@@ -8,10 +8,10 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import { caddy, composePath, deploy, roll, rollback, services } from './compose.fixture.mjs';
 
-test('the load balancer: a pinned image, its own config only, both copies with active health checks', () => {
+test('the load balancer: a pinned image, its own config only, every copy with active health checks', () => {
   assert.match(services['ayat-lb'].image, /^caddy:\d+\.\d+\.\d+-alpine$/);
   assert.deepEqual(services['ayat-lb'].volumes, ['./lb:/etc/caddy:ro']);
-  assert.match(caddy, /reverse_proxy ayat-api-a:3000 ayat-api-b:3000/);
+  assert.match(caddy, /reverse_proxy ayat-api-a:3000 ayat-api-b:3000 ayat-api-c:3000 ayat-api-d:3000 \{/);
   for (const d of [
     'lb_policy round_robin',
     'health_uri /health',
@@ -56,8 +56,8 @@ test('roll.sh and the deploy touch only this project (no global prune, no CRM, n
   // Comment lines may sit between the rolls; the order may not change.
   assert.match(
     roll,
-    /\n {2}roll ayat-worker\n(\s*#.*\n)* {2}roll ayat-pdf \|\| echo [^\n]*\n {2}roll ayat-api-a\n {2}roll ayat-api-b\n {2}lb\n/,
-    'worker → pdf sandbox → api-a → api-b → lb',
+    /\n {2}roll ayat-worker\n(\s*#.*\n)* {2}roll ayat-pdf \|\| echo [^\n]*\n {2}roll ayat-api-a\n {2}roll ayat-api-b\n {2}roll ayat-api-c\n {2}roll ayat-api-d\n {2}lb\n/,
+    'worker → pdf sandbox → api-a → api-b → api-c → api-d → lb',
   );
   assert.match(
     deploy,

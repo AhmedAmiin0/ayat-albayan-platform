@@ -55,18 +55,24 @@ describe('portal reads', () => {
   });
 });
 
+const LESSON = '/portal/students/s1/lessons/l1';
+
 describe('portal sends', () => {
   const sends = portalSends(client);
   it('mints a signed file link per tap', async () => {
     await sends.fileUrl({ studentId: 's1', kind: 'recordings', id: 'rec1' });
-    expect(apiSend).toHaveBeenLastCalledWith('POST', '/portal/students/s1/recordings/rec1/url');
+    const sent = '/portal/students/s1/recordings/rec1/url';
+    expect(apiSend).toHaveBeenLastCalledWith('POST', sent, undefined);
+    await sends.fileUrl({ studentId: 's1', kind: 'reports', id: 'r1' });
+    const report = '/portal/students/s1/reports/r1/url';
+    expect(apiSend).toHaveBeenLastCalledWith('POST', report, undefined);
   });
 
   it('asks our classroom to admit the student, and checks the room answer', async () => {
     const room = { url: 'wss://lk.example.org', token: 't', room: 'lesson-l1', role: 'guest' };
     apiSend.mockResolvedValueOnce(room);
     await expect(sends.join({ studentId: 's1', lessonId: 'l1' })).resolves.toEqual(room);
-    expect(apiSend).toHaveBeenLastCalledWith('POST', '/portal/students/s1/lessons/l1/join');
+    expect(apiSend).toHaveBeenLastCalledWith('POST', `${LESSON}/join`, undefined);
     apiSend.mockResolvedValueOnce({ url: 1 });
     await expect(sends.join({ studentId: 's1', lessonId: 'l1' })).rejects.toThrow();
   });
@@ -75,7 +81,7 @@ describe('portal sends', () => {
     const link = { url: 'https://app.example.org/join/x', expires_at: '2026-10-27T16:45:00.000Z' };
     apiSend.mockResolvedValueOnce(link);
     await expect(sends.roomLink({ studentId: 's1', lessonId: 'l1' })).resolves.toEqual(link);
-    expect(apiSend).toHaveBeenLastCalledWith('POST', '/portal/students/s1/lessons/l1/room-link');
+    expect(apiSend).toHaveBeenLastCalledWith('POST', `${LESSON}/room-link`, undefined);
     apiSend.mockResolvedValueOnce({ url: 'x' });
     await expect(sends.roomLink({ studentId: 's1', lessonId: 'l1' })).rejects.toThrow();
   });

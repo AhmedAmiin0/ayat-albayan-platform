@@ -1,4 +1,4 @@
-// One path builder and one query key so web and mobile never drift.
+// The query keys web and phone share, so their caches never drift.
 
 export const PEOPLE_EDIT_KEY = ['people-edit'] as const;
 
@@ -8,19 +8,3 @@ export const peopleEditKey = (studentId: string) => [...PEOPLE_EDIT_KEY, student
 /** The guardian picker's results for one search. */
 export const familySearchKey = (search: string) =>
   [...PEOPLE_EDIT_KEY, 'families', search] as const;
-
-const student = (id: string): string => `/people/students/${encodeURIComponent(id)}`;
-const guardian = (id: string): string => `/people/guardians/${encodeURIComponent(id)}`;
-
-export const peopleEditPaths = {
-  student,
-  guardian,
-  /** The family's second number (DELETE). */
-  secondPhone: (guardianId: string, phone: string): string =>
-    `${guardian(guardianId)}/phones/${encodeURIComponent(phone)}`,
-  families: (search: string): string => `/people/guardians?search=${encodeURIComponent(search)}`,
-  move: (studentId: string): string => `${student(studentId)}/guardian`,
-  contactSelf: (studentId: string): string => `${student(studentId)}/contact-self`,
-  toStudent: (guardianId: string): string => `${guardian(guardianId)}/to-student`,
-  toGuardian: (studentId: string): string => `${student(studentId)}/to-guardian`,
-};

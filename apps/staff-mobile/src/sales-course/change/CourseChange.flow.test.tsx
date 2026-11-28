@@ -38,7 +38,7 @@ beforeEach(() => {
   mockApiSend.mockImplementation(async (_m: string, path: string) =>
     path === `${CHANGE}/check`
       ? { conflicts: [], remaining: 5, endsOn: '2026-10-29' }
-      : { subscriptionId: SUB_ID, ruleIds: ['r1', 'r2'], endsOn: '2026-10-29' },
+      : { subscriptionId: SUB_ID, ruleIds: ['9a1b2c3d-0000-4000-8000-000000000001', '9a1b2c3d-0000-4000-8000-000000000002'], endsOn: '2026-10-29' },
   );
 });
 afterEach(() => jest.useRealTimers());

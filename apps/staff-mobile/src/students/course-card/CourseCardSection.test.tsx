@@ -53,6 +53,7 @@ function answer(course: object | null) {
 beforeEach(() => {
   mockApiFetch.mockReset();
   mockApiSend.mockReset();
+  mockApiSend.mockResolvedValue(BOOKED);
 });
 
 test('the summary, the lessons without a date and the next lessons', async () => {
@@ -90,8 +91,9 @@ test('«مدّ الجدول» previews the dates, then books them and says so', 
   const confirm = screen.getAllByRole('button', { name: c.extend.confirm }).at(-1);
   if (!confirm) throw new Error('no confirm');
   await fireEvent.press(confirm);
-  const posted = expect.objectContaining({ method: 'POST', body: JSON.stringify({ subscriptionId: SUB }) });
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(`${BASE}/course-extend`, posted));
+  const posted = { subscriptionId: SUB };
+  const extendPath = `${BASE}/course-extend`;
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', extendPath, posted));
   expect(await screen.findByText(c.extend.done.two, { exact: false })).toBeTruthy();
 });
 

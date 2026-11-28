@@ -65,7 +65,7 @@ test('a bookable student with a course booked ahead: «محجوزة تبدأ ل�
 });
 
 test('a renewal whose current course is another one (booked ahead): its own days are named in its block', async () => {
-  serve({ previous: runningCourse, current: { ...runningCourse, subscriptionId: 'other', running: false } });
+  serve({ previous: runningCourse, current: { ...runningCourse, subscriptionId: 'f0000000-0000-4000-8000-0000000000f1', running: false } });
   await renderWithQuery(<CourseScreen />);
   expect(await screen.findByText(t.booking.courseChange.upcoming)).toBeTruthy();
   expect(screen.getByText(current)).toBeTruthy();

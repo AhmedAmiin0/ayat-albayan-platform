@@ -1,4 +1,3 @@
-import { paymentsPageSchema } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
@@ -46,15 +45,11 @@ describe('PaymentsPage sort + filters (R-NFR-08)', () => {
     fireEvent.click(await screen.findByRole('button', { name: t.payments.amount }));
     expect(onSearch).toHaveBeenLastCalledWith({ sort: 'amount', dir: undefined, page: undefined });
     await vi.waitFor(() =>
-      expect(apiFetch).toHaveBeenCalledWith('/payments?sort=amount&page=1&pageSize=20', {
-        schema: paymentsPageSchema,
-      }),
+      expect(apiFetch).toHaveBeenCalledWith('/payments?sort=amount&page=1&pageSize=20'),
     );
     fireEvent.click(screen.getByRole('button', { name: t.payments.amount }));
     await vi.waitFor(() =>
-      expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('sort=amount&dir=desc'), {
-        schema: paymentsPageSchema,
-      }),
+      expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('sort=amount&dir=desc')),
     );
   });
 
@@ -73,9 +68,7 @@ describe('PaymentsPage sort + filters (R-NFR-08)', () => {
       target: { value: 'cash' },
     });
     await vi.waitFor(() =>
-      expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('method=cash'), {
-        schema: paymentsPageSchema,
-      }),
+      expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('method=cash')),
     );
     expect(onSearch).toHaveBeenLastCalledWith({ f_method: 'cash', page: undefined });
     expect(screen.getByRole('combobox', { name: by(t.payments.method) })).toBeTruthy();

@@ -24,9 +24,8 @@ export const instantLessonSchema = z.object({
 });
 export type InstantLessonRequest = z.output<typeof instantLessonSchema>;
 
-export interface InstantLessonResult {
-  lessonId: string;
-}
+export const instantLessonResultSchema = z.object({ lessonId: z.string() });
+export type InstantLessonResult = z.infer<typeof instantLessonResultSchema>;
 
 /** POST /lessons/:id/room/open: the lesson's window after the room was opened. */
 export interface RoomOpenResult extends JoinWindow {

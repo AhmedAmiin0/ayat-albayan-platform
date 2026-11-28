@@ -1,9 +1,11 @@
-import type { MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
+import { mySalesCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 // The salesperson's own money pages (R-ASST-06, web staff-web/src/features/sales/api.ts). The API
 // answers only for the caller; amounts stay per currency, never summed across them.
+
+const mine = mySalesCalls({ apiFetch, apiSend });
 
 /** A body that is not a list (an older API, a stub) reads as an empty list rather than crashing. */
 const asList = <T>(data: T[]): T[] => (Array.isArray(data) ? data : []);
@@ -12,18 +14,18 @@ const asList = <T>(data: T[]): T[] => (Array.isArray(data) ? data : []);
 export const useMyStudents = () =>
   useQuery({
     queryKey: pathKey('/sales/me/students'),
-    queryFn: () => apiFetch<MyStudentRow[]>('/sales/me/students'),
+    queryFn: mine.students,
     select: asList,
   });
 
 /** GET /sales/me/earnings — my terms, this month so far, commissions earned and my statements. */
 export const useMyEarnings = () =>
-  useQuery({ queryKey: pathKey('/sales/me/earnings'), queryFn: () => apiFetch<MyEarnings>('/sales/me/earnings') });
+  useQuery({ queryKey: pathKey('/sales/me/earnings'), queryFn: mine.earnings });
 
 /** GET /sales/me/payments — only the payments I recorded. */
 export const useMyPayments = () =>
   useQuery({
     queryKey: pathKey('/sales/me/payments'),
-    queryFn: () => apiFetch<MyPaymentRow[]>('/sales/me/payments'),
+    queryFn: mine.payments,
     select: asList,
   });

@@ -32,8 +32,8 @@ vi.mock('@tanstack/react-router', () => ({
 
 const makeup = (l: LessonView): LessonView & { makeup: true } => ({ ...l, makeup: true });
 const INVOICE: InvoiceView = {
-  id: 'inv-1',
-  rule_id: 'r-1',
+  id: 'e3333333-3333-4333-8333-333333333333',
+  rule_id: 'e1111111-1111-4111-8111-111111111111',
   kind: 'package',
   mime: 'application/pdf',
   size_bytes: 9,
@@ -48,7 +48,7 @@ function renderDrawer(l: LessonView, invoices: InvoiceView[] = []) {
       ? invoices
       : path === '/messaging/templates'
         ? []
-        : { url: 'https://signed/inv' },
+        : { url: 'https://signed/inv', expires_at: '2026-10-03T10:00:00.000Z' },
   );
   render(
     <QueryClientProvider

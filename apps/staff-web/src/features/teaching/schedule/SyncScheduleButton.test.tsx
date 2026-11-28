@@ -28,7 +28,7 @@ describe('«مزامنة الجدول» (R-SCH-02)', () => {
     const { onDone, invalidate } = open();
     fireEvent.click(screen.getByRole('button', { name: t.schedule.sync }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.schedule.synced.replace('{n}', '5')));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/schedule-rules/refresh');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/schedule-rules/refresh', undefined);
     expect(invalidate).toHaveBeenCalledWith({ queryKey: lessonKeys.all });
   });
 

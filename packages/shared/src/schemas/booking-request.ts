@@ -1,3 +1,5 @@
+import { PACKAGE_SIZES, type PackageSize } from '@ab/catalog';
+import { lessonsOf, PACKAGE_IDS, type PackageId } from '@ab/money';
 import { z } from 'zod';
 import { bookingBaseSchema, refineBookingKind, refineDayTimes } from '@ab/schedule';
 import { guardianCreateSchema, studentCreateSchema } from '../people/schemas';
@@ -30,3 +32,21 @@ export const bookingRequestSchema = z
   .superRefine(refineDayTimes);
 
 export type BookingRequest = z.infer<typeof bookingRequestSchema>;
+
+/** Pricing catalog package (docs/08: starter, bulk, weekly…) → schedule_rules.package. */
+export function packageSizeOf(id: PackageId): PackageSize {
+  const lessons = String(lessonsOf(id));
+  const size = PACKAGE_SIZES.find((s) => s === lessons);
+  if (!size) throw new Error(`package ${id} has no package_size for ${lessons} lessons`);
+  return size;
+}
+
+const catalogPackage = z.looseObject({ package: z.enum(PACKAGE_IDS) });
+
+const withPackageSize = (body: z.input<typeof bookingRequestSchema>) => {
+  const read = catalogPackage.safeParse(body);
+  return read.success ? { ...read.data, package: packageSizeOf(read.data.package) } : body;
+};
+
+/** The booking and trial-date body: a catalog package id is read as its lesson count. */
+export const bookingBodySchema = z.preprocess(withPackageSize, bookingRequestSchema);

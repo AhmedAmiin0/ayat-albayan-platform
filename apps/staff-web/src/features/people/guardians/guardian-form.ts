@@ -2,7 +2,7 @@ import { guardianUpdateSchema, type GuardianUpdate } from '@ab/shared';
 import type { LeadSource } from '@ab/catalog';
 import { phoneError, requiredError } from '@/features/people/students/create/create-student';
 import { t } from '@ab/web-kit';
-import type { GuardianDetail } from './api';
+import type { GuardianDetail } from '@ab/shared';
 
 /** Inputs hold strings; '' means not set. */
 export type GuardianValues = {
