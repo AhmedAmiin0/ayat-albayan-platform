@@ -2,12 +2,14 @@ import {
   changeEffectiveFrom,
   type CourseChangeCheck,
   type CourseChangeResult,
+  profileCourseViewSchema,
   type ProfileCourseView,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 import { CourseChangeRepo } from '@/modules/teaching/booking/course-change/course-change.repo';
 import {
   CourseChange,
@@ -59,10 +61,8 @@ export class ProfileCourse {
     const view = await this.views.view(subscriptionId);
     const course = await this.queries.course(subscriptionId);
     const upcoming = await this.repo.upcoming(course.map((r) => r.rule_id));
-    return {
-      ...view,
-      nextLesson: changeEffectiveFrom(upcoming, { tz: view.course.tz, now: new Date() }),
-    };
+    const nextLesson = changeEffectiveFrom(upcoming, { tz: view.course.tz, now: new Date() });
+    return asResponse(profileCourseViewSchema, { ...view, nextLesson });
   }
 
   /** 403 not_your_student before anything of another assistant's student is read (actorOf). */

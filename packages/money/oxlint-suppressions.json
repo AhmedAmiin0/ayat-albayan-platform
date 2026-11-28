@@ -62,7 +62,7 @@
   },
   "src/assistant/wallet.ts": {
     "stylistic/max-len": {
-      "count": 9
+      "count": 7
     }
   },
   "src/ledger/alerts.ts": {
@@ -89,11 +89,6 @@
     }
   },
   "src/ledger/earnings/earnings-schemas.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/ledger/earnings/earnings-views.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -155,11 +150,6 @@
       "count": 2
     }
   },
-  "src/ledger/views.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/pricing/currency.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -173,9 +163,6 @@
   "src/pricing/quote/quote.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/pricing/renewal.ts": {

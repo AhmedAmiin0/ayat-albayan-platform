@@ -1,6 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
+import { ApiError } from '@ab/mobile-kit';
 import { usePagedList } from './use-paged-list';
 
 const mockApiFetch = jest.fn();
@@ -78,4 +79,40 @@ test('empty list is empty, not pending', async () => {
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   expect(result.current.items).toEqual([]);
   expect(result.current.total).toBe(0);
+});
+
+test('a list with its own read asks it for each page with the signal, never by path', async () => {
+  const read = jest.fn(async ({ page }: { page: number; pageSize: number }, _: AbortSignal) => ({
+    items: [lead(`p${page}`)],
+    total: 2,
+    page,
+    pageSize: 1,
+  }));
+  const { result } = await renderHook(
+    () => usePagedList({ path: '/students', params: { teacher: 't' }, pageSize: 1, read }),
+    { wrapper: queryWrapper(createTestQueryClient()) },
+  );
+  await waitFor(() => expect(result.current.hasNextPage).toBe(true));
+  await act(async () => result.current.loadMore());
+  await waitFor(() => expect(result.current.items.map((r) => r.id)).toEqual(['p1', 'p2']));
+  expect(read.mock.calls.map(([at]) => at)).toEqual([
+    { page: 1, pageSize: 1 },
+    { page: 2, pageSize: 1 },
+  ]);
+  expect(read.mock.calls[0]?.[1]).toBeInstanceOf(AbortSignal);
+  expect(mockApiFetch).not.toHaveBeenCalled();
+});
+
+test('a read of its own that gets a bad answer shows as the list error', async () => {
+  const bad = new ApiError(200, { code: 'bad_response', path: '/teachers', issues: [] });
+  const read = jest.fn(async () => Promise.reject(bad));
+  const { result } = await renderHook(
+    () => {
+      const list = usePagedList({ path: '/teachers', read });
+      return { error: list.error, items: list.items };
+    },
+    { wrapper: queryWrapper(createTestQueryClient()) },
+  );
+  await waitFor(() => expect(result.current.error).toBe(bad));
+  expect(result.current.items).toEqual([]);
 });

@@ -133,11 +133,6 @@
       "count": 1
     }
   },
-  "src/components/shell/account/SideFoot.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/components/shell/header/SheetBell.tsx": {
     "ab/module-boundaries": {
       "count": 2
@@ -145,7 +140,7 @@
   },
   "src/components/shell/layout/AdminLayout.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -341,14 +336,8 @@
     }
   },
   "src/features/finance/expenses/api.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 9
     }
   },
   "src/features/finance/expenses/expense-columns.tsx": {
@@ -413,7 +402,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 1
     }
   },
   "src/features/finance/finance/finance-tables.test.tsx": {
@@ -501,15 +490,12 @@
   },
   "src/features/finance/payments/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 3
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -661,14 +647,6 @@
       "count": 1
     }
   },
-  "src/features/finance/payouts/api.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/features/finance/payouts/list/PayoutActions.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -753,11 +731,6 @@
       "count": 1
     }
   },
-  "src/features/finance/pricing/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/features/finance/pricing/calculator/QuoteResult.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -817,7 +790,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 8
+      "count": 6
     }
   },
   "src/features/finance/subscriptions/balance/BalanceCard/BalanceCard.tsx": {
@@ -973,13 +946,13 @@
   },
   "src/features/finance/teacher-earnings/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 3
     },
     "ab/no-untyped-api-calls": {
-      "count": 7
+      "count": 2
     }
   },
   "src/features/finance/teacher-earnings/fixtures.ts": {
@@ -2494,11 +2467,6 @@
       "count": 2
     }
   },
-  "src/features/people/account/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 6
-    }
-  },
   "src/features/people/account/avatar-file.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -2573,13 +2541,13 @@
   },
   "src/features/people/assistants/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
       "count": 5
     },
     "ab/no-untyped-api-calls": {
-      "count": 11
+      "count": 5
     }
   },
   "src/features/people/assistants/commissions/CommissionLedger.test.tsx": {
@@ -2823,17 +2791,6 @@
       "count": 1
     }
   },
-  "src/features/people/guardians/api.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
   "src/features/people/guardians/guardian-form.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -2867,11 +2824,6 @@
       "count": 1
     }
   },
-  "src/features/people/roles/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 6
-    }
-  },
   "src/features/people/roles/role-form.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -2890,11 +2842,6 @@
       "count": 1
     }
   },
-  "src/features/people/staff-photo/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/features/people/staff-photo/photo-error.ts": {
     "ab/no-shape-checks": {
       "count": 2
@@ -2910,10 +2857,7 @@
   },
   "src/features/people/students/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 7
+      "count": 1
     }
   },
   "src/features/people/students/create/CreateStudentDialog/CreateStudentDialog.tsx": {
@@ -3165,11 +3109,6 @@
       "count": 1
     }
   },
-  "src/features/people/teachers/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 4
-    }
-  },
   "src/features/people/teachers/availability/AvailabilityDay.tsx": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -3190,16 +3129,7 @@
     "typescript/consistent-type-definitions": {
       "count": 1
     },
-    "max-lines-per-function": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -3290,12 +3220,6 @@
     "stylistic/max-len": {
       "count": 1
     },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
-    },
     "typescript/no-confusing-void-expression": {
       "count": 2
     }
@@ -3379,14 +3303,6 @@
     },
     "max-lines-per-function": {
       "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    }
-  },
-  "src/features/people/teachers/time-off/TimeOffList.tsx": {
-    "ab/forbidden-imports": {
-      "count": 1
     }
   },
   "src/features/people/teachers/time-off/time-off.ts": {
@@ -3428,11 +3344,6 @@
   "src/features/people/users/actions/set-password.ts": {
     "typescript/no-deprecated": {
       "count": 1
-    }
-  },
-  "src/features/people/users/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 9
     }
   },
   "src/features/people/users/create/CreateUserDialog.tsx": {
@@ -3686,11 +3597,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    }
-  },
-  "src/features/platform/presence/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/features/platform/settings/boundaries.test.ts": {
@@ -4598,7 +4504,7 @@
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 6
+      "count": 1
     }
   },
   "src/features/sales/payment-links/errors.ts": {
@@ -4679,7 +4585,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 10
+      "count": 9
     }
   },
   "src/features/sales/sales-money/course/ContinueChoice.tsx": {
@@ -4938,7 +4844,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 8
+      "count": 4
     }
   },
   "src/features/sales/sales/live/SalesLive.tsx": {
@@ -5210,13 +5116,10 @@
   },
   "src/features/teaching/booking/api.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "complexity": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 4
     },
     "typescript/dot-notation": {
       "count": 9
@@ -5250,14 +5153,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    }
-  },
-  "src/features/teaching/booking/course-change/api.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
     }
   },
   "src/features/teaching/booking/course-change/change-body.ts": {
@@ -5358,7 +5253,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 6
+      "count": 2
     }
   },
   "src/features/teaching/booking/invoice/invoice-file.ts": {
@@ -5525,9 +5420,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 3
     }
   },
   "src/features/teaching/booking/trial-date/dialog/TrialDateDialog/TrialDateDialog.tsx": {
@@ -5582,7 +5474,7 @@
   },
   "src/features/teaching/classroom/api/meetings-api.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/features/teaching/classroom/join/GuestJoinPage.tsx": {
@@ -5695,11 +5587,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/course-actions/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 4
-    }
-  },
   "src/features/teaching/course-pause/ChangeUntilDialog.tsx": {
     "stylistic/max-len": {
       "count": 2
@@ -5718,9 +5605,6 @@
   "src/features/teaching/course-pause/api.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 6
     }
   },
   "src/features/teaching/feedback/FeedbackPage.test.tsx": {
@@ -5934,13 +5818,13 @@
   },
   "src/features/teaching/schedule/api.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1
     },
     "ab/no-untyped-api-calls": {
-      "count": 11
+      "count": 9
     }
   },
   "src/features/teaching/schedule/edit-time/EditTime.captions.test.tsx": {

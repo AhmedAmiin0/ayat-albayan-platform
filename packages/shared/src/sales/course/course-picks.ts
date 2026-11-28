@@ -6,7 +6,8 @@ import {
   type DayTime,
   type PickedRule,
 } from '@ab/schedule';
-import type { BookedCourse, PrefilledPick } from './course-follow';
+import type { BookedCourse } from './booked-course.schemas';
+import type { PrefilledPick } from './course-follow';
 import { prefillDays } from './course-follow';
 
 // Shared by web and mobile so both read the days the same way; pure, Intl only.

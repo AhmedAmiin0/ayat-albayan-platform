@@ -10,7 +10,13 @@ vi.mock('@/features/people/auth', async (orig) => ({
   usePermissions: () => ({ permissions: perms.list, can: (p: string) => perms.list.includes(p) }),
 }));
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
+const BOOKED = { subscriptionId: 'sub1', inserted: 1, endsOn: '2026-12-06', conflicts: 0 };
 
 const c = t.courseCard;
 const PKG = {
@@ -30,8 +36,9 @@ const card = (course: object | null) => ({
 const PREVIEW = { subscriptionId: 'sub1', starts: ['2026-12-06T14:00:00Z'], tz: 'Asia/Riyadh', endsOn: '2026-12-06', notified: [] };
 
 function serve(course: object | null) {
+  apiSend.mockResolvedValue(BOOKED);
   apiFetch.mockImplementation(async (path: string, init?: RequestInit) => {
-    if (init?.method === 'POST') return { subscriptionId: 'sub1', inserted: 1, endsOn: '2026-12-06', conflicts: 0 };
+    if (init?.method === 'POST') return BOOKED;
     if (path.endsWith('/course-card')) return card(course);
     if (path.startsWith('/students/s1/course-extend')) return PREVIEW;
     if (path.endsWith('/course-pause')) return { open: null, history: [] };

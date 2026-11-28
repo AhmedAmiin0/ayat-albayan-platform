@@ -1,9 +1,10 @@
+import { pricingRoutes } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { PRICE_LIST_PATH, priceListKeys } from '../price-list.keys';
+import { priceListKeys } from '../price-list.keys';
 
 describe('priceListKeys', () => {
-  it('sits under the API path, so one key reaches every cached list', () => {
-    expect(PRICE_LIST_PATH).toBe('/pricing/list');
+  it('sits under the route path, so one key reaches every cached list', () => {
+    expect(pricingRoutes.list.path).toBe('/pricing/list');
     expect(priceListKeys.all).toEqual(['pricing', 'list']);
   });
 

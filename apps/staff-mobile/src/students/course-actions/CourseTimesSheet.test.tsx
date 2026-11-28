@@ -23,7 +23,7 @@ const CLASH = { kind: 'teacher_busy', startsAt: changeBody.startsAt, endsAt: cha
 const answer = (conflicts: unknown[]) => async (_m: string, path: string) =>
   path === `${PATH}/check`
     ? { conflicts, remaining: 5, endsOn: '2026-10-29' }
-    : { subscriptionId: SUB, ruleIds: ['r1'], endsOn: '2026-10-29' };
+    : { subscriptionId: SUB, ruleIds: ['9a1b2c3d-0000-4000-8000-000000000001'], endsOn: '2026-10-29' };
 
 beforeEach(() => {
   jest.clearAllMocks();

@@ -1,11 +1,11 @@
-import { PRESENCE_SELF_PATH, presenceSelfKey, trackSelf } from '@ab/client-core';
-import type { PresenceSelf } from '@ab/shared';
+import { presenceSelfCall, presenceSelfKey, trackSelf } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { apiFetch, supabase, useAppActive } from '@ab/mobile-kit';
+import { apiFetch, apiSend, supabase, useAppActive } from '@ab/mobile-kit';
 
 /** The setting rarely changes: read once in a while, not per screen. */
 const SELF_STALE_MS = 15 * 60_000;
+const readSelf = presenceSelfCall({ apiFetch, apiSend });
 
 /**
  * Online now for everyone else (docs/33 §1.1): the signed-in user tracks their own presence topic
@@ -16,7 +16,7 @@ export function usePresenceSelf(profileId: string): void {
   const active = useAppActive();
   const self = useQuery({
     queryKey: presenceSelfKey,
-    queryFn: () => apiFetch<PresenceSelf>(PRESENCE_SELF_PATH),
+    queryFn: readSelf,
     enabled: profileId !== '',
     staleTime: SELF_STALE_MS,
   });

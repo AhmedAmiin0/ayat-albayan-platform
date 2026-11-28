@@ -1,31 +1,50 @@
 import { NotFoundException } from '@nestjs/common';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { asResponse } from '@/common/http/returns';
 import { accountKit, ME } from './account.fakes';
+
+vi.mock('@/common/http/returns', { spy: true });
 
 describe('GET /me/profile (R-ACC-01)', () => {
   it('returns the caller’s name, email from Auth, phone, role label and no photo', async () => {
     const kit = accountKit();
     expect(await kit.account.profile(ME)).toEqual({
-      id: 'user-1',
+      id: ME.id,
       full_name: 'Huda',
       email: 'old@example.test',
       phone_e164: null,
       avatar_url: null,
-      avatar_seed: 'user-1',
+      avatar_seed: ME.id,
       role: { base: 'teacher', key: 'teacher', name_ar: 'teacher-ar', name_en: 'Teacher' },
     });
   });
 
   it('signs a short-lived URL for a stored photo', async () => {
     const kit = accountKit();
-    await kit.store.update(ME.id, { avatar_path: 'user-1/avatar-1.png' });
-    expect((await kit.account.profile(ME)).avatar_url).toBe('https://storage.test/signed/user-1/avatar-1.png');
+    await kit.store.update(ME.id, { avatar_path: `${ME.id}/avatar-1.png` });
+    expect((await kit.account.profile(ME)).avatar_url).toBe(
+      `https://storage.test/signed/${ME.id}/avatar-1.png`,
+    );
   });
 
   it('falls back to the token email when Auth has none, and 404s without a profile', async () => {
     const kit = accountKit();
     kit.auth.emails.clear();
     expect((await kit.account.profile(ME)).email).toBe('old@example.test');
-    await expect(kit.account.profile({ ...ME, id: 'nobody' })).rejects.toBeInstanceOf(NotFoundException);
+    await expect(kit.account.profile({ ...ME, id: 'nobody' })).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
+  });
+});
+
+describe('the profile answer (docs/62 part 2 §3: asResponse on read routes only)', () => {
+  it('checks GET /me/profile and not the answer of a profile or photo write', async () => {
+    const kit = accountKit();
+    vi.mocked(asResponse).mockClear();
+    await kit.account.updateProfile(ME, { full_name: 'Huda A.' });
+    await kit.avatar.remove(ME);
+    expect(asResponse).not.toHaveBeenCalled();
+    await kit.account.profile(ME);
+    expect(asResponse).toHaveBeenCalledTimes(1);
   });
 });

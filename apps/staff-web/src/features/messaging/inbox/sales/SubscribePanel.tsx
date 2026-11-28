@@ -1,7 +1,7 @@
 import type { ThreadPeople } from '@ab/shared';
 import { studentStatusStyle } from '@ab/money';
 import { Link } from '@tanstack/react-router';
-import { railXl, cn, Button, Ltr, StatusChip, Toast, t } from '@ab/web-kit';
+import { railThread, cn, Button, Ltr, StatusChip, Toast, t } from '@ab/web-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { CreateSubscriptionDialog } from '@/features/finance/subscriptions/create/CreateSubscriptionDialog';
@@ -27,7 +27,7 @@ export function SubscribePanel({ people }: { people: ThreadPeople }) {
   return (
     <aside
       aria-label={t.inbox.subscription.title}
-      className={cn('grid content-start gap-3', railXl)}
+      className={cn('grid content-start gap-3', railThread)}
     >
       <SearchFromProfile />
       <h3 className="text-sm font-semibold">{t.inbox.subscription.title}</h3>

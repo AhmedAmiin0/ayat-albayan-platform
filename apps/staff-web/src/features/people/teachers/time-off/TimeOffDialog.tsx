@@ -1,8 +1,8 @@
 import type { TimeOffCreate } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button, Dialog, Field, Input, apiSend, t, FormAlert } from '@ab/web-kit';
-import { timeOffQuery } from '@/features/people/teachers/api';
+import { Button, Dialog, Field, Input, t, FormAlert } from '@ab/web-kit';
+import { addTimeOff, timeOffQuery } from '@/features/people/teachers/api';
 import { emptyTimeOffDraft, toTimeOffBody, type TimeOffDraft } from './time-off';
 
 type Props = { teacherId: string; onClose: () => void };
@@ -16,7 +16,7 @@ export function TimeOffDialog({ teacherId, onClose }: Props) {
   const set = (patch: Partial<TimeOffDraft>) => setDraft((d) => ({ ...d, ...patch }));
 
   const add = useMutation({
-    mutationFn: (body: TimeOffCreate) => apiSend('POST', `/teachers/${teacherId}/time-off`, body),
+    mutationFn: (body: TimeOffCreate) => addTimeOff(teacherId, body),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: timeOffQuery(teacherId).queryKey });
       onClose();

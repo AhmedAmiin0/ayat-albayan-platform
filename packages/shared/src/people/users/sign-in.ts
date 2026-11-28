@@ -110,9 +110,10 @@ export const codeSessionSchema = z.object({
 export type CodeSession = z.infer<typeof codeSessionSchema>;
 
 /** POST /auth/login: the session for supabase.auth.setSession. */
-export interface PasswordSession {
-  access_token: string;
-  refresh_token: string;
-  expires_in: number;
-  expires_at: number | null;
-}
+export const passwordSessionSchema = z.object({
+  access_token: z.string().min(1),
+  refresh_token: z.string().min(1),
+  expires_in: z.number(),
+  expires_at: z.number().nullable(),
+});
+export type PasswordSession = z.infer<typeof passwordSessionSchema>;

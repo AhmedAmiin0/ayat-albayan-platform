@@ -1,5 +1,5 @@
 import type { Duration } from '@ab/catalog';
-import type { BalanceView, QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/money';
+import type { BalanceView, StudentBalanceView, SubscriptionView } from '@ab/money';
 import { countsForMoney, livePackages, studentRemaining } from '@ab/money';
 import { emptyBalance, type BalanceRow } from './money/balance.repo';
 import type { StudentRef, SubRow } from './shared/subscriptions.repo';
@@ -44,7 +44,7 @@ export function toSubscriptionView(sub: SubRow, ctx: SubContext): SubscriptionVi
     fx_rate: sub.fx_rate === null ? null : Number(sub.fx_rate),
     fx_date: sub.fx_date,
     // Written only by the API from PricingService.quote (S2).
-    price_source: sub.price_source as unknown as QuoteResponse,
+    price_source: sub.price_source as SubscriptionView['price_source'],
     starts_on: sub.starts_on,
     status: sub.status,
     cancel_kind: sub.cancel_kind,

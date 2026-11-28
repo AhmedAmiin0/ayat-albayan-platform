@@ -1,17 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import { apiFetch, t, pathKey, ErrorState, InsetGroup, Section } from '@ab/mobile-kit';
+import { t, ErrorState, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { groupByWeekday, gridTz, tzLabel } from '@/more/schedule';
 import { WeekdayRow } from './WeekdayRow';
-import type { AvailabilityRow, Teacher } from '@ab/shared';
+import { useWeeklyGrid } from './use-teacher-availability';
+import type { Teacher } from '@ab/shared';
 
 /** R-TCH-02: read-only, in the zone it was saved in. */
 export function WeeklyAvailability({ teacher }: { teacher: Pick<Teacher, 'id' | 'tz'> }) {
-  const path = `/teachers/${teacher.id}/availability`;
-  const query = useQuery({
-    queryKey: pathKey(path),
-    queryFn: () => apiFetch<AvailabilityRow[]>(path),
-  });
+  const query = useWeeklyGrid(teacher.id);
   const rows = query.data;
   return (
     <Section title={t.availability.title}>

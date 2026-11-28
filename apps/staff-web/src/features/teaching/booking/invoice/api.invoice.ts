@@ -1,12 +1,9 @@
-import type { SignedDownload, SignedUpload } from '@ab/shared';
+import { bookingExtraCalls, invoiceCalls } from '@ab/client-core';
+import { invoiceUploadSchema, type InvoiceUpload } from '@ab/schedule';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import type {
-  InvoiceView,
-  MakeupCandidate,
-  ThreadMediaItem,
-} from '@/features/teaching/booking/draft/contract';
+import type { ThreadMediaItem } from '@/features/teaching/booking/draft/contract';
 import { invoiceMime } from './invoice-file';
 import {
   bookingKeys,
@@ -17,8 +14,9 @@ import {
 // R-SCH-10 / R-PAY-03 / R-MSG-06 routes (spec section 4): the invoice upload, the chat's media,
 // the missed lessons of a student and the stored invoices (all admin only).
 
-export const invoiceUploadUrl = (body: { clientRequestId: string; mime: string; size: number }) =>
-  apiSend<SignedUpload>('POST', '/booking/invoice-upload-url', body);
+const extras = bookingExtraCalls({ apiFetch, apiSend });
+
+export const invoiceUploadUrl = (body: InvoiceUpload) => extras.invoiceUploadUrl(body);
 
 /**
  * The invoice goes straight to the private bucket through a one-off signed URL; its path is then
@@ -26,7 +24,7 @@ export const invoiceUploadUrl = (body: { clientRequestId: string; mime: string; 
  */
 export async function uploadInvoiceFile(input: { requestId: string; file: File }): Promise<string> {
   const { file } = input;
-  const mime = invoiceMime(file);
+  const mime = invoiceUploadSchema.shape.mime.parse(invoiceMime(file));
   const signed = await invoiceUploadUrl({
     clientRequestId: input.requestId,
     mime,
@@ -62,21 +60,18 @@ export const threadMediaUrl = (phone: string, messageId: string) =>
 export const makeupCandidatesQuery = (studentId: string) =>
   queryOptions({
     queryKey: bookingKeys.makeupCandidates(studentId),
-    queryFn: () =>
-      apiFetch<MakeupCandidate[]>(
-        `/booking/makeup-candidates?studentId=${encodeURIComponent(studentId)}`,
-      ),
+    queryFn: () => extras.makeupCandidates(studentId),
   });
+
+const invoices = invoiceCalls({ apiFetch, apiSend });
 
 /** GET /invoices?ruleId= | ?studentId= (admin only). */
-export const invoicesQuery = (f: { ruleId: string } | { studentId: string }) => {
-  const params = new URLSearchParams(f);
-  return queryOptions({
-    queryKey: invoiceKeys.list(params.toString()),
-    queryFn: () => apiFetch<InvoiceView[]>(`/invoices?${params}`),
+export const invoicesQuery = (f: { ruleId: string } | { studentId: string }) =>
+  queryOptions({
+    queryKey: invoiceKeys.list(new URLSearchParams(f).toString()),
+    queryFn: () => invoices.list(f),
     retry: false,
   });
-};
 
 /** GET /invoices/:id/download — a 1-hour signed URL. */
-export const invoiceDownload = (id: string) => apiFetch<SignedDownload>(`/invoices/${id}/download`);
+export const invoiceDownload = invoices.download;

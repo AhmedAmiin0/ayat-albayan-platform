@@ -1,3 +1,4 @@
+import { studentProfileFixture } from '@ab/shared/testing';
 import { screen } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
 import { StudentReportsScreen } from '@/teacher/screens/StudentReportsScreen/StudentReportsScreen';
@@ -17,7 +18,7 @@ const NOTE = 'التواصل مع أسرة طالب التجربة يكون عب
 test('the admin’s view of a trial student never shows the teacher’s note (no /teachers/me read)', async () => {
   mockApiFetch.mockImplementation(async (p: string) =>
     p === '/students/s1'
-      ? { id: 's1', name: 'يوسف أحمد', status: 'trial' }
+      ? studentProfileFixture({ id: 's1', name: 'يوسف أحمد', status: 'trial' })
       : { items: [], total: 0, page: 1, pageSize: 10, series: [] },
   );
   await renderWithQuery(<StudentReportsScreen />);

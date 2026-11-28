@@ -1,10 +1,14 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
+import { savedProfile } from '@/test/account';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { MINE, REPLIES, WELCOME } from './testing/fixtures';
 import { clearComposerDrafts } from '@/inbox/composer/draft-store';
+
+/** The signed-in staff member the composer greets with. */
+const ME = savedProfile({ full_name: 'سارة' });
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -24,7 +28,7 @@ async function open() {
     thread: { ...thread, last_inbound_at: new Date(Date.now() - 5 * 60_000).toISOString() },
   });
   mockApiFetch.mockImplementation(async (p: string) =>
-    p === '/saved-replies' ? REPLIES : p === '/me/profile' ? { full_name: 'سارة' } : p === '/messages/gate' ? { open: true, reason: null, queued: 0 } : th,
+    p === '/saved-replies' ? REPLIES : p === '/me/profile' ? ME : p === '/messages/gate' ? { open: true, reason: null, queued: 0 } : th,
   );
   await renderWithQuery(<ThreadScreen />, createTestQueryClient());
   await screen.findByText(inbound.body ?? '');

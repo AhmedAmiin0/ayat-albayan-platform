@@ -1,10 +1,12 @@
-import type { SignedUpload } from '@ab/shared';
-import { apiSend } from '@ab/mobile-kit';
+import { bookingExtraCalls } from '@ab/client-core';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 
 /** The API signed the upload but Storage did not take the file. */
 export class InvoiceUploadError extends Error {}
+
+const extras = bookingExtraCalls({ apiFetch, apiSend });
 
 /**
  * POST /booking/invoice-upload-url, then the signed upload: the API picks and signs the path
@@ -13,7 +15,7 @@ export class InvoiceUploadError extends Error {}
  * Resolves the path for the booking's `invoice`.
  */
 export async function uploadInvoice(requestId: string, receipt: Receipt): Promise<string> {
-  const signed = await apiSend<SignedUpload>('POST', '/booking/invoice-upload-url', {
+  const signed = await extras.invoiceUploadUrl({
     clientRequestId: requestId,
     mime: receipt.mime,
     size: receipt.size,

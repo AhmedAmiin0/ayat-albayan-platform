@@ -1,8 +1,8 @@
-import { pageOf } from '@ab/core';
-import { paymentViewSchema, type StudentBalanceView } from '@ab/money';
+import { paymentCalls } from '@ab/client-core';
+import type { StudentBalanceView } from '@ab/money';
 import type { AcademySettings } from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString, listKey, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, listKey, pathKey } from '@ab/mobile-kit';
 
 // Money reads (docs/11 §6–7). Keys follow lib/query-keys, so invalidating ['students', id] reaches
 // the balance and ['payments'] reaches every payments list.
@@ -39,12 +39,12 @@ export function useRenewalThreshold(): number | undefined {
 /** The student's latest payments on the quick view (P1, newest first). */
 const recentParams = (studentId: string) => ({ studentId, pageSize: 5 });
 
-const recentPaymentsSchema = pageOf(paymentViewSchema);
+const payments = paymentCalls({ apiFetch, apiSend });
 
 export function useRecentPayments(studentId: string) {
   const params = recentParams(studentId);
   return useQuery({
     queryKey: listKey('/payments', params),
-    queryFn: () => apiFetch(`/payments${toQueryString(params)}`, { schema: recentPaymentsSchema }),
+    queryFn: () => payments.list(params),
   });
 }

@@ -1,33 +1,27 @@
-import type { SignedDownload, SignedUpload } from '@ab/shared';
-import {
-  earningsListQuery,
-  teacherPaymentListQuery,
-  teacherPaymentCreateSchema,
-  teacherReceiptUploadSchema,
-  teacherResyncSchema,
-  voidReasonSchema,
-  type TeacherEarningsBalanceView,
-  type TeacherEarningsSummaryView,
-  type TeacherEarningView,
-  type TeacherPaymentResult,
-  type TeacherPaymentView,
+import { teacherEarningRoutes as routes, type SignedDownload, type SignedUpload } from '@ab/shared';
+import type {
+  TeacherEarningsBalanceView,
+  TeacherEarningsSummaryView,
+  TeacherEarningView,
+  TeacherPaymentResult,
+  TeacherPaymentView,
 } from '@ab/money';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import type { Page } from '@ab/core';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { CorrectionsRepo } from './summary/corrections.repo';
 import { EarningsReceipts } from './earnings.receipts';
 import { EarningsService } from './earnings.service';
 import { toSummaryView } from './summary/earnings.summary';
-import type { Page } from '@ab/core';
+
+type In<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 /** Admin: a teacher's balance, sessions and payments; record a payment (docs/11 §10). */
-@ApiTags('teacher-earnings')
 @ApiBearerAuth()
-@Permissions('earnings.read')
-@Controller('teacher-earnings')
+@Controller()
 export class TeacherEarningsController {
   constructor(
     private readonly earnings: EarningsService,
@@ -35,69 +29,61 @@ export class TeacherEarningsController {
     private readonly corrections: CorrectionsRepo,
   ) {}
 
-  /** Static segment, declared before `:teacherId`. */
-  @Get('summary')
+  @Route(routes.summary)
   async summary(): Promise<TeacherEarningsSummaryView> {
     return toSummaryView(await this.corrections.summary());
   }
 
-  /** Static segment, declared before `:teacherId`. After a rate or a payout_count_* setting changes. */
-  @Post('resync')
+  /** After a rate or a payout_count_* setting changes. */
+  @Route(routes.resync)
   @HttpCode(200)
-  @Permissions('earnings.write')
-  async resync(@Body() body: unknown): Promise<{ lessons: number }> {
-    const { teacherId } = parseOrThrow(teacherResyncSchema, body ?? {});
-    return { lessons: await this.earnings.resync(teacherId) };
+  async resync(@RouteInput() { body }: In<'resync'>): Promise<{ lessons: number }> {
+    return { lessons: await this.earnings.resync(body.teacherId) };
   }
 
   /** A wrong transfer is voided with a reason (never deleted); its sessions are owed again. */
-  @Post('payments/:id/void')
+  @Route(routes.void)
   @HttpCode(200)
-  @Permissions('earnings.write')
-  async void(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
-    const { reason } = parseOrThrow(voidReasonSchema, body ?? {});
-    await this.corrections.voidPayment({ paymentId: id, actorId: user.id, reason });
-    return this.earnings.payment(id);
+  async void(
+    @RouteInput() { params, body }: In<'void'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TeacherPaymentView> {
+    await this.corrections.voidPayment({ paymentId: params.id, actorId: user.id, ...body });
+    return this.earnings.payment(params.id);
   }
 
-  @Get('payments/:id/receipt')
-  receipt(@Param('id', ParseUUIDPipe) id: string): Promise<SignedDownload> {
-    return this.earnings.receipt(id);
+  @Route(routes.receipt)
+  receipt(@RouteInput() { params }: In<'receipt'>): Promise<SignedDownload> {
+    return this.earnings.receipt(params.id);
   }
 
-  @Get(':teacherId')
-  balance(@Param('teacherId', ParseUUIDPipe) teacherId: string): Promise<TeacherEarningsBalanceView> {
-    return this.earnings.balance(teacherId);
+  @Route(routes.balance)
+  balance(@RouteInput() { params }: In<'balance'>): Promise<TeacherEarningsBalanceView> {
+    return this.earnings.balance(params.teacherId);
   }
 
-  @Get(':teacherId/sessions')
-  sessions(@Param('teacherId', ParseUUIDPipe) teacherId: string, @Query() query: unknown): Promise<Page<TeacherEarningView>> {
-    return this.earnings.sessions(teacherId, parseOrThrow(earningsListQuery, query));
+  @Route(routes.sessions)
+  sessions(@RouteInput() { params, query }: In<'sessions'>): Promise<Page<TeacherEarningView>> {
+    return this.earnings.sessions(params.teacherId, query);
   }
 
-  @Get(':teacherId/payments')
-  payments(@Param('teacherId', ParseUUIDPipe) teacherId: string, @Query() query: unknown): Promise<Page<TeacherPaymentView>> {
-    return this.earnings.payments(teacherId, parseOrThrow(teacherPaymentListQuery, query));
+  @Route(routes.payments)
+  payments(@RouteInput() { params, query }: In<'payments'>): Promise<Page<TeacherPaymentView>> {
+    return this.earnings.payments(params.teacherId, query);
   }
 
-  @Post(':teacherId/payments')
+  @Route(routes.record)
   @HttpCode(200)
-  @Permissions('earnings.write')
   record(
-    @Param('teacherId', ParseUUIDPipe) teacherId: string,
-    @Body() body: unknown,
+    @RouteInput() { params, body }: In<'record'>,
     @CurrentUser() user: AuthUser,
   ): Promise<TeacherPaymentResult> {
-    return this.earnings.record(
-      { teacherId, actorId: user.id },
-      parseOrThrow(teacherPaymentCreateSchema, body),
-    );
+    return this.earnings.record({ teacherId: params.teacherId, actorId: user.id }, body);
   }
 
-  @Post(':teacherId/receipt-upload-url')
+  @Route(routes.receiptUploadUrl)
   @HttpCode(200)
-  @Permissions('earnings.write')
-  receiptUploadUrl(@Param('teacherId', ParseUUIDPipe) teacherId: string, @Body() body: unknown): Promise<SignedUpload> {
-    return this.receipts.uploadUrl(teacherId, parseOrThrow(teacherReceiptUploadSchema, body));
+  receiptUploadUrl(@RouteInput() { params, body }: In<'receiptUploadUrl'>): Promise<SignedUpload> {
+    return this.receipts.uploadUrl(params.teacherId, body);
   }
 }

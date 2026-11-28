@@ -3,6 +3,21 @@ import { t } from '@ab/web-kit';
 import { expenseBody, expenseForm } from './expense-form';
 
 const form = expenseForm(null, '2026-10-05');
+const EXPENSE = {
+  id: '00000000-0000-4000-8000-000000000001',
+  month: '2026-10',
+  category: 'ads',
+  amount: 10,
+  currency: 'EGP',
+  note: null,
+  created_at: '2026-10-02T10:00:00Z',
+  paid_on: null,
+  vendor: null,
+  method: null,
+  has_receipt: false,
+  recurring: false,
+  is_draft: false,
+};
 
 describe('expense form', () => {
   it('a new expense defaults to today, EGP, not recurring', () => {
@@ -23,5 +38,11 @@ describe('expense form', () => {
     });
     const noDay = expenseBody({ ...form, amount: '5', paidOn: '' }, '2026-10');
     expect(noDay.ok && noDay.body.month).toBe('2026-10');
+  });
+
+  it('a stored card method opens blank: the form offers only the manual methods', () => {
+    const card = { ...EXPENSE, method: 'card' as const };
+    expect(expenseForm(card, '2026-10-05').method).toBe('');
+    expect(expenseForm({ ...card, method: 'wallet' }, '2026-10-05').method).toBe('wallet');
   });
 });

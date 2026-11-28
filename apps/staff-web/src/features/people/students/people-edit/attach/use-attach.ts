@@ -3,7 +3,7 @@ import type { PeopleEditView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { t } from '@ab/web-kit';
-import { familySearchQuery, moveFamily } from '@/features/people/students/people-edit/api';
+import { familySearchQuery, peopleWrites } from '@/features/people/students/people-edit/api';
 import { usePeopleWrite } from '@/features/people/students/people-edit/use-people-write';
 
 export function useAttach(view: PeopleEditView, onDone: (notice: string) => void): AttachModel {
@@ -12,7 +12,7 @@ export function useAttach(view: PeopleEditView, onDone: (notice: string) => void
   const [fresh, setFresh] = useState(() => emptyFamily(view.guardian.tz));
   const [invalid, setInvalid] = useState<string[]>([]);
   const families = useQuery(familySearchQuery(search.trim()));
-  const move = usePeopleWrite(moveFamily, () => onDone(t.peopleEdit.moved));
+  const move = usePeopleWrite(peopleWrites.moveFamily, () => onDone(t.peopleEdit.moved));
   const set = { search: setSearch, choice: setChoice, fresh: setFresh, invalid: setInvalid };
   const state = { search, choice, fresh, invalid };
   return attachModel({ view, state, set, families: families.data, move, text: t.peopleEdit });

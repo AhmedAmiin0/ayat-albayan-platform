@@ -1,4 +1,4 @@
-import { PRESENCE_SELF_PATH } from '@ab/client-core';
+import { presenceRoutes } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { AppState, type AppStateStatus } from 'react-native';
 
@@ -37,7 +37,7 @@ test('signed in and enabled: tracks its own topic; background, sign-out and unmo
   mockApiFetch.mockResolvedValue({ enabled: true });
   const hook = await mount('u1');
   await waitFor(() => expect(realtime.isOpen('u1')).toBe(true));
-  expect(mockApiFetch).toHaveBeenCalledWith(PRESENCE_SELF_PATH);
+  expect(mockApiFetch).toHaveBeenCalledWith(presenceRoutes.self.path);
   await act(async () => realtime.joinAll());
   expect(realtime.tracked('u1')).toHaveLength(1);
   await act(async () => appState.forEach((h) => h('background')));

@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { teacherRowFixture } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
@@ -10,18 +11,11 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
-const ROW = {
-  id: 't1',
+const ROW = teacherRowFixture({
   display_name_ar: 'فاطمة',
-  display_name_en: null,
-  gender: 'female',
-  programs: ['quran'],
   phone_e164: '+201066123049',
-  meeting_link: null,
-  status: 'active',
-  tz: 'Africa/Cairo',
   max_students: 12,
-};
+});
 
 function renderPage(list: ListUrlState, total = 1) {
   apiFetch.mockResolvedValue({ items: total ? [ROW] : [], total, page: list.page, pageSize: 25 });

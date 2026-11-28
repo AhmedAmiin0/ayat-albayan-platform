@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { TeacherDetailPage } from './TeacherDetailPage';
 import type { Teacher } from '@ab/shared';
-import { teacherFixture } from '@ab/shared/testing';
+import { teacherFixture, timeOffFixture } from '@ab/shared/testing';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -31,7 +31,7 @@ const FATMA: Teacher = teacherFixture({
 const RESPONSES: Record<string, unknown> = {
   '/teachers/t1': FATMA,
   '/teachers/t1/availability': [{ id: 'a1', weekday: 6, start_time: '15:00', end_time: '18:00', tz: 'Africa/Cairo' }],
-  '/teachers/t1/time-off': [{ id: 'o1', starts_at: '2026-10-10T00:00:00Z', ends_at: '2026-10-10T08:00:00Z', reason: 'سفر' }],
+  '/teachers/t1/time-off': [timeOffFixture({ reason: 'سفر' })],
 };
 
 function renderPage() {

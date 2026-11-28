@@ -1,6 +1,11 @@
 import { systemPermissionsOf, USER_ROLES } from '@ab/catalog';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { accessBefore, walkRoutes, type RouteAccess } from './route-walk.test-util';
+import {
+  accessBefore,
+  permissionKeys,
+  walkRoutes,
+  type RouteAccess,
+} from './route-walk.test-util';
 
 // Linking a chat's number to a family is its own admin-only key; removing one is guardians.write.
 describe('«رقم ثانٍ للعائلة» routes', () => {
@@ -15,7 +20,8 @@ describe('«رقم ثانٍ للعائلة» routes', () => {
   });
 
   it('removing a second number is the admin guardians.write route, recorded in the frozen table', () => {
-    expect(routes.find((r) => r.key === 'GuardiansController.removePhone')?.permission).toBe('guardians.write');
+    const removePhone = routes.filter((r) => r.key === 'GuardiansController.removePhone');
+    expect(removePhone.flatMap(permissionKeys)).toEqual(['guardians.write']);
     expect(accessBefore()['GuardiansController.removePhone']).toEqual(['admin']);
     expect(accessBefore()['LeadFamilyController.link']).toEqual(['admin']);
   });

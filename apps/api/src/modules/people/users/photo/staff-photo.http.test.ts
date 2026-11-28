@@ -85,4 +85,11 @@ describe('staff photo routes', () => {
     expect(photos.set).not.toHaveBeenCalled();
     expect(photos.remove).not.toHaveBeenCalled();
   });
+
+  // docs/62 part 1 §6: the ids move from ParseUUIDPipe to the route's params schema.
+  it.each(['/teachers/x/avatar', '/users/x/avatar'])('DELETE %s answers 400 validation_failed', async (url) => {
+    const res = await call('DELETE', url);
+    expect([res.statusCode, res.json().code]).toEqual([400, 'validation_failed']);
+    expect(photos.remove).not.toHaveBeenCalled();
+  });
 });

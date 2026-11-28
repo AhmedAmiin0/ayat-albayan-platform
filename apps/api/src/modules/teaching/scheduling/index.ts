@@ -20,7 +20,7 @@ export {
 } from './occurrences/lesson-writer';
 export { IN_CHUNK, MAX_ROWS, readAll, readChunked } from '@/common/db/read-all';
 export { callRpc, rpcError } from './rpc';
-export { type ExtendResult, RuleExtendService } from './rules/rule-extend.service';
+export { RuleExtendService } from './rules/rule-extend.service';
 export { type ProjectionQuery, RuleProjectionRepo } from './rules/rule-projection.repo';
 export {
   generatedKey,

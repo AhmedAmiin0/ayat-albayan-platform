@@ -29,3 +29,17 @@ test('compareReport lists only pages above the limit, then new and missing pages
 test('compareReport says so when nothing moved', () => {
   assert.match(compareReport({ ratios: { 'a.png': 0 }, added: [], missing: [] }), /No page/);
 });
+
+test('changedRatio reads a full-page pair and counts each moved pixel once', () => {
+  const pixels = 1280 * 4000;
+  const base = new Uint8ClampedArray(pixels * 4);
+  const head = Uint8ClampedArray.from(base);
+  head.set([200, 200, 200, 200], 0);
+  head.set([0, 0, 0, 17], 4 * (pixels - 1));
+  head.set([16, 16, 16, 16], 4 * 10);
+  assert.equal(changedRatio(base, head), 2 / pixels);
+});
+
+test('changedRatio of two empty images is 0', () => {
+  assert.equal(changedRatio(new Uint8ClampedArray(0), new Uint8ClampedArray(0)), 0);
+});

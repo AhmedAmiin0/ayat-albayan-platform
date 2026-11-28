@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { railXl, cn, Toast, type ToastProps, t } from '@ab/web-kit';
+import { railThread, cn, Toast, type ToastProps, t } from '@ab/web-kit';
 import { leadByPhoneQuery } from '@/features/messaging/inbox/api/api';
 import { FollowUpLine } from '@/features/messaging/inbox/lead/FollowUpLine';
 import { LeadDataActions } from '@/features/messaging/inbox/lead/LeadDataActions';
@@ -27,7 +27,7 @@ export function LeadPanel({ phone, onNotice }: LeadPanelProps) {
   };
 
   return (
-    <aside aria-label={t.inbox.leadPanel} className={cn('@container grid content-start gap-6', railXl)}>
+    <aside aria-label={t.inbox.leadPanel} className={cn('@container grid content-start gap-6', railThread)}>
       <SearchFromProfile />
       {lead.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
       {lead.isError && <p role="alert">{t.common.error}</p>}

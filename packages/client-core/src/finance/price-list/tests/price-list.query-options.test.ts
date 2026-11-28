@@ -6,7 +6,10 @@ import type { PriceListChoice } from '../price-list.types';
 
 const choice: PriceListChoice = { country: 'SA', students: 2, discount: 10, rounding: 'down' };
 const answer = { ...priceList({ ...choice }), fx: null };
-const clientAnswering = (body: unknown) => ({ apiFetch: vi.fn(async () => body) });
+const clientAnswering = (body: unknown) => ({
+  apiFetch: vi.fn(async () => body),
+  apiSend: vi.fn(),
+});
 
 describe('priceListParams', () => {
   it('sends the site country and the whole pricing choice', () => {
@@ -72,7 +75,7 @@ describe('priceListQueryOptions', () => {
   });
 
   it('lets a failed request through as it is', async () => {
-    const client = { apiFetch: vi.fn().mockRejectedValue(new ApiError(403)) };
+    const client = { apiFetch: vi.fn().mockRejectedValue(new ApiError(403)), apiSend: vi.fn() };
     await expect(priceListQueryOptions(client, choice).queryFn()).rejects.toThrow('API 403');
   });
 });

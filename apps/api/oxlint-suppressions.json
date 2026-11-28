@@ -978,10 +978,7 @@
   },
   "src/modules/finance/assistant-pay/admin/assistant-pay.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 9
+      "count": 1
     }
   },
   "src/modules/finance/assistant-pay/assistant-pay.module.ts": {
@@ -1030,9 +1027,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/finance/assistant-pay/my/my.earnings.test.ts": {
@@ -1073,11 +1067,6 @@
     }
   },
   "src/modules/finance/assistant-pay/my/my.service.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/finance/assistant-pay/shared/assistant-pay.dto.ts": {
     "stylistic/max-len": {
       "count": 2
     }
@@ -1126,10 +1115,7 @@
   },
   "src/modules/finance/assistant-pay/statements/assistant-statements.controller.ts": {
     "stylistic/max-len": {
-      "count": 5
-    },
-    "ab/zod-inputs": {
-      "count": 11
+      "count": 2
     }
   },
   "src/modules/finance/assistant-pay/statements/corrections.service.ts": {
@@ -1155,11 +1141,6 @@
     },
     "typescript/no-unnecessary-type-conversion": {
       "count": 1
-    }
-  },
-  "src/modules/finance/assistant-pay/statements/statements.permissions.test.ts": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/modules/finance/assistant-pay/statements/statements.repo.ts": {
@@ -1188,11 +1169,6 @@
   "src/modules/finance/assistant-pay/terms/terms.service.ts": {
     "stylistic/max-len": {
       "count": 5
-    }
-  },
-  "src/modules/finance/expenses/expense-categories.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/modules/finance/expenses/expense-receipts.ts": {
@@ -1242,12 +1218,6 @@
     }
   },
   "src/modules/finance/expenses/expenses.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 8
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -1309,18 +1279,7 @@
       "count": 1
     }
   },
-  "src/modules/finance/invoices/invoices.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 3
-    }
-  },
   "src/modules/finance/invoices/invoices.dto.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -1407,17 +1366,9 @@
       "count": 1
     }
   },
-  "src/modules/finance/payments/payments.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 9
-    }
-  },
   "src/modules/finance/payments/payments.dto.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/finance/payments/payments.list-query.ts": {
@@ -1480,11 +1431,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/payouts/payouts.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 9
-    }
-  },
   "src/modules/finance/payouts/payouts.generate.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -1545,11 +1491,6 @@
   },
   "src/modules/finance/payouts/payouts.settings.ts": {
     "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/modules/finance/pricing/pricing.controller.ts": {
-    "ab/zod-inputs": {
       "count": 2
     }
   },
@@ -1621,11 +1562,6 @@
     },
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/modules/finance/stripe/links/payment-links.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/finance/stripe/links/payment-links.mapper.ts": {
@@ -1773,11 +1709,6 @@
   "src/modules/finance/stripe/webhook/tests/stripe-webhook.paid.http.test.ts": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/modules/finance/subscriptions/alerts/admin-tasks.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/finance/subscriptions/alerts/admin-tasks.repo.ts": {
@@ -1967,15 +1898,7 @@
       "count": 1
     }
   },
-  "src/modules/finance/subscriptions/subscriptions.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 10
-    }
-  },
   "src/modules/finance/subscriptions/subscriptions.dto.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -2029,14 +1952,6 @@
       "count": 2
     }
   },
-  "src/modules/finance/teacher-earnings/earnings.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 13
-    }
-  },
   "src/modules/finance/teacher-earnings/earnings.errors.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -2050,9 +1965,6 @@
   "src/modules/finance/teacher-earnings/earnings.mine.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 3
     }
   },
   "src/modules/finance/teacher-earnings/earnings.mine.http.test.ts": {
@@ -4805,11 +4717,6 @@
       "count": 1
     }
   },
-  "src/modules/people/guardians/guardians.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
   "src/modules/people/guardians/guardians.mapper.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -4818,11 +4725,6 @@
   "src/modules/people/guardians/guardians.service.ts": {
     "ab/forbidden-imports": {
       "count": 2
-    }
-  },
-  "src/modules/people/guardians/http.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
     }
   },
   "src/modules/people/me/account/account.auth.ts": {
@@ -4924,7 +4826,7 @@
   },
   "src/modules/people/portal/portal.controller.ts": {
     "ab/zod-inputs": {
-      "count": 9
+      "count": 2
     }
   },
   "src/modules/people/portal/portal.fakes.ts": {
@@ -4963,14 +4865,6 @@
   "src/modules/people/portal/scope/portal-scope.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/modules/people/roles/roles.controller.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 4
     }
   },
   "src/modules/people/roles/roles.fakes.ts": {
@@ -5104,22 +4998,8 @@
     }
   },
   "src/modules/people/students/students.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/module-boundaries": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 4
-    }
-  },
-  "src/modules/people/students/students.dto.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/modules/people/students/students.filters.ts": {
@@ -5202,11 +5082,6 @@
       "count": 3
     }
   },
-  "src/modules/people/teachers/availability/availability.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 8
-    }
-  },
   "src/modules/people/teachers/availability/availability.query.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -5251,10 +5126,7 @@
   },
   "src/modules/people/teachers/teachers.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/people/teachers/teachers.list.ts": {
@@ -5322,11 +5194,6 @@
       "count": 2
     }
   },
-  "src/modules/people/users/photo/staff-photo.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 6
-    }
-  },
   "src/modules/people/users/store/users.fakes.store.ts": {
     "stylistic/max-len": {
       "count": 4
@@ -5366,14 +5233,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    }
-  },
-  "src/modules/people/users/users.controller.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/zod-inputs": {
-      "count": 7
     }
   },
   "src/modules/people/users/users.fakes.ts": {
@@ -7088,11 +6947,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/booking/course-change/course-change.fakes.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/booking/course-change/course-change.lessons.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -7221,11 +7075,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/booking/instant/instant.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/modules/teaching/booking/instant/instant.plan.ts": {
     "typescript/consistent-type-definitions": {
       "count": 2
@@ -7343,14 +7192,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/booking/plan/package-size.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 3
-    }
-  },
   "src/modules/teaching/booking/plan/slots.service.ts": {
     "stylistic/max-len": {
       "count": 3
@@ -7416,21 +7257,6 @@
       "count": 3
     }
   },
-  "src/modules/teaching/booking/profile/course-move.routes.ts": {
-    "ab/zod-inputs": {
-      "count": 6
-    }
-  },
-  "src/modules/teaching/booking/profile/profile-course.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/booking/sales/booking/sales-booking.controller.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    }
-  },
   "src/modules/teaching/booking/sales/booking/sales-booking.ownership.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -7480,14 +7306,6 @@
   "src/modules/teaching/booking/sales/booking/tests/sales-booking.ownership.test.ts": {
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/modules/teaching/booking/sales/course/sales-course.controller.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 3
     }
   },
   "src/modules/teaching/booking/sales/course/sales-course.repo.ts": {
@@ -7635,11 +7453,6 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/booking/trial-date/trial-date.controller.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -8460,11 +8273,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/course-pause/course-pause.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 5
-    }
-  },
   "src/modules/teaching/course-pause/course-pause.fakes.ts": {
     "typescript/consistent-type-definitions": {
       "count": 1
@@ -8503,7 +8311,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/teaching/course-pause/course-pause.repo.test.ts": {
@@ -8530,11 +8338,6 @@
     },
     "stylistic/max-len": {
       "count": 8
-    }
-  },
-  "src/modules/teaching/course-stop/course-stop.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/teaching/feedback/feedback.controller.ts": {
@@ -9337,10 +9140,10 @@
   },
   "src/modules/teaching/scheduling/rules/rule-extend.service.ts": {
     "typescript/consistent-type-definitions": {
-      "count": 2
+      "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/teaching/scheduling/rules/rule-projection.repo.ts": {
@@ -9361,11 +9164,6 @@
       "count": 1
     },
     "typescript/dot-notation": {
-      "count": 1
-    }
-  },
-  "src/modules/teaching/scheduling/rules/schedule-rules.controller.ts": {
-    "ab/zod-inputs": {
       "count": 1
     }
   },

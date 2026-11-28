@@ -2,6 +2,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { invoiceKeys, salesCourseKeys, studentKeys } from '@/core/lib/keys';
 
 it('keeps the key shapes the screens already cache under', () => {
+  expect(studentKeys.one('s1')).toEqual(['students', 's1']);
   expect(studentKeys.statusCounts({ q: 'a' })).toEqual(['students', 'status-counts', { q: 'a' }]);
   expect(studentKeys.teacherOptions()).toEqual(['students', 'teacher-options']);
   expect(invoiceKeys.ofStudent('s1')).toEqual(['invoices', 'student', 's1']);
@@ -25,7 +26,7 @@ const staleAfter = async (keys: readonly (readonly unknown[])[], root: readonly 
 };
 
 it('refreshes the student reads after a student write, and not the invoices', async () => {
-  const mine = [studentKeys.statusCounts({}), studentKeys.teacherOptions()];
+  const mine = [studentKeys.one('s1'), studentKeys.statusCounts({}), studentKeys.teacherOptions()];
   expect(await staleAfter([...mine, invoiceKeys.ofStudent('s1')], studentKeys.all)).toEqual(mine);
 });
 

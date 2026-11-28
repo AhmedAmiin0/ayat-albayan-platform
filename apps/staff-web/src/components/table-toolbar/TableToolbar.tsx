@@ -53,7 +53,7 @@ export function TableToolbar({ search, fields, chips, onClearAll, resultCount, e
   return (
     <>
       <div className="mb-3 flex flex-wrap items-center gap-2">
-        {search && <div className={cn('min-w-0 flex-1 sm:max-w-[340px]', compact ? 'basis-24' : 'basis-44')}>{search}</div>}
+        {search && <div className={cn('min-w-0 flex-1 sm:max-w-[340px]', compact ? 'basis-full' : 'basis-44')}>{search}</div>}
         {fields && (
           <Button
             ref={filterButton}

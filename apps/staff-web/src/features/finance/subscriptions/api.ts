@@ -1,17 +1,13 @@
 import type { SubscriptionStatus } from '@ab/catalog';
 import type { Page } from '@ab/core';
 import type {
-  AdminTaskView,
   QuoteResponse,
   StudentBalanceView,
   SubscriptionPricing,
   SubscriptionView,
 } from '@ab/money';
-import {
-  startDateEditResultSchema,
-  usedBeforeEditResultSchema,
-  usedBeforeStateSchema,
-} from '@ab/shared';
+import { adminTaskCalls, startDateEditCall } from '@ab/client-core';
+import { usedBeforeEditResultSchema, usedBeforeStateSchema } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { moneyKeys } from '@/features/finance/keys';
@@ -55,9 +51,11 @@ export const studentBalanceQuery = (studentId: string) =>
     queryFn: () => apiFetch<StudentBalanceView>(`/students/${studentId}/balance`),
   });
 
+const taskCalls = adminTaskCalls({ apiFetch, apiSend });
+
 export const openTasksQuery = queryOptions({
   queryKey: moneyKeys.tasks(),
-  queryFn: () => apiFetch<Page<AdminTaskView>>('/admin-tasks?open=true&pageSize=50'),
+  queryFn: () => taskCalls.list({ open: 'true', pageSize: 50 }),
 });
 
 export type CreateSubscriptionBody = {
@@ -90,10 +88,7 @@ export const editUsedBefore = (id: string, lessonsUsedBefore: number) =>
   );
 
 /** Needs subscriptions.edit_terms; changes starts_on only. */
-export const editStartDate = (id: string, startsOn: string) =>
-  apiSend('PATCH', `/subscriptions/${id}/start-date`, { startsOn }).then((raw: unknown) =>
-    startDateEditResultSchema.parse(raw),
-  );
+export const editStartDate = startDateEditCall({ apiFetch, apiSend });
 
 /** GET /subscriptions/:id/lessons-used-before: the stored number, the max, a refusal. */
 export const usedBeforeStateQuery = (id: string) =>
@@ -105,4 +100,4 @@ export const usedBeforeStateQuery = (id: string) =>
       ),
   });
 
-export const completeTask = (id: string) => apiSend<AdminTaskView>('POST', `/admin-tasks/${id}/done`);
+export const completeTask = taskCalls.done;

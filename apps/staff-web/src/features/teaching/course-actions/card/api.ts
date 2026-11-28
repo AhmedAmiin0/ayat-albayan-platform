@@ -1,31 +1,24 @@
-import {
-  courseCardPath,
-  courseExtendPreviewPath,
-  courseKeys,
-  parseCourseCard,
-  parseExtendPreview,
-  postCourseExtend,
-  readLessonAt,
-  type CardTree,
-} from '@ab/client-core';
+import { courseCardCalls, courseKeys, readLessonAt, type CardTree } from '@ab/client-core';
 import type { CourseCardLesson, CourseExtendResult } from '@ab/shared';
 import type { LessonView } from '@ab/schedule';
 import { queryOptions, useMutation } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { useInvalidateCourseActions } from '@/features/teaching/course-actions/api';
 
-// Paths, keys and parsers come from @ab/client-core; the card key sits under the actions' key.
+// Calls and keys come from @ab/client-core; the card key sits under the actions' key.
+
+const calls = courseCardCalls({ apiFetch, apiSend });
 
 export const courseCardQuery = (input: { studentId: string; tree: CardTree }) =>
   queryOptions({
     queryKey: courseKeys.card(input.studentId, input.tree),
-    queryFn: async () => parseCourseCard(await apiFetch(courseCardPath(input))),
+    queryFn: () => calls.card(input),
   });
 
 export const extendPreviewQuery = (input: { studentId: string; subscriptionId: string }) =>
   queryOptions({
     queryKey: courseKeys.extend(input),
-    queryFn: async () => parseExtendPreview(await apiFetch(courseExtendPreviewPath(input))),
+    queryFn: () => calls.extendPreview(input),
   });
 
 /**
@@ -46,7 +39,7 @@ export function useExtendCourse(input: {
 }) {
   const invalidate = useInvalidateCourseActions(input.studentId);
   return useMutation({
-    mutationFn: () => postCourseExtend(apiFetch, input),
+    mutationFn: () => calls.extend(input),
     onSuccess: async (result) => {
       await invalidate();
       input.onDone(result);

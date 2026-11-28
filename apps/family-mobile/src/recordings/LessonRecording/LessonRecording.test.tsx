@@ -21,7 +21,7 @@ test('a part: its title, then the in-app player from a fresh recording link', as
   );
   expect(screen.getByText(title)).toBeTruthy();
   expect(await screen.findByRole('button', { name: t.audioPlayer.play })).toBeTruthy();
-  expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/A/url');
+  expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/A/url', undefined);
 });
 
 test('no title: the section is named the lesson recording', async () => {

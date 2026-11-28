@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button, FormAlert, NuqtaGlyph, Skeleton, Toast, t } from '@ab/web-kit';
 import { AccountHead } from '@/features/people/account/AccountHead';
 import { profileQuery } from '@/features/people/account/api';
+import { AccountAppearance } from '@/features/people/account/sections/AccountAppearance';
 import { AvatarSection } from '@/features/people/account/sections/AvatarSection';
 import { EmailSection } from '@/features/people/account/sections/EmailSection';
 import { NameSection } from '@/features/people/account/sections/NameSection';
@@ -61,6 +62,9 @@ export function AccountPage() {
           <PasswordSection onDone={setToast} />
         </div>
       )}
+      <div className={data ? undefined : 'mt-6'}>
+        <AccountAppearance />
+      </div>
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </>
   );
