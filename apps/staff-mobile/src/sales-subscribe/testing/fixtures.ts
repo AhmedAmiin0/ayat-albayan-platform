@@ -16,8 +16,8 @@ export const KID = '66666666-6666-4666-8666-666666666666';
 export const KID2 = '77777777-7777-4777-8777-777777777777';
 export const SUB = '88888888-8888-4888-8888-888888888888';
 export const MSG = '99999999-9999-4999-8999-999999999999';
-export const GUARDIAN = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
-export const PAYMENT = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+const GUARDIAN = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+const PAYMENT = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 
 export const familyThread = { ...thread, phone_e164: PHONE, guardian_id: GUARDIAN, lead_id: null, lead_status: null, guardian_tz: 'Asia/Riyadh' };
 
