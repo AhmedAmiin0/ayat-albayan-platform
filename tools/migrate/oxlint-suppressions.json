@@ -4,21 +4,6 @@
       "count": 1
     }
   },
-  "src/cli.commands.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/cli.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/db/target.ts": {
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
   "src/hash.ts": {
     "ab/no-shape-checks": {
       "count": 1

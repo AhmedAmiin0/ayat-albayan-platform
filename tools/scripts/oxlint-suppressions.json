@@ -1,43 +1,10 @@
 {
-  "calendar/calendar-diff.mjs": {
-    "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "calendar/calendar-ics.mjs": {
-    "complexity": {
-      "count": 2
-    },
-    "max-depth": {
-      "count": 1
-    },
-    "ab/no-if-chains": {
-      "count": 6
-    }
-  },
   "calendar/calendar-slots.mjs": {
     "no-restricted-properties": {
       "count": 1
-    },
-    "complexity": {
-      "count": 1
-    },
-    "max-depth": {
-      "count": 1
-    },
-    "ab/no-if-chains": {
-      "count": 2
     }
   },
   "chat-markers/chat-markers-backfill.mjs": {
-    "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "chat-markers/markers-plan.mjs": {
-    "complexity": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -84,15 +51,7 @@
     }
   },
   "ci-checks/knip-gate.mjs": {
-    "max-depth": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
-      "count": 2
-    }
-  },
-  "ci-checks/lint/cycles-gate.mjs": {
-    "max-depth": {
       "count": 2
     }
   },
@@ -311,9 +270,6 @@
     }
   },
   "seed/seed-test-account.plan.mjs": {
-    "complexity": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
