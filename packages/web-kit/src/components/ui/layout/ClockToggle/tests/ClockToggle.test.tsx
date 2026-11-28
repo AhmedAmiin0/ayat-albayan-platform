@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { clockCycle, setClockPref } from '@ab/web-kit/lib/clock';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { ClockToggle } from './clock-toggle';
+import { ClockToggle } from '@ab/web-kit/components/ui/layout/ClockToggle';
 
 afterEach(() => {
   setClockPref('24');
