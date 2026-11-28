@@ -70,7 +70,7 @@ describe('query keys', () => {
 });
 
 describe('GET /lessons/overview through its route object', () => {
-  const read = () => new QueryClient().fetchQuery(overviewQuery({ from: FROM, to: TO }));
+  const read = () => new QueryClient().query(overviewQuery({ from: FROM, to: TO }));
 
   it('asks the window and keeps a well-formed answer', async () => {
     apiFetch.mockResolvedValue(overview([]));

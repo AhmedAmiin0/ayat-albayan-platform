@@ -1,5 +1,5 @@
 import type { LessonView, OverviewTeacher, ScheduleOverview } from '@ab/schedule';
-import { ABRAR, FATMA } from './lesson/lesson-fixture';
+import { ABRAR, FATMA, answered, guidOf } from './lesson/lesson-fixture';
 
 // Test data only (imported by *.test.ts[x]): GET /lessons/overview rows for the week of Sat 3 Oct
 // 2026 (Riyadh = UTC+3). Abrar works Sunday 16:00–20:00 Riyadh; Fatma is off all Monday.
@@ -51,5 +51,16 @@ export function overview(
   lessons: LessonView[],
   teachers = [T_ABRAR, T_FATMA, T_NOUR],
 ): ScheduleOverview {
-  return { from: '2026-10-02T21:00:00.000Z', to: '2026-10-09T21:00:00.000Z', teachers, lessons };
+  return {
+    from: '2026-10-02T21:00:00.000Z',
+    to: '2026-10-09T21:00:00.000Z',
+    teachers: teachers.map(answeredTeacher),
+    lessons: lessons.map(answered),
+  };
+}
+
+/** The teacher row as the API answers it: every id a uuid. */
+function answeredTeacher(teacher: OverviewTeacher): OverviewTeacher {
+  const timeOff = teacher.time_off.map((off) => ({ ...off, id: guidOf(off.id) }));
+  return { ...teacher, id: guidOf(teacher.id), time_off: timeOff };
 }

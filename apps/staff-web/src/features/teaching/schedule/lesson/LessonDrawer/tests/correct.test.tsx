@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { setConfirmationRequired } from '@ab/web-kit/testing';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
@@ -49,7 +49,7 @@ describe('LessonDrawer: no confirmation (owner 2026-11-02) and «تصحيح ال
   });
 
   it('held automatically: the three other statuses; «غائب» posts { to } and says it is done', async () => {
-    apiSend.mockResolvedValue(AUTO_HELD);
+    apiSend.mockResolvedValue(answered(AUTO_HELD));
     const { drawer } = renderDrawer(AUTO_HELD);
     expect(within(drawer).getByText(c.outcomeHint)).toBeTruthy();
     expect(within(drawer).queryByRole('button', { name: c.to.completed })).toBeNull();

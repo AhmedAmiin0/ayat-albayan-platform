@@ -3,7 +3,7 @@ import type { LessonStatus } from '@ab/catalog';
 import type { CorrectTo } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
-import { LESSONS_KEY } from '@/features/teaching/schedule/api';
+import { correctLesson, LESSONS_KEY } from '@/features/teaching/schedule/api';
 
 /** Whose route: the admin's (lessons.write) or sales' (lessons.cancel). */
 export type CorrectArea = 'admin' | 'sales';
@@ -11,7 +11,7 @@ export type CorrectArea = 'admin' | 'sales';
 const salesLessons = salesLessonActionCalls({ apiFetch, apiSend });
 
 const SEND: Record<CorrectArea, (id: string, to: CorrectTo) => Promise<unknown>> = {
-  admin: (id, to) => apiSend('POST', `/lessons/${id}/correct`, { to }),
+  admin: correctLesson,
   sales: (lessonId, to) => salesLessons.correct({ lessonId, body: { to } }),
 };
 const REFETCH: Record<CorrectArea, readonly string[]> = {
