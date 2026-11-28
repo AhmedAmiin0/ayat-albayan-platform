@@ -19,7 +19,8 @@ export interface PayRequest {
 export const isLinkToken = (token: string): boolean => /^[A-Za-z0-9_-]{32,64}$/.test(token);
 
 /** The web PayPage asks for JSON (Accept: application/json); a browser that opens the link gets HTML. */
-export const wantsJson = (req: PayRequest): boolean => /application\/json/i.test(String(req.headers.accept ?? ''));
+export const wantsJson = (req: PayRequest): boolean =>
+  /application\/json/i.test(String(req.headers.accept ?? ''));
 
 /** The family pages' headers: never cached, nothing framed, sniffed or referred, the strict CSP. */
 export function html(res: HtmlReply, page: { status: number; body: string }): string {

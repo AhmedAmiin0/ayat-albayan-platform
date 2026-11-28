@@ -6,7 +6,14 @@
  * - permissions: every user's resolved permission set
  * - rules: notification_rules rows · templates: message_templates · custom-config: its public rows
  */
-export type CacheTopic = 'settings' | 'integrations' | 'numbers' | 'permissions' | 'rules' | 'templates' | 'custom-config';
+export type CacheTopic =
+  | 'settings'
+  | 'integrations'
+  | 'numbers'
+  | 'permissions'
+  | 'rules'
+  | 'templates'
+  | 'custom-config';
 
 /** Keys of the values kept in Redis. Never a secret: Vault values and tokens stay in each process. */
 export const CACHE_KEYS = {

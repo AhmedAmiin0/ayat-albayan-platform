@@ -27,12 +27,22 @@ export async function liveTokens<P extends { id: string; push_tokens: string[] }
 ): Promise<P[]> {
   const all = profiles.flatMap((p) => p.push_tokens);
   if (all.length === 0) return [...profiles];
-  const { data, error } = await db.from('push_device_sessions').select('token, profile_id, session_id, contested_at').in('token', all);
+  const { data, error } = await db
+    .from('push_device_sessions')
+    .select('token, profile_id, session_id, contested_at')
+    .in('token', all);
   const none = () => profiles.map((p) => ({ ...p, push_tokens: [] }));
   if (error) return none();
   const ids = data.map((b) => b.session_id);
   const live = await orFallback(liveSessions(db, ids), null, 'push live sessions read');
   if (!live) return none();
-  const ok = new Set(data.filter((b) => !b.contested_at && live.has(b.session_id)).map((b) => `${b.profile_id}|${b.token}`));
-  return profiles.map((p) => ({ ...p, push_tokens: p.push_tokens.filter((t) => ok.has(`${p.id}|${t}`)) }));
+  const ok = new Set(
+    data
+      .filter((b) => !b.contested_at && live.has(b.session_id))
+      .map((b) => `${b.profile_id}|${b.token}`),
+  );
+  return profiles.map((p) => ({
+    ...p,
+    push_tokens: p.push_tokens.filter((t) => ok.has(`${p.id}|${t}`)),
+  }));
 }

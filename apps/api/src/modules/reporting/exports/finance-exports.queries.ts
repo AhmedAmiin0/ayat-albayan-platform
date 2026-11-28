@@ -4,9 +4,12 @@ import type { Window } from '@/modules/reporting/dashboard';
 import type { SessionIn } from './finance.rows';
 import { readAll } from '@/common/db/read-all';
 
-const EXPENSE = 'month, paid_on, category, amount, currency, vendor, method, note, recurring, is_draft, cat:expense_categories(label_ar)';
-const SESSION = 'lesson_id, teacher_id, starts_at, minutes, rate, amount, paid_amount, status, teacher:teachers(display_name_ar)';
-const TPAY = 'paid_at, amount, method, note, payout_id, voided_at, void_reason, teacher_id, teacher:teachers(display_name_ar)';
+const EXPENSE =
+  'month, paid_on, category, amount, currency, vendor, method, note, recurring, is_draft, cat:expense_categories(label_ar)';
+const SESSION =
+  'lesson_id, teacher_id, starts_at, minutes, rate, amount, paid_amount, status, teacher:teachers(display_name_ar)';
+const TPAY =
+  'paid_at, amount, method, note, payout_id, voided_at, void_reason, teacher_id, teacher:teachers(display_name_ar)';
 
 /** Reads for the finance CSVs (expenses, teacher ledger). Service role; admin-only routes. Paged. */
 @Injectable()
@@ -16,7 +19,14 @@ export class FinanceExportsQueries {
   /** Expenses of months `first`…`last` (YYYY-MM-01), drafts included (flagged in the file). */
   expenses(first: string, last: string) {
     return readAll((from, to) =>
-      this.db.from('expenses').select(EXPENSE).gte('month', first).lte('month', last).order('month').order('id').range(from, to),
+      this.db
+        .from('expenses')
+        .select(EXPENSE)
+        .gte('month', first)
+        .lte('month', last)
+        .order('month')
+        .order('id')
+        .range(from, to),
     );
   }
 
@@ -40,11 +50,18 @@ export class FinanceExportsQueries {
     return readAll((from, to) => {
       let q = this.db.from('teacher_payments').select(TPAY);
       if (teacherId) q = q.eq('teacher_id', teacherId);
-      return q.gte('paid_at', w.from.toISOString()).lt('paid_at', w.to.toISOString()).order('paid_at').order('id').range(from, to);
+      return q
+        .gte('paid_at', w.from.toISOString())
+        .lt('paid_at', w.to.toISOString())
+        .order('paid_at')
+        .order('id')
+        .range(from, to);
     });
   }
 }
 
 export type ExpenseCsvRow = Awaited<ReturnType<FinanceExportsQueries['expenses']>>[number];
 export type SessionCsvRow = Awaited<ReturnType<FinanceExportsQueries['sessions']>>[number];
-export type TeacherPaymentCsvRow = Awaited<ReturnType<FinanceExportsQueries['teacherPayments']>>[number];
+export type TeacherPaymentCsvRow = Awaited<
+  ReturnType<FinanceExportsQueries['teacherPayments']>
+>[number];

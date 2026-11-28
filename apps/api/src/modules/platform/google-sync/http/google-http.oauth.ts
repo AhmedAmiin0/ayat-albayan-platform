@@ -48,7 +48,11 @@ export class GoogleOAuthApi implements GoogleOAuth {
   ): Promise<{ refreshToken: string | null; scopes: string[]; accessToken: string }> {
     try {
       const { tokens } = await oauthClient(this.env).getToken(code);
-      return { refreshToken: tokens.refresh_token ?? null, scopes: (tokens.scope ?? '').split(/\s+/).filter(Boolean), accessToken: tokens.access_token ?? '' };
+      return {
+        refreshToken: tokens.refresh_token ?? null,
+        scopes: (tokens.scope ?? '').split(/\s+/).filter(Boolean),
+        accessToken: tokens.access_token ?? '',
+      };
     } catch (e) {
       throw toGoogleError(e);
     }

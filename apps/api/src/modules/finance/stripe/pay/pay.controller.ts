@@ -49,7 +49,10 @@ export class PayController {
   @Route(routes.checkout)
   @Redirect()
   @Header('Cache-Control', 'no-store')
-  async go(@Param('token') token: string, @Ip() ip: string): Promise<{ url: string; statusCode: number }> {
+  async go(
+    @Param('token') token: string,
+    @Ip() ip: string,
+  ): Promise<{ url: string; statusCode: number }> {
     await this.limit.check(ip, token);
     return { url: await this.checkout.target(token), statusCode: 303 };
   }
@@ -67,13 +70,23 @@ export class PayController {
     return this.result({ kind: 'cancelled', req, res });
   }
 
-  private async result(r: { kind: 'done' | 'cancelled'; req: PayRequest; res: HtmlReply }): Promise<string> {
+  private async result(r: {
+    kind: 'done' | 'cancelled';
+    req: PayRequest;
+    res: HtmlReply;
+  }): Promise<string> {
     const token = r.req.params.token ?? '';
     await this.limit.check(r.req.ip, token);
     if (!isLinkToken(token) || !(await this.links.byToken(token)))
       return html(r.res, { status: 404, body: notFoundPageHtml() });
     const os = fromApp(r.req.headers.cookie);
-    const back = { token, kind: r.kind, payOrigin: apiPublicOrigin(), android: os === 'android', live: stripeLiveAllowed() };
+    const back = {
+      token,
+      kind: r.kind,
+      payOrigin: apiPublicOrigin(),
+      android: os === 'android',
+      live: stripeLiveAllowed(),
+    };
     const app = os ? appReturnUrl(back) : null;
     const auto = r.req.query?.auto !== '0';
     return html(r.res, { status: 200, body: resultPageHtml({ kind: r.kind, token, app, auto }) });

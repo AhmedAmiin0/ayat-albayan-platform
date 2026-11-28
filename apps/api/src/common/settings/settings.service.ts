@@ -8,7 +8,10 @@ import { Inject, Injectable, Optional } from '@nestjs/common';
 import { CACHE_KEYS } from '@/common/infra/cache/cache-keys';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { ConfigStore } from '@/common/configuration/config-store/store/config-store.service';
-import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '@/common/configuration/config-store/config-store.types';
+import {
+  DEFAULT_TTL_MS,
+  SETTINGS_CACHE_MS,
+} from '@/common/configuration/config-store/config-store.types';
 import { DB, type Db } from '@/common/db/db.module';
 import { writeLatest } from './settings-write';
 
@@ -33,7 +36,10 @@ export class SettingsService {
   constructor(
     @Inject(DB) private readonly db: Db,
     @Inject(SETTINGS_CACHE_MS) private readonly ttlMs: number = DEFAULT_TTL_MS,
-    @Inject(ConfigStore) private readonly store: Pick<ConfigStore, 'fresh' | 'set' | 'onChange' | 'invalidate'>,
+    @Inject(ConfigStore) private readonly store: Pick<
+      ConfigStore,
+      'fresh' | 'set' | 'onChange' | 'invalidate'
+    >,
   ) {
     store.onChange(() => this.invalidate());
   }

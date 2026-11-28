@@ -4,11 +4,7 @@ import { notFound } from '@/common/http/errors';
 import { peopleErrors } from './http';
 import { pgError } from '@/common/db/errors';
 
-interface SecondNumber {
-  guardianId: string;
-  phone: string;
-  actorId: string;
-}
+interface SecondNumber { guardianId: string; phone: string; actorId: string }
 
 /**
  * A family's SECOND number (public.guardian_phones). Only POST /leads/:id/link-family adds one;

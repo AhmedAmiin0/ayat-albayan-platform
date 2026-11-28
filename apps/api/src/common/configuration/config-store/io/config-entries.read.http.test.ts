@@ -84,19 +84,10 @@ describe('GET /config/entries, PUT …/description, GET /admin/config/parity', (
     const res = await describeKey('upload_max_mb', 'حد حجم الملف');
     expect(res.statusCode).toBe(200);
     expect(res.json().entry.key).toBe('upload_max_mb');
-    expect(h.store.describe).toHaveBeenCalledWith({
-      key: 'upload_max_mb',
-      text: 'حد حجم الملف',
-      actorId: USERS.admin?.id,
-    });
-    expect(h.audit.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        entity: 'settings',
-        entityId: SINGLETON_ENTITY_ID,
-        action: 'describe:upload_max_mb',
-        after: { description: 'حد حجم الملف' },
-      }),
-    );
+    expect(h.store.describe).toHaveBeenCalledWith({ key: 'upload_max_mb', text: 'حد حجم الملف', actorId: USERS.admin?.id });
+    expect(h.audit.record).toHaveBeenCalledWith(expect.objectContaining({
+      entity: 'settings', entityId: SINGLETON_ENTITY_ID, action: 'describe:upload_max_mb', after: { description: 'حد حجم الملف' },
+    }));
   });
 
   it('null restores the seeded text; an empty or too long text is 400; unknown key 404', async () => {

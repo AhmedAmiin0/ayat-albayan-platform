@@ -16,7 +16,14 @@ export class GoogleAdminService {
   ) {}
 
   private record(input: { actorId: string; action: string; after: Json }): Promise<void> {
-    return this.run.audit.record({ actorId: input.actorId, entity: 'google_account', entityId: GOOGLE_ENTITY_ID, action: input.action, before: null, after: input.after });
+    return this.run.audit.record({
+      actorId: input.actorId,
+      entity: 'google_account',
+      entityId: GOOGLE_ENTITY_ID,
+      action: input.action,
+      before: null,
+      after: input.after,
+    });
   }
 
   /** Going live re-queues the dry-run items; turning on queues the window. Nothing in a routine calls this. */
@@ -69,7 +76,11 @@ export class GoogleAdminService {
       drive_confirmed_at: new Date().toISOString(),
       drive_confirmed_by: input.actorId,
     });
-    await this.record({ actorId: input.actorId, action: 'drive_confirm', after: { root_folder_id: root.id } });
+    await this.record({
+      actorId: input.actorId,
+      action: 'drive_confirm',
+      after: { root_folder_id: root.id },
+    });
     await this.data.items.requeue('drive_unconfirmed');
     void this.run.job.kick();
   }

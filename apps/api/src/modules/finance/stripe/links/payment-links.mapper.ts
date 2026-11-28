@@ -47,4 +47,5 @@ export function toPublicLink(row: LinkRow, now: Date): PublicPaymentLink {
 }
 
 const STATUSES = ['open', 'paid', 'expired', 'cancelled'] as const;
-export const statusOf = (row: Pick<LinkRow, 'status'>) => STATUSES.find((s) => s === row.status) ?? 'cancelled';
+export const statusOf = (row: Pick<LinkRow, 'status'>) =>
+  STATUSES.find((s) => s === row.status) ?? 'cancelled';

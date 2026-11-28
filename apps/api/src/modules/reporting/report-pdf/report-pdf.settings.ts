@@ -8,7 +8,9 @@ import { SettingsService } from '@/common/settings/settings.service';
  * teacher's edit window, after which the job renders and sends a report (docs/46 B3).
  */
 const KEYS = [
-  'academy_contact', 'academy_whatsapp_e164', 'report_teacher_edit_minutes',
+  'academy_contact',
+  'academy_whatsapp_e164',
+  'report_teacher_edit_minutes',
 ] as const satisfies readonly SettingKey[];
 export type ReportPdfSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

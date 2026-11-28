@@ -10,7 +10,13 @@ export class SalesTeacherAssign {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async options(): Promise<SalesTeacherOption[]> {
-    const data = rows(await this.db.from('teachers').select('id, display_name_ar').eq('status', 'active').order('display_name_ar'));
+    const data = rows(
+      await this.db
+        .from('teachers')
+        .select('id, display_name_ar')
+        .eq('status', 'active')
+        .order('display_name_ar'),
+    );
     return data.map((t) => ({ id: t.id, name: t.display_name_ar }));
   }
 
@@ -19,7 +25,14 @@ export class SalesTeacherAssign {
    * would else leave a saved package and a retry with another pick (a new clientRequestId) a second one.
    */
   async ensureActive(teacherId: string): Promise<void> {
-    const data = maybe(await this.db.from('teachers').select('id').eq('id', teacherId).eq('status', 'active').maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('teachers')
+        .select('id')
+        .eq('id', teacherId)
+        .eq('status', 'active')
+        .maybeSingle(),
+    );
     if (!data) throw badRequest('teacher_not_found');
   }
 

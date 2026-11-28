@@ -3,7 +3,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { googleRedirectUri, loadEnv } from '@/config/env/env';
 import { readDiscovery } from '@/modules/platform/google-sync/map/discovery';
 import { GoogleData } from '@/modules/platform/google-sync/google-data';
-import { GOOGLE_CLIENT_FACTORY, type GoogleClientFactory } from '@/modules/platform/google-sync/google-client.port';
+import {
+  GOOGLE_CLIENT_FACTORY,
+  type GoogleClientFactory,
+} from '@/modules/platform/google-sync/google-client.port';
 import { GoogleMapQueries } from '@/modules/platform/google-sync/map/google-map.queries';
 
 /** GET /admin/google/status: the connection (never a token), settings, Drive root, counts, warnings. */

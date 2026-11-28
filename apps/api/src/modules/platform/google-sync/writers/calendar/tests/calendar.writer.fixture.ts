@@ -4,7 +4,10 @@ import type { EventLesson } from '@/modules/platform/google-sync/writers/calenda
 import type { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts';
 import { FakeGoogle } from '@/modules/platform/google-sync/http/google-client.fake';
 import type { GoogleMapQueries } from '@/modules/platform/google-sync/map/google-map.queries';
-import type { GoogleSyncSource, LessonSource } from '@/modules/platform/google-sync/sync/google-sync.source';
+import type {
+  GoogleSyncSource,
+  LessonSource,
+} from '@/modules/platform/google-sync/sync/google-sync.source';
 import { eventLesson, TEACHER_ID } from '@/modules/platform/google-sync/google-sync.fakes';
 
 // Test-only: a CalendarWriter over a FakeGoogle with one mapped teacher calendar. Never Google.

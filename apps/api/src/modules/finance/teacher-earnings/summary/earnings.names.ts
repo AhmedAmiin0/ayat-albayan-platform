@@ -1,9 +1,7 @@
 import type { Db } from '@/common/db/db.module';
 import { rows } from '@/common/db/errors';
 
-interface Student {
-  student: { name: string } | null;
-}
+interface Student { student: { name: string } | null }
 type NameRow = { lesson_id: string } & Student;
 
 /** lesson id → the students on it (names for the sessions list). */

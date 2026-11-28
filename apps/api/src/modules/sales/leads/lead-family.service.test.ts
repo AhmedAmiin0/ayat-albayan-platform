@@ -13,18 +13,26 @@ function setup(results: FakeResult[], students: FakeResult[] = []) {
 }
 
 async function failure(p: Promise<unknown>): Promise<[number, string | undefined]> {
-  const e: unknown = await p.then(() => null, (err: unknown) => err);
+  const e: unknown = await p.then(
+    () => null,
+    (err: unknown) => err,
+  );
   return e instanceof HttpException ? [e.getStatus(), errorCode(e)] : [0, String(e)];
 }
 
-const pkey = { code: '23505', message: 'duplicate key value violates unique constraint "guardian_phones_pkey"' };
+const pkey = {
+  code: '23505',
+  message: 'duplicate key value violates unique constraint "guardian_phones_pkey"',
+};
 
 // The writes, their audit rows and the lead's compare-and-set live in link_family_phone (migration 973).
 describe('LeadFamilyService.link «ربط بطالب موجود»', () => {
   it('one call of link_family_phone with the lead, the code and the actor; true → linked: true', async () => {
     const t = setup([{ data: true }]);
     expect(await t.svc.link(INPUT)).toEqual({ linked: true });
-    expect(t.calls).toEqual([{ table: RPC, method: 'rpc', args: [{ p_lead: 'l1', p_code: 'AB-0183', p_actor: 'u1' }] }]);
+    expect(t.calls).toEqual([
+      { table: RPC, method: 'rpc', args: [{ p_lead: 'l1', p_code: 'AB-0183', p_actor: 'u1' }] },
+    ]);
   });
 
   it('already a number of that family → linked: false', async () => {
@@ -47,15 +55,24 @@ describe('LeadFamilyService.link «ربط بطالب موجود»', () => {
   });
 
   it('the family already has a second number → 409 family_has_second_number', async () => {
-    const one = { code: '23505', message: 'duplicate key value violates unique constraint "guardian_phones_one_second"' };
-    expect(await failure(setup([{ error: one }]).svc.link(INPUT))).toEqual([409, 'family_has_second_number']);
+    const one = {
+      code: '23505',
+      message: 'duplicate key value violates unique constraint "guardian_phones_one_second"',
+    };
+    expect(await failure(setup([{ error: one }]).svc.link(INPUT))).toEqual([
+      409,
+      'family_has_second_number',
+    ]);
   });
 
   it('a lost race on the number calls once more, and that answer stands', async () => {
     const same = setup([{ error: pkey }, { data: false }]);
     expect(await same.svc.link(INPUT)).toEqual({ linked: false });
     expect(same.trips).toEqual([RPC, RPC]);
-    const other = setup([{ error: pkey }, { error: { code: 'P0001', message: 'lead_has_family' } }]);
+    const other = setup([
+      { error: pkey },
+      { error: { code: 'P0001', message: 'lead_has_family' } },
+    ]);
     expect(await failure(other.svc.link(INPUT))).toEqual([409, 'lead_has_family']);
     const again = setup([{ error: pkey }, { error: pkey }]);
     expect(await failure(again.svc.link(INPUT))).toEqual([409, 'number_taken']);
@@ -64,7 +81,10 @@ describe('LeadFamilyService.link «ربط بطالب موجود»', () => {
 
   it('a non-admin: 409 guardian_has_login once the family has a login, nothing written', async () => {
     const t = setup([], [{ data: { guardian: { profile_id: 'p-g1' } } }]);
-    expect(await failure(t.svc.link({ ...INPUT, admin: false }))).toEqual([409, 'guardian_has_login']);
+    expect(await failure(t.svc.link({ ...INPUT, admin: false }))).toEqual([
+      409,
+      'guardian_has_login',
+    ]);
     expect(t.trips).toEqual(['students']);
     expect(t.argsOf('students', 'eq')).toEqual(['code', 'AB-0183']);
   });

@@ -11,7 +11,10 @@ const T = 'ExponentPushToken[tttttttttttttttttttttt]';
 const KEY = mintDeviceKey();
 
 function setup(answer: FakeResult) {
-  return fakeDb({ 'rpc:claim_push_device': [answer], profiles: [{ data: { push_tokens: [] } }, {}, { data: [] }] });
+  return fakeDb({
+    'rpc:claim_push_device': [answer],
+    profiles: [{ data: { push_tokens: [] } }, {}, { data: [] }],
+  });
 }
 const add = (db: ReturnType<typeof setup>['db'], deviceKey?: string) =>
   new MeService(db).addPushToken({ userId: 'admin-1', token: T, sessionId: 'sess-a', deviceKey });
@@ -21,7 +24,13 @@ describe('PUT /me/push-tokens: no takeover of another person’s live device', (
     const { db, argsOf } = setup({ data: 'bound' });
     await add(db, KEY);
     expect(argsOf('rpc:claim_push_device', 'rpc')).toEqual([
-      { p_token: T, p_profile: 'admin-1', p_session: 'sess-a', p_new_hash: expect.stringMatching(/^[0-9a-f]{64}$/), p_presented: deviceKeyHash(KEY) },
+      {
+        p_token: T,
+        p_profile: 'admin-1',
+        p_session: 'sess-a',
+        p_new_hash: expect.stringMatching(/^[0-9a-f]{64}$/),
+        p_presented: deviceKeyHash(KEY),
+      },
     ]);
     expect(JSON.stringify(argsOf('rpc:claim_push_device', 'rpc'))).not.toContain(KEY);
   });
@@ -40,11 +49,15 @@ describe('PUT /me/push-tokens: no takeover of another person’s live device', (
     const { db, argsOf } = setup({ data: 'bound' });
     const { deviceKey } = await add(db, KEY);
     expect(deviceKey).not.toBe(KEY);
-    expect(argsOf('rpc:claim_push_device', 'rpc')?.[0]).toMatchObject({ p_new_hash: deviceKeyHash(deviceKey) });
+    expect(argsOf('rpc:claim_push_device', 'rpc')?.[0]).toMatchObject({
+      p_new_hash: deviceKeyHash(deviceKey),
+    });
   });
 
   it('no_session → 401; a failed call or an unknown answer fails, nothing on profiles', async () => {
-    await expect(add(setup({ data: 'no_session' }).db)).rejects.toBeInstanceOf(UnauthorizedException);
+    await expect(add(setup({ data: 'no_session' }).db)).rejects.toBeInstanceOf(
+      UnauthorizedException,
+    );
     for (const answer of [{ error: { message: 'down' } }, { data: 'what' }]) {
       const { db, calls } = setup(answer);
       await expect(add(db)).rejects.toThrow();

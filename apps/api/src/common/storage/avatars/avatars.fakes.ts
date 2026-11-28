@@ -39,6 +39,9 @@ export function fakePhotos(urls: Record<string, string> = {}) {
     calls.push({ method, ids: [...ids] });
     return new Map(ids.flatMap((id) => (urls[id] ? [[id, urls[id]] as const] : [])));
   };
-  const photos = { ofTeachers: pick('ofTeachers'), ofProfiles: pick('ofProfiles') } as unknown as StaffPhotos;
+  const photos = {
+    ofTeachers: pick('ofTeachers'),
+    ofProfiles: pick('ofProfiles'),
+  } as unknown as StaffPhotos;
   return { photos, calls };
 }

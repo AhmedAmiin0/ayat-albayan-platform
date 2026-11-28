@@ -51,7 +51,8 @@ export class ReceiptsService {
       (await this.storage.exists({ bucket: BUCKETS.receipts, path }));
     if (!ok) throw badRequest('receipt_path');
     const owners = await this.files.owners([path]);
-    if (owners.some((o) => o.paymentId !== input.paymentId)) throw conflict('attachment_in_use', { path });
+    if (owners.some((o) => o.paymentId !== input.paymentId))
+      throw conflict('attachment_in_use', { path });
   }
 
   async subscription(id: string): Promise<PaymentSubscription> {

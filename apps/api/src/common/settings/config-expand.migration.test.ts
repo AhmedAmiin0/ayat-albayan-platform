@@ -7,11 +7,13 @@ import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 // No database in unit tests; e2e/tests/config-expand.sql.spec.ts runs it against Postgres.
 const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261023000630_config_expand.sql'), 'utf8');
-const body = (fn: string): string => new RegExp(`function public\\.${fn}\\([\\s\\S]*?\\$\\$([\\s\\S]*?)\\$\\$`).exec(sql)?.[1] ?? '';
+const body = (fn: string): string =>
+  new RegExp(`function public\\.${fn}\\([\\s\\S]*?\\$\\$([\\s\\S]*?)\\$\\$`).exec(sql)?.[1] ?? '';
 
 describe('migration 630: config expand', () => {
   it('config_seed never writes a value or a description on an existing row', () => {
-    const update = /on conflict \(key\) do update set([\s\S]*?)where/.exec(body('config_seed'))?.[1] ?? '';
+    const update =
+      /on conflict \(key\) do update set([\s\S]*?)where/.exec(body('config_seed'))?.[1] ?? '';
     expect(update).toContain('module = excluded.module');
     expect(update).not.toMatch(/\bvalue\s*=/);
     expect(update).not.toMatch(/\bdescription(_edited)?\s*=/);
@@ -41,10 +43,14 @@ describe('migration 630: config expand', () => {
 
   it('keeps both RPCs service-role only, security definer with an empty search_path', () => {
     expect(sql).toContain("'config_seed(jsonb, int)', 'config_set(jsonb, uuid)'");
-    expect(sql).toContain("revoke execute on function public.%s from public, anon, authenticated");
-    expect(sql).toContain("grant execute on function public.%s to service_role");
+    expect(sql).toContain('revoke execute on function public.%s from public, anon, authenticated');
+    expect(sql).toContain('grant execute on function public.%s to service_role');
     for (const fn of ['config_seed', 'config_set']) {
-      expect(sql).toMatch(new RegExp(`function public\\.${fn}\\([^)]*\\) returns jsonb\\s+language plpgsql security definer set search_path = ''`));
+      expect(sql).toMatch(
+        new RegExp(
+          `function public\\.${fn}\\([^)]*\\) returns jsonb\\s+language plpgsql security definer set search_path = ''`,
+        ),
+      );
     }
   });
 

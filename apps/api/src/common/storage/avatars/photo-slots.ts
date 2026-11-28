@@ -12,7 +12,9 @@ export function profileSlot(db: Db, profileId: string): AvatarSlot {
   return {
     owns: (path) => isUserAvatarPathOf(path, profileId),
     read: async () => {
-      const data = maybe(await db.from('profiles').select('avatar_path').eq('id', profileId).maybeSingle());
+      const data = maybe(
+        await db.from('profiles').select('avatar_path').eq('id', profileId).maybeSingle(),
+      );
       if (!data) throw notFound('user_not_found');
       return data.avatar_path;
     },
@@ -27,7 +29,9 @@ export function teacherSlot(db: Db, teacherId: string): AvatarSlot {
   return {
     owns: (path) => isTeacherAvatarPathOf(path, teacherId),
     read: async () => {
-      const data = maybe(await db.from('teachers').select('avatar_path').eq('id', teacherId).maybeSingle());
+      const data = maybe(
+        await db.from('teachers').select('avatar_path').eq('id', teacherId).maybeSingle(),
+      );
       if (!data) throw notFound('teacher_not_found');
       return data.avatar_path;
     },

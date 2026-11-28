@@ -1,6 +1,13 @@
 import { parseIdentifier } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { AUTH_GATE, SUBJECT_STORE, type AuthGate, type ProfileRec, type StudentRec, type SubjectStore } from '@/modules/people/sign-in/sign-in.ports';
+import {
+  AUTH_GATE,
+  SUBJECT_STORE,
+  type AuthGate,
+  type ProfileRec,
+  type StudentRec,
+  type SubjectStore,
+} from '@/modules/people/sign-in/sign-in.ports';
 import type { CodeTarget } from '@/modules/people/sign-in/codes/code-issuer';
 import { isStaff } from '@/modules/people/sign-in/sign-in.roles';
 
@@ -27,7 +34,15 @@ export class PasswordTargets {
     if (id.kind === 'student') return this.student(id.value);
     const profile = await this.staff(id);
     if (!profile?.phone || profile.disabled || !isStaff(profile.role)) return null;
-    return { kind: 'staff', profile, code: { purpose: 'reset_password', subject: { kind: 'profile', id: profile.id }, phone: profile.phone } };
+    return {
+      kind: 'staff',
+      profile,
+      code: {
+        purpose: 'reset_password',
+        subject: { kind: 'profile', id: profile.id },
+        phone: profile.phone,
+      },
+    };
   }
 
   private async student(code: string): Promise<PasswordTarget | null> {
@@ -38,10 +53,17 @@ export class PasswordTargets {
       if (!login || login.disabled) return null;
     }
     const purpose = student.profileId ? 'reset_password' : 'set_password';
-    return { kind: 'student', student, code: { purpose, subject: { kind: 'student', id: student.id }, phone: student.guardianPhone } };
+    return {
+      kind: 'student',
+      student,
+      code: { purpose, subject: { kind: 'student', id: student.id }, phone: student.guardianPhone },
+    };
   }
 
-  private async staff(id: { kind: 'email' | 'phone' | 'username'; value: string }): Promise<ProfileRec | null> {
+  private async staff(id: {
+    kind: 'email' | 'phone' | 'username';
+    value: string;
+  }): Promise<ProfileRec | null> {
     if (id.kind === 'username') return this.subjects.profileByUsername(id.value);
     if (id.kind === 'phone') return this.subjects.staffByPhone(id.value);
     const userId = await this.auth.idByEmail(id.value);

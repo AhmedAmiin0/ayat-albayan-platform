@@ -14,7 +14,10 @@ describe('ExpensesSettings', () => {
   });
 
   it('answers the stored currency and zone', async () => {
-    const values = await readerOf(ExpensesSettings, { reporting_currency: 'EGP', academy_timezone: 'Africa/Cairo' }).read();
+    const values = await readerOf(ExpensesSettings, {
+      reporting_currency: 'EGP',
+      academy_timezone: 'Africa/Cairo',
+    }).read();
     expect(values).toEqual({ reporting_currency: 'EGP', academy_timezone: 'Africa/Cairo' });
   });
 });

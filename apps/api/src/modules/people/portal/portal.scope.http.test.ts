@@ -34,7 +34,10 @@ describe('/portal scope over HTTP', () => {
     const res = await t.call('GET', '/portal/me', 'guardianA');
     expect(res.json()).toEqual({
       kind: 'guardian',
-      students: [expect.objectContaining({ id: S1, name: 'سلمى' }), expect.objectContaining({ id: S2, name: 'يوسف' })],
+      students: [
+        expect.objectContaining({ id: S1, name: 'سلمى' }),
+        expect.objectContaining({ id: S2, name: 'يوسف' }),
+      ],
       renew_url: 'https://wa.me/966500000000',
       locale: 'ar',
       guardian: GUARDIAN,
@@ -72,14 +75,22 @@ describe('/portal scope over HTTP', () => {
 
   it('a student never reaches a sibling (same guardian)', async () => {
     for (const path of ['lessons', 'reports', 'package', 'history?status=absent']) {
-      expect((await t.call('GET', `/portal/students/${S2}/${path}`, 'student1')).statusCode).toBe(404);
+      expect((await t.call('GET', `/portal/students/${S2}/${path}`, 'student1')).statusCode).toBe(
+        404,
+      );
     }
-    expect((await t.call('GET', `/portal/students/${S2}/lessons`, 'guardianA')).statusCode).toBe(200);
-    expect((await t.call('GET', `/portal/students/${S3}/lessons`, 'guardianA')).statusCode).toBe(404);
+    expect((await t.call('GET', `/portal/students/${S2}/lessons`, 'guardianA')).statusCode).toBe(
+      200,
+    );
+    expect((await t.call('GET', `/portal/students/${S3}/lessons`, 'guardianA')).statusCode).toBe(
+      404,
+    );
   });
 
   it('a bad id is 400; without a known chat number the renewal link is null', async () => {
-    expect((await t.call('GET', '/portal/students/nope/lessons', 'guardianA')).statusCode).toBe(400);
+    expect((await t.call('GET', '/portal/students/nope/lessons', 'guardianA')).statusCode).toBe(
+      400,
+    );
     t.chat.e164.mockResolvedValueOnce(null);
     expect((await t.call('GET', '/portal/me', 'guardianA')).json().renew_url).toBeNull();
     t.chat.e164.mockRejectedValueOnce(new Error('db down'));
@@ -88,7 +99,9 @@ describe('/portal scope over HTTP', () => {
 
   it("the family requests read are this login's own only (another guardian's stay hidden)", async () => {
     t.lessons.ahead.mockResolvedValueOnce([lessonRow()]);
-    expect((await t.call('GET', `/portal/students/${S1}/lessons`, 'guardianA')).statusCode).toBe(200);
+    expect((await t.call('GET', `/portal/students/${S1}/lessons`, 'guardianA')).statusCode).toBe(
+      200,
+    );
     expect(t.lessons.requests).toHaveBeenLastCalledWith({ lessonIds: [L1], userId: 'g-a' });
   });
 

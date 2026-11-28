@@ -15,15 +15,8 @@ import type { ReportRow } from '@/modules/reporting/reports/report-row';
 import { ReportsQueries } from '@/modules/reporting/reports/shared/reports.queries';
 import { submitPayload } from './submit-plan';
 
-interface SubmitInput {
-  id: string;
-  form: ReportSubmit;
-  user: ReportCaller;
-}
-interface RetryInput {
-  id: string;
-  user: ReportCaller;
-}
+interface SubmitInput { id: string; form: ReportSubmit; user: ReportCaller }
+interface RetryInput { id: string; user: ReportCaller }
 type Editable = Awaited<ReturnType<ReportGate['editable']>> & { user: ReportCaller };
 /** What a v1 or v2 form sends, as the submit writes it. content: v2 only. */
 interface SubmitWrite {

@@ -21,9 +21,12 @@ export class LinkPackages {
   async release(subscriptionId: string, actorId: string): Promise<void> {
     try {
       const before = await this.cancels.view(subscriptionId);
-      if (before.status !== 'cancelled' && before.paid === 0) await this.cancels.cancel(before, { actorId, reason: 'payment_link_unused' });
+      if (before.status !== 'cancelled' && before.paid === 0)
+        await this.cancels.cancel(before, { actorId, reason: 'payment_link_unused' });
     } catch (e) {
-      this.log.warn(`payment link package not cancelled: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(
+        `payment link package not cancelled: ${e instanceof Error ? e.message : String(e)}`,
+      );
     }
   }
 

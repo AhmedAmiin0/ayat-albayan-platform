@@ -11,16 +11,8 @@ import { reportView } from '@/modules/reporting/reports/report.mapper';
 import { ReportsQueries } from '@/modules/reporting/reports/shared/reports.queries';
 import { contentJson, v2DraftColumns, v2SubmitColumns } from './report-v2.mapper';
 
-interface DraftInput {
-  id: string;
-  form: Partial<ReportV2Draft>;
-  user: ReportCaller;
-}
-interface SubmitInput {
-  id: string;
-  form: ReportV2Submit;
-  user: ReportCaller;
-}
+interface DraftInput { id: string; form: Partial<ReportV2Draft>; user: ReportCaller }
+interface SubmitInput { id: string; form: ReportV2Submit; user: ReportCaller }
 
 /**
  * The new lesson report form (docs/design/report-form): autosave and submit of a

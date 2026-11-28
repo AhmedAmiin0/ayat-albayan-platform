@@ -22,7 +22,11 @@ export const CALLS_SHAPE = {
   CALLS_TURN_SECRET: optionalSecret,
 };
 
-const urls = (raw: string): string[] => raw.split(',').map((u) => u.trim()).filter(Boolean);
+const urls = (raw: string): string[] =>
+  raw
+    .split(',')
+    .map((u) => u.trim())
+    .filter(Boolean);
 
 /** TURN REST: username «<expiry unix s>:<user>», credential base64(HMAC-SHA1(secret, username)). */
 function turnCredential(input: { secret: string; userId: string; now: Date }): {
@@ -30,7 +34,10 @@ function turnCredential(input: { secret: string; userId: string; now: Date }): {
   credential: string;
 } {
   const username = `${Math.floor(input.now.getTime() / 1000) + TURN_TTL_S}:${input.userId}`;
-  return { username, credential: createHmac('sha1', input.secret).update(username).digest('base64') };
+  return {
+    username,
+    credential: createHmac('sha1', input.secret).update(username).digest('base64'),
+  };
 }
 
 /** The RTCPeerConnection iceServers: STUN always, TURN only when its urls are set (with minted credentials). */

@@ -59,7 +59,10 @@ export class ReportsController {
 
   /** R6: 1 h signed URL; 409 pdf_not_ready. */
   @Get(':id/pdf')
-  pdf(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<SignedDownload> {
+  pdf(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SignedDownload> {
     return this.files.pdfUrl({ id, user });
   }
 
@@ -67,7 +70,10 @@ export class ReportsController {
   @Post(':id/pdf/retry')
   @HttpCode(200)
   @Permissions('reports.resend')
-  retry(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<ReportView> {
+  retry(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ReportView> {
     return this.submits.retryPdf({ id, user });
   }
 }

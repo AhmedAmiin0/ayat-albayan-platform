@@ -23,19 +23,33 @@ export async function signInApp() {
     audit: new FakeAudit(),
   };
   const mod = await Test.createTestingModule({ imports: [messagingRoot(SignInModule)] })
-    .overrideProvider(CODE_STORE).useValue(fakes.codes)
-    .overrideProvider(LIMIT_STORE).useValue(new MemoryLimitStore())
-    .overrideProvider(SUBJECT_STORE).useValue(fakes.subjects)
-    .overrideProvider(AUTH_GATE).useValue(fakes.auth)
-    .overrideProvider(CodeSend).useValue(fakes.send)
-    .overrideProvider(AuditService).useValue(fakes.audit)
-    .overrideProvider(SIGN_IN_CONFIG).useValue({ pepper: PEPPER, passwordMinLength: 8, supabaseUrl: 'http://localhost', signInKey: 'k' })
-    .overrideProvider(SettingsService).useValue(fakeSettings({ family_login_enabled: true }))
+    .overrideProvider(CODE_STORE)
+    .useValue(fakes.codes)
+    .overrideProvider(LIMIT_STORE)
+    .useValue(new MemoryLimitStore())
+    .overrideProvider(SUBJECT_STORE)
+    .useValue(fakes.subjects)
+    .overrideProvider(AUTH_GATE)
+    .useValue(fakes.auth)
+    .overrideProvider(CodeSend)
+    .useValue(fakes.send)
+    .overrideProvider(AuditService)
+    .useValue(fakes.audit)
+    .overrideProvider(SIGN_IN_CONFIG)
+    .useValue({
+      pepper: PEPPER,
+      passwordMinLength: 8,
+      supabaseUrl: 'http://localhost',
+      signInKey: 'k',
+    })
+    .overrideProvider(SettingsService)
+    .useValue(fakeSettings({ family_login_enabled: true }))
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
-  const post = (url: string, body: object, ip = '203.0.113.50') => app.inject({ method: 'POST', url, payload: body, remoteAddress: ip });
+  const post = (url: string, body: object, ip = '203.0.113.50') =>
+    app.inject({ method: 'POST', url, payload: body, remoteAddress: ip });
   const get = (url: string) => app.inject({ method: 'GET', url });
   return { ...fakes, app, post, get };
 }

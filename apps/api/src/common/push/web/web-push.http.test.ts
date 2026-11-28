@@ -91,16 +91,8 @@ describe('/me/web-push (R-NOT-02)', () => {
   it('PUT stores the subscription for the caller; a disallowed endpoint is 400 and never stored', async () => {
     expect((await call({ method: 'PUT', url: '/me/web-push', payload: SUB })).statusCode).toBe(204);
     expect(q.subscribe).toHaveBeenCalledWith(USERS.assistant?.id, SUB, 'sess-1');
-    for (const endpoint of [
-      'http://fcm.googleapis.com/x',
-      'https://localhost/x',
-      'https://127.0.0.1/x',
-      'https://evil.example/x',
-    ]) {
-      expect(
-        (await call({ method: 'PUT', url: '/me/web-push', payload: { ...SUB, endpoint } }))
-          .statusCode,
-      ).toBe(400);
+    for (const endpoint of ['http://fcm.googleapis.com/x', 'https://localhost/x', 'https://127.0.0.1/x', 'https://evil.example/x']) {
+      expect((await call({ method: 'PUT', url: '/me/web-push', payload: { ...SUB, endpoint } })).statusCode).toBe(400);
     }
     expect(q.subscribe).toHaveBeenCalledTimes(1);
   });

@@ -27,8 +27,7 @@ describe('GoogleItemsQueries.requeueReportRows', () => {
   it('re-queues FAILED rows too (skip_reason null), only already_in_sheet stays', async () => {
     const calls: [string, unknown[]][] = [];
     const chain: Record<string, unknown> = {};
-    for (const m of ['update', 'in', 'neq', 'or'])
-      chain[m] = (...args: unknown[]) => (calls.push([m, args]), chain);
+    for (const m of ['update', 'in', 'neq', 'or']) chain[m] = (...args: unknown[]) => (calls.push([m, args]), chain);
     chain.then = (ok: (v: { error: null }) => unknown) => ok({ error: null });
     const db = { from: vi.fn().mockReturnValue(chain) };
     await new GoogleItemsQueries(db as unknown as Db).requeueReportRows({

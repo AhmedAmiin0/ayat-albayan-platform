@@ -5,7 +5,11 @@ import { authEmailOf, createAuthUser } from '@/common/auth/auth-users';
 import { DB, type Db } from '@/common/db/db.module';
 import { badRequest } from '@/common/http/errors';
 import { done, pgError } from '@/common/db/errors';
-import { SIGN_IN_CONFIG, type AuthGate, type SignInConfig } from '@/modules/people/sign-in/sign-in.ports';
+import {
+  SIGN_IN_CONFIG,
+  type AuthGate,
+  type SignInConfig,
+} from '@/modules/people/sign-in/sign-in.ports';
 
 /** GoTrue's admin failures as module codes (a weak password is the user's to fix); anything else is a 500. */
 function authError(error: { code?: string | undefined }): Error {

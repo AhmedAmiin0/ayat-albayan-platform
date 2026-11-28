@@ -8,11 +8,7 @@ import { StudentStatusRepo } from './student-status.repo';
 import { NO_TRIAL, trialFactsOf } from '@/modules/finance/subscriptions/trial/student-trial.plan';
 import { StudentTrialRepo } from '@/modules/finance/subscriptions/trial/student-trial.repo';
 
-export interface DeletedPayment {
-  id: string;
-  kind: string;
-  amount: number | string;
-}
+export interface DeletedPayment { id: string; kind: string; amount: number | string }
 interface Ctx {
   payment: DeletedPayment;
   ids: { studentId: string; actorId: string };

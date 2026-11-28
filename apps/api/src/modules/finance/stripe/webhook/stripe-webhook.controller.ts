@@ -19,7 +19,10 @@ export class StripeWebhookController {
 
   @Route(routes.webhook)
   @HttpCode(200)
-  receive(@Req() req: RawRequest, @Headers('stripe-signature') signature?: string): Promise<StripeWebhookAnswer> {
+  receive(
+    @Req() req: RawRequest,
+    @Headers('stripe-signature') signature?: string,
+  ): Promise<StripeWebhookAnswer> {
     return this.webhook.handle({ rawBody: req.rawBody, signature });
   }
 }

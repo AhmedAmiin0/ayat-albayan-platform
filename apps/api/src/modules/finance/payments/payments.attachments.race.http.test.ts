@@ -2,10 +2,22 @@ import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
 import { moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
-import { ADMIN_PAY, attachment as file, JPEG, PAYMENT_ID, paymentRow, STUDENT_ID, SUB_ID } from '@/modules/sales/sales-money/tests/sales-money.pay.fakes';
+import {
+  ADMIN_PAY,
+  attachment as file,
+  JPEG,
+  PAYMENT_ID,
+  paymentRow,
+  STUDENT_ID,
+  SUB_ID,
+} from '@/modules/sales/sales-money/tests/sales-money.pay.fakes';
 
 const REQ = '7d1c6a52-3b7e-4f0e-9a51-2f7c3e9b8a40';
-const post = (body: object) => ({ method: 'POST' as const, url: '/payments', body: { ...ADMIN_PAY, clientRequestId: REQ, ...body } });
+const post = (body: object) => ({
+  method: 'POST' as const,
+  url: '/payments',
+  body: { ...ADMIN_PAY, clientRequestId: REQ, ...body },
+});
 
 // Rule 8: two sends of the same form (same clientRequestId) book one payment, and neither gets an error.
 describe('POST /payments: a retry racing the first send', () => {
@@ -22,7 +34,11 @@ describe('POST /payments: a retry racing the first send', () => {
   beforeEach(() => {
     resetMocks(m);
     replayed.mockClear();
-    m.payments.subscription.mockResolvedValue({ id: SUB_ID, student_id: STUDENT_ID, currency: 'SAR' });
+    m.payments.subscription.mockResolvedValue({
+      id: SUB_ID,
+      student_id: STUDENT_ID,
+      currency: 'SAR',
+    });
     m.payments.insert.mockResolvedValue(paymentRow());
     m.payments.get.mockResolvedValue(paymentRow());
     m.storage.info.mockResolvedValue({ size: 2048, contentType: 'image/jpeg' });

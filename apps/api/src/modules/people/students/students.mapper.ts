@@ -46,11 +46,7 @@ export type StudentProfileRow = Student & {
   } | null;
 };
 
-interface InsertOpts {
-  dto: StudentCreateRequest;
-  guardianId: string;
-  actorId: string;
-}
+interface InsertOpts { dto: StudentCreateRequest; guardianId: string; actorId: string }
 
 /** Request → row: drops request-only keys, adds name_normalized (R-STU-03) and created_by. */
 export function toStudentInsert({

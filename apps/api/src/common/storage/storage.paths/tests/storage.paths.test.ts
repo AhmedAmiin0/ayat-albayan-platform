@@ -31,8 +31,12 @@ describe('storage paths (migration 122 policies parse these)', () => {
     expect(owner).toBe('r1');
     expect(file?.replace(/\.mp3$/, '')).toMatch(UUID);
     expect(attachmentPath({ reportId: 'r1', mime: 'audio/mpeg' })).not.toBe(a);
-    expect(receiptPath({ subscriptionId: 'sub', mime: 'image/jpeg' })).toMatch(/^sub\/[0-9a-f-]{36}\.jpg$/);
-    expect(teacherReceiptPath({ teacherId: 'tch', mime: 'application/pdf' })).toMatch(/^tch\/[0-9a-f-]{36}\.pdf$/);
+    expect(receiptPath({ subscriptionId: 'sub', mime: 'image/jpeg' })).toMatch(
+      /^sub\/[0-9a-f-]{36}\.jpg$/,
+    );
+    expect(teacherReceiptPath({ teacherId: 'tch', mime: 'application/pdf' })).toMatch(
+      /^tch\/[0-9a-f-]{36}\.pdf$/,
+    );
   });
 
   it('invoice: {client_request_id}/{name}; a chat copy has a deterministic name, an upload a new one', () => {
@@ -41,20 +45,31 @@ describe('storage paths (migration 122 policies parse these)', () => {
     expect(chatName('m1', 'application/pdf')).toBe(chatName('m1', 'application/pdf'));
     expect(uploadName('image/jpeg')).toMatch(/^[0-9a-f-]{36}\.jpg$/);
     expect(uploadName('image/jpeg')).not.toBe(uploadName('image/jpeg'));
-    expect(isPathOf(invoicePath({ requestId, name: uploadName('image/png') }), requestId)).toBe(true);
+    expect(isPathOf(invoicePath({ requestId, name: uploadName('image/png') }), requestId)).toBe(
+      true,
+    );
   });
 
   it('wa-media cache: {message_id}.{ext}; the buckets are named once', () => {
     expect(waMediaPath({ messageId: 'm1', mime: 'image/webp' })).toBe('m1.webp');
     // A chat PDF's page images sit under pdf/, never out/ (isChatOutPathOf) nor a message's own copy.
     expect(pdfPagePath({ messageId: 'm1', page: 7 })).toBe('pdf/m1/7.jpg');
-    expect(BUCKETS).toMatchObject({ invoices: 'invoices', waMedia: 'wa-media', recordings: 'recordings' });
+    expect(BUCKETS).toMatchObject({
+      invoices: 'invoices',
+      waMedia: 'wa-media',
+      recordings: 'recordings',
+    });
   });
 
   it('every accepted mime has a real extension', () => {
-    for (const mime of [...ATTACHMENT_MIMES, ...RECEIPT_MIMES]) expect(extFor(mime)).not.toBe('bin');
+    for (const mime of [...ATTACHMENT_MIMES, ...RECEIPT_MIMES])
+      expect(extFor(mime)).not.toBe('bin');
     expect(extFor('application/zip')).toBe('bin');
-    expect([extFor('video/mp4'), extFor('video/3gpp'), extFor('audio/amr')]).toEqual(['mp4', '3gp', 'amr']);
+    expect([extFor('video/mp4'), extFor('video/3gpp'), extFor('audio/amr')]).toEqual([
+      'mp4',
+      '3gp',
+      'amr',
+    ]);
   });
 
   it.each([
@@ -69,7 +84,9 @@ describe('storage paths (migration 122 policies parse these)', () => {
   });
 
   it('chatOutPath is out/{actor}/{request}/{uuid}.{ext}', () => {
-    expect(chatOutPath({ actorId: 'u1', requestId: 'r1', mime: 'application/pdf' })).toMatch(/^out\/u1\/r1\/[0-9a-f-]{36}\.pdf$/);
+    expect(chatOutPath({ actorId: 'u1', requestId: 'r1', mime: 'application/pdf' })).toMatch(
+      /^out\/u1\/r1\/[0-9a-f-]{36}\.pdf$/,
+    );
   });
 
   it.each([

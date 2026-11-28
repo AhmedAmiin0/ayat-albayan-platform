@@ -45,10 +45,7 @@ const PAYMENT_SORT: SortSpec<(typeof TEACHER_PAYMENT_SORT_KEYS)[number]> = {
   fallback: [{ column: 'paid_at', ascending: false }],
 };
 
-interface For<F> {
-  teacherId: string;
-  filter: F;
-}
+interface For<F> { teacherId: string; filter: F }
 
 function sessionsQuery(db: Db, q: For<EarningsListQuery>) {
   const f = q.filter;

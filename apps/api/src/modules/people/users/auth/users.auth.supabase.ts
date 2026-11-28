@@ -3,7 +3,12 @@ import { createAuthUser } from '@/common/auth/auth-users';
 import { DB, type Db } from '@/common/db/db.module';
 import { badRequest, conflict } from '@/common/http/errors';
 import { done, pgError } from '@/common/db/errors';
-import { USERS_CONFIG, type AuthAdmin, type AuthPatch, type UsersConfig } from '@/modules/people/users/store/users.store';
+import {
+  USERS_CONFIG,
+  type AuthAdmin,
+  type AuthPatch,
+  type UsersConfig,
+} from '@/modules/people/users/store/users.store';
 
 /** ~100 years: GoTrue has no "ban forever", and `none` lifts it. */
 const BAN_FOREVER = '876000h';
@@ -15,7 +20,8 @@ interface AuthFailure {
 
 /** The Auth Admin API's failures as the module's own codes; anything else is a 500. */
 function authError(error: AuthFailure): Error {
-  if (error.code === 'email_exists' || error.code === 'user_already_exists') return conflict('email_taken');
+  if (error.code === 'email_exists' || error.code === 'user_already_exists')
+    return conflict('email_taken');
   if (error.code === 'weak_password') return badRequest('password_too_short');
   if (error.code === 'validation_failed') return badRequest('invalid_email');
   return new Error(`auth admin: ${error.code ?? 'unknown'}`);

@@ -5,7 +5,12 @@ import { vi } from 'vitest';
 import { featureRoot } from '@/common/infra/test-root';
 import { AssistantPayModule } from '@/modules/finance/assistant-pay/assistant-pay.module';
 import { AuditService } from '@/common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { CommissionBell } from '@/modules/finance/subscriptions';
 import { EarningsReceipts } from '@/modules/finance/teacher-earnings/earnings.receipts';
@@ -93,7 +98,17 @@ export async function assistantApp() {
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
-  const call = (input: { method: 'GET' | 'POST' | 'PUT'; url: string; token: keyof typeof USERS; body?: object }) =>
-    app.inject({ method: input.method, url: input.url, headers: { authorization: `Bearer ${input.token}` }, payload: input.body });
+  const call = (input: {
+    method: 'GET' | 'POST' | 'PUT';
+    url: string;
+    token: keyof typeof USERS;
+    body?: object;
+  }) =>
+    app.inject({
+      method: input.method,
+      url: input.url,
+      headers: { authorization: `Bearer ${input.token}` },
+      payload: input.body,
+    });
   return { app, call, my, terms, statements, ledger, rpc, receipts, audit, bell };
 }

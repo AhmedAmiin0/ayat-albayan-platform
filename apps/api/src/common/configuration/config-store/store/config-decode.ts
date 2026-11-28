@@ -7,7 +7,10 @@ import { CONFIG_DEFS, defaultOf } from './config-defs';
 // /admin/config/parity compares two independent paths.
 
 /** The send switches: ON only for a stored JSON boolean `true` ("true", 1, null, missing → off). */
-export const GATE_KEYS: ReadonlySet<string> = new Set(['messaging_enabled', 'auto_messages_enabled']);
+export const GATE_KEYS: ReadonlySet<string> = new Set([
+  'messaging_enabled',
+  'auto_messages_enabled',
+]);
 
 interface Decoded {
   value: unknown;
@@ -19,7 +22,10 @@ const ok = (value: unknown): Decoded => ({ value, malformed: false });
 
 /** comms_source: 'module' only for the exact string "module"; anything else is 'legacy'. */
 function decodeCommsSource(v: unknown): Decoded {
-  return { value: v === 'module' ? 'module' : 'legacy', malformed: v !== 'module' && v !== 'legacy' };
+  return {
+    value: v === 'module' ? 'module' : 'legacy',
+    malformed: v !== 'module' && v !== 'legacy',
+  };
 }
 
 /**

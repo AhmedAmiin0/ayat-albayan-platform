@@ -5,7 +5,10 @@ import { SettingsService } from '@/common/settings/settings.service';
 
 /** The teacher's report edit window (R-REP-02), the late-cancel policy shown with a report, and the v2 form flag. */
 const KEYS = [
-  'report_teacher_edit_minutes', 'report_teacher_edit_hours', 'late_cancel_hours', 'report_form_v2',
+  'report_teacher_edit_minutes',
+  'report_teacher_edit_hours',
+  'late_cancel_hours',
+  'report_form_v2',
 ] as const satisfies readonly SettingKey[];
 export type ReportsSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 

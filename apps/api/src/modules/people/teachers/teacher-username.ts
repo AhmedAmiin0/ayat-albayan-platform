@@ -13,7 +13,9 @@ export class TeacherUsernames {
 
   async of(profileId: string | null): Promise<string | null> {
     if (!profileId) return null;
-    const data = maybe(await this.db.from('profiles').select('username').eq('id', profileId).maybeSingle());
+    const data = maybe(
+      await this.db.from('profiles').select('username').eq('id', profileId).maybeSingle(),
+    );
     return data?.username ?? null;
   }
 

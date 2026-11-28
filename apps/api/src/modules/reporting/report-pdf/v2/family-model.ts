@@ -1,6 +1,10 @@
 import { juzProgress, type JuzProgress, type ReportContent } from '@ab/shared';
 import type { Attendance, Grade, Program } from '@ab/catalog';
-import { packageSlot, type PackageSlot, type PdfContact } from '@/modules/reporting/report-pdf/render/pdf-model';
+import {
+  packageSlot,
+  type PackageSlot,
+  type PdfContact,
+} from '@/modules/reporting/report-pdf/render/pdf-model';
 import type { ReportSource } from '@/modules/reporting/report-pdf/report-pdf.source';
 
 /**

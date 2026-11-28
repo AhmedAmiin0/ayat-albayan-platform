@@ -58,7 +58,8 @@ export function matchDate(
   let script = false;
   for (const [i, row] of rows.entries()) {
     if (sheetDate(row[0] ?? null) !== input.date) continue;
-    if (input.pdfFileId && fileIdIn(row[12]) === input.pdfFileId) return { kind: 'ours', row: i + 2 };
+    if (input.pdfFileId && fileIdIn(row[12]) === input.pdfFileId)
+      return { kind: 'ours', row: i + 2 };
     script = true;
   }
   return script ? { kind: 'script' } : { kind: 'none' };

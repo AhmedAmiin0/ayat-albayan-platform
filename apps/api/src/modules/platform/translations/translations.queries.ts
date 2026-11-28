@@ -22,7 +22,9 @@ export class TranslationsQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async all(): Promise<OverrideRow[]> {
-    const { data, error } = await this.db.from('translation_overrides').select('key, locale, value');
+    const { data, error } = await this.db
+      .from('translation_overrides')
+      .select('key, locale, value');
     if (error) throw pgError(error);
     return data;
   }
@@ -39,7 +41,11 @@ export class TranslationsQueries {
   }
 
   async remove(locale: Locale, key: string): Promise<void> {
-    const { error } = await this.db.from('translation_overrides').delete().eq('locale', locale).eq('key', key);
+    const { error } = await this.db
+      .from('translation_overrides')
+      .delete()
+      .eq('locale', locale)
+      .eq('key', key);
     if (error) throw pgError(error);
   }
 }

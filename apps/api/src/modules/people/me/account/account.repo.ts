@@ -18,11 +18,15 @@ export class AccountRepo implements AccountStore {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async get(id: string): Promise<AccountRow | null> {
-    const data = maybe(await this.db
-      .from('profiles')
-      .select('id, full_name, phone_e164, avatar_path, role, role_id, teacher:teachers!teachers_profile_id_fkey(id)')
-      .eq('id', id)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('profiles')
+        .select(
+          'id, full_name, phone_e164, avatar_path, role, role_id, teacher:teachers!teachers_profile_id_fkey(id)',
+        )
+        .eq('id', id)
+        .maybeSingle(),
+    );
     if (!data) return null;
     const name = await this.roleName(data.role, data.role_id);
     const teacher_id = [data.teacher].flat()[0]?.id ?? null;
@@ -54,7 +58,9 @@ export class AccountRepo implements AccountStore {
   /** The held custom role's names, else the base role's system role. */
   private async roleName(base: UserRole, roleId: string | null): Promise<RoleName | null> {
     const query = this.db.from('roles').select('key, name_ar, name_en');
-    const { data, error } = await (roleId ? query.eq('id', roleId) : query.eq('is_system', true).eq('base_role', base)).limit(1);
+    const { data, error } = await (
+      roleId ? query.eq('id', roleId) : query.eq('is_system', true).eq('base_role', base)
+    ).limit(1);
     if (error) throw pgError(error);
     return data[0] ?? null;
   }

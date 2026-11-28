@@ -3,11 +3,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { peopleErrors } from '@/modules/people/guardians/http';
 import { pgError } from '@/common/db/errors';
 
-interface MergeOptions {
-  keptId: string;
-  mergedId: string;
-  actorId: string;
-}
+interface MergeOptions { keptId: string; mergedId: string; actorId: string }
 
 /**
  * Merges student B into A (R-STU-03, R-NFR-03). The whole merge — re-pointing every reference,

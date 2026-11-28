@@ -48,7 +48,10 @@ export class AvatarWriter {
     let code: string | null = null;
     if (!isAvatarMime(file.mime)) code = 'avatar_type';
     else if (file.size < 1 || file.size > AVATAR_MAX_BYTES) code = 'avatar_too_large';
-    else if (sniffMime((await this.files.head(path, SNIFF_BYTES)) ?? new Uint8Array()) !== file.mime) code = 'avatar_type';
+    else if (
+      sniffMime((await this.files.head(path, SNIFF_BYTES)) ?? new Uint8Array()) !== file.mime
+    )
+      code = 'avatar_type';
     if (code === null) return;
     await this.discard(path);
     throw badRequest(code);

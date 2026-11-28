@@ -5,7 +5,13 @@ import { DB, type Db } from '@/common/db/db.module';
 import { readAll, readChunked } from '@/common/db/read-all';
 
 /** Open or with an outcome; never cancelled or moved (docs/11 R11). */
-const REPORTABLE: readonly LessonStatus[] = [...OPEN_LESSON_STATUSES, 'completed', 'late', 'excused', 'no_show'];
+const REPORTABLE: readonly LessonStatus[] = [
+  ...OPEN_LESSON_STATUSES,
+  'completed',
+  'late',
+  'excused',
+  'no_show',
+];
 
 const PENDING =
   'lesson_id, student_id, student:students(id, code, name), lesson:lessons!inner(id, starts_at, status, teacher:teachers(id, display_name_ar, display_name_en)), lesson_reports(id)';
@@ -69,9 +75,17 @@ export class WorkQueries {
   async taskSubjects(subscriptionIds: readonly string[]) {
     const ids = [...new Set(subscriptionIds)];
     const [subs, balances] = await Promise.all([
-      readChunked(ids, (chunk) => this.db.from('subscriptions').select('id, student:students(id, code, name)').in('id', chunk)),
       readChunked(ids, (chunk) =>
-        this.db.from('v_subscription_balance').select('subscription_id, lessons_total, lessons_used').in('subscription_id', chunk),
+        this.db
+          .from('subscriptions')
+          .select('id, student:students(id, code, name)')
+          .in('id', chunk),
+      ),
+      readChunked(ids, (chunk) =>
+        this.db
+          .from('v_subscription_balance')
+          .select('subscription_id, lessons_total, lessons_used')
+          .in('subscription_id', chunk),
       ),
     ]);
     const used = new Map(balances.map((b) => [b.subscription_id, b]));

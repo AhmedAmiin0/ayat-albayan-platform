@@ -9,10 +9,7 @@ import type { Window } from './finance/finance.types';
 
 const HOURS_48 = 48 * 3_600_000;
 
-interface CountResult {
-  count: number | null;
-  error: PostgrestError | null;
-}
+interface CountResult { count: number | null; error: PostgrestError | null }
 
 async function counted(q: PromiseLike<CountResult>): Promise<number> {
   const { count, error } = await q;

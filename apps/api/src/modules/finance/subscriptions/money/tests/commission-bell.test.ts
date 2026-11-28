@@ -4,7 +4,13 @@ import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { CommissionBell } from '@/modules/finance/subscriptions/money/commission-bell';
 
 const NOW = new Date('2026-10-29T16:42:20Z');
-const ROW = { id: 'ca03d8c8', assistant_id: 'alzahra', amount: 50, currency: 'EGP', student: { code: 'AB-1022', name: 'lmkl' } };
+const ROW = {
+  id: 'ca03d8c8',
+  assistant_id: 'alzahra',
+  amount: 50,
+  currency: 'EGP',
+  student: { code: 'AB-1022', name: 'lmkl' },
+};
 const EARN = { id: 'audit-1', entity_id: 'ca03d8c8' };
 /** The signed number in LRI … PDI, as the bell body stores it. */
 const signed = (n: string, currency: string) => `⁦+${n}⁩ ${currency}`;
@@ -72,7 +78,14 @@ describe('CommissionBell («عمولة جديدة», owner 2026-10-29)', () => {
 
   it('a site currency reads its symbol; an unknown one its code', async () => {
     const events = [{ data: [EARN, { id: 'audit-2', entity_id: 'c2' }] }];
-    const t = setup(events, [{ data: [{ ...ROW, amount: 12.5, currency: 'SAR' }, { ...ROW, id: 'c2', currency: 'GBP' }] }]);
+    const t = setup(events, [
+      {
+        data: [
+          { ...ROW, amount: 12.5, currency: 'SAR' },
+          { ...ROW, id: 'c2', currency: 'GBP' },
+        ],
+      },
+    ]);
     await t.bell.notify(NOW);
     const amounts = t.push.notifyProfiles.mock.calls.map(
       (c) => (c[0] as { vars: { amount: string } }).vars.amount,

@@ -71,7 +71,14 @@ export class TermsService {
       this.queries.renewalShare(),
     ]);
     const after = toTermsView(input.assistantId, row, share);
-    await this.env.audit.record({ actorId: input.actorId, entity: 'assistant_terms', entityId: input.assistantId, action: 'set', before: { ...before }, after: { ...after } });
+    await this.env.audit.record({
+      actorId: input.actorId,
+      entity: 'assistant_terms',
+      entityId: input.assistantId,
+      action: 'set',
+      before: { ...before },
+      after: { ...after },
+    });
     if (after.commission) await this.evaluateBrought(input.assistantId);
     return after;
   }

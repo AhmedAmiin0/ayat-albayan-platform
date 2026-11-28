@@ -4,11 +4,7 @@ import { TeacherReportsQueries } from '@/modules/reporting/reports/teacher/teach
 
 const T = 'lesson_reports';
 const PAGE = { page: 2, pageSize: 10 };
-interface Call {
-  table: string;
-  method: string;
-  args: unknown[];
-}
+interface Call { table: string; method: string; args: unknown[] }
 const argsOf = (calls: Call[], table: string, method: string) =>
   calls.filter((c) => c.table === table && c.method === method).map((c) => c.args);
 

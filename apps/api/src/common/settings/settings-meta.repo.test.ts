@@ -2,16 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { SettingsMetaRepo } from './settings-meta.repo';
 
-interface Result {
-  data: unknown;
-  error: { message: string } | null;
-}
-interface MetaRow {
-  key: string;
-  value: unknown;
-  updated_at: string;
-  updated_by: string | null;
-}
+interface Result { data: unknown; error: { message: string } | null }
+interface MetaRow { key: string; value: unknown; updated_at: string; updated_by: string | null }
 
 const ok = (data: unknown): Result => ({ data, error: null });
 const fail = (message: string): Result => ({ data: null, error: { message } });
@@ -53,21 +45,13 @@ describe('SettingsMetaQueries.meta (GET /config/meta)', () => {
     );
     const meta = await q.meta();
     expect(inIds).toHaveBeenCalledWith('id', ['u1', 'u2']);
-    expect([meta.a?.updatedByName, meta.b?.updatedByName, meta.c?.updatedByName]).toEqual([
-      'منى',
-      'منى',
-      'سارة',
-    ]);
+    expect([meta.a?.updatedByName, meta.b?.updatedByName, meta.c?.updatedByName]).toEqual(['منى', 'منى', 'سارة']);
     expect(meta.c?.updatedBy).toBe('u2');
   });
 
   it('gives a null name for an id with no profile', async () => {
     const { q } = queries(ok([row('a', 'gone')]), ok([]));
-    expect((await q.meta()).a).toEqual({
-      updatedAt: '2026-10-05T00:00:00Z',
-      updatedBy: 'gone',
-      updatedByName: null,
-    });
+    expect((await q.meta()).a).toEqual({ updatedAt: '2026-10-05T00:00:00Z', updatedBy: 'gone', updatedByName: null });
   });
 
   it('skips a seeded row nobody wrote (JSON null, no writer); keeps an admin null save', async () => {

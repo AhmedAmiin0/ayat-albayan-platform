@@ -7,7 +7,12 @@ import { chatKeyGaps, hasChatKeys, lineProvider } from './whatsapp/env.whatsapp'
 
 // What each line still lacks to send, for the line check and the boot log (docs/19): names only.
 
-const META_NOTIFICATION_KEYS = ['WA_API_BASE', 'WA_PHONE_NUMBER_ID', 'WA_WABA_ID', 'WA_ACCESS_TOKEN'] as const;
+const META_NOTIFICATION_KEYS = [
+  'WA_API_BASE',
+  'WA_PHONE_NUMBER_ID',
+  'WA_WABA_ID',
+  'WA_ACCESS_TOKEN',
+] as const;
 
 /**
  * A meta chat line, once any WA_CHAT_* key is set: chatKeyGaps, plus WA_API_BASE when it is unset
@@ -57,7 +62,8 @@ const BOTH_ON_CRM = 'WA_CHAT_PROVIDER (crm, same as WA_PROVIDER)';
  * notifications line just means messaging is off (local dev): nothing to name, as before.
  */
 export function bootGaps(env: Env, line: WaLine): string[] {
-  const names = line === 'notifications' && lineProvider(env, line) === 'meta' ? [] : lineGaps(env, line);
+  const names =
+    line === 'notifications' && lineProvider(env, line) === 'meta' ? [] : lineGaps(env, line);
   if (!duplicatePhone(env, line)) return names;
   return [...names, bothOnCrm(env) ? BOTH_ON_CRM : DUPLICATE_CHAT_PHONE];
 }

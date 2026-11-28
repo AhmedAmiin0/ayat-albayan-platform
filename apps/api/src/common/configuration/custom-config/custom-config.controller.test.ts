@@ -80,20 +80,8 @@ describe('/config/custom (admin CRUD)', () => {
       payload: { value: 'hi', isPublic: true },
     });
     expect(res.statusCode).toBe(200);
-    expect(custom.upsert).toHaveBeenCalledWith(
-      'promo',
-      { value: 'hi', isPublic: true },
-      USERS.admin?.id,
-    );
-    expect(audit.record).toHaveBeenCalledWith(
-      expect.objectContaining({
-        entity: 'custom_config',
-        entityId: SINGLETON_ENTITY_ID,
-        action: 'create:promo',
-        before: null,
-        after: VIEW,
-      }),
-    );
+    expect(custom.upsert).toHaveBeenCalledWith('promo', { value: 'hi', isPublic: true }, USERS.admin?.id);
+    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'custom_config', entityId: SINGLETON_ENTITY_ID, action: 'create:promo', before: null, after: VIEW }));
   });
 
   it('PUT over an existing entry audits before and after as an update', async () => {

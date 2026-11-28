@@ -21,7 +21,13 @@ export const KAPSO_SHAPE = {
    * kapso is not configured (e2e points it at tools/wa-stub's kapso prefix).
    */
   KAPSO_API_BASE: z.preprocess(blankIsUnset, z.url().optional()),
-  KAPSO_API_VERSION: z.preprocess(blankIsUnset, z.string().regex(/^v\d+\.\d+$/).default('v24.0')),
+  KAPSO_API_VERSION: z.preprocess(
+    blankIsUnset,
+    z
+      .string()
+      .regex(/^v\d+\.\d+$/)
+      .default('v24.0'),
+  ),
   /** Kapso project API key: the X-API-Key of every proxied call (Vault or env). */
   KAPSO_API_KEY: optionalSecret,
   /** HMAC key of POST /webhooks/kapso (X-Webhook-Signature). Unset = that route answers 401. */

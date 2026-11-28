@@ -5,7 +5,12 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { featureRoot } from '@/common/infra/test-root';
 import { SettingsModule } from './settings.module';
 import { AuditService } from '@/common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import { SettingsService } from './settings.service';
 
 const ADMIN = 'a0000000-0000-4000-8000-000000000001';
@@ -39,7 +44,12 @@ const OWNED_KEYS = [
 describe('PATCH /settings — owned keys are moved', () => {
   let app: NestFastifyApplication;
   const patch = (payload: unknown) =>
-    app.inject({ method: 'PATCH', url: '/settings', payload: payload as object, headers: { authorization: 'Bearer admin', 'content-type': 'application/json' } });
+    app.inject({
+      method: 'PATCH',
+      url: '/settings',
+      payload: payload as object,
+      headers: { authorization: 'Bearer admin', 'content-type': 'application/json' },
+    });
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(SettingsModule)] })
@@ -99,7 +109,10 @@ describe('PATCH /settings — owned keys are moved', () => {
   it('invalid with nothing saved → 400 as before, even beside owned keys', async () => {
     const res = await patch({ messagingEnabled: true, bookingHorizonWeeks: 13 });
     expect(res.statusCode).toBe(400);
-    expect(res.json()).toMatchObject({ message: 'validation_failed', issues: [{ path: 'bookingHorizonWeeks' }] });
+    expect(res.json()).toMatchObject({
+      message: 'validation_failed',
+      issues: [{ path: 'bookingHorizonWeeks' }],
+    });
     expect(settings.write).not.toHaveBeenCalled();
   });
 

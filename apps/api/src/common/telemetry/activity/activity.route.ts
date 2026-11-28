@@ -7,7 +7,14 @@ const LOGGED_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
  * Never logged, whatever the method: liveness probes and the provider webhooks (high volume,
  * machine traffic, not user actions; each keeps its own store of what it received).
  */
-const SKIPPED_ROUTES = ['/health', '/webhooks/whatsapp', '/webhooks/kapso', '/webhooks/wacrm', '/webhooks/evolution', '/livekit/webhook'] as const;
+const SKIPPED_ROUTES = [
+  '/health',
+  '/webhooks/whatsapp',
+  '/webhooks/kapso',
+  '/webhooks/wacrm',
+  '/webhooks/evolution',
+  '/livekit/webhook',
+] as const;
 
 /** Mutations only (GET/HEAD/OPTIONS are reads), minus SKIPPED_ROUTES and anything under them. */
 export function shouldLog(req: { method: string; route: string }): boolean {
@@ -74,7 +81,9 @@ const MAX_FIELDS = 30;
 /** Top-level field NAMES of a JSON body (never values); map-like keys (ids, phones) are dropped. */
 export function fieldNames(body: unknown): string[] {
   if (body === null || typeof body !== 'object' || Array.isArray(body)) return [];
-  return Object.keys(body).filter((k) => FIELD.test(k)).slice(0, MAX_FIELDS);
+  return Object.keys(body)
+    .filter((k) => FIELD.test(k))
+    .slice(0, MAX_FIELDS);
 }
 
 /** The `id` of a created row in the response (POST /expenses → the new expense), if any. */
