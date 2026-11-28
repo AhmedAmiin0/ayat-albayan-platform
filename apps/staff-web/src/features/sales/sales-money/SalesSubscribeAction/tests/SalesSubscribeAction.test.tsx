@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
@@ -11,7 +12,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
+const FAMILY = { guardian_id: uid('g-1'), lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
 
 function open(
   mode: InboxMode,

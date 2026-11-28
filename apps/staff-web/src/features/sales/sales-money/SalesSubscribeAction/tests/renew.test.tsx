@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
@@ -12,7 +13,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
+const FAMILY = { guardian_id: uid('g-1'), lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
 const JUD = 'f7c1a0de-3333-4a8e-9b00-000000000003';
 
 function open(students: ReturnType<typeof student>[]) {
@@ -71,7 +72,7 @@ describe('«جدّد الاشتراك» in a sales chat: the visible action whil
     open([
       student({ status: 'pending_renewal', renew_due: true }),
       student({ id: JUD, name: 'جود', status: 'active', renew_due: true, renewal: PREMIUM }),
-      student({ id: 'x', name: 'يوسف', status: 'active' }),
+      student({ id: uid('x'), name: 'يوسف', status: 'active' }),
     ]);
     fireEvent.click(await screen.findByRole('button', { name: t.students.renew }));
     const dialog = subscribeDialog(t.students.renew);

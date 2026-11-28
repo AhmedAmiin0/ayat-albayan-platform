@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
@@ -17,7 +18,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => false }) }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
+const FAMILY = { guardian_id: uid('g-1'), lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
 const BLOCKED = { ...COURSE_VIEW, blocked: 'course_exists' as const };
 
 const openMore = async () => fireEvent.click(await screen.findByRole('button', { name: t.common.more }));
@@ -47,9 +48,9 @@ describe('the entries to «أيام الحلقات» (owner 2026-10-18)', () => 
   it('ONE entry, no child named (owner 2026-10-29); with several, the children with a subscription to follow are picked first', async () => {
     openChat([
       student({ status: 'active' }),
-      student({ id: 'p', name: 'جود', status: 'pending_subscription' }),
-      student({ id: 'r', name: 'يوسف', status: 'pending_renewal' }),
-      student({ id: 't', name: 'مريم', status: 'trial' }),
+      student({ id: uid('p'), name: 'جود', status: 'pending_subscription' }),
+      student({ id: uid('r'), name: 'يوسف', status: 'pending_renewal' }),
+      student({ id: uid('t'), name: 'مريم', status: 'trial' }),
     ]);
     await openMore();
     expect(await screen.findAllByRole('button', { name: t.booking.courseDays })).toHaveLength(1);
@@ -66,7 +67,7 @@ describe('the entries to «أيام الحلقات» (owner 2026-10-18)', () => 
   });
 
   it('one child with a course: the entry opens its dialog straight away', async () => {
-    openChat([student({ status: 'active' }), student({ id: 't', name: 'مريم', status: 'trial' })]);
+    openChat([student({ status: 'active' }), student({ id: uid('t'), name: 'مريم', status: 'trial' })]);
     await openMore();
     fireEvent.click(await screen.findByRole('button', { name: t.booking.courseDays }));
     expect(await screen.findByText(t.booking.courseBlocked.course_exists)).toBeTruthy();
@@ -79,7 +80,7 @@ describe('the entries to «أيام الحلقات» (owner 2026-10-18)', () => 
   });
 
   it('a new, trial or expired student holding an unpaid package gets «أيام الحلقات» too', async () => {
-    openChat([student({ status: 'trial', open: [OPEN_SUB] }), student({ id: 'e', name: 'جود', status: 'expired', open: [OPEN_SUB] })]);
+    openChat([student({ status: 'trial', open: [OPEN_SUB] }), student({ id: uid('e'), name: 'جود', status: 'expired', open: [OPEN_SUB] })]);
     await openMore();
     fireEvent.click(await screen.findByRole('button', { name: t.booking.courseDays }));
     const choice = within(await screen.findByRole('dialog', { name: t.booking.courseDays }));

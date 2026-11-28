@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
@@ -19,7 +20,7 @@ vi.mock('@tanstack/react-router', async () => ({
 }));
 
 const FAMILY = {
-  guardian_id: 'g-1',
+  guardian_id: uid('g-1'),
   lead_id: null,
   lead_status: null,
   guardian_name: 'أم سهيلة',
@@ -36,7 +37,7 @@ const NO_CHAT = {
 
 function openChat(linked: string | null, chat: object = detail([], FAMILY)) {
   routeFetch(apiFetch, [
-    ['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: ['messages.read'] }],
+    ['/auth/me', { id: uid('u1'), email: null, role: 'sales', permissions: ['messages.read'] }],
     ['/messages/gate', { open: true, reason: null, queued: 0 }],
     ['/threads/%2B966501234567', chat],
     ['/messaging/templates', []],
