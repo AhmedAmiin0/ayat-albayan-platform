@@ -1,4 +1,4 @@
-import type { SubscriptionView } from '../ledger/subscription-view.schemas';
+import type { SubscriptionView } from '../ledger';
 import {
   CUSTOM_COUNT_DEFAULT,
   CUSTOM_COUNT_MAX,
@@ -45,7 +45,8 @@ const clampCount = (n: number): number =>
 
 const discountOf = (v: unknown): number => (typeof v === 'number' && v >= 0 && v <= 100 ? v : 0);
 
-const lessonsOf = (v: unknown, fallback: number): number => (typeof v === 'number' && v > 0 ? v : fallback);
+const lessonsOf = (v: unknown, fallback: number): number =>
+  typeof v === 'number' && v > 0 ? v : fallback;
 
 /** The last package's tier (or count), duration, discount and country. */
 export function renewalPricing(last: LastPackage | null | undefined): RenewalPricing {
@@ -53,10 +54,14 @@ export function renewalPricing(last: LastPackage | null | undefined): RenewalPri
   const quote: unknown = last.price_source;
   const tier = among(PACKAGE_IDS, field(quote, 'package'));
   const duration =
-    among(PRICING_DURATIONS, field(quote, 'duration')) ?? among(PRICING_DURATIONS, last.duration) ?? DEFAULT_DURATION;
+    among(PRICING_DURATIONS, field(quote, 'duration')) ??
+    among(PRICING_DURATIONS, last.duration) ??
+    DEFAULT_DURATION;
   return {
     pkg: tier ?? 'custom',
-    count: tier ? CUSTOM_COUNT_DEFAULT : clampCount(lessonsOf(field(quote, 'lessons'), last.lessons_total)),
+    count: tier
+      ? CUSTOM_COUNT_DEFAULT
+      : clampCount(lessonsOf(field(quote, 'lessons'), last.lessons_total)),
     duration,
     discount: discountOf(field(quote, 'discount')),
     country: among(SITE_COUNTRIES, field(quote, 'country')) ?? '',

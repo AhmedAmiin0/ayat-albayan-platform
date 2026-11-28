@@ -1,5 +1,4 @@
-import type { AssistantCommissionStatus } from '../assistant/commission';
-import type { WalletState } from '../assistant';
+import type { AssistantCommissionStatus, WalletState } from '../assistant';
 import type { StatusStyle } from './status-style';
 
 /**

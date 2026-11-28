@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { hasTwoDecimals, instant, localDate } from '@ab/core';
-import { currencyIso, moneyAmount, monthParam, payoutPaySchema } from '../ledger';
-import { voidReasonSchema } from '../ledger/corrections-schemas';
+import { currencyIso, moneyAmount, monthParam, payoutPaySchema, voidReasonSchema } from '../ledger';
 import { ASSISTANT_COMMISSION_STATUSES, ASSISTANT_COMMISSION_TYPES } from './commission';
 import { ASSISTANT_COMMISSION_KINDS } from './kind';
 import { PAYOUT_STATUSES } from '@ab/catalog';
@@ -21,8 +20,14 @@ const commissionTerms = z
      */
     startsOn: localDate,
   })
-  .refine((t) => (t.type === 'fixed' ? !!t.currency : !t.currency), { message: 'currency_fixed_only', path: ['currency'] })
-  .refine((t) => t.type === 'fixed' || t.value <= 100, { message: 'percent_max_100', path: ['value'] });
+  .refine((t) => (t.type === 'fixed' ? !!t.currency : !t.currency), {
+    message: 'currency_fixed_only',
+    path: ['currency'],
+  })
+  .refine((t) => t.type === 'fixed' || t.value <= 100, {
+    message: 'percent_max_100',
+    path: ['value'],
+  });
 
 const salaryTerms = z.object({ amount: moneyAmount, currency: currencyIso, startsOn: localDate });
 

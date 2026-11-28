@@ -12,7 +12,7 @@ import type {
   SubscriptionStatus,
   TeacherStatus,
 } from '@ab/catalog';
-import type { EarningStatus } from '../ledger/earnings/earnings';
+import type { EarningStatus } from '../ledger';
 
 // Status visual grammar (docs/07 §6); act means the admin must act now, bad means someone's fault.
 
