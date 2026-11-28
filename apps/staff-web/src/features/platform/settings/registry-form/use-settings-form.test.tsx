@@ -39,7 +39,9 @@ describe('useSettingsForm (a page’s settings form)', () => {
     expect(result.current.dirty('booking_horizon_weeks')).toBe(false);
     expect(result.current.atDefault('booking_horizon_weeks')).toBe(false);
     act(() => result.current.reset('booking_horizon_weeks'));
-    expect(result.current.form.bookingHorizonWeeks).toBe(String(SETTING_DEFAULTS.booking_horizon_weeks));
+    expect(result.current.form.bookingHorizonWeeks).toBe(
+      String(SETTING_DEFAULTS.booking_horizon_weeks),
+    );
     expect(result.current.dirty('booking_horizon_weeks')).toBe(true);
     expect(result.current.changed).toEqual(['booking_horizon_weeks']);
   });
@@ -58,9 +60,15 @@ describe('useSettingsForm (a page’s settings form)', () => {
     act(() => result.current.set({ bookingHorizonWeeks: '8' }));
     act(() => result.current.submit());
     await waitFor(() => expect(onSaved).toHaveBeenCalledWith({ moved: [] }));
-    expect(apiSend).toHaveBeenCalledExactlyOnceWith('PATCH', '/settings', { bookingHorizonWeeks: 8 });
+    expect(apiSend).toHaveBeenCalledExactlyOnceWith('PATCH', '/settings', {
+      bookingHorizonWeeks: 8,
+    });
     expect(client.getQueryData(['settings'])).toBeUndefined();
-    expect(invalidate.mock.calls.map(([f]) => f?.queryKey)).toEqual([['settings'], ['config', 'meta'], ['settings', 'public']]);
+    expect(invalidate.mock.calls.map(([f]) => f?.queryKey)).toEqual([
+      ['settings'],
+      ['config', 'meta'],
+      ['settings', 'public'],
+    ]);
     expect(result.current.dirty('booking_horizon_weeks')).toBe(false);
     expect(result.current.failed).toBe(false);
   });

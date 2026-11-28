@@ -27,7 +27,12 @@ export function PayDialog({ teacher, selected, outstanding, onClose, onSaved }: 
   const formId = useId();
   const ceiling = payCeiling(selected, outstanding);
   const maxBytes = useUploadMaxBytes();
-  const [form, setForm] = useState<PaymentForm>({ amount: String(ceiling), method: 'bank', day: paidAtDay(), note: '' });
+  const [form, setForm] = useState<PaymentForm>({
+    amount: String(ceiling),
+    method: 'bank',
+    day: paidAtDay(),
+    note: '',
+  });
   const [file, setFile] = useState<File | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
   const [amountError, setAmountError] = useState<string | null>(null);
@@ -66,10 +71,18 @@ export function PayDialog({ teacher, selected, outstanding, onClose, onSaved }: 
       <form id={formId} className="grid gap-5" onSubmit={submit} noValidate>
         <p className="text-sm text-ink-2">
           {selected.size > 0
-            ? t.earnings.chosenSummary.replace('{count}', String(selected.size)).replace('{amount}', moneyText(ceiling, 'EGP'))
+            ? t.earnings.chosenSummary
+                .replace('{count}', String(selected.size))
+                .replace('{amount}', moneyText(ceiling, 'EGP'))
             : `${t.earnings.payAll}: ${moneyText(ceiling, 'EGP')}`}
         </p>
-        <PaymentFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} currency="EGP" today={paidAtDay()} amountError={amountError} />
+        <PaymentFields
+          form={form}
+          set={(patch) => setForm((f) => ({ ...f, ...patch }))}
+          currency="EGP"
+          today={paidAtDay()}
+          amountError={amountError}
+        />
         <p className="text-xs text-ink-3">{t.earnings.allocation}</p>
         <ReceiptField file={file} onChange={setFile} error={problem} />
         {save.isError && <FormAlert>{payErrorText(save.error)}</FormAlert>}
@@ -82,5 +95,7 @@ export function PayDialog({ teacher, selected, outstanding, onClose, onSaved }: 
 function payErrorText(e: unknown): string {
   if (e instanceof TypeError) return t.payments.mobile.offline;
   const text = apiErrorText(e, t.earnings.error);
-  return text === t.common.error && e instanceof Error && e.name === 'StorageError' ? t.payments.mobile.uploadFailed : text;
+  return text === t.common.error && e instanceof Error && e.name === 'StorageError'
+    ? t.payments.mobile.uploadFailed
+    : text;
 }

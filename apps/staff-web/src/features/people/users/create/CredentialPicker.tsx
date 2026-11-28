@@ -32,8 +32,20 @@ export function CredentialPicker({
         onChange={onMode}
       />
       {mode === 'set' && (
-        <Field label={C.password} required error={error} hint={C.hint.replace('{n}', String(DEFAULT_PASSWORD_MIN))}>
-          {(p) => <PasswordInput {...p} autoComplete="new-password" value={password} onValue={onPassword} />}
+        <Field
+          label={C.password}
+          required
+          error={error}
+          hint={C.hint.replace('{n}', String(DEFAULT_PASSWORD_MIN))}
+        >
+          {(p) => (
+            <PasswordInput
+              {...p}
+              autoComplete="new-password"
+              value={password}
+              onValue={onPassword}
+            />
+          )}
         </Field>
       )}
     </div>

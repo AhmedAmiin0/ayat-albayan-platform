@@ -8,7 +8,10 @@ import { errorText } from '@/features/people/assistants/status';
 import type { StudentPick } from './use-student-pick';
 
 const B = t.assistants.brought;
-interface Props { pick: StudentPick; onDone: (message: string) => void }
+interface Props {
+  pick: StudentPick;
+  onDone: (message: string) => void;
+}
 
 /** One salesperson for every ticked student, audited by the API (R-ASST-01). */
 export function BulkAssign({ pick, onDone }: Props) {
@@ -34,7 +37,15 @@ export function BulkAssign({ pick, onDone }: Props) {
   );
 }
 
-function BulkDialog({ ids, onClose, onDone }: { ids: readonly string[]; onClose: () => void; onDone: (message: string) => void }) {
+function BulkDialog({
+  ids,
+  onClose,
+  onDone,
+}: {
+  ids: readonly string[];
+  onClose: () => void;
+  onDone: (message: string) => void;
+}) {
   const formId = useId();
   const queryClient = useQueryClient();
   const assistants = useQuery(assistantsQuery);
@@ -68,7 +79,11 @@ function BulkDialog({ ids, onClose, onDone }: { ids: readonly string[]; onClose:
         className="grid gap-4"
         onSubmit={(e) => {
           e.preventDefault();
-          save.mutate({ studentIds: [...ids], assistantId: assistantId || null, ...broughtAtOf(assistantId ? day : '') });
+          save.mutate({
+            studentIds: [...ids],
+            assistantId: assistantId || null,
+            ...broughtAtOf(assistantId ? day : ''),
+          });
         }}
       >
         <Field label={B.select}>
@@ -85,7 +100,16 @@ function BulkDialog({ ids, onClose, onDone }: { ids: readonly string[]; onClose:
         </Field>
         {assistantId !== '' && (
           <Field label={B.broughtAt}>
-            {(p) => <Input {...p} type="date" dir="ltr" max={paidAtDay()} value={day} onChange={(e) => setDay(e.target.value)} />}
+            {(p) => (
+              <Input
+                {...p}
+                type="date"
+                dir="ltr"
+                max={paidAtDay()}
+                value={day}
+                onChange={(e) => setDay(e.target.value)}
+              />
+            )}
           </Field>
         )}
         {save.isError && <FormAlert>{errorText(save.error)}</FormAlert>}

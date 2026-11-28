@@ -1,6 +1,12 @@
 import { INVOICE_SORT_KEYS } from '@ab/money';
 import { parsePage } from '@/features/finance/subscriptions/search';
-import { parseFilterSearch, parseSortSearch, type FilterSearch, type SortDir, type SortSearch } from '@/lib/list/list-search';
+import {
+  parseFilterSearch,
+  parseSortSearch,
+  type FilterSearch,
+  type SortDir,
+  type SortSearch,
+} from '@/lib/list/list-search';
 
 // URL state of /admin/invoices: the page, the created-day range, the table's sort and filters.
 // Defaults (page 1, no range, newest first) stay out of the URL.
@@ -22,7 +28,14 @@ const day = (v: unknown) => (typeof v === 'string' && DAY.test(v) ? v : undefine
 export function parseInvoicesSearch(s: Record<string, unknown>): InvoicesUrlSearch {
   const f = parseFilterSearch(s, ['student', 'kind']);
   const kind = (['package', 'makeup'] as const).find((k) => k === f.kind);
-  return { ...parsePage(s), from: day(s.from), to: day(s.to), ...parseSortSearch(s, INVOICE_SORT_KEYS), f_student: f.student, f_kind: kind };
+  return {
+    ...parsePage(s),
+    from: day(s.from),
+    to: day(s.to),
+    ...parseSortSearch(s, INVOICE_SORT_KEYS),
+    f_student: f.student,
+    f_kind: kind,
+  };
 }
 
 /** The list query of a parsed URL: range, sort and the column filters under their API keys. */

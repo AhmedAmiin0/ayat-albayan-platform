@@ -22,7 +22,10 @@ import { payoutColumns } from '@/features/finance/payouts/list/payout-columns';
 import { PayoutDialogs, type PayoutDialog } from '@/features/finance/payouts/pay/PayoutDialogs';
 import { TeacherDuesSummary } from '@/features/finance/payouts/list/TeacherDuesSummary';
 
-interface Props { month: string; onMonth: (month: string) => void }
+interface Props {
+  month: string;
+  onMonth: (month: string) => void;
+}
 
 /** /admin/payouts (R-PAY-02, R-TCH-04, E3): what every teacher is owed, then a month's drafts, approve, pay, correct, CSV. */
 export function PayoutsPage({ month, onMonth }: Props) {
@@ -44,7 +47,9 @@ export function PayoutsPage({ month, onMonth }: Props) {
   });
   const [dialog, setDialog] = useState<PayoutDialog | null>(null);
   const csv = useMutation({ mutationFn: downloadPayoutsCsv });
-  const ledger = useMutation({ mutationFn: () => downloadCsv({ kind: 'teacher-ledger', params: { month } }) });
+  const ledger = useMutation({
+    mutationFn: () => downloadCsv({ kind: 'teacher-ledger', params: { month } }),
+  });
   const [approve, openReceipt] = [move.mutate, receipt.mutate];
   const rows = useMemo(() => list.data ?? [], [list.data]);
   const columns = useMemo(
@@ -77,13 +82,27 @@ export function PayoutsPage({ month, onMonth }: Props) {
           onChange={onMonth}
         />
         <div className="ms-auto flex flex-wrap gap-2.5">
-          <Button type="button" variant="secondary" disabled={rows.length === 0 || csv.isPending} onClick={() => csv.mutate(month)}>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={rows.length === 0 || csv.isPending}
+            onClick={() => csv.mutate(month)}
+          >
             {t.payouts.exportCsv}
           </Button>
-          <Button type="button" variant="secondary" disabled={ledger.isPending} onClick={() => ledger.mutate()}>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={ledger.isPending}
+            onClick={() => ledger.mutate()}
+          >
             {t.finance.ledgerCsv}
           </Button>
-          <Button type="button" disabled={generate.isPending} onClick={() => generate.mutate(month)}>
+          <Button
+            type="button"
+            disabled={generate.isPending}
+            onClick={() => generate.mutate(month)}
+          >
             {rows.length > 0 ? t.payouts.regenerate : t.payouts.generate}
           </Button>
         </div>
@@ -97,7 +116,11 @@ export function PayoutsPage({ month, onMonth }: Props) {
       <QueryState
         query={list}
         isEmpty={(data) => data.length === 0}
-        empty={<TableBox center><EmptyState title={t.payouts.empty} /></TableBox>}
+        empty={
+          <TableBox center>
+            <EmptyState title={t.payouts.empty} />
+          </TableBox>
+        }
       >
         {(data) => (
           <>

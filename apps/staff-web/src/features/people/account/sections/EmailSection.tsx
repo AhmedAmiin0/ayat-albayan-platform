@@ -30,21 +30,41 @@ export function EmailSection({ profile, onDone }: SectionProps) {
     setEmail('');
     setPassword('');
   };
-  const save = useAccountSave({ save: changeEmail, toast: t.account.toast.email, onDone, refreshAuth: true, onSaved: clear });
+  const save = useAccountSave({
+    save: changeEmail,
+    toast: t.account.toast.email,
+    onDone,
+    refreshAuth: true,
+    onSaved: clear,
+  });
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = emailErrors({ email, password });
     save.setErrors(found);
-    if (Object.keys(found).length === 0) save.submit({ email: email.trim().toLowerCase(), current_password: password });
+    if (Object.keys(found).length === 0)
+      save.submit({ email: email.trim().toLowerCase(), current_password: password });
   };
   return (
     <AccountSection title={M.title}>
       <form className="grid gap-4" onSubmit={submit} noValidate>
         {profile.email && <CurrentEmail email={profile.email} />}
         <Field label={M.label} hint={M.hint} error={save.errors.email} required>
-          {(p) => <Input {...p} type="email" dir="ltr" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />}
+          {(p) => (
+            <Input
+              {...p}
+              type="email"
+              dir="ltr"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          )}
         </Field>
-        <PasswordField value={password} onValue={setPassword} error={save.errors.current_password} />
+        <PasswordField
+          value={password}
+          onValue={setPassword}
+          error={save.errors.current_password}
+        />
         {save.errors.form && <FormAlert>{save.errors.form}</FormAlert>}
         <SaveButton pending={save.pending} disabled={email.trim() === ''} />
       </form>

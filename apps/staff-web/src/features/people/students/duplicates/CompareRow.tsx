@@ -2,7 +2,8 @@ import type { ReactNode } from 'react';
 import { Icon, type IconName, t, cn } from '@ab/web-kit';
 import type { Match } from './compare';
 
-const base = 'flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 px-2.5 py-2 sm:px-3.5 sm:py-2.5';
+const base =
+  'flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 px-2.5 py-2 sm:px-3.5 sm:py-2.5';
 
 /** Cell classes of the duplicate compare grid (docs/design ink-and-gold.html `.compare`). */
 export const cell = {
@@ -36,12 +37,31 @@ export function CompareRow({ label, now, existing, match, large, last }: Compare
   const result = match && RESULT[match];
   return (
     <div role="row" className="contents">
-      <span role="rowheader" className={cn(base, line, 'text-xs text-ink-3 max-sm:col-span-full max-sm:border-b-0 max-sm:pt-2.5 max-sm:pb-0 max-sm:font-semibold')}>
+      <span
+        role="rowheader"
+        className={cn(
+          base,
+          line,
+          'text-xs text-ink-3 max-sm:col-span-full max-sm:border-b-0 max-sm:pt-2.5 max-sm:pb-0 max-sm:font-semibold',
+        )}
+      >
         {label}
       </span>
-      <span role="cell" className={value}>{now}</span>
-      <span role="cell" className={cn(value, cell.existing)}>{existing}</span>
-      <span role="cell" className={cn(base, line, 'text-xs font-semibold max-sm:col-span-full max-sm:pt-0.5 max-sm:pb-2.5', result?.className)}>
+      <span role="cell" className={value}>
+        {now}
+      </span>
+      <span role="cell" className={cn(value, cell.existing)}>
+        {existing}
+      </span>
+      <span
+        role="cell"
+        className={cn(
+          base,
+          line,
+          'text-xs font-semibold max-sm:col-span-full max-sm:pt-0.5 max-sm:pb-2.5',
+          result?.className,
+        )}
+      >
         {result && (
           <>
             <Icon name={result.icon} className="size-[15px] stroke-2" />

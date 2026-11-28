@@ -1,7 +1,11 @@
 import type { GoogleStatusView } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { t } from '@ab/web-kit';
-import { discoverGoogle, googleStatusQuery, putGoogleDrive } from '@/features/platform/google-sync/google-api';
+import {
+  discoverGoogle,
+  googleStatusQuery,
+  putGoogleDrive,
+} from '@/features/platform/google-sync/google-api';
 import { googleKeys } from '@/features/platform/keys';
 
 /** Both return the new status, since teacher and student suggestions may change. */

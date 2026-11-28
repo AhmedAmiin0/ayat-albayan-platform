@@ -12,7 +12,9 @@ export type LeadSearch = LeadSort & {
 };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-export interface PageSearch { page: number }
+export interface PageSearch {
+  page: number;
+}
 
 function toPage(value: unknown): number {
   const n = Number(value);
@@ -23,7 +25,8 @@ function toPage(value: unknown): number {
 export function parseLeadSearch(s: Record<string, unknown>): LeadSearch {
   const out: LeadSearch = { page: toPage(s.page), ...parseLeadSort(s.sort, s.dir) };
   const assignee = s.assignee;
-  if (typeof assignee === 'string' && (assignee === NO_ASSIGNEE || UUID.test(assignee))) out.assignee = assignee;
+  if (typeof assignee === 'string' && (assignee === NO_ASSIGNEE || UUID.test(assignee)))
+    out.assignee = assignee;
   const status = LEAD_STATUSES.find((x) => x === s.status);
   const source = LEAD_SOURCES.find((x) => x === s.source);
   const q = typeof s.q === 'string' ? s.q.trim() : '';

@@ -1,8 +1,16 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { t } from '@ab/web-kit';
-import { createStudent, duplicateCandidates, mergeStudents, STUDENTS_KEY } from '@/features/people/students/api';
-import { toCreateBody, type CreateStudentValues } from '@/features/people/students/create/create-student';
+import {
+  createStudent,
+  duplicateCandidates,
+  mergeStudents,
+  STUDENTS_KEY,
+} from '@/features/people/students/api';
+import {
+  toCreateBody,
+  type CreateStudentValues,
+} from '@/features/people/students/create/create-student';
 import { CreateStudentForm } from '@/features/people/students/create/CreateStudentForm';
 import { DuplicateDialog } from '@/features/people/students/duplicates/DuplicateDialog';
 import { MergeDialog } from '@/features/people/students/duplicates/MergeDialog';

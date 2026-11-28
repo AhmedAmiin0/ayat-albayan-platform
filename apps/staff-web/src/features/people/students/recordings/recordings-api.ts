@@ -9,7 +9,8 @@ export const RECORDINGS_PAGE_SIZE = 10;
 
 function queryString(filters: StudentRecordingFilters, page: number, pageSize: number): string {
   const q = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
-  for (const key of ['from', 'to', 'teacherId', 'status'] as const) if (filters[key]) q.set(key, filters[key]);
+  for (const key of ['from', 'to', 'teacherId', 'status'] as const)
+    if (filters[key]) q.set(key, filters[key]);
   return q.toString();
 }
 
@@ -41,7 +42,11 @@ export const recordedLessonIdsQuery = (studentId: string) =>
 
 /** PATCH /recordings/:id/visibility: admin, or the lesson's teacher. */
 export const setRecordingVisible = (input: { id: string; visible: boolean }) =>
-  apiSend<{ id: string; visible_to_student: boolean }>('PATCH', `/recordings/${input.id}/visibility`, { visible: input.visible });
+  apiSend<{ id: string; visible_to_student: boolean }>(
+    'PATCH',
+    `/recordings/${input.id}/visibility`,
+    { visible: input.visible },
+  );
 
 /** DELETE /recordings/:id (204): admin only. */
 export const deleteRecording = (id: string) => apiSend('DELETE', `/recordings/${id}`);

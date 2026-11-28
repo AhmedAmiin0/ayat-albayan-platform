@@ -36,7 +36,12 @@ export function SalesConfirmLesson({
   return (
     <div className="grid gap-2">
       {confirm.isError && <FormAlert>{confirmErrorText(confirm.error)}</FormAlert>}
-      <Button type="button" variant={secondary ? 'secondary' : 'primary'} disabled={confirm.isPending} onClick={() => confirm.mutate()}>
+      <Button
+        type="button"
+        variant={secondary ? 'secondary' : 'primary'}
+        disabled={confirm.isPending}
+        onClick={() => confirm.mutate()}
+      >
         {confirm.isPending ? t.common.saving : t.sales.lessonActions.confirm}
       </Button>
     </div>

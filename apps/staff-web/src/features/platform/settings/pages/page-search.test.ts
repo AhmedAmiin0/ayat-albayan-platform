@@ -30,12 +30,24 @@ describe('«التواصل» ?tab=', () => {
   });
 
   it('?audience= stays with «الإشعارات» only; an unknown audience is dropped', () => {
-    expect(parseCommunicationsSearch({ tab: 'catalogue', audience: 'teacher' })).toEqual({ tab: 'catalogue', audience: 'teacher' });
-    expect(parseCommunicationsSearch({ tab: 'catalogue', audience: 'nobody' })).toEqual({ tab: 'catalogue' });
-    expect(parseCommunicationsSearch({ tab: 'catalogue', audience: 2 })).toEqual({ tab: 'catalogue' });
-    expect(parseCommunicationsSearch({ tab: 'numbers', audience: 'teacher' })).toEqual({ tab: 'numbers' });
+    expect(parseCommunicationsSearch({ tab: 'catalogue', audience: 'teacher' })).toEqual({
+      tab: 'catalogue',
+      audience: 'teacher',
+    });
+    expect(parseCommunicationsSearch({ tab: 'catalogue', audience: 'nobody' })).toEqual({
+      tab: 'catalogue',
+    });
+    expect(parseCommunicationsSearch({ tab: 'catalogue', audience: 2 })).toEqual({
+      tab: 'catalogue',
+    });
+    expect(parseCommunicationsSearch({ tab: 'numbers', audience: 'teacher' })).toEqual({
+      tab: 'numbers',
+    });
     expect(parseCommunicationsSearch({ audience: 'teacher' })).toEqual({});
-    expect(communicationsSearch('catalogue', 'lead')).toEqual({ tab: 'catalogue', audience: 'lead' });
+    expect(communicationsSearch('catalogue', 'lead')).toEqual({
+      tab: 'catalogue',
+      audience: 'lead',
+    });
     expect(communicationsSearch('catalogue')).toEqual({ tab: 'catalogue' });
     expect(communicationsSearch('safety', 'lead')).toEqual({ tab: 'safety' });
     expect(communicationsSearch('overview', 'lead')).toEqual({});
@@ -61,7 +73,15 @@ describe('«التواصل» ?tab=', () => {
   it('that group holds both timing values and the reopen template, editable there; the public number sits in «الأكاديمية»', () => {
     const timing = ['quick_reply_window_hours', 'reminder_lookahead_hours'] as const;
     // The chat reopen template, the WhatsApp calls switch and permission template (docs/28) and the old CRM files host and copy switch and the presence switch (docs/33) sit in the same messaging group.
-    expect([...VALUE_GROUPS[VALUES_GROUP.timing]].sort()).toEqual(['calls_permission_template', 'chat_reopen_template', 'crm_media_copy_all', 'crm_media_host', 'presence_enabled', ...timing, 'whatsapp_calls_enabled']);
+    expect([...VALUE_GROUPS[VALUES_GROUP.timing]].sort()).toEqual([
+      'calls_permission_template',
+      'chat_reopen_template',
+      'crm_media_copy_all',
+      'crm_media_host',
+      'presence_enabled',
+      ...timing,
+      'whatsapp_calls_enabled',
+    ]);
     expect(timing.every((k) => isEditableValueKey(k))).toBe(true);
     expect(VALUE_GROUPS[VALUES_GROUP.academy]).toContain('academy_whatsapp_e164');
   });
@@ -78,7 +98,10 @@ describe('«التواصل» ?tab=', () => {
 
 describe('Google OAuth return on «التكاملات»', () => {
   it('keeps google and reason (strings only)', () => {
-    expect(parseOauthReturnSearch({ google: 'error', reason: 'denied', tab: 'x' })).toEqual({ google: 'error', reason: 'denied' });
+    expect(parseOauthReturnSearch({ google: 'error', reason: 'denied', tab: 'x' })).toEqual({
+      google: 'error',
+      reason: 'denied',
+    });
     expect(parseOauthReturnSearch({ google: '', reason: 4 })).toEqual({});
   });
 
@@ -88,7 +111,10 @@ describe('Google OAuth return on «التكاملات»', () => {
       search: { google: 'connected' },
       replace: true,
     });
-    expect(oauthReturnRedirect({ google: 'error', reason: 'denied' })?.search).toEqual({ google: 'error', reason: 'denied' });
+    expect(oauthReturnRedirect({ google: 'error', reason: 'denied' })?.search).toEqual({
+      google: 'error',
+      reason: 'denied',
+    });
   });
 
   it('no ?google=: stays on «التكاملات»', () => {

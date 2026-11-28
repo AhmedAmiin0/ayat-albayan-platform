@@ -1,7 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId } from 'react';
 import { RadioChips, t, publicConfigQuery } from '@ab/web-kit';
-import { academyOptionText, effectivePlatform, fromChoice, knownAcademyAuto, toChoice, type MeetingModeChoice } from './meeting-mode-text';
+import {
+  academyOptionText,
+  effectivePlatform,
+  fromChoice,
+  knownAcademyAuto,
+  toChoice,
+  type MeetingModeChoice,
+} from './meeting-mode-text';
 import { MeetingModeWarnings } from './MeetingModeWarnings';
 import type { SetField, TeacherForm } from './teacher-form';
 import type { Teacher } from '@ab/shared';

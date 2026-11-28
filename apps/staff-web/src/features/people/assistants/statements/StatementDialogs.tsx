@@ -1,12 +1,20 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
 import { t } from '@ab/web-kit';
-import { ASSISTANTS_KEY, reopenStatement, unpayStatement, type AssistantStatementView } from '@/features/people/assistants/api';
+import {
+  ASSISTANTS_KEY,
+  reopenStatement,
+  unpayStatement,
+  type AssistantStatementView,
+} from '@/features/people/assistants/api';
 import { PayStatementDialog } from './PayStatementDialog';
 import { errorText } from '@/features/people/assistants/status';
 import { StatementLinesDialog } from './StatementLinesDialog';
 
-export interface StatementDialog { statement: AssistantStatementView; kind: 'details' | 'pay' | 'reopen' | 'unpay' }
+export interface StatementDialog {
+  statement: AssistantStatementView;
+  kind: 'details' | 'pay' | 'reopen' | 'unpay';
+}
 
 /** The dialog behind a statement row action: details, pay (receipt), reopen, un-pay (with a reason). */
 export function StatementDialogs({
@@ -19,7 +27,10 @@ export function StatementDialogs({
   const queryClient = useQueryClient();
   const { statement, kind } = open;
   const fix = useMutation({
-    mutationFn: (reason: string) => (kind === 'unpay' ? unpayStatement({ id: statement.id, reason }) : reopenStatement(statement.id)),
+    mutationFn: (reason: string) =>
+      kind === 'unpay'
+        ? unpayStatement({ id: statement.id, reason })
+        : reopenStatement(statement.id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ASSISTANTS_KEY });
       onClose();
@@ -31,7 +42,10 @@ export function StatementDialogs({
   const unpay = kind === 'unpay';
   return (
     <ConfirmDialog
-      title={(unpay ? S.unpayTitle : S.reopenTitle).replace('{assistant}', statement.assistant.name)}
+      title={(unpay ? S.unpayTitle : S.reopenTitle).replace(
+        '{assistant}',
+        statement.assistant.name,
+      )}
       confirmLabel={unpay ? t.finance.unpay : t.finance.reopen}
       withReason={unpay}
       pending={fix.isPending}

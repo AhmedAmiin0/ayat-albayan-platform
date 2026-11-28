@@ -9,7 +9,13 @@ export const COURSE_STUDENT_ID = '0b6a7c1e-2222-4a8e-9b00-000000000002';
 const SUB_0 = 'e0000000-0000-4000-8000-0000000000a0';
 const SUB_1 = 'e0000000-0000-4000-8000-0000000000a1';
 
-export const COURSE_SUB: CourseSubscription = { id: SUB_1, package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-03' };
+export const COURSE_SUB: CourseSubscription = {
+  id: SUB_1,
+  package: '8',
+  duration: 45,
+  lessons_total: 8,
+  starts_on: '2026-10-03',
+};
 
 export const COURSE_VIEW: SalesCourseView = {
   student: {
@@ -40,7 +46,14 @@ export function routeCourse(apiFetch: Mock, view: SalesCourseView = COURSE_VIEW)
   const routes: [string, unknown][] = [
     ['/sales/booking/course', view],
     ['/sales/booking/teachers', [ABRAR]],
-    ['/sales/booking/slots', { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [SLOT, WED_SLOT].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] })) }],
+    [
+      '/sales/booking/slots',
+      {
+        teacher_tz: 'Africa/Cairo',
+        step_min: 45,
+        slots: [SLOT, WED_SLOT].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] })),
+      },
+    ],
   ];
   apiFetch.mockImplementation((path: string) => {
     const hit = routes.find(([prefix]) => path.startsWith(prefix));
@@ -50,7 +63,9 @@ export function routeCourse(apiFetch: Mock, view: SalesCourseView = COURSE_VIEW)
 
 /** apiSend: the series check answers `check` (clean by default), the booking BOOKED. */
 export function routeCourseSend(apiSend: Mock, check: unknown = { conflicts: [] }): void {
-  apiSend.mockImplementation((_m: string, path: string) => Promise.resolve(path === '/sales/booking/check' ? check : BOOKED));
+  apiSend.mockImplementation((_m: string, path: string) =>
+    Promise.resolve(path === '/sales/booking/check' ? check : BOOKED),
+  );
 }
 
 // A renewal: the previous course ran Sunday 17:00 + Wednesday 19:30 until Saturday

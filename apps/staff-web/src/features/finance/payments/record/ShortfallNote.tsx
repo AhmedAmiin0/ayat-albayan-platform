@@ -9,7 +9,9 @@ export function shortfallText(input: {
 }): string | null {
   const short = receiptShortfall(input);
   if (short <= 0) return null;
-  return t.packagePayment.shortfall.replace('{amount}', formatAmount(short)).replace('{currency}', input.currencyLabel);
+  return t.packagePayment.shortfall
+    .replace('{amount}', formatAmount(short))
+    .replace('{currency}', input.currencyLabel);
 }
 
 interface Props {

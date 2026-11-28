@@ -19,7 +19,9 @@ const sub = (over: Partial<SalesSubscriptionView>): SalesSubscriptionView => ({
   ...over,
 });
 const PENDING = [sub({})];
-const CONFIRMED = [sub({ id: 'p2', student: { id: 's2', code: 'AB-0190', name: 'يوسف' }, status: 'active' })];
+const CONFIRMED = [
+  sub({ id: 'p2', student: { id: 's2', code: 'AB-0190', name: 'يوسف' }, status: 'active' }),
+];
 
 /** The route's `kind` as local state, so the tabs swap the list as they do on /sales/subscriptions. */
 function Harness() {
@@ -49,7 +51,10 @@ describe('SalesSubscriptions «الاشتراكات»', () => {
     expect(apiFetch).toHaveBeenCalledWith('/sales/subscriptions?kind=pending');
     expect(screen.queryByText('يوسف')).toBeNull();
     const tabs = screen.getAllByRole('tab');
-    expect(tabs.map((x) => [x.textContent, x.getAttribute('aria-selected')])).toEqual([['في الانتظار', 'true'], ['مؤكدة', 'false']]);
+    expect(tabs.map((x) => [x.textContent, x.getAttribute('aria-selected')])).toEqual([
+      ['في الانتظار', 'true'],
+      ['مؤكدة', 'false'],
+    ]);
     fireEvent.click(tabs[1] as HTMLElement);
     expect(await screen.findByText('يوسف')).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/sales/subscriptions?kind=confirmed');

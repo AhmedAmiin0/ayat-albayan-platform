@@ -2,7 +2,12 @@ import type { StudentProfile } from '@ab/shared';
 import type { StudentStatus } from '@ab/catalog';
 import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@ab/web-kit';
-import { isStatusChanged, STUDENTS_KEY, studentQuery, updateStudent } from '@/features/people/students/api';
+import {
+  isStatusChanged,
+  STUDENTS_KEY,
+  studentQuery,
+  updateStudent,
+} from '@/features/people/students/api';
 import { toProfileValues, toStudentPatch, type ProfileValues } from './profile-form';
 
 export interface SaveProfileOptions {

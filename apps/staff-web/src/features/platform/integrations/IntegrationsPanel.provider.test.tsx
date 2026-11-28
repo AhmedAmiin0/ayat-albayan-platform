@@ -7,7 +7,11 @@ import { IntegrationsPanel } from './IntegrationsPanel';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 // docs/19: each line's driver is a select (meta | kapso | crm), never free text; the Kapso and CRM keys have a group.
 
@@ -41,7 +45,9 @@ describe('«التكاملات»: the WhatsApp provider select', () => {
       ]);
     }
     expect(screen.getByRole('group', { name: s.groups.kapso })).toBeTruthy();
-    expect((screen.getByLabelText<HTMLInputElement>(s.keys.KAPSO_API_KEY.label)).type).toBe('password');
+    expect(screen.getByLabelText<HTMLInputElement>(s.keys.KAPSO_API_KEY.label).type).toBe(
+      'password',
+    );
   });
 
   it('switching the notifications line to kapso saves only that key', async () => {
@@ -50,15 +56,25 @@ describe('«التكاملات»: the WhatsApp provider select', () => {
     fireEvent.change(select(s.keys.WA_PROVIDER.label), { target: { value: 'kapso' } });
     apiSend.mockResolvedValue(integrationItems());
     fireEvent.click(screen.getByRole('button', { name: s.saveValues }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/settings/integrations', { values: { WA_PROVIDER: 'kapso' } }));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('PUT', '/settings/integrations', {
+        values: { WA_PROVIDER: 'kapso' },
+      }),
+    );
   });
 
   it('with the server on kapso (source env) the empty choice names the server value, not «Meta»', async () => {
-    const items = integrationItems().map((i) => (i.key === 'WA_PROVIDER' ? { ...i, value: 'kapso', set: true, source: 'env' as const } : i));
+    const items = integrationItems().map((i) =>
+      i.key === 'WA_PROVIDER' ? { ...i, value: 'kapso', set: true, source: 'env' as const } : i,
+    );
     renderPanel(items);
     await ready();
-    expect(select(s.keys.WA_PROVIDER.label).options[0]?.text).toBe(s.enumServer.replace('{value}', s.options.kapso));
-    expect(select(s.keys.WA_CHAT_PROVIDER.label).options[0]?.text).toBe(s.enumDefault.replace('{value}', s.options.meta));
+    expect(select(s.keys.WA_PROVIDER.label).options[0]?.text).toBe(
+      s.enumServer.replace('{value}', s.options.kapso),
+    );
+    expect(select(s.keys.WA_CHAT_PROVIDER.label).options[0]?.text).toBe(
+      s.enumDefault.replace('{value}', s.options.meta),
+    );
   });
 
   it('the select shows Arabic labels without the monospace of the LTR text inputs', async () => {
@@ -72,9 +88,11 @@ describe('«التكاملات»: the WhatsApp provider select', () => {
     renderPanel();
     await ready();
     expect(screen.getByRole('group', { name: s.groups.wacrm })).toBeTruthy();
-    expect((screen.getByLabelText<HTMLInputElement>(s.keys.WACRM_API_BASE.label)).type).not.toBe('password');
+    expect(screen.getByLabelText<HTMLInputElement>(s.keys.WACRM_API_BASE.label).type).not.toBe(
+      'password',
+    );
     for (const key of ['WACRM_API_KEY', 'WACRM_WEBHOOK_SECRET'] as const) {
-      expect((screen.getByLabelText<HTMLInputElement>(s.keys[key].label)).type).toBe('password');
+      expect(screen.getByLabelText<HTMLInputElement>(s.keys[key].label).type).toBe('password');
       expect(screen.getByText(s.keys[key].hint)).toBeTruthy();
     }
     expect(s.keys.WACRM_API_KEY.hint).toContain('messages:send');

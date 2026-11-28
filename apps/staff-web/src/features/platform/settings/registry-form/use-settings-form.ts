@@ -5,8 +5,21 @@ import { t } from '@ab/web-kit';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 import { updateSettings } from '@/lib/settings/settings-api';
 import { isDefault, isDirty, resetPatch } from './settings-dirty';
-import { FORM_KEYS, settingsForm, settingsUpdate, type SettingsErrors, type SettingsForm } from './settings-form';
-import { afterSave, changedKeys, invalidKeys, movedKeys, refreshed, type FormPair } from './settings-scope';
+import {
+  FORM_KEYS,
+  settingsForm,
+  settingsUpdate,
+  type SettingsErrors,
+  type SettingsForm,
+} from './settings-form';
+import {
+  afterSave,
+  changedKeys,
+  invalidKeys,
+  movedKeys,
+  refreshed,
+  type FormPair,
+} from './settings-scope';
 
 export interface SettingsFormState {
   form: SettingsForm;
@@ -56,10 +69,16 @@ export function useSettingsForm(
   const changed = changedKeys(keys, pair);
   const submit = () => {
     const result = settingsUpdate(pair.form, changed);
-    if (!result.ok) {  setErrors(result.errors);; return; }
+    if (!result.ok) {
+      setErrors(result.errors);
+      return;
+    }
     setErrors({});
     const sent = changed;
-    if (sent.length === 0) {  options.onSaved({ moved: [] });; return; }
+    if (sent.length === 0) {
+      options.onSaved({ moved: [] });
+      return;
+    }
     const snapshot = pair.form;
     save.mutate(result.value, {
       onSuccess: (res: unknown) => {

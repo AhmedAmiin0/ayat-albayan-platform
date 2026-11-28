@@ -21,7 +21,10 @@ export function useTeacherPick(students: readonly SalesFamilyStudent[], studentI
   };
 }
 
-interface Props { value: string; onChange: (id: string) => void }
+interface Props {
+  value: string;
+  onChange: (id: string) => void;
+}
 
 /** Defaults to the trial's teacher (students.teacher_id); teacher chat opens after subscribing. */
 export function SalesTeacherField({ value, onChange }: Props) {

@@ -7,8 +7,16 @@ export function SecretStatusChip({ item }: { item: IntegrationConfigItem }) {
   const clock = useClock();
   const s = t.integrations;
   if (item.source === 'db') {
-    return <StatusChip tone="ok" glyph="fill" size="sm" label={s.secretSaved.replace('{at}', formatDateTime(item.updated_at, clock))} />;
+    return (
+      <StatusChip
+        tone="ok"
+        glyph="fill"
+        size="sm"
+        label={s.secretSaved.replace('{at}', formatDateTime(item.updated_at, clock))}
+      />
+    );
   }
-  if (item.source === 'env') return <StatusChip tone="act" glyph="hollow" size="sm" label={s.secretFromServer} />;
+  if (item.source === 'env')
+    return <StatusChip tone="act" glyph="hollow" size="sm" label={s.secretFromServer} />;
   return <StatusChip tone="neutral" glyph="hollow" size="sm" label={s.secretUnset} />;
 }

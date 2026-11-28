@@ -44,7 +44,11 @@ export function SalesRunningCourse({ view, current, children }: SalesRunningCour
         <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">
           {ahead ? t.booking.courseChange.upcoming : t.booking.courseChange.running}
         </p>
-        <Button type="button" variant={children ? 'secondary' : 'primary'} onClick={() => setStage('change')}>
+        <Button
+          type="button"
+          variant={children ? 'secondary' : 'primary'}
+          onClick={() => setStage('change')}
+        >
           {t.booking.courseChange.changeDays}
         </Button>
         <SalesCourseActions studentId={id} subscriptionId={current.subscriptionId} />

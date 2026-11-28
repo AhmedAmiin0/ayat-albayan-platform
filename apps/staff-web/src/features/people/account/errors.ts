@@ -1,7 +1,15 @@
 import { ApiError, t } from '@ab/web-kit';
 
 /** `form` is the form-level alert. */
-export type AccountField = 'full_name' | 'phone_e164' | 'email' | 'current_password' | 'new_password' | 'confirm' | 'avatar' | 'form';
+export type AccountField =
+  | 'full_name'
+  | 'phone_e164'
+  | 'email'
+  | 'current_password'
+  | 'new_password'
+  | 'confirm'
+  | 'avatar'
+  | 'form';
 export type AccountErrors = Partial<Record<AccountField, string>>;
 
 const MESSAGES: Record<string, string | undefined> = t.account.errors;
@@ -69,7 +77,8 @@ function fromIssues(issues: unknown[]): AccountErrors {
 export function accountErrors(error: unknown): AccountErrors {
   const body = error instanceof ApiError && isRecord(error.body) ? error.body : null;
   if (!body) return { form: t.account.errors.generic };
-  if (body.message === 'validation_failed' && Array.isArray(body.issues)) return fromIssues(body.issues);
+  if (body.message === 'validation_failed' && Array.isArray(body.issues))
+    return fromIssues(body.issues);
   const code = typeof body.code === 'string' ? body.code : '';
   return { [FIELD_OF[code] ?? 'form']: accountMessage(code) };
 }

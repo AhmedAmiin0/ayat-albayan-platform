@@ -15,7 +15,9 @@ export function byTeacher(lessons: readonly SalesScheduleLesson[]): TeacherDay[]
     row.lessons.push(lesson);
     rows.set(lesson.teacher.id, row);
   }
-  return [...rows.values()].sort((a, b) => teacherLabel(a.teacher).localeCompare(teacherLabel(b.teacher), 'ar'));
+  return [...rows.values()].sort((a, b) =>
+    teacherLabel(a.teacher).localeCompare(teacherLabel(b.teacher), 'ar'),
+  );
 }
 
 /**

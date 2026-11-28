@@ -11,17 +11,31 @@ import { SubscriptionsPage } from './SubscriptionsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const TASK = {
-  id: 'k1', kind: 'renewal_due', subject_type: 'subscription', subject_id: 'sub-1', student: WEEKLY.student,
-  title: 'بقيت حلقتان', due_at: null, done_at: null, created_at: '2026-10-02T09:00:00Z',
+  id: 'k1',
+  kind: 'renewal_due',
+  subject_type: 'subscription',
+  subject_id: 'sub-1',
+  student: WEEKLY.student,
+  title: 'بقيت حلقتان',
+  due_at: null,
+  done_at: null,
+  created_at: '2026-10-02T09:00:00Z',
 };
 const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSize: 20 });
 
 function route(path: string) {
   if (path.startsWith('/admin-tasks')) return page([TASK]);
-  if (path.startsWith('/students?')) return page([studentListItemFixture({ ...WEEKLY.student, guardian_name: 'أم سهيلة', status: 'active' })]);
+  if (path.startsWith('/students?'))
+    return page([
+      studentListItemFixture({ ...WEEKLY.student, guardian_name: 'أم سهيلة', status: 'active' }),
+    ]);
   return page([WEEKLY]);
 }
 
@@ -68,31 +82,43 @@ describe('SubscriptionsPage (R-SUB-01/02)', () => {
     const { onChange } = renderPage();
     await screen.findByRole('button', { name: t.subscriptions.price });
     openFilters();
-    fireEvent.change(screen.getByRole('combobox', { name: t.subscriptions.status }), { target: { value: 'unpaid' } });
+    fireEvent.change(screen.getByRole('combobox', { name: t.subscriptions.status }), {
+      target: { value: 'unpaid' },
+    });
     expect(onChange).toHaveBeenCalledWith({ status: 'unpaid', page: undefined });
   });
 
   it('sorts by price and filters by the student name server-side (R-NFR-08)', async () => {
     const { onChange } = renderPage();
     fireEvent.click(await screen.findByRole('button', { name: t.subscriptions.price }));
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/subscriptions?sort=price&page=1&pageSize=20'));
+    await vi.waitFor(() =>
+      expect(apiFetch).toHaveBeenCalledWith('/subscriptions?sort=price&page=1&pageSize=20'),
+    );
     const by = t.table.filterBy.replace('{col}', t.subscriptions.package);
     openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by }), { target: { value: '8' } });
     expect(onChange).toHaveBeenLastCalledWith({ f_package: '8', page: undefined });
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/subscriptions?sort=price&package=8&page=1&pageSize=20'));
+    await vi.waitFor(() =>
+      expect(apiFetch).toHaveBeenCalledWith(
+        '/subscriptions?sort=price&package=8&page=1&pageSize=20',
+      ),
+    );
   });
 
   it('a task is marked done', async () => {
     renderPage();
     apiSend.mockResolvedValue({ ...TASK, done_at: '2026-10-03T09:00:00Z' });
     fireEvent.click(await screen.findByRole('button', { name: t.dashboard.taskDone }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin-tasks/k1/done', undefined));
+    await vi.waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('POST', '/admin-tasks/k1/done', undefined),
+    );
   });
 
   it('new package: pick the student, the API quote is shown, saved with calculator inputs only', async () => {
     renderPage();
-    apiSend.mockImplementation(async (_m: string, path: string) => (path === '/subscriptions/quote' ? WEEKLY.price_source : WEEKLY));
+    apiSend.mockImplementation(async (_m: string, path: string) =>
+      path === '/subscriptions/quote' ? WEEKLY.price_source : WEEKLY,
+    );
     fireEvent.click(await screen.findByRole('button', { name: t.subscriptions.new }));
     const dialog = await screen.findByRole('dialog', { name: t.subscriptions.new });
     fireEvent.change(within(dialog).getByRole('searchbox'), { target: { value: 'سهي' } });
@@ -104,9 +130,16 @@ describe('SubscriptionsPage (R-SUB-01/02)', () => {
     });
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.save }));
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/subscriptions', expect.objectContaining({ studentId: 'stu-1', notes: null })),
+      expect(apiSend).toHaveBeenCalledWith(
+        'POST',
+        '/subscriptions',
+        expect.objectContaining({ studentId: 'stu-1', notes: null }),
+      ),
     );
-    const body = apiSend.mock.calls.find((c) => c[1] === '/subscriptions')?.[2] as Record<string, unknown>;
+    const body = apiSend.mock.calls.find((c) => c[1] === '/subscriptions')?.[2] as Record<
+      string,
+      unknown
+    >;
     expect(body).not.toHaveProperty('price');
   });
 });

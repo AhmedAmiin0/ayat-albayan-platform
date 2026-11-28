@@ -27,9 +27,14 @@ export function salesClockLines(
   const other = (tz: string | null | undefined): tz is string =>
     !!tz && !sameClockAt(at, { a: tz, b: viewer });
   const zones = [...new Set(lesson.students.map((s) => s.tz))].filter(other);
-  const lines = zones.map((tz) => t.schedule.studentTime.replace('{time}', timeInCity(lesson.starts_at, tz, clock)));
+  const lines = zones.map((tz) =>
+    t.schedule.studentTime.replace('{time}', timeInCity(lesson.starts_at, tz, clock)),
+  );
   const teacherTz = lesson.teacher.tz;
-  if (other(teacherTz)) lines.push(t.schedule.teacherTime.replace('{time}', timeInCity(lesson.starts_at, teacherTz, clock)));
+  if (other(teacherTz))
+    lines.push(
+      t.schedule.teacherTime.replace('{time}', timeInCity(lesson.starts_at, teacherTz, clock)),
+    );
   return lines;
 }
 
@@ -54,7 +59,9 @@ export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) 
         <DetailRow label={t.schedule.time}>
           <span className="block">{`${lessonWhenAt(new Date(lesson.starts_at), { tz, ...clock })} ${t.schedule.viewerTime}`}</span>
           {salesClockLines(lesson, { ...clock, tz }).map((line) => (
-            <span key={line} className="block text-xs text-ink-2">{line}</span>
+            <span key={line} className="block text-xs text-ink-2">
+              {line}
+            </span>
           ))}
         </DetailRow>
         <DetailRow label={t.schedule.duration}>{lengthText(durationMin(lesson))}</DetailRow>

@@ -34,8 +34,18 @@ export function SafetyTab({
       </div>
       {/* Each section heading names its driver already: the group heading stays for screen readers only. */}
       <div className="grid min-w-0 gap-6 [&_[role=group]>h3]:sr-only">
-        <IntegrationsPanel query="" onSaved={onNote} groups={KAPSO_GROUPS} title={t.integrations.groups.kapso} />
-        <IntegrationsPanel query="" onSaved={onNote} groups={WACRM_GROUPS} title={t.integrations.groups.wacrm} />
+        <IntegrationsPanel
+          query=""
+          onSaved={onNote}
+          groups={KAPSO_GROUPS}
+          title={t.integrations.groups.kapso}
+        />
+        <IntegrationsPanel
+          query=""
+          onSaved={onNote}
+          groups={WACRM_GROUPS}
+          title={t.integrations.groups.wacrm}
+        />
         <IntegrationsPanel
           query=""
           onSaved={onNote}

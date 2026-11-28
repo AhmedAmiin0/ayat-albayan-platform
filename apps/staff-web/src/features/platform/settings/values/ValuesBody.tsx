@@ -70,7 +70,11 @@ export function ValuesBody({
         counts={view.filterCounts}
       />
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 shell:grid-cols-[220px_minmax(0,1fr)] shell:gap-8">
-        {chips ? <div className="min-w-0">{nav}</div> : <aside className="shell:sticky shell:top-20 shell:self-start">{nav}</aside>}
+        {chips ? (
+          <div className="min-w-0">{nav}</div>
+        ) : (
+          <aside className="shell:sticky shell:top-20 shell:self-start">{nav}</aside>
+        )}
         <div className="min-w-0">
           {failed && <ValuesLoadError onRetry={onRetry} />}
           {!failed && view.customFailed && (
@@ -88,7 +92,11 @@ export function ValuesBody({
             />
           )}
           {view.all && !empty && (
-            <button type="button" onClick={clear} className="mt-3 min-h-11 text-sm font-semibold text-lapis underline underline-offset-4 sm:min-h-8">
+            <button
+              type="button"
+              onClick={clear}
+              className="mt-3 min-h-11 text-sm font-semibold text-lapis underline underline-offset-4 sm:min-h-8"
+            >
               {t.settingsValues.clearSearch}
             </button>
           )}

@@ -23,9 +23,13 @@ export function addChatChoice(
   list: readonly ReceiptChoice[],
   choice: ReceiptChoice & { kind: 'chat' },
 ): { list: ReceiptChoice[]; problem: 'too_many_attachments' | null } {
-  const same = (c: ReceiptChoice) => c.kind === 'chat' && c.messageId === choice.messageId && c.subscriptionId === choice.subscriptionId;
+  const same = (c: ReceiptChoice) =>
+    c.kind === 'chat' &&
+    c.messageId === choice.messageId &&
+    c.subscriptionId === choice.subscriptionId;
   if (list.some(same)) return { list: [...list], problem: null };
-  if (list.length >= PAYMENT_ATTACHMENTS_MAX) return { list: [...list], problem: 'too_many_attachments' };
+  if (list.length >= PAYMENT_ATTACHMENTS_MAX)
+    return { list: [...list], problem: 'too_many_attachments' };
   return { list: [...list, choice], problem: null };
 }
 
@@ -43,7 +47,9 @@ export function pickedMessages(
 
 /** How a chosen attachment is listed: the chat file's label, or the picked file's name. */
 export function attachmentItem(c: ReceiptChoice, index: number): AttachmentItem {
-  return c.kind === 'chat' ? { key: `chat-${c.subscriptionId}-${c.messageId}`, name: c.label } : { key: `file-${index}-${c.file.name}`, name: c.file.name };
+  return c.kind === 'chat'
+    ? { key: `chat-${c.subscriptionId}-${c.messageId}`, name: c.label }
+    : { key: `file-${index}-${c.file.name}`, name: c.file.name };
 }
 
 /** An accessible name: caption or a default, its day, and whether it expired. */

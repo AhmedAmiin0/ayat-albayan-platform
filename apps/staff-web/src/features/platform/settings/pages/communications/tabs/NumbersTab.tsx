@@ -17,9 +17,17 @@ export function NumbersTab({ onNote }: { onNote: (message: string) => void }) {
           <LinesCard />
         </div>
         <details className="group min-w-0 rounded-md border border-rule px-3 py-2">
-          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold sm:min-h-8">{h.linesLegacyTitle}</summary>
+          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold sm:min-h-8">
+            {h.linesLegacyTitle}
+          </summary>
           <div className="grid gap-2 pt-2 [&>section>h2]:sr-only">
-            <IntegrationsPanel query="" onSaved={onNote} groups={LEGACY_LINE_GROUPS} title={h.linesLegacyTitle} intro={h.linesLegacyHint} />
+            <IntegrationsPanel
+              query=""
+              onSaved={onNote}
+              groups={LEGACY_LINE_GROUPS}
+              title={h.linesLegacyTitle}
+              intro={h.linesLegacyHint}
+            />
           </div>
         </details>
       </div>

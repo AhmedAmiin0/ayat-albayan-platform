@@ -29,15 +29,20 @@ export interface ShowOptions {
 const fail = () => Promise.reject(new Error('403'));
 
 function answer(path: string, o: Required<ShowOptions>): Promise<unknown> {
-  if (path === '/settings/public') return o.auto === 'pending' ? new Promise(() => undefined) : fail();
+  if (path === '/settings/public')
+    return o.auto === 'pending' ? new Promise(() => undefined) : fail();
   if (path === '/messaging/templates') {
     if (o.status === 'error') return fail();
-    return Promise.resolve(o.status === null ? [] : [{ key: 'lesson_join_link', status: o.status }]);
+    return Promise.resolve(
+      o.status === null ? [] : [{ key: 'lesson_join_link', status: o.status }],
+    );
   }
   if (path === '/settings/integrations') {
     if (o.livekit === 'error') return fail();
     const keys = ['LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET'];
-    return Promise.resolve(keys.map((key, i) => ({ key, set: o.livekit || i === 0, source: 'env' })));
+    return Promise.resolve(
+      keys.map((key, i) => ({ key, set: o.livekit || i === 0, source: 'env' })),
+    );
   }
   return Promise.resolve([]);
 }

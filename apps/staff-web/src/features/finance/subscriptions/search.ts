@@ -1,11 +1,19 @@
 import { PACKAGE_SIZES, SUBSCRIPTION_STATUSES, type PackageSize } from '@ab/catalog';
 import { SUBSCRIPTION_SORT_KEYS } from '@ab/money';
 import type { SubscriptionFilter } from '@ab/client-core';
-import { parseFilterSearch, parseSortSearch, type FilterSearch, type SortDir, type SortSearch } from '@/lib/list/list-search';
+import {
+  parseFilterSearch,
+  parseSortSearch,
+  type FilterSearch,
+  type SortDir,
+  type SortSearch,
+} from '@/lib/list/list-search';
 
 // URL search of the money pages; defaults (no filter, page 1, this month) stay out of the URL.
 
-export interface PagedUrlSearch { page?: number }
+export interface PagedUrlSearch {
+  page?: number;
+}
 /** `sort`/`dir` and the column filters `f_student` (name contains) and `f_package` (R-NFR-08). */
 export type SubscriptionsUrlSearch = PagedUrlSearch & {
   status?: SubscriptionFilter;
@@ -14,7 +22,9 @@ export type SubscriptionsUrlSearch = PagedUrlSearch & {
   f_student?: string;
   f_package?: PackageSize;
 };
-export interface MonthUrlSearch { month?: string }
+export interface MonthUrlSearch {
+  month?: string;
+}
 
 export function parsePage(s: Record<string, unknown>): PagedUrlSearch {
   return { page: Number(s.page) > 1 ? Math.floor(Number(s.page)) : undefined };
@@ -24,7 +34,13 @@ export function parseSubscriptionsSearch(s: Record<string, unknown>): Subscripti
   const status = [...SUBSCRIPTION_STATUSES, 'partial' as const].find((x) => x === s.status);
   const f = parseFilterSearch(s, ['student', 'package']);
   const pkg = PACKAGE_SIZES.find((x) => x === f.package);
-  return { ...parsePage(s), status, ...parseSortSearch(s, SUBSCRIPTION_SORT_KEYS), f_student: f.student, f_package: pkg };
+  return {
+    ...parsePage(s),
+    status,
+    ...parseSortSearch(s, SUBSCRIPTION_SORT_KEYS),
+    f_student: f.student,
+    f_package: pkg,
+  };
 }
 
 /** The table's server sort and column filters (API keys) of a parsed URL. */

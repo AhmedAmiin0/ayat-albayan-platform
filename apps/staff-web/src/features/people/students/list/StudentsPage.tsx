@@ -50,7 +50,11 @@ export function StudentsPage({
   const none = data?.total === 0 && isUnfiltered(view);
   const controls = studentTableControls(view, onChange);
   const kinds = (
-    <StudentKindSwitch status={filters.status} counts={narrowed ? undefined : counts.data} onChange={(st) => onChange({ ...view, filters: setFilter(filters, 'status', st) })} />
+    <StudentKindSwitch
+      status={filters.status}
+      counts={narrowed ? undefined : counts.data}
+      onChange={(st) => onChange({ ...view, filters: setFilter(filters, 'status', st) })}
+    />
   );
   const extra = useStudentFilters({
     value: filters,
@@ -65,7 +69,9 @@ export function StudentsPage({
         <Cartouche>{t.students.title}</Cartouche>
         {data && (
           // One count form for every n; Arabic plural forms come when copy needs them.
-          <span className="text-sm text-ink-3 tabular-nums">{t.students.count.replace('{n}', String(data.total))}</span>
+          <span className="text-sm text-ink-3 tabular-nums">
+            {t.students.count.replace('{n}', String(data.total))}
+          </span>
         )}
         <div className="ms-auto flex gap-2.5 max-sm:w-full max-sm:[&>*]:flex-1">
           <BulkAssign pick={pick} onDone={setNotice} />

@@ -40,7 +40,8 @@ export const flag = (form: SettingsForm, key: string): boolean => form[key] === 
 export const shapeId = (field: string, name: string): string => `${field}.${name}`;
 
 function shapeFields(field: string, def: JsonDef, v: AcademySettings[SettingKey]): SettingsForm {
-  const obj: Record<string, string> = v !== null && typeof v === 'object' && !Array.isArray(v) ? v : {};
+  const obj: Record<string, string> =
+    v !== null && typeof v === 'object' && !Array.isArray(v) ? v : {};
   return Object.fromEntries(def.shape.map((f) => [shapeId(field, f.name), obj[f.name] ?? '']));
 }
 
@@ -69,7 +70,11 @@ export function settingsForm(s: AcademySettings): SettingsForm {
 /** A blank box is not 0: it fails validation like any other bad number. */
 const num = (v: string): number => (v.trim() === '' ? Number.NaN : Number(v.trim()));
 /** Accepts comma, Arabic comma or space separated numbers. */
-const list = (v: string): number[] => v.split(/[\s,،]+/).filter(Boolean).map(Number);
+const list = (v: string): number[] =>
+  v
+    .split(/[\s,،]+/)
+    .filter(Boolean)
+    .map(Number);
 /** Any typed phone → E.164 when it can be read; otherwise sent as typed and refused. */
 const phone = (v: string): string => {
   const r = normalizePhone(v);
@@ -94,7 +99,8 @@ function bodyValue(def: SettingDef, input: { form: SettingsForm; field: string }
   const raw = input.form[input.field];
   if (def.type === 'bool') return raw === true;
   const text = typeof raw === 'string' ? raw : '';
-  if (def.type === 'int') return def.nullable && !flag(input.form, onKey(input.field)) ? null : num(text);
+  if (def.type === 'int')
+    return def.nullable && !flag(input.form, onKey(input.field)) ? null : num(text);
   if (def.type === 'int_list') return list(text);
   if (def.type === 'e164') return phone(text);
   return text;
@@ -103,7 +109,8 @@ function bodyValue(def: SettingDef, input: { form: SettingsForm; field: string }
 function errorText(def: SettingDef, message: string): string {
   if (message === 'not_ascending') return t.settings.notAscending;
   if (def.type === 'e164') return t.settings.invalidPhone;
-  if (def.type === 'string' || def.type === 'tz' || def.type === 'enum' || def.type === 'json') return t.settings.invalidText;
+  if (def.type === 'string' || def.type === 'tz' || def.type === 'enum' || def.type === 'json')
+    return t.settings.invalidText;
   return t.settings.invalid;
 }
 

@@ -32,7 +32,11 @@ export function StatementCard({ statement: s }: { statement: AssistantStatementV
     <li className="grid gap-3 border-b border-rule py-4">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <h3 className="font-semibold">{monthLabel(s.month.slice(0, 7))}</h3>
-        <StatusChip size="sm" {...payoutStatusStyle[s.status]} label={t.enums.payoutStatus[s.status]} />
+        <StatusChip
+          size="sm"
+          {...payoutStatusStyle[s.status]}
+          label={t.enums.payoutStatus[s.status]}
+        />
         {when && <span className="text-2xs text-ink-3">{when}</span>}
       </div>
       <CurrencyTotalsList totals={s.totals} label={monthLabel(s.month.slice(0, 7))} />

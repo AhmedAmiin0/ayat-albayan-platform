@@ -16,7 +16,9 @@ export function StatementLinesDialog({
 }) {
   return (
     <Dialog
-      title={S.detailsTitle.replace('{assistant}', statement.assistant.name).replace('{month}', monthLabel(statement.month.slice(0, 7)))}
+      title={S.detailsTitle
+        .replace('{assistant}', statement.assistant.name)
+        .replace('{month}', monthLabel(statement.month.slice(0, 7)))}
       onClose={onClose}
       layout="center"
       actions={
@@ -27,16 +29,23 @@ export function StatementLinesDialog({
     >
       <ul className="grid gap-2 text-sm">
         {statement.lines.map((line, i) => (
-          <li key={`${line.kind}-${i}`} className="flex items-baseline justify-between gap-3 border-b border-rule pb-2">
+          <li
+            key={`${line.kind}-${i}`}
+            className="flex items-baseline justify-between gap-3 border-b border-rule pb-2"
+          >
             <span>
               {line.kind === 'salary' && S.lineSalary}
               {line.kind === 'commission' && line.student && (
                 <>
-                  {(line.commission_kind === 'renewal' ? S.lineCommissionRenewal : S.lineCommission).replace('{student}', line.student.name)}{' '}
+                  {(line.commission_kind === 'renewal'
+                    ? S.lineCommissionRenewal
+                    : S.lineCommission
+                  ).replace('{student}', line.student.name)}{' '}
                   <Ltr className="text-2xs text-ink-3">{line.student.code}</Ltr>
                 </>
               )}
-              {line.kind === 'adjustment' && S.lineAdjustment.replace('{reason}', line.reason ?? '')}
+              {line.kind === 'adjustment' &&
+                S.lineAdjustment.replace('{reason}', line.reason ?? '')}
             </span>
             <Amount amount={line.amount} currency={line.currency} />
           </li>

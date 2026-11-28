@@ -5,7 +5,11 @@ import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
 import { Button, buttonVariants, FormAlert, Pager, t } from '@ab/web-kit';
-import { studentListQuery, studentStatusCountsQuery, type StatusCounts } from '@/features/people/students/api';
+import {
+  studentListQuery,
+  studentStatusCountsQuery,
+  type StatusCounts,
+} from '@/features/people/students/api';
 import { StatusChips } from '@/features/people/students/list/StatusChips';
 import { setColumnFilter } from '@/features/people/students/list/search';
 import type { FilterSearch, SortSearch } from '@/lib/list/list-search';
@@ -28,7 +32,9 @@ export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState<SortSearch>({});
   const [columns, setColumns] = useState<FilterSearch>({});
-  const list = useQuery(studentListQuery('', page, panelView({ teacherId, statuses, sort, columns })));
+  const list = useQuery(
+    studentListQuery('', page, panelView({ teacherId, statuses, sort, columns })),
+  );
   const counts = useQuery(studentStatusCountsQuery({ teacher: teacherId }));
   const pick = (next: readonly StudentStatus[]) => {
     setStatuses(next);
@@ -56,7 +62,9 @@ export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
         <h2 id="teacher-students-title" className="font-display text-xl font-bold">
           {t.teachers.studentsTitle}
         </h2>
-        {counts.data && <span className="text-sm text-ink-3 tabular-nums">{statusSummary(counts.data)}</span>}
+        {counts.data && (
+          <span className="text-sm text-ink-3 tabular-nums">{statusSummary(counts.data)}</span>
+        )}
         <Link
           to="/admin/students"
           search={{ teacher: teacherId }}

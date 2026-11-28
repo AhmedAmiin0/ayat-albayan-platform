@@ -2,7 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { integrationsQuery } from '@/features/platform/integrations/integrations-api';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { t } from '@ab/web-kit';
-import { joinStatus, livekitConfigured, meetingModeNotes, type MeetingModeNote } from './meeting-mode-notes';
+import {
+  joinStatus,
+  livekitConfigured,
+  meetingModeNotes,
+  type MeetingModeNote,
+} from './meeting-mode-notes';
 
 const NOTE = 'rounded-md bg-sunk px-3 py-2 text-sm text-ink-2';
 /** Templates are submitted to Meta from the communications templates tab (docs/26b §1). */
@@ -32,7 +37,12 @@ function NoteText({ note, livekit }: { note: MeetingModeNote; livekit: boolean |
       {/* Without LiveKit the teacher gets no link either (reminders.links.ts): only say so when it is set. */}
       {livekit === true && ` ${T.meetingModeTeacherOnly}`}{' '}
       {/* A new tab: this sits inside the unsaved teacher form, which a page load would throw away. */}
-      <a href={TEMPLATES_HREF} target="_blank" rel="noopener noreferrer" className="font-semibold text-lapis underline underline-offset-4">
+      <a
+        href={TEMPLATES_HREF}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="font-semibold text-lapis underline underline-offset-4"
+      >
         {T.meetingModeTemplatesLink}
       </a>
     </>

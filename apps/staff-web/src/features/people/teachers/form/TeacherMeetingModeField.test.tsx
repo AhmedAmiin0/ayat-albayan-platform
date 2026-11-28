@@ -10,12 +10,26 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 const T = t.teachers;
 const LINK = 'https://meet.google.com/xqa-ngdu-fpe';
-const academyLabel = (now: 'platform' | 'static') => `${T.meetingModeOption.academy} ${T.meetingModeResolves[now]}`;
+const academyLabel = (now: 'platform' | 'static') =>
+  `${T.meetingModeOption.academy} ${T.meetingModeResolves[now]}`;
 const notes = () => screen.getByRole('status');
 const SARA: Teacher = teacherFixture({
-  id: 't1', display_name_ar: 'أ. سارة', display_name_en: null, gender: 'female', programs: ['quran'], phone_e164: null,
-  meeting_link: null, meeting_mode: null, platform_classroom: true,
-  rate_30: null, rate_45: null, rate_60: null, rate_90: null, max_students: null, status: 'active', tz: 'Africa/Cairo',
+  id: 't1',
+  display_name_ar: 'أ. سارة',
+  display_name_en: null,
+  gender: 'female',
+  programs: ['quran'],
+  phone_e164: null,
+  meeting_link: null,
+  meeting_mode: null,
+  platform_classroom: true,
+  rate_30: null,
+  rate_45: null,
+  rate_60: null,
+  rate_90: null,
+  max_students: null,
+  status: 'active',
+  tz: 'Africa/Cairo',
 });
 
 describe('«طريقة حضور الحلقات» in the teacher form (owner 2026-10-19)', () => {
@@ -24,20 +38,36 @@ describe('«طريقة حضور الحلقات» in the teacher form (owner 2026
   it('offers three options; the academy one says what it resolves to now', () => {
     showMeetingMode(apiFetch, {}, { auto: true });
     expect(screen.getByRole('group', { name: T.meetingMode })).toBeTruthy();
-    expect(screen.getByRole('radio', { name: academyLabel('platform') })).toHaveProperty('checked', true);
+    expect(screen.getByRole('radio', { name: academyLabel('platform') })).toHaveProperty(
+      'checked',
+      true,
+    );
     expect(screen.getByRole('radio', { name: T.meetingModeOption.static })).toBeTruthy();
     expect(screen.getByRole('radio', { name: T.meetingModeOption.platform })).toBeTruthy();
   });
 
   it('academy switch OFF: the academy option reads «الرابط الثابت»', () => {
     showMeetingMode(apiFetch, { meeting_mode: 'platform', meeting_link: LINK });
-    expect(screen.getByRole('radio', { name: academyLabel('static') })).toHaveProperty('checked', false);
-    expect(screen.getByRole('radio', { name: T.meetingModeOption.platform })).toHaveProperty('checked', true);
+    expect(screen.getByRole('radio', { name: academyLabel('static') })).toHaveProperty(
+      'checked',
+      false,
+    );
+    expect(screen.getByRole('radio', { name: T.meetingModeOption.platform })).toHaveProperty(
+      'checked',
+      true,
+    );
   });
 
   it('settings still loading: the bare academy label and no note (not the registry default)', async () => {
-    showMeetingMode(apiFetch, { meeting_mode: null, meeting_link: '' }, { auto: 'pending', status: 'not_submitted' });
-    expect(screen.getByRole('radio', { name: T.meetingModeOption.academy })).toHaveProperty('checked', true);
+    showMeetingMode(
+      apiFetch,
+      { meeting_mode: null, meeting_link: '' },
+      { auto: 'pending', status: 'not_submitted' },
+    );
+    expect(screen.getByRole('radio', { name: T.meetingModeOption.academy })).toHaveProperty(
+      'checked',
+      true,
+    );
     await settle();
     expect(notes().textContent).toBe('');
     expect(apiFetch).not.toHaveBeenCalledWith('/messaging/templates');
@@ -54,12 +84,19 @@ describe('«طريقة حضور الحلقات» in the teacher form (owner 2026
   it('an academy-mode teacher while the settings load: their resolved mode stands in, as in TeacherFacts', async () => {
     const start = { meeting_mode: null, meeting_link: '' };
     showMeetingMode(apiFetch, start, { auto: 'pending', status: 'not_submitted', teacher: SARA });
-    expect(screen.getByRole('radio', { name: academyLabel('platform') })).toHaveProperty('checked', true);
+    expect(screen.getByRole('radio', { name: academyLabel('platform') })).toHaveProperty(
+      'checked',
+      true,
+    );
     await waitFor(() => expect(notes().textContent).toContain(T.meetingModeTemplateNotApproved));
   });
 
   it('a mode chosen in the form needs no setting: its notes show while the settings load', async () => {
-    showMeetingMode(apiFetch, { meeting_mode: 'static', meeting_link: '' }, { auto: 'pending', status: 'pending' });
+    showMeetingMode(
+      apiFetch,
+      { meeting_mode: 'static', meeting_link: '' },
+      { auto: 'pending', status: 'pending' },
+    );
     await waitFor(() => expect(notes().textContent).toBe(T.meetingModeNoLink));
   });
 
@@ -76,9 +113,13 @@ describe('«طريقة حضور الحلقات» in the teacher form (owner 2026
     expect(region.getAttribute('aria-live')).toBe('polite');
     // Never display:none while empty (a region revealed with its first note is often not announced).
     expect(region.className).not.toContain('empty:hidden');
-    expect(screen.getByRole('group', { name: T.meetingMode }).getAttribute('aria-describedby')).toBe(region.id);
+    expect(
+      screen.getByRole('group', { name: T.meetingMode }).getAttribute('aria-describedby'),
+    ).toBe(region.id);
     await waitFor(() => expect(region.textContent).toContain(T.meetingModeTemplatePending));
     // Inside the unsaved teacher form: the templates page opens in a new tab, the form stays.
-    expect(screen.getByRole('link', { name: T.meetingModeTemplatesLink }).getAttribute('target')).toBe('_blank');
+    expect(
+      screen.getByRole('link', { name: T.meetingModeTemplatesLink }).getAttribute('target'),
+    ).toBe('_blank');
   });
 });

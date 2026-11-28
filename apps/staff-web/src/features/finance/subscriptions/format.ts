@@ -15,7 +15,10 @@ import type { SubscriptionView } from './api';
 export { currencySymbol, moneyText };
 
 /** Package line (docs/07 §6), in the act tone at the R-SUB-02 threshold. */
-export function progressOf(b: Pick<BalanceView, 'lessons_used' | 'lessons_total'>, threshold?: number): PackageProgress {
+export function progressOf(
+  b: Pick<BalanceView, 'lessons_used' | 'lessons_total'>,
+  threshold?: number,
+): PackageProgress {
   const opts = threshold === undefined ? {} : { threshold };
   return packageProgress(b.lessons_used, b.lessons_total, {
     forms: t.subscriptions.progress,
@@ -66,7 +69,8 @@ type ErrorTable = Readonly<Record<string, string>>;
  * receipt_type…), looked up in the feature's `error` table; anything else is the generic line.
  */
 export function apiErrorText(e: unknown, table: ErrorTable): string {
-  if (!(e instanceof ApiError) || typeof e.body !== 'object' || e.body === null) return t.common.error;
+  if (!(e instanceof ApiError) || typeof e.body !== 'object' || e.body === null)
+    return t.common.error;
   const body = e.body as { code?: unknown; issues?: { message?: unknown }[]; currency?: unknown };
   const key = typeof body.code === 'string' ? body.code : body.issues?.[0]?.message;
   const text = typeof key === 'string' ? table[key] : undefined;

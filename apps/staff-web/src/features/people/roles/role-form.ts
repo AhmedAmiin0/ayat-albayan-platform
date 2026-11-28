@@ -17,13 +17,21 @@ export interface RoleForm {
 
 export function roleForm(role: RoleView | null): RoleForm {
   if (!role) return { name_ar: '', name_en: '', base_role: 'admin', permissions: [] };
-  const base = role.base_role === 'guardian' || role.base_role === 'student' ? 'admin' : role.base_role;
-  return { name_ar: role.name_ar, name_en: role.name_en ?? '', base_role: base, permissions: [...role.permissions] };
+  const base =
+    role.base_role === 'guardian' || role.base_role === 'student' ? 'admin' : role.base_role;
+  return {
+    name_ar: role.name_ar,
+    name_en: role.name_en ?? '',
+    base_role: base,
+    permissions: [...role.permissions],
+  };
 }
 
 /** Catalog order, no duplicates. */
 function ordered(set: ReadonlySet<Permission>): Permission[] {
-  return permissionGroups().flatMap((g) => g.keys).filter((p) => set.has(p));
+  return permissionGroups()
+    .flatMap((g) => g.keys)
+    .filter((p) => set.has(p));
 }
 
 export function togglePermission(form: RoleForm, permission: Permission): RoleForm {
@@ -55,7 +63,9 @@ export function toggleGroup(form: RoleForm, keys: readonly Permission[]): RoleFo
   return { ...form, permissions: ordered(set) };
 }
 
-export type RoleBody = { ok: true; body: RoleCreate | RoleUpdate } | { ok: false; error: 'name_required' };
+export type RoleBody =
+  | { ok: true; body: RoleCreate | RoleUpdate }
+  | { ok: false; error: 'name_required' };
 
 /** POST body for a new role; PATCH body (names + grants, never the base role) for an existing one. */
 export function roleBody(

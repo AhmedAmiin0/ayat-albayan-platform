@@ -19,7 +19,9 @@ import { myMoneyKeys, salesMoneyKeys, salesSubscriptionKeys } from '@/features/s
 // /sales/subscriptions and /sales/payments. Only her students; the price always from the API. `Bind`: the chat's
 // phone for a child not hers (chatBinding, sales.renew_any, docs/16 row 38); nothing for hers.
 
-export interface Bind { phone?: string }
+export interface Bind {
+  phone?: string;
+}
 const scopeQuery = (studentId: string, bind: Bind) =>
   `studentId=${studentId}${bind.phone ? `&phone=${encodeURIComponent(bind.phone)}` : ''}`;
 
@@ -30,21 +32,26 @@ export const SALES_MONEY_KEY = salesMoneyKeys.all;
 export const salesFamilyQuery = (phone: string) =>
   queryOptions({
     queryKey: salesMoneyKeys.family(phone),
-    queryFn: () => apiFetch<SalesFamilyView>(`/sales/money/family?phone=${encodeURIComponent(phone)}`),
+    queryFn: () =>
+      apiFetch<SalesFamilyView>(`/sales/money/family?phone=${encodeURIComponent(phone)}`),
   });
 
 /** GET /sales/money/chat-receipts: the images / PDFs the family sent (metadata only). */
 export const chatReceiptsQuery = (studentId: string, bind: Bind = {}) =>
   queryOptions({
     queryKey: salesMoneyKeys.chatReceipts(studentId),
-    queryFn: () => apiFetch<SalesChatReceipt[]>(`/sales/money/chat-receipts?${scopeQuery(studentId, bind)}`),
+    queryFn: () =>
+      apiFetch<SalesChatReceipt[]>(`/sales/money/chat-receipts?${scopeQuery(studentId, bind)}`),
   });
 
 /** GET /sales/money/chat-receipts/:messageId: a short-lived thumbnail URL, asked per item. */
 export const chatReceiptFileQuery = (studentId: string, messageId: string, bind: Bind = {}) =>
   queryOptions({
     queryKey: salesMoneyKeys.chatReceipt(studentId, messageId),
-    queryFn: () => apiFetch<SalesChatReceiptFile>(`/sales/money/chat-receipts/${messageId}?${scopeQuery(studentId, bind)}`),
+    queryFn: () =>
+      apiFetch<SalesChatReceiptFile>(
+        `/sales/money/chat-receipts/${messageId}?${scopeQuery(studentId, bind)}`,
+      ),
     staleTime: 60_000,
   });
 
@@ -83,7 +90,8 @@ export type SalesPaymentBody = Bind & {
   clientRequestId: string;
 };
 
-export const recordSalesPayment = (body: SalesPaymentBody) => apiSend<SalesPaymentView>('POST', '/sales/payments', body);
+export const recordSalesPayment = (body: SalesPaymentBody) =>
+  apiSend<SalesPaymentView>('POST', '/sales/payments', body);
 
 /** POST /sales/payments/receipt-from-chat: copies the chat file into the package's receipts. */
 export const receiptFromChat = (body: Bind & { subscriptionId: string; messageId: string }) =>

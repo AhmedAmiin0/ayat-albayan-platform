@@ -6,7 +6,10 @@ import type { PeriodTotal } from '@ab/money';
 export function PeriodTotals({ totals }: { totals: readonly PeriodTotal[] }) {
   if (totals.length === 0) return null;
   return (
-    <p className="mb-3 flex flex-wrap items-baseline gap-x-5 gap-y-1 text-sm" aria-label={t.finance.periodTotal}>
+    <p
+      className="mb-3 flex flex-wrap items-baseline gap-x-5 gap-y-1 text-sm"
+      aria-label={t.finance.periodTotal}
+    >
       <span className="text-ink-3">{t.finance.periodTotal}</span>
       {totals.map((x) => (
         <span key={x.currency} className="flex items-baseline gap-1.5">

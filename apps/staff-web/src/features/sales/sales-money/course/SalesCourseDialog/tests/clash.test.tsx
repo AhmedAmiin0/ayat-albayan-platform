@@ -1,15 +1,31 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ABRAR, next, pickSlot, pickWednesday, SLOT } from '@/features/teaching/booking/wizard-fixture';
+import {
+  ABRAR,
+  next,
+  pickSlot,
+  pickWednesday,
+  SLOT,
+} from '@/features/teaching/booking/wizard-fixture';
 import { ApiError, t } from '@ab/web-kit';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { COURSE_STUDENT_ID, routeCourse, routeCourseSend } from '@/features/sales/sales-money/course/course-fixture';
+import {
+  COURSE_STUDENT_ID,
+  routeCourse,
+  routeCourseSend,
+} from '@/features/sales/sales-money/course/course-fixture';
 import { SalesCourseDialog } from '@/features/sales/sales-money/course/SalesCourseDialog/SalesCourseDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
 const nextButton = () => screen.getByRole('button', { name: t.booking.next });
 const submit = () => screen.getByRole('button', { name: t.booking.submit });

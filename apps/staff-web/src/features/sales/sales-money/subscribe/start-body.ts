@@ -1,8 +1,17 @@
-import { salesStartDate, usedBeforeProblem, type SalesStartProblem, type UsedBeforeProblem } from '@ab/shared';
+import {
+  salesStartDate,
+  usedBeforeProblem,
+  type SalesStartProblem,
+  type UsedBeforeProblem,
+} from '@ab/shared';
 import type { StartValue } from './SalesStartField';
 
 /** The start fields of POST /sales/subscriptions: none without the permission (the API's default day). */
-export interface StartBody { startsOn?: string; alreadyStarted?: true; lessonsUsedBefore?: number }
+export interface StartBody {
+  startsOn?: string;
+  alreadyStarted?: true;
+  lessonsUsedBefore?: number;
+}
 
 interface StartOpts {
   canSet: boolean;

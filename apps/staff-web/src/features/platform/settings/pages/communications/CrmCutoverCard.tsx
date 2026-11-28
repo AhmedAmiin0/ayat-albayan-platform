@@ -23,7 +23,11 @@ export function CrmCutoverCard({ settings }: { settings: AcademySettings }) {
       </h2>
       {/* The chip changes after a save: said politely (no role=status, the page's toast has it). */}
       <div aria-live="polite" data-testid="crm-state">
-        <StatusChip tone={done ? 'ok' : 'act'} glyph={done ? 'fill' : 'hollow'} label={done ? h.crmDoneState : h.crmPendingState} />
+        <StatusChip
+          tone={done ? 'ok' : 'act'}
+          glyph={done ? 'fill' : 'hollow'}
+          label={done ? h.crmDoneState : h.crmPendingState}
+        />
       </div>
       <Button
         size="sm"

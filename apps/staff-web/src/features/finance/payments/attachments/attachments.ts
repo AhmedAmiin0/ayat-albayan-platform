@@ -27,7 +27,9 @@ export function addAttachments<T>(
 /** The legacy receipt comes first. */
 export function attachmentLabels(rows: readonly PaymentAttachmentView[]): string[] {
   let n = 0;
-  return rows.map((r) => (r.legacy ? t.payments.legacyReceipt : t.payments.attachmentN.replace('{n}', String((n += 1)))));
+  return rows.map((r) =>
+    r.legacy ? t.payments.legacyReceipt : t.payments.attachmentN.replace('{n}', String((n += 1))),
+  );
 }
 
 export type Uploader = (input: { subscriptionId: string; file: File }) => Promise<string>;

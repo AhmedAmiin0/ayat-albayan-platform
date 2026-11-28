@@ -28,8 +28,18 @@ export function invoiceRangeFilters({ search, onChange }: InvoiceRangeOptions): 
       </div>
     ),
     chips: [
-      ...chipIfSet({ id: 'from', label: t.finance.from, value: search.from, onRemove: () => onChange({ from: undefined }) }),
-      ...chipIfSet({ id: 'to', label: t.finance.to, value: search.to, onRemove: () => onChange({ to: undefined }) }),
+      ...chipIfSet({
+        id: 'from',
+        label: t.finance.from,
+        value: search.from,
+        onRemove: () => onChange({ from: undefined }),
+      }),
+      ...chipIfSet({
+        id: 'to',
+        label: t.finance.to,
+        value: search.to,
+        onRemove: () => onChange({ to: undefined }),
+      }),
     ],
     onClearAll: (keys) => onChange({ from: undefined, to: undefined, ...clearFilterSearch(keys) }),
   };

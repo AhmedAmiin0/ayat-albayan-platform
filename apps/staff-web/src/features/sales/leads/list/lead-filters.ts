@@ -15,7 +15,10 @@ export interface LeadChipsOptions {
 }
 
 /** The salesperson's id is never shown. */
-function assigneeText(assignee: string | undefined, people: LeadChipsOptions['people']): string | undefined {
+function assigneeText(
+  assignee: string | undefined,
+  people: LeadChipsOptions['people'],
+): string | undefined {
   if (!assignee) return undefined;
   if (assignee === NO_ASSIGNEE) return t.sales.assign.none;
   return people.find((p) => p.id === assignee)?.name ?? t.common.loading;

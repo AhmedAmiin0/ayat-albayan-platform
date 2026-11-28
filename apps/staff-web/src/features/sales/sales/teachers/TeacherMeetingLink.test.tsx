@@ -33,7 +33,9 @@ function show(link: string | null, { platform = false, auto = false } = {}) {
 
 describe('TeacherMeetingLink «رابط الحلقة الثابت» (sales drawer)', () => {
   const writeText = vi.fn();
-  beforeEach(() => Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true }));
+  beforeEach(() =>
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true }),
+  );
   afterEach(() => {
     writeText.mockReset();
     apiFetch.mockReset();

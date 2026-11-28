@@ -2,7 +2,11 @@ import { integrationEnum, type IntegrationConfigItem } from '@ab/catalog';
 import { SettingRow } from '@/components/settings/fields/SettingRow';
 import { Input, Select, t } from '@ab/web-kit';
 import { DeveloperKey } from './DeveloperKey';
-import { enumEmptyLabel, integrationText, optionText } from '@/features/platform/integrations/integrations-form';
+import {
+  enumEmptyLabel,
+  integrationText,
+  optionText,
+} from '@/features/platform/integrations/integrations-form';
 import { IntegrationSourceNote } from '@/features/platform/integrations/IntegrationSourceNote';
 
 interface Props {

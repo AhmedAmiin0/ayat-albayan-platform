@@ -45,9 +45,13 @@ export function saveFailure(
   if (!(error instanceof ApiError)) return failed;
   const code = codeOf(error.body);
   if (error.status === 409 && isConflict(error.body)) {
-    return { status: { state: 'conflict', conflict: error.body, mine: input.mine }, end: 'conflict' };
+    return {
+      status: { state: 'conflict', conflict: error.body, mine: input.mine },
+      end: 'conflict',
+    };
   }
-  if (error.status === 409 && code === 'owned_by_module') return { status: { state: 'moved' }, end: 'moved' };
+  if (error.status === 409 && code === 'owned_by_module')
+    return { status: { state: 'moved' }, end: 'moved' };
   if (error.status === 428 && !input.typed) return { status: IDLE, end: 'confirm' };
   return failed;
 }

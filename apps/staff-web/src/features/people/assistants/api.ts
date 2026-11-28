@@ -86,7 +86,8 @@ const act = (id: string, verb: string, body?: unknown) =>
 
 export const approveStatement = (id: string) => act(id, 'approve');
 export const reopenStatement = (id: string) => act(id, 'reopen');
-export const unpayStatement = (input: { id: string; reason: string }) => act(input.id, 'unpay', { reason: input.reason });
+export const unpayStatement = (input: { id: string; reason: string }) =>
+  act(input.id, 'unpay', { reason: input.reason });
 
 export interface PayStatementBody {
   paidAt: string;
@@ -97,11 +98,16 @@ export interface PayStatementBody {
 export const payStatement = (input: { id: string; body: PayStatementBody }) =>
   act(input.id, 'pay', input.body);
 
-export const statementReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/assistant-pay/statements/${id}/receipt`);
+export const statementReceiptUrl = (id: string) =>
+  apiFetch<SignedDownload>(`/assistant-pay/statements/${id}/receipt`);
 
 /** Straight to the private bucket through a one-off signed URL; the path is then sent with the pay. */
 export async function uploadStatementReceipt(file: File, assistantId: string): Promise<string> {
-  const signed = await apiSend<SignedUpload>('POST', '/assistant-pay/receipt-upload-url', { assistantId, mime: file.type, size: file.size });
+  const signed = await apiSend<SignedUpload>('POST', '/assistant-pay/receipt-upload-url', {
+    assistantId,
+    mime: file.type,
+    size: file.size,
+  });
   const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return signed.path;
