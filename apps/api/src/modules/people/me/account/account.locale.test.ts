@@ -3,7 +3,8 @@ import type { MeZoneRepo } from '@/common/auth/me-zone.repo';
 import { accountRoutes } from '@ab/shared';
 import { ZodPipe } from '@/common/http/zod-inputs';
 import { AccountController } from './account.controller';
-import { accountKit, ME } from './account.fakes';
+import { accountKit } from './account.fakes';
+import { ME } from './account.me.fakes';
 
 const setup = () => {
   const kit = accountKit();

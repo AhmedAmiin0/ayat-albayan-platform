@@ -5,21 +5,11 @@ import type {
   AssistantTermsView,
 } from '@ab/money';
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '@/common/audit/audit.service';
 import { notFound } from '@/common/http/errors';
-import { CommissionBell } from '@/modules/finance/subscriptions';
 import { AssistantRpc } from '@/modules/finance/assistant-pay/shared/assistant-pay.rpc';
 import { termsColumns, toTermsView } from './terms.mapper';
 import { TermsRepo } from './terms.repo';
-
-/** The audit and the commission bell (max-params). */
-@Injectable()
-export class TermsEnv {
-  constructor(
-    readonly audit: AuditService,
-    readonly bell: CommissionBell,
-  ) {}
-}
+import { TermsEnv } from './terms.env';
 
 /** The commission and salary terms of each assistant (R-ASST-02, R-ASST-03): set by an admin, read-only for the assistant. */
 @Injectable()

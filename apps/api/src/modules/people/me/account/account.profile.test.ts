@@ -1,7 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { asResponse } from '@/common/http/returns';
-import { accountKit, ME } from './account.fakes';
+import { accountKit } from './account.fakes';
+import { ME } from './account.me.fakes';
 
 vi.mock('@/common/http/returns', { spy: true });
 

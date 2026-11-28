@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { accountKit, ME, PASSWORD } from './account.fakes';
+import { accountKit } from './account.fakes';
+import { ME, PASSWORD } from './account.me.fakes';
 
 // R-ACC-04: the rules of users.password / AUTH_PASSWORD_MIN_LENGTH; the caller's session is kept.
 

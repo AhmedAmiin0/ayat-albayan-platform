@@ -1,6 +1,7 @@
 import { emailChangeSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { accountKit, ME, PASSWORD } from './account.fakes';
+import { accountKit } from './account.fakes';
+import { ME, PASSWORD } from './account.me.fakes';
 
 describe('PUT /me/email (R-ACC-03)', () => {
   it('changes the login email after the password check, confirmed at once', async () => {

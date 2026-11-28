@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { PricingModule } from '@/modules/finance/pricing';
 import { AlertsRepo } from '@/modules/finance/subscriptions/alerts/alerts.repo';
-import {
-  AlertsEnv,
-  SubscriptionAlertsService,
-} from '@/modules/finance/subscriptions/alerts/alerts.service';
+import { SubscriptionAlertsService } from '@/modules/finance/subscriptions/alerts/alerts.service';
+import { AlertsEnv } from '@/modules/finance/subscriptions/alerts/alerts.env';
 import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags.service';
 import { SubscriptionCancelRepo } from '@/modules/finance/subscriptions/cancel/subscription-cancel.repo';
 import { SubscriptionCancel } from '@/modules/finance/subscriptions/cancel/subscription-cancel.service';
@@ -12,7 +10,8 @@ import { CourseDue } from '@/modules/finance/subscriptions/course-due/course-due
 import { CourseDueRepo } from '@/modules/finance/subscriptions/course-due/course-due.repo';
 import { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
 import { CommissionBell } from '@/modules/finance/subscriptions/money/commission-bell';
-import { FollowUpEnv, MoneyFollowUps } from '@/modules/finance/subscriptions/money/money-follow-ups';
+import { MoneyFollowUps } from '@/modules/finance/subscriptions/money/money-follow-ups';
+import { FollowUpEnv } from '@/modules/finance/subscriptions/money/follow-up.env';
 import { MoneyWrites } from '@/modules/finance/subscriptions/money/money-writes';
 import { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
 import { LeadConversion } from '@/modules/finance/subscriptions/student-lifecycle/lead-conversion';

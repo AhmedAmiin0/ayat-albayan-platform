@@ -12,7 +12,8 @@ import { StudentStatusRepo } from '@/modules/finance/subscriptions/student-lifec
 import { SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 import { SubscriptionsSettings } from '@/modules/finance/subscriptions/shared/subscriptions.settings';
 import { AlertsRepo } from '@/modules/finance/subscriptions/alerts/alerts.repo';
-import { AlertsEnv, SubscriptionAlertsService } from '@/modules/finance/subscriptions/alerts/alerts.service';
+import { SubscriptionAlertsService } from '@/modules/finance/subscriptions/alerts/alerts.service';
+import { AlertsEnv } from '@/modules/finance/subscriptions/alerts/alerts.env';
 
 const NOW = new Date('2026-10-02T09:00:00Z');
 const ids = (n: number): string[] => Array.from({ length: n }, (_, i) => `s${i}`);

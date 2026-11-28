@@ -5,7 +5,8 @@ import { PERMISSION, SIGNED_IN } from '@/common/auth/decorators';
 import { accountRoutes } from '@ab/shared';
 import { ZodPipe } from '@/common/http/zod-inputs';
 import { AccountController } from './account.controller';
-import { accountKit, ME, PASSWORD } from './account.fakes';
+import { accountKit } from './account.fakes';
+import { ME, PASSWORD } from './account.me.fakes';
 
 // R-ACC-01..05: every signed-in role, always the caller (no id in any path).
 

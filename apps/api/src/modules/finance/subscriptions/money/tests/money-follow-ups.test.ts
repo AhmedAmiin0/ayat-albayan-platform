@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { CommissionBell } from '@/modules/finance/subscriptions/money/commission-bell';
 import type { LeadConversion } from '@/modules/finance/subscriptions/student-lifecycle/lead-conversion';
-import { FollowUpEnv, MoneyFollowUps } from '@/modules/finance/subscriptions/money/money-follow-ups';
+import { MoneyFollowUps } from '@/modules/finance/subscriptions/money/money-follow-ups';
+import { FollowUpEnv } from '@/modules/finance/subscriptions/money/follow-up.env';
 import type { StudentActivation } from '@/modules/finance/subscriptions/student-lifecycle/student-activation';
 import type { StudentDeactivation } from '@/modules/finance/subscriptions/student-lifecycle/student-deactivation';
 

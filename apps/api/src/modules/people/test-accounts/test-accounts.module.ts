@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { StudentTestController, UserTestController } from './test-accounts.controller';
+import { UserTestController } from './test-accounts.controller';
+import { StudentTestController } from './student-test.controller';
 import { TestAccountsRepo } from './test-accounts.repo';
 import { TestAccountsService } from './test-accounts.service';
 

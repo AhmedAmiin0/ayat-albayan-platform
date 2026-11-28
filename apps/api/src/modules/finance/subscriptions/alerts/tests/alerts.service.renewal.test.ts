@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { AlertsRepo } from '@/modules/finance/subscriptions/alerts/alerts.repo';
-import { SubscriptionAlertsService, type AlertsEnv } from '@/modules/finance/subscriptions/alerts/alerts.service';
+import { SubscriptionAlertsService } from '@/modules/finance/subscriptions/alerts/alerts.service';
+import type { AlertsEnv } from '@/modules/finance/subscriptions/alerts/alerts.env';
 import type { PackagesService, StudentState } from '@/modules/finance/subscriptions/money/packages.service';
 import { SubscriptionsSettings } from '@/modules/finance/subscriptions/shared/subscriptions.settings';
 

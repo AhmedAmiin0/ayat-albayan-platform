@@ -1,7 +1,8 @@
 import { profileUpdateSchema } from '@ab/shared';
 import { BadRequestException, ConflictException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { accountKit, ME, PASSWORD } from './account.fakes';
+import { accountKit } from './account.fakes';
+import { ME, PASSWORD } from './account.me.fakes';
 
 // R-ACC-02: the name is trimmed (2-80); a phone is normalised to E.164 (rule 7), unique, and
 // changing it needs the current password.

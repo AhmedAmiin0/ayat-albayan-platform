@@ -1,6 +1,7 @@
 import { avatarUploadSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { accountKit, ME, PNG } from './account.fakes';
+import { accountKit, PNG } from './account.fakes';
+import { ME } from './account.me.fakes';
 
 // R-ACC-05: avatars/<uid>/avatar-<ms>.<ext>; mime and size re-checked from Storage and the bytes.
 

@@ -14,7 +14,8 @@ import { MyService } from './my/my.service';
 import { StatementsRepo } from './statements/statements.repo';
 import { StatementsService } from './statements/statements.service';
 import { TermsRepo } from './terms/terms.repo';
-import { TermsEnv, TermsService } from './terms/terms.service';
+import { TermsEnv } from './terms/terms.env';
+import { TermsService } from './terms/terms.service';
 
 /**
  * The assistant's (base role sales) pay: commission terms and salary per assistant, the commission ledger,
