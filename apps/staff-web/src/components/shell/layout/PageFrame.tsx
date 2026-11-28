@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Page, cn } from '@ab/web-kit';
-import { useRailBox } from './use-rail-box';
 
 // The page's own scroll area: the cartouche row stays pinned and a table keeps its header in view.
 // A flex column, so a screen can hand the rest of the height to one box (`flex-1 min-h-0`: the
@@ -25,12 +24,11 @@ export function PageFrame({
   children: ReactNode;
   pageClassName?: string;
 }) {
-  const scroll = useRailBox<HTMLDivElement>();
   return (
     <main className="flex min-h-0 min-w-0 flex-1 flex-col">
       <Page className={cn('flex min-h-0 flex-1 flex-col', pageClassName)}>
         {/* data-page-scroll: the e2e probes read this box (horizontal overflow stays inside it, not the document). */}
-        <div ref={scroll} data-page-scroll className={SCROLL}>
+        <div data-page-scroll className={SCROLL}>
           {children}
         </div>
       </Page>
