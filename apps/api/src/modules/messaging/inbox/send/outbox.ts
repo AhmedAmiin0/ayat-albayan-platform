@@ -26,7 +26,10 @@ const echoOf = (row: Echo): Echo => ({
 
 type Outbound = Omit<TablesInsert<'messages'>, 'direction' | 'status'>;
 
-/** send() on an API copy: how often and how many times the row is read again while it is still queued. */
+/**
+ * send() on an API copy: how often and how many times the row is read again while it is still
+ * queued.
+ */
 export const SETTLE_POLL_MS = 500;
 export const SETTLE_POLLS = 10;
 
@@ -68,7 +71,10 @@ export class Outbox {
     return { view, replayed: queued.replayed === true, echo: echoOf(queued) };
   }
 
-  /** The row after the pass; on an API copy, read again (bounded) while the worker has not moved it yet. */
+  /**
+   * The row after the pass; on an API copy, read again (bounded) while the worker has not moved it
+   * yet.
+   */
   private async settled(id: string): Promise<Awaited<ReturnType<ThreadMessagesRepo['get']>>> {
     let row = await this.queries.get(id);
     for (let i = 0; i < SETTLE_POLLS && row?.status === 'queued' && appRole() === 'api'; i += 1) {

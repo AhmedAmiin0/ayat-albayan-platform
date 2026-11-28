@@ -2,13 +2,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pgError } from '@/common/db/errors';
 
-/** What pdfinfo said about a message's PDF: its page count (0 = no preview) and its size in bytes. */
+/**
+ * What pdfinfo said about a message's PDF: its page count (0 = no preview) and its size in bytes.
+ */
 export interface PdfDoc { pages: number; bytes: number }
 
 /**
- * messages.media_pages / media_bytes (migration 20261030000982), read and written only here: the shared
- * select of InboundMediaQueries stays without them, so a deploy that skipped the migration breaks only
- * the preview, never /file, the picker or a forward.
+ * messages.media_pages / media_bytes (migration 20261030000982), read and written only here: the
+ * shared select of InboundMediaQueries stays without them, so a deploy that skipped the migration
+ * breaks only the preview, never /file, the picker or a forward.
  */
 @Injectable()
 export class PdfPreviewRepo {

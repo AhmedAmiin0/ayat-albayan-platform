@@ -5,18 +5,26 @@ import type { PageRange } from './pdf-pages';
 import { PdfToolError, type PdfPageImage } from './pdf-render';
 import { PDF_SOCKET, readCapped } from './pdf-wire';
 
-// The API's side of the PDF sandbox (docs/09 «PDF sandbox»): the two calls of pdf-render.ts, answered by
-// poppler in ayat-pdf (no secrets, no network). An API copy never runs poppler itself: no socket (local dev,
-// tests, CI) is PdfToolError('unavailable'), a 503 pdf_unavailable.
+// The API's side of the PDF sandbox (docs/09 «PDF sandbox»): the two calls of pdf-render.ts,
+// answered by poppler in ayat-pdf (no secrets, no network). An API copy never runs poppler itself:
+// no socket (local dev, tests, CI) is PdfToolError('unavailable'), a 503 pdf_unavailable.
 
 /** `socket`: tests listen on a temp path; `timeoutMs`: tests wait less. */
 interface SandboxOpts { socket?: string; timeoutMs?: number }
 
-/** Whole call, queue included: the other copy's 20 s render ahead of ours, then our own 20 s, plus transfer. */
+/**
+ * Whole call, queue included: the other copy's 20 s render ahead of ours, then our own 20 s, plus
+ * transfer.
+ */
 const TIMEOUT_MS = 45_000;
-/** Five 1600 px JPEGs as base64 JSON are a few MB; more is never a preview (a sandbox gone wrong). */
+/**
+ * Five 1600 px JPEGs as base64 JSON are a few MB; more is never a preview (a sandbox gone wrong).
+ */
 const ANSWER_MAX = 16 * 1024 * 1024;
-/** No listener behind the path (ayat-pdf down or restarting): retry later, nothing remembered about the PDF. */
+/**
+ * No listener behind the path (ayat-pdf down or restarting): retry later, nothing remembered about
+ * the PDF.
+ */
 const UNREACHABLE = new Set(['ENOENT', 'ECONNREFUSED', 'EACCES', 'ENOTSOCK']);
 
 const pagesAnswer = z.object({ pages: z.number().int().min(0) });
@@ -38,7 +46,9 @@ export async function pdfPageCount(bytes: Uint8Array, opts: SandboxOpts = {}): P
   return parse(pagesAnswer, await call({ path: '/pages', bytes, opts })).pages;
 }
 
-/** pdf-render's renderPdfPages, in ayat-pdf: the JPEGs of `range` (any page outside it is dropped). */
+/**
+ * pdf-render's renderPdfPages, in ayat-pdf: the JPEGs of `range` (any page outside it is dropped).
+ */
 export async function renderPdfPages(
   bytes: Uint8Array,
   range: PageRange,
@@ -84,7 +94,10 @@ async function call(input: {
 
 interface Post { socketPath: string; path: string; bytes: Uint8Array; timeoutMs: number }
 
-/** One POST on a fresh connection, aborted as a whole after `timeoutMs` (a slow trickle cannot hold it). */
+/**
+ * One POST on a fresh connection, aborted as a whole after `timeoutMs` (a slow trickle cannot hold
+ * it).
+ */
 function post(input: Post): Promise<{ status: number; body: Buffer | null }> {
   return new Promise((resolve, reject) => {
     const fail = (e: unknown) => {

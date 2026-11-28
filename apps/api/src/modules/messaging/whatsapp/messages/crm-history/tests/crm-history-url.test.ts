@@ -3,7 +3,8 @@ import { allowedCrmUrl, crmMediaUrl, isCrmHistoryRow, looksCrmHistory } from '@/
 import { CRM_HOST, crmLink, crmRow } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history.fakes';
 
 // An imported CRM file's body is only its storage link. Only that exact shape, on
-// exactly the configured host, is ever fetched (SSRF guard); everything else is refused before fetch.
+// exactly the configured host, is ever fetched (SSRF guard); everything else is refused before
+// fetch.
 
 describe('crmMediaUrl (the shape of an old-CRM file link)', () => {
   it('takes one https link under the chat-media prefix, trimmed', () => {

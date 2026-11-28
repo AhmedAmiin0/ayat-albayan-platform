@@ -20,7 +20,10 @@ export const CALL_EVENTS = Symbol('CALL_EVENTS');
 
 const isUuid = (v: string | null): v is string => v !== null && z.uuid().safeParse(v).success;
 
-/** The machine event a webhook item stands for; null = nothing to do (an inbound offer is handled apart). */
+/**
+ * The machine event a webhook item stands for; null = nothing to do (an inbound offer is handled
+ * apart).
+ */
 export function machineEvent(e: CallWebhookEvent): CallEvent | null {
   const at = e.at.toISOString();
   if (e.kind === 'terminate') return { type: 'terminate', at, failed: e.status === 'FAILED', duration: e.duration };
@@ -31,8 +34,9 @@ export function machineEvent(e: CallWebhookEvent): CallEvent | null {
 }
 
 /**
- * Our outbound row already ended (a connect that timed out, a hang-up before WhatsApp named the call)
- * but WhatsApp says the call rings, was answered or got its answer: it is still up there, so end it.
+ * Our outbound row already ended (a connect that timed out, a hang-up before WhatsApp named the
+ * call) but WhatsApp says the call rings, was answered or got its answer: it is still up there, so
+ * end it.
  */
 function stillUpOnWhatsapp(row: CallRow, event: CallEvent): boolean {
   return row.direction === 'outbound' && row.status === 'ended' && ['ringing', 'accepted', 'answer_sdp'].includes(event.type);

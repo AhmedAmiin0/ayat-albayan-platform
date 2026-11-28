@@ -24,9 +24,9 @@ import { WebhookSettings } from '@/modules/messaging/webhook/shared/webhook.sett
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
 
-// The classroom, reports, messaging and money readers as AppModule wires them: each resolves and reads the one
-// SettingsService (here a fake). SendGate (provided by WhatsappModule only) reads its switches through
-// WhatsappSettings straight from the DB, never from this store (docs/26 §5 26-P4).
+// The classroom, reports, messaging and money readers as AppModule wires them: each resolves and
+// reads the one SettingsService (here a fake). SendGate (provided by WhatsappModule only) reads its
+// switches through WhatsappSettings straight from the DB, never from this store (docs/26 §5 26-P4).
 
 const READERS = [
   ClassroomSettings,

@@ -25,7 +25,9 @@ function legacyLines(lines: LineEnvs): KapsoNumber[] {
   return out;
 }
 
-/** The Kapso number Meta names by this phone_number_id; null = not ours or not on Kapso (ignored). */
+/**
+ * The Kapso number Meta names by this phone_number_id; null = not ours or not on Kapso (ignored).
+ */
 export function kapsoNumberFor(
   phoneNumberId: string,
   read: () => LineEnvs = () => lineEnvs(loadEnv()),

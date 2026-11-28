@@ -50,7 +50,9 @@ export interface StatusEvent {
   errorText: string | null;
   conversationId: string | null;
   pricingCategory: string | null;
-  /** Where the status came in (an unknown wamid on a Kapso number is fetched and stored, external/). */
+  /**
+   * Where the status came in (an unknown wamid on a Kapso number is fetched and stored, external/).
+   */
   line?: NumberPurpose | null;
   numberId?: string;
   phoneNumberId?: string;
@@ -74,9 +76,9 @@ export interface EchoEvent {
 }
 
 /**
- * One WhatsApp Calling item (docs/28 §2), from a change whose field is `calls`: a `connect` (an inbound
- * call's offer, or WhatsApp's answer to our outbound offer), a `terminate`, or a call `status`
- * (RINGING / ACCEPTED / REJECTED of our outbound call). Message statuses never come here.
+ * One WhatsApp Calling item (docs/28 §2), from a change whose field is `calls`: a `connect` (an
+ * inbound call's offer, or WhatsApp's answer to our outbound offer), a `terminate`, or a call
+ * `status` (RINGING / ACCEPTED / REJECTED of our outbound call). Message statuses never come here.
  */
 export interface CallWebhookEvent {
   kind: 'connect' | 'terminate' | 'status';

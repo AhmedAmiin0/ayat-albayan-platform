@@ -13,8 +13,8 @@ import { NumbersSettings } from '@/modules/messaging/numbers/numbers.settings';
 
 /**
  * Parity and the read switch (docs/23 §2e steps 4–5, docs/23b decision 5). The switch to module is
- * REFUSED (409 parity_not_empty) while the legacy and module paths differ anywhere: a number field or
- * a notification rule's mapped part. Back to legacy is always allowed, after copying the rules'
+ * REFUSED (409 parity_not_empty) while the legacy and module paths differ anywhere: a number field
+ * or a notification rule's mapped part. Back to legacy is always allowed, after copying the rules'
  * effective values into the legacy keys. It writes comms_source (and those 8 rule keys) only: never
  * messaging_enabled, the allow-list or any other switch, so flipping never opens the send gate.
  */
@@ -57,7 +57,8 @@ export class CommunicationsService {
     }
     try {
       // Again, now that legacy reads: a rule PATCH that landed between the first copy and the flip
-      // wrote only notification_rules (module mode then). Idempotent: an unchanged copy rewrites the same values.
+      // wrote only notification_rules (module mode then). Idempotent: an unchanged copy rewrites
+      // the same values.
       if (source === 'legacy') await this.rules.copyToLegacy(actorId);
     } finally {
       await this.audit.record({

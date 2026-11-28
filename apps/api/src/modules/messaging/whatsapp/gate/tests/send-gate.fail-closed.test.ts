@@ -2,7 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { FakeResult } from '@/common/db/testing/fake-db';
 import { STUB_WA_ENV, fakeGate, rows } from '@/modules/messaging/whatsapp/gate/send-gate.fakes';
 
-// docs/26 §5 «26-P4»: off for a missing row, JSON null, a string, a number, malformed, a failed read; on only for true.
+// docs/26 §5 «26-P4»: off for a missing row, JSON null, a string, a number, malformed, a failed
+// read; on only for true.
 
 const OFF_VALUES: [string, unknown][] = [
   ['JSON null', null], ['a string', 'true'], ['a number', 1], ['an object', {}], ['an array', [true]], ['false', false],

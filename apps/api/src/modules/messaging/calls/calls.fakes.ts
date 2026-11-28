@@ -1,5 +1,6 @@
-// Test-only fakes for the calls module (excluded from the build): an in-memory wa_calls store with the
-// same compare-and-set semantics as CallsQueries, a recording Kapso calls API and the kit around them.
+// Test-only fakes for the calls module (excluded from the build): an in-memory wa_calls store with
+// the same compare-and-set semantics as CallsQueries, a recording Kapso calls API and the kit
+// around them.
 import { vi } from 'vitest';
 import { forbidden, notFound } from '@/common/http/errors';
 
@@ -111,7 +112,10 @@ export function fakeThreads(thread: { guardian_id: string | null; lead_id: strin
   return { thread: vi.fn(async () => thread), numberWindows: vi.fn(async () => []), enqueue };
 }
 
-/** A gate with the setting `on`, the Kapso line and the allow-list check (pass `refuse` to block a phone). */
+/**
+ * A gate with the setting `on`, the Kapso line and the allow-list check (pass `refuse` to block a
+ * phone).
+ */
 export function fakeGate(input: { on?: boolean; refuse?: string } = {}): CallsGate {
   return {
     enabled: async () => input.on !== false,

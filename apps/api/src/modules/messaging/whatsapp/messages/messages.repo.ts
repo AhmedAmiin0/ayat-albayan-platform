@@ -35,9 +35,9 @@ export class MessagesRepo {
 
   /**
    * failed → queued with a fresh attempt budget; null when it is no longer failed, or it was never
-   * ours to send: a message sent outside the app or imported (created_by null, attempts 0, a wamid).
-   * `restart` (a held text's retry): held again (AWAITING_REPLY, never tried as free text), its
-   * 7 days from then (scheduled_for), no old deadline. Never an app_send_unconfirmed row.
+   * ours to send: a message sent outside the app or imported (created_by null, attempts 0, a
+   * wamid). `restart` (a held text's retry): held again (AWAITING_REPLY, never tried as free text),
+   * its 7 days from then (scheduled_for), no old deadline. Never an app_send_unconfirmed row.
    */
   async requeue(id: string, restart: Date | null = null): Promise<ThreadMessageRow | null> {
     const fresh = restart ? heldAgain(restart) : {};

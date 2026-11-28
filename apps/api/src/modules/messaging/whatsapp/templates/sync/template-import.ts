@@ -13,10 +13,10 @@ import { wabaNames } from '@/modules/messaging/whatsapp/templates/names/template
 import type { MetaTemplate, TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // One line's sync, pure part (docs/12 §3.4): an approved template on a
-// line's WABA the registry does not know becomes a row on THAT line; on the restricted allow-list only
-// when it comes from the chat WABA and is one of RESTRICTED_TEMPLATE_DEFAULTS (a notifications import
-// is never flagged). Only what the sender and the composers can send is imported; the rest is skipped
-// with a reason, returned to the admin.
+// line's WABA the registry does not know becomes a row on THAT line; on the restricted allow-list
+// only when it comes from the chat WABA and is one of RESTRICTED_TEMPLATE_DEFAULTS (a notifications
+// import is never flagged). Only what the sender and the composers can send is imported; the rest
+// is skipped with a reason, returned to the admin.
 
 export type ImportRow = TablesInsert<'message_templates'>;
 
@@ -29,14 +29,18 @@ interface ImportPlan {
 const isCategory = (c: string): c is TemplateCategory =>
   (TEMPLATE_CATEGORIES as readonly string[]).includes(c);
 
-/** The highest numbered {{n}}; null when a variable is named ({{first_name}}): we send by position. */
+/**
+ * The highest numbered {{n}}; null when a variable is named ({{first_name}}): we send by position.
+ */
 function varCount(body: string): number | null {
   const vars = [...body.matchAll(/\{\{([^}]*)\}\}/g)].map((m) => (m[1] ?? '').trim());
   if (vars.some((v) => !/^\d+$/.test(v))) return null;
   return Math.max(0, ...vars.map(Number));
 }
 
-/** No header, or a plain text one: a media header or a header variable needs a part we never send. */
+/**
+ * No header, or a plain text one: a media header or a header variable needs a part we never send.
+ */
 function headerOk(comps: readonly Component[]): boolean {
   const header = comps.find((c) => c.type === 'HEADER');
   return !header || (header.format?.toUpperCase() === 'TEXT' && !(header.text ?? '').includes('{{'));
@@ -51,9 +55,10 @@ const valueFree = (b: MetaButton): boolean => {
 };
 
 /**
- * Meta's buttons as ours. A list we cannot model (a reply without a known intent, a phone button) is
- * kept as none when every button needs no value: the send then carries no button part, which Meta
- * accepts (a tap arrives as plain text). null = a button needs a value we cannot send (copy code…).
+ * Meta's buttons as ours. A list we cannot model (a reply without a known intent, a phone button)
+ * is kept as none when every button needs no value: the send then carries no button part, which
+ * Meta accepts (a tap arrives as plain text). null = a button needs a value we cannot send (copy
+ * code…).
  */
 function importButtons(comps: readonly Component[]) {
   const raw = comps.find((c) => c.type === 'BUTTONS')?.buttons ?? [];
@@ -69,7 +74,8 @@ const isSkip = (r: ImportRow | TemplateSkipReason): r is TemplateSkipReason => '
 /** The registry row for one template of `line`'s WABA, or the reason code it is not imported. */
 export function starterRow(meta: MetaTemplate, now: Date, line: WaLine = 'chat'): ImportRow | TemplateSkipReason {
   const category = meta.category.toLowerCase();
-  // An authentication template (account_code, docs/30) is never a chat starter: only our own seeded row sends one.
+  // An authentication template (account_code, docs/30) is never a chat starter: only our own seeded
+  // row sends one.
   if (!isCategory(category) || category === 'authentication') return { code: 'category', category: meta.category };
   if (!TEMPLATE_KEY_PATTERN.test(meta.name)) return { code: 'bad_key' };
   const comps = components(meta.components);
@@ -97,7 +103,8 @@ export function starterRow(meta: MetaTemplate, now: Date, line: WaLine = 'chat')
     meta_id: meta.id,
     last_checked_at: now.toISOString(),
     line,
-    // The allow-list's defaults from the chat WABA only; after the import the admin's toggle decides.
+    // The allow-list's defaults from the chat WABA only; after the import the admin's toggle
+    // decides.
     sales_starter: flagged(line, meta.name),
   };
 }
@@ -113,7 +120,8 @@ interface StarterInput {
 
 /**
  * Every approved template of one WABA the registry does not know by Meta name + language, nor as a
- * row's WABA name (template-waba-match.ts: a known one is a sync's), each once. key = the Meta name, so a name whose key is taken is skipped.
+ * row's WABA name (template-waba-match.ts: a known one is a sync's), each once. key = the Meta
+ * name, so a name whose key is taken is skipped.
  */
 export function newStarters(input: StarterInput): ImportPlan {
   const plan: ImportPlan = { rows: [], skipped: [] };

@@ -105,7 +105,10 @@ export interface ParseOptions extends ReceiveOptions {
   now: Date;
 }
 
-/** `messages` → the batch; `smb_message_echoes` → echoes; `calls` → batch.calls (docs/28, never ticks); else skipped. */
+/**
+ * `messages` → the batch; `smb_message_echoes` → echoes; `calls` → batch.calls (docs/28, never
+ * ticks); else skipped.
+ */
 function readChange(change: unknown, ctx: ParseOptions & { batch: WebhookBatch }): void {
   const kind = field(change, 'field');
   if (kind !== 'messages' && kind !== ECHO_FIELD && kind !== 'calls') return;

@@ -8,8 +8,9 @@ interface CrmHistoryShape { direction: string | null; media_mime: string | null;
 
 /**
  * The body as an old-CRM file link, or null: the whole (trimmed) body is ONE https URL in canonical
- * form (no space, userinfo, port, query or fragment; no «..» or encoded slash) under CRM_MEDIA_PREFIX.
- * Only the shape: the host is checked against the setting by allowedCrmUrl before any fetch.
+ * form (no space, userinfo, port, query or fragment; no «..» or encoded slash) under
+ * CRM_MEDIA_PREFIX. Only the shape: the host is checked against the setting by allowedCrmUrl before
+ * any fetch.
  */
 export function crmMediaUrl(body: string | null): URL | null {
   const text = body?.trim() ?? '';
@@ -47,7 +48,10 @@ export const looksCrmHistory = (row: CrmHistoryShape): boolean =>
 export const isCrmHistoryRow = (row: CrmHistoryShape & Pick<MediaMessage, 'media_id'>): boolean =>
   !row.media_id && looksCrmHistory(row);
 
-/** A public DNS name: dotted labels ending in letters (never an IP literal, localhost or a bare name). */
+/**
+ * A public DNS name: dotted labels ending in letters (never an IP literal, localhost or a bare
+ * name).
+ */
 const DNS_HOST = /^(?=.{4,100}$)([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,63}$/;
 
 /**

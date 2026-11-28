@@ -7,7 +7,8 @@ const URL = `/threads/${encodeURIComponent(PHONE)}`;
 const WHO = { guardian_id: 'g1', guardian_name: 'أم سهيلة', guardian_tz: 'Asia/Riyadh', lead_id: null, lead_status: null, teacher_id: null };
 const LESSON = { id: 'l1', starts_at: '2026-10-14T15:00:00.000Z', meeting_link: 'https://meet.google.com/abc-defg-hij', student_names: ['سهيلة'], tz: 'Asia/Riyadh' };
 
-// Owner report 2026-10-12 («it is not able to start the conversation»): a booked family with no message yet.
+// Owner report 2026-10-12 («it is not able to start the conversation»): a booked family with no
+// message yet.
 describe('H2 a number with no message yet (admin and sales: the first template names the lesson)', () => {
   let t: App;
   beforeAll(async () => {

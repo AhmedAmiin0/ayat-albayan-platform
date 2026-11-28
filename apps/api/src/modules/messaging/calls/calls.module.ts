@@ -21,10 +21,11 @@ import { CallsNumberRepo } from './store/calls-number.repo';
 import { CallsRepo } from './store/calls.repo';
 
 /**
- * WhatsApp voice calls from the chat number (docs/28), dark behind whatsapp_calls_enabled. InboxModule
- * brings the outbox (the permission request), the chats and the teacher scopes; SalesModule the sales
- * scopes; the global WhatsappModule the send gate and message views (a calls number's permission
- * request, docs/28 §10). CALL_EVENTS is the port WebhookModule feeds the parsed `calls` items into.
+ * WhatsApp voice calls from the chat number (docs/28), dark behind whatsapp_calls_enabled.
+ * InboxModule brings the outbox (the permission request), the chats and the teacher scopes;
+ * SalesModule the sales scopes; the global WhatsappModule the send gate and message views (a calls
+ * number's permission request, docs/28 §10). CALL_EVENTS is the port WebhookModule feeds the parsed
+ * `calls` items into.
  */
 @Module({
   imports: [InboxModule, SalesModule],

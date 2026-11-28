@@ -1,4 +1,5 @@
-// Test fixtures (not shipped behaviour): module-mode numbers for the reply-per-number tests (docs/23c).
+// Test fixtures (not shipped behaviour): module-mode numbers for the reply-per-number tests
+// (docs/23c).
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import type { WhatsappEnv } from '@/config/env/env';
 

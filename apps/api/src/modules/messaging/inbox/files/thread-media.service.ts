@@ -86,7 +86,10 @@ export class ThreadMediaService {
     return { ...signed, mime: file.mime };
   }
 
-  /** bubbleFile's message and stored object, unsigned: the PDF preview (pdf/) reads the same file under the same rules. */
+  /**
+   * bubbleFile's message and stored object, unsigned: the PDF preview (pdf/) reads the same file
+   * under the same rules.
+   */
   async bubbleObject(input: {
     phone: string;
     messageId: string;

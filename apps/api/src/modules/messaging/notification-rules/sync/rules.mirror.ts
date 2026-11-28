@@ -9,8 +9,8 @@ import {
 } from '@ab/shared';
 import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
 
-// The rules ↔ legacy keys mirror (docs/23b decisions 3, 5, 6): parity, the flip back to legacy and the
-// GET /settings overlay in module mode. Pure.
+// The rules ↔ legacy keys mirror (docs/23b decisions 3, 5, 6): parity, the flip back to legacy and
+// the GET /settings overlay in module mode. Pure.
 
 const MAPPED = Object.keys(RULE_LEGACY_MAP) as LegacyMappedKey[];
 
@@ -44,7 +44,10 @@ export function ruleDifferences(input: RulesInput): RuleParityDiff[] {
   });
 }
 
-/** The legacy keys as the module path's effective rules say them (the flip back, the module-mode overlay). */
+/**
+ * The legacy keys as the module path's effective rules say them (the flip back, the module-mode
+ * overlay).
+ */
 export function moduleLegacyValues(input: RulesInput): Partial<RuleSettings> {
   return Object.assign({}, ...MAPPED.map((key) => legacyValues(key, resolved(key, input, 'module')))) as Partial<RuleSettings>;
 }

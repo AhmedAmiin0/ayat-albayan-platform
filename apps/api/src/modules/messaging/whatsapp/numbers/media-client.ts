@@ -8,7 +8,10 @@ import type { MediaMessage, MediaNumber } from '@/modules/messaging/whatsapp/mes
 import type { WhatsappClient, WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
 import type { NumberClients } from './number-clients';
 
-/** Who can fetch a message's media id: a client (and the line it stands for), or the CRM (no client). */
+/**
+ * Who can fetch a message's media id: a client (and the line it stands for), or the CRM (no
+ * client).
+ */
 type MediaSource = { kind: 'client'; client: WhatsappClient; line: WaLine | null } | { kind: 'crm' } | { kind: 'none' };
 
 /**

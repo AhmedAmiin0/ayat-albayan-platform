@@ -34,7 +34,10 @@ const detailQuery = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),
 });
 
-/** ?after= (the delta refresh) with the client's outgoing rows still moving: `pending=<uuid>,<uuid>`. */
+/**
+ * ?after= (the delta refresh) with the client's outgoing rows still moving:
+ * `pending=<uuid>,<uuid>`.
+ */
 const deltaQuery = detailQuery.omit({ before: true }).extend({
   after: z.iso.datetime({ offset: true }),
   pending: z
@@ -131,7 +134,10 @@ export class ThreadsController {
     return this.audited({ sent, action: 'thread_template', user, scope, sales });
   }
 
-  /** Who is sending: a salesperson (their SalesScope), a teacher (TeacherScope) or the admin (neither). */
+  /**
+   * Who is sending: a salesperson (their SalesScope), a teacher (TeacherScope) or the admin
+   * (neither).
+   */
   private async scopes(
     user: AuthUser,
   ): Promise<{ scope: TeacherScope | null; sales: SalesScope | null }> {

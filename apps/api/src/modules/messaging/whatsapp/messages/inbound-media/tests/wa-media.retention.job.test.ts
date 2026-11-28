@@ -5,7 +5,10 @@ import { BATCH, MAX_BATCHES, WaMediaRetentionJob } from '@/modules/messaging/wha
 
 const NOW = new Date('2026-10-19T03:00:00Z');
 const cached = (n: number, mime = 'audio/ogg; codecs=opus'): CachedMedia => ({ id: `m${n}`, media_path: `m${n}.ogg`, media_mime: mime, media_id: `wamid-${n}` });
-/** A voice note / video imported from the old CRM and copied by us (no Meta media id): our only copy. */
+/**
+ * A voice note / video imported from the old CRM and copied by us (no Meta media id): our only
+ * copy.
+ */
 const crmCopy = (n: number, mime = 'audio/ogg'): CachedMedia => ({ ...cached(n, mime), media_id: null });
 const batch = (size: number, from = 0) => Array.from({ length: size }, (_, i) => cached(from + i));
 

@@ -11,8 +11,9 @@ export type SecretStatus = ReadonlyMap<string, Partial<Record<NumberSecretName, 
 const isName = (n: string): n is NumberSecretName => NUMBER_SECRET_NAMES.some((k) => k === n);
 
 /**
- * Per-number credentials in Vault (migration 20261023000621): wa_number:<id>:access_token / :app_secret.
- * No method logs a value; only read() returns one, for the in-memory line config (NumbersConfig).
+ * Per-number credentials in Vault (migration 20261023000621): wa_number:<id>:access_token /
+ * :app_secret. No method logs a value; only read() returns one, for the in-memory line config
+ * (NumbersConfig).
  */
 @Injectable()
 export class NumbersSecrets {
@@ -29,7 +30,10 @@ export class NumbersSecrets {
     return data;
   }
 
-  /** The import: legacy Vault secret `key` → this number, inside the database. false = no legacy secret. */
+  /**
+   * The import: legacy Vault secret `key` → this number, inside the database. false = no legacy
+   * secret.
+   */
   async copy(target: SecretTarget, key: string): Promise<boolean> {
     const { data, error } = await this.db.rpc('wa_number_secret_copy', { p_id: target.id, p_name: target.name, p_key: key });
     if (error) throw new Error(`number secret ${target.name} not copied: ${error.code ?? 'error'}`);

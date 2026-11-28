@@ -19,8 +19,9 @@ interface V2Context {
 /**
  * GET /admin/notifications: the catalogue with each row's effective state from the send gate, the
  * template registry and the EFFECTIVE rules (NotificationPolicy: legacy keys while comms_source =
- * legacy, notification_rules when module; every row off when the rules cannot be read, locked rows on).
- * Untagged clients get the frozen v1 shape; tagged ones v2 (rule, approval, mode, reach). Read-only.
+ * legacy, notification_rules when module; every row off when the rules cannot be read, locked rows
+ * on). Untagged clients get the frozen v1 shape; tagged ones v2 (rule, approval, mode, reach).
+ * Read-only.
  */
 @Injectable()
 export class RulesService {

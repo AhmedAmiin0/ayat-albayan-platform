@@ -3,8 +3,8 @@ import { loadEnv } from '@/config/env/env';
 import { LEGACY_ENV, numberRow } from '@/modules/messaging/numbers/numbers.fakes';
 import { planAll, type PlanInput } from './numbers.import-plan';
 
-// PR #142 item 16: an id that would fail a wa_numbers check (migration 620, ^[A-Za-z0-9_-]{1,64}$) makes
-// its role not importable in the dry run, by field NAME; the value itself is never shown.
+// PR #142 item 16: an id that would fail a wa_numbers check (migration 620, ^[A-Za-z0-9_-]{1,64}$)
+// makes its role not importable in the dry run, by field NAME; the value itself is never shown.
 
 const CHAT = { WA_CHAT_PHONE_NUMBER_ID: '1000000002', WA_CHAT_WABA_ID: '2000000002' };
 const input = (over: Record<string, string>, rows: PlanInput['rows'] = []): PlanInput => ({

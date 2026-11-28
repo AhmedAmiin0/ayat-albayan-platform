@@ -15,7 +15,10 @@ export interface LeadLink {
   created: string | null;
   /** Follow-ups already sent; a reply starts the cadence over. */
   stage: number;
-  /** The lead's assistant (assigned_to, after auto-assign); null for a guardian, teacher or applicant. */
+  /**
+   * The lead's assistant (assigned_to, after auto-assign); null for a guardian, teacher or
+   * applicant.
+   */
   owner: string | null;
 }
 
@@ -83,8 +86,8 @@ export class InboundStore {
   }
 
   /**
-   * A message from one of the academy's own numbers (OwnNumbers): the row only, already read, with no
-   * lead, guardian or lesson; false = a replay. Never touches a lead (no follow-up reset).
+   * A message from one of the academy's own numbers (OwnNumbers): the row only, already read, with
+   * no lead, guardian or lesson; false = a replay. Never touches a lead (no follow-up reset).
    */
   saveOwn(m: InboundEvent, phone: string): Promise<boolean> {
     return this.save({ m, phone, who: NOBODY, leadId: null, lessonId: null, stage: 0, read: true });
@@ -116,12 +119,17 @@ export class InboundStore {
     });
   }
 
-  /** Legacy mode: the wa_numbers row of the receiving phone_number_id, as the chat import stamps it. Never blocks the row. */
+  /**
+   * Legacy mode: the wa_numbers row of the receiving phone_number_id, as the chat import stamps it.
+   * Never blocks the row.
+   */
   private async numberOf(m: InboundEvent): Promise<string | null> {
     return m.phoneNumberId ? orFallback(this.queries.numberIdFor(m.phoneNumberId), null, 'receiving number read') : null;
   }
 
-  /** A guardian's lesson_rating tap on lesson_feedback (migration 195); runs only for a new wamid. */
+  /**
+   * A guardian's lesson_rating tap on lesson_feedback (migration 195); runs only for a new wamid.
+   */
   async rate(tap: RatingTap): Promise<void> {
     await this.ratings.record(tap);
   }

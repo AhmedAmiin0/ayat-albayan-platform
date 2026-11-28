@@ -57,7 +57,9 @@ export class SalesThreadsService {
     return { items: items.map(view), total, page: f.page, pageSize: f.pageSize };
   }
 
-  /** One page, oldest → newest, of any chat; the admin's two parallel stages (reads/thread-page.ts). */
+  /**
+   * One page, oldest → newest, of any chat; the admin's two parallel stages (reads/thread-page.ts).
+   */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     const first = isFirstPage(q);
     const at = await pageRows({ threads: this.queries, messages: this.messages }, q);

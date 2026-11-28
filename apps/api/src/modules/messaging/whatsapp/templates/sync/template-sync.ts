@@ -29,7 +29,9 @@ export function ourStatus(metaStatus: string): TemplateStatus {
 
 const componentSchema = z.object({
   type: z.string(),
-  /** HEADER only: TEXT | IMAGE | VIDEO | DOCUMENT | LOCATION (the chat import skips all but TEXT). */
+  /**
+   * HEADER only: TEXT | IMAGE | VIDEO | DOCUMENT | LOCATION (the chat import skips all but TEXT).
+   */
   format: z.string().optional(),
   text: z.string().optional(),
   buttons: z

@@ -26,7 +26,10 @@ export interface PeopleStudentRow {
   teacher: { display_name_ar: string } | null;
 }
 
-/** The newest package with the BalanceCard numbers: lessons across every live package (never a cancelled one), money of this one. */
+/**
+ * The newest package with the BalanceCard numbers: lessons across every live package (never a
+ * cancelled one), money of this one.
+ */
 function subscriptionOf({
   current,
   packages,

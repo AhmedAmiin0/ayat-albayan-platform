@@ -29,7 +29,8 @@ describe('GET /threads — the academy’s own numbers are never a chat', () => 
     for (const token of ['admin', 'sales', 'teacher']) {
       for (const url of urls) expect((await t.call({ method: 'GET', url, token })).statusCode).toBe(200);
     }
-    // 12 requests, 11 reads: a teacher with nothing unread of their own gets the empty page without one.
+    // 12 requests, 11 reads: a teacher with nothing unread of their own gets the empty page without
+    // one.
     expect(t.queries.list).toHaveBeenCalledTimes(11);
     for (const [f] of t.queries.list.mock.calls) expect(f).toMatchObject({ hide: [OWN] });
   });

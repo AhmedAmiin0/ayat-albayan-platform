@@ -12,18 +12,20 @@ import { evolutionEnv, evolutionTokenOf } from './numbers.env.evolution';
 import { ROLE_KEYS } from '@/modules/messaging/numbers/lines/numbers.lines';
 import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 
-// One number's own client config (docs/23 phase 5, docs/23c decision 3): the row's ids and ITS Vault
-// secrets only. A number never borrows another number's token or a legacy WA_* key (PR #142 item 15).
-// The shared pieces come from the config: meta = WA_API_BASE / WA_API_VERSION; kapso = KAPSO_API_BASE,
-// KAPSO_API_VERSION and the project-wide KAPSO_API_KEY (env.kapso.ts kapsoLine); crm = WACRM_API_BASE and
-// WACRM_API_KEY (env.crm.ts crmLine). Never logs a value.
+// One number's own client config (docs/23 phase 5, docs/23c decision 3): the row's ids and ITS
+// Vault secrets only. A number never borrows another number's token or a legacy WA_* key (PR #142
+// item 15). The shared pieces come from the config: meta = WA_API_BASE / WA_API_VERSION; kapso =
+// KAPSO_API_BASE, KAPSO_API_VERSION and the project-wide KAPSO_API_KEY (env.kapso.ts kapsoLine);
+// crm = WACRM_API_BASE and WACRM_API_KEY (env.crm.ts crmLine). Never logs a value.
 
 export interface NumberSource {
   row: NumberRow;
   secrets: Partial<Record<NumberSecretName, string>>;
 }
 
-/** The row's sending values checked against their env schema keys; null = one of them is invalid. */
+/**
+ * The row's sending values checked against their env schema keys; null = one of them is invalid.
+ */
 function checked({ row, secrets }: NumberSource, line: WaLine): Record<string, string> | null {
   const k = ROLE_KEYS[line];
   let bad = false;
@@ -78,7 +80,10 @@ function kapsoEnv(ids: Ids, env: Env): KapsoLineEnv | null {
   return { provider: 'kapso', base, version: env.KAPSO_API_VERSION, ...ids, apiKey };
 }
 
-/** The CRM: WACRM_API_BASE and the account-wide WACRM_API_KEY, like Kapso's project key; never a Meta token. */
+/**
+ * The CRM: WACRM_API_BASE and the account-wide WACRM_API_KEY, like Kapso's project key; never a
+ * Meta token.
+ */
 function crmEnv(env: Env): WhatsappEnv | null {
   const base = env.WACRM_API_BASE?.replace(/\/+$/, '');
   const apiKey = env.WACRM_API_KEY;
@@ -103,7 +108,10 @@ function appSecretOf({ row, secrets }: NumberSource): string | null {
   return validOverlay({ [key]: secrets.app_secret ?? '' }, () => undefined)[key] ?? null;
 }
 
-/** A wa_numbers row as the overlay carries it (enabled or not: inbound on an off number is still logged). */
+/**
+ * A wa_numbers row as the overlay carries it (enabled or not: inbound on an off number is still
+ * logged).
+ */
 export function overlayNumber(source: NumberSource, env: Env): OverlayNumber {
   const { row } = source;
   return {

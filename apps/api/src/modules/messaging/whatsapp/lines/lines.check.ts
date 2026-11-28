@@ -32,7 +32,10 @@ interface LineInput {
   env: WhatsappEnv | null;
   appId: string | null;
   checkedAt: string;
-  /** The line's driver, the NAMES of what it still lacks, a duplicate chat id, whether Kapso can deliver inbound (docs/19). */
+  /**
+   * The line's driver, the NAMES of what it still lacks, a duplicate chat id, whether Kapso can
+   * deliver inbound (docs/19).
+   */
   driver: LineDriver;
 }
 
@@ -75,8 +78,9 @@ async function appsOf(conn: GraphConn): Promise<NonNullable<LineCheckView['subsc
 
 /**
  * POST /messaging/lines/check (docs/12 §13.9): two read-only Graph GETs per configured line, both
- * lines and both calls at once, through each line's driver (a crm line: GET /me only, lines.check.crm.ts). Ids, URLs and key NAMES only: the
- * result never carries a token, key or secret.
+ * lines and both calls at once, through each line's driver (a crm line: GET /me only,
+ * lines.check.crm.ts). Ids, URLs and key NAMES only: the result never carries a token, key or
+ * secret.
  */
 @Injectable()
 export class LinesCheck {
@@ -109,8 +113,8 @@ export class LinesCheck {
     // crm (GET /me) and evolution (connectionState): no Graph call at all (docs/19).
     if (!isGraphEnv(env)) return offGraphCheck({ ...input, env, at: this });
     const conn: GraphConn = { env, fetch: this.fetch, timeoutMs: this.timeoutMs };
-    // Kapso's Meta proxy has no /{waba}/subscribed_apps (404 on staging, 2026-10-18): its inbound comes
-    // through the Kapso webhook, so a kapso line is not asked (subscribed_apps stays null).
+    // Kapso's Meta proxy has no /{waba}/subscribed_apps (404 on staging, 2026-10-18): its inbound
+    // comes through the Kapso webhook, so a kapso line is not asked (subscribed_apps stays null).
     const kapso = input.driver.provider === 'kapso';
     const [phone, apps] = await Promise.all([
       attempt('phone', () => phoneOf(conn)),

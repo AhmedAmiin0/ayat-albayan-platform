@@ -21,14 +21,20 @@ import { toVoiceOgg } from './voice-ogg';
 import { voiceMedia } from './voice-send';
 import { httpError } from '@/common/http/errors';
 
-/** 400 file_type / 413 file_too_large, or nothing. The chat's own list: an image, a PDF or a recorded voice note. */
+/**
+ * 400 file_type / 413 file_too_large, or nothing. The chat's own list: an image, a PDF or a
+ * recorded voice note.
+ */
 function assertSendable(f: { mime: string; size: number; maxBytes: number }): void {
   const problem = chatFileProblem(f, CHAT_FILE_MIMES);
   if (problem === 'file_type') throw httpError(HttpStatus.BAD_REQUEST, 'file_type');
   if (problem) throw httpError(HttpStatus.PAYLOAD_TOO_LARGE, problem);
 }
 
-/** A PDF reaches the family named .pdf whatever the client called it (the bytes were sniffed as PDF). */
+/**
+ * A PDF reaches the family named .pdf whatever the client called it (the bytes were sniffed as
+ * PDF).
+ */
 export const sentFileName = (name: string, mime: string): string =>
   mime !== 'application/pdf' || /\.pdf$/i.test(name) ? name : `${name.slice(0, 196)}.pdf`;
 
@@ -42,7 +48,9 @@ const filePath = () => httpError(HttpStatus.BAD_REQUEST, 'file_path');
  */
 @Injectable()
 export class ThreadFileSender {
-  /** Property-injected (the constructor is at the 3-parameter limit); absent → the registry default. */
+  /**
+   * Property-injected (the constructor is at the 3-parameter limit); absent → the registry default.
+   */
   @Inject(InboxSettings) private readonly settings?: InboxSettings;
   /** Property-injected like settings. */
   @Inject(ThreadQuotes) private readonly quotes?: ThreadQuotes;
@@ -56,9 +64,8 @@ export class ThreadFileSender {
   ) {}
 
   /**
-   * A signed upload URL for one file of this actor and request id; type and size checked first, then
-   * the line as send() picks it, so a chat that cannot be sent
-   * to stores nothing.
+   * A signed upload URL for one file of this actor and request id; type and size checked first,
+   * then the line as send() picks it, so a chat that cannot be sent to stores nothing.
    */
   async uploadUrl(s: ThreadSend<ThreadFileUpload>, now = new Date()): Promise<SignedUpload> {
     assertSendable({ mime: s.input.mime, size: s.input.size, maxBytes: await this.maxBytes() });
@@ -76,9 +83,9 @@ export class ThreadFileSender {
 
   /**
    * Queue the uploaded file, strictly in this order: the request id (400), the line as a text's
-   * (chatLine: 409 session_closed / 503, before any Storage call), the path is this actor's and this
-   * request's (400 file_path), Storage's own type and size, then the first bytes must be that type.
-   * A replayed request id returns the first row (the namespace is shared with text sends).
+   * (chatLine: 409 session_closed / 503, before any Storage call), the path is this actor's and
+   * this request's (400 file_path), Storage's own type and size, then the first bytes must be that
+   * type. A replayed request id returns the first row (the namespace is shared with text sends).
    */
   async send(s: ThreadSend<ThreadFileSendInput>, now = new Date()): Promise<Sent> {
     const key = dedupKey(s);

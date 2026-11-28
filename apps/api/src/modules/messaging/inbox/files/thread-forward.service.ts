@@ -29,8 +29,9 @@ const SKIPS: ReadonlySet<string> = new Set<ForwardSkip>([
 ]);
 
 /**
- * A send path refusal → the target's reason. Any other error (a DB or outbox failure) is that target's
- * `send_failed` too: the targets before it are already queued, so the forward still answers and is audited.
+ * A send path refusal → the target's reason. Any other error (a DB or outbox failure) is that
+ * target's `send_failed` too: the targets before it are already queued, so the forward still
+ * answers and is audited.
  */
 export function skipOf(e: unknown): ForwardSkip {
   if (!(e instanceof HttpException)) return 'send_failed';
@@ -39,7 +40,10 @@ export function skipOf(e: unknown): ForwardSkip {
   return SKIPS.has(code) ? (code as ForwardSkip) : 'send_failed';
 }
 
-/** 404 for a message the actor cannot read (never reveal another chat), 400 for a template or an empty row. */
+/**
+ * 404 for a message the actor cannot read (never reveal another chat), 400 for a template or an
+ * empty row.
+ */
 function assertForwardable(
   row: ThreadMessageRow | null,
   who: Omit<ForwardInput, 'input' | 'actorId'>,

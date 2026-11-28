@@ -27,13 +27,19 @@ export interface PatchPlan {
   row: RuleRowWrite;
   before: EffectiveRule;
   after: EffectiveRule;
-  /** legacy mode: the mirrored legacy keys to write with the row (parity stays empty); {} in module mode. */
+  /**
+   * legacy mode: the mirrored legacy keys to write with the row (parity stays empty); {} in module
+   * mode.
+   */
   legacy: Partial<RuleSettings>;
   /** An essential row going ON → OFF (confirmed): logged in the activity log too. */
   essentialOff: boolean;
 }
 
-/** A subset of the entry's channels that keeps its first one, in the entry's order; else 422 invalid. */
+/**
+ * A subset of the entry's channels that keeps its first one, in the entry's order; else 422
+ * invalid.
+ */
 function channelsOf(
   entry: NotificationEntry,
   wanted: readonly NotificationChannel[],
@@ -83,9 +89,10 @@ const confirmed = (text: unknown): boolean => typeof text === 'string' && text.t
 
 /**
  * PATCH /admin/notifications/:key, decided without I/O (docs/23b decision 4): manual rows 422
- * not_editable; a locked row's OFF 422 locked; channels / timing / number checked against the entry;
- * an essential row's OFF needs ESSENTIAL_OFF_TEXT (428). Unspecified fields keep the current effective
- * values. In legacy mode the mirrored legacy keys are written too, so both paths keep agreeing.
+ * not_editable; a locked row's OFF 422 locked; channels / timing / number checked against the
+ * entry; an essential row's OFF needs ESSENTIAL_OFF_TEXT (428). Unspecified fields keep the current
+ * effective values. In legacy mode the mirrored legacy keys are written too, so both paths keep
+ * agreeing.
  */
 export function planPatch(input: PlanInput): PatchPlan {
   const { entry, snapshot, patch } = input;

@@ -48,7 +48,9 @@ export class HttpWhatsappClient implements WhatsappClient {
     return this.conn !== null;
   }
 
-  /** The row's WABA template (the crm driver's too), or the old report's two sends (waba-send.ts). */
+  /**
+   * The row's WABA template (the crm driver's too), or the old report's two sends (waba-send.ts).
+   */
   sendTemplate(input: TemplateSend): Promise<WaSent> {
     const post = (to: string, build: () => GraphBody) => this.send(to, build);
     return sendGraphTemplate(input, { post, document: (d) => this.sendDocument(d) });

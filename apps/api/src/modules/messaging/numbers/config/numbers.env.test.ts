@@ -3,7 +3,8 @@ import { loadEnv } from '@/config/env/env';
 import { numberEnv, overlayNumber } from './numbers.env';
 import { LEGACY_ENV, numberRow } from '@/modules/messaging/numbers/numbers.fakes';
 
-// docs/23c: each number sends with its own ids and ITS Vault token only; never a legacy key or another number's.
+// docs/23c: each number sends with its own ids and ITS Vault token only; never a legacy key or
+// another number's.
 
 const ENV = loadEnv({ ...LEGACY_ENV, WA_ACCESS_TOKEN: 'legacy-token-fake', KAPSO_API_BASE: 'http://localhost:4010/kapso/', KAPSO_API_KEY: 'kapso-key-fake' });
 const own = { access_token: 'own-token-fake', app_secret: 'own-secret-fake' };

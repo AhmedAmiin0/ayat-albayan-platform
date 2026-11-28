@@ -30,7 +30,9 @@ type ScopeFacts = Pick<
   'crm_send_scope' | 'crm_template_scopes_missing' | 'crm_read_scopes_missing'
 >;
 
-/** The key's scopes (GET /me); a refused key or a failed call is an errors[] entry (scopes unknown). */
+/**
+ * The key's scopes (GET /me); a refused key or a failed call is an errors[] entry (scopes unknown).
+ */
 async function scopesOf(conn: CrmConn): Promise<{ scopes: string[] | null; error?: CallError }> {
   try {
     const me = meSchema.safeParse(await crmJson(conn, { path: 'me' }));
@@ -57,8 +59,8 @@ const scopeFacts = (scopes: readonly string[] | null): ScopeFacts =>
   } : UNKNOWN);
 
 /**
- * One configured crm line: ok, the key refused (credential 'crm'), or the key without messages:send;
- * and which template scopes it lacks, from the same GET /me (no other call).
+ * One configured crm line: ok, the key refused (credential 'crm'), or the key without
+ * messages:send; and which template scopes it lacks, from the same GET /me (no other call).
  */
 export async function crmLineCheck(input: CrmCheckInput): Promise<LineCheckView> {
   const { scopes, error } = await scopesOf(input.conn);

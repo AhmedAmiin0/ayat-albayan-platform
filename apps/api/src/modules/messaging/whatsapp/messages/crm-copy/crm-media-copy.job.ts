@@ -9,14 +9,19 @@ import { Ticker, TickerJob } from '@/common/jobs';
 /** Two files at a time: the batch of 20 takes ten rounds at most (10 s fetch timeout each). */
 const CONCURRENCY = 2;
 const EVERY_MS = 60_000;
-/** Not on boot, and no minute tick before it: every API test boots AppModule (the AlertsJob rule). */
+/**
+ * Not on boot, and no minute tick before it: every API test boots AppModule (the AlertsJob rule).
+ */
 const FIRST_RUN_MS = 15 * 60_000;
 
 type CopyTick =
   | { state: 'off' | 'busy' | 'done' | 'error' }
   | { state: 'copied' | 'unreachable'; outcomes: CopyOutcome[] };
 
-/** The setting as a host we may fetch from (allowedCrmUrl's own check), or null (empty or not a DNS name). */
+/**
+ * The setting as a host we may fetch from (allowedCrmUrl's own check), or null (empty or not a DNS
+ * name).
+ */
 export function copyHost(setting: string): string | null {
   const host = setting.trim().toLowerCase();
   return allowedCrmUrl(`https://${host}${CRM_MEDIA_PREFIX}f`, host) ? host : null;
@@ -24,10 +29,10 @@ export function copyHost(setting: string): string | null {
 
 /**
  * A private copy of EVERY family file imported from the old CRM, so its
- * public storage can later be made private. Only while crm_media_copy_all is on and crm_media_host is
- * a host: each minute one batch (BATCH rows, CONCURRENCY at a time) through CrmMediaCopier; when no
- * row is left, CrmMediaCopyDone turns the switch off and writes one audit row. The CRM's storage not
- * answering any row of a round (CRM_UNREACHABLE) ends the tick with a warning and counts no
+ * public storage can later be made private. Only while crm_media_copy_all is on and crm_media_host
+ * is a host: each minute one batch (BATCH rows, CONCURRENCY at a time) through CrmMediaCopier; when
+ * no row is left, CrmMediaCopyDone turns the switch off and writes one audit row. The CRM's storage
+ * not answering any row of a round (CRM_UNREACHABLE) ends the tick with a warning and counts no
  * attempt. Ticks never overlap (a slow one makes the next return 'busy'); idempotent (a copied row
  * leaves the batch query, a failing one is capped). Never edits a body, never deletes. In-process
  * timer like WaMediaRetentionJob, in the one job runner only (@BackgroundJob: `running` and the

@@ -7,7 +7,9 @@ export interface CallSdp {
   answer_sdp: string | null;
 }
 
-/** One wa_calls row (migration 20261026000740) with its SDPs. The text checks hold the shared enums. */
+/**
+ * One wa_calls row (migration 20261026000740) with its SDPs. The text checks hold the shared enums.
+ */
 export type CallRow = Tables<'wa_calls'> & CallSdp;
 export type NewCall = TablesInsert<'wa_calls'> & { offer_sdp?: string | null };
 

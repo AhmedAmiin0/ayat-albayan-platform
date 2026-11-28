@@ -19,7 +19,10 @@ function flat(row: Joined): CallRow {
   return { ...call, offer_sdp: one?.offer_sdp ?? null, answer_sdp: one?.answer_sdp ?? null };
 }
 
-/** wa_calls and wa_call_sdp (service role; RLS keeps clients read-only, and away from the SDPs). UTC ISO times. */
+/**
+ * wa_calls and wa_call_sdp (service role; RLS keeps clients read-only, and away from the SDPs). UTC
+ * ISO times.
+ */
 @Injectable()
 export class CallsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -63,8 +66,9 @@ export class CallsRepo {
   }
 
   /**
-   * Compare-and-set on the status: the moved row, or null when someone else moved it first. The answer
-   * SDP is written once (only while none is stored), the rest only while the row still has `from`.
+   * Compare-and-set on the status: the moved row, or null when someone else moved it first. The
+   * answer SDP is written once (only while none is stored), the rest only while the row still has
+   * `from`.
    */
   async move(m: CallMove): Promise<CallRow | null> {
     const { answer_sdp, ...patch } = m.patch;
@@ -81,14 +85,19 @@ export class CallsRepo {
     return this.get(m.id);
   }
 
-  /** Every call not ended yet (a handful): the incoming-call screen, the busy check and the sweep. */
+  /**
+   * Every call not ended yet (a handful): the incoming-call screen, the busy check and the sweep.
+   */
   async live(): Promise<CallRow[]> {
     const { data, error } = await this.db.from('wa_calls').select(SELECT).neq('status', 'ended').order('started_at', { ascending: false }).limit(50);
     check(error);
     return (data ?? []).map(flat);
   }
 
-  /** The calls log, newest first (no SDP); `phones` narrows it (a teacher's families), `phone` to one chat. */
+  /**
+   * The calls log, newest first (no SDP); `phones` narrows it (a teacher's families), `phone` to
+   * one chat.
+   */
   async list(q: { phone?: string | undefined; phones?: readonly string[] | null; limit: number }): Promise<CallRow[]> {
     let query = this.db.from('wa_calls').select('*');
     if (q.phone) query = query.eq('phone_e164', q.phone);

@@ -11,7 +11,8 @@ import { own } from '@/common/infra/own-value';
 import type { Component } from './template-sync';
 
 // message_templates.display from Meta's components: what the guardian SEES, so the
-// chat draws the template like WhatsApp. Every button is kept, the ones the sender cannot model too.
+// chat draws the template like WhatsApp. Every button is kept, the ones the sender cannot model
+// too.
 
 /** Meta's button types → ours; an authentication template's OTP button shows as «copy code». */
 const BUTTONS = z.record(z.string(), templateButtonKindSchema).readonly().decode({

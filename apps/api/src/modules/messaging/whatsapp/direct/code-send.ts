@@ -13,14 +13,18 @@ import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp
 /** The line every sign-in / password code leaves from (docs/30 §4). */
 const CODE_LINE = 'chat' as const;
 
-/** sent | unavailable (gate closed, template not approved, no line / number can send it) | failed (the provider refused). */
+/**
+ * sent | unavailable (gate closed, template not approved, no line / number can send it) | failed
+ * (the provider refused).
+ */
 type CodeSendResult = { status: 'sent' } | { status: 'unavailable' } | { status: 'failed'; error: string };
 
 /**
  * The sign-in / password code (docs/30 §4): ONE authentication-template send, now, through the same
- * MessageDispatch the outbox uses (driver per line; module mode routes it to a number). Never queued:
- * a `messages` row would keep the code in template_params, readable by staff in the chat. Respects the
- * send gate and WA_ALLOWED_RECIPIENTS (dispatch.ready). Never retried: the user asks again.
+ * MessageDispatch the outbox uses (driver per line; module mode routes it to a number). Never
+ * queued: a `messages` row would keep the code in template_params, readable by staff in the chat.
+ * Respects the send gate and WA_ALLOWED_RECIPIENTS (dispatch.ready). Never retried: the user asks
+ * again.
  */
 /**
  * Drivers a login code never leaves from: the CRM (its inbox shows the code) and Evolution (an
@@ -38,7 +42,10 @@ export class CodeSend {
     @Optional() @Inject(NumberRoutes) private readonly routes?: NumberRoutes,
   ) {}
 
-  /** Can a code go out now? The template approved, the gate open and a chat line / number that can send it. */
+  /**
+   * Can a code go out now? The template approved, the gate open and a chat line / number that can
+   * send it.
+   */
   async available(): Promise<boolean> {
     const template = await this.template();
     if (!template || !(await this.gate.open())) return false;
@@ -65,8 +72,8 @@ export class CodeSend {
 
   /**
    * The CHAT line only (login codes leave from the chat number), never a fallback to
-   * notifications: no chat line (or number) that can send = unavailable. Legacy: the chat line's own
-   * client. Module mode: routing over the enabled chat numbers only. Never a crm line or number
+   * notifications: no chat line (or number) that can send = unavailable. Legacy: the chat line's
+   * own client. Module mode: routing over the enabled chat numbers only. Never a crm line or number
    * (docs/30 §4): the CRM's inbox would show the code to its users, and its OTP button is untested.
    */
   private async via(row: DueMessage, template: TemplateRow): Promise<SendVia | null> {
@@ -83,7 +90,10 @@ export class CodeSend {
   }
 }
 
-/** An in-memory row for the dispatch: the code fills {{1}} and the copy-code button; nothing is stored. */
+/**
+ * An in-memory row for the dispatch: the code fills {{1}} and the copy-code button; nothing is
+ * stored.
+ */
 export function codeRow(input: { phone: string; code: string; template: Pick<TemplateRow, 'key'> }): DueMessage {
   return {
     id: 'account-code',

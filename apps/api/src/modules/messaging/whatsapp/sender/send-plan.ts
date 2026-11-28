@@ -16,13 +16,21 @@ import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp
 
 /** How long a claimed row is held: a worker that dies mid-send frees it after this. */
 export const CLAIM_LEASE_MS = 2 * 60_000;
-/** error_code written with the claim, before Meta is called (write-ahead; see SenderQueries.claim). */
+/**
+ * error_code written with the claim, before Meta is called (write-ahead; see SenderQueries.claim).
+ */
 export const SENDING = 'sending';
-/** error_code of a row Meta may or may not have sent: the admin checks WhatsApp before resending. */
+/**
+ * error_code of a row Meta may or may not have sent: the admin checks WhatsApp before resending.
+ */
 export const UNCERTAIN = 'uncertain';
-/** error_code while the admin sends it from their own WhatsApp (M3); the UI asks them to confirm. */
+/**
+ * error_code while the admin sends it from their own WhatsApp (M3); the UI asks them to confirm.
+ */
 export const HANDED_OFF = 'handed_off';
-/** An expired / revoked token holds the queue this long before the next try (no attempt counted). */
+/**
+ * An expired / revoked token holds the queue this long before the next try (no attempt counted).
+ */
 export const AUTH_HOLD_MS = 15 * 60_000;
 export { KAPSO_AUTH, CRM_AUTH, EVOLUTION_AUTH } from '@/modules/messaging/whatsapp/drivers/driver-codes';
 export { CRM_RATE_LIMITED } from '@/modules/messaging/whatsapp/drivers/crm/crm-plan';
@@ -65,8 +73,8 @@ function errorText(error: unknown): string {
  * row, uncounted, as its lane's probe (hold/line-down). An auth error (190 / 10 / 200, or Kapso /
  * the CRM refusing its key) holds the row, uncounted: the credential is broken.
  * Meta's 131042 (no payment method on the WABA; meta, kapso) holds it too (hold/payment-hold).
- * The crm driver: a 429 waits for its Retry-After (uncounted); any other CRM error code fails at once.
- * `attempts` counts this try.
+ * The crm driver: a 429 waits for its Retry-After (uncounted); any other CRM error code fails at
+ * once. `attempts` counts this try.
  */
 export function failurePlan(input: PlanInput): FailurePlan {
   const info = input.error instanceof WaError ? input.error.info : null;

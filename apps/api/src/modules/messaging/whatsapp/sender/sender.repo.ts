@@ -19,14 +19,19 @@ export type { DueMessage } from './sender.due';
 const NOT_CHAT_TEXT = 'template_key.not.is.null,line.is.null,line.neq.chat';
 interface DueInput { keys: readonly string[]; now: Date; limit: number; lane?: Lane }
 
-/** The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set. */
+/**
+ * The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set.
+ */
 @Injectable()
 export class SenderRepo {
   /** WA_ALLOWED_RECIPIENTS, read per call (docs/12 §13.5a): rows to other phones are never read. */
   get allowed(): readonly string[] | null {
     return allowedRecipients(loadEnv());
   }
-  /** Chat client configured, read per call: without it chat-stamped texts can never send (review A, C1). */
+  /**
+   * Chat client configured, read per call: without it chat-stamped texts can never send (review A,
+   * C1).
+   */
   get chatConfigured(): boolean {
     return lineEnvs(loadEnv()).chat !== null;
   }
@@ -37,7 +42,9 @@ export class SenderRepo {
     @Optional() @Inject(TemplatesRepo) private readonly templates?: TemplatesRepo,
   ) {}
 
-  /** A staff alert's teacher as on record now (send-time staffStale); undefined for any other row. */
+  /**
+   * A staff alert's teacher as on record now (send-time staffStale); undefined for any other row.
+   */
   staffAtSend(row: DueMessage): Promise<StaffAtSend[] | undefined> {
     return staffAtSend(this.db, row);
   }
@@ -90,11 +97,12 @@ export class SenderRepo {
   }
 
   /**
-   * attempts n → n+1, a lease, and error_code SENDING written ahead of the Meta call: if the outcome
-   * is never recorded (the «sent» write failed, the process died) the next pass sees SENDING and
-   * asks the admin instead of sending again. null when another worker (or the admin) got there first.
-   * `line` (two lines only, docs/12 §13.2) stamps the line used; absent = the update is unchanged.
-   * `numberId` (module mode only, docs/23 phase 3) stamps messages.number_id; absent under legacy.
+   * attempts n → n+1, a lease, and error_code SENDING written ahead of the Meta call: if the
+   * outcome is never recorded (the «sent» write failed, the process died) the next pass sees
+   * SENDING and asks the admin instead of sending again. null when another worker (or the admin)
+   * got there first. `line` (two lines only, docs/12 §13.2) stamps the line used; absent = the
+   * update is unchanged. `numberId` (module mode only, docs/23 phase 3) stamps messages.number_id;
+   * absent under legacy.
    */
   async claim(input: { id: string; attempts: number; now: Date; line?: WaLine; numberId?: string }): Promise<number | null> {
     const attempts = input.attempts + 1;
@@ -136,8 +144,8 @@ export class SenderRepo {
 
   /**
    * Never sent, no push: past its use (`expired`: a reminder after the lesson started), no longer
-   * wanted (`stale`: its lesson was cancelled, the lead paused or replied; the reason in error_text)
-   * or held (`auto_off`: automatic messages are OFF; the admin's retry re-queues it).
+   * wanted (`stale`: its lesson was cancelled, the lead paused or replied; the reason in
+   * error_text) or held (`auto_off`: automatic messages are OFF; the admin's retry re-queues it).
    */
   async expire(id: string, why: { code: 'expired' | 'stale' | 'auto_off'; text: string }): Promise<void> {
     const { error } = await this.db

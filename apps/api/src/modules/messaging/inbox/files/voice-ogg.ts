@@ -3,10 +3,14 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { inTempDir } from './temp-dir';
 
-/** Runs ffmpeg with these arguments; rejects on a non-zero exit, a missing binary or the timeout. */
+/**
+ * Runs ffmpeg with these arguments; rejects on a non-zero exit, a missing binary or the timeout.
+ */
 export type FfmpegRun = (args: readonly string[]) => Promise<void>;
 
-/** Long enough for a 10-minute note on a small instance; a stuck ffmpeg never holds a send longer. */
+/**
+ * Long enough for a 10-minute note on a small instance; a stuck ffmpeg never holds a send longer.
+ */
 const FFMPEG_TIMEOUT_MS = 30_000;
 
 /**
@@ -32,9 +36,10 @@ const spawnFfmpeg: FfmpegRun = (args) =>
   });
 
 /**
- * A recorded voice note (AAC in MP4, as Android records it) as ogg/opus mono, or null when ffmpeg is
- * missing or fails: the caller then sends the m4a as plain audio. Through temp files, never stdin:
- * Android's MP4 has its index (moov) at the end, which a pipe cannot seek to. The files are always removed.
+ * A recorded voice note (AAC in MP4, as Android records it) as ogg/opus mono, or null when ffmpeg
+ * is missing or fails: the caller then sends the m4a as plain audio. Through temp files, never
+ * stdin: Android's MP4 has its index (moov) at the end, which a pipe cannot seek to. The files are
+ * always removed.
  */
 export function toVoiceOgg(
   bytes: Uint8Array,

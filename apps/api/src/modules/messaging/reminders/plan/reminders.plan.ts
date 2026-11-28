@@ -31,7 +31,10 @@ export interface ReminderLesson {
   ends_at: string;
   status: LessonStatus;
   meeting_link: string | null;
-  /** meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in fakes. */
+  /**
+   * meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in
+   * fakes.
+   */
   teacher:
     | ({ id: string; display_name_ar: string; phone_e164: string | null; tz: string; meeting_mode?: string | null } & StaffOnRecord)
     | null;
@@ -44,10 +47,15 @@ export interface ReminderPlanInput {
   minutesBefore: number;
   /** lesson_reminder on (default); false = no same-day guardian reminder. */
   sameDay?: boolean;
-  /** lesson_reminder_24h on AND approved in the registry; dayBeforeAt = its send_at_local (null = the lesson's time). */
+  /**
+   * lesson_reminder_24h on AND approved in the registry; dayBeforeAt = its send_at_local (null =
+   * the lesson's time).
+   */
   dayBefore: boolean;
   dayBeforeAt?: string | null;
-  /** teacher_lesson_reminder on (R-NOT-03; default on) and its lead time (default minutesBefore). */
+  /**
+   * teacher_lesson_reminder on (R-NOT-03; default on) and its lead time (default minutesBefore).
+   */
   teacherReminders?: boolean;
   teacherMinutesBefore?: number;
   /** The web origin (firstWebOrigin): the teacher's CRM reminder links are absolute. */
@@ -134,7 +142,9 @@ export function needsConfirmation(lessons: readonly ReminderLesson[], at: { now:
   });
 }
 
-/** The push for one such lesson. One text for every admin, so the time is the academy's (Riyadh). */
+/**
+ * The push for one such lesson. One text for every admin, so the time is the academy's (Riyadh).
+ */
 export function confirmationPush(lesson: ReminderLesson): PushEvent {
   return {
     subject: lesson.id,

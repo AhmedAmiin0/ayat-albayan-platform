@@ -7,8 +7,9 @@ import { DbRulesReader } from './rules.store';
 import { RulesTable, type RuleRowWrite } from './rules.table';
 
 /**
- * Where the rule writes land: the row, the mirrored legacy keys (legacy mode, the flip back) and the
- * snapshot cache, which is dropped after every write (even a failed one), here and on the worker.
+ * Where the rule writes land: the row, the mirrored legacy keys (legacy mode, the flip back) and
+ * the snapshot cache, which is dropped after every write (even a failed one), here and on the
+ * worker.
  */
 @Injectable()
 export class RulesPersist {

@@ -19,7 +19,10 @@ export interface NumberSetInput {
   number_id: string | null;
 }
 
-/** Decision 4: its own approved row, else (no row yet) the role's default number when the row is approved. */
+/**
+ * Decision 4: its own approved row, else (no row yet) the role's default number when the row is
+ * approved.
+ */
 export function approvedOn(
   row: TemplateRow,
   ref: NumberRef,
@@ -30,7 +33,9 @@ export function approvedOn(
   return ref.is_default && ref.purpose === row.line && row.status === 'approved';
 }
 
-/** PUT /messaging/templates/:key/number (audited, template_number_set); the same number is a no-op. */
+/**
+ * PUT /messaging/templates/:key/number (audited, template_number_set); the same number is a no-op.
+ */
 export async function setTemplateNumber(
   deps: NumberSetDeps,
   input: NumberSetInput,

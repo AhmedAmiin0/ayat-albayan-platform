@@ -27,7 +27,9 @@ const publicResult = (r: ForwardOutcome): ForwardResult =>
     ? { phone: r.phone, sent: true, message_id: r.message_id }
     : { phone: r.phone, sent: false, reason: r.reason };
 
-/** What this request newly did: a copy that already existed (a retry) was audited the first time. */
+/**
+ * What this request newly did: a copy that already existed (a retry) was audited the first time.
+ */
 export const freshResults = (results: readonly ForwardOutcome[]): ForwardOutcome[] =>
   results.filter((r) => !(r.sent && r.replayed === true));
 

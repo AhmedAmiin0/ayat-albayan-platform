@@ -69,14 +69,19 @@ export class WebhookRepo {
     return data ? new Date(data.created_at) : null;
   }
 
-  /** The wa_numbers row Meta names by this phone_number_id (as the chat import stamps it); null when none. */
+  /**
+   * The wa_numbers row Meta names by this phone_number_id (as the chat import stamps it); null when
+   * none.
+   */
   async numberIdFor(phoneNumberId: string): Promise<string | null> {
     const { data, error } = await this.db.from('wa_numbers').select('id').eq('phone_number_id', phoneNumberId).maybeSingle();
     check(error);
     return data?.id ?? null;
   }
 
-  /** Removes an inbound row by wamid (its quick reply failed: Meta's re-send must not be a replay). */
+  /**
+   * Removes an inbound row by wamid (its quick reply failed: Meta's re-send must not be a replay).
+   */
   async deleteInbound(waMessageId: string): Promise<void> {
     const { error } = await this.db.from('messages').delete().eq('wa_message_id', waMessageId).eq('direction', 'inbound');
     check(error);
@@ -107,7 +112,9 @@ export class WebhookRepo {
     return (data ?? []).length > 0;
   }
 
-  /** The lesson exists and one of its students is this guardian's child (a payload is not trusted). */
+  /**
+   * The lesson exists and one of its students is this guardian's child (a payload is not trusted).
+   */
   async guardianLesson(input: { lessonId: string; guardianId: string }): Promise<boolean> {
     const { data, error } = await this.db
       .from('lesson_students')

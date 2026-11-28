@@ -10,7 +10,8 @@ import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due'
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // Module mode's per-row number pick (docs/23 phase 5, contract docs/23c decisions 3–5). Pure: the
-// sender loads a RoutePass once per pass and asks routeOf() for every due row. Legacy never gets here.
+// sender loads a RoutePass once per pass and asks routeOf() for every due row. Legacy never gets
+// here.
 
 /** The number a row leaves from, and its role (stamped as messages.line at claim, decision 8). */
 export interface NumberRoute {
@@ -24,10 +25,15 @@ export type Approvals = ReadonlyMap<string, ReadonlyMap<string, string>>;
 /** What one pass routes with. */
 export interface RoutePass {
   numbers: readonly RoutableNumber[];
-  /** template key → its catalogue row's notification_rules.number_id (absent / null = none chosen). */
+  /**
+   * template key → its catalogue row's notification_rules.number_id (absent / null = none chosen).
+   */
   ruleNumbers: ReadonlyMap<string, string | null>;
   approvals: Approvals;
-  /** The crm numbers (docs/19): their approval is message_templates.status (set by hand), never a per-number row. */
+  /**
+   * The crm numbers (docs/19): their approval is message_templates.status (set by hand), never a
+   * per-number row.
+   */
   crm?: ReadonlySet<string>;
   /** The keys a crm number may send (gateApprovedKeys); absent = message_templates.status. */
   crmApproved?: ReadonlySet<string>;
@@ -94,9 +100,10 @@ const crmApproved = (pass: RoutePass, template: Pick<TemplateRow, 'key' | 'statu
   pass.crmApproved?.has(template.key) ?? template.status === 'approved';
 
 /**
- * Decision 4: approved on a number = its message_template_numbers row says approved; with no row yet,
- * the role's default number counts as approved when message_templates.status is approved. A crm number
- * reads message_templates.status only: a row left from its meta days must not override the hand-set status.
+ * Decision 4: approved on a number = its message_template_numbers row says approved; with no row
+ * yet, the role's default number counts as approved when message_templates.status is approved. A
+ * crm number reads message_templates.status only: a row left from its meta days must not override
+ * the hand-set status.
  */
 export function approvedOn(pass: RoutePass, template: Pick<TemplateRow, 'key' | 'line' | 'status'>): (id: string) => boolean {
   const rows = pass.approvals.get(template.key);
@@ -109,7 +116,10 @@ export function approvedOn(pass: RoutePass, template: Pick<TemplateRow, 'key' | 
   };
 }
 
-/** The row's number now; null = none can send it (it stays queued, untouched). Sessions never fall back. */
+/**
+ * The row's number now; null = none can send it (it stays queued, untouched). Sessions never fall
+ * back.
+ */
 export function routeOf(
   pass: RoutePass,
   at: { row: DueMessage; template: TemplateRow | null },

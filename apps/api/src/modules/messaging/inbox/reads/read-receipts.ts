@@ -33,8 +33,8 @@ export class ReadReceipts {
   ) {}
 
   /**
-   * `upTo`: the newest row the caller shows (a created_at), or the ids of the rows it shows; a row it
-   * does not show stays unread.
+   * `upTo`: the newest row the caller shows (a created_at), or the ids of the rows it shows; a row
+   * it does not show stays unread.
    */
   async open(
     phone: string,

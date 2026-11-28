@@ -28,15 +28,15 @@ interface InboundOptions {
 /**
  * One inbound WhatsApp message (R-MSG-04, R-LEAD-01): lead upsert, the stored row, quick reply
  * (a lesson_rating tap is stored on lesson_feedback, migration 195), the admin push and the
- * assistants' push (docs/21 §6: the family's owners, else every assistant). Replay-safe: Meta re-sends a wamid until it gets a 200, and a wamid already
- * stored stops here before any side effect (no second confirm, no second push). If the quick
- * reply fails (DB down) while Meta still waits for our answer, the row just stored is removed and
- * the error goes up (500): Meta's re-send then finds no row and does it all again. Past the
- * deadline Meta already has its 200 and will not re-send, so the row stays (the message is in the
- * inbox; only the confirm / pause and the push are lost) and the error is only logged.
- * a pending flag on the row + a sweeper would retry those too; add it if logs show any.
- * A reaction, edit or revoke stops first (marker()): no lead, reply, push or unread.
- * The ONE gate for the academy's own numbers: a message from one of them is stored
+ * assistants' push (docs/21 §6: the family's owners, else every assistant). Replay-safe: Meta
+ * re-sends a wamid until it gets a 200, and a wamid already stored stops here before any side
+ * effect (no second confirm, no second push). If the quick reply fails (DB down) while Meta still
+ * waits for our answer, the row just stored is removed and the error goes up (500): Meta's re-send
+ * then finds no row and does it all again. Past the deadline Meta already has its 200 and will not
+ * re-send, so the row stays (the message is in the inbox; only the confirm / pause and the push are
+ * lost) and the error is only logged. a pending flag on the row + a sweeper would retry those too;
+ * add it if logs show any. A reaction, edit or revoke stops first (marker()): no lead, reply, push
+ * or unread. The ONE gate for the academy's own numbers: a message from one of them is stored
  * (audit, already read) and nothing else runs: no lead, quick reply, rating or push.
  */
 @Injectable()

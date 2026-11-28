@@ -18,7 +18,10 @@ import { WaError, WHATSAPP_LINES, type TemplateRow, type WaSent, type WhatsappCl
 /** Refuses every call before any request (WaError code null, status 0). */
 const UNCONFIGURED = whatsappClient(null);
 
-/** Where a row leaves from: a line (legacy: today's two line clients) or a number (module mode, docs/23c). */
+/**
+ * Where a row leaves from: a line (legacy: today's two line clients) or a number (module mode,
+ * docs/23c).
+ */
 export type SendVia = WaLine | NumberRoute;
 
 /**
@@ -36,7 +39,8 @@ export async function documentLink(storage: StorageService, doc: TemplateDocumen
 
 /**
  * A 7-day signed link to a file staff sent from the chat, signed again on
- * every try. Only wa-media paths under out/ are ever signed: never an inbound cache, never a report.
+ * every try. Only wa-media paths under out/ are ever signed: never an inbound cache, never a
+ * report.
  */
 export async function mediaLink(storage: StorageService, path: string): Promise<string> {
   if (!isSentFilePath(path)) throw new WaError(`media path ${path} is not a sent file`, { code: 100, status: 0 });
@@ -65,7 +69,9 @@ export class MessageDispatch {
     private readonly storage: StorageService,
   ) {}
 
-  /** Checked before the claim: false leaves the row queued and untouched (no attempt, no Meta call). */
+  /**
+   * Checked before the claim: false leaves the row queued and untouched (no attempt, no Meta call).
+   */
   ready(row: DueMessage, via: SendVia): boolean {
     return this.client(via).configured() && recipientAllowed(this.allowed, row.phone_e164);
   }
@@ -134,14 +140,20 @@ export class MessageDispatch {
     return client.sendCallPermissionRequest({ to: row.phone_e164, text: row.body ?? '' });
   }
 
-  /** A reaction through the line's driver; the CRM has none (the API refuses it before the queue, this is the backstop). */
+  /**
+   * A reaction through the line's driver; the CRM has none (the API refuses it before the queue,
+   * this is the backstop).
+   */
   private sendReaction(row: DueMessage, r: { via: SendVia; messageId: string; emoji: string | null }): Promise<WaSent> {
     const client = this.client(r.via);
     if (!client.sendReaction) throw new WaError('this line cannot send a reaction', { code: 100, status: 0 });
     return client.sendReaction({ to: row.phone_e164, messageId: r.messageId, emoji: r.emoji });
   }
 
-  /** A line's client, or the number's own; a number that cannot send now gets a client that refuses every call. */
+  /**
+   * A line's client, or the number's own; a number that cannot send now gets a client that refuses
+   * every call.
+   */
   private client(via: SendVia): WhatsappClient {
     if (typeof via === 'string') return this.lines[via];
     return this.numbers.client(via.numberId) ?? UNCONFIGURED;

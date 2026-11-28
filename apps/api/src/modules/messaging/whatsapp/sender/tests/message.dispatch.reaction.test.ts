@@ -9,7 +9,8 @@ import { MessageDispatch } from '@/modules/messaging/whatsapp/sender/message.dis
 import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 
 // Message reactions: a queued reaction row goes out as Meta's {type:'reaction'} on the
-// meta and kapso drivers (the same body), never as a text; the crm driver has no reaction call. No network.
+// meta and kapso drivers (the same body), never as a text; the crm driver has no reaction call. No
+// network.
 
 const client = {
   sendTemplate: vi.fn(),

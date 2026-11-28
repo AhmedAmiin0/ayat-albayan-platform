@@ -7,9 +7,10 @@ import { reachInfo, TIMEOUT_INFO } from '@/modules/messaging/whatsapp/drivers/tr
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { recordingFetch } from '@/modules/messaging/whatsapp/drivers/crm/crm-fetch';
 
-// One call to the academy CRM's public REST API (docs/19 «crm driver»): Bearer key, JSON, timeout, and the
-// CRM's envelope ({data} / {error:{code,message}}) → WaError. The CRM has no idempotency key, so an answer
-// that may have come after the CRM reached Meta is `uncertain` (never resent automatically).
+// One call to the academy CRM's public REST API (docs/19 «crm driver»): Bearer key, JSON, timeout,
+// and the CRM's envelope ({data} / {error:{code,message}}) → WaError. The CRM has no idempotency
+// key, so an answer that may have come after the CRM reached Meta is `uncertain` (never resent
+// automatically).
 
 export interface CrmConn {
   env: CrmLineEnv;
@@ -28,11 +29,16 @@ const errorSchema = z.object({
   error: z.object({ code: z.string().optional(), message: z.string().optional() }),
 });
 
-/** The CRM's own refusals that mean nothing reached WhatsApp: fail with its code, never uncertain. */
+/**
+ * The CRM's own refusals that mean nothing reached WhatsApp: fail with its code, never uncertain.
+ */
 const NOT_SENT_5XX = new Set(['meta_error', 'template_malformed']);
 /** A proxy's 503 page (no envelope): the CRM itself is down, so the lane is held, not the row. */
 const CRM_DOWN = 'http_503';
-/** The CRM's own WhatsApp connection is down (400): the line, not the message, so held like a refused key. */
+/**
+ * The CRM's own WhatsApp connection is down (400): the line, not the message, so held like a
+ * refused key.
+ */
 const LINE_DOWN = 'whatsapp_not_configured';
 const RETRY_DEFAULT_MS = 60_000;
 const RETRY_MAX_MS = 60 * 60_000;
@@ -96,7 +102,10 @@ function crmErrorOf(res: CrmAnswer): WaError {
   return new WaError(message, base);
 }
 
-/** The CRM's error code and message; a body that is not its envelope (a proxy's page) is http_<status> only, never shown. */
+/**
+ * The CRM's error code and message; a body that is not its envelope (a proxy's page) is
+ * http_<status> only, never shown.
+ */
 function envelopeOf(res: Pick<CrmAnswer, 'status' | 'body'>): {
   crmCode: string;
   said: string | undefined;
@@ -127,7 +136,8 @@ const dataSchema = z.union([
   z.unknown().transform(() => null),
 ]);
 
-// The CRM never redirects: a 3xx (a wrong base) is a plain «not sent» failure, never a POST turned GET.
+// The CRM never redirects: a 3xx (a wrong base) is a plain «not sent» failure, never a POST turned
+// GET.
 const crmHttp = (conn: CrmConn) => {
   const transport = recordingFetch(conn.fetch);
   return createHttp({

@@ -30,8 +30,8 @@ export function healthRows(views: readonly LineCheckView[]): KeptRow[] {
 type KeptRow = LineHealthView & { phone_number_id: string | null };
 
 /**
- * #134 item 9: a kept row counts only while its phone id is still the line's (a swapped number, or a
- * row from before the column, shows «not checked yet» until the next check).
+ * #134 item 9: a kept row counts only while its phone id is still the line's (a swapped number, or
+ * a row from before the column, shows «not checked yet» until the next check).
  */
 export function currentRows(rows: readonly KeptRow[], ids: Partial<Record<LineHealthView['line'], string>>): LineHealthView[] {
   return rows.flatMap(({ phone_number_id: id, ...row }) => (id !== null && id === ids[row.line] ? [row] : []));

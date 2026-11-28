@@ -2,7 +2,8 @@ import type { OverlayNumber } from '@/common/configuration/integrations/numbers-
 import { messagingNumbers, routable, type Approvals, type RoutePass } from './number-route';
 import { STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// Test-only (excluded from the build): numbers as the overlay carries them, and one pass's routing input.
+// Test-only (excluded from the build): numbers as the overlay carries them, and one pass's routing
+// input.
 
 export const N1 = '00000000-0000-4000-8000-0000000000a1';
 export const N2 = '00000000-0000-4000-8000-0000000000a2';

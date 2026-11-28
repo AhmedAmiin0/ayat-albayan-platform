@@ -35,10 +35,10 @@ export function servable(msg: MediaMessage, allow: (mime: string | null) => bool
 }
 
 /**
- * W6's gate (a chat bubble, a forward): a family's file (servable with isChatViewMime), or an ECHO, a
- * file the academy phone sent from the WhatsApp Business app (outbound with Meta's media id, docs/19
- * coexistence). An echo is fetched and cached exactly as an inbound file; an outbound row with neither
- * a stored file nor a media id (imported history) is 410 media_expired.
+ * W6's gate (a chat bubble, a forward): a family's file (servable with isChatViewMime), or an ECHO,
+ * a file the academy phone sent from the WhatsApp Business app (outbound with Meta's media id,
+ * docs/19 coexistence). An echo is fetched and cached exactly as an inbound file; an outbound row
+ * with neither a stored file nor a media id (imported history) is 410 media_expired.
  */
 export function chatServable(msg: MediaMessage): MediaMessage {
   if (msg.direction === 'inbound') return servable(msg, isChatViewMime);
@@ -64,7 +64,10 @@ const fromCrmStorage = (msg: MediaMessage): boolean =>
 export class InboundMedia {
   /** Module mode's per-number clients (in memory; legacy finds none and uses the lines). */
   private readonly numbers = new NumberClients();
-  /** Property injection keeps the constructor at three parameters; absent (unit tests) = old-CRM files are 410. */
+  /**
+   * Property injection keeps the constructor at three parameters; absent (unit tests) = old-CRM
+   * files are 410.
+   */
   @Optional() @Inject(CrmHistoryMedia) private readonly crm?: CrmHistoryMedia;
 
   constructor(
@@ -73,7 +76,9 @@ export class InboundMedia {
     private readonly storage: StorageService,
   ) {}
 
-  /** The message, checked to be a file we can serve; the caller checks it belongs to the right chat. */
+  /**
+   * The message, checked to be a file we can serve; the caller checks it belongs to the right chat.
+   */
   async load(messageId: string, allow: (mime: string | null) => boolean = isInvoiceMime): Promise<MediaMessage> {
     const msg = await this.queries.message(messageId);
     if (!msg) throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
@@ -92,9 +97,9 @@ export class InboundMedia {
   }
 
   /**
-   * The cached object of a loaded message, downloading it first (cap: 16 MB audio/video, else 10 MB):
-   * from WhatsApp, or an old-CRM file from the CRM's storage (CrmHistoryMedia; no 29-day limit).
-   * A final refusal is kept on the row and answered from it later (media-refusal.ts).
+   * The cached object of a loaded message, downloading it first (cap: 16 MB audio/video, else 10
+   * MB): from WhatsApp, or an old-CRM file from the CRM's storage (CrmHistoryMedia; no 29-day
+   * limit). A final refusal is kept on the row and answered from it later (media-refusal.ts).
    */
   async cache(msg: MediaMessage): Promise<InboundFile> {
     const mime = baseMime(msg.media_mime);
@@ -114,7 +119,10 @@ export class InboundMedia {
     return this.download(msg, msg.media_id);
   }
 
-  /** A Meta 4xx means the id is gone (expired, deleted): 410, not a server error; a dead token is 502. */
+  /**
+   * A Meta 4xx means the id is gone (expired, deleted): 410, not a server error; a dead token is
+   * 502.
+   */
   private async download(msg: MediaMessage, mediaId: string): Promise<{ bytes: Uint8Array }> {
     const from = mediaSource(msg, { lines: this.lines, numbers: this.numbers });
     if (from.kind === 'crm') throw httpError(HttpStatus.CONFLICT, CRM_NO_MEDIA);

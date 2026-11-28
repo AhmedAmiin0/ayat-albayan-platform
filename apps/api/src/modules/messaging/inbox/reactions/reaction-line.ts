@@ -5,7 +5,9 @@ import { capsOf } from '@/modules/messaging/whatsapp';
 import { pickSend } from '@/modules/messaging/inbox/send/send-number';
 import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 
-/** Where the chat's next session message leaves from (sendLine / pickSend): a line and/or a number. */
+/**
+ * Where the chat's next session message leaves from (sendLine / pickSend): a line and/or a number.
+ */
 interface ReactFrom { line?: WaLine; number_id?: string }
 
 /** A number: its own driver's capability. */
@@ -28,8 +30,9 @@ export function sendsOnCrm(from: ReactFrom): boolean {
 }
 
 /**
- * The thread page's `reactable` flag: its 24 h window is open and the line it answers from is not the CRM's.
- * Never throws (a failed windows read reads as not reactable): the apps only hide the row.
+ * The thread page's `reactable` flag: its 24 h window is open and the line it answers from is not
+ * the CRM's. Never throws (a failed windows read reads as not reactable): the apps only hide the
+ * row.
  */
 export async function threadReactable(
   queries: ThreadsRepo,

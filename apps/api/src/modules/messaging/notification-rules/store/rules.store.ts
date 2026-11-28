@@ -41,13 +41,17 @@ export class DbRulesReader extends RulesReader {
     this.cached = null;
   }
 
-  /** After a notification_rules write here: drop it and tell the other API copies and the worker. */
+  /**
+   * After a notification_rules write here: drop it and tell the other API copies and the worker.
+   */
   changed(): void {
     this.invalidate();
     void this.shared?.invalidate({ topic: 'rules' });
   }
 
-  /** A fresh snapshot (writes and parity never decide on a cached one): the settings it reads too. */
+  /**
+   * A fresh snapshot (writes and parity never decide on a cached one): the settings it reads too.
+   */
   fresh(): Promise<RulesSnapshot> {
     this.settings.invalidate();
     this.invalidate();

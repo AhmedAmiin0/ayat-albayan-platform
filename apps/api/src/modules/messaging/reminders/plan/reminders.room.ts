@@ -5,12 +5,16 @@ import { isUniqueViolation, maybe, pgError } from '@/common/db/errors';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
 import type { RoomCandidate } from './reminders.links';
 
-// The family's classroom link minted by the reminders job (a platform lesson, reminders.links.ts). It lives in
-// the lesson_join_links row of (lesson, student), the same row a student-link join goes in by
-// (migration 191), so a removal from the room (classroom_blocks.join_link_id) holds either way.
+// The family's classroom link minted by the reminders job (a platform lesson, reminders.links.ts).
+// It lives in the lesson_join_links row of (lesson, student), the same row a student-link join goes
+// in by (migration 191), so a removal from the room (classroom_blocks.join_link_id) holds either
+// way.
 
 
-/** dedup_keys among `keys` already in messages: those links were minted and queued on an earlier tick. */
+/**
+ * dedup_keys among `keys` already in messages: those links were minted and queued on an earlier
+ * tick.
+ */
 async function queuedKeys(db: Db, keys: readonly string[]): Promise<Set<string>> {
   const { data, error } = await db.from('messages').select('dedup_key').in('dedup_key', [...keys]);
   if (error) throw pgError(error);
@@ -28,7 +32,8 @@ async function findLink(db: Db, c: RoomCandidate): Promise<string | null> {
 
 /**
  * The (lesson, student) row takes the new token (the previous one dies) and the room's close; it is
- * created when there is none. PostgREST cannot upsert on the partial unique index, hence find first.
+ * created when there is none. PostgREST cannot upsert on the partial unique index, hence find
+ * first.
  */
 async function saveToken(db: Db, c: RoomCandidate, hash: string): Promise<void> {
   const fields = { token_hash: hash, expires_at: c.expiresAt };

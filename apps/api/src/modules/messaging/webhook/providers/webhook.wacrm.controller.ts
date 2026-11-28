@@ -19,11 +19,11 @@ interface RawRequest {
 }
 
 /**
- * The academy CRM's outbound webhook (docs/19 «crm driver»). Public: authenticated by WACRM_WEBHOOK_SECRET's
- * HMAC over `${t}.${rawBody}` only, within 5 minutes (a replay is refused). message.status_updated moves our
- * outbound row by its wamid (the existing delivery-status path); message.received (a family writing to
- * the notifications number) is queued by its wamid and the mirror job kicked: it lands in the
- * inbox. Deduped on the delivery id. Never sends anything.
+ * The academy CRM's outbound webhook (docs/19 «crm driver»). Public: authenticated by
+ * WACRM_WEBHOOK_SECRET's HMAC over `${t}.${rawBody}` only, within 5 minutes (a replay is refused).
+ * message.status_updated moves our outbound row by its wamid (the existing delivery-status path);
+ * message.received (a family writing to the notifications number) is queued by its wamid and the
+ * mirror job kicked: it lands in the inbox. Deduped on the delivery id. Never sends anything.
  */
 @ApiTags('webhooks')
 @Public()
@@ -39,7 +39,10 @@ export class WacrmWebhookController {
     @Inject(CrmInboundJob) private readonly crmInboundJob: CrmInboundJob,
   ) {}
 
-  /** 401 (nothing read) unless the signature is good and fresh; 500 when a write failed (it may come again). */
+  /**
+   * 401 (nothing read) unless the signature is good and fresh; 500 when a write failed (it may come
+   * again).
+   */
   @Post()
   @HttpCode(200)
   async receive(@Req() req: RawRequest, @Headers('x-wacrm-signature') signature?: string): Promise<void> {
@@ -51,7 +54,8 @@ export class WacrmWebhookController {
       now,
     });
     if (verdict !== 'ok') {
-      // Debug only, like the other webhook routes: a public URL gets probed. The verdict, never a value.
+      // Debug only, like the other webhook routes: a public URL gets probed. The verdict, never a
+      // value.
       this.log.debug(`wacrm webhook refused (401): ${signature === undefined ? 'no signature' : verdict}`);
       throw new UnauthorizedException();
     }

@@ -6,7 +6,8 @@ import { liveWebhookConfig, signatureSecrets } from '@/modules/messaging/webhook
 import { receivingNumber } from '@/modules/messaging/webhook/lines/webhook.lines';
 import { parseWebhook } from '@/modules/messaging/webhook/parse/webhook.parse';
 
-// Module mode inbound (docs/23c decision 7): any number row stamps its id and purpose; legacy unchanged.
+// Module mode inbound (docs/23c decision 7): any number row stamps its id and purpose; legacy
+// unchanged.
 
 const NOW = new Date('2026-10-24T10:00:00Z');
 const number = (over: Partial<OverlayNumber>): OverlayNumber => ({

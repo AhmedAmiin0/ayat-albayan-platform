@@ -6,9 +6,9 @@ import type { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import type { NumbersSecrets } from './numbers.secrets';
 import { NumbersSettings } from '@/modules/messaging/numbers/numbers.settings';
 
-// Test-only (excluded from the build): a NumbersConfig over a stored source and fake rows (`defaults` =
-// each role's default enabled number, `all` = every wa_numbers row; no calls number unless a test
-// sets one).
+// Test-only (excluded from the build): a NumbersConfig over a stored source and fake rows
+// (`defaults` = each role's default enabled number, `all` = every wa_numbers row; no calls number
+// unless a test sets one).
 
 export function config(source: 'legacy' | 'module', defaults = vi.fn(async () => [numberRow()]), all = vi.fn(async () => [numberRow()])) {
   const queries = {

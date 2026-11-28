@@ -5,12 +5,16 @@ import { graphHttpError } from './template.mapper';
 import { WaError, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { httpError } from '@/common/http/errors';
 
-// What every registry action checks first (docs/12 §3.4, §13.9), out of template.registry.ts (150-line cap).
+// What every registry action checks first (docs/12 §3.4, §13.9), out of template.registry.ts
+// (150-line cap).
 
 /** Read per call, so tests can vi.stubEnv it. */
 export const syncOn = (): boolean =>  loadEnv().WA_TEMPLATE_SYNC;
 
-/** WA_TEMPLATE_SYNC=false (docs/12 §13.9): staging on Meta TEST credentials must not touch the registry. */
+/**
+ * WA_TEMPLATE_SYNC=false (docs/12 §13.9): staging on Meta TEST credentials must not touch the
+ * registry.
+ */
 export function requireSync(): void {
   if (!syncOn()) throw httpError(409, 'template_sync_off');
 }
@@ -20,7 +24,9 @@ export function requireLine(client: WhatsappClient, line: WaLine): void {
   if (!client.configured()) throw httpError(503, 'not_configured', { line });
 }
 
-/** The line's templates are the CRM's (docs/19): no sync, no submit, never marked missing from here. */
+/**
+ * The line's templates are the CRM's (docs/19): no sync, no submit, never marked missing from here.
+ */
 export const onCrm = (line: WaLine): boolean => lineProvider(loadEnv(), line) === 'crm';
 
 /** One line as env names it: ids only, no Graph call; `configured` is its client's. */
@@ -38,7 +44,10 @@ export function lineFacts(line: WaLine, client: Pick<WhatsappClient, 'configured
   };
 }
 
-/** A Graph failure → 502 meta_error with Meta's code and message, kapso_auth / crm_auth, or 409 crm_managed (docs/19). */
+/**
+ * A Graph failure → 502 meta_error with Meta's code and message, kapso_auth / crm_auth, or 409
+ * crm_managed (docs/19).
+ */
 export async function fromMeta<T>(call: () => Promise<T>): Promise<T> {
   try {
     return await call();

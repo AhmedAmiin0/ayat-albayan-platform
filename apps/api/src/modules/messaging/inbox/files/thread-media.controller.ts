@@ -19,13 +19,19 @@ import { ThreadMediaService } from './thread-media.service';
 export class ThreadMediaController {
   constructor(private readonly media: ThreadMediaService) {}
 
-  /** Inbound image / PDF messages of the last 30 days, newest first, at most 12; nothing is downloaded. */
+  /**
+   * Inbound image / PDF messages of the last 30 days, newest first, at most 12; nothing is
+   * downloaded.
+   */
   @Get(':phone/media')
   list(@ZodParam('phone', phoneE164, invalidPhone) phone: string): Promise<ThreadMediaItem[]> {
     return this.media.list(phone);
   }
 
-  /** The file as a signed URL (downloaded from WhatsApp on first use); 410 media_expired when it is gone. */
+  /**
+   * The file as a signed URL (downloaded from WhatsApp on first use); 410 media_expired when it is
+   * gone.
+   */
   @Get(':phone/media/:messageId')
   file(
     @ZodParam('phone', phoneE164, invalidPhone) phone: string,

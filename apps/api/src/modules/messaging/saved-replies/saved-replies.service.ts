@@ -95,7 +95,10 @@ export class SavedRepliesService {
     return this.files.uploadUrl(user.id, input);
   }
 
-  /** The reply's attachment as this sender's chat file (out/{sender}/{request}/…); 404 when it has none. */
+  /**
+   * The reply's attachment as this sender's chat file (out/{sender}/{request}/…); 404 when it has
+   * none.
+   */
   async stage(user: AuthUser, id: string, requestId: string): Promise<SavedReplyStaged> {
     const row = await this.visible(user, id);
     const {
@@ -125,7 +128,10 @@ export class SavedRepliesService {
     if (row.owner_profile_id === null && !managesShared(user)) throw forbidden('saved_replies_forbidden');
   }
 
-  /** undefined keeps the file; null removes it; the same path only renames it; a new path is checked. */
+  /**
+   * undefined keeps the file; null removes it; the same path only renames it; a new path is
+   * checked.
+   */
   private async attachmentPatch(input: {
     attachment: Attachment;
     replaced: boolean;

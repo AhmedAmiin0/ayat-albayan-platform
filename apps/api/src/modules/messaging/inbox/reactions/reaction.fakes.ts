@@ -1,4 +1,5 @@
-// Test fixtures for message reactions (test-only, excluded from the build by the *.fakes.ts pattern).
+// Test fixtures for message reactions (test-only, excluded from the build by the *.fakes.ts
+// pattern).
 import type { TablesInsert } from '@ab/db';
 import { vi } from 'vitest';
 import type { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
@@ -38,8 +39,9 @@ export const request = (over: Partial<ReactionRequest> = {}): ReactionRequest =>
 });
 
 /**
- * The service over in-memory fakes: one target row, an outbox that keeps ONE row per dedup_key (as the
- * unique index does) and answers `status` for a new row (a failed send also runs the revert, as the trigger).
+ * The service over in-memory fakes: one target row, an outbox that keeps ONE row per dedup_key (as
+ * the unique index does) and answers `status` for a new row (a failed send also runs the revert, as
+ * the trigger).
  */
 export function reactionHarness(t: ReactionTarget | null = target(), status: 'sent' | 'failed' = 'sent') {
   const row: ThreadMessageRow = messageRow({ id: TARGET_ID, direction: 'inbound', wa_message_id: 'wamid.T', template_key: null, body: 'السلام عليكم' });

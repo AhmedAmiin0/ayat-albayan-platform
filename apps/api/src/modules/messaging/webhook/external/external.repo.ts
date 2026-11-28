@@ -16,7 +16,10 @@ interface ExternalScope {
   numberId: string | null;
 }
 
-/** Thin supabase-js access for messages sent outside the app (external/); the rules live in the services. */
+/**
+ * Thin supabase-js access for messages sent outside the app (external/); the rules live in the
+ * services.
+ */
 @Injectable()
 export class ExternalRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -32,7 +35,8 @@ export class ExternalRepo {
   /**
    * True while our sender holds a claimed, unrecorded try for this phone (queued + SENDING): the
    * message Kapso reports may be that very send, whose wamid the sender writes only after Meta
-   * answered. Storing it now would take its wamid; the catch-up job's day-long re-read stores it later.
+   * answered. Storing it now would take its wamid; the catch-up job's day-long re-read stores it
+   * later.
    */
   async inFlight(phone: string): Promise<boolean> {
     const { data, error } = await this.db
@@ -47,7 +51,10 @@ export class ExternalRepo {
     return (data ?? []).length > 0;
   }
 
-  /** Inserts the row; false when the wamid is already stored (unique wa_message_id: on conflict do nothing). */
+  /**
+   * Inserts the row; false when the wamid is already stored (unique wa_message_id: on conflict do
+   * nothing).
+   */
   async insert(row: TablesInsert<'messages'>): Promise<boolean> {
     const { data, error } = await this.db
       .from('messages')
@@ -76,8 +83,9 @@ export class ExternalRepo {
   }
 
   /**
-   * The newest message sent outside the app on this number: outbound, created_by null, never claimed
-   * by the sender (attempts 0, which counts every try of ours) and with a wamid; null when none.
+   * The newest message sent outside the app on this number: outbound, created_by null, never
+   * claimed by the sender (attempts 0, which counts every try of ours) and with a wamid; null when
+   * none.
    */
   async newestExternal(scope: ExternalScope): Promise<Date | null> {
     let query = this.db

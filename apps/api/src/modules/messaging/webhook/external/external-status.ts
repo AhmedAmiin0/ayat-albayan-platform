@@ -14,7 +14,8 @@ const reason = (e: unknown): string => (e instanceof Error ? e.message : String(
  * it from Kapso's own inbox. The message is read back from Kapso and stored as an outbound row with
  * WhatsApp's own time and this status (replies once showed under 4-day-old
  * messages). Never throws: a Kapso or database error is logged and the webhook still answers 200;
- * the catch-up job (external-catchup.job.ts) stores it within 10 minutes. Any other number: ignored.
+ * the catch-up job (external-catchup.job.ts) stores it within 10 minutes. Any other number:
+ * ignored.
  */
 @Injectable()
 export class ExternalStatus {

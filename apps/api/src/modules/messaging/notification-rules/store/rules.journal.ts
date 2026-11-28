@@ -22,8 +22,8 @@ const ESSENTIAL_OFF_ACTION = 'notification_essential_off';
 const json = (v: unknown): Json => JSON.parse(JSON.stringify(v)) as Json;
 
 /**
- * Every rule write is audited (audit_log entity 'notification_rules'; the key is not a uuid, so it goes
- * in the action and in before/after, like custom_config). An essential OFF also gets its own
+ * Every rule write is audited (audit_log entity 'notification_rules'; the key is not a uuid, so it
+ * goes in the action and in before/after, like custom_config). An essential OFF also gets its own
  * activity_log row (queued, never fails the request).
  */
 @Injectable()
@@ -57,7 +57,9 @@ export class RulesJournal {
     });
   }
 
-  /** The flip back to legacy (docs/23b decision 5): the rules' values copied into the legacy keys. */
+  /**
+   * The flip back to legacy (docs/23b decision 5): the rules' values copied into the legacy keys.
+   */
   recordCopy(actorId: string, values: Partial<RuleSettings>): Promise<void> {
     return this.audit.record({
       actorId,

@@ -22,9 +22,9 @@ export function webhookConfig(env: Env): WebhookConfig {
 }
 
 /**
- * The signature keys. Legacy (numbers null): appSecrets(env) exactly. Module mode (docs/23c decision 7):
- * the role keys loadEnv() already laid from each default number (blank = unset, never a legacy key) plus
- * every number's own non-blank app secret, distinct.
+ * The signature keys. Legacy (numbers null): appSecrets(env) exactly. Module mode (docs/23c
+ * decision 7): the role keys loadEnv() already laid from each default number (blank = unset, never
+ * a legacy key) plus every number's own non-blank app secret, distinct.
  */
 export function signatureSecrets(env: Env, numbers: readonly OverlayNumber[] | null): string[] {
   const base = appSecrets(env);

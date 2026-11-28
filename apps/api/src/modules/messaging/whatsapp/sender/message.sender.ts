@@ -77,7 +77,8 @@ export class MessageSender implements OnApplicationBootstrap, BeforeApplicationS
     try {
       const gate = await this.gate.switches();
       if (!gate.open) return summary;
-      // Automatic messages OFF: hold every job-made row first, read by due() or not (unapproved template).
+      // Automatic messages OFF: hold every job-made row first, read by due() or not (unapproved
+      // template).
       if (!gate.automaticOn) summary.held += await this.queries.holdAutomatic();
       await this.worker.release(); // held texts the family answered (window/): due again
       if (!(await this.anyWork(options, now))) return this.report(summary);
@@ -119,7 +120,8 @@ export class MessageSender implements OnApplicationBootstrap, BeforeApplicationS
 
   /**
    * Module mode (docs/23c): each row's number from routeOf (none = the worker leaves it queued). A
-   * broken token pauses that NUMBER for the rest of the pass; the role's other numbers keep sending.
+   * broken token pauses that NUMBER for the rest of the pass; the role's other numbers keep
+   * sending.
    */
   private async numbersPass(input: { run: SenderRun; now: Date; numbers: readonly OverlayNumber[] }): Promise<void> {
     const { run, now } = input;

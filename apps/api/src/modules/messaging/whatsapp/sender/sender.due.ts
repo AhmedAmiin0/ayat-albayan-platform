@@ -29,9 +29,14 @@ export interface DueMessage {
   scheduled_for?: string | null;
   /** SENDING = a previous try was claimed and never resolved (send-plan). */
   error_code: string | null;
-  /** The line a session text leaves from (docs/12 §13.3); null = notifications. Templates ignore it. */
+  /**
+   * The line a session text leaves from (docs/12 §13.3); null = notifications. Templates ignore it.
+   */
   line: WaLine | null;
-  /** The number a session text was stamped with at enqueue (module mode, docs/23c decision 5); null = its line's default. */
+  /**
+   * The number a session text was stamped with at enqueue (module mode, docs/23c decision 5); null
+   * = its line's default.
+   */
   number_id: string | null;
   /** A file staff sent from the chat (wa-media out/…); optional so older fixtures compile. */
   media_path?: string | null;
@@ -51,9 +56,9 @@ export const DUE_COLUMNS =
 interface AnyDueInput { now: Date; allowed: readonly string[] | null; lane?: Lane }
 
 /**
- * The idle tick's one read (messages_queue_idx): is any queued outbound row due now (in the allow-list
- * when one is set)? A superset of SenderQueries.due() (any template, any line), so false never skips
- * a row due() would have read; true runs the pass exactly as before.
+ * The idle tick's one read (messages_queue_idx): is any queued outbound row due now (in the
+ * allow-list when one is set)? A superset of SenderQueries.due() (any template, any line), so false
+ * never skips a row due() would have read; true runs the pass exactly as before.
  */
 export async function anyDue(db: Db, input: AnyDueInput): Promise<boolean> {
   const now = input.now.toISOString();

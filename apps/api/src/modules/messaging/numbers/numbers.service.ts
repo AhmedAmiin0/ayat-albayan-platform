@@ -53,9 +53,9 @@ export class NumbersService {
   }
 
   /**
-   * is_default true → wa_number_make_default (409 not_enabled unless the number is on, checked before
-   * any write); numberPatch for the rest. Whatever was written is audited and refreshes the config,
-   * even when the default step then fails.
+   * is_default true → wa_number_make_default (409 not_enabled unless the number is on, checked
+   * before any write); numberPatch for the rest. Whatever was written is audited and refreshes the
+   * config, even when the default step then fails.
    */
   async update(id: string, body: NumberUpdate, actorId: string): Promise<NumberView> {
     const before = (await this.queries.byId(id)) ?? missing();

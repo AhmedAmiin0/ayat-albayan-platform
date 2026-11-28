@@ -38,8 +38,9 @@ interface Tick {
  *   follow-up goes out on the first tick after approval.
  * - fewer than two free slots → nothing queued, retried next tick (note no_slots).
  * - settings.auto_messages_enabled OFF, the follow_up_slots rule OFF or unreadable (fail closed) →
- *   the tick does nothing: no row queued, no stage advanced. Stages and slot window: the rule's timing.
- * TODO(owner/integrator): «else an admin task» needs an admin_task_kind value (migration + types).
+ * the tick does nothing: no row queued, no stage advanced. Stages and slot window: the rule's
+ * timing. TODO(owner/integrator): «else an admin task» needs an admin_task_kind value (migration +
+ * types).
  */
 @BackgroundJob({ name: 'follow-ups' })
 @Injectable()
@@ -91,7 +92,10 @@ export class FollowUpsJob extends TickerJob {
     return summary;
   }
 
-  /** The follow_up_slots rule's timing while it is on; null when off or unreadable (logged by the policy). */
+  /**
+   * The follow_up_slots rule's timing while it is on; null when off or unreadable (logged by the
+   * policy).
+   */
   private async timing(): Promise<({ hours: readonly number[] } & SlotWindow) | null> {
     const snap = await this.policy.snapshot();
     const rule = snap && ruleOf(snap, 'follow_up_slots');

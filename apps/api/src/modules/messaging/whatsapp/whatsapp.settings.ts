@@ -8,10 +8,10 @@ const KEYS = ['messaging_enabled', 'auto_messages_enabled'] as const satisfies r
 type WhatsappSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
 /**
- * The send gate's two switches, read by SendGate (docs/26 §5, 26-P4). Never cached: every call is one
- * primary-key read of `settings`, so no SettingsService / ConfigStore cache can hold the gate open.
- * Fail-closed: only a stored JSON `true` is ON; a missing row, JSON null, a string, a number or any
- * other value is OFF; a failed read rejects, so the gate never opens on an error.
+ * The send gate's two switches, read by SendGate (docs/26 §5, 26-P4). Never cached: every call is
+ * one primary-key read of `settings`, so no SettingsService / ConfigStore cache can hold the gate
+ * open. Fail-closed: only a stored JSON `true` is ON; a missing row, JSON null, a string, a number
+ * or any other value is OFF; a failed read rejects, so the gate never opens on an error.
  */
 @Injectable()
 export class WhatsappSettings {

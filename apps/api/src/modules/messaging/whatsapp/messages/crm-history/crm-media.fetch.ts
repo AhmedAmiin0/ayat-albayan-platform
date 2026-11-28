@@ -4,7 +4,10 @@ import { httpError } from '@/common/http/errors';
 
 /** The old CRM's storage gets this long for the whole file (headers and body). */
 export const CRM_FETCH_TIMEOUT_MS = 10_000;
-/** The storage did not answer about the file (down, timed out, 5xx, 429): try again later, it is not gone. */
+/**
+ * The storage did not answer about the file (down, timed out, 5xx, 429): try again later, it is not
+ * gone.
+ */
 export const CRM_UNREACHABLE = 'crm_unreachable';
 
 interface CrmFetchInput { url: URL; mime: string; maxBytes: number }
@@ -27,9 +30,9 @@ export function sameFamily(got: string | null, want: string): boolean {
 /**
  * GET one old-CRM file (the URL allowedCrmUrl returned, nothing else): no redirect followed (a 3xx
  * is refused), 10 s in all, the body streamed and cut at `maxBytes`. 200 only, with a content type
- * of the row's family. Unreachable (no answer, the timeout, a broken stream), 5xx or 429 → 502 crm_unreachable
- * (CRM_UNREACHABLE: a retry may work); any other status, another type or an empty body → 410 media_expired;
- * larger than the cap → 413 invoice_too_large.
+ * of the row's family. Unreachable (no answer, the timeout, a broken stream), 5xx or 429 → 502
+ * crm_unreachable (CRM_UNREACHABLE: a retry may work); any other status, another type or an empty
+ * body → 410 media_expired; larger than the cap → 413 invoice_too_large.
  */
 export async function fetchCrmMedia(input: CrmFetchInput): Promise<Uint8Array> {
   const signal = AbortSignal.timeout(CRM_FETCH_TIMEOUT_MS);
@@ -51,7 +54,10 @@ export async function fetchCrmMedia(input: CrmFetchInput): Promise<Uint8Array> {
   return readCapped(res.body, input.maxBytes);
 }
 
-/** The stream's bytes, cancelled (413) the moment they pass `max`; a broken (or timed-out) stream is 502. */
+/**
+ * The stream's bytes, cancelled (413) the moment they pass `max`; a broken (or timed-out) stream is
+ * 502.
+ */
 async function readCapped(body: ReadableStream<Uint8Array>, max: number): Promise<Uint8Array> {
   const reader = body.getReader();
   const chunks: Uint8Array[] = [];

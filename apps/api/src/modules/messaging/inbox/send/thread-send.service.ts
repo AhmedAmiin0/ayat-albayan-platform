@@ -33,9 +33,9 @@ export interface ThreadSend<T> {
 
 /**
  * Rule 8: every inbox send carries the client's request id, so a retried POST (lost answer, double
- * tap) returns the first row instead of messaging the family twice. 400 without one. The key is scoped to who sends
- * and to whom (`teacher:<teacher>:<phone>:<id>`, `admin:<phone>:<id>`), so one id reused on another
- * phone, or by another teacher, is a new send, never the first family's row.
+ * tap) returns the first row instead of messaging the family twice. 400 without one. The key is
+ * scoped to who sends and to whom (`teacher:<teacher>:<phone>:<id>`, `admin:<phone>:<id>`), so one
+ * id reused on another phone, or by another teacher, is a new send, never the first family's row.
  */
 export function dedupKey<T>(s: ThreadSend<T>): string {
   if (!s.input.clientRequestId) throw httpError(400, 'missing_client_request_id');
@@ -67,8 +67,8 @@ export async function replyOf(
 }
 
 /**
- * H3/H4 (docs/12 §4, R-LEAD-02): the admin, a salesperson (any chat, docs/16) — or, in teacher mode,
- * a teacher for their own families — writes from the inbox.
+ * H3/H4 (docs/12 §4, R-LEAD-02): the admin, a salesperson (any chat, docs/16) — or, in teacher
+ * mode, a teacher for their own families — writes from the inbox.
  */
 @Injectable()
 export class ThreadSendService {
@@ -103,11 +103,11 @@ export class ThreadSendService {
   }
 
   /**
-   * H4: an approved template with every variable filled; a PDF template comes only from the PDF job.
-   * A restricted role (teacher, sales, any role without templates.send_all) sends only the
-   * allow-list: 403 template_not_allowed for any other. The sender picks the template's own
-   * line at claim (docs/12 §13.3); a chat-line starter is stamped chat now (templateStamp), so the
-   * chat lane sends it before the chat's next text (docs/42 42-7). `reopen` in a closed window: the
+   * H4: an approved template with every variable filled; a PDF template comes only from the PDF
+   * job. A restricted role (teacher, sales, any role without templates.send_all) sends only the
+   * allow-list: 403 template_not_allowed for any other. The sender picks the template's own line at
+   * claim (docs/12 §13.3); a chat-line starter is stamped chat now (templateStamp), so the chat
+   * lane sends it before the chat's next text (docs/42 42-7). `reopen` in a closed window: the
    * staff-picked reopen template (ReopenPick: the window hold's `reopen:` key, so no second one).
    */
   async template(s: ThreadSend<ThreadTemplate>, now = new Date()): Promise<Sent> {
@@ -140,7 +140,10 @@ export class ThreadSendService {
     });
   }
 
-  /** A teacher: own families only, not their own chat, own lessons only (the allow-list is checked after). */
+  /**
+   * A teacher: own families only, not their own chat, own lessons only (the allow-list is checked
+   * after).
+   */
   private async teacherMay(scope: TeacherScope, s: ThreadSend<ThreadTemplate>): Promise<void> {
     assertCanSend(scope, s.phone);
     if (s.input.lessonId && (await this.queries.lessonTeacher(s.input.lessonId)) !== scope.teacherId) {

@@ -36,7 +36,10 @@ export class ThreadsService {
     private readonly messages: ThreadMessagesRepo,
   ) {}
 
-  /** Each row's family tags come from its guardian's students (one read for the whole page, beside the unsupported marks). */
+  /**
+   * Each row's family tags come from its guardian's students (one read for the whole page, beside
+   * the unsupported marks).
+   */
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
     const [{ items: rows, total }, threshold] = await Promise.all([
       this.queries.list(f), renewalThreshold(this.settings),
@@ -52,10 +55,10 @@ export class ThreadsService {
   }
 
   /**
-   * One page, oldest → newest, in two parallel stages (thread-page.ts): the thread and the page, then
-   * the people, lessons, bubbles (templates from TemplatesQueries' copy) and, only when something is
-   * unread, the read stamp. The first page carries the people; an older page (`before`) gets the
-   * list's cheap tags instead (one read, not 1 + 3 a child).
+   * One page, oldest → newest, in two parallel stages (thread-page.ts): the thread and the page,
+   * then the people, lessons, bubbles (templates from TemplatesQueries' copy) and, only when
+   * something is unread, the read stamp. The first page carries the people; an older page
+   * (`before`) gets the list's cheap tags instead (one read, not 1 + 3 a child).
    */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     const first = isFirstPage(q);

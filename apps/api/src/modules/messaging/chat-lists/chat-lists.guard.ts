@@ -12,9 +12,9 @@ import { badRequest, forbidden, notFound } from '@/common/http/errors';
 import { isAdmin, isSales } from '@/common/auth/roles';
 
 /**
- * Every lists route needs inbox.lists (the route's @Permissions) AND inbox.read, and the inbox of the
- * admin or an assistant (base role sales): a teacher never gets lists, whatever a custom role grants
- * (docs/22 §2). 403 lists_forbidden otherwise.
+ * Every lists route needs inbox.lists (the route's @Permissions) AND inbox.read, and the inbox of
+ * the admin or an assistant (base role sales): a teacher never gets lists, whatever a custom role
+ * grants (docs/22 §2). 403 lists_forbidden otherwise.
  */
 export function assertListsUser(user: AuthUser): void {
   const staff = isAdmin(user) || isSales(user);

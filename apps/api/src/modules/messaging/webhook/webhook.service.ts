@@ -10,7 +10,10 @@ import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.confi
 
 /** WhatsApp webhook settings from env (docs/12 §3.1, §13.6), provided as WEBHOOK_CONFIG. */
 export interface WebhookConfig {
-  /** [WA_APP_SECRET, WA_CHAT_APP_SECRET]: X-Hub-Signature-256 keys, any may match. None → every POST is 401. */
+  /**
+   * [WA_APP_SECRET, WA_CHAT_APP_SECRET]: X-Hub-Signature-256 keys, any may match. None → every POST
+   * is 401.
+   */
   appSecrets: readonly string[];
   /** WA_VERIFY_TOKEN: GET subscribe handshake (one token for both Meta apps). Unset → 403. */
   verifyToken: string | undefined;
@@ -18,9 +21,15 @@ export interface WebhookConfig {
   numbers: LineNumbers;
   /** KAPSO_WEBHOOK_SECRET: POST /webhooks/kapso only (docs/19). Unset → every Kapso POST is 401. */
   kapsoSecret?: string;
-  /** WACRM_WEBHOOK_SECRET: POST /webhooks/wacrm only (docs/19 «crm driver»). Unset → every CRM POST is 401. */
+  /**
+   * WACRM_WEBHOOK_SECRET: POST /webhooks/wacrm only (docs/19 «crm driver»). Unset → every CRM POST
+   * is 401.
+   */
   wacrmSecret?: string;
-  /** Module mode (docs/23c decision 7): every wa_numbers row, enabled or not; absent / null = legacy (`numbers`). */
+  /**
+   * Module mode (docs/23c decision 7): every wa_numbers row, enabled or not; absent / null = legacy
+   * (`numbers`).
+   */
   overlay?: readonly ReceivingNumber[] | null;
   /** The dedicated calls number (docs/28 §10), read per access; null / absent = none. */
   calls?: ReceivingNumber | null;
@@ -57,9 +66,15 @@ export class WebhookService {
   private readonly log = new Logger(WebhookService.name);
   /** phone_number_ids already warned about: one warning per distinct id per process. */
   private readonly ignored = new Set<string>();
-  /** WhatsApp Calling items (docs/28; property-injected: the constructor is at the 3-parameter limit). */
+  /**
+   * WhatsApp Calling items (docs/28; property-injected: the constructor is at the 3-parameter
+   * limit).
+   */
   @Optional() @Inject(CALL_EVENTS) private readonly calls?: CallEventsPort;
-  /** Reloads the config once before a change for an unknown number is ignored (absent in unit tests). */
+  /**
+   * Reloads the config once before a change for an unknown number is ignored (absent in unit
+   * tests).
+   */
   @Optional() @Inject(WebhookConfigReload) private readonly reload?: WebhookConfigReload;
 
   constructor(
@@ -71,7 +86,8 @@ export class WebhookService {
   async handle(body: unknown): Promise<void> {
     const now = new Date();
     const batch = await this.parse(body, now);
-    // When the controller stops waiting (within), so an item knows whether Meta can still re-send it.
+    // When the controller stops waiting (within), so an item knows whether Meta can still re-send
+    // it.
     const deadline = now.getTime() + RESPONSE_BUDGET_MS;
     let failed = 0;
     for (const m of batch.messages)
@@ -91,8 +107,9 @@ export class WebhookService {
   }
 
   /**
-   * The batch for the numbers this copy knows. An unknown phone_number_id may be one the other API copy
-   * just saved: reload the config once and parse again before its changes are ignored (and warned about).
+   * The batch for the numbers this copy knows. An unknown phone_number_id may be one the other API
+   * copy just saved: reload the config once and parse again before its changes are ignored (and
+   * warned about).
    */
   private async parse(body: unknown, now: Date): Promise<ReturnType<typeof parseWebhook>> {
     const ignored: string[] = [];

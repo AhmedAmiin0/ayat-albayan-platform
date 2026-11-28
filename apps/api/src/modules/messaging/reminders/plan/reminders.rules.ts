@@ -4,12 +4,15 @@ import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store
 /**
  * What one reminder tick needs from the notification rules (docs/23 §2c), resolved from ONE
  * NotificationPolicy snapshot. In legacy mode with no rows these are exactly the old settings:
- * reminder_minutes_before, reminder_24h_enabled, teacher_whatsapp_lesson_reminder; the rows without a
- * legacy key (join link, confirmation push) are on, the day-before hour is the lesson's own time and the
- * teacher's lead time is the families'.
+ * reminder_minutes_before, reminder_24h_enabled, teacher_whatsapp_lesson_reminder; the rows without
+ * a legacy key (join link, confirmation push) are on, the day-before hour is the lesson's own time
+ * and the teacher's lead time is the families'.
  */
 export interface ReminderRules {
-  /** lesson_reminder.timing.minutes_before: the same-day reminder, the join link and the confirmation push. */
+  /**
+   * lesson_reminder.timing.minutes_before: the same-day reminder, the join link and the
+   * confirmation push.
+   */
   minutesBefore: number;
   /** lesson_reminder (on unless a module-mode row switches it off). */
   sameDay: boolean;
@@ -44,13 +47,16 @@ export function reminderRules(snap: RulesSnapshot): ReminderRules {
   };
 }
 
-/** A day-before send_at_local can be as early as 06:00 the previous day: up to ~42 h ahead (DST included). */
+/**
+ * A day-before send_at_local can be as early as 06:00 the previous day: up to ~42 h ahead (DST
+ * included).
+ */
 const DAY_BEFORE_AT_HOURS = 48;
 
 /**
- * How many hours ahead one tick reads lessons: settings.reminder_lookahead_hours (≥ 25: the day-before
- * reminder at the lesson's own time is 23–25 h ahead), widened to 48 h only while the day-before
- * reminder is on with a fixed send_at_local hour.
+ * How many hours ahead one tick reads lessons: settings.reminder_lookahead_hours (≥ 25: the
+ * day-before reminder at the lesson's own time is 23–25 h ahead), widened to 48 h only while the
+ * day-before reminder is on with a fixed send_at_local hour.
  */
 export function lookaheadHours(
   lookahead: number,

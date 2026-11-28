@@ -52,7 +52,10 @@ export class TemplatesController {
     return this.creator.create(body, user.id);
   }
 
-  /** Each number: driver, WABA and phone ids (env only, no Meta call), its newest check and its last sync. */
+  /**
+   * Each number: driver, WABA and phone ids (env only, no Meta call), its newest check and its last
+   * sync.
+   */
   @Get('lines')
   @UseGuards(TemplateManagerGuard)
   lines(): Promise<TemplateLineView[]> {
@@ -60,10 +63,10 @@ export class TemplatesController {
   }
 
   /**
-   * One number's sync with Meta (`line` in the body or the query), or every configured number: its rows'
-   * status, quality and text from its own WABA, and that WABA's new templates imported (flagged only for
-   * RESTRICTED_TEMPLATE_DEFAULTS from the chat WABA). A line's read failure is that line's error (200).
-   * 503 not_configured, 409 template_sync_off.
+   * One number's sync with Meta (`line` in the body or the query), or every configured number: its
+   * rows' status, quality and text from its own WABA, and that WABA's new templates imported
+   * (flagged only for RESTRICTED_TEMPLATE_DEFAULTS from the chat WABA). A line's read failure is
+   * that line's error (200). 503 not_configured, 409 template_sync_off.
    */
   @Post('health')
   @HttpCode(200)

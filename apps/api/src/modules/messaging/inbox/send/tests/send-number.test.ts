@@ -5,7 +5,8 @@ import { pickSendLine } from '@/modules/messaging/inbox/send/send-line';
 import { CHAT_DEFAULT, CHAT_OFF, CHAT_TWO, NOTIF_DEFAULT, NUMBERS } from '@/modules/messaging/inbox/send/send-number.fakes';
 import { numberWindows, pickNumber, pickSend, type ThreadWindow } from '@/modules/messaging/inbox/send/send-number';
 
-// Reply per number (docs/23c decision 6): module mode picks a number; legacy is pickSendLine untouched.
+// Reply per number (docs/23c decision 6): module mode picks a number; legacy is pickSendLine
+// untouched.
 
 const NOW = new Date('2026-10-24T10:00:00Z');
 const hoursAgo = (h: number) => new Date(NOW.getTime() - h * 3_600_000).toISOString();
@@ -44,7 +45,8 @@ describe('pickNumber', () => {
   });
 
   it('review: an inbound on a second number never opens a window on the default', () => {
-    // The family wrote only to CHAT_TWO; the default's window stays closed whatever the uuids sort as.
+    // The family wrote only to CHAT_TWO; the default's window stays closed whatever the uuids sort
+    // as.
     const rows = [at(CHAT_TWO.id, 'chat', 1), at(null, 'chat', 30)];
     expect(pickNumber({ rows, numbers: NUMBERS, now: NOW })).toEqual({ number_id: 'num-chat-2', line: 'chat' });
     const noEnv = { ...CHAT_TWO, env: null };

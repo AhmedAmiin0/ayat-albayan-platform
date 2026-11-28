@@ -82,9 +82,9 @@ export class ExternalStore {
 
   /**
    * Stamps the inbound rows before the reply's second read at the reply's time (now when that is
-   * ahead). WhatsApp times are whole seconds and orderedAt orders within one by arrival, so a family
-   * message of the same second may be newer than the reply: it stays unread. Our sign-in code
-   * (CodeSend: no row, so Kapso's status adopts it here) is never a reply.
+   * ahead). WhatsApp times are whole seconds and orderedAt orders within one by arrival, so a
+   * family message of the same second may be newer than the reply: it stays unread. Our sign-in
+   * code (CodeSend: no row, so Kapso's status adopts it here) is never a reply.
    */
   private async answered(phone: string, at: Date): Promise<void> {
     const now = new Date();

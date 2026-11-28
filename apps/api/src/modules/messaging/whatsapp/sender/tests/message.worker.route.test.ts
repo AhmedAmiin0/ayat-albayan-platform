@@ -9,7 +9,8 @@ import type { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// docs/23c decision 8: the claim stamps the chosen number and line = its role; a broken token pauses that number.
+// docs/23c decision 8: the claim stamps the chosen number and line = its role; a broken token
+// pauses that number.
 
 const queries = {
   claim: vi.fn(),

@@ -16,8 +16,8 @@ export const isPartyOf = (row: CallRow, userId: string): boolean =>
 
 /**
  * Staff → family (docs/28 §3.1). The row is written BEFORE Kapso hears of the call (its id is the
- * biz_opaque_callback_data), and the connect is sent exactly once: a failed or timed-out connect ends
- * the row as failed and is never retried (it may already ring, and business calls are billed).
+ * biz_opaque_callback_data), and the connect is sent exactly once: a failed or timed-out connect
+ * ends the row as failed and is never retried (it may already ring, and business calls are billed).
  */
 @Injectable()
 export class OutboundCalls {
@@ -83,7 +83,10 @@ export class OutboundCalls {
     return this.view(ended ?? (await this.kit.queries.get(id)) ?? row, actor.user.id);
   }
 
-  /** The connecting row, linked to the chat's guardian / lead; null = that request id exists already. */
+  /**
+   * The connecting row, linked to the chat's guardian / lead; null = that request id exists
+   * already.
+   */
   private async insert(input: {
     phone: string;
     sdp: string;
@@ -111,7 +114,10 @@ export class OutboundCalls {
     return row;
   }
 
-  /** Calls on, the chat line on Kapso, this chat theirs to write in and the number on the allow-list. */
+  /**
+   * Calls on, the chat line on Kapso, this chat theirs to write in and the number on the
+   * allow-list.
+   */
   private async allowed(actor: CallActor, phone: string): Promise<CallingLine> {
     await this.gate.assertOn();
     const line = this.gate.line();

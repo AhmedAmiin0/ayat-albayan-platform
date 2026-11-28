@@ -1,4 +1,5 @@
-// Test fakes for messages sent outside the app (not shipped behaviour). No network: Kapso is a vi.fn().
+// Test fakes for messages sent outside the app (not shipped behaviour). No network: Kapso is a
+// vi.fn().
 import type { TablesInsert } from '@ab/db';
 import { vi } from 'vitest';
 import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
@@ -78,7 +79,10 @@ export const fakeKapso = () => ({
   inbound: vi.fn().mockResolvedValue(emptyPage()),
 });
 
-/** The real external services over the fakes; `queries` is fakeQueries() (identify, latestInSecond, numberIdFor). */
+/**
+ * The real external services over the fakes; `queries` is fakeQueries() (identify, latestInSecond,
+ * numberIdFor).
+ */
 export function externalServices(queries: { stored: TablesInsert<'messages'>[] }) {
   const ext = fakeExternalQueries(queries.stored);
   const kapso = fakeKapso();

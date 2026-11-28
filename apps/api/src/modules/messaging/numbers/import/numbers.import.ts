@@ -20,7 +20,9 @@ const toView = (p: RolePlan): ImportRoleView => ({
   ...(p.not_importable ? { not_importable: p.not_importable } : {}),
 });
 
-/** Something to write: a row to create (none for a role that is not importable) or a secret to copy. */
+/**
+ * Something to write: a row to create (none for a role that is not importable) or a secret to copy.
+ */
 const hasWork = (p: RolePlan): boolean => (p.action === 'create' && p.row !== null) || p.copies.length > 0;
 
 /** Dry run or apply (docs/23 §2e): never deletes; re-apply is a no-op; only key names logged. */
@@ -41,7 +43,8 @@ export class NumbersImport {
       try {
         for (const p of plans) await this.apply(p, actorId);
       } finally {
-        // One audit row (roles, ids, secret NAMES) and the refresh, even when a role failed half-way.
+        // One audit row (roles, ids, secret NAMES) and the refresh, even when a role failed
+        // half-way.
         const roles = plans.map((p) => ({
           role: p.role,
           action: p.action,

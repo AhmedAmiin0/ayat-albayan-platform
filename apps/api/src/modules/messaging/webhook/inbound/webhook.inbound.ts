@@ -28,7 +28,8 @@ export function intentOf(m: InboundEvent): QuickReplyIntent | null {
 
 /**
  * A lesson_rating tap (migration 195): our «rate_<value>:<lesson>» payload, else — a template
- * button Meta sent with its text only — the exact text of one of the three buttons. Never typed text.
+ * button Meta sent with its text only — the exact text of one of the three buttons. Never typed
+ * text.
  */
 export function ratingOf(m: InboundEvent): LessonRating | null {
   return ratingOfIntent(intentOf(m)) ?? (m.type === 'button' ? ratingOfText(m.body) : null);
@@ -49,7 +50,10 @@ export interface RowInput {
   who: Contact;
   leadId: string | null;
   lessonId: string | null;
-  /** One of the academy's own numbers (OwnNumbers): stored already read, so it never counts as unread. */
+  /**
+   * One of the academy's own numbers (OwnNumbers): stored already read, so it never counts as
+   * unread.
+   */
   read?: boolean;
 }
 
@@ -79,7 +83,8 @@ export function inboundRow({ m, phone, who, leadId, lessonId, read }: RowInput):
     ...(read ? { read_at: m.at.toISOString() } : {}),
     // Only when stamped (docs/12 §13.2): a single-line insert carries no `line` key at all.
     ...(m.line ? { line: m.line } : {}),
-    // The receiving number (docs/23c decision 7; legacy: looked up by phone_number_id, InboundStore); none = no key.
+    // The receiving number (docs/23c decision 7; legacy: looked up by phone_number_id,
+    // InboundStore); none = no key.
     ...(m.numberId ? { number_id: m.numberId } : {}),
   };
 }
@@ -112,12 +117,17 @@ interface PushInput {
   intent: QuickReplyIntent | null;
 }
 
-/** How the admin knows this phone: guardian, lead, teacher, WhatsApp profile name, else the number. */
+/**
+ * How the admin knows this phone: guardian, lead, teacher, WhatsApp profile name, else the number.
+ */
 function senderName({ m, phone, who }: Pick<PushInput, 'm' | 'phone' | 'who'>): string {
   return who.guardian?.name ?? who.lead?.name ?? who.teacher?.name ?? m.name ?? phone;
 }
 
-/** One push per phone per 10 minutes; a reschedule / stop request gets its own (a burst can't hide it). */
+/**
+ * One push per phone per 10 minutes; a reschedule / stop request gets its own (a burst can't hide
+ * it).
+ */
 function messageSubject({ m, phone, intent }: Pick<PushInput, 'm' | 'phone' | 'intent'>): string {
   if (intent === 'reschedule' || intent === 'stop') return `${phone}:${intent}:${m.waMessageId}`;
   return `${phone}:${Math.floor(m.at.getTime() / PUSH_BUCKET_MS)}`;

@@ -8,8 +8,9 @@ import { pdfPageCount as askPages, renderPdfPages as askRender } from '@/modules
 import { pdfPageCount, PdfToolError, renderPdfPages } from '@/modules/messaging/inbox/files/pdf/pdf-render';
 import { parseOp, serve } from '@/modules/messaging/inbox/files/pdf/pdf-sandbox.handler';
 
-// ayat-pdf's handler on a real temp socket, asked through the real client. Poppler is mocked: its argv, limits
-// and temp folder are pdf-render.test.ts / pdf-render.spawn.test.ts; the slot (inSlot) is the real one.
+// ayat-pdf's handler on a real temp socket, asked through the real client. Poppler is mocked: its
+// argv, limits and temp folder are pdf-render.test.ts / pdf-render.spawn.test.ts; the slot (inSlot)
+// is the real one.
 vi.mock('@/modules/messaging/inbox/files/pdf/pdf-render', async (importOriginal) => ({
   ...(await importOriginal<Record<string, unknown>>()),
   pdfPageCount: vi.fn(),
@@ -106,7 +107,8 @@ describe('the sandbox over its socket', () => {
       release = r;
     }));
     count.mockResolvedValue(3);
-    // Bigger than the socket's buffers: answering before the body is in would break the sender's write.
+    // Bigger than the socket's buffers: answering before the body is in would break the sender's
+    // write.
     const big = new Uint8Array(4 * 1024 * 1024);
     const first = askPages(big, { socket });
     await vi.waitFor(() => expect(count).toHaveBeenCalledTimes(1));

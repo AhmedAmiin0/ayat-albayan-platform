@@ -6,8 +6,8 @@ import type { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-
 import type { PdfDoc, PdfPreviewRepo } from './pdf-preview.repo';
 import { PdfPreviewService } from './pdf-preview.service';
 
-// Test helper (not a test): PdfPreviewService over an in-memory bucket and messages table. The tests
-// mock ./pdf-render's poppler calls (vi.mock) before importing this.
+// Test helper (not a test): PdfPreviewService over an in-memory bucket and messages table. The
+// tests mock ./pdf-render's poppler calls (vi.mock) before importing this.
 
 const PHONE = '+966552147730';
 export const PDF_BYTES = new TextEncoder().encode('%PDF-1.4 fake');
@@ -19,7 +19,10 @@ export const jpgs = (range: { first: number; last: number }) =>
     jpg: new Uint8Array([0xff, 0xd8, i]),
   }));
 
-/** `objects`: wa-media by path (a message's PDF is `{id}.pdf`); `docs`: messages.media_pages / media_bytes by id. */
+/**
+ * `objects`: wa-media by path (a message's PDF is `{id}.pdf`); `docs`: messages.media_pages /
+ * media_bytes by id.
+ */
 export function setup() {
   const objects = new Map<string, Uint8Array>();
   const docs = new Map<string, PdfDoc>();

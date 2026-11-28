@@ -3,7 +3,8 @@ import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { SendGate } from './send-gate';
 import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
 
-// Test helper (not a test): a SendGate over a fake DB. Each `settings` result answers one uncached gate read.
+// Test helper (not a test): a SendGate over a fake DB. Each `settings` result answers one uncached
+// gate read.
 
 /** WA_* env of the local stub: WhatsApp configured, so only the stored switches decide. */
 export const STUB_WA_ENV = {

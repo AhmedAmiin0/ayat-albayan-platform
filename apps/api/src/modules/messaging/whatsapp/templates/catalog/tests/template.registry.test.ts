@@ -23,7 +23,10 @@ const client = {
   canUploadSamples: vi.fn(),
   uploadSample: vi.fn(),
 };
-/** Not configured (reset mocks answer undefined): one line, as before the chat line (template.registry.lines.test). */
+/**
+ * Not configured (reset mocks answer undefined): one line, as before the chat line
+ * (template.registry.lines.test).
+ */
 const chatClient = { configured: vi.fn(), getTemplates: vi.fn() };
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');

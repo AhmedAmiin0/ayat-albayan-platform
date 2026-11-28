@@ -10,13 +10,16 @@ vi.mock('node:child_process', () => ({ spawn }));
 const PDF = new TextEncoder().encode('%PDF-1.4 fake');
 interface End { code: number | null; killed?: boolean; stdout?: string; enoent?: boolean }
 
-/** A child that ends as `end` says; `killed` is what node sets when ITS timeout killed the child. */
+/**
+ * A child that ends as `end` says; `killed` is what node sets when ITS timeout killed the child.
+ */
 function child(end: End) {
   const c = Object.assign(new EventEmitter(), {
     stdout: new PassThrough(),
     killed: end.killed ?? false,
   });
-  // A sink beside spawnPoppler's own once('error'): an emit with no listener would throw an uncaught error.
+  // A sink beside spawnPoppler's own once('error'): an emit with no listener would throw an
+  // uncaught error.
   c.on('error', () => undefined);
   setImmediate(() => {
     if (end.enoent) {

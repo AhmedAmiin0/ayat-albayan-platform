@@ -12,7 +12,9 @@ const NOW = new Date('2026-10-02T08:00:00Z');
 const ON = rows({ messaging_enabled: true, auto_messages_enabled: true });
 const worker = { process: vi.fn(async () => 'sent' as const), deferRest: vi.fn(), release: vi.fn(async () => 0) };
 
-/** The real gate and queries on a counting fake db: `trips` = one entry per PostgREST round trip. */
+/**
+ * The real gate and queries on a counting fake db: `trips` = one entry per PostgREST round trip.
+ */
 function sender(results: Parameters<typeof fakeDb>[0]) {
   const fake = fakeDb(results);
   const gate = new SendGate(new WhatsappSettings(fake.db), fake.db);

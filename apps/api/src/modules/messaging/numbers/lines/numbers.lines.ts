@@ -3,8 +3,9 @@ import { WA_LINES, type IntegrationKey, type WaLine } from '@ab/catalog';
 import type { NumbersOverlay } from '@/common/configuration/integrations/numbers-overlay';
 import { validOverlay } from '@/config/env/env';
 
-// Each role's legacy line keys (docs/23a §A3), the bridge between a number record and today's config:
-// module mode fills exactly these keys from the role's default number; the import reads them.
+// Each role's legacy line keys (docs/23a §A3), the bridge between a number record and today's
+// config: module mode fills exactly these keys from the role's default number; the import reads
+// them.
 
 export const ROLE_KEYS: Record<WaLine, Record<ImportField, IntegrationKey>> = {
   notifications: {
@@ -54,8 +55,9 @@ function roleValues(n: DefaultNumber): Record<string, string> {
 }
 
 /**
- * The numbers overlay of module mode: every line key, blank unless the role's default number sets it.
- * Each value is checked against its key's env schema; a bad one is blanked and `onBad` gets its KEY.
+ * The numbers overlay of module mode: every line key, blank unless the role's default number sets
+ * it. Each value is checked against its key's env schema; a bad one is blanked and `onBad` gets its
+ * KEY.
  */
 export function moduleOverlay(
   defaults: readonly DefaultNumber[],

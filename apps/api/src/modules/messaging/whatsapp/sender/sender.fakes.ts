@@ -83,7 +83,10 @@ export function messageRow(over: Partial<MessageRow> = {}): MessageRow {
   };
 }
 
-/** A SendGate stand-in: mock open() / automaticOn(); switches() answers both from them, as the real one does from one read. */
+/**
+ * A SendGate stand-in: mock open() / automaticOn(); switches() answers both from them, as the real
+ * one does from one read.
+ */
 export function fakeSwitches() {
   const open = vi.fn<() => Promise<boolean>>();
   const automaticOn = vi.fn<() => Promise<boolean>>();

@@ -122,7 +122,8 @@ describe('ThreadReactionService — the guard (as a text send)', () => {
   });
 
   it('a wamid of another number than the send line: 409, never a call Meta would refuse', async () => {
-    // Two lines: the chat window is open, so the reaction would leave from chat; the target came in on notifications.
+    // Two lines: the chat window is open, so the reaction would leave from chat; the target came in
+    // on notifications.
     const h = reactionHarness(target({ line: 'notifications' }));
     h.threads.thread.mockResolvedValue(threadRow({ last_chat_inbound_at: '2026-10-27T11:00:00Z' }));
     for (const [k, v] of TWO_LINES) vi.stubEnv(k, v);

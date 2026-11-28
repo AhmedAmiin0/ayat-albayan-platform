@@ -106,10 +106,14 @@ function mocks() {
   };
 }
 
-/** `resolve`: the system roles as seeded by default; a test may grant a role more (a DB-edited role). */
+/**
+ * `resolve`: the system roles as seeded by default; a test may grant a role more (a DB-edited
+ * role).
+ */
 export async function inboxApp(resolve: PermissionResolver = systemResolver) {
   const m = mocks();
-  // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between tests.
+  // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between
+  // tests.
   const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
   const root = messagingRoot(InboxModule, LessonRatingModule);
   const mod = await Test.createTestingModule({ imports: [root] })
