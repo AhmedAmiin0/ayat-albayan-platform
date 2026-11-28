@@ -1,6 +1,6 @@
 import { apiErrorCode } from '@ab/client-core';
 import { z } from 'zod';
-import { apiFetch } from './api';
+import { call } from './api';
 
 jest.mock('./supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } },
@@ -20,11 +20,13 @@ const reply = (body: unknown) =>
 
 test('a read with a schema resolves the parsed answer', async () => {
   reply({ id: 'p1', amount: 10, extra: true });
-  expect(await apiFetch('/payouts/p1', { schema: payout })).toEqual({ id: 'p1', amount: 10 });
+  expect(await call({ path: '/payouts/p1', schema: payout })).toEqual({ id: 'p1', amount: 10 });
 });
 
 test('an answer that breaks the schema rejects as bad_response', async () => {
   reply({ id: 'p1', amount: '10' });
-  const error: unknown = await apiFetch('/payouts/p1', { schema: payout }).catch((e: unknown) => e);
+  const error: unknown = await call({ path: '/payouts/p1', schema: payout }).catch(
+    (e: unknown) => e,
+  );
   expect(apiErrorCode(error)).toBe('bad_response');
 });
