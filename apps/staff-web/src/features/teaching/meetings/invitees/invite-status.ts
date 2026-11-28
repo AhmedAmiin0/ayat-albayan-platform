@@ -10,11 +10,11 @@ const BY_STATUS: Record<MeetingInviteStatus, string> = {
   cancelled: R.cancelled,
 };
 
-type Outcome = {
+interface Outcome {
   channel: MeetingInviteChannel;
   status: MeetingInviteStatus;
   error_code?: string | null;
-};
+}
 /** The creator may not send WhatsApp (owner policy 2026-10-13): the invitation is a link to copy. */
 const linkOnly = (i: Outcome) => i.error_code === 'chat_not_allowed';
 
@@ -33,7 +33,7 @@ export const copyPayload = (i: {
   invitation_text: string | null;
 }): string | null => (i.link === null ? null : (i.invitation_text ?? i.link));
 
-type Row = { kind: MeetingInviteeKind; display_name: string; status: MeetingInviteStatus };
+interface Row { kind: MeetingInviteeKind; display_name: string; status: MeetingInviteStatus }
 
 /** Never staff or a cancelled row; a typed phone for admin and sales only (the API answers 403). */
 export const mayResend = (i: Row, mayInvitePhones: boolean): boolean =>

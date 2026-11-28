@@ -21,7 +21,7 @@ export type StepKey = 'students' | 'missed' | 'teacher' | 'package' | 'slot' | '
 export { stepReady, stepsFor, stepsOf } from './draft.steps';
 export { days, draftPicks, pickPatch, withPicks } from './draft.days';
 
-export type PickedStudent = { id: string; name: string; code: string | null };
+export interface PickedStudent { id: string; name: string; code: string | null }
 
 export interface BookingDraft {
   /** Trial, package or makeup (R-SCH-10). */

@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { DataTable, type DataTableFeatures } from './DataTable';
 import { TableBox, tableBoxClass } from './TableBox';
 
-type Row = { id: string; name: string };
+interface Row { id: string; name: string }
 const col = createColumnHelper<DataTableFeatures, Row>();
 const columns = col.columns([col.accessor('name', { header: () => 'name' })]);
 

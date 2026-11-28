@@ -34,7 +34,7 @@ export interface BookingWizardProps {
   onProgress?: ((p: { draft: BookingDraft; step: StepKey; booked: boolean }) => void) | undefined;
 }
 
-type BackProps = { first: boolean; exit: BookingWizardProps['exit']; onBack: () => void };
+interface BackProps { first: boolean; exit: BookingWizardProps['exit']; onBack: () => void }
 
 /** On the first step the caller's exit, else disabled. */
 function BackButton({ first, exit, onBack }: BackProps) {

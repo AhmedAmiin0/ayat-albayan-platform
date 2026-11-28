@@ -59,7 +59,7 @@ describe('BookingWizard — a lead whose family is already on file (R-STU-03, R-
     expect(second).toMatchObject({ studentIds: [JOUD.id], leadId: LEAD });
     expect(second).not.toHaveProperty('newStudent');
     // Same wizard, same booking: the idempotency key does not change between the two tries.
-    expect(second?.['clientRequestId']).toBe(first?.['clientRequestId']);
+    expect(second?.clientRequestId).toBe(first?.clientRequestId);
   });
 
   it('«لا، هذا طالب جديد» books the new student anyway (force)', async () => {

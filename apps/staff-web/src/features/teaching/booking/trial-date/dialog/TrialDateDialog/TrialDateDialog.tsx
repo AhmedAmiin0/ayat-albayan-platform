@@ -21,7 +21,7 @@ export interface TrialDateDialogProps {
 }
 
 const noop = () => undefined;
-type Start = { draft: BookingDraft; hint: BookHint | null };
+interface Start { draft: BookingDraft; hint: BookHint | null }
 
 /** Collapsed so the wizard comes first. */
 function HistoryToggle({ query }: { query: UseQueryResult<TrialHistory> }) {

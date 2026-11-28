@@ -11,12 +11,12 @@ import {
 // A paginated list's whole URL state (R-NFR-08): page, sort and column filters, for routes whose
 // search holds nothing else. `?page=` is left out on page 1, like every other default.
 
-export type ListUrlState = { page: number; sort: SortSearch; filters: FilterSearch };
+export interface ListUrlState { page: number; sort: SortSearch; filters: FilterSearch }
 export type ListUrlSearch = { page?: number; sort?: string; dir?: SortDir } & Record<
   string,
   string | number | undefined
 >;
-export type ListUrlKeys = { sortKeys: readonly string[]; filterKeys: readonly string[] };
+export interface ListUrlKeys { sortKeys: readonly string[]; filterKeys: readonly string[] }
 
 function toPage(value: unknown): number {
   const n = Number(value);
@@ -26,7 +26,7 @@ function toPage(value: unknown): number {
 /** Raw route search → state: unknown sort keys, blank filters and bad pages dropped. */
 export function parseListUrl(search: Record<string, unknown>, keys: ListUrlKeys): ListUrlState {
   return {
-    page: toPage(search['page']),
+    page: toPage(search.page),
     sort: parseSortSearch(search, keys.sortKeys),
     filters: parseFilterSearch(search, keys.filterKeys),
   };

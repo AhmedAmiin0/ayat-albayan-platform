@@ -47,7 +47,7 @@ describe('thread header: the 24 h window', () => {
     renderThread({ lastInboundAgoMs: 3 * HOUR - 60_000 });
     const banner = await screen.findByTestId('window-banner');
     expect(banner.textContent).toBe(t.inbox.window.open.replace('{left}', '21س'));
-    expect(banner.dataset['open']).toBe('true');
+    expect(banner.dataset.open).toBe('true');
     expect(screen.queryByRole('button', { name: t.inbox.rating.send })).toBeNull();
   });
 

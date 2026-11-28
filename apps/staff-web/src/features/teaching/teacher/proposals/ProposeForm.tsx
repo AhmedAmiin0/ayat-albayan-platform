@@ -40,7 +40,10 @@ export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormPro
     mutationFn: () =>
       proposeLesson({
         id: lesson.id,
-        body: { startsAt: wallInstant(date, time, tz).toISOString(), ...(note.trim() ? { note: note.trim() } : {}) },
+        body: {
+          startsAt: wallInstant(date, time, tz).toISOString(),
+          ...(note.trim() ? { note: note.trim() } : {}),
+        },
       }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
@@ -61,21 +64,41 @@ export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormPro
         send.mutate();
       }}
     >
-      {!bare && <h4 ref={focusOnMount} tabIndex={-1} className="font-semibold outline-none">{t.teacherDash.propose.title}</h4>}
+      {!bare && (
+        <h4 ref={focusOnMount} tabIndex={-1} className="font-semibold outline-none">
+          {t.teacherDash.propose.title}
+        </h4>
+      )}
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label={t.teacherDash.propose.date}>
-          {(p) => <Input {...p} type="date" dir="ltr" min={today} value={date} onChange={(e) => setDate(e.target.value)} />}
+          {(p) => (
+            <Input
+              {...p}
+              type="date"
+              dir="ltr"
+              min={today}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+          )}
         </Field>
         <Field label={t.teacherDash.propose.time}>
           {(p) => (
-            <Select {...p} dir={clockDir(clock)} value={time} onChange={(e) => setTime(e.target.value)}>
+            <Select
+              {...p}
+              dir={clockDir(clock)}
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
+            >
               <ClockOptions times={timeOptions(time)} />
             </Select>
           )}
         </Field>
       </div>
       <Field label={t.teacherDash.propose.note}>
-        {(p) => <Input {...p} value={note} maxLength={500} onChange={(e) => setNote(e.target.value)} />}
+        {(p) => (
+          <Input {...p} value={note} maxLength={500} onChange={(e) => setNote(e.target.value)} />
+        )}
       </Field>
       {send.isError && <FormAlert>{lessonErrorText(send.error)}</FormAlert>}
       <div className="flex flex-wrap justify-end gap-2.5">

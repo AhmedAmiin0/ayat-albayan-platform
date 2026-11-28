@@ -62,13 +62,13 @@ export function newStudentReady(s: NewStudentDraft | null): boolean {
 }
 
 type LeadParts = Pick<Extract<BookingRequest, { newStudent: unknown }>, 'newStudent' | 'guardian'>;
-type Family = {
+interface Family {
   program: Program;
   tz: string;
   pkg: PackageSize;
   genderPref: Gender | null;
   country: string | null;
-};
+}
 
 const blankToNull = (v: string | null | undefined) => (v?.trim() ? v.trim() : null);
 

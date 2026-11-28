@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AdminShell, SalesShell, TeacherShell } from '@/components/shell/nav/SectionShells/SectionShells';
 
-type Shell = { nav?: ReactNode; topNav?: ReactNode };
+interface Shell { nav?: ReactNode; topNav?: ReactNode }
 const inboxRealtime = vi.hoisted(() => vi.fn<(enabled: boolean) => void>());
 const appShell = vi.hoisted(() => vi.fn((props: Shell) => <div>{props.nav ?? props.topNav}</div>));
 const perms = vi.hoisted(() => ({ loaded: false }));

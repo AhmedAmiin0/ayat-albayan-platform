@@ -6,7 +6,7 @@ import { closeFilters, openFilters } from '@/test/open-filters';
 import { FILTER_DEBOUNCE_MS } from './ColumnFilterText';
 import { DataTable, type DataTableFeatures } from './DataTable';
 
-type Row = { id: string; name: string; status: string };
+interface Row { id: string; name: string; status: string }
 
 const col = createColumnHelper<DataTableFeatures, Row>();
 const options = [

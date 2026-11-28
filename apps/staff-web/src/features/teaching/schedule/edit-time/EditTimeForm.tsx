@@ -48,7 +48,7 @@ export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
         body: editBody({ mode, expectedStartsAt: lesson.starts_at, expectedEndsAt: lesson.ends_at, choice, reason: value.reason, notify, override }),
       }),
     onSuccess: async (result) => {
-      if (needsFollowUp(result)) return setDone(result);
+      if (needsFollowUp(result)) {  setDone(result);; return; }
       await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
       onDone(savedMessage(result));
     },

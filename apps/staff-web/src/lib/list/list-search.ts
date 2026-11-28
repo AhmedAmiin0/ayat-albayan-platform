@@ -14,9 +14,9 @@ export function parseSortSearch(
   search: Record<string, unknown>,
   keys: readonly string[],
 ): SortSearch {
-  const sort = search['sort'];
+  const sort = search.sort;
   if (typeof sort !== 'string' || !keys.includes(sort)) return {};
-  return search['dir'] === 'desc' ? { sort, dir: 'desc' } : { sort };
+  return search.dir === 'desc' ? { sort, dir: 'desc' } : { sort };
 }
 
 /** `f_<key>` params for the allowlisted keys; non-empty strings only. */

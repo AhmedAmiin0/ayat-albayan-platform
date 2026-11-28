@@ -12,13 +12,13 @@ import { sendStart, settleOwnSend } from '@/features/messaging/inbox/composer/li
 import { useReplyTarget } from '@/features/messaging/inbox/composer/lib/use-reply-target';
 import { rereadSentChat, showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
-type FileSend = {
+interface FileSend {
   phone: string;
   clientRequestId: string;
   file: File;
   caption: string;
   replyTo?: string | undefined;
-};
+}
 
 export interface FileComposerProps {
   phone: string;

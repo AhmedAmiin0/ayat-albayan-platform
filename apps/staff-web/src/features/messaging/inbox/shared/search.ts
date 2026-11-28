@@ -11,7 +11,7 @@ export type ThreadSort = (typeof THREAD_SORTS)[number];
  * status (`f_status`, R-NFR-08) and page. One route with search params, so the list keeps its
  * filters while threads open and close.
  */
-export type InboxSearch = {
+export interface InboxSearch {
   phone?: string;
   q?: string;
   unread?: true;
@@ -25,7 +25,7 @@ export type InboxSearch = {
   /** A student id whose course wizard opens on the chat. */
   course?: string;
   page: number;
-};
+}
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -45,19 +45,19 @@ const courseParam = (s: Record<string, unknown>): Pick<InboxSearch, 'course'> =>
 
 /** Route `validateSearch`: a bad phone closes the thread; blank search, unknown sort/status, a non-id list drop; bad page → 1. */
 export function parseInboxSearch(s: Record<string, unknown>): InboxSearch {
-  const page = Number(s['page']);
+  const page = Number(s.page);
   const out: InboxSearch = { page: Number.isInteger(page) && page > 1 ? page : 1 };
-  const phone = typeof s['phone'] === 'string' ? s['phone'].trim() : '';
-  const q = typeof s['q'] === 'string' ? s['q'].trim() : '';
+  const phone = typeof s.phone === 'string' ? s.phone.trim() : '';
+  const q = typeof s.q === 'string' ? s.q.trim() : '';
   if (E164_RE.test(phone)) out.phone = phone;
   if (q) out.q = q;
-  if (s['unread'] === true || s['unread'] === 'true') out.unread = true;
-  const sort = pick(THREAD_SORTS, s['sort']);
+  if (s.unread === true || s.unread === 'true') out.unread = true;
+  const sort = pick(THREAD_SORTS, s.sort);
   if (sort) out.sort = sort;
-  const status = pick(LEAD_STATUSES, s['f_status']);
+  const status = pick(LEAD_STATUSES, s.f_status);
   if (status) out.f_status = status;
-  if (typeof s['list'] === 'string' && UUID.test(s['list'])) out.list = s['list'];
-  if (s['calls'] === true || s['calls'] === 'true') out.calls = true;
+  if (typeof s.list === 'string' && UUID.test(s.list)) out.list = s.list;
+  if (s.calls === true || s.calls === 'true') out.calls = true;
   return { ...out, ...anchorOf(s.msg, out.phone), ...courseParam(s) };
 }
 

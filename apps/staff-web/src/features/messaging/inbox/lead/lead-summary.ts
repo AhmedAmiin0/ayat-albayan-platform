@@ -5,7 +5,7 @@ import { hhmmText, t } from '@ab/web-kit';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { qualForm } from './qualification/qualification-form';
 
-export type SummaryRow = { label: string; value: string };
+export interface SummaryRow { label: string; value: string }
 
 const CITY: Record<string, string | undefined> = t.tz;
 const WEEKDAY: Record<string, string | undefined> = t.enums.weekday;

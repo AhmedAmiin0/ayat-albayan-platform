@@ -7,7 +7,7 @@ const ARIA_SORT = { asc: 'ascending', desc: 'descending', none: 'none' } as cons
 const HINT = { asc: t.table.sortAsc, desc: t.table.sortDesc, none: t.table.sortNone };
 const ICON = { asc: 'arrow-up', desc: 'arrow-down', none: 'arrows-up-down' } as const;
 
-type SortState = { dir: SortDir | false; toggle: () => void };
+interface SortState { dir: SortDir | false; toggle: () => void }
 
 /** How a column sorts here: server (`sort` prop + `meta.sortKey`), client (TanStack), or not at all. */
 function sortStateOf<T extends RowData>(
