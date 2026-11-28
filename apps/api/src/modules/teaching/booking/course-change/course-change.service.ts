@@ -103,7 +103,7 @@ export class CourseChange {
     return { sub, active, all };
   }
 
-  /** Each new lesson against the teacher's and student's time, minus moved lessons and old rules. */
+  /** New lessons against the teacher's and student's time, minus moved lessons and old rules. */
   private conflicts(p: Planned, teacherId: string | undefined): Promise<Conflict[]> {
     return this.deps.checker.check({
       teacherId: teacherId ?? p.active[0]?.teacher_id ?? '',
