@@ -16,8 +16,10 @@ export const KID = '66666666-6666-4666-8666-666666666666';
 export const KID2 = '77777777-7777-4777-8777-777777777777';
 export const SUB = '88888888-8888-4888-8888-888888888888';
 export const MSG = '99999999-9999-4999-8999-999999999999';
+export const GUARDIAN = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+export const PAYMENT = 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
 
-export const familyThread = { ...thread, phone_e164: PHONE, guardian_id: 'g-9', lead_id: null, lead_status: null, guardian_tz: 'Asia/Riyadh' };
+export const familyThread = { ...thread, phone_e164: PHONE, guardian_id: GUARDIAN, lead_id: null, lead_status: null, guardian_tz: 'Asia/Riyadh' };
 
 export function openSub(
   fields: Partial<SalesMoneySubscriptionView> = {},
@@ -56,7 +58,7 @@ export const salesQuote: SalesQuoteView = {
 
 export function salesPayment(status: SalesPaymentView['student']['status'] = 'active'): SalesPaymentView {
   return {
-    id: 'p-1',
+    id: PAYMENT,
     subscription_id: SUB,
     student: { id: KID, code: 'AB-0201', name: 'ريم', status },
     amount: 180,

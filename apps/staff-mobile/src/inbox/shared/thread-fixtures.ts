@@ -14,10 +14,17 @@ import type { ThreadListCache } from '@/inbox/thread/hooks/thread-list-cache';
 export const PHONE = '+966552147730';
 export const NOW = new Date('2026-10-02T09:00:00Z');
 
+const hexOf = (label: string): string =>
+  Array.from(label, (c) => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+
+/** A fixed uuid named by a short label (at most 6 ascii characters), so ids stay readable. */
+export const uid = (label: string): string =>
+  `00000000-0000-4000-8000-${hexOf(label).padStart(12, '0').slice(-12)}`;
+
 export const thread: ThreadView = {
   phone_e164: PHONE,
   display_name: 'هدى سالم',
-  last_message_id: 'm2',
+  last_message_id: uid('m2'),
   last_direction: 'outbound',
   last_body: 'أهلًا بيكي',
   last_template_key: null,
@@ -26,7 +33,7 @@ export const thread: ThreadView = {
   last_message_at: '2026-10-02T08:05:00Z',
   last_inbound_at: '2026-10-02T08:00:00Z',
   unread_count: 0,
-  lead_id: 'a1',
+  lead_id: uid('a1'),
   lead_name: 'هدى سالم',
   lead_status: 'new',
   lead_source: 'facebook_ad',
@@ -49,15 +56,8 @@ export function sentText(fields: Partial<TextSendAnswer> & { id: string }): Text
   return { replayed: false, same_request: false, ...message(fields) };
 }
 
-const hexOf = (label: string): string =>
-  Array.from(label, (c) => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
-
-/** A fixed uuid named by a short label (at most 6 ascii characters), so ids stay readable. */
-export const uid = (label: string): string =>
-  `00000000-0000-4000-8000-${hexOf(label).padStart(12, '0').slice(-12)}`;
-
 export const inbound = message({
-  id: 'm1',
+  id: uid('m1'),
   direction: 'inbound',
   status: 'delivered',
   body: 'السلام عليكم، عايزة أسجّل بنتي',
@@ -65,7 +65,7 @@ export const inbound = message({
 });
 
 export const delivered = message({
-  id: 'm2',
+  id: uid('m2'),
   body: 'أهلًا بيكي',
   status: 'delivered',
   sent_at: '2026-10-02T08:05:00Z',
@@ -74,7 +74,7 @@ export const delivered = message({
 });
 
 export const failed = message({
-  id: 'm3',
+  id: uid('m3'),
   body: 'حلقة سهيلة النهاردة — 17:00',
   template_key: 'lesson_reminder_plain',
   status: 'failed',
