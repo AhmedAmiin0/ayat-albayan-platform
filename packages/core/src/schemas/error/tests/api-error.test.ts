@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { apiErrorSchema } from './api-error';
+import { apiErrorSchema } from '../api-error';
 
 describe('apiErrorSchema: the error body every api answer carries', () => {
   it('reads the code, the message and the validation issues', () => {

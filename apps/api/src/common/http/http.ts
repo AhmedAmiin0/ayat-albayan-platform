@@ -1,15 +1,20 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { pageQuery } from '@ab/core';
+import { pageQuery, toApiIssues } from '@ab/core';
 import { z } from 'zod';
 
 // ponytail: module-local; lift to common/ once a second module needs the same helpers.
 
-/** Validates with a shared zod schema → 400 `{ message: 'validation_failed', issues }`. */
+/**
+ * Validates with a shared zod schema → 400 `{ message: 'validation_failed', issues }`, each issue
+ * in the shared `apiIssueSchema` shape so clients word it as their own check would (docs/67).
+ */
 export function parseOrThrow<S extends z.ZodType>(schema: S, value: unknown): z.output<S> {
   const result = schema.safeParse(value);
   if (result.success) return result.data;
-  const issues = result.error.issues.map((i) => ({ path: i.path.join('.'), message: i.message }));
-  throw new BadRequestException({ message: 'validation_failed', issues });
+  throw new BadRequestException({
+    message: 'validation_failed',
+    issues: toApiIssues(result.error.issues),
+  });
 }
 
 /**
