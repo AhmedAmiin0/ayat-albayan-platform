@@ -18,7 +18,11 @@ describe('the backup’s alerts (bell only, once a day per subject)', () => {
   it('skipped: counted in Arabic forms, the first names given with size and why', async () => {
     const t = setup();
     const keys = ['reports/a', 'reports/b', 'reports/c', 'reports/d', 'reports/e', 'reports/f'];
-    const items: BackupSkippedItem[] = keys.map((id) => ({ id, size: 3 * 1024 ** 2, reason: 'changed' }));
+    const items: BackupSkippedItem[] = keys.map((id) => ({
+      id,
+      size: 3 * 1024 ** 2,
+      reason: 'changed',
+    }));
     items[0] = { id: 'recordings/r.mp4', size: 5 * 1024 ** 3, reason: 'too_large' };
     await t.alerts.skipped({ items, now });
     expect(t.said().subject).toBe('drive_backup:skipped:2026-11-10');

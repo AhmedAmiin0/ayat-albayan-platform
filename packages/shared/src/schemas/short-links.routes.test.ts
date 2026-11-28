@@ -51,6 +51,12 @@ describe('shortLinkGateRoutes', () => {
     );
   });
 
+  it('marks the view and the code routes public, and leaves open to a signed-in caller', () => {
+    const { view, start, verify, open } = shortLinkGateRoutes;
+    expect([view, start, verify].map((r) => r.isPublic)).toEqual([true, true, true]);
+    expect(open).not.toHaveProperty('isPublic');
+  });
+
   it('reads the phone and the six digits, and answers the start with nothing', () => {
     const { start, verify } = shortLinkGateRoutes;
     expect(start.body.safeParse({ phone: '0100' }).success).toBe(false);
@@ -60,7 +66,9 @@ describe('shortLinkGateRoutes', () => {
 
   it('keeps the target out of every outcome but open', () => {
     const answer = shortLinkGateRoutes.open.response;
-    expect(answer.parse({ outcome: 'gone', target: 'https://x.test' })).toEqual({ outcome: 'gone' });
+    expect(answer.parse({ outcome: 'gone', target: 'https://x.test' })).toEqual({
+      outcome: 'gone',
+    });
     expect(answer.safeParse({ outcome: 'open' }).success).toBe(false);
   });
 });

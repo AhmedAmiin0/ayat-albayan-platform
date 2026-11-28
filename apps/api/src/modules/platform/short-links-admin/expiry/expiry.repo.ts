@@ -13,24 +13,28 @@ export class LinkExpiryRepo {
 
   /** active → expired once past expires_at; the number of links stopped. */
   async expire(now: Date): Promise<number> {
-    const data = rows(await this.db
-      .from('short_links')
-      .update({ status: 'expired' })
-      .eq('kind', MANAGED_KIND)
-      .eq('status', 'active')
-      .lte('expires_at', now.toISOString())
-      .select('code'));
+    const data = rows(
+      await this.db
+        .from('short_links')
+        .update({ status: 'expired' })
+        .eq('kind', MANAGED_KIND)
+        .eq('status', 'active')
+        .lte('expires_at', now.toISOString())
+        .select('code'),
+    );
     return data.length;
   }
 
   /** Deletes managed links that expired before `cutoff` (their users and visits cascade). */
   async purge(cutoff: Date): Promise<number> {
-    const data = rows(await this.db
-      .from('short_links')
-      .delete()
-      .eq('kind', MANAGED_KIND)
-      .lt('expires_at', cutoff.toISOString())
-      .select('code'));
+    const data = rows(
+      await this.db
+        .from('short_links')
+        .delete()
+        .eq('kind', MANAGED_KIND)
+        .lt('expires_at', cutoff.toISOString())
+        .select('code'),
+    );
     return data.length;
   }
 }

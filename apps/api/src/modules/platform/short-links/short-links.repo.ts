@@ -23,22 +23,17 @@ export class ShortLinksRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async byCode(code: string): Promise<ShortLinkRow | null> {
-    const data = maybe(await this.db
-      .from('short_links')
-      .select('*')
-      .eq('code', code)
-      .maybeSingle());
+    const data = maybe(
+      await this.db.from('short_links').select('*').eq('code', code).maybeSingle(),
+    );
     return data;
   }
 
   /** The row of (kind, subject) with its target refreshed; null when there is none yet. */
   async refresh(key: Key, target: Target): Promise<ShortLinkRow | null> {
-    const data = maybe(await this.db
-      .from('short_links')
-      .update(target)
-      .match(key)
-      .select('*')
-      .maybeSingle());
+    const data = maybe(
+      await this.db.from('short_links').update(target).match(key).select('*').maybeSingle(),
+    );
     return data;
   }
 

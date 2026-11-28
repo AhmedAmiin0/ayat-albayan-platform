@@ -46,5 +46,7 @@ const textOf = (e: unknown): string =>
 
 /** Never a token or a body: status and Google's reason only, ≤ 500 chars (the column check). */
 export function errorText(e: unknown): string {
-  return textOf(e).replace(/(ya29|1\/\/)[A-Za-z0-9._-]+/g, '[redacted]').slice(0, 500);
+  return textOf(e)
+    .replace(/(ya29|1\/\/)[A-Za-z0-9._-]+/g, '[redacted]')
+    .slice(0, 500);
 }

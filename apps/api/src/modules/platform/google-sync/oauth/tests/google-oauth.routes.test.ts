@@ -7,6 +7,7 @@ describe('googleOAuthRoutes', () => {
     expect(`${callback.method} ${callback.path}`).toBe('GET /integrations/google/callback');
     expect(callback.response).toBe('redirect');
     expect(callback).not.toHaveProperty('permissions');
+    expect(callback.isPublic).toBe(true);
   });
 
   it('reads the code, the state and the error Google sends back', () => {

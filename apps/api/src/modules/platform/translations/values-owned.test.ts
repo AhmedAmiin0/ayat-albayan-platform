@@ -39,7 +39,9 @@ describe('«الترجمات» vs «القيم» (docs/26 §3)', () => {
   it('PUT and DELETE of the ar override of a hint key: 409 edit_on_values with the settings key', async () => {
     const { q, s } = service();
     const want = { code: 'edit_on_values', message: 'edit_on_values', settingKey: 'upload_max_mb' };
-    expect(await conflictBody(() => s.save({ locale: 'ar', key: HINT, value: 'نص', actorId: 'u1' }))).toEqual(want);
+    expect(
+      await conflictBody(() => s.save({ locale: 'ar', key: HINT, value: 'نص', actorId: 'u1' })),
+    ).toEqual(want);
     expect(await conflictBody(() => s.restore('ar', HINT))).toEqual(want);
     expect(q.upsert).not.toHaveBeenCalled();
     expect(q.remove).not.toHaveBeenCalled();

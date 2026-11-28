@@ -1,16 +1,31 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { GoogleData } from '@/modules/platform/google-sync/google-data';
-import { GoogleApiError, type GoogleClientFactory, type GoogleOAuth } from '@/modules/platform/google-sync/google-client.port';
+import {
+  GoogleApiError,
+  type GoogleClientFactory,
+  type GoogleOAuth,
+} from '@/modules/platform/google-sync/google-client.port';
 import { fakeFactory } from '@/modules/platform/google-sync/http/google-client.fake';
 import { GoogleConnection } from '@/modules/platform/google-sync/oauth/google-connection';
-import { GoogleOAuthService, REQUIRED_SCOPES } from '@/modules/platform/google-sync/oauth/google-oauth.service';
+import {
+  GoogleOAuthService,
+  REQUIRED_SCOPES,
+} from '@/modules/platform/google-sync/oauth/google-oauth.service';
 import type { GoogleRuntime } from '@/modules/platform/google-sync/google-runtime';
 import { fakeData } from '@/modules/platform/google-sync/google-sync.fakes';
 import { nonceHash } from '@/modules/platform/google-sync/oauth/oauth-state';
 import type { GoogleAccountQueries } from '@/modules/platform/google-sync/oauth/google-account.queries';
 import type { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts';
 
-function setup(exchange = vi.fn().mockResolvedValue({ refreshToken: 'fake-refresh', scopes: [...REQUIRED_SCOPES, 'openid'], accessToken: 'fake-access' })) {
+function setup(
+  exchange = vi
+    .fn()
+    .mockResolvedValue({
+      refreshToken: 'fake-refresh',
+      scopes: [...REQUIRED_SCOPES, 'openid'],
+      accessToken: 'fake-access',
+    }),
+) {
   const data = fakeData();
   let stored = '';
   data.account.setNonce.mockImplementation(
@@ -21,7 +36,12 @@ function setup(exchange = vi.fn().mockResolvedValue({ refreshToken: 'fake-refres
     stored = '';
     return ok;
   });
-  const oauth: GoogleOAuth = { authUrl: vi.fn(({ state }) => `https://stub.test/auth?state=${encodeURIComponent(state)}`), exchange, email: vi.fn().mockResolvedValue('academy@example.test'), revoke: vi.fn() };
+  const oauth: GoogleOAuth = {
+    authUrl: vi.fn(({ state }) => `https://stub.test/auth?state=${encodeURIComponent(state)}`),
+    exchange,
+    email: vi.fn().mockResolvedValue('academy@example.test'),
+    revoke: vi.fn(),
+  };
   const factory: GoogleClientFactory = fakeFactory(undefined, oauth);
   const connection = new GoogleConnection(
     data.account as unknown as GoogleAccountQueries,
@@ -41,10 +61,18 @@ describe('GoogleOAuthService', () => {
   it('connect → callback stores the refresh token in Vault and marks the account connected', async () => {
     const s = setup();
     const state = stateOf(await s.svc.connectUrl('admin-1'));
-    expect(s.data.account.setNonce).toHaveBeenCalledWith(expect.objectContaining({ hash: expect.stringMatching(/^[0-9a-f]{64}$/) }));
+    expect(s.data.account.setNonce).toHaveBeenCalledWith(
+      expect.objectContaining({ hash: expect.stringMatching(/^[0-9a-f]{64}$/) }),
+    );
     expect(await s.svc.callback({ code: 'code-1', state })).toBe('connected');
     expect(s.data.account.setToken).toHaveBeenCalledWith('fake-refresh');
-    expect(s.data.account.update).toHaveBeenCalledWith(expect.objectContaining({ status: 'connected', email: 'academy@example.test', connected_by: 'admin-1' }));
+    expect(s.data.account.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        status: 'connected',
+        email: 'academy@example.test',
+        connected_by: 'admin-1',
+      }),
+    );
     expect(JSON.stringify(s.audit.record.mock.calls)).not.toContain('fake-refresh');
   });
 
@@ -61,18 +89,35 @@ describe('GoogleOAuthService', () => {
   it('denied consent, a failed exchange, no refresh token or missing scopes never connect', async () => {
     expect(await setup().svc.callback({ error: 'access_denied', state: 'x' })).toBe('denied');
     const failing = setup(vi.fn().mockRejectedValue(new GoogleApiError(400, 'invalid_grant')));
-    expect(await failing.svc.callback({ code: 'c', state: stateOf(await failing.svc.connectUrl('a')) })).toBe('exchange');
-    const noRefresh = setup(vi.fn().mockResolvedValue({ refreshToken: null, scopes: [...REQUIRED_SCOPES], accessToken: 'x' }));
-    expect(await noRefresh.svc.callback({ code: 'c', state: stateOf(await noRefresh.svc.connectUrl('a')) })).toBe('exchange');
-    const narrow = setup(vi.fn().mockResolvedValue({ refreshToken: 'r', scopes: ['openid'], accessToken: 'x' }));
-    expect(await narrow.svc.callback({ code: 'c', state: stateOf(await narrow.svc.connectUrl('a')) })).toBe('scopes');
+    expect(
+      await failing.svc.callback({ code: 'c', state: stateOf(await failing.svc.connectUrl('a')) }),
+    ).toBe('exchange');
+    const noRefresh = setup(
+      vi
+        .fn()
+        .mockResolvedValue({ refreshToken: null, scopes: [...REQUIRED_SCOPES], accessToken: 'x' }),
+    );
+    expect(
+      await noRefresh.svc.callback({
+        code: 'c',
+        state: stateOf(await noRefresh.svc.connectUrl('a')),
+      }),
+    ).toBe('exchange');
+    const narrow = setup(
+      vi.fn().mockResolvedValue({ refreshToken: 'r', scopes: ['openid'], accessToken: 'x' }),
+    );
+    expect(
+      await narrow.svc.callback({ code: 'c', state: stateOf(await narrow.svc.connectUrl('a')) }),
+    ).toBe('scopes');
     expect(narrow.data.account.setToken).not.toHaveBeenCalled();
   });
 
   it('refuses another Google account than the academy one already connected', async () => {
     const s = setup();
     s.data.account.get.mockResolvedValue({ email: 'other@example.test' });
-    expect(await s.svc.callback({ code: 'c', state: stateOf(await s.svc.connectUrl('admin-1')) })).toBe('account');
+    expect(
+      await s.svc.callback({ code: 'c', state: stateOf(await s.svc.connectUrl('admin-1')) }),
+    ).toBe('account');
     expect(s.data.account.setToken).not.toHaveBeenCalled();
     expect(s.oauth.revoke).toHaveBeenCalledWith('fake-refresh');
   });
@@ -80,7 +125,9 @@ describe('GoogleOAuthService', () => {
   it('refuses a grant whose account email cannot be read (the switch check would be blind after it)', async () => {
     const s = setup();
     vi.mocked(s.oauth.email).mockResolvedValue(null);
-    expect(await s.svc.callback({ code: 'c', state: stateOf(await s.svc.connectUrl('admin-1')) })).toBe('account');
+    expect(
+      await s.svc.callback({ code: 'c', state: stateOf(await s.svc.connectUrl('admin-1')) }),
+    ).toBe('account');
     expect(s.data.account.setToken).not.toHaveBeenCalled();
     expect(s.oauth.revoke).toHaveBeenCalledWith('fake-refresh');
   });
@@ -91,7 +138,10 @@ describe('GoogleOAuthService', () => {
     await s.svc.disconnect('admin-1');
     expect(s.oauth.revoke).toHaveBeenCalledWith('fake-refresh');
     expect(s.data.account.clearToken).toHaveBeenCalled();
-    expect(s.data.account.update).toHaveBeenCalledWith({ status: 'disconnected', last_error: null });
+    expect(s.data.account.update).toHaveBeenCalledWith({
+      status: 'disconnected',
+      last_error: null,
+    });
   });
 
   it('stores only the nonce hash', async () => {

@@ -4,7 +4,12 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { featureRoot } from '@/common/infra/test-root';
 import { GoogleSyncModule } from '@/modules/platform/google-sync/google-sync.module';
 import { AuditService } from '@/common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { PermissionResolver } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { GoogleAccountQueries } from '@/modules/platform/google-sync/oauth/google-account.queries';
@@ -27,7 +32,8 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 /** A custom role that was handed settings.* still is not the academy's admin. */
-const resolver: PermissionResolver = async (u) => (u.role === 'sales' ? ['settings.read', 'settings.write'] : systemResolver(u));
+const resolver: PermissionResolver = async (u) =>
+  u.role === 'sales' ? ['settings.read', 'settings.write'] : systemResolver(u);
 
 const data = fakeData();
 const map = {
@@ -39,16 +45,29 @@ const map = {
 const log = { recent: vi.fn().mockResolvedValue([]), one: vi.fn() };
 
 const ROUTES = [
-  ['GET', '/admin/google/status'], ['GET', '/admin/google/connect'], ['POST', '/admin/google/disconnect'], ['PUT', '/admin/google/settings'],
-  ['POST', '/admin/google/discover'], ['PUT', '/admin/google/drive'], ['GET', '/admin/google/teachers'], ['GET', '/admin/google/students'],
-  ['GET', '/admin/google/items'], ['POST', '/admin/google/reconcile'],
-  ['GET', `/admin/google/teachers/${TEACHER_ID}/calendar-owner`], ['PUT', `/admin/google/teachers/${TEACHER_ID}/calendar-owner`],
+  ['GET', '/admin/google/status'],
+  ['GET', '/admin/google/connect'],
+  ['POST', '/admin/google/disconnect'],
+  ['PUT', '/admin/google/settings'],
+  ['POST', '/admin/google/discover'],
+  ['PUT', '/admin/google/drive'],
+  ['GET', '/admin/google/teachers'],
+  ['GET', '/admin/google/students'],
+  ['GET', '/admin/google/items'],
+  ['POST', '/admin/google/reconcile'],
+  ['GET', `/admin/google/teachers/${TEACHER_ID}/calendar-owner`],
+  ['PUT', `/admin/google/teachers/${TEACHER_ID}/calendar-owner`],
 ] as const;
 
 describe('/admin/google (docs/24): admins only', () => {
   let app: NestFastifyApplication;
   const call = (o: { method: string; url: string; token?: string; payload?: object }) =>
-    app.inject({ method: o.method as 'GET', url: o.url, payload: o.payload, headers: o.token ? { authorization: `Bearer ${o.token}` } : {} });
+    app.inject({
+      method: o.method as 'GET',
+      url: o.url,
+      payload: o.payload,
+      headers: o.token ? { authorization: `Bearer ${o.token}` } : {},
+    });
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(GoogleSyncModule)] })
@@ -116,8 +135,19 @@ describe('/admin/google (docs/24): admins only', () => {
   });
 
   it('refuses a bad settings body (400) and connect without an OAuth client (409)', async () => {
-    expect((await call({ method: 'PUT', url: '/admin/google/settings', token: 'admin', payload: { mode: 'write' } })).statusCode).toBe(400);
-    expect((await call({ method: 'GET', url: '/admin/google/connect', token: 'admin' })).statusCode).toBe(409);
+    expect(
+      (
+        await call({
+          method: 'PUT',
+          url: '/admin/google/settings',
+          token: 'admin',
+          payload: { mode: 'write' },
+        })
+      ).statusCode,
+    ).toBe(400);
+    expect(
+      (await call({ method: 'GET', url: '/admin/google/connect', token: 'admin' })).statusCode,
+    ).toBe(409);
     expect(data.settings.write).not.toHaveBeenCalled();
   });
 
@@ -140,11 +170,19 @@ describe('/admin/google (docs/24): admins only', () => {
   });
 
   it('the public callback always redirects to the settings page; a forged state never connects', async () => {
-    const res = await call({ method: 'GET', url: '/integrations/google/callback?code=x&state=forged' });
+    const res = await call({
+      method: 'GET',
+      url: '/integrations/google/callback?code=x&state=forged',
+    });
     expect(res.statusCode).toBe(302);
-    expect(res.headers.location).toMatch(/\/admin\/settings\?google=error&reason=state#integrations$/);
+    expect(res.headers.location).toMatch(
+      /\/admin\/settings\?google=error&reason=state#integrations$/,
+    );
     expect(data.account.setToken).not.toHaveBeenCalled();
-    const denied = await call({ method: 'GET', url: '/integrations/google/callback?error=access_denied' });
+    const denied = await call({
+      method: 'GET',
+      url: '/integrations/google/callback?error=access_denied',
+    });
     expect(denied.headers.location).toContain('reason=denied');
   });
 });

@@ -30,10 +30,12 @@ export function suggestCalendar(
     : undefined;
   if (byId) return byId;
   const names = [t.display_name_ar, t.display_name_en ?? ''].map(normalizeArabic).filter(Boolean);
-  return calendars.find((c) => {
-    const who = calendarTeacher(c.name);
-    return who !== null && names.includes(who);
-  }) ?? null;
+  return (
+    calendars.find((c) => {
+      const who = calendarTeacher(c.name);
+      return who !== null && names.includes(who);
+    }) ?? null
+  );
 }
 
 export interface SummaryLink {

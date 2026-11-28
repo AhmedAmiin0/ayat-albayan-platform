@@ -15,9 +15,12 @@ interface StatePayload {
 }
 
 const b64 = (buf: Buffer | string): string => Buffer.from(buf).toString('base64url');
-export const stateKey = (secret: string): Buffer => createHmac('sha256', secret).update('google-oauth-state:v1').digest();
-const sign = (body: string, key: Buffer): string => b64(createHmac('sha256', key).update(body).digest());
-export const nonceHash = (nonce: string): string => createHash('sha256').update(nonce).digest('hex');
+export const stateKey = (secret: string): Buffer =>
+  createHmac('sha256', secret).update('google-oauth-state:v1').digest();
+const sign = (body: string, key: Buffer): string =>
+  b64(createHmac('sha256', key).update(body).digest());
+export const nonceHash = (nonce: string): string =>
+  createHash('sha256').update(nonce).digest('hex');
 
 /** A new state for `userId`, valid until now + 10 minutes. */
 export function newState(input: { userId: string; key: Buffer; now: number }): {

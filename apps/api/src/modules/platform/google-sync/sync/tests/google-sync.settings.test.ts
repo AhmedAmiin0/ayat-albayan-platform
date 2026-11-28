@@ -1,7 +1,10 @@
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
-import { GoogleSyncAcademySettings, type GoogleSyncAcademySettingsValues } from '@/modules/platform/google-sync/sync/google-sync.settings';
+import {
+  GoogleSyncAcademySettings,
+  type GoogleSyncAcademySettingsValues,
+} from '@/modules/platform/google-sync/sync/google-sync.settings';
 
 /** Pinned by hand: every key GoogleSyncSource reads. */
 const EXPECTED = ['meeting_link_auto'] as const;

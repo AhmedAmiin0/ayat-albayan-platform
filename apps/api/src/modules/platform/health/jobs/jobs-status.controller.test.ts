@@ -3,7 +3,14 @@ import { describe, expect, it } from 'vitest';
 import type { BeatReader } from '@/common/jobs/beats';
 import { JobsStatusController } from './jobs-status.controller';
 
-const beat: JobBeat = { name: 'a', everyMs: 1_000, since: 0, lastOkAt: 0, lastErrorAt: null, lastError: null };
+const beat: JobBeat = {
+  name: 'a',
+  everyMs: 1_000,
+  since: 0,
+  lastOkAt: 0,
+  lastErrorAt: null,
+  lastError: null,
+};
 const reader = (beats: JobBeat[] | null) => ({ read: async () => beats }) as unknown as BeatReader;
 
 describe('GET /admin/jobs', () => {

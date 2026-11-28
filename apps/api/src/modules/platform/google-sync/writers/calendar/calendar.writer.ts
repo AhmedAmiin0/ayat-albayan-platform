@@ -3,16 +3,35 @@ import { contentHash } from './content-hash';
 import { eventBody, eventWanted, isOurEvent, type EventCopy } from './event-format';
 import { scriptEventAt } from './script-guard';
 import { GoogleAlerts } from '@/modules/platform/google-sync/google-alerts';
-import { GoogleApiError, type EventRef, type GoogleClient, type GoogleEventBody } from '@/modules/platform/google-sync/google-client.port';
-import type { ItemResult, SyncItem } from '@/modules/platform/google-sync/sync/google-items.queries';
+import {
+  GoogleApiError,
+  type EventRef,
+  type GoogleClient,
+  type GoogleEventBody,
+} from '@/modules/platform/google-sync/google-client.port';
+import type {
+  ItemResult,
+  SyncItem,
+} from '@/modules/platform/google-sync/sync/google-items.queries';
 import { GoogleMapQueries } from '@/modules/platform/google-sync/map/google-map.queries';
-import { GoogleSyncSource, type LessonSource } from '@/modules/platform/google-sync/sync/google-sync.source';
-import { planned, synced, type ItemWriter, type WriteCtx } from '@/modules/platform/google-sync/sync/write-context';
+import {
+  GoogleSyncSource,
+  type LessonSource,
+} from '@/modules/platform/google-sync/sync/google-sync.source';
+import {
+  planned,
+  synced,
+  type ItemWriter,
+  type WriteCtx,
+} from '@/modules/platform/google-sync/sync/write-context';
 
 const MAIN_CALENDAR = 'primary';
 
 /** Deletes only an event that carries our tag for this lesson; `foreign` = not ours, left untouched. */
-async function deleteOwn(google: GoogleClient, input: { calendarId: string; eventId: string; lessonId: string }): Promise<'deleted' | 'gone' | 'foreign'> {
+async function deleteOwn(
+  google: GoogleClient,
+  input: { calendarId: string; eventId: string; lessonId: string },
+): Promise<'deleted' | 'gone' | 'foreign'> {
   const ev = await google.getEvent({ calendarId: input.calendarId, eventId: input.eventId });
   if (!ev || ev.status === 'cancelled') return 'gone';
   if (!isOurEvent(ev, input.lessonId)) return 'foreign';
@@ -46,7 +65,8 @@ export class CalendarWriter implements ItemWriter {
     const copy: EventCopy = item.kind === 'main_event' ? 'main' : 'teacher';
     const wanted = !!src && src.managed && eventWanted(src.lesson.status);
     if (!wanted) return this.remove(item, { ctx, imported: !!src && !src.managed });
-    const calendarId = copy === 'main' ? MAIN_CALENDAR : await this.map.teacherCalendar(src.teacherId);
+    const calendarId =
+      copy === 'main' ? MAIN_CALENDAR : await this.map.teacherCalendar(src.teacherId);
     if (!calendarId) {
       await this.alerts.teacherUnmapped({ teacherId: src.teacherId, name: src.lesson.teacherName });
       return { state: 'skipped', reason: 'teacher_unmapped' };
@@ -57,9 +77,11 @@ export class CalendarWriter implements ItemWriter {
     if (item.google_id && !moved && hash === item.content_hash)
       return synced({ googleId: item.google_id, parentId: calendarId, hash });
     const method = !item.google_id || moved ? 'POST' : 'PUT';
-    if (!ctx.live) return planned({ method, target: `calendar:${calendarId}`, summary: event.summary });
+    if (!ctx.live)
+      return planned({ method, target: `calendar:${calendarId}`, summary: event.summary });
     const { google } = ctx;
-    if (method === 'PUT' && item.google_id) return this.update({ google, calendarId, eventId: item.google_id, item, event, hash });
+    if (method === 'PUT' && item.google_id)
+      return this.update({ google, calendarId, eventId: item.google_id, item, event, hash });
     const held = await this.beforeInsert(item, { google, calendarId, src });
     if (held) return held;
     const made = await google.insertEvent({ calendarId, event });
@@ -78,11 +100,13 @@ export class CalendarWriter implements ItemWriter {
     const { google, calendarId, eventId, item, event, hash } = input;
     const ev = await google.getEvent({ calendarId, eventId });
     if (!ev || ev.status === 'cancelled') return { state: 'gone', error: 'deleted_in_google' };
-    if (!isOurEvent(ev, item.subject_id)) return { state: 'failed', error: 'not_platform_event', attempts: item.attempts };
+    if (!isOurEvent(ev, item.subject_id))
+      return { state: 'failed', error: 'not_platform_event', attempts: item.attempts };
     try {
       await google.updateEvent({ calendarId, eventId, event });
     } catch (e) {
-      if (e instanceof GoogleApiError && (e.status === 404 || e.status === 410)) return { state: 'gone', error: 'deleted_in_google' };
+      if (e instanceof GoogleApiError && (e.status === 404 || e.status === 410))
+        return { state: 'gone', error: 'deleted_in_google' };
       throw e;
     }
     return synced({ googleId: eventId, parentId: calendarId, hash });
@@ -123,7 +147,9 @@ export class CalendarWriter implements ItemWriter {
   ): Promise<ItemResult> {
     const { ctx } = input;
     if (!item.google_id || !item.google_parent_id) {
-      return input.imported ? { state: 'skipped', reason: 'not_platform_origin' } : synced({ googleId: null, parentId: null, hash: null });
+      return input.imported
+        ? { state: 'skipped', reason: 'not_platform_origin' }
+        : synced({ googleId: null, parentId: null, hash: null });
     }
     if (!ctx.live)
       return planned({

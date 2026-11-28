@@ -1,5 +1,12 @@
 import type { Database } from '@ab/db';
-import { GOOGLE_SYNC_KINDS, GOOGLE_SYNC_STATES, type GooglePlannedRequest, type GoogleSkipReason, type GoogleSyncKind, type GoogleSyncState } from '@ab/shared';
+import {
+  GOOGLE_SYNC_KINDS,
+  GOOGLE_SYNC_STATES,
+  type GooglePlannedRequest,
+  type GoogleSkipReason,
+  type GoogleSyncKind,
+  type GoogleSyncState,
+} from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pgError } from '@/common/db/errors';
@@ -26,7 +33,13 @@ export type SyncItem = {
 export type ItemResult =
   | { state: 'synced'; googleId: string | null; parentId: string | null; hash: string | null }
   | { state: 'gone'; error: string }
-  | { state: 'skipped'; reason: GoogleSkipReason; planned?: GooglePlannedRequest | null; googleId?: string | null; parentId?: string | null }
+  | {
+      state: 'skipped';
+      reason: GoogleSkipReason;
+      planned?: GooglePlannedRequest | null;
+      googleId?: string | null;
+      parentId?: string | null;
+    }
   | { state: 'failed'; error: string; attempts: number }
   | { state: 'retry'; error: string; attempts: number; at: Date };
 
@@ -34,21 +47,42 @@ function patchOf(r: ItemResult): ItemUpdate {
   const done = { claimed_at: null, claim_token: null } as const;
   switch (r.state) {
     case 'synced':
-      return { ...done, state: 'synced', google_id: r.googleId, google_parent_id: r.parentId, content_hash: r.hash, last_error: null, skip_reason: null, planned: null, attempts: 0, synced_at: new Date().toISOString() };
+      return {
+        ...done,
+        state: 'synced',
+        google_id: r.googleId,
+        google_parent_id: r.parentId,
+        content_hash: r.hash,
+        last_error: null,
+        skip_reason: null,
+        planned: null,
+        attempts: 0,
+        synced_at: new Date().toISOString(),
+      };
     case 'gone':
       return { ...done, state: 'gone', last_error: r.error, skip_reason: null };
     case 'skipped':
       return {
-        ...done, state: 'skipped', skip_reason: r.reason, planned: r.planned ?? null, last_error: null,
-        ...(r.googleId !== undefined ? { google_id: r.googleId } : {}), ...(r.parentId !== undefined ? { google_parent_id: r.parentId } : {}),
+        ...done,
+        state: 'skipped',
+        skip_reason: r.reason,
+        planned: r.planned ?? null,
+        last_error: null,
+        ...(r.googleId !== undefined ? { google_id: r.googleId } : {}),
+        ...(r.parentId !== undefined ? { google_parent_id: r.parentId } : {}),
       };
     case 'failed':
       return { ...done, state: 'failed', last_error: r.error, attempts: r.attempts };
     case 'retry':
-      return { ...done, state: 'pending', last_error: r.error, attempts: r.attempts, next_attempt_at: r.at.toISOString() };
+      return {
+        ...done,
+        state: 'pending',
+        last_error: r.error,
+        attempts: r.attempts,
+        next_attempt_at: r.at.toISOString(),
+      };
   }
 }
-
 
 /** The outbox: claim with a token, finish only that claim (a re-queue meanwhile wins), list, retry. */
 @Injectable()
@@ -57,10 +91,15 @@ export class GoogleItemsQueries {
 
   async claim(limit: number): Promise<SyncItem[]> {
     const stale = new Date(Date.now() - 10 * 60_000).toISOString();
-    const { data, error } = await this.db.rpc('google_sync_claim', { p_limit: limit, p_stale_before: stale });
+    const { data, error } = await this.db.rpc('google_sync_claim', {
+      p_limit: limit,
+      p_stale_before: stale,
+    });
     if (error) throw pgError(error);
     // UPDATE … RETURNING keeps no order: a report's PDF must run before its rows in the same pass.
-    return [...(data as SyncItem[])].sort((a, b) => GOOGLE_SYNC_KINDS.indexOf(a.kind) - GOOGLE_SYNC_KINDS.indexOf(b.kind));
+    return [...(data as SyncItem[])].sort(
+      (a, b) => GOOGLE_SYNC_KINDS.indexOf(a.kind) - GOOGLE_SYNC_KINDS.indexOf(b.kind),
+    );
   }
 
   /**
@@ -69,12 +108,28 @@ export class GoogleItemsQueries {
    */
   async finish(item: Pick<SyncItem, 'id' | 'claim_token'>, result: ItemResult): Promise<boolean> {
     if (!item.claim_token) return false;
-    const { data, error } = await this.db.from('google_sync_items').update(patchOf(result)).eq('id', item.id).eq('claim_token', item.claim_token).select('dirty');
+    const { data, error } = await this.db
+      .from('google_sync_items')
+      .update(patchOf(result))
+      .eq('id', item.id)
+      .eq('claim_token', item.claim_token)
+      .select('dirty');
     if (error) throw pgError(error);
     if (data[0]?.dirty) {
-      const again = await this.db.from('google_sync_items')
-        .update({ state: 'pending', dirty: false, content_hash: null, attempts: 0, next_attempt_at: new Date().toISOString(), skip_reason: null, planned: null, ...(result.state === 'gone' ? { google_id: null } : {}) })
-        .eq('id', item.id).is('claim_token', null);
+      const again = await this.db
+        .from('google_sync_items')
+        .update({
+          state: 'pending',
+          dirty: false,
+          content_hash: null,
+          attempts: 0,
+          next_attempt_at: new Date().toISOString(),
+          skip_reason: null,
+          planned: null,
+          ...(result.state === 'gone' ? { google_id: null } : {}),
+        })
+        .eq('id', item.id)
+        .is('claim_token', null);
       if (again.error) throw pgError(again.error);
     }
     return data.length === 1;
@@ -83,9 +138,18 @@ export class GoogleItemsQueries {
   /** A report's PDF reached Drive: its attendance and summary rows that waited or failed go again. */
   async requeueReportRows(input: { reportId: string; studentId: string | null }): Promise<void> {
     const subjects = [input.reportId, ...(input.studentId ? [input.studentId] : [])];
-    const { error } = await this.db.from('google_sync_items')
-      .update({ state: 'pending', attempts: 0, next_attempt_at: new Date().toISOString(), skip_reason: null, last_error: null })
-      .in('kind', ['attendance_row', 'summary_row']).in('subject_id', subjects).in('state', ['failed', 'skipped'])
+    const { error } = await this.db
+      .from('google_sync_items')
+      .update({
+        state: 'pending',
+        attempts: 0,
+        next_attempt_at: new Date().toISOString(),
+        skip_reason: null,
+        last_error: null,
+      })
+      .in('kind', ['attendance_row', 'summary_row'])
+      .in('subject_id', subjects)
+      .in('state', ['failed', 'skipped'])
       // A failed row has no skip_reason: `neq` alone would drop it (NULL <> x is not true).
       .or('skip_reason.is.null,skip_reason.neq.already_in_sheet');
     if (error) throw pgError(error);
@@ -93,16 +157,37 @@ export class GoogleItemsQueries {
 
   /** Keeps this claim fresh while a slow pass works through its batch: no second worker takes it over. */
   async touch(item: Pick<SyncItem, 'id' | 'claim_token'>): Promise<void> {
-    if (item.claim_token) await this.db.from('google_sync_items').update({ claimed_at: new Date().toISOString() }).eq('id', item.id).eq('claim_token', item.claim_token);
+    if (item.claim_token)
+      await this.db
+        .from('google_sync_items')
+        .update({ claimed_at: new Date().toISOString() })
+        .eq('id', item.id)
+        .eq('claim_token', item.claim_token);
   }
   /** Release a claim untouched (the pass stopped: the account is disconnected). */
   async release(item: Pick<SyncItem, 'id' | 'claim_token'>): Promise<void> {
-    if (item.claim_token) await this.db.from('google_sync_items').update({ claimed_at: null, claim_token: null }).eq('id', item.id).eq('claim_token', item.claim_token);
+    if (item.claim_token)
+      await this.db
+        .from('google_sync_items')
+        .update({ claimed_at: null, claim_token: null })
+        .eq('id', item.id)
+        .eq('claim_token', item.claim_token);
   }
 
   /** The google ids of another item (a report's PDF for its attendance row). */
-  async sibling(input: { kind: GoogleSyncKind; subjectId: string }): Promise<(Pick<SyncItem, 'state' | 'google_id' | 'google_parent_id'> & { skip_reason: string | null }) | null> {
-    const { data, error } = await this.db.from('google_sync_items').select('state, google_id, google_parent_id, skip_reason').eq('kind', input.kind).eq('subject_id', input.subjectId).maybeSingle();
+  async sibling(input: {
+    kind: GoogleSyncKind;
+    subjectId: string;
+  }): Promise<
+    | (Pick<SyncItem, 'state' | 'google_id' | 'google_parent_id'> & { skip_reason: string | null })
+    | null
+  > {
+    const { data, error } = await this.db
+      .from('google_sync_items')
+      .select('state, google_id, google_parent_id, skip_reason')
+      .eq('kind', input.kind)
+      .eq('subject_id', input.subjectId)
+      .maybeSingle();
     if (error) throw pgError(error);
     return data;
   }
@@ -121,22 +206,48 @@ export class GoogleItemsQueries {
 
   /** A gone row is not retried: what was deleted in Google returns only on lesson change (§2.4). */
   async retry(id: string): Promise<boolean> {
-    const reset = { state: 'pending' as const, attempts: 0, next_attempt_at: new Date().toISOString(), last_error: null, skip_reason: null, planned: null };
-    const { data, error } = await this.db.from('google_sync_items').update(reset).eq('id', id).in('state', ['failed', 'skipped']).is('claim_token', null).select('id');
+    const reset = {
+      state: 'pending' as const,
+      attempts: 0,
+      next_attempt_at: new Date().toISOString(),
+      last_error: null,
+      skip_reason: null,
+      planned: null,
+    };
+    const { data, error } = await this.db
+      .from('google_sync_items')
+      .update(reset)
+      .eq('id', id)
+      .in('state', ['failed', 'skipped'])
+      .is('claim_token', null)
+      .select('id');
     if (error) throw pgError(error);
     return data.length === 1;
   }
 
-  async counts(): Promise<{ counts: Record<GoogleSyncState, number>; skips: Partial<Record<GoogleSkipReason, number>> }> {
-    const counts = Object.fromEntries(GOOGLE_SYNC_STATES.map((s) => [s, 0])) as Record<GoogleSyncState, number>;
+  async counts(): Promise<{
+    counts: Record<GoogleSyncState, number>;
+    skips: Partial<Record<GoogleSkipReason, number>>;
+  }> {
+    const counts = Object.fromEntries(GOOGLE_SYNC_STATES.map((s) => [s, 0])) as Record<
+      GoogleSyncState,
+      number
+    >;
     const skips: Partial<Record<GoogleSkipReason, number>> = {};
     for (const state of GOOGLE_SYNC_STATES) {
-      const { count, error } = await this.db.from('google_sync_items').select('id', { count: 'exact', head: true }).eq('state', state);
+      const { count, error } = await this.db
+        .from('google_sync_items')
+        .select('id', { count: 'exact', head: true })
+        .eq('state', state);
       if (error) throw pgError(error);
       counts[state] = count ?? 0;
     }
     for (const reason of ['teacher_unmapped', 'student_unmapped', 'drive_unconfirmed'] as const) {
-      const { count, error } = await this.db.from('google_sync_items').select('id', { count: 'exact', head: true }).eq('state', 'skipped').eq('skip_reason', reason);
+      const { count, error } = await this.db
+        .from('google_sync_items')
+        .select('id', { count: 'exact', head: true })
+        .eq('state', 'skipped')
+        .eq('skip_reason', reason);
       if (error) throw pgError(error);
       skips[reason] = count ?? 0;
     }

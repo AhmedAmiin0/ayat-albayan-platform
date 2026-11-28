@@ -1,10 +1,14 @@
-import type { GoogleClient, GoogleListedEvent } from '@/modules/platform/google-sync/google-client.port';
+import type {
+  GoogleClient,
+  GoogleListedEvent,
+} from '@/modules/platform/google-sync/google-client.port';
 import { EVENT, PLATFORM_SOURCE } from '@/modules/platform/google-sync/google-format';
 
 /** Script and our titles share the prefix; the tag tells ours apart. */
 const TITLE = EVENT.titlePrefix.trim();
 
-const isTagged = (e: GoogleListedEvent): boolean => e.extendedProperties?.private?.['ab_source'] === PLATFORM_SOURCE;
+const isTagged = (e: GoogleListedEvent): boolean =>
+  e.extendedProperties?.private?.['ab_source'] === PLATFORM_SOURCE;
 
 /** docs/24: untagged, not cancelled, same start, with the script's title or sheet line. */
 export function isScriptEvent(e: GoogleListedEvent, startsAt: string): boolean {

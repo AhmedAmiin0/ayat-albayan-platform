@@ -9,11 +9,18 @@ import { Inject, Injectable, Optional } from '@nestjs/common';
 import { CACHE_KEYS } from '@/common/infra/cache/cache-keys';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { TtlCache } from '@/common/infra/cache/ttl-cache';
-import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '@/common/configuration/config-store/config-store.types';
+import {
+  DEFAULT_TTL_MS,
+  SETTINGS_CACHE_MS,
+} from '@/common/configuration/config-store/config-store.types';
 import { DB, type Db } from '@/common/db/db.module';
 import { kickConfigReload } from '@/config/role/worker-kick';
 
-export const GOOGLE_DEFAULTS: GoogleSyncSettings = { enabled: false, mode: 'dry_run', window_days: GOOGLE_WINDOW_DAYS.default };
+export const GOOGLE_DEFAULTS: GoogleSyncSettings = {
+  enabled: false,
+  mode: 'dry_run',
+  window_days: GOOGLE_WINDOW_DAYS.default,
+};
 
 /** Missing or malformed rows read as the safe defaults: OFF and dry_run (docs/24 §4). */
 export function readGoogleSettings(
@@ -25,7 +32,13 @@ export function readGoogleSettings(
   return {
     enabled: v.get(GOOGLE_SETTING_KEYS.enabled) === true,
     mode: GOOGLE_SYNC_MODES.find((m) => m === mode) ?? 'dry_run',
-    window_days: typeof days === 'number' && Number.isInteger(days) && days >= GOOGLE_WINDOW_DAYS.min && days <= GOOGLE_WINDOW_DAYS.max ? days : GOOGLE_WINDOW_DAYS.default,
+    window_days:
+      typeof days === 'number' &&
+      Number.isInteger(days) &&
+      days >= GOOGLE_WINDOW_DAYS.min &&
+      days <= GOOGLE_WINDOW_DAYS.max
+        ? days
+        : GOOGLE_WINDOW_DAYS.default,
   };
 }
 
@@ -60,7 +73,9 @@ export class GoogleSettings {
       ][]) {
         const value = input.values[field];
         if (value === undefined) continue;
-        const { error } = await this.db.from('settings').upsert({ key, value, updated_by: input.actorId });
+        const { error } = await this.db
+          .from('settings')
+          .upsert({ key, value, updated_by: input.actorId });
         if (error) throw new Error(`google settings write failed: ${error.message}`);
       }
     } finally {
@@ -76,7 +91,10 @@ export class GoogleSettings {
   }
 
   private async load(): Promise<GoogleSyncSettings> {
-    const { data, error } = await this.db.from('settings').select('key, value').in('key', Object.values(GOOGLE_SETTING_KEYS));
+    const { data, error } = await this.db
+      .from('settings')
+      .select('key, value')
+      .in('key', Object.values(GOOGLE_SETTING_KEYS));
     if (error) throw new Error(`google settings read failed: ${error.message}`);
     return readGoogleSettings(data);
   }

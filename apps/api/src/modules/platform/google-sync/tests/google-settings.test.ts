@@ -1,7 +1,10 @@
 import { GOOGLE_SETTING_KEYS } from '@ab/catalog';
 import { isSettingKey } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
-import { GOOGLE_DEFAULTS, readGoogleSettings } from '@/modules/platform/google-sync/google-settings';
+import {
+  GOOGLE_DEFAULTS,
+  readGoogleSettings,
+} from '@/modules/platform/google-sync/google-settings';
 
 describe('Google sync settings', () => {
   it('default OFF and dry_run with a 60-day window when nothing is stored', () => {
@@ -10,17 +13,29 @@ describe('Google sync settings', () => {
   });
 
   it('reads stored values', () => {
-    const rows = [{ key: 'google_sync_enabled', value: true }, { key: 'google_sync_mode', value: 'live' }, { key: 'google_calendar_window_days', value: 30 }];
+    const rows = [
+      { key: 'google_sync_enabled', value: true },
+      { key: 'google_sync_mode', value: 'live' },
+      { key: 'google_calendar_window_days', value: 30 },
+    ];
     expect(readGoogleSettings(rows)).toEqual({ enabled: true, mode: 'live', window_days: 30 });
   });
 
   it('a malformed value falls back to the safe default, never to live', () => {
-    const rows = [{ key: 'google_sync_enabled', value: 'true' }, { key: 'google_sync_mode', value: 'LIVE' }, { key: 'google_calendar_window_days', value: 999 }];
+    const rows = [
+      { key: 'google_sync_enabled', value: 'true' },
+      { key: 'google_sync_mode', value: 'LIVE' },
+      { key: 'google_calendar_window_days', value: 999 },
+    ];
     expect(readGoogleSettings(rows)).toEqual({ enabled: false, mode: 'dry_run', window_days: 60 });
   });
 
   it('reads the shared GOOGLE_SETTING_KEYS rows, none of them a registry key (GET/PATCH /settings never list them)', () => {
-    expect(Object.values(GOOGLE_SETTING_KEYS)).toEqual(['google_sync_enabled', 'google_sync_mode', 'google_calendar_window_days']);
+    expect(Object.values(GOOGLE_SETTING_KEYS)).toEqual([
+      'google_sync_enabled',
+      'google_sync_mode',
+      'google_calendar_window_days',
+    ]);
     expect(Object.values(GOOGLE_SETTING_KEYS).filter((k) => isSettingKey(k))).toEqual([]);
   });
 });

@@ -4,10 +4,16 @@ import { Test } from '@nestjs/testing';
 import { afterEach, describe, expect, it } from 'vitest';
 import { ReadinessService } from './readiness.service';
 import { ReadyController } from './ready.controller';
+import { IS_PUBLIC, OWN_PUBLIC } from '@/common/auth/decorators';
+import { HealthController } from './health.controller';
 
 const view = (status: Readiness['status']): Readiness => ({
   status,
-  checks: { database: { status: 'ok', ms: 1 }, redis: { status: 'off' }, jobs: { status: 'off', stale: 0 } },
+  checks: {
+    database: { status: 'ok', ms: 1 },
+    redis: { status: 'off' },
+    jobs: { status: 'off', stale: 0 },
+  },
 });
 
 let app: NestFastifyApplication | undefined;
@@ -37,5 +43,23 @@ describe('GET /ready (public, no token)', () => {
     const res = await (await boot(view('down'))).inject({ method: 'GET', url: '/ready' });
     expect(res.statusCode).toBe(503);
     expect(res.json()).toEqual(view('down'));
+  });
+});
+
+describe('probe access', () => {
+  const probes = [HealthController, ReadyController].map((c) =>
+    Object(Reflect.get(c.prototype, 'check')),
+  );
+
+  it('opens both probes from their route objects, with no @Public of their own', () => {
+    expect(
+      probes.map((p) => [
+        Reflect.getOwnMetadata(IS_PUBLIC, p),
+        Reflect.getOwnMetadata(OWN_PUBLIC, p),
+      ]),
+    ).toEqual([
+      [true, undefined],
+      [true, undefined],
+    ]);
   });
 });

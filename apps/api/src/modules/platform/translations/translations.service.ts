@@ -5,7 +5,14 @@ import {
   type TranslationKeysPage,
   type TranslationKeysQuery,
 } from '@ab/i18n';
-import { BadRequestException, Injectable, Logger, NotFoundException, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+  type OnApplicationBootstrap,
+  type OnModuleDestroy,
+} from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import { ar } from '@/common/infra/i18n/server-text';
 import { kickConfigReload } from '@/config/role/worker-kick';
@@ -66,7 +73,9 @@ export class TranslationsService implements OnApplicationBootstrap, OnModuleDest
       this.apply(group(await this.queries.all()));
       return true;
     } catch (e) {
-      this.log.warn(`translation overrides not loaded: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(
+        `translation overrides not loaded: ${e instanceof Error ? e.message : String(e)}`,
+      );
       return false;
     }
   }
@@ -91,7 +100,8 @@ export class TranslationsService implements OnApplicationBootstrap, OnModuleDest
 
   /** Back to the bundled text (deleting a key that has no override is a no-op). 409 as save(). */
   async restore(locale: Locale, key: string): Promise<void> {
-    if (!Object.hasOwn(DEFAULTS[locale], key)) throw new NotFoundException({ message: 'unknown_key' });
+    if (!Object.hasOwn(DEFAULTS[locale], key))
+      throw new NotFoundException({ message: 'unknown_key' });
     assertNotValuesOwned(locale, key);
     await this.queries.remove(locale, key);
     await this.reload();

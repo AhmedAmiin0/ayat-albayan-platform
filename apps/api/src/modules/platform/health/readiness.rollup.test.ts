@@ -21,10 +21,14 @@ describe('rollup (the worst check wins; off counts as ok)', () => {
   });
 
   it('the database down → down, whatever else', () => {
-    expect(rollup(all({ database: { status: 'down', ms: 2000 }, redis: { status: 'degraded' } }))).toBe('down');
+    expect(
+      rollup(all({ database: { status: 'down', ms: 2000 }, redis: { status: 'degraded' } })),
+    ).toBe('down');
   });
 
   it('only down answers 503', () => {
-    expect([httpStatusOf('ok'), httpStatusOf('degraded'), httpStatusOf('down')]).toEqual([200, 200, 503]);
+    expect([httpStatusOf('ok'), httpStatusOf('degraded'), httpStatusOf('down')]).toEqual([
+      200, 200, 503,
+    ]);
   });
 });

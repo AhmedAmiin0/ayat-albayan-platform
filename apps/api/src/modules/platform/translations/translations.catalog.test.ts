@@ -31,7 +31,14 @@ describe('listKeys (GET /i18n/keys)', () => {
     const overrides = { ar: { 'nav.leads': 'zz-override' }, en: {} };
     const page = listKeys(q({ search: 'zz-override' }), overrides);
     expect(page.items).toEqual([
-      { key: 'nav.leads', section: 'nav', ar: BUNDLES.ar.nav.leads, en: BUNDLES.en.nav.leads, arOverride: 'zz-override', enOverride: null },
+      {
+        key: 'nav.leads',
+        section: 'nav',
+        ar: BUNDLES.ar.nav.leads,
+        en: BUNDLES.en.nav.leads,
+        arOverride: 'zz-override',
+        enOverride: null,
+      },
     ]);
   });
 });
@@ -48,6 +55,9 @@ describe('overrideProblem (PUT validation)', () => {
   });
 
   it('rejects a value that drops a {placeholder} of the default', () => {
-    expect(overrideProblem('en', 'translations.count', 'Total')).toEqual({ kind: 'placeholders_missing', missing: ['{n}'] });
+    expect(overrideProblem('en', 'translations.count', 'Total')).toEqual({
+      kind: 'placeholders_missing',
+      missing: ['{n}'],
+    });
   });
 });

@@ -83,14 +83,23 @@ describe('TranslationsService', () => {
   it('save validates, writes with the actor, then reloads', async () => {
     const { q, service } = fakeQueries();
     await service.save({ locale: 'en', key: 'nav.leads', value: 'Prospects', actorId: 'u1' });
-    expect(q.upsert).toHaveBeenCalledWith({ locale: 'en', key: 'nav.leads', value: 'Prospects', actorId: 'u1' });
+    expect(q.upsert).toHaveBeenCalledWith({
+      locale: 'en',
+      key: 'nav.leads',
+      value: 'Prospects',
+      actorId: 'u1',
+    });
     expect(q.all).toHaveBeenCalledTimes(1);
   });
 
   it('save refuses an unknown key (404) and dropped placeholders (400) without writing', async () => {
     const { q, service } = fakeQueries();
-    await expect(service.save({ locale: 'en', key: 'nav.nope', value: 'x', actorId: 'u1' })).rejects.toMatchObject({ status: 404 });
-    await expect(service.save({ locale: 'en', key: 'translations.count', value: 'Total', actorId: 'u1' })).rejects.toMatchObject({
+    await expect(
+      service.save({ locale: 'en', key: 'nav.nope', value: 'x', actorId: 'u1' }),
+    ).rejects.toMatchObject({ status: 404 });
+    await expect(
+      service.save({ locale: 'en', key: 'translations.count', value: 'Total', actorId: 'u1' }),
+    ).rejects.toMatchObject({
       status: 400,
       response: { message: 'placeholders_missing', missing: ['{n}'] },
     });

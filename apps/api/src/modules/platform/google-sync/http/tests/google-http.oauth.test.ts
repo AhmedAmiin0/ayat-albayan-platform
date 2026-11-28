@@ -53,7 +53,10 @@ describe('GoogleOAuthApi.email', () => {
 
   it('gives up after 15 s', async () => {
     vi.useFakeTimers();
-    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>(() => undefined)));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => new Promise<Response>(() => undefined)),
+    );
     const call = api.email('tok').catch((e: unknown) => e);
     await vi.advanceTimersByTimeAsync(15_000);
     expect(await call).toMatchObject({ message: 'google userinfo: timeout' });

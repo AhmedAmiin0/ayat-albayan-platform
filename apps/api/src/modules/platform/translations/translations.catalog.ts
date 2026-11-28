@@ -40,7 +40,9 @@ function row(key: string, overrides: OverrideMaps): TranslationKeyRow {
 }
 
 function matches(r: TranslationKeyRow, needle: string): boolean {
-  return [r.key, r.ar, r.en, r.arOverride ?? '', r.enOverride ?? ''].some((v) => v.toLowerCase().includes(needle));
+  return [r.key, r.ar, r.en, r.arOverride ?? '', r.enOverride ?? ''].some((v) =>
+    v.toLowerCase().includes(needle),
+  );
 }
 
 /** GET /i18n/keys: sorted by key, filtered by section and a case-insensitive search, one page. */
@@ -56,7 +58,9 @@ export function listKeys(
   return { ...toPage(rows.slice(from, to + 1), rows.length, query), sections: SECTIONS };
 }
 
-type OverrideProblem = { kind: 'unknown_key' } | { kind: 'placeholders_missing'; missing: string[] };
+type OverrideProblem =
+  | { kind: 'unknown_key' }
+  | { kind: 'placeholders_missing'; missing: string[] };
 
 /** Why `value` cannot override `key` in `locale`, or null: the key must exist, slots must stay. */
 export function overrideProblem(

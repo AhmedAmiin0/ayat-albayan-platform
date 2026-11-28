@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { classify, errorText, MAX_ATTEMPTS, retryDelayMs } from '@/modules/platform/google-sync/http/backoff';
+import {
+  classify,
+  errorText,
+  MAX_ATTEMPTS,
+  retryDelayMs,
+} from '@/modules/platform/google-sync/http/backoff';
 import { GoogleApiError } from '@/modules/platform/google-sync/google-client.port';
 
 describe('retry policy', () => {

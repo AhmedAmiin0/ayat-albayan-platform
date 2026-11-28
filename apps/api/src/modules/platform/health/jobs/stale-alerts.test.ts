@@ -6,7 +6,13 @@ import { StaleAlerts } from './stale-alerts';
 
 const MIN = 60_000;
 const beat = (over: Partial<JobBeat> = {}): JobBeat => ({
-  name: 'RemindersJob', everyMs: 5 * MIN, since: 0, lastOkAt: null, lastErrorAt: null, lastError: null, ...over,
+  name: 'RemindersJob',
+  everyMs: 5 * MIN,
+  since: 0,
+  lastOkAt: null,
+  lastErrorAt: null,
+  lastError: null,
+  ...over,
 });
 
 function setup() {

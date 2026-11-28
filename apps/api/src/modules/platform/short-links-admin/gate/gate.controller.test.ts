@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { linksApp } from '@/modules/platform/short-links-admin/short-links-admin.app.fakes';
 import type { GateService } from './gate.service';
 import { GatePublicController } from './gate.controller';
+import { IS_PUBLIC, OWN_PUBLIC } from '@/common/auth/decorators';
 
 const view: ShortLinkGateView = {
   title: 'حلقة',
@@ -48,5 +49,18 @@ describe('the gate routes over http', () => {
     const res = await t.call({ method: 'POST', url, token: 'guardian', payload: { phone: '0' } });
     expect(res.statusCode).toBe(400);
     expect(t.system.row).not.toHaveBeenCalled();
+  });
+});
+
+describe('gate access', () => {
+  const steps = ['view', 'start', 'verify'].map((n) =>
+    Object(Reflect.get(GatePublicController.prototype, n)),
+  );
+  const marked = (key: string) => steps.map((step) => Reflect.getOwnMetadata(key, step));
+
+  it('opens the view and the code steps from their route objects, not from the class', () => {
+    expect(Reflect.getOwnMetadata(IS_PUBLIC, GatePublicController)).toBeUndefined();
+    expect(marked(IS_PUBLIC)).toEqual([true, true, true]);
+    expect(marked(OWN_PUBLIC)).toEqual([undefined, undefined, undefined]);
   });
 });

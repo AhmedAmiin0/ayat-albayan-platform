@@ -26,7 +26,9 @@ export function readDiscovery(raw: unknown): StoredDiscovery | null {
 
 /** docs/24 §3: read-only calls; nothing found is used until an admin confirms it. */
 export async function discover(google: GoogleClient, now = new Date()): Promise<StoredDiscovery> {
-  const calendars: GoogleFound[] = (await google.listCalendars()).filter((c) => c.id !== 'primary').map((c) => ({ id: c.id, name: c.summary }));
+  const calendars: GoogleFound[] = (await google.listCalendars())
+    .filter((c) => c.id !== 'primary')
+    .map((c) => ({ id: c.id, name: c.summary }));
   const roots = await google.findFiles({ name: DRIVE.rootFolder, mimeType: MIME.folder });
   const root = roots.length === 1 && roots[0] ? { id: roots[0].id, name: roots[0].name } : null;
   const sheets = root

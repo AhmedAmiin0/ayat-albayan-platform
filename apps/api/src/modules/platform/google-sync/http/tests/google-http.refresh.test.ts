@@ -39,7 +39,8 @@ beforeAll(async () => {
       const isToken = path === '/token';
       if (!isToken) state.bearers.push(req.headers.authorization ?? '');
       const a = isToken ? tokenAnswer(Buffer.concat(chunks).toString()) : answer(path);
-      const reply = () => res.writeHead(a.status, { 'content-type': 'application/json' }).end(a.body);
+      const reply = () =>
+        res.writeHead(a.status, { 'content-type': 'application/json' }).end(a.body);
       setTimeout(reply, a.delayMs ?? 0);
     });
   });

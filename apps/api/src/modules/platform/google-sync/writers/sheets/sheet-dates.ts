@@ -8,7 +8,9 @@ import type { CellValue } from '@/modules/platform/google-sync/google-client.por
 const EPOCH = '1899-12-30';
 const pad = (n: number): string => String(n).padStart(2, '0');
 const ymd = (y: number, m: number, d: number): string | null =>
-  m >= 1 && m <= 12 && d >= 1 && d <= 31 && y >= 2000 && y <= 2100 ? `${y}-${pad(m)}-${pad(d)}` : null;
+  m >= 1 && m <= 12 && d >= 1 && d <= 31 && y >= 2000 && y <= 2100
+    ? `${y}-${pad(m)}-${pad(d)}`
+    : null;
 
 export function sheetDate(cell: CellValue): string | null {
   if (typeof cell === 'number' && cell > 30_000 && cell < 80_000) {

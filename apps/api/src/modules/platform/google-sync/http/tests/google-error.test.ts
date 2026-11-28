@@ -2,11 +2,23 @@ import { describe, expect, it } from 'vitest';
 import { errorFor } from '@/common/infra/http/errors';
 import type { HttpFailure } from '@/common/infra/http/failure';
 import { GoogleApiError } from '@/modules/platform/google-sync/google-client.port';
-import { Gone, GOOGLE_ERRORS, LOOKUP_ERRORS, reasonOf, toGoogleError } from '@/modules/platform/google-sync/http/google-error';
+import {
+  Gone,
+  GOOGLE_ERRORS,
+  LOOKUP_ERRORS,
+  reasonOf,
+  toGoogleError,
+} from '@/modules/platform/google-sync/http/google-error';
 
 const where = 'google GET /x';
-const status = (code: number, body: unknown): HttpFailure =>
-  ({ kind: 'status', status: code, body, text: '', retryAfter: null, where });
+const status = (code: number, body: unknown): HttpFailure => ({
+  kind: 'status',
+  status: code,
+  body,
+  text: '',
+  retryAfter: null,
+  where,
+});
 
 describe('reasonOf', () => {
   it('reads the API reason, then the status, then the OAuth string', () => {

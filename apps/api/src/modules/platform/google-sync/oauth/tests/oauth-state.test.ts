@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { newState, nonceHash, readState, STATE_TTL_MS, stateKey } from '@/modules/platform/google-sync/oauth/oauth-state';
+import {
+  newState,
+  nonceHash,
+  readState,
+  STATE_TTL_MS,
+  stateKey,
+} from '@/modules/platform/google-sync/oauth/oauth-state';
 
 const KEY = stateKey('fake-service-key');
 const NOW = Date.UTC(2026, 9, 22, 10);
@@ -7,7 +13,11 @@ const NOW = Date.UTC(2026, 9, 22, 10);
 describe('OAuth state', () => {
   it('round-trips the admin id and nonce while unexpired', () => {
     const s = newState({ userId: 'admin-1', key: KEY, now: NOW });
-    expect(readState({ state: s.state, key: KEY, now: NOW + 1000 })).toEqual({ u: 'admin-1', n: s.nonce, e: NOW + STATE_TTL_MS });
+    expect(readState({ state: s.state, key: KEY, now: NOW + 1000 })).toEqual({
+      u: 'admin-1',
+      n: s.nonce,
+      e: NOW + STATE_TTL_MS,
+    });
     expect(s.expiresAt.getTime()).toBe(NOW + STATE_TTL_MS);
   });
 

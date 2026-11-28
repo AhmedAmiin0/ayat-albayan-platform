@@ -37,7 +37,7 @@ function fakeDb(input: { owner: string; changed: number }) {
 const runtime = () => ({ job: { kick: vi.fn().mockResolvedValue(undefined) } });
 
 describe('TeacherCalendarService', () => {
-  it('the view: owner and this teacher\'s managed / script_event_present counts', async () => {
+  it("the view: owner and this teacher's managed / script_event_present counts", async () => {
     const f = fakeDb({ owner: 'platform', changed: 0 });
     const view = await new TeacherCalendarService(f.db, runtime() as unknown as GoogleRuntime).view(
       TEACHER_ID,
@@ -57,7 +57,11 @@ describe('TeacherCalendarService', () => {
   it('a switch writes the owner with the admin as actor (the DB trigger queues the lessons) and kicks the worker', async () => {
     const f = fakeDb({ owner: 'platform', changed: 1 });
     const run = runtime();
-    await new TeacherCalendarService(f.db, run as unknown as GoogleRuntime).setOwner({ teacherId: TEACHER_ID, owner: 'platform', actorId: ACTOR });
+    await new TeacherCalendarService(f.db, run as unknown as GoogleRuntime).setOwner({
+      teacherId: TEACHER_ID,
+      owner: 'platform',
+      actorId: ACTOR,
+    });
     expect(f.updates).toEqual([{ calendar_owner: 'platform', calendar_owner_changed_by: ACTOR }]);
     expect(run.job.kick).toHaveBeenCalledOnce();
   });
@@ -65,7 +69,11 @@ describe('TeacherCalendarService', () => {
   it('the same owner again changes nothing: no kick', async () => {
     const f = fakeDb({ owner: 'script', changed: 0 });
     const run = runtime();
-    const view = await new TeacherCalendarService(f.db, run as unknown as GoogleRuntime).setOwner({ teacherId: TEACHER_ID, owner: 'script', actorId: ACTOR });
+    const view = await new TeacherCalendarService(f.db, run as unknown as GoogleRuntime).setOwner({
+      teacherId: TEACHER_ID,
+      owner: 'script',
+      actorId: ACTOR,
+    });
     expect(view.owner).toBe('script');
     expect(run.job.kick).not.toHaveBeenCalled();
   });

@@ -5,6 +5,7 @@ import { ConfigReloadJob } from './config-reload.job';
 import type { KickQuery } from '@/config/role/kick-options';
 import { InternalJobsController } from './jobs.controller';
 import { internalToken } from '@/config/role/worker-kick';
+import { IS_PUBLIC, OWN_PUBLIC } from '@/common/auth/decorators';
 
 const kickOf = (name: string, query: KickQuery = {}) => ({
   params: { name },
@@ -57,5 +58,19 @@ describe('POST /internal/jobs/config-reload/here (a peer API copy)', () => {
     expect(reload.reloadHere).not.toHaveBeenCalled();
     await controller.peerReload(internalToken());
     expect(reload.reloadHere).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('internal job access', () => {
+  const handlers = ['kick', 'peerReload'].map((n) =>
+    Object(Reflect.get(InternalJobsController.prototype, n)),
+  );
+
+  it('is public through its route objects only: the internal token is the check', () => {
+    expect(handlers.map((h) => Reflect.getOwnMetadata(IS_PUBLIC, h))).toEqual([true, true]);
+    expect(handlers.map((h) => Reflect.getOwnMetadata(OWN_PUBLIC, h))).toEqual([
+      undefined,
+      undefined,
+    ]);
   });
 });

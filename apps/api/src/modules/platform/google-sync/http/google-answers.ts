@@ -22,10 +22,7 @@ const eventFields = {
   id: text,
   /** '' reads like a missing status did: not 'cancelled'. */
   status: text.catch(''),
-  extendedProperties: z
-    .looseObject({ private: strings.optional() })
-    .optional()
-    .catch(undefined),
+  extendedProperties: z.looseObject({ private: strings.optional() }).optional().catch(undefined),
 };
 
 /** events.get */

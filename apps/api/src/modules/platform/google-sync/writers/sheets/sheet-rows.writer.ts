@@ -6,11 +6,20 @@ import { contentHash } from '@/modules/platform/google-sync/writers/calendar/con
 import { DriveFiles } from '@/modules/platform/google-sync/writers/drive/drive-files';
 import { GoogleData } from '@/modules/platform/google-sync/google-data';
 import { TZ } from '@/modules/platform/google-sync/google-format';
-import type { ItemResult, SyncItem } from '@/modules/platform/google-sync/sync/google-items.queries';
+import type {
+  ItemResult,
+  SyncItem,
+} from '@/modules/platform/google-sync/sync/google-items.queries';
 import { GoogleSyncSource } from '@/modules/platform/google-sync/sync/google-sync.source';
 import { localDate } from './sheet-dates';
 import { findSummaryRow, newSummaryRow, summaryUpdates } from './summary-row';
-import { later, planned, synced, type ItemWriter, type WriteCtx } from '@/modules/platform/google-sync/sync/write-context';
+import {
+  later,
+  planned,
+  synced,
+  type ItemWriter,
+  type WriteCtx,
+} from '@/modules/platform/google-sync/sync/write-context';
 
 const isSkipReason = (r: string | null): r is GoogleSkipReason =>
   GOOGLE_SKIP_REASONS.some((x) => x === r);
@@ -40,9 +49,11 @@ export class SheetRowsWriter implements ItemWriter {
     const pdf = await this.data.items.sibling({ kind: 'report_pdf', subjectId: item.subject_id });
     if (!ctx.live) return planned({ method: 'POST', target: 'sheet:attendance', summary: date });
     if (!pdf || pdf.state === 'pending') return later(item, 'pdf_not_synced');
-    if (pdf.state === 'skipped' && isSkipReason(pdf.skip_reason)) return { state: 'skipped', reason: pdf.skip_reason };
+    if (pdf.state === 'skipped' && isSkipReason(pdf.skip_reason))
+      return { state: 'skipped', reason: pdf.skip_reason };
     // failed / gone: wait for the PDF; its sync re-queues this row (GoogleSyncProcessor).
-    if (pdf.state !== 'synced' || !pdf.google_id) return { state: 'failed', error: 'pdf_not_synced', attempts: item.attempts };
+    if (pdf.state !== 'synced' || !pdf.google_id)
+      return { state: 'failed', error: 'pdf_not_synced', attempts: item.attempts };
     const need = await this.drive.need(src.studentId);
     if (need.kind !== 'ready') return later(item, 'sheet_not_ready');
     const { google } = ctx;
@@ -63,7 +74,11 @@ export class SheetRowsWriter implements ItemWriter {
       pdfFileId: pdf.google_id,
     });
     const hash = contentHash(values);
-    const rows = await google.readValues({ spreadsheetId: sheetId, range: 'A2:M', render: 'UNFORMATTED_VALUE' });
+    const rows = await google.readValues({
+      spreadsheetId: sheetId,
+      range: 'A2:M',
+      render: 'UNFORMATTED_VALUE',
+    });
     const found = matchDate(rows, { date, pdfFileId: pdf.google_id });
     if (found.kind === 'script') return { state: 'skipped', reason: 'already_in_sheet' };
     if (found.kind === 'ours') {
@@ -73,7 +88,11 @@ export class SheetRowsWriter implements ItemWriter {
       return synced({ googleId: range, parentId: sheetId, hash });
     }
     if (item.google_id) return { state: 'gone', error: 'row_deleted_in_google' };
-    const { updatedRange } = await google.appendRow({ spreadsheetId: sheetId, range: 'A1', values });
+    const { updatedRange } = await google.appendRow({
+      spreadsheetId: sheetId,
+      range: 'A1',
+      values,
+    });
     return synced({ googleId: updatedRange || null, parentId: sheetId, hash });
   }
 
@@ -88,14 +107,24 @@ export class SheetRowsWriter implements ItemWriter {
     const src = item.report_id ? await this.source.report(item.report_id) : null;
     if (!src?.exportable) return { state: 'skipped', reason: 'not_platform_origin' };
     const acct = await this.data.account.get();
-    if (!acct.summary_sheet_id || !acct.drive_confirmed_at) return { state: 'skipped', reason: 'drive_unconfirmed' };
+    if (!acct.summary_sheet_id || !acct.drive_confirmed_at)
+      return { state: 'skipped', reason: 'drive_unconfirmed' };
     const need = await this.drive.need(src.studentId);
     if (need.kind === 'unmapped') return { state: 'skipped', reason: 'student_unmapped' };
-    if (!ctx.live) return planned({ method: 'PUT', target: `sheet:${acct.summary_sheet_id}`, summary: src.studentName });
+    if (!ctx.live)
+      return planned({
+        method: 'PUT',
+        target: `sheet:${acct.summary_sheet_id}`,
+        summary: src.studentName,
+      });
     if (need.kind !== 'ready') return this.waitForSheet(item, src.reportId);
     const { google } = ctx;
     const summaryId = acct.summary_sheet_id;
-    const att = await google.readValues({ spreadsheetId: need.drive.sheetId, range: 'A2:M', render: 'UNFORMATTED_VALUE' });
+    const att = await google.readValues({
+      spreadsheetId: need.drive.sheetId,
+      range: 'A2:M',
+      render: 'UNFORMATTED_VALUE',
+    });
     const stats = attendanceStats(att);
     const student = {
       name: src.studentName,
@@ -112,16 +141,29 @@ export class SheetRowsWriter implements ItemWriter {
     const row = findSummaryRow(rows, student);
     const otherFolder = row !== null ? folderIdIn(rows[row - 2]?.[6]) : null;
     // A name match whose row points at ANOTHER folder is the script's student: never overwrite it.
-    if (otherFolder && otherFolder !== student.folderId) return { state: 'failed', error: 'summary_row_other_folder', attempts: item.attempts };
+    if (otherFolder && otherFolder !== student.folderId)
+      return { state: 'failed', error: 'summary_row_other_folder', attempts: item.attempts };
     const hash = contentHash({ row, stats, student });
     if (row === null) {
-      const { updatedRange } = await google.appendRow({ spreadsheetId: summaryId, range: 'A1', values: newSummaryRow(student, stats) });
-      return synced({ googleId: updatedRange ? `A${rowOf(updatedRange) ?? ''}` : null, parentId: summaryId, hash });
+      const { updatedRange } = await google.appendRow({
+        spreadsheetId: summaryId,
+        range: 'A1',
+        values: newSummaryRow(student, stats),
+      });
+      return synced({
+        googleId: updatedRange ? `A${rowOf(updatedRange) ?? ''}` : null,
+        parentId: summaryId,
+        hash,
+      });
     }
     if (hash !== item.content_hash) {
       for (const u of summaryUpdates(rows[row - 2] ?? [], student, stats)) {
         const end = colLetter(u.range.charCodeAt(0) - 65 + u.values.length - 1);
-        await google.updateValues({ spreadsheetId: summaryId, range: `${u.range}${row}:${end}${row}`, values: [u.values] });
+        await google.updateValues({
+          spreadsheetId: summaryId,
+          range: `${u.range}${row}:${end}${row}`,
+          values: [u.values],
+        });
       }
     }
     return synced({ googleId: `A${row}`, parentId: summaryId, hash });

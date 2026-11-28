@@ -5,7 +5,12 @@ import { ReadinessService, type ReadinessDeps } from './readiness.service';
 
 const NOW = 10_000_000;
 const beat = (name: string, lastOkAt: number | null): JobBeat => ({
-  name, everyMs: 1_000, since: NOW - 500, lastOkAt, lastErrorAt: null, lastError: null,
+  name,
+  everyMs: 1_000,
+  since: NOW - 500,
+  lastOkAt,
+  lastErrorAt: null,
+  lastError: null,
 });
 
 function deps(over: Partial<ReadinessDeps> = {}): ReadinessDeps {
@@ -24,7 +29,11 @@ describe('ReadinessService (GET /ready)', () => {
     const view = await new ReadinessService(deps({ now: () => ticks.shift() ?? NOW + 7 })).check();
     expect(view).toEqual({
       status: 'ok',
-      checks: { database: { status: 'ok', ms: 7 }, redis: { status: 'ok' }, jobs: { status: 'ok', stale: 0 } },
+      checks: {
+        database: { status: 'ok', ms: 7 },
+        redis: { status: 'ok' },
+        jobs: { status: 'ok', stale: 0 },
+      },
     });
   });
 
@@ -43,8 +52,13 @@ describe('ReadinessService (GET /ready)', () => {
 
   it('a stale job → degraded with the count only', async () => {
     const old = NOW - MIN_STALE_MS - 1;
-    const view = await new ReadinessService(deps({ beats: async () => [beat('a', old), beat('b', NOW)] })).check();
-    expect(view).toMatchObject({ status: 'degraded', checks: { jobs: { status: 'degraded', stale: 1 } } });
+    const view = await new ReadinessService(
+      deps({ beats: async () => [beat('a', old), beat('b', NOW)] }),
+    ).check();
+    expect(view).toMatchObject({
+      status: 'degraded',
+      checks: { jobs: { status: 'degraded', stale: 1 } },
+    });
   });
 
   it('beats unreadable here (an API copy without Redis) → jobs off', async () => {

@@ -25,7 +25,13 @@ export type StudentFiles = {
 };
 
 /** Students the sync may write for: everyone who has (or had) lessons in the platform's sense. */
-const STUDENT_STATUSES = ['trial', 'active', 'pending_subscription', 'pending_renewal', 'paused'] as const;
+const STUDENT_STATUSES = [
+  'trial',
+  'active',
+  'pending_subscription',
+  'pending_renewal',
+  'paused',
+] as const;
 
 /** google_teacher_calendars / google_student_files and the people they map, with the service role. */
 @Injectable()
@@ -34,8 +40,14 @@ export class GoogleMapQueries {
 
   async teachers(): Promise<TeacherRow[]> {
     const [t, m] = await Promise.all([
-      this.db.from('teachers').select('id, display_name_ar, display_name_en, google_calendar_id').eq('status', 'active').order('display_name_ar'),
-      this.db.from('google_teacher_calendars').select('teacher_id, calendar_id, calendar_name, confirmed_at'),
+      this.db
+        .from('teachers')
+        .select('id, display_name_ar, display_name_en, google_calendar_id')
+        .eq('status', 'active')
+        .order('display_name_ar'),
+      this.db
+        .from('google_teacher_calendars')
+        .select('teacher_id, calendar_id, calendar_name, confirmed_at'),
     ]);
     if (t.error) throw pgError(t.error);
     if (m.error) throw pgError(m.error);
@@ -44,13 +56,19 @@ export class GoogleMapQueries {
   }
 
   async teacherCalendar(teacherId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('google_teacher_calendars').select('calendar_id').eq('teacher_id', teacherId).maybeSingle();
+    const { data, error } = await this.db
+      .from('google_teacher_calendars')
+      .select('calendar_id')
+      .eq('teacher_id', teacherId)
+      .maybeSingle();
     if (error) throw pgError(error);
     return data?.calendar_id ?? null;
   }
 
   async mappedCalendarNames(): Promise<string[]> {
-    const { data, error } = await this.db.from('google_teacher_calendars').select('calendar_id, calendar_name');
+    const { data, error } = await this.db
+      .from('google_teacher_calendars')
+      .select('calendar_id, calendar_name');
     if (error) throw pgError(error);
     return data.map((r) => r.calendar_name ?? r.calendar_id);
   }
@@ -62,57 +80,109 @@ export class GoogleMapQueries {
   }): Promise<void> {
     const { teacherId, calendar, actorId } = input;
     const { error } = calendar
-      ? await this.db.from('google_teacher_calendars').upsert({ teacher_id: teacherId, calendar_id: calendar.id, calendar_name: calendar.name, confirmed_by: actorId, confirmed_at: new Date().toISOString() })
+      ? await this.db
+          .from('google_teacher_calendars')
+          .upsert({
+            teacher_id: teacherId,
+            calendar_id: calendar.id,
+            calendar_name: calendar.name,
+            confirmed_by: actorId,
+            confirmed_at: new Date().toISOString(),
+          })
       : await this.db.from('google_teacher_calendars').delete().eq('teacher_id', teacherId);
     if (error) throw pgError(error);
   }
 
   async students(q: string): Promise<StudentRow[]> {
-    let query = this.db.from('students').select('id, code, name').in('status', [...STUDENT_STATUSES]).order('name').limit(200);
+    let query = this.db
+      .from('students')
+      .select('id, code, name')
+      .in('status', [...STUDENT_STATUSES])
+      .order('name')
+      .limit(200);
     const text = orFilterTerm(q);
     if (text) query = query.or(`name.ilike.%${text}%,code.ilike.%${text}%`);
     const s = await query;
     if (s.error) throw pgError(s.error);
     const ids = s.data.map((r) => r.id);
-    const f = ids.length ? await this.db.from('google_student_files').select('student_id, folder_id, attendance_sheet_id, confirmed_at').in('student_id', ids) : { data: [], error: null };
+    const f = ids.length
+      ? await this.db
+          .from('google_student_files')
+          .select('student_id, folder_id, attendance_sheet_id, confirmed_at')
+          .in('student_id', ids)
+      : { data: [], error: null };
     if (f.error) throw pgError(f.error);
     const byStudent = new Map(f.data.map((r) => [r.student_id, r]));
-    return s.data.map((r) => ({ id: r.id, code: r.code ?? '', name: r.name, files: byStudent.get(r.id) ?? null }));
+    return s.data.map((r) => ({
+      id: r.id,
+      code: r.code ?? '',
+      name: r.name,
+      files: byStudent.get(r.id) ?? null,
+    }));
   }
 
   async student(studentId: string): Promise<StudentRow | null> {
-    const s = await this.db.from('students').select('id, code, name').eq('id', studentId).maybeSingle();
+    const s = await this.db
+      .from('students')
+      .select('id, code, name')
+      .eq('id', studentId)
+      .maybeSingle();
     if (s.error) throw pgError(s.error);
     if (!s.data) return null;
-    const f = await this.db.from('google_student_files').select('folder_id, attendance_sheet_id, confirmed_at').eq('student_id', studentId).maybeSingle();
+    const f = await this.db
+      .from('google_student_files')
+      .select('folder_id, attendance_sheet_id, confirmed_at')
+      .eq('student_id', studentId)
+      .maybeSingle();
     if (f.error) throw pgError(f.error);
     return { id: s.data.id, code: s.data.code ?? '', name: s.data.name, files: f.data };
   }
 
   /** The confirmed mapping, or null (nothing is written for an unconfirmed student). */
   async files(studentId: string): Promise<StudentFiles | null> {
-    const { data, error } = await this.db.from('google_student_files').select('folder_id, attendance_sheet_id, summary_row_hint').eq('student_id', studentId).maybeSingle();
+    const { data, error } = await this.db
+      .from('google_student_files')
+      .select('folder_id, attendance_sheet_id, summary_row_hint')
+      .eq('student_id', studentId)
+      .maybeSingle();
     if (error) throw pgError(error);
     return data;
   }
 
-  async setStudent(input: { studentId: string; files: Omit<StudentFiles, 'summary_row_hint'> | null; actorId: string }): Promise<void> {
+  async setStudent(input: {
+    studentId: string;
+    files: Omit<StudentFiles, 'summary_row_hint'> | null;
+    actorId: string;
+  }): Promise<void> {
     const { studentId, files, actorId } = input;
     const { error } = files
-      ? await this.db.from('google_student_files').upsert({ student_id: studentId, ...files, confirmed_by: actorId, confirmed_at: new Date().toISOString() })
+      ? await this.db
+          .from('google_student_files')
+          .upsert({
+            student_id: studentId,
+            ...files,
+            confirmed_by: actorId,
+            confirmed_at: new Date().toISOString(),
+          })
       : await this.db.from('google_student_files').delete().eq('student_id', studentId);
     if (error) throw pgError(error);
   }
 
   /** The existing sheet found in a confirmed folder (not made by the platform). */
   async recordSheet(input: { studentId: string; sheetId: string }): Promise<void> {
-    const { error } = await this.db.from('google_student_files').update({ attendance_sheet_id: input.sheetId }).eq('student_id', input.studentId);
+    const { error } = await this.db
+      .from('google_student_files')
+      .update({ attendance_sheet_id: input.sheetId })
+      .eq('student_id', input.studentId);
     if (error) throw pgError(error);
   }
 
   /** The platform made a folder / sheet for this student: recorded at once, so a retry never makes a second one. */
   async recordCreated(input: { studentId: string; patch: Partial<StudentFiles> }): Promise<void> {
-    const { error } = await this.db.from('google_student_files').update({ ...input.patch, created_by_platform: true }).eq('student_id', input.studentId);
+    const { error } = await this.db
+      .from('google_student_files')
+      .update({ ...input.patch, created_by_platform: true })
+      .eq('student_id', input.studentId);
     if (error) throw pgError(error);
   }
 }
