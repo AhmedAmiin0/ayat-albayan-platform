@@ -29,7 +29,7 @@ function sumOf(
 ): number | undefined {
   const each = statuses.map((s) => num(counts?.[s]));
   return each.every((n) => n !== undefined)
-    ? each.reduce<number>((sum, n) => sum + (n ?? 0), 0)
+    ? each.reduce<number>((sum, n) => sum + n, 0)
     : undefined;
 }
 
@@ -45,7 +45,11 @@ function kindCounts(counts: StatusCounts | undefined): Record<StudentListKind, n
 /** Uses the same `status` filter as the chips; other status combinations press no segment. */
 export function StudentKindSwitch({ status, counts, onChange }: StudentKindSwitchProps) {
   const n = kindCounts(counts);
-  const options = (['all', 'active', 'trial'] as const).map((kind) => ({ value: kind, label: L[kind], count: n[kind] }));
+  const options = (['all', 'active', 'trial'] as const).map((kind) => ({
+    value: kind,
+    label: L[kind],
+    count: n[kind],
+  }));
   return (
     <SegmentedControl
       label={L.kinds}

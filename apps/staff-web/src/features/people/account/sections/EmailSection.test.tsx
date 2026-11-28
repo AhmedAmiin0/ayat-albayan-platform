@@ -2,13 +2,22 @@ import { pathKey } from '@ab/client-core';
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { domainError, PROFILE, renderWithClient, section } from '@/features/people/account/account-test-kit';
+import {
+  domainError,
+  PROFILE,
+  renderWithClient,
+  section,
+} from '@/features/people/account/account-test-kit';
 import { AccountPage } from '@/features/people/account/AccountPage';
 import { PROFILE_KEY } from '@/features/people/account';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 beforeEach(() => {
   apiFetch.mockReset().mockResolvedValue(PROFILE);
@@ -33,7 +42,9 @@ describe('EmailSection (R-ACC-03)', () => {
     const { s } = await emailSection();
     const [before = ''] = M.current.split('{email}');
     expect(s.getByText(PROFILE.email ?? '').tagName).toBe('BDI');
-    expect(s.getByText(PROFILE.email ?? '').parentElement?.textContent?.startsWith(before)).toBe(true);
+    expect(s.getByText(PROFILE.email ?? '').parentElement?.textContent.startsWith(before)).toBe(
+      true,
+    );
     expect(s.getByLabelText(M.label).getAttribute('dir')).toBe('ltr');
   });
 
@@ -42,10 +53,15 @@ describe('EmailSection (R-ACC-03)', () => {
     apiSend.mockResolvedValue({ ...PROFILE, email: 'new@ab.co' });
     type(' New@AB.co ', 'secret-1');
     expect(await screen.findByText(t.account.toast.email)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('PUT', '/me/email', { email: 'new@ab.co', current_password: 'secret-1' });
+    expect(apiSend).toHaveBeenCalledWith('PUT', '/me/email', {
+      email: 'new@ab.co',
+      current_password: 'secret-1',
+    });
     expect(invalidate).toHaveBeenCalledWith({ queryKey: PROFILE_KEY });
-    await vi.waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: pathKey('/auth/me') }));
-    expect((s.getByLabelText<HTMLInputElement>(M.label)).value).toBe('');
+    await vi.waitFor(() =>
+      expect(invalidate).toHaveBeenCalledWith({ queryKey: pathKey('/auth/me') }),
+    );
+    expect(s.getByLabelText<HTMLInputElement>(M.label).value).toBe('');
   });
 
   it('409 email_taken shows at the email', async () => {

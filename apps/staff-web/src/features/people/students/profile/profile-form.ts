@@ -40,6 +40,8 @@ export const PROFILE_LABELS: Record<keyof ProfileValues, string> = {
   contact_is_self: t.familyAuth.contactIsSelf.label,
 };
 
+const LABEL_OF = new Map<string, string>(Object.entries(PROFILE_LABELS));
+
 export function toProfileValues(p: StudentProfile): ProfileValues {
   return {
     name: p.name,
@@ -77,8 +79,8 @@ export function toStudentPatch(values: ProfileValues, loaded: StudentStatus): Pa
   raw.contact_is_self = contactIsSelf;
   const r = studentUpdateSchema.safeParse(raw);
   if (r.success) return { ok: true, patch: withStatus(r.data, { status: values.status, loaded }) };
-  const key = String(r.error.issues[0]?.path[0] ?? '') as keyof ProfileValues;
-  const field = PROFILE_LABELS[key] ?? key;
+  const key = String(r.error.issues[0]?.path[0] ?? '');
+  const field = LABEL_OF.get(key) ?? key;
   return { ok: false, error: t.students.invalidField.replace('{field}', field) };
 }
 

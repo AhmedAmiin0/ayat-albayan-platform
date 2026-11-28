@@ -6,7 +6,10 @@ import { CreateStudentDialog } from '@/features/people/students/create/CreateStu
 import { EMPTY_STUDENT, toCreateBody } from '@/features/people/students/create/create-student';
 
 const api = vi.hoisted(() => ({ createStudent: vi.fn(), mergeStudents: vi.fn() }));
-vi.mock('@/features/people/students/api', async (importOriginal) => ({ ...(await importOriginal<object>()), ...api }));
+vi.mock('@/features/people/students/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  ...api,
+}));
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
   apiFetch: vi.fn(async () => [{ id: 't-abrar', display_name_ar: 'أبرار', meeting_link: null }]),
@@ -33,7 +36,7 @@ describe('«إضافة طالب»: «المعلم/المعلمة» (registration
       t.students.teacher,
       t.guardians.source,
     ];
-    const html = document.body.textContent ?? '';
+    const html = document.body.textContent;
     const at = labels.map((x) => html.indexOf(x));
     expect(at.every((i) => i >= 0)).toBe(true);
     expect([...at].sort((a, b) => a - b)).toEqual(at);
@@ -50,11 +53,17 @@ describe('«إضافة طالب»: «المعلم/المعلمة» (registration
     fireEvent.change(screen.getByLabelText(t.leads.studentName), { target: { value: 'سهيله' } });
     fireEvent.change(select, { target: { value: 't-abrar' } });
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
-    await waitFor(() => expect(api.createStudent).toHaveBeenCalledWith(expect.objectContaining({ teacher_id: 't-abrar' })));
+    await waitFor(() =>
+      expect(api.createStudent).toHaveBeenCalledWith(
+        expect.objectContaining({ teacher_id: 't-abrar' }),
+      ),
+    );
   });
 
   it('toCreateBody: no teacher picked sends no teacher_id', () => {
     expect(toCreateBody({ ...EMPTY_STUDENT, name: 'x' }, false)).not.toHaveProperty('teacher_id');
-    expect(toCreateBody({ ...EMPTY_STUDENT, name: 'x', teacher_id: 't1' }, false)).toMatchObject({ teacher_id: 't1' });
+    expect(toCreateBody({ ...EMPTY_STUDENT, name: 'x', teacher_id: 't1' }, false)).toMatchObject({
+      teacher_id: 't1',
+    });
   });
 });

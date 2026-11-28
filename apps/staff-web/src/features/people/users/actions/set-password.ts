@@ -26,7 +26,7 @@ export async function savePassword(
   const { error } = await supabase.auth.updateUser({ password });
   if (error) return { ok: false, error: t.users.setPassword.failed };
   queryClient.removeQueries({ queryKey: meQuery.queryKey });
-  const me = await queryClient.fetchQuery(meQuery);
+  const me = await queryClient.query(meQuery);
   const role: UserRole | null = me?.role ?? null;
   void reportSession('login');
   return { ok: true, home: role ? HOME_BY_ROLE[role] : '/login' };

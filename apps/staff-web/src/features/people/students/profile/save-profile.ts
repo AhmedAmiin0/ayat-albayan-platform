@@ -40,7 +40,7 @@ export async function saveProfile(o: SaveProfileOptions): Promise<SaveProfileRes
   } catch (error) {
     if (!isStatusChanged(error)) return { message: { ok: false, text: t.common.error } };
     await o.queryClient.invalidateQueries({ queryKey: STUDENTS_KEY });
-    const fresh = await o.queryClient.fetchQuery(studentQuery(o.student.id)).catch(() => null);
+    const fresh = await o.queryClient.query(studentQuery(o.student.id)).catch(() => null);
     return { message: { ok: false, text: t.students.statusChanged }, current: fresh?.status };
   }
 }

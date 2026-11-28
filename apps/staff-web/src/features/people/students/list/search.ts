@@ -52,7 +52,10 @@ export function fromStudentsUrl(search: StudentsUrlSearch): StudentsSearch {
 
 /** The page's state → URL search (parsed again, so blanks and defaults drop out). */
 export function toStudentsUrl(next: StudentsSearch): StudentsUrlSearch {
-  const columns = Object.entries(next.columns ?? {}).map(([k, v]) => [filterParam(k), v]);
+  const columns = Object.entries(next.columns ?? {}).map(([k, v]): [string, typeof v] => [
+    filterParam(k),
+    v,
+  ]);
   const sort = toSortSearch({ key: next.sort?.sort, dir: next.sort?.dir });
   return parseStudentsSearch({
     ...next.filters,

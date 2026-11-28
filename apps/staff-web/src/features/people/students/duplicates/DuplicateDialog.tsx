@@ -41,7 +41,7 @@ export function DuplicateDialog(props: DuplicateDialogProps) {
       <Button variant="secondary" onClick={onCreateAnyway}>
         {t.students.createAnyway}
       </Button>
-      <Button data-autofocus={focusMerge || undefined} onClick={() => onMerge(candidate)}>
+      <Button data-autofocus={focusMerge ? true : undefined} onClick={() => onMerge(candidate)}>
         {t.students.merge}
       </Button>
     </>
