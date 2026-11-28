@@ -1,6 +1,5 @@
 import { feedbackPublicRoutes as routes } from '@ab/shared';
 import { Body, Controller, HttpCode, Ip, Param } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { FeedbackPublicService } from './feedback.public.service';
 
@@ -8,7 +7,6 @@ import { FeedbackPublicService } from './feedback.public.service';
  * The family's page (no login): the signed token in the path is the whole credential. Answers
  * carry nothing beyond the teacher's name, the kind and the prefilled phone.
  */
-@Public()
 @Controller()
 export class FeedbackPublicController {
   constructor(private readonly feedback: FeedbackPublicService) {}

@@ -122,9 +122,10 @@ describe('feedback access (permissions and tags)', () => {
     expect(access).toEqual([[['feedback.write'], tag], read, read, [['self.teacher'], tag]]);
   });
 
-  it('tags the public page without a permission: the token is the credential', () => {
+  it('marks the public page public without a permission: the token is the credential', () => {
     const routes = Object.values(feedbackPublicRoutes);
     expect(routes.map((r) => r.tags)).toEqual([['feedback'], ['feedback']]);
+    expect(routes.map((r) => r.isPublic)).toEqual([true, true]);
     expect(routes.flatMap(Object.keys)).not.toContain('permissions');
   });
 });
