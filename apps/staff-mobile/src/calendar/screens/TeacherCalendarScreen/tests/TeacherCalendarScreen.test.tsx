@@ -21,28 +21,15 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 't1' }),
 }));
 
-const TEACHER: Teacher = teacherFixture({
-  id: 't1',
-  display_name_ar: 'أبرار',
-  phone_e164: null,
-  status: 'active',
-  tz: 'Africa/Cairo',
-});
-const GRID: AvailabilityRow[] = [
-  { id: 'a', weekday: 4, start_time: '16:00', end_time: '18:00', tz: 'Africa/Cairo' },
-];
+const TEACHER: Teacher = teacherFixture({ id: 't1', display_name_ar: 'أبرار', phone_e164: null, status: 'active', tz: 'Africa/Cairo' });
+const GRID: AvailabilityRow[] = [{ id: 'a', weekday: 4, start_time: '16:00', end_time: '18:00', tz: 'Africa/Cairo' }];
 /** Saturday 26 Sep 13:00 Riyadh, the week's first day. */
-const saturday = lesson({
-  id: 'sat',
-  starts_at: '2026-09-26T10:00:00.000Z',
-  ends_at: '2026-09-26T10:30:00.000Z',
-});
+const saturday = lesson({ id: 'sat', starts_at: '2026-09-26T10:00:00.000Z', ends_at: '2026-09-26T10:30:00.000Z' });
 const week = (from: string, to: string) =>
   `/lessons?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&teacherId=t1`;
 const THIS_WEEK = week('2026-09-25T21:00:00.000Z', '2026-10-02T21:00:00.000Z');
 const NEXT_WEEK = week('2026-10-02T21:00:00.000Z', '2026-10-09T21:00:00.000Z');
-const lessonCalls = () =>
-  mockApiFetch.mock.calls.filter(([p]: [string]) => p.startsWith('/lessons')).length;
+const lessonCalls = () => mockApiFetch.mock.calls.filter(([p]: [string]) => p.startsWith('/lessons')).length;
 
 /** The teacher, its grid, and these weeks (any other week is empty); an Error fails every week. */
 function serve(lessons: Record<string, unknown> | Error) {
@@ -99,11 +86,7 @@ test('‹ › moves a week, an empty week says so, «اليوم» comes back', a
   await fireEvent.press(screen.getByRole('button', { name: t.schedule.today }));
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.schedule.prevWeek }));
-  await waitFor(() =>
-    expect(mockApiFetch).toHaveBeenCalledWith(
-      week('2026-09-18T21:00:00.000Z', '2026-09-25T21:00:00.000Z'),
-    ),
-  );
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(week('2026-09-18T21:00:00.000Z', '2026-09-25T21:00:00.000Z')));
 });
 
 test('a week still loading says so instead of a blank list', async () => {
@@ -118,13 +101,9 @@ test('a week still loading says so instead of a blank list', async () => {
 test('a lesson’s «غيّر الموعد» is in view on its row (no hidden tap) and opens the sheet; a held lesson has none', async () => {
   serve({ [THIS_WEEK]: [done, pending] });
   await renderWithQuery(<TeacherCalendarScreen />, confirmingQueryClient());
-  const move = await screen.findByRole('button', {
-    name: `${t.lessons.rescheduleSubmit} — يوسف أحمد`,
-  });
+  const move = await screen.findByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` });
   // The held lesson cannot move.
-  expect(
-    screen.getAllByRole('button', { name: new RegExp(t.lessons.rescheduleSubmit) }),
-  ).toHaveLength(1);
+  expect(screen.getAllByRole('button', { name: new RegExp(t.lessons.rescheduleSubmit) })).toHaveLength(1);
   await fireEvent.press(move);
   expect(await screen.findByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy();
 });
@@ -132,17 +111,11 @@ test('a lesson’s «غيّر الموعد» is in view on its row (no hidden ta
 test('offline with a saved week: it stays, and the subtitle says how old it is', async () => {
   mockApiFetch.mockRejectedValue(new ApiError(503));
   const client = confirmingQueryClient();
-  const params = {
-    from: '2026-09-25T21:00:00.000Z',
-    to: '2026-10-02T21:00:00.000Z',
-    teacherId: 't1',
-  };
+  const params = { from: '2026-09-25T21:00:00.000Z', to: '2026-10-02T21:00:00.000Z', teacherId: 't1' };
   client.setQueryData(['lessons', 'list', params], [pending]);
   await renderWithQuery(<TeacherCalendarScreen />, client);
   expect(screen.getByText('يوسف أحمد')).toBeTruthy();
-  expect(
-    await screen.findByText(new RegExp(t.mobile.lastUpdated.replace(' {time}', ''))),
-  ).toBeTruthy();
+  expect(await screen.findByText(new RegExp(t.mobile.lastUpdated.replace(' {time}', '')))).toBeTruthy();
 });
 
 test('failed with nothing saved: error and retry; pull to refresh asks again', async () => {
@@ -152,7 +125,7 @@ test('failed with nothing saved: error and retry; pull to refresh asks again', a
   serve({ [THIS_WEEK]: [pending] });
   await fireEvent.press(retry);
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
-  const [list] = container.queryAll((node) => typeof node.props.onRefresh === 'function');
+  const [list] = container.queryAll((node) => typeof node.props['onRefresh'] === 'function');
   if (!list) throw new Error('no pull-to-refresh on the agenda');
   const before = lessonCalls();
   await fireEvent(list, 'refresh');

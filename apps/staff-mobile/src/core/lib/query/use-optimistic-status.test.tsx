@@ -72,10 +72,7 @@ test('a failed change rolls every cached copy back to the snapshot', async () =>
 test('lists refetch before details: a detail read from the lists sees the server, not the rollback', async () => {
   mockApiSend.mockRejectedValue(new ApiError(409, { code: 'invalid_transition' }));
   const { client, wrapper } = setup();
-  const lost = {
-    ...seedList,
-    pages: [{ ...seedList.pages[0], items: [{ id: 'a', status: 'lost' }] }],
-  };
+  const lost = { ...seedList, pages: [{ ...seedList.pages[0], items: [{ id: 'a', status: 'lost' }] }] };
   const listFn = jest.fn().mockResolvedValueOnce(seedList).mockResolvedValue(lost);
   const { result } = await renderHook(
     () => {
@@ -130,18 +127,10 @@ test('request sends another route shape; only id and status reach the cached arr
   const client = createTestQueryClient();
   const dayKey = ['lessons', 'day', { date: '2026-10-01' }];
   client.setQueryData(dayKey, [{ id: 'l1', status: 'scheduled' }]);
-  interface Cancel {
-    id: string;
-    status: string;
-    reason: string;
-  }
+  type Cancel = { id: string; status: string; reason: string };
   const options = {
     path: '/lessons',
-    request: (c: Cancel) => ({
-      method: 'POST' as const,
-      path: `/lessons/${c.id}/cancel`,
-      body: { reason: c.reason },
-    }),
+    request: (c: Cancel) => ({ method: 'POST' as const, path: `/lessons/${c.id}/cancel`, body: { reason: c.reason } }),
   };
   const { result } = await renderHook(() => useOptimisticStatus<string, Cancel>(options), {
     wrapper: queryWrapper(client),

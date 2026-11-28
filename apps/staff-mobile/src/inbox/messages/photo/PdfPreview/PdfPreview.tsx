@@ -63,10 +63,7 @@ export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: P
   // Never the name twice («File / File»): «PDF» until page 1 tells the count and size.
   const meta = doc ? pdfMetaLine(doc, t.inbox.pdf) : t.inbox.pdf.type;
   const onError = () => {
-    if (resigned.has(m.id)) {
-      setNoThumb(true);
-      return;
-    }
+    if (resigned.has(m.id)) return setNoThumb(true);
     resigned.add(m.id);
     void client.invalidateQueries({ queryKey: query.queryKey, exact: true });
   };
@@ -113,12 +110,7 @@ export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: P
               }}
               onError={onError}
               // Full width from the top in the page's own shape: a landscape page is never cut at the sides.
-              style={{
-                position: 'absolute',
-                top: 0,
-                width: WIDTH,
-                height: Math.round(WIDTH * ratio),
-              }}
+              style={{ position: 'absolute', top: 0, width: WIDTH, height: Math.round(WIDTH * ratio) }}
             />
           ) : null}
         </PdfStrip>
@@ -137,9 +129,7 @@ export function PdfPreview({ message: m, phone, kind, onLongPress, fallback }: P
             >
               {name}
             </ContentText>
-            <AppText numberOfLines={1} style={small}>
-              {meta}
-            </AppText>
+            <AppText numberOfLines={1} style={small}>{meta}</AppText>
           </View>
         </View>
       </Pressable>
