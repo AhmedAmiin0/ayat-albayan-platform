@@ -2,13 +2,11 @@ import type { ReactNode } from 'react';
 import { Section } from '@/components/settings/Section';
 import { matchesText } from '@/components/settings/search/settings-search';
 import { useSettingsView } from '@/components/settings/settings-view';
-import { ClockToggle, ThemeToggle, t } from '@ab/web-kit';
+import { ThemeToggle, t } from '@ab/web-kit';
 
-const themeMatch = (query: string): boolean => matchesText(`${t.settings.theme} ${t.settings.themeHint}`, query);
-const clockMatch = (query: string): boolean => matchesText(`${t.clock.label} ${t.clock.hint}`, query);
-
-/** Does the search match the theme or the clock-format row's words? */
-export const appearanceMatch = (query: string): boolean => themeMatch(query) || clockMatch(query);
+/** Does the search match the theme row's words? The web has no time-format row (12 h only). */
+export const appearanceMatch = (query: string): boolean =>
+  matchesText(`${t.settings.theme} ${t.settings.themeHint}`, query);
 
 function Row({ title, hint, children }: { title: string; hint: string; children: ReactNode }) {
   return (
@@ -22,24 +20,15 @@ function Row({ title, hint, children }: { title: string; hint: string; children:
   );
 }
 
-/** Theme and 12/24-hour clock of this browser, not stored settings. */
+/** The theme of this browser, not a stored setting. */
 export function AppearanceSection() {
   const { query } = useSettingsView();
-  const theme = themeMatch(query);
-  const clock = clockMatch(query);
-  if (!theme && !clock) return null;
+  if (!appearanceMatch(query)) return null;
   return (
     <Section id="appearance" title={t.settings.sections.appearance}>
-      {theme && (
-        <Row title={t.settings.theme} hint={t.settings.themeHint}>
-          <ThemeToggle />
-        </Row>
-      )}
-      {clock && (
-        <Row title={t.clock.label} hint={t.clock.hint}>
-          <ClockToggle />
-        </Row>
-      )}
+      <Row title={t.settings.theme} hint={t.settings.themeHint}>
+        <ThemeToggle />
+      </Row>
     </Section>
   );
 }

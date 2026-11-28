@@ -12,6 +12,6 @@ it('reads in English', () => {
   render(<TrialHistoryTable history={history({ family_tz: 'Europe/London', items: [row({ outcome: 'attended', picked_by: null })] })} />);
   expect(screen.getByRole('columnheader', { name: 'Picked by' })).toBeTruthy();
   expect(screen.getByText('Attended')).toBeTruthy();
-  expect(screen.getByText('Family time: Monday 5 October 15:00')).toBeTruthy();
+  expect(screen.getByText('Family time: Monday 5 October 3:00 PM')).toBeTruthy();
   expect(screen.getByText(/^Unknown, /)).toBeTruthy();
 });

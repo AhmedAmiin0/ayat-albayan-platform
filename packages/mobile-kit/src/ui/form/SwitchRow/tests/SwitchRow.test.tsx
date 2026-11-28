@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { AppText } from '../../primitives/AppText';
-import { SwitchRow } from './SwitchRow';
+import { AppText } from '../../../primitives/AppText';
+import { SwitchRow } from '../SwitchRow';
 
 test('the label names the switch; a flip reports the new value; the note sits under it', async () => {
   const onChange = jest.fn();

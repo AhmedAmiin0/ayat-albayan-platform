@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClockAt } from '../../support/core/locale';
 import {
   addDays,
   lessonsOf,
@@ -92,7 +93,7 @@ test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)',
       .toContainEqual(expect.objectContaining({ template_key: 'booking_confirmation', status: 'queued' }));
 
     const mine = await openMyLesson(teacher, { name: /ريم/, at: movedTo, last: true });
-    const moved = mine.getByRole('article', { name: new RegExp(`^${cairoClock(movedTo)} ريم`) });
+    const moved = mine.getByRole('article', { name: new RegExp(`^${webClockAt(movedTo, 'Africa/Cairo')} ريم`) });
     await expect(moved).toBeVisible();
     await expect(teacher.getByText(waiting)).toHaveCount(0);
   });

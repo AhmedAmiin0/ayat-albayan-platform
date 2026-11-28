@@ -2,8 +2,14 @@ import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { fakeNow, openEditTime, SCHEDULED } from './edit-time-fixture';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend: vi.fn() }));
+const mockApi = mockCall();
+mockApi.onRead(async () => []);
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 describe('«عدّل الوقت» form footer (docs/07 «الأزرار»)', () => {
   fakeNow();

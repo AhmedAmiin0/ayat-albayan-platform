@@ -15,4 +15,10 @@ describe('«المظهر» page', () => {
     expect(screen.getByText(t.settings.theme)).toBeTruthy();
     expect(screen.getByText(t.settings.themeHint)).toBeTruthy();
   });
+
+  it('has no time-format row: the web shows 12-hour times only', () => {
+    render(<AppearancePage />);
+    expect(screen.queryByText(t.clock.label)).toBeNull();
+    expect(screen.queryByRole('group', { name: t.clock.label })).toBeNull();
+  });
 });

@@ -51,7 +51,7 @@ describe('LessonAction «ادخل الحلقة»', () => {
   it('before the window: no button, the opening time on the family clock', () => {
     show({}, new Date('2026-10-27T15:00:00.000Z'));
     expect(screen.queryByRole('button')).toBeNull();
-    expect(screen.getByText(t.portal.opensAt.replace('{time}', '18:50'))).toBeTruthy();
+    expect(screen.getByText(t.portal.opensAt.replace('{time}', '6:50 م'))).toBeTruthy();
   });
 
   it('before the window on a card that counts down to it: no second «يُتاح الدخول…» line', () => {

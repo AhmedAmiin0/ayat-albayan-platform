@@ -4925,6 +4925,8 @@
     "autoShort": "Auto",
     "h12": "12-hour",
     "h24": "24-hour",
+    "h12Short": "12",
+    "h24Short": "24",
     "hint": "Saved on this device only."
   },
   "mobileStudentFile": {

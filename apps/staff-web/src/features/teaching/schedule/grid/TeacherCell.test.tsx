@@ -17,7 +17,7 @@ describe('TeacherCell', () => {
     render(<TeacherCell teacher={T_ABRAR} now={WINTER} />);
     expect(screen.getByRole('link', { name: 'أبرار' })).toBeTruthy();
     expect(screen.getByText(`${t.teachers.genderLabel.female} · ${t.enums.program.quran}`)).toBeTruthy();
-    expect(screen.getByText(/عند المعلم\/ة 11:00 بتوقيت القاهرة/)).toBeTruthy();
+    expect(screen.getByText(/عند المعلم\/ة 11:00 ص بتوقيت القاهرة/)).toBeTruthy();
   });
 
   it('a Cairo teacher in summer reads the viewer clock: no second clock', () => {

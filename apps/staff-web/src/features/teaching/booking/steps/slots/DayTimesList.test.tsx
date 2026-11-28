@@ -23,8 +23,8 @@ describe('DayTimesList (owner 2026-10-18: a time per day)', () => {
   it('lists each day with its own remove button', () => {
     const onRemove = vi.fn();
     render(<DayTimesList picks={[SUN, TUE]} tz="Asia/Riyadh" onRemove={onRemove} />);
-    expect(screen.getByText(dayAt(0, '17:00'))).toBeTruthy();
-    expect(screen.getByText(dayAt(2, '19:30'))).toBeTruthy();
+    expect(screen.getByText(dayAt(0, '5:00 م'))).toBeTruthy();
+    expect(screen.getByText(dayAt(2, '7:30 م'))).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.booking.removeDay.replace('{day}', t.enums.weekday[2]) }));
     expect(onRemove).toHaveBeenCalledWith(TUE.at);
   });

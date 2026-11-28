@@ -9,8 +9,13 @@ import { ChatSearchBar } from './ChatSearchBar';
 import { ChatSearchProvider } from './ChatSearchProvider';
 import { SearchFromProfile } from './SearchFromProfile';
 import { ThreadSideSheet } from '@/features/messaging/inbox/threads/pane/ThreadSideSheet';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const label = t.inbox.chatSearch.fromProfile;
 

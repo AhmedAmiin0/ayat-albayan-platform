@@ -5,8 +5,13 @@ import { t } from '@ab/web-kit';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble/MessageBubble';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const NOW = new Date('2026-10-01T12:00:00Z');
 const SARA = t.inbox.sentBy.replace('{name}', 'سارة');
@@ -14,7 +19,11 @@ const SARA = t.inbox.sentBy.replace('{name}', 'سارة');
 function renderBubble(patch: Partial<MessageView>) {
   renderWithClient(
     <ul>
-      <MessageBubble message={message({ direction: 'outbound', status: 'sent', body: 'أهلًا', ...patch })} waitingTemplate={false} now={NOW} />
+      <MessageBubble
+        message={message({ direction: 'outbound', status: 'sent', body: 'أهلًا', ...patch })}
+        waitingTemplate={false}
+        now={NOW}
+      />
     </ul>,
   );
   return screen.getByRole('article');

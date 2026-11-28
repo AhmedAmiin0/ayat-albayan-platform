@@ -49,7 +49,7 @@ describe('AvailabilityWeek (R-TCH-02, docs/07 §8)', () => {
     const monday = row(1);
     expect(monday.querySelectorAll('[data-bar]')).toHaveLength(2);
     expect(monday.querySelectorAll('[data-clash]')).toHaveLength(1);
-    const span = t.availability.overlapSpan.replace('{from}', '17:30').replace('{to}', '18:00');
+    const span = t.availability.overlapSpan.replace('{from}', '5:30 م').replace('{to}', '6:00 م');
     expect(within(monday).getByRole('alert').textContent).toBe(`${t.availability.overlap}${t.common.listSeparator}${span}`);
   });
 
