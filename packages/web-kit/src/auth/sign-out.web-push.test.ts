@@ -11,7 +11,7 @@ const auth = vi.hoisted(() => ({
   }),
 }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession: vi.fn(async () => void order.push('report')) }));
+vi.mock('@ab/web-kit/auth/session-activity/session-activity', () => ({ reportSession: vi.fn(async () => void order.push('report')) }));
 vi.mock('@ab/web-kit/push/web-push', () => ({ forgetWebPush: vi.fn(async () => void order.push('forget')) }));
 
 beforeEach(() => {

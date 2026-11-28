@@ -13,3 +13,18 @@ export const activityRoutes = {
     tags: ['activity'],
   }),
 };
+
+const sessionReport = (path: string) =>
+  defineRoute({
+    method: 'POST',
+    path,
+    response: 'empty',
+    tags: ['activity'],
+  });
+
+/** Sign-in happens against the auth provider in the browser, which reports it here (no body). */
+export const activitySessionRoutes = {
+  login: sessionReport('/activity/session/login'),
+  logout: sessionReport('/activity/session/logout'),
+  loginFailed: sessionReport('/activity/session/login-failed'),
+};

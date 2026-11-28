@@ -1,7 +1,10 @@
+import { activitySessionRoutes } from '@ab/shared';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { EXPENSE_ID, expenseRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { ADMIN, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
+import { routeOf } from '@/common/http/route';
+import { AuthSessionController } from './activity.controller';
 import { ActivityRepo } from './activity.repo';
 import { ActivityWriter } from './activity.writer';
 
@@ -66,6 +69,15 @@ describe('activity log over HTTP (money routes, real interceptor and guards)', (
     expect(res.statusCode).toBe(500);
     expect(res.json().code).toBe('response_invalid');
     expect(res.body).not.toContain('سهيلة');
+  });
+
+  it('serves the session reports from their shared route objects', () => {
+    const { login, logout, loginFailed } = AuthSessionController.prototype;
+    expect([login, logout, loginFailed].map(routeOf)).toEqual([
+      activitySessionRoutes.login,
+      activitySessionRoutes.logout,
+      activitySessionRoutes.loginFailed,
+    ]);
   });
 
   it('records sign-in and sign-out reported by the web', async () => {

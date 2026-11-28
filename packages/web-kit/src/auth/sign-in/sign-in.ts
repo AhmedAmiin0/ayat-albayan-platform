@@ -64,7 +64,7 @@ export async function signIn(creds: Credentials, queryClient: QueryClient): Prom
   await forgetWebPush();
   const error = await passwordSession(creds);
   if (error) {
-    void reportSession('login-failed');
+    void reportSession('loginFailed');
     return { ok: false, error };
   }
   return finishSignIn(queryClient);
