@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '../../../lib/i18n/i18n';
+import { type } from '../../../theme';
 import { MaintenanceScreen } from './MaintenanceScreen';
 
 const S = t.maintenance;
@@ -27,4 +28,14 @@ test('one button asks again; it reads «جارٍ التحقق…» while a check
   expect(onRetry).toHaveBeenCalledTimes(1);
   await open('maintenance', true);
   expect(screen.getByRole('button', { name: S.checking })).toBeTruthy();
+});
+
+test('before the fonts load, the title takes the system font', async () => {
+  await render(
+    <MaintenanceScreen kind="down" checking={false} onRetry={jest.fn()} fontsLoaded={false} />,
+  );
+  await act(async () => undefined);
+  expect(screen.getByRole('header', { name: S.outage.title })).not.toHaveStyle({
+    fontFamily: type.display,
+  });
 });

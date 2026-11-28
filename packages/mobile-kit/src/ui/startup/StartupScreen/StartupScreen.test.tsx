@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { AccessibilityInfo, Animated } from 'react-native';
-import { t } from '../../lib/i18n/i18n';
-import { palette } from '../../theme';
+import { t } from '../../../lib/i18n/i18n';
+import { palette, type } from '../../../theme';
 import { StartupScreen } from './StartupScreen';
 
 // The branded wait: the status from the start, the 10 s hint and retry in a reserved space, Reduce Motion.
@@ -102,4 +102,10 @@ test('Reduce Motion: no ring turn, breath or dot wave; the words and the retry s
   expect(loop).not.toHaveBeenCalled();
   for (const dot of screen.getAllByTestId('connecting-dot', { includeHiddenElements: true })) expect(dot).toHaveStyle({ opacity: 0.7 });
   expect(retryButton()).toBeOnTheScreen();
+});
+
+test('before the fonts load, the title takes the system font', async () => {
+  await render(<StartupScreen mode="loading" onRetry={onRetry} fontsLoaded={false} />);
+  await act(async () => undefined);
+  expect(screen.getByText(t.app.name)).not.toHaveStyle({ fontFamily: type.display });
 });
