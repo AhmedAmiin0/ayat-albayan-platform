@@ -1,18 +1,9 @@
-import type { MuteSource } from '@ab/schedule';
 import { IconButton } from '@ab/web-kit/components/ui/form/IconButton';
-import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
-import type { TileView } from '@ab/web-kit/classroom/room/components/room-types';
-import type { MuteController } from '@ab/web-kit/classroom/mute/use-mute';
+import type { MuteButtonsProps } from './MuteButtons.types';
+import { LABEL, SOURCES } from './mute-buttons.helpers';
 
-const M = t.classroom.mute;
-const LABEL: Record<MuteSource, { short: string; of: string; icon: 'mic' | 'cam' }> = {
-  microphone: { short: M.mic, of: M.micOf, icon: 'mic' },
-  camera: { short: M.cam, of: M.camOf, icon: 'cam' },
-};
-const SOURCES: readonly MuteSource[] = ['microphone', 'camera'];
-
-export function MuteButtons({ tile, mute }: { tile: TileView; mute: MuteController }) {
+export function MuteButtons({ tile, mute }: MuteButtonsProps) {
   return (
     <>
       {SOURCES.filter((s) => mute.canMute(tile, s)).map((source) => (
