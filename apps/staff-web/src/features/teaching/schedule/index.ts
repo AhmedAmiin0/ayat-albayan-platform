@@ -60,3 +60,5 @@ export { reasonPart } from './reschedule/reschedule';
 export { SlotPicker, type SlotPickerProps } from './reschedule/SlotPicker';
 export { RescheduleForm, type RescheduleFormProps } from './reschedule/RescheduleForm';
 export { TeacherConfirmedTag } from './lesson/TeacherConfirmedTag';
+export { DetailRow } from './lesson/DetailRow';
+export { lengthText } from './edit-time/edit-time-text';

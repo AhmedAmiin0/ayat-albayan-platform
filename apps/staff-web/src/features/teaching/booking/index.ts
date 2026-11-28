@@ -75,3 +75,4 @@ export { dayAtText, DayTimesList, type DayTimesListProps } from './steps/slots/D
 export { courseNear, pickedText, SlotStep, type SlotStepProps } from './steps/slots/SlotStep';
 export { TrialDatesSection } from './trial-date/TrialDatesSection';
 export { TrialDateDialog, type TrialDateDialogProps } from './trial-date/dialog/TrialDateDialog';
+export { CourseHeldContext } from './mode';
