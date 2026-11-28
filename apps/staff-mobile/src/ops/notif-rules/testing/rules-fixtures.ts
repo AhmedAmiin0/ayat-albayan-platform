@@ -57,3 +57,7 @@ export const answer =
 export const openAudience = async (label: string): Promise<void> => {
   await fireEvent.press(await screen.findByRole('tab', { name: new RegExp(`^${label}`) }));
 };
+
+/** apiSend for a row's PATCH: the API answers with that row as the catalogue holds it. */
+export const savedRow = async (_method: string, path: string): Promise<unknown> =>
+  catalogueV2.entries.find((e) => path === `/admin/notifications/${e.key}`);
