@@ -16,7 +16,7 @@ import { useEarningsBalance } from '@/earnings/hooks/queries';
  * the payments, and the payment form for the ticked sessions (or everything outstanding).
  */
 export function TeacherEarningsScreen() {
-  const { id = '' } = useLocalSearchParams<{ id: string }>();
+  const { id = '' } = useLocalSearchParams<{ id?: string }>();
   const scope = { teacherId: id };
   const balance = useEarningsBalance(scope);
   const [tab, setTab] = useState<Tab>('sessions');

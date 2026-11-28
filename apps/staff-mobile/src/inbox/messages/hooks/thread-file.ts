@@ -61,7 +61,7 @@ export const threadFileQuery = (phone: string, messageId: string) =>
 export function useThreadFile(phone: string, messageId: string): () => Promise<ThreadFile> {
   const client = useQueryClient();
   return useCallback(
-    () => client.fetchQuery(threadFileQuery(phone, messageId)),
+    () => client.query(threadFileQuery(phone, messageId)),
     [client, phone, messageId],
   );
 }

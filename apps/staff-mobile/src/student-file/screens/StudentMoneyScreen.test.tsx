@@ -65,7 +65,7 @@ test('empty and failed states; a missing permission hides its tab', async () => 
   );
   expect(await screen.findByText(M.invoicesEmpty)).toBeTruthy();
   expect(screen.queryByRole('tab', { name: M.tabPayments })).toBeNull();
-  view.unmount();
+  await view.unmount();
   // D6: /auth/me answers (a failed one hides every tab); the lists fail.
   mockApiFetch.mockReset().mockImplementation(async (path: string) => {
     if (path === '/auth/me') return { permissions: ['payments.read', 'invoices.read'] };

@@ -38,7 +38,7 @@ beforeEach(() => jest.clearAllMocks());
 test('sales: the bell opens the sales notifications; «محادثة جديدة» floats over the chats', async () => {
   answer(['inbox.read', 'inbox.send', 'notifications.push', 'self.sales']);
   await openInbox();
-  fireEvent.press(await screen.findByRole('button', { name: unreadName }));
+  await fireEvent.press(await screen.findByRole('button', { name: unreadName }));
   expect(router.push).toHaveBeenCalledWith('/sales/more/notifications');
   expect(screen.getByRole('button', { name: t.inbox.newChat.title })).toBeTruthy();
 });
@@ -55,6 +55,6 @@ test('assistant: the bell in the «حلقاتي» header opens the assistant not
     <AssistantHomeScreen can={() => true} />,
     createTestQueryClient({ meFromApi: true }),
   );
-  fireEvent.press(await screen.findByRole('button', { name: unreadName }));
+  await fireEvent.press(await screen.findByRole('button', { name: unreadName }));
   expect(router.push).toHaveBeenCalledWith('/assistant/more/notifications');
 });

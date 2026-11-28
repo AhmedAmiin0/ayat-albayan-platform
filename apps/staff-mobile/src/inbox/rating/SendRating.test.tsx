@@ -134,7 +134,7 @@ test('without feedback.write, or on a thread that is not a guardian’s: no butt
   backend(['leads.read']);
   const first = await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
   await waitFor(() => expect(screen.queryByRole('button', { name: t.inbox.rating.send })).toBeNull());
-  first.unmount();
+  await first.unmount();
   backend(['feedback.write']);
   mockApiFetch.mockClear();
   await renderWithQuery(<SendRating thread={{ ...guardian, guardian_id: null }} />, createTestQueryClient({ meFromApi: true }));

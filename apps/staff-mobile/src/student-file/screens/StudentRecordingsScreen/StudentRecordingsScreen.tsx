@@ -28,7 +28,7 @@ const keyOf = (r: StudentRecordingView) => r.id;
 
 /** Teachers see their own tz and no delete; controls follow recordings.manage, as the API. */
 export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
-  const { id = '' } = useLocalSearchParams<{ id: string }>();
+  const { id = '' } = useLocalSearchParams<{ id?: string }>();
   const { color } = useTheme();
   const can = usePermissions();
   const me = useTeacherMe(!admin);

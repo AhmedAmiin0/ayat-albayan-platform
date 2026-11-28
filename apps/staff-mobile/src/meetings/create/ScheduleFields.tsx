@@ -1,7 +1,7 @@
 import { MEETING_DURATION_MAX, MEETING_DURATION_MIN } from '@ab/schedule';
 import { hourLabel } from '@ab/time';
 import { useClockCycle } from '@/core/lib/clock';
-import { locale, t, type, useTheme, AppText, FilterPills } from '@ab/mobile-kit';
+import { locale, t, type, useTheme, AppText, FilterPills, useNow } from '@ab/mobile-kit';
 import { useMemo } from 'react';
 import { View } from 'react-native';
 import { Note } from '@/core/ui/feedback/Note';
@@ -21,9 +21,10 @@ interface ScheduleFieldsProps {
 
 /** No date picker: 14 day chips in the viewer's calendar; length 15 to 240 by 15; 24 h slot. */
 export function ScheduleFields({ slot, onChange, tz }: ScheduleFieldsProps) {
+  const now = useNow();
   const { color } = useTheme();
   const cycle = useClockCycle();
-  const days = useMemo(() => dateChoices(new Date(), tz), [tz]);
+  const days = useMemo(() => dateChoices(now, tz), [now, tz]);
   const items = days.map((d, i) => ({ value: d, label: dayChipLabel(d, i === 0) }));
   if (!days.includes(slot.date))
     items.unshift({ value: slot.date, label: dayChipLabel(slot.date, false) });

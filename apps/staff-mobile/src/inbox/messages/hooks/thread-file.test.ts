@@ -42,8 +42,8 @@ test('a second tap within the signed hour reuses the signed URL', async () => {
   const fresh = { ...FILE, expires_at: new Date(Date.now() + 60 * 60_000).toISOString() };
   mockApiFetch.mockResolvedValue(fresh);
   const client = createTestQueryClient();
-  await expect(client.fetchQuery(threadFileQuery(PHONE, 'm1'))).resolves.toEqual(fresh);
-  await client.fetchQuery(threadFileQuery(PHONE, 'm1'));
+  await expect(client.query(threadFileQuery(PHONE, 'm1'))).resolves.toEqual(fresh);
+  await client.query(threadFileQuery(PHONE, 'm1'));
   expect(mockApiFetch).toHaveBeenCalledTimes(1);
   expect(mockApiFetch).toHaveBeenCalledWith('/threads/%2B966552147730/messages/m1/file');
 });
@@ -72,14 +72,14 @@ test('a failure is not asked again on mount, focus or reconnect; a success follo
   mockApiFetch.mockRejectedValue(new Error('410'));
   const client = createTestQueryClient();
   const q = threadFileQuery(PHONE, 'm1');
-  await client.fetchQuery(q).catch(() => undefined);
+  await client.query(q).catch(() => undefined);
   const query = client.getQueryCache().find({ queryKey: q.queryKey });
   if (!query) throw new Error('no query');
   for (const option of [q.refetchOnMount, q.refetchOnWindowFocus, q.refetchOnReconnect]) {
     expect(resolve(option, query)).toBe(false);
   }
   mockApiFetch.mockResolvedValue(FILE);
-  await client.fetchQuery({ ...q, staleTime: 0 });
+  await client.query({ ...q, staleTime: 0 });
   expect(resolve(q.refetchOnWindowFocus, query)).toBe(true);
 });
 
@@ -111,7 +111,7 @@ test('a PDF page: a 503 is asked again when the bubble mounts again; a 4xx stays
   const q = pdfPageQuery(PHONE, 'm1', 1);
   const onMount = async (e: Error) => {
     mockApiFetch.mockRejectedValue(e);
-    await client.fetchQuery({ ...q, retry: false }).catch(() => undefined);
+    await client.query({ ...q, retry: false }).catch(() => undefined);
     const query = client.getQueryCache().find({ queryKey: q.queryKey });
     if (!query) throw new Error('no query');
     return resolve(q.retryOnMount, query);

@@ -32,7 +32,7 @@ const back = () => backWithin('/teacher/reports');
 /** Same questions, rules and API as the web form (R-REP-01/02, R-MOB-02); offline sends nothing. */
 export function ReportFormScreen() {
   const cycle = useClockCycle();
-  const { lessonId = '' } = useLocalSearchParams<{ lessonId: string }>();
+  const { lessonId = '' } = useLocalSearchParams<{ lessonId?: string }>();
   const form = useReportForm(lessonId);
   const tz = useViewerTz();
   // A saved form is shown only once this open has asked the API (or could not): each card seeds

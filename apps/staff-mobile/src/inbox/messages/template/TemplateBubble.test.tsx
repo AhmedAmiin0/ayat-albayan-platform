@@ -37,7 +37,7 @@ test('a URL button is a link that opens its address', async () => {
   const link = screen.getByTestId('template-button-url');
   expect(link.props.accessibilityRole).toBe('link');
   expect(link.props.accessibilityLabel).toBe(s.opensLink.replace('{label}', 'Join'));
-  fireEvent.press(link);
+  await fireEvent.press(link);
   expect(open).toHaveBeenCalledWith('https://meet.google.com/abc');
   open.mockRestore();
 });

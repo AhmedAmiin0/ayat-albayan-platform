@@ -2,7 +2,7 @@ import { type CallView, senderLine } from '@ab/shared';
 import { chatDayKey } from '@ab/time';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
-import { t, useTheme, EmptyState, FloatingDay } from '@ab/mobile-kit';
+import { t, useTheme, EmptyState, FloatingDay, useNow } from '@ab/mobile-kit';
 import { useStableHandler } from '@/core/lib/stable-handler';
 import { logRows, type LogRow } from '@/inbox/thread/calls/entries/log-rows';
 import { useCallBack, useThreadCalls } from '@/inbox/thread/calls/entries/use-thread-calls';
@@ -98,7 +98,7 @@ export function MessageList({ phone, query: live }: { phone: string; query: Thre
   );
   const onEndReached = useOlder(query);
   // Today's key redraws the day chips at midnight even without a new message.
-  const today = chatDayKey(new Date(), deviceTimeZone());
+  const today = chatDayKey(useNow(), deviceTimeZone());
   const top = useTopDay(rows, query.hasNextPage);
   // The rows seen on screen: a PDF asks its page 1 only then, never a burst.
   const seen = useSeenRows<LogRow>(top.list.onViewableItemsChanged);

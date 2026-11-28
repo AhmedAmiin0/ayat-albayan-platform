@@ -2,7 +2,7 @@ import { staffMaySend } from '@ab/client-core';
 import { canReact, type MessageView, type ThreadView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { type ReactNode, useMemo, useState } from 'react';
-import { ltr } from '@ab/mobile-kit';
+import { ltr, useNow } from '@ab/mobile-kit';
 import {
   BubbleActionsContext,
   type BubbleChatActions,
@@ -31,6 +31,7 @@ export interface ChatActionsProviderProps {
 
 /** State lives with the chat screen; the shared sheets are drawn once here, not per bubble. */
 export function ChatActionsProvider({ phone, thread, children }: ChatActionsProviderProps) {
+  const now = useNow();
   const mode = useThreadMode();
   // At most one of reply or correction.
   const target = useComposeTarget(phone);
@@ -44,7 +45,7 @@ export function ChatActionsProvider({ phone, thread, children }: ChatActionsProv
   const [failed, setFailed] = useState<MessageView | null>(null);
   const { mutate: reactNow } = useReact(phone, (text) => say({ text }));
   const own = isOwnThread(mode, thread);
-  const chat = sendState(thread, new Date());
+  const chat = sendState(thread, now);
   // Reply follows the text rule; a reaction keeps the window.
   const canSend = !own && staffMaySend(chat, mode.kind !== 'teacher');
   const windowOpen = !own && chat.open;

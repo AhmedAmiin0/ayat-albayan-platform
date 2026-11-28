@@ -10,7 +10,7 @@ const M = t.mobileStudentFile.money;
 
 /** Each section shows only with its permission (payments.read / invoices.read); read-only. */
 export function StudentMoneyScreen() {
-  const { id = '' } = useLocalSearchParams<{ id: string }>();
+  const { id = '' } = useLocalSearchParams<{ id?: string }>();
   const can = usePermissions();
   const name = useStudentName(id, true);
   const [tab, setTab] = useState<'payments' | 'invoices'>('payments');

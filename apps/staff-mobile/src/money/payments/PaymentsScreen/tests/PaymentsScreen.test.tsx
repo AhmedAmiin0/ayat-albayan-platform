@@ -107,7 +107,7 @@ test('empty period and failed read', async () => {
   backend([]);
   const first = await renderWithQuery(<PaymentsScreen />);
   expect(await screen.findByRole('header', { name: t.mobileMoney.paymentsEmpty })).toBeTruthy();
-  first.unmount();
+  await first.unmount();
   mockApiFetch.mockReset();
   mockApiFetch.mockRejectedValue(new Error('offline'));
   await renderWithQuery(<PaymentsScreen />);

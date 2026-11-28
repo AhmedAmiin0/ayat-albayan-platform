@@ -119,7 +119,7 @@ test('teacher mode never shows delete; an empty list and an error have their sta
     createTestQueryClient({ meFromApi: true }),
   );
   expect(await screen.findByText(R.empty)).toBeTruthy();
-  view.unmount();
+  await view.unmount();
   mockApiFetch.mockReset().mockImplementation(async (p: string) => {
     if (p === '/auth/me') return { permissions };
     throw new ApiError(500);

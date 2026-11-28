@@ -4,7 +4,7 @@ import { Linking } from 'react-native';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
 import { recordingsPath, type RecordingSource } from './recording-format';
 
-// The list carries 1-hour signed URLs, so `noPersist` keeps it off the disk cache (lib/query-client).
+// The list carries 1-hour signed URLs, so `noPersist` keeps it off the disk cache.
 const meta = { noPersist: true };
 
 const recordingsQuery = (source: RecordingSource) =>
@@ -16,7 +16,7 @@ const recordingsQuery = (source: RecordingSource) =>
 
 export const useRecordings = (source: RecordingSource) => useQuery(recordingsQuery(source));
 
-/** GET /recordings/status: can the server record at all? Unknown while it loads or fails: no warning. */
+/** GET /recordings/status: can the server record? Loading or failed is unknown: no warning. */
 export function useRecordingStatus() {
   return useQuery({
     queryKey: pathKey('/recordings/status'),
@@ -36,7 +36,7 @@ export async function playRecording(
   source: RecordingSource,
   id: string,
 ): Promise<void> {
-  const list = await client.fetchQuery({ ...recordingsQuery(source), staleTime: 0 });
+  const list = await client.query({ ...recordingsQuery(source), staleTime: 0 });
   const url = list.find((r) => r.id === id)?.url;
   if (!url) throw new RecordingUnavailable();
   await Linking.openURL(url);

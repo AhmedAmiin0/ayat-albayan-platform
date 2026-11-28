@@ -28,7 +28,7 @@ const pdfError = (e: unknown): string =>
 
 /** A row with a sent report opens it for any student; no money, links or notes. */
 export function AttendanceLogScreen() {
-  const { id = '' } = useLocalSearchParams<{ id: string }>();
+  const { id = '' } = useLocalSearchParams<{ id?: string }>();
   const base = useTreeBase();
   const to = useStudentHref();
   const cycle = useClockCycle();

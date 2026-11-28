@@ -66,7 +66,7 @@ test('tapping an unread row marks it read and opens its screen', async () => {
   await renderWithQuery(<NotificationsScreen tree="admin" />, createTestQueryClient({ meFromApi: true }));
   const row = await screen.findByText('رسالة جديدة');
   serve(page([{ ...lead, read_at: at }, student], 0)); // what the refetch after the POST reads
-  fireEvent.press(row);
+  await fireEvent.press(row);
   expect(router.push).toHaveBeenCalledWith('/inbox/thread/%2B966552147730');
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', { ids: ['n1'] }));
   await waitFor(() => expect(screen.queryByText(B.unread)).toBeNull());
@@ -75,7 +75,7 @@ test('tapping an unread row marks it read and opens its screen', async () => {
 test('a read row opens without asking the API again; the teacher tree routes to her calendar', async () => {
   serve(page([student], 0));
   await renderWithQuery(<NotificationsScreen tree="teacher" />, createTestQueryClient({ meFromApi: true }));
-  fireEvent.press(await screen.findByText('طالب جديد'));
+  await fireEvent.press(await screen.findByText('طالب جديد'));
   expect(router.push).toHaveBeenCalledWith('/teacher/schedule', { withAnchor: true });
   expect(mockApiSend).not.toHaveBeenCalled();
 });
@@ -85,7 +85,7 @@ test('«تحديد الكل كمقروء» while any is unread, then it goes', a
   await renderWithQuery(<NotificationsScreen tree="admin" />, createTestQueryClient({ meFromApi: true }));
   const markAll = await screen.findByRole('button', { name: B.markAll });
   serve(page([lead, student].map((n) => ({ ...n, read_at: at })), 0));
-  fireEvent.press(markAll);
+  await fireEvent.press(markAll);
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/me/notifications/read', {}));
   await waitFor(() => expect(screen.queryByRole('button', { name: B.markAll })).toBeNull());
 });
@@ -105,7 +105,7 @@ test('a failed read with nothing cached says so and retries', async () => {
   await renderWithQuery(<NotificationsScreen tree="admin" />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(B.loadError)).toBeTruthy();
   serve(page([lead], 1));
-  fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
+  await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText('رسالة جديدة')).toBeTruthy();
 });
 

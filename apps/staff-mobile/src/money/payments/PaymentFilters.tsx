@@ -1,7 +1,7 @@
 import { PAYMENT_KINDS, type PaymentKind } from '@ab/catalog';
 import { useMemo } from 'react';
 import { riyadhToday } from '@/calendar';
-import { t, FilterPills } from '@ab/mobile-kit';
+import { t, FilterPills, useNow } from '@ab/mobile-kit';
 import { monthLabel, recentMonths } from '@/money/shared/months';
 
 interface PaymentFiltersProps {
@@ -13,13 +13,14 @@ interface PaymentFiltersProps {
 
 /** Two chip rows: the type (payment / refund) and the month (this and the last five, or all). */
 export function PaymentFilters({ kind, month, onKind, onMonth }: PaymentFiltersProps) {
+  const now = useNow();
   const months = useMemo(
     () => [
       { value: 'all', label: t.mobileMoney.allMonths },
       // academy day (docs/34 b): the finance months are the academy's.
-      ...recentMonths(riyadhToday(new Date())).map((m) => ({ value: m, label: monthLabel(m) })),
+      ...recentMonths(riyadhToday(now)).map((m) => ({ value: m, label: monthLabel(m) })),
     ],
-    [],
+    [now],
   );
   const kinds = [
     { value: 'all' as const, label: t.mobileMoney.filterAll },
