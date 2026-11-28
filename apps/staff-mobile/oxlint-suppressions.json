@@ -2194,7 +2194,7 @@
   },
   "src/inbox/messages/reply-actions/reply-lesson-read.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/messages/resend/FailedSheet/FailedSheet.tsx": {
@@ -3769,9 +3769,6 @@
   "src/registration-check/lib/link-family.ts": {
     "ab/no-shape-checks": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/registration-check/lib/registration-check.ts": {

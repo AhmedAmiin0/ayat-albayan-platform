@@ -80,6 +80,14 @@ test('{ linked: false }: the number already was this family’s', async () => {
   expect(await screen.findByText(lf.already)).toBeTruthy();
 });
 
+test('an answer that is not { linked } is the generic error, not a link', async () => {
+  mockApiSend.mockResolvedValue({ linked: 'yes' });
+  await openAndPick();
+  await fireEvent.press(screen.getByRole('button', { name: lf.submit }));
+  expect(await screen.findByText(t.common.error)).toBeTruthy();
+  expect(screen.queryByText(lf.done)).toBeNull();
+});
+
 test('a 409 says why in her words and keeps the confirm to try another child', async () => {
   mockApiSend.mockRejectedValue(new ApiError(409, { code: 'family_has_second_number', message: 'family_has_second_number' }));
   await openAndPick();

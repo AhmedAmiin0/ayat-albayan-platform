@@ -1,9 +1,4 @@
-import type {
-  SalesCourseView,
-  SalesPaymentView,
-  SalesReceiptCopied,
-  SignedUpload,
-} from '@ab/shared';
+import { salesPaymentRoutes, type SalesCourseView } from '@ab/shared';
 import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -12,6 +7,7 @@ import {
   pathKey,
   salesChatReceiptCalls,
   salesMoneyFamilyCalls,
+  salesPaymentCalls,
   salesSubscribeCalls,
 } from '@ab/client-core';
 import { myMoneyKeys, salesMoneyKeys, salesSubscriptionKeys } from '@/features/sales/keys';
@@ -24,6 +20,7 @@ export type Bind = { phone?: string };
 const chatReceipts = salesChatReceiptCalls({ apiFetch, apiSend });
 const subscribe = salesSubscribeCalls({ apiFetch, apiSend });
 const families = salesMoneyFamilyCalls({ apiFetch, apiSend });
+const payments = salesPaymentCalls({ apiFetch, apiSend });
 
 /** Every sales money read lives under it (family, chat receipts, quotes). */
 export const SALES_MONEY_KEY = salesMoneyKeys.all;
@@ -90,12 +87,11 @@ export type SalesPaymentBody = Bind & {
   clientRequestId: string;
 };
 
-export const recordSalesPayment = (body: SalesPaymentBody) =>
-  apiSend<SalesPaymentView>('POST', '/sales/payments', body);
+export const recordSalesPayment = (body: SalesPaymentBody) => payments.create(body);
 
 /** POST /sales/payments/receipt-from-chat: copies the chat file into the package's receipts. */
 export const receiptFromChat = (body: Bind & { subscriptionId: string; messageId: string }) =>
-  apiSend<SalesReceiptCopied>('POST', '/sales/payments/receipt-from-chat', body);
+  payments.receiptFromChat(body);
 
 /** The admin's uploadReceipt, through the sales signed URL (the package must be her student's). */
 export async function uploadSalesReceipt(input: {
@@ -104,12 +100,13 @@ export async function uploadSalesReceipt(input: {
   bind?: Bind;
 }): Promise<string> {
   const { file } = input;
-  const signed = await apiSend<SignedUpload>('POST', '/sales/payments/receipt-upload-url', {
+  const slot = salesPaymentRoutes.receiptUploadUrl.body.parse({
     subscriptionId: input.subscriptionId,
     mime: file.type,
     size: file.size,
     ...input.bind,
   });
+  const signed = await payments.receiptUploadUrl(slot);
   const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return signed.path;

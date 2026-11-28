@@ -5,6 +5,7 @@ import { Pressable, Text } from 'react-native';
 import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery, seedPublicConfig } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { scheduleLesson } from '@/sales/sales/testing/fixtures';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
 const mockApiFetch = jest.fn();
@@ -72,11 +73,20 @@ test('«تأجيل الحلقة», admin: «تغيير الموعد» opens the 
 });
 
 test('«تأجيل الحلقة», sales: her one-lesson sheet, the lesson read from that Riyadh day', async () => {
-  mockApiFetch.mockResolvedValue({ date: '2099-10-04', lessons: [{ id: 'l-1' }] });
+  mockApiFetch.mockResolvedValue({ date: '2099-10-04', lessons: [scheduleLesson({ id: 'l-1' })] });
   await renderNote(ASK, SALES);
   await fireEvent.press(screen.getByRole('button', { name: /^تغيير موعد حلقة/ }));
   expect(await screen.findByText('sales l-1')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/sales/schedule?date=2099-10-04');
+});
+
+test('«تأجيل الحلقة», sales: a day answer outside its schema opens no sheet', async () => {
+  const lesson = { ...scheduleLesson({ id: 'l-1' }), status: 'gone' };
+  mockApiFetch.mockResolvedValue({ date: '2099-10-04', lessons: [lesson] });
+  await renderNote(ASK, SALES);
+  await fireEvent.press(screen.getByRole('button', { name: /^تغيير موعد حلقة/ }));
+  expect(await screen.findByText(t.inbox.replyAction.notFound)).toBeTruthy();
+  expect(screen.queryByText('sales l-1')).toBeNull();
 });
 
 test('no right to move: «طلب تغيير الموعد» and no button', async () => {

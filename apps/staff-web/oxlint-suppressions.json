@@ -1332,12 +1332,6 @@
     },
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/lead/lead-summary.ts": {
@@ -4550,7 +4544,7 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 4
+      "count": 1
     }
   },
   "src/features/sales/sales-money/course/ContinueChoice.tsx": {
@@ -4866,21 +4860,10 @@
     },
     "complexity": {
       "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/features/sales/sales/registration/register-redirect.ts": {
     "typescript/dot-notation": {
-      "count": 1
-    }
-  },
-  "src/features/sales/sales/registration/registration-check.ts": {
-    "complexity": {
       "count": 1
     }
   },

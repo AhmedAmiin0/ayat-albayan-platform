@@ -1,11 +1,14 @@
+import { salesPaymentCalls } from '@ab/client-core';
 import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
-import { apiSend, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+
+const salesPayments = salesPaymentCalls({ apiFetch, apiSend });
 
 /** The amount edit the sheet runs: the new amount in, nothing back (the lists refetch). */
 export type AmountEditMutation = ReturnType<typeof useAmountEdit>;
 
 /** One PATCH, then every list or balance that shows the payment, its package or its money. */
-function useAmountEdit(send: (amount: number) => Promise<void>, stale: readonly QueryKey[]) {
+function useAmountEdit(send: (amount: number) => Promise<unknown>, stale: readonly QueryKey[]) {
   const client = useQueryClient();
   return useMutation({
     mutationKey: ['payments', 'edit-amount'],
@@ -30,7 +33,7 @@ export function useAdminAmountEdit(payment: { id: string; student: { id: string 
  */
 export function useSalesAmountEdit(paymentId: string) {
   return useAmountEdit(
-    (amount) => apiSend('PATCH', `/sales/payments/${paymentId}/amount`, { amount }),
+    (amount) => salesPayments.editAmount({ paymentId, amount }),
     [pathKey('/sales/me'), pathKey('/sales/money'), pathKey('/sales/students'), pathKey('/sales/subscriptions')],
   );
 }

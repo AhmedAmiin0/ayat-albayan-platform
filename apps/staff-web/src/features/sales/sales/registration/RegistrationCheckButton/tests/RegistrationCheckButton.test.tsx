@@ -80,4 +80,12 @@ describe('«التحقق من التسجيل»', () => {
     fireEvent.click(screen.getByRole('button', { name: R.submit }));
     await waitFor(() => expect(dialog.getByText(R.error.generic)).toBeTruthy());
   });
+
+  it('an answer with a phone or an unknown status is refused, not shown', async () => {
+    const leaked = { ...FOUND.matches[0], status: 'gone', phone: '+966501234567' };
+    apiFetch.mockResolvedValue({ ...FOUND, matches: [leaked] });
+    const dialog = openDialog('+966501234567');
+    await waitFor(() => expect(dialog.getByText(R.error.generic)).toBeTruthy());
+    expect(dialog.queryByText('AB-0183')).toBeNull();
+  });
 });
