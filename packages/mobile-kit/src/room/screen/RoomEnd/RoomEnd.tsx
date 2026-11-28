@@ -49,7 +49,7 @@ const CLOSED: Record<ClosedWhy, ClosedLook> = {
   },
 };
 
-export interface RoomEndProps {
+interface RoomEndProps {
   phase: Extract<RoomPhase, { step: 'failed' | 'closed' }>;
   kind: RoomKind;
   presence: readonly RoomPresence[];
