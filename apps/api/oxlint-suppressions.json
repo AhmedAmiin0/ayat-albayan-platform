@@ -68,9 +68,6 @@
   "src/common/auth/permissions.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/require-await": {
-      "count": 1
     }
   },
   "src/common/auth/verify-token.ts": {
@@ -146,7 +143,7 @@
       "count": 1
     },
     "typescript/require-await": {
-      "count": 2
+      "count": 1
     }
   },
   "src/common/configuration/config-store/store/config-decode.ts": {
@@ -189,9 +186,6 @@
   "src/common/configuration/integrations/integration-config.controller.test.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "typescript/restrict-template-expressions": {
-      "count": 1
     }
   },
   "src/common/configuration/integrations/integration-config.controller.ts": {
@@ -321,9 +315,6 @@
     },
     "stylistic/max-len": {
       "count": 2
-    },
-    "typescript/no-unnecessary-type-conversion": {
-      "count": 1
     }
   },
   "src/common/infra/cache/ttl-cache.ts": {
@@ -585,11 +576,6 @@
       "count": 1
     }
   },
-  "src/common/storage/avatars/staff-photo-admin.test.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
   "src/common/storage/avatars/staff-photo-admin.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -693,11 +679,6 @@
   "src/common/telemetry/client-usage/client-usage.counter.ts": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/common/telemetry/client-usage/client-usage.hook.ts": {
-    "typescript/require-await": {
-      "count": 1
     }
   },
   "src/common/telemetry/client-usage/client-usage.module.ts": {
@@ -949,9 +930,6 @@
   },
   "src/modules/finance/assistant-pay/shared/rpc.test.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/use-unknown-in-catch-callback-variable": {
       "count": 1
     }
   },
@@ -1376,11 +1354,6 @@
       "count": 1
     }
   },
-  "src/modules/finance/stripe/pay/pay-html.ts": {
-    "typescript/no-import-type-side-effects": {
-      "count": 1
-    }
-  },
   "src/modules/finance/stripe/pay/pay-limit.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -1692,9 +1665,6 @@
   "src/modules/finance/teacher-earnings/earnings.repo.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "typescript/no-deprecated": {
-      "count": 2
     }
   },
   "src/modules/finance/teacher-earnings/earnings.service.test.ts": {
@@ -1717,9 +1687,6 @@
   },
   "src/modules/finance/teacher-earnings/summary/earnings.names.ts": {
     "ab/forbidden-imports": {
-      "count": 1
-    },
-    "typescript/no-deprecated": {
       "count": 1
     }
   },
@@ -1836,16 +1803,6 @@
       "count": 1
     }
   },
-  "src/modules/people/me/account/account.avatar.test.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
-  "src/modules/people/me/account/account.password.test.ts": {
-    "typescript/use-unknown-in-catch-callback-variable": {
-      "count": 1
-    }
-  },
   "src/modules/people/me/account/account.ports.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -1887,9 +1844,6 @@
     },
     "ab/forbidden-imports": {
       "count": 1
-    },
-    "typescript/no-unnecessary-type-conversion": {
-      "count": 1
     }
   },
   "src/modules/people/portal/home/chat-number.ts": {
@@ -1922,9 +1876,6 @@
   },
   "src/modules/people/portal/portal.fakes.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/restrict-template-expressions": {
       "count": 1
     }
   },
@@ -2191,9 +2142,6 @@
   "src/modules/people/users/auth/users.fakes.auth.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/require-await": {
-      "count": 6
     }
   },
   "src/modules/people/users/auth/users.password.ts": {
@@ -2433,11 +2381,6 @@
       "count": 1
     },
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/modules/platform/google-sync/oauth/tests/oauth-state.test.ts": {
-    "typescript/restrict-template-expressions": {
       "count": 1
     }
   },
@@ -2791,9 +2734,6 @@
   },
   "src/modules/reporting/exports/finance-exports.queries.ts": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/no-deprecated": {
       "count": 1
     }
   },
