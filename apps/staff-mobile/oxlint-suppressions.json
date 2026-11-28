@@ -1369,9 +1369,6 @@
     }
   },
   "src/finance/payouts/PayoutsScreen/PayoutsScreen.tsx": {
-    "complexity": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
