@@ -1,34 +1,16 @@
 import { View } from 'react-native';
-import { type, useTheme } from '../../../../theme';
+import { useTheme } from '../../../../theme';
 import { AppText } from '../../../primitives/AppText';
+import { frameStyle, labelStyle, lineStyle } from './switch-frame.style';
 import type { SwitchFrameProps } from './SwitchFrame.types';
 
 /** A 56pt settings row: the label, the switch at the end, a note below. */
 export function SwitchFrame({ label, control, note, testID }: SwitchFrameProps) {
   const { color } = useTheme();
   return (
-    <View
-      testID={testID}
-      style={{ minHeight: 56, paddingHorizontal: 16, paddingVertical: 10, gap: 4 }}
-    >
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 12,
-        }}
-      >
-        <AppText
-          style={{
-            flexShrink: 1,
-            fontFamily: type.ui[600],
-            fontSize: type.size.sm,
-            color: color.ink,
-          }}
-        >
-          {label}
-        </AppText>
+    <View testID={testID} style={frameStyle}>
+      <View style={lineStyle}>
+        <AppText style={labelStyle(color.ink)}>{label}</AppText>
         {control}
       </View>
       {note}
