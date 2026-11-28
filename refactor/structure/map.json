@@ -190,18 +190,21 @@
   },
   {
    "from": "apps/api/src/common/push/family-readers.*",
-   "to": "apps/api/src/modules/messaging/notifications/bell/",
-   "layer": "api"
+   "to": "apps/api/src/modules/messaging/notifications/push/bell/",
+   "layer": "api",
+   "why": "push.module registers the bell controller; bell becomes its own feature after the module split"
   },
   {
    "from": "apps/api/src/common/push/notification-bell.*",
-   "to": "apps/api/src/modules/messaging/notifications/bell/",
-   "layer": "api"
+   "to": "apps/api/src/modules/messaging/notifications/push/bell/",
+   "layer": "api",
+   "why": "push.module registers the bell controller; bell becomes its own feature after the module split"
   },
   {
    "from": "apps/api/src/common/push/notifications.*",
-   "to": "apps/api/src/modules/messaging/notifications/bell/",
-   "layer": "api"
+   "to": "apps/api/src/modules/messaging/notifications/push/bell/",
+   "layer": "api",
+   "why": "push.module registers the bell controller; bell becomes its own feature after the module split"
   },
   {
    "from": "apps/api/src/common/push/push.service/",
@@ -1790,8 +1793,9 @@
   },
   {
    "from": "packages/shared/src/schedule/lessons/",
-   "to": "packages/shared/src/teaching/lessons/",
-   "layer": "shared"
+   "to": "packages/shared/src/teaching/tests/",
+   "layer": "shared",
+   "why": "only tests: a feature folder needs code and an index, the domain tests/ folder takes them"
   },
   {
    "from": "packages/shared/src/schedule/schemas/",
@@ -3040,6 +3044,90 @@
    "to": "packages/shared/src/people/tests/people-schemas.test.ts",
    "layer": "shared",
    "why": "it tests the people schemas; schemas/ is dissolved"
+  },
+  {
+   "from": "apps/staff-web/src/features/finance/keys/",
+   "to": "apps/staff-web/src/lib/keys/finance/",
+   "layer": "staff-web",
+   "why": "the finance query-key factory serves every finance feature; a domain folder holds only features (docs/68), so it joins lib/ until the per-feature split"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/keys/",
+   "to": "apps/staff-web/src/lib/keys/messaging/",
+   "layer": "staff-web",
+   "why": "the messaging query-key factory serves every messaging feature; a domain folder holds only features (docs/68), so it joins lib/ until the per-feature split"
+  },
+  {
+   "from": "apps/staff-web/src/features/people/keys/",
+   "to": "apps/staff-web/src/lib/keys/people/",
+   "layer": "staff-web",
+   "why": "the people query-key factory serves every people feature; a domain folder holds only features (docs/68), so it joins lib/ until the per-feature split"
+  },
+  {
+   "from": "apps/staff-web/src/features/platform/keys/",
+   "to": "apps/staff-web/src/lib/keys/platform/",
+   "layer": "staff-web",
+   "why": "the platform query-key factory serves every platform feature; a domain folder holds only features (docs/68), so it joins lib/ until the per-feature split"
+  },
+  {
+   "from": "apps/staff-web/src/features/reporting/keys/",
+   "to": "apps/staff-web/src/lib/keys/reporting/",
+   "layer": "staff-web",
+   "why": "the reporting query-key factory serves every reporting feature; a domain folder holds only features (docs/68), so it joins lib/ until the per-feature split"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/keys/",
+   "to": "apps/staff-web/src/lib/keys/sales/",
+   "layer": "staff-web",
+   "why": "the sales query-key factory serves every sales feature; a domain folder holds only features (docs/68), so it joins lib/ until the per-feature split"
+  },
+  {
+   "from": "packages/shared/src/finance/empty-when-missing.*",
+   "to": "packages/shared/src/finance/payments/",
+   "layer": "shared",
+   "why": "a domain folder holds only features; four finance features read it through the payments index until it moves to @ab/core"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/sales/course/",
+   "to": "apps/api/src/modules/sales/course/sales-course/",
+   "layer": "api",
+   "why": "booking/sales/ becomes sales/course, so its course/ unit would sit at course/course"
+  },
+  {
+   "from": "apps/staff-mobile/src/calendar/overview/",
+   "to": "apps/staff-mobile/src/features/teaching/lessons/overview/schedule-overview/",
+   "layer": "staff-mobile",
+   "why": "calendar/ becomes lessons/overview, so its overview/ unit would sit at overview/overview"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/course-change/course-change.plan*",
+   "to": "apps/api/src/modules/teaching/courses/course-change/plan/",
+   "layer": "api",
+   "why": "course-change would hold 13 code files with its module and index"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/course-change/course-change.projection.*",
+   "to": "apps/api/src/modules/teaching/courses/course-change/plan/",
+   "layer": "api",
+   "why": "the projection belongs with the planner (folder cap)"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/course-actions/card/Extend*",
+   "to": "apps/staff-web/src/features/teaching/courses/course-card/extend/",
+   "layer": "staff-web",
+   "why": "course-card would hold 13 code files with its index"
+  },
+  {
+   "from": "apps/staff-mobile/src/students/course-card/ExtendForm.*",
+   "to": "apps/staff-mobile/src/features/teaching/courses/course-card/extend/",
+   "layer": "staff-mobile",
+   "why": "course-card would hold 13 code files with its index"
+  },
+  {
+   "from": "apps/staff-mobile/src/students/course-pause/ChangeUntil*",
+   "to": "apps/staff-mobile/src/features/teaching/courses/course-pause/change-until/",
+   "layer": "staff-mobile",
+   "why": "course-pause would hold 13 code files with its index"
   }
  ],
  "drops": [

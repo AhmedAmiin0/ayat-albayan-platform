@@ -40,7 +40,7 @@ test('each problem is one line with its layer', () => {
   assert.equal(out.code, 1);
   assert.deepEqual(out.lines, [
     '  staff-web: not a listed name: apps/staff-web/src/features/sales/lead (closest: leads)',
-    '  api: controller without a Nest module: apps/api/src/modules/sales/leads',
+    '  api: feature controller without a Nest module: apps/api/src/modules/sales/leads',
     'structure: 2 problems in 2 layers',
   ]);
 });

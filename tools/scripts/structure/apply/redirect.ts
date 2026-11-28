@@ -64,31 +64,61 @@ function splitRef(ctx: Ctx, file: string, split: Split): Redirect {
   };
 }
 
+const MAX_NEST = 6;
+
+/** A foreign line as seen from `file`; a line into another pruned barrel opens that one too. */
+function foreignLines(ctx: Ctx, file: string, at: { pruned: Pruned; depth: number }): string[] {
+  return at.pruned.foreign.flatMap((l) => {
+    const inner = l.star ? ctx.barrels.get(l.target) : undefined;
+    if (inner !== undefined && at.depth < MAX_NEST) {
+      const own = inner.kept
+        ? [
+            lineText({
+              kind: 'export',
+              spec: specFor(ctx, file, l.target),
+              bindings: [],
+              star: true,
+            }),
+          ]
+        : [];
+      return [...own, ...foreignLines(ctx, file, { pruned: inner, depth: at.depth + 1 })];
+    }
+    return [
+      lineText({
+        kind: 'export',
+        spec: specFor(ctx, file, l.target),
+        bindings: l.bindings,
+        star: l.star,
+      }),
+    ];
+  });
+}
+
 /** `export * from '<barrel>'` gains the barrel's foreign re-exports, seen from `file`. */
-function expandStar(ctx: Ctx, file: string, split: Split): Redirect {
+function expandStar(ctx: Ctx, file: string, split: Split & { text: string }): Redirect {
   const { pruned, ref } = split;
   const own = pruned.kept ? [ref.decl.getText()] : [];
-  const moved = pruned.foreign.map((l) =>
-    lineText({
-      kind: 'export',
-      spec: specFor(ctx, file, l.target),
-      bindings: l.bindings,
-      star: l.star,
-    }),
+  const moved = foreignLines(ctx, file, { pruned, depth: 0 }).filter(
+    (l) => !split.text.includes(l),
   );
   const written = pruned.foreign.filter((l) => !l.target.startsWith('pkg:'));
   return {
-    text: [...own, ...moved].join('\n'),
+    text: [...own, ...new Set(moved)].join('\n'),
     problems: [],
     written: written.map((l) => [file, l.target]),
   };
 }
 
 /** One import of a pruned barrel, rewritten; a default or namespace import of a gone one fails. */
-function redirectRef(ctx: Ctx, file: string, ref: ModuleRef): Redirect | undefined {
+function redirectRef(
+  ctx: Ctx,
+  file: string,
+  at: { ref: ModuleRef; text: string },
+): Redirect | undefined {
+  const { ref } = at;
   const pruned = ctx.barrels.get(resolveSpec(ctx.r, file, ref.spec)?.file ?? '');
   if (pruned === undefined) return undefined;
-  if (ref.star) return expandStar(ctx, file, { ref, pruned });
+  if (ref.star) return expandStar(ctx, file, { ref, pruned, text: at.text });
   if (ref.named) return splitRef(ctx, file, { ref, pruned });
   const problems = pruned.kept ? [] : [`${file}: default or namespace use of ${ref.spec}`];
   return { text: ref.decl.getText(), problems, written: [] };
@@ -98,7 +128,7 @@ function redirectRef(ctx: Ctx, file: string, ref: ModuleRef): Redirect | undefin
 export function redirectFile(ctx: Ctx, file: string, text: string): Redirect {
   const sf = ctx.project.createSourceFile(`/virtual/redirect/${file}`, text, { overwrite: true });
   const done = moduleRefs(sf).flatMap((ref) => {
-    const out = redirectRef(ctx, file, ref);
+    const out = redirectRef(ctx, file, { ref, text });
     return out === undefined ? [] : [{ start: ref.decl.getStart(), end: ref.decl.getEnd(), out }];
   });
   ctx.project.removeSourceFile(sf);

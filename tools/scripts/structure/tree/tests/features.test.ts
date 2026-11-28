@@ -54,14 +54,16 @@ test('a package group may hold an index.ts that re-exports its features', () => 
   assert.deepEqual(featureProblems(files, pkg, domains), []);
 });
 
-test('an api folder with a controller needs a Nest module beside it', () => {
+test('an api feature with a controller needs a Nest module beside it; a unit may not', () => {
   const root = 'apps/api/src/modules';
+  const api = { ...layer, workspace: 'apps/api', root };
   const files = [
     `${root}/sales/leads/leads.controller.ts`,
     `${root}/sales/leads/leads.module.ts`,
+    `${root}/sales/money/money.controller.ts`,
     `${root}/sales/money/views/views.controller.ts`,
   ];
-  assert.deepEqual(nestProblems(files, root), [
-    `controller without a Nest module: ${root}/sales/money/views`,
+  assert.deepEqual(nestProblems(files, { layer: api, domains }), [
+    `feature controller without a Nest module: ${root}/sales/money`,
   ]);
 });

@@ -1,4 +1,4 @@
-// Usage (repo root): pnpm structure:move [-- --dry-run [--base <ref>] [--no-typecheck]]
+// Usage (repo root): pnpm structure:move [-- --dry-run [--base <ref>] [--no-typecheck] [--keep]]
 // Applies refactor/structure/map.json (docs/68): without --dry-run to this checkout, with it to a
 // temporary worktree of <ref> (default HEAD), printing every problem; exit 1 on any.
 import { execFileSync } from 'node:child_process';
@@ -26,7 +26,12 @@ function format(root: string): void {
 }
 
 const problems = args.includes('--dry-run')
-  ? dryRun(map, { repo, base, typecheck: !args.includes('--no-typecheck') })
+  ? dryRun(map, {
+      repo,
+      base,
+      typecheck: !args.includes('--no-typecheck'),
+      keep: args.includes('--keep'),
+    })
   : (() => {
       const out = applyStructure(repo, map);
       if (out.applied) format(repo);

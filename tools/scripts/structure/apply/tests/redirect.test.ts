@@ -77,3 +77,27 @@ test('a barrel left with nothing of its own is deleted; its package names go to 
   );
   assert.deepEqual(out.problems, ['p/src/app.ts: default or namespace use of ./ops']);
 });
+
+test('export * of a gone barrel that re-exports another gone barrel opens both', () => {
+  const root = tree({
+    'p/src/a/index.ts': "export * from '../b';\n",
+    'p/src/b/index.ts': "export * from './x';\n",
+    'p/src/b/x.ts': 'export const X = 1;\n',
+  });
+  const r = { root, aliases: [], renamed: new Map<string, string>() };
+  const project = newProject();
+  const place = {
+    to: (f: string) => f.replace('p/src/b/x.ts', 'p/src/c/x.ts'),
+    home: (f: string) => f.split('/').slice(0, 3).join('/'),
+  };
+  const barrels = new Map([
+    ['p/src/a/index.ts', prunePlan({ project, r }, 'p/src/a/index.ts', place)],
+    ['p/src/b/index.ts', prunePlan({ project, r }, 'p/src/b/index.ts', place)],
+  ]);
+  const out = redirectFile(
+    { project, r, barrels },
+    'p/src/index.ts',
+    "export * from './b/x';\nexport * from './a';\n",
+  );
+  assert.equal(out.text, "export * from './b/x';\n\n");
+});

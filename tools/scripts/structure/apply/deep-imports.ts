@@ -17,6 +17,8 @@ export interface DeepCtx {
   oldOf: (file: string) => string;
   /** `file→target` imports that went through a barrel before the moves. */
   forced: Set<string>;
+  /** Features with no index yet: every import into them goes through a new one. */
+  open: Set<string>;
 }
 
 export interface DeepImport {
@@ -77,7 +79,8 @@ function deepUse(ctx: DeepCtx, file: string, ref: ModuleRef): DeepImport[] {
   const target = targetOf(ctx, file, ref.spec);
   const feature = featureOf(target, ctx);
   if (feature === undefined || within(file, feature)) return [];
-  const fine = isIndexOf(target, feature) || !mustFix(ctx, file, target);
+  const fix = ctx.open.has(feature) || mustFix(ctx, file, target);
+  const fine = isIndexOf(target, feature) || !fix;
   return fine ? [] : [use(ref, { target, feature })];
 }
 

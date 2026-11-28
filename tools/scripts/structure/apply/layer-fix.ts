@@ -1,9 +1,12 @@
+import { existsSync } from 'node:fs';
 import { posix } from 'node:path';
 import { readText, writeIfChanged } from '../../ci-checks/move-module/files.ts';
 import { loadAliases } from '../../ci-checks/move-module/resolve.ts';
 import { newProject } from '../../ci-checks/move-module/rewrite.ts';
 import { LAYERS } from '../layers.ts';
-import { LAYER_NAMES, type Domain } from '../map/index.ts';
+import { LAYER_NAMES, type Domain, type Layer } from '../map/index.ts';
+import { featureOf } from '../tree/feature-of.ts';
+import type { Allowed } from '../tree/tree.types.ts';
 import { allowedTree } from '../tree/allowed.ts';
 import { BOUNDARIES } from './boundaries.data.ts';
 import { editBoundaries } from './boundaries.ts';
@@ -12,6 +15,7 @@ import { rewriteLintPaths } from './lint-paths.ts';
 import type { Moves } from '../tree/tree.types.ts';
 
 const CODE = /\.[cm]?[jt]sx?$/;
+const INDEXES = ['index.ts', 'index.tsx'];
 const TEST = /\.(test|spec)\.[cm]?[jt]sx?$|\/tests?\//;
 
 interface LayerRun {
@@ -22,27 +26,35 @@ interface LayerRun {
   oldOf: (file: string) => string;
 }
 
+/** Feature folders of `files` that have code but no index.ts on disk. */
+function withoutIndex(
+  root: string,
+  files: readonly string[],
+  ctx: { layer: Layer; allowed: Allowed },
+): Set<string> {
+  const features = new Set(files.flatMap((f) => featureOf(f, ctx) ?? []));
+  return new Set(
+    [...features].filter((d) => !INDEXES.some((n) => existsSync(posix.join(root, d, n)))),
+  );
+}
+
 /** Every layer's cross-feature imports through feature indexes; returns the problems. */
 export function fixLayers(run: LayerRun): string[] {
   const r = { root: run.root, aliases: loadAliases(run.root), renamed: new Map<string, string>() };
   const allowed = allowedTree(run.domains);
   return LAYER_NAMES.flatMap((name) => {
     const layer = LAYERS[name];
-    const ctx = {
-      project: newProject(),
-      r,
-      layer,
-      allowed,
-      old: BOUNDARIES[name].old,
-      oldOf: run.oldOf,
-      forced: run.forced,
-    };
+    const base = { project: newProject(), r, layer, allowed, old: BOUNDARIES[name].old };
+    const ctx = { ...base, oldOf: run.oldOf, forced: run.forced, open: new Set<string>() };
     const files = run.files.filter(
       (f) => f.startsWith(`${layer.workspace}/`) && CODE.test(f) && !TEST.test(f),
     );
-    const work = fixFeatureIndexes(ctx, files);
-    work.writes.forEach((text, file) => writeIfChanged(run.root, file, text));
-    return work.problems;
+    const first = fixFeatureIndexes(ctx, files);
+    first.writes.forEach((text, file) => writeIfChanged(run.root, file, text));
+    const open = withoutIndex(run.root, files, { layer, allowed });
+    const second = fixFeatureIndexes({ ...ctx, open }, files);
+    second.writes.forEach((text, file) => writeIfChanged(run.root, file, text));
+    return [...first.problems, ...second.problems];
   });
 }
 

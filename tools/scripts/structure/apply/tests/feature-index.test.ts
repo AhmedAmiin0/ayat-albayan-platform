@@ -20,6 +20,7 @@ function ctx(root: string, opts: { old: Record<string, string>; forced?: string[
     old: 'src/[^/]+',
     oldOf: (file: string) => opts.old[file] ?? file,
     forced: new Set(opts.forced ?? []),
+    open: new Set<string>(),
   };
 }
 
@@ -91,4 +92,15 @@ test('export * of a deep file goes through the feature index once', () => {
     work.writes.get(`${F}/finance/payouts/index.ts`),
     "export * from './Row';\nexport * from './More';\n",
   );
+});
+
+test('a feature with no index gets one from every import into it', () => {
+  const root = tree(files);
+  const file = `${F}/finance/expenses/Old.tsx`;
+  const work = fixFeatureIndexes(
+    { ...ctx(root, { old: {} }), open: new Set([`${F}/finance/payouts`]) },
+    [file],
+  );
+  assert.equal(work.writes.get(file), "import { Row } from '@/features/finance/payouts';\n");
+  assert.equal(work.writes.get(`${F}/finance/payouts/index.ts`), "export { Row } from './Row';\n");
 });

@@ -23,7 +23,7 @@ export function layerProblems(io: GateIo, name: LayerName, map: StructureMap): s
   return [
     ...featureProblems(io.files, layer, map.domains),
     ...facadeProblems(indexes, { layer, domains: map.domains }),
-    ...(name === 'api' ? nestProblems(io.files, layer.root) : []),
+    ...(name === 'api' ? nestProblems(io.files, { layer, domains: map.domains }) : []),
   ];
 }
 

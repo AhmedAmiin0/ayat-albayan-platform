@@ -24,7 +24,7 @@ export function checkTree(
     return [
       ...featureProblems(after, layer, domains),
       ...facadeProblems(indexes, { layer, domains }),
-      ...(name === 'api' ? nestProblems(after, layer.root) : []),
+      ...(name === 'api' ? nestProblems(after, { layer, domains }) : []),
     ];
   });
   return [...perLayer, ...nestingProblems(trees.before, after)];

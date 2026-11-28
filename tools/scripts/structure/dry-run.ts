@@ -11,6 +11,8 @@ export interface DryRunOptions {
   repo: string;
   base: string;
   typecheck: boolean;
+  /** Leave the worktree in place to look at it (its path is printed). */
+  keep: boolean;
 }
 
 const run = (cwd: string, cmd: string, args: string[]): { ok: boolean; out: string } => {
@@ -52,9 +54,8 @@ export function dryRun(map: StructureMap, opts: DryRunOptions): string[] {
     const types = opts.typecheck ? typecheck(dir) : [];
     return [...applied.problems, ...checks, ...tools(dir), ...types];
   } finally {
-    execFileSync('git', ['worktree', 'remove', '--force', dir], {
-      cwd: opts.repo,
-      stdio: 'ignore',
-    });
+    const drop = ['worktree', 'remove', '--force', dir];
+    if (opts.keep) console.log(`structure: worktree kept at ${dir}`);
+    else execFileSync('git', drop, { cwd: opts.repo, stdio: 'ignore' });
   }
 }
