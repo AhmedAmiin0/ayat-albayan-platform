@@ -8,7 +8,7 @@ import { TeacherLessonCard } from '@/features/teaching/teacher/lessons/TeacherLe
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiSend }));
 
-// Monday 5 Oct 16:00 Cairo (13:00Z); the teacher is in Cairo (UTC+3 until 29 Oct).
+// Monday 5 Oct 4:00 PM Cairo (13:00Z); the teacher is in Cairo (UTC+3 until 29 Oct).
 const MONDAY = lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z', status: 'confirmed' });
 const CAIRO = 'Africa/Cairo';
 
@@ -68,7 +68,7 @@ describe('TeacherLessonCard — «اقترح موعدًا آخر» (R-SCH-08)', 
   it('a pending proposal shows instead of the button, and the cancel dialog offers none', () => {
     const pending = { id: 'p1', proposed_starts_at: '2026-10-06T15:30:00.000Z', note: null, created_at: '2026-10-03T08:00:00.000Z' };
     renderCard(lesson({ ...MONDAY, pending_proposal: pending }));
-    expect(screen.getByText(/اقترحت .*18:30، بانتظار رد الإدارة/)).toBeTruthy();
+    expect(screen.getByText(/اقترحت .*6:30 م، بانتظار رد الإدارة/)).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.teacherDash.proposeReschedule })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t.teacherBoard.cancel }));
     const cancel = screen.getByRole('dialog', { name: t.teacherBoard.cancelTitle });

@@ -1,6 +1,5 @@
 import { cleanup, configure } from '@testing-library/react';
 import { setViewerPersonTz } from '@ab/client-core';
-import { CLOCK_STORAGE_KEY } from '@ab/time';
 import { afterEach, beforeEach } from 'vitest';
 
 // findBy*/waitFor budget: 1s (the default) is too tight when `turbo --force` runs every package's
@@ -11,9 +10,6 @@ afterEach(cleanup);
 
 // Tab memory (kept drafts) never carries from one test to the next.
 afterEach(() => sessionStorage.clear());
-
-// jsdom's en-US locale would otherwise mean 12 h, so tests default to 24 h.
-localStorage.setItem(CLOCK_STORAGE_KEY, '24');
 
 // Times read in the viewer's zone (docs/34): pinned to Riyadh before every test so expectations
 // never depend on the machine's zone. A test about another viewer sets its own (Africa/Cairo).

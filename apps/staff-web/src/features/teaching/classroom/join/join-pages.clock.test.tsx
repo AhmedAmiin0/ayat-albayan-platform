@@ -1,8 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { CLOCK_STORAGE_KEY } from '@ab/time';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { setClockPref, ApiError, t, opensAtText } from '@ab/web-kit';
+import { ApiError, t, opensAtText } from '@ab/web-kit';
 import { GuestJoinPage } from './GuestJoinPage';
 import { StaffClassroomPage } from './StaffClassroomPage';
 
@@ -12,26 +13,24 @@ const withClient = (node: ReactNode) => (
   <QueryClientProvider client={new QueryClient()}>{node}</QueryClientProvider>
 );
 
-async function expectSwitch() {
-  expect((await screen.findByRole('alert')).textContent).toBe(opensAtText(OPENS, '24'));
-  act(() => setClockPref('12'));
-  expect(screen.getByRole('alert').textContent).toBe(opensAtText(OPENS, '12'));
+async function expect12h() {
+  expect((await screen.findByRole('alert')).textContent).toBe(opensAtText(OPENS, '12'));
 }
 
-afterEach(() => act(() => setClockPref('24')));
+afterEach(() => localStorage.removeItem(CLOCK_STORAGE_KEY));
 
-describe('a too-early join: «تفتح الساعة …» follows «تنسيق الوقت» without a remount', () => {
+describe('a too-early join: «تفتح الساعة …» reads 12 h even with a saved 24 h choice', () => {
   it('GuestJoinPage (the lesson link)', async () => {
-    act(() => setClockPref('24'));
+    localStorage.setItem(CLOCK_STORAGE_KEY, '24');
     render(withClient(<GuestJoinPage linkToken="tok-1" joinWith={refused} />));
     fireEvent.change(screen.getByLabelText(new RegExp(t.classroom.guest.name)), { target: { value: 'سهيلة' } });
     fireEvent.click(screen.getByRole('button', { name: t.classroom.guest.join }));
-    await expectSwitch();
+    await expect12h();
   });
 
   it('StaffClassroomPage (/classroom/:lessonId)', async () => {
-    act(() => setClockPref('24'));
+    localStorage.setItem(CLOCK_STORAGE_KEY, '24');
     render(withClient(<StaffClassroomPage lessonId="l-9" join={refused} />));
-    await expectSwitch();
+    await expect12h();
   });
 });

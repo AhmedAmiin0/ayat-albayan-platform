@@ -20,7 +20,7 @@ import {
 } from '@/features/teaching/booking/wizard-fixture';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+const C12 = { cycle: '12', locale } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -98,7 +98,7 @@ describe('BookingWizard: makeup and trial for a registered student (R-SCH-10, R-
     fireEvent.click(screen.getByRole('button', { name: t.booking.invoice.fromChat }));
     expect(apiFetch).toHaveBeenCalledWith('/threads/%2B966501234567/media');
     const dialog = await screen.findByRole('dialog', { name: t.booking.invoice.chatTitle });
-    fireEvent.click(await within(dialog).findByRole('button', { name: mediaCardLabel(PHOTO, C24) }));
+    fireEvent.click(await within(dialog).findByRole('button', { name: mediaCardLabel(PHOTO, C12) }));
     next();
 
     expect(screen.getByText(t.booking.makeup.missedLabel, { selector: 'dt' })).toBeTruthy();

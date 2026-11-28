@@ -66,7 +66,7 @@ describe('the assistant\'s «تغيير الموعد» in the /sales drawer (own
     apiSend.mockResolvedValue({ id: 'new', starts_at: FREE.starts_at, status: 'scheduled' });
     const drawer = open();
     fireEvent.click(within(drawer).getByRole('button', { name: a.reschedule }));
-    fireEvent.click(await within(drawer).findByRole('button', { name: /17:00/ }));
+    fireEvent.click(await within(drawer).findByRole('button', { name: /5:00 م/ }));
     const url = apiFetch.mock.calls.map((c) => String(c[0])).find((u) => u.includes('/slots')) ?? '';
     expect(url).toMatch(/^\/sales\/booking\/slots\?teacherId=tc1&.*studentIds=s1.*&lessonId=l-7/);
     fireEvent.click(within(drawer).getByRole('button', { name: t.lessons.rescheduleSubmit }));
@@ -79,7 +79,7 @@ describe('the assistant\'s «تغيير الموعد» in the /sales drawer (own
     apiSend.mockResolvedValue({ id: 'new', starts_at: FREE.starts_at, status: 'scheduled' });
     const drawer = open();
     fireEvent.click(within(drawer).getByRole('button', { name: a.reschedule }));
-    fireEvent.click(await within(drawer).findByRole('button', { name: /17:00/ }));
+    fireEvent.click(await within(drawer).findByRole('button', { name: /5:00 م/ }));
     const field = within(drawer).getByLabelText(t.reschedule.reason);
     expect(within(drawer).getByText(t.reschedule.reasonHint)).toBeTruthy();
     fireEvent.change(field, { target: { value: ' سفر الأسرة ' } });

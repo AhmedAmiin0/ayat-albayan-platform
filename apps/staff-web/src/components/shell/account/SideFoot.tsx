@@ -3,8 +3,8 @@ import { AccountChip } from './AccountChip';
 import { LogoutButton } from './LogoutButton';
 
 /**
- * Sidebar foot from 900px (docs/07 §7, R-ACC-01); the theme and clock switches live on the
- * account page, since the 236px sidebar cannot fit them (docs/65 UX-4).
+ * Sidebar foot from 900px (docs/07 §7, R-ACC-01); the theme and clock switches sit beside the
+ * bell in the running head, since the 236px sidebar cannot fit them (docs/65 UX-4).
  */
 export function SideFoot({ email }: { email?: string | null }) {
   return (

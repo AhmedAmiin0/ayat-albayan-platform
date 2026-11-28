@@ -22,7 +22,7 @@ describe('«عدّل الوقت» in English', () => {
     pick.day(/^Monday 5 October/);
     pick.time('18:00');
     pick.duration(60);
-    expect(confirmLine(/Sunday 4 October 17:00 \(45 minutes\) → .*Monday 5 October 18:00 \(60 minutes\)/)).toBeTruthy();
+    expect(confirmLine(/Sunday 4 October 5:00 PM \(45 minutes\) → .*Monday 5 October 6:00 PM \(60 minutes\)/)).toBeTruthy();
     expect(screen.getByLabelText(en.lessons.timeEdit.notify)).toBeTruthy();
     expect(form.textContent).not.toMatch(ARABIC);
     pick.save();

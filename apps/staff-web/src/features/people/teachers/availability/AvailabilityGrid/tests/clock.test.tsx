@@ -1,7 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { CLOCK_STORAGE_KEY } from '@ab/time';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setClockPref, t } from '@ab/web-kit';
+import { t } from '@ab/web-kit';
 import { AvailabilityGrid } from '@/features/people/teachers/availability/AvailabilityGrid/AvailabilityGrid';
 
 const apiSend = vi.hoisted(() => vi.fn());
@@ -10,11 +11,11 @@ vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiSend, apiFetch: vi.fn() }));
 const SAT = t.enums.weekday[6];
 const ROWS = [{ weekday: 6, start_time: '16:00', end_time: '18:30', tz: 'Asia/Riyadh' }];
 
-afterEach(() => setClockPref('24'));
+afterEach(() => localStorage.removeItem(CLOCK_STORAGE_KEY));
 
-describe('AvailabilityGrid in 12 h', () => {
-  it('shows ص / م in the time selects but still saves «HH:MM» 24 h', async () => {
-    setClockPref('12');
+describe('AvailabilityGrid on the web (12 h only)', () => {
+  it('shows ص / م in the time selects, even with a saved 24 h choice, but saves «HH:MM» 24 h', async () => {
+    localStorage.setItem(CLOCK_STORAGE_KEY, '24');
     apiSend.mockResolvedValue([]);
     render(
       <QueryClientProvider client={new QueryClient()}>

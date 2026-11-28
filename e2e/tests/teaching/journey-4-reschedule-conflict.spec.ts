@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClock } from '../../support/core/locale';
 import {
   addDays,
   lessonsOf,
@@ -42,19 +43,19 @@ test.describe('journey 4 — reschedule into a busy slot (R-SCH-07, R-SCH-04)', 
 
     // Monday 14:00 is Leen's lesson: still pickable, refused with the reason in Arabic.
     const mondaySlots = drawer.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['1']} `) });
-    await mondaySlots.getByRole('button', { name: /14:00/ }).click();
+    await mondaySlots.getByRole('button', { name: new RegExp(webClock('14:00')) }).click();
     await drawer.getByRole('button', { name: ar.lessons.rescheduleSubmit }).click();
     await expect(drawer.getByText(ar.booking.conflictTitle)).toBeVisible();
     await expect(drawer.getByText(/المعلم\/ة مشغول\/ة بحلقة أخرى في هذا الموعد/)).toBeVisible();
 
     await drawer.getByRole('button', { name: ar.booking.changeSlot }).click();
-    await mondaySlots.getByRole('button', { name: /15:30/ }).click();
+    await mondaySlots.getByRole('button', { name: new RegExp(webClock('15:30')) }).click();
     await drawer.getByRole('button', { name: ar.lessons.rescheduleSubmit }).click();
     await expect(page.getByRole('status')).toHaveText(ar.lessons.rescheduled);
 
     // The week shows Reem on Monday 15:30; the moved Sunday row is closed (hidden by default).
-    await expect(grid.getByRole('button', { name: /15:30.*ريم/ })).toBeVisible();
-    await expect(grid.getByRole('button', { name: /14:00.*ريم/ })).toHaveCount(0);
+    await expect(grid.getByRole('button', { name: new RegExp(`${webClock('15:30')}.*ريم`) })).toBeVisible();
+    await expect(grid.getByRole('button', { name: new RegExp(`${webClock('14:00')}.*ريم`) })).toHaveCount(0);
     const rows = await lessonsOf(reemId);
     expect(rows.map((l) => [l.status, l.starts_at.toISOString()])).toEqual([
       ['rescheduled', riyadh(sunday, '14:00').toISOString()],

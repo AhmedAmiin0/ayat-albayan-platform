@@ -24,16 +24,16 @@ afterEach(() => {
   apiFetch.mockReset();
 });
 
-it('«أحدث الرسائل» (compiled): one clock for the rows; «23:00» turns into the date after midnight', async () => {
+it('«أحدث الرسائل» (compiled): one clock for the rows; «11:00 م» turns into the date after midnight', async () => {
   const timers = vi.spyOn(globalThis, 'setInterval');
   apiFetch.mockResolvedValue({ items: [1, 2, 3].map(thread), total: 3, page: 1, pageSize: 30 });
   render(<QueryClientProvider client={new QueryClient()}><RecentInbox /></QueryClientProvider>);
   await screen.findByText('ولي أمر 1');
   const times = () => [...document.querySelectorAll('li time')].map((el) => el.textContent);
-  expect(times()).toEqual(['23:00', '23:00', '23:00']);
+  expect(times()).toEqual(['11:00 م', '11:00 م', '11:00 م']);
   expect(minuteTimers(timers)).toBe(1);
   act(() => {
     vi.advanceTimersByTime(2 * 60_000);
   });
-  expect(times().every((text) => text !== '23:00' && text.includes('19'))).toBe(true);
+  expect(times().every((text) => text !== '11:00 م' && text.includes('19'))).toBe(true);
 });

@@ -1,6 +1,7 @@
 import { Link, useRouterState } from '@tanstack/react-router';
 import { useState, type MouseEvent, type ReactNode } from 'react';
 import { Dialog, Mark, t, cn } from '@ab/web-kit';
+import { HeadPrefs } from './HeadPrefs';
 import { MenuBell } from './MenuBell';
 import { MenuFoot } from '@/components/shell/account/MenuFoot';
 import { SheetBell } from './SheetBell';
@@ -43,6 +44,7 @@ export function MenuBar({ home, title, nav, email, className }: MenuBarProps) {
       {open && (
         <Dialog title={t.nav.menu} onClose={close}>
           <div onClickCapture={onPick}>
+            <HeadPrefs className="mb-3 flex-wrap" />
             <SheetBell onPick={close} />
             {nav}
             <MenuFoot email={email} />

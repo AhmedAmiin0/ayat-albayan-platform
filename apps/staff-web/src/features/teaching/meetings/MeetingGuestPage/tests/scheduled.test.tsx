@@ -6,8 +6,8 @@ import { ApiError, t, locale } from '@ab/web-kit';
 import { meetingJoinProblem } from '@/features/teaching/meetings/rows/meeting-join-errors';
 import { MeetingGuestPage } from '@/features/teaching/meetings/MeetingGuestPage/MeetingGuestPage';
 
-/** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+/** The web reads every time in 12 h. */
+const C12 = { cycle: '12', locale } as const;
 
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
@@ -45,7 +45,7 @@ describe('MeetingGuestPage — a scheduled meeting', () => {
     fireEvent.change(screen.getByLabelText(new RegExp(t.classroom.guest.name)), { target: { value: 'ضيف' } });
     fireEvent.click(screen.getByRole('button', { name: t.classroom.guest.join }));
     const early = new ApiError(403, { code: 'join_not_open_yet', opens_at: VIEW.opens_at });
-    const refusal = meetingJoinProblem(early, C24, 'Asia/Riyadh');
+    const refusal = meetingJoinProblem(early, C12, 'Asia/Riyadh');
     await waitFor(() => expect(screen.getByText(refusal)).toBeTruthy());
     expect(refusal).not.toContain('الحلقة');
   });
