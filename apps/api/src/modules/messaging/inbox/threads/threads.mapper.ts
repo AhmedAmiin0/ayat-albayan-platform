@@ -2,6 +2,7 @@ import type { Tables } from '@ab/db';
 import {
   replyLine,
   sessionWindowOpen,
+  threadViewSchema,
   type BodySlot,
   type ReopenChoice,
   type TemplateParamsInput,
@@ -12,6 +13,7 @@ import {
 import type { WaLine } from '@ab/catalog';
 import { searchDigits } from '@ab/core';
 import { lineEnvs, loadEnv } from '@/config/env/env';
+import { asResponse } from '@/common/http/returns';
 import { orFilterTerm } from '@/common/db/or-filter';
 import { looksCrmHistory, windowless } from '@/modules/messaging/whatsapp';
 import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
@@ -28,7 +30,7 @@ interface ThreadViewOpts {
 export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: boolean }, now: Date, opts: ThreadViewOpts = {}): ThreadView {
   const chat = lineEnvs(loadEnv()).chat;
   const tag = opts.tag ?? null;
-  return {
+  return asResponse(threadViewSchema, {
     phone_e164: row.phone_e164 ?? '',
     display_name: row.display_name,
     last_message_id: row.last_message_id ?? '',
@@ -60,7 +62,7 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     // An Evolution Baileys chat line has no 24 h window: free text at any time (docs/19).
     session_open: messagingWindowOpen(row, now) || windowless(chat),
     ...familyFields(row.guardian_id ? (tag ?? NO_TAG) : null),
-  };
+  });
 }
 
 const tryAfterWindow = (choice: ReopenChoice | null) =>
