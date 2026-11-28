@@ -1,11 +1,12 @@
-import { replyConfirmPath, type ConfirmRoute } from '@ab/shared';
+import type { ConfirmRoute } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, apiSend, t } from '@ab/web-kit';
+import { Button, t } from '@ab/web-kit';
 import { salesKeys } from '@/features/sales/keys';
 import { confirmErrorText } from '@/features/sales/sales';
 import { lessonKeys } from '@/features/teaching/schedule';
 import { refreshAnchored } from '@/features/messaging/inbox/api/anchored';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
+import { confirmReplyLesson } from './reply-confirm-api';
 
 export interface ReplyConfirmButtonProps {
   phone: string;
@@ -19,7 +20,7 @@ export interface ReplyConfirmButtonProps {
 export function ReplyConfirmButton({ phone, lessonId, route, label }: ReplyConfirmButtonProps) {
   const client = useQueryClient();
   const confirm = useMutation({
-    mutationFn: () => apiSend('POST', replyConfirmPath(lessonId, route)),
+    mutationFn: () => confirmReplyLesson({ lessonId, route }),
     onSettled: () =>
       Promise.all([
         client.invalidateQueries({ queryKey: threadKeys.detail(phone) }),

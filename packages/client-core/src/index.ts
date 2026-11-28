@@ -44,6 +44,7 @@ export * from './messaging/channels';
 export * from './messaging/calls';
 export * from './messaging/inbox';
 export * from './messaging/live-rejoin';
+export { replyConfirm } from './messaging/reply-confirm';
 export * from './platform/settings';
 export * from './platform/short-links';
 export * from './platform/translation-overrides';

@@ -1,9 +1,10 @@
-import { replyConfirmPath, type ConfirmRoute } from '@ab/shared';
+import type { ConfirmRoute } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { apiSend, pathKey, t, Button, ErrorLine } from '@ab/mobile-kit';
+import { pathKey, t, Button, ErrorLine } from '@ab/mobile-kit';
 import { confirmFailureText } from '@/sales/sales';
 import { refreshChat } from '@/inbox/thread/hooks/inbox-sync';
+import { confirmReplyLesson } from './reply-confirm-api';
 
 interface ReplyConfirmButtonProps {
   phone: string;
@@ -19,7 +20,7 @@ export function ReplyConfirmButton({ phone, lessonId, route, label }: ReplyConfi
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const confirm = useMutation({
-    mutationFn: () => apiSend('POST', replyConfirmPath(lessonId, route)),
+    mutationFn: () => confirmReplyLesson({ lessonId, route }),
     onSettled: () =>
       Promise.all([
         refreshChat(client, phone),
