@@ -3580,11 +3580,6 @@
       "count": 2
     }
   },
-  "src/modules/teaching/booking/sales/booking/sales-booking.service.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
   "src/modules/teaching/booking/sales/booking/tests/sales-booking.http.test.ts": {
     "stylistic/max-len": {
       "count": 2

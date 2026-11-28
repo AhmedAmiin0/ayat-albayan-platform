@@ -9,7 +9,7 @@ import type { TeacherOptionsService } from '@/modules/teaching/booking/teacher/t
 import { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 import type { SalesOwnershipRule } from '@/modules/sales/sales/rule/sales-ownership-rule';
 import type { TrialDateRepo } from '@/modules/teaching/booking/trial-date/trial-date.repo';
-import { SalesBookingOptions } from '@/modules/teaching/booking/sales/booking/sales-booking.service';
+import { SalesBookingOptions } from '@/modules/teaching/booking/sales/booking/sales-booking-options.service';
 
 // docs/16 row 37: the move grid reads that lesson's students; other grids keep her scope.
 const MINE = 'c0000000-0000-4000-8000-000000000001';
