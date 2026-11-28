@@ -36,6 +36,11 @@
       "count": 2
     }
   },
+  "src/auth/verify-role.ts": {
+    "stylistic/max-len": {
+      "count": 2
+    }
+  },
   "src/lib/connectivity/connectivity-machine.ts": {
     "complexity": {
       "count": 1
@@ -170,6 +175,11 @@
       "count": 1
     }
   },
+  "src/ui/connecting/HeaderConnectingBar/HeaderConnectingBar.tsx": {
+    "stylistic/max-len": {
+      "count": 1
+    }
+  },
   "src/ui/connecting/use-bar-reveal.ts": {
     "complexity": {
       "count": 1
@@ -196,6 +206,9 @@
     },
     "complexity": {
       "count": 1
+    },
+    "stylistic/max-len": {
+      "count": 2
     }
   },
   "src/ui/layout/KeyboardFrame/KeyboardFrame.tsx": {

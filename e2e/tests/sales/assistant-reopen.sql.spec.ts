@@ -21,7 +21,8 @@ test.describe('assistant statements: reopen (20261006000273)', () => {
       const last = await lastMonth(tx);
       const { statement_id: s1 } = await generate(tx, a, last);
       await approve(tx, s1);
-      await pay(tx, sub, { amount: 100, kind: 'refund' }); // voided: a reversal (-20) is due this month
+      // voided: a reversal (-20) is due this month
+      await pay(tx, sub, { amount: 100, kind: 'refund' });
       const { statement_id: s2 } = await generate(tx, a, await openMonth(tx, a)); // ... and goes into this month's statement
       expect(one(await tx<{ n: number }[]>`select count(*)::int n from public.assistant_statement_lines
         where statement_id = ${s2} and kind = 'adjustment'`).n).toBe(1);

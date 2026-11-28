@@ -5,10 +5,17 @@ import { reportView } from '@ab/shared/testing';
 import { describe, expect, it } from 'vitest';
 import { reportV2Lines, type ReportV2Text } from '../..';
 
-const AR: ReportV2Text = { v2: ar.reports.v2, grade: ar.enums.grade, program: ar.enums.program, lang: 'ar' };
+const AR: ReportV2Text = {
+  v2: ar.reports.v2,
+  grade: ar.enums.grade,
+  program: ar.enums.program,
+  lang: 'ar',
+};
 const content = (over: Partial<ReportContent>): ReportContent => ({ ...emptyContent(), ...over });
-const v2 = (over: Partial<ReportView>) => reportView({ form_version: 2, attendance: 'on_time', ...over });
-const values = (r: ReportView, text = AR) => Object.fromEntries(reportV2Lines(r, text).map((l) => [l.key, l.value]));
+const v2 = (over: Partial<ReportView>) =>
+  reportView({ form_version: 2, attendance: 'on_time', ...over });
+const values = (r: ReportView, text = AR) =>
+  Object.fromEntries(reportV2Lines(r, text).map((l) => [l.key, l.value]));
 
 describe('reportV2Lines (admin read view)', () => {
   it('a Quran lesson: each part with its range and grade, tajweed, overall, plan and note', () => {
@@ -28,8 +35,15 @@ describe('reportV2Lines (admin read view)', () => {
     });
     const lines = reportV2Lines(r, AR);
     expect(lines.map((l) => l.label)).toEqual([
-      'الحضور', 'البرنامج', 'التسميع', 'الحفظ الجديد', 'الدرس النظري / التجويد',
-      'التقدير العام', 'الواجب قبل الحلقة القادمة', 'الحلقة القادمة', 'ملاحظة للأسرة',
+      'الحضور',
+      'البرنامج',
+      'التسميع',
+      'الحفظ الجديد',
+      'الدرس النظري / التجويد',
+      'التقدير العام',
+      'الواجب قبل الحلقة القادمة',
+      'الحلقة القادمة',
+      'ملاحظة للأسرة',
     ]);
     const v = values(r);
     expect(v['segment.0']).toBe(`سورة الملك · الآيات 1–15 · ${ar.enums.grade.excellent}`);
@@ -54,20 +68,55 @@ describe('reportV2Lines (admin read view)', () => {
   });
 
   it('Arabic and Islamic studies: topic, area, memorized and the graded rows', () => {
-    const arabic = values(v2({ program: 'arabic', content: content({ arabic: { topic: 'الجملة الاسمية', skills: { reading: 'good', writing: null, listening: null, grammar: null } } }) }));
+    const arabic = values(
+      v2({
+        program: 'arabic',
+        content: content({
+          arabic: {
+            topic: 'الجملة الاسمية',
+            skills: { reading: 'good', writing: null, listening: null, grammar: null },
+          },
+        }),
+      }),
+    );
     expect(arabic.topic).toBe('الجملة الاسمية');
     expect(arabic['skill.reading']).toBe(ar.enums.grade.good);
     expect(arabic['skill.writing']).toBeNull();
-    const islamic = values(v2({ program: 'islamic_studies', content: content({ islamic: { domain: 'fiqh', topic: 'الوضوء', memorized: null, rates: { comprehension: 'excellent', participation: null } } }) }));
+    const islamic = values(
+      v2({
+        program: 'islamic_studies',
+        content: content({
+          islamic: {
+            domain: 'fiqh',
+            topic: 'الوضوء',
+            memorized: null,
+            rates: { comprehension: 'excellent', participation: null },
+          },
+        }),
+      }),
+    );
     expect(islamic.domain).toBe('الفقه');
     expect('memorized' in islamic).toBe(false);
     expect(islamic['rate.comprehension']).toBe(ar.enums.grade.excellent);
   });
 
   it('English words and surah names', () => {
-    const EN: ReportV2Text = { v2: en.reports.v2, grade: en.enums.grade, program: en.enums.program, lang: 'en' };
-    const r = v2({ content: content({ segments: [{ kind: 'revision', surah: 68, from: 1, to: 20, grade: 'good' }] }) });
+    const EN: ReportV2Text = {
+      v2: en.reports.v2,
+      grade: en.enums.grade,
+      program: en.enums.program,
+      lang: 'en',
+    };
+    const r = v2({
+      content: content({
+        segments: [{ kind: 'revision', surah: 68, from: 1, to: 20, grade: 'good' }],
+      }),
+    });
     const line = reportV2Lines(r, EN).find((l) => l.key === 'segment.0');
-    expect(line).toEqual({ key: 'segment.0', label: 'Revision', value: `Surah Al-Qalam · ayahs 1–20 · ${en.enums.grade.good}` });
+    expect(line).toEqual({
+      key: 'segment.0',
+      label: 'Revision',
+      value: `Surah Al-Qalam · ayahs 1–20 · ${en.enums.grade.good}`,
+    });
   });
 });

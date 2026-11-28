@@ -32,7 +32,8 @@ export type CallPhase = 'preparing' | 'connecting' | 'ringing' | 'accepting' | '
  */
 export function callPhase(session: CallSession, row: ActiveCallView | undefined): CallPhase {
   if (session.ended) return 'ended';
-  if (!row) return session.direction === 'inbound' ? 'accepting' : session.id ? 'connecting' : 'preparing';
+  if (!row)
+    return session.direction === 'inbound' ? 'accepting' : session.id ? 'connecting' : 'preparing';
   if (row.status === 'ended') return 'ended';
   return row.status;
 }
@@ -49,18 +50,30 @@ export function talkedSeconds(row: ActiveCallView | undefined, now: number): num
  */
 export const UNANSWERED_MS = 45_000;
 
-const isUnanswered = (phase: CallPhase): boolean => phase === 'preparing' || phase === 'connecting' || phase === 'ringing';
+const isUnanswered = (phase: CallPhase): boolean =>
+  phase === 'preparing' || phase === 'connecting' || phase === 'ringing';
 
 /** The inbound calls ringing for this user that they have not declined here. */
-export function ringingFor(rows: readonly ActiveCallView[], dismissed: ReadonlySet<string>): ActiveCallView[] {
-  return rows.filter((r) => r.direction === 'inbound' && r.status === 'ringing' && !!r.offer_sdp && !dismissed.has(r.id));
+export function ringingFor(
+  rows: readonly ActiveCallView[],
+  dismissed: ReadonlySet<string>,
+): ActiveCallView[] {
+  return rows.filter(
+    (r) =>
+      r.direction === 'inbound' && r.status === 'ringing' && !!r.offer_sdp && !dismissed.has(r.id),
+  );
 }
 
 /**
  * The session's call has ended on the server when a poll that STARTED after we learnt its id no
  * longer lists it (/calls/active lists live calls only); an older, slow poll proves nothing.
  */
-export function endedOnServer(input: { session: CallSession | null; rows: readonly ActiveCallView[]; pollStartedAt: number; idAt: number }): boolean {
+export function endedOnServer(input: {
+  session: CallSession | null;
+  rows: readonly ActiveCallView[];
+  pollStartedAt: number;
+  idAt: number;
+}): boolean {
   const { session } = input;
   if (!session?.id || session.ended || input.pollStartedAt <= input.idAt) return false;
   return !input.rows.some((r) => r.id === session.id);
@@ -85,7 +98,8 @@ export interface CallDerived {
 const outboundWaiting = (session: CallSession | null, phase: CallPhase | null): boolean =>
   session?.direction === 'outbound' && phase !== null && isUnanswered(phase);
 
-const liveWhileOff = (session: CallSession | null, enabled: boolean | undefined): boolean => enabled === false && session !== null && !session.ended;
+const liveWhileOff = (session: CallSession | null, enabled: boolean | undefined): boolean =>
+  enabled === false && session !== null && !session.ended;
 
 export function deriveCall(
   state: { session: CallSession | null; dismissed: ReadonlySet<string>; idAt: number },
@@ -98,7 +112,12 @@ export function deriveCall(
   return {
     row,
     phase,
-    gone: endedOnServer({ session, rows: poll.rows, pollStartedAt: poll.startedAt, idAt: state.idAt }),
+    gone: endedOnServer({
+      session,
+      rows: poll.rows,
+      pollStartedAt: poll.startedAt,
+      idAt: state.idAt,
+    }),
     // Counted from when the server knows the call (its id), not from the tap: the mic prompt may
     // take a while.
     deadline: unanswered && session?.id ? state.idAt + UNANSWERED_MS : null,

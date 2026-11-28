@@ -1,9 +1,9 @@
 import { planOn, type CommissionContext, type PlannedCommission, type SubscriptionFact } from './first-paid';
 import { commissionKindOf, RENEWAL_CUTOFF } from './kind';
 
-// Renewal commission (migration 20261027000751 assistant_commission_plan): «half of the
-// value» = HALF OF HER NORMAL COMMISSION on each renewal (settings.renewal_commission_percent,
-// default 50), not half of the renewal's price. Pure twin; the database decides.
+// Renewal commission (migration 20261027000751 assistant_commission_plan): «half of the value» =
+// HALF OF HER NORMAL COMMISSION on each renewal (settings.renewal_commission_percent, default 50),
+// not half of the renewal's price. Pure twin; the database decides.
 
 /** Renewal share for new renewals: the percent while renewal commission is on, else 0. */
 export const renewalShareNow = (s: {

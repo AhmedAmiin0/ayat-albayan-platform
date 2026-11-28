@@ -30,7 +30,9 @@ export async function bookCourseDays(page: Page, transfer: Locator): Promise<voi
   await expect(page.getByRole('dialog', { name: ar.salesMoney.stepTransfer })).toBeVisible();
 }
 
-/** The student's course rules (not the trial): their end day and lessons, credited to `createdBy`. */
+/**
+ * The student's course rules (not the trial): their end day and lessons, credited to `createdBy`.
+ */
 export async function courseOf(
   studentId: string,
 ): Promise<{ ends_on: string | null; lessons: number; created_by: string | null }[]> {

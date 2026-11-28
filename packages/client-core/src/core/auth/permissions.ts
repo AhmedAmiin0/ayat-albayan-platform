@@ -31,5 +31,9 @@ export function permissionsOf(me: unknown): Permission[] {
  */
 export function permissionsView(me: unknown): PermissionsView {
   const permissions = permissionsOf(me);
-  return { loaded: meLoaded(me), permissions, can: (permission) => permissions.includes(permission) };
+  return {
+    loaded: meLoaded(me),
+    permissions,
+    can: (permission) => permissions.includes(permission),
+  };
 }

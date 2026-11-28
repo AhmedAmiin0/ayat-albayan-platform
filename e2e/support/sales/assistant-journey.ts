@@ -79,7 +79,8 @@ export async function expectStatus(
       reason: want.reason,
       ...(want.via ? { via: want.via } : {}),
     });
-  await page.bringToFront(); // the admin's page may hold focus; an open chat polls only while focused (W13)
+  // the admin's page may hold focus; an open chat polls only while focused (W13)
+  await page.bringToFront();
   await openChat(page, who.phone);
   await checkRegistration(page, statusLine(want.to));
 }

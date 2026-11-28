@@ -97,7 +97,8 @@ test.describe.serial('sales: the course of her subscription with a time per day 
     const body = course();
     const res = await book(request, me.token, body);
     expect(res.status, JSON.stringify(res.body)).toBe(201);
-    const again = await book(request, me.token, body); // a retry replays it (review m6), not course_exists
+    // a retry replays it (review m6), not course_exists
+    const again = await book(request, me.token, body);
     expect([again.status, again.body.rule_id]).toEqual([201, res.body.rule_id]);
     expect(res.body.lessons).toHaveLength(8);
     const rules = await withSql((sql) => sql<{ start: string; created_by: string; ends_on: string; first_rule_id: string | null; invoices: number }[]>`

@@ -96,7 +96,8 @@ describe('connectInboxLive', () => {
     const alone = fakeClient();
     connectInboxLive(alone.client, createInboxLive(), targets());
     await flush();
-    connectInboxLive(alone.client, createInboxLive(), targets()).stop(); // never joined: nothing to leave
+    // never joined: nothing to leave
+    connectInboxLive(alone.client, createInboxLive(), targets()).stop();
     expect(alone.client.realtime.disconnect).not.toHaveBeenCalled();
     const calls = fakeClient(undefined, [{ topic: 'realtime:wa_calls:x' }]);
     const { stop } = connectInboxLive(calls.client, createInboxLive(), targets());

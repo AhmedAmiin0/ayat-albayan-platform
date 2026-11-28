@@ -13,7 +13,12 @@ beforeEach(() => jest.clearAllMocks());
 test('three round 5 pt dots in the given colour', async () => {
   await render(<ConnectingDots color="gold-token" still={false} />);
   expect(dots()).toHaveLength(3);
-  expect(dots()[0]).toHaveStyle({ width: 5, height: 5, borderRadius: 2.5, backgroundColor: 'gold-token' });
+  expect(dots()[0]).toHaveStyle({
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: 'gold-token',
+  });
   expect(dots()[0]?.parent).toHaveStyle({ gap: 4 });
 });
 

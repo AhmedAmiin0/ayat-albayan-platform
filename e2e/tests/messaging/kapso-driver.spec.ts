@@ -18,11 +18,10 @@ import { setMessaging, stubReset } from '../../support/core/wa-stub';
 // arrives through POST /webhooks/kapso (Kapso-signed raw Meta payload) and shows in the inbox, and
 // what leaves goes through the stub's Kapso prefix with X-API-Key, never a bearer: on a single line
 // a staff reply and a file (docs/21 D2); with a chat line the reply is refused (chat first) and a
-// template goes instead. A bad
-// signature is 401 and stores nothing. Provider meta is ALWAYS restored, so other specs are
-// unaffected. Messaging opens only AFTER the switch and closes BEFORE the switch back: a row an
-// earlier spec left queued can then only leave through Kapso, never through Meta inside this spec's
-// window.
+// template goes instead. A bad signature is 401 and stores nothing. Provider meta is ALWAYS
+// restored, so other specs are unaffected. Messaging opens only AFTER the switch and closes BEFORE
+// the switch back: a row an earlier spec left queued can then only leave through Kapso, never
+// through Meta inside this spec's window.
 
 const WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };
 const MESSAGES = `/${NOTIF_PN}/messages`;

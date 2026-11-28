@@ -20,8 +20,12 @@ function fakePeer() {
     listeners,
     createOffer: vi.fn(async () => ({ type: 'offer' as const, sdp: 'v=0 offer' })),
     createAnswer: vi.fn(async () => ({ type: 'answer' as const, sdp: 'v=0 answer' })),
-    setLocalDescription: vi.fn(async (d: unknown) => void (pc.localDescription = d as { sdp: string })),
-    setRemoteDescription: vi.fn(async (d: unknown) => void (remote.push(d), (pc.remoteDescription = d))),
+    setLocalDescription: vi.fn(
+      async (d: unknown) => void (pc.localDescription = d as { sdp: string }),
+    ),
+    setRemoteDescription: vi.fn(
+      async (d: unknown) => void (remote.push(d), (pc.remoteDescription = d)),
+    ),
     addEventListener: (type: string, l: () => void) => void listeners.set(type, l),
     removeEventListener: vi.fn(),
     close: vi.fn(),

@@ -9,14 +9,13 @@ function env(name: string): string {
 }
 
 /**
- * Wipes every public table and all auth users. Local/CI database only (R-NFR-04).
- * message_templates (migration 141) and expense_categories (20261005000204) are reference data
- * seeded by their migrations (like an enum), so they survive; a journey that changes a template's
- * status puts it back, and a category an e2e adds is harmless (its key is unique per run).
- * The five system roles and their grants (20261005000220) survive too; custom roles are dropped.
- * wa_numbers is deleted, not truncated: message_templates.number_id references it (migration 633),
- * so a TRUNCATE … CASCADE of wa_numbers would empty the template registry too; the delete sets it
- * null.
+ * Wipes every public table and all auth users. Local/CI database only (R-NFR-04). message_templates
+ * (migration 141) and expense_categories (20261005000204) are reference data seeded by their
+ * migrations (like an enum), so they survive; a journey that changes a template's status puts it
+ * back, and a category an e2e adds is harmless (its key is unique per run). The five system roles
+ * and their grants (20261005000220) survive too; custom roles are dropped. wa_numbers is deleted,
+ * not truncated: message_templates.number_id references it (migration 633), so a TRUNCATE … CASCADE
+ * of wa_numbers would empty the template registry too; the delete sets it null.
  */
 export async function resetDb(): Promise<void> {
   const url = env('DATABASE_URL');

@@ -61,8 +61,7 @@ export function createConnectivity(deps: ConnectivityDeps): ConnectivityStore {
     probing = false;
     // Overtaken while in flight (a request answered, or a new failure started its own loop): stale.
     if (state.status !== asked.status || state.since !== asked.since) return;
-    const reached = ok && state.status === 'connecting';
-    if (reached) store.reportReached();
+    if (ok && state.status === 'connecting') store.reportReached();
     if (ok) return;
     // Online, this was the foreground check: its failure is the one that starts `connecting`.
     if (state.status === 'online') {

@@ -10,6 +10,9 @@
     },
     "ab/module-boundaries": {
       "count": 1
+    },
+    "typescript/consistent-type-definitions": {
+      "count": 1
     }
   },
   "src/messaging/chat/chat-lists.ts": {
@@ -314,6 +317,11 @@
   "src/settings/exports.test.ts": {
     "stylistic/max-len": {
       "count": 3
+    }
+  },
+  "src/settings/layout.test.ts": {
+    "stylistic/max-len": {
+      "count": 1
     }
   }
 }

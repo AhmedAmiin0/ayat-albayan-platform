@@ -1,8 +1,8 @@
 import type { StudentStatus } from '@ab/catalog';
 
-// Student statuses (docs/03 R-STU-05, docs/11 §7): the pure rules of the automatic
-// transitions. The API applies them compare-and-set on the expected from-status and audits each
-// move; a status the admin sets by hand is never a from-status these rules expect, so it wins.
+// Student statuses (docs/03 R-STU-05, docs/11 §7): the pure rules of the automatic transitions. The
+// API applies them compare-and-set on the expected from-status and audits each move; a status the
+// admin sets by hand is never a from-status these rules expect, so it wins.
 
 /** No payment yet: the trial list kind, trial chat rules and not-yet-subscribed checks. */
 export const NOT_SUBSCRIBED_STATUSES = [

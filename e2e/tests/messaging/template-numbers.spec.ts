@@ -9,9 +9,9 @@ import { restoreTemplates, snapshotTemplates, stubTemplates, type TemplateRow } 
 import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { stubReset, stubTemplateStatus } from '../../support/core/wa-stub';
 
-// Templates per number: each number syncs on its own, a template moves to the other
-// number, trial_reschedule is submitted to the chat number's WABA and, once «Meta» (the stub)
-// approves it there, a restricted role lists all three defaults.
+// Templates per number: each number syncs on its own, a template moves to the other number,
+// trial_reschedule is submitted to the chat number's WABA and, once «Meta» (the stub) approves it
+// there, a restricted role lists all three defaults.
 
 const t = ar.templates;
 const p = t.perNumber;

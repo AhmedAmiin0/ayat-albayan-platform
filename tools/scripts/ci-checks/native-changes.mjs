@@ -1,9 +1,9 @@
-// Did anything that needs a NEW native build change since the last build? (mobile.yml OTA guard)
-// An OTA update only swaps JavaScript; a native dependency, plugin or app.json native field needs
-// an APK. Usage: node tools/scripts/ci-checks/native-changes.mjs <lastBuildCommit> [easProfile]
-// exit 1 = native change found. easProfile (default preview) is the build the OTA targets: a side
-// profile (stripe-test) compares ITS app. Env APP_DIR (default apps/staff-mobile): the Expo app
-// compared; mobile.yml app=family sets apps/family-mobile.
+// Did anything that needs a NEW native build change since the last build? (mobile.yml OTA guard) An
+// OTA update only swaps JavaScript; a native dependency, plugin or app.json native field needs an
+// APK. Usage: node tools/scripts/ci-checks/native-changes.mjs <lastBuildCommit> [easProfile] exit 1
+// = native change found. easProfile (default preview) is the build the OTA targets: a side profile
+// (stripe-test) compares ITS app. Env APP_DIR (default apps/staff-mobile): the Expo app compared;
+// mobile.yml app=family sets apps/family-mobile.
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -45,9 +45,8 @@ const easCore = (text, profile) => {
     return `unparsed:${text}`;
   }
 };
-// Pure-JS packages (no native code, no config plugin): a version change ships by OTA.
-// Google fonts are .ttf files loaded at runtime by expo-font's useFonts, not embedded by its
-// plugin.
+// Pure-JS packages (no native code, no config plugin): a version change ships by OTA. Google fonts
+// are .ttf files loaded at runtime by expo-font's useFonts, not embedded by its plugin.
 // @shopify/flash-list v2 is a JS-only recycler on the New Architecture: its package ships dist/*.js
 // and src/*.ts, no android/, ios/, podspec or config plugin (checked on 2.0.2, the SDK 57 version).
 // Only major 2 counts: 1.x shipped a native AutoLayoutView, and a later major may add native code

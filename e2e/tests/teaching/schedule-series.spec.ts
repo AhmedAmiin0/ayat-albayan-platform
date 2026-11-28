@@ -38,8 +38,9 @@ test.describe('reschedule a whole series (R-SCH-07)', () => {
     await drawer.getByRole('button', { name: ar.lessons.rescheduleSubmit }).click();
     await expect(page.getByRole('status').filter({ hasText: ar.lessons.rescheduled })).toBeVisible();
 
-    // The tapped lesson is the rule's first: the day before it is before the rule starts, so nothing
-    // is left (apply_lesson_changes) and the rule ends at once on its start day; all three old lessons are closed.
+    // The tapped lesson is the rule's first: the day before it is before the rule starts, so
+    // nothing is left (apply_lesson_changes) and the rule ends at once on its start day; all three
+    // old lessons are closed.
     expect(await ruleStateOf(rule.ruleId)).toEqual({ status: 'ended', ends_on: sunday });
     const lessons = await lessonsOf(studentId);
     const old = lessons.filter((l) => l.status === 'rescheduled');
@@ -50,7 +51,8 @@ test.describe('reschedule a whole series (R-SCH-07)', () => {
     for (const l of fresh)
       expect([l.starts_at.getUTCDay(), l.starts_at.getUTCHours()]).toEqual([2, 14]);
 
-    // The week now shows the Tuesday lesson, and the guardian got one confirmation, not one per lesson.
+    // The week now shows the Tuesday lesson, and the guardian got one confirmation, not one per
+    // lesson.
     await page.goto(`/admin/schedule?week=${weekOf(first)}&teacher=${teacherId}`);
     await expect(weekGrid(page).getByRole('button', { name: new RegExp(`17:00.*${name}|${name}.*17:00`) })).toHaveCount(1);
     await expect.poll(() => queuedFor(family.guardianId)).toEqual([

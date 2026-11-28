@@ -1,4 +1,10 @@
-import { isPendingMessage, PENDING_IDS_MAX, type MessageView, type ThreadDelta, type ThreadDetail } from '@ab/shared';
+import {
+  isPendingMessage,
+  PENDING_IDS_MAX,
+  type MessageView,
+  type ThreadDelta,
+  type ThreadDetail,
+} from '@ab/shared';
 
 /** An open chat's cache (TanStack's InfiniteData<ThreadDetail>): pages[0] is the newest page. */
 export interface ThreadPages {
@@ -20,7 +26,9 @@ export function deltaSearch(data: ThreadPages | undefined, now: number): string 
   const newest = Math.max(...head.messages.map(time));
   if (!Number.isFinite(newest)) return null;
   const params = new URLSearchParams({ after: new Date(newest).toISOString() });
-  const moving = data.pages.flatMap((p) => p.messages).filter((m) => UUID.test(m.id) && isPendingMessage(m, now));
+  const moving = data.pages
+    .flatMap((p) => p.messages)
+    .filter((m) => UUID.test(m.id) && isPendingMessage(m, now));
   const ids = [...new Set(moving.map((m) => m.id))].slice(-PENDING_IDS_MAX);
   if (ids.length > 0) params.set('pending', ids.join(','));
   return `?${params}`;
@@ -33,13 +41,19 @@ export function deltaSearch(data: ThreadPages | undefined, now: number): string 
  * `has_more` must not be merged (rows in between would be missing): re-read the thread instead
  * (needsFullRead).
  */
-export function mergeDelta<T extends ThreadPages>(data: T | undefined, delta: ThreadDelta): T | undefined {
+export function mergeDelta<T extends ThreadPages>(
+  data: T | undefined,
+  delta: ThreadDelta,
+): T | undefined {
   const head = data?.pages[0];
   if (!data || !head) return data;
   const fresh = new Map([...delta.pending, ...delta.messages].map((m) => [m.id, m]));
   const known = new Set(data.pages.flatMap((p) => p.messages.map((m) => m.id)));
   const added = delta.messages.filter((m) => !known.has(m.id));
-  const pages = data.pages.map((p) => ({ ...p, messages: p.messages.map((m) => fresh.get(m.id) ?? m) }));
+  const pages = data.pages.map((p) => ({
+    ...p,
+    messages: p.messages.map((m) => fresh.get(m.id) ?? m),
+  }));
   const first = pages[0] ?? head;
   const messages = [...first.messages, ...added].sort((a, b) => time(a) - time(b));
   const thread = first.thread && delta.thread ? { ...first.thread, ...delta.thread } : first.thread;

@@ -14,7 +14,8 @@ async function bookMakeup(admin: Page, o: { child: string; late: boolean }): Pro
   const step = admin.getByRole('region', { name: ar.booking.steps.slot });
   await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
   const slots = step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button');
-  await (o.late ? slots.last() : slots.first()).click(); // the second child takes the last slot: the first child has 16:00
+  // the second child takes the last slot: the first child has 16:00
+  await (o.late ? slots.last() : slots.first()).click();
   await next(admin);
   await admin.getByLabel(ar.booking.invoice.upload).setInputFiles({ name: 'inv.png', mimeType: 'image/png', buffer: PNG });
   await expect(admin.getByRole('button', { name: ar.booking.invoice.remove })).toBeVisible();

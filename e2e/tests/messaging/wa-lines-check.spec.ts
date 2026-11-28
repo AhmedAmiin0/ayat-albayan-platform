@@ -20,7 +20,8 @@ test.describe('settings — WhatsApp lines check', () => {
     const admin = await asRole('admin');
     await admin.goto('/admin/settings/communications?tab=numbers');
     await expect(admin.getByText(s.title, { exact: true })).toBeVisible();
-    await expect(admin.getByText(s.notChecked, { exact: true })).toBeVisible(); // nothing fetched on mount
+    // nothing fetched on mount
+    await expect(admin.getByText(s.notChecked, { exact: true })).toBeVisible();
 
     const check = admin.getByRole('button', { name: s.check, exact: true });
     const notifications = admin.locator('[data-testid="line-row"][data-line="notifications"]');

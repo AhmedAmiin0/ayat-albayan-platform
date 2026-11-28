@@ -4,9 +4,10 @@
 // result) and only moves the cut points so that every shard costs about the same measured time. The
 // result is the value of PWTEST_SHARD_WEIGHTS (Playwright 1.63 reads it as the shard sizes);
 // without it, equal counts as before. Usage: node tools/scripts/e2e-shards.mjs weights <total>
-// <groups.json>  groups = E2E_GROUPS_FILE of a --list run        node tools/scripts/e2e-shards.mjs
-// merge <durations-*.json…>    new e2e/shard-durations.json on stdout The durations-*.json files
-// come from e2e/support/durations-reporter.ts (CI artifacts «e2e-durations-*»).
+// <groups.json> groups = E2E_GROUPS_FILE of a --list run
+//        node tools/scripts/e2e-shards.mjs merge <durations-*.json…>    new e2e/shard-durations.json on stdout
+// The durations-*.json files come from e2e/support/durations-reporter.ts (CI artifacts
+// «e2e-durations-*»).
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 

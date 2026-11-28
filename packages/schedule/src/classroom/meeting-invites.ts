@@ -1,12 +1,11 @@
 import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 
-// Scheduled meetings and invitations (R-MEET-01..03, migrations 410–419). Staff are
-// invited in the app (the bell, kind meeting_invite); a family (picked from the students: the
-// guardian's phone is resolved by the API, never sent to a client) or any typed phone gets a
-// WhatsApp CHAT message inside its 24 h window only (no template). A closed window is not an error:
-// that recipient's result says so and the creator copies the personal link and the invitation text
-// instead.
+// Scheduled meetings and invitations (R-MEET-01..03, migrations 410–419). Staff are invited in the
+// app (the bell, kind meeting_invite); a family (picked from the students: the guardian's phone is
+// resolved by the API, never sent to a client) or any typed phone gets a WhatsApp CHAT message
+// inside its 24 h window only (no template). A closed window is not an error: that recipient's
+// result says so and the creator copies the personal link and the invitation text instead.
 
 export const MEETING_INVITEE_KINDS = ['staff', 'student', 'phone'] as const;
 export type MeetingInviteeKind = (typeof MEETING_INVITEE_KINDS)[number];

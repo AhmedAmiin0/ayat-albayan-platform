@@ -3,9 +3,10 @@ import { uploadInvoice } from '../../support/finance/invoice';
 import { lessonsOf, resetAbrar, ruleOf, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
 
-// Two siblings in ONE group lesson on a two-day series (R-STU-04, R-SCH-02/06): the wizard ticks the
-// sibling, a second lesson row adds Wednesday at the same time, SeriesCheck is clean, and the booking writes one rule with both
-// students, both on every lesson, and a single confirmation to the guardian naming both.
+// Two siblings in ONE group lesson on a two-day series (R-STU-04, R-SCH-02/06): the wizard ticks
+// the sibling, a second lesson row adds Wednesday at the same time, SeriesCheck is clean, and the
+// booking writes one rule with both students, both on every lesson, and a single confirmation to
+// the guardian naming both.
 
 const weekday = ar.enums.weekday;
 
@@ -39,7 +40,8 @@ test.describe('siblings group + multi-day series (R-STU-04)', () => {
     await admin.getByRole('button', { name: ar.booking.submit }).click();
     await expect(admin.getByRole('heading', { name: ar.booking.booked })).toBeVisible();
 
-    // One rule, both students on it, both on every lesson, on both weekdays (16:00 Riyadh = 13:00Z).
+    // One rule, both students on it, both on every lesson, on both weekdays (16:00 Riyadh =
+    // 13:00Z).
     expect(await ruleOf(idA)).toHaveLength(1);
     const [rule] = await withSql((sql) => sql<{ id: string; byday: number[]; students: number }[]>`
       select r.id, r.byday, (select count(*)::int from public.schedule_rule_students x where x.rule_id = r.id) as students
@@ -54,7 +56,8 @@ test.describe('siblings group + multi-day series (R-STU-04)', () => {
     expect(new Set(lessons.map((l) => l.starts_at.getUTCDay()))).toEqual(new Set([0, 3]));
     expect((await lessonsOf(idA)).length).toBe(lessons.length);
 
-    // One confirmation for the guardian; {{1}} joins both names (Intl.ListFormat, the API's own join).
+    // One confirmation for the guardian; {{1}} joins both names (Intl.ListFormat, the API's own
+    // join).
     const names = new Intl.ListFormat('ar', { type: 'conjunction' });
     const sent = await withSql((sql) => sql<{ template_key: string; template_params: Record<string, string> }[]>`
       select template_key, template_params from public.messages where guardian_id = ${family.guardianId} and direction = 'outbound'`);

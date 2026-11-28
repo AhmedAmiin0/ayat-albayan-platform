@@ -5,9 +5,8 @@ import { ar, expect, test } from '../../support/core/fixtures';
 
 // A14, phone search (searchDigits): the list endpoints of inbox, leads, students, job applicants
 // and teachers find a person by a local 05…, 00966…, +966 with spaces, partial Arabic digits or
-// mixed digits; fewer than 3 digits fall back to the name. Only the inbox, leads and students
-// pages have a search box: job applicants and teachers are covered at the API (their pages have
-// none).
+// mixed digits; fewer than 3 digits fall back to the name. Only the inbox, leads and students pages
+// have a search box: job applicants and teachers are covered at the API (their pages have none).
 
 const STAMP = String(Date.now()).slice(-6);
 const LIST = people(STAMP);

@@ -1,10 +1,10 @@
 import type { Permission } from '@ab/catalog';
 import type { TemplateView } from './template-views';
 
-// Every role without
-// templates.manage or templates.send_all (teachers in teacher mode, sales, the classroom assistant,
-// a custom role) lists and sends only the restricted allow-list: the message_templates rows flagged
-// `sales_starter` (the column kept its name; it now means «allowed for restricted roles», docs/16).
+// Every role without templates.manage or templates.send_all (teachers in teacher mode, sales, the
+// classroom assistant, a custom role) lists and sends only the restricted allow-list: the
+// message_templates rows flagged `sales_starter` (the column kept its name; it now means «allowed
+// for restricted roles», docs/16).
 
 /**
  * Flagged by the chat line's import (template-import.ts); any other import comes unflagged.

@@ -81,10 +81,10 @@ function Letters({ name, size, theme }: { name: string; size: AvatarSize; theme:
 }
 
 /**
- * The one avatar: a staff member's photo in a round frame, else their initials on
- * the person's own tone (shared avatarTones, ink text, AA in both themes), a hairline around both.
- * Fixed size either way, so a photo that loads or fails never moves the row; a photo that fails
- * falls back to the initials, a name with no letter shows the person glyph.
+ * The one avatar: a staff member's photo in a round frame, else their initials on the person's own
+ * tone (shared avatarTones, ink text, AA in both themes), a hairline around both. Fixed size either
+ * way, so a photo that loads or fails never moves the row; a photo that fails falls back to the
+ * initials, a name with no letter shows the person glyph.
  */
 export const Avatar = memo(function Avatar({ name, id, src, size = 'md', decorative = false }: AvatarProps) {
   const theme = useTheme();

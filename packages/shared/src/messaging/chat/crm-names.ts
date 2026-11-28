@@ -94,7 +94,11 @@ export const isCrmReportName = (name: string): boolean =>
  * index; `report` picks the report template by the lesson's kind.
  */
 // A type, not an interface: messages.template_params is Json, which needs an index signature.
-export type CrmValues = z.infer<typeof crmValuesSchema>;
+export interface CrmValues {
+  body?: string[];
+  buttons?: string[];
+  report?: CrmReportKind;
+}
 
 export const crmValuesSchema = z.object({
   body: z.array(z.string()).optional(),

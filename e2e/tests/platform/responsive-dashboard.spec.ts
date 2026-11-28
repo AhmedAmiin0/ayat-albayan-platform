@@ -28,7 +28,8 @@ test.describe('the dashboard never scrolls sideways', () => {
       test.setTimeout(180_000);
       const dict = lang === 'ar' ? ar : en;
       const teacherId = await resetAbrar();
-      await seedDashboard(teacherId); // leads, a paid and an unpaid package, lessons, an expense: every table has rows
+      // leads, a paid and an unpaid package, lessons, an expense: every table has rows
+      await seedDashboard(teacherId);
       const page = await asRole('admin');
       if (lang === 'en') await page.addInitScript(`localStorage.setItem(${JSON.stringify(LOCALE_STORAGE_KEY)}, 'en')`);
 

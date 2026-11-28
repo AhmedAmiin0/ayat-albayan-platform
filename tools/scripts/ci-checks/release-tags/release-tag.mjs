@@ -1,17 +1,17 @@
-// Release tags (docs/09 «Release tags»): one git tag + one GitHub Release per shipped
-// release, made by the «release» jobs of deploy-staging.yml (KIND=app) and mobile.yml (KIND=apk /
-// ota) with the run's GITHUB_TOKEN (tags it makes start no workflow, so nothing loops).
-//   app  v<YYYY.MM.DD>-<n>                the web + API deploy (UTC day; n = 1 + that day's highest
-// n)   apk  mobile-v<version>-b<run number>  an EAS Android build (another profile:
-// mobile-<profile>-v…)   aab  aab-<profile>-v<version>-b<run>   a Google Play bundle (mobile.yml
-// family production)   ota  ota-<channel>-<YYYY.MM.DD>-<n>   an EAS update to that channel
+// Release tags (docs/09 «Release tags»): one git tag + one GitHub Release per shipped release, made
+// by the «release» jobs of deploy-staging.yml (KIND=app) and mobile.yml (KIND=apk / ota) with the
+// run's GITHUB_TOKEN (tags it makes start no workflow, so nothing loops).
+//   app  v<YYYY.MM.DD>-<n>                the web + API deploy (UTC day; n = 1 + that day's highest n)
+//   apk  mobile-v<version>-b<run number>  an EAS Android build (another profile: mobile-<profile>-v…)
+//   aab  aab-<profile>-v<version>-b<run>   a Google Play bundle (mobile.yml family production)
+//   ota  ota-<channel>-<YYYY.MM.DD>-<n>   an EAS update to that channel
 // A commit that already carries a tag of the family is skipped (re-runs never duplicate). The notes
 // are GitHub's generated notes since the family's previous tag. Any failure only warns: the run
 // stays green (deploy-baseline.mjs reads green runs) and a tag is a label, never part of the
 // release. Usage: GH_TOKEN=… GH_REPO=o/r KIND=app SHA=<40 hex> node
-// tools/scripts/ci-checks/release-tags/release-tag.mjs   apk and aab also need PROFILE, VERSION,
-// GITHUB_RUN_NUMBER (EAS_URL, or ARTIFACT_URL and SHA256 for   a runner build, optional); ota needs
-// CHANNEL.
+// tools/scripts/ci-checks/release-tags/release-tag.mjs
+//   apk and aab also need PROFILE, VERSION, GITHUB_RUN_NUMBER (EAS_URL, or ARTIFACT_URL and SHA256 for
+//   a runner build, optional); ota needs CHANNEL.
 import { execFileSync } from 'node:child_process';
 import { appendFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';

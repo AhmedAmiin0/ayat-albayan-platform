@@ -5,9 +5,9 @@ import { errorCode } from '../../support/core/db-error';
 // Migration 20261010000290 (two WhatsApp lines, docs/12 §13): messages.line and the columns
 // appended to v_threads; here last_inbound_line = the line of the newest inbound row (null when
 // that row has none; the per-line instants are in whatsapp-lines.windows.sql.spec.ts), against the
-// real database in a transaction that is rolled back. Every row gets an
-// explicit, DISTINCT created_at: rows inserted in one statement share now(), so «newest» would be
-// arbitrary and the null-newest case would flake.
+// real database in a transaction that is rolled back. Every row gets an explicit, DISTINCT
+// created_at: rows inserted in one statement share now(), so «newest» would be arbitrary and the
+// null-newest case would flake.
 
 const OLD_COLUMNS = [
   'phone_e164', 'last_message_id', 'last_direction', 'last_body', 'last_template_key', 'last_status',

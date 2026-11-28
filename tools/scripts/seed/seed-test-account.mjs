@@ -1,11 +1,11 @@
-// node tools/scripts/seed-test-account.mjs [--remove] [--allow-remote-staging]
-// The staging test teacher: a sign-in account with role teacher, its teachers row (DEMO),
-// and a DEMO guardian + student assigned to it. Idempotent: re-runs update the same rows and reset
-// the password. --remove deletes exactly these rows and the login (also idempotent).
-// Env: TEST_TEACHER_EMAIL, TEST_ACCOUNT_PASSWORD (create only, ≥ 10 chars), DATABASE_URL (or
-// PGHOST/ PGUSER/PGPASSWORD), optional SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (Admin API instead
-// of SQL). Refuses anything but a local DB, or STAGING with --allow-remote-staging (allowedTarget).
-// Prints ids and counts only: never the email, the password or a phone (public Actions logs).
+// node tools/scripts/seed-test-account.mjs [--remove] [--allow-remote-staging] The staging test
+// teacher: a sign-in account with role teacher, its teachers row (DEMO), and a DEMO guardian +
+// student assigned to it. Idempotent: re-runs update the same rows and reset the password. --remove
+// deletes exactly these rows and the login (also idempotent). Env: TEST_TEACHER_EMAIL,
+// TEST_ACCOUNT_PASSWORD (create only, ≥ 10 chars), DATABASE_URL (or PGHOST/ PGUSER/PGPASSWORD),
+// optional SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (Admin API instead of SQL). Refuses anything
+// but a local DB, or STAGING with --allow-remote-staging (allowedTarget). Prints ids and counts
+// only: never the email, the password or a phone (public Actions logs).
 import postgres from 'postgres';
 import { allowedTarget } from './clear-demo.plan.mjs';
 import {

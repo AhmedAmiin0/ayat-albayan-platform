@@ -1,7 +1,7 @@
 // Code-owned settings keys must not be written by a migration (docs/26 §5, 26-P0): the send gate
 // and the Google sync switches are changed only through their module routes, so a migration can
 // never turn sending on (staging holds real families). Old seeding migrations (142, 162, 610) sit
-// at or below CUTOFF. Usage: node tools/scripts/owned-keys-check.mjs [migrationsDir]   exit 1 = a
+// at or below CUTOFF. Usage: node tools/scripts/owned-keys-check.mjs [migrationsDir] exit 1 = a
 // newer migration writes one.
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';

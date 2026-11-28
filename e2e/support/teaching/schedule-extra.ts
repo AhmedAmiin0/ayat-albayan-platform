@@ -27,7 +27,8 @@ export function weekGrid(page: Page): Locator {
 
 /** settings.late_cancel_hours: a number of hours, or null = OFF (the seeded default). */
 export async function setLateCancelHours(hours: number | null): Promise<void> {
-  // null removes the row, as PATCH /settings does (the column is not null); a number is stored as a jsonb number.
+  // null removes the row, as PATCH /settings does (the column is not null); a number is stored as a
+  // jsonb number.
   await withSql((sql) => hours === null
     ? sql`delete from public.settings where key = 'late_cancel_hours'`
     : sql`

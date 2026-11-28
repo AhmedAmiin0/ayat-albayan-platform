@@ -10,11 +10,11 @@ import {
   subscriptionPricingSchema,
 } from '@ab/money';
 
-// The salesperson's money writes from the chat (R-ASST-01/04, docs/16): she subscribes
-// a student she brought and records the family's bank transfer with its receipt. Same rules as the
-// admin's commands, narrower: no typed price ever, no notes, no refund, no invoice, the method is
-// always 'bank', every write carries its clientRequestId (rule 8). docs/16 rows 24–25: the receipt
-// is OPTIONAL now (old students have none) and the files go in `attachments` (0..5); `startsOn` is
+// The salesperson's money writes from the chat (R-ASST-01/04, docs/16): she subscribes a student
+// she brought and records the family's bank transfer with its receipt. Same rules as the admin's
+// commands, narrower: no typed price ever, no notes, no refund, no invoice, the method is always
+// 'bank', every write carries its clientRequestId (rule 8). docs/16 rows 24–25: the receipt is
+// OPTIONAL now (old students have none) and the files go in `attachments` (0..5); `startsOn` is
 // honoured only with subscriptions.set_start_date (salesStartDate), a past day only with
 // `alreadyStarted`. The API narrows further (docs/16 rows 20–22): only the site's discount pills
 // (403 discount_not_allowed) and the package currency (400 currency_mismatch; `currency` stays for
@@ -22,9 +22,8 @@ import {
 // method, invoiceId…) is a 400, never silently dropped.
 
 /**
- * The chat the write comes from (docs/16 row 38). Never an access check
- * (sales.renew_any renews ANY student): it only picks which of the student's family chats the
- * receipt files come from.
+ * The chat the write comes from (docs/16 row 38). Never an access check (sales.renew_any renews ANY
+ * student): it only picks which of the student's family chats the receipt files come from.
  */
 const chatPhone = phoneE164.optional();
 

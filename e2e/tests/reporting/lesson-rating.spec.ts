@@ -51,7 +51,8 @@ test.describe('lesson rating by WhatsApp buttons', () => {
     await expect(banner).toHaveAttribute('data-open', 'true', { timeout: 30_000 });
     await expect(banner).toContainText(ar.inbox.window.open.split(' — ')[0] ?? '');
     await expect(admin.getByTestId('rating-chip')).toHaveText(ar.inbox.rating.chip.replace('{rating}', 'جيدة'));
-    expect(await ratingRows(s.lessonId)).toHaveLength(1); // the 5-minute sweep never repeats it (dedup key)
+    // the 5-minute sweep never repeats it (dedup key)
+    expect(await ratingRows(s.lessonId)).toHaveLength(1);
   });
 
   test('feedback_mode «link»: nothing automatic; the admin sends the rating from the closed chat', async ({ asRole }) => {

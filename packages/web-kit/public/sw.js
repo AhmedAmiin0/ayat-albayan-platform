@@ -1,8 +1,7 @@
 // Web push worker (R-NOT-01). Registered only from the bell's browser-push switch (use-web-push);
-// no caching, no fetch handler: it shows what the API pushes and opens it on a click.
-// Payload: JSON { title, body, url, tag }; the API always sends the title (no UI text lives here:
-// a bad payload falls back to the site's host name). The url is opened only on this origin, else
-// '/'.
+// no caching, no fetch handler: it shows what the API pushes and opens it on a click. Payload: JSON
+// { title, body, url, tag }; the API always sends the title (no UI text lives here: a bad payload
+// falls back to the site's host name). The url is opened only on this origin, else '/'.
 
 const ICON = '/icon-192.png';
 

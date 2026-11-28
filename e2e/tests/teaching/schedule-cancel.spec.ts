@@ -96,7 +96,8 @@ test.describe('cancel a lesson (R-SCH-07)', () => {
     const student = { teacherId, name, by: ar.lessons.by.student, reason: 'سفر' };
     await cancelFromDrawer(page, { ...student, at: soon });
     expect(await cancelStateOf(lateId)).toEqual({ status: 'excused', cancel_reason: 'سفر', chargeable: true });
-    expect((await balanceOf(seed.subscriptionId))?.remaining).toBe(2); // 3 → 2: the late cancel used a lesson
+    // 3 → 2: the late cancel used a lesson
+    expect((await balanceOf(seed.subscriptionId))?.remaining).toBe(2);
 
     await cancelFromDrawer(page, { ...student, at: later });
     expect(await cancelStateOf(earlyId)).toEqual({ status: 'excused', cancel_reason: 'سفر', chargeable: false });

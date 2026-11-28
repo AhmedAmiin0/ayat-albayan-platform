@@ -1,4 +1,10 @@
-import { callEntryKind, formatCallDuration, type ActiveCallView, type CallEntryKind, type CallView } from '@ab/shared';
+import {
+  callEntryKind,
+  formatCallDuration,
+  type ActiveCallView,
+  type CallEntryKind,
+  type CallView,
+} from '@ab/shared';
 import { ApiError } from '../../core/http';
 import { talkedSeconds, type CallPhase } from './call-phase';
 
@@ -11,7 +17,11 @@ export interface CallsText {
   entry: Record<CallEntryKind, string>;
   mic: { denied: string; unsupported: string };
   /** The API's `code` → its sentence; the three below are always there. */
-  errors: Record<string, string> & { no_permission: string; call_failed: string; media_failed: string };
+  errors: Record<string, string> & {
+    no_permission: string;
+    call_failed: string;
+    media_failed: string;
+  };
 }
 
 /** An unknown API `code` falls back to the generic call failure text. */
@@ -41,8 +51,13 @@ export function callPhaseText(phase: CallPhase, text: CallsText): string {
   }
 }
 
-export function callStatusText(phase: CallPhase, input: { row: ActiveCallView | undefined; now: number; text: CallsText }): string {
-  return phase === 'active' ? formatCallDuration(talkedSeconds(input.row, input.now)) : callPhaseText(phase, input.text);
+export function callStatusText(
+  phase: CallPhase,
+  input: { row: ActiveCallView | undefined; now: number; text: CallsText },
+): string {
+  return phase === 'active'
+    ? formatCallDuration(talkedSeconds(input.row, input.now))
+    : callPhaseText(phase, input.text);
 }
 
 export function callEntryText(call: CallView, text: CallsText): string {

@@ -1,6 +1,6 @@
 // UI strings (packages/shared/i18n/ar.json, en.json): a changed bundle is followed key by key to
-// the files that read those keys, which then go through the import graph like any changed file.
-// A file reads key a.b.c when it names the whole path (t.a.b.c, ar.a.b.c, 'a.b.c', a destructured
+// the files that read those keys, which then go through the import graph like any changed file. A
+// file reads key a.b.c when it names the whole path (t.a.b.c, ar.a.b.c, 'a.b.c', a destructured
 // a.b.c) or takes a parent object whole (t.a.b passed on, t.a.b[x], Object.keys(t.a)). A key nobody
 // is found to read = unknown (a computed key): the caller runs the full suite.
 export const BUNDLES = /^packages\/shared\/i18n\/(ar|en)\.json$/;

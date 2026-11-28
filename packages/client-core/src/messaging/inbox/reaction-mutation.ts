@@ -47,5 +47,7 @@ export function withReactions<D extends { pages: readonly { messages: readonly M
   data: D | undefined,
   edit: { id: string; reactions: MessageView['reactions'] },
 ): D | undefined {
-  return data ? { ...data, pages: patchMessage(data.pages, edit.id, { reactions: edit.reactions }) } : data;
+  return data
+    ? { ...data, pages: patchMessage(data.pages, edit.id, { reactions: edit.reactions }) }
+    : data;
 }

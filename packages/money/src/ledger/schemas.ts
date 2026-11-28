@@ -45,7 +45,8 @@ export const subscriptionPricingSchema = z.xor([
   z.object({ ...pricingBase, count: z.int().min(CUSTOM_COUNT_MIN).max(CUSTOM_COUNT_MAX) }),
 ]);
 
-export const LESSONS_USED_BEFORE_MAX = 99; // schema bound; the real one is usedBeforeMax (usedBeforeProblem)
+// schema bound; the real one is usedBeforeMax (usedBeforeProblem)
+export const LESSONS_USED_BEFORE_MAX = 99;
 /** POST /subscriptions (R-SUB-01). */
 export const subscriptionCreateSchema = z.object({
   studentId: z.uuid(),
@@ -101,7 +102,8 @@ export const paymentCreateSchema = z.object({
 /** PATCH /payments/:id: explicit optionals (a .partial() would re-apply defaults). */
 export const paymentUpdateSchema = z.object({
   amount: moneyAmount.optional(),
-  method: z.enum(ALL_PAYMENT_METHODS).optional(), // a card (Stripe) payment keeps its method on an edit
+  // a card (Stripe) payment keeps its method on an edit
+  method: z.enum(ALL_PAYMENT_METHODS).optional(),
   paidAt: pastInstant.optional(),
   receiptPath: z.string().min(1).nullable().optional(),
   note: optionalText,

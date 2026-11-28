@@ -1,10 +1,22 @@
 import { describe, expect, it, vi } from 'vitest';
-import { CHANNEL_LIVE_FALLBACK_MS, channelMode, channelPollMs, liveChannelId, subscribeChannelMessages, type ChannelRealtimeLike } from './channel-live';
+import {
+  CHANNEL_LIVE_FALLBACK_MS,
+  channelMode,
+  channelPollMs,
+  liveChannelId,
+  subscribeChannelMessages,
+  type ChannelRealtimeLike,
+} from './channel-live';
 import { CHANNEL_REFRESH_MS } from './channels';
 
 /** A fake supabase client: records the filter, lets the test fire the status and an insert. */
 function fakeRealtime() {
-  const fired: { status?: (s: string) => void; insert?: () => void; filter?: unknown; topic?: string } = {};
+  const fired: {
+    status?: (s: string) => void;
+    insert?: () => void;
+    filter?: unknown;
+    topic?: string;
+  } = {};
   const channel = {
     on: vi.fn((_type: string, filter: unknown, cb: () => void) => {
       fired.filter = filter;
@@ -32,7 +44,12 @@ describe('subscribeChannelMessages (owner 2026-10-29: the socket, never WhatsApp
     const onMessage = vi.fn();
     const onLive = vi.fn();
     const leave = subscribeChannelMessages(realtime, { channelId: 'c1', onMessage, onLive });
-    expect(fired.filter).toEqual({ event: '*', schema: 'public', table: 'channel_messages', filter: 'channel_id=eq.c1' });
+    expect(fired.filter).toEqual({
+      event: '*',
+      schema: 'public',
+      table: 'channel_messages',
+      filter: 'channel_id=eq.c1',
+    });
     expect(fired.topic).toMatch(/^channel_messages:c1:/);
     fired.status?.('SUBSCRIBED');
     expect(onLive).toHaveBeenLastCalledWith(true);
@@ -48,7 +65,11 @@ describe('subscribeChannelMessages (owner 2026-10-29: the socket, never WhatsApp
 
   it('no realtime or no channel id: nothing joined, the poll carries on', () => {
     const onLive = vi.fn();
-    const leave = subscribeChannelMessages({} as ChannelRealtimeLike, { channelId: 'c1', onMessage: vi.fn(), onLive });
+    const leave = subscribeChannelMessages({} as ChannelRealtimeLike, {
+      channelId: 'c1',
+      onMessage: vi.fn(),
+      onLive,
+    });
     leave();
     const { realtime, raw } = fakeRealtime();
     subscribeChannelMessages(realtime, { channelId: '', onMessage: vi.fn(), onLive })();
@@ -57,8 +78,15 @@ describe('subscribeChannelMessages (owner 2026-10-29: the socket, never WhatsApp
 
   it('a throwing client is down, not a crash', () => {
     const onLive = vi.fn();
-    const broken = { channel: () => { throw new Error('no socket'); }, removeChannel: vi.fn() } as unknown as ChannelRealtimeLike;
-    expect(() => subscribeChannelMessages(broken, { channelId: 'c1', onMessage: vi.fn(), onLive })()).not.toThrow();
+    const broken = {
+      channel: () => {
+        throw new Error('no socket');
+      },
+      removeChannel: vi.fn(),
+    } as unknown as ChannelRealtimeLike;
+    expect(() =>
+      subscribeChannelMessages(broken, { channelId: 'c1', onMessage: vi.fn(), onLive })(),
+    ).not.toThrow();
     expect(onLive).toHaveBeenCalledWith(false);
   });
 });

@@ -1,6 +1,5 @@
-// google_sync_items.last_error / google_account.last_error hold short codes (never a token):
-// the apps show them through ar.json googleSync.errors.<key>, anything else as «other» with the
-// code.
+// google_sync_items.last_error / google_account.last_error hold short codes (never a token): the
+// apps show them through ar.json googleSync.errors.<key>, anything else as «other» with the code.
 
 export const GOOGLE_ERROR_KEYS = [
   'invalid_grant',

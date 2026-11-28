@@ -7,6 +7,8 @@ import { HttpNetworkError } from './http-network.error.mjs';
 import { HttpShapeError } from './http-shape.error.mjs';
 import { HttpStatusError } from './http-status.error.mjs';
 
+export { HttpNetworkError, HttpShapeError, HttpStatusError };
+
 /** «name METHOD /path»: never the host or the query. */
 export function whereOf(name, call) {
   const path = URL.canParse(call.url) ? new URL(call.url).pathname : '<invalid url>';

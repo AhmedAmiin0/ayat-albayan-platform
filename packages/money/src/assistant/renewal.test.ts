@@ -81,7 +81,8 @@ describe('planRenewalCommission (rules 3-4)', () => {
     expect(renewal([first, second], 's2', { excluded: true })).toBeNull();
   });
   it('a subscription already holding a renewal row is never a first (no flip)', () => {
-    const free = { ...first, price: 0 }; // the older one became free: the renewal is now first by order
+    // the older one became free: the renewal is now first by order
+    const free = { ...first, price: 0 };
     expect(planCommission({ ...ctx, subscriptions: [free, second] })?.subscriptionId).toBe('s2');
     expect(planCommission({ ...ctx, subscriptions: [free, second], renewalRowSubscriptionIds: ['s2'] })).toBeNull();
   });

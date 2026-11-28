@@ -52,7 +52,8 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     await admin.getByRole('tab', { name: tabs.overview, exact: true }).click();
     await expect(admin.getByText(s.off, { exact: true })).toBeVisible();
     await expect(admin.getByText(s.queued.two, { exact: true })).toBeVisible();
-    await expect(admin.getByText(s.gateNotConfigured)).toHaveCount(0); // WhatsApp is set up (the stub)
+    // WhatsApp is set up (the stub)
+    await expect(admin.getByText(s.gateNotConfigured)).toHaveCount(0);
 
     // Cancel is the way out: nothing changes.
     await admin.getByRole('button', { name: s.enableTitle, exact: true }).click();

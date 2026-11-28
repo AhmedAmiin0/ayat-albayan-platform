@@ -4,10 +4,12 @@ import { projectGroups, projectOf, rel, type Group, type ProjectSuiteLike } from
 
 /**
  * CI only, for the shard sizes (tools/scripts/e2e-shards.mjs). Never fails the run.
- *  - E2E_DURATIONS_FILE: milliseconds per spec file and project (uploaded as an artifact;
- * `e2e-shards.mjs    merge` turns a run's files into e2e/shard-durations.json).
- *  - E2E_GROUPS_FILE (with --list): Playwright's shard groups in Playwright's own order, i.e. per
- * project,    by worker hash (a different fixture set starts a new run of groups), then by file.
+ * - E2E_DURATIONS_FILE: milliseconds per spec file and project (uploaded as an artifact;
+ * `e2e-shards.mjs
+ *    merge` turns a run's files into e2e/shard-durations.json).
+ * - E2E_GROUPS_FILE (with --list): Playwright's shard groups in Playwright's own order, i.e. per
+ * project,
+ *    by worker hash (a different fixture set starts a new run of groups), then by file.
  */
 export default class DurationsReporter implements Reporter {
   private readonly ms: Record<string, Record<string, number>> = {};

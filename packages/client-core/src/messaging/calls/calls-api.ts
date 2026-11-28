@@ -1,4 +1,10 @@
-import type { ActiveCallView, CallConfigView, CallPermissionView, CallView, MessageView } from '@ab/shared';
+import type {
+  ActiveCallView,
+  CallConfigView,
+  CallPermissionView,
+  CallView,
+  MessageView,
+} from '@ab/shared';
 import type { ApiClient } from '../../core/http';
 
 // WhatsApp voice calls (docs/28 §4), the routes both apps use. Everything but /calls/config answers
@@ -34,12 +40,16 @@ const enc = encodeURIComponent;
 /** The steps of a call (each sent once: a failed connect is never retried). */
 export function callSends({ client, requestId }: CallsApiDeps) {
   return {
-    startCall: (body: { phone: string; sdp: string; clientRequestId: string }) => client.apiSend<ActiveCallView>('POST', '/calls', body),
-    acceptCall: (id: string, sdp: string) => client.apiSend<ActiveCallView>('POST', `/calls/${enc(id)}/accept`, { sdp }),
+    startCall: (body: { phone: string; sdp: string; clientRequestId: string }) =>
+      client.apiSend<ActiveCallView>('POST', '/calls', body),
+    acceptCall: (id: string, sdp: string) =>
+      client.apiSend<ActiveCallView>('POST', `/calls/${enc(id)}/accept`, { sdp }),
     rejectCall: (id: string) => client.apiSend<ActiveCallView>('POST', `/calls/${enc(id)}/reject`),
     endCall: (id: string) => client.apiSend<ActiveCallView>('POST', `/calls/${enc(id)}/end`),
     requestCallPermission: (phone: string) =>
-      client.apiSend<MessageView>('POST', `/calls/permission/${enc(phone)}/request`, { clientRequestId: requestId() }),
+      client.apiSend<MessageView>('POST', `/calls/permission/${enc(phone)}/request`, {
+        clientRequestId: requestId(),
+      }),
   };
 }
 
@@ -65,13 +75,21 @@ export function callQueries(client: ApiClient) {
         return { startedAt, rows: await client.apiFetch<ActiveCallView[]>('/calls/active') };
       },
       enabled: input.enabled,
-      refetchInterval: input.enabled && input.polling !== false ? (input.live ? LIVE_POLL_MS : ACTIVE_POLL_MS) : (false as const),
+      refetchInterval:
+        input.enabled && input.polling !== false
+          ? input.live
+            ? LIVE_POLL_MS
+            : ACTIVE_POLL_MS
+          : (false as const),
       retry: false,
     }),
     /** One chat's calls (merged into its messages), or the whole calls log when `phone` is null. */
     callListQuery: (input: { enabled: boolean; phone: string | null }) => ({
       queryKey: [...CALLS_KEY, 'list', input.phone ?? 'all'],
-      queryFn: () => client.apiFetch<CallView[]>(input.phone ? `/calls?phone=${enc(input.phone)}&limit=50` : '/calls?limit=100'),
+      queryFn: () =>
+        client.apiFetch<CallView[]>(
+          input.phone ? `/calls?phone=${enc(input.phone)}&limit=50` : '/calls?limit=100',
+        ),
       enabled: input.enabled,
       refetchInterval: input.enabled ? 10_000 : (false as const),
       retry: false,

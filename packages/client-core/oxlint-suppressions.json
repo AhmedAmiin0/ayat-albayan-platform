@@ -36,6 +36,9 @@
     },
     "stylistic/max-len": {
       "count": 7
+    },
+    "typescript/no-confusing-void-expression": {
+      "count": 2
     }
   },
   "src/messaging/calls/call-peer.test.ts": {

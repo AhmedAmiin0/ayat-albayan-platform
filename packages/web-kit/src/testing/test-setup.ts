@@ -19,7 +19,8 @@ localStorage.setItem(CLOCK_STORAGE_KEY, '24');
 // never depend on the machine's zone. A test about another viewer sets its own (Africa/Cairo).
 beforeEach(() => setViewerPersonTz('Asia/Riyadh'));
 
-// jsdom has no screen capture; a desktop browser does. Specs about phones delete it to hide the buttons.
+// jsdom has no screen capture; a desktop browser does. Specs about phones delete it to hide the
+// buttons.
 if (typeof navigator !== 'undefined' && !navigator.mediaDevices) {
   Object.defineProperty(navigator, 'mediaDevices', {
     configurable: true,

@@ -42,7 +42,8 @@ describe('createInboxLive: events → throttled refreshes', () => {
     live.watch('list');
     for (let i = 0; i < 20; i += 1) live.changed({ phone: i % 2 ? OPEN : OTHER });
     vi.advanceTimersByTime(10_000);
-    for (const fn of [targets.chat, targets.list, targets.badge]) expect(fn.mock.calls.length).toBeLessThanOrEqual(2);
+    for (const fn of [targets.chat, targets.list, targets.badge])
+      expect(fn.mock.calls.length).toBeLessThanOrEqual(2);
     expect(targets.chat).toHaveBeenCalledTimes(2);
   });
 
@@ -58,7 +59,11 @@ describe('createInboxLive: events → throttled refreshes', () => {
     const { live, targets } = setup();
     const release = live.watch(chatLiveKey(OPEN));
     live.resync();
-    expect([targets.chat.mock.calls.length, targets.list.mock.calls.length, targets.badge.mock.calls.length]).toEqual([1, 0, 1]);
+    expect([
+      targets.chat.mock.calls.length,
+      targets.list.mock.calls.length,
+      targets.badge.mock.calls.length,
+    ]).toEqual([1, 0, 1]);
     release();
     vi.advanceTimersByTime(5_000);
     live.resync();

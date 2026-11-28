@@ -1,9 +1,9 @@
 // Pure-move codemod (docs/27 §4). Usage, from the repo root:
 //   node tools/scripts/move-module.ts refactor/moves/<id>.json   apply one move map
-//   node tools/scripts/move-module.ts --replay                   apply every committed map (an open
-// branch follows the moves) It rewrites imports, re-exports, import(), require, vi/jest mock paths
-// and `@/` aliases across the whole monorepo, moves tests and __snapshots__ with their files and
-// writes the map's index.ts barrels. Run twice = no diff.
+//   node tools/scripts/move-module.ts --replay                   apply every committed map (an open branch follows the moves)
+// It rewrites imports, re-exports, import(), require, vi/jest mock paths and `@/` aliases across
+// the whole monorepo, moves tests and __snapshots__ with their files and writes the map's index.ts
+// barrels. Run twice = no diff.
 import { posix } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { replay, runMap, type RunReport } from './move-module/run.ts';

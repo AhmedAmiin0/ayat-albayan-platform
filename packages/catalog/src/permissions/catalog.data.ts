@@ -78,9 +78,8 @@ export const PERMISSION_ROWS = [
   { key: 'messages.read', area: 'messaging', grants: TS },
   { key: 'messages.manage', area: 'messaging', grants: [] },
   { key: 'templates.manage', area: 'messaging', grants: [] },
-  // Every template from the inbox; without it (or templates.manage) only the
-  // restricted allow-list: free_trial_invite and welcome_greeting by default
-  // (restricted-templates.ts).
+  // Every template from the inbox; without it (or templates.manage) only the restricted allow-list:
+  // free_trial_invite and welcome_greeting by default (restricted-templates.ts).
   { key: 'templates.send_all', area: 'messaging', grants: [] },
   { key: 'templates.author', area: 'messaging', grants: ['sales'] },
   ...SHORT_LINK_ROWS,
@@ -137,9 +136,8 @@ export const PERMISSION_ROWS = [
   // The assistant side of sales (docs/16): the academy's teachers, every student and
   // the lessons running now (read-only, whitelisted). Follows the base role like the keys above.
   { key: 'self.sales_academy', area: 'self', grants: ['sales'] },
-  // Her money writes from the chat (docs/16 row 16): subscribe a student she owns and
-  // record the family's bank transfer with its receipt (/sales/subscriptions, /sales/payments,
-  // /sales/money).
+  // Her money writes from the chat (docs/16 row 16): subscribe a student she owns and record the
+  // family's bank transfer with its receipt (/sales/subscriptions, /sales/payments, /sales/money).
   { key: 'self.sales_money', area: 'self', grants: ['sales'] },
   { key: 'self.assistant', area: 'self', grants: ['assistant'] },
   // The family portal (/portal/*, docs/31): guardian or student login; a scope, not a grant (433).
