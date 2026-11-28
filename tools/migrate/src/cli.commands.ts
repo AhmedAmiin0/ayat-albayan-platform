@@ -10,6 +10,7 @@ import { applyPlan } from './plan/apply.ts';
 import { seedConfig } from './db/config-seed.ts';
 import { unqueueImportedLessons } from './db/unqueue-imported.ts';
 import type { PlanWithChanges } from './plan/changes.ts';
+import type { Existing } from './types.ts';
 import { deltaPlan } from './plan/stale-refs.ts';
 import { buildPlan, loadBundle } from './plan/run.ts';
 import { clampRuleStarts, logScope, runScope } from './delta/scope.ts';
@@ -61,6 +62,41 @@ async function writeOutputs(plan: PlanWithChanges): Promise<void> {
   );
 }
 
+interface ApplyInput {
+  args: CliArgs;
+  config: TargetConfig;
+  db: TargetDb;
+  plan: PlanWithChanges;
+  existing: ReadonlyMap<string, Existing>;
+}
+
+/** Writes the printed plan, then seeds settings and drops google sync rows of imported lessons. */
+async function applyWritten(o: ApplyInput): Promise<void> {
+  const manifest = readJson<SheetManifest | undefined>(cachePath.sheetManifest(), undefined);
+  const zip = o.plan.items.some((i) => i.key.entity === 'report_pdfs' && i.action !== 'skip')
+    ? openZip(resolveZipPath(o.args.zip))
+    : undefined;
+  const runId = await applyPlan({
+    db: o.db,
+    plan: o.plan,
+    existing: o.existing,
+    modules: ENTITY_MODULES,
+    sources: {
+      zip: manifest?.zip,
+      zip_sha256: manifest?.sha256,
+      crm_cursor: readJson(cachePath.crmCursor(), {}),
+    },
+    gitSha: gitSha(),
+    storage: o.config.storage ? createTargetStorage(o.config.storage) : undefined,
+    readZipEntry: zip ? (path) => zip.read((n) => n === path)[path] : undefined,
+  });
+  console.log(`applied to ${o.config.name}: import_runs ${runId}`);
+  console.log(`settings seed: ${await seedConfig(o.db)}`);
+  console.log(
+    `google sync rows of imported lessons dropped: ${await unqueueImportedLessons(o.db)}`,
+  );
+}
+
 /** dry-run never writes to the target (SELECTs only); apply writes the same plan it printed. */
 export function planOrApply(args: CliArgs, apply: boolean): Promise<void> {
   return withTarget(args, async (config, db) => {
@@ -82,30 +118,7 @@ export function planOrApply(args: CliArgs, apply: boolean): Promise<void> {
     );
     logScope({ plan, recreated: built.recreated, from: scope.build.from });
     await writeOutputs(plan);
-    if (!apply) return;
-    const manifest = readJson<SheetManifest | undefined>(cachePath.sheetManifest(), undefined);
-    const zip = plan.items.some((i) => i.key.entity === 'report_pdfs' && i.action !== 'skip')
-      ? openZip(resolveZipPath(args.zip))
-      : undefined;
-    const runId = await applyPlan({
-      db,
-      plan,
-      existing,
-      modules: ENTITY_MODULES,
-      sources: {
-        zip: manifest?.zip,
-        zip_sha256: manifest?.sha256,
-        crm_cursor: readJson(cachePath.crmCursor(), {}),
-      },
-      gitSha: gitSha(),
-      storage: config.storage ? createTargetStorage(config.storage) : undefined,
-      readZipEntry: zip ? (path) => zip.read((n) => n === path)[path] : undefined,
-    });
-    console.log(`applied to ${config.name}: import_runs ${runId}`);
-    console.log(`settings seed: ${await seedConfig(db)}`);
-    console.log(
-      `google sync rows of imported lessons dropped: ${await unqueueImportedLessons(db)}`,
-    );
+    if (apply) await applyWritten({ args, config, db, plan, existing });
   });
 }
 
