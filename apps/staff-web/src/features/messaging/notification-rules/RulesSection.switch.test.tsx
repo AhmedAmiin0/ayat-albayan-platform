@@ -2,7 +2,7 @@ import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
-import { findRow, openTab, overview, renderRules } from './rules-test-kit';
+import { findRow, openTab, overview, renderRules, savedRow } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -31,7 +31,7 @@ describe('«الإشعارات»: the switch', () => {
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.cancel }));
     expect(apiSend).not.toHaveBeenCalled();
     fireEvent.click(switchOf(row, 'lesson_reminder_24h'));
-    apiSend.mockResolvedValue(undefined);
+    apiSend.mockResolvedValue(savedRow('lesson_reminder_24h'));
     fireEvent.click(within(screen.getByRole('dialog', { name: title })).getByRole('button', { name: r.familyOn.yes }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/admin/notifications/lesson_reminder_24h', { enabled: true }));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
@@ -70,7 +70,7 @@ describe('«الإشعارات»: the switch', () => {
     apiSend.mockRejectedValueOnce(new ApiError(428, { message: 'confirmation_required' }));
     fireEvent.click(yes);
     expect(await within(dialog).findByText(r.errors.confirmation_required.replace('{word}', ESSENTIAL_OFF_TEXT))).toBeTruthy();
-    apiSend.mockResolvedValue(undefined);
+    apiSend.mockResolvedValue(savedRow('report_ready'));
     fireEvent.click(yes);
     await waitFor(() =>
       expect(apiSend).toHaveBeenLastCalledWith('PATCH', '/admin/notifications/report_ready', { enabled: false, confirmText: ESSENTIAL_OFF_TEXT }),
@@ -83,7 +83,7 @@ describe('«الإشعارات»: the switch', () => {
     await findRow('lesson_reminder');
     openTab(t.notificationCatalogue.audience.teacher);
     const row = await findRow('teacher_new_student');
-    apiSend.mockResolvedValue(undefined);
+    apiSend.mockResolvedValue(savedRow('teacher_new_student'));
     fireEvent.click(switchOf(row, 'teacher_new_student'));
     expect(screen.queryByRole('dialog')).toBeNull();
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/admin/notifications/teacher_new_student', { enabled: false }));
