@@ -28,7 +28,7 @@ test('a package feature index re-exports whole files; a value use beats a type u
   assert.equal(out.writes.get(`${F}/finance/payouts/index.ts`), "export * from './Row';\n");
 });
 
-test('a name two importers want from different files, or a type-only name a value import wants, stays deep', () => {
+test('a contested name and a name stuck in export type {} stay deep', () => {
   const root = tree({
     ...files,
     [`${F}/finance/payouts/index.ts`]: "export type { Pay } from './pay';\n",
@@ -44,4 +44,19 @@ test('a name two importers want from different files, or a type-only name a valu
   assert.equal(work.writes.get(`${W}/app/a.tsx`), undefined);
   assert.equal(work.writes.get(`${W}/app/payouts.tsx`), undefined);
   assert.equal(work.problems.length, 3);
+});
+
+test('an inline type export that a value import wants becomes a value export', () => {
+  const root = tree({
+    ...files,
+    [`${F}/finance/payouts/index.ts`]: "export { type Pay } from './pay';\n",
+    [`${F}/finance/payouts/pay.ts`]: 'export const Pay = 1;\n',
+    [`${W}/app/a.tsx`]: "import { Pay } from '@/features/finance/payouts/pay';\n",
+  });
+  const work = fixFeatureIndexes(ctx(root, { old: {} }), [`${W}/app/a.tsx`]);
+  assert.equal(
+    work.writes.get(`${W}/app/a.tsx`),
+    "import { Pay } from '@/features/finance/payouts';\n",
+  );
+  assert.equal(work.writes.get(`${F}/finance/payouts/index.ts`), "export { Pay } from './pay';\n");
 });

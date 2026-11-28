@@ -4,7 +4,7 @@ import { formatSpec } from '../../../../move-module/resolve.ts';
 import { readText } from '../../../../move-module/files.ts';
 import { deepImports, type DeepCtx, type DeepImport } from './deep-imports.ts';
 import { lineText } from '../barrels/imports.ts';
-import { clashes, indexLines, textOf } from './index-lines.ts';
+import { clashes, indexLines, textOf, valueExports } from './index-lines.ts';
 
 export interface IndexWork {
   /** New text per file: importers pointed at feature indexes, indexes with the names they need. */
@@ -83,8 +83,10 @@ export function fixFeatureIndexes(ctx: DeepCtx, files: readonly string[]): Index
     const index = indexOf(ctx.r.root, feature);
     const lines = indexLines(ctx, index, uses);
     work.names.push(...uses.flatMap((u) => u.bindings.map((b) => b.name)));
-    const before = work.writes.get(index) ?? textOf(ctx.r.root, index);
-    if (lines.length > 0) work.writes.set(index, `${before}${lines.join('\n')}\n`);
+    const values = uses.flatMap((u) => u.bindings.filter((b) => !b.isType).map((b) => b.name));
+    const before = valueExports(work.writes.get(index) ?? textOf(ctx.r.root, index), values);
+    const after = lines.length > 0 ? `${before}${lines.join('\n')}\n` : before;
+    if (after !== textOf(ctx.r.root, index)) work.writes.set(index, after);
   }
   return work;
 }

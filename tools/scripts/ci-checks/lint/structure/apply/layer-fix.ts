@@ -17,7 +17,8 @@ import type { Moves } from '../tree/tree.types.ts';
 
 const CODE = /\.[cm]?[jt]sx?$/;
 const INDEXES = ['index.ts', 'index.tsx'];
-const TEST = /\.(test|spec)\.[cm]?[jt]sx?$|\/tests?\//;
+/** Files the boundary rule skips (eslint-boundaries TESTS): their deep imports may stay. */
+const TEST = /\.(test|spec)\.[cm]?[jt]sx?$|\/tests?\/|\.fakes?\.ts$|fixture|test-app[^/]*\.ts$/;
 
 interface LayerRun {
   root: string;

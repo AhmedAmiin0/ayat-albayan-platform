@@ -27,18 +27,27 @@ function contested(wanted: readonly Use[], declOf: (w: Use) => string): string[]
 }
 
 /** Names the index exports for another declaration, or as a type only to a value importer. */
-function taken(has: Map<string, Source>, w: Use, declOf: (w: Use) => string): boolean {
-  const now = has.get(w.b.name);
+interface Has {
+  names: Map<string, Source>;
+  text: string;
+}
+
+/** Exported for another declaration, or as a type in an `export type {}` a value cannot use. */
+function taken(has: Has, w: Use, declOf: (w: Use) => string): boolean {
+  const now = has.names.get(w.b.name);
   if (now === undefined) return false;
-  return now.file !== declOf(w) || (now.typeOnly === true && !w.b.isType);
+  const stuckType =
+    now.typeOnly === true && !w.b.isType && valueExports(has.text, [w.b.name]) === has.text;
+  return now.file !== declOf(w) || stuckType;
 }
 
 /** Names an index cannot carry for these imports: those imports stay where they are. */
 export function clashes(ctx: DeepCtx, index: string, uses: readonly DeepImport[]): Set<string> {
   if (!ctx.layer.alias) return new Set();
-  const has = existsSync(posix.join(ctx.r.root, index))
+  const names = existsSync(posix.join(ctx.r.root, index))
     ? exportSources(ctx, index)
     : new Map<string, Source>();
+  const has = { names, text: textOf(ctx.r.root, index) };
   const seen = new Map<string, Map<string, Source>>();
   const declOf = (w: Use): string => {
     const names = seen.get(w.target) ?? exportSources(ctx, w.target);
@@ -80,4 +89,17 @@ export function indexLines(ctx: DeepCtx, index: string, uses: readonly DeepImpor
   const stars = [...new Set(starred.map(starOf))].filter((l) => !text.includes(l));
   const named = ctx.layer.alias ? namedLines(ctx, index, uses) : [];
   return [...named, ...stars];
+}
+
+const escape = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** An index that re-exports a value as `type X` inside `export { … }` exports it as a value. */
+export function valueExports(text: string, names: readonly string[]): string {
+  return names.reduce(
+    (acc, name) =>
+      acc.replace(/export \{[^}]*\}/g, (block) =>
+        block.replace(new RegExp(`\\btype ${escape(name)}\\b`), name),
+      ),
+    text,
+  );
 }
