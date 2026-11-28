@@ -2954,9 +2954,6 @@
     },
     "ab/no-restricted-syntax": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/meetings/create/CreateMeetingForm.tsx": {
