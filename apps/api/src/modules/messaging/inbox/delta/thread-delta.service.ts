@@ -21,8 +21,8 @@ export interface ThreadDeltaQuery {
 /** Who reads: the admin, a salesperson (redacted like her pages) or a teacher (own families only). */
 export type DeltaCaller = { kind: 'admin' } | { kind: 'sales' } | { kind: 'teacher'; scope: TeacherScope };
 
-type Arrived = { window: ThreadDeltaWindow; stamped: boolean };
-type StampInput = { q: ThreadDeltaQuery; caller: DeltaCaller; now: Date };
+interface Arrived { window: ThreadDeltaWindow; stamped: boolean }
+interface StampInput { q: ThreadDeltaQuery; caller: DeltaCaller; now: Date }
 
 const windowOf = (v: ThreadView, unread: number): ThreadDeltaWindow => ({
   last_inbound_at: v.last_inbound_at,

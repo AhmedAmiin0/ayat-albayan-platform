@@ -8,7 +8,12 @@ const spawn = vi.hoisted(() => vi.fn());
 vi.mock('node:child_process', () => ({ spawn }));
 
 const PDF = new TextEncoder().encode('%PDF-1.4 fake');
-type End = { code: number | null; killed?: boolean; stdout?: string; enoent?: boolean };
+interface End {
+  code: number | null;
+  killed?: boolean;
+  stdout?: string;
+  enoent?: boolean;
+}
 
 /** A child that ends as `end` says; `killed` is what node sets when ITS timeout killed the child. */
 function child(end: End) {
@@ -41,9 +46,25 @@ describe('spawnPoppler: niced, OOM-killer first, address space capped, SIGKILL o
     await expect(pdfPageCount(PDF)).resolves.toBe(3);
     const { cmd, argv, opts } = spawned();
     expect(cmd).toBe('/usr/bin/nice');
-    expect(argv.slice(0, 10)).toEqual(['-n', '10', 'choom', '-n', '1000', '--', 'prlimit', '--as=268435456', '--', 'pdfinfo']);
+    expect(argv.slice(0, 10)).toEqual([
+      '-n',
+      '10',
+      'choom',
+      '-n',
+      '1000',
+      '--',
+      'prlimit',
+      '--as=268435456',
+      '--',
+      'pdfinfo',
+    ]);
     expect(argv[10]).toMatch(/in\.pdf$/);
-    expect(opts).toEqual({ stdio: ['ignore', 'pipe', 'ignore'], env: { PATH: '/usr/bin:/bin' }, timeout: 5_000, killSignal: 'SIGKILL' });
+    expect(opts).toEqual({
+      stdio: ['ignore', 'pipe', 'ignore'],
+      env: { PATH: '/usr/bin:/bin' },
+      timeout: 5_000,
+      killSignal: 'SIGKILL',
+    });
   });
 
   it('pdfinfo killed by its own timeout: 0 pages for good; killed from outside (the memory cap): failed, retried later', async () => {
@@ -55,9 +76,18 @@ describe('spawnPoppler: niced, OOM-killer first, address space capped, SIGKILL o
 
   it('pdftoppm gets 20 s, and a timeout kill is failed (nothing stored)', async () => {
     spawn.mockImplementation(() => child({ code: null, killed: true }));
-    await expect(renderPdfPages(PDF, { first: 2, last: 6 })).rejects.toMatchObject({ reason: 'failed' });
+    await expect(renderPdfPages(PDF, { first: 2, last: 6 })).rejects.toMatchObject({
+      reason: 'failed',
+    });
     const { argv, opts } = spawned();
-    expect(argv.slice(9, 15)).toEqual(['pdftoppm', '-jpeg', '-jpegopt', 'quality=70', '-scale-to', '1600']);
+    expect(argv.slice(9, 15)).toEqual([
+      'pdftoppm',
+      '-jpeg',
+      '-jpegopt',
+      'quality=70',
+      '-scale-to',
+      '1600',
+    ]);
     expect(opts).toMatchObject({ timeout: 20_000, killSignal: 'SIGKILL' });
   });
 

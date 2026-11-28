@@ -7,7 +7,11 @@ export const CRM_FETCH_TIMEOUT_MS = 10_000;
 /** The storage did not answer about the file (down, timed out, 5xx, 429): try again later, it is not gone. */
 export const CRM_UNREACHABLE = 'crm_unreachable';
 
-type CrmFetchInput = { url: URL; mime: string; maxBytes: number };
+interface CrmFetchInput {
+  url: URL;
+  mime: string;
+  maxBytes: number;
+}
 
 const gone = (): Error => httpError(HttpStatus.GONE, 'media_expired');
 const tooBig = (): Error => httpError(HttpStatus.PAYLOAD_TOO_LARGE, 'invoice_too_large');

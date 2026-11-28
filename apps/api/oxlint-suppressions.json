@@ -1744,11 +1744,6 @@
       "count": 2
     }
   },
-  "src/modules/messaging/calls/access/calls-gate.ts": {
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/calls/calls.fakes.ts": {
     "complexity": {
       "count": 1
@@ -1781,9 +1776,6 @@
       "count": 3
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
       "count": 1
     }
   },
@@ -1866,9 +1858,6 @@
     "typescript/no-base-to-string": {
       "count": 1
     },
-    "typescript/dot-notation": {
-      "count": 1
-    },
     "typescript/no-unnecessary-type-conversion": {
       "count": 1
     }
@@ -1915,15 +1904,7 @@
       "count": 2
     }
   },
-  "src/modules/messaging/chat-lists/chat-lists.repo.test.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/chat-lists/chat-lists.repo.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     }
@@ -1997,9 +1978,6 @@
     }
   },
   "src/modules/messaging/inbox/delta/thread-delta.service.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
-    },
     "complexity": {
       "count": 2
     },
@@ -2019,9 +1997,6 @@
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-client.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     },
@@ -2036,9 +2011,6 @@
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-pages.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 8
     }
@@ -2049,9 +2021,6 @@
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-preview.repo.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }
@@ -2062,9 +2031,6 @@
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-render.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
-    },
     "stylistic/max-len": {
       "count": 18
     },
@@ -2078,9 +2044,6 @@
     },
     "stylistic/max-len": {
       "count": 7
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 3
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-sandbox.ts": {
@@ -2104,9 +2067,6 @@
     }
   },
   "src/modules/messaging/inbox/files/pdf/tests/pdf-render.spawn.test.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     }
@@ -2192,9 +2152,6 @@
     },
     "ab/zod-inputs": {
       "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 3
     }
   },
   "src/modules/messaging/inbox/files/thread-forward.controller.ts": {
@@ -2207,9 +2164,6 @@
   },
   "src/modules/messaging/inbox/files/thread-forward.service.ts": {
     "complexity": {
-      "count": 1
-    },
-    "typescript/consistent-type-definitions": {
       "count": 1
     },
     "stylistic/max-len": {
@@ -2253,9 +2207,6 @@
     }
   },
   "src/modules/messaging/inbox/files/voice-send.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     }
@@ -2266,9 +2217,6 @@
     }
   },
   "src/modules/messaging/inbox/people/thread-people.mapper.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     },
@@ -2288,9 +2236,6 @@
     }
   },
   "src/modules/messaging/inbox/reactions/reaction-line.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     },
@@ -2342,11 +2287,6 @@
       "count": 6
     }
   },
-  "src/modules/messaging/inbox/reads/read-marks.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/inbox/reads/read-receipts.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -2394,9 +2334,6 @@
     }
   },
   "src/modules/messaging/inbox/send/outbox.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     },
@@ -2553,17 +2490,11 @@
     }
   },
   "src/modules/messaging/inbox/threads/thread-lessons.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "ab/forbidden-imports": {
       "count": 1
     }
   },
   "src/modules/messaging/inbox/threads/thread-quotes.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -2591,9 +2522,6 @@
     },
     "ab/zod-inputs": {
       "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "src/modules/messaging/inbox/threads/threads.list.ts": {
@@ -2773,11 +2701,6 @@
       "count": 2
     }
   },
-  "src/modules/messaging/notification-rules/test-app.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/numbers/communications/communications.controller.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -2785,9 +2708,6 @@
   },
   "src/modules/messaging/numbers/communications/communications.service.test.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "typescript/dot-notation": {
       "count": 2
     }
   },
@@ -2826,9 +2746,6 @@
     "complexity": {
       "count": 1
     },
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 7
     },
@@ -2847,9 +2764,6 @@
     },
     "typescript/no-unnecessary-condition": {
       "count": 5
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 2
     }
   },
   "src/modules/messaging/numbers/import/numbers.import-plan.invalid.test.ts": {
@@ -2858,9 +2772,6 @@
     }
   },
   "src/modules/messaging/numbers/import/numbers.import-plan.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "no-nested-ternary": {
       "count": 1
     },
@@ -2942,9 +2853,6 @@
   "src/modules/messaging/numbers/numbers.repo.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 2
     }
   },
   "src/modules/messaging/numbers/numbers.routing.migration.test.ts": {
@@ -2980,9 +2888,6 @@
     }
   },
   "src/modules/messaging/push/push-receipts.job.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -3008,11 +2913,6 @@
   "src/modules/messaging/push/receipts.transport.ts": {
     "typescript/require-await": {
       "count": 1
-    }
-  },
-  "src/modules/messaging/reminders/chain-db.fake.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
     }
   },
   "src/modules/messaging/reminders/plan/reminders.links.test.ts": {
@@ -3073,14 +2973,6 @@
   "src/modules/messaging/reminders/plan/teacher-lesson.crm.test.ts": {
     "complexity": {
       "count": 1
-    }
-  },
-  "src/modules/messaging/reminders/reminders.fakes.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/modules/messaging/reminders/reminders.job.ts": {
@@ -3191,9 +3083,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "src/modules/messaging/webhook/external/external-row.ts": {
@@ -3283,15 +3172,7 @@
       "count": 1
     }
   },
-  "src/modules/messaging/webhook/inbound/tests/inbound.test.ts": {
-    "typescript/dot-notation": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/webhook/inbound/tests/reaction.test.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     }
@@ -3404,9 +3285,6 @@
   "src/modules/messaging/webhook/parse/webhook.echoes.ts": {
     "ab/no-shape-checks": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "src/modules/messaging/webhook/parse/webhook.kapso-signature.ts": {
@@ -3434,9 +3312,6 @@
     },
     "stylistic/max-len": {
       "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 2
     }
   },
   "src/modules/messaging/webhook/providers/tests/wacrm.http.test.ts": {
@@ -3509,11 +3384,6 @@
   "src/modules/messaging/webhook/tests/http.numbers.test.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/modules/messaging/webhook/tests/meta.fakes.ts": {
-    "typescript/dot-notation": {
-      "count": 3
     }
   },
   "src/modules/messaging/webhook/tests/service.reload.test.ts": {
@@ -3646,9 +3516,6 @@
     }
   },
   "src/modules/messaging/whatsapp/gate/gate.controller.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }
@@ -3664,9 +3531,6 @@
     },
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/gate/tests/send-gate.fail-closed.test.ts": {
@@ -3735,9 +3599,6 @@
     }
   },
   "src/modules/messaging/whatsapp/messages/crm-copy/crm-media-copy.repo.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     },
@@ -3751,17 +3612,11 @@
     }
   },
   "src/modules/messaging/whatsapp/messages/crm-copy/tests/crm-copy.fakes.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     }
   },
   "src/modules/messaging/whatsapp/messages/crm-history/crm-history-url.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -3776,9 +3631,6 @@
   },
   "src/modules/messaging/whatsapp/messages/crm-history/crm-media.fetch.ts": {
     "no-restricted-globals": {
-      "count": 1
-    },
-    "typescript/consistent-type-definitions": {
       "count": 1
     },
     "complexity": {
@@ -3799,17 +3651,11 @@
     }
   },
   "src/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 4
-    },
     "stylistic/max-len": {
       "count": 12
     }
   },
   "src/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 2
     },
@@ -3868,16 +3714,6 @@
   },
   "src/modules/messaging/whatsapp/messages/tests/message.mapper.test.ts": {
     "typescript/no-deprecated": {
-      "count": 3
-    }
-  },
-  "src/modules/messaging/whatsapp/messages/tests/wa-components.media.test.ts": {
-    "typescript/dot-notation": {
-      "count": 5
-    }
-  },
-  "src/modules/messaging/whatsapp/messages/tests/wa-components.test.ts": {
-    "typescript/dot-notation": {
       "count": 3
     }
   },
@@ -4135,9 +3971,6 @@
     },
     "stylistic/max-len": {
       "count": 4
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.mapper.ts": {
@@ -4311,11 +4144,6 @@
       "count": 3
     }
   },
-  "src/modules/messaging/whatsapp/tests/live-client.kapso.test.ts": {
-    "typescript/dot-notation": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/whatsapp/tests/meta-callers.test-util.ts": {
     "stylistic/max-len": {
       "count": 5
@@ -4324,19 +4152,6 @@
   "src/modules/messaging/whatsapp/tests/settings-readers.app.test.ts": {
     "stylistic/max-len": {
       "count": 2
-    }
-  },
-  "src/modules/messaging/whatsapp/tests/template-review.test.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/whatsapp/tests/wa-media-bucket.migration.test.ts": {
-    "typescript/prefer-regexp-exec": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/tests/whatsapp.client.kapso.test.ts": {
@@ -4374,14 +4189,6 @@
     },
     "stylistic/max-len": {
       "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 2
-    }
-  },
-  "src/modules/messaging/whatsapp/whatsapp.fakes.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
     }
   },
   "src/modules/messaging/whatsapp/whatsapp.module.ts": {

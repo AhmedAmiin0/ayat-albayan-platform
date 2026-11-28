@@ -102,7 +102,10 @@ export class ThreadForwardService {
       if (sent.view.status === 'failed') return { phone, sent: false, reason: 'send_failed' };
       return { phone, sent: true, message_id: sent.view.id, replayed: sent.replayed };
     } catch (e) {
-      if (!(e instanceof HttpException)) this.log.error(`forward to one target failed: ${e instanceof Error ? e.message : String(e)}`);
+      if (!(e instanceof HttpException))
+        this.log.error(
+          `forward to one target failed: ${e instanceof Error ? e.message : String(e)}`,
+        );
       return { phone, sent: false, reason: skipOf(e) };
     }
   }
@@ -118,14 +121,17 @@ export class ThreadForwardService {
       if (!t.file) throw httpError(HttpStatus.FORBIDDEN, 'files_forbidden');
       return this.files.send({ ...t.base, input: { clientRequestId } }, t.file);
     }
-    return this.sends.text({ ...t.base, input: { text: t.source.body?.trim() ?? '', clientRequestId } });
+    return this.sends.text({
+      ...t.base,
+      input: { text: t.source.body?.trim() ?? '', clientRequestId },
+    });
   }
 }
 
-type SendBase = {
+interface SendBase {
   phone: string;
   actorId: string;
   scope: TeacherScope | null;
   sales: SalesScope | null;
   forwardedFrom: string;
-};
+}

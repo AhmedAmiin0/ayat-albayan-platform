@@ -30,13 +30,13 @@ const toLesson = (row: LessonRow, tz: string): ThreadLesson => ({
 /** What the lessons are looked up by: a thread, or a number with no message yet (KnownNumber). */
 export type LessonsOf = Pick<ThreadView, 'guardian_id' | 'guardian_tz' | 'teacher_id'>;
 
-type ReadBy = {
+interface ReadBy {
   select: string;
   column: string;
   id: string;
   now: Date;
   teacherId?: string | undefined;
-};
+}
 
 async function read(db: Db, by: ReadBy): Promise<LessonRow[]> {
   let query = db.from('lessons').select(by.select).eq(by.column, by.id);
@@ -53,7 +53,8 @@ async function read(db: Db, by: ReadBy): Promise<LessonRow[]> {
 
 const GUARDIAN_SELECT =
   'id, starts_at, ends_at, status, meeting_link, teacher:teachers(tz), lesson_students!inner(student:students!inner(name, guardian_id))';
-const TEACHER_SELECT = 'id, starts_at, ends_at, status, meeting_link, teacher:teachers(tz), lesson_students(student:students(name))';
+const TEACHER_SELECT =
+  'id, starts_at, ends_at, status, meeting_link, teacher:teachers(tz), lesson_students(student:students(name))';
 
 /** Rule 6: a template's lesson time is picked from these, never typed. */
 export async function upcomingLessons(
@@ -62,10 +63,22 @@ export async function upcomingLessons(
 ): Promise<ThreadLesson[]> {
   const { thread, now, teacherId } = at;
   if (thread.guardian_id) {
-    const by = { select: GUARDIAN_SELECT, column: 'lesson_students.student.guardian_id', id: thread.guardian_id, now, teacherId };
+    const by = {
+      select: GUARDIAN_SELECT,
+      column: 'lesson_students.student.guardian_id',
+      id: thread.guardian_id,
+      now,
+      teacherId,
+    };
     return (await read(db, by)).map((r) => toLesson(r, thread.guardian_tz ?? RIYADH_TZ));
   }
   if (!thread.teacher_id) return [];
-  const rows = await read(db, { select: TEACHER_SELECT, column: 'teacher_id', id: thread.teacher_id, now, teacherId });
+  const rows = await read(db, {
+    select: TEACHER_SELECT,
+    column: 'teacher_id',
+    id: thread.teacher_id,
+    now,
+    teacherId,
+  });
   return rows.map((r) => toLesson(r, r.teacher?.tz ?? RIYADH_TZ));
 }

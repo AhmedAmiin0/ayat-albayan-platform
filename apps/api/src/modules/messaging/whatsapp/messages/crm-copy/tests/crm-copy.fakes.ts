@@ -22,7 +22,7 @@ export const crmRows = (n: number, from = 0): MediaMessage[] =>
     crmRow({ id: `c${from + i}`, media_mime: 'audio/ogg', body: crmLink(`v${from + i}.ogg`), created_at: `2026-08-01T00:${String(i % 60).padStart(2, '0')}:00Z` }),
   );
 
-type Failure = { attempts: number; skipped: boolean };
+interface Failure { attempts: number; skipped: boolean }
 
 /** Tests only: migrations 891 / 920's three functions over in-memory rows (the same WHERE, in TypeScript). */
 function fakeCopyQueries(rows: Map<string, MediaMessage>, failures: Map<string, Failure>) {

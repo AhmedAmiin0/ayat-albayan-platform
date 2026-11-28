@@ -1,7 +1,6 @@
 import { safeEqual } from '@/common/infra/crypto/safe-equal';
 import { hmacSha256Hex } from '@/common/infra/crypto/hmac';
 
-
 // The academy CRM's webhook authentication (docs/19 «crm driver»). Fails closed: no WACRM_WEBHOOK_SECRET →
 // every request is refused. Only that secret is tried here; the Meta and Kapso routes never try it.
 
@@ -23,9 +22,11 @@ type WacrmVerdict = 'ok' | 'bad' | 'stale';
 
 /** The t and v1 parts, in any order; null when either is missing or malformed. */
 export function signatureParts(header: string): { t: string; v1: string } | null {
-  const parts = Object.fromEntries(header.split(',').map((p) => p.trim().split('=', 2) as [string, string | undefined]));
-  const t = parts['t'];
-  const v1 = parts['v1']?.toLowerCase();
+  const parts = Object.fromEntries(
+    header.split(',').map((p) => p.trim().split('=', 2) as [string, string | undefined]),
+  );
+  const t = parts.t;
+  const v1 = parts.v1?.toLowerCase();
   return t && /^\d{1,12}$/.test(t) && v1 && /^[0-9a-f]{64}$/.test(v1) ? { t, v1 } : null;
 }
 
@@ -37,5 +38,7 @@ export function verifyWacrmSignature(req: WacrmSignedRequest): WacrmVerdict {
   if (!parts) return 'bad';
   const expected = hmacSha256Hex(secret, [`${parts.t}.`, rawBody]);
   if (!safeEqual(parts.v1, expected)) return 'bad';
-  return Math.abs(req.now.getTime() - Number(parts.t) * 1000) <= WACRM_TOLERANCE_MS ? 'ok' : 'stale';
+  return Math.abs(req.now.getTime() - Number(parts.t) * 1000) <= WACRM_TOLERANCE_MS
+    ? 'ok'
+    : 'stale';
 }

@@ -15,7 +15,7 @@ afterEach(() => {
 });
 
 describe('LiveWhatsappClient across drivers', () => {
-  it('meta → kapso → a new key → meta again, each on the next call, with that driver\'s credential', async () => {
+  it("meta → kapso → a new key → meta again, each on the next call, with that driver's credential", async () => {
     vi.stubEnv('WA_API_BASE', 'http://127.0.0.1:4010');
     const f = scriptedFetch(RECORDED.sendOk, RECORDED.sendOk, RECORDED.sendOk, RECORDED.sendOk);
     vi.stubGlobal('fetch', f.fetch);
@@ -36,7 +36,12 @@ describe('LiveWhatsappClient across drivers', () => {
       'http://127.0.0.1:4010/v21.0/p1/messages',
     ]);
     const headers = f.requests.map((r) => r.init.headers as Record<string, string>);
-    expect(headers.map((h) => h['authorization'] ?? h['x-api-key'])).toEqual(['Bearer token-a', 'key-a', 'key-b', 'Bearer token-a']);
+    expect(headers.map((h) => h.authorization ?? h['x-api-key'])).toEqual([
+      'Bearer token-a',
+      'key-a',
+      'key-b',
+      'Bearer token-a',
+    ]);
     expect(headers[1]).not.toHaveProperty('authorization');
   });
 
@@ -46,7 +51,9 @@ describe('LiveWhatsappClient across drivers', () => {
     const client = new LiveWhatsappClient('notifications');
     setIntegrationOverlay({ ...LINE, KAPSO_API_BASE: KAPSO.KAPSO_API_BASE, WA_PROVIDER: 'kapso' });
     expect(client.configured()).toBe(false);
-    await expect(client.sendText({ to: '+966551234567', text: 'x' })).rejects.toThrow('WhatsApp is not configured');
+    await expect(client.sendText({ to: '+966551234567', text: 'x' })).rejects.toThrow(
+      'WhatsApp is not configured',
+    );
     expect(f.requests).toHaveLength(0);
   });
 });

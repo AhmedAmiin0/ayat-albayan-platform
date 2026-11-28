@@ -7,10 +7,17 @@ import { pageOfFile, pdfinfoPages, pdftoppmArgs, type PageRange } from './pdf-pa
 import { popplerToolSchema, type PdfFailure, type PopplerTool } from './pdf.schemas';
 
 /** How a run ended: the exit code (null when killed), the start of stdout, and whether our timeout killed it. */
-export type PdfExit = { code: number | null; stdout: string; timedOut: boolean };
+export interface PdfExit {
+  code: number | null;
+  stdout: string;
+  timedOut: boolean;
+}
 /** Runs a poppler tool on files in a temp folder; rejects (PdfToolError 'failed') only when it cannot start. */
 export type PdfRun = (tool: PopplerTool, args: readonly string[]) => Promise<PdfExit>;
-export type PdfPageImage = { page: number; jpg: Uint8Array };
+export interface PdfPageImage {
+  page: number;
+  jpg: Uint8Array;
+}
 
 /**
  * 'busy': the render queue is full, try again; 'failed': the tool crashed, hung or could not start (not stored);
@@ -33,6 +40,7 @@ const TIMEOUT_MS = z
  * no secrets, no network, read-only root, docs/09 «PDF sandbox»), never in an API copy (pdf-client.ts).
  */
 const AS_BYTES = 256 * 1024 * 1024;
+const SANDBOX = ['-n', '10', 'choom', '-n', '1000', '--', 'prlimit'];
 /** stdout kept per run; a pdfinfo report this long (a padded Title) may have lost its «Pages:» line. */
 const STDOUT_MAX = 64 * 1024;
 /** pdfinfo cannot open the file (1: broken, or a user password) or refuses it (3: permissions): it never previews. */
@@ -48,7 +56,7 @@ const QUEUE_MAX = 8;
  */
 const spawnPoppler: PdfRun = (tool, args) =>
   new Promise((resolve, reject) => {
-    const argv = ['-n', '10', 'choom', '-n', '1000', '--', 'prlimit', `--as=${AS_BYTES}`, '--', tool, ...args];
+    const argv = [...SANDBOX, `--as=${AS_BYTES}`, '--', tool, ...args];
     const child = spawn('/usr/bin/nice', argv, {
       stdio: ['ignore', 'pipe', 'ignore'],
       env: { PATH: '/usr/bin:/bin' },

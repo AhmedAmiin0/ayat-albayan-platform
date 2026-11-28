@@ -7,10 +7,10 @@ import { RECEIPT_FILTERS } from '@/modules/messaging/whatsapp/messages/receipts/
 import { pgError } from '@/common/db/errors';
 
 /** The number a message came in on (messages.number_id → wa_numbers): it decides who can fetch its media. */
-export type MediaNumber = { id: string; provider: string; purpose: NumberPurpose };
+export interface MediaNumber { id: string; provider: string; purpose: NumberPurpose }
 
 /** The columns of an inbound message that carry a file (R-MSG-06). */
-export type MediaMessage = {
+export interface MediaMessage {
   id: string;
   phone_e164: string;
   direction: 'inbound' | 'outbound';
@@ -31,14 +31,14 @@ export type MediaMessage = {
   hidden_at?: string | null;
   /** Meta's message part ({type, [type]: …}); a «sticker» is never a receipt (receiptMime). */
   interactive_payload?: unknown;
-};
+}
 const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, media_refusal, body, media_name, interactive_payload, created_at, line, hidden_at, number:wa_numbers(id, provider, purpose)';
 
 /** The filters `cached` adds (a select or an update on messages). */
-type Filterable<Q> = { eq(column: 'direction', value: string): Q; not(column: string, op: string, value: unknown): Q };
+interface Filterable<Q> { eq(column: 'direction', value: string): Q; not(column: string, op: string, value: unknown): Q }
 
 /** A cached inbound voice note or video, for the 30-day purge (WaMediaRetentionJob); always a Meta media id. */
-export type CachedMedia = { id: string; media_path: string; media_mime: string | null; media_id: string | null };
+export interface CachedMedia { id: string; media_path: string; media_mime: string | null; media_id: string | null }
 /**
  * PostgREST `or`: exactly a PLAYABLE_MIMES base type, bare or with parameters («; codecs=opus»). Not a
  * bare prefix: `audio/mp4*` also matched audio/mp4a-latm, which the job skips and never clears, so a

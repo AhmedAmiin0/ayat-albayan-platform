@@ -4,7 +4,11 @@ import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound
 export const CRM_MEDIA_PREFIX = '/storage/v1/object/public/chat-media/';
 
 /** The columns that tell an imported CRM file (a messages row, or a v_threads last message). */
-type CrmHistoryShape = { direction: string | null; media_mime: string | null; body: string | null };
+interface CrmHistoryShape {
+  direction: string | null;
+  media_mime: string | null;
+  body: string | null;
+}
 
 /**
  * The body as an old-CRM file link, or null: the whole (trimmed) body is ONE https URL in canonical

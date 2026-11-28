@@ -1,7 +1,10 @@
 import { waIdToE164, type CallEvent } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
-import type { CallPermissionReplyEvent, CallWebhookEvent } from '@/modules/messaging/webhook/webhook.events';
+import type {
+  CallPermissionReplyEvent,
+  CallWebhookEvent,
+} from '@/modules/messaging/webhook/webhook.events';
 import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
 import { callingLine, type CallingLine } from '@/modules/messaging/calls/kapso/calling-line';
 import type { CallRow } from '@/modules/messaging/calls/store/call-row';
@@ -23,8 +26,10 @@ const isUuid = (v: string | null): v is string => v !== null && z.uuid().safePar
 /** The machine event a webhook item stands for; null = nothing to do (an inbound offer is handled apart). */
 export function machineEvent(e: CallWebhookEvent): CallEvent | null {
   const at = e.at.toISOString();
-  if (e.kind === 'terminate') return { type: 'terminate', at, failed: e.status === 'FAILED', duration: e.duration };
-  if (e.kind === 'connect') return e.direction === 'outbound' && e.sdp ? { type: 'answer_sdp', sdp: e.sdp } : null;
+  if (e.kind === 'terminate')
+    return { type: 'terminate', at, failed: e.status === 'FAILED', duration: e.duration };
+  if (e.kind === 'connect')
+    return e.direction === 'outbound' && e.sdp ? { type: 'answer_sdp', sdp: e.sdp } : null;
   if (e.status === 'RINGING') return { type: 'ringing' };
   if (e.status === 'ACCEPTED') return { type: 'accepted', at };
   return e.status === 'REJECTED' ? { type: 'rejected', at } : null;
@@ -35,7 +40,11 @@ export function machineEvent(e: CallWebhookEvent): CallEvent | null {
  * but WhatsApp says the call rings, was answered or got its answer: it is still up there, so end it.
  */
 function stillUpOnWhatsapp(row: CallRow, event: CallEvent): boolean {
-  return row.direction === 'outbound' && row.status === 'ended' && ['ringing', 'accepted', 'answer_sdp'].includes(event.type);
+  return (
+    row.direction === 'outbound' &&
+    row.status === 'ended' &&
+    ['ringing', 'accepted', 'answer_sdp'].includes(event.type)
+  );
 }
 
 /**
@@ -89,14 +98,19 @@ export class CallEvents implements CallEventsPort {
 
   /** Best effort, never a connect: a terminate is not billed. */
   private async terminate(line: CallingLine, waCallId: string): Promise<void> {
-    await this.kit.api.terminate(line, waCallId).catch((err: unknown) => logCallError(this.log, { what: 'stray call terminate', callId: waCallId, error: err }));
+    await this.kit.api
+      .terminate(line, waCallId)
+      .catch((err: unknown) =>
+        logCallError(this.log, { what: 'stray call terminate', callId: waCallId, error: err }),
+      );
   }
 
   /** Our outbound call by its biz_opaque_callback_data (our id), else any call by its wacid. */
   private async find(e: CallWebhookEvent): Promise<CallRow | null> {
     if (isUuid(e.ref)) {
       const own = await this.kit.queries.get(e.ref);
-      if (own?.direction === 'outbound' && (!own.wa_call_id || own.wa_call_id === e.waCallId)) return own;
+      if (own?.direction === 'outbound' && (!own.wa_call_id || own.wa_call_id === e.waCallId))
+        return own;
     }
     return this.kit.queries.byWaCallId(e.waCallId);
   }
@@ -105,7 +119,10 @@ export class CallEvents implements CallEventsPort {
     if (!(await this.gate.enabled()) || !e.sdp) return;
     if (await this.kit.queries.byWaCallId(e.waCallId)) return;
     const phone = e.peer ? waIdToE164(e.peer) : null;
-    if (!phone) return this.log.warn(`call ${e.waCallId}: the caller's wa_id is not a phone`);
+    if (!phone) {
+      this.log.warn(`call ${e.waCallId}: the caller's wa_id is not a phone`);
+      return;
+    }
     const thread = await this.kit.threads.thread(phone);
     await this.kit.queries.insert({
       ...{

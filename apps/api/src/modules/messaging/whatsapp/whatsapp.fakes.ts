@@ -77,7 +77,7 @@ export const RECORDED = {
   read: { status: 200, body: { success: true } },
 } as const;
 
-export type Recorded = { status: number; body: unknown };
+export interface Recorded { status: number; body: unknown }
 
 /** A fetch that answers from a script and records every request. */
 export function scriptedFetch(...replies: (Recorded | Error)[]) {

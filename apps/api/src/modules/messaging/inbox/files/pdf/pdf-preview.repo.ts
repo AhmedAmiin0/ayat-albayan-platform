@@ -3,7 +3,10 @@ import { DB, type Db } from '@/common/db/db.module';
 import { pgError } from '@/common/db/errors';
 
 /** What pdfinfo said about a message's PDF: its page count (0 = no preview) and its size in bytes. */
-export type PdfDoc = { pages: number; bytes: number };
+export interface PdfDoc {
+  pages: number;
+  bytes: number;
+}
 
 /**
  * messages.media_pages / media_bytes (migration 20261030000982), read and written only here: the shared
@@ -16,7 +19,11 @@ export class PdfPreviewRepo {
 
   /** null = not probed yet. */
   async doc(id: string): Promise<PdfDoc | null> {
-    const { data, error } = await this.db.from('messages').select('media_pages, media_bytes').eq('id', id).maybeSingle();
+    const { data, error } = await this.db
+      .from('messages')
+      .select('media_pages, media_bytes')
+      .eq('id', id)
+      .maybeSingle();
     if (error) throw pgError(error);
     if (data?.media_pages == null) return null;
     return { pages: data.media_pages, bytes: data.media_bytes ?? 0 };

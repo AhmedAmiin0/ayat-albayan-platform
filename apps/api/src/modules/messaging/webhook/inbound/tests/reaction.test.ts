@@ -7,7 +7,12 @@ import { InboundReactions } from '@/modules/messaging/webhook/inbound/webhook.re
 const FAMILY = '+966501234567';
 const OTHER = '+966501234568';
 
-type Row = { id: string; wa_message_id: string; phone_e164: string; their_reaction: string | null };
+interface Row {
+  id: string;
+  wa_message_id: string;
+  phone_e164: string;
+  their_reaction: string | null;
+}
 
 /** messages.update(patch).eq(…).eq(…).select('id') over rows in memory; `fail` = the DB answers an error. */
 function fakeDb(rows: Row[], fail = false): Db {
@@ -30,7 +35,15 @@ function fakeDb(rows: Row[], fail = false): Db {
 }
 
 const reaction = (emoji: string | undefined, target = 'wamid.OUT1') =>
-  event({ waMessageId: 'wamid.R1', type: 'reaction', body: null, payload: { type: 'reaction', reaction: { message_id: target, ...(emoji === undefined ? {} : { emoji }) } } });
+  event({
+    waMessageId: 'wamid.R1',
+    type: 'reaction',
+    body: null,
+    payload: {
+      type: 'reaction',
+      reaction: { message_id: target, ...(emoji === undefined ? {} : { emoji }) },
+    },
+  });
 
 const seeded = (): Row[] => [
   { id: 'm1', wa_message_id: 'wamid.OUT1', phone_e164: FAMILY, their_reaction: null },

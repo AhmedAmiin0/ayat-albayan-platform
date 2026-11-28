@@ -8,7 +8,7 @@ import { httpError } from '@/common/http/errors';
 // What every registry action checks first (docs/12 §3.4, §13.9), out of template.registry.ts (150-line cap).
 
 /** Read per call, so tests can vi.stubEnv it. */
-export const syncOn = (): boolean => loadEnv().WA_TEMPLATE_SYNC !== false;
+export const syncOn = (): boolean => loadEnv().WA_TEMPLATE_SYNC;
 
 /** WA_TEMPLATE_SYNC=false (docs/12 §13.9): staging on Meta TEST credentials must not touch the registry. */
 export function requireSync(): void {
@@ -24,7 +24,10 @@ export function requireLine(client: WhatsappClient, line: WaLine): void {
 export const onCrm = (line: WaLine): boolean => lineProvider(loadEnv(), line) === 'crm';
 
 /** One line as env names it: ids only, no Graph call; `configured` is its client's. */
-export function lineFacts(line: WaLine, client: Pick<WhatsappClient, 'configured'>): TemplateLineFacts {
+export function lineFacts(
+  line: WaLine,
+  client: Pick<WhatsappClient, 'configured'>,
+): TemplateLineFacts {
   const env = loadEnv();
   const ids = lineEnvs(env)[line];
   // A crm line has no ids of ours: the number and its WABA are the CRM's (docs/19).
@@ -48,7 +51,11 @@ export async function fromMeta<T>(call: () => Promise<T>): Promise<T> {
   }
 }
 
-interface ErrorBody { code: string; meta_message?: unknown; scope?: unknown }
+interface ErrorBody {
+  code: string;
+  meta_message?: unknown;
+  scope?: unknown;
+}
 
 /**
  * A failed list read as a line's error: the same code (and Meta's message, or the missing scope)

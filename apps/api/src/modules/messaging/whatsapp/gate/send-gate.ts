@@ -1,7 +1,13 @@
 import type { SendGateView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv, type Env } from '@/config/env/env';
+import {
+  allowedRecipients,
+  loadEnv,
+  sendingAllowed,
+  whatsappEnv,
+  type Env,
+} from '@/config/env/env';
 import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
 
 /**
@@ -57,7 +63,7 @@ export class SendGate {
   /** Which gate is closed, for the admin: WhatsApp config, or their own switch. */
   async state(): Promise<Omit<SendGateView, 'queued'>> {
     if (!whatsappEnv(this.env)) return { open: false, reason: 'not_configured' };
-    const on = (await this.settings.read()).messaging_enabled === true;
+    const on = (await this.settings.read()).messaging_enabled;
     return on ? { open: true, reason: null } : { open: false, reason: 'switch_off' };
   }
 

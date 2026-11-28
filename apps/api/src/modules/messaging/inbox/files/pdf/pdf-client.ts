@@ -10,7 +10,10 @@ import { PDF_SOCKET, readCapped } from './pdf-wire';
 // tests, CI) is PdfToolError('unavailable'), a 503 pdf_unavailable.
 
 /** `socket`: tests listen on a temp path; `timeoutMs`: tests wait less. */
-type SandboxOpts = { socket?: string; timeoutMs?: number };
+interface SandboxOpts {
+  socket?: string;
+  timeoutMs?: number;
+}
 
 /** Whole call, queue included: the other copy's 20 s render ahead of ours, then our own 20 s, plus transfer. */
 const TIMEOUT_MS = 45_000;
@@ -82,7 +85,12 @@ async function call(input: {
   }
 }
 
-type Post = { socketPath: string; path: string; bytes: Uint8Array; timeoutMs: number };
+interface Post {
+  socketPath: string;
+  path: string;
+  bytes: Uint8Array;
+  timeoutMs: number;
+}
 
 /** One POST on a fresh connection, aborted as a whole after `timeoutMs` (a slow trickle cannot hold it). */
 function post(input: Post): Promise<{ status: number; body: Buffer | null }> {

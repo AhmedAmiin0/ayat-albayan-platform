@@ -11,14 +11,16 @@ import { PDF_SOCKET, readCapped } from './pdf-wire';
 
 type Op = { op: 'pages' } | { op: 'render'; range: PageRange };
 
-const int = (s: string | null): number | null => (s !== null && /^\d{1,6}$/.test(s) ? Number(s) : null);
+const int = (s: string | null): number | null =>
+  s !== null && /^\d{1,6}$/.test(s) ? Number(s) : null;
 
 /** POST /pages, or POST /render?first=&last= with 1 ≤ first ≤ last < first + PDF_RUN; anything else is null. */
 export function parseOp(method: string | undefined, url: string | undefined): Op | null {
   const u = method === 'POST' && url ? URL.parse(url, 'http://pdf') : null;
   if (!u) return null;
   if (u.pathname === '/pages' && !u.search) return { op: 'pages' };
-  if (u.pathname !== '/render' || [...u.searchParams.keys()].sort().join() !== 'first,last') return null;
+  if (u.pathname !== '/render' || [...u.searchParams.keys()].sort().join() !== 'first,last')
+    return null;
   const first = int(u.searchParams.get('first'));
   const last = int(u.searchParams.get('last'));
   if (first === null || last === null || first < 1 || last < first || last - first >= PDF_RUN)
@@ -30,7 +32,9 @@ export function parseOp(method: string | undefined, url: string | undefined): Op
 function send(res: ServerResponse, status: number, body: unknown): void {
   const answer = () => {
     if (res.headersSent || res.destroyed) return;
-    res.writeHead(status, { 'content-type': 'application/json', connection: 'close' }).end(JSON.stringify(body));
+    res
+      .writeHead(status, { 'content-type': 'application/json', connection: 'close' })
+      .end(JSON.stringify(body));
   };
   if (res.req.complete) answer();
   else res.req.once('end', answer).resume();
@@ -39,16 +43,27 @@ function send(res: ServerResponse, status: number, body: unknown): void {
 async function run(op: Op, bytes: Uint8Array): Promise<unknown> {
   if (op.op === 'pages') return { pages: await pdfPageCount(bytes) };
   const images = await renderPdfPages(bytes, op.range);
-  return { images: images.map((i) => ({ page: i.page, jpg: Buffer.from(i.jpg).toString('base64') })) };
+  return {
+    images: images.map((i) => ({ page: i.page, jpg: Buffer.from(i.jpg).toString('base64') })),
+  };
 }
 
 /** 200 the answer; 400 an unknown request; 413 no or too big a Content-Length; 503 queue full; 500 poppler failed. */
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
-  if (req.method === 'GET' && req.url === '/health') return send(res, 200, { ok: true });
+  if (req.method === 'GET' && req.url === '/health') {
+    send(res, 200, { ok: true });
+    return;
+  }
   const op = parseOp(req.method, req.url);
-  if (!op) return send(res, 400, { error: 'bad_request' });
+  if (!op) {
+    send(res, 400, { error: 'bad_request' });
+    return;
+  }
   const length = Number(req.headers['content-length']);
-  if (!(length >= 1 && length <= INVOICE_MAX_BYTES)) return send(res, 413, { error: 'too_large' });
+  if (!(length >= 1 && length <= INVOICE_MAX_BYTES)) {
+    send(res, 413, { error: 'too_large' });
+    return;
+  }
   try {
     const out = await inSlot(async () => {
       // The body is read only here, so the PDFs waiting stay in their senders, not in this container's memory.

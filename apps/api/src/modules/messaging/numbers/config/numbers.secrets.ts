@@ -19,21 +19,33 @@ export class NumbersSecrets {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async set(target: SecretTarget, value: string): Promise<void> {
-    const { error } = await this.db.rpc('wa_number_secret_set', { p_id: target.id, p_name: target.name, p_value: value });
+    const { error } = await this.db.rpc('wa_number_secret_set', {
+      p_id: target.id,
+      p_name: target.name,
+      p_value: value,
+    });
     if (error) throw new Error(`number secret ${target.name} not saved: ${error.code ?? 'error'}`);
   }
 
   async clear(target: SecretTarget): Promise<boolean> {
-    const { data, error } = await this.db.rpc('wa_number_secret_clear', { p_id: target.id, p_name: target.name });
-    if (error) throw new Error(`number secret ${target.name} not cleared: ${error.code ?? 'error'}`);
-    return data === true;
+    const { data, error } = await this.db.rpc('wa_number_secret_clear', {
+      p_id: target.id,
+      p_name: target.name,
+    });
+    if (error)
+      throw new Error(`number secret ${target.name} not cleared: ${error.code ?? 'error'}`);
+    return data;
   }
 
   /** The import: legacy Vault secret `key` → this number, inside the database. false = no legacy secret. */
   async copy(target: SecretTarget, key: string): Promise<boolean> {
-    const { data, error } = await this.db.rpc('wa_number_secret_copy', { p_id: target.id, p_name: target.name, p_key: key });
+    const { data, error } = await this.db.rpc('wa_number_secret_copy', {
+      p_id: target.id,
+      p_name: target.name,
+      p_key: key,
+    });
     if (error) throw new Error(`number secret ${target.name} not copied: ${error.code ?? 'error'}`);
-    return data === true;
+    return data;
   }
 
   /** number id → secret name → when it was set (no values). */

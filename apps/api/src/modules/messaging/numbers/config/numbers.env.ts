@@ -2,12 +2,7 @@ import type { NumberSecretName } from '@ab/shared';
 import { isWaLine, type WaLine } from '@ab/catalog';
 import type { CallsNumber } from '@/common/configuration/integrations/calls-number';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
-import {
-  validOverlay,
-  type Env,
-  type KapsoLineEnv,
-  type WhatsappEnv,
-} from '@/config/env/env';
+import { validOverlay, type Env, type KapsoLineEnv, type WhatsappEnv } from '@/config/env/env';
 import { evolutionEnv, evolutionTokenOf } from './numbers.env.evolution';
 import { ROLE_KEYS } from '@/modules/messaging/numbers/lines/numbers.lines';
 import type { NumberRow } from '@/modules/messaging/numbers/numbers.repo';
@@ -59,10 +54,15 @@ export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
   const wabaId = v[k.waba_id];
   if (!phoneNumberId || !wabaId) return null;
   const ids = { phoneNumberId, wabaId };
-  return v[k.provider] === 'kapso' ? kapsoEnv(ids, env) : metaEnv({ ids, token: v[k.access_token], appId: v[k.app_id] }, env);
+  return v[k.provider] === 'kapso'
+    ? kapsoEnv(ids, env)
+    : metaEnv({ ids, token: v[k.access_token], appId: v[k.app_id] }, env);
 }
 
-type Ids = { phoneNumberId: string; wabaId: string };
+interface Ids {
+  phoneNumberId: string;
+  wabaId: string;
+}
 
 /** The drivers whose number config is not Graph ids + a credential. */
 const OWN_ENV: Partial<Record<string, (s: NumberSource, env: Env) => WhatsappEnv | null>> = {

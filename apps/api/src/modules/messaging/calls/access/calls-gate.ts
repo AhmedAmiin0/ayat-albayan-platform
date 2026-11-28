@@ -21,7 +21,7 @@ export class CallsGate {
   ) {}
 
   async enabled(): Promise<boolean> {
-    return (await this.settings.read()).whatsapp_calls_enabled === true;
+    return (await this.settings.read()).whatsapp_calls_enabled;
   }
 
   async assertOn(): Promise<void> {
@@ -47,11 +47,16 @@ export class CallsGate {
   /** The calls number, else the chat line on Kapso, or 503 calls_unavailable. */
   line(): CallingLine {
     const line = callingLine();
-    if (!line) throw new ServiceUnavailableException({ code: 'calls_unavailable', message: 'calls_unavailable' });
+    if (!line)
+      throw new ServiceUnavailableException({
+        code: 'calls_unavailable',
+        message: 'calls_unavailable',
+      });
     return line;
   }
 
   assertRecipient(phone: string): void {
-    if (!recipientAllowed(allowedRecipients(loadEnv()), phone)) throw forbidden('recipient_not_allowed');
+    if (!recipientAllowed(allowedRecipients(loadEnv()), phone))
+      throw forbidden('recipient_not_allowed');
   }
 }

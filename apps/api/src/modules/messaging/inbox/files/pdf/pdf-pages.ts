@@ -8,7 +8,10 @@ export const PDF_RUN = 5;
 /** A crafted «Pages: 99999999999» is stored as this many: never a column overflow, a 500 and a probe per view. */
 const PDF_PAGES_MAX = 100_000;
 
-export type PageRange = { first: number; last: number };
+export interface PageRange {
+  first: number;
+  last: number;
+}
 
 /** Page 1 alone (the bubble's thumb), else the run of PDF_RUN it falls in, cut at the page count and PDF_PREVIEW_PAGES. */
 export function pageRange(page: number, pages: number): PageRange {
@@ -33,7 +36,19 @@ export function pdfinfoPages(stdout: string): number {
  */
 export function pdftoppmArgs(input: { pdf: string; outRoot: string; range: PageRange }): string[] {
   const { first, last } = input.range;
-  return ['-jpeg', '-jpegopt', 'quality=70', '-scale-to', '1600', '-f', String(first), '-l', String(last), input.pdf, input.outRoot];
+  return [
+    '-jpeg',
+    '-jpegopt',
+    'quality=70',
+    '-scale-to',
+    '1600',
+    '-f',
+    String(first),
+    '-l',
+    String(last),
+    input.pdf,
+    input.outRoot,
+  ];
 }
 
 /** «p-07.jpg» → 7: pdftoppm pads the number to the digits of the page count, so names are parsed, never built. */

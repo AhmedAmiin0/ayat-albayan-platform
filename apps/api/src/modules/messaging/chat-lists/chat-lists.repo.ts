@@ -12,12 +12,12 @@ export interface ListName {
   name_key: string;
 }
 
-type CountedRow = {
+interface CountedRow {
   id: string;
   name: string;
   auto_rule: string | null;
   members: { count: number }[];
-};
+}
 
 const COUNTED = 'id, name, auto_rule, members:chat_list_threads(count)' as const;
 
@@ -46,25 +46,39 @@ export class ChatListsRepo {
 
   /** Every list, oldest first, with its member count. */
   async all(): Promise<ChatList[]> {
-    const { data, error } = await this.db.from('chat_lists').select(COUNTED).order('created_at').order('id');
+    const { data, error } = await this.db
+      .from('chat_lists')
+      .select(COUNTED)
+      .order('created_at')
+      .order('id');
     check(error);
     return (data ?? []).map(counted);
   }
 
   async one(id: string): Promise<ChatList | null> {
-    const { data, error } = await this.db.from('chat_lists').select(COUNTED).eq('id', id).maybeSingle();
+    const { data, error } = await this.db
+      .from('chat_lists')
+      .select(COUNTED)
+      .eq('id', id)
+      .maybeSingle();
     check(error);
     return data ? counted(data) : null;
   }
 
   async count(): Promise<number> {
-    const { count, error } = await this.db.from('chat_lists').select('id', { count: 'exact', head: true });
+    const { count, error } = await this.db
+      .from('chat_lists')
+      .select('id', { count: 'exact', head: true });
     check(error);
     return count ?? 0;
   }
 
   async create(row: ListName & { created_by: string }): Promise<ChatList | ListClash> {
-    const { data, error } = await this.db.from('chat_lists').insert(row).select('id, name').single();
+    const { data, error } = await this.db
+      .from('chat_lists')
+      .insert(row)
+      .select('id, name')
+      .single();
     const clash = clashOf(error);
     if (clash) return clash;
     check(error);
@@ -89,7 +103,9 @@ export class ChatListsRepo {
   /** Adding twice is a no-op. `gone` = the list was deleted meanwhile (23503: its FK), not a 500. */
   async add(input: { listId: string; phone: string; by: string }): Promise<'added' | 'gone'> {
     const row = { list_id: input.listId, phone_e164: input.phone, added_by: input.by };
-    const { error } = await this.db.from('chat_list_threads').upsert(row, { onConflict: 'list_id,phone_e164', ignoreDuplicates: true });
+    const { error } = await this.db
+      .from('chat_list_threads')
+      .upsert(row, { onConflict: 'list_id,phone_e164', ignoreDuplicates: true });
     if (error?.code === '23503') return 'gone';
     check(error);
     return 'added';
@@ -97,7 +113,11 @@ export class ChatListsRepo {
 
   /** Removing a non-member is a no-op. */
   async drop(listId: string, phone: string): Promise<void> {
-    const { error } = await this.db.from('chat_list_threads').delete().eq('list_id', listId).eq('phone_e164', phone);
+    const { error } = await this.db
+      .from('chat_list_threads')
+      .delete()
+      .eq('list_id', listId)
+      .eq('phone_e164', phone);
     check(error);
   }
 

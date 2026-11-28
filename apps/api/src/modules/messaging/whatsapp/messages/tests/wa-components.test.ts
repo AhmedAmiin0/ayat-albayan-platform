@@ -114,20 +114,20 @@ describe('submitPayload — a registry row as Meta creates it (docs/12 §3.4)', 
 
   it('a dynamic URL button gets a sample link; no footer, no examples when there is nothing to fill', () => {
     const row = templateRow({ footer_ar: null, params: [], body_ar: 'نص ثابت', buttons: [{ type: 'url', url: 'https://meet.google.com/{{1}}', text: 'ادخل' }] });
-    expect(submitPayload(row)['components']).toEqual([
+    expect(submitPayload(row).components).toEqual([
       { type: 'BODY', text: 'نص ثابت' },
       { type: 'BUTTONS', buttons: [{ type: 'URL', text: 'ادخل', url: 'https://meet.google.com/{{1}}', example: ['https://meet.google.com/sample'] }] },
     ]);
   });
 
   it('a document header comes first with the uploaded sample’s handle; without a handle it never builds', () => {
-    expect(submitPayload(REPORT_READY, '4::h1')['components']).toEqual([
+    expect(submitPayload(REPORT_READY, '4::h1').components).toEqual([
       { type: 'HEADER', format: 'DOCUMENT', example: { header_handle: ['4::h1'] } },
       { type: 'BODY', text: REPORT_READY.body_ar, example: { body_text: [['أحمد', 'الأحد 4 أكتوبر 17:00']] } },
       { type: 'FOOTER', text: 'أكاديمية آيات البيان' },
     ]);
     expect(() => submitPayload(REPORT_READY)).toThrow(WaError);
-    expect(submitPayload(REMINDER_24H, '4::h1')['components']).not.toContainEqual(expect.objectContaining({ type: 'HEADER' }));
+    expect(submitPayload(REMINDER_24H, '4::h1').components).not.toContainEqual(expect.objectContaining({ type: 'HEADER' }));
   });
 
   it('a text header (display.header, an admin-made template) goes before BODY; never beside a document one', () => {

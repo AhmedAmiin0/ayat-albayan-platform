@@ -6,7 +6,11 @@ export interface ReadMark {
   line: WaLine;
 }
 
-type InboundRead = { wa_message_id: string | null; created_at: string; line: WaLine | null };
+interface InboundRead {
+  wa_message_id: string | null;
+  created_at: string;
+  line: WaLine | null;
+}
 
 /**
  * The newest unread inbound per line. A wamid only works with the receiving line's token, so each

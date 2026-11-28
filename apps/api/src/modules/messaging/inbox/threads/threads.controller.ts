@@ -82,7 +82,7 @@ export class ThreadsController {
     @Query() query: Record<string, unknown> | undefined,
     @CurrentUser() user: AuthUser,
   ) {
-    if (query?.['after'] !== undefined)
+    if (query?.after !== undefined)
       return this.reads.delta({ phone, ...parseOrThrow(deltaQuery, query) }, user);
     return this.reads.detail({ phone, ...parseOrThrow(onePage, query) }, user);
   }

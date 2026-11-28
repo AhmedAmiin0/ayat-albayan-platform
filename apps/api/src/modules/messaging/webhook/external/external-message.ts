@@ -49,7 +49,8 @@ export function messageTime(ts: string | null): Date | null {
 }
 
 /** The text parameters of one template component, in order. */
-const texts = (c: unknown): string[] => list(get(c, 'parameters')).map((p) => field(p, 'text') ?? field(p, 'payload') ?? '');
+const texts = (c: unknown): string[] =>
+  list(get(c, 'parameters')).map((p) => field(p, 'text') ?? field(p, 'payload') ?? '');
 
 /** Body parameters as «1», «2», …; the first button's parameter as «button». */
 export function templateParams(components: unknown): Record<string, string> | null {
@@ -59,7 +60,7 @@ export function templateParams(components: unknown): Record<string, string> | nu
   texts(body).forEach((t, i) => (out[String(i + 1)] = t));
   const button = parts.find((c) => field(c, 'type')?.toLowerCase() === 'button');
   const tap = texts(button)[0];
-  if (tap) out['button'] = tap;
+  if (tap) out.button = tap;
   return Object.keys(out).length > 0 ? out : null;
 }
 

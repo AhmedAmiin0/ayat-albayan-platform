@@ -73,7 +73,11 @@ interface BadgeStudentRow {
 }
 
 /** Absent ring means none. */
-export type FamilyTag = { badge: SubscriptionBadge; unpaid: boolean; ring?: FamilyRing | null };
+export interface FamilyTag {
+  badge: SubscriptionBadge;
+  unpaid: boolean;
+  ring?: FamilyRing | null;
+}
 
 /**
  * The chat's people → the same tags the list computes (subscriptionBadge, familyUnpaid, familyRing
