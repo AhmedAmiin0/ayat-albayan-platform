@@ -11,3 +11,5 @@ export const TONE: Readonly<Record<StepState, { fill: keyof Palette; ink: keyof 
 export const CHECK = 'm5 12.5 4.5 4.5L19 7';
 
 export const CLOCK = 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3 2';
+
+export const GLYPH = { done: CHECK, current: CLOCK } as const;
