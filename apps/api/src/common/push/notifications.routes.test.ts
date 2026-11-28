@@ -12,10 +12,11 @@ describe('the bell and browser push handlers: served from their route objects', 
     ]);
   });
 
-  it('serves the browser key and removal from webPushRoutes', () => {
-    const { key, unsubscribe } = WebPushController.prototype;
-    expect([routeOf(key), routeOf(unsubscribe)]).toEqual([
+  it('serves the browser key, registration and removal from webPushRoutes', () => {
+    const { key, subscribe, unsubscribe } = WebPushController.prototype;
+    expect([routeOf(key), routeOf(subscribe), routeOf(unsubscribe)]).toEqual([
       webPushRoutes.key,
+      webPushRoutes.subscribe,
       webPushRoutes.unsubscribe,
     ]);
   });
