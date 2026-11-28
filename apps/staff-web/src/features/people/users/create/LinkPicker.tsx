@@ -6,6 +6,8 @@ import { useDebounced } from '@/features/finance/pricing/use-debounced';
 import { candidatesQuery } from '@/features/people/users/api';
 
 const L = t.users.link;
+/** Like StudentPicker: a short list that fits the dialog body without its own scroll. */
+const SHOWN = 6;
 
 export interface LinkPickerProps {
   kind: LinkKind;
@@ -47,7 +49,7 @@ export function LinkPicker({ kind, value, onChange, error, locked }: LinkPickerP
       </div>
     );
   }
-  const items = found.data ?? [];
+  const items = (found.data ?? []).slice(0, SHOWN);
   return (
     <div className="grid gap-2">
       <Field label={L.label} required error={error} hint={L.hint}>
@@ -56,7 +58,7 @@ export function LinkPicker({ kind, value, onChange, error, locked }: LinkPickerP
       {found.isPending && <p className="text-xs text-ink-3">{L.searching}</p>}
       {found.data && items.length === 0 && <p className="text-xs text-ink-3">{L.empty}</p>}
       {items.length > 0 && (
-        <ul className="grid max-h-56 gap-1 overflow-y-auto">
+        <ul className="grid gap-1">
           {items.map((c) => (
             <li key={c.id}>
               <button
