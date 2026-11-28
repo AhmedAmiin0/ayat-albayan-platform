@@ -1,11 +1,10 @@
 import type { PaymentView } from '@ab/money';
 import { ActivityIndicator } from 'react-native';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';
+import { EmptyState, ErrorState, LazyList, t, useTheme } from '@ab/mobile-kit';
 import { PaymentItem } from '@/money/payments/PaymentItem';
 import { PaymentTotals } from '@/money/payments/PaymentTotals';
 import { periodTotals } from '@/money/shared/queries';
-import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (p: PaymentView) => p.id;
 // Keyed by the payment: its receipt viewers hold state that a recycled row must not carry over.

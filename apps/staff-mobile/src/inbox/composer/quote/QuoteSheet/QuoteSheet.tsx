@@ -8,6 +8,7 @@ import { appendComposerText } from '@/inbox/composer/draft-store';
 import { QuoteActions } from '@/inbox/composer/quote/QuoteActions';
 import { useQuoteSend, useQuoteSheet } from '@/inbox/composer/quote/use-quote-sheet';
 import { QuoteChoices } from './QuoteChoices';
+import { QuotePdf } from './QuotePdf';
 import { QuotePreview } from './QuotePreview';
 import type { QuoteSheetProps } from './QuoteSheet.types';
 
@@ -59,6 +60,9 @@ export function QuoteSheet({ phone, open, onClose }: QuoteSheetProps) {
           onEdit={edit}
           onCopy={() => text && void copyOrShare(text).then(setCopied)}
         />
+        {sheet.mode === 'all' ? (
+          <QuotePdf phone={phone} choice={sheet.listChoice} open={open} onSent={onClose} />
+        ) : null}
       </ScrollView>
     </ReplySheetFrame>
   );
