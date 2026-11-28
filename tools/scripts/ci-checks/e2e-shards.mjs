@@ -1,11 +1,13 @@
-// e2e shard sizes for ci.yml. Playwright's --shard cuts its ordered (project, file) groups into equal TEST
-// COUNTS, so one shard took 10 min and another 6. This keeps Playwright's own order and contiguous cuts
-// (the specs share one database per shard, so a different neighbour can change a result) and only moves
-// the cut points so that every shard costs about the same measured time. The result is the value of
-// PWTEST_SHARD_WEIGHTS (Playwright 1.63 reads it as the shard sizes); without it, equal counts as before.
-// Usage: node tools/scripts/e2e-shards.mjs weights <total> <groups.json>  groups = E2E_GROUPS_FILE of a --list run
+// e2e shard sizes for ci.yml. Playwright's --shard cuts its ordered (project, file) groups into
+// equal TEST COUNTS, so one shard took 10 min and another 6. This keeps Playwright's own order and
+// contiguous cuts (the specs share one database per shard, so a different neighbour can change a
+// result) and only moves the cut points so that every shard costs about the same measured time. The
+// result is the value of PWTEST_SHARD_WEIGHTS (Playwright 1.63 reads it as the shard sizes);
+// without it, equal counts as before. Usage: node tools/scripts/e2e-shards.mjs weights <total>
+// <groups.json> groups = E2E_GROUPS_FILE of a --list run
 //        node tools/scripts/e2e-shards.mjs merge <durations-*.json…>    new e2e/shard-durations.json on stdout
-// The durations-*.json files come from e2e/support/durations-reporter.ts (CI artifacts «e2e-durations-*»).
+// The durations-*.json files come from e2e/support/durations-reporter.ts (CI artifacts
+// «e2e-durations-*»).
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -42,7 +44,8 @@ export function shardSizes(groups, ms, total) {
   const n = groups.length;
   const pre = [0];
   for (let i = 0; i < n; i++) pre.push(pre[i] + ms[i]);
-  // best[k][i] = slowest shard when the first i groups go to k shards; cut[k][i] = start of the last one.
+  // best[k][i] = slowest shard when the first i groups go to k shards; cut[k][i] = start of the
+  // last one.
   const best = Array.from({ length: total + 1 }, () => new Array(n + 1).fill(Infinity));
   const cut = Array.from({ length: total + 1 }, () => new Array(n + 1).fill(0));
   best[0][0] = 0;
@@ -74,7 +77,9 @@ function addPart(out, part) {
   }
 }
 
-/** Sums several shard outputs (each file ran on one shard) into one { file: { project: ms } } map. */
+/**
+ * Sums several shard outputs (each file ran on one shard) into one { file: { project: ms } } map.
+ */
 export function mergeDurations(parts) {
   const out = {};
   for (const part of parts) addPart(out, part);

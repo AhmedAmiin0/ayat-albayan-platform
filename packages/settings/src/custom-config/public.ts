@@ -7,7 +7,9 @@ interface CustomRow {
   is_public: boolean;
 }
 
-/** The public custom entries by key; a private row, or one shadowing a registry setting, is dropped. */
+/**
+ * The public custom entries by key; a private row, or one shadowing a registry setting, is dropped.
+ */
 export function publicCustom(rows: readonly CustomRow[]): Record<string, Json> {
   return Object.fromEntries(
     rows.filter((r) => r.is_public && !isSettingKey(r.key)).map((r) => [r.key, r.value]),

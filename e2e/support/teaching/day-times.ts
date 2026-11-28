@@ -51,7 +51,10 @@ const timing = (at: number, time: string) => ({
 
 interface PayloadOptions { requestId: string | null; siblings: boolean; invoice: boolean }
 
-/** A package booking of both children: a weekly 17:00 first rule, optionally a 19:30 sibling two days later. */
+/**
+ * A package booking of both children: a weekly 17:00 first rule, optionally a 19:30 sibling two
+ * days later.
+ */
 export function dayTimesPayload(s: DaySeed, o: PayloadOptions) {
   return {
     rule: { ...timing(BASE, '17:00'), teacher_id: s.teacher, client_request_id: o.requestId },

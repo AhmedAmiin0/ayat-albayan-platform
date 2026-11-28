@@ -1,8 +1,8 @@
 import type { StudentStatus } from '@ab/catalog';
 
-// Student statuses (docs/03 R-STU-05, docs/11 §7): the pure rules of the automatic
-// transitions. The API applies them compare-and-set on the expected from-status and audits each move;
-// a status the admin sets by hand is never a from-status these rules expect, so it wins.
+// Student statuses (docs/03 R-STU-05, docs/11 §7): the pure rules of the automatic transitions. The
+// API applies them compare-and-set on the expected from-status and audits each move; a status the
+// admin sets by hand is never a from-status these rules expect, so it wins.
 
 /** No payment yet: the trial list kind, trial chat rules and not-yet-subscribed checks. */
 export const NOT_SUBSCRIBED_STATUSES = [
@@ -17,7 +17,9 @@ export const PACKAGE_ENDED_STATUSES = [
   'expired',
 ] as const satisfies readonly StudentStatus[];
 
-/** What a positive payment moves to `active` (StudentActivation); paused / churned / active never. */
+/**
+ * What a positive payment moves to `active` (StudentActivation); paused / churned / active never.
+ */
 export const ACTIVATING_STATUSES = [...NOT_SUBSCRIBED_STATUSES, ...PACKAGE_ENDED_STATUSES] as const;
 
 const among = (list: readonly StudentStatus[], s: StudentStatus | null | undefined): boolean =>
@@ -61,16 +63,19 @@ export interface TrialFacts {
   open: boolean;
   /** A trial lesson the student attended (completed or late, not absent / excused on it). */
   attended: boolean;
-  /** A positive payment exists (read only when attended): a paying student never waits for a subscription. */
+  /**
+   * A positive payment exists (read only when attended): a paying student never waits for a
+   * subscription.
+   */
   paid: boolean;
 }
 
 /**
- * Transitions 2–3: booking, attending or losing the trial lesson. Only from new / trial: new with an
- * open trial → trial (an open one keeps a trial student in trial, even after an older attended one);
- * attended and nothing open → pending_subscription; trial with neither an open nor an attended
- * trial lesson (no_show, excused, cancelled and nothing else booked) → new. Anything else: null.
- * Attended but already paid: no move; the payment rules own that student.
+ * Transitions 2–3: booking, attending or losing the trial lesson. Only from new / trial: new with
+ * an open trial → trial (an open one keeps a trial student in trial, even after an older attended
+ * one); attended and nothing open → pending_subscription; trial with neither an open nor an
+ * attended trial lesson (no_show, excused, cancelled and nothing else booked) → new. Anything else:
+ * null. Attended but already paid: no move; the payment rules own that student.
  */
 export function trialMove(current: StudentStatus, facts: TrialFacts): StatusMovePlan | null {
   if (current !== 'new' && current !== 'trial') return null;
@@ -90,7 +95,10 @@ export function paymentMove(current: StudentStatus): StatusMovePlan | null {
 
 export interface StatusExpiryInput {
   current: StudentStatus;
-  /** When the student became pending_renewal (its status_change audit row, or the expiry clock start), ISO UTC. */
+  /**
+   * When the student became pending_renewal (its status_change audit row, or the expiry clock
+   * start), ISO UTC.
+   */
   since: string | null;
   now: Date;
   /** settings.subscription_expiry_days (1..90). */
@@ -111,7 +119,8 @@ export function expiryMove(input: StatusExpiryInput): StatusMovePlan | null {
 
 /**
  * Transition 4, undone: the payment that activated the student is deleted. Back to the from-status
- * recorded in that payment's audit row, only while the student is still in the status it set (active).
+ * recorded in that payment's audit row, only while the student is still in the status it set
+ * (active).
  */
 export function revertMove(
   current: StudentStatus,

@@ -32,8 +32,8 @@ export interface SalesTeacherView extends TeacherStudentCounts {
   /** teachers.meeting_link, null when unset; render it only when http(s). */
   meeting_link: string | null;
   /**
-   * usesPlatform(teachers.meeting_mode, settings.meeting_link_auto): families get the platform link.
-   * Absent in a payload cached before migration 490: clients use the academy default.
+   * usesPlatform(teachers.meeting_mode, settings.meeting_link_auto): families get the platform
+   * link. Absent in a payload cached before migration 490: clients use the academy default.
    */
   platform_classroom?: boolean;
   /** The teacher's photo, a short-lived signed URL; null/absent = initials. */
@@ -69,7 +69,10 @@ export const salesStudentsQuerySchema = z.object({
 });
 export type SalesStudentsQuery = z.output<typeof salesStudentsQuerySchema>;
 
-/** One subscription of the student over time, with its lessons, dated events and its payments' amounts; no price. */
+/**
+ * One subscription of the student over time, with its lessons, dated events and its payments'
+ * amounts; no price.
+ */
 export interface SalesHistoryEntry extends Omit<SalesSubscriptionView, 'student'> {
   renews_on: string | null;
   ended_at: string | null;
@@ -84,7 +87,10 @@ export interface SalesHistoryEntry extends Omit<SalesSubscriptionView, 'student'
   payments: { id: string; paid_at: string; kind: PaymentKind; amount: number; currency: string }[];
 }
 
-/** GET /sales/subscriptions/:id/history: the opened subscription and all its student's subscriptions, oldest first. */
+/**
+ * GET /sales/subscriptions/:id/history: the opened subscription and all its student's
+ * subscriptions, oldest first.
+ */
 export interface SalesSubscriptionHistory {
   subscription_id: string;
   student: { id: string; code: string; name: string };

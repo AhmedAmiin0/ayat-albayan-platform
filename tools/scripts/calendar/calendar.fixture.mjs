@@ -1,5 +1,5 @@
-// Invented calendars in Google's export shape (no real people): duplicate series, a cancelled event,
-// an exception instance, an ended series and the main calendar.
+// Invented calendars in Google's export shape (no real people): duplicate series, a cancelled
+// event, an exception instance, an ended series and the main calendar.
 export const TEACHER_ICS = [
   'BEGIN:VCALENDAR', 'X-WR-CALNAME:آيات البيان — Testa', 'X-WR-TIMEZONE:Asia/Riyadh',
   'BEGIN:VEVENT', 'DTSTART;TZID=Asia/Riyadh:20260926T080000', 'DTEND;TZID=Asia/Riyadh:20260926T084500',

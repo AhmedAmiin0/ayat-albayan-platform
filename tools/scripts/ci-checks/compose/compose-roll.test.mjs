@@ -1,5 +1,5 @@
-// Guards for deploy/staging (docs/09): the load balancer, roll.sh and the deploy touch only this project, and the
-// compose file is valid for the Docker CLI.
+// Guards for deploy/staging (docs/09): the load balancer, roll.sh and the deploy touch only this
+// project, and the compose file is valid for the Docker CLI.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { copyFileSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
@@ -27,7 +27,8 @@ test('the load balancer: a pinned image, its own config only, every copy with ac
 });
 
 test('roll.sh and the deploy touch only this project (no global prune, no CRM, no host Caddy)', () => {
-  // Commands only (comments may name what is never touched); the container's own /etc/caddy is ayat-lb's.
+  // Commands only (comments may name what is never touched); the container's own /etc/caddy is
+  // ayat-lb's.
   const code = (text) =>
     text
       .split('\n')

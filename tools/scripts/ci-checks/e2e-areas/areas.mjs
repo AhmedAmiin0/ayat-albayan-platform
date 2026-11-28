@@ -5,7 +5,10 @@ import { join } from 'node:path';
 export const AREAS_FILE = 'e2e/areas.json';
 export const SPEC_DIR = 'e2e/tests/';
 
-/** Spec files under e2e/tests/, relative to it, sub-folders included (`messaging/inbox.spec.ts`, D8). */
+/**
+ * Spec files under e2e/tests/, relative to it, sub-folders included (`messaging/inbox.spec.ts`,
+ * D8).
+ */
 export function listSpecs(root) {
   return readdirSync(join(root, SPEC_DIR), { recursive: true, encoding: 'utf8' })
     .map((f) => f.split('\\').join('/'))
@@ -43,8 +46,8 @@ export const areasOf = (map, file) =>
     .map(([name]) => name);
 
 /**
- * The page routes a layout route renders through its <Outlet/>: `x/route.tsx` and `x.tsx` hold every
- * route under `x/`, and `x.tsx` also the flat children `x.y.tsx` beside it.
+ * The page routes a layout route renders through its <Outlet/>: `x/route.tsx` and `x.tsx` hold
+ * every route under `x/`, and `x.tsx` also the flat children `x.y.tsx` beside it.
  */
 export function childRoutes(route, files) {
   const dir = route.endsWith('/route.tsx')

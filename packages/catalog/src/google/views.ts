@@ -103,13 +103,19 @@ export interface GoogleSyncItemView {
   updated_at: string;
 }
 
-/** GET /admin/google/teachers/:id/calendar-owner: who builds the teacher's calendar, and how its events fare. */
+/**
+ * GET /admin/google/teachers/:id/calendar-owner: who builds the teacher's calendar, and how its
+ * events fare.
+ */
 export interface TeacherCalendarView {
   teacher_id: string;
   owner: TeacherCalendarOwner;
   changed_at: string | null;
   /** This teacher's teacher-calendar items the platform wrote (synced). */
   managed: number;
-  /** Items not written because the old script's event is still there (skip_reason script_event_present). */
+  /**
+   * Items not written because the old script's event is still there (skip_reason
+   * script_event_present).
+   */
   script_event_present: number;
 }

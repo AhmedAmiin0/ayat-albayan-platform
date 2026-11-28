@@ -10,7 +10,10 @@ export type RoomLayout =
   | { mode: 'stage'; board: false; stage: TileView; strip: TileView[] }
   | { mode: 'grid'; tiles: TileView[] };
 
-/** Which tile goes where. With the board open here, others' shared-board videos would only repeat it. */
+/**
+ * Which tile goes where. With the board open here, others' shared-board videos would only repeat
+ * it.
+ */
 export function layoutOf(tiles: readonly TileView[], boardVisible: boolean): RoomLayout {
   const shown = boardVisible ? tiles.filter((x) => !x.isBoard) : [...tiles];
   if (boardVisible) return { mode: 'stage', board: true, stage: null, strip: shown };

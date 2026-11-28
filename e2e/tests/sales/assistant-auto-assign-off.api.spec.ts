@@ -4,11 +4,11 @@ import { call, family, freshPhone, leadOf, makeAssistant, trialBody, type Assist
 import { seedLead, setSetting } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/core/schedule';
 
-// settings.sales_auto_assign OFF (docs/16 row 13), through the REAL API and database:
-// a salesperson registers from any chat, a lead of another salesperson or of nobody (new leads stay
-// unassigned while OFF); she is still the one who brought the student, and leads.assigned_to stays as it
-// was. The trial-only rules still hold. ON (the seeded default) is covered by assistant-money.api.spec.ts
-// and is restored after this file.
+// settings.sales_auto_assign OFF (docs/16 row 13), through the REAL API and database: a salesperson
+// registers from any chat, a lead of another salesperson or of nobody (new leads stay unassigned
+// while OFF); she is still the one who brought the student, and leads.assigned_to stays as it was.
+// The trial-only rules still hold. ON (the seeded default) is covered by
+// assistant-money.api.spec.ts and is restored after this file.
 
 const need = <T>(v: T | undefined): T => {
   if (v === undefined) throw new Error('an earlier step did not run');

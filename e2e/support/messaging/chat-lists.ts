@@ -16,7 +16,10 @@ export async function createListFromRow(page: Page, name: string): Promise<void>
   await page.getByRole('button', { name: L.create, exact: true }).click();
 }
 
-/** Lists left by an earlier failed run of the same spec (names are unique ignoring case and letter forms). */
+/**
+ * Lists left by an earlier failed run of the same spec (names are unique ignoring case and letter
+ * forms).
+ */
 export async function dropListsLike(prefix: string): Promise<void> {
   await withSql((sql) => sql`delete from public.chat_lists where name like ${`${prefix}%`}`);
 }

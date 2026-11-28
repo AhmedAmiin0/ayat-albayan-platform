@@ -25,7 +25,9 @@ interface ScreenHeaderProps {
   size?: 'h1' | 'h2';
   /** The title's node, e.g. to move screen-reader focus to it when a sheet changes mode. */
   titleRef?: Ref<AppTextNode>;
-  /** The reconnecting bar under the title; on for h1. A screen with a compact h2 title passes true. */
+  /**
+   * The reconnecting bar under the title; on for h1. A screen with a compact h2 title passes true.
+   */
   connecting?: boolean;
 }
 

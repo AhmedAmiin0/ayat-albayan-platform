@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { SEED_ENTRIES } from './seed-entries';
 import { sqlSettingsReaders } from './sql-readers';
 
-// Vite's raw import (vitest): the shared lib has no Node typings, so the migrations are read this way.
+// Vite's raw import (vitest): the shared lib has no Node typings, so the migrations are read this
+// way.
 declare global {
   interface ImportMeta {
     glob<T>(pattern: string | string[], options: { query: '?raw'; import: 'default'; eager: true }): Record<string, T>;

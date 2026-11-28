@@ -38,7 +38,8 @@ function paintStroke(ctx: CtxLike, s: Stroke, o: PaintOptions): void {
 
 /**
  * Repaints the whole board: opaque paper first (the shared-board video must not be transparent),
- * then every stroke in order. The eraser paints with the paper colour, so it works in the video too.
+ * then every stroke in order. The eraser paints with the paper colour, so it works in the video
+ * too.
  */
 export function paintBoard(ctx: CtxLike, strokes: readonly Stroke[], o: PaintOptions): void {
   ctx.fillStyle = o.resolve('raised');

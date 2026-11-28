@@ -7,7 +7,8 @@ import { addDays, resetAbrar, withSql } from '../../support/core/schedule';
 
 // CSV exports (R-RPT-03) from the ExportsPanel on /admin: students, lessons, payments, payouts.
 // Each file starts with the U+FEFF BOM, has the ar.json header row, E.164 phones, AB-nnnn codes and
-// Riyadh «YYYY-MM-DD HH:MM» times (compared with SQL's own conversion), and a `<name>-<range>.csv` name.
+// Riyadh «YYYY-MM-DD HH:MM» times (compared with SQL's own conversion), and a `<name>-<range>.csv`
+// name.
 
 const { students: S, guardians: G, payments: P, payouts: Y, subscriptions: SUB, exports: X } = ar;
 const HEADERS = {

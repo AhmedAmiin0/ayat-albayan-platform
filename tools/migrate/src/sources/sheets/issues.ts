@@ -1,5 +1,6 @@
 // RowIssue builders for sheet mappers. `code` and `detail` stay Arabic-free (machine reasons); the
-// owner-facing Arabic label is looked up by issueLabelKey(code) in ar.json (`migrate.issue.<code>`).
+// owner-facing Arabic label is looked up by issueLabelKey(code) in ar.json
+// (`migrate.issue.<code>`).
 import type {
   EntityName,
   IssueCode,

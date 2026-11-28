@@ -4,7 +4,8 @@ import { ApiError } from '../lib/http/api';
 import { ensurePushPermission } from './permission';
 import { registerPush, TOKEN_KEY } from './registerPush';
 
-// A role without notifications.push (sales, a classroom assistant): PUT /me/push-tokens answers 403.
+// A role without notifications.push (sales, a classroom assistant): PUT /me/push-tokens answers
+// 403.
 const mockApiSend = jest.fn();
 // Signed in with a valid token (live-session.test.ts covers the check itself).
 jest.mock('./live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));

@@ -6,7 +6,9 @@ import { withSql } from '../core/schedule';
 /** The payload the API's ConfigSeeder sends at boot (docs/26 §2b): metadata only, never a value. */
 const SEED_PAYLOAD = seedPayload(bundleText(ar));
 
-/** One «boot» of the seeder: config_seed with the real registry payload (JSON text, not sql.json). */
+/**
+ * One «boot» of the seeder: config_seed with the real registry payload (JSON text, not sql.json).
+ */
 export async function runConfigSeed(sql: Sql | TransactionSql): Promise<Record<string, unknown>> {
   const [row] = await sql<{ r: Record<string, unknown> }[]>`
     select public.config_seed(${JSON.stringify(SEED_PAYLOAD)}::text::jsonb, ${REGISTRY_VERSION}::int) as r`;

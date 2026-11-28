@@ -6,7 +6,10 @@ const { passwordError } = userChecks(() => ({
   phoneErrors: t.common.phoneErrors,
 }));
 
-/** What is wrong with the new password and its confirmation (the shared password rules), or undefined. */
+/**
+ * What is wrong with the new password and its confirmation (the shared password rules), or
+ * undefined.
+ */
 export function newPasswordProblem(password: string, confirm: string): string | undefined {
   return (
     passwordError(password) ?? (password === confirm ? undefined : t.familyAuth.passwordsDiffer)

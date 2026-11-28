@@ -31,6 +31,9 @@ export function clockWithSeconds(at: Date, clock: Clock & { tz: string }): strin
   return clockOf(at, clock).replace(/^(\d{1,2}:\d{2})/, `$1:${ss}`);
 }
 
-/** A stored «HH:MM» on screen in the viewer's cycle; «24:00» (a span to midnight) stays as is in 24 h. */
+/**
+ * A stored «HH:MM» on screen in the viewer's cycle; «24:00» (a span to midnight) stays as is in 24
+ * h.
+ */
 export const hhmmText = (hhmm: string, clock: Clock): string =>
   hhmm === '24:00' && clock.cycle === '24' ? hhmm : clockOfHhmm(hhmm, clock.cycle, clock.locale);

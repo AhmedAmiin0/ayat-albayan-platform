@@ -123,7 +123,8 @@ const RETRY_POINTLESS = new Set<string>([
   ...[E.paymentIssue, E.accountLocked, E.policyBlocked, E.certificateError].map(String),
   ...[E.numberNotRegistered, E.displayNameNotApproved].map(String),
   // This row: outside the 24 h window (470), marketing turned off (131050), our own number
-  // (131021), template values (132000, 132012), template disabled for good (132016), file type (131053).
+  // (131021), template values (132000, 132012), template disabled for good (132016), file type
+  // (131053).
   ...[E.outsideWindow, E.marketingOptOut, E.sameSenderRecipient].map(String),
   ...[E.paramCountMismatch, E.paramFormatMismatch, E.templateDisabled, E.mediaType].map(String),
 ]);

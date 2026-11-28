@@ -6,7 +6,8 @@ export const API = 'http://localhost:3100';
 
 /** The signed-in user's Supabase access token, from the page's own session. */
 export async function accessToken(page: Page): Promise<string> {
-  // The context's storage state, not page.evaluate: a fresh page on about:blank cannot read localStorage.
+  // The context's storage state, not page.evaluate: a fresh page on about:blank cannot read
+  // localStorage.
   const { origins } = await page.context().storageState();
   const entries = origins.flatMap((o) => o.localStorage).filter((e) => e.name.endsWith('-auth-token'));
   for (const { value } of entries) {

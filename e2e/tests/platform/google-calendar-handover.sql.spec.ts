@@ -3,8 +3,9 @@ import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
 import { errorCode } from '../../support/core/db-error';
 
-// Migration 20261028000943 (docs/24 §7) against the real database, rolled back: teachers.calendar_owner,
-// the calendar-managed predicate, the switch's producer, the admin-only guard and the audit row.
+// Migration 20261028000943 (docs/24 §7) against the real database, rolled back:
+// teachers.calendar_owner, the calendar-managed predicate, the switch's producer, the admin-only
+// guard and the audit row.
 
 async function seed(tx: Tx) {
   const [t] = await tx<{ id: string }[]>`select t.id from public.teachers t join auth.users u on u.id = t.profile_id where u.email = ${USERS.teacher.email}`;

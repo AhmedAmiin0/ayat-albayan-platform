@@ -16,7 +16,10 @@ export const RULE_SETTING_KEYS = [
 export type RuleSettingKey = (typeof RULE_SETTING_KEYS)[number];
 export type RuleSettings = Pick<AcademySettings, RuleSettingKey>;
 
-/** Which part of a row mirrors which legacy keys (the copy, the policy's fallback and parity use it). */
+/**
+ * Which part of a row mirrors which legacy keys (the copy, the policy's fallback and parity use
+ * it).
+ */
 export const RULE_LEGACY_MAP = {
   lesson_reminder: { timing: ['reminder_minutes_before'] },
   lesson_reminder_24h: { enabled: ['reminder_24h_enabled'] },
@@ -100,7 +103,10 @@ export function legacyParts(key: string, s: RuleSettings): Partial<LegacyRule> {
   return codecOf(key)?.parts(s) ?? {};
 }
 
-/** The legacy settings a row's effective choices write back (legacy mode, and the flip back to legacy). */
+/**
+ * The legacy settings a row's effective choices write back (legacy mode, and the flip back to
+ * legacy).
+ */
 export function legacyValues(key: string, rule: LegacyRule): Partial<RuleSettings> {
   return codecOf(key)?.values(rule, rule.timing) ?? {};
 }

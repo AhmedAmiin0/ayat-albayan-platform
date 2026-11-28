@@ -51,7 +51,9 @@ export const SET_NULL_DEPENDENTS = [
   { table: 'channel_messages', column: 'reply_to_id', parent: 'channel_messages' },
 ];
 
-/** FK-safe: rows that point at others go first (leads → guardians, students → guardians/teachers). */
+/**
+ * FK-safe: rows that point at others go first (leads → guardians, students → guardians/teachers).
+ */
 export const DELETE_ORDER = [
   'job_applicants',
   'leads',
@@ -59,14 +61,16 @@ export const DELETE_ORDER = [
   'student_assistants',
   // The demo students' own classroom links (migration 191).
   'student_join_links',
-  // The demo students' teacher–family channels, their messages and read marks (migration 800, docs/31).
+  // The demo students' teacher–family channels, their messages and read marks (migration 800,
+  // docs/31).
   'channel_reads',
   // Their edit / delete history (migration 993), before the messages it points at.
   'channel_message_edits',
   'channel_messages',
   'student_channels',
   'students',
-  // The demo families' numbers (migration 973); a second number linked to one makes clear:demo refuse.
+  // The demo families' numbers (migration 973); a second number linked to one makes clear:demo
+  // refuse.
   'guardian_phones',
   'guardians',
   'teacher_time_off',

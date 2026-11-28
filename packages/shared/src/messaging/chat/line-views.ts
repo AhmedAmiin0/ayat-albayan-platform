@@ -7,17 +7,34 @@ import type { WaLine, WaProvider } from '@ab/catalog';
 export interface LineCheckView {
   line: WaLine;
   configured: boolean;
-  /** The line's driver (WA_PROVIDER / WA_CHAT_PROVIDER, docs/19): Meta directly, Kapso or the academy CRM. */
+  /**
+   * The line's driver (WA_PROVIDER / WA_CHAT_PROVIDER, docs/19): Meta directly, Kapso or the
+   * academy CRM.
+   */
   provider: WaProvider;
-  /** NAMES (never values) of the keys this line still lacks to send under its provider; [] = none. */
+  /**
+   * NAMES (never values) of the keys this line still lacks to send under its provider; [] = none.
+   */
   gaps: string[];
-  /** The chat line's phone id is the notifications one, so the chat line is off (shown in words, not as a key). */
+  /**
+   * The chat line's phone id is the notifications one, so the chat line is off (shown in words, not
+   * as a key).
+   */
   duplicate_chat_phone: boolean;
-  /** kapso lines only: is KAPSO_WEBHOOK_SECRET set (a boolean, never the value)? false = every inbound is refused. */
+  /**
+   * kapso lines only: is KAPSO_WEBHOOK_SECRET set (a boolean, never the value)? false = every
+   * inbound is refused.
+   */
   kapso_webhook_secret?: boolean;
-  /** crm lines only (docs/19): is WACRM_WEBHOOK_SECRET set (never the value)? false = no delivery ticks arrive. */
+  /**
+   * crm lines only (docs/19): is WACRM_WEBHOOK_SECRET set (never the value)? false = no delivery
+   * ticks arrive.
+   */
   crm_webhook_secret?: boolean;
-  /** crm lines only: does the CRM key carry messages:send (GET /me)? null = not known (the call failed). */
+  /**
+   * crm lines only: does the CRM key carry messages:send (GET /me)? null = not known (the call
+   * failed).
+   */
   crm_send_scope?: boolean | null;
   /** crm lines only (docs/39): the templates:read / write scopes the key lacks; null = unknown. */
   crm_template_scopes_missing?: string[] | null;
@@ -42,13 +59,15 @@ export interface LineCheckView {
   status: string | null;
   name_status: string | null;
   code_verification_status: string | null;
-  /** null = not asked / the call failed; [] = no app subscribed to the WABA (no webhook arrives). */
+  /**
+   * null = not asked / the call failed; [] = no app subscribed to the WABA (no webhook arrives).
+   */
   subscribed_apps:
     | { id: string | null; name: string | null; override_callback_uri: string | null }[]
     | null;
   /**
-   * One entry per failed call (phone first, then subscribed_apps; a crm line's only call is crm_me = GET /me);
-   * `credential: 'kapso'` = Kapso refused its key, `'crm'` = the CRM refused its key.
+   * One entry per failed call (phone first, then subscribed_apps; a crm line's only call is crm_me
+   * = GET /me); `credential: 'kapso'` = Kapso refused its key, `'crm'` = the CRM refused its key.
    */
   errors: {
     step: 'phone' | 'subscribed_apps' | 'crm_me';

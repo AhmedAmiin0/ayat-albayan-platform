@@ -55,7 +55,9 @@ interface Props {
   requests: ShareRequests;
 }
 
-/** Pen, colours, eraser and undo for whoever may draw; clear / allow students / share for the staff. */
+/**
+ * Pen, colours, eraser and undo for whoever may draw; clear / allow students / share for the staff.
+ */
 export function BoardToolbar({ board, share, requests }: Props) {
   return (
     <div role="toolbar" aria-label={t.classroom.board.tools} className="flex flex-wrap items-center gap-1.5">

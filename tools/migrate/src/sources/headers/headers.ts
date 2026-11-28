@@ -8,7 +8,9 @@ import { MONEY_SHEETS } from './headers.money.ts';
 import { OPS_SHEETS } from './headers.ops.ts';
 
 export interface SheetSpec {
-  /** Cache file: cache/sheets/<id>.json. Also the name mappers use: bundle.sheets['hub_students']. */
+  /**
+   * Cache file: cache/sheets/<id>.json. Also the name mappers use: bundle.sheets['hub_students'].
+   */
   id: string;
   source: SourceAlias;
   /** Zip entry path, or a pattern for the 60 per-student files. */
@@ -43,7 +45,9 @@ export const SKIPPED_TABS: Record<string, string> = {
   'FIN/Augest cost/Income_Statement.xlsx': 'August totals only; use for validation by hand',
 };
 
-/** Files in the export that are never read (docs/06 «Not migration data»), by exact path or pattern. */
+/**
+ * Files in the export that are never read (docs/06 «Not migration data»), by exact path or pattern.
+ */
 const EXCLUDED_FILES: readonly (string | RegExp)[] = [
   'Backup  keys.docx', // recovery codes: never open
   'data.zip', // Facebook account export: never open

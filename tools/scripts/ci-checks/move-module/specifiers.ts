@@ -39,7 +39,9 @@ function declSpec(node: Node): SpecNode | undefined {
   return undefined;
 }
 
-/** Every import, re-export, `import()`, `import('x').T`, require and vi/jest mock path in the file. */
+/**
+ * Every import, re-export, `import()`, `import('x').T`, require and vi/jest mock path in the file.
+ */
 export function specifierNodes(sf: SourceFile): SpecNode[] {
   const out: SpecNode[] = [];
   sf.forEachDescendant((node) => {

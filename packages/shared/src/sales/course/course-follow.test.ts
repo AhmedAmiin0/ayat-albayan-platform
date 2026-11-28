@@ -46,7 +46,8 @@ describe('prefillPicks', () => {
     expect(prefillPicks({ days: [], from: '2026-11-01', tz: 'Asia/Riyadh', now })).toEqual([]);
   });
   it('a `from` several weeks in the past rolls each pick by whole weeks into the coming week', () => {
-    // from Sunday 2026-09-06; now Sunday 2026-10-18 15:00Z (Sunday 17:00 passed, Tuesday 19:30 ahead).
+    // from Sunday 2026-09-06; now Sunday 2026-10-18 15:00Z (Sunday 17:00 passed, Tuesday 19:30
+    // ahead).
     const picks = prefillPicks({
       days,
       from: '2026-09-06',

@@ -5,7 +5,8 @@ import { errorCode } from '../../support/core/db-error';
 
 // Migration 20261012000370 (R-ACC-05, rule 9): the private 'avatars' bucket. A signed-in user
 // writes and reads only under their own folder `<uid>/…`; an admin reads every avatar; anon reads
-// nothing. public.profiles has no self-write: a non-admin's UPDATE of their own row changes nothing.
+// nothing. public.profiles has no self-write: a non-admin's UPDATE of their own row changes
+// nothing.
 
 /** Runs `q` in a savepoint: 'ok' or the Postgres error code. */
 const code = (tx: Tx, q: () => Promise<unknown>) =>

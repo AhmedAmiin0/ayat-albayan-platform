@@ -1,13 +1,17 @@
 // Guard for e2e/areas.json (ci.yml «guards»): no spec can silently never run on pull requests.
-// Every e2e spec file is in an area or in «developOnly» (not both), every listed spec exists, and every
-// area path matches at least one file. Usage: node tools/scripts/ci-checks/e2e-areas/guard.mjs
+// Every e2e spec file is in an area or in «developOnly» (not both), every listed spec exists, and
+// every area path matches at least one file. Usage: node
+// tools/scripts/ci-checks/e2e-areas/guard.mjs
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { listFiles } from './graph.mjs';
 import { AREAS_FILE, listSpecs, loadAreas, pathMatches, SPEC_DIR } from './areas.mjs';
 
-/** Problems with the map, as sentences (empty = fine). `specFiles`: paths under e2e/tests/ (folders allowed). */
+/**
+ * Problems with the map, as sentences (empty = fine). `specFiles`: paths under e2e/tests/ (folders
+ * allowed).
+ */
 export function checkMap(map, specFiles, files) {
   const inAreas = new Set(Object.values(map.areas).flatMap((a) => a.specs));
   const dev = new Set(map.developOnly);

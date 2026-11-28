@@ -2,7 +2,10 @@ import type { SalesScheduleLesson } from '../schedule';
 
 // Weekly slots and next lessons; never a meeting link, price or money.
 
-/** One active weekly rule of the student: its days and wall-clock time in the rule's zone (imported: Riyadh). */
+/**
+ * One active weekly rule of the student: its days and wall-clock time in the rule's zone (imported:
+ * Riyadh).
+ */
 export interface SalesWeeklySlot {
   rule_id: string;
   /** 0 = Sunday ... 6 = Saturday, in `tz`, sorted. */
@@ -13,7 +16,10 @@ export interface SalesWeeklySlot {
   duration_min: number;
   /** Both names: the phone shows the one of its language (localizedName). */
   teacher: { display_name_ar: string; display_name_en: string | null } | null;
-  /** The next start of each weekday (UTC instants, sorted): the phone reads them in Riyadh and in the student's zone. */
+  /**
+   * The next start of each weekday (UTC instants, sorted): the phone reads them in Riyadh and in
+   * the student's zone.
+   */
   next: string[];
 }
 
@@ -24,7 +30,10 @@ export interface SalesStudentSchedule {
   /** The student's own zone: the student-time label reads `next` in it; absent in an old cache. */
   student_tz?: string;
   weekly: SalesWeeklySlot[];
-  /** Open lessons (scheduled / confirmed) from now, the next SCHEDULE_DAYS days, at most SCHEDULE_LIMIT, by start. */
+  /**
+   * Open lessons (scheduled / confirmed) from now, the next SCHEDULE_DAYS days, at most
+   * SCHEDULE_LIMIT, by start.
+   */
   upcoming: SalesStudentLesson[];
 }
 

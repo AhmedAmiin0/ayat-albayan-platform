@@ -24,7 +24,10 @@ export interface SalesTeacherSlot {
   students: SalesOverviewStudent[];
 }
 
-/** How the teacher's past lessons ended: held = completed / late, `other` = any other closed status (excused). */
+/**
+ * How the teacher's past lessons ended: held = completed / late, `other` = any other closed status
+ * (excused).
+ */
 export type TeacherLessonKind =
   | 'held'
   | 'student_absent'

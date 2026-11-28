@@ -16,7 +16,9 @@ interface ButtonProps {
   disabled?: boolean;
   /** The spoken name when the label repeats down a list. */
   accessibilityLabel?: string;
-  /** A leading icon in the label's colour (decorative: hidden from screen readers by the icon set). */
+  /**
+   * A leading icon in the label's colour (decorative: hidden from screen readers by the icon set).
+   */
   icon?: (color: string) => ReactNode;
   /** The pressable, e.g. to move screen-reader focus to it (focusNode). */
   ref?: Ref<View>;

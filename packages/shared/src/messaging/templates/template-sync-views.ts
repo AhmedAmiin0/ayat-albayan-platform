@@ -14,7 +14,10 @@ export interface TemplateLineFacts {
   phone_number_id: string | null;
 }
 
-/** Why a sync did not import a template: a code (templates.perNumber.skipReasons.<code>) and its params. */
+/**
+ * Why a sync did not import a template: a code (templates.perNumber.skipReasons.<code>) and its
+ * params.
+ */
 export type TemplateSkipReason =
   | { code: 'category'; category: string }
   | { code: 'too_many_vars'; max: number }
@@ -53,13 +56,19 @@ export interface TemplateHealthView {
   templates: TemplateView[];
 }
 
-/** GET /messaging/templates/lines item: the line's facts, the newest check of its rows, its last sync since boot. */
+/**
+ * GET /messaging/templates/lines item: the line's facts, the newest check of its rows, its last
+ * sync since boot.
+ */
 export interface TemplateLineView extends TemplateLineFacts {
   last_checked_at: string | null;
   last_sync: TemplateLineSync | null;
 }
 
-/** PATCH /messaging/templates/:key/line: the moved row after its new line's sync (null = that line is not configured). */
+/**
+ * PATCH /messaging/templates/:key/line: the moved row after its new line's sync (null = that line
+ * is not configured).
+ */
 export interface TemplateMoveView {
   template: TemplateView;
   sync: TemplateLineSync | null;

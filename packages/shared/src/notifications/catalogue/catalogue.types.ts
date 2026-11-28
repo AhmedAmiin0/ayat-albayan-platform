@@ -4,7 +4,8 @@ import type { SettingKey } from '@ab/settings';
 import type { CatalogueSettings } from './catalogue-settings';
 
 // The notification catalogue (docs/23 §2b): what the academy sends, to whom, through which channel,
-// and which of today's settings governs it. Code defines what exists; phase 3 adds the admin's overrides.
+// and which of today's settings governs it. Code defines what exists; phase 3 adds the admin's
+// overrides.
 
 export const NOTIFICATION_AUDIENCES = ['guardian', 'teacher', 'lead', 'staff'] as const;
 export type NotificationAudience = (typeof NOTIFICATION_AUDIENCES)[number];
@@ -41,7 +42,10 @@ export interface NotificationEntry<K extends string = string> {
   automatic: boolean;
   /** Sent only when a person presses a button: listed, never switched. */
   manual: boolean;
-  /** Families rely on it (booking confirmation, report PDF): turning it off will need a typed confirmation. */
+  /**
+   * Families rely on it (booking confirmation, report PDF): turning it off will need a typed
+   * confirmation.
+   */
   essential: boolean;
   /** A safety alert that stays on (a failed send must reach an admin). */
   locked: boolean;

@@ -25,9 +25,10 @@ export function courseDaysPerWeek(
 }
 
 /**
- * The `package` a course's POST /sales/booking body carries: the subscription's, or for a custom count
- * any paid size the schema accepts ('8'). The API ignores it for a course and labels every rule with
- * the subscription's own package (null for a custom count, PR #113 review M4); never show it as a label.
+ * The `package` a course's POST /sales/booking body carries: the subscription's, or for a custom
+ * count any paid size the schema accepts ('8'). The API ignores it for a course and labels every
+ * rule with the subscription's own package (null for a custom count, PR #113 review M4); never show
+ * it as a label.
  */
 export const courseBodyPackage = (
   sub: Pick<CourseSubscription, 'package'>,

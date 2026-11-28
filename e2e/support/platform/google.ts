@@ -71,7 +71,10 @@ export async function itemsOf(subjectId: string): Promise<ItemRow[]> {
     select kind, state, skip_reason, google_id, planned from public.google_sync_items where subject_id = ${subjectId} order by kind`);
 }
 
-/** A tiny PDF in the reports bucket, and the report row pointing at it, made `ready` (the trigger queues it). */
+/**
+ * A tiny PDF in the reports bucket, and the report row pointing at it, made `ready` (the trigger
+ * queues it).
+ */
 export async function readyReport(input: {
   lessonId: string;
   studentId: string;

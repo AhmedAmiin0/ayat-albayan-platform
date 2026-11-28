@@ -12,11 +12,15 @@ export interface RadioChipsProps<V extends string> {
   disabled?: boolean | undefined;
   /** The last submit attempt found it missing. */
   invalid?: boolean | undefined;
-  /** Equal-width chips in a row of the same count on a phone (long labels wrap inside their chip). */
+  /**
+   * Equal-width chips in a row of the same count on a phone (long labels wrap inside their chip).
+   */
   equal?: boolean;
   /** One scrolling row on a phone instead of wrapping into many (a week of day chips). */
   scroll?: boolean;
-  /** The id of what describes the choice (a live region of notes): aria-describedby on the group. */
+  /**
+   * The id of what describes the choice (a live region of notes): aria-describedby on the group.
+   */
   describedBy?: string | undefined;
 }
 

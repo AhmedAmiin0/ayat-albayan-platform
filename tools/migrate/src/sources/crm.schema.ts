@@ -31,8 +31,9 @@ export const CRM_TABLES: readonly CrmTableSpec[] = [
     cursor: 'updated_at',
   },
   {
-    // sender_type customer|agent|bot · content_type text|template|image|audio|document|video|interactive
-    // status delivered|read|failed|sent · message_id = Meta wamid · media_url = CRM storage (not copied).
+    // sender_type customer|agent|bot · content_type
+    // text|template|image|audio|document|video|interactive status delivered|read|failed|sent ·
+    // message_id = Meta wamid · media_url = CRM storage (not copied).
     table: 'messages',
     select:
       'id,conversation_id,sender_type,content_type,content_text,media_url,media_type,template_name,message_id,status,created_at,reply_to_message_id,ai_generated,conversations!inner(account_id)',

@@ -22,7 +22,9 @@ export async function insertTeacher(seed: TeacherSeed): Promise<string> {
   });
 }
 
-/** Removes a seeded teacher together with what hangs off it (availability, time off, rates, links). */
+/**
+ * Removes a seeded teacher together with what hangs off it (availability, time off, rates, links).
+ */
 export async function dropTeacher(teacherId: string): Promise<void> {
   await withSql(async (sql) => {
     await sql`update public.students set teacher_id = null where teacher_id = ${teacherId}`;

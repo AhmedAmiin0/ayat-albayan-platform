@@ -8,9 +8,10 @@ import type { SettingDef } from '../defs';
 export const DESCRIPTION_MAX = 500;
 
 /**
- * One row of GET /config/entries (docs/26 §2f): the stored row merged with its code entry. `value` is the
- * effective value (JSON null and a missing row read as the default); `stored` says whether a non-null value
- * is stored. `version` is 0 for a missing row (config_set accepts 0 for an absent row).
+ * One row of GET /config/entries (docs/26 §2f): the stored row merged with its code entry. `value`
+ * is the effective value (JSON null and a missing row read as the default); `stored` says whether a
+ * non-null value is stored. `version` is 0 for a missing row (config_set accepts 0 for an absent
+ * row).
  */
 export interface ConfigEntry {
   key: string;
@@ -51,7 +52,9 @@ export const configEntryPatchSchema = z.object({
 });
 export type ConfigEntryPatchInput = z.infer<typeof configEntryPatchSchema>;
 
-/** PUT /config/entries/:key/description. null = restore the seeded text (clears the override too). */
+/**
+ * PUT /config/entries/:key/description. null = restore the seeded text (clears the override too).
+ */
 export const configDescriptionSchema = z.object({
   text: z.string().trim().min(1).max(DESCRIPTION_MAX).nullable(),
 });
@@ -63,7 +66,9 @@ export const CONFIG_ENTRY_ERRORS = [
 ] as const;
 export type ConfigEntryError = (typeof CONFIG_ENTRY_ERRORS)[number];
 
-/** 409 `conflict`: someone saved first. The row keeps the admin's draft; these are the newer facts. */
+/**
+ * 409 `conflict`: someone saved first. The row keeps the admin's draft; these are the newer facts.
+ */
 export interface ConfigEntryConflict {
   code: 'conflict';
   key: string;
@@ -92,9 +97,9 @@ export interface ConfigParityResponse {
 }
 
 /**
- * Does saving `value` over `prev` need the typed text (VALUE_CONFIRM 'typed' keys delete data)? Only when the
- * deleting starts (from OFF = null) or gets earlier (a shorter period); the server then wants the number of
- * days typed. Lengthening or turning it off deletes nothing more.
+ * Does saving `value` over `prev` need the typed text (VALUE_CONFIRM 'typed' keys delete data)?
+ * Only when the deleting starts (from OFF = null) or gets earlier (a shorter period); the server
+ * then wants the number of days typed. Lengthening or turning it off deletes nothing more.
  */
 export function needsTypedConfirm(
   confirm: SettingConfirm | null,

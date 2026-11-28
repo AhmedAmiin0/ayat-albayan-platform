@@ -49,7 +49,9 @@ export interface SubscriptionBalance {
   subscriptionId: string;
   lessonsTotal: number;
   lessonsUsed: number;
-  /** lessonsTotal − lessonsUsed; negative only on the newest package (attended past every package). */
+  /**
+   * lessonsTotal − lessonsUsed; negative only on the newest package (attended past every package).
+   */
   remaining: number;
   isLast: boolean;
   /** R-SUB-03: start of the lesson that used the last unit; null while units are left. */
@@ -58,7 +60,10 @@ export interface SubscriptionBalance {
   projectedEndAt: string | null;
 }
 
-/** Rules 1–3 of migration 123 plus 172 and 190: chargeable, has an outcome, not a trial, makeup or instant lesson. */
+/**
+ * Rules 1–3 of migration 123 plus 172 and 190: chargeable, has an outcome, not a trial, makeup or
+ * instant lesson.
+ */
 export function consumesPackage(
   l: Pick<PackageLesson, 'status' | 'chargeable' | 'trial' | 'makeup' | 'instant'>,
 ): boolean {

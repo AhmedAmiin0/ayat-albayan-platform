@@ -48,7 +48,8 @@ export const WHATSAPP_ENTRIES = [
     timing: 'reminder_minutes_before',
   },
   {
-    // W7: only for lessons held in the academy classroom (meeting_link_auto or the teacher's own mode).
+    // W7: only for lessons held in the academy classroom (meeting_link_auto or the teacher's own
+    // mode).
     ...AUTO,
     key: 'lesson_join_link',
     audience: 'guardian',

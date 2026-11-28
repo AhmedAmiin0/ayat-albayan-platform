@@ -3,9 +3,10 @@ import { localDay } from './first-paid';
 import { addCalendarDays, addCalendarMonths } from '@ab/time';
 import { z } from 'zod';
 
-// An assistant's monthly statement (migration 20261006000273: build_assistant_statement) in pure code:
-// salary + the commissions earned up to that month +/- adjustments, per currency, never summed across
-// currencies. The status flow is the teacher payouts' (canTransitionPayout, PAYOUT_CORRECTIONS).
+// An assistant's monthly statement (migration 20261006000273: build_assistant_statement) in pure
+// code: salary + the commissions earned up to that month +/- adjustments, per currency, never
+// summed across currencies. The status flow is the teacher payouts' (canTransitionPayout,
+// PAYOUT_CORRECTIONS).
 
 export interface StatementSalary {
   amount: number;
@@ -119,8 +120,9 @@ export function nextOpenMonth(input: {
 }
 
 /**
- * Where a commission voided later goes (void_assistant_commission_row): out of a draft or an unlinked
- * commission silently; out of an approved or paid statement as a negative adjustment in the next open month.
+ * Where a commission voided later goes (void_assistant_commission_row): out of a draft or an
+ * unlinked commission silently; out of an approved or paid statement as a negative adjustment in
+ * the next open month.
  */
 export function voidEffect(
   statement: 'draft' | 'approved' | 'paid' | null,

@@ -7,14 +7,19 @@ import { CLASSROOM_KEY } from './api';
 const ROOM_PREFIX = 'lesson-';
 const MEETING_PREFIX = 'meeting-';
 
-/** The lesson id behind a room name (`lesson-<id>`, shared lessonRoomName); null for any other room. */
+/**
+ * The lesson id behind a room name (`lesson-<id>`, shared lessonRoomName); null for any other room.
+ */
 export function lessonIdOfRoom(room: string): string | null {
   return room.startsWith(ROOM_PREFIX) && room.length > ROOM_PREFIX.length
     ? room.slice(ROOM_PREFIX.length)
     : null;
 }
 
-/** The internal meeting id behind a room name (`meeting-<id>`, shared meetingRoomName); null for any other room. */
+/**
+ * The internal meeting id behind a room name (`meeting-<id>`, shared meetingRoomName); null for any
+ * other room.
+ */
 export function meetingIdOfRoom(room: string): string | null {
   return room.startsWith(MEETING_PREFIX) && room.length > MEETING_PREFIX.length
     ? room.slice(MEETING_PREFIX.length)

@@ -1,11 +1,14 @@
-// Literal-level part of pure-move-check: a string or anchored regex literal may change only by a rename
-// of the same diff (a guard's path allow-list such as 'modules/whatsapp/kapso.ts' following its file), or a
-// relative literal ('../../app') re-based so it still names the same place from the moved file.
+// Literal-level part of pure-move-check: a string or anchored regex literal may change only by a
+// rename of the same diff (a guard's path allow-list such as 'modules/whatsapp/kapso.ts' following
+// its file), or a relative literal ('../../app') re-based so it still names the same place from the
+// moved file.
 import { target } from './pure-move-paths.mjs';
 
 const stripExt = (p) => p.replace(/\.[cm]?[jt]sx?$/, '');
 
-/** Every `old folder → new folder` whose files all moved to one new folder and that is gone at head. */
+/**
+ * Every `old folder → new folder` whose files all moved to one new folder and that is gone at head.
+ */
 export function folderRenames(renames, gone) {
   const dirs = new Map();
   for (const [from, to] of renames) {
@@ -20,7 +23,9 @@ export function folderRenames(renames, gone) {
   return [...dirs].filter(([dir, next]) => next !== null && next !== dir && gone(dir));
 }
 
-/** `old fragment → new fragments`: path suffixes of renamed files and of folders that moved whole. */
+/**
+ * `old fragment → new fragments`: path suffixes of renamed files and of folders that moved whole.
+ */
 export function substitutions(renames, gone = () => false) {
   const subs = new Map();
   const add = (a, b) => {
@@ -52,7 +57,9 @@ export function renamedLiteral(a, b, subs) {
   return false;
 }
 
-/** End index (exclusive) of the quoted literal starting at `i`; templates track `${ … }` nesting. */
+/**
+ * End index (exclusive) of the quoted literal starting at `i`; templates track `${ … }` nesting.
+ */
 function literalEnd(code, i) {
   const q = code[i];
   let depth = 0;
@@ -93,14 +100,20 @@ export function literals(code) {
 
 const RELATIVE = /^(['"`])(\.\.?\/[^'"`]*)\1$/;
 
-/** True when both are relative literals naming the same repo path, `a` from `from` and `b` from `to`. */
+/**
+ * True when both are relative literals naming the same repo path, `a` from `from` and `b` from
+ * `to`.
+ */
 export function rebasedLiteral(a, b, { from, to }) {
   const [x, y] = [RELATIVE.exec(a), RELATIVE.exec(b)];
   if (!x || !y || from === undefined || to === undefined || from === to) return false;
   return target(from, x[2] ?? '') === target(to, y[2] ?? '');
 }
 
-/** Same skeleton, and every literal equal, changed by a rename or re-based. `opts`: subs, or { subs, from, to }. */
+/**
+ * Same skeleton, and every literal equal, changed by a rename or re-based. `opts`: subs, or { subs,
+ * from, to }.
+ */
 export function sameButRenames(a, b, opts) {
   const move = opts instanceof Map ? { subs: opts } : opts;
   const x = literals(a);

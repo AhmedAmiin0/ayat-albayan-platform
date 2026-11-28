@@ -16,7 +16,10 @@ export interface TemplateView {
   /** Names of {{1}}, {{2}}, … in order. */
   params: string[];
   buttons: TemplateButton[];
-  /** What WhatsApp shows (header, every button) as Meta's sync reported it; null = not synced yet. Absent from older APIs. */
+  /**
+   * What WhatsApp shows (header, every button) as Meta's sync reported it; null = not synced yet.
+   * Absent from older APIs.
+   */
   display?: TemplateDisplay | null;
   status: TemplateStatus;
   quality: string | null;
@@ -26,13 +29,23 @@ export interface TemplateView {
   submitted_at: string | null;
   /** The line (WABA) Meta approved it on: the sender sends it from there (docs/12 §13.3). */
   line: WaLine;
-  /** On the restricted allow-list: the only templates a role without templates.send_all may list or send (docs/16 §15). */
+  /**
+   * On the restricted allow-list: the only templates a role without templates.send_all may list or
+   * send (docs/16 §15).
+   */
   sales_starter: boolean;
-  /** The template's own number (docs/23 phase 5); null = its role's default. Absent from older APIs. */
+  /**
+   * The template's own number (docs/23 phase 5); null = its role's default. Absent from older APIs.
+   */
   number_id?: string | null;
-  /** Its approval on each number synced so far (one Meta template per WABA). Absent from older APIs. */
+  /**
+   * Its approval on each number synced so far (one Meta template per WABA). Absent from older APIs.
+   */
   numbers?: TemplateNumberApproval[];
-  /** The CRM's name / language when its line is on crm (docs/19); null = the default. Absent from older APIs. */
+  /**
+   * The CRM's name / language when its line is on crm (docs/19); null = the default. Absent from
+   * older APIs.
+   */
   crm_name?: string | null;
   crm_language?: string | null;
   /** Who wrote it here (sales authoring); null = seeded or imported. */
@@ -59,6 +72,9 @@ export interface SendGateView {
   reason: 'not_configured' | 'switch_off' | null;
   /** Outbound rows waiting in the queue: they go out the moment the gate opens. */
   queued: number;
-  /** Set (true) only when WA_ALLOWED_RECIPIENTS restricts sending; its only reader is the web ServerGateNote. */
+  /**
+   * Set (true) only when WA_ALLOWED_RECIPIENTS restricts sending; its only reader is the web
+   * ServerGateNote.
+   */
   restricted?: boolean;
 }

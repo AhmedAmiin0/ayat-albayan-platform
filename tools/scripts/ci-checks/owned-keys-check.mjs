@@ -1,7 +1,8 @@
-// Code-owned settings keys must not be written by a migration (docs/26 §5, 26-P0): the send gate and the
-// Google sync switches are changed only through their module routes, so a migration can never turn
-// sending on (staging holds real families). Old seeding migrations (142, 162, 610) sit at or below CUTOFF.
-// Usage: node tools/scripts/owned-keys-check.mjs [migrationsDir]   exit 1 = a newer migration writes one.
+// Code-owned settings keys must not be written by a migration (docs/26 §5, 26-P0): the send gate
+// and the Google sync switches are changed only through their module routes, so a migration can
+// never turn sending on (staging holds real families). Old seeding migrations (142, 162, 610) sit
+// at or below CUTOFF. Usage: node tools/scripts/owned-keys-check.mjs [migrationsDir] exit 1 = a
+// newer migration writes one.
 import { readdirSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
@@ -19,10 +20,14 @@ export const OWNED_KEYS = [
 // A write into settings (also "public"."settings", the Studio / db diff form) or a call of the
 // security-definer writers from migration 630 (config_set / config_seed).
 const WRITE = /\b(insert\s+into|update(\s+only)?|delete\s+from|merge\s+into)\s+("?public"?\s*\.\s*)?"?settings"?(?![\w$])|\bconfig_(set|seed)\s*\(/i;
-// COPY puts its rows after the `;`, so the key is never in the same statement: any COPY into settings fails.
+// COPY puts its rows after the `;`, so the key is never in the same statement: any COPY into
+// settings fails.
 const COPY = /\bcopy\s+("?public"?\s*\.\s*)?"?settings"?(?![\w$])[\s\S]*?\bfrom\b/i;
 
-/** true when the file's 14-digit number is above the cutoff; a name without one is checked too (fail safe). */
+/**
+ * true when the file's 14-digit number is above the cutoff; a name without one is checked too (fail
+ * safe).
+ */
 export function newerThan(name, cutoff = CUTOFF) {
   const m = /^(\d{14})_/.exec(name);
   return m ? m[1] > cutoff : true;
@@ -39,9 +44,9 @@ const quoteEnd = (sql, i, q) => {
 };
 
 /**
- * Splits SQL into statements on top-level `;`. Comments go; quoted strings stay (the keys are string
- * literals); each dollar-quoted body is set aside as `BODY` and split on its own, so a plpgsql
- * `update public.settings … 'messaging_enabled'` is one statement of its body.
+ * Splits SQL into statements on top-level `;`. Comments go; quoted strings stay (the keys are
+ * string literals); each dollar-quoted body is set aside as `BODY` and split on its own, so a
+ * plpgsql `update public.settings … 'messaging_enabled'` is one statement of its body.
  */
 export function statements(sql) {
   const out = [];
@@ -84,7 +89,9 @@ export function statements(sql) {
   return out;
 }
 
-/** The owned keys a statement writes: a write to settings that names the key as a quoted literal. */
+/**
+ * The owned keys a statement writes: a write to settings that names the key as a quoted literal.
+ */
 export function writtenKeys(stmt) {
   if (COPY.test(stmt)) return ['<copy into settings>'];
   if (!WRITE.test(stmt)) return [];

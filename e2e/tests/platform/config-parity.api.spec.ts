@@ -5,10 +5,10 @@ import { withSql } from '../../support/core/schedule';
 import { restoreSettings, snapshotSettings } from '../../support/platform/settings';
 import { USERS } from '../../support/core/users';
 
-// 26-P2 «Copy» + «Parity» (docs/26 §4) through the REAL API: GET /admin/config/parity is empty on the
-// e2e database (CI runs this), and a missing row, a JSON null and a seeded null give the same
-// GET /settings, the same GET /settings/public and a closed send gate, with no `messages` row created.
-// The send-gate rows are only deleted or set to JSON null (both = OFF), then put back.
+// 26-P2 «Copy» + «Parity» (docs/26 §4) through the REAL API: GET /admin/config/parity is empty on
+// the e2e database (CI runs this), and a missing row, a JSON null and a seeded null give the same
+// GET /settings, the same GET /settings/public and a closed send gate, with no `messages` row
+// created. The send-gate rows are only deleted or set to JSON null (both = OFF), then put back.
 
 const KEYS = [
   'late_cancel_hours', 'recording_retention_days', 'recording_consent_notice', 'booking_horizon_weeks',

@@ -61,7 +61,10 @@ export const lessonRows = (teacherId: string) =>
   withSql((sql) => sql<LessonRow[]>`
     select id, status, starts_at, ends_at, override_reason from public.lessons where teacher_id = ${teacherId} order by starts_at`);
 
-/** e2e seeds auto_messages_enabled on (journey 3); an admin edit must queue its message even when off. */
+/**
+ * e2e seeds auto_messages_enabled on (journey 3); an admin edit must queue its message even when
+ * off.
+ */
 export const autoMessages = (on: boolean) =>
   withSql((sql) => sql`update public.settings set value = ${sql.json(on)} where key = 'auto_messages_enabled'`);
 

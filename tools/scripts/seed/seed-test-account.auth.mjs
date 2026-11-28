@@ -1,7 +1,8 @@
 // The test teacher's sign-in account, two ways (seed-test-account.mjs picks one with authMode):
 // - 'admin-api': Supabase Auth Admin REST (what admin.createUser / updateUserById call), when
 //   SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY are set;
-// - 'sql': auth.users + auth.identities written directly, as Supabase's own SQL seeds do (bcrypt via
+// - 'sql': auth.users + auth.identities written directly, as Supabase's own SQL seeds do (bcrypt
+//   via
 //   pgcrypto, email confirmed, token columns '' — GoTrue fails sign-in on NULL there).
 // Nothing here logs the email, the password or a response body.
 import { z } from 'zod';

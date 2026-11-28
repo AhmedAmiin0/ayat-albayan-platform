@@ -1,7 +1,8 @@
-// After an apply: imported lessons are the old system's (the Apps Script already put them in Google),
-// but the lessons insert trigger queues each one for Google sync before its import item is written
-// (v_platform_origin_lessons sees no import item yet). Drop those queue rows so a live sync never
-// duplicates the old script's events. Rows a later change queues are excluded by the view itself.
+// After an apply: imported lessons are the old system's (the Apps Script already put them in
+// Google), but the lessons insert trigger queues each one for Google sync before its import item is
+// written (v_platform_origin_lessons sees no import item yet). Drop those queue rows so a live sync
+// never duplicates the old script's events. Rows a later change queues are excluded by the view
+// itself.
 import type { TargetDb } from './target.ts';
 
 export const unqueueImportedSql = () => ({
@@ -14,7 +15,10 @@ export const unqueueImportedSql = () => ({
   params: [],
 });
 
-/** How many queue rows were dropped; a failure is reported, never thrown (the apply already committed). */
+/**
+ * How many queue rows were dropped; a failure is reported, never thrown (the apply already
+ * committed).
+ */
 export async function unqueueImportedLessons(db: Pick<TargetDb, 'select'>): Promise<string> {
   try {
     const [row] = await db.select<{ n: number }>(unqueueImportedSql());

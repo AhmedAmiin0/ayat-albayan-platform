@@ -1,6 +1,6 @@
-// Clickable links in a chat message (W11, web and mobile). A link is an http(s) URL, or `www.` and a
-// host, which opens as `https://www.…`. `javascript:`, `ftp:`, other schemes and
-// bare domains without `www.` stay text. Signed links never reach sales (the API strips them).
+// Clickable links in a chat message (W11, web and mobile). A link is an http(s) URL, or `www.` and
+// a host, which opens as `https://www.…`. `javascript:`, `ftp:`, other schemes and bare domains
+// without `www.` stay text. Signed links never reach sales (the API strips them).
 
 export interface TextPart {
   text: string;
@@ -11,7 +11,9 @@ export interface TextPart {
 const URL_RE = /https?:\/\/[^\s]+|www\.[^\s]+/g;
 /** Sentence punctuation that ends a URL written inside a sentence: «… https://a.b/c.» */
 const TRAILING_RE = /[.,،؛)]+$/;
-/** Before `www.`, a Latin letter, digit or URL character means it is inside another word: «awww.x». */
+/**
+ * Before `www.`, a Latin letter, digit or URL character means it is inside another word: «awww.x».
+ */
 const GLUED_RE = /[\w.@/:-]/;
 /** `www.` then a host with at least one more label: «www.x.com», not «www.» or «www.x». */
 const WWW_HOST_RE = /^www\.[^\s./]+\.[^\s./]/;

@@ -15,7 +15,9 @@ import { SITE_COUNTRIES, type SiteCountry } from './currency';
 
 export type LastPackage = Pick<SubscriptionView, 'price_source' | 'lessons_total' | 'duration'>;
 
-/** The calculator inputs of a renewal. `country` '' = the guardian's country (the API's default). */
+/**
+ * The calculator inputs of a renewal. `country` '' = the guardian's country (the API's default).
+ */
 export interface RenewalPricing {
   pkg: PackageId | 'custom';
   count: number;

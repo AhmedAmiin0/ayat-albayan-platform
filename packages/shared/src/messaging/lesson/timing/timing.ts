@@ -77,7 +77,10 @@ export interface ReminderTiming {
   tz: string;
   /** The lesson_reminder rule's minutes_before (same_day). */
   minutesBefore: number;
-  /** day_before: the rule's send_at_local («HH:MM» on the previous local day); null / absent = the lesson's own time. */
+  /**
+   * day_before: the rule's send_at_local («HH:MM» on the previous local day); null / absent = the
+   * lesson's own time.
+   */
   sendAtLocal?: string | null;
   now: Date;
 }

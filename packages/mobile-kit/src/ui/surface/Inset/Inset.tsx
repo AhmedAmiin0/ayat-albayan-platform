@@ -8,7 +8,9 @@ const INSET_RADIUS = 20;
 
 const InsetContext = createContext(false);
 
-/** True inside an inset group: a ListRow drops its own fill and bottom rule (the group draws them). */
+/**
+ * True inside an inset group: a ListRow drops its own fill and bottom rule (the group draws them).
+ */
 export const useInset = () => useContext(InsetContext);
 
 /** The rule between two rows, inset 16pt from both sides. */
@@ -34,7 +36,8 @@ export function InsetGroup({ children, testID }: { children: ReactNode; testID?:
     <InsetContext.Provider value>
       <View
         testID={testID}
-        // A border, not raisedCard's outer ring: a scroll view without side padding would clip the ring.
+        // A border, not raisedCard's outer ring: a scroll view without side padding would clip the
+        // ring.
         style={{ ...raisedCard(color, INSET_RADIUS), boxShadow: undefined, borderWidth: StyleSheet.hairlineWidth, borderColor: color.rule, overflow: 'hidden' }}
       >
         {rows.map((row, i) => (
@@ -54,7 +57,9 @@ interface CellPlace {
   last: boolean;
 }
 
-/** One row's slice of the card in a virtualised list: the fill, the side edges, the rounded ends. */
+/**
+ * One row's slice of the card in a virtualised list: the fill, the side edges, the rounded ends.
+ */
 function cellStyle(color: { raised: string; rule: string }, { first, last }: CellPlace): ViewStyle {
   const edge = StyleSheet.hairlineWidth;
   return {

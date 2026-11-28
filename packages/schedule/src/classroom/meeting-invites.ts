@@ -1,11 +1,11 @@
 import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
 
-// Scheduled meetings and invitations (R-MEET-01..03, migrations 410–419). Staff are
-// invited in the app (the bell, kind meeting_invite); a family (picked from the students: the guardian's
-// phone is resolved by the API, never sent to a client) or any typed phone gets a WhatsApp CHAT message
-// inside its 24 h window only (no template). A closed window is not an error: that recipient's result
-// says so and the creator copies the personal link and the invitation text instead.
+// Scheduled meetings and invitations (R-MEET-01..03, migrations 410–419). Staff are invited in the
+// app (the bell, kind meeting_invite); a family (picked from the students: the guardian's phone is
+// resolved by the API, never sent to a client) or any typed phone gets a WhatsApp CHAT message
+// inside its 24 h window only (no template). A closed window is not an error: that recipient's
+// result says so and the creator copies the personal link and the invitation text instead.
 
 export const MEETING_INVITEE_KINDS = ['staff', 'student', 'phone'] as const;
 export type MeetingInviteeKind = (typeof MEETING_INVITEE_KINDS)[number];
@@ -29,7 +29,9 @@ export const MEETING_MAX_AHEAD_DAYS = 90;
 /** Only admin and sales may invite any phone and see every student; others get 403. */
 export const mayInvitePhones = (role: string | null | undefined): boolean => role === 'admin' || role === 'sales';
 
-/** One invitee as the client picks it: a staff profile, a student (→ the guardian) or a typed phone. */
+/**
+ * One invitee as the client picks it: a staff profile, a student (→ the guardian) or a typed phone.
+ */
 export const meetingInviteeInputSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('staff'), profileId: z.uuid() }),
   z.object({ kind: z.literal('student'), studentId: z.uuid() }),
@@ -77,13 +79,18 @@ export interface MeetingInviteeView {
   sent_at: string | null;
 }
 
-/** One recipient's outcome. `link` and `invitation_text` only once, to the creator, for non-staff invitees. */
+/**
+ * One recipient's outcome. `link` and `invitation_text` only once, to the creator, for non-staff
+ * invitees.
+ */
 export interface MeetingInviteResult extends MeetingInviteeView {
   link: string | null;
   invitation_text: string | null;
 }
 
-/** GET /meetings/invitee-options: staff by name and role, students by name and code. Never a phone. */
+/**
+ * GET /meetings/invitee-options: staff by name and role, students by name and code. Never a phone.
+ */
 export type MeetingInviteeOption =
   | { kind: 'staff'; id: string; name: string; role: string }
   | { kind: 'student'; id: string; name: string; code: string };

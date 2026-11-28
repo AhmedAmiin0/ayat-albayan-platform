@@ -9,7 +9,10 @@ interface LinkedBodyProps {
   mark?: (text: string) => ReactNode;
 }
 
-/** A chat text with its http(s) and www. links clickable (W11, splitLinks): the inbox and the student channel. */
+/**
+ * A chat text with its http(s) and www. links clickable (W11, splitLinks): the inbox and the
+ * student channel.
+ */
 export function LinkedBody({ text, mark = plain }: LinkedBodyProps) {
   return (
     <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">

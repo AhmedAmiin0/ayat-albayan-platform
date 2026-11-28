@@ -4,14 +4,17 @@ import { seedFamily, withSql } from '../core/schedule';
 import { STUB_URL, setMessaging, stubSent, stubTemplateStatus } from '../core/wa-stub';
 import { templateParam } from '../core/stub-template';
 
-// Family accounts (docs/30): the account_code template on the stub, the switch, a fresh family, and the
-// code as the stub captured it. Example data only; «Meta» is tools/wa-stub.
+// Family accounts (docs/30): the account_code template on the stub, the switch, a fresh family, and
+// the code as the stub captured it. Example data only; «Meta» is tools/wa-stub.
 
 const TEMPLATE = 'account_code';
 /** Codes leave from the CHAT line: the template lives on the chat WABA (= playwright.config.ts). */
 const CHAT_WABA = 'e2e-chat-waba';
 
-/** Codes can go out (two-line runs only: no chat line = no codes): the template exists and is approved (stub + DB), sending and family sign-in are on. */
+/**
+ * Codes can go out (two-line runs only: no chat line = no codes): the template exists and is
+ * approved (stub + DB), sending and family sign-in are on.
+ */
 export async function openCodes(): Promise<void> {
   const created = await fetch(`${STUB_URL}/v21.0/${CHAT_WABA}/message_templates`, {
     method: 'POST',
@@ -20,8 +23,9 @@ export async function openCodes(): Promise<void> {
       name: TEMPLATE,
       language: 'ar',
       category: 'AUTHENTICATION',
-      // Meta lists an approved authentication template with its fixed text ({{1}} = the code) and the
-      // copy-code button as a URL button: the stub checks a send's body values against this text.
+      // Meta lists an approved authentication template with its fixed text ({{1}} = the code) and
+      // the copy-code button as a URL button: the stub checks a send's body values against this
+      // text.
       components: [
         { type: 'BODY', text: 'رمز التحقق الخاص بك هو *{{1}}*. لا تشاركه مع أحد.', example: { body_text: [['123456']] } },
         {
@@ -89,7 +93,10 @@ export async function codesSent(phone: string): Promise<number> {
 
 let visitor = 0;
 
-/** A public POST from a visitor of its own (the API trusts one proxy hop): the per-IP buckets never fill across specs. */
+/**
+ * A public POST from a visitor of its own (the API trusts one proxy hop): the per-IP buckets never
+ * fill across specs.
+ */
 export function post(path: string, body: unknown): Promise<Response> {
   visitor += 1;
   const ip = `198.51.${Math.floor(Date.now() / 1000) % 250}.${visitor % 250}`;

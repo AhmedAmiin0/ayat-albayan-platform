@@ -35,8 +35,9 @@ function Dot({ index, color, still }: { index: number; color: string; still: boo
 }
 
 /**
- * Three round dots in a wave, staggered 0 / 150 / 300 ms in reading order: the row follows the layout
- * direction, so in Arabic the wave runs right to left. Decorative (the words beside them speak).
+ * Three round dots in a wave, staggered 0 / 150 / 300 ms in reading order: the row follows the
+ * layout direction, so in Arabic the wave runs right to left. Decorative (the words beside them
+ * speak).
  */
 export function ConnectingDots({ color, still }: { color: string; still: boolean }) {
   return (

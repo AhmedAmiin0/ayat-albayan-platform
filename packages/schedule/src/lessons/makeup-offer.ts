@@ -3,7 +3,10 @@ import type { LessonStudentView, LessonView } from './views';
 
 /** Who a lesson's makeup is for: a makeup to book, and a makeup already booked. */
 export interface MakeupOffer {
-  /** Eligible (makeupEligible: charged miss, within the makeup window, not a trial or a makeup) with no active makeup yet. */
+  /**
+   * Eligible (makeupEligible: charged miss, within the makeup window, not a trial or a makeup) with
+   * no active makeup yet.
+   */
   open: LessonStudentView[];
   /** Eligible students whose makeup is already booked. */
   booked: (LessonStudentView & { makeup: NonNullable<LessonStudentView['makeup']> })[];

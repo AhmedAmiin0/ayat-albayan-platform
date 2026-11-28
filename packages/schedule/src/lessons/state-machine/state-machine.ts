@@ -79,7 +79,9 @@ export const OCCUPYING_LESSON_STATUSES = [
   'no_show',
 ] as const satisfies readonly LessonStatus[];
 
-/** Not happened and not cancelled yet: the only statuses a confirm/cancel/reschedule can start from. */
+/**
+ * Not happened and not cancelled yet: the only statuses a confirm/cancel/reschedule can start from.
+ */
 export const OPEN_LESSON_STATUSES = [
   'scheduled',
   'confirmed',

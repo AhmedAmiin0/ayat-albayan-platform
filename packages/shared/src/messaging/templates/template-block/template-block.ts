@@ -18,7 +18,9 @@ export interface TemplateHeader {
   text?: string;
 }
 
-/** One button as WhatsApp shows it; `text` '' = Meta gave no label (the client names it by type). */
+/**
+ * One button as WhatsApp shows it; `text` '' = Meta gave no label (the client names it by type).
+ */
 export interface TemplateDisplayButton {
   type: TemplateButtonKind;
   text: string;
@@ -28,7 +30,10 @@ export interface TemplateDisplayButton {
   phone?: string;
 }
 
-/** message_templates.display: the header and every button as Meta's sync last reported them; null = never synced. */
+/**
+ * message_templates.display: the header and every button as Meta's sync last reported them; null =
+ * never synced.
+ */
 export interface TemplateDisplay {
   header: TemplateHeader | null;
   buttons: TemplateDisplayButton[];
@@ -41,7 +46,10 @@ export interface MessageTemplateBlock {
   buttons: TemplateDisplayButton[];
 }
 
-/** MessageView's template part: a template row's block (templateBlock); absent = an older API, null = none. */
+/**
+ * MessageView's template part: a template row's block (templateBlock); absent = an older API, null
+ * = none.
+ */
 export interface TemplatedMessage {
   template?: MessageTemplateBlock | null;
 }
@@ -56,8 +64,8 @@ export interface TemplateBlockSource {
 }
 
 /**
- * URL suffixes that are a guardian's own signed token (the feedback form, the classroom guest link):
- * a staff tap would act as the family, so the button shows its label only.
+ * URL suffixes that are a guardian's own signed token (the feedback form, the classroom guest
+ * link): a staff tap would act as the family, so the button shows its label only.
  */
 export const TOKEN_URL_KEYS: ReadonlySet<string> = new Set([
   'lesson_feedback_request',
@@ -110,7 +118,10 @@ export function templateBlock(
   return { header, footer: src.footer_ar, buttons: buttons.map((b) => filled(b, src.key, params)) };
 }
 
-/** The link a staff tap may open: a URL button's http(s) link only; every other button is display-only. */
+/**
+ * The link a staff tap may open: a URL button's http(s) link only; every other button is
+ * display-only.
+ */
 export function templateButtonLink(b: TemplateDisplayButton): string | null {
   return b.type === 'url' && b.url && /^https?:\/\//i.test(b.url) ? b.url : null;
 }

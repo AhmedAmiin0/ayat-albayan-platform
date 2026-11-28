@@ -1,6 +1,6 @@
 // Quote currency per guardian country (docs/08 §1). The site's five countries keep their own
-// currency; every other or unknown country is quoted in USD (owner rule, 2026-10-02).
-// Arabic country names and currency symbols live in ar.json `pricing.countries` / `pricing.currencies`;
+// currency; every other or unknown country is quoted in USD (owner rule, 2026-10-02). Arabic
+// country names and currency symbols live in ar.json `pricing.countries` / `pricing.currencies`;
 // the English symbol is the ISO code (as on the site).
 
 export const SITE_COUNTRIES = ['SA', 'AE', 'QA', 'KW', 'OM'] as const;

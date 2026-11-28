@@ -1,7 +1,8 @@
 import { toCents } from '@ab/core';
 import type { PaymentLinkStatus } from './schemas';
 
-// Pure rules of the payment links (docs/30-stripe-test.md), shared by the API, the web and the mobile app.
+// Pure rules of the payment links (docs/30-stripe-test.md), shared by the API, the web and the
+// mobile app.
 
 /** The platform's own cents (every stored amount has 2 decimals): 290.5 → 29050. */
 export const toMinorUnits = toCents;
@@ -51,8 +52,9 @@ export function effectiveLinkStatus(
 }
 
 /**
- * The Stripe test app's Android package (apps/staff-mobile app.config.ts: app.json's package + '.stripetest'; its
- * app-config.stripe.test.ts pins this): the pay page names it to bring the payer back into that app.
+ * The Stripe test app's Android package (apps/staff-mobile app.config.ts: app.json's package +
+ * '.stripetest'; its app-config.stripe.test.ts pins this): the pay page names it to bring the payer
+ * back into that app.
  */
 export const STRIPE_TEST_APP_PACKAGE = 'com.ayatalbayan.admin.stripetest';
 /** The normal app's Android package (app.json; app-config.stripe.test.ts pins it): live mode. */

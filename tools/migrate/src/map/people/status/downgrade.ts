@@ -35,7 +35,9 @@ export function oldActiveReason(g: OldGrounds): DowngradeReason | null {
   return GROUNDS.find(([, holds]) => holds(g))?.[0] ?? null;
 }
 
-/** A warn issue when the old rule said active and the new one does not; `detail` = reason→status. */
+/**
+ * A warn issue when the old rule said active and the new one does not; `detail` = reason→status.
+ */
 export function downgradeIssue(
   ref: SourceRef,
   o: { grounds: OldGrounds; status: StudentStatus },

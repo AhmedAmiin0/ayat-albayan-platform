@@ -3,7 +3,8 @@ import { SETTING_DEFAULTS } from './registry';
 import { settingsChanges } from './validation/schema';
 import { readSettings } from './validation/validate';
 
-// Read side (readSettings) against the registry defaults, plus the write-side diff (settingsChanges).
+// Read side (readSettings) against the registry defaults, plus the write-side diff
+// (settingsChanges).
 
 describe('readSettings (migration 073 + 123 defaults)', () => {
   it('no rows → every default; Phase 3 defaults are the documented ones', () => {

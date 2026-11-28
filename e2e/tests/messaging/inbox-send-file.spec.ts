@@ -9,7 +9,8 @@ import { stubInboundAnswerable } from '../../support/messaging/wa-lines';
 
 // docs/21 D2 (R-MSG-03): inside the 24 h window the assistant attaches an image in her chat, adds a
 // caption and sends it. It is stored in wa-media under her name, leaves «Meta» (tools/wa-stub) as
-// type image by link, and its bubble opens it like an inbound photo. A closed window hides the paperclip.
+// type image by link, and its bubble opens it like an inbound photo. A closed window hides the
+// paperclip.
 
 const WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };
 const c = ar.inbox.composer;

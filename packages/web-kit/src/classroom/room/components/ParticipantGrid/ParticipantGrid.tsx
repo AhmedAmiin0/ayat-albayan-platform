@@ -10,7 +10,10 @@ export interface TileSlots {
   actionFor: (tile: TileView) => ReactNode;
 }
 
-/** Nothing shared: the cameras split the space evenly (1 / 2 / 4 / 6 …), sized by the grid's own width. */
+/**
+ * Nothing shared: the cameras split the space evenly (1 / 2 / 4 / 6 …), sized by the grid's own
+ * width.
+ */
 export function ParticipantGrid({ tiles, attach, actionFor }: TileSlots & { tiles: TileView[] }) {
   return (
     <section aria-label={t.classroom.title} className="@container min-h-0 flex-1 overflow-y-auto">

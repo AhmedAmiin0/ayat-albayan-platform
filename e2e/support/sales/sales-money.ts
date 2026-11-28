@@ -9,7 +9,10 @@ import { withSql } from '../core/schedule';
 /** A 1×1 PNG made in memory (no binary fixtures in the repo). */
 export const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
 
-/** A Saudi guardian on `phone` with one child in trial, brought by the salesperson (test data, written with SQL). */
+/**
+ * A Saudi guardian on `phone` with one child in trial, brought by the salesperson (test data,
+ * written with SQL).
+ */
 export async function trialFamily(input: {
   broughtBy: string;
   phone: string;

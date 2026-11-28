@@ -16,10 +16,14 @@ import { accessToken } from './access-token';
 import { withReadDeadline } from './read-within';
 import { reportStall } from './stall-report';
 
-// The one client lives in @ab/client-core (docs/27 E1); this module injects mobile's env, session and tag.
+// The one client lives in @ab/client-core (docs/27 E1); this module injects mobile's env, session
+// and tag.
 export { ApiError, toQueryString, type SendMethod } from '@ab/client-core';
 
-/** fetch that tells the connection state what happened: any response is an answer, a rejection is none. */
+/**
+ * fetch that tells the connection state what happened: any response is an answer, a rejection is
+ * none.
+ */
 async function reach(url: string, init: RequestInit): Promise<Response> {
   markSending(init.signal);
   try {

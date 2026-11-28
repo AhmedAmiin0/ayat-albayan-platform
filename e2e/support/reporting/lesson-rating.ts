@@ -12,7 +12,10 @@ interface RatingScene {
   phone: string;
 }
 
-/** A family with a lesson that started 30 minutes ago and is still `scheduled` (the teacher has not closed it). */
+/**
+ * A family with a lesson that started 30 minutes ago and is still `scheduled` (the teacher has not
+ * closed it).
+ */
 export async function startedLesson(student: string): Promise<RatingScene> {
   const teacherId = await resetAbrar();
   const family = await seedFamily(`أم ${student}`, [student]);

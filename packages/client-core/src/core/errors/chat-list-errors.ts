@@ -2,7 +2,8 @@ import { isChatListError } from '@ab/shared';
 import { ApiError } from '../http';
 
 // The words for a failed chat-list call (docs/22 §3), shared by both apps (docs/27 E6). Each app
-// injects its `t.inbox.lists`, read on every call (the admins' translation overrides land after import).
+// injects its `t.inbox.lists`, read on every call (the admins' translation overrides land after
+// import).
 
 /** The app's `t.inbox.lists` (only these four lines are read). */
 export interface ChatListErrorText {
@@ -12,7 +13,10 @@ export interface ChatListErrorText {
   saveError: string;
 }
 
-/** The 409s (a taken name, the 30-list cap), a list deleted meanwhile (404), else the generic save error. */
+/**
+ * The 409s (a taken name, the 30-list cap), a list deleted meanwhile (404), else the generic save
+ * error.
+ */
 export function chatListErrorWords(text: () => ChatListErrorText): (error: unknown) => string {
   return (error) => {
     const words = text();

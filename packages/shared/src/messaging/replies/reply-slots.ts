@@ -70,8 +70,8 @@ export function replyNeedsInput(body: string, known: SavedReplyValues): boolean 
 
 /**
  * The reply with every slot filled (values trimmed, inserted literally). An empty blank keeps its
- * «[label]» as written, so nothing silently disappears; an empty auto placeholder is removed cleanly
- * (resolveSavedReply's rules). Pure.
+ * «[label]» as written, so nothing silently disappears; an empty auto placeholder is removed
+ * cleanly (resolveSavedReply's rules). Pure.
  */
 export function fillReply(body: string, values: ReplySlotValues): string {
   const blanks: string[] = [];

@@ -17,7 +17,10 @@ const label = (tile: TileView): string => {
   return tile.isLocal ? `${tile.name} (${t.classroom.you})` : tile.name;
 };
 
-/** One person (or one shared screen). Speaking = gold ring + the word; muted = struck glyph + the word. */
+/**
+ * One person (or one shared screen). Speaking = gold ring + the word; muted = struck glyph + the
+ * word.
+ */
 export function VideoTile({ tile, attach, action, className }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {

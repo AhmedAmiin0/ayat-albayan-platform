@@ -57,7 +57,10 @@ export interface Glass {
   /** The tab capsule's fill: `raised` at 92 %. No backdrop blur in this APK, so a row scrolled under
    *  the capsule must not read through it (0.8 / 0.84 did). */
   fill: string;
-  /** The vertical sheen over the capsule (white in both themes): bright top, dim middle, a lift at the foot. */
+  /**
+   * The vertical sheen over the capsule (white in both themes): bright top, dim middle, a lift at
+   * the foot.
+   */
   sheen: { color: string; stops: readonly GlassStop[] };
   /** The capsule's 0.5px edge. */
   border: string;

@@ -1,5 +1,5 @@
-// Folder cap (docs/27 §1 rule 4): ≈ 12 code files (tests not counted) and ≈ 12 sub-folders per folder.
-// Usage: node tools/scripts/folder-cap.mjs [--strict] [--write <app>…]
+// Folder cap (docs/27 §1 rule 4): ≈ 12 code files (tests not counted) and ≈ 12 sub-folders per
+// folder. Usage: node tools/scripts/folder-cap.mjs [--strict] [--write <app>…]
 //   default   report only (exit 0): new crowded folders, allow-listed folders that grew, stale entries
 //   --strict  exit 1 on any of those (CI runs it since Wave F; the allow-lists may only shrink)
 //   --write   rewrite refactor/folder-cap/<app>.json from today's tree (one file per app: lanes never share one)
@@ -48,7 +48,10 @@ export const crowded = (counts) =>
       .sort(([a], [b]) => a.localeCompare(b)),
   );
 
-/** New crowded folders, allow-listed folders that grew, and allow-list entries that are no longer needed. */
+/**
+ * New crowded folders, allow-listed folders that grew, and allow-list entries that are no longer
+ * needed.
+ */
 export function check(counts, allow) {
   const problems = [];
   for (const [folder, c] of Object.entries(crowded(counts))) {

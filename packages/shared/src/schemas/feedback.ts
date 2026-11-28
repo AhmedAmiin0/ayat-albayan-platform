@@ -92,7 +92,10 @@ export interface FeedbackRowView {
   recommend: FeedbackRecommend | null;
   note: string | null;
   submitted_at: string | null;
-  /** The guardian's WhatsApp button answer (lesson_rating, migration 195); null until they tap. Absent in an old cache. */
+  /**
+   * The guardian's WhatsApp button answer (lesson_rating, migration 195); null until they tap.
+   * Absent in an old cache.
+   */
   quick_rating?: LessonRating | null;
   quick_rated_at?: string | null;
   /** Admin only: the family's contact number; never in a teacher's view. */
@@ -119,7 +122,10 @@ export interface TeacherFeedbackSummary extends FeedbackAverage {
   teacher: { id: string; name: string };
 }
 
-/** GET /teachers/me/feedback: own rows plus the teacher's own average (null before the first answer). */
+/**
+ * GET /teachers/me/feedback: own rows plus the teacher's own average (null before the first
+ * answer).
+ */
 export interface TeacherFeedbackView {
   items: TeacherFeedbackRowView[];
   total: number;
@@ -128,11 +134,16 @@ export interface TeacherFeedbackView {
   average: FeedbackAverage | null;
 }
 
-/** POST /lessons/:lessonId/feedback-request: `replayed` = already requested, nothing new was sent. */
+/**
+ * POST /lessons/:lessonId/feedback-request: `replayed` = already requested, nothing new was sent.
+ */
 export interface FeedbackRequestResult {
   requested_at: string;
   expires_at: string;
   replayed: boolean;
-  /** The queued row's status: queued while sending is gated off, failed carries nothing to resend but a new link. */
+  /**
+   * The queued row's status: queued while sending is gated off, failed carries nothing to resend
+   * but a new link.
+   */
   message_status: MessageStatus;
 }

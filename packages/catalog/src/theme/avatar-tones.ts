@@ -1,8 +1,8 @@
 import type { ThemeName } from './theme';
 
-// The initials circle's backgrounds (one consistent circle when there is no photo).
-// Six muted tones, the text is always `ink` (AA in both themes: avatar-tones.test.ts). A person keeps
-// the same tone on every screen and both apps: avatarTone(id) hashes the person's id, never the name.
+// The initials circle's backgrounds (one consistent circle when there is no photo). Six muted
+// tones, the text is always `ink` (AA in both themes: avatar-tones.test.ts). A person keeps the
+// same tone on every screen and both apps: avatarTone(id) hashes the person's id, never the name.
 // apps/staff-web/src/styles/avatar-tones.css carries the same hex (its test diffs the two).
 export const avatarTones: Record<ThemeName, readonly string[]> = {
   light: ['#d9efe3', '#f3e6c4', '#dbe9f6', '#f4dfe3', '#e6e0f3', '#d6eeee'],

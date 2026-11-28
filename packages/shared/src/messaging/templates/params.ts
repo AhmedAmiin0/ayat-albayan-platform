@@ -50,10 +50,14 @@ export function lessonReminder24hMessage(
   };
 }
 
-/** The approved sample's wording before the link (WhatsApp text: Arabic whatever the UI language). */
+/**
+ * The approved sample's wording before the link (WhatsApp text: Arabic whatever the UI language).
+ */
 const LINK_LABEL = 'رابط الحلقة:';
 
-/** Meta rejects a parameter with a newline, a tab or 4+ spaces in a row: one line, single spaces. */
+/**
+ * Meta rejects a parameter with a newline, a tab or 4+ spaces in a row: one line, single spaces.
+ */
 const oneLine = (text: string) => text.replace(/\s+/g, ' ').trim();
 
 /** The plain template has no button, so a non-Meet link rides in {{2}}. */

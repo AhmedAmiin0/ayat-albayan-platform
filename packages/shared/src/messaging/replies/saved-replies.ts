@@ -28,7 +28,10 @@ export interface SavedReply {
   updated_at: string;
 }
 
-/** POST /saved-replies/:id/stage: the attachment copied as this sender's chat file, ready for POST /threads/:phone/file. */
+/**
+ * POST /saved-replies/:id/stage: the attachment copied as this sender's chat file, ready for POST
+ * /threads/:phone/file.
+ */
 export interface SavedReplyStaged {
   path: string;
   filename: string;
@@ -68,7 +71,10 @@ export type SavedReplyUpdate = z.infer<typeof savedReplyUpdateSchema>;
 export const savedReplyMoveSchema = z.object({ direction: z.enum(['up', 'down']) });
 export type SavedReplyMove = z.infer<typeof savedReplyMoveSchema>;
 
-/** POST /saved-replies/attachment-upload-url: the chat's own types (JPEG, PNG, PDF); size checked against the upload limit. */
+/**
+ * POST /saved-replies/attachment-upload-url: the chat's own types (JPEG, PNG, PDF); size checked
+ * against the upload limit.
+ */
 export const savedReplyUploadSchema = z.object({
   mime: z.enum(CHAT_SEND_MIMES, { message: 'file_type' }),
   size: z.int().min(1),

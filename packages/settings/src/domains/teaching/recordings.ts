@@ -1,9 +1,9 @@
 import type { SettingDef } from '../../defs';
 
 /**
- * The recording consent notice and the recordings' retention.
- * The consent notice and the recording retention have no consumer yet (the recordings PR adds them). Retention of recordings is OFF (null = keep forever):
- * deleting them is the owner's decision, never on by default.
+ * The recording consent notice and the recordings' retention. The consent notice and the recording
+ * retention have no consumer yet (the recordings PR adds them). Retention of recordings is OFF
+ * (null = keep forever): deleting them is the owner's decision, never on by default.
  */
 export const RECORDING_SETTINGS = {
   recording_consent_notice: {

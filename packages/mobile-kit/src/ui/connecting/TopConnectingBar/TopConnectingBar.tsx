@@ -7,7 +7,8 @@ import { ConnectingBar } from '../ConnectingBar';
 /**
  * The reconnecting bar for a screen with no header (root layout, above the stack): under the top
  * safe area, pushing the screen down. The screens' own SafeAreaView measures its position, so the
- * inset is never doubled. A focused ScreenHeader shows the bar itself, and then this one steps aside.
+ * inset is never doubled. A focused ScreenHeader shows the bar itself, and then this one steps
+ * aside.
  */
 export function TopConnectingBar({ store }: { store?: ConnectivityStore }) {
   const { top } = useSafeAreaInsets();

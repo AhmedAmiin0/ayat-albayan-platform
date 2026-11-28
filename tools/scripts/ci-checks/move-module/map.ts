@@ -10,7 +10,10 @@ export interface BarrelEntry {
   dir: string;
   files: string[];
 }
-/** `refactor/moves/<id>.json`. `files` is written by the first run, so a replay works once the sources are gone. */
+/**
+ * `refactor/moves/<id>.json`. `files` is written by the first run, so a replay works once the
+ * sources are gone.
+ */
 export interface MoveMap {
   id: string;
   seq: number;
@@ -18,8 +21,8 @@ export interface MoveMap {
   barrels?: BarrelEntry[];
   files?: [string, string][];
   /**
-   * Identifier renames applied across the monorepo with the move (`{ "XQueries": "XRepo" }`, D2). They stay
-   * active on every replay: an old name a branch adds later is renamed too.
+   * Identifier renames applied across the monorepo with the move (`{ "XQueries": "XRepo" }`, D2).
+   * They stay active on every replay: an old name a branch adds later is renamed too.
    */
   renames?: Record<string, string>;
 }
@@ -71,7 +74,10 @@ function expandEntry(root: string, entry: MoveEntry): [string, string][] {
   return [[from, to.endsWith('/') ? posix.join(to, posix.basename(from)) : to]];
 }
 
-/** `foo.ts` brings `foo.test.ts(x)`, `foo.spec.*` (renamed with its stem); every test brings its `__snapshots__/<test>.snap`. */
+/**
+ * `foo.ts` brings `foo.test.ts(x)`, `foo.spec.*` (renamed with its stem); every test brings its
+ * `__snapshots__/<test>.snap`.
+ */
 function companions(root: string, pair: [string, string]): [string, string][] {
   const [from, to] = pair;
   const dir = posix.dirname(from);

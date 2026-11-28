@@ -4,7 +4,8 @@ import { freshDigits } from '../../support/core/messages';
 import { setMessaging, stubInbound, stubReset } from '../../support/core/wa-stub';
 
 // An unknown number writes on WhatsApp (R-LEAD-01, R-MSG-04): the lead is created once, the text is
-// stored as an unread inbound row, the admin gets one new_lead push, and the thread is in the inbox.
+// stored as an unread inbound row, the admin gets one new_lead push, and the thread is in the
+// inbox.
 
 const POLL = { timeout: 30_000, intervals: [500, 1_000, 2_000] };
 

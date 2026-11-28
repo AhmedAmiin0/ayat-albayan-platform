@@ -3,8 +3,8 @@ import type { LiveKey } from './inbox-live';
 /**
  * Which refresh targets are on screen. A watched key (a focused chats tab, an open focused chat)
  * refreshes on its event. A seen key (mounted, but under another screen or tab) is marked dirty
- * instead and refreshes once when it is watched again. A key never watched, or forgotten on unmount,
- * ignores events: a chat opened later loads fresh by itself.
+ * instead and refreshes once when it is watched again. A key never watched, or forgotten on
+ * unmount, ignores events: a chat opened later loads fresh by itself.
  */
 export function createLiveRegistry() {
   const watched = new Map<LiveKey, number>();

@@ -5,11 +5,16 @@
 export const GOOGLE_SYNC_KINDS = ['teacher_event', 'main_event', 'report_pdf', 'attendance_row', 'summary_row'] as const;
 export type GoogleSyncKind = (typeof GOOGLE_SYNC_KINDS)[number];
 
-/** google_sync_items.state: the outbox's states. `gone` = deleted by someone in Google; never recreated by itself. */
+/**
+ * google_sync_items.state: the outbox's states. `gone` = deleted by someone in Google; never
+ * recreated by itself.
+ */
 export const GOOGLE_SYNC_STATES = ['pending', 'synced', 'gone', 'failed', 'skipped'] as const;
 export type GoogleSyncState = (typeof GOOGLE_SYNC_STATES)[number];
 
-/** settings.google_sync_mode: `dry_run` records the planned request and writes nothing in Google. */
+/**
+ * settings.google_sync_mode: `dry_run` records the planned request and writes nothing in Google.
+ */
 export const GOOGLE_SYNC_MODES = ['dry_run', 'live'] as const;
 export type GoogleSyncMode = (typeof GOOGLE_SYNC_MODES)[number];
 
@@ -20,9 +25,14 @@ export const GOOGLE_SKIP_REASONS = [
   'student_unmapped',
   'drive_unconfirmed',
   'already_in_sheet',
-  /** Queued, then found to be an imported lesson (an import ran while sync was on): never written. */
+  /**
+   * Queued, then found to be an imported lesson (an import ran while sync was on): never written.
+   */
   'not_platform_origin',
-  /** An imported lesson's slot already holds the old script's event: not written, tried again on the next sweep. */
+  /**
+   * An imported lesson's slot already holds the old script's event: not written, tried again on the
+   * next sweep.
+   */
   'script_event_present',
 ] as const;
 export type GoogleSkipReason = (typeof GOOGLE_SKIP_REASONS)[number];
@@ -45,7 +55,9 @@ export const GOOGLE_SCOPES = [
   'email',
 ] as const;
 
-/** The production callback, registered by the owner in the Google Cloud OAuth client (docs/24 §3). */
+/**
+ * The production callback, registered by the owner in the Google Cloud OAuth client (docs/24 §3).
+ */
 export const GOOGLE_REDIRECT_URI_PRODUCTION = 'https://api.ayatalbayan.com/integrations/google/callback';
 
 /** settings.google_calendar_window_days bounds (default 60). */

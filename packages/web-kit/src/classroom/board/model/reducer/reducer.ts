@@ -2,7 +2,9 @@ import type { JoinRole } from '@ab/shared';
 import type { BoardMessage } from '@ab/web-kit/classroom/board/model/messages';
 import { canAllowStudents, canDraw, canManageBoard, type BoardState, type Stroke } from '@ab/web-kit/classroom/board/model/model';
 
-/** A message and who sent it (the local person for their own actions). Roles come from the token. */
+/**
+ * A message and who sent it (the local person for their own actions). Roles come from the token.
+ */
 export interface BoardInput {
   msg: BoardMessage;
   from: { identity: string; role: JoinRole | null };
@@ -80,7 +82,9 @@ export function boardReducer(state: BoardState, { msg, from }: BoardInput): Boar
   }
 }
 
-/** Answer a late joiner's sync-request? Anyone holding strokes; the staff also for the flags alone. */
+/**
+ * Answer a late joiner's sync-request? Anyone holding strokes; the staff also for the flags alone.
+ */
 export function shouldAnswerSync(state: BoardState, role: JoinRole | null): boolean {
   return (
     state.strokes.length > 0 ||

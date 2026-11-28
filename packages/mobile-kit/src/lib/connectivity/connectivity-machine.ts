@@ -1,5 +1,6 @@
 // WhatsApp-like connection state without NetInfo (no native module: the app ships by OTA). The app
-// only learns it is offline from a request that got no answer; it is back the moment anything answers.
+// only learns it is offline from a request that got no answer; it is back the moment anything
+// answers.
 
 export type Connectivity = 'online' | 'connecting';
 

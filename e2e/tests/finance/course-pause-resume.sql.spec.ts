@@ -10,7 +10,8 @@ test.describe('course pause resume (docs/11 §7b)', () => {
   test('two students paused on one group rule: each resume brings back exactly its own student', async () => {
     await rolledBack(async (tx) => {
       const s = await seedPause(tx);
-      // The first leaves the group lessons (days 2 and 4); the second is then alone: they are cancelled.
+      // The first leaves the group lessons (days 2 and 4); the second is then alone: they are
+      // cancelled.
       const first = (await start(tx, pauseOf(s, 0, 5))) as { id: string; left: string[] };
       const second = (await start(tx, { ...pauseOf(s, 0, 5), student_id: s.other })) as {
         id: string;
@@ -18,7 +19,8 @@ test.describe('course pause resume (docs/11 §7b)', () => {
       };
       expect([first.left.length, second.cancelled.length]).toEqual([2, 2]);
       expect(await groupOf(tx, s.group)).toEqual([]);
-      // The first-paused resumes first: the lessons come back with it alone (handed over), the other stays out.
+      // The first-paused resumes first: the lessons come back with it alone (handed over), the
+      // other stays out.
       const back = await resume(tx, { pause_id: first.id, actor: s.actor, on: s.today });
       expect((back.rejoined as string[]).length).toBe(2);
       expect((await groupOf(tx, s.group)).map((g) => [g.day, [...g.students].sort()])).toEqual([
@@ -43,12 +45,14 @@ test.describe('course pause resume (docs/11 §7b)', () => {
     await rolledBack(async (tx) => {
       const s = await seedPause(tx);
       const { id } = (await start(tx, pauseOf(s, 0, 5))) as { id: string };
-      // As if paused from 14 days ago to 3 days ago, the package and the solo rule starting 6 days ago (inside it).
+      // As if paused from 14 days ago to 3 days ago, the package and the solo rule starting 6 days
+      // ago (inside it).
       await tx`update public.course_pauses set from_date = ${day(s.today, -14)}, until_date = ${day(s.today, -3)} where id = ${id}`;
       await tx`update public.subscriptions set starts_on = ${day(s.today, -6)} where id = ${s.sub}`;
       await tx`update public.schedule_rules set starts_on = ${day(s.today, -6)} where id = ${s.solo}`;
       const out = await resume(tx, { pause_id: id, actor: null });
-      // The pause lasted 12 days (extended_days); the course was paused for 4 of them (days −6 … −3).
+      // The pause lasted 12 days (extended_days); the course was paused for 4 of them (days −6 …
+      // −3).
       expect([out.resumed, out.days]).toEqual([true, 12]);
       expect(await statuses(tx, s)).toMatchObject({ renews: day(s.today, 34), ends: day(s.today, 34), rule: 'active' });
       const [row] = await tx<{ d: number }[]>`select extended_days as d from public.course_pauses where id = ${id}`;

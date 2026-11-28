@@ -24,7 +24,10 @@ function filesOf(root: string, mapFile: string): { map: MoveMap; pairs: [string,
   return { map: recorded, pairs };
 }
 
-/** A text file's new text: repo paths, then the root knip.json workspace paths and the knip guard names. */
+/**
+ * A text file's new text: repo paths, then the root knip.json workspace paths and the knip guard
+ * names.
+ */
 function rewriteTextFile(
   file: string,
   text: string,
@@ -58,7 +61,10 @@ function rewriteAll(r: Resolver, pairs: [string, string][], table: Map<string, s
   return count;
 }
 
-/** Applies one move map: rewrites every specifier, path reference and renamed identifier, moves the files, writes barrels. */
+/**
+ * Applies one move map: rewrites every specifier, path reference and renamed identifier, moves the
+ * files, writes barrels.
+ */
 export function runMap(root: string, mapFile: string): RunReport {
   const { map, pairs } = filesOf(root, mapFile);
   const pending = pairs.filter(([from]) => existsSync(posix.join(root, from)));
@@ -72,7 +78,9 @@ export function runMap(root: string, mapFile: string): RunReport {
   return { id: map.id, moved: pending.length, rewritten };
 }
 
-/** Every committed map in `refactor/moves/`, in `seq` order: an open branch follows all the moves. */
+/**
+ * Every committed map in `refactor/moves/`, in `seq` order: an open branch follows all the moves.
+ */
 export function replay(root: string): RunReport[] {
   const dir = posix.join(root, 'refactor', 'moves');
   if (!existsSync(dir)) return [];

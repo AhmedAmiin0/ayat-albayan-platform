@@ -7,6 +7,9 @@ export const MODULE_GROUPS = ['notifications', 'safety', 'google'] as const;
 export const SETTING_GROUPS = [...CONFIG_GROUPS, ...MODULE_GROUPS] as const;
 export type SettingGroup = (typeof SETTING_GROUPS)[number];
 
-/** A per-value confirmation the registry declares (docs/26 §1 rule 5): a plain one, or the typed text. */
+/**
+ * A per-value confirmation the registry declares (docs/26 §1 rule 5): a plain one, or the typed
+ * text.
+ */
 export const SETTING_CONFIRMS = ['simple', 'typed'] as const;
 export type SettingConfirm = (typeof SETTING_CONFIRMS)[number];

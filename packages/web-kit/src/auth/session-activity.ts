@@ -1,6 +1,8 @@
 import { call } from '@ab/web-kit/lib/http/api';
 
-/** What the activity log is told about a Supabase sign-in (the API never sees the sign-in itself). */
+/**
+ * What the activity log is told about a Supabase sign-in (the API never sees the sign-in itself).
+ */
 export type SessionEvent = 'login' | 'logout' | 'login-failed';
 
 /** Longest a report may hold up sign-in / sign-out; after that it is abandoned. */

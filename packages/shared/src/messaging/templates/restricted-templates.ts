@@ -1,14 +1,14 @@
 import type { Permission } from '@ab/catalog';
 import type { TemplateView } from './template-views';
 
-// Every role without
-// templates.manage or templates.send_all (teachers in teacher mode, sales, the classroom assistant, a
-// custom role) lists and sends only the restricted allow-list: the message_templates rows flagged
-// `sales_starter` (the column kept its name; it now means «allowed for restricted roles», docs/16).
+// Every role without templates.manage or templates.send_all (teachers in teacher mode, sales, the
+// classroom assistant, a custom role) lists and sends only the restricted allow-list: the
+// message_templates rows flagged `sales_starter` (the column kept its name; it now means «allowed
+// for restricted roles», docs/16).
 
 /**
- * Flagged by the chat line's import (template-import.ts); any other import comes unflagged. trial_reschedule
- * (reschedules the trial meeting) is seeded by migration 460.
+ * Flagged by the chat line's import (template-import.ts); any other import comes unflagged.
+ * trial_reschedule (reschedules the trial meeting) is seeded by migration 460.
  */
 export const RESTRICTED_TEMPLATE_DEFAULTS = [
   'free_trial_invite',
@@ -51,8 +51,9 @@ export function sendsAllTemplates(who: TemplateSender | null | undefined): boole
 }
 
 /**
- * May this user manage the registry (sync, submit, move, the allow-list, the lines check)? templates.manage,
- * never a role based on sales, the classroom assistant or teacher, whatever it holds.
+ * May this user manage the registry (sync, submit, move, the allow-list, the lines check)?
+ * templates.manage, never a role based on sales, the classroom assistant or teacher, whatever it
+ * holds.
  */
 export function managesTemplates(who: TemplateSender | null | undefined): boolean {
   if (!who || (who.role && ALLOW_LIST_ONLY_ROLES.includes(who.role))) return false;
@@ -65,8 +66,9 @@ export type RestrictedCheck = Pick<
 >;
 
 /**
- * May a restricted role list or send this template? Approved, flagged by the admin, never a PDF one,
- * never an own-button one. The one rule behind both GET /messaging/templates and the thread send.
+ * May a restricted role list or send this template? Approved, flagged by the admin, never a PDF
+ * one, never an own-button one. The one rule behind both GET /messaging/templates and the thread
+ * send.
  */
 export function restrictedMay(t: RestrictedCheck): boolean {
   return (

@@ -19,7 +19,10 @@ interface Props {
   onDone: (saved: boolean) => void;
 }
 
-/** One flow for both (docs/30 §6): identifier → code on the registered WhatsApp → new password twice. */
+/**
+ * One flow for both (docs/30 §6): identifier → code on the registered WhatsApp → new password
+ * twice.
+ */
 export function ResetFlow({ mode, onDone }: Props) {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');

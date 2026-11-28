@@ -2,9 +2,10 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { STUB_URL } from './core/wa-stub';
 
-// 26-P4 (docs/26 §5): a SECOND API process on its own port, booted from the same build and database as the
-// e2e API, then stopped. WhatsApp points at tools/wa-stub only (the e2e credentials); Google, Kapso and the
-// currency API at nothing. Used to boot the API twice and check that the send gate stays closed.
+// 26-P4 (docs/26 §5): a SECOND API process on its own port, booted from the same build and database
+// as the e2e API, then stopped. WhatsApp points at tools/wa-stub only (the e2e credentials);
+// Google, Kapso and the currency API at nothing. Used to boot the API twice and check that the send
+// gate stays closed.
 
 const API_DIR = fileURLToPath(new URL('../../apps/api/', import.meta.url));
 const BOOT_PORT = 3101;
@@ -40,7 +41,9 @@ async function healthy(input: { deadline: number; alive: () => boolean }): Promi
   throw new Error(`the second API did not answer /health on :${BOOT_PORT}`);
 }
 
-/** Boots the API, lets it run `runMs` (sender passes, jobs), then stops it and waits for the exit. */
+/**
+ * Boots the API, lets it run `runMs` (sender passes, jobs), then stops it and waits for the exit.
+ */
 export async function bootApiOnce(runMs: number): Promise<void> {
   const child = spawn(process.execPath, ['--env-file-if-exists=.env', 'dist/main.js'], {
     cwd: API_DIR,

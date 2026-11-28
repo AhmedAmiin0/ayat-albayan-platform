@@ -61,5 +61,7 @@ export const paymentLinkListSchema = z.object({ status: paymentLinkStatusSchema.
 export type PaymentLinkQuote = z.output<typeof paymentLinkQuoteSchema>;
 export type PaymentLinkCreate = z.output<typeof paymentLinkCreateSchema>;
 
-/** What PaymentsService records: a form's payment, or one only the platform writes (method 'card'). */
+/**
+ * What PaymentsService records: a form's payment, or one only the platform writes (method 'card').
+ */
 export type PaymentWrite = Omit<PaymentCreate, 'method'> & { method: PaymentMethod };

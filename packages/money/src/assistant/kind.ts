@@ -1,12 +1,14 @@
 import type { SubscriptionStatus } from '@ab/catalog';
 
-// Renewal commission (migrations 20261027000750-751): which kind a subscription's commission
-// is. Pure twin of subscription_commission_kind: decided by subscription ORDER, never by payment order.
+// Renewal commission (migrations 20261027000750-751): which kind a subscription's commission is.
+// Pure twin of subscription_commission_kind: decided by subscription ORDER, never by payment order.
 
 export const ASSISTANT_COMMISSION_KINDS = ['first', 'renewal'] as const;
 export type AssistantCommissionKind = (typeof ASSISTANT_COMMISSION_KINDS)[number];
 
-/** Renewals fully paid before this instant never earn (no backfill): 2026-10-27 00:00 Asia/Riyadh. */
+/**
+ * Renewals fully paid before this instant never earn (no backfill): 2026-10-27 00:00 Asia/Riyadh.
+ */
 export const RENEWAL_CUTOFF = '2026-10-26T21:00:00.000Z';
 
 /** settings.renewal_commission_percent's default: half of the normal commission on each renewal. */
@@ -34,8 +36,9 @@ const before = (a: OrderFact, b: OrderFact): boolean =>
   (Date.parse(a.created_at) === Date.parse(b.created_at) && a.id < b.id);
 
 /**
- * 'first' when no other priced subscription of the student was created earlier, else 'renewal'; null for a
- * free one (a trial never counts), a cancelled one or an unknown id. A row already earned keeps its kind: this decides new rows.
+ * 'first' when no other priced subscription of the student was created earlier, else 'renewal';
+ * null for a free one (a trial never counts), a cancelled one or an unknown id. A row already
+ * earned keeps its kind: this decides new rows.
  */
 export function commissionKindOf(
   subs: readonly OrderFact[],

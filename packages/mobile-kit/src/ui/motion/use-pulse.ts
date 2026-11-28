@@ -7,7 +7,10 @@ interface PulseOptions {
   /** Wait before rising and after falling, so staggered pulses keep one period (dots in a row). */
   lead?: number;
   trail?: number;
-  /** Reduce Motion (or nothing to animate): the value rests at 0 (the loop's first frame), no loop runs. */
+  /**
+   * Reduce Motion (or nothing to animate): the value rests at 0 (the loop's first frame), no loop
+   * runs.
+   */
   still: boolean;
 }
 

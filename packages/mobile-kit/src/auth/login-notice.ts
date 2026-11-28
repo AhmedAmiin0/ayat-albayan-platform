@@ -19,7 +19,8 @@ export function noticeText(notice: LoginNotice): string {
   return notice === 'wrongApp' ? WRONG_APP[audience()]() : t.mobileNav.accountDisabled;
 }
 
-// Why the last session ended, shown once at the login screen (the screen mounts after the gate flips).
+// Why the last session ended, shown once at the login screen (the screen mounts after the gate
+// flips).
 let current: LoginNotice | null = null;
 const listeners = new Set<() => void>();
 

@@ -28,7 +28,10 @@ async function patch(targets: LiveTargets | null, phone: string, rows: readonly 
   await targets?.rows?.(phone, rows);
 }
 
-/** One per app: whether realtime is up (intervals read it), what is on screen, and the throttled refreshes. */
+/**
+ * One per app: whether realtime is up (intervals read it), what is on screen, and the throttled
+ * refreshes.
+ */
 export interface InboxLive {
   isLive(): boolean;
   setLive(live: boolean): void;

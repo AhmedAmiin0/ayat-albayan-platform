@@ -45,7 +45,10 @@ export interface ReportView {
   can_edit: boolean;
   /** End of the teacher's edit window (editUntil); null while a draft. */
   edit_until: string | null;
-  /** 1 = the original form (every report before the new form); 2 = the new form (docs/design/report-form). */
+  /**
+   * 1 = the original form (every report before the new form); 2 = the new form
+   * (docs/design/report-form).
+   */
   form_version: 1 | 2;
   /** The v2 form's structured content; null on a v1 report. */
   content: ReportContent | null;
@@ -121,7 +124,9 @@ export interface StudentReportsResponse {
   series: GradePoint[];
 }
 
-/** GET /teachers/me/pending-reports (R-TCH-03): started lessons still missing a submitted report. */
+/**
+ * GET /teachers/me/pending-reports (R-TCH-03): started lessons still missing a submitted report.
+ */
 export interface PendingReportView {
   lesson_id: string;
   starts_at: string;

@@ -1,5 +1,6 @@
-// A tiny repo for the e2e-areas tests: two pages (inbox, payments) behind barrels, a shell, an API module,
-// a shared package, the UI strings and an areas map; committed, so a test can diff the bundles against HEAD.
+// A tiny repo for the e2e-areas tests: two pages (inbox, payments) behind barrels, a shell, an API
+// module, a shared package, the UI strings and an areas map; committed, so a test can diff the
+// bundles against HEAD.
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';

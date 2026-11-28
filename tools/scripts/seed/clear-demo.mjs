@@ -66,7 +66,8 @@ const DELETES = {
     delete from public.students st using public.guardians g
     where g.id = st.guardian_id and st.notes = ${s.note}
       and g.phone_e164 || '|' || st.name = any(${tx.array(s.studentKeys)}) returning st.id`,
-  // The seed writes only the main numbers (the mirror trigger); a second number was linked in the app: refuse.
+  // The seed writes only the main numbers (the mirror trigger); a second number was linked in the
+  // app: refuse.
   guardian_phones: async (tx, s) => {
     const [{ n }] = await tx`
       select count(*)::int as n from public.guardian_phones
@@ -86,7 +87,9 @@ const DELETES = {
     tx`delete from public.teachers where id in (${DEMO_IDS.teachers(tx, s)}) returning id`,
 };
 
-/** Runs before `table` is deleted; demo applicants are already gone (DELETE_ORDER), real ones count. */
+/**
+ * Runs before `table` is deleted; demo applicants are already gone (DELETE_ORDER), real ones count.
+ */
 async function refuseDetaching(tx, table, s) {
   for (const d of SET_NULL_DEPENDENTS.filter((x) => x.parent === table)) {
     const [{ n }] = await tx`

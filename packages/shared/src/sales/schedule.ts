@@ -22,17 +22,26 @@ export interface SalesScheduleLesson {
   makeup: boolean;
   /** docs/46 D1: the teacher said she will attend (never the status); absent in an old cache. */
   teacher_confirmed_at?: string | null;
-  /** The lesson's copied meeting link (trimmed, empty → null). Optional: an old persisted cache lacks it. */
+  /**
+   * The lesson's copied meeting link (trimmed, empty → null). Optional: an old persisted cache
+   * lacks it.
+   */
   meeting_link?: string | null;
   /** Held in our classroom (meeting_mode, else the academy default), so there is no URL. */
   platform_classroom?: boolean;
-  /** tz: the teacher's and each student's zone, for the details sheet's local times. Absent in an old cache. */
+  /**
+   * tz: the teacher's and each student's zone, for the details sheet's local times. Absent in an
+   * old cache.
+   */
   teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz?: string };
   /** `mine` (docs/16 row 36): opens details and lets her move or cancel the lesson. */
   students: { id: string; code: string; name: string; tz?: string; mine?: boolean }[];
 }
 
-/** GET /sales/schedule: the Riyadh day shown and its lessons by start (a moved-away lesson is left out). */
+/**
+ * GET /sales/schedule: the Riyadh day shown and its lessons by start (a moved-away lesson is left
+ * out).
+ */
 export interface SalesScheduleDay {
   date: string;
   lessons: SalesScheduleLesson[];

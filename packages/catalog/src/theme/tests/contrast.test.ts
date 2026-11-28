@@ -22,7 +22,9 @@ function contrast(a: string, b: string): number {
 
 type Key = keyof Palette;
 const SURFACES: Key[] = ['margin', 'page', 'raised', 'sunk'];
-/** Every token that is ever text: body ink, links/ghost buttons (lapis), and the three status tones. */
+/**
+ * Every token that is ever text: body ink, links/ghost buttons (lapis), and the three status tones.
+ */
 const TEXT: Key[] = ['ink', 'ink2', 'ink3', 'lapis', 'ok', 'act', 'bad'];
 const WASHES: Key[] = ['goldWash', 'lapisWash', 'okSoft', 'actSoft', 'badSoft', 'neutralSoft'];
 
@@ -69,7 +71,8 @@ const EDGES: [Key, Key][] = [
   ['act', 'raised'],
   ['bad', 'raised'],
   ['ink3', 'raised'],
-  // delivery ticks on our bubble (sunk on desktop, lapisWash on phones) and on a thread row (raised)
+  // delivery ticks on our bubble (sunk on desktop, lapisWash on phones) and on a thread row
+  // (raised)
   ...(['sunk', 'lapisWash', 'raised'] as Key[]).flatMap((bg): [Key, Key][] => [['read', bg], ['tick', bg], ['act', bg]]),
 ];
 

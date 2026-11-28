@@ -1,6 +1,9 @@
 import { withSql } from '../core/schedule';
 
-/** A renewal of the student's plan (8 lessons, 2 a week), unpaid, starting today: the newest subscription. */
+/**
+ * A renewal of the student's plan (8 lessons, 2 a week), unpaid, starting today: the newest
+ * subscription.
+ */
 export async function renewal(studentId: string): Promise<string> {
   const [row] = await withSql((sql) => sql<{ id: string }[]>`insert into public.subscriptions
       (student_id, duration, lessons_total, price, price_source, starts_on, package, status)
@@ -9,7 +12,10 @@ export async function renewal(studentId: string): Promise<string> {
   return row.id;
 }
 
-/** The course's lessons that take a place (the balance views' rule): chargeable, not cancelled nor moved. */
+/**
+ * The course's lessons that take a place (the balance views' rule): chargeable, not cancelled nor
+ * moved.
+ */
 export async function countedLessons(subscriptionId: string): Promise<number> {
   const [row] = await withSql((sql) => sql<{ n: number }[]>`select count(*)::int as n
     from public.lessons l join public.lesson_students ls on ls.lesson_id = l.id

@@ -1,4 +1,5 @@
-// e2e specs and helpers grouped by domain (docs/32 D8, t1–t7): e2e/tests/<domain>/, e2e/support/{core,<domain>}/.
+// e2e specs and helpers grouped by domain (docs/32 D8, t1–t7): e2e/tests/<domain>/,
+// e2e/support/{core,<domain>}/.
 import assert from 'node:assert/strict';
 import { rmSync } from 'node:fs';
 import { after, test } from 'node:test';

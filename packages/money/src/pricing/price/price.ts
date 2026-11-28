@@ -3,7 +3,10 @@
 import { BULK, STARTER, type PricingDuration } from '../catalog';
 import { currencyForCountry } from '../currency';
 
-/** Site lE, before the currency step: n lessons at bulk's per-lesson rate from 28 up, else starter's. */
+/**
+ * Site lE, before the currency step: n lessons at bulk's per-lesson rate from 28 up, else
+ * starter's.
+ */
 export function customBase(count: number, duration: PricingDuration): number {
   const tier = count >= BULK.lessons ? BULK : STARTER;
   const rate = tier.base[duration] / tier.lessons;

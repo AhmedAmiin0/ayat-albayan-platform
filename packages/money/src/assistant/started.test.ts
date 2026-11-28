@@ -4,7 +4,8 @@ import { commissionKindOf, DEFAULT_RENEWAL_SHARE } from './kind';
 import { planRenewalCommission } from './renewal';
 import { subscriptionAlreadyStarted } from './started';
 
-// Owner 2026-10-28: «If the course already started so dont give commission» (migration 20261028000942).
+// Owner 2026-10-28: «If the course already started so dont give commission» (migration
+// 20261028000942).
 const CREATED = '2026-11-01T09:00:00Z'; // 12:00 in Riyadh, 2026-11-01
 const pay = (amount: number): PaymentFact => ({ amount, kind: 'payment', paid_at: '2026-11-02T09:00:00Z' });
 const sub = (id: string, over: Partial<SubscriptionFact> = {}): SubscriptionFact => ({

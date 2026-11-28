@@ -30,7 +30,9 @@ export async function chatRows(): Promise<FlagRow[]> {
     select key, line, sales_starter from public.message_templates where key in ${sql(CHAT_KEYS)} order by key`);
 }
 
-/** Removes the chat rows (the boot check or another project's run may have imported them already). */
+/**
+ * Removes the chat rows (the boot check or another project's run may have imported them already).
+ */
 export async function dropChatRows(): Promise<void> {
   for (const key of CHAT_KEYS) await dropTemplate(key);
 }

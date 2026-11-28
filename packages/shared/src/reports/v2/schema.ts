@@ -62,7 +62,10 @@ const PROBLEM_OF: Record<Program, (c: ReportContent) => V2Problem | null> = {
   islamic_studies: islamicProblem,
 };
 
-/** What a program's content still lacks for a send (null = complete). Grades come last, as on the form. */
+/**
+ * What a program's content still lacks for a send (null = complete). Grades come last, as on the
+ * form.
+ */
 export function contentProblem(program: Program, content: ReportContent): V2Problem | null {
   return PROBLEM_OF[program](content);
 }

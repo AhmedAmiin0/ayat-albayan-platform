@@ -98,7 +98,8 @@ test.describe('leads list and job applicants (R-LEAD-01/04)', () => {
     await expect(page.getByRole('status')).toHaveText(ar.leads.reclassified);
     await expect(page.getByText(ar.leads.empty)).toBeVisible();
 
-    // The lead row is deleted, so from_lead_id goes null (on delete set null); the audit keeps the link.
+    // The lead row is deleted, so from_lead_id goes null (on delete set null); the audit keeps the
+    // link.
     expect(await jobApplicantsWith(phone)).toEqual([{ from_lead_id: null, name }]);
     const moved = await withSql((sql) => sql`
       select 1 from public.audit_log where entity_id = ${leadId[0]?.id ?? ''} and action = 'reclassify_to_job_applicant'`);

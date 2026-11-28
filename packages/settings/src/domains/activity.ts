@@ -2,8 +2,8 @@ import type { SettingDef } from '../defs';
 
 export const ACTIVITY_SETTINGS = {
   /**
-   * Read by SQL prune_activity_log() (migration 20261005000250) with its own fallback; the old fixed
-   * value was 180. A default change needs a migration too.
+   * Read by SQL prune_activity_log() (migration 20261005000250) with its own fallback; the old
+   * fixed value was 180. A default change needs a migration too.
    */
   activity_retention_days: {
     module: 'activity', group: 'retention', confirm: 'typed',

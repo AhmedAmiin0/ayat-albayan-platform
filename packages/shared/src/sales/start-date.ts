@@ -57,7 +57,10 @@ export interface UsedBeforeInput {
   lessonsTotal: number;
 }
 
-/** Why lessonsUsedBefore is refused (403 for not_allowed, 400 otherwise); null = accepted. 0 is always fine. */
+/**
+ * Why lessonsUsedBefore is refused (403 for not_allowed, 400 otherwise); null = accepted. 0 is
+ * always fine.
+ */
 export function usedBeforeProblem(input: UsedBeforeInput): UsedBeforeProblem | null {
   if (input.lessonsUsedBefore === 0) return null;
   if (!input.canSet) return 'used_before_not_allowed';
@@ -68,8 +71,8 @@ export function usedBeforeProblem(input: UsedBeforeInput): UsedBeforeProblem | n
 }
 
 /**
- * The stepper's last value: every lesson but one, whatever the course days; with
- * fewer lessons left than days a week the course books just those (planSeries drops the later days).
+ * The stepper's last value: every lesson but one, whatever the course days; with fewer lessons left
+ * than days a week the course books just those (planSeries drops the later days).
  */
 export function usedBeforeMax(lessonsTotal: number): number {
   return Math.max(0, lessonsTotal - 1);

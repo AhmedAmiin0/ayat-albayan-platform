@@ -48,7 +48,9 @@ function changeRows(changes: readonly FieldChange[]): Row[] {
   ];
 }
 
-/** Rows the app created before the import that imported records will link to (never overwritten). */
+/**
+ * Rows the app created before the import that imported records will link to (never overwritten).
+ */
 function adoptedRows(items: Plan['items']): Row[] {
   return [
     ['entity', 'key', 'target id', 'source', 'tab', 'row'],

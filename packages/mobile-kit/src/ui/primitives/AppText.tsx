@@ -7,8 +7,8 @@ export type AppTextNode = Text;
 /**
  * Text that starts at the inline-start in either language (docs/07 §12, §14.1). An unset textAlign
  * follows the phone's language on iOS, not the app's; RN swaps 'left' to the right in RTL
- * (doLeftAndRightSwapInRTL), so 'left' means "start": right in Arabic, left in English.
- * Pass textAlign: 'center' to override. Android's default «highQuality» line breaking can lay a line out
+ * (doLeftAndRightSwapInRTL), so 'left' means "start": right in Arabic, left in English. Pass
+ * textAlign: 'center' to override. Android's default «highQuality» line breaking can lay a line out
  * wider than Yoga measured it, so a shrink-wrapped label wraps and loses its last word («Join the»,
  * «Needs / confirmation»); «simple» measures and draws alike (iOS ignores the prop).
  */

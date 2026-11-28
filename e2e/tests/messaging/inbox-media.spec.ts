@@ -11,7 +11,10 @@ const PNG = Buffer.from(
   'base64',
 ).toString('base64');
 const PDF = Buffer.from('%PDF-1.1\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF').toString('base64');
-/** A real 0.1 s Ogg Opus voice note (191 bytes, ffmpeg anullsrc), so the player does not fall back to the link. */
+/**
+ * A real 0.1 s Ogg Opus voice note (191 bytes, ffmpeg anullsrc), so the player does not fall back
+ * to the link.
+ */
 const OGG =
   'T2dnUwACAAAAAAAAAAAAAAAAAAAAAAIotXIBE09wdXNIZWFkAQE4AYC7AAAAAABPZ2dTAAAAAAAAAAAAAAAAAAABAAAASZW+VAEuT3B1c1RhZ3MGAAAAZmZtcGVnAQAAABQAAABl' +
   'bmNvZGVyPUxhdmMgbGlib3B1c09nZ1MABPgTAAAAAAAAAAAAAAIAAABBShkFBgcGBgYGBggL5jsjq2AICKyzDsYICKyzDsYICKyzDsYICKyzDsYICKyzDsY=';
@@ -52,8 +55,8 @@ test.describe('inbox — inbound media (R-MSG-05)', () => {
     await expect(bubble(log, photo).getByRole('img')).toHaveCount(0);
     await expect(bubble(log, file).getByRole('button')).toHaveCount(1);
 
-    // A click downloads it from «Meta» (the stub) into our bucket: a thumbnail for the photo, a link
-    // for the PDF, named by its file name.
+    // A click downloads it from «Meta» (the stub) into our bucket: a thumbnail for the photo, a
+    // link for the PDF, named by its file name.
     await viewPhoto.click();
     const thumb = bubble(log, photo).getByRole('img', {
       name: ar.inbox.openMedia.replace('{kind}', ar.inbox.media.image),

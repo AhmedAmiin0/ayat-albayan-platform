@@ -1,5 +1,5 @@
-// Module-path part of pure-move-check: a changed import/mock path must point at the same file as before,
-// at its new place (a rename of the same diff), seen from the file's own new place.
+// Module-path part of pure-move-check: a changed import/mock path must point at the same file as
+// before, at its new place (a rename of the same diff), seen from the file's own new place.
 import { posix } from 'node:path';
 
 const EXT = /\.(d\.ts|[cm]?[jt]sx?)$/;
@@ -27,9 +27,10 @@ export function target(file, spec) {
 }
 
 /**
- * True when `newSpec` in `to` names the file that `oldSpec` named in `from`, or a folder whose index barrel
- * re-exports that file (`reexports(dir)`: the files the head's `dir/index` barrel re-exports, extensions stripped).
- * The folder is named bare (`@/inbox`) or by its index file (`../core/schemas/index.js`: NodeNext).
+ * True when `newSpec` in `to` names the file that `oldSpec` named in `from`, or a folder whose
+ * index barrel re-exports that file (`reexports(dir)`: the files the head's `dir/index` barrel
+ * re-exports, extensions stripped). The folder is named bare (`@/inbox`) or by its index file
+ * (`../core/schemas/index.js`: NodeNext).
  */
 export function samePath({ from, to, table, reexports }, oldSpec, newSpec) {
   const was = target(from, oldSpec);
@@ -42,7 +43,10 @@ export function samePath({ from, to, table, reexports }, oldSpec, newSpec) {
   return got === expected || `${got}/index` === expected || (reexports?.(dir)?.has(expected) ?? false);
 }
 
-/** `dir → the files its head index barrel re-exports` (stripped repo paths), memoised. `paths(file, text)`: its specs. */
+/**
+ * `dir → the files its head index barrel re-exports` (stripped repo paths), memoised. `paths(file,
+ * text)`: its specs.
+ */
 export function reexportsOf(readHead, paths) {
   const memo = new Map();
   const load = (dir) => {

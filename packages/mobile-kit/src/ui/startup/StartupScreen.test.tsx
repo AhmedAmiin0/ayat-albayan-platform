@@ -4,7 +4,8 @@ import { t } from '../../lib/i18n/i18n';
 import { palette } from '../../theme';
 import { StartupScreen } from './StartupScreen';
 
-// The branded wait: the status from the start, the 10 s hint and retry in a reserved space, Reduce Motion.
+// The branded wait: the status from the start, the 10 s hint and retry in a reserved space, Reduce
+// Motion.
 jest.useFakeTimers();
 const reduceMotion = jest.mocked(AccessibilityInfo.isReduceMotionEnabled);
 const loop = jest.spyOn(Animated, 'loop');

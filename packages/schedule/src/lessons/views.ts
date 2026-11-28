@@ -40,7 +40,10 @@ export interface LessonView {
   /** A makeup replaces a missed lesson and never consumes a package unit. */
   makeup?: boolean;
   makeup_of?: { id: string; starts_at: string } | null; // a makeup's missed lesson
-  /** avatar_url: the teacher's photo (a short-lived signed URL), on staff views only; null/absent = initials. */
+  /**
+   * avatar_url: the teacher's photo (a short-lived signed URL), on staff views only; null/absent =
+   * initials.
+   */
   teacher: {
     id: string;
     display_name_ar: string;
@@ -57,7 +60,8 @@ export interface LessonView {
   meeting_link: string | null;
   /**
    * The lesson's teacher holds it in our classroom (usesPlatform(teachers.meeting_mode, the academy
-   * default), migration 490): clients hide the fixed link then. Absent in an old cache: the academy default.
+   * default), migration 490): clients hide the fixed link then. Absent in an old cache: the academy
+   * default.
    */
   platform_classroom?: boolean;
   cancel_reason: string | null;

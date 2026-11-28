@@ -19,7 +19,9 @@ function issueTable(issues: readonly RowIssue[]): string[] {
   ];
 }
 
-/** Students the old status rule made active without a current subscription: reason→status → count. */
+/**
+ * Students the old status rule made active without a current subscription: reason→status → count.
+ */
 export function downgradeCounts(issues: readonly RowIssue[]): Record<string, number> {
   const out: Record<string, number> = {};
   for (const i of issues)

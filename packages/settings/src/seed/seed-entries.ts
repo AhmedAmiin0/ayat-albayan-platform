@@ -6,8 +6,8 @@ import { SETTINGS_REGISTRY } from '../registry';
 
 /**
  * Bump when any SEED_ENTRIES metadata changes (module, group, scope, type, default, public, hint,
- * owner, confirm, retired). The 26-P2 seeder sends it to config_seed, which ignores an older version
- * so a rollback or an older build cannot rewrite the metadata (docs/26 §2a).
+ * owner, confirm, retired). The 26-P2 seeder sends it to config_seed, which ignores an older
+ * version so a rollback or an older build cannot rewrite the metadata (docs/26 §2a).
  */
 export const REGISTRY_VERSION = 1;
 
@@ -15,9 +15,9 @@ export const REGISTRY_VERSION = 1;
 export type SeedScope = 'config' | 'module';
 
 /**
- * One public.settings row's metadata, as the future config_seed(entries jsonb) takes it (docs/26 §2b).
- * The snake_case fields mirror table columns; the camelCase ones are code-side metadata the API merges
- * into GET /config/entries. There is no value here: the seeder never writes one.
+ * One public.settings row's metadata, as the future config_seed(entries jsonb) takes it (docs/26
+ * §2b). The snake_case fields mirror table columns; the camelCase ones are code-side metadata the
+ * API merges into GET /config/entries. There is no value here: the seeder never writes one.
  */
 export interface SeedEntry {
   key: string;
@@ -61,9 +61,9 @@ export function seedEntry(key: string, def: SettingDef): SeedEntry {
 }
 
 /**
- * Every row the seeder owns: the registry ∪ the google-sync rows (outside the registry) ∪ module keys
- * kept outside the generic write path (comms_source is a registry entry with patch: false, so it is
- * listed once). INERT: nothing calls a seeder yet (26-P2).
+ * Every row the seeder owns: the registry ∪ the google-sync rows (outside the registry) ∪ module
+ * keys kept outside the generic write path (comms_source is a registry entry with patch: false, so
+ * it is listed once). INERT: nothing calls a seeder yet (26-P2).
  */
 const SEED_DEFS: Readonly<Record<string, SettingDef>> = {
   ...SETTINGS_REGISTRY,

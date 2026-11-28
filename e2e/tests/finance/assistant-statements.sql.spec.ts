@@ -2,9 +2,10 @@ import { expect, test } from '@playwright/test';
 import { assistant, brought, code, commissionOf, generate, iso, lastMonth, one, paidStatement, pay } from '../../support/sales/assistant';
 import { rolledBack, type Tx } from '../../support/core/rls';
 
-// Assistant statements and reversals (migrations 271-274) against the real database: salary + commissions
-// + adjustments per currency, draft -> approved -> paid like teacher payouts, a void after the statement
-// was paid becomes an adjustment. Who may read what is assistant-scope.sql.spec.ts. Each case is rolled back.
+// Assistant statements and reversals (migrations 271-274) against the real database: salary +
+// commissions + adjustments per currency, draft -> approved -> paid like teacher payouts, a void
+// after the statement was paid becomes an adjustment. Who may read what is
+// assistant-scope.sql.spec.ts. Each case is rolled back.
 
 const TERMS = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01',
   salary_amount: 1000, salary_currency: 'EGP', salary_starts_on: '2000-01-01' } as const;
@@ -100,7 +101,8 @@ test.describe('assistant statements (20261006000271-274)', () => {
       expect(rebuilt.totals).toEqual({});
       expect((await tx`select 1 from public.assistant_adjustments where assistant_id = ${a}`).length).toBe(0);
 
-      // A statement of LAST month (a month that has not begun cannot be built): a package paid 35 days ago.
+      // A statement of LAST month (a month that has not begun cannot be built): a package paid 35
+      // days ago.
       const p = await brought(tx, { by: a, phone: '+966500000203', price: 500, broughtAt: iso(-40) });
       await pay(tx, p.sub, { amount: 500, at: iso(-35) });
       const paid = await paidStatement(tx, a, await lastMonth(tx));

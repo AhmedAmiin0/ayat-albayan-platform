@@ -14,7 +14,10 @@ export const SCHEDULING_SETTINGS = {
     labelKey: 'settings.lateCancelHours',
     toggleLabelKey: 'settings.lateCancel', toggleHintKey: 'settings.lateCancelHint',
   },
-  /** A charged miss may be made up within this many days (makeupEligible; web/mobile show the button). */
+  /**
+   * A charged miss may be made up within this many days (makeupEligible; web/mobile show the
+   * button).
+   */
   makeup_window_days: {
     module: 'scheduling', group: 'schedule', reachesFamilies: true,
     type: 'int', default: 60, min: 1, max: 365, public: true,

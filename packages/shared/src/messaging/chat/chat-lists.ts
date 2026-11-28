@@ -3,7 +3,10 @@ import { E164_RE, normalizeArabic, normalizePhone } from '@ab/core';
 
 // Chat lists (docs/22) only organise chats; nothing is ever sent because of a list.
 
-/** A list's name: 1–30 characters after trimming, not only tashkeel / tatweel (its key is never empty). */
+/**
+ * A list's name: 1–30 characters after trimming, not only tashkeel / tatweel (its key is never
+ * empty).
+ */
 export const CHAT_LIST_NAME_MAX = 30;
 /** At most 30 lists for the whole academy (POST answers 409 list_limit). */
 export const CHAT_LIST_LIMIT = 30;
@@ -32,8 +35,9 @@ export function chatListNameKey(name: string): string {
 }
 
 /**
- * A list member is a chat's E.164 number (a new-chat number with no message yet counts). Any E.164 thread
- * key is kept as is (a landline WhatsApp Business number too); other spellings are normalised.
+ * A list member is a chat's E.164 number (a new-chat number with no message yet counts). Any E.164
+ * thread key is kept as is (a landline WhatsApp Business number too); other spellings are
+ * normalised.
  */
 export function chatListPhone(raw: string): string | null {
   const trimmed = raw.trim();
@@ -49,7 +53,9 @@ export type ChatListAutoRule = (typeof CHAT_LIST_AUTO_RULES)[number];
 export const isChatListAutoRule = (rule: unknown): rule is ChatListAutoRule =>
   CHAT_LIST_AUTO_RULES.some((r) => r === rule);
 
-/** GET /chat-lists: oldest first; `count` = the chats in it; `auto_rule` null = a hand-kept list. */
+/**
+ * GET /chat-lists: oldest first; `count` = the chats in it; `auto_rule` null = a hand-kept list.
+ */
 export interface ChatList {
   id: string;
   name: string;

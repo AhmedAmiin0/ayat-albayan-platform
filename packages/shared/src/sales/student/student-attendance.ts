@@ -16,7 +16,10 @@ export interface AttendanceTableRow {
   duration_min: number;
   teacher_name: string | null;
   status: LessonStatus;
-  /** The student's own lesson_students.attendance (on_time / late / absent / excused), null: unmarked. */
+  /**
+   * The student's own lesson_students.attendance (on_time / late / absent / excused), null:
+   * unmarked.
+   */
   attendance: Attendance | null;
   kind: AttendanceKind | null;
   /** A report of this student for this lesson was submitted (sent). */
@@ -67,7 +70,9 @@ export interface StudentAttendanceTable {
   /** Newest first. */
   items: AttendanceTableRow[];
   totals: Record<AttendanceTotalKind, number>;
-  /** Hers (the sales tree; always true for the admin); a sent report opens either way (2026-10-30). */
+  /**
+   * Hers (the sales tree; always true for the admin); a sent report opens either way (2026-10-30).
+   */
   mine: boolean;
 }
 

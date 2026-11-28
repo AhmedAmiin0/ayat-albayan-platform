@@ -12,7 +12,10 @@ interface Base {
   hintKey?: string;
   /** Returned by GET /settings/public (no login): only values safe for anyone to read. */
   public?: boolean;
-  /** false: the page shows it with its own control (a switch with a confirmation), not the generic field. */
+  /**
+   * false: the page shows it with its own control (a switch with a confirmation), not the generic
+   * field.
+   */
   form?: boolean;
   /** false: PATCH /settings ignores it; only its own guarded endpoint writes it (comms_source). */
   patch?: boolean;
@@ -27,12 +30,16 @@ interface Base {
   /** The module page that edits it when not the values page (same owner as OWNED_SETTING_KEYS). */
   ownedBy?: SettingOwner;
   /**
-   * true: changing it changes a message families, guardians or leads receive, or a page, link, number or
-   * lesson balance they see (send switches, reminders, follow-ups, feedback, join window, contact block).
-   * Left out for staff-only values (teacher messages, payouts, money reports, internal flags).
+   * true: changing it changes a message families, guardians or leads receive, or a page, link,
+   * number or lesson balance they see (send switches, reminders, follow-ups, feedback, join window,
+   * contact block). Left out for staff-only values (teacher messages, payouts, money reports,
+   * internal flags).
    */
   reachesFamilies?: boolean;
-  /** Kept readable, no longer used: the seeder sets retired_at (only an explicit flag retires a row). */
+  /**
+   * Kept readable, no longer used: the seeder sets retired_at (only an explicit flag retires a
+   * row).
+   */
   retired?: true;
 }
 

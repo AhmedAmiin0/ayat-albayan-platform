@@ -3,8 +3,8 @@ import * as http from '@ab/web-kit/lib/http/api/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 
 /**
- * The public sign-in routes (docs/30 §6) on the web's API client. The client's functions are read at
- * call time, so a module that imports sign-in without calling these routes never touches them.
+ * The public sign-in routes (docs/30 §6) on the web's API client. The client's functions are read
+ * at call time, so a module that imports sign-in without calling these routes never touches them.
  */
 export const authApi = signInApi({
   get apiFetch() {
@@ -16,8 +16,8 @@ export const authApi = signInApi({
 });
 
 /**
- * The text of a failed sign-in step: the API's `code` (familyAuth.errors, the users' password rules),
- * a disabled account as everywhere else, anything unknown the generic error.
+ * The text of a failed sign-in step: the API's `code` (familyAuth.errors, the users' password
+ * rules), a disabled account as everywhere else, anything unknown the generic error.
  */
 export function signInErrorText(e: unknown): string {
   if (isAccountDisabled(e)) return t.users.errors.account_disabled;

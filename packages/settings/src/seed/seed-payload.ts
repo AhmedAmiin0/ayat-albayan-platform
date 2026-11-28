@@ -1,6 +1,8 @@
 import { SEED_ENTRIES, type SeedEntry } from './seed-entries';
 
-/** One element of config_seed(entries jsonb, …): the table's metadata columns only, never a value. */
+/**
+ * One element of config_seed(entries jsonb, …): the table's metadata columns only, never a value.
+ */
 export interface ConfigSeedRow {
   key: string;
   module: string;
@@ -16,9 +18,10 @@ export interface ConfigSeedRow {
 export type HintText = (hintKey: string) => string | null;
 
 /**
- * SEED_ENTRIES → the config_seed payload (docs/26 §2b, §3): `description_seed` is the Arabic hint of the
- * entry (its `hintKey` in ar.json, the canonical MSA text), or null without one. The code-side fields
- * (group, ownedBy, confirm …) stay in code. Used by the API boot seeder, migrate:apply and e2e.
+ * SEED_ENTRIES → the config_seed payload (docs/26 §2b, §3): `description_seed` is the Arabic hint
+ * of the entry (its `hintKey` in ar.json, the canonical MSA text), or null without one. The
+ * code-side fields (group, ownedBy, confirm …) stay in code. Used by the API boot seeder,
+ * migrate:apply and e2e.
  */
 export function seedPayload(
   hint: HintText,

@@ -110,7 +110,8 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
       const page = await asRole('admin');
       await page.goto(`/admin/schedule?week=${addDays(s.sunday, -1)}&teacher=${s.otherId}`);
       const grid = page.getByRole('table', { name: ar.schedule.grid }).or(page.getByRole('group', { name: ar.schedule.grid })); // table, or the day list on a phone
-      // The table has one row header per teacher; on a phone the day list shows names only above lessons.
+      // The table has one row header per teacher; on a phone the day list shows names only above
+      // lessons.
       if (test.info().project.name === 'desktop') {
         await expect(grid.getByRole('rowheader')).toHaveCount(1);
         await expect(grid.getByRole('rowheader')).toContainText(OTHER);

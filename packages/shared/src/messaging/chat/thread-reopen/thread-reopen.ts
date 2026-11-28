@@ -22,8 +22,9 @@ export interface ThreadReopenView {
 }
 
 /**
- * `reopen:<E.164>:<Asia/Riyadh date>`: a second send the same day queues no second template. A later try the
- * same day (the first failed or expired unsent) adds `:<try>` (2, 3…), so it is not deduped away.
+ * `reopen:<E.164>:<Asia/Riyadh date>`: a second send the same day queues no second template. A
+ * later try the same day (the first failed or expired unsent) adds `:<try>` (2, 3…), so it is not
+ * deduped away.
  */
 export function reopenDedupKey(phone: string, now: Date, attempt = 1): string {
   const day = `reopen:${phone}:${localDate(now, REOPEN_TZ)}`;

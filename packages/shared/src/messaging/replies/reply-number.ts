@@ -1,8 +1,12 @@
 import { sessionWindowOpen } from '../wa';
 
-// replyNumber() (docs/23 §3 phase 5): replyLine() per number. Module mode only; legacy keeps replyLine().
+// replyNumber() (docs/23 §3 phase 5): replyLine() per number. Module mode only; legacy keeps
+// replyLine().
 
-/** The newest inbound of one phone on one number (v_thread_numbers, plus the legacy line windows mapped to their role's default). */
+/**
+ * The newest inbound of one phone on one number (v_thread_numbers, plus the legacy line windows
+ * mapped to their role's default).
+ */
 export interface NumberWindow {
   numberId: string;
   lastInboundAt: string | null;
@@ -26,9 +30,9 @@ export type ReplyNumber =
   | { code: 'session_closed' | 'number_not_configured' };
 
 /**
- * The number a staff session text leaves from: the number the family wrote to most recently whose 24 h
- * window is open and that can send; open windows only on numbers that cannot send → number_not_configured
- * (503, like line_not_configured); no open window → session_closed (409).
+ * The number a staff session text leaves from: the number the family wrote to most recently whose
+ * 24 h window is open and that can send; open windows only on numbers that cannot send →
+ * number_not_configured (503, like line_not_configured); no open window → session_closed (409).
  */
 export function replyNumber(input: ReplyNumberInput): ReplyNumber {
   const open = input.windows

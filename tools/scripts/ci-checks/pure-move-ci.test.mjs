@@ -1,5 +1,6 @@
-// The refactor job's pure-move step runs for move PRs: refactor/* and cloud/refactor-* heads of any lane, and
-// any head whose diff adds or changes a refactor/moves/*.json map (docs/32 critic correction 5).
+// The refactor job's pure-move step runs for move PRs: refactor/* and cloud/refactor-* heads of any
+// lane, and any head whose diff adds or changes a refactor/moves/*.json map (docs/32 critic
+// correction 5).
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { chmodSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
@@ -12,12 +13,18 @@ import { parse } from 'yaml';
 const ci = parse(readFileSync(fileURLToPath(new URL('../../../.github/workflows/ci.yml', import.meta.url)), 'utf8'));
 const step = ci.jobs.refactor.steps.find((s) => s.name === 'Pure-move check');
 
-/** A fake `git` on PATH: prints its args to stderr and `$FAKE_MAPS` (the diff's changed maps) to stdout. */
+/**
+ * A fake `git` on PATH: prints its args to stderr and `$FAKE_MAPS` (the diff's changed maps) to
+ * stdout.
+ */
 const bin = mkdtempSync(join(tmpdir(), 'pure-move-ci-'));
 writeFileSync(join(bin, 'git'), '#!/usr/bin/env bash\necho "git $*" >&2\nprintf "%s" "$FAKE_MAPS"\n');
 chmodSync(join(bin, 'git'), 0o755);
 
-/** What the step's script does for a head branch and changed maps, its node command replaced by an echo. */
+/**
+ * What the step's script does for a head branch and changed maps, its node command replaced by an
+ * echo.
+ */
 const runFor = (head, maps = '') =>
   execFileSync('bash', ['-ec', step.run.replace(/\bnode tools\//, 'echo RUN tools/')], {
     env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, HEAD_REF: head, BASE_REF: 'develop', FAKE_MAPS: maps },

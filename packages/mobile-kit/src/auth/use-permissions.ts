@@ -17,10 +17,11 @@ export { permissionsOf, type Can };
 export const meQuery = () => meQueryOptions({ apiFetch });
 
 /**
- * Dynamic roles: the app stays role-gated (admin, teacher, sales and assistant trees, verify-role.ts), and the
- * admin screens that map to a permission hide what the held role does not grant. One behaviour with web
- * (@ab/client-core, docs/27 E2, owner D6): until /auth/me has answered nothing is granted. The tab bars never
- * see that state: the startup screen stays up until /auth/me is loaded (useMeReady).
+ * Dynamic roles: the app stays role-gated (admin, teacher, sales and assistant trees,
+ * verify-role.ts), and the admin screens that map to a permission hide what the held role does not
+ * grant. One behaviour with web (@ab/client-core, docs/27 E2, owner D6): until /auth/me has
+ * answered nothing is granted. The tab bars never see that state: the startup screen stays up until
+ * /auth/me is loaded (useMeReady).
  */
 export function usePermissions(): Can {
   return permissionsView(useQuery(meQuery()).data).can;
@@ -49,7 +50,10 @@ export function useHolds(permission: Permission): boolean {
   return permissionsOf(me.data).includes(permission);
 }
 
-/** Strict: is /auth/me a base-role admin? false until it answers (the Google card's API is admins only). */
+/**
+ * Strict: is /auth/me a base-role admin? false until it answers (the Google card's API is admins
+ * only).
+ */
 export function useIsAdmin(): boolean {
   const me = useQuery(meQuery());
   return typeof me.data === 'object' && me.data !== null && Reflect.get(me.data, 'role') === 'admin';
@@ -61,7 +65,10 @@ function roleOf(data: unknown): string | null {
   return typeof role === 'string' ? role : null;
 }
 
-/** Every template from the picker (shared sendsAllTemplates: never an assistant); false until /auth/me answers. */
+/**
+ * Every template from the picker (shared sendsAllTemplates: never an assistant); false until
+ * /auth/me answers.
+ */
 export function useSendsAllTemplates(): boolean {
   const me = useQuery(meQuery());
   return sendsAllTemplates({ role: roleOf(me.data), permissions: permissionsOf(me.data) });

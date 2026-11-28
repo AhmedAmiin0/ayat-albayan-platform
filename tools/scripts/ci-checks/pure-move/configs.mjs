@@ -1,7 +1,8 @@
-// Config files in a move PR (docs/32 critic correction 5): they may follow moved files, nothing more.
-// Workflows and tsconfigs: only moved paths (repo or package-relative) change. The root knip.json: each
-// workspace's own relative paths follow moves inside it. refactor/: new or extended move maps, docs, and the
-// count baselines (jscpd, lint, cycles) with the same keys and counts at or below base. Anything else fails.
+// Config files in a move PR (docs/32 critic correction 5): they may follow moved files, nothing
+// more. Workflows and tsconfigs: only moved paths (repo or package-relative) change. The root
+// knip.json: each workspace's own relative paths follow moves inside it. refactor/: new or extended
+// move maps, docs, and the count baselines (jscpd, lint, cycles) with the same keys and counts at
+// or below base. Anything else fails.
 import { posix } from 'node:path';
 import { relativePairs } from './baselines.mjs';
 export { followDomains } from './domains.mjs';
@@ -55,7 +56,9 @@ export function knipConfigMoved(texts, renames) {
   return JSON.stringify({ ...base, workspaces: moved }) === JSON.stringify(head);
 }
 
-/** A count baseline (`{ key: number }`, nested allowed): same keys, every number at or below base. */
+/**
+ * A count baseline (`{ key: number }`, nested allowed): same keys, every number at or below base.
+ */
 export function countsNotRaised(base, head) {
   if (typeof base === 'number') return typeof head === 'number' && head <= base;
   if (!isRecord(base) || !isRecord(head)) return false;
@@ -83,7 +86,10 @@ function editedInPlace(to, texts, renames) {
   return bad('config a move may not change');
 }
 
-/** The verdict for a non-code config file of a move PR (`.md`: free under refactor/, paths only elsewhere). */
+/**
+ * The verdict for a non-code config file of a move PR (`.md`: free under refactor/, paths only
+ * elsewhere).
+ */
 export function classifyConfig(entry, read, renames) {
   const { status, from, to } = entry;
   if (/\.md$/.test(to) && to.startsWith('refactor/')) return ok;

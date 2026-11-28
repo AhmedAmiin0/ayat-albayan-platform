@@ -63,13 +63,19 @@ export const statusParamOfKind = (kind: StudentListKind): string | undefined =>
 
 const HTTP_URL = /^https?:\/\/[^\s/?#]+[^\s]*$/i;
 
-/** An http(s) URL as it is, anything else (javascript:, a bare word, blank) null: safe to render as a link. */
+/**
+ * An http(s) URL as it is, anything else (javascript:, a bare word, blank) null: safe to render as
+ * a link.
+ */
 export function safeHttpUrl(value: string | null | undefined): string | null {
   const text = value?.trim();
   return text && HTTP_URL.test(text) ? text : null;
 }
 
-/** GET /teachers and GET /sales/teachers: each teacher's current students by kind (server-side counts). */
+/**
+ * GET /teachers and GET /sales/teachers: each teacher's current students by kind (server-side
+ * counts).
+ */
 export interface TeacherStudentCounts {
   active_count: number;
   trial_count: number;

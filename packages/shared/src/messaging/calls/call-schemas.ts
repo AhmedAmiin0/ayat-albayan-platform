@@ -16,7 +16,9 @@ const sdp = z
 export const startCallSchema = z.object({
   phone: phoneE164,
   sdp,
-  /** Idempotency (rule 8): a repeated tap returns the first call, never a second (billed) connect. */
+  /**
+   * Idempotency (rule 8): a repeated tap returns the first call, never a second (billed) connect.
+   */
   clientRequestId,
 });
 export type StartCallInput = z.input<typeof startCallSchema>;

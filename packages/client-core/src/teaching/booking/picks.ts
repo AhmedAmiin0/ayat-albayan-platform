@@ -1,6 +1,9 @@
 // Both booking wizards (docs/27 E5): the earliest pick is `startsAt`, the others `extra`.
 
-/** The picked slots of a booking draft: the earliest (the first lesson) and the others' UTC instants, sorted. */
+/**
+ * The picked slots of a booking draft: the earliest (the first lesson) and the others' UTC
+ * instants, sorted.
+ */
 export interface BookingPickFields {
   startsAt: string | null;
   extra: string[];

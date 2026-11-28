@@ -9,7 +9,10 @@ export const REGISTRATION_CHECK_MAX = 10;
 /** A name search needs at least this many letters (no enumeration with one or two). */
 export const REGISTRATION_NAME_MIN = 3;
 
-/** The letters and digits a search really matches on: tatweel, punctuation and wildcards do not count. */
+/**
+ * The letters and digits a search really matches on: tatweel, punctuation and wildcards do not
+ * count.
+ */
 export function searchChars(q: string): number {
   return normalizeArabic(q).replace(/[^\p{L}\p{N}]/gu, '').length;
 }
@@ -59,7 +62,9 @@ export interface RegistrationCheckView {
   more: boolean;
 }
 
-/** The answer's shape from the rows read (already whitelisted), capped at REGISTRATION_CHECK_MAX. */
+/**
+ * The answer's shape from the rows read (already whitelisted), capped at REGISTRATION_CHECK_MAX.
+ */
 export function registrationView(rows: readonly RegistrationMatch[]): RegistrationCheckView {
   const matches = rows
     .slice(0, REGISTRATION_CHECK_MAX)

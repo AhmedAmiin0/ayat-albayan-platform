@@ -1,9 +1,9 @@
-// Path-keyed baselines in a move PR (docs/27 §4): the lint suppressions (`<pkg>/oxlint-suppressions.json`
-// and Oxlint's `<pkg>/oxlint-suppressions.json`, docs/31b §4,
-// keyed by PACKAGE-relative paths), the knip baseline, the queries list and the folder-cap allow-lists (repo
-// paths). A pure move may only carry an entry to its file's (or whole folder's) new path. Suppressions keep
-// every entry and count exactly; the other baselines may also shrink (their own gates check them against the
-// tree).
+// Path-keyed baselines in a move PR (docs/27 §4): the lint suppressions
+// (`<pkg>/oxlint-suppressions.json` and Oxlint's `<pkg>/oxlint-suppressions.json`, docs/31b §4,
+// keyed by PACKAGE-relative paths), the knip baseline, the queries list and the folder-cap
+// allow-lists (repo paths). A pure move may only carry an entry to its file's (or whole folder's)
+// new path. Suppressions keep every entry and count exactly; the other baselines may also shrink
+// (their own gates check them against the tree).
 import { posix } from 'node:path';
 import { folderRenames } from '../pure-move-tokens.mjs';
 import { renameGuardLine } from './identifiers.mjs';
@@ -13,7 +13,10 @@ const SUPPRESSIONS = /(^|\/)oxlint-suppressions\.json$/;
 const KNIP = /^refactor\/guards\/(knip|queries)\.json$/;
 const FOLDER_CAP = /^refactor\/folder-cap\/[^/]+\.json$/;
 
-/** The renames inside `dir`, as paths relative to it (a move out of the package has no relative form). */
+/**
+ * The renames inside `dir`, as paths relative to it (a move out of the package has no relative
+ * form).
+ */
 export function relativePairs(dir, renames) {
   if (dir === '' || dir === '.') return renames;
   const pre = `${dir}/`;
@@ -71,21 +74,25 @@ export function shrunk(moved, head) {
 }
 
 /**
- * True when `head` is `base` with each moved file's key renamed (package-relative) and every count kept
- * (SHRINKS may only go down).
+ * True when `head` is `base` with each moved file's key renamed (package-relative) and every count
+ * kept (SHRINKS may only go down).
  */
 export function suppressionsMoved(file, texts, renames) {
   const [base, head] = [parse(texts.base), parse(texts.head)];
   if (!isRecord(base) || !isRecord(head)) return false;
   const pairs = relativePairs(posix.dirname(file), renames);
   const table = new Map(pairs);
-  // A file moved onto a stale key (its old file gone) would silently inherit that key's suppressions.
+  // A file moved onto a stale key (its old file gone) would silently inherit that key's
+  // suppressions.
   if (pairs.some(([, to]) => Object.hasOwn(base, to) && !table.has(to))) return false;
   const moved = rekey(base, table);
   return moved !== null && canon(shrunk(moved, head)) === canon(head);
 }
 
-/** True when every head knip line is a base line, its file (first word) at its new path, its name renamed by `ids`. */
+/**
+ * True when every head knip line is a base line, its file (first word) at its new path, its name
+ * renamed by `ids`.
+ */
 export function knipMoved(texts, renames, ids = new Map()) {
   const [base, head] = [parse(texts.base), parse(texts.head)];
   if (!Array.isArray(base) || !Array.isArray(head)) return false;
@@ -103,7 +110,10 @@ const within = (c, was) =>
   isRecord(c) && isRecord(was) && Number.isInteger(c.files) && Number.isInteger(c.dirs) &&
   c.files <= was.files && c.dirs <= was.dirs;
 
-/** True when every head folder-cap entry is a base entry (its folder at its new place if moved whole), not grown. */
+/**
+ * True when every head folder-cap entry is a base entry (its folder at its new place if moved
+ * whole), not grown.
+ */
 export function folderCapMoved(texts, renames, gone) {
   const [base, head] = [parse(texts.base), parse(texts.head)];
   if (!isRecord(base) || !isRecord(head)) return false;

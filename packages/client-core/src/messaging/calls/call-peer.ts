@@ -1,6 +1,7 @@
-// The WebRTC side of a call (docs/28 §2): this device IS the peer, its audio flows directly to Meta;
-// only the SDP goes through our API. The shapes are the part of RTCPeerConnection / MediaStream both the
-// browser and react-native-webrtc have; each app opens the microphone and builds the connection.
+// The WebRTC side of a call (docs/28 §2): this device IS the peer, its audio flows directly to
+// Meta; only the SDP goes through our API. The shapes are the part of RTCPeerConnection /
+// MediaStream both the browser and react-native-webrtc have; each app opens the microphone and
+// builds the connection.
 
 export interface TrackLike {
   enabled: boolean;
@@ -10,7 +11,9 @@ export interface TrackLike {
 export interface StreamLike {
   getAudioTracks(): TrackLike[];
   getTracks(): TrackLike[];
-  /** react-native-webrtc: frees the native stream (track.stop() alone keeps the microphone held). */
+  /**
+   * react-native-webrtc: frees the native stream (track.stop() alone keeps the microphone held).
+   */
   release?(): void;
 }
 
@@ -28,7 +31,10 @@ export interface PeerLike {
   close(): void;
 }
 
-/** Why the microphone could not be opened: refused, refused for good (only Settings helps), or no WebRTC here. */
+/**
+ * Why the microphone could not be opened: refused, refused for good (only Settings helps), or no
+ * WebRTC here.
+ */
 export type MicProblem = 'denied' | 'blocked' | 'unsupported';
 
 export class MicError extends Error {
@@ -62,7 +68,10 @@ export function releaseMic(mic: StreamLike): void {
   mic.release?.();
 }
 
-/** Resolves once gathering is complete, or after `ms` (then the SDP carries the candidates found so far). */
+/**
+ * Resolves once gathering is complete, or after `ms` (then the SDP carries the candidates found so
+ * far).
+ */
 export function gathered(pc: PeerLike, ms = GATHER_MS): Promise<void> {
   if (pc.iceGatheringState === 'complete') return Promise.resolve();
   return new Promise((resolve) => {
@@ -79,7 +88,10 @@ export function gathered(pc: PeerLike, ms = GATHER_MS): Promise<void> {
   });
 }
 
-/** The call over a built connection that already carries the microphone's track; close() releases both. */
+/**
+ * The call over a built connection that already carries the microphone's track; close() releases
+ * both.
+ */
 export function callPeer(pc: PeerLike, mic: StreamLike): CallPeer {
   const sdpOf = () => pc.localDescription?.sdp ?? '';
   return {

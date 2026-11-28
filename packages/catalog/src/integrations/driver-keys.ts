@@ -11,7 +11,10 @@ const EVOLUTION_KEYS: readonly IntegrationKey[] = ['EVOLUTION_API_BASE'];
 const NOTIFICATION_IDS: readonly IntegrationKey[] = ['WA_PHONE_NUMBER_ID', 'WA_WABA_ID'];
 const CHAT_IDS: readonly IntegrationKey[] = ['WA_CHAT_PHONE_NUMBER_ID', 'WA_CHAT_WABA_ID'];
 
-/** The keys a line on `provider` sends with: crm its base and key; kapso the line's ids and the project key; meta the line's ids, base and token. */
+/**
+ * The keys a line on `provider` sends with: crm its base and key; kapso the line's ids and the
+ * project key; meta the line's ids, base and token.
+ */
 export function driverKeys(provider: WaProvider, line: WaLine): IntegrationKey[] {
   const ids = line === 'chat' ? CHAT_IDS : NOTIFICATION_IDS;
   if (provider === 'crm') return [...CRM_KEYS];
@@ -20,7 +23,10 @@ export function driverKeys(provider: WaProvider, line: WaLine): IntegrationKey[]
   return ['WA_API_BASE', ...ids, line === 'chat' ? 'WA_CHAT_ACCESS_TOKEN' : 'WA_ACCESS_TOKEN'];
 }
 
-/** The NAMES of the keys `provider` still lacks on `line`, read from GET /settings/integrations (never a value). */
+/**
+ * The NAMES of the keys `provider` still lacks on `line`, read from GET /settings/integrations
+ * (never a value).
+ */
 export function driverMissing(input: { provider: WaProvider; line: WaLine; items: readonly Pick<IntegrationConfigItem, 'key' | 'set'>[] }): IntegrationKey[] {
   const set = new Set(input.items.filter((i) => i.set).map((i) => i.key));
   return driverKeys(input.provider, input.line).filter((k) => !set.has(k));

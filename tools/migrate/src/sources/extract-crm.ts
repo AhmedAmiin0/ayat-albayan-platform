@@ -1,5 +1,6 @@
 // extract-crm [--since ISO]: CRM → cache/crm/<table>.json (+ cursor.json). Read-only; counts only.
-// Without --since it re-reads everything; with it, rows changed since then merge into the cache by id.
+// Without --since it re-reads everything; with it, rows changed since then merge into the cache by
+// id.
 import { cachePath, readJson, writeJson } from '../cache.ts';
 import type { CrmRow } from '../types.ts';
 import { type CrmReader, maxCursor, mergeById, selectAll } from './crm.ts';
@@ -16,7 +17,8 @@ interface ExtractCrmOptions {
 }
 
 function accountIdOf(opts: ExtractCrmOptions): string {
-  // The academy's account (the only one with data). Its id is the owner's: env only, never committed.
+  // The academy's account (the only one with data). Its id is the owner's: env only, never
+  // committed.
   const accountId = opts.accountId ?? process.env.CRM_ACCOUNT_ID;
   if (!accountId) {
     throw new Error(

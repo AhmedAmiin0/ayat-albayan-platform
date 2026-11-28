@@ -9,8 +9,8 @@ export interface SalesCandidate {
 
 /**
  * Who gets the next new lead: the least loaded salesperson; a tie goes to whoever was handed a lead
- * longest ago (never-assigned first), then to the lowest id so the answer is stable. No candidates =
- * null: the lead stays unassigned and the admin assigns it.
+ * longest ago (never-assigned first), then to the lowest id so the answer is stable. No candidates
+ * = null: the lead stays unassigned and the admin assigns it.
  */
 export function pickSales(candidates: readonly SalesCandidate[]): string | null {
   const stamp = (c: SalesCandidate) =>
