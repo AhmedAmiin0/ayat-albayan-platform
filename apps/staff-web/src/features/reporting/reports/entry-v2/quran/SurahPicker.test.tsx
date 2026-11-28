@@ -72,4 +72,10 @@ describe('«اختر السورة والآيات» picker', () => {
     fireEvent.click(screen.getByRole('button', { name: /سورة الفاتحة/ }));
     expect(screen.getByRole('button', { name: p.done })).toHaveProperty('disabled', false);
   });
+
+  it('the surah list flows in the dialog body, which is the only scroller', () => {
+    openPicker();
+    const list = screen.getByRole('button', { name: /سورة الملك/ }).closest('ul');
+    expect(list?.className).not.toMatch(/overflow|max-h/);
+  });
 });
