@@ -1,38 +1,33 @@
-import { clockOfHhmm } from '@ab/time';
-import { act, render, screen } from '@testing-library/react';
+import { CLOCK_STORAGE_KEY } from '@ab/time';
+import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { setClockPref } from '@ab/web-kit/lib/clock';
-import { locale } from '@ab/web-kit/lib/i18n/locale';
 import { ClockOptions } from './ClockOptions';
 
 const TIMES = ['09:00', '18:30'] as const;
 
-afterEach(() => setClockPref('auto'));
+afterEach(() => localStorage.clear());
 
 const options = () => screen.getAllByRole<HTMLOptionElement>('option');
 
+const renderOptions = () =>
+  render(
+    <select aria-label="time">
+      <ClockOptions times={TIMES} />
+    </select>,
+  );
+
 describe('ClockOptions', () => {
-  it('each option keeps the stored 24 h value and reads in the chosen cycle', () => {
-    setClockPref('12');
-    render(
-      <select aria-label="time">
-        <ClockOptions times={TIMES} />
-      </select>,
-    );
+  it('each option keeps the stored 24 h value and reads in 12-hour time', () => {
+    renderOptions();
     expect(options().map((o) => o.value)).toEqual([...TIMES]);
-    expect(options()[1]?.textContent).toBe(clockOfHhmm('18:30', '12', locale));
+    expect(options()[0]?.textContent).toBe('9:00 ص');
+    expect(options()[1]?.textContent).toBe('6:30 م');
   });
 
-  it('a new cycle relabels the options without changing their values', () => {
-    setClockPref('24');
-    render(
-      <select aria-label="time">
-        <ClockOptions times={TIMES} />
-      </select>,
-    );
-    expect(options()[1]?.textContent).toBe(clockOfHhmm('18:30', '24', locale));
-    act(() => setClockPref('12'));
-    expect(options()[1]?.textContent).toBe(clockOfHhmm('18:30', '12', locale));
+  it('a stored 24-hour choice does not change the labels or the values', () => {
+    localStorage.setItem(CLOCK_STORAGE_KEY, '24');
+    renderOptions();
+    expect(options()[1]?.textContent).toBe('6:30 م');
     expect(options()[1]?.value).toBe('18:30');
   });
 });
