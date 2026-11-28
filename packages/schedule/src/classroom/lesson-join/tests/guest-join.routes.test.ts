@@ -8,6 +8,7 @@ describe('lessonJoinRoutes.guestJoin (R-LES-01)', () => {
     const route = routes.guestJoin;
     expect(`${route.method} ${route.path}`).toBe('POST /public/join/:linkToken');
     expect(route).not.toHaveProperty('permissions');
+    expect(route.isPublic).toBe(true);
     expect(route.tags).toEqual(['classroom']);
   });
 

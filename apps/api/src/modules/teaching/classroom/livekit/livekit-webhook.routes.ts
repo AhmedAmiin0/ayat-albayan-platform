@@ -9,6 +9,7 @@ export const livekitWebhookRoutes = {
     method: 'POST',
     path: '/livekit/webhook',
     response: 'empty',
+    isPublic: true,
     tags: ['classroom'],
   }),
 };

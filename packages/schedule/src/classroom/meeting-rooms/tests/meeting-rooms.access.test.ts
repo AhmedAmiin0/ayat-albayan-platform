@@ -17,6 +17,7 @@ describe('meetingRoomRoutes access', () => {
 
   it.each(['publicView', 'guestJoin'] as const)('%s is public: tagged, no permission', (key) => {
     expect(routes[key]).not.toHaveProperty('permissions');
+    expect(routes[key].isPublic).toBe(true);
     expect(routes[key].tags).toEqual(['classroom']);
   });
 });

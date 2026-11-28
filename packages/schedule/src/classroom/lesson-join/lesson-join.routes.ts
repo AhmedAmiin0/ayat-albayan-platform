@@ -65,6 +65,7 @@ export const lessonJoinRoutes = {
     params: byLink,
     body: familyGuestJoinSchema,
     response: roomJoinResultSchema,
+    isPublic: true,
     tags,
   }),
 };

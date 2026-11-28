@@ -12,6 +12,7 @@ const byId = z.object({ id: z.uuid() });
 /** Any text: a token that is not ours is answered 404 link_invalid after the rate limit. */
 const byToken = z.object({ token: z.string() });
 const tags = ['classroom'] as const;
+const open = { isPublic: true, tags } as const;
 
 /** A lesson's room and the student's long-lived link (R-LES-01). */
 export const lessonRoomRoutes = {
@@ -30,7 +31,7 @@ export const lessonRoomRoutes = {
     path: '/public/student/:token',
     params: byToken,
     response: studentLinkViewSchema,
-    tags,
+    ...open,
   }),
   /** The lesson whose room is open now; 404, 403 join_not_open_yet, 410, 429 before a bad name. */
   studentJoin: defineRoute({
@@ -39,7 +40,7 @@ export const lessonRoomRoutes = {
     params: byToken,
     body: studentJoinSchema,
     response: roomJoinResultSchema,
-    tags,
+    ...open,
   }),
   /** Creates or rotates the student's link; the old one stops working. */
   issueStudentLink: defineRoute({

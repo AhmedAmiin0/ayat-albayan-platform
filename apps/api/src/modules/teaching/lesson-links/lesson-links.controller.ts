@@ -1,5 +1,4 @@
 import { Controller, Ip, Req, Res } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { answerLink, lessonLinkRoutes as routes, type LinkReply } from './http';
 import { TeacherJoin } from './join.service';
@@ -9,7 +8,6 @@ import { LessonLinksLimit } from './lesson-links.limit';
 const LEGACY_PREFIX = '/report-link/legacy/';
 
 /** Signed expiring token for one lesson redirects to its room; invalid shows an error page. */
-@Public()
 @Controller()
 export class TeacherJoinController {
   constructor(
@@ -32,7 +30,6 @@ export class TeacherJoinController {
  * GET /report-link/legacy/* (no login): the old Vercel report redirector forwards
  * every /r/<path> here; one lesson's no-login report page, or the «invalid link» page.
  */
-@Public()
 @Controller()
 export class LegacyReportLinkController {
   constructor(

@@ -19,6 +19,7 @@ const byLink = z.object({ token: z.string() });
 const tags = ['classroom'] as const;
 const reads = { permissions: ['meetings.read'], tags } as const;
 const writes = { permissions: ['meetings.write'], tags } as const;
+const open = { isPublic: true, tags } as const;
 
 /** Internal meetings (R-MEET-01/02): staff routes, then the link's door with no login. */
 export const meetingRoomRoutes = {
@@ -78,7 +79,7 @@ export const meetingRoomRoutes = {
     path: '/public/meetings/:token',
     params: byLink,
     response: publicMeetingViewSchema,
-    tags,
+    ...open,
   }),
   guestJoin: defineRoute({
     method: 'POST',
@@ -86,6 +87,6 @@ export const meetingRoomRoutes = {
     params: byLink,
     body: guestJoinSchema,
     response: roomJoinResultSchema,
-    tags,
+    ...open,
   }),
 };
