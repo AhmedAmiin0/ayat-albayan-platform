@@ -11,8 +11,14 @@ describe('FeedbackReadRepo.page past the last page', () => {
     const repo = new FeedbackReadRepo(fake.db);
     const page = await repo.page({ filter: { kind: 'trial' }, page: { page: 4, pageSize: 10 } });
     expect(page).toEqual({ rows: [], total: 12 });
-    expect(rangesOn(fake, T)).toEqual([[30, 39], [0, 0]]);
+    expect(rangesOn(fake, T)).toEqual([
+      [30, 39],
+      [0, 0],
+    ]);
     const eqs = fake.calls.filter((c) => c.method === 'eq').map((c) => c.args);
-    expect(eqs).toEqual([['kind', 'trial'], ['kind', 'trial']]);
+    expect(eqs).toEqual([
+      ['kind', 'trial'],
+      ['kind', 'trial'],
+    ]);
   });
 });

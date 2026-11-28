@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { confirmationDrafts, type BookedStudent } from '@/modules/teaching/booking/core/booking.messages';
+import {
+  confirmationDrafts,
+  type BookedStudent,
+} from '@/modules/teaching/booking/core/booking.messages';
 
 const firstStart = new Date('2026-10-04T14:00:00Z'); // Sun 17:00 Riyadh / 17:00 Cairo (UTC+3)
 const riyadh = { id: 'G1', phone_e164: '+966552147730', tz: 'Asia/Riyadh' };
@@ -22,8 +25,15 @@ describe('confirmationDrafts — template by link (R-SCH-06, R-LES-02, docs/10 �
   });
 
   it('Jitsi → booking_confirmation with the room slug', () => {
-    const [draft] = confirmationDrafts({ students: one, firstStart, meetingLink: 'https://meet.jit.si/ab-abrar' });
-    expect(draft).toMatchObject({ template_key: 'booking_confirmation', template_params: { button: 'ab-abrar' } });
+    const [draft] = confirmationDrafts({
+      students: one,
+      firstStart,
+      meetingLink: 'https://meet.jit.si/ab-abrar',
+    });
+    expect(draft).toMatchObject({
+      template_key: 'booking_confirmation',
+      template_params: { button: 'ab-abrar' },
+    });
   });
 
   it('no link → booking_confirmation_plain without a button param', () => {
@@ -59,6 +69,8 @@ describe('confirmationDrafts — one per guardian', () => {
 
   it('keeps a null guardian id for the guardian the RPC creates (lead path)', () => {
     const students = [{ name: 'سهيلة', guardian: { ...riyadh, id: null } }];
-    expect(confirmationDrafts({ students, firstStart, meetingLink: null })[0]?.guardian_id).toBeNull();
+    expect(
+      confirmationDrafts({ students, firstStart, meetingLink: null })[0]?.guardian_id,
+    ).toBeNull();
   });
 });

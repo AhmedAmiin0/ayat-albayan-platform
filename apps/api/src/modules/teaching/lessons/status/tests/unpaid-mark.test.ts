@@ -6,7 +6,12 @@ import { markUnpaid, upcomingStudentIds } from '@/modules/teaching/lessons/statu
 
 const NOW = Date.parse('2026-10-02T09:00:00Z');
 const SIBLING = '00000000-0000-4000-8000-0000000000c9';
-const sibling = { student_id: SIBLING, attendance: null, chargeable: true, student: { id: SIBLING, code: 'AB-0184', name: 'مريم', tz: 'Asia/Riyadh' } };
+const sibling = {
+  student_id: SIBLING,
+  attendance: null,
+  chargeable: true,
+  student: { id: SIBLING, code: 'AB-0184', name: 'مريم', tz: 'Asia/Riyadh' },
+};
 const twoStudents = lessonRow({ lesson_students: [...lessonRow().lesson_students, sibling] });
 const view = (over: Parameters<typeof lessonRow>[0] = {}): LessonView =>
   toLessonView({ ...twoStudents, ...over }, { role: 'admin', seq: new Map() });

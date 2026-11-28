@@ -56,20 +56,24 @@ export class StopRefundRepo {
   }
 
   private async sub(subscriptionId: string): Promise<z.infer<typeof pkgSchema>> {
-    const data = one(await this.db
-      .from('subscriptions')
-      .select('price, lessons_total, student:students(name)')
-      .eq('id', subscriptionId)
-      .single());
+    const data = one(
+      await this.db
+        .from('subscriptions')
+        .select('price, lessons_total, student:students(name)')
+        .eq('id', subscriptionId)
+        .single(),
+    );
     return pkgSchema.parse(data);
   }
 
   private async used(subscriptionId: string): Promise<number> {
-    const data = maybe(await this.db
-      .from('v_subscription_balance')
-      .select('lessons_used')
-      .eq('subscription_id', subscriptionId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('v_subscription_balance')
+        .select('lessons_used')
+        .eq('subscription_id', subscriptionId)
+        .maybeSingle(),
+    );
     return data?.lessons_used ?? 0;
   }
 

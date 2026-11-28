@@ -12,7 +12,10 @@ import { badRequest, conflict } from '@/common/http/errors';
 import { ScheduleRepo, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
-import { AutoHeldCorrection, isAutoHeldCorrection } from '@/modules/teaching/lessons/auto-held/auto-held-correction';
+import {
+  AutoHeldCorrection,
+  isAutoHeldCorrection,
+} from '@/modules/teaching/lessons/auto-held/auto-held-correction';
 import {
   CANCEL_EVENT,
   cancelChange,
@@ -23,10 +26,21 @@ import {
 
 /** The admin's body, or a salesperson's single lesson with no reason (null). */
 type CancelBody = Omit<CancelRequest, 'reason'> & { reason: string | null };
-interface CancelInput { lessonId: string; body: CancelBody; actor: AuthUser }
-interface RuleCancelInput { ruleId: string; body: RuleCancelRequest; actor: AuthUser }
+interface CancelInput {
+  lessonId: string;
+  body: CancelBody;
+  actor: AuthUser;
+}
+interface RuleCancelInput {
+  ruleId: string;
+  body: RuleCancelRequest;
+  actor: AuthUser;
+}
 
-interface Cancel { by: CancelRequest['by']; reason: string | null }
+interface Cancel {
+  by: CancelRequest['by'];
+  reason: string | null;
+}
 interface EndRule {
   rule: RuleWithLinks;
   /** First local day without lessons; the rule's ends_on becomes the day before. */
@@ -107,7 +121,13 @@ export class LessonCancelService {
         entityId: rule.id,
         action: 'cancel',
         before: { status: rule.status, ends_on: rule.ends_on },
-        after: { ends_on: addDays(from, -1), from, by: body.by, reason: body.reason, cancelled: open.map((l) => l.id) },
+        after: {
+          ends_on: addDays(from, -1),
+          from,
+          by: body.by,
+          reason: body.reason,
+          cancelled: open.map((l) => l.id),
+        },
       },
       transition: { from: open[0]?.status ?? 'scheduled', event: CANCEL_EVENT[body.by] },
     });
@@ -115,6 +135,10 @@ export class LessonCancelService {
   }
 
   private async context(body: Cancel): Promise<CancelContext> {
-    return { ...body, now: new Date(), lateCancelHours: (await this.settings.read()).late_cancel_hours };
+    return {
+      ...body,
+      now: new Date(),
+      lateCancelHours: (await this.settings.read()).late_cancel_hours,
+    };
   }
 }

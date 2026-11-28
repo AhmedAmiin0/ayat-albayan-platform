@@ -12,8 +12,14 @@ import {
 } from '@/modules/teaching/classroom/livekit/livekit-twirp';
 
 const where = 'livekit POST /twirp/livekit.RoomService/X';
-const status = (code: number, body: unknown): HttpFailure =>
-  ({ kind: 'status', status: code, body, text: '', retryAfter: null, where });
+const status = (code: number, body: unknown): HttpFailure => ({
+  kind: 'status',
+  status: code,
+  body,
+  text: '',
+  retryAfter: null,
+  where,
+});
 const mapped = (f: HttpFailure) => errorFor(TWIRP_ERRORS, f);
 
 describe('TWIRP_ERRORS (today: any non-2xx → LivekitError(status, Twirp code))', () => {
@@ -39,7 +45,9 @@ describe('TWIRP_ERRORS (today: any non-2xx → LivekitError(status, Twirp code))
   });
 
   it('a 2xx of the wrong shape keeps its status (no schema here refuses one)', () => {
-    expect(mapped({ kind: 'shape', status: 200, issues: [], where })).toMatchObject({ status: 200 });
+    expect(mapped({ kind: 'shape', status: 200, issues: [], where })).toMatchObject({
+      status: 200,
+    });
   });
 });
 

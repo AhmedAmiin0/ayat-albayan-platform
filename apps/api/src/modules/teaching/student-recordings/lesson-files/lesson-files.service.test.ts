@@ -9,7 +9,10 @@ import { LessonFilesService } from './lesson-files.service';
 const access = { lesson: vi.fn() };
 const repo = { add: vi.fn(), byId: vi.fn(), setVisible: vi.fn(), remove: vi.fn() };
 const storage = {
-  signedUpload: vi.fn(), exists: vi.fn(), remove: vi.fn(), signedDownload: vi.fn(),
+  signedUpload: vi.fn(),
+  exists: vi.fn(),
+  remove: vi.fn(),
+  signedDownload: vi.fn(),
 };
 const service = () =>
   new LessonFilesService(
@@ -46,11 +49,13 @@ describe('LessonFilesService uploads', () => {
   it('refuses a path of another lesson or one never uploaded', async () => {
     storage.exists.mockResolvedValue(false);
     const other = { ...file, path: 'other/x.pdf', visible_to_family: true };
-    await expect(service().register({ user: TEACHER, id: LESSON, file: other }))
-      .rejects.toBeInstanceOf(BadRequestException);
+    await expect(
+      service().register({ user: TEACHER, id: LESSON, file: other }),
+    ).rejects.toBeInstanceOf(BadRequestException);
     const missing = { ...other, path: `${LESSON}/x.pdf` };
-    await expect(service().register({ user: TEACHER, id: LESSON, file: missing }))
-      .rejects.toBeInstanceOf(BadRequestException);
+    await expect(
+      service().register({ user: TEACHER, id: LESSON, file: missing }),
+    ).rejects.toBeInstanceOf(BadRequestException);
     expect(repo.add).not.toHaveBeenCalled();
   });
 });
@@ -72,7 +77,8 @@ describe('LessonFilesService on one file', () => {
 
   it('answers 404 for an unknown file', async () => {
     repo.byId.mockResolvedValue(null);
-    await expect(service().url({ user: TEACHER, id: FILE }))
-      .rejects.toBeInstanceOf(NotFoundException);
+    await expect(service().url({ user: TEACHER, id: FILE })).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
   });
 });

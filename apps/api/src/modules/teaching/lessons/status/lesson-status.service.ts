@@ -10,10 +10,18 @@ import { outcomeChange } from './outcomes';
 import { invalidTransition } from './transition';
 
 /** Outcomes that only make sense once the lesson has started; `excuse` is allowed any time. */
-const AFTER_START: ReadonlySet<StatusRouteEvent> = new Set(['complete', 'mark_late', 'mark_no_show']);
+const AFTER_START: ReadonlySet<StatusRouteEvent> = new Set([
+  'complete',
+  'mark_late',
+  'mark_no_show',
+]);
 
 /** actor null means the guardian's WhatsApp yes; anyLesson skips the admin-or-own-teacher rule. */
-export type ConfirmInput = { lessonId: string; actor: AuthUser | null; anyLesson?: true };
+export interface ConfirmInput {
+  lessonId: string;
+  actor: AuthUser | null;
+  anyLesson?: true;
+}
 export type StatusInput = LessonStatusRequest & { lessonId: string; actor: AuthUser };
 
 const teacherAfterEnd = (actor: AuthUser, lesson: LessonRow): boolean =>
@@ -44,7 +52,8 @@ export class LessonStatusService {
     const lesson = await this.store.get(lessonId);
     await this.assertMayConfirm(lesson, { actor, anyLesson });
     if (lesson.status === 'confirmed') return lesson.id;
-    if (!applyLessonEvent(lesson.status, 'confirm')) throw invalidTransition(lesson.status, 'confirm');
+    if (!applyLessonEvent(lesson.status, 'confirm'))
+      throw invalidTransition(lesson.status, 'confirm');
     const actorId = actor?.id ?? null;
     const change = {
       id: lesson.id,
@@ -94,14 +103,19 @@ export class LessonStatusService {
     const now = new Date();
     if (AFTER_START.has(event) && now < new Date(lesson.starts_at)) throw conflict('not_started');
     const onLesson = new Set(studentIdsOf(lesson));
-    if (students?.some((s) => !onLesson.has(s.studentId))) throw badRequest('student_not_in_lesson');
+    if (students?.some((s) => !onLesson.has(s.studentId)))
+      throw badRequest('student_not_in_lesson');
     const { late_cancel_hours: lateCancelHours } = await this.settings.read();
     const change = outcomeChange({ lesson, to, event, students, now, lateCancelHours });
     await this.store.commit({
       change: { actor: actor.id, changes: [change] },
       audit: audit(lesson, {
         action: 'status_change',
-        after: { status: to, chargeable: change.chargeable, ...(change.students ? { students: change.students } : {}) },
+        after: {
+          status: to,
+          chargeable: change.chargeable,
+          ...(change.students ? { students: change.students } : {}),
+        },
       }),
       transition: { from: lesson.status, event },
     });

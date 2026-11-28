@@ -36,17 +36,27 @@ describe('CourseStopRepo', () => {
   it("subscription: 404 for an unknown package or another student's", async () => {
     const row = { id: 's1', student_id: 'st1' };
     expect(await repoOf(chain({ data: row, error: null })).subscription('s1', 'st1')).toEqual(row);
-    for (const [data, student] of [[row, 'st2'], [null, 'st1']] as const)
-      await expect(repoOf(chain({ data, error: null })).subscription('s1', student)).rejects.toThrow(
-        'subscription_not_found',
-      );
+    for (const [data, student] of [
+      [row, 'st2'],
+      [null, 'st1'],
+    ] as const)
+      await expect(
+        repoOf(chain({ data, error: null })).subscription('s1', student),
+      ).rejects.toThrow('subscription_not_found');
   });
 
   it('plan: course_stop_plan at now, parsed', async () => {
-    const plan = { rule_ids: ['r1'], lessons: [{ id: 'l1', status: 'scheduled' }], unattributed: false };
+    const plan = {
+      rule_ids: ['r1'],
+      lessons: [{ id: 'l1', status: 'scheduled' }],
+      unattributed: false,
+    };
     const rpc = vi.fn(async () => ({ data: plan, error: null }));
     expect(await repoOf(chain({}), rpc).plan('s1', NOW)).toEqual(plan);
-    expect(rpc).toHaveBeenCalledWith('course_stop_plan', { p_subscription: 's1', p_at: NOW.toISOString() });
+    expect(rpc).toHaveBeenCalledWith('course_stop_plan', {
+      p_subscription: 's1',
+      p_at: NOW.toISOString(),
+    });
   });
 
   it('paid: payments minus refunds in the package currency', async () => {
@@ -82,11 +92,21 @@ describe('CourseStopRepo', () => {
   });
 
   it.each([
-    { message: 'subscription_not_found', code: 'P0001', expected: 'subscription_not_found', status: 404 },
+    {
+      message: 'subscription_not_found',
+      code: 'P0001',
+      expected: 'subscription_not_found',
+      status: 404,
+    },
     { message: 'already_cancelled', code: 'P0001', expected: 'already_cancelled', status: 409 },
     { message: 'course_unattributed', code: 'P0001', expected: 'course_unattributed', status: 409 },
     { message: 'stop_mismatch', code: 'P0001', expected: 'stop_mismatch', status: 409 },
-    { message: 'has_future_lessons: s1', code: '23514', expected: 'has_future_lessons', status: 409 },
+    {
+      message: 'has_future_lessons: s1',
+      code: '23514',
+      expected: 'has_future_lessons',
+      status: 409,
+    },
   ])('stop: $message → $status', async ({ message, code, expected, status }) => {
     const err = await repoOf(chain({}), failing({ code, message }))
       .stop(CALL)

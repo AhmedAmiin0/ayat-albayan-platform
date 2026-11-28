@@ -22,14 +22,23 @@ describe('outcomeChange — attendance outcomes (R-SCH-03, R-SCH-07, R-STU-04)',
   });
 
   it('a sibling absent in a completed group lesson: absent and still charged (no_show consumes)', () => {
-    const change = outcomeChange({ ...base, students: [{ studentId: 'S2', event: 'mark_no_show' }] });
+    const change = outcomeChange({
+      ...base,
+      students: [{ studentId: 'S2', event: 'mark_no_show' }],
+    });
     expect(change.students).toEqual([{ student_id: 'S2', attendance: 'absent', chargeable: true }]);
-    expect(change).toMatchObject({ to_status: 'completed', attendance: 'on_time', chargeable: true });
+    expect(change).toMatchObject({
+      to_status: 'completed',
+      attendance: 'on_time',
+      chargeable: true,
+    });
   });
 
   it('a sibling excused: not charged while late-cancel is OFF', () => {
     const change = outcomeChange({ ...base, students: [{ studentId: 'S2', event: 'excuse' }] });
-    expect(change.students).toEqual([{ student_id: 'S2', attendance: 'excused', chargeable: false }]);
+    expect(change.students).toEqual([
+      { student_id: 'S2', attendance: 'excused', chargeable: false },
+    ]);
   });
 
   it('a late excuse is charged once the owner sets late_cancel_hours', () => {

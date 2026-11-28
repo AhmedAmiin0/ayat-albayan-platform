@@ -15,7 +15,10 @@ import {
   uploadName,
 } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { baseMime, InboundMedia } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
+import {
+  baseMime,
+  InboundMedia,
+} from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
 import { SNIFF_BYTES, sniffMime } from './invoice-sniff';
 import type { InvoiceRow } from '@/modules/teaching/booking/core/booking.mapper';
 import { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
@@ -29,7 +32,11 @@ type Saved = Pick<InvoiceRow, 'path' | 'mime' | 'size_bytes'>;
  * server-side option (BookingPlanner PrepareOptions.invoiceWaived, the assistant's course): no
  * invoice is then null instead of 400 invoice_required.
  */
-type InvoiceScope = { phones: readonly string[]; maxBytes: number; waived?: boolean };
+interface InvoiceScope {
+  phones: readonly string[];
+  maxBytes: number;
+  waived?: boolean;
+}
 
 /** R-PAY-03, R-MSG-06: mime and size come from Storage, never the client; clashes copy nothing. */
 @Injectable()
@@ -67,13 +74,24 @@ export class BookingInvoices {
       : this.fromChat({ input: req.invoice, requestId, kind, ...scope });
   }
 
-  private async fromUpload(a: { input: Extract<InvoiceInput, { source: 'upload' }>; requestId: string; kind: Kind; maxBytes: number }): Promise<InvoiceRow> {
+  private async fromUpload(a: {
+    input: Extract<InvoiceInput, { source: 'upload' }>;
+    requestId: string;
+    kind: Kind;
+    maxBytes: number;
+  }): Promise<InvoiceRow> {
     if (!isPathOf(a.input.path, a.requestId)) throw bad('invoice_path');
     const info = await this.storage.info({ bucket: BUCKETS.invoices, path: a.input.path });
     if (!info) throw bad('invoice_path');
-    const saved = this.checked({ path: a.input.path, mime: baseMime(info.contentType), size_bytes: info.size }, a.maxBytes);
+    const saved = this.checked(
+      { path: a.input.path, mime: baseMime(info.contentType), size_bytes: info.size },
+      a.maxBytes,
+    );
     // Storage trusts the Content-Type the browser PUT with: the bytes must agree with it.
-    const head = await this.storage.head({ bucket: BUCKETS.invoices, path: a.input.path }, SNIFF_BYTES);
+    const head = await this.storage.head(
+      { bucket: BUCKETS.invoices, path: a.input.path },
+      SNIFF_BYTES,
+    );
     if (!head || sniffMime(head) !== saved.mime) throw bad('invoice_type');
     return { ...saved, kind: a.kind, source: 'upload', message_id: null };
   }
@@ -101,7 +119,8 @@ export class BookingInvoices {
   /** What Storage reports must be an image / PDF of 1 byte to maxBytes (settings.upload_max_mb). */
   private checked(file: Saved, maxBytes: number): Saved {
     if (!(INVOICE_MIMES as readonly string[]).includes(file.mime)) throw bad('invoice_type');
-    if (file.size_bytes < 1 || file.size_bytes > Math.min(maxBytes, INVOICE_MAX_BYTES)) throw bad('invoice_too_large');
+    if (file.size_bytes < 1 || file.size_bytes > Math.min(maxBytes, INVOICE_MAX_BYTES))
+      throw bad('invoice_too_large');
     return file;
   }
 }

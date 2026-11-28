@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { ignoredAnswer, roomsAnswer } from '@/modules/teaching/classroom/livekit/livekit-twirp';
 import { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
-import { roomNameOf, type RoomTarget } from '@/modules/teaching/classroom/recordings/recording-target';
+import {
+  roomNameOf,
+  type RoomTarget,
+} from '@/modules/teaching/classroom/recordings/recording-target';
 import { liveRooms, type LiveRoom } from './max-duration.rule';
 
 /** A running recording is stopped first so its file is kept; every method throws on failure. */

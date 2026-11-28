@@ -24,13 +24,22 @@ export const meetingRow = (over: Partial<MeetingRow> = {}): MeetingRow => ({
 
 /** A meeting scheduled 12:00–13:00 on NOW's day (its room opens 11:45, closes 15:00). */
 export const scheduledRow = (over: Partial<MeetingRow> = {}): MeetingRow =>
-  meetingRow({ starts_at: '2026-10-05T12:00:00.000Z', planned_end_at: '2026-10-05T13:00:00.000Z', ...over });
+  meetingRow({
+    starts_at: '2026-10-05T12:00:00.000Z',
+    planned_end_at: '2026-10-05T13:00:00.000Z',
+    ...over,
+  });
 
 /** Mocked InternalMeetingsQueries with the happy-path defaults. */
 export function meetingQueries() {
   return {
     insert: vi.fn(async (r: NewMeeting) =>
-      meetingRow({ title: r.title, created_by: r.createdBy, starts_at: r.startsAt, planned_end_at: r.plannedEndAt }),
+      meetingRow({
+        title: r.title,
+        created_by: r.createdBy,
+        starts_at: r.startsAt,
+        planned_end_at: r.plannedEndAt,
+      }),
     ),
     byRequest: vi.fn().mockResolvedValue(null),
     byId: vi.fn().mockResolvedValue(meetingRow()),

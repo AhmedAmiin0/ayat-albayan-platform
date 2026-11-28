@@ -2,7 +2,11 @@ import { systemPermissionsOf } from '@ab/catalog';
 import { mayInvitePhones, type MeetingInviteeView } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { assertCanSend, TeacherScopes, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import {
+  assertCanSend,
+  TeacherScopes,
+  type TeacherScope,
+} from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 
 /**
  * Who may send WhatsApp through meeting invitations (owner policy 2026-10-13, R-MEET-02):
@@ -23,7 +27,8 @@ export interface InvitePolicy {
 export const CHAT_NOT_ALLOWED = 'chat_not_allowed';
 
 /** The AuthGuard always sets permissions; a bare AuthUser (an internal call) falls back to its system role's. */
-const heldOf = (user: Pick<AuthUser, 'role' | 'permissions'>) => user.permissions ?? (user.role ? systemPermissionsOf(user.role) : []);
+const heldOf = (user: Pick<AuthUser, 'role' | 'permissions'>) =>
+  user.permissions ?? (user.role ? systemPermissionsOf(user.role) : []);
 
 /** True when the inbox would let this teacher send to this phone (their families, never their own chat). */
 export function teacherMaySend(scope: TeacherScope, phone: string): boolean {
@@ -56,10 +61,15 @@ export class MeetingInvitePolicies {
 
   async of(user: AuthUser): Promise<InvitePolicy> {
     const seesAll = mayInvitePhones(user.role);
-    if (!heldOf(user).includes('inbox.send')) return { seesAll, mayChat: () => false, teacherId: null };
+    if (!heldOf(user).includes('inbox.send'))
+      return { seesAll, mayChat: () => false, teacherId: null };
     if (seesAll) return { seesAll, mayChat: () => true, teacherId: null };
     if (user.role !== 'teacher') return { seesAll, mayChat: () => false, teacherId: null };
     const scope = await this.teachers.of(user).catch(() => null);
-    return { seesAll, mayChat: (phone) => scope !== null && teacherMaySend(scope, phone), teacherId: scope?.teacherId ?? null };
+    return {
+      seesAll,
+      mayChat: (phone) => scope !== null && teacherMaySend(scope, phone),
+      teacherId: scope?.teacherId ?? null,
+    };
   }
 }

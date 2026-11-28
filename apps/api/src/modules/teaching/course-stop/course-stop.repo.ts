@@ -65,12 +65,14 @@ export class CourseStopRepo {
 
   /** The student's current package (currentPackage: newest active, else newest live); 404 none. */
   async current(studentId: string): Promise<StopSub> {
-    const data = rows(await this.db
-      .from('subscriptions')
-      .select(SUB)
-      .eq('student_id', studentId)
-      .order('starts_on', { ascending: false })
-      .order('created_at', { ascending: false }));
+    const data = rows(
+      await this.db
+        .from('subscriptions')
+        .select(SUB)
+        .eq('student_id', studentId)
+        .order('starts_on', { ascending: false })
+        .order('created_at', { ascending: false }),
+    );
     const sub = currentPackage(data);
     if (!sub) throw notFound('subscription_not_found');
     return sub;
@@ -90,16 +92,20 @@ export class CourseStopRepo {
   /** The instants of these lessons, earliest first (the sheet lists what a stop cancels). */
   async starts(ids: readonly string[]): Promise<string[]> {
     if (ids.length === 0) return [];
-    const data = rows(await this.db.from('lessons').select('starts_at').in('id', [...ids]));
+    const data = rows(
+      await this.db
+        .from('lessons')
+        .select('starts_at')
+        .in('id', [...ids]),
+    );
     return data.map((l) => l.starts_at).sort();
   }
 
   /** Net paid in the package currency: shown, never changed. */
   async paid(sub: Pick<StopSub, 'id' | 'currency'>): Promise<number> {
-    const data = rows(await this.db
-      .from('payments')
-      .select('amount, kind, currency')
-      .eq('subscription_id', sub.id));
+    const data = rows(
+      await this.db.from('payments').select('amount, kind, currency').eq('subscription_id', sub.id),
+    );
     return netPaidIn(data, sub.currency);
   }
 

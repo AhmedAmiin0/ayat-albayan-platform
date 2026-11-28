@@ -13,7 +13,10 @@ export class RoomOpenService {
     private readonly queries: ClassroomRepo,
   ) {}
 
-  async open(input: { user: AuthUser; lessonId: string }, now = new Date()): Promise<RoomOpenResult> {
+  async open(
+    input: { user: AuthUser; lessonId: string },
+    now = new Date(),
+  ): Promise<RoomOpenResult> {
     const { lesson, role } = await this.roles.resolve(input.user, input.lessonId);
     if (role !== 'admin' && role !== 'teacher') throw new ForbiddenException();
     if (!isOpenLesson(lesson.status)) throw conflict('lesson_not_open', { status: lesson.status });
@@ -21,7 +24,9 @@ export class RoomOpenService {
     if (joinWindow(lesson, now, win).state === 'closed') {
       throw new HttpException({ code: 'join_closed', message: 'join_closed' }, HttpStatus.GONE);
     }
-    const opened = lesson.room_opened_at ? lesson : await this.queries.openRoom(lesson.id, now.toISOString());
+    const opened = lesson.room_opened_at
+      ? lesson
+      : await this.queries.openRoom(lesson.id, now.toISOString());
     if (!opened) throw notFound('lesson_not_found');
     const at = opened.room_opened_at ?? now.toISOString();
     return { ...joinWindow({ ...opened, room_opened_at: at }, now, win), room_opened_at: at };

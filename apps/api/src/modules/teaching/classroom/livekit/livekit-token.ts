@@ -26,7 +26,13 @@ interface VideoGrant {
  * camera and microphone but not share a screen into the room.
  */
 export function grantsFor(role: JoinRole, room: string): VideoGrant {
-  const base: VideoGrant = { roomJoin: true, room, canPublish: true, canSubscribe: true, canPublishData: true };
+  const base: VideoGrant = {
+    roomJoin: true,
+    room,
+    canPublish: true,
+    canSubscribe: true,
+    canPublishData: true,
+  };
   return role === 'guest' ? { ...base, canPublishSources: ['camera', 'microphone'] } : base;
 }
 
@@ -58,7 +64,11 @@ export function signJwt(secret: string, claims: object): string {
  * A join token. `metadata` (participant.metadata in the room) carries the role, so every client
  * knows who may remove whom (participantMeta, @ab/shared).
  */
-export function mintToken(cfg: Pick<LivekitEnv, 'apiKey' | 'apiSecret'>, input: TokenInput, now: Date): string {
+export function mintToken(
+  cfg: Pick<LivekitEnv, 'apiKey' | 'apiSecret'>,
+  input: TokenInput,
+  now: Date,
+): string {
   const ttl = Math.min(Math.max(input.ttlSeconds ?? TOKEN_TTL_S, MIN_TTL_S), TOKEN_TTL_S);
   const nowS = Math.floor(now.getTime() / 1000);
   return signJwt(cfg.apiSecret, {
@@ -84,7 +94,17 @@ export interface ServerGrant {
 const SERVER_TTL_S = 600;
 
 /** A short-lived token for one Twirp call of the API to LiveKit (the Authorization: Bearer). */
-export function mintServerToken(cfg: Pick<LivekitEnv, 'apiKey' | 'apiSecret'>, grant: ServerGrant, now: Date): string {
+export function mintServerToken(
+  cfg: Pick<LivekitEnv, 'apiKey' | 'apiSecret'>,
+  grant: ServerGrant,
+  now: Date,
+): string {
   const nowS = Math.floor(now.getTime() / 1000);
-  return signJwt(cfg.apiSecret, { iss: cfg.apiKey, sub: 'ab-api', nbf: nowS - SKEW_S, exp: nowS + SERVER_TTL_S, video: grant });
+  return signJwt(cfg.apiSecret, {
+    iss: cfg.apiKey,
+    sub: 'ab-api',
+    nbf: nowS - SKEW_S,
+    exp: nowS + SERVER_TTL_S,
+    video: grant,
+  });
 }

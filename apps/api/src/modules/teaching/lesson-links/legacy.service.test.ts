@@ -29,10 +29,7 @@ function setup(rows: { lesson?: LinkLesson | null; teachers?: { id: string; tz: 
       url: `https://app.example/teacher/report/${l.id}`,
     })),
   };
-  const service = new LegacyReportLinks(
-    repo as unknown as LessonLinksRepo,
-    reports,
-  );
+  const service = new LegacyReportLinks(repo as unknown as LessonLinksRepo, reports);
   return { service, repo, reports };
 }
 

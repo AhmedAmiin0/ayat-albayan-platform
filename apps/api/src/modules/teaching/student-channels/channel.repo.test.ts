@@ -6,7 +6,12 @@ import { ChannelRepo } from './channel.repo';
 // read mark only moves forward (channel_mark_read, bug a).
 
 const ROW = { id: 'm1', body: 'x', created_at: '2026-11-17T10:00:00.123456+00:00' };
-const NEW = { channel_id: 'c1', sender_profile_id: 'p1', sender_role: 'teacher', body: 'x' } as const;
+const NEW = {
+  channel_id: 'c1',
+  sender_profile_id: 'p1',
+  sender_role: 'teacher',
+  body: 'x',
+} as const;
 
 function db(insertError: { code: string; message: string } | null) {
   const eqs: [string, string][] = [];

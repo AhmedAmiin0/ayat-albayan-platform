@@ -34,7 +34,9 @@ describe('POST /teachers/me/channels/:studentId/messages with another teacher’
 
   it('an unknown student is 404 and nothing is stored or pushed', async () => {
     t.queries.teacherIds.mockResolvedValueOnce([]);
-    const res = await t.post(post('52000000-0000-4000-8000-0000000000ff'), 'teacher', { body: 'x' });
+    const res = await t.post(post('52000000-0000-4000-8000-0000000000ff'), 'teacher', {
+      body: 'x',
+    });
     expect([res.statusCode, res.json().code]).toEqual([404, 'student_not_found']);
     nothingSent();
   });

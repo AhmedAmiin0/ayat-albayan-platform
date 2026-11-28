@@ -10,8 +10,7 @@ import { migrationPath } from '@/common/db/repo-paths.test-util';
 // docs/30 §1 (a docs/13 deviation): contact_is_self is inserted by create_booking (migration 775).
 
 const MIGRATION = '20261028000775_create_booking_contact_is_self';
-const sql = readFileSync(migrationPath(`${MIGRATION}.sql`), 'utf8')
-  .replace(/--.*$/gm, '');
+const sql = readFileSync(migrationPath(`${MIGRATION}.sql`), 'utf8').replace(/--.*$/gm, '');
 
 function parties() {
   const queries = fakeQueries();
@@ -21,7 +20,9 @@ function parties() {
 
 describe('booking: new student contact_is_self', () => {
   it('true is passed to new_student', async () => {
-    const who = await parties().resolve(leadRequest({ newStudent: { name: 'ريم', tz: 'Asia/Riyadh', contact_is_self: true } }));
+    const who = await parties().resolve(
+      leadRequest({ newStudent: { name: 'ريم', tz: 'Asia/Riyadh', contact_is_self: true } }),
+    );
     expect(who.new_student).toMatchObject({ contact_is_self: true });
   });
 
@@ -33,6 +34,8 @@ describe('booking: new student contact_is_self', () => {
   it('create_booking v7 inserts it, defaulting a missing value to false', () => {
     expect(sql).toMatch(/meeting_link_override, notes, contact_is_self, created_by\)/);
     expect(sql).toContain('coalesce(s.contact_is_self, false)');
-    expect(sql).toContain('grant execute on function public.create_booking(jsonb, uuid) to service_role;');
+    expect(sql).toContain(
+      'grant execute on function public.create_booking(jsonb, uuid) to service_role;',
+    );
   });
 });

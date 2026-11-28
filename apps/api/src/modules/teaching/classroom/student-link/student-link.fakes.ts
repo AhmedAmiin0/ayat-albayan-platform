@@ -30,7 +30,9 @@ export function studentLinkQueries() {
     student: vi.fn().mockResolvedValue({ id: STUDENT_ID, name: 'سهيلة محمد', is_test: false }),
     saveLink: vi.fn().mockResolvedValue(undefined),
     linkByHash: vi.fn(async (hash: string) =>
-      hash === hashLinkToken(STUDENT_TOKEN) ? ({ id: 'sl1', student_id: STUDENT_ID, revoked_at: null as string | null }) : null,
+      hash === hashLinkToken(STUDENT_TOKEN)
+        ? { id: 'sl1', student_id: STUDENT_ID, revoked_at: null as string | null }
+        : null,
     ),
     lessonsAhead: vi.fn().mockResolvedValue([STUDENT_LESSON, LATER_LESSON]),
     joinWindow: vi.fn().mockResolvedValue(DEFAULT_JOIN_WINDOW),

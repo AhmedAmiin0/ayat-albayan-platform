@@ -8,7 +8,15 @@ const SUB = { id: 'sub1', package: '8', duration: 45, lessons_total: 8, starts_o
 
 describe('SalesCourseQueries', () => {
   it('student: the wizard’s fields; a missing code reads as empty; 404 when unknown', async () => {
-    const row = { id: 's1', code: null, name: 'سهيلة', tz: 'Asia/Riyadh', program: 'quran', teacher_gender_pref: null, teacher_id: null };
+    const row = {
+      id: 's1',
+      code: null,
+      name: 'سهيلة',
+      tz: 'Asia/Riyadh',
+      program: 'quran',
+      teacher_gender_pref: null,
+      teacher_id: null,
+    };
     const t = fakeDb({ students: [{ data: row }, { data: null }] });
     const q = new SalesCourseRepo(t.db);
     expect(await q.student('s1')).toEqual({ ...row, code: '' });
@@ -27,7 +35,10 @@ describe('SalesCourseQueries', () => {
 
   it('subscription: the newest one WITHOUT a course (two active packages, the older one unbooked)', async () => {
     const older = { ...SUB, id: 'sub0', rules: [] };
-    const t = fakeDb({ subscriptions: [{ data: [{ ...SUB, rules: [{ id: 'r1' }] }, older] }], ...notImported() });
+    const t = fakeDb({
+      subscriptions: [{ data: [{ ...SUB, rules: [{ id: 'r1' }] }, older] }],
+      ...notImported(),
+    });
     expect(await new SalesCourseRepo(t.db).subscription('s1')).toEqual({ ...SUB, id: 'sub0' });
   });
 
@@ -35,13 +46,18 @@ describe('SalesCourseQueries', () => {
     const older = { ...SUB, id: 'sub0', rules: [] };
     const t = fakeDb({
       subscriptions: [{ data: [{ ...SUB, rules: [{ id: 'r1' }] }, older] }],
-      schedule_rule_students: [{ data: [{ rule: { starts_on: '2026-01-01', ends_on: null, package: null } }] }],
+      schedule_rule_students: [
+        { data: [{ rule: { starts_on: '2026-01-01', ends_on: null, package: null } }] },
+      ],
     });
     expect(await new SalesCourseRepo(t.db).subscription('s1')).toEqual(SUB);
   });
 
   it('subscription: every package booked → the newest (course_exists, the view shows its course)', async () => {
-    const booked = [{ ...SUB, rules: [{ id: 'r1' }] }, { ...SUB, id: 'sub0', rules: [{ id: 'r0' }] }];
+    const booked = [
+      { ...SUB, rules: [{ id: 'r1' }] },
+      { ...SUB, id: 'sub0', rules: [{ id: 'r0' }] },
+    ];
     const t = fakeDb({ subscriptions: [{ data: booked }], ...notImported() });
     expect(await new SalesCourseRepo(t.db).subscription('s1')).toEqual(SUB);
   });
@@ -54,7 +70,9 @@ describe('SalesCourseQueries', () => {
 
   it('rules: the student’s active rules, flattened', async () => {
     const rule = { starts_on: '2026-09-01', ends_on: null, package: '8', status: 'active' };
-    const t = fakeDb({ schedule_rule_students: [{ data: [{ rule }] }, { error: { message: 'down' } }] });
+    const t = fakeDb({
+      schedule_rule_students: [{ data: [{ rule }] }, { error: { message: 'down' } }],
+    });
     const q = new SalesCourseRepo(t.db);
     expect(await q.rules('s1')).toEqual([{ starts_on: '2026-09-01', ends_on: null, package: '8' }]);
     expect(t.calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([

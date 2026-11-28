@@ -21,7 +21,10 @@ function setup() {
   const deps = fakeContext();
   deps.availability.bookableSlots.mockResolvedValue(allDayRows(RIYADH_TZ));
   const settings = readerOf(BookingSettings, { teachers_always_available: true });
-  return { ...deps, service: new SlotsService(deps.queries as unknown as BookingRepo, deps.context, settings) };
+  return {
+    ...deps,
+    service: new SlotsService(deps.queries as unknown as BookingRepo, deps.context, settings),
+  };
 }
 const byStart = (slots: { starts_at: string; conflicts: { kind: string }[] }[]) =>
   Object.fromEntries(slots.map((s) => [s.starts_at, s.conflicts.map((c) => c.kind)]));
@@ -43,9 +46,15 @@ describe('SlotsService with teachers available 24/7 (owner 2026-10-12)', () => {
   it('a booked lesson and time off still block the starts they touch', async () => {
     const { service, availability } = setup();
     availability.listBusyLessons.mockResolvedValue([
-      { id: 'e9999999-9999-4999-8999-999999999991', starts_at: new Date('2026-10-04T13:00:00Z'), ends_at: new Date('2026-10-04T13:45:00Z') },
+      {
+        id: 'e9999999-9999-4999-8999-999999999991',
+        starts_at: new Date('2026-10-04T13:00:00Z'),
+        ends_at: new Date('2026-10-04T13:45:00Z'),
+      },
     ]);
-    availability.listTimeOff.mockResolvedValue([{ starts_at: '2026-10-04T00:00:00Z', ends_at: '2026-10-04T01:00:00Z' }]);
+    availability.listTimeOff.mockResolvedValue([
+      { starts_at: '2026-10-04T00:00:00Z', ends_at: '2026-10-04T01:00:00Z' },
+    ]);
     const kinds = byStart((await service.slots(query())).slots);
     expect(kinds['2026-10-04T12:30:00.000Z']).toEqual(['teacher_busy']); // 15:30 runs into it
     expect(kinds['2026-10-04T13:00:00.000Z']).toEqual(['teacher_busy']);

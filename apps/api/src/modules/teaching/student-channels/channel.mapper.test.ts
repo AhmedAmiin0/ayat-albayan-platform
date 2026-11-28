@@ -14,17 +14,35 @@ describe('the teacher list rows', () => {
         { student_id: '4', unread: 1, last_body: null, last_role: null, last_at: at(9) },
       ],
     );
-    expect(rows.map((r) => [r.student_id, r.unread])).toEqual([['1', 3], ['2', 0], ['3', 0], ['4', 1]]);
+    expect(rows.map((r) => [r.student_id, r.unread])).toEqual([
+      ['1', 3],
+      ['2', 0],
+      ['3', 0],
+      ['4', 1],
+    ]);
     expect(rows[0]?.last_message).toEqual({
-      body: 'مرحبا', sender_role: 'guardian', created_at: at(5), deleted: false,
+      body: 'مرحبا',
+      sender_role: 'guardian',
+      created_at: at(5),
+      deleted: false,
     });
     expect(rows[1]?.last_message).toBeNull();
   });
 
   it('a deleted last message never shows its text; an unknown role reads as unknown', () => {
-    const [row] = toTeacherRows([student('1', 'سارة')], [
-      { student_id: '1', unread: 0, last_body: 'سر', last_role: 'x', last_at: at(1), last_deleted: true },
-    ]);
+    const [row] = toTeacherRows(
+      [student('1', 'سارة')],
+      [
+        {
+          student_id: '1',
+          unread: 0,
+          last_body: 'سر',
+          last_role: 'x',
+          last_at: at(1),
+          last_deleted: true,
+        },
+      ],
+    );
     expect(row?.last_message).toMatchObject({ body: '', deleted: true });
   });
 

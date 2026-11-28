@@ -33,7 +33,10 @@ describe('OutcomeSettleService (owner 2026-11-03, confirmation required)', () =>
   it('reads [max(cutoff, now − 14 d), now − grace] and the reminders of what it read', async () => {
     const { service, repo } = setup([open('a')]);
     await service.runOnce({ now: NOW, graceMs: GRACE });
-    expect(repo.openEnded).toHaveBeenCalledWith({ from: SINCE, until: new Date('2026-11-04T11:30:00Z') });
+    expect(repo.openEnded).toHaveBeenCalledWith({
+      from: SINCE,
+      until: new Date('2026-11-04T11:30:00Z'),
+    });
     expect(repo.reminded).toHaveBeenCalledWith(['a']);
   });
 
@@ -41,7 +44,12 @@ describe('OutcomeSettleService (owner 2026-11-03, confirmation required)', () =>
     const lessons = [open('c', { status: 'confirmed' }), open('r'), open('u')];
     const { service, writer, record } = setup(lessons, ['r']);
     expect(await service.runOnce({ now: NOW, graceMs: GRACE })).toEqual({
-      held: 1, absent: 1, unresolved: 1, waiting: 0, skipped: 0, lost: 0,
+      held: 1,
+      absent: 1,
+      unresolved: 1,
+      waiting: 0,
+      skipped: 0,
+      lost: 0,
     });
     expect(writer.apply).toHaveBeenCalledTimes(2);
     expect(appliedChange(writer)).toEqual({
@@ -52,10 +60,15 @@ describe('OutcomeSettleService (owner 2026-11-03, confirmation required)', () =>
       actor: null,
       changes: [{ id: 'r', from_status: 'scheduled', to_status: 'no_show' }],
     });
-    expect(record).toHaveBeenLastCalledWith(expect.objectContaining({
-      actorId: null, entityId: 'r', action: 'status_change',
-      before: { status: 'scheduled' }, after: { status: 'no_show', reason: 'auto_no_show' },
-    }));
+    expect(record).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        actorId: null,
+        entityId: 'r',
+        action: 'status_change',
+        before: { status: 'scheduled' },
+        after: { status: 'no_show', reason: 'auto_no_show' },
+      }),
+    );
   });
 
   it('no retro: a lesson read that ended before the cutoff is skipped, never written', async () => {
@@ -65,7 +78,10 @@ describe('OutcomeSettleService (owner 2026-11-03, confirmation required)', () =>
   });
 
   it('inside the grace: waits; another status: skipped', async () => {
-    const lessons = [open('w', { ends_at: '2026-11-04T11:45:00Z' }), open('x', { status: 'excused' })];
+    const lessons = [
+      open('w', { ends_at: '2026-11-04T11:45:00Z' }),
+      open('x', { status: 'excused' }),
+    ];
     const { service, writer } = setup(lessons, ['w', 'x']);
     expect(await service.runOnce(PASS)).toMatchObject({ waiting: 1, skipped: 1 });
     expect(writer.apply).not.toHaveBeenCalled();
@@ -73,7 +89,9 @@ describe('OutcomeSettleService (owner 2026-11-03, confirmation required)', () =>
 
   it('idempotent: a lost compare-and-set or a failed write counts as lost, never throws', async () => {
     const { service, writer } = setup([open('a'), open('b', { status: 'confirmed' })], ['a']);
-    writer.apply.mockRejectedValueOnce(conflict('invalid_transition')).mockRejectedValueOnce(new Error('db'));
+    writer.apply
+      .mockRejectedValueOnce(conflict('invalid_transition'))
+      .mockRejectedValueOnce(new Error('db'));
     expect(await service.runOnce(PASS)).toMatchObject({ held: 0, absent: 0, lost: 2 });
   });
 

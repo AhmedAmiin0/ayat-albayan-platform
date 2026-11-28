@@ -13,10 +13,10 @@ import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import { pauseViewOf, toPauseView, type RpcOut } from './course-pause.mapper';
 import { CoursePauseRepo } from './course-pause.repo';
 
-type Actor = { id: string };
-type StartInput = { studentId: string; body: CoursePauseStart; actor: Actor };
-type UntilInput = { studentId: string; body: CoursePauseUntil; actor: Actor };
-type ResumeInput = { studentId: string; body: CoursePauseResume; actor: Actor };
+interface Actor { id: string }
+interface StartInput { studentId: string; body: CoursePauseStart; actor: Actor }
+interface UntilInput { studentId: string; body: CoursePauseUntil; actor: Actor }
+interface ResumeInput { studentId: string; body: CoursePauseResume; actor: Actor }
 
 /** An old package-only pause lifted: no pause row, nothing cancelled or moved. */
 const legacyResult = (subscriptionId: string): CoursePauseResult => {

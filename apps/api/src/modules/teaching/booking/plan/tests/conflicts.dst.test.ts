@@ -6,7 +6,14 @@ const window = { from: new Date('2026-10-18T00:00:00Z'), to: new Date('2026-11-0
 const SUN_16_20_CAIRO = { weekday: 0, start_time: '16:00', end_time: '20:00', tz: 'Africa/Cairo' };
 const rule = (start: string, tz: string) =>
   ruleOccurrences(
-    { byday: [0], start_time_local: start, duration_min: 45, tz, starts_on: '2026-10-01', ends_on: null },
+    {
+      byday: [0],
+      start_time_local: start,
+      duration_min: 45,
+      tz,
+      starts_on: '2026-10-01',
+      ends_on: null,
+    },
     window,
   );
 const base = (proposed: ConflictInput['proposed']): ConflictInput => ({
@@ -16,7 +23,10 @@ const base = (proposed: ConflictInput['proposed']): ConflictInput => ({
   availability: [SUN_16_20_CAIRO],
   timeOff: [],
 });
-const span = (start: string, end: string) => ({ starts_at: new Date(start), ends_at: new Date(end) });
+const span = (start: string, end: string) => ({
+  starts_at: new Date(start),
+  ends_at: new Date(end),
+});
 
 describe('ConflictChecker across DST (R-SCH-04, R-SCH-01)', () => {
   it('a Riyadh 16:00 series leaves a Cairo 16:00–20:00 grid once Cairo falls back', () => {
@@ -74,7 +84,9 @@ describe('ConflictChecker across midnight (R-SCH-04)', () => {
   });
 
   it('time-off ending exactly at midnight does not touch a lesson starting at midnight', () => {
-    const timeOff = [{ start: new Date('2026-10-04T18:00:00Z'), end: new Date('2026-10-04T21:00:00Z') }];
+    const timeOff = [
+      { start: new Date('2026-10-04T18:00:00Z'), end: new Date('2026-10-04T21:00:00Z') },
+    ];
     expect(findConflicts({ ...base([midnight]), availability: lateGrid, timeOff })).toEqual([]);
   });
 
@@ -82,6 +94,8 @@ describe('ConflictChecker across midnight (R-SCH-04)', () => {
     const studentLessons = [
       { id: 'L8', student_id: 'S1', ...span('2026-10-04T20:15:00Z', '2026-10-04T21:00:00Z') },
     ];
-    expect(findConflicts({ ...base([midnight]), availability: lateGrid, studentLessons })).toEqual([]);
+    expect(findConflicts({ ...base([midnight]), availability: lateGrid, studentLessons })).toEqual(
+      [],
+    );
   });
 });

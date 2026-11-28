@@ -13,7 +13,11 @@ import type { NewChannelMessage } from './channel-row';
 // failure there is logged, never lost and never a 500.
 
 const ACTOR: ChannelActor = {
-  mode: 'participant', studentId: 'st1', profileId: 'p-t', role: 'teacher', open: true,
+  mode: 'participant',
+  studentId: 'st1',
+  profileId: 'p-t',
+  role: 'teacher',
+  open: true,
 };
 
 function sender(sent: ChannelNotify['sent']) {
@@ -27,7 +31,9 @@ function sender(sent: ChannelNotify['sent']) {
     setReadMark: vi.fn(async () => undefined),
   };
   const notify = { sent: vi.fn(sent) };
-  const views = { safeContext: vi.fn(async () => ({ me: 'p-t', names: new Map<string, string>() })) };
+  const views = {
+    safeContext: vi.fn(async () => ({ me: 'p-t', names: new Map<string, string>() })),
+  };
   const s = new ChannelSender(
     queries as unknown as ChannelRepo,
     { columns: vi.fn(async () => ({})) } as unknown as ChannelSendInputs,
@@ -59,7 +65,13 @@ describe('ChannelSender: the notification fan-out is off the request path', () =
 
   it('a resend (same client_id, already stored) notifies nobody again', async () => {
     const { s, notify, queries } = sender(async () => undefined);
-    const stored = { id: 'm0', body: 'x', sender_profile_id: 'p-t', sender_role: 'teacher', created_at: '' };
+    const stored = {
+      id: 'm0',
+      body: 'x',
+      sender_profile_id: 'p-t',
+      sender_role: 'teacher',
+      created_at: '',
+    };
     queries.byClientId.mockResolvedValueOnce(stored as never);
     await s.post(ACTOR, { body: 'x', client_id: 'a1000000-0000-4000-8000-000000000001' });
     expect(notify.sent).not.toHaveBeenCalled();

@@ -5,30 +5,58 @@ import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-ale
 const T1 = { id: 'T1', profile_id: 'P1', phone_e164: '+201001234567', tz: 'Africa/Cairo' };
 const LESSONS = [{ id: 'L1', starts_at: '2026-10-04T14:00:00Z', teacher: T1 }];
 const REQ = bookingRequestSchema.parse({
-  teacherId: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11', byday: [0], startTimeLocal: '17:00', tz: 'Asia/Riyadh', durationMin: 45,
-  startsOn: '2026-10-04', package: 'trial', studentIds: ['11111111-1111-4111-8111-111111111111'],
+  teacherId: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11',
+  byday: [0],
+  startTimeLocal: '17:00',
+  tz: 'Asia/Riyadh',
+  durationMin: 45,
+  startsOn: '2026-10-04',
+  package: 'trial',
+  studentIds: ['11111111-1111-4111-8111-111111111111'],
 });
-const RESULT = { rule_id: 'R1', student_ids: ['s1'], guardian_ids: [], lessons: [{ id: 'L1', starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z' }], message_ids: [], invoice_id: null };
+const RESULT = {
+  rule_id: 'R1',
+  student_ids: ['s1'],
+  guardian_ids: [],
+  lessons: [{ id: 'L1', starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z' }],
+  message_ids: [],
+  invoice_id: null,
+};
 
 describe('TeacherAlert.afterBooking (R-NOT-03)', () => {
   it('bell row always; WhatsApp queued when the switch is ON and the template approved; sender kicked', async () => {
     const { alert, push, queries, sender } = fakeTeacherAlert({ lessons: LESSONS });
     await alert.afterBooking({ req: REQ, result: RESULT });
-    expect(push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ kind: 'new_student', subject: 'L1', profileIds: ['P1'] }));
-    expect(queries.queue).toHaveBeenCalledWith([expect.objectContaining({ template_key: 'teacher_new_student', dedup_key: 'teacher_new_student:L1:T1' })]);
-    expect(queries.queue.mock.calls[0]?.[0][0]).toMatchObject({ template_params: { '3': 'تجريبية' } });
+    expect(push.notifyProfiles).toHaveBeenCalledWith(
+      expect.objectContaining({ kind: 'new_student', subject: 'L1', profileIds: ['P1'] }),
+    );
+    expect(queries.queue).toHaveBeenCalledWith([
+      expect.objectContaining({
+        template_key: 'teacher_new_student',
+        dedup_key: 'teacher_new_student:L1:T1',
+      }),
+    ]);
+    expect(queries.queue.mock.calls[0]?.[0][0]).toMatchObject({
+      template_params: { '3': 'تجريبية' },
+    });
     expect(sender.kick).toHaveBeenCalledTimes(1);
   });
 
   it('switch OFF: the bell row only, no WhatsApp', async () => {
-    const { alert, push, queries } = fakeTeacherAlert({ lessons: LESSONS, settings: { teacher_whatsapp_new_student: false } });
+    const { alert, push, queries } = fakeTeacherAlert({
+      lessons: LESSONS,
+      settings: { teacher_whatsapp_new_student: false },
+    });
     await alert.afterBooking({ req: REQ, result: RESULT });
     expect(push.notifyProfiles).toHaveBeenCalledTimes(1);
     expect(queries.queue).not.toHaveBeenCalled();
   });
 
   it.each([
-    ['module mode, the teacher_new_student row off', { mode: 'module' as const, rows: [{ key: 'teacher_new_student', enabled: false }] }],
+    [
+      'module mode, the teacher_new_student row off',
+      { mode: 'module' as const, rows: [{ key: 'teacher_new_student', enabled: false }] },
+    ],
     ['rules unreadable (fail closed)', { fail: true }],
   ])('%s: the bell row only, no WhatsApp', async (_name, rules) => {
     const { alert, push, queries } = fakeTeacherAlert({ lessons: LESSONS, rules });
@@ -38,8 +66,15 @@ describe('TeacherAlert.afterBooking (R-NOT-03)', () => {
   });
 
   it('module mode, the row on: WhatsApp queued even while the legacy key is off', async () => {
-    const rules = { mode: 'module' as const, rows: [{ key: 'teacher_new_student', enabled: true }] };
-    const { alert, queries } = fakeTeacherAlert({ lessons: LESSONS, rules, settings: { teacher_whatsapp_new_student: false } });
+    const rules = {
+      mode: 'module' as const,
+      rows: [{ key: 'teacher_new_student', enabled: true }],
+    };
+    const { alert, queries } = fakeTeacherAlert({
+      lessons: LESSONS,
+      rules,
+      settings: { teacher_whatsapp_new_student: false },
+    });
     await alert.afterBooking({ req: REQ, result: RESULT });
     expect(queries.queue).toHaveBeenCalledTimes(1);
   });
@@ -74,7 +109,9 @@ describe('TeacherAlert.toTeachers («تغيير المعلم», owner 2026-10-30
     expect(queries.lessons).toHaveBeenCalledWith(['L1']);
     const bell = expect.objectContaining({ kind: 'new_student', profileIds: ['P1'] });
     expect(push.notifyProfiles).toHaveBeenCalledWith(bell);
-    expect(queries.queue.mock.calls[0]?.[0][0]).toMatchObject({ template_params: { '3': 'اشتراك' } });
+    expect(queries.queue.mock.calls[0]?.[0][0]).toMatchObject({
+      template_params: { '3': 'اشتراك' },
+    });
     expect(sender.kick).toHaveBeenCalledTimes(1);
   });
 });

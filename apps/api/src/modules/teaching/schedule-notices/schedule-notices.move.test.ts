@@ -33,7 +33,10 @@ describe('ScheduleNotices: a move, one family message', () => {
       const h = harness();
       await h.notices.handle(move(choice), NOW);
       expect(h.queued()).toEqual([KEY('t:T1')]);
-      expect(h.push.notifyProfiles.mock.calls.map(([p]) => p.profileIds)).toEqual([['pT1'], ['pG1']]);
+      expect(h.push.notifyProfiles.mock.calls.map(([p]) => p.profileIds)).toEqual([
+        ['pT1'],
+        ['pG1'],
+      ]);
     }
   });
 
@@ -54,14 +57,24 @@ describe('ScheduleNotices: a resume names the RESUMED course', () => {
   it('the first lesson back is read on the rules the pause held', async () => {
     const h = harness();
     h.repo.pauseRules.mockResolvedValue(['R1', 'G9']);
-    await h.notices.handle({ kind: 'course_resumed', pauseId: 'P1', studentId: 'S1', actorId: null }, NOW);
-    expect(h.repo.nextLesson).toHaveBeenCalledWith({ studentId: 'S1', ruleIds: ['R1', 'G9'], after: NOW });
+    await h.notices.handle(
+      { kind: 'course_resumed', pauseId: 'P1', studentId: 'S1', actorId: null },
+      NOW,
+    );
+    expect(h.repo.nextLesson).toHaveBeenCalledWith({
+      studentId: 'S1',
+      ruleIds: ['R1', 'G9'],
+      after: NOW,
+    });
   });
 
   it('no lesson back on those rules (another course runs on): nobody is told', async () => {
     const h = harness();
     h.repo.pauseRules.mockResolvedValue([]);
-    await h.notices.handle({ kind: 'course_resumed', pauseId: 'P1', studentId: 'S1', actorId: null }, NOW);
+    await h.notices.handle(
+      { kind: 'course_resumed', pauseId: 'P1', studentId: 'S1', actorId: null },
+      NOW,
+    );
     expect(h.repo.queue).not.toHaveBeenCalled();
     expect(h.push.notifyProfiles).not.toHaveBeenCalled();
   });

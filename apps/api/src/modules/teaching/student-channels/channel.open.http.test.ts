@@ -19,7 +19,10 @@ describe('student channel: closed before the subscription and the assignment', (
   });
 
   it('closed: the teacher and the family read an empty closed page, no message is listed', async () => {
-    for (const [who, base] of [['teacher', TEACHER], ['guardian', PORTAL]] as [Who, string][]) {
+    for (const [who, base] of [
+      ['teacher', TEACHER],
+      ['guardian', PORTAL],
+    ] as [Who, string][]) {
       const page = (await t.call('GET', `${base}/messages`, who)).json();
       expect([who, page.open, page.messages, page.channel_id]).toEqual([who, false, [], CH]);
     }
@@ -28,7 +31,10 @@ describe('student channel: closed before the subscription and the assignment', (
   });
 
   it('closed: a post or a read mark is 409 channel_not_open; nothing stored, nobody pushed', async () => {
-    for (const [who, base] of [['teacher', TEACHER], ['guardian', PORTAL]] as [Who, string][]) {
+    for (const [who, base] of [
+      ['teacher', TEACHER],
+      ['guardian', PORTAL],
+    ] as [Who, string][]) {
       const res = await t.post(`${base}/messages`, who, { body: 'السلام عليكم' });
       expect([who, res.statusCode, res.json().code]).toEqual([who, 409, 'channel_not_open']);
       expect((await t.post(`${base}/read`, who, {})).statusCode).toBe(409);
@@ -41,13 +47,20 @@ describe('student channel: closed before the subscription and the assignment', (
   it('closed: monitors still read the history', async () => {
     const page = (await t.call('GET', `/students/${ST}/channel/messages`, 'admin')).json();
     expect([page.open, page.read_only, page.messages.length]).toEqual([false, true, 1]);
-    expect((await t.call('GET', `/sales/students/${ST}/channel/messages`, 'sales')).json().messages).toHaveLength(1);
+    expect(
+      (await t.call('GET', `/sales/students/${ST}/channel/messages`, 'sales')).json().messages,
+    ).toHaveLength(1);
   });
 
   it('open after the subscription and the assignment: the same routes list and post', async () => {
     t.queries.isOpen.mockResolvedValue(true);
-    expect((await t.call('GET', `${TEACHER}/messages`, 'teacher')).json()).toMatchObject({ open: true, channel_id: CH });
-    expect((await t.post(`${PORTAL}/messages`, 'guardian', { body: 'السلام عليكم' })).statusCode).toBe(201);
+    expect((await t.call('GET', `${TEACHER}/messages`, 'teacher')).json()).toMatchObject({
+      open: true,
+      channel_id: CH,
+    });
+    expect(
+      (await t.post(`${PORTAL}/messages`, 'guardian', { body: 'السلام عليكم' })).statusCode,
+    ).toBe(201);
     expect(t.queries.isOpen).toHaveBeenCalledWith(ST);
   });
 
@@ -55,9 +68,16 @@ describe('student channel: closed before the subscription and the assignment', (
     t.queries.isOpen.mockResolvedValue(true);
     expect((await t.call('GET', `${PORTAL}/messages`, 'student')).statusCode).toBe(200);
     for (const route of ['messages', 'unread']) {
-      expect([route, (await t.call('GET', `${PORTAL}/${route}`, 'child')).statusCode]).toEqual([route, 200]);
+      expect([route, (await t.call('GET', `${PORTAL}/${route}`, 'child')).statusCode]).toEqual([
+        route,
+        200,
+      ]);
     }
-    expect((await t.post(`${PORTAL}/messages`, 'child', { body: 'السلام عليكم' })).statusCode).toBe(201);
-    expect(t.queries.insert).toHaveBeenCalledWith(expect.objectContaining({ sender_role: 'student' }));
+    expect((await t.post(`${PORTAL}/messages`, 'child', { body: 'السلام عليكم' })).statusCode).toBe(
+      201,
+    );
+    expect(t.queries.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ sender_role: 'student' }),
+    );
   });
 });

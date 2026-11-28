@@ -1,11 +1,11 @@
-export type LinkSources = {
+export interface LinkSources {
   /** The booking request's / rule's own link (schedule_rules.meeting_link). */
   explicit: string | null | undefined;
   /** students.meeting_link_override of every student on the rule. */
   studentOverrides: readonly (string | null)[];
   /** teachers.meeting_link — the same link every time (issue B8). */
   teacherLink: string | null | undefined;
-};
+}
 
 /**
  * Link copied onto a new lesson (docs/10 invariant 3, R-LES-01): the rule's link, else the single

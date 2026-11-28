@@ -1,6 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';
-import type { ChangeSet, QueuedMessage, TimeEditChange } from '@/modules/teaching/scheduling/change-set';
+import type {
+  ChangeSet,
+  QueuedMessage,
+  TimeEditChange,
+} from '@/modules/teaching/scheduling/change-set';
 import { fakeStore } from '@/modules/teaching/lessons/lessons.fakes';
 
 // ONE family WhatsApp per move (the owner's operator, 2026-10-30): before a move's write the store
@@ -11,21 +15,44 @@ const NOW = new Date('2026-10-02T10:00:00Z');
 const FROM = '2026-10-04T14:00:00.000Z';
 const TO = '2026-10-05T14:00:00.000Z';
 const confirmation: QueuedMessage = {
-  phone_e164: '+966501234567', guardian_id: 'G1', lesson_id: 'L2',
-  template_key: 'booking_confirmation', template_params: {}, dedup_key: 'booking_confirmation:L2:G1',
+  phone_e164: '+966501234567',
+  guardian_id: 'G1',
+  lesson_id: 'L2',
+  template_key: 'booking_confirmation',
+  template_params: {},
+  dedup_key: 'booking_confirmation:L2:G1',
 };
-const moved: ScheduleChange = { kind: 'lesson_rescheduled', lessonId: 'L2', fromStartsAt: FROM, actorId: 'u1' };
+const moved: ScheduleChange = {
+  kind: 'lesson_rescheduled',
+  lessonId: 'L2',
+  fromStartsAt: FROM,
+  actorId: 'u1',
+};
 const lesson = {
-  id: 'L2', rule_id: null, teacher_id: 'T1', starts_at: TO, ends_at: TO, meeting_link: null,
-  override_reason: null, rescheduled_from_id: 'L1', student_ids: ['S1'],
+  id: 'L2',
+  rule_id: null,
+  teacher_id: 'T1',
+  starts_at: TO,
+  ends_at: TO,
+  meeting_link: null,
+  override_reason: null,
+  rescheduled_from_id: 'L1',
+  student_ids: ['S1'],
 };
 const change: ChangeSet = { actor: 'u1', lessons: [lesson], messages: [confirmation] };
 const audit = { entity: 'lessons', entityId: 'L1', action: 'reschedule' };
 const transition = { from: 'scheduled' as const, event: 'reschedule' as const };
 const retime = {
-  actor: 'u1', lesson_id: 'L2', from: { status: 'scheduled' as const, starts_at: FROM, ends_at: FROM },
-  to: { starts_at: TO, ends_at: TO }, reason: null, override_reason: null, retime_open: true,
-  refresh_pdf: false, messages: [confirmation], audit: { entity: 'lessons', entity_id: 'L2', action: 'time_edit' },
+  actor: 'u1',
+  lesson_id: 'L2',
+  from: { status: 'scheduled' as const, starts_at: FROM, ends_at: FROM },
+  to: { starts_at: TO, ends_at: TO },
+  reason: null,
+  override_reason: null,
+  retime_open: true,
+  refresh_pdf: false,
+  messages: [confirmation],
+  audit: { entity: 'lessons', entity_id: 'L2', action: 'time_edit' },
 } satisfies TimeEditChange;
 
 function setup(usable: boolean) {

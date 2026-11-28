@@ -4,7 +4,10 @@ import { SalesCourseRepo } from '@/modules/teaching/booking/sales/course/sales-c
 
 // PR #642 review: only a weekly course with no package makes a student «imported».
 const SUB = { id: 'sub1', package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-10' };
-const TWO = [{ ...SUB, rules: [{ id: 'r1' }] }, { ...SUB, id: 'sub0', rules: [] }];
+const TWO = [
+  { ...SUB, rules: [{ id: 'r1' }] },
+  { ...SUB, id: 'sub0', rules: [] },
+];
 const trial = { starts_on: '2026-10-01', ends_on: '2026-10-01', package: 'trial' };
 const makeup = { starts_on: '2026-10-05', ends_on: '2026-10-05', package: '8' };
 

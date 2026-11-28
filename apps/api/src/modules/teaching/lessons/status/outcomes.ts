@@ -16,7 +16,7 @@ export const ATTENDANCE = z.record(statusRouteEventSchema, attendanceSchema).rea
   excuse: 'excused',
 });
 
-export type OutcomeInput = {
+export interface OutcomeInput {
   lesson: { id: string; status: LessonStatus; starts_at: string };
   /** The lesson's own new status (applyLessonEvent of the lesson-wide event). */
   to: LessonStatus;
@@ -26,7 +26,7 @@ export type OutcomeInput = {
   now: Date;
   /** settings.late_cancel_hours; null = OFF. */
   lateCancelHours: number | null;
-};
+}
 
 /**
  * The change set entry of an attendance outcome (R-SCH-03, R-SCH-07): the lesson moves to `to`,

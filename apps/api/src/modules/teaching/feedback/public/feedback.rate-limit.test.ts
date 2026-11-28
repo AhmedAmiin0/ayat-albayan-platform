@@ -42,24 +42,33 @@ describe('PublicFeedbackLimit', () => {
 
   it('another token from the same IP has its own bucket, but the IP has a ceiling of 60', () => {
     const l = new PublicFeedbackLimit();
-    const codes = Array.from({ length: 61 }, (_, i) => status(() => l.assert({ ip: '2.2.2.2', token: `t${i}` }, 0)));
+    const codes = Array.from({ length: 61 }, (_, i) =>
+      status(() => l.assert({ ip: '2.2.2.2', token: `t${i}` }, 0)),
+    );
     expect(codes.slice(0, 60).every((s) => s === 200)).toBe(true);
     expect(codes[60]).toBe(429);
     expect(status(() => l.assert({ ip: '3.3.3.3', token: 't0' }, 0))).toBe(200);
   });
 
   it('check() reads settings.feedback_rate_window_min: a 2-minute window frees the bucket sooner', async () => {
-    const short = new PublicFeedbackLimit(readerOf(FeedbackSettings, { feedback_rate_window_min: 2 }));
+    const short = new PublicFeedbackLimit(
+      readerOf(FeedbackSettings, { feedback_rate_window_min: 2 }),
+    );
     const usual = new PublicFeedbackLimit(readerOf(FeedbackSettings));
-    for (const l of [short, usual]) for (let i = 0; i < 10; i++) await l.check({ ip: '4.4.4.4', token: 't' }, 0);
+    for (const l of [short, usual])
+      for (let i = 0; i < 10; i++) await l.check({ ip: '4.4.4.4', token: 't' }, 0);
     await expect(short.check({ ip: '4.4.4.4', token: 't' }, 3 * MIN)).resolves.toBeUndefined();
-    await expect(usual.check({ ip: '4.4.4.4', token: 't' }, 3 * MIN)).rejects.toBeInstanceOf(HttpException);
+    await expect(usual.check({ ip: '4.4.4.4', token: 't' }, 3 * MIN)).rejects.toBeInstanceOf(
+      HttpException,
+    );
   });
 
   it('check() without settings (unit use) keeps the 10-minute default window', async () => {
     const l = new PublicFeedbackLimit();
     for (let i = 0; i < 10; i++) await l.check({ ip: '5.5.5.5', token: 't' }, 0);
-    await expect(l.check({ ip: '5.5.5.5', token: 't' }, 9 * MIN)).rejects.toBeInstanceOf(HttpException);
+    await expect(l.check({ ip: '5.5.5.5', token: 't' }, 9 * MIN)).rejects.toBeInstanceOf(
+      HttpException,
+    );
     await expect(l.check({ ip: '5.5.5.5', token: 't' }, 11 * MIN)).resolves.toBeUndefined();
   });
 });

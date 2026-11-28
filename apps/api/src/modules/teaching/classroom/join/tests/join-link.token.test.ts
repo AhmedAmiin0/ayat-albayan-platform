@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { hashLinkToken, linkExpiry, looksLikeLinkToken, newLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import {
+  hashLinkToken,
+  linkExpiry,
+  looksLikeLinkToken,
+  newLinkToken,
+} from '@/modules/teaching/classroom/join/join-link.token';
 
 describe('newLinkToken', () => {
   it('is 32 URL-safe characters, short enough for a path parameter and a WhatsApp button', () => {
@@ -12,9 +17,12 @@ describe('newLinkToken', () => {
     expect(new Set(Array.from({ length: 1000 }, newLinkToken)).size).toBe(1000);
   });
 
-  it.each(['', 'short', 'x'.repeat(33), `${'a'.repeat(31)}!`, `${'a'.repeat(31)}.`])('refuses %j before any lookup', (t) => {
-    expect(looksLikeLinkToken(t)).toBe(false);
-  });
+  it.each(['', 'short', 'x'.repeat(33), `${'a'.repeat(31)}!`, `${'a'.repeat(31)}.`])(
+    'refuses %j before any lookup',
+    (t) => {
+      expect(looksLikeLinkToken(t)).toBe(false);
+    },
+  );
 });
 
 describe('hashLinkToken', () => {

@@ -28,7 +28,9 @@ describe('GET /students/:id/course-card', () => {
     t.m.views.booked.mockResolvedValue({ student: {}, course: COURSE });
     t.m.repo.teacher.mockResolvedValue({ id: 't1', status: 'active', display_name_ar: 'فاطمة' });
     t.m.lessons.ofCourse.mockResolvedValue([lesson(1), lesson(2), lesson(3, 'cancelled_by_admin')]);
-    t.m.repo.upcoming.mockResolvedValue([{ id: 'u1', status: 'confirmed', starts_at: '2026-11-18T14:00:00Z' }]);
+    t.m.repo.upcoming.mockResolvedValue([
+      { id: 'u1', status: 'confirmed', starts_at: '2026-11-18T14:00:00Z' },
+    ]);
   });
 
   it('the summary: teacher, days, end, last booked lesson, 6 without a date, the next lessons', async () => {

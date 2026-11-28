@@ -1,8 +1,22 @@
 import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
-import { admissionOf, moderation, recorder } from '@/modules/teaching/classroom/moderation/moderation.fakes';
-import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, LINK_TOKEN, linkRow, OPEN, queries } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  admissionOf,
+  moderation,
+  recorder,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  CLOSED,
+  CONFIG,
+  decode,
+  EARLY,
+  LESSON_ID,
+  LINK_TOKEN,
+  linkRow,
+  OPEN,
+  queries,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import { GuestJoinService } from '@/modules/teaching/classroom/join/guest-join.service';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
 import { resolverOf } from '@/modules/teaching/classroom/family-link/family-link.fakes';
@@ -18,9 +32,19 @@ const service = (config: typeof CONFIG | null = CONFIG, limit = new PublicJoinLi
     admissionOf({ q, mod, rec, config }),
     resolverOf(q),
   );
-const join = (over: { linkToken?: string; body?: unknown; now?: Date; svc?: GuestJoinService } = {}) =>
-  (over.svc ?? service()).join({ linkToken: over.linkToken ?? LINK_TOKEN, ip: '9.9.9.9', body: over.body !== undefined ? over.body : { name: 'سهيلة' } }, over.now ?? OPEN);
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+const join = (
+  over: { linkToken?: string; body?: unknown; now?: Date; svc?: GuestJoinService } = {},
+) =>
+  (over.svc ?? service()).join(
+    {
+      linkToken: over.linkToken ?? LINK_TOKEN,
+      ip: '9.9.9.9',
+      body: over.body !== undefined ? over.body : { name: 'سهيلة' },
+    },
+    over.now ?? OPEN,
+  );
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 
 beforeEach(() => {
   q = queries();
@@ -54,7 +78,10 @@ describe('guest join', () => {
   });
 
   it('is valid from 15 minutes before the lesson: 403 join_not_open_yet earlier', async () => {
-    expect((await fail(join({ now: EARLY }))).getResponse()).toMatchObject({ code: 'join_not_open_yet', opens_at: '2026-10-05T15:45:00.000Z' });
+    expect((await fail(join({ now: EARLY }))).getResponse()).toMatchObject({
+      code: 'join_not_open_yet',
+      opens_at: '2026-10-05T15:45:00.000Z',
+    });
     expect((await join({ now: new Date('2026-10-05T15:45:00Z') })).role).toBe('guest');
   });
 
@@ -90,9 +117,12 @@ describe('a bad link', () => {
 });
 
 describe('the name, the switch and the limit', () => {
-  it.each([{}, { name: '' }, { name: '   ' }, { name: 'x'.repeat(31) }, null])('400 for the body %j', async (body) => {
-    expect((await fail(join({ body }))).getStatus()).toBe(400);
-  });
+  it.each([{}, { name: '' }, { name: '   ' }, { name: 'x'.repeat(31) }, null])(
+    '400 for the body %j',
+    async (body) => {
+      expect((await fail(join({ body }))).getStatus()).toBe(400);
+    },
+  );
 
   it('503 when LIVEKIT_* are not set', async () => {
     expect((await fail(join({ svc: service(null) }))).getStatus()).toBe(503);

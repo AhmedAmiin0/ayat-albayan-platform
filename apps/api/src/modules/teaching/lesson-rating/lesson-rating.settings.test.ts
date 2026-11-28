@@ -14,7 +14,10 @@ describe('LessonRatingSettings', () => {
   });
 
   it('answers the stored switch, not the rule-owned feedback_mode', async () => {
-    const values = await readerOf(LessonRatingSettings, { feedback_mode: 'link', auto_messages_enabled: true }).read();
+    const values = await readerOf(LessonRatingSettings, {
+      feedback_mode: 'link',
+      auto_messages_enabled: true,
+    }).read();
     expect(values).toEqual({ auto_messages_enabled: true });
   });
 });

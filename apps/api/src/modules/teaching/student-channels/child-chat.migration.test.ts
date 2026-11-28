@@ -4,7 +4,11 @@ import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // A child's login chats like any student's: read as text, no database in unit tests.
-const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
+const strip = (sql: string) =>
+  sql
+    .split('\n')
+    .filter((l) => !l.trim().startsWith('--'))
+    .join('\n');
 const sql = strip(readFileSync(join(MIGRATIONS_DIR, '20261116000100_child_chat.sql'), 'utf8'));
 /** The SQL between a function's two `$$` (its body). */
 const body = (fn: string): string => {

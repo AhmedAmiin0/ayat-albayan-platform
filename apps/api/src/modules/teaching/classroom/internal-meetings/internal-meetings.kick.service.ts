@@ -1,5 +1,11 @@
 import { canRemove, meetingRoomName } from '@ab/schedule';
-import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { InternalMeetingsRepo } from './internal-meetings.repo';
@@ -24,11 +30,19 @@ export class InternalMeetingKickService {
     if (!role) throw new ForbiddenException();
     const target = roleOfIdentity(input.identity);
     if (!target) throw notFound('participant_not_found');
-    if (!canRemove(role, target)) throw new HttpException({ code: 'cannot_remove', message: 'cannot_remove' }, HttpStatus.FORBIDDEN);
+    if (!canRemove(role, target))
+      throw new HttpException(
+        { code: 'cannot_remove', message: 'cannot_remove' },
+        HttpStatus.FORBIDDEN,
+      );
     try {
-      await this.livekit.removeParticipant({ room: meetingRoomName(meeting.id), identity: input.identity });
+      await this.livekit.removeParticipant({
+        room: meetingRoomName(meeting.id),
+        identity: input.identity,
+      });
     } catch (e) {
-      if (e instanceof LivekitError) throw new BadGatewayException({ code: 'livekit_error', message: e.message });
+      if (e instanceof LivekitError)
+        throw new BadGatewayException({ code: 'livekit_error', message: e.message });
       throw e;
     }
   }

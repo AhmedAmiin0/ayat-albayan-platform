@@ -89,7 +89,13 @@ describe('CourseChangeWriter: the course change tells the teacher and the family
   });
 
   it('a new teacher on the same times: the confirmation stays, both teachers told', async () => {
-    const same = { teacherChanged: true, added: [{ ...SUN, id: 'n1' }, { ...TUE, id: 'n2' }] };
+    const same = {
+      teacherChanged: true,
+      added: [
+        { ...SUN, id: 'n1' },
+        { ...TUE, id: 'n2' },
+      ],
+    };
     const s = setup({ usable: true, told: same });
     await s.write();
     expect(s.written()).toEqual({ p: s.payload });

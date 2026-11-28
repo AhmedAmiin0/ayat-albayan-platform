@@ -2,7 +2,10 @@ import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import { ADMIN, STUDENT_ID } from '@/modules/teaching/classroom/classroom.fakes';
-import { hashLinkToken, looksLikeLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import {
+  hashLinkToken,
+  looksLikeLinkToken,
+} from '@/modules/teaching/classroom/join/join-link.token';
 import { StudentLinkAdminService } from '@/modules/teaching/classroom/student-link/student-link.admin.service';
 import { studentLinkQueries } from '@/modules/teaching/classroom/student-link/student-link.fakes';
 import type { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
@@ -10,7 +13,11 @@ import type { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/
 let q: ReturnType<typeof studentLinkQueries>;
 let audit: { record: ReturnType<typeof vi.fn> };
 const issue = () =>
-  new StudentLinkAdminService(q as unknown as StudentLinkRepo, audit as unknown as AuditService, 'https://app.example.test').issue({
+  new StudentLinkAdminService(
+    q as unknown as StudentLinkRepo,
+    audit as unknown as AuditService,
+    'https://app.example.test',
+  ).issue({
     studentId: STUDENT_ID,
     actorId: ADMIN.id,
   });
@@ -25,9 +32,19 @@ describe('POST /students/:id/join-link', () => {
     const { url } = await issue();
     const token = url.replace('https://app.example.test/s/', '');
     expect(looksLikeLinkToken(token)).toBe(true);
-    expect(q.saveLink).toHaveBeenCalledWith({ studentId: STUDENT_ID, hash: hashLinkToken(token), actorId: ADMIN.id });
+    expect(q.saveLink).toHaveBeenCalledWith({
+      studentId: STUDENT_ID,
+      hash: hashLinkToken(token),
+      actorId: ADMIN.id,
+    });
     expect(JSON.stringify(q.saveLink.mock.calls)).not.toContain(token);
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'students', entityId: STUDENT_ID, action: 'join_link_issued' }));
+    expect(audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        entity: 'students',
+        entityId: STUDENT_ID,
+        action: 'join_link_issued',
+      }),
+    );
   });
 
   it('rotates: every call is a new token (the stored hash is replaced)', async () => {

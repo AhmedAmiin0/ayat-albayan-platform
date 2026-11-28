@@ -22,7 +22,11 @@ export class FeedbackPublicController {
   /** 409 already_submitted, 410 feedback_expired, 404 feedback_not_found, 429 too_many_requests. */
   @Post(':token')
   @HttpCode(200)
-  submit(@Param('token') token: string, @Body() body: unknown, @Ip() ip: string): Promise<{ submitted: true }> {
+  submit(
+    @Param('token') token: string,
+    @Body() body: unknown,
+    @Ip() ip: string,
+  ): Promise<{ submitted: true }> {
     return this.feedback.submit({ token, ip, body });
   }
 }

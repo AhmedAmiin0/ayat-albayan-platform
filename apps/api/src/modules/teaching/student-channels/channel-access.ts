@@ -15,7 +15,13 @@ import { FamilyChatSettings } from './family-chat.settings';
  * reads.
  */
 export type ChannelActor =
-  | { mode: 'participant'; studentId: string; profileId: string; role: ChannelSenderRole; open: boolean }
+  | {
+      mode: 'participant';
+      studentId: string;
+      profileId: string;
+      role: ChannelSenderRole;
+      open: boolean;
+    }
   | { mode: 'monitor'; studentId: string; profileId: string; open: boolean };
 
 /** ChannelAccess's people lookups and the family chat switch, grouped (max-params). */
@@ -48,8 +54,15 @@ export class ChannelAccess {
   async teacher(user: AuthUser, studentId: string): Promise<ChannelActor> {
     const teacherId = await this.deps.teachers.idByProfile(user.id);
     if (!teacherId) throw notFound('teacher_not_linked');
-    if (!(await this.queries.teacherIds(studentId)).includes(teacherId)) throw notFound('student_not_found');
-    return { mode: 'participant', studentId, profileId: user.id, role: 'teacher', open: await this.queries.isOpen(studentId) };
+    if (!(await this.queries.teacherIds(studentId)).includes(teacherId))
+      throw notFound('student_not_found');
+    return {
+      mode: 'participant',
+      studentId,
+      profileId: user.id,
+      role: 'teacher',
+      open: await this.queries.isOpen(studentId),
+    };
   }
 
   async family(user: AuthUser, studentId: string): Promise<ChannelActor> {
@@ -57,13 +70,24 @@ export class ChannelAccess {
     // After the scope: another family's id stays 404 whatever the switch (docs/50 §4).
     if (!(await this.deps.familyChat.enabled())) throw forbidden(FAMILY_CHAT_OFF);
     if (user.role !== 'guardian' && user.role !== 'student') throw new ForbiddenException();
-    return { mode: 'participant', studentId, profileId: user.id, role: user.role, open: await this.queries.isOpen(studentId) };
+    return {
+      mode: 'participant',
+      studentId,
+      profileId: user.id,
+      role: user.role,
+      open: await this.queries.isOpen(studentId),
+    };
   }
 
   /** student_channels.monitor (the route's key): any existing student. */
   async monitor(user: AuthUser, studentId: string): Promise<ChannelActor> {
     if ((await this.people.students([studentId])).length === 0) throw notFound('student_not_found');
-    return { mode: 'monitor', studentId, profileId: user.id, open: await this.queries.isOpen(studentId) };
+    return {
+      mode: 'monitor',
+      studentId,
+      profileId: user.id,
+      open: await this.queries.isOpen(studentId),
+    };
   }
 
   /**

@@ -17,7 +17,12 @@ describe('student channel access over HTTP', () => {
   beforeEach(() => vi.clearAllMocks());
 
   it('participants read: the current teacher, the guardian, the student login, the seat holder (owner 11-16)', async () => {
-    for (const [who, url] of [['teacher', TEACHER], ['guardian', PORTAL], ['student', PORTAL], ['sales', SALES]] as [Who, string][]) {
+    for (const [who, url] of [
+      ['teacher', TEACHER],
+      ['guardian', PORTAL],
+      ['student', PORTAL],
+      ['sales', SALES],
+    ] as [Who, string][]) {
       const res = await t.call('GET', url, who);
       expect([who, res.statusCode, res.json().read_only]).toEqual([who, 200, false]);
     }
@@ -27,9 +32,14 @@ describe('student channel access over HTTP', () => {
     expect((await t.call('GET', ADMIN, 'admin')).json().read_only).toBe(true);
   });
 
-  it('nobody posts or marks read on another audience\'s route: 403', async () => {
+  it("nobody posts or marks read on another audience's route: 403", async () => {
     for (const who of ['admin', 'sales', 'assistant'] as Who[]) {
-      for (const url of [TEACHER, PORTAL]) expect([who, url, (await t.post(url, who, { body: 'x' })).statusCode]).toEqual([who, url, 403]);
+      for (const url of [TEACHER, PORTAL])
+        expect([who, url, (await t.post(url, who, { body: 'x' })).statusCode]).toEqual([
+          who,
+          url,
+          403,
+        ]);
     }
     expect((await t.post(ADMIN, 'admin', { body: 'x' })).statusCode).toBe(404);
     expect(t.queries.insert).not.toHaveBeenCalled();
@@ -48,8 +58,18 @@ describe('student channel access over HTTP', () => {
     expect((await t.call('GET', PORTAL, 'otherGuardian')).json().code).toBe('student_not_found');
     expect((await t.post(PORTAL, 'otherGuardian', { body: 'x' })).statusCode).toBe(404);
     expect((await t.call('GET', SALES, 'otherSales')).json().code).toBe('student_not_found');
-    expect((await t.call('GET', `/students/52000000-0000-4000-8000-0000000000ff/channel/messages`, 'admin')).statusCode).toBe(404);
-    expect((await t.call('GET', `/portal/students/${OTHER}/channel/messages`, 'guardian')).statusCode).toBe(404);
+    expect(
+      (
+        await t.call(
+          'GET',
+          `/students/52000000-0000-4000-8000-0000000000ff/channel/messages`,
+          'admin',
+        )
+      ).statusCode,
+    ).toBe(404);
+    expect(
+      (await t.call('GET', `/portal/students/${OTHER}/channel/messages`, 'guardian')).statusCode,
+    ).toBe(404);
     expect(t.queries.page).not.toHaveBeenCalled();
   });
 

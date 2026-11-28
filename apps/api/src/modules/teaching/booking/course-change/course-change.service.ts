@@ -14,7 +14,11 @@ import { isSales } from '@/common/auth/roles';
 import { httpError } from '@/common/http/errors';
 
 /** anyStudent: a key skips «her own students» (the profile's routes; sales.renew_any, docs/16 row 38). */
-export interface ChangeActor { user: AuthUser; role: ChangeRole; anyStudent?: boolean }
+export interface ChangeActor {
+  user: AuthUser;
+  role: ChangeRole;
+  anyStudent?: boolean;
+}
 /** Absent means the course's teacher. */
 export type CourseMove = CourseChangeRequest & { teacherId?: string };
 
@@ -117,7 +121,9 @@ export class CourseChange {
     const teacherLink = teacher ? await this.queries.teacherLink(teacher) : null;
     const mode = teacher ? await this.queries.teacherMode(teacher) : null;
     const auto = usesPlatform(mode, (await this.deps.planner.settings.read()).meeting_link_auto);
-    const contacts = await this.queries.contacts(head ? head.schedule_rule_students.map((s) => s.student_id) : []);
+    const contacts = await this.queries.contacts(
+      head ? head.schedule_rule_students.map((s) => s.student_id) : [],
+    );
     return { link: { teacherLink, auto }, contacts };
   }
 }

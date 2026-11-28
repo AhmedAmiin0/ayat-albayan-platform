@@ -1,6 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { GUARDIAN_PHONE, listRow, NOW, publicContext, STUDENT_ID, TEACHER_ID } from './feedback.fakes';
-import { answerOf, peopleOf, toFormView, toRowView, toSummary, toTeacherRowView } from './feedback.mapper';
+import {
+  GUARDIAN_PHONE,
+  listRow,
+  NOW,
+  publicContext,
+  STUDENT_ID,
+  TEACHER_ID,
+} from './feedback.fakes';
+import {
+  answerOf,
+  peopleOf,
+  toFormView,
+  toRowView,
+  toSummary,
+  toTeacherRowView,
+} from './feedback.mapper';
 
 const people = peopleOf(
   [{ id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة' }],
@@ -35,7 +49,9 @@ describe('feedback mapper', () => {
       contactPhone: GUARDIAN_PHONE,
       alreadySubmitted: false,
     });
-    expect(toFormView(publicContext({ submitted_at: NOW.toISOString(), contact_phone: '+20100000000' }))).toMatchObject({
+    expect(
+      toFormView(publicContext({ submitted_at: NOW.toISOString(), contact_phone: '+20100000000' })),
+    ).toMatchObject({
       contactPhone: '+20100000000',
       alreadySubmitted: true,
     });
@@ -50,14 +66,22 @@ describe('feedback mapper', () => {
       contact_phone: GUARDIAN_PHONE,
       submitted_at: NOW.toISOString(),
     });
-    expect(answerOf({ rating: 5, recommend: 'yes', note: 'شكرًا', contactPhone: '+20100000000' }, ctx, NOW)).toMatchObject({
+    expect(
+      answerOf(
+        { rating: 5, recommend: 'yes', note: 'شكرًا', contactPhone: '+20100000000' },
+        ctx,
+        NOW,
+      ),
+    ).toMatchObject({
       note: 'شكرًا',
       contact_phone: '+20100000000',
     });
   });
 
   it('summary names the teacher', () => {
-    expect(toSummary({ teacher_id: TEACHER_ID, avg_rating: 4.5, n: 2, recommend_yes_pct: 50 }, people)).toEqual({
+    expect(
+      toSummary({ teacher_id: TEACHER_ID, avg_rating: 4.5, n: 2, recommend_yes_pct: 50 }, people),
+    ).toEqual({
       teacher: { id: TEACHER_ID, name: 'أبرار' },
       avg_rating: 4.5,
       n: 2,

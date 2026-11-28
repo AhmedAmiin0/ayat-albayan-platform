@@ -7,7 +7,7 @@ import { notFound } from '@/common/http/errors';
 import { maybe, pgError, rows } from '@/common/db/errors';
 
 /** The subscription a course belongs to (subscriptions row). */
-export type CourseSub = {
+export interface CourseSub {
   id: string;
   student_id: string;
   package: PackageSize | null;
@@ -16,10 +16,10 @@ export type CourseSub = {
   /** Taken before the platform: the course carries lessons_total − this. */
   lessons_used_before: number;
   starts_on: string;
-};
+}
 
 /** A rule of the course, with what its replacement keeps (link, package, lead, students). */
-export type ChangeRule = {
+export interface ChangeRule {
   id: string;
   status: 'active' | 'paused' | 'ended';
   teacher_id: string;
@@ -40,7 +40,7 @@ export type ChangeRule = {
   }[];
   /** How course_rules_of (migration 991) attributes it; absent = linked by subscription_id. */
   course?: CourseRuleRef;
-};
+}
 
 /**
  * course_rules_of: a rule of the course. linked = its subscription_id; else the student's rule
@@ -55,10 +55,10 @@ export interface CourseRuleRef {
   until_on: string | null;
 }
 
-export type OpenCourseLesson = { id: string; status: LessonStatus };
+export interface OpenCourseLesson { id: string; status: LessonStatus }
 
 /** An active rule of the student, for courseOverlaps (sales-course.rules.ts). */
-type OtherRule = { id: string; starts_on: string; ends_on: string | null; package: PackageSize | null; subscription_id: string | null };
+interface OtherRule { id: string; starts_on: string; ends_on: string | null; package: PackageSize | null; subscription_id: string | null }
 
 /** Service role; ownership is checked by CourseChange. */
 @Injectable()

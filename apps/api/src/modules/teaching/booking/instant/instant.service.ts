@@ -7,7 +7,10 @@ import { instantPayload, instantPlan } from './instant.plan';
 import { InstantRepo } from './instant.repo';
 import { httpError } from '@/common/http/errors';
 
-type InstantInput = { req: InstantLessonRequest; actorId: string };
+interface InstantInput {
+  req: InstantLessonRequest;
+  actorId: string;
+}
 
 const firstLesson = (r: BookingResult): InstantLessonResult => {
   const [first] = r.lessons;
@@ -30,7 +33,8 @@ export class InstantLessonService {
     const teacher = await this.booking.teacher(req.teacherId);
     if (!teacher) throw httpError(HttpStatus.NOT_FOUND, 'teacher_not_found');
     const students = await this.booking.students(req.studentIds);
-    if (students.length !== req.studentIds.length) throw httpError(HttpStatus.NOT_FOUND, 'student_not_found');
+    if (students.length !== req.studentIds.length)
+      throw httpError(HttpStatus.NOT_FOUND, 'student_not_found');
     const plan = instantPlan({ now, tz: teacher.tz, durationMin: req.durationMin });
     const conflicts = await this.checker.check({
       teacherId: teacher.id,
@@ -38,7 +42,8 @@ export class InstantLessonService {
       proposed: [plan.occurrence],
       excludeIds: [],
     });
-    if (conflicts.length > 0 && !req.override) throw httpError(HttpStatus.CONFLICT, 'conflict', { conflicts });
+    if (conflicts.length > 0 && !req.override)
+      throw httpError(HttpStatus.CONFLICT, 'conflict', { conflicts });
     const meetingLink = meetingLinkFor({
       overrides: students.map((s) => s.meeting_link_override),
       teacherLink: teacher.meeting_link,

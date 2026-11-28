@@ -13,7 +13,11 @@ describe('GET /students/:id/course-stop', () => {
   beforeEach(() => t.reset());
 
   it('what the sheet shows: future lessons, rules (also those without subscription_id), the money kept', async () => {
-    const res = await t.call({ method: 'GET', url: `${URL}?subscriptionId=${SUB}`, token: 'sales' });
+    const res = await t.call({
+      method: 'GET',
+      url: `${URL}?subscriptionId=${SUB}`,
+      token: 'sales',
+    });
     expect(res.json()).toEqual({
       subscriptionId: SUB,
       futureLessons: 1,
@@ -32,7 +36,11 @@ describe('GET /students/:id/course-stop', () => {
   });
 
   it('the admin (subscriptions.refund): 290 − 3 × 50 × 100 % (the default rate) = 140', async () => {
-    const res = await t.call({ method: 'GET', url: `${URL}?subscriptionId=${SUB}`, token: 'admin' });
+    const res = await t.call({
+      method: 'GET',
+      url: `${URL}?subscriptionId=${SUB}`,
+      token: 'admin',
+    });
     expect(res.json().refund).toEqual({
       ...{ paid: 290, perLesson: 50, attended: 3 },
       ...{ ratePercent: 100, charged: 150, refund: 140 },
@@ -41,13 +49,21 @@ describe('GET /students/:id/course-stop', () => {
 
   it('a running rule it cannot attribute: 409 course_unattributed before the sheet opens', async () => {
     t.m.repo.plan.mockResolvedValue({ rule_ids: ['g1'], lessons: [], unattributed: true });
-    const res = await t.call({ method: 'GET', url: `${URL}?subscriptionId=${SUB}`, token: 'admin' });
+    const res = await t.call({
+      method: 'GET',
+      url: `${URL}?subscriptionId=${SUB}`,
+      token: 'admin',
+    });
     expect([res.statusCode, res.json().code]).toEqual([409, 'course_unattributed']);
   });
 
   it('a stopped package shows who / when / why and nothing left to cancel', async () => {
     t.m.repo.subscription.mockResolvedValue(stamped);
-    const res = await t.call({ method: 'GET', url: `${URL}?subscriptionId=${SUB}`, token: 'admin' });
+    const res = await t.call({
+      method: 'GET',
+      url: `${URL}?subscriptionId=${SUB}`,
+      token: 'admin',
+    });
     expect(res.json()).toMatchObject({
       futureLessons: 0,
       activeRules: 0,

@@ -39,7 +39,10 @@ export class AutoHeldRepo {
   /** Every package of these students (the plan keeps the current one). */
   packages(studentIds: readonly string[]): Promise<PackageRow[]> {
     return readChunked(studentIds, (chunk) =>
-      this.db.from('subscriptions').select('student_id, starts_on, status, cancel_kind').in('student_id', chunk),
+      this.db
+        .from('subscriptions')
+        .select('student_id, starts_on, status, cancel_kind')
+        .in('student_id', chunk),
     );
   }
 

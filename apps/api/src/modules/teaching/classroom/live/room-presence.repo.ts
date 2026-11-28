@@ -29,12 +29,14 @@ export class RoomPresenceRepo {
   async entered(e: PresenceEvent): Promise<Pick<ParticipantRow, 'role'> | null> {
     const match = { lesson_id: e.lessonId, identity: e.identity };
     const rows = () => this.db.from('classroom_participants');
-    const data = maybe(await rows()
-      .update({ left_at: null, presence_at: e.at })
-      .match(match)
-      .or(olderThan(e.at))
-      .select('role')
-      .maybeSingle());
+    const data = maybe(
+      await rows()
+        .update({ left_at: null, presence_at: e.at })
+        .match(match)
+        .or(olderThan(e.at))
+        .select('role')
+        .maybeSingle(),
+    );
     if (!data) return null;
     const first = await rows().update({ entered_at: e.at }).match(match).is('entered_at', null);
     if (first.error) throw pgError(first.error);
@@ -44,21 +46,25 @@ export class RoomPresenceRepo {
   /** participant_left: no longer inside (unless a newer join already came). */
   async left(e: PresenceEvent): Promise<void> {
     const match = { lesson_id: e.lessonId, identity: e.identity };
-    done(await this.db
-      .from('classroom_participants')
-      .update({ left_at: e.at, presence_at: e.at })
-      .match(match)
-      .or(olderThan(e.at)));
+    done(
+      await this.db
+        .from('classroom_participants')
+        .update({ left_at: e.at, presence_at: e.at })
+        .match(match)
+        .or(olderThan(e.at)),
+    );
   }
 
   /** Ending the room or room_finished: everyone inside is out; no more events follow. */
   async leaveAll(lessonId: string, at: string): Promise<void> {
-    done(await this.db
-      .from('classroom_participants')
-      .update({ left_at: at, presence_at: at })
-      .eq('lesson_id', lessonId)
-      .not('entered_at', 'is', null)
-      .is('left_at', null));
+    done(
+      await this.db
+        .from('classroom_participants')
+        .update({ left_at: at, presence_at: at })
+        .eq('lesson_id', lessonId)
+        .not('entered_at', 'is', null)
+        .is('left_at', null),
+    );
   }
 
   /** Is anyone inside this lesson's room now? */

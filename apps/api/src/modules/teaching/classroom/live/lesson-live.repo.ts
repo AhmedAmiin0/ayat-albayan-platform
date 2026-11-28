@@ -16,11 +16,9 @@ export class LessonLiveRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async lesson(lessonId: string): Promise<LiveLesson | null> {
-    const data = maybe(await this.db
-      .from('lessons')
-      .select(LESSON)
-      .eq('id', lessonId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db.from('lessons').select(LESSON).eq('id', lessonId).maybeSingle(),
+    );
     if (!data) return null;
     const { lesson_students: links, ...lesson } = data;
     return { ...lesson, students: links.flatMap(present) };

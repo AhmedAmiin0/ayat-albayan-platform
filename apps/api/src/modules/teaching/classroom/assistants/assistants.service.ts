@@ -26,7 +26,11 @@ export class AssistantsService {
   }
 
   /** 404 student_not_found; 400 not_an_assistant when the login's role is not assistant. */
-  async assign(input: { studentId: string; body: unknown; actorId: string }): Promise<AssistantView[]> {
+  async assign(input: {
+    studentId: string;
+    body: unknown;
+    actorId: string;
+  }): Promise<AssistantView[]> {
     const { profileId } = parseOrThrow(assignAssistantSchema, input.body);
     if (!(await this.queries.studentExists(input.studentId))) throw notFound('student_not_found');
     if (!(await this.queries.isAssistant(profileId))) throw badRequest('not_an_assistant');

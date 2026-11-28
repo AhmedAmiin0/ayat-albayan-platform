@@ -12,12 +12,25 @@ import {
   queries,
   STUDENT_ID,
 } from '@/modules/teaching/classroom/classroom.fakes';
-import { admissionOf, moderation, recorder } from '@/modules/teaching/classroom/moderation/moderation.fakes';
-import { LESSON_LINK_ID, studentLinkQueries } from '@/modules/teaching/classroom/student-link/student-link.fakes';
-import { familyJoinExpiry, signFamilyJoin } from '@/modules/teaching/classroom/family-link/family-join.token';
+import {
+  admissionOf,
+  moderation,
+  recorder,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  LESSON_LINK_ID,
+  studentLinkQueries,
+} from '@/modules/teaching/classroom/student-link/student-link.fakes';
+import {
+  familyJoinExpiry,
+  signFamilyJoin,
+} from '@/modules/teaching/classroom/family-link/family-join.token';
 import { GuestJoinService } from '@/modules/teaching/classroom/join/guest-join.service';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
-import { FAMILY_SECRET, resolverOf } from '@/modules/teaching/classroom/family-link/family-link.fakes';
+import {
+  FAMILY_SECRET,
+  resolverOf,
+} from '@/modules/teaching/classroom/family-link/family-link.fakes';
 
 // The family app's browser link (/join/<signed token>): the same guest join, through the
 // (lesson, student) row the portal join uses.
@@ -56,13 +69,19 @@ describe('guest join with the family join token', () => {
   });
 
   it("keeps today's checks: early 403 join_not_open_yet, a revoked row 410 link_expired", async () => {
-    expect((await fail(join(TOKEN, EARLY))).getResponse()).toMatchObject({ code: 'join_not_open_yet' });
+    expect((await fail(join(TOKEN, EARLY))).getResponse()).toMatchObject({
+      code: 'join_not_open_yet',
+    });
     q.linkById.mockResolvedValueOnce(linkRow({ revoked_at: '2026-10-05T10:00:00Z' }));
     expect((await fail(join())).getResponse()).toMatchObject({ code: 'link_expired' });
   });
 
   it('404 link_invalid when expired, tampered, signed with another secret or its lesson is gone', async () => {
-    const other = signFamilyJoin('x'.repeat(40), { lessonId: LESSON_ID, studentId: STUDENT_ID, exp });
+    const other = signFamilyJoin('x'.repeat(40), {
+      lessonId: LESSON_ID,
+      studentId: STUDENT_ID,
+      exp,
+    });
     const flip = TOKEN.startsWith('B') ? 'C' : 'B';
     for (const bad of [other, `${flip}${TOKEN.slice(1)}`]) {
       expect((await fail(join(bad))).getResponse()).toMatchObject({ code: 'link_invalid' });

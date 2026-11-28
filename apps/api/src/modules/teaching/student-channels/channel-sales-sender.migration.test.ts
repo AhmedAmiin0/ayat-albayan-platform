@@ -5,7 +5,11 @@ import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // The seated assistant writes too: read as text, no database in unit tests.
-const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
+const strip = (sql: string) =>
+  sql
+    .split('\n')
+    .filter((l) => !l.trim().startsWith('--'))
+    .join('\n');
 const file = '20261116000200_channel_sales_sender.sql';
 const sql = strip(readFileSync(join(MIGRATIONS_DIR, file), 'utf8'));
 const NAME = 'channel_messages_sender_role_check';

@@ -76,16 +76,17 @@ describe('PATCH …/messages/:id: edit in the student channel', () => {
     expect([res.statusCode, res.json().edited]).toEqual([200, true]);
     expect(t.edits.edit).toHaveBeenCalledWith(expect.objectContaining({ id: M, actor: 'p-sa' }));
     expect((await t.patch(SALES, 'otherSales', { body: 'x' })).statusCode).toBe(404);
-    expect((await t.patch(`/sales/students/${ST}/channel/messages/nope`, 'sales', { body: 'x' })).statusCode).toBe(400);
+    expect(
+      (await t.patch(`/sales/students/${ST}/channel/messages/nope`, 'sales', { body: 'x' }))
+        .statusCode,
+    ).toBe(400);
   });
 
   it("a deleted message is 409 message_deleted; an unknown or other channel's id is 404", async () => {
     t.edits.message.mockResolvedValueOnce(
       messageRow({ id: M, sender_profile_id: 'p-g', created_at: ago(MIN), deleted_at: ago(0) }),
     );
-    expect((await t.patch(PORTAL, 'guardian', { body: 'x' })).json().code).toBe(
-      'message_deleted',
-    );
+    expect((await t.patch(PORTAL, 'guardian', { body: 'x' })).json().code).toBe('message_deleted');
     t.edits.message.mockResolvedValueOnce(null);
     expect((await t.patch(PORTAL, 'guardian', { body: 'x' })).json().code).toBe(
       'message_not_found',
@@ -97,8 +98,7 @@ describe('PATCH …/messages/:id: edit in the student channel', () => {
     expect((await t.patch(PORTAL, 'guardian', { body: 'x' })).statusCode).toBe(409);
     expect((await t.patch(PORTAL, 'guardian', { body: '  ' })).statusCode).toBe(400);
     expect(
-      (await t.patch(`/students/${ST}/channel/messages/${M}`, 'admin', { body: 'x' }))
-        .statusCode,
+      (await t.patch(`/students/${ST}/channel/messages/${M}`, 'admin', { body: 'x' })).statusCode,
     ).toBe(404);
     expect(t.audit.record).not.toHaveBeenCalled();
   });

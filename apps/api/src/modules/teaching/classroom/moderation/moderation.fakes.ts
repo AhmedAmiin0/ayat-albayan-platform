@@ -2,9 +2,19 @@
 import { createHash } from 'node:crypto';
 import { vi } from 'vitest';
 import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import type { ClassroomConfig, RecordingConfig } from '@/modules/teaching/classroom/classroom.config';
+import type {
+  ClassroomConfig,
+  RecordingConfig,
+} from '@/modules/teaching/classroom/classroom.config';
 import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
-import { CONFIG, LESSON_ID, OTHER_TEACHER, TEACHER, TEACHER_ID, type queries } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  CONFIG,
+  LESSON_ID,
+  OTHER_TEACHER,
+  TEACHER,
+  TEACHER_ID,
+  type queries,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
 import { signJwt } from '@/modules/teaching/classroom/livekit/livekit-token';
 import type { FetchLike } from '@/common/infra/http/failure';
@@ -82,7 +92,10 @@ export function recordingQueries() {
   };
 }
 
-export const recorder = () => ({ startFor: vi.fn().mockResolvedValue('started'), configured: true });
+export const recorder = () => ({
+  startFor: vi.fn().mockResolvedValue('started'),
+  configured: true,
+});
 
 /** A stub LiveKit transport answering `status` with `body` (JSON), recording every call. */
 export function http(answer: { status?: number; body?: object } = {}) {
@@ -90,7 +103,9 @@ export function http(answer: { status?: number; body?: object } = {}) {
 }
 
 const teachersFake = () => ({
-  idByProfile: vi.fn(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null)),
+  idByProfile: vi.fn(async (id: string) =>
+    id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null,
+  ),
 });
 
 interface JoinDeps {
@@ -103,7 +118,10 @@ interface JoinDeps {
 
 /** Real LessonRoleService over the mocked queries. */
 export const rolesOf = (d: JoinDeps): LessonRoleService =>
-  new LessonRoleService(d.q as unknown as ClassroomRepo, (d.teachers ?? teachersFake()) as unknown as TeachersRepo);
+  new LessonRoleService(
+    d.q as unknown as ClassroomRepo,
+    (d.teachers ?? teachersFake()) as unknown as TeachersRepo,
+  );
 
 /** Real RoomAdmission over the mocked moderation queries and recorder. */
 export const admissionOf = (d: JoinDeps): RoomAdmission =>
@@ -114,8 +132,17 @@ export const admissionOf = (d: JoinDeps): RoomAdmission =>
   );
 
 /** The Authorization header LiveKit sends with a webhook body (bare JWT, sha256 claim of the body). */
-export function signedWebhook(body: Buffer, opts: { now: Date; over?: object; secret?: string }): string {
+export function signedWebhook(
+  body: Buffer,
+  opts: { now: Date; over?: object; secret?: string },
+): string {
   const nowS = Math.floor(opts.now.getTime() / 1000);
   const sha256 = createHash('sha256').update(body).digest('base64');
-  return signJwt(opts.secret ?? CONFIG.apiSecret, { iss: CONFIG.apiKey, nbf: nowS - 5, exp: nowS + 300, sha256, ...opts.over });
+  return signJwt(opts.secret ?? CONFIG.apiSecret, {
+    iss: CONFIG.apiKey,
+    nbf: nowS - 5,
+    exp: nowS + 300,
+    sha256,
+    ...opts.over,
+  });
 }

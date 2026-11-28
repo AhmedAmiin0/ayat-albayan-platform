@@ -1,9 +1,16 @@
 import { HttpException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { bookingRequest, fakePlanner, IDS, NOW } from '@/modules/teaching/booking/booking.fakes';
-import { makeupRequest, missedLessonRow } from '@/modules/teaching/booking/core/makeup/booking.makeup.fakes';
+import {
+  makeupRequest,
+  missedLessonRow,
+} from '@/modules/teaching/booking/core/makeup/booking.makeup.fakes';
 
-const T1 = { id: 'T1', starts_at: new Date('2026-10-04T14:00:00Z'), ends_at: new Date('2026-10-04T14:45:00Z') };
+const T1 = {
+  id: 'T1',
+  starts_at: new Date('2026-10-04T14:00:00Z'),
+  ends_at: new Date('2026-10-04T14:45:00Z'),
+};
 const failure = async (p: Promise<unknown>) => {
   const e: unknown = await p.catch((err: unknown) => err);
   if (!(e instanceof HttpException)) throw new Error('expected an HttpException');
@@ -23,7 +30,11 @@ describe('BookingPlanner — حجز تعويضي (R-SCH-10)', () => {
   it('one lesson, one day, no package: the rule ends the day it starts and links the missed lesson', async () => {
     const { planner } = setup();
     const { payload } = await planner.prepare(makeupRequest());
-    expect(payload.rule).toMatchObject({ package: null, starts_on: '2026-10-01', ends_on: '2026-10-04' });
+    expect(payload.rule).toMatchObject({
+      package: null,
+      starts_on: '2026-10-01',
+      ends_on: '2026-10-04',
+    });
     expect(payload.lessons.map((l) => l.starts_at)).toEqual(['2026-10-04T14:00:00.000Z']);
     expect(payload.student_ids).toEqual([IDS.s1]);
     expect(payload.makeup_of).toBe(IDS.missed);
@@ -39,7 +50,7 @@ describe('BookingPlanner — حجز تعويضي (R-SCH-10)', () => {
     expect(queries.lead).not.toHaveBeenCalled();
   });
 
-  it('the guardian\'s confirmation reads «تعويضية لـسهيلة» and reuses the approved template', async () => {
+  it("the guardian's confirmation reads «تعويضية لـسهيلة» and reuses the approved template", async () => {
     const { planner } = setup();
     const { payload, phones } = await planner.prepare(makeupRequest());
     expect(payload.messages).toEqual([
@@ -70,8 +81,13 @@ describe('BookingPlanner — حجز تعويضي (R-SCH-10)', () => {
   it('conflicts are checked as for any booking: 409 unless an override reason is given', async () => {
     const { planner, busy } = setup();
     busy.teacherLessons.mockResolvedValue([T1]);
-    expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({ status: 409, body: { code: 'conflict' } });
-    const { payload, conflicts } = await planner.prepare(makeupRequest({ override: { reason: 'بطلب ولي الأمر' } }));
+    expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({
+      status: 409,
+      body: { code: 'conflict' },
+    });
+    const { payload, conflicts } = await planner.prepare(
+      makeupRequest({ override: { reason: 'بطلب ولي الأمر' } }),
+    );
     expect(conflicts).toHaveLength(1);
     expect(payload.lessons[0]?.override_reason).toBe('بطلب ولي الأمر');
   });
@@ -79,18 +95,29 @@ describe('BookingPlanner — حجز تعويضي (R-SCH-10)', () => {
   it('a student busy at that time clashes too', async () => {
     const { planner, busy } = setup();
     busy.studentLessons.mockResolvedValue([{ ...T1, student_id: IDS.s1 }]);
-    expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({ status: 409, body: { code: 'conflict' } });
+    expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({
+      status: 409,
+      body: { code: 'conflict' },
+    });
   });
 
   it('404 lesson_not_found for a lesson that does not exist', async () => {
     const { planner, queries } = setup();
     queries.makeupOriginal.mockResolvedValue(null);
-    expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({ status: 404, body: { code: 'lesson_not_found' } });
+    expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({
+      status: 404,
+      body: { code: 'lesson_not_found' },
+    });
   });
 
   it('400 makeup_student when the student was not on the missed lesson', async () => {
-    const { planner } = setup(missedLessonRow({ lesson_students: [{ student_id: IDS.s2, chargeable: true }] }));
-    expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({ status: 400, body: { code: 'makeup_student' } });
+    const { planner } = setup(
+      missedLessonRow({ lesson_students: [{ student_id: IDS.s2, chargeable: true }] }),
+    );
+    expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({
+      status: 400,
+      body: { code: 'makeup_student' },
+    });
   });
 
   it.each([
@@ -101,7 +128,11 @@ describe('BookingPlanner — حجز تعويضي (R-SCH-10)', () => {
     ['a trial', { rule: { package: 'trial' as const } }, 'trial'],
     ['itself a makeup', { makeup_of_id: IDS.s3 }, 'is_makeup'],
     ['older than 60 days', { starts_at: '2026-07-01T14:00:00Z' }, 'too_old'],
-    ['not charged', { lesson_students: [{ student_id: IDS.s1, chargeable: false }] }, 'not_charged'],
+    [
+      'not charged',
+      { lesson_students: [{ student_id: IDS.s1, chargeable: false }] },
+      'not_charged',
+    ],
   ])('409 makeup_not_eligible for %s', async (_name, over, reason) => {
     const { planner } = setup(missedLessonRow(over));
     expect(await failure(planner.prepare(makeupRequest()))).toMatchObject({

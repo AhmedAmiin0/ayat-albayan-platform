@@ -3,12 +3,25 @@ import { describe, expect, it } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { TeacherScopes } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { ADMIN, ASSISTANT, SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
-import { MeetingInvitePolicies, teacherMaySend, visibleCode, visibleView } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.policy';
-import { CLOSED_PHONE, OPEN_PHONE, teacherScopesFake } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
+import {
+  MeetingInvitePolicies,
+  teacherMaySend,
+  visibleCode,
+  visibleView,
+} from '@/modules/teaching/classroom/meetings/invites/meeting-invite.policy';
+import {
+  CLOSED_PHONE,
+  OPEN_PHONE,
+  teacherScopesFake,
+} from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
 
 const OTHER = '+201000000109';
-const policies = (scopes = teacherScopesFake()) => new MeetingInvitePolicies(scopes as unknown as TeacherScopes);
-const withPerms = (user: AuthUser, drop: string): AuthUser => ({ ...user, permissions: systemPermissionsOf(user.role ?? 'teacher').filter((p) => p !== drop) });
+const policies = (scopes = teacherScopesFake()) =>
+  new MeetingInvitePolicies(scopes as unknown as TeacherScopes);
+const withPerms = (user: AuthUser, drop: string): AuthUser => ({
+  ...user,
+  permissions: systemPermissionsOf(user.role ?? 'teacher').filter((p) => p !== drop),
+});
 
 describe('InvitePolicy: who may send WhatsApp through invitations (owner 2026-10-13)', () => {
   it('admin and sales: every phone, the exact codes', async () => {
@@ -18,11 +31,21 @@ describe('InvitePolicy: who may send WhatsApp through invitations (owner 2026-10
     }
   });
 
-  it("a teacher: only the families the inbox lets them write to (assertCanSend), never their own chat", async () => {
+  it('a teacher: only the families the inbox lets them write to (assertCanSend), never their own chat', async () => {
     const p = await policies().of(TEACHER);
-    expect([p.seesAll, p.mayChat(OPEN_PHONE), p.mayChat(CLOSED_PHONE), p.mayChat(OTHER)]).toEqual([false, true, true, false]);
+    expect([p.seesAll, p.mayChat(OPEN_PHONE), p.mayChat(CLOSED_PHONE), p.mayChat(OTHER)]).toEqual([
+      false,
+      true,
+      true,
+      false,
+    ]);
     expect(p.teacherId).toBe('t1');
-    expect(teacherMaySend({ teacherId: 't', teacherName: 'x', phones: new Set([OPEN_PHONE]), ownPhone: OPEN_PHONE }, OPEN_PHONE)).toBe(false);
+    expect(
+      teacherMaySend(
+        { teacherId: 't', teacherName: 'x', phones: new Set([OPEN_PHONE]), ownPhone: OPEN_PHONE },
+        OPEN_PHONE,
+      ),
+    ).toBe(false);
   });
 
   it('a teacher whose scope cannot be read sends nothing', async () => {
@@ -44,7 +67,15 @@ describe('InvitePolicy: who may send WhatsApp through invitations (owner 2026-10
   });
 
   it('a typed phone shows no name to a non-all caller; students, staff and admins keep theirs', () => {
-    const v = { id: 'i', kind: 'phone' as const, display_name: 'أم سهيلة', channel: 'link' as const, status: 'sent' as const, error_code: null, sent_at: null };
+    const v = {
+      id: 'i',
+      kind: 'phone' as const,
+      display_name: 'أم سهيلة',
+      channel: 'link' as const,
+      status: 'sent' as const,
+      error_code: null,
+      sent_at: null,
+    };
     expect(visibleView(v, false).display_name).toBe('');
     expect(visibleView(v, true).display_name).toBe('أم سهيلة');
     expect(visibleView({ ...v, kind: 'student' }, false).display_name).toBe('أم سهيلة');

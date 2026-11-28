@@ -3,7 +3,12 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';
 import { REQ, SUB } from '@/modules/teaching/booking/sales/course-draft/tests/course-draft.fakes';
 
-const ROW = { subscription_id: SUB, request: REQ, saved_by: 'a1000000-0000-4000-8000-00000000000a', saved_at: '2026-11-06T09:00:00.000Z' };
+const ROW = {
+  subscription_id: SUB,
+  request: REQ,
+  saved_by: 'a1000000-0000-4000-8000-00000000000a',
+  saved_at: '2026-11-06T09:00:00.000Z',
+};
 const NOW = new Date('2026-11-06T12:00:00.000Z');
 
 describe('CourseDraftRepo (owner 2026-11-06)', () => {
@@ -34,12 +39,19 @@ describe('CourseDraftRepo (owner 2026-11-06)', () => {
     const t = fakeDb({ subscription_course_drafts: [{ data: null }] });
     await new CourseDraftRepo(t.db).remove({ subscriptionId: SUB, savedAt: ROW.saved_at });
     const eqs = t.calls.filter((c) => c.method === 'eq').map((c) => c.args);
-    expect(eqs).toEqual([['subscription_id', SUB], ['saved_at', ROW.saved_at]]);
+    expect(eqs).toEqual([
+      ['subscription_id', SUB],
+      ['saved_at', ROW.saved_at],
+    ]);
   });
 
   it('held: unpaid AND an open, unexpired link; paid or no link → not held', async () => {
     const t = fakeDb({
-      subscriptions: [{ data: { status: 'unpaid' } }, { data: { status: 'active' } }, { data: { status: 'unpaid' } }],
+      subscriptions: [
+        { data: { status: 'unpaid' } },
+        { data: { status: 'active' } },
+        { data: { status: 'unpaid' } },
+      ],
       payment_links: [{ data: [{ id: 'l1' }] }, { data: [{ id: 'l1' }] }, { data: [] }],
     });
     const repo = new CourseDraftRepo(t.db);

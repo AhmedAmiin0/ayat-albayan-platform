@@ -10,12 +10,14 @@ export class TimeEditRepo {
 
   /** The teacher's payout status for `YYYY-MM`, null when that month has no payout row yet. */
   async payoutStatus(teacherId: string, month: string): Promise<PayoutStatus | null> {
-    const data = maybe(await this.db
-      .from('teacher_payouts')
-      .select('status')
-      .eq('teacher_id', teacherId)
-      .eq('month', `${month}-01`)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('teacher_payouts')
+        .select('status')
+        .eq('teacher_id', teacherId)
+        .eq('month', `${month}-01`)
+        .maybeSingle(),
+    );
     return data?.status ?? null;
   }
 }

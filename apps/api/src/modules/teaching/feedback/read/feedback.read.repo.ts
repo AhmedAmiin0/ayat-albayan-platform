@@ -32,12 +32,26 @@ const FEEDBACK_SORT: SortSpec<FeedbackSortKey> = {
 
 export type FeedbackListRow = Pick<
   FeedbackRow,
-  | 'id' | 'lesson_id' | 'student_id' | 'teacher_id' | 'kind' | 'requested_at' | 'expires_at'
-  | 'rating' | 'recommend' | 'note' | 'contact_phone' | 'submitted_at' | 'quick_rating' | 'quick_rated_at'
+  | 'id'
+  | 'lesson_id'
+  | 'student_id'
+  | 'teacher_id'
+  | 'kind'
+  | 'requested_at'
+  | 'expires_at'
+  | 'rating'
+  | 'recommend'
+  | 'note'
+  | 'contact_phone'
+  | 'submitted_at'
+  | 'quick_rating'
+  | 'quick_rated_at'
 >;
-export type FeedbackPage = { rows: FeedbackListRow[]; total: number };
+export interface FeedbackPage {
+  rows: FeedbackListRow[];
+  total: number;
+}
 export type AverageRow = FeedbackAverage & { teacher_id: string };
-
 
 const EMPTY: FeedbackPage = { rows: [], total: 0 };
 
@@ -73,32 +87,52 @@ export class FeedbackReadRepo {
   }
 
   /** A teacher's own rows: the teacher filter is the login, never a request parameter. */
-  mine(teacherId: string, input: { filter: FeedbackQuery; page: PageQuery }): Promise<FeedbackPage> {
+  mine(
+    teacherId: string,
+    input: { filter: FeedbackQuery; page: PageQuery },
+  ): Promise<FeedbackPage> {
     return this.page({ filter: { ...input.filter, teacher: teacherId }, page: input.page });
   }
 
   /** Per-teacher averages over answered rows (v_teacher_feedback_avg); `teacherId` limits to one. */
   async averages(teacherId?: string): Promise<AverageRow[]> {
-    const q = this.db.from('v_teacher_feedback_avg').select('teacher_id, avg_rating, n, recommend_yes_pct');
+    const q = this.db
+      .from('v_teacher_feedback_avg')
+      .select('teacher_id, avg_rating, n, recommend_yes_pct');
     const { data, error } = await (teacherId ? q.eq('teacher_id', teacherId) : q);
     if (error) throw pgError(error);
     return data.flatMap((r) =>
       r.teacher_id === null || r.n === null || r.n === 0
         ? []
-        : [{ teacher_id: r.teacher_id, avg_rating: Number(r.avg_rating), n: r.n, recommend_yes_pct: Number(r.recommend_yes_pct) }],
+        : [
+            {
+              teacher_id: r.teacher_id,
+              avg_rating: Number(r.avg_rating),
+              n: r.n,
+              recommend_yes_pct: Number(r.recommend_yes_pct),
+            },
+          ],
     );
   }
 
-  async students(ids: readonly string[]): Promise<{ id: string; code: string | null; name: string }[]> {
+  async students(
+    ids: readonly string[],
+  ): Promise<{ id: string; code: string | null; name: string }[]> {
     if (ids.length === 0) return [];
-    const { data, error } = await this.db.from('students').select('id, code, name').in('id', [...new Set(ids)]);
+    const { data, error } = await this.db
+      .from('students')
+      .select('id, code, name')
+      .in('id', [...new Set(ids)]);
     if (error) throw pgError(error);
     return data;
   }
 
   async teachers(ids: readonly string[]): Promise<{ id: string; display_name_ar: string }[]> {
     if (ids.length === 0) return [];
-    const { data, error } = await this.db.from('teachers').select('id, display_name_ar').in('id', [...new Set(ids)]);
+    const { data, error } = await this.db
+      .from('teachers')
+      .select('id, display_name_ar')
+      .in('id', [...new Set(ids)]);
     if (error) throw pgError(error);
     return data;
   }

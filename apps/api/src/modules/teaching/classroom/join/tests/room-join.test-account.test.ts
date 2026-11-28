@@ -3,9 +3,21 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TestFlagReader } from '@/common/auth/test-flag';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { readerOf } from '@/common/settings/settings.fakes';
-import { CONFIG, EARLY, LESSON_ID, queries, TEACHER, TEACHER_ID } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  CONFIG,
+  EARLY,
+  LESSON_ID,
+  queries,
+  TEACHER,
+  TEACHER_ID,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
-import { admissionOf, moderation, recorder, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  admissionOf,
+  moderation,
+  recorder,
+  rolesOf,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RoomJoinService } from '@/modules/teaching/classroom/join/room-join.service';
 
 // Test accounts (docs/56) on POST /lessons/:id/room/join: the window is skipped only for a test
@@ -38,7 +50,9 @@ describe('the staff room join before the window', () => {
 
   it('a test teacher on a real lesson is refused join_not_open_yet', async () => {
     lessonIsTest.mockResolvedValue(false);
-    expect(await codeOf(join({ ...TEACHER, isTest: true }))).toMatchObject({ code: 'join_not_open_yet' });
+    expect(await codeOf(join({ ...TEACHER, isTest: true }))).toMatchObject({
+      code: 'join_not_open_yet',
+    });
   });
 
   it('a real teacher on a test lesson is refused, and the lesson is not even read', async () => {

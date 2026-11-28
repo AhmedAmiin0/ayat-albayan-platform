@@ -81,6 +81,10 @@ export class CourseLessonRepo {
         .order('id')
         .range(from, to),
     );
-    return new Set(rows.flatMap((r) => (r.rule_id && r.local_date ? [generatedKey(r.rule_id, r.local_date)] : [])));
+    return new Set(
+      rows.flatMap((r) =>
+        r.rule_id && r.local_date ? [generatedKey(r.rule_id, r.local_date)] : [],
+      ),
+    );
   }
 }

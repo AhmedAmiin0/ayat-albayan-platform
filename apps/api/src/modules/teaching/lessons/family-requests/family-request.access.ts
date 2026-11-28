@@ -12,7 +12,8 @@ import { TeacherCancelRepo } from '@/modules/teaching/lessons/teacher-me/teacher
 type Answers = (user: AuthUser, lessons: readonly (readonly string[])[]) => Promise<boolean[]>;
 
 /** Her own lesson: every student on it is hers (a family request is one student's lesson). */
-const ownsAll = (owners: ReadonlyMap<string, string[]>, user: AuthUser) =>
+const ownsAll =
+  (owners: ReadonlyMap<string, string[]>, user: AuthUser) =>
   (ids: readonly string[]): boolean =>
     ids.length > 0 && ids.every((id) => owners.get(id)?.includes(user.id) ?? false);
 
@@ -37,7 +38,10 @@ export class FamilyRequestAccess {
   }
   /** The lessons of `lessons` whose family request this user answers. */
   async visible(user: AuthUser, lessons: readonly LessonView[]): Promise<LessonView[]> {
-    const mine = await this.answers(user, lessons.map((l) => l.students.map((s) => s.id)));
+    const mine = await this.answers(
+      user,
+      lessons.map((l) => l.students.map((s) => s.id)),
+    );
     return lessons.filter((_, i) => mine[i]);
   }
   /** 404 request_not_found (unknown, or a teacher's proposal), 403 not_your_student. */

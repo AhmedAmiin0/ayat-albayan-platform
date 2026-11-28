@@ -1,9 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG, decode } from '@/modules/teaching/classroom/classroom.fakes';
-import { LivekitApi, LivekitError, twirpBase } from '@/modules/teaching/classroom/livekit/livekit-api';
+import {
+  LivekitApi,
+  LivekitError,
+  twirpBase,
+} from '@/modules/teaching/classroom/livekit/livekit-api';
 import { egressAnswer, ignoredAnswer } from '@/modules/teaching/classroom/livekit/livekit-twirp';
 import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
-import { sentBody, sentHeader, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import {
+  sentBody,
+  sentHeader,
+  twirpAnswer,
+} from '@/modules/teaching/classroom/livekit/livekit.fakes';
 
 const api = (h = http(), config: typeof CONFIG | null = CONFIG) => new LivekitApi(config, h);
 const sent = (h: ReturnType<typeof http>, i = 0) => {
@@ -33,11 +41,17 @@ describe('LivekitApi.removeParticipant', () => {
   });
 
   it('a participant already gone (not_found) counts as removed', async () => {
-    await expect(api(http({ status: 404, body: { code: 'not_found', msg: 'participant not found' } })).removeParticipant({ room: 'r', identity: 'i' })).resolves.toBeUndefined();
+    await expect(
+      api(
+        http({ status: 404, body: { code: 'not_found', msg: 'participant not found' } }),
+      ).removeParticipant({ room: 'r', identity: 'i' }),
+    ).resolves.toBeUndefined();
   });
 
   it('any other refusal throws a LivekitError with the Twirp code', async () => {
-    const err = await api(http({ status: 401, body: { code: 'unauthenticated' } })).removeParticipant({ room: 'r', identity: 'i' }).catch((e: unknown) => e);
+    const err = await api(http({ status: 401, body: { code: 'unauthenticated' } }))
+      .removeParticipant({ room: 'r', identity: 'i' })
+      .catch((e: unknown) => e);
     expect(err).toBeInstanceOf(LivekitError);
     expect(err).toMatchObject({ status: 401, code: 'unauthenticated' });
   });
@@ -46,20 +60,33 @@ describe('LivekitApi.removeParticipant', () => {
 describe('LivekitApi.call', () => {
   it('returns the JSON answer', async () => {
     const h = http({ body: { egress_id: 'EG_1' } });
-    expect(await api(h).call({ method: 'livekit.Egress/StartRoomCompositeEgress', body: {}, grant: { roomRecord: true } }, egressAnswer)).toEqual({ egress_id: 'EG_1' });
+    expect(
+      await api(h).call(
+        {
+          method: 'livekit.Egress/StartRoomCompositeEgress',
+          body: {},
+          grant: { roomRecord: true },
+        },
+        egressAnswer,
+      ),
+    ).toEqual({ egress_id: 'EG_1' });
   });
 
   it('a non-JSON error body still throws (code unknown)', async () => {
     const h = http({ status: 502 });
     h.mockResolvedValueOnce(twirpAnswer(502, '<html>'));
-    await expect(api(h).call({ method: 'x', body: {}, grant: {} }, ignoredAnswer)).rejects.toMatchObject({ status: 502, code: 'unknown' });
+    await expect(
+      api(h).call({ method: 'x', body: {}, grant: {} }, ignoredAnswer),
+    ).rejects.toMatchObject({ status: 502, code: 'unknown' });
   });
 
   it('not configured: throws without any request', async () => {
     const h = http();
     const a = api(h, null);
     expect(a.configured).toBe(false);
-    await expect(a.call({ method: 'x', body: {}, grant: {} }, ignoredAnswer)).rejects.toMatchObject({ code: 'not_configured' });
+    await expect(a.call({ method: 'x', body: {}, grant: {} }, ignoredAnswer)).rejects.toMatchObject(
+      { code: 'not_configured' },
+    );
     expect(h).not.toHaveBeenCalled();
   });
 });

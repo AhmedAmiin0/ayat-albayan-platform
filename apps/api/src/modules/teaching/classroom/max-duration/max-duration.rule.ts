@@ -1,4 +1,7 @@
-import { targetOfRoom, type RoomTarget } from '@/modules/teaching/classroom/recordings/recording-target';
+import {
+  targetOfRoom,
+  type RoomTarget,
+} from '@/modules/teaching/classroom/recordings/recording-target';
 
 const MINUTE_MS = 60_000;
 

@@ -1,6 +1,9 @@
 import type { CourseLessonFact } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { planExtend, type ExtendRuleRow } from '@/modules/teaching/booking/extend/course-extend.plan';
+import {
+  planExtend,
+  type ExtendRuleRow,
+} from '@/modules/teaching/booking/extend/course-extend.plan';
 
 const MON: ExtendRuleRow = {
   id: 'ra',

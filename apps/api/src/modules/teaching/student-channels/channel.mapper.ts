@@ -6,9 +6,7 @@ import {
   type ChannelSenderRole,
   type TeacherChannelRow,
 } from '@ab/shared';
-import type {
-  PageViewContext,
-} from '@/modules/teaching/student-channels/views/channel-views.service';
+import type { PageViewContext } from '@/modules/teaching/student-channels/views/channel-views.service';
 import { roleOf, toMessageView } from '@/modules/teaching/student-channels/views/message-view';
 import type { ChannelStudent } from './channel-people.repo';
 import type { ChannelMessageRow, ChannelSummaryRow } from './channel.repo';

@@ -4,7 +4,11 @@ import { fileRow, LESSON } from './lesson-files.fakes';
 import { LessonFilesRepo } from './lesson-files.repo';
 
 const insert = {
-  lesson_id: LESSON, kind: 'homework', mime: 'image/png', size: 900, storage_path: `${LESSON}/a.png`,
+  lesson_id: LESSON,
+  kind: 'homework',
+  mime: 'image/png',
+  size: 900,
+  storage_path: `${LESSON}/a.png`,
 };
 
 describe('LessonFilesRepo.add (idempotent register)', () => {

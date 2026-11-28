@@ -23,7 +23,10 @@ export class LessonAccess {
   /** 403 unless admin, or the teacher who teaches this lesson. */
   async assertCanTouch(user: AuthUser, lesson: { teacher_id: string }): Promise<void> {
     if (isAdmin(user)) return;
-    if (user.role === 'teacher' && (await this.teachers.idByProfile(user.id)) === lesson.teacher_id) {
+    if (
+      user.role === 'teacher' &&
+      (await this.teachers.idByProfile(user.id)) === lesson.teacher_id
+    ) {
       return;
     }
     throw new ForbiddenException();

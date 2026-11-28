@@ -1,14 +1,29 @@
 import { courseChangeSchema } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
-import { BODY, RULE_A, RULE_B, SUB_ID } from '@/modules/teaching/booking/course-change/course-change.fakes';
-import { changePayload, type PayloadInput } from '@/modules/teaching/booking/course-change/course-change.payload';
+import {
+  BODY,
+  RULE_A,
+  RULE_B,
+  SUB_ID,
+} from '@/modules/teaching/booking/course-change/course-change.fakes';
+import {
+  changePayload,
+  type PayloadInput,
+} from '@/modules/teaching/booking/course-change/course-change.payload';
 import { planChange } from '@/modules/teaching/booking/course-change/course-change.plan';
 
 // A change never lengthens an old rule (review fix 1) and writes every moved lesson (review fix 3).
 
 const NOW = new Date('2026-10-18T08:00:00Z');
 const req = courseChangeSchema.parse(BODY); // startsOn 2026-10-25
-const facts = { role: 'admin' as const, perWeek: 2, lessonsTotal: 8, durationMin: 45 as const, tz: 'Asia/Riyadh', before: [] };
+const facts = {
+  role: 'admin' as const,
+  perWeek: 2,
+  lessonsTotal: 8,
+  durationMin: 45 as const,
+  tz: 'Asia/Riyadh',
+  before: [],
+};
 const plan = planChange({ req, facts, now: NOW, horizonWeeks: 5 });
 const base: PayloadInput = {
   req,
@@ -22,8 +37,18 @@ const base: PayloadInput = {
   contacts: [],
   counted: 0,
 };
-type Step = { id: string; from_status: string; to_status: string; chargeable: boolean };
-type Payload = { starts_on: string; end_rules: { id: string; ends_on: string; changes: Step[] }[]; changes: Step[]; audit: { after: { moved: string[] } } };
+interface Step {
+  id: string;
+  from_status: string;
+  to_status: string;
+  chargeable: boolean;
+}
+type Payload = {
+  starts_on: string;
+  end_rules: { id: string; ends_on: string; changes: Step[] }[];
+  changes: Step[];
+  audit: { after: { moved: string[] } };
+};
 const payloadOf = (o: Partial<PayloadInput>) => changePayload({ ...base, ...o }) as Payload;
 
 describe('changePayload — old rules end at min(their ends_on, startsOn − 1)', () => {
@@ -34,7 +59,12 @@ describe('changePayload — old rules end at min(their ends_on, startsOn − 1)'
     expect(p.starts_on).toBe('2026-10-25');
   });
   it('a rule ending the day before the change point is not touched; an open-ended one ends then', () => {
-    const p = payloadOf({ active: [{ ...RULE_A, ends_on: '2026-10-24' }, { ...RULE_B, ends_on: null }] });
+    const p = payloadOf({
+      active: [
+        { ...RULE_A, ends_on: '2026-10-24' },
+        { ...RULE_B, ends_on: null },
+      ],
+    });
     expect(p.end_rules.map((r) => [r.id, r.ends_on])).toEqual([['rb', '2026-10-24']]);
   });
 });
@@ -47,10 +77,17 @@ describe('changePayload — every moved lesson is written', () => {
       { id: 'l3', status: 'scheduled' as const, rule_id: null },
     ];
     const p = payloadOf({ moved });
-    const step = (id: string, from: string) => ({ id, from_status: from, to_status: 'rescheduled', chargeable: false });
+    const step = (id: string, from: string) => ({
+      id,
+      from_status: from,
+      to_status: 'rescheduled',
+      chargeable: false,
+    });
     expect(p.end_rules.find((r) => r.id === 'ra')?.changes).toEqual([step('l1', 'scheduled')]);
     expect(p.changes).toEqual([step('l2', 'confirmed'), step('l3', 'scheduled')]);
-    const written = [...p.end_rules.flatMap((r) => r.changes), ...p.changes].map((c) => c.id).sort();
+    const written = [...p.end_rules.flatMap((r) => r.changes), ...p.changes]
+      .map((c) => c.id)
+      .sort();
     expect(written).toEqual(p.audit.after.moved.sort());
   });
 });

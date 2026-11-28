@@ -7,12 +7,31 @@ import { toOverview } from '@/modules/teaching/lessons/overview/overview.mapper'
 const window = { from: new Date('2026-10-04T19:20:00Z'), to: new Date('2026-10-04T21:00:00Z') };
 const teacher = {
   ...{ id: TEACHER_ID, display_name_ar: 'أبرار', display_name_en: null, gender: 'female' as const },
-  ...{ programs: ['quran' as const], tz: 'Africa/Cairo', meeting_link: null, max_students: 12, status: 'active' as const },
+  ...{
+    programs: ['quran' as const],
+    tz: 'Africa/Cairo',
+    meeting_link: null,
+    max_students: 12,
+    status: 'active' as const,
+  },
 };
-const slots = [{ teacher_id: TEACHER_ID, weekday: 0, start_time: '22:00:00', end_time: '23:59:00', tz: 'Africa/Cairo' }];
+const slots = [
+  {
+    teacher_id: TEACHER_ID,
+    weekday: 0,
+    start_time: '22:00:00',
+    end_time: '23:59:00',
+    tz: 'Africa/Cairo',
+  },
+];
 const base = { window, teachers: [teacher], slots, timeOff: [], loads: new Map(), lessons: [] };
 const carry = (status: 'scheduled' | 'cancelled_by_admin') => [
-  { teacher_id: TEACHER_ID, status, starts_at: '2026-10-04T18:45:00+00:00', ends_at: '2026-10-04T19:30:00+00:00' },
+  {
+    teacher_id: TEACHER_ID,
+    status,
+    starts_at: '2026-10-04T18:45:00+00:00',
+    ends_at: '2026-10-04T19:30:00+00:00',
+  },
 ];
 
 describe('toOverview: a lesson that started before the window and runs into it', () => {

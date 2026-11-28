@@ -4,13 +4,30 @@ import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';
 import { lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
 
 const NOW = new Date('2026-11-11T10:10:00Z');
-const ctx = { role: 'teacher' as const, seq: new Map<string, number>(), reportMinutes: 30, now: NOW };
-const student = { student_id: 's1', attendance: null, chargeable: true, student: { id: 's1', code: 'AB-0001', name: 'سهيلة', tz: 'Asia/Riyadh' } };
-interface Embed { id: string; status: 'draft' | 'submitted'; submitted_at?: string | null; sent_at?: string | null }
+const ctx = {
+  role: 'teacher' as const,
+  seq: new Map<string, number>(),
+  reportMinutes: 30,
+  now: NOW,
+};
+const student = {
+  student_id: 's1',
+  attendance: null,
+  chargeable: true,
+  student: { id: 's1', code: 'AB-0001', name: 'سهيلة', tz: 'Asia/Riyadh' },
+};
+interface Embed {
+  id: string;
+  status: 'draft' | 'submitted';
+  submitted_at?: string | null;
+  sent_at?: string | null;
+}
 
 const report = (r: Embed | null | undefined, over: Partial<typeof ctx> = {}) =>
-  toLessonView(lessonRow({ lesson_students: [{ ...student, ...(r === undefined ? {} : { report: r }) }] }), { ...ctx, ...over })
-    .students[0]?.report;
+  toLessonView(
+    lessonRow({ lesson_students: [{ ...student, ...(r === undefined ? {} : { report: r }) }] }),
+    { ...ctx, ...over },
+  ).students[0]?.report;
 
 describe('toLessonView — each student’s report state (the lesson details sheet, docs/46 B7)', () => {
   it('the select embeds the report id, status, first submit and family send, through lesson_students', () => {
@@ -18,20 +35,46 @@ describe('toLessonView — each student’s report state (the lesson details she
   });
 
   it('a submitted report inside its window: can_edit, edit_until = first submit + minutes, not sent', () => {
-    expect(report({ id: 'r1', status: 'submitted', submitted_at: '2026-11-11 10:00:00+00', sent_at: null })).toEqual({
-      id: 'r1', status: 'submitted', submitted_at: '2026-11-11T10:00:00.000Z', sent_at: null,
-      can_edit: true, edit_until: '2026-11-11T10:30:00.000Z',
+    expect(
+      report({
+        id: 'r1',
+        status: 'submitted',
+        submitted_at: '2026-11-11 10:00:00+00',
+        sent_at: null,
+      }),
+    ).toEqual({
+      id: 'r1',
+      status: 'submitted',
+      submitted_at: '2026-11-11T10:00:00.000Z',
+      sent_at: null,
+      can_edit: true,
+      edit_until: '2026-11-11T10:30:00.000Z',
     });
   });
 
   it('the stored window applies (10 min: closed by now); the admin still edits', () => {
-    const row = { id: 'r1', status: 'submitted' as const, submitted_at: '2026-11-11 10:00:00+00', sent_at: null };
-    expect(report(row, { reportMinutes: 10 })).toMatchObject({ can_edit: false, edit_until: '2026-11-11T10:10:00.000Z' });
-    expect(report(row, { reportMinutes: 10, role: 'admin' as never })).toMatchObject({ can_edit: true });
+    const row = {
+      id: 'r1',
+      status: 'submitted' as const,
+      submitted_at: '2026-11-11 10:00:00+00',
+      sent_at: null,
+    };
+    expect(report(row, { reportMinutes: 10 })).toMatchObject({
+      can_edit: false,
+      edit_until: '2026-11-11T10:10:00.000Z',
+    });
+    expect(report(row, { reportMinutes: 10, role: 'admin' as never })).toMatchObject({
+      can_edit: true,
+    });
   });
 
   it('a draft: editable, no window; none (or an old fake) → null', () => {
-    expect(report({ id: 'r2', status: 'draft' })).toMatchObject({ id: 'r2', status: 'draft', can_edit: true, edit_until: null });
+    expect(report({ id: 'r2', status: 'draft' })).toMatchObject({
+      id: 'r2',
+      status: 'draft',
+      can_edit: true,
+      edit_until: null,
+    });
     expect(report(null)).toBeNull();
     expect(report(undefined)).toBeNull();
   });

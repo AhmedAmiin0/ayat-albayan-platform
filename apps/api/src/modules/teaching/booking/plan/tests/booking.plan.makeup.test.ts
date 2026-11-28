@@ -3,7 +3,15 @@ import { planBooking, type PlanInput } from '@/modules/teaching/booking/plan/boo
 
 // Sundays + Tuesdays 17:00 Riyadh, 45 min, from Thu 2026-10-01 11:00 Riyadh.
 const input = (single: boolean, over: Partial<PlanInput['rule']> = {}): PlanInput => ({
-  rule: { byday: [0, 2], startTimeLocal: '17:00', tz: 'Asia/Riyadh', durationMin: 45, startsOn: '2026-10-01', single, ...over },
+  rule: {
+    byday: [0, 2],
+    startTimeLocal: '17:00',
+    tz: 'Asia/Riyadh',
+    durationMin: 45,
+    startsOn: '2026-10-01',
+    single,
+    ...over,
+  },
   now: new Date('2026-10-01T08:00:00Z'),
   horizonWeeks: 5,
 });
@@ -11,7 +19,9 @@ const input = (single: boolean, over: Partial<PlanInput['rule']> = {}): PlanInpu
 describe('planBooking — a makeup is one lesson like a trial (R-SCH-10)', () => {
   it('single: only the first occurrence, and the rule ends that local day', () => {
     const plan = planBooking(input(true));
-    expect(plan.occurrences.map((o) => o.starts_at.toISOString())).toEqual(['2026-10-04T14:00:00.000Z']);
+    expect(plan.occurrences.map((o) => o.starts_at.toISOString())).toEqual([
+      '2026-10-04T14:00:00.000Z',
+    ]);
     expect(plan.timing.ends_on).toBe('2026-10-04');
   });
 

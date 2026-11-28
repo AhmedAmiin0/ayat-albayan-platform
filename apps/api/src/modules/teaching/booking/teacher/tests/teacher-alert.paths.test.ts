@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { bookingRequest, fakePlanner, IDS, leadRequest, NOW } from '@/modules/teaching/booking/booking.fakes';
+import {
+  bookingRequest,
+  fakePlanner,
+  IDS,
+  leadRequest,
+  NOW,
+} from '@/modules/teaching/booking/booking.fakes';
 import type { BookingInvoices } from '@/modules/teaching/booking/invoice/booking.invoice';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
@@ -10,13 +16,29 @@ import type { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-
 import { SalesBookingService } from '@/modules/teaching/booking/sales/booking/sales-booking.service';
 import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.fakes';
 
-const TEACHER = { id: IDS.teacher, profile_id: 'P1', phone_e164: '+201001234567', tz: 'Africa/Cairo' };
-const RESULT = { rule_id: 'R1', student_ids: [IDS.s1], guardian_ids: [IDS.g1], lessons: [{ id: 'L1', starts_at: '2026-10-04T14:00:00.000Z', ends_at: '2026-10-04T14:45:00.000Z' }], message_ids: [], invoice_id: null };
+const TEACHER = {
+  id: IDS.teacher,
+  profile_id: 'P1',
+  phone_e164: '+201001234567',
+  tz: 'Africa/Cairo',
+};
+const RESULT = {
+  rule_id: 'R1',
+  student_ids: [IDS.s1],
+  guardian_ids: [IDS.g1],
+  lessons: [
+    { id: 'L1', starts_at: '2026-10-04T14:00:00.000Z', ends_at: '2026-10-04T14:45:00.000Z' },
+  ],
+  message_ids: [],
+  invoice_id: null,
+};
 
 function setup() {
   const deps = fakePlanner();
   deps.queries.createBooking.mockResolvedValue(RESULT);
-  const fake = fakeTeacherAlert({ lessons: [{ id: 'L1', starts_at: RESULT.lessons[0]?.starts_at ?? '', teacher: TEACHER }] });
+  const fake = fakeTeacherAlert({
+    lessons: [{ id: 'L1', starts_at: RESULT.lessons[0]?.starts_at ?? '', teacher: TEACHER }],
+  });
   const invoices = { resolve: vi.fn().mockResolvedValue(null) } as unknown as BookingInvoices;
   const writer = new BookingWriter(deps.queries as unknown as BookingRepo, invoices, fake.after);
   const booking = new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo);
@@ -38,15 +60,23 @@ describe('teacher alert on both booking paths (R-NOT-03)', () => {
     const { booking, push } = setup();
     const scope = { of: vi.fn(async () => null) } as unknown as SalesBookingScope;
     const user: AuthUser = { id: 'sales-1', email: null, role: 'sales' };
-    await new SalesBookingService(scope, booking, {} as unknown as SalesCourse).book(leadRequest(), user);
-    expect(push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ kind: 'new_student', profileIds: ['P1'] }));
+    await new SalesBookingService(scope, booking, {} as unknown as SalesCourse).book(
+      leadRequest(),
+      user,
+    );
+    expect(push.notifyProfiles).toHaveBeenCalledWith(
+      expect.objectContaining({ kind: 'new_student', profileIds: ['P1'] }),
+    );
     expect(push.notifyProfiles).toHaveBeenCalledTimes(1);
   });
 
   it('a replay (same clientRequestId) alerts nobody again', async () => {
     const { booking, push, bookingQueries } = setup();
     bookingQueries.replay.mockResolvedValue(RESULT);
-    await booking.book(bookingRequest({ clientRequestId: 'c0000000-0000-4000-8000-0000000000c1' }), 'admin-1');
+    await booking.book(
+      bookingRequest({ clientRequestId: 'c0000000-0000-4000-8000-0000000000c1' }),
+      'admin-1',
+    );
     expect(push.notifyProfiles).not.toHaveBeenCalled();
   });
 });

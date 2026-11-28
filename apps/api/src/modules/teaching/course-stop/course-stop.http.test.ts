@@ -21,28 +21,31 @@ describe('POST /students/:id/course-stop', () => {
   it.each([
     ['admin', ADMIN],
     ['sales', SALES],
-  ])("%s stops ANY student's course in ONE call of stop_course (its key in the stamp)", async (who, actor) => {
-    const res = await t.call({ method: 'POST', url: URL, token: who, body: BODY });
-    expect(res.statusCode).toBe(201);
-    expect(res.json()).toEqual({
-      subscriptionId: SUB,
-      cancelledLessons: 3,
-      endedRules: 2,
-      studentStatus: 'churned',
-      stoppedAt: NOW.toISOString(),
-      refund: null,
-    });
-    expect(t.m.repo.stop).toHaveBeenCalledTimes(1);
-    expect(t.m.repo.stop).toHaveBeenCalledWith({
-      subscriptionId: SUB,
-      studentId: STUDENT,
-      requestId: REQ,
-      actorId: actor,
-      reason: 'سفر الأسرة',
-      // No `owe` sent: the sheet's default, 3 attended × 50 × 100 %.
-      owed: { amount: 150, choice: 'attended' },
-    });
-  });
+  ])(
+    "%s stops ANY student's course in ONE call of stop_course (its key in the stamp)",
+    async (who, actor) => {
+      const res = await t.call({ method: 'POST', url: URL, token: who, body: BODY });
+      expect(res.statusCode).toBe(201);
+      expect(res.json()).toEqual({
+        subscriptionId: SUB,
+        cancelledLessons: 3,
+        endedRules: 2,
+        studentStatus: 'churned',
+        stoppedAt: NOW.toISOString(),
+        refund: null,
+      });
+      expect(t.m.repo.stop).toHaveBeenCalledTimes(1);
+      expect(t.m.repo.stop).toHaveBeenCalledWith({
+        subscriptionId: SUB,
+        studentId: STUDENT,
+        requestId: REQ,
+        actorId: actor,
+        reason: 'سفر الأسرة',
+        // No `owe` sent: the sheet's default, 3 attended × 50 × 100 %.
+        owed: { amount: 150, choice: 'attended' },
+      });
+    },
+  );
 
   it('after the commit: the balance alerts hear the cancelled lessons, then the money follow-ups (no 2nd audit)', async () => {
     await t.call({ method: 'POST', url: URL, token: 'sales', body: BODY });

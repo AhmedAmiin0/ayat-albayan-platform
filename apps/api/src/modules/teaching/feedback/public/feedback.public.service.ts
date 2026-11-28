@@ -8,7 +8,10 @@ import { FeedbackRepo, type PublicContext } from '@/modules/teaching/feedback/fe
 import { PublicFeedbackLimit } from './feedback.rate-limit';
 import { hashToken, verifyToken, type TokenPayload } from './feedback.token';
 
-type PublicCall = { token: string; ip: string };
+interface PublicCall {
+  token: string;
+  ip: string;
+}
 
 const expired = () => new GoneException({ code: 'feedback_expired', message: 'feedback_expired' });
 const invalid = () => notFound('feedback_not_found');
@@ -26,7 +29,10 @@ export class FeedbackPublicService {
     return toFormView(await this.resolve(call, now));
   }
 
-  async submit(call: PublicCall & { body: unknown }, now = new Date()): Promise<{ submitted: true }> {
+  async submit(
+    call: PublicCall & { body: unknown },
+    now = new Date(),
+  ): Promise<{ submitted: true }> {
     const ctx = await this.resolve(call, now);
     if (ctx.row.submitted_at) throw conflict('already_submitted');
     const input = parseOrThrow(feedbackSubmitSchema, call.body);

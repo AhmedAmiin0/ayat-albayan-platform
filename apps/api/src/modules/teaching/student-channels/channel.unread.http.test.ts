@@ -38,7 +38,7 @@ describe('unread counts match who is pushed', () => {
     expect(lastCount()).toEqual({ profileId: 'p-sa', studentIds: [ST], countRoles: ALL });
   });
 
-  it('the SQL never counts the viewer\'s own messages', () => {
+  it("the SQL never counts the viewer's own messages", () => {
     expect(sql).toContain('m.sender_profile_id is distinct from p_profile');
   });
 });

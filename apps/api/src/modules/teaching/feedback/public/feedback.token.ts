@@ -22,7 +22,8 @@ type TokenCheck =
 const keyOf = (secret: string) => ({ secret, context: '' });
 
 /** Expiry in unix seconds for a link issued at `now`. */
-export const expiryOf = (now: Date): number => Math.floor(now.getTime() / 1000) + FEEDBACK_TTL_DAYS * DAY_S;
+export const expiryOf = (now: Date): number =>
+  Math.floor(now.getTime() / 1000) + FEEDBACK_TTL_DAYS * DAY_S;
 
 /** Throws on ids that are not lowercase uuids: only ids from the DB are signed. */
 export function signToken(secret: string, p: TokenPayload): string {
@@ -36,8 +37,12 @@ export function signToken(secret: string, p: TokenPayload): string {
 export function verifyToken(secret: string, token: string, now: Date): TokenCheck {
   const r = verifyPair(keyOf(secret), token, now);
   if (!r.ok) return r;
-  return { ok: true, payload: { lessonId: r.payload.a, studentId: r.payload.b, exp: r.payload.exp } };
+  return {
+    ok: true,
+    payload: { lessonId: r.payload.a, studentId: r.payload.b, exp: r.payload.exp },
+  };
 }
 
 /** What the DB keeps: the token itself is never stored. */
-export const hashToken = (token: string): string => createHash('sha256').update(token).digest('hex');
+export const hashToken = (token: string): string =>
+  createHash('sha256').update(token).digest('hex');

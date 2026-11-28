@@ -9,10 +9,10 @@ import type { FeedbackRating } from '@ab/catalog';
 import type { Answer, PublicContext } from './feedback.repo';
 import type { AverageRow, FeedbackListRow } from './read/feedback.read.repo';
 
-export type People = {
+export interface People {
   students: ReadonlyMap<string, { id: string; code: string | null; name: string }>;
   teachers: ReadonlyMap<string, string>;
-};
+}
 
 /** The page's lookups, keyed by id (a page is at most 100 rows). */
 export function peopleOf(
@@ -26,7 +26,8 @@ export function peopleOf(
 }
 
 /** rating is 1..5 by the table's check; the generated type is plain number. */
-const rating = (n: number | null): FeedbackRating | null => (n === null ? null : (n as FeedbackRating));
+const rating = (n: number | null): FeedbackRating | null =>
+  n === null ? null : (n as FeedbackRating);
 
 function common(row: FeedbackListRow, people: People): TeacherFeedbackRowView {
   const student = people.students.get(row.student_id);

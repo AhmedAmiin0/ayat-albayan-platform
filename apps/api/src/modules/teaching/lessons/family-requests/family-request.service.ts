@@ -11,7 +11,6 @@ interface RequestInput {
   actor: AuthUser;
 }
 
-
 /** A family's reschedule request is answered like a teacher's proposal; time kept until then. */
 @Injectable()
 export class FamilyRequestService {

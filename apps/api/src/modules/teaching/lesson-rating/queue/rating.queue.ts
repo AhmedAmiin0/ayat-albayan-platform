@@ -6,7 +6,10 @@ import { RatingRepo } from '@/modules/teaching/lesson-rating/rating.repo';
 import { RatingReads } from '@/modules/teaching/lesson-rating/rating.reads';
 
 /** Why nothing was queued (mode_link = the lesson_rating rule is off; rules_unread = fail closed), or how many rows were new. */
-export type QueueResult = { queued: number; skipped: 'mode_link' | 'rules_unread' | 'auto_off' | 'not_approved' | null };
+export interface QueueResult {
+  queued: number;
+  skipped: 'mode_link' | 'rules_unread' | 'auto_off' | 'not_approved' | null;
+}
 
 /**
  * The automatic lesson_rating (migration 195): only while its notification rule is on (legacy:

@@ -68,15 +68,13 @@ export function setup(o: { rules?: ChangeRule[]; owned?: string[] } = {}) {
     subscription: vi.fn().mockResolvedValue(SUB),
     rules: vi.fn().mockResolvedValue(o.rules ?? [RULE_A, RULE_B]),
     others: vi.fn().mockResolvedValue([]),
-    contacts: vi
-      .fn()
-      .mockResolvedValue([
-        {
-          id: S1,
-          name: 'سهيلة',
-          guardian: { id: 'g1', phone_e164: '+966500000001', tz: 'Asia/Riyadh' },
-        },
-      ]),
+    contacts: vi.fn().mockResolvedValue([
+      {
+        id: S1,
+        name: 'سهيلة',
+        guardian: { id: 'g1', phone_e164: '+966500000001', tz: 'Asia/Riyadh' },
+      },
+    ]),
     teacherLink: vi.fn().mockResolvedValue('https://meet.google.com/abc-defg-hij'),
     teacherMode: vi.fn().mockResolvedValue(null),
   };

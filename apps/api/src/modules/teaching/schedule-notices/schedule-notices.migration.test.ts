@@ -9,7 +9,10 @@ import { NOTICE_KEYS } from './notice.types';
 // owner's exact bodies (the ones he pastes into the CRM).
 const dir = join(__dirname, '../../../../../../packages/db/supabase/migrations');
 const sql = readFileSync(join(dir, '20261030000988_schedule_change_notices.sql'), 'utf8');
-const code = sql.split('\n').filter((l) => !l.trimStart().startsWith('--')).join('\n');
+const code = sql
+  .split('\n')
+  .filter((l) => !l.trimStart().startsWith('--'))
+  .join('\n');
 
 const BODIES: Record<(typeof NOTICE_KEYS)[number], string> = {
   lesson_rescheduled:
@@ -18,7 +21,8 @@ const BODIES: Record<(typeof NOTICE_KEYS)[number], string> = {
     'السلام عليكم {{1}}،\nتم إلغاء حلقة {{2}} المحددة في {{3}}.\nللاستفسار يسعدنا تواصلكم معنا.\nأكاديمية آيات البيان',
   course_paused:
     'السلام عليكم {{1}}،\nتم إيقاف حلقات {{2}} مؤقتًا ابتداءً من {{3}}.\nسنبلغكم عند استئنافها.\nأكاديمية آيات البيان',
-  course_resumed: 'السلام عليكم {{1}}،\nتم استئناف حلقات {{2}}، وأول حلقة في {{3}}.\nأكاديمية آيات البيان',
+  course_resumed:
+    'السلام عليكم {{1}}،\nتم استئناف حلقات {{2}}، وأول حلقة في {{3}}.\nأكاديمية آيات البيان',
 };
 
 describe('migration 988: the schedule-change notices', () => {
@@ -32,7 +36,9 @@ describe('migration 988: the schedule-change notices', () => {
 
   it('seeds each template with the owner’s exact body: Arabic, utility, notifications line, not submitted', () => {
     for (const key of NOTICE_KEYS) {
-      expect(code).toContain(`('${key}', '${key}', 'ar', 'utility', 'notifications', 'not_submitted',`);
+      expect(code).toContain(
+        `('${key}', '${key}', 'ar', 'utility', 'notifications', 'not_submitted',`,
+      );
       expect(code).toContain(`'${BODIES[key]}'`);
     }
     expect(code).not.toMatch(/'(approved|pending)'/);

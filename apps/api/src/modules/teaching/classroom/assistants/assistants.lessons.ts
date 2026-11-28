@@ -9,19 +9,30 @@ import type { LessonRef } from './assistants.repo';
 export class AssistantLessonsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async between(refs: LessonRef[], range: { from: string; to: string }): Promise<AssistantLessonView[]> {
+  async between(
+    refs: LessonRef[],
+    range: { from: string; to: string },
+  ): Promise<AssistantLessonView[]> {
     const ids = [...new Set(refs.map((r) => r.lesson_id))];
     if (!ids.length) return [];
-    const lessons = rows(await this.db
-      .from('lessons')
-      .select('id, teacher_id, starts_at, ends_at, status')
-      .in('id', ids)
-      .gte('starts_at', range.from)
-      .lt('starts_at', range.to)
-      .order('starts_at'));
+    const lessons = rows(
+      await this.db
+        .from('lessons')
+        .select('id, teacher_id, starts_at, ends_at, status')
+        .in('id', ids)
+        .gte('starts_at', range.from)
+        .lt('starts_at', range.to)
+        .order('starts_at'),
+    );
     const [teachers, students] = await Promise.all([
-      this.db.from('teachers').select('id, display_name_ar').in('id', [...new Set(lessons.map((l) => l.teacher_id))]),
-      this.db.from('students').select('id, name').in('id', [...new Set(refs.map((r) => r.student_id))]),
+      this.db
+        .from('teachers')
+        .select('id, display_name_ar')
+        .in('id', [...new Set(lessons.map((l) => l.teacher_id))]),
+      this.db
+        .from('students')
+        .select('id, name')
+        .in('id', [...new Set(refs.map((r) => r.student_id))]),
     ]);
     if (teachers.error) throw pgError(teachers.error);
     if (students.error) throw pgError(students.error);
@@ -33,7 +44,9 @@ export class AssistantLessonsRepo {
       ends_at: l.ends_at,
       status: l.status,
       teacher_name: teacherName.get(l.teacher_id) ?? '',
-      student_names: refs.filter((r) => r.lesson_id === l.id).map((r) => studentName.get(r.student_id) ?? ''),
+      student_names: refs
+        .filter((r) => r.lesson_id === l.id)
+        .map((r) => studentName.get(r.student_id) ?? ''),
     }));
   }
 }

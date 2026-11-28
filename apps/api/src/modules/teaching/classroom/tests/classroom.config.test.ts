@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG } from '@/modules/teaching/classroom/classroom.fakes';
-import { classroomConfigOf, firstWebOrigin, type ClassroomConfig } from '@/modules/teaching/classroom/classroom.config';
+import {
+  classroomConfigOf,
+  firstWebOrigin,
+  type ClassroomConfig,
+} from '@/modules/teaching/classroom/classroom.config';
 
 describe('CLASSROOM_CONFIG source', () => {
   it('a fixed value (tests) as is; a reader (the app) is called on every use', () => {
@@ -16,7 +20,9 @@ describe('CLASSROOM_CONFIG source', () => {
 
 describe('firstWebOrigin', () => {
   it('the first of the comma list, trimmed, without a trailing slash', () => {
-    expect(firstWebOrigin(' https://app.ayatalbayan.com/ , http://localhost:5173')).toBe('https://app.ayatalbayan.com');
+    expect(firstWebOrigin(' https://app.ayatalbayan.com/ , http://localhost:5173')).toBe(
+      'https://app.ayatalbayan.com',
+    );
     expect(firstWebOrigin('http://localhost:5173')).toBe('http://localhost:5173');
   });
 });

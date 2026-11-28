@@ -1,5 +1,15 @@
 import type { AssistantLessonView, AssistantView } from '@ab/schedule';
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
@@ -34,13 +44,20 @@ export class AssistantsController {
   @Post('students/:id/assistants')
   @HttpCode(200)
   @Permissions('assistants.write')
-  assign(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AssistantView[]> {
+  assign(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<AssistantView[]> {
     return this.assistants.assign({ studentId: id, body, actorId: user.id });
   }
 
   @Delete('students/:id/assistants/:profileId')
   @Permissions('assistants.write')
-  remove(@Param('id', ParseUUIDPipe) id: string, @Param('profileId', ParseUUIDPipe) profileId: string): Promise<AssistantView[]> {
+  remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('profileId', ParseUUIDPipe) profileId: string,
+  ): Promise<AssistantView[]> {
     return this.assistants.remove(id, profileId);
   }
 }

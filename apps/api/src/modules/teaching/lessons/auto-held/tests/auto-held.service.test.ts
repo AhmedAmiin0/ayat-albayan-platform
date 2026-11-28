@@ -51,7 +51,12 @@ describe('AutoHeldService.runOnce (owner 2026-11-02)', () => {
     const { service, repo, writer, record } = setup({
       lessons: [open('l1'), open('l2', { status: 'confirmed' })],
     });
-    expect(await service.runOnce(NOW)).toEqual({ mode: 'held_by_default', due: 2, held: 2, absent: 0 });
+    expect(await service.runOnce(NOW)).toEqual({
+      mode: 'held_by_default',
+      due: 2,
+      held: 2,
+      absent: 0,
+    });
     expect(repo.openEnded).toHaveBeenCalledWith(autoHeldWindow(NOW));
     expect(appliedChange(writer)).toEqual({
       actor: null,
@@ -97,7 +102,12 @@ describe('AutoHeldService.runOnce (owner 2026-11-02)', () => {
     writer.apply
       .mockRejectedValueOnce(conflict('invalid_transition'))
       .mockRejectedValueOnce(new Error('db down'));
-    expect(await service.runOnce(NOW)).toEqual({ mode: 'held_by_default', due: 2, held: 0, absent: 0 });
+    expect(await service.runOnce(NOW)).toEqual({
+      mode: 'held_by_default',
+      due: 2,
+      held: 0,
+      absent: 0,
+    });
   });
 
   it('outside the 14-day window or before the 30-minute grace: not held', async () => {

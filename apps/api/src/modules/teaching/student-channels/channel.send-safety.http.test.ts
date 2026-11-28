@@ -34,7 +34,11 @@ describe('student channel sends: safe to repeat, never a 500 after the insert', 
     const stored = messageRow({ id: 'm9', sender_profile_id: 'p-g', client_id: CLIENT });
     t.queries.byClientId.mockResolvedValueOnce(stored);
     t.edits.message.mockResolvedValueOnce(null);
-    const post = { body: 'نعم', reply_to_id: 'a7000000-0000-4000-8000-000000000002', client_id: CLIENT };
+    const post = {
+      body: 'نعم',
+      reply_to_id: 'a7000000-0000-4000-8000-000000000002',
+      client_id: CLIENT,
+    };
     const res = await t.post(`${PORTAL}/messages`, 'guardian', post);
     expect([res.statusCode, res.json().id]).toEqual([201, 'm9']);
     expect(t.queries.byClientId).toHaveBeenCalledWith(
@@ -52,7 +56,12 @@ describe('student channel sends: safe to repeat, never a 500 after the insert', 
     const res = await t.post(`${PORTAL}/messages`, 'guardian', { body: 'سلام' });
     expect([res.statusCode, res.json().id, res.json().body]).toEqual([201, 'm2', 'سلام']);
     t.people.names.mockReset();
-    t.people.names.mockResolvedValue(new Map([['p-g', 'أم سلمى'], ['p-t1', 'أبرار']]));
+    t.people.names.mockResolvedValue(
+      new Map([
+        ['p-g', 'أم سلمى'],
+        ['p-t1', 'أبرار'],
+      ]),
+    );
   });
 
   it('a closed page says why: the reason from the student, null while open', async () => {

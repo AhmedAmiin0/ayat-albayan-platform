@@ -1,7 +1,10 @@
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
-import { LessonsSettings, type LessonsSettingsValues } from '@/modules/teaching/lessons/lessons.settings';
+import {
+  LessonsSettings,
+  type LessonsSettingsValues,
+} from '@/modules/teaching/lessons/lessons.settings';
 
 /** Pinned by hand: every key the lessons consumers read (RulePlanner … TimeEditPayout). */
 const EXPECTED = [
@@ -26,7 +29,10 @@ describe('LessonsSettings', () => {
   });
 
   it('an over value comes through, from one store read', async () => {
-    const values = await readerOf(LessonsSettings, { late_cancel_hours: 24, booking_horizon_weeks: 2 }).read();
+    const values = await readerOf(LessonsSettings, {
+      late_cancel_hours: 24,
+      booking_horizon_weeks: 2,
+    }).read();
     expect(values).toMatchObject({ late_cancel_hours: 24, booking_horizon_weeks: 2 });
     const store = fakeSettings();
     await new LessonsSettings(store).read();

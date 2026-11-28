@@ -47,7 +47,12 @@ export class RecordingEraser {
     await this.removeTwin(input.filePath);
     if ((await this.queries.markDeleted(input.id, input.now.toISOString())) !== 1) return false;
     try {
-      await this.audit.record({ actorId: input.actorId, entity: 'lesson_recordings', entityId: input.id, ...input.audit });
+      await this.audit.record({
+        actorId: input.actorId,
+        entity: 'lesson_recordings',
+        entityId: input.id,
+        ...input.audit,
+      });
     } catch (e) {
       this.log.error(`recording ${input.id} deleted but its audit row failed: ${String(e)}`);
     }

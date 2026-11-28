@@ -78,7 +78,9 @@ export function fakeFamilyMove(usable = false) {
 
 /** A policy over stored rows (legacy mode: these keys have no legacy switch, the row decides). */
 function policy(rows: Partial<NotificationRuleRow>[] = []): NotificationPolicy {
-  const map = new Map(rows.map((r) => [r.key ?? '', { channels: null, timing: null, number_id: null, ...r }]));
+  const map = new Map(
+    rows.map((r) => [r.key ?? '', { channels: null, timing: null, number_id: null, ...r }]),
+  );
   const reader = { snapshot: async () => ({ mode: 'legacy', rows: map, settings: {} }) };
   return new NotificationPolicy(reader as unknown as RulesReader);
 }

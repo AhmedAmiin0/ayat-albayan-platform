@@ -15,7 +15,12 @@ export class ChannelPeopleRepo {
 
   async students(ids: readonly string[]): Promise<ChannelStudent[]> {
     if (ids.length === 0) return [];
-    const data = rows(await this.db.from('students').select('id, name, code').in('id', [...ids]));
+    const data = rows(
+      await this.db
+        .from('students')
+        .select('id, name, code')
+        .in('id', [...ids]),
+    );
     return data.map((s) => ({ id: s.id, name: s.name, code: s.code ?? '' }));
   }
 
@@ -37,18 +42,22 @@ export class ChannelPeopleRepo {
     const names = new Map<string, string>(sales);
     for (const r of [guardians, students, teachers]) {
       if (r.error) throw pgError(r.error);
-      for (const row of r.data) if (row.profile_id) names.set(row.profile_id, 'display_name_ar' in row ? row.display_name_ar : row.name);
+      for (const row of r.data)
+        if (row.profile_id)
+          names.set(row.profile_id, 'display_name_ar' in row ? row.display_name_ar : row.name);
     }
     return names;
   }
 
   /** The salespeople among these profiles, by their profile name (never a phone or email). */
   private async salesNames(ids: readonly string[]): Promise<[string, string][]> {
-    const data = rows(await this.db
-      .from('profiles')
-      .select('id, full_name')
-      .in('id', [...ids])
-      .eq('role', 'sales'));
+    const data = rows(
+      await this.db
+        .from('profiles')
+        .select('id, full_name')
+        .in('id', [...ids])
+        .eq('role', 'sales'),
+    );
     return data.map((p): [string, string] => [p.id, p.full_name]);
   }
 
@@ -57,11 +66,13 @@ export class ChannelPeopleRepo {
    * (student_channels.assistant_id) while she is still a salesperson; null when free.
    */
   async assistantId(studentId: string): Promise<string | null> {
-    const data = maybe(await this.db
-      .from('student_channels')
-      .select('assistant_id')
-      .eq('student_id', studentId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('student_channels')
+        .select('assistant_id')
+        .eq('student_id', studentId)
+        .maybeSingle(),
+    );
     const id = data?.assistant_id;
     if (!id) return null;
     return (await this.salesNames([id])).length > 0 ? id : null;

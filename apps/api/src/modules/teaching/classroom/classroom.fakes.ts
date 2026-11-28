@@ -30,12 +30,36 @@ export const OPEN = new Date('2026-10-05T16:05:00Z');
 export const EARLY = new Date('2026-10-05T15:00:00Z');
 export const CLOSED = new Date('2026-10-05T19:30:00Z');
 
-export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
-export const TEACHER: AuthUser = { id: 'b0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
-export const OTHER_TEACHER: AuthUser = { id: 'b0000000-0000-4000-8000-000000000003', email: null, role: 'teacher' };
-export const ASSISTANT: AuthUser = { id: 'd0000000-0000-4000-8000-000000000005', email: null, role: 'assistant' };
-export const SALES: AuthUser = { id: 'e0000000-0000-4000-8000-000000000006', email: null, role: 'sales' };
-export const GUARDIAN: AuthUser = { id: 'c0000000-0000-4000-8000-000000000004', email: null, role: 'guardian' };
+export const ADMIN: AuthUser = {
+  id: 'a0000000-0000-4000-8000-000000000001',
+  email: null,
+  role: 'admin',
+};
+export const TEACHER: AuthUser = {
+  id: 'b0000000-0000-4000-8000-000000000002',
+  email: null,
+  role: 'teacher',
+};
+export const OTHER_TEACHER: AuthUser = {
+  id: 'b0000000-0000-4000-8000-000000000003',
+  email: null,
+  role: 'teacher',
+};
+export const ASSISTANT: AuthUser = {
+  id: 'd0000000-0000-4000-8000-000000000005',
+  email: null,
+  role: 'assistant',
+};
+export const SALES: AuthUser = {
+  id: 'e0000000-0000-4000-8000-000000000006',
+  email: null,
+  role: 'sales',
+};
+export const GUARDIAN: AuthUser = {
+  id: 'c0000000-0000-4000-8000-000000000004',
+  email: null,
+  role: 'guardian',
+};
 
 export const linkRow = (over: Partial<JoinLinkRow> = {}): JoinLinkRow => ({
   id: '00000000-0000-4000-8000-0000000000f1',
@@ -70,13 +94,28 @@ export function queries() {
   };
 }
 
-type Claims = {
-  iss: string; sub: string; name: string; nbf: number; exp: number; metadata?: string;
-  video: { roomJoin: boolean; room: string; canPublish: boolean; canSubscribe: boolean; canPublishData: boolean; canPublishSources?: string[] };
-};
+interface Claims {
+  iss: string;
+  sub: string;
+  name: string;
+  nbf: number;
+  exp: number;
+  metadata?: string;
+  video: {
+    roomJoin: boolean;
+    room: string;
+    canPublish: boolean;
+    canSubscribe: boolean;
+    canPublishData: boolean;
+    canPublishSources?: string[];
+  };
+}
 
 /** Decodes a join token and checks its HS256 signature against `secret`. */
-export function decode(token: string, secret = CONFIG.apiSecret): Claims & { validSignature: boolean } {
+export function decode(
+  token: string,
+  secret = CONFIG.apiSecret,
+): Claims & { validSignature: boolean } {
   const [head = '', body = '', sig = ''] = token.split('.');
   const expected = createHmac('sha256', secret).update(`${head}.${body}`).digest('base64url');
   const claims: Claims = JSON.parse(Buffer.from(body, 'base64url').toString('utf8'));

@@ -7,7 +7,7 @@ import { planBooking, type Plan, type PlanRule } from './booking.plan';
 import { httpError } from '@/common/http/errors';
 
 export type SeriesRule = PlanRule & Pick<BookingRequest, 'dayTimes'>;
-type SeriesInput = {
+interface SeriesInput {
   rule: SeriesRule;
   now: Date;
   horizonWeeks: number;
@@ -17,7 +17,7 @@ type SeriesInput = {
    * checked now whatever the horizon. Absent = open-ended.
    */
   endsOn?: string | null | undefined;
-};
+}
 
 const isoDay = (day: number) => new Date(day).toISOString().slice(0, 10);
 
@@ -30,7 +30,9 @@ function groupsOf(rule: SeriesRule): TimeGroup[] {
 /** The plan cut at endsOn: timing.ends_on = endsOn, later occurrences dropped. */
 function capped(plan: Plan, endsOn: string): Plan {
   const { tz } = plan.timing;
-  const occurrences = plan.occurrences.filter((o) => isoDay(dayInZone(o.starts_at.getTime(), tz)) <= endsOn);
+  const occurrences = plan.occurrences.filter(
+    (o) => isoDay(dayInZone(o.starts_at.getTime(), tz)) <= endsOn,
+  );
   return { timing: { ...plan.timing, ends_on: endsOn }, occurrences };
 }
 
@@ -42,7 +44,8 @@ function courseWeeks(input: SeriesInput, endsOn: string): number {
   return Math.max(input.horizonWeeks, (end - input.now.getTime()) / (7 * DAY_MS));
 }
 
-const overlaps = (a: Occurrence, b: Occurrence) => a.starts_at < b.ends_at && b.starts_at < a.ends_at;
+const overlaps = (a: Occurrence, b: Occurrence) =>
+  a.starts_at < b.ends_at && b.starts_at < a.ends_at;
 
 /**
  * 400 day_times_overlap when a lesson of one time runs into a lesson of another (e.g. across

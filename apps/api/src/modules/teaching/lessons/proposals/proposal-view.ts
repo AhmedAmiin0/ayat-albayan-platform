@@ -1,4 +1,8 @@
-import { proposalRequesterSchema, type LessonProposalView, type ProposalRequester } from '@ab/schedule';
+import {
+  proposalRequesterSchema,
+  type LessonProposalView,
+  type ProposalRequester,
+} from '@ab/schedule';
 import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 
 /** Postgres "2026-10-04 14:00:00+00" → "2026-10-04T14:00:00.000Z". */
@@ -9,7 +13,9 @@ const requesterSchema = proposalRequesterSchema.catch('teacher');
 const requesterOf = (value: string | undefined): ProposalRequester => requesterSchema.parse(value);
 
 /** The lesson's pending proposal (at most one, R-SCH-08), the teacher's or the family's. */
-export function pendingProposal(rows: LessonRow['proposals'] | undefined): LessonProposalView | null {
+export function pendingProposal(
+  rows: LessonRow['proposals'] | undefined,
+): LessonProposalView | null {
   const p = rows?.find((r) => r.status === 'pending');
   if (!p) return null;
   return {

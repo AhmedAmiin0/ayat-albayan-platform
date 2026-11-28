@@ -1,8 +1,14 @@
 import { courseTeacherChangeSchema, type DayTime } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { BODY, RULE_A, SUB_ID } from '@/modules/teaching/booking/course-change/course-change.fakes';
-import { changePayload, type PayloadInput } from '@/modules/teaching/booking/course-change/course-change.payload';
-import { assertStart, planChange } from '@/modules/teaching/booking/course-change/course-change.plan';
+import {
+  changePayload,
+  type PayloadInput,
+} from '@/modules/teaching/booking/course-change/course-change.payload';
+import {
+  assertStart,
+  planChange,
+} from '@/modules/teaching/booking/course-change/course-change.plan';
 
 // The same change, with the new rules' teacher.
 const NOW = new Date('2026-10-18T08:00:00Z');

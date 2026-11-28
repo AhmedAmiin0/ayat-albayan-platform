@@ -7,7 +7,7 @@ export type ProjectedRule = OccurrenceTiming & {
   student_ids: readonly string[];
 };
 
-export type ProjectionInput = {
+export interface ProjectionInput {
   rules: readonly ProjectedRule[];
   /** `${rule_id}:${local_date}` of every generated row of those rules (any status). */
   generated: ReadonlySet<string>;
@@ -16,8 +16,11 @@ export type ProjectionInput = {
   studentIds: readonly string[];
   /** Occurrences before this are history, not busy (a rule booked mid-day skips its past slot). */
   now: Date;
-};
-export type Projected = { teacher: BusyLesson[]; students: StudentBusyLesson[] };
+}
+export interface Projected {
+  teacher: BusyLesson[];
+  students: StudentBusyLesson[];
+}
 
 /** Longest lesson: an occurrence that starts this long before the span can still overlap it. */
 const LOOKBACK_MS = 3 * 60 * 60_000;

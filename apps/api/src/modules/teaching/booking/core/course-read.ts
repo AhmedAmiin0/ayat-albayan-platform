@@ -5,7 +5,7 @@ import { type DayTime, wallParts } from '@ab/schedule';
 // Rules sharing a subscription_id (migration 470); pure; local dates compare as strings.
 
 /** One schedule_rules row of a course, with its subscription's plan. */
-export type CourseRuleRow = {
+export interface CourseRuleRow {
   id: string;
   subscription_id: string;
   teacher_id: string;
@@ -21,7 +21,7 @@ export type CourseRuleRow = {
   sub: { package: PackageSize | null; lessons_total: number; lessons_used_before?: number };
   /** The course teacher's zone. */
   teacher: { tz: string } | null;
-};
+}
 
 const hhmm = (time: string) => time.slice(0, 5);
 
@@ -112,14 +112,14 @@ export function currentCourse(rows: readonly CourseRuleRow[], courses: readonly 
   return ahead[0]?.c ?? null;
 }
 
-type CourseFactsInput = {
+interface CourseFactsInput {
   rows: readonly CourseRuleRow[];
   now: Date;
   /** The newest unpaid / active subscription (the one the wizard books), if any. */
   subscriptionId: string | null;
   /** That subscription already has its course. */
   booked: boolean;
-};
+}
 
 /**
  * SalesCourseView.previous: the latest course of another subscription while the newest one has no

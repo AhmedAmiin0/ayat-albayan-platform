@@ -5,7 +5,11 @@ import type { SeriesRule } from '@/modules/teaching/booking/plan/booking.series-
 
 const WEEK = 7 * DAY_MS;
 
-type CourseEndInput = { rule: SeriesRule; now: Date; lessonsTotal: number };
+interface CourseEndInput {
+  rule: SeriesRule;
+  now: Date;
+  lessonsTotal: number;
+}
 
 /** Planned far enough to reach the N-th lesson whatever booking_horizon_weeks is. */
 export function plannedCourseStarts({ rule, now, lessonsTotal }: CourseEndInput): Date[] {

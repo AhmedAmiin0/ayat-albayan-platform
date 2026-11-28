@@ -10,7 +10,7 @@ const LESSON_EMBEDS =
 export const LESSON_SELECT = `${LESSON_COLUMNS}, ${LESSON_EMBEDS}` as const;
 
 /** What LESSON_SELECT returns (structural, so fakes in tests stay small). */
-export type LessonRow = {
+export interface LessonRow {
   id: string;
   rule_id: string | null;
   teacher_id: string;
@@ -33,7 +33,12 @@ export type LessonRow = {
   makeup_of_id?: string | null;
   /** The missed lesson a makeup replaces, and the makeups booked for this lesson's misses (one per student). */
   original?: { id: string; starts_at: string } | null;
-  makeups?: { id: string; starts_at: string; status: LessonStatus; makeup_student_id: string | null }[];
+  makeups?: {
+    id: string;
+    starts_at: string;
+    status: LessonStatus;
+    makeup_student_id: string | null;
+  }[];
   /** Clashes stored when the daily job / extend generated it (Conflict[] as jsonb), or null. */
   conflicts: Json | null;
   /** The last in-place time edit (R-SCH-11, migration 174) and the time it replaced; optional in test fakes. */
@@ -41,7 +46,13 @@ export type LessonRow = {
   time_edit_reason?: string | null;
   time_edit_was?: Json | null;
   /** meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in test fakes. */
-  teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz: string; meeting_mode?: string | null } | null;
+  teacher: {
+    id: string;
+    display_name_ar: string;
+    display_name_en: string | null;
+    tz: string;
+    meeting_mode?: string | null;
+  } | null;
   /** Rule days (kept by a series reschedule, R-SCH-07) and package (R-SCH-09). */
   rule?: { byday: number[]; package?: PackageSize | null; subscription_id?: string | null } | null;
   lesson_students: {
@@ -55,7 +66,10 @@ export type LessonRow = {
      * its first submit and family send (docs/46 B7).
      */
     report?: {
-      id: string; status: ReportStatus; submitted_at?: string | null; sent_at?: string | null;
+      id: string;
+      status: ReportStatus;
+      submitted_at?: string | null;
+      sent_at?: string | null;
     } | null;
   }[];
   /** The teacher's or the family's reschedule proposals (R-SCH-08); at most one is pending. */
@@ -68,6 +82,7 @@ export type LessonRow = {
     /** 'teacher' | 'family'; absent in older test fakes (the teacher's). */
     requested_by?: string;
   }[];
-};
+}
 
-export const studentIdsOf = (row: LessonRow): string[] => row.lesson_students.map((s) => s.student_id);
+export const studentIdsOf = (row: LessonRow): string[] =>
+  row.lesson_students.map((s) => s.student_id);

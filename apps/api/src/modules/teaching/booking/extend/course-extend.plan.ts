@@ -51,7 +51,10 @@ const later = (a: string, b: string): string => (a > b ? a : b);
  */
 function latestSet(rules: readonly ExtendRuleRow[]): ExtendRuleRow[] {
   const capped = rules.filter((r) => r.ends_on !== null);
-  const end = capped.map((r) => r.ends_on ?? '').sort().at(-1);
+  const end = capped
+    .map((r) => r.ends_on ?? '')
+    .sort()
+    .at(-1);
   return capped.filter((r) => r.ends_on === end);
 }
 

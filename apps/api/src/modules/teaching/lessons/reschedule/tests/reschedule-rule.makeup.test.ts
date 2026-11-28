@@ -4,7 +4,13 @@ import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/co
 import { ruleRow } from '@/modules/teaching/scheduling/scheduling.fakes';
 import type { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
 import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import { ADMIN, fakeStore, LESSON_ID, lessonRow, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import {
+  ADMIN,
+  fakeStore,
+  LESSON_ID,
+  lessonRow,
+  TEACHER_ID,
+} from '@/modules/teaching/lessons/lessons.fakes';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { RescheduleRuleService } from '@/modules/teaching/lessons/reschedule/reschedule-rule.service';
 import { RulePlanner } from '@/modules/teaching/lessons/reschedule/rule-planner';
@@ -12,12 +18,26 @@ import { RulePlanner } from '@/modules/teaching/lessons/reschedule/rule-planner'
 const rules = { rule: vi.fn() };
 const teachers = { get: vi.fn() };
 const checker = { check: vi.fn() };
-const NEW_RULE = { teacherId: TEACHER_ID, byday: [1], startTimeLocal: '18:30', tz: 'Asia/Riyadh', durationMin: 60 as const, startsOn: '2026-10-12' };
+const NEW_RULE = {
+  teacherId: TEACHER_ID,
+  byday: [1],
+  startTimeLocal: '18:30',
+  tz: 'Asia/Riyadh',
+  durationMin: 60 as const,
+  startsOn: '2026-10-12',
+};
 
 function setup(makeupOf: string | null) {
   const deps = fakeStore(lessonRow({ makeup_of_id: makeupOf }));
-  const planner = new RulePlanner(rules as unknown as ScheduleRepo, teachers as unknown as TeachersRepo, readerOf(LessonsSettings, { booking_horizon_weeks: 2 }));
-  return { ...deps, service: new RescheduleRuleService(deps.store, planner, checker as unknown as ConflictChecker) };
+  const planner = new RulePlanner(
+    rules as unknown as ScheduleRepo,
+    teachers as unknown as TeachersRepo,
+    readerOf(LessonsSettings, { booking_horizon_weeks: 2 }),
+  );
+  return {
+    ...deps,
+    service: new RescheduleRuleService(deps.store, planner, checker as unknown as ConflictChecker),
+  };
 }
 
 describe('RescheduleRuleService — a makeup moves one lesson at a time (R-SCH-10)', () => {
@@ -32,7 +52,9 @@ describe('RescheduleRuleService — a makeup moves one lesson at a time (R-SCH-1
   it("scope 'rule' on a makeup → 400 makeup_scope_one, nothing written (the new rule would drop the link)", async () => {
     const { service, writer } = setup('77777777-7777-4777-8777-777777777777');
     const body = { scope: 'rule' as const, newRule: NEW_RULE };
-    await expect(service.reschedule({ lessonId: LESSON_ID, body, actor: ADMIN })).rejects.toMatchObject({
+    await expect(
+      service.reschedule({ lessonId: LESSON_ID, body, actor: ADMIN }),
+    ).rejects.toMatchObject({
       response: { code: 'makeup_scope_one' },
       status: 400,
     });
@@ -43,7 +65,9 @@ describe('RescheduleRuleService — a makeup moves one lesson at a time (R-SCH-1
     const { service, writer, queries } = setup(null);
     queries.openOfRule.mockResolvedValue([]);
     const body = { scope: 'rule' as const, newRule: NEW_RULE };
-    await expect(service.reschedule({ lessonId: LESSON_ID, body, actor: ADMIN })).resolves.toBeTypeOf('string');
+    await expect(
+      service.reschedule({ lessonId: LESSON_ID, body, actor: ADMIN }),
+    ).resolves.toBeTypeOf('string');
     expect(writer.apply).toHaveBeenCalledTimes(1);
   });
 });

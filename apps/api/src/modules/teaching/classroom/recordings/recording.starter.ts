@@ -3,8 +3,15 @@ import { MINIO_MARK, storageKeyOf } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { RECORDING_CONFIG, type RecordingConfig } from '@/modules/teaching/classroom/classroom.config';
-import { egressIdOf, egressRequest, recordingPath } from '@/modules/teaching/classroom/livekit/egress-request';
+import {
+  RECORDING_CONFIG,
+  type RecordingConfig,
+} from '@/modules/teaching/classroom/classroom.config';
+import {
+  egressIdOf,
+  egressRequest,
+  recordingPath,
+} from '@/modules/teaching/classroom/livekit/egress-request';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { egressAnswer } from '@/modules/teaching/classroom/livekit/livekit-twirp';
 import { RecordingRepo } from './recording.repo';
@@ -60,7 +67,12 @@ export class RecordingStarter {
     return this.start({ id: claim, room: roomNameOf(target), filePath, s3 });
   }
 
-  private async start(input: { id: string; room: string; filePath: string; s3: RecordingConfig }): Promise<StartOutcome> {
+  private async start(input: {
+    id: string;
+    room: string;
+    filePath: string;
+    s3: RecordingConfig;
+  }): Promise<StartOutcome> {
     const { room, s3 } = input;
     try {
       if (!s3) return 'off';
@@ -81,10 +93,13 @@ export class RecordingStarter {
     } catch (e) {
       this.log.warn(`recording did not start for ${room}: ${errorMessage(e)}`);
       await this.queries
-        .finish(input.id, { status: 'failed', endedAt: new Date().toISOString(), error: errorMessage(e).slice(0, 500) })
+        .finish(input.id, {
+          status: 'failed',
+          endedAt: new Date().toISOString(),
+          error: errorMessage(e).slice(0, 500),
+        })
         .catch(() => undefined);
       return 'failed';
     }
   }
 }
-

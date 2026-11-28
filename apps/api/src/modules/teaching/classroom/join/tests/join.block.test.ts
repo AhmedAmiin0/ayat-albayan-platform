@@ -1,11 +1,24 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
-import { ADMIN, LESSON_ID, LINK_TOKEN, linkRow, OPEN, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  ADMIN,
+  LESSON_ID,
+  LINK_TOKEN,
+  linkRow,
+  OPEN,
+  queries,
+  TEACHER,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import { GuestJoinService } from '@/modules/teaching/classroom/join/guest-join.service';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
 import { resolverOf } from '@/modules/teaching/classroom/family-link/family-link.fakes';
-import { admissionOf, moderation, recorder, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  admissionOf,
+  moderation,
+  recorder,
+  rolesOf,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RoomJoinService } from '@/modules/teaching/classroom/join/room-join.service';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
@@ -13,18 +26,20 @@ import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settin
 let q: ReturnType<typeof queries>;
 let mod: ReturnType<typeof moderation>;
 const deps = () => ({ q, mod, rec: recorder() });
-const staffJoin = (user = TEACHER) => new RoomJoinService(rolesOf(deps()), admissionOf(deps()), readerOf(ClassroomSettings)).join({ user, lessonId: LESSON_ID }, OPEN);
+const staffJoin = (user = TEACHER) =>
+  new RoomJoinService(rolesOf(deps()), admissionOf(deps()), readerOf(ClassroomSettings)).join(
+    { user, lessonId: LESSON_ID },
+    OPEN,
+  );
 const guestJoin = () =>
   new GuestJoinService(
     q as unknown as ClassroomRepo,
     new PublicJoinLimit(),
     admissionOf(deps()),
     resolverOf(q),
-  ).join(
-    { linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } },
-    OPEN,
-  );
-const code = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+  ).join({ linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } }, OPEN);
+const code = async (p: Promise<unknown>) =>
+  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = queries();
@@ -51,7 +66,9 @@ describe('a removed principal cannot come back to that lesson', () => {
   });
 
   it('a lesson the login has no role in is refused before any block lookup', async () => {
-    await expect(staffJoin({ id: 'x', email: null, role: 'guardian' })).rejects.toBeInstanceOf(HttpException);
+    await expect(staffJoin({ id: 'x', email: null, role: 'guardian' })).rejects.toBeInstanceOf(
+      HttpException,
+    );
     expect(mod.isBlocked).not.toHaveBeenCalled();
   });
 });

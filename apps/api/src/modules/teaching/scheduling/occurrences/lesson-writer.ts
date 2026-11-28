@@ -9,13 +9,21 @@ import { callRpc } from '@/modules/teaching/scheduling/rpc';
 import { done } from '@/common/db/errors';
 
 /** One occurrence to persist for a rule (UTC ISO instants + the link copied onto the lesson). */
-export type OccurrenceRow = { starts_at: string; ends_at: string; meeting_link: string | null };
-export type GeneratedLesson = { id: string; starts_at: string; ends_at: string };
-export type GenerateInput = {
+export interface OccurrenceRow {
+  starts_at: string;
+  ends_at: string;
+  meeting_link: string | null;
+}
+export interface GeneratedLesson {
+  id: string;
+  starts_at: string;
+  ends_at: string;
+}
+export interface GenerateInput {
   ruleId: string;
   lessons: readonly OccurrenceRow[];
   actorId: string | null;
-};
+}
 
 const generated = z.array(z.object({ id: z.string(), starts_at: z.string(), ends_at: z.string() }));
 
@@ -47,7 +55,10 @@ export class LessonWriter {
    * Stores the clashes of freshly generated lessons on them (lessons.conflicts, R-SCH-04) so the
    * schedule shows what the daily job booked over a conflict. Conflicts match lessons by start.
    */
-  async flagConflicts(lessons: readonly GeneratedLesson[], conflicts: readonly Conflict[]): Promise<void> {
+  async flagConflicts(
+    lessons: readonly GeneratedLesson[],
+    conflicts: readonly Conflict[],
+  ): Promise<void> {
     const byStart = new Map<string, Conflict[]>();
     for (const c of conflicts) byStart.set(c.startsAt, [...(byStart.get(c.startsAt) ?? []), c]);
     const flagged = lessons.flatMap((l) => {
@@ -64,12 +75,16 @@ export class LessonWriter {
    * Its booking_confirmation* rows only while that notification rule is on (gateConfirmations).
    */
   async apply(change: ChangeSet): Promise<void> {
-    const p = change.messages ? { ...change, messages: await gateConfirmations(this.policy, change.messages) } : change;
+    const p = change.messages
+      ? { ...change, messages: await gateConfirmations(this.policy, change.messages) }
+      : change;
     await callRpc(this.db, 'apply_lesson_changes', { p });
   }
 
   /** Migration 174: one lesson's time in place; 409 stale_time or slot_taken. */
   async retime(change: TimeEditChange): Promise<void> {
-    await callRpc(this.db, 'edit_lesson_time', { p: { ...change, messages: await gateConfirmations(this.policy, change.messages) } });
+    await callRpc(this.db, 'edit_lesson_time', {
+      p: { ...change, messages: await gateConfirmations(this.policy, change.messages) },
+    });
   }
 }

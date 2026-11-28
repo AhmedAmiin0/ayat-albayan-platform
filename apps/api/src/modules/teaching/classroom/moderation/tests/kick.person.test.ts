@@ -3,7 +3,13 @@ import { ADMIN, CONFIG, LESSON_ID, queries } from '@/modules/teaching/classroom/
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import { KickService } from '@/modules/teaching/classroom/moderation/kick.service';
-import { http, moderation, participantRow, roomPersons, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  http,
+  moderation,
+  participantRow,
+  roomPersons,
+  rolesOf,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import type { ModerationRepo } from '@/modules/teaching/classroom/moderation/moderation.repo';
 import type { RoomPersonRepo } from '@/modules/teaching/classroom/moderation/room-person.repo';
 

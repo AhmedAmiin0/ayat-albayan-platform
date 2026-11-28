@@ -22,7 +22,11 @@ export class StudentLinkPublicController {
   /** The guest join of the lesson whose room is open now. */
   @Post(':token/join')
   @HttpCode(200)
-  join(@Param('token') token: string, @Body() body: unknown, @Ip() ip: string): Promise<RoomJoinResult> {
+  join(
+    @Param('token') token: string,
+    @Body() body: unknown,
+    @Ip() ip: string,
+  ): Promise<RoomJoinResult> {
     return this.links.join({ token, ip, body });
   }
 }
@@ -37,7 +41,10 @@ export class StudentLinkAdminController {
 
   @Post()
   @HttpCode(200)
-  issue(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<StudentJoinLinkUrl> {
+  issue(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<StudentJoinLinkUrl> {
     return this.links.issue({ studentId: id, actorId: user.id });
   }
 }

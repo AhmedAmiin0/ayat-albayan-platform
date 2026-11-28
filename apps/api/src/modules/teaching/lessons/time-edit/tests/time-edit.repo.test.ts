@@ -4,11 +4,21 @@ import { TimeEditRepo } from '@/modules/teaching/lessons/time-edit/time-edit.rep
 
 describe('TimeEditQueries.payoutStatus (R-SCH-11)', () => {
   it('reads the payout of that teacher for the first of the month; no row → null', async () => {
-    const { db, calls } = fakeDb({ teacher_payouts: [{ data: { status: 'approved' } }, { data: null }] });
+    const { db, calls } = fakeDb({
+      teacher_payouts: [{ data: { status: 'approved' } }, { data: null }],
+    });
     const q = new TimeEditRepo(db);
     expect(await q.payoutStatus('t1', '2026-10')).toBe('approved');
-    expect(calls).toContainEqual({ table: 'teacher_payouts', method: 'eq', args: ['teacher_id', 't1'] });
-    expect(calls).toContainEqual({ table: 'teacher_payouts', method: 'eq', args: ['month', '2026-10-01'] });
+    expect(calls).toContainEqual({
+      table: 'teacher_payouts',
+      method: 'eq',
+      args: ['teacher_id', 't1'],
+    });
+    expect(calls).toContainEqual({
+      table: 'teacher_payouts',
+      method: 'eq',
+      args: ['month', '2026-10-01'],
+    });
     expect(await q.payoutStatus('t1', '2026-11')).toBeNull();
   });
 

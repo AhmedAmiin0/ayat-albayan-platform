@@ -6,12 +6,7 @@ import {
 } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { badRequest, conflict } from '@/common/http/errors';
-import {
-  BUCKETS,
-  isPathOf,
-  SIGNED_URL_SECONDS,
-  uploadName,
-} from '@/common/storage/storage.paths';
+import { BUCKETS, isPathOf, SIGNED_URL_SECONDS, uploadName } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import type { ChannelActor } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelRepo } from '@/modules/teaching/student-channels/channel.repo';

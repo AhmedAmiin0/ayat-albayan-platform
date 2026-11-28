@@ -5,7 +5,14 @@ import type { TeachersRepo } from '@/modules/people/teachers';
 import { LessonAssetsService } from './lesson-assets.service';
 import type { LessonAssetsRepo } from './lesson-assets.repo';
 import { LessonFilesAccess } from './lesson-files.access';
-import { FILE, fileRow, LESSON, lessonRef, OTHER_TEACHER, teachersFake } from './lesson-files.fakes';
+import {
+  FILE,
+  fileRow,
+  LESSON,
+  lessonRef,
+  OTHER_TEACHER,
+  teachersFake,
+} from './lesson-files.fakes';
 import type { LessonFilesRepo } from './lesson-files.repo';
 import { LessonFilesService } from './lesson-files.service';
 
@@ -19,7 +26,10 @@ const files = {
 };
 const assets = { students: vi.fn(), reports: vi.fn(), recordings: vi.fn() };
 const storage = {
-  signedUpload: vi.fn(), exists: vi.fn(), remove: vi.fn(), signedDownload: vi.fn(),
+  signedUpload: vi.fn(),
+  exists: vi.fn(),
+  remove: vi.fn(),
+  signedDownload: vi.fn(),
 };
 const upload = { mime: 'application/pdf' as const, size: 10, kind: 'homework' as const };
 

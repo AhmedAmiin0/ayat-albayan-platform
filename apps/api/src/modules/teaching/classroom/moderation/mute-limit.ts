@@ -21,7 +21,10 @@ export class MuteLimit {
   assert(user: Pick<AuthUser, 'id' | 'isTest'>, now = Date.now()): void {
     if (canSkip('rate_limits', userOnlyFlags(user.isTest))) return;
     if (!this.perUser.allow(user.id, now)) {
-      throw new HttpException({ code: 'too_many_requests', message: 'too_many_requests' }, HttpStatus.TOO_MANY_REQUESTS);
+      throw new HttpException(
+        { code: 'too_many_requests', message: 'too_many_requests' },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
     }
   }
 }

@@ -5,13 +5,13 @@ import type { UtcWindow } from '@ab/schedule';
 import { readAll } from '@/common/db/read-all';
 import { generatedKey, projectRules, type Projected, type ProjectedRule } from './rule-projection';
 
-export type ProjectionQuery = {
+export interface ProjectionQuery {
   teacherId: string;
   studentIds: readonly string[];
   span: UtcWindow;
   /** Rules that must not count (the rule being moved or topped up). */
   excludeRuleIds: readonly string[];
-};
+}
 
 const DAY_MS = 86_400_000;
 const RULE_COLUMNS =
@@ -26,13 +26,26 @@ export class RuleProjectionRepo {
     const skip = new Set(q.excludeRuleIds);
     const rules = (await this.rules(q)).filter((r) => !skip.has(r.id));
     if (rules.length === 0) return { teacher: [], students: [] };
-    const generated = await this.generated(rules.map((r) => r.id), q.span);
-    return projectRules({ rules, generated, span: q.span, teacherId: q.teacherId, studentIds: q.studentIds, now });
+    const generated = await this.generated(
+      rules.map((r) => r.id),
+      q.span,
+    );
+    return projectRules({
+      rules,
+      generated,
+      span: q.span,
+      teacherId: q.teacherId,
+      studentIds: q.studentIds,
+      now,
+    });
   }
 
   private async rules(q: ProjectionQuery): Promise<ProjectedRule[]> {
     const ids = await this.studentRuleIds(q.studentIds);
-    const owner = ids.length > 0 ? `teacher_id.eq.${q.teacherId},id.in.(${ids.join(',')})` : `teacher_id.eq.${q.teacherId}`;
+    const owner =
+      ids.length > 0
+        ? `teacher_id.eq.${q.teacherId},id.in.(${ids.join(',')})`
+        : `teacher_id.eq.${q.teacherId}`;
     const { data, error } = await this.db
       .from('schedule_rules')
       .select(RULE_COLUMNS)
@@ -73,6 +86,10 @@ export class RuleProjectionRepo {
         .order('id')
         .range(from, to),
     );
-    return new Set(rows.flatMap((r) => (r.rule_id && r.local_date ? [generatedKey(r.rule_id, r.local_date)] : [])));
+    return new Set(
+      rows.flatMap((r) =>
+        r.rule_id && r.local_date ? [generatedKey(r.rule_id, r.local_date)] : [],
+      ),
+    );
   }
 }

@@ -11,10 +11,21 @@ import { SalesBookingService } from '@/modules/teaching/booking/sales/booking/sa
 const S1 = 'c0000000-0000-4000-8000-000000000001';
 const USER: AuthUser = { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'sales' };
 const REQ = bookingRequestSchema.parse({
-  kind: 'package', package: '8', studentIds: [S1], teacherId: 'd0000000-0000-4000-8000-000000000001',
-  byday: [0, 4], startTimeLocal: '17:00', tz: 'Asia/Riyadh', durationMin: 45, startsOn: '2026-11-08',
+  kind: 'package',
+  package: '8',
+  studentIds: [S1],
+  teacherId: 'd0000000-0000-4000-8000-000000000001',
+  byday: [0, 4],
+  startTimeLocal: '17:00',
+  tz: 'Asia/Riyadh',
+  durationMin: 45,
+  startsOn: '2026-11-08',
 });
-const OPTS = { invoiceWaived: true, endsOn: '2026-12-03', course: { package: '8', subscriptionId: 'sub1' } };
+const OPTS = {
+  invoiceWaived: true,
+  endsOn: '2026-12-03',
+  course: { package: '8', subscriptionId: 'sub1' },
+};
 
 function setup(held: boolean) {
   const scope = { of: vi.fn(async () => null) };
@@ -40,7 +51,10 @@ describe('SalesBookingService.book — a held package', () => {
     const e: unknown = await t.service.book(REQ, salesMoney).catch((err: unknown) => err);
     expect(e).toBeInstanceOf(HttpException);
     const res = e instanceof HttpException ? e.getResponse() : null;
-    expect(res).toMatchObject({ code: 'course_held', message: expect.stringContaining('بانتظار الدفع') });
+    expect(res).toMatchObject({
+      code: 'course_held',
+      message: expect.stringContaining('بانتظار الدفع'),
+    });
     expect(t.course.held).toHaveBeenCalledWith('sub1');
     expect(t.booking.book).not.toHaveBeenCalled();
   });

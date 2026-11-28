@@ -11,7 +11,7 @@ import { MINUTE_MS } from '@ab/time';
 /** The shortest lesson: a shorter gap can never be booked, so it is not shown as free. */
 const MIN_GAP = Math.min(...DURATIONS) * MINUTE_MS;
 
-type TeacherSpansInput = {
+interface TeacherSpansInput {
   from: Date;
   to: Date;
   /** The teacher's weekly rows, wall-clock in their own tz (teacher_availability). */
@@ -20,9 +20,12 @@ type TeacherSpansInput = {
   timeOff: readonly TimeRange[];
   /** The teacher's occupying lessons (OCCUPYING_LESSON_STATUSES), UTC. */
   busy: readonly TimeRange[];
-};
+}
 
-type TeacherSpans = { windows: Interval[]; free: Interval[] };
+interface TeacherSpans {
+  windows: Interval[];
+  free: Interval[];
+}
 
 const toInterval = (r: TimeRange): Interval => ({ start: r.start.getTime(), end: r.end.getTime() });
 

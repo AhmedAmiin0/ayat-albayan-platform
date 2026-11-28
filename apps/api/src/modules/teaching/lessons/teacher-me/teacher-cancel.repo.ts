@@ -2,8 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pgError } from '@/common/db/errors';
 
-const ids = (values: readonly (string | null)[]): string[] =>
-  [...new Set(values.filter((v): v is string => v !== null))];
+const ids = (values: readonly (string | null)[]): string[] => [
+  ...new Set(values.filter((v): v is string => v !== null)),
+];
 
 /**
  * Who follows the students of a cancelled lesson (docs/46 D3): the assistant who brought each

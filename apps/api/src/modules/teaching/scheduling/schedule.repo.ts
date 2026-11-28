@@ -22,11 +22,9 @@ export class ScheduleRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async rule(id: string): Promise<RuleWithLinks | null> {
-    const data = maybe(await this.db
-      .from('schedule_rules')
-      .select(RULE_SELECT)
-      .eq('id', id)
-      .maybeSingle());
+    const data = maybe(
+      await this.db.from('schedule_rules').select(RULE_SELECT).eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
@@ -35,12 +33,14 @@ export class ScheduleRepo {
    * stays active until then, R-SCH-07). Returns how many were ended.
    */
   async endExpired(before: string): Promise<number> {
-    const data = rows(await this.db
-      .from('schedule_rules')
-      .update({ status: 'ended' })
-      .eq('status', 'active')
-      .lt('ends_on', before)
-      .select('id'));
+    const data = rows(
+      await this.db
+        .from('schedule_rules')
+        .update({ status: 'ended' })
+        .eq('status', 'active')
+        .lt('ends_on', before)
+        .select('id'),
+    );
     return data.length;
   }
 

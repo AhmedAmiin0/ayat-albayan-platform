@@ -2,13 +2,25 @@ import { feedbackEligible, type FeedbackRequest, type FeedbackRequestResult } fr
 import { Inject, Injectable } from '@nestjs/common';
 import { conflict, httpError, notFound } from '@/common/http/errors';
 import { FEEDBACK_CONFIG, type FeedbackConfig } from '@/modules/teaching/feedback/feedback.config';
-import { FeedbackRepo, type FeedbackRow, type RequestContext } from '@/modules/teaching/feedback/feedback.repo';
+import {
+  FeedbackRepo,
+  type FeedbackRow,
+  type RequestContext,
+} from '@/modules/teaching/feedback/feedback.repo';
 import { FEEDBACK_TEMPLATE, FeedbackSender } from './feedback.sender';
 import { hashToken, signToken } from '@/modules/teaching/feedback/public/feedback.token';
 import { issueLink } from '@/modules/teaching/feedback/links/feedback.links';
 
-type RequestInput = { lessonId: string; body: FeedbackRequest; actorId: string };
-type Link = { row: FeedbackRow; token: string; exp: number };
+interface RequestInput {
+  lessonId: string;
+  body: FeedbackRequest;
+  actorId: string;
+}
+interface Link {
+  row: FeedbackRow;
+  token: string;
+  exp: number;
+}
 
 /** Explicit admin send, never a job; dedup key carries link expiry so a re-press replays. */
 @Injectable()

@@ -10,15 +10,26 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
     const { payload } = await planner.prepare(leadRequest());
     expect(queries.guardianByPhone).toHaveBeenCalledWith('+966501234567');
     expect(payload.student_ids).toEqual([]);
-    expect(payload.new_guardian).toMatchObject({ name: 'أم ريم', phone_e164: '+966501234567', tz: 'Asia/Riyadh' });
-    expect(payload.new_student).toMatchObject({ name: 'رِيم', name_normalized: 'ريم', status: 'trial', program: 'quran' });
+    expect(payload.new_guardian).toMatchObject({
+      name: 'أم ريم',
+      phone_e164: '+966501234567',
+      tz: 'Asia/Riyadh',
+    });
+    expect(payload.new_student).toMatchObject({
+      name: 'رِيم',
+      name_normalized: 'ريم',
+      status: 'trial',
+      program: 'quran',
+    });
     expect(payload.lessons.map((l) => l.starts_at)).toEqual(['2026-10-04T14:00:00.000Z']);
     expect(payload.rule).toMatchObject({ package: 'trial', ends_on: '2026-10-04' });
   });
 
   it('a trial booking registers the new student as trial; an explicit other status is kept (owner 2026-10-15)', async () => {
     const { planner } = fakePlanner();
-    const kept = await planner.prepare(leadRequest({ newStudent: { name: 'رِيم', tz: 'Asia/Riyadh', status: 'paused' } }));
+    const kept = await planner.prepare(
+      leadRequest({ newStudent: { name: 'رِيم', tz: 'Asia/Riyadh', status: 'paused' } }),
+    );
     expect(kept.payload.new_student?.status).toBe('paused');
   });
 
@@ -39,7 +50,9 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
   it('reuses the guardian that already has this phone (id and time zone)', async () => {
     const { planner, queries } = fakePlanner();
     queries.guardianByPhone.mockResolvedValue({ id: IDS.g2, tz: 'Africa/Cairo', students: [] });
-    const { payload } = await planner.prepare(leadRequest({ meetingLink: 'https://meet.google.com/abc-defg-hij' }));
+    const { payload } = await planner.prepare(
+      leadRequest({ meetingLink: 'https://meet.google.com/abc-defg-hij' }),
+    );
     expect(payload.messages[0]).toMatchObject({
       guardian_id: IDS.g2,
       template_key: 'booking_confirmation_meet',
@@ -51,7 +64,11 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
 
   it("the new student's own link is used for a one-student booking", async () => {
     const { planner } = fakePlanner();
-    const newStudent = { name: 'رِيم', tz: 'Asia/Riyadh', meeting_link_override: 'https://meet.google.com/own-link-xyz' };
+    const newStudent = {
+      name: 'رِيم',
+      tz: 'Asia/Riyadh',
+      meeting_link_override: 'https://meet.google.com/own-link-xyz',
+    };
     const { payload } = await planner.prepare(leadRequest({ newStudent }));
     expect(payload.lessons[0]?.meeting_link).toBe('https://meet.google.com/own-link-xyz');
     expect(payload.rule.meeting_link).toBeNull();
@@ -59,7 +76,9 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
 
   it('a paid package from a fresh lead books and converts it (subscribe from the chat)', async () => {
     const { planner } = fakePlanner();
-    const { payload } = await planner.prepare(leadRequest({ package: '8', invoice: { source: 'upload', path: 'req/a.png' } }));
+    const { payload } = await planner.prepare(
+      leadRequest({ package: '8', invoice: { source: 'upload', path: 'req/a.png' } }),
+    );
     expect(payload.lead).toEqual({ id: IDS.lead, from: 'new', to: 'converted' });
     expect(payload.new_student?.status).toBe('new');
     expect(payload.lessons).toHaveLength(5);

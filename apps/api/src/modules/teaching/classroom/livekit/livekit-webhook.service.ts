@@ -1,5 +1,9 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from '@/modules/teaching/classroom/classroom.config';
+import {
+  CLASSROOM_CONFIG,
+  classroomConfigOf,
+  type ClassroomConfigSource,
+} from '@/modules/teaching/classroom/classroom.config';
 import { egressOutcome, verifyWebhook } from './livekit-webhook';
 import { participantEventOf, type ParticipantEvent } from './livekit-webhook.room';
 import { RoomPresenceService } from '@/modules/teaching/classroom/live/room-presence.service';
@@ -31,7 +35,12 @@ export class LivekitWebhookService {
     const outcome = egressOutcome(event, now);
     if (!outcome) return;
     const { egressId, status, endedAt, error, sizeBytes } = outcome;
-    await this.recordings.finishByEgress(egressId, { status, endedAt, error, ...(sizeBytes !== undefined && { sizeBytes }) });
+    await this.recordings.finishByEgress(egressId, {
+      status,
+      endedAt,
+      error,
+      ...(sizeBytes !== undefined && { sizeBytes }),
+    });
     await this.lifecycle.afterEgressEnded({ room: outcome.room, status: outcome.status });
   }
 

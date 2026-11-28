@@ -31,18 +31,28 @@ export class FeedbackReadService {
   async list(filter: FeedbackQuery, page: PageQuery): Promise<Page<FeedbackRowView>> {
     const { rows, total } = await this.queries.page({ filter, page });
     const people = await this.people(rows);
-    return { items: rows.map((r) => toRowView(r, people)), total, page: page.page, pageSize: page.pageSize };
+    return {
+      items: rows.map((r) => toRowView(r, people)),
+      total,
+      page: page.page,
+      pageSize: page.pageSize,
+    };
   }
 
   /** Admin: average, count and recommend share per teacher. */
   async summary(): Promise<TeacherFeedbackSummary[]> {
     const averages = await this.queries.averages();
     const people = peopleOf([], await this.queries.teachers(averages.map((a) => a.teacher_id)));
-    return averages.map((a) => toSummary(a, people)).sort((a, b) => b.avg_rating - a.avg_rating || b.n - a.n);
+    return averages
+      .map((a) => toSummary(a, people))
+      .sort((a, b) => b.avg_rating - a.avg_rating || b.n - a.n);
   }
 
   /** GET /teachers/me/feedback: own rows (sorted/filtered like the admin's) plus the teacher's own average. The login is the scope. */
-  async mine(user: AuthUser, input: { filter: FeedbackQuery; page: PageQuery }): Promise<TeacherFeedbackView> {
+  async mine(
+    user: AuthUser,
+    input: { filter: FeedbackQuery; page: PageQuery },
+  ): Promise<TeacherFeedbackView> {
     const { page } = input;
     const teacherId = await this.teachers.idByProfile(user.id);
     if (!teacherId) throw notFound('teacher_not_linked');
@@ -56,7 +66,13 @@ export class FeedbackReadService {
       total,
       page: page.page,
       pageSize: page.pageSize,
-      average: average ? { avg_rating: average.avg_rating, n: average.n, recommend_yes_pct: average.recommend_yes_pct } : null,
+      average: average
+        ? {
+            avg_rating: average.avg_rating,
+            n: average.n,
+            recommend_yes_pct: average.recommend_yes_pct,
+          }
+        : null,
     };
   }
 

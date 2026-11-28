@@ -2,7 +2,12 @@ import { NotFoundException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';
 import type { PortalRecordingRow, PortalReportsRepo, PortalScopes } from '@/modules/people/portal';
-import { FILE, fileRow, GUARDIAN, LESSON } from '@/modules/teaching/student-recordings/lesson-files/lesson-files.fakes';
+import {
+  FILE,
+  fileRow,
+  GUARDIAN,
+  LESSON,
+} from '@/modules/teaching/student-recordings/lesson-files/lesson-files.fakes';
 import type { LessonFilesRepo } from '@/modules/teaching/student-recordings/lesson-files/lesson-files.repo';
 import { PortalAssetsService } from './portal-assets.service';
 
@@ -19,8 +24,13 @@ const service = () =>
     storage as unknown as StorageService,
   );
 const rec: PortalRecordingRow = {
-  id: 'R', lesson_id: LESSON, file_path: 'secret/r.mp3', started_at: '2026-11-16T16:00:00.000Z',
-  ended_at: '2026-11-16T16:44:00.000Z', size_bytes: 21, lesson: { starts_at: 'x', teacher: null },
+  id: 'R',
+  lesson_id: LESSON,
+  file_path: 'secret/r.mp3',
+  started_at: '2026-11-16T16:00:00.000Z',
+  ended_at: '2026-11-16T16:44:00.000Z',
+  size_bytes: 21,
+  lesson: { starts_at: 'x', teacher: null },
 };
 
 beforeEach(() => {
@@ -51,8 +61,9 @@ describe('PortalAssetsService.lesson', () => {
 
   it('answers 404 before the report was sent', async () => {
     reports.sentLessons.mockResolvedValue(new Map());
-    await expect(service().lesson({ user: GUARDIAN, studentId: S, lessonId: LESSON }))
-      .rejects.toBeInstanceOf(NotFoundException);
+    await expect(
+      service().lesson({ user: GUARDIAN, studentId: S, lessonId: LESSON }),
+    ).rejects.toBeInstanceOf(NotFoundException);
   });
 });
 
@@ -75,8 +86,9 @@ describe('PortalAssetsService.fileUrl', () => {
 
   it('hides a file staff kept from the family', async () => {
     files.byId.mockResolvedValue(fileRow({ visible_to_family: false }));
-    await expect(service().fileUrl({ user: GUARDIAN, studentId: S, fileId: FILE }))
-      .rejects.toBeInstanceOf(NotFoundException);
+    await expect(
+      service().fileUrl({ user: GUARDIAN, studentId: S, fileId: FILE }),
+    ).rejects.toBeInstanceOf(NotFoundException);
     expect(storage.signedDownload).not.toHaveBeenCalled();
   });
 });

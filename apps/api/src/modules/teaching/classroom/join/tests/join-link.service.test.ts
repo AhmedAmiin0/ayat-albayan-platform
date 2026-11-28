@@ -3,7 +3,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import type { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
-import { ADMIN, LESSON_ID, OPEN, queries, STUDENT_ID } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  ADMIN,
+  LESSON_ID,
+  OPEN,
+  queries,
+  STUDENT_ID,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import { hashLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 import { JoinLinkService } from '@/modules/teaching/classroom/join/join-link.service';
 
@@ -11,11 +17,13 @@ let q: ReturnType<typeof queries>;
 let outbox: { send: ReturnType<typeof vi.fn> };
 let templates: { approved: ReturnType<typeof vi.fn> };
 const send = () =>
-  new JoinLinkService(q as unknown as ClassroomRepo, templates as unknown as TemplateRegistry, outbox as unknown as Outbox).send(
-    { lessonId: LESSON_ID, body: { studentId: STUDENT_ID }, actorId: ADMIN.id },
-    OPEN,
-  );
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+  new JoinLinkService(
+    q as unknown as ClassroomRepo,
+    templates as unknown as TemplateRegistry,
+    outbox as unknown as Outbox,
+  ).send({ lessonId: LESSON_ID, body: { studentId: STUDENT_ID }, actorId: ADMIN.id }, OPEN);
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 
 beforeEach(() => {
   q = queries();
@@ -26,7 +34,11 @@ beforeEach(() => {
 describe('«أرسل رابط الحلقة»', () => {
   it('queues the lesson_join_link template to the guardian through the Outbox, token in the button', async () => {
     const r = await send();
-    expect(r).toEqual({ expires_at: '2026-10-05T19:00:00.000Z', replayed: false, message_status: 'queued' });
+    expect(r).toEqual({
+      expires_at: '2026-10-05T19:00:00.000Z',
+      replayed: false,
+      message_status: 'queued',
+    });
     const row = outbox.send.mock.calls[0]?.[0];
     expect(row).toMatchObject({
       phone_e164: '+966501234567',
@@ -72,7 +84,12 @@ describe('«أرسل رابط الحلقة»', () => {
   it('404 for an unknown lesson, and for a student who is not on it', async () => {
     q.lesson.mockResolvedValue(null);
     expect((await fail(send())).getResponse()).toMatchObject({ code: 'lesson_not_found' });
-    q.lesson.mockResolvedValue({ id: LESSON_ID, teacher_id: 't', starts_at: '2026-10-05T16:00:00.000Z', ends_at: '2026-10-05T17:00:00.000Z' });
+    q.lesson.mockResolvedValue({
+      id: LESSON_ID,
+      teacher_id: 't',
+      starts_at: '2026-10-05T16:00:00.000Z',
+      ends_at: '2026-10-05T17:00:00.000Z',
+    });
     q.sendContext.mockResolvedValue(null);
     expect((await fail(send())).getResponse()).toMatchObject({ code: 'student_not_in_lesson' });
   });

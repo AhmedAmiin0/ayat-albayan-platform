@@ -2,12 +2,19 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { RecordingConfig } from '@/modules/teaching/classroom/classroom.config';
 import { CONFIG, LESSON_ID, OPEN } from '@/modules/teaching/classroom/classroom.fakes';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { http, recordingQueries, S3 } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  http,
+  recordingQueries,
+  S3,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 import { RecordingStarter } from '@/modules/teaching/classroom/recordings/recording.starter';
 import { SUPABASE_STORAGE } from './recording.storage.fakes';
-import { lessonTarget, meetingTarget } from '@/modules/teaching/classroom/recordings/recording-target';
+import {
+  lessonTarget,
+  meetingTarget,
+} from '@/modules/teaching/classroom/recordings/recording-target';
 
 let q: ReturnType<typeof recordingQueries>;
 let h: ReturnType<typeof http>;
@@ -28,21 +35,32 @@ beforeEach(() => {
 describe('starting a lesson recording', () => {
   it('claims the row, creates the room, then starts an audio-only MP3 egress into the bucket path', async () => {
     expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('started');
-    expect(q.claim).toHaveBeenCalledWith({ target: lessonTarget(LESSON_ID), filePath: path, startedAt: OPEN.toISOString() });
+    expect(q.claim).toHaveBeenCalledWith({
+      target: lessonTarget(LESSON_ID),
+      filePath: path,
+      startedAt: OPEN.toISOString(),
+    });
     const urls = h.mock.calls.map(([url]) => url);
     expect(urls).toEqual([
       'https://livekit.example.test/twirp/livekit.RoomService/CreateRoom',
       'https://livekit.example.test/twirp/livekit.Egress/StartRoomCompositeEgress',
     ]);
     const body = sentBody(h.mock.calls[1]?.[1]);
-    expect(body).toMatchObject({ room_name: `lesson-${LESSON_ID}`, audio_only: true, file_outputs: [{ file_type: 'MP3', filepath: path }] });
+    expect(body).toMatchObject({
+      room_name: `lesson-${LESSON_ID}`,
+      audio_only: true,
+      file_outputs: [{ file_type: 'MP3', filepath: path }],
+    });
     expect(q.attachEgress).toHaveBeenCalledWith('00000000-0000-4000-8000-0000000000aa', 'EG_new');
   });
 
   it('an internal meeting records the same way, into meetings/<id>/', async () => {
     expect(await starter().startFor(meetingTarget(LESSON_ID), OPEN)).toBe('started');
     const body = sentBody(h.mock.calls[1]?.[1]);
-    expect(body).toMatchObject({ room_name: `meeting-${LESSON_ID}`, file_outputs: [{ filepath: `meetings/${LESSON_ID}/2026-10-05T16-05-00-000Z.mp3` }] });
+    expect(body).toMatchObject({
+      room_name: `meeting-${LESSON_ID}`,
+      file_outputs: [{ filepath: `meetings/${LESSON_ID}/2026-10-05T16-05-00-000Z.mp3` }],
+    });
     expect(starter().configured).toBe(true);
     expect(starter({ s3: null }).configured).toBe(false);
   });
@@ -64,14 +82,20 @@ describe('starting a lesson recording', () => {
     h.mockResolvedValueOnce(twirpAnswer(200));
     h.mockResolvedValueOnce(twirpAnswer(503, { code: 'unavailable' }));
     expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('failed');
-    expect(q.finish).toHaveBeenCalledWith('00000000-0000-4000-8000-0000000000aa', expect.objectContaining({ status: 'failed', error: 'livekit 503 unavailable' }));
+    expect(q.finish).toHaveBeenCalledWith(
+      '00000000-0000-4000-8000-0000000000aa',
+      expect.objectContaining({ status: 'failed', error: 'livekit 503 unavailable' }),
+    );
     expect(q.attachEgress).not.toHaveBeenCalled();
   });
 
   it('an answer without an egress id is a failure too', async () => {
     h = http({ body: {} });
     expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('failed');
-    expect(q.finish).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ error: 'no egress id in the answer' }));
+    expect(q.finish).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({ error: 'no egress id in the answer' }),
+    );
   });
 
   it('a failing claim (database) is reported, not thrown', async () => {

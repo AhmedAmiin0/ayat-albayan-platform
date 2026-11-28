@@ -26,7 +26,13 @@ const linkOf = (row: SignableRecording, urls: ReadonlyMap<string, string>): [str
 /** A row as the clients see it; `url` only for a finished file. */
 export function recordingView(row: RecordingRow, url: string | null): LessonRecordingView {
   const status = asStatus(row.status);
-  return { id: row.id, status, started_at: row.started_at, ended_at: row.ended_at, url: status === 'done' ? url : null };
+  return {
+    id: row.id,
+    status,
+    started_at: row.started_at,
+    ended_at: row.ended_at,
+    url: status === 'done' ? url : null,
+  };
 }
 
 /** A room's recordings, newest first, with 1-hour signed links to the finished files. */

@@ -6,12 +6,21 @@ import {
   shareGrantSchema,
   type JoinRole,
 } from '@ab/schedule';
-import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { parseOrThrow } from '@/common/http/http';
 import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
-import { meetingRoleOf, roleOfIdentity } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
+import {
+  meetingRoleOf,
+  roleOfIdentity,
+} from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
 import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
 import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
@@ -26,7 +35,10 @@ interface ShareGrantInput {
 }
 
 const cannotGrant = (): HttpException =>
-  new HttpException({ code: 'cannot_grant_share', message: 'cannot_grant_share' }, HttpStatus.FORBIDDEN);
+  new HttpException(
+    { code: 'cannot_grant_share', message: 'cannot_grant_share' },
+    HttpStatus.FORBIDDEN,
+  );
 const asJoinRole = (role: string): JoinRole | null => JOIN_ROLES.find((r) => r === role) ?? null;
 
 function checkBody(livekit: LivekitApi, body: unknown): { allow: boolean } {
@@ -34,12 +46,17 @@ function checkBody(livekit: LivekitApi, body: unknown): { allow: boolean } {
   return parseOrThrow(shareGrantSchema, body);
 }
 
-async function applyShare(livekit: LivekitApi, input: { room: string; identity: string; allow: boolean }): Promise<void> {
+async function applyShare(
+  livekit: LivekitApi,
+  input: { room: string; identity: string; allow: boolean },
+): Promise<void> {
   try {
     await livekit.setScreenShare(input);
   } catch (e) {
-    if (e instanceof LivekitError && e.code === 'not_found') throw notFound('participant_not_found');
-    if (e instanceof LivekitError) throw new BadGatewayException({ code: 'livekit_error', message: e.message });
+    if (e instanceof LivekitError && e.code === 'not_found')
+      throw notFound('participant_not_found');
+    if (e instanceof LivekitError)
+      throw new BadGatewayException({ code: 'livekit_error', message: e.message });
     throw e;
   }
 }
@@ -60,7 +77,11 @@ export class ShareGrantService {
     const target = await this.moderation.participant(lesson.id, input.identity);
     if (!target) throw notFound('participant_not_found');
     if (!canGrantShare(role, asJoinRole(target.role))) throw cannotGrant();
-    await applyShare(this.livekit, { room: lessonRoomName(lesson.id), identity: target.identity, allow });
+    await applyShare(this.livekit, {
+      room: lessonRoomName(lesson.id),
+      identity: target.identity,
+      allow,
+    });
   }
 }
 
@@ -82,6 +103,10 @@ export class MeetingShareGrantService {
     const target = roleOfIdentity(input.identity);
     if (!target) throw notFound('participant_not_found');
     if (!canGrantShare(role, target)) throw cannotGrant();
-    await applyShare(this.livekit, { room: meetingRoomName(meeting.id), identity: input.identity, allow });
+    await applyShare(this.livekit, {
+      room: meetingRoomName(meeting.id),
+      identity: input.identity,
+      allow,
+    });
   }
 }

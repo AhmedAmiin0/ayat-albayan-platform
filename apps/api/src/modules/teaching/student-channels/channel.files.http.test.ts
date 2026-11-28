@@ -22,20 +22,32 @@ describe('student channel files over HTTP', () => {
   });
 
   it('upload-url: a participant gets a one-off slot in the channel folder, sized and typed', async () => {
-    for (const [base, who] of [[TEACHER, 'teacher'], [PORTAL, 'guardian'], [SALES, 'sales']] as const) {
+    for (const [base, who] of [
+      [TEACHER, 'teacher'],
+      [PORTAL, 'guardian'],
+      [SALES, 'sales'],
+    ] as const) {
       const res = await t.post(`${base}/attachments/upload-url`, who, PHOTO);
       expect([who, res.statusCode]).toEqual([who, 201]);
       expect(res.json().path).toMatch(new RegExp(`^${CH}/[0-9a-f-]{36}\\.jpg$`));
     }
-    expect(t.storage.signedUpload).toHaveBeenCalledWith(expect.objectContaining({
-      bucket: 'channel-media', file: { size: 2048, mime: 'image/jpeg' },
-    }));
+    expect(t.storage.signedUpload).toHaveBeenCalledWith(
+      expect.objectContaining({
+        bucket: 'channel-media',
+        file: { size: 2048, mime: 'image/jpeg' },
+      }),
+    );
   });
 
   it('upload-url: another type or an oversize file is 400; a closed channel 409; a monitor 403', async () => {
-    const bad = [{ ...PHOTO, mime: 'video/mp4' }, { ...PHOTO, size: 10 * 1024 * 1024 + 1 }];
+    const bad = [
+      { ...PHOTO, mime: 'video/mp4' },
+      { ...PHOTO, size: 10 * 1024 * 1024 + 1 },
+    ];
     for (const file of bad) {
-      expect((await t.post(`${PORTAL}/attachments/upload-url`, 'guardian', file)).statusCode).toBe(400);
+      expect((await t.post(`${PORTAL}/attachments/upload-url`, 'guardian', file)).statusCode).toBe(
+        400,
+      );
     }
     t.queries.isOpen.mockResolvedValue(false);
     const closed = await t.post(`${PORTAL}/attachments/upload-url`, 'guardian', PHOTO);
@@ -49,16 +61,31 @@ describe('student channel files over HTTP', () => {
     const attachment = { ...PHOTO, path: UPLOADED };
     const res = await t.post(`${PORTAL}/messages`, 'guardian', { attachment });
     expect(res.statusCode).toBe(201);
-    expect(t.queries.insert).toHaveBeenCalledWith(expect.objectContaining({
-      body: '', kind: 'photo', attachment_path: UPLOADED, attachment_mime: 'image/jpeg',
-      attachment_size: 2048, attachment_name: 'صفحة.jpg', attachment_duration_ms: null,
-    }));
-    expect(res.json()).toMatchObject({ kind: 'photo', attachment: {
-      mime: 'image/jpeg', size: 2048, name: 'صفحة.jpg', url: `https://storage.test/get/${UPLOADED}`,
-    } });
-    expect(t.push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({
-      vars: expect.objectContaining({ text: 'صورة' }),
-    }));
+    expect(t.queries.insert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        body: '',
+        kind: 'photo',
+        attachment_path: UPLOADED,
+        attachment_mime: 'image/jpeg',
+        attachment_size: 2048,
+        attachment_name: 'صفحة.jpg',
+        attachment_duration_ms: null,
+      }),
+    );
+    expect(res.json()).toMatchObject({
+      kind: 'photo',
+      attachment: {
+        mime: 'image/jpeg',
+        size: 2048,
+        name: 'صفحة.jpg',
+        url: `https://storage.test/get/${UPLOADED}`,
+      },
+    });
+    expect(t.push.notifyProfiles).toHaveBeenCalledWith(
+      expect.objectContaining({
+        vars: expect.objectContaining({ text: 'صورة' }),
+      }),
+    );
   });
 
   it('a file not in this channel folder, or never uploaded, is 400 attachment_path', async () => {
@@ -72,9 +99,14 @@ describe('student channel files over HTTP', () => {
   });
 
   it('a stored object that is not the claimed file (type or size) is 400 attachment_path', async () => {
-    const claims = [{ ...PHOTO, size: 1024 }, { ...PHOTO, mime: 'image/png' }];
+    const claims = [
+      { ...PHOTO, size: 1024 },
+      { ...PHOTO, mime: 'image/png' },
+    ];
     for (const claim of claims) {
-      const res = await t.post(`${PORTAL}/messages`, 'guardian', { attachment: { ...claim, path: UPLOADED } });
+      const res = await t.post(`${PORTAL}/messages`, 'guardian', {
+        attachment: { ...claim, path: UPLOADED },
+      });
       expect([res.statusCode, res.json().code]).toEqual([400, 'attachment_path']);
     }
     expect(t.storage.info).toHaveBeenCalledWith({ bucket: 'channel-media', path: UPLOADED });
@@ -89,11 +121,14 @@ describe('student channel files over HTTP', () => {
       messageRow({ id: 'b', ...file, ...extra, deleted_at: '2026-10-27T11:00:00.000Z' }),
     ]);
     const page = (await t.call('GET', `${TEACHER}/messages`, 'teacher')).json();
-    expect(page.messages.map((m: { attachment: { url: string | null } }) => m.attachment.url))
-      .toEqual([null, `https://storage.test/get/${UPLOADED}`]);
+    expect(
+      page.messages.map((m: { attachment: { url: string | null } }) => m.attachment.url),
+    ).toEqual([null, `https://storage.test/get/${UPLOADED}`]);
     expect(page.messages[1].attachment.duration_ms).toBe(4200);
-    expect(t.storage.signedDownloads).toHaveBeenCalledWith(
-      { bucket: 'channel-media', paths: [UPLOADED], seconds: 3600 },
-    );
+    expect(t.storage.signedDownloads).toHaveBeenCalledWith({
+      bucket: 'channel-media',
+      paths: [UPLOADED],
+      seconds: 3600,
+    });
   });
 });

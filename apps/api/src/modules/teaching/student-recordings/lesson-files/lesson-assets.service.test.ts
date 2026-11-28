@@ -7,9 +7,18 @@ import { ADMIN, fileRow, LESSON, lessonRef } from './lesson-files.fakes';
 import type { LessonFilesRepo } from './lesson-files.repo';
 
 const rec = (status: string) => ({
-  id: status, lesson_id: LESSON, meeting_id: null, egress_id: null, error: null, deleted_at: null,
-  file_path: 'p.mp3', started_at: '2026-11-16T16:00:00.000Z', ended_at: null, size_bytes: null,
-  status, visible_to_student: false,
+  id: status,
+  lesson_id: LESSON,
+  meeting_id: null,
+  egress_id: null,
+  error: null,
+  deleted_at: null,
+  file_path: 'p.mp3',
+  started_at: '2026-11-16T16:00:00.000Z',
+  ended_at: null,
+  size_bytes: null,
+  status,
+  visible_to_student: false,
 });
 
 describe('LessonAssetsService', () => {

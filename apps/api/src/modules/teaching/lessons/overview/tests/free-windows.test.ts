@@ -4,15 +4,26 @@ import { teacherSpans } from '@/modules/teaching/lessons/overview/free-windows';
 
 const RIYADH = 'Asia/Riyadh';
 const CAIRO = 'Africa/Cairo';
-const span = (start: string, end: string): TimeRange => ({ start: new Date(start), end: new Date(end) });
+const span = (start: string, end: string): TimeRange => ({
+  start: new Date(start),
+  end: new Date(end),
+});
 const iso = (list: { start: number; end: number }[]) =>
-  list.map((i) => `${new Date(i.start).toISOString().slice(5, 16)}–${new Date(i.end).toISOString().slice(11, 16)}`);
+  list.map(
+    (i) =>
+      `${new Date(i.start).toISOString().slice(5, 16)}–${new Date(i.end).toISOString().slice(11, 16)}`,
+  );
 
 // Sunday 2026-10-04 16:00–18:00 Riyadh = 13:00Z–15:00Z; the window is that Riyadh day.
-const SUN_16_18: WeeklyRow = { weekday: 0, start_time: '16:00:00', end_time: '18:00:00', tz: RIYADH };
+const SUN_16_18: WeeklyRow = {
+  weekday: 0,
+  start_time: '16:00:00',
+  end_time: '18:00:00',
+  tz: RIYADH,
+};
 const DAY: [string, string] = ['2026-10-03T21:00:00Z', '2026-10-04T21:00:00Z'];
 
-type Case = {
+interface Case {
   name: string;
   window?: [string, string];
   weekly?: WeeklyRow[];
@@ -20,10 +31,14 @@ type Case = {
   busy?: TimeRange[];
   windows: string[];
   free: string[];
-};
+}
 
 const CASES: Case[] = [
-  { name: 'a plain window is all free', windows: ['10-04T13:00–15:00'], free: ['10-04T13:00–15:00'] },
+  {
+    name: 'a plain window is all free',
+    windows: ['10-04T13:00–15:00'],
+    free: ['10-04T13:00–15:00'],
+  },
   { name: 'no weekly rows → nothing', weekly: [], windows: [], free: [] },
   {
     name: 'a lesson cuts the window; both 30+ min sides stay',

@@ -3,7 +3,10 @@ import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import type { ChannelActor } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelNotify } from '@/modules/teaching/student-channels/channel-notify';
-import { ChannelRepo, type ChannelMessageRow } from '@/modules/teaching/student-channels/channel.repo';
+import {
+  ChannelRepo,
+  type ChannelMessageRow,
+} from '@/modules/teaching/student-channels/channel.repo';
 import type { ChannelViewer } from '@/modules/teaching/student-channels/reads/channel-read-state';
 import { ChannelViews } from '@/modules/teaching/student-channels/views/channel-views.service';
 import { toMessageView } from '@/modules/teaching/student-channels/views/message-view';

@@ -6,7 +6,7 @@ import type { ChangeRule } from './course-change.repo';
 // REMAINING's lessons that do not exist yet (review fix 2b): an old active rule stays active until the
 // day before the change point, so the nightly HorizonJob still generates its occurrences up to then. Pure.
 
-type UnmaterialisedInput = {
+interface UnmaterialisedInput {
   /** The course's active rules. */
   rules: readonly ChangeRule[];
   /** `${rule_id}:${local_date}` of the rules' generated rows (CourseLessonQueries.held). */
@@ -14,7 +14,7 @@ type UnmaterialisedInput = {
   now: Date;
   /** The change point's local date. */
   startsOn: string;
-};
+}
 
 /**
  * Occurrences of each rule between max(now, its starts_on) and min(its ends_on, startsOn − 1) that have

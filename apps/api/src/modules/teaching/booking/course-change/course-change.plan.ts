@@ -13,7 +13,7 @@ import { httpError } from '@/common/http/errors';
 export type ChangeRole = 'sales' | 'admin';
 
 /** What the request is checked against: the course's facts, read by CourseChange. */
-export type ChangeFacts = {
+export interface ChangeFacts {
   role: ChangeRole;
   /** Days a week the plan needs (courseDaysPerWeek); null = a custom count. */
   perWeek: number | null;
@@ -23,7 +23,7 @@ export type ChangeFacts = {
   tz: string;
   /** The course's lessons that count and do not move, plus those its old rules will still generate. */
   before: readonly CourseLessonFact[];
-};
+}
 
 /**
  * 400 date_in_past (the first new lesson is not in the future), 403 override_not_allowed (the
@@ -33,8 +33,7 @@ export type ChangeFacts = {
 export function assertChange(req: CourseChangeRequest, facts: ChangeFacts, now: Date): void {
   if (Date.parse(req.startsAt) <= now.getTime())
     throw httpError(HttpStatus.BAD_REQUEST, 'date_in_past');
-  if (isSales(facts) && req.override)
-    throw httpError(HttpStatus.FORBIDDEN, 'override_not_allowed');
+  if (isSales(facts) && req.override) throw httpError(HttpStatus.FORBIDDEN, 'override_not_allowed');
   if (facts.perWeek === null && isSales(facts))
     throw httpError(HttpStatus.CONFLICT, 'custom_count_admin');
   if (facts.perWeek !== null && req.byday.length !== facts.perWeek)
@@ -42,14 +41,20 @@ export function assertChange(req: CourseChangeRequest, facts: ChangeFacts, now: 
 }
 
 /** What the change point is checked against (review fix 4, 7). */
-type StartFacts = {
+interface StartFacts {
   /** subscriptions.starts_on. */
   subStartsOn: string;
   /** Every rule of the course (any status). */
-  rules: readonly { status: string; starts_on: string; ends_on: string | null; byday: readonly number[]; start_time_local: string }[];
+  rules: readonly {
+    status: string;
+    starts_on: string;
+    ends_on: string | null;
+    byday: readonly number[];
+    start_time_local: string;
+  }[];
   /** Same days still count as a change when the teacher changes. */
   teacherChanged?: boolean;
-};
+}
 
 /**
  * 400 starts_before_subscription (before the subscription starts), 400 starts_before_course (before the
@@ -57,29 +62,34 @@ type StartFacts = {
  * change point, for a client that did not stop it; a new teacher is a change on the same days).
  */
 export function assertStart(req: CourseChangeRequest, facts: StartFacts): void {
-  if (req.startsOn < facts.subStartsOn) throw httpError(HttpStatus.BAD_REQUEST, 'starts_before_subscription');
+  if (req.startsOn < facts.subStartsOn)
+    throw httpError(HttpStatus.BAD_REQUEST, 'starts_before_subscription');
   const first = facts.rules.map((r) => r.starts_on).sort()[0];
-  if (first !== undefined && req.startsOn < first) throw httpError(HttpStatus.BAD_REQUEST, 'starts_before_course');
+  if (first !== undefined && req.startsOn < first)
+    throw httpError(HttpStatus.BAD_REQUEST, 'starts_before_course');
   const days = facts.rules
     .filter((r) => r.status === 'active' && (r.ends_on === null || r.ends_on >= req.startsOn))
-    .flatMap((r) => r.byday.map((weekday) => ({ weekday, startTimeLocal: r.start_time_local.slice(0, 5) })));
-  if (days.length > 0 && facts.teacherChanged !== true && sameDays(req, days)) throw httpError(HttpStatus.BAD_REQUEST, 'no_change');
+    .flatMap((r) =>
+      r.byday.map((weekday) => ({ weekday, startTimeLocal: r.start_time_local.slice(0, 5) })),
+    );
+  if (days.length > 0 && facts.teacherChanged !== true && sameDays(req, days))
+    throw httpError(HttpStatus.BAD_REQUEST, 'no_change');
 }
 
-export type ChangePlan = {
+export interface ChangePlan {
   /** One plan per distinct time (planSeries), the first rule's first. */
   plans: Plan[];
   remaining: number;
   /** The remaining-th new lesson's local date: every new rule's ends_on. */
   endsOn: string;
-};
+}
 
-type ChangePlanInput = {
+interface ChangePlanInput {
   req: CourseChangeRequest;
   facts: ChangeFacts;
   now: Date;
   horizonWeeks: number;
-};
+}
 
 /**
  * REMAINING = lessons_total − the course's lessons that count and stay (courseRemaining: the

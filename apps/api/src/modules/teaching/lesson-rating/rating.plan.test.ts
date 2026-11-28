@@ -1,6 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { child, GUARDIAN_ID, heldLesson, LESSON_ID, NOW, OTHER_GUARDIAN_ID, PHONE } from './rating.fakes';
-import { planRatings, ratingDedupKey, ratingDue, ratingFamilies, RATING_LOOKBACK_MS } from './rating.plan';
+import {
+  child,
+  GUARDIAN_ID,
+  heldLesson,
+  LESSON_ID,
+  NOW,
+  OTHER_GUARDIAN_ID,
+  PHONE,
+} from './rating.fakes';
+import {
+  planRatings,
+  ratingDedupKey,
+  ratingDue,
+  ratingFamilies,
+  RATING_LOOKBACK_MS,
+} from './rating.plan';
 
 const other = { id: OTHER_GUARDIAN_ID, phone_e164: '+201001234567', tz: 'Africa/Cairo' };
 
@@ -25,7 +39,11 @@ describe('planRatings (migration 195)', () => {
 
   it('siblings share one message; another family on the lesson gets its own', () => {
     const lesson = heldLesson({
-      lesson_students: [child('سهيلة'), child('مريم'), child('يوسف', { student: { id: 's-y', name: 'يوسف', guardian: other } })],
+      lesson_students: [
+        child('سهيلة'),
+        child('مريم'),
+        child('يوسف', { student: { id: 's-y', name: 'يوسف', guardian: other } }),
+      ],
     });
     const rows = planRatings({ lessons: [lesson], now: NOW });
     expect(rows.map((r) => [r.dedup_key, r.template_params['1']])).toEqual([
@@ -35,7 +53,12 @@ describe('planRatings (migration 195)', () => {
   });
 
   it('only children who attended: an absent or excused sibling is left out, a family with none gets nothing', () => {
-    const lesson = heldLesson({ lesson_students: [child('سهيلة', { attendance: 'absent' }), child('مريم', { attendance: 'excused' })] });
+    const lesson = heldLesson({
+      lesson_students: [
+        child('سهيلة', { attendance: 'absent' }),
+        child('مريم', { attendance: 'excused' }),
+      ],
+    });
     expect(ratingFamilies(lesson)).toEqual([]);
     expect(planRatings({ lessons: [lesson], now: NOW })).toEqual([]);
   });

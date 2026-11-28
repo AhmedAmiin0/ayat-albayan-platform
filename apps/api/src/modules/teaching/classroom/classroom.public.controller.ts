@@ -13,7 +13,11 @@ export class ClassroomPublicController {
 
   @Post(':linkToken')
   @HttpCode(200)
-  join(@Param('linkToken') linkToken: string, @Body() body: unknown, @Ip() ip: string): Promise<RoomJoinResult> {
+  join(
+    @Param('linkToken') linkToken: string,
+    @Body() body: unknown,
+    @Ip() ip: string,
+  ): Promise<RoomJoinResult> {
     return this.guests.join({ linkToken, ip, body });
   }
 }

@@ -5,7 +5,7 @@ import { BusyRepo } from './busy.repo';
 import { findConflicts } from '@ab/schedule';
 import { RuleProjectionRepo } from '@/modules/teaching/scheduling/rules/rule-projection.repo';
 
-export type CheckInput = {
+export interface CheckInput {
   teacherId: string;
   studentIds: readonly string[];
   proposed: readonly Occurrence[];
@@ -13,7 +13,7 @@ export type CheckInput = {
   excludeIds: readonly string[];
   /** Rules whose not-yet-generated occurrences must not count (the rule being replaced). */
   excludeRuleIds?: readonly string[];
-};
+}
 
 /**
  * Loads what findConflicts needs for one teacher + students and runs it (R-SCH-04, issue B3).
@@ -40,7 +40,12 @@ export class ConflictChecker {
       this.busy.studentLessons(studentIds, span),
       this.availability.bookableSlots(teacherId),
       this.availability.listTimeOff(teacherId, span),
-      this.projection.busy({ teacherId, studentIds, span, excludeRuleIds: input.excludeRuleIds ?? [] }),
+      this.projection.busy({
+        teacherId,
+        studentIds,
+        span,
+        excludeRuleIds: input.excludeRuleIds ?? [],
+      }),
     ]);
     const skip = new Set(input.excludeIds);
     return findConflicts({

@@ -12,7 +12,10 @@ describe('StudentRecordingRepo.page past the last page', () => {
     const input = { studentId: STUDENT, onlyTeacherId: null, query: { page: 2, pageSize: 10 } };
     const page = await new StudentRecordingRepo(fake.db).page(input);
     expect(page).toEqual({ rows: [], total: 4 });
-    expect(rangesOn(fake, T)).toEqual([[10, 19], [0, 0]]);
+    expect(rangesOn(fake, T)).toEqual([
+      [10, 19],
+      [0, 0],
+    ]);
     const orders = fake.calls.filter((c) => c.table === T && c.method === 'order');
     expect(orders.slice(0, 2).map((c) => c.args)).toEqual([
       ['started_at', { ascending: false }],

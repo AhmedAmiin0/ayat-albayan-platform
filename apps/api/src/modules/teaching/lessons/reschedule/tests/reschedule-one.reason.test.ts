@@ -33,10 +33,15 @@ describe('RescheduleOneService — «سبب تغيير الموعد» (docs/47)'
     const { service, writer, record } = setup();
     const body = { scope: 'one' as const, startsAt: NEW_START, reason: 'سفر الأسرة' };
     await service.reschedule({ lessonId: LESSON_ID, body, actor: ADMIN });
-    expect(appliedChange(writer)?.changes).toEqual([{
-      id: LESSON_ID, from_status: 'scheduled', to_status: 'rescheduled', chargeable: false,
-      cancel_reason: 'سفر الأسرة',
-    }]);
+    expect(appliedChange(writer)?.changes).toEqual([
+      {
+        id: LESSON_ID,
+        from_status: 'scheduled',
+        to_status: 'rescheduled',
+        chargeable: false,
+        cancel_reason: 'سفر الأسرة',
+      },
+    ]);
     const audit = expect.objectContaining({ reason: 'سفر الأسرة' });
     expect(record).toHaveBeenCalledWith(expect.objectContaining({ after: audit }));
   });

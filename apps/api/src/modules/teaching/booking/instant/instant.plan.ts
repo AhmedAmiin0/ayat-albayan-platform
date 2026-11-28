@@ -2,7 +2,10 @@ import { dayInZone, MINUTE_MS, offsetMs, weekdayOfDay } from '@ab/time';
 import type { Conflict, Occurrence, OccurrenceTiming } from '@ab/schedule';
 import { lessonRows, type BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
 
-type InstantPlan = { timing: OccurrenceTiming; occurrence: Occurrence };
+interface InstantPlan {
+  timing: OccurrenceTiming;
+  occurrence: Occurrence;
+}
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -21,11 +24,14 @@ export function instantPlan(input: { now: Date; tz: string; durationMin: number 
       starts_on: date,
       ends_on: date,
     },
-    occurrence: { starts_at: new Date(start), ends_at: new Date(start + input.durationMin * MINUTE_MS) },
+    occurrence: {
+      starts_at: new Date(start),
+      ends_at: new Date(start + input.durationMin * MINUTE_MS),
+    },
   };
 }
 
-type InstantPayloadInput = {
+interface InstantPayloadInput {
   plan: InstantPlan;
   teacherId: string;
   studentIds: string[];
@@ -33,7 +39,7 @@ type InstantPayloadInput = {
   reason: string | null;
   meetingLink: string | null;
   clientRequestId: string | null;
-};
+}
 
 /**
  * The create_booking payload of an instant lesson: package null (like a makeup: it has no package
@@ -54,12 +60,22 @@ export function instantPayload(input: InstantPayloadInput): BookingPayload {
     lead: null,
     new_guardian: null,
     new_student: null,
-    lessons: lessonRows({ occurrences: [plan.occurrence], conflicts, reason, meetingLink: input.meetingLink }),
+    lessons: lessonRows({
+      occurrences: [plan.occurrence],
+      conflicts,
+      reason,
+      meetingLink: input.meetingLink,
+    }),
     messages: [],
     makeup_of: null,
     invoice: null,
     audit: {
-      after: { kind: 'instant', package: null, override_reason: reason, conflicts: conflicts.map((c) => ({ ...c })) },
+      after: {
+        kind: 'instant',
+        package: null,
+        override_reason: reason,
+        conflicts: conflicts.map((c) => ({ ...c })),
+      },
     },
   };
 }

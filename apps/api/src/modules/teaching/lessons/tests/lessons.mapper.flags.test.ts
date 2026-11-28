@@ -3,7 +3,12 @@ import { storedConflicts, toLessonView } from '@/modules/teaching/lessons/lesson
 import { lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
 
 const ctx = { role: 'admin' as const, seq: new Map<string, number>() };
-const CLASH = { kind: 'teacher_busy', startsAt: '2026-11-01T15:00:00.000Z', endsAt: '2026-11-01T16:00:00.000Z', lessonId: 'x' };
+const CLASH = {
+  kind: 'teacher_busy',
+  startsAt: '2026-11-01T15:00:00.000Z',
+  endsAt: '2026-11-01T16:00:00.000Z',
+  lessonId: 'x',
+};
 const proposal = (status: 'pending' | 'approved' | 'rejected') => ({
   id: `p-${status}`,
   proposed_starts_at: '2026-10-05 15:00:00+00',
@@ -24,7 +29,10 @@ describe('toLessonView — generation clashes and the pending proposal (R-SCH-04
   });
 
   it('only a pending proposal is shown, with ISO instants', () => {
-    const view = toLessonView(lessonRow({ proposals: [proposal('rejected'), proposal('pending')] }), ctx);
+    const view = toLessonView(
+      lessonRow({ proposals: [proposal('rejected'), proposal('pending')] }),
+      ctx,
+    );
     expect(view.pending_proposal).toEqual({
       id: 'p-pending',
       proposed_starts_at: '2026-10-05T15:00:00.000Z',
@@ -32,7 +40,9 @@ describe('toLessonView — generation clashes and the pending proposal (R-SCH-04
       created_at: '2026-10-02T08:00:00.000Z',
       requested_by: 'teacher',
     });
-    expect(toLessonView(lessonRow({ proposals: [proposal('approved')] }), ctx).pending_proposal).toBeNull();
+    expect(
+      toLessonView(lessonRow({ proposals: [proposal('approved')] }), ctx).pending_proposal,
+    ).toBeNull();
   });
 
   it('a lesson cancelled or held since the proposal shows none (approving would 409)', () => {

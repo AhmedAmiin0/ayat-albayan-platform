@@ -25,13 +25,21 @@ export class MonitorChannelController {
 
   @Get('students/:id/channel/messages')
   @Permissions('student_channels.monitor')
-  async messages(@Param('id', UUID) studentId: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<ChannelPage> {
+  async messages(
+    @Param('id', UUID) studentId: string,
+    @Query() query: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ChannelPage> {
     return pageFor(this.channels, await this.access.monitor(user, studentId), query);
   }
 
   @Get('sales/students/:id/channel/messages')
   @Permissions('self.sales')
-  async salesMessages(@Param('id', UUID) studentId: string, @Query() query: unknown, @CurrentUser() user: AuthUser): Promise<ChannelPage> {
+  async salesMessages(
+    @Param('id', UUID) studentId: string,
+    @Query() query: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ChannelPage> {
     return pageFor(this.channels, await this.access.assistant(user, studentId), query);
   }
 }

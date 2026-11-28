@@ -13,7 +13,9 @@ describe('planNotice: both the teacher and the family (owner 2026-10-30)', () =>
       ['+966500000001', 'lesson_cancelled', 'lesson_cancelled:L1:t:T1', null],
       ['+447700900001', 'lesson_cancelled', 'lesson_cancelled:L1:g:G1', 'G1'],
     ]);
-    expect(messages.every((m) => m.lesson_id === 'L1' && m.expires_at === AT.toISOString())).toBe(true);
+    expect(messages.every((m) => m.lesson_id === 'L1' && m.expires_at === AT.toISOString())).toBe(
+      true,
+    );
   });
 
   it('familyWhatsApp false (the booking confirmation went): the teacher’s row only, bells kept', () => {
@@ -25,7 +27,10 @@ describe('planNotice: both the teacher and the family (owner 2026-10-30)', () =>
   it('each one in their own zone: the teacher in Riyadh, the guardian in London', () => {
     const [toTeacher, toGuardian] = planNotice(notice(), NOW).messages;
     expect(toTeacher?.template_params['3']).toBe('الاثنين 2 نوفمبر، 11:00 ص');
-    expect(toGuardian?.template_params).toMatchObject({ '1': 'أم سهيلة', '3': 'الاثنين 2 نوفمبر، 8:00 ص' });
+    expect(toGuardian?.template_params).toMatchObject({
+      '1': 'أم سهيلة',
+      '3': 'الاثنين 2 نوفمبر، 8:00 ص',
+    });
   });
 
   it('the bells: teacher and guardian, never the person who made the change', () => {
@@ -54,7 +59,11 @@ describe('planNotice: both the teacher and the family (owner 2026-10-30)', () =>
   });
 
   it('no teacher number, an inactive teacher or a disabled login: no WhatsApp to them, the bell stays', () => {
-    for (const t of [teacher({ phone_e164: null }), teacher({ status: 'inactive' }), teacher({ profile: { disabled_at: 'x' } })]) {
+    for (const t of [
+      teacher({ phone_e164: null }),
+      teacher({ status: 'inactive' }),
+      teacher({ profile: { disabled_at: 'x' } }),
+    ]) {
       expect(phones(notice({ teachers: [{ teacher: t, at: AT }] }))).toEqual(['+447700900001']);
     }
   });
@@ -62,7 +71,9 @@ describe('planNotice: both the teacher and the family (owner 2026-10-30)', () =>
   it('a profile-less teacher or guardian: WhatsApp only', () => {
     const n = notice({ teachers: [{ teacher: teacher({ profile_id: null }), at: AT }] });
     expect(pushedTo(n)).toEqual(['pG1']);
-    expect(pushedTo(notice({ students: [student({ guardian: guardian({ profile_id: null }) })] }))).toEqual(['pT1']);
+    expect(
+      pushedTo(notice({ students: [student({ guardian: guardian({ profile_id: null }) })] })),
+    ).toEqual(['pT1']);
   });
 });
 
@@ -84,10 +95,13 @@ describe('families and dedup keys', () => {
   });
 
   it('two families on a group lesson: one each; a student without a guardian is skipped', () => {
-    const other = student({ id: 'S3', guardian: guardian({ id: 'G2', phone_e164: '+201000000002' }) });
-    expect(phones(notice({ students: [student(), other, student({ id: 'S4', guardian: null })] }))).toEqual([
-      '+966500000001', '+447700900001', '+201000000002',
-    ]);
+    const other = student({
+      id: 'S3',
+      guardian: guardian({ id: 'G2', phone_e164: '+201000000002' }),
+    });
+    expect(
+      phones(notice({ students: [student(), other, student({ id: 'S4', guardian: null })] })),
+    ).toEqual(['+966500000001', '+447700900001', '+201000000002']);
   });
 
   it('the same change twice gives the same keys (a retry is a no-op); a new subject a new key', () => {

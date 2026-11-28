@@ -22,29 +22,35 @@ export class LessonAssetsRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async students(lessonId: string): Promise<AssetStudent[]> {
-    const data = rows(await this.db
-      .from('lesson_students')
-      .select('students(id, name, code)')
-      .eq('lesson_id', lessonId));
+    const data = rows(
+      await this.db
+        .from('lesson_students')
+        .select('students(id, name, code)')
+        .eq('lesson_id', lessonId),
+    );
     return data.map((r) => r.students);
   }
 
   async reports(lessonId: string): Promise<AssetReportRow[]> {
-    const data = rows(await this.db
-      .from('lesson_reports')
-      .select('id, student_id, pdf_status, sent_at, status')
-      .eq('lesson_id', lessonId));
+    const data = rows(
+      await this.db
+        .from('lesson_reports')
+        .select('id, student_id, pdf_status, sent_at, status')
+        .eq('lesson_id', lessonId),
+    );
     return data;
   }
 
   /** Every recording of the lesson but a removed one, newest first. */
   async recordings(lessonId: string): Promise<AssetRecordingRow[]> {
-    const data = rows(await this.db
-      .from('lesson_recordings')
-      .select('*')
-      .eq('lesson_id', lessonId)
-      .neq('status', 'deleted')
-      .order('started_at', { ascending: false }));
+    const data = rows(
+      await this.db
+        .from('lesson_recordings')
+        .select('*')
+        .eq('lesson_id', lessonId)
+        .neq('status', 'deleted')
+        .order('started_at', { ascending: false }),
+    );
     return data;
   }
 }

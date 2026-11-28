@@ -2,13 +2,17 @@ import { bookingConfirmationTemplate, lessonWhenText } from '@ab/shared';
 import type { QueuedMessage } from '@/modules/teaching/scheduling/change-set';
 
 /** A booked student and their guardian (students → guardians). */
-export type Contact = {
+export interface Contact {
   id: string;
   name: string;
   guardian: { id: string; phone_e164: string; tz: string } | null;
-};
+}
 
-export type ConfirmedLesson = { id: string; starts_at: string; meeting_link: string | null };
+export interface ConfirmedLesson {
+  id: string;
+  starts_at: string;
+  meeting_link: string | null;
+}
 
 const names = new Intl.ListFormat('ar', { type: 'conjunction' });
 
@@ -17,7 +21,8 @@ const names = new Intl.ListFormat('ar', { type: 'conjunction' });
  * (`auto` = usesPlatform(teachers.meeting_mode, settings.meeting_link_auto); booking_confirmation_plain; the classroom link goes with the same-day reminder). The lesson row
  * itself keeps its link.
  */
-export const forMessages = <L extends ConfirmedLesson>(lesson: L, auto: boolean): L => (auto ? { ...lesson, meeting_link: null } : lesson);
+export const forMessages = <L extends ConfirmedLesson>(lesson: L, auto: boolean): L =>
+  auto ? { ...lesson, meeting_link: null } : lesson;
 
 /** One message per guardian (docs/10 §5.11, R-SCH-06, R-LES-02); dedup_key makes retries no-ops. */
 export function confirmationMessages(
@@ -25,7 +30,10 @@ export function confirmationMessages(
   contacts: readonly Contact[],
 ): QueuedMessage[] {
   const template = bookingConfirmationTemplate(lesson.meeting_link);
-  const byGuardian = new Map<string, { guardian: NonNullable<Contact['guardian']>; names: string[] }>();
+  const byGuardian = new Map<
+    string,
+    { guardian: NonNullable<Contact['guardian']>; names: string[] }
+  >();
   for (const c of contacts) {
     if (!c.guardian) continue;
     const entry = byGuardian.get(c.guardian.id) ?? { guardian: c.guardian, names: [] };

@@ -4,9 +4,14 @@ import type { Db } from '@/common/db/db.module';
 import { pgError, raisedAs, type PgErrorMap } from '@/common/db/errors';
 import { conflict } from '@/common/http/errors';
 
-type RpcResult = { data: unknown; error: PostgrestError | null };
+interface RpcResult {
+  data: unknown;
+  error: PostgrestError | null;
+}
 type RpcName = keyof Database['public']['Functions'];
-type UntypedRpc = { rpc(fn: string, args: Record<string, unknown>): PromiseLike<RpcResult> };
+interface UntypedRpc {
+  rpc(fn: string, args: Record<string, unknown>): PromiseLike<RpcResult>;
+}
 
 const slotTaken = () => conflict('slot_taken');
 
@@ -38,7 +43,11 @@ export const rpcError = (error: PostgrestError): Error => pgError(error, LESSON_
  * the generated types make every arg non-null and jsonb-typed, but p_actor may be null (the
  * daily job) and the change sets are typed objects, not `Json`.
  */
-export async function callRpc(db: Db, fn: RpcName, args: Record<string, unknown>): Promise<unknown> {
+export async function callRpc(
+  db: Db,
+  fn: RpcName,
+  args: Record<string, unknown>,
+): Promise<unknown> {
   const { data, error } = await (db as unknown as UntypedRpc).rpc(fn, args);
   if (error) throw rpcError(error);
   return data;

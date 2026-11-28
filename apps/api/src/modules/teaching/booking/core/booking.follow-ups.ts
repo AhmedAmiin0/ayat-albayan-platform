@@ -1,7 +1,10 @@
 import { bookingKindOf } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import { StudentTrialStatus } from '@/modules/finance/subscriptions/trial/student-trial-status';
-import { TeacherAlert, type BookedEvent } from '@/modules/teaching/booking/teacher/teacher-alert.service';
+import {
+  TeacherAlert,
+  type BookedEvent,
+} from '@/modules/teaching/booking/teacher/teacher-alert.service';
 
 type BookingDone = BookedEvent & { actorId: string };
 

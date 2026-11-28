@@ -40,7 +40,9 @@ export class StudentRecordingRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async student(id: string): Promise<{ id: string; teacher_id: string | null } | null> {
-    const data = maybe(await this.db.from('students').select('id, teacher_id').eq('id', id).maybeSingle());
+    const data = maybe(
+      await this.db.from('students').select('id, teacher_id').eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
@@ -57,17 +59,22 @@ export class StudentRecordingRepo {
   }
 
   async assists(input: { profileId: string; studentId: string }): Promise<boolean> {
-    const data = maybe(await this.db
-      .from('student_assistants')
-      .select('student_id')
-      .eq('profile_id', input.profileId)
-      .eq('student_id', input.studentId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('student_assistants')
+        .select('student_id')
+        .eq('profile_id', input.profileId)
+        .eq('student_id', input.studentId)
+        .maybeSingle(),
+    );
     return data !== null;
   }
 
   /** The lessons of this student with a finished recording: ids only, nothing is signed (the report history's links). */
-  async doneLessonIds(input: { studentId: string; onlyTeacherId: string | null }): Promise<string[]> {
+  async doneLessonIds(input: {
+    studentId: string;
+    onlyTeacherId: string | null;
+  }): Promise<string[]> {
     let q = this.db
       .from('lesson_recordings')
       .select('lesson_id, lessons!inner(teacher_id, lesson_students!inner(student_id))')

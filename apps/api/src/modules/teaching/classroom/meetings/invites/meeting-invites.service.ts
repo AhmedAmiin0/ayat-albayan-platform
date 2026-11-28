@@ -30,7 +30,10 @@ export class MeetingInvitesDeps {
   ) {}
 }
 
-type Target = { user: AuthUser; id: string };
+interface Target {
+  user: AuthUser;
+  id: string;
+}
 
 /** Meeting invitees (R-MEET-02): creator or admin only (403; 410 once ended); never a phone. */
 @Injectable()
@@ -44,7 +47,9 @@ export class MeetingInvitesService {
   async list(t: Target): Promise<MeetingInviteeView[]> {
     await this.meetings.managed(t);
     const seesAll = mayInvitePhones(t.user.role);
-    return (await this.deps.invitees.forMeeting(t.id)).map((r) => visibleView(toInviteeView(r), seesAll));
+    return (await this.deps.invitees.forMeeting(t.id)).map((r) =>
+      visibleView(toInviteeView(r), seesAll),
+    );
   }
 
   async add(t: Target & { body: unknown }, now = new Date()): Promise<MeetingInviteResult[]> {
@@ -52,11 +57,21 @@ export class MeetingInvitesService {
     const { row, win } = await this.meetings.managedOpen(t, now);
     const resolved = await this.deps.resolver.resolve({ user: t.user, invitees });
     const policy = await this.deps.resolver.policy(t.user);
-    return this.flow.invite({ meeting: row, actorId: t.user.id, invitees: resolved, win, now, policy });
+    return this.flow.invite({
+      meeting: row,
+      actorId: t.user.id,
+      invitees: resolved,
+      win,
+      now,
+      policy,
+    });
   }
 
   /** Resend: a retried request id whose text was already queued sends and rotates nothing. */
-  async resend(t: Target & { inviteeId: string; body: unknown }, now = new Date()): Promise<MeetingInviteResult> {
+  async resend(
+    t: Target & { inviteeId: string; body: unknown },
+    now = new Date(),
+  ): Promise<MeetingInviteResult> {
     const { clientRequestId } = parseOrThrow(resendMeetingInviteSchema, t.body);
     const { row, win } = await this.meetings.managedOpen(t, now);
     const invitee = await this.deps.invitees.byId(row.id, t.inviteeId);
@@ -65,12 +80,21 @@ export class MeetingInvitesService {
     const policy = await this.deps.resolver.policy(t.user);
     const run = { meeting: row, actorId: t.user.id, win, now, policy };
     if (invitee.kind === 'staff') {
-      return this.flow.staff({ run, invitee, dedupKey: `${inviteSubject(row.id, row.starts_at)}:resend:${clientRequestId}` });
+      return this.flow.staff({
+        run,
+        invitee,
+        dedupKey: `${inviteSubject(row.id, row.starts_at)}:resend:${clientRequestId}`,
+      });
     }
     const v = { meetingId: row.id, phone: invitee.phone_e164 ?? '', startsAt: row.starts_at };
     const dedupKey = resendDedupKey(v, clientRequestId);
     if (!policy.mayChat(v.phone)) return this.flow.personal({ run, invitee, dedupKey });
-    if (await this.deps.invitees.queued(dedupKey)) return { ...visibleView(toInviteeView(invitee), policy.seesAll), link: null, invitation_text: null };
+    if (await this.deps.invitees.queued(dedupKey))
+      return {
+        ...visibleView(toInviteeView(invitee), policy.seesAll),
+        link: null,
+        invitation_text: null,
+      };
     await this.flow.assertDailyLimit({ actorId: t.user.id, now, adding: 1 });
     const result = await this.flow.personal({ run, invitee, dedupKey });
     this.flow.kickIfSent([result]);
@@ -85,8 +109,20 @@ export class MeetingInvitesService {
       this.deps.picks.students({ scope, ...(q ? { q } : {}) }),
     ]);
     return [
-      ...staff.filter((s) => s.id !== user.id).map((s): MeetingInviteeOption => ({ kind: 'staff', id: s.id, name: s.full_name, role: s.role })),
-      ...students.map((s): MeetingInviteeOption => ({ kind: 'student', id: s.id, name: s.name, code: s.code ?? '' })),
+      ...staff
+        .filter((s) => s.id !== user.id)
+        .map((s): MeetingInviteeOption => ({
+          kind: 'staff',
+          id: s.id,
+          name: s.full_name,
+          role: s.role,
+        })),
+      ...students.map((s): MeetingInviteeOption => ({
+        kind: 'student',
+        id: s.id,
+        name: s.name,
+        code: s.code ?? '',
+      })),
     ];
   }
 }

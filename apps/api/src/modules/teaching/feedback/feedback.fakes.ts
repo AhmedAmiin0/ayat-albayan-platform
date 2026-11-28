@@ -13,10 +13,26 @@ const GUARDIAN_ID = '00000000-0000-4000-8000-0000000000a1';
 export const GUARDIAN_PHONE = '+966501234567';
 export const NOW = new Date('2026-10-05T10:00:00Z');
 
-export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
-export const TEACHER: AuthUser = { id: 'b0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
-export const OTHER_TEACHER: AuthUser = { id: 'b0000000-0000-4000-8000-000000000003', email: null, role: 'teacher' };
-export const GUARDIAN: AuthUser = { id: 'c0000000-0000-4000-8000-000000000004', email: null, role: 'guardian' };
+export const ADMIN: AuthUser = {
+  id: 'a0000000-0000-4000-8000-000000000001',
+  email: null,
+  role: 'admin',
+};
+export const TEACHER: AuthUser = {
+  id: 'b0000000-0000-4000-8000-000000000002',
+  email: null,
+  role: 'teacher',
+};
+export const OTHER_TEACHER: AuthUser = {
+  id: 'b0000000-0000-4000-8000-000000000003',
+  email: null,
+  role: 'teacher',
+};
+export const GUARDIAN: AuthUser = {
+  id: 'c0000000-0000-4000-8000-000000000004',
+  email: null,
+  role: 'guardian',
+};
 
 export const EXP = Math.floor(NOW.getTime() / 1000) + 14 * 86_400;
 export const tokenFor = (exp = EXP, secret = SECRET) =>
@@ -65,10 +81,27 @@ export function requestContext(over: Partial<RequestContext> = {}): RequestConte
 }
 
 export function listRow(over: Partial<FeedbackListRow> = {}): FeedbackListRow {
-  const r = feedbackRow({ rating: 5, recommend: 'yes', note: 'ممتازة', contact_phone: '+966509999999', submitted_at: NOW.toISOString() });
+  const r = feedbackRow({
+    rating: 5,
+    recommend: 'yes',
+    note: 'ممتازة',
+    contact_phone: '+966509999999',
+    submitted_at: NOW.toISOString(),
+  });
   return {
-    ...{ id: r.id, lesson_id: r.lesson_id, student_id: r.student_id, teacher_id: r.teacher_id, kind: r.kind },
-    ...{ requested_at: r.requested_at, expires_at: r.expires_at, rating: r.rating, recommend: r.recommend },
+    ...{
+      id: r.id,
+      lesson_id: r.lesson_id,
+      student_id: r.student_id,
+      teacher_id: r.teacher_id,
+      kind: r.kind,
+    },
+    ...{
+      requested_at: r.requested_at,
+      expires_at: r.expires_at,
+      rating: r.rating,
+      recommend: r.recommend,
+    },
     ...{ note: r.note, contact_phone: r.contact_phone, submitted_at: r.submitted_at },
     ...{ quick_rating: r.quick_rating, quick_rated_at: r.quick_rated_at },
     ...over,

@@ -13,7 +13,11 @@ const service = new RuleExtendService(
   generator as unknown as OccurrenceGenerator,
   readerOf(SchedulingSettings, { booking_horizon_weeks: 5 }),
 );
-const NEW = { id: 'l-new', starts_at: '2026-11-08T14:00:00.000Z', ends_at: '2026-11-08T14:45:00.000Z' };
+const NEW = {
+  id: 'l-new',
+  starts_at: '2026-11-08T14:00:00.000Z',
+  ends_at: '2026-11-08T14:45:00.000Z',
+};
 const UNTIL = new Date('2026-11-13T10:00:00Z');
 
 describe('RuleExtendService — POST /schedule-rules/:id/extend (R-SCH-02, R-SCH-04)', () => {
@@ -25,7 +29,9 @@ describe('RuleExtendService — POST /schedule-rules/:id/extend (R-SCH-02, R-SCH
 
   it('404 for an unknown rule', async () => {
     rules.rule.mockResolvedValue(null);
-    await expect(service.extend({ ruleId: 'x', actorId: 'a' })).rejects.toMatchObject({ status: 404 });
+    await expect(service.extend({ ruleId: 'x', actorId: 'a' })).rejects.toMatchObject({
+      status: 404,
+    });
   });
 
   it('409 rule_not_active for a paused or ended rule (only active rules are extended)', async () => {
@@ -44,14 +50,27 @@ describe('RuleExtendService — POST /schedule-rules/:id/extend (R-SCH-02, R-SCH
       weeks: 6,
       actorId: 'admin-1',
     });
-    expect(res).toEqual({ rule_id: ruleRow().id, until: UNTIL.toISOString(), inserted: 1, conflicts: [] });
+    expect(res).toEqual({
+      rule_id: ruleRow().id,
+      until: UNTIL.toISOString(),
+      inserted: 1,
+      conflicts: [],
+    });
   });
 
-  it('weeks default to settings.booking_horizon_weeks; the new rows\' clashes are returned (never blocks)', async () => {
-    const clash = { kind: 'teacher_busy', startsAt: NEW.starts_at, endsAt: NEW.ends_at, lessonId: 'other' };
+  it("weeks default to settings.booking_horizon_weeks; the new rows' clashes are returned (never blocks)", async () => {
+    const clash = {
+      kind: 'teacher_busy',
+      startsAt: NEW.starts_at,
+      endsAt: NEW.ends_at,
+      lessonId: 'other',
+    };
     generator.topUp.mockResolvedValue({ until: UNTIL, lessons: [NEW], conflicts: [clash] });
     const res = await service.extend({ ruleId: 'r', actorId: 'admin-1' });
-    expect(generator.topUp).toHaveBeenCalledWith(expect.anything(), { weeks: 5, actorId: 'admin-1' });
+    expect(generator.topUp).toHaveBeenCalledWith(expect.anything(), {
+      weeks: 5,
+      actorId: 'admin-1',
+    });
     expect(res.conflicts).toEqual([clash]);
     expect(res.inserted).toBe(1);
   });

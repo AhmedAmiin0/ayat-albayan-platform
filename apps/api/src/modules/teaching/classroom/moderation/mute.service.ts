@@ -7,12 +7,21 @@ import {
   type JoinRole,
   type MuteSource,
 } from '@ab/schedule';
-import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
 import { parseOrThrow } from '@/common/http/http';
 import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
-import { meetingRoleOf, roleOfIdentity } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
+import {
+  meetingRoleOf,
+  roleOfIdentity,
+} from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
 import { LessonRoleService } from '@/modules/teaching/classroom/join/lesson-role.service';
 import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/livekit-api';
@@ -27,7 +36,8 @@ interface MuteInput {
   body: unknown;
 }
 
-const cannotMute = (): HttpException => new HttpException({ code: 'cannot_mute', message: 'cannot_mute' }, HttpStatus.FORBIDDEN);
+const cannotMute = (): HttpException =>
+  new HttpException({ code: 'cannot_mute', message: 'cannot_mute' }, HttpStatus.FORBIDDEN);
 const asJoinRole = (role: string): JoinRole | null => JOIN_ROLES.find((r) => r === role) ?? null;
 
 function checkBody(livekit: LivekitApi, body: unknown): MuteSource {
@@ -35,12 +45,17 @@ function checkBody(livekit: LivekitApi, body: unknown): MuteSource {
   return parseOrThrow(muteSchema, body).source;
 }
 
-async function applyMute(livekit: LivekitApi, input: { room: string; identity: string; source: MuteSource }): Promise<void> {
+async function applyMute(
+  livekit: LivekitApi,
+  input: { room: string; identity: string; source: MuteSource },
+): Promise<void> {
   try {
     await muteTrack(livekit, input);
   } catch (e) {
-    if (e instanceof LivekitError && e.code === 'not_found') throw notFound('participant_not_found');
-    if (e instanceof LivekitError) throw new BadGatewayException({ code: 'livekit_error', message: e.message });
+    if (e instanceof LivekitError && e.code === 'not_found')
+      throw notFound('participant_not_found');
+    if (e instanceof LivekitError)
+      throw new BadGatewayException({ code: 'livekit_error', message: e.message });
     throw e;
   }
 }
@@ -61,7 +76,11 @@ export class MuteService {
     const target = await this.moderation.participant(lesson.id, input.identity);
     if (!target) throw notFound('participant_not_found');
     if (!canMute(role, asJoinRole(target.role))) throw cannotMute();
-    await applyMute(this.livekit, { room: lessonRoomName(lesson.id), identity: target.identity, source });
+    await applyMute(this.livekit, {
+      room: lessonRoomName(lesson.id),
+      identity: target.identity,
+      source,
+    });
   }
 }
 
@@ -83,6 +102,10 @@ export class MeetingMuteService {
     const target = roleOfIdentity(input.identity);
     if (!target) throw notFound('participant_not_found');
     if (!canMute(role, target)) throw cannotMute();
-    await applyMute(this.livekit, { room: meetingRoomName(meeting.id), identity: input.identity, source });
+    await applyMute(this.livekit, {
+      room: meetingRoomName(meeting.id),
+      identity: input.identity,
+      source,
+    });
   }
 }

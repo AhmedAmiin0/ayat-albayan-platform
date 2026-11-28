@@ -1,6 +1,14 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { REQUIRE_ON } from '@/modules/sales/sales/rule/sales-ownership-rule.fakes';
-import { BODY, profileApp, RESULT, S1, SALES, SUB_ID, T_NEW } from '@/modules/teaching/booking/profile/profile-course.fakes';
+import {
+  BODY,
+  profileApp,
+  RESULT,
+  S1,
+  SALES,
+  SUB_ID,
+  T_NEW,
+} from '@/modules/teaching/booking/profile/profile-course.fakes';
 
 // Course routes follow SalesOwnershipRule: own students while enforced; the admin any.
 type App = Awaited<ReturnType<typeof profileApp>>;

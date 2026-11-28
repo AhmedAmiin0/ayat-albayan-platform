@@ -3,7 +3,10 @@ import type { PushService } from '@/common/push/push.service';
 import { lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
 import type { TeacherCancelRepo } from '@/modules/teaching/lessons/teacher-me/teacher-cancel.repo';
 import { lockScreenText } from '@/common/push/dispatch/push.lock-screen';
-import { TeacherCancelPush, teacherCancelEvent } from '@/modules/teaching/lessons/teacher-me/teacher-cancel.push';
+import {
+  TeacherCancelPush,
+  teacherCancelEvent,
+} from '@/modules/teaching/lessons/teacher-me/teacher-cancel.push';
 
 const lesson = lessonRow();
 
@@ -41,13 +44,16 @@ describe('the lock screen (review 11-11)', () => {
   });
 
   it('any other cancel push has no reason and no literal slot', () => {
-    const text = lockScreenText({ kind: 'lesson_cancelled', vars: { student: 'سهيلة', when: 'الاثنين' } });
+    const text = lockScreenText({
+      kind: 'lesson_cancelled',
+      vars: { student: 'سهيلة', when: 'الاثنين' },
+    });
     expect(text.body).not.toContain('{reason}');
   });
 });
 
 describe('TeacherCancelPush', () => {
-  it('the admins, then the students\' own assistants', async () => {
+  it("the admins, then the students' own assistants", async () => {
     const { push, repo, notifier } = setup(async () => ['s-1']);
     await notifier.notify(lesson, 'سفر');
     expect(push.notifyAdmins).toHaveBeenCalledWith('lesson_cancelled', expect.any(Object));

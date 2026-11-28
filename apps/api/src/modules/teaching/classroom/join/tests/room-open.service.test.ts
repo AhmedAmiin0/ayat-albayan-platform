@@ -2,14 +2,29 @@ import { ForbiddenException } from '@nestjs/common';
 import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
-import { ADMIN, ASSISTANT, CLOSED, EARLY, LESSON, LESSON_ID, OTHER_TEACHER, queries, SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  ADMIN,
+  ASSISTANT,
+  CLOSED,
+  EARLY,
+  LESSON,
+  LESSON_ID,
+  OTHER_TEACHER,
+  queries,
+  SALES,
+  TEACHER,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import { rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RoomOpenService } from '@/modules/teaching/classroom/join/room-open.service';
 
 let q: ReturnType<typeof queries>;
 const open = (user = TEACHER, now = EARLY) =>
-  new RoomOpenService(rolesOf({ q }), q as unknown as ClassroomRepo).open({ user, lessonId: LESSON_ID }, now);
-const body = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+  new RoomOpenService(rolesOf({ q }), q as unknown as ClassroomRepo).open(
+    { user, lessonId: LESSON_ID },
+    now,
+  );
+const body = async (p: Promise<unknown>) =>
+  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = queries();
@@ -19,7 +34,11 @@ describe('«افتح الحلقة الآن»', () => {
   it('the lesson teacher opens the room an hour early: stamped now, the window is open', async () => {
     const r = await open(TEACHER, EARLY);
     expect(q.openRoom).toHaveBeenCalledWith(LESSON_ID, EARLY.toISOString());
-    expect(r).toMatchObject({ state: 'open', opens_at: EARLY.toISOString(), room_opened_at: EARLY.toISOString() });
+    expect(r).toMatchObject({
+      state: 'open',
+      opens_at: EARLY.toISOString(),
+      room_opened_at: EARLY.toISOString(),
+    });
   });
 
   it('an admin may open it too', async () => {

@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';
-import { body, LESSON_ID, NOW, retimed, timeSetup } from '@/modules/teaching/lessons/time-edit/time-edit.fakes';
+import {
+  body,
+  LESSON_ID,
+  NOW,
+  retimed,
+  timeSetup,
+} from '@/modules/teaching/lessons/time-edit/time-edit.fakes';
 
 // lesson_rescheduled only when notify is on and the start moved; the family gets one message.
 

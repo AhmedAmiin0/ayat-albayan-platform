@@ -2,7 +2,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { LessonStatus } from '@ab/catalog';
 import type { CorrectTo } from '@ab/schedule';
 import { readerOf } from '@/common/settings/settings.fakes';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
+import {
+  ADMIN,
+  appliedChange,
+  fakeStore,
+  LESSON_ID,
+  lessonRow,
+} from '@/modules/teaching/lessons/lessons.fakes';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import type { AutoHeldRepo } from '@/modules/teaching/lessons/auto-held/auto-held.repo';
 import { OutcomeCorrection } from '@/modules/teaching/lessons/auto-held/outcome-correction';
@@ -43,11 +49,18 @@ describe('OutcomeCorrection', () => {
     for (const [to, fields] of cases) {
       const { correct, writer, record } = setup();
       expect(await correct(to)).toBe(LESSON_ID);
-      expect(appliedChange(writer)?.changes[0]).toMatchObject({ from_status: 'scheduled', to_status: to, ...fields });
-      expect(record).toHaveBeenCalledWith(expect.objectContaining({
-        actorId: ADMIN.id, action: 'status_change',
-        after: expect.objectContaining({ status: to, reason: 'outcome_correction' }),
-      }));
+      expect(appliedChange(writer)?.changes[0]).toMatchObject({
+        from_status: 'scheduled',
+        to_status: to,
+        ...fields,
+      });
+      expect(record).toHaveBeenCalledWith(
+        expect.objectContaining({
+          actorId: ADMIN.id,
+          action: 'status_change',
+          after: expect.objectContaining({ status: to, reason: 'outcome_correction' }),
+        }),
+      );
     }
   });
 
@@ -58,7 +71,10 @@ describe('OutcomeCorrection', () => {
   });
 
   it('a lesson the job settled: absent → held, held → absent', async () => {
-    for (const [from, to] of [['no_show', 'completed'], ['completed', 'no_show']] as const) {
+    for (const [from, to] of [
+      ['no_show', 'completed'],
+      ['completed', 'no_show'],
+    ] as const) {
       const { correct, writer } = setup({ status: from, settled: true });
       await correct(to);
       expect(appliedChange(writer)?.changes[0]).toMatchObject({ from_status: from, to_status: to });
@@ -73,18 +89,26 @@ describe('OutcomeCorrection', () => {
 
   it('settled over 14 days ago, or an open lesson before its end: 409 not_auto_held', async () => {
     vi.setSystemTime(new Date('2026-10-19T00:00:00Z'));
-    await expect(setup({ status: 'no_show', settled: true }).correct('completed')).rejects.toMatchObject({
+    await expect(
+      setup({ status: 'no_show', settled: true }).correct('completed'),
+    ).rejects.toMatchObject({
       response: { code: 'not_auto_held' },
     });
     vi.setSystemTime(new Date('2026-10-04T14:30:00Z'));
-    await expect(setup().correct('no_show')).rejects.toMatchObject({ response: { code: 'not_auto_held' } });
+    await expect(setup().correct('no_show')).rejects.toMatchObject({
+      response: { code: 'not_auto_held' },
+    });
   });
 
   it('the same status: 409 invalid_transition; a paid earning: 409 earning_paid', async () => {
-    await expect(setup({ status: 'no_show', settled: true }).correct('no_show')).rejects.toMatchObject({
+    await expect(
+      setup({ status: 'no_show', settled: true }).correct('no_show'),
+    ).rejects.toMatchObject({
       response: { code: 'invalid_transition' },
     });
-    await expect(setup({ status: 'completed', settled: true, paid: true }).correct('no_show')).rejects.toMatchObject({
+    await expect(
+      setup({ status: 'completed', settled: true, paid: true }).correct('no_show'),
+    ).rejects.toMatchObject({
       response: { code: 'earning_paid' },
     });
   });

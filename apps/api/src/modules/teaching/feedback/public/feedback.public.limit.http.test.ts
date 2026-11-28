@@ -17,7 +17,8 @@ describe('public feedback rate limit (own app: the limiter is per instance)', ()
   afterEach(() => vi.useRealTimers());
 
   it('the 11th request on one token from one IP is 429 too_many_requests; another token still works', async () => {
-    const get = (token: string) => h.call({ method: 'GET', url: `/public/feedback/${token}`, token: null });
+    const get = (token: string) =>
+      h.call({ method: 'GET', url: `/public/feedback/${token}`, token: null });
     const codes: number[] = [];
     for (let i = 0; i < 11; i++) codes.push((await get(tokenFor())).statusCode);
     expect(codes.slice(0, 10).every((c) => c === 200)).toBe(true);

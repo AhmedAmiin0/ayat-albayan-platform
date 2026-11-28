@@ -6,24 +6,51 @@ import { TeacherConfirmRepo } from '@/modules/teaching/lessons/teacher-me/teache
 describe('TeacherConfirmRepo', () => {
   it('calls teacher_confirm_lesson and parses its outcome', async () => {
     const f = fakeDb({ 'rpc:teacher_confirm_lesson': [{ data: 'started' }] });
-    const out = await new TeacherConfirmRepo(f.db).confirm({ lessonId: 'l1', teacherId: 't1', actorId: 'p1' });
+    const out = await new TeacherConfirmRepo(f.db).confirm({
+      lessonId: 'l1',
+      teacherId: 't1',
+      actorId: 'p1',
+    });
     expect(out).toBe('started');
-    expect(f.argsOf('rpc:teacher_confirm_lesson', 'rpc')).toEqual([{ p_lesson: 'l1', p_teacher: 't1', p_actor: 'p1' }]);
+    expect(f.argsOf('rpc:teacher_confirm_lesson', 'rpc')).toEqual([
+      { p_lesson: 'l1', p_teacher: 't1', p_actor: 'p1' },
+    ]);
   });
 
   it('an unknown answer or a database error throws', async () => {
     const odd = fakeDb({ 'rpc:teacher_confirm_lesson': [{ data: 'maybe' }] });
-    await expect(new TeacherConfirmRepo(odd.db).confirm({ lessonId: 'l1', teacherId: 't1', actorId: 'p1' })).rejects.toThrow();
-    const bad = fakeDb({ 'rpc:teacher_confirm_lesson': [{ data: null, error: { message: 'x', code: '42' } }] });
-    await expect(new TeacherConfirmRepo(bad.db).confirm({ lessonId: 'l1', teacherId: 't1', actorId: 'p1' })).rejects.toThrow();
+    await expect(
+      new TeacherConfirmRepo(odd.db).confirm({ lessonId: 'l1', teacherId: 't1', actorId: 'p1' }),
+    ).rejects.toThrow();
+    const bad = fakeDb({
+      'rpc:teacher_confirm_lesson': [{ data: null, error: { message: 'x', code: '42' } }],
+    });
+    await expect(
+      new TeacherConfirmRepo(bad.db).confirm({ lessonId: 'l1', teacherId: 't1', actorId: 'p1' }),
+    ).rejects.toThrow();
   });
 });
 
 describe('TeacherCancelRepo.ownerIds', () => {
-  it('who brought each student and who holds their family\'s lead, once each', async () => {
+  it("who brought each student and who holds their family's lead, once each", async () => {
     const f = fakeDb({
-      students: [{ data: [{ id: 's1', brought_by: 'a1', guardian_id: 'g1' }, { id: 's2', brought_by: null, guardian_id: 'g1' }] }],
-      leads: [{ data: [{ assigned_to: 'a2', converted_guardian_id: 'g1' }, { assigned_to: 'a1', converted_guardian_id: 'g1' }, { assigned_to: null, converted_guardian_id: 'g1' }] }],
+      students: [
+        {
+          data: [
+            { id: 's1', brought_by: 'a1', guardian_id: 'g1' },
+            { id: 's2', brought_by: null, guardian_id: 'g1' },
+          ],
+        },
+      ],
+      leads: [
+        {
+          data: [
+            { assigned_to: 'a2', converted_guardian_id: 'g1' },
+            { assigned_to: 'a1', converted_guardian_id: 'g1' },
+            { assigned_to: null, converted_guardian_id: 'g1' },
+          ],
+        },
+      ],
     });
     expect(await new TeacherCancelRepo(f.db).ownerIds(['s1', 's2'])).toEqual(['a1', 'a2']);
     expect(f.argsOf('students', 'in')).toEqual(['id', ['s1', 's2']]);
@@ -38,7 +65,14 @@ describe('TeacherCancelRepo.ownerIds', () => {
 
   it("ownersOf: each student's own owners, in the same two reads", async () => {
     const f = fakeDb({
-      students: [{ data: [{ id: 's1', brought_by: 'a1', guardian_id: 'g1' }, { id: 's2', brought_by: null, guardian_id: 'g2' }] }],
+      students: [
+        {
+          data: [
+            { id: 's1', brought_by: 'a1', guardian_id: 'g1' },
+            { id: 's2', brought_by: null, guardian_id: 'g2' },
+          ],
+        },
+      ],
       leads: [{ data: [{ assigned_to: 'a2', converted_guardian_id: 'g2' }] }],
     });
     const owners = await new TeacherCancelRepo(f.db).ownersOf(['s1', 's2', 's1']);

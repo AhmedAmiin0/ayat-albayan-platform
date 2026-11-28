@@ -16,7 +16,10 @@ export class MeetingRecordingsController {
 
   /** Newest first; 404 meeting_not_found, 403 anyone but an admin or the creator. */
   @Get()
-  list(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<LessonRecordingView[]> {
+  list(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<LessonRecordingView[]> {
     return this.recordings.list({ user, id });
   }
 }

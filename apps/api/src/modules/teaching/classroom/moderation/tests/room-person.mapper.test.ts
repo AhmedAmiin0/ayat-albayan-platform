@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { personLinkIds, type LinkRow } from '@/modules/teaching/classroom/moderation/room-person.mapper';
+import {
+  personLinkIds,
+  type LinkRow,
+} from '@/modules/teaching/classroom/moderation/room-person.mapper';
 
 const link = (id: string, over: Partial<LinkRow> = {}): LinkRow => ({
   id,

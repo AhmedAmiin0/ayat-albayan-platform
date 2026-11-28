@@ -50,7 +50,8 @@ export class CoursePauseJob extends TickerJob {
     } catch (e) {
       this.log.error(`course pause pass aborted: ${String(e)}`);
     }
-    if (summary.begun + summary.due > 0) this.log.log(`course pause pass: ${JSON.stringify(summary)}`);
+    if (summary.begun + summary.due > 0)
+      this.log.log(`course pause pass: ${JSON.stringify(summary)}`);
     return summary;
   }
 

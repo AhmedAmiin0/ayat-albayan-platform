@@ -34,29 +34,35 @@ export class RoomPersonRepo {
       ...(users.length ? [`user_id.in.(${users.join(',')})`] : []),
     ];
     if (or.length === 0) return [];
-    const data = rows(await this.db
-      .from('classroom_participants')
-      .select('identity')
-      .eq('lesson_id', lessonId)
-      .is('left_at', null)
-      .or(or.join(','))
-      .limit(LIMIT));
+    const data = rows(
+      await this.db
+        .from('classroom_participants')
+        .select('identity')
+        .eq('lesson_id', lessonId)
+        .is('left_at', null)
+        .or(or.join(','))
+        .limit(LIMIT),
+    );
     return data.map((r) => r.identity);
   }
 
   private async links(lessonId: string): Promise<LinkRow[]> {
-    const data = rows(await this.db
-      .from('lesson_join_links')
-      .select('id, student_id, sent_for_student_id')
-      .eq('lesson_id', lessonId));
+    const data = rows(
+      await this.db
+        .from('lesson_join_links')
+        .select('id, student_id, sent_for_student_id')
+        .eq('lesson_id', lessonId),
+    );
     return data;
   }
 
   private async students(lessonId: string): Promise<LessonStudentRow[]> {
-    const data = rows(await this.db
-      .from('lesson_students')
-      .select('student_id, student:students(guardian_id)')
-      .eq('lesson_id', lessonId));
+    const data = rows(
+      await this.db
+        .from('lesson_students')
+        .select('student_id, student:students(guardian_id)')
+        .eq('lesson_id', lessonId),
+    );
     return data.map((r) => ({ student_id: r.student_id, guardian_id: r.student.guardian_id }));
   }
 }

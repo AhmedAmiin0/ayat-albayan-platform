@@ -10,7 +10,10 @@ const SUHAILA = { id: IDS.s1, code: 'AB-0001', name: 'سهيلة', status: 'acti
 function setup() {
   const queries = fakeQueries();
   queries.guardianByPhone.mockResolvedValue({ id: IDS.g1, tz: 'Asia/Riyadh', students: [SUHAILA] });
-  return { queries, parties: new BookingParties(queries as unknown as BookingRepo, readerOf(BookingSettings)) };
+  return {
+    queries,
+    parties: new BookingParties(queries as unknown as BookingRepo, readerOf(BookingSettings)),
+  };
 }
 const lead = (name: string, over: Record<string, unknown> = {}) =>
   leadRequest({ newStudent: { name, tz: 'Asia/Riyadh' }, ...over });

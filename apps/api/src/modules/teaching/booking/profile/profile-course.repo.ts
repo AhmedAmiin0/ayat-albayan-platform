@@ -33,23 +33,23 @@ export class ProfileCourseRepo {
 
   /** 404 student_not_found; the student's assigned teacher (students.teacher_id). */
   async studentTeacher(studentId: string): Promise<string | null> {
-    const data = maybe(await this.db
-      .from('students')
-      .select('teacher_id')
-      .eq('id', studentId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db.from('students').select('teacher_id').eq('id', studentId).maybeSingle(),
+    );
     if (!data) throw notFound('student_not_found');
     return data.teacher_id;
   }
 
   /** The student's current package id (currentPackage); 404 subscription_not_found when none. */
   async currentSubscription(studentId: string): Promise<string> {
-    const data = rows(await this.db
-      .from('subscriptions')
-      .select('id, status')
-      .eq('student_id', studentId)
-      .order('starts_on', { ascending: false })
-      .order('created_at', { ascending: false }));
+    const data = rows(
+      await this.db
+        .from('subscriptions')
+        .select('id, status')
+        .eq('student_id', studentId)
+        .order('starts_on', { ascending: false })
+        .order('created_at', { ascending: false }),
+    );
     const current = currentPackage(data);
     if (!current) throw notFound('subscription_not_found');
     return current.id;
@@ -57,11 +57,13 @@ export class ProfileCourseRepo {
 
   /** Null when unknown. */
   async teacher(id: string): Promise<PickedTeacher | null> {
-    const data = maybe(await this.db
-      .from('teachers')
-      .select('id, status, display_name_ar')
-      .eq('id', id)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('teachers')
+        .select('id, status, display_name_ar')
+        .eq('id', id)
+        .maybeSingle(),
+    );
     return data;
   }
 
@@ -71,14 +73,16 @@ export class ProfileCourseRepo {
     limit = 1,
   ): Promise<{ id: string; status: LessonStatus; starts_at: string }[]> {
     if (ruleIds.length === 0) return [];
-    const data = rows(await this.db
-      .from('lessons')
-      .select('id, status, starts_at')
-      .in('rule_id', [...ruleIds])
-      .in('status', [...OPEN_LESSON_STATUSES])
-      .gte('starts_at', new Date().toISOString())
-      .order('starts_at')
-      .limit(limit));
+    const data = rows(
+      await this.db
+        .from('lessons')
+        .select('id, status, starts_at')
+        .in('rule_id', [...ruleIds])
+        .in('status', [...OPEN_LESSON_STATUSES])
+        .gte('starts_at', new Date().toISOString())
+        .order('starts_at')
+        .limit(limit),
+    );
     return data;
   }
 

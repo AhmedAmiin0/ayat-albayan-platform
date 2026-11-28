@@ -1,7 +1,12 @@
 import { roleOfMeta } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { CONFIG, decode } from '@/modules/teaching/classroom/classroom.fakes';
-import { grantsFor, mintServerToken, mintToken, signJwt } from '@/modules/teaching/classroom/livekit/livekit-token';
+import {
+  grantsFor,
+  mintServerToken,
+  mintToken,
+  signJwt,
+} from '@/modules/teaching/classroom/livekit/livekit-token';
 
 const NOW = new Date('2026-10-05T16:00:00Z');
 const nowS = NOW.getTime() / 1000;
@@ -27,7 +32,8 @@ describe('grants used by the classroom', () => {
   });
 
   it('teacher, admin and assistant may share a screen (no source limit); a guest may not', () => {
-    for (const role of ['teacher', 'admin', 'assistant'] as const) expect(grantsFor(role, 'r').canPublishSources).toBeUndefined();
+    for (const role of ['teacher', 'admin', 'assistant'] as const)
+      expect(grantsFor(role, 'r').canPublishSources).toBeUndefined();
     expect(grantsFor('guest', 'r').canPublishSources).not.toContain('screen_share');
   });
 });
@@ -35,7 +41,13 @@ describe('grants used by the classroom', () => {
 describe('mintServerToken', () => {
   it('signs a short-lived server token carrying only the requested grant', () => {
     const t = mintServerToken(CONFIG, { roomAdmin: true, room: 'lesson-x' }, NOW);
-    const c = decode(t) as unknown as { iss: string; exp: number; nbf: number; video: object; validSignature: boolean };
+    const c = decode(t) as unknown as {
+      iss: string;
+      exp: number;
+      nbf: number;
+      video: object;
+      validSignature: boolean;
+    };
     expect(c.validSignature).toBe(true);
     expect(c.iss).toBe(CONFIG.apiKey);
     expect(c.video).toEqual({ roomAdmin: true, room: 'lesson-x' });
@@ -51,7 +63,14 @@ describe('mintServerToken', () => {
 
 describe('signJwt', () => {
   it('is an HS256 JWT over the claims', () => {
-    const t = signJwt(CONFIG.apiSecret, { iss: 'k', sub: 's', name: 'n', nbf: 1, exp: 2, video: {} });
+    const t = signJwt(CONFIG.apiSecret, {
+      iss: 'k',
+      sub: 's',
+      name: 'n',
+      nbf: 1,
+      exp: 2,
+      video: {},
+    });
     expect(decode(t).validSignature).toBe(true);
     expect(decode(t, 'other').validSignature).toBe(false);
   });

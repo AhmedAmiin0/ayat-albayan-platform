@@ -30,7 +30,9 @@ describe('GET /lessons: «الباقة غير مدفوعة» on upcoming lessons
   });
 
   it('a failed flag lookup still returns the lessons, unflagged', async () => {
-    h.lessons.window.mockResolvedValue([lessonRow({ id: 'next', starts_at: '2099-01-02T14:00:00Z' })]);
+    h.lessons.window.mockResolvedValue([
+      lessonRow({ id: 'next', starts_at: '2099-01-02T14:00:00Z' }),
+    ]);
     h.unpaid.studentIds.mockRejectedValue(new Error('db down'));
     const res = await h.call({ method: 'GET', url: `/lessons?${WEEK}` });
     expect(res.statusCode).toBe(200);

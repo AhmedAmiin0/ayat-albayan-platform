@@ -32,8 +32,12 @@ export class InternalMeetingsService {
    */
   async end(input: { user: AuthUser; id: string }, now = new Date()): Promise<void> {
     const row = await this.managed(input);
-    const early = !row.ends_at && !row.cancelled_at && meetingWindow(row, now, await this.queries.joinWindow())?.state === 'early';
-    if (early) throw new ConflictException({ code: 'meeting_not_started', message: 'meeting_not_started' });
+    const early =
+      !row.ends_at &&
+      !row.cancelled_at &&
+      meetingWindow(row, now, await this.queries.joinWindow())?.state === 'early';
+    if (early)
+      throw new ConflictException({ code: 'meeting_not_started', message: 'meeting_not_started' });
     await this.queries.end(input.id, now.toISOString());
     this.closeRoom(input.id, now);
   }
@@ -57,7 +61,10 @@ export class InternalMeetingsService {
   }
 
   /** managed, and still open: 410 meeting_ended once ended, cancelled or past its window. */
-  async managedOpen(input: { user: AuthUser; id: string }, now: Date): Promise<{ row: MeetingRow; win: JoinWindowConfig }> {
+  async managedOpen(
+    input: { user: AuthUser; id: string },
+    now: Date,
+  ): Promise<{ row: MeetingRow; win: JoinWindowConfig }> {
     const row = await this.managed(input);
     const win = await this.queries.joinWindow();
     if (meetingState(row, now, win) === 'ended') throw meetingEnded();

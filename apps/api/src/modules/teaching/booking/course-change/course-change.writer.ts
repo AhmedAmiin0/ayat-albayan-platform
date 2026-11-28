@@ -33,9 +33,18 @@ export class CourseChangeWriter {
 
   /** The change this clientRequestId already made (a retry), or null. */
   async replay(requestId: string, subscriptionId: string): Promise<CourseChangeResult | null> {
-    const data = maybe(await this.db.from('schedule_rules').select('id').eq('client_request_id', requestId).maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('schedule_rules')
+        .select('id')
+        .eq('client_request_id', requestId)
+        .maybeSingle(),
+    );
     if (!data) return null;
-    return this.result(await callRpc(this.db, 'course_change_result', { p_first: data.id }), subscriptionId);
+    return this.result(
+      await callRpc(this.db, 'course_change_result', { p_first: data.id }),
+      subscriptionId,
+    );
   }
 
   /**
@@ -50,7 +59,10 @@ export class CourseChangeWriter {
     const listed: unknown[] = Array.isArray(payload.messages) ? payload.messages : [];
     const kept = await this.notices.prepare(told, await gateConfirmations(this.policy, listed));
     const p = Array.isArray(payload.messages) ? { ...payload, messages: kept.messages } : payload;
-    const result = this.result(await callRpc(this.db, 'change_course', { p }), change.subscriptionId);
+    const result = this.result(
+      await callRpc(this.db, 'change_course', { p }),
+      change.subscriptionId,
+    );
     await this.events.changed(told.moved.map((m) => m.id));
     await this.notices.announce(told, kept.changes);
     return result;

@@ -24,11 +24,18 @@ export class BusyRepo {
         .order('id')
         .range(from, to),
     );
-    return rows.map((r) => ({ id: r.id, starts_at: new Date(r.starts_at), ends_at: new Date(r.ends_at) }));
+    return rows.map((r) => ({
+      id: r.id,
+      starts_at: new Date(r.starts_at),
+      ends_at: new Date(r.ends_at),
+    }));
   }
 
   /** One row per (lesson, student) for the given students. */
-  async studentLessons(studentIds: readonly string[], span: UtcWindow): Promise<StudentBusyLesson[]> {
+  async studentLessons(
+    studentIds: readonly string[],
+    span: UtcWindow,
+  ): Promise<StudentBusyLesson[]> {
     if (studentIds.length === 0) return [];
     const rows = await readAll((from, to) =>
       this.db
@@ -51,7 +58,11 @@ export class BusyRepo {
   }
 
   /** Changing course days moves these lessons, so the slot grid does not show them busy. */
-  async courseLessonIds(input: { subscriptionId: string; studentIds: readonly string[]; span: UtcWindow }): Promise<string[]> {
+  async courseLessonIds(input: {
+    subscriptionId: string;
+    studentIds: readonly string[];
+    span: UtcWindow;
+  }): Promise<string[]> {
     if (input.studentIds.length === 0) return [];
     const rows = await readAll((from, to) =>
       this.db

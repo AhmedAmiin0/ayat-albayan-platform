@@ -13,7 +13,14 @@ const plan = (rows = [cardRow(), row({ method: 'cash' })]): RefundPlan => ({
   pkg: { price: 400, lessonsTotal: 8, attended: 0, studentName: 'ط' },
   calc,
   cards: [
-    { paymentId: 'p-card', intent: 'pi_1', currency: 'SAR', refundable: 200, mine: [], unrecorded: 0 },
+    {
+      paymentId: 'p-card',
+      intent: 'pi_1',
+      currency: 'SAR',
+      refundable: 200,
+      mine: [],
+      unrecorded: 0,
+    },
   ],
   rows,
   requestId: REQ,

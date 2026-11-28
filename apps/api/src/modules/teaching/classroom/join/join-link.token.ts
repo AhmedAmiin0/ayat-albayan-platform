@@ -12,8 +12,11 @@ export const newLinkToken = (): string => randomBytes(24).toString('base64url');
 /** False for anything that cannot be one of ours: no database call is made for it. */
 export const looksLikeLinkToken = (token: string): boolean => TOKEN_RE.test(token);
 
-export const hashLinkToken = (token: string): string => createHash('sha256').update(token).digest('hex');
+export const hashLinkToken = (token: string): string =>
+  createHash('sha256').update(token).digest('hex');
 
 /** A link dies when its classroom closes (settings.join_closes_after_min after the lesson ends, at creation). */
-export const linkExpiry = (lesson: { ends_at: string }, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): string =>
-  roomClosesAt(lesson, win);
+export const linkExpiry = (
+  lesson: { ends_at: string },
+  win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
+): string => roomClosesAt(lesson, win);

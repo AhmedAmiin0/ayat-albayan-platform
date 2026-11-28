@@ -47,29 +47,35 @@ export class ChannelSeatRepo {
       .from('student_channels')
       .update({ assistant_id: input.profileId })
       .eq('student_id', input.studentId);
-    done(await (input.from === null
-      ? seat.is('assistant_id', null)
-      : seat.eq('assistant_id', input.from)));
+    done(
+      await (input.from === null
+        ? seat.is('assistant_id', null)
+        : seat.eq('assistant_id', input.from)),
+    );
   }
 
   /** The holder frees it; anyone else changes nothing. */
   async leave(input: { studentId: string; profileId: string }): Promise<void> {
-    done(await this.db
-      .from('student_channels')
-      .update({ assistant_id: null })
-      .eq('student_id', input.studentId)
-      .eq('assistant_id', input.profileId));
+    done(
+      await this.db
+        .from('student_channels')
+        .update({ assistant_id: null })
+        .eq('student_id', input.studentId)
+        .eq('assistant_id', input.profileId),
+    );
   }
 
   /** A salesperson's profile name (never a phone or email); null for anyone else. */
   private async assistant(id: string | null): Promise<SeatRow['holder']> {
     if (id === null) return null;
-    const data = maybe(await this.db
-      .from('profiles')
-      .select('id, full_name')
-      .eq('id', id)
-      .eq('role', 'sales')
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('profiles')
+        .select('id, full_name')
+        .eq('id', id)
+        .eq('role', 'sales')
+        .maybeSingle(),
+    );
     return data && { id: data.id, name: data.full_name };
   }
 }

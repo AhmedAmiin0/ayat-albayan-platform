@@ -25,11 +25,9 @@ export class LessonEndRepo {
       .eq('id', lessonId)
       .is('room_ended_at', null);
     if (set.error) throw pgError(set.error);
-    const data = one(await this.db
-      .from('lessons')
-      .select('room_ended_at')
-      .eq('id', lessonId)
-      .single());
+    const data = one(
+      await this.db.from('lessons').select('room_ended_at').eq('id', lessonId).single(),
+    );
     return data.room_ended_at ?? at;
   }
 }

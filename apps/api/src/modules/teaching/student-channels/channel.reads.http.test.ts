@@ -17,7 +17,9 @@ describe('student channel read state over HTTP', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     t.queries.isOpen.mockResolvedValue(true);
-    t.edits.message.mockResolvedValue(messageRow({ id: M, sender_profile_id: 'p-g', created_at: SENT }));
+    t.edits.message.mockResolvedValue(
+      messageRow({ id: M, sender_profile_id: 'p-g', created_at: SENT }),
+    );
     t.reads.marks.mockResolvedValue([
       { profile_id: 'p-t1', last_read_at: '2026-10-27T10:05:00+00:00' },
       // 0.4 µs… before the message: not read (a Date would say read).
@@ -30,7 +32,10 @@ describe('student channel read state over HTTP', () => {
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({
       read: [{ name: 'أبرار', role: 'teacher', at: '2026-10-27T10:05:00+00:00' }],
-      unread: [{ name: '', role: 'student' }, { name: '', role: 'sales' }],
+      unread: [
+        { name: '', role: 'student' },
+        { name: '', role: 'sales' },
+      ],
     });
     expect(t.reads.marks).toHaveBeenCalledWith(CH);
   });
@@ -41,7 +46,8 @@ describe('student channel read state over HTTP', () => {
       [reads(`/sales/students/${ST}/channel`), 'sales'],
       [reads(`/students/${ST}/channel`), 'admin'],
     ] as const;
-    for (const [url, who] of routes) expect([who, (await t.call('GET', url, who)).statusCode]).toEqual([who, 200]);
+    for (const [url, who] of routes)
+      expect([who, (await t.call('GET', url, who)).statusCode]).toEqual([who, 200]);
     t.edits.message.mockResolvedValueOnce(null);
     const res = await t.call('GET', reads(PORTAL), 'guardian');
     expect([res.statusCode, res.json().code]).toEqual([404, 'message_not_found']);
@@ -56,13 +62,19 @@ describe('student channel read state over HTTP', () => {
   it('✓✓ on my message once every other member read it; never on another’s', async () => {
     t.queries.page.mockResolvedValue([
       messageRow({ id: 'mine', sender_profile_id: 'p-g', created_at: SENT }),
-      messageRow({ id: 'theirs', sender_profile_id: 'p-t1', sender_role: 'teacher', created_at: SENT }),
+      messageRow({
+        id: 'theirs',
+        sender_profile_id: 'p-t1',
+        sender_role: 'teacher',
+        created_at: SENT,
+      }),
     ]);
     const all = ['p-t1', 'p-s', 'p-sa'].map((profile_id) => ({ profile_id, last_read_at: SENT }));
     t.reads.marks.mockResolvedValueOnce(all);
     const ticks = (await t.call('GET', `${PORTAL}/messages`, 'guardian')).json().messages;
     expect(ticks.map((m: { id: string; read_by_all: boolean }) => [m.id, m.read_by_all])).toEqual([
-      ['theirs', false], ['mine', true],
+      ['theirs', false],
+      ['mine', true],
     ]);
     // One member (p-s) still before it: no ✓✓; a failing read lookup shows none, the page loads.
     const page = await t.call('GET', `${PORTAL}/messages`, 'guardian');
@@ -74,6 +86,10 @@ describe('student channel read state over HTTP', () => {
 
   it('a read mark keeps the microseconds of the newest message shown (bug: the newest stayed unread)', async () => {
     expect((await t.post(`${PORTAL}/read`, 'guardian', { at: SENT })).statusCode).toBe(204);
-    expect(t.queries.setReadMark).toHaveBeenCalledWith({ channelId: CH, profileId: 'p-g', at: SENT });
+    expect(t.queries.setReadMark).toHaveBeenCalledWith({
+      channelId: CH,
+      profileId: 'p-g',
+      at: SENT,
+    });
   });
 });

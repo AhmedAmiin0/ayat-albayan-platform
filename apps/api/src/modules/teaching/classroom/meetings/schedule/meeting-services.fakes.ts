@@ -17,7 +17,10 @@ import type { MeetingInviteeRepo } from '@/modules/teaching/classroom/meetings/i
 import { MeetingInviteeResolver } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.resolver';
 import type { MeetingInviteesRepo } from '@/modules/teaching/classroom/meetings/invites/meeting-invitees.repo';
 import { meetingInviteMocks } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
-import { MeetingInvitesDeps, MeetingInvitesService } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.service';
+import {
+  MeetingInvitesDeps,
+  MeetingInvitesService,
+} from '@/modules/teaching/classroom/meetings/invites/meeting-invites.service';
 import type { MeetingListRepo } from './meeting-list.repo';
 import { MeetingListService } from './meeting-list.service';
 import { MeetingScheduleDeps, MeetingScheduleService } from './meeting-schedule.service';
@@ -40,7 +43,10 @@ export function meetingServices() {
     m.threads as unknown as ThreadMessagesRepo,
   );
   const flow = new MeetingInviteFlow(invitees, sender, ORIGIN);
-  const resolver = new MeetingInviteeResolver(picks, new MeetingInvitePolicies(m.teacherScopes as unknown as TeacherScopes));
+  const resolver = new MeetingInviteeResolver(
+    picks,
+    new MeetingInvitePolicies(m.teacherScopes as unknown as TeacherScopes),
+  );
   const meetings = new InternalMeetingsService(queries, new LivekitApi(CONFIG, post), ORIGIN);
   return {
     mq,
@@ -49,8 +55,16 @@ export function meetingServices() {
     meetings,
     create: new MeetingCreateService(queries, new MeetingCreateDeps(resolver, flow, invitees)),
     list: new MeetingListService(queries, m.lists as unknown as MeetingListRepo),
-    schedule: new MeetingScheduleService(meetings, queries, new MeetingScheduleDeps(invitees, sender, resolver)),
-    invites: new MeetingInvitesService(meetings, flow, new MeetingInvitesDeps(resolver, picks, invitees)),
+    schedule: new MeetingScheduleService(
+      meetings,
+      queries,
+      new MeetingScheduleDeps(invitees, sender, resolver),
+    ),
+    invites: new MeetingInvitesService(
+      meetings,
+      flow,
+      new MeetingInvitesDeps(resolver, picks, invitees),
+    ),
   };
 }
 export type MeetingServices = ReturnType<typeof meetingServices>;

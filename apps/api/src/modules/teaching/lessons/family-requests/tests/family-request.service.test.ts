@@ -1,5 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { FAMILY_USER, fakeStore, LESSON_ID, lessonRow, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import {
+  FAMILY_USER,
+  fakeStore,
+  LESSON_ID,
+  lessonRow,
+  TEACHER_ID,
+} from '@/modules/teaching/lessons/lessons.fakes';
 import type { LessonProposalRepo } from '@/modules/teaching/lessons/proposals/lesson-proposals.repo';
 import { FamilyRequestService } from '@/modules/teaching/lessons/family-requests/family-request.service';
 
@@ -17,7 +23,11 @@ describe('FamilyRequestService: «اطلب موعدًا آخر» and «سحب ا
   afterEach(() => vi.useRealTimers());
 
   it("stores a pending family row on the lesson's teacher, by the login that asked", async () => {
-    await service().request({ lessonId: LESSON_ID, body: { startsAt: LATER, note: 'اختبار' }, actor: FAMILY_USER });
+    await service().request({
+      lessonId: LESSON_ID,
+      body: { startsAt: LATER, note: 'اختبار' },
+      actor: FAMILY_USER,
+    });
     expect(proposals.create).toHaveBeenCalledWith({
       lesson_id: LESSON_ID,
       teacher_id: TEACHER_ID,
@@ -36,10 +46,18 @@ describe('FamilyRequestService: «اطلب موعدًا آخر» and «سحب ا
       response: { code: 'lesson_started' },
     });
     await expect(
-      service(lessonRow({ status: 'excused' })).request({ lessonId: LESSON_ID, body, actor: FAMILY_USER }),
+      service(lessonRow({ status: 'excused' })).request({
+        lessonId: LESSON_ID,
+        body,
+        actor: FAMILY_USER,
+      }),
     ).rejects.toMatchObject({ response: { code: 'lesson_started' } });
     await expect(
-      service().request({ lessonId: LESSON_ID, body: { startsAt: '2026-10-01T10:00:00Z' }, actor: FAMILY_USER }),
+      service().request({
+        lessonId: LESSON_ID,
+        body: { startsAt: '2026-10-01T10:00:00Z' },
+        actor: FAMILY_USER,
+      }),
     ).rejects.toMatchObject({ response: { code: 'date_in_past' } });
     expect(proposals.create).not.toHaveBeenCalled();
   });

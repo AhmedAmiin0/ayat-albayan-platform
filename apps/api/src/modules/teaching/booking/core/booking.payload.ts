@@ -17,7 +17,7 @@ import type { BookingTeacher } from './types';
 
 export type { CourseLabel } from './booking.course-label';
 
-type PayloadInput = {
+interface PayloadInput {
   req: BookingRequest;
   kind: BookingKind;
   teacher: BookingTeacher;
@@ -42,7 +42,7 @@ type PayloadInput = {
   makeupOf: string | null;
   /** The assistant's course: the subscription's label and id on every rule, whatever was sent. */
   course?: CourseLabel | undefined;
-};
+}
 
 
 /** The rule's package: the request's, or none for a makeup (it has no package of its own). */

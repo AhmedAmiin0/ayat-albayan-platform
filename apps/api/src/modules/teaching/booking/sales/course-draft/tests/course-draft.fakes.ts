@@ -10,11 +10,21 @@ import { CourseDrafts } from '@/modules/teaching/booking/sales/course-draft/cour
 // Test-only: CourseDrafts over an in-memory draft table and fake booking.
 
 export const SUB = 'e0000000-0000-4000-8000-000000000001';
-export const USER: AuthUser = { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'sales' };
+export const USER: AuthUser = {
+  id: 'a1000000-0000-4000-8000-00000000000a',
+  email: null,
+  role: 'sales',
+};
 export const REQ: BookingRequest = bookingRequestSchema.parse({
-  kind: 'package', package: '8', studentIds: ['c0000000-0000-4000-8000-000000000001'],
-  teacherId: 'd0000000-0000-4000-8000-000000000001', byday: [0, 4], startTimeLocal: '17:00',
-  tz: 'Asia/Riyadh', durationMin: 45, startsOn: '2026-11-08',
+  kind: 'package',
+  package: '8',
+  studentIds: ['c0000000-0000-4000-8000-000000000001'],
+  teacherId: 'd0000000-0000-4000-8000-000000000001',
+  byday: [0, 4],
+  startTimeLocal: '17:00',
+  tz: 'Asia/Riyadh',
+  durationMin: 45,
+  startsOn: '2026-11-08',
 });
 export const BOOKING = { rule_id: 'r1', lesson_ids: ['l1'], student_ids: ['s1'] };
 
@@ -35,7 +45,11 @@ export function setup(state: { held: boolean[]; status?: string; booked?: boolea
       if (rows.get(d.subscriptionId)?.savedAt === d.savedAt) rows.delete(d.subscriptionId);
     }),
   };
-  const opts = { invoiceWaived: true, endsOn: '2026-12-03', course: { package: '8', subscriptionId: SUB } };
+  const opts = {
+    invoiceWaived: true,
+    endsOn: '2026-12-03',
+    course: { package: '8', subscriptionId: SUB },
+  };
   const env = {
     sales: { allowed: vi.fn(async () => ({ own: {}, opts })), book: vi.fn(async () => BOOKING) },
     course: {

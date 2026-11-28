@@ -9,9 +9,18 @@ import {
 } from '@/modules/teaching/classroom/classroom.fakes';
 import { studentLinkQueries } from '@/modules/teaching/classroom/student-link/student-link.fakes';
 import type { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
-import { familyJoinExpiry, signFamilyJoin } from '@/modules/teaching/classroom/family-link/family-join.token';
-import { FAMILY_SECRET, familyLinks } from '@/modules/teaching/classroom/family-link/family-link.fakes';
-import { JoinLinkResolver, tokenKind } from '@/modules/teaching/classroom/family-link/join-link.resolver';
+import {
+  familyJoinExpiry,
+  signFamilyJoin,
+} from '@/modules/teaching/classroom/family-link/family-join.token';
+import {
+  FAMILY_SECRET,
+  familyLinks,
+} from '@/modules/teaching/classroom/family-link/family-link.fakes';
+import {
+  JoinLinkResolver,
+  tokenKind,
+} from '@/modules/teaching/classroom/family-link/join-link.resolver';
 import { hashLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 
 const exp = familyJoinExpiry('2026-10-05T19:00:00.000Z');

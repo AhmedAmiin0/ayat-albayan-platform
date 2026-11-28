@@ -49,10 +49,21 @@ export class CoursePauseFollowUps {
    * Old package-only pauses lifted (CoursePauseService.resume): each audited, then the packages and
    * student recomputed once.
    */
-  async liftedLegacy(input: { studentId: string; subscriptionIds: readonly string[]; actorId: string }): Promise<void> {
+  async liftedLegacy(input: {
+    studentId: string;
+    subscriptionIds: readonly string[];
+    actorId: string;
+  }): Promise<void> {
     const after = { status: 'unpaid', via: 'course_resume_legacy' };
     for (const entityId of input.subscriptionIds)
-      await this.audit.record({ actorId: input.actorId, entity: 'subscriptions', entityId, action: 'update', before: { status: 'paused' }, after });
+      await this.audit.record({
+        actorId: input.actorId,
+        entity: 'subscriptions',
+        entityId,
+        action: 'update',
+        before: { status: 'paused' },
+        after,
+      });
     await this.alerts.evaluateStudents([input.studentId], { actorId: input.actorId });
   }
 }

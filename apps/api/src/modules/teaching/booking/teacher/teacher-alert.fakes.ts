@@ -14,13 +14,13 @@ import type { AlertLesson } from './teacher-alert.plan';
 import type { TeacherAlertRepo } from './teacher-alert.repo';
 import { TeacherAlert, TeacherAlertDeps } from './teacher-alert.service';
 
-type AlertOver = {
+interface AlertOver {
   lessons?: AlertLesson[];
   approved?: boolean;
   v3?: boolean;
   settings?: Partial<AcademySettings>;
   rules?: Omit<FakePolicyInput, 'settings'>;
-};
+}
 
 /** Tests only: a real TeacherAlert over vi.fn reads, push, a fake policy and sender; BookingFollowUps over it and a vi.fn trial status. */
 export function fakeTeacherAlert(over: AlertOver = {}) {

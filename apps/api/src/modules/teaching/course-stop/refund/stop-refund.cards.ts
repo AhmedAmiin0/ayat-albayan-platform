@@ -24,16 +24,17 @@ const isMine = (r: Stripe.Refund, requestId: string): boolean =>
   r.metadata?.course_stop === requestId;
 /** Refunds of one card, as a stored amount (a card's refunds are all in its currency). */
 const sum = (refunds: readonly Stripe.Refund[], currency: string): number =>
-  fromStripeAmount(refunds.reduce((n, r) => n + r.amount, 0), currency);
+  fromStripeAmount(
+    refunds.reduce((n, r) => n + r.amount, 0),
+    currency,
+  );
 
 /**
  * A card the stop refunds through Stripe: a payment link's, charged in the package currency
  * (a payment converted on record would come back at another rate); KWD / OMR in Stripe's 1/1000.
  */
 const isStripeCard = (row: MoneyRow, intents: ReadonlyMap<string, string>): boolean =>
-  row.kind === 'payment' &&
-  intents.has(row.id) &&
-  row.original_currency === null;
+  row.kind === 'payment' && intents.has(row.id) && row.original_currency === null;
 
 /** The idempotency key of one card refund of one stop (Stripe keeps it 24 h; `mine` beyond). */
 export const cardRefundKey = (requestId: string, paymentId: string): string =>
@@ -96,7 +97,10 @@ export class StopRefundCards {
       currency,
       refundable: Math.max(0, fromMinorUnits(left)),
       mine: mine.map((r) => ({ id: r.id, amount: fromStripeAmount(r.amount, currency) })),
-      unrecorded: sum(other.filter((r) => !c.recorded.has(uuidFor(r.id))), currency),
+      unrecorded: sum(
+        other.filter((r) => !c.recorded.has(uuidFor(r.id))),
+        currency,
+      ),
     };
   }
 }

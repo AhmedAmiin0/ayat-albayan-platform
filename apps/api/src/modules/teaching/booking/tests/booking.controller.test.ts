@@ -73,7 +73,7 @@ describe('BookingController (docs/10 §5 #12–14)', () => {
     booking.book.mockResolvedValue({ rule_id: 'R1' });
     const res = await call({ method: 'POST', url: '/booking', payload: BODY });
     expect(res.statusCode).toBe(201);
-    expect(booking.book).toHaveBeenCalledWith(expect.objectContaining({ package: '8', studentIds: [IDS.s1] }), USERS['admin']?.id);
+    expect(booking.book).toHaveBeenCalledWith(expect.objectContaining({ package: '8', studentIds: [IDS.s1] }), USERS.admin?.id);
   });
 
   it('POST 400 validation_failed for free-text times or both shapes at once', async () => {
