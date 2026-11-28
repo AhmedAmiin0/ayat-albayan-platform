@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { SEED_ENTRIES, type SeedEntry } from './seed-entries';
 
 /**
@@ -39,14 +40,15 @@ export function seedPayload(
   }));
 }
 
+const bundleNode = z.record(z.string(), z.unknown());
+
 /** A HintText over a nested string bundle (ar.json): the leaf at the dotted path, or null. */
 export const bundleText =
   (bundle: object): HintText =>
   (path) => {
-    const hit = path.split('.').reduce<unknown>(
-      (node, part) => (node !== null && typeof node === 'object' ? (node as Record<string, unknown>)[part] : undefined),
-      bundle,
-    );
+    const hit = path
+      .split('.')
+      .reduce<unknown>((node, part) => bundleNode.safeParse(node).data?.[part], bundle);
     return typeof hit === 'string' ? hit : null;
   };
 

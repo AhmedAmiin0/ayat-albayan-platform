@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { camelKey, type CamelKey } from './camel';
 import type { SettingDef, SettingsOf } from './defs';
 import { ACADEMY_SETTINGS } from './domains/academy';
@@ -75,9 +76,17 @@ export const SETTING_KEY_OF = Object.fromEntries(
  * mutates the registry.
  */
 function defaultOf(key: SettingKey): AcademySettings[SettingKey] {
-  const d: unknown = SETTINGS_REGISTRY[key].default;
-  const v = Array.isArray(d) ? [...d] : d !== null && typeof d === 'object' ? Object.freeze({ ...d }) : d;
-  return v as AcademySettings[SettingKey];
+  return copyOf(SETTINGS_REGISTRY[key].default) as AcademySettings[SettingKey];
+}
+
+const listValue = z.array(z.unknown());
+const objectValue = z.record(z.string(), z.unknown());
+
+function copyOf(d: unknown): unknown {
+  const list = listValue.safeParse(d);
+  if (list.success) return list.data;
+  const object = objectValue.safeParse(d);
+  return object.success ? Object.freeze(object.data) : d;
 }
 
 /** Used when a row is missing or malformed; the migrations seed the same values. */
