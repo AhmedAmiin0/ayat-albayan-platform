@@ -12,7 +12,7 @@ import { ChannelQuote } from '../ChannelQuote';
 import { menuA11y } from '../menu-a11y';
 import { SenderLine } from '../SenderLine';
 
-export interface ChannelBubbleProps {
+interface ChannelBubbleProps {
   message: ChannelMessageView;
   tz: string;
   /** The thread's clock (useNow): today's messages show only their time. */
