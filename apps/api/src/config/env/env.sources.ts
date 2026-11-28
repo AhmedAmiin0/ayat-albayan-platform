@@ -10,5 +10,8 @@ export function envCandidates(
 ): NodeJS.ProcessEnv[] {
   const overlay = integrationOverlay();
   if (numbers === null) return Object.keys(overlay).length === 0 ? [] : [{ ...env, ...overlay }];
-  return [{ ...env, ...overlay, ...numbers }, { ...env, ...numbers }];
+  return [
+    { ...env, ...overlay, ...numbers },
+    { ...env, ...numbers },
+  ];
 }

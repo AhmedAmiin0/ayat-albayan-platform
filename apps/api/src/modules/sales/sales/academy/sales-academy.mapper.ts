@@ -16,7 +16,10 @@ const NO_CONTEXT: TeacherContext = { facts: new Map(), next: new Map() };
 // Whitelists, not omit-lists (docs/16): a column added to teachers or students later never reaches sales.
 
 /** A churned student is no longer the teacher's; meeting link null when unset. */
-export function toSalesTeacher(row: SalesTeacherRow, ctx: TeacherContext = NO_CONTEXT): SalesTeacherView {
+export function toSalesTeacher(
+  row: SalesTeacherRow,
+  ctx: TeacherContext = NO_CONTEXT,
+): SalesTeacherView {
   const today = ctx.facts.get(row.id);
   const current = row.students.filter((s) => s.status !== 'churned');
   const counts = countByKind(current);
@@ -34,7 +37,14 @@ export function toSalesTeacher(row: SalesTeacherRow, ctx: TeacherContext = NO_CO
     platform_classroom: usesPlatform(meetingModeOf(row.meeting_mode), ctx.academyAuto ?? false),
     avatar_url: row.avatar_url ?? null,
     students: current
-      .map((s) => ({ id: s.id, code: s.code ?? '', name: s.name, program: s.program, status: s.status, next_lesson_at: ctx.next.get(s.id) ?? null }))
+      .map((s) => ({
+        id: s.id,
+        code: s.code ?? '',
+        name: s.name,
+        program: s.program,
+        status: s.status,
+        next_lesson_at: ctx.next.get(s.id) ?? null,
+      }))
       .sort((a, b) => a.name.localeCompare(b.name, 'ar')),
   };
 }

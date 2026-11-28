@@ -9,7 +9,11 @@ import { CUSTOM_COLUMNS, toCustomView } from './custom-config.mapper';
 /** The public rows' shared copy (Redis only): GET /settings/public is read by every page load. */
 const PUBLIC_ROWS_TTL_MS = 60_000;
 
-interface PublicRow { key: string; value: Json; is_public: boolean }
+interface PublicRow {
+  key: string;
+  value: Json;
+  is_public: boolean;
+}
 
 /** `custom_config` (migration 20261005000250): free-form admin entries, written by the service role. */
 @Injectable()
@@ -26,7 +30,11 @@ export class CustomConfigService {
   }
 
   async find(key: string): Promise<CustomConfigView | null> {
-    const { data, error } = await this.db.from('custom_config').select(CUSTOM_COLUMNS).eq('key', key).maybeSingle();
+    const { data, error } = await this.db
+      .from('custom_config')
+      .select(CUSTOM_COLUMNS)
+      .eq('key', key)
+      .maybeSingle();
     if (error) throw new Error(`custom_config read failed: ${error.message}`);
     return data ? toCustomView(data) : null;
   }
@@ -40,7 +48,10 @@ export class CustomConfigService {
   }
 
   private async readPublic(): Promise<PublicRow[]> {
-    const { data, error } = await this.db.from('custom_config').select('key, value, is_public').eq('is_public', true);
+    const { data, error } = await this.db
+      .from('custom_config')
+      .select('key, value, is_public')
+      .eq('is_public', true);
     if (error) throw new Error(`custom_config read failed: ${error.message}`);
     return data;
   }
@@ -65,7 +76,11 @@ export class CustomConfigService {
 
   /** false when there was no such entry. */
   async remove(key: string): Promise<boolean> {
-    const { data, error } = await this.db.from('custom_config').delete().eq('key', key).select('key');
+    const { data, error } = await this.db
+      .from('custom_config')
+      .delete()
+      .eq('key', key)
+      .select('key');
     await this.forgetPublic();
     if (error) throw new Error(`custom_config delete failed: ${error.message}`);
     return data.length > 0;

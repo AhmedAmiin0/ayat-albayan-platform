@@ -1,7 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TeacherEarningsModule } from '@/modules/finance/teacher-earnings/earnings.module';
 import { TeachersModule } from '@/modules/people/teachers/teachers.module';
-import { PayoutPaymentController, PayoutsController, TeacherPayoutsController } from './payouts.controller';
+import {
+  PayoutPaymentController,
+  PayoutsController,
+  TeacherPayoutsController,
+} from './payouts.controller';
 import { PayoutsGenerator } from './payouts.generate';
 import { PayoutsLedger } from './payouts.ledger';
 import { PayoutsPayment } from './payouts.payment';

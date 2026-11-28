@@ -3,13 +3,32 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { featureRoot } from '@/common/infra/test-root';
 import { TeacherStudentsModule } from './teacher-students.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import { ADMIN, GUARDIAN, OTHER, OTHER_ID, student, TEACHER, TEACHER_ID, lesson } from './teacher-students.fakes';
+import {
+  ADMIN,
+  GUARDIAN,
+  OTHER,
+  OTHER_ID,
+  student,
+  TEACHER,
+  TEACHER_ID,
+  lesson,
+} from './teacher-students.fakes';
 import { TeacherStudentsRepo } from './teacher-students.repo';
 
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER, guardian: GUARDIAN };
+const USERS: Record<string, AuthUser> = {
+  admin: ADMIN,
+  teacher: TEACHER,
+  other: OTHER,
+  guardian: GUARDIAN,
+};
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
@@ -25,9 +44,14 @@ describe('GET /teachers/me/students?kind= (teacher tab «الطلاب», R-TCH-0
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(TeacherStudentsModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(TeachersRepo).useValue(teachers)
-      .overrideProvider(TeacherStudentsRepo).useValue(q)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(TeachersRepo)
+      .useValue(teachers)
+      .overrideProvider(TeacherStudentsRepo)
+      .useValue(q)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -36,7 +60,9 @@ describe('GET /teachers/me/students?kind= (teacher tab «الطلاب», R-TCH-0
   afterAll(() => app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER.id ? OTHER_ID : null));
+    teachers.idByProfile.mockImplementation(async (id: string) =>
+      id === TEACHER.id ? TEACHER_ID : id === OTHER.id ? OTHER_ID : null,
+    );
     q.assigned.mockImplementation(async ({ teacherId }: { teacherId: string }) =>
       teacherId === TEACHER_ID ? [student({})] : [student({ id: 'x9', name: 'غريب' })],
     );
@@ -47,38 +73,64 @@ describe('GET /teachers/me/students?kind= (teacher tab «الطلاب», R-TCH-0
   it('subscribed = status active, pending_renewal or expired: mine plus those on my lessons, merged and by name', async () => {
     const res = await get('/teachers/me/students?kind=subscribed');
     expect(res.statusCode).toBe(200);
-    expect(q.assigned).toHaveBeenCalledWith({ teacherId: TEACHER_ID, statuses: ['active', 'pending_renewal', 'expired'] });
-    expect(q.byIds).toHaveBeenCalledWith({ ids: ['s7'], statuses: ['active', 'pending_renewal', 'expired'] });
+    expect(q.assigned).toHaveBeenCalledWith({
+      teacherId: TEACHER_ID,
+      statuses: ['active', 'pending_renewal', 'expired'],
+    });
+    expect(q.byIds).toHaveBeenCalledWith({
+      ids: ['s7'],
+      statuses: ['active', 'pending_renewal', 'expired'],
+    });
     expect(res.json().map((s: { id: string }) => s.id)).toEqual(['s7', 's1']);
   });
 
   it('trial asks for the not-subscribed statuses (new, trial, pending_subscription; owner 2026-10-15)', async () => {
     await get('/teachers/me/students?kind=trial');
-    expect(q.assigned).toHaveBeenCalledWith({ teacherId: TEACHER_ID, statuses: ['new', 'trial', 'pending_subscription'] });
-    expect(q.byIds).toHaveBeenCalledWith(expect.objectContaining({ statuses: ['new', 'trial', 'pending_subscription'] }));
+    expect(q.assigned).toHaveBeenCalledWith({
+      teacherId: TEACHER_ID,
+      statuses: ['new', 'trial', 'pending_subscription'],
+    });
+    expect(q.byIds).toHaveBeenCalledWith(
+      expect.objectContaining({ statuses: ['new', 'trial', 'pending_subscription'] }),
+    );
   });
 
   it('a pending_renewal student stays in my subscribed list, with its status for the chip', async () => {
     q.byIds.mockResolvedValue([student({ id: 's7', name: 'بلال', status: 'pending_renewal' })]);
     const res = await get('/teachers/me/students?kind=subscribed');
-    expect(res.json().map((s: { id: string; status: string }) => [s.id, s.status])).toEqual([['s7', 'pending_renewal'], ['s1', 'active']]);
+    expect(res.json().map((s: { id: string; status: string }) => [s.id, s.status])).toEqual([
+      ['s7', 'pending_renewal'],
+      ['s1', 'active'],
+    ]);
   });
 
-  it("another teacher gets only their own: the id comes from the login, a teacherId param is ignored", async () => {
+  it('another teacher gets only their own: the id comes from the login, a teacherId param is ignored', async () => {
     const res = await get(`/teachers/me/students?kind=subscribed&teacherId=${TEACHER_ID}`, 'other');
-    expect(q.assigned).toHaveBeenCalledWith({ teacherId: OTHER_ID, statuses: ['active', 'pending_renewal', 'expired'] });
+    expect(q.assigned).toHaveBeenCalledWith({
+      teacherId: OTHER_ID,
+      statuses: ['active', 'pending_renewal', 'expired'],
+    });
     expect(q.lessons).toHaveBeenCalledWith(expect.objectContaining({ teacherId: OTHER_ID }));
     expect(res.json().map((s: { id: string }) => s.id)).toContain('x9');
     expect(res.json().map((s: { id: string }) => s.id)).not.toContain('s1');
   });
 
   it('no phone, guardian or money anywhere in the payload', async () => {
-    q.assigned.mockResolvedValue([{ ...student({}), phone_e164: '+966500000000', guardian_id: 'g1', price: 10 }]);
+    q.assigned.mockResolvedValue([
+      { ...student({}), phone_e164: '+966500000000', guardian_id: 'g1', price: 10 },
+    ]);
     const text = (await get('/teachers/me/students?kind=subscribed')).body;
     expect(text).not.toMatch(/phone|guardian|price|\+966/);
-    expect(Object.keys(JSON.parse(text)[0]).sort()).toEqual(
-      ['age', 'code', 'id', 'level', 'name', 'next_lesson_at', 'program', 'status'],
-    );
+    expect(Object.keys(JSON.parse(text)[0]).sort()).toEqual([
+      'age',
+      'code',
+      'id',
+      'level',
+      'name',
+      'next_lesson_at',
+      'program',
+      'status',
+    ]);
   });
 
   it('teacher only; kind required and validated; a login without a teachers row is 404', async () => {

@@ -32,7 +32,11 @@ export class ReportPdfQueries {
    * tick also runs recoverStale + pendingIds, two cheap reads at a few dozen reports a day.
    */
   async hasWork(): Promise<boolean> {
-    const { data, error } = await this.db.from('lesson_reports').select('id').in('pdf_status', ['pending', 'rendering']).limit(1);
+    const { data, error } = await this.db
+      .from('lesson_reports')
+      .select('id')
+      .in('pdf_status', ['pending', 'rendering'])
+      .limit(1);
     if (error) throw pgError(error);
     return data.length > 0;
   }

@@ -17,7 +17,13 @@ const STALE_MS = 10 * 60_000;
 /** Three attempts per claim, 2 s then 8 s apart; then `failed` and the admin retries (R12). */
 export const RETRY_DELAYS_MS = [2_000, 8_000] as const;
 
-export interface RunSummary { recovered: number; rendered: number; failed: number; skipped: number; held: number }
+export interface RunSummary {
+  recovered: number;
+  rendered: number;
+  failed: number;
+  skipped: number;
+  held: number;
+}
 type Outcome = 'rendered' | 'failed' | 'skipped' | 'held';
 
 /** The notification rules could not be read: hold the report (back to pending), never fail or send it. */
@@ -91,7 +97,11 @@ export class ReportPdfJob extends TickerJob {
     if (version === null) return 'skipped';
     try {
       const giveUp = (e: unknown) => e instanceof RulesUnreadError;
-      await retry(() => this.publish(id, version), { delays: RETRY_DELAYS_MS, sleep: this.wait, giveUp });
+      await retry(() => this.publish(id, version), {
+        delays: RETRY_DELAYS_MS,
+        sleep: this.wait,
+        giveUp,
+      });
       return 'rendered';
     } catch (e) {
       if (e instanceof RulesUnreadError) {
@@ -120,7 +130,9 @@ export class ReportPdfJob extends TickerJob {
     if (rule.enabled) await this.queries.queueMessages(messages);
     else this.log.log(`report_ready off: report ${id} v${version} not sent to the guardian`);
     if (!(await this.queries.finish({ id, version, status: 'ready', path }))) {
-      this.log.log(`report ${id} changed while v${version} rendered; the newer version renders next`);
+      this.log.log(
+        `report ${id} changed while v${version} rendered; the newer version renders next`,
+      );
     }
   }
 }

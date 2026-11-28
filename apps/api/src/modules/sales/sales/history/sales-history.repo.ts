@@ -5,15 +5,38 @@ import { maybe, pgError } from '@/common/db/errors';
 
 type Sub = Tables<'subscriptions'>;
 /** Whitelisted subscription columns: never price, currency, fx_*, price_source or notes. */
-export type HistorySubscriptionRow = Pick<Sub, 'id' | 'package' | 'status' | 'starts_on' | 'renews_on' | 'lessons_total' | 'lessons_used_before' | 'created_at'>;
-export interface HistoryBalanceRow { subscription_id: string | null; lessons_used: number | null; remaining: number | null; ended_at: string | null }
+export type HistorySubscriptionRow = Pick<
+  Sub,
+  | 'id'
+  | 'package'
+  | 'status'
+  | 'starts_on'
+  | 'renews_on'
+  | 'lessons_total'
+  | 'lessons_used_before'
+  | 'created_at'
+>;
+export interface HistoryBalanceRow {
+  subscription_id: string | null;
+  lessons_used: number | null;
+  remaining: number | null;
+  ended_at: string | null;
+}
 /** A payment as date, kind, amount and currency: never method, receipt, fx or note. */
-export type HistoryPaymentRow = Pick<Tables<'payments'>, 'id' | 'subscription_id' | 'paid_at' | 'kind' | 'amount' | 'currency'>;
+export type HistoryPaymentRow = Pick<
+  Tables<'payments'>,
+  'id' | 'subscription_id' | 'paid_at' | 'kind' | 'amount' | 'currency'
+>;
 /**
  * An audit row reduced to its date and the status before / after (json paths, nothing else of the
  * row).
  */
-export interface HistoryAuditRow { entity_id: string; at: string; before_status: string | null; after_status: string | null }
+export interface HistoryAuditRow {
+  entity_id: string;
+  at: string;
+  before_status: string | null;
+  after_status: string | null;
+}
 
 export interface HistoryBundle {
   student: { id: string; code: string | null; name: string };
@@ -33,7 +56,13 @@ export class SalesHistoryRepo {
 
   /** The subscription's student, or null for an unknown id. */
   async studentOf(subscriptionId: string): Promise<string | null> {
-    const data = maybe(await this.db.from('subscriptions').select('student_id').eq('id', subscriptionId).maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('subscriptions')
+        .select('student_id')
+        .eq('id', subscriptionId)
+        .maybeSingle(),
+    );
     return data?.student_id ?? null;
   }
 
@@ -42,7 +71,9 @@ export class SalesHistoryRepo {
       this.db.from('students').select('id, code, name').eq('id', studentId).maybeSingle(),
       this.db
         .from('subscriptions')
-        .select('id, package, status, starts_on, renews_on, lessons_total, lessons_used_before, created_at')
+        .select(
+          'id, package, status, starts_on, renews_on, lessons_total, lessons_used_before, created_at',
+        )
         .eq('student_id', studentId)
         .order('starts_on')
         .order('created_at'),
@@ -51,10 +82,18 @@ export class SalesHistoryRepo {
     if (subs.error) throw pgError(subs.error);
     if (!student.data) return null;
     const ids = subs.data.map((s) => s.id);
-    if (ids.length === 0) return { student: student.data, subscriptions: [], balances: [], payments: [], audit: [] };
+    if (ids.length === 0)
+      return { student: student.data, subscriptions: [], balances: [], payments: [], audit: [] };
     const [balances, payments, audit] = await Promise.all([
-      this.db.from('v_subscription_balance').select('subscription_id, lessons_used, remaining, ended_at').in('subscription_id', ids),
-      this.db.from('payments').select('id, subscription_id, paid_at, kind, amount, currency').in('subscription_id', ids).order('paid_at'),
+      this.db
+        .from('v_subscription_balance')
+        .select('subscription_id, lessons_used, remaining, ended_at')
+        .in('subscription_id', ids),
+      this.db
+        .from('payments')
+        .select('id, subscription_id, paid_at, kind, amount, currency')
+        .in('subscription_id', ids)
+        .order('paid_at'),
       this.db
         .from('audit_log')
         .select('entity_id, at, before_status:before->>status, after_status:after->>status')
@@ -64,6 +103,12 @@ export class SalesHistoryRepo {
         .overrideTypes<HistoryAuditRow[], { merge: false }>(),
     ]);
     for (const r of [balances, payments, audit]) if (r.error) throw pgError(r.error);
-    return { student: student.data, subscriptions: subs.data, balances: balances.data ?? [], payments: payments.data ?? [], audit: audit.data ?? [] };
+    return {
+      student: student.data,
+      subscriptions: subs.data,
+      balances: balances.data ?? [],
+      payments: payments.data ?? [],
+      audit: audit.data ?? [],
+    };
   }
 }

@@ -1,9 +1,20 @@
 import type { ConfigEntry, ConfigEntryConflict, SeedEntry, SettingDef } from '@ab/settings';
 import { defaultOf } from '@/common/configuration/config-store/store/config-defs';
 import { ownerOf } from '@/common/configuration/config-store/boundaries/config-ownership';
-import { neverWritten, type ConfigRow } from '@/common/configuration/config-store/config-store.types';
+import {
+  neverWritten,
+  type ConfigRow,
+} from '@/common/configuration/config-store/config-store.types';
 
-const BOUND_FIELDS = ['min', 'max', 'options', 'minLength', 'maxLength', 'maxItems', 'nullable'] as const;
+const BOUND_FIELDS = [
+  'min',
+  'max',
+  'options',
+  'minLength',
+  'maxLength',
+  'maxItems',
+  'nullable',
+] as const;
 
 /** The code entry's bounds (bounds stay in code, docs/26 §2d). */
 export function boundsOf(def: SettingDef): Record<string, unknown> {

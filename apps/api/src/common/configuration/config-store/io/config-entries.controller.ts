@@ -27,14 +27,22 @@ export class ConfigEntriesController {
   /** `{value, expectedVersion, confirmText?}`; value null stores JSON null (= the default). */
   @Patch(':key')
   @Permissions('settings.write')
-  update(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ConfigEntryResult> {
+  update(
+    @Param('key') key: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ConfigEntryResult> {
     return this.entries.patch({ key, body: parseOrThrow(configEntryPatchSchema, body), user });
   }
 
   /** `{text | null}`; null = restore the seeded text (and drop the ar override). Audited `describe:<key>`. */
   @Put(':key/description')
   @Permissions('settings.write')
-  describe(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ConfigEntryResult> {
+  describe(
+    @Param('key') key: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<ConfigEntryResult> {
     return this.entries.describe({ key, body: parseOrThrow(configDescriptionSchema, body), user });
   }
 }

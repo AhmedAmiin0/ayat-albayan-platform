@@ -18,11 +18,9 @@ export class StudentAccess {
   ) {}
 
   async check(user: AuthUser, studentId: string): Promise<void> {
-    const student = maybe(await this.db
-      .from('students')
-      .select('id, teacher_id')
-      .eq('id', studentId)
-      .maybeSingle());
+    const student = maybe(
+      await this.db.from('students').select('id, teacher_id').eq('id', studentId).maybeSingle(),
+    );
     if (!student) throw notFound('student_not_found');
     if (isAdmin(user)) return;
     const teacherId = user.role === 'teacher' ? await this.teachers.idByProfile(user.id) : null;
@@ -33,8 +31,11 @@ export class StudentAccess {
 
   /** teacher_has_student: assigned, or a lesson of theirs in the last 90 days (migration 165). */
   private async taughtBy(studentId: string, teacherId: string): Promise<boolean> {
-    const { data, error } = await this.db.rpc('teacher_has_student', { p_teacher_id: teacherId, p_student_id: studentId });
+    const { data, error } = await this.db.rpc('teacher_has_student', {
+      p_teacher_id: teacherId,
+      p_student_id: studentId,
+    });
     if (error) throw pgError(error);
-    return  data;
+    return data;
   }
 }

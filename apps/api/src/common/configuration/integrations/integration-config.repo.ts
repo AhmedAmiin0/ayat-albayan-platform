@@ -30,7 +30,10 @@ export class IntegrationConfigRepo {
 
   /** Every DB value of a registry key (plain from the table, secret from Vault), for the overlay. */
   async rawValues(): Promise<Record<string, string>> {
-    const [plain, secrets] = await Promise.all([this.plainRows(), this.db.rpc('integration_secrets_read')]);
+    const [plain, secrets] = await Promise.all([
+      this.plainRows(),
+      this.db.rpc('integration_secrets_read'),
+    ]);
     if (secrets.error) throw pgError(secrets.error);
     const out: Record<string, string> = {};
     for (const r of plain) if (isIntegrationPlainKey(r.key)) out[r.key] = r.value;
@@ -39,7 +42,9 @@ export class IntegrationConfigRepo {
   }
 
   async plainRows(): Promise<PlainRow[]> {
-    const { data, error } = await this.db.from('integration_config').select('key, value, updated_at');
+    const { data, error } = await this.db
+      .from('integration_config')
+      .select('key, value, updated_at');
     if (error) throw pgError(error);
     return data;
   }
@@ -65,7 +70,10 @@ export class IntegrationConfigRepo {
   }
 
   async setSecret(input: { key: IntegrationSecretKey; value: string }): Promise<void> {
-    const { error } = await this.db.rpc('integration_secret_set', { p_key: input.key, p_value: input.value });
+    const { error } = await this.db.rpc('integration_secret_set', {
+      p_key: input.key,
+      p_value: input.value,
+    });
     if (error) throw pgError(error);
   }
 

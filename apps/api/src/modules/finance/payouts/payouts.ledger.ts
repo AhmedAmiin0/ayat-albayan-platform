@@ -38,7 +38,8 @@ export class PayoutsLedger {
   /** approved → draft (only while not paid): calculate again, then approve again. */
   async reopen(id: string, actorId: string): Promise<PayoutView> {
     const row = await this.row(id);
-    if (PAYOUT_CORRECTIONS[row.status] !== 'draft') throw conflict('invalid_transition', { from: row.status });
+    if (PAYOUT_CORRECTIONS[row.status] !== 'draft')
+      throw conflict('invalid_transition', { from: row.status });
     await this.corrections.reopenPayout({ payoutId: id, actorId });
     return this.view(id);
   }

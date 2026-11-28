@@ -108,6 +108,12 @@ export class NotificationsRepo {
 
   /** The caller's own row only; 204 even when there was none. */
   async unsubscribe(profileId: string, endpoint: string): Promise<void> {
-    done(await this.db.from('web_push_subscriptions').delete().eq('profile_id', profileId).eq('endpoint', endpoint));
+    done(
+      await this.db
+        .from('web_push_subscriptions')
+        .delete()
+        .eq('profile_id', profileId)
+        .eq('endpoint', endpoint),
+    );
   }
 }

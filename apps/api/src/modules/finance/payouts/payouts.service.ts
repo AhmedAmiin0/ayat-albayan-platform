@@ -44,7 +44,12 @@ export class PayoutsService {
         throw conflict(block, block === 'reports_pending' ? { count: pendingReports } : {});
     }
     const now = new Date().toISOString();
-    return this.move({ before, actorId, to: 'approved', write: { approved_at: now, approved_by: actorId } });
+    return this.move({
+      before,
+      actorId,
+      to: 'approved',
+      write: { approved_at: now, approved_by: actorId },
+    });
   }
 
   /** Y5: the signed-in teacher's rows, newest month first. */

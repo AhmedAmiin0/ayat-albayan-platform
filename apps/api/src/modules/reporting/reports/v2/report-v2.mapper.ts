@@ -13,9 +13,16 @@ import {
   type ReportView,
 } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
-import { formColumns, submitColumns, type FormColumns } from '@/modules/reporting/reports/report.mapper';
+import {
+  formColumns,
+  submitColumns,
+  type FormColumns,
+} from '@/modules/reporting/reports/report.mapper';
 
-interface StoredForm { form_version: number; content: Json | null }
+interface StoredForm {
+  form_version: number;
+  content: Json | null;
+}
 
 /** The stored v2 content, re-read through the schema (defaults filled); null on v1 or a row it cannot read. */
 export function storedContent(row: StoredForm): ReportContent | null {

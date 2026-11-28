@@ -45,7 +45,8 @@ export function compareEffective(sides: ParitySides): ConfigParityDiff[] {
   const stored = new Map(sides.rows.map((r) => [r.key, r.value]));
   for (const key of RULE_KEYS) {
     const want = ruleValue(key, stored.get(key));
-    if (legacy[key] !== want || store[key] !== want) diffs.push({ key: `rule:${key}`, legacy: legacy[key], store: store[key] });
+    if (legacy[key] !== want || store[key] !== want)
+      diffs.push({ key: `rule:${key}`, legacy: legacy[key], store: store[key] });
   }
   return diffs;
 }

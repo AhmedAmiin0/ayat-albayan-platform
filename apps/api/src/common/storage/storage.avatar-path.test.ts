@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { avatarPath, BUCKETS, isPathOf, isTeacherAvatarPathOf, isUserAvatarPathOf, teacherAvatarPath } from './storage.paths';
+import {
+  avatarPath,
+  BUCKETS,
+  isPathOf,
+  isTeacherAvatarPathOf,
+  isUserAvatarPathOf,
+  teacherAvatarPath,
+} from './storage.paths';
 
 // avatars/<user_id>/avatar-<ms>.<ext> (migration 20261012000370 parses the first segment; R-ACC-05) and
 // avatars/teachers/<teacher_id>/avatar-<ms>.<ext> (migration 20261028000944).

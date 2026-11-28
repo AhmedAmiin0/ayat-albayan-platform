@@ -5,7 +5,12 @@ import { vi } from 'vitest';
 import { featureRoot } from '@/common/infra/test-root';
 import { SalesModule } from './sales.module';
 import { AuditService } from '@/common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SalesAssignRepo } from './assign/sales-assign.repo';
 import type { SalesLessonRow } from './schedule/sales-lessons';
@@ -29,15 +34,30 @@ const verify: TokenVerifier = async (token) => {
 };
 
 /** A owns lead l1 -> guardian g1 -> student s1; B owns nothing. */
-export const OWN_A: SalesOwnership = { leadIds: ['l1'], guardianIds: ['g1'], studentIds: ['s1'], phones: ['+966551110000'] };
+export const OWN_A: SalesOwnership = {
+  leadIds: ['l1'],
+  guardianIds: ['g1'],
+  studentIds: ['s1'],
+  phones: ['+966551110000'],
+};
 export const NONE: SalesOwnership = { leadIds: [], guardianIds: [], studentIds: [], phones: [] };
 
 /** A row as the database returns it: with every money column present, so a test can prove they never leave. */
 export const dirtySubscription = (over: Partial<SalesSubscriptionRow> = {}): SalesSubscriptionRow =>
   ({
-    id: 'sub-1', package: '8', status: 'unpaid', starts_on: '2026-10-01', lessons_total: 8,
+    id: 'sub-1',
+    package: '8',
+    status: 'unpaid',
+    starts_on: '2026-10-01',
+    lessons_total: 8,
     student: { id: 's1', code: 'AB-0101', name: 'ياسمين' },
-    price: 290, currency: 'SAR', fx_rate: 3.75, fx_date: '2026-10-01', price_source: 'tier', notes: 'سر', payments: [{ amount: 100 }],
+    price: 290,
+    currency: 'SAR',
+    fx_rate: 3.75,
+    fx_date: '2026-10-01',
+    price_source: 'tier',
+    notes: 'سر',
+    payments: [{ amount: 100 }],
     ...over,
   }) as SalesSubscriptionRow;
 
@@ -53,23 +73,49 @@ export const meetingRow = (over: Partial<SalesLessonRow> = {}): SalesLessonRow =
 });
 
 export async function salesApp() {
-  const sales = { ownership: vi.fn(), subscriptions: vi.fn(), meetings: vi.fn(), ownsLesson: vi.fn() };
+  const sales = {
+    ownership: vi.fn(),
+    subscriptions: vi.fn(),
+    meetings: vi.fn(),
+    ownsLesson: vi.fn(),
+  };
   const assign = {
-    salespeople: vi.fn(), assignedLeads: vi.fn(), unassignedLeadIds: vi.fn(),
-    isSalesperson: vi.fn(), setAssignee: vi.fn(), names: vi.fn(),
+    salespeople: vi.fn(),
+    assignedLeads: vi.fn(),
+    unassignedLeadIds: vi.fn(),
+    isSalesperson: vi.fn(),
+    setAssignee: vi.fn(),
+    names: vi.fn(),
   };
   const audit = { record: vi.fn() };
   const mod = await Test.createTestingModule({ imports: [featureRoot(SalesModule)] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(SalesRepo).useValue(sales)
-    .overrideProvider(SalesAssignRepo).useValue(assign)
-    .overrideProvider(AuditService).useValue(audit)
-    .overrideProvider(SettingsService).useValue(fakeSettings())
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(SalesRepo)
+    .useValue(sales)
+    .overrideProvider(SalesAssignRepo)
+    .useValue(assign)
+    .overrideProvider(AuditService)
+    .useValue(audit)
+    .overrideProvider(SettingsService)
+    .useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
-  const call = (input: { method: 'GET' | 'POST'; url: string; token: keyof typeof USERS; body?: object }) =>
-    app.inject({ method: input.method, url: input.url, headers: { authorization: `Bearer ${input.token}` }, payload: input.body });
+  const call = (input: {
+    method: 'GET' | 'POST';
+    url: string;
+    token: keyof typeof USERS;
+    body?: object;
+  }) =>
+    app.inject({
+      method: input.method,
+      url: input.url,
+      headers: { authorization: `Bearer ${input.token}` },
+      payload: input.body,
+    });
   return { app, call, sales, assign, audit };
 }

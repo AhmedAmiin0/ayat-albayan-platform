@@ -2,13 +2,16 @@ import type { SalesHistoryEntry, SalesSubscriptionHistory } from '@ab/shared';
 import { SUBSCRIPTION_STATUSES, type SubscriptionStatus } from '@ab/catalog';
 import type { HistoryAuditRow, HistoryBundle, HistorySubscriptionRow } from './sales-history.repo';
 
-const asStatus = (v: string | null): SubscriptionStatus | null => SUBSCRIPTION_STATUSES.find((s) => s === v) ?? null;
+const asStatus = (v: string | null): SubscriptionStatus | null =>
+  SUBSCRIPTION_STATUSES.find((s) => s === v) ?? null;
 
 /**
  * The audit rows that moved the status (a create counts: from null), oldest first; any other edit
  * is dropped.
  */
-export function statusChanges(rows: readonly HistoryAuditRow[]): SalesHistoryEntry['status_changes'] {
+export function statusChanges(
+  rows: readonly HistoryAuditRow[],
+): SalesHistoryEntry['status_changes'] {
   return rows
     .map((r) => ({ at: r.at, from: asStatus(r.before_status), to: asStatus(r.after_status) }))
     .filter((c) => c.to !== null && c.from !== c.to);
@@ -29,11 +32,20 @@ function entry(sub: HistorySubscriptionRow, b: HistoryBundle): SalesHistoryEntry
     lessons_used_before: sub.lessons_used_before,
     lessons_used: used,
     // A cancelled package has no balance row and nothing left.
-    lessons_remaining: sub.status === 'cancelled' ? 0 : (balance?.remaining ?? Math.max(sub.lessons_total - used, 0)),
+    lessons_remaining:
+      sub.status === 'cancelled'
+        ? 0
+        : (balance?.remaining ?? Math.max(sub.lessons_total - used, 0)),
     status_changes: statusChanges(b.audit.filter((a) => a.entity_id === sub.id)),
     payments: b.payments
       .filter((p) => p.subscription_id === sub.id)
-      .map((p) => ({ id: p.id, paid_at: p.paid_at, kind: p.kind, amount: p.amount, currency: p.currency })),
+      .map((p) => ({
+        id: p.id,
+        paid_at: p.paid_at,
+        kind: p.kind,
+        amount: p.amount,
+        currency: p.currency,
+      })),
   };
 }
 

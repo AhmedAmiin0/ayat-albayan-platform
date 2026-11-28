@@ -13,7 +13,9 @@ import {
   type MyStudentSource,
 } from './my.mapper';
 
-export interface StatementState { statement: { status: 'draft' | 'approved' | 'paid' } | null }
+export interface StatementState {
+  statement: { status: 'draft' | 'approved' | 'paid' } | null;
+}
 export type MyCommission = StatementState & {
   id: string;
   amount: number;

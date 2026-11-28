@@ -34,12 +34,18 @@ export class AssistantRpc {
   }
 
   async approve(statementId: string, actorId: string): Promise<void> {
-    const { error } = await this.db.rpc('approve_assistant_statement', { p_statement: statementId, p_actor: actorId });
+    const { error } = await this.db.rpc('approve_assistant_statement', {
+      p_statement: statementId,
+      p_actor: actorId,
+    });
     if (error) throw assistantError(error);
   }
 
   async reopen(statementId: string, actorId: string): Promise<void> {
-    const { error } = await this.db.rpc('reopen_assistant_statement', { p_statement: statementId, p_actor: actorId });
+    const { error } = await this.db.rpc('reopen_assistant_statement', {
+      p_statement: statementId,
+      p_actor: actorId,
+    });
     if (error) throw assistantError(error);
   }
 
@@ -91,7 +97,11 @@ export class AssistantRpc {
 
   /** Both parts of the terms in one transaction; the start days are checked there (commission_start_in_past, ..._earlier, salary_...). */
   async setTerms(input: { assistantId: string; columns: Json; actorId: string }): Promise<void> {
-    const { error } = await this.db.rpc('set_assistant_terms', { p_assistant: input.assistantId, p: input.columns, p_actor: input.actorId });
+    const { error } = await this.db.rpc('set_assistant_terms', {
+      p_assistant: input.assistantId,
+      p: input.columns,
+      p_actor: input.actorId,
+    });
     if (error) throw assistantError(error);
   }
 
@@ -127,7 +137,9 @@ export class AssistantRpc {
 
   /** Runs the commission rule for the student of this subscription (safe to repeat: one commission per student). */
   async evaluate(subscriptionId: string): Promise<void> {
-    const { error } = await this.db.rpc('evaluate_assistant_commission', { p_subscription: subscriptionId });
+    const { error } = await this.db.rpc('evaluate_assistant_commission', {
+      p_subscription: subscriptionId,
+    });
     if (error) throw assistantError(error);
   }
 }

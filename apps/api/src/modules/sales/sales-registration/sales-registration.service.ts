@@ -1,4 +1,8 @@
-import { registrationView, type RegistrationCheckQuery, type RegistrationCheckView } from '@ab/shared';
+import {
+  registrationView,
+  type RegistrationCheckQuery,
+  type RegistrationCheckView,
+} from '@ab/shared';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.rate-limit';
@@ -14,11 +18,21 @@ export class SalesRegistrationService {
 
   constructor(private readonly queries: SalesRegistrationRepo) {}
 
-  async check(user: AuthUser, query: RegistrationCheckQuery, now = Date.now()): Promise<RegistrationCheckView> {
+  async check(
+    user: AuthUser,
+    query: RegistrationCheckQuery,
+    now = Date.now(),
+  ): Promise<RegistrationCheckView> {
     if (!this.limit.allow(user.id, now)) {
-      throw new HttpException({ code: 'too_many_requests', message: 'too_many_requests' }, HttpStatus.TOO_MANY_REQUESTS);
+      throw new HttpException(
+        { code: 'too_many_requests', message: 'too_many_requests' },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
     }
-    const rows = query.by === 'phone' ? await this.queries.byPhone(query.phone) : await this.queries.byName(query.q);
+    const rows =
+      query.by === 'phone'
+        ? await this.queries.byPhone(query.phone)
+        : await this.queries.byName(query.q);
     return registrationView(rows);
   }
 }

@@ -41,7 +41,13 @@ export class SubscriptionsService {
   async add(row: TablesInsert<'subscriptions'>, actorId: string): Promise<SubscriptionView | null> {
     const created = await this.subs.insert(row);
     if (!created) return null;
-    const audit = { actorId, entity: 'subscriptions', entityId: created.id, action: 'create', after: created };
+    const audit = {
+      actorId,
+      entity: 'subscriptions',
+      entityId: created.id,
+      action: 'create',
+      after: created,
+    };
     await this.writes.done(audit, created.student_id);
     return this.get(created.id);
   }
@@ -61,7 +67,10 @@ export class SubscriptionsService {
     if (patch.renewsOn !== undefined) write.renews_on = patch.renewsOn;
     if (patch.notes !== undefined) write.notes = patch.notes;
     const after = Object.keys(write).length > 0 ? await this.subs.update(id, write) : before;
-    await this.writes.done({ actorId, entity: 'subscriptions', entityId: id, action: 'update', before, after }, before.student_id);
+    await this.writes.done(
+      { actorId, entity: 'subscriptions', entityId: id, action: 'update', before, after },
+      before.student_id,
+    );
     return this.get(id);
   }
 
@@ -70,7 +79,10 @@ export class SubscriptionsService {
     const before = await this.row(id);
     if (await this.subs.hasPayments(id)) throw conflict('has_payments');
     await this.subs.remove(id);
-    await this.writes.done({ actorId, entity: 'subscriptions', entityId: id, action: 'delete', before }, before.student_id);
+    await this.writes.done(
+      { actorId, entity: 'subscriptions', entityId: id, action: 'delete', before },
+      before.student_id,
+    );
   }
 
   private async row(id: string): Promise<SubRow> {

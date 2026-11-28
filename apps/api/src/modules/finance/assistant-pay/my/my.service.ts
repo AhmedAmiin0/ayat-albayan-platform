@@ -25,7 +25,9 @@ export class MyService {
   /** The students I brought, newest first: when, the guardian's phone, whether the first subscription is paid, my commission. No price. */
   async students(user: AuthUser): Promise<MyStudentRow[]> {
     // The phone only for a holder of inbox.read (chatPhone): she sees it in the chats anyway.
-    const phones = can(user, 'inbox.read') ? this.queries.guardianPhones(user.id) : Promise.resolve(new Map<string, string>());
+    const phones = can(user, 'inbox.read')
+      ? this.queries.guardianPhones(user.id)
+      : Promise.resolve(new Map<string, string>());
     const [rows, byStudent] = await Promise.all([this.queries.students(user.id), phones]);
     return rows.flatMap((r) => toMyStudent(r, byStudent) ?? []);
   }

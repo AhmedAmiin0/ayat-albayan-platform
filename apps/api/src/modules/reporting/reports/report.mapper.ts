@@ -13,7 +13,11 @@ import type { ReportRow } from './report-row';
 import { v2Fields } from './v2/report-v2.mapper';
 
 /** Who reads the report and when: drives can_edit / edit_until (R-REP-02). */
-export interface ViewContext { role: UserRole | null; now: Date; minutes: number }
+export interface ViewContext {
+  role: UserRole | null;
+  now: Date;
+  minutes: number;
+}
 
 const instant = (iso: string | null) => (iso === null ? null : new Date(iso));
 
@@ -82,7 +86,14 @@ type FormColumn =
 /** The lesson_reports columns the forms write (content: v2 only); identity and state are never client-written. */
 export type FormColumns = Pick<TablesUpdate<'lesson_reports'>, FormColumn | 'content'>;
 
-type TextField = 'recited' | 'newMemorization' | 'revision' | 'theory' | 'notes' | 'homework' | 'nextPlan';
+type TextField =
+  | 'recited'
+  | 'newMemorization'
+  | 'revision'
+  | 'theory'
+  | 'notes'
+  | 'homework'
+  | 'nextPlan';
 const TEXT_COLUMN = {
   recited: 'recited',
   newMemorization: 'new_memorization',

@@ -31,7 +31,9 @@ export class FakeRoleStore implements RoleStore {
   }
 
   async profiles(): Promise<ProfileRecord[]> {
-    return this.profilesData.filter((p) => p.role !== 'guardian' && p.role !== 'student').map((p) => ({ ...p }));
+    return this.profilesData
+      .filter((p) => p.role !== 'guardian' && p.role !== 'student')
+      .map((p) => ({ ...p }));
   }
 
   async insertRole(row: NewRole): Promise<string> {
@@ -43,24 +45,39 @@ export class FakeRoleStore implements RoleStore {
 
   async renameRole(id: string, names: RoleNames): Promise<void> {
     this.rolesData = this.rolesData.map((r) =>
-      r.id === id ? { ...r, name_ar: names.name_ar ?? r.name_ar, name_en: names.name_en === undefined ? r.name_en : names.name_en } : r,
+      r.id === id
+        ? {
+            ...r,
+            name_ar: names.name_ar ?? r.name_ar,
+            name_en: names.name_en === undefined ? r.name_en : names.name_en,
+          }
+        : r,
     );
   }
 
   async setPermissions(id: string, permissions: readonly string[]): Promise<void> {
-    this.rolesData = this.rolesData.map((r) => (r.id === id ? { ...r, permissions: [...permissions] } : r));
+    this.rolesData = this.rolesData.map((r) =>
+      r.id === id ? { ...r, permissions: [...permissions] } : r,
+    );
   }
 
   async deleteRole(id: string): Promise<void> {
     this.rolesData = this.rolesData.filter((r) => r.id !== id);
   }
 
-  async setProfileRole(id: string, change: { role: ProfileRecord['role']; role_id: string | null }): Promise<void> {
+  async setProfileRole(
+    id: string,
+    change: { role: ProfileRecord['role']; role_id: string | null },
+  ): Promise<void> {
     this.profilesData = this.profilesData.map((p) => (p.id === id ? { ...p, ...change } : p));
   }
 }
 
-export const profile = (id: string, role: ProfileRecord['role'], role_id: string | null = null): ProfileRecord => ({
+export const profile = (
+  id: string,
+  role: ProfileRecord['role'],
+  role_id: string | null = null,
+): ProfileRecord => ({
   id,
   full_name: id,
   role,
@@ -77,11 +94,21 @@ class FakeAudit {
 }
 
 /** The service on a fake store, a real cache and a fake audit. */
-export function rolesHarness(profiles: ProfileRecord[]): { store: FakeRoleStore; cache: PermissionCache; audit: FakeAudit; svc: RolesService } {
+export function rolesHarness(profiles: ProfileRecord[]): {
+  store: FakeRoleStore;
+  cache: PermissionCache;
+  audit: FakeAudit;
+  svc: RolesService;
+} {
   const store = new FakeRoleStore(undefined, profiles);
   const cache = new PermissionCache();
   const audit = new FakeAudit();
-  return { store, cache, audit, svc: new RolesService(store, cache, audit as unknown as AuditService) };
+  return {
+    store,
+    cache,
+    audit,
+    svc: new RolesService(store, cache, audit as unknown as AuditService),
+  };
 }
 
 export const fakeAudit = (): AuditService => new FakeAudit() as unknown as AuditService;

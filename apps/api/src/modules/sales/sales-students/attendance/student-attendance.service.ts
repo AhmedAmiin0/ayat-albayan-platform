@@ -17,13 +17,20 @@ export class StudentAttendanceService {
   constructor(private readonly queries: StudentAttendanceRepo) {}
 
   /** 404 student_not_found for an unknown id. */
-  async table(studentId: string, o: { month: string; mine: boolean }, now = new Date()): Promise<StudentAttendanceTable> {
+  async table(
+    studentId: string,
+    o: { month: string; mine: boolean },
+    now = new Date(),
+  ): Promise<StudentAttendanceTable> {
     if (!(await this.queries.exists(studentId))) throw notFound('student_not_found');
     const [lessons, starts] = await Promise.all([
       this.queries.lessons(studentId, attendanceWindow(o.month, now)),
       this.queries.starts(studentId, now),
     ]);
-    const reports = await this.queries.reports(studentId, lessons.map((l) => l.id));
+    const reports = await this.queries.reports(
+      studentId,
+      lessons.map((l) => l.id),
+    );
     return toAttendanceTable({ month: o.month, lessons, reports, starts, mine: o.mine }, now);
   }
 }

@@ -10,7 +10,12 @@ export interface FamilyExtras {
   nextLessonAt: string | null;
 }
 
-interface V2Report { id: string; student_id: string; content: unknown; submitted_at: string | null }
+interface V2Report {
+  id: string;
+  student_id: string;
+  content: unknown;
+  submitted_at: string | null;
+}
 
 const OPEN = ['scheduled', 'confirmed'] as const;
 

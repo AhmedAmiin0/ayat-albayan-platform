@@ -1,10 +1,16 @@
 import type { Json } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { ConfigConflictError, type ConfigChange, type ConfigRow, type ConfigSnapshot } from '@/common/configuration/config-store/config-store.types';
+import {
+  ConfigConflictError,
+  type ConfigChange,
+  type ConfigRow,
+  type ConfigSnapshot,
+} from '@/common/configuration/config-store/config-store.types';
 import { pgError } from '@/common/db/errors';
 
-const COLUMNS = 'key, value, version, description, description_seed, description_edited, updated_at, updated_by, retired_at';
+const COLUMNS =
+  'key, value, version, description, description_seed, description_edited, updated_at, updated_by, retired_at';
 
 /** The bits of a PostgREST error the mapping reads. */
 interface RpcError {
@@ -61,7 +67,11 @@ export class ConfigStoreRepo {
 
   /** settings_revision.rev (0 when the row is missing, e.g. right after a truncate). */
   async revision(): Promise<number> {
-    const { data, error } = await this.db.from('settings_revision').select('rev').eq('id', true).maybeSingle();
+    const { data, error } = await this.db
+      .from('settings_revision')
+      .select('rev')
+      .eq('id', true)
+      .maybeSingle();
     if (error) throw pgError(error);
     return data?.rev ?? 0;
   }
@@ -108,7 +118,10 @@ export class ConfigStoreRepo {
   async names(ids: readonly string[]): Promise<Map<string, string>> {
     const out = new Map<string, string>();
     if (ids.length === 0) return out;
-    const { data, error } = await this.db.from('profiles').select('id, full_name').in('id', [...new Set(ids)]);
+    const { data, error } = await this.db
+      .from('profiles')
+      .select('id, full_name')
+      .in('id', [...new Set(ids)]);
     if (error) throw pgError(error);
     for (const p of data) out.set(p.id, p.full_name);
     return out;

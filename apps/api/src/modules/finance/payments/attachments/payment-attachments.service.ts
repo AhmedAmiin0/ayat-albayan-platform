@@ -10,8 +10,15 @@ import { PaymentAttachmentsRepo } from './payment-attachments.repo';
 import { PaymentsRepo } from '@/modules/finance/payments/payments.repo';
 
 /** A client-sent path that passed every check: the mime is the sniffed one, never the client's. */
-export interface CheckedAttachment { path: string; mime: string; size: number | null }
-interface WithReceipt { id: string; receipt_path: string | null }
+export interface CheckedAttachment {
+  path: string;
+  mime: string;
+  size: number | null;
+}
+interface WithReceipt {
+  id: string;
+  receipt_path: string | null;
+}
 /** paymentId: a path this payment already holds is fine (its own replay / edit); any other owner is 409. */
 export interface AttachmentCheck {
   subscriptionId: string;
@@ -46,7 +53,8 @@ export class PaymentAttachments {
   /** Every path checked before anything is written; duplicates collapse to one. */
   async check(input: AttachmentCheck): Promise<CheckedAttachment[]> {
     const paths = [...new Set(input.paths)];
-    for (const path of paths) if (!isPathOf(path, input.subscriptionId)) throw badRequest('attachment_path', { path });
+    for (const path of paths)
+      if (!isPathOf(path, input.subscriptionId)) throw badRequest('attachment_path', { path });
     const held = (await this.rows.owners(paths)).find((o) => o.paymentId !== input.paymentId);
     if (held) throw conflict('attachment_in_use', { path: held.path });
     return Promise.all(paths.map((path) => this.checkOne(path)));

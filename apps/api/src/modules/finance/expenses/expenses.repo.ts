@@ -32,15 +32,17 @@ export class ExpensesRepo {
 
   /** Months `first`…`last` (YYYY-MM-01), inclusive; one month when equal; the server caps rows. */
   async between(first: string, last: string): Promise<ExpenseRow[]> {
-    const data = rows(await this.db
-      .from('expenses')
-      .select('*')
-      .gte('month', first)
-      .lte('month', last)
-      .order('month')
-      .order('category')
-      .order('created_at')
-      .limit(MAX_ROWS));
+    const data = rows(
+      await this.db
+        .from('expenses')
+        .select('*')
+        .gte('month', first)
+        .lte('month', last)
+        .order('month')
+        .order('category')
+        .order('created_at')
+        .limit(MAX_ROWS),
+    );
     return data;
   }
 
@@ -55,7 +57,9 @@ export class ExpensesRepo {
   }
 
   async update(id: string, patch: TablesUpdate<'expenses'>): Promise<ExpenseRow> {
-    const data = one(await this.db.from('expenses').update(patch).eq('id', id).select('*').single());
+    const data = one(
+      await this.db.from('expenses').update(patch).eq('id', id).select('*').single(),
+    );
     return data;
   }
 
@@ -64,11 +68,13 @@ export class ExpensesRepo {
   }
 
   async categories(): Promise<ExpenseCategoryView[]> {
-    const data = rows(await this.db
-      .from('expense_categories')
-      .select('key, label_ar, label_en, active')
-      .order('sort')
-      .order('key'));
+    const data = rows(
+      await this.db
+        .from('expense_categories')
+        .select('key, label_ar, label_en, active')
+        .order('sort')
+        .order('key'),
+    );
     return data;
   }
 
@@ -86,7 +92,9 @@ export class ExpensesRepo {
 
   /** Recurring expenses of the previous month copied into `month` as drafts (idempotent). */
   async createRecurringDrafts(month: string): Promise<number> {
-    const { data, error } = await this.db.rpc('create_recurring_expense_drafts', { p_month: month });
+    const { data, error } = await this.db.rpc('create_recurring_expense_drafts', {
+      p_month: month,
+    });
     if (error) throw pgError(error);
     return data;
   }

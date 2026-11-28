@@ -5,9 +5,16 @@ import { z } from 'zod';
 // default port, by host name (never an IP literal or userinfo). Checked at subscribe AND before
 // every send (a row could predate a tighter list).
 
-const EXACT_HOSTS: ReadonlySet<string> = new Set(['fcm.googleapis.com', 'updates.push.services.mozilla.com']);
+const EXACT_HOSTS: ReadonlySet<string> = new Set([
+  'fcm.googleapis.com',
+  'updates.push.services.mozilla.com',
+]);
 /** Subdomains only (label boundary): «x.notify.windows.com», never «evilnotify.windows.com». */
-const HOST_SUFFIXES = ['.push.services.mozilla.com', '.notify.windows.com', '.push.apple.com'] as const;
+const HOST_SUFFIXES = [
+  '.push.services.mozilla.com',
+  '.notify.windows.com',
+  '.push.apple.com',
+] as const;
 
 const IPV4 = /^\d{1,3}(\.\d{1,3}){3}$/;
 
@@ -19,13 +26,17 @@ export function pushEndpointAllowed(endpoint: string): boolean {
   } catch {
     return false;
   }
-  if (url.protocol !== 'https:' || url.username !== '' || url.password !== '' || url.port !== '') return false;
+  if (url.protocol !== 'https:' || url.username !== '' || url.password !== '' || url.port !== '')
+    return false;
   const host = url.hostname.toLowerCase();
   if (host.startsWith('[') || IPV4.test(host)) return false;
-  return EXACT_HOSTS.has(host) || HOST_SUFFIXES.some((s) => host.endsWith(s) && host.length > s.length);
+  return (
+    EXACT_HOSTS.has(host) || HOST_SUFFIXES.some((s) => host.endsWith(s) && host.length > s.length)
+  );
 }
 
-const base64url = (len: number) => z.string().regex(new RegExp(`^[A-Za-z0-9_-]{${len}}$`), 'invalid_key');
+const base64url = (len: number) =>
+  z.string().regex(new RegExp(`^[A-Za-z0-9_-]{${len}}$`), 'invalid_key');
 
 /** PUT /me/web-push: PushSubscription.toJSON() (migration 380's column checks, plus the allow-list). */
 export const webPushSubscriptionSchema = z.object({

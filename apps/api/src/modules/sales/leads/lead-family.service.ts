@@ -5,7 +5,12 @@ import { DB, type Db } from '@/common/db/db.module';
 import { conflict, notFound } from '@/common/http/errors';
 import { isUniqueViolation, maybe, pgError, uniqueViolationMentions } from '@/common/db/errors';
 
-interface LinkInput { leadId: string; code: string; actorId: string; admin: boolean }
+interface LinkInput {
+  leadId: string;
+  code: string;
+  actorId: string;
+  admin: boolean;
+}
 
 const NOT_FOUND: readonly string[] = ['lead_not_found', 'student_not_found'];
 
@@ -15,9 +20,11 @@ const lostRace = (error: PostgrestError | null): boolean =>
 
 /** link_family_phone's refusals (migration 973) as the API's 404 / 409 codes. */
 function linkError(error: PostgrestError): Error {
-  if (uniqueViolationMentions(error, 'guardian_phones_one_second')) return conflict('family_has_second_number');
+  if (uniqueViolationMentions(error, 'guardian_phones_one_second'))
+    return conflict('family_has_second_number');
   if (isUniqueViolation(error)) return conflict('number_taken');
-  const code = error.code === 'P0001' ? LEAD_FAMILY_LINK_ERRORS.find((c) => c === error.message) : undefined;
+  const code =
+    error.code === 'P0001' ? LEAD_FAMILY_LINK_ERRORS.find((c) => c === error.message) : undefined;
   if (!code) return pgError(error);
   return NOT_FOUND.includes(code) ? notFound(code) : conflict(code);
 }
@@ -29,7 +36,8 @@ export class LeadFamilyService {
 
   async link({ leadId, code, actorId, admin }: LinkInput): Promise<LeadFamilyLinked> {
     if (!admin) await this.assertNoLogin(code);
-    const call = () => this.db.rpc('link_family_phone', { p_lead: leadId, p_code: code, p_actor: actorId });
+    const call = () =>
+      this.db.rpc('link_family_phone', { p_lead: leadId, p_code: code, p_actor: actorId });
     let { data, error } = await call();
     // Once more after a lost race: the number's new holder answers (this family → false, another → its 409).
     if (lostRace(error)) ({ data, error } = await call());

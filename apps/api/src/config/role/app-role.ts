@@ -54,5 +54,8 @@ export function workerUrl(source: NodeJS.ProcessEnv = process.env): string | nul
  * ayat-api-a), which an admin save on this copy also asks to reload their config; unset = none.
  */
 export function peerUrls(source: NodeJS.ProcessEnv = process.env): string[] {
-  return (source.PEER_URLS ?? '').split(',').map(baseUrl).filter((u) => u !== '');
+  return (source.PEER_URLS ?? '')
+    .split(',')
+    .map(baseUrl)
+    .filter((u) => u !== '');
 }

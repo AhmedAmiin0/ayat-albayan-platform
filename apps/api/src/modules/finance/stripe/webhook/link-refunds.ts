@@ -66,8 +66,14 @@ export class LinkRefunds {
    * within the hour) → fail so Stripe retries; else (the payment was refused) → the admins settle it by hand.
    */
   private async unrecorded(link: LinkRow, c: { charge: string; created: number }): Promise<string> {
-    if (link.processing || Date.now() - c.created * 1000 < RETRY_MS) throw new Error('stripe refund before its payment was recorded');
-    await this.deps.alerts.admins({ subject: `stripe_refund_unrecorded:${c.charge}`, title: ar.paymentLinks.bell.refusedTitle, text: c.charge, link });
+    if (link.processing || Date.now() - c.created * 1000 < RETRY_MS)
+      throw new Error('stripe refund before its payment was recorded');
+    await this.deps.alerts.admins({
+      subject: `stripe_refund_unrecorded:${c.charge}`,
+      title: ar.paymentLinks.bell.refusedTitle,
+      text: c.charge,
+      link,
+    });
     return 'refund_alerted';
   }
 
@@ -83,7 +89,12 @@ export class LinkRefunds {
   async disputed(dispute: Stripe.Dispute): Promise<string> {
     const link = await this.linkOfIntent(await this.clients.client(), idOf(dispute.payment_intent));
     const text = `${fromStripeAmount(dispute.amount, dispute.currency)} ${dispute.currency.toUpperCase()} — ${ar.paymentLinks.bell.disputeBody}`;
-    await this.deps.alerts.admins({ subject: `stripe_dispute:${dispute.id}`, title: ar.paymentLinks.bell.disputeTitle, text, link });
+    await this.deps.alerts.admins({
+      subject: `stripe_dispute:${dispute.id}`,
+      title: ar.paymentLinks.bell.disputeTitle,
+      text,
+      link,
+    });
     return 'dispute_alert';
   }
 
@@ -93,14 +104,28 @@ export class LinkRefunds {
     const currency = refund.currency.toUpperCase();
     try {
       await this.deps.payments.create(
-        { subscriptionId, amount, currency, kind: 'refund', method: 'card', paidAt: pastIso(refund.created), note: `Stripe ${refund.id}`, clientRequestId: uuidFor(refund.id) },
+        {
+          subscriptionId,
+          amount,
+          currency,
+          kind: 'refund',
+          method: 'card',
+          paidAt: pastIso(refund.created),
+          note: `Stripe ${refund.id}`,
+          clientRequestId: uuidFor(refund.id),
+        },
         link.created_by,
       );
       return 1;
     } catch (e) {
       if (!(e instanceof HttpException) || e.getStatus() >= 500) throw e;
       const text = `${amount} ${currency} (${errorCode(e) ?? 'refused'})`;
-      await this.deps.alerts.admins({ subject: `stripe_refund_refused:${refund.id}`, title: ar.paymentLinks.bell.refusedTitle, text, link });
+      await this.deps.alerts.admins({
+        subject: `stripe_refund_refused:${refund.id}`,
+        title: ar.paymentLinks.bell.refusedTitle,
+        text,
+        link,
+      });
       return 0;
     }
   }

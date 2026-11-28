@@ -33,7 +33,14 @@ export interface HistoryLesson {
 }
 
 /** Lessons a report is still owed for: started, not cancelled or moved (docs/11 §4 R11). */
-export const REPORTABLE_STATUSES = ['scheduled', 'confirmed', 'completed', 'late', 'no_show', 'excused'] as const;
+export const REPORTABLE_STATUSES = [
+  'scheduled',
+  'confirmed',
+  'completed',
+  'late',
+  'no_show',
+  'excused',
+] as const;
 
 export interface PendingRow {
   lesson_id: string;
@@ -72,7 +79,12 @@ export class ReportHistoryQueries {
   /** Completed lessons only (v_lesson_sequence). */
   async sequence(studentId: string): Promise<Map<string, number>> {
     const rows = await readAll((from, to) =>
-      this.db.from('v_lesson_sequence').select('lesson_id, seq').eq('student_id', studentId).order('seq').range(from, to),
+      this.db
+        .from('v_lesson_sequence')
+        .select('lesson_id, seq')
+        .eq('student_id', studentId)
+        .order('seq')
+        .range(from, to),
     );
     return new Map(
       rows.flatMap((r) => (r.lesson_id && r.seq !== null ? [[r.lesson_id, r.seq] as const] : [])),
@@ -81,7 +93,9 @@ export class ReportHistoryQueries {
 
   /** The student's assigned teacher; null when the student does not exist. */
   async student(id: string): Promise<{ teacher_id: string | null } | null> {
-    const data = maybe(await this.db.from('students').select('teacher_id').eq('id', id).maybeSingle());
+    const data = maybe(
+      await this.db.from('students').select('teacher_id').eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
@@ -92,7 +106,7 @@ export class ReportHistoryQueries {
       p_student_id: input.studentId,
     });
     if (error) throw pgError(error);
-    return  data;
+    return data;
   }
 
   /**
@@ -103,7 +117,9 @@ export class ReportHistoryQueries {
     return readAll((from, to) =>
       this.db
         .from('lesson_students')
-        .select('lesson_id, student:students(id, code, name), lessons!inner(starts_at, status), lesson_reports(id, status)')
+        .select(
+          'lesson_id, student:students(id, code, name), lessons!inner(starts_at, status), lesson_reports(id, status)',
+        )
         .eq('lessons.teacher_id', teacherId)
         .lte('lessons.starts_at', now.toISOString())
         .in('lessons.status', [...REPORTABLE_STATUSES])

@@ -107,7 +107,13 @@ export class PushService {
       const { data: inserted, error } = await this.db
         .from('push_notifications')
         .upsert(
-          { profile_id: profile.id, kind: target.kind, ...text, data, dedup_key: `${target.kind}:${target.subject}:${profile.id}` },
+          {
+            profile_id: profile.id,
+            kind: target.kind,
+            ...text,
+            data,
+            dedup_key: `${target.kind}:${target.subject}:${profile.id}`,
+          },
           { onConflict: 'dedup_key', ignoreDuplicates: true },
         )
         .select('id');

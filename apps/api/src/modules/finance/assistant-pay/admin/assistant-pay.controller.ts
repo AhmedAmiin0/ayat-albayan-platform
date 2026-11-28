@@ -70,7 +70,10 @@ export class AssistantPayController {
 
   /** A signed amount carried into the next open statement; 404 assistant_not_found. */
   @Route(routes.adjust)
-  adjust(@RouteInput() { body }: In<'adjust'>, @CurrentUser() user: AuthUser): Promise<{ id: string }> {
+  adjust(
+    @RouteInput() { body }: In<'adjust'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<{ id: string }> {
     return this.corrections.adjust({ ...body, actorId: user.id });
   }
 
@@ -80,7 +83,10 @@ export class AssistantPayController {
    */
   @Route(routes.broughtBy)
   @HttpCode(200)
-  broughtBy(@RouteInput() { body }: In<'broughtBy'>, @CurrentUser() user: AuthUser): Promise<BroughtByResult> {
+  broughtBy(
+    @RouteInput() { body }: In<'broughtBy'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<BroughtByResult> {
     return this.corrections.broughtBy(body, user.id);
   }
 }

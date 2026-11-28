@@ -6,7 +6,11 @@ import { ResponseCheckInterceptor } from './common/http/returns';
 import { registerClientUsage } from './common/telemetry/client-usage/client-usage.hook';
 import { ClientUsageService } from './common/telemetry/client-usage/client-usage.service';
 import { apiErrorReporter } from './common/infra/http/error-report';
-import { registerRequestId, ReportingLogger, requestIdOptions } from './common/telemetry/request-id';
+import {
+  registerRequestId,
+  ReportingLogger,
+  requestIdOptions,
+} from './common/telemetry/request-id';
 import { loadEnv } from './config/env/env';
 import { appRole, servesPublicHttp, trustProxyHops } from './config/role/app-role';
 import { registerRoleHttp } from './modules/platform/process-role';

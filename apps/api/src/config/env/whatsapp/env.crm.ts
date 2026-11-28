@@ -22,7 +22,8 @@ export const CRM_SHAPE = {
 };
 
 /** Both lines on crm would be one CRM account (one number) twice: the chat line then stays off (duplicate). */
-export const bothOnCrm = (env: Env): boolean => env.WA_PROVIDER === 'crm' && env.WA_CHAT_PROVIDER === 'crm';
+export const bothOnCrm = (env: Env): boolean =>
+  env.WA_PROVIDER === 'crm' && env.WA_CHAT_PROVIDER === 'crm';
 
 /** A line on crm: the CRM's base and key, nothing else. null (refuses every call, rows stay queued) while either is missing. */
 export function crmLine(env: Env, line: WaLine): CrmLineEnv | null {

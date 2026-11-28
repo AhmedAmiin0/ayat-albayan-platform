@@ -8,7 +8,11 @@ import type { PayoutLesson, PayoutTeacher } from './payouts.plan';
 export type PayoutRow = Tables<'teacher_payouts'> & {
   teacher: { id: string; display_name_ar: string; tz: string } | null;
 };
-export interface LessonWindow { teacherId: string; from: string; to: string }
+export interface LessonWindow {
+  teacherId: string;
+  from: string;
+  to: string;
+}
 
 const SELECT = '*, teacher:teachers(id, display_name_ar, display_name_en, tz)';
 const byTeacherName = (a: PayoutRow, b: PayoutRow) =>

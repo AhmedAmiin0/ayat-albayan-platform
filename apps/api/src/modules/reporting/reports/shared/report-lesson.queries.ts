@@ -53,7 +53,9 @@ export class ReportLessonQueries {
     if (studentIds.length === 0) return out;
     const { data, error } = await this.db
       .from('v_subscription_balance')
-      .select('subscription_id, student_id, lessons_total, lessons_used, remaining, ended_at, projected_end_at')
+      .select(
+        'subscription_id, student_id, lessons_total, lessons_used, remaining, ended_at, projected_end_at',
+      )
       .in('student_id', [...studentIds])
       .eq('is_last', true);
     if (error) throw pgError(error);

@@ -7,11 +7,14 @@ const WINDOW_END = new Date(AFTER.getTime() + 30 * 60_000);
 
 describe('reportView (docs/11 §4 ReportView)', () => {
   it('maps the grade columns to grades by rubric and hides pdf_path', () => {
-    const view = reportView(submittedRow({ grade_tajweed: 'good', grade_overall: 'excellent', pdf_path: 's/l.pdf' }), {
-      role: 'teacher',
-      now: AFTER,
-      minutes: 30,
-    });
+    const view = reportView(
+      submittedRow({ grade_tajweed: 'good', grade_overall: 'excellent', pdf_path: 's/l.pdf' }),
+      {
+        role: 'teacher',
+        now: AFTER,
+        minutes: 30,
+      },
+    );
     expect(view.grades).toEqual({
       recitation: null,
       memorization: null,
@@ -42,12 +45,23 @@ describe('reportView (docs/11 §4 ReportView)', () => {
   });
 
   it('attachments oldest first', () => {
-    const file = (id: string, created_at: string) => ({ id, storage_path: `r/${id}.png`, mime: 'image/png', size: 9, created_at });
-    const view = reportView(reportRow({ attachments: [file('b', '2026-10-04T15:02:00Z'), file('a', '2026-10-04T15:01:00Z')] }), {
-      role: 'admin',
-      now: AFTER,
-      minutes: 30,
+    const file = (id: string, created_at: string) => ({
+      id,
+      storage_path: `r/${id}.png`,
+      mime: 'image/png',
+      size: 9,
+      created_at,
     });
+    const view = reportView(
+      reportRow({
+        attachments: [file('b', '2026-10-04T15:02:00Z'), file('a', '2026-10-04T15:01:00Z')],
+      }),
+      {
+        role: 'admin',
+        now: AFTER,
+        minutes: 30,
+      },
+    );
     expect(view.attachments.map((a) => a.id)).toEqual(['a', 'b']);
   });
 });
@@ -55,7 +69,13 @@ describe('reportView (docs/11 §4 ReportView)', () => {
 describe('formColumns (R-REP-02 autosave writes only what was sent)', () => {
   it('maps camelCase to columns and grades to grade_* columns', () => {
     expect(
-      formColumns({ attendance: 'late', newMemorization: 'الملك 1-5', nextPlan: 'الملك 6-10', grades: { tajweed: 'good' }, overall: 'very_good' }),
+      formColumns({
+        attendance: 'late',
+        newMemorization: 'الملك 1-5',
+        nextPlan: 'الملك 6-10',
+        grades: { tajweed: 'good' },
+        overall: 'very_good',
+      }),
     ).toEqual({
       attendance: 'late',
       new_memorization: 'الملك 1-5',
@@ -76,7 +96,12 @@ describe('formColumns (R-REP-02 autosave writes only what was sent)', () => {
 
 describe('submitColumns (a submit is the whole form)', () => {
   it('every form column is written; a field left out is cleared', () => {
-    const cols = submitColumns({ attendance: 'on_time', grades: FULL_GRADES, overall: 'excellent', homework: 'الملك' });
+    const cols = submitColumns({
+      attendance: 'on_time',
+      grades: FULL_GRADES,
+      overall: 'excellent',
+      homework: 'الملك',
+    });
     expect(cols).toMatchObject({
       attendance: 'on_time',
       grade_recitation: 'excellent',

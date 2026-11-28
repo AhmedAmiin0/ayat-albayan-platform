@@ -1,6 +1,10 @@
 import type { ReportSummaryView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { historyResponse, ReportFilesService, ReportHistoryQueries } from '@/modules/reporting/reports';
+import {
+  historyResponse,
+  ReportFilesService,
+  ReportHistoryQueries,
+} from '@/modules/reporting/reports';
 import { SalesHistoryRepo } from '@/modules/sales/sales';
 
 /** Teachers page history by 10; a salesperson reads the recent ones. */
@@ -22,7 +26,12 @@ export class SalesStudentReads {
       this.reports.lessons(rows.map((r) => r.lesson_id)),
       this.reports.sequence(studentId),
     ]);
-    const page = historyResponse({ rows, lessons, seq, page: { page: 1, pageSize: REPORTS_LIMIT } });
+    const page = historyResponse({
+      rows,
+      lessons,
+      seq,
+      page: { page: 1, pageSize: REPORTS_LIMIT },
+    });
     return { items: page.items, total: page.total };
   }
 }

@@ -55,7 +55,10 @@ export class SignInLimits {
       { key: `${kind}:id:${identifierKey(at.identifier)}`, max: budget.identifier },
     ];
     if (!(await this.store.take({ buckets, windowMs: WINDOW_MS, now }))) {
-      throw new HttpException({ code: 'too_many_requests', message: 'too_many_requests' }, HttpStatus.TOO_MANY_REQUESTS);
+      throw new HttpException(
+        { code: 'too_many_requests', message: 'too_many_requests' },
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
     }
   }
 
@@ -67,6 +70,9 @@ export class SignInLimits {
     const key = `send:phone:${phone}`;
     const take = (suffix: string, max: number, windowMs: number) =>
       this.store.take({ buckets: [{ key: `${key}${suffix}`, max }], windowMs, now });
-    return (await take('', PHONE_LIMITS.per15Min, WINDOW_MS)) && take(':day', PHONE_LIMITS.perDay, DAY_MS);
+    return (
+      (await take('', PHONE_LIMITS.per15Min, WINDOW_MS)) &&
+      take(':day', PHONE_LIMITS.perDay, DAY_MS)
+    );
   }
 }

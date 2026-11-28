@@ -19,7 +19,8 @@ export interface RoleState {
 export const isSystemAdmin = (role: RoleRecord): boolean => role.is_system && role.key === 'admin';
 
 /** The system guardian / student roles: their grants are the family portal's, fixed (a rename only). */
-export const isPortalRole = (role: RoleRecord): boolean => role.is_system && (role.key === 'guardian' || role.key === 'student');
+export const isPortalRole = (role: RoleRecord): boolean =>
+  role.is_system && (role.key === 'guardian' || role.key === 'student');
 
 /** profiles.role_id, or the system role of profiles.role when null. */
 export function heldRole(state: RoleState, profile: ProfileRecord): RoleRecord | null {
@@ -83,7 +84,12 @@ export function roleView(state: RoleState, role: RoleRecord): RoleView {
 
 export function staffUserView(state: RoleState, profile: ProfileRecord): StaffUserView {
   const held = heldRole(state, profile);
-  return { id: profile.id, full_name: profile.full_name, role: profile.role, role_id: held?.id ?? '' };
+  return {
+    id: profile.id,
+    full_name: profile.full_name,
+    role: profile.role,
+    role_id: held?.id ?? '',
+  };
 }
 
 /** Grantable keys only, deduplicated, catalog order. */

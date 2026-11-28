@@ -8,9 +8,18 @@ import type { SubRow } from '@/modules/finance/subscriptions/shared/subscription
 
 const CANCELLED_LESSONS = '(cancelled_by_teacher,cancelled_by_admin)';
 
-interface CancelWrite { id: string; actorId: string; reason: string | null; now: Date }
+interface CancelWrite {
+  id: string;
+  actorId: string;
+  reason: string | null;
+  now: Date;
+}
 /** The package being cancelled, as ordered by subscription_commission_kind: (created_at, id). */
-interface LaterOf { id: string; studentId: string; createdAt: string }
+interface LaterOf {
+  id: string;
+  studentId: string;
+  createdAt: string;
+}
 /** The cancelled row; null when it was already cancelled (a race); a block the DB guard raised (934). */
 type CancelResult = { row: SubRow } | { row: null; block: CancelBlock };
 
@@ -32,7 +41,10 @@ export class SubscriptionCancelRepo {
     if (rules.error) throw pgError(rules.error);
     const { count, error } = await this.db
       .from('lessons')
-      .select('id, rule:schedule_rules!lessons_rule_id_fkey!inner(subscription_id)', { count: 'exact', head: true })
+      .select('id, rule:schedule_rules!lessons_rule_id_fkey!inner(subscription_id)', {
+        count: 'exact',
+        head: true,
+      })
       .eq('rule.subscription_id', subscriptionId)
       .not('status', 'in', CANCELLED_LESSONS);
     if (error) throw pgError(error);
@@ -55,14 +67,23 @@ export class SubscriptionCancelRepo {
     if (later.error) throw pgError(later.error);
     const ids = later.data.map((r) => r.id);
     if (ids.length === 0) return false;
-    const { count, error } = await this.db.from('assistant_commissions').select('id', { count: 'exact', head: true }).in('subscription_id', ids);
+    const { count, error } = await this.db
+      .from('assistant_commissions')
+      .select('id', { count: 'exact', head: true })
+      .in('subscription_id', ids);
     if (error) throw pgError(error);
     return (count ?? 0) > 0;
   }
 
   /** Compare-and-set: only a package not cancelled yet; the DB guard re-checks money, lessons and commission. */
   async cancel(w: CancelWrite): Promise<CancelResult> {
-    const patch = { status: 'cancelled' as const, cancel_kind: 'unused', cancelled_at: w.now.toISOString(), cancelled_by: w.actorId, cancel_reason: w.reason };
+    const patch = {
+      status: 'cancelled' as const,
+      cancel_kind: 'unused',
+      cancelled_at: w.now.toISOString(),
+      cancelled_by: w.actorId,
+      cancel_reason: w.reason,
+    };
     const { data, error } = await this.db
       .from('subscriptions')
       .update(patch)
@@ -70,9 +91,12 @@ export class SubscriptionCancelRepo {
       .neq('status', 'cancelled')
       .select(SELECT)
       .maybeSingle();
-    if (error?.code === '23514' && error.message.startsWith('has_payments')) return { row: null, block: 'has_payments' };
-    if (error?.code === '23514' && error.message.startsWith('has_lessons')) return { row: null, block: 'has_lessons' };
-    if (error?.code === '23514' && error.message.startsWith('has_commission')) return { row: null, block: 'has_commission' };
+    if (error?.code === '23514' && error.message.startsWith('has_payments'))
+      return { row: null, block: 'has_payments' };
+    if (error?.code === '23514' && error.message.startsWith('has_lessons'))
+      return { row: null, block: 'has_lessons' };
+    if (error?.code === '23514' && error.message.startsWith('has_commission'))
+      return { row: null, block: 'has_commission' };
     if (error) throw pgError(error);
     return data ? { row: data } : { row: null, block: 'already_cancelled' };
   }

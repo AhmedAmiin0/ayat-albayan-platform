@@ -37,7 +37,9 @@ export interface Stored<T> {
 
 export function parseStored<T>(raw: string): Stored<T> | null {
   const s = parseJson<Partial<Stored<T>>>(raw)?.value;
-  return s && typeof s === 'object' && typeof s.at === 'number' && 'v' in s ? (s as Stored<T>) : null;
+  return s && typeof s === 'object' && typeof s.at === 'number' && 'v' in s
+    ? (s as Stored<T>)
+    : null;
 }
 
 export interface CacheEntry<T> {

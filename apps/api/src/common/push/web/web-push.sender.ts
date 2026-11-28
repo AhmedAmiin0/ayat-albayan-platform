@@ -81,16 +81,24 @@ export class WebPushSender {
     try {
       const keys = this.keys();
       if (!keys) return 0;
-      const { data, error } = await this.db.from('web_push_subscriptions').select('id, endpoint, p256dh, auth, session_id').eq('profile_id', profileId);
+      const { data, error } = await this.db
+        .from('web_push_subscriptions')
+        .select('id, endpoint, p256dh, auth, session_id')
+        .eq('profile_id', profileId);
       if (error) throw pgError(error);
       // Only browsers bound to a live session of this profile (migration 700; null = not yet re-bound).
-      const live = await liveSessions(this.db, data.map((s) => s.session_id));
+      const live = await liveSessions(
+        this.db,
+        data.map((s) => s.session_id),
+      );
       const subs = data.filter((s) => s.session_id !== null && live.has(s.session_id));
       const body = Buffer.from(JSON.stringify({ ...payload, body: clip(payload.body) }));
       const sent = await Promise.allSettled(subs.map((sub) => this.one({ sub, keys, body })));
       return sent.filter((r) => r.status === 'fulfilled' && r.value).length;
     } catch (e) {
-      this.log.warn(`web push to ${profileId} failed: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(
+        `web push to ${profileId} failed: ${e instanceof Error ? e.message : String(e)}`,
+      );
       return 0;
     }
   }
@@ -118,7 +126,9 @@ export class WebPushSender {
       if (res.status >= 200 && res.status < 300) return true;
       this.log.warn(`web push HTTP ${res.status} (subscription ${sub.id} kept)`);
     } catch (e) {
-      this.log.warn(`web push to subscription ${sub.id} failed: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(
+        `web push to subscription ${sub.id} failed: ${e instanceof Error ? e.message : String(e)}`,
+      );
     }
     return false;
   }

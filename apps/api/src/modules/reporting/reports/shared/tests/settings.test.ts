@@ -4,7 +4,12 @@ import { readerOf } from '@/common/settings/settings.fakes';
 import { ReportsSettings } from '@/modules/reporting/reports/shared/reports.settings';
 
 /** ReportGate's keys: the edit window (docs/46 B1), the link lifetime, the late-cancel policy, the v2 flag. */
-const BEFORE = ['report_teacher_edit_minutes', 'report_teacher_edit_hours', 'late_cancel_hours', 'report_form_v2'] as const;
+const BEFORE = [
+  'report_teacher_edit_minutes',
+  'report_teacher_edit_hours',
+  'late_cancel_hours',
+  'report_form_v2',
+] as const;
 
 describe('ReportsSettings', () => {
   it('reads exactly its keys, in order, with the registry defaults', async () => {

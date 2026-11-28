@@ -1,7 +1,13 @@
 import type { Json } from '@ab/db';
 import { bundleText, REGISTRY_VERSION, seedPayload } from '@ab/settings';
 import arBundle from '@ab/shared/i18n/ar.json';
-import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  type OnApplicationBootstrap,
+  type OnModuleDestroy,
+} from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { ConfigStore } from '@/common/configuration/config-store/store/config-store.service';
 import { BackgroundJob } from '@/config/role/background-job';
@@ -30,7 +36,8 @@ function report(out: SeedOutcome, log: SeedLog): void {
     return;
   }
   const failed = out.failed ?? [];
-  if (failed.length > 0) log.warn(`config seed applied ${out.applied ?? 0}, failed: ${failed.join(', ')}`);
+  if (failed.length > 0)
+    log.warn(`config seed applied ${out.applied ?? 0}, failed: ${failed.join(', ')}`);
   else log.log(`config seed applied ${out.applied ?? 0}, failed none`);
 }
 
@@ -39,10 +46,16 @@ function report(out: SeedOutcome, log: SeedLog): void {
  * never the overrides) as description_seed, and REGISTRY_VERSION. It carries no value: the RPC never
  * writes one. Never throws: a failure is logged and answered null, so it can never block boot.
  */
-export async function runConfigSeed(db: Db, log: SeedLog = new Logger('ConfigSeeder')): Promise<SeedOutcome | null> {
+export async function runConfigSeed(
+  db: Db,
+  log: SeedLog = new Logger('ConfigSeeder'),
+): Promise<SeedOutcome | null> {
   try {
     const entries = seedPayload(bundleText(arBundle)) as unknown as Json;
-    const { data, error } = await db.rpc('config_seed', { entries, registry_version: REGISTRY_VERSION });
+    const { data, error } = await db.rpc('config_seed', {
+      entries,
+      registry_version: REGISTRY_VERSION,
+    });
     if (error) throw new Error(error.message);
     const out = asOutcome(data);
     report(out, log);

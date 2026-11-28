@@ -51,7 +51,9 @@ async function postInternal(url: string, what: string, query?: KickQuery): Promi
     const status = await internalHttp(url).status({ path: '', method: 'POST', headers, query });
     if (!ok(status)) log.warn(`${what}: answered ${status}, left for its next poll`);
   } catch (e) {
-    log.warn(`${what}: failed (${e instanceof Error ? e.message : String(e)}), left for its next poll`);
+    log.warn(
+      `${what}: failed (${e instanceof Error ? e.message : String(e)}), left for its next poll`,
+    );
   }
 }
 
@@ -79,5 +81,6 @@ export async function kickWorker(name: string, options: KickOptions = {}): Promi
 export function kickConfigReload(): void {
   if (appRole() !== 'api') return;
   void kickWorker('config-reload');
-  for (const peer of peerUrls()) void postInternal(`${peer}${PEER_RELOAD_PATH}`, `config-reload: peer ${peer}`);
+  for (const peer of peerUrls())
+    void postInternal(`${peer}${PEER_RELOAD_PATH}`, `config-reload: peer ${peer}`);
 }

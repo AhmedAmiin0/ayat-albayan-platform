@@ -44,7 +44,12 @@ export class SalesChatFiles {
    * attachment_in_use). 404 outside this chat, 400 receipt_type for any file `list` does not
    * offer (a sticker, a voice note), 400 receipt_too_large over maxBytes (copy removed).
    */
-  async copy(input: { phone: string; messageId: string; subscriptionId: string; maxBytes: number }): Promise<string> {
+  async copy(input: {
+    phone: string;
+    messageId: string;
+    subscriptionId: string;
+    maxBytes: number;
+  }): Promise<string> {
     const picked = await this.thread.pick({ phone: input.phone, messageId: input.messageId });
     if (!picked) throw badRequest('receipt_type');
     const { msg, file } = picked;

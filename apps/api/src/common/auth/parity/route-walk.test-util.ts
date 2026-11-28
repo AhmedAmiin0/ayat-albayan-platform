@@ -109,7 +109,8 @@ function isHandler(value: unknown): value is (...args: unknown[]) => unknown {
 /** Boots AppModule (no network) and lists every routed handler of every controller. */
 export async function walkRoutes(): Promise<RouteAccess[]> {
   const mod = await Test.createTestingModule({ imports: [AppModule, DiscoveryModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
     .compile();
   const reflector = mod.get(Reflector);
   const scanner = new MetadataScanner();

@@ -22,14 +22,17 @@ type AccountPatch = Partial<AccountRow> & { drive_confirmed_by?: string | null }
 const COLUMNS =
   'status, email, scopes, connected_at, connected_by, last_error, discovery, root_folder_id, root_folder_name, summary_sheet_id, drive_confirmed_at, last_run_at';
 
-
 /** google_account (one row) and the refresh token's Vault functions, with the service role. Never logs a value. */
 @Injectable()
 export class GoogleAccountQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async get(): Promise<AccountRow> {
-    const { data, error } = await this.db.from('google_account').select(COLUMNS).eq('id', true).maybeSingle();
+    const { data, error } = await this.db
+      .from('google_account')
+      .select(COLUMNS)
+      .eq('id', true)
+      .maybeSingle();
     if (error) throw pgError(error);
     return (data ?? {
       status: 'disconnected',

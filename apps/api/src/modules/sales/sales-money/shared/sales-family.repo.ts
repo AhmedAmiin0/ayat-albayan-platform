@@ -5,7 +5,13 @@ import { familyOfPhone } from '@/common/db/family-of-phone';
 import { notFound } from '@/common/http/errors';
 import { maybe, rows } from '@/common/db/errors';
 
-export interface FamilyStudentRow { id: string; code: string | null; name: string; status: StudentStatus; teacher_id: string | null }
+export interface FamilyStudentRow {
+  id: string;
+  code: string | null;
+  name: string;
+  status: StudentStatus;
+  teacher_id: string | null;
+}
 
 /** The reads of the salesperson's money endpoints that the admin services do not answer (service role). */
 @Injectable()
@@ -19,21 +25,25 @@ export class SalesFamilyRepo {
   async studentsOfPhone(phone: string): Promise<FamilyStudentRow[]> {
     const family = await familyOfPhone(this.db, phone);
     if (!family) return [];
-    const data = rows(await this.db
-      .from('students')
-      .select('id, code, name, status, teacher_id')
-      .eq('guardian_id', family.id)
-      .order('created_at'));
+    const data = rows(
+      await this.db
+        .from('students')
+        .select('id, code, name, status, teacher_id')
+        .eq('guardian_id', family.id)
+        .order('created_at'),
+    );
     return data;
   }
 
   /** Every number of the student's family (main and second, guardian_phones); [] for an unknown student. */
   async phonesOf(studentId: string): Promise<string[]> {
-    const data = maybe(await this.db
-      .from('students')
-      .select('guardian:guardians(phones:guardian_phones(phone_e164))')
-      .eq('id', studentId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('students')
+        .select('guardian:guardians(phones:guardian_phones(phone_e164))')
+        .eq('id', studentId)
+        .maybeSingle(),
+    );
     return (data?.guardian?.phones ?? []).map((p) => p.phone_e164);
   }
 
@@ -47,13 +57,21 @@ export class SalesFamilyRepo {
 
   /** guardians.phone_e164 of the student's family; null without one, undefined for an unknown student. */
   async phoneOf(studentId: string): Promise<string | null | undefined> {
-    const data = maybe(await this.db.from('students').select('guardian:guardians(phone_e164)').eq('id', studentId).maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('students')
+        .select('guardian:guardians(phone_e164)')
+        .eq('id', studentId)
+        .maybeSingle(),
+    );
     return data ? (data.guardian?.phone_e164 ?? null) : undefined;
   }
 
   /** students.status right now (after a payment may have turned a trial active). */
   async studentStatus(studentId: string): Promise<StudentStatus> {
-    const data = maybe(await this.db.from('students').select('status').eq('id', studentId).maybeSingle());
+    const data = maybe(
+      await this.db.from('students').select('status').eq('id', studentId).maybeSingle(),
+    );
     if (!data) throw notFound('student_not_found');
     return data.status;
   }
@@ -64,12 +82,14 @@ export class SalesFamilyRepo {
    */
   async linkPackages(subscriptionIds: readonly string[], now = new Date()): Promise<string[]> {
     if (subscriptionIds.length === 0) return [];
-    const data = rows(await this.db
-      .from('payment_links')
-      .select('subscription_id')
-      .in('subscription_id', [...subscriptionIds])
-      .eq('status', 'open')
-      .gt('expires_at', now.toISOString()));
+    const data = rows(
+      await this.db
+        .from('payment_links')
+        .select('subscription_id')
+        .in('subscription_id', [...subscriptionIds])
+        .eq('status', 'open')
+        .gt('expires_at', now.toISOString()),
+    );
     return data.flatMap((r) => (r.subscription_id ? [r.subscription_id] : []));
   }
 }

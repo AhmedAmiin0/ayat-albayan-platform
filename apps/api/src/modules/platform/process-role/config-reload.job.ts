@@ -45,7 +45,9 @@ export class ConfigReloadJob implements OnApplicationBootstrap {
     try {
       await run(this.refs.get(token, { strict: false }));
     } catch (e) {
-      this.log.warn(`config reload: ${token.name} skipped (${e instanceof Error ? e.message : String(e)})`);
+      this.log.warn(
+        `config reload: ${token.name} skipped (${e instanceof Error ? e.message : String(e)})`,
+      );
     }
   }
 }

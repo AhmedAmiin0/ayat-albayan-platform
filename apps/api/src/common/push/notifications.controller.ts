@@ -1,5 +1,20 @@
-import { notificationsQuerySchema, notificationsReadSchema, type NotificationsPage, type WebPushKey } from '@ab/shared';
-import { Body, Controller, Delete, Get, HttpCode, Post, Put, Query, UnauthorizedException } from '@nestjs/common';
+import {
+  notificationsQuerySchema,
+  notificationsReadSchema,
+  type NotificationsPage,
+  type WebPushKey,
+} from '@ab/shared';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Post,
+  Put,
+  Query,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '@/common/http/http';
 import { loadEnv, webPushEnv } from '@/config/env/env';

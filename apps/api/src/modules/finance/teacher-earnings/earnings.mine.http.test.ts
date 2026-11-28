@@ -7,7 +7,8 @@ describe('teachers/me/earnings (a teacher reads only their own)', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
   let call: Awaited<ReturnType<typeof moneyApp>>['call'];
-  const mine = (url: string) => call({ method: 'GET', url: `/teachers/me/earnings${url}`, token: 'teacher' });
+  const mine = (url: string) =>
+    call({ method: 'GET', url: `/teachers/me/earnings${url}`, token: 'teacher' });
 
   beforeAll(async () => ({ app, m, call } = await moneyApp()));
   afterAll(() => app.close());
@@ -23,7 +24,10 @@ describe('teachers/me/earnings (a teacher reads only their own)', () => {
   });
 
   it('balance, sessions and payments are read for the teacher behind the token', async () => {
-    m.earnings.money.mockResolvedValue([earning(1, { paid_amount: 70, status: 'paid' }), earning(2)]);
+    m.earnings.money.mockResolvedValue([
+      earning(1, { paid_amount: 70, status: 'paid' }),
+      earning(2),
+    ]);
     expect((await mine('')).json()).toMatchObject({ earned: 140, paid: 70, outstanding: 70 });
     m.earnings.sessions.mockResolvedValue({ items: [session(2)], total: 1, page: 1, pageSize: 25 });
     expect((await mine('/sessions?status=earned')).statusCode).toBe(200);
@@ -48,16 +52,24 @@ describe('teachers/me/earnings (a teacher reads only their own)', () => {
     m.earnings.sessions.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 25 });
     await mine(`/sessions?teacherId=${OTHER_TEACHER}`);
     expect(m.earnings.sessions).toHaveBeenCalledWith(TEACHER, expect.anything());
-    expect((await call({ method: 'GET', url: `/teacher-earnings/${OTHER_TEACHER}`, token: 'teacher' })).statusCode).toBe(403);
+    expect(
+      (await call({ method: 'GET', url: `/teacher-earnings/${OTHER_TEACHER}`, token: 'teacher' }))
+        .statusCode,
+    ).toBe(403);
   });
 
   it('another teacher’s receipt is 404, their own is signed', async () => {
-    m.earnings.payment.mockResolvedValue(paymentRow({ teacher_id: OTHER_TEACHER, receipt_path: `${OTHER_TEACHER}/a.png` }));
+    m.earnings.payment.mockResolvedValue(
+      paymentRow({ teacher_id: OTHER_TEACHER, receipt_path: `${OTHER_TEACHER}/a.png` }),
+    );
     const other = await mine(`/payments/${PAYMENT}/receipt`);
     expect(other.statusCode).toBe(404);
     expect(m.storage.signedDownload).not.toHaveBeenCalled();
     m.earnings.payment.mockResolvedValue(paymentRow({ receipt_path: `${TEACHER}/a.png` }));
-    m.storage.signedDownload.mockResolvedValue({ url: 'https://files.example/r.pdf', expires_at: 'e' });
+    m.storage.signedDownload.mockResolvedValue({
+      url: 'https://files.example/r.pdf',
+      expires_at: 'e',
+    });
     expect((await mine(`/payments/${PAYMENT}/receipt`)).statusCode).toBe(200);
   });
 
@@ -69,7 +81,12 @@ describe('teachers/me/earnings (a teacher reads only their own)', () => {
 
   it('read only: no write verb exists on the teacher routes', async () => {
     for (const method of ['POST', 'PATCH', 'DELETE'] as const) {
-      const res = await call({ method, url: '/teachers/me/earnings/payments', token: 'teacher', body: {} });
+      const res = await call({
+        method,
+        url: '/teachers/me/earnings/payments',
+        token: 'teacher',
+        body: {},
+      });
       expect(res.statusCode).toBeGreaterThanOrEqual(400);
     }
     expect(m.earnings.record).not.toHaveBeenCalled();

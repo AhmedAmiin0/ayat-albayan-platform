@@ -3,7 +3,10 @@ import { monthStart, type AssistantStatementView, type TeacherReceiptUpload } fr
 import { Injectable } from '@nestjs/common';
 import { notFound } from '@/common/http/errors';
 import { EarningsReceipts } from '@/modules/finance/teacher-earnings/earnings.receipts';
-import type { StatementPay as Pay, StatementsQuery as Query } from '@/modules/finance/assistant-pay/shared/assistant-pay.dto';
+import type {
+  StatementPay as Pay,
+  StatementsQuery as Query,
+} from '@/modules/finance/assistant-pay/shared/assistant-pay.dto';
 import { AssistantRpc } from '@/modules/finance/assistant-pay/shared/assistant-pay.rpc';
 import { StatementsRepo } from './statements.repo';
 import { toStatementView, type StatementRow } from './statements.mapper';

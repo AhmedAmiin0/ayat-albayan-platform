@@ -22,8 +22,11 @@ function paidPackage(entry: Pick<AuditEntry, 'entity' | 'action' | 'after'>): st
 }
 
 /** A payment create carries its id to the renewal flip (pending_renewal → active, docs/11 §7). */
-export function causeOf(entry: Pick<AuditEntry, 'entity' | 'action' | 'entityId' | 'after'>): RenewalCause {
-  const payment = entry.entity === 'payments' && entry.action === 'create' && activatesStudent(entry.after);
+export function causeOf(
+  entry: Pick<AuditEntry, 'entity' | 'action' | 'entityId' | 'after'>,
+): RenewalCause {
+  const payment =
+    entry.entity === 'payments' && entry.action === 'create' && activatesStudent(entry.after);
   return payment ? { via: 'payment', paymentId: entry.entityId } : { via: 'event' };
 }
 
@@ -45,7 +48,8 @@ export class MoneyWrites {
   /** As done, for a write whose RPC wrote its audit row in its own transaction (stop_course). */
   async recorded(entry: Done, studentId: string | null): Promise<void> {
     // A deleted or cancelled package: its open tasks have nothing left to point at.
-    if (entry.entity === 'subscriptions' && GONE.has(entry.action)) await this.alerts.closeTasksOf(entry.entityId);
+    if (entry.entity === 'subscriptions' && GONE.has(entry.action))
+      await this.alerts.closeTasksOf(entry.entityId);
     if (studentId) await this.followUp(entry, studentId);
   }
 

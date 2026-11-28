@@ -18,7 +18,12 @@ export interface SalesOwnership {
   phones: string[];
 }
 
-export const NO_OWNERSHIP: SalesOwnership = { leadIds: [], guardianIds: [], studentIds: [], phones: [] };
+export const NO_OWNERSHIP: SalesOwnership = {
+  leadIds: [],
+  guardianIds: [],
+  studentIds: [],
+  phones: [],
+};
 
 const uniq = (ids: readonly string[]): string[] => [...new Set(ids)];
 
@@ -31,7 +36,9 @@ export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwner
   ]);
   if (leads.error) throw pgError(leads.error);
   if (brought.error) throw pgError(brought.error);
-  const leadGuardians = uniq(leads.data.flatMap((l) => (l.converted_guardian_id ? [l.converted_guardian_id] : [])));
+  const leadGuardians = uniq(
+    leads.data.flatMap((l) => (l.converted_guardian_id ? [l.converted_guardian_id] : [])),
+  );
   const guardianIds = uniq([...leadGuardians, ...brought.data.map((s) => s.guardian_id)]);
   const phones = new Set(leads.data.map((l) => l.phone_e164));
   const leadIds = leads.data.map((l) => l.id);
@@ -41,7 +48,9 @@ export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwner
     db.from('guardian_phones').select('phone_e164').in('guardian_id', guardianIds),
     // Their lead families' children (as before); a brought student is theirs wherever the family
     // came from.
-    leadGuardians.length > 0 ? db.from('students').select('id').in('guardian_id', leadGuardians) : { data: [], error: null },
+    leadGuardians.length > 0
+      ? db.from('students').select('id').in('guardian_id', leadGuardians)
+      : { data: [], error: null },
   ]);
   if (guardians.error) throw pgError(guardians.error);
   if (families.error) throw pgError(families.error);
@@ -70,11 +79,9 @@ export async function guardianOwnerIds(db: Db, guardianId: string): Promise<stri
  * brought it and who holds the lead its family came from; never a sibling's assistant.
  */
 export async function studentOwnerIds(db: Db, studentId: string): Promise<string[]> {
-  const data = maybe(await db
-    .from('students')
-    .select('brought_by, guardian_id')
-    .eq('id', studentId)
-    .maybeSingle());
+  const data = maybe(
+    await db.from('students').select('brought_by, guardian_id').eq('id', studentId).maybeSingle(),
+  );
   if (!data) return [];
   const leads = await db
     .from('leads')

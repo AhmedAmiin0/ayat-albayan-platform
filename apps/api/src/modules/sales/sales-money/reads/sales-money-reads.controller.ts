@@ -32,7 +32,10 @@ export class SalesMoneyReadsController {
 
   /** The images / PDFs her student's family sent in its chat (last 30 days, metadata only). */
   @Get('chat-receipts')
-  chatReceipts(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<SalesChatReceipt[]> {
+  chatReceipts(
+    @Query() query: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SalesChatReceipt[]> {
     return this.receipts.list(parseOrThrow(salesChatReceiptsQuerySchema, query), user);
   }
 

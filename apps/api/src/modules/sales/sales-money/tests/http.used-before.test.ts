@@ -15,7 +15,11 @@ const withoutSetStart: PermissionResolver = async (user) =>
   (await systemResolver(user)).filter((p) => p !== 'subscriptions.set_start_date');
 
 function suite(resolver: PermissionResolver) {
-  const ctx = {} as { app: NestFastifyApplication; m: Mocks; call: Awaited<ReturnType<typeof salesMoneyApp>>['call'] };
+  const ctx = {} as {
+    app: NestFastifyApplication;
+    m: Mocks;
+    call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
+  };
   beforeAll(async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(NOW);
@@ -34,15 +38,24 @@ function suite(resolver: PermissionResolver) {
 
 describe('POST /sales/subscriptions lessonsUsedBefore with subscriptions.set_start_date', () => {
   const ctx = suite(systemResolver);
-  const create = (patch: object) => ctx.call({ method: 'POST', url: URL, token: 'salesA', body: { ...CREATE, ...patch } });
+  const create = (patch: object) =>
+    ctx.call({ method: 'POST', url: URL, token: 'salesA', body: { ...CREATE, ...patch } });
 
   it('with a past start: stored on the row and in the audited row; the view returns it', async () => {
-    ctx.m.subs.insert.mockResolvedValue(subRow({ lessons_used_before: 1, starts_on: '2026-10-27' }));
+    ctx.m.subs.insert.mockResolvedValue(
+      subRow({ lessons_used_before: 1, starts_on: '2026-10-27' }),
+    );
     ctx.m.subs.get.mockResolvedValue(subRow({ lessons_used_before: 1, starts_on: '2026-10-27' }));
     const res = await create({ ...PAST, lessonsUsedBefore: 1 });
     expect(res.statusCode).toBe(201);
-    expect(ctx.m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ starts_on: '2026-10-27', lessons_used_before: 1 }));
-    const audit = { entity: 'subscriptions', action: 'create', after: expect.objectContaining({ lessons_used_before: 1 }) };
+    expect(ctx.m.subs.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ starts_on: '2026-10-27', lessons_used_before: 1 }),
+    );
+    const audit = {
+      entity: 'subscriptions',
+      action: 'create',
+      after: expect.objectContaining({ lessons_used_before: 1 }),
+    };
     expect(ctx.m.audit.record).toHaveBeenCalledWith(expect.objectContaining(audit));
     expect(res.json().lessons_used_before).toBe(1);
   });
@@ -50,11 +63,16 @@ describe('POST /sales/subscriptions lessonsUsedBefore with subscriptions.set_sta
   it('omitted or 0: stored as 0, any start', async () => {
     expect((await create({})).statusCode).toBe(201);
     expect((await create({ lessonsUsedBefore: 0 })).statusCode).toBe(201);
-    expect(ctx.m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ lessons_used_before: 0 }));
+    expect(ctx.m.subs.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ lessons_used_before: 0 }),
+    );
   });
 
   it('without a past start → 400 used_before_needs_past_start, nothing inserted', async () => {
-    for (const body of [{ lessonsUsedBefore: 1 }, { startsOn: '2026-10-30', lessonsUsedBefore: 1 }]) {
+    for (const body of [
+      { lessonsUsedBefore: 1 },
+      { startsOn: '2026-10-30', lessonsUsedBefore: 1 },
+    ]) {
       const res = await create(body);
       expect([res.statusCode, res.json().code]).toEqual([400, 'used_before_needs_past_start']);
     }

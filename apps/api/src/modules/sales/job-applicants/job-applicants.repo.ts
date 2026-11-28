@@ -5,11 +5,16 @@ import { readPage } from '@/common/db/page';
 import { guardianSearchFilter } from '@/modules/people/guardians/guardians.mapper';
 import { throwIfDbError, type PageQuery } from '@/modules/sales/leads/http';
 import type { ApplicantStatus } from './applicant-state-machine';
-import { APPLICANT_SORT, applyApplicantFilters, type ApplicantColumnQuery } from './job-applicants.list';
+import {
+  APPLICANT_SORT,
+  applyApplicantFilters,
+  type ApplicantColumnQuery,
+} from './job-applicants.list';
 
 export type JobApplicantRow = Tables<'job_applicants'>;
 
-export type ApplicantListFilter = PageQuery & ApplicantColumnQuery & { status?: ApplicantStatus | undefined };
+export type ApplicantListFilter = PageQuery &
+  ApplicantColumnQuery & { status?: ApplicantStatus | undefined };
 
 export interface ApplicantMove {
   id: string;

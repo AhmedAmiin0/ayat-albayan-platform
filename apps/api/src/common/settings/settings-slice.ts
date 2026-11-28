@@ -23,7 +23,10 @@ import type { SettingsService } from './settings.service';
 export type SettingsSlice<K extends SettingKey> = Pick<AcademySettings, K>;
 
 /** One store.all() call (cached by SettingsService), then only the listed keys. */
-export async function readSlice<K extends SettingKey>(store: Pick<SettingsService, 'all'>, keys: readonly K[]): Promise<SettingsSlice<K>> {
+export async function readSlice<K extends SettingKey>(
+  store: Pick<SettingsService, 'all'>,
+  keys: readonly K[],
+): Promise<SettingsSlice<K>> {
   const all = await store.all();
   return Object.fromEntries(keys.map((k) => [k, all[k]])) as SettingsSlice<K>;
 }

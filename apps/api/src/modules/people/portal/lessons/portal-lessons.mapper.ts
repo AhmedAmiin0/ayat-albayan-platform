@@ -32,7 +32,10 @@ export function externalLink(row: PortalLessonRow, override: string | null): str
  * The reminders' rule (reminders.links.ts roomFor): our room for a platform lesson, or for a lesson with
  * no link of its own, once LiveKit is configured; a platform lesson never falls back to a fixed link.
  */
-export function wayIn(row: PortalLessonRow, ctx: Pick<WayContext, 'academyAuto' | 'override' | 'classroom'>): PortalWayIn {
+export function wayIn(
+  row: PortalLessonRow,
+  ctx: Pick<WayContext, 'academyAuto' | 'override' | 'classroom'>,
+): PortalWayIn {
   const platform = usesPlatform(meetingModeOf(row.teacher?.meeting_mode), ctx.academyAuto);
   const link = externalLink(row, ctx.override);
   if (ctx.classroom && (platform || !link)) return 'classroom';
@@ -49,7 +52,10 @@ export function toPortalLesson(row: PortalLessonRow, ctx: WayContext): PortalLes
     starts_at: row.starts_at,
     ends_at: row.ends_at,
     status: row.status,
-    teacher: { display_name_ar: row.teacher?.display_name_ar ?? '', display_name_en: row.teacher?.display_name_en ?? null },
+    teacher: {
+      display_name_ar: row.teacher?.display_name_ar ?? '',
+      display_name_en: row.teacher?.display_name_en ?? null,
+    },
     way_in: way,
     meeting_url: open ? externalLink(row, ctx.override) : null,
     window,

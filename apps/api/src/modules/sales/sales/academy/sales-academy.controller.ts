@@ -47,13 +47,19 @@ export class SalesAcademyController {
   @Get('schedule')
   @Permissions('self.sales_academy')
   async day(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<SalesScheduleDay> {
-    const [day, own] = await Promise.all([this.schedule.day(parseOrThrow(salesScheduleQuerySchema, query)), this.academy.ownStudents(user)]);
+    const [day, own] = await Promise.all([
+      this.schedule.day(parseOrThrow(salesScheduleQuerySchema, query)),
+      this.academy.ownStudents(user),
+    ]);
     return { ...day, lessons: day.lessons.map((lesson) => withMine(lesson, own)) };
   }
 
   @Get('students/all')
   @Permissions('self.sales_academy')
-  students(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<SalesStudentView>> {
+  students(
+    @Query() query: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<Page<SalesStudentView>> {
     return this.academy.students(parseOrThrow(salesStudentsQuerySchema, query), user);
   }
 

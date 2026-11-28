@@ -25,17 +25,25 @@ export class StatementsRepo {
     if (f.month) q = q.eq('month', f.month);
     if (f.status) q = q.eq('status', f.status);
     if (f.hideDrafts) q = q.neq('status', 'draft');
-    const { data, error } = await q.order('month', { ascending: false }).overrideTypes<StatementRow[], { merge: false }>();
+    const { data, error } = await q
+      .order('month', { ascending: false })
+      .overrideTypes<StatementRow[], { merge: false }>();
     if (error) throw pgError(error);
-    return data.sort((a, b) => b.month.localeCompare(a.month) || (a.assistant?.full_name ?? '').localeCompare(b.assistant?.full_name ?? '', 'ar'));
+    return data.sort(
+      (a, b) =>
+        b.month.localeCompare(a.month) ||
+        (a.assistant?.full_name ?? '').localeCompare(b.assistant?.full_name ?? '', 'ar'),
+    );
   }
 
   async get(id: string): Promise<StatementRow | null> {
-    const data = maybe(await this.db
-      .from('assistant_statements')
-      .select(STATEMENT_SELECT)
-      .eq('id', id)
-      .maybeSingle<StatementRow>());
+    const data = maybe(
+      await this.db
+        .from('assistant_statements')
+        .select(STATEMENT_SELECT)
+        .eq('id', id)
+        .maybeSingle<StatementRow>(),
+    );
     return data;
   }
 }

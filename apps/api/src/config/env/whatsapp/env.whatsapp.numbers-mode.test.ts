@@ -6,8 +6,17 @@ import { envFrom, lineEnvs, lineGaps, lineNumbers, loadEnv } from '@/config/env/
 // number without a token is not configured (nothing sends from it), but its phone id still receives.
 // Legacy keeps the fallback exactly as before.
 
-const NOTIF = { WA_API_BASE: 'http://localhost:4010', WA_PHONE_NUMBER_ID: '1000000001', WA_WABA_ID: '2000000001', WA_ACCESS_TOKEN: 'notif-token-fake' };
-const CHAT_NO_TOKEN = { WA_CHAT_PHONE_NUMBER_ID: '1000000002', WA_CHAT_WABA_ID: '2000000002', WA_CHAT_ACCESS_TOKEN: '' };
+const NOTIF = {
+  WA_API_BASE: 'http://localhost:4010',
+  WA_PHONE_NUMBER_ID: '1000000001',
+  WA_WABA_ID: '2000000001',
+  WA_ACCESS_TOKEN: 'notif-token-fake',
+};
+const CHAT_NO_TOKEN = {
+  WA_CHAT_PHONE_NUMBER_ID: '1000000002',
+  WA_CHAT_WABA_ID: '2000000002',
+  WA_CHAT_ACCESS_TOKEN: '',
+};
 
 afterEach(() => {
   setNumbersOverlay(null);
@@ -40,8 +49,14 @@ describe('module mode: no chat token fallback', () => {
 
   it('loadEnv() under the numbers overlay is marked too; a chat number with its own token still sends', () => {
     stubBase();
-    setNumbersOverlay({ values: { ...NOTIF, ...CHAT_NO_TOKEN, WA_CHAT_ACCESS_TOKEN: 'chat-token-fake' }, numberIds: {} });
-    expect(lineEnvs(loadEnv()).chat).toMatchObject({ phoneNumberId: '1000000002', accessToken: 'chat-token-fake' });
+    setNumbersOverlay({
+      values: { ...NOTIF, ...CHAT_NO_TOKEN, WA_CHAT_ACCESS_TOKEN: 'chat-token-fake' },
+      numberIds: {},
+    });
+    expect(lineEnvs(loadEnv()).chat).toMatchObject({
+      phoneNumberId: '1000000002',
+      accessToken: 'chat-token-fake',
+    });
   });
 
   it('the server env WA_CHAT_ACCESS_TOKEN cannot sneak in either: numbers blank it', () => {

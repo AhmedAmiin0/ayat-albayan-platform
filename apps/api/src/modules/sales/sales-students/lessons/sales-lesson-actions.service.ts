@@ -21,9 +21,20 @@ const AFTER_END = z.record(cancelBySchema, z.boolean()).readonly().decode({
   student: true,
 });
 
-interface Move { lessonId: string; body: SalesReschedule; actor: AuthUser }
-interface Cancel { lessonId: string; body: SalesCancel; actor: AuthUser }
-interface Confirm { lessonId: string; actor: AuthUser }
+interface Move {
+  lessonId: string;
+  body: SalesReschedule;
+  actor: AuthUser;
+}
+interface Cancel {
+  lessonId: string;
+  body: SalesCancel;
+  actor: AuthUser;
+}
+interface Confirm {
+  lessonId: string;
+  actor: AuthUser;
+}
 interface Correct {
   lessonId: string;
   body: LessonCorrect;
@@ -59,14 +70,21 @@ export class SalesLessonActions {
     const id = await this.lessons.one.reschedule({ lessonId, body: one, actor });
     const moved = await this.queries.lesson(id);
     if (!moved) throw notFound('lesson_not_found');
-    return { id: moved.id, starts_at: new Date(moved.starts_at).toISOString(), status: moved.status };
+    return {
+      id: moved.id,
+      starts_at: new Date(moved.starts_at).toISOString(),
+      status: moved.status,
+    };
   }
 
   /**
    * `by` admin (default): before it ends only. teacher / student: before or after it ends, and on
    * a lesson held automatically the admin service's correction (409 not_auto_held otherwise).
    */
-  async cancel({ lessonId, body, actor }: Cancel, now = new Date()): Promise<{ id: string; status: LessonStatus }> {
+  async cancel(
+    { lessonId, body, actor }: Cancel,
+    now = new Date(),
+  ): Promise<{ id: string; status: LessonStatus }> {
     const by = body.by ?? 'admin';
     await this.scope.assertLesson({ lessonId, now, user: actor, afterEnd: AFTER_END[by] });
     const reason = body.reason ? body.reason : null;
@@ -81,7 +99,11 @@ export class SalesLessonActions {
     if (!lesson) throw notFound('lesson_not_found');
     if (Date.parse(lesson.ends_at) <= now.getTime()) throw conflict('lesson_ended');
     await this.lessons.status.confirm({ lessonId, actor, anyLesson: true });
-    return { id: lesson.id, starts_at: new Date(lesson.starts_at).toISOString(), status: 'confirmed' };
+    return {
+      id: lesson.id,
+      starts_at: new Date(lesson.starts_at).toISOString(),
+      status: 'confirmed',
+    };
   }
 
   /** After the end via OutcomeCorrection; any lesson unless SalesOwnershipRule enforces. */

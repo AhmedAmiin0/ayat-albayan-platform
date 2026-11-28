@@ -13,15 +13,26 @@ export async function stripeApp() {
   const s = stripeMocks();
   const app = await moneyApp(undefined, (b) =>
     b
-      .overrideProvider(PaymentLinksRepo).useValue(s.links)
-      .overrideProvider(StripeEventsRepo).useValue(s.events)
-      .overrideProvider(PayLimit).useValue(s.limit)
-      .overrideProvider(PushService).useValue(s.push)
-      .overrideProvider(SalesTeacherAssign).useValue(s.teachers)
-      .overrideProvider(STRIPE_FACTORY).useValue(() => s.stripe),
+      .overrideProvider(PaymentLinksRepo)
+      .useValue(s.links)
+      .overrideProvider(StripeEventsRepo)
+      .useValue(s.events)
+      .overrideProvider(PayLimit)
+      .useValue(s.limit)
+      .overrideProvider(PushService)
+      .useValue(s.push)
+      .overrideProvider(SalesTeacherAssign)
+      .useValue(s.teachers)
+      .overrideProvider(STRIPE_FACTORY)
+      .useValue(() => s.stripe),
   );
   /** A webhook POST with Stripe's header (no bearer token). */
   const hook = (body: string, signature: string) =>
-    app.app.inject({ method: 'POST', url: '/webhooks/stripe', headers: { 'content-type': 'application/json', 'stripe-signature': signature }, payload: body });
+    app.app.inject({
+      method: 'POST',
+      url: '/webhooks/stripe',
+      headers: { 'content-type': 'application/json', 'stripe-signature': signature },
+      payload: body,
+    });
   return { ...app, s, hook };
 }

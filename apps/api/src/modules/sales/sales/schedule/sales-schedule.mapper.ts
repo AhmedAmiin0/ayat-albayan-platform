@@ -16,7 +16,10 @@ export function riyadhToday(now: Date): string {
 /** The UTC instants bounding a Riyadh day "YYYY-MM-DD": [00:00, 24:00). */
 export function riyadhDayRange(date: string): { from: Date; to: Date } {
   const day = Date.parse(`${date}T00:00:00Z`);
-  return { from: new Date(dayWallToUtc(day, 0, RIYADH_TZ)), to: new Date(dayWallToUtc(day, 1440, RIYADH_TZ)) };
+  return {
+    from: new Date(dayWallToUtc(day, 0, RIYADH_TZ)),
+    to: new Date(dayWallToUtc(day, 1440, RIYADH_TZ)),
+  };
 }
 
 /** From now to UPCOMING_DAYS ahead. */
@@ -25,7 +28,10 @@ export function upcomingRange(now: Date): { from: Date; to: Date } {
 }
 
 /** The way in: the trimmed link (blank → null) and whether the teacher holds it in our classroom. */
-function wayIn(row: SalesScheduleRow, academyAuto: boolean): Pick<SalesScheduleLesson, 'meeting_link' | 'platform_classroom'> {
+function wayIn(
+  row: SalesScheduleRow,
+  academyAuto: boolean,
+): Pick<SalesScheduleLesson, 'meeting_link' | 'platform_classroom'> {
   return {
     meeting_link: row.meeting_link?.trim() || null,
     platform_classroom: usesPlatform(meetingModeOf(row.teacher?.meeting_mode), academyAuto),
@@ -60,8 +66,14 @@ export function toScheduleLesson(row: SalesScheduleRow, academyAuto: boolean): S
 }
 
 /** `mine` on each student she owns (docs/16 rows 36–37): her details sheet opens it and she may move or cancel the lesson. */
-export function withMine<L extends { students: { id: string }[] }>(lesson: L, own: ReadonlySet<string>): L {
-  return { ...lesson, students: lesson.students.map((s) => (own.has(s.id) ? { ...s, mine: true } : s)) };
+export function withMine<L extends { students: { id: string }[] }>(
+  lesson: L,
+  own: ReadonlySet<string>,
+): L {
+  return {
+    ...lesson,
+    students: lesson.students.map((s) => (own.has(s.id) ? { ...s, mine: true } : s)),
+  };
 }
 
 export interface TeacherDayFacts {
@@ -70,14 +82,18 @@ export interface TeacherDayFacts {
 }
 
 /** Per teacher id: today's lessons (not cancelled) and whether one of them is running now. */
-export function teacherDayFacts(rows: readonly SalesScheduleRow[], now: Date): Map<string, TeacherDayFacts> {
+export function teacherDayFacts(
+  rows: readonly SalesScheduleRow[],
+  now: Date,
+): Map<string, TeacherDayFacts> {
   const facts = new Map<string, TeacherDayFacts>();
   const at = now.getTime();
   for (const row of rows) {
     const id = row.teacher?.id;
     // Cancelled lessons are not counted; moved-away ones are never read.
     if (!id || isCancelledLesson(row.status)) continue;
-    const running = isOpenLesson(row.status) && Date.parse(row.starts_at) <= at && at < Date.parse(row.ends_at);
+    const running =
+      isOpenLesson(row.status) && Date.parse(row.starts_at) <= at && at < Date.parse(row.ends_at);
     const prev = facts.get(id) ?? { lessons_today: 0, live_now: false };
     facts.set(id, { lessons_today: prev.lessons_today + 1, live_now: prev.live_now || running });
   }
@@ -88,7 +104,8 @@ export function teacherDayFacts(rows: readonly SalesScheduleRow[], now: Date): M
 export function nextLessons(rows: readonly UpcomingRow[]): Map<string, string> {
   const next = new Map<string, string>();
   for (const row of rows) {
-    for (const { student_id } of row.lesson_students) if (!next.has(student_id)) next.set(student_id, row.starts_at);
+    for (const { student_id } of row.lesson_students)
+      if (!next.has(student_id)) next.set(student_id, row.starts_at);
   }
   return next;
 }

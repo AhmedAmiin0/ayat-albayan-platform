@@ -19,7 +19,11 @@ export type PaymentFilter = PageQuery &
 
 /** Sort keys → payments columns (R-NFR-08); the default is newest paid first. */
 export const PAYMENT_SORT: SortSpec<PaymentSortKey> = {
-  columns: { paid_at: { column: 'paid_at' }, amount: { column: 'amount' }, method: { column: 'method' } },
+  columns: {
+    paid_at: { column: 'paid_at' },
+    amount: { column: 'amount' },
+    method: { column: 'method' },
+  },
   fallback: [{ column: 'paid_at', ascending: false }],
 };
 

@@ -9,7 +9,12 @@ export function toTrialLessons(rows: readonly TrialLessonRead[], now: Date): Sal
       lesson_id: l.id,
       starts_at: new Date(l.starts_at).toISOString(),
       status: l.status,
-      outcome: trialOutcome({ status: l.status, attendance: l.attendance, starts_at: l.starts_at, now }),
+      outcome: trialOutcome({
+        status: l.status,
+        attendance: l.attendance,
+        starts_at: l.starts_at,
+        now,
+      }),
       teacher_name: l.teacher?.display_name_ar ?? null,
     }));
 }

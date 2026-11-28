@@ -5,8 +5,14 @@ import { DB, type Db } from '@/common/db/db.module';
 import { done, pgError } from '@/common/db/errors';
 
 /** A path already held by a payment, as an attachment or its single legacy receipt. */
-export interface PathOwner { path: string; paymentId: string }
-export type PaymentAttachmentRow = Pick<Tables<'payment_attachments'>, 'id' | 'path' | 'mime' | 'size' | 'created_at'>;
+export interface PathOwner {
+  path: string;
+  paymentId: string;
+}
+export type PaymentAttachmentRow = Pick<
+  Tables<'payment_attachments'>,
+  'id' | 'path' | 'mime' | 'size' | 'created_at'
+>;
 
 /** All supabase access for `payment_attachments` (service role; the API is the only writer), plus who holds a path. */
 @Injectable()
@@ -39,15 +45,19 @@ export class PaymentAttachmentsRepo {
     if (receipts.error) throw pgError(receipts.error);
     return [
       ...files.data.map((r) => ({ path: r.path, paymentId: r.payment_id })),
-      ...receipts.data.flatMap((r) => (r.receipt_path ? [{ path: r.receipt_path, paymentId: r.id }] : [])),
+      ...receipts.data.flatMap((r) =>
+        r.receipt_path ? [{ path: r.receipt_path, paymentId: r.id }] : [],
+      ),
     ];
   }
 
   /** Idempotent on the unique path: a replayed form never duplicates a row. */
   async save(rows: readonly TablesInsert<'payment_attachments'>[]): Promise<void> {
     if (rows.length === 0) return;
-    done(await this.db
-      .from('payment_attachments')
-      .upsert([...rows], { onConflict: 'path', ignoreDuplicates: true }));
+    done(
+      await this.db
+        .from('payment_attachments')
+        .upsert([...rows], { onConflict: 'path', ignoreDuplicates: true }),
+    );
   }
 }
