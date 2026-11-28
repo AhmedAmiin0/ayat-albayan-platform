@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { Skeleton, t, cn } from '@ab/web-kit';
-import { useCatalogue } from '@/features/messaging/notification-catalogue/use-catalogue';
+import { useCatalogue } from '@/features/messaging/notification-catalogue';
 import { communicationsSearch } from '@/features/platform/settings/pages/page-search';
 import { audienceCounts } from './overview-counts';
 import { CELL, LINK, TH } from './overview-table';

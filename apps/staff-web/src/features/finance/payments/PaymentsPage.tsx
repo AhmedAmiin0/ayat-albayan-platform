@@ -16,7 +16,7 @@ import {
   t,
   HeadActions,
 } from '@ab/web-kit';
-import { downloadCsv } from '@/features/reporting/exports/api';
+import { downloadCsv } from '@/features/reporting/exports';
 import { toSortSearch } from '@/lib/list/list-search';
 import { filterParams, paymentsQuery, type PaymentFilters, type PaymentView } from './api';
 import { paymentColumns, type PaymentAction } from './payment-columns';

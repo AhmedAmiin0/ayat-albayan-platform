@@ -2,9 +2,9 @@ import { canLinkFamily, canPickTrialDate, type SalesFamilyStudent, type SalesStu
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { Button, Toast, usePermissions, t } from '@ab/web-kit';
-import { RegistrationCheckTrigger } from '@/features/sales/sales/registration/RegistrationCheckButton';
-import { RegistrationCheckDialog } from '@/features/sales/sales/registration/RegistrationCheckDialog';
-import { TrialDateDialog } from '@/features/teaching/booking/trial-date/dialog/TrialDateDialog';
+import { RegistrationCheckTrigger } from '@/features/sales/sales';
+import { RegistrationCheckDialog } from '@/features/sales/sales';
+import { TrialDateDialog } from '@/features/teaching/booking';
 import { LinkFamilyDialog } from '@/features/messaging/inbox';
 import { useInboxMode } from '@/features/messaging/inbox';
 import { SalesRegisterButton, SalesRegisterDialog } from '@/features/messaging/inbox';

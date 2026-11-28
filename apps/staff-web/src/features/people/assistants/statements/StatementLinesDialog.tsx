@@ -1,6 +1,6 @@
 import { Button, Dialog, Ltr, t } from '@ab/web-kit';
-import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { monthLabel } from '@/features/finance/payouts';
+import { Amount } from '@/features/finance/subscriptions';
 import type { AssistantStatementView } from '@/features/people/assistants/api';
 import { StatementTotals } from './StatementTotals';
 

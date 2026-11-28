@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
 import { Button, EmptyState, FormAlert, ListSkeleton, t } from '@ab/web-kit';
-import { currentMonth } from '@/features/finance/payouts/api';
+import { currentMonth } from '@/features/finance/payouts';
 import {
   ASSISTANTS_KEY,
   approveStatement,

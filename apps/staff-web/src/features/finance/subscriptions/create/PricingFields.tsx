@@ -7,7 +7,7 @@ import {
 } from '@ab/money';
 import type { ReactNode } from 'react';
 import { Field, Input, Select, SegmentedControl, t } from '@ab/web-kit';
-import { durationLabel, packageCopy } from '@/features/finance/pricing/format';
+import { durationLabel, packageCopy } from '@/features/finance/pricing';
 import type { PricingForm } from './pricing-form';
 
 interface Props {

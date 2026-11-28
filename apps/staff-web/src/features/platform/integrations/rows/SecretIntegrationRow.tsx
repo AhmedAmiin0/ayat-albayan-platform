@@ -9,7 +9,7 @@ import { SettingRow } from '@/components/settings/fields/SettingRow';
 import { Button, Dialog, FormAlert, Input, t } from '@ab/web-kit';
 import { stripeFeatureQuery } from '@/features/sales/payment-links';
 import { DeveloperKey } from './DeveloperKey';
-import { sendGateQuery } from '@/features/messaging/messaging/api';
+import { sendGateQuery } from '@/features/messaging/messaging';
 import { clearIntegrationSecret, integrationsQuery, putIntegrationSecret } from '@/features/platform/integrations/integrations-api';
 import { integrationText } from '@/features/platform/integrations/integrations-form';
 import { SecretStatusChip } from './SecretStatusChip';

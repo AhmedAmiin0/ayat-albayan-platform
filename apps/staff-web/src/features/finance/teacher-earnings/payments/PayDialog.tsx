@@ -7,9 +7,9 @@ import {
 } from '@ab/money';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button, Dialog, FormAlert, t, useUploadMaxBytes } from '@ab/web-kit';
-import { paidAtDay } from '@/features/finance/payments/record/pay-day';
-import { PaymentFields, type PaymentForm } from '@/features/finance/payments/record/PaymentFields';
-import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
+import { paidAtDay } from '@/features/finance/payments';
+import { PaymentFields, type PaymentForm } from '@/features/finance/payments';
+import { ReceiptField, receiptProblem } from '@/features/finance/payments';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
 import { usePayTeacher } from './use-pay-teacher';
 

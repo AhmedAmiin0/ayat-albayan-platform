@@ -1,6 +1,6 @@
 import { PAYMENT_KINDS, PAYMENT_METHODS, type PaymentKind, type PaymentMethod } from '@ab/catalog';
 import { PAYMENT_SORT_KEYS } from '@ab/money';
-import { parsePage } from '@/features/finance/subscriptions/search';
+import { parsePage } from '@/features/finance/subscriptions';
 import { parseFilterSearch, parseSortSearch, type SortDir, type SortSearch } from '@/lib/list/list-search';
 import type { PaymentFilters } from './api';
 

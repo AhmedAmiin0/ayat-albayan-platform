@@ -4,7 +4,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button, Ltr, StatusChip, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 import type { AssistantCommissionView } from '@/features/people/assistants/api';
 import { commissionStatusStyle } from '@/features/people/assistants/status';
 

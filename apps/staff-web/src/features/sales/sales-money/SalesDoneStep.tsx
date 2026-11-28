@@ -1,7 +1,7 @@
 import type { SalesPaymentView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Button, buttonVariants, Dialog, t } from '@ab/web-kit';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 import { studentLabel } from '@/features/finance/subscriptions';
 
 /** `onBookCourse` books the course days for the paid package's student. */

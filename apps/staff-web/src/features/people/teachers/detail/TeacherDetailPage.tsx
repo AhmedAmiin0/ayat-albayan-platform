@@ -17,7 +17,7 @@ import {
   teacherLabel,
 } from '@ab/web-kit';
 import { StaffPhotoControl } from '@/features/people/staff-photo';
-import { EntityActivity } from '@/features/reporting/activity/EntityActivity';
+import { EntityActivity } from '@/features/reporting/activity';
 import { TeacherCalendarOwner } from '@/features/platform/google-sync';
 import { availabilityQuery, teacherQuery } from '@/features/people/teachers/api';
 import { AvailabilityGrid } from '@/features/people/teachers/availability/AvailabilityGrid';

@@ -7,8 +7,8 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { NUMBERS, PARITY_SAME } from '@/features/messaging/numbers/numbers.fixture';
 import { LINES } from '@/features/messaging/templates/lines/template-lines-fixture';
 import { CATALOGUE_ROUTE, SETTINGS } from '@/test/settings-fixture';
-import { CommunicationsPage } from './CommunicationsPage';
-import type { CommunicationsTab } from './page-search';
+import { CommunicationsPage } from '@/features/platform/settings/pages/CommunicationsPage';
+import type { CommunicationsTab } from '@/features/platform/settings/pages/page-search';
 
 // Each test file mocks @/lib/api and the router's Link.
 
@@ -53,7 +53,11 @@ function Harness({ initial, audience, renderGuard }: HarnessProps) {
 /** The first matching prefix wins. */
 export function renderCommunications(input: RenderCommunications): QueryClient {
   const settings = { ...SETTINGS, ...input.settings };
-  const gate = input.gate ?? { open: settings.messaging_enabled, reason: settings.messaging_enabled ? null : 'switch_off', queued: 0 };
+  const gate = input.gate ?? {
+    open: settings.messaging_enabled,
+    reason: settings.messaging_enabled ? null : 'switch_off',
+    queued: 0,
+  };
   routeFetch(input.apiFetch, [
     ['/config/meta', { meta: {} }],
     ['/settings/integrations', input.integrations ?? []],
@@ -66,5 +70,11 @@ export function renderCommunications(input: RenderCommunications): QueryClient {
     ['/admin/numbers', NUMBERS],
     ['/admin/communications/parity', PARITY_SAME],
   ]);
-  return renderWithClient(<Harness initial={input.tab ?? 'overview'} audience={input.audience} renderGuard={input.renderGuard} />);
+  return renderWithClient(
+    <Harness
+      initial={input.tab ?? 'overview'}
+      audience={input.audience}
+      renderGuard={input.renderGuard}
+    />,
+  );
 }

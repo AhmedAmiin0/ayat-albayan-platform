@@ -1,7 +1,7 @@
 import type { SubscriptionPricing } from '@ab/money';
 import { FormAlert, t } from '@ab/web-kit';
-import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/pricing/format';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/pricing';
+import { Amount } from '@/features/finance/subscriptions';
 import type { Bind } from '@/features/sales/sales-money/api';
 import { salesErrorText } from '@/features/sales/sales-money/errors';
 import { useSalesQuote } from './use-sales-quote';

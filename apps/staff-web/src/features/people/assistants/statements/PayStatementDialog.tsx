@@ -1,9 +1,9 @@
 import { PAYMENT_METHODS, type PaymentMethod } from '@ab/catalog';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button, Dialog, Field, FormAlert, Input, Select, t, useUploadMaxBytes } from '@ab/web-kit';
-import { paidAtDay } from '@/features/finance/payments/record/pay-day';
-import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
-import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
+import { paidAtDay } from '@/features/finance/payments';
+import { ReceiptField, receiptProblem } from '@/features/finance/payments';
+import { monthLabel } from '@/features/finance/payouts';
 import { moneyText } from '@/features/finance/subscriptions';
 import type { AssistantStatementView } from '@/features/people/assistants/api';
 import { errorText } from '@/features/people/assistants/status';

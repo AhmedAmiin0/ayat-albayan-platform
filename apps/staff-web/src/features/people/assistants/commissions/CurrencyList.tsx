@@ -1,4 +1,4 @@
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 import { cn } from '@ab/web-kit';
 
 interface Props { totals: Readonly<Record<string, number>>; className?: string }

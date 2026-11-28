@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { settingText } from '@/components/settings/search/setting-text';
 import { t } from '@ab/web-kit';
 import { entryOf } from '@/test/entries-fixture';
-import { findRow, renderValues } from './values-test-utils';
+import { findRow, renderValues } from '@/features/platform/settings/values/testing/values-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

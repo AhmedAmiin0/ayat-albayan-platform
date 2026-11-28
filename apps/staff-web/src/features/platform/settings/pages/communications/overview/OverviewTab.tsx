@@ -1,7 +1,7 @@
 import type { AcademySettings } from '@ab/settings';
 import { DangerFrame } from '@/components/settings/fields/DangerFrame';
-import { AutoMessagesSwitch } from '@/features/messaging/messaging/AutoMessagesSwitch';
-import { MessagingSwitch } from '@/features/messaging/messaging/MessagingSwitch';
+import { AutoMessagesSwitch } from '@/features/messaging/messaging';
+import { MessagingSwitch } from '@/features/messaging/messaging';
 import { t } from '@ab/web-kit';
 import { OverviewNumbers } from './OverviewNumbers';
 import { OwnTraffic } from './OwnTraffic';

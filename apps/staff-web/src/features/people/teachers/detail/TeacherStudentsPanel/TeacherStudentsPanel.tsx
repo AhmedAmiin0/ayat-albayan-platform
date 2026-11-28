@@ -9,9 +9,9 @@ import {
   studentListQuery,
   studentStatusCountsQuery,
   type StatusCounts,
-} from '@/features/people/students/api';
-import { StatusChips } from '@/features/people/students/list/StatusChips';
-import { setColumnFilter } from '@/features/people/students/list/search';
+} from '@/features/people/students';
+import { StatusChips } from '@/features/people/students';
+import { setColumnFilter } from '@/features/people/students';
 import type { FilterSearch, SortSearch } from '@/lib/list/list-search';
 import { teacherStudentColumns } from '@/features/people/teachers/detail/teacher-student-columns';
 import { panelView } from '@/features/people/teachers/detail/teacher-students-view';

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, t } from '@ab/web-kit';
-import { assignUnassigned } from '@/features/sales/sales/api';
+import { assignUnassigned } from '@/features/sales/sales';
 import { leadKeys, salesKeys } from '@/features/sales/keys';
 
 export function AssignUnassignedButton() {

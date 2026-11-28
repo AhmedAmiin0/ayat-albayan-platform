@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { ColumnFilterText } from '@/components/data-table/ColumnFilterText';
 import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
-import { salesPeopleQuery } from '@/features/sales/sales/api';
+import { salesPeopleQuery } from '@/features/sales/sales';
 import { t } from '@ab/web-kit';
 import { LeadFilterFields } from './LeadFilterFields';
 import { CLEAR_LEAD_FILTERS, leadFilterChips } from './lead-filters';

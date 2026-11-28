@@ -7,7 +7,7 @@ import {
   SETTING_DEFAULTS,
   type AcademySettings,
 } from '@ab/settings';
-import { accountStyle, fill } from '@/features/platform/google-sync/google-format';
+import { accountStyle, fill } from '@/features/platform/google-sync';
 import { t } from '@ab/web-kit';
 
 // docs/26b §1.

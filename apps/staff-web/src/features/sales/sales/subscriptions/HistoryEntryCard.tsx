@@ -2,7 +2,7 @@ import type { SalesHistoryEntry } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Ltr, t, cn } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const status = (s: string | null): string => (s ? (STATUS[s] ?? s) : '—');

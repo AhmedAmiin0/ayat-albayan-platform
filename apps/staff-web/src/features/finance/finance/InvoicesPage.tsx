@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
 import { Cartouche, EmptyState, FormAlert, PageHead, Pager, Toast, t } from '@ab/web-kit';
-import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
+import { RecordPaymentDialog } from '@/features/finance/payments';
 import { clearFilterSearch, toFilterSearch, toSortSearch } from '@/lib/list/list-search';
 import { invoiceDownload, invoicesQuery, type InvoiceView } from './api';
 import { invoiceColumns } from './invoice-columns';

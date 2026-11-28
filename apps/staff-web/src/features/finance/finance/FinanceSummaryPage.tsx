@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Cartouche, Field, FormAlert, PageHead, Select, t } from '@ab/web-kit';
-import { summaryQuery } from '@/features/reporting/dashboard/api';
-import { FinanceByMonth } from '@/features/reporting/dashboard/finance/FinanceByMonth';
-import { FinanceTotals } from '@/features/reporting/dashboard/finance/FinanceTotals';
-import { riyadhToday } from '@/features/reporting/dashboard/search';
+import { summaryQuery } from '@/features/reporting/dashboard';
+import { FinanceByMonth } from '@/features/reporting/dashboard';
+import { FinanceTotals } from '@/features/reporting/dashboard';
+import { riyadhToday } from '@/features/reporting/dashboard';
 import { yearRange } from './api';
 import { MoneyKpis } from './MoneyKpis';
 

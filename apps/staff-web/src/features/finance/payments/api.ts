@@ -12,7 +12,7 @@ import { apiFetch, apiSend } from '@ab/web-kit';
 import { z } from 'zod';
 import type { SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import { PAGE_SIZE } from '@/features/finance/subscriptions/api';
+import { PAGE_SIZE } from '@/features/finance/subscriptions';
 import { financeFileKeys, moneyKeys } from '@/features/finance/keys';
 
 // apps/api/src/modules/payments (docs/11 §7, R-PAY-01).

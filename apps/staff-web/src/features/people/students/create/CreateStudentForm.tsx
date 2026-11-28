@@ -11,7 +11,7 @@ import {
   TimeZoneSelect,
   t,
 } from '@ab/web-kit';
-import { SourceField } from '@/features/people/guardians/SourceField';
+import { SourceField } from '@/features/people/guardians';
 import { ageError, EMPTY_STUDENT, phoneError, requiredError, type CreateStudentValues } from './create-student';
 import { AgeField, ContactIsSelfField, GenderField } from '@/features/people/students/profile/FactFields';
 import { ProgramField } from '@/features/people/students/profile/ProgramField';

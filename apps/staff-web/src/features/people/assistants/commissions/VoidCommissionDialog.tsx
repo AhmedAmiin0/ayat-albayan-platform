@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
+import { ConfirmDialog } from '@/features/finance/payments';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';
 import {

@@ -3,7 +3,7 @@ import { formatPhone } from '@ab/core';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { Ltr, NuqtaGlyph, Skeleton, t, cn } from '@ab/web-kit';
-import { numbersQuery } from '@/features/messaging/numbers/numbers-api';
+import { numbersQuery } from '@/features/messaging/numbers';
 import { CELL, LINK, TH } from './overview-table';
 
 const h = t.communicationsHub;

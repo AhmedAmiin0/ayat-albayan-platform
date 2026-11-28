@@ -4,7 +4,7 @@ import { createContext, useContext } from 'react';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { StatusChip, t, useClock } from '@ab/web-kit';
 import { formatDateTime } from '@/features/sales/leads';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 
 const col = createColumnHelper<DataTableFeatures, TeacherEarningView>();
 

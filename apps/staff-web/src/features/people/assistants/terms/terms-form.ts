@@ -1,6 +1,6 @@
 import { termsFormOf, type TermsForm } from '@ab/client-core';
 import type { AssistantTermsView } from '@ab/money';
-import { paidAtDay } from '@/features/finance/payments/record/pay-day';
+import { paidAtDay } from '@/features/finance/payments';
 
 // The terms form lives in @ab/client-core (docs/27 E5), shared with the mobile app; this module keeps the web's names
 // and its default "today" (paidAtDay, Riyadh).

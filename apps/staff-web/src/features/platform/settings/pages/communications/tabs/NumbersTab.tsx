@@ -1,7 +1,7 @@
-import { LEGACY_LINE_GROUPS } from '@/features/platform/integrations/integration-places';
-import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
-import { LinesCard } from '@/features/messaging/messaging/lines/LinesCard';
-import { NumbersPanel } from '@/features/messaging/numbers/NumbersPanel';
+import { LEGACY_LINE_GROUPS } from '@/features/platform/integrations';
+import { IntegrationsPanel } from '@/features/platform/integrations';
+import { LinesCard } from '@/features/messaging/messaging';
+import { NumbersPanel } from '@/features/messaging/numbers';
 import { t } from '@ab/web-kit';
 
 const h = t.communicationsHub;

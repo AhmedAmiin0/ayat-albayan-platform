@@ -1,6 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures, FilterOption } from '@/components/data-table/DataTable';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';
 import type { ExpenseView } from './api';
 import { ExpenseActions, type ExpenseAction } from './ExpenseActions';

@@ -1,4 +1,4 @@
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';
 import type { PeriodTotal } from '@ab/money';
 

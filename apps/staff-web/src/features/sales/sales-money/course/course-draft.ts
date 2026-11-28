@@ -5,8 +5,8 @@ import {
   type SalesCourseView,
 } from '@ab/shared';
 import { counted } from '@ab/core';
-import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft/draft';
-import type { BookHint } from '@/features/teaching/booking/hint';
+import { emptyDraft, type BookingDraft } from '@/features/teaching/booking';
+import type { BookHint } from '@/features/teaching/booking';
 import { dateLabel } from '@/features/teaching/schedule';
 import { studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';

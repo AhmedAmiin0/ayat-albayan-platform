@@ -14,7 +14,7 @@ import {
   ListSkeleton,
   t,
 } from '@ab/web-kit';
-import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
+import { RecordPaymentDialog } from '@/features/finance/payments';
 import { usePermissions } from '@/features/people/auth';
 import { CoursePauseDialogs, type CoursePauseTarget } from '@/features/teaching/course-pause';
 import { toFilterSearch, toSortSearch } from '@/lib/list/list-search';

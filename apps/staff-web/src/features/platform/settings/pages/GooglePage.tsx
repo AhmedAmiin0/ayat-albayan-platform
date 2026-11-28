@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Toast, t } from '@ab/web-kit';
-import { GoogleSection } from '@/features/platform/google-sync/GoogleSection';
+import { GoogleSection } from '@/features/platform/google-sync';
 import { ModuleHead } from './ModuleHead';
 
 /** docs/26b §3. */

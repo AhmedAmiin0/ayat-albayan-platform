@@ -1,8 +1,8 @@
 import { isRunningLesson, type SalesScheduleLesson } from '@ab/shared';
 import { useState } from 'react';
 import { StatusChip, t, useViewerTz } from '@ab/web-kit';
-import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
-import { LessonChip } from '@/features/teaching/schedule/lesson/LessonChip';
+import { EnterButton } from '@/features/teaching/classroom';
+import { LessonChip } from '@/features/teaching/schedule';
 import { otherDayNote } from './other-day';
 import { SalesLessonDrawer } from './SalesLessonDrawer';
 

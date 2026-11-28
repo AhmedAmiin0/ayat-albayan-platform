@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { TemplateHealth } from '@/features/messaging/templates/TemplateHealth';
+import { TemplateHealth } from '@/features/messaging/templates';
 
 export function TemplatesTab() {
   const heading = useId();

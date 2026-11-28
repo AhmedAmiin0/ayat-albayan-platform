@@ -6,8 +6,8 @@ import type { Mock } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { entriesFixture } from '@/test/entries-fixture';
 import { SETTINGS } from '@/test/settings-fixture';
-import type { ValuesSearch } from './values-search';
-import { ValuesView } from './ValuesView';
+import type { ValuesSearch } from '@/features/platform/settings/values/values-search';
+import { ValuesView } from '@/features/platform/settings/values/ValuesView';
 
 // Shared by the values component tests; each file mocks the api, permissions and router itself.
 
@@ -52,7 +52,10 @@ export function renderValues(apiFetch: Mock, fx: ValuesFixture = {}) {
     ['/config/meta', { meta: {} }],
     ['/config/entries', entriesFixture(fx.entries)],
     ['/config/custom', fx.custom ?? []],
-    ['/admin/google/status', { settings: fx.google ?? { enabled: false, mode: 'dry_run', window_days: 60 } }],
+    [
+      '/admin/google/status',
+      { settings: fx.google ?? { enabled: false, mode: 'dry_run', window_days: 60 } },
+    ],
   ]);
   const routed = apiFetch.getMockImplementation();
   if ((fx.settingsState || fx.customState) && routed) {
@@ -79,4 +82,5 @@ export async function findRow(label: string): Promise<HTMLElement> {
 }
 
 /** Is a row labelled `label` in the table now? */
-export const hasRow = (label: string): boolean => screen.queryByText(label, { selector: 'th span' }) !== null;
+export const hasRow = (label: string): boolean =>
+  screen.queryByText(label, { selector: 'th span' }) !== null;

@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { SearchInput, t } from '@ab/web-kit';
-import { useDebounced } from '@/features/finance/pricing/use-debounced';
+import { useDebounced } from '@/features/finance/pricing';
 import { BlockSkeleton, GoogleBlock, LoadError } from '@/features/platform/google-sync/GoogleBlock';
 import { googleStudentsQuery } from '@/features/platform/google-sync/google-api';
 import { StudentRow } from './StudentRow';

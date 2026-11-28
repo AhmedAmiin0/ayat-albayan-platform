@@ -1,6 +1,6 @@
 import { Field, Select, t } from '@ab/web-kit';
-import { currentMonth } from '@/features/finance/payouts/api';
-import { monthLabel, monthOptions } from '@/features/finance/payouts/shared/MonthSelect';
+import { currentMonth } from '@/features/finance/payouts';
+import { monthLabel, monthOptions } from '@/features/finance/payouts';
 import type { AssistantRow } from '@ab/client-core';
 
 export interface Filter<S extends string> { assistantId: string; month: string; status: '' | S }

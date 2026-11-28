@@ -1,6 +1,6 @@
 import type { IntegrationConfigItem } from '@ab/catalog';
 import { StatusChip, t, useClock } from '@ab/web-kit';
-import { formatDateTime } from '@/features/sales/leads/format';
+import { formatDateTime } from '@/features/sales/leads';
 
 /** A secret's state, never its value: saved in settings (and when), set on the server, or not set. */
 export function SecretStatusChip({ item }: { item: IntegrationConfigItem }) {

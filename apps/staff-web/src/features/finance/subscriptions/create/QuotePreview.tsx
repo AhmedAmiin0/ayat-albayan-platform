@@ -1,7 +1,7 @@
 import type { SubscriptionPricing } from '@ab/money';
 import { FormAlert, t } from '@ab/web-kit';
-import { FxNote } from '@/features/finance/pricing/calculator/FxNote';
-import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/pricing/format';
+import { FxNote } from '@/features/finance/pricing';
+import { durationLabel, packageCopy, sessionsOf } from '@/features/finance/pricing';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { apiErrorText } from '@/features/finance/subscriptions/format';
 import { useSubscriptionQuote } from './use-subscription-quote';

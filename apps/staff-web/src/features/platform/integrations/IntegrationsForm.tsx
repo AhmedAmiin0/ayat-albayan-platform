@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { ConfirmSwitchDialog, Button, FormAlert, t } from '@ab/web-kit';
 import { stripeFeatureQuery } from '@/features/sales/payment-links';
-import { sendGateQuery } from '@/features/messaging/messaging/api';
+import { sendGateQuery } from '@/features/messaging/messaging';
 import { integrationsQuery, putIntegrationValues } from './integrations-api';
 import { changesOf, draftOf, emptiesAllowList, invalidKeys, matchesIntegration, type IntegrationDraft } from './integrations-form';
 import { IntegrationGroup } from './rows/IntegrationGroup';

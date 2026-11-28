@@ -1,6 +1,6 @@
 import type { SalesChatReceipt } from '@ab/shared';
 import { PAYMENT_ATTACHMENTS_MAX } from '@ab/money';
-import type { AttachmentItem } from '@/features/finance/payments/attachments/AttachmentItems';
+import type { AttachmentItem } from '@/features/finance/payments';
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit';
 

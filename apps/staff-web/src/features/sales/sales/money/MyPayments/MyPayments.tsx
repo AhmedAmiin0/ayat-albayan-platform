@@ -1,7 +1,7 @@
 import type { MyPaymentRow } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { AttachmentsDialog } from '@/features/finance/payments/attachments/AttachmentsDialog';
+import { AttachmentsDialog } from '@/features/finance/payments';
 import { studentLabel } from '@/features/finance/subscriptions';
 import { usePermissions } from '@/features/people/auth';
 import { t } from '@ab/web-kit';

@@ -2,8 +2,8 @@ import { uploadOnce } from '@ab/client-core';
 import { parseAmount, teacherPaymentCreateSchema } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { paidAtFor } from '@/features/finance/payments/api';
-import type { PaymentForm } from '@/features/finance/payments/record/PaymentFields';
+import { paidAtFor } from '@/features/finance/payments';
+import type { PaymentForm } from '@/features/finance/payments';
 import { earningsKey, payTeacher, uploadTeacherReceipt, type Scope } from '@/features/finance/teacher-earnings/api';
 
 /** The form lists the manual methods only; the platform's card is never a teacher payment. */

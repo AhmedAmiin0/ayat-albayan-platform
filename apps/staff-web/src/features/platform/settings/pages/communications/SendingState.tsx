@@ -1,8 +1,8 @@
 import type { AcademySettings } from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
 import { StatusChip, t } from '@ab/web-kit';
-import { sendGateQuery } from '@/features/messaging/messaging/api';
-import { sendingChip } from '@/features/messaging/messaging/sending-chip';
+import { sendGateQuery } from '@/features/messaging/messaging';
+import { sendingChip } from '@/features/messaging/messaging';
 
 /** Named so it never reads as the kill switch's own chip (docs/26b §3). */
 export function SendingState({ settings }: { settings: AcademySettings }) {

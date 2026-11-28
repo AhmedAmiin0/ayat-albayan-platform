@@ -1,6 +1,6 @@
 import type { IntegrationConfigItem } from '@ab/catalog';
 import { t, useClock } from '@ab/web-kit';
-import { formatDateTime } from '@/features/sales/leads/format';
+import { formatDateTime } from '@/features/sales/leads';
 
 /** Under a plain field's hint: where the value in use comes from (settings, the server, nowhere). */
 export function IntegrationSourceNote({ item }: { item: IntegrationConfigItem }) {

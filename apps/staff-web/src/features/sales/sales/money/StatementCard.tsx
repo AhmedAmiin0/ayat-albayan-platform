@@ -5,8 +5,8 @@ import {
 } from '@ab/money';
 import { StatusChip, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
-import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { monthLabel } from '@/features/finance/payouts';
+import { Amount } from '@/features/finance/subscriptions';
 import { CurrencyTotalsList } from './CurrencyTotalsList';
 
 const p = t.assistantPortal.earnings;

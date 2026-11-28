@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { integrationsQuery } from '@/features/platform/integrations/integrations-api';
-import { templatesQuery } from '@/features/messaging/templates/api';
+import { integrationsQuery } from '@/features/platform/integrations';
+import { templatesQuery } from '@/features/messaging/templates';
 import { t } from '@ab/web-kit';
 import {
   joinStatus,

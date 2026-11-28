@@ -5,8 +5,8 @@ import {
   KAPSO_GROUPS,
   SAFETY_GUARD_GROUPS,
   WACRM_GROUPS,
-} from '@/features/platform/integrations/integration-places';
-import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
+} from '@/features/platform/integrations';
+import { IntegrationsPanel } from '@/features/platform/integrations';
 import { t } from '@ab/web-kit';
 import { CrmCutoverCard } from '@/features/platform/settings/pages/communications/CrmCutoverCard';
 

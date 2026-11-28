@@ -4,7 +4,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { t } from '@ab/web-kit';
 import { googleStatus } from './google.fixture';
 import { GoogleSection } from './GoogleSection';
-import { renderGoogle } from './google-test-utils';
+import { renderGoogle } from '@/features/platform/google-sync/testing/google-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

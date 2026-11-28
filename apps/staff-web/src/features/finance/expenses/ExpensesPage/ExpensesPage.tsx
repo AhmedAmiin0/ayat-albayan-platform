@@ -12,12 +12,12 @@ import {
   ListSkeleton,
   t,
 } from '@ab/web-kit';
-import { downloadCsv } from '@/features/reporting/exports/api';
-import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
-import { currentMonth } from '@/features/finance/payouts/api';
-import { MonthSelect } from '@/features/finance/payouts/shared/MonthSelect';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { downloadCsv } from '@/features/reporting/exports';
+import { ConfirmDialog } from '@/features/finance/payments';
+import { currentMonth } from '@/features/finance/payouts';
+import { MonthSelect } from '@/features/finance/payouts';
+import { MONEY_KEY } from '@/features/finance/subscriptions';
+import { Amount } from '@/features/finance/subscriptions';
 import { categoriesQuery, categoryLabel, confirmDraft, deleteExpense, expenseReceiptUrl, expensesQuery, totalsByCurrency, type ExpenseView } from '@/features/finance/expenses/api';
 import { ExpenseDialog } from '@/features/finance/expenses/ExpenseDialog';
 import type { ExpenseAction } from '@/features/finance/expenses/ExpenseActions';

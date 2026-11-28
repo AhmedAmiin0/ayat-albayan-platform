@@ -5,12 +5,12 @@ import { Field, Select, t } from '@ab/web-kit';
 import {
   studentSubscriptionsQuery,
   type SubscriptionView,
-} from '@/features/finance/subscriptions/api';
+} from '@/features/finance/subscriptions';
 import { moneyText, packageName } from '@/features/finance/subscriptions';
 import {
   StudentPicker,
   type PickedStudent,
-} from '@/features/finance/subscriptions/create/StudentPicker';
+} from '@/features/finance/subscriptions';
 
 interface Props {
   student: PickedStudent | null;

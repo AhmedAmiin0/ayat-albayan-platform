@@ -12,8 +12,8 @@ import {
   teacherLabel,
   useUploadMaxBytes,
 } from '@ab/web-kit';
-import { paidAtDay } from '@/features/finance/payments/record/pay-day';
-import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
+import { paidAtDay } from '@/features/finance/payments';
+import { ReceiptField, receiptProblem } from '@/features/finance/payments';
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
 import type { PayoutView } from '@/features/finance/payouts/api';
 import { usePayPayout } from './use-pay-payout';

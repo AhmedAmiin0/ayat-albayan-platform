@@ -1,5 +1,5 @@
 import { INVOICE_SORT_KEYS } from '@ab/money';
-import { parsePage } from '@/features/finance/subscriptions/search';
+import { parsePage } from '@/features/finance/subscriptions';
 import {
   parseFilterSearch,
   parseSortSearch,

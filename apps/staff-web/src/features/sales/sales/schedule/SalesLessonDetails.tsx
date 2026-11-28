@@ -10,11 +10,11 @@ import {
   useViewerTz,
   useLessonStatusText,
 } from '@ab/web-kit';
-import { DetailRow } from '@/features/teaching/schedule/lesson/DetailRow';
-import { durationMin, timeInCity } from '@/features/teaching/schedule/lesson/lessons';
-import { LessonTags } from '@/features/teaching/schedule/lesson/LessonTags';
+import { DetailRow } from '@/features/teaching/schedule';
+import { durationMin, timeInCity } from '@/features/teaching/schedule';
+import { LessonTags } from '@/features/teaching/schedule';
 import { TeacherConfirmedTag } from '@/features/teaching/schedule';
-import { lengthText } from '@/features/teaching/schedule/edit-time/edit-time-text';
+import { lengthText } from '@/features/teaching/schedule';
 import { LessonMeetingLink } from './LessonMeetingLink';
 
 /** Each line only when its clock differs from the viewer's (`clock.tz`) at that instant. */
