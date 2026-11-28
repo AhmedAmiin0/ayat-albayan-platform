@@ -70,5 +70,9 @@ export type DashboardResponse = DashboardSummary & {
 /** The KPI strip's counts, the part of GET /dashboard/summary a client reads for its badges. */
 export type DashboardCounts = Pick<
   DashboardSummary,
-  'active_students' | 'needs_confirmation' | 'pending_reports' | 'unpaid_subscriptions' | 'open_tasks'
+  | 'active_students'
+  | 'needs_confirmation'
+  | 'pending_reports'
+  | 'unpaid_subscriptions'
+  | 'open_tasks'
 >;

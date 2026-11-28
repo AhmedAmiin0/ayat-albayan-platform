@@ -28,7 +28,10 @@ describe('payoutBreakdownSchema (teacher_payouts.breakdown, R-PAY-02)', () => {
     ['lesson ids not a list', { ...valid, lesson_ids: 'l1' }],
     ['an unknown status', { ...valid, statuses: ['done'] }],
     ['a line without an amount', { ...valid, lines: [{ duration: 45, lessons: 2, rate: 70 }] }],
-    ['a negative lesson count', { ...valid, lines: [{ duration: 45, lessons: -1, rate: 70, amount: 0 }] }],
+    [
+      'a negative lesson count',
+      { ...valid, lines: [{ duration: 45, lessons: -1, rate: 70, amount: 0 }] },
+    ],
   ])('refuses %s', (_label, value) => {
     expect(payoutBreakdownSchema.safeParse(value).success).toBe(false);
   });

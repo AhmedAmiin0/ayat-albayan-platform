@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseDiscount } from './catalog';
 
-describe('parseDiscount (the site\'s free discount field)', () => {
+describe("parseDiscount (the site's free discount field)", () => {
   it.each([
     ['7', 7],
     ['12.5', 12.5],

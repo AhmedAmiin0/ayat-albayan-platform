@@ -18,7 +18,13 @@ describe('paymentState («مدفوع جزئيًا» is derived)', () => {
 
 describe('netPaid (a refund counts against what was paid)', () => {
   it('payments minus refunds, in cents', () => {
-    expect(netPaid([{ amount: 300.1, kind: 'payment' }, { amount: 150.2, kind: 'payment' }, { amount: 50.05, kind: 'refund' }])).toBe(400.25);
+    expect(
+      netPaid([
+        { amount: 300.1, kind: 'payment' },
+        { amount: 150.2, kind: 'payment' },
+        { amount: 50.05, kind: 'refund' },
+      ]),
+    ).toBe(400.25);
     expect(netPaid([])).toBe(0);
   });
 });

@@ -9,6 +9,12 @@ export const SUBSCRIPTION_SORT_KEYS = ['created_at', 'package', 'price', 'status
 /** GET /invoices/recent: created (the default, newest first), kind. */
 export const INVOICE_SORT_KEYS = ['created_at', 'kind'] as const;
 /** GET …/earnings sessions: date (the default, newest first), length, amount, paid, status. */
-export const EARNING_SORT_KEYS = ['starts_at', 'minutes', 'amount', 'paid_amount', 'status'] as const;
+export const EARNING_SORT_KEYS = [
+  'starts_at',
+  'minutes',
+  'amount',
+  'paid_amount',
+  'status',
+] as const;
 /** GET …/earnings payments: paid day (the default, newest first), amount, method. */
 export const TEACHER_PAYMENT_SORT_KEYS = ['paid_at', 'amount', 'method'] as const;

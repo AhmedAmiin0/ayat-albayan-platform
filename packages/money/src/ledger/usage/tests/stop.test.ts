@@ -7,7 +7,15 @@ let seq = 0;
 function done(day: string): PackageLesson {
   seq += 1;
   const lessonId = `s${String(seq).padStart(3, '0')}`;
-  return { lessonId, startsAt: `${day}T07:00:00Z`, localDate: day, status: 'completed', chargeable: true, trial: false, makeup: false };
+  return {
+    lessonId,
+    startsAt: `${day}T07:00:00Z`,
+    localDate: day,
+    status: 'completed',
+    chargeable: true,
+    trial: false,
+    makeup: false,
+  };
 }
 const A = { id: 'A', lessonsTotal: 8, startsOn: '2026-10-01', createdAt: '2026-10-01T00:00:00Z' };
 const B = { id: 'B', lessonsTotal: 8, startsOn: '2026-11-01', createdAt: '2026-11-01T00:00:00Z' };
@@ -17,7 +25,12 @@ describe('subscriptionBalances with a stopped package', () => {
   it('A stopped at 3 of 8, B holds 2: A (3, 5, not last), B (2, 6, last)', () => {
     const subs = [{ ...A, lessonsUsedAtStop: 3 }, B];
     const [a, b] = subscriptionBalances({ lessons: held, subscriptions: subs });
-    expect(a).toMatchObject({ lessonsUsed: 3, remaining: 5, isLast: false, endedAt: '2026-10-04T07:00:00Z' });
+    expect(a).toMatchObject({
+      lessonsUsed: 3,
+      remaining: 5,
+      isLast: false,
+      endedAt: '2026-10-04T07:00:00Z',
+    });
     expect(b).toMatchObject({ lessonsUsed: 2, remaining: 6, isLast: true });
   });
 

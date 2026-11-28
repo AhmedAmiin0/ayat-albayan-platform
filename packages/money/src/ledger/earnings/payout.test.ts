@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { canTransitionPayout, payoutStatuses, PAYOUT_CORRECTIONS, PAYOUT_TRANSITIONS } from './payout';
+import {
+  canTransitionPayout,
+  payoutStatuses,
+  PAYOUT_CORRECTIONS,
+  PAYOUT_TRANSITIONS,
+} from './payout';
 
 describe('payoutStatuses (R-PAY-02 `completed`; late / no-show are owner settings, OFF)', () => {
   it.each([

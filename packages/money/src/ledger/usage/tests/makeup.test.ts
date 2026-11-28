@@ -25,9 +25,12 @@ function lesson(
 const A = { id: 'A', lessonsTotal: 4, startsOn: '2026-09-01', createdAt: '2026-09-01T00:00:00Z' };
 
 describe('a makeup lesson never consumes a package unit', () => {
-  it.each(['completed', 'late', 'no_show', 'excused'] as const)('%s + chargeable + makeup → no unit', (status) => {
-    expect(consumesPackage({ status, chargeable: true, trial: false, makeup: true })).toBe(false);
-  });
+  it.each(['completed', 'late', 'no_show', 'excused'] as const)(
+    '%s + chargeable + makeup → no unit',
+    (status) => {
+      expect(consumesPackage({ status, chargeable: true, trial: false, makeup: true })).toBe(false);
+    },
+  );
 
   it('the miss uses its unit; the completed makeup uses none', () => {
     const lessons = [
@@ -48,6 +51,10 @@ describe('a makeup lesson never consumes a package unit', () => {
       lesson('2026-09-18', 'scheduled'),
     ];
     const [a] = subscriptionBalances({ lessons, subscriptions: [A] });
-    expect(a).toMatchObject({ lessonsUsed: 3, remaining: 1, projectedEndAt: '2026-09-18T07:00:00Z' });
+    expect(a).toMatchObject({
+      lessonsUsed: 3,
+      remaining: 1,
+      projectedEndAt: '2026-09-18T07:00:00Z',
+    });
   });
 });

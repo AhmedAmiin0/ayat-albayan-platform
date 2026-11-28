@@ -8,7 +8,11 @@ interface At {
   paid: string;
 }
 const sub = (id: string, price: number, at: At): SubscriptionFact => ({
-  id, price, currency: 'SAR', created_at: at.created, payments: [{ amount: price, kind: 'payment', paid_at: at.paid }],
+  id,
+  price,
+  currency: 'SAR',
+  created_at: at.created,
+  payments: [{ amount: price, kind: 'payment', paid_at: at.paid }],
 });
 const subs = [
   sub('s1', 200, { created: '2026-10-03T00:00:00Z', paid: '2026-10-04T09:00:00Z' }),
@@ -16,7 +20,15 @@ const subs = [
 ];
 const terms = { type: 'percent', value: 10, currency: null, startsOn: '2026-10-01' } as const;
 const plan = (share: number) =>
-  planRenewalCommission({ broughtBy: 'a1', broughtAt: '2026-10-02T08:00:00Z', terms, tz: 'Asia/Riyadh', share, subscriptionId: 's2', subscriptions: subs });
+  planRenewalCommission({
+    broughtBy: 'a1',
+    broughtAt: '2026-10-02T08:00:00Z',
+    terms,
+    tz: 'Asia/Riyadh',
+    share,
+    subscriptionId: 's2',
+    subscriptions: subs,
+  });
 
 const now = (enabled: boolean, percent: number) =>
   renewalShareNow({ renewal_commission_enabled: enabled, renewal_commission_percent: percent });

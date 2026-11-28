@@ -8,9 +8,13 @@ describe('lessonCountsForPay (public.lesson_counts_for_pay)', () => {
   it('counts a completed lesson; late / no_show only by setting', () => {
     expect(lessonCountsForPay({ status: 'completed', isTrial: false }, OFF)).toBe(true);
     expect(lessonCountsForPay({ status: 'late', isTrial: false }, OFF)).toBe(false);
-    expect(lessonCountsForPay({ status: 'late', isTrial: false }, { ...OFF, countLate: true })).toBe(true);
+    expect(
+      lessonCountsForPay({ status: 'late', isTrial: false }, { ...OFF, countLate: true }),
+    ).toBe(true);
     expect(lessonCountsForPay({ status: 'no_show', isTrial: false }, OFF)).toBe(false);
-    expect(lessonCountsForPay({ status: 'no_show', isTrial: false }, { ...OFF, countNoShow: true })).toBe(true);
+    expect(
+      lessonCountsForPay({ status: 'no_show', isTrial: false }, { ...OFF, countNoShow: true }),
+    ).toBe(true);
   });
 
   it('never counts open, cancelled or excused lessons', () => {
@@ -21,7 +25,9 @@ describe('lessonCountsForPay (public.lesson_counts_for_pay)', () => {
 
   it('a trial counts only with payout_count_trials (default off = the old ledger)', () => {
     expect(lessonCountsForPay({ status: 'completed', isTrial: true }, OFF)).toBe(false);
-    expect(lessonCountsForPay({ status: 'completed', isTrial: true }, { ...OFF, countTrials: true })).toBe(true);
+    expect(
+      lessonCountsForPay({ status: 'completed', isTrial: true }, { ...OFF, countTrials: true }),
+    ).toBe(true);
   });
 });
 

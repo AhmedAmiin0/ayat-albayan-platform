@@ -16,7 +16,9 @@ function lesson(
     startsAt: `${day}T07:00:00Z`,
     localDate: day,
     status,
-    chargeable: !['excused', 'cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled'].includes(status),
+    chargeable: !['excused', 'cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled'].includes(
+      status,
+    ),
     trial: false,
     makeup: false,
     ...extra,
@@ -72,7 +74,10 @@ describe('subscriptionBalances: FIFO across packages (R-SUB-01, R-SUB-03, issue 
   it('an early renewal starts only when the first package is used up', () => {
     const [a, b] = subscriptionBalances({
       lessons: LESSONS,
-      subscriptions: [sub('B', 8, { startsOn: '2026-09-20', createdAt: '2026-09-20T00:00:00Z' }), sub('A', 4, { startsOn: '2026-09-01' })],
+      subscriptions: [
+        sub('B', 8, { startsOn: '2026-09-20', createdAt: '2026-09-20T00:00:00Z' }),
+        sub('A', 4, { startsOn: '2026-09-01' }),
+      ],
     });
     expect(a).toMatchObject({ subscriptionId: 'A', lessonsUsed: 4, remaining: 0, isLast: false });
     expect(a?.endedAt).toBe('2026-09-05T07:00:00Z');
@@ -85,22 +90,35 @@ describe('subscriptionBalances: FIFO across packages (R-SUB-01, R-SUB-03, issue 
   it('projected end = the booked lesson that would use the last unit', () => {
     const [, b] = subscriptionBalances({
       lessons: LESSONS,
-      subscriptions: [sub('A', 4, { startsOn: '2026-09-01' }), sub('B', 3, { startsOn: '2026-09-20', createdAt: '2026-09-20T00:00:00Z' })],
+      subscriptions: [
+        sub('A', 4, { startsOn: '2026-09-01' }),
+        sub('B', 3, { startsOn: '2026-09-20', createdAt: '2026-09-20T00:00:00Z' }),
+      ],
     });
-    expect(b).toMatchObject({ lessonsUsed: 2, remaining: 1, projectedEndAt: '2026-12-01T07:00:00Z' });
+    expect(b).toMatchObject({
+      lessonsUsed: 2,
+      remaining: 1,
+      projectedEndAt: '2026-12-01T07:00:00Z',
+    });
   });
 
   it('overflow lands on the newest package: remaining goes negative, endedAt = last unit', () => {
     const [a, b] = subscriptionBalances({
       lessons: LESSONS,
-      subscriptions: [sub('A', 4, { startsOn: '2026-09-01' }), sub('B', 1, { startsOn: '2026-09-20', createdAt: '2026-09-20T00:00:00Z' })],
+      subscriptions: [
+        sub('A', 4, { startsOn: '2026-09-01' }),
+        sub('B', 1, { startsOn: '2026-09-20', createdAt: '2026-09-20T00:00:00Z' }),
+      ],
     });
     expect(a?.remaining).toBe(0);
     expect(b).toMatchObject({ lessonsUsed: 2, remaining: -1, endedAt: '2026-09-06T07:00:00Z' });
   });
 
   it('lessons before the first package start do not count (the trial period)', () => {
-    const [only] = subscriptionBalances({ lessons: LESSONS, subscriptions: [sub('A', 8, { startsOn: '2026-09-05' })] });
+    const [only] = subscriptionBalances({
+      lessons: LESSONS,
+      subscriptions: [sub('A', 8, { startsOn: '2026-09-05' })],
+    });
     expect(only).toMatchObject({ lessonsUsed: 3, remaining: 5 }); // Sept 5, 6, 7
   });
 

@@ -57,7 +57,13 @@ describe('studentRemaining: an early renewal silences the alert', () => {
 });
 
 describe('subscriptionStatusFor (R-SUB-01/02, journey 3: payment → active)', () => {
-  const base: StatusInput = { current: 'unpaid', paid: 120, price: 120, remaining: 3, superseded: false };
+  const base: StatusInput = {
+    current: 'unpaid',
+    paid: 120,
+    price: 120,
+    remaining: 3,
+    superseded: false,
+  };
   it.each<[string, Partial<StatusInput>, SubscriptionStatus]>([
     ['paid in full, lessons left → active', {}, 'active'],
     ['nothing paid yet → unpaid', { paid: 0 }, 'unpaid'],
@@ -69,9 +75,21 @@ describe('subscriptionStatusFor (R-SUB-01/02, journey 3: payment → active)', (
     ['used up and still owed → unpaid', { remaining: 0, superseded: true, paid: 0 }, 'unpaid'],
     ['paused stays paused', { current: 'paused', paid: 0 }, 'paused'],
     ['trial stays trial', { current: 'trial' }, 'trial'],
-    ['cancelled stays cancelled (never resurrected)', { current: 'cancelled', paid: 0, price: 0, remaining: 8 }, 'cancelled'],
-    ['cancelled stays cancelled even with nothing left', { current: 'cancelled', remaining: 0, superseded: true }, 'cancelled'],
-    ['active → expired when superseded', { current: 'active', remaining: -1, superseded: true }, 'expired'],
+    [
+      'cancelled stays cancelled (never resurrected)',
+      { current: 'cancelled', paid: 0, price: 0, remaining: 8 },
+      'cancelled',
+    ],
+    [
+      'cancelled stays cancelled even with nothing left',
+      { current: 'cancelled', remaining: 0, superseded: true },
+      'cancelled',
+    ],
+    [
+      'active → expired when superseded',
+      { current: 'active', remaining: -1, superseded: true },
+      'expired',
+    ],
   ])('%s', (_name, patch, expected) => {
     expect(subscriptionStatusFor({ ...base, ...patch })).toBe(expected);
   });

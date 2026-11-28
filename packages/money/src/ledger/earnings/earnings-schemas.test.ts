@@ -25,7 +25,15 @@ describe('teacherPaymentCreateSchema', () => {
   });
 
   it('refuses zero, negative, three decimals, a future date, an empty selection, a bad method', () => {
-    for (const bad of [{ amount: 0 }, { amount: -1 }, { amount: 1.005 }, { paidAt: '2999-01-01T00:00:00Z' }, { earningIds: [] }, { method: 'barter' }, { earningIds: ['x'] }]) {
+    for (const bad of [
+      { amount: 0 },
+      { amount: -1 },
+      { amount: 1.005 },
+      { paidAt: '2999-01-01T00:00:00Z' },
+      { earningIds: [] },
+      { method: 'barter' },
+      { earningIds: ['x'] },
+    ]) {
       expect(teacherPaymentCreateSchema.safeParse({ ...base, ...bad }).success).toBe(false);
     }
   });
@@ -33,25 +41,39 @@ describe('teacherPaymentCreateSchema', () => {
 
 describe('receipt and list queries', () => {
   it('receipt: image or pdf up to 10 MB', () => {
-    expect(teacherReceiptUploadSchema.safeParse({ mime: 'application/pdf', size: 100 }).success).toBe(true);
-    expect(teacherReceiptUploadSchema.safeParse({ mime: 'text/html', size: 100 }).success).toBe(false);
-    expect(teacherReceiptUploadSchema.safeParse({ mime: 'image/png', size: 11 * 1024 * 1024 }).success).toBe(false);
+    expect(
+      teacherReceiptUploadSchema.safeParse({ mime: 'application/pdf', size: 100 }).success,
+    ).toBe(true);
+    expect(teacherReceiptUploadSchema.safeParse({ mime: 'text/html', size: 100 }).success).toBe(
+      false,
+    );
+    expect(
+      teacherReceiptUploadSchema.safeParse({ mime: 'image/png', size: 11 * 1024 * 1024 }).success,
+    ).toBe(false);
   });
 
   it('list: defaults, the unpaid alias, a bad status', () => {
     expect(earningsListQuery.parse({})).toEqual({ page: 1, pageSize: 25 });
-    expect(earningsListQuery.parse({ status: 'unpaid', page: '2' })).toMatchObject({ status: 'unpaid', page: 2 });
+    expect(earningsListQuery.parse({ status: 'unpaid', page: '2' })).toMatchObject({
+      status: 'unpaid',
+      page: 2,
+    });
     expect(earningsListQuery.safeParse({ status: 'x' }).success).toBe(false);
   });
 
   it('sessions: an allowlisted sort key and dir (R-NFR-08)', () => {
-    expect(earningsListQuery.parse({ sort: 'amount', dir: 'desc' })).toMatchObject({ sort: 'amount', dir: 'desc' });
+    expect(earningsListQuery.parse({ sort: 'amount', dir: 'desc' })).toMatchObject({
+      sort: 'amount',
+      dir: 'desc',
+    });
     expect(earningsListQuery.safeParse({ sort: 'outstanding' }).success).toBe(false);
   });
 
   it('payments: method, voided and sort filters; bad values rejected', () => {
     expect(teacherPaymentListQuery.parse({})).toEqual({ page: 1, pageSize: 25 });
-    expect(teacherPaymentListQuery.parse({ method: 'cash', voided: 'false', sort: 'amount' })).toMatchObject({
+    expect(
+      teacherPaymentListQuery.parse({ method: 'cash', voided: 'false', sort: 'amount' }),
+    ).toMatchObject({
       method: 'cash',
       voided: 'false',
       sort: 'amount',

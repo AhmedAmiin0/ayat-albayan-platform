@@ -4,7 +4,12 @@ import { quote, type QuoteOptions } from '../quote';
 
 // Per-lesson price rounds like the site's Intl formatter; these cases differed by 0.01 otherwise.
 type Case = [country: string, plan: string, duration: 30 | 45 | 60, discount: number, site: number];
-const KW_45_15 = ['starter', 'standard', 'premium', ...[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 24, 26].map((n) => `c${n}`)];
+const KW_45_15 = [
+  'starter',
+  'standard',
+  'premium',
+  ...[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 24, 26].map((n) => `c${n}`),
+];
 const CASES: Case[] = [
   ...['SA', 'AE', 'QA'].flatMap((c): Case[] => [
     [c, 'c40', 30, 0, 9.83],
@@ -20,7 +25,8 @@ const CASES: Case[] = [
 function optionsOf([country, plan, duration, discount]: Case): QuoteOptions {
   const common = { country, duration, discount, students: 1 };
   if (plan.startsWith('c')) return { ...common, count: Number(plan.slice(1)) };
-  if (plan === 'starter' || plan === 'standard' || plan === 'premium') return { ...common, tier: plan };
+  if (plan === 'starter' || plan === 'standard' || plan === 'premium')
+    return { ...common, tier: plan };
   throw new Error(`unexpected plan ${plan}`);
 }
 

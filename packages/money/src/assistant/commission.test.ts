@@ -63,8 +63,16 @@ describe('cents helpers', () => {
 });
 
 describe('commissionAction: the evaluator decision', () => {
-  const earned = (stillFullyPaid: boolean) => ({ status: 'earned' as const, voidAuto: null, stillFullyPaid });
-  const voided = (voidAuto: boolean) => ({ status: 'voided' as const, voidAuto, stillFullyPaid: false });
+  const earned = (stillFullyPaid: boolean) => ({
+    status: 'earned' as const,
+    voidAuto: null,
+    stillFullyPaid,
+  });
+  const voided = (voidAuto: boolean) => ({
+    status: 'voided' as const,
+    voidAuto,
+    stillFullyPaid: false,
+  });
 
   it.each([
     ['no row, eligible', null, true, 'earn'],

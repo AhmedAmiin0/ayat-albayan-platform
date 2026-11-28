@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { cancelBlock, cancelOffered, COUNTS_FOR_MONEY, countsForMoney, currentPackage, livePackages, subscriptionCancelSchema } from './package-cancel';
+import {
+  cancelBlock,
+  cancelOffered,
+  COUNTS_FOR_MONEY,
+  countsForMoney,
+  currentPackage,
+  livePackages,
+  subscriptionCancelSchema,
+} from './package-cancel';
 
 describe('cancelBlock («إلغاء الباقة», owner 2026-10-28)', () => {
   it('a package with nothing paid and no lesson may be cancelled', () => {
@@ -12,9 +20,15 @@ describe('cancelBlock («إلغاء الباقة», owner 2026-10-28)', () => {
     expect(cancelBlock({ status: 'unpaid', paid: 0, lessons: 1 })).toBe('has_lessons');
   });
   it('has_commission after money and lessons', () => {
-    expect(cancelBlock({ status: 'unpaid', paid: 0, lessons: 0, laterCommission: true })).toBe('has_commission');
-    expect(cancelBlock({ status: 'unpaid', paid: 0, lessons: 2, laterCommission: true })).toBe('has_lessons');
-    expect(cancelBlock({ status: 'unpaid', paid: 0, lessons: 0, laterCommission: false })).toBeNull();
+    expect(cancelBlock({ status: 'unpaid', paid: 0, lessons: 0, laterCommission: true })).toBe(
+      'has_commission',
+    );
+    expect(cancelBlock({ status: 'unpaid', paid: 0, lessons: 2, laterCommission: true })).toBe(
+      'has_lessons',
+    );
+    expect(
+      cancelBlock({ status: 'unpaid', paid: 0, lessons: 0, laterCommission: false }),
+    ).toBeNull();
   });
   it('a net negative (refund over payment) still counts as money moved', () => {
     expect(cancelBlock({ status: 'unpaid', paid: -10, lessons: 0 })).toBe('has_payments');

@@ -7,6 +7,10 @@ describe('earningStatusStyle', () => {
     expect(Object.keys(earningStatusStyle).sort()).toEqual([...EARNING_STATUSES].sort());
     expect(EARNING_STATUSES.filter((s) => earningStatusStyle[s].tone === 'ok')).toEqual(['paid']);
     expect(EARNING_STATUSES.some((s) => earningStatusStyle[s].tone === 'act')).toBe(false);
-    expect(EARNING_STATUSES.map((s) => earningStatusStyle[s].glyph)).toEqual(['hollow', 'half', 'fill']);
+    expect(EARNING_STATUSES.map((s) => earningStatusStyle[s].glyph)).toEqual([
+      'hollow',
+      'half',
+      'fill',
+    ]);
   });
 });

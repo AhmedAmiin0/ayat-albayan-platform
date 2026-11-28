@@ -14,12 +14,21 @@ describe('assistantTermsSchema', () => {
 
   it('accepts a percent, a fixed amount with its currency, a salary, or none of them', () => {
     expect(assistantTermsSchema.safeParse({ commission: percent, salary }).success).toBe(true);
-    expect(assistantTermsSchema.safeParse({ commission: { type: 'fixed', value: 30, currency: 'EGP', startsOn: '2026-10-01' }, salary: null }).success).toBe(true);
+    expect(
+      assistantTermsSchema.safeParse({
+        commission: { type: 'fixed', value: 30, currency: 'EGP', startsOn: '2026-10-01' },
+        salary: null,
+      }).success,
+    ).toBe(true);
     expect(assistantTermsSchema.safeParse({ commission: null, salary: null }).success).toBe(true);
   });
 
   it.each([
-    ['fixed without a currency', { type: 'fixed', value: 30, startsOn: '2026-10-01' }, 'currency_fixed_only'],
+    [
+      'fixed without a currency',
+      { type: 'fixed', value: 30, startsOn: '2026-10-01' },
+      'currency_fixed_only',
+    ],
     ['percent with a currency', { ...percent, currency: 'SAR' }, 'currency_fixed_only'],
     ['percent over 100', { ...percent, value: 101 }, 'percent_max_100'],
     ['three decimals', { ...percent, value: 10.123 }, 'too_many_decimals'],
@@ -41,7 +50,13 @@ describe('assistantTermsSchema', () => {
 describe('broughtBySchema', () => {
   it('takes one or many students and null to clear', () => {
     expect(broughtBySchema.safeParse({ studentIds: [ID], assistantId: ID }).success).toBe(true);
-    expect(broughtBySchema.safeParse({ studentIds: [ID], assistantId: null, broughtAt: '2026-09-01T10:00:00Z' }).success).toBe(true);
+    expect(
+      broughtBySchema.safeParse({
+        studentIds: [ID],
+        assistantId: null,
+        broughtAt: '2026-09-01T10:00:00Z',
+      }).success,
+    ).toBe(true);
   });
   it('refuses an empty list or a bad id', () => {
     expect(broughtBySchema.safeParse({ studentIds: [], assistantId: ID }).success).toBe(false);
@@ -51,8 +66,12 @@ describe('broughtBySchema', () => {
 
 describe('statement and adjustment commands', () => {
   it('generate needs an assistant and a YYYY-MM month', () => {
-    expect(assistantStatementGenerateSchema.safeParse({ assistantId: ID, month: '2026-10' }).success).toBe(true);
-    expect(assistantStatementGenerateSchema.safeParse({ assistantId: ID, month: '2026-13' }).success).toBe(false);
+    expect(
+      assistantStatementGenerateSchema.safeParse({ assistantId: ID, month: '2026-10' }).success,
+    ).toBe(true);
+    expect(
+      assistantStatementGenerateSchema.safeParse({ assistantId: ID, month: '2026-13' }).success,
+    ).toBe(false);
   });
 
   it('an adjustment is signed, non-zero, two decimals, with a reason', () => {
@@ -68,6 +87,8 @@ describe('statement and adjustment commands', () => {
     const ok = { assistantId: ID, amount: -50, currency: 'SAR', reason: 'خصم' };
     expect(assistantAdjustmentSchema.parse({ ...ok, requestId: ID }).requestId).toBe(ID);
     expect(assistantAdjustmentSchema.parse(ok).requestId).toBeUndefined();
-    expect(assistantAdjustmentSchema.safeParse({ ...ok, requestId: 'not-a-uuid' }).success).toBe(false);
+    expect(assistantAdjustmentSchema.safeParse({ ...ok, requestId: 'not-a-uuid' }).success).toBe(
+      false,
+    );
   });
 });

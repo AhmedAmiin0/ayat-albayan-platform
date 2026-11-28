@@ -10,7 +10,13 @@ import {
 } from './statement';
 
 const SALARY = { amount: 1000, currency: 'EGP', startsOn: '2026-01-01' };
-const base = { month: '2026-10-01', tz: 'Asia/Riyadh', salary: SALARY, commissions: [], adjustments: [] };
+const base = {
+  month: '2026-10-01',
+  tz: 'Asia/Riyadh',
+  salary: SALARY,
+  commissions: [],
+  adjustments: [],
+};
 
 describe('planStatement', () => {
   it('is the salary alone when nothing else is open', () => {
@@ -50,7 +56,9 @@ describe('planStatement', () => {
   it('buckets a commission by the day in the assistant tz (late 30 Sept UTC is already 1 Oct in Riyadh)', () => {
     const c = { id: 'c', amount: 5, currency: 'SAR', earnedAt: '2026-09-30T22:00:00Z' };
     expect(planStatement({ ...base, month: '2026-09-01', commissions: [c] }).lines).toHaveLength(1); // salary only
-    expect(planStatement({ ...base, month: '2026-10-01', commissions: [c] }).lines.map((l) => l.kind)).toEqual(['salary', 'commission']);
+    expect(
+      planStatement({ ...base, month: '2026-10-01', commissions: [c] }).lines.map((l) => l.kind),
+    ).toEqual(['salary', 'commission']);
   });
 
   it('applies adjustments from their effective month on, signed', () => {
@@ -63,8 +71,12 @@ describe('planStatement', () => {
   });
 
   it('runs the salary only once it has started, a full month, and skips a zero salary', () => {
-    expect(planStatement({ ...base, salary: { ...SALARY, startsOn: '2026-10-31' } }).lines).toHaveLength(1);
-    expect(planStatement({ ...base, salary: { ...SALARY, startsOn: '2026-11-01' } }).lines).toHaveLength(0);
+    expect(
+      planStatement({ ...base, salary: { ...SALARY, startsOn: '2026-10-31' } }).lines,
+    ).toHaveLength(1);
+    expect(
+      planStatement({ ...base, salary: { ...SALARY, startsOn: '2026-11-01' } }).lines,
+    ).toHaveLength(0);
     expect(planStatement({ ...base, salary: { ...SALARY, amount: 0 } }).lines).toHaveLength(0);
   });
 
@@ -75,7 +87,12 @@ describe('planStatement', () => {
 
 describe('totalsOf', () => {
   it('sums in exact cents', () => {
-    const lines = [0.1, 0.2, 0.3].map((amount) => ({ kind: 'commission' as const, ref: null, amount, currency: 'SAR' }));
+    const lines = [0.1, 0.2, 0.3].map((amount) => ({
+      kind: 'commission' as const,
+      ref: null,
+      amount,
+      currency: 'SAR',
+    }));
     expect(totalsOf(lines).SAR?.total).toBe(0.6);
   });
 });
@@ -94,11 +111,17 @@ describe('nextOpenMonth', () => {
   const now = '2026-10-15T10:00:00Z';
   it('is this month without a frozen statement or when it is older', () => {
     expect(nextOpenMonth({ now, tz: 'Asia/Riyadh', latestFrozenMonth: null })).toBe('2026-10-01');
-    expect(nextOpenMonth({ now, tz: 'Asia/Riyadh', latestFrozenMonth: '2026-08-01' })).toBe('2026-10-01');
+    expect(nextOpenMonth({ now, tz: 'Asia/Riyadh', latestFrozenMonth: '2026-08-01' })).toBe(
+      '2026-10-01',
+    );
   });
   it('is the month after the newest approved or paid statement when that is later', () => {
-    expect(nextOpenMonth({ now, tz: 'Asia/Riyadh', latestFrozenMonth: '2026-10-01' })).toBe('2026-11-01');
-    expect(nextOpenMonth({ now, tz: 'Asia/Riyadh', latestFrozenMonth: '2026-12-01' })).toBe('2027-01-01');
+    expect(nextOpenMonth({ now, tz: 'Asia/Riyadh', latestFrozenMonth: '2026-10-01' })).toBe(
+      '2026-11-01',
+    );
+    expect(nextOpenMonth({ now, tz: 'Asia/Riyadh', latestFrozenMonth: '2026-12-01' })).toBe(
+      '2027-01-01',
+    );
   });
 });
 

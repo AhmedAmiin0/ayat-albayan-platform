@@ -3,7 +3,11 @@ import { dueOf, owedFor, owesMore, partPaidOf } from './owed';
 
 // Owner 2026-11-06: a stopped course owes what the stop stored, every other package its price.
 const live = { price: 400, cancel_kind: null };
-const stopped = (owed: number | string | null) => ({ price: 400, cancel_kind: 'stopped', stop_owed_amount: owed });
+const stopped = (owed: number | string | null) => ({
+  price: 400,
+  cancel_kind: 'stopped',
+  stop_owed_amount: owed,
+});
 
 describe('owedFor', () => {
   it('a running package owes its price, whatever a stray stop_owed_amount says', () => {

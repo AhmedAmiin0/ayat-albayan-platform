@@ -85,25 +85,55 @@ describe('allocatePayment', () => {
   it('the exact total pays everything; one piaster more is an overpayment', () => {
     const all = allocatePayment({ amount: 180, earnings: rows });
     expect(all.ok && all.items.map((i) => i.earning_id)).toEqual(['a', 'b', 'c']);
-    expect(allocatePayment({ amount: 180.01, earnings: rows })).toEqual({ ok: false, error: 'overpayment' });
+    expect(allocatePayment({ amount: 180.01, earnings: rows })).toEqual({
+      ok: false,
+      error: 'overpayment',
+    });
   });
 
   it('same start: ties go by id; paid sessions are skipped', () => {
     const tie = [e('z', 1, [10]), e('y', 1, [10]), e('x', 1, [10, 10])];
     const r = allocatePayment({ amount: 15, earnings: tie });
-    expect(r).toEqual({ ok: true, items: [{ earning_id: 'y', amount: 10 }, { earning_id: 'z', amount: 5 }] });
+    expect(r).toEqual({
+      ok: true,
+      items: [
+        { earning_id: 'y', amount: 10 },
+        { earning_id: 'z', amount: 5 },
+      ],
+    });
   });
 
   it('refuses a non-positive amount and sessions with nothing outstanding', () => {
-    expect(allocatePayment({ amount: 0, earnings: rows })).toEqual({ ok: false, error: 'invalid_amount' });
-    expect(allocatePayment({ amount: -5, earnings: rows })).toEqual({ ok: false, error: 'invalid_amount' });
-    expect(allocatePayment({ amount: Number.NaN, earnings: rows })).toEqual({ ok: false, error: 'invalid_amount' });
-    expect(allocatePayment({ amount: 10, earnings: [e('a', 1, [70, 70])] })).toEqual({ ok: false, error: 'nothing_outstanding' });
-    expect(allocatePayment({ amount: 10, earnings: [] })).toEqual({ ok: false, error: 'nothing_outstanding' });
+    expect(allocatePayment({ amount: 0, earnings: rows })).toEqual({
+      ok: false,
+      error: 'invalid_amount',
+    });
+    expect(allocatePayment({ amount: -5, earnings: rows })).toEqual({
+      ok: false,
+      error: 'invalid_amount',
+    });
+    expect(allocatePayment({ amount: Number.NaN, earnings: rows })).toEqual({
+      ok: false,
+      error: 'invalid_amount',
+    });
+    expect(allocatePayment({ amount: 10, earnings: [e('a', 1, [70, 70])] })).toEqual({
+      ok: false,
+      error: 'nothing_outstanding',
+    });
+    expect(allocatePayment({ amount: 10, earnings: [] })).toEqual({
+      ok: false,
+      error: 'nothing_outstanding',
+    });
   });
 
   it('decimals add up to the cent', () => {
     const r = allocatePayment({ amount: 0.3, earnings: [e('a', 1, [0.1]), e('b', 2, [0.2])] });
-    expect(r).toEqual({ ok: true, items: [{ earning_id: 'a', amount: 0.1 }, { earning_id: 'b', amount: 0.2 }] });
+    expect(r).toEqual({
+      ok: true,
+      items: [
+        { earning_id: 'a', amount: 0.1 },
+        { earning_id: 'b', amount: 0.2 },
+      ],
+    });
   });
 });

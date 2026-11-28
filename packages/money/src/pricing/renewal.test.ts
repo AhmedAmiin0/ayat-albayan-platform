@@ -17,8 +17,24 @@ describe('renewalPricing («جدّد الاشتراك» from the last package)',
   });
 
   it('a tier keeps its tier, duration, discount and country', () => {
-    const last = { ...WEEKLY, duration: 60 as const, price_source: source({ tier: 'premium', duration: 60, country: 'AE', students: 1, discount: 10 }) };
-    expect(renewalPricing(last)).toEqual({ pkg: 'premium', count: DEFAULT_RENEWAL_PRICING.count, duration: 60, discount: 10, country: 'AE' });
+    const last = {
+      ...WEEKLY,
+      duration: 60 as const,
+      price_source: source({
+        tier: 'premium',
+        duration: 60,
+        country: 'AE',
+        students: 1,
+        discount: 10,
+      }),
+    };
+    expect(renewalPricing(last)).toEqual({
+      pkg: 'premium',
+      count: DEFAULT_RENEWAL_PRICING.count,
+      duration: 60,
+      discount: 10,
+      country: 'AE',
+    });
   });
 
   it('a custom count keeps the count; a USD quote leaves the country to the guardian', () => {
@@ -43,12 +59,27 @@ describe('renewalPricing («جدّد الاشتراك» from the last package)',
   });
 
   it('weekly (90 min) keeps weekly, the duration falls back to the default', () => {
-    expect(renewalPricing(WEEKLY)).toMatchObject({ pkg: 'weekly', duration: DEFAULT_RENEWAL_PRICING.duration, country: 'SA' });
+    expect(renewalPricing(WEEKLY)).toMatchObject({
+      pkg: 'weekly',
+      duration: DEFAULT_RENEWAL_PRICING.duration,
+      country: 'SA',
+    });
   });
 
   it('an unusable quote (an imported row): a custom package of its lesson count, clamped', () => {
-    const last = { ...WEEKLY, duration: 30 as const, lessons_total: 12, price_source: 'tier' as unknown as QuoteResponse };
-    expect(renewalPricing(last)).toEqual({ pkg: 'custom', count: 12, duration: 30, discount: 0, country: '' });
+    const last = {
+      ...WEEKLY,
+      duration: 30 as const,
+      lessons_total: 12,
+      price_source: 'tier' as unknown as QuoteResponse,
+    };
+    expect(renewalPricing(last)).toEqual({
+      pkg: 'custom',
+      count: 12,
+      duration: 30,
+      discount: 0,
+      country: '',
+    });
     expect(renewalPricing({ ...last, lessons_total: 500 }).count).toBe(60);
   });
 });

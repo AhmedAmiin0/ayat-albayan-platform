@@ -13,6 +13,7 @@ describe('pricingCountryOfPhone («عرض سعر» in the chat)', () => {
   });
 
   it('is null (USD) for Egypt, any other code and a broken number', () => {
-    for (const phone of ['+201001234567', '+447700900123', '+1555', '']) expect(pricingCountryOfPhone(phone)).toBeNull();
+    for (const phone of ['+201001234567', '+447700900123', '+1555', ''])
+      expect(pricingCountryOfPhone(phone)).toBeNull();
   });
 });

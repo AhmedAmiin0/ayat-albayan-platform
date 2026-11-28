@@ -44,6 +44,10 @@ describe('an instant lesson never consumes a package unit', () => {
       lesson('2026-09-23', 'scheduled'),
     ];
     const [a] = subscriptionBalances({ lessons, subscriptions: [A] });
-    expect(a).toMatchObject({ lessonsUsed: 1, remaining: 3, projectedEndAt: '2026-09-23T07:00:00Z' });
+    expect(a).toMatchObject({
+      lessonsUsed: 1,
+      remaining: 3,
+      projectedEndAt: '2026-09-23T07:00:00Z',
+    });
   });
 });
