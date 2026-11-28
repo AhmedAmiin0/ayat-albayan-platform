@@ -2100,11 +2100,6 @@
       "count": 2
     }
   },
-  "src/inbox/messages/reply-actions/ReplyConfirmButton.tsx": {
-    "ab/forbidden-imports": {
-      "count": 1
-    }
-  },
   "src/inbox/messages/reply-actions/ReplyNoteLine.tsx": {
     "stylistic/max-len": {
       "count": 3

@@ -90,8 +90,3 @@ export function replyRights(
       : null;
   return { reschedule: can('lessons.reschedule') && sheet, confirm };
 }
-
-/** The confirm request's path for `route`. */
-export function replyConfirmPath(lessonId: string, route: ConfirmRoute): string {
-  return route === 'sales' ? `/sales/lessons/${lessonId}/confirm` : `/lessons/${lessonId}/confirm`;
-}
