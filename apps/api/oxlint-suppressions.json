@@ -1997,11 +1997,6 @@
       "count": 1
     }
   },
-  "src/modules/messaging/inbox/files/pdf/pdf-pages.ts": {
-    "stylistic/max-len": {
-      "count": 8
-    }
-  },
   "src/modules/messaging/inbox/files/pdf/pdf-preview.fakes.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -2015,14 +2010,6 @@
   "src/modules/messaging/inbox/files/pdf/pdf-preview.service.ts": {
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/modules/messaging/inbox/files/pdf/pdf-render.ts": {
-    "stylistic/max-len": {
-      "count": 18
-    },
-    "typescript/no-unnecessary-condition": {
-      "count": 2
     }
   },
   "src/modules/messaging/inbox/files/pdf/pdf-sandbox.handler.ts": {
