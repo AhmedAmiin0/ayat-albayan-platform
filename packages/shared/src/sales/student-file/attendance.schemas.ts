@@ -2,7 +2,7 @@ import { ATTENDANCES, LESSON_STATUSES, REPORT_STATUSES } from '@ab/catalog';
 import { id, instant } from '@ab/core';
 import { monthParam } from '@ab/money';
 import { z } from 'zod';
-import { attendanceKindSchema } from '../student/student-details';
+import { attendanceKindSchema } from '../student/details-answer.schemas';
 
 // One student's past lessons in a month; never a price, payment, meeting link or note.
 

@@ -4636,9 +4636,6 @@
   "src/sales/sales/student/student-api.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/sales/sales/testing/fixtures.ts": {

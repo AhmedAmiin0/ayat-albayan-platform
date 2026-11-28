@@ -1,6 +1,6 @@
 import { wallParts } from '@ab/schedule';
 import { inWeekOrder } from '../course/course-picks';
-import type { AttendanceKind } from './student-details';
+import type { AttendanceKind } from './details-answer.schemas';
 import type { RosterAttendance, RosterSlot } from './student-views.schemas';
 
 // Each roster row's weekly slots in one short line and an attendance count; pure.

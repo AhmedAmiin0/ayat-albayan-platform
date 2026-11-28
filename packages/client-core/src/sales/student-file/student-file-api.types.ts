@@ -17,6 +17,7 @@ export interface StudentAttendanceMonth {
 }
 
 export interface SalesStudentFileCalls {
+  details: (studentId: string) => Answer<'details'>;
   reportPdf: (input: SalesStudentReport) => Answer<'reportPdf'>;
   attendance: (input: StudentAttendanceMonth) => Answer<'attendance'>;
 }

@@ -1,80 +1,8 @@
-import { z } from 'zod';
-import type { Attendance, LessonStatus, Program, StudentStatus } from '@ab/catalog';
-import type { ReportSummaryView } from '../../reports';
+import type { Attendance, LessonStatus } from '@ab/catalog';
 import { isCancelledLesson } from '@ab/schedule';
-import type { SalesHistoryEntry } from '../teacher/academy-lists.schemas';
-import type { SalesPackageSummary } from './student-views.schemas';
-import type { SalesStudentSchedule } from './student-schedule';
-import type { SalesStudentFamily } from './student-family';
-import type { TrialOutcome } from '../../people/students';
+import type { AttendanceKind, SalesAttendanceDay } from './details-answer.schemas';
 
-// Student details for any student (docs/16 row 36); every assistant sees every student.
-
-/** A subscription without its payments or audit trail: package, status, dates, lessons used / left. */
-/** Sent only to self.sales_money holders and only when 0 < paid < price (docs/16 row 36). */
-export interface SalesPartPaid {
-  paid: number;
-  price: number;
-  due: number;
-  currency: string;
-}
-
-export type SalesStudentSubscription = Omit<SalesHistoryEntry, 'payments' | 'status_changes'> & {
-  part_paid?: SalesPartPaid;
-};
-
-/** One past lesson for this student, as the attendance list says it. */
-export const ATTENDANCE_KINDS = ['present', 'absent', 'excused', 'cancelled', 'unmarked'] as const;
-export const attendanceKindSchema = z.enum(ATTENDANCE_KINDS);
-export type AttendanceKind = z.infer<typeof attendanceKindSchema>;
-
-export interface SalesAttendanceDay {
-  lesson_id: string;
-  starts_at: string;
-  kind: AttendanceKind;
-}
-
-/** A trial date a newer one replaced stays, with outcome `moved`. */
-export interface SalesTrialLesson {
-  lesson_id: string;
-  starts_at: string;
-  status: LessonStatus;
-  outcome: TrialOutcome;
-  teacher_name: string | null;
-}
-
-/** GET /sales/students/:id: 404 student_not_found for an unknown id only. */
-export interface SalesStudentDetails {
-  /** Hers, or any while SalesOwnershipRule does not enforce: the money actions. Every student reads the same. Absent: old cache (= hers). */
-  mine?: boolean;
-  student: {
-    id: string;
-    code: string;
-    name: string;
-    status: StudentStatus;
-    program: Program;
-    teacher_name: string | null;
-    guardian_phone: string | null;
-  };
-  /** Newest first; `current_id` is the newest active one, else the newest (null without any). */
-  subscriptions: SalesStudentSubscription[];
-  current_id: string | null;
-  /** The latest past lessons, newest first, and their totals per kind. */
-  attendance: { items: SalesAttendanceDay[]; totals: Record<AttendanceKind, number> };
-  /** The sent reports newest first, the teacher's rows (ReportSummaryView), and how many there are. */
-  reports: { items: ReportSummaryView[]; total: number };
-  /** Weekly slots and next lessons, no link; absent in an old cache. */
-  schedule?: SalesStudentSchedule;
-  /** Trial lessons newest first ([] without one); absent in an old cache. */
-  trial?: SalesTrialLesson[];
-  /**
-   * The current package of ANY student: size, status, dates, lessons used /
-   * left; never a price or payment. null: none. Absent in an old cache.
-   */
-  package?: SalesPackageSummary | null;
-  /** The guardian's name and siblings; absent in an old cache. */
-  family?: SalesStudentFamily;
-}
+// How a past lesson reads in a student's attendance (docs/16 row 36).
 
 const HELD: readonly LessonStatus[] = ['completed', 'late'];
 

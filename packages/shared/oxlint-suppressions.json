@@ -567,9 +567,6 @@
   "src/sales/student/student-details.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/sales/student/student-roster.ts": {
@@ -578,11 +575,6 @@
     },
     "max-depth": {
       "count": 1
-    }
-  },
-  "src/sales/student/student-schedule.ts": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/sales/teacher-filter/teacher-filter.ts": {
