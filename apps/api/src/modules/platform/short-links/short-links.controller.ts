@@ -1,5 +1,4 @@
 import { Controller, Ip, Res } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { ar } from '@/common/infra/i18n/server-text';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { shortLinkRedirectRoutes as routes } from './short-links.routes';
@@ -25,7 +24,6 @@ const noStore = (res: Reply): void => {
  * writes (allow-listed: https on our origins or Google Meet). Unknown or expired → 404 with a short
  * Arabic text. Rate-limited per IP and code.
  */
-@Public()
 @Controller()
 export class ShortLinksController {
   constructor(

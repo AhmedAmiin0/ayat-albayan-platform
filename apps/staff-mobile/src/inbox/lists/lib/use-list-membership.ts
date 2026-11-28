@@ -37,7 +37,9 @@ export function useListMembership(phone: string) {
   const queryKey = threadKey(phone);
   return useMutation({
     mutationFn: ({ list, member }: MemberChange) =>
-      chatLists.setMember({ id: list.id, phone, member }),
+      member
+        ? chatLists.addThread({ id: list.id, phone })
+        : chatLists.dropThread({ id: list.id, phone }),
     onMutate: async (change) => {
       await client.cancelQueries({ queryKey });
       client.setQueryData<ThreadCache>(queryKey, (old) => withMembership(old, change));

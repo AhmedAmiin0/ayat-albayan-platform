@@ -1,7 +1,8 @@
-import { chatListCalls, chatListErrorWords, type ChatListMember } from '@ab/client-core';
+import { chatListCalls, chatListErrorWords } from '@ab/client-core';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, t } from '@ab/web-kit';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
+import type { MemberIntent } from './member-queue';
 
 // docs/22 §3: one academy-wide shared set of chat lists; lists only organise chats.
 
@@ -23,7 +24,8 @@ export const renameList = (input: { id: string; name: string }) => lists.rename(
 export const deleteList = (id: string) => lists.remove(id);
 
 /** In = PUT, out = DELETE; both idempotent (204). */
-export const setMember = (input: ChatListMember) => lists.setMember(input);
+export const setMember = ({ member, ...thread }: MemberIntent) =>
+  member ? lists.addThread(thread) : lists.dropThread(thread);
 
 /** A change to lists or members: the chips' counts, the filtered thread list and the open chat's lists. */
 export const refreshLists = (queryClient: QueryClient) =>

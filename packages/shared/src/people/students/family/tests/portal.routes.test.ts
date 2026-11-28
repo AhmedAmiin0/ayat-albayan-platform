@@ -13,6 +13,7 @@ describe('portalRoutes (docs/31, docs/50: the family reads its own students)', (
       'GET /portal/me',
       `GET ${student}/lessons`,
       `GET ${student}/history`,
+      `POST ${student}/lessons/:lessonId/join`,
       `POST ${student}/lessons/:lessonId/room-link`,
       `GET ${student}/reports`,
       `POST ${student}/reports/:reportId/url`,
@@ -32,6 +33,13 @@ describe('portalRoutes (docs/31, docs/50: the family reads its own students)', (
     expect(file.safeParse({ id: S, recordingId: 'x' }).success).toBe(false);
     const ids = { id: S, lessonId: L };
     expect(portalRoutes.roomLink.params.parse(ids)).toEqual(ids);
+    expect(portalRoutes.join.params.safeParse({ id: S, lessonId: 'x' }).success).toBe(false);
+  });
+
+  it('answers the join with the classroom room, its role from the closed list', () => {
+    const room = { url: 'wss://lk.example.org', token: 't', room: 'lesson-l1', role: 'guest' };
+    expect(portalRoutes.join.response.parse(room)).toEqual(room);
+    expect(portalRoutes.join.response.safeParse({ ...room, role: 'owner' }).success).toBe(false);
   });
 
   it('reads history by status, the cursor only as an instant', () => {

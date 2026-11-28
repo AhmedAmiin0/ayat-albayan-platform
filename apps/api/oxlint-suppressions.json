@@ -4705,11 +4705,6 @@
       "count": 1
     }
   },
-  "src/modules/people/portal/portal.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
-    }
-  },
   "src/modules/people/portal/portal.fakes.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -5830,11 +5825,6 @@
       "count": 2
     },
     "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    }
-  },
-  "src/modules/reporting/reports/report-entry.controller.ts": {
-    "ab/zod-inputs": {
       "count": 1
     }
   },

@@ -10,6 +10,12 @@ export interface MeetingMute {
   source: MuteSource;
 }
 
+export interface MeetingShare {
+  meetingId: string;
+  identity: string;
+  allow: boolean;
+}
+
 export interface RoomModerationApi {
   /** Newest first, with 1-hour links to the finished files. */
   lessonRecordings: (lessonId: string) => Answer<'lessonRecordings'>;
@@ -17,4 +23,6 @@ export interface RoomModerationApi {
   recordingStatus: () => Answer<'recordingStatus'>;
   /** 204; 403 cannot_mute, 404 participant_not_found. */
   muteInMeeting: (input: MeetingMute) => Promise<void>;
+  /** 204; 403 cannot_grant_share, 404 participant_not_found. */
+  shareInMeeting: (input: MeetingShare) => Promise<void>;
 }

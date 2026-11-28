@@ -8,6 +8,7 @@ const BASE = '/public/teacher-report/:token/reports/:id';
 describe('teacherLinkRoutes', () => {
   it('keeps the paths the api serves today', () => {
     expect(Object.values(routes).map((r) => `${r.method} ${r.path}`)).toEqual([
+      'GET /public/teacher-report/:token',
       `PUT ${BASE}/draft`,
       `POST ${BASE}/submit`,
       `PUT ${BASE}/v2/draft`,
@@ -15,8 +16,9 @@ describe('teacherLinkRoutes', () => {
     ]);
   });
 
-  it('needs no permission, only the link, and files every route under reports', () => {
+  it('is public with no permission, only the link, and files every route under reports', () => {
     expect(Object.values(routes).some((r) => 'permissions' in r)).toBe(false);
+    expect(new Set(Object.values(routes).map((r) => r.isPublic))).toEqual(new Set([true]));
     expect(Object.values(routes).every((r) => r.tags.join() === 'reports')).toBe(true);
   });
 

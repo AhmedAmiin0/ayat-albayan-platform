@@ -1,7 +1,6 @@
 import {
   attachmentUploadSchema,
   type ReportAttachmentView,
-  type ReportFormResponse,
   type DraftBody,
   type ReportV2DraftBody,
   type ReportV2SubmitBody,
@@ -24,12 +23,13 @@ import { reportKeys } from '@/features/reporting/keys';
 export const REPORTS_KEY = reportKeys.all;
 
 const history = reportHistoryCalls({ apiFetch, apiSend });
+const reports = reportCalls({ apiFetch, apiSend });
 
 /** R1: GET /lessons/:id/report-form — creates the drafts on first open. */
 export const reportFormQuery = (lessonId: string) =>
   queryOptions({
     queryKey: reportKeys.form(lessonId),
-    queryFn: () => apiFetch<ReportFormResponse>(`/lessons/${lessonId}/report-form`),
+    queryFn: () => reports.form({ id: lessonId }),
     retry: false,
     // No refetch on focus: each entry seeds its state once; a submit invalidates REPORTS_KEY.
     refetchOnWindowFocus: false,
@@ -48,8 +48,6 @@ export const pendingReportsQuery = queryOptions({
   queryFn: () => history.pending(),
   refetchInterval: TEACHER_REFRESH_MS,
 });
-
-const reports = reportCalls({ apiFetch, apiSend });
 
 export const saveDraft = ({ id, body }: { id: string; body: DraftBody }) =>
   reports.draft({ id }, body);

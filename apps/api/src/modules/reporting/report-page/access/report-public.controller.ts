@@ -5,7 +5,6 @@ import {
 } from '@ab/shared';
 import { Controller, Header, HttpCode, Ip, Req, Res, UseGuards } from '@nestjs/common';
 import { z } from 'zod';
-import { Public } from '@/common/auth/decorators';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ReportCodeService } from './report-code.service';
 import { ReportPublicLimit } from './report-public.limit';
@@ -26,7 +25,6 @@ interface CookieReply {
 }
 
 /** Never cached: the page and the masked numbers depend on this report's cookie. */
-@Public()
 @UseGuards(ReportPublicLimit)
 @Controller()
 export class ReportPublicController {

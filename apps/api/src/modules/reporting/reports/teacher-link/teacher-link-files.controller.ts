@@ -5,7 +5,6 @@ import {
   type SignedUpload,
 } from '@ab/shared';
 import { Controller, HttpCode, UseGuards } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { TeacherLinkFiles } from './teacher-link.files';
 import { TeacherLinkLimit } from './teacher-link.limit';
@@ -17,7 +16,6 @@ type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
  * URL, PUT the file to Storage, register it; remove one; open one. Adding and removing close with
  * the edit window (409 edit_window_closed). Same link errors as the form (404 / 410 / 409 / 429).
  */
-@Public()
 @UseGuards(TeacherLinkLimit)
 @Controller()
 export class TeacherLinkFilesController {
