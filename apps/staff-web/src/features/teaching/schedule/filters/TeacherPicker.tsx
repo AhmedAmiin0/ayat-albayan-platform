@@ -39,8 +39,8 @@ export function TeacherPicker({ teachers, value, onChange, inline = false }: Tea
         </summary>
         <fieldset
           className={cn(
-            'mt-1 grid gap-0.5 overflow-y-auto rounded-md border border-rule bg-raised p-1.5',
-            inline ? 'max-h-56' : 'absolute z-20 max-h-72 w-max min-w-full shadow-md',
+            'mt-1 grid gap-0.5 rounded-md border border-rule bg-raised p-1.5',
+            !inline && 'absolute z-20 max-h-72 w-max min-w-full overflow-y-auto shadow-md',
           )}
         >
           <legend className="sr-only">{t.schedule.teacherFilter}</legend>

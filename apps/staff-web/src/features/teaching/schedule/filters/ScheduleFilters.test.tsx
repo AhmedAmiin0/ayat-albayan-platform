@@ -56,7 +56,7 @@ describe('ScheduleFilters on the shared toolbar', () => {
     renderFilters({});
     openFilters();
     const list = screen.getByRole('checkbox', { name: 'نور' }).closest('fieldset');
-    expect(list?.className).toContain('max-h-56');
+    expect(list?.className).not.toMatch(/overflow|max-h/);
     expect(list?.className).not.toContain('absolute');
   });
 
