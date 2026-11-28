@@ -15,9 +15,12 @@ const exact = { exact: true } as const;
 const leadOf = (phone: string) => withSql((sql) => sql<{ status: string; qualification: unknown }[]>`
   select status, qualification from public.leads where phone_e164 = ${phone}`).then((rows) => rows[0]);
 
+// Scoped to the shown panel: under a 48rem thread a hidden inline copy sits beside the sheet's.
 async function moveTo(page: Page, status: keyof typeof ar.enums.leadStatus): Promise<void> {
-  await page.getByLabel(L.changeStatus, exact).selectOption({ label: ar.enums.leadStatus[status] });
-  await page.getByRole('button', { name: ar.inbox.applyStatus, exact: true }).click();
+  const panel = await sidePanel(page, 'lead');
+  const label = ar.enums.leadStatus[status];
+  await panel.getByLabel(L.changeStatus, exact).selectOption({ label });
+  await panel.getByRole('button', { name: ar.inbox.applyStatus, exact: true }).click();
 }
 
 async function openEdit(page: Page): Promise<Locator> {
