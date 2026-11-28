@@ -1,5 +1,5 @@
 // Stand-ins for @expo/ui in jest (jest.shared.cjs mocks the modules with these).
-const { createElement, useState } = require('react');
+const { createElement, useState, useSyncExternalStore } = require('react');
 const RN = require('react-native');
 
 // The BottomSheet shows its children only while presented (the lesson room's participants; the
@@ -12,10 +12,29 @@ const BottomSheet = ({ isPresented, children, ...props }) =>
 const Host = ({ children, ...props }) =>
   createElement(RN.View, { testID: 'native-host', ...props }, children);
 
-// The observable native text: a React state here, so a write re-renders the field that owns it.
-const useNativeState = (initial) => {
-  const [value, set] = useState(initial);
-  return { value, get: () => value, set };
+// The observable native text: one object for the field's life, as the native one is. Only the
+// stand-in input re-renders on a write, as only the native view redraws; React never sees it.
+const nativeState = (initial) => {
+  const listeners = new Set();
+  const state = {
+    value: initial,
+    get: () => state.value,
+    set: (next) => {
+      state.value = next;
+      listeners.forEach((listener) => listener());
+    },
+    subscribe: (listener) => {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+  };
+  return state;
+};
+const useNativeState = (initial) => useState(() => nativeState(initial))[0];
+const noState = { get: () => undefined, subscribe: () => () => undefined };
+const useShown = (value) => {
+  const state = value ?? noState;
+  return useSyncExternalStore(state.subscribe, state.get);
 };
 
 const modifier = ($type) => (params) => ({ $type, params });
@@ -36,8 +55,9 @@ const paramOf = (modifiers, $type) => modifiers?.find((m) => m.$type === $type)?
 // The universal TextInput as React Native's: its iOS accessibility modifiers become the label and
 // hint a test queries by, and the observable value its display value. Typing writes that value,
 // as the native field does, before the callback. `expoUi` marks it.
-const TextInput = ({ value, modifiers, onChangeText, onFocus, onBlur, ...props }) =>
-  createElement(RN.TextInput, {
+const TextInput = ({ value, modifiers, onChangeText, onFocus, onBlur, ...props }) => {
+  const shown = useShown(value);
+  return createElement(RN.TextInput, {
     ...props,
     onChangeText: (text) => {
       value?.set(text);
@@ -45,13 +65,14 @@ const TextInput = ({ value, modifiers, onChangeText, onFocus, onBlur, ...props }
     },
     expoUi: true,
     modifiers,
-    value: value?.value,
+    value: shown,
     accessibilityLabel: paramOf(modifiers, 'accessibilityLabel'),
     accessibilityHint: paramOf(modifiers, 'accessibilityHint'),
     onFocus: () => onFocus?.(),
     onBlur: () => onBlur?.(),
-    onSubmitEditing: () => props.onSubmitEditing?.(value?.value ?? ''),
+    onSubmitEditing: () => props.onSubmitEditing?.(value?.get() ?? ''),
   });
+};
 
 module.exports = {
   universal: { __esModule: true, BottomSheet, Host, TextInput, useNativeState },
