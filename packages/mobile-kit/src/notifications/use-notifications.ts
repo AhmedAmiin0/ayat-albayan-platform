@@ -1,6 +1,6 @@
-import type { NotificationsPage } from '@ab/shared';
+import { meNotificationRoutes, type NotificationsPage } from '@ab/shared';
 import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '../lib/http/api';
+import { call } from '../lib/http/api';
 import { markedRead } from './notifications-cache';
 
 // The bell (R-NOT-01): GET /me/notifications (newest 20, polled) and POST /me/notifications/read.
@@ -9,12 +9,12 @@ const NOTIFICATIONS_KEY = ['notifications'] as const;
 const NOTIFICATIONS_LIST_KEY = ['notifications', 'list'] as const;
 /** The badge stays fresh without a push (a refused permission, a teacher on the web). */
 const NOTIFICATIONS_POLL_MS = 30_000;
-const NOTIFICATIONS_PATH = '/me/notifications?page=1&pageSize=20';
+const NOTIFICATIONS_PAGE = { page: 1, pageSize: 20 };
 
 /** The bell's query: the newest page and the unread count (useBellSignal rides the same one). */
 export const notificationsListQuery = queryOptions({
   queryKey: NOTIFICATIONS_LIST_KEY,
-  queryFn: () => apiFetch<NotificationsPage>(NOTIFICATIONS_PATH),
+  queryFn: () => call({ route: meNotificationRoutes.list, query: NOTIFICATIONS_PAGE }),
   refetchInterval: NOTIFICATIONS_POLL_MS,
 });
 
@@ -31,7 +31,7 @@ export function useMarkRead() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (ids?: readonly string[]) =>
-      apiSend('POST', '/me/notifications/read', ids ? { ids: [...ids] } : {}),
+      call({ route: meNotificationRoutes.read, body: ids ? { ids: [...ids] } : {} }),
     onMutate: async (ids?: readonly string[]) => {
       await client.cancelQueries({ queryKey: NOTIFICATIONS_LIST_KEY });
       const before = client.getQueryData<NotificationsPage>(NOTIFICATIONS_LIST_KEY);

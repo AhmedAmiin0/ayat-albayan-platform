@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { mockCall } from '@ab/testing/mock-call';
 import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -6,7 +7,13 @@ import { HeldBell } from './HeldBell';
 
 const mockApiFetch = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+const mockApi = mockCall();
+mockApi.onRead((request) => mockApiFetch(request.path));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const page = { items: [], total: 0, page: 1, pageSize: 20, unread: 0 };
 

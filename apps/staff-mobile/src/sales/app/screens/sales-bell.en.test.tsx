@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react-native';
+import { mockCall } from '@ab/testing/mock-call';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
@@ -11,7 +12,13 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+const mockApi = mockCall();
+mockApi.onRead((request) => mockApiFetch(request.path));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 test('the sales inbox bell reads in English', async () => {
   mockApiFetch.mockImplementation(async (p: string) => {

@@ -1,4 +1,5 @@
 import type { NotificationItem } from '@ab/shared';
+import { mockCall } from '@ab/testing/mock-call';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { pathKey, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
@@ -7,7 +8,13 @@ import { commissionPage, earnings, myCommission } from '@/sales-money/testing/fi
 import { MyWalletView } from './MyWalletView';
 
 const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+const mockApi = mockCall();
+mockApi.onRead((request) => mockApiFetch(request.path));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const W = t.assistantPortal.wallet;
 const bellRow = (id: string): NotificationItem =>

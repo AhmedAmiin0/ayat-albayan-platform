@@ -1,4 +1,5 @@
 import { DEFAULT_HOME_PREFS, withAlert } from '@ab/client-core';
+import { mockCall } from '@ab/testing/mock-call';
 import type { NotificationsPage } from '@ab/shared';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
@@ -10,11 +11,14 @@ import { resetHomePrefs, saveHomePrefs } from './home-prefs';
 import { TodayAlerts } from './TodayAlerts';
 
 const mockApiFetch = jest.fn();
-const mockApiSend = jest.fn(() => Promise.resolve(undefined));
+const mockApiSend = jest.fn((..._args: unknown[]) => Promise.resolve(undefined));
+const mockApi = mockCall();
+mockApi.onRead((request) => mockApiFetch(request.path));
+mockApi.onWrite((request) => mockApiSend(request.method, request.path, request.body));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
   apiFetch: (p: string) => mockApiFetch(p),
-  apiSend: (...a: unknown[]) => mockApiSend(...(a as [])),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 

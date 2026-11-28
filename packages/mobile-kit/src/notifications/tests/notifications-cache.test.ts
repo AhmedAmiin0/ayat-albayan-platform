@@ -1,6 +1,6 @@
 import type { NotificationItem, NotificationsPage } from '@ab/shared';
-import { t } from '../lib/i18n/i18n';
-import { bellBadge, bellLabel, markedRead } from './notifications-cache';
+import { t } from '../../lib/i18n/i18n';
+import { bellBadge, bellLabel, markedRead } from '../notifications-cache';
 
 const row = (id: string, read_at: string | null = null): NotificationItem => ({
   id, kind: 'new_message', title: 'x', body: 'y', data: {}, created_at: '2026-10-12T08:00:00Z', read_at,

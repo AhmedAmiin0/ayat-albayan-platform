@@ -1,4 +1,5 @@
 import type { NotificationItem, NotificationsPage } from '@ab/shared';
+import { mockCall } from '@ab/testing/mock-call';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';
@@ -7,10 +8,12 @@ import { AlertSections } from './AlertSections';
 
 const mockSend = jest.fn(async (..._args: unknown[]) => ({}));
 jest.mock('expo-router', () => ({ router: { navigate: jest.fn(), push: jest.fn() } }));
+const mockApi = mockCall();
+mockApi.onRead(() => ({}));
+mockApi.onWrite((request) => mockSend(request.method, request.path, request.body));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: jest.fn(async () => ({})),
-  apiSend: (...args: unknown[]) => mockSend(...args),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const item = (over: Partial<NotificationItem> = {}): NotificationItem => ({
