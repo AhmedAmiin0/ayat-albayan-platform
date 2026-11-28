@@ -7,10 +7,11 @@ import type { Props } from './ShareButton.types';
 /** Shown only where it can work; a guest who may not yet gets the request button instead. */
 export function ShareButton({ room, role, share }: Props) {
   const { snap } = room;
+  const label = snap.shareOn ? t.classroom.shareOff : t.classroom.shareOn;
+  const mayAsk = role === 'guest';
   if (!canShareScreen()) return null;
   if (snap.shareAllowed) {
-    const label = snap.shareOn ? t.classroom.shareOff : t.classroom.shareOn;
     return <RoomButton icon="screen" on={snap.shareOn} label={label} onClick={room.toggleShare} />;
   }
-  return role === 'guest' ? <RequestButton share={share} what="screen" /> : null;
+  return mayAsk ? <RequestButton share={share} what="screen" /> : null;
 }
