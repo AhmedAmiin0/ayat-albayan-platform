@@ -2,6 +2,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { translationRoutes } from '@ab/i18n';
+import { ResponseCheckInterceptor } from '@/common/http/returns';
 import { messagingRoot } from '@/common/infra/test-root';
 import { TranslationsModule } from './translations.module';
 import { ActivityWriter } from '@/common/telemetry/activity/activity.writer';
@@ -52,6 +53,7 @@ describe('/i18n — dynamic translations', () => {
       .useValue(activity)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
+    app.useGlobalInterceptors(new ResponseCheckInterceptor(true));
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
   });
@@ -113,9 +115,15 @@ describe('/i18n — dynamic translations', () => {
       await call('DELETE', '/i18n/fr/nav.leads', { token: 'admin' }),
       await call('GET', '/i18n/keys?page=0', { token: 'admin' }),
       await call('PUT', '/i18n/en/nav.leads', { token: 'admin', payload: {} }),
+      await call('GET', '/i18n/fr/overrides'),
     ];
     const answers = bad.map((r) => [r.statusCode, r.json<{ message: string }>().message]);
-    expect(answers).toEqual(Array.from({ length: 4 }, () => [400, 'validation_failed']));
+    expect(answers).toEqual(Array.from({ length: 5 }, () => [400, 'validation_failed']));
+  });
+
+  it('GET overrides answers a map that fits the shared schema', async () => {
+    const res = await call('GET', '/i18n/ar/overrides');
+    expect(translationRoutes.overrides.response.safeParse(res.json()).success).toBe(true);
   });
 
   it('GET keys answers rows that fit the shared page schema', async () => {
