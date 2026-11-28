@@ -73,7 +73,11 @@ export class MeetingInviteeResolver {
     if (invitees.length === 0) return [];
     const scope = await this.scopeOf(user);
     if (scope.kind !== 'all' && invitees.some((i) => i.kind === 'phone')) throw phoneNotAllowed();
-    const out = [...(await this.staff(invitees)), ...(await this.students(invitees, scope)), ...(await this.phones({ user, invitees, scope }))];
+    const out = [
+      ...(await this.staff(invitees)),
+      ...(await this.students(invitees, scope)),
+      ...(await this.phones({ user, invitees, scope })),
+    ];
     return dedupeInvitees(out.filter((i) => i.profileId !== user.id));
   }
 

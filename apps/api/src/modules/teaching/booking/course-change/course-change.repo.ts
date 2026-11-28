@@ -58,7 +58,13 @@ export interface CourseRuleRef {
 export interface OpenCourseLesson { id: string; status: LessonStatus }
 
 /** An active rule of the student, for courseOverlaps (sales-course.rules.ts). */
-interface OtherRule { id: string; starts_on: string; ends_on: string | null; package: PackageSize | null; subscription_id: string | null }
+interface OtherRule {
+  id: string;
+  starts_on: string;
+  ends_on: string | null;
+  package: PackageSize | null;
+  subscription_id: string | null;
+}
 
 /** Service role; ownership is checked by CourseChange. */
 @Injectable()

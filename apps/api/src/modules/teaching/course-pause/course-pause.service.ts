@@ -22,7 +22,16 @@ interface ResumeInput { studentId: string; body: CoursePauseResume; actor: Actor
 const legacyResult = (subscriptionId: string): CoursePauseResult => {
   const today = riyadhToday();
   const now = new Date().toISOString();
-  const pause = { id: subscriptionId, from_date: today, until_date: null, reason: null, created_at: now, created_by_name: null, resumed_at: now, extended_days: 0 };
+  const pause = {
+    id: subscriptionId,
+    from_date: today,
+    until_date: null,
+    reason: null,
+    created_at: now,
+    created_by_name: null,
+    resumed_at: now,
+    extended_days: 0,
+  };
   return { pause, cancelled: 0, left: 0, reopened: 0, conflicts: 0 };
 };
 
@@ -37,14 +46,23 @@ export class CoursePauseService {
   async state(studentId: string): Promise<CoursePauseState> {
     await assertStudent(this.queries, studentId);
     const views = (await this.queries.pauses(studentId)).map(toPauseView);
-    return { open: views.find((v) => v.resumed_at === null) ?? null, history: views.filter((v) => v.resumed_at !== null) };
+    return {
+      open: views.find((v) => v.resumed_at === null) ?? null,
+      history: views.filter((v) => v.resumed_at !== null),
+    };
   }
 
   async start({ studentId, body, actor }: StartInput): Promise<CoursePauseResult> {
     const from = body.fromDate ?? riyadhToday();
     const until = body.untilDate ?? null;
     assertPauseDates(from, until);
-    const p = { student_id: studentId, from_date: from, until_date: until, reason: body.reason ?? null, actor: actor.id };
+    const p = {
+      student_id: studentId,
+      from_date: from,
+      until_date: until,
+      reason: body.reason ?? null,
+      actor: actor.id,
+    };
     const out = await this.queries.call('course_pause_start', p);
     const result = await this.done(out, actor.id);
     await this.follow.paused(out, actor.id);
@@ -63,8 +81,12 @@ export class CoursePauseService {
     await assertStudent(this.queries, studentId);
     const open = await this.queries.openPause(studentId);
     const subscriptionId = body.subscriptionId;
-    if (open && (subscriptionId === undefined || subscriptionId === open.subscription_id)) return this.resumePause(open.id, actor.id);
-    const lifted = await this.queries.liftLegacyPause({ studentId, ...(subscriptionId ? { subscriptionId } : {}) });
+    if (open && (subscriptionId === undefined || subscriptionId === open.subscription_id))
+      return this.resumePause(open.id, actor.id);
+    const lifted = await this.queries.liftLegacyPause({
+      studentId,
+      ...(subscriptionId ? { subscriptionId } : {}),
+    });
     const [first] = lifted;
     if (first === undefined) throw conflict('pause_not_open');
     await this.follow.liftedLegacy({ studentId, subscriptionIds: lifted, actorId: actor.id });
@@ -103,7 +125,13 @@ export class CoursePauseService {
     const row = await this.queries.pause(out.id);
     if (!row) throw notFound('pause_not_found');
     const reopened = out.reopened.length + out.rejoined.length;
-    return { pause: pauseViewOf(row), cancelled: out.cancelled.length, left: out.left.length, reopened, conflicts };
+    return {
+      pause: pauseViewOf(row),
+      cancelled: out.cancelled.length,
+      left: out.left.length,
+      reopened,
+      conflicts,
+    };
   }
 
   private async openId(studentId: string): Promise<string> {

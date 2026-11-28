@@ -59,13 +59,23 @@ export class SalesCourse {
       this.queries.courseRules(studentId),
     ]);
     const booked = await this.booked(sub);
-    const endsOn = sub && plannedCourseEnd({ rule: { ...req, single: false }, now, lessonsTotal: courseLessonCount(sub) });
+    const endsOn =
+      sub &&
+      plannedCourseEnd({
+        rule: { ...req, single: false },
+        now,
+        lessonsTotal: courseLessonCount(sub),
+      });
     const bad = courseProblem({ req, sub, rules, endsOn, booked });
     if (bad) throw httpError(bad.status, bad.code);
     if (!sub) throw httpError(HttpStatus.CONFLICT, 'subscription_required');
     // The audit names the course a renewal follows, whichever days were picked.
     const { previous } = courseFacts({ rows, now, subscriptionId: sub.id, booked });
-    const course = { package: sub.package, subscriptionId: sub.id, follows: previous?.subscriptionId ?? null };
+    const course = {
+      package: sub.package,
+      subscriptionId: sub.id,
+      follows: previous?.subscriptionId ?? null,
+    };
     return { invoiceWaived: true, endsOn, course };
   }
 
@@ -94,7 +104,12 @@ export class SalesCourse {
     const now = new Date();
     const today = wallParts(now.toISOString(), student.tz).date;
     const booked = await this.booked(sub);
-    const { previous, current } = courseFacts({ rows, now, subscriptionId: sub?.id ?? null, booked });
+    const { previous, current } = courseFacts({
+      rows,
+      now,
+      subscriptionId: sub?.id ?? null,
+      booked,
+    });
     const after = previous ? addLocalDays(previous.endsOn, 1) : today;
     const from = after > today ? after : today;
     const held = await this.holdOf(sub, previous);

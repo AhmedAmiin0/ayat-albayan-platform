@@ -34,7 +34,8 @@ export class MeetingScheduleDeps {
 }
 
 /** Same instant? '+00:00' (PostgREST) and '.000Z' (the API) spell one time two ways. */
-export const sameInstant = (a: string | null, b: string | null): boolean => a !== null && b !== null && Date.parse(a) === Date.parse(b);
+export const sameInstant = (a: string | null, b: string | null): boolean =>
+  a !== null && b !== null && Date.parse(a) === Date.parse(b);
 
 /** R-MEET-01: a real move re-notifies staff; cancelling twice is a no-op; ended answers 410. */
 @Injectable()
@@ -45,14 +46,19 @@ export class MeetingScheduleService {
     private readonly deps: MeetingScheduleDeps,
   ) {}
 
-  async update(input: { user: AuthUser; id: string; body: unknown }, now = new Date()): Promise<void> {
+  async update(
+    input: { user: AuthUser; id: string; body: unknown },
+    now = new Date(),
+  ): Promise<void> {
     const patch = parseOrThrow(updateMeetingSchema, input.body);
     const { row } = await this.meetings.managedOpen(input, now);
     const times = rescheduleTimes(row, patch, now);
     const title = patch.title ?? row.title;
     await this.queries.update(row.id, {
       title,
-      ...(times?.startsAt && times.plannedEndAt ? { starts_at: times.startsAt, planned_end_at: times.plannedEndAt } : {}),
+      ...(times?.startsAt && times.plannedEndAt
+        ? { starts_at: times.startsAt, planned_end_at: times.plannedEndAt }
+        : {}),
     });
     if (!times?.startsAt || sameInstant(times.startsAt, row.starts_at)) return;
     await this.markStale(row.id, await this.deps.invitees.dropQueuedInvites(row.id));
@@ -78,9 +84,21 @@ export class MeetingScheduleService {
     const title = ar.meetingInvites.push.cancelled;
     let queued = false;
     for (const invitee of all.filter((i) => i.status !== 'cancelled')) {
-      if (invitee.kind === 'staff') await this.deps.sender.staff({ meeting: row, invitee, subject: `cancel:${row.id}`, title });
-      else if (mayTell(invitee, delivered) && invitee.phone_e164 && policy.mayChat(invitee.phone_e164)) {
-        queued = (await this.tellFamily({ row, invitee, actorId: input.user.id, teacherId: policy.teacherId, now })) || queued;
+      if (invitee.kind === 'staff')
+        await this.deps.sender.staff({ meeting: row, invitee, subject: `cancel:${row.id}`, title });
+      else if (
+        mayTell(invitee, delivered) &&
+        invitee.phone_e164 &&
+        policy.mayChat(invitee.phone_e164)
+      ) {
+        queued =
+          (await this.tellFamily({
+            row,
+            invitee,
+            actorId: input.user.id,
+            teacherId: policy.teacherId,
+            now,
+          })) || queued;
       }
     }
     if (queued) this.deps.sender.kick();
@@ -103,16 +121,30 @@ export class MeetingScheduleService {
     for (const i of stale) await this.deps.invitees.update(i.id, { status: 'failed', error_code: 'stale', sent_at: null });
   }
 
-  /**
-   * The cancellation chat text, only inside an open window (pickSendLine decides; a closed one
-   * sends nothing).
-   */
-  private async tellFamily(v: { row: MeetingRow; invitee: StoredInvitee; actorId: string; teacherId: string | null; now: Date }): Promise<boolean> {
+  /** The cancellation chat text, only inside an open window (pickSendLine decides; a closed one sends nothing). */
+  private async tellFamily(v: {
+    row: MeetingRow;
+    invitee: StoredInvitee;
+    actorId: string;
+    teacherId: string | null;
+    now: Date;
+  }): Promise<boolean> {
     const phone = v.invitee.phone_e164 ?? '';
-    const body = cancellationText({ title: v.row.title, when: inviteeWhen(v.row.starts_at, v.invitee) });
+    const body = cancellationText({
+      title: v.row.title,
+      when: inviteeWhen(v.row.starts_at, v.invitee),
+    });
     const expiresAt = new Date(v.now.getTime() + HOUR_MS).toISOString();
     const dedupKey = cancelDedupKey(v.row.id, phone);
-    const out = await this.deps.sender.chat({ phone, body, dedupKey, actorId: v.actorId, teacherId: v.teacherId, expiresAt, now: v.now });
+    const out = await this.deps.sender.chat({
+      phone,
+      body,
+      dedupKey,
+      actorId: v.actorId,
+      teacherId: v.teacherId,
+      expiresAt,
+      now: v.now,
+    });
     return out.status === 'sent';
   }
 }

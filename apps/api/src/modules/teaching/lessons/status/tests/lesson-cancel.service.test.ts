@@ -34,7 +34,9 @@ describe('LessonCancelService.cancel (R-SCH-07)', () => {
 
   it('one occurrence by the teacher: cancelled_by_teacher, reason kept, not chargeable, audited', async () => {
     const { service, writer, record } = setup();
-    expect(await service.cancel({ lessonId: LESSON_ID, body: body(), actor: ADMIN })).toEqual([LESSON_ID]);
+    expect(await service.cancel({ lessonId: LESSON_ID, body: body(), actor: ADMIN })).toEqual([
+      LESSON_ID,
+    ]);
     expect(appliedChange(writer)).toEqual({
       actor: ADMIN.id,
       changes: [{ id: LESSON_ID, from_status: 'scheduled', to_status: 'cancelled_by_teacher', cancel_reason: 'ظرف طارئ', chargeable: false }],
@@ -112,10 +114,12 @@ describe('LessonCancelService.cancelRule — POST /schedule-rules/:id/cancel', (
   it('a from date before today in the rule tz → 400 date_in_past, nothing written (issue B2)', async () => {
     const { service, writer } = setup();
     const body = { by: 'admin' as const, reason: 'x', from: '2026-10-01' };
-    await expect(service.cancelRule({ ruleId: RULE_ID, body, actor: ADMIN })).rejects.toMatchObject({
-      status: 400,
-      response: { code: 'date_in_past' },
-    });
+    await expect(service.cancelRule({ ruleId: RULE_ID, body, actor: ADMIN })).rejects.toMatchObject(
+      {
+        status: 400,
+        response: { code: 'date_in_past' },
+      },
+    );
     expect(writer.apply).not.toHaveBeenCalled();
   });
 

@@ -13,14 +13,22 @@ function setup() {
   const store = fakeLessonsDb();
   const { audit, record } = fakeAudit();
   const checker = { check: vi.fn().mockResolvedValue([]) };
-  const generator = new OccurrenceGenerator(new LessonWriter(store.db, fakePolicy()), checker as unknown as ConflictChecker, audit);
+  const generator = new OccurrenceGenerator(
+    new LessonWriter(store.db, fakePolicy()),
+    checker as unknown as ConflictChecker,
+    audit,
+  );
   return { ...store, generator, record, checker };
 }
 
 describe('OccurrenceGenerator.topUp — idempotent horizon upsert (R-SCH-02, issue B1)', () => {
   it('first run books every Sun/Tue in the 5-week horizon', async () => {
     const { generator, lessons } = setup();
-    const { lessons: inserted, until } = await generator.topUp(ruleRow(), { weeks: 5, actorId: null, now: NOW });
+    const { lessons: inserted, until } = await generator.topUp(ruleRow(), {
+      weeks: 5,
+      actorId: null,
+      now: NOW,
+    });
     expect(inserted).toHaveLength(10);
     expect(inserted[0]?.starts_at).toBe('2026-10-04T14:00:00.000Z');
     expect(inserted.at(-1)?.starts_at).toBe('2026-11-03T14:00:00.000Z');
@@ -67,7 +75,11 @@ describe('OccurrenceGenerator.topUp — idempotent horizon upsert (R-SCH-02, iss
   it('the next daily run only adds what rolled into the horizon', async () => {
     const { generator } = setup();
     await generator.topUp(ruleRow(), { weeks: 5, actorId: null, now: NOW });
-    const day3 = await generator.topUp(ruleRow(), { weeks: 5, actorId: null, now: new Date(NOW.getTime() + 3 * DAY) });
+    const day3 = await generator.topUp(ruleRow(), {
+      weeks: 5,
+      actorId: null,
+      now: new Date(NOW.getTime() + 3 * DAY),
+    });
     expect(day3.lessons.map((l) => l.starts_at)).toEqual(['2026-11-08T14:00:00.000Z']);
   });
 
@@ -76,8 +88,14 @@ describe('OccurrenceGenerator.topUp — idempotent horizon upsert (R-SCH-02, iss
     await teacherOnly.generator.topUp(ruleRow(), { weeks: 5, actorId: null, now: NOW });
     expect([...teacherOnly.lessons.values()][0]?.meeting_link).toBe('https://meet.jit.si/abrar');
     const own = setup();
-    const override = [{ student_id: STUDENT_ID, student: { meeting_link_override: 'https://meet.google.com/x' } }];
-    await own.generator.topUp(ruleRow({ schedule_rule_students: override }), { weeks: 5, actorId: null, now: NOW });
+    const override = [
+      { student_id: STUDENT_ID, student: { meeting_link_override: 'https://meet.google.com/x' } },
+    ];
+    await own.generator.topUp(ruleRow({ schedule_rule_students: override }), {
+      weeks: 5,
+      actorId: null,
+      now: NOW,
+    });
     expect([...own.lessons.values()][0]?.meeting_link).toBe('https://meet.google.com/x');
   });
 
@@ -95,7 +113,10 @@ describe('OccurrenceGenerator.topUp — idempotent horizon upsert (R-SCH-02, iss
     const res = await generator.topUp(ruleRow(), { weeks: 2, actorId: null, now: NOW });
     expect(res.lessons).toHaveLength(4);
     expect(checker.check).toHaveBeenCalledWith(
-      expect.objectContaining({ excludeIds: res.lessons.map((l) => l.id), excludeRuleIds: [ruleRow().id] }),
+      expect.objectContaining({
+        excludeIds: res.lessons.map((l) => l.id),
+        excludeRuleIds: [ruleRow().id],
+      }),
     );
     expect(res.conflicts).toEqual([clash]);
     expect(flags).toEqual([{ id: res.lessons[0]?.id, conflicts: [clash] }]);
@@ -117,7 +138,9 @@ describe('OccurrenceGenerator.topUp — idempotent horizon upsert (R-SCH-02, iss
   it('a rule ended concurrently → 409 rule_not_active from the RPC', async () => {
     const { generator, state } = setup();
     state.ruleStatus = 'ended';
-    await expect(generator.topUp(ruleRow(), { weeks: 5, actorId: null, now: NOW })).rejects.toMatchObject({
+    await expect(
+      generator.topUp(ruleRow(), { weeks: 5, actorId: null, now: NOW }),
+    ).rejects.toMatchObject({
       response: { code: 'rule_not_active' },
     });
   });

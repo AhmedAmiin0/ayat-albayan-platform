@@ -14,7 +14,15 @@ import { ADMIN, ASSISTANT, GUARDIAN, joinRow, OTHER_TEACHER, recording, REC_ID, 
 import { StudentRecordingRepo } from './student-recordings.repo';
 
 const READ_ONLY: AuthUser = { ...ADMIN, id: 'read-only-admin' };
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, guardian: GUARDIAN, sales: SALES, readOnly: READ_ONLY };
+const USERS: Record<string, AuthUser> = {
+  admin: ADMIN,
+  teacher: TEACHER,
+  other: OTHER_TEACHER,
+  assistant: ASSISTANT,
+  guardian: GUARDIAN,
+  sales: SALES,
+  readOnly: READ_ONLY,
+};
 /** A custom admin-base role that holds recordings.read and nothing else. */
 const resolver: PermissionResolver = async (user) => (user.id === READ_ONLY.id ? ['recordings.read'] : systemResolver(user));
 const verify: TokenVerifier = async (token) => {
@@ -25,7 +33,12 @@ const verify: TokenVerifier = async (token) => {
 
 describe('student recordings routes', () => {
   const sq = studentQueries();
-  const admin = { byId: vi.fn(), setVisible: vi.fn(), markDeleted: vi.fn(), attendeeCount: vi.fn() };
+  const admin = {
+    byId: vi.fn(),
+    setVisible: vi.fn(),
+    markDeleted: vi.fn(),
+    attendeeCount: vi.fn(),
+  };
   const storage = { signedDownloads: vi.fn(), remove: vi.fn() };
   const audit = { record: vi.fn() };
   let app: NestFastifyApplication;
@@ -53,9 +66,12 @@ describe('student recordings routes', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     Object.assign(sq, studentQueries());
-    sq.assists.mockImplementation(async ({ profileId }: { profileId: string }) => profileId === ASSISTANT.id);
-    storage.signedDownloads.mockImplementation(async (i: { paths: readonly string[] }) =>
-      new Map(i.paths.map((p) => [p, 'https://signed.example.test/r.mp4'])),
+    sq.assists.mockImplementation(
+      async ({ profileId }: { profileId: string }) => profileId === ASSISTANT.id,
+    );
+    storage.signedDownloads.mockImplementation(
+      async (i: { paths: readonly string[] }) =>
+        new Map(i.paths.map((p) => [p, 'https://signed.example.test/r.mp4'])),
     );
     admin.byId.mockResolvedValue({ ...recording(), lessons: { teacher_id: TEACHER_ID } });
     admin.attendeeCount.mockResolvedValue(1);

@@ -131,7 +131,9 @@ export const admissionOf = (d: JoinDeps): RoomAdmission =>
     (d.rec ?? recorder()) as unknown as RecordingStarter,
   );
 
-/** The Authorization header LiveKit sends with a webhook body (bare JWT, sha256 claim of the body). */
+/**
+ * The Authorization header LiveKit sends with a webhook body (bare JWT, sha256 claim of the body).
+ */
 export function signedWebhook(
   body: Buffer,
   opts: { now: Date; over?: object; secret?: string },

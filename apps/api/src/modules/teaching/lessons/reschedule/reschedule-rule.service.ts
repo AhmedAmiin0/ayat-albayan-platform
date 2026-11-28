@@ -5,7 +5,10 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { badRequest, conflict } from '@/common/http/errors';
 import { ruleStudents } from '@/modules/teaching/scheduling/schedule.repo';
-import { confirmationMessages, forMessages } from '@/modules/teaching/lessons/status/confirmation-messages';
+import {
+  confirmationMessages,
+  forMessages,
+} from '@/modules/teaching/lessons/status/confirmation-messages';
 import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { planLessons } from './rule-plan';
@@ -24,15 +27,20 @@ function moveFrom(lesson: LessonRow, tz: string): string {
   return day > today ? day : today;
 }
 
-interface RescheduleRuleInput { lessonId: string; body: RuleScope; actor: AuthUser }
+interface RescheduleRuleInput {
+  lessonId: string;
+  body: RuleScope;
+  actor: AuthUser;
+}
 
 /**
  * Move the tapped lesson and every later one (R-SCH-07, docs/10 route 8 `rule`): the old rule ends
  * the day before the tapped lesson's local day (today for a past one, moveFrom), its open lessons
- * from that day become `rescheduled` (chargeable false), and a new rule with the same students / package generates from
- * `newRule.startsOn` (never before the tapped lesson, RulePlanner) over the horizon, with the first
- * new lesson's confirmation queued. One transaction. Returns the first new lesson's id. Anchoring
- * on the tapped lesson, not the new start, keeps earlier lessons and moves the tapped one.
+ * from that day become `rescheduled` (chargeable false), and a new rule with the same students /
+ * package generates from `newRule.startsOn` (never before the tapped lesson, RulePlanner) over the
+ * horizon, with the first new lesson's confirmation queued. One transaction. Returns the first new
+ * lesson's id. Anchoring on the tapped lesson, not the new start, keeps earlier lessons and moves
+ * the tapped one.
  */
 @Injectable()
 export class RescheduleRuleService {
@@ -73,7 +81,12 @@ export class RescheduleRuleService {
       change: {
         actor: actor.id,
         end_rule: { id: old.id, ends_on: addDays(lessonDay, -1) },
-        changes: moved.map((m) => ({ id: m.id, from_status: m.status, to_status: 'rescheduled', chargeable: false })),
+        changes: moved.map((m) => ({
+          id: m.id,
+          from_status: m.status,
+          to_status: 'rescheduled',
+          chargeable: false,
+        })),
         new_rule: plan.rule,
         lessons,
         messages: confirmationMessages(forMessages(first, auto), contacts),

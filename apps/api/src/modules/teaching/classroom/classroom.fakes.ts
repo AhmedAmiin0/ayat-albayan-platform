@@ -95,20 +95,8 @@ export function queries() {
 }
 
 interface Claims {
-  iss: string;
-  sub: string;
-  name: string;
-  nbf: number;
-  exp: number;
-  metadata?: string;
-  video: {
-    roomJoin: boolean;
-    room: string;
-    canPublish: boolean;
-    canSubscribe: boolean;
-    canPublishData: boolean;
-    canPublishSources?: string[];
-  };
+  iss: string; sub: string; name: string; nbf: number; exp: number; metadata?: string;
+  video: { roomJoin: boolean; room: string; canPublish: boolean; canSubscribe: boolean; canPublishData: boolean; canPublishSources?: string[] };
 }
 
 /** Decodes a join token and checks its HS256 signature against `secret`. */

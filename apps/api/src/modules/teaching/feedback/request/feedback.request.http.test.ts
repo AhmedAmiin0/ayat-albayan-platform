@@ -57,14 +57,18 @@ describe('POST /lessons/:id/feedback-request («أرسل طلب الرأي»)', 
   });
 
   it('resend replaces the link: a new row hash, so the old link stops working', async () => {
-    h.queries.find.mockResolvedValue(feedbackRow({ expires_at: new Date(NOW.getTime() + 1000).toISOString() }));
+    h.queries.find.mockResolvedValue(
+      feedbackRow({ expires_at: new Date(NOW.getTime() + 1000).toISOString() }),
+    );
     const res = await h.call({ method: 'POST', url: URL, body: { ...BODY, resend: true } });
     expect(res.statusCode).toBe(200);
     expect(h.queries.issue).toHaveBeenCalledOnce();
   });
 
   it('an expired link is replaced without asking for resend', async () => {
-    h.queries.find.mockResolvedValue(feedbackRow({ expires_at: new Date(NOW.getTime() - 1000).toISOString() }));
+    h.queries.find.mockResolvedValue(
+      feedbackRow({ expires_at: new Date(NOW.getTime() - 1000).toISOString() }),
+    );
     await h.call({ method: 'POST', url: URL, body: BODY });
     expect(h.queries.issue).toHaveBeenCalledOnce();
   });

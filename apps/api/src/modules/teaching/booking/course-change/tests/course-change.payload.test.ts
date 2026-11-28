@@ -55,7 +55,7 @@ interface Rule {
   ends_on: string;
   lessons: { id: string; starts_at: string; meeting_link: string | null }[];
 }
-type Payload = {
+interface Payload extends Record<string, unknown> {
   client_request_id: string;
   subscription_id: string;
   end_rules: {
@@ -71,7 +71,7 @@ type Payload = {
     action: string;
     after: { by: string; remaining: number; ends_on: string };
   };
-};
+}
 const payload = changePayload(INPUT) as Payload;
 
 describe('changePayload — change_course (migration 480)', () => {

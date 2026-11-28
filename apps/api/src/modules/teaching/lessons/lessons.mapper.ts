@@ -70,14 +70,19 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     trial: row.rule?.package === 'trial',
     course_subscription_id: row.rule?.subscription_id ?? null,
     makeup: (row.makeup_of_id ?? null) !== null,
-    makeup_of: row.original ? { id: row.original.id, starts_at: iso(row.original.starts_at) } : null,
+    makeup_of: row.original
+      ? { id: row.original.id, starts_at: iso(row.original.starts_at) }
+      : null,
     teacher: teacherOf(row),
     starts_at: iso(row.starts_at),
     ends_at: iso(row.ends_at),
     status: row.status,
     meeting_link: row.meeting_link,
     // The lesson's own teacher decides (a substitute's mode applies), migration 490.
-    platform_classroom: usesPlatform(meetingModeOf(row.teacher?.meeting_mode), ctx.academyAuto ?? false),
+    platform_classroom: usesPlatform(
+      meetingModeOf(row.teacher?.meeting_mode),
+      ctx.academyAuto ?? false,
+    ),
     cancel_reason: row.cancel_reason,
     override_reason: row.override_reason,
     confirmed_at: row.confirmed_at === null ? null : iso(row.confirmed_at),

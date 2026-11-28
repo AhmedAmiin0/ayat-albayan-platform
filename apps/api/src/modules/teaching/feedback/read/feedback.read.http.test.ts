@@ -73,10 +73,19 @@ describe('feedback lists', () => {
 
   describe('GET /teachers/me/feedback (teacher)', () => {
     it('own rows and own average, scoped by the login; no phone, no guardian, no teacher block', async () => {
-      h.reads.averages.mockResolvedValue([{ teacher_id: TEACHER_ID, avg_rating: 4.5, n: 2, recommend_yes_pct: 100 }]);
-      const res = await h.call({ method: 'GET', url: '/teachers/me/feedback?page=1&pageSize=5', token: 'teacher' });
+      h.reads.averages.mockResolvedValue([
+        { teacher_id: TEACHER_ID, avg_rating: 4.5, n: 2, recommend_yes_pct: 100 },
+      ]);
+      const res = await h.call({
+        method: 'GET',
+        url: '/teachers/me/feedback?page=1&pageSize=5',
+        token: 'teacher',
+      });
       expect(res.statusCode).toBe(200);
-      expect(h.reads.mine).toHaveBeenCalledWith(TEACHER_ID, { filter: {}, page: { page: 1, pageSize: 5 } });
+      expect(h.reads.mine).toHaveBeenCalledWith(TEACHER_ID, {
+        filter: {},
+        page: { page: 1, pageSize: 5 },
+      });
       expect(h.reads.averages).toHaveBeenCalledWith(TEACHER_ID);
       const body = res.json();
       expect(body.average).toEqual({ avg_rating: 4.5, n: 2, recommend_yes_pct: 100 });

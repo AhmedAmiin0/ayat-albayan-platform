@@ -7,7 +7,8 @@ import { CLOSED_PHONE, OPEN_PHONE, openThread, STAFF_ID, STUDENT_A, STUDENT_B } 
 import { meetingServices, ORIGIN, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
 let s: MeetingServices;
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 const tokenOf = (url: string) => url.slice(`${ORIGIN}/m/`.length);
 const SCHEDULED = { startsAt: '2026-10-06T12:00:00Z', durationMin: 45 };
 const STUDENTS = [
@@ -18,9 +19,15 @@ const RESULT_KEYS = ['channel', 'display_name', 'error_code', 'id', 'invitation_
 
 beforeEach(() => {
   s = meetingServices();
-  s.m.picks.staff.mockResolvedValue([{ id: STAFF_ID, full_name: 'أ. مريم', role: 'teacher', tz: 'Asia/Riyadh' }]);
-  s.m.picks.students.mockImplementation(async (q: { ids?: string[] }) => STUDENTS.filter((x) => !q.ids || q.ids.includes(x.id)));
-  s.m.threads.thread.mockImplementation(async (phone: string) => (phone === OPEN_PHONE ? openThread(phone, NOW) : null));
+  s.m.picks.staff.mockResolvedValue([
+    { id: STAFF_ID, full_name: 'أ. مريم', role: 'teacher', tz: 'Asia/Riyadh' },
+  ]);
+  s.m.picks.students.mockImplementation(async (q: { ids?: string[] }) =>
+    STUDENTS.filter((x) => !q.ids || q.ids.includes(x.id)),
+  );
+  s.m.threads.thread.mockImplementation(async (phone: string) =>
+    phone === OPEN_PHONE ? openThread(phone, NOW) : null,
+  );
 });
 
 describe('MeetingCreateService: instant (as before)', () => {
@@ -35,8 +42,18 @@ describe('MeetingCreateService: instant (as before)', () => {
   });
 
   it('400 for a bad title or duration', async () => {
-    expect((await fail(s.create.create({ user: TEACHER, body: { title: 'x'.repeat(61) } }, NOW))).getStatus()).toBe(400);
-    expect((await fail(s.create.create({ user: TEACHER, body: { ...SCHEDULED, durationMin: 300 } }, NOW))).getStatus()).toBe(400);
+    expect(
+      (
+        await fail(s.create.create({ user: TEACHER, body: { title: 'x'.repeat(61) } }, NOW))
+      ).getStatus(),
+    ).toBe(400);
+    expect(
+      (
+        await fail(
+          s.create.create({ user: TEACHER, body: { ...SCHEDULED, durationMin: 300 } }, NOW),
+        )
+      ).getStatus(),
+    ).toBe(400);
   });
 });
 
@@ -86,7 +103,9 @@ describe('MeetingCreateService: scheduled with invitees (R-MEET-01/02)', () => {
   it('only hashes are stored: each personal link hashes to its row', async () => {
     const r = await s.create.create({ user: SALES, body: { invitees: [{ kind: 'student', studentId: STUDENT_B }] } }, NOW);
     const link = r.invitees[0]?.link ?? '';
-    expect(s.m.invitees.update).toHaveBeenCalledWith(r.invitees[0]?.id, { token_hash: hashMeetingToken(tokenOf(link)) });
+    expect(s.m.invitees.update).toHaveBeenCalledWith(r.invitees[0]?.id, {
+      token_hash: hashMeetingToken(tokenOf(link)),
+    });
   });
 
   it('409 invite_limit past 100 WhatsApp invitations a day, before the meeting exists', async () => {

@@ -43,12 +43,12 @@ interface Step {
   to_status: string;
   chargeable: boolean;
 }
-type Payload = {
+interface Payload extends Record<string, unknown> {
   starts_on: string;
   end_rules: { id: string; ends_on: string; changes: Step[] }[];
   changes: Step[];
   audit: { after: { moved: string[] } };
-};
+}
 const payloadOf = (o: Partial<PayloadInput>) => changePayload({ ...base, ...o }) as Payload;
 
 describe('changePayload — old rules end at min(their ends_on, startsOn − 1)', () => {

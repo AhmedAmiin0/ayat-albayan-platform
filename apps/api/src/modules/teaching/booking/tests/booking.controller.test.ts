@@ -46,7 +46,9 @@ describe('BookingController (docs/10 §5 #12–14)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [bookingRoot()] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
       .overrideProvider(BookingService)
       .useValue(booking)
@@ -119,7 +121,9 @@ describe('BookingController (docs/10 §5 #12–14)', () => {
     slots.slots.mockResolvedValue({ teacher_tz: 'Africa/Cairo', step_min: 15, slots: [] });
     const base = `/booking/slots?teacherId=${IDS.teacher}&from=2026-10-04T00:00:00Z&to=2026-10-05T00:00:00Z&durationMin=45&stepMin=15`;
     expect((await call({ url: `${base}&excludeLessonId=${IDS.s1}` })).statusCode).toBe(200);
-    expect(slots.slots).toHaveBeenCalledWith(expect.objectContaining({ stepMin: 15, excludeLessonId: IDS.s1 }));
+    expect(slots.slots).toHaveBeenCalledWith(
+      expect.objectContaining({ stepMin: 15, excludeLessonId: IDS.s1 }),
+    );
     expect((await call({ url: `${base}&excludeLessonId=nope` })).statusCode).toBe(400);
   });
 

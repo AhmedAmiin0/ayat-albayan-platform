@@ -13,7 +13,10 @@ import { assertOwnStudents } from '@/modules/teaching/booking/sales/booking/sale
 import { isSales } from '@/common/auth/roles';
 import { httpError } from '@/common/http/errors';
 
-/** anyStudent: a key skips «her own students» (the profile's routes; sales.renew_any, docs/16 row 38). */
+/**
+ * anyStudent: a key skips «her own students» (the profile's routes; sales.renew_any, docs/16 row
+ * 38).
+ */
 export interface ChangeActor {
   user: AuthUser;
   role: ChangeRole;
@@ -42,8 +45,8 @@ export class CourseChange {
   /**
    * POST …/course/change: 201 CourseChangeResult (a retry with the same clientRequestId returns the
    * first change); 404 subscription_not_found / course_not_found, 403 not_your_student /
-   * override_not_allowed, 409 course_finished / custom_count_admin / course_exists / course_changed /
-   * conflict (the assistant always, the admin without override.reason), 400 date_in_past /
+   * override_not_allowed, 409 course_finished / custom_count_admin / course_exists / course_changed
+   * / conflict (the assistant always, the admin without override.reason), 400 date_in_past /
    * starts_at_mismatch / starts_before_subscription / starts_before_course / no_change /
    * days_count_mismatch / no_occurrences / trial_not_course.
    */
@@ -88,8 +91,8 @@ export class CourseChange {
   }
 
   /**
-   * The course's rules (course_rules_of); 400 trial_not_course, 404 course_not_found, 409 course_finished
-   * (no active rule) / course_unattributed.
+   * The course's rules (course_rules_of); 400 trial_not_course, 404 course_not_found, 409
+   * course_finished (no active rule) / course_unattributed.
    */
   private async load(sub: CourseSub): Promise<Loaded> {
     if (sub.package === 'trial') throw httpError(HttpStatus.BAD_REQUEST, 'trial_not_course');
@@ -103,7 +106,10 @@ export class CourseChange {
     return { sub, active, all };
   }
 
-  /** Every new lesson against the (new) teacher's and the student's time; moved lessons, old rules out. */
+  /**
+   * Every new lesson against the (new) teacher's and the student's time; moved lessons, old rules
+   * out.
+   */
   private conflicts(p: Planned, teacherId: string | undefined): Promise<Conflict[]> {
     return this.deps.checker.check({
       teacherId: teacherId ?? p.active[0]?.teacher_id ?? '',

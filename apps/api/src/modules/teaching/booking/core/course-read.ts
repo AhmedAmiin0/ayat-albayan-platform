@@ -98,14 +98,22 @@ export function studentCourses(rows: readonly CourseRuleRow[], now: Date): Booke
  * The first day of its active rules starting after today in its zone (a course booked ahead), or
  * null.
  */
-const upcomingFrom = (rows: readonly CourseRuleRow[], c: BookedCourse, now: Date): string | null => {
+const upcomingFrom = (
+  rows: readonly CourseRuleRow[],
+  c: BookedCourse,
+  now: Date,
+): string | null => {
   const today = dayIn(now, c.tz);
   const own = rows.filter((r) => r.subscription_id === c.subscriptionId && r.status === 'active');
   return own.map((r) => r.starts_on).filter((d) => d > today).sort()[0] ?? null;
 };
 
 /** The running course, else the earliest upcoming, so a renewal booked ahead never hides it. */
-export function currentCourse(rows: readonly CourseRuleRow[], courses: readonly BookedCourse[], now: Date): BookedCourse | null {
+export function currentCourse(
+  rows: readonly CourseRuleRow[],
+  courses: readonly BookedCourse[],
+  now: Date,
+): BookedCourse | null {
   const running = courses.find((c) => c.running);
   if (running) return running;
   const ahead = courses

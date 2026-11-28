@@ -38,11 +38,18 @@ describe('booking routes for the invoice and the makeup (R-PAY-03, R-SCH-10)', (
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [bookingRoot()] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(BookingService).useValue(booking)
-      .overrideProvider(BookingInvoices).useValue(invoices)
-      .overrideProvider(MakeupCandidates).useValue(makeup)
-      .overrideProvider(SettingsService).useValue(fakeSettings())
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(BookingService)
+      .useValue(booking)
+      .overrideProvider(BookingInvoices)
+      .useValue(invoices)
+      .overrideProvider(MakeupCandidates)
+      .useValue(makeup)
+      .overrideProvider(SettingsService)
+      .useValue(fakeSettings())
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
