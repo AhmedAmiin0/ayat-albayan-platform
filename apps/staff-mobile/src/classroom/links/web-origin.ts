@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 const FALLBACK = 'https://app.ayatalbayan.com';
 
 /**
@@ -6,7 +8,7 @@ const FALLBACK = 'https://app.ayatalbayan.com';
  * slash is dropped so a path can be appended.
  */
 export function webOrigin(): string {
-  const raw = process.env.EXPO_PUBLIC_WEB_ORIGIN?.trim();
+  const raw = z.string().trim().optional().parse(process.env.EXPO_PUBLIC_WEB_ORIGIN);
   return (raw ? raw : FALLBACK).replace(/\/+$/, '');
 }
 

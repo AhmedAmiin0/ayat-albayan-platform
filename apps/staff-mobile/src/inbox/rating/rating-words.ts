@@ -1,7 +1,10 @@
 import { RATING_TEMPLATE, type MessageView, type TemplateView } from '@ab/shared';
-import { ApiError, t } from '@ab/mobile-kit';
+import { t } from '@ab/mobile-kit';
+import { z } from 'zod';
+import { errorCode } from '@/core/lib/http/error-code';
 
 const r = t.inbox.rating;
+const templateList = z.array(z.object({ key: z.string(), status: z.string() }));
 const ERRORS: Record<string, string | undefined> = {
   template_not_approved: r.notApproved,
   no_completed_lesson: r.noLesson,
@@ -10,9 +13,8 @@ const ERRORS: Record<string, string | undefined> = {
 
 /** Maps the refusal code as the web button does, else a generic failure. */
 export function ratingError(error: unknown): string {
-  const body = error instanceof ApiError ? error.body : null;
-  const code = typeof body === 'object' && body !== null ? Reflect.get(body, 'code') : undefined;
-  return (typeof code === 'string' ? ERRORS[code] : undefined) ?? r.failed;
+  const code = errorCode(error);
+  return (code === undefined ? undefined : ERRORS[code]) ?? r.failed;
 }
 
 /** What the 201 row says: failed (Meta refused it) is an error; queued waits for the send gate. */
@@ -24,4 +26,6 @@ export function ratingDone(sent: MessageView | undefined): { text: string; error
 
 /** lesson_rating can only be sent once Meta approved it; anything but a list is «not yet». */
 export const ratingApproved = (templates: readonly TemplateView[] | undefined): boolean =>
-  Array.isArray(templates) && templates.some((x) => x.key === RATING_TEMPLATE && x.status === 'approved');
+  (templateList.safeParse(templates).data ?? []).some(
+    (x) => x.key === RATING_TEMPLATE && x.status === 'approved',
+  );

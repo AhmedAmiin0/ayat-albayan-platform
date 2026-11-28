@@ -1,15 +1,15 @@
 // Tests only: which side quoted text takes (textAlign) in the quote block and the reply strip.
 import { screen } from '@testing-library/react-native';
 import { useContext } from 'react';
-import { StyleSheet } from 'react-native';
 import { renderWithQuery } from '@/test/query';
+import { styleProp } from '@/test/style';
 import { ChatActionsContext } from '@/inbox/thread/hooks/chat-actions';
 import { message } from '@/inbox/shared/thread-fixtures';
 import { quoteOf } from '@/inbox/messages/hooks/quote-text';
 import { QuoteBlock } from './QuoteBlock';
 import { QuoteStrip } from './QuoteStrip';
 
-const alignOf = (text: string) => StyleSheet.flatten(screen.getByText(text).props.style).textAlign;
+const alignOf = (text: string) => styleProp(screen.getByText(text), 'textAlign');
 
 /** The quoted body's textAlign in the block over a bubble and in the strip over the composer. */
 export async function quoteSides(body: string): Promise<{ block: unknown; strip: unknown }> {

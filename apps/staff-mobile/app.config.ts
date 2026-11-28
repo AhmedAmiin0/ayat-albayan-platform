@@ -1,13 +1,19 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config';
+import { z } from 'zod';
 
 /** The eas.json `stripe-test` APP_VARIANT: a separate app installable beside the normal one. */
 const STRIPE_TEST = 'stripetest';
+const servicesFile = z.string().default('./google-services.json');
 
 type Plugins = NonNullable<ExpoConfig['plugins']>;
 
 /** The test app is no share target (docs/38), so the share sheet shows only the normal app. */
 const noShareTarget = (plugins: Plugins = []): Plugins =>
-  plugins.map((p) => (Array.isArray(p) && p[0] === 'expo-sharing' ? ['expo-sharing', { android: { enabled: false } }] : p));
+  plugins.map((p) =>
+    Array.isArray(p) && p[0] === 'expo-sharing'
+      ? ['expo-sharing', { android: { enabled: false } }]
+      : p,
+  );
 
 /**
  * The Stripe test variant (docs/30): its own package / bundle id and name, and NO
@@ -41,7 +47,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ...(config as ExpoConfig),
     android: {
       ...config.android,
-      googleServicesFile: process.env.GOOGLE_SERVICES_JSON ?? './google-services.json',
+      googleServicesFile: servicesFile.parse(process.env.GOOGLE_SERVICES_JSON),
     },
   };
   return process.env.APP_VARIANT === STRIPE_TEST ? stripeTestVariant(base) : base;
