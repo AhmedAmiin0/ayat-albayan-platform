@@ -3,7 +3,12 @@ import { storedConflicts, toLessonView } from '@/modules/teaching/lessons/lesson
 import { lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
 
 const ctx = { role: 'admin' as const, seq: new Map<string, number>() };
-const CLASH = { kind: 'teacher_busy', startsAt: '2026-11-01T15:00:00.000Z', endsAt: '2026-11-01T16:00:00.000Z', lessonId: 'x' };
+const CLASH = {
+  kind: 'teacher_busy',
+  startsAt: '2026-11-01T15:00:00.000Z',
+  endsAt: '2026-11-01T16:00:00.000Z',
+  lessonId: 'e0000000-0000-4000-8000-000000000001',
+};
 const proposal = (status: 'pending' | 'approved' | 'rejected') => ({
   id: `p-${status}`,
   proposed_starts_at: '2026-10-05 15:00:00+00',
