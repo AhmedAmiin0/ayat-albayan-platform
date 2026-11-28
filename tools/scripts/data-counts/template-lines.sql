@@ -14,10 +14,7 @@ where not (result ? 'configured' and result ? 'ok' and result ? 'checked_at'
   and result ? 'meta_count' and result ? 'synced' and result ? 'imported' and result ? 'skipped'
   and result ? 'waba_id' and result ? 'phone_number_id');
 
--- count: template_line_syncs_unknown_skip_code
-select count(*) from public.wa_template_line_syncs s,
-  jsonb_array_elements(coalesce(s.result->'skipped', '[]'::jsonb)) as k
-where k->'reason'->>'code' not in (
-  'category', 'too_many_vars', 'bad_key', 'media_header', 'no_body', 'named_vars',
-  'button_value', 'key_taken'
-);
+-- Every sync with a skipped entry, a superset of those with an unknown skip code: the runner
+-- takes no set-returning function.
+-- count: template_line_syncs_with_skips
+select count(*) from public.wa_template_line_syncs where result->'skipped'->0 is not null;

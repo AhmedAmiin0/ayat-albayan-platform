@@ -4,7 +4,7 @@ select count(*) from public.messages where media_mime = 'image/webp';
 
 -- count: sticker_messages_missing_phone
 select count(*) from public.messages
-where media_mime = 'image/webp' and coalesce(phone_e164, '') = '';
+where media_mime = 'image/webp' and (phone_e164 is null or phone_e164 = '');
 
 -- count: sticker_favourites_missing_key
-select count(*) from public.sticker_favourites where coalesce(sticker_key, '') = '';
+select count(*) from public.sticker_favourites where sticker_key is null or sticker_key = '';
