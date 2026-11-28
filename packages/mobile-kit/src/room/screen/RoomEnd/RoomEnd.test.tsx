@@ -1,6 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '../../../lib/i18n/i18n';
-import { RoomEnd, type RoomEndProps } from './RoomEnd';
+import type { ComponentProps } from 'react';
+import { RoomEnd } from './RoomEnd';
+
+type RoomEndProps = ComponentProps<typeof RoomEnd>;
 
 const props = (over: Partial<RoomEndProps>): RoomEndProps => ({
   phase: { step: 'closed', why: 'left' },
