@@ -16,6 +16,10 @@ testRule({ name: 'no-api-path-literal', rule: noApiPathLiteralRule, lang: 'ts' }
     // Function.prototype.call and other callees stay free.
     "fn.call(this, '/x');",
     "send({ path: '/x' });",
+    // A helper the file writes itself (an inject wrapper, a sidecar) is not the api client.
+    "const call = (url) => app.inject({ url }); call('/invoices');",
+    "call({ path: '/pages' }); async function call(input) { return fetch(input.path); }",
+    "const call = function (url) { return get(url); }; call('/x');",
   ],
   invalid: [
     { code: "call({ path: '/leads' });", errors: [literal] },
@@ -23,5 +27,7 @@ testRule({ name: 'no-api-path-literal', rule: noApiPathLiteralRule, lang: 'ts' }
     { code: "publicCall({ path: '/public/config' });", errors: [literal] },
     { code: "call('/leads');", errors: [literal] },
     { code: "call({ 'path': '/leads' });", errors: [literal] },
+    { code: "const call = callWith(client); call({ path: '/leads' });", errors: [literal] },
+    { code: "import { call } from '@ab/web-kit'; call({ path: '/leads' });", errors: [literal] },
   ],
 });

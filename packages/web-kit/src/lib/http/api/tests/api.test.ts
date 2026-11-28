@@ -1,5 +1,11 @@
+import { defineRoute, routePath } from '@ab/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, apiFetch, apiSend, publicCall } from '@ab/web-kit/lib/http/api/api';
+import { z } from 'zod';
+
+const routes = {
+  publicX: defineRoute({ method: 'PUT', path: '/public/x', response: z.unknown() }),
+};
 
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({
   supabase: {
@@ -59,7 +65,7 @@ describe('apiSend / apiFetch', () => {
 
   it('the signed-link client never sends the session token', async () => {
     fetchMock.mockResolvedValue(new Response(JSON.stringify({ id: 'r1' }), { status: 200 }));
-    await publicCall({ method: 'PUT', path: '/public/x', body: { a: 1 } });
+    await publicCall({ method: 'PUT', path: routePath(routes.publicX), body: { a: 1 } });
     const headers = new Headers(lastCall()[1].headers);
     expect(headers.get('Authorization')).toBeNull();
     expect(headers.get('X-AB-Client')).toBe('web/dev');

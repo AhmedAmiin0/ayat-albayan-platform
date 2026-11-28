@@ -13,6 +13,12 @@ const pathOf = (arg) =>
     ? arg.properties.find((prop) => prop.type === 'Property' && keyName(prop) === 'path')?.value
     : arg;
 
+// A function the file writes itself under that name (an inject wrapper, a sidecar client) is not
+// the api client; an imported call or a callWith(client) result is.
+const FUNCTION_TYPES = new Set(['ArrowFunctionExpression', 'FunctionExpression']);
+const isOwnHelper = (declarator) =>
+  CALLEES.has(declarator.id?.name) && FUNCTION_TYPES.has(declarator.init?.type);
+
 export const noApiPathLiteralRule = {
   meta: {
     type: 'problem',
@@ -21,11 +27,23 @@ export const noApiPathLiteralRule = {
     messages: { literal: 'Pass the route object: call({ route, params }) or routePath(route).' },
   },
   create(context) {
+    const helpers = new Set();
+    const literals = [];
     return {
+      FunctionDeclaration(node) {
+        if (CALLEES.has(node.id?.name)) helpers.add(node.id.name);
+      },
+      VariableDeclarator(node) {
+        if (isOwnHelper(node)) helpers.add(node.id.name);
+      },
       CallExpression(node) {
         const named = node.callee.type === 'Identifier' && CALLEES.has(node.callee.name);
-        if (!named || !startsWithSlash(pathOf(node.arguments[0]))) return;
-        context.report({ node, messageId: 'literal' });
+        if (named && startsWithSlash(pathOf(node.arguments[0]))) literals.push(node);
+      },
+      'Program:exit'() {
+        literals
+          .filter((node) => !helpers.has(node.callee.name))
+          .forEach((node) => context.report({ node, messageId: 'literal' }));
       },
     };
   },

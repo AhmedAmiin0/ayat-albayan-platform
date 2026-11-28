@@ -1,4 +1,6 @@
 import { isAccountDisabled } from '@ab/client-core';
+import { routePath } from '@ab/core';
+import { authMeRoutes } from '@ab/shared';
 import type { Session } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { ApiError, call } from '../lib/http/api';
@@ -60,7 +62,7 @@ const ROLE_APP = {
 } satisfies Record<'app' | 'none', (me: Me) => void>;
 
 async function liveRole(): Promise<AppRole | null> {
-  const me = meSchema.parse(await call({ path: '/auth/me' }));
+  const me = meSchema.parse(await call({ path: routePath(authMeRoutes.me) }));
   const role = appRole(me.role);
   ROLE_APP[role ? 'app' : 'none'](me);
   return role;
