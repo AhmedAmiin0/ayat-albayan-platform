@@ -6,7 +6,10 @@ const QUOTED = /'((?:src|app)\/[^'*]*)([^']*)'/g;
 
 /** A folder of the old tree that the moves empty (its files went to different places). */
 const gone = (dir: string, m: Moves): boolean =>
-  m.folders.has(dir) && [...m.before].every((f) => !f.startsWith(`${dir}/`) || m.files.has(f));
+  m.folders.has(dir) &&
+  [...m.before].every(
+    (f) => !f.startsWith(`${dir}/`) || !(m.files.get(f) ?? f).startsWith(`${dir}/`),
+  );
 
 /**
  * A lint.blocks file with its workspace-relative paths (`'src/inbox/send-file.ts'`,

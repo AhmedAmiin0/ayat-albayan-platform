@@ -1,6 +1,6 @@
 import type { Project } from 'ts-morph';
 import { formatSpec, resolveSpec, type Resolver } from '../../ci-checks/move-module/resolve.ts';
-import type { BarrelLine, Binding, ModuleRef, Source } from './apply.types.ts';
+import type { Binding, ModuleRef, Pruned, Source } from './apply.types.ts';
 import { declText, kindOf, lineText, moduleRefs } from './imports.ts';
 
 export interface Redirect {
@@ -13,59 +13,62 @@ export interface Redirect {
 interface Ctx {
   project: Project;
   r: Resolver;
-  barrels: Map<string, Map<string, Source>>;
-  lines: Map<string, BarrelLine[]>;
+  barrels: Map<string, Pruned>;
 }
 
 const styleOf = (file: string): 'index' | 'bare' =>
   /\/index\.tsx?$/.test(file) ? 'index' : 'bare';
 
+const specFor = (ctx: Ctx, from: string, target: string): string =>
+  target.startsWith('pkg:')
+    ? target.slice(4)
+    : formatSpec(
+        { file: target, style: styleOf(target) },
+        { from, file: target, aliases: ctx.r.aliases },
+      );
+
 interface Split {
   ref: ModuleRef;
-  names: Map<string, Source>;
+  pruned: Pruned;
 }
 
-const specFor = (ctx: Ctx, from: string, target: string): string =>
-  formatSpec(
-    { file: target, style: styleOf(target) },
-    { from, file: target, aliases: ctx.r.aliases },
-  );
-
-/** Each binding with the file and name behind it in the barrel. */
-function located(split: Split): { src: Source; binding: Binding }[] {
-  return split.ref.bindings.flatMap((b) => {
-    const src = split.names.get(b.name);
-    if (src === undefined) return [];
-    const alias = b.alias ?? (src.name === b.name ? undefined : b.name);
-    return [{ src, binding: { name: src.name, alias, isType: b.isType } }];
-  });
+/** Foreign bindings by the file behind them; the rest stay on the barrel (or its package). */
+function locate(split: Split): { byFile: Map<string, Binding[]>; rest: Binding[] } {
+  const byFile = new Map<string, Binding[]>();
+  const rest: Binding[] = [];
+  for (const b of split.ref.bindings) {
+    const src: Source | undefined = split.pruned.names.get(b.name);
+    const alias = b.alias ?? (src === undefined || src.name === b.name ? undefined : b.name);
+    const moved = { name: src?.name ?? b.name, alias, isType: b.isType };
+    if (src === undefined) rest.push(b);
+    else byFile.set(src.file, [...(byFile.get(src.file) ?? []), moved]);
+  }
+  return { byFile, rest };
 }
 
 function splitRef(ctx: Ctx, file: string, split: Split): Redirect {
-  const { ref } = split;
-  const missing = ref.bindings.filter((b) => !split.names.has(b.name)).map((b) => b.name);
-  if (missing.length > 0) {
-    const problems = [`${file}: ${ref.spec} has no ${missing.join(', ')}`];
-    return { text: ref.decl.getText(), problems, written: [] };
-  }
-  const byFile = new Map<string, Binding[]>();
-  located(split).forEach(({ src, binding }) =>
-    byFile.set(src.file, [...(byFile.get(src.file) ?? []), binding]),
-  );
+  const { ref, pruned } = split;
+  const { byFile, rest } = locate(split);
+  const restSpec = pruned.kept ? ref.spec : pruned.external;
+  const lost = rest.length > 0 && restSpec === undefined;
+  const kind = kindOf(ref.decl);
   const lines = [...byFile].map(([target, bindings]) =>
-    declText({ kind: kindOf(ref.decl), spec: specFor(ctx, file, target), bindings }),
+    declText({ kind, spec: specFor(ctx, file, target), bindings }),
   );
+  const kept = rest.length > 0 && restSpec !== undefined;
+  const restLine = kept ? [declText({ kind, spec: restSpec, bindings: rest })] : [];
   return {
-    text: lines.join('\n'),
-    problems: [],
+    text: [...restLine, ...lines].join('\n'),
+    problems: lost ? [`${file}: ${ref.spec} has no ${rest.map((b) => b.name).join(', ')}`] : [],
     written: [...byFile.keys()].map((t) => [file, t]),
   };
 }
 
-/** `export * from '<barrel>'` becomes the barrel's own re-exports, seen from `file`. */
-function expandStar(ctx: Ctx, file: string, barrel: string): Redirect {
-  const lines = ctx.lines.get(barrel) ?? [];
-  const text = lines.map((l) =>
+/** `export * from '<barrel>'` gains the barrel's foreign re-exports, seen from `file`. */
+function expandStar(ctx: Ctx, file: string, split: Split): Redirect {
+  const { pruned, ref } = split;
+  const own = pruned.kept ? [ref.decl.getText()] : [];
+  const moved = pruned.foreign.map((l) =>
     lineText({
       kind: 'export',
       spec: specFor(ctx, file, l.target),
@@ -73,21 +76,25 @@ function expandStar(ctx: Ctx, file: string, barrel: string): Redirect {
       star: l.star,
     }),
   );
-  return { text: text.join('\n'), problems: [], written: lines.map((l) => [file, l.target]) };
+  const written = pruned.foreign.filter((l) => !l.target.startsWith('pkg:'));
+  return {
+    text: [...own, ...moved].join('\n'),
+    problems: [],
+    written: written.map((l) => [file, l.target]),
+  };
 }
 
-/** One import of a dropped barrel, rewritten; a default or namespace import is a problem. */
+/** One import of a pruned barrel, rewritten; a default or namespace import of a gone one fails. */
 function redirectRef(ctx: Ctx, file: string, ref: ModuleRef): Redirect | undefined {
-  const target = resolveSpec(ctx.r, file, ref.spec)?.file ?? '';
-  const names = ctx.barrels.get(target);
-  if (names === undefined) return undefined;
-  if (ref.star) return expandStar(ctx, file, target);
-  if (ref.named) return splitRef(ctx, file, { ref, names });
-  const problem = `${file}: default, namespace or * use of dropped barrel ${ref.spec}`;
-  return { text: ref.decl.getText(), problems: [problem], written: [] };
+  const pruned = ctx.barrels.get(resolveSpec(ctx.r, file, ref.spec)?.file ?? '');
+  if (pruned === undefined) return undefined;
+  if (ref.star) return expandStar(ctx, file, { ref, pruned });
+  if (ref.named) return splitRef(ctx, file, { ref, pruned });
+  const problems = pruned.kept ? [] : [`${file}: default or namespace use of ${ref.spec}`];
+  return { text: ref.decl.getText(), problems, written: [] };
 }
 
-/** The file with every import of a dropped barrel pointed at the files that hold the names. */
+/** The file with every import of a pruned barrel pointed at the files that hold the names. */
 export function redirectFile(ctx: Ctx, file: string, text: string): Redirect {
   const sf = ctx.project.createSourceFile(`/virtual/redirect/${file}`, text, { overwrite: true });
   const done = moduleRefs(sf).flatMap((ref) => {

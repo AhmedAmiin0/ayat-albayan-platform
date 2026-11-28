@@ -59,7 +59,7 @@ export function planMoves(
 ): Plan {
   const present = new Set(files);
   const drops = map.drops.map((d) => d.drop);
-  const kept = files.filter((f) => !drops.includes(f));
+  const kept = files;
   const rules = rulesOf(map.moves);
   const picked = pick(kept, rules);
   const pairs = picked.pairs.sort(([a], [b]) => a.localeCompare(b));

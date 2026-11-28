@@ -16,11 +16,23 @@ export interface ModuleRef {
   star: boolean;
 }
 
-/** One re-export of a barrel, with the file it reaches. */
+/** One re-export of a barrel: the file it reaches (`pkg:<name>` for a package) and its span. */
 export interface BarrelLine {
   target: string;
   bindings: Binding[];
   star: boolean;
+  start: number;
+  end: number;
+}
+
+/** A barrel the plan prunes: the re-exports that leave its feature, by line and by name. */
+export interface Pruned {
+  foreign: BarrelLine[];
+  names: Map<string, Source>;
+  /** Some statement stays, so the barrel is kept. */
+  kept: boolean;
+  /** The package a deleted barrel re-exported whole, for names no line explains. */
+  external?: string;
 }
 
 /** A name a barrel exports and the file that holds it. */

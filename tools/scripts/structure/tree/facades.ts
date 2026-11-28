@@ -20,7 +20,10 @@ function resolve(spec: string, ctx: { file: string; layer: Layer }): string | un
 const isContainer = (parts: readonly string[], groups: ReadonlySet<string> | undefined): boolean =>
   parts.length === 1 || (parts.length === 2 && groups?.has(parts[1] ?? '') === true);
 
-function containerOf(dir: string, ctx: { layer: Layer; allowed: Allowed }): string | undefined {
+export function containerOf(
+  dir: string,
+  ctx: { layer: Layer; allowed: Allowed },
+): string | undefined {
   const parts = partsOf(dir, ctx.layer.root);
   const domain = ctx.allowed.get(parts[0] ?? '');
   const groups = domain === undefined ? undefined : new Set(domain.groups.keys());

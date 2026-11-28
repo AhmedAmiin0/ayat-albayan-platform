@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { newProject } from '../../../ci-checks/move-module/rewrite.ts';
-import { barrelLines, exportSources } from '../barrel-names.ts';
+import { exportSources } from '../barrel-names.ts';
+import { prunedText, prunePlan } from '../prune.ts';
 import { redirectFile } from '../redirect.ts';
 import { tree } from './fixture.ts';
 
@@ -13,75 +14,66 @@ const files = {
   'p/src/ops/b/B.ts': 'export const B = 2;\nexport const C = 3;\n',
   'p/src/ops/t.ts': 'export interface T { x: number }\n',
 };
+const BARREL = 'p/src/ops/index.ts';
+
+function setup(extra: Record<string, string>, place: { to: (f: string) => string }) {
+  const root = tree({ ...files, ...extra });
+  const r = { root, aliases: [], renamed: new Map<string, string>() };
+  const project = newProject();
+  const home = (file: string) => file.split('/').slice(0, 3).join('/');
+  const pruned = prunePlan({ project, r }, BARREL, { to: place.to, home });
+  return { root, ctx: { project, r, barrels: new Map([[BARREL, pruned]]) }, pruned };
+}
+
+/** a/ and t.ts move to other features; b/ stays with the barrel. */
+const to = (f: string) =>
+  f.replace('p/src/ops/a/', 'p/src/x/a/').replace('p/src/ops/t.ts', 'p/src/y/t.ts');
 
 test('a barrel exports names with the files that hold them', () => {
   const root = tree(files);
   const ctx = { project: newProject(), r: { root, aliases: [], renamed: new Map() } };
-  const names = exportSources(ctx, 'p/src/ops/index.ts');
-  assert.deepEqual(Object.fromEntries(names), {
+  assert.deepEqual(Object.fromEntries(exportSources(ctx, BARREL)), {
     A: { file: 'p/src/ops/a/A.ts', name: 'A' },
     B: { file: 'p/src/ops/b/B.ts', name: 'B' },
     U: { file: 'p/src/ops/t.ts', name: 'T' },
   });
 });
 
-test('imports of a dropped barrel split by the file that holds each name', () => {
-  const root = tree(files);
-  const r = { root, aliases: [], renamed: new Map() };
-  const project = newProject();
-  const barrels = new Map([
-    ['p/src/ops/index.ts', exportSources({ project, r }, 'p/src/ops/index.ts')],
-  ]);
-  const text =
-    "import { A, B, type U } from './ops';\nimport * as all from './ops';\nexport { B as Bee } from './ops';\n";
-  const lines = new Map([
-    ['p/src/ops/index.ts', barrelLines({ project, r }, 'p/src/ops/index.ts').lines],
-  ]);
-  const out = redirectFile({ project, r, barrels, lines }, 'p/src/app.ts', text);
+test("pruning keeps the barrel's own re-exports and points importers of the rest at their files", () => {
+  const { ctx, pruned, root } = setup({}, { to });
+  assert.equal(pruned.kept, true);
+  const text = "import { A, B, type U } from './ops';\nexport * from './ops';\n";
+  const out = redirectFile(ctx, 'p/src/app.ts', text);
   assert.equal(
     out.text,
     [
+      "import { B } from './ops';",
       "import { A } from './ops/a/A';",
-      "import { B } from './ops/b/B';",
       "import type { T as U } from './ops/t';",
-      "import * as all from './ops';",
-      "export { B as Bee } from './ops/b/B';",
+      "export * from './ops';",
+      "export { A } from './ops/a/A';",
+      "export type { T as U } from './ops/t';",
       '',
     ].join('\n'),
   );
-  assert.deepEqual(out.problems, [
-    'p/src/app.ts: default, namespace or * use of dropped barrel ./ops',
-  ]);
-  assert.deepEqual(
-    out.written.map(([, t]) => t),
-    ['p/src/ops/a/A.ts', 'p/src/ops/b/B.ts', 'p/src/ops/t.ts', 'p/src/ops/b/B.ts'],
-  );
+  assert.deepEqual(out.problems, []);
+  assert.equal(prunedText(files[BARREL], pruned), "export * from './b';\n");
+  assert.ok(root.length > 0);
 });
 
-test("export * of a dropped barrel becomes the barrel's own re-exports", () => {
-  const root = tree(files);
-  const r = { root, aliases: [], renamed: new Map() };
-  const project = newProject();
-  const barrel = 'p/src/ops/index.ts';
-  const barrels = new Map([[barrel, exportSources({ project, r }, barrel)]]);
-  const lines = new Map([[barrel, barrelLines({ project, r }, barrel).lines]]);
+test('a barrel left with nothing of its own is deleted; its package names go to the package', () => {
+  const extra = { [BARREL]: "export * from '@ab/schedule';\nexport { A } from './a/A';\n" };
+  const { ctx, pruned } = setup(extra, { to });
+  assert.equal(pruned.kept, false);
+  assert.equal(pruned.external, '@ab/schedule');
   const out = redirectFile(
-    { project, r, barrels, lines },
-    'p/src/index.ts',
-    "export * from './ops';\n",
+    ctx,
+    'p/src/app.ts',
+    "import { A, slotSchema } from './ops';\nimport * as all from './ops';\n",
   );
   assert.equal(
     out.text,
-    "export { A } from './ops/a/A';\nexport * from './ops/b';\nexport type { T as U } from './ops/t';\n",
+    "import { slotSchema } from '@ab/schedule';\nimport { A } from './ops/a/A';\nimport * as all from './ops';\n",
   );
-});
-
-test('a barrel with code of its own cannot be dropped', () => {
-  const root = tree({
-    'p/src/x/index.ts': "export const k = 1;\nexport * from './y';\n",
-    'p/src/x/y.ts': '',
-  });
-  const r = { root, aliases: [], renamed: new Map() };
-  const out = barrelLines({ project: newProject(), r }, 'p/src/x/index.ts');
-  assert.deepEqual(out.problems, ['dropped barrel p/src/x/index.ts declares code of its own']);
+  assert.deepEqual(out.problems, ['p/src/app.ts: default or namespace use of ./ops']);
 });

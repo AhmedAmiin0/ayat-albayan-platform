@@ -46,7 +46,16 @@ function namedLines(
   const wanted: Wanted[] = uses
     .filter((u) => u.named)
     .flatMap((u) => u.bindings.map((b) => ({ target: u.target, binding: b })));
-  const clash = (w: Wanted): boolean => (has.get(w.binding.name)?.file ?? w.target) !== w.target;
+  const seen = new Map<string, Map<string, Source>>();
+  const declOf = (w: Wanted): string => {
+    const names = seen.get(w.target) ?? exportSources(ctx, w.target);
+    seen.set(w.target, names);
+    return names.get(w.binding.name)?.file ?? w.target;
+  };
+  const clash = (w: Wanted): boolean => {
+    const now = has.get(w.binding.name)?.file;
+    return now !== undefined && now !== declOf(w);
+  };
   const fresh = wanted
     .filter((w) => !has.has(w.binding.name))
     .filter((w, i, all) => all.findIndex((o) => o.binding.name === w.binding.name) === i);

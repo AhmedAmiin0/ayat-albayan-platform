@@ -3,40 +3,45 @@ import { posix } from 'node:path';
 import { readText, writeIfChanged } from '../../ci-checks/move-module/files.ts';
 import { loadAliases } from '../../ci-checks/move-module/resolve.ts';
 import { newProject } from '../../ci-checks/move-module/rewrite.ts';
-import { barrelLines, exportSources } from './barrel-names.ts';
+import { prunedText, prunePlan, type Place } from './prune.ts';
 import { redirectFile } from './redirect.ts';
 
 const CODE = /^(?:apps|packages)\/.*\.[cm]?[jt]sx?$/;
 
 export interface Dropped {
   problems: string[];
-  /** `[file, target]` imports that went through a dropped barrel (old paths). */
+  /** `[file, target]` imports that went through a pruned barrel (old paths). */
   written: [string, string][];
+  /** Barrels deleted because nothing of their own was left. */
+  deleted: string[];
 }
 
-/** Points every import of a dropped barrel at the files behind it, then deletes the barrel. */
+/**
+ * Prunes each listed barrel to the re-exports of its own feature (after the moves), points their
+ * importers at the files behind the removed names, and deletes a barrel left empty.
+ */
 export function dropBarrels(
   root: string,
   drops: readonly string[],
-  files: readonly string[],
+  at: { files: readonly string[]; place: Place },
 ): Dropped {
-  const out: Dropped = { problems: [], written: [] };
-  if (drops.length === 0) return out;
+  const out: Dropped = { problems: [], written: [], deleted: [] };
   const project = newProject();
   const r = { root, aliases: loadAliases(root), renamed: new Map<string, string>() };
-  const barrels = new Map(drops.map((d) => [d, exportSources({ project, r }, d)]));
-  const read = drops.map((d) => [d, barrelLines({ project, r }, d)] as const);
-  const lines = new Map(read.map(([d, l]) => [d, l.lines]));
-  out.problems.push(...read.flatMap(([, l]) => l.problems));
+  const barrels = new Map(drops.map((d) => [d, prunePlan({ project, r }, d, at.place)]));
   const needles = drops.map((d) => posix.basename(posix.dirname(d)));
-  for (const file of files.filter((f) => CODE.test(f) && !drops.includes(f))) {
+  for (const file of at.files.filter((f) => CODE.test(f) && !barrels.has(f))) {
     const text = readText(root, file);
     if (!needles.some((n) => text.includes(n))) continue;
-    const res = redirectFile({ project, r, barrels, lines }, file, text);
+    const res = redirectFile({ project, r, barrels }, file, text);
     writeIfChanged(root, file, res.text);
     out.problems.push(...res.problems);
     out.written.push(...res.written);
   }
-  drops.forEach((d) => unlinkSync(posix.join(root, d)));
+  for (const [barrel, pruned] of barrels) {
+    if (pruned.kept) writeIfChanged(root, barrel, prunedText(readText(root, barrel), pruned));
+    else unlinkSync(posix.join(root, barrel));
+    if (!pruned.kept) out.deleted.push(barrel);
+  }
   return out;
 }

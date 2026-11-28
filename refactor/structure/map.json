@@ -554,11 +554,6 @@
    "layer": "api"
   },
   {
-   "from": "apps/api/src/modules/teaching/booking/teacher/",
-   "to": "apps/api/src/modules/teaching/booking/slots/",
-   "layer": "api"
-  },
-  {
    "from": "apps/api/src/modules/teaching/booking/teacher/teacher-alert.*",
    "to": "apps/api/src/modules/messaging/notifications/teacher-alert/",
    "layer": "api"
@@ -1414,11 +1409,6 @@
    "layer": "shared"
   },
   {
-   "from": "packages/shared/src/messaging/message-actions/",
-   "to": "packages/shared/src/messaging/inbox/",
-   "layer": "shared"
-  },
-  {
    "from": "packages/shared/src/messaging/message-actions/channel-actions.*",
    "to": "packages/shared/src/teaching/student-channels/",
    "layer": "shared"
@@ -2084,11 +2074,6 @@
    "layer": "staff-mobile"
   },
   {
-   "from": "apps/staff-mobile/src/money/",
-   "to": "apps/staff-mobile/src/features/finance/payments/shared/",
-   "layer": "staff-mobile"
-  },
-  {
    "from": "apps/staff-mobile/src/money/attachments/",
    "to": "apps/staff-mobile/src/features/finance/payments/attachments/",
    "layer": "staff-mobile"
@@ -2171,11 +2156,6 @@
   {
    "from": "apps/staff-mobile/src/notifications/",
    "to": "apps/staff-mobile/src/features/messaging/notifications/bell/",
-   "layer": "staff-mobile"
-  },
-  {
-   "from": "apps/staff-mobile/src/ops/",
-   "to": "apps/staff-mobile/src/features/platform/settings/shared/",
    "layer": "staff-mobile"
   },
   {
@@ -2589,11 +2569,6 @@
    "layer": "staff-mobile"
   },
   {
-   "from": "apps/staff-mobile/src/teaching/",
-   "to": "apps/staff-mobile/src/features/teaching/lessons/",
-   "layer": "staff-mobile"
-  },
-  {
    "from": "apps/staff-mobile/src/teaching/correct/",
    "to": "apps/staff-mobile/src/features/teaching/lessons/status/",
    "layer": "staff-mobile"
@@ -2694,11 +2669,6 @@
    "layer": "staff-web"
   },
   {
-   "from": "apps/staff-web/src/features/messaging/inbox/lead/",
-   "to": "apps/staff-web/src/features/sales/leads/lead-panel/",
-   "layer": "staff-web"
-  },
-  {
    "from": "apps/staff-web/src/features/messaging/inbox/lists/",
    "to": "apps/staff-web/src/features/messaging/inbox/chat-lists/",
    "layer": "staff-web"
@@ -2715,16 +2685,6 @@
   },
   {
    "from": "apps/staff-web/src/features/messaging/inbox/sales/register-drafts.*",
-   "to": "apps/staff-web/src/features/sales/registration/chat-register/",
-   "layer": "staff-web"
-  },
-  {
-   "from": "apps/staff-web/src/features/messaging/inbox/sales/sales-register.*",
-   "to": "apps/staff-web/src/features/sales/registration/chat-register/",
-   "layer": "staff-web"
-  },
-  {
-   "from": "apps/staff-web/src/features/messaging/inbox/sales/SalesRegisterAction.*",
    "to": "apps/staff-web/src/features/sales/registration/chat-register/",
    "layer": "staff-web"
   },
@@ -3062,6 +3022,24 @@
    "from": "apps/staff-web/src/lib/settings/teacher-pages*",
    "to": "apps/staff-web/src/features/teaching/teacher-home/teacher-pages/",
    "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/inbox/sales/SalesRegisterAction.*",
+   "to": "apps/staff-web/src/features/messaging/inbox/sales/",
+   "layer": "staff-web",
+   "why": "the inbox barrel test pins it to the inbox; moving it to sales/registration changes that test"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/inbox/sales/sales-register.*",
+   "to": "apps/staff-web/src/features/messaging/inbox/sales/",
+   "layer": "staff-web",
+   "why": "the inbox barrel test pins it to the inbox"
+  },
+  {
+   "from": "packages/shared/src/schemas/schemas.test.ts",
+   "to": "packages/shared/src/people/tests/people-schemas.test.ts",
+   "layer": "shared",
+   "why": "it tests the people schemas; schemas/ is dissolved"
   }
  ],
  "drops": [

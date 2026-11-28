@@ -3,6 +3,7 @@ import { trackedFiles } from '../../units/scan/tree.ts';
 import type { StructureMap } from '../map/index.ts';
 import { planMoves, type Plan } from '../plan/index.ts';
 import { foldersOf } from '../tree/folders.ts';
+import { homeOf } from '../tree/home.ts';
 import { fixReads } from './reads.ts';
 import type { Moves } from '../tree/tree.types.ts';
 import { updateBaselines } from './baselines.ts';
@@ -53,11 +54,14 @@ export function applyStructure(root: string, map: StructureMap): Applied {
     return { plan, moves, problems: plan.problems, applied: false };
   }
   const reads = fixReads(root, { files: before, moves });
-  const dropped = dropBarrels(root, plan.drops, before);
-  movePhased(root, plan.pairs);
   const to = (f: string): string => moves.files.get(f) ?? f;
+  const dropped = dropBarrels(root, plan.drops, {
+    files: before,
+    place: { to, home: homeOf(map.domains) },
+  });
+  movePhased(root, plan.pairs);
   const back = new Map(plan.pairs.map(([from, dest]) => [dest, from]));
-  const after = before.filter((f) => !plan.drops.includes(f)).map(to);
+  const after = before.filter((f) => !dropped.deleted.includes(f)).map(to);
   const forced = new Set(dropped.written.map(([f, t]) => `${to(f)}→${to(t)}`));
   const indexProblems = fixLayers({
     root,

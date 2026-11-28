@@ -29,7 +29,11 @@ function reExported(
   const target = resolveSpec(ctx.r, at.file, at.ref.spec)?.file;
   if (target === undefined) return [];
   if (at.ref.bindings.length === 0) return [...exportSources(ctx, target, at.depth + 1)];
-  return at.ref.bindings.map((b) => [b.alias ?? b.name, { file: target, name: b.name }]);
+  const deeper = exportSources(ctx, target, at.depth + 1);
+  return at.ref.bindings.map((b) => [
+    b.alias ?? b.name,
+    deeper.get(b.name) ?? { file: target, name: b.name },
+  ]);
 }
 
 /** What a module exports by name, with the file that declares each name (through barrels). */
@@ -48,26 +52,30 @@ export function exportSources(ctx: Ctx, file: string, depth = 0): Map<string, So
 
 export const stem = (file: string): string => posix.basename(file).replace(/\.[cm]?[jt]sx?$/, '');
 
-/** A barrel's re-exports with their files; a barrel that declares code of its own is a problem. */
-export function barrelLines(ctx: Ctx, barrel: string): { lines: BarrelLine[]; problems: string[] } {
-  const sf = ctx.project.createSourceFile(
-    `/virtual/lines/${barrel}`,
-    readText(ctx.r.root, barrel),
-    {
-      overwrite: true,
-    },
-  );
+const isPackage = (spec: string): boolean => !spec.startsWith('.') && !spec.startsWith('@/');
+
+function lineOf(ctx: Ctx, barrel: string, ref: ModuleRef): BarrelLine[] {
+  const found = resolveSpec(ctx.r, barrel, ref.spec)?.file;
+  const target = found ?? (isPackage(ref.spec) ? `pkg:${ref.spec}` : undefined);
+  if (target === undefined) return [];
+  const span = { start: ref.decl.getStart(), end: ref.decl.getEnd() };
+  return [{ target, bindings: ref.bindings, star: ref.star, ...span }];
+}
+
+/** A barrel's re-exports with their files and spans, and the count of its other statements. */
+export function barrelLines(ctx: Ctx, barrel: string): { lines: BarrelLine[]; own: number } {
+  const text = readText(ctx.r.root, barrel);
+  const sf = ctx.project.createSourceFile(`/virtual/lines/${barrel}`, text, { overwrite: true });
   const refs = moduleRefs(sf).filter((x) => x.decl.getKindName() === 'ExportDeclaration');
-  const own = sf
-    .getStatements()
-    .filter((s) => !['ExportDeclaration', 'ImportDeclaration'].includes(s.getKindName()));
-  const lines = refs.flatMap((ref) => {
-    const target = resolveSpec(ctx.r, barrel, ref.spec)?.file;
-    return target === undefined ? [] : [{ target, bindings: ref.bindings, star: ref.star }];
-  });
+  const lines = refs.flatMap((ref) => lineOf(ctx, barrel, ref));
+  const own = sf.getStatements().length - lines.length;
   ctx.project.removeSourceFile(sf);
-  return {
-    lines,
-    problems: own.length > 0 ? [`dropped barrel ${barrel} declares code of its own`] : [],
-  };
+  return { lines, own };
+}
+
+/** The names one barrel line exports, with the file that holds each. */
+export function lineNames(ctx: Ctx, line: BarrelLine): [string, Source][] {
+  if (line.target.startsWith('pkg:')) return [];
+  if (line.star) return [...exportSources(ctx, line.target)];
+  return line.bindings.map((b) => [b.alias ?? b.name, { file: line.target, name: b.name }]);
 }

@@ -39,12 +39,22 @@ function oldModule(ctx: DeepCtx, file: string): string | undefined {
   return new RegExp(`^(${ctx.old})/`).exec(`${rel}/`)?.[1];
 }
 
-/** Legal before (one old module, a route file or a barrel import), cross-feature now. */
+const isRoute = (ctx: DeepCtx, file: string): boolean =>
+  ctx.layer.routes.some((r) => file === r || within(file, r));
+/** A package's entry re-exports its features through their indexes. */
+const isEntry = (ctx: DeepCtx, file: string): boolean =>
+  !ctx.layer.alias && INDEX.test(file) && posix.dirname(file) === ctx.layer.root;
+
+/** Was legal (inside one old module, or the target sat in no module), crosses a feature now. */
+function wasLegal(ctx: DeepCtx, file: string, target: string): boolean {
+  const to = oldModule(ctx, target);
+  return to === undefined || to === oldModule(ctx, file);
+}
+
+/** Route files, a package entry, imports that went through a pruned barrel, and legal ones. */
 function mustFix(ctx: DeepCtx, file: string, target: string): boolean {
-  const isRoute = ctx.layer.routes.some((r) => file === r || within(file, r));
-  if (isRoute || ctx.forced.has(`${file}→${target}`)) return true;
-  const was = oldModule(ctx, file);
-  return was !== undefined && was === oldModule(ctx, target);
+  const special = isRoute(ctx, file) || isEntry(ctx, file);
+  return special || ctx.forced.has(`${file}→${target}`) || wasLegal(ctx, file, target);
 }
 
 const use = (ref: ModuleRef, at: { target: string; feature: string }): DeepImport => ({

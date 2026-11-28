@@ -81,14 +81,17 @@ test('fails on a move across workspaces and on a moved route file', () => {
   ]);
 });
 
-test('a dropped barrel leaves the plan and must exist', () => {
+test('a pruned barrel moves with its folder and must exist', () => {
   const files = [`${W}/a/index.ts`, `${W}/a/x.ts`];
   const drop = (path: string) => ({ drop: path, layer: 'staff-web' as const, why: 'facade' });
   const plan = planMoves(files, {
     moves: [move(`${W}/a/`, `${W}/f/`)],
     drops: [drop(`${W}/a/index.ts`), drop(`${W}/b/index.ts`)],
   });
-  assert.deepEqual(plan.pairs, [[`${W}/a/x.ts`, `${W}/f/x.ts`]]);
+  assert.deepEqual(plan.pairs, [
+    [`${W}/a/index.ts`, `${W}/f/index.ts`],
+    [`${W}/a/x.ts`, `${W}/f/x.ts`],
+  ]);
   assert.deepEqual(plan.drops, [`${W}/a/index.ts`]);
   assert.deepEqual(plan.problems, [`missing barrel: ${W}/b/index.ts`]);
 });

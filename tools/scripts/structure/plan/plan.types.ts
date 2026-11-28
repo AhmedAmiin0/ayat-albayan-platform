@@ -11,7 +11,7 @@ export interface Rule {
 export interface Plan {
   /** `[from, to]` for every file that moves, sorted by source. */
   pairs: [string, string][];
-  /** Parent barrels removed by the plan. */
+  /** Barrels pruned to their own feature's re-exports (deleted when nothing is left). */
   drops: string[];
   problems: string[];
 }

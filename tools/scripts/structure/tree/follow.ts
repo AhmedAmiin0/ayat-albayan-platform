@@ -20,5 +20,6 @@ export function follow(path: string, m: Moves): string | undefined {
   if (m.before.has(path)) return m.files.get(path) ?? path;
   if (!m.folders.has(path)) return undefined;
   const inside = [...m.before].filter((f) => f.startsWith(`${path}/`));
-  return inside.every((f) => m.files.has(f)) ? movedTogether(path, m, inside) : path;
+  const emptied = inside.every((f) => !(m.files.get(f) ?? f).startsWith(`${path}/`));
+  return emptied ? movedTogether(path, m, inside) : path;
 }
