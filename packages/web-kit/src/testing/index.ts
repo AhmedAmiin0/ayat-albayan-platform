@@ -1,4 +1,5 @@
 // Test-only entry: fixtures, render helpers and the shapes of the kit modules tests mock.
+export * from '@ab/web-kit/classroom/kick/kick.fixtures';
 export * from '@ab/web-kit/classroom/room/livekit/fake-client';
 export * from '@ab/web-kit/components/channel/channel.fixtures';
 export * from '@ab/web-kit/lib/settings/confirmation-testing';
