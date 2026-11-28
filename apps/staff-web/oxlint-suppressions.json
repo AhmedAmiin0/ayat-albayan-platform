@@ -161,20 +161,6 @@
       "count": 2
     }
   },
-  "src/features/finance/finance/InvoicesPage.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 4
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
-    }
-  },
   "src/features/finance/finance/api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
@@ -303,11 +289,6 @@
       "count": 1
     },
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/features/finance/subscriptions/create/NoCommissionNote.tsx": {
-    "react/purity": {
       "count": 1
     }
   },
@@ -1472,11 +1453,6 @@
       "count": 1
     }
   },
-  "src/features/people/students/recordings/RecordingPlayer.tsx": {
-    "jsx-a11y/media-has-caption": {
-      "count": 2
-    }
-  },
   "src/features/people/students/recordings/StudentRecordings.tsx": {
     "complexity": {
       "count": 1
@@ -1665,11 +1641,6 @@
       "count": 1
     }
   },
-  "src/features/platform/google-sync/connection/use-oauth-return.ts": {
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
   "src/features/platform/google-sync/google-api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 16
@@ -1731,11 +1702,6 @@
       "count": 1
     }
   },
-  "src/features/platform/settings/hub/HubLink.tsx": {
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
   "src/features/platform/settings/hub/SettingsHub.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
@@ -1752,11 +1718,6 @@
     },
     "ab/no-shape-checks": {
       "count": 2
-    }
-  },
-  "src/features/platform/settings/hub/use-legacy-redirect.ts": {
-    "typescript/no-unnecessary-condition": {
-      "count": 1
     }
   },
   "src/features/platform/settings/pages/CommunicationsPage.state.test.tsx": {
@@ -2009,11 +1970,6 @@
       "count": 1
     }
   },
-  "src/features/platform/translations/ValuesLink.tsx": {
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
   "src/features/platform/translations/translations.api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 1
@@ -2165,14 +2121,6 @@
       "count": 1
     }
   },
-  "src/features/sales/leads/list/ReclassifyConfirm.tsx": {
-    "jsx-a11y/no-noninteractive-element-interactions": {
-      "count": 1
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/features/sales/leads/list/lead-filters.test.ts": {
     "complexity": {
       "count": 1
@@ -2236,14 +2184,6 @@
       "count": 1
     }
   },
-  "src/features/sales/sales-money/subscribe/SalesStartField.tsx": {
-    "jsx-a11y/label-has-associated-control": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/features/sales/sales-money/subscribe/SalesSubscribeStep.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -2297,17 +2237,6 @@
   "src/features/sales/sales/api.ts": {
     "ab/no-untyped-api-calls": {
       "count": 4
-    }
-  },
-  "src/features/sales/sales/money/MyWallet.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "no-nested-ternary": {
-      "count": 3
-    },
-    "typescript/no-unnecessary-condition": {
-      "count": 1
     }
   },
   "src/features/sales/sales/money/StatementCard.tsx": {
