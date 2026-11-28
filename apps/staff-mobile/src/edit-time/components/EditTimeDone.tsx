@@ -15,7 +15,12 @@ export interface EditTimeDoneProps {
 export function EditTimeDone({ done, tz, onClose }: EditTimeDoneProps) {
   const viewer = useViewerClock();
   const { color } = useTheme();
-  const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
+  const text = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink2,
+  };
   return (
     <View style={{ gap: 12 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -23,16 +28,30 @@ export function EditTimeDone({ done, tz, onClose }: EditTimeDoneProps) {
         <AppText
           accessibilityRole="alert"
           accessibilityLiveRegion="polite"
-          style={{ fontFamily: type.display, fontSize: type.size.h2, lineHeight: type.lineHeight(type.size.h2, true), color: color.ink }}
+          style={{
+            fontFamily: type.display,
+            fontSize: type.size.h2,
+            lineHeight: type.lineHeight(type.size.h2, true),
+            color: color.ink,
+          }}
         >
           {t.editTime.saved}
         </AppText>
       </View>
-      <AppText style={{ ...text, fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink }}>
+      <AppText
+        style={{
+          ...text,
+          fontSize: type.size.body,
+          lineHeight: type.lineHeight(type.size.body),
+          color: color.ink,
+        }}
+      >
         {t.reschedule.newWhen.replace('{when}', whenText(done.lesson.starts_at, tz, viewer))}
       </AppText>
       {done.notified > 0 ? <AppText style={text}>{t.editTime.notifiedLine}</AppText> : null}
-      {done.payout === 'draft_stale' ? <AppText style={text}>{t.editTime.payoutDraft}</AppText> : null}
+      {done.payout === 'draft_stale' ? (
+        <AppText style={text}>{t.editTime.payoutDraft}</AppText>
+      ) : null}
       {done.pdf_refresh ? <AppText style={text}>{t.editTime.pdfRefresh}</AppText> : null}
       <Button label={t.reschedule.done} onPress={onClose} />
     </View>

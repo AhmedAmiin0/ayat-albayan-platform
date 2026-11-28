@@ -15,7 +15,10 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
 const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  apiFetch: (p: string) => mockApiFetch(p),
+}));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }));
 
 test('an English run reads en.json: the «Payouts and expenses» section on More', async () => {
@@ -32,7 +35,9 @@ test('the statement detail, the due line and the month in English with Western d
   await fireEvent.press(await screen.findByText('سلمى'));
   expect(screen.getByText(en.enums.payoutStatus.approved)).toBeTruthy();
   expect(screen.getByRole('button', { name: en.finance.confirmPaid })).toBeTruthy();
-  expect(screen.getByText(en.mobileFinance.payouts.due.replace('{amount}', amountText(1500)))).toBeTruthy();
+  expect(
+    screen.getByText(en.mobileFinance.payouts.due.replace('{amount}', amountText(1500))),
+  ).toBeTruthy();
   expect(amountText(1500)).toBe('⁦1,500⁩ EGP');
   expect(monthLabel('2026-09')).toBe('September 2026');
 });

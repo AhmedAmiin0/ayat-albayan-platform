@@ -32,7 +32,13 @@ export function SummaryCard({ counts, filter, onFilter }: SummaryCardProps) {
     <View
       accessibilityRole="toolbar"
       accessibilityLabel={t.today.summaryLabel}
-      style={{ ...raisedCard(color), flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 8 }}
+      style={{
+        ...raisedCard(color),
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 14,
+        paddingHorizontal: 8,
+      }}
     >
       {TODAY_FILTERS.map((value, i) => {
         const active = filter === value;
@@ -40,11 +46,25 @@ export function SummaryCard({ counts, filter, onFilter }: SummaryCardProps) {
         const label = labels[value];
         return (
           <Fragment key={value}>
-            {i > 0 ? <View style={{ width: 1, alignSelf: 'stretch', marginVertical: 6, backgroundColor: color.rule }} /> : null}
+            {i > 0 ? (
+              <View
+                style={{
+                  width: 1,
+                  alignSelf: 'stretch',
+                  marginVertical: 6,
+                  backgroundColor: color.rule,
+                }}
+              />
+            ) : null}
             <Pressable
               accessibilityRole="button"
               accessibilityState={{ selected: active }}
-              accessibilityLabel={(active && value !== 'all' ? t.today.summaryFilterActive : t.today.summaryFilter).replace('{n}', String(counts[value])).replace('{label}', label)}
+              accessibilityLabel={(active && value !== 'all'
+                ? t.today.summaryFilterActive
+                : t.today.summaryFilter
+              )
+                .replace('{n}', String(counts[value]))
+                .replace('{label}', label)}
               onPress={() => onFilter(active ? 'all' : value)}
               style={({ pressed }) => ({
                 flex: 1,
@@ -59,7 +79,20 @@ export function SummaryCard({ counts, filter, onFilter }: SummaryCardProps) {
             >
               {/* The dot hangs before the number, so every column's number sits centred like its label. */}
               <View>
-                {act ? <View style={{ position: 'absolute', end: '100%', top: 10.5, marginEnd: 6, width: 7, height: 7, borderRadius: 3.5, backgroundColor: color.act }} /> : null}
+                {act ? (
+                  <View
+                    style={{
+                      position: 'absolute',
+                      end: '100%',
+                      top: 10.5,
+                      marginEnd: 6,
+                      width: 7,
+                      height: 7,
+                      borderRadius: 3.5,
+                      backgroundColor: color.act,
+                    }}
+                  />
+                ) : null}
                 <AppText
                   style={{
                     fontFamily: type.ui[700],
@@ -77,7 +110,14 @@ export function SummaryCard({ counts, filter, onFilter }: SummaryCardProps) {
                 adjustsFontSizeToFit
                 minimumFontScale={0.5}
                 maxFontSizeMultiplier={1.6}
-                style={{ alignSelf: 'stretch', textAlign: 'center', fontFamily: type.ui[500], fontSize: type.size['2xs'], lineHeight: 18, color: color.ink3 }}
+                style={{
+                  alignSelf: 'stretch',
+                  textAlign: 'center',
+                  fontFamily: type.ui[500],
+                  fontSize: type.size['2xs'],
+                  lineHeight: 18,
+                  color: color.ink3,
+                }}
               >
                 {label}
               </AppText>

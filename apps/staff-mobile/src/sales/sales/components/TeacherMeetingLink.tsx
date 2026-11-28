@@ -35,22 +35,44 @@ export function TeacherMeetingLink({ link, platform }: { link: string | null; pl
           <AppText
             selectable
             numberOfLines={2}
-            style={{ writingDirection: 'ltr', textAlign: 'left', fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink }}
+            style={{
+              writingDirection: 'ltr',
+              textAlign: 'left',
+              fontFamily: type.ui[500],
+              fontSize: type.size.sm,
+              color: color.ink,
+            }}
           >
             {url}
           </AppText>
           <ButtonRow>
-            <Button variant="secondary" icon={copyIcon} label={L.copyLink} onPress={() => void copy(url)} />
+            <Button
+              variant="secondary"
+              icon={copyIcon}
+              label={L.copyLink}
+              onPress={() => void copy(url)}
+            />
             <Button variant="secondary" label={L.shareLink} onPress={() => share(url)} />
-            <Button variant="secondary" icon={openIcon} label={L.openLink} onPress={() => void Linking.openURL(url).catch(() => setFailed(true))} />
+            <Button
+              variant="secondary"
+              icon={openIcon}
+              label={L.openLink}
+              onPress={() => void Linking.openURL(url).catch(() => setFailed(true))}
+            />
           </ButtonRow>
           {copied ? (
-            <AppText accessibilityLiveRegion="polite" style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
+            <AppText
+              accessibilityLiveRegion="polite"
+              style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}
+            >
               {L.copied}
             </AppText>
           ) : null}
           {failed ? (
-            <AppText accessibilityRole="alert" style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
+            <AppText
+              accessibilityRole="alert"
+              style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}
+            >
               {L.shareFailed}
             </AppText>
           ) : null}

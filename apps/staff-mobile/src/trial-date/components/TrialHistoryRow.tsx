@@ -20,21 +20,44 @@ export function TrialHistoryRow({ row, familyTz }: TrialHistoryRowProps) {
   const viewer = { tz, cycle };
   const { color } = useTheme();
   const { when, family } = whenLines(row.starts_at, familyTz, viewer);
-  const small = { fontFamily: type.ui[500], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };
+  const small = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.xs,
+    lineHeight: type.lineHeight(type.size.xs),
+    color: color.ink2,
+  };
   return (
     <View
       testID={`trial-row-${row.lesson_id}`}
-      style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 10, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: color.rule }}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        gap: 10,
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: color.rule,
+      }}
     >
       <View style={{ flex: 1, gap: 2 }}>
-        <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink }}>
+        <AppText
+          style={{
+            fontFamily: type.ui[600],
+            fontSize: type.size.sm,
+            lineHeight: type.lineHeight(type.size.sm),
+            color: color.ink,
+          }}
+        >
           {when}
         </AppText>
         {family ? <AppText style={small}>{family}</AppText> : null}
         {row.teacher ? <AppText style={small}>{row.teacher.name}</AppText> : null}
         <AppText style={small}>{pickedLine(row, viewer)}</AppText>
       </View>
-      <StatusChip {...trialOutcomeStyle[row.outcome]} label={t.trialDate.outcome[row.outcome]} size="sm" />
+      <StatusChip
+        {...trialOutcomeStyle[row.outcome]}
+        label={t.trialDate.outcome[row.outcome]}
+        size="sm"
+      />
     </View>
   );
 }

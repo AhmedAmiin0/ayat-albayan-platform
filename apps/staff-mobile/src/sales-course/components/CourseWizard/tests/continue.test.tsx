@@ -6,7 +6,12 @@ import { localDay } from '@/core/lib/money/format';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { daysText, weekdayName } from '@/sales-course/lib/course-days';
-import { fakeCourseApi, isDisabled, press, pressEnabled } from '@/sales-course/testing/course-test-utils';
+import {
+  fakeCourseApi,
+  isDisabled,
+  press,
+  pressEnabled,
+} from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen';
 import { bookedCourse, courseView, PREV_SUB_ID, STUDENT_ID } from '@/sales-course/testing/fixtures';
 
@@ -79,7 +84,10 @@ test('«تابِع بنفس الأيام»: the same teacher and days, prefilled
   await waitFor(() => expect(isDisabled(t.booking.submit)).toBe(false));
   await press('button', t.booking.submit);
   expect(await screen.findByText(t.booking.booked)).toBeTruthy();
-  expect(sent('/sales/booking')[0]?.[2]).toMatchObject({ ...body, clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/) });
+  expect(sent('/sales/booking')[0]?.[2]).toMatchObject({
+    ...body,
+    clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
+  });
 });
 
 test('a prefilled day taken since: its day is named, «اختر موعدًا آخر» keeps the picks', async () => {
@@ -106,8 +114,12 @@ test('«اختر أيامًا أخرى»: the teacher step, then the days from t
   await press('button', t.booking.courseChange.pickOtherDays);
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
   await screen.findByTestId('lesson-date-0');
-  expect(reads('/sales/booking/slots')[0]).toContain(`from=${encodeURIComponent('2026-10-10T21:00:00.000Z')}`);
+  expect(reads('/sales/booking/slots')[0]).toContain(
+    `from=${encodeURIComponent('2026-10-10T21:00:00.000Z')}`,
+  );
   await press('button', t.common.back);
   await press('button', t.common.back);
-  expect(await screen.findByRole('button', { name: t.booking.courseChange.continueSameDays })).toBeTruthy();
+  expect(
+    await screen.findByRole('button', { name: t.booking.courseChange.continueSameDays }),
+  ).toBeTruthy();
 });

@@ -9,7 +9,12 @@ function Header({ header, hasMedia }: { header: TemplateHeader | null; hasMedia:
   if (!header || (header.type !== 'text' && hasMedia)) return null;
   if (header.type === 'text') {
     if (!header.text) return null;
-    const style = { fontFamily: type.ui[700], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
+    const style = {
+      fontFamily: type.ui[700],
+      fontSize: type.size.body,
+      lineHeight: type.lineHeight(type.size.body),
+      color: color.ink,
+    };
     return (
       <ContentText testID="template-header" source={header.text} style={style}>
         {header.text}
@@ -17,9 +22,31 @@ function Header({ header, hasMedia }: { header: TemplateHeader | null; hasMedia:
     );
   }
   return (
-    <View testID="template-header" style={{ flexDirection: 'row', alignItems: 'center', gap: 6, padding: 8, borderRadius: shape.radius.sm, borderWidth: 1, borderColor: color.rule }}>
-      {header.type === 'document' ? <DocumentIcon color={color.ink2} size={18} /> : <AttachIcon color={color.ink2} size={18} />}
-      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 }}>
+    <View
+      testID="template-header"
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        padding: 8,
+        borderRadius: shape.radius.sm,
+        borderWidth: 1,
+        borderColor: color.rule,
+      }}
+    >
+      {header.type === 'document' ? (
+        <DocumentIcon color={color.ink2} size={18} />
+      ) : (
+        <AttachIcon color={color.ink2} size={18} />
+      )}
+      <AppText
+        style={{
+          fontFamily: type.ui[600],
+          fontSize: type.size.xs,
+          lineHeight: type.lineHeight(type.size.xs),
+          color: color.ink2,
+        }}
+      >
         {t.inbox.templateBubble.header[header.type]}
       </AppText>
     </View>
@@ -31,14 +58,31 @@ function Footer({ text }: { text: string | null }) {
   const { color } = useTheme();
   if (!text) return null;
   return (
-    <ContentText testID="template-footer" source={text} style={{ fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink3 }}>
+    <ContentText
+      testID="template-footer"
+      source={text}
+      style={{
+        fontFamily: type.ui[400],
+        fontSize: type.size.xs,
+        lineHeight: type.lineHeight(type.size.xs),
+        color: color.ink3,
+      }}
+    >
       {text}
     </ContentText>
   );
 }
 
 /** A template's header over its content (file, body) and its footer under it; else as it is. */
-export function TemplateFrame({ block, hasMedia, children }: { block?: MessageTemplateBlock | null; hasMedia: boolean; children: ReactNode }) {
+export function TemplateFrame({
+  block,
+  hasMedia,
+  children,
+}: {
+  block?: MessageTemplateBlock | null;
+  hasMedia: boolean;
+  children: ReactNode;
+}) {
   if (!block) return <>{children}</>;
   return (
     <>

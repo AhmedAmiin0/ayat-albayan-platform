@@ -29,16 +29,24 @@ export function PicksList({ picks, tz, onRemove }: PicksListProps) {
     <View style={{ gap: 6 }}>
       <SectionLabel>{t.booking.courseDays}</SectionLabel>
       {picks.length === 0 ? (
-        <AppText style={{ ...text, fontSize: type.size.sm, color: color.ink2 }}>{t.booking.noDayPicked}</AppText>
+        <AppText style={{ ...text, fontSize: type.size.sm, color: color.ink2 }}>
+          {t.booking.noDayPicked}
+        </AppText>
       ) : null}
       {picks.map((pick) => (
-        <View key={pick} style={{ flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 44 }}>
+        <View
+          key={pick}
+          style={{ flexDirection: 'row', alignItems: 'center', gap: 8, minHeight: 44 }}
+        >
           <AppText style={{ ...text, flex: 1 }}>{dayLine(pick, tz, viewer)}</AppText>
           {onRemove ? (
             <View testID="pick-remove" style={{ flex: 1 }}>
               <Button
                 variant="danger"
-                label={t.booking.removeDay.replace('{day}', weekdays[String(wallParts(pick, tz).weekday)] ?? '')}
+                label={t.booking.removeDay.replace(
+                  '{day}',
+                  weekdays[String(wallParts(pick, tz).weekday)] ?? '',
+                )}
                 onPress={() => onRemove(pick)}
               />
             </View>

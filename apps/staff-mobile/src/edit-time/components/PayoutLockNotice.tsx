@@ -16,14 +16,28 @@ interface PayoutLockNoticeProps {
  */
 export function PayoutLockNotice({ lock, original, onRestore }: PayoutLockNoticeProps) {
   const { color } = useTheme();
-  const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink };
+  const text = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink,
+  };
   return (
-    <View style={{ gap: 8, padding: 14, borderRadius: shape.radius.md, backgroundColor: color.badSoft }}>
-      <AppText accessibilityRole="alert" style={{ ...text, fontFamily: type.ui[600], color: color.bad }}>
+    <View
+      style={{ gap: 8, padding: 14, borderRadius: shape.radius.md, backgroundColor: color.badSoft }}
+    >
+      <AppText
+        accessibilityRole="alert"
+        style={{ ...text, fontFamily: type.ui[600], color: color.bad }}
+      >
         {lockedText(lock)}
       </AppText>
       <AppText style={text}>{t.editTime.startOnly}</AppText>
-      <Button variant="secondary" label={t.editTime.restoreLength.replace('{len}', lengthText(original))} onPress={onRestore} />
+      <Button
+        variant="secondary"
+        label={t.editTime.restoreLength.replace('{len}', lengthText(original))}
+        onPress={onRestore}
+      />
     </View>
   );
 }

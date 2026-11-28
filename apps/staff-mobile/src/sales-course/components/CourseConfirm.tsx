@@ -38,13 +38,25 @@ export function CourseConfirm(props: CourseConfirmProps) {
   const ends = body ? courseEnd(body, total) : null;
   const clean = check.isSuccess && check.data.conflicts.length === 0;
   const ready = body !== null && picks.length === view.perWeek && clean;
-  const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
+  const note = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink2,
+  };
   return (
     <View style={{ gap: 14 }}>
       <SummaryList rows={courseRows({ view, teacherName, body, viewer })} />
       <PicksList picks={picks} tz={view.student.tz} />
-      {ends ? <AppText style={{ ...note, color: color.ink }}>{counted(t.booking.courseEnds, total).replace('{date}', localDay(ends))}</AppText> : null}
-      <TakenLines taken={{ picks, prefilled: prefilled ?? [], tz: view.student.tz }} data={check.data} />
+      {ends ? (
+        <AppText style={{ ...note, color: color.ink }}>
+          {counted(t.booking.courseEnds, total).replace('{date}', localDay(ends))}
+        </AppText>
+      ) : null}
+      <TakenLines
+        taken={{ picks, prefilled: prefilled ?? [], tz: view.student.tz }}
+        data={check.data}
+      />
       <CourseCheckNotice check={check} onChangeSlot={onChangeSlot} />
       <AppText style={note}>{t.booking.confirmationNote}</AppText>
       <BookError failure={booking.failure} onChangeSlot={onChangeSlot} />
@@ -58,9 +70,16 @@ export function CourseConfirm(props: CourseConfirmProps) {
   );
 }
 
-function BookError({ failure, onChangeSlot }: { failure: BookFailure | null; onChangeSlot: () => void }) {
+function BookError({
+  failure,
+  onChangeSlot,
+}: {
+  failure: BookFailure | null;
+  onChangeSlot: () => void;
+}) {
   if (!failure) return null;
-  if (failure.kind === 'conflict') return <ConflictNotice lines={failure.lines} onChangeSlot={onChangeSlot} />;
+  if (failure.kind === 'conflict')
+    return <ConflictNotice lines={failure.lines} onChangeSlot={onChangeSlot} />;
   return <ErrorLine message={failure.kind === 'duplicate' ? t.common.error : failure.text} />;
 }
 
@@ -74,7 +93,12 @@ interface TakenLinesProps {
 function TakenLines({ taken, data }: TakenLinesProps) {
   const { color } = useTheme();
   const conflicts = data && Array.isArray(data.conflicts) ? data.conflicts : [];
-  const style = { fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.bad };
+  const style = {
+    fontFamily: type.ui[600],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.bad,
+  };
   return (
     <>
       {takenTexts(taken, conflicts).map((line) => (

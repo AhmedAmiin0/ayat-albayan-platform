@@ -18,7 +18,12 @@ interface RescheduleDoneProps {
 export function RescheduleDone({ moved, scope, tz, onClose }: RescheduleDoneProps) {
   const viewer = useViewerClock();
   const { color } = useTheme();
-  const text = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
+  const text = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.body,
+    lineHeight: type.lineHeight(type.size.body),
+    color: color.ink,
+  };
   return (
     <View style={{ gap: 12 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -26,14 +31,23 @@ export function RescheduleDone({ moved, scope, tz, onClose }: RescheduleDoneProp
         <AppText
           accessibilityRole="alert"
           accessibilityLiveRegion="polite"
-          style={{ fontFamily: type.display, fontSize: type.size.h2, lineHeight: type.lineHeight(type.size.h2, true), color: color.ink }}
+          style={{
+            fontFamily: type.display,
+            fontSize: type.size.h2,
+            lineHeight: type.lineHeight(type.size.h2, true),
+            color: color.ink,
+          }}
         >
           {scope === 'rule' ? t.reschedule.seriesMoved : t.lessons.rescheduled}
         </AppText>
       </View>
-      <AppText style={text}>{t.reschedule.newWhen.replace('{when}', whenText(moved.starts_at, tz, viewer))}</AppText>
+      <AppText style={text}>
+        {t.reschedule.newWhen.replace('{when}', whenText(moved.starts_at, tz, viewer))}
+      </AppText>
       <LessonStatusChip status={moved.status} full />
-      <AppText style={{ ...text, fontSize: type.size.sm, color: color.ink2 }}>{t.reschedule.guardianNote}</AppText>
+      <AppText style={{ ...text, fontSize: type.size.sm, color: color.ink2 }}>
+        {t.reschedule.guardianNote}
+      </AppText>
       <Button label={t.reschedule.done} onPress={onClose} />
     </View>
   );

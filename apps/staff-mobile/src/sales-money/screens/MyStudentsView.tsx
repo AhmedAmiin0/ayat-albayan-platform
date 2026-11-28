@@ -17,7 +17,9 @@ export function MyStudentsView() {
       renderItem={renderRow}
       refreshing={list.isRefetching}
       onRefresh={() => void list.refetch()}
-      ListEmptyComponent={<LoadState status={list} empty emptyTitle={S.empty} emptyHint={S.emptyHint} />}
+      ListEmptyComponent={
+        <LoadState status={list} empty emptyTitle={S.empty} emptyHint={S.emptyHint} />
+      }
     />
   );
 }

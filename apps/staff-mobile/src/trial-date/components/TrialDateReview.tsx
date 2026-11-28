@@ -31,7 +31,12 @@ export function TrialDateReview(props: TrialDateReviewProps) {
   const check = useTrialDateCheck(body);
   const clashes = (check.data?.conflicts ?? []).map((c) => conflictLine(c, cycle, tz));
   const blocked = clashes.length > 0 || submit.failure?.kind === 'conflict';
-  const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
+  const note = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink2,
+  };
   return (
     <View style={{ gap: 14 }}>
       <PickedLines draft={draft} />

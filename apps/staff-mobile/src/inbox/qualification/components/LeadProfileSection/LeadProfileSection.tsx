@@ -31,7 +31,11 @@ export function LeadProfileSection({ lead }: { lead: LeadView }) {
       <FollowUpCard lead={row} offline={offline} />
       {/* ponytail: remounts once, when the fresh row replaces the cached one (edits typed before
           it arrived are dropped; offline there is no save anyway). Later refetches keep the form. */}
-      <QualificationForm key={fresh.data === undefined ? 'cached' : 'fresh'} lead={row} offline={offline} />
+      <QualificationForm
+        key={fresh.data === undefined ? 'cached' : 'fresh'}
+        lead={row}
+        offline={offline}
+      />
     </View>
   );
 }

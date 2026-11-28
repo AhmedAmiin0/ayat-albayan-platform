@@ -17,7 +17,8 @@ const ERRORS: Record<string, string> = t.reports.error;
 
 export function saveLine(state: SaveState, tz: string, cycle: ClockCycle): string | null {
   if (state.kind === 'saving') return t.reports.autosaving;
-  if (state.kind === 'saved') return t.reports.draftSaved.replace('{time}', clockIn(state.at, tz, cycle));
+  if (state.kind === 'saved')
+    return t.reports.draftSaved.replace('{time}', clockIn(state.at, tz, cycle));
   return state.kind === 'failed' ? t.reports.saveFailed : null;
 }
 
@@ -43,7 +44,11 @@ export function SentNote({ report, tz }: { report: ReportView; tz: string }) {
         <StatusChip {...reportStatusStyle.submitted} label={t.reports.submitted} size="sm" />
         <Note>{t.reports.version.replace('{n}', String(report.version))}</Note>
         {pdf ? (
-          <StatusChip {...pdfStatusStyle[pdf]} size="sm" label={`${t.reports.pdfLabel}: ${t.enums.pdfStatus[pdf]}`} />
+          <StatusChip
+            {...pdfStatusStyle[pdf]}
+            size="sm"
+            label={`${t.reports.pdfLabel}: ${t.enums.pdfStatus[pdf]}`}
+          />
         ) : null}
       </View>
       {lines.edit ? <Note>{lines.edit}</Note> : null}
@@ -52,7 +57,15 @@ export function SentNote({ report, tz }: { report: ReportView; tz: string }) {
   );
 }
 
-export function ReportFooter({ s, block, tz }: { s: ReportEntryState; block: ReportFormResponse['submit_block']; tz: string }) {
+export function ReportFooter({
+  s,
+  block,
+  tz,
+}: {
+  s: ReportEntryState;
+  block: ReportFormResponse['submit_block'];
+  tz: string;
+}) {
   const cycle = useClockCycle();
   const { report } = s;
   const sent = report.status === 'submitted';
@@ -64,10 +77,20 @@ export function ReportFooter({ s, block, tz }: { s: ReportEntryState; block: Rep
       {s.submit.error ? <ErrorLine message={reportErrorText(s.submit.error)} /> : null}
       {block ? <ErrorLine message={ERRORS[block] ?? t.common.error} /> : null}
       {sent ? <SentNote report={report} tz={tz} /> : null}
-      <SentPanel report={report} mode={s.mode.mode} onEdit={s.mode.startEdit} tz={tz}
-        busy={s.submit.isPending} />
+      <SentPanel
+        report={report}
+        mode={s.mode.mode}
+        onEdit={s.mode.startEdit}
+        tz={tz}
+        busy={s.submit.isPending}
+      />
       {s.mode.locked ? null : (
-        <SendButton label={label} pending={s.submit.isPending} disabled={block !== null} onPress={s.send} />
+        <SendButton
+          label={label}
+          pending={s.submit.isPending}
+          disabled={block !== null}
+          onPress={s.send}
+        />
       )}
       {saved ? <Note>{saved}</Note> : null}
     </View>

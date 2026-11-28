@@ -29,7 +29,9 @@ const row = () => within(screen.getByRole('button', { name: new RegExp(NAME) }))
 beforeEach(() => {
   mockApiFetch.mockReset();
   mockApiFetch.mockImplementation(async (p: string) =>
-    p.startsWith('/threads?') ? { items: [OPEN], total: 1, page: 1, pageSize: 25 } : detail([inbound], { thread: OPEN }),
+    p.startsWith('/threads?')
+      ? { items: [OPEN], total: 1, page: 1, pageSize: 25 }
+      : detail([inbound], { thread: OPEN }),
   );
 });
 afterEach(() => clearComposerDrafts());

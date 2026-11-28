@@ -29,7 +29,8 @@ export function RescheduleForm({ lesson, onClose, onDone }: RescheduleFormProps)
   // docs/47: only a one-lesson move carries a reason.
   const field = scope === 'one' ? <MoveReason value={reason} onChange={setReason} /> : null;
 
-  if (move.data) return <RescheduleDone moved={move.data} scope={scope} tz={tz} onClose={onDone ?? onClose} />;
+  if (move.data)
+    return <RescheduleDone moved={move.data} scope={scope} tz={tz} onClose={onDone ?? onClose} />;
   return (
     <View style={{ gap: 16 }}>
       <RescheduleHeading names={namesOf(lesson)} startsAt={lesson.starts_at} tz={tz} />
@@ -51,16 +52,35 @@ export function RescheduleForm({ lesson, onClose, onDone }: RescheduleFormProps)
 }
 
 /** Current time in the family's zone. */
-export function RescheduleHeading({ names, startsAt, tz }: { names: string; startsAt: string; tz: string }) {
+export function RescheduleHeading({
+  names,
+  startsAt,
+  tz,
+}: {
+  names: string;
+  startsAt: string;
+  tz: string;
+}) {
   const { color } = useTheme();
   const cycle = useClockCycle();
   const viewerZone = useViewerTz();
   const viewer = { tz: viewerZone, cycle };
-  const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
+  const text = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.sm,
+    lineHeight: type.lineHeight(type.size.sm),
+    color: color.ink2,
+  };
   return (
     <View style={{ gap: 2 }}>
-      <AppText style={{ ...text, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>{names}</AppText>
-      <AppText style={text}>{t.reschedule.current.replace('{when}', whenText(startsAt, tz, viewer))}</AppText>
+      <AppText
+        style={{ ...text, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}
+      >
+        {names}
+      </AppText>
+      <AppText style={text}>
+        {t.reschedule.current.replace('{when}', whenText(startsAt, tz, viewer))}
+      </AppText>
     </View>
   );
 }

@@ -84,7 +84,12 @@ export function SavedPanel({ onBack }: { onBack: () => void }) {
         <NuqtaGlyph shape="fill" color={color.ok} size={14} />
         <AppText
           accessibilityRole="alert"
-          style={{ fontFamily: type.display, fontSize: type.size.h2, lineHeight: type.lineHeight(type.size.h2, true), color: color.ink }}
+          style={{
+            fontFamily: type.display,
+            fontSize: type.size.h2,
+            lineHeight: type.lineHeight(type.size.h2, true),
+            color: color.ink,
+          }}
         >
           {t.subscriptions.saved}
         </AppText>

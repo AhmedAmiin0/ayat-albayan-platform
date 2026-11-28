@@ -1,9 +1,4 @@
 {
-  "app.config.ts": {
-    "typescript/no-unsafe-assignment": {
-      "count": 1
-    }
-  },
   "app/_layout.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
@@ -252,11 +247,6 @@
       "count": 1
     },
     "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/booking/shared/PicksList.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -532,20 +522,6 @@
       "count": 2
     }
   },
-  "src/classroom/links/web-origin.ts": {
-    "typescript/no-unsafe-assignment": {
-      "count": 1
-    },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
-    },
-    "typescript/no-unsafe-return": {
-      "count": 1
-    }
-  },
   "src/classroom/recordings/RecordingsList.tsx": {
     "complexity": {
       "count": 1
@@ -570,9 +546,6 @@
   "src/classroom/sessions/sessions.ts": {
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/core/lib/clipboard.ts": {
@@ -790,11 +763,6 @@
       "count": 4
     }
   },
-  "src/edit-time/components/EditTimeDone.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/edit-time/components/EditTimeFields.tsx": {
     "no-nested-ternary": {
       "count": 1
@@ -818,16 +786,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    }
-  },
-  "src/edit-time/components/EditTimeHeader.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/edit-time/components/PayoutLockNotice.tsx": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/edit-time/lib/edit-time-body.ts": {
@@ -936,19 +894,9 @@
       "count": 1
     }
   },
-  "src/finance/payouts/PayoutPayForm.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/finance/payouts/PayoutsScreen/PayoutsScreen.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1
-    }
-  },
-  "src/finance/payouts/UnpayConfirm.tsx": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/finance/payouts/use-payout-move.ts": {
@@ -1323,15 +1271,6 @@
   "src/inbox/messages/components/content-side.helpers.tsx": {
     "ab/no-restricted-syntax": {
       "count": 2
-    },
-    "typescript/no-unsafe-return": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 1
-    },
-    "typescript/no-unsafe-assignment": {
-      "count": 1
     }
   },
   "src/inbox/messages/components/hide/use-hide-message.ts": {
@@ -1455,17 +1394,6 @@
       "count": 1
     }
   },
-  "src/inbox/messages/photo/media-problem.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "typescript/no-unsafe-assignment": {
-      "count": 1
-    }
-  },
   "src/inbox/messages/reactions/use-react.ts": {
     "ab/no-shape-checks": {
       "count": 1
@@ -1488,11 +1416,6 @@
   "src/inbox/messages/reply-actions/ReplyConfirmButton.tsx": {
     "ab/forbidden-imports": {
       "count": 1
-    }
-  },
-  "src/inbox/messages/reply-actions/ReplyNoteLine.tsx": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/inbox/messages/reply-actions/reply-actions-context.ts": {
@@ -1519,16 +1442,6 @@
     }
   },
   "src/inbox/messages/resend/ResendSheet/ResendSheet.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/inbox/messages/resend/resend-side.helpers.tsx": {
-    "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/template/TemplateFrame.tsx": {
     "stylistic/max-len": {
       "count": 3
     }
@@ -1567,11 +1480,6 @@
       "count": 1
     }
   },
-  "src/inbox/qualification/lib/qualification-form.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/inbox/qualification/lib/queries.ts": {
     "ab/no-untyped-api-calls": {
       "count": 3
@@ -1593,17 +1501,6 @@
       "count": 2
     },
     "ab/no-untyped-api-calls": {
-      "count": 2
-    }
-  },
-  "src/inbox/rating/rating-words.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "typescript/no-unsafe-assignment": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
       "count": 2
     }
   },
@@ -1667,11 +1564,6 @@
   "src/inbox/saved-replies/lib/reply-error.ts": {
     "ab/no-shape-checks": {
       "count": 1
-    }
-  },
-  "src/inbox/saved-replies/quick-list/FillPreview.tsx": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/inbox/saved-replies/quick-list/ReplySheetFrame.tsx": {
@@ -1753,14 +1645,6 @@
       "count": 1
     }
   },
-  "src/inbox/shared/physical-row.helpers.ts": {
-    "typescript/no-unsafe-assignment": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
   "src/inbox/subscription/SubscriptionPanel/SubscriptionPanel.tsx": {
     "complexity": {
       "count": 1
@@ -1784,14 +1668,6 @@
   },
   "src/inbox/thread/calls/entries/CallEntry/CallEntry.tsx": {
     "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/inbox/thread/calls/entries/call-entry.helpers.tsx": {
-    "typescript/no-unsafe-return": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
       "count": 1
     }
   },
@@ -2279,9 +2155,6 @@
     }
   },
   "src/more/teachers/TeacherRow.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
@@ -2424,11 +2297,6 @@
     },
     "ab/no-shape-checks": {
       "count": 1
-    }
-  },
-  "src/ops/notif-rules/lib/audience-tabs.ts": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/ops/notif-rules/lib/rule-words.ts": {
@@ -2690,11 +2558,6 @@
       "count": 1
     }
   },
-  "src/sales-course/change/CourseChangeDone.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/sales-course/change/CourseChangeFlow.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -2731,15 +2594,10 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 2
-    }
-  },
-  "src/sales-course/components/CourseContinue.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/sales-course/components/CourseDone.tsx": {
@@ -2842,11 +2700,6 @@
   "src/sales-money/screens/MyMoneyScreen/MyMoneyScreen.tsx": {
     "no-nested-ternary": {
       "count": 2
-    }
-  },
-  "src/sales-money/screens/MyStudentsView.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/sales-money/wallet/CommissionEntry.tsx": {
@@ -2961,11 +2814,6 @@
   "src/sales-subscribe/lib/transfer-form.ts": {
     "ab/module-boundaries": {
       "count": 1
-    }
-  },
-  "src/sales-subscribe/payment-link/LinkPriceSection.tsx": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/sales-subscribe/payment-link/PaymentDoneScreen.tsx": {
@@ -3363,11 +3211,6 @@
       "count": 2
     }
   },
-  "src/student-file/recordings/RecordingVisibility.tsx": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/student-file/recordings/recording-actions.ts": {
     "ab/no-shape-checks": {
       "count": 1
@@ -3515,9 +3358,6 @@
   "src/subscribe/SubscribeParts.tsx": {
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/subscribe/SubscribeScreen/SubscribeScreen.tsx": {
@@ -3610,9 +3450,6 @@
   },
   "src/teacher/report/components/ReportFooter.tsx": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -3751,16 +3588,6 @@
       "count": 1
     }
   },
-  "src/teaching/reschedule/RescheduleDone.tsx": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/teaching/reschedule/RescheduleForm.tsx": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
   "src/teaching/reschedule/queries.ts": {
     "ab/no-untyped-api-calls": {
       "count": 2
@@ -3856,14 +3683,6 @@
   "src/trial-date/components/TrialDateReview.tsx": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/trial-date/components/TrialHistoryRow.tsx": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/trial-date/components/TrialTeacherPick.tsx": {

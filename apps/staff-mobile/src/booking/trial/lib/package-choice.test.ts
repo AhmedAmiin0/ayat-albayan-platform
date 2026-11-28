@@ -57,7 +57,9 @@ test('after a paid package: on to its subscription, prefilled; a trial goes nowh
 
 describe('packageDaysNote: the package and the weekly days agree (as the web)', () => {
   it('8 a month on one day → «= مرتان في الأسبوع»; matching days or a trial → nothing', () => {
-    expect(packageDaysNote('8', 1)).toBe(`الباقة ${t.enums.packageSize['8']} = ${t.booking.perWeek.two}`);
+    expect(packageDaysNote('8', 1)).toBe(
+      `الباقة ${t.enums.packageSize['8']} = ${t.booking.perWeek.two}`,
+    );
     expect(packageDaysNote('8', 2)).toBeNull();
     expect(packageDaysNote('trial', 1)).toBeNull();
   });

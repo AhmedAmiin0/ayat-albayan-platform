@@ -37,13 +37,23 @@ export function CourseContinue(props: CourseContinueProps) {
     adjustTo === null
       ? line.replace('{days}', days).replace('{date}', localDay(opensOn))
       : counted(texts.continueAdjust, adjustTo).replace('{days}', days);
-  const text = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
+  const text = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.body,
+    lineHeight: type.lineHeight(type.size.body),
+    color: color.ink,
+  };
   return (
     <View style={{ gap: 12 }}>
-      {transfer ? <Button variant="secondary" label={t.salesMoney.stepTransfer} onPress={transfer} /> : null}
+      {transfer ? (
+        <Button variant="secondary" label={t.salesMoney.stepTransfer} onPress={transfer} />
+      ) : null}
       <AppText style={text}>{hint}</AppText>
       {teacher.unavailable ? (
-        <AppText accessibilityRole="alert" style={{ ...text, fontSize: type.size.sm, color: color.bad }}>
+        <AppText
+          accessibilityRole="alert"
+          style={{ ...text, fontSize: type.size.sm, color: color.bad }}
+        >
           {t.booking.courseChange.teacherUnavailable}
         </AppText>
       ) : null}
