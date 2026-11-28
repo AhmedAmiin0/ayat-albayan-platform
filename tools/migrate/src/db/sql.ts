@@ -34,7 +34,9 @@ export interface InsertSpec {
   overridingSystemValue?: boolean;
   /** 'id' (default) or null for link tables without an id column (then ON CONFLICT DO NOTHING). */
   returning?: 'id' | null;
-  /** 'nothing': ON CONFLICT DO NOTHING RETURNING id — a conflict returns no row instead of failing. */
+  /**
+   * 'nothing': ON CONFLICT DO NOTHING RETURNING id — a conflict returns no row instead of failing.
+   */
   onConflict?: 'nothing';
 }
 

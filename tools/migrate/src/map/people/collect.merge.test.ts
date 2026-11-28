@@ -1,4 +1,5 @@
-// collectPeople merge rules on invented rows: AB code identity, visible conflicts, HEART, phone-only.
+// collectPeople merge rules on invented rows: AB code identity, visible conflicts, HEART,
+// phone-only.
 import { describe, expect, it } from 'vitest';
 import { bundleOf, row, studentRow } from '../../sources/sheets/fixtures.ts';
 import { collectPeople } from './collect.ts';

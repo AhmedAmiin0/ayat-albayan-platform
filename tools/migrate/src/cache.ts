@@ -34,7 +34,9 @@ export const cachePath = {
   files: () => `${CACHE_DIR}sheets/files.json`,
   crm: (table: string) => `${CACHE_DIR}crm/${table}.json`,
   crmCursor: () => `${CACHE_DIR}crm/cursor.json`,
-  /** Teacher directory: Arabic names + spelling aliases (personal, git-ignored; teachers.dir.ts). */
+  /**
+   * Teacher directory: Arabic names + spelling aliases (personal, git-ignored; teachers.dir.ts).
+   */
   teachers: () => `${CACHE_DIR}teachers.json`,
   /** Owner decisions: zip paths of weakly matched PDFs to attach anyway (RUNBOOK.md). */
   pdfApproved: () => `${CACHE_DIR}pdf-approved.json`,

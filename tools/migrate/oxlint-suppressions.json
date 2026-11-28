@@ -1,8 +1,5 @@
 {
   "src/cache.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -17,16 +14,6 @@
       "count": 1
     }
   },
-  "src/config.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/db/sql.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/db/target.ts": {
     "max-lines-per-function": {
       "count": 1
@@ -35,34 +22,14 @@
       "count": 1
     }
   },
-  "src/db/unqueue-imported.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/delta/scope.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/delta/staging-delta.test.ts": {
     "typescript/no-unnecessary-condition": {
       "count": 1
     }
   },
-  "src/entities/contract.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/hash.ts": {
     "ab/no-shape-checks": {
       "count": 1
-    }
-  },
-  "src/keys.ts": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "src/map/leads/fixtures.ts": {
@@ -93,11 +60,6 @@
       "count": 1
     }
   },
-  "src/map/people/collect.merge.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/map/people/collect.ts": {
     "typescript/restrict-template-expressions": {
       "count": 1
@@ -110,11 +72,6 @@
   },
   "src/map/people/status/bookings.ts": {
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/map/people/status/downgrade.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -162,9 +119,6 @@
     }
   },
   "src/pdf-import/match.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-base-to-string": {
       "count": 1
     }
@@ -189,38 +143,12 @@
       "count": 1
     }
   },
-  "src/plan/stale-refs.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/report/report.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/report/review.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-unnecessary-condition": {
       "count": 1
     }
   },
-  "src/sources/crm.schema.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/sources/crm.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/sources/crm.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-unnecessary-condition": {
       "count": 1
     }
@@ -233,19 +161,9 @@
       "count": 1
     }
   },
-  "src/sources/extract-crm.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/sources/extract-sheets.ts": {
     "ab/no-shape-checks": {
       "count": 1
-    }
-  },
-  "src/sources/headers/headers.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/sources/rows.ts": {
@@ -259,11 +177,6 @@
   "src/sources/sheets/cells.ts": {
     "typescript/restrict-template-expressions": {
       "count": 2
-    }
-  },
-  "src/sources/sheets/issues.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/sources/teachers.dir.ts": {
@@ -280,9 +193,6 @@
     "no-restricted-properties": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 4
-    },
     "typescript/restrict-template-expressions": {
       "count": 3
     }
@@ -290,11 +200,6 @@
   "src/types.ts": {
     "stylistic/max-len": {
       "count": 5
-    }
-  },
-  "src/validate.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   }
 }

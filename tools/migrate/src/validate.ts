@@ -1,6 +1,6 @@
-// validate --target: docs/06 «Validation after apply» as SQL checks → stdout table + out/validate.md
-// (counts only). 'zero' checks are hard: any FAIL makes the command exit 1. Source comparisons
-// (SUBS, ATT) live in validate.sources.ts.
+// validate --target: docs/06 «Validation after apply» as SQL checks → stdout table +
+// out/validate.md (counts only). 'zero' checks are hard: any FAIL makes the command exit 1. Source
+// comparisons (SUBS, ATT) live in validate.sources.ts.
 import type { TargetDb } from './db/target.ts';
 import { tableIdent } from './db/sql.ts';
 

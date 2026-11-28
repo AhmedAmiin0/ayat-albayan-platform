@@ -1,5 +1,6 @@
 // Natural keys per entity (README §Natural keys). The only place keys are built: a key that changes
-// between runs creates a second row, so every builder imports from here and never concatenates by hand.
+// between runs creates a second row, so every builder imports from here and never concatenates by
+// hand.
 import { normalizeArabic } from '@ab/core';
 import type { EntityName, NaturalKey } from './types.ts';
 
@@ -7,7 +8,9 @@ import type { EntityName, NaturalKey } from './types.ts';
 const TITLES =
   /^(?:الاستاذه|الاستاذ|استاذه|استاذ|ا\.|د\.|دكتوره|دكتور|الحاجه|الحاج|المعلمه|معلمه)\s*:?\s*/;
 
-/** normalizeArabic + leading honorifics removed + punctuation squeezed. Used for name parts of keys. */
+/**
+ * normalizeArabic + leading honorifics removed + punctuation squeezed. Used for name parts of keys.
+ */
 export function personName(raw: string): string {
   let s = normalizeArabic(raw)
     .replace(/[«»"'()]/g, ' ')
@@ -42,7 +45,9 @@ interface LessonKeyInput {
   teacher: string;
   /** Student natural keys (key part). One for a 1:1 lesson, several for a group. */
   students: readonly string[];
-  /** UTC instant (ISO) for rule occurrences/trials; local 'YYYY-MM-DD' for report-derived lessons. */
+  /**
+   * UTC instant (ISO) for rule occurrences/trials; local 'YYYY-MM-DD' for report-derived lessons.
+   */
   at: string;
 }
 

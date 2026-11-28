@@ -1,4 +1,5 @@
-// Fake reader, invented rows. Proves paging, delta merge and the tag precedence; never hits the CRM.
+// Fake reader, invented rows. Proves paging, delta merge and the tag precedence; never hits the
+// CRM.
 import { describe, expect, it } from 'vitest';
 import { type CrmPageQuery, type CrmReader, PAGE, maxCursor, mergeById, selectAll } from './crm.ts';
 import { CRM_TABLES, leadStatusFromTags } from './crm.schema.ts';

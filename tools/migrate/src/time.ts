@@ -1,7 +1,10 @@
-// Sheet wall-clock values → UTC (rule 6). read-excel-file returns serial dates as Date objects whose
-// UTC parts are the sheet's wall clock; extraction keeps them zone-less and mappers add the tz here.
+// Sheet wall-clock values → UTC (rule 6). read-excel-file returns serial dates as Date objects
+// whose UTC parts are the sheet's wall clock; extraction keeps them zone-less and mappers add the
+// tz here.
 
-/** Date cell → 'YYYY-MM-DD' (midnight), 'HH:mm' (time-only, Excel day 0) or 'YYYY-MM-DDTHH:mm:ss'. */
+/**
+ * Date cell → 'YYYY-MM-DD' (midnight), 'HH:mm' (time-only, Excel day 0) or 'YYYY-MM-DDTHH:mm:ss'.
+ */
 export function wallClock(d: Date): string {
   const iso = d.toISOString();
   if (iso.startsWith('1899-12-30') || iso.startsWith('1899-12-31')) return iso.slice(11, 16);
@@ -38,7 +41,10 @@ function offsetMin(instant: number, tz: string): number {
   return (partsIn(instant, tz) - Math.floor(instant / 60_000) * 60_000) / 60_000;
 }
 
-/** The UTC instant of wall clock `date` `time` ('HH:mm') in `tz`; DST-safe (second pass). Same as web zonedToUtc. */
+/**
+ * The UTC instant of wall clock `date` `time` ('HH:mm') in `tz`; DST-safe (second pass). Same as
+ * web zonedToUtc.
+ */
 export function zonedToUtc(o: { date: string; time: string; tz: string }): Date {
   const [h = 0, mi = 0] = o.time.split(':').map(Number);
   const wall = utcOf(o.date) + (h * 60 + mi) * 60_000;

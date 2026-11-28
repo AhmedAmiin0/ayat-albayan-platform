@@ -37,8 +37,8 @@ export function runScope(
 
 /**
  * A new rule starts on max(starts_on, --from): the platform never books before the import date.
- * Creates only, and the hash stays the mapped one, so a re-run with the same sheets is a skip and an
- * existing rule's start is never moved (no daily update of every rule).
+ * Creates only, and the hash stays the mapped one, so a re-run with the same sheets is a skip and
+ * an existing rule's start is never moved (no daily update of every rule).
  */
 export function clampRuleStarts<P extends Pick<Plan, 'items'>>(plan: P, from: string): P {
   const items = plan.items.map((i) => {

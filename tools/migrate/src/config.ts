@@ -19,7 +19,9 @@ export interface TargetConfig {
   name: TargetName;
   databaseUrl: string;
   ssl: boolean;
-  /** Supabase API for Storage uploads (report PDFs); absent → PDF copy is planned but not applied. */
+  /**
+   * Supabase API for Storage uploads (report PDFs); absent → PDF copy is planned but not applied.
+   */
   storage?: StorageConfig;
 }
 

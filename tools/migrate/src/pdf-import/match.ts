@@ -15,7 +15,9 @@ import { type PdfName, ZIP_FILES, isPdf, parsePdfName } from './files.ts';
 
 const riyadhDay = (t: number): string => localToday({ now: new Date(t), tz: 'Asia/Riyadh' });
 
-/** Local day of a lesson key: report-derived keys end in 'YYYY-MM-DD', rule ones in a UTC instant. */
+/**
+ * Local day of a lesson key: report-derived keys end in 'YYYY-MM-DD', rule ones in a UTC instant.
+ */
 export function lessonDay(lessonKey: string): string {
   const at = lessonKey.slice(lessonKey.lastIndexOf('|') + 1);
   if (/^\d{4}-\d{2}-\d{2}$/.test(at)) return at;

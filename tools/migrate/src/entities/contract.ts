@@ -10,11 +10,16 @@ export interface SourceBundle {
   sheets: Readonly<Record<string, readonly SourceRow[]>>;
   /** CRM rows by table (sources/crm.schema.ts), e.g. crm['contacts']. */
   crm: Readonly<Record<string, readonly CrmRow[]>>;
-  /** Accepted records of entities earlier in APPLY_ORDER (after resolve), for cross-entity lookups. */
+  /**
+   * Accepted records of entities earlier in APPLY_ORDER (after resolve), for cross-entity lookups.
+   */
   earlier: ReadonlyMap<EntityName, readonly Desired[]>;
   /** Local date in Asia/Riyadh at run time ('YYYY-MM-DD'); the A6 window is 2026-08-01..today. */
   today: string;
-  /** First local date ('YYYY-MM-DD', Asia/Riyadh) bookings may create lessons on (`--from`); default today. */
+  /**
+   * First local date ('YYYY-MM-DD', Asia/Riyadh) bookings may create lessons on (`--from`); default
+   * today.
+   */
   from?: string;
   /** The app's subscription_expiry_days (`--expiry-days`); default the setting's default (7). */
   expiryDays?: number;

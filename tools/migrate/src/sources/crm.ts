@@ -54,7 +54,9 @@ export async function selectAll(
 
 const FILTER_EMBEDS = new Set(['conversations', 'contacts', 'pipelines']);
 
-/** Delta merge by id: newer rows replace cached ones; embeds used only for filtering are dropped. */
+/**
+ * Delta merge by id: newer rows replace cached ones; embeds used only for filtering are dropped.
+ */
 export function mergeById(cached: readonly CrmRow[], fresh: readonly CrmRow[]): CrmRow[] {
   const byId = new Map(cached.map((r) => [String(r.id), r]));
   for (const r of fresh) {
