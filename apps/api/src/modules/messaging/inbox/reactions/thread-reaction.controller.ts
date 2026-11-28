@@ -1,4 +1,3 @@
-import { phoneE164 } from '@ab/core';
 import { messageReactionRoutes as routes, type ReactionResult } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
@@ -6,14 +5,13 @@ import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { ZodParam } from '@/common/http/zod-inputs';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
 import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { ThreadReactionService } from './thread-reaction.service';
 
-// The phone is read on its own so a bad phone answers 400 invalid_phone, not the envelope; a bad
-// body still wins over it, as it did before the route object.
+// A bad phone answers 400 invalid_phone, not the envelope; a bad body still wins over it.
+const phoneFirst = { paramErrors: [{ name: 'phone', fail: invalidPhone }] };
 
 /** Same scopes as POST /threads/:phone/text, audited like a text send. */
 @ApiBearerAuth()
@@ -28,10 +26,10 @@ export class ThreadReactionController {
   @Route(routes.react)
   @HttpCode(200)
   async react(
-    @RouteInput() { params, body }: RouteInputOf<typeof routes.react>,
+    @RouteInput(phoneFirst) { params, body }: RouteInputOf<typeof routes.react>,
     @CurrentUser() user: AuthUser,
-    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
   ): Promise<ReactionResult> {
+    const { phone } = params;
     const sales = await this.reads.salesScope(user);
     const scope = sales ? null : await this.reads.scope(user);
     const request = { phone, messageId: params.id, input: body, actorId: user.id, scope, sales };

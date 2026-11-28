@@ -19,6 +19,17 @@ export interface RouteInputOptions {
   paramsFirst?: true;
   /** With `paramsFirst`: a server-only rule a `:param` must also pass (an env-gated key). */
   paramChecks?: Readonly<Record<string, z.ZodType>>;
+  /**
+   * After the body and query, these `:param`s are each checked alone, in this order, before the
+   * rest: the first bad one answers its own error (or the 400 envelope, issue path '').
+   */
+  paramErrors?: readonly ParamError[];
+}
+
+/** A `:param` checked alone, with the route's own error for it. */
+export interface ParamError {
+  name: string;
+  fail?: ParamFailure;
 }
 
 /** The request parts @RouteInput() reads, with the route of the handler. */

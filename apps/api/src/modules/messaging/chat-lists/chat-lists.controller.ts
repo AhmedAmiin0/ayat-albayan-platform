@@ -1,14 +1,20 @@
-import { chatListIdParam, chatListPhoneParam, chatListRoutes as routes } from '@ab/shared';
+import { chatListRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { ZodParam } from '@/common/http/zod-inputs';
 import { ListsUserGuard, listInvalidPhone, listNotFound } from './chat-lists.guard';
 import { ChatListsService } from './chat-lists.service';
 
 const byId = { badParam: listNotFound };
+// A bad id (404) wins over a bad phone (400 invalid_phone).
+const byIdThenPhone = {
+  paramErrors: [
+    { name: 'id', fail: listNotFound },
+    { name: 'phone', fail: listInvalidPhone },
+  ],
+};
 
 /** Shared chat lists (docs/22 §3); teachers get 403; nothing here sends. */
 @ApiBearerAuth()
@@ -42,24 +48,20 @@ export class ChatListsController {
     await this.lists.remove(params.id);
   }
 
-  // Each param keeps its own error (404 id, 400 phone), so they stay on ZodParam. `id` comes after
-  // `phone` on purpose: Nest runs the later param's pipe first, so a bad id still wins.
   @Route(routes.addThread)
   @HttpCode(204)
   async add(
-    @ZodParam('phone', chatListPhoneParam, listInvalidPhone) phone: string,
-    @ZodParam('id', chatListIdParam, listNotFound) id: string,
+    @RouteInput(byIdThenPhone) { params }: RouteInputOf<typeof routes.addThread>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.lists.add({ listId: id, phone, by: user.id });
+    await this.lists.add({ listId: params.id, phone: params.phone, by: user.id });
   }
 
   @Route(routes.dropThread)
   @HttpCode(204)
   async drop(
-    @ZodParam('phone', chatListPhoneParam, listInvalidPhone) phone: string,
-    @ZodParam('id', chatListIdParam, listNotFound) id: string,
+    @RouteInput(byIdThenPhone) { params }: RouteInputOf<typeof routes.dropThread>,
   ): Promise<void> {
-    await this.lists.drop(id, phone);
+    await this.lists.drop(params.id, params.phone);
   }
 }

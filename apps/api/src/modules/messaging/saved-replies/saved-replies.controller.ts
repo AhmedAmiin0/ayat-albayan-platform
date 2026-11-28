@@ -1,11 +1,9 @@
-import { savedReplyIdParam, savedReplyRoutes as routes } from '@ab/shared';
-import { Body, Controller, HttpCode, UseGuards } from '@nestjs/common';
+import { savedReplyRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { ZodParam } from '@/common/http/zod-inputs';
 import { RepliesUserGuard, replyNotFound } from './saved-replies.guard';
 import { SavedRepliesService } from './saved-replies.service';
 
@@ -41,15 +39,16 @@ export class SavedRepliesController {
     return this.replies.uploadUrl(user, body);
   }
 
-  // A bad :id (404) wins over a bad body here, so the body is parsed in the handler after the
-  // param pipe; @RouteInput() parses the body first.
+  // A bad :id (404) wins over a bad body on the edit only.
   @Route(routes.update)
   update(
-    @ZodParam('id', savedReplyIdParam, replyNotFound) id: string,
-    @Body() body: unknown,
+    @RouteInput({ ...byId, paramsFirst: true }) {
+      params,
+      body,
+    }: RouteInputOf<typeof routes.update>,
     @CurrentUser() user: AuthUser,
   ) {
-    return this.replies.update(user, id, parseOrThrow(routes.update.body, body));
+    return this.replies.update(user, params.id, body);
   }
 
   @Route(routes.remove)
