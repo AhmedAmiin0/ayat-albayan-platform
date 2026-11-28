@@ -13,10 +13,7 @@ import { assertOwnStudents } from '@/modules/teaching/booking/sales/booking/sale
 import { isSales } from '@/common/auth/roles';
 import { httpError } from '@/common/http/errors';
 
-/**
- * anyStudent: a key skips «her own students» (the profile's routes; sales.renew_any, docs/16 row
- * 38).
- */
+/** anyStudent: a key skips the own-students check (sales.renew_any, docs/16 row 38). */
 export interface ChangeActor {
   user: AuthUser;
   role: ChangeRole;
@@ -91,8 +88,8 @@ export class CourseChange {
   }
 
   /**
-   * The course's rules (course_rules_of); 400 trial_not_course, 404 course_not_found, 409
-   * course_finished (no active rule) / course_unattributed.
+   * The course's rules (course_rules_of); 400 trial_not_course, 404 course_not_found,
+   * 409 course_finished (no active rule) / course_unattributed.
    */
   private async load(sub: CourseSub): Promise<Loaded> {
     if (sub.package === 'trial') throw httpError(HttpStatus.BAD_REQUEST, 'trial_not_course');
@@ -106,10 +103,7 @@ export class CourseChange {
     return { sub, active, all };
   }
 
-  /**
-   * Every new lesson against the (new) teacher's and the student's time; moved lessons, old rules
-   * out.
-   */
+  /** Each new lesson against the teacher's and student's time, minus moved lessons and old rules. */
   private conflicts(p: Planned, teacherId: string | undefined): Promise<Conflict[]> {
     return this.deps.checker.check({
       teacherId: teacherId ?? p.active[0]?.teacher_id ?? '',

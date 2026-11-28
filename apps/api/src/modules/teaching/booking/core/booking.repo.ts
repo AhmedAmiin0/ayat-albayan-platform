@@ -86,7 +86,7 @@ export class BookingRepo {
     return data;
   }
 
-  /** The booking's stored invoice, if this request already saved one (a replay never copies again). */
+  /** The stored invoice, if this request already saved one (a replay never copies again). */
   async invoiceByRequest(requestId: string): Promise<InvoiceRow | null> {
     const data = maybe(
       await this.db
@@ -105,7 +105,7 @@ export class BookingRepo {
     };
   }
 
-  /** The booking this request already made (rule 8), null when it is new. No plan, no conflict check. */
+  /** The booking this request already made (rule 8), else null. No plan, no conflict check. */
   async replay(requestId: string): Promise<BookingResult | null> {
     const { data: rule, error } = await this.db
       .from('schedule_rules')
@@ -120,7 +120,7 @@ export class BookingRepo {
   }
 
   /** Rule + students + lessons + lead + queued messages in one transaction (docs/10 §5 #14). */
-  /** create_booking; its booking_confirmation* rows only while that notification rule is on (gateConfirmations). */
+  /** create_booking; booking_confirmation* rows only while that notification rule is on. */
   async createBooking(payload: BookingPayload, actorId: string): Promise<BookingResult> {
     const gated = payload.messages
       ? { ...payload, messages: await gateConfirmations(this.policy, payload.messages) }

@@ -72,14 +72,14 @@ export class InternalMeetingsController {
     return this.routes.lists.list(user);
   }
 
-  /** {id} of the meeting behind /m/<token>: a signed-in staff member enters as staff. 404 link_invalid. */
+  /** {id} of the meeting behind /m/<token>; signed-in staff enter as staff. 404 link_invalid. */
   @Get('by-link/:token')
   @Permissions('meetings.read')
   byLink(@Param('token') token: string, @CurrentUser() user: AuthUser): Promise<{ id: string }> {
     return this.joins.idByLink({ user, token });
   }
 
-  /** 204; 404 meeting_not_found, 403 not the creator nor an admin, 409 meeting_not_started (scheduled, window not open). */
+  /** 204; 404 meeting_not_found, 403 not creator or admin, 409 meeting_not_started (not open). */
   @Post(':id/end')
   @HttpCode(204)
   async end(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
@@ -96,7 +96,10 @@ export class InternalMeetingsController {
     return this.routes.meetings.newLink({ user, id });
   }
 
-  /** 503 classroom_not_configured, 404 meeting_not_found, 410 meeting_ended | join_closed, 403 join_not_open_yet. */
+  /**
+   * 503 classroom_not_configured, 404 meeting_not_found, 410 meeting_ended | join_closed,
+   * 403 join_not_open_yet.
+   */
   @Post(':id/join')
   @HttpCode(200)
   join(

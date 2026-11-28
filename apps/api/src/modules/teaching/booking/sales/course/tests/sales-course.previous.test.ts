@@ -1,7 +1,7 @@
 import { bookingRequestSchema, type CourseSubscription } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
-import type { CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
+import type { CourseRuleRow } from '@/modules/teaching/booking/core/types';
 import type { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 import type { SalesCourseRepo } from '@/modules/teaching/booking/sales/course/sales-course.repo';
 import type { CourseRule } from '@/modules/teaching/booking/sales/course/sales-course.rules';

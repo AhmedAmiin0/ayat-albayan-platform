@@ -18,7 +18,7 @@ export interface PayloadInput {
   req: CourseChangeRequest & { clientRequestId: string; teacherId?: string };
   actor: { id: string; role: ChangeRole };
   subscriptionId: string;
-  /** The course's active rules (the first leads): those still reaching the change point end the day before it. */
+  /** Active rules (the first leads): those reaching the change point end the day before it. */
   active: readonly ChangeRule[];
   moved: readonly (OpenCourseLesson & { rule_id: string | null })[];
   plan: ChangePlan;
@@ -32,7 +32,7 @@ export interface PayloadInput {
 const changesTeacher = (input: PayloadInput, head: ChangeRule): boolean =>
   input.req.teacherId !== undefined && input.req.teacherId !== head.teacher_id;
 
-/** One new rule per time: the course's (or the new) teacher, link, package, lead and students; the first leads. */
+/** One new rule per time with the teacher, link, package, lead and students; the first leads. */
 function newRules(input: PayloadInput, head: ChangeRule): (NewRule & { lessons: NewLesson[] })[] {
   const studentIds = head.schedule_rule_students.map((s) => s.student_id);
   const overrides = head.schedule_rule_students.map(
@@ -78,8 +78,8 @@ const moveOf = (m: PayloadInput['moved'][number]) => ({
 
 /**
  * The active rules still reaching the change point (ends_on null or ≥ startsOn), each ending at
- * min(its ends_on, startsOn − 1): a change never lengthens a rule (review fix 1). A rule already ending
- * before has no end_rule step.
+ * min(its ends_on, startsOn − 1): a change never lengthens a rule. A rule already ending before
+ * has no end_rule step.
  */
 function endRules(input: PayloadInput) {
   const endsOld = addDays(input.req.startsOn, -1);
@@ -93,9 +93,9 @@ function endRules(input: PayloadInput) {
 }
 
 /**
- * end_rules (endRules, each with its own open lessons from the change point: rescheduled, chargeable
- * false), changes (every other moved lesson, keyed by its id: `moved` is exactly what is written,
- * review fix 3), new_rules with their lessons, the first new lesson's confirmation
+ * end_rules (endRules, each with its open lessons from the change point: rescheduled, not
+ * chargeable), changes (every other moved lesson by id: `moved` is exactly what is written),
+ * new_rules with their lessons, the first new lesson's confirmation
  * and the audit row naming the actor's role and the course (entity subscriptions).
  */
 export function changePayload(input: PayloadInput): Record<string, unknown> {

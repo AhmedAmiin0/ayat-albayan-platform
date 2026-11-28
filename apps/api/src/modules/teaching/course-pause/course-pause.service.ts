@@ -10,30 +10,14 @@ import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '@/common/http/errors';
 import { assertPauseDates, assertStudent } from './preview/course-pause.guards';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
-import { pauseViewOf, toPauseView, type RpcOut } from './course-pause.mapper';
+import { legacyResult, pauseViewOf, toPauseView, type RpcOut } from './course-pause.mapper';
 import { CoursePauseRepo } from './course-pause.repo';
 
-interface Actor { id: string }
-interface StartInput { studentId: string; body: CoursePauseStart; actor: Actor }
-interface UntilInput { studentId: string; body: CoursePauseUntil; actor: Actor }
-interface ResumeInput { studentId: string; body: CoursePauseResume; actor: Actor }
-
-/** An old package-only pause lifted: no pause row, nothing cancelled or moved. */
-const legacyResult = (subscriptionId: string): CoursePauseResult => {
-  const today = riyadhToday();
-  const now = new Date().toISOString();
-  const pause = {
-    id: subscriptionId,
-    from_date: today,
-    until_date: null,
-    reason: null,
-    created_at: now,
-    created_by_name: null,
-    resumed_at: now,
-    extended_days: 0,
-  };
-  return { pause, cancelled: 0, left: 0, reopened: 0, conflicts: 0 };
-};
+interface Input<Body> {
+  studentId: string;
+  body: Body;
+  actor: { id: string };
+}
 
 /** Course pause (docs/11 §7b): one RPC each (migration 956); teacher and family are told once. */
 @Injectable()
@@ -52,7 +36,7 @@ export class CoursePauseService {
     };
   }
 
-  async start({ studentId, body, actor }: StartInput): Promise<CoursePauseResult> {
+  async start({ studentId, body, actor }: Input<CoursePauseStart>): Promise<CoursePauseResult> {
     const from = body.fromDate ?? riyadhToday();
     const until = body.untilDate ?? null;
     assertPauseDates(from, until);
@@ -70,14 +54,14 @@ export class CoursePauseService {
   }
 
   /** Extend or shorten the open pause; lessons after a shortened end come back (clash-checked). */
-  async setUntil({ studentId, body, actor }: UntilInput): Promise<CoursePauseResult> {
+  async setUntil({ studentId, body, actor }: Input<CoursePauseUntil>): Promise<CoursePauseResult> {
     const id = await this.openId(studentId);
     const p = { pause_id: id, until_date: body.untilDate, actor: actor.id };
     return this.done(await this.queries.call('course_pause_set_until', p), actor.id);
   }
 
   /** Legacy package-only pauses are lifted instead; 409 pause_not_open when nothing was paused. */
-  async resume({ studentId, body, actor }: ResumeInput): Promise<CoursePauseResult> {
+  async resume({ studentId, body, actor }: Input<CoursePauseResume>): Promise<CoursePauseResult> {
     await assertStudent(this.queries, studentId);
     const open = await this.queries.openPause(studentId);
     const subscriptionId = body.subscriptionId;
@@ -98,7 +82,10 @@ export class CoursePauseService {
    * RPC answers resumed false).
    */
   async resumePause(pauseId: string, actorId: string | null): Promise<CoursePauseResult> {
-    const out = await this.queries.call('course_pause_resume', { pause_id: pauseId, actor: actorId });
+    const out = await this.queries.call('course_pause_resume', {
+      pause_id: pauseId,
+      actor: actorId,
+    });
     if (out.resumed === false) return this.result(out, 0);
     const result = await this.done(out, actorId);
     await this.follow.resumed(out, actorId);

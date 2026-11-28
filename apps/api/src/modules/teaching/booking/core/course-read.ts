@@ -1,27 +1,9 @@
 import { courseDaysPerWeek, courseLessonCount, type BookedCourse } from '@ab/shared';
-import { DURATIONS, type PackageSize } from '@ab/catalog';
+import { DURATIONS } from '@ab/catalog';
 import { type DayTime, wallParts } from '@ab/schedule';
+import type { CourseFactsInput, CourseRuleRow } from './types';
 
 // Rules sharing a subscription_id (migration 470); pure; local dates compare as strings.
-
-/** One schedule_rules row of a course, with its subscription's plan. */
-export interface CourseRuleRow {
-  id: string;
-  subscription_id: string;
-  teacher_id: string;
-  duration_min: number;
-  /** Postgres time "HH:MM:SS". */
-  start_time_local: string;
-  tz: string;
-  byday: number[];
-  starts_on: string;
-  ends_on: string | null;
-  status: 'active' | 'paused' | 'ended';
-  first_rule_id: string | null;
-  sub: { package: PackageSize | null; lessons_total: number; lessons_used_before?: number };
-  /** The course teacher's zone. */
-  teacher: { tz: string } | null;
-}
 
 const hhmm = (time: string) => time.slice(0, 5);
 
@@ -105,7 +87,12 @@ const upcomingFrom = (
 ): string | null => {
   const today = dayIn(now, c.tz);
   const own = rows.filter((r) => r.subscription_id === c.subscriptionId && r.status === 'active');
-  return own.map((r) => r.starts_on).filter((d) => d > today).sort()[0] ?? null;
+  return (
+    own
+      .map((r) => r.starts_on)
+      .filter((d) => d > today)
+      .sort()[0] ?? null
+  );
 };
 
 /** The running course, else the earliest upcoming, so a renewal booked ahead never hides it. */
@@ -121,15 +108,6 @@ export function currentCourse(
     .filter((x): x is { c: BookedCourse; from: string } => x.from !== null)
     .sort((a, b) => a.from.localeCompare(b.from));
   return ahead[0]?.c ?? null;
-}
-
-interface CourseFactsInput {
-  rows: readonly CourseRuleRow[];
-  now: Date;
-  /** The newest unpaid / active subscription (the one the wizard books), if any. */
-  subscriptionId: string | null;
-  /** That subscription already has its course. */
-  booked: boolean;
 }
 
 /**

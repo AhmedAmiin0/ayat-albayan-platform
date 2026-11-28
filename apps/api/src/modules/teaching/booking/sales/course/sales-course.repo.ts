@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { notFound } from '@/common/http/errors';
 import { maybe, rows } from '@/common/db/errors';
-import type { CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
+import type { CourseRuleRow } from '@/modules/teaching/booking/core/types';
 import { isCourseRule, type CourseRule } from './sales-course.rules';
 
 type SubscriptionRow = Omit<CourseSubscription, 'duration'> & { duration: number };

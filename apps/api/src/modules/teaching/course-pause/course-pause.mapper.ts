@@ -1,4 +1,5 @@
-import { coursePauseViewSchema, type CoursePauseView } from '@ab/shared';
+import { coursePauseViewSchema, type CoursePauseResult, type CoursePauseView } from '@ab/shared';
+import { riyadhToday } from '@ab/time';
 import { z } from 'zod';
 import { asResponse } from '@/common/http/returns';
 
@@ -55,3 +56,20 @@ export type RpcOut = z.infer<typeof rpcOutSchema>;
 export const changedLessons = (out: RpcOut): string[] => [
   ...new Set([...out.cancelled, ...out.left, ...out.reopened, ...out.rejoined]),
 ];
+
+/** An old package-only pause lifted: no pause row, nothing cancelled or moved. */
+export const legacyResult = (subscriptionId: string): CoursePauseResult => {
+  const today = riyadhToday();
+  const now = new Date().toISOString();
+  const pause = {
+    id: subscriptionId,
+    from_date: today,
+    until_date: null,
+    reason: null,
+    created_at: now,
+    created_by_name: null,
+    resumed_at: now,
+    extended_days: 0,
+  };
+  return { pause, cancelled: 0, left: 0, reopened: 0, conflicts: 0 };
+};

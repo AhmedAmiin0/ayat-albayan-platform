@@ -16,7 +16,7 @@ import { z } from 'zod';
 import type { Role } from '@/common/auth/verify-token';
 import type { LessonRow } from './store/lesson-row';
 import { lessonReport, readerWindow } from './store/lesson-report';
-import type { SeqMap } from './lessons.repo';
+import type { ViewContext } from './lessons.mapper.types';
 import { iso, pendingProposal } from './proposals/proposal-view';
 import { isAdmin } from '@/common/auth/roles';
 
@@ -28,18 +28,6 @@ const TEACHER_EVENTS: ReadonlySet<LessonEvent> = new Set([
   'mark_no_show',
   'excuse',
 ]);
-
-/**
- * academyAuto: settings.meeting_link_auto, the default of a teacher whose meeting_mode is null
- * (false when absent); reportMinutes and now: the report edit window (docs/46 B7, readerWindow).
- */
-interface ViewContext {
-  role: Role | null;
-  seq: SeqMap;
-  academyAuto?: boolean;
-  reportMinutes?: number;
-  now?: Date;
-}
 
 /** Event list for the caller's role (LessonView.allowed_events). */
 function eventsFor(row: Pick<LessonRow, 'status'>, role: Role | null): LessonEvent[] {
@@ -70,14 +58,19 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     trial: row.rule?.package === 'trial',
     course_subscription_id: row.rule?.subscription_id ?? null,
     makeup: (row.makeup_of_id ?? null) !== null,
-    makeup_of: row.original ? { id: row.original.id, starts_at: iso(row.original.starts_at) } : null,
+    makeup_of: row.original
+      ? { id: row.original.id, starts_at: iso(row.original.starts_at) }
+      : null,
     teacher: teacherOf(row),
     starts_at: iso(row.starts_at),
     ends_at: iso(row.ends_at),
     status: row.status,
     meeting_link: row.meeting_link,
     // The lesson's own teacher decides (a substitute's mode applies), migration 490.
-    platform_classroom: usesPlatform(meetingModeOf(row.teacher?.meeting_mode), ctx.academyAuto ?? false),
+    platform_classroom: usesPlatform(
+      meetingModeOf(row.teacher?.meeting_mode),
+      ctx.academyAuto ?? false,
+    ),
     cancel_reason: row.cancel_reason,
     override_reason: row.override_reason,
     confirmed_at: row.confirmed_at === null ? null : iso(row.confirmed_at),
@@ -99,7 +92,9 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
 /** The lesson's teacher without meeting_mode (platform_classroom carries what it means). */
 function teacherOf(row: LessonRow): LessonView['teacher'] {
   const t = row.teacher;
-  return t ? { id: t.id, display_name_ar: t.display_name_ar, display_name_en: t.display_name_en, tz: t.tz } : { id: row.teacher_id, display_name_ar: '', tz: '' };
+  return t
+    ? { id: t.id, display_name_ar: t.display_name_ar, display_name_en: t.display_name_en, tz: t.tz }
+    : { id: row.teacher_id, display_name_ar: '', tz: '' };
 }
 
 /** Migration 190: room opened early and instant lesson. */
@@ -118,7 +113,11 @@ function timeEdit(row: LessonRow, role: ViewContext['role']): LessonTimeEditView
   const was = wasTimes.safeParse(row.time_edit_was);
   if (!row.time_edited_at || !was.success) return null;
   const { starts_at, ends_at } = was.data;
-  return { at: iso(row.time_edited_at), reason: role === 'admin' ? (row.time_edit_reason ?? null) : null, was: { starts_at: iso(starts_at), ends_at: iso(ends_at) } };
+  return {
+    at: iso(row.time_edited_at),
+    reason: role === 'admin' ? (row.time_edit_reason ?? null) : null,
+    was: { starts_at: iso(starts_at), ends_at: iso(ends_at) },
+  };
 }
 
 /** The makeup booked for this student's miss: not cancelled, not moved (lessons_makeup_of_key). */

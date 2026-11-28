@@ -28,7 +28,7 @@ interface InviteRun {
   invitees: readonly ResolvedInvitee[];
   win: JoinWindowConfig;
   now: Date;
-  /** What the caller may send (meeting-invite.policy.ts): no chat right = a link to copy, never WhatsApp. */
+  /** What the caller may send (meeting-invite.policy.ts): without chat, a link to copy only. */
   policy: InvitePolicy;
 }
 
@@ -44,9 +44,9 @@ interface PersonalSend {
 /**
  * Invites people to a meeting (R-MEET-02): drops the ones already invited, enforces 30 invitees per
  * meeting (400 too_many_invitees) and 100 WhatsApp invitations per login per day (409 invite_limit
- * from the fast check; migration 414's trigger fails only that recipient: failed / invite_limit + link),
- * stores one row each (non-staff: only the sha256 of a personal /m/<token>), delivers, and answers one
- * result per recipient; a non-staff result carries its link and invitation text, once.
+ * from the fast check; migration 414's trigger fails only that recipient with the link),
+ * stores one row each (non-staff: only the sha256 of a personal /m/<token>), delivers, and
+ * answers one result per recipient; a non-staff result carries its link and text, once.
  */
 @Injectable()
 export class MeetingInviteFlow {
@@ -85,8 +85,8 @@ export class MeetingInviteFlow {
   }
 
   /**
-   * A fresh personal link (the old one stops working) and its chat text when the caller may chat and a
-   * window is open; the link and the text to copy come back either way (chat_not_allowed, invite_limit).
+   * A fresh personal link (the old one stops working), sent in chat when the caller may chat and a
+   * window is open; the link and text to copy always come back (chat_not_allowed, invite_limit).
    */
   async personal(p: PersonalSend): Promise<MeetingInviteResult> {
     const { meeting, now } = p.run;
@@ -117,7 +117,7 @@ export class MeetingInviteFlow {
     return { ...(await this.record(p.invitee, out, p.run)), link: null, invitation_text: null };
   }
 
-  /** The outcome on the row; a caller without scope 'all' never tells no_thread from session_closed. */
+  /** The outcome on the row; without scope 'all' no_thread and session_closed look the same. */
   private async record(invitee: StoredInvitee, raw: DeliveryOutcome, run: Omit<InviteRun, 'invitees'>) {
     const out = { ...raw, error_code: visibleCode(raw.error_code, run.policy.seesAll) };
     const sent_at = out.status === 'sent' ? run.now.toISOString() : null;

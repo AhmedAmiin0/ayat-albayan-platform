@@ -7,10 +7,19 @@ import { done, isUniqueViolation, maybe, pgError, rows } from '@/common/db/error
 
 export type MeetingRow = Pick<
   Tables<'meetings'>,
-  'id' | 'title' | 'created_by' | 'created_at' | 'ends_at' | 'revoked' | 'starts_at' | 'planned_end_at' | 'cancelled_at'
+  | 'id'
+  | 'title'
+  | 'created_by'
+  | 'created_at'
+  | 'ends_at'
+  | 'revoked'
+  | 'starts_at'
+  | 'planned_end_at'
+  | 'cancelled_at'
 >;
 /** Never the hash nor the request id: they are only ever compared in the query. */
-export const MEETING_COLUMNS = 'id, title, created_by, created_at, ends_at, revoked, starts_at, planned_end_at, cancelled_at';
+export const MEETING_COLUMNS =
+  'id, title, created_by, created_at, ends_at, revoked, starts_at, planned_end_at, cancelled_at';
 
 export interface NewMeeting {
   title: string;
@@ -60,28 +69,39 @@ export class InternalMeetingsRepo {
 
   /** The meeting a retried POST /meetings already created (rule 8). */
   async byRequest(createdBy: string, clientRequestId: string): Promise<MeetingRow | null> {
-    const data = maybe(await this.db
-      .from('meetings')
-      .select(MEETING_COLUMNS)
-      .eq('created_by', createdBy)
-      .eq('client_request_id', clientRequestId)
-      .maybeSingle());
-    return data;
+    return maybe(
+      await this.db
+        .from('meetings')
+        .select(MEETING_COLUMNS)
+        .eq('created_by', createdBy)
+        .eq('client_request_id', clientRequestId)
+        .maybeSingle(),
+    );
   }
 
   async byId(id: string): Promise<MeetingRow | null> {
-    const data = maybe(await this.db.from('meetings').select(MEETING_COLUMNS).eq('id', id).maybeSingle());
-    return data;
+    return maybe(await this.db.from('meetings').select(MEETING_COLUMNS).eq('id', id).maybeSingle());
   }
 
   async byHash(hash: string): Promise<MeetingRow | null> {
-    const data = maybe(await this.db.from('meetings').select(MEETING_COLUMNS).eq('link_token_hash', hash).maybeSingle());
-    return data;
+    return maybe(
+      await this.db
+        .from('meetings')
+        .select(MEETING_COLUMNS)
+        .eq('link_token_hash', hash)
+        .maybeSingle(),
+    );
   }
 
   /** The meeting behind an invitee's personal link (migration 411; cleared when cancelled). */
   async byInviteHash(hash: string): Promise<MeetingRow | null> {
-    const data = maybe(await this.db.from('meeting_invitees').select('meeting_id').eq('token_hash', hash).maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('meeting_invitees')
+        .select('meeting_id')
+        .eq('token_hash', hash)
+        .maybeSingle(),
+    );
     return data ? this.byId(data.meeting_id) : null;
   }
 
@@ -101,19 +121,23 @@ export class InternalMeetingsRepo {
 
   /** Stamps cancelled_at once; false when already cancelled or the meeting was ended meanwhile. */
   async cancel(id: string, at: string): Promise<boolean> {
-    const data = rows(await this.db
-      .from('meetings')
-      .update({ cancelled_at: at })
-      .eq('id', id)
-      .is('cancelled_at', null)
-      .is('ends_at', null)
-      .select('id'));
+    const data = rows(
+      await this.db
+        .from('meetings')
+        .update({ cancelled_at: at })
+        .eq('id', id)
+        .is('cancelled_at', null)
+        .is('ends_at', null)
+        .select('id'),
+    );
     return data.length > 0;
   }
 
   /** The name a staff login shows in the room. */
   async profileName(profileId: string): Promise<string | null> {
-    const data = maybe(await this.db.from('profiles').select('full_name').eq('id', profileId).maybeSingle());
+    const data = maybe(
+      await this.db.from('profiles').select('full_name').eq('id', profileId).maybeSingle(),
+    );
     return data?.full_name ?? null;
   }
 

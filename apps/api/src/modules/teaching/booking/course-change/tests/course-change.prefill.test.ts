@@ -3,7 +3,8 @@ import type { CourseChangeRequest } from '@ab/schedule';
 import { describe, expect, it } from 'vitest';
 import { errorCode } from '@/common/http/errors';
 import { assertStart } from '@/modules/teaching/booking/course-change/course-change.plan';
-import { bookedCourse, type CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
+import { bookedCourse } from '@/modules/teaching/booking/core/course-read';
+import type { CourseRuleRow } from '@/modules/teaching/booking/core/types';
 
 // The change form's unchanged prefill (shared changePicks) against the server's no_change, with a
 // pending change: the old rules hold the days before the latest set's startsOn (PR #117 review fix

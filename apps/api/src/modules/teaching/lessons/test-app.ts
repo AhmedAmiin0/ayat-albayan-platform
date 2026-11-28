@@ -105,9 +105,9 @@ export async function lessonsApp() {
     .overrideProvider(AutoHeldRepo).useValue(m.autoHeld)
     // The rules (legacy, no rows): no DB here.
     .overrideProvider(NotificationPolicy).useValue(fakePolicy())
-    // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).
+    // LessonEvents → SubscriptionAlerts listener; R-SUB-02 is tested in subscriptions/.
     .overrideProvider(AlertsRepo).useValue({ studentsOfLessons: async () => [] })
-    // LessonEvents → StudentTrialStatus listener (tested in subscriptions/student-trial-status.test.ts).
+    // LessonEvents → StudentTrialStatus listener, tested in subscriptions/.
     .overrideProvider(StudentTrialRepo).useValue({ studentsOfTrialLessons: async () => [], lessonsOf: async () => [] })
     .overrideProvider(UnpaidFlags).useValue(m.unpaid)
     .overrideProvider(StaffPhotos).useValue(m.photos)

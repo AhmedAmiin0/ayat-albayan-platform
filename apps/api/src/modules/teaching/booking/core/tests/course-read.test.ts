@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { bookedCourse, courseFacts, currentCourse, studentCourses, type CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
+import { bookedCourse, courseFacts, currentCourse, studentCourses } from '@/modules/teaching/booking/core/course-read';
+import type { CourseRuleRow } from '@/modules/teaching/booking/core/types';
 
 /** 12:00 Riyadh on Sunday 18 Oct 2026. */
 const NOW = new Date('2026-10-18T09:00:00Z');

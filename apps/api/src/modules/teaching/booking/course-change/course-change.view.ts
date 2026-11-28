@@ -2,7 +2,8 @@ import { courseChangeViewSchema, type BookedCourse, type CourseChangeView } from
 import { wallParts } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { CourseChangeRepo, type ChangeRule, type CourseSub } from './course-change.repo';
-import { studentCourses, type CourseRuleRow } from '@/modules/teaching/booking/core/course-read';
+import { studentCourses } from '@/modules/teaching/booking/core/course-read';
+import type { CourseRuleRow } from '@/modules/teaching/booking/core/types';
 import { SalesCourseRepo } from '@/modules/teaching/booking/sales/course/sales-course.repo';
 import { httpError } from '@/common/http/errors';
 import { asResponse } from '@/common/http/returns';

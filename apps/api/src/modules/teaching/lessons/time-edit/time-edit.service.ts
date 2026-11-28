@@ -64,8 +64,8 @@ export class LessonTimeService {
   }
 
   /**
-   * One confirmation per guardian for the NEW start (admin-initiated: queued even with auto messages
-   * off), naming no fixed link when the lesson's teacher holds it in our classroom (meetingLinkAuto).
+   * One confirmation per guardian for the new start (queued even with auto messages off), naming
+   * no fixed link when the lesson's teacher holds it in our classroom (meetingLinkAuto).
    */
   private async notices(row: LessonRow, plan: TimeEditPlan): Promise<TimeEditChange['messages']> {
     const contacts = await this.store.queries.contacts(studentIdsOf(row));
