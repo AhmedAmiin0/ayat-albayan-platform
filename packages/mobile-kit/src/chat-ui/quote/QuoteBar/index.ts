@@ -1,1 +1,2 @@
-export { QuoteBar, type QuoteBarProps } from './QuoteBar';
+export { QuoteBar } from './QuoteBar';
+export type { QuoteBarProps } from './QuoteBar.types';

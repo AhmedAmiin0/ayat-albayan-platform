@@ -1,1 +1,2 @@
-export { DeliveryTicks, type DeliveryTicksProps } from './DeliveryTicks';
+export { DeliveryTicks } from './DeliveryTicks';
+export type { DeliveryTicksProps } from './DeliveryTicks.types';

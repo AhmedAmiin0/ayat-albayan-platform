@@ -1,17 +1,8 @@
-import type { ReactNode } from 'react';
-import { type TextStyle, View } from 'react-native';
+import { View } from 'react-native';
 import { type, useTheme } from '../../../theme';
 import { ContentText } from '../../../ui/primitives/ContentText';
 import { quoteLine } from '../quote-style';
-
-interface QuoteTextProps {
-  text: string;
-  /** A file's emoji before the words (the staff inbox). */
-  icon?: string | null;
-  /** A drawn file icon before the words, in place of the emoji (the student channel). */
-  glyph?: ReactNode;
-  style: TextStyle;
-}
+import type { QuoteTextProps } from './QuoteText.types';
 
 /** The quoted line on the side of its own language, after a file's emoji or drawn icon. */
 export function QuoteText({ text, icon, glyph, style }: QuoteTextProps) {
