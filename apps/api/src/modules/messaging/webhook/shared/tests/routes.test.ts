@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { OWN_PUBLIC } from '@/common/auth/decorators';
+import { EvolutionWebhookController } from '@/modules/messaging/webhook/evolution/evolution-webhook.controller';
+import { WacrmWebhookController } from '@/modules/messaging/webhook/providers/webhook.wacrm.controller';
 import { webhookRoutes as routes } from '@/modules/messaging/webhook/shared';
+import { WebhookController } from '@/modules/messaging/webhook/webhook.controller';
+import { KapsoWebhookController } from '@/modules/messaging/webhook/webhook.kapso.controller';
 
 describe('webhookRoutes', () => {
   it('keeps the paths of today', () => {
@@ -19,11 +24,22 @@ describe('webhookRoutes', () => {
     expect(deliveries.map((r) => r.response)).toEqual(['empty', 'empty', 'empty', 'empty']);
   });
 
-  it('tags every callback webhooks and asks no permission of the caller', () => {
+  it('tags every callback webhooks, marks it public and asks no permission of the caller', () => {
     for (const route of Object.values(routes)) {
       expect(route.tags).toEqual(['webhooks']);
+      expect(route.isPublic).toBe(true);
       expect(route).not.toHaveProperty('permissions');
     }
+  });
+
+  it('leaves the public mark to the route objects, not to the controllers', () => {
+    const controllers = [
+      WebhookController,
+      KapsoWebhookController,
+      WacrmWebhookController,
+      EvolutionWebhookController,
+    ];
+    for (const c of controllers) expect(Reflect.getMetadata(OWN_PUBLIC, c)).toBeUndefined();
   });
 
   it('leaves each payload to its controller, parsed after the signature check', () => {
