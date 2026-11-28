@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { accountKit } from './account.fakes';
 import { ME, PASSWORD } from './account.me.fakes';
+import { errorCode } from '@/common/http/errors';
 
 // R-ACC-04: the rules of users.password / AUTH_PASSWORD_MIN_LENGTH; the caller's session is kept.
 
@@ -36,10 +37,9 @@ describe('PUT /me/password (R-ACC-04)', () => {
   it('refuses a blank, an over-long or an unchanged password', async () => {
     const kit = accountKit();
     const codeOf = (new_password: string) =>
-      kit.account.changePassword(ME, { current_password: PASSWORD, new_password }).then(
-        () => 'ok',
-        (e: { response?: { code?: string } }) => e.response?.code,
-      );
+      kit.account
+        .changePassword(ME, { current_password: PASSWORD, new_password })
+        .then(() => 'ok', errorCode);
     expect(await codeOf('        ')).toBe('password_too_short');
     expect(await codeOf('x'.repeat(73))).toBe('password_too_long');
     expect(await codeOf(PASSWORD)).toBe('password_same');

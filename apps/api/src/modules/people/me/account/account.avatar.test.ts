@@ -2,15 +2,12 @@ import { avatarUploadSchema } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { accountKit, PNG } from './account.fakes';
 import { ME } from './account.me.fakes';
+import { errorCode } from '@/common/http/errors';
 
 // R-ACC-05: avatars/<uid>/avatar-<ms>.<ext>; mime and size re-checked from Storage and the bytes.
 
 const PATH = `${ME.id}/avatar-1700000000000.png`;
-const codeOf = (p: Promise<unknown>) =>
-  p.then(
-    () => 'ok',
-    (e: { response?: { code?: string } }) => e.response?.code,
-  );
+const codeOf = (p: Promise<unknown>) => p.then(() => 'ok', errorCode);
 
 describe('avatar upload (R-ACC-05)', () => {
   it('signs an upload into the caller’s own folder', async () => {

@@ -75,7 +75,7 @@ describe('/settings/integrations («التكاملات»)', () => {
     for (const values of [{ WA_API_BASE: 'nope' }, { WA_ACCESS_TOKEN: 'x' }, { PORT: '1' }]) {
       const res = await call({ method: 'PUT', payload: { values } });
       expect(res.statusCode).toBe(400);
-      expect(res.body).toContain(`values.${Object.keys(values)[0]}`);
+      expect(res.body).toContain(`values.${String(Object.keys(values)[0])}`);
     }
     expect(q.writePlain).not.toHaveBeenCalled();
     expect((await call({ method: 'PUT', token: 'teacher', payload: { values: {} } })).statusCode).toBe(403);

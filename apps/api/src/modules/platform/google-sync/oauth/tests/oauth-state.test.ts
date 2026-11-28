@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { newState, nonceHash, readState, STATE_TTL_MS, stateKey } from '@/modules/platform/google-sync/oauth/oauth-state';
+import {
+  newState,
+  nonceHash,
+  readState,
+  STATE_TTL_MS,
+  stateKey,
+} from '@/modules/platform/google-sync/oauth/oauth-state';
 
 const KEY = stateKey('fake-service-key');
 const NOW = Date.UTC(2026, 9, 22, 10);
@@ -7,7 +13,11 @@ const NOW = Date.UTC(2026, 9, 22, 10);
 describe('OAuth state', () => {
   it('round-trips the admin id and nonce while unexpired', () => {
     const s = newState({ userId: 'admin-1', key: KEY, now: NOW });
-    expect(readState({ state: s.state, key: KEY, now: NOW + 1000 })).toEqual({ u: 'admin-1', n: s.nonce, e: NOW + STATE_TTL_MS });
+    expect(readState({ state: s.state, key: KEY, now: NOW + 1000 })).toEqual({
+      u: 'admin-1',
+      n: s.nonce,
+      e: NOW + STATE_TTL_MS,
+    });
     expect(s.expiresAt.getTime()).toBe(NOW + STATE_TTL_MS);
   });
 
@@ -19,7 +29,7 @@ describe('OAuth state', () => {
   it('refuses a tampered body, a foreign key and junk', () => {
     const s = newState({ userId: 'admin-1', key: KEY, now: NOW });
     const [, mac] = s.state.split('.');
-    const forged = `${Buffer.from(JSON.stringify({ u: 'attacker', n: 'x', e: NOW + 60_000 })).toString('base64url')}.${mac}`;
+    const forged = `${Buffer.from(JSON.stringify({ u: 'attacker', n: 'x', e: NOW + 60_000 })).toString('base64url')}.${String(mac)}`;
     expect(readState({ state: forged, key: KEY, now: NOW })).toBeNull();
     expect(readState({ state: s.state, key: stateKey('other'), now: NOW })).toBeNull();
     expect(readState({ state: 'nope', key: KEY, now: NOW })).toBeNull();

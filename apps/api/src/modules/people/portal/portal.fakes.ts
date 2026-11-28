@@ -104,7 +104,7 @@ export async function portalApp() {
     livekit: vi.fn(() => ({ url: 'wss://lk.example.org' })),
     admit: vi.fn(async () => ({ url: 'wss://lk.example.org', token: 'room-token', role: 'guest' })),
   };
-  const storage = { signedDownload: vi.fn(async (ref: { seconds?: number }) => ({ url: 'https://files.example.org/signed', expires_at: `+${ref.seconds}` })) };
+  const storage = { signedDownload: vi.fn(async (ref: { seconds?: number }) => ({ url: 'https://files.example.org/signed', expires_at: `+${String(ref.seconds)}` })) };
   const chat = { e164: vi.fn(async (): Promise<string | null> => '+966500000000') };
   const guardian = { ownOf: vi.fn(async (): Promise<PortalGuardian | null> => GUARDIAN) };
   const builder = Test.createTestingModule({

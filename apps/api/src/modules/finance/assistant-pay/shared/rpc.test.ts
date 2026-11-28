@@ -9,7 +9,8 @@ import { AssistantPaySettings } from './assistant-pay.settings';
 import { TermsRepo } from '@/modules/finance/assistant-pay/terms/terms.repo';
 
 const pg = (code: string, message: string) => new PostgrestError({ message, details: '', hint: '', code });
-const thrown = (p: Promise<unknown>): Promise<Error> => p.then(() => new Error('did not throw'), (e: Error) => e);
+const asError = (e: unknown): Error => (e instanceof Error ? e : new Error('not an error'));
+const thrown = (p: Promise<unknown>): Promise<Error> => p.then(() => new Error('did not throw'), asError);
 const err = (message: string, code = 'P0001') => ({ error: { code, message } });
 const status = (e: Error): [number, unknown] => (e instanceof HttpException ? [e.getStatus(), (e.getResponse() as { code?: string }).code] : [0, e.message]);
 

@@ -6,15 +6,12 @@ import { PNG } from '@/modules/people/me/account/account.fakes';
 import { AvatarWriter } from './avatar-writer';
 import { FakeAvatarFiles } from './avatars.fakes';
 import { StaffPhotoAdmin } from './staff-photo-admin';
+import { errorCode } from '@/common/http/errors';
 
 // An admin's staff photos: a teacher without a login → its record; with one → the login's.
 
 const T = 't0000000-0000-4000-8000-000000000001';
-const codeOf = (p: Promise<unknown>) =>
-  p.then(
-    () => 'ok',
-    (e: { response?: { code?: string } }) => e.response?.code,
-  );
+const codeOf = (p: Promise<unknown>) => p.then(() => 'ok', errorCode);
 
 function kit(results: Record<string, FakeResult[]>) {
   const f = fakeDb(results);
