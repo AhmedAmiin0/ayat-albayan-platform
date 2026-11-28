@@ -1,17 +1,11 @@
-import {
-  threadFileSendSchema,
-  threadFileUploadSchema,
-  type MessageView,
-  type SignedUpload,
-  type ThreadFileSendInput,
-  type ThreadFileUpload,
-} from '@ab/shared';
-import { Controller, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { chatFileSendRoutes as routes, type MessageView, type SignedUpload } from '@ab/shared';
+import { Controller, HttpCode, HttpStatus, Param } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { SalesScope } from '@/modules/sales/sales/sales-scope';
+import { Route, type RouteInputOf } from '@/common/http/route';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
@@ -22,12 +16,11 @@ import { httpError } from '@/common/http/errors';
 /**
  * The admin and a salesperson send a JPEG/PNG image or a PDF from the chat
  * (R-MSG-05). First a signed upload URL (the browser PUTs the file), then the send, audited as
- * `thread_file` under the sender. A teacher (TeacherScope) gets 403 files_forbidden.
+ * `thread_file` under the sender. A teacher (TeacherScope) gets 403 files_forbidden, read before
+ * the phone so it still wins over a bad phone.
  */
-@ApiTags('inbox')
 @ApiBearerAuth()
-@Permissions('inbox.read')
-@Controller('threads')
+@Controller()
 export class ThreadFileSendController {
   constructor(
     private readonly reads: ThreadReads,
@@ -35,24 +28,22 @@ export class ThreadFileSendController {
     private readonly audit: AuditService,
   ) {}
 
-  @Post(':phone/file-upload-url')
+  @Route(routes.uploadUrl)
   @HttpCode(201)
-  @Permissions('inbox.send')
   async uploadUrl(
     @Param('phone') raw: string,
-    @ZodBody(threadFileUploadSchema) input: ThreadFileUpload,
+    @ZodBody(routes.uploadUrl.body) input: RouteInputOf<typeof routes.uploadUrl>['body'],
     @CurrentUser() user: AuthUser,
   ): Promise<SignedUpload> {
     const sales = await this.sender(user);
     return this.files.uploadUrl({ phone: phoneParam(raw), input, actorId: user.id, sales });
   }
 
-  @Post(':phone/file')
+  @Route(routes.send)
   @HttpCode(201)
-  @Permissions('inbox.send')
   async send(
     @Param('phone') raw: string,
-    @ZodBody(threadFileSendSchema) input: ThreadFileSendInput,
+    @ZodBody(routes.send.body) input: RouteInputOf<typeof routes.send>['body'],
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
     const sales = await this.sender(user);

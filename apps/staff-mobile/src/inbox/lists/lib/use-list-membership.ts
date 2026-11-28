@@ -1,8 +1,7 @@
 import type { ChatListRef } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@ab/mobile-kit';
 import { threadKey, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
-import { listPath, listsKey, threadsKey } from './use-chat-lists';
+import { chatLists, listsKey, threadsKey } from './use-chat-lists';
 
 interface MemberChange {
   list: ChatListRef;
@@ -38,7 +37,9 @@ export function useListMembership(phone: string) {
   const queryKey = threadKey(phone);
   return useMutation({
     mutationFn: ({ list, member }: MemberChange) =>
-      apiSend(member ? 'PUT' : 'DELETE', `${listPath(list.id)}/threads/${encodeURIComponent(phone)}`),
+      member
+        ? chatLists.addThread({ id: list.id, phone })
+        : chatLists.dropThread({ id: list.id, phone }),
     onMutate: async (change) => {
       await client.cancelQueries({ queryKey });
       client.setQueryData<ThreadCache>(queryKey, (old) => withMembership(old, change));

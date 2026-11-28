@@ -110,5 +110,6 @@ export type ThreadRating = z.infer<typeof threadRatingSchema>;
 export type TemplateStarter = z.infer<typeof templateStarterSchema>;
 export type TemplateHealthInput = z.infer<typeof templateHealthSchema>;
 export type TemplateLineInput = z.infer<typeof templateLineSchema>;
+export type TemplateCrmStatusInput = z.infer<typeof templateCrmStatusSchema>;
 export type LeadQualificationPatch = z.infer<typeof leadQualificationPatchSchema>;
 export type LeadFollowUp = z.infer<typeof leadFollowUpSchema>;

@@ -1,80 +1,89 @@
 import {
-  googleStudentMapSchema,
-  googleTeacherMapSchema,
-  teacherCalendarOwnerSchema,
+  googleMapRoutes as routes,
   type GoogleStudentMapRow,
   type GoogleTeacherMapRow,
   type TeacherCalendarView,
 } from '@ab/catalog';
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Put, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { asResponse } from '@/common/http/returns';
+import { AdminUser, requireAdmin } from '@/modules/platform/google-sync/admin/admin-only';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
-import { requireAdmin } from '@/modules/platform/google-sync/admin/admin-only';
+import { CurrentUser } from '@/common/auth/decorators';
 import { GoogleMapService } from './google-map.service';
 import { TeacherCalendarService } from './teacher-calendar.service';
 
+const SEARCH_MAX = 80;
+
 /** Teacher ↔ calendar and student ↔ folder mappings, confirmed by an admin (docs/24 §3). */
-@ApiTags('google-sync')
 @ApiBearerAuth()
-@Permissions('settings.write')
-@Controller('admin/google')
+@Controller()
 export class GoogleMapController {
   constructor(
     private readonly map: GoogleMapService,
     private readonly calendars: TeacherCalendarService,
   ) {}
 
-  @Get('teachers')
-  @Permissions('settings.read')
-  teachers(@CurrentUser() user: AuthUser): Promise<GoogleTeacherMapRow[]> {
+  @Route(routes.teachers)
+  async teachers(@CurrentUser() user: AuthUser): Promise<GoogleTeacherMapRow[]> {
     requireAdmin(user);
-    return this.map.teachers();
+    return asResponse(routes.teachers.response, await this.map.teachers());
   }
 
-  @Put('teachers/:id')
-  async setTeacher(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<GoogleTeacherMapRow[]> {
-    requireAdmin(user);
-    const { calendar_id } = parseOrThrow(googleTeacherMapSchema, body);
-    await this.map.setTeacher({ teacherId: id, calendarId: calendar_id, actorId: user.id });
-    return this.map.teachers();
+  @Route(routes.setTeacher)
+  async setTeacher(
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.setTeacher>,
+    @AdminUser() user: AuthUser,
+  ): Promise<GoogleTeacherMapRow[]> {
+    const input = { teacherId: params.id, calendarId: body.calendar_id, actorId: user.id };
+    await this.map.setTeacher(input);
+    return asResponse(routes.setTeacher.response, await this.map.teachers());
   }
 
-  @Get('teachers/:id/calendar-owner')
-  @Permissions('settings.read')
-  calendarOwner(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<TeacherCalendarView> {
+  @Route(routes.calendarOwner)
+  async calendarOwner(
+    @RouteInput() { params }: RouteInputOf<typeof routes.calendarOwner>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TeacherCalendarView> {
     requireAdmin(user);
-    return this.calendars.view(id);
+    return asResponse(routes.calendarOwner.response, await this.calendars.view(params.id));
   }
 
-  @Put('teachers/:id/calendar-owner')
-  setCalendarOwner(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TeacherCalendarView> {
-    requireAdmin(user);
-    const { owner } = parseOrThrow(teacherCalendarOwnerSchema, body);
-    return this.calendars.setOwner({ teacherId: id, owner, actorId: user.id });
+  @Route(routes.setCalendarOwner)
+  async setCalendarOwner(
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.setCalendarOwner>,
+    @AdminUser() user: AuthUser,
+  ): Promise<TeacherCalendarView> {
+    const input = { teacherId: params.id, owner: body.owner, actorId: user.id };
+    return asResponse(routes.setCalendarOwner.response, await this.calendars.setOwner(input));
   }
 
-  @Get('students')
-  @Permissions('settings.read')
-  students(@Query('q') q: string | undefined, @CurrentUser() user: AuthUser): Promise<GoogleStudentMapRow[]> {
+  @Route(routes.students)
+  async students(
+    @RouteInput() { query }: RouteInputOf<typeof routes.students>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<GoogleStudentMapRow[]> {
     requireAdmin(user);
-    return this.map.students((q ?? '').slice(0, 80));
+    const rows = await this.map.students((query.q ?? '').slice(0, SEARCH_MAX));
+    return asResponse(routes.students.response, rows);
   }
 
-  @Put('students/:id')
-  setStudent(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<GoogleStudentMapRow> {
-    requireAdmin(user);
-    return this.map.setStudent({
-      studentId: id,
-      files: parseOrThrow(googleStudentMapSchema, body),
-      actorId: user.id,
-    });
+  @Route(routes.setStudent)
+  async setStudent(
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.setStudent>,
+    @AdminUser() user: AuthUser,
+  ): Promise<GoogleStudentMapRow> {
+    const row = await this.map.setStudent({ studentId: params.id, files: body, actorId: user.id });
+    return asResponse(routes.setStudent.response, row);
   }
 
-  @Delete('students/:id')
-  unsetStudent(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<GoogleStudentMapRow> {
-    requireAdmin(user);
-    return this.map.setStudent({ studentId: id, files: null, actorId: user.id });
+  @Route(routes.unsetStudent)
+  async unsetStudent(
+    @RouteInput() { params }: RouteInputOf<typeof routes.unsetStudent>,
+    @AdminUser() user: AuthUser,
+  ): Promise<GoogleStudentMapRow> {
+    const row = await this.map.setStudent({ studentId: params.id, files: null, actorId: user.id });
+    return asResponse(routes.unsetStudent.response, row);
   }
 }

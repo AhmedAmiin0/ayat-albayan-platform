@@ -10,17 +10,17 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-const kid = (id: string, name: string, status: string) => ({
-  id,
-  code: `AB-0${id}`,
+const kid = (n: string, name: string, status: string) => ({
+  id: `00000000-0000-4000-8000-000000000${n}`,
+  code: `AB-0${n}`,
   name,
   tz: 'Asia/Riyadh',
   status,
 });
 const me = {
-  id: 't-abrar',
-  display_name_ar: 'أبرار',
-  tz: 'Africa/Cairo',
+  id: '00000000-0000-4000-8000-0000000000a1',
+  display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  meeting_link: null, meeting_mode: null,
   students: [
     kid('101', 'يوسف', 'active'),
     kid('102', 'بلال', 'trial'),

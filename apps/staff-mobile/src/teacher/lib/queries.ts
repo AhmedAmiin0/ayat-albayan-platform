@@ -1,19 +1,26 @@
-import { myPayoutRoutes, type PendingReportView } from '@ab/shared';
+import { myPayoutRoutes } from '@ab/shared';
 import { routePath } from '@ab/core';
-import type { LessonView, TeacherMe } from '@ab/schedule';
-import { availabilityCalls, myPayoutCalls, TEACHER_REFRESH_MS } from '@ab/client-core';
+import {
+  availabilityCalls,
+  myPayoutCalls,
+  reportHistoryCalls,
+  TEACHER_REFRESH_MS,
+  teacherLessonCalls,
+} from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { ApiError, apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
+import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 // The signed-in teacher's own reads (R-TCH-03, R-TCH-04). Every route is scoped by the session on
 // the API (no teacher id to tamper with); the persisted cache keeps them for an offline start.
 
 const ME = '/teachers/me';
+const history = reportHistoryCalls({ apiFetch, apiSend });
+const lessons = teacherLessonCalls({ apiFetch, apiSend });
 const availability = availabilityCalls({ apiFetch, apiSend });
 
 /** GET /teachers/me: name, tz, link, students. 404 `teacher_not_linked` without a teachers row. */
 export function useTeacherMe(enabled = true) {
-  return useQuery({ queryKey: pathKey(ME), queryFn: () => apiFetch<TeacherMe>(ME), enabled });
+  return useQuery({ queryKey: pathKey(ME), queryFn: () => lessons.me(), enabled });
 }
 
 export function isNotLinked(error: unknown): boolean {
@@ -27,17 +34,16 @@ const pollWhen = (live: boolean) => (live ? TEACHER_REFRESH_MS : false);
 export function useMyLessons(window: { from: string; to: string }, live = false) {
   return useQuery({
     queryKey: [...pathKey('/lessons'), 'mine', window],
-    queryFn: () => apiFetch<LessonView[]>(`${ME}/lessons${toQueryString(window)}`),
+    queryFn: () => lessons.lessons(window),
     refetchInterval: pollWhen(live),
   });
 }
 
 /** GET /teachers/me/pending-reports: started lessons still missing a sent report, oldest first. */
 export function usePendingReports(live = false) {
-  const path = `${ME}/pending-reports`;
   return useQuery({
     queryKey: [...pathKey('/reports'), 'pending'],
-    queryFn: () => apiFetch<PendingReportView[]>(path),
+    queryFn: () => history.pending(),
     refetchInterval: pollWhen(live),
   });
 }

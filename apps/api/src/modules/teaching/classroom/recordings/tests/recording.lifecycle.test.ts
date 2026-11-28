@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CONFIG, LESSON_ID } from '@/modules/teaching/classroom/classroom.fakes';
 import type { FetchLike } from '@/common/infra/http/failure';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import { participantEventOf, peopleIn } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
 import { recordingQueries } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RecordingLifecycle } from '@/modules/teaching/classroom/recordings/recording.lifecycle';

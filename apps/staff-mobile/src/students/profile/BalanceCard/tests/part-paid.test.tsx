@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { screen } from '@testing-library/react-native';
 import { ApiError } from '@ab/mobile-kit';
 import { balanceOf, page, subscription } from '@/payments/fixtures';
@@ -17,7 +18,7 @@ const partPaidText = partPaidLine({ paid: 80, price: 81, currency: 'SAR' }) ?? '
 function serve(paid: number) {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/students/s1/balance') return balanceOf(subscription({ price: 81, paid }));
-    if (path === '/settings') return { renewal_alert_remaining: 2 };
+    if (path === '/settings') return { ...SETTING_DEFAULTS, renewal_alert_remaining: 2 };
     if (path.startsWith('/payments?')) return page([]);
     throw new ApiError(404);
   });

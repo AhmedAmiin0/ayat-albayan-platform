@@ -1,10 +1,8 @@
-import { PAYMENT_KINDS, PAYMENT_METHODS } from '@ab/catalog';
-import { monthQuery } from '@ab/money';
-import { z } from 'zod';
+import { exportRoutes as routes, paymentExportFilterSchema } from '@ab/shared';
 import { parseOrThrow } from '@/common/http/http';
-import { Controller, Get, Query, Res } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { Controller, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Route } from '@/common/http/route';
 import { parseRange } from '@/modules/reporting/dashboard/range';
 import { badRequest } from '@/common/http/errors';
 import { attachment } from './csv';
@@ -23,42 +21,34 @@ function send(reply: HeaderReply, file: CsvFile): string {
   return file.csv;
 }
 
-const paymentFilter = z.object({
-  studentId: z.uuid().optional(),
-  method: z.enum(PAYMENT_METHODS).optional(),
-  kind: z.enum(PAYMENT_KINDS).optional(),
-});
-
-/** CSV exports (R-RPT-03, R-TCH-04). Admin only. `/payouts/:month.csv` can't be routed in Fastify. */
-@ApiTags('exports')
+/**
+ * CSV exports (R-RPT-03, R-TCH-04). `/payouts/:month.csv` can't be routed in Fastify. The range
+ * and month keep their own 400 codes, which @RouteInput() would answer as validation_failed.
+ */
 @ApiBearerAuth()
-@Permissions('exports.read')
-@Controller('exports')
+@Controller()
 export class ExportsController {
   constructor(private readonly exports: ExportsService) {}
 
-  @Get('students.csv')
+  @Route(routes.students)
   async students(@Res({ passthrough: true }) reply: HeaderReply) {
     return send(reply, await this.exports.students());
   }
 
-  @Get('lessons.csv')
+  @Route(routes.lessons)
   async lessons(@Query() query: unknown, @Res({ passthrough: true }) reply: HeaderReply) {
     return send(reply, await this.exports.lessons(parseRange(query)));
   }
 
-  @Get('payments.csv')
+  @Route(routes.payments)
   async payments(@Query() query: unknown, @Res({ passthrough: true }) reply: HeaderReply) {
-    return send(
-      reply,
-      await this.exports.payments(parseRange(query), parseOrThrow(paymentFilter, query)),
-    );
+    const filter = parseOrThrow(paymentExportFilterSchema, query);
+    return send(reply, await this.exports.payments(parseRange(query), filter));
   }
 
-  /** `?month=YYYY-MM` → 400 invalid_month otherwise. */
-  @Get('payouts.csv')
+  @Route(routes.payouts)
   async payouts(@Query() query: unknown, @Res({ passthrough: true }) reply: HeaderReply) {
-    const parsed = monthQuery.safeParse(query);
+    const parsed = routes.payouts.query.safeParse(query);
     if (!parsed.success) throw badRequest('invalid_month');
     return send(reply, await this.exports.payouts(parsed.data.month));
   }

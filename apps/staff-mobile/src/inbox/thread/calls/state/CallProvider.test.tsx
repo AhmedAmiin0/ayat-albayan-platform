@@ -1,3 +1,4 @@
+import { aMessageView } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Vibration } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -5,7 +6,7 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { CallButton } from '@/inbox/thread/calls/entries/CallButton';
 import { CallProvider } from './CallProvider';
-import { fakeRtc, OFF, ON, ringing, routes } from './call-test-kit';
+import { fakeRtc, IN_ID, OFF, ON, OUT_ID, ringing, routes } from './call-test-kit';
 
 const mockFetch = jest.fn();
 const mockSend = jest.fn();
@@ -32,7 +33,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.spyOn(Vibration, 'vibrate').mockImplementation(() => undefined);
   jest.spyOn(Vibration, 'cancel').mockImplementation(() => undefined);
-  mockSend.mockImplementation(async (_m: string, path: string) => ({ ...ringing(), id: path === '/calls' ? 'out1' : 'in1', status: 'connecting' }));
+  mockSend.mockImplementation(async (_m: string, path: string) => ({ ...ringing(), id: path === '/calls' ? OUT_ID : IN_ID, status: 'connecting' }));
 });
 
 test('off: only /calls/config is asked, no phone icon, no ring', async () => {
@@ -50,14 +51,14 @@ test('an incoming call rings full screen; «قبول» posts our answer to the f
   expect(await screen.findByTestId('incoming-call')).toBeTruthy();
   expect(Vibration.vibrate).toHaveBeenCalled();
   await fireEvent.press(screen.getByLabelText(t.calls.controls.accept));
-  await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', '/calls/in1/accept', { sdp: 'v=0 our answer' }));
+  await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', `/calls/${IN_ID}/accept`, { sdp: 'v=0 our answer' }));
 });
 
 test('«رفض» rejects on WhatsApp and stops the ring at once', async () => {
   mockFetch.mockImplementation(routes({ config: ON, active: [ringing()] }));
   await renderWithQuery(ui());
   await fireEvent.press(await screen.findByLabelText(t.calls.controls.decline));
-  await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', '/calls/in1/reject'));
+  await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', `/calls/${IN_ID}/reject`, undefined));
   await waitFor(() => expect(screen.queryByTestId('incoming-call')).toBeNull());
   expect(Vibration.cancel).toHaveBeenCalled();
 });
@@ -73,6 +74,7 @@ test('the phone icon: with permission, our gathered offer goes to POST /calls on
 
 test('no permission inside the window: «اطلب إذن الاتصال» sends the request through the API', async () => {
   mockFetch.mockImplementation(routes({ config: ON, permission: 'request' }));
+  mockSend.mockResolvedValue(aMessageView({ phone_e164: '+966501234567' }));
   await renderWithQuery(ui());
   await fireEvent.press(await screen.findByTestId('call-button'));
   await fireEvent.press(await screen.findByText(t.calls.permission.request));

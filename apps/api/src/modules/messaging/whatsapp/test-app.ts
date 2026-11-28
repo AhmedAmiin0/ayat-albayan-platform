@@ -23,7 +23,7 @@ import { WHATSAPP_CLIENT, WHATSAPP_LINES } from './whatsapp.types';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
-const SALES: AuthUser = { id: 's0000000-0000-4000-8000-000000000003', email: null, role: 'sales' };
+const SALES: AuthUser = { id: '50000000-0000-4000-8000-000000000003', email: null, role: 'sales' };
 const ASSISTANT: AuthUser = { id: 's0000000-0000-4000-8000-000000000004', email: null, role: 'assistant' };
 /** A custom role (base sales) for the dynamic-roles cases; its grants come from the test's resolver. */
 const CUSTOM: AuthUser = { id: 's0000000-0000-4000-8000-000000000005', email: null, role: 'sales' };

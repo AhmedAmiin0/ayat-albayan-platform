@@ -1,5 +1,6 @@
-import { liveInterval, UNREAD_COUNT_KEY, UNREAD_COUNT_PATH, unreadTotal } from '@ab/client-core';
-import { ApiError, apiFetch, env } from '@ab/web-kit';
+import { liveInterval, UNREAD_COUNT_KEY } from '@ab/client-core';
+import { ApiError, env } from '@ab/web-kit';
+import { threadReads } from '@/features/messaging/inbox/api/api';
 import { inboxLive } from '@/features/messaging/inbox/api/live';
 
 /** A signed-out session (401) is not retried: the next poll, or the sign-in, asks again. */
@@ -16,8 +17,7 @@ export const unreadPollMs = (): number => liveInterval(inboxLive.isLive(), env.i
 export const unreadCountQuery = (enabled: boolean) => ({
   enabled,
   queryKey: UNREAD_COUNT_KEY,
-  queryFn: async ({ signal }: { signal: AbortSignal }) =>
-    unreadTotal(await apiFetch(UNREAD_COUNT_PATH, { signal })),
+  queryFn: async ({ signal }: { signal: AbortSignal }) => (await threadReads.unread(signal)).total,
   refetchInterval: unreadPollMs,
   retry: unreadRetry,
 });

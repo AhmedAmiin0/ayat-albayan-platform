@@ -1,6 +1,6 @@
 import type { ShortLinkGateView, ShortLinkOpenResult, ShortLinkOutcome } from '@ab/shared';
 import { z } from 'zod';
-import type { GateViewResult } from './short-links-api';
+import type { GateViewResult } from './api';
 
 // The web gate /l/<code> of a managed link (docs/19 «Gate»; boards docs/design/short-links/
 // LinkXGate*.dc.html): which screen shows, from the public view, the session, the visitor's

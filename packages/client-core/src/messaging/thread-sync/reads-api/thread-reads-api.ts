@@ -1,0 +1,20 @@
+import { threadModeRoutes, threadReadRoutes } from '@ab/shared';
+import { callWith, type ApiClient } from '../../../core/http';
+import type { ThreadReadCalls } from './thread-reads-api.types';
+
+/** The nav badges read the chats list's own unread total through one row (docs/44 BUG4). */
+const UNREAD_ONE = { unread: 'true', page: 1, pageSize: 1 } as const;
+
+/** The inbox's reads on one api client: the chats list, the phone store's sync and a chat. */
+export function threadReadCalls(client: ApiClient): ThreadReadCalls {
+  const call = callWith(client);
+  return {
+    list: (query, signal) => call({ route: threadReadRoutes.list, query, signal }),
+    unread: (signal) => call({ route: threadReadRoutes.list, query: UNREAD_ONE, signal }),
+    sync: (query) => call({ route: threadReadRoutes.sync, query }),
+    page: ({ phone, query, signal }) =>
+      call({ route: threadModeRoutes.page, params: { phone }, query, signal }),
+    delta: ({ phone, query, signal }) =>
+      call({ route: threadModeRoutes.delta, params: { phone }, query, signal }),
+  };
+}

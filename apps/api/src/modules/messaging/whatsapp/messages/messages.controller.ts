@@ -1,23 +1,23 @@
-import type { MessageView, SendGateView } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import {
+  messageStatusRoutes as routes,
+  sendGateViewSchema,
+  type MessageView,
+  type SendGateView,
+} from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { asResponse } from '@/common/http/returns';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { AuditService } from '@/common/audit/audit.service';
 import { MessagesService, type MessageChange } from './messages.service';
 import { AppSend } from './app-send';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
-import { ZodParam } from '@/common/http/zod-inputs';
-import { z } from 'zod';
-
-/** The row's id (rule 12: zod at the boundary). */
-const messageId = z.uuid();
 
 /** M1–M3 (docs/12 §4): what the admin does with an outbound message that did not go out. */
-@ApiTags('messaging')
 @ApiBearerAuth()
-@Permissions('messages.manage')
-@Controller('messages')
+@Controller()
 export class MessagesController {
   constructor(
     private readonly messages: MessagesService,
@@ -27,44 +27,55 @@ export class MessagesController {
   ) {}
 
   /** Read only, so a teacher's composer shows the same sending-stopped note. */
-  @Get('gate')
-  @Permissions('messages.read')
-  gate(): Promise<SendGateView> {
-    return this.sendGate.view();
+  @Route(routes.gate)
+  async gate(): Promise<SendGateView> {
+    return asResponse(sendGateViewSchema, await this.sendGate.view());
   }
 
-  /** failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while OFF). */
-  @Post(':id/retry')
+  /** failed → queued, attempts 0; 409 not_retryable, or auto_off for a held row while OFF. */
+  @Route(routes.retry)
   @HttpCode(200)
   async retry(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.retry>,
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
-    const change = await this.messages.retry(id, {
+    const change = await this.messages.retry(params.id, {
       automaticOn: await this.sendGate.automaticOn(),
     });
     return this.audited({ change, action: 'message_retry', user });
   }
 
   /** R-MSG-03: queued / failed outbound → sent_manually (409 not_manual otherwise). */
-  @Post(':id/sent-manually')
+  @Route(routes.sentManually)
   @HttpCode(200)
-  async sentManually(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
-    return this.audited({ change: await this.messages.sentManually(id), action: 'message_sent_manually', user });
+  async sentManually(
+    @RouteInput() { params }: RouteInputOf<typeof routes.sentManually>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MessageView> {
+    const change = await this.messages.sentManually(params.id);
+    return this.audited({ change, action: 'message_sent_manually', user });
   }
 
   /** docs/19: held from platform sends for 10 minutes; idempotent; 409 not_app_send otherwise. */
-  @Post(':id/app-send')
+  @Route(routes.appSend)
   @HttpCode(200)
-  async appSend(@ZodParam('id', messageId) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
-    return this.audited({ change: await this.appSends.start(id), action: 'message_app_send', user });
+  async appSend(
+    @RouteInput() { params }: RouteInputOf<typeof routes.appSend>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MessageView> {
+    const change = await this.appSends.start(params.id);
+    return this.audited({ change, action: 'message_app_send', user });
   }
 
-  /** M3: the admin opened wa.me; held (failed «handed_off») until M2 or M1. 409 not_manual otherwise. */
-  @Post(':id/hand-off')
+  /** M3: the admin opened wa.me; held (failed «handed_off») until M2 or M1; 409 not_manual. */
+  @Route(routes.handOff)
   @HttpCode(200)
-  async handOff(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
-    return this.audited({ change: await this.messages.handOff(id), action: 'message_handed_off', user });
+  async handOff(
+    @RouteInput() { params }: RouteInputOf<typeof routes.handOff>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MessageView> {
+    const change = await this.messages.handOff(params.id);
+    return this.audited({ change, action: 'message_handed_off', user });
   }
 
   private async audited(input: {

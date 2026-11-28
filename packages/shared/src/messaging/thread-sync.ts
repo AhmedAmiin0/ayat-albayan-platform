@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import type { MessageView, ThreadView } from './chat/views';
+import type { MessageView } from './chat/message-view';
+import type { ThreadView } from './chat/thread-reads/thread-view.schemas';
 import { syncCursorSchema } from './sync-cursor';
 
 /** A first sync (no `since`) and every later page: at most this many rows a page (hard cap). */

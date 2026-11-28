@@ -1,6 +1,8 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
+import { aMessageView } from '@ab/shared/testing';
 import { ApiError, t } from '@ab/web-kit';
 import { detail, message, PHONE, template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
@@ -15,7 +17,7 @@ const PATH = '/threads/%2B966501234567';
 const HOUR = 3_600_000;
 const RATING = template({ key: 'lesson_rating', params: ['student_name', 'lesson_date'] });
 const tap = message({
-  id: 'm-tap',
+  id: uid('m-tap'),
   body: 'جيدة',
   interactive_payload: { type: 'button', button: { text: 'جيدة', payload: 'rate_good:l-1' } },
 });
@@ -28,7 +30,7 @@ function renderThread(input: {
   const last = new Date(Date.now() - input.lastInboundAgoMs).toISOString();
   const open = input.lastInboundAgoMs < 24 * HOUR;
   routeFetch(apiFetch, [
-    [PATH, detail([tap], { session_open: open, last_inbound_at: last, guardian_id: input.guardian === false ? null : 'g-1' })],
+    [PATH, detail([tap], { session_open: open, last_inbound_at: last, guardian_id: input.guardian === false ? null : uid('g-1') })],
     ['/messaging/templates', input.templates ?? [template(), RATING]],
     ['/messages/gate', { open: true, reason: null, queued: 0 }],
     ['/settings', SETTINGS],
@@ -61,7 +63,7 @@ describe('thread header: the 24 h window', () => {
 describe('«إرسال تقييم الحلقة»', () => {
   it('sends with a request id and says it went', async () => {
     renderThread({ lastInboundAgoMs: 30 * HOUR });
-    apiSend.mockResolvedValue(message({ id: 'm-out', direction: 'outbound', status: 'sent', template_key: 'lesson_rating' }));
+    apiSend.mockResolvedValue(aMessageView({ phone_e164: PHONE, status: 'sent', template_key: 'lesson_rating' }));
     const button = await screen.findByRole('button', { name: t.inbox.rating.send });
     await waitFor(() => expect((button as HTMLButtonElement).disabled).toBe(false));
     fireEvent.click(button);

@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit';
 import { TeacherLessonCard } from '@/features/teaching/teacher/lessons/TeacherLessonCard/TeacherLessonCard';
 
@@ -24,7 +24,7 @@ describe('TeacherLessonCard — «اقترح موعدًا آخر» on phones (< 
   });
 
   it('the form opens in a full-screen dialog instead of inside the card, and sends from there', async () => {
-    apiSend.mockResolvedValue(MONDAY);
+    apiSend.mockResolvedValue(answered(MONDAY));
     const onDone = vi.fn();
     render(
       <QueryClientProvider client={new QueryClient()}>

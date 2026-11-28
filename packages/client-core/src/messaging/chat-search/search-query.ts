@@ -1,14 +1,6 @@
 import type { ChatSearchHit, ChatSearchPage } from '@ab/shared';
-import {
-  chatSearchKey,
-  chatSearchPath,
-  parseChatSearchPage,
-  type ChatSearchState,
-  type SearchStep,
-} from './chat-search';
-
-/** The app's GET (its apiFetch, untyped: the answer is parsed here). */
-export type SearchGet = (path: string) => Promise<unknown>;
+import type { InboxSearchCalls } from '../inbox';
+import { chatSearchKey, type ChatSearchState, type SearchStep } from './chat-search';
 
 /** useInfiniteQuery's options for the search (plain: client-core has no react-query). */
 export interface ChatSearchPagesOptions {
@@ -27,12 +19,11 @@ export interface ChatSearchPagesOptions {
 export function chatSearchPages(
   phone: string,
   q: string,
-  get: SearchGet,
+  calls: Pick<InboxSearchCalls, 'chat'>,
 ): ChatSearchPagesOptions {
   return {
     queryKey: chatSearchKey(phone, q),
-    queryFn: async ({ pageParam }) =>
-      parseChatSearchPage(await get(chatSearchPath(phone, q, pageParam))),
+    queryFn: ({ pageParam }) => calls.chat({ phone }, { q, cursor: pageParam }),
     initialPageParam: undefined,
     getNextPageParam: (last) => last.next_cursor ?? undefined,
     enabled: q !== '',

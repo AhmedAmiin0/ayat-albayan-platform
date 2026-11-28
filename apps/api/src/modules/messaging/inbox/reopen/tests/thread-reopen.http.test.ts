@@ -50,6 +50,7 @@ describe('POST /threads/:phone/reopen (answer only)', () => {
 
   it('a guardian (no inbox.send) is refused; a bad phone is 400', async () => {
     expect((await reopen('guardian')).statusCode).toBe(403);
-    expect((await t.call({ method: 'POST', url: '/threads/abc/reopen' })).statusCode).toBe(400);
+    const bad = await t.call({ method: 'POST', url: '/threads/abc/reopen' });
+    expect([bad.statusCode, bad.json().code]).toEqual([400, 'invalid_phone']);
   });
 });

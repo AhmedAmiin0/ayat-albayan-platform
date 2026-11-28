@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
-import { FATMA, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { FATMA, guidOf, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { overview } from '@/features/teaching/schedule/overview-fixture';
 import type { ScheduleSearch } from '@/features/teaching/schedule/filters/search';
 import { WeekSchedule } from '@/features/teaching/schedule/grid/WeekSchedule/WeekSchedule';
@@ -93,7 +93,7 @@ describe('WeekSchedule (R-SCH-01, R-SCH-03)', () => {
   });
 
   it('picked teachers, program and gender filter the rows on the client', async () => {
-    renderWeek({ teachers: ['t-abrar', 't-nour'], program: 'quran' });
+    renderWeek({ teachers: [guidOf('t-abrar'), guidOf('t-nour')], program: 'quran' });
     const grid = await screen.findByRole('table', { name: t.schedule.grid });
     expect(rowNames(grid)).toEqual(['أبرار']);
     expect(apiFetch).toHaveBeenCalledWith(expect.not.stringContaining('teacherId'));

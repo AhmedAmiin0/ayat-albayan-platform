@@ -1,46 +1,36 @@
-import { Controller, Delete, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { messageHideRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { MessageHideService } from './message-hide.service';
 
-const uuid = new ParseUUIDPipe();
+// A bad phone (400 invalid_phone) wins over a bad id (the 400 envelope).
+const phoneThenId = { paramErrors: [{ name: 'phone', fail: invalidPhone }, { name: 'messageId' }] };
 
 /** Hides for staff only; the message stays on the customer's phone; only admin can show. */
-@ApiTags('inbox')
 @ApiBearerAuth()
-@Permissions('inbox.send')
-@Controller('threads/:phone/messages/:messageId/hide')
+@Controller()
 export class MessageHideController {
   constructor(private readonly hides: MessageHideService) {}
 
-  @Post()
+  @Route(routes.hide)
   @HttpCode(204)
   async hide(
-    @Param() params: Record<string, string | undefined>,
+    @RouteInput(phoneThenId) { params }: RouteInputOf<typeof routes.hide>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.hides.hide({ ...(await target(params)), user });
+    await this.hides.hide({ ...params, user });
   }
 
-  @Delete()
+  @Route(routes.unhide)
   @HttpCode(204)
   async unhide(
-    @Param() params: Record<string, string | undefined>,
+    @RouteInput(phoneThenId) { params }: RouteInputOf<typeof routes.unhide>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.hides.unhide({ ...(await target(params)), user });
+    await this.hides.unhide({ ...params, user });
   }
-}
-
-async function target(
-  params: Record<string, string | undefined>,
-): Promise<{ phone: string; messageId: string }> {
-  const phone = phoneParam(params.phone ?? '');
-  const messageId = await uuid.transform(params.messageId ?? '', {
-    type: 'param',
-    data: 'messageId',
-  });
-  return { phone, messageId };
 }

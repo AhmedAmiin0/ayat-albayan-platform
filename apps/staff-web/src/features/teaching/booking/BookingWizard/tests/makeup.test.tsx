@@ -38,7 +38,7 @@ const MISSED: MakeupCandidate = {
   duration_min: 45,
   teacher: { id: ABRAR.id, display_name_ar: 'أبرار' },
 };
-const PHOTO = { message_id: 'm-photo', created_at: '2026-10-02T10:00:00.000Z', mime: 'image/jpeg', caption: null, expired: false };
+const PHOTO = { message_id: 'a1111111-1111-4111-8111-111111111111', created_at: '2026-10-02T10:00:00.000Z', mime: 'image/jpeg', caption: null, expired: false };
 const RESULT = {
   rule_id: 'e7777777-7777-4777-8777-777777777771',
   student_ids: [STUDENT_ID],
@@ -115,7 +115,7 @@ describe('BookingWizard: makeup and trial for a registered student (R-SCH-10, R-
       startsOn: '2026-10-04',
       kind: 'makeup',
       makeupOfLessonId: MISSED.lesson_id,
-      invoice: { source: 'whatsapp', messageId: 'm-photo' },
+      invoice: { source: 'whatsapp', messageId: 'a1111111-1111-4111-8111-111111111111' },
       meetingLink: null,
       clientRequestId: expect.any(String),
       startsAt: SLOT,

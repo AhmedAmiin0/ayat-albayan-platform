@@ -1,7 +1,7 @@
 import { threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import { infiniteQueryOptions } from '@tanstack/react-query';
 import { env } from '@ab/web-kit';
-import { threadPage, threadPath } from './api';
+import { threadReads } from './api';
 import { threadKeys } from './keys';
 
 /**
@@ -18,7 +18,7 @@ export const threadQuery = (phone: string) =>
   infiniteQueryOptions({
     queryKey: threadKeys.detail(phone),
     queryFn: ({ pageParam, signal }) =>
-      threadPage(`${threadPath(phone)}${threadPageQuery(pageParam)}`, { signal }),
+      threadReads.page({ phone, query: threadPageQuery(pageParam), signal }),
     initialPageParam: null as ThreadPageParam,
     // Time and id (docs/37 NEW 4): rows sharing the oldest row's time are never skipped.
     getNextPageParam: threadNextParam,

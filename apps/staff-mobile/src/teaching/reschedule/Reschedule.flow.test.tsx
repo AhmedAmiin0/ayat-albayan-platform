@@ -1,6 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { answered } from '@/today/testing/answered';
 import { lesson, pending } from '@/today/testing/fixtures';
 import { NOW, SAT_17, SLOTS, SUN_17 } from './fixtures';
 import { RescheduleSheet } from './RescheduleSheet';
@@ -14,8 +15,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 
 const dayKey = ['lessons', 'day', { date: '2026-10-01', tz: 'Asia/Riyadh' }];
+const endOf = (startsAt: string) => new Date(Date.parse(startsAt) + 45 * 60_000).toISOString();
 const moved = (startsAt: string) =>
-  lesson({ id: 'new', starts_at: startsAt, ends_at: new Date(Date.parse(startsAt) + 45 * 60_000).toISOString() });
+  answered(lesson({ id: 'new', starts_at: startsAt, ends_at: endOf(startsAt) }));
 
 beforeEach(() => {
   mockApiFetch.mockReset().mockResolvedValue(SLOTS);

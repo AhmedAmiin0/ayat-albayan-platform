@@ -6,7 +6,7 @@ import type { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal
 import { InternalMeetingsService } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.service';
 import { hashMeetingToken } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 const ORIGIN = 'https://app.example.test';

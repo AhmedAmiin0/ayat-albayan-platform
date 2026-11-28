@@ -1,43 +1,40 @@
-import { usedBeforeEditSchema, type UsedBeforeEditResult, type UsedBeforeState } from '@ab/shared';
-import { Controller, Get, Patch } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { usedBeforeRoutes as routes } from '@ab/shared';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { UsedBeforeEdit } from '@/modules/finance/subscriptions';
 import { UsedBeforeAccess } from './used-before-access';
 
 /** Needs subscriptions.edit_terms; never teachers or families; own students only if enforced. */
-@ApiTags('subscriptions')
 @ApiBearerAuth()
-@Permissions('subscriptions.edit_terms')
-@Controller('subscriptions/:id/lessons-used-before')
+@Controller()
 export class UsedBeforeEditController {
   constructor(
     private readonly edits: UsedBeforeEdit,
     private readonly access: UsedBeforeAccess,
   ) {}
 
-  /** 200 UsedBeforeState: the stored number, the stepper's max, a refusal (cancelled, course). */
-  @Get()
+  /** The stored number, the stepper's max, a refusal (cancelled, course). */
+  @Route(routes.state)
   async state(
-    @ZodParam('id', z.uuid()) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.state>,
     @CurrentUser() user: AuthUser,
-  ): Promise<UsedBeforeState> {
-    await this.access.assert(id, user);
-    return this.edits.state(id);
+  ) {
+    await this.access.assert(params.id, user);
+    return asResponse(routes.state.response, await this.edits.state(params.id));
   }
 
-  /** 200 UsedBeforeEditResult; see UsedBeforeEdit for the refusals. */
-  @Patch()
+  /** See UsedBeforeEdit for the refusals. */
+  @Route(routes.edit)
   async edit(
-    @ZodParam('id', z.uuid()) id: string,
-    @ZodBody(usedBeforeEditSchema) body: z.output<typeof usedBeforeEditSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.edit>,
     @CurrentUser() user: AuthUser,
-  ): Promise<UsedBeforeEditResult> {
-    await this.access.assert(id, user);
-    const input = { id, lessonsUsedBefore: body.lessonsUsedBefore, actorId: user.id };
+  ) {
+    await this.access.assert(params.id, user);
+    const input = { id: params.id, lessonsUsedBefore: body.lessonsUsedBefore, actorId: user.id };
     return this.edits.edit({ ...input, now: new Date() });
   }
 }

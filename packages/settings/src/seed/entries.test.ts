@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import {
-  configDescriptionSchema,
-  configEntryPatchSchema,
-  DESCRIPTION_MAX,
-  needsTypedConfirm,
-  typedConfirmMatches,
-} from './entries';
+import { configDescriptionSchema, configEntryPatchSchema } from '../config-entries';
+import { DESCRIPTION_MAX, needsTypedConfirm, typedConfirmMatches } from './entries';
 
 describe('needsTypedConfirm (data-deleting values, docs/26 §8 q3)', () => {
   it('asks when the deleting starts (from OFF) or gets earlier', () => {

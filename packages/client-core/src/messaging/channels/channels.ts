@@ -7,7 +7,12 @@ import { clockOf, dateText, localDateIn, type ClockCycle } from '@ab/time';
 export type ChannelAudience = 'teacher' | 'portal' | 'admin' | 'sales';
 
 /** Participants write and mark read (the owning assistant too); the monitor reads. */
-export const CHANNEL_WRITES: Readonly<Record<ChannelAudience, boolean>> = { teacher: true, portal: true, admin: false, sales: true };
+export const CHANNEL_WRITES: Readonly<Record<ChannelAudience, boolean>> = {
+  teacher: true,
+  portal: true,
+  admin: false,
+  sales: true,
+};
 
 /** The thread re-reads this often while it is on screen (the inbox polls the same way). */
 export const CHANNEL_REFRESH_MS = 15_000;
@@ -27,45 +32,29 @@ export const THREAD_FULL_MS = 60_000;
  */
 export const INBOX_LIST_REFRESH_MS = 15_000;
 
-const BASE: Readonly<Record<ChannelAudience, (studentId: string) => string>> = {
-  teacher: (id) => `/teachers/me/channels/${id}`,
-  portal: (id) => `/portal/students/${id}/channel`,
-  admin: (id) => `/students/${id}/channel`,
-  sales: (id) => `/sales/students/${id}/channel`,
-};
+export const channelKey = (audience: ChannelAudience, studentId: string) =>
+  ['channel', audience, studentId] as const;
 
-/** GET …/messages, paging back with `before`. */
-export function channelMessagesPath(input: { audience: ChannelAudience; studentId: string; before?: string | undefined }): string {
-  const path = `${BASE[input.audience](input.studentId)}/messages`;
-  return input.before ? `${path}?before=${encodeURIComponent(input.before)}` : path;
-}
-
-/** GET …/presence: the chat's people this viewer may see online (docs/33). */
-export const channelPresencePath = (audience: ChannelAudience, studentId: string): string =>
-  `${BASE[audience](studentId)}/presence`;
-
-/** POST …/read (participants only). */
-export const channelReadPath = (audience: ChannelAudience, studentId: string): string => `${BASE[audience](studentId)}/read`;
-
-/** POST …/attachments/upload-url (participants): where to PUT a photo, PDF or voice note. */
-export const channelUploadPath = (audience: ChannelAudience, studentId: string): string =>
-  `${BASE[audience](studentId)}/attachments/upload-url`;
-
-export const channelKey = (audience: ChannelAudience, studentId: string) => ['channel', audience, studentId] as const;
-
-/** The teacher's list and the family's unread badge. */
-export const TEACHER_CHANNELS_PATH = '/teachers/me/channels';
-export const portalUnreadPath = (studentId: string): string => `/portal/students/${studentId}/channel/unread`;
+/** The family's unread badge. */
+export const portalUnreadPath = (studentId: string): string =>
+  `/portal/students/${studentId}/channel/unread`;
 
 /** The next `before` of an infinite thread: the last page's oldest message, while more exist. */
-export const olderCursor = (last: ChannelPage): string | undefined => (last.has_more ? last.messages[0]?.created_at : undefined);
+export const olderCursor = (last: ChannelPage): string | undefined =>
+  last.has_more ? last.messages[0]?.created_at : undefined;
 
 /** Every page of an infinite thread (newest page first) as one list, oldest first. */
 export function threadMessages(pages: readonly ChannelPage[] | undefined): ChannelPage['messages'] {
   return [...(pages ?? [])].reverse().flatMap((p) => p.messages);
 }
 
-export function channelTimeText(input: { iso: string; tz: string; now: Date; locale: Locale; cycle: ClockCycle }): string {
+export function channelTimeText(input: {
+  iso: string;
+  tz: string;
+  now: Date;
+  locale: Locale;
+  cycle: ClockCycle;
+}): string {
   const at = new Date(input.iso);
   const clock = clockOf(at, input);
   if (localDateIn(at, input.tz) === localDateIn(input.now, input.tz)) return clock;

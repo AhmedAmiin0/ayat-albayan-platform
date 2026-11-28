@@ -1,20 +1,9 @@
 import { wallParts } from '@ab/schedule';
 import { inWeekOrder } from '../course/course-picks';
-import type { AttendanceKind } from './student-details';
-import type { SalesWeeklySlot } from './student-schedule';
+import type { AttendanceKind } from './details-answer.schemas';
+import type { RosterAttendance, RosterSlot } from './student-views.schemas';
 
 // Each roster row's weekly slots in one short line and an attendance count; pure.
-
-/** A row's weekly slot: the next start of each weekday (UTC) and the teacher; never a link. */
-export type RosterSlot = Pick<SalesWeeklySlot, 'next' | 'teacher'>;
-
-/** Present lessons out of held ones (present + absent), as the attendance log counts. */
-export interface RosterAttendance {
-  attended: number;
-  held: number;
-  /** 'subscription': since the current package started; 'recent': the last 30 days. */
-  basis: 'subscription' | 'recent';
-}
 
 /** Without a current package, the attendance of the last 30 days. */
 export const ROSTER_RECENT_DAYS = 30;

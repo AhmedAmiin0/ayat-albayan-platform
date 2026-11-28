@@ -1,9 +1,12 @@
-import { SETTING_FIELD_OF, type SettingKey, type SettingsMetaResponse } from '@ab/settings';
+import { settingsCalls, settingsMetaCalls } from '@ab/client-core';
+import { SETTING_FIELD_OF, type SettingKey } from '@ab/settings';
 import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 const SETTINGS = '/settings';
 const META = '/config/meta';
+const metaCalls = settingsMetaCalls({ apiFetch, apiSend });
+const calls = settingsCalls({ apiFetch, apiSend });
 
 type SaveOutcome = 'saved' | 'moved' | 'invalid';
 
@@ -44,7 +47,7 @@ export function useSaveValue() {
   return useMutation({
     mutationKey: SAVE_KEY,
     mutationFn: async ({ key, value }: ValueSave) => {
-      const answer = await apiSend<unknown>('PATCH', SETTINGS, { [SETTING_FIELD_OF[key]]: value });
+      const answer = await calls.update({ [SETTING_FIELD_OF[key]]: value });
       return { outcome: outcomeOf(key, answer), answer };
     },
     onSuccess: ({ answer }, { key }) => {
@@ -61,7 +64,7 @@ export function useSaveValue() {
 export function useConfigMeta() {
   return useQuery({
     queryKey: pathKey(META),
-    queryFn: () => apiFetch<SettingsMetaResponse>(META),
+    queryFn: () => metaCalls.view(),
     retry: false,
   });
 }

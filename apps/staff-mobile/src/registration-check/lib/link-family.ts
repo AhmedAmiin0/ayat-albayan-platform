@@ -1,10 +1,12 @@
-import type { LeadFamilyLinked } from '@ab/shared';
+import { leadFamilyCalls } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ApiError, apiSend, t, pathKey } from '@ab/mobile-kit';
+import { ApiError, apiFetch, apiSend, t, pathKey } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
 
 // Linking to an existing student: the lead chat's number becomes the second number of an existing
 // student's family. POST /leads/:id/link-family { code } → 200 { linked }; never an id or a phone.
+
+const leadFamily = leadFamilyCalls({ apiFetch, apiSend });
 
 type LinkErrorCode = keyof typeof t.inbox.linkFamily.errors;
 
@@ -27,10 +29,7 @@ export function linkFamilyErrorText(error: unknown): string {
 export function useLinkFamily(leadId: string) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (code: string) =>
-      apiSend<LeadFamilyLinked>('POST', `/leads/${encodeURIComponent(leadId)}/link-family`, {
-        code,
-      }),
+    mutationFn: (code: string) => leadFamily.link({ leadId, code }),
     onSuccess: () => {
       for (const key of [pathKey('/threads'), pathKey('/leads'), salesKeys.families]) {
         void client.invalidateQueries({ queryKey: key });

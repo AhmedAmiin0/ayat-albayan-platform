@@ -5,7 +5,7 @@ import { MEETING_ID, meetingQueries } from '@/modules/teaching/classroom/interna
 import { InternalMeetingKickService } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.kick.service';
 import type { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
-import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
+import { sentBody } from '@/modules/teaching/classroom/livekit/tests/livekit.fakes';
 import { http } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 let mq: ReturnType<typeof meetingQueries>;

@@ -1,4 +1,4 @@
-import type { AuthorTemplate } from '@ab/client-core';
+import type { TemplateView } from '@ab/shared';
 import { useId, useState } from 'react';
 import { FormAlert, Dialog, t } from '@ab/web-kit';
 import { SaveActions } from '@/features/messaging/templates/create/SaveActions';
@@ -11,9 +11,9 @@ import { useEditTemplate } from './use-edit-template';
 const S = t.templates.edit;
 
 export interface EditTemplateDialogProps {
-  tpl: AuthorTemplate;
+  tpl: TemplateView;
   mode: EditMode;
-  onSaved: (tpl: AuthorTemplate) => void;
+  onSaved: (tpl: TemplateView) => void;
   onClose: () => void;
 }
 

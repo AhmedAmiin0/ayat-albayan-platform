@@ -1,99 +1,80 @@
-import {
-  savedReplyCreateSchema,
-  savedReplyMoveSchema,
-  savedReplyStageSchema,
-  savedReplyUpdateSchema,
-  savedReplyUploadSchema,
-  type SavedReply,
-  type SavedReplyCreate,
-  type SavedReplyMove,
-  type SavedReplyStaged,
-  type SavedReplyUpload,
-  type SignedUpload,
-} from '@ab/shared';
-import { Body, Controller, Delete, Get, HttpCode, Patch, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import type { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { savedReplyRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
-import { RepliesUserGuard, replyIdSchema, replyNotFound } from './saved-replies.guard';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { RepliesUserGuard, replyNotFound } from './saved-replies.guard';
 import { SavedRepliesService } from './saved-replies.service';
 
-type StageBody = z.output<typeof savedReplyStageSchema>;
+const byId = { badParam: replyNotFound };
 
 /** Shared list writes need saved_replies.manage; /stage only copies, sends keep their gates. */
-@ApiTags('inbox')
 @ApiBearerAuth()
-@Permissions('inbox.read')
 @UseGuards(RepliesUserGuard)
-@Controller('saved-replies')
+@Controller()
 export class SavedRepliesController {
   constructor(private readonly replies: SavedRepliesService) {}
 
-  @Get()
-  all(@CurrentUser() user: AuthUser): Promise<SavedReply[]> {
+  @Route(routes.all)
+  all(@CurrentUser() user: AuthUser) {
     return this.replies.list(user);
   }
 
-  @Post()
+  @Route(routes.create)
   @HttpCode(201)
   create(
-    @ZodBody(savedReplyCreateSchema) body: SavedReplyCreate,
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
     @CurrentUser() user: AuthUser,
-  ): Promise<SavedReply> {
+  ) {
     return this.replies.create(user, body);
   }
 
-  @Post('attachment-upload-url')
+  @Route(routes.uploadUrl)
   @HttpCode(201)
   uploadUrl(
-    @ZodBody(savedReplyUploadSchema) body: SavedReplyUpload,
+    @RouteInput() { body }: RouteInputOf<typeof routes.uploadUrl>,
     @CurrentUser() user: AuthUser,
-  ): Promise<SignedUpload> {
+  ) {
     return this.replies.uploadUrl(user, body);
   }
 
-  @Patch(':id')
+  // A bad :id (404) wins over a bad body on the edit only.
+  @Route(routes.update)
   update(
-    @ZodParam('id', replyIdSchema, replyNotFound) id: string,
-    @Body() body: unknown,
+    @RouteInput({ ...byId, paramsFirst: true }) {
+      params,
+      body,
+    }: RouteInputOf<typeof routes.update>,
     @CurrentUser() user: AuthUser,
-  ): Promise<SavedReply> {
-    // A bad :id (404) still wins over a bad body: the body is parsed in the handler, after every
-    // pipe (a ZodBody would run before the ZodParam).
-    return this.replies.update(user, id, parseOrThrow(savedReplyUpdateSchema, body));
+  ) {
+    return this.replies.update(user, params.id, body);
   }
 
-  @Delete(':id')
+  @Route(routes.remove)
   @HttpCode(204)
   async remove(
-    @ZodParam('id', replyIdSchema, replyNotFound) id: string,
+    @RouteInput(byId) { params }: RouteInputOf<typeof routes.remove>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.replies.remove(user, id);
+    await this.replies.remove(user, params.id);
   }
 
-  /** Answers both lists in their new order. */
-  @Post(':id/move')
+  @Route(routes.move)
   @HttpCode(200)
   move(
-    @ZodParam('id', replyIdSchema, replyNotFound) id: string,
-    @ZodBody(savedReplyMoveSchema) body: SavedReplyMove,
+    @RouteInput(byId) { params, body }: RouteInputOf<typeof routes.move>,
     @CurrentUser() user: AuthUser,
-  ): Promise<SavedReply[]> {
-    return this.replies.move(user, id, body.direction);
+  ) {
+    return this.replies.move(user, params.id, body.direction);
   }
 
-  @Post(':id/stage')
+  @Route(routes.stage)
   @HttpCode(201)
-  @Permissions('inbox.send')
   stage(
-    @ZodParam('id', replyIdSchema, replyNotFound) id: string,
-    @ZodBody(savedReplyStageSchema) body: StageBody,
+    @RouteInput(byId) { params, body }: RouteInputOf<typeof routes.stage>,
     @CurrentUser() user: AuthUser,
-  ): Promise<SavedReplyStaged> {
-    return this.replies.stage(user, id, body.clientRequestId);
+  ) {
+    return this.replies.stage(user, params.id, body.clientRequestId);
   }
 }

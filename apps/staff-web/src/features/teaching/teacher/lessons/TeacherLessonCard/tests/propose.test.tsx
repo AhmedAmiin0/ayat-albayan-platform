@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError, t } from '@ab/web-kit';
 import { TeacherLessonCard } from '@/features/teaching/teacher/lessons/TeacherLessonCard/TeacherLessonCard';
 
@@ -32,7 +32,7 @@ describe('TeacherLessonCard — «اقترح موعدًا آخر» (R-SCH-08)', 
   });
 
   it('proposes another day and time on the teacher clock, with a note', async () => {
-    apiSend.mockResolvedValue(MONDAY);
+    apiSend.mockResolvedValue(answered(MONDAY));
     const onDone = renderCard();
     fireEvent.click(screen.getByRole('button', { name: t.teacherDash.proposeReschedule }));
     // A Dialog on every width (docs/48: no inline form in the card).

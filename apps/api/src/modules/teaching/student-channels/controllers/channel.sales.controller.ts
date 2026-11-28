@@ -1,22 +1,18 @@
 import {
-  channelPostSchema,
-  channelReadSchema,
+  channelSalesRoutes as chatRoutes,
+  channelSeatRoutes as seatRoutes,
   type ChannelMessageView,
-  type ChannelPost,
   type ChannelSeat,
   type ChannelUnread,
 } from '@ab/shared';
-import { Controller, Delete, Get, HttpCode, Inject, Post, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller, HttpCode, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ChannelAccess } from '@/modules/teaching/student-channels/channel-access';
 import { ChannelService } from '@/modules/teaching/student-channels/channel.service';
 import { ChannelSeatService } from '@/modules/teaching/student-channels/seat/channel-seat.service';
-
-const id = z.uuid();
 
 /**
  * The assistant in the chat writes too (docs/31 §2): sends, read
@@ -27,10 +23,8 @@ const id = z.uuid();
  * the student's bringer takes it from anyone (the bringer comes first), the
  * holder leaves it. Her page stays GET …/messages (MonitorChannelController).
  */
-@ApiTags('student-channels')
 @ApiBearerAuth()
-@Permissions('self.sales')
-@Controller('sales/students/:id/channel')
+@Controller()
 export class SalesChannelController {
   constructor(
     @Inject(ChannelAccess) private readonly access: ChannelAccess,
@@ -38,56 +32,54 @@ export class SalesChannelController {
     @Inject(ChannelSeatService) private readonly seats: ChannelSeatService,
   ) {}
 
-  @Post('messages')
+  @Route(chatRoutes.post)
   async post(
-    @ZodParam('id', id) studentId: string,
-    @ZodBody(channelPostSchema) body: ChannelPost,
+    @RouteInput() { params, body }: RouteInputOf<typeof chatRoutes.post>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelMessageView> {
-    return this.channels.post(await this.access.assistantWriter(user, studentId), body);
+    return this.channels.post(await this.access.assistantWriter(user, params.id), body);
   }
 
-  @Post('read')
+  @Route(chatRoutes.read)
   @HttpCode(204)
   async read(
-    @ZodParam('id', id) studentId: string,
-    @ZodBody(channelReadSchema, { orEmpty: true }) body: z.output<typeof channelReadSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof chatRoutes.read>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.channels.read(await this.access.assistantWriter(user, studentId), body.at);
+    await this.channels.read(await this.access.assistantWriter(user, params.id), body.at);
   }
 
-  @Get('unread')
+  @Route(chatRoutes.unread)
   async unread(
-    @ZodParam('id', id) studentId: string,
+    @RouteInput() { params }: RouteInputOf<typeof chatRoutes.unread>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelUnread> {
-    return this.channels.unread(await this.access.assistant(user, studentId));
+    return this.channels.unread(await this.access.assistant(user, params.id));
   }
 
-  @Get('seat')
-  async seat(
-    @ZodParam('id', id) studentId: string,
+  @Route(seatRoutes.view)
+  seat(
+    @RouteInput() { params }: RouteInputOf<typeof seatRoutes.view>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelSeat> {
-    return this.seats.view(user.id, studentId);
+    return this.seats.view(user.id, params.id);
   }
 
   /** Take the seat: free, or I brought the student; 409 channel_seat_taken otherwise. */
-  @Put('seat')
-  async takeSeat(
-    @ZodParam('id', id) studentId: string,
+  @Route(seatRoutes.take)
+  takeSeat(
+    @RouteInput() { params }: RouteInputOf<typeof seatRoutes.take>,
     @CurrentUser() user: AuthUser,
   ): Promise<ChannelSeat> {
-    return this.seats.take(user.id, studentId);
+    return this.seats.take(user.id, params.id);
   }
 
-  @Delete('seat')
+  @Route(seatRoutes.leave)
   @HttpCode(204)
   async leaveSeat(
-    @ZodParam('id', id) studentId: string,
+    @RouteInput() { params }: RouteInputOf<typeof seatRoutes.leave>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.seats.leave(user.id, studentId);
+    await this.seats.leave(user.id, params.id);
   }
 }

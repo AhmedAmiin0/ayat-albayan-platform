@@ -1,7 +1,7 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { GUARDIAN_PHONE } from '@/inbox/shared/flow-backend';
-import { PHONE } from '@/inbox/shared/thread-fixtures';
+import { PHONE, uid } from '@/inbox/shared/thread-fixtures';
 import { t } from '@ab/mobile-kit';
 import { armCamera } from '@/test/native-mocks';
 import { booked } from '@/booking/testing/fixtures';
@@ -85,7 +85,7 @@ test('a lead without a student: «اشترك» → camera invoice → POST /book
   expect(post).toMatchObject({
     kind: 'package',
     package: '8',
-    leadId: 'a1',
+    leadId: uid('a1'),
     invoice: { source: 'upload', path: 'req/0b1c.jpg' },
     newStudent: { name: 'يوسف', status: 'new' },
   });

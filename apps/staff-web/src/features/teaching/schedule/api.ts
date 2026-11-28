@@ -1,12 +1,17 @@
-import { scheduleRuleCalls, type BookingMode } from '@ab/client-core';
-import type { LessonTimeEdit, TimeEditResult } from '@ab/schedule';
+import {
+  lessonActionCalls,
+  lessonListCalls,
+  lessonMoveCalls,
+  proposalDecisionCalls,
+  scheduleRuleCalls,
+  type BookingMode,
+} from '@ab/client-core';
+import type { CorrectTo, LessonTimeEdit } from '@ab/schedule';
 import type {
   CancelRequest,
   Conflict,
-  LessonView,
   RescheduleRequest,
   StatusRouteEvent,
-  ScheduleOverview,
 } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend, errorCode, t } from '@ab/web-kit';
@@ -19,16 +24,18 @@ import { lessonKeys } from './lesson.keys';
 /** Invalidate after any lesson write: the week grid, the teacher dashboard and slot pickers. */
 export const LESSONS_KEY = lessonKeys.all;
 
+const lists = lessonListCalls({ apiFetch, apiSend });
+
 /**
  * GET /lessons/overview?from&to (≤ 31 days): every teacher with hours, time off, load and free
  * gaps, plus the window's lessons (every status). One request; the filters run on this payload.
  * Under LESSONS_KEY, so every lesson write refreshes the calendar.
  */
 export const overviewQuery = (w: Window) => {
-  const params = new URLSearchParams({ from: w.from.toISOString(), to: w.to.toISOString() });
+  const window = { from: w.from.toISOString(), to: w.to.toISOString() };
   return queryOptions({
-    queryKey: lessonKeys.overview(params.toString()),
-    queryFn: () => apiFetch<ScheduleOverview>(`/lessons/overview?${params}`),
+    queryKey: lessonKeys.overview(new URLSearchParams(window).toString()),
+    queryFn: () => lists.overview(window),
     placeholderData: keepPreviousData,
   });
 };
@@ -68,38 +75,43 @@ export const slotsQuery = (p: SlotsParams, mode: BookingMode = 'admin') => {
 /** POST /schedule-rules/refresh (admin): generate every lesson the weekly rules owe, now. */
 export const syncSchedule = () => scheduleRuleCalls({ apiFetch, apiSend }).refresh();
 
-export const confirmLesson = (id: string) => apiSend<LessonView>('POST', `/lessons/${id}/confirm`);
+const actions = lessonActionCalls({ apiFetch, apiSend });
+
+export const confirmLesson = (id: string) => actions.confirm({ id });
 
 export const setLessonStatus = ({ id, event }: { id: string; event: StatusRouteEvent }) =>
-  apiSend<LessonView>('POST', `/lessons/${id}/status`, { event });
+  actions.status({ id }, { event });
 
 export const cancelLesson = ({ id, body }: { id: string; body: CancelRequest }) =>
-  apiSend<LessonView[]>('POST', `/lessons/${id}/cancel`, body);
+  actions.cancel({ id }, body);
+
+/** An ended lesson set to another outcome on the admin's route; sales has its own. */
+export const correctLesson = (id: string, to: CorrectTo) => actions.correct({ id }, { to });
+
+const moves = lessonMoveCalls({ apiFetch, apiSend });
 
 export const rescheduleLesson = ({ id, body }: { id: string; body: RescheduleRequest }) =>
-  apiSend<LessonView>('POST', `/lessons/${id}/reschedule`, body);
+  moves.reschedule({ id }, body);
 
 /** Admin only (R-SCH-11): the same lesson with a new start and length. */
 export const editLessonTime = ({ id, body }: { id: string; body: LessonTimeEdit }) =>
-  apiSend<TimeEditResult>('PATCH', `/lessons/${id}/time`, body);
+  moves.editTime({ id }, body);
+
+const proposals = proposalDecisionCalls({ apiFetch, apiSend });
 
 /** Pending alternative-time proposals of a teacher or family (R-SCH-08). */
 export const proposalsQuery = queryOptions({
   queryKey: lessonKeys.proposals(),
-  queryFn: () => apiFetch<LessonView[]>('/lesson-proposals'),
+  queryFn: () => proposals.pending(),
 });
 
 /** Approving moves the lesson (a reschedule): 409 conflict unless `override` is given. */
 export const approveProposal = ({ id, override }: { id: string; override?: string }) =>
-  apiSend<LessonView>(
-    'POST',
-    `/lesson-proposals/${id}/approve`,
-    override ? { override: { reason: override } } : {},
-  );
+  proposals.approve({ id }, override ? { override: { reason: override } } : {});
 
 /** `note` is the answer the family reads with a declined request. */
 export const rejectProposal = ({ id, note }: { id: string; note?: string }) =>
-  apiSend<LessonView>('POST', `/lesson-proposals/${id}/reject`, note ? { note } : {});
+  proposals.reject({ id }, note ? { note } : {});
 
 export { errorCode };
 

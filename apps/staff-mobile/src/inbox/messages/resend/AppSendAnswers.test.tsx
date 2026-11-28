@@ -15,8 +15,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 // docs/19: the platform never sends such a row itself, so only the stop path, never a retry.
 
+const HELD_ID = 'c3333333-3333-4333-8333-333333333333';
 const held = message({
-  id: 'm-held',
+  id: HELD_ID,
   direction: 'outbound',
   status: 'queued',
   error_code: 'awaiting_reply',
@@ -34,7 +35,7 @@ beforeEach(() => send.mockReset().mockResolvedValue({ ...held, status: 'sent_man
 test('pending: «أرسلتها» records the manual send', async () => {
   await show(pending);
   await fireEvent.press(button(t.messages.whatsappSend.sentIt) as never);
-  await waitFor(() => expect(send).toHaveBeenCalledWith('POST', '/messages/m-held/sent-manually'));
+  await waitFor(() => expect(send).toHaveBeenCalledWith('POST', `/messages/${HELD_ID}/sent-manually`, undefined));
 });
 
 test('the plain offer: no answers', async () => {
@@ -48,7 +49,7 @@ test('unconfirmed: the question, «نعم» = sent-manually, and the action agai
   expect(screen.getByText(t.messages.whatsappSend.askSent)).toBeTruthy();
   expect(button(t.messages.whatsappSend.action)).toBeTruthy();
   await fireEvent.press(button(t.messages.whatsappSend.yes) as never);
-  await waitFor(() => expect(send).toHaveBeenCalledWith('POST', '/messages/m-held/sent-manually'));
+  await waitFor(() => expect(send).toHaveBeenCalledWith('POST', `/messages/${HELD_ID}/sent-manually`, undefined));
 });
 
 test('unconfirmed: never put back to sending (no «لا», no retry)', async () => {
@@ -64,7 +65,7 @@ test('the «!» sheet of an unconfirmed row: «نعم» closes it and records th
   expect(s.queryByRole('button', { name: t.messages.retry })).toBeNull();
   await fireEvent.press(s.getByRole('button', { name: t.messages.whatsappSend.yes }));
   expect(props.onClose).toHaveBeenCalled();
-  await waitFor(() => expect(send).toHaveBeenCalledWith('POST', '/messages/m-held/sent-manually'));
+  await waitFor(() => expect(send).toHaveBeenCalledWith('POST', `/messages/${HELD_ID}/sent-manually`, undefined));
 });
 
 test('the «!» sheet: a failed «نعم» shows in the chat notice after the sheet closed', async () => {

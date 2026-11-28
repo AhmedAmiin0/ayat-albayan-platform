@@ -4,38 +4,47 @@ import type { ReactElement } from 'react';
 import { ApiError, t } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
-import { openSigned } from '@/core/lib/http/open-signed';
+import { openDownload } from '@/core/lib/http/open-signed';
 import { AttendanceLogScreen } from '@/sales/sales/attendance/AttendanceLogScreen/AttendanceLogScreen';
 import { dayDateOf } from '@/sales/sales/attendance/attendance-log-text';
-import { logTable } from '@/sales/sales/attendance/fixtures';
+import { lessonId, logTable, REPORT_ID } from '@/sales/sales/attendance/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
-jest.mock('@/core/lib/http/open-signed', () => ({ openSigned: jest.fn(async () => undefined) }));
+jest.mock('@/core/lib/http/open-signed', () => ({
+  openDownload: jest.fn(async (answer: Promise<{ url: string }>) => {
+    await answer;
+  }),
+}));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
 
 const w = t.sales.student.log;
+const SIGNED = { url: 'https://storage/x.pdf', expires_at: '2026-10-27T16:00:00.000Z' };
 const openDay = dayDateOf('2026-10-27T15:00:00.000Z', 'Asia/Riyadh');
 const openLabel = w.openReport.replace('{date}', openDay);
 const inSales = (node: ReactElement) => renderWithQuery(<TreeBaseProvider value="/sales">{node}</TreeBaseProvider>);
 beforeEach(() => {
   mockApiFetch.mockReset();
   jest.mocked(router.push).mockClear();
-  jest.mocked(openSigned).mockClear();
+  jest.mocked(openDownload).mockClear();
 });
 
 test('her student: only the row with a sent report is a button, and it opens that report\'s PDF as «التقارير»', async () => {
-  mockApiFetch.mockResolvedValue(logTable());
+  mockApiFetch.mockImplementation(async (path: string) => (path.endsWith('/pdf') ? SIGNED : logTable()));
   await inSales(<AttendanceLogScreen />);
   const rows = await screen.findAllByRole('button', { name: openLabel });
   expect(rows).toHaveLength(1);
   await fireEvent.press(rows[0] ?? screen.getByText(w.sent));
-  expect(openSigned).toHaveBeenCalledWith('/sales/students/st1/reports/rep1/pdf');
+  expect(mockApiFetch).toHaveBeenCalledWith(`/sales/students/st1/reports/${REPORT_ID}/pdf`);
+  expect(openDownload).toHaveBeenCalledTimes(1);
 });
 
 test('a PDF not ready yet says so above the table', async () => {
-  mockApiFetch.mockResolvedValue(logTable());
-  jest.mocked(openSigned).mockRejectedValueOnce(new ApiError(409, { code: 'pdf_not_ready' }));
+  const notReady = new ApiError(409, { code: 'pdf_not_ready' });
+  mockApiFetch.mockImplementation(async (path: string) => {
+    if (path.endsWith('/pdf')) throw notReady;
+    return logTable();
+  });
   await inSales(<AttendanceLogScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: openLabel }));
   expect(await screen.findByText(t.reports.error.pdf_not_ready)).toBeTruthy();
@@ -52,7 +61,7 @@ test('the admin tree: the admin\'s route, and a sent report opens the admin\'s r
   await renderWithQuery(<AttendanceLogScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: openLabel }));
   expect(mockApiFetch).toHaveBeenCalledWith('/students/st1/attendance');
-  expect(router.push).toHaveBeenCalledWith('/students/reports/view/rep1');
+  expect(router.push).toHaveBeenCalledWith(`/students/reports/view/${REPORT_ID}`);
 });
 
 test('rows are keyed by lesson id (FlashList recycles by key)', async () => {
@@ -63,7 +72,7 @@ test('rows are keyed by lesson id (FlashList recycles by key)', async () => {
   const keyOf = list.props.keyExtractor as
     | ((row: { lesson_id: string }, i: number) => string)
     | undefined;
-  expect(logTable().items.map((r, i) => keyOf?.(r, i))).toEqual(['l1', 'l2', 'l3']);
+  expect(logTable().items.map((r, i) => keyOf?.(r, i))).toEqual([1, 2, 3].map(lessonId));
 });
 
 test('loading, then an unknown student (404) says so; another failure the load error with retry', async () => {

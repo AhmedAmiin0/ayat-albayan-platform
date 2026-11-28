@@ -1,22 +1,7 @@
 import type { PackageSize, SubscriptionStatus } from '@ab/catalog';
+import type { SalesPackageSummary } from './student-views.schemas';
 
 // Any student's current package for the assistant; never price, payment or commission.
-
-/** Size, status, dates and lessons used / left (v_subscription_balance, lessons_used_before in). */
-export interface SalesPackageSummary {
-  id: string;
-  package: PackageSize | null;
-  status: SubscriptionStatus;
-  starts_on: string;
-  renews_on: string | null;
-  ended_at: string | null;
-  /** The start of the booked lesson expected to use the last one left; null when not known. */
-  projected_end_at: string | null;
-  created_at: string;
-  lessons_total: number;
-  lessons_used: number;
-  lessons_remaining: number;
-}
 
 /** The words of one summary line, in the app's language. */
 export interface PackageWords {

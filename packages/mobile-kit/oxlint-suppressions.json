@@ -198,11 +198,6 @@
       "count": 1
     }
   },
-  "src/notifications/use-notifications.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/push/permission.test.ts": {
     "typescript/no-unsafe-enum-assignment": {
       "count": 1

@@ -1,3 +1,4 @@
+import { chatListCalls } from '@ab/client-core';
 import type { ChatList } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
@@ -8,7 +9,7 @@ import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 export const listsKey = pathKey('/chat-lists');
 /** ['threads']: the chat list (filtered by `list`) and every thread detail (its `lists`). */
 export const threadsKey = pathKey('/threads');
-export const listPath = (id: string) => `/chat-lists/${encodeURIComponent(id)}`;
+export const chatLists = chatListCalls({ apiFetch, apiSend });
 
 /**
  * GET /chat-lists, oldest first. `enabled` only for a holder of inbox.lists outside teacher mode.
@@ -18,20 +19,19 @@ export const listPath = (id: string) => `/chat-lists/${encodeURIComponent(id)}`;
 export function useChatLists(enabled: boolean) {
   return useQuery({
     queryKey: listsKey,
-    queryFn: () => apiFetch<ChatList[]>('/chat-lists'),
+    queryFn: () => chatLists.all(),
     enabled,
   });
 }
 
-/** Keeps a list answer usable even if a mock or an older API answers something else. */
-export const listsOf = (data: unknown): ChatList[] =>
-  Array.isArray(data) ? (data as ChatList[]) : [];
+/** The cached lists, or none before the first answer. */
+export const listsOf = (data: ChatList[] | undefined): ChatList[] => data ?? [];
 
 /** The new list enters the cache at once so the caller's active chip already exists. */
 export function useCreateList() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (name: string) => apiSend<ChatList>('POST', '/chat-lists', { name }),
+    mutationFn: (name: string) => chatLists.create(name),
     onSuccess: (list) => {
       client.setQueryData<ChatList[]>(listsKey, (old) => [...listsOf(old), list]);
       void client.invalidateQueries({ queryKey: listsKey });
@@ -48,7 +48,7 @@ interface RenameInput {
 export function useRenameList() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, name }: RenameInput) => apiSend<ChatList>('PATCH', listPath(id), { name }),
+    mutationFn: (input: RenameInput) => chatLists.rename(input),
     onSuccess: (list) => {
       client.setQueryData<ChatList[]>(listsKey, (old) =>
         listsOf(old).map((l) => (l.id === list.id ? list : l)),
@@ -62,7 +62,7 @@ export function useRenameList() {
 export function useDeleteList() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => apiSend('DELETE', listPath(id)),
+    mutationFn: (id: string) => chatLists.remove(id),
     onSuccess: (_none, id) => {
       client.setQueryData<ChatList[]>(listsKey, (old) => listsOf(old).filter((l) => l.id !== id));
       void client.invalidateQueries({ queryKey: listsKey });

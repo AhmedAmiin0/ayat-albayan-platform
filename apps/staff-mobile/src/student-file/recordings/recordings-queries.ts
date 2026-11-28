@@ -1,11 +1,13 @@
-import type { StudentRecordingsPage } from '@ab/schedule';
+import type { StudentRecordingFilters, StudentRecordingsPage } from '@ab/schedule';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
-import { apiFetch, toQueryString, listKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, listKey } from '@ab/mobile-kit';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
-import { flattenPages, nextPageParam } from '@ab/client-core';
+import { flattenPages, nextPageParam, studentRecordingsApi } from '@ab/client-core';
 
 const PAGE_SIZE = 10;
+
+export const recordingsApi = studentRecordingsApi({ apiFetch, apiSend });
 
 /** The key prefix of one student's recordings, for invalidation after a visibility change or delete. */
 export const recordingsKey = (studentId: string) => ['students', studentId, 'recordings'];
@@ -14,13 +16,13 @@ export const recordingsKey = (studentId: string) => ['students', studentId, 'rec
 // a restart would show dead links. Playing loads a fresh link anyway (freshRecordingUrl).
 const meta = { noPersist: true };
 
-/** GET /students/:id/recordings, newest first, paged; `params` are the filters. */
-export function useRecordings(studentId: string, params: Record<string, string | undefined>) {
-  const path = `/students/${studentId}/recordings`;
+/** Newest first, paged; `params` are the filters. */
+export function useRecordings(studentId: string, params: StudentRecordingFilters) {
+  const loadPage: LoadPage = (page) =>
+    recordingsApi.list({ studentId, query: { page, pageSize: PAGE_SIZE, ...params } });
   const query = useInfiniteQuery({
-    queryKey: listKey(path, params),
-    queryFn: ({ pageParam }) =>
-      apiFetch<StudentRecordingsPage>(`${path}${toQueryString({ ...params, page: pageParam, pageSize: PAGE_SIZE })}`),
+    queryKey: listKey(`/students/${studentId}/recordings`, params),
+    queryFn: ({ pageParam }) => loadPage(pageParam),
     initialPageParam: 1,
     getNextPageParam: nextPageParam,
     meta,
@@ -28,7 +30,6 @@ export function useRecordings(studentId: string, params: Record<string, string |
   const pages = query.data?.pages;
   const items = useMemo(() => flattenPages(pages ?? []), [pages]);
   const { loadMore, refresh, pulling } = usePagedActions(query);
-  const loadPage: LoadPage = (page) => apiFetch<StudentRecordingsPage>(`${path}${toQueryString({ ...params, page, pageSize: PAGE_SIZE })}`);
   const freshUrl = (id: string) => freshRecordingUrl(loadPage, pages ?? [], id);
   return withTracked(query, {
     items,

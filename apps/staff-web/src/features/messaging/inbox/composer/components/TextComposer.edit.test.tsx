@@ -3,7 +3,6 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { clearTabMemories } from '@/features/messaging/inbox/shared/tab-memory';
-import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import {
   box,
   editBar,
@@ -11,6 +10,7 @@ import {
   pickEdit,
   showChat,
 } from '@/features/messaging/inbox/testing/correction-harness';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
@@ -54,10 +54,8 @@ describe('«تعديل» in the text box (owner 2026-11-07)', () => {
 
   it('the send carries correctsId (no replyToMessageId, no prefix); a sent one clears the bar', async () => {
     apiSend.mockResolvedValue(
-      message({
-        id: 'fix',
-        direction: 'outbound',
-        status: 'queued',
+      sentText({
+        id: uid('fix'),
         body: 'تصحيح: الحلقة الساعة السادسة',
         corrects_id: OWN.id,
       }),
@@ -75,7 +73,7 @@ describe('«تعديل» in the text box (owner 2026-11-07)', () => {
 
   it('a replayed earlier row keeps the bar and brings the text back (review of #694)', async () => {
     const first = { body: 'تصحيح: الحلقة الساعة', corrects_id: OWN.id, replayed: true };
-    apiSend.mockResolvedValue({ ...message({ id: 'fix', direction: 'outbound' }), ...first });
+    apiSend.mockResolvedValue(sentText({ id: uid('fix'), ...first }));
     showChat();
     pickEdit();
     sendText('الساعة');

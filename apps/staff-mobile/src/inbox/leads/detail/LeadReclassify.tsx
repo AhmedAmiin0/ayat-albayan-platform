@@ -2,15 +2,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { apiSend, t, pathKey, Button, ErrorLine } from '@ab/mobile-kit';
+import { t, pathKey, Button, ErrorLine } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
+import { leadWrites } from './lead-writes';
 
 /** R-LEAD-04: the lead leaves the funnel, so success pops back and every lead list refetches. */
 export function LeadReclassify({ id }: { id: string }) {
   const client = useQueryClient();
   const [asking, setAsking] = useState(false);
   const move = useMutation({
-    mutationFn: () => apiSend<unknown>('POST', `/leads/${id}/reclassify`),
+    mutationFn: () => leadWrites.reclassify(id),
     onSuccess: () => {
       router.back();
       void client.invalidateQueries({ queryKey: pathKey('/leads') });

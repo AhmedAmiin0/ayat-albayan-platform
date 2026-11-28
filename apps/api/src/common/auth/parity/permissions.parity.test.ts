@@ -76,13 +76,13 @@ describe('system-role parity with the old @Roles table', () => {
   });
 
   it('students.check_registration gates the registration check only, for admin and sales', () => {
-    expect(routes.filter((r) => r.permission === 'students.check_registration').map((r) => r.key)).toEqual(['SalesRegistrationController.check']);
+    expect(routes.filter((r) => permissionKeys(r).includes('students.check_registration')).map((r) => r.key)).toEqual(['SalesRegistrationController.check']);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('students.check_registration'))).toEqual(['admin', 'sales']);
   });
 
   // The chat lists are their own route permission, admin and sales only (docs/22).
   it('inbox.lists gates the chat-lists routes only, for admin and sales (never a teacher)', () => {
-    const gated = routes.filter((r) => r.permission === 'inbox.lists').map((r) => r.key);
+    const gated = routes.filter((r) => [r.permission].flat().includes('inbox.lists')).map((r) => r.key);
     expect(gated.length).toBe(6);
     expect(gated.every((k) => k.startsWith('ChatListsController.'))).toBe(true);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('inbox.lists'))).toEqual(['admin', 'sales']);
@@ -96,8 +96,8 @@ describe('system-role parity with the old @Roles table', () => {
 
   // Sales has its own confirm route; the teacher and admin route keeps lessons.status.
   it('lessons.confirm gates the sales confirm route only, for admin and sales (never a teacher)', () => {
-    expect(routes.filter((r) => r.permission === 'lessons.confirm').map((r) => r.key)).toEqual(['SalesLessonActionsController.confirm']);
-    expect(routes.find((r) => r.key === 'LessonActionsController.confirm')?.permission).toBe('lessons.status');
+    expect(routes.filter((r) => permissionKeys(r).includes('lessons.confirm')).map((r) => r.key)).toEqual(['SalesLessonActionsController.confirm']);
+    expect(routes.filter((r) => r.key === 'LessonActionsController.confirm').map(permissionKeys)).toEqual([['lessons.status']]);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('lessons.confirm'))).toEqual(['admin', 'sales']);
   });
 
@@ -124,17 +124,17 @@ describe('system-role parity with the old @Roles table', () => {
 
   // docs/23 phase 4: notifications.manage gates the rule writes only; the list is settings.read.
   it('notifications.manage gates the two rule PATCH routes only, for the system admin only', () => {
-    const gated = routes.filter((r) => r.permission === 'notifications.manage').map((r) => r.key).sort();
-    expect(gated).toEqual(['RulesAliasController.update', 'RulesController.update']);
-    expect(routes.find((r) => r.key === 'RulesController.overview')?.permission).toBe('settings.read');
+    const gated = routes.filter((r) => permissionKeys(r).includes('notifications.manage'));
+    expect(gated.map((r) => r.key).sort()).toEqual(['RulesAliasController.update', 'RulesController.update']);
+    expect(routes.filter((r) => r.key === 'RulesController.overview').map(permissionKeys)).toEqual([['settings.read']]);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('notifications.manage'))).toEqual(['admin']);
   });
 
   // docs/23 phase 3: numbers.manage gates the numbers writes and the comms_source switch; reads are
   // settings.read.
   it('numbers.manage gates the numbers writes and the source switch only, for the system admin only', () => {
-    const gated = routes.filter((r) => r.permission === 'numbers.manage').map((r) => r.key).sort();
-    expect(gated).toEqual([
+    const gated = routes.filter((r) => permissionKeys(r).includes('numbers.manage'));
+    expect(gated.map((r) => r.key).sort()).toEqual([
       'CommunicationsController.setSource',
       // Every Evolution option, saved and pushed to the instance.
       'EvolutionConfigController.config', 'EvolutionConfigController.push', 'EvolutionConfigController.verify',
@@ -144,7 +144,7 @@ describe('system-role parity with the old @Roles table', () => {
       'NumbersEvolutionController.qr', 'NumbersEvolutionController.state',
     ]);
     const reads = routes.filter((r) => r.key === 'NumbersController.list' || r.key === 'CommunicationsController.parity');
-    expect(reads.map((r) => r.permission)).toEqual(['settings.read', 'settings.read']);
+    expect(reads.map(permissionKeys)).toEqual([['settings.read'], ['settings.read']]);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('numbers.manage'))).toEqual(['admin']);
   });
 });

@@ -1,8 +1,8 @@
-import type { ReportPageView } from '@ab/shared';
+import { reportPageRoutes, type ReportPageView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ReportPageScreen } from './ReportPageScreen';
 
 // Invented data: no real student, teacher or family.
@@ -99,4 +99,25 @@ test('opened from a link (ayatalbayan://report/<public id>): read by its public 
   await renderWithQuery(<ReportPageScreen />);
   expect(await screen.findByText('أداء ممتاز')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/report-pages/aaaabbbbccccddddeeeeffff00001111');
+});
+
+test("a list's report page is cached under its route key", async () => {
+  const id = '00000000-0000-4000-8000-0000000000f1';
+  mockParams.mockReturnValue({ reportId: id });
+  mockApiFetch.mockResolvedValue(view());
+  const client = createTestQueryClient();
+  await renderWithQuery(<ReportPageScreen />, client);
+  expect(await screen.findByText('أداء ممتاز')).toBeTruthy();
+  const key = reportPageRoutes.byReportId.key.of({ id });
+  expect(client.getQueryData(key)).toEqual(view());
+});
+
+test("a link's report page is cached under its route key", async () => {
+  const publicId = 'aaaabbbbccccddddeeeeffff00001111';
+  mockParams.mockReturnValue({ publicId });
+  mockApiFetch.mockResolvedValue(view());
+  const client = createTestQueryClient();
+  await renderWithQuery(<ReportPageScreen />, client);
+  expect(await screen.findByText('أداء ممتاز')).toBeTruthy();
+  expect(client.getQueryData(reportPageRoutes.byPublicId.key.of({ publicId }))).toEqual(view());
 });

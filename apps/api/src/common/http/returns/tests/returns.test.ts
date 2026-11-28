@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Module } from '@nestjs/common';
+import { Controller, Get, HttpCode, Module, Res } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { ResponseCheckInterceptor, Returns, returnsOf } from '@/common/http/returns';
 
 const item = z.object({ id: z.string(), size: z.number().int() });
+const maybeItem = item.optional();
 
 @Controller('probe-returns')
 class ReturnsProbeController {
@@ -37,6 +38,19 @@ class ReturnsProbeController {
   @Get('bare')
   bare(): { anything: boolean } {
     return { anything: true };
+  }
+
+  @Get('unchanged')
+  @Returns(maybeItem)
+  unchanged(@Res({ passthrough: true }) reply: { status(code: number): unknown }): undefined {
+    reply.status(304);
+    return undefined;
+  }
+
+  @Get('missing')
+  @Returns(maybeItem)
+  missing(): undefined {
+    return undefined;
   }
 
   @Get('none')
@@ -85,6 +99,12 @@ describe('@Returns with the response check on', () => {
   it('skips handlers without @Returns and 204 handlers', async () => {
     expect((await get('bare')).json()).toEqual({ anything: true });
     expect((await get('none')).statusCode).toBe(204);
+  });
+
+  it('lets a 304 through without a body, and refuses a 200 without one', async () => {
+    const unchanged = await get('unchanged');
+    expect([unchanged.statusCode, unchanged.body]).toEqual([304, '']);
+    expect((await get('missing')).statusCode).toBe(500);
   });
 
   it('compares the wire form, as JSON.stringify sends it', async () => {

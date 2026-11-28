@@ -13,11 +13,11 @@ import {
   t,
   useTheme,
 } from '@ab/mobile-kit';
-import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { CheckRegistrationButton } from '@/registration-check/components/CheckRegistrationButton';
 import { MyStudentsView } from '@/sales-money/screens/MyStudentsView';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { AllStudentRow } from '@/sales/sales/components/AllStudentRow';
+import { useAllStudents } from '@/sales/sales/lib/sales-api';
 
 export type StudentsView = 'all' | 'mine';
 
@@ -37,7 +37,7 @@ export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
   const [view, setView] = useState<StudentsView>('all');
   const [search, setSearch] = useState('');
-  const list = usePagedList<SalesStudentView>({ path: '/sales/students/all', params: { search } });
+  const list = useAllStudents(search);
   const all = view === 'all';
   return (
     <Screen list>

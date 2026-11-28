@@ -63,6 +63,11 @@ export function overview(
   return { entries, lines: [], mode: 'legacy', reach: { guardian: 12, teacher: 3, lead: 25 } };
 }
 
+/** The row PATCH /admin/notifications/:key answers after a save, as the API sends it. */
+export function savedRow(key: string): NotificationEntryView | undefined {
+  return overview().entries.find((e) => e.key === key);
+}
+
 export function renderRules(input: {
   apiFetch: Mock;
   data?: NotificationsOverview;

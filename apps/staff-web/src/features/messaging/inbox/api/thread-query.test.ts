@@ -1,4 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
+import { aThreadDetail } from '@ab/shared/testing';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { threadsQuery } from './api';
 import { threadQuery } from './thread-query';
@@ -12,7 +13,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   apiFetch: (...args: unknown[]) => mockApiFetch(...args) as unknown,
 }));
 
-beforeEach(() => mockApiFetch.mockReset().mockResolvedValue({ messages: [], has_more: false }));
+beforeEach(() => mockApiFetch.mockReset().mockResolvedValue(aThreadDetail()));
 
 it("a chat page's read gets the query's signal", async () => {
   const client = new QueryClient();
@@ -23,7 +24,7 @@ it("a chat page's read gets the query's signal", async () => {
 });
 
 it("the chats list's read gets the query's signal", async () => {
-  mockApiFetch.mockResolvedValue({ items: [], total: 0 });
+  mockApiFetch.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 30 });
   const client = new QueryClient();
   await client.query(threadsQuery({ page: 1 }));
   const [path, init] = mockApiFetch.mock.calls[0] as [string, RequestInit];

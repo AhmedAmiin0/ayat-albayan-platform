@@ -3,7 +3,7 @@ import type { ThreadDetail } from '@ab/shared';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
-import { message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { message, PHONE, sentText, uid } from '@/inbox/shared/thread-fixtures';
 import { clearChatMemory } from '@/inbox/thread/anchor';
 import { refreshInbox, refreshLists } from '@/inbox/thread/hooks/inbox-sync';
 import { type ThreadCache, threadKey, threadMessages } from '@/inbox/thread/hooks/thread-cache';
@@ -30,7 +30,8 @@ const old = message({ id: 'm0', body: 'قديمة', created_at: '2026-01-01T00:0
 const page = (rows = [old]) => ({ messages: rows, has_more: false }) as unknown as ThreadDetail;
 const noAnswer = () => new TypeError('Network request failed');
 const box = (id: string, text: string) => ({ id, out: { kind: 'text' as const, text }, pin: 'box' as const });
-const serverRow = (body: string) => message({ id: 'srv-1', body, status: 'sent' });
+const SERVER_ID = uid('srv-1');
+const serverRow = (body: string) => sentText({ id: SERVER_ID, body, status: 'sent' });
 
 async function setup() {
   const client = createTestQueryClient();
@@ -79,7 +80,7 @@ test('a 2xx with the pinned id and the same text: only the server row stays, the
   await send(box('req-1', 'وصلت'));
   setComposerText(PHONE, '');
   await send(box('req-1', 'وصلت'));
-  expect(rows().map((m) => m.id)).toEqual(['m0', 'srv-1']);
+  expect(rows().map((m) => m.id)).toEqual(['m0', SERVER_ID]);
   expect(PINS.box.pinned(PHONE)).toBeUndefined();
   expect(PINS.box.replayed(PHONE)).toBe(false);
 });
@@ -93,7 +94,7 @@ test('M1: a 2xx with the FIRST message: the note, the edit back in the box, the 
   expect(PINS.box.replayed(PHONE)).toBe(true);
   expect(getComposerText(PHONE)).toBe('وصلت الآن');
   expect(PINS.box.pinned(PHONE)).toBeUndefined();
-  expect(rows().map((m) => m.id)).toEqual(['m0', 'srv-1']);
+  expect(rows().map((m) => m.id)).toEqual(['m0', SERVER_ID]);
 });
 
 test('a 4xx answer releases the pin and rolls the bubble back; a 5xx pins it', async () => {

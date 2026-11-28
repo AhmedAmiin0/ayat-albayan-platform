@@ -1,8 +1,14 @@
-import type { FollowUpNote, LeadView } from '@ab/shared';
-import type { Page } from '@ab/core';
-import type { AcademySettings } from '@ab/settings';
+import type {
+  FollowUpNote,
+  LeadFollowUp,
+  LeadQualificationPatch,
+  LeadRowView,
+  LeadView,
+} from '@ab/shared';
+import { leadReadCalls, leadWriteCalls } from '@ab/client-core';
+import { settingsCalls } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString, pathKey, t } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey, t } from '@ab/mobile-kit';
 import { patchCached } from '@/core/lib/query/paging';
 import { isOffline } from '@/core/lib/money/payment-errors';
 import { leadKeys } from '@/core/lib/keys';
@@ -23,6 +29,8 @@ export type LeadProfile = LeadView & {
   follow_up_note?: FollowUpNote | null;
 };
 
+const leadReads = leadReadCalls({ apiFetch, apiSend });
+
 /**
  * This lead fresh from the API, like the web's leadByPhoneQuery (there is no GET /leads/:id): the
  * phone search, then the exact E.164 match; null if it is no longer a lead. Its failure with no
@@ -32,8 +40,7 @@ export function useFreshLead(phone: string) {
   return useQuery({
     queryKey: leadKeys.byPhone(phone),
     queryFn: async () => {
-      const query = toQueryString({ q: phone, page: 1, pageSize: 5 });
-      const page = await apiFetch<Page<LeadProfile>>(`/leads${query}`);
+      const page = await leadReads.list({ q: phone, page: 1, pageSize: 5 });
       return page.items.find((l) => l.phone_e164 === phone) ?? null;
     },
   });
@@ -49,15 +56,24 @@ interface LeadPatchInput<B> {
   body: B;
 }
 
+const leadWrites = leadWriteCalls({ apiFetch, apiSend });
+
+/** L1: only the changed fields; the API merges them and a null clears one. */
+export const saveQualification = ({ id, body }: LeadPatchInput<LeadQualificationPatch>) =>
+  leadWrites.qualification({ id, patch: body });
+
+/** L2: the admin's pause of this lead's follow-ups. */
+export const savePause = ({ id, body }: LeadPatchInput<LeadFollowUp>) =>
+  leadWrites.followUp({ id, paused: body.paused });
+
 /**
- * PATCH /leads/:id/qualification (L1) or /follow-up (L2). Both answer the whole row: it replaces
- * the lead in every cached list and detail, so the inbox and this screen agree without a refetch.
+ * L1 or L2. Both answer the whole row: it replaces the lead in every cached list and detail, so
+ * the inbox and this screen agree without a refetch.
  */
-export function useLeadPatch<B>(route: 'qualification' | 'follow-up') {
+export function useLeadPatch<B>(send: (input: LeadPatchInput<B>) => Promise<LeadRowView>) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, body }: LeadPatchInput<B>) =>
-      apiSend<LeadProfile>('PATCH', `/leads/${id}/${route}`, body),
+    mutationFn: send,
     onSuccess: (row) => {
       client.setQueriesData({ queryKey: pathKey('/leads') }, (old: unknown) =>
         patchCached(old, { ...row }),
@@ -71,11 +87,13 @@ export function saveErrorText(error: unknown): string {
   return isOffline(error) ? t.leads.mobile.offline : t.common.error;
 }
 
-/** How many follow-ups the settings send (follow_up_hours); undefined until /settings loads. */
+const settings = settingsCalls({ apiFetch, apiSend });
+
+/** How many follow-ups the settings send; undefined until a valid /settings answer loads. */
 export function useFollowUpTotal(): number | undefined {
   const { data } = useQuery({
     queryKey: pathKey('/settings'),
-    queryFn: () => apiFetch<AcademySettings>('/settings'),
+    queryFn: () => settings.view(),
     staleTime: 60 * 60 * 1000,
   });
   return data?.follow_up_hours.length;

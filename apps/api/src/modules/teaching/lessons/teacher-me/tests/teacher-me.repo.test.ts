@@ -6,7 +6,13 @@ import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { TeacherMeRepo } from '@/modules/teaching/lessons/teacher-me/teacher-me.repo';
 
 const ROW = { id: TEACHER_ID, display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo', meeting_link: null, meeting_mode: null };
-const student = (id: string, name: string) => ({ id, code: `AB-${id}`, name, tz: 'Asia/Riyadh', status: 'active' });
+const student = (n: string, name: string) => ({
+  id: `00000000-0000-4000-8000-00000000000${n}`,
+  code: `AB-000${n}`,
+  name,
+  tz: 'Asia/Riyadh',
+  status: 'active',
+});
 
 describe('TeacherMeQueries.me (R-TCH-03)', () => {
   it('null when the profile has no teachers row', async () => {

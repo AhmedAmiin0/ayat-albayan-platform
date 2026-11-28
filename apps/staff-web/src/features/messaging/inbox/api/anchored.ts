@@ -1,6 +1,6 @@
 import { anchoredThreadPages, anchoredThreadPrefix, ApiError } from '@ab/client-core';
 import { infiniteQueryOptions, type QueryClient } from '@tanstack/react-query';
-import { threadPage } from './api';
+import { threadReads } from './api';
 
 /**
  * The window around a search hit (docs/37 NEW 3): ?around=<id>, then older pages inside it.
@@ -13,7 +13,7 @@ export const hitGone = (error: unknown): boolean =>
 
 export const anchoredThreadQuery = (phone: string, id: string) =>
   infiniteQueryOptions({
-    ...anchoredThreadPages(phone, id, threadPage),
+    ...anchoredThreadPages(phone, id, threadReads.page),
     refetchInterval: false,
     refetchOnWindowFocus: false,
     retry: (failures: number, error: Error) => !hitGone(error) && failures < 2,

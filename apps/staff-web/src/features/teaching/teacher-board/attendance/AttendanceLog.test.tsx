@@ -9,6 +9,19 @@ import { AttendanceLog } from './AttendanceLog';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
+/** Lesson and report ids, uuids as the api sends them. */
+const ID = {
+  a: '10000000-0000-4000-8000-000000000001',
+  b: '10000000-0000-4000-8000-000000000002',
+  c: '10000000-0000-4000-8000-000000000003',
+  w: '10000000-0000-4000-8000-000000000004',
+  e: '10000000-0000-4000-8000-000000000005',
+  v: '10000000-0000-4000-8000-000000000006',
+  m: '10000000-0000-4000-8000-000000000007',
+  x: '10000000-0000-4000-8000-000000000008',
+  re: '10000000-0000-4000-8000-000000000009',
+  rv: '10000000-0000-4000-8000-000000000010',
+};
 const NOW = new Date('2026-10-08T14:00:00.000Z');
 const NO_RETRY = { defaultOptions: { queries: { retry: false } } };
 const base = {
@@ -26,9 +39,9 @@ const LOG: StudentAttendanceTable = {
   totals,
   mine: true,
   items: [
-    { ...base, lesson_id: 'a', starts_at: '2026-10-08T13:00:00.000Z', status: 'completed', attendance: null, kind: 'unmarked', report_sent: false },
-    { ...base, lesson_id: 'b', starts_at: '2026-10-06T13:00:00.000Z', status: 'cancelled_by_teacher', attendance: null, kind: 'cancelled', report_sent: false, cancel_reason: 'سفر' },
-    { ...base, lesson_id: 'c', starts_at: '2026-10-04T13:00:00.000Z', status: 'completed', attendance: 'on_time', kind: 'present', report_sent: true },
+    { ...base, lesson_id: ID.a, starts_at: '2026-10-08T13:00:00.000Z', status: 'completed', attendance: null, kind: 'unmarked', report_sent: false },
+    { ...base, lesson_id: ID.b, starts_at: '2026-10-06T13:00:00.000Z', status: 'cancelled_by_teacher', attendance: null, kind: 'cancelled', report_sent: false, cancel_reason: 'سفر' },
+    { ...base, lesson_id: ID.c, starts_at: '2026-10-04T13:00:00.000Z', status: 'completed', attendance: 'on_time', kind: 'present', report_sent: true },
   ],
 };
 const sent = (editUntil: string) => ({
@@ -39,11 +52,11 @@ const sent = (editUntil: string) => ({
 const LOG_47: StudentAttendanceTable = {
   ...LOG,
   items: [
-    { ...base, lesson_id: 'w', starts_at: '2026-10-08T13:00:00.000Z', status: 'completed', attendance: null, kind: 'unmarked', report_sent: false, report: null },
-    { ...base, lesson_id: 'e', report_id: 'r-e', starts_at: '2026-10-07T13:00:00.000Z', status: 'completed', attendance: 'on_time', kind: 'present', report_sent: true, report: sent('2026-10-08T15:00:00.000Z') },
-    { ...base, lesson_id: 'v', report_id: 'r-v', starts_at: '2026-10-05T13:00:00.000Z', status: 'completed', attendance: 'on_time', kind: 'present', report_sent: true, report: sent('2026-10-05T15:00:00.000Z') },
-    { ...base, lesson_id: 'm', starts_at: '2026-10-04T13:00:00.000Z', status: 'rescheduled', attendance: null, kind: null, report_sent: false, report: null, moved_to: '2026-10-06T13:00:00.000Z', move_reason: 'سفر الأسرة' },
-    { ...base, lesson_id: 'x', starts_at: '2026-10-03T13:00:00.000Z', status: 'cancelled_by_admin', attendance: null, kind: 'cancelled', report_sent: false, report: null, cancel_reason: 'مرض' },
+    { ...base, lesson_id: ID.w, starts_at: '2026-10-08T13:00:00.000Z', status: 'completed', attendance: null, kind: 'unmarked', report_sent: false, report: null },
+    { ...base, lesson_id: ID.e, report_id: ID.re, starts_at: '2026-10-07T13:00:00.000Z', status: 'completed', attendance: 'on_time', kind: 'present', report_sent: true, report: sent('2026-10-08T15:00:00.000Z') },
+    { ...base, lesson_id: ID.v, report_id: ID.rv, starts_at: '2026-10-05T13:00:00.000Z', status: 'completed', attendance: 'on_time', kind: 'present', report_sent: true, report: sent('2026-10-05T15:00:00.000Z') },
+    { ...base, lesson_id: ID.m, starts_at: '2026-10-04T13:00:00.000Z', status: 'rescheduled', attendance: null, kind: null, report_sent: false, report: null, moved_to: '2026-10-06T13:00:00.000Z', move_reason: 'سفر الأسرة' },
+    { ...base, lesson_id: ID.x, starts_at: '2026-10-03T13:00:00.000Z', status: 'cancelled_by_admin', attendance: null, kind: 'cancelled', report_sent: false, report: null, cancel_reason: 'مرض' },
   ],
 };
 
@@ -90,8 +103,8 @@ describe('AttendanceLog (docs/46 C5)', () => {
     const [write, edit, view, moved, cancelled] = await tableRows(LOG_47);
     const link = (row: HTMLElement | undefined, name: string) =>
       within(row as HTMLElement).getByRole('link', { name }).getAttribute('href');
-    expect(link(write, t.teacherBoard.writeReport)).toBe('/teacher/report/w');
-    expect(link(edit, t.reports.edit)).toBe('/teacher/report/e');
+    expect(link(write, t.teacherBoard.writeReport)).toBe(`/teacher/report/${ID.w}`);
+    expect(link(edit, t.reports.edit)).toBe(`/teacher/report/${ID.e}`);
     expect(within(view as HTMLElement).queryByRole('link')).toBeNull();
     expect(within(view as HTMLElement).getByText(t.reports.view).tagName).toBe('SUMMARY');
     expect(within(moved as HTMLElement).getByText('—')).toBeTruthy();

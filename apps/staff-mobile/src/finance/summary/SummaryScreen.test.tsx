@@ -4,12 +4,14 @@ import { renderWithQuery } from '@/test/query';
 import { SummaryScreen } from './SummaryScreen';
 import { summaryYears } from '@/finance/shared/month';
 import { receivablesView } from '@/money/shared/fixtures';
+import { summary } from '@/ops/shared/fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
 
 const finance = {
+  ...summary.finance,
   currency: 'EGP', revenue: 5000, teacher_cost: 2000, expenses: 500, gross_margin: 2500, by_source: [], fx_date: null,
   fx_missing: ['KWD'], unrated_lessons: 2,
   by_month: [
@@ -28,7 +30,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockApiFetch.mockImplementation((p: string) =>
     Promise.resolve(
-      p.startsWith('/dashboard/summary') ? { finance }
+      p.startsWith('/dashboard/summary') ? { ...summary, finance }
         : p.startsWith('/teacher-earnings/summary') ? teacherDues
         : { ...receivablesView([]), total: 20 },
     ),
@@ -57,6 +59,14 @@ test('the year pills re-read the summary for that year', async () => {
 
 test('a failed load with nothing cached offers a retry', async () => {
   mockApiFetch.mockRejectedValue(new Error('x'));
+  await renderWithQuery(<SummaryScreen />);
+  expect(await screen.findByText(t.mobileFinance.loadFailed)).toBeTruthy();
+});
+
+test('a summary in another shape is refused and offers a retry', async () => {
+  mockApiFetch.mockImplementation((p: string) =>
+    Promise.resolve(p.startsWith('/dashboard/summary') ? { finance } : teacherDues),
+  );
   await renderWithQuery(<SummaryScreen />);
   expect(await screen.findByText(t.mobileFinance.loadFailed)).toBeTruthy();
 });

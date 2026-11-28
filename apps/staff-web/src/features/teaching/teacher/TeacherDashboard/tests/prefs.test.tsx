@@ -4,7 +4,7 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit';
 import { reloadHomePrefs } from '@/features/teaching/teacher/alerts/home-prefs';
 import { TeacherDashboard } from '@/features/teaching/teacher/TeacherDashboard/TeacherDashboard';
@@ -12,13 +12,14 @@ import { TeacherDashboard } from '@/features/teaching/teacher/TeacherDashboard/T
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 
+const TEACHER = '00000000-0000-4000-8000-0000000000a1';
 const ME: TeacherMe = {
-  id: 't-abrar', display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  id: TEACHER, display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
   meeting_link: null, meeting_mode: null, platform_classroom: false, students: [],
 };
 // Saturday 3 Oct, 12:00 Cairo: one lesson at 16:00 (the hero) and one ended at 10:00.
-const NEXT = lesson({ id: 'h', starts_at: '2026-10-03T13:00:00.000Z' });
-const ENDED = lesson({ id: 'e', starts_at: '2026-10-03T07:00:00.000Z' });
+const NEXT = answered(lesson({ id: 'h', starts_at: '2026-10-03T13:00:00.000Z' }));
+const ENDED = answered(lesson({ id: 'e', starts_at: '2026-10-03T07:00:00.000Z' }));
 const ANSWERS: [string, unknown][] = [
   ['/teachers/me/lessons', [NEXT, ENDED]],
   ['/teachers/me', ME],

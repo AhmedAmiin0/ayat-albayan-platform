@@ -1,6 +1,6 @@
 import type { WaLine } from '../enums/messaging';
 import type { IntegrationKey, WaProvider } from './keys';
-import type { IntegrationConfigItem } from './views';
+import type { IntegrationConfigItem } from './views.schemas';
 
 // Keys each driver needs (docs/19), by name; the API's lineGaps (env.gaps.ts) has the final word.
 

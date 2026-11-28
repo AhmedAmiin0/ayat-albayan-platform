@@ -1,14 +1,23 @@
-import { mySalesCalls } from '@ab/client-core';
-import type { SalesPersonView, SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
+import {
+  mySalesCalls,
+  salesAssignCalls,
+  salesPaymentCalls,
+  salesPortalCalls,
+} from '@ab/client-core';
+import type { SalesSubscriptionKind } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { myMoneyKeys, salesKeys, salesSubscriptionKeys } from '@/features/sales/keys';
+
+const salesPortal = salesPortalCalls({ apiFetch, apiSend });
+const salesAssign = salesAssignCalls({ apiFetch, apiSend });
+const salesPayments = salesPaymentCalls({ apiFetch, apiSend });
 
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
 export const salesSubscriptionsQuery = (kind: SalesSubscriptionKind) =>
   queryOptions({
     queryKey: salesSubscriptionKeys.list(kind),
-    queryFn: () => apiFetch<SalesSubscriptionView[]>(`/sales/subscriptions?kind=${kind}`),
+    queryFn: () => salesPortal.subscriptions(kind),
   });
 
 const mine = mySalesCalls({ apiFetch, apiSend });
@@ -48,18 +57,16 @@ export const myPaymentsQuery = queryOptions({
 
 /** PATCH /sales/payments/:id/amount (subscriptions.edit_terms): a payment, never card. */
 export const updateMyPaymentAmount = (id: string, amount: number) =>
-  apiSend('PATCH', `/sales/payments/${id}/amount`, { amount });
+  salesPayments.editAmount({ paymentId: id, amount });
 
 /** GET /sales/people (admin):the salespeople with their open-lead counts. */
 export const salesPeopleQuery = queryOptions({
   queryKey: salesKeys.people(),
-  queryFn: () => apiFetch<SalesPersonView[]>('/sales/people'),
+  queryFn: () => salesAssign.people(),
 });
 
 /** POST /leads/:id/assign (admin): hand a lead to a salesperson, or null to take it back. */
-export const assignLead = ({ leadId, profileId }: { leadId: string; profileId: string | null }) =>
-  apiSend<unknown>('POST', `/leads/${leadId}/assign`, { profileId });
+export const assignLead = salesAssign.assign;
 
 /** POST /leads/assign-unassigned (admin): spread every ownerless lead over the salespeople. */
-export const assignUnassigned = () =>
-  apiSend<{ assigned: number }>('POST', '/leads/assign-unassigned');
+export const assignUnassigned = () => salesAssign.assignUnassigned();

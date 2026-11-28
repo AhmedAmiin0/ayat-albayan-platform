@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { Linking } from 'react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { delivered, detail, failed, inbound, message } from '@/inbox/shared/thread-fixtures';
+import { delivered, detail, failed, inbound, message, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 import { ticksLabel } from '@/inbox/shared/ticks.helpers';
 
@@ -68,7 +68,7 @@ test('«حاول مرة أخرى» puts it back in the queue and the row says so
   await open();
   mockApiFetch.mockResolvedValue(detail([inbound, delivered, retried]));
   await fireEvent.press((await sheetOf()).getByRole('button', { name: t.messages.retry }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/retry');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/messages/${failed.id}/retry`, undefined);
   expect(await screen.findByRole('button', { name: parkedClock })).toBeTruthy();
   expect(screen.queryByText(word.failed)).toBeNull();
 });
@@ -83,12 +83,13 @@ test('a refused retry says so in the chat’s notice and leaves the row as it wa
 
 test('«أرسلها بنفسك» tells the server first (it holds the row), then opens the API wa.me link', async () => {
   const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
-  const held = { ...failed, error_code: 'handed_off' };
+  const row = { ...failed, id: 'd4444444-4444-4444-8444-444444444444' };
+  const held = { ...row, error_code: 'handed_off' };
   mockApiSend.mockResolvedValue(held);
-  await open();
+  await open([inbound, delivered, row]);
   mockApiFetch.mockResolvedValue(detail([inbound, delivered, held]));
   await fireEvent.press((await sheetOf()).getByRole('button', { name: t.messages.clickToChat }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/hand-off');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/messages/${row.id}/hand-off`, undefined);
   await waitFor(() => expect(openUrl).toHaveBeenCalledWith(failed.click_to_chat));
   expect(mockApiSend.mock.invocationCallOrder[0]).toBeLessThan(
     openUrl.mock.invocationCallOrder[0] ?? 0,
@@ -114,14 +115,15 @@ test('a held row asks from its own state: «أرسلتها بنفسي» records 
   expect(screen.getByText(t.messages.handedOff)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: t.messages.markSentManually }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/sent-manually');
+  const manualPath = `/messages/${failed.id}/sent-manually`;
+  expect(mockApiSend).toHaveBeenCalledWith('POST', manualPath, undefined);
   await fireEvent.press(screen.getByRole('button', { name: t.messages.undoHandOff }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/retry');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/messages/${failed.id}/retry`, undefined);
 });
 
 test('queued with sending off: a tap on the clock offers sending by hand, no retry; a later one says when it goes', async () => {
-  const parked = message({ id: 'q', body: 'تأكيد الحجز', status: 'queued', click_to_chat: 'https://wa.me/966552147730' });
-  const later = message({ id: 'l', body: 'تذكير', status: 'queued', scheduled_for: '2099-01-01T10:00:00Z' });
+  const parked = message({ id: uid('q'), body: 'تأكيد الحجز', status: 'queued', click_to_chat: 'https://wa.me/966552147730' });
+  const later = message({ id: uid('l'), body: 'تذكير', status: 'queued', scheduled_for: '2099-01-01T10:00:00Z' });
   await open([inbound, parked, later]);
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
   // Only the parked row's clock is a button (the later one has no wa.me link): getBy finds exactly one.
@@ -133,7 +135,7 @@ test('queued with sending off: a tap on the clock offers sending by hand, no ret
 });
 
 test('a row the sender is sending right now (no wa.me from the API): no hand-send, no retry', async () => {
-  const claimed = message({ id: 'c', body: 'تذكير', status: 'queued', attempts: 1, error_code: 'sending', click_to_chat: null });
+  const claimed = message({ id: uid('c'), body: 'تذكير', status: 'queued', attempts: 1, error_code: 'sending', click_to_chat: null });
   await open([inbound, claimed]);
   const ticks = screen.getByLabelText(ticksLabel(word.queued));
   expect(ticks.props.accessibilityRole).toBe('image');

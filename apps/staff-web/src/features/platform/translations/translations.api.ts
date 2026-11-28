@@ -1,5 +1,5 @@
+import { translationCalls } from '@ab/client-core';
 import type { Locale } from '@ab/core';
-import type { TranslationKeysPage } from '@ab/i18n';
 import { keepPreviousData, queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { translationKeys } from '@/features/platform/keys';
@@ -12,16 +12,21 @@ export interface TranslationsSearch {
   page: number;
 }
 
-/** GET /i18n/keys: every key of the bundle with its defaults and overrides (admin). */
+const translations = translationCalls({ apiFetch, apiSend });
+
+const textOrNone = (text: string): string | undefined => text.trim() || undefined;
+
+/** Every key of the bundle with its defaults and overrides (admin). */
 export const translationKeysQuery = (s: TranslationsSearch) =>
   queryOptions({
     queryKey: translationKeys.list(s),
-    queryFn: () => {
-      const qs = new URLSearchParams([['page', String(s.page)], ['pageSize', String(TRANSLATIONS_PAGE_SIZE)]]);
-      if (s.search.trim()) qs.set('search', s.search.trim());
-      if (s.section) qs.set('section', s.section);
-      return apiFetch<TranslationKeysPage>(`/i18n/keys?${qs}`);
-    },
+    queryFn: () =>
+      translations.keys({
+        page: s.page,
+        pageSize: TRANSLATIONS_PAGE_SIZE,
+        search: textOrNone(s.search),
+        section: textOrNone(s.section),
+      }),
     placeholderData: keepPreviousData,
   });
 
@@ -32,14 +37,15 @@ export interface OverrideChange {
   value: string | null;
 }
 
-const path = (c: OverrideChange) => `/i18n/${c.locale}/${encodeURIComponent(c.key)}`;
+const sendChange = ({ value, ...key }: OverrideChange): Promise<undefined> =>
+  value === null ? translations.restore(key) : translations.save(key, { value });
 
 /** PUT / DELETE one locale's override, then refresh the list. */
 export function useOverrideChange() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (changes: readonly OverrideChange[]) => {
-      for (const c of changes) await (c.value === null ? apiSend('DELETE', path(c)) : apiSend('PUT', path(c), { value: c.value }));
+      for (const c of changes) await sendChange(c);
     },
     onSettled: () => qc.invalidateQueries({ queryKey: translationKeys.all }),
   });

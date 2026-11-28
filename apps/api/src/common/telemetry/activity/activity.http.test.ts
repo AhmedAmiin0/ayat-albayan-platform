@@ -1,7 +1,10 @@
+import { activitySessionRoutes } from '@ab/shared';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi, type MockInstance } from 'vitest';
 import { EXPENSE_ID, expenseRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { ADMIN, moneyApp, resetMocks, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
+import { routeOf } from '@/common/http/route';
+import { AuthSessionController } from './activity.controller';
 import { ActivityRepo } from './activity.repo';
 import { ActivityWriter } from './activity.writer';
 
@@ -55,6 +58,26 @@ describe('activity log over HTTP (money routes, real interceptor and guards)', (
     expect((await call({ method: 'GET', url: '/activity?result=maybe' })).statusCode).toBe(400);
     expect((await call({ method: 'GET', url: '/activity', token: 'teacher' })).statusCode).toBe(403);
     expect(push).not.toHaveBeenCalled();
+  });
+
+  it('a row the page schema refuses is a 500 response_invalid, never the row', async () => {
+    const row = { id: 'a1', at: 'yesterday', actor_id: null, actor_name: 'سهيلة', actor_role: 'admin',
+      action: 'students.create', method: 'POST', route: '/students', entity: null, entity_id: null,
+      status: 201, duration_ms: 3, meta: {} };
+    list.mockResolvedValueOnce({ items: [row], total: 1, page: 1, pageSize: 25 });
+    const res = await call({ method: 'GET', url: '/activity' });
+    expect(res.statusCode).toBe(500);
+    expect(res.json().code).toBe('response_invalid');
+    expect(res.body).not.toContain('سهيلة');
+  });
+
+  it('serves the session reports from their shared route objects', () => {
+    const { login, logout, loginFailed } = AuthSessionController.prototype;
+    expect([login, logout, loginFailed].map(routeOf)).toEqual([
+      activitySessionRoutes.login,
+      activitySessionRoutes.logout,
+      activitySessionRoutes.loginFailed,
+    ]);
   });
 
   it('records sign-in and sign-out reported by the web', async () => {

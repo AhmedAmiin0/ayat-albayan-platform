@@ -1,13 +1,10 @@
-import { Body, Controller, Get, Headers, HttpCode, Post, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Public } from '@/common/auth/decorators';
+import { Body, Controller, Headers, HttpCode, UseGuards } from '@nestjs/common';
+import { Route } from '@/common/http/route';
 import { relayError } from './relay.errors';
 import { RelayLimit } from './relay.limit';
+import { relayRoutes as routes } from './relay.routes';
 import { relayRequestSchema } from './relay.schema';
 import { RelayService, type RelaySent } from './relay.service';
-
-/** The script's CRM_URL is this base; it appends /api/v1/me and /api/v1/messages itself. */
-const RELAY_BASE = 'script-relay';
 
 const ME = {
   account: { name: 'Ayat Al-Bayan platform relay' },
@@ -29,20 +26,18 @@ function invalid(issues: readonly { path: PropertyKey[]; message: string }[]) {
  * /webhooks/* (no user JWT): authenticated by the notifications line's own CRM API key as a
  * Bearer. Never gated by automatic messages: the script decides what to send.
  */
-@ApiTags('webhooks')
-@Public()
 @UseGuards(RelayLimit)
-@Controller(`${RELAY_BASE}/api/v1`)
+@Controller()
 export class RelayController {
   constructor(private readonly relay: RelayService) {}
 
-  @Get('me')
+  @Route(routes.me)
   async me(@Headers('authorization') auth?: string): Promise<{ data: typeof ME }> {
     await this.relay.authorize(auth);
     return { data: ME };
   }
 
-  @Post('messages')
+  @Route(routes.send)
   @HttpCode(201)
   async send(
     @Body() body: unknown,

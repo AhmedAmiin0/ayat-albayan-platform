@@ -73,3 +73,26 @@ function core(o: LessonOverrides): Omit<LessonView, 'conflicts' | 'pending_propo
     trial: o.trial ?? false,
   };
 }
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+/** A stable uuid for a short test id; a uuid stays as it is, so a row is answered once. */
+export const guidOf = (key: string): string => {
+  if (UUID.test(key)) return key;
+  const hash = Array.from(key).reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 2 ** 48, 7);
+  return `00000000-0000-4000-8000-${hash.toString(16).padStart(12, '0')}`;
+};
+
+/** The row as the API answers it: every id a uuid, since answers are parsed strictly. */
+export function answered(l: LessonView): LessonView {
+  const asked = l.pending_proposal;
+  const proposal = asked && { ...asked, id: guidOf(asked.id) };
+  return {
+    ...l,
+    id: guidOf(l.id),
+    rule_id: l.rule_id && guidOf(l.rule_id),
+    teacher: { ...l.teacher, id: guidOf(l.teacher.id) },
+    students: l.students.map((s) => ({ ...s, id: guidOf(s.id) })),
+    pending_proposal: proposal,
+  };
+}

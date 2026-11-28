@@ -68,7 +68,7 @@ describe('«حذف الحساب وبياناته»', () => {
   });
 
   it('no usable contact in the settings: the WhatsApp fallback line, no link', async () => {
-    apiFetch.mockResolvedValue({ academy_contact: { site: '' } });
+    apiFetch.mockResolvedValue({ academy_contact: {} });
     renderAt(<LegalPage page="deleteAccount" />, '/delete-account');
     const box = await screen.findByRole('region', { name: L.deletion.sections.contact.title });
     expect(await within(box).findByText(L.contactFallback)).toBeTruthy();

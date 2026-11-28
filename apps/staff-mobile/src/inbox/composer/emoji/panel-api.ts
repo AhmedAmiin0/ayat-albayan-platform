@@ -1,6 +1,7 @@
-import { gifListSchema, type MessageView, stickerKey, stickerListSchema } from '@ab/shared';
+import { stickerPanelCalls } from '@ab/client-core';
+import { type MessageView, stickerKey } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { sendError } from '@/inbox/messages/hooks/message-text';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
@@ -11,7 +12,6 @@ import {
   removeMessage,
   type ThreadCache,
   threadKey,
-  threadPath,
 } from '@/inbox/thread/hooks/thread-cache';
 import { threadKeys } from '@/core/lib/keys';
 
@@ -19,6 +19,7 @@ import { threadKeys } from '@/core/lib/keys';
 // (the key never reaches the app) and the stickers of every chat, plus this user's favourites.
 
 const STICKERS_KEY = ['stickers'] as const;
+const panel = stickerPanelCalls({ apiFetch, apiSend });
 
 /** The chat a GIF or sticker goes to, and the composer's error line for a refused send. */
 export interface PanelMedia {
@@ -30,7 +31,7 @@ export interface PanelMedia {
 export function useStickers(enabled = true) {
   return useQuery({
     queryKey: STICKERS_KEY,
-    queryFn: async () => stickerListSchema.parse(await apiFetch('/threads/stickers')),
+    queryFn: () => panel.list(),
     enabled,
   });
 }
@@ -39,8 +40,7 @@ export function useStickers(enabled = true) {
 export function useGifs(q: string) {
   return useQuery({
     queryKey: threadKeys.gifs(q),
-    queryFn: async () =>
-      gifListSchema.parse(await apiFetch(`/threads/gifs${toQueryString({ q })}`)),
+    queryFn: () => panel.gifs({ q }),
     staleTime: 5 * 60_000,
   });
 }
@@ -48,8 +48,13 @@ export function useGifs(q: string) {
 /** What the panel sends: a held sticker again, or a GIPHY GIF (the API fetches its mp4). */
 type PanelSend = { kind: 'sticker'; messageId: string } | { kind: 'gif'; gifId: string };
 
-const bodyOf = (v: PanelSend) =>
-  v.kind === 'sticker' ? { messageId: v.messageId } : { gifId: v.gifId };
+function sendTo(phone: string, v: PanelSend): Promise<MessageView> {
+  const params = { phone };
+  const clientRequestId = requestId();
+  return v.kind === 'sticker'
+    ? panel.sticker({ params, body: { messageId: v.messageId, clientRequestId } })
+    : panel.gif({ params, body: { gifId: v.gifId, clientRequestId } });
+}
 
 /**
  * POST /threads/:phone/sticker | gif: the row shows in the chat at once, with its ticks. The sheet
@@ -58,13 +63,7 @@ const bodyOf = (v: PanelSend) =>
 export function usePanelSend(phone: string, onError: (message: string) => void) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async (v: PanelSend) => {
-      const row: MessageView = await apiSend('POST', `${threadPath(phone)}/${v.kind}`, {
-        ...bodyOf(v),
-        clientRequestId: requestId(),
-      });
-      return row;
-    },
+    mutationFn: (v: PanelSend) => sendTo(phone, v),
     onMutate: () => markOwnSend(phone),
     onSuccess: async (row) => {
       const add = (old: ThreadCache | undefined) => appendMessage(removeMessage(old, row.id), row);
@@ -83,8 +82,8 @@ export function useStickerFavourite(m: Pick<MessageView, 'id' | 'interactive_pay
   const toggle = useMutation({
     mutationFn: () =>
       saved
-        ? apiSend('DELETE', `/threads/stickers/favourites/${encodeURIComponent(m.id)}`)
-        : apiSend('PUT', '/threads/stickers/favourites', { messageId: m.id }),
+        ? panel.unfavourite({ messageId: m.id })
+        : panel.favourite({ messageId: m.id }),
     onSettled: () => client.invalidateQueries({ queryKey: STICKERS_KEY }),
   });
   return { saved, toggle };

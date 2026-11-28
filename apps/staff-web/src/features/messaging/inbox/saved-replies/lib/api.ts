@@ -1,12 +1,10 @@
 import {
-  isSavedReplyError,
-  type ChatSendMime,
-  type SavedReply,
-  type SavedReplyCreate,
-  type SavedReplyStaged,
-  type SavedReplyUpdate,
-  type SignedUpload,
-} from '@ab/shared';
+  savedReplyCalls,
+  type SavedReplyEdit,
+  type SavedReplyStageInput,
+  type SavedReplyStep,
+} from '@ab/client-core';
+import { savedReplyErrorSchema, type ChatSendMime, type SavedReplyCreate } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { errorCode } from '@/features/teaching/schedule';
 import { apiFetch, apiSend, t } from '@ab/web-kit';
@@ -17,32 +15,30 @@ import { ChatUploadError } from '@/features/messaging/inbox/api/api.files';
 
 export const SAVED_REPLIES_KEY = ['saved-replies'] as const;
 
+const replies = savedReplyCalls({ apiFetch, apiSend });
+
 /** Both lists (shared first), each by position then title; another admin may change them meanwhile. */
 export const savedRepliesQuery = queryOptions({
   queryKey: SAVED_REPLIES_KEY,
-  queryFn: () => apiFetch<SavedReply[]>('/saved-replies'),
+  queryFn: () => replies.all(),
   refetchOnWindowFocus: true,
   staleTime: 30_000,
 });
 
-const replyPath = (id: string) => `/saved-replies/${encodeURIComponent(id)}`;
+export const createReply = (body: SavedReplyCreate) => replies.create(body);
 
-export const createReply = (body: SavedReplyCreate) => apiSend<SavedReply>('POST', '/saved-replies', body);
+export const updateReply = (input: SavedReplyEdit) => replies.update(input);
 
-export const updateReply = (input: { id: string; body: SavedReplyUpdate }) => apiSend<SavedReply>('PATCH', replyPath(input.id), input.body);
+export const deleteReply = (id: string) => replies.remove(id);
 
-export const deleteReply = (id: string) => apiSend('DELETE', replyPath(id));
-
-export const moveReply = (input: { id: string; direction: 'up' | 'down' }) =>
-  apiSend<SavedReply[]>('POST', `${replyPath(input.id)}/move`, { direction: input.direction });
+export const moveReply = (input: SavedReplyStep) => replies.move(input);
 
 /** The attachment copied as this sender's chat file; POST /threads/:phone/file sends it next. */
-export const stageReply = (input: { id: string; clientRequestId: string }) =>
-  apiSend<SavedReplyStaged>('POST', `${replyPath(input.id)}/stage`, { clientRequestId: input.clientRequestId });
+export const stageReply = (input: SavedReplyStageInput) => replies.stage(input);
 
 /** Uploads a picked image or PDF under the uploader's folder; resolves to its storage path. */
 export async function uploadReplyFile(input: { file: File; mime: ChatSendMime }): Promise<string> {
-  const signed = await apiSend<SignedUpload>('POST', '/saved-replies/attachment-upload-url', { mime: input.mime, size: input.file.size });
+  const signed = await replies.uploadUrl({ mime: input.mime, size: input.file.size });
   const { error } = await uploadSigned(signed, { body: input.file, contentType: input.mime });
   if (error) throw new ChatUploadError(error.message);
   return signed.path;
@@ -57,6 +53,7 @@ export function replyErrorText(error: unknown): string {
   if (error instanceof ChatUploadError) return t.inbox.error.file_upload;
   const code = errorCode(error);
   if (code === 'saved_reply_not_found' || code === 'saved_replies_forbidden') return t.savedReplies.errors[code];
-  if (isSavedReplyError(code)) return FILE_ERRORS[code] ?? t.savedReplies.errors.generic;
-  return t.savedReplies.errors.generic;
+  const known = savedReplyErrorSchema.safeParse(code);
+  if (!known.success) return t.savedReplies.errors.generic;
+  return FILE_ERRORS[known.data] ?? t.savedReplies.errors.generic;
 }

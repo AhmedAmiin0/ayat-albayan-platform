@@ -1,50 +1,53 @@
 import { describe, expect, it, vi } from 'vitest';
-import { lessonEndPath, lessonMutePath, lessonRemovePath, lessonRoomSends } from './lesson-room';
+import { lessonRoomSends } from './lesson-room';
+
+const LESSON = '00000000-0000-4000-8000-000000000001';
+const WHO = 'guest-0123456789ab';
+const room = `/lessons/${LESSON}/room/participants`;
 
 const make = (answer: (path: string) => Promise<unknown>) => {
-  const apiSend = vi.fn((_m: string, path: string) => answer(path));
+  const apiSend = vi.fn((_m: string, path: string, _body?: unknown) => answer(path));
   return {
     apiSend,
     sends: lessonRoomSends({ apiFetch: vi.fn(), apiSend }),
   };
 };
 
-describe('lesson room paths', () => {
-  it('end, mute and remove under /lessons/:id', () => {
-    expect(lessonEndPath('l1')).toBe('/lessons/l1/end');
-    expect(lessonMutePath('l1', 'guest-0123456789ab')).toBe(
-      '/lessons/l1/room/participants/guest-0123456789ab/mute',
-    );
-    expect(lessonRemovePath('l1', 'a b')).toBe('/lessons/l1/room/participants/a%20b/remove');
-  });
-});
-
-describe('lessonRoomSends', () => {
+describe('lessonRoomSends (R-CLS)', () => {
   it('«إنهاء الحلقة للجميع» answers the stamp, parsed', async () => {
     const { apiSend, sends } = make(async () => ({ endedAt: '2026-11-16T10:00:00.000Z' }));
-    await expect(sends.end('l1')).resolves.toEqual({ endedAt: '2026-11-16T10:00:00.000Z' });
-    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l1/end');
+    await expect(sends.end(LESSON)).resolves.toEqual({ endedAt: '2026-11-16T10:00:00.000Z' });
+    expect(apiSend).toHaveBeenCalledWith('POST', `/lessons/${LESSON}/end`, undefined);
   });
 
   it('refuses an end answer without the stamp', async () => {
-    await expect(make(async () => ({})).sends.end('l1')).rejects.toThrow();
+    await expect(make(async () => ({})).sends.end(LESSON)).rejects.toThrow();
   });
 
   it('mutes one source and removes one person', async () => {
     const { apiSend, sends } = make(async () => undefined);
-    await sends.mute({ lessonId: 'l1', identity: 'guest-1', source: 'camera' });
-    await sends.remove({ lessonId: 'l1', identity: 'guest-1' });
-    expect(apiSend).toHaveBeenNthCalledWith(
-      1,
-      'POST',
-      '/lessons/l1/room/participants/guest-1/mute',
-      { source: 'camera' },
-    );
-    expect(apiSend).toHaveBeenNthCalledWith(
-      2,
-      'POST',
-      '/lessons/l1/room/participants/guest-1/remove',
-    );
+    await sends.mute({ lessonId: LESSON, identity: WHO, source: 'camera' });
+    await sends.remove({ lessonId: LESSON, identity: WHO });
+    expect(apiSend.mock.calls).toEqual([
+      ['POST', `${room}/${WHO}/mute`, { source: 'camera' }],
+      ['POST', `${room}/${WHO}/remove`, undefined],
+    ]);
+  });
+
+  it('allows or stops one guest\'s screen share', async () => {
+    const { apiSend, sends } = make(async () => undefined);
+    await sends.share({ lessonId: LESSON, identity: WHO, allow: true });
+    await sends.share({ lessonId: LESSON, identity: WHO, allow: false });
+    expect(apiSend.mock.calls).toEqual([
+      ['POST', `${room}/${WHO}/share`, { allow: true }],
+      ['POST', `${room}/${WHO}/share`, { allow: false }],
+    ]);
+  });
+
+  it('escapes an identity in the path', async () => {
+    const { apiSend, sends } = make(async () => undefined);
+    await sends.remove({ lessonId: LESSON, identity: 'a b' });
+    expect(apiSend).toHaveBeenCalledWith('POST', `${room}/a%20b/remove`, undefined);
   });
 
   it('«كتم الجميع» mutes every microphone and reports the first refusal', async () => {
@@ -53,11 +56,11 @@ describe('lessonRoomSends', () => {
       p.includes('guest-2') ? Promise.reject(refusal) : undefined,
     );
     await expect(
-      sends.muteAll({ lessonId: 'l1', identities: ['guest-1', 'guest-2'] }),
+      sends.muteAll({ lessonId: LESSON, identities: ['guest-1', 'guest-2'] }),
     ).rejects.toBe(refusal);
     expect(apiSend).toHaveBeenCalledTimes(2);
     await expect(
-      sends.muteAll({ lessonId: 'l1', identities: ['guest-1'] }),
+      sends.muteAll({ lessonId: LESSON, identities: ['guest-1'] }),
     ).resolves.toBeUndefined();
   });
 });

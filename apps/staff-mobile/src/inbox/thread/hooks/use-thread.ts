@@ -1,5 +1,4 @@
-import type { MessageView, ThreadDetail } from '@ab/shared';
-import { refreshNewest, type TextAnswer, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
+import { refreshNewest, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import {
   infiniteQueryOptions,
   type QueryClient,
@@ -7,13 +6,13 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { useStoredView } from '@/inbox/thread/local/stored-view';
 import { rollback, unanswered } from '@/inbox/thread/send/after-send';
 import { failPinned, pinGeneration, pinnedOf, settlePinned } from '@/inbox/thread/send/pinned-outcome';
-import { echoed, type SendDone, sendBody, type SendInput } from '@/inbox/thread/send/outgoing';
-import { refreshInbox, refreshLists, touchInbox } from './inbox-sync';
+import { echoed, type SendDone, type SendInput } from '@/inbox/thread/send/outgoing';
+import { sendOut } from '@/inbox/thread/send/send-out';
+import { refreshLists, touchInbox } from './inbox-sync';
 import { replaceListRows } from './list-edits';
 import {
   appendMessage,
@@ -22,14 +21,10 @@ import {
   replaceMessage,
   sendKey,
   threadKey,
-  threadPath,
+  threadReads,
   type ThreadCache,
 } from './thread-cache';
 import { useThreadPoll } from './thread-poll';
-
-/** One page of a chat (the live pages and the window around a search hit, docs/37). */
-export const threadGet = (path: string, init?: { signal?: AbortSignal }) =>
-  apiFetch<ThreadDetail>(path, init);
 
 export const threadQuery = (phone: string) =>
   infiniteQueryOptions({
@@ -37,7 +32,7 @@ export const threadQuery = (phone: string) =>
     // TanStack's signal: closing the chat drops its read, so a later push tap never joins it.
     // Older builds persisted a bare `before` string: threadPageQuery still pages back from it.
     queryFn: ({ pageParam, signal }) =>
-      threadGet(`${threadPath(phone)}${threadPageQuery(pageParam)}`, { signal }),
+      threadReads.page({ phone, query: threadPageQuery(pageParam), signal }),
     initialPageParam: null as ThreadPageParam,
     getNextPageParam: threadNextParam,
     meta: { noPersist: true },
@@ -69,7 +64,7 @@ export function refreshSent(client: QueryClient, phone: string, own: string[] = 
     busy: () => client.isFetching({ queryKey }) > 0,
     read: () => client.getQueryData<ThreadCache>(queryKey),
     write: (edit) => client.setQueryData<ThreadCache>(queryKey, edit),
-    newest: () => threadGet(threadPath(phone)),
+    newest: () => threadReads.page({ phone, query: {} }),
     reload: () => client.invalidateQueries({ queryKey }),
   });
 }
@@ -101,8 +96,7 @@ export function useSendMessage(phone: string) {
   return useMutation({
     // One key per chat so the composer and the quote sheet see each other's in-flight send.
     mutationKey: sendKey(phone),
-    mutationFn: (input: SendInput) =>
-      apiSend<TextAnswer>('POST', `${threadPath(phone)}/${input.out.kind}`, sendBody(input)),
+    mutationFn: (input: SendInput) => sendOut(phone, input),
     onMutate: async ({ out, id, pin }) => {
       const generation = pinGeneration(pin);
       markOwnSend(phone);
@@ -127,24 +121,5 @@ export function useSendMessage(phone: string) {
       failPinned(pinned(input, context?.generation), error);
     },
     onSettled: (row, error, { id }) => afterSend(client, phone, { row, error, id }),
-  });
-}
-
-/** app-send gives the row a short pending window (docs/19). */
-type MessageAction = 'retry' | 'sent-manually' | 'hand-off' | 'app-send';
-
-/**
- * POST /messages/:id/retry (failed → queued), /sent-manually (the admin sent it from WhatsApp, so
- * the sender never sends it again) or /hand-off (wa.me opened: held until one of the other two).
- * Not optimistic: the API decides the new state.
- */
-export function useMessageAction(phone: string, action: MessageAction) {
-  const client = useQueryClient();
-  const queryKey = threadKey(phone);
-  return useMutation({
-    mutationFn: (id: string) => apiSend<MessageView>('POST', `/messages/${id}/${action}`),
-    onSuccess: (row) =>
-      client.setQueryData<ThreadCache>(queryKey, (old) => replaceMessage(old, row.id, row)),
-    onSettled: () => refreshInbox(client, phone),
   });
 }

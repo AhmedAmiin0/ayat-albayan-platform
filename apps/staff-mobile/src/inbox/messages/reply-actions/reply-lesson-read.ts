@@ -1,9 +1,12 @@
-import type { ReplyLesson, SalesScheduleLesson, SalesScheduleDay } from '@ab/shared';
+import type { ReplyLesson, SalesScheduleLesson } from '@ab/shared';
 import type { LessonView } from '@ab/schedule';
-import { offPathKeys } from '@ab/client-core';
+import { lessonListCalls, offPathKeys, salesAcademyDayCalls } from '@ab/client-core';
 import { chatDayKey, RIYADH_TZ } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
+
+const academyDay = salesAcademyDayCalls({ apiFetch, apiSend });
+const lists = lessonListCalls({ apiFetch, apiSend });
 
 const MINUTE_MS = 60_000;
 
@@ -14,7 +17,7 @@ export function useSalesReplyLesson(lesson: ReplyLesson) {
     queryFn: async (): Promise<SalesScheduleLesson | null> => {
       // academy day (docs/34 b): a reply is about a lesson of the same academy day.
       const date = chatDayKey(new Date(lesson.starts_at), RIYADH_TZ);
-      const day = await apiFetch<SalesScheduleDay>(`/sales/schedule${toQueryString({ date })}`);
+      const day = await academyDay.day({ date });
       return day.lessons.find((l) => l.id === lesson.id) ?? null;
     },
     staleTime: 0,
@@ -31,7 +34,7 @@ export function useAdminReplyLesson(lesson: ReplyLesson) {
         from: new Date(start).toISOString(),
         to: new Date(start + MINUTE_MS).toISOString(),
       };
-      const rows = await apiFetch<LessonView[]>(`/lessons${toQueryString(window)}`);
+      const rows = await lists.list(window);
       return rows.find((l) => l.id === lesson.id) ?? null;
     },
     staleTime: 0,

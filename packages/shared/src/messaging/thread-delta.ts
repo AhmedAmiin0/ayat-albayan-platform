@@ -1,34 +1,4 @@
-import type { MessageView, ThreadView } from './chat/views';
-
-/**
- * GET /threads/:phone?after=<ISO>&pending=<id,…>: what changed in an
- * open chat since the newest row the client holds, in ~2 reads instead of a whole page (~10).
- */
-export interface ThreadDelta {
-  /** Rows created after `after`, oldest → newest; at most `limit`. */
-  messages: MessageView[];
-  /** More than `limit` newer rows: merging would leave a gap, so the client re-reads the whole thread. */
-  has_more: boolean;
-  /**
-   * Outgoing rows whose status may still move, as they are now: the ids the client passed (this chat's
-   * only) and the chat's outbound rows queued / sent / delivered in the last PENDING_WINDOW_MS.
-   */
-  pending: MessageView[];
-  /** Only when a new inbound row arrived: the window and the unread count moved. Absent otherwise. */
-  thread?: ThreadDeltaWindow;
-}
-
-/** The thread fields a new inbound row changes (the 24 h window, its reply line, the unread count). */
-export type ThreadDeltaWindow = Pick<
-  ThreadView,
-  | 'last_inbound_at'
-  | 'session_open'
-  | 'unread_count'
-  | 'reply_line'
-  | 'last_inbound_line'
-  | 'last_chat_inbound_at'
-  | 'last_notifications_inbound_at'
->;
+import type { MessageView } from './chat/message-view';
 
 /** Outbound rows this young still change status (queued → sent → delivered → read). */
 export const PENDING_WINDOW_MS = 30 * 60_000;

@@ -9,7 +9,12 @@ import { EvolutionSyncPanel } from './EvolutionSyncPanel';
 import { syncView } from './sync.fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const s = t.numbers.evolution.sync;
 const SYNC_PATH = '/admin/numbers/num-7/evolution/sync';
@@ -22,7 +27,10 @@ function show(sync: Sync = syncView(), manage = true) {
   return renderWithClient(<EvolutionSyncPanel view={view} evolution={evolution} manage={manage} />);
 }
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => {
+  apiFetch.mockReset();
+  apiSend.mockReset();
+});
 
 describe('«المزامنة مع Evolution» on the card', () => {
   it('says «غير متزامن» with each part in words, and asks nothing on load', () => {
@@ -32,6 +40,7 @@ describe('«المزامنة مع Evolution» on the card', () => {
     expect(screen.getByText(s.states.drift)).toBeTruthy();
     expect(screen.getByText(s.states.skipped)).toBeTruthy();
     expect(apiFetch).not.toHaveBeenCalled();
+    expect(apiSend).not.toHaveBeenCalled();
   });
 
   it('never pushed: «لم تُزامن بعد»', () => {
@@ -41,10 +50,10 @@ describe('«المزامنة مع Evolution» on the card', () => {
 
   it('«مزامنة الآن» POSTs the sync and shows its answer', async () => {
     show();
-    apiFetch.mockResolvedValue(syncView({ synced: true }));
+    apiSend.mockResolvedValue(syncView({ synced: true }));
     fireEvent.click(screen.getByRole('button', { name: s.push }));
     expect(await screen.findByText(s.synced)).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith(SYNC_PATH, { method: 'POST' });
+    expect(apiSend).toHaveBeenCalledWith('POST', SYNC_PATH, undefined);
   });
 
   it('«تحقق» only reads back (GET)', async () => {
@@ -57,7 +66,7 @@ describe('«المزامنة مع Evolution» on the card', () => {
 
   it('a refusal is said in words (502 evolution_auth)', async () => {
     show();
-    apiFetch.mockRejectedValue(new ApiError(502, { code: 'evolution_auth' }));
+    apiSend.mockRejectedValue(new ApiError(502, { code: 'evolution_auth' }));
     fireEvent.click(screen.getByRole('button', { name: s.push }));
     await waitFor(() =>
       expect(screen.getByRole('alert').textContent).toBe(t.numbers.evolution.errors.evolution_auth),
@@ -70,7 +79,7 @@ describe('«المزامنة مع Evolution» on the card', () => {
     apiFetch.mockResolvedValueOnce(syncView({ synced: true }));
     fireEvent.click(screen.getByRole('button', { name: s.verify }));
     expect(await screen.findByText(s.synced)).toBeTruthy();
-    apiFetch.mockRejectedValueOnce(new ApiError(502, { code: 'evolution_auth' }));
+    apiSend.mockRejectedValueOnce(new ApiError(502, { code: 'evolution_auth' }));
     fireEvent.click(screen.getByRole('button', { name: s.push }));
     expect(await screen.findByText(s.unsynced)).toBeTruthy();
     expect(screen.queryByText(s.synced)).toBeNull();

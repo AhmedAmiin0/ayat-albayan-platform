@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { Permission } from '@ab/catalog';
-import type { ThreadLesson } from '../chat/views';
-import { replyConfirmPath, replyLesson, replyRights } from './reply-lesson';
+import type { ThreadLesson } from '../chat/thread-reads';
+import { replyLesson, replyRights } from './reply-lesson';
 
 const NOW = new Date('2026-10-28T12:00:00Z');
 const fam = (id: string, starts_at: string, over: Partial<ThreadLesson> = {}): ThreadLesson => ({
@@ -65,10 +65,5 @@ describe('replyRights: what the viewer may do from the chat (docs/16 rows 37, 37
 
   it('teacher mode: nothing', () => {
     expect(replyRights(() => true, null)).toEqual({ reschedule: false, confirm: null });
-  });
-
-  it('the confirm path of each route', () => {
-    expect(replyConfirmPath('l1', 'sales')).toBe('/sales/lessons/l1/confirm');
-    expect(replyConfirmPath('l1', 'admin')).toBe('/lessons/l1/confirm');
   });
 });

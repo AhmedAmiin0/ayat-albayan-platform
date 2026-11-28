@@ -3,9 +3,10 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { clearAllDrafts, getDraft } from '@/features/messaging/inbox/composer/lib/draft-store';
-import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { clearOwnSends, lastOwnSend } from '@/features/messaging/inbox/composer/lib/own-send';
 import { TextComposer } from './TextComposer';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
@@ -49,9 +50,9 @@ describe('TextComposer: a failed id never outlives its text (round 2 C)', () => 
     expect(getDraft(PHONE).failed?.text).toBe('السلام عليكم');
     type('موعد الحلقة غدًا');
     expect(getDraft(PHONE).failed).toBeNull(); // the box no longer holds the failed text
-    apiSend.mockResolvedValueOnce(message({ id: 'm-2', direction: 'outbound', status: 'sent' }));
+    apiSend.mockResolvedValueOnce(sentText({ id: uid('m-2'), status: 'sent' }));
     await sendAndWait(2);
-    apiSend.mockResolvedValueOnce(message({ id: 'm-3', direction: 'outbound', status: 'sent' }));
+    apiSend.mockResolvedValueOnce(sentText({ id: uid('m-3'), status: 'sent' }));
     type('السلام عليكم');
     await sendAndWait(3);
     expect(sentId(2)).not.toBe(sentId(0));
@@ -63,7 +64,7 @@ describe('TextComposer: a failed id never outlives its text (round 2 C)', () => 
     type('السلام عليكم');
     await sendAndWait(1);
     type('السلام عليكم ');
-    apiSend.mockResolvedValueOnce(message({ id: 'm-2', direction: 'outbound', status: 'sent' }));
+    apiSend.mockResolvedValueOnce(sentText({ id: uid('m-2'), status: 'sent' }));
     await sendAndWait(2);
     expect(sentId(1)).toBe(sentId(0));
     expect(getDraft(PHONE).failed).toBeNull();
@@ -127,7 +128,7 @@ describe('TextComposer: a send settling after sign-out writes nothing back (roun
     clearAllDrafts();
     clearOwnSends();
     view.unmount();
-    resolve(message({ id: 'm-9', direction: 'outbound', status: 'sent' }));
+    resolve(sentText({ id: uid('m-9'), status: 'sent' }));
     await waitFor(() => expect(client.isMutating()).toBe(0));
     expect(lastOwnSend(PHONE)).toBeUndefined();
   });

@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { page, STUDENT, subscription } from '@/payments/fixtures';
@@ -26,7 +27,7 @@ const roomy = subscription({
 
 function backend(subs = [due, roomy], tasks = [adminTask()]) {
   mockApiFetch.mockImplementation(async (path: string) => {
-    if (path === '/settings') return { renewal_alert_remaining: 2 };
+    if (path === '/settings') return { ...SETTING_DEFAULTS, renewal_alert_remaining: 2 };
     if (path.startsWith('/admin-tasks')) return page(tasks);
     return page(subs);
   });

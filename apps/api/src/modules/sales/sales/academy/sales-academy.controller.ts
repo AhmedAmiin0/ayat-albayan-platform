@@ -1,65 +1,62 @@
 import {
-  salesScheduleQuerySchema,
-  salesStudentsQuerySchema,
-  type SalesScheduleDay,
-  type SalesStudentView,
-  type SalesSubscriptionHistory,
-  type SalesTeacherView,
+  salesAcademyDayRoutes,
+  salesAcademyListRoutes as lists,
+  salesAcademyStudentRoutes,
 } from '@ab/shared';
-import type { AssistantLessonView } from '@ab/schedule';
-import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
-import { SalesAcademyService } from './sales-academy.service';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { withMine } from '@/modules/sales/sales/schedule/sales-schedule.mapper';
 import { SalesScheduleService } from '@/modules/sales/sales/schedule/sales-schedule.service';
-import type { Page } from '@ab/core';
+import { SalesAcademyService } from './sales-academy.service';
 
 /** docs/16: read-only and whitelisted; rooms are entered via POST /lessons/:id/room/join. */
-@ApiTags('sales')
 @ApiBearerAuth()
-@Controller('sales')
+@Controller()
 export class SalesAcademyController {
   constructor(
     private readonly academy: SalesAcademyService,
     private readonly schedule: SalesScheduleService,
   ) {}
 
-  @Get('subscriptions/:id/history')
-  @Permissions('self.sales')
-  history(@Param('id', ParseUUIDPipe) id: string): Promise<SalesSubscriptionHistory> {
-    return this.academy.history(id);
+  @Route(lists.history)
+  async history(@RouteInput() { params }: RouteInputOf<typeof lists.history>) {
+    return asResponse(lists.history.response, await this.academy.history(params.id));
   }
 
-  @Get('teachers')
-  @Permissions('self.sales_academy')
-  teachers(): Promise<SalesTeacherView[]> {
-    return this.schedule.teachers();
+  @Route(lists.teachers)
+  async teachers() {
+    return asResponse(lists.teachers.response, await this.schedule.teachers());
   }
 
   /**
-   * `?date=YYYY-MM-DD&teacherId=`: the day's lessons with their meeting link, no note or money (400
-   * on a bad date/id); `mine` on her own students (docs/16 row 37: she may move or cancel those
-   * lessons).
+   * The day's lessons with their meeting link, no note or money; `mine` on her own students
+   * (docs/16 row 37: she may move or cancel those lessons).
    */
-  @Get('schedule')
-  @Permissions('self.sales_academy')
-  async day(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<SalesScheduleDay> {
-    const [day, own] = await Promise.all([this.schedule.day(parseOrThrow(salesScheduleQuerySchema, query)), this.academy.ownStudents(user)]);
-    return { ...day, lessons: day.lessons.map((lesson) => withMine(lesson, own)) };
+  @Route(salesAcademyDayRoutes.day)
+  async day(
+    @RouteInput() { query }: RouteInputOf<typeof salesAcademyDayRoutes.day>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const [day, own] = await Promise.all([this.schedule.day(query), this.academy.ownStudents(user)]);
+    const lessons = day.lessons.map((lesson) => withMine(lesson, own));
+    return asResponse(salesAcademyDayRoutes.day.response, { ...day, lessons });
   }
 
-  @Get('students/all')
-  @Permissions('self.sales_academy')
-  students(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<SalesStudentView>> {
-    return this.academy.students(parseOrThrow(salesStudentsQuerySchema, query), user);
+  @Route(salesAcademyStudentRoutes.students)
+  async students(
+    @RouteInput() { query }: RouteInputOf<typeof salesAcademyStudentRoutes.students>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    const page = await this.academy.students(query, user);
+    return asResponse(salesAcademyStudentRoutes.students.response, page);
   }
 
-  @Get('live')
-  @Permissions('self.sales_academy')
-  live(): Promise<AssistantLessonView[]> {
-    return this.academy.live();
+  @Route(salesAcademyDayRoutes.live)
+  async live() {
+    return asResponse(salesAcademyDayRoutes.live.response, await this.academy.live());
   }
 }

@@ -1,7 +1,7 @@
 import { act, fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, message, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 // Shared by the voice tests: a fake expo-audio recorder (no native module, nothing recorded) and a
@@ -94,10 +94,10 @@ export function resetVoice() {
 }
 
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
-const asked = message({ id: 'm1', direction: 'inbound', status: 'delivered', body: 'Please send a voice note', replyable: true, created_at: minutesAgo(9) });
+const asked = message({ id: uid('m1'), direction: 'inbound', status: 'delivered', body: 'Please send a voice note', replyable: true, created_at: minutesAgo(9) });
 
 /** The API's row of a sent voice note (a full row: the chat's next read keeps it). */
-export const voiceRow = message({ id: 'v1', direction: 'outbound', status: 'queued', media_mime: 'audio/mp4', body: null });
+export const voiceRow = message({ id: 'c3333333-3333-4333-8333-333333333333', direction: 'outbound', status: 'queued', media_mime: 'audio/mp4', body: null });
 
 /** The chat with an open window; `mockApiFetch` answers the gate and the thread. */
 export async function openChat(mockApiFetch: jest.Mock) {
@@ -108,7 +108,7 @@ export async function openChat(mockApiFetch: jest.Mock) {
 }
 
 export async function replyToAsked() {
-  await fireEvent(await screen.findByTestId('bubble-m1'), 'longPress');
+  await fireEvent(await screen.findByTestId(`bubble-${uid('m1')}`), 'longPress');
   await fireEvent.press(within(screen.getByTestId('message-menu')).getByRole('button', { name: t.inbox.reply.action }));
 }
 

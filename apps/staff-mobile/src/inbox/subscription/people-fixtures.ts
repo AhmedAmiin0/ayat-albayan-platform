@@ -1,4 +1,5 @@
 import type { ThreadPeople, ThreadStudentView, ThreadSubscriptionView } from '@ab/shared';
+import { uid } from '@/inbox/shared/thread-fixtures';
 
 // Invented GET /threads/:phone `people` rows for the chat's subscription tests (no real people).
 
@@ -7,7 +8,7 @@ export const CHILD_ID = '44444444-4444-4444-8444-444444444444';
 /** An 8-lesson package with 2 left and nothing paid yet. */
 export function sub(fields: Partial<ThreadSubscriptionView> = {}): ThreadSubscriptionView {
   return {
-    id: 'sub-1',
+    id: uid('sub1'),
     status: 'active',
     package_size: '8',
     lessons_total: 8,
@@ -43,13 +44,13 @@ export function child(fields: Partial<ThreadStudentView> = {}): ThreadStudentVie
 }
 
 export const family = (students: ThreadStudentView[]): ThreadPeople => ({
-  guardian: { id: 'g-1', name: 'أم يوسف' },
+  guardian: { id: uid('gd1'), name: 'أم يوسف' },
   lead: null,
   students,
 });
 
 export const leadOnly: ThreadPeople = {
   guardian: null,
-  lead: { id: 'a1', status: 'new' },
+  lead: { id: uid('a1'), status: 'new' },
   students: [],
 };

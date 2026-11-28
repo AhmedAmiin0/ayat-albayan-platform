@@ -3,6 +3,7 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { TeacherScheduleScreen } from '@/teacher/screens/TeacherScheduleScreen/TeacherScheduleScreen';
+import { answered } from '@/today/testing/answered';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -16,8 +17,13 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }
 jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T12:00:00Z') }));
 
 const w = t.teacherBoard;
-const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
-const ahead = lesson({ id: 'l1', status: 'confirmed' });
+const me = {
+  id: '00000000-0000-4000-8000-0000000000a1',
+  display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  meeting_link: null, meeting_mode: null,
+  students: [],
+};
+const ahead = answered(lesson({ id: 'l1', status: 'confirmed' }));
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -38,7 +44,7 @@ const openSheet = async () =>
   );
 
 test('«تفاصيل الحلقة» of a lesson ahead: «سأحضر» posts confirm-attendance and says so', async () => {
-  mockApiSend.mockResolvedValue({ ...ahead, teacher_confirmed_at: '2026-10-01T12:00:00Z' });
+  mockApiSend.mockResolvedValue(answered({ ...ahead, teacher_confirmed_at: '2026-10-01T12:00:00Z' }));
   await renderWithQuery(<TeacherScheduleScreen />);
   await openSheet();
   expect(screen.queryByRole('button', { name: t.today.confirm })).toBeNull();
@@ -46,7 +52,7 @@ test('«تفاصيل الحلقة» of a lesson ahead: «سأحضر» posts conf
   await waitFor(() =>
     expect(mockApiSend).toHaveBeenCalledWith(
       'POST',
-      '/teachers/me/lessons/l1/confirm-attendance',
+      `/teachers/me/lessons/${ahead.id}/confirm-attendance`,
       undefined,
     ),
   );
@@ -54,14 +60,14 @@ test('«تفاصيل الحلقة» of a lesson ahead: «سأحضر» posts conf
 });
 
 test('«إلغاء الحلقة» in the sheet: the reason form, then the teacher route', async () => {
-  mockApiSend.mockResolvedValue({ ...ahead, status: 'cancelled_by_teacher' });
+  mockApiSend.mockResolvedValue(answered({ ...ahead, status: 'cancelled_by_teacher' }));
   await renderWithQuery(<TeacherScheduleScreen />);
   await openSheet();
   await fireEvent.press(screen.getByRole('button', { name: w.cancel }));
   await fireEvent.changeText(screen.getByLabelText(new RegExp(w.reason)), 'سفر');
   await fireEvent.press(screen.getByRole('button', { name: w.cancelSubmit }));
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/l1/cancel', {
+    expect(mockApiSend).toHaveBeenCalledWith('POST', `/teachers/me/lessons/${ahead.id}/cancel`, {
       reason: 'سفر',
     }),
   );

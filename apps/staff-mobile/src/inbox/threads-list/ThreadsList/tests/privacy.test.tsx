@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { readable, SHOWN } from '@/inbox/screens/privacy.helpers';
-import { thread } from '@/inbox/shared/thread-fixtures';
+import { thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadsList } from '@/inbox/threads-list/ThreadsList/ThreadsList';
 
@@ -14,7 +14,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-const base: ThreadView = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null, lead_source: null };
+const base: ThreadView = { ...thread, guardian_id: uid('g1'), lead_id: null, lead_status: null, lead_source: null };
 const named: ThreadView = { ...base, display_name: 'أم يوسف' };
 const unnamed: ThreadView = { ...base, phone_e164: '+966552147731', display_name: null };
 

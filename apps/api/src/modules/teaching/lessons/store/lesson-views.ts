@@ -1,9 +1,10 @@
 import type { LessonStatus } from '@ab/catalog';
-import { CORRECT_TO, type LessonView } from '@ab/schedule';
+import { CORRECT_TO, lessonViewListSchema, type LessonView } from '@ab/schedule';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import type { Role } from '@/common/auth/verify-token';
 import { UnpaidFlags } from '@/modules/finance/subscriptions/alerts/unpaid-flags.service';
 import type { PageQuery } from '@/common/http/http';
+import { asResponse } from '@/common/http/returns';
 import type { LessonRow } from './lesson-row';
 import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';
 import { LessonsRepo, type LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
@@ -53,7 +54,10 @@ export class LessonViews {
     ]);
     const ctx = { role, seq, academyAuto, reportMinutes, now: new Date(now) };
     const view = (row: LessonRow) => markUnpaid(toLessonView(row, ctx), flagged, now);
-    return rows.map((row) => withRoom(withPhoto(withAutoHeld(view(row), held), photos), rooms));
+    const full = (row: LessonRow) =>
+      withRoom(withPhoto(withAutoHeld(view(row), held), photos), rooms);
+    const views = rows.map(full);
+    return asResponse(lessonViewListSchema, views);
   }
 
   /** Also a hint: the correction route checks it again. */

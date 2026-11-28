@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { LessonView } from '../lessons/views';
+import { lessonViewSchema } from '../lessons/lesson-view';
 import { instant } from '@ab/core';
 import { lessonDuration, overrideSchema } from './scheduling';
 
@@ -22,13 +22,16 @@ export const lessonTimeEditSchema = z.object({
 
 export type LessonTimeEdit = z.infer<typeof lessonTimeEditSchema>;
 
+export const TIME_EDIT_PAYOUTS = ['none', 'draft_stale'] as const;
+
 /** Response: the lesson as the admin sees it plus what the edit set in motion. */
-export interface TimeEditResult {
-  lesson: LessonView;
+export const timeEditResultSchema = z.object({
+  lesson: lessonViewSchema,
   /** Queued guardian confirmations. */
-  notified: number;
+  notified: z.int().nonnegative(),
   /** draft_stale: the lesson's month has a draft payout that must be recalculated. */
-  payout: 'none' | 'draft_stale';
+  payout: z.enum(TIME_EDIT_PAYOUTS),
   /** The report PDF is re-rendered (the guardian is not sent it again). */
-  pdf_refresh: boolean;
-}
+  pdf_refresh: z.boolean(),
+});
+export type TimeEditResult = z.infer<typeof timeEditResultSchema>;

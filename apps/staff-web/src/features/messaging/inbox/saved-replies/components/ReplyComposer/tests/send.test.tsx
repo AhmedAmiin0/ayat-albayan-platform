@@ -7,6 +7,7 @@ import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing
 import { PRICES, PROFILE, REPLIES } from '@/features/messaging/inbox/saved-replies/lib/fixture';
 import { ReplyComposer } from '@/features/messaging/inbox/saved-replies/components/ReplyComposer/ReplyComposer';
 import { setStaged } from '@/features/messaging/inbox/saved-replies/lib/staged-store';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -23,6 +24,11 @@ function show() {
   ]);
   renderWithClient(<ReplyComposer thread={thread(OPEN)} context={{}} leading={null} />);
 }
+const FILE_ROW = 'c3333333-3333-4333-8333-333333333333';
+const fileRow = message({ id: FILE_ROW, lead_id: null });
+const answer = (path: string) => (path.endsWith('/file') ? fileRow : sentText({ id: uid('text') }));
+const answerSend = async (_m: string, path: string) =>
+  path.endsWith('/stage') ? STAGED : answer(path);
 const box = () => screen.getByRole<HTMLTextAreaElement>('textbox', { name: t.inbox.composer.messageLabel });
 async function pickPrices() {
   fireEvent.change(box(), { target: { value: '/الأسعار' } });
@@ -49,7 +55,7 @@ describe('ReplyComposer: a reply\'s attachment', () => {
   });
 
   it('send: the text, then stage and the chat\'s own file send with its own request id', async () => {
-    apiSend.mockImplementation(async (_m: string, path: string) => (path.endsWith('/stage') ? STAGED : message({ id: path })));
+    apiSend.mockImplementation(answerSend);
     show();
     await pickPrices();
     send();
@@ -67,14 +73,14 @@ describe('ReplyComposer: a reply\'s attachment', () => {
   it('a failed file keeps the chip with the reason and a retry (same request id)', async () => {
     apiSend.mockImplementation(async (_m: string, path: string) => {
       if (path.endsWith('/stage')) throw new ApiError(404, { code: 'saved_reply_not_found' });
-      return message({ id: path });
+      return answer(path);
     });
     show();
     await pickPrices();
     send();
     const alert = await screen.findByRole('alert');
     expect(alert.textContent).toContain(S.errors.saved_reply_not_found);
-    apiSend.mockImplementation(async (_m: string, path: string) => (path.endsWith('/stage') ? STAGED : message({ id: path })));
+    apiSend.mockImplementation(answerSend);
     fireEvent.click(screen.getByRole('button', { name: S.web.retryFile }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(4));
     const ids = apiSend.mock.calls.filter((c) => String(c[1]).endsWith('/stage')).map((c) => (c[2] as { clientRequestId: string }).clientRequestId);

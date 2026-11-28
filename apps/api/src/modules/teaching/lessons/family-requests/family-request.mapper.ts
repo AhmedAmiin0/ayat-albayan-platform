@@ -1,5 +1,5 @@
-import type { FamilyRequestView } from '@ab/shared';
-import type { LessonView } from '@ab/schedule';
+import { familyRequestsSchema, type FamilyRequestView, type LessonView } from '@ab/schedule';
+import { asResponse } from '@/common/http/returns';
 
 /** The row of a lesson with a pending family request; null for any other. */
 function toFamilyRequest(l: LessonView): FamilyRequestView | null {
@@ -26,7 +26,10 @@ function toFamilyRequest(l: LessonView): FamilyRequestView | null {
 
 /** The rows of the lessons still waiting, in the given (oldest first) order. */
 export const familyRequests = (lessons: readonly LessonView[]): FamilyRequestView[] =>
-  lessons.flatMap((l) => {
-    const row = toFamilyRequest(l);
-    return row ? [row] : [];
-  });
+  asResponse(
+    familyRequestsSchema,
+    lessons.flatMap((l) => {
+      const row = toFamilyRequest(l);
+      return row ? [row] : [];
+    }),
+  );

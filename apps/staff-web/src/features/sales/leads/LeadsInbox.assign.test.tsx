@@ -1,10 +1,11 @@
+import { leadListItem } from '@ab/shared/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { LeadsInbox } from './LeadsInbox';
-import type { LeadView } from '@ab/shared';
+import type { LeadListItem } from '@ab/shared';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -26,14 +27,19 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-const ROW: LeadView = {
+const ROW = leadListItem({
   id: 'l1', phone_e164: '+966501234567', name: 'أم سهيلة', source: 'facebook_ad', status: 'new',
   last_inbound_at: null, last_outbound_at: null, created_at: '2026-09-28T10:00:00+00:00',
   assigned_to: null, assigned_to_name: null,
-};
-const PEOPLE = [{ id: 'p1', name: 'منى', open_leads: 2 }, { id: 'p2', name: 'خالد', open_leads: 0 }];
+});
+const P1 = 'a0000000-0000-4000-8000-000000000001';
+const P2 = 'a0000000-0000-4000-8000-000000000002';
+const PEOPLE = [
+  { id: P1, name: 'منى', open_leads: 2 },
+  { id: P2, name: 'خالد', open_leads: 0 },
+];
 
-function open(row: LeadView = ROW) {
+function open(row: LeadListItem = ROW) {
   apiFetch.mockImplementation(async (path: string) =>
     path.startsWith('/sales/people') ? PEOPLE : { items: [row], total: 1, page: 1, pageSize: 25 });
   render(
@@ -58,14 +64,14 @@ describe('leads: «مسؤول المبيعات» (admin)', () => {
     expect([...select.options].map((o) => o.textContent)).toEqual([t.sales.assign.none, 'منى', 'خالد']);
     expect(select.value).toBe('');
     apiSend.mockResolvedValue({});
-    fireEvent.change(select, { target: { value: 'p2' } });
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/assign', { profileId: 'p2' }));
+    fireEvent.change(select, { target: { value: P2 } });
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/assign', { profileId: P2 }));
   });
 
   it('choosing «بدون مسؤول» sends profileId null', async () => {
-    open({ ...ROW, assigned_to: 'p1', assigned_to_name: 'منى' });
+    open({ ...ROW, assigned_to: P1, assigned_to_name: 'منى' });
     const select = await screen.findByRole<HTMLSelectElement>('combobox', { name: /مسؤول المبيعات لـ/ });
-    await waitFor(() => expect(select.value).toBe('p1'));
+    await waitFor(() => expect(select.value).toBe(P1));
     apiSend.mockResolvedValue({});
     fireEvent.change(select, { target: { value: '' } });
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/assign', { profileId: null }));
@@ -76,6 +82,6 @@ describe('leads: «مسؤول المبيعات» (admin)', () => {
     apiSend.mockResolvedValue({ assigned: 7 });
     fireEvent.click(await screen.findByRole('button', { name: t.sales.assign.assignAll }));
     expect(await screen.findByText('عُيّن 7 عميل')).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/leads/assign-unassigned');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/leads/assign-unassigned', undefined);
   });
 });

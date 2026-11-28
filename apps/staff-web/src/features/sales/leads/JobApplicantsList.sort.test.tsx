@@ -17,7 +17,10 @@ const ROW = {
   cv_url: null,
   recitation_url: null,
   notes: null,
+  from_lead_id: null,
+  created_by: null,
   created_at: '2026-09-28T10:00:00+00:00',
+  updated_at: '2026-09-28T10:00:00+00:00',
 };
 
 function renderList(search: ListUrlState, total = 1) {
@@ -39,7 +42,7 @@ afterEach(() => apiFetch.mockReset());
 describe('JobApplicantsList sort + column filters (R-LEAD-04, R-NFR-08)', () => {
   it('sends the sort and filters with the page', () => {
     renderList({ page: 2, sort: { sort: 'created_at' }, filters: { cv: 'yes', status: 'new' } });
-    expect(apiFetch).toHaveBeenCalledWith('/job-applicants?page=2&pageSize=25&sort=created_at&cv=yes&status=new');
+    expect(apiFetch).toHaveBeenCalledWith('/job-applicants?status=new&page=2&pageSize=25&sort=created_at&cv=yes');
   });
 
   it('every column sorts; a header click goes back to page 1', async () => {

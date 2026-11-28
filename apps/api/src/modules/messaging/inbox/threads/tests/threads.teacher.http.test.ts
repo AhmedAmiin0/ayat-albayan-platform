@@ -6,7 +6,7 @@ type App = Awaited<ReturnType<typeof inboxApp>>;
 const OWN = '+201001234567';
 const OTHER = '+966559999999';
 const URL = `/threads/${encodeURIComponent(PHONE)}`;
-const ME = { id: 'tch-1', display_name_ar: 'أبرار', phone_e164: OWN };
+const ME = { id: 'e0000000-0000-4000-8000-000000000001', display_name_ar: 'أبرار', phone_e164: OWN };
 const kid = (id: string, name: string) => ({ id, code: 'AB-0101', name, status: 'active' as const, teacher: { display_name_ar: 'أبرار' } });
 
 describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-TCH-03, R-MSG-05)', () => {
@@ -20,8 +20,8 @@ describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-
     t.teacher.teacher.mockImplementation(async (profileId: string) => (profileId === 't1' ? ME : null));
     t.teacher.phones.mockResolvedValue([PHONE, OWN]);
     t.teacher.unread.mockResolvedValue(new Map([[PHONE, 2]]));
-    t.queries.list.mockResolvedValue({ items: [threadRow({ guardian_id: 'g1', guardian_name: 'أم ياسمين', unread_count: 5 })], total: 1 });
-    t.queries.thread.mockResolvedValue(threadRow({ guardian_id: 'g1', guardian_name: 'أم ياسمين', unread_count: 5 }));
+    t.queries.list.mockResolvedValue({ items: [threadRow({ guardian_id: 'c0000000-0000-4000-8000-000000000001', guardian_name: 'أم ياسمين', unread_count: 5 })], total: 1 });
+    t.queries.thread.mockResolvedValue(threadRow({ guardian_id: 'c0000000-0000-4000-8000-000000000001', guardian_name: 'أم ياسمين', unread_count: 5 }));
     t.queries.messages.mockResolvedValue([]);
     t.queries.lessons.mockResolvedValue([]);
     t.teacher.guardianStudents.mockResolvedValue([kid('s1', 'ياسمين'), kid('s2', 'مريم')]);
@@ -37,7 +37,7 @@ describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-
       unread: false,
       phones: [PHONE, OWN],
     });
-    expect(t.teacher.unread).toHaveBeenCalledWith('tch-1', [PHONE, OWN]);
+    expect(t.teacher.unread).toHaveBeenCalledWith('e0000000-0000-4000-8000-000000000001', [PHONE, OWN]);
     const [item] = res.json().items;
     expect(item).toMatchObject({
       unread_count: 2,
@@ -86,7 +86,7 @@ describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-
   it("H2 opening stamps my read mark only: the admin's read_at and Meta's receipt are untouched", async () => {
     const res = await t.call({ method: 'GET', url: URL, token: 'teacher' });
     expect(res.statusCode).toBe(200);
-    expect(t.teacher.stampRead).toHaveBeenCalledWith({ teacherId: 'tch-1', phone: PHONE, at: expect.any(Date) });
+    expect(t.teacher.stampRead).toHaveBeenCalledWith({ teacherId: 'e0000000-0000-4000-8000-000000000001', phone: PHONE, at: expect.any(Date) });
     expect(t.queries.markInboundRead).not.toHaveBeenCalled();
     expect(t.client.markRead).not.toHaveBeenCalled();
     expect(res.json().thread).toMatchObject({ unread_count: 0, lead_id: null, subscribed: false });
@@ -98,13 +98,13 @@ describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-
   it('H2 people: the guardian and only my students, no package or money; my lessons only', async () => {
     const body = (await t.call({ method: 'GET', url: URL, token: 'teacher' })).json();
     expect(body.people).toEqual({
-      guardian: { id: 'g1', name: 'أم ياسمين' },
+      guardian: { id: 'c0000000-0000-4000-8000-000000000001', name: 'أم ياسمين' },
       lead: null,
       students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', teacher_name: 'أبرار', status: 'active', subscription: null }],
     });
-    expect(t.teacher.myStudentIds).toHaveBeenCalledWith('tch-1');
+    expect(t.teacher.myStudentIds).toHaveBeenCalledWith('e0000000-0000-4000-8000-000000000001');
     expect(t.queries.people).not.toHaveBeenCalled();
-    expect(t.queries.lessons).toHaveBeenCalledWith(expect.objectContaining({ phone_e164: PHONE }), expect.any(Date), 'tch-1');
+    expect(t.queries.lessons).toHaveBeenCalledWith(expect.objectContaining({ phone_e164: PHONE }), expect.any(Date), 'e0000000-0000-4000-8000-000000000001');
     t.teacher.guardianStudents.mockClear();
     const older = (await t.call({ method: 'GET', url: `${URL}?before=2026-10-02T08:00:00Z`, token: 'teacher' })).json();
     expect([older.people.students, older.lessons]).toEqual([[], []]);
@@ -112,7 +112,7 @@ describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-
   });
 
   it('H2 my own chat with the academy is readable (no guardian → no students)', async () => {
-    t.queries.thread.mockResolvedValue(threadRow({ phone_e164: OWN, lead_id: null, teacher_id: 'tch-1', teacher_name: 'أبرار' }));
+    t.queries.thread.mockResolvedValue(threadRow({ phone_e164: OWN, lead_id: null, teacher_id: 'e0000000-0000-4000-8000-000000000001', teacher_name: 'أبرار' }));
     const res = await t.call({ method: 'GET', url: `/threads/${encodeURIComponent(OWN)}`, token: 'teacher' });
     expect(res.statusCode).toBe(200);
     expect(res.json().people).toEqual({ guardian: null, lead: null, students: [] });

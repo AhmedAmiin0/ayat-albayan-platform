@@ -1,7 +1,7 @@
 import type { Readiness } from '@ab/shared';
-import { Controller, Get, Header, Inject, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Public } from '@/common/auth/decorators';
+import { Controller, Header, Inject, Res } from '@nestjs/common';
+import { Route } from '@/common/http/route';
+import { healthRoutes as routes } from './health.routes';
 import { httpStatusOf } from './readiness.rollup';
 import { ReadinessService } from './readiness.service';
 
@@ -10,8 +10,7 @@ interface StatusReply {
   status(code: number): unknown;
 }
 
-@ApiTags('health')
-@Controller('ready')
+@Controller()
 export class ReadyController {
   // @Inject(Class): the class is a value here (DI), not only a type (docs/31b §3.2).
   constructor(@Inject(ReadinessService) private readonly readiness: ReadinessService) {}
@@ -21,8 +20,7 @@ export class ReadyController {
    * uptime monitor read it. The load balancer keeps /health, so a database blip never takes both
    * API copies out at once.
    */
-  @Public()
-  @Get()
+  @Route(routes.ready)
   @Header('Cache-Control', 'no-store')
   async check(@Res({ passthrough: true }) reply: StatusReply): Promise<Readiness> {
     const view = await this.readiness.check();

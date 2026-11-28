@@ -1,14 +1,12 @@
 import {
-  templateCrmNameSchema, templateCrmStatusSchema, templateLineSchema, templateNumberSchema,
-  templateStarterSchema, type TemplateMoveView, type TemplateNumberSetView, type TemplateView,
+  templateEditRoutes as routes,
+  type TemplateMoveView, type TemplateNumberSetView, type TemplateView,
 } from '@ab/shared';
-import { templateEditSchema, templateKeyParam } from '@ab/shared';
-import { Controller, HttpCode, Inject, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller, HttpCode, Inject, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { TemplateEditor } from '@/modules/messaging/whatsapp/templates/edit/template-editor';
 import { TemplateNumbers } from '@/modules/messaging/whatsapp/templates/sync/template-numbers.service';
 import { TemplateAdmin } from './template-admin';
@@ -16,14 +14,12 @@ import { TemplateManagerGuard } from './template-manager.guard';
 import { TemplateStarters } from './template-starters';
 
 /**
- * The admin's edits of one template (docs/12 §4, R-MSG-01), beside TemplatesController on the same
- * routes: templates.manage only, never a role based on sales, the classroom assistant or teacher
- * (TemplateManagerGuard, 403 allow_list_only); every edit is audited.
+ * The admin's edits of one template, beside TemplatesController: never a role based on sales,
+ * the classroom assistant or teacher (TemplateManagerGuard, 403 allow_list_only); every edit is
+ * audited.
  */
-@ApiTags('messaging')
 @ApiBearerAuth()
-@Permissions('templates.manage')
-@Controller('messaging/templates')
+@Controller()
 export class TemplateEditsController {
   constructor(
     private readonly admin: TemplateAdmin,
@@ -32,86 +28,73 @@ export class TemplateEditsController {
     @Inject(TemplateEditor) private readonly editor: TemplateEditor,
   ) {}
 
-  /** Follows Meta's edit rules; a code-bound template allows word changes only; audited. */
-  @Patch(':key/content')
+  @Route(routes.content)
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   edit(
-    @ZodParam('key', templateKeyParam) key: string,
-    @ZodBody(templateEditSchema) input: z.output<typeof templateEditSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.content>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateView> {
-    return this.editor.edit(key, input, { id: user.id, author: false });
+    return this.editor.edit(params.key, body, { id: user.id, author: false });
   }
 
-  /** The only way a template reaches Meta: the admin's explicit, audited act, to its own number. */
-  @Post(':key/submit')
+  @Route(routes.submit)
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
-  submit(@Param('key') key: string, @CurrentUser() user: AuthUser): Promise<TemplateView> {
-    return this.admin.submit(key, user.id);
+  submit(
+    @RouteInput() { params }: RouteInputOf<typeof routes.submit>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TemplateView> {
+    return this.admin.submit(params.key, user.id);
   }
 
-  /** Moves the template to the other number, then syncs that number; audited. */
-  @Patch(':key/line')
+  @Route(routes.line)
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   setLine(
-    @Param('key') key: string,
-    @ZodBody(templateLineSchema) input: z.output<typeof templateLineSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.line>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateMoveView> {
-    return this.admin.moveLine({ key, line: input.line }, user.id);
+    return this.admin.moveLine({ key: params.key, line: body.line }, user.id);
   }
 
-  /** docs/23c decision 9: null is the role's default; never blocked, only a warning. */
-  @Put(':key/number')
+  @Route(routes.number)
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   setNumber(
-    @Param('key') key: string,
-    @ZodBody(templateNumberSchema) input: z.output<typeof templateNumberSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.number>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateNumberSetView> {
-    return this.numbers.setNumber({ key, number_id: input.number_id }, user.id);
+    return this.numbers.setNumber({ key: params.key, number_id: body.number_id }, user.id);
   }
 
-  /** Crm line only (docs/19), set by hand; 409 not_crm_line; audited. */
-  @Put(':key/crm-status')
+  @Route(routes.crmStatus)
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   setCrmStatus(
-    @Param('key') key: string,
-    @ZodBody(templateCrmStatusSchema) input: z.output<typeof templateCrmStatusSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.crmStatus>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateView> {
-    return this.admin.setCrmStatus({ key, status: input.status }, user.id);
+    return this.admin.setCrmStatus({ key: params.key, status: body.status }, user.id);
   }
 
-  /** docs/19: blank is the default; any line; audited. */
-  @Put(':key/crm-name')
+  @Route(routes.crmName)
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   setCrmName(
-    @Param('key') key: string,
-    @ZodBody(templateCrmNameSchema) input: z.output<typeof templateCrmNameSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.crmName>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateView> {
-    return this.admin.setCrmName({ key, ...input }, user.id);
+    return this.admin.setCrmName({ key: params.key, ...body }, user.id);
   }
 
-  /**
-   * The allow-list: the admin offers a template to the restricted roles (teachers, sales…), or
-   * stops; audited.
-   */
-  @Patch(':key/starter')
+  @Route(routes.starter)
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   setStarter(
-    @Param('key') key: string,
-    @ZodBody(templateStarterSchema) input: z.output<typeof templateStarterSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.starter>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateView> {
-    return this.starters.set(key, input.sales_starter, user.id);
+    return this.starters.set(params.key, body.sales_starter, user.id);
   }
 }

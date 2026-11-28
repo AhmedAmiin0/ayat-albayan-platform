@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { View } from 'react-native';
 import {
   usePermissions,
-  apiSend,
   t,
   pathKey,
   type,
@@ -13,7 +12,7 @@ import {
   type FilterPill,
   ErrorLine,
 } from '@ab/mobile-kit';
-import { useSalesPeople } from './use-sales-people';
+import { assignLead, useSalesPeople } from './use-sales-people';
 import type { LeadView } from '@ab/shared';
 import { leadKeys } from '@/core/lib/keys';
 
@@ -26,7 +25,7 @@ export function LeadAssign({ lead }: { lead: LeadView }) {
   const allowed = can('leads.assign');
   const { people, isError, refetch } = useSalesPeople(allowed);
   const save = useMutation({
-    mutationFn: (profileId: string | null) => apiSend<unknown>('POST', `/leads/${lead.id}/assign`, { profileId }),
+    mutationFn: (profileId: string | null) => assignLead({ leadId: lead.id, profileId }),
     onSuccess: (_done, profileId) => {
       const name = people.find((p) => p.id === profileId)?.name ?? null;
       const next = { ...lead, assigned_to: profileId, assigned_to_name: name };

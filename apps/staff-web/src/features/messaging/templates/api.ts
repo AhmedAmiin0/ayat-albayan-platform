@@ -1,11 +1,7 @@
+import { adminTemplateCalls } from '@ab/client-core';
 import type {
   CRM_TEMPLATE_STATUSES,
-  TemplateCreateInput,
-  TemplateHealthView,
   TemplateLineSync,
-  TemplateLineView,
-  TemplateMoveView,
-  TemplateNumberSetView,
   TemplateView,
 } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
@@ -18,65 +14,42 @@ import { ApiError, apiFetch, apiSend, t } from '@ab/web-kit';
 // Template registry routes (docs/12 §4: T1–T3). Submitting to Meta is only ever this explicit
 // admin action (owner's messaging-safety rule), never automatic.
 
+const catalog = adminTemplateCalls({ apiFetch, apiSend });
+
 export const templatesQuery = queryOptions({
   queryKey: templateKeys.all,
-  queryFn: () => apiFetch<TemplateView[]>('/messaging/templates'),
+  queryFn: catalog.list,
 });
 
 /** Both numbers as the server's env knows them (ids, driver, last sync): no Meta call, safe on mount. */
 export const templateLinesQuery = queryOptions({
   queryKey: templateKeys.lines(),
-  queryFn: () => apiFetch<TemplateLineView[]>('/messaging/templates/lines'),
+  queryFn: catalog.lines,
 });
 
 /** T2 per number: one line's rows against its own WABA, or both when no line is given. */
-export const checkTemplateHealth = (line?: WaLine) =>
-  line
-    ? apiSend<TemplateHealthView>('POST', '/messaging/templates/health', { line })
-    : apiSend<TemplateHealthView>('POST', '/messaging/templates/health');
+export const checkTemplateHealth = (line?: WaLine) => catalog.health({ line });
 
 /** Creates a new unsubmitted row; 409 template_exists when the key is taken. */
-export const createTemplate = (input: TemplateCreateInput) =>
-  apiSend<TemplateView>('POST', '/messaging/templates', input);
+export const createTemplate = catalog.create;
 
 /** T3: not_submitted / rejected / missing → pending, on the WABA of the row's own line. */
-export const submitTemplate = (key: string) =>
-  apiSend<TemplateView>('POST', `/messaging/templates/${encodeURIComponent(key)}/submit`);
+export const submitTemplate = catalog.submit;
 
 /** The row now goes out from the other number; the API re-reads its status on that number's WABA. */
-export const moveTemplateLine = ({ key, line }: { key: string; line: WaLine }) =>
-  apiSend<TemplateMoveView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/line`, {
-    line,
-  });
+export const moveTemplateLine = catalog.moveLine;
 
 /** docs/23c decision 9: the template's own number; null = its role's default (404 unknown_number). */
-export const setTemplateNumber = ({ key, number_id }: { key: string; number_id: string | null }) =>
-  apiSend<TemplateNumberSetView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/number`, {
-    number_id,
-  });
+export const setTemplateNumber = catalog.setNumber;
 
 /** Toggles the restricted allow-list that teachers, sales and limited roles may send (docs/16). */
-export const setStarter = ({ key, on }: { key: string; on: boolean }) =>
-  apiSend<TemplateView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/starter`, {
-    sales_starter: on,
-  });
+export const setStarter = catalog.setStarter;
 
 /** Set by hand for a crm line's template and audited (docs/19). */
-export const setCrmStatus = ({ key, status }: { key: string; status: CrmTemplateStatus }) =>
-  apiSend<TemplateView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/crm-status`, {
-    status,
-  });
+export const setCrmStatus = catalog.setCrmStatus;
 
 /** A crm line's template name / language in the CRM (docs/19); null = the default; audited. */
-export const setCrmName = ({
-  key,
-  ...body
-}: {
-  key: string;
-  crm_name: string | null;
-  crm_language: string | null;
-}) =>
-  apiSend<TemplateView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/crm-name`, body);
+export const setCrmName = catalog.setCrmName;
 
 /** A submittable row: never sent, refused, or gone from Meta (docs/12 §3.4), on either number. */
 export const canSubmit = (tpl: Pick<TemplateView, 'status'>): boolean =>

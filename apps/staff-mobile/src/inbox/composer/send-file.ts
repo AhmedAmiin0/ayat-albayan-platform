@@ -1,17 +1,20 @@
-import { CHAT_FILE_MIMES, chatFileProblem, type MessageView, type SignedUpload } from '@ab/shared';
+import { CHAT_FILE_MIMES, chatFileProblem, type MessageView } from '@ab/shared';
+import { chatFileCalls } from '@ab/client-core';
 import { type QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as DocumentPicker from 'expo-document-picker';
-import { apiSend, t } from '@ab/mobile-kit';
+import { apiFetch, apiSend, t } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { ensureCameraPermission, pickReceipt } from '@/payments';
 import { sendError } from '@/inbox/messages/hooks/message-text';
 import { touchInbox } from '@/inbox/thread/hooks/inbox-sync';
 import { refreshSent } from '@/inbox/thread/hooks/use-thread';
-import { appendMessage, removeMessage, type ThreadCache, threadKey, threadPath } from '@/inbox/thread/hooks/thread-cache';
+import { appendMessage, removeMessage, type ThreadCache, threadKey } from '@/inbox/thread/hooks/thread-cache';
 
 // The assistant sends a photo or a PDF from the chat, inside the 24 h
 // window: the API signs an upload into wa-media, then queues the file as her message.
+
+const chatFiles = chatFileCalls({ apiFetch, apiSend });
 
 /** A picked file, its bytes ready for the signed upload. */
 export interface ChatFilePick {
@@ -98,20 +101,16 @@ export async function sendChatFile({
   replyToMessageId,
 }: SendFileInput): Promise<MessageView> {
   const problem = chatFileProblem({ mime: file.mime, size: file.size, maxBytes }, CHAT_FILE_MIMES);
-  if (problem) throw new ChatFileError(problem);
-  const signed = await apiSend<SignedUpload>('POST', `${threadPath(phone)}/file-upload-url`, {
-    clientRequestId: id,
-    mime: file.mime,
-    size: file.size,
-  });
+  const mime = CHAT_FILE_MIMES.find((m) => m === file.mime);
+  if (problem || !mime) throw new ChatFileError(problem ?? 'file_type');
+  const params = { phone };
+  const upload = { clientRequestId: id, mime, size: file.size };
+  const signed = await chatFiles.uploadUrl({ params, body: upload });
   const { error } = await uploadSigned(signed, { body: file.bytes, contentType: file.mime });
   if (error) throw new ChatFileError('file_upload');
-  return apiSend<MessageView>('POST', `${threadPath(phone)}/file`, {
-    clientRequestId: id,
-    path: signed.path,
-    filename: file.filename,
-    ...(replyToMessageId ? { replyToMessageId } : {}),
-  });
+  const reply = replyToMessageId ? { replyToMessageId } : {};
+  const body = { clientRequestId: id, path: signed.path, filename: file.filename, ...reply };
+  return chatFiles.send({ params, body });
 }
 
 /**

@@ -1,24 +1,22 @@
-import { answeredLessonSchema, familyRequestsSchema, type AnsweredLesson } from '@ab/shared';
-import type { ProposalApprove } from '@ab/schedule';
+import { familyRequestCalls } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
-
-// Family reschedule requests and their answers; parsed (rule 12).
+import type { Answer, AnswerKind, AnswerSenders } from './family-requests.types';
 
 const PATH = '/family-requests';
+const requests = familyRequestCalls({ apiFetch, apiSend });
 
 export function useFamilyRequests() {
-  return useQuery({
-    queryKey: pathKey(PATH),
-    queryFn: async () => familyRequestsSchema.parse(await apiFetch(PATH)),
-  });
+  return useQuery({ queryKey: pathKey(PATH), queryFn: () => requests.pending() });
 }
 
-export type Answer =
-  | { kind: 'approve'; body: ProposalApprove }
-  | { kind: 'reject'; note: string };
+const SENDERS: AnswerSenders = {
+  approve: (id, answer) => requests.approve({ id }, answer.body),
+  reject: (id, answer) => requests.reject({ id }, { note: answer.note || undefined }),
+};
 
-const bodyOf = (a: Answer): object => (a.kind === 'approve' ? a.body : { note: a.note || undefined });
+const sendAnswer = <K extends AnswerKind>(id: string, answer: Answer<K>) =>
+  SENDERS[answer.kind](id, answer);
 
 /**
  * Approve (a reschedule: 409 conflict when the time was taken meanwhile) or reject with a note
@@ -27,10 +25,7 @@ const bodyOf = (a: Answer): object => (a.kind === 'approve' ? a.body : { note: a
 export function useAnswerRequest(proposalId: string) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (a: Answer): Promise<AnsweredLesson> =>
-      apiSend('POST', `${PATH}/${proposalId}/${a.kind}`, bodyOf(a)).then((r: unknown) =>
-        answeredLessonSchema.parse(r),
-      ),
+    mutationFn: (answer: Answer) => sendAnswer(proposalId, answer),
     onSuccess: () =>
       Promise.all([
         client.invalidateQueries({ queryKey: pathKey(PATH) }),

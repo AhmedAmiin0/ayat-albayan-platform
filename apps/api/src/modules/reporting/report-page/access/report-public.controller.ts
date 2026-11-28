@@ -1,19 +1,15 @@
 import {
-  reportCodeRequestSchema,
-  reportCodeVerifySchema,
-  reportPublicIdSchema,
+  reportPublicRoutes as routes,
   type ReportAccessView,
-  type ReportCodeRequest,
-  type ReportCodeVerify,
   type ReportPageView,
 } from '@ab/shared';
-import { Controller, Get, Header, HttpCode, Ip, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Header, HttpCode, Ip, Req, Res, UseGuards } from '@nestjs/common';
 import { z } from 'zod';
-import { Public } from '@/common/auth/decorators';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ReportCodeService } from './report-code.service';
 import { ReportPublicLimit } from './report-public.limit';
+
+type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 /** The Cookie header (its report token is checked by validReportSession). */
 const cookieHeader = z.string().max(8192).optional();
@@ -28,53 +24,43 @@ interface CookieReply {
   request: { ip: string };
 }
 
-/**
- * /report/<public_id> for a viewer who is not signed in: the masked numbers a
- * code may go to, the code, then the page with this report's cookie (never another report's).
- * 404 report_not_found, 401 code_required / invalid_code, 429 too_many_requests,
- * 503 codes_unavailable. Never cached.
- */
-@ApiTags('reports')
-@Public()
+/** Never cached: the page and the masked numbers depend on this report's cookie. */
 @UseGuards(ReportPublicLimit)
-@Controller('public/report-pages/:publicId')
+@Controller()
 export class ReportPublicController {
   constructor(private readonly codes: ReportCodeService) {}
 
-  @Get()
+  @Route(routes.view)
   @Header('Cache-Control', 'no-store')
   view(
-    @ZodParam('publicId', reportPublicIdSchema) publicId: string,
+    @RouteInput() { params }: Input<'view'>,
     @Req() req: CookieRequest,
   ): Promise<ReportPageView> {
     const cookie = cookieHeader.safeParse(req.headers.cookie);
-    return this.codes.view({ publicId, cookie: cookie.success ? cookie.data : undefined });
+    const sent = cookie.success ? cookie.data : undefined;
+    return this.codes.view({ publicId: params.publicId, cookie: sent });
   }
 
-  @Get('access')
+  @Route(routes.access)
   @Header('Cache-Control', 'no-store')
-  access(@ZodParam('publicId', reportPublicIdSchema) publicId: string): Promise<ReportAccessView> {
-    return this.codes.access(publicId);
+  access(@RouteInput() { params }: Input<'access'>): Promise<ReportAccessView> {
+    return this.codes.access(params.publicId);
   }
 
-  @Post('code')
+  @Route(routes.code)
   @HttpCode(202)
-  async code(
-    @ZodParam('publicId', reportPublicIdSchema) publicId: string,
-    @ZodBody(reportCodeRequestSchema) body: ReportCodeRequest,
-    @Ip() ip: string,
-  ): Promise<void> {
-    await this.codes.request({ publicId, ip, to: body.to });
+  async code(@RouteInput() { params, body }: Input<'code'>, @Ip() ip: string): Promise<void> {
+    await this.codes.request({ publicId: params.publicId, ip, to: body.to });
   }
 
-  @Post('verify')
+  @Route(routes.verify)
   @HttpCode(204)
   @Header('Cache-Control', 'no-store')
   async verify(
-    @ZodParam('publicId', reportPublicIdSchema) publicId: string,
-    @ZodBody(reportCodeVerifySchema) body: ReportCodeVerify,
+    @RouteInput() { params, body }: Input<'verify'>,
     @Res({ passthrough: true }) res: CookieReply,
   ): Promise<void> {
+    const { publicId } = params;
     const cookie = await this.codes.verify({ publicId, ip: res.request.ip, code: body.code });
     res.header('Set-Cookie', cookie);
   }

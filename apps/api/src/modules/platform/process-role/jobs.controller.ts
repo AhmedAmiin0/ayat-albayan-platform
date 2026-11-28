@@ -4,17 +4,15 @@ import {
   Headers,
   HttpCode,
   NotFoundException,
-  Param,
-  Post,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ApiExcludeController } from '@nestjs/swagger';
-import { Public } from '@/common/auth/decorators';
 import { kickable } from '@/config/role/background-job';
-import { ZodQuery } from '@/common/http/zod-inputs';
-import { kickOptionsOfQuery, kickQuerySchema, type KickQuery } from '@/config/role/kick-options';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { kickOptionsOfQuery } from '@/config/role/kick-options';
 import { INTERNAL_HEADER, validInternalToken } from '@/config/role/worker-kick';
 import { ConfigReloadJob } from './config-reload.job';
+import { internalJobRoutes as routes } from './jobs.routes';
 
 type KickMethod = (this: unknown, options: object) => unknown;
 
@@ -27,20 +25,18 @@ const forbidden = () => new ForbiddenException({ code: 'forbidden', message: 'fo
  * (an API copy from before 42-8) answers once the pass is done (docs/42 42-8). `?lane=`: 42-7.
  */
 @ApiExcludeController()
-@Controller('internal/jobs')
+@Controller()
 export class InternalJobsController {
   constructor(private readonly refs: ModuleRef) {}
 
-  @Public()
-  @Post(':name/kick')
+  @Route(routes.kick)
   @HttpCode(202)
   async kick(
-    @Param('name') name: string,
+    @RouteInput() { params, query }: RouteInputOf<typeof routes.kick>,
     @Headers(INTERNAL_HEADER) token: string | undefined,
-    @ZodQuery(kickQuerySchema) query: KickQuery = {},
   ): Promise<void> {
     if (!validInternalToken(token)) throw forbidden();
-    const found = kickable(name);
+    const found = kickable(params.name);
     if (!found) throw new NotFoundException({ code: 'not_found', message: 'not_found' });
     const { wait, ...options } = kickOptionsOfQuery(query);
     const job: unknown = this.refs.get(found.job, { strict: false });
@@ -52,8 +48,7 @@ export class InternalJobsController {
   }
 
   /** PEER_RELOAD_PATH: another API copy took an admin save; reload this process's config (any role). */
-  @Public()
-  @Post('config-reload/here')
+  @Route(routes.peerReload)
   @HttpCode(204)
   async peerReload(@Headers(INTERNAL_HEADER) token: string | undefined): Promise<void> {
     if (!validInternalToken(token)) throw forbidden();

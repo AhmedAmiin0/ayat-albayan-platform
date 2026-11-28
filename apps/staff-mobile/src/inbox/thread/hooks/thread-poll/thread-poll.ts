@@ -1,10 +1,10 @@
-import { chatLiveKey, deltaSearch, freshRow, fullReadInterval, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead } from '@ab/client-core';
-import type { ThreadDelta, ThreadDetail } from '@ab/shared';
+import { chatLiveKey, deltaQuery, freshRow, fullReadInterval, INBOX_REFRESH_MS, laterTicks, liveInterval, mergeDelta, needsFullRead } from '@ab/client-core';
+import type { ThreadDetail } from '@ab/shared';
 import { useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { apiFetch, useScreenFocused } from '@ab/mobile-kit';
+import { useScreenFocused } from '@ab/mobile-kit';
 import { useInboxLive, useLiveWatch } from '@/inbox/thread/live/inbox-live';
 import { noteDelta } from '@/inbox/thread/live/delta-news';
-import { leavesGap, mergeNewest, sendKey, threadKey, threadPath, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
+import { leavesGap, mergeNewest, sendKey, threadKey, threadReads, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 
 /** The polls' own keys: outside threadKey, so a push's invalidation never runs them too. */
 export const threadPollsKey = ['thread-poll'];
@@ -58,10 +58,10 @@ export function useThreadPoll(phone: string, loaded: boolean) {
   useQuery({
     queryKey: threadDeltaKey(phone),
     queryFn: async ({ signal }) => {
-      const search = deltaSearch(client.getQueryData<ThreadCache>(queryKey), Date.now());
-      if (!search) return Date.now();
+      const query = deltaQuery(client.getQueryData<ThreadCache>(queryKey), Date.now());
+      if (!query) return Date.now();
       const asked = client.getQueryState(queryKey)?.dataUpdatedAt;
-      const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`, { signal });
+      const delta = await threadReads.delta({ phone, query, signal });
       noteDelta(phone, client.getQueryData<ThreadCache>(queryKey), delta);
       // The cache moved meanwhile (a full read, the page poll): this answer may be older than it.
       if (busy(client, phone) || client.getQueryState(queryKey)?.dataUpdatedAt !== asked)
@@ -78,7 +78,7 @@ export function useThreadPoll(phone: string, loaded: boolean) {
     queryKey: threadPollKey(phone),
     queryFn: async ({ signal }) => {
       const asked = Date.now();
-      const fresh = await apiFetch<ThreadDetail>(threadPath(phone), { signal });
+      const fresh = await threadReads.page({ phone, query: {}, signal });
       if (busy(client, phone)) return Date.now();
       const fold = foldPage(fresh, movedSince(client, phone, asked));
       if (leavesGap(client.getQueryData<ThreadCache>(queryKey), fresh))

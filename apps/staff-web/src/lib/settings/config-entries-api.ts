@@ -1,28 +1,24 @@
-import type {
-  ConfigEntriesResponse,
-  ConfigEntry,
-  ConfigEntryPatchInput,
-  ConfigEntryResult,
-} from '@ab/settings';
+import { configEntryCalls } from '@ab/client-core';
+import type { ConfigEntry, ConfigEntryPatchInput } from '@ab/settings';
 import { queryOptions, useQuery, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { CONFIG_QUERY_KEYS } from './query-keys';
 
-/** GET /config/entries (settings.read): every key with value, version, description and owner. */
+const calls = configEntryCalls({ apiFetch, apiSend });
+
+/** Every key with value, version, description and owner (settings.read). */
 export const configEntriesQuery = queryOptions({
   queryKey: CONFIG_QUERY_KEYS.entries,
-  queryFn: () => apiFetch<ConfigEntriesResponse>('/config/entries'),
+  queryFn: calls.list,
 });
 
-const keyPath = (key: string) => `/config/entries/${encodeURIComponent(key)}`;
-
-/** PATCH /config/entries/:key with the row's version (409 conflict / owned_by_module, 422, 428, 404). */
+/** Saves with the row's version (409 conflict / owned_by_module, 422, 428, 404). */
 export const patchConfigEntry = (key: string, body: ConfigEntryPatchInput) =>
-  apiSend<ConfigEntryResult>('PATCH', keyPath(key), body);
+  calls.patch({ key, body });
 
-/** PUT /config/entries/:key/description; `text: null` restores the seeded text. */
+/** `text: null` restores the seeded text. */
 export const putConfigDescription = (key: string, text: string | null) =>
-  apiSend<ConfigEntryResult>('PUT', `${keyPath(key)}/description`, { text });
+  calls.describe({ key, text });
 
 /** The cached row of `key`, if the entries were read. */
 export function cachedEntry(client: QueryClient, key: string): ConfigEntry | undefined {

@@ -16,7 +16,8 @@ beforeEach(() => {
 test('a voice note plays in the app from a fresh lesson file link', async () => {
   await renderWithQuery(<VoiceNote studentId="s1" fileId="f2" />, freshQueryClient());
   expect(await screen.findByRole('button', { name: t.audioPlayer.play })).toBeTruthy();
-  expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lesson-files/f2/url');
+  const link = '/portal/students/s1/lesson-files/f2/url';
+  expect(mockSend).toHaveBeenCalledWith('POST', link, undefined);
 });
 
 test('no link yet: no player', async () => {

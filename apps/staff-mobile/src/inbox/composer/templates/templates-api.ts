@@ -1,5 +1,6 @@
+import type { TemplateView } from '@ab/shared';
 import {
-  TEMPLATES_KEY, templateErrorWords, templateQueries, templateSends, type AuthorTemplate,
+  adminTemplateCalls, authoredTemplateCalls, TEMPLATES_KEY, templateErrorWords, templateQueries,
   type TemplateListMode,
 } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -9,7 +10,8 @@ import { useHolds, useIsAdmin, apiFetch, apiSend, t } from '@ab/mobile-kit';
 
 const client = { apiFetch, apiSend };
 const { templateListQuery } = templateQueries(client);
-export const templateApi = templateSends(client);
+export const adminTemplates = adminTemplateCalls(client);
+export const authoredTemplates = authoredTemplateCalls(client);
 
 /** The admin (templates.manage, admin base) sees and edits every template; else the author's. */
 export function useTemplateMode(): TemplateListMode {
@@ -21,7 +23,7 @@ export function useTemplateMode(): TemplateListMode {
 export const useTemplateList = (mode: TemplateListMode) => useQuery(templateListQuery(mode));
 
 /** A create or an edit; the lists refetch after it, whatever happened. */
-export function useTemplateSave<I>(run: (input: I) => Promise<AuthorTemplate>) {
+export function useTemplateSave<I>(run: (input: I) => Promise<TemplateView>) {
   const queries = useQueryClient();
   return useMutation({
     mutationFn: run,

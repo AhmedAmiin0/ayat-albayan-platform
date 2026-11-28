@@ -18,7 +18,7 @@ describe('moderation api', () => {
 
   it('removes by identity (url-encoded)', async () => {
     await removeParticipant({ lessonId: 'L1', identity: 'guest:a b' });
-    expect(api.send).toHaveBeenCalledWith('POST', '/lessons/L1/room/participants/guest%3Aa%20b/remove');
+    expect(api.send).toHaveBeenCalledWith('POST', '/lessons/L1/room/participants/guest%3Aa%20b/remove', undefined);
   });
 
   it('an internal meeting room: its id, and «إخراج» through the meeting route', async () => {
@@ -30,7 +30,8 @@ describe('moderation api', () => {
     expect(scope.lessonId).toBe('7');
     expect(kickScope('lesson-9').remove).toBeUndefined();
     await scope.remove?.({ lessonId: '7', identity: 'guest-0123456789ab' });
-    expect(api.send).toHaveBeenCalledWith('POST', '/meetings/7/participants/guest-0123456789ab/remove');
+    const path = '/meetings/7/participants/guest-0123456789ab/remove';
+    expect(api.send).toHaveBeenCalledWith('POST', path, undefined);
   });
 
   it('lists the recordings of a lesson or of a meeting', async () => {

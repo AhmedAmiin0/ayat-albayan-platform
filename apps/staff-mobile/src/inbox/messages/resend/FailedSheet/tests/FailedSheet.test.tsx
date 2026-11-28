@@ -49,17 +49,18 @@ test('131056 (too many to one number): «حاول مرة أخرى» first, close
   expect(s.getAllByRole('button').map(kind)).toEqual(['retry', 'hand', 'cancel']);
   await fireEvent.press(s.getByRole('button', { name: t.messages.retry }));
   expect(onClose).toHaveBeenCalledTimes(1);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', `/messages/${failed.id}/retry`);
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/messages/${failed.id}/retry`, undefined);
 });
 
 test('by hand: the server holds the row first, then WhatsApp opens (after the sheet closed)', async () => {
   const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
-  mockApiSend.mockResolvedValue({ ...failed, error_code: 'handed_off' });
-  const s = await sheet(failed);
+  const row = { ...failed, id: 'd4444444-4444-4444-8444-444444444444' };
+  mockApiSend.mockResolvedValue({ ...row, error_code: 'handed_off' });
+  const s = await sheet(row);
   await fireEvent.press(s.getByRole('button', { name: t.messages.clickToChat }));
   expect(onClose).toHaveBeenCalledTimes(1);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', `/messages/${failed.id}/hand-off`);
-  await waitFor(() => expect(openUrl).toHaveBeenCalledWith(failed.click_to_chat));
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/messages/${row.id}/hand-off`, undefined);
+  await waitFor(() => expect(openUrl).toHaveBeenCalledWith(row.click_to_chat));
 });
 
 test('refused: «تُرسل الآن» when the sender claimed it (409 not_manual), else the plain error, in the chat notice', async () => {

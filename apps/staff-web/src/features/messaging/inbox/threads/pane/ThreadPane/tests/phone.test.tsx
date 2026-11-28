@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { studentRowFixture } from '@ab/shared/testing';
 import type { ThreadDetail } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
@@ -16,11 +17,11 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 const PHONE_QUERIES = ['(max-width: 39.99rem)', '(max-width: 56.24rem)'];
 const LEAD_PAGE: ThreadDetail = {
   ...detail([]),
-  people: { guardian: null, lead: { id: 'lead-1', status: 'new' }, students: [] },
+  people: { guardian: null, lead: { id: uid('lead-1'), status: 'new' }, students: [] },
 };
 const FAMILY_PAGE: ThreadDetail = {
-  ...detail([], { guardian_id: 'g-1', lead_id: null, lead_status: null }),
-  people: { guardian: { id: 'g-1', name: 'أم سهيلة' }, lead: null, students: [pupil()] },
+  ...detail([], { guardian_id: uid('g-1'), lead_id: null, lead_status: null }),
+  people: { guardian: { id: uid('g-1'), name: 'أم سهيلة' }, lead: null, students: [pupil()] },
 };
 
 function renderThread(page: ThreadDetail) {
@@ -92,7 +93,7 @@ describe('ThreadPane on phones (< 640px): the side panel is a full-screen sheet'
     const form = within(screen.getByRole('dialog', { name: t.inbox.registerStudent }));
     apiSend.mockImplementation(async () => {
       page = FAMILY_PAGE;
-      return studentRowFixture({ id: 's1', code: 'AB-0001', name: 'عمر', status: 'trial' });
+      return studentRowFixture({ id: uid('s1'), code: 'AB-0001', name: 'عمر', status: 'trial' });
     });
     fireEvent.click(form.getByRole('button', { name: t.common.save }));
     const sheet = within(await screen.findByRole('dialog', { name: t.inbox.subscriptionSheet }));

@@ -1,15 +1,8 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { PAYOUT } from '@/features/finance/subscriptions/money-fixture';
-import { currentMonth, downloadPayoutsCsv } from '@/features/finance/payouts/api';
+import { currentMonth } from '@/features/finance/payouts/api';
 import { monthLabel, monthOptions } from '@/features/finance/payouts/shared/MonthSelect';
 import { breakdownLines } from '@/features/finance/payouts/list/payout-columns';
-import { mockCall } from '@ab/testing/mock-call';
-
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
 
 describe('payout helpers', () => {
   it('breakdown lines with a missing rate read 0', () => {
@@ -41,20 +34,4 @@ describe('payout helpers', () => {
     expect(monthLabel('2026-10')).toBe('أكتوبر 2026');
   });
 
-  it('the CSV is fetched with the token and saved with a BOM', async () => {
-    mockApi.onRead(() => 'a,b\n');
-    const created: Blob[] = [];
-    URL.createObjectURL = vi.fn((b: Blob) => {
-      created.push(b);
-      return 'blob:x';
-    });
-    URL.revokeObjectURL = vi.fn();
-    await downloadPayoutsCsv('2026-09');
-    expect(mockApi.reads()).toContainEqual({
-      method: 'GET',
-      path: '/exports/payouts.csv?month=2026-09',
-    });
-    const bytes = new Uint8Array((await created[0]?.arrayBuffer()) ?? new ArrayBuffer(0));
-    expect([...bytes.slice(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
-  });
 });

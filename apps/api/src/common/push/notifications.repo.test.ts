@@ -31,7 +31,7 @@ function recordingDb(result: (calls: Call[]) => object) {
   return { db: { from } as unknown as Db, queries };
 }
 
-const ROW = { id: 'n1', kind: 'new_student', title: 't', body: 'b', data: { kind: 'new_student', lessonId: 'l1', n: 3 }, created_at: '2026-10-12T08:00:00Z', read_at: null };
+const ROW = { id: '5c6d7e8f-9a0b-4c1d-8e2f-3a4b5c6d7e8f', kind: 'new_student', title: 't', body: 'b', data: { kind: 'new_student', lessonId: 'l1', n: 3 }, created_at: '2026-10-12T08:00:00Z', read_at: null };
 
 describe('NotificationsQueries (R-NOT-01)', () => {
   it('lists the profile’s own rows, newest first, hiding superseded ones; counts unread', async () => {

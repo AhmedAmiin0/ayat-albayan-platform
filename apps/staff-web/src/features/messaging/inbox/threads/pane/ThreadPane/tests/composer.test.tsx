@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
@@ -17,12 +18,12 @@ const TEMPLATES = [
   template({ key: 'renewal_due', status: 'not_submitted' }),
   template({ key: 'teacher_lesson_reminder', params: ['teacher_name', 'lesson_slot'] }),
 ];
-const LESSON = { id: 'l-1', starts_at: '2026-10-04T14:00:00Z', meeting_link: null, student_names: ['سهيلة'], tz: 'Asia/Riyadh' };
+const LESSON = { id: uid('l-1'), starts_at: '2026-10-04T14:00:00Z', meeting_link: null, student_names: ['سهيلة'], tz: 'Asia/Riyadh' };
 type Gate = 'switch_off' | 'not_configured' | null;
 
 function renderThread(open: boolean, gate: Gate = null) {
   routeFetch(apiFetch, [
-    [PATH, { ...detail([message()], { session_open: open, guardian_id: 'g-1' }), lessons: [LESSON] }],
+    [PATH, { ...detail([message()], { session_open: open, guardian_id: uid('g-1') }), lessons: [LESSON] }],
     ['/messaging/templates', TEMPLATES],
     ['/messages/gate', { open: gate === null, reason: gate, queued: 0 }],
     ['/settings', SETTINGS],
@@ -42,7 +43,7 @@ describe('thread composer inside the 24 h window (R-LEAD-02)', () => {
     const log = await screen.findByRole('log', { name: t.messages.log });
     expect(within(log).getByText('السلام عليكم')).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: 'أم سهيلة' })).toBeTruthy();
-    apiSend.mockResolvedValue(message({ id: 'm-out', direction: 'outbound', status: 'queued', body: 'أهلًا' }));
+    apiSend.mockResolvedValue(message({ id: uid('m-out'), direction: 'outbound', status: 'queued', body: 'أهلًا' }));
     const box = screen.getByRole('textbox', { name: t.inbox.composer.messageLabel });
     fireEvent.change(box, { target: { value: '  أهلًا بحضرتك ' } });
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.send }));
@@ -91,8 +92,8 @@ describe('after the 24 h window: approved templates only', () => {
     // Nothing went out: opening a closed chat sends nothing, no template yet.
     expect(apiSend).not.toHaveBeenCalled();
 
-    apiSend.mockResolvedValue(message({ id: 'm-t', direction: 'outbound', status: 'queued' }));
-    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: 'l-1' } });
+    apiSend.mockResolvedValue(message({ id: uid('m-t'), direction: 'outbound', status: 'queued' }));
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: uid('l-1') } });
     expect(when.value).toBe('الأحد 4 أكتوبر 17:00');
     expect(screen.getByText('تم حجز حلقة سهيلة يوم الأحد 4 أكتوبر 17:00')).toBeTruthy(); // the preview
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
@@ -101,7 +102,7 @@ describe('after the 24 h window: approved templates only', () => {
         key: 'booking_confirmation_plain',
         params: { '1': 'سهيلة', '2': 'الأحد 4 أكتوبر 17:00' },
         clientRequestId: expect.any(String),
-        lessonId: 'l-1',
+        lessonId: uid('l-1'),
       }),
     );
   });
@@ -111,7 +112,7 @@ describe('after the 24 h window: approved templates only', () => {
     fireEvent.change(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate }), {
       target: { value: 'booking_confirmation_plain' },
     });
-    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: 'l-1' } });
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: uid('l-1') } });
     fireEvent.change(screen.getByLabelText(t.inbox.composer.paramNames.student_names), { target: { value: ' ' } });
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
     const name = t.inbox.composer.paramNames.student_names;

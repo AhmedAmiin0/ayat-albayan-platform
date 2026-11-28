@@ -1,4 +1,5 @@
 import {
+  chatSearchPageSchema,
   messageMatches,
   parseSearchCursor,
   searchCursor,
@@ -6,6 +7,7 @@ import {
   type ChatSearchHit,
   type ChatSearchPage,
 } from '@ab/shared';
+import { asResponse } from '@/common/http/returns';
 import { looksCrmHistory } from '@/modules/messaging/whatsapp';
 import type { SearchRow } from './chat-search.repo';
 
@@ -57,9 +59,9 @@ export function searchPage(rows: readonly SearchRow[], input: SearchInput): Chat
   const page = rest.slice(0, input.limit);
   const last = page.at(-1);
   const more = rest.length > input.limit && last !== undefined;
-  return {
+  return asResponse(chatSearchPageSchema, {
     items: page.map((r) => hitOf(r, input.q)),
     total: hits.length,
     next_cursor: more ? searchCursor(last) : null,
-  };
+  });
 }

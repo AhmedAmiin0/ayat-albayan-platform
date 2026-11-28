@@ -1,6 +1,7 @@
 import type { LessonView, TimeEditResult } from '@ab/schedule';
 import { SLOTS, SUN_17 } from '@/teaching/reschedule/fixtures';
 import { done, lesson } from '@/today/testing/fixtures';
+import { answered } from '@/today/testing/answered';
 
 export { NOW, SLOTS, SAT_17, SUN_17 } from '@/teaching/reschedule/fixtures';
 
@@ -21,5 +22,6 @@ export const GRID = { ...SLOTS, step_min: 15 };
 
 /** PATCH answer for `lesson` after the edit. */
 export function result(over: Partial<TimeEditResult> = {}): TimeEditResult {
-  return { lesson: upcoming, notified: 0, payout: 'none', pdf_refresh: false, ...over };
+  const answer = { lesson: upcoming, notified: 0, pdf_refresh: false, ...over };
+  return { payout: 'none', ...answer, lesson: answered(answer.lesson) };
 }

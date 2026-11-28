@@ -1,20 +1,18 @@
 import {
   Controller,
   ForbiddenException,
-  Get,
   Headers,
   HttpCode,
   Inject,
-  Post,
   Query,
   Req,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Public } from '@/common/auth/decorators';
+import { Route } from '@/common/http/route';
 import { verifyChallenge, verifySignature } from './parse/webhook.signature';
 import { RESPONSE_BUDGET_MS, WebhookService, within, type WebhookConfig } from './webhook.service';
+import { webhookRoutes as routes } from '@/modules/messaging/webhook/shared';
 import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
 
 /** The bits of the Fastify request / reply used here (no direct `fastify` dependency). */
@@ -33,9 +31,7 @@ type HubQuery = Partial<Record<'hub.mode' | 'hub.verify_token' | 'hub.challenge'
  * Meta WhatsApp Cloud API webhook (R-MSG-04, R-MSG-05, R-LEAD-01, R-SCH-03; docs/12 §3.5).
  * Public: authenticated by the verify token (GET) and the X-Hub-Signature-256 HMAC (POST).
  */
-@ApiTags('webhooks')
-@Public()
-@Controller('webhooks/whatsapp')
+@Controller()
 export class WebhookController {
   constructor(
     @Inject(WEBHOOK_CONFIG) private readonly config: WebhookConfig,
@@ -43,7 +39,7 @@ export class WebhookController {
   ) {}
 
   /** Subscribe handshake: echo hub.challenge as plain text when the verify token matches. */
-  @Get()
+  @Route(routes.metaChallenge)
   challenge(@Query() q: HubQuery, @Res({ passthrough: true }) reply: TypedReply): string {
     const query = { mode: q['hub.mode'], token: q['hub.verify_token'], challenge: q['hub.challenge'] };
     const challenge = verifyChallenge(query, this.config.verifyToken);
@@ -56,7 +52,7 @@ export class WebhookController {
    * Signed events: 401 (nothing stored) unless the HMAC over the raw bytes matches. 500 when an
    * item failed within the budget (WebhookService.handle), so Meta re-sends instead of losing it.
    */
-  @Post()
+  @Route(routes.meta)
   @HttpCode(200)
   async receive(
     @Req() req: RawRequest,

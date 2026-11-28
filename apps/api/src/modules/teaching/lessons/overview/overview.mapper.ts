@@ -1,11 +1,13 @@
 import {
   OCCUPYING_LESSON_STATUSES,
+  scheduleOverviewSchema,
   type LessonView,
   type OverviewTeacher,
   type ScheduleOverview,
   type Span,
 } from '@ab/schedule';
 import type { Interval } from '@ab/schedule';
+import { asResponse } from '@/common/http/returns';
 import type { LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { teacherSpans } from './free-windows';
 import type { OverviewCarryRow, OverviewSlotRow, OverviewTeacherRow, OverviewTimeOffRow } from './overview.repo';
@@ -59,10 +61,10 @@ export function toOverview(p: OverviewParts): ScheduleOverview {
       };
     })
     .sort((a, b) => a.display_name_ar.localeCompare(b.display_name_ar, 'ar') || a.id.localeCompare(b.id));
-  return {
+  return asResponse(scheduleOverviewSchema, {
     from: p.window.from.toISOString(),
     to: p.window.to.toISOString(),
     teachers,
     lessons: [...p.lessons].sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at)),
-  };
+  });
 }

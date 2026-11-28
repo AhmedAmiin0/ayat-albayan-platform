@@ -6,7 +6,7 @@ import { TreeBaseProvider, type TreeBase } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { answer } from '@/inbox/lists/lib/list-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
-import { detail, inbound, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, PHONE, thread, uid } from '@/inbox/shared/thread-fixtures';
 
 // Needs leads.link_family, on a lead's chat with no family.
 const mockApiFetch = jest.fn();
@@ -45,7 +45,7 @@ test('the sales tree: a lead chat opens the picker for this number and lead, und
   await openMenu({ me: salesMe(LINK), base: '/sales' });
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.linkFamily.action }));
   await waitFor(() =>
-    expect(router.push).toHaveBeenCalledWith({ pathname: '/sales/inbox/link-family', params: { phone: PHONE, leadId: 'a1' } }),
+    expect(router.push).toHaveBeenCalledWith({ pathname: '/sales/inbox/link-family', params: { phone: PHONE, leadId: uid('a1') } }),
   );
 });
 
@@ -53,7 +53,7 @@ test('the admin tree, and a converted or lost lead with no family still offers i
   await openMenu({ me: adminMe, th: { ...thread, lead_status: 'converted' } });
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.linkFamily.action }));
   await waitFor(() =>
-    expect(router.push).toHaveBeenCalledWith({ pathname: '/inbox/link-family', params: { phone: PHONE, leadId: 'a1' } }),
+    expect(router.push).toHaveBeenCalledWith({ pathname: '/inbox/link-family', params: { phone: PHONE, leadId: uid('a1') } }),
   );
 });
 
@@ -70,8 +70,8 @@ test('hidden without students.check_registration (the picker could not search)',
 });
 
 test.each<[string, ThreadView]>([
-  ['a family chat', { ...thread, guardian_id: 'g-1', guardian_name: 'أم يوسف' }],
-  ['a teacher chat', { ...thread, teacher_id: 't-1', teacher_name: 'أ. هدى' }],
+  ['a family chat', { ...thread, guardian_id: uid('g1'), guardian_name: 'أم يوسف' }],
+  ['a teacher chat', { ...thread, teacher_id: uid('t1'), teacher_name: 'أ. هدى' }],
   ['a number with no lead', { ...thread, lead_id: null, lead_name: null, lead_status: null }],
 ])('hidden on %s, even with the key', async (_name, th) => {
   await openMenu({ me: adminMe, th });

@@ -57,12 +57,8 @@ export const jobApplicantCreateSchema = z.object({
   notes: optionalText,
   from_lead_id: z.uuid().nullish(),
 });
-export const jobApplicantUpdateSchema = jobApplicantCreateSchema
-  .omit({ phone_e164: true })
-  .partial();
 
 export type LeadQualification = z.infer<typeof leadQualificationSchema>;
 export type LeadCreate = z.infer<typeof leadCreateSchema>;
 export type LeadUpdate = z.infer<typeof leadUpdateSchema>;
 export type JobApplicantCreate = z.infer<typeof jobApplicantCreateSchema>;
-export type JobApplicantUpdate = z.infer<typeof jobApplicantUpdateSchema>;

@@ -1,6 +1,5 @@
-import { paymentCalls } from '@ab/client-core';
+import { paymentCalls, settingsCalls } from '@ab/client-core';
 import type { StudentBalanceView } from '@ab/money';
-import type { AcademySettings } from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend, listKey, pathKey } from '@ab/mobile-kit';
 
@@ -26,11 +25,16 @@ export function useStudentBalance(studentId: string) {
   });
 }
 
-/** settings.renewal_alert_remaining (R-SUB-02); undefined until it loads (lines use the default). */
+const settings = settingsCalls({ apiFetch, apiSend });
+
+/**
+ * settings.renewal_alert_remaining (R-SUB-02); undefined until a valid /settings answer loads
+ * (lines use the default).
+ */
 export function useRenewalThreshold(): number | undefined {
   const { data } = useQuery({
     queryKey: pathKey('/settings'),
-    queryFn: () => apiFetch<AcademySettings>('/settings'),
+    queryFn: () => settings.view(),
     staleTime: 60 * MINUTE,
   });
   return data?.renewal_alert_remaining;

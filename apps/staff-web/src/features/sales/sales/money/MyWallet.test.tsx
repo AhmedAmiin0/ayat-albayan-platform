@@ -3,12 +3,18 @@ import type { MyCommissionRow, MyEarnings } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { mockCall } from '@ab/testing/mock-call';
 import { formatDate } from '@/features/sales/leads';
 import { t, notificationsQuery } from '@ab/web-kit';
 import { MyWallet } from './MyWallet';
 
 const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const W = t.assistantPortal.wallet;
 const row = (over: Partial<MyCommissionRow> = {}): MyCommissionRow => ({
@@ -24,10 +30,10 @@ let bell: NotificationItem[] = [];
 function open(rows: MyCommissionRow[], over: { total?: number; wallet?: MyEarnings['wallet']; earningsDown?: boolean } = {}) {
   apiFetch.mockImplementation(async (path: string) => {
     if (path.startsWith('/sales/me/commissions')) return { items: rows, total: over.total ?? rows.length, page: 1, pageSize: 20 };
-    if (path.startsWith('/me/notifications')) return { items: bell, total: bell.length, page: 1, pageSize: 20, unread: 0 };
     if (over.earningsDown) throw new Error('down');
     return { ...EARNINGS, wallet: over.wallet ?? EARNINGS.wallet };
   });
+  mockApi.onRead(() => ({ items: bell, total: bell.length, page: 1, pageSize: 20, unread: 0 }));
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
     <QueryClientProvider client={client}>
@@ -37,10 +43,13 @@ function open(rows: MyCommissionRow[], over: { total?: number; wallet?: MyEarnin
   return client;
 }
 const calls = (prefix: string) =>
-  apiFetch.mock.calls.filter(([p]) => String(p).startsWith(prefix)).length;
+  [...apiFetch.mock.calls.map(([p]) => String(p)), ...mockApi.reads().map((r) => r.path)].filter(
+    (p) => p.startsWith(prefix),
+  ).length;
 
 afterEach(() => {
   apiFetch.mockReset();
+  mockApi.reset();
   bell = [];
 });
 

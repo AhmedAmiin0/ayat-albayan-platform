@@ -2,13 +2,10 @@ import {
   baseMime,
   CHAT_SEND_MIMES,
   type ChatSendMime,
-  type MessageView,
-  type SignedUpload,
   type ThreadFileSendInput,
   type ThreadFileUpload,
-  type ThreadPdfPage,
 } from '@ab/shared';
-import { pdfPageRetryable } from '@ab/client-core';
+import { chatFileCalls, pdfPageRetryable } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
@@ -17,7 +14,7 @@ import { threadKeys } from '@/features/messaging/inbox/api/keys';
 // D2: staff send an image or PDF inside the 24 h window. The file goes to
 // wa-media through a one-off signed URL, then POST /file sends that path (the API re-checks it).
 
-const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
+const chatFiles = chatFileCalls({ apiFetch, apiSend });
 
 /** The file's type as the API takes it; null for anything else (WebP, HEIC, …). */
 export const chatSendMime = (file: Pick<File, 'type'>): ChatSendMime | null =>
@@ -29,7 +26,7 @@ export class ChatUploadError extends Error {
 }
 
 export const fileUploadUrl = ({ phone, ...body }: ThreadFileUpload & { phone: string }) =>
-  apiSend<SignedUpload>('POST', `${threadPath(phone)}/file-upload-url`, body);
+  chatFiles.uploadUrl({ params: { phone }, body });
 
 /** Uploads the picked file under this request's id; resolves to its storage path. */
 export async function uploadChatFile(input: {
@@ -52,7 +49,7 @@ export async function uploadChatFile(input: {
 }
 
 export const sendFile = ({ phone, ...body }: ThreadFileSendInput & { phone: string }) =>
-  apiSend<MessageView>('POST', `${threadPath(phone)}/file`, body);
+  chatFiles.send({ params: { phone }, body });
 
 /** Page 1 is the bubble's thumb; a 503 (one render at a time per API copy) is retried twice. */
 /** A query that has not failed: one that has keeps its answer (no ask on focus or reconnect). */
@@ -61,10 +58,7 @@ const notFailed = (query: { state: { status: string } }): boolean => query.state
 export const threadPdfPageQuery = (phone: string, messageId: string, page: number) =>
   queryOptions({
     queryKey: threadKeys.pdfPage({ phone, messageId, page }),
-    queryFn: () =>
-      apiFetch<ThreadPdfPage>(
-        `${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/pdf/${page}`,
-      ),
+    queryFn: () => chatFiles.pdfPage({ phone, messageId, page }),
     staleTime: 30 * 60_000,
     // A busy slot or failed render (503) is asked again; pdf_unavailable (no sandbox) and a 4xx
     // not.

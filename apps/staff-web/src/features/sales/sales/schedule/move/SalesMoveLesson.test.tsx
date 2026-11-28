@@ -19,7 +19,7 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
 const NOW = new Date('2026-10-12T14:00:00.000Z');
 const a = t.sales.lessonActions;
 // The owner's screenshot (2026-11-02): a confirmed trial, another family's, not over yet.
-const TRIAL = scheduleLesson({ id: 'l-7', status: 'confirmed', trial: true });
+const TRIAL = scheduleLesson({ id: 'a1000000-0000-4000-8000-000000000007', status: 'confirmed', trial: true });
 const FREE = { starts_at: '2026-10-13T14:00:00.000Z', ends_at: '2026-10-13T14:30:00.000Z', conflicts: [] };
 const slots = { teacher_tz: 'Africa/Cairo', step_min: 30, slots: [FREE] };
 
@@ -63,20 +63,20 @@ describe('the assistant\'s «تغيير الموعد» in the /sales drawer (own
   });
 
   it('her scoped slots naming the lesson, then her move route, then «تم»', async () => {
-    apiSend.mockResolvedValue({ id: 'new', starts_at: FREE.starts_at, status: 'scheduled' });
+    apiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-00000000000e', starts_at: FREE.starts_at, status: 'scheduled' });
     const drawer = open();
     fireEvent.click(within(drawer).getByRole('button', { name: a.reschedule }));
     fireEvent.click(await within(drawer).findByRole('button', { name: /5:00 م/ }));
     const url = apiFetch.mock.calls.map((c) => String(c[0])).find((u) => u.includes('/slots')) ?? '';
-    expect(url).toMatch(/^\/sales\/booking\/slots\?teacherId=tc1&.*studentIds=s1.*&lessonId=l-7/);
+    expect(url).toMatch(/^\/sales\/booking\/slots\?teacherId=tc1&.*studentIds=s1.*&lessonId=a1000000-0000-4000-8000-000000000007/);
     fireEvent.click(within(drawer).getByRole('button', { name: t.lessons.rescheduleSubmit }));
     const body = { startsAt: FREE.starts_at };
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-7/reschedule', body));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/a1000000-0000-4000-8000-000000000007/reschedule', body));
     expect(await within(drawer).findByText(t.lessons.rescheduled)).toBeTruthy();
   });
 
   it('the optional move reason goes in the body (docs/47)', async () => {
-    apiSend.mockResolvedValue({ id: 'new', starts_at: FREE.starts_at, status: 'scheduled' });
+    apiSend.mockResolvedValue({ id: 'a1000000-0000-4000-8000-00000000000e', starts_at: FREE.starts_at, status: 'scheduled' });
     const drawer = open();
     fireEvent.click(within(drawer).getByRole('button', { name: a.reschedule }));
     fireEvent.click(await within(drawer).findByRole('button', { name: /5:00 م/ }));
@@ -85,6 +85,6 @@ describe('the assistant\'s «تغيير الموعد» in the /sales drawer (own
     fireEvent.change(field, { target: { value: ' سفر الأسرة ' } });
     fireEvent.click(within(drawer).getByRole('button', { name: t.lessons.rescheduleSubmit }));
     const body = { startsAt: FREE.starts_at, reason: 'سفر الأسرة' };
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-7/reschedule', body));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/a1000000-0000-4000-8000-000000000007/reschedule', body));
   });
 });

@@ -28,6 +28,8 @@ describe('MyFeedback (teacher)', () => {
     open({
       items: [ROW_DONE],
       total: 1,
+      page: 1,
+      pageSize: 20,
       average: { avg_rating: 4.5, n: 2, recommend_yes_pct: 50 },
     });
     expect(await screen.findByText('سهيلة')).toBeTruthy();
@@ -38,12 +40,12 @@ describe('MyFeedback (teacher)', () => {
   });
 
   it('says there is nothing yet', async () => {
-    open({ items: [], total: 0, average: null });
+    open({ items: [], total: 0, page: 1, pageSize: 20, average: null });
     expect(await screen.findByText(t.feedback.empty)).toBeTruthy();
   });
 
   it('sorts and filters on the server: no teacher filter, the URL state in the request (R-NFR-08)', async () => {
-    const onSearch = open({ items: [ROW_DONE], total: 1, average: null }, { sort: 'note', f_recommend: 'yes', f_teacher: 'x' });
+    const onSearch = open({ items: [ROW_DONE], total: 1, page: 1, pageSize: 20, average: null }, { sort: 'note', f_recommend: 'yes', f_teacher: 'x' });
     await screen.findByText('سهيلة');
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/feedback?page=1&pageSize=20&sort=note&recommend=yes');
     openFilters();

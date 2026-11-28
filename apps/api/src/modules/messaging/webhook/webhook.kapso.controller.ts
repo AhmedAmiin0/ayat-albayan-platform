@@ -1,8 +1,8 @@
-import { Controller, Headers, HttpCode, Inject, Logger, Post, Req, UnauthorizedException } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Public } from '@/common/auth/decorators';
+import { Controller, Headers, HttpCode, Inject, Logger, Req, UnauthorizedException } from '@nestjs/common';
+import { Route } from '@/common/http/route';
 import { presentSignatureHeaders, verifyKapsoSignature, type KapsoSignedRequest } from '@/modules/messaging/webhook/parse/webhook.kapso-signature';
 import { RESPONSE_BUDGET_MS, WebhookService, within, type WebhookConfig } from './webhook.service';
+import { webhookRoutes as routes } from '@/modules/messaging/webhook/shared';
 import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
 
 /** The bits of the Fastify request used here (no direct `fastify` dependency). */
@@ -18,9 +18,7 @@ interface RawRequest {
  * only (never a Meta app secret). Answers within RESPONSE_BUDGET_MS (Kapso gives up after 10 s,
  * retries 3 times and pauses a webhook that keeps failing).
  */
-@ApiTags('webhooks')
-@Public()
-@Controller('webhooks/kapso')
+@Controller()
 export class KapsoWebhookController {
   private readonly log = new Logger(KapsoWebhookController.name);
 
@@ -34,7 +32,7 @@ export class KapsoWebhookController {
    * («sha256=» hex) is the HMAC of the raw bytes with KAPSO_WEBHOOK_SECRET. 500 when an item failed
    * within the budget, so Kapso re-sends instead of losing it.
    */
-  @Post()
+  @Route(routes.kapso)
   @HttpCode(200)
   async receive(@Req() req: RawRequest, @Headers() headers: KapsoSignedRequest['headers']): Promise<void> {
     if (!verifyKapsoSignature({ rawBody: req.rawBody, headers, secret: this.config.kapsoSecret })) {

@@ -1,7 +1,7 @@
 import { canRetryCode, canSendViaWhatsApp, type MessageView } from '@ab/shared';
 import { Linking } from 'react-native';
 import { ApiError, t, type, useTheme, AppText, Button, Sheet } from '@ab/mobile-kit';
-import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
+import { useMessageAction } from '@/inbox/thread/hooks/use-message-action';
 import { errorLine } from '@/inbox/messages/hooks/message-text';
 import { SheetAnswers } from '@/inbox/messages/resend/AppSendAnswers';
 import { useWhatsAppSend } from '@/inbox/messages/resend/use-whatsapp-send';

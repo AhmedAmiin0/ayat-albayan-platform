@@ -1,10 +1,10 @@
-import type { AuthorTemplate } from '@ab/client-core';
+import type { TemplateView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { templatesQuery } from '@/features/messaging/templates/api';
 import { authoredTemplatesQuery, editTemplate } from './edit-api';
 
 /** The API has already re-synced that number, so the status shows under review. */
-export function useEditTemplate(onSaved: (tpl: AuthorTemplate) => void) {
+export function useEditTemplate(onSaved: (tpl: TemplateView) => void) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: editTemplate,

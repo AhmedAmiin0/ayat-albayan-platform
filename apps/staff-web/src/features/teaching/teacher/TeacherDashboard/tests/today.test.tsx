@@ -3,7 +3,7 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit';
 import { TeacherDashboard } from '@/features/teaching/teacher/TeacherDashboard/TeacherDashboard';
 
@@ -15,15 +15,16 @@ vi.mock('@tanstack/react-router', async (importOriginal) => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));
 
+const TEACHER = '00000000-0000-4000-8000-0000000000a1';
 const ME: TeacherMe = {
-  id: 't-abrar', display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  id: TEACHER, display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
   meeting_link: 'https://meet.jit.si/ayat-abrar', meeting_mode: null, platform_classroom: false, students: [],
 };
 // Saturday 3 Oct, 12:00 Cairo (09:00Z): 16:00 and 18:00 today, one ended at 10:00, Monday's.
-const HERO = lesson({ id: 'h', starts_at: '2026-10-03T13:00:00.000Z' });
-const LATER = lesson({ id: 'l', starts_at: '2026-10-03T15:00:00.000Z', students: [{ ...HERO.students[0], id: 's-9', name: 'جود' } as LessonView['students'][number]] });
-const ENDED = lesson({ id: 'e', starts_at: '2026-10-03T07:00:00.000Z' });
-const MONDAY = lesson({ id: 'm', starts_at: '2026-10-05T13:00:00.000Z' });
+const HERO = answered(lesson({ id: 'h', starts_at: '2026-10-03T13:00:00.000Z' }));
+const LATER = answered(lesson({ id: 'l', starts_at: '2026-10-03T15:00:00.000Z', students: [{ ...HERO.students[0], id: 's-9', name: 'جود' } as LessonView['students'][number]] }));
+const ENDED = answered(lesson({ id: 'e', starts_at: '2026-10-03T07:00:00.000Z' }));
+const MONDAY = answered(lesson({ id: 'm', starts_at: '2026-10-05T13:00:00.000Z' }));
 
 type Lessons = LessonView[] | Error;
 

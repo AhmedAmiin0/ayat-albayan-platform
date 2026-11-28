@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
@@ -20,7 +21,7 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }
 test('an English run reads en.json: title, view tabs, status chips, renewal flag', async () => {
   expect(t).toEqual(en);
   mockApiFetch.mockImplementation(async (path: string) =>
-    path === '/settings' ? { renewal_alert_remaining: 2 } : page([subscription({ status: 'active', paid: 145 })]),
+    path === '/settings' ? { ...SETTING_DEFAULTS, renewal_alert_remaining: 2 } : page([subscription({ status: 'active', paid: 145 })]),
   );
   await renderWithQuery(<SubscriptionsScreen />);
   expect(await screen.findByRole('header', { name: en.mobileMoney.subscriptionsTitle })).toBeTruthy();

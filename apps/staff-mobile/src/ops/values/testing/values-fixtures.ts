@@ -3,7 +3,11 @@ import { settings } from '@/ops/shared/fixtures';
 
 export const meta: SettingsMetaResponse = {
   meta: {
-    booking_horizon_weeks: { updatedAt: '2026-10-20T09:00:00Z', updatedBy: 'u1', updatedByName: 'سارة' },
+    booking_horizon_weeks: {
+      updatedAt: '2026-10-20T09:00:00Z',
+      updatedBy: 'a0000000-0000-4000-8000-000000000001',
+      updatedByName: 'سارة',
+    },
   },
 };
 

@@ -12,9 +12,9 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const PHONE = '+966501234567';
-const PHOTO: ThreadMediaItem = { message_id: 'm-photo', created_at: '2026-10-02T10:00:00.000Z', mime: 'image/jpeg', caption: 'التحويل', expired: false };
-const PDF: ThreadMediaItem = { message_id: 'm-pdf', created_at: '2026-10-01T10:00:00.000Z', mime: 'application/pdf', caption: null, expired: false };
-const OLD: ThreadMediaItem = { message_id: 'm-old', created_at: '2026-09-01T10:00:00.000Z', mime: 'image/png', caption: null, expired: true };
+const PHOTO: ThreadMediaItem = { message_id: 'a1111111-1111-4111-8111-111111111111', created_at: '2026-10-02T10:00:00.000Z', mime: 'image/jpeg', caption: 'التحويل', expired: false };
+const PDF: ThreadMediaItem = { message_id: 'a2222222-2222-4222-8222-222222222222', created_at: '2026-10-01T10:00:00.000Z', mime: 'application/pdf', caption: null, expired: false };
+const OLD: ThreadMediaItem = { message_id: 'a3333333-3333-4333-8333-333333333333', created_at: '2026-09-01T10:00:00.000Z', mime: 'image/png', caption: null, expired: true };
 
 function renderPicker(items: ThreadMediaItem[]) {
   apiFetch.mockImplementation(async (path: string) => {
@@ -39,19 +39,19 @@ describe('ChatMediaPicker «من المحادثة» (R-MSG-06)', () => {
   it('lists the family’s files: the photo loads its thumbnail lazily, the PDF is a tile', async () => {
     renderPicker([PHOTO, PDF]);
     const photo = await screen.findByRole('button', { name: mediaCardLabel(PHOTO, C12) });
-    expect((await screen.findByRole('img')).getAttribute('src')).toBe('https://signed/m-photo');
+    expect((await screen.findByRole('img')).getAttribute('src')).toBe('https://signed/a1111111-1111-4111-8111-111111111111');
     expect(photo.textContent).toContain('التحويل');
     expect(screen.getByRole('button', { name: mediaCardLabel(PDF, C12) }).textContent).toContain(t.booking.invoice.pdf);
-    expect(apiFetch).toHaveBeenCalledWith('/threads/%2B966501234567/media/m-pdf');
+    expect(apiFetch).toHaveBeenCalledWith('/threads/%2B966501234567/media/a2222222-2222-4222-8222-222222222222');
   });
 
   it('choosing a photo hands back the message and its preview, a PDF without one', async () => {
     const { onPick } = renderPicker([PHOTO, PDF]);
     await screen.findByRole('img');
     fireEvent.click(screen.getByRole('button', { name: mediaCardLabel(PHOTO, C12) }));
-    expect(onPick).toHaveBeenLastCalledWith({ source: 'whatsapp', messageId: 'm-photo', mime: 'image/jpeg', preview: 'https://signed/m-photo' });
+    expect(onPick).toHaveBeenLastCalledWith({ source: 'whatsapp', messageId: 'a1111111-1111-4111-8111-111111111111', mime: 'image/jpeg', preview: 'https://signed/a1111111-1111-4111-8111-111111111111' });
     fireEvent.click(screen.getByRole('button', { name: mediaCardLabel(PDF, C12) }));
-    expect(onPick).toHaveBeenLastCalledWith({ source: 'whatsapp', messageId: 'm-pdf', mime: 'application/pdf', preview: null });
+    expect(onPick).toHaveBeenLastCalledWith({ source: 'whatsapp', messageId: 'a2222222-2222-4222-8222-222222222222', mime: 'application/pdf', preview: null });
   });
 
   it('an expired file is disabled with the reason and never fetched', async () => {
@@ -59,7 +59,7 @@ describe('ChatMediaPicker «من المحادثة» (R-MSG-06)', () => {
     const card = await screen.findByRole('button', { name: mediaCardLabel(OLD, C12) });
     expect(card.hasAttribute('disabled')).toBe(true);
     expect(card.textContent).toContain(t.booking.invoice.expired);
-    expect(apiFetch).not.toHaveBeenCalledWith(expect.stringContaining('m-old'));
+    expect(apiFetch).not.toHaveBeenCalledWith(expect.stringContaining('a3333333-3333-4333-8333-333333333333'));
   });
 
   it('says so when the guardian sent nothing, and when the list fails', async () => {

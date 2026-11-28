@@ -1,26 +1,24 @@
 import {
   gateConfirmed,
-  gateCutoverSchema,
-  gateSwitchSchema,
+  gateRoutes as routes,
   GATE_SWITCH_KEY,
   type AcademySettings,
   type GateSwitch,
   SETTING_DEFAULTS,
 } from '@ab/shared';
-import { Controller, HttpCode, Logger, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import type { z } from 'zod';
+import { Controller, HttpCode, Logger } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { confirmationRequired } from './gate.errors';
 import { GateSettings, type GateKey } from './gate.settings';
 
 type KeyWrite = { key: GateKey; value: boolean; action: string };
-type SwitchBody = z.output<typeof gateSwitchSchema>;
-type CutoverBody = z.output<typeof gateCutoverSchema>;
+type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
+type SwitchBody = Input<'sending'>['body'];
 
 /**
  * The send-gate switches' own routes (docs/26 §2f, §5, 26-P0): the ONLY writers of messaging_enabled,
@@ -28,10 +26,8 @@ type CutoverBody = z.output<typeof gateCutoverSchema>;
  * the exact confirmation text (GATE_CONFIRM_TEXT), checked here → 428 confirmation_required. OFF is
  * always accepted: no version, no 409, no text. GET /messages/gate stays on MessagesController.
  */
-@ApiTags('messaging')
 @ApiBearerAuth()
-@Permissions('settings.write')
-@Controller('messages/gate')
+@Controller()
 export class GateController {
   private readonly logger = new Logger(GateController.name);
 
@@ -40,32 +36,35 @@ export class GateController {
     private readonly audit: AuditService,
   ) {}
 
-  @Put('sending')
+  @Route(routes.sending)
   @HttpCode(200)
   sending(
-    @ZodBody(gateSwitchSchema) body: SwitchBody,
+    @RouteInput() { body }: Input<'sending'>,
     @CurrentUser() user: AuthUser,
   ): Promise<AcademySettings> {
     return this.toggle('sending', body, user);
   }
 
-  @Put('auto')
+  @Route(routes.auto)
   @HttpCode(200)
   auto(
-    @ZodBody(gateSwitchSchema) body: SwitchBody,
+    @RouteInput() { body }: Input<'auto'>,
     @CurrentUser() user: AuthUser,
   ): Promise<AcademySettings> {
     return this.toggle('auto', body, user);
   }
 
   /** The CRM cut-over tick: no confirmation (the web button has none). */
-  @Put('cutover')
+  @Route(routes.cutover)
   @HttpCode(200)
   cutover(
-    @ZodBody(gateCutoverSchema) { done }: CutoverBody,
+    @RouteInput() { body }: Input<'cutover'>,
     @CurrentUser() user: AuthUser,
   ): Promise<AcademySettings> {
-    return this.writeOne({ key: 'crm_cutover_done', value: done, action: 'gate_cutover' }, user);
+    return this.writeOne(
+      { key: 'crm_cutover_done', value: body.done, action: 'gate_cutover' },
+      user,
+    );
   }
 
   private toggle(sw: GateSwitch, body: SwitchBody, user: AuthUser): Promise<AcademySettings> {

@@ -1,7 +1,7 @@
-import type { StudentAttendanceTable } from '@ab/shared';
+import { salesStudentFileCalls, studentAttendanceCalls } from '@ab/client-core';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { type Href, router } from 'expo-router';
-import { apiFetch } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import type { TreeBase } from '@/core/nav/tree-base';
 import { openStudentReportPdf } from '@/sales/sales/student/student-api';
 import { salesKeys } from '@/core/lib/keys';
@@ -10,13 +10,17 @@ import { salesKeys } from '@/core/lib/keys';
 export const attendancePath = (base: TreeBase, id: string): string =>
   base === '/sales' ? `/sales/students/${id}/attendance` : `/students/${id}/attendance`;
 
+const salesFile = salesStudentFileCalls({ apiFetch, apiSend });
+const adminFile = studentAttendanceCalls({ apiFetch, apiSend });
+
+const readerOf = (base: TreeBase) => (base === '/sales' ? salesFile.attendance : adminFile.table);
+
 /** Null month means the current Riyadh month; the last month stays while the next loads. */
 export function useAttendanceLog(base: TreeBase, id: string, month: string | null) {
-  const path = attendancePath(base, id);
-  const url = month ? `${path}?month=${month}` : path;
+  const read = readerOf(base);
   return useQuery({
-    queryKey: salesKeys.attendance(path, month),
-    queryFn: () => apiFetch<StudentAttendanceTable>(url),
+    queryKey: salesKeys.attendance(attendancePath(base, id), month),
+    queryFn: () => read({ studentId: id, month: month ?? undefined }),
     enabled: id !== '',
     placeholderData: keepPreviousData,
   });

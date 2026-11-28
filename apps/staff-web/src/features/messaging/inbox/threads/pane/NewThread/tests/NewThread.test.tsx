@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
@@ -22,7 +23,7 @@ const OPENER = template({
 });
 const ME = [
   '/auth/me',
-  { id: 'u1', email: null, role: 'sales', permissions: ['messages.read'] },
+  { id: uid('u1'), email: null, role: 'sales', permissions: ['messages.read'] },
 ] as const;
 const EMPTY = {
   thread: null,
@@ -56,7 +57,7 @@ describe('starting a conversation (no thread yet)', () => {
     await waitFor(() => expect(within(select).getAllByRole('option')).toHaveLength(2));
     fireEvent.change(select, { target: { value: 'follow_up_slots' } });
     fireEvent.change(screen.getByLabelText(t.inbox.composer.paramNames.student_name), { target: { value: 'سهيلة' } });
-    apiSend.mockResolvedValue(message({ id: 'm-1', direction: 'outbound', status: 'queued' }));
+    apiSend.mockResolvedValue(message({ id: uid('m-1'), direction: 'outbound', status: 'queued' }));
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
     await waitFor(() =>
       expect(apiSend).toHaveBeenCalledWith('POST', `${PATH}/template`, {
@@ -68,7 +69,7 @@ describe('starting a conversation (no thread yet)', () => {
   });
 
   it('a booked family: the template that needs a lesson picks it from the family’s next lessons (rule 6)', async () => {
-    const lesson = { id: 'l-1', starts_at: '2026-10-04T14:00:00Z', meeting_link: null, student_names: ['سهيلة'], tz: 'Asia/Riyadh' };
+    const lesson = { id: uid('l-1'), starts_at: '2026-10-04T14:00:00Z', meeting_link: null, student_names: ['سهيلة'], tz: 'Asia/Riyadh' };
     routeFetch(apiFetch, [ME, [PATH, { ...EMPTY, lessons: [lesson] }], ['/messaging/templates', [template()]], ['/messages/gate', { open: true, reason: null, queued: 0 }]]);
     renderWithClient(
       <InboxModeContext.Provider value="sales">
@@ -76,10 +77,10 @@ describe('starting a conversation (no thread yet)', () => {
       </InboxModeContext.Provider>,
     );
     fireEvent.change(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate }), { target: { value: 'booking_confirmation_plain' } });
-    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: 'l-1' } });
-    apiSend.mockResolvedValue(message({ id: 'm-2', direction: 'outbound', status: 'queued' }));
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: uid('l-1') } });
+    apiSend.mockResolvedValue(message({ id: uid('m-2'), direction: 'outbound', status: 'queued' }));
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `${PATH}/template`, expect.objectContaining({ key: 'booking_confirmation_plain', lessonId: 'l-1' })));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `${PATH}/template`, expect.objectContaining({ key: 'booking_confirmation_plain', lessonId: uid('l-1') })));
   });
 
   it('the admin gets the same first template', async () => {
@@ -101,7 +102,7 @@ describe('starting a conversation (no thread yet)', () => {
   });
 
   it('round 2 J: sales without messages.read reads the permission line, not «no template»', async () => {
-    routeFetch(apiFetch, [['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: [] }]]);
+    routeFetch(apiFetch, [['/auth/me', { id: uid('u1'), email: null, role: 'sales', permissions: [] }]]);
     renderWithClient(
       <InboxModeContext.Provider value="sales">
         <NewThread phone={PHONE} lessons={[]} />

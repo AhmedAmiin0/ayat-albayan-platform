@@ -8,13 +8,16 @@ import { z } from 'zod';
 // says so and the creator copies the personal link and the invitation text instead.
 
 export const MEETING_INVITEE_KINDS = ['staff', 'student', 'phone'] as const;
-export type MeetingInviteeKind = (typeof MEETING_INVITEE_KINDS)[number];
+export const meetingInviteeKindSchema = z.enum(MEETING_INVITEE_KINDS);
+export type MeetingInviteeKind = z.infer<typeof meetingInviteeKindSchema>;
 
 export const MEETING_INVITE_CHANNELS = ['in_app', 'whatsapp', 'link'] as const;
-export type MeetingInviteChannel = (typeof MEETING_INVITE_CHANNELS)[number];
+export const meetingInviteChannelSchema = z.enum(MEETING_INVITE_CHANNELS);
+export type MeetingInviteChannel = z.infer<typeof meetingInviteChannelSchema>;
 
 export const MEETING_INVITE_STATUSES = ['pending', 'sent', 'window_closed', 'failed', 'cancelled'] as const;
-export type MeetingInviteStatus = (typeof MEETING_INVITE_STATUSES)[number];
+export const meetingInviteStatusSchema = z.enum(MEETING_INVITE_STATUSES);
+export type MeetingInviteStatus = z.infer<typeof meetingInviteStatusSchema>;
 
 /** At most 30 invitees per meeting (one request and in total). */
 export const MAX_MEETING_INVITEES = 30;
@@ -66,30 +69,9 @@ export const meetingInviteeOptionsQuerySchema = z.object({
   q: z.string().trim().max(60).optional(),
 });
 
-/** GET /meetings/:id/invitees (creator or admin): never a phone. */
-export interface MeetingInviteeView {
-  id: string;
-  kind: MeetingInviteeKind;
-  display_name: string;
-  channel: MeetingInviteChannel;
-  status: MeetingInviteStatus;
-  error_code: string | null;
-  sent_at: string | null;
-}
-
-/** One recipient's outcome. `link` and `invitation_text` only once, to the creator, for non-staff invitees. */
-export interface MeetingInviteResult extends MeetingInviteeView {
-  link: string | null;
-  invitation_text: string | null;
-}
-
 /** GET /meetings/invitee-options: staff by name and role, students by name and code. Never a phone. */
-export type MeetingInviteeOption =
-  | { kind: 'staff'; id: string; name: string; role: string }
-  | { kind: 'student'; id: string; name: string; code: string };
-
-/** The caller's own invitation on a meeting someone else created. */
-export interface MyMeetingInvite {
-  status: MeetingInviteStatus;
-  channel: MeetingInviteChannel;
-}
+export const meetingInviteeOptionSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('staff'), id: z.uuid(), name: z.string(), role: z.string() }),
+  z.object({ kind: z.literal('student'), id: z.uuid(), name: z.string(), code: z.string() }),
+]);
+export type MeetingInviteeOption = z.infer<typeof meetingInviteeOptionSchema>;

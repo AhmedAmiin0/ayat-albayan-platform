@@ -3,7 +3,7 @@ import { PUBLIC_SETTING_DEFAULTS } from '@ab/settings';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { ApiError, t } from '@ab/web-kit';
 import { TeacherDashboard } from '@/features/teaching/teacher/TeacherDashboard/TeacherDashboard';
 
@@ -15,8 +15,9 @@ vi.mock('@tanstack/react-router', async (importOriginal) => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));
 
+const SUHAILA_ID = '00000000-0000-4000-8000-0000000000c1';
 const ME: TeacherMe = {
-  id: 't-abrar',
+  id: '00000000-0000-4000-8000-0000000000a1',
   display_name_ar: 'أبرار',
   gender: 'female',
   programs: ['quran'],
@@ -24,11 +25,11 @@ const ME: TeacherMe = {
   meeting_link: 'https://meet.jit.si/ayat-abrar',
   meeting_mode: null,
   platform_classroom: false,
-  students: [{ id: 's-1', code: 'AB-0183', name: 'سهيلة', tz: 'Asia/Riyadh', status: 'active' }],
+  students: [{ id: SUHAILA_ID, code: 'AB-0183', name: 'سهيلة', tz: 'Asia/Riyadh', status: 'active' }],
 };
 // Saturday 3 Oct, 12:00 Cairo. Today: 16:00 Cairo; later this week: Monday.
-const TODAY = lesson({ id: 'a', starts_at: '2026-10-03T13:00:00.000Z', students: [{ ...SUHAILA, tz: 'Asia/Riyadh' }], meeting_link: null });
-const MONDAY = lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z', status: 'confirmed' });
+const TODAY = answered(lesson({ id: 'a', starts_at: '2026-10-03T13:00:00.000Z', students: [{ ...SUHAILA, tz: 'Asia/Riyadh' }], meeting_link: null }));
+const MONDAY = answered(lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z', status: 'confirmed' }));
 
 const BOARD_CALL = '/teachers/me/lessons?from=2026-09-18T21%3A00%3A00.000Z&to=2026-10-16T21%3A00%3A00.000Z';
 
@@ -98,7 +99,7 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     const hero = await screen.findByRole('region', { name: new RegExp(t.today.next) });
     fireEvent.click(within(hero).getByRole('button', { name: t.teacherBoard.confirm }));
     await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.teacherBoard.confirmedOk));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/a/confirm-attendance');
+    expect(apiSend).toHaveBeenCalledWith('POST', `/teachers/me/lessons/${TODAY.id}/confirm-attendance`, undefined);
   });
 
   it('today only (owner 2026-11-14): no tabs, no students board, no pending reports, no week', async () => {

@@ -4,6 +4,7 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { TeacherLessonTools } from './TeacherLessonTools';
+import { answered } from '@/today/testing/answered';
 
 const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -25,7 +26,8 @@ function Tools({ l }: { l: LessonView }) {
 beforeEach(() => jest.clearAllMocks());
 
 test('before the start: «سأحضر» posts confirm-attendance, then onDone and the chip', async () => {
-  mockApiSend.mockResolvedValue(lesson({ id: 'l1', teacher_confirmed_at: '2026-10-01T12:00:00Z' }));
+  const confirmed = lesson({ id: 'l1', teacher_confirmed_at: '2026-10-01T12:00:00Z' });
+  mockApiSend.mockResolvedValue(answered(confirmed));
   await renderWithQuery(<Tools l={lesson({ id: 'l1' })} />);
   await fireEvent.press(screen.getByRole('button', { name: w.confirm }));
   await waitFor(() => expect(onDone).toHaveBeenCalledWith(w.confirmedOk));
@@ -46,7 +48,7 @@ test('a refused «سأحضر» (409 lesson_started) says so', async () => {
 });
 
 test('«إلغاء الحلقة» opens the reason form in place; a landed cancel calls onDone', async () => {
-  mockApiSend.mockResolvedValue(lesson({ id: 'l1', status: 'cancelled_by_teacher' }));
+  mockApiSend.mockResolvedValue(answered(lesson({ id: 'l1', status: 'cancelled_by_teacher' })));
   await renderWithQuery(<Tools l={lesson({ id: 'l1' })} />);
   await fireEvent.press(screen.getByRole('button', { name: w.cancel }));
   expect(screen.getByTestId('teacher-cancel-form')).toBeTruthy();

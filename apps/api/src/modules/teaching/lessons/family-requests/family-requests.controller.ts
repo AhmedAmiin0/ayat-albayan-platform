@@ -1,27 +1,19 @@
-import type { FamilyRequestView } from '@ab/shared';
-import {
-  proposalApproveSchema,
-  proposalRejectSchema,
-  type LessonView,
-  type ProposalApprove,
-  type ProposalReject,
-} from '@ab/schedule';
-import { Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { familyRequestRoutes as routes } from '@ab/schedule';
+import { Controller, HttpCode, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
-import { z } from 'zod';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ProposalDecisionService } from '@/modules/teaching/lessons/proposals/lesson-proposals.service';
 import { LessonViews } from '@/modules/teaching/lessons/store/lesson-views';
 import { FamilyRequestAccess } from './family-request.access';
 import { familyRequests } from './family-request.mapper';
 
+type In<K extends 'approve' | 'reject'> = RouteInputOf<(typeof routes)[K]>;
+
 /** Pending family requests: admins see all, the owning assistant hers; approve is a reschedule. */
-@ApiTags('lessons')
 @ApiBearerAuth()
-@Permissions('lessons.reschedule')
-@Controller('family-requests')
+@Controller()
 export class FamilyRequestsController {
   constructor(
     @Inject(LessonViews) private readonly views: LessonViews,
@@ -29,37 +21,27 @@ export class FamilyRequestsController {
     @Inject(FamilyRequestAccess) private readonly access: FamilyRequestAccess,
   ) {}
 
-  /** Oldest first; a closed lesson's request is moot and left out. */
-  @Get()
-  async pending(@CurrentUser() user: AuthUser): Promise<FamilyRequestView[]> {
+  @Route(routes.pending)
+  async pending(@CurrentUser() user: AuthUser) {
     const lessons = await this.views.many(await this.deciding.pendingLessonIds('family'), 'admin');
     const open = lessons.filter((l) => l.pending_proposal !== null);
     return familyRequests(await this.access.visible(user, open));
   }
 
-  /** 200: the moved lesson. 404, 403 not_your_student, 409 conflict / proposal_decided. */
-  @Post(':id/approve')
+  @Route(routes.approve)
   @HttpCode(200)
-  async approve(
-    @ZodParam('id', z.uuid()) id: string,
-    @ZodBody(proposalApproveSchema, { orEmpty: true }) body: ProposalApprove,
-    @CurrentUser() user: AuthUser,
-  ): Promise<LessonView> {
-    await this.access.assertRequest(user, id);
-    const lessonId = await this.deciding.approve({ proposalId: id, body, actor: user });
+  async approve(@RouteInput() { params, body }: In<'approve'>, @CurrentUser() user: AuthUser) {
+    await this.access.assertRequest(user, params.id);
+    const lessonId = await this.deciding.approve({ proposalId: params.id, body, actor: user });
     return this.views.one(lessonId, 'admin');
   }
 
-  /** 200: the unchanged lesson; the family hears it with `note`. */
-  @Post(':id/reject')
+  @Route(routes.reject)
   @HttpCode(200)
-  async reject(
-    @ZodParam('id', z.uuid()) id: string,
-    @ZodBody(proposalRejectSchema, { orEmpty: true }) body: ProposalReject,
-    @CurrentUser() user: AuthUser,
-  ): Promise<LessonView> {
-    await this.access.assertRequest(user, id);
-    const lessonId = await this.deciding.reject({ proposalId: id, actor: user, note: body.note });
+  async reject(@RouteInput() { params, body }: In<'reject'>, @CurrentUser() user: AuthUser) {
+    await this.access.assertRequest(user, params.id);
+    const input = { proposalId: params.id, actor: user, note: body.note };
+    const lessonId = await this.deciding.reject(input);
     return this.views.one(lessonId, 'admin');
   }
 }

@@ -4,11 +4,6 @@
       "count": 1
     }
   },
-  "src/custom-config/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
   "src/custom-config/public-config.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -89,11 +84,6 @@
       "count": 1
     }
   },
-  "src/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
   "src/layout.ts": {
     "stylistic/max-len": {
       "count": 2
@@ -135,7 +125,7 @@
   },
   "src/seed/entries.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 3
     }
   },
   "src/seed/seed-entries.sql-keys.test.ts": {

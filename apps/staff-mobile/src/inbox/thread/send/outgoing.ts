@@ -5,6 +5,7 @@ import {
   type MessageView,
   type TemplateParamsInput,
   type ThreadTemplate,
+  type ThreadText,
 } from '@ab/shared';
 import bundled from '@ab/shared/i18n/ar.json';
 import { t, locale } from '@ab/mobile-kit';
@@ -61,17 +62,24 @@ export function echoed(out: Outgoing): string {
   return fixes ? correctionBody(prefix, out.text, [fallback]) : carried(out);
 }
 
-/** The POST body of a text or template send, with its clientRequestId. */
-export function sendBody({ out, id }: SendInput) {
-  if (out.kind === 'text') {
-    const reply = out.replyTo ? { replyToMessageId: out.replyTo.id } : {};
-    // The API adds the prefix and the reply to the original.
-    const corrects = out.correctsId ? { correctsId: out.correctsId } : {};
-    return { text: out.text, clientRequestId: id, ...reply, ...corrects };
-  }
+type TextOut = Extract<Outgoing, { kind: 'text' }>;
+type TemplateOut = Extract<Outgoing, { kind: 'template' }>;
+
+/** The POST body of a text send; the API adds the prefix and the reply to the original. */
+export function textBody(out: TextOut, id: string): ThreadText {
+  const reply = out.replyTo ? { replyToMessageId: out.replyTo.id } : {};
+  const corrects = out.correctsId ? { correctsId: out.correctsId } : {};
+  return { text: out.text, clientRequestId: id, ...reply, ...corrects };
+}
+
+/** The POST body of a template send; Meta 132018: no newline, tab or run of spaces in a value. */
+export function templateBody(out: TemplateOut, id: string): ThreadTemplate {
   const lesson = out.lessonId ? { lessonId: out.lessonId } : {};
   const reopen = out.reopen ? { reopen: true } : {};
-  // Meta 132018: no newline, tab or run of spaces in a body value.
   const params = normaliseTemplateParams(out.params);
   return { key: out.key, params, clientRequestId: id, ...lesson, ...reopen };
 }
+
+/** The POST body of a text or template send, with its clientRequestId. */
+export const sendBody = ({ out, id }: SendInput): ThreadText | ThreadTemplate =>
+  out.kind === 'text' ? textBody(out, id) : templateBody(out, id);

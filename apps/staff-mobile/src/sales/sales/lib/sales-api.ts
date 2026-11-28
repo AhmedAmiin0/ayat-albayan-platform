@@ -1,64 +1,67 @@
-import type {
-  SalesScheduleDay,
-  SalesSubscriptionKind,
-  SalesSubscriptionView,
-  SalesSubscriptionHistory,
-  SalesTeacherView,
-} from '@ab/shared';
-import type { AssistantLessonView } from '@ab/schedule';
+import type { SalesScheduleDay, SalesSubscriptionKind } from '@ab/shared';
 import { riyadhToday } from '@ab/time';
+import { salesAcademyDayCalls, salesAcademyListCalls, salesPortalCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, listKey, pathKey } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
+import { usePagedPages } from '@/core/lib/query/use-paged-pages';
 
 // The salesperson's pages (docs/16, web parity with apps/staff-web/src/features/sales): read-only, no money.
 
 /** The running lessons are re-read every minute: one ends, another starts (same as the web). */
 const LIVE_REFRESH_MS = 60_000;
+const ALL_STUDENTS_PAGE_SIZE = 25;
 
-/** A body that is not a list (an older API, a stub) reads as an empty list rather than crashing. */
-const asList = <T>(data: T[]): T[] => (Array.isArray(data) ? data : []);
+const salesPortal = salesPortalCalls({ apiFetch, apiSend });
+const academyDay = salesAcademyDayCalls({ apiFetch, apiSend });
+const academyLists = salesAcademyListCalls({ apiFetch, apiSend });
 
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
 export const useSalesSubscriptions = (kind: SalesSubscriptionKind) =>
   useQuery({
     queryKey: salesKeys.subscriptions(kind),
-    queryFn: () => apiFetch<SalesSubscriptionView[]>(`/sales/subscriptions?kind=${kind}`),
-    select: asList,
+    queryFn: () => salesPortal.subscriptions(kind),
   });
 
 /** GET /sales/subscriptions/:id/history — one of my confirmed subscriptions and its student's history. */
 export const useSubscriptionHistory = (id: string) =>
   useQuery({
     queryKey: pathKey(`/sales/subscriptions/${id}/history`),
-    queryFn: () => apiFetch<SalesSubscriptionHistory>(`/sales/subscriptions/${id}/history`),
+    queryFn: () => academyLists.history(id),
     enabled: id !== '',
+  });
+
+/** GET /sales/students/all — every student, a page more as the list scrolls. */
+export const useAllStudents = (search: string) =>
+  usePagedPages({
+    queryKey: listKey('/sales/students/all', { search }),
+    loadPage: (page) =>
+      academyLists.students({
+        page,
+        pageSize: ALL_STUDENTS_PAGE_SIZE,
+        search: search || undefined,
+      }),
   });
 
 /** GET /sales/teachers — every active teacher with the students they teach. */
 export const useSalesTeachers = () =>
   useQuery({
     queryKey: pathKey('/sales/teachers'),
-    queryFn: () => apiFetch<SalesTeacherView[]>('/sales/teachers'),
-    select: asList,
+    queryFn: () => academyLists.teachers(),
   });
 
 /** GET /sales/live — the lessons running now across the academy. */
 export const useSalesLive = () =>
   useQuery({
     queryKey: pathKey('/sales/live'),
-    queryFn: () => apiFetch<AssistantLessonView[]>('/sales/live'),
-    select: asList,
+    queryFn: () => academyDay.live(),
     refetchInterval: LIVE_REFRESH_MS,
   });
 
 /** GET /sales/schedule?date&teacherId — one Riyadh day of the academy, read-only, re-read every minute. */
 const salesScheduleQuery = (date: string, teacherId: string) => ({
   queryKey: salesKeys.schedule(date, teacherId),
-  queryFn: () =>
-    apiFetch<SalesScheduleDay>(
-      `/sales/schedule?date=${date}${teacherId ? `&teacherId=${teacherId}` : ''}`,
-    ),
+  queryFn: () => academyDay.day({ date, teacherId: teacherId || undefined }),
   refetchInterval: LIVE_REFRESH_MS,
 });
 

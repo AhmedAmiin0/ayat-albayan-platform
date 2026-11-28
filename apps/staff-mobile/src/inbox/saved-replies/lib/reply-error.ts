@@ -1,4 +1,4 @@
-import { isSavedReplyError } from '@ab/shared';
+import { savedReplyErrorSchema } from '@ab/shared';
 import { ApiError, t } from '@ab/mobile-kit';
 import { ChatFileError } from '@/inbox/composer/send-file';
 
@@ -10,6 +10,7 @@ export function replyError(error: unknown): string {
   const code = codeOf(error);
   const files: Record<string, string> = t.inbox.error;
   const own: Record<string, string> = t.savedReplies.errors;
-  if (isSavedReplyError(code)) return own[code] ?? files[code] ?? t.savedReplies.errors.generic;
-  return t.savedReplies.errors.generic;
+  const known = savedReplyErrorSchema.safeParse(code);
+  if (!known.success) return t.savedReplies.errors.generic;
+  return own[known.data] ?? files[known.data] ?? t.savedReplies.errors.generic;
 }

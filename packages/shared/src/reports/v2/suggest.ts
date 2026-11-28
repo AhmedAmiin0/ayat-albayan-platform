@@ -1,6 +1,7 @@
 import { surahName } from '../quran/quran';
 import type { ReportContent, SegmentKind } from './content';
-import { suggestRange, type SurahRange } from './rules';
+import type { SurahRange } from '../report-routes/report-form.schemas';
+import { suggestRange } from './rules';
 
 /** The ar.json / en.json strings (reports.v2.suggest), passed in so web, mobile and the API share this. */
 export interface SuggestWords {

@@ -19,20 +19,20 @@ const last = (id: string, over: Record<string, unknown> = {}) => ({
 describe('markUnsupported', () => {
   it('reads the page’s last messages once, and marks the unsupported inbound ones', async () => {
     const data = [
-      last('m1', { interactive_payload: UNAVAILABLE }),
-      last('m2', { interactive_payload: { type: 'location' } }),
-      last('m3'),
+      last('a0000000-0000-4000-8000-000000000001', { interactive_payload: UNAVAILABLE }),
+      last('a0000000-0000-4000-8000-000000000002', { interactive_payload: { type: 'location' } }),
+      last('a0000000-0000-4000-8000-000000000003'),
     ];
     const { db, log } = chainDb({ messages: [{ data }] });
     const rows = [
-      threadRow({ last_message_id: 'm1', last_body: null }),
-      threadRow({ last_message_id: 'm2', last_body: null, phone_e164: '+966500000002' }),
-      threadRow({ last_message_id: 'm3', last_body: 'السلام عليكم' }),
+      threadRow({ last_message_id: 'a0000000-0000-4000-8000-000000000001', last_body: null }),
+      threadRow({ last_message_id: 'a0000000-0000-4000-8000-000000000002', last_body: null, phone_e164: '+966500000002' }),
+      threadRow({ last_message_id: 'a0000000-0000-4000-8000-000000000003', last_body: 'السلام عليكم' }),
     ];
     const out = await markUnsupported(db, rows);
     expect(callsOf(log, 'messages')).toEqual([
       ['select', ['id, direction, interactive_payload, deleted_at']],
-      ['in', ['id', ['m1', 'm2', 'm3']]],
+      ['in', ['id', ['a0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000002', 'a0000000-0000-4000-8000-000000000003']]],
     ]);
     expect(out.map((r) => r.last_unsupported ?? false)).toEqual([true, false, false]);
     expect(toThreadView(out[0] ?? threadRow(), NOW).last_unsupported).toBe(true);
@@ -41,10 +41,10 @@ describe('markUnsupported', () => {
   });
 
   it('a deleted last message is a note: its text and file are not in the list', async () => {
-    const data = [last('m1', { direction: 'outbound', deleted_at: '2026-10-30T10:00:00Z' })];
+    const data = [last('a0000000-0000-4000-8000-000000000001', { direction: 'outbound', deleted_at: '2026-10-30T10:00:00Z' })];
     const { db } = chainDb({ messages: [{ data }] });
     const row = threadRow({
-      last_message_id: 'm1',
+      last_message_id: 'a0000000-0000-4000-8000-000000000001',
       last_body: 'سر',
       last_media_mime: 'image/jpeg',
     });
@@ -55,15 +55,15 @@ describe('markUnsupported', () => {
 
   it("the ad's welcome shows its own text, else none; an unsupported echo is a note", async () => {
     const data = [
-      last('m1', {
+      last('a0000000-0000-4000-8000-000000000001', {
         direction: 'outbound',
         interactive_payload: { type: 'errors', welcome: 'أهلًا' },
       }),
-      last('m2', { direction: 'outbound', interactive_payload: { type: 'errors', welcome: null } }),
-      last('m3', { direction: 'outbound', interactive_payload: { type: 'unsupported' } }),
+      last('a0000000-0000-4000-8000-000000000002', { direction: 'outbound', interactive_payload: { type: 'errors', welcome: null } }),
+      last('a0000000-0000-4000-8000-000000000003', { direction: 'outbound', interactive_payload: { type: 'unsupported' } }),
     ];
     const { db } = chainDb({ messages: [{ data }] });
-    const ids = ['m1', 'm2', 'm3'];
+    const ids = ['a0000000-0000-4000-8000-000000000001', 'a0000000-0000-4000-8000-000000000002', 'a0000000-0000-4000-8000-000000000003'];
     const rows = ids.map((id) =>
       threadRow({ last_message_id: id, last_body: null, last_direction: 'outbound' }),
     );

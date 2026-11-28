@@ -54,7 +54,10 @@ export function paymentView(status: SalesPaymentView['student']['status'] = 'act
   };
 }
 
+export const MSG_IMG = 'c1111111-1111-4111-8111-111111111111';
+const MSG_OLD = 'c2222222-2222-4222-8222-222222222222';
+
 export const CHAT_RECEIPTS = [
-  { message_id: 'msg-img', created_at: '2026-10-11T10:00:00Z', mime: 'image/jpeg', caption: 'تحويل', expired: false },
-  { message_id: 'msg-old', created_at: '2026-09-01T10:00:00Z', mime: 'image/png', caption: null, expired: true },
+  { message_id: MSG_IMG, created_at: '2026-10-11T10:00:00Z', mime: 'image/jpeg', caption: 'تحويل', expired: false },
+  { message_id: MSG_OLD, created_at: '2026-09-01T10:00:00Z', mime: 'image/png', caption: null, expired: true },
 ];

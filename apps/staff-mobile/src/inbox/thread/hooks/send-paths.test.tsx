@@ -6,7 +6,8 @@ import { useSendStagedFile } from '@/inbox/saved-replies/hooks/send-staged';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { refreshInbox, refreshLists, touchInbox } from './inbox-sync';
 import { useForward } from './use-forward';
-import { useMessageAction, useSendMessage } from './use-thread';
+import { useMessageAction } from './use-message-action';
+import { useSendMessage } from './use-thread';
 import { ApiError } from '@ab/client-core';
 
 // Every way a chat sends (text, template, quote, file, saved reply, forward, retry) goes
@@ -29,7 +30,7 @@ jest.mock('./inbox-sync', () => ({
   touchInbox: jest.fn(async () => undefined),
 }));
 
-const row = message({ id: 'p1', body: 'وصلت', status: 'sent' });
+const row = message({ id: 'c3333333-3333-4333-8333-333333333333', body: 'وصلت', status: 'sent' });
 const refreshed = jest.mocked(refreshInbox);
 /** refreshSent's lists step: a send into one chat (its newest page: send-refresh.test). */
 const sent = jest.mocked(refreshLists);
@@ -68,7 +69,7 @@ test('a refused send still refreshes the inbox, so the list shows the truth agai
 
 test('a file and a saved reply attachment touch the list with the API row', async () => {
   mockApiSend.mockImplementation(async (_m: string, path: string) =>
-    path.endsWith('upload-url') ? { bucket: 'wa-media', path: 'out/x.pdf', token: 't' } : row);
+    path.endsWith('upload-url') ? { bucket: 'wa-media', path: 'out/x.pdf', token: 't', signed_url: 'https://s.test/up' } : row);
   const file = { mime: 'application/pdf', bytes: new ArrayBuffer(3), size: 3, filename: 'a.pdf' };
   await run(() => useSendFile(PHONE), { phone: PHONE, file, id: 'p1', maxBytes: 1024 });
   expect(touched).toHaveBeenCalledWith(expect.anything(), row);

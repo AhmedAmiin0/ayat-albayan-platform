@@ -3,13 +3,11 @@ import {
   JOIN_ROLES,
   lessonRoomName,
   meetingRoomName,
-  shareGrantSchema,
   type JoinRole,
 } from '@ab/schedule';
 import { BadGatewayException, ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
-import { parseOrThrow } from '@/common/http/http';
 import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { meetingRoleOf, roleOfIdentity } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 import { notConfigured } from '@/modules/teaching/classroom/join/join-gate';
@@ -22,16 +20,15 @@ interface ShareGrantInput {
   /** The lesson id, or the internal meeting id. */
   id: string;
   identity: string;
-  body: unknown;
+  allow: boolean;
 }
 
 const cannotGrant = (): HttpException =>
   new HttpException({ code: 'cannot_grant_share', message: 'cannot_grant_share' }, HttpStatus.FORBIDDEN);
 const asJoinRole = (role: string): JoinRole | null => JOIN_ROLES.find((r) => r === role) ?? null;
 
-function checkBody(livekit: LivekitApi, body: unknown): { allow: boolean } {
+function assertConfigured(livekit: LivekitApi): void {
   if (!livekit.configured) throw notConfigured();
-  return parseOrThrow(shareGrantSchema, body);
 }
 
 async function applyShare(livekit: LivekitApi, input: { room: string; identity: string; allow: boolean }): Promise<void> {
@@ -55,7 +52,8 @@ export class ShareGrantService {
 
   /** 204; 400 body, 404 participant_not_found, 403 cannot_grant_share, 503, 502. */
   async lesson(input: ShareGrantInput): Promise<void> {
-    const { allow } = checkBody(this.livekit, input.body);
+    assertConfigured(this.livekit);
+    const { allow } = input;
     const { lesson, role } = await this.roles.resolve(input.user, input.id);
     const target = await this.moderation.participant(lesson.id, input.identity);
     if (!target) throw notFound('participant_not_found');
@@ -74,7 +72,8 @@ export class MeetingShareGrantService {
 
   /** 204; 400, 404 meeting_not_found / participant_not_found, 403, 503, 502. */
   async meeting(input: ShareGrantInput): Promise<void> {
-    const { allow } = checkBody(this.livekit, input.body);
+    assertConfigured(this.livekit);
+    const { allow } = input;
     const meeting = await this.meetings.byId(input.id);
     if (!meeting) throw notFound('meeting_not_found');
     const role = meetingRoleOf(input.user, meeting);

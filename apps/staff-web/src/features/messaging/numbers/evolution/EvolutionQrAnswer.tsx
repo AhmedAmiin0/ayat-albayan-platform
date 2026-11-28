@@ -1,10 +1,11 @@
+import type { EvolutionQrView } from '@ab/shared';
 import { t } from '@ab/web-kit';
-import { qrImageOf, type EvolutionQrAnswer as Answer } from './evolution-api';
+import { qrImageOf } from './evolution-api';
 
 const e = t.numbers.evolution;
 
 export interface EvolutionQrAnswerProps {
-  answer: Answer;
+  answer: EvolutionQrView;
   /** The number's name, for the image's alternative text. */
   label: string;
 }

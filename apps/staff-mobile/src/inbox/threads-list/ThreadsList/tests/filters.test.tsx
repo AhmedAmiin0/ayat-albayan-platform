@@ -38,7 +38,7 @@ jest.mock('@ab/mobile-kit/ui/lists/LazyList/LazyList', () => {
 // Invented chats, newest message first as the API sends them.
 const chat = (name: string, at: string, last_direction: ThreadView['last_direction']): ThreadView => ({
   ...thread,
-  phone_e164: `+9665500000${name.length}${at.slice(11, 13)}`,
+  phone_e164: `+966552147${name.length}${at.slice(11, 13)}`,
   display_name: name,
   last_message_at: at,
   last_direction,

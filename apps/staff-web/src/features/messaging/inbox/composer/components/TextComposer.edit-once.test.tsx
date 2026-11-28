@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { clearTabMemories } from '@/features/messaging/inbox/shared/tab-memory';
-import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { sentRow, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 import {
   box,
   editBar,
@@ -17,9 +17,8 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 // Review of PR #694, round 3: a correction is never corrected again (staff correct the original
 // once more), and a text that is only the prefix has nothing to send.
-const FIRST_FIX = message({
-  id: 'fix1',
-  direction: 'outbound',
+const FIRST_FIX = sentRow({
+  id: uid('fix1'),
   status: 'sent',
   body: 'تصحيح: The lesson is at six',
   replyable: true,
@@ -44,8 +43,8 @@ describe('«تعديل» once per message', () => {
   });
 
   it('a second correction of the original goes once and is reported sent', async () => {
-    const second = { ...FIRST_FIX, id: 'fix2', body: 'تصحيح: The lesson is at seven' };
-    apiSend.mockResolvedValue({ ...second, replayed: false });
+    const second = { ...FIRST_FIX, id: uid('fix2'), sent_by_id: null, body: 'تصحيح: The lesson is at seven' };
+    apiSend.mockResolvedValue({ ...second, replayed: false, same_request: false });
     showChat([OWN, FIRST_FIX]);
     const menus = screen.getAllByRole('button', { name: t.inbox.reply.menu });
     fireEvent.click(menus[0] ?? send());

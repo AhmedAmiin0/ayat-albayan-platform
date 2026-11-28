@@ -1,6 +1,9 @@
-import type { LessonView, RescheduleRequest, SlotsResponse } from '@ab/schedule';
+import { lessonMoveCalls } from '@ab/client-core';
+import type { RescheduleRequest, SlotsResponse } from '@ab/schedule';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
+
+const moves = lessonMoveCalls({ apiFetch, apiSend });
 
 interface RescheduleSlotsParams {
   teacherId: string;
@@ -47,8 +50,7 @@ export function useRescheduleSlots(p: RescheduleSlotsParams) {
 export function useReschedule(lessonId: string) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (body: RescheduleRequest) =>
-      apiSend<LessonView>('POST', `/lessons/${lessonId}/reschedule`, body),
+    mutationFn: (body: RescheduleRequest) => moves.reschedule({ id: lessonId }, body),
     onSuccess: () => client.invalidateQueries({ queryKey: pathKey('/lessons') }),
   });
 }

@@ -29,6 +29,7 @@ const CLOSED = { ...thread, last_inbound_at: minutesAgo(3 * 24 * 60) };
 const attach = () => screen.queryByRole('button', { name: t.inbox.composer.attach });
 const paperclip = () => screen.getByRole('button', { name: t.inbox.composer.attach });
 const signed = { bucket: 'wa-media', path: 'out/u1/r1/x.jpg', token: 'tok', signed_url: 'https://s.test/up' };
+const SENT = 'c3333333-3333-4333-8333-333333333333';
 const photo = { uri: 'file:///p.jpg', width: 1, height: 1, base64: 'aGVsbG8=', mimeType: 'image/jpeg' };
 
 async function show(th: typeof thread, mode: ThreadMode = { kind: 'admin' }) {
@@ -53,7 +54,7 @@ beforeEach(() => {
 });
 
 test('open window: the paperclip sends a photo, and its row joins the thread', async () => {
-  const row = message({ id: 'sent', media_mime: 'image/jpeg', body: null });
+  const row = message({ id: SENT, media_mime: 'image/jpeg', body: null });
   mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce(row);
   const client = await show(OPEN);
   await fireEvent.press(paperclip());
@@ -65,9 +66,9 @@ test('open window: the paperclip sends a photo, and its row joins the thread', a
     (c) => (c[2] as { clientRequestId: string }).clientRequestId,
   );
   expect(sent[0]).toBe(sent[1]);
-  await waitFor(() =>
-    expect(threadMessages(client.getQueryData<ThreadCache>(threadKey(PHONE))).map((m) => m.id)).toContain('sent'),
-  );
+  const cached = () => client.getQueryData<ThreadCache>(threadKey(PHONE));
+  const ids = () => threadMessages(cached()).map((m) => m.id);
+  await waitFor(() => expect(ids()).toContain(SENT));
 });
 
 test('a refusal shows inbox.error.<code> under the row', async () => {

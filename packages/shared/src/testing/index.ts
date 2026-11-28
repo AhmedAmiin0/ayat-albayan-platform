@@ -7,3 +7,5 @@ export * from './golden-sweep';
 export * from './teachers';
 export * from './course-pause';
 export * from './students';
+export * from './messaging';
+export * from './sales';

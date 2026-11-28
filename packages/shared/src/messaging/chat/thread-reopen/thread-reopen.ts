@@ -1,5 +1,6 @@
-import type { MessageStatus } from '@ab/catalog';
 import { localDate } from '../../lesson/timing.day-before';
+import type { z } from 'zod';
+import type { reopenSentSchema, ThreadView } from '../thread-reads/thread-view.schemas';
 
 // The reopen template goes only when staff send in a closed chat, never on open; the text is held.
 
@@ -8,18 +9,8 @@ import { localDate } from '../../lesson/timing.day-before';
 /** The day the dedupe counts in. */
 export const REOPEN_TZ = 'Asia/Riyadh';
 
-/**
- * POST /threads/:phone/reopen's answer, kept for app builds older than 2026-11-07 that call it on
- * open: the window is still open, or the starter goes on the first send. It never queues anything.
- */
-export type ReopenTemplateOutcome = 'window_open' | 'on_send';
-
-/** POST /threads/:phone/reopen (old clients only). */
-export interface ThreadReopenView {
-  /** Always false since 2026-11-07 (the hold reopens Kapso's record on send). */
-  kapso_reopened: boolean;
-  template: ReopenTemplateOutcome;
-}
+/** The window is still open, or the starter goes on the first send; nothing is ever queued. */
+export const REOPEN_TEMPLATE_OUTCOMES = ['window_open', 'on_send'] as const;
 
 /**
  * `reopen:<E.164>:<Asia/Riyadh date>`: a second send the same day queues no second template. A later try the
@@ -83,19 +74,10 @@ export const isHoldFailure = (code: string | null | undefined): boolean =>
 // Staff pick the template themselves.
 
 /** The reopen template live for a phone (pending or sent, not yet answered): the bar's tick. */
-export interface ReopenSent {
-  id: string;
-  template_key: string;
-  status: MessageStatus;
-}
+export type ReopenSent = z.infer<typeof reopenSentSchema>;
 
 /** ThreadView's reopen fields (a closed window on the chat line). */
-export interface ReopenFields {
-  /** Kapso chat line: after the window a staff text is held; reopen_choice: what asks a reply. */
-  try_after_window?: boolean;
-  reopen_choice?: 'template' | 'wait';
-  /** Thread page, window closed: the reopen template live for this phone; absent/null = none. */
-  reopen_sent?: ReopenSent | null;
-  /** The academy's `chat_reopen_template` (the picker's preselected key); absent = none set. */
-  reopen_template?: string;
-}
+export type ReopenFields = Pick<
+  ThreadView,
+  'try_after_window' | 'reopen_choice' | 'reopen_sent' | 'reopen_template'
+>;

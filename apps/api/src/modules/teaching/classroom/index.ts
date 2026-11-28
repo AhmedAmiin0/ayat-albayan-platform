@@ -25,7 +25,6 @@ export {
 export {
   MeetingRecordingListService,
   RecordingListService,
-  recordingView,
   RecordingViews,
 } from './recordings/recording-list.service';
 export {

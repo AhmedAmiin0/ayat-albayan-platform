@@ -1,4 +1,5 @@
-import type { SalesFamilyStudent, SalesMoneySubscriptionView } from '@ab/shared';
+import type { SalesFamilyStudent } from '@ab/shared';
+import { salesOwedPackage } from '@ab/shared/testing';
 import { DEFAULT_RENEWAL_PRICING } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
@@ -15,6 +16,7 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, 
 const PHONE = '+201001112223';
 const FAMILY = `/sales/money/family?phone=${encodeURIComponent(PHONE)}`;
 const m = t.sales.money;
+const REF = { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد' };
 const kid = (over: Partial<SalesFamilyStudent>): SalesFamilyStudent => ({
   id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', status: 'active', open: [], renew_due: false, renewal: DEFAULT_RENEWAL_PRICING, teacher_id: null, ...over,
 });
@@ -34,7 +36,7 @@ beforeEach(() => {
 });
 
 test('an owed package: ONE primary «تسجيل تحويل» opening the transfer screen on that package', async () => {
-  serve(kid({ open: [{ id: 'sub2' } as SalesMoneySubscriptionView], renew_due: true }));
+  serve(kid({ open: [salesOwedPackage({ id: 'sub2', student: REF })], renew_due: true }));
   await open();
   await fireEvent.press(await screen.findByRole('button', { name: m.transferFor.replace('{name}', 'يوسف أحمد') }));
   expect(router.push).toHaveBeenCalledWith({ pathname: '/sales/inbox/sales-transfer', params: { phone: PHONE, subscriptionId: 'sub2' } });

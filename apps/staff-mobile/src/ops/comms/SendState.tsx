@@ -1,23 +1,17 @@
-import type { SendGateView } from '@ab/shared';
-import { useQuery } from '@tanstack/react-query';
 import { View } from 'react-native';
-import { apiFetch, t, pathKey, ErrorState, StatusChip } from '@ab/mobile-kit';
+import { t, ErrorState, StatusChip } from '@ab/mobile-kit';
+import { useSendGate } from '@/inbox';
 import { Note } from '@/core/ui/feedback/Note';
 import { ReadOnlySettings } from '@/ops/settings/ReadOnlySettings';
 import { useSettings } from '@/ops/settings/use-settings';
 import { gateChip, gateLine } from './gate-words';
-
-const GATE_PATH = '/messages/gate';
 
 /**
  * The effective gate under the switches, folded: the chip and one line (reason, then the queue) side
  * by side. Quiet while loading or when the read fails (the switches still show).
  */
 function GateLine() {
-  const gate = useQuery({
-    queryKey: pathKey(GATE_PATH),
-    queryFn: () => apiFetch<SendGateView>(GATE_PATH),
-  });
+  const gate = useSendGate();
   if (!gate.data) return null;
   return (
     <View testID="gate-state" style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}>

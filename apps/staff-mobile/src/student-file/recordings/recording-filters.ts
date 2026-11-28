@@ -1,4 +1,4 @@
-import type { StudentRecordingStatus } from '@ab/schedule';
+import type { StudentRecordingFilters, StudentRecordingStatus } from '@ab/schedule';
 import { addDays } from '@/calendar/lib/week';
 import { monthRange } from '@/money/shared/months';
 
@@ -38,7 +38,7 @@ export function presetRange(preset: DatePreset, today: string): { from?: string;
 export function recordingParams(
   f: RecordingFilters,
   today: string,
-): Record<string, string | undefined> {
+): StudentRecordingFilters {
   const range = presetRange(f.preset, today);
   return { ...range, teacherId: f.teacherId || undefined, status: f.status || undefined };
 }

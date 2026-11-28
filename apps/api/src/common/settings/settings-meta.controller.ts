@@ -1,22 +1,18 @@
-import type { SettingsMetaResponse } from '@ab/settings';
-import { Controller, Get } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { settingsMetaRoutes as routes, type SettingsMetaResponse } from '@ab/settings';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Route } from '@/common/http/route';
+import { asResponse } from '@/common/http/returns';
 import { SettingsMetaRepo } from './settings-meta.repo';
 
-/**
- * GET /config/meta: who last changed each stored setting and when (rows never written have no
- * entry). The route and its 'config' tag are legacy names kept on purpose.
- */
-@ApiTags('config')
+/** Who last changed each stored setting and when (rows never written have no entry). */
 @ApiBearerAuth()
-@Permissions('settings.read')
-@Controller('config/meta')
+@Controller()
 export class SettingsMetaController {
   constructor(private readonly queries: SettingsMetaRepo) {}
 
-  @Get()
+  @Route(routes.view)
   async get(): Promise<SettingsMetaResponse> {
-    return { meta: await this.queries.meta() };
+    return asResponse(routes.view.response, { meta: await this.queries.meta() });
   }
 }

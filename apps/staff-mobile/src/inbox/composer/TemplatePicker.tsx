@@ -1,5 +1,6 @@
 import {
   RATING_TEMPLATE,
+  templateCatalogRoutes,
   type TemplateParamsInput,
   type TemplateView,
   type ThreadLesson,
@@ -7,19 +8,18 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Modal } from 'react-native';
-import { apiFetch, t, pathKey, Button, Screen, ScreenHeader } from '@ab/mobile-kit';
+import { t, pathKey, Button, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { TemplateForm } from './TemplateForm';
 import { TemplateList, templateName } from './TemplateList';
 import type { Outgoing } from '@/inbox/thread/hooks/use-thread';
 import { reopenAllowed } from '@/inbox/composer/reopen/reopen-choices';
-
-const PATH = '/messaging/templates';
+import { adminTemplates } from '@/inbox/composer/templates';
 
 /** Only Meta-approved templates; lesson_rating is left out since only the web picks its lesson. */
 export function useApprovedTemplates(enabled: boolean) {
   return useQuery({
-    queryKey: pathKey(PATH),
-    queryFn: () => apiFetch<TemplateView[]>(PATH),
+    queryKey: pathKey(templateCatalogRoutes.list.path),
+    queryFn: adminTemplates.list,
     select: (rows) => rows.filter((row) => row.status === 'approved' && row.key !== RATING_TEMPLATE),
     enabled,
   });

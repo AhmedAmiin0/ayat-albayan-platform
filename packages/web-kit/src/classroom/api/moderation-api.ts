@@ -1,8 +1,16 @@
-import { lessonRemovePath } from '@ab/client-core';
-import type { LessonRecordingView, RecordingStatus } from '@ab/schedule';
+import {
+  lessonRoomSends,
+  meetingCalls,
+  roomModerationApi,
+  type RoomModerationApi,
+} from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
 import { CLASSROOM_KEY } from './api';
+
+const room = lessonRoomSends({ apiFetch, apiSend });
+const moderation = roomModerationApi({ apiFetch, apiSend });
+const meetings = meetingCalls({ apiFetch, apiSend });
 
 const ROOM_PREFIX = 'lesson-';
 const MEETING_PREFIX = 'meeting-';
@@ -22,12 +30,11 @@ export function meetingIdOfRoom(room: string): string | null {
 }
 
 /** 403 cannot_remove, 404 participant_not_found; then joins fail with removed_from_room. */
-export const removeParticipant = ({ lessonId, identity }: { lessonId: string; identity: string }) =>
-  apiSend('POST', lessonRemovePath(lessonId, identity));
+export const removeParticipant = (who: { lessonId: string; identity: string }) => room.remove(who);
 
 /** POST /meetings/:id/participants/:identity/remove: disconnects someone (no lasting block). */
 export const removeMeetingParticipant = (who: { meetingId: string; identity: string }) =>
-  apiSend('POST', `/meetings/${who.meetingId}/participants/${encodeURIComponent(who.identity)}/remove`);
+  meetings.remove(who);
 
 /** An internal meeting only disconnects, no lasting block; `lessonId` null means no removal. */
 export function kickScope(room: string): {
@@ -48,6 +55,11 @@ export interface RecordingSource {
   id: string;
 }
 
+const RECORDINGS: Record<RecordingSource['kind'], RoomModerationApi['lessonRecordings']> = {
+  lesson: moderation.lessonRecordings,
+  meeting: moderation.meetingRecordings,
+};
+
 /**
  * GET /lessons/:id/recordings (admin, the lesson's teacher) or /meetings/:id/recordings (admin, the
  * creator): newest first as the API sends them.
@@ -55,13 +67,13 @@ export interface RecordingSource {
 export const recordingsQuery = (source: RecordingSource) =>
   queryOptions({
     queryKey: [...CLASSROOM_KEY, 'recordings', source.kind, source.id],
-    queryFn: () => apiFetch<LessonRecordingView[]>(`/${source.kind}s/${source.id}/recordings`),
+    queryFn: () => RECORDINGS[source.kind](source.id),
   });
 
 /** GET /recordings/status: can the server record at all (RECORDING_S3_* + LiveKit)? */
 export const recordingStatusQuery = queryOptions({
   queryKey: [...CLASSROOM_KEY, 'recording-status'],
-  queryFn: () => apiFetch<RecordingStatus>('/recordings/status'),
+  queryFn: () => moderation.recordingStatus(),
   staleTime: 5 * 60_000,
 });
 

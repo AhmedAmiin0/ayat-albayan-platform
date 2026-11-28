@@ -1,7 +1,8 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';
-import { renderWithQuery } from '@/test/query';
+import { reportRoutes } from '@ab/shared';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { AdminReportScreen } from '@/ops/reports/AdminReportScreen/AdminReportScreen';
 import { report } from '@/ops/shared/fixtures';
 
@@ -46,4 +47,26 @@ test('a failed read: error with retry', async () => {
   mockApiFetch.mockRejectedValue(new Error('offline'));
   await renderWithQuery(<AdminReportScreen />);
   expect(await screen.findByRole('button', { name: t.mobile.retry })).toBeTruthy();
+});
+
+test('an answer that is not a report: error with retry, never a half page', async () => {
+  mockApiFetch.mockResolvedValue({ id: 'r1' });
+  await renderWithQuery(<AdminReportScreen />);
+  expect(await screen.findByRole('button', { name: t.mobile.retry })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.reports.downloadPdf })).toBeNull();
+});
+
+test('a PDF link that cannot be read says the PDF is not ready', async () => {
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/reports/r1' ? report() : {}));
+  await renderWithQuery(<AdminReportScreen />);
+  await fireEvent.press(await screen.findByRole('button', { name: t.reports.downloadPdf }));
+  expect(await screen.findByText(t.reports.error.pdf_not_ready)).toBeTruthy();
+});
+
+test('the report is cached under its route key', async () => {
+  mockApiFetch.mockResolvedValue(report());
+  const client = createTestQueryClient();
+  await renderWithQuery(<AdminReportScreen />, client);
+  expect(await screen.findByText('أداء ممتاز')).toBeTruthy();
+  expect(client.getQueryData(reportRoutes.get.key.of({ id: 'r1' }))).toEqual(report());
 });

@@ -1,33 +1,4 @@
-import type { StudentStatus } from '@ab/catalog';
-import type { AttendanceTableRow } from './student-attendance';
-
-// docs/47 PR 1: the teacher's student file head (GET /teachers/me/students/:id). Whitelist: the
-// course's dates and lesson counts only; never a price, payment, package id, status or renews_on.
-
-/** The course she is teaching (the FIFO-running package), as the teacher may see it. */
-export interface TeacherCourseView {
-  /** Calendar date (YYYY-MM-DD), shown with no zone shift. */
-  starts_on: string;
-  /** When the course was stopped; null otherwise. */
-  stopped_at: string | null;
-  /** When its last lesson was used (v_subscription_balance.ended_at). */
-  ended_at: string | null;
-  /** The booked last lesson, when every remaining lesson is booked. */
-  projected_end_at: string | null;
-  lessons_total: number;
-  lessons_used: number;
-  lessons_remaining: number;
-}
-
-export interface TeacherStudentHead {
-  id: string;
-  code: string;
-  name: string;
-  status: StudentStatus;
-  course: TeacherCourseView | null;
-  /** Her lessons with the student in the next 14 days, cancelled and moved ones included. */
-  upcoming: AttendanceTableRow[];
-}
+import type { TeacherCourseView } from '../student-file/teacher-student.schemas';
 
 export type CourseEndKey = 'stopped' | 'ended' | 'expected' | 'after' | 'unknown';
 

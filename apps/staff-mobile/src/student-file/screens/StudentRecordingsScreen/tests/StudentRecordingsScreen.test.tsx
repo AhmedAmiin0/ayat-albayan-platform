@@ -89,7 +89,7 @@ test('delete asks first, then DELETEs; a 409 says it is still recording', async 
   await fireEvent.press(screen.getByText(R.delete.confirm));
   expect(await screen.findByText(R.delete.inProgress)).toBeTruthy();
   await fireEvent.press(screen.getByText(R.delete.confirm));
-  await waitFor(() => expect(mockApiSend).toHaveBeenLastCalledWith('DELETE', '/recordings/r1'));
+  await waitFor(() => expect(mockApiSend).toHaveBeenLastCalledWith('DELETE', '/recordings/r1', undefined));
 });
 
 test('date and teacher pills filter on the server', async () => {

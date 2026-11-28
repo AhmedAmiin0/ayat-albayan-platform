@@ -1,6 +1,6 @@
 import type { CatalogueSettings } from './catalogue-settings';
 import type { NotificationEntry } from './catalogue.types';
-import type { NotificationEntryView } from './catalogue-views';
+import type { NotificationEntryView } from '../rules';
 import type { EffectiveRule } from '../rules.types';
 
 const text = (value: unknown): string => (Array.isArray(value) ? value.join('، ') : String(value));

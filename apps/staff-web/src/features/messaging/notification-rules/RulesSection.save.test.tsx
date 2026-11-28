@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { findRow, overview, renderRules } from './rules-test-kit';
+import { findRow, overview, renderRules, savedRow } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -50,7 +50,7 @@ describe('«الإشعارات»: a row saves on its own', () => {
     expect((select as HTMLSelectElement).value).toBe('');
     expect(document.querySelector('[data-unsaved="lesson_reminder"]')).toBeNull();
     fireEvent.change(select, { target: { value: 'num-2' } });
-    apiSend.mockResolvedValue(undefined);
+    apiSend.mockResolvedValue(savedRow('lesson_reminder'));
     fireEvent.click(screen.getByRole('button', { name: saveName }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/admin/notifications/lesson_reminder', { number_id: 'num-2' }));
   });
@@ -77,5 +77,16 @@ describe('«الإشعارات»: a row saves on its own', () => {
     fireEvent.click(screen.getByRole('button', { name: saveName }));
     expect(await screen.findByText(r.errors.invalid)).toBeTruthy();
     expect((within(row).getByLabelText<HTMLInputElement>(r.timing.minutesLabel)).value).toBe('90');
+  });
+
+  it('an answer that is not a catalogue row is a failed save, not a saved one', async () => {
+    const onSaved = vi.fn();
+    renderRules({ apiFetch, onSaved });
+    const row = await findRow('lesson_reminder');
+    fireEvent.change(within(row).getByLabelText(r.timing.minutesLabel), { target: { value: '90' } });
+    apiSend.mockResolvedValue({ key: 'lesson_reminder', state: 'maybe' });
+    fireEvent.click(screen.getByRole('button', { name: saveName }));
+    expect(await screen.findByText(r.errors.failed)).toBeTruthy();
+    expect(onSaved).not.toHaveBeenCalled();
   });
 });

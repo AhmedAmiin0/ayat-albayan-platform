@@ -1,17 +1,18 @@
 import {
-  threadForwardSchema,
+  threadForwardRoutes as routes,
   type ForwardResponse,
   type ForwardResult,
-  type ThreadForward,
 } from '@ab/shared';
-import { Controller, HttpCode, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
-import { ThreadForwardService, type ForwardOutcome } from './thread-forward.service';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import type { SalesScope } from '@/modules/sales/sales';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
+import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import { ThreadForwardService, type ForwardOutcome } from './thread-forward.service';
 
 /** What the audit row keeps: who got the copy (its id) and who was skipped (why). */
 export function forwardAudit(results: readonly ForwardOutcome[]) {
@@ -35,11 +36,22 @@ export const freshResults = (results: readonly ForwardOutcome[]): ForwardOutcome
 export const allReplayed = (results: readonly ForwardOutcome[]): boolean =>
   freshResults(results).length === 0;
 
+/** Who forwarded: a salesperson's id, a teacher's id and name, or nothing for staff. */
+function forwardedBy(sales: SalesScope | null, scope: TeacherScope | null): object {
+  const teacher = scope ? { teacher_id: scope.teacherId, teacher_name: scope.teacherName } : {};
+  return sales ? { sales_id: sales.salesId } : teacher;
+}
+
+interface Forwarded {
+  user: AuthUser;
+  source: { id: string; phone_e164: string; media_mime: string | null };
+  results: readonly ForwardOutcome[];
+  by: object;
+}
+
 /** Copies one message to 1-5 chats via the send path; audited once per forward. */
-@ApiTags('inbox')
 @ApiBearerAuth()
-@Permissions('inbox.read')
-@Controller('threads')
+@Controller()
 export class ThreadForwardController {
   constructor(
     private readonly reads: ThreadReads,
@@ -47,41 +59,34 @@ export class ThreadForwardController {
     private readonly audit: AuditService,
   ) {}
 
-  @Post('forward')
+  @Route(routes.forward)
   @HttpCode(201)
-  @Permissions('inbox.send')
   async forward(
-    @ZodBody(threadForwardSchema) input: ThreadForward,
+    @RouteInput() { body }: RouteInputOf<typeof routes.forward>,
     @CurrentUser() user: AuthUser,
   ): Promise<ForwardResponse> {
     const sales = await this.reads.salesScope(user);
     const scope = sales ? null : await this.reads.scope(user);
-    const { source, results } = await this.forwards.forward({
-      input,
-      actorId: user.id,
-      scope,
-      sales,
-    });
-    if (!allReplayed(results)) {
-      const by = sales
-        ? { sales_id: sales.salesId }
-        : scope
-          ? { teacher_id: scope.teacherId, teacher_name: scope.teacherName }
-          : {};
-      await this.audit.record({
-        actorId: user.id,
-        entity: 'messages',
-        entityId: source.id,
-        action: 'thread_forward',
-        before: null,
-        after: {
-          from_phone: source.phone_e164,
-          media_mime: source.media_mime,
-          ...forwardAudit(freshResults(results)),
-          ...by,
-        },
-      });
-    }
+    const forwarded = await this.forwards.forward({ input: body, actorId: user.id, scope, sales });
+    const { source, results } = forwarded;
+    await this.record({ user, source, results, by: forwardedBy(sales, scope) });
     return { results: results.map(publicResult) };
+  }
+
+  private async record({ user, source, results, by }: Forwarded): Promise<void> {
+    if (allReplayed(results)) return;
+    await this.audit.record({
+      actorId: user.id,
+      entity: 'messages',
+      entityId: source.id,
+      action: 'thread_forward',
+      before: null,
+      after: {
+        from_phone: source.phone_e164,
+        media_mime: source.media_mime,
+        ...forwardAudit(freshResults(results)),
+        ...by,
+      },
+    });
   }
 }

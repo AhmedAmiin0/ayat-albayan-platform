@@ -1,7 +1,7 @@
 import type { ReportV2SubmitBody, SubmitBody } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
-import { reportView } from '@/features/reporting/reports/report-fixture';
+import { formResponse, reportView } from '@/features/reporting/reports/report-fixture';
 import { linkProblem, linkReportApi, linkReportFormQuery } from './link-api';
 
 const fetchMock = vi.fn<(url: string, init?: RequestInit) => Promise<Response>>();
@@ -26,10 +26,18 @@ function calls(): [string, string, boolean][] {
 }
 
 describe('the teacher link calls (no session)', () => {
-  it('reads the form from GET /public/teacher-report/:token', async () => {
+  it('reads the form from GET /public/teacher-report/:token and checks its answer', async () => {
+    const form = formResponse();
+    fetchMock.mockImplementation(() => Promise.resolve(new Response(JSON.stringify(form))));
     const query = linkReportFormQuery(TOKEN);
-    await query.queryFn?.({} as never);
+    await expect(query.queryFn?.({} as never)).resolves.toEqual(form);
     expect(calls()).toEqual([[BASE, 'GET', false]]);
+  });
+
+  it('refuses a form the api answers in a shape the page cannot read', async () => {
+    const bad = { ...formResponse(), submit_block: 'closed' };
+    fetchMock.mockImplementation(() => Promise.resolve(new Response(JSON.stringify(bad))));
+    await expect(linkReportFormQuery(TOKEN).queryFn?.({} as never)).rejects.toThrow();
   });
 
   it('saves and sends both forms through the token-bound routes', async () => {
@@ -47,6 +55,12 @@ describe('the teacher link calls (no session)', () => {
     expect(api.attachments).toBe(true);
   });
 
+  it('refuses a saved report the api answers in a shape the form cannot read', async () => {
+    const bad = { ...reportView(), status: 'sent' };
+    fetchMock.mockImplementation(() => Promise.resolve(new Response(JSON.stringify(bad))));
+    await expect(linkReportApi(TOKEN).saveDraft({ id: 'r-1', body: {} })).rejects.toThrow();
+  });
+
   it('the attachments: remove and open through the token-bound routes, no session', async () => {
     const api = linkReportApi(TOKEN);
     fetchMock.mockImplementation(() => Promise.resolve(new Response(null, { status: 204 })));
@@ -58,6 +72,13 @@ describe('the teacher link calls (no session)', () => {
       [`${BASE}/reports/r-1/attachments/a-1`, 'DELETE', false],
       [`${BASE}/reports/r-1/attachments/a-1/url`, 'GET', false],
     ]);
+  });
+
+  it('refuses a signed link without its expiry', async () => {
+    const api = linkReportApi(TOKEN);
+    const bad = { url: 'https://files.example/a' };
+    fetchMock.mockImplementation(() => Promise.resolve(new Response(JSON.stringify(bad))));
+    await expect(api.files.url({ id: 'r-1', attachmentId: 'a-1' })).rejects.toThrow();
   });
 });
 
@@ -76,7 +97,9 @@ describe('link problems', () => {
 
   it('a refused send says the link expired, else the report error', () => {
     const { errorText } = linkReportApi(TOKEN);
-    expect(errorText(new ApiError(410, { code: 'link_expired' }))).toBe(t.reports.teacherLink.expired);
+    expect(errorText(new ApiError(410, { code: 'link_expired' }))).toBe(
+      t.reports.teacherLink.expired,
+    );
     expect(errorText(new ApiError(429, null))).toBe(t.reports.teacherLink.tooMany);
     const conflict = new ApiError(409, { code: 'version_conflict' });
     expect(errorText(conflict)).toBe(t.reports.error.version_conflict);

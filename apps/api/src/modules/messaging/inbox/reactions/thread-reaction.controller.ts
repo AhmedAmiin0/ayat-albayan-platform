@@ -1,23 +1,21 @@
-import { threadReactionSchema, type ReactionResult } from '@ab/shared';
-import { Body, Controller, HttpCode, Param, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
+import { messageReactionRoutes as routes, type ReactionResult } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
-import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
+import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { ThreadReactionService } from './thread-reaction.service';
 
-const params = z.object({ phone: z.string(), id: z.uuid() });
+// A bad phone answers 400 invalid_phone, not the envelope; a bad body still wins over it.
+const phoneFirst = { paramErrors: [{ name: 'phone', fail: invalidPhone }] };
 
-/** Same permissions and scopes as POST /threads/:phone/text, audited like a text send. */
-@ApiTags('inbox')
+/** Same scopes as POST /threads/:phone/text, audited like a text send. */
 @ApiBearerAuth()
-@Permissions('inbox.read')
-@Controller('threads')
+@Controller()
 export class ThreadReactionController {
   constructor(
     private readonly reads: ThreadReads,
@@ -25,26 +23,16 @@ export class ThreadReactionController {
     private readonly audit: AuditService,
   ) {}
 
-  @Put(':phone/messages/:id/reaction')
+  @Route(routes.react)
   @HttpCode(200)
-  @Permissions('inbox.send')
   async react(
-    @Param() raw: unknown,
-    @Body() body: unknown,
+    @RouteInput(phoneFirst) { params, body }: RouteInputOf<typeof routes.react>,
     @CurrentUser() user: AuthUser,
   ): Promise<ReactionResult> {
-    const { phone, id } = parseOrThrow(params, raw);
-    const input = parseOrThrow(threadReactionSchema, body);
+    const { phone } = params;
     const sales = await this.reads.salesScope(user);
     const scope = sales ? null : await this.reads.scope(user);
-    const request = {
-      phone: phoneParam(phone),
-      messageId: id,
-      input,
-      actorId: user.id,
-      scope,
-      sales,
-    };
+    const request = { phone, messageId: params.id, input: body, actorId: user.id, scope, sales };
     const { result, sent } = await this.reactions.react(request);
     await recordSend(this.audit, { sent, action: 'thread_reaction', user, scope, sales });
     return result;

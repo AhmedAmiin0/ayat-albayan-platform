@@ -2,6 +2,7 @@ import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { askMic, hold, lift, moveTo, openChat, perms, rec, replyToAsked, resetVoice, tick, voiceRow } from '@/inbox/composer/voice/voice-test-kit';
 import type * as mockVoiceTestKit from '@/inbox/composer/voice/voice-test-kit';
+import { uid } from '@/inbox/shared/thread-fixtures';
 
 // Hold to record, lift to send on an Arabic phone (jest.setup: RTL). No real
 // recorder, upload or WhatsApp: expo-audio, the API and Storage are fakes.
@@ -87,7 +88,7 @@ test('lift after a hold: the m4a goes as audio/mp4 voice.m4a to this chat, answe
   expect(mockApiSend.mock.calls.map((c: unknown[]) => c[1])).toEqual(['/threads/%2B966552147730/file-upload-url', '/threads/%2B966552147730/file']);
   const [upload, file] = bodies();
   expect(upload).toMatchObject({ mime: 'audio/mp4', size: 10 });
-  expect(file).toMatchObject({ clientRequestId: upload?.clientRequestId, filename: 'voice.m4a', path: signed.path, replyToMessageId: 'm1' });
+  expect(file).toMatchObject({ clientRequestId: upload?.clientRequestId, filename: 'voice.m4a', path: signed.path, replyToMessageId: uid('m1') });
   await waitFor(() => expect(screen.queryByTestId('recording-bar')).toBeNull());
 });
 

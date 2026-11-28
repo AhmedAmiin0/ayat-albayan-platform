@@ -15,8 +15,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 // docs/19: only under a staff text the 24 h window stopped; app-send first, then wa.me; no undo.
 
+const HELD_ID = 'c3333333-3333-4333-8333-333333333333';
 const held = message({
-  id: 'm-held',
+  id: HELD_ID,
   direction: 'outbound',
   status: 'queued',
   error_code: 'awaiting_reply',
@@ -72,8 +73,8 @@ test('app-send first, then wa.me with the digits and the encoded text', async ()
   await show(held);
   await fireEvent.press(action() as never);
   await waitFor(() => expect(openURL).toHaveBeenCalled());
-  expect(send).toHaveBeenCalledWith('POST', '/messages/m-held/app-send');
-  expect(send).not.toHaveBeenCalledWith('POST', '/messages/m-held/sent-manually');
+  expect(send).toHaveBeenCalledWith('POST', `/messages/${HELD_ID}/app-send`, undefined);
+  expect(send).not.toHaveBeenCalledWith('POST', `/messages/${HELD_ID}/sent-manually`, undefined);
   expect(send.mock.invocationCallOrder[0]).toBeLessThan(openURL.mock.invocationCallOrder[0] ?? 0);
   const url = String(openURL.mock.calls[0]?.[0]);
   expect(url.startsWith(`https://wa.me/${PHONE.slice(1)}?text=`)).toBe(true);
@@ -102,7 +103,7 @@ test('pending: «جارٍ الإرسال من واتساب…», re-open posts a
   const again = screen.getByRole('button', { name: t.messages.whatsappSend.openAgain });
   await fireEvent.press(again);
   await waitFor(() => expect(openURL).toHaveBeenCalled());
-  expect(send).toHaveBeenCalledWith('POST', '/messages/m-held/app-send');
+  expect(send).toHaveBeenCalledWith('POST', `/messages/${HELD_ID}/app-send`, undefined);
 });
 
 test('a window and its grace that passed: the offer again (the sweep asks next)', async () => {

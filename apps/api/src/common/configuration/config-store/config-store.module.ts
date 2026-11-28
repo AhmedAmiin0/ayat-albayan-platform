@@ -3,7 +3,7 @@ import { loadEnv } from '@/config/env/env';
 import { ConfigEntriesAudit } from './io/config-entries.audit';
 import { ConfigEntriesController } from './io/config-entries.controller';
 import { ConfigEntriesService } from './io/config-entries.service';
-import { ConfigParityController } from './boundaries/config-parity';
+import { ConfigParityController } from './parity';
 import { ConfigSeeder } from './boundaries/config-seeder';
 import { ConfigCacheBridge } from './store/config-cache.bridge';
 import { ConfigStoreRepo } from './store/config-store.repo';

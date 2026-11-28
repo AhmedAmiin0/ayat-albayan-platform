@@ -1,22 +1,15 @@
-import {
-  recordingVisibilitySchema,
-  studentRecordingsQuerySchema,
-  type StudentRecordingsPage,
-} from '@ab/schedule';
-import { Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { studentRecordingsRoutes as routes } from '@ab/schedule';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { RecordingDeleteService } from './retention/recording-delete.service';
 import { RecordingVisibilityService } from './recording-visibility.service';
 import { StudentRecordingsService } from './student-recordings.service';
 
 /** Permissions are the coarse gate; services decide per student, and DELETE stays admin-only. */
-@ApiTags('classroom')
 @ApiBearerAuth()
-@Permissions('recordings.read')
 @Controller()
 export class StudentRecordingsController {
   constructor(
@@ -25,44 +18,40 @@ export class StudentRecordingsController {
     private readonly deletion: RecordingDeleteService,
   ) {}
 
-  /** Newest first, paginated; admin, the teacher (own lessons or assigned student), an assigned assistant. */
-  @Get('students/:id/recordings')
+  /** Newest first; admin, the teacher (own lessons or assigned student), an assigned assistant. */
+  @Route(routes.list)
   list(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodQuery(studentRecordingsQuerySchema) query: z.output<typeof studentRecordingsQuerySchema>,
+    @RouteInput() { params, query }: RouteInputOf<typeof routes.list>,
     @CurrentUser() user: AuthUser,
-  ): Promise<StudentRecordingsPage> {
-    return this.recordings.list({ user, studentId: id, query });
+  ) {
+    return this.recordings.list({ user, studentId: params.id, query });
   }
 
-  /** Lesson ids with a finished recording, for the report history's links: no signed URLs. Same access as the list. */
-  @Get('students/:id/recorded-lesson-ids')
+  /** Same access as the list. */
+  @Route(routes.recordedLessonIds)
   recordedLessonIds(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.recordedLessonIds>,
     @CurrentUser() user: AuthUser,
-  ): Promise<string[]> {
-    return this.recordings.recordedLessonIds({ user, studentId: id });
+  ) {
+    return this.recordings.recordedLessonIds({ user, studentId: params.id });
   }
 
-  /** Show or hide one recording from the student (off by default); admin, or the lesson's teacher. */
-  @Patch('recordings/:id/visibility')
-  @Permissions('recordings.manage')
+  /** Off by default; admin, or the lesson's teacher. */
+  @Route(routes.visibility)
   visibility(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodBody(recordingVisibilitySchema) body: z.output<typeof recordingVisibilitySchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.visibility>,
     @CurrentUser() user: AuthUser,
-  ): Promise<{ id: string; visible_to_student: boolean }> {
-    return this.toggles.setVisibility({ user, id, visible: body.visible });
+  ) {
+    return this.toggles.setVisibility({ user, id: params.id, visible: body.visible });
   }
 
   /** Admin only: removes the file, keeps the row as `deleted`, writes an audit row. */
-  @Delete('recordings/:id')
-  @Permissions('recordings.manage')
+  @Route(routes.remove)
   @HttpCode(204)
   async remove(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.deletion.remove({ user, id });
+    await this.deletion.remove({ user, id: params.id });
   }
 }

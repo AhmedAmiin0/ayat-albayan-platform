@@ -806,6 +806,9 @@ importers:
       '@ab/core':
         specifier: workspace:*
         version: link:../core
+      '@ab/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@ab/money':
         specifier: workspace:*
         version: link:../money

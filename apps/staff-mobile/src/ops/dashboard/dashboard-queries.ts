@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
+import { dashboardCalls } from '@ab/client-core';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
+import { dashboardRoutes } from '@ab/money';
 import { addDays, riyadhToday, weekStart } from '@/calendar/lib/week';
-import type { DashboardCounts, DashboardWork } from '@ab/money';
+
+const dashboard = dashboardCalls({ apiFetch, apiSend });
 
 /** The Riyadh week (Saturday → Friday) holding `now`: the range of the web's KPI strip. */
 export function weekRange(now: Date): { from: string; to: string } {
@@ -12,17 +15,16 @@ export function weekRange(now: Date): { from: string; to: string } {
 
 /** GET /dashboard/summary?from&to (admin): counts from statuses. */
 export function useSummary(range: { from: string; to: string }) {
-  const path = `/dashboard/summary${toQueryString(range)}`;
   return useQuery({
-    queryKey: [...pathKey('/dashboard/summary'), range],
-    queryFn: () => apiFetch<DashboardCounts>(path),
+    queryKey: dashboardRoutes.summary.key.of(range),
+    queryFn: () => dashboard.summary(range),
   });
 }
 
 /** GET /dashboard/work: pending reports, unpaid packages and open tasks, oldest first. */
 export function useWork() {
   return useQuery({
-    queryKey: pathKey('/dashboard/work'),
-    queryFn: () => apiFetch<DashboardWork>('/dashboard/work'),
+    queryKey: dashboardRoutes.work.key.all,
+    queryFn: dashboard.work,
   });
 }

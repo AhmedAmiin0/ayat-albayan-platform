@@ -6,7 +6,9 @@ import type {
 } from '@ab/shared';
 import type { StudentRecordingView } from '@ab/schedule';
 
-// Test data, not a test; sample names only.
+// Test data, not a test; sample names only. Ids the api checks are uuids.
+
+const UUID = (n: number): string => `20000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 
 export const COURSE: TeacherCourseView = {
   starts_on: '2026-09-01',
@@ -19,7 +21,7 @@ export const COURSE: TeacherCourseView = {
 };
 
 const upcomingRow = (over: Partial<AttendanceTableRow> = {}): AttendanceTableRow => ({
-  lesson_id: 'u-1',
+  lesson_id: UUID(1),
   starts_at: '2026-10-10T13:00:00.000Z',
   duration_min: 45,
   teacher_name: 'أبرار',
@@ -36,14 +38,14 @@ const upcomingRow = (over: Partial<AttendanceTableRow> = {}): AttendanceTableRow
 });
 
 export const HEAD: TeacherStudentHead = {
-  id: 's-1',
+  id: UUID(3),
   code: 'AB-0183',
   name: 'سهيلة',
   status: 'active',
   course: COURSE,
   upcoming: [
     upcomingRow(),
-    upcomingRow({ lesson_id: 'u-2', status: 'cancelled_by_admin', cancel_reason: 'سفر الأسرة' }),
+    upcomingRow({ lesson_id: UUID(2), status: 'cancelled_by_admin', cancel_reason: 'سفر الأسرة' }),
   ],
 };
 

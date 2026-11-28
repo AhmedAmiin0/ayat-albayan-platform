@@ -1,8 +1,9 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ABRAR, next, pickSlot, pickTeacher, SLOT } from '@/features/teaching/booking/wizard-fixture';
 import { ApiError, t } from '@ab/web-kit';
-import { detail, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
+import { detail, PHONE, THREAD_LEAD_ID } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane';
@@ -79,7 +80,7 @@ describe('«تسجيل طالب جديد» in a sales chat (R-ASST-01, docs/16)'
     fireEvent.click(await screen.findByRole('button', { name: t.booking.submit }));
     expect(await screen.findByText(t.booking.booked)).toBeTruthy();
     const post = apiSend.mock.calls.find(([, path]) => path === '/sales/booking');
-    expect(post?.[2]).toMatchObject({ kind: 'trial', teacherId: ABRAR.id, leadId: 'lead-1', newStudent: { name: 'سهيلة' } });
+    expect(post?.[2]).toMatchObject({ kind: 'trial', teacherId: ABRAR.id, leadId: THREAD_LEAD_ID, newStudent: { name: 'سهيلة' } });
     expect(post?.[2]).toMatchObject({ guardian: { name: 'أم سهيلة', phone_e164: PHONE, source: 'facebook_ad' } });
     expect(post?.[2]).not.toHaveProperty('invoice');
     for (const [, path] of apiSend.mock.calls) expect(String(path)).toMatch(/^\/sales\/booking/);
@@ -110,7 +111,7 @@ describe('«تسجيل طالب جديد» in a sales chat (R-ASST-01, docs/16)'
   });
 
   it.each([
-    ['a guardian', { guardian_id: 'g-1', lead_id: null, lead_status: null }],
+    ['a guardian', { guardian_id: uid('g-1'), lead_id: null, lead_status: null }],
     ['a converted lead', { lead_status: 'converted' as const }],
     ['a lost lead', { lead_status: 'lost' as const }],
   ])('no action on %s', async (_label, patch) => {

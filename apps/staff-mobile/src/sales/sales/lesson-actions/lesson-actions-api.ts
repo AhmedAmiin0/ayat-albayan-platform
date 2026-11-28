@@ -1,13 +1,10 @@
-import type {
-  SalesCancel,
-  SalesLessonMoved,
-  SalesReschedule,
-  SalesScheduleLesson,
-} from '@ab/shared';
-import type { LessonStatus } from '@ab/catalog';
+import { salesLessonActionCalls } from '@ab/client-core';
+import type { SalesCancel, SalesReschedule, SalesScheduleLesson } from '@ab/shared';
 import { isOpenLesson, type CorrectTo } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+
+const lessons = salesLessonActionCalls({ apiFetch, apiSend });
 
 /** Any open, not-over lesson with a student and her key (docs/16 row 37); the API re-checks. */
 export function canChangeLesson(
@@ -34,20 +31,20 @@ const useRefreshSchedule = () => {
     ]);
 };
 
-/** POST /sales/lessons/:id/reschedule { startsAt, reason? }: the admin's one-lesson move (confirmation to the family queued). */
+/** The admin's one-lesson move; the confirmation to the family is queued. */
 export function useSalesReschedule(lessonId: string) {
   const refresh = useRefreshSchedule();
   return useMutation({
-    mutationFn: (body: SalesReschedule) => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/reschedule`, body),
+    mutationFn: (body: SalesReschedule) => lessons.reschedule({ lessonId, body }),
     onSuccess: refresh,
   });
 }
 
-/** POST /sales/lessons/:id/confirm: scheduled → confirmed, ANY lesson, no message to anyone. */
+/** Scheduled → confirmed, ANY lesson, no message to anyone. */
 export function useSalesConfirm(lessonId: string) {
   const refresh = useRefreshSchedule();
   return useMutation({
-    mutationFn: () => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/confirm`),
+    mutationFn: () => lessons.confirm(lessonId),
     // A 409 (cancelled or confirmed elsewhere) refetches too, so the stale button and status go.
     onSettled: refresh,
   });
@@ -57,7 +54,7 @@ export function useSalesConfirm(lessonId: string) {
 export function useSalesCancel(lessonId: string) {
   const refresh = useRefreshSchedule();
   return useMutation({
-    mutationFn: (body: SalesCancel) => apiSend<{ id: string; status: LessonStatus }>('POST', `/sales/lessons/${lessonId}/cancel`, body),
+    mutationFn: (body: SalesCancel) => lessons.cancel({ lessonId, body }),
     onSuccess: refresh,
   });
 }
@@ -65,7 +62,7 @@ export function useSalesCancel(lessonId: string) {
 export function useSalesCorrect(lessonId: string) {
   const refresh = useRefreshSchedule();
   return useMutation({
-    mutationFn: (to: CorrectTo) => apiSend('POST', `/sales/lessons/${lessonId}/correct`, { to }),
+    mutationFn: (to: CorrectTo) => lessons.correct({ lessonId, body: { to } }),
     onSettled: refresh,
   });
 }

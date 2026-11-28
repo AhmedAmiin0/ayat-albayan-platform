@@ -1,26 +1,10 @@
-import {
-  reportDraftSchema,
-  reportSubmitSchema,
-  reportV2DraftSchema,
-  reportV2SubmitSchema,
-  type ReportDraft,
-  type ReportFormResponse,
-  type ReportSubmit,
-  type ReportV2Draft,
-  type ReportV2Submit,
-  type ReportView,
-} from '@ab/shared';
-import { Controller, Get, HttpCode, Post, Put, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { Public } from '@/common/auth/decorators';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { teacherLinkRoutes as routes, type ReportFormResponse, type ReportView } from '@ab/shared';
+import { Controller, HttpCode, UseGuards } from '@nestjs/common';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { TeacherLinkLimit } from './teacher-link.limit';
 import { TeacherLinkReports } from './teacher-link.reports';
 
-/** The link's token (≤ 100: Fastify's maxParamLength) and a report's uuid. */
-const tokenSchema = z.string().min(1).max(100);
-const idSchema = z.uuid();
+type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
 /**
  * The teacher's report for ONE lesson without signing in (docs/19 «Teacher
@@ -29,53 +13,35 @@ const idSchema = z.uuid();
  * hours. Same bodies, validation and answers as /lessons/:id/report-form and /reports/:id/…;
  * rate-limited. 404 link_not_found, 410 link_expired, 409 link_not_open, 429 too_many_requests.
  */
-@ApiTags('reports')
-@Public()
 @UseGuards(TeacherLinkLimit)
-@Controller('public/teacher-report/:token')
+@Controller()
 export class TeacherLinkController {
   constructor(private readonly reports: TeacherLinkReports) {}
 
-  @Get()
-  async form(@ZodParam('token', tokenSchema) token: string): Promise<ReportFormResponse> {
-    return this.reports.form({ token });
+  @Route(routes.form)
+  form(@RouteInput() { params }: Input<'form'>): Promise<ReportFormResponse> {
+    return this.reports.form({ token: params.token });
   }
 
-  @Put('reports/:id/draft')
-  async draft(
-    @ZodParam('token', tokenSchema) token: string,
-    @ZodParam('id', idSchema) id: string,
-    @ZodBody(reportDraftSchema, { sentOnly: true }) form: Partial<ReportDraft>,
-  ): Promise<ReportView> {
-    return this.reports.draft({ token, reportId: id, form });
+  @Route(routes.draft)
+  draft(@RouteInput() { params, body }: Input<'draft'>): Promise<ReportView> {
+    return this.reports.draft({ token: params.token, reportId: params.id, form: body });
   }
 
-  @Post('reports/:id/submit')
+  @Route(routes.submit)
   @HttpCode(200)
-  async submit(
-    @ZodParam('token', tokenSchema) token: string,
-    @ZodParam('id', idSchema) id: string,
-    @ZodBody(reportSubmitSchema) form: ReportSubmit,
-  ): Promise<ReportView> {
-    return this.reports.submit({ token, reportId: id, form });
+  submit(@RouteInput() { params, body }: Input<'submit'>): Promise<ReportView> {
+    return this.reports.submit({ token: params.token, reportId: params.id, form: body });
   }
 
-  @Put('reports/:id/v2/draft')
-  async draftV2(
-    @ZodParam('token', tokenSchema) token: string,
-    @ZodParam('id', idSchema) id: string,
-    @ZodBody(reportV2DraftSchema, { sentOnly: true }) form: Partial<ReportV2Draft>,
-  ): Promise<ReportView> {
-    return this.reports.draftV2({ token, reportId: id, form });
+  @Route(routes.draftV2)
+  draftV2(@RouteInput() { params, body }: Input<'draftV2'>): Promise<ReportView> {
+    return this.reports.draftV2({ token: params.token, reportId: params.id, form: body });
   }
 
-  @Post('reports/:id/v2/submit')
+  @Route(routes.submitV2)
   @HttpCode(200)
-  async submitV2(
-    @ZodParam('token', tokenSchema) token: string,
-    @ZodParam('id', idSchema) id: string,
-    @ZodBody(reportV2SubmitSchema) form: ReportV2Submit,
-  ): Promise<ReportView> {
-    return this.reports.submitV2({ token, reportId: id, form });
+  submitV2(@RouteInput() { params, body }: Input<'submitV2'>): Promise<ReportView> {
+    return this.reports.submitV2({ token: params.token, reportId: params.id, form: body });
   }
 }

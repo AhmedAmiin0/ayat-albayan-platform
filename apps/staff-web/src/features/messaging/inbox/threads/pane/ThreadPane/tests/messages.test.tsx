@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { viewerTz } from '@ab/client-core';
 import { lessonWhenAt } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
@@ -15,7 +16,8 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 
 const LINK = 'https://wa.me/966501234567?text=x';
 const FAILED = message({
-  id: 'm-f',
+  id: 'e5555555-5555-4555-8555-555555555555',
+  lead_id: null,
   direction: 'outbound',
   status: 'failed',
   body: 'تذكير بالحلقة',
@@ -24,7 +26,7 @@ const FAILED = message({
   created_at: '2026-10-01T11:00:00Z',
 });
 const WAITING = message({
-  id: 'm-w',
+  id: uid('m-w'),
   direction: 'outbound',
   status: 'queued',
   template_key: 'renewal_due',
@@ -32,17 +34,23 @@ const WAITING = message({
   click_to_chat: LINK,
   created_at: '2026-10-01T12:00:00Z',
 });
-const PHOTO = message({ id: 'm-p', body: null, media_mime: 'image/jpeg', media_url: 'https://sb.test/signed/p.jpg' });
+const PHOTO = message({ id: uid('m-p'), body: null, media_mime: 'image/jpeg', media_url: 'https://sb.test/signed/p.jpg' });
 const CONFIRM = message({
-  id: 'm-c',
+  id: uid('m-c'),
   body: 'تمام، هنحضر',
-  guardian_id: 'g-1',
+  guardian_id: uid('g-1'),
   interactive_payload: { payload: 'confirm:l-1' },
-  lesson_id: 'l-1',
+  lesson_id: uid('l-1'),
   lesson: { starts_at: '2026-10-04T14:00:00Z', status: 'confirmed' },
 });
-const UNLINKED = message({ id: 'm-u', body: 'تمام', guardian_id: 'g-1' });
-const HANDED = message({ ...FAILED, id: 'm-h', body: 'رسالة باليد', error_code: 'handed_off', created_at: '2026-10-01T11:30:00Z' });
+const UNLINKED = message({ id: uid('m-u'), body: 'تمام', guardian_id: uid('g-1') });
+const HANDED = message({
+  ...FAILED,
+  id: 'f6666666-6666-4666-8666-666666666666',
+  body: 'رسالة باليد',
+  error_code: 'handed_off',
+  created_at: '2026-10-01T11:30:00Z',
+});
 
 function renderThread() {
   routeFetch(apiFetch, [
@@ -89,7 +97,7 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     expect(failed.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
     apiSend.mockResolvedValue({ ...FAILED, status: 'queued' });
     fireEvent.click(failed.getByRole('button', { name: t.messages.retry }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-f/retry'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `/messages/${FAILED.id}/retry`, undefined));
     expect(await screen.findByText(t.messages.retryQueued)).toBeTruthy();
   });
 
@@ -102,7 +110,7 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     expect(held.queryByRole('button', { name: t.messages.retry })).toBeNull();
     apiSend.mockResolvedValue({ ...HANDED, status: 'sent_manually' });
     fireEvent.click(within(ask).getByRole('button', { name: t.messages.markSentManually }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-h/sent-manually'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `/messages/${HANDED.id}/sent-manually`, undefined));
     await waitFor(() => expect(held.queryByRole('group', { name: t.messages.markSentManually })).toBeNull());
   });
 
@@ -112,7 +120,7 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     const ask = bubble('رسالة باليد').getByRole('group', { name: t.messages.markSentManually });
     apiSend.mockResolvedValue({ ...HANDED, status: 'queued' });
     fireEvent.click(within(ask).getByRole('button', { name: t.messages.undoHandOff }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-h/retry'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `/messages/${HANDED.id}/retry`, undefined));
   });
 
   it('a queued row whose template Meta has not approved says so', async () => {

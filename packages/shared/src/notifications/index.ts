@@ -1,6 +1,7 @@
 export * from './views';
 export * from './course-notice';
 export * from './web-path';
+export * from './me';
 export * from './kind-permissions';
 export * from './catalogue/catalogue';
 export * from './catalogue/catalogue-settings';
@@ -12,3 +13,4 @@ export * from './rules.effective';
 export * from './push-wake';
 export * from './push-readers';
 export * from './text-clip';
+export * from './rules';

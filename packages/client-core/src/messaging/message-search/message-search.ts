@@ -1,22 +1,10 @@
-import {
-  messageSearchPageSchema,
-  searchesMessages,
-  type MessageSearchHit,
-  type MessageSearchPage,
-} from '@ab/shared';
-import type { SearchGet } from '../chat-search';
+import { searchesMessages, type MessageSearchHit, type MessageSearchPage } from '@ab/shared';
+import type { InboxSearchCalls } from '../inbox';
 
 // Search across all messages (docs/37): newest first, a page per cursor, no total.
 
 /** Under ['threads'] on purpose: the inbox's ['threads'] invalidations refresh it too. */
 export const messageSearchKey = (q: string) => ['threads', 'message-search', q] as const;
-
-/** GET /threads/search: the words always encoded, the cursor only when given. */
-export function messageSearchPath(q: string, cursor?: string): string {
-  const params = new URLSearchParams({ q });
-  if (cursor) params.set('cursor', cursor);
-  return `/threads/search?${params.toString()}`;
-}
 
 /** useInfiniteQuery's options (plain: client-core has no react-query). */
 export interface MessageSearchPagesOptions {
@@ -30,13 +18,15 @@ export interface MessageSearchPagesOptions {
 
 /**
  * The global search's pages for either app: asked only from MESSAGE_SEARCH_MIN folded characters,
- * every answer checked (rule 12). A short page is not the end: only a null cursor is.
+ * every answer parsed by its route. A short page is not the end: only a null cursor is.
  */
-export function messageSearchPages(q: string, get: SearchGet): MessageSearchPagesOptions {
+export function messageSearchPages(
+  q: string,
+  calls: Pick<InboxSearchCalls, 'messages'>,
+): MessageSearchPagesOptions {
   return {
     queryKey: messageSearchKey(q),
-    queryFn: async ({ pageParam }) =>
-      messageSearchPageSchema.parse(await get(messageSearchPath(q, pageParam))),
+    queryFn: ({ pageParam }) => calls.messages({ q, cursor: pageParam }),
     initialPageParam: undefined,
     getNextPageParam: (last) => last.next_cursor ?? undefined,
     enabled: searchesMessages(q),

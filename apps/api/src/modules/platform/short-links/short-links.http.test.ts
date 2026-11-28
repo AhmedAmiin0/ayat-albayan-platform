@@ -6,6 +6,7 @@ import { ShortLinksLimit } from './short-links.limit';
 import { linkRow } from './short-links.fakes';
 import type { ShortLinkRow } from './short-links.repo';
 import { ShortLinks } from './short-links.service';
+import { IS_PUBLIC, OWN_PUBLIC } from '@/common/auth/decorators';
 
 const NOW = Date.now();
 const LATER = new Date(NOW + 86_400_000).toISOString();
@@ -75,5 +76,14 @@ describe('GET /r/:code (public)', () => {
     const { HttpException } = await import('@nestjs/common');
     limit.check.mockRejectedValueOnce(new HttpException({ code: 'too_many_requests' }, 429));
     expect((await app.inject({ method: 'GET', url: '/r/Ab12Cd34Ef' })).statusCode).toBe(429);
+  });
+});
+
+describe('short link redirect access', () => {
+  it('opens /r/:code from its route object, not from a class or handler mark', () => {
+    const go: object = Object(Reflect.get(ShortLinksController.prototype, 'go'));
+    expect(Reflect.getOwnMetadata(IS_PUBLIC, ShortLinksController)).toBeUndefined();
+    const marks = [IS_PUBLIC, OWN_PUBLIC].map((key) => Reflect.getOwnMetadata(key, go));
+    expect(marks).toEqual([true, undefined]);
   });
 });

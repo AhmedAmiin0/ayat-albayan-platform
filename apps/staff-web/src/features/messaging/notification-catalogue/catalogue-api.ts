@@ -1,7 +1,9 @@
-import type { NotificationsOverview } from '@ab/shared';
+import { notificationRuleCalls } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { catalogueKeys } from '@/features/messaging/keys';
+
+const rules = notificationRuleCalls({ apiFetch, apiSend });
 
 /**
  * GET /admin/notifications (settings.read): the catalogue with each row's state from today's
@@ -10,6 +12,6 @@ import { catalogueKeys } from '@/features/messaging/keys';
 export const catalogueQuery = (version: number) =>
   queryOptions({
     queryKey: catalogueKeys.version(version),
-    queryFn: () => apiFetch<NotificationsOverview>('/admin/notifications'),
+    queryFn: () => rules.overview(),
     placeholderData: (previous) => previous,
   });

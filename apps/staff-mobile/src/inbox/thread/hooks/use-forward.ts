@@ -1,9 +1,12 @@
-import type { ForwardResponse, ThreadForward } from '@ab/shared';
+import { threadForwardCalls } from '@ab/client-core';
+import type { ThreadForward } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { apiSend } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { refreshInbox } from './inbox-sync';
+
+const forwards = threadForwardCalls({ apiFetch, apiSend });
 
 /**
  * POST /threads/forward: one message to 1–5 chats, each answered on its own (sent, or skipped and why).
@@ -12,7 +15,7 @@ import { refreshInbox } from './inbox-sync';
 export function useForward() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (body: ThreadForward) => apiSend<ForwardResponse>('POST', '/threads/forward', body),
+    mutationFn: (body: ThreadForward) => forwards.forward(body),
     onSettled: () => refreshInbox(client),
   });
 }

@@ -28,7 +28,7 @@ beforeEach(() => {
 
 test('with LiveKit in the binary and the setting on: the room route, the token in memory only', async () => {
   await openRoom(meeting, true);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', `/meetings/${ID}/join`);
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/meetings/${ID}/join`, undefined);
   expect(mockPush).toHaveBeenCalledWith(`/room/meeting/${ID}`);
   expect(Linking.openURL).not.toHaveBeenCalled();
   expect(takeHandoff(meeting)).toEqual({ url: 'wss://lk', token: 'tok', role: 'admin', chat: true });

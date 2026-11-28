@@ -36,7 +36,7 @@ describe('channel bubble edit / delete calls', () => {
     expect(screen.getByText(a.moderateBody)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: a.deleteConfirm }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('DELETE', '/students/s1/channel/messages/m1'),
+      expect(apiSend).toHaveBeenCalledWith('DELETE', '/students/s1/channel/messages/m1', undefined),
     );
   });
 
@@ -47,6 +47,10 @@ describe('channel bubble edit / delete calls', () => {
     expect(screen.getByText(a.deleteBody)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: a.deleteConfirm }));
     expect(await screen.findByText(a.errors.delete_window_closed)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('DELETE', '/portal/students/s1/channel/messages/m1');
+    expect(apiSend).toHaveBeenCalledWith(
+      'DELETE',
+      '/portal/students/s1/channel/messages/m1',
+      undefined,
+    );
   });
 });

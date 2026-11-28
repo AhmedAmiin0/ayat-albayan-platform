@@ -1,10 +1,11 @@
-import type { FamilyRequestView } from '@ab/shared';
+import type { FamilyRequestView } from '@ab/schedule';
 import { useState, type ReactElement } from 'react';
 import { View } from 'react-native';
 import { t, Button, ButtonRow, ErrorLine, MoveReason } from '@ab/mobile-kit';
 import { ConflictNotice } from '@/booking';
 import { LessonSlotPicker, useRescheduleFailure } from '@/teaching';
-import { useAnswerRequest, type Answer } from './family-requests-api';
+import { useAnswerRequest } from './family-requests-api';
+import type { Answer } from './family-requests.types';
 import { requestMinutes } from './request-text';
 
 type Mode = 'answer' | 'other' | 'decline';
@@ -74,7 +75,9 @@ interface AnswerButtonsProps {
 }
 
 function AnswerButtons({ mode, busy, picked, onApprove, onReject, onMode }: AnswerButtonsProps) {
-  const back = <Button variant="ghost" label={t.portal.actions.back} onPress={() => onMode('answer')} />;
+  const back = (
+    <Button variant="ghost" label={t.portal.actions.back} onPress={() => onMode('answer')} />
+  );
   const steps: Record<Mode, ReactElement> = {
     answer: (
       <View style={{ gap: 8 }}>

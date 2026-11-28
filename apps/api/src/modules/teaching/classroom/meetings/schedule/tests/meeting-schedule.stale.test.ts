@@ -10,7 +10,7 @@ const staff = stored({ meeting_id: MEETING_ID, kind: 'staff', profile_id: STAFF_
 const family = (phone: string) => stored({ meeting_id: MEETING_ID, kind: 'student', phone_e164: phone, display_name: 'سهيلة', channel: 'whatsapp', status: 'sent' });
 const fam1 = family(OPEN_PHONE);
 const fam2 = family(CLOSED_PHONE);
-const move = () => s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-06T08:00:00Z' } }, NOW);
+const move = () => s.schedule.update({ user: TEACHER, id: MEETING_ID, patch: { startsAt: '2026-10-06T08:00:00Z' } }, NOW);
 
 beforeEach(() => {
   s = meetingServices();

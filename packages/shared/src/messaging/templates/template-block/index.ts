@@ -1,1 +1,1 @@
-export { type TemplateDisplay, type TemplatedMessage } from './template-block';
+export { templateButtonKindSchema, templateHeaderKindSchema } from './template-block';

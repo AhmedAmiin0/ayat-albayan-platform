@@ -5,7 +5,7 @@ import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { useHideMessage } from '@/inbox/messages/components/hide/use-hide-message';
 import { useReact } from '@/inbox/messages/reactions/use-react';
-import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
+import { useMessageAction } from '@/inbox/thread/hooks/use-message-action';
 
 // docs/37 review correction 1: bubble actions inside the window around an old search hit show
 // there at once (the window sits outside the live chat's key on purpose).

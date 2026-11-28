@@ -1,7 +1,7 @@
-import { Controller, Headers, HttpCode, Inject, Logger, Post, Req, UnauthorizedException } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Public } from '@/common/auth/decorators';
+import { Controller, Headers, HttpCode, Inject, Logger, Req, UnauthorizedException } from '@nestjs/common';
+import { Route } from '@/common/http/route';
 import { RESPONSE_BUDGET_MS, within, type WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import { webhookRoutes as routes } from '@/modules/messaging/webhook/shared';
 import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
 import { StatusService } from '@/modules/messaging/webhook/status/webhook.status.service';
 import { verifyWacrmSignature, WACRM_TOLERANCE_MS } from '@/modules/messaging/webhook/parse/webhook.wacrm-signature';
@@ -25,9 +25,7 @@ interface RawRequest {
  * the notifications number) is queued by its wamid and the mirror job kicked: it lands in the
  * inbox. Deduped on the delivery id. Never sends anything.
  */
-@ApiTags('webhooks')
-@Public()
-@Controller('webhooks/wacrm')
+@Controller()
 export class WacrmWebhookController {
   private readonly log = new Logger(WacrmWebhookController.name);
   private readonly seen = new SeenDeliveries(WACRM_TOLERANCE_MS * 2);
@@ -40,7 +38,7 @@ export class WacrmWebhookController {
   ) {}
 
   /** 401 (nothing read) unless the signature is good and fresh; 500 when a write failed (it may come again). */
-  @Post()
+  @Route(routes.wacrm)
   @HttpCode(200)
   async receive(@Req() req: RawRequest, @Headers('x-wacrm-signature') signature?: string): Promise<void> {
     const now = new Date();

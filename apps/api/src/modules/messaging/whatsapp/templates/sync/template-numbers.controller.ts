@@ -1,22 +1,21 @@
-import type { TemplateNumberSyncView } from '@ab/shared';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Permissions } from '@/common/auth/decorators';
+import { numberTemplatesRoutes as routes, type TemplateNumberSyncView } from '@ab/shared';
+import { Controller, HttpCode, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { TemplateManagerGuard } from '@/modules/messaging/whatsapp/templates/catalog/template-manager.guard';
 import { TemplateNumbers } from './template-numbers.service';
 
-/** docs/23c decision 9: needs templates.manage, never a sales, assistant or teacher based role. */
-@ApiTags('messaging')
 @ApiBearerAuth()
-@Permissions('templates.manage')
-@Controller('admin/numbers')
+@Controller()
 export class TemplateNumbersController {
   constructor(private readonly templates: TemplateNumbers) {}
 
-  @Post(':id/templates/sync')
+  @Route(routes.sync)
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
-  sync(@Param('id', new ParseUUIDPipe()) id: string): Promise<TemplateNumberSyncView> {
-    return this.templates.sync(id);
+  sync(
+    @RouteInput() { params }: RouteInputOf<typeof routes.sync>,
+  ): Promise<TemplateNumberSyncView> {
+    return this.templates.sync(params.id);
   }
 }

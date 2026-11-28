@@ -6,7 +6,7 @@ import {
 } from '@ab/client-core';
 import type { MessageView } from '@ab/shared';
 import { t, Button, useNow, ErrorLine } from '@ab/mobile-kit';
-import { useMessageAction } from '@/inbox/thread/hooks/use-thread';
+import { useMessageAction } from '@/inbox/thread/hooks/use-message-action';
 
 interface ButtonsProps {
   answers: readonly AppSendAnswer[];

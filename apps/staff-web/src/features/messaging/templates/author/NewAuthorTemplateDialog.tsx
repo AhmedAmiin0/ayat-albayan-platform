@@ -1,5 +1,4 @@
-import type { AuthorTemplate } from '@ab/client-core';
-import { templateAuthorSchema } from '@ab/shared';
+import { templateAuthorSchema, type TemplateView } from '@ab/shared';
 import { useId, useState, type SubmitEvent } from 'react';
 import { FormAlert, Dialog, t } from '@ab/web-kit';
 import { editErrorText } from '@/features/messaging/templates/edit/edit-api';
@@ -17,7 +16,7 @@ const S = t.templates.author;
 const WORDS_MODE = { bound: false, repliesOnly: true, line: 'chat' } as const;
 
 export interface NewAuthorTemplateDialogProps {
-  onCreated: (tpl: AuthorTemplate) => void;
+  onCreated: (tpl: TemplateView) => void;
   onClose: () => void;
 }
 

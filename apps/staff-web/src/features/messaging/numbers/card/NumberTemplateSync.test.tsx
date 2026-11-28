@@ -11,7 +11,15 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ pe
 // docs/23c decision 9: the result goes in a live region.
 
 const s = t.numbers.templateSync;
-const SYNC = { number_id: 'num-1', ok: true, checked_at: '2026-10-24T08:00:00Z', meta_count: 9, synced: 4, number_ids: ['num-1'] };
+const SYNCED_ID = '6f1c2a40-0b7e-4c2f-9d1a-3e5b7c9d1f20';
+const SYNC = {
+  number_id: SYNCED_ID,
+  ok: true,
+  checked_at: '2026-10-24T08:00:00Z',
+  meta_count: 9,
+  synced: 4,
+  number_ids: [SYNCED_ID],
+};
 
 async function clickSync() {
   renderPanel(apiFetch);
@@ -29,7 +37,7 @@ describe('a number’s template sync', () => {
   it('POSTs the per-number sync and announces what it found', async () => {
     apiSend.mockResolvedValue(SYNC);
     const card = await clickSync();
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin/numbers/num-1/templates/sync'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/admin/numbers/num-1/templates/sync', undefined));
     const status = card.getByRole('status');
     expect(status.getAttribute('aria-live')).toBe('polite');
     await waitFor(() => expect(status.textContent).toBe(s.done.replace('{{meta}}', '9').replace('{{synced}}', '4')));

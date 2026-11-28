@@ -1,4 +1,4 @@
-import type { CallView } from './call-types';
+import type { CallView } from './call-views.schemas';
 
 // A call as a chat and log entry (docs/28 §5); clients map the kind to strings and glyphs.
 

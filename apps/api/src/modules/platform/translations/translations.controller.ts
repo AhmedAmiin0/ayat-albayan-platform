@@ -1,28 +1,16 @@
-import type { Locale } from '@ab/core';
 import {
-  translationKeysQuerySchema,
-  translationLocaleSchema,
-  translationValueSchema,
+  translationKeysPageSchema,
+  translationOverridesSchema,
+  translationRoutes as routes,
   type TranslationKeysPage,
   type TranslationOverrides,
 } from '@ab/i18n';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Headers,
-  HttpCode,
-  Param,
-  Put,
-  Query,
-  Res,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions, Public } from '@/common/auth/decorators';
+import { Controller, Headers, HttpCode, Res } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
-import { ZodParam } from '@/common/http/zod-inputs';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { TranslationsService } from './translations.service';
 
 /** The bit of the Fastify reply used here (no direct `fastify` dependency). */
@@ -36,57 +24,46 @@ interface CacheReply {
  * needs it before sign-in), cached 60 s and revalidated by ETag; the editor routes are admin only.
  * Writes are recorded by the global ActivityInterceptor ('/i18n/:locale/:key').
  */
-@ApiTags('i18n')
-@Controller('i18n')
+@Controller()
 export class TranslationsController {
   constructor(private readonly translations: TranslationsService) {}
 
-  @Public()
-  @Get(':locale/overrides')
+  @Route(routes.overrides)
   overrides(
-    @ZodParam('locale', translationLocaleSchema) locale: Locale,
+    @RouteInput() { params }: RouteInputOf<typeof routes.overrides>,
     @Headers('if-none-match') ifNoneMatch: string | undefined,
     @Res({ passthrough: true }) reply: CacheReply,
   ): TranslationOverrides | undefined {
-    const snap = this.translations.overrides(locale);
+    const snap = this.translations.overrides(params.locale);
     reply.header('Cache-Control', 'public, max-age=60');
     reply.header('ETag', snap.etag);
     if (ifNoneMatch === snap.etag) {
       reply.status(304);
       return undefined;
     }
-    return snap.values;
+    return asResponse(translationOverridesSchema, snap.values);
   }
 
   @ApiBearerAuth()
-  @Permissions('translations.manage')
-  @Get('keys')
-  keys(@Query() query: unknown): TranslationKeysPage {
-    return this.translations.keys(parseOrThrow(translationKeysQuerySchema, query));
+  @Route(routes.keys)
+  keys(@RouteInput() { query }: RouteInputOf<typeof routes.keys>): TranslationKeysPage {
+    return asResponse(translationKeysPageSchema, this.translations.keys(query));
   }
 
   @ApiBearerAuth()
-  @Permissions('translations.manage')
-  @Put(':locale/:key')
+  @Route(routes.save)
   @HttpCode(204)
   async save(
-    @Param() params: Record<string, string>,
-    @Body() body: unknown,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.save>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    const locale = parseOrThrow(translationLocaleSchema, params['locale']);
-    const { value } = parseOrThrow(translationValueSchema, body);
-    await this.translations.save({ locale, key: params['key'] ?? '', value, actorId: user.id });
+    await this.translations.save({ ...params, value: body.value, actorId: user.id });
   }
 
   @ApiBearerAuth()
-  @Permissions('translations.manage')
-  @Delete(':locale/:key')
+  @Route(routes.restore)
   @HttpCode(204)
-  async restore(
-    @ZodParam('locale', translationLocaleSchema) locale: Locale,
-    @Param('key') key: string,
-  ): Promise<void> {
-    await this.translations.restore(locale, key);
+  async restore(@RouteInput() { params }: RouteInputOf<typeof routes.restore>): Promise<void> {
+    await this.translations.restore(params.locale, params.key);
   }
 }

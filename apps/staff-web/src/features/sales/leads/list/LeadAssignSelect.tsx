@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Select, t } from '@ab/web-kit';
 import { assignLead, salesPeopleQuery } from '@/features/sales/sales/api';
-import type { LeadView } from '@ab/shared';
+import type { LeadListItem } from '@ab/shared';
 import { leadKeys, salesKeys } from '@/features/sales/keys';
 
-export function LeadAssignSelect({ lead }: { lead: LeadView }) {
+export function LeadAssignSelect({ lead }: { lead: LeadListItem }) {
   const queryClient = useQueryClient();
   const people = useQuery(salesPeopleQuery);
   const options = Array.isArray(people.data) ? people.data : [];

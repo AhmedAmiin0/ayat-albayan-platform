@@ -4,7 +4,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { overview } from '@/features/teaching/schedule/overview-fixture';
 import { WeekSchedule } from '@/features/teaching/schedule/grid/WeekSchedule/WeekSchedule';
 
@@ -25,7 +25,7 @@ const PROPOSED = lesson({
 
 function renderWeek(week: LessonView[]) {
   apiFetch.mockImplementation((path: string) =>
-    Promise.resolve(path.startsWith('/lessons/overview') ? overview(week) : path.startsWith('/lesson-proposals') ? [PROPOSED] : []),
+    Promise.resolve(path.startsWith('/lessons/overview') ? overview(week) : path.startsWith('/lesson-proposals') ? [answered(PROPOSED)] : []),
   );
   render(
     <QueryClientProvider

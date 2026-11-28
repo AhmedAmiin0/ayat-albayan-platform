@@ -44,6 +44,11 @@ const text = {
 };
 const req = (body: unknown, token: string | null = TOKEN) =>
   ({ body, headers: token === null ? {} : { 'x-evolution-token': token } });
+const AT = {
+  params: { instance: 'secondary-1' },
+  query: undefined,
+  body: undefined,
+};
 const status = (e: unknown) => (e as { getStatus(): number }).getStatus();
 
 afterEach(() => setNumbersOverlay(null));
@@ -52,7 +57,7 @@ describe('EvolutionWebhookController', () => {
   it('the right token: a family message goes into the inbound path, stamped with the number', async () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [NUMBER] });
     const h = harness();
-    await h.controller.receive('secondary-1', req(text));
+    await h.controller.receive(AT, req(text));
     const event = expect.objectContaining({ waMessageId: 'EVO-IN-1', numberId: 'num-evo', line: 'chat' });
     expect(h.handle).toHaveBeenCalledWith(event, expect.anything());
   });
@@ -60,8 +65,8 @@ describe('EvolutionWebhookController', () => {
   it('a replayed delivery stores the message once', async () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [NUMBER] });
     const h = harness();
-    await h.controller.receive('secondary-1', req(text));
-    await h.controller.receive('secondary-1', req(text));
+    await h.controller.receive(AT, req(text));
+    await h.controller.receive(AT, req(text));
     expect([...h.stored]).toEqual(['EVO-IN-1']);
     expect(await h.handle.mock.results[1]?.value).toBe(false);
   });
@@ -69,25 +74,26 @@ describe('EvolutionWebhookController', () => {
   it('a wrong or missing token is 401 and nothing is read', async () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [NUMBER] });
     const h = harness();
-    expect(status(await h.controller.receive('secondary-1', req(text, 'nope')).catch((e: unknown) => e))).toBe(401);
-    expect(status(await h.controller.receive('secondary-1', req(text, null)).catch((e: unknown) => e))).toBe(401);
+    expect(status(await h.controller.receive(AT, req(text, 'nope')).catch((e: unknown) => e))).toBe(401);
+    const noToken = await h.controller.receive(AT, req(text, null)).catch((e: unknown) => e);
+    expect(status(noToken)).toBe(401);
     expect(h.handle).not.toHaveBeenCalled();
   });
 
   it('an unknown instance (or legacy mode, or a number without a token) is 404', async () => {
     const h = harness();
-    expect(status(await h.controller.receive('secondary-1', req(text)).catch((e: unknown) => e))).toBe(404);
+    expect(status(await h.controller.receive(AT, req(text)).catch((e: unknown) => e))).toBe(404);
     const tokenless = { ...NUMBER, evolutionToken: undefined };
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [tokenless] });
-    expect(status(await h.controller.receive('secondary-1', req(text)).catch((e: unknown) => e))).toBe(404);
+    expect(status(await h.controller.receive(AT, req(text)).catch((e: unknown) => e))).toBe(404);
     expect(h.handle).not.toHaveBeenCalled();
   });
 
   it('ticks go to the status path; a connection update is the number\'s state', async () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [NUMBER] });
     const h = harness();
-    await h.controller.receive('secondary-1', req({ event: 'messages.update', data: { keyId: 'EVO-OUT-1', fromMe: true, status: 'READ' } }));
-    await h.controller.receive('secondary-1', req({ event: 'connection.update', data: { state: 'close' } }));
+    await h.controller.receive(AT, req({ event: 'messages.update', data: { keyId: 'EVO-OUT-1', fromMe: true, status: 'READ' } }));
+    await h.controller.receive(AT, req({ event: 'connection.update', data: { state: 'close' } }));
     expect(h.statuses.handle).toHaveBeenCalledWith(expect.objectContaining({ waMessageId: 'EVO-OUT-1', status: 'read' }));
     expect(h.states.set).toHaveBeenCalledWith(expect.objectContaining({ numberId: 'num-evo', state: 'close' }));
   });
@@ -96,22 +102,22 @@ describe('EvolutionWebhookController', () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [NUMBER] });
     const h = harness();
     h.handle.mockRejectedValueOnce(new Error('db down'));
-    expect(status(await h.controller.receive('secondary-1', req(text)).catch((e: unknown) => e))).toBe(500);
+    expect(status(await h.controller.receive(AT, req(text)).catch((e: unknown) => e))).toBe(500);
   });
 
   it('a flood without the token never starves the real instance (security review)', async () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [NUMBER] });
     const h = harness();
-    const flood = Array.from({ length: 1_300 }, () => h.controller.receive('secondary-1', req(text, 'nope')));
+    const flood = Array.from({ length: 1_300 }, () => h.controller.receive(AT, req(text, 'nope')));
     const codes = await Promise.all(flood.map((p) => p.catch((e: unknown) => status(e))));
     expect(codes).toContain(429);
-    await h.controller.receive('secondary-1', req(text));
+    await h.controller.receive(AT, req(text));
     expect(h.handle).toHaveBeenCalledTimes(1);
   });
 
   it('503 (Evolution re-sends) while module mode has no number loaded yet', async () => {
     setNumbersOverlay({ values: {}, numberIds: {}, numbers: [] });
     const h = harness();
-    expect(status(await h.controller.receive('secondary-1', req(text)).catch((e: unknown) => e))).toBe(503);
+    expect(status(await h.controller.receive(AT, req(text)).catch((e: unknown) => e))).toBe(503);
   });
 });

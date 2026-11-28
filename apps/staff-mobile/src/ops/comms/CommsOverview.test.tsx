@@ -91,10 +91,12 @@ test('open under the allow-list: the chip says so, never a plain «يعمل»', 
   expect(screen.queryByText(t.templates.settings.on)).toBeNull();
 });
 
-test('no public number set: «غير محدد»', async () => {
+test('a public number outside the shared schema: the read fails, no number is shown', async () => {
   mockApiFetch.mockImplementation(async (p: string) => (p === '/settings' ? { ...(await overviewAnswer(p) as object), academy_whatsapp_e164: '' } : overviewAnswer(p)));
   await show();
-  expect(await screen.findByText(h.publicNumberNone)).toBeTruthy();
+  expect((await screen.findAllByText(t.common.error)).length).toBeGreaterThan(0);
+  expect(screen.queryByText(h.publicNumber)).toBeNull();
+  expect(screen.queryByText(h.publicNumberNone)).toBeNull();
 });
 
 test('the catalogue and numbers down: each says so with a retry; the send state still shows', async () => {

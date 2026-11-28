@@ -66,6 +66,16 @@ describe('PUT …/reaction', () => {
     expect((await t.call({ ...put('admin'), url: `/threads/${encodeURIComponent(PHONE)}/messages/not-a-uuid/reaction` })).statusCode).toBe(400);
   });
 
+  it('400 invalid_phone for a bad phone; a bad body still wins; nothing written', async () => {
+    const url = `/threads/abc/messages/${TARGET_ID}/reaction`;
+    const res = await t.call({ ...put('admin'), url });
+    expect(res.statusCode).toBe(400);
+    expect(res.json()).toMatchObject({ code: 'invalid_phone' });
+    const both = await t.call({ ...put('admin', { emoji: 'ok', clientRequestId: REQ }), url });
+    expect(both.json()).toMatchObject({ code: 'validation_failed' });
+    expect(t.queries.enqueue).not.toHaveBeenCalled();
+  });
+
   it('GET /threads/:phone carries thread.reactable (open window, not the CRM line)', async () => {
     t.queries.messages.mockResolvedValue([]);
     t.queries.markInboundRead.mockResolvedValue([]);

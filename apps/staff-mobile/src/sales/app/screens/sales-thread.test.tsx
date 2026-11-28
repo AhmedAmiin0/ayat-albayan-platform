@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { detail, inbound, NOW, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, NOW, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { t, pathKey } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
@@ -20,7 +20,13 @@ jest.mock('expo-router', () => ({
 }));
 
 const SALES_ME = { role: 'sales', permissions: ['inbox.read', 'inbox.send', 'messages.read', 'self.sales', 'self.sales_academy'] };
-const family = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null, lead_source: null };
+const family = {
+  ...thread,
+  guardian_id: uid('gd1'),
+  lead_id: null,
+  lead_status: null,
+  lead_source: null,
+};
 
 async function open(th: typeof thread) {
   const body = detail([inbound], { thread: th });

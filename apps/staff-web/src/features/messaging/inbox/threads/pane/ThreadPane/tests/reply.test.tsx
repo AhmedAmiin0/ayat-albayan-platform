@@ -5,6 +5,7 @@ import { ApiError, t } from '@ab/web-kit';
 import { detail, lead, message, PHONE, template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane';
+import { sentText, uid } from '@/features/messaging/inbox/testing/sent-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -17,7 +18,7 @@ const THEIRS = message({ id: ID, body: 'متى الحلقة؟\nسطر ثانٍ',
 
 function renderThread(open = true) {
   routeFetch(apiFetch, [
-    [PATH, detail([THEIRS], { session_open: open, guardian_id: 'g-1' })],
+    [PATH, detail([THEIRS], { session_open: open, guardian_id: uid('g-1') })],
     ['/messaging/templates', [template()]],
     ['/messages/gate', { open: true, reason: null, queued: 0 }],
     ['/settings', SETTINGS],
@@ -62,7 +63,7 @@ describe('«رد» in the chat (owner 2026-10-25)', () => {
   it('the send answers the message (replyToMessageId); a sent answer clears the strip', async () => {
     renderThread();
     await pickReply();
-    apiSend.mockResolvedValue(message({ id: 'm-out', direction: 'outbound', status: 'queued', body: 'الساعة الخامسة' }));
+    apiSend.mockResolvedValue(sentText({ id: uid('m-out'), status: 'queued', body: 'الساعة الخامسة' }));
     fireEvent.change(box(), { target: { value: 'الساعة الخامسة' } });
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.send }));
     await waitFor(() => expect(strip()).toBeNull());

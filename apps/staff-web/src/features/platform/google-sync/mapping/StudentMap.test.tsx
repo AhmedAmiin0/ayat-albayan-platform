@@ -2,7 +2,13 @@ import { driveFolderLink } from '@ab/catalog';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { FAKE_FOLDER, FAKE_SHEET, googleStudents } from '@/features/platform/google-sync/google.fixture';
+import {
+  FAKE_FOLDER,
+  FAKE_SHEET,
+  googleStudents,
+  STUDENT_ONE,
+  STUDENT_TWO,
+} from '@/features/platform/google-sync/google.fixture';
 import { renderGoogle } from '@/features/platform/google-sync/google-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -26,7 +32,7 @@ describe('student ↔ folder mapping', () => {
     apiSend.mockResolvedValue(googleStudents()[0]);
     fireEvent.click(within(row).getByRole('button', { name: t.googleSync.common.confirm }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('PUT', '/admin/google/students/student-1', { folder_id: FAKE_FOLDER, attendance_sheet_id: FAKE_SHEET }),
+      expect(apiSend).toHaveBeenCalledWith('PUT', `/admin/google/students/${STUDENT_ONE}`, { folder_id: FAKE_FOLDER, attendance_sheet_id: FAKE_SHEET }),
     );
   });
 
@@ -36,7 +42,7 @@ describe('student ↔ folder mapping', () => {
     apiSend.mockResolvedValue(googleStudents()[0]);
     fireEvent.click(within(row).getByRole('button', { name: s.createNew }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('PUT', '/admin/google/students/student-1', { folder_id: null, attendance_sheet_id: null }),
+      expect(apiSend).toHaveBeenCalledWith('PUT', `/admin/google/students/${STUDENT_ONE}`, { folder_id: null, attendance_sheet_id: null }),
     );
   });
 
@@ -54,7 +60,7 @@ describe('student ↔ folder mapping', () => {
     apiSend.mockResolvedValue(googleStudents()[0]);
     fireEvent.click(within(row).getByRole('button', { name: s.useLink }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('PUT', '/admin/google/students/student-1', { folder_id: FAKE_FOLDER, attendance_sheet_id: null }),
+      expect(apiSend).toHaveBeenCalledWith('PUT', `/admin/google/students/${STUDENT_ONE}`, { folder_id: FAKE_FOLDER, attendance_sheet_id: null }),
     );
   });
 
@@ -64,7 +70,8 @@ describe('student ↔ folder mapping', () => {
     expect(within(row).getByText(s.existing)).toBeTruthy();
     apiSend.mockResolvedValue({ ...googleStudents()[1], confirmed_at: null });
     fireEvent.click(within(row).getByRole('button', { name: s.unmap }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/admin/google/students/student-2'));
+    const path = `/admin/google/students/${STUDENT_TWO}`;
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', path, undefined));
   });
 
   it('the search asks the server with the typed text (debounced)', async () => {
@@ -72,7 +79,7 @@ describe('student ↔ folder mapping', () => {
     await rowOf('Student One');
     fireEvent.change(screen.getByRole('searchbox', { name: s.search }), { target: { value: 'AB-0002' } });
     await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/admin/google/students?q=AB-0002'));
-    expect(apiFetch).toHaveBeenCalledWith('/admin/google/students?q=');
+    expect(apiFetch).toHaveBeenCalledWith('/admin/google/students');
   });
 
   it('empty search result', async () => {

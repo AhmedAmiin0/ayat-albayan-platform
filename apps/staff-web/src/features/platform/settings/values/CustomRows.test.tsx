@@ -50,7 +50,8 @@ describe('«قيم مخصصة» rows in «القيم»', () => {
     expect(document.activeElement?.textContent).toBe(t.common.cancel);
     apiSend.mockResolvedValue(undefined);
     fireEvent.click(within(dialog).getByRole('button', { name: c.deleteYes }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/config/custom/promo.banner'));
+    const removed = '/config/custom/promo.banner';
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', removed, undefined));
   });
 
   it('an edit that makes a private value public asks first; yes saves it', async () => {

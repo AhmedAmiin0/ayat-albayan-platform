@@ -14,9 +14,9 @@ test('an open session keeps what the join button needs', () => {
   expect(joinableOf(base)).toEqual({ id: 'l1', status: 'confirmed', starts_at: base.starts_at, ends_at: base.ends_at });
 });
 
-test('a cancelled session or an unknown status has no entry', () => {
+test('a cancelled or finished session has no entry', () => {
   expect(joinableOf({ ...base, status: 'cancelled_by_admin' })).toBeNull();
-  expect(joinableOf({ ...base, status: 'from_the_future' })).toBeNull();
+  expect(joinableOf({ ...base, status: 'completed' })).toBeNull();
 });
 
 test('joinableRows keeps the open sessions in order, each with its entry data', () => {

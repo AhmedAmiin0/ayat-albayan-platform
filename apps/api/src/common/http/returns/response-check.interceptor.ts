@@ -13,6 +13,12 @@ import { returnsOf } from './returns';
 const log = new Logger('ResponseCheck');
 const switchSchema = z.object({ API_CHECK_RESPONSES: z.literal('1').optional().catch(undefined) });
 
+const replySchema = z.object({ statusCode: z.number() });
+
+/** A 304 sends no body by HTTP's rule, so there is no answer to check. */
+const notModified = (ctx: ExecutionContext): boolean =>
+  replySchema.safeParse(ctx.switchToHttp().getResponse()).data?.statusCode === 304;
+
 /** The body as the client reads it: JSON text read back (dates as text, undefined keys gone). */
 const wireOf = async (body: unknown): Promise<unknown> =>
   z.unknown().parse(await new Response(JSON.stringify(body ?? null)).json());
@@ -42,7 +48,7 @@ export class ResponseCheckInterceptor implements NestInterceptor {
   }
 
   private async checked(schema: z.ZodType, body: unknown, ctx: ExecutionContext): Promise<unknown> {
-    if (await fits(schema, body)) return body;
+    if (notModified(ctx) || (await fits(schema, body))) return body;
     log.error(`response_contract on ${ctx.getClass().name}.${ctx.getHandler().name}`);
     throw new InternalServerErrorException({
       code: 'response_contract',

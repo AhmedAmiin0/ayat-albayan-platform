@@ -12,13 +12,13 @@ describe('upcomingLessons (template composer, rule 6; the reply note’s actions
   it('a guardian: open lessons of their children only, named, in the guardian’s tz, with status and end', async () => {
     const students = [{ student: { name: 'سهيلة' } }, { student: null }];
     const { db, log } = chainDb({ lessons: [{ data: [{ ...row, lesson_students: students }] }] });
-    const thread = view({ guardian_id: 'g1', guardian_tz: 'Europe/London', teacher_id: null });
+    const thread = view({ guardian_id: 'c0000000-0000-4000-8000-000000000001', guardian_tz: 'Europe/London', teacher_id: null });
     expect(await upcomingLessons(db, { thread, now: NOW })).toEqual([
       { id: 'l1', starts_at: row.starts_at, meeting_link: null, student_names: ['سهيلة'], tz: 'Europe/London', status: 'scheduled', ends_at: row.ends_at },
     ]);
     expect(callsOf(log, 'lessons')).toEqual(
       expect.arrayContaining([
-        ['eq', ['lesson_students.student.guardian_id', 'g1']],
+        ['eq', ['lesson_students.student.guardian_id', 'c0000000-0000-4000-8000-000000000001']],
         ['in', ['status', ['scheduled', 'confirmed']]],
         ['gt', ['starts_at', NOW.toISOString()]],
       ]),
@@ -27,18 +27,18 @@ describe('upcomingLessons (template composer, rule 6; the reply note’s actions
 
   it('a teacher: their lessons in their own tz', async () => {
     const { db, log } = chainDb({ lessons: [{ data: [{ ...row, lesson_students: [{ student: { name: 'ياسين' } }] }] }] });
-    const thread = view({ guardian_id: null, teacher_id: 't1' });
+    const thread = view({ guardian_id: null, teacher_id: 'd0000000-0000-4000-8000-000000000001' });
     expect(await upcomingLessons(db, { thread, now: NOW })).toMatchObject([{ student_names: ['ياسين'], tz: 'Africa/Cairo' }]);
-    expect(callsOf(log, 'lessons')).toContainEqual(['eq', ['teacher_id', 't1']]);
+    expect(callsOf(log, 'lessons')).toContainEqual(['eq', ['teacher_id', 'd0000000-0000-4000-8000-000000000001']]);
   });
 
   it('teacher mode: a guardian thread lists only the signed-in teacher’s lessons', async () => {
     const { db, log } = chainDb({ lessons: [{ data: [] }] });
-    const thread = view({ guardian_id: 'g1', teacher_id: null });
+    const thread = view({ guardian_id: 'c0000000-0000-4000-8000-000000000001', teacher_id: null });
     await upcomingLessons(db, { thread, now: NOW, teacherId: 't-me' });
     expect(callsOf(log, 'lessons')).toEqual(
       expect.arrayContaining([
-        ['eq', ['lesson_students.student.guardian_id', 'g1']],
+        ['eq', ['lesson_students.student.guardian_id', 'c0000000-0000-4000-8000-000000000001']],
         ['eq', ['teacher_id', 't-me']],
       ]),
     );

@@ -1,43 +1,14 @@
-import { lessonEndResultSchema, type LessonEndResult, type MuteSource } from '@ab/schedule';
-import type { ApiClient } from '../../core/http';
+import { roomModerationRoutes as routes } from '@ab/schedule';
+import { callWith, type ApiClient } from '../../core/http';
+import type { LessonRoomSends } from './lesson-room.types';
 
-// Room host controls for web and both apps; the API decides who may act.
-
-const enc = encodeURIComponent;
-const lessonPath = (lessonId: string) => `/lessons/${enc(lessonId)}`;
-const participantPath = (lessonId: string, identity: string) =>
-  `${lessonPath(lessonId)}/room/participants/${enc(identity)}`;
-
-/** POST: the teacher of the lesson or an admin ends it for everyone (idempotent): { endedAt }. */
-export const lessonEndPath = (lessonId: string): string => `${lessonPath(lessonId)}/end`;
-/** POST { source }: 204; 403 cannot_mute, 404 participant_not_found. */
-export const lessonMutePath = (lessonId: string, identity: string): string =>
-  `${participantPath(lessonId, identity)}/mute`;
-/** POST: 204; the person (every link and window of theirs) is kept out of this lesson's room. */
-export const lessonRemovePath = (lessonId: string, identity: string): string =>
-  `${participantPath(lessonId, identity)}/remove`;
-
-export interface RoomTargetInput {
-  lessonId: string;
-  identity: string;
-}
-
-export interface LessonRoomSends {
-  end: (lessonId: string) => Promise<LessonEndResult>;
-  mute: (input: RoomTargetInput & { source: MuteSource }) => Promise<void>;
-  /** Rejects with the first refusal. */
-  muteAll: (input: { lessonId: string; identities: readonly string[] }) => Promise<void>;
-  remove: (input: RoomTargetInput) => Promise<void>;
-}
-
+/** Room host controls for web and both apps; the API decides who may act. */
 export function lessonRoomSends(client: ApiClient): LessonRoomSends {
+  const call = callWith(client);
   const mute: LessonRoomSends['mute'] = ({ lessonId, identity, source }) =>
-    client.apiSend('POST', lessonMutePath(lessonId, identity), { source });
-  const ended = async (lessonId: string): Promise<unknown> =>
-    client.apiSend('POST', lessonEndPath(lessonId));
+    call({ route: routes.muteInLesson, params: { id: lessonId, identity }, body: { source } });
   return {
-    end: async (lessonId) =>
-      lessonEndResultSchema.parse(await ended(lessonId)),
+    end: (lessonId) => call({ route: routes.endLesson, params: { id: lessonId } }),
     mute,
     muteAll: async ({ lessonId, identities }) => {
       const calls = identities.map((identity) =>
@@ -47,6 +18,8 @@ export function lessonRoomSends(client: ApiClient): LessonRoomSends {
       if (failed) throw failed.reason;
     },
     remove: ({ lessonId, identity }) =>
-      client.apiSend('POST', lessonRemovePath(lessonId, identity)),
+      call({ route: routes.removeFromLesson, params: { id: lessonId, identity } }),
+    share: ({ lessonId, identity, allow }) =>
+      call({ route: routes.shareInLesson, params: { id: lessonId, identity }, body: { allow } }),
   };
 }

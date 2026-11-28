@@ -32,9 +32,8 @@ test('the header counts the report PDF with the files; the PDF opens from a fres
 test('a picture opens from its own link', async () => {
   await show();
   await fireEvent.press(screen.getByText('صفحة الواجب'));
-  await waitFor(() =>
-    expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lesson-files/f1/url'),
-  );
+  const link = '/portal/students/s1/lesson-files/f1/url';
+  await waitFor(() => expect(mockSend).toHaveBeenCalledWith('POST', link, undefined));
 });
 
 test('a file that fails to open: the error line', async () => {

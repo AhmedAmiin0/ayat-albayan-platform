@@ -20,3 +20,22 @@ export type {
   MaintenanceView,
   MaintenanceViewer,
 } from './maintenance';
+export { settingsMetaCalls, type SettingsMetaCalls } from './meta';
+export { settingsCalls, type SettingsCalls } from './academy';
+export {
+  integrationCalls,
+  type IntegrationCalls,
+  type IntegrationSecretSave,
+} from './integrations';
+export {
+  customConfigCalls,
+  type CustomConfigCalls,
+  type CustomConfigSave,
+} from './custom-config';
+export {
+  configEntryCalls,
+  type ConfigDescriptionSave,
+  type ConfigEntryCalls,
+  type ConfigEntryPatch,
+} from './config-entries';
+export { publicConfigCalls, type PublicConfigCalls } from './public-config';

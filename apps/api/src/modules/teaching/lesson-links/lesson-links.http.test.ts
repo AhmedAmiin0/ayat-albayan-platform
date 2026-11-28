@@ -66,6 +66,12 @@ describe('GET /join/:token and GET /report-link/legacy/* (public)', () => {
     ]);
   });
 
+  it('/join: a token over 100 characters matches no route, so no limit is counted', async () => {
+    limit.check.mockClear();
+    const res = await app.inject({ method: 'GET', url: `/join/${'x'.repeat(101)}` });
+    expect([res.statusCode, limit.check.mock.calls.length]).toEqual([404, 0]);
+  });
+
   it('429 when the limit is full', async () => {
     const { HttpException } = await import('@nestjs/common');
     limit.check.mockRejectedValueOnce(new HttpException({ code: 'too_many_requests' }, 429));

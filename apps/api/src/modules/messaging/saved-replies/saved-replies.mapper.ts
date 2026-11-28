@@ -1,4 +1,11 @@
-import { CHAT_SEND_MIMES, type ChatSendMime, type SavedReply, type SavedReplyAttachment } from '@ab/shared';
+import {
+  CHAT_SEND_MIMES,
+  savedReplySchema,
+  type ChatSendMime,
+  type SavedReply,
+  type SavedReplyAttachment,
+} from '@ab/shared';
+import { asResponse } from '@/common/http/returns';
 
 /** One saved_replies row as the API reads it (migration 20261025000670). */
 export interface SavedReplyRow {
@@ -28,7 +35,7 @@ function attachmentOf(row: SavedReplyRow): SavedReplyAttachment | null {
 
 /** The storage path stays in the API: clients see the file's name, type and size only. */
 export function toSavedReply(row: SavedReplyRow): SavedReply {
-  return {
+  return asResponse(savedReplySchema, {
     id: row.id,
     scope: row.owner_profile_id === null ? 'shared' : 'mine',
     title: row.title,
@@ -36,7 +43,7 @@ export function toSavedReply(row: SavedReplyRow): SavedReply {
     attachment: attachmentOf(row),
     position: row.position,
     updated_at: row.updated_at,
-  };
+  });
 }
 
 /** By position, then title (Arabic collation), then id: the order of both lists. */

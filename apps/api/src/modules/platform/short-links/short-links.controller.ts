@@ -1,16 +1,9 @@
-import { Controller, Get, Ip, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Public } from '@/common/auth/decorators';
+import { Controller, Ip, Res } from '@nestjs/common';
 import { ar } from '@/common/infra/i18n/server-text';
-import { ZodParam } from '@/common/http/zod-inputs';
-import { z } from 'zod';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { shortLinkRedirectRoutes as routes } from './short-links.routes';
 import { ShortLinksLimit } from './short-links.limit';
 import { ShortLinks } from './short-links.service';
-
-/**
- * Any text: a code that cannot be ours is the same 404 page (ShortLinks.resolve checks its shape).
- */
-const codeParam = z.string();
 
 /**
  * What the controller needs of Fastify's reply (passthrough: Nest still sends the returned body).
@@ -31,18 +24,16 @@ const noStore = (res: Reply): void => {
  * writes (allow-listed: https on our origins or Google Meet). Unknown or expired → 404 with a short
  * Arabic text. Rate-limited per IP and code.
  */
-@ApiTags('short-links')
-@Public()
-@Controller('r')
+@Controller()
 export class ShortLinksController {
   constructor(
     private readonly links: ShortLinks,
     private readonly limit: ShortLinksLimit,
   ) {}
 
-  @Get(':code')
+  @Route(routes.go)
   async go(
-    @ZodParam('code', codeParam) code: string,
+    @RouteInput() { params: { code } }: RouteInputOf<typeof routes.go>,
     @Ip() ip: string,
     @Res({ passthrough: true }) res: Reply,
   ): Promise<string> {

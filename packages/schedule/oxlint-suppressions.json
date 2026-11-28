@@ -14,7 +14,7 @@
   },
   "src/classroom/meeting-invites.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/classroom/meeting-mode.ts": {
@@ -37,17 +37,12 @@
   },
   "src/classroom/room.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
-  "src/classroom/schemas.ts": {
+  "src/classroom/student-recordings/student-recordings.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/classroom/student-recordings.ts": {
-    "stylistic/max-len": {
-      "count": 2
     },
     "typescript/no-deprecated": {
       "count": 1
@@ -117,16 +112,6 @@
       "count": 1
     }
   },
-  "src/lessons/makeup-views.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/lessons/overview.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/lessons/series/time-edit.ts": {
     "ab/no-shape-checks": {
       "count": 1
@@ -139,14 +124,6 @@
   },
   "src/lessons/teacher-name.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/lessons/views.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
       "count": 1
     }
   },

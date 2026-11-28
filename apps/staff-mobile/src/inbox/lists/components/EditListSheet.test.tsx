@@ -38,10 +38,16 @@ test('a list chip names its edit action and hint for screen readers; the action 
   await renderWithQuery(<ThreadsList />);
   const chip = await screen.findByRole('tab', { name: TRIAL.name });
   expect(chip.props.accessibilityHint).toBe(t.inbox.lists.editHint);
-  expect(chip.props.accessibilityActions).toEqual([{ name: 'longpress', label: t.inbox.lists.edit }]);
-  expect(chips().getByRole('tab', { name: t.inbox.filterAll }).props.accessibilityActions).toBeUndefined();
+  expect(chip.props.accessibilityActions).toEqual([
+    { name: 'longpress', label: t.inbox.lists.edit },
+  ]);
+  expect(
+    chips().getByRole('tab', { name: t.inbox.filterAll }).props.accessibilityActions,
+  ).toBeUndefined();
   await fireEvent(chip, 'accessibilityAction', { nativeEvent: { actionName: 'longpress' } });
-  expect(await screen.findByText(t.inbox.lists.editNamed.replace('{name}', TRIAL.name))).toBeTruthy();
+  expect(
+    await screen.findByText(t.inbox.lists.editNamed.replace('{name}', TRIAL.name)),
+  ).toBeTruthy();
 });
 
 test('long-press → rename: PATCH with the trimmed name, the chip shows it; a taken name inline', async () => {
@@ -72,7 +78,7 @@ test('delete asks first (the chats stay); «إلغاء» keeps it, yes deletes a
   mockApiSend.mockResolvedValueOnce(undefined);
   mockLists = [TRIAL];
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.lists.deleteYes }));
-  expect(mockApiSend).toHaveBeenCalledWith('DELETE', `/chat-lists/${PAID.id}`);
+  expect(mockApiSend).toHaveBeenCalledWith('DELETE', `/chat-lists/${PAID.id}`, undefined);
   await waitFor(() => expect(screen.queryByRole('tab', { name: PAID.name })).toBeNull());
   expect(chips().getByRole('tab', { name: t.inbox.filterAll, selected: true })).toBeTruthy();
   expect(screen.queryByText(editTitle)).toBeNull();

@@ -4,3 +4,8 @@ export * from './chat-search';
 export * from './search-snippet';
 export * from './message-search';
 export * from './correction/correction';
+export * from './message-hide';
+export * from './thread-forward';
+export * from './inbox-search';
+export * from './message-status';
+export * from './thread-send';

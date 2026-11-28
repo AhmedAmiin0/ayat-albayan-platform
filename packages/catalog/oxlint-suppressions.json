@@ -19,16 +19,6 @@
       "count": 1
     }
   },
-  "src/google/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/google/views.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/integrations/checks.ts": {
     "complexity": {
       "count": 1
@@ -42,11 +32,6 @@
       "count": 2
     },
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/integrations/index.ts": {
-    "typescript/consistent-type-exports": {
       "count": 1
     }
   },

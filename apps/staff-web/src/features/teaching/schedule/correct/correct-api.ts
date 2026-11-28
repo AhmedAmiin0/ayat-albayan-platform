@@ -1,15 +1,18 @@
+import { salesLessonActionCalls } from '@ab/client-core';
 import type { LessonStatus } from '@ab/catalog';
 import type { CorrectTo } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@ab/web-kit';
-import { LESSONS_KEY } from '@/features/teaching/schedule/api';
+import { apiFetch, apiSend } from '@ab/web-kit';
+import { correctLesson, LESSONS_KEY } from '@/features/teaching/schedule/api';
 
 /** Whose route: the admin's (lessons.write) or sales' (lessons.cancel). */
 export type CorrectArea = 'admin' | 'sales';
 
-const PATH: Record<CorrectArea, (id: string) => string> = {
-  admin: (id) => `/lessons/${id}/correct`,
-  sales: (id) => `/sales/lessons/${id}/correct`,
+const salesLessons = salesLessonActionCalls({ apiFetch, apiSend });
+
+const SEND: Record<CorrectArea, (id: string, to: CorrectTo) => Promise<unknown>> = {
+  admin: correctLesson,
+  sales: (lessonId, to) => salesLessons.correct({ lessonId, body: { to } }),
 };
 const REFETCH: Record<CorrectArea, readonly string[]> = {
   admin: LESSONS_KEY,
@@ -20,7 +23,7 @@ const REFETCH: Record<CorrectArea, readonly string[]> = {
 export function useCorrectLesson(lessonId: string, area: CorrectArea) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (to: CorrectTo) => apiSend('POST', PATH[area](lessonId), { to }),
+    mutationFn: (to: CorrectTo) => SEND[area](lessonId, to),
     onSettled: () => client.invalidateQueries({ queryKey: REFETCH[area] }),
   });
 }

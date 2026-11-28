@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { detail, inbound, meetReminder, NOW, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, meetReminder, NOW, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
@@ -19,7 +19,7 @@ jest.mock('expo-router', () => ({
 }));
 
 const rating: TemplateView = { ...meetReminder, key: 'lesson_rating', status: 'approved' };
-const guardianThread = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null };
+const guardianThread = { ...thread, guardian_id: uid('g1'), lead_id: null, lead_status: null };
 const closedThread = { ...guardianThread, last_inbound_at: '2026-10-01T08:00:00Z', session_open: false };
 
 function backend(row: ThreadView = guardianThread) {

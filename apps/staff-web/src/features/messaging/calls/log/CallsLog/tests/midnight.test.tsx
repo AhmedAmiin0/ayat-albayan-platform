@@ -5,6 +5,10 @@ import { t } from '@ab/web-kit';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { CallsLog } from '@/features/messaging/calls/log/CallsLog/CallsLog';
 
+const ID1 = 'c0000000-0000-4000-8000-000000000001';
+const ID2 = 'c0000000-0000-4000-8000-000000000002';
+const STAFF = 'a0000000-0000-4000-8000-000000000001';
+
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({
@@ -14,7 +18,7 @@ vi.mock('@tanstack/react-router', async () => ({
 const AT = new Date(2026, 9, 19, 23, 0).toISOString();
 const call = (id: string): CallView => ({
   id, phone_e164: '+966501234567', direction: 'outbound', status: 'ended', end_reason: 'completed',
-  display_name: 'أم سهيلة', staff_id: 'u1', started_at: AT, answered_at: null, ended_at: null, duration_seconds: 60,
+  display_name: 'أم سهيلة', staff_id: STAFF, started_at: AT, answered_at: null, ended_at: null, duration_seconds: 60,
 });
 
 // useNow's minute timers (the list query polls on its own interval too).
@@ -32,7 +36,7 @@ afterEach(() => {
 describe('«المكالمات» at midnight (compiled)', () => {
   it('one clock for the log: today\'s «11:00 م» turns into the date without a remount', async () => {
     const timers = vi.spyOn(globalThis, 'setInterval');
-    routeFetch(apiFetch, [['/calls?limit=100', [call('c1'), call('c2')]]]);
+    routeFetch(apiFetch, [['/calls?limit=100', [call(ID1), call(ID2)]]]);
     renderWithClient(<CallsLog />);
     const list = await screen.findByRole('list', { name: t.calls.log.title });
     const firstLine = () => [...list.querySelectorAll('li')].map((li) => li.querySelector('.tabular-nums span')?.textContent);

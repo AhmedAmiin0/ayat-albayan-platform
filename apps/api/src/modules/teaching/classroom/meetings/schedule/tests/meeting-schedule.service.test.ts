@@ -20,7 +20,7 @@ beforeEach(() => {
 
 describe('MeetingScheduleService.update (R-MEET-01)', () => {
   it('a new time keeps the length and re-notifies staff with a new dedup subject', async () => {
-    await s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-06T08:00:00Z' } }, NOW);
+    await s.schedule.update({ user: TEACHER, id: MEETING_ID, patch: { startsAt: '2026-10-06T08:00:00Z' } }, NOW);
     expect(s.mq.update).toHaveBeenCalledWith(MEETING_ID, {
       title: 'اجتماع الإدارة', starts_at: '2026-10-06T08:00:00.000Z', planned_end_at: '2026-10-06T09:00:00.000Z',
     });
@@ -34,8 +34,8 @@ describe('MeetingScheduleService.update (R-MEET-01)', () => {
 
   it('the same instant ("+00:00" from PostgREST) or a duration alone: no bell, nothing dropped', async () => {
     s.mq.byId.mockResolvedValue(scheduledRow({ starts_at: '2026-10-05T12:00:00+00:00', planned_end_at: '2026-10-05T13:00:00+00:00' }));
-    await s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-05T12:00:00Z' } }, NOW);
-    await s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { durationMin: 30 } }, NOW);
+    await s.schedule.update({ user: TEACHER, id: MEETING_ID, patch: { startsAt: '2026-10-05T12:00:00Z' } }, NOW);
+    await s.schedule.update({ user: TEACHER, id: MEETING_ID, patch: { durationMin: 30 } }, NOW);
     expect(s.mq.update).toHaveBeenLastCalledWith(MEETING_ID, expect.objectContaining({ planned_end_at: '2026-10-05T12:30:00.000Z' }));
     expect(s.m.push.notifyProfiles).not.toHaveBeenCalled();
     expect(s.m.invitees.dropQueuedInvites).not.toHaveBeenCalled();
@@ -43,11 +43,11 @@ describe('MeetingScheduleService.update (R-MEET-01)', () => {
 
   it('A→B→A rings every move (each move has its own subject)', async () => {
     const at = (iso: string) => new Date(iso);
-    await s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-06T08:00:00Z' } }, at('2026-10-05T10:00:00Z'));
+    await s.schedule.update({ user: TEACHER, id: MEETING_ID, patch: { startsAt: '2026-10-06T08:00:00Z' } }, at('2026-10-05T10:00:00Z'));
     s.mq.byId.mockResolvedValue(scheduledRow({ starts_at: '2026-10-06T08:00:00+00:00', planned_end_at: '2026-10-06T09:00:00+00:00' }));
-    await s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-05T12:00:00Z' } }, at('2026-10-05T10:01:00Z'));
+    await s.schedule.update({ user: TEACHER, id: MEETING_ID, patch: { startsAt: '2026-10-05T12:00:00Z' } }, at('2026-10-05T10:01:00Z'));
     s.mq.byId.mockResolvedValue(scheduledRow({ starts_at: '2026-10-05T12:00:00+00:00', planned_end_at: '2026-10-05T13:00:00+00:00' }));
-    await s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-06T08:00:00Z' } }, at('2026-10-05T10:02:00Z'));
+    await s.schedule.update({ user: TEACHER, id: MEETING_ID, patch: { startsAt: '2026-10-06T08:00:00Z' } }, at('2026-10-05T10:02:00Z'));
     const subjects = s.m.push.notifyProfiles.mock.calls.map(([n]) => (n as { subject: string }).subject);
     expect(new Set(subjects).size).toBe(3);
   });
@@ -59,19 +59,19 @@ describe('MeetingScheduleService.update (R-MEET-01)', () => {
   });
 
   it('a title alone notifies nobody; a duration alone needs a schedule', async () => {
-    await s.schedule.update({ user: ADMIN, id: MEETING_ID, body: { title: 'جديد' } }, NOW);
+    await s.schedule.update({ user: ADMIN, id: MEETING_ID, patch: { title: 'جديد' } }, NOW);
     expect(s.mq.update).toHaveBeenCalledWith(MEETING_ID, { title: 'جديد' });
     expect(s.m.push.notifyProfiles).not.toHaveBeenCalled();
     s.mq.byId.mockResolvedValue(meetingRow());
-    const e = await fail(s.schedule.update({ user: ADMIN, id: MEETING_ID, body: { durationMin: 30 } }, NOW));
+    const e = await fail(s.schedule.update({ user: ADMIN, id: MEETING_ID, patch: { durationMin: 30 } }, NOW));
     expect(e.getResponse()).toMatchObject({ code: 'not_scheduled' });
   });
 
   it('403 for another staff login, 410 once cancelled, 400 for a past time', async () => {
-    expect((await fail(s.schedule.update({ user: OTHER_TEACHER, id: MEETING_ID, body: { title: 'x' } }, NOW))).getStatus()).toBe(403);
-    const past = await fail(s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-01T08:00:00Z' } }, NOW));
+    expect((await fail(s.schedule.update({ user: OTHER_TEACHER, id: MEETING_ID, patch: { title: 'x' } }, NOW))).getStatus()).toBe(403);
+    const past = await fail(s.schedule.update({ user: TEACHER, id: MEETING_ID, patch: { startsAt: '2026-10-01T08:00:00Z' } }, NOW));
     expect(past.getResponse()).toMatchObject({ code: 'starts_in_past' });
     s.mq.byId.mockResolvedValue(scheduledRow({ cancelled_at: '2026-10-05T09:00:00Z' }));
-    expect((await fail(s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { title: 'x' } }, NOW))).getStatus()).toBe(410);
+    expect((await fail(s.schedule.update({ user: TEACHER, id: MEETING_ID, patch: { title: 'x' } }, NOW))).getStatus()).toBe(410);
   });
 });

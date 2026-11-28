@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { LessonStatus } from '@ab/catalog';
 import {
-  cancelAnswerSchema,
   confirmedChipShown,
   confirmedNow,
   teacherCanAct,
@@ -50,20 +49,6 @@ describe('teacher lesson actions (docs/46 C3/C4)', () => {
   });
 
   it('paths', () => {
-    expect(teacherLessonPaths.cancel('l1')).toBe('/teachers/me/lessons/l1/cancel');
-    expect(teacherLessonPaths.confirm('l1')).toBe('/teachers/me/lessons/l1/confirm-attendance');
     expect(teacherLessonPaths.attendance('s1')).toBe('/teachers/me/students/s1/attendance');
-  });
-});
-
-describe('cancelAnswerSchema', () => {
-  it('keeps the fields the write-through cancel patches, refuses another shape', () => {
-    const answer = { id: 'l1', status: 'cancelled_by_teacher', cancel_reason: 'سفر', extra: 1 };
-    expect(cancelAnswerSchema.parse(answer)).toEqual({
-      id: 'l1',
-      status: 'cancelled_by_teacher',
-      cancel_reason: 'سفر',
-    });
-    expect(cancelAnswerSchema.safeParse({ id: 'l1' }).success).toBe(false);
   });
 });

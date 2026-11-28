@@ -1,17 +1,18 @@
+import { jobApplicant, leadListItem } from '@ab/shared/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { LeadsInbox } from './LeadsInbox';
-import type { LeadView } from '@ab/shared';
+import type { LeadListItem } from '@ab/shared';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', () => ({ Link: ({ children }: { children: ReactNode }) => <a href="/admin/book">{children}</a> }));
 
-const ROW: LeadView = {
+const ROW = leadListItem({
   id: 'l1',
   phone_e164: '+966501234567',
   name: 'أم سهيلة',
@@ -20,10 +21,10 @@ const ROW: LeadView = {
   last_inbound_at: null,
   last_outbound_at: null,
   created_at: '2026-09-28T10:00:00+00:00',
-};
-const askLabel = (row: LeadView) => t.leads.reclassifyRow.replace('{name}', row.name ?? row.phone_e164);
+});
+const askLabel = (row: LeadListItem) => t.leads.reclassifyRow.replace('{name}', row.name ?? row.phone_e164);
 
-async function openConfirm(row: LeadView = ROW) {
+async function openConfirm(row: LeadListItem = ROW) {
   apiFetch.mockResolvedValue({ items: [row], total: 1, page: 1, pageSize: 25 });
   render(
     <QueryClientProvider
@@ -52,11 +53,11 @@ describe('LeadsInbox reclassify to job applicants (R-LEAD-04)', () => {
   });
 
   it('moving POSTs, closes the strip and confirms in Arabic', async () => {
-    apiSend.mockResolvedValue({ id: 'a1' });
+    apiSend.mockResolvedValue(jobApplicant({ id: 'a1' }));
     const { strip } = await openConfirm();
     fireEvent.click(within(strip).getByRole('button', { name: t.leads.reclassifyAsApplicant }));
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe(t.leads.reclassified));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/reclassify');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/reclassify', undefined);
     expect(screen.queryByRole('group', { name: t.leads.reclassifyAsApplicant })).toBeNull();
   });
 

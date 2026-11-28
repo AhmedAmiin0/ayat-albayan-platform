@@ -16,6 +16,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 const L = t.meetings.internal;
 const base = { created_by: 'u1', created_at: '2026-10-05T11:30:00.000Z', ends_at: null, starts_at: null, planned_end_at: null, cancelled_at: null, window: null, invitees_count: 0, my_invite: null };
+const JOIN = { url: 'wss://lk', token: 'tok', room: 'meeting-x', role: 'admin' };
 const mine = { ...base, id: 'm1', title: 'اجتماع الإدارة', state: 'open', can_manage: true, can_join: true };
 const others = { ...base, id: 'm2', title: 'اجتماع المعلمين', state: 'open', can_manage: false, can_join: true };
 const over = { ...base, id: 'm3', title: 'اجتماع قديم', state: 'ended', can_manage: true, can_join: false };
@@ -40,12 +41,12 @@ test('the list shows each meeting with the actions its state and role allow', as
 });
 
 test('enter asks the API, then opens the web room in the system browser', async () => {
-  mockApiSend.mockResolvedValue({});
+  mockApiSend.mockResolvedValue(JOIN);
   await renderWithQuery(<MeetingsScreen />);
   await screen.findByText('اجتماع الإدارة');
   await fireEvent.press(screen.getAllByRole('button', { name: L.enter })[0] as never);
   await waitFor(() => expect(openURL).toHaveBeenCalledWith('https://app.ayatalbayan.com/meeting/m1'));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/join');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/join', undefined);
 });
 
 test('a refused join (ended) reads its message and opens nothing', async () => {
@@ -64,7 +65,7 @@ test('ending asks first, then POSTs and refreshes the list', async () => {
   await press(L.end);
   expect(mockApiSend).not.toHaveBeenCalled();
   await press(t.mobileClassroom.endAction);
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/end'));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/end', undefined));
   const lists = () => mockApiFetch.mock.calls.filter(([p]) => p === '/meetings').length;
   await waitFor(() => expect(lists()).toBe(2));
 });
@@ -76,7 +77,7 @@ test('a new link asks first (the old one stops), then goes to the share sheet', 
   await press(L.newLink);
   await press(t.mobileClassroom.newLinkAction);
   expect(await screen.findByText(t.mobileClassroom.newLinkReady)).toBeTruthy();
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/link');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/link', undefined);
   await press(t.mobileClassroom.shareLink);
   expect(share).toHaveBeenCalledWith({ message: 'https://app/m/tok' });
 });
@@ -89,7 +90,9 @@ test('«التسجيلات» opens the meeting’s recordings', async () => {
 });
 
 test('creating: optional title, then the link to share and «ادخل الاجتماع»', async () => {
-  mockApiSend.mockResolvedValue({ id: 'm9', url: 'https://app/m/new', invitees: [], replayed: false });
+  mockApiSend
+    .mockResolvedValueOnce({ id: 'm9', url: 'https://app/m/new', invitees: [], replayed: false })
+    .mockResolvedValue(JOIN);
   await renderWithQuery(<MeetingsScreen />);
   await screen.findByText('اجتماع الإدارة');
   await press(t.meetings.new);

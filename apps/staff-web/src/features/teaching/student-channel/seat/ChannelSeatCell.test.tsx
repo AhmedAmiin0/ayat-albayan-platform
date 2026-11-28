@@ -48,7 +48,7 @@ describe('ChannelSeatCell', () => {
       return mine;
     });
     fireEvent.click(await screen.findByRole('button', { name: S.take }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', SEAT));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', SEAT, undefined));
     expect(await screen.findByRole('button', { name: t.studentChannel.open })).toBeTruthy();
   });
 
@@ -65,7 +65,7 @@ describe('ChannelSeatCell', () => {
     fireEvent.click(await screen.findByRole('button', { name: t.studentChannel.open }));
     expect(await screen.findByText('غدًا إن شاء الله')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: S.leave }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', SEAT));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', SEAT, undefined));
   });
 
   it('my own student, held by a colleague: who, and «انقل المحادثة إليك» (PUT)', async () => {
@@ -73,7 +73,7 @@ describe('ChannelSeatCell', () => {
     apiSend.mockResolvedValue(mine);
     expect(await screen.findByText(S.heldBy.replace('{name}', 'هدى'))).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: S.takeOver }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', SEAT));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', SEAT, undefined));
   });
 
   it('taken over since the row was read: opening re-reads the seat and says who follows it', async () => {

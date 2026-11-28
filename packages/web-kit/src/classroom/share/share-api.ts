@@ -1,28 +1,27 @@
-import { call } from '@ab/web-kit/lib/http/api';
-import { lessonIdOfRoom, meetingIdOfRoom } from '@ab/web-kit/classroom/api/moderation-api';
+import { lessonRoomSends, roomModerationApi } from '@ab/client-core';
+import { apiFetch, apiSend } from '@ab/web-kit/lib/http/api';
+import {
+  recordingSourceOf,
+  type RecordingSource,
+} from '@ab/web-kit/classroom/api/moderation-api';
 
 /** Allow or stop one guest's screen share: 204, or an ApiError. */
 export type GrantShare = (input: { identity: string; allow: boolean }) => Promise<void>;
 
-/**
- * The participants route of this room: /lessons/:id/room/participants or
- * /meetings/:id/participants; null for a room of neither kind.
- */
-function participantsBase(room: string): string | null {
-  const meetingId = meetingIdOfRoom(room);
-  const lessonId = lessonIdOfRoom(room);
-  if (meetingId !== null) return `/meetings/${meetingId}/participants`;
-  return lessonId !== null ? `/lessons/${lessonId}/room/participants` : null;
-}
+type RoomShare = (input: { id: string; identity: string; allow: boolean }) => Promise<void>;
 
-/** POST {base}/:identity/share for this room; null for a room of neither kind. */
+const lessonRoom = lessonRoomSends({ apiFetch, apiSend });
+const meetings = roomModerationApi({ apiFetch, apiSend });
+
+const SHARE: Record<RecordingSource['kind'], RoomShare> = {
+  lesson: ({ id, ...rest }) => lessonRoom.share({ lessonId: id, ...rest }),
+  meeting: ({ id, ...rest }) => meetings.shareInMeeting({ meetingId: id, ...rest }),
+};
+
+/** POST …/:identity/share {allow} for this room; null for a room of neither kind. */
 export function grantShareFor(room: string): GrantShare | null {
-  const base = participantsBase(room);
-  if (base === null) return null;
-  return ({ identity, allow }) =>
-    call({
-      method: 'POST',
-      path: `${base}/${encodeURIComponent(identity)}/share`,
-      body: { allow },
-    });
+  const of = recordingSourceOf(room);
+  if (of === null) return null;
+  const share = SHARE[of.kind];
+  return ({ identity, allow }) => share({ id: of.id, identity, allow });
 }

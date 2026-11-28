@@ -1,6 +1,14 @@
-import { reportBlock, type ReportDraft, type ReportFormResponse, type ReportView } from '@ab/shared';
+import {
+  reportBlock,
+  reportFormResponseSchema,
+  reportViewSchema,
+  type ReportDraft,
+  type ReportFormResponse,
+  type ReportView,
+} from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 import { formResponse } from '@/modules/reporting/reports/submit/report-form.mapper';
 import { ReportGate } from './report-gate';
 import { assertForm } from '@/modules/reporting/reports/submit/report-submit.service';
@@ -54,13 +62,14 @@ export class ReportsService {
             v2.map((r) => r.student_id),
             reports.map((r) => r.id),
           );
-    return formResponse({ lesson, reports, numbers, packages, memory, ctx, block });
+    const parts = { lesson, reports, numbers, packages, memory, ctx, block };
+    return asResponse(reportFormResponseSchema, formResponse(parts));
   }
 
   /** R4. */
   async get(id: string, user: ReportCaller): Promise<ReportView> {
     const row = await this.gate.load(id, user);
-    return reportView(row, await this.gate.context(user));
+    return asResponse(reportViewSchema, reportView(row, await this.gate.context(user)));
   }
 
   /**

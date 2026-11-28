@@ -1,15 +1,11 @@
 import type { MessageView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { patchMessage, reactionName, reactionPath, reactionPill, reactorLines, tappedReaction, withOurs } from './reactions';
+import { patchMessage, reactionName, reactionPill, reactorLines, tappedReaction, withOurs } from './reactions';
 
 const R = { theirs: '❤️', ours: '👍', ours_by: 'هبة' };
 const msg = (id: string) => ({ id, body: id }) as unknown as MessageView;
 
 describe('reactions (client-core)', () => {
-  it('the path escapes the phone', () => {
-    expect(reactionPath('+966501234567', 'm1')).toBe('/threads/%2B966501234567/messages/m1/reaction');
-  });
-
   it('a tap on ours removes it, any other replaces it', () => {
     expect(tappedReaction(R, '👍')).toBeNull();
     expect(tappedReaction(R, '😂')).toBe('😂');

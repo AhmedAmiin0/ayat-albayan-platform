@@ -1,3 +1,4 @@
+import { leadListItem } from '@ab/shared/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -13,7 +14,7 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children }: { to: string; children: ReactNode }) => <a href={to}>{children}</a>,
 }));
 
-const ROW = {
+const ROW = leadListItem({
   id: 'l1',
   phone_e164: '+966501234567',
   name: 'أم سهيلة',
@@ -22,8 +23,8 @@ const ROW = {
   last_inbound_at: null,
   last_outbound_at: null,
   created_at: '2026-09-28T10:00:00+00:00',
-};
-const SARA = { id: '22222222-2222-4222-8222-222222222222', name: 'سارة' };
+});
+const SARA = { id: '22222222-2222-4222-8222-222222222222', name: 'سارة', open_leads: 0 };
 const chipName = (label: string, value: string) =>
   t.table.removeFilter.replace('{filter}', t.table.activeFilter.replace('{label}', label).replace('{value}', value));
 

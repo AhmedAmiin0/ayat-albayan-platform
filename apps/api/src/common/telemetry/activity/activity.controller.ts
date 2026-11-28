@@ -1,23 +1,22 @@
-import { activityListQuery, type ActivityPage } from '@ab/shared';
-import { Controller, Get, HttpCode, HttpException, HttpStatus, Ip, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { parseOrThrow } from '@/common/http/http';
+import { activityRoutes as routes, activitySessionRoutes, type ActivityPage } from '@ab/shared';
+import { Controller, HttpCode, HttpException, HttpStatus, Ip } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { asResponse } from '@/common/http/returns';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.rate-limit';
-import { CurrentUser, Permissions, Public, SignedIn } from '@/common/auth/decorators';
+import { CurrentUser, Public, SignedIn } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ActivityRepo } from './activity.repo';
 
 /** Admin only, paged, filtered and sorted (R-NFR-08). */
-@ApiTags('activity')
 @ApiBearerAuth()
-@Permissions('activity.read')
-@Controller('activity')
+@Controller()
 export class ActivityController {
   constructor(private readonly activity: ActivityRepo) {}
 
-  @Get()
-  list(@Query() query: unknown): Promise<ActivityPage> {
-    return this.activity.list(parseOrThrow(activityListQuery, query));
+  @Route(routes.list)
+  async list(@RouteInput() { query }: RouteInputOf<typeof routes.list>): Promise<ActivityPage> {
+    return asResponse(routes.list.response, await this.activity.list(query));
   }
 }
 
@@ -32,15 +31,14 @@ function tooMany(): HttpException {
  * only IP and user agent (plus the names of any fields a client did send).
  * Rate-limited per user (30) and, for failures, per IP (20), each per 10 minutes.
  */
-@ApiTags('activity')
 @SignedIn()
-@Controller('activity/session')
+@Controller()
 export class AuthSessionController {
   private readonly perUser = new WindowCounter(30);
   private readonly perIp = new WindowCounter(20);
 
   @ApiBearerAuth()
-  @Post('login')
+  @Route(activitySessionRoutes.login)
   @HttpCode(204)
   login(@CurrentUser() user: AuthUser): void {
     if (!this.perUser.allow(user.id, Date.now())) throw tooMany();
@@ -48,14 +46,14 @@ export class AuthSessionController {
 
   /** Called before supabase.auth.signOut(), while the token is still valid. */
   @ApiBearerAuth()
-  @Post('logout')
+  @Route(activitySessionRoutes.logout)
   @HttpCode(204)
   logout(@CurrentUser() user: AuthUser): void {
     if (!this.perUser.allow(user.id, Date.now())) throw tooMany();
   }
 
   @Public()
-  @Post('login-failed')
+  @Route(activitySessionRoutes.loginFailed)
   @HttpCode(204)
   loginFailed(@Ip() ip: string): void {
     if (!this.perIp.allow(ip, Date.now())) throw tooMany();

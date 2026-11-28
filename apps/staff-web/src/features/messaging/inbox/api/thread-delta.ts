@@ -1,4 +1,4 @@
-import { deltaSearch, mergeDelta, needsFullRead } from '@ab/client-core';
+import { deltaQuery, mergeDelta, needsFullRead, type ThreadDeltaQuery } from '@ab/client-core';
 import type { ThreadDelta } from '@ab/shared';
 import {
   type QueryClient,
@@ -6,8 +6,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit';
-import { inboxPollMs, threadPath } from './api';
+import { inboxPollMs, threadReads } from './api';
 import { useTicksInLists } from './list-ticks';
 import { threadQuery } from './thread-query';
 import { threadKeys } from './keys';
@@ -32,9 +31,9 @@ const busy = (client: QueryClient, phone: string): boolean =>
 const overtaken = (client: QueryClient, phone: string, asked: number | undefined): boolean =>
   busy(client, phone) || client.getQueryState(threadQuery(phone).queryKey)?.dataUpdatedAt !== asked;
 
-const searchFor = (client: QueryClient, phone: string): string | null =>
+const deltaFor = (client: QueryClient, phone: string): ThreadDeltaQuery | null =>
   document.hasFocus()
-    ? deltaSearch(client.getQueryData(threadQuery(phone).queryKey), Date.now())
+    ? deltaQuery(client.getQueryData(threadQuery(phone).queryKey), Date.now())
     : null;
 
 /**
@@ -47,10 +46,10 @@ async function readThreadDelta(
   phone: string,
   signal: AbortSignal,
 ): Promise<number> {
-  const search = searchFor(client, phone);
-  if (search === null) return Date.now();
+  const query = deltaFor(client, phone);
+  if (query === null) return Date.now();
   const asked = client.getQueryState(threadQuery(phone).queryKey)?.dataUpdatedAt;
-  const delta = await apiFetch<ThreadDelta>(`${threadPath(phone)}${search}`, { signal });
+  const delta = await threadReads.delta({ phone, query, signal });
   // A full read that landed meanwhile is newer than this answer: keep it.
   if (overtaken(client, phone, asked)) return Date.now();
   fold[needsFullRead(delta) ? 'full' : 'merge'](client, phone, delta);

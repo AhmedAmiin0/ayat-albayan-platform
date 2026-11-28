@@ -1,7 +1,8 @@
 import type { LessonStatus, Permission } from '@ab/catalog';
 import { chatDayKey, RIYADH_TZ } from '@ab/time';
 import { isOpenLesson } from '@ab/schedule';
-import type { MessageView, ThreadLesson } from '../chat/views';
+import type { MessageView } from '../chat/message-view';
+import type { ThreadLesson } from '../chat/thread-reads';
 
 // Which lesson a guardian's quick reply refers to and what the viewer may do from the chat; pure.
 
@@ -88,9 +89,4 @@ export function replyRights(
       ? 'admin'
       : null;
   return { reschedule: can('lessons.reschedule') && sheet, confirm };
-}
-
-/** The confirm request's path for `route`. */
-export function replyConfirmPath(lessonId: string, route: ConfirmRoute): string {
-  return route === 'sales' ? `/sales/lessons/${lessonId}/confirm` : `/lessons/${lessonId}/confirm`;
 }

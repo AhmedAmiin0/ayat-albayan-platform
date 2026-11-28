@@ -8,7 +8,17 @@ import {
   threadMessages,
   threadPath,
 } from '@/inbox/thread/hooks/thread-cache/thread-cache';
-import { cachedThread, delivered, detail, failed, inbound, message, NOW, PHONE } from '@/inbox/shared/thread-fixtures';
+import {
+  cachedThread,
+  delivered,
+  detail,
+  failed,
+  inbound,
+  message,
+  NOW,
+  PHONE,
+  uid,
+} from '@/inbox/shared/thread-fixtures';
 
 const older = message({ id: 'm0', body: 'قديمة', created_at: '2026-09-30T08:00:00Z' });
 
@@ -20,7 +30,7 @@ test('paths: the + is encoded for the route and the API; the key keeps the raw p
 
 test('messages run oldest → newest across pages, each row once', () => {
   const data = cachedThread(detail([inbound, delivered]), detail([older, inbound]));
-  expect(threadMessages(data).map((m) => m.id)).toEqual(['m0', 'm1', 'm2']);
+  expect(threadMessages(data).map((m) => m.id)).toEqual(['m0', uid('m1'), uid('m2')]);
   expect(threadMessages(undefined)).toEqual([]);
 });
 
@@ -28,14 +38,14 @@ test('a row on two pages shows as the newest page has it: no stale tick at the b
   const stale = { ...delivered, status: 'sent' as const };
   const data = cachedThread(detail([delivered]), detail([older, inbound, stale]));
   const rows = threadMessages(data);
-  expect(rows.map((m) => m.id)).toEqual(['m0', 'm1', 'm2']);
+  expect(rows.map((m) => m.id)).toEqual(['m0', uid('m1'), uid('m2')]);
   expect(rows.find((m) => m.id === delivered.id)?.status).toBe('delivered');
 });
 
 test('append goes to the end of the newest page only', () => {
   const data = cachedThread(detail([inbound]), detail([older]));
   const next = appendMessage(data, delivered);
-  expect(next?.pages[0]?.messages.map((m) => m.id)).toEqual(['m1', 'm2']);
+  expect(next?.pages[0]?.messages.map((m) => m.id)).toEqual([uid('m1'), uid('m2')]);
   expect(next?.pages[1]?.messages.map((m) => m.id)).toEqual(['m0']);
   expect(appendMessage(undefined, delivered)).toBeUndefined();
 });
@@ -44,8 +54,8 @@ test('replace swaps the row by id wherever it is; remove rolls it back', () => {
   const temp = provisionalMessage({ id: 'tmp', phone: PHONE, body: 'x', now: NOW });
   const data = cachedThread(detail([inbound, temp]));
   const replaced = replaceMessage(data, 'tmp', failed);
-  expect(threadMessages(replaced).map((m) => m.id)).toEqual(['m1', 'm3']);
-  expect(threadMessages(removeMessage(data, 'tmp')).map((m) => m.id)).toEqual(['m1']);
+  expect(threadMessages(replaced).map((m) => m.id)).toEqual([uid('m1'), uid('m3')]);
+  expect(threadMessages(removeMessage(data, 'tmp')).map((m) => m.id)).toEqual([uid('m1')]);
   expect(replaceMessage(undefined, 'tmp', failed)).toBeUndefined();
 });
 

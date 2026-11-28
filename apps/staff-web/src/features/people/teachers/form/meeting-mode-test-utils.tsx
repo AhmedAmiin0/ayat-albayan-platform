@@ -5,6 +5,7 @@ import { render } from '@testing-library/react';
 import { useState } from 'react';
 import type { Mock } from 'vitest';
 import { publicConfigQuery } from '@ab/web-kit';
+import { aTemplateView } from '@ab/shared/testing';
 import { emptyTeacherForm, type SetField, type TeacherForm } from './teacher-form';
 import { TeacherMeetingModeField } from './TeacherMeetingModeField';
 import type { Teacher } from '@ab/shared';
@@ -32,12 +33,23 @@ function answer(path: string, o: Required<ShowOptions>): Promise<unknown> {
   if (path === '/settings/public') return o.auto === 'pending' ? new Promise(() => undefined) : fail();
   if (path === '/messaging/templates') {
     if (o.status === 'error') return fail();
-    return Promise.resolve(o.status === null ? [] : [{ key: 'lesson_join_link', status: o.status }]);
+    const row = (status: TemplateStatus) => aTemplateView({ key: 'lesson_join_link', status });
+    const rows = o.status === null ? [] : [row(o.status)];
+    return Promise.resolve(rows);
   }
   if (path === '/settings/integrations') {
     if (o.livekit === 'error') return fail();
     const keys = ['LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET'];
-    return Promise.resolve(keys.map((key, i) => ({ key, set: o.livekit || i === 0, source: 'env' })));
+    const row = (key: string, i: number) => ({
+      key,
+      group: 'livekit',
+      secret: i > 0,
+      value: null,
+      set: o.livekit || i === 0,
+      source: 'env',
+      updated_at: null,
+    });
+    return Promise.resolve(keys.map(row));
   }
   return Promise.resolve([]);
 }

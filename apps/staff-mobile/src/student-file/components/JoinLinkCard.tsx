@@ -1,17 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Share, View } from 'react-native';
-import { apiSend, t, AppText, Button, ErrorLine } from '@ab/mobile-kit';
+import { t, AppText, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
+import { issueJoinLink } from './join-link-api';
 
 const J = t.mobileStudentFile.joinLink;
-
-/** POST /students/:id/join-link: the new link (it rotates the old one, so the admin confirms first), then shared. */
-function issueJoinLink(studentId: string): Promise<{ url: string }> {
-  return apiSend<{ url: string }>('POST', `/students/${studentId}/join-link`);
-}
 
 /** Only the hash is stored and the old link is revoked, so the new one stays on screen. */
 export function JoinLinkCard({ studentId, studentName }: { studentId: string; studentName: string }) {

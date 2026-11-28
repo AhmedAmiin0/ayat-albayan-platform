@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { answered, uuidFor } from '@/today/testing/answered';
 import { t } from '@ab/mobile-kit';
 import { SLOTS, SUN_17 } from '@/teaching/reschedule/fixtures';
 import { renderWithQuery } from '@/test/query';
@@ -36,7 +37,7 @@ function serve(day: unknown[]) {
 const move = (who: string) => ({ name: `${t.lessons.rescheduleSubmit} — ${who}` });
 
 test('an open lesson’s sheet offers «غيّر الموعد»; a held lesson’s does not', async () => {
-  serve([done, pending]);
+  serve([done, pending].map(answered));
   await renderWithQuery(<TodayScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));
   expect(await screen.findByRole('button', move('يوسف أحمد'))).toBeTruthy();
@@ -48,8 +49,9 @@ test('an open lesson’s sheet offers «غيّر الموعد»; a held lesson�
 });
 
 test('«غيّر الموعد» in the details opens the reschedule sheet; the move lands and Today refetches', async () => {
-  serve([pending]);
-  const moved = lesson({ id: 'new', starts_at: SUN_17, ends_at: '2026-10-04T14:45:00.000Z' });
+  serve([pending].map(answered));
+  const ends_at = '2026-10-04T14:45:00.000Z';
+  const moved = answered(lesson({ id: 'new', starts_at: SUN_17, ends_at }));
   mockApiSend.mockResolvedValue(moved);
   await renderWithQuery(<TodayScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));
@@ -61,7 +63,10 @@ test('«غيّر الموعد» in the details opens the reschedule sheet; the m
   const [submit] = screen.getAllByRole('button', { name: t.lessons.rescheduleSubmit });
   if (!submit) throw new Error('no submit in the sheet');
   await fireEvent.press(submit);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/reschedule', { scope: 'one', startsAt: SUN_17 });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/lessons/${uuidFor('l-pending')}/reschedule`, {
+    scope: 'one',
+    startsAt: SUN_17,
+  });
   expect(await screen.findByText(t.reschedule.guardianNote)).toBeTruthy();
   await waitFor(() => expect(dayCalls()).toBe(2));
 

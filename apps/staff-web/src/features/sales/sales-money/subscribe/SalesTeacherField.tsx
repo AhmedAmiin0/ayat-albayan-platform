@@ -1,15 +1,9 @@
 import { teacherChoice, type TeacherPick } from '@ab/client-core';
-import type { SalesFamilyStudent, SalesTeacherOption } from '@ab/shared';
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import type { SalesFamilyStudent } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Field, Select, apiFetch, t } from '@ab/web-kit';
-import { salesSubscriptionKeys } from '@/features/sales/keys';
-
-export const salesTeachersQuery = queryOptions({
-  queryKey: salesSubscriptionKeys.teachers(),
-  queryFn: () => apiFetch<SalesTeacherOption[]>('/sales/subscriptions/teachers'),
-  staleTime: 5 * 60_000,
-});
+import { Field, Select, t } from '@ab/web-kit';
+import { salesTeachersQuery } from '@/features/sales/sales-money/api';
 
 /** teacherChoice (@ab/client-core) with her pick kept: the teacher to show and the body to send. */
 export function useTeacherPick(students: readonly SalesFamilyStudent[], studentId: string) {

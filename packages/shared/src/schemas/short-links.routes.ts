@@ -2,6 +2,8 @@ import { defineRoute } from '@ab/core';
 import { z } from 'zod';
 import {
   shortLinkDetailSchema,
+  shortLinkGateViewSchema,
+  shortLinkOpenResultSchema,
   shortLinkPageSchema,
   shortLinkPersonSchema,
   shortLinkSentDetailSchema,
@@ -10,6 +12,8 @@ import {
   shortCodeSchema,
   shortLinkCreateSchema,
   shortLinkListQuerySchema,
+  shortLinkOtpStartSchema,
+  shortLinkOtpVerifySchema,
   shortLinkPeopleQuerySchema,
   shortLinkUpdateSchema,
 } from './short-links';
@@ -68,5 +72,38 @@ export const shortLinkRoutes = {
     params: byCode,
     response: shortLinkSentDetailSchema,
     ...access,
+  }),
+};
+
+const gate = { params: byCode, tags: ['short-links'] } as const;
+const open = { ...gate, isPublic: true } as const;
+
+/** The web gate /l/<code> of a managed link (docs/19 «Gate»): no permission, never the target. */
+export const shortLinkGateRoutes = {
+  view: defineRoute({
+    method: 'GET',
+    path: '/public/short-links/:code',
+    response: shortLinkGateViewSchema,
+    ...open,
+  }),
+  start: defineRoute({
+    method: 'POST',
+    path: '/public/short-links/:code/otp/start',
+    body: shortLinkOtpStartSchema,
+    response: 'empty',
+    ...open,
+  }),
+  verify: defineRoute({
+    method: 'POST',
+    path: '/public/short-links/:code/otp/verify',
+    body: shortLinkOtpVerifySchema,
+    response: shortLinkOpenResultSchema,
+    ...open,
+  }),
+  open: defineRoute({
+    method: 'POST',
+    path: '/public/short-links/:code/open',
+    response: shortLinkOpenResultSchema,
+    ...gate,
   }),
 };

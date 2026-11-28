@@ -4,6 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { answer, evening, held, later } from '@/teacher/today/testing/day-fixtures';
 import { TeacherTodayScreen } from '@/teacher/screens/TeacherTodayScreen/TeacherTodayScreen';
+import { answered } from '@/today/testing/answered';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -28,15 +29,15 @@ beforeEach(() => {
 });
 
 test('row → sheet → «إلغاء الحلقة» POSTs the reason; the notice says it once', async () => {
-  const cancelled = { ...evening, status: 'cancelled_by_teacher', cancel_reason: 'سفر' };
-  mockApiSend.mockResolvedValue(cancelled);
+  const cancelled = { ...evening, status: 'cancelled_by_teacher' as const, cancel_reason: 'سفر' };
+  mockApiSend.mockResolvedValue(answered(cancelled));
   await renderWithQuery(<TeacherTodayScreen />, confirmingQueryClient());
   await fireEvent.press(await openRow('سلمى علي'));
   await fireEvent.press(screen.getByRole('button', { name: w.cancel }));
   await fireEvent.changeText(screen.getByLabelText(new RegExp(w.reason)), 'سفر');
   await fireEvent.press(screen.getByRole('button', { name: w.cancelSubmit }));
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/teachers/me/lessons/evening/cancel', {
+    expect(mockApiSend).toHaveBeenCalledWith('POST', `/teachers/me/lessons/${evening.id}/cancel`, {
       reason: 'سفر',
     }),
   );
@@ -62,7 +63,7 @@ test('the ended lesson: its row lead and ONE sheet button, to «اليوم»’s
   expect(more).toHaveLength(0);
   if (!sheet) throw new Error('no report button in the sheet');
   await fireEvent.press(sheet);
-  expect(mockPush).toHaveBeenCalledWith('/teacher/today/report/held');
+  expect(mockPush).toHaveBeenCalledWith(`/teacher/today/report/${held.id}`);
 });
 
 test('an excused lesson that started: its row leads with the report, shown once', async () => {

@@ -9,7 +9,9 @@ import {
   listCache,
   message,
   PHONE,
+  sentText,
   thread,
+  uid,
 } from '@/inbox/shared/thread-fixtures';
 import { missedChange } from '@/inbox/thread/live';
 import { refreshInbox, refreshLists, threadListKey, useInboxRead } from './inbox-sync';
@@ -64,7 +66,7 @@ test('a send moves the chat to the top of every cached list at once, then marks 
   const { result } = await renderHook(() => useSendMessage(PHONE), {
     wrapper: queryWrapper(client),
   });
-  await act(async () => result.current.mutate({ id: 'p1', out: { kind: 'text', text: 'وصلت' } }));
+  await act(async () => result.current.mutate({ id: uid('p1'), out: { kind: 'text', text: 'وصلت' } }));
   // Before the API answers: on top, with the provisional row as its last message.
   await waitFor(() =>
     expect(top(client, ALL)).toMatchObject({
@@ -75,7 +77,7 @@ test('a send moves the chat to the top of every cached list at once, then marks 
   );
   expect(top(client, UNREAD)).toBe(other); // a list without the chat waits for its refetch
   expect(spy).not.toHaveBeenCalledWith(expect.objectContaining({ queryKey: threadListKey }));
-  await act(async () => answer(message({ id: 'p1', body: 'وصلت', status: 'sent' })));
+  await act(async () => answer(sentText({ id: uid('p1'), body: 'وصلت', status: 'sent' })));
   // The list is under the chat: marked stale, not read again until it shows (docs/43 AU2).
   await waitFor(() => expect(spy).toHaveBeenCalledWith(HIDDEN_LISTS));
   expect(spy).toHaveBeenCalledWith({ queryKey: threadKeys.chat(PHONE) });
@@ -105,7 +107,7 @@ test('opening a chat clears its unread badge once the API answered; a refetch wi
   expect(spy).not.toHaveBeenCalled();
   // A newer received message in the open chat reads it again.
   const later = message({
-    id: 'm4',
+    id: uid('m4'),
     direction: 'inbound',
     body: 'تمام',
     created_at: '2026-10-02T08:20:00Z',
@@ -138,7 +140,7 @@ test("a send and an opened chat keep the lists' read time (the mark survives)", 
   await waitFor(() => expect(unread()).toBe(0));
   const send = await renderHook(() => useSendMessage(PHONE), { wrapper });
   await act(async () =>
-    send.result.current.mutate({ id: 'p2', out: { kind: 'text', text: 'تم' } }),
+    send.result.current.mutate({ id: uid('p2'), out: { kind: 'text', text: 'تم' } }),
   );
   await waitFor(() =>
     expect(top(client, ALL)).toMatchObject({ phone_e164: PHONE, last_body: 'تم' }),

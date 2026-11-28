@@ -27,7 +27,7 @@ describe('StaffClassroomPage', () => {
     apiSend.mockResolvedValue(JOIN);
     const client = open();
     await waitFor(() => expect(client.connect).toHaveBeenCalledWith('wss://lk', 'staff'));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-9/room/join');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-9/room/join', undefined);
   });
 
   it('too early: «تُفتح الساعة …» and a retry that asks again', async () => {

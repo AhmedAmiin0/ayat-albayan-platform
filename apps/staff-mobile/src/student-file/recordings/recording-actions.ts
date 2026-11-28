@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ApiError, apiSend, t } from '@ab/mobile-kit';
-import { recordingsKey } from './recordings-queries';
+import { ApiError, t } from '@ab/mobile-kit';
+import { recordingsApi, recordingsKey } from './recordings-queries';
 
 const R = t.mobileStudentFile.recordings;
 
@@ -15,12 +15,11 @@ export const visibilityError = (e: unknown): string =>
 export const deleteError = (e: unknown): string =>
   e instanceof ApiError && e.status === 409 ? R.delete.inProgress : R.delete.failed;
 
-/** PATCH /recordings/:id/visibility (admin, or the lesson's teacher). */
+/** Admin, or the lesson's teacher. */
 export function useSetVisibility(studentId: string) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (input: { id: string; visible: boolean }) =>
-      apiSend('PATCH', `/recordings/${input.id}/visibility`, { visible: input.visible }),
+    mutationFn: recordingsApi.setVisible,
     onSuccess: () => client.invalidateQueries({ queryKey: recordingsKey(studentId) }),
   });
 }
@@ -29,7 +28,7 @@ export function useSetVisibility(studentId: string) {
 export function useDeleteRecording(studentId: string) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => apiSend('DELETE', `/recordings/${id}`),
+    mutationFn: recordingsApi.remove,
     onSuccess: () => client.invalidateQueries({ queryKey: recordingsKey(studentId) }),
   });
 }

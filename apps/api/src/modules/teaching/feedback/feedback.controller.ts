@@ -1,38 +1,19 @@
-import {
-  feedbackQuerySchema,
-  feedbackRequestSchema,
-  type FeedbackRequestResult,
-  type FeedbackRowView,
-  type TeacherFeedbackSummary,
-  type TeacherFeedbackView,
-} from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { feedbackRoutes as routes, type FeedbackListQuery } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { pageQuerySchema, parseOrThrow } from '@/common/http/http';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { FeedbackReadService } from './read/feedback.read.service';
 import { FeedbackRequestService } from './request/feedback.request.service';
-import type { Page } from '@ab/core';
 
-type FeedbackQuery = z.output<typeof feedbackQuerySchema>;
-type PageQuery = z.output<typeof pageQuerySchema>;
-
-/**
- * One query, two schemas: the filter's 400 wins over the paging's, as before z1d. Two
- * `@ZodQuery` params would not keep that order (Nest runs the last param's pipe first).
- */
-const filterThenPage = (query: unknown): [FeedbackQuery, PageQuery] => [
-  parseOrThrow(feedbackQuerySchema, query),
-  parseOrThrow(pageQuerySchema, query),
-];
+const filterAndPage = ({ page, pageSize, ...filter }: FeedbackListQuery) => ({
+  filter,
+  page: { page, pageSize },
+});
 
 /** The static teachers/me route wins over teachers/:id in Fastify's router. */
-@ApiTags('feedback')
 @ApiBearerAuth()
-@Permissions('feedback.read')
 @Controller()
 export class FeedbackController {
   constructor(
@@ -41,32 +22,29 @@ export class FeedbackController {
   ) {}
 
   /** 409 template_not_approved, lesson_not_eligible or already_submitted; 503 not_configured. */
-  @Post('lessons/:id/feedback-request')
+  @Route(routes.request)
   @HttpCode(200)
-  @Permissions('feedback.write')
   request(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodBody(feedbackRequestSchema) body: z.output<typeof feedbackRequestSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.request>,
     @CurrentUser() user: AuthUser,
-  ): Promise<FeedbackRequestResult> {
-    return this.requests.request({ lessonId: id, body, actorId: user.id });
+  ) {
+    return this.requests.request({ lessonId: params.id, body, actorId: user.id });
   }
 
-  @Get('feedback')
-  list(@Query() query: unknown): Promise<Page<FeedbackRowView>> {
-    return this.reads.list(...filterThenPage(query));
+  @Route(routes.list)
+  list(@RouteInput() { query }: RouteInputOf<typeof routes.list>) {
+    const { filter, page } = filterAndPage(query);
+    return this.reads.list(filter, page);
   }
 
-  @Get('feedback/summary')
-  summary(): Promise<TeacherFeedbackSummary[]> {
+  @Route(routes.summary)
+  summary() {
     return this.reads.summary();
   }
 
   /** A teacher's own rows and average; contact phone and guardian are never in them. */
-  @Get('teachers/me/feedback')
-  @Permissions('self.teacher')
-  mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<TeacherFeedbackView> {
-    const [filter, page] = filterThenPage(query);
-    return this.reads.mine(user, { filter, page });
+  @Route(routes.mine)
+  mine(@RouteInput() { query }: RouteInputOf<typeof routes.mine>, @CurrentUser() user: AuthUser) {
+    return this.reads.mine(user, filterAndPage(query));
   }
 }

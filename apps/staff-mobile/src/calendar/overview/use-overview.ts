@@ -1,6 +1,8 @@
-import type { ScheduleOverview } from '@ab/schedule';
+import { lessonListCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+
+const lists = lessonListCalls({ apiFetch, apiSend });
 
 /**
  * GET /lessons/overview?from&to (admin, ≤ 31 days): one Riyadh week of every teacher and lesson.
@@ -11,6 +13,6 @@ import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
 export function useOverview(window: { from: string; to: string }) {
   return useQuery({
     queryKey: [...pathKey('/lessons/overview'), window],
-    queryFn: () => apiFetch<ScheduleOverview>(`/lessons/overview${toQueryString({ ...window })}`),
+    queryFn: () => lists.overview(window),
   });
 }

@@ -88,12 +88,12 @@ test('a lead without a guardian: «اشترك» opens the booking wizard with it
     label: s.subscribe,
     href: {
       pathname: '/inbox/book',
-      params: { leadId: 'a1', phone: PHONE, mode: 'subscribe', name: 'هدى سالم' },
+      params: { leadId: leadOnly.lead?.id, phone: PHONE, mode: 'subscribe', name: 'هدى سالم' },
     },
   });
   expect(subscribeAction({ people: leadOnly, phone: PHONE, thread: null })).toEqual({
     label: s.subscribe,
-    href: { pathname: '/inbox/book', params: { leadId: 'a1', phone: PHONE, mode: 'subscribe' } },
+    href: { pathname: '/inbox/book', params: { leadId: leadOnly.lead?.id, phone: PHONE, mode: 'subscribe' } },
   });
 });
 

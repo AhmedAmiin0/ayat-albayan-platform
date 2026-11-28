@@ -3,7 +3,7 @@ import type { Conflict } from '@ab/schedule';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit';
 import { ConflictNotice } from './ConflictNotice';
 import { ProposalsPanel } from './proposals/ProposalsPanel';
@@ -36,7 +36,7 @@ describe('a viewer-zone change re-words the times in place (React Compiler)', ()
   });
 
   it('ProposalsPanel: both sides of «from ← to»', async () => {
-    apiFetch.mockResolvedValue([MOVED]);
+    apiFetch.mockResolvedValue([answered(MOVED)]);
     render(
       <QueryClientProvider client={new QueryClient()}>
         <ProposalsPanel onOpen={vi.fn()} />

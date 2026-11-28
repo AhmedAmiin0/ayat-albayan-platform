@@ -40,7 +40,9 @@ describe('FileViewer (boards FamFilesWebImage / FamFilesWebPdf)', () => {
     expect(screen.getByRole<HTMLButtonElement>('button', { name: V.prevFile }).disabled).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: V.nextFile }));
     expect(await screen.findByTitle(V.pdfFrame.replace('{title}', 'خطة الحفظ'))).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lesson-files/p1/url');
+    expect(apiSend).toHaveBeenCalledWith(
+      'POST', '/portal/students/s1/lesson-files/p1/url', undefined,
+    );
   });
 
   it('«افتح في نافذة جديدة» is the shown link; «تنزيل» asks for a saving link under the name', async () => {
@@ -52,9 +54,9 @@ describe('FileViewer (boards FamFilesWebImage / FamFilesWebPdf)', () => {
     expect(tab.href).toBe('https://files.example/p1');
     expect(tab.target).toBe('_blank');
     fireEvent.click(screen.getByRole('button', { name: V.download }));
-    const name = new URLSearchParams({ download: 'خطة الحفظ.pdf' }).toString();
+    const name = `download=${encodeURIComponent('خطة الحفظ.pdf')}`;
     await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith(
-      'POST', `/portal/students/s1/lesson-files/p1/url?${name}`,
+      'POST', `/portal/students/s1/lesson-files/p1/url?${name}`, undefined,
     ));
     await vi.waitFor(() => expect(assign).toHaveBeenCalledWith('https://files.example/p1'));
   });

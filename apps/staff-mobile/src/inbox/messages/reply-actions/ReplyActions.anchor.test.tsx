@@ -3,6 +3,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Pressable as MockPressable, Text as MockText } from 'react-native';
 import { createTestQueryClient, renderWithQuery, seedPublicConfig } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { lesson } from '@/today/testing/fixtures';
+import { answered } from '@/today/testing/answered';
 import { ReplyActionsProvider, ReplyNoteLine } from './index';
 
 // docs/37 review correction 1: a reply action taken inside the window around an old search hit
@@ -24,8 +26,10 @@ jest.mock('@/teaching', () => ({
   ),
 }));
 
+const MOVED_ID = 'a1000000-0000-4000-8000-000000000001';
+const ROW = answered(lesson({ id: 'l-9', starts_at: '2099-10-04T14:00:00.000Z' }));
 const NEXT = {
-  id: 'l-9',
+  id: ROW.id,
   starts_at: '2099-10-04T14:00:00Z',
   ends_at: '2099-10-04T15:00:00Z',
   status: 'scheduled' as const,
@@ -51,14 +55,14 @@ async function note(body: string) {
 beforeEach(() => jest.clearAllMocks());
 
 test('ReplyConfirmButton: «تأكيد الحلقة» refreshes the anchored window', async () => {
-  mockPost.mockResolvedValue({ id: 'l-9', status: 'confirmed' });
+  mockPost.mockResolvedValue({ id: MOVED_ID, starts_at: NEXT.starts_at, status: 'confirmed' });
   const keys = await note('ايوة');
   await fireEvent.press(screen.getByRole('button', { name: /^تأكيد حلقة/ }));
   await waitFor(() => expect(keys()).toContainEqual([...anchoredThreadPrefix(PHONE)]));
 });
 
 test('ReplyActionsProvider: a moved lesson refreshes the anchored window', async () => {
-  mockGet.mockResolvedValue([{ id: 'l-9' }]);
+  mockGet.mockResolvedValue([ROW]);
   const keys = await note('تأجيل الحلقة إلى غدا');
   await fireEvent.press(screen.getByRole('button', { name: /^تغيير موعد حلقة/ }));
   await fireEvent.press(await screen.findByText('moved'));

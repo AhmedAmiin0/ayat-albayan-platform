@@ -2,8 +2,6 @@ import { systemPermissionsOf, type UserRole } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { row } from './saved-replies.fakes';
-import { paramPipeOf } from '@/common/http/zod-inputs.test-util';
-import { SavedRepliesController } from './saved-replies.controller';
 import { assertRepliesUser, managesShared } from './saved-replies.guard';
 import { toSavedReply } from './saved-replies.mapper';
 import { movedOrder } from './saved-replies.order';
@@ -28,13 +26,6 @@ describe('guard', () => {
 
   it('only the admin manages the shared list by default', () => {
     expect([managesShared(as('admin')), managesShared(as('sales'))]).toEqual([true, false]);
-  });
-
-  it('a malformed id is 404', async () => {
-    for (const method of ['update', 'remove', 'move', 'stage'] as const) {
-      const pipe = paramPipeOf(SavedRepliesController, { method, name: 'id' });
-      await expect(pipe('x')).rejects.toMatchObject({ status: 404 });
-    }
   });
 });
 

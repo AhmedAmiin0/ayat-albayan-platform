@@ -5,6 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { cachedList, huda, unnamed } from '@/inbox/shared/fixtures';
 import { LeadDetailScreen } from './LeadDetailScreen';
 import { answer, hudaProfile } from '@/inbox/qualification/lib/fixtures';
+import { leadListItem } from '@ab/shared/testing';
 
 // GET /leads?q=phone (the fresh row under the facts) and /settings; huda answers for any phone.
 const mockApiFetch = jest.fn();
@@ -52,7 +53,7 @@ test('the lead comes from the cached inbox: name, isolated phone, source, status
 
 test('an unnamed lead is titled by its isolated phone and has no last-message line', async () => {
   mockParams.id = 'b2';
-  mockApiFetch.mockImplementation(answer({ ...unnamed, status: 'no_reply', follow_up_stage: 1 }));
+  mockApiFetch.mockImplementation(answer(leadListItem({ ...unnamed, status: 'no_reply', follow_up_stage: 1 })));
   await openLead();
   expect(screen.getByRole('header', { name: ltr('+20 10 1234 5678') })).toBeTruthy();
   expect(screen.queryByText(t.leads.lastInboundAt)).toBeNull();

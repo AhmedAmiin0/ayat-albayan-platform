@@ -18,7 +18,7 @@ const THREAD = { phone_e164: '+966501234567', session_open: false, last_inbound_
 function show(role: 'admin' | 'teacher') {
   apiFetch.mockImplementation(async (path: string) => {
     if (path === '/auth/me') return { id: 'u1', email: null, role };
-    if (path === '/messages/gate') return { open: false, reason: 'switch_off' };
+    if (path === '/messages/gate') return { open: false, reason: 'switch_off', queued: 2 };
     return [];
   });
   render(

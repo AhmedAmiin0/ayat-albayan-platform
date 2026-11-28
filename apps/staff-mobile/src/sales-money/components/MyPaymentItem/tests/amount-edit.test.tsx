@@ -2,6 +2,7 @@ import type { MyPaymentRow } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, pathKey, money } from '@ab/mobile-kit';
 import { myPayment } from '@/sales-money/testing/fixtures';
+import { salesPayment } from '@/sales-subscribe/testing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { MyPaymentItem } from '@/sales-money/components/MyPaymentItem/MyPaymentItem';
 
@@ -31,7 +32,7 @@ async function editTo(text: string) {
 
 beforeEach(() => {
   mockApiSend.mockReset();
-  mockApiSend.mockResolvedValue(undefined);
+  mockApiSend.mockResolvedValue(salesPayment());
 });
 
 test('with the key: old → new confirm, then PATCH /sales/payments/:id/amount', async () => {
@@ -71,4 +72,12 @@ test('the API’s refusal is said in its words', async () => {
   await editTo('450');
   await fireEvent.press(screen.getByRole('button', { name: e.confirm }));
   expect(await screen.findByText(t.payments.error.stripe_amount_locked)).toBeTruthy();
+});
+
+test('an answer that is not a payment is not taken as saved', async () => {
+  mockApiSend.mockResolvedValue({ ...salesPayment(), method: 'barter' });
+  await show(myPayment());
+  await editTo('450');
+  await fireEvent.press(screen.getByRole('button', { name: e.confirm }));
+  expect(await screen.findByText(t.common.error)).toBeTruthy();
 });

@@ -44,10 +44,10 @@ describe('InternalMeetingsList «الاجتماعات الداخلية»', () =>
     open([row()]);
     fireEvent.click(await screen.findByRole('button', { name: L.newLink }));
     await waitFor(() => expect((screen.getByLabelText<HTMLInputElement>(L.link)).value).toBe('https://app.example.test/m/new'));
-    expect(api.send).toHaveBeenCalledWith('POST', '/meetings/m-1/link');
+    expect(api.send).toHaveBeenCalledWith('POST', '/meetings/m-1/link', undefined);
     api.send.mockResolvedValueOnce(undefined);
     fireEvent.click(screen.getByRole('button', { name: L.end }));
-    await waitFor(() => expect(api.send).toHaveBeenCalledWith('POST', '/meetings/m-1/end'));
+    await waitFor(() => expect(api.send).toHaveBeenCalledWith('POST', '/meetings/m-1/end', undefined));
   });
 
   it('a scheduled meeting shows its time on the viewer clock, the invitees, «يُفتح الدخول» and no enter before the window', async () => {

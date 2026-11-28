@@ -4,7 +4,6 @@ import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import {
-  apiSend,
   t,
   BackButton,
   EmptyState,
@@ -18,6 +17,7 @@ import { CancelPackage } from '@/payments';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { chosenOpen, openPackages, useSalesFamily } from '@/sales-subscribe/lib/family';
 import { salesKeys } from '@/core/lib/keys';
+import { cancelSalesPackage } from '@/sales-subscribe/hooks/use-sales-subscribe';
 import { OpenPackagePicker } from '@/sales-subscribe/components/OpenPackagePicker';
 import { TransferDone } from '@/sales-subscribe/components/TransferDone';
 import { TransferForm } from '@/sales-subscribe/components/TransferForm';
@@ -61,7 +61,7 @@ export function SalesTransferScreen() {
             {sub && cancelOffered(sub) && !bind.phone ? (
               <CancelPackage
                 key={`cancel-${sub.id}`}
-                cancel={(body) => apiSend('POST', `/sales/subscriptions/${sub.id}/cancel`, body)}
+                cancel={cancelSalesPackage(sub.id)}
                 stale={[salesKeys.family(phone)]}
               />
             ) : null}

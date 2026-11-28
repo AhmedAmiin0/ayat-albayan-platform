@@ -3,7 +3,6 @@ import { INBOX_REFRESH_MS, THREAD_FULL_MS } from '../channels/channels';
 import {
   catchUpPlan,
   changedPhone,
-  unreadTotal,
   chatLiveKey,
   fullReadInterval,
   INBOX_FALLBACK_MS,
@@ -55,12 +54,5 @@ describe('catchUpPlan (docs/44 BUG4)', () => {
     expect(catchUpPlan('list')).toEqual(['list', 'badge']);
     expect(catchUpPlan(chatLiveKey('+966500000001'))).toEqual(['chat:+966500000001']);
     expect(catchUpPlan('badge')).toEqual(['badge']);
-  });
-});
-
-describe('unreadTotal', () => {
-  it('reads the page total; anything else throws', () => {
-    expect(unreadTotal({ items: [], total: 4, page: 1, pageSize: 1 })).toBe(4);
-    for (const bad of [null, {}, { total: -1 }, { total: '3' }]) expect(() => unreadTotal(bad)).toThrow();
   });
 });

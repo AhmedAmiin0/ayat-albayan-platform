@@ -6,7 +6,7 @@ import type { SortSpec } from '@/common/db/list-sort';
 type ApplicantSortKey = (typeof APPLICANT_SORT_KEYS)[number];
 
 /** Column filters + sort of GET /job-applicants (R-LEAD-04, R-NFR-08); status is its own param. */
-export type ApplicantColumnQuery = ListSort<ApplicantSortKey> & {
+type ApplicantColumnQuery = ListSort<ApplicantSortKey> & {
   name?: string | undefined;
   phone?: string | undefined;
   cv?: PresenceFilter | undefined;

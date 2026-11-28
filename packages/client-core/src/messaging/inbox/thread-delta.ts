@@ -1,4 +1,5 @@
 import { isPendingMessage, PENDING_IDS_MAX, type MessageView, type ThreadDelta, type ThreadDetail } from '@ab/shared';
+import type { ThreadDeltaQuery } from '../thread-sync';
 
 /** An open chat's cache (TanStack's InfiniteData<ThreadDetail>): pages[0] is the newest page. */
 export interface ThreadPages {
@@ -10,20 +11,19 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const time = (m: MessageView) => Date.parse(m.created_at);
 
 /**
- * The delta request's query string for this cache: `after` = the newest row held, `pending` = the
+ * The delta request's query for this cache: `after` = the newest row held, `pending` = the
  * outgoing rows whose status may still move (newest PENDING_IDS_MAX). null = nothing to anchor on
  * (no page, or an empty chat): the caller does a full read instead.
  */
-export function deltaSearch(data: ThreadPages | undefined, now: number): string | null {
+export function deltaQuery(data: ThreadPages | undefined, now: number): ThreadDeltaQuery | null {
   const head = data?.pages[0];
   if (!data || !head || head.messages.length === 0) return null;
   const newest = Math.max(...head.messages.map(time));
   if (!Number.isFinite(newest)) return null;
-  const params = new URLSearchParams({ after: new Date(newest).toISOString() });
+  const after = new Date(newest).toISOString();
   const moving = data.pages.flatMap((p) => p.messages).filter((m) => UUID.test(m.id) && isPendingMessage(m, now));
   const ids = [...new Set(moving.map((m) => m.id))].slice(-PENDING_IDS_MAX);
-  if (ids.length > 0) params.set('pending', ids.join(','));
-  return `?${params}`;
+  return ids.length > 0 ? { after, pending: ids.join(',') } : { after };
 }
 
 /**

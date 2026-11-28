@@ -93,7 +93,7 @@ describe('«التكاملات» panel', () => {
     expect(apiSend).not.toHaveBeenCalled();
     apiSend.mockResolvedValue(integrationItems());
     fireEvent.click(within(dialog).getByRole('button', { name: s.clearSecret }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/settings/integrations/secrets/WA_ACCESS_TOKEN'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/settings/integrations/secrets/WA_ACCESS_TOKEN', undefined));
   });
 
   it('the settings search filters the rows; no match hides the section', async () => {

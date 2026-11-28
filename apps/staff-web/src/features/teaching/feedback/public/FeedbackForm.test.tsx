@@ -63,7 +63,7 @@ describe('FeedbackForm «رأيك يهمّنا»', () => {
   });
 
   it('a corrected number goes out as E.164; one that is not a number stops the send', async () => {
-    fetchMock.mockResolvedValue(reply(204));
+    fetchMock.mockResolvedValue(reply(200, { submitted: true }));
     const onDone = renderForm();
     fireEvent.click(screen.getByRole('radio', { name: t.feedback.rowRating.replace('{n}', '4') }));
     fireEvent.click(screen.getByRole('radio', { name: t.enums.feedbackRecommend.no }));
@@ -79,7 +79,7 @@ describe('FeedbackForm «رأيك يهمّنا»', () => {
   });
 
   it('sends rating, recommend, note and phone only — never the kind or the teacher', async () => {
-    fetchMock.mockResolvedValue(reply(204));
+    fetchMock.mockResolvedValue(reply(200, { submitted: true }));
     const onDone = renderForm();
     fireEvent.click(screen.getByRole('radio', { name: t.feedback.rowRating.replace('{n}', '5') }));
     fireEvent.click(screen.getByRole('radio', { name: t.enums.feedbackRecommend.yes }));
