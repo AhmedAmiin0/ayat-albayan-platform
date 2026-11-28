@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import type { LessonStatus } from '@ab/catalog';
 
 // R-SCH-11 edits one lesson's time in place, unlike reschedule which creates a twin (docs/10 §10).
@@ -42,7 +43,12 @@ export const durationText = (
 
 /** The `{ month: '2026-09', status: 'approved' }` of a 409 `payout_locked` body, else null. */
 export function payoutLockOf(body: unknown): { month: string; status: string } | null {
-  if (typeof body !== 'object' || body === null) return null;
-  const { code, month, status } = body as Record<string, unknown>;
-  return code === 'payout_locked' && typeof month === 'string' && typeof status === 'string' ? { month, status } : null;
+  const lock = payoutLockSchema.safeParse(body).data;
+  return lock ? { month: lock.month, status: lock.status } : null;
 }
+
+const payoutLockSchema = z.object({
+  code: z.literal('payout_locked'),
+  month: z.string(),
+  status: z.string(),
+});

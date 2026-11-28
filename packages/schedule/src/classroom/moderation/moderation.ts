@@ -1,4 +1,5 @@
-import type { JoinRole } from '../room';
+import { z } from 'zod';
+import { JOIN_ROLES, type JoinRole } from '../room';
 
 /**
  * The JSON in every LiveKit token's `metadata` (participant.metadata in the room): the role, so
@@ -12,11 +13,12 @@ export interface ParticipantMeta {
 export const participantMeta = (role: JoinRole): string =>
   JSON.stringify({ role } satisfies ParticipantMeta);
 
+const participantMetaSchema = z.object({ role: z.enum(JOIN_ROLES) });
+
 /** The role in a participant's metadata, or null when absent or malformed. */
 export function roleOfMeta(metadata: string | undefined | null): JoinRole | null {
   try {
-    const role = (JSON.parse(metadata ?? '') as Partial<ParticipantMeta>).role;
-    return typeof role === 'string' ? role : null;
+    return participantMetaSchema.safeParse(JSON.parse(metadata ?? '')).data?.role ?? null;
   } catch {
     return null;
   }
@@ -25,7 +27,8 @@ export function roleOfMeta(metadata: string | undefined | null): JoinRole | null
 /** Admin removes anyone but an admin; the teacher removes guests, assistants and sales. */
 export function canRemove(actor: JoinRole, target: JoinRole): boolean {
   if (actor === 'admin') return target !== 'admin';
-  if (actor === 'teacher') return target === 'guest' || target === 'assistant' || target === 'sales';
+  if (actor === 'teacher')
+    return target === 'guest' || target === 'assistant' || target === 'sales';
   return false;
 }
 
@@ -52,7 +55,8 @@ export function canMute(actor: JoinRole | null, target: JoinRole | null): boolea
 }
 
 /** Muting every guest is the teacher's or an admin's. */
-export const canMuteAll = (actor: JoinRole | null): boolean => actor === 'teacher' || actor === 'admin';
+export const canMuteAll = (actor: JoinRole | null): boolean =>
+  actor === 'teacher' || actor === 'admin';
 
 /** GET /recordings/status: false = RECORDING_S3_* or LiveKit missing, rooms are not recorded. */
 export interface RecordingStatus {
@@ -70,4 +74,5 @@ export interface LessonRecordingView {
 }
 
 /** Ending the lesson for everyone is the lesson's teacher's or an admin's. */
-export const canEndLesson = (actor: JoinRole | null): boolean => actor === 'teacher' || actor === 'admin';
+export const canEndLesson = (actor: JoinRole | null): boolean =>
+  actor === 'teacher' || actor === 'admin';
