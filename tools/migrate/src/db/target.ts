@@ -76,6 +76,33 @@ function txOf(sql: Sql): TargetTx {
   };
 }
 
+interface ImportItemRow {
+  entity: string;
+  natural_key: string;
+  target_id: string | null;
+  payload_hash: string;
+}
+
+async function loadImportItems(sql: Sql, entities: readonly EntityName[]) {
+  const rows = await run<ImportItemRow>(sql, {
+    text: 'select entity, natural_key, target_id::text, payload_hash from public.import_items where entity = any($1)',
+    params: [entities],
+  }).catch((err: unknown) => {
+    // Migration 160 not deployed yet: a dry-run plans as a first run; apply fails at startRun.
+    if ((err as { code?: string }).code !== '42P01') throw err;
+    console.warn(
+      'import_items missing on target (migration 20261001000160 not applied): first-run plan',
+    );
+    return [] as ImportItemRow[];
+  });
+  return new Map(
+    rows.map((r) => [
+      `${r.entity}:${r.natural_key}`,
+      { targetId: r.target_id, hash: r.payload_hash },
+    ]),
+  );
+}
+
 const ignoreNotice = (): undefined => undefined;
 
 export function createTargetDb(config: TargetConfig): TargetDb {
@@ -86,31 +113,7 @@ export function createTargetDb(config: TargetConfig): TargetDb {
   });
   return {
     name: config.name,
-    async loadImportItems(entities) {
-      interface Item {
-        entity: string;
-        natural_key: string;
-        target_id: string | null;
-        payload_hash: string;
-      }
-      const rows = await run<Item>(sql, {
-        text: 'select entity, natural_key, target_id::text, payload_hash from public.import_items where entity = any($1)',
-        params: [entities],
-      }).catch((err: unknown) => {
-        // Migration 160 not deployed yet: a dry-run plans as a first run; apply fails at startRun.
-        if ((err as { code?: string }).code !== '42P01') throw err;
-        console.warn(
-          'import_items missing on target (migration 20261001000160 not applied): first-run plan',
-        );
-        return [] as Item[];
-      });
-      return new Map(
-        rows.map((r) => [
-          `${r.entity}:${r.natural_key}`,
-          { targetId: r.target_id, hash: r.payload_hash },
-        ]),
-      );
-    },
+    loadImportItems: (entities) => loadImportItems(sql, entities),
     async findByColumn(q) {
       if (q.values.length === 0) return new Map();
       const rows = await run<{ id: string; value: string }>(sql, findByColumnSql(q));
