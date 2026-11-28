@@ -47,4 +47,11 @@ describe('roomModerationApi (R-CLS)', () => {
     const path = `/meetings/${ROOM}/participants/${WHO}/mute`;
     expect(apiSend).toHaveBeenCalledWith('POST', path, { source: 'microphone' });
   });
+
+  it('allows or stops one guest\'s screen share in a meeting', async () => {
+    const { api, apiSend } = clientAnswering(undefined);
+    await api.shareInMeeting({ meetingId: ROOM, identity: WHO, allow: false });
+    const path = `/meetings/${ROOM}/participants/${WHO}/share`;
+    expect(apiSend).toHaveBeenCalledWith('POST', path, { allow: false });
+  });
 });

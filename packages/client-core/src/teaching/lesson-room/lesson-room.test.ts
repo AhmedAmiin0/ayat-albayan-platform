@@ -34,6 +34,16 @@ describe('lessonRoomSends (R-CLS)', () => {
     ]);
   });
 
+  it('allows or stops one guest\'s screen share', async () => {
+    const { apiSend, sends } = make(async () => undefined);
+    await sends.share({ lessonId: LESSON, identity: WHO, allow: true });
+    await sends.share({ lessonId: LESSON, identity: WHO, allow: false });
+    expect(apiSend.mock.calls).toEqual([
+      ['POST', `${room}/${WHO}/share`, { allow: true }],
+      ['POST', `${room}/${WHO}/share`, { allow: false }],
+    ]);
+  });
+
   it('escapes an identity in the path', async () => {
     const { apiSend, sends } = make(async () => undefined);
     await sends.remove({ lessonId: LESSON, identity: 'a b' });

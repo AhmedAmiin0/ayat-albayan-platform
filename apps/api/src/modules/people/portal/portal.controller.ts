@@ -9,9 +9,9 @@ import {
   type PortalRoomLink,
 } from '@ab/shared';
 import type { RoomJoinResult } from '@ab/schedule';
-import { Controller, HttpCode, Inject, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller, HttpCode, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { PortalHistoryService } from './history/portal-history.service';
@@ -19,8 +19,6 @@ import { PortalHomeService } from './home/portal-home.service';
 import { PortalLessonsService } from './lessons/portal-lessons.service';
 import { PortalPackageService } from './package/portal-package.service';
 import { PortalReportsService } from './reports/portal-reports.service';
-
-const UUID = new ParseUUIDPipe();
 
 type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
 
@@ -61,17 +59,13 @@ export class PortalController {
     return this.past.history({ user, studentId: params.id, query });
   }
 
-  /** The classroom join answer has no shared schema yet, so this handler keeps its decorators. */
-  @Post('portal/students/:id/lessons/:lessonId/join')
-  @ApiTags('portal')
-  @Permissions('self.portal')
+  @Route(routes.join)
   @HttpCode(200)
   join(
-    @Param('id', UUID) studentId: string,
-    @Param('lessonId', UUID) lessonId: string,
+    @RouteInput() { params }: Input<'join'>,
     @CurrentUser() user: AuthUser,
   ): Promise<RoomJoinResult> {
-    return this.lessons.join({ user, studentId, lessonId });
+    return this.lessons.join({ user, studentId: params.id, lessonId: params.lessonId });
   }
 
   @Route(routes.roomLink)
