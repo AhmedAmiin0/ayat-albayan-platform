@@ -1,4 +1,4 @@
-import { jobApplicantRoutes as routes } from '@ab/shared';
+import { jobApplicantRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
 import type { JobApplicantCalls } from './job-applicants-api.types';
 
@@ -6,12 +6,12 @@ import type { JobApplicantCalls } from './job-applicants-api.types';
 export function jobApplicantCalls(client: ApiClient): JobApplicantCalls {
   const call = callWith(client);
   return {
-    list: (query) => call({ route: routes.list, query }),
-    get: (id) => call({ route: routes.get, params: { id } }),
-    create: (body) => call({ route: routes.create, body }),
-    update: ({ id, body }) => call({ route: routes.update, params: { id }, body }),
+    list: (query) => call({ route: jobApplicantRoutes.list, query }),
+    get: (id) => call({ route: jobApplicantRoutes.get, params: { id } }),
+    create: (body) => call({ route: jobApplicantRoutes.create, body }),
+    update: ({ id, body }) => call({ route: jobApplicantRoutes.update, params: { id }, body }),
     changeStatus: ({ id, status }) =>
-      call({ route: routes.changeStatus, params: { id }, body: { status } }),
-    remove: (id) => call({ route: routes.remove, params: { id } }),
+      call({ route: jobApplicantRoutes.changeStatus, params: { id }, body: { status } }),
+    remove: (id) => call({ route: jobApplicantRoutes.remove, params: { id } }),
   };
 }

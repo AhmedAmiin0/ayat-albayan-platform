@@ -1,4 +1,4 @@
-import { salesTeacherOverviewRoutes as routes } from '@ab/shared';
+import { salesTeacherOverviewRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
 import type { TeacherOverviewCalls } from './teacher-overview-api.types';
 
@@ -6,6 +6,6 @@ import type { TeacherOverviewCalls } from './teacher-overview-api.types';
 export function teacherOverviewCalls(client: ApiClient): TeacherOverviewCalls {
   const call = callWith(client);
   return {
-    overview: (id) => call({ route: routes.overview, params: { id } }),
+    overview: (id) => call({ route: salesTeacherOverviewRoutes.overview, params: { id } }),
   };
 }
