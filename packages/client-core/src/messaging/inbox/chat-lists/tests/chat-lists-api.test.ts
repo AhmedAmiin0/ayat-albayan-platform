@@ -33,8 +33,8 @@ describe('chat list calls (docs/22 §3)', () => {
     const { client, apiSend } = clientAnswering(undefined);
     const calls = chatListCalls(client);
     await calls.remove(ID);
-    await calls.setMember({ id: ID, phone: '+966501234567', member: true });
-    await calls.setMember({ id: ID, phone: '+966501234567', member: false });
+    await calls.addThread({ id: ID, phone: '+966501234567' });
+    await calls.dropThread({ id: ID, phone: '+966501234567' });
     const member = `/chat-lists/${ID}/threads/%2B966501234567`;
     expect(apiSend.mock.calls).toEqual([
       ['DELETE', `/chat-lists/${ID}`, undefined],
