@@ -3,7 +3,6 @@ export { monthLabel, monthOptions, MonthSelect } from './shared/MonthSelect';
 export {
   approvePayout,
   currentMonth,
-  downloadPayoutsCsv,
   earningsSummaryQuery,
   generatePayouts,
   type PayoutGenerateResult,
