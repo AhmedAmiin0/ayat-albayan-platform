@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { leadRow } from '../../../testing/leads';
+import { leadRow } from '../../../testing/sales/leads';
 import { leadWriteRoutes as routes } from '../leads.routes';
 
 const ROW = leadRow({ qualification: { age: 9 }, last_inbound_at: '2026-11-01T10:00:00+00:00' });

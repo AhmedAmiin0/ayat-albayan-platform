@@ -1,10 +1,12 @@
-import { uploadOnce } from '@ab/client-core';
-import { payoutViewSchema, type PayoutView } from '@ab/money';
+import { payoutCalls, uploadOnce } from '@ab/client-core';
+import type { PayoutView } from '@ab/money';
 import { useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { uploadTeacherReceipt } from '@/earnings/hooks/upload-receipt';
-import { apiSend } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { payBody, type PayDraft } from './payout-actions';
+
+const payouts = payoutCalls({ apiFetch, apiSend });
 
 /** Money moved: the month list, the teacher's ledger, the summaries and the money lists (payments, receivables) all re-read. */
 export const refreshMoney = (client: QueryClient) =>
@@ -23,10 +25,7 @@ export function usePayoutMove() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (m: PayoutMove) =>
-      apiSend('POST', `/payouts/${m.id}/${m.move}`, {
-        body: m.move === 'unpay' ? { reason: m.reason } : undefined,
-        schema: payoutViewSchema,
-      }),
+      m.move === 'unpay' ? payouts.unpay(m.id, m.reason) : payouts[m.move](m.id),
     onSuccess: () => refreshMoney(client),
   });
 }
@@ -42,7 +41,7 @@ export function usePayPayout(payout: PayoutView) {
         ? await receiptOnce(receipt.uri, () => uploadTeacherReceipt(payout.teacher.id, receipt))
         : null;
       const body = payBody(draft, path, new Date());
-      return apiSend('POST', `/payouts/${payout.id}/pay`, { body, schema: payoutViewSchema });
+      return payouts.pay(payout.id, body);
     },
     onSuccess: () => refreshMoney(client),
   });

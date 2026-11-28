@@ -1,6 +1,9 @@
-import type { Page } from '@ab/core';
-import type { MyCommissionRow, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/money';
-import { salesAssignCalls, salesPaymentCalls, salesPortalCalls } from '@ab/client-core';
+import {
+  mySalesCalls,
+  salesAssignCalls,
+  salesPaymentCalls,
+  salesPortalCalls,
+} from '@ab/client-core';
 import type { SalesSubscriptionKind } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
@@ -17,19 +20,21 @@ export const salesSubscriptionsQuery = (kind: SalesSubscriptionKind) =>
     queryFn: () => salesPortal.subscriptions(kind),
   });
 
+const mine = mySalesCalls({ apiFetch, apiSend });
+
 // The assistant's own pages (R-ASST-06). The API answers only for the caller: students they brought,
 // payments they recorded, their commission and statements. Amounts stay per currency.
 
 /** GET /sales/me/students — the students I brought, newest first; no price, only «paid or not». */
 export const myStudentsQuery = queryOptions({
   queryKey: myMoneyKeys.students(),
-  queryFn: () => apiFetch<MyStudentRow[]>('/sales/me/students'),
+  queryFn: () => mine.students(),
 });
 
 /** GET /sales/me/earnings — my terms, this month so far, commissions earned and my statements. */
 export const myEarningsQuery = queryOptions({
   queryKey: myMoneyKeys.earnings(),
-  queryFn: () => apiFetch<MyEarnings>('/sales/me/earnings'),
+  queryFn: () => mine.earnings(),
 });
 
 /** Both wallet queries sit under this key, so one invalidation refreshes the page. */
@@ -40,14 +45,14 @@ export const MY_COMMISSIONS_PAGE_SIZE = 20;
 export const myCommissionsQuery = (page: number) =>
   queryOptions({
     queryKey: myMoneyKeys.commissions(page),
-    queryFn: () => apiFetch<Page<MyCommissionRow>>(`/sales/me/commissions?page=${page}&pageSize=${MY_COMMISSIONS_PAGE_SIZE}`),
+    queryFn: () => mine.commissions({ page, pageSize: MY_COMMISSIONS_PAGE_SIZE }),
     placeholderData: keepPreviousData,
   });
 
 /** GET /sales/me/payments — only the payments I recorded. */
 export const myPaymentsQuery = queryOptions({
   queryKey: myMoneyKeys.payments(),
-  queryFn: () => apiFetch<MyPaymentRow[]>('/sales/me/payments'),
+  queryFn: () => mine.payments(),
 });
 
 /** PATCH /sales/payments/:id/amount (subscriptions.edit_terms): a payment, never card. */

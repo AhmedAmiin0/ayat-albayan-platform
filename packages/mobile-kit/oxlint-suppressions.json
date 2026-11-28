@@ -1,9 +1,4 @@
 {
-  "src/account/account-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/account/account-errors.ts": {
     "ab/no-shape-checks": {
       "count": 2
@@ -177,11 +172,6 @@
   },
   "src/lib/log/log.ts": {
     "no-console": {
-      "count": 1
-    }
-  },
-  "src/lib/profile/my-profile.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

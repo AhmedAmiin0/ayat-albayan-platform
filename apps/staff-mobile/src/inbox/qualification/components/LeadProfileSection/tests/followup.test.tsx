@@ -6,7 +6,7 @@ import { huda } from '@/inbox/shared/fixtures';
 import { deviceTimeZone } from '@/inbox/messages/hooks/message-text';
 import { answer, hudaProfile, hudaRow } from '@/inbox/qualification/lib/fixtures';
 import { LeadProfileSection } from '@/inbox/qualification/components/LeadProfileSection/LeadProfileSection';
-import type { LeadProfile } from '@/inbox/qualification/lib/queries';
+import type { LeadListItem } from '@ab/shared';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -18,7 +18,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 const f = t.followUps;
 
-function serve(row: LeadProfile) {
+function serve(row: LeadListItem) {
   mockApiFetch.mockImplementation(answer(row));
   return renderWithQuery(<LeadProfileSection lead={huda} />);
 }

@@ -59,7 +59,9 @@ describe('lessonViewSchema', () => {
         created_at: view.starts_at,
         requested_by: 'family',
       },
-      conflicts: [{ kind: 'teacher_busy', startsAt: '1', endsAt: '2', lessonId }],
+      conflicts: [
+        { kind: 'teacher_busy', startsAt: view.starts_at, endsAt: view.ends_at, lessonId },
+      ],
       students: [
         {
           ...student,

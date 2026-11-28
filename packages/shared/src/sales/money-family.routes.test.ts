@@ -1,6 +1,6 @@
 import { DEFAULT_RENEWAL_PRICING } from '@ab/money';
 import { describe, expect, it } from 'vitest';
-import { salesFamilyStudent, salesOwedPackage } from '../testing/sales-family';
+import { salesFamilyStudent, salesOwedPackage } from '../testing/sales/sales-family';
 import { salesMoneyFamilyRoutes as routes } from './money-family.routes';
 
 const accepts = (v: unknown): boolean => routes.family.response.safeParse(v).success;

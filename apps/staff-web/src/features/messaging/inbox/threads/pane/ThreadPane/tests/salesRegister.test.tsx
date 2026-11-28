@@ -13,7 +13,14 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-const RESULT = { rule_id: 'r1', student_ids: ['s1'], guardian_ids: ['g1'], lessons: [{ id: uid('l1'), starts_at: SLOT, ends_at: SLOT }], message_ids: ['m1'] };
+const RESULT = {
+  rule_id: 'e7777777-7777-4777-8777-777777777771',
+  student_ids: ['e7777777-7777-4777-8777-777777777776'],
+  guardian_ids: ['e7777777-7777-4777-8777-777777777772'],
+  lessons: [{ id: 'e7777777-7777-4777-8777-777777777773', starts_at: SLOT, ends_at: SLOT }],
+  message_ids: ['e7777777-7777-4777-8777-777777777774'],
+  invoice_id: null,
+};
 const SLOTS = { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [{ starts_at: SLOT, ends_at: SLOT, conflicts: [] }] };
 
 function open(mode: InboxMode, patch: Parameters<typeof detail>[1] = {}) {

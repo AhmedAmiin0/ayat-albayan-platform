@@ -17,6 +17,7 @@ export interface ChatAsk<R extends ThreadPageRoute | ThreadDeltaRoute> {
 
 export interface ThreadReadCalls {
   list: (query: RouteQuery<ListRoute>, signal?: AbortSignal) => Promise<RouteResult<ListRoute>>;
+  unread: (signal?: AbortSignal) => Promise<RouteResult<ListRoute>>;
   sync: (query: RouteQuery<SyncRoute>) => Promise<RouteResult<SyncRoute>>;
   page: (ask: ChatAsk<ThreadPageRoute>) => Promise<RouteResult<ThreadPageRoute>>;
   delta: (ask: ChatAsk<ThreadDeltaRoute>) => Promise<RouteResult<ThreadDeltaRoute>>;

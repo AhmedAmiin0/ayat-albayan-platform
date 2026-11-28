@@ -1,4 +1,5 @@
 import type { LessonView, OverviewTeacher } from '@ab/schedule';
+import { teacherFixture, teacherRowFixture } from '@ab/shared/testing';
 import { SLOTS } from '@/teaching/reschedule/fixtures';
 import { muscat, pending } from '@/today/testing/fixtures';
 import { answered } from '@/today/testing/answered';
@@ -12,7 +13,7 @@ const TEACHER = {
   id: 't1',
   display_name_ar: 'أبرار',
   phone_e164: null,
-  status: 'active',
+  status: 'active' as const,
   tz: 'Africa/Cairo',
 };
 const TEACHERS: OverviewTeacher[] = [
@@ -31,12 +32,12 @@ export function calendarBackend() {
   const within = (l: LessonView, from = '', to = '9') => l.starts_at >= from && l.starts_at < to;
   const backend = new FakeBackend()
     .on('GET /teachers', () => ({
-      items: [{ ...TEACHER, active_count: 0, trial_count: 0 }],
+      items: [teacherRowFixture({ ...TEACHER, active_count: 0, trial_count: 0 })],
       total: 1,
       page: 1,
       pageSize: 25,
     }))
-    .on('GET /teachers/:id', () => TEACHER)
+    .on('GET /teachers/:id', () => teacherFixture(TEACHER))
     .on('GET /teachers/:id/availability', () => [])
     .on('GET /teachers/:id/time-off', () => [])
     .on('GET /students/status-counts', () => ({

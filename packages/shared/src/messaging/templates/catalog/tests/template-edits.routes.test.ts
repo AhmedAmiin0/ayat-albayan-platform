@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { templateEditRoutes as edits } from '..';
 import { aLineSync } from './template-sync.builder';
-import { aTemplateView } from '../../../../testing/templates';
+import { aTemplateView } from '../../../../testing/messaging/templates';
 
 const line = (r: { method: string; path: string }) => `${r.method} ${r.path}`;
 const ALL = [

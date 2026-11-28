@@ -2,6 +2,8 @@ import { defineRoute } from '@ab/core';
 import { catalogResponseSchema, priceListResponseSchema, quoteResponseSchema } from '@ab/money';
 import { catalogQuerySchema, priceListQuerySchema, quoteQuerySchema } from './pricing.schemas';
 
+const access = { permissions: ['pricing.read'], tags: ['pricing'] } as const;
+
 /** The staff price calculator (docs/08), written once for the api and its clients. */
 export const pricingRoutes = {
   catalog: defineRoute({
@@ -9,17 +11,20 @@ export const pricingRoutes = {
     path: '/pricing/catalog',
     query: catalogQuerySchema,
     response: catalogResponseSchema,
+    ...access,
   }),
   quote: defineRoute({
     method: 'GET',
     path: '/pricing/quote',
     query: quoteQuerySchema,
     response: quoteResponseSchema,
+    ...access,
   }),
   list: defineRoute({
     method: 'GET',
     path: '/pricing/list',
     query: priceListQuerySchema,
     response: priceListResponseSchema,
+    ...access,
   }),
 };

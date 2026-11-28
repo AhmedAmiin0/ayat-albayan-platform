@@ -11,5 +11,6 @@ export const roll = readFileSync(root('deploy/staging/roll.sh'), 'utf8');
 export const rollback = readFileSync(root('deploy/staging/rollback.sh'), 'utf8');
 export const deploy = readFileSync(root('.github/workflows/deploy-staging.yml'), 'utf8');
 export const services = compose.services;
-export const APPS = ['ayat-worker', 'ayat-api-a', 'ayat-api-b'];
+export const COPIES = ['ayat-api-a', 'ayat-api-b', 'ayat-api-c', 'ayat-api-d'];
+export const APPS = ['ayat-worker', ...COPIES];
 export const mb = (v) => Number(/^(\d+)M$/.exec(v)?.[1] ?? NaN);

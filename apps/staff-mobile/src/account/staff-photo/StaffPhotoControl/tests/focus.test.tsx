@@ -2,6 +2,7 @@ import { act, fireEvent, screen } from '@testing-library/react-native';
 import { apiSend, t } from '@ab/mobile-kit';
 import { focusNode } from '@/core/lib/a11y-focus';
 import { renderWithQuery } from '@/test/query';
+import { teacherPhotos } from '@/account/staff-photo/staff-photo-api';
 import { StaffPhotoControl } from '@/account/staff-photo/StaffPhotoControl/StaffPhotoControl';
 
 jest.mock('@/core/lib/a11y-focus', () => ({ focusNode: jest.fn(() => true) }));
@@ -11,7 +12,7 @@ const s = t.staffPhoto;
 const focused = jest.mocked(focusNode);
 
 const show = () =>
-  renderWithQuery(<StaffPhotoControl name="هدى سالم" id="t1" base="/teachers/t1/avatar" photo="https://cdn/t1.jpg" invalidate={[['teachers']]} />);
+  renderWithQuery(<StaffPhotoControl name="هدى سالم" id="00000000-0000-4000-8000-0000000000a1" calls={teacherPhotos} photo="https://cdn/t1.jpg" invalidate={[['teachers']]} />);
 /** Whether `target` (what focusNode got) is the named button: the host Pressable shares its onClick with the screen's element. */
 const isButton = (name: string) => (target: unknown) =>
   screen.getByRole('button', { name }).props.onClick === (target as { props: { onClick: unknown } }).props.onClick;

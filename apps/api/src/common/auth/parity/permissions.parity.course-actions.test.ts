@@ -11,7 +11,7 @@ describe('the student profile course actions', () => {
 
   const gated = (key: string) =>
     routes
-      .filter((r) => permissionKeys(r).includes(key))
+      .filter((r) => permissionKeys(r).join('|') === key)
       .map((r) => r.key)
       .sort();
 

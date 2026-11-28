@@ -16,8 +16,6 @@ export {
   refreshPlan,
   THREAD_FULL_LIVE_MS,
   UNREAD_COUNT_KEY,
-  UNREAD_COUNT_PATH,
-  unreadTotal,
 } from './inbox-live';
 export {
   connectInboxLive,

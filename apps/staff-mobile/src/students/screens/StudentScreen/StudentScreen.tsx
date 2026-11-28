@@ -5,9 +5,7 @@ import { ScrollView } from 'react-native';
 import { AssistantsSection } from '@/classroom/assistants/AssistantsSection';
 import {
   ApiError,
-  apiFetch,
   t,
-  pathKey,
   Button,
   BackButton,
   ErrorState,
@@ -28,18 +26,14 @@ import { GuardianCard } from '@/students/profile/GuardianCard';
 import { SiblingsList } from '@/students/profile/SiblingsList';
 import { StatusChanger } from '@/students/profile/StatusChanger';
 import { StudentFacts } from '@/students/profile/StudentFacts';
-import type { StudentProfile } from '@ab/shared';
+import { studentProfileQuery } from '@/students/profile-query';
 
 const back = () => backWithin('/students');
 
 /** Quick view (R-MOB-02): editing, adding and merging stay on the web. */
 export function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const path = `/students/${id}`;
-  const query = useQuery({
-    queryKey: pathKey(path),
-    queryFn: () => apiFetch<StudentProfile>(path),
-  });
+  const query = useQuery(studentProfileQuery(id));
   const student = query.data;
   const to = useStudentHref();
   const backButton = <BackButton onPress={back} />;

@@ -285,11 +285,6 @@
       "count": 1
     }
   },
-  "src/people/account/account.views.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/people/presence/presence-rules.ts": {
     "complexity": {
       "count": 1
@@ -307,14 +302,6 @@
   },
   "src/people/schemas/teacher-students.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/people/students/course-pause.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    },
-    "typescript/no-deprecated": {
       "count": 1
     }
   },
@@ -352,11 +339,6 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/people/users/index.ts": {
-    "typescript/consistent-type-exports": {
       "count": 1
     }
   },
@@ -371,11 +353,6 @@
     },
     "typescript/no-unnecessary-condition": {
       "count": 1
-    }
-  },
-  "src/people/users/users.views.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/people/users/validation.ts": {
@@ -453,19 +430,9 @@
       "count": 1
     }
   },
-  "src/sales/course/course-change.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/sales/course/course-follow.test.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/sales/course/course-follow.ts": {
-    "stylistic/max-len": {
-      "count": 6
     }
   },
   "src/sales/course/course-picks.test.ts": {
@@ -475,17 +442,12 @@
   },
   "src/sales/course/course.ts": {
     "stylistic/max-len": {
-      "count": 4
+      "count": 3
     }
   },
   "src/sales/money.ts": {
     "stylistic/max-len": {
       "count": 13
-    }
-  },
-  "src/sales/payment-link/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
     }
   },
   "src/sales/payment-link/rules.ts": {
@@ -501,11 +463,6 @@
   "src/sales/payment-link/schemas.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/sales/payment-link/views.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/sales/pick-sales.ts": {

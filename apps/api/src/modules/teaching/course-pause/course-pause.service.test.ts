@@ -1,8 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { asResponse } from '@/common/http/returns';
 import type { CoursePauseFollowUps } from './course-pause.follow-ups';
 import { PAUSE, pauseMocks, resetPauseMocks, rpcOut, STUDENT } from './course-pause.fakes';
 import type { CoursePauseRepo } from './course-pause.repo';
 import { CoursePauseService } from './course-pause.service';
+
+vi.mock('@/common/http/returns', { spy: true });
 
 function service() {
   const m = pauseMocks();
@@ -48,5 +51,18 @@ describe('CoursePauseService.beginPause (a pause from a later day, on its from d
     m.queries.call.mockResolvedValue(rpcOut({ started: false }));
     await svc.beginPause(PAUSE);
     expect(m.follow.after).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('the pause view answer (docs/62 part 2 §3: asResponse on read routes only)', () => {
+  it('checks the view on the read and not on a write that already ran', async () => {
+    const { m, svc } = service();
+    m.queries.call.mockResolvedValue(rpcOut({ resumed: true }));
+    vi.mocked(asResponse).mockClear();
+    await svc.resumePause(PAUSE, null);
+    expect(asResponse).not.toHaveBeenCalled();
+    m.queries.pauses.mockResolvedValue([await m.queries.pause(PAUSE)]);
+    await svc.state(STUDENT);
+    expect(asResponse).toHaveBeenCalledTimes(1);
   });
 });

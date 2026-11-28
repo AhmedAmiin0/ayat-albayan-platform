@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t, pathKey, money } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { CourseActionsSection } from './CourseActionsSection';
-import { BASE, serve, stopPreview, SUB } from './fixtures';
+import { BASE, serve, stopPreview, stopResult, SUB } from './fixtures';
 
 // The stop sheet's money on mobile, as on web: the person chooses what is still
 // owed or the refund amount; one summary line. 300 SAR paid, 3 of 8 attended (charge 112.5).
@@ -16,15 +16,6 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 const s = t.courseActions.stop;
 const BODY = { subscriptionId: SUB, reason: 'سفر', clientRequestId: expect.any(String) };
-const stopped = (refund: object | null) => ({
-  subscriptionId: SUB,
-  cancelledLessons: 3,
-  endedRules: 1,
-  studentStatus: 'churned',
-  stoppedAt: 'x',
-  refund,
-});
-
 beforeEach(() => {
   mockApiFetch.mockReset().mockImplementation(serve());
   mockApiSend.mockReset();
@@ -47,7 +38,7 @@ const sent = (extra: object) =>
   );
 
 test('«إلغاء فقط» by default, attended × rate owed: nothing more due on 300 paid', async () => {
-  mockApiSend.mockResolvedValue(stopped(null));
+  mockApiSend.mockResolvedValue(stopResult());
   await openSheet();
   expect(checked(s.cancelOnly).checked).toBe(true);
   expect(checked(s.oweAttended.replace('{amount}', sar(112.5))).checked).toBe(true);
@@ -58,7 +49,7 @@ test('«إلغاء فقط» by default, attended × rate owed: nothing more due 
 });
 
 test('«إلغاء فقط» with a custom owed amount: 0 .. the price', async () => {
-  mockApiSend.mockResolvedValue(stopped(null));
+  mockApiSend.mockResolvedValue(stopResult());
   await openSheet();
   await fireEvent.press(screen.getByRole('radio', { name: s.oweCustom }));
   const hint = s.customHint.replace('{amount}', sar(300));
@@ -72,12 +63,14 @@ test('«إلغاء فقط» with a custom owed amount: 0 .. the price', async ()
 });
 
 test('«إلغاء مع استرداد»: unattended by default, everything paid offered, nothing left owed', async () => {
-  mockApiSend.mockResolvedValue(stopped({ amount: 300, card: 0, manual: 300 }));
+  mockApiSend.mockResolvedValue(stopResult({ refund: { amount: 300, card: 0, manual: 300 } }));
   await openSheet();
   await fireEvent.press(screen.getByRole('radio', { name: s.withRefund }));
   expect(checked(s.refundUnattended.replace('{amount}', sar(187.5))).checked).toBe(true);
   expect(screen.getByText(summary(187.5, 0))).toBeTruthy();
-  await fireEvent.press(screen.getByRole('radio', { name: s.refundAll.replace('{amount}', sar(300)) }));
+  await fireEvent.press(
+    screen.getByRole('radio', { name: s.refundAll.replace('{amount}', sar(300)) }),
+  );
   expect(screen.getByText(summary(300, 0))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await sent({ refund: { choice: 'paid' } });
@@ -93,7 +86,9 @@ test('without subscriptions.refund (sales by default): never below attended × r
   expect(screen.queryByRole('radio', { name: s.withRefund })).toBeNull();
   expect(screen.queryByRole('radio', { name: s.oweNothing })).toBeNull();
   expect(screen.queryByRole('radio', { name: s.oweCustom })).toBeNull();
-  expect(screen.getByRole('radio', { name: s.owePrice.replace('{amount}', sar(300)) })).toBeTruthy();
+  expect(
+    screen.getByRole('radio', { name: s.owePrice.replace('{amount}', sar(300)) }),
+  ).toBeTruthy();
 });
 
 test('the refund unreadable now: the sheet says why', async () => {

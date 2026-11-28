@@ -75,3 +75,10 @@ test('each row shows «مشترك n · تجريبي n»; a count opens the teach
   await fireEvent.press(screen.getByRole('button', { name: /^أ\. فاطمة الزهراء/ }));
   expect(router.push).toHaveBeenLastCalledWith('/more/teachers/t1');
 });
+
+test('an answer that is not a page of teacher rows shows the error, not a broken row', async () => {
+  mockApiFetch.mockResolvedValue({ items: [{ id: 't1' }], total: 1, page: 1, pageSize: 25 });
+  await renderWithQuery(<TeachersScreen />);
+  expect(await screen.findByRole('alert')).toBeTruthy();
+  expect(screen.queryByRole('button', { name: /^أ\./ })).toBeNull();
+});

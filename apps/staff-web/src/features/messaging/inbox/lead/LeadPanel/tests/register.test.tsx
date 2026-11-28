@@ -1,3 +1,4 @@
+import { studentRowFixture } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
@@ -75,7 +76,7 @@ describe('the short lead aside: summary, «تسجيل الطالب», «تعدي
     expect(dialog.getByLabelText<HTMLInputElement>(t.guardians.name).value).toBe('أم عمر');
     expect(dialog.queryByLabelText(t.students.program)).toBeNull();
     expect(dialog.queryByLabelText(t.guardians.source)).toBeNull();
-    apiSend.mockResolvedValue({ id: 's1', code: 'AB-0001', name: 'عمر', status: 'trial' });
+    apiSend.mockResolvedValue(studentRowFixture({ id: 's1', code: 'AB-0001', name: 'عمر', status: 'trial' }));
     fireEvent.click(dialog.getByRole('button', { name: t.common.save }));
     await waitFor(() => expect(onNotice).toHaveBeenCalledWith({ message: t.students.created }));
     expect(apiSend).toHaveBeenCalledWith('POST', '/students', {

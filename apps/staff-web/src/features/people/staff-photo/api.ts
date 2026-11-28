@@ -1,20 +1,23 @@
-import type { StaffPhotoView } from '@ab/shared';
+import { teacherPhotoCalls, userPhotoCalls, type StaffPhotoCalls } from '@ab/client-core';
+import { z } from 'zod';
 import { uploadPhoto } from '@/features/people/account';
-import { apiSend } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
+import { staffPhotoKindSchema, type StaffPhotoTarget } from './staff-photo.schemas';
 
-/** Whose photo an admin edits: a teacher (teachers.write) or a staff login (users.write). */
-export type StaffPhotoKind = 'teachers' | 'users';
+const client = { apiFetch, apiSend };
+const CALLS = z
+  .record(staffPhotoKindSchema, z.custom<StaffPhotoCalls>())
+  .readonly()
+  .decode({ teachers: teacherPhotoCalls(client), users: userPhotoCalls(client) });
 
-export interface StaffPhotoTarget {
-  kind: StaffPhotoKind;
-  id: string;
-}
+export const uploadStaffPhoto = ({ kind, id }: StaffPhotoTarget, file: File) =>
+  uploadPhoto(
+    {
+      uploadUrl: (body) => CALLS[kind].uploadUrl(id, body),
+      set: (body) => CALLS[kind].set(id, body),
+    },
+    file,
+  );
 
-const base = ({ kind, id }: StaffPhotoTarget) => `/${kind}/${encodeURIComponent(id)}/avatar`;
-
-export const uploadStaffPhoto = (target: StaffPhotoTarget, file: File) =>
-  uploadPhoto<StaffPhotoView>(base(target), file);
-
-/** DELETE …/avatar: back to the initials. */
-export const removeStaffPhoto = (target: StaffPhotoTarget) =>
-  apiSend<StaffPhotoView>('DELETE', base(target));
+/** Back to the initials. */
+export const removeStaffPhoto = ({ kind, id }: StaffPhotoTarget) => CALLS[kind].remove(id);

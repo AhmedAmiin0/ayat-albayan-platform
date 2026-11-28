@@ -1,27 +1,11 @@
-import { PAYMENT_KINDS, PAYMENT_METHODS } from '@ab/catalog';
-import { listSortShape, localDate } from '@ab/core';
-import { PAYMENT_SORT_KEYS } from '@ab/money';
+import type { paymentListQuery } from '@ab/shared';
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { DAY_MS, dayWallToUtc } from '@ab/time';
-import { z } from 'zod';
-import { pageQuerySchema } from '@/common/http/http';
+import type { z } from 'zod';
 import type { PaymentFilter } from './payments.repo';
 
 /** Ranges are local days in the academy's zone (settings.academy_timezone), inclusive (docs/11 §3). */
 const DEFAULT_TZ = SETTING_DEFAULTS.academy_timezone;
-
-/** GET /payments?subscriptionId&studentId&from&to&method&kind&sort&dir&page&pageSize (P1, R-NFR-08). */
-export const paymentListQuery = pageQuerySchema
-  .extend({
-    subscriptionId: z.uuid().optional(),
-    studentId: z.uuid().optional(),
-    from: localDate.optional(),
-    to: localDate.optional(),
-    method: z.enum(PAYMENT_METHODS).optional(),
-    kind: z.enum(PAYMENT_KINDS).optional(),
-    ...listSortShape(PAYMENT_SORT_KEYS),
-  })
-  .refine((q) => !q.from || !q.to || q.from <= q.to, { message: 'invalid_range', path: ['to'] });
 
 /** Local `from`/`to` days → the half-open UTC window [from 00:00, to + 1 day 00:00). */
 export function utcWindow(

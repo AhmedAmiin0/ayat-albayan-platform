@@ -11,7 +11,6 @@ export {
   payoutsQuery,
   type PayoutView,
   payPayout,
-  type PayPayoutBody,
   reopenPayout,
   unpayPayout,
 } from './api';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { leadListItem } from '../../../testing/leads';
+import { leadListItem } from '../../../testing/sales/leads';
 import { leadReadRoutes as routes } from '../leads.routes';
 
 const ITEM = leadListItem({ assigned_to_name: 'سارة', qualification: { age: 9 } });

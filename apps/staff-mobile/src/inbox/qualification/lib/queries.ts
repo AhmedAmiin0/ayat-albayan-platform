@@ -5,11 +5,10 @@ import type {
   LeadRowView,
   LeadView,
 } from '@ab/shared';
-import { leadWriteCalls } from '@ab/client-core';
-import type { Page } from '@ab/core';
+import { leadReadCalls, leadWriteCalls } from '@ab/client-core';
 import { settingsCalls } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString, pathKey, t } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey, t } from '@ab/mobile-kit';
 import { patchCached } from '@/core/lib/query/paging';
 import { isOffline } from '@/core/lib/money/payment-errors';
 import { leadKeys } from '@/core/lib/keys';
@@ -30,6 +29,8 @@ export type LeadProfile = LeadView & {
   follow_up_note?: FollowUpNote | null;
 };
 
+const leadReads = leadReadCalls({ apiFetch, apiSend });
+
 /**
  * This lead fresh from the API, like the web's leadByPhoneQuery (there is no GET /leads/:id): the
  * phone search, then the exact E.164 match; null if it is no longer a lead. Its failure with no
@@ -39,8 +40,7 @@ export function useFreshLead(phone: string) {
   return useQuery({
     queryKey: leadKeys.byPhone(phone),
     queryFn: async () => {
-      const query = toQueryString({ q: phone, page: 1, pageSize: 5 });
-      const page = await apiFetch<Page<LeadProfile>>(`/leads${query}`);
+      const page = await leadReads.list({ q: phone, page: 1, pageSize: 5 });
       return page.items.find((l) => l.phone_e164 === phone) ?? null;
     },
   });

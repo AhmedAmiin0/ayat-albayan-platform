@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { CreateUserDialog } from './CreateUserDialog';
-import { CANDIDATES, fakeApi, renderWithClient } from '@/features/people/users/users-test-kit';
+import { CANDIDATES, DETAIL, fakeApi, renderWithClient } from '@/features/people/users/users-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -42,7 +42,7 @@ describe('CreateUserDialog', () => {
   });
 
   it('finds a student by code, links it and sends linked_id', async () => {
-    apiSend.mockResolvedValue({ user: {}, credential: { kind: 'password', value: 'Gen-Pass-123' } });
+    apiSend.mockResolvedValue({ user: DETAIL, credential: { kind: 'password', value: 'Gen-Pass-123' } });
     renderWithClient(<CreateUserDialog onClose={() => undefined} />);
     fillBasics();
     fireEvent.change(within(dialog()).getByLabelText(F.role), { target: { value: 'student' } });
@@ -55,7 +55,7 @@ describe('CreateUserDialog', () => {
   });
 
   it('shows the generated password once, then it is gone after closing', async () => {
-    apiSend.mockResolvedValue({ user: {}, credential: { kind: 'password', value: 'Gen-Pass-123' } });
+    apiSend.mockResolvedValue({ user: DETAIL, credential: { kind: 'password', value: 'Gen-Pass-123' } });
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
     let open = true;
@@ -75,7 +75,7 @@ describe('CreateUserDialog', () => {
   });
 
   it('a typed password is sent and not shown back', async () => {
-    apiSend.mockResolvedValue({ user: {}, credential: null });
+    apiSend.mockResolvedValue({ user: DETAIL, credential: null });
     renderWithClient(<CreateUserDialog onClose={() => undefined} />);
     fillBasics();
     fireEvent.click(within(dialog()).getByRole('radio', { name: t.users.credential.set }));
@@ -95,7 +95,7 @@ describe('CreateUserDialog', () => {
   });
 
   it('a teacher can be created new, with its own names', async () => {
-    apiSend.mockResolvedValue({ user: {}, credential: null });
+    apiSend.mockResolvedValue({ user: DETAIL, credential: null });
     renderWithClient(<CreateUserDialog onClose={() => undefined} />);
     fillBasics();
     fireEvent.change(within(dialog()).getByLabelText(F.role), { target: { value: 'teacher' } });
@@ -117,7 +117,7 @@ describe('CreateUserDialog', () => {
   });
 
   it('prefill links the student and fixes the role', async () => {
-    apiSend.mockResolvedValue({ user: {}, credential: { kind: 'link', value: 'https://x.test/invite' } });
+    apiSend.mockResolvedValue({ user: DETAIL, credential: { kind: 'link', value: 'https://x.test/invite' } });
     const linked = CANDIDATES[0];
     if (!linked) throw new Error('fixture');
     renderWithClient(<CreateUserDialog onClose={() => undefined} prefill={{ role: 'student', linked }} />);

@@ -52,7 +52,7 @@ test('«استئناف» asks first; «استئناف الدورة» resumes and
   expect(screen.getByText(`${c.resumeTitle} ${c.resumeBody}`)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
   await fireEvent.press(screen.getByRole('button', { name: c.resumeConfirm }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/students/s1/course-pause/resume'));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/students/s1/course-pause/resume', {}));
   expect(await screen.findByText(c.resumedConflicts.replace('{n}', '2'))).toBeTruthy();
 });
 

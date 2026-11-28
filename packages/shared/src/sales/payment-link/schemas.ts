@@ -13,9 +13,11 @@ import {
 // Stripe payment link (docs/30-stripe-test.md, FEATURE_STRIPE); strict, unknown fields are 400.
 
 export const PAYMENT_LINK_KINDS = ['new', 'renewal'] as const;
-export type PaymentLinkKind = (typeof PAYMENT_LINK_KINDS)[number];
+export const paymentLinkKindSchema = z.enum(PAYMENT_LINK_KINDS);
+export type PaymentLinkKind = z.infer<typeof paymentLinkKindSchema>;
 export const PAYMENT_LINK_STATUSES = ['open', 'paid', 'expired', 'cancelled'] as const;
-export type PaymentLinkStatus = (typeof PAYMENT_LINK_STATUSES)[number];
+export const paymentLinkStatusSchema = z.enum(PAYMENT_LINK_STATUSES);
+export type PaymentLinkStatus = z.infer<typeof paymentLinkStatusSchema>;
 /**
  * The package currencies a link may carry: every catalog currency (KWD / OMR in Stripe's
  * thousandths, toStripeAmount). The API refuses any other before a package is made (400
@@ -40,7 +42,7 @@ export const paymentLinkQuoteSchema = z.strictObject({
 export const paymentLinkCreateSchema = z.strictObject({
   studentId: z.uuid(),
   /** Optional: the API stores 'renewal' once the student has a priced package, else 'new'. */
-  kind: z.enum(PAYMENT_LINK_KINDS).optional(),
+  kind: paymentLinkKindSchema.optional(),
   pricing: subscriptionPricingSchema,
   startsOn: localDate.optional(),
   alreadyStarted: z.boolean().optional(),
@@ -54,7 +56,7 @@ export const paymentLinkCreateSchema = z.strictObject({
 });
 
 /** GET /sales/payment-links?status=: her links, newest first. */
-export const paymentLinkListSchema = z.object({ status: z.enum(PAYMENT_LINK_STATUSES).optional() });
+export const paymentLinkListSchema = z.object({ status: paymentLinkStatusSchema.optional() });
 
 export type PaymentLinkQuote = z.output<typeof paymentLinkQuoteSchema>;
 export type PaymentLinkCreate = z.output<typeof paymentLinkCreateSchema>;

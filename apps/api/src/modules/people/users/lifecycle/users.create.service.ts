@@ -4,7 +4,7 @@ import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { UserJournal } from '@/modules/people/users/audit/users.journal';
 import { UserLogins } from '@/modules/people/users/auth/users.logins';
 import { chooseRole } from '@/modules/people/users/users.logic';
-import { toUserDetail } from '@/modules/people/users/users.mapper';
+import { userDetailOf } from '@/modules/people/users/users.mapper';
 import { UserAccess } from '@/modules/people/users/users.access';
 import { assertMayAssign, type Actor } from '@/modules/people/users/users.rules';
 import { USER_STORE, type UserStore } from '@/modules/people/users/store/users.store';
@@ -66,7 +66,7 @@ export class UsersCreateService {
       after: row,
       extra: { credential_mode: input.credential },
     });
-    return { user: toUserDetail(row), credential: issued };
+    return { user: userDetailOf(row), credential: issued };
   }
 
   /**

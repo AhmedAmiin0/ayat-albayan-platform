@@ -26,7 +26,7 @@ test('the header counts the report PDF with the files; the PDF opens from a fres
   expect(screen.getByText(F.header.replace('{n}', '3'))).toBeTruthy();
   await fireEvent.press(screen.getByText(F.reportPdf));
   await waitFor(() => expect(Linking.openURL).toHaveBeenCalledWith('https://files.example/x'));
-  expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/reports/r-L1/url');
+  expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/reports/r-L1/url', undefined);
 });
 
 test('a picture opens from its own link', async () => {
