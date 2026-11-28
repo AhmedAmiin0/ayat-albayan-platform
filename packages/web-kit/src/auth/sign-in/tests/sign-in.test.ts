@@ -36,7 +36,7 @@ describe('signIn (R-AUTH-01)', () => {
     const result = await signIn(creds, new QueryClient());
     expect(result).toEqual({ ok: false, error: t.auth.invalidCredentials });
     expect(apiFetch).not.toHaveBeenCalled();
-    expect(reportSession).toHaveBeenCalledWith('login-failed');
+    expect(reportSession).toHaveBeenCalledWith('loginFailed');
   });
 
   it('signs out users without a profile role', async () => {

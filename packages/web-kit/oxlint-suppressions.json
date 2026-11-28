@@ -62,11 +62,6 @@
       "count": 1
     }
   },
-  "src/auth/session-activity.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/auth/sign-in/sign-in.ts": {
     "typescript/no-deprecated": {
       "count": 1
