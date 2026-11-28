@@ -4,11 +4,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { DataTable, hamishMeta, type DataTableFeatures } from './DataTable';
 
-type Row = {
+interface Row {
   id: string;
   code: string;
   name: string;
-};
+}
 
 const col = createColumnHelper<DataTableFeatures, Row>();
 const columns = col.columns([

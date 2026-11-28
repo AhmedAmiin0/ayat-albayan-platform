@@ -13,7 +13,10 @@ import {
 // A paged, server-sorted list's whole URL state (R-NFR-08): `page`, `sort`, `dir`, `f_<key>`.
 // Routes use `parseServerListSearch` as `validateSearch`; pages read `serverListState`.
 
-export type ServerListSearch = { page?: number; sort?: string; dir?: SortDir } & { [key: `f_${string}`]: string | undefined };
+export type ServerListSearch = { page?: number; sort?: string; dir?: SortDir } & Record<
+  `f_${string}`,
+  string | undefined
+>;
 /** A route-search patch: undefined drops a key. */
 export type ServerListPatch = Record<string, string | number | undefined>;
 
@@ -27,10 +30,11 @@ export function parseServerListSearch(
   search: Record<string, unknown>,
   keys: ServerListKeys,
 ): ServerListSearch {
-  const page = Number(search['page']);
+  const page = Number(search.page);
   const out: ServerListSearch = { ...parseSortSearch(search, keys.sort) };
   if (Number.isInteger(page) && page > 1) out.page = page;
-  for (const [key, value] of Object.entries(parseFilterSearch(search, keys.filters))) out[`f_${key}`] = value;
+  for (const [key, value] of Object.entries(parseFilterSearch(search, keys.filters)))
+    out[`f_${key}`] = value;
   return out;
 }
 
@@ -44,7 +48,7 @@ export function serverListState(
   search: Record<string, unknown>,
   keys: ServerListKeys,
 ): ServerListState {
-  const page = Number(search['page']);
+  const page = Number(search.page);
   return {
     page: Number.isInteger(page) && page > 1 ? page : 1,
     sort: parseSortSearch(search, keys.sort),

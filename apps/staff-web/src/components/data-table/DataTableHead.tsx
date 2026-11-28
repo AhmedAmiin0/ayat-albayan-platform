@@ -7,7 +7,10 @@ const ARIA_SORT = { asc: 'ascending', desc: 'descending', none: 'none' } as cons
 const HINT = { asc: t.table.sortAsc, desc: t.table.sortDesc, none: t.table.sortNone };
 const ICON = { asc: 'arrow-up', desc: 'arrow-down', none: 'arrows-up-down' } as const;
 
-type SortState = { dir: SortDir | false; toggle: () => void };
+interface SortState {
+  dir: SortDir | false;
+  toggle: () => void;
+}
 
 /** How a column sorts here: server (`sort` prop + `meta.sortKey`), client (TanStack), or not at all. */
 function sortStateOf<T extends RowData>(
@@ -67,7 +70,10 @@ export function DataTableHead<T extends RowData>({ table, sort }: DataTableHeadP
                     className="-mx-1 inline-flex items-center gap-1 rounded-sm px-1 hover:text-ink focus-visible:outline-2 focus-visible:outline-ring"
                   >
                     <table.FlexRender header={header} />
-                    <Icon name={ICON[now]} className={cn('size-3.5', now === 'none' && 'opacity-50')} />
+                    <Icon
+                      name={ICON[now]}
+                      className={cn('size-3.5', now === 'none' && 'opacity-50')}
+                    />
                   </button>
                 ) : (
                   <table.FlexRender header={header} />

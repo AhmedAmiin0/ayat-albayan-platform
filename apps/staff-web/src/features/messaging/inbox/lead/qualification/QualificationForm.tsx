@@ -36,7 +36,10 @@ export function QualificationForm({ lead, onDone }: QualificationFormProps) {
       onSubmit={(e) => {
         e.preventDefault();
         const result = qualPatch(form, initial);
-        if (!result.ok) return setErrors(result.errors);
+        if (!result.ok) {
+          setErrors(result.errors);
+          return;
+        }
         setErrors({});
         if (Object.keys(result.patch).length === 0) return;
         // The saved values become the baseline, so the next save sends only newer changes.

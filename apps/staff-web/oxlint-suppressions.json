@@ -10,21 +10,8 @@
     }
   },
   "src/components/data-table/DataTable.filter.test.tsx": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "typescript/no-floating-promises": {
       "count": 2
-    }
-  },
-  "src/components/data-table/DataTable.sort.test.tsx": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
-  "src/components/data-table/DataTable.test.tsx": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
     }
   },
   "src/components/data-table/DataTable.tsx": {
@@ -42,9 +29,6 @@
     }
   },
   "src/components/data-table/DataTableHead.tsx": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -52,11 +36,6 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/components/data-table/TableBox.test.tsx": {
-    "typescript/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -75,9 +54,6 @@
     }
   },
   "src/components/data-table/data-table-features.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }
@@ -207,11 +183,6 @@
   "src/components/shell/nav/SectionShells/SectionShells.tsx": {
     "ab/module-boundaries": {
       "count": 3
-    }
-  },
-  "src/components/shell/nav/SectionShells/tests/loading.test.tsx": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
     }
   },
   "src/components/shell/nav/crumb-trail.ts": {
@@ -1150,9 +1121,6 @@
     }
   },
   "src/features/messaging/inbox/lead/lead-summary.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -1176,11 +1144,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/lead/qualification/QualificationForm.tsx": {
-    "typescript/no-confusing-void-expression": {
       "count": 1
     }
   },
@@ -1382,11 +1345,6 @@
   },
   "src/features/messaging/inbox/messages/lib/message-notes/tests/message-notes.test.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/messaging/inbox/messages/lib/use-bubble-tools.tsx": {
-    "typescript/consistent-type-definitions": {
       "count": 1
     }
   },
@@ -1637,17 +1595,11 @@
     }
   },
   "src/features/messaging/inbox/shared/search.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 14
     }
   },
   "src/features/messaging/inbox/shared/use-chat-access.ts": {
@@ -1755,11 +1707,6 @@
   "src/features/messaging/inbox/threads/pane/ThreadPane/tests/privacy.test.tsx": {
     "typescript/restrict-template-expressions": {
       "count": 3
-    }
-  },
-  "src/features/messaging/inbox/threads/pane/ThreadPane/tests/rating.test.tsx": {
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "src/features/messaging/inbox/threads/pane/ThreadPane/tests/reply.test.tsx": {
@@ -3776,16 +3723,7 @@
     }
   },
   "src/features/reporting/dashboard/search.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 3
-    },
-    "typescript/no-unnecessary-condition": {
       "count": 1
     }
   },
@@ -4504,11 +4442,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/booking/BookingWizard/tests/duplicate.test.tsx": {
-    "typescript/dot-notation": {
-      "count": 2
-    }
-  },
   "src/features/teaching/booking/BookingWizard/tests/makeup.test.tsx": {
     "stylistic/max-len": {
       "count": 2
@@ -4528,14 +4461,8 @@
     }
   },
   "src/features/teaching/booking/api.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 9
     }
   },
   "src/features/teaching/booking/booking-entries.tsx": {
@@ -4812,9 +4739,6 @@
     "complexity": {
       "count": 2
     },
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     },
@@ -4836,9 +4760,6 @@
     }
   },
   "src/features/teaching/booking/trial-date/dialog/TrialDateDialog/TrialDateDialog.tsx": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     }
@@ -5061,9 +4982,6 @@
     },
     "ab/no-untyped-api-calls": {
       "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 6
     }
   },
   "src/features/teaching/feedback/public/FeedbackForm.test.tsx": {
@@ -5175,9 +5093,6 @@
     }
   },
   "src/features/teaching/meetings/invitees/invite-status.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
-    },
     "complexity": {
       "count": 1
     },
@@ -5330,9 +5245,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 10
     },
     "typescript/no-unnecessary-condition": {
       "count": 1
@@ -5585,28 +5497,11 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 2
-    }
-  },
-  "src/lib/list/list-url.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
-    },
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "src/lib/list/server-list-search.ts": {
-    "typescript/consistent-indexed-object-style": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 2
     }
   },
   "src/lib/settings/config-entries-api.ts": {
@@ -6003,11 +5898,6 @@
   },
   "src/routes/teacher/inbox.tsx": {
     "ab/module-boundaries": {
-      "count": 3
-    }
-  },
-  "src/routes/teacher/messages.tsx": {
-    "typescript/dot-notation": {
       "count": 3
     }
   },

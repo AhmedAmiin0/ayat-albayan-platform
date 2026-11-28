@@ -6,7 +6,11 @@ import { closeFilters, openFilters } from '@/test/open-filters';
 import { FILTER_DEBOUNCE_MS } from './ColumnFilterText';
 import { DataTable, type DataTableFeatures } from './DataTable';
 
-type Row = { id: string; name: string; status: string };
+interface Row {
+  id: string;
+  name: string;
+  status: string;
+}
 
 const col = createColumnHelper<DataTableFeatures, Row>();
 const options = [
@@ -15,7 +19,10 @@ const options = [
 ];
 const columns = col.columns([
   col.accessor('name', { header: () => t.students.name, meta: { filter: { kind: 'text' } } }),
-  col.accessor('status', { header: 'الحالة', meta: { filter: { kind: 'select', options }, filterKey: 'st' } }),
+  col.accessor('status', {
+    header: 'الحالة',
+    meta: { filter: { kind: 'select', options }, filterKey: 'st' },
+  }),
 ]);
 const DATA: Row[] = [
   { id: 'a', name: 'فاطمة', status: 'active' },
@@ -23,7 +30,11 @@ const DATA: Row[] = [
   { id: 'c', name: 'فاطمه علي', status: 'paused' },
 ];
 const by = (col: string) => t.table.filterBy.replace('{col}', col);
-const names = () => screen.getAllByRole('row').slice(1).map((r) => r.querySelector('td')?.textContent);
+const names = () =>
+  screen
+    .getAllByRole('row')
+    .slice(1)
+    .map((r) => r.querySelector('td')?.textContent);
 
 describe('DataTable filters', () => {
   beforeEach(() => vi.useFakeTimers());
@@ -38,7 +49,9 @@ describe('DataTable filters', () => {
   it('the text filter is the search box; the select waits in the «تصفية» panel', () => {
     render(<DataTable clientFilter columns={columns} data={DATA} getRowId={(r) => r.id} />);
     const search = screen.getByRole('searchbox', { name: by(t.students.name) });
-    expect(search.getAttribute('placeholder')).toBe(t.table.searchIn.replace('{col}', t.students.name));
+    expect(search.getAttribute('placeholder')).toBe(
+      t.table.searchIn.replace('{col}', t.students.name),
+    );
     expect(screen.queryByRole('combobox')).toBeNull();
     const panel = openFilters();
     expect(panel.querySelector('select')?.getAttribute('aria-label')).toBe(by('الحالة'));
@@ -46,11 +59,15 @@ describe('DataTable filters', () => {
 
   it('clientFilter: text contains (Arabic-normalised), select exact, clear restores', () => {
     render(<DataTable clientFilter columns={columns} data={DATA} getRowId={(r) => r.id} />);
-    fireEvent.change(screen.getByRole('searchbox', { name: by(t.students.name) }), { target: { value: 'فاطمة' } });
+    fireEvent.change(screen.getByRole('searchbox', { name: by(t.students.name) }), {
+      target: { value: 'فاطمة' },
+    });
     act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));
     expect(names()).toEqual(['فاطمة', 'فاطمه علي']);
     openFilters();
-    fireEvent.change(screen.getByRole('combobox', { name: by('الحالة') }), { target: { value: 'paused' } });
+    fireEvent.change(screen.getByRole('combobox', { name: by('الحالة') }), {
+      target: { value: 'paused' },
+    });
     expect(names()).toEqual(['فاطمه علي']);
     // Clear all empties the panel's filters; the search box keeps its text.
     closeFilters();
@@ -60,9 +77,13 @@ describe('DataTable filters', () => {
 
   it('server filters: values by filterKey (default column id); onChange reports, rows untouched', () => {
     const onChange = vi.fn();
-    render(<DataTable columns={columns} data={DATA} filters={{ values: { st: 'active' }, onChange }} />);
+    render(
+      <DataTable columns={columns} data={DATA} filters={{ values: { st: 'active' }, onChange }} />,
+    );
     openFilters();
-    expect((screen.getByRole<HTMLSelectElement>('combobox', { name: by('الحالة') })).value).toBe('active');
+    expect(screen.getByRole<HTMLSelectElement>('combobox', { name: by('الحالة') }).value).toBe(
+      'active',
+    );
     expect(names()).toHaveLength(3);
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'أحمد' } });
     act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));
@@ -98,14 +119,26 @@ describe('DataTable filters', () => {
   });
 
   it('a server list without a total says only «عرض النتائج» (the page is not the result)', () => {
-    render(<DataTable columns={columns} data={DATA} filters={{ values: { st: 'active' }, onChange: vi.fn() }} />);
+    render(
+      <DataTable
+        columns={columns}
+        data={DATA}
+        filters={{ values: { st: 'active' }, onChange: vi.fn() }}
+      />,
+    );
     openFilters();
     expect(screen.getByRole('button', { name: t.table.showResults })).toBeTruthy();
   });
 
   it('server «مسح الكل» calls onClear once with the panel keys', () => {
     const onClear = vi.fn();
-    render(<DataTable columns={columns} data={DATA} filters={{ values: { st: 'active' }, onChange: vi.fn(), onClear }} />);
+    render(
+      <DataTable
+        columns={columns}
+        data={DATA}
+        filters={{ values: { st: 'active' }, onChange: vi.fn(), onClear }}
+      />,
+    );
     fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
     expect(onClear).toHaveBeenCalledWith(['st']);
   });

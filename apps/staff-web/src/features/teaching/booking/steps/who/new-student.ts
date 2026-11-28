@@ -7,7 +7,10 @@ import { parseAge } from '@/features/people/students/create/create-student';
 // Lead path (R-LEAD-06): what step 1 edits, the lead's prefill and its POST /booking mapping.
 
 /** What the qualification captured beyond step 1's fields; it lands on the new student row. */
-export type CarriedFacts = Pick<LeadQualification, 'level' | 'memorized' | 'goal' | 'riwaya' | 'notes'>;
+export type CarriedFacts = Pick<
+  LeadQualification,
+  'level' | 'memorized' | 'goal' | 'riwaya' | 'notes'
+>;
 
 /** Lead path: the new student + guardian typed in step 1 (phone prefilled from the lead). */
 export interface NewStudentDraft {
@@ -62,13 +65,13 @@ export function newStudentReady(s: NewStudentDraft | null): boolean {
 }
 
 type LeadParts = Pick<Extract<BookingRequest, { newStudent: unknown }>, 'newStudent' | 'guardian'>;
-type Family = {
+interface Family {
   program: Program;
   tz: string;
   pkg: PackageSize;
   genderPref: Gender | null;
   country: string | null;
-};
+}
 
 const blankToNull = (v: string | null | undefined) => (v?.trim() ? v.trim() : null);
 

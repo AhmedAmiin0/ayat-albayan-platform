@@ -1,9 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { AdminShell, SalesShell, TeacherShell } from '@/components/shell/nav/SectionShells/SectionShells';
+import {
+  AdminShell,
+  SalesShell,
+  TeacherShell,
+} from '@/components/shell/nav/SectionShells/SectionShells';
 
-type Shell = { nav?: ReactNode; topNav?: ReactNode };
+interface Shell {
+  nav?: ReactNode;
+  topNav?: ReactNode;
+}
 const inboxRealtime = vi.hoisted(() => vi.fn<(enabled: boolean) => void>());
 const appShell = vi.hoisted(() => vi.fn((props: Shell) => <div>{props.nav ?? props.topNav}</div>));
 const perms = vi.hoisted(() => ({ loaded: false }));
@@ -11,9 +18,17 @@ vi.mock('@/components/shell/layout/AppShell', () => ({ AppShell: appShell }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ loaded: perms.loaded, permissions: [], can: () => perms.loaded }),
 }));
-vi.mock('@/components/shell/nav/AdminNav/AdminNav', () => ({ AdminNav: () => <nav>admin-nav</nav> }));
-vi.mock('@/features/teaching/teacher/TeacherNav/TeacherNav', () => ({ TEACHER_NAV_ITEMS: [], TeacherNav: () => <nav>teacher-nav</nav> }));
-vi.mock('@/features/sales/sales/SalesNav/SalesNav', () => ({ SALES_NAV_ITEMS: [], SalesNav: () => <nav>sales-nav</nav> }));
+vi.mock('@/components/shell/nav/AdminNav/AdminNav', () => ({
+  AdminNav: () => <nav>admin-nav</nav>,
+}));
+vi.mock('@/features/teaching/teacher/TeacherNav/TeacherNav', () => ({
+  TEACHER_NAV_ITEMS: [],
+  TeacherNav: () => <nav>teacher-nav</nav>,
+}));
+vi.mock('@/features/sales/sales/SalesNav/SalesNav', () => ({
+  SALES_NAV_ITEMS: [],
+  SalesNav: () => <nav>sales-nav</nav>,
+}));
 vi.mock('@/features/sales/sales/use-sales-unread', () => ({ useSalesUnread: () => 0 }));
 vi.mock('@/components/shell/nav/use-nav-counts', () => ({ useNavCounts: () => ({}) }));
 // The calls provider (docs/28) reads the inbox API; these tests are about the nav only.

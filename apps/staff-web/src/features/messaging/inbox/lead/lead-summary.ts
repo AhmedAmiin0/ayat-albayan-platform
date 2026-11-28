@@ -1,11 +1,17 @@
-import { EMPTY_STUDENT, type CreateStudentValues } from '@/features/people/students/create/create-student';
+import {
+  EMPTY_STUDENT,
+  type CreateStudentValues,
+} from '@/features/people/students/create/create-student';
 import type { Clock } from '@ab/web-kit';
 import { clockRange } from '@ab/time';
 import { hhmmText, t } from '@ab/web-kit';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
 import { qualForm } from './qualification/qualification-form';
 
-export type SummaryRow = { label: string; value: string };
+export interface SummaryRow {
+  label: string;
+  value: string;
+}
 
 const CITY: Record<string, string | undefined> = t.tz;
 const WEEKDAY: Record<string, string | undefined> = t.enums.weekday;

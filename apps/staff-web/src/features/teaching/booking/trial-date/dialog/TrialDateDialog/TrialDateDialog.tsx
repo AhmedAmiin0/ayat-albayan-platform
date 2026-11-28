@@ -8,8 +8,15 @@ import type { BookingDraft, PickedStudent } from '@/features/teaching/booking/dr
 import type { BookHint } from '@/features/teaching/booking/hint';
 import { BookingModeContext, ChatReturnContext } from '@/features/teaching/booking/mode';
 import { trialHistoryQuery } from '@/features/teaching/booking/trial-date/api';
-import { trialDateDraft, trialHint, type TrialStudentFacts } from '@/features/teaching/booking/trial-date/dialog/draft';
-import { TrialHistoryBody, TrialHistoryTitle } from '@/features/teaching/booking/trial-date/history/TrialHistoryBody';
+import {
+  trialDateDraft,
+  trialHint,
+  type TrialStudentFacts,
+} from '@/features/teaching/booking/trial-date/dialog/draft';
+import {
+  TrialHistoryBody,
+  TrialHistoryTitle,
+} from '@/features/teaching/booking/trial-date/history/TrialHistoryBody';
 
 export interface TrialDateDialogProps {
   student: PickedStudent;
@@ -21,16 +28,28 @@ export interface TrialDateDialogProps {
 }
 
 const noop = () => undefined;
-type Start = { draft: BookingDraft; hint: BookHint | null };
+interface Start {
+  draft: BookingDraft;
+  hint: BookHint | null;
+}
 
 /** Collapsed so the wizard comes first. */
 function HistoryToggle({ query }: { query: UseQueryResult<TrialHistory> }) {
   const [open, setOpen] = useState(false);
   return (
-    <section aria-label={t.trialDate.historyTitle} className="mb-4 grid gap-2 border-b border-rule pb-3">
+    <section
+      aria-label={t.trialDate.historyTitle}
+      className="mb-4 grid gap-2 border-b border-rule pb-3"
+    >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <TrialHistoryTitle history={query.data} />
-        <Button type="button" size="sm" variant="ghost" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
           {open ? t.trialDate.web.hideHistory : t.trialDate.showHistory}
         </Button>
       </div>
@@ -51,12 +70,18 @@ export function TrialDateDialog({ student, mode, facts, onClose }: TrialDateDial
     <Dialog title={t.trialDate.title.replace('{name}', student.name)} onClose={onClose} wide>
       <div data-testid="trial-date-dialog">
         <HistoryToggle query={history} />
-        {blocked && <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">{t.trialDate.notAllowed}</p>}
+        {blocked && (
+          <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">
+            {t.trialDate.notAllowed}
+          </p>
+        )}
         {!start && history.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
         {!start && history.isError && (
           <FormAlert>
             {t.trialDate.loadError}{' '}
-            <Button type="button" size="sm" variant="ghost" onClick={() => void history.refetch()}>{t.trialDate.retry}</Button>
+            <Button type="button" size="sm" variant="ghost" onClick={() => void history.refetch()}>
+              {t.trialDate.retry}
+            </Button>
           </FormAlert>
         )}
         {start && (

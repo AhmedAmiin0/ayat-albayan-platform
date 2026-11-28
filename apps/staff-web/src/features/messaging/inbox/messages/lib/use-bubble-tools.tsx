@@ -6,7 +6,10 @@ import { errorCode } from '@/features/teaching/schedule';
 import { threadFileDownload } from '@/features/messaging/inbox/api/api';
 import { copyText, saveUrl } from './save-file';
 
-type Said = { text: string; tone: 'info' | 'error' };
+interface Said {
+  text: string;
+  tone: 'info' | 'error';
+}
 
 export interface BubbleTools {
   copy: (m: MessageView) => void;
@@ -28,7 +31,11 @@ export function useBubbleTools(): BubbleTools {
   const done = () => say(null);
   const copy = (m: MessageView) => {
     void copyText(m.body ?? '').then((ok) =>
-      say(ok ? { text: t.inbox.copy.done, tone: 'info' } : { text: t.inbox.copy.failed, tone: 'error' }),
+      say(
+        ok
+          ? { text: t.inbox.copy.done, tone: 'info' }
+          : { text: t.inbox.copy.failed, tone: 'error' },
+      ),
     );
   };
   const download = (m: MessageView) => {
@@ -38,7 +45,15 @@ export function useBubbleTools(): BubbleTools {
     );
   };
   const toast = said
-    ? createPortal(<Toast message={said.text} tone={said.tone} duration={said.tone === 'info' ? 2000 : 5000} onDismiss={done} />, document.body)
+    ? createPortal(
+        <Toast
+          message={said.text}
+          tone={said.tone}
+          duration={said.tone === 'info' ? 2000 : 5000}
+          onDismiss={done}
+        />,
+        document.body,
+      )
     : null;
   return { copy, download, toast };
 }

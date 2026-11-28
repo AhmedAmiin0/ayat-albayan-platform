@@ -4,19 +4,47 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { BookingPage } from '@/features/teaching/booking/BookingPage';
-import { bookingBodies, next, pickTeacherAndSlot, respond, routeSend, SLOT } from '@/features/teaching/booking/wizard-fixture';
+import {
+  bookingBodies,
+  next,
+  pickTeacherAndSlot,
+  respond,
+  routeSend,
+  SLOT,
+} from '@/features/teaching/booking/wizard-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+  apiSend,
+}));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ children }: { children: ReactNode }) => <a href="/admin/schedule">{children}</a>,
 }));
 
 const LEAD = '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d';
-const JOUD = { id: '2d7e9f3c-4e5f-4a6b-9c0d-9e8f7a6b5c4d', code: 'AB-0190', name: 'جود', status: 'trial' };
-const DUPLICATE = new ApiError(409, { code: 'duplicate_student', message: 'duplicate_student', guardian_id: 'g', candidates: [JOUD] });
-const BOOKED = { rule_id: 'e7777777-7777-4777-8777-777777777771', student_ids: [JOUD.id], guardian_ids: ['e7777777-7777-4777-8777-777777777772'], lessons: [{ id: 'e7777777-7777-4777-8777-777777777773', starts_at: SLOT, ends_at: SLOT }], message_ids: [], invoice_id: null };
+const JOUD = {
+  id: '2d7e9f3c-4e5f-4a6b-9c0d-9e8f7a6b5c4d',
+  code: 'AB-0190',
+  name: 'جود',
+  status: 'trial',
+};
+const DUPLICATE = new ApiError(409, {
+  code: 'duplicate_student',
+  message: 'duplicate_student',
+  guardian_id: 'g',
+  candidates: [JOUD],
+});
+const BOOKED = {
+  rule_id: 'e7777777-7777-4777-8777-777777777771',
+  student_ids: [JOUD.id],
+  guardian_ids: ['e7777777-7777-4777-8777-777777777772'],
+  lessons: [{ id: 'e7777777-7777-4777-8777-777777777773', starts_at: SLOT, ends_at: SLOT }],
+  message_ids: [],
+  invoice_id: null,
+};
 
 async function bookFromLead() {
   apiFetch.mockImplementation(respond);
@@ -30,7 +58,9 @@ async function bookFromLead() {
       />
     </QueryClientProvider>,
   );
-  fireEvent.change(await screen.findByLabelText(t.leads.studentName), { target: { value: 'جوود' } });
+  fireEvent.change(await screen.findByLabelText(t.leads.studentName), {
+    target: { value: 'جوود' },
+  });
   next();
   await pickTeacherAndSlot();
   next();
@@ -59,7 +89,7 @@ describe('BookingWizard — a lead whose family is already on file (R-STU-03, R-
     expect(second).toMatchObject({ studentIds: [JOUD.id], leadId: LEAD });
     expect(second).not.toHaveProperty('newStudent');
     // Same wizard, same booking: the idempotency key does not change between the two tries.
-    expect(second?.['clientRequestId']).toBe(first?.['clientRequestId']);
+    expect(second?.clientRequestId).toBe(first?.clientRequestId);
   });
 
   it('«لا، هذا طالب جديد» books the new student anyway (force)', async () => {

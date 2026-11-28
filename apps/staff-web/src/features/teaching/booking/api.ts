@@ -58,7 +58,7 @@ export const bookingCheckQuery = (body: BookingRequest, mode: BookingMode = 'adm
 };
 
 /** `pkg` none is a trial (R-SUB-01); `teacherId` + `startsAt` preselect a gap; makeup R-SCH-10. */
-export type BookSearch = {
+export interface BookSearch {
   studentId?: string;
   leadId?: string;
   phone?: string;
@@ -68,7 +68,7 @@ export type BookSearch = {
   startsAt?: string;
   kind?: BookingKind;
   missedLessonId?: string;
-};
+}
 
 const text = (v: unknown): string | undefined =>
   typeof v === 'string' && v.trim() ? v.trim() : undefined;
@@ -76,19 +76,19 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function parseBookSearch(s: Record<string, unknown>): BookSearch {
   const out: BookSearch = { ...hintOf(s) };
-  const studentId = text(s['studentId']);
-  const leadId = text(s['leadId']);
+  const studentId = text(s.studentId);
+  const leadId = text(s.leadId);
   if (studentId) {
     out.studentId = studentId;
-    const kind = BOOKING_KINDS.find((k) => k === s['kind']);
-    const missed = text(s['missedLessonId']);
+    const kind = BOOKING_KINDS.find((k) => k === s.kind);
+    const missed = text(s.missedLessonId);
     if (kind) out.kind = kind;
     if (kind === 'makeup' && missed && UUID.test(missed)) out.missedLessonId = missed;
   } else if (leadId) {
     out.leadId = leadId;
-    const phone = text(s['phone']);
-    const name = text(s['name']);
-    const pkg = PACKAGE_SIZES.find((p) => p === String(s['pkg']));
+    const phone = text(s.phone);
+    const name = text(s.name);
+    const pkg = PACKAGE_SIZES.find((p) => p === String(s.pkg));
     if (phone) out.phone = phone;
     if (name) out.name = name;
     if (pkg) out.pkg = pkg;
@@ -98,8 +98,8 @@ export function parseBookSearch(s: Record<string, unknown>): BookSearch {
 
 /** The calendar's free-gap hint: a teacher uuid, and its start (an instant) only with it. */
 function hintOf(s: Record<string, unknown>): Pick<BookSearch, 'teacherId' | 'startsAt'> {
-  const teacherId = text(s['teacherId']);
+  const teacherId = text(s.teacherId);
   if (!teacherId || !UUID.test(teacherId)) return {};
-  const at = Date.parse(text(s['startsAt']) ?? '');
+  const at = Date.parse(text(s.startsAt) ?? '');
   return Number.isNaN(at) ? { teacherId } : { teacherId, startsAt: new Date(at).toISOString() };
 }

@@ -8,8 +8,14 @@ import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/T
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
 const PATH = '/threads/%2B966501234567';
 const HOUR = 3_600_000;
@@ -28,7 +34,14 @@ function renderThread(input: {
   const last = new Date(Date.now() - input.lastInboundAgoMs).toISOString();
   const open = input.lastInboundAgoMs < 24 * HOUR;
   routeFetch(apiFetch, [
-    [PATH, detail([tap], { session_open: open, last_inbound_at: last, guardian_id: input.guardian === false ? null : 'g-1' })],
+    [
+      PATH,
+      detail([tap], {
+        session_open: open,
+        last_inbound_at: last,
+        guardian_id: input.guardian === false ? null : 'g-1',
+      }),
+    ],
     ['/messaging/templates', input.templates ?? [template(), RATING]],
     ['/messages/gate', { open: true, reason: null, queued: 0 }],
     ['/settings', SETTINGS],
@@ -47,7 +60,7 @@ describe('thread header: the 24 h window', () => {
     renderThread({ lastInboundAgoMs: 3 * HOUR - 60_000 });
     const banner = await screen.findByTestId('window-banner');
     expect(banner.textContent).toBe(t.inbox.window.open.replace('{left}', '21س'));
-    expect(banner.dataset['open']).toBe('true');
+    expect(banner.dataset.open).toBe('true');
     expect(screen.queryByRole('button', { name: t.inbox.rating.send })).toBeNull();
   });
 
@@ -61,12 +74,21 @@ describe('thread header: the 24 h window', () => {
 describe('«إرسال تقييم الحلقة»', () => {
   it('sends with a request id and says it went', async () => {
     renderThread({ lastInboundAgoMs: 30 * HOUR });
-    apiSend.mockResolvedValue(message({ id: 'm-out', direction: 'outbound', status: 'sent', template_key: 'lesson_rating' }));
+    apiSend.mockResolvedValue(
+      message({
+        id: 'm-out',
+        direction: 'outbound',
+        status: 'sent',
+        template_key: 'lesson_rating',
+      }),
+    );
     const button = await screen.findByRole('button', { name: t.inbox.rating.send });
     await waitFor(() => expect((button as HTMLButtonElement).disabled).toBe(false));
     fireEvent.click(button);
     expect(await screen.findByText(t.inbox.rating.sent)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', `${PATH}/rating`, { clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/) });
+    expect(apiSend).toHaveBeenCalledWith('POST', `${PATH}/rating`, {
+      clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
+    });
   });
 
   it('no lesson took place yet → the reason in words', async () => {
@@ -81,7 +103,9 @@ describe('«إرسال تقييم الحلقة»', () => {
   it('template not approved yet → disabled with the note; a lead’s chat has no button', async () => {
     renderThread({ lastInboundAgoMs: 30 * HOUR, templates: [template()] });
     expect(await screen.findByText(t.inbox.rating.notApproved)).toBeTruthy();
-    expect((screen.getByRole<HTMLButtonElement>('button', { name: t.inbox.rating.send })).disabled).toBe(true);
+    expect(
+      screen.getByRole<HTMLButtonElement>('button', { name: t.inbox.rating.send }).disabled,
+    ).toBe(true);
   });
 
   it('a lead (not a guardian) gets no rating button', async () => {
@@ -94,6 +118,8 @@ describe('«إرسال تقييم الحلقة»', () => {
 describe('rating chip', () => {
   it('a guardian’s tap shows «التقييم: جيدة» on the bubble', async () => {
     renderThread({ lastInboundAgoMs: HOUR });
-    expect((await screen.findByTestId('rating-chip')).textContent).toBe(t.inbox.rating.chip.replace('{rating}', 'جيدة'));
+    expect((await screen.findByTestId('rating-chip')).textContent).toBe(
+      t.inbox.rating.chip.replace('{rating}', 'جيدة'),
+    );
   });
 });

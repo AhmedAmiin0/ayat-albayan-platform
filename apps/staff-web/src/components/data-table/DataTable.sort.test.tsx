@@ -4,7 +4,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { DataTable, type DataTableFeatures } from './DataTable';
 
-type Row = { id: string; name: string; lessons: number };
+interface Row {
+  id: string;
+  name: string;
+  lessons: number;
+}
 
 const col = createColumnHelper<DataTableFeatures, Row>();
 const columns = col.columns([
@@ -19,7 +23,11 @@ const DATA: Row[] = [
 ];
 
 const head = (name: string) => screen.getByRole('columnheader', { name });
-const firstCells = () => screen.getAllByRole('row').slice(1).map((r) => r.querySelector('td')?.textContent);
+const firstCells = () =>
+  screen
+    .getAllByRole('row')
+    .slice(1)
+    .map((r) => r.querySelector('td')?.textContent);
 
 describe('DataTable sort (server mode)', () => {
   it('only meta.sortKey columns get a button; aria-sort follows the sort prop', () => {
@@ -31,7 +39,9 @@ describe('DataTable sort (server mode)', () => {
 
     rerender(<DataTable columns={columns} data={DATA} sort={{ key: 'name', onChange }} />);
     expect(head(t.students.name).getAttribute('aria-sort')).toBe('ascending');
-    rerender(<DataTable columns={columns} data={DATA} sort={{ key: 'name', dir: 'desc', onChange }} />);
+    rerender(
+      <DataTable columns={columns} data={DATA} sort={{ key: 'name', dir: 'desc', onChange }} />,
+    );
     expect(head(t.students.name).getAttribute('aria-sort')).toBe('descending');
     // Server rows keep the order they came in.
     expect(firstCells()).toEqual(['هدى', 'أحمد', 'بلال']);
@@ -46,14 +56,18 @@ describe('DataTable sort (server mode)', () => {
     rerender(<DataTable columns={columns} data={DATA} sort={{ key: 'name', onChange }} />);
     fireEvent.click(button());
     expect(onChange).toHaveBeenLastCalledWith({ key: 'name', dir: 'desc' });
-    rerender(<DataTable columns={columns} data={DATA} sort={{ key: 'name', dir: 'desc', onChange }} />);
+    rerender(
+      <DataTable columns={columns} data={DATA} sort={{ key: 'name', dir: 'desc', onChange }} />,
+    );
     fireEvent.click(button());
     expect(onChange).toHaveBeenLastCalledWith({});
   });
 
   it('the button carries the i18n hint', () => {
     render(<DataTable columns={columns} data={DATA} sort={{ key: 'name', onChange: vi.fn() }} />);
-    expect(screen.getByRole('button', { name: t.students.name }).getAttribute('title')).toBe(t.table.sortAsc);
+    expect(screen.getByRole('button', { name: t.students.name }).getAttribute('title')).toBe(
+      t.table.sortAsc,
+    );
   });
 });
 

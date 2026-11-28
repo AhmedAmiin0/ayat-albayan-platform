@@ -5,14 +5,23 @@ import { addCalendarMonths, addDays, riyadhToday, weekStart } from '@ab/time';
 export type DayRange = DashboardSummary['range'];
 
 /** /admin URL state; defaults (the last 6 months, the reports queue) stay out of the URL. */
-export type DashboardSearch = { from?: string; to?: string; work?: WorkTab };
+export interface DashboardSearch {
+  from?: string;
+  to?: string;
+  work?: WorkTab;
+}
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
-const day = (v: unknown) => (typeof v === 'string' && DATE.test(v) && !Number.isNaN(Date.parse(v)) ? v : undefined);
+const day = (v: unknown) =>
+  typeof v === 'string' && DATE.test(v) && !Number.isNaN(Date.parse(v)) ? v : undefined;
 
 /** Route `validateSearch`: a bad day or tab is dropped. */
 export function parseDashboardSearch(s: Record<string, unknown>): DashboardSearch {
-  const out: DashboardSearch = { from: day(s['from']), to: day(s['to']), work: WORK_TABS.find((w) => w === s['work']) };
+  const out: DashboardSearch = {
+    from: day(s.from),
+    to: day(s.to),
+    work: WORK_TABS.find((w) => w === s.work),
+  };
   return Object.fromEntries(Object.entries(out).filter(([, v]) => v !== undefined));
 }
 
@@ -40,5 +49,7 @@ export function thisWeek(today: string): DayRange {
 export function rangeError(r: DayRange): 'invalid_range' | 'range_too_large' | null {
   const parsed = dateRangeQuery.safeParse(r);
   if (parsed.success) return null;
-  return parsed.error.issues.some((i) => i.message === 'range_too_large') ? 'range_too_large' : 'invalid_range';
+  return parsed.error.issues.some((i) => i.message === 'range_too_large')
+    ? 'range_too_large'
+    : 'invalid_range';
 }

@@ -21,13 +21,13 @@ export const FEEDBACK_PAGE_SIZE = 20;
 /** The one place that knows the public GET's shape (camelCase); a rename changes only this. */
 export function toFormView(raw: unknown): FeedbackFormView {
   const r = (raw ?? {}) as Record<string, unknown>;
-  const kind = FEEDBACK_KINDS.find((k) => k === r['kind']);
-  if (typeof r['teacherName'] !== 'string' || !kind) throw new ApiError(502, raw);
+  const kind = FEEDBACK_KINDS.find((k) => k === r.kind);
+  if (typeof r.teacherName !== 'string' || !kind) throw new ApiError(502, raw);
   return {
-    teacherName: r['teacherName'],
+    teacherName: r.teacherName,
     kind,
-    contactPhone: typeof r['contactPhone'] === 'string' ? r['contactPhone'] : '',
-    alreadySubmitted: r['alreadySubmitted'] === true,
+    contactPhone: typeof r.contactPhone === 'string' ? r.contactPhone : '',
+    alreadySubmitted: r.alreadySubmitted === true,
   };
 }
 
