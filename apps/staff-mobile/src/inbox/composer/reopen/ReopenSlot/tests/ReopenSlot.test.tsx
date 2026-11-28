@@ -4,16 +4,22 @@ import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { plainReminder, thread } from '@/inbox/shared/thread-fixtures';
 import { ReopenSlot } from '@/inbox/composer/reopen/ReopenSlot/ReopenSlot';
+import { mockCall } from '@ab/testing/mock-call';
 
 // The reopen sheet opens on the academy template, editable; fakes only, nothing is sent.
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const chat = (key: string, over: Partial<TemplateView> = {}): TemplateView => ({
-  ...plainReminder, key, meta_name: key, line: 'chat', sales_starter: true, ...over,
+  ...plainReminder,
+  key,
+  meta_name: key,
+  line: 'chat',
+  sales_starter: true,
+  ...over,
 });
 const INVITE = chat('free_trial_invite', { body_ar: 'أهلًا {{1}}', params: ['contact_name'] });
 const WELCOME = chat('welcome_greeting', { body_ar: 'أهلًا بكم', params: [] });
@@ -22,14 +28,14 @@ const onSend = jest.fn();
 const names: Record<string, string> = t.templates.names;
 
 async function show(rows: TemplateView[]) {
-  mockApiFetch.mockResolvedValue(rows);
+  mockApi.onRead(() => rows);
   const props = { phone: thread.phone_e164, lessons: [], teacher: false, open: false, held: true };
   const slot = <ReopenSlot {...props} thread={CLOSED} onSend={onSend} />;
   await renderWithQuery(slot, createTestQueryClient());
 }
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   onSend.mockReset();
 });
 

@@ -8,12 +8,18 @@ import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../../app/(tabs)/_layout';
 import RootLayout from '../../../app/_layout';
 import TeacherLayout from '../../../app/teacher/_layout';
+import { mockCall } from '@ab/testing/mock-call';
 
 // The real root, admin and teacher layouts with stub screens: the gate decides who reaches what.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
-const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({
+  registerPush: jest.fn(async () => undefined),
+}));
+const mockApi = mockCall();
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
+}));
 jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => {
   const { useState } = jest.requireActual('react');
   const gate = { initial: 'out', set: (() => undefined) as (mockStatus: string) => void };
@@ -68,7 +74,7 @@ beforeEach(() => {
   const teacher = { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
   const switches = Object.fromEntries(Object.values(TEACHER_PAGE_SWITCH).map((k) => [k, true]));
   const publicConfig = { ...PUBLIC_SETTING_DEFAULTS, ...switches, custom: {} };
-  mockApiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path === '/auth/me') return fullAccessMe('teacher');
     return path === '/settings/public' ? publicConfig : teacher;
   });
@@ -99,7 +105,8 @@ test.each([['/'], ['/students'], ['/inbox'], ['/more'], ['/login']])(
   async (url) => {
     mockGate.initial = 'teacher';
     const router = await open(url);
-    for (const admin of [...ADMIN_STUBS, 'login-screen']) expect(screen.queryByText(admin)).toBeNull();
+    for (const admin of [...ADMIN_STUBS, 'login-screen'])
+      expect(screen.queryByText(admin)).toBeNull();
     expect(router.pathname()).toMatch(/^\/teacher/);
   },
 );

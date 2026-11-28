@@ -3,11 +3,14 @@ import { act, renderHook } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import type { PushTree } from '@/core/push/notification-route';
 import { useNotificationHandling } from '@/core/push/useNotificationHandling/useNotificationHandling';
+import { mockCall } from '@ab/testing/mock-call';
 
 // docs/48: a received push refreshes the teacher's screens; every other tree is unchanged.
+const mockApi = mockCall();
+mockApi.onRead(async () => ({}));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({}),
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockNav = {
   isReady: () => true,

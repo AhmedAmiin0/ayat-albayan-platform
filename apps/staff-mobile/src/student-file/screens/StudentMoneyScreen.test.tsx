@@ -5,26 +5,40 @@ import { ApiError, t, money } from '@ab/mobile-kit';
 import { payment } from '@/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { StudentMoneyScreen } from './StudentMoneyScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
 const M = t.mobileStudentFile.money;
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn(), replace: jest.fn(), canGoBack: () => true },
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
 
-const invoice = { id: 'i1', created_at: '2026-10-01T10:00:00Z', kind: 'package', source: 'upload', students: [], payment_id: null };
+const invoice = {
+  id: 'i1',
+  created_at: '2026-10-01T10:00:00Z',
+  kind: 'package',
+  source: 'upload',
+  students: [],
+  payment_id: null,
+};
 let permissions = ['payments.read', 'invoices.read'];
 function serve(invoices: unknown[] = [invoice]) {
-  mockApiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path === '/auth/me') return { permissions };
     if (path === '/students/s1') return studentProfileFixture({ id: 's1', name: 'هدى' });
     if (path.startsWith('/payments?')) {
-      return { items: [payment()], total: 1, page: 1, pageSize: 25, totals: [{ currency: 'SAR', net: 145, payments: 145, refunds: 0 }] };
+      return {
+        items: [payment()],
+        total: 1,
+        page: 1,
+        pageSize: 25,
+        totals: [{ currency: 'SAR', net: 145, payments: 145, refunds: 0 }],
+      };
     }
     if (path === '/invoices?studentId=s1') return invoices;
     if (path === '/invoices/i1/download') return { url: 'https://files.test/inv.pdf?t=1' };
@@ -35,7 +49,7 @@ function serve(invoices: unknown[] = [invoice]) {
 let openURL: jest.SpyInstance;
 beforeEach(() => {
   permissions = ['payments.read', 'invoices.read'];
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
 });
 afterEach(() => openURL.mockRestore());
@@ -44,7 +58,10 @@ test('payments of the student with the net, from GET /payments?studentId=', asyn
   serve();
   await renderWithQuery(<StudentMoneyScreen />, createTestQueryClient({ meFromApi: true }));
   expect((await screen.findAllByText(money(145, 'SAR'))).length).toBe(2);
-  expect(mockApiFetch).toHaveBeenCalledWith('/payments?studentId=s1&page=1&pageSize=25');
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: '/payments?studentId=s1&page=1&pageSize=25',
+  });
   expect(screen.getByRole('header', { name: M.title })).toBeTruthy();
 });
 
@@ -67,7 +84,8 @@ test('empty and failed states; a missing permission hides its tab', async () => 
   expect(screen.queryByRole('tab', { name: M.tabPayments })).toBeNull();
   view.unmount();
   // D6: /auth/me answers (a failed one hides every tab); the lists fail.
-  mockApiFetch.mockReset().mockImplementation(async (path: string) => {
+  mockApi.reset('read');
+  mockApi.onRead(async ({ path }) => {
     if (path === '/auth/me') return { permissions: ['payments.read', 'invoices.read'] };
     throw new ApiError(500);
   });

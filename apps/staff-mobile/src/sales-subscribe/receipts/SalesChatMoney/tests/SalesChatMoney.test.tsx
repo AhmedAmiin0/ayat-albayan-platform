@@ -2,13 +2,22 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { familyOf, familyThread, KID, KID2, kid, openSub, PHONE } from '@/sales-subscribe/testing/fixtures';
+import {
+  familyOf,
+  familyThread,
+  KID,
+  KID2,
+  kid,
+  openSub,
+  PHONE,
+} from '@/sales-subscribe/testing/fixtures';
 import { SalesChatMoney } from '@/sales-subscribe/receipts/SalesChatMoney/SalesChatMoney';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (h: unknown) => mockPush(h) } }));
@@ -17,7 +26,7 @@ const m = t.salesMoney;
 const FAMILY_PATH = `/sales/money/family?phone=${encodeURIComponent(PHONE)}`;
 
 function serve(family: unknown, permissions = ['self.sales', 'self.sales_money']) {
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { permissions } : family));
+  mockApi.onRead(async ({ path }) => (path === '/auth/me' ? { permissions } : family));
 }
 
 beforeEach(() => jest.clearAllMocks());
@@ -29,10 +38,16 @@ test('her student with an owed package: «اشتراك جديد» and «سجّل
     createTestQueryClient({ meFromApi: true }),
   );
   await fireEvent.press(await screen.findByRole('button', { name: m.newSubscription }));
-  expect(mockApiFetch).toHaveBeenCalledWith(FAMILY_PATH);
-  expect(mockPush).toHaveBeenLastCalledWith({ pathname: '/inbox/sales-subscribe', params: { phone: PHONE, tz: 'Asia/Riyadh' } });
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: FAMILY_PATH });
+  expect(mockPush).toHaveBeenLastCalledWith({
+    pathname: '/inbox/sales-subscribe',
+    params: { phone: PHONE, tz: 'Asia/Riyadh' },
+  });
   await fireEvent.press(screen.getByRole('button', { name: m.recordTransfer }));
-  expect(mockPush).toHaveBeenLastCalledWith({ pathname: '/inbox/sales-transfer', params: { phone: PHONE } });
+  expect(mockPush).toHaveBeenLastCalledWith({
+    pathname: '/inbox/sales-transfer',
+    params: { phone: PHONE },
+  });
 });
 
 test('nothing owed: only «اشتراك جديد»', async () => {
@@ -74,11 +89,16 @@ test('several due: ONE «جدّد الاشتراك» with no child named and no 
     createTestQueryClient({ meFromApi: true }),
   );
   await screen.findByRole('button', { name: t.students.renew });
-  const labels = screen.getAllByRole('button').map((b) => String(within(b).getByText(/.+/).props.children));
+  const labels = screen
+    .getAllByRole('button')
+    .map((b) => String(within(b).getByText(/.+/).props.children));
   expect(labels).toEqual([t.students.renew, m.recordTransfer]);
   expect(labels.some((l) => l.includes(' — '))).toBe(false);
   await fireEvent.press(screen.getByRole('button', { name: t.students.renew }));
-  expect(mockPush).toHaveBeenLastCalledWith({ pathname: '/inbox/sales-subscribe', params: { phone: PHONE, renew: '1', tz: 'Asia/Riyadh' } });
+  expect(mockPush).toHaveBeenLastCalledWith({
+    pathname: '/inbox/sales-subscribe',
+    params: { phone: PHONE, renew: '1', tz: 'Asia/Riyadh' },
+  });
 });
 
 test('one due among several children: still no name, that child preselected', async () => {
@@ -95,7 +115,15 @@ test('one due among several children: still no name, that child preselected', as
   expect(screen.queryByRole('button', { name: m.newSubscription })).toBeNull();
 });
 
-test.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned', 'expired'] as const)('her %s student, not due: no «جدّد الاشتراك»', async (status) => {
+test.each([
+  'new',
+  'trial',
+  'pending_subscription',
+  'active',
+  'paused',
+  'churned',
+  'expired',
+] as const)('her %s student, not due: no «جدّد الاشتراك»', async (status) => {
   serve(familyOf(kid({ status })));
   await renderWithQuery(
     <SalesChatMoney thread={familyThread} />,
@@ -111,7 +139,7 @@ test('no student of hers in the family: no button', async () => {
     <SalesChatMoney thread={familyThread} />,
     createTestQueryClient({ meFromApi: true }),
   );
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(FAMILY_PATH));
+  await waitFor(() => expect(mockApi.reads()).toContainEqual({ method: 'GET', path: FAMILY_PATH }));
   expect(screen.queryByRole('button')).toBeNull();
 });
 
@@ -121,8 +149,11 @@ test('a lead’s chat asks nothing and shows nothing', async () => {
     <SalesChatMoney thread={thread} />,
     createTestQueryClient({ meFromApi: true }),
   );
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
-  expect(mockApiFetch).not.toHaveBeenCalledWith(expect.stringContaining('/sales/money'));
+  await waitFor(() => expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/auth/me' }));
+  expect(mockApi.reads()).not.toContainEqual({
+    method: 'GET',
+    path: expect.stringContaining('/sales/money'),
+  });
   expect(screen.queryByRole('button')).toBeNull();
 });
 
@@ -132,7 +163,7 @@ test('without self.sales_money the family is never asked', async () => {
     <SalesChatMoney thread={familyThread} />,
     createTestQueryClient({ meFromApi: true }),
   );
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
-  expect(mockApiFetch).not.toHaveBeenCalledWith(FAMILY_PATH);
+  await waitFor(() => expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/auth/me' }));
+  expect(mockApi.reads()).not.toContainEqual({ method: 'GET', path: FAMILY_PATH });
   expect(screen.queryByRole('button')).toBeNull();
 });

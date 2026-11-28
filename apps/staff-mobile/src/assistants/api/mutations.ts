@@ -1,6 +1,6 @@
 import type { AssistantStatementView, AssistantTermsInput } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@ab/mobile-kit';
+import { apiSend, call } from '@ab/mobile-kit';
 import { ASSISTANTS_KEY, calls } from './api';
 
 // The admin's writes (web api.ts + the dialogs): each re-reads everything under ['assistant-pay'] on success.
@@ -30,7 +30,9 @@ export function useVoidCommission() {
   });
 }
 
-type StatementMove = { id: string; move: 'approve' | 'reopen' } | { id: string; move: 'unpay'; reason: string };
+type StatementMove =
+  | { id: string; move: 'approve' | 'reopen' }
+  | { id: string; move: 'unpay'; reason: string };
 
 /** POST /assistant-pay/statements/:id/{approve|reopen|unpay}; un-paying carries its reason. */
 export function useStatementMove() {
@@ -53,7 +55,11 @@ export function useGenerateStatements() {
     mutationFn: async (input: { assistantIds: readonly string[]; month: string }) => {
       const results = await Promise.allSettled(
         input.assistantIds.map((assistantId) =>
-          apiSend<AssistantStatementView>('POST', '/assistant-pay/statements', { assistantId, month: input.month }),
+          call<AssistantStatementView>({
+            method: 'POST',
+            path: '/assistant-pay/statements',
+            body: { assistantId, month: input.month },
+          }),
         ),
       );
       const failed = results.find((r): r is PromiseRejectedResult => r.status === 'rejected');

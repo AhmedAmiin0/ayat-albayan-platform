@@ -4,6 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { formResponseV2 } from '@/teacher/report/testing/fixtures';
 import { ReportEntryCardV2 } from '@/teacher/report/v2/ReportEntryCardV2/ReportEntryCardV2';
+import { mockCall } from '@ab/testing/mock-call';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -11,9 +12,10 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiSend: jest.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 test('English: the form, its surah names and the picker speak English', async () => {

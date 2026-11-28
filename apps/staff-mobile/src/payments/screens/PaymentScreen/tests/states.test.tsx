@@ -3,13 +3,12 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { balanceOf, OLD_SUB_ID, payment, subscription } from '@/payments/fixtures';
 import { PaymentScreen } from '@/payments/screens/PaymentScreen/PaymentScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockBack = jest.fn();
 jest.mock('expo-router', () => ({
@@ -30,33 +29,33 @@ async function fillAndSave() {
 }
 
 test('nothing entered: amount and method are required, nothing is sent', async () => {
-  mockApiFetch.mockResolvedValue(balanceOf(subscription()));
+  mockApi.onRead(() => balanceOf(subscription()));
   await renderWithQuery(<PaymentScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: m.record }));
   expect(screen.getAllByText(t.common.required)).toHaveLength(2);
   await fireEvent.changeText(screen.getByLabelText(t.payments.amount), '12.345');
   expect(screen.getByText(m.amountInvalid)).toBeTruthy();
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
 });
 
 test('offline: the saved package shows but saving is blocked until «حاول مرة أخرى» gets through', async () => {
   const client = createTestQueryClient();
   client.setQueryData(balanceKey, balanceOf(subscription()), { updatedAt: Date.now() - 600_000 });
-  mockApiFetch.mockRejectedValue(offline);
+  mockApi.onRead(() => Promise.reject(offline));
   await renderWithQuery(<PaymentScreen />, client);
   expect(await screen.findByText(m.offline)).toBeTruthy();
   expect(screen.getByRole('header', { name: 'دفعة لـهدى' })).toBeTruthy();
   expect(screen.queryByRole('button', { name: m.record })).toBeNull();
 
-  mockApiFetch.mockResolvedValue(balanceOf(subscription()));
+  mockApi.onRead(() => balanceOf(subscription()));
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByRole('button', { name: m.record })).toBeTruthy();
   expect(screen.queryByText(m.offline)).toBeNull();
 });
 
 test('the network drops while saving: says so, keeps what was typed', async () => {
-  mockApiFetch.mockResolvedValue(balanceOf(subscription()));
-  mockApiSend.mockRejectedValue(offline);
+  mockApi.onRead(() => balanceOf(subscription()));
+  mockApi.onWrite(() => Promise.reject(offline));
   await renderWithQuery(<PaymentScreen />);
   await fillAndSave();
   expect(await screen.findByText(m.offline)).toBeTruthy();
@@ -65,8 +64,10 @@ test('the network drops while saving: says so, keeps what was typed', async () =
 });
 
 test('refused by the API: its reason, the form kept', async () => {
-  mockApiFetch.mockResolvedValue(balanceOf(subscription()));
-  mockApiSend.mockRejectedValue(new ApiError(400, { code: 'currency_mismatch', currency: 'SAR' }));
+  mockApi.onRead(() => balanceOf(subscription()));
+  mockApi.onWrite(() =>
+    Promise.reject(new ApiError(400, { code: 'currency_mismatch', currency: 'SAR' })),
+  );
   await renderWithQuery(<PaymentScreen />);
   await fillAndSave();
   expect(
@@ -84,8 +85,8 @@ test('an older package still owed: both offered, the oldest picked; the paid lin
     paid: 100,
     status: 'expired',
   });
-  mockApiFetch.mockResolvedValue(balanceOf(old, subscription()));
-  mockApiSend.mockResolvedValue(payment());
+  mockApi.onRead(() => balanceOf(old, subscription()));
+  mockApi.onWrite(() => payment());
   await renderWithQuery(<PaymentScreen />);
   const oldPill = await screen.findByRole('radio', { name: /27 أغسطس 2026/ });
   expect(oldPill.props.accessibilityState).toMatchObject({ checked: true });
@@ -94,18 +95,22 @@ test('an older package still owed: both offered, the oldest picked; the paid lin
   expect(screen.getByText(/دُفع ⁦0⁩/)).toBeTruthy();
   await fillAndSave();
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', expect.objectContaining({ subscriptionId: subscription().id }));
+  expect(mockApi.writes()).toContainEqual({
+    method: 'POST',
+    path: '/payments',
+    body: expect.objectContaining({ subscriptionId: subscription().id }),
+  });
 });
 
 test('no package yet: the empty state, no form', async () => {
-  mockApiFetch.mockResolvedValue(balanceOf());
+  mockApi.onRead(() => balanceOf());
   await renderWithQuery(<PaymentScreen />);
   expect(await screen.findByText(t.subscriptions.empty)).toBeTruthy();
   expect(screen.queryByLabelText(t.payments.amount)).toBeNull();
 });
 
 test('nothing cached and the read fails: the error state with a retry', async () => {
-  mockApiFetch.mockRejectedValue(new ApiError(500));
+  mockApi.onRead(() => Promise.reject(new ApiError(500)));
   await renderWithQuery(<PaymentScreen />);
   expect(await screen.findByText(t.common.error)).toBeTruthy();
   expect(screen.getByRole('header', { name: t.payments.record })).toBeTruthy();

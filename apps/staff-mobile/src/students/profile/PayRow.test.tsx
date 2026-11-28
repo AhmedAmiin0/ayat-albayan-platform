@@ -3,17 +3,18 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { balanceOf, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { PayRow } from './PayRow';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
 
 const serve = (balance: unknown) =>
-  mockApiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path === '/students/s1/balance') return balance;
     throw new ApiError(404);
   });
@@ -30,6 +31,8 @@ test('a current package: the row with what it does opens the payment screen', as
 test('no package: no row', async () => {
   serve(balanceOf());
   await renderWithQuery(<PayRow studentId="s1" />);
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/balance'));
+  await waitFor(() =>
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/students/s1/balance' }),
+  );
   expect(screen.queryByRole('button', { name: t.courseCard.pay })).toBeNull();
 });

@@ -3,11 +3,12 @@ import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useOptimisticStatus } from './use-optimistic-status';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiSend: (...args: unknown[]) => mockApiSend(...args),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const listKey = ['leads', 'list', { status: 'new' }];
@@ -37,11 +38,11 @@ function setup() {
 
 const statusOf = (data: unknown, i: number) => (data as typeof seedList).pages[0]?.items[i]?.status;
 
-beforeEach(() => mockApiSend.mockReset());
+beforeEach(() => mockApi.reset('write'));
 
 test('the new status shows before the server answers, then the resource refetches', async () => {
   let resolve: (v: unknown) => void = () => undefined;
-  mockApiSend.mockReturnValue(new Promise((r) => (resolve = r)));
+  mockApi.onWrite(() => new Promise((r) => (resolve = r)));
   const { client, invalidate, wrapper } = setup();
   const { result } = await renderHook(() => useOptimisticStatus({ path: '/leads' }), { wrapper });
 
@@ -49,7 +50,11 @@ test('the new status shows before the server answers, then the resource refetche
   await waitFor(() => expect(statusOf(client.getQueryData(listKey), 0)).toBe('contacted'));
   expect(statusOf(client.getQueryData(listKey), 1)).toBe('new');
   expect(client.getQueryData(detailKey)).toMatchObject({ status: 'contacted', name: 'Huda' });
-  expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/leads/a/status', { status: 'contacted' });
+  expect(mockApi.writes()).toContainEqual({
+    method: 'PATCH',
+    path: '/leads/a/status',
+    body: { status: 'contacted' },
+  });
   expect(invalidate).not.toHaveBeenCalled();
 
   await act(async () => resolve({ id: 'a', status: 'contacted' }));
@@ -58,7 +63,7 @@ test('the new status shows before the server answers, then the resource refetche
 });
 
 test('a failed change rolls every cached copy back to the snapshot', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'invalid_transition' }));
+  mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'invalid_transition' })));
   const { client, invalidate, wrapper } = setup();
   const { result } = await renderHook(() => useOptimisticStatus({ path: '/leads' }), { wrapper });
 
@@ -70,9 +75,12 @@ test('a failed change rolls every cached copy back to the snapshot', async () =>
 });
 
 test('lists refetch before details: a detail read from the lists sees the server, not the rollback', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'invalid_transition' }));
+  mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'invalid_transition' })));
   const { client, wrapper } = setup();
-  const lost = { ...seedList, pages: [{ ...seedList.pages[0], items: [{ id: 'a', status: 'lost' }] }] };
+  const lost = {
+    ...seedList,
+    pages: [{ ...seedList.pages[0], items: [{ id: 'a', status: 'lost' }] }],
+  };
   const listFn = jest.fn().mockResolvedValueOnce(seedList).mockResolvedValue(lost);
   const { result } = await renderHook(
     () => {
@@ -94,7 +102,7 @@ test('lists refetch before details: a detail read from the lists sees the server
 });
 
 test('other resources are never touched', async () => {
-  mockApiSend.mockResolvedValue(undefined);
+  mockApi.onWrite(() => undefined);
   const { client, wrapper } = setup();
   const other = { id: 'a', status: 'new' };
   client.setQueryData(['job-applicants', 'a'], other);
@@ -105,7 +113,7 @@ test('other resources are never touched', async () => {
 });
 
 test('patchPath sends the row PATCH for resources without a /status route (students)', async () => {
-  mockApiSend.mockResolvedValue(undefined);
+  mockApi.onWrite(() => undefined);
   const client = createTestQueryClient();
   const studentKey = ['students', 's1'];
   client.setQueryData(studentKey, { id: 's1', status: 'trial', name: 'هدى' });
@@ -117,20 +125,32 @@ test('patchPath sends the row PATCH for resources without a /status route (stude
 
   await act(async () => result.current.mutate({ id: 's1', status: 'active' }));
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
-  expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/students/s1', { status: 'active' });
+  expect(mockApi.writes()).toContainEqual({
+    method: 'PATCH',
+    path: '/students/s1',
+    body: { status: 'active' },
+  });
   expect(client.getQueryData(studentKey)).toMatchObject({ status: 'active', name: 'هدى' });
   expect(invalidate).toHaveBeenCalledWith(expect.objectContaining({ queryKey: ['students'] }));
 });
 
 test('request sends another route shape; only id and status reach the cached array', async () => {
-  mockApiSend.mockResolvedValue([]);
+  mockApi.onWrite(() => []);
   const client = createTestQueryClient();
   const dayKey = ['lessons', 'day', { date: '2026-10-01' }];
   client.setQueryData(dayKey, [{ id: 'l1', status: 'scheduled' }]);
-  type Cancel = { id: string; status: string; reason: string };
+  interface Cancel {
+    id: string;
+    status: string;
+    reason: string;
+  }
   const options = {
     path: '/lessons',
-    request: (c: Cancel) => ({ method: 'POST' as const, path: `/lessons/${c.id}/cancel`, body: { reason: c.reason } }),
+    request: (c: Cancel) => ({
+      method: 'POST' as const,
+      path: `/lessons/${c.id}/cancel`,
+      body: { reason: c.reason },
+    }),
   };
   const { result } = await renderHook(() => useOptimisticStatus<string, Cancel>(options), {
     wrapper: queryWrapper(client),
@@ -138,6 +158,10 @@ test('request sends another route shape; only id and status reach the cached arr
 
   await act(async () => result.current.mutate({ id: 'l1', status: 'excused', reason: 'سفر' }));
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l1/cancel', { reason: 'سفر' });
+  expect(mockApi.writes()).toContainEqual({
+    method: 'POST',
+    path: '/lessons/l1/cancel',
+    body: { reason: 'سفر' },
+  });
   expect(client.getQueryData(dayKey)).toEqual([{ id: 'l1', status: 'excused' }]);
 });

@@ -5,16 +5,22 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
 import { thread } from '@/inbox/shared/thread-fixtures';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 // Like WhatsApp's chat list: ticks before the preview only when the last message is ours.
-const ours: ThreadView = { ...thread, display_name: 'أم سارة', last_status: 'read', last_body: 'أهلًا' };
+const ours: ThreadView = {
+  ...thread,
+  display_name: 'أم سارة',
+  last_status: 'read',
+  last_body: 'أهلًا',
+};
 const theirs: ThreadView = {
   ...thread,
   phone_e164: '+966552147731',
@@ -28,12 +34,12 @@ const row = (name: string) => screen.getByRole('button', { name: new RegExp(name
 const hidden = { includeHiddenElements: true };
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   jest.mocked(router.push).mockReset();
 });
 
 test('our last message carries its ticks; the row (one stop) says the status word', async () => {
-  mockApiFetch.mockResolvedValue(page([ours, theirs]));
+  mockApi.onRead(() => page([ours, theirs]));
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('أم سارة');
   expect(row(`أم سارة.*${t.enums.messageStatus.read} · ${t.inbox.you} أهلًا`)).toBeTruthy();
@@ -43,7 +49,7 @@ test('our last message carries its ticks; the row (one stop) says the status wor
 });
 
 test('a tap on the ticks opens the thread, as anywhere on the row', async () => {
-  mockApiFetch.mockResolvedValue(page([ours]));
+  mockApi.onRead(() => page([ours]));
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('أم سارة');
   const ticks = screen.getByTestId('ticks-read', hidden);
@@ -54,7 +60,7 @@ test('a tap on the ticks opens the thread, as anywhere on the row', async () => 
 });
 
 test('their last message shows no ticks; the unread chip stays', async () => {
-  mockApiFetch.mockResolvedValue(page([theirs]));
+  mockApi.onRead(() => page([theirs]));
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('أم إيمان');
   expect(screen.queryByTestId(/^ticks-/)).toBeNull();
@@ -62,7 +68,7 @@ test('their last message shows no ticks; the unread chip stays', async () => {
 });
 
 test('a failed last send: the saffron «!» before the preview, «لم تُرسل» said once (the chip)', async () => {
-  mockApiFetch.mockResolvedValue(page([{ ...ours, last_status: 'failed' }]));
+  mockApi.onRead(() => page([{ ...ours, last_status: 'failed' }]));
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('أم سارة');
   expect(screen.getByTestId('ticks-failed', hidden)).toBeTruthy();

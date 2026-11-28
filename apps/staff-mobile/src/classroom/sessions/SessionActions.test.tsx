@@ -3,12 +3,13 @@ import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { SessionActions } from './SessionActions';
+import { mockCall } from '@ab/testing/mock-call';
 
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (...args: unknown[]) => mockApiFetch(...args),
+  call: (request: unknown) => mockApi.call(request),
 }));
 function show(permissions: string[], group: 'now' | 'ended', id: string) {
   const client = createTestQueryClient();
@@ -19,7 +20,7 @@ const links = () => screen.queryAllByRole('button', { name: t.classroom.sendLink
 const copy = () => screen.queryAllByRole('button', { name: t.classroom.copyLink });
 
 test('an ended session offers neither send nor copy, only the recordings', async () => {
-  mockApiFetch.mockResolvedValue({ permissions: ['classroom.links', 'classroom.host'] });
+  mockApi.onRead(() => ({ permissions: ['classroom.links', 'classroom.host'] }));
   await show(['classroom.links', 'classroom.host'], 'ended', 'old');
   expect(links()).toHaveLength(0);
   expect(copy()).toHaveLength(0);
@@ -27,14 +28,14 @@ test('an ended session offers neither send nor copy, only the recordings', async
 });
 
 test('send needs classroom.links and copy needs classroom.host', async () => {
-  mockApiFetch.mockResolvedValue({ permissions: ['classroom.host'] });
+  mockApi.onRead(() => ({ permissions: ['classroom.host'] }));
   await show(['classroom.host'], 'now', 'now');
   expect(await screen.findAllByRole('button', { name: t.classroom.copyLink })).toHaveLength(1);
   expect(links()).toHaveLength(0);
 });
 
 test('with classroom.links only, the copy button is hidden', async () => {
-  mockApiFetch.mockResolvedValue({ permissions: ['classroom.links'] });
+  mockApi.onRead(() => ({ permissions: ['classroom.links'] }));
   await show(['classroom.links'], 'now', 'now');
   expect(await screen.findAllByRole('button', { name: t.classroom.sendLink })).toHaveLength(1);
   expect(copy()).toHaveLength(0);

@@ -1,17 +1,18 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import Login from '../../../app/login';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 beforeEach(() => jest.clearAllMocks());
 
 test('«الدخول برمز واتساب» shows while staff codes can be sent, and opens the phone step (docs/46 A8)', async () => {
-  mockApiFetch.mockResolvedValue({ available: false, staff: true });
+  mockApi.onRead(() => ({ available: false, staff: true }));
   await render(<Login />);
   await fireEvent.press(await screen.findByRole('button', { name: t.teacherAuth.withCode }));
   expect(screen.getByLabelText(t.familyAuth.phone)).toBeTruthy();
@@ -21,7 +22,7 @@ test('«الدخول برمز واتساب» shows while staff codes can be sent
 });
 
 test('no link while staff codes are off or the status fails', async () => {
-  mockApiFetch.mockRejectedValue(new TypeError('Network request failed'));
+  mockApi.onRead(() => Promise.reject(new TypeError('Network request failed')));
   await render(<Login />);
   expect(await screen.findByRole('button', { name: t.familyAuth.forgot })).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.teacherAuth.withCode })).toBeNull();

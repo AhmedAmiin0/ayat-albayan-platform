@@ -3,13 +3,17 @@ import { StyleSheet } from 'react-native';
 import { t, palette } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ReplyEditor } from './ReplyEditor';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onRead(() => new Promise(() => undefined));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: () => new Promise(() => undefined),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
-const styleOf = (name: string) => StyleSheet.flatten(screen.getByRole('button', { name }).props.style);
+const styleOf = (name: string) =>
+  StyleSheet.flatten(screen.getByRole('button', { name }).props.style);
 
 test('docs/07 «الأزرار»: «حفظ» (filled) and «إلغاء» (outlined) are one ButtonRow, save first; the file picks are a row too', async () => {
   await renderWithQuery(<ReplyEditor reply={null} scope="mine" onDone={jest.fn()} />);

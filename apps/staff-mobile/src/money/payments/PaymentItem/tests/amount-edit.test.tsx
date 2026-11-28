@@ -4,13 +4,14 @@ import { ApiError, t, pathKey, money } from '@ab/mobile-kit';
 import { payment } from '@/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { PaymentItem } from '@/money/payments/PaymentItem/PaymentItem';
+import { mockCall } from '@ab/testing/mock-call';
 
 // Only the amount is patched.
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
+mockApi.onRead(async () => ({}));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: jest.fn(async () => ({})),
-  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const e = t.payments.editAmount;
@@ -33,18 +34,26 @@ async function typeAndReview(text: string) {
 }
 
 beforeEach(() => {
-  mockApiSend.mockReset();
-  mockApiSend.mockResolvedValue(payment());
+  mockApi.reset('write');
+  mockApi.onWrite(() => payment());
 });
 
 test('new amount → old → new confirm → PATCH { amount } only; the lists refetch', async () => {
   const invalidate = await show(payment());
   await typeAndReview('150');
-  const body = e.confirmBody.replace('{old}', money(145, 'SAR')).replace('{new}', money(150, 'SAR'));
+  const body = e.confirmBody
+    .replace('{old}', money(145, 'SAR'))
+    .replace('{new}', money(150, 'SAR'));
   expect(screen.getByText(body)).toBeTruthy();
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
   await fireEvent.press(screen.getByRole('button', { name: e.confirm }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/payments/p1', { amount: 150 }));
+  await waitFor(() =>
+    expect(mockApi.writes()).toContainEqual({
+      method: 'PATCH',
+      path: '/payments/p1',
+      body: { amount: 150 },
+    }),
+  );
   await waitFor(() => expect(invalidate).toHaveBeenCalledWith({ queryKey: ['payments'] }));
   expect(invalidate).toHaveBeenCalledWith({ queryKey: ['subscriptions'] });
   await waitFor(() => expect(screen.queryByLabelText(LABEL)).toBeNull());
@@ -55,7 +64,7 @@ test('the same amount: said, no confirm and no request', async () => {
   await typeAndReview('145');
   expect(screen.getByText(e.same)).toBeTruthy();
   expect(screen.queryByRole('button', { name: e.confirm })).toBeNull();
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
 });
 
 test('a card (Stripe) payment: no «تعديل المبلغ»', async () => {
@@ -69,7 +78,7 @@ test('without payments.write: no «تعديل المبلغ»', async () => {
 });
 
 test('the API’s refusal is said in its words', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'refund_exceeds_paid' }));
+  mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'refund_exceeds_paid' })));
   await show(payment());
   await typeAndReview('10');
   await fireEvent.press(screen.getByRole('button', { name: e.confirm }));

@@ -3,11 +3,19 @@ import { screen } from '@testing-library/react-native';
 import { renderWithQuery, teacherPagesClient } from '@/test/query';
 import { pathKey, type TabItem } from '@ab/mobile-kit';
 import { TeacherTabs } from '@/teacher/components/TeacherTabs/TeacherTabs';
+import { mockCall } from '@ab/testing/mock-call';
 
 const mockTabs = jest.fn();
+const mockApi = mockCall();
+mockApi.onRead(async () => ({
+  id: 't1',
+  display_name_ar: 'أبرار',
+  tz: 'Africa/Cairo',
+  students: [],
+}));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: jest.fn(async () => ({ id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] })),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('@ab/mobile-kit/ui/tabs/AppNativeTabs', () => {
   const { Text } = jest.requireActual('react-native');

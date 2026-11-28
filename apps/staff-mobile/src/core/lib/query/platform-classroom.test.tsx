@@ -3,10 +3,13 @@ import { renderHook } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { publicConfigQuery, usePlatformClassroom } from './public-config';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onRead(() => new Promise(() => undefined));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: () => new Promise(() => undefined),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 /** `auto`: settings.meeting_link_auto as GET /settings/public answered it. */

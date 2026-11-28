@@ -3,11 +3,12 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { yusuf } from '@/today/testing/fixtures';
 import { SendLinkAction } from '@/classroom/links/SendLinkAction/SendLinkAction';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiSend: (...args: unknown[]) => mockApiSend(...args),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 beforeEach(() => jest.clearAllMocks());
@@ -16,23 +17,29 @@ const press = (name: string) => fireEvent.press(screen.getByRole('button', { nam
 test('a press asks first; cancel sends nothing', async () => {
   await renderWithQuery(<SendLinkAction lessonId="l-1" student={yusuf} named={false} />);
   await press(t.classroom.sendLink);
-  expect(screen.getByText(t.mobileClassroom.sendConfirm.replace('{name}', yusuf.name))).toBeTruthy();
+  expect(
+    screen.getByText(t.mobileClassroom.sendConfirm.replace('{name}', yusuf.name)),
+  ).toBeTruthy();
   await press(t.common.cancel);
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
   expect(screen.getByRole('button', { name: t.classroom.sendLink })).toBeTruthy();
 });
 
 test('confirming POSTs the student, then says «أُرسل الرابط» and the button stays off', async () => {
-  mockApiSend.mockResolvedValue({ expires_at: 'x', replayed: false, message_status: 'sent' });
+  mockApi.onWrite(() => ({ expires_at: 'x', replayed: false, message_status: 'sent' }));
   await renderWithQuery(<SendLinkAction lessonId="l-1" student={yusuf} named />);
   await press(`${t.classroom.sendLink} ${t.classroom.sendLinkTo.replace('{name}', yusuf.name)}`);
   await press(t.mobileClassroom.sendConfirmAction);
   expect(await screen.findByText(t.classroom.linkSent)).toBeTruthy();
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-1/join-link', { studentId: 's1' });
+  expect(mockApi.writes()).toContainEqual({
+    method: 'POST',
+    path: '/lessons/l-1/join-link',
+    body: { studentId: 's1' },
+  });
 });
 
 test('a replay says it was sent before', async () => {
-  mockApiSend.mockResolvedValue({ expires_at: 'x', replayed: true, message_status: 'sent' });
+  mockApi.onWrite(() => ({ expires_at: 'x', replayed: true, message_status: 'sent' }));
   await renderWithQuery(<SendLinkAction lessonId="l-1" student={yusuf} named={false} />);
   await press(t.classroom.sendLink);
   await press(t.mobileClassroom.sendConfirmAction);
@@ -44,18 +51,20 @@ test.each([
   [404, 'student_not_in_lesson'],
   [503, 'classroom_not_configured'],
 ])('a %s refusal shows its message and the button is usable again', async (status, code) => {
-  mockApiSend.mockRejectedValue(new ApiError(status, { code }));
+  mockApi.onWrite(() => Promise.reject(new ApiError(status, { code })));
   await renderWithQuery(<SendLinkAction lessonId="l-1" student={yusuf} named={false} />);
   await press(t.classroom.sendLink);
   await press(t.mobileClassroom.sendConfirmAction);
   const text: Record<string, string | undefined> = t.classroom.error;
   expect(text[code]).toBeTruthy(); // every code has its own sentence, no fallback
   expect(await screen.findByText(text[code] ?? '')).toBeTruthy();
-  await waitFor(() => expect(screen.getByRole('button', { name: t.classroom.sendLink })).toBeTruthy());
+  await waitFor(() =>
+    expect(screen.getByRole('button', { name: t.classroom.sendLink })).toBeTruthy(),
+  );
 });
 
 test('a 403 without a code reads «غير مسموح»', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(403, null));
+  mockApi.onWrite(() => Promise.reject(new ApiError(403, null)));
   await renderWithQuery(<SendLinkAction lessonId="l-1" student={yusuf} named={false} />);
   await press(t.classroom.sendLink);
   await press(t.mobileClassroom.sendConfirmAction);

@@ -1,7 +1,7 @@
 import { paymentCalls, receivablesCall } from '@ab/client-core';
 import { paymentAttachmentListSchema, periodTotalSchema, type PeriodTotal } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey, call } from '@ab/mobile-kit';
 import { z } from 'zod';
 
 const MINUTE = 60_000;
@@ -38,7 +38,7 @@ export function useReceiptUrl(paymentId: string, enabled: boolean) {
 export function usePaymentAttachments(path: string, enabled: boolean) {
   return useQuery({
     queryKey: pathKey(path),
-    queryFn: () => apiFetch(path, { schema: paymentAttachmentListSchema }),
+    queryFn: () => call({ path, schema: paymentAttachmentListSchema }),
     enabled,
     staleTime: 30 * MINUTE,
     meta,

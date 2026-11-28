@@ -4,23 +4,29 @@ import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { plainReminder } from '@/inbox/shared/thread-fixtures';
 import { NewChatSheet } from '@/inbox/threads-list/NewChatSheet';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn(), canGoBack: () => true } }));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn(), back: jest.fn(), canGoBack: () => true },
+}));
 
-const OPENER = { ...plainReminder, key: 'follow_up_slots', params: ['student_name'], body_ar: 'السلام عليكم، موعد {{1}}' };
+const OPENER = {
+  ...plainReminder,
+  key: 'follow_up_slots',
+  params: ['student_name'],
+  body_ar: 'السلام عليكم، موعد {{1}}',
+};
 const PEOPLE = { guardian: null, lead: null, students: [] };
 const EMPTY = { thread: null, messages: [], has_more: false, lessons: [], people: PEOPLE };
 const ME = { id: 'u1', role: 'sales', permissions: ['inbox.send', 'messages.read'] };
 
 async function toTemplates(templates: unknown[], client = createTestQueryClient()) {
-  mockApiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path === '/auth/me') return ME;
     return path === '/messaging/templates' ? templates : EMPTY;
   });
@@ -31,8 +37,8 @@ async function toTemplates(templates: unknown[], client = createTestQueryClient(
 }
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
-  mockApiSend.mockReset();
+  mockApi.reset('read');
+  mockApi.reset('write');
   jest.mocked(router.push).mockReset();
 });
 
@@ -50,7 +56,7 @@ test('back goes one step (params → templates → the number, still typed); clo
   expect(screen.queryByLabelText(t.inbox.composer.paramNames.student_name)).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.title }));
   expect(screen.getByLabelText(t.inbox.newChat.phone).props.value).toBe('');
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
   expect(router.push).not.toHaveBeenCalled();
 });
 
@@ -59,16 +65,19 @@ test('sales with no template allowed reads «noAllowed», with nothing to send',
   expect(await screen.findByText(t.inbox.composer.noAllowed)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.inbox.composer.send })).toBeNull();
   expect(screen.queryByText(t.inbox.newChat.firstTemplate)).toBeNull();
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
 });
 
 test('while «أرسل» is on its way, close waits for it (no second first template)', async () => {
-  mockApiSend.mockReturnValue(new Promise(() => undefined));
+  mockApi.onWrite(() => new Promise(() => undefined));
   await toTemplates([OPENER]);
   await fireEvent.press(await screen.findByText(t.templates.names.follow_up_slots));
-  await fireEvent.changeText(screen.getByLabelText(t.inbox.composer.paramNames.student_name), 'سهيلة');
+  await fireEvent.changeText(
+    screen.getByLabelText(t.inbox.composer.paramNames.student_name),
+    'سهيلة',
+  );
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   expect(await screen.findByText(t.inbox.newChat.sending)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.common.close })).toBeDisabled();
-  expect(mockApiSend).toHaveBeenCalledTimes(1);
+  expect(mockApi.writes()).toHaveLength(1);
 });

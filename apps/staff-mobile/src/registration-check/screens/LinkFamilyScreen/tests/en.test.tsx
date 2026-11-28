@@ -3,18 +3,26 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { LinkFamilyScreen } from '@/registration-check/screens/LinkFamilyScreen/LinkFamilyScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
+const mockApi = mockCall();
+mockApi.onRead(async ({ path }) =>
+  path === '/auth/me'
+    ? { role: 'admin', permissions: ['students.check_registration', 'leads.link_family'] }
+    : {
+        found: true,
+        more: false,
+        matches: [{ name: 'Reem', code: 'AB-0201', status: 'active', teacher_name: null }],
+      },
+);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async (path: string) =>
-    path === '/auth/me'
-      ? { role: 'admin', permissions: ['students.check_registration', 'leads.link_family'] }
-      : { found: true, more: false, matches: [{ name: 'Reem', code: 'AB-0201', status: 'active', teacher_name: null }] },
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },

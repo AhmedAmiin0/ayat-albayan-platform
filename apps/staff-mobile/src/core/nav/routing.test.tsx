@@ -6,14 +6,21 @@ import { fullAccessMe } from '@/test/staff-me';
 import { TabStack } from '@/core/nav/TabStack';
 import TabsLayout from '../../../app/(tabs)/_layout';
 import RootLayout from '../../../app/_layout';
+import { mockCall } from '@ab/testing/mock-call';
 
 // The real root + tabs layouts with stub screens: proves the gate decides what can be reached.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({
+  registerPush: jest.fn(async () => undefined),
+}));
 // Permissions and the inbox badge read the API: an admin holding every permission sees every tab.
+const mockApi = mockCall();
+mockApi.onRead(async ({ path }) =>
+  path === '/auth/me' ? jest.requireActual('@/test/staff-me').fullAccessMe('admin') : { total: 0 },
+);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async (path: string) => (path === '/auth/me' ? jest.requireActual('@/test/staff-me').fullAccessMe('admin') : { total: 0 }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => {
   const { useState } = jest.requireActual('react');

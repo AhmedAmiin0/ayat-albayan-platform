@@ -1,5 +1,5 @@
 import type { SignedUpload } from '@ab/shared';
-import { apiSend } from '@ab/mobile-kit';
+import { call } from '@ab/mobile-kit';
 import { uploadSigned } from '@/core/lib/http/upload-slot';
 import type { Receipt } from '@/core/lib/receipts/receipt';
 import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
@@ -12,10 +12,14 @@ export async function uploadStatementReceipt(
   assistantId: string,
   receipt: Receipt,
 ): Promise<string> {
-  const signed = await apiSend<SignedUpload>('POST', '/assistant-pay/receipt-upload-url', {
-    assistantId,
-    mime: receipt.mime,
-    size: receipt.size,
+  const signed = await call<SignedUpload>({
+    method: 'POST',
+    path: '/assistant-pay/receipt-upload-url',
+    body: {
+      assistantId,
+      mime: receipt.mime,
+      size: receipt.size,
+    },
   });
   const { error } = await uploadSigned(signed, { body: receipt.bytes, contentType: receipt.mime });
   if (error) throw new ReceiptUploadError(error.message);

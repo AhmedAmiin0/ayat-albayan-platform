@@ -6,12 +6,12 @@ import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { readStoredDraft, REPORT_DRAFTS_KEY } from '@/teacher/report/drafts';
 import { formResponseV2, reportView } from '@/teacher/report/testing/fixtures';
 import { useV2Entry } from './use-v2-entry';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: jest.fn(),
-  apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const SEGMENT = { kind: 'recited', surah: 67, from: 1, to: 5, grade: 'excellent' };
@@ -27,14 +27,22 @@ const open = () =>
   renderHook(() => useV2Entry(entry()), { wrapper: queryWrapper(createTestQueryClient()) });
 
 beforeEach(async () => {
-  mockApiSend.mockReset();
+  mockApi.reset('write');
   await AsyncStorage.clear();
 });
 
 test('after an app restart the typed v2 content and notes are shown', async () => {
-  const kept = { attendance: 'on_time', program: 'quran', content: { segments: [SEGMENT] }, notes: 'ممتاز' };
-  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': { body: JSON.stringify(kept), base: serverBody() } }));
-  mockApiSend.mockImplementation(async () => reportView({ form_version: 2 }));
+  const kept = {
+    attendance: 'on_time',
+    program: 'quran',
+    content: { segments: [SEGMENT] },
+    notes: 'ممتاز',
+  };
+  await AsyncStorage.setItem(
+    REPORT_DRAFTS_KEY,
+    JSON.stringify({ 'r-1': { body: JSON.stringify(kept), base: serverBody() } }),
+  );
+  mockApi.onWrite(async () => reportView({ form_version: 2 }));
   const { result } = await open();
   await waitFor(() => expect(result.current.values.notes).toBe('ممتاز'));
   expect(result.current.values.content.segments).toEqual([SEGMENT]);
@@ -42,8 +50,11 @@ test('after an app restart the typed v2 content and notes are shown', async () =
 });
 
 test('a successful v2 send clears the stored draft', async () => {
-  await AsyncStorage.setItem(REPORT_DRAFTS_KEY, JSON.stringify({ 'r-1': { body: '{"notes":"x"}', base: serverBody() } }));
-  mockApiSend.mockImplementation(async (m: string) =>
+  await AsyncStorage.setItem(
+    REPORT_DRAFTS_KEY,
+    JSON.stringify({ 'r-1': { body: '{"notes":"x"}', base: serverBody() } }),
+  );
+  mockApi.onWrite(async ({ method: m }) =>
     reportView({ form_version: 2, ...(m === 'POST' ? { status: 'submitted', version: 1 } : {}) }),
   );
   const { result } = await open();

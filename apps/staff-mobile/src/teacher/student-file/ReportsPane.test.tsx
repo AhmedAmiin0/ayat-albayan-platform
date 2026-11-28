@@ -4,11 +4,12 @@ import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ReportsPane } from './ReportsPane';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockPush = jest.fn();
 jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
@@ -45,7 +46,7 @@ const mine = { admin: false, teacherId: 't-abrar' } as const;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockImplementation(async (p: string) =>
+  mockApi.onRead(async ({ path: p }) =>
     p.endsWith('/pdf')
       ? { url: 'https://x/r1.pdf', expires_at: '2026-10-02T10:00:00Z' }
       : { items: [row({}), other], total: 2, page: 1, pageSize: 10, series: [] },
@@ -56,12 +57,15 @@ test('sent reports newest first, lesson no. + grade, the PDF once ready', async 
   const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
   await renderWithQuery(<ReportsPane id="s1" who={mine} />);
   expect(await screen.findByText(`${lessonNo('12')} · ${t.enums.grade.excellent}`)).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/reports?page=1&pageSize=10');
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: '/students/s1/reports?page=1&pageSize=10',
+  });
   expect(screen.getByText(`${lessonNo('11')} · ${t.enums.attendance.absent}`)).toBeTruthy();
   expect(screen.getAllByText(t.reports.downloadPdf)).toHaveLength(1);
   await fireEvent.press(screen.getByText(t.reports.downloadPdf));
   await waitFor(() => expect(open).toHaveBeenCalledWith('https://x/r1.pdf'));
-  expect(mockApiFetch).toHaveBeenCalledWith('/reports/r1/pdf');
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/reports/r1/pdf' });
   open.mockRestore();
 });
 
@@ -80,7 +84,7 @@ test('the teacher gets the recordings way; it opens her recordings route', async
 });
 
 test('no report yet: the empty line', async () => {
-  mockApiFetch.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 10, series: [] });
+  mockApi.onRead(() => ({ items: [], total: 0, page: 1, pageSize: 10, series: [] }));
   await renderWithQuery(<ReportsPane id="s1" who={mine} />);
   expect(await screen.findByText(t.reports.noReports)).toBeTruthy();
 });

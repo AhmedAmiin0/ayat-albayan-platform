@@ -6,24 +6,35 @@ import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvid
 import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 import { message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { HOLD_MS } from '@/inbox/messages/text/use-hold-press';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const mockStripe = { on: false };
 // No spread: it would read the getter while the factory runs, before mockStripe exists.
 jest.mock('@/core/lib/stripe-flag', () => ({
-  appOpenUrl: jest.requireActual<{ appOpenUrl: (href: string, on: boolean) => string }>('@/core/lib/stripe-flag').appOpenUrl,
+  appOpenUrl: jest.requireActual<{ appOpenUrl: (href: string, on: boolean) => string }>(
+    '@/core/lib/stripe-flag',
+  ).appOpenUrl,
   get STRIPE_FEATURE() {
     return mockStripe.on;
   },
 }));
 
 const BODY = 'رابط الحلقة https://meet.test/ab. والموقع www.x.com';
-const row = (body: string) => message({ id: 'm1', direction: 'inbound', status: 'delivered', body, replyable: true, forwardable: true });
+const row = (body: string) =>
+  message({
+    id: 'm1',
+    direction: 'inbound',
+    status: 'delivered',
+    body,
+    replyable: true,
+    forwardable: true,
+  });
 const show = (body = BODY) =>
   renderWithQuery(
     <ChatActionsProvider phone={PHONE} thread={thread}>
@@ -34,7 +45,8 @@ const openURL = jest.spyOn(Linking, 'openURL');
 
 beforeEach(() => {
   mockStripe.on = false;
-  mockApiFetch.mockReset().mockResolvedValue(null);
+  mockApi.reset('read');
+  mockApi.onRead(() => null);
   openURL.mockReset().mockResolvedValue(true);
 });
 afterEach(() => jest.useRealTimers());
@@ -101,5 +113,7 @@ test('an Arabic body aligns to the start (the right); an English one to the left
   expect(arabic.textAlign).toBe('left'); // RN swaps left/right in RTL: the start
   expect(arabic.writingDirection).toBeUndefined();
   await show('Hello, see you at 5');
-  expect(StyleSheet.flatten(screen.getByText('Hello, see you at 5').props.style).textAlign).toBe('right');
+  expect(StyleSheet.flatten(screen.getByText('Hello, see you at 5').props.style).textAlign).toBe(
+    'right',
+  );
 });

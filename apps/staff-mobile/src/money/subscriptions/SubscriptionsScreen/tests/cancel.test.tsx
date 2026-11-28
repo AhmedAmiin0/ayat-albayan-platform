@@ -3,15 +3,14 @@ import { t } from '@ab/mobile-kit';
 import { page, STUDENT, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { SubscriptionsScreen } from '@/money/subscriptions/SubscriptionsScreen/SubscriptionsScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
 // A cancelled package row is history only.
 
-const mockApiFetch = jest.fn();
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
@@ -29,12 +28,14 @@ const gone = subscription({
 });
 
 beforeEach(() => {
-  mockApiFetch.mockReset().mockImplementation(async (path: string) => {
+  mockApi.reset('read');
+  mockApi.onRead(async ({ path }) => {
     if (path === '/settings') return { renewal_alert_remaining: 2 };
     if (path.startsWith('/admin-tasks')) return page([]);
     return page([mistake, gone]);
   });
-  mockApiSend.mockReset().mockResolvedValue({ ...mistake, status: 'cancelled' });
+  mockApi.reset('write');
+  mockApi.onWrite(() => ({ ...mistake, status: 'cancelled' }));
 });
 
 test('only the live unpaid row offers «إلغاء الباقة»; the cancelled one shows «ملغاة»', async () => {
@@ -51,7 +52,16 @@ test('confirm with a reason → POST /subscriptions/:id/cancel', async () => {
   await screen.findByText(t.subscriptions.cancel.action);
   await fireEvent.press(screen.getByRole('button', { name: t.subscriptions.cancel.action }));
   expect(screen.getByText(t.subscriptions.cancel.body)).toBeTruthy();
-  await fireEvent.changeText(screen.getByLabelText(t.subscriptions.cancel.reason), ' أُنشئت بالخطأ ');
+  await fireEvent.changeText(
+    screen.getByLabelText(t.subscriptions.cancel.reason),
+    ' أُنشئت بالخطأ ',
+  );
   await fireEvent.press(screen.getByRole('button', { name: t.subscriptions.cancel.confirm }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/subscriptions/a/cancel', { reason: 'أُنشئت بالخطأ' }));
+  await waitFor(() =>
+    expect(mockApi.writes()).toContainEqual({
+      method: 'POST',
+      path: '/subscriptions/a/cancel',
+      body: { reason: 'أُنشئت بالخطأ' },
+    }),
+  );
 });

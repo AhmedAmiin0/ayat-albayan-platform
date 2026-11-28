@@ -4,11 +4,12 @@ import { ApiError, t, listKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { cachedList, huda } from '@/inbox/shared/fixtures';
 import { LeadDetailScreen } from '@/inbox/screens/LeadDetailScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn() },
@@ -27,7 +28,7 @@ async function open(status = huda.status) {
 const statusInList = (client: ReturnType<typeof createTestQueryClient>) =>
   (client.getQueryData(key) as ReturnType<typeof cachedList>).pages[0]?.items[0]?.status;
 
-beforeEach(() => mockApiSend.mockReset());
+beforeEach(() => mockApi.reset('write'));
 
 test('offers exactly the moves the API allows from جديد', async () => {
   await open('new');
@@ -43,17 +44,21 @@ test('مشترك is terminal: no changer at all', async () => {
 });
 
 test('a move shows at once in the screen and the inbox, then PATCHes', async () => {
-  mockApiSend.mockReturnValue(new Promise(() => undefined));
+  mockApi.onWrite(() => new Promise(() => undefined));
   const client = await open('new');
   await fireEvent.press(screen.getByRole('button', { name: word.contacted }));
-  expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/leads/a1/status', { status: 'contacted' });
+  expect(mockApi.writes()).toContainEqual({
+    method: 'PATCH',
+    path: '/leads/a1/status',
+    body: { status: 'contacted' },
+  });
   await waitFor(() => expect(statusInList(client)).toBe('contacted'));
   expect(screen.getByRole('button', { name: word.trial_booked })).toBeTruthy();
   expect(screen.queryByRole('button', { name: word.new })).toBeNull();
 });
 
 test('a refused move rolls back and says why', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'invalid_transition' }));
+  mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'invalid_transition' })));
   const client = await open('new');
   await fireEvent.press(screen.getByRole('button', { name: word.lost }));
   expect(await screen.findByText(t.leads.invalidTransition)).toBeTruthy();
@@ -62,7 +67,7 @@ test('a refused move rolls back and says why', async () => {
 });
 
 test('any other failure: the generic error', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(500));
+  mockApi.onWrite(() => Promise.reject(new ApiError(500)));
   await open('new');
   await fireEvent.press(screen.getByRole('button', { name: word.lost }));
   expect(await screen.findByText(t.common.error)).toBeTruthy();

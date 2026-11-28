@@ -7,11 +7,12 @@ import { t } from '@ab/mobile-kit';
 import { bulkSa } from '@/finance/pricing/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { QuoteSheet } from '@/inbox/composer/quote/QuoteSheet/QuoteSheet';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const listOf = (discount: number) => ({
@@ -34,13 +35,11 @@ const opacity = () => StyleSheet.flatten(preview().props.style).opacity;
 
 /** Answers every list request with `list`: a value, a rejection or a pending promise. */
 function lists(list: () => Promise<unknown>) {
-  mockApiFetch.mockImplementation((path: string) =>
-    isList(path) ? list() : Promise.resolve(bulkSa),
-  );
+  mockApi.onRead(({ path }) => (isList(path) ? list() : Promise.resolve(bulkSa)));
 }
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   lists(() => Promise.resolve(listOf(0)));
 });
 

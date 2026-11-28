@@ -3,8 +3,14 @@ import * as Sharing from 'expo-sharing';
 import { t } from '@ab/mobile-kit';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { sendChatFile } from '@/inbox/composer/send-file';
-import { answerThreads, FAMILY, renderShare, TEACHER } from '@/inbox/thread/share/screen/share-testing';
+import {
+  answerThreads,
+  FAMILY,
+  renderShare,
+  TEACHER,
+} from '@/inbox/thread/share/screen/share-testing';
 import type * as ShareTestingModule from '@/inbox/thread/share/screen/share-testing';
+import { mockCall } from '@ab/testing/mock-call';
 
 type ShareTesting = typeof ShareTestingModule;
 
@@ -13,9 +19,13 @@ jest.mock('expo-sharing', () => ({
   getResolvedSharedPayloadsAsync: jest.fn(),
   clearSharedPayloads: jest.fn(),
 }));
+const mockApi = mockCall();
+mockApi.onRead(async ({ path }) =>
+  jest.requireActual<ShareTesting>('@/inbox/thread/share/screen/share-testing').answerThreads(path),
+);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async (path: string) => jest.requireActual<ShareTesting>('@/inbox/thread/share/screen/share-testing').answerThreads(path),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('@/inbox/composer/send-file', () => ({
   ...jest.requireActual('@/inbox/composer/send-file'),

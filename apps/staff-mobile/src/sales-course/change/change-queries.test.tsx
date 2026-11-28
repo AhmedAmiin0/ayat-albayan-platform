@@ -4,11 +4,12 @@ import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useChangeCourse, useCourseChangeCheck } from './change-queries';
 import type { ChangeBody } from './change-calls.types';
 import { SUB_ID } from '@/sales-course/testing/fixtures';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const body: ChangeBody = {
@@ -22,27 +23,37 @@ const body: ChangeBody = {
 const check = { conflicts: [], remaining: 5, endsOn: '2026-10-21' };
 
 test('the check is dropped once unmounted, so the same picks after a save ask the server again', async () => {
-  mockApiSend.mockResolvedValue(check);
+  mockApi.onWrite(() => check);
   const client = createTestQueryClient();
   const { result, unmount } = await renderHook(() => useCourseChangeCheck(body), {
     wrapper: queryWrapper(client),
   });
   await waitFor(() => expect(result.current.data).toEqual(check));
   await unmount();
-  await waitFor(() => expect(client.getQueryCache().findAll({ queryKey: ['sales', 'booking', 'course-change'] })).toHaveLength(0));
+  await waitFor(() =>
+    expect(
+      client.getQueryCache().findAll({ queryKey: ['sales', 'booking', 'course-change'] }),
+    ).toHaveLength(0),
+  );
 });
 
-afterEach(() => mockApiSend.mockReset());
+afterEach(() => mockApi.reset('write'));
 
 test('the assistant checks on her own route without the idempotency key in the cache key', async () => {
-  mockApiSend.mockResolvedValue(check);
+  mockApi.onWrite(() => check);
   const client = createTestQueryClient();
   const { result } = await renderHook(() => useCourseChangeCheck(body), {
     wrapper: queryWrapper(client),
   });
   await waitFor(() => expect(result.current.data).toEqual(check));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/booking/course/change/check', body);
-  const [query] = client.getQueryCache().findAll({ queryKey: ['sales', 'booking', 'course-change'] });
+  expect(mockApi.writes()).toContainEqual({
+    method: 'POST',
+    path: '/sales/booking/course/change/check',
+    body: body,
+  });
+  const [query] = client
+    .getQueryCache()
+    .findAll({ queryKey: ['sales', 'booking', 'course-change'] });
   expect(JSON.stringify(query?.queryKey)).not.toContain(body.clientRequestId);
 });
 
@@ -51,17 +62,21 @@ test('no check is asked before a day is picked', async () => {
     wrapper: queryWrapper(createTestQueryClient()),
   });
   expect(result.current.fetchStatus).toBe('idle');
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
 });
 
 test('a saved change the route does not describe fails instead of showing a broken result', async () => {
-  mockApiSend.mockResolvedValue({ subscriptionId: SUB_ID, ruleIds: ['r1'], endsOn: null });
+  mockApi.onWrite(() => ({ subscriptionId: SUB_ID, ruleIds: ['r1'], endsOn: null }));
   const { result } = await renderHook(() => useChangeCourse(), {
     wrapper: queryWrapper(createTestQueryClient()),
   });
   await act(async () => {
     await result.current.mutateAsync(body).catch(() => undefined);
   });
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/booking/course/change', body);
+  expect(mockApi.writes()).toContainEqual({
+    method: 'POST',
+    path: '/sales/booking/course/change',
+    body: body,
+  });
   expect(result.current.error).toMatchObject({ body: { code: 'bad_response' } });
 });

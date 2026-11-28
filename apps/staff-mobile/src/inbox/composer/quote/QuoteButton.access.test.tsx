@@ -6,11 +6,12 @@ import { fullAccessMe } from '@/test/staff-me';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),
@@ -24,13 +25,25 @@ async function open(opts: { teacher?: boolean; permissions?: string[]; last?: st
   const th = detail([inbound], {
     thread: { ...thread, last_inbound_at: opts.last ?? minutesAgo(5) },
   });
-  mockApiFetch.mockImplementation(async (p: string) =>
-    p.startsWith('/pricing/quote') ? bulkSa : p === '/messages/gate' ? { open: true, reason: null, queued: 0 } : th,
+  mockApi.onRead(async ({ path: p }) =>
+    p.startsWith('/pricing/quote')
+      ? bulkSa
+      : p === '/messages/gate'
+        ? { open: true, reason: null, queued: 0 }
+        : th,
   );
   const client = createTestQueryClient();
-  if (opts.permissions) client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions: opts.permissions });
+  if (opts.permissions)
+    client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions: opts.permissions });
   const ui = <ThreadScreen />;
-  await renderWithQuery(opts.teacher ? <ThreadModeProvider value={{ kind: 'teacher', teacherId: 't1' }}>{ui}</ThreadModeProvider> : ui, client);
+  await renderWithQuery(
+    opts.teacher ? (
+      <ThreadModeProvider value={{ kind: 'teacher', teacherId: 't1' }}>{ui}</ThreadModeProvider>
+    ) : (
+      ui
+    ),
+    client,
+  );
   await screen.findByText(inbound.body ?? '');
 }
 const quote = () => screen.queryByRole('button', { name: t.inbox.quote.open });
@@ -40,7 +53,7 @@ const paperclip = async () => {
   return clip;
 };
 
-beforeEach(() => mockApiFetch.mockReset());
+beforeEach(() => mockApi.reset('read'));
 
 test('sales with pricing.read get «عرض سعر» in the bar; it opens the quote sheet', async () => {
   await open({ permissions: fullAccessMe('sales').permissions });

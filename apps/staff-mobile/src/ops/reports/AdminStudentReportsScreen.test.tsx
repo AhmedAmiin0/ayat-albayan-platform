@@ -4,11 +4,12 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { AdminStudentReportsScreen } from './AdminStudentReportsScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
@@ -37,7 +38,7 @@ const row: ReportSummaryView = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockImplementation(async (p: string) => {
+  mockApi.onRead(async ({ path: p }) => {
     if (p === '/students/s1') return studentProfileFixture({ id: 's1', name: 'يوسف أحمد' });
     return { items: [row], total: 1, page: 1, pageSize: 10, series: [] };
   });
@@ -46,8 +47,11 @@ beforeEach(() => {
 test('admin mode: the student’s name, no teacher read, any report opens the read-only view', async () => {
   await renderWithQuery(<AdminStudentReportsScreen />);
   expect(await screen.findByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
-  expect(mockApiFetch).not.toHaveBeenCalledWith('/teachers/me');
-  expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/reports?page=1&pageSize=10');
+  expect(mockApi.reads()).not.toContainEqual({ method: 'GET', path: '/teachers/me' });
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: '/students/s1/reports?page=1&pageSize=10',
+  });
   await fireEvent.press(await screen.findByText(new RegExp(t.enums.grade.excellent)));
   expect(mockPush).toHaveBeenCalledWith('/students/reports/view/r1');
 });

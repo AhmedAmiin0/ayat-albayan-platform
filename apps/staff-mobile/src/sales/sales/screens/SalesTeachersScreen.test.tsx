@@ -4,11 +4,12 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { teacher } from '@/sales/sales/testing/fixtures';
 import { SalesTeachersScreen } from './SalesTeachersScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
@@ -30,31 +31,35 @@ const TEACHERS = [
   teacher({ ...KHALID, active_count: 0, trial_count: 0 }),
 ];
 
-beforeEach(() => mockApiFetch.mockReset());
+beforeEach(() => mockApi.reset('read'));
 
 test('master list: name, gender · programs, counts and «في حلقة الآن»; students are not crammed in the row', async () => {
-  mockApiFetch.mockResolvedValue(TEACHERS);
+  mockApi.onRead(() => TEACHERS);
   await renderWithQuery(<SalesTeachersScreen />);
   expect(await screen.findByText('أبرار محمد')).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith('/sales/teachers');
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/sales/teachers' });
   expect(screen.getByText(counts(2, 3))).toBeTruthy();
   expect(screen.getByText(counts(0, 0))).toBeTruthy();
   expect(screen.getByText(kinds(4, 2))).toBeTruthy();
   expect(screen.getByText(kinds(0, 0))).toBeTruthy();
   expect(screen.getAllByText(t.sales.teachers.liveNow)).toHaveLength(1);
-  expect(screen.getByText(`${t.enums.gender.female} · ${t.enums.program.quran}${t.common.listSeparator}${t.enums.program.arabic}`)).toBeTruthy();
+  expect(
+    screen.getByText(
+      `${t.enums.gender.female} · ${t.enums.program.quran}${t.common.listSeparator}${t.enums.program.arabic}`,
+    ),
+  ).toBeTruthy();
   expect(screen.queryByText('جنى علي')).toBeNull();
 });
 
 test('a row opens the teacher’s students screen', async () => {
-  mockApiFetch.mockResolvedValue(TEACHERS);
+  mockApi.onRead(() => TEACHERS);
   await renderWithQuery(<SalesTeachersScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: /أبرار محمد/ }));
   expect(router.push).toHaveBeenCalledWith('/more/sales/teachers/t1');
 });
 
 test('program and gender pills filter the list; nothing left says so', async () => {
-  mockApiFetch.mockResolvedValue(TEACHERS);
+  mockApi.onRead(() => TEACHERS);
   await renderWithQuery(<SalesTeachersScreen />);
   await screen.findByText('خالد');
   await fireEvent.press(screen.getByRole('tab', { name: t.enums.program.arabic }));
@@ -64,17 +69,17 @@ test('program and gender pills filter the list; nothing left says so', async () 
 });
 
 test('no teachers shows the empty state; a failed read shows the error', async () => {
-  mockApiFetch.mockResolvedValue([]);
+  mockApi.onRead(() => []);
   const first = await renderWithQuery(<SalesTeachersScreen />);
   expect(await screen.findByText(t.sales.teachers.empty)).toBeTruthy();
   await first.unmount();
-  mockApiFetch.mockRejectedValue(new Error('offline'));
+  mockApi.onRead(() => Promise.reject(new Error('offline')));
   await renderWithQuery(<SalesTeachersScreen />);
   expect(await screen.findByRole('alert')).toBeTruthy();
 });
 
 test('the compact top: «المعلمون · 2» on the title’s line, the rows in one inset card', async () => {
-  mockApiFetch.mockResolvedValue(TEACHERS);
+  mockApi.onRead(() => TEACHERS);
   await renderWithQuery(<SalesTeachersScreen />);
   expect(await screen.findByRole('header', { name: `${t.sales.teachers.title} · 2` })).toBeTruthy();
   expect(screen.getAllByTestId('inset-cell')).toHaveLength(2);

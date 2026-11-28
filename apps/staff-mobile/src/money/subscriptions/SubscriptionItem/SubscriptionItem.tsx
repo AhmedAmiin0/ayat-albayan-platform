@@ -11,7 +11,18 @@ import {
 import { pushInTab } from '@/core/nav/back-within';
 import { View } from 'react-native';
 import { useTabOpen } from '@/core/auth/use-tab-open';
-import { apiSend, pathKey, t, type, useTheme, AppText, Button, ListRow, StatusChip, money } from '@ab/mobile-kit';
+import {
+  pathKey,
+  t,
+  type,
+  useTheme,
+  AppText,
+  Button,
+  ListRow,
+  StatusChip,
+  money,
+  call,
+} from '@ab/mobile-kit';
 import { CancelPackage } from '@/payments';
 import { packageName, paidLine } from '@/core/lib/money/format';
 
@@ -25,7 +36,8 @@ function subscriptionProgress(sub: SubscriptionView, threshold?: number) {
 }
 
 /** The status word; a status newer than this bundle (an old OTA) shows its code instead of nothing. */
-const statusLabel = (status: SubscriptionView['status']): string => t.enums.subscriptionStatus[status] ?? status;
+const statusLabel = (status: SubscriptionView['status']): string =>
+  t.enums.subscriptionStatus[status] ?? status;
 
 /** docs/07 §6: full width, never shrink-wrapped in the tag line. */
 function SubscriptionActions({ sub, pay }: { sub: SubscriptionView; pay: boolean }) {
@@ -43,7 +55,7 @@ function SubscriptionActions({ sub, pay }: { sub: SubscriptionView; pay: boolean
       ) : null}
       {cancel ? (
         <CancelPackage
-          cancel={(body) => apiSend('POST', `/subscriptions/${sub.id}/cancel`, body)}
+          cancel={(body) => call({ method: 'POST', path: `/subscriptions/${sub.id}/cancel`, body })}
           stale={[pathKey('/subscriptions'), ['students', sub.student.id]]}
         />
       ) : null}
@@ -80,7 +92,11 @@ export const SubscriptionItem = memo(function SubscriptionItem({
               color: due ? color.act : color.ink2,
             }}
           >
-            {gone ? '—' : due ? `${progress.remainingLabel} · ${t.mobileMoney.renewalDue}` : progress.remainingLabel}
+            {gone
+              ? '—'
+              : due
+                ? `${progress.remainingLabel} · ${t.mobileMoney.renewalDue}`
+                : progress.remainingLabel}
           </AppText>
           {partial ? (
             <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>{paidLine(sub)}</AppText>
@@ -90,7 +106,11 @@ export const SubscriptionItem = memo(function SubscriptionItem({
       }
       trailing={
         <View>
-          <StatusChip {...subscriptionStatusStyle[sub.status]} label={statusLabel(sub.status)} size="sm" />
+          <StatusChip
+            {...subscriptionStatusStyle[sub.status]}
+            label={statusLabel(sub.status)}
+            size="sm"
+          />
         </View>
       }
     />

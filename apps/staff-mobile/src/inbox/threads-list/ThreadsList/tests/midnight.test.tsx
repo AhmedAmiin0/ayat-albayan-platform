@@ -6,17 +6,23 @@ import { renderWithQuery } from '@/test/query';
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadsList } from '@/inbox/threads-list/ThreadsList/ThreadsList';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 // 23:58 on the device; both chats' last message is from 23:00 that day.
 const AT = new Date(2026, 9, 26, 23, 0).toISOString();
-const chat = (n: number) => ({ ...thread, phone_e164: `+96655000000${n}`, display_name: `محادثة ${n}`, last_message_at: AT });
+const chat = (n: number) => ({
+  ...thread,
+  phone_e164: `+96655000000${n}`,
+  display_name: `محادثة ${n}`,
+  last_message_at: AT,
+});
 
 // Every AppState listener (the list's clock among them), called on «back to the foreground».
 const listeners: ((s: AppStateStatus) => void)[] = [];
@@ -35,7 +41,7 @@ afterEach(() => {
 
 test('compiled: one clock for the list; «23:00» turns into «أمس» after midnight (foreground), no remount', async () => {
   const timers = jest.spyOn(globalThis, 'setInterval');
-  mockApiFetch.mockResolvedValue({ items: [chat(1), chat(2)], total: 2, page: 1, pageSize: 25 });
+  mockApi.onRead(() => ({ items: [chat(1), chat(2)], total: 2, page: 1, pageSize: 25 }));
   await renderWithQuery(
     <ThreadModeProvider value={{ kind: 'admin' }}>
       <ThreadsList />

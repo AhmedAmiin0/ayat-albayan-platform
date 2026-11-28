@@ -5,11 +5,12 @@ import { thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadsList } from '@/inbox/threads-list/ThreadsList/ThreadsList';
 import { threadKeys } from '@/core/lib/keys';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 // Counts each row's draws by its title (ThreadRow → ChatRow), then draws the real row.
@@ -34,7 +35,7 @@ const chat = (n: number, extra: Partial<ThreadView> = {}): ThreadView => ({
 const page = (items: ThreadView[]) => ({ items, total: items.length, page: 1, pageSize: 25 });
 
 test("a poll that changes one chat redraws only that chat's row (owner: «Avoid rerenders»)", async () => {
-  mockApiFetch.mockResolvedValue(page([chat(1), chat(2), chat(3)]));
+  mockApi.onRead(() => page([chat(1), chat(2), chat(3)]));
   const { client } = await renderWithQuery(
     <ThreadModeProvider value={{ kind: 'admin' }}>
       <ThreadsList />
@@ -43,7 +44,7 @@ test("a poll that changes one chat redraws only that chat's row (owner: «Avoid 
   await screen.findByText('محادثة 3');
   const before = new Map(mockDraws);
   // The next poll: chat 2 got a new message; the others come back equal (new JSON objects).
-  mockApiFetch.mockResolvedValue(
+  mockApi.onRead(() =>
     page([chat(1), chat(2, { last_body: 'وصلت الآن', unread_count: 1 }), chat(3)]),
   );
   await act(async () => client.invalidateQueries({ queryKey: threadKeys.all }));

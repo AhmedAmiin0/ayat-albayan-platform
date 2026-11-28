@@ -5,17 +5,23 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { plainReminder, thread } from '@/inbox/shared/thread-fixtures';
 import { getComposerText, setComposerText } from '@/inbox/composer/draft-store';
 import { ReopenSlot } from '@/inbox/composer/reopen/ReopenSlot/ReopenSlot';
+import { mockCall } from '@ab/testing/mock-call';
 
 // The draft goes now inside academy_message and leaves the box; fakes only, nothing is sent.
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const BODY = 'السلام عليكم\nرسالة من الأكاديمية:\n\n{{1}}\n\nيسعدنا ردّكم.';
 const chat = (key: string, over: Partial<TemplateView> = {}): TemplateView => ({
-  ...plainReminder, key, meta_name: key, line: 'chat', sales_starter: true, ...over,
+  ...plainReminder,
+  key,
+  meta_name: key,
+  line: 'chat',
+  sales_starter: true,
+  ...over,
 });
 const ACADEMY = chat('academy_message', { body_ar: BODY, params: ['var_1'] });
 const WELCOME = chat('welcome_greeting', { body_ar: 'أهلًا بكم', params: [] });
@@ -26,14 +32,14 @@ const carry = () => screen.queryByRole('button', { name: t.inbox.reopenBar.carry
 
 async function show(rows: TemplateView[], draft = 'سطر أول\n\nسطر   ثانٍ') {
   setComposerText(PHONE, draft);
-  mockApiFetch.mockResolvedValue(rows);
+  mockApi.onRead(() => rows);
   const props = { phone: PHONE, lessons: [], teacher: false, open: false, held: true };
   const slot = <ReopenSlot {...props} thread={CLOSED} onSend={onSend} />;
   await renderWithQuery(slot, createTestQueryClient());
 }
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   onSend.mockReset();
   setComposerText(PHONE, '');
 });

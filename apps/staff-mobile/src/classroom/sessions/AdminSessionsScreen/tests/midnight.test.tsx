@@ -4,14 +4,14 @@ import { dayLabel } from '@/calendar/lib/week';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { AdminSessionsScreen } from '@/classroom/sessions/AdminSessionsScreen/AdminSessionsScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
 // The screen stays mounted for days, so the day must follow the clock.
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (...args: unknown[]) => mockApiFetch(...args),
-  apiSend: jest.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 /** 23:59 on 26 Oct in Riyadh (UTC+3). */
@@ -22,7 +22,8 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 beforeEach(() => {
-  mockApiFetch.mockReset().mockResolvedValue([]);
+  mockApi.reset('read');
+  mockApi.onRead(() => []);
   jest.useFakeTimers({ now: BEFORE_MIDNIGHT });
 });
 

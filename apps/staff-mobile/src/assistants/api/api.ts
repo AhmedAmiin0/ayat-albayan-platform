@@ -7,7 +7,7 @@ import {
   type StatementFilter,
 } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/mobile-kit';
+import { apiFetch, apiSend, call } from '@ab/mobile-kit';
 
 // apps/api assistant-pay (web apps/staff-web/src/features/assistants/api.ts). Reads need
 // assistantpay.read, writes assistantpay.write, approve/reopen/unpay assistantpay.approve. Per currency.
@@ -55,7 +55,13 @@ export const useAssistants = () =>
   });
 
 export const useCommissions = (f: LedgerFilter) =>
-  useQuery({ queryKey: [...ASSISTANTS_KEY, 'commissions', f], queryFn: () => apiFetch<AssistantCommissionView[]>(commissionsPath(f)) });
+  useQuery({
+    queryKey: [...ASSISTANTS_KEY, 'commissions', f],
+    queryFn: () => call<AssistantCommissionView[]>({ path: commissionsPath(f) }),
+  });
 
 export const useStatements = (f: StatementFilter) =>
-  useQuery({ queryKey: [...ASSISTANTS_KEY, 'statements', f], queryFn: () => apiFetch<AssistantStatementView[]>(statementsPath(f)) });
+  useQuery({
+    queryKey: [...ASSISTANTS_KEY, 'statements', f],
+    queryFn: () => call<AssistantStatementView[]>({ path: statementsPath(f) }),
+  });

@@ -4,11 +4,12 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { StudentReportsScreen } from '@/teacher/screens/StudentReportsScreen/StudentReportsScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockPush = jest.fn();
 const mockReplace = jest.fn();
@@ -39,7 +40,7 @@ const row: ReportSummaryView = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockImplementation(async (p: string) =>
+  mockApi.onRead(async ({ path: p }) =>
     p === '/students/s1'
       ? studentProfileFixture({ id: 's1', name: 'يوسف أحمد' })
       : { items: [row], total: 1, page: 1, pageSize: 10, series: [] },

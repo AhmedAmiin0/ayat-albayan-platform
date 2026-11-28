@@ -1,20 +1,23 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { TeacherCodeSignIn } from './TeacherCodeSignIn';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 const mockSignInWithCode = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
+  call: (request: unknown) => mockApi.call(request),
 }));
-jest.mock('@ab/mobile-kit/auth/sign-in', () => ({ signInWithCode: (b: unknown) => mockSignInWithCode(b) }));
+jest.mock('@ab/mobile-kit/auth/sign-in', () => ({
+  signInWithCode: (b: unknown) => mockSignInWithCode(b),
+}));
 
 const onBack = jest.fn();
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiSend.mockResolvedValue(undefined);
+  mockApi.onWrite(() => undefined);
 });
 
 async function toCodeStep() {
@@ -26,8 +29,12 @@ async function toCodeStep() {
 
 test('phone → the staff route with the normalised number → the code step', async () => {
   await toCodeStep();
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/staff-code/request', {
-    phone: '+966500000005',
+  expect(mockApi.writes()).toContainEqual({
+    method: 'POST',
+    path: '/auth/staff-code/request',
+    body: {
+      phone: '+966500000005',
+    },
   });
   expect(screen.getByRole('button', { name: /يمكنك إعادة الإرسال|You can resend/ })).toBeDisabled();
 });
@@ -60,8 +67,8 @@ test('a bad number is refused before any request; 429 is said; back returns to t
   await fireEvent.changeText(screen.getByLabelText(t.familyAuth.phone), '12');
   await fireEvent.press(screen.getByRole('button', { name: t.familyAuth.sendCode }));
   expect(await screen.findByText(t.familyAuth.errors.invalid_phone)).toBeTruthy();
-  expect(mockApiSend).not.toHaveBeenCalled();
-  mockApiSend.mockRejectedValue(new ApiError(429, { code: 'too_many_requests' }));
+  expect(mockApi.writes()).toHaveLength(0);
+  mockApi.onWrite(() => Promise.reject(new ApiError(429, { code: 'too_many_requests' })));
   await fireEvent.changeText(screen.getByLabelText(t.familyAuth.phone), '+966500000005');
   await fireEvent.press(screen.getByRole('button', { name: t.familyAuth.sendCode }));
   expect(await screen.findByText(t.familyAuth.errors.too_many_requests)).toBeTruthy();

@@ -6,6 +6,7 @@ import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { AssistantHomeScreen } from './AssistantHomeScreen';
 import { AssistantMoreScreen } from './AssistantMoreScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -19,8 +20,12 @@ const PROFILE = savedProfile({
   full_name: 'Sara Ali',
   role: { base: 'assistant', key: null, name_ar: null, name_en: null },
 });
-const mockApiFetch = jest.fn(async (p: string) => (p === '/me/profile' ? PROFILE : []));
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+const mockApi = mockCall();
+mockApi.onRead(async ({ path: p }) => (p === '/me/profile' ? PROFILE : []));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 afterEach(() => jest.useRealTimers());
 

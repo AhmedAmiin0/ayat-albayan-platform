@@ -18,6 +18,7 @@ import AssistantLayout from '../../../app/assistant/_layout';
 import SalesLayout from '../../../app/sales/_layout';
 import ShareRoute from '../../../app/share';
 import TeacherLayout from '../../../app/teacher/_layout';
+import { mockCall } from '@ab/testing/mock-call';
 
 // docs/38: an Android share opens /share (+native-intent); the root layout's gate (a store here,
 // so it can move) hands it to its tree's chooser in its chat group (stubs print base, mode, share).
@@ -29,13 +30,19 @@ jest.mock('expo-sharing', () => ({
     mockShare.payloads = [];
   }),
 }));
-jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({
+  registerPush: jest.fn(async () => undefined),
+}));
 const mockMe = { answer: {} as object };
 const mockTeacher = { id: 't1', display_name_ar: 'نور', tz: 'Africa/Cairo', students: [] };
+const mockApi = mockCall();
+mockApi.onRead(
+  async ({ path }) =>
+    ({ '/auth/me': mockMe.answer, '/teachers/me': mockTeacher })[path] ?? { total: 0 },
+);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async (path: string) =>
-    ({ '/auth/me': mockMe.answer, '/teachers/me': mockTeacher })[path] ?? { total: 0 },
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockGate = { now: 'out', seen: new Set<() => void>() };
 const mockWatch = (listener: () => void) => {
@@ -44,7 +51,8 @@ const mockWatch = (listener: () => void) => {
 };
 jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => ({
   ...jest.requireActual('@ab/mobile-kit/auth/use-auth-gate'),
-  useAuthGate: () => jest.requireActual('react').useSyncExternalStore(mockWatch, () => mockGate.now),
+  useAuthGate: () =>
+    jest.requireActual('react').useSyncExternalStore(mockWatch, () => mockGate.now),
 }));
 const moveGate = (gate: string) =>
   act(async () => {
@@ -109,9 +117,24 @@ test('the share URL becomes /share (home once read); the Stripe return does not'
 });
 
 test.each([
-  { gate: 'admin', path: '/inbox/share', group: '(admin-chat)', text: 'chooser base= mode=admin items=1' },
-  { gate: 'sales', path: '/sales/inbox/share', group: '(sales-chat)', text: 'chooser base=/sales mode=admin items=1' },
-  { gate: 'teacher', path: '/teacher/chats/share', group: '(teacher-chat)', text: 'chooser base= mode=teacher items=1' },
+  {
+    gate: 'admin',
+    path: '/inbox/share',
+    group: '(admin-chat)',
+    text: 'chooser base= mode=admin items=1',
+  },
+  {
+    gate: 'sales',
+    path: '/sales/inbox/share',
+    group: '(sales-chat)',
+    text: 'chooser base=/sales mode=admin items=1',
+  },
+  {
+    gate: 'teacher',
+    path: '/teacher/chats/share',
+    group: '(teacher-chat)',
+    text: 'chooser base= mode=teacher items=1',
+  },
 ])('$gate: /share replaces itself with $path in $group', async ({ gate, path, group, text }) => {
   const router = await open(gate, '/share');
   expect(await screen.findByText(text)).toBeTruthy();

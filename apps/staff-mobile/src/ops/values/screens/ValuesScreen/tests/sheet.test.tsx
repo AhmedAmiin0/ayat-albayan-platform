@@ -6,32 +6,42 @@ import { groupLabel } from '@/ops/values/lib/value-groups';
 import { labelOf } from '@/ops/values/lib/value-text';
 import { meta, WRITER } from '@/ops/values/testing/values-fixtures';
 import { ValuesScreen } from '@/ops/values/screens/ValuesScreen/ValuesScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
-  apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
+  call: (request: unknown) => mockApi.call(request),
 }));
-jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() } }));
+jest.mock('expo-router', () => ({
+  router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
+}));
 
 // Stored values differ from the defaults (5 weeks, 180 days) so the reset action shows.
 const stored = { ...settings, booking_horizon_weeks: 8, activity_retention_days: 90 };
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockImplementation((p: string) =>
-    Promise.resolve(p === '/auth/me' ? { role: 'admin', permissions: WRITER } : p === '/config/meta' ? meta : stored),
+  mockApi.onRead(({ path: p }) =>
+    Promise.resolve(
+      p === '/auth/me'
+        ? { role: 'admin', permissions: WRITER }
+        : p === '/config/meta'
+          ? meta
+          : stored,
+    ),
   );
-  mockApiSend.mockResolvedValue(stored);
+  mockApi.onWrite(() => stored);
 });
 
 const HORIZON = labelOf('booking_horizon_weeks');
 const openRow = async (label: string, group?: Parameters<typeof groupLabel>[0]) => {
   await renderWithQuery(<ValuesScreen />);
   await screen.findByText(HORIZON);
-  if (group) await fireEvent.press(screen.getByRole('radio', { name: new RegExp(groupLabel(group).replace(/[()]/g, '.')) }));
+  if (group)
+    await fireEvent.press(
+      screen.getByRole('radio', { name: new RegExp(groupLabel(group).replace(/[()]/g, '.')) }),
+    );
   await fireEvent.press(await screen.findByRole('button', { name: new RegExp(`«${label}»`) }));
   return screen.getByTestId('value-sheet');
 };
@@ -52,7 +62,9 @@ test('D4: the scrim is a hidden sibling; the editor and «احفظ» are reached
   expect(scrim.props.importantForAccessibility).toBe('no');
   expect(within(sheet).queryByTestId('value-sheet-scrim')).toBeNull();
   expect(reachableAlone(within(sheet).getByLabelText(HORIZON))).toBe(true);
-  expect(reachableAlone(within(sheet).getByRole('button', { name: t.config.custom.save }))).toBe(true);
+  expect(reachableAlone(within(sheet).getByRole('button', { name: t.config.custom.save }))).toBe(
+    true,
+  );
   // A tap on the scrim with an edit asks first.
   await fireEvent.changeText(within(sheet).getByLabelText(HORIZON), '9');
   await fireEvent.press(scrim);
@@ -76,9 +88,15 @@ test('D20: «أعد القيمة الافتراضية» puts the default in the 
   const sheet = await openRow(HORIZON);
   await fireEvent.press(within(sheet).getByRole('button', { name: t.settingsValues.resetDefault }));
   expect(within(sheet).getByLabelText(HORIZON).props.value).toBe('5');
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
   await fireEvent.press(within(sheet).getByRole('button', { name: t.config.custom.save }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/settings', { bookingHorizonWeeks: 5 }));
+  await waitFor(() =>
+    expect(mockApi.writes()).toContainEqual({
+      method: 'PATCH',
+      path: '/settings',
+      body: { bookingHorizonWeeks: 5 },
+    }),
+  );
 });
 
 test('D20: «للمطوّر» is closed, and opens to the key', async () => {
@@ -95,7 +113,9 @@ test('D20: a confirmed switch says what it does, with its tag', async () => {
   const sheet = await openRow(label, 'schedule');
   expect(within(sheet).getByText(t.settingsValues.tags.confirm)).toBeTruthy();
   const m = t.mobileAdmin.settings;
-  await fireEvent.press(within(sheet).getByRole('radio', { name: settings.teachers_always_available ? m.off : m.on }));
+  await fireEvent.press(
+    within(sheet).getByRole('radio', { name: settings.teachers_always_available ? m.off : m.on }),
+  );
   await fireEvent.press(within(sheet).getByRole('button', { name: t.config.custom.save }));
   expect(within(sheet).getByText(t.mobileValues.plainConfirm)).toBeTruthy();
   // The impact sentence is in the question too (it is also the sheet's description).
@@ -117,7 +137,7 @@ test('D22: shortening a retention asks to type the days; the box comes before it
   };
   visit(sheet);
   expect(order).toEqual([box, confirm]);
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
 });
 
 test('D22: lengthening a retention saves without typing', async () => {
@@ -126,5 +146,11 @@ test('D22: lengthening a retention saves without typing', async () => {
   await fireEvent.changeText(within(sheet).getByLabelText(label), '365');
   await fireEvent.press(within(sheet).getByRole('button', { name: t.config.custom.save }));
   expect(screen.queryByLabelText(t.mobileValues.typedLabel)).toBeNull();
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/settings', { activityRetentionDays: 365 }));
+  await waitFor(() =>
+    expect(mockApi.writes()).toContainEqual({
+      method: 'PATCH',
+      path: '/settings',
+      body: { activityRetentionDays: 365 },
+    }),
+  );
 });

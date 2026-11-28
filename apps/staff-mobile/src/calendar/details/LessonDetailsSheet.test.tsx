@@ -6,9 +6,13 @@ import { renderWithQuery } from '@/test/query';
 import { jana, lesson } from '@/today/testing/fixtures';
 import { LessonDetailsSheet } from './LessonDetailsSheet';
 import type { DetailsRole } from './details-text';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+const mockApi = mockCall();
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
+}));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
 // 17:00 Riyadh Thursday 1 Oct, a Muscat student; «now» is 17:20, so the report can be written.
@@ -22,14 +26,20 @@ const held = lesson({
   meeting_link: 'https://meet.example/abc',
   platform_classroom: false,
   override_reason: 'موافقة ولي الأمر',
-  conflicts: [{ kind: 'teacher_busy', startsAt: '2026-10-01T14:00:00.000Z', endsAt: '2026-10-01T15:00:00.000Z' }],
+  conflicts: [
+    {
+      kind: 'teacher_busy',
+      startsAt: '2026-10-01T14:00:00.000Z',
+      endsAt: '2026-10-01T15:00:00.000Z',
+    },
+  ],
   students: [{ ...jana, unpaid: true, report: { id: 'r1', status: 'submitted' } }],
 });
 
 beforeEach(() => {
   jest.clearAllMocks();
   jest.useFakeTimers({ now: new Date('2026-10-01T14:20:00Z'), advanceTimers: true });
-  mockApiFetch.mockImplementation(async (p: string) => {
+  mockApi.onRead(async ({ path: p }) => {
     if (p === '/students/s2/balance') return balanceOf(subscription({ status: 'active' }));
     throw new ApiError(404);
   });
@@ -45,9 +55,15 @@ test('admin: status, tags, every clock, length, series, students with code / unp
   expect(screen.getByText(t.enums.lessonStatus.completed)).toBeTruthy();
   expect(screen.getByText(t.schedule.trialTag)).toBeTruthy();
   expect(screen.getByText(new RegExp(t.schedule.viewerTime))).toBeTruthy();
-  expect(screen.getByText(new RegExp(`^${t.schedule.studentTime.replace('{time}', '')}`))).toBeTruthy();
+  expect(
+    screen.getByText(new RegExp(`^${t.schedule.studentTime.replace('{time}', '')}`)),
+  ).toBeTruthy();
   expect(screen.getByText(`${t.schedule.duration}: ${t.enums.duration['60']}`)).toBeTruthy();
-  expect(screen.getByText(new RegExp(`^${t.lessons.sheet.series.split(':')[0]}.*${t.enums.weekday['0']}`))).toBeTruthy();
+  expect(
+    screen.getByText(
+      new RegExp(`^${t.lessons.sheet.series.split(':')[0]}.*${t.enums.weekday['0']}`),
+    ),
+  ).toBeTruthy();
   expect(screen.getByText(ltr('AB-0185'))).toBeTruthy();
   expect(screen.getByText(t.subscriptions.unpaidFlag)).toBeTruthy();
   expect(screen.getByText(t.lessons.sheet.report.submitted)).toBeTruthy();
@@ -55,13 +71,19 @@ test('admin: status, tags, every clock, length, series, students with code / unp
   expect(screen.getByText('موافقة ولي الأمر')).toBeTruthy();
   expect(screen.getByText(t.schedule.generatedConflict)).toBeTruthy();
   // The admin's package line, from the student's balance.
-  expect(await screen.findByText(new RegExp(t.subscriptions.usedOf.replace('{used}', '2').replace('{total}', '4')))).toBeTruthy();
+  expect(
+    await screen.findByText(
+      new RegExp(t.subscriptions.usedOf.replace('{used}', '2').replace('{total}', '4')),
+    ),
+  ).toBeTruthy();
 });
 
 test('admin: a student opens the file, a sent report opens the report; the sheet closes first', async () => {
   const onClose = jest.fn();
   await renderWithQuery(<LessonDetailsSheet lesson={held} role="admin" onClose={onClose} />);
-  await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }));
+  await fireEvent.press(
+    screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }),
+  );
   expect(router.push).toHaveBeenCalledWith('/students/s2', { withAnchor: true });
   expect(onClose.mock.invocationCallOrder[0]).toBeLessThan(
     jest.mocked(router.push).mock.invocationCallOrder[0] ?? 0,
@@ -71,15 +93,24 @@ test('admin: a student opens the file, a sent report opens the report; the sheet
 });
 
 test('teacher: her students’ reports page and one report button; no package read', async () => {
-  await show('teacher', { ...held, students: [{ ...jana, report: { id: 'r1', status: 'draft' } }] });
+  await show('teacher', {
+    ...held,
+    students: [{ ...jana, report: { id: 'r1', status: 'draft' } }],
+  });
   expect(screen.getByText(t.lessons.sheet.report.draft)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.reports.resume }));
   expect(router.push).toHaveBeenCalledWith('/teacher/reports/l-held', { withAnchor: true });
-  await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }));
+  await fireEvent.press(
+    screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }),
+  );
   expect(router.push).toHaveBeenCalledWith('/teacher/reports/student/s2', { withAnchor: true });
-  expect(mockApiFetch).not.toHaveBeenCalledWith('/students/s2/balance');
+  expect(mockApi.reads()).not.toContainEqual({ method: 'GET', path: '/students/s2/balance' });
   // Admin-only today: the unpaid flag, the override reason and the generated clashes.
-  for (const word of [t.subscriptions.unpaidFlag, 'موافقة ولي الأمر', t.schedule.generatedConflict]) {
+  for (const word of [
+    t.subscriptions.unpaidFlag,
+    'موافقة ولي الأمر',
+    t.schedule.generatedConflict,
+  ]) {
     expect(screen.queryByText(word)).toBeNull();
   }
 });
@@ -90,9 +121,11 @@ test('sales: read-only, the lesson link (owner 2026-10-26), no report, no packag
   expect(screen.getByText(t.lessons.joinLink)).toBeTruthy();
   expect(screen.getByText('https://meet.example/abc')).toBeTruthy();
   expect(screen.queryByText(t.lessons.sheet.report.submitted)).toBeNull();
-  expect(mockApiFetch).not.toHaveBeenCalledWith('/students/s2/balance');
+  expect(mockApi.reads()).not.toContainEqual({ method: 'GET', path: '/students/s2/balance' });
   // Outside the sales tree it opens the admin's student file; studentHref covers the sales tree.
-  await fireEvent.press(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }));
+  await fireEvent.press(
+    screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'جنى وليد') }),
+  );
   expect(router.push).toHaveBeenCalledWith('/students/s2', { withAnchor: true });
 });
 
@@ -100,7 +133,9 @@ test('a running lesson says «جارية الآن»; the actions slot renders th
   const onClose = jest.fn();
   const running = { ...held, status: 'confirmed' as const };
   const actions = (l: typeof running) => <AppText>{`actions:${l.id}`}</AppText>;
-  await renderWithQuery(<LessonDetailsSheet lesson={running} role="admin" onClose={onClose} actions={actions} />);
+  await renderWithQuery(
+    <LessonDetailsSheet lesson={running} role="admin" onClose={onClose} actions={actions} />,
+  );
   expect(screen.getByText(t.lessons.sheet.live)).toBeTruthy();
   expect(screen.getByText('actions:l-held')).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.common.close }));

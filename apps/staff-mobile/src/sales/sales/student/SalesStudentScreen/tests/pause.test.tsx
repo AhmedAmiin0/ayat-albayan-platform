@@ -5,13 +5,17 @@ import { fakeNow } from '@/test/fake-now';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { details } from '@/sales/sales/student/fixtures';
 import { SalesStudentScreen } from '@/sales/sales/student/SalesStudentScreen/SalesStudentScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn(), back: jest.fn() },
+  useLocalSearchParams: () => ({ id: 'st1' }),
+}));
 
 const c = t.coursePause;
 const OPEN = {
@@ -25,7 +29,7 @@ const OPEN = {
   extended_days: null,
 };
 const serve = (input: { mine: boolean; open: typeof OPEN | null }) =>
-  mockApiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path === '/sales/students/st1') return details({ mine: input.mine });
     if (path === '/students/st1/course-pause') return { open: input.open, history: [] };
     if (path.startsWith('/students/st1/course-pause/preview'))
@@ -34,22 +38,28 @@ const serve = (input: { mine: boolean; open: typeof OPEN | null }) =>
   });
 const asSales = (permissions: string[]) => {
   const client = createTestQueryClient();
-  client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions: [...permissions, ...selfPermissionsOf('sales')] });
+  client.setQueryData(pathKey('/auth/me'), {
+    role: 'sales',
+    permissions: [...permissions, ...selfPermissionsOf('sales')],
+  });
   return client;
 };
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   fakeNow(new Date('2026-10-28T09:00:00.000Z'));
 });
 afterEach(() => jest.useRealTimers());
 
-test('another family\'s student too: «إيقاف مؤقت» with courses.pause opens the sheet', async () => {
+test("another family's student too: «إيقاف مؤقت» with courses.pause opens the sheet", async () => {
   serve({ mine: false, open: null });
   await renderWithQuery(<SalesStudentScreen />, asSales([...GRANTABLE_PERMISSIONS]));
   await fireEvent.press(await screen.findByRole('button', { name: c.action }));
   expect(await screen.findByText(c.preview.one)).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith('/students/st1/course-pause/preview?from=2026-10-28');
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: '/students/st1/course-pause/preview?from=2026-10-28',
+  });
 });
 
 test('paused: the banner with «استئناف»', async () => {
@@ -62,8 +72,13 @@ test('paused: the banner with «استئناف»', async () => {
 
 test('without courses.pause: no action', async () => {
   serve({ mine: true, open: null });
-  await renderWithQuery(<SalesStudentScreen />, asSales(GRANTABLE_PERMISSIONS.filter((p) => p !== 'courses.pause')));
+  await renderWithQuery(
+    <SalesStudentScreen />,
+    asSales(GRANTABLE_PERMISSIONS.filter((p) => p !== 'courses.pause')),
+  );
   await screen.findByRole('header', { name: 'يوسف أحمد' });
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/students/st1/course-pause'));
+  await waitFor(() =>
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/students/st1/course-pause' }),
+  );
   expect(screen.queryByRole('button', { name: c.action })).toBeNull();
 });

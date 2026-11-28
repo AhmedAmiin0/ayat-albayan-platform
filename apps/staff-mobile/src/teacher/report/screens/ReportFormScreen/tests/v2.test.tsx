@@ -4,12 +4,12 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { formResponse, formResponseV2 } from '@/teacher/report/testing/fixtures';
 import { ReportFormScreen } from '@/teacher/report/screens/ReportFormScreen/ReportFormScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
-  apiSend: jest.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
@@ -19,7 +19,7 @@ jest.mock('expo-router', () => ({
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 
 async function serve(form: ReportFormResponse) {
-  mockApiFetch.mockImplementation(async (p: string) => (p === '/teachers/me' ? me : form));
+  mockApi.onRead(async ({ path: p }) => (p === '/teachers/me' ? me : form));
   await renderWithQuery(<ReportFormScreen />);
 }
 

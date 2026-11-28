@@ -6,13 +6,20 @@ import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
 import { SalesScheduleScreen } from '@/sales/sales/screens/SalesScheduleScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
 // An academy that requires lesson confirmation.
 const statusWord = lessonStatusText(true).word;
 
-const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({}) }));
+const mockApi = mockCall();
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
+}));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn(), back: jest.fn() },
+  useLocalSearchParams: () => ({}),
+}));
 
 const s = t.sales.academySchedule.status;
 const one = (id: string, name: string, status: LessonStatus) =>
@@ -25,18 +32,22 @@ const LESSONS = [
 ];
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: LESSONS }));
+  mockApi.reset('read');
+  mockApi.onRead(async ({ path }) =>
+    path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: LESSONS },
+  );
   fakeNow(new Date('2026-10-12T10:00:00.000Z'));
 });
 afterEach(() => jest.useRealTimers());
 
 const pills = () => within(screen.getByLabelText(s.label));
 
-test('the status pills carry the day\'s counts; «الكل» is chosen first and shows every lesson', async () => {
+test("the status pills carry the day's counts; «الكل» is chosen first and shows every lesson", async () => {
   await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   expect(await screen.findByText('نور')).toBeTruthy();
-  expect(pills().getByRole('tab', { name: `${s.all} 4` }).props.accessibilityState).toMatchObject({ selected: true });
+  expect(pills().getByRole('tab', { name: `${s.all} 4` }).props.accessibilityState).toMatchObject({
+    selected: true,
+  });
   expect(pills().getByRole('tab', { name: `${s.scheduled} 2` })).toBeTruthy();
   expect(pills().getByRole('tab', { name: `${s.confirmed} 1` })).toBeTruthy();
   expect(pills().getByRole('tab', { name: `${s.cancelled} 1` })).toBeTruthy();
@@ -67,7 +78,11 @@ test('under «الكل» each row says its status; under «للتأكيد» the 
 });
 
 test('a pill with no lessons says so, not that the day is empty', async () => {
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: [one('a', 'سلمى', 'scheduled')] }));
+  mockApi.onRead(async ({ path }) =>
+    path === '/sales/teachers'
+      ? [teacher()]
+      : { date: '2026-10-12', lessons: [one('a', 'سلمى', 'scheduled')] },
+  );
   await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await screen.findByRole('tab', { name: `${s.confirmed} 0` }));
   expect(screen.getByText(s.empty)).toBeTruthy();
@@ -75,8 +90,13 @@ test('a pill with no lessons says so, not that the day is empty', async () => {
 });
 
 test('«ملغاة» groups two statuses, so each row still says who cancelled', async () => {
-  const cancelled = [one('d', 'نور', 'cancelled_by_admin'), one('e', 'ليلى', 'cancelled_by_teacher')];
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: cancelled }));
+  const cancelled = [
+    one('d', 'نور', 'cancelled_by_admin'),
+    one('e', 'ليلى', 'cancelled_by_teacher'),
+  ];
+  mockApi.onRead(async ({ path }) =>
+    path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: cancelled },
+  );
   await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await screen.findByRole('tab', { name: `${s.cancelled} 2` }));
   expect(screen.getByText(statusWord('cancelled_by_admin'))).toBeTruthy();

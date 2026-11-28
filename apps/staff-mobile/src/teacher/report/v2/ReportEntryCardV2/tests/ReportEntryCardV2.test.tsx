@@ -4,11 +4,12 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { formResponseV2 } from '@/teacher/report/testing/fixtures';
 import { ReportEntryCardV2 } from '@/teacher/report/v2/ReportEntryCardV2/ReportEntryCardV2';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const v2 = t.reports.v2;

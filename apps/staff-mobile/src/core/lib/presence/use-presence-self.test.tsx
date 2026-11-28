@@ -5,11 +5,12 @@ import { AppState, type AppStateStatus } from 'react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { realtime } from '@ab/testing/presence-realtime';
 import { usePresenceSelf } from './use-presence-self';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () =>
   jest.requireActual('@ab/testing/presence-realtime').realtime.module(),
@@ -18,7 +19,7 @@ jest.mock('@ab/mobile-kit/lib/http/supabase', () =>
 let appState: ((s: AppStateStatus) => void)[] = [];
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   realtime.reset();
   appState = [];
   jest.spyOn(AppState, 'addEventListener').mockImplementation((_type, handler) => {
@@ -34,10 +35,10 @@ const mount = (id: string) =>
   });
 
 test('signed in and enabled: tracks its own topic; background, sign-out and unmount leave', async () => {
-  mockApiFetch.mockResolvedValue({ enabled: true });
+  mockApi.onRead(() => ({ enabled: true }));
   const hook = await mount('u1');
   await waitFor(() => expect(realtime.isOpen('u1')).toBe(true));
-  expect(mockApiFetch).toHaveBeenCalledWith(presenceRoutes.self.path);
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: presenceRoutes.self.path });
   await act(async () => realtime.joinAll());
   expect(realtime.tracked('u1')).toHaveLength(1);
   await act(async () => appState.forEach((h) => h('background')));
@@ -49,14 +50,14 @@ test('signed in and enabled: tracks its own topic; background, sign-out and unmo
 });
 
 test('presence off: never tracks', async () => {
-  mockApiFetch.mockResolvedValue({ enabled: false });
+  mockApi.onRead(() => ({ enabled: false }));
   await mount('u1');
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalled());
+  await waitFor(() => expect(mockApi.reads()).not.toHaveLength(0));
   expect(realtime.topics()).toEqual([]);
 });
 
 test('signed out: no request, no track', async () => {
   await mount('');
-  expect(mockApiFetch).not.toHaveBeenCalled();
+  expect(mockApi.reads()).toHaveLength(0);
   expect(realtime.topics()).toEqual([]);
 });

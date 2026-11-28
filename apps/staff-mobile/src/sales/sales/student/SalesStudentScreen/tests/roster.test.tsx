@@ -6,10 +6,17 @@ import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { details, weeklySlot } from '@/sales/sales/student/fixtures';
 import { SalesStudentScreen } from '@/sales/sales/student/SalesStudentScreen/SalesStudentScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
+const mockApi = mockCall();
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
+}));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn(), back: jest.fn() },
+  useLocalSearchParams: () => ({ id: 'st1' }),
+}));
 jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 
 const s = t.sales.student;
@@ -18,7 +25,7 @@ const reports = { items: [], total: 0 };
 const other = () =>
   details({ mine: false, subscriptions: [], current_id: null, reports, schedule });
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   jest.mocked(router.push).mockClear();
   fakeNow(new Date('2026-10-27T10:00:00Z'));
 });
@@ -32,8 +39,8 @@ const open = () =>
   );
 
 // Any student's schedule and full attendance log, without any «not yours» note.
-test('another assistant\'s student: schedule, attendance and the full log; no note', async () => {
-  mockApiFetch.mockResolvedValue(other());
+test("another assistant's student: schedule, attendance and the full log; no note", async () => {
+  mockApi.onRead(() => other());
   await open();
   expect(await screen.findByRole('header', { name: s.schedule.title })).toBeTruthy();
   expect(screen.getByText('الأحد · الثلاثاء · الخميس الساعة 20:00')).toBeTruthy();
@@ -44,7 +51,7 @@ test('another assistant\'s student: schedule, attendance and the full log; no no
 });
 
 test('one of hers: the same schedule and log, and her package', async () => {
-  mockApiFetch.mockResolvedValue(details({ schedule }));
+  mockApi.onRead(() => details({ schedule }));
   await open();
   expect(await screen.findByText(s.current)).toBeTruthy();
   expect(screen.getByText('الأحد · الثلاثاء · الخميس الساعة 20:00')).toBeTruthy();

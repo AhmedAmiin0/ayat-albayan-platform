@@ -4,11 +4,12 @@ import { page, STUDENT, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { adminTask } from '@/money/shared/fixtures';
 import { SubscriptionsScreen } from '@/money/subscriptions/SubscriptionsScreen/SubscriptionsScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
@@ -25,7 +26,7 @@ const roomy = subscription({
 });
 
 function backend(subs = [due, roomy], tasks = [adminTask()]) {
-  mockApiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path === '/settings') return { renewal_alert_remaining: 2 };
     if (path.startsWith('/admin-tasks')) return page(tasks);
     return page(subs);
@@ -33,7 +34,7 @@ function backend(subs = [due, roomy], tasks = [adminTask()]) {
 }
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   mockPush.mockReset();
 });
 
@@ -41,7 +42,10 @@ test('packages: student, code, status word; the renewal-due one is flagged, the 
   backend();
   await renderWithQuery(<SubscriptionsScreen />);
   expect(await screen.findByText('يوسف')).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith('/subscriptions?page=1&pageSize=25');
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: '/subscriptions?page=1&pageSize=25',
+  });
   expect(screen.getAllByText(ltr('AB-0183')).length).toBe(1);
   expect(screen.getAllByText(t.enums.subscriptionStatus.active)).toHaveLength(3); // the filter chip and the two rows
   await waitFor(() =>
@@ -54,7 +58,9 @@ test('«سجّل دفعة» only on a package not fully paid, and it opens the e
   await renderWithQuery(<SubscriptionsScreen />);
   await screen.findByText('يوسف');
   expect(screen.getAllByLabelText(new RegExp(`^${t.mobileMoney.recordPayment} ·`))).toHaveLength(1);
-  await fireEvent.press(screen.getByRole('button', { name: `${t.mobileMoney.recordPayment} · يوسف` }));
+  await fireEvent.press(
+    screen.getByRole('button', { name: `${t.mobileMoney.recordPayment} · يوسف` }),
+  );
   expect(mockPush).toHaveBeenCalledWith('/students/payment/s2');
 });
 
@@ -70,9 +76,19 @@ test('status chips filter on the server: a status, then «مدفوعة جزئي�
   await renderWithQuery(<SubscriptionsScreen />);
   await screen.findByText('يوسف');
   await fireEvent.press(screen.getByRole('tab', { name: t.enums.subscriptionStatus.unpaid }));
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/subscriptions?status=unpaid&page=1&pageSize=25'));
+  await waitFor(() =>
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/subscriptions?status=unpaid&page=1&pageSize=25',
+    }),
+  );
   await fireEvent.press(screen.getByRole('tab', { name: t.mobileMoney.filterPartial }));
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/subscriptions?paid=partial&page=1&pageSize=25'));
+  await waitFor(() =>
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/subscriptions?paid=partial&page=1&pageSize=25',
+    }),
+  );
 });
 
 test('the student search goes to the server as ?student=', async () => {
@@ -82,7 +98,12 @@ test('the student search goes to the server as ?student=', async () => {
   const field = screen.getByLabelText(t.mobileMoney.searchStudent);
   await fireEvent.changeText(field, 'يوسف');
   await fireEvent(field, 'submitEditing');
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(expect.stringContaining('student=')));
+  await waitFor(() =>
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: expect.stringContaining('student='),
+    }),
+  );
 });
 
 test('«المهام» lists the open admin tasks and opens the student', async () => {
@@ -90,7 +111,10 @@ test('«المهام» lists the open admin tasks and opens the student', async 
   await renderWithQuery(<SubscriptionsScreen />);
   await fireEvent.press(await screen.findByRole('tab', { name: t.mobileMoney.viewTasks }));
   expect(await screen.findByText(new RegExp(t.mobileMoney.taskRenewalDue))).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith('/admin-tasks?open=true&page=1&pageSize=25');
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: '/admin-tasks?open=true&page=1&pageSize=25',
+  });
   expect(screen.getByText(t.mobileMoney.taskNeedsAction)).toBeTruthy();
   await fireEvent.press(screen.getByText('هدى'));
   expect(mockPush).toHaveBeenCalledWith('/students/s1');
@@ -99,13 +123,15 @@ test('«المهام» lists the open admin tasks and opens the student', async 
 test('empty packages and empty tasks say so', async () => {
   backend([], []);
   await renderWithQuery(<SubscriptionsScreen />);
-  expect(await screen.findByRole('header', { name: t.mobileMoney.subscriptionsEmpty })).toBeTruthy();
+  expect(
+    await screen.findByRole('header', { name: t.mobileMoney.subscriptionsEmpty }),
+  ).toBeTruthy();
   await fireEvent.press(screen.getByRole('tab', { name: t.mobileMoney.viewTasks }));
   expect(await screen.findByRole('header', { name: t.mobileMoney.tasksEmpty })).toBeTruthy();
 });
 
 test('failed with nothing cached: error + retry', async () => {
-  mockApiFetch.mockRejectedValue(new Error('offline'));
+  mockApi.onRead(() => Promise.reject(new Error('offline')));
   await renderWithQuery(<SubscriptionsScreen />);
   expect(await screen.findByText(t.common.error)).toBeTruthy();
   backend();

@@ -6,16 +6,15 @@ import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { MINE, REPLIES, WELCOME } from './testing/fixtures';
 import { clearComposerDrafts } from '@/inbox/composer/draft-store';
+import { mockCall } from '@ab/testing/mock-call';
 
 /** The signed-in staff member the composer greets with. */
 const ME = savedProfile({ full_name: 'سارة' });
 
-const mockApiFetch = jest.fn();
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),
@@ -27,8 +26,14 @@ async function open() {
   const th = detail([inbound], {
     thread: { ...thread, last_inbound_at: new Date(Date.now() - 5 * 60_000).toISOString() },
   });
-  mockApiFetch.mockImplementation(async (p: string) =>
-    p === '/saved-replies' ? REPLIES : p === '/me/profile' ? ME : p === '/messages/gate' ? { open: true, reason: null, queued: 0 } : th,
+  mockApi.onRead(async ({ path: p }) =>
+    p === '/saved-replies'
+      ? REPLIES
+      : p === '/me/profile'
+        ? ME
+        : p === '/messages/gate'
+          ? { open: true, reason: null, queued: 0 }
+          : th,
   );
   await renderWithQuery(<ThreadScreen />, createTestQueryClient());
   await screen.findByText(inbound.body ?? '');
@@ -43,8 +48,8 @@ async function type(...steps: string[]) {
 afterEach(() => clearComposerDrafts());
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
-  mockApiSend.mockReset();
+  mockApi.reset('read');
+  mockApi.reset('write');
 });
 
 test('«/» docks the list over the composer (no sheet): both tabs, «/title» first, filtered live', async () => {
@@ -76,7 +81,7 @@ test('a tap replaces the «/search» with the reply and sends nothing', async ()
   await fireEvent.press(await screen.findByRole('button', { name: WELCOME.title }));
   expect(box().props.value).toBe(`سطر\n${WELCOME.body}`);
   expect(docked()).toBeNull();
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
 });
 
 test('no match: one line says so', async () => {

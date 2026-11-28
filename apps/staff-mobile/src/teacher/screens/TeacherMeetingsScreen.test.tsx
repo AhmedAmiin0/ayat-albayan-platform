@@ -3,11 +3,17 @@ import { t } from '@ab/mobile-kit';
 import { MeetingsScreen } from '@/meetings';
 import { renderWithQuery, teacherPagesClient } from '@/test/query';
 import { TeacherMeetingsScreen } from './TeacherMeetingsScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useSegments: () => ['teacher'] }));
+jest.mock('expo-router', () => ({
+  router: { push: jest.fn(), back: jest.fn() },
+  useSegments: () => ['teacher'],
+}));
+const mockApi = mockCall();
+mockApi.onRead(async () => []);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: jest.fn(async () => []),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const INSTANT = t.meetings.new;

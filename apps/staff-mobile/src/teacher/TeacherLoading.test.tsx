@@ -5,9 +5,15 @@ import { MyPayoutsScreen } from './screens/MyPayoutsScreen';
 import { TeacherReportsScreen } from './screens/TeacherReportsScreen';
 import { TeacherScheduleScreen } from './screens/TeacherScheduleScreen';
 import { TeacherTodayScreen } from './screens/TeacherTodayScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
 // A request that never answers: the screen is "loading", and says so instead of showing a blank body.
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: () => new Promise(() => undefined) }));
+const mockApi = mockCall();
+mockApi.onRead(() => new Promise(() => undefined));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
+}));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }));
 
 test.each([

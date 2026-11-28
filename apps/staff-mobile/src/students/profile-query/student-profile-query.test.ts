@@ -2,21 +2,22 @@ import { studentProfileFixture } from '@ab/shared/testing';
 import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
 import { studentProfileQuery } from '@/students/profile-query';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
-beforeEach(() => mockApiFetch.mockReset());
+beforeEach(() => mockApi.reset('read'));
 
 test('reads GET /students/:id through its route', async () => {
   const profile = studentProfileFixture({ id: 's1', name: 'سارة' });
-  mockApiFetch.mockResolvedValue(profile);
+  mockApi.onRead(() => profile);
   const read = await createTestQueryClient().query(studentProfileQuery('s1'));
   expect(read).toEqual(profile);
-  expect(mockApiFetch).toHaveBeenCalledWith('/students/s1');
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/students/s1' });
 });
 
 test('caches under the path key the student writes already refresh', () => {
@@ -24,7 +25,7 @@ test('caches under the path key the student writes already refresh', () => {
 });
 
 test('a profile that breaks the route answer is refused', async () => {
-  mockApiFetch.mockResolvedValue({ id: 's1', name: 'سارة' });
+  mockApi.onRead(() => ({ id: 's1', name: 'سارة' }));
   const read = createTestQueryClient().query(studentProfileQuery('s1'));
   await expect(read).rejects.toThrow();
 });

@@ -8,18 +8,32 @@ import RootLayout from '../../../app/_layout';
 import AssistantLayout from '../../../app/assistant/_layout';
 import SalesLayout from '../../../app/sales/_layout';
 import TeacherLayout from '../../../app/teacher/_layout';
+import { mockCall } from '@ab/testing/mock-call';
 
 // The real root and the four tree layouts with stub screens: the gate decides who reaches what.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({
+  registerPush: jest.fn(async () => undefined),
+}));
 const mockMe = { answer: { role: 'sales', permissions: [] as string[] } };
+const mockApi = mockCall();
+mockApi.onRead(async ({ path }) => (path === '/auth/me' ? mockMe.answer : { total: 0 }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async (path: string) => (path === '/auth/me' ? mockMe.answer : { total: 0 }),
+  call: (request: unknown) => mockApi.call(request),
 }));
-jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => ({ useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out' }));
+jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => ({
+  useAuthGate: () => (globalThis as { gate?: string }).gate ?? 'out',
+}));
 
-const SALES = ['inbox.read', 'inbox.send', 'self.sales', 'self.sales_academy', 'self.sales_earnings', 'classroom.join'];
+const SALES = [
+  'inbox.read',
+  'inbox.send',
+  'self.sales',
+  'self.sales_academy',
+  'self.sales_earnings',
+  'classroom.join',
+];
 const stub = (label: string) => () => <Text>{label}</Text>;
 const app = {
   _layout: RootLayout,
@@ -78,7 +92,10 @@ test('sales: its own tabs in the web SalesNav order, «المحادثات» firs
 });
 
 test('assistant: «حلقاتي» then «المزيد»', async () => {
-  mockMe.answer = { role: 'assistant', permissions: ['self.assistant', 'classroom.join', 'meetings.read'] };
+  mockMe.answer = {
+    role: 'assistant',
+    permissions: ['self.assistant', 'classroom.join', 'meetings.read'],
+  };
   const router = await open('assistant', '/assistant');
   expect(await screen.findByText('assistant-lessons')).toBeTruthy();
   expect(router.pathname()).toBe('/assistant/lessons');
@@ -95,20 +112,30 @@ test.each([
 ])('%s opening %s stays in its own tree', async (gate, url, own) => {
   mockMe.answer = { role: gate, permissions: [] };
   const router = await open(gate, url);
-  for (const other of ['admin-today', 'admin-more', 'teacher-today', 'login-screen']) expect(screen.queryByText(other)).toBeNull();
+  for (const other of ['admin-today', 'admin-more', 'teacher-today', 'login-screen'])
+    expect(screen.queryByText(other)).toBeNull();
   expect(router.pathname()).toMatch(own);
 });
 
-test.each([['admin'], ['teacher'], ['out']])('%s never reaches the sales or assistant tree', async (gate) => {
-  mockMe.answer = { role: gate, permissions: [] };
-  await open(gate, '/sales/inbox');
-  expect(screen.queryByText('sales-inbox')).toBeNull();
-  await open(gate, '/assistant/lessons');
-  expect(screen.queryByText('assistant-lessons')).toBeNull();
-});
+test.each([['admin'], ['teacher'], ['out']])(
+  '%s never reaches the sales or assistant tree',
+  async (gate) => {
+    mockMe.answer = { role: gate, permissions: [] };
+    await open(gate, '/sales/inbox');
+    expect(screen.queryByText('sales-inbox')).toBeNull();
+    await open(gate, '/assistant/lessons');
+    expect(screen.queryByText('assistant-lessons')).toBeNull();
+  },
+);
 
 // Back from Stripe into the test app (pay-return): only those who make payment links reach /pay-done.
-test.each([['sales', true], ['admin', true], ['teacher', false], ['assistant', false], ['out', false]])('%s opening /pay-done: %s', async (gate, reached) => {
+test.each([
+  ['sales', true],
+  ['admin', true],
+  ['teacher', false],
+  ['assistant', false],
+  ['out', false],
+])('%s opening /pay-done: %s', async (gate, reached) => {
   mockMe.answer = { role: gate, permissions: gate === 'sales' ? SALES : [] };
   await open(gate, '/pay-done?token=t&r=done');
   if (reached) expect(await screen.findByText('pay-done')).toBeTruthy();

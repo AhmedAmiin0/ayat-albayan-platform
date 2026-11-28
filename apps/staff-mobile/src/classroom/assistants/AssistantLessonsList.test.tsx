@@ -3,12 +3,12 @@ import { t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { AssistantLessonsList } from './AssistantLessonsList';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (...args: unknown[]) => mockApiFetch(...args),
-  apiSend: jest.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 afterEach(() => jest.useRealTimers());
@@ -25,20 +25,25 @@ const row = (over: object) => ({
 
 test('lists the open sessions with students, teacher and «ادخل الحلقة»; cancelled ones are left out', async () => {
   fakeNow(new Date('2026-10-01T13:10:00Z'));
-  mockApiFetch.mockResolvedValue([row({}), row({ lesson_id: 'l2', status: 'cancelled_by_admin' })]);
+  mockApi.onRead(() => [row({}), row({ lesson_id: 'l2', status: 'cancelled_by_admin' })]);
   await renderWithQuery(<AssistantLessonsList day={day} />);
   expect(await screen.findByText(`${t.classroom.assistants.student} يوسف، جنى`)).toBeTruthy();
   expect(screen.getByText(`${t.classroom.assistants.teacher} أبرار`)).toBeTruthy();
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(1);
-  expect(mockApiFetch).toHaveBeenCalledWith(expect.stringContaining('/assistants/me/lessons?from='));
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: expect.stringContaining('/assistants/me/lessons?from='),
+  });
 });
 
 test('no open session shows the empty state; a failed read shows the error', async () => {
-  mockApiFetch.mockResolvedValue([]);
+  mockApi.onRead(() => []);
   const first = await renderWithQuery(<AssistantLessonsList day={day} />);
   expect(await screen.findByText(t.classroom.assistants.homeEmpty)).toBeTruthy();
   await first.unmount();
-  mockApiFetch.mockRejectedValue(new Error('x'));
-  await renderWithQuery(<AssistantLessonsList day={{ ...day, from: '2026-10-02T00:00:00.000Z' }} />);
+  mockApi.onRead(() => Promise.reject(new Error('x')));
+  await renderWithQuery(
+    <AssistantLessonsList day={{ ...day, from: '2026-10-02T00:00:00.000Z' }} />,
+  );
   expect(await screen.findByRole('alert')).toBeTruthy();
 });

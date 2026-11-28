@@ -5,18 +5,17 @@ import { renderWithQuery } from '@/test/query';
 import { thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadsList } from '@/inbox/threads-list/ThreadsList/ThreadsList';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 // Three short rows, 8pt apart, then the chats.
-beforeEach(() =>
-  mockApiFetch.mockResolvedValue({ items: [thread], total: 1, page: 1, pageSize: 25 }),
-);
+beforeEach(() => mockApi.onRead(() => ({ items: [thread], total: 1, page: 1, pageSize: 25 })));
 
 test('RTL: «المحادثات» as a one-line h2 header, a compact pill search, the blocks 8pt apart', async () => {
   expect(I18nManager.isRTL).toBe(true);

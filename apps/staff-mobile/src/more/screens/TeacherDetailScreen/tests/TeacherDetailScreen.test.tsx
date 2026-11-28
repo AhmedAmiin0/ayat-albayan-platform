@@ -6,11 +6,12 @@ import { renderWithQuery } from '@/test/query';
 import { TeacherDetailScreen } from '@/more/screens/TeacherDetailScreen/TeacherDetailScreen';
 import type { AvailabilityRow, Teacher, TimeOff } from '@ab/shared';
 import { teacherFixture, timeOffFixture } from '@ab/shared/testing';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 let mockParams: Record<string, string> = { id: 't1' };
 jest.mock('expo-router', () => ({
@@ -32,14 +33,18 @@ const slot = (id: string, weekday: number, range: string): AvailabilityRow => {
   const [start_time = '', end_time = ''] = range.split('-');
   return { id, weekday, start_time, end_time, tz: 'Africa/Cairo' };
 };
-const GRID = [slot('a', 1, '16:00-18:00'), slot('b', 1, '09:00-11:00'), slot('c', 4, '20:00-22:00')];
+const GRID = [
+  slot('a', 1, '16:00-18:00'),
+  slot('b', 1, '09:00-11:00'),
+  slot('c', 4, '20:00-22:00'),
+];
 const TIME_OFF: TimeOff[] = [
   timeOffFixture({ id: 'next', starts_at: iso(3), ends_at: iso(5), reason: 'سفر' }),
   timeOffFixture({ id: 'old', starts_at: iso(-20), ends_at: iso(-18), reason: 'عيد' }),
 ];
 
 function serve(routes: Record<string, unknown>) {
-  mockApiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path in routes) return routes[path];
     throw new ApiError(404);
   });
@@ -51,13 +56,19 @@ beforeEach(() => {
 });
 
 test('name, status, LTR phone, weekly grid by day with its zone, and only upcoming time-off', async () => {
-  serve({ '/teachers/t1': TEACHER, '/teachers/t1/availability': GRID, '/teachers/t1/time-off': TIME_OFF });
+  serve({
+    '/teachers/t1': TEACHER,
+    '/teachers/t1/availability': GRID,
+    '/teachers/t1/time-off': TIME_OFF,
+  });
   await renderWithQuery(<TeacherDetailScreen />);
   expect(await screen.findByRole('header', { name: TEACHER.display_name_ar })).toBeTruthy();
   expect(screen.getByText(t.enums.teacherStatus.active)).toBeTruthy();
   expect(screen.getByText(ltr('+966 55 214 7730'))).toBeTruthy();
 
-  expect(await screen.findByText(t.availability.tzHint.replace('{tz}', t.runningHead.cairo))).toBeTruthy();
+  expect(
+    await screen.findByText(t.availability.tzHint.replace('{tz}', t.runningHead.cairo)),
+  ).toBeTruthy();
   expect(screen.getByText(t.enums.weekday['1'])).toBeTruthy();
   expect(screen.getByText(t.enums.weekday['4'])).toBeTruthy();
   expect(screen.queryByText(t.enums.weekday['0'])).toBeNull();
@@ -93,7 +104,9 @@ test('WhatsApp opens the wa.me chat for the teacher’s number', async () => {
   expect(await screen.findByText(t.availability.empty)).toBeTruthy();
   expect(screen.getByText(t.availability.timeOffEmpty)).toBeTruthy();
   // No grid saved yet: the hint names the teacher's own zone.
-  expect(screen.getByText(t.availability.tzHint.replace('{tz}', t.runningHead.riyadh))).toBeTruthy();
+  expect(
+    screen.getByText(t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)),
+  ).toBeTruthy();
 });
 
 test('no phone on file: no phone, no WhatsApp button', async () => {
@@ -121,5 +134,8 @@ test('«طلاب المعلم/ة» opens on the list the `status` param names (a
   serve({ '/teachers/t1': TEACHER, '/teachers/t1/availability': [], '/teachers/t1/time-off': [] });
   await renderWithQuery(<TeacherDetailScreen />);
   expect(await screen.findByRole('header', { name: t.studentLists.section })).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith('/students?teacher=t1&status=new%2Ctrial%2Cpending_subscription&page=1&pageSize=50');
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: '/students?teacher=t1&status=new%2Ctrial%2Cpending_subscription&page=1&pageSize=50',
+  });
 });

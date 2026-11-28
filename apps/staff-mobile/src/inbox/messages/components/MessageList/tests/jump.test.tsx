@@ -6,24 +6,51 @@ import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { ChatNotice } from '@/inbox/thread/components/ChatNotice';
 import { MessageList } from '@/inbox/messages/components/MessageList/MessageList';
-import { cachedThread, detail, inbound, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import {
+  cachedThread,
+  detail,
+  inbound,
+  message,
+  PHONE,
+  thread,
+} from '@/inbox/shared/thread-fixtures';
 import { JUMP_PAGES } from '@/inbox/thread/hooks/use-jump';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
+import { mockCall } from '@ab/testing/mock-call';
 
 // A tap on a quote whose original is on a page not loaded yet: older pages load until it is there.
+const mockApi = mockCall();
+mockApi.onRead(async () => ({ id: 'u1', role: 'admin', permissions: [] }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 type ThreadQuery = ReturnType<typeof useThread>;
-const ORIGINAL = message({ id: 'm-old', direction: 'inbound', body: 'السؤال الأول', created_at: '2026-09-20T10:00:00Z' });
-const MIDDLE = message({ id: 'm-mid', direction: 'inbound', body: 'وسط', created_at: '2026-09-25T10:00:00Z' });
+const ORIGINAL = message({
+  id: 'm-old',
+  direction: 'inbound',
+  body: 'السؤال الأول',
+  created_at: '2026-09-20T10:00:00Z',
+});
+const MIDDLE = message({
+  id: 'm-mid',
+  direction: 'inbound',
+  body: 'وسط',
+  created_at: '2026-09-25T10:00:00Z',
+});
 const answer = message({
   id: 'm9',
   body: 'نعم',
   status: 'sent',
-  reply_to: { id: ORIGINAL.id, direction: 'inbound', body: ORIGINAL.body, media_mime: null, template_key: null, sender_name: null },
+  reply_to: {
+    id: ORIGINAL.id,
+    direction: 'inbound',
+    body: ORIGINAL.body,
+    media_mime: null,
+    template_key: null,
+    sender_name: null,
+  },
   created_at: '2026-10-02T08:30:00Z',
 });
 
@@ -50,7 +77,9 @@ const tree = (query: ThreadQuery) => (
 afterEach(() => jest.restoreAllMocks());
 
 test('the original two pages back: both load, then the list goes to it once it renders', async () => {
-  const toIndex = jest.spyOn(FlatList.prototype, 'scrollToIndex').mockImplementation(() => undefined);
+  const toIndex = jest
+    .spyOn(FlatList.prototype, 'scrollToIndex')
+    .mockImplementation(() => undefined);
   const fetchNextPage = jest
     .fn()
     .mockResolvedValueOnce(page([[inbound, answer], [MIDDLE]], true))
@@ -68,7 +97,9 @@ test('the original two pages back: both load, then the list goes to it once it r
 });
 
 test('no page holds it: the chat says so once the pages run out, and nothing scrolls', async () => {
-  const toIndex = jest.spyOn(FlatList.prototype, 'scrollToIndex').mockImplementation(() => undefined);
+  const toIndex = jest
+    .spyOn(FlatList.prototype, 'scrollToIndex')
+    .mockImplementation(() => undefined);
   const fetchNextPage = jest.fn().mockResolvedValue(page([[inbound, answer], [MIDDLE]], false));
   await renderWithQuery(tree(stub([[inbound, answer]], fetchNextPage)));
   await act(async () => undefined);

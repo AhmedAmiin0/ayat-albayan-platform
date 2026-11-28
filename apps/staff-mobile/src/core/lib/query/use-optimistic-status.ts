@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend, type SendMethod, pathKey } from '@ab/mobile-kit';
+import { type SendMethod, pathKey, call } from '@ab/mobile-kit';
 import { patchCached } from './paging';
 
 export interface StatusChange<S extends string> {
@@ -34,10 +34,11 @@ interface OptimisticStatusOptions<C> {
  * Only `id` and `status` reach the cache; extra fields of the change (a cancel reason) only feed
  * `request`.
  */
-export function useOptimisticStatus<
-  S extends string,
-  C extends StatusChange<S> = StatusChange<S>,
->({ path, patchPath, request }: OptimisticStatusOptions<C>) {
+export function useOptimisticStatus<S extends string, C extends StatusChange<S> = StatusChange<S>>({
+  path,
+  patchPath,
+  request,
+}: OptimisticStatusOptions<C>) {
   const client = useQueryClient();
   const queryKey = pathKey(path);
   const urlOf = patchPath ?? ((id: string) => `${path}/${id}/status`);
@@ -47,7 +48,7 @@ export function useOptimisticStatus<
   return useMutation({
     mutationFn: (change: C) => {
       const r = requestOf(change);
-      return apiSend<unknown>(r.method, r.path, r.body);
+      return call({ method: r.method, path: r.path, body: r.body });
     },
     onMutate: async (change) => {
       await client.cancelQueries({ queryKey });

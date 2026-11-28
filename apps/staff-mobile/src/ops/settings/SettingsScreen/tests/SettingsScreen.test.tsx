@@ -4,11 +4,12 @@ import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { settings } from '@/ops/shared/fixtures';
 import { SettingsScreen } from '@/ops/settings/SettingsScreen/SettingsScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
@@ -16,7 +17,9 @@ jest.mock('expo-router', () => ({
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockImplementation(async (p: string) => (p === '/auth/me' ? { role: 'admin', permissions: ['settings.read'] } : settings));
+  mockApi.onRead(async ({ path: p }) =>
+    p === '/auth/me' ? { role: 'admin', permissions: ['settings.read'] } : settings,
+  );
 });
 
 test('«الإعدادات» lists «القيم» and «التواصل»; each opens its screen', async () => {
@@ -24,7 +27,9 @@ test('«الإعدادات» lists «القيم» and «التواصل»; each o
   expect(screen.getByRole('header', { name: t.settingsHub.title })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.mobileValues.title }));
   expect(router.push).toHaveBeenCalledWith('/more/ops/settings/values');
-  await fireEvent.press(screen.getByRole('button', { name: new RegExp(t.settingsPages.communications) }));
+  await fireEvent.press(
+    screen.getByRole('button', { name: new RegExp(t.settingsPages.communications) }),
+  );
   expect(router.push).toHaveBeenCalledWith('/more/ops/settings/communications');
 });
 
@@ -37,8 +42,10 @@ test('the send state is on the list: «إرسال الرسائل: مفعّل» w
 });
 
 test('sending off: «إرسال الرسائل: متوقف» with the struck nuqta', async () => {
-  mockApiFetch.mockImplementation(async (p: string) =>
-    p === '/auth/me' ? { role: 'admin', permissions: ['settings.read'] } : { ...settings, messaging_enabled: false },
+  mockApi.onRead(async ({ path: p }) =>
+    p === '/auth/me'
+      ? { role: 'admin', permissions: ['settings.read'] }
+      : { ...settings, messaging_enabled: false },
   );
   await renderWithQuery(<SettingsScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(sendLine(t.numbers.chips.disabled))).toBeTruthy();
@@ -49,7 +56,9 @@ test('«التكاملات» is a line, not a button, with «تُدار من ا�
   await renderWithQuery(<SettingsScreen />, createTestQueryClient({ meFromApi: true }));
   expect(screen.getByText(t.mobileValues.integrations)).toBeTruthy();
   expect(screen.getByText(t.mobileValues.integrationsNote)).toBeTruthy();
-  expect(screen.queryByRole('button', { name: new RegExp(t.mobileValues.integrations) })).toBeNull();
+  expect(
+    screen.queryByRole('button', { name: new RegExp(t.mobileValues.integrations) }),
+  ).toBeNull();
 });
 
 test('an admin with settings.read gets «مزامنة Google»', async () => {
@@ -59,7 +68,9 @@ test('an admin with settings.read gets «مزامنة Google»', async () => {
 });
 
 test('without settings.read: no «مزامنة Google» row', async () => {
-  mockApiFetch.mockImplementation(async (p: string) => (p === '/auth/me' ? { role: 'admin', permissions: [] } : settings));
+  mockApi.onRead(async ({ path: p }) =>
+    p === '/auth/me' ? { role: 'admin', permissions: [] } : settings,
+  );
   await renderWithQuery(<SettingsScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByText(sendLine(t.numbers.chips.enabled));
   expect(screen.queryByRole('button', { name: t.googleSync.mobile.title })).toBeNull();
@@ -69,8 +80,10 @@ test('«الردود السريعة» shows only with saved_replies.manage and o
   await renderWithQuery(<SettingsScreen />, createTestQueryClient({ meFromApi: true }));
   await screen.findByRole('button', { name: t.mobileValues.title });
   expect(screen.queryByRole('button', { name: t.savedReplies.title })).toBeNull();
-  mockApiFetch.mockImplementation(async (p: string) =>
-    p === '/auth/me' ? { role: 'admin', permissions: ['settings.read', 'saved_replies.manage'] } : settings,
+  mockApi.onRead(async ({ path: p }) =>
+    p === '/auth/me'
+      ? { role: 'admin', permissions: ['settings.read', 'saved_replies.manage'] }
+      : settings,
   );
   await renderWithQuery(<SettingsScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.press(await screen.findByRole('button', { name: t.savedReplies.title }));

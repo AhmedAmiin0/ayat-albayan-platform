@@ -1,7 +1,7 @@
 import type { QuoteResponse, SubscriptionPricing, SubscriptionView } from '@ab/money';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { apiSend } from '@ab/mobile-kit';
+import { call } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { subscriptionKeys } from '@/core/lib/keys';
 
@@ -9,7 +9,12 @@ import { subscriptionKeys } from '@/core/lib/keys';
 export function useSubscriptionQuote(studentId: string, pricing: SubscriptionPricing) {
   return useQuery({
     queryKey: subscriptionKeys.quote(studentId, pricing),
-    queryFn: () => apiSend<QuoteResponse>('POST', '/subscriptions/quote', { studentId, pricing }),
+    queryFn: () =>
+      call<QuoteResponse>({
+        method: 'POST',
+        path: '/subscriptions/quote',
+        body: { studentId, pricing },
+      }),
     placeholderData: keepPreviousData,
     enabled: studentId !== '',
   });
@@ -35,10 +40,14 @@ export function useCreateSubscription() {
   function save(input: SubscribeInput): Promise<SubscriptionView> {
     const body = JSON.stringify(input);
     if (request.current?.body !== body) request.current = { body, id: requestId() };
-    return apiSend<SubscriptionView>('POST', '/subscriptions', {
-      ...input,
-      notes: null,
-      clientRequestId: request.current.id,
+    return call<SubscriptionView>({
+      method: 'POST',
+      path: '/subscriptions',
+      body: {
+        ...input,
+        notes: null,
+        clientRequestId: request.current.id,
+      },
     });
   }
 

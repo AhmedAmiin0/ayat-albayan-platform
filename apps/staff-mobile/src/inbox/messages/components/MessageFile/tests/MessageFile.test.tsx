@@ -7,15 +7,28 @@ import { renderWithQuery } from '@/test/query';
 import { MessageBubble } from '@/inbox/messages/components/MessageBubble';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-audio', () => {
-  const player = { play: jest.fn(), pause: jest.fn(), seekTo: jest.fn(), setPlaybackRate: jest.fn() };
-  const status = { playing: false, currentTime: 0, duration: 12, didJustFinish: false, isLoaded: true, isBuffering: false };
+  const player = {
+    play: jest.fn(),
+    pause: jest.fn(),
+    seekTo: jest.fn(),
+    setPlaybackRate: jest.fn(),
+  };
+  const status = {
+    playing: false,
+    currentTime: 0,
+    duration: 12,
+    didJustFinish: false,
+    isLoaded: true,
+    isBuffering: false,
+  };
   return {
     useAudioPlayer: jest.fn(() => player),
     useAudioPlayerStatus: jest.fn(() => status),
@@ -25,7 +38,12 @@ jest.mock('expo-audio', () => {
 jest.mock('expo-video', () => {
   const { createElement } = jest.requireActual('react');
   const { View } = jest.requireActual('react-native');
-  const player = { play: jest.fn(), pause: jest.fn(), status: 'loading', addListener: jest.fn(() => ({ remove: jest.fn() })) };
+  const player = {
+    play: jest.fn(),
+    pause: jest.fn(),
+    status: 'loading',
+    addListener: jest.fn(() => ({ remove: jest.fn() })),
+  };
   return {
     useVideoPlayer: jest.fn(() => player),
     VideoView: (props: { testID?: string }) => createElement(View, { testID: props.testID }),
@@ -45,21 +63,24 @@ const PDF_1 = '/threads/%2B966552147730/messages/f1/pdf/1';
 const noPreview = () => Promise.reject(new ApiError(422, { code: 'pdf_no_preview' }));
 /** W6 answers `file`; the bubble's other reads (/auth/me for its actions) get nothing. */
 const serve = (file: () => Promise<unknown>) =>
-  mockApiFetch.mockImplementation((path: string) => (path === PATH ? file() : path === PDF_1 ? noPreview() : Promise.resolve(null)));
+  mockApi.onRead(({ path }) =>
+    path === PATH ? file() : path === PDF_1 ? noPreview() : Promise.resolve(null),
+  );
 /** The PDF card has no preview of its own, so the existing opener stays. */
-const pdfOpener = () => screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) });
+const pdfOpener = () =>
+  screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) });
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   openURL.mockReset().mockResolvedValue(true);
 });
 
 test('a HEIC photo keeps «عرض صورة»: nothing is signed on render; the tap asks W6 and opens the signed URL', async () => {
   serve(async () => ({ url: SIGNED, mime: 'image/heic', expires_at: '2026-10-19T10:00:00Z' }));
   await show(row({ media_mime: 'image/heic' }));
-  expect(mockApiFetch).not.toHaveBeenCalledWith(PATH);
+  expect(mockApi.reads()).not.toContainEqual({ method: 'GET', path: PATH });
   await press(t.inbox.viewMedia.replace('{kind}', kind.image));
-  expect(mockApiFetch).toHaveBeenCalledWith(PATH);
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: PATH });
   await waitFor(() => expect(openURL).toHaveBeenCalledWith(SIGNED));
 });
 
@@ -71,7 +92,9 @@ test('the opener is a full touch target (docs/07: 44 pt)', async () => {
 
 test('our sent PDF with no preview opens too and shows its name', async () => {
   serve(async () => ({ url: SIGNED, mime: 'application/pdf', expires_at: '2026-10-19T10:00:00Z' }));
-  await show(row({ direction: 'outbound', media_mime: 'application/pdf', media_name: 'الجدول.pdf' }));
+  await show(
+    row({ direction: 'outbound', media_mime: 'application/pdf', media_name: 'الجدول.pdf' }),
+  );
   await fireEvent.press(await pdfOpener());
   expect(screen.getByText('الجدول.pdf')).toBeTruthy();
   await waitFor(() => expect(openURL).toHaveBeenCalledWith(SIGNED));
@@ -97,26 +120,36 @@ test('a video is a tile in the bubble and plays full screen, never inline', asyn
 });
 
 test('410: the file expired', async () => {
-  serve(async () => { throw new ApiError(410, { code: 'media_expired' }); });
+  serve(async () => {
+    throw new ApiError(410, { code: 'media_expired' });
+  });
   await show(row({ media_mime: 'audio/ogg' }));
   await press(t.inbox.playMedia.replace('{kind}', kind.audio));
   expect(await screen.findByText(t.inbox.mediaExpired)).toBeTruthy();
 });
 
 test('403: the label and «not allowed», no button left', async () => {
-  serve(async () => { throw new ApiError(403, { code: 'media_forbidden' }); });
+  serve(async () => {
+    throw new ApiError(403, { code: 'media_forbidden' });
+  });
   await show(row({ media_mime: 'application/pdf' }));
   await fireEvent.press(await pdfOpener());
   expect(await screen.findByText(`${kind.document} · ${t.inbox.mediaNotAllowed}`)).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) })).toBeNull();
+  expect(
+    screen.queryByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) }),
+  ).toBeNull();
 });
 
 test('another failure says so and keeps the button for another try', async () => {
-  serve(async () => { throw new ApiError(500); });
+  serve(async () => {
+    throw new ApiError(500);
+  });
   await show(row({ media_mime: 'application/pdf' }));
   await fireEvent.press(await pdfOpener());
   expect(await screen.findByText(t.common.error)).toBeTruthy();
-  expect(screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) })).toBeTruthy();
+  expect(
+    screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind.document) }),
+  ).toBeTruthy();
 });
 
 test('teacher mode: the label only, and no request', async () => {
@@ -126,8 +159,10 @@ test('teacher mode: the label only, and no request', async () => {
     </ThreadModeProvider>,
   );
   expect(screen.getByText(`${kind.audio} · ${t.inbox.mediaNotAllowed}`)).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.inbox.playMedia.replace('{kind}', kind.audio) })).toBeNull();
-  expect(mockApiFetch).not.toHaveBeenCalledWith(PATH);
+  expect(
+    screen.queryByRole('button', { name: t.inbox.playMedia.replace('{kind}', kind.audio) }),
+  ).toBeNull();
+  expect(mockApi.reads()).not.toContainEqual({ method: 'GET', path: PATH });
 });
 
 test('a file type we do not keep (a zip) keeps its plain label line', async () => {

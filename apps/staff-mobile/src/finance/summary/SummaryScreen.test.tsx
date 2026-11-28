@@ -4,14 +4,25 @@ import { renderWithQuery } from '@/test/query';
 import { SummaryScreen } from './SummaryScreen';
 import { summaryYears } from '@/finance/shared/month';
 import { receivablesView } from '@/money/shared/fixtures';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+const mockApi = mockCall();
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
+}));
 jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
 
 const finance = {
-  currency: 'EGP', revenue: 5000, teacher_cost: 2000, expenses: 500, gross_margin: 2500, by_source: [], fx_date: null,
-  fx_missing: ['KWD'], unrated_lessons: 2,
+  currency: 'EGP',
+  revenue: 5000,
+  teacher_cost: 2000,
+  expenses: 500,
+  gross_margin: 2500,
+  by_source: [],
+  fx_date: null,
+  fx_missing: ['KWD'],
+  unrated_lessons: 2,
   by_month: [
     { month: '2026-01', revenue: 0, teacher_cost: 0, expenses: 0, gross_margin: 0 },
     { month: '2026-09', revenue: 3000, teacher_cost: 1200, expenses: 300, gross_margin: 1500 },
@@ -26,11 +37,13 @@ const teacherDues = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockImplementation((p: string) =>
+  mockApi.onRead(({ path: p }) =>
     Promise.resolve(
-      p.startsWith('/dashboard/summary') ? { finance }
-        : p.startsWith('/teacher-earnings/summary') ? teacherDues
-        : { ...receivablesView([]), total: 20 },
+      p.startsWith('/dashboard/summary')
+        ? { finance }
+        : p.startsWith('/teacher-earnings/summary')
+          ? teacherDues
+          : { ...receivablesView([]), total: 20 },
     ),
   );
 });
@@ -52,11 +65,14 @@ test('the year pills re-read the summary for that year', async () => {
   await screen.findByLabelText(`${t.dashboard.revenue}: ⁦5,000⁩ ج.م`);
   const last = summaryYears()[1] ?? '';
   await fireEvent.press(screen.getByRole('tab', { name: last }));
-  expect(mockApiFetch).toHaveBeenCalledWith(`/dashboard/summary?from=${last}-01-01&to=${last}-12-31`);
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: `/dashboard/summary?from=${last}-01-01&to=${last}-12-31`,
+  });
 });
 
 test('a failed load with nothing cached offers a retry', async () => {
-  mockApiFetch.mockRejectedValue(new Error('x'));
+  mockApi.onRead(() => Promise.reject(new Error('x')));
   await renderWithQuery(<SummaryScreen />);
   expect(await screen.findByText(t.mobileFinance.loadFailed)).toBeTruthy();
 });

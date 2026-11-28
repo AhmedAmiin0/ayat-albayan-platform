@@ -3,20 +3,19 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { balanceOf, page, subscription, SUB_ID } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { BalanceCard } from '@/students/profile/BalanceCard/BalanceCard';
+import { mockCall } from '@ab/testing/mock-call';
 
 // Package cancel only while nothing is paid.
 
-const mockApiFetch = jest.fn();
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 function serve(balance: unknown) {
-  mockApiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path === '/students/s1/balance') return balance;
     if (path === '/settings') return { renewal_alert_remaining: 2 };
     return page([]);
@@ -24,8 +23,8 @@ function serve(balance: unknown) {
 }
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
-  mockApiSend.mockReset();
+  mockApi.reset('read');
+  mockApi.reset('write');
 });
 
 // A package made by mistake: nothing paid and no lesson used (the fixture has used 2).
@@ -36,12 +35,18 @@ const fresh = (paid: number) => {
 
 test('nothing paid: cancel, no reason → an empty body; a 409 has_lessons is said in Arabic', async () => {
   serve(balanceOf(fresh(0)));
-  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'has_lessons' }));
+  mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'has_lessons' })));
   await renderWithQuery(<BalanceCard studentId="s1" />);
   await screen.findByText(t.subscriptions.cancel.action);
   await fireEvent.press(screen.getByRole('button', { name: t.subscriptions.cancel.action }));
   await fireEvent.press(screen.getByRole('button', { name: t.subscriptions.cancel.confirm }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', `/subscriptions/${SUB_ID}/cancel`, {}));
+  await waitFor(() =>
+    expect(mockApi.writes()).toContainEqual({
+      method: 'POST',
+      path: `/subscriptions/${SUB_ID}/cancel`,
+      body: {},
+    }),
+  );
   expect(await screen.findByText(t.subscriptions.cancel.errors.has_lessons)).toBeTruthy();
 });
 

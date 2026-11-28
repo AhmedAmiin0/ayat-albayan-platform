@@ -5,18 +5,19 @@ import { t } from '@ab/mobile-kit';
 import { bulkSa } from '@/finance/pricing/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { QuoteSheet } from '@/inbox/composer/quote/QuoteSheet/QuoteSheet';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const p = t.pricing;
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
-  mockApiFetch.mockResolvedValue(bulkSa);
+  mockApi.reset('read');
+  mockApi.onRead(() => bulkSa);
 });
 
 const sheet = (phone: string) =>
@@ -28,18 +29,20 @@ test.each([
 ] as const)('a %s chat opens on its country (%s), still editable', async (phone, country) => {
   await sheet(phone);
   await screen.findByTestId('quote-preview');
-  expect(mockApiFetch).toHaveBeenCalledWith(
-    `/pricing/quote?tier=standard&duration=45&country=${country}&students=1&discount=0`,
-  );
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: `/pricing/quote?tier=standard&duration=45&country=${country}&students=1&discount=0`,
+  });
   expect(screen.getByRole('radio', { name: p.countries[country], checked: true })).toBeTruthy();
 });
 
 test('any other code opens on «دولة أخرى» and asks in USD (no country sent)', async () => {
   await sheet('+447700900123');
   await screen.findByTestId('quote-preview');
-  expect(mockApiFetch).toHaveBeenCalledWith(
-    '/pricing/quote?tier=standard&duration=45&students=1&discount=0',
-  );
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: '/pricing/quote?tier=standard&duration=45&students=1&discount=0',
+  });
   expect(screen.getByRole('radio', { name: p.otherCountry, checked: true })).toBeTruthy();
 });
 

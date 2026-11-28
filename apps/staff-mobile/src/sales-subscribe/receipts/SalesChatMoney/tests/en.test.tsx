@@ -4,23 +4,26 @@ import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { familyOf, familyThread, kid, openSub } from '@/sales-subscribe/testing/fixtures';
 import { SalesChatMoney } from '@/sales-subscribe/receipts/SalesChatMoney/SalesChatMoney';
+import { mockCall } from '@ab/testing/mock-call';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 test('an English run reads en.json for both chat buttons', async () => {
   expect(t).toEqual(en);
-  mockApiFetch.mockImplementation(async (path: string) =>
-    path === '/auth/me' ? { permissions: ['self.sales', 'self.sales_money'] } : familyOf(kid({ open: [openSub()] })),
+  mockApi.onRead(async ({ path }) =>
+    path === '/auth/me'
+      ? { permissions: ['self.sales', 'self.sales_money'] }
+      : familyOf(kid({ open: [openSub()] })),
   );
   await renderWithQuery(
     <SalesChatMoney thread={familyThread} />,
@@ -31,8 +34,10 @@ test('an English run reads en.json for both chat buttons', async () => {
 });
 
 test('a child due: the one money pill reads en.json «renew», with no child named', async () => {
-  mockApiFetch.mockImplementation(async (path: string) =>
-    path === '/auth/me' ? { permissions: ['self.sales', 'self.sales_money'] } : familyOf(kid(), kid({ id: 'k2', name: 'Salma', renew_due: true })),
+  mockApi.onRead(async ({ path }) =>
+    path === '/auth/me'
+      ? { permissions: ['self.sales', 'self.sales_money'] }
+      : familyOf(kid(), kid({ id: 'k2', name: 'Salma', renew_due: true })),
   );
   await renderWithQuery(
     <SalesChatMoney thread={familyThread} />,

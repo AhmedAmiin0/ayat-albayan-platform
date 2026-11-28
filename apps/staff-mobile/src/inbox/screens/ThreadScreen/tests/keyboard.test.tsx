@@ -6,13 +6,14 @@ import { keyboardAt } from '@ab/mobile-kit/testing';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
 // The owner's Android sales chat (2026-10-25): the composer was under the keyboard. A 400 × 800
 // window, 32pt status bar, 48pt navigation bar; the chat body starts under the status bar.
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),
@@ -32,8 +33,10 @@ afterEach(async () => {
 });
 
 async function open() {
-  mockApiFetch.mockImplementation(async (p: string) =>
-    p === '/messages/gate' ? { open: true, reason: null, queued: 0 } : detail([inbound], { thread: { ...thread, last_inbound_at: new Date().toISOString() } }),
+  mockApi.onRead(async ({ path: p }) =>
+    p === '/messages/gate'
+      ? { open: true, reason: null, queued: 0 }
+      : detail([inbound], { thread: { ...thread, last_inbound_at: new Date().toISOString() } }),
   );
   await renderWithQuery(
     <SafeAreaProvider initialMetrics={metrics}>

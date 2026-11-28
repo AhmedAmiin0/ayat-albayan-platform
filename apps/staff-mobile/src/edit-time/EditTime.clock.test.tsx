@@ -5,20 +5,27 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { EditTimeSheet } from './components/EditTimeSheet';
 import { GRID, NOW, SAT_17, upcoming } from './testing/fixtures';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: (...args: unknown[]) => mockApiSend(...args),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
-const clash = { kind: 'student_busy', startsAt: SAT_17, endsAt: '2026-10-03T14:45:00.000Z' } as const;
+const clash = {
+  kind: 'student_busy',
+  startsAt: SAT_17,
+  endsAt: '2026-10-03T14:45:00.000Z',
+} as const;
 
 beforeEach(() => {
-  mockApiFetch.mockReset().mockResolvedValue(GRID);
-  mockApiSend.mockReset().mockRejectedValue(new ApiError(409, { code: 'conflict', conflicts: [clash] }));
+  mockApi.reset('read');
+  mockApi.onRead(() => GRID);
+  mockApi.reset('write');
+  mockApi.onWrite(() =>
+    Promise.reject(new ApiError(409, { code: 'conflict', conflicts: [clash] })),
+  );
   jest.useFakeTimers({ now: NOW, advanceTimers: true });
 });
 afterEach(() => jest.useRealTimers());

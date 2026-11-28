@@ -1,11 +1,15 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { t, setLoginNotice } from '@ab/mobile-kit';
 import Login from '../../../app/login';
+import { mockCall } from '@ab/testing/mock-call';
 
 const mockSignIn = jest.fn();
 jest.mock('@ab/mobile-kit/auth/sign-in', () => ({ signIn: (c: unknown) => mockSignIn(c) }));
-const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+const mockApi = mockCall();
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 beforeEach(() => jest.clearAllMocks());
 
@@ -32,7 +36,9 @@ test('success signs in with the trimmed identifier and stays busy for the auth g
   await fireEvent.changeText(screen.getByLabelText(t.auth.email), ' a@b.c ');
   await fireEvent.changeText(screen.getByLabelText(t.auth.password), 'pw');
   await fireEvent.press(screen.getByRole('button', { name: t.auth.submit }));
-  await waitFor(() => expect(mockSignIn).toHaveBeenCalledWith({ identifier: 'a@b.c', password: 'pw' }));
+  await waitFor(() =>
+    expect(mockSignIn).toHaveBeenCalledWith({ identifier: 'a@b.c', password: 'pw' }),
+  );
   // No navigation here: Stack.Protected in app/_layout swaps the screen when the gate says admin.
   expect(screen.getByRole('button', { name: t.auth.submitting })).toBeDisabled();
   expect(screen.queryByRole('alert')).toBeNull();
@@ -73,7 +79,7 @@ test('the wrong-app message reads as an alert too', async () => {
 });
 
 test('«نسيت كلمة المرور؟» opens the reset flow in the screen and comes back', async () => {
-  mockApiFetch.mockResolvedValue({ available: false });
+  mockApi.onRead(() => ({ available: false }));
   await render(<Login />);
   await fireEvent.press(screen.getByRole('button', { name: t.familyAuth.forgot }));
   expect(screen.getByRole('header', { name: t.familyAuth.forgotTitle })).toBeTruthy();

@@ -8,10 +8,13 @@ import { MessageList } from '@/inbox/messages/components/MessageList';
 import { cachedThread, detail, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
 import { CORRECTED_OPACITY } from './Corrected';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onRead(async () => ({ id: 'u1', role: 'admin', permissions: [] }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 type ThreadQuery = ReturnType<typeof useThread>;
@@ -45,7 +48,9 @@ test('the original is greyed and marked; its corrections and other bubbles are n
 });
 
 test('a tap on «صُحِّحت» scrolls to the newest correction', async () => {
-  const toIndex = jest.spyOn(FlatList.prototype, 'scrollToIndex').mockImplementation(() => undefined);
+  const toIndex = jest
+    .spyOn(FlatList.prototype, 'scrollToIndex')
+    .mockImplementation(() => undefined);
   await show([original, first, newest, other]);
   // Named by its visible text (WCAG 2.5.3); where it goes is the hint.
   const mark = screen.getByRole('button', { name: t.inbox.correction.mark });

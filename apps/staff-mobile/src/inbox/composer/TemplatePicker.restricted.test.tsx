@@ -4,12 +4,13 @@ import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { plainReminder } from '@/inbox/shared/thread-fixtures';
 import { TemplatePicker } from './TemplatePicker';
+import { mockCall } from '@ab/testing/mock-call';
 
 // Every role without templates.manage / templates.send_all gets only the allow-list.
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const INVITE: TemplateView = {
@@ -26,16 +27,34 @@ const INVITE: TemplateView = {
 // The allow-list as staging has it: free_trial_invite and welcome_greeting take no params.
 const STARTERS: TemplateView[] = [
   { ...INVITE, body_ar: 'ندعوكم إلى حلقة تجريبية مجانية', params: [] },
-  { ...INVITE, key: 'welcome_greeting', meta_name: 'welcome_greeting', body_ar: 'أهلًا بكم في الأكاديمية', params: [] },
-  { ...INVITE, key: 'trial_reschedule', meta_name: 'trial_reschedule', body_ar: 'أهلًا {{1}}', params: ['contact_name'] },
+  {
+    ...INVITE,
+    key: 'welcome_greeting',
+    meta_name: 'welcome_greeting',
+    body_ar: 'أهلًا بكم في الأكاديمية',
+    params: [],
+  },
+  {
+    ...INVITE,
+    key: 'trial_reschedule',
+    meta_name: 'trial_reschedule',
+    body_ar: 'أهلًا {{1}}',
+    params: ['contact_name'],
+  },
   // A template that carries your text.
-  { ...INVITE, key: 'academy_message', meta_name: 'academy_message', body_ar: '{{1}}', params: ['var_1'] },
+  {
+    ...INVITE,
+    key: 'academy_message',
+    meta_name: 'academy_message',
+    body_ar: '{{1}}',
+    params: ['var_1'],
+  },
 ];
 const names: Record<string, string> = t.templates.names;
 const onSend = jest.fn();
 
 function show(rows: TemplateView[], permissions: string[], role = 'teacher') {
-  mockApiFetch.mockImplementation(async (path: string) =>
+  mockApi.onRead(async ({ path }) =>
     path === '/auth/me' ? { id: 'u1', role, permissions } : rows,
   );
   return renderWithQuery(
@@ -45,7 +64,7 @@ function show(rows: TemplateView[], permissions: string[], role = 'teacher') {
 }
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   onSend.mockReset();
 });
 
@@ -66,12 +85,14 @@ test('the assistant reads each default by its Arabic name, never a Meta key, and
   }
   await fireEvent.press(screen.getByText(t.templates.names.welcome_greeting));
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
-  expect(onSend).toHaveBeenCalledWith(expect.objectContaining({ kind: 'template', key: 'welcome_greeting', params: {} }));
+  expect(onSend).toHaveBeenCalledWith(
+    expect.objectContaining({ kind: 'template', key: 'welcome_greeting', params: {} }),
+  );
 });
 
 test('while the list loads the sheet says so, not an empty white page', async () => {
   const me = { id: 'u1', role: 'sales', permissions: ['messages.read'] };
-  mockApiFetch.mockImplementation((path: string) =>
+  mockApi.onRead(({ path }) =>
     path === '/auth/me' ? Promise.resolve(me) : new Promise(() => undefined),
   );
   await renderWithQuery(
@@ -93,8 +114,11 @@ test('templates.send_all (or templates.manage) keeps the plain empty note', asyn
   expect(await screen.findByText(t.inbox.composer.noApproved)).toBeTruthy();
 });
 
-test.each(['sales', 'teacher'])('%s stays on the allow-list even when granted templates.manage (owner 2026-10-15, 10-18)', async (role) => {
-  await show([], ['messages.read', 'templates.manage', 'templates.send_all'], role);
-  expect(await screen.findByText(t.inbox.composer.noAllowed)).toBeTruthy();
-  expect(screen.queryByText(t.inbox.composer.noApproved)).toBeNull();
-});
+test.each(['sales', 'teacher'])(
+  '%s stays on the allow-list even when granted templates.manage (owner 2026-10-15, 10-18)',
+  async (role) => {
+    await show([], ['messages.read', 'templates.manage', 'templates.send_all'], role);
+    expect(await screen.findByText(t.inbox.composer.noAllowed)).toBeTruthy();
+    expect(screen.queryByText(t.inbox.composer.noApproved)).toBeNull();
+  },
+);

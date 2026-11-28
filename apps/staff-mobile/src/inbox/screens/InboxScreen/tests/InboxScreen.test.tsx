@@ -3,17 +3,18 @@ import { ApiError, t, listKey, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { cachedList, huda, page, unnamed } from '@/inbox/shared/fixtures';
 import { InboxScreen } from '@/inbox/screens/InboxScreen/InboxScreen';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
 
 beforeEach(() => {
-  mockApiFetch.mockReset();
+  mockApi.reset('read');
   mockPush.mockReset();
 });
 
@@ -23,7 +24,7 @@ async function openLeads() {
 }
 
 test('rows: name, isolated phone, source, status chip; an unnamed lead is titled by its phone', async () => {
-  mockApiFetch.mockResolvedValue(page([huda, unnamed], 2));
+  mockApi.onRead(() => page([huda, unnamed], 2));
   await renderWithQuery(<InboxScreen />);
   await openLeads();
   expect(await screen.findByText('هدى سالم')).toBeTruthy();
@@ -33,12 +34,14 @@ test('rows: name, isolated phone, source, status chip; an unnamed lead is titled
   expect(screen.getByText('ه', { includeHiddenElements: true })).toBeTruthy();
   expect(screen.getByText(new RegExp(t.enums.leadSource.facebook_ad))).toBeTruthy();
   expect(screen.getAllByText(t.enums.leadStatus.contacted).length).toBeGreaterThan(0);
-  expect(screen.queryByText(t.common.showing.replace('{shown}', '2').replace('{total}', '2'))).toBeNull();
-  expect(mockApiFetch).toHaveBeenCalledWith('/leads?page=1&pageSize=25');
+  expect(
+    screen.queryByText(t.common.showing.replace('{shown}', '2').replace('{total}', '2')),
+  ).toBeNull();
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/leads?page=1&pageSize=25' });
 });
 
 test('a status pill filters server-side and only the selected pill carries the API total', async () => {
-  mockApiFetch.mockResolvedValue(page([huda], 7));
+  mockApi.onRead(() => page([huda], 7));
   await renderWithQuery(<InboxScreen />);
   await openLeads();
   await screen.findByText('هدى سالم');
@@ -46,14 +49,17 @@ test('a status pill filters server-side and only the selected pill carries the A
 
   await fireEvent.press(screen.getByRole('tab', { name: t.enums.leadStatus.new }));
   await waitFor(() =>
-    expect(mockApiFetch).toHaveBeenLastCalledWith('/leads?status=new&page=1&pageSize=25'),
+    expect(mockApi.reads().at(-1)).toEqual({
+      method: 'GET',
+      path: '/leads?status=new&page=1&pageSize=25',
+    }),
   );
   expect(await screen.findByRole('tab', { name: `${t.enums.leadStatus.new} 7` })).toBeTruthy();
   expect(screen.getByRole('tab', { name: t.leads.filterAll })).toBeTruthy();
 });
 
 test('search sends q to the API', async () => {
-  mockApiFetch.mockResolvedValue(page([huda]));
+  mockApi.onRead(() => page([huda]));
   await renderWithQuery(<InboxScreen />);
   await openLeads();
   await screen.findByText('هدى سالم');
@@ -61,14 +67,15 @@ test('search sends q to the API', async () => {
   await fireEvent.changeText(field, ' هدى ');
   await fireEvent(field, 'submitEditing');
   await waitFor(() =>
-    expect(mockApiFetch).toHaveBeenLastCalledWith(
-      `/leads?q=${encodeURIComponent('هدى')}&page=1&pageSize=25`,
-    ),
+    expect(mockApi.reads().at(-1)).toEqual({
+      method: 'GET',
+      path: `/leads?q=${encodeURIComponent('هدى')}&page=1&pageSize=25`,
+    }),
   );
 });
 
 test('a row opens the lead screen', async () => {
-  mockApiFetch.mockResolvedValue(page([huda]));
+  mockApi.onRead(() => page([huda]));
   await renderWithQuery(<InboxScreen />);
   await openLeads();
   await fireEvent.press(await screen.findByRole('button', { name: /هدى سالم/ }));
@@ -76,7 +83,7 @@ test('a row opens the lead screen', async () => {
 });
 
 test('nothing found: the inbox empty state', async () => {
-  mockApiFetch.mockResolvedValue(page([]));
+  mockApi.onRead(() => page([]));
   await renderWithQuery(<InboxScreen />);
   await openLeads();
   expect(await screen.findByRole('header', { name: t.leads.empty })).toBeTruthy();
@@ -84,7 +91,7 @@ test('nothing found: the inbox empty state', async () => {
 
 test('failed with nothing saved: error and retry', async () => {
   let failed = false;
-  mockApiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path.startsWith('/leads') && !failed) {
       failed = true;
       throw new ApiError(500);
@@ -99,7 +106,7 @@ test('failed with nothing saved: error and retry', async () => {
 });
 
 test('offline with a saved list: rows stay, no error, and «آخر تحديث» says how old', async () => {
-  mockApiFetch.mockRejectedValue(new ApiError(503));
+  mockApi.onRead(() => Promise.reject(new ApiError(503)));
   const client = createTestQueryClient();
   client.setQueryData(listKey('/leads', { q: '' }), cachedList([huda]));
   await renderWithQuery(<InboxScreen />, client);

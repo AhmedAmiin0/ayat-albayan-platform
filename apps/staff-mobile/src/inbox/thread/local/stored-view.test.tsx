@@ -9,13 +9,14 @@ import { applyAs, id, plan, row } from '@/inbox/thread/store/store-fixtures';
 import { storeReader } from './store-session';
 import { storedPage, viewOf } from './stored-view';
 import { threadKeys } from '@/core/lib/keys';
+import { mockCall } from '@ab/testing/mock-call';
 
 // docs/43 43-7: the chat reads the phone store: on screen before its GET, its ticks, new rows.
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({
   useScreenFocused: () => false,
@@ -49,7 +50,7 @@ test('storedPage: the rows oldest → newest, one page, no older one', () => {
 
 test('before its GET answers, the chat shows the stored rows (offline open)', async () => {
   await storeWith(mine(1), mine(2));
-  mockApiFetch.mockReturnValue(new Promise(() => undefined));
+  mockApi.onRead(() => new Promise(() => undefined));
   const { result } = await renderHook(() => useThread(PHONE), {
     wrapper: queryWrapper(createTestQueryClient()),
   });
@@ -59,7 +60,7 @@ test('before its GET answers, the chat shows the stored rows (offline open)', as
 
 test('the GET answered: its pages, with the store’s tick and a row only a sync brought', async () => {
   const store = await storeWith(mine(1, 'read'));
-  mockApiFetch.mockResolvedValue(page(mine(1, 'sent')));
+  mockApi.onRead(() => page(mine(1, 'sent')));
   const { result } = await renderHook(() => useThread(PHONE), {
     wrapper: queryWrapper(createTestQueryClient()),
   });
@@ -72,7 +73,7 @@ test('the GET answered: its pages, with the store’s tick and a row only a sync
 });
 
 test('thread pages never go to disk (the store keeps the chat)', async () => {
-  mockApiFetch.mockResolvedValue(page(mine(1)));
+  mockApi.onRead(() => page(mine(1)));
   const client = createTestQueryClient();
   await renderHook(() => useThread(PHONE), { wrapper: queryWrapper(client) });
   const query = client.getQueryCache().find({ queryKey: threadKeys.chat(PHONE) });

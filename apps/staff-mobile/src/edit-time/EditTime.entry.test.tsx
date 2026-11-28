@@ -5,8 +5,14 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { held, upcoming } from './testing/fixtures';
+import { mockCall } from '@ab/testing/mock-call';
 
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: async () => [] }));
+const mockApi = mockCall();
+mockApi.onRead(async () => []);
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 // Edit time (R-SCH-11) shows only where the API offered it via time_edit_mode.
 
@@ -77,4 +83,3 @@ test('a teacher calendar row (no `actions`): «عدّل الوقت» beside «غ
   await fireEvent.press(screen.getByRole('button', edit('يوسف أحمد')));
   expect(onEditTime).toHaveBeenCalledWith(upcoming);
 });
-

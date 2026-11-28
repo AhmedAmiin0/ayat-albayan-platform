@@ -6,14 +6,24 @@ import { renderWithQuery } from '@/test/query';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { ChatNotice } from '@/inbox/thread/components/ChatNotice';
 import { MessageList } from '@/inbox/messages/components/MessageList/MessageList';
-import { cachedThread, detail, inbound, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import {
+  cachedThread,
+  detail,
+  inbound,
+  message,
+  PHONE,
+  thread,
+} from '@/inbox/shared/thread-fixtures';
 import { LIT_MS } from '@/inbox/thread/hooks/use-jump';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
+import { mockCall } from '@ab/testing/mock-call';
 
 // A bubble that answers another shows its quote on top; a tap goes to the original.
+const mockApi = mockCall();
+mockApi.onRead(async () => ({ id: 'u1', role: 'admin', permissions: [] }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 type ThreadQuery = ReturnType<typeof useThread>;
@@ -56,7 +66,8 @@ async function show(rows: MessageView[]) {
   );
   await act(async () => undefined); // /auth/me answers (the bubbles' permission check)
 }
-const edge = (id: string) => StyleSheet.flatten(screen.getByTestId(`bubble-${id}`).props.style).borderColor;
+const edge = (id: string) =>
+  StyleSheet.flatten(screen.getByTestId(`bubble-${id}`).props.style).borderColor;
 
 afterEach(() => {
   jest.restoreAllMocks();
@@ -72,12 +83,16 @@ test('the quote names who wrote it and its first line, and says where a tap goes
 
 test('a file without a caption is quoted by its kind', async () => {
   await show([inbound, older]);
-  expect(screen.getByTestId('quote-gone').props.accessibilityLabel).toBe(`${thread.display_name}: ${t.inbox.media.image}`);
+  expect(screen.getByTestId('quote-gone').props.accessibilityLabel).toBe(
+    `${thread.display_name}: ${t.inbox.media.image}`,
+  );
 });
 
 test('a tap on the quote scrolls the inverted list to the original and lights it up a moment', async () => {
   jest.useFakeTimers();
-  const toIndex = jest.spyOn(FlatList.prototype, 'scrollToIndex').mockImplementation(() => undefined);
+  const toIndex = jest
+    .spyOn(FlatList.prototype, 'scrollToIndex')
+    .mockImplementation(() => undefined);
   await show([inbound, answer]);
   await fireEvent.press(screen.getByTestId(`quote-${inbound.id}`));
   // Newest first: the answer is row 0, the original row 1.
@@ -89,17 +104,27 @@ test('a tap on the quote scrolls the inverted list to the original and lights it
 
 test('a row not laid out yet: near it by the average height, then exactly', async () => {
   jest.useFakeTimers();
-  const toIndex = jest.spyOn(FlatList.prototype, 'scrollToIndex').mockImplementation(() => undefined);
-  const toOffset = jest.spyOn(FlatList.prototype, 'scrollToOffset').mockImplementation(() => undefined);
+  const toIndex = jest
+    .spyOn(FlatList.prototype, 'scrollToIndex')
+    .mockImplementation(() => undefined);
+  const toOffset = jest
+    .spyOn(FlatList.prototype, 'scrollToOffset')
+    .mockImplementation(() => undefined);
   await show([inbound, answer]);
-  await act(() => screen.getByTestId('message-list').props.onScrollToIndexFailed({ index: 1, averageItemLength: 80 }));
+  await act(() =>
+    screen
+      .getByTestId('message-list')
+      .props.onScrollToIndexFailed({ index: 1, averageItemLength: 80 }),
+  );
   expect(toOffset).toHaveBeenCalledWith({ offset: 80, animated: false });
   await act(() => jest.advanceTimersByTime(200));
   expect(toIndex).toHaveBeenCalledWith({ index: 1, animated: true, viewPosition: 0.5 });
 });
 
 test('an original older than the loaded pages: the chat says so, nothing scrolls', async () => {
-  const toIndex = jest.spyOn(FlatList.prototype, 'scrollToIndex').mockImplementation(() => undefined);
+  const toIndex = jest
+    .spyOn(FlatList.prototype, 'scrollToIndex')
+    .mockImplementation(() => undefined);
   await show([inbound, older]);
   await fireEvent.press(screen.getByTestId('quote-gone'));
   expect(toIndex).not.toHaveBeenCalled();

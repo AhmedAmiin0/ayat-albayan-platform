@@ -7,13 +7,14 @@ import { UPLOADED } from '@/booking/testing/fixtures';
 import { uploadInvoice } from '@/booking/invoice/invoice-upload';
 import { InvoiceStep, type InvoiceStepProps } from '@/booking/invoice/InvoiceStep/InvoiceStep';
 import { PHOTO, PREVIEW } from '@/booking/testing/test-utils';
+import { mockCall } from '@ab/testing/mock-call';
 
 jest.mock('@/core/lib/receipts/receipt', () => ({ pickReceipt: jest.fn() }));
 jest.mock('@/booking/invoice/invoice-upload', () => ({ uploadInvoice: jest.fn() }));
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const REQ = '99999999-9999-4999-8999-999999999999';
@@ -102,17 +103,25 @@ test('no chat number: no «من المحادثة»', async () => {
 });
 
 test('with the guardian’s number: her files are listed and one is picked, nothing uploaded', async () => {
-  mockApiFetch.mockImplementation((path: string) =>
+  mockApi.onRead(({ path }) =>
     Promise.resolve(
       path === MEDIA
-        ? [{ message_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', created_at: '2026-10-02T10:00:00.000Z', mime: 'application/pdf', caption: 'تحويل', expired: false }]
+        ? [
+            {
+              message_id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+              created_at: '2026-10-02T10:00:00.000Z',
+              mime: 'application/pdf',
+              caption: 'تحويل',
+              expired: false,
+            },
+          ]
         : null,
     ),
   );
   const { props } = await step({ chatPhone: PHONE });
   await press(t.booking.invoice.fromChat);
   await fireEvent.press(await screen.findByText('تحويل'));
-  expect(mockApiFetch).toHaveBeenCalledWith(MEDIA);
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: MEDIA });
   expect(props.onChange).toHaveBeenCalledWith({
     source: 'whatsapp',
     messageId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
