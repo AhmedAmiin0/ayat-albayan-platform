@@ -45,7 +45,6 @@
     "expo": "~57.0.26",
     "expo-audio": "~57.0.5",
     "expo-blur": "~57.0.3",
-    "expo-checkbox": "~57.0.0",
     "expo-clipboard": "~57.0.2",
     "expo-constants": "~57.0.20",
     "expo-device": "~57.0.2",

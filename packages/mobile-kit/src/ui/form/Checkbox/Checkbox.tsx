@@ -1,36 +1,34 @@
-import ExpoCheckbox from 'expo-checkbox';
-import { Pressable, View } from 'react-native';
-import { boxStyle } from './checkbox.style';
+import { View } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
+import { CheckboxRow } from './CheckboxRow';
 import type { CheckboxProps } from './Checkbox.types';
 import { useCheckbox } from './use-checkbox';
 
 /**
- * One tick box and its row. The row is the touch target and the one accessible checkbox; the box
- * itself is drawn by expo-checkbox and hidden from touch and the screen reader.
+ * One tick box and its row, the box drawn in the brand. iOS keeps it too: it has no checkbox
+ * control, and @expo/ui's universal one becomes a switch there, a different control.
  */
 export function Checkbox(props: CheckboxProps) {
-  const { boxColor, onPress, style } = useCheckbox(props);
+  const { box, tick } = useCheckbox(props);
   return (
-    <Pressable
-      testID={props.testID}
-      accessibilityRole="checkbox"
-      accessibilityLabel={props.label}
-      accessibilityHint={props.hint}
-      accessibilityState={{ checked: props.checked, disabled: props.disabled }}
-      disabled={props.disabled}
-      onPress={onPress}
-      style={style}
-    >
-      <ExpoCheckbox
-        testID="checkbox-box"
-        value={props.checked}
-        color={boxColor}
-        style={boxStyle}
-        pointerEvents="none"
-        accessible={false}
-        importantForAccessibility="no-hide-descendants"
-      />
-      <View style={{ flex: 1 }}>{props.children}</View>
-    </Pressable>
+    <CheckboxRow
+      {...props}
+      box={
+        <View testID="checkbox-box" style={box}>
+          {props.checked && (
+            <Svg testID="checkbox-tick" viewBox="0 0 16 16" width="100%" height="100%">
+              <Path
+                d="M3 8.5 6.5 12 13 4.5"
+                fill="none"
+                stroke={tick}
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </Svg>
+          )}
+        </View>
+      }
+    />
   );
 }

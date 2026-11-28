@@ -38,3 +38,11 @@ test('the box takes the accent of the theme when checked, the input rule when no
   await rerender(<Checkbox label="x" checked={false} onChange={jest.fn()} />);
   expect(box().borderColor).toBe(palette.light.ruleInput);
 });
+
+test('the brand box draws the tick only when checked', async () => {
+  const tick = () => screen.queryByTestId('checkbox-tick', { includeHiddenElements: true });
+  const { rerender } = await render(<Checkbox label="x" checked onChange={jest.fn()} />);
+  expect(tick()).not.toBeNull();
+  await rerender(<Checkbox label="x" checked={false} onChange={jest.fn()} />);
+  expect(tick()).toBeNull();
+});

@@ -1,3 +1,4 @@
+import type { CheckboxColors } from '@expo/ui/jetpack-compose';
 import type { ReactNode } from 'react';
 import type { ViewStyle } from 'react-native';
 
@@ -21,16 +22,11 @@ export interface CheckboxProps {
   testID?: string | undefined;
 }
 
-export interface CheckboxRowLook {
-  pressed: boolean;
-  disabled: boolean;
-  inset: boolean;
-  side: CheckboxSide;
-  wash: string;
-}
-
-export interface CheckboxLogic {
-  boxColor: string;
-  onPress: () => void;
-  style: (state: { pressed: boolean }) => ViewStyle;
+export interface CheckboxLook {
+  /** The kit's own box: the brand fill when checked, the input rule as its edge when not. */
+  box: ViewStyle;
+  /** The tick on the fill. */
+  tick: string;
+  /** The same look for Material's box. */
+  colors: CheckboxColors;
 }

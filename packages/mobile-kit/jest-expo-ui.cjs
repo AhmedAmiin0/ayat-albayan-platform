@@ -48,6 +48,7 @@ const composeModifiers = {
   __esModule: true,
   semantics: modifier('semantics'),
   defaultMinSize: modifier('defaultMinSize'),
+  testID: modifier('testID'),
 };
 
 const paramOf = (modifiers, $type) => modifiers?.find((m) => m.$type === $type)?.params;
@@ -86,9 +87,13 @@ const ComposeSwitch = ({ value, enabled = true, onCheckedChange, colors, modifie
     onValueChange: (next) => onCheckedChange?.(next),
   });
 
+// Compose's Checkbox as a plain view carrying its props; its testID modifier becomes the test id.
+const ComposeCheckbox = ({ modifiers, ...props }) =>
+  createElement(RN.View, { ...props, compose: true, testID: paramOf(modifiers, 'testID') });
+
 module.exports = {
   universal: { __esModule: true, BottomSheet, Host, RNHostView, TextInput, useNativeState },
   swiftUiModifiers,
   composeModifiers,
-  jetpackCompose: { __esModule: true, Switch: ComposeSwitch },
+  jetpackCompose: { __esModule: true, Checkbox: ComposeCheckbox, Switch: ComposeSwitch },
 };
