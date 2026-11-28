@@ -3,7 +3,7 @@ import type { ThreadView } from '@ab/shared';
 import { screen, within } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
-import { thread } from '@/inbox/shared/thread-fixtures';
+import { thread, uid } from '@/inbox/shared/thread-fixtures';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -22,7 +22,7 @@ const teacher: ThreadView = {
   ...thread,
   phone_e164: '+201066000001',
   display_name: 'Fatma',
-  teacher_id: 't-1',
+  teacher_id: uid('t1'),
   lead_source: null,
 };
 
