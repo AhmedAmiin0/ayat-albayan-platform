@@ -1,5 +1,6 @@
 import { WA_ERROR } from '@ab/catalog';
 import { z } from 'zod';
+import { runtimeFetch } from '@/common/infra/http/http';
 import { recipientAllowed, type CrmLineEnv } from '@/config/env/env';
 import { crmMediaBody, crmTemplateBody, crmTextBody, type CrmBody } from './crm-body';
 import { crmJson, type CrmConn } from './crm-http';
@@ -25,8 +26,8 @@ interface CrmClientOpts {
 
 const DEFAULT_TIMEOUT_MS = 15_000;
 
-/** The runtime fetch for CRM calls: this file's one global use (H-1). */
-export const crmFetch: FetchLike = fetch;
+/** The runtime fetch for CRM calls, from the one outbound client (H-1). */
+export const crmFetch: FetchLike = runtimeFetch;
 
 /**
  * POST /messages answers 201 {data:{message_id, whatsapp_message_id, …}}; only the wamid is kept.

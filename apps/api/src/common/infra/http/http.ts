@@ -1,7 +1,7 @@
 import type { z } from 'zod';
 import { readCapped } from './bytes';
 import { withDeadline, type Phase } from './deadline';
-import { Failed, Passthrough, type HttpFailure } from './failure';
+import { Failed, Passthrough, type FetchLike, type HttpFailure } from './failure';
 import type { BytesCall, Http, HttpProfile, HttpRequest } from './http.types';
 import { timed } from './http-timing';
 import { initOf, urlOf, whereOf } from './request';
@@ -10,6 +10,9 @@ import { initOf, urlOf, whereOf } from './request';
 // path must never resend an `uncertain` request; retries stay with send-plan, backoff, pg-boss).
 
 const TEXT_CAP = 300;
+
+/** The runtime's fetch, for an integration whose transport seam wraps it (crm's recording). */
+export const runtimeFetch: FetchLike = fetch;
 
 /** The one JSON.parse of the api's outbound calls: not JSON → null (the schema decides). */
 function parseJson(text: string): unknown {
