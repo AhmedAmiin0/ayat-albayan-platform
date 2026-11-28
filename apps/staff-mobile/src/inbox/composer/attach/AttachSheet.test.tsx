@@ -70,9 +70,9 @@ test('«الرموز التعبيرية» closes the sheet and opens the emoji s
   expect(screen.getByTestId('emoji-sheet')).toBeTruthy();
 });
 
-test('an even three-column grid under a drag handle, every word on one line, no «إلغاء»', async () => {
+test('an even three-column grid on the kit sheet, every word on one line, no «إلغاء»', async () => {
   const tiles = await sheet();
-  expect(screen.getByTestId('attach-handle')).toBeTruthy();
+  expect(within(screen.getByTestId('attach-sheet')).getByLabelText(c.attach)).toBeTruthy();
   expect(tiles.props.style).toMatchObject({
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -86,11 +86,10 @@ test('an even three-column grid under a drag handle, every word on one line, no 
   expect(within(screen.getByTestId('attach-sheet')).queryByText(t.common.cancel)).toBeNull();
 });
 
-test('Android back and a tap outside close the sheet', async () => {
+test('a drag down, the scrim or Android back (the native dismiss) closes the sheet', async () => {
   await sheet();
-  await fireEvent(screen.getByTestId('attach-modal'), 'requestClose');
+  await fireEvent(screen.getByTestId('attach-sheet'), 'dismiss');
   expect(screen.queryByTestId('attach-sheet')).toBeNull();
   await sheet();
-  await fireEvent.press(screen.getByTestId('attach-scrim'));
-  expect(screen.queryByTestId('attach-sheet')).toBeNull();
+  expect(screen.getByTestId('attach-sheet')).toBeTruthy();
 });

@@ -36,7 +36,7 @@ test('one renewal and one new child: «لأيّ طالب؟» lists each with its
   await panel(family([sara, child({ subscription: usedUp })]));
   await fireEvent.press(screen.getByRole('button', { name: t.subscriptions.new }));
   const sheet = screen.getByTestId('thread-menu');
-  expect(sheet.props.accessibilityLabel).toBe(s.pickStudent);
+  expect(within(sheet).getByLabelText(s.pickStudent)).toBeTruthy();
   // A Latin name and the code stay apart in an Arabic row: each in its own isolate.
   expect(within(sheet).getByRole('button', { name: `${isolate('sara')} · ${ltr('AB-0184')} — ${t.subscriptions.new}` })).toBeTruthy();
   await fireEvent.press(within(sheet).getByRole('button', { name: `${isolate('يوسف')} · ${ltr('AB-0183')} — ${s.renew}` }));

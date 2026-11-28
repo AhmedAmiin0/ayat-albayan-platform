@@ -5,8 +5,13 @@
 // its own box (use-rail-box.ts), so a rail fits under the pinned page head instead of the window.
 export const rail =
   'shell:sticky shell:top-[var(--rail-top,1rem)] shell:h-[var(--rail-h,calc(100dvh-7rem))] shell:overflow-y-auto shell:overscroll-contain shell:pe-1';
-/** Thread side panels (the inbox's fixed-height pane): from 1280px, beside the
- *  log, a panel fills its grid cell and scrolls inside it; below that it flows under the log. */
-export const railXl = 'xl:h-full xl:min-h-0 xl:overflow-y-auto xl:overscroll-contain xl:pe-1';
+/**
+ * Thread side panels (the inbox's fixed-height pane, container `thread`): once the thread is wide
+ * enough to hold the panel beside the log, it fills its grid cell and scrolls inside it; below
+ * that it flows under the log, so the reply box keeps the thread's width.
+ */
+export const railThread =
+  '@3xl/thread:h-full @3xl/thread:min-h-0 @3xl/thread:overflow-y-auto ' +
+  '@3xl/thread:overscroll-contain @3xl/thread:pe-1';
 /** A column of a viewport-high screen (the inbox list): fills its grid row, scrolls on its own. */
 export const paneScroll = 'shell:h-full shell:min-h-0 shell:overflow-y-auto shell:overscroll-contain shell:pe-1';

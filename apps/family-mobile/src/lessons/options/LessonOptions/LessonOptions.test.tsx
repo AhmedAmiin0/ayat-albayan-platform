@@ -118,10 +118,10 @@ test('a group lesson has no options: the academy changes it', async () => {
   expect(screen.queryByRole('button', { name: A.menuTitle })).toBeNull();
 });
 
-test('closing the menu sends nothing and shows the options button again', async () => {
+test('closing the menu (a drag down, the scrim or back) sends nothing and shows the options button again', async () => {
   await show();
   await fireEvent.press(screen.getByRole('button', { name: A.menuTitle }));
-  await fireEvent.press(screen.getByLabelText(t.common.cancel, { includeHiddenElements: true }));
+  await fireEvent(screen.getByTestId('lesson-options'), 'dismiss');
   expect(screen.queryByRole('button', { name: A.confirm })).toBeNull();
   expect(screen.getByRole('button', { name: A.menuTitle })).toBeTruthy();
   expect(mockSend).not.toHaveBeenCalled();

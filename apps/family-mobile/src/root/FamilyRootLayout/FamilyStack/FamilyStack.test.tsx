@@ -1,4 +1,4 @@
-import { act, renderRouter, screen } from 'expo-router/testing-library';
+import { act, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { queryClient, t } from '@ab/mobile-kit';
 import Layout from '../../../../app/_layout';
 import Login from '../../../../app/login';
@@ -13,6 +13,13 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('@ab/mobile-kit/auth/use-auth-gate', () => ({ useAuthGate: () => 'out' }));
+jest.mock('expo-screen-capture', () => ({
+  preventScreenCaptureAsync: jest.fn(async () => undefined),
+  allowScreenCaptureAsync: jest.fn(async () => undefined),
+  enableAppSwitcherProtectionAsync: jest.fn(async () => undefined),
+  disableAppSwitcherProtectionAsync: jest.fn(async () => undefined),
+}));
+const capture = jest.requireMock<Record<string, jest.Mock>>('expo-screen-capture');
 
 const MARKER = 'observe-interactive';
 
@@ -42,4 +49,11 @@ test('the mark comes once with the whole sign-in screen', async () => {
   await act(async () => release());
   expect(await screen.findByText(t.familyApp.signIn.withPassword)).toBeTruthy();
   expect(screen.getAllByTestId(MARKER)).toHaveLength(1);
+});
+
+test('capture is blocked from launch, before the first screen is ready and signed out', async () => {
+  const { router } = openWithHeldCodes();
+  await router;
+  await waitFor(() => expect(capture.preventScreenCaptureAsync).toHaveBeenCalled());
+  expect(capture.allowScreenCaptureAsync).not.toHaveBeenCalled();
 });

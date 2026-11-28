@@ -70,7 +70,10 @@ export const lessonRow = (over: Partial<PortalLessonRow> = {}): PortalLessonRow 
 const SETTINGS = { meeting_link_auto: false, family_payment_instructions: 'تحويل' };
 
 export async function portalApp() {
-  const scope = { studentsOf: vi.fn(async (id: string) => FAMILIES[id] ?? []) };
+  const scope = {
+    studentsOf: vi.fn(async (id: string) => FAMILIES[id] ?? []),
+    testIdsOf: vi.fn(async (_ids: readonly string[]) => new Set<string>()),
+  };
   const lessons = {
     readSettings: vi.fn(async () => ({
       meeting_link_auto: false,

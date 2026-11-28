@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { Modal, ScrollView, View } from 'react-native';
+import { Modal, View } from 'react-native';
 import { SheetLeave } from '@/classroom';
-import { t, Button, Screen, ScreenHeader } from '@ab/mobile-kit';
+import { t, Button, Screen, ScreenHeader, KeyboardScroll } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { DetailsAbout } from './DetailsAbout';
 import { DetailsHead } from './DetailsHead';
@@ -41,12 +41,10 @@ export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetails
             subtitle={title ? t.lessons.details : undefined}
             trailing={<Button variant="ghost" label={t.common.close} onPress={onClose} />}
           />
-          <ScrollView
+          <KeyboardScroll
             style={{ flex: 1, marginHorizontal: -16 }}
             contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32, gap: 10 }}
-            // Cancel opens its reason field in the sheet, so a tap must land with the keyboard up.
-            keyboardShouldPersistTaps="handled"
-            automaticallyAdjustKeyboardInsets
+            // Cancel opens its reason field in the sheet: it scrolls above the keyboard, taps land.
           >
             {lesson ? (
               <>
@@ -70,7 +68,7 @@ export function LessonDetailsSheet<L extends DetailsLesson>(props: LessonDetails
                 <DetailsAbout lesson={lesson} role={role} />
               </>
             ) : null}
-          </ScrollView>
+          </KeyboardScroll>
         </Screen>
         {lesson ? sheets : null}
       </Modal>

@@ -1,7 +1,16 @@
 import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
 import { useRef, useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { t, shape, useTheme, Button, Field, ScreenHeader, ErrorLine } from '@ab/mobile-kit';
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import {
+  t,
+  shape,
+  useTheme,
+  Button,
+  Field,
+  ScreenHeader,
+  ErrorLine,
+  KeyboardScroll,
+} from '@ab/mobile-kit';
 import type { AppTextNode } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { ButtonRow } from '@/core/ui/actions';
@@ -49,10 +58,8 @@ export function EssentialOffSheet({
             backgroundColor: color.raised,
           }}
         >
-          <ScrollView
+          <KeyboardScroll
             contentContainerStyle={{ padding: 16, paddingBottom: 32, gap: 12 }}
-            keyboardShouldPersistTaps="handled"
-            automaticallyAdjustKeyboardInsets
           >
             <ScreenHeader
               size="h2"
@@ -76,7 +83,7 @@ export function EssentialOffSheet({
               <Button variant="danger" label={r.turnOff} busy={busy} disabled={!matches} onPress={() => onConfirm(typed.trim())} />
               <Button variant="secondary" label={r.cancel} onPress={onClose} />
             </ButtonRow>
-          </ScrollView>
+          </KeyboardScroll>
         </View>
       </View>
     </Modal>

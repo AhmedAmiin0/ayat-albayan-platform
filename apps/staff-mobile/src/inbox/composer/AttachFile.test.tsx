@@ -81,7 +81,7 @@ test('a refusal shows inbox.error.<code> under the row', async () => {
 test('a tap outside closes the choice and sends nothing', async () => {
   await show(OPEN);
   await fireEvent.press(paperclip());
-  await fireEvent.press(screen.getByTestId('attach-scrim'));
+  await fireEvent(screen.getByTestId('attach-sheet'), 'dismiss');
   expect(screen.queryByRole('button', { name: t.inbox.composer.document })).toBeNull();
   expect(mockApiSend).not.toHaveBeenCalled();
 });

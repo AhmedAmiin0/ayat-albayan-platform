@@ -19,7 +19,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 test('an LTR run words the failed-send sheet from en.json: the Meta billing reason, by hand only', async () => {
   await renderWithQuery(<FailedSheet phone={PHONE} message={{ ...failed, error_code: '131042' }} onClose={jest.fn()} onError={jest.fn()} />);
   const sheet = screen.getByTestId('failed-sheet');
-  expect(sheet.props.accessibilityLabel).toBe(en.messages.failedMenu);
+  expect(within(sheet).getByLabelText(en.messages.failedMenu)).toBeTruthy();
   const s = within(sheet);
   expect(s.getByText(en.messages.errorLine.replace('{reason}', en.messages.errors['131042']))).toBeTruthy();
   expect(s.queryByRole('button', { name: en.messages.retry })).toBeNull();
