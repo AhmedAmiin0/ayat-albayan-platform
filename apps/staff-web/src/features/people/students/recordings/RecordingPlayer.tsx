@@ -15,9 +15,20 @@ export function RecordingPlayer({ rec, when }: { rec: StudentRecordingView; when
   return (
     <div className="grid gap-2">
       {rec.media === 'audio' ? (
-        <audio controls preload="none" src={rec.url} aria-label={label} className="w-full" />
+        <audio controls preload="none" src={rec.url} aria-label={label} className="w-full">
+          <track kind="captions" />
+        </audio>
       ) : (
-        <video controls preload="none" src={rec.url} aria-label={label} className="aspect-video w-full rounded-md bg-ink" playsInline />
+        <video
+          controls
+          preload="none"
+          src={rec.url}
+          aria-label={label}
+          className="aspect-video w-full rounded-md bg-ink"
+          playsInline
+        >
+          <track kind="captions" />
+        </video>
       )}
       <a
         href={rec.url}
