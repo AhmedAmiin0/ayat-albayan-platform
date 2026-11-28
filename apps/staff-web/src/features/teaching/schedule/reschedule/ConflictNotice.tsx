@@ -21,6 +21,12 @@ const SHOWN = 5;
 /** Clashes with the teacher's own week, read better on the teacher's clock (a DST shift shows). */
 const TEACHER_SIDE = new Set<Conflict['kind']>(['outside_availability', 'time_off']);
 
+/** «Name: » before a student's clash, when the caller knows the student's name. */
+const namePrefix = (names: Readonly<Record<string, string>>, id: string | undefined): string => {
+  const name = id === undefined ? undefined : names[id];
+  return name ? `${name}: ` : '';
+};
+
 /** The viewer's wall clock, plus the teacher's own when it differs; `clock.tz` is the viewer's. */
 export function conflictText(
   c: Conflict,
@@ -89,7 +95,7 @@ export function ConflictNotice(p: ConflictNoticeProps) {
         {conflicts.slice(0, SHOWN).map((c, i) => (
           <li key={`${c.kind}-${c.startsAt}-${i}`} className="flex items-start gap-2">
             <NuqtaGlyph shape="hollow" className="mt-1.5 text-danger" />
-            <span>{(c.studentId && studentNames[c.studentId] ? `${studentNames[c.studentId]}: ` : '') + conflictText(c, clock, teacherTz)}</span>
+            <span>{namePrefix(studentNames, c.studentId) + conflictText(c, clock, teacherTz)}</span>
           </li>
         ))}
       </ul>

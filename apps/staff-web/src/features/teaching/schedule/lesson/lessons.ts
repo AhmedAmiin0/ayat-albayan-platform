@@ -46,7 +46,10 @@ export function teacherRows(lessons: readonly LessonView[], tz: string): Teacher
   const rows = new Map<string, TeacherRow>();
   const sorted = lessons.toSorted((a, b) => a.starts_at.localeCompare(b.starts_at));
   for (const lesson of sorted) {
-    const row = rows.get(lesson.teacher.id) ?? { teacher: lesson.teacher, days: new Map() };
+    const row: TeacherRow = rows.get(lesson.teacher.id) ?? {
+      teacher: lesson.teacher,
+      days: new Map(),
+    };
     rows.set(lesson.teacher.id, row);
     const day = zonedPartsIn(new Date(lesson.starts_at), tz).date;
     row.days.set(day, [...(row.days.get(day) ?? []), lesson]);
