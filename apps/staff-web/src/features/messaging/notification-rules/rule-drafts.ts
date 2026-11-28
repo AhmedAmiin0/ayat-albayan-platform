@@ -1,5 +1,5 @@
 import type { NotificationKey } from '@ab/shared';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import type { RuleDraft } from './rule-draft';
 
 /** Held above the tabs so a tab switch keeps them; only real diffs are stored. */
@@ -22,13 +22,10 @@ export function placeRuleDraft(all: Drafts, key: NotificationKey, draft: RuleDra
 
 export function useRuleDrafts(): RuleDrafts {
   const [drafts, setDrafts] = useState<Drafts>({});
-  const put = useCallback(
-    (key: NotificationKey, draft: RuleDraft | null) =>
-      setDrafts((all) => placeRuleDraft(all, key, draft)),
-    [],
-  );
-  const keys = useMemo(() => Object.keys(drafts) as NotificationKey[], [drafts]);
-  return useMemo(() => ({ get: (key) => drafts[key], put, keys }), [drafts, put, keys]);
+  const put = (key: NotificationKey, draft: RuleDraft | null) =>
+    setDrafts((all) => placeRuleDraft(all, key, draft));
+  const keys = Object.keys(drafts) as NotificationKey[];
+  return { get: (key) => drafts[key], put, keys };
 }
 
 /** Outside any holder (a read-only render): nothing is kept. */

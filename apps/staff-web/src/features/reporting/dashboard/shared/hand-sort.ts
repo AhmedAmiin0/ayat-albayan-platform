@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { compareValues, nextSortDir } from '@/components/data-table/client-sort';
 
 // Client sort for the dashboard's hand-built summary tables (they keep their <th scope="row">
@@ -34,6 +34,6 @@ export function useHandSort<T, K extends string>(
   valueOf: (row: T, key: K) => unknown,
 ): HandSort<T, K> {
   const [sort, setSort] = useState<HandSortState<K>>(null);
-  const sorted = useMemo(() => sortRows(rows, sort, valueOf), [rows, sort, valueOf]);
+  const sorted = sortRows(rows, sort, valueOf);
   return { rows: sorted, sort, toggle: (key) => setSort((s) => toggleSort(s, key)) };
 }

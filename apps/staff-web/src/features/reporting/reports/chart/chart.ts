@@ -47,10 +47,12 @@ export function segments(points: readonly ChartPoint[]): ChartPoint[][] {
   const out: ChartPoint[][] = [];
   let run: ChartPoint[] = [];
   for (const p of points) {
-    if (p.y === null) {
-      if (run.length > 0) out.push(run);
-      run = [];
-    } else run.push(p);
+    if (p.y !== null) {
+      run.push(p);
+      continue;
+    }
+    if (run.length > 0) out.push(run);
+    run = [];
   }
   if (run.length > 0) out.push(run);
   return out;
@@ -58,5 +60,6 @@ export function segments(points: readonly ChartPoint[]): ChartPoint[][] {
 
 /** Where a tooltip hangs off its point so it stays inside the plot near the edges. */
 export function tooltipAnchor(pos: number): 'start' | 'center' | 'end' {
-  return pos < 15 ? 'start' : pos > 85 ? 'end' : 'center';
+  if (pos < 15) return 'start';
+  return pos > 85 ? 'end' : 'center';
 }

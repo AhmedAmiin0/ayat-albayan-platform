@@ -1,6 +1,5 @@
 import type { TemplateView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback } from 'react';
 import { t } from '@ab/web-kit';
 import { setCrmStatus, templateErrorText, templatesQuery, type CrmTemplateStatus } from '@/features/messaging/templates/api';
 import { templateName } from '@/features/messaging/templates/template-cells';
@@ -28,9 +27,7 @@ export function useCrmStatus(onNotice: (notice: Notice) => void) {
     onError: (e) => onNotice({ message: templateErrorText(e), tone: 'error' }),
   });
   const { mutate } = save;
-  const onSet = useCallback(
-    (tpl: TemplateView, status: CrmTemplateStatus) => mutate({ key: tpl.key, status }),
-    [mutate],
-  );
+  const onSet = (tpl: TemplateView, status: CrmTemplateStatus) =>
+    mutate({ key: tpl.key, status });
   return { busyKey: save.isPending ? save.variables.key : null, onSet };
 }

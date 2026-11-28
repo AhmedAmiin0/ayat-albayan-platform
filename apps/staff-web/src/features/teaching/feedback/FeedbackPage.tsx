@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
 import { Cartouche, FormAlert, PageHead, Pager, ListSkeleton, t, teacherLabel } from '@ab/web-kit';
 import { teacherOptionsQuery } from '@/features/people/students/api';
 import { serverListProps, serverListState, type ServerListPatch, type ServerListSearch } from '@/lib/list/server-list-search';
@@ -21,10 +20,10 @@ export function FeedbackPage({ search, onSearch }: FeedbackPageProps) {
   const teachers = useQuery(teacherOptionsQuery);
   const summary = useQuery(feedbackSummaryQuery);
   const list = useQuery(feedbackListQuery(state));
-  const teacherOptions = useMemo(
-    () => (teachers.data ?? []).map((tc) => ({ value: tc.id, label: teacherLabel(tc) })),
-    [teachers.data],
-  );
+  const teacherOptions = (teachers.data ?? []).map((tc) => ({
+    value: tc.id,
+    label: teacherLabel(tc),
+  }));
 
   return (
     <>

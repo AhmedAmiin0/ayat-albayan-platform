@@ -15,7 +15,8 @@ export function groupOf(
   win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
 ): SessionGroup {
   const state = joinWindow(lesson, now, win).state;
-  return state === 'open' ? 'now' : state === 'early' ? 'upcoming' : 'ended';
+  if (state === 'open') return 'now';
+  return state === 'early' ? 'upcoming' : 'ended';
 }
 
 /** The day's lessons that still take place, by group, each group earliest first. */

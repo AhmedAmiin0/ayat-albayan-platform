@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { TemplateParamFields } from './TemplateParamFields';
 
@@ -9,7 +9,7 @@ function preview(patch: Parameters<typeof template>[0], values = {}) {
       template={template(patch)}
       values={values}
       missing={[]}
-      onChange={() => {}}
+      onChange={vi.fn()}
     />,
   );
   return screen.getByRole('figure');

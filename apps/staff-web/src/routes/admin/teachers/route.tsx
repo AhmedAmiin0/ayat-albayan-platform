@@ -1,6 +1,5 @@
 import { TEACHER_FILTER_KEYS, TEACHER_SORT_KEYS } from '@ab/shared';
 import { createFileRoute, Outlet, useChildMatches, useNavigate } from '@tanstack/react-router';
-import { useCallback } from 'react';
 import { TeachersPage } from '@/features/people/teachers/TeachersPage';
 import { listUrlValidator, parseListUrl, toListUrl } from '@/lib/list/list-url';
 
@@ -17,10 +16,8 @@ function TeachersRoute() {
   const list = parseListUrl(Route.useSearch(), KEYS);
   const navigate = useNavigate();
   const hasChild = useChildMatches().length > 0;
-  const onOpen = useCallback(
-    (teacherId: string) => void navigate({ to: '/admin/teachers/$teacherId', params: { teacherId } }),
-    [navigate],
-  );
+  const onOpen = (teacherId: string) =>
+    void navigate({ to: '/admin/teachers/$teacherId', params: { teacherId } });
   if (hasChild) return <Outlet />;
   return (
     <TeachersPage

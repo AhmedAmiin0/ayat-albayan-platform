@@ -1,7 +1,6 @@
 import type { LineCheckView, TemplateLineView } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
 import { linesCheckQuery } from '@/features/messaging/messaging/api';
 import { templateLinesQuery } from '@/features/messaging/templates/api';
 
@@ -30,9 +29,6 @@ export function useTemplateLines(): TemplateLines {
   const facts = useQuery(templateLinesQuery);
   const check = useQuery(linesCheckQuery);
   const lines = facts.data;
-  const phones = useMemo(() => phonesOf(check.data), [check.data]);
-  return useMemo(
-    () => ({ lines, phones, factsOf: (line: WaLine) => lines?.find((l) => l.line === line) }),
-    [lines, phones],
-  );
+  const phones = phonesOf(check.data);
+  return { lines, phones, factsOf: (line: WaLine) => lines?.find((l) => l.line === line) };
 }
