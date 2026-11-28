@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { BiometricGate, RootFrame, useTheme } from '@ab/mobile-kit';
+import { ObserveInteractiveMarker } from 'expo-observe';
 import { ROOM_CHAT_SCREEN, ROOM_SCREEN } from '@/root/room-screen';
 import { screenAnimation } from '@/root/screen-animation';
 import type { FamilyStackProps } from './FamilyStack.types';
@@ -10,6 +11,7 @@ export function FamilyStack({ gate, boot }: FamilyStackProps) {
   const { signedIn, ready } = useFamilyStack({ gate, boot });
   return (
     <RootFrame ready={ready} fontsLoaded={boot.fontsLoaded}>
+      {ready ? <ObserveInteractiveMarker /> : null}
       <BiometricGate signedIn={signedIn}>
         <Stack
           screenOptions={{
