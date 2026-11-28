@@ -19,7 +19,6 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
 }));
 
 const S = t.classroom.shareRequest;
-const SHARE_PATH = '/lessons/L1/room/participants/guest-1/share';
 const guestRoom = () =>
   fakeClient({
     shareAllowed: false,
@@ -69,7 +68,9 @@ describe('«اطلب مشاركة الشاشة»', () => {
     deliver(c, { t: 'request', what: 'screen' }, { identity: 'guest-1', role: 'guest' });
     expect(screen.getAllByText(S.asks.replace('{name}', 'سهيلة'))).toHaveLength(1);
     fireEvent.click(screen.getByRole('button', { name: S.allow }));
-    expect(apiSend).toHaveBeenCalledWith('POST', SHARE_PATH, { allow: true });
+    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/L1/room/participants/guest-1/share', {
+      allow: true,
+    });
     act(() =>
       c.push({
         tiles: [
@@ -79,7 +80,11 @@ describe('«اطلب مشاركة الشاشة»', () => {
       }),
     );
     fireEvent.click(await screen.findByRole('button', { name: S.stop.replace('{name}', 'سهيلة') }));
-    expect(apiSend).toHaveBeenLastCalledWith('POST', SHARE_PATH, { allow: false });
+    expect(apiSend).toHaveBeenLastCalledWith(
+      'POST',
+      '/lessons/L1/room/participants/guest-1/share',
+      { allow: false },
+    );
   });
 
   it('«رفض» sends share-denied naming the guest and clears the prompt', async () => {
