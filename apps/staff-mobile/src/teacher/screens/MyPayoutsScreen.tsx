@@ -1,6 +1,6 @@
 import { payoutStatusStyle, type PayoutView } from '@ab/money';
 import { router } from 'expo-router';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 import {
   t,
   shape,
@@ -10,6 +10,7 @@ import {
   BackButton,
   EmptyState,
   ErrorState,
+  LazyList,
   Screen,
   ScreenHeader,
   StatusChip,
@@ -51,9 +52,11 @@ export function MyPayoutsScreen() {
         title={t.earnings.monthly}
         leading={<BackButton onPress={() => router.back()} />}
       />
-      <FlatList
-        style={{ flex: 1 }}
-        contentContainerStyle={{ gap: 12, paddingBottom: 24 }}
+      <LazyList
+        inset={false}
+        gap={12}
+        tabBar={false}
+        endSpace={24}
         data={payouts.data ?? []}
         keyExtractor={(p) => p.id}
         renderItem={({ item }) => <PayoutCard payout={item} />}

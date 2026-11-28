@@ -4,19 +4,39 @@ import { FlatList, StyleSheet } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { AT_NEWEST, MessageList } from '@/inbox/messages/components/MessageList/MessageList';
-import { cachedThread, delivered, detail, inbound, message, PHONE } from '@/inbox/shared/thread-fixtures';
+import {
+  cachedThread,
+  delivered,
+  detail,
+  inbound,
+  message,
+  PHONE,
+} from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
+import { mockCall } from '@ab/testing/mock-call';
 
 // Every mobile chat opens on the newest
 // message. Inverted, so offset 0 is exactly the newest: no scrollToEnd aimed at a guessed height.
+const mockApi = mockCall();
+mockApi.onRead(async () => ({ id: 'u1', role: 'admin', permissions: [] }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 type ThreadQuery = ReturnType<typeof useThread>;
-const OLD = message({ id: 'm0', direction: 'inbound', body: 'رسالة قديمة', created_at: '2026-09-29T10:00:00Z' });
-const LATER = message({ id: 'm4', direction: 'inbound', body: 'شكرًا', created_at: '2026-10-02T08:20:00Z' });
+const OLD = message({
+  id: 'm0',
+  direction: 'inbound',
+  body: 'رسالة قديمة',
+  created_at: '2026-09-29T10:00:00Z',
+});
+const LATER = message({
+  id: 'm4',
+  direction: 'inbound',
+  body: 'شكرًا',
+  created_at: '2026-10-02T08:20:00Z',
+});
 
 /** pages[0] is the newest page, as useThread caches it. */
 function stub(
@@ -37,8 +57,12 @@ function stub(
   } as unknown as ThreadQuery;
 }
 const show = (query: ThreadQuery) => renderWithQuery(<MessageList phone={PHONE} query={query} />);
-const rowIds = () => screen.getAllByTestId(/^message-row-/).map((n) => String(n.props.testID).replace('message-row-', ''));
-const gapOf = (id: string) => StyleSheet.flatten(screen.getByTestId(`message-row-${id}`).props.style).paddingTop;
+const rowIds = () =>
+  screen
+    .getAllByTestId(/^message-row-/)
+    .map((n) => String(n.props.testID).replace('message-row-', ''));
+const gapOf = (id: string) =>
+  StyleSheet.flatten(screen.getByTestId(`message-row-${id}`).props.style).paddingTop;
 
 afterEach(() => jest.restoreAllMocks());
 
@@ -56,7 +80,9 @@ test('opens on the newest: an inverted list, newest first, never a guessed scrol
 });
 
 test('a message she sends brings her to the newest; one that comes in, or an older page, does not', async () => {
-  const toOffset = jest.spyOn(FlatList.prototype, 'scrollToOffset').mockImplementation(() => undefined);
+  const toOffset = jest
+    .spyOn(FlatList.prototype, 'scrollToOffset')
+    .mockImplementation(() => undefined);
   const view = await show(stub([[inbound]]));
   expect(toOffset).not.toHaveBeenCalled();
   await view.rerender(<MessageList phone={PHONE} query={stub([[inbound, delivered]])} />);
@@ -70,9 +96,21 @@ test('a message she sends brings her to the newest; one that comes in, or an old
 });
 
 test("a job's row or a colleague's reply that lands newest leaves her where she is", async () => {
-  const toOffset = jest.spyOn(FlatList.prototype, 'scrollToOffset').mockImplementation(() => undefined);
-  const job = message({ id: 'm5', status: 'sent', automatic: true, created_at: '2026-10-02T08:30:00Z' });
-  const colleague = message({ id: 'm6', status: 'sent', sender_name: 'سارة', created_at: '2026-10-02T08:40:00Z' });
+  const toOffset = jest
+    .spyOn(FlatList.prototype, 'scrollToOffset')
+    .mockImplementation(() => undefined);
+  const job = message({
+    id: 'm5',
+    status: 'sent',
+    automatic: true,
+    created_at: '2026-10-02T08:30:00Z',
+  });
+  const colleague = message({
+    id: 'm6',
+    status: 'sent',
+    sender_name: 'سارة',
+    created_at: '2026-10-02T08:40:00Z',
+  });
   const view = await show(stub([[inbound]]));
   await view.rerender(<MessageList phone={PHONE} query={stub([[inbound, job]])} />);
   await view.rerender(<MessageList phone={PHONE} query={stub([[inbound, job, colleague]])} />);
@@ -82,11 +120,18 @@ test("a job's row or a colleague's reply that lands newest leaves her where she 
 test("an empty chat keeps its empty state upright: the wrapper takes the inverted list's flip back", async () => {
   await show(stub([[]]));
   expect(screen.getByText(t.inbox.empty)).toBeTruthy();
-  expect(StyleSheet.flatten(screen.getByTestId('message-empty').props.style).transform).toContainEqual({ scaleY: -1 });
+  expect(
+    StyleSheet.flatten(screen.getByTestId('message-empty').props.style).transform,
+  ).toContainEqual({ scaleY: -1 });
 });
 
 test('the gap over a message comes from the older one above it: none, same side, side change', async () => {
-  const again = message({ id: 'm1b', direction: 'inbound', body: 'وأختها أيضًا', created_at: '2026-10-02T08:01:00Z' });
+  const again = message({
+    id: 'm1b',
+    direction: 'inbound',
+    body: 'وأختها أيضًا',
+    created_at: '2026-10-02T08:01:00Z',
+  });
   await show(stub([[inbound, again, delivered]]));
   expect(gapOf(inbound.id)).toBe(0);
   expect(gapOf(again.id)).toBe(4);

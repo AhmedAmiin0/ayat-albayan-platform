@@ -25,6 +25,23 @@ describe('Tabs badge and followSelected', () => {
     Reflect.deleteProperty(HTMLElement.prototype, 'scrollBy');
   });
 
+  it('a horizontal strip follows its selected tab by default; a deep link opens it in view', () => {
+    const scrollBy = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollBy', { value: scrollBy, configurable: true });
+    render(<Tabs label="t" tabs={TABS} value="chat" onChange={vi.fn()} />);
+    expect(scrollBy).toHaveBeenCalledWith({ left: 0 });
+    Reflect.deleteProperty(HTMLElement.prototype, 'scrollBy');
+  });
+
+  it('a strip can opt out, and a vertical fihris does not follow unless asked', () => {
+    const scrollBy = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollBy', { value: scrollBy, configurable: true });
+    render(<Tabs label="t" tabs={TABS} value="chat" onChange={vi.fn()} followSelected={false} />);
+    render(<Tabs label="v" tabs={TABS} value="chat" onChange={vi.fn()} orientation="vertical" />);
+    expect(scrollBy).not.toHaveBeenCalled();
+    Reflect.deleteProperty(HTMLElement.prototype, 'scrollBy');
+  });
+
   it('keepInStrip does nothing without a strip that scrolls', () => {
     expect(() => keepInStrip(null)).not.toThrow();
     expect(() => keepInStrip(document.createElement('button'))).not.toThrow();

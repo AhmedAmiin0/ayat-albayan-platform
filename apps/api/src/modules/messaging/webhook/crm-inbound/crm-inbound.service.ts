@@ -38,7 +38,7 @@ const WITH_FILE: ReadonlySet<string> = new Set([
   'image', 'audio', 'voice', 'video', 'document', 'sticker',
 ]);
 
-/** The wait before attempt `n` again: 30 s doubling, at most an hour. */
+/** The wait after `n` earlier failures: 30 s doubling, at most an hour. */
 export const retryAfterMs = (n: number): number =>
   Math.min(FIRST_RETRY_MS * 2 ** Math.min(n, 20), MAX_RETRY_MS);
 
@@ -107,7 +107,7 @@ export class CrmInbound {
   /** Kept for another try (its own failure is only logged: the row stays due for the next pass). */
   private async later(row: CrmQueueRow, at: { now: Date; error: string }): Promise<void> {
     const attempts = row.attempts + 1;
-    const nextAt = new Date(at.now.getTime() + retryAfterMs(attempts));
+    const nextAt = new Date(at.now.getTime() + retryAfterMs(row.attempts));
     this.log.warn(`crm inbound ${row.wa_message_id.slice(-8)}: try ${String(attempts)}: ${at.error}`);
     try {
       await this.repo.retry({ waMessageId: row.wa_message_id, attempts, nextAt, error: at.error });

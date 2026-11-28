@@ -34,6 +34,7 @@
     "@tanstack/react-query-persist-client": "^5.104.0",
     "expo": "~57.0.26",
     "expo-audio": "~57.0.5",
+    "expo-checkbox": "~57.0.0",
     "expo-constants": "~57.0.20",
     "expo-device": "~57.0.2",
     "expo-document-picker": "~57.0.3",

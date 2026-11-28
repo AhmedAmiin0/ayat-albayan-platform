@@ -1,76 +1,95 @@
-import { packageWords, priceList, type PriceList, type Quote } from '@ab/money';
 import { describe, expect, it } from 'vitest';
 import { ar } from '@/common/infra/i18n/server-text';
-import {
-  countryNameAr,
-  priceListPdfModel,
-} from '@/modules/finance/pricing/list-pdf/price-list-pdf.model';
+import { priceListPdfModel } from '@/modules/finance/pricing/list-pdf/price-list-pdf.model';
+import { aPriceList } from './price-list.builder';
 
-const NOW = new Date('2030-03-31T22:30:00Z');
 const P = ar.pricing;
-const list = (o: { discount: number; rounding?: 'up' | 'down' }) =>
-  priceList({ country: 'KW', students: 2, ...o });
-const kwd = (amount: number) => `${amount} ${P.currencies.KWD}`;
+const D = P.pdf;
+const CONTACT = { whatsapp: '+000 00 000 0000', site: 'example.test' };
+const at = { country: 'QA', contact: CONTACT };
 
-function quoteAt(source: PriceList, group: number, row: number): Quote {
-  const q = source.groups[group]?.packages[row];
-  if (!q) throw new Error(`no package ${group}/${row}`);
-  return q;
-}
-
-describe('priceListPdfModel', () => {
-  it('lists every package of every duration, then the weekly one', () => {
-    const source = list({ discount: 0 });
-    const model = priceListPdfModel(source, { country: 'KW', now: NOW });
-    expect(model.groups).toHaveLength(source.groups.length + 1);
-    const names = model.groups.slice(0, -1).map((g) => g.rows.map((r) => r.name));
-    const expected = source.groups.map((g) => g.packages.map((q) => packageWords(q, P).name));
-    expect(names).toEqual(expected);
-    expect(model.groups.at(-1)).toMatchObject({ title: P.pdf.weekly });
+describe('priceListPdfModel: the main table', () => {
+  it('has one row per monthly tier, one price column per lesson length', () => {
+    const model = priceListPdfModel(aPriceList().build(), at);
+    expect(model.durations).toEqual(['30', '45', '60']);
+    expect(model.rows.map((r) => r.name)).toEqual(
+      (['starter', 'standard', 'premium', 'bulk'] as const).map((id) => P.packages[id].name),
+    );
+    expect(model.rows.every((r) => r.prices.length === 3)).toBe(true);
   });
 
-  it('without a discount has one price per row, the list total in the currency', () => {
-    const source = list({ discount: 0 });
-    const model = priceListPdfModel(source, { country: 'KW', now: NOW });
-    expect(model.discount).toBeNull();
-    expect(model.groups[0]?.rows[0]).toEqual({
-      name: P.packages.starter.name,
-      lessons: P.packages.starter.sessions,
-      before: null,
-      after: kwd(quoteAt(source, 0, 0).afterDiscount),
-    });
+  it('a tier the catalog lacks has no row', () => {
+    const model = priceListPdfModel(aPriceList().without('premium', 'monthly').build(), at);
+    expect(model.rows.map((r) => r.name)).not.toContain(P.packages.premium.name);
+    expect(model.rows).toHaveLength(3);
   });
 
-  it('with a discount strikes the total and shows the rounded price after it', () => {
-    const source = list({ discount: 15, rounding: 'up' });
-    const model = priceListPdfModel(source, { country: 'KW', now: NOW });
-    const q = quoteAt(source, 2, 3);
-    expect(model.discount).toBe(P.pdf.discount.replace('{pct}', '15'));
-    expect(model.groups[2]?.rows[3]).toMatchObject({
-      before: kwd(q.total),
-      after: kwd(q.afterDiscount),
-    });
-    expect(q.afterDiscount).not.toBe(q.total);
-  });
-
-  it('names the currency and dates the issue on the Riyadh calendar', () => {
-    const model = priceListPdfModel(list({ discount: 0 }), { country: 'KW', now: NOW });
-    expect(model).toMatchObject({
-      country: P.countries.KW,
-      currency: `${P.pdf.currencyNames.KWD} (${P.currencies.KWD})`,
-      issued: '2030-04-01',
-      students: 2,
-    });
+  it('marks the popular and the best-value tier, with their words and cadence', () => {
+    const [starter, standard, , bulk] = priceListPdfModel(aPriceList().build(), at).rows;
+    expect(starter).toMatchObject({ tone: null, cadence: D.cadence.starter });
+    expect(standard).toMatchObject({ tone: 'popular', tagline: P.packages.standard.tagline });
+    expect(bulk).toMatchObject({ tone: 'featured', lessons: P.packages.bulk.sessions });
   });
 });
 
-describe('countryNameAr', () => {
-  it('a site country by the calculator name, another by its Arabic region name', () => {
-    expect(countryNameAr('SA')).toBe(P.countries.SA);
-    expect(countryNameAr('EG')).toBe(new Intl.DisplayNames(['ar'], { type: 'region' }).of('EG'));
+describe('priceListPdfModel: discount on and off', () => {
+  it('without a discount: no pill, no struck price, the whole-package caption', () => {
+    const model = priceListPdfModel(aPriceList().build(), at);
+    expect(model.discount).toBeNull();
+    expect(model.caption).toBe(D.wholePackage);
+    expect(model.rows[0]?.prices[0]).toEqual({ now: '1,030', was: null });
+    expect(model.weekly?.tiles[0]?.price.was).toBeNull();
   });
 
-  it('no country is the calculator other-country label', () => {
-    expect(countryNameAr(undefined)).toBe(P.otherCountry);
+  it('with a discount: the pill, the caption and every old total struck', () => {
+    const model = priceListPdfModel(aPriceList().discounted(12).build(), at);
+    expect(model.discount).toBe(D.discount.replace('{pct}', '12'));
+    expect(model.caption).toBe(`${D.afterDiscount.replace('{pct}', '12')} — ${D.wholePackage}`);
+    expect(model.rows[1]?.prices[2]).toEqual({ now: '1,153', was: '1,160' });
+    expect(model.monthly?.tiles[0]?.price).toEqual({ now: '1,423', was: '1,430' });
+  });
+
+  it('says for how many students the prices are when more than one', () => {
+    const model = priceListPdfModel(aPriceList().forStudents(3).build(), at);
+    expect(model.caption).toBe(`${D.wholePackage} · ${D.forStudents.replace('{n}', '3')}`);
+  });
+});
+
+describe('priceListPdfModel: cards, header and footer', () => {
+  it('the weekly card has one price, the monthly one a tile per lesson length', () => {
+    const model = priceListPdfModel(aPriceList().build(), at);
+    expect(model.weekly).toMatchObject({ name: P.packages.weekly.name });
+    expect(model.weekly?.tiles).toHaveLength(1);
+    expect(model.monthly?.tiles.map((t) => t.duration)).toEqual(
+      (['30', '45', '60'] as const).map((m) =>
+        D.lessonMinutes.replace('{duration}', P.durations[m]),
+      ),
+    );
+  });
+
+  it('hides the monthly card when the catalog lacks it', () => {
+    expect(priceListPdfModel(aPriceList().without('monthly').build(), at).monthly).toBeNull();
+  });
+
+  it('names the country with its flag, the currency and its symbol', () => {
+    const model = priceListPdfModel(aPriceList().build(), at);
+    expect(model.flag).toBe('🇶🇦');
+    expect(model.symbol).toBe(P.currencies.QAR);
+    expect(model.pricedIn).toBe(
+      D.pricedIn
+        .replace('{country}', P.countries.QA)
+        .replace('{currency}', D.currencyNames.QAR)
+        .replace('{symbol}', P.currencies.QAR),
+    );
+  });
+
+  it('a list without a country has no flag and the other-country name', () => {
+    const model = priceListPdfModel(aPriceList().build(), { ...at, country: undefined });
+    expect(model.flag).toBe('');
+    expect(model.pricedIn.startsWith(P.otherCountry)).toBe(true);
+  });
+
+  it('carries the academy contact from the settings', () => {
+    expect(priceListPdfModel(aPriceList().build(), at).contact).toEqual(CONTACT);
   });
 });

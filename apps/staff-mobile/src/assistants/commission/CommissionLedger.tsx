@@ -1,8 +1,8 @@
 import { sumByCurrency } from '@ab/core';
 import { ASSISTANT_COMMISSION_STATUSES } from '@ab/money';
 import { useState } from 'react';
-import { FlatList, View } from 'react-native';
-import { t } from '@ab/mobile-kit';
+import { View } from 'react-native';
+import { LazyList, t } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useCommissions } from '@/assistants/api/api';
 import { AssistantPills } from '@/assistants/list/AssistantPills';
@@ -28,10 +28,11 @@ export function CommissionLedger({ assistants, assistantId = '', canWrite, onNot
   const rows = list.data ?? [];
   const L = t.assistants.ledger;
   return (
-    <FlatList
+    <LazyList
       accessibilityLabel={t.assistants.tabs.commissions}
-      style={{ flex: 1 }}
-      contentContainerStyle={{ gap: 8 }}
+      inset={false}
+      gap={8}
+      tabBar={false}
       data={rows}
       keyExtractor={(c) => c.id}
       renderItem={({ item }) => <CommissionItem commission={item} canWrite={canWrite} onNotice={onNotice} />}

@@ -1,5 +1,6 @@
 import type { PriceListResponse, Rounding } from '@ab/money';
-import type { ListParams } from '../../core/keys';
+import type { pricingRoutes } from '@ab/shared';
+import type { RouteQueryContext } from '../../core/query';
 
 /** What the quote sheet chose; the list itself has every duration and package. */
 export interface PriceListChoice {
@@ -11,13 +12,9 @@ export interface PriceListChoice {
   rounding: Rounding;
 }
 
-export interface PriceListKeys {
-  /** Every cached list sits under it. */
-  all: string[];
-  of: (params: ListParams) => unknown[];
-}
+export type PriceListKeys = (typeof pricingRoutes)['list']['key'];
 
 export interface PriceListQuery {
   queryKey: unknown[];
-  queryFn: () => Promise<PriceListResponse>;
+  queryFn: (context?: RouteQueryContext) => Promise<PriceListResponse>;
 }

@@ -15,6 +15,7 @@ export { WarnLine } from './feedback/WarnLine';
 export type { WarnLineProps } from './feedback/WarnLine';
 export { StatusChip, type StatusChipProps, toneColors } from './feedback/StatusChip';
 export { AppearancePicker } from './form/AppearancePicker';
+export { Checkbox, type CheckboxProps, type CheckboxSide } from './form/Checkbox';
 export { Field, type FieldProps } from './form/Field';
 export { FormLabel } from './form/FormLabel';
 export { type FilterPill, FilterPills } from './form/FilterPills';

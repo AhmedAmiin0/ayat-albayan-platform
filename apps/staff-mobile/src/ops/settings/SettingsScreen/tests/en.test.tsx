@@ -13,9 +13,13 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
+function mockAnswer(p: string) {
+  return mockNumbersAnswer(p) ?? (p === '/admin/notifications' ? mockCatalogue : mockSettings);
+}
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async (p: string) => mockNumbersAnswer(p) ?? (p === '/admin/notifications' ? mockCatalogue : mockSettings),
+  apiFetch: async (p: string) => mockAnswer(p),
+  call: async ({ path }: { path: string }) => mockAnswer(path),
 }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: () => true, push: jest.fn() } }));
 
