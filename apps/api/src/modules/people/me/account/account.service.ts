@@ -34,12 +34,17 @@ export class AccountService {
 
   /** R-ACC-01. */
   async profile(user: AuthUser): Promise<AccountProfile> {
+    return asResponse(accountProfileSchema, await this.current(user));
+  }
+
+  /** A write's answer: the profile it just wrote, not checked (the write already ran). */
+  async current(user: AuthUser): Promise<AccountProfile> {
     const row = await this.store.get(user.id);
     if (!row) throw notFound('profile_not_found');
     const email = (await this.auth.emailOf(user.id)) ?? user.email;
     const avatar_url = row.avatar_path ? await this.files.url(row.avatar_path) : null;
     const avatar_seed = row.teacher_id ?? row.id;
-    return asResponse(accountProfileSchema, {
+    return {
       id: row.id,
       full_name: row.full_name,
       email,
@@ -47,7 +52,7 @@ export class AccountService {
       avatar_url,
       avatar_seed,
       role: row.role,
-    });
+    };
   }
 
   /** R-ACC-02: name and/or phone; 409 phone_taken. */
@@ -59,14 +64,14 @@ export class AccountService {
         throw conflict('phone_taken');
     }
     await this.store.update(user.id, patch);
-    return this.profile(user);
+    return this.current(user);
   }
 
   /** R-ACC-03: confirmed at once (staging has no SMTP); 409 email_taken. */
   async changeEmail(user: AuthUser, input: EmailChange): Promise<AccountProfile> {
     await this.checkPassword(user, { password: input.current_password });
     await this.auth.update(user.id, { email: input.email });
-    return this.profile(user);
+    return this.current(user);
   }
 
   /**

@@ -14,7 +14,7 @@ import { notFound } from '@/common/http/errors';
 import { asResponse } from '@/common/http/returns';
 import { StaffPhotos } from '@/common/storage/avatars/staff-photos';
 import { UserAccess } from './users.access';
-import { toUserDetail, toUserView } from './users.mapper';
+import { toUserDetail, toUserView, userDetailOf } from './users.mapper';
 import { assertMayList, canAssign, type Actor } from './users.rules';
 import { USER_STORE, type UserRow, type UserStore } from './store/users.store';
 
@@ -41,13 +41,17 @@ export class UsersService {
   }
 
   async get(id: string): Promise<UserDetail> {
-    return this.detail(await this.row(id));
+    const row = await this.row(id);
+    return toUserDetail(row, await this.photoOf(row));
   }
 
-  /** The row with its signed photo. */
+  /** A write's answer: the row it just wrote, with its signed photo. */
   async detail(row: UserRow): Promise<UserDetail> {
-    const photos = await this.photos.ofProfiles([row.id]);
-    return toUserDetail(row, photos.get(row.id) ?? null);
+    return userDetailOf(row, await this.photoOf(row));
+  }
+
+  private async photoOf(row: UserRow): Promise<string | null> {
+    return (await this.photos.ofProfiles([row.id])).get(row.id) ?? null;
   }
 
   /** 403 permission_not_held unless the actor holds that table's write permission (students.write…). */
