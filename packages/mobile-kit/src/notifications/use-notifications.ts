@@ -1,6 +1,6 @@
 import type { NotificationsPage } from '@ab/shared';
 import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '../lib/http/api';
+import { apiSend, call } from '../lib/http/api';
 import { markedRead } from './notifications-cache';
 
 // The bell (R-NOT-01): GET /me/notifications (newest 20, polled) and POST /me/notifications/read.
@@ -14,7 +14,7 @@ const NOTIFICATIONS_PATH = '/me/notifications?page=1&pageSize=20';
 /** The bell's query: the newest page and the unread count (useBellSignal rides the same one). */
 export const notificationsListQuery = queryOptions({
   queryKey: NOTIFICATIONS_LIST_KEY,
-  queryFn: () => apiFetch<NotificationsPage>(NOTIFICATIONS_PATH),
+  queryFn: () => call<NotificationsPage>({ path: NOTIFICATIONS_PATH }),
   refetchInterval: NOTIFICATIONS_POLL_MS,
 });
 

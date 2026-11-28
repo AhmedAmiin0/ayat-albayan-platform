@@ -1,11 +1,12 @@
 import { renderHook, waitFor } from '@testing-library/react-native';
 import { freshQueryClient, queryWrapper } from '../../testing/query';
 import { useMyProfile } from './my-profile';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('../http/api', () => ({
   ...jest.requireActual('../http/api'),
-  apiFetch: (...mockArgs: unknown[]) => mockApiFetch(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const role = { base: 'teacher', key: null, name_ar: null, name_en: null };
@@ -26,18 +27,18 @@ beforeEach(() => jest.clearAllMocks());
 test('outside a QueryClientProvider it stays idle and asks nothing', async () => {
   const { result } = await renderHook(() => useMyProfile());
   expect(result.current.fetchStatus).toBe('idle');
-  expect(mockApiFetch).not.toHaveBeenCalled();
+  expect(mockApi.reads()).toHaveLength(0);
 });
 
 test('reads GET /me/profile through its route and keeps the parsed answer', async () => {
-  mockApiFetch.mockResolvedValue(profile);
+  mockApi.onRead(() => profile);
   const { result } = await readProfile();
   await waitFor(() => expect(result.current.data).toEqual(profile));
-  expect(mockApiFetch).toHaveBeenCalledWith('/me/profile');
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/me/profile' });
 });
 
 test('an answer that breaks the shared schema is an error, not data', async () => {
-  mockApiFetch.mockResolvedValue({ id: 'p1', full_name: 'Huda Salem' });
+  mockApi.onRead(() => ({ id: 'p1', full_name: 'Huda Salem' }));
   const { result } = await readProfile();
   await waitFor(() => expect(result.current.isError).toBe(true));
   expect(result.current.data).toBeUndefined();

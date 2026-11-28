@@ -5,14 +5,13 @@ import { t } from '../../../lib/i18n/i18n';
 import { freshQueryClient, renderWithQuery } from '../../../testing/query';
 import { ChannelThread } from '../ChannelThread';
 import { channelMessage, channelPage } from '../../testing/channel-fixtures';
+import { mockCall } from '@ab/testing/mock-call';
 
 // Read marks only while the thread is seen (focused and the app in the foreground).
-const mockApiFetch = jest.fn();
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('../../../lib/http/api', () => ({
   ...jest.requireActual('../../../lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const c = t.studentChannel;
@@ -33,10 +32,10 @@ const reads = {
 };
 
 beforeEach(() => {
-  mockApiFetch
-    .mockReset()
-    .mockImplementation(async (path: string) => (path.endsWith('/reads') ? reads : page));
-  mockApiSend.mockReset().mockResolvedValue({});
+  mockApi.reset('read');
+  mockApi.onRead(async ({ path }) => (path.endsWith('/reads') ? reads : page));
+  mockApi.reset('write');
+  mockApi.onWrite(() => ({}));
 });
 
 const open = () =>
@@ -50,21 +49,24 @@ test('a long press on my ticks: who read it (with the time) and who not yet', as
   await fireEvent(await screen.findByTestId('ticks-sent'), 'longPress');
   expect(await screen.findByText(`أم سلمى · ${c.roles.guardian}`)).toBeTruthy();
   expect(screen.getByText(`سلمى · ${c.roles.student}`)).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/channels/s1/messages/m3/reads');
+  expect(mockApi.reads()).toContainEqual({
+    method: 'GET',
+    path: '/teachers/me/channels/s1/messages/m3/reads',
+  });
 });
 
 test('the band sits over the first message after the page’s mark, and the mark moves on', async () => {
   const marked = { ...page, my_last_read_at: '2026-10-27T09:30:00.000Z' };
-  mockApiFetch.mockImplementation(async (path: string) =>
-    path.endsWith('/reads') ? reads : marked,
-  );
+  mockApi.onRead(async ({ path }) => (path.endsWith('/reads') ? reads : marked));
   const client = freshQueryClient();
   await renderWithQuery(<ChannelThread refs={{ audience: 'teacher', studentId: 's1' }} />, client);
   expect(await screen.findByText(c.unread.replace('{n}', '1'))).toBeTruthy();
   const at = '2026-10-27T10:05:00.000Z';
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', READ_PATH, { at }));
+  await waitFor(() =>
+    expect(mockApi.writes()).toContainEqual({ method: 'POST', path: READ_PATH, body: { at } }),
+  );
   // A refetch brings the moved mark: the band stays where it was when the chat opened.
-  mockApiFetch.mockResolvedValue({ ...marked, my_last_read_at: at });
+  mockApi.onRead(() => ({ ...marked, my_last_read_at: at }));
   await act(() => client.invalidateQueries());
   expect(screen.getByText(c.unread.replace('{n}', '1'))).toBeTruthy();
 });
@@ -84,10 +86,14 @@ test('in the background the thread is not marked read', async () => {
   Object.defineProperty(AppState, 'currentState', { value: 'background', configurable: true });
   await open();
   expect(await screen.findByText('جديدة')).toBeTruthy();
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
   await act(async () => listeners.forEach((fn) => fn('active')));
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', READ_PATH, expect.anything()),
+    expect(mockApi.writes()).toContainEqual({
+      method: 'POST',
+      path: READ_PATH,
+      body: expect.anything(),
+    }),
   );
   Object.defineProperty(AppState, 'currentState', { value: 'active', configurable: true });
 });
@@ -95,12 +101,10 @@ test('in the background the thread is not marked read', async () => {
 describe('the owning assistant (sales): a monitor on a closed chat', () => {
   const SALES_READ = '/sales/students/s1/channel/read';
   const asSales = async (over: Partial<ChannelPage>) => {
-    mockApiFetch.mockImplementation(async (path: string) =>
-      path.endsWith('/reads') ? reads : { ...page, ...over },
-    );
+    mockApi.onRead(async ({ path }) => (path.endsWith('/reads') ? reads : { ...page, ...over }));
     const refs = { audience: 'sales', studentId: 's1' } as const;
     await renderWithQuery(<ChannelThread refs={refs} />, freshQueryClient());
-    await waitFor(() => expect(mockApiFetch).toHaveBeenCalled());
+    await waitFor(() => expect(mockApi.reads()).not.toHaveLength(0));
     await act(async () => undefined);
   };
 
@@ -109,12 +113,18 @@ describe('the owning assistant (sales): a monitor on a closed chat', () => {
     { open: false, read_only: false },
   ])('a closed chat never calls the read endpoint (%o)', async (over) => {
     await asSales(over);
-    expect(mockApiSend).not.toHaveBeenCalledWith('POST', SALES_READ, expect.anything());
+    expect(mockApi.writes()).not.toContainEqual({
+      method: 'POST',
+      path: SALES_READ,
+      body: expect.anything(),
+    });
   });
 
   test('an open chat marks it read up to the newest message', async () => {
     await asSales({ open: true, read_only: false });
     const at = '2026-10-27T10:05:00.000Z';
-    await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', SALES_READ, { at }));
+    await waitFor(() =>
+      expect(mockApi.writes()).toContainEqual({ method: 'POST', path: SALES_READ, body: { at } }),
+    );
   });
 });

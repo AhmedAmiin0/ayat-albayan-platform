@@ -7,11 +7,12 @@ import {
   usePublicConfig,
   useUploadMaxBytes,
 } from './public-config';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 jest.mock('../http/api', () => ({
   ...jest.requireActual('../http/api'),
-  apiFetch: (...mockArgs: unknown[]) => mockApiFetch(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 beforeEach(() => jest.clearAllMocks());
@@ -24,7 +25,7 @@ test('keeps the cache key and the 5-minute stale time the admin save invalidates
 test('outside a QueryClientProvider: the registry defaults, and no request', async () => {
   const { result } = await renderHook(() => usePublicConfig());
   expect(result.current).toEqual(PUBLIC_SETTING_DEFAULTS);
-  expect(mockApiFetch).not.toHaveBeenCalled();
+  expect(mockApi.reads()).toHaveLength(0);
 });
 
 test('reads GET /settings/public; the hooks follow the academy values', async () => {
@@ -34,17 +35,17 @@ test('reads GET /settings/public; the hooks follow the academy values', async ()
     upload_max_mb: 3,
     custom: {},
   };
-  mockApiFetch.mockResolvedValue(answer);
+  mockApi.onRead(() => answer);
   const wrapper = queryWrapper(freshQueryClient());
   const useRead = () => ({ win: useJoinWindow(), max: useUploadMaxBytes() });
   const { result } = await renderHook(useRead, { wrapper });
   await waitFor(() => expect(result.current.win.opensBeforeMin).toBe(45));
   expect(result.current.max).toBe(3 * 1024 * 1024);
-  expect(mockApiFetch).toHaveBeenCalledWith('/settings/public');
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/settings/public' });
 });
 
 test('odd values in the answer: their defaults stand, the read still succeeds', async () => {
-  mockApiFetch.mockResolvedValue({ upload_max_mb: 'ten', family_chat_enabled: 'yes' });
+  mockApi.onRead(() => ({ upload_max_mb: 'ten', family_chat_enabled: 'yes' }));
   const client = freshQueryClient();
   const wrapper = queryWrapper(client);
   const { result } = await renderHook(() => usePublicConfig(), { wrapper });

@@ -1,10 +1,13 @@
-import { ApiError, apiFetch, apiSend, toQueryString } from './api';
+import { ApiError, toQueryString, call } from './api';
 
 jest.mock('./supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } },
 }));
 jest.mock('./env', () => ({ env: { apiUrl: 'http://api' } }));
-jest.mock('./client-tag', () => ({ CLIENT_HEADER: 'X-AB-Client', mobileClientTag: () => 'mobile/0.2.0' }));
+jest.mock('./client-tag', () => ({
+  CLIENT_HEADER: 'X-AB-Client',
+  mobileClientTag: () => 'mobile/0.2.0',
+}));
 
 const mockFetch = jest.fn();
 beforeEach(() => {
@@ -17,7 +20,7 @@ const reply = (status: number, body?: unknown) =>
 
 test('GET sends the bearer token and parses JSON', async () => {
   mockFetch.mockResolvedValue(reply(200, { role: 'admin' }));
-  expect(await apiFetch('/auth/me')).toEqual({ role: 'admin' });
+  expect(await call({ path: '/auth/me' })).toEqual({ role: 'admin' });
   const [url, init] = mockFetch.mock.calls[0];
   expect(url).toBe('http://api/auth/me');
   expect(new Headers(init.headers).get('Authorization')).toBe('Bearer tok');
@@ -26,14 +29,16 @@ test('GET sends the bearer token and parses JSON', async () => {
 
 test('non-2xx throws ApiError with status and body', async () => {
   mockFetch.mockResolvedValue(reply(409, { code: 'duplicate_phone' }));
-  const err = await apiFetch('/students').catch((e: unknown) => e);
+  const err = await call({ path: '/students' }).catch((e: unknown) => e);
   expect(err).toBeInstanceOf(ApiError);
   expect(err).toMatchObject({ status: 409, body: { code: 'duplicate_phone' } });
 });
 
 test('apiSend PATCHes JSON and resolves undefined on 204', async () => {
   mockFetch.mockResolvedValue(reply(204));
-  expect(await apiSend('PATCH', '/leads/1/status', { status: 'contacted' })).toBeUndefined();
+  expect(
+    await call({ method: 'PATCH', path: '/leads/1/status', body: { status: 'contacted' } }),
+  ).toBeUndefined();
   const [, init] = mockFetch.mock.calls[0];
   expect(init.method).toBe('PATCH');
   expect(init.body).toBe('{"status":"contacted"}');

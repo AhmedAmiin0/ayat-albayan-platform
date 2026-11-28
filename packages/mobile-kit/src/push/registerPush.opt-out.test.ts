@@ -2,10 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { setPushOptOut } from './device-key';
 import { registerPush } from './registerPush';
+import { mockCall } from '@ab/testing/mock-call';
 
 // docs/50 §6: device opt-out keeps registerPush away (no prompt, no token, no PUT).
 
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('expo-device', () => ({ __esModule: true, isDevice: true }));
 jest.mock('expo-constants', () => ({
   __esModule: true,
@@ -20,7 +21,7 @@ jest.mock('./permission', () => ({ ensurePushPermission: jest.fn(async () => tru
 jest.mock('./live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
-  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 beforeEach(async () => {
@@ -32,15 +33,15 @@ test('switched off on this device: no token is fetched and nothing is PUT', asyn
   await setPushOptOut(true);
   await registerPush();
   expect(Notifications.getExpoPushTokenAsync).not.toHaveBeenCalled();
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(mockApi.writes()).toHaveLength(0);
 });
 
 test('on (the default, and always in the staff app): the token is PUT', async () => {
   await registerPush();
   expect(Notifications.getExpoPushTokenAsync).toHaveBeenCalled();
-  expect(mockApiSend).toHaveBeenCalledWith(
-    'PUT',
-    '/me/push-tokens',
-    expect.objectContaining({ token: 'ExponentPushToken[x]' }),
-  );
+  expect(mockApi.writes()).toContainEqual({
+    method: 'PUT',
+    path: '/me/push-tokens',
+    body: expect.objectContaining({ token: 'ExponentPushToken[x]' }),
+  });
 });
