@@ -32,7 +32,9 @@ export function calendarBackend() {
     .on('GET /students', () => ({ items: [], total: 0, page: 1, pageSize: 50 }))
     .on('GET /settings', () => ({ renewal_alert_remaining: 2, follow_up_hours: [2, 24, 72] }))
     .on('GET /lessons', ({ query }) =>
-      state.lessons.filter((l) => l.teacher.id === query['teacherId'] && within(l, query['from'], query['to'])),
+      state.lessons
+        .filter((l) => l.teacher.id === query['teacherId'] && within(l, query['from'], query['to']))
+        .map(answered),
     )
     .on('GET /lessons/overview', ({ query }) => ({
       from: query['from'],
@@ -45,7 +47,9 @@ export function calendarBackend() {
     .on('POST /lessons/:id/reschedule', ({ params, body }) => {
       const move = body as { scope: 'one' | 'rule'; startsAt?: string; newRule?: { startsOn: string; startTimeLocal: string } };
       const startsAt = move.startsAt ?? `${move.newRule?.startsOn}T14:00:00.000Z`;
-      const old = state.lessons.find((l) => l.id === params['id']);
+      const asked = params['id'];
+      // The week list answers uuid ids; the overview and day still answer the readable ones.
+      const old = state.lessons.find((l) => l.id === asked || answered(l).id === asked);
       if (!old) throw new Error('no such lesson');
       const moved: LessonView = { ...old, starts_at: startsAt, ends_at: new Date(Date.parse(startsAt) + 45 * MINUTE).toISOString(), status: 'scheduled' };
       state.lessons = state.lessons.map((l) => (l.id === old.id ? moved : l));

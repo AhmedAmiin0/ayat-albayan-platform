@@ -3,6 +3,7 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { pending } from '@/today/testing/fixtures';
+import { answered } from '@/today/testing/answered';
 import { TeacherCalendarScreen } from '@/calendar/screens/TeacherCalendarScreen/TeacherCalendarScreen';
 
 jest.setTimeout(120_000);
@@ -16,7 +17,7 @@ beforeEach(() => {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/teachers/t1') return { id: 't1', display_name_ar: 'أبرار', phone_e164: null, status: 'active', tz: 'Africa/Cairo' };
     if (path === '/teachers/t1/availability') return [];
-    if (path.startsWith('/lessons')) return [{ ...pending, time_edit_mode: 'edit' }];
+    if (path.startsWith('/lessons')) return [answered({ ...pending, time_edit_mode: 'move' })];
     throw new ApiError(404);
   });
   fakeNow(new Date('2026-10-01T13:20:00Z'));

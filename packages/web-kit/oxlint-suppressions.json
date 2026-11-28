@@ -72,11 +72,6 @@
       "count": 2
     }
   },
-  "src/classroom/api/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/classroom/api/moderation-api.ts": {
     "stylistic/max-len": {
       "count": 2

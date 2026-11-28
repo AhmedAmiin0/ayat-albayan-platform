@@ -650,7 +650,7 @@
   },
   "src/calendar/lib/queries.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/calendar/overview/TeacherHeader.tsx": {
@@ -2189,11 +2189,6 @@
   },
   "src/inbox/messages/reply-actions/reply-actions-context.ts": {
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/reply-actions/reply-lesson-read.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

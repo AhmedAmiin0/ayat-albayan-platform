@@ -1,7 +1,9 @@
 import type { AvailabilityRow, Teacher } from '@ab/shared';
-import type { LessonView } from '@ab/schedule';
+import { lessonListCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+
+const lists = lessonListCalls({ apiFetch, apiSend });
 
 // Calendar reads. Keys are the API path's segments (lib/query-keys), so a lesson change that
 // invalidates ['lessons'] refreshes the week, and the app's persisted cache keeps the last week
@@ -17,7 +19,7 @@ interface WeekParams {
 export function useWeekLessons(params: WeekParams) {
   return useQuery({
     queryKey: [...pathKey('/lessons'), 'list', params],
-    queryFn: () => apiFetch<LessonView[]>(`/lessons${toQueryString({ ...params })}`),
+    queryFn: () => lists.list(params),
   });
 }
 
