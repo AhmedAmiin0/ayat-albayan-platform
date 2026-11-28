@@ -34,3 +34,16 @@ export interface ChartFigureView {
   view: ChartView;
   setView: (view: ChartView) => void;
 }
+
+export interface TableSeries {
+  label: string;
+  values: readonly number[];
+}
+
+export interface TableOfInput {
+  /** The first column's header, e.g. «Month». */
+  head: string;
+  rows: readonly { key: string; label: string }[];
+  series: readonly TableSeries[];
+  format?: (value: number) => string;
+}
