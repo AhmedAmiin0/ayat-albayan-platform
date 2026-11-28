@@ -15,7 +15,8 @@ const code = sql.replace(/--.*$/gm, '');
 
 describe('migration 20261024000632: notification_rules', () => {
   it('sorts after 20261023000630 (config expand)', () => {
-    expect(FILE > '20261023000630_config_expand.sql').toBe(true);
+    const before = '20261023000630_config_expand.sql';
+    expect([FILE, before].toSorted()).toEqual([before, FILE]);
   });
 
   it('the table: key format, enabled not null, channels subset, timing size, number_id set null', () => {
