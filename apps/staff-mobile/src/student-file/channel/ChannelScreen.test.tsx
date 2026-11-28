@@ -3,17 +3,16 @@ import { t } from '@ab/mobile-kit';
 import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { TeacherChannelScreen } from './ChannelScreen';
 import { SalesChannelScreen } from './SalesChannelScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-mockApi.onWrite(async () => ({}));
+const mockFetch = jest.fn();
 jest.mock('expo-router', () => ({
   router: { back: jest.fn() },
   useLocalSearchParams: () => ({ studentId: 's1', id: 's1' }),
 }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (path: string) => mockFetch(path),
+  apiSend: jest.fn(async () => ({})),
 }));
 
 const c = t.studentChannel;
@@ -30,8 +29,9 @@ const ANSWERS: readonly (readonly [string, unknown])[] = [
 const answer = (path: string) => ANSWERS.find(([end]) => path.endsWith(end))?.[1] ?? page;
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.onRead(async ({ path }) => answer(path));
+  mockFetch
+    .mockReset()
+    .mockImplementation(async (path: string) => answer(path));
 });
 
 test('the teacher’s chat: the student’s name, attach and the microphone (the staff port)', async () => {
@@ -39,10 +39,7 @@ test('the teacher’s chat: the student’s name, attach and the microphone (the
   expect(await screen.findByRole('header', { name: 'سلمى' })).toBeTruthy();
   expect(screen.getByLabelText(c.media.attach)).toBeTruthy();
   expect(screen.getByLabelText(c.media.record)).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({
-    method: 'GET',
-    path: '/teachers/me/channels/s1/messages',
-  });
+  expect(mockFetch).toHaveBeenCalledWith('/teachers/me/channels/s1/messages');
 });
 
 test('the seated assistant’s chat: whose chat before the student, «مغادرة», attach', async () => {

@@ -4,13 +4,12 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { MessageFile } from '@/inbox/messages/components/MessageFile';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
 // A GIF bubble: it plays inline, muted and looping, as WhatsApp.
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
 const SIGNED = 'https://storage.test/wa-media/out/a/r/gif.mp4?token=x';
@@ -22,12 +21,8 @@ const gif = message({
 });
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.onRead(() => ({
-    url: SIGNED,
-    mime: 'video/mp4',
-    expires_at: new Date(Date.now() + 3_600_000).toISOString(),
-  }));
+  mockApiFetch.mockReset();
+  mockApiFetch.mockResolvedValue({ url: SIGNED, mime: 'video/mp4', expires_at: new Date(Date.now() + 3_600_000).toISOString() });
   jest.mocked(useVideoPlayer).mockClear();
 });
 

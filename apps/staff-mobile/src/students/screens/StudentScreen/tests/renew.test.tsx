@@ -6,12 +6,11 @@ import { balanceOf, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { StudentScreen } from '@/students/screens/StudentScreen/StudentScreen';
 import { profile } from '@/students/shared/test-data';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
@@ -24,7 +23,7 @@ jest.mock('expo-router', () => ({
 }));
 
 function serve(status: StudentStatus, balance?: unknown) {
-  mockApi.onRead(async ({ path }) => {
+  mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/students/s1') return { ...profile, status };
     if (path === '/students/s1/balance' && balance) return balance;
     throw new ApiError(404);
@@ -33,7 +32,7 @@ function serve(status: StudentStatus, balance?: unknown) {
 const renew = () => screen.queryByRole('button', { name: t.students.renew });
 
 beforeEach(() => {
-  mockApi.reset('read');
+  mockApiFetch.mockReset();
   mockPush.mockReset();
 });
 
@@ -52,9 +51,7 @@ test.each(['pending_renewal', 'expired'] as const)(
     );
     await renderWithQuery(<StudentScreen />);
     await screen.findByRole('header', { name: 'هدى' });
-    await waitFor(() =>
-      expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/students/s1/balance' }),
-    );
+    await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/balance'));
     await screen.findByText(t.subscriptions.balance);
     await fireEvent.press(await screen.findByRole('button', { name: t.students.renew }));
     expect(mockPush).toHaveBeenCalledWith({
@@ -73,7 +70,7 @@ test.each(['pending_renewal', 'expired'] as const)(
 );
 
 test('hidden until the last package loads, so it never opens on the defaults', async () => {
-  mockApi.onRead(async ({ path }) =>
+  mockApiFetch.mockImplementation(async (path: string) =>
     path === '/students/s1' ? { ...profile, status: 'expired' } : new Promise(() => undefined),
   );
   await renderWithQuery(<StudentScreen />);
@@ -82,15 +79,12 @@ test('hidden until the last package loads, so it never opens on the defaults', a
 });
 
 // The admin renews ANY time; the start day is picked on the subscribe screen.
-test.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned'] as const)(
-  '%s with a package: «جدّد الاشتراك»',
-  async (status) => {
-    serve(status, balanceOf(subscription()));
-    await renderWithQuery(<StudentScreen />);
-    await screen.findByRole('header', { name: 'هدى' });
-    expect(await screen.findByRole('button', { name: t.students.renew })).toBeTruthy();
-  },
-);
+test.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned'] as const)('%s with a package: «جدّد الاشتراك»', async (status) => {
+  serve(status, balanceOf(subscription()));
+  await renderWithQuery(<StudentScreen />);
+  await screen.findByRole('header', { name: 'هدى' });
+  expect(await screen.findByRole('button', { name: t.students.renew })).toBeTruthy();
+});
 
 test('no package at all and not package-ended: no «جدّد الاشتراك»', async () => {
   serve('active', balanceOf());

@@ -3,22 +3,18 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { RegistrationCheckScreen } from '@/registration-check/screens/RegistrationCheckScreen/RegistrationCheckScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-const mockApi = mockCall();
-mockApi.onRead(async ({ path }) =>
-  path === '/auth/me'
-    ? { role: 'sales', permissions: ['students.check_registration'] }
-    : { found: false, matches: [], more: false },
-);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: async (path: string) =>
+    path === '/auth/me'
+      ? { role: 'sales', permissions: ['students.check_registration'] }
+      : { found: false, matches: [], more: false },
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
@@ -30,9 +26,7 @@ test('an English run: the registration check reads en.json', async () => {
   await renderWithQuery(<RegistrationCheckScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByRole('header', { name: en.registrationCheck.title })).toBeTruthy();
   // The form waits for /auth/me (D6) while the header is already up: wait for it, as the Arabic tests do.
-  expect(
-    await screen.findByRole('radio', { name: en.registrationCheck.byName, checked: true }),
-  ).toBeTruthy();
+  expect(await screen.findByRole('radio', { name: en.registrationCheck.byName, checked: true })).toBeTruthy();
   expect(screen.getByText(en.registrationCheck.queryHint)).toBeTruthy();
   await fireEvent.changeText(screen.getByLabelText(en.registrationCheck.query), 'Yusuf');
   await fireEvent.press(screen.getByRole('button', { name: en.registrationCheck.submit }));

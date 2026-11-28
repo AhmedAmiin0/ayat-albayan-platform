@@ -3,48 +3,24 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { TeacherStudentsScreen } from './TeacherStudentsScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({
-  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const mockApiFetch = jest.fn();
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (h: string) => mockPush(h) } }));
 
 const row = (over: Partial<TeacherStudentView>): TeacherStudentView => ({
-  ...{
-    id: 's1',
-    code: 'AB-0183',
-    name: 'سهيلة',
-    status: 'active',
-    program: 'quran',
-    level: 'جزء عمّ',
-    age: 9,
-  },
+  ...{ id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active', program: 'quran', level: 'جزء عمّ', age: 9 },
   ...{ next_lesson_at: null },
   ...over,
 });
-const SUBSCRIBED = [
-  row({}),
-  row({ id: 's2', name: 'يوسف', code: 'AB-0190', level: null, age: null }),
-];
-const TRIAL = [
-  row({
-    id: 's3',
-    name: 'بلال',
-    code: 'AB-0201',
-    status: 'trial',
-    next_lesson_at: '2026-10-05T14:00:00.000Z',
-  }),
-];
+const SUBSCRIBED = [row({}), row({ id: 's2', name: 'يوسف', code: 'AB-0190', level: null, age: null })];
+const TRIAL = [row({ id: 's3', name: 'بلال', code: 'AB-0201', status: 'trial', next_lesson_at: '2026-10-05T14:00:00.000Z' })];
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApi.onRead(async ({ path: p }) => {
-    if (p === '/teachers/me')
-      return { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
+  mockApiFetch.mockImplementation(async (p: string) => {
+    if (p === '/teachers/me') return { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
     return p.endsWith('kind=trial') ? TRIAL : SUBSCRIBED;
   });
 });
@@ -52,10 +28,7 @@ beforeEach(() => {
 test('opens on «مشتركون»: only subscribed students; a row opens their report history', async () => {
   await renderWithQuery(<TeacherStudentsScreen />);
   expect(await screen.findByText('سهيلة')).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({
-    method: 'GET',
-    path: '/teachers/me/students?kind=subscribed',
-  });
+  expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/students?kind=subscribed');
   expect(screen.queryByText('بلال')).toBeNull();
   expect(screen.getByText(/AB-0183/)).toBeTruthy();
   await fireEvent.press(screen.getByText('سهيلة'));
@@ -63,14 +36,8 @@ test('opens on «مشتركون»: only subscribed students; a row opens their r
 });
 
 test('a package-ended student (pending_renewal, expired) stays in «مشتركون» with its chip; active rows carry none', async () => {
-  mockApi.onRead(async ({ path: p }) =>
-    p === '/teachers/me'
-      ? { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] }
-      : [
-          row({}),
-          row({ id: 's4', name: 'مريم', status: 'pending_renewal' }),
-          row({ id: 's5', name: 'زيد', status: 'expired' }),
-        ],
+  mockApiFetch.mockImplementation(async (p: string) =>
+    p === '/teachers/me' ? { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } : [row({}), row({ id: 's4', name: 'مريم', status: 'pending_renewal' }), row({ id: 's5', name: 'زيد', status: 'expired' })],
   );
   await renderWithQuery(<TeacherStudentsScreen />);
   expect(await screen.findByText('مريم')).toBeTruthy();
@@ -91,9 +58,8 @@ test('«تجريبي» swaps to the trial list, with the next lesson in her time
 });
 
 test('empty and failed states', async () => {
-  mockApi.onRead(async ({ path: p }) => {
-    if (p === '/teachers/me')
-      return { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
+  mockApiFetch.mockImplementation(async (p: string) => {
+    if (p === '/teachers/me') return { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
     if (p.endsWith('kind=trial')) throw new Error('boom');
     return [];
   });
@@ -104,10 +70,8 @@ test('empty and failed states', async () => {
 });
 
 test('a paused or churned row the API still sends never shows (docs/46 D4: current students only)', async () => {
-  mockApi.onRead(async ({ path: p }) =>
-    p === '/teachers/me'
-      ? { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] }
-      : [row({}), row({ id: 's6', name: 'هند', status: 'paused' })],
+  mockApiFetch.mockImplementation(async (p: string) =>
+    p === '/teachers/me' ? { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } : [row({}), row({ id: 's6', name: 'هند', status: 'paused' })],
   );
   await renderWithQuery(<TeacherStudentsScreen />);
   expect(await screen.findByText('سهيلة')).toBeTruthy();

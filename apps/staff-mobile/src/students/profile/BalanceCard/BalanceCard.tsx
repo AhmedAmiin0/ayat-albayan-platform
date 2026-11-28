@@ -1,6 +1,15 @@
 import { cancelOffered, subscriptionStatusStyle } from '@ab/money';
 import { View } from 'react-native';
-import { pathKey, t, shape, type, useTheme, AppText, StatusChip, call } from '@ab/mobile-kit';
+import {
+  apiSend,
+  pathKey,
+  t,
+  shape,
+  type,
+  useTheme,
+  AppText,
+  StatusChip,
+} from '@ab/mobile-kit';
 import { CancelPackage } from '@/payments';
 import { StartDateEdit, UsedBeforeEdit } from '@/subscribe';
 import { packageName, paidLine, usedOf } from '@/core/lib/money/format';
@@ -61,20 +70,12 @@ export function BalanceCard({ studentId }: { studentId: string }) {
             <AppText style={small}>{paidLine(current)}</AppText>
             {cancelOffered(current) ? (
               <CancelPackage
-                cancel={(body) =>
-                  call({ method: 'POST', path: `/subscriptions/${current.id}/cancel`, body })
-                }
+                cancel={(body) => apiSend('POST', `/subscriptions/${current.id}/cancel`, body)}
                 stale={[['students', studentId], pathKey('/subscriptions')]}
               />
             ) : null}
-            <UsedBeforeEdit
-              sub={current}
-              stale={[['students', studentId], pathKey('/subscriptions')]}
-            />
-            <StartDateEdit
-              sub={current}
-              stale={[['students', studentId], pathKey('/subscriptions')]}
-            />
+            <UsedBeforeEdit sub={current} stale={[['students', studentId], pathKey('/subscriptions')]} />
+            <StartDateEdit sub={current} stale={[['students', studentId], pathKey('/subscriptions')]} />
           </>
         ) : (
           <AppText style={small}>{t.subscriptions.empty}</AppText>

@@ -4,12 +4,11 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { AdminReportScreen } from '@/ops/reports/AdminReportScreen/AdminReportScreen';
 import { report } from '@/ops/shared/fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
@@ -28,7 +27,7 @@ const content = {
 };
 
 test('a new-form report: badge, attendance, parts with range and grade, tajweed, note', async () => {
-  mockApi.onRead(() => report({ form_version: 2, content, notes: 'تحسّن واضح' }));
+  mockApiFetch.mockResolvedValue(report({ form_version: 2, content, notes: 'تحسّن واضح' }));
   await renderWithQuery(<AdminReportScreen />);
   expect(await screen.findByText(v2.admin.v2Badge)).toBeTruthy();
   expect(screen.getByText(v2.attendance.on_time)).toBeTruthy();
@@ -40,9 +39,7 @@ test('a new-form report: badge, attendance, parts with range and grade, tajweed,
 });
 
 test('absent: the attendance line and the note only', async () => {
-  mockApi.onRead(() =>
-    report({ form_version: 2, content: emptyContent(), attendance: 'absent', notes: 'نرجو الإبلاغ' }),
-  );
+  mockApiFetch.mockResolvedValue(report({ form_version: 2, content: emptyContent(), attendance: 'absent', notes: 'نرجو الإبلاغ' }));
   await renderWithQuery(<AdminReportScreen />);
   expect(await screen.findByText(v2.attendance.absent)).toBeTruthy();
   expect(screen.getByText('نرجو الإبلاغ')).toBeTruthy();
@@ -50,7 +47,7 @@ test('absent: the attendance line and the note only', async () => {
 });
 
 test('a v1 report reads as before, without the badge', async () => {
-  mockApi.onRead(() => report());
+  mockApiFetch.mockResolvedValue(report());
   await renderWithQuery(<AdminReportScreen />);
   expect(await screen.findByText(t.reports.recited)).toBeTruthy();
   expect(screen.queryByText(v2.admin.v2Badge)).toBeNull();

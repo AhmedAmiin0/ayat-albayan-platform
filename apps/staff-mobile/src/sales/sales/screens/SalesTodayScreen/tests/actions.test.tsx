@@ -4,17 +4,10 @@ import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson } from '@/sales/sales/testing/fixtures';
 import { SalesTodayScreen } from '@/sales/sales/screens/SalesTodayScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({
-  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
-}));
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), navigate: jest.fn() },
-  useLocalSearchParams: () => ({}),
-}));
+const mockApiFetch = jest.fn();
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn(), navigate: jest.fn() }, useLocalSearchParams: () => ({}) }));
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 
 // No admin action for sales (docs/16); join only on a running lesson.
@@ -27,18 +20,11 @@ const ADMIN_ACTIONS = [
   t.booking.makeup.action,
 ];
 const running = scheduleLesson({ status: 'scheduled' });
-const soon = scheduleLesson({
-  id: 'l2',
-  status: 'scheduled',
-  starts_at: '2026-10-12T15:20:00.000Z',
-  ends_at: '2026-10-12T15:50:00.000Z',
-  students: [{ id: 'st3', code: 'AB-0200', name: 'سلمى' }],
-});
+const soon = scheduleLesson({ id: 'l2', status: 'scheduled', starts_at: '2026-10-12T15:20:00.000Z', ends_at: '2026-10-12T15:50:00.000Z', students: [{ id: 'st3', code: 'AB-0200', name: 'سلمى' }] });
 
-const day = (...lessons: object[]) => mockApi.onRead(async () => ({ date: '2026-10-12', lessons }));
+const day = (...lessons: object[]) => mockApiFetch.mockImplementation(async () => ({ date: '2026-10-12', lessons }));
 const noAdminAction = () => {
-  for (const label of ADMIN_ACTIONS)
-    expect(screen.queryByRole('button', { name: new RegExp(`^${label}$`) })).toBeNull();
+  for (const label of ADMIN_ACTIONS) expect(screen.queryByRole('button', { name: new RegExp(`^${label}$`) })).toBeNull();
 };
 const salesActions = () => {
   expect(screen.getAllByRole('button', { name: /^تأكيد/ })).toHaveLength(1);
@@ -50,12 +36,11 @@ const salesActions = () => {
     expect(screen.getByRole('button', { name: label })).toBeTruthy();
   }
   // The admin's confirm reads like hers and is counted once above, so only the rest are checked.
-  for (const label of ADMIN_ACTIONS.slice(1))
-    expect(screen.queryByRole('button', { name: new RegExp(`^${label}$`) })).toBeNull();
+  for (const label of ADMIN_ACTIONS.slice(1)) expect(screen.queryByRole('button', { name: new RegExp(`^${label}$`) })).toBeNull();
 };
 
 beforeEach(() => {
-  mockApi.reset('read');
+  mockApiFetch.mockReset();
   fakeNow(new Date('2026-10-12T15:10:00.000Z'));
 });
 afterEach(() => jest.useRealTimers());

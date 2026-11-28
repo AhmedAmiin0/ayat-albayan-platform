@@ -6,13 +6,13 @@ import { clearComposerDrafts } from '@/inbox/composer/draft-store';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadsList } from '@/inbox/threads-list/ThreadsList/ThreadsList';
-import { mockCall } from '@ab/testing/mock-call';
 
 // Review 2026-10-29 #4 / C3: a half-written reply survives leaving the chat and shows on its row.
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  apiSend: jest.fn(),
 }));
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),
@@ -27,11 +27,9 @@ const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 const row = () => within(screen.getByRole('button', { name: new RegExp(NAME) }));
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.onRead(async ({ path: p }) =>
-    p.startsWith('/threads?')
-      ? { items: [OPEN], total: 1, page: 1, pageSize: 25 }
-      : detail([inbound], { thread: OPEN }),
+  mockApiFetch.mockReset();
+  mockApiFetch.mockImplementation(async (p: string) =>
+    p.startsWith('/threads?') ? { items: [OPEN], total: 1, page: 1, pageSize: 25 } : detail([inbound], { thread: OPEN }),
   );
 });
 afterEach(() => clearComposerDrafts());

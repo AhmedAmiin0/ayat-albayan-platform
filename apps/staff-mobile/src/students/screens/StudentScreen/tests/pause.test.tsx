@@ -7,12 +7,11 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { NOW, pauseState, pauseView } from '@/students/course-pause/fixtures';
 import { profile } from '@/students/shared/test-data';
 import { StudentScreen } from '@/students/screens/StudentScreen/StudentScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn(), canGoBack: () => true },
@@ -21,7 +20,7 @@ jest.mock('expo-router', () => ({
 
 const c = t.coursePause;
 const serve = (state: ReturnType<typeof pauseState>) =>
-  mockApi.onRead(async ({ path }) => {
+  mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/students/s1') return profile;
     if (path === '/students/s1/course-pause') return state;
     if (path.startsWith('/students/s1/course-pause/preview'))
@@ -30,12 +29,12 @@ const serve = (state: ReturnType<typeof pauseState>) =>
   });
 
 beforeEach(() => {
-  mockApi.reset('read');
+  mockApiFetch.mockReset();
   fakeNow(NOW);
 });
 afterEach(() => jest.useRealTimers());
 
-test("the admin's file: «إيقاف مؤقت» opens «إيقاف الدورة مؤقتًا»", async () => {
+test('the admin\'s file: «إيقاف مؤقت» opens «إيقاف الدورة مؤقتًا»', async () => {
   serve(pauseState());
   await renderWithQuery(<StudentScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: c.action }));
@@ -46,9 +45,7 @@ test("the admin's file: «إيقاف مؤقت» opens «إيقاف الدورة 
 test('paused: the banner instead of the action', async () => {
   serve(pauseState(pauseView()));
   await renderWithQuery(<StudentScreen />);
-  expect(
-    await screen.findByText(c.bannerUntil.replace('{date}', localDay('2026-11-10'))),
-  ).toBeTruthy();
+  expect(await screen.findByText(c.bannerUntil.replace('{date}', localDay('2026-11-10')))).toBeTruthy();
   expect(screen.queryByRole('button', { name: c.action })).toBeNull();
   expect(screen.getByRole('button', { name: c.resume })).toBeTruthy();
 });
@@ -56,14 +53,9 @@ test('paused: the banner instead of the action', async () => {
 test('without courses.pause: no action', async () => {
   serve(pauseState());
   const client = createTestQueryClient();
-  client.setQueryData(pathKey('/auth/me'), {
-    role: 'admin',
-    permissions: GRANTABLE_PERMISSIONS.filter((p) => p !== 'courses.pause'),
-  });
+  client.setQueryData(pathKey('/auth/me'), { role: 'admin', permissions: GRANTABLE_PERMISSIONS.filter((p) => p !== 'courses.pause') });
   await renderWithQuery(<StudentScreen />, client);
   await screen.findByRole('header', { name: profile.name });
-  await waitFor(() =>
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/students/s1/course-pause' }),
-  );
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/course-pause'));
   expect(screen.queryByRole('button', { name: c.action })).toBeNull();
 });

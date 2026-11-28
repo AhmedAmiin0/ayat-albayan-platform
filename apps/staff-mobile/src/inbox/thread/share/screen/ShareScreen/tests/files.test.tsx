@@ -4,7 +4,6 @@ import { t } from '@ab/mobile-kit';
 import { ChatFileError, sendChatFile } from '@/inbox/composer/send-file';
 import { renderShare, resolvedPdf, TEACHER } from '@/inbox/thread/share/screen/share-testing';
 import type * as ShareTestingModule from '@/inbox/thread/share/screen/share-testing';
-import { mockCall } from '@ab/testing/mock-call';
 
 type ShareTesting = typeof ShareTestingModule;
 
@@ -13,13 +12,9 @@ jest.mock('expo-sharing', () => ({
   getResolvedSharedPayloadsAsync: jest.fn(),
   clearSharedPayloads: jest.fn(),
 }));
-const mockApi = mockCall();
-mockApi.onRead(async ({ path }) =>
-  jest.requireActual<ShareTesting>('@/inbox/thread/share/screen/share-testing').answerThreads(path),
-);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: async (path: string) => jest.requireActual<ShareTesting>('@/inbox/thread/share/screen/share-testing').answerThreads(path),
 }));
 jest.mock('@/inbox/composer/send-file', () => ({
   ...jest.requireActual('@/inbox/composer/send-file'),
@@ -33,9 +28,9 @@ jest.mock('expo-router', () => ({
 const s = t.inbox.share;
 const send = jest.mocked(sendChatFile);
 const share = (...names: string[]) => {
-  jest
-    .mocked(Sharing.getSharedPayloads)
-    .mockReturnValue(names.map((n) => ({ value: `content://provider/${n}`, shareType: 'file' })));
+  jest.mocked(Sharing.getSharedPayloads).mockReturnValue(
+    names.map((n) => ({ value: `content://provider/${n}`, shareType: 'file' })),
+  );
   const resolved = names.map(resolvedPdf);
   jest.mocked(Sharing.getResolvedSharedPayloadsAsync).mockResolvedValue(resolved as never);
 };
@@ -50,9 +45,7 @@ beforeEach(() => {
     arrayBuffer: async () => new ArrayBuffer(2048),
     blob: async () => ({ size: 2048 }),
   }));
-  send.mockImplementation(
-    async ({ id }) => ({ id: `row-${id}`, phone_e164: '+201000000001' }) as never,
-  );
+  send.mockImplementation(async ({ id }) => ({ id: `row-${id}`, phone_e164: '+201000000001' }) as never);
 });
 
 async function sendToFamily() {

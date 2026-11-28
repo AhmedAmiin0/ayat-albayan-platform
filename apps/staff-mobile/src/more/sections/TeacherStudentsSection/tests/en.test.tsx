@@ -4,23 +4,22 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { listItem } from '@/students/shared/test-data';
 import { TeacherStudentsSection } from '@/more/sections/TeacherStudentsSection/TeacherStudentsSection';
-import { mockCall } from '@ab/testing/mock-call';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 test('an English run: the section, the switch and the student statuses in English', async () => {
   expect(t).toEqual(en);
-  mockApi.onRead(async ({ path }) =>
+  mockApiFetch.mockImplementation(async (path: string) =>
     path.startsWith('/students/status-counts')
       ? {
           new: 0,

@@ -6,12 +6,11 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { realtime } from '@ab/testing/presence-realtime';
 import { fullAccessMe } from '@/test/staff-me';
 import { StaffPresenceSection } from './StaffPresenceSection';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('@ab/mobile-kit/lib/http/supabase', () =>
   jest.requireActual('@ab/testing/presence-realtime').realtime.module(),
@@ -27,41 +26,41 @@ const row = (id: string, last: string | null): StaffPresenceRow => ({
 });
 
 beforeEach(() => {
-  mockApi.reset('read');
+  mockApiFetch.mockReset();
   realtime.reset();
 });
 
 test('loading: the title and a spinner', async () => {
-  mockApi.onRead(() => new Promise(() => undefined));
+  mockApiFetch.mockReturnValue(new Promise(() => undefined));
   await renderWithQuery(<StaffPresenceSection />);
   expect(screen.getByText(p.staffTitle)).toBeTruthy();
   expect(screen.getByLabelText(t.common.loading)).toBeTruthy();
 });
 
 test('a failed read says so', async () => {
-  mockApi.onRead(() => Promise.reject(new Error('down')));
+  mockApiFetch.mockRejectedValue(new Error('down'));
   await renderWithQuery(<StaffPresenceSection />);
   expect(await screen.findByText(p.loadError)).toBeTruthy();
 });
 
 test('presence off says so', async () => {
-  mockApi.onRead(() => ({ enabled: false, staff: [] }));
+  mockApiFetch.mockResolvedValue({ enabled: false, staff: [] });
   await renderWithQuery(<StaffPresenceSection />);
   expect(await screen.findByText(p.off)).toBeTruthy();
 });
 
 test('no staff yet says so', async () => {
-  mockApi.onRead(() => ({ enabled: true, staff: [] }));
+  mockApiFetch.mockResolvedValue({ enabled: true, staff: [] });
   await renderWithQuery(<StaffPresenceSection />);
   expect(await screen.findByText(p.staffEmpty)).toBeTruthy();
 });
 
 test('online first, then newest last seen, never seen last; «متصلون الآن: 1»', async () => {
   const staff = [row('a', ago(30)), row('b', null), row('c', ago(5)), row('d', ago(50))];
-  mockApi.onRead(() => ({ enabled: true, staff }));
+  mockApiFetch.mockResolvedValue({ enabled: true, staff });
   await renderWithQuery(<StaffPresenceSection />);
   expect(await screen.findByText('اسم a', { exact: false })).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: presenceRoutes.staff.path });
+  expect(mockApiFetch).toHaveBeenCalledWith(presenceRoutes.staff.path);
   await waitFor(() => expect(realtime.isOpen('d')).toBe(true));
   await act(async () => {
     realtime.joinAll();
@@ -69,12 +68,7 @@ test('online first, then newest last seen, never seen last; «متصلون ال�
   });
   await waitFor(() => expect(screen.getByText(p.staffOnline.replace('{n}', '1'))).toBeTruthy());
   const ids = screen.getAllByTestId(/^staff-presence-/).map((r) => r.props.testID as string);
-  expect(ids).toEqual([
-    'staff-presence-d',
-    'staff-presence-c',
-    'staff-presence-a',
-    'staff-presence-b',
-  ]);
+  expect(ids).toEqual(['staff-presence-d', 'staff-presence-c', 'staff-presence-a', 'staff-presence-b']);
   const online = screen.getByTestId('staff-presence-d');
   expect(within(online).getByText(p.online)).toBeTruthy();
   expect(within(online).getByTestId('presence-dot')).toBeTruthy();
@@ -89,5 +83,5 @@ test('not a base-role admin: no section, no request', async () => {
   client.setQueryData(pathKey('/auth/me'), fullAccessMe('assistant'));
   await renderWithQuery(<StaffPresenceSection />, client);
   expect(screen.queryByTestId('staff-presence')).toBeNull();
-  expect(mockApi.reads()).toHaveLength(0);
+  expect(mockApiFetch).not.toHaveBeenCalled();
 });

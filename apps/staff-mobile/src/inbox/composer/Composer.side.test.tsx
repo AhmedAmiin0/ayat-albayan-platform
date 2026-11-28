@@ -4,14 +4,14 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { leftToRight } from '@/inbox/shared/physical-row.helpers';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
 // The typing bar on an Arabic phone (jest.setup: RTL): the row is mirrored, the round button on the
 // physical left, the box on the right. Only the price tag and the paperclip stay in it.
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  apiSend: jest.fn(),
 }));
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),
@@ -24,9 +24,7 @@ const gate = { open: true, reason: null, queued: 0 };
 
 async function show(lastInbound: string, permissions?: string[]) {
   const th = { ...thread, last_inbound_at: lastInbound, reply_line: 'chat' as const };
-  mockApi.onRead(async ({ path: p }) =>
-    p === '/messages/gate' ? gate : detail([inbound], { thread: th }),
-  );
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/messages/gate' ? gate : detail([inbound], { thread: th })));
   const client = createTestQueryClient();
   if (permissions) client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions });
   await renderWithQuery(<ThreadScreen />, client);
@@ -37,10 +35,7 @@ const shown = (names: string[]) => names.filter((n) => n !== '?');
 
 test('open window with pricing.read: [round] [paperclip] [price tag] [text] [emoji], left → right; nothing else', async () => {
   await show(ago(5));
-  expect(leftToRight(screen.getByTestId('open-row'), true)).toEqual([
-    'round-action',
-    'composer-pill',
-  ]);
+  expect(leftToRight(screen.getByTestId('open-row'), true)).toEqual(['round-action', 'composer-pill']);
   expect(shown(leftToRight(screen.getByTestId('composer-pill'), true))).toEqual([
     t.inbox.composer.attach,
     'quote-button',

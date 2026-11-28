@@ -3,12 +3,13 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { clientWith, PEOPLE_KEYS, VIEW } from '@/students/people-edit/people-edit.fixtures';
 import { PeopleEditSection } from '@/students/people-edit/PeopleEditSection';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (...mockArgs: unknown[]) => mockApiFetch(...mockArgs),
+  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 
 const E = t.peopleEdit;
@@ -26,10 +27,12 @@ const OTHER = {
 
 beforeEach(() => {
   jest.useFakeTimers();
-  mockApi.reset('read');
-  mockApi.onRead(async ({ path }) => (path.startsWith('/people/guardians') ? [OTHER] : VIEW));
-  mockApi.reset('write');
-  mockApi.onWrite(() => ({ student_id: 's1', guardian_id: 'g2' }));
+  mockApiFetch
+    .mockReset()
+    .mockImplementation(async (path: string) =>
+      path.startsWith('/people/guardians') ? [OTHER] : VIEW,
+    );
+  mockApiSend.mockReset().mockResolvedValue({ student_id: 's1', guardian_id: 'g2' });
 });
 afterEach(() => jest.useRealTimers());
 
@@ -46,18 +49,11 @@ test('searches a code, picks the family, confirms: the student moves', async () 
   await fireEvent.press(await screen.findByRole('radio', { name: 'أبو خالد' }));
   await fireEvent.press(screen.getByRole('button', { name: E.confirm }));
   await waitFor(() =>
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: '/people/students/s1/guardian',
-      body: {
-        guardian_id: 'g2',
-      },
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/people/students/s1/guardian', {
+      guardian_id: 'g2',
     }),
   );
-  expect(mockApi.reads()).toContainEqual({
-    method: 'GET',
-    path: '/people/guardians?search=AB-0190',
-  });
+  expect(mockApiFetch).toHaveBeenCalledWith('/people/guardians?search=AB-0190');
 });
 
 test('a new guardian by number, parsed to E.164', async () => {
@@ -71,12 +67,8 @@ test('a new guardian by number, parsed to E.164', async () => {
   await waitFor(() => expect(screen.getByRole('button', { name: E.confirm })).toBeEnabled());
   await fireEvent.press(screen.getByRole('button', { name: E.confirm }));
   await waitFor(() =>
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: '/people/students/s1/guardian',
-      body: {
-        guardian: { name: 'أبو سهيلة', phone_e164: '+201000000003', tz: 'Africa/Cairo' },
-      },
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/people/students/s1/guardian', {
+      guardian: { name: 'أبو سهيلة', phone_e164: '+201000000003', tz: 'Africa/Cairo' },
     }),
   );
 });

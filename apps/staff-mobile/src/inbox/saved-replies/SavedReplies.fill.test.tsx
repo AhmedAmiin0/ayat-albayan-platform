@@ -7,7 +7,6 @@ import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { REPLIES, WELCOME } from './testing/fixtures';
 import { clearComposerDrafts } from '@/inbox/composer/draft-store';
-import { mockCall } from '@ab/testing/mock-call';
 
 /** The signed-in staff member the composer greets with. */
 const ME = savedProfile({ full_name: 'سارة' });
@@ -22,10 +21,12 @@ const DEPOSIT: SavedReply = {
   attachment: { name: 'الحساب.pdf', mime: 'application/pdf', size: 1024 },
 };
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),
@@ -37,14 +38,8 @@ async function open() {
   const th = detail([inbound], {
     thread: { ...thread, last_inbound_at: new Date(Date.now() - 5 * 60_000).toISOString() },
   });
-  mockApi.onRead(async ({ path: p }) =>
-    p === '/saved-replies'
-      ? [...REPLIES, DEPOSIT]
-      : p === '/me/profile'
-        ? ME
-        : p === '/messages/gate'
-          ? { open: true, reason: null, queued: 0 }
-          : th,
+  mockApiFetch.mockImplementation(async (p: string) =>
+    p === '/saved-replies' ? [...REPLIES, DEPOSIT] : p === '/me/profile' ? ME : p === '/messages/gate' ? { open: true, reason: null, queued: 0 } : th,
   );
   await renderWithQuery(<ThreadScreen />, createTestQueryClient());
   await screen.findByText(inbound.body ?? '');
@@ -54,9 +49,7 @@ const form = () => screen.getByTestId('fill-reply-sheet');
 const preview = () => screen.getByTestId('fill-reply-preview').props.children;
 async function pickFromSheet(title: string | RegExp) {
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attach }));
-  await fireEvent.press(
-    within(screen.getByTestId('attach-sheet')).getByRole('button', { name: t.savedReplies.open }),
-  );
+  await fireEvent.press(within(screen.getByTestId('attach-sheet')).getByRole('button', { name: t.savedReplies.open }));
   await fireEvent.press(await screen.findByRole('button', { name: title }));
 }
 
@@ -64,8 +57,8 @@ async function pickFromSheet(title: string | RegExp) {
 afterEach(() => clearComposerDrafts());
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.reset('write');
+  mockApiFetch.mockReset();
+  mockApiSend.mockReset();
 });
 
 test('no blanks, every name known: the tap fills the box at once, no form', async () => {
@@ -94,7 +87,7 @@ test('blanks: one input per slot (the name prefilled), a live preview, «أدر�
   expect(box().props.value).toBe('أهلًا هدى سالم، العربون 300 ريال قبل [التاريخ]. المبلغ: 300');
   expect(screen.queryByTestId('fill-reply-sheet')).toBeNull();
   expect(screen.getByTestId('saved-reply-chip')).toBeTruthy();
-  expect(mockApi.writes()).toHaveLength(0);
+  expect(mockApiSend).not.toHaveBeenCalled();
 });
 
 test('«إلغاء» puts nothing in the box and stages nothing', async () => {
@@ -119,29 +112,19 @@ test('a placeholder with no known value opens the form too; left empty it is rem
 test('from the «/» list: the form opens, the box losing focus keeps the «/search», «أدرج» replaces it', async () => {
   await open();
   for (const step of ['سطر\n', 'سطر\n/', 'سطر\n/عر']) await fireEvent.changeText(box(), step);
-  await fireEvent.press(
-    await within(screen.getByTestId('slash-suggestions')).findByRole('button', {
-      name: /^العربون/,
-    }),
-  );
+  await fireEvent.press(await within(screen.getByTestId('slash-suggestions')).findByRole('button', { name: /^العربون/ }));
   await fireEvent(box(), 'blur');
   expect(screen.queryByTestId('slash-suggestions')).toBeNull();
   await fireEvent.changeText(within(form()).getByLabelText('التاريخ'), 'الخميس');
   await fireEvent.press(within(form()).getByRole('button', { name: t.savedReplies.fill.insert }));
-  expect(box().props.value).toBe(
-    'سطر\nأهلًا هدى سالم، العربون [المبلغ] ريال قبل الخميس. المبلغ: [المبلغ]',
-  );
+  expect(box().props.value).toBe('سطر\nأهلًا هدى سالم، العربون [المبلغ] ريال قبل الخميس. المبلغ: [المبلغ]');
   expect(screen.getByTestId('saved-reply-chip')).toBeTruthy();
 });
 
 test('«إلغاء» from the «/» list keeps the «/search» in the box and docks its list again', async () => {
   await open();
   for (const step of ['/', '/عر']) await fireEvent.changeText(box(), step);
-  await fireEvent.press(
-    await within(screen.getByTestId('slash-suggestions')).findByRole('button', {
-      name: /^العربون/,
-    }),
-  );
+  await fireEvent.press(await within(screen.getByTestId('slash-suggestions')).findByRole('button', { name: /^العربون/ }));
   await fireEvent(box(), 'blur');
   await fireEvent.press(within(form()).getByRole('button', { name: t.common.cancel }));
   expect(box().props.value).toBe('/عر');

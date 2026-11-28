@@ -3,12 +3,11 @@ import { ApiError, t, palette } from '@ab/mobile-kit';
 import { balanceOf, page, payment, subscription } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { BalanceCard } from '@/students/profile/BalanceCard/BalanceCard';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
@@ -23,7 +22,7 @@ const left = (remaining: number) =>
 
 /** GET /students/s1/balance, /settings and /payments, as the card asks for them. */
 function serve(balance: unknown, threshold = 2) {
-  mockApi.onRead(async ({ path }) => {
+  mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/students/s1/balance') return balance;
     if (path === '/settings') return { renewal_alert_remaining: threshold };
     if (path.startsWith('/payments?')) return { ...page([payment()]), totals: [] };
@@ -68,10 +67,7 @@ test('the latest payments under the card', async () => {
   serve(left(3));
   await renderWithQuery(<BalanceCard studentId="s1" />);
   expect(await screen.findByText(t.payments.title)).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({
-    method: 'GET',
-    path: '/payments?studentId=s1&pageSize=5',
-  });
+  expect(mockApiFetch).toHaveBeenCalledWith('/payments?studentId=s1&pageSize=5');
   expect(screen.getByText(`${t.enums.paymentMethod.bank} · 29 سبتمبر 2026`)).toBeTruthy();
 });
 
@@ -84,10 +80,8 @@ test('no package: says so, no payment action, no payments list', async () => {
 });
 
 test('the balance cannot be read (and nothing is cached): no card at all', async () => {
-  mockApi.onRead(() => Promise.reject(new ApiError(404)));
+  mockApiFetch.mockRejectedValue(new ApiError(404));
   const { client } = await renderWithQuery(<BalanceCard studentId="s1" />);
-  await waitFor(() =>
-    expect(client.getQueryState(['students', 's1', 'balance'])?.status).toBe('error'),
-  );
+  await waitFor(() => expect(client.getQueryState(['students', 's1', 'balance'])?.status).toBe('error'));
   expect(screen.queryByText(t.subscriptions.balance)).toBeNull();
 });

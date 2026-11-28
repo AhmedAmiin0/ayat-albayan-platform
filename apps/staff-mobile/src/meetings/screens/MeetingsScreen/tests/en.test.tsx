@@ -1,7 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
 import { MeetingsScreen } from '@/meetings/screens/MeetingsScreen/MeetingsScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
@@ -16,27 +15,13 @@ const SCHEDULED = {
   invitees_count: 3,
   my_invite: null,
 };
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
-  useSegments: () => ['(tabs)'],
-}));
-const mockApi = mockCall();
-mockApi.onRead(async () => [
-  {
-    id: 'm1',
-    title: 'Staff sync',
-    created_by: 'u',
-    created_at: '2026-10-05T11:30:00.000Z',
-    ends_at: null,
-    state: 'open',
-    can_manage: true,
-    can_join: true,
-    ...SCHEDULED,
-  },
-]);
+jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useSegments: () => ['(tabs)'] }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: jest.fn(async () => [
+    { id: 'm1', title: 'Staff sync', created_by: 'u', created_at: '2026-10-05T11:30:00.000Z', ends_at: null, state: 'open', can_manage: true, can_join: true, ...SCHEDULED },
+  ]),
+  apiSend: jest.fn(),
 }));
 
 test('the meetings screen reads in English', async () => {

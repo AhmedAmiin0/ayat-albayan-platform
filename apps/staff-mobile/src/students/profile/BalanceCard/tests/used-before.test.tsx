@@ -3,12 +3,11 @@ import { t } from '@ab/mobile-kit';
 import { balanceOf, page, subscription, SUB_ID } from '@/payments/fixtures';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { BalanceCard } from '@/students/profile/BalanceCard/BalanceCard';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
@@ -21,24 +20,23 @@ const ME = {
 };
 
 function serve(me?: object) {
-  mockApi.onRead(async ({ path }) => {
+  mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/auth/me' && me) return me;
-    if (path === '/students/s1/balance')
-      return balanceOf(subscription({ starts_on: '2026-01-01' }));
+    if (path === '/students/s1/balance') return balanceOf(subscription({ starts_on: '2026-01-01' }));
     if (path === '/settings') return { renewal_alert_remaining: 2 };
     if (path === STATE) return STATE_BODY;
     return page([]);
   });
 }
 
-beforeEach(() => mockApi.reset('read'));
+beforeEach(() => mockApiFetch.mockReset());
 
 test('the current package offers the edit, which opens on the server state', async () => {
   serve();
   await renderWithQuery(<BalanceCard studentId="s1" />);
   await fireEvent.press(await screen.findByRole('button', { name: e.action }));
   expect(await screen.findByLabelText(`${t.salesMoney.usedBefore}: 0`)).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: STATE });
+  expect(mockApiFetch).toHaveBeenCalledWith(STATE);
 });
 
 test('without subscriptions.edit_terms: not offered', async () => {

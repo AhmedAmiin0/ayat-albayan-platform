@@ -9,31 +9,25 @@ import { thread } from '@/inbox/shared/thread-fixtures';
 import { storeReader } from '@/inbox/thread/local';
 import { createMessageStore } from '@/inbox/thread/store/message-store';
 import { applyAs, plan } from '@/inbox/thread/store/store-fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
 // docs/43 43-7: a list row's tick comes from the phone store too: a list answer that still says
 // «sent» shows the store's ✓✓ for the same last message (the owner's pending tick, one source).
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-const ours: ThreadView = {
-  ...thread,
-  display_name: 'أم سارة',
-  last_status: 'sent',
-  last_body: 'أهلًا',
-};
+const ours: ThreadView = { ...thread, display_name: 'أم سارة', last_status: 'sent', last_body: 'أهلًا' };
 const page = (items: ThreadView[]) => ({ items, total: items.length, page: 1, pageSize: 25 });
 const row = (name: string) => screen.getByRole('button', { name: new RegExp(name) });
 
 afterEach(() => storeReader.detach());
 
 test('the store’s read tick lifts a list row whose answer is still «sent»', async () => {
-  mockApi.onRead(() => page([ours]));
+  mockApiFetch.mockResolvedValue(page([ours]));
   const store = createMessageStore(memoryPort().port);
   await store.open('user-a');
   await renderWithQuery(<InboxScreen />);
@@ -48,14 +42,10 @@ test('the store’s read tick lifts a list row whose answer is still «sent»', 
 });
 
 test('a stored row for another last message never changes the tick', async () => {
-  mockApi.onRead(() => page([ours]));
+  mockApiFetch.mockResolvedValue(page([ours]));
   const store = createMessageStore(memoryPort().port);
   await store.open('user-a');
-  const other = {
-    ...ours,
-    last_message_id: 'c0000000-0000-4000-8000-0000000000ff',
-    last_status: 'read' as const,
-  };
+  const other = { ...ours, last_message_id: 'c0000000-0000-4000-8000-0000000000ff', last_status: 'read' as const };
   await applyAs(store, plan([], { threads: [other] }));
   storeReader.attach(store, 'user-a');
   await renderWithQuery(<InboxScreen />);

@@ -6,18 +6,14 @@ import { renderWithQuery } from '@/test/query';
 import { meetingError } from './meeting-text';
 import { useEnterMeeting } from './use-enter-meeting';
 import { useMeetingManage } from './use-meeting-manage';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 
-const early = new ApiError(403, {
-  code: 'join_not_open_yet',
-  opens_at: '2026-10-05T11:30:00.000Z',
-});
+const early = new ApiError(403, { code: 'join_not_open_yet', opens_at: '2026-10-05T11:30:00.000Z' });
 const line = (cycle: '12' | '24') => meetingError(early, cycle, 'Asia/Riyadh');
 
 function Enter({ go }: { go: (run: (id: string) => Promise<void>) => void }) {
@@ -33,8 +29,7 @@ function Manage({ go }: { go: (ask: () => void) => void }) {
 }
 
 beforeEach(async () => {
-  mockApi.reset('write');
-  mockApi.onWrite(() => Promise.reject(early));
+  mockApiSend.mockReset().mockRejectedValue(early);
   await act(async () => setClockPref('24'));
 });
 

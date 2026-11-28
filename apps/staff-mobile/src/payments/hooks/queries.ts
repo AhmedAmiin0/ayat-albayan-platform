@@ -2,7 +2,7 @@ import { paymentCalls } from '@ab/client-core';
 import type { StudentBalanceView } from '@ab/money';
 import type { AcademySettings } from '@ab/settings';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, apiSend, listKey, pathKey, call } from '@ab/mobile-kit';
+import { apiFetch, apiSend, listKey, pathKey } from '@ab/mobile-kit';
 
 // Money reads (docs/11 §6–7). Keys follow lib/query-keys, so invalidating ['students', id] reaches
 // the balance and ['payments'] reaches every payments list.
@@ -21,7 +21,7 @@ export const balanceKey = (studentId: string) => pathKey(balancePath(studentId))
 export function useStudentBalance(studentId: string) {
   return useQuery({
     queryKey: balanceKey(studentId),
-    queryFn: () => call<StudentBalanceView>({ path: balancePath(studentId) }),
+    queryFn: () => apiFetch<StudentBalanceView>(balancePath(studentId)),
     staleTime: 5 * MINUTE,
   });
 }
@@ -30,7 +30,7 @@ export function useStudentBalance(studentId: string) {
 export function useRenewalThreshold(): number | undefined {
   const { data } = useQuery({
     queryKey: pathKey('/settings'),
-    queryFn: () => call<AcademySettings>({ path: '/settings' }),
+    queryFn: () => apiFetch<AcademySettings>('/settings'),
     staleTime: 60 * MINUTE,
   });
   return data?.renewal_alert_remaining;

@@ -4,14 +4,13 @@ import { Linking } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { ReportPageScreen } from './ReportPageScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
 // Invented data: no real student, teacher or family.
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 const mockParams = jest.fn((): object => ({ reportId: '00000000-0000-4000-8000-0000000000f1' }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
@@ -63,14 +62,13 @@ const view = (over: Partial<ReportPageView> = {}): ReportPageView => ({
 });
 
 test("the saved report read-only by the report's uuid; a file and the PDF open", async () => {
-  mockApi.onRead(() => view());
+  mockApiFetch.mockResolvedValue(view());
   const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
   await renderWithQuery(<ReportPageScreen />);
   expect(await screen.findByText('أداء ممتاز')).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({
-    method: 'GET',
-    path: '/report-pages/by-report/00000000-0000-4000-8000-0000000000f1',
-  });
+  expect(mockApiFetch).toHaveBeenCalledWith(
+    '/report-pages/by-report/00000000-0000-4000-8000-0000000000f1',
+  );
   expect(screen.getByText(t.reportPage.teacher.replace('{name}', 'أبرار'))).toBeTruthy();
   expect(screen.queryByRole('textbox')).toBeNull();
   await fireEvent.press(
@@ -83,25 +81,22 @@ test("the saved report read-only by the report's uuid; a file and the PDF open",
 });
 
 test('the PDF still being prepared: says so, no download button', async () => {
-  mockApi.onRead(() => view({ pdf: null }));
+  mockApiFetch.mockResolvedValue(view({ pdf: null }));
   await renderWithQuery(<ReportPageScreen />);
   expect(await screen.findByText(t.reportPage.pdfPending)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.reportPage.downloadPdf })).toBeNull();
 });
 
 test('not a reader (404): the not-found words with a retry', async () => {
-  mockApi.onRead(() => Promise.reject(new Error('404')));
+  mockApiFetch.mockRejectedValue(new Error('404'));
   await renderWithQuery(<ReportPageScreen />);
   expect(await screen.findByText(t.reportPage.notFound)).toBeTruthy();
 });
 
 test('opened from a link (ayatalbayan://report/<public id>): read by its public id', async () => {
   mockParams.mockReturnValue({ publicId: 'aaaabbbbccccddddeeeeffff00001111' });
-  mockApi.onRead(() => view());
+  mockApiFetch.mockResolvedValue(view());
   await renderWithQuery(<ReportPageScreen />);
   expect(await screen.findByText('أداء ممتاز')).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({
-    method: 'GET',
-    path: '/report-pages/aaaabbbbccccddddeeeeffff00001111',
-  });
+  expect(mockApiFetch).toHaveBeenCalledWith('/report-pages/aaaabbbbccccddddeeeeffff00001111');
 });

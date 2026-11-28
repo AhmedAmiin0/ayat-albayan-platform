@@ -5,82 +5,48 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { details } from '@/sales/sales/student/fixtures';
 import { SalesStudentScreen } from '@/sales/sales/student/SalesStudentScreen/SalesStudentScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
-  useLocalSearchParams: () => ({ id: 'st1' }),
-}));
+jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
 
 test('an English (LTR) run of «Student details»: en.json words for the subscription, attendance and reports', async () => {
   expect(t).toEqual(en);
   expect(I18nManager.isRTL).toBe(false);
-  mockApi.onRead(() => details());
+  mockApiFetch.mockResolvedValue(details());
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByRole('header', { name: 'يوسف أحمد' })).toBeTruthy();
   const s = en.sales.student;
-  for (const text of [
-    s.subscription,
-    s.current,
-    s.attendance,
-    s.reports,
-    s.kind.present,
-    s.kind.absent,
-    s.showPast.replace('{n}', '1'),
-  ]) {
+  for (const text of [s.subscription, s.current, s.attendance, s.reports, s.kind.present, s.kind.absent, s.showPast.replace('{n}', '1')]) {
     expect(screen.getByText(text)).toBeTruthy();
   }
-  expect(
-    screen.getByText(
-      s.totals
-        .replace('{present}', '1')
-        .replace('{absent}', '1')
-        .replace('{excused}', '0')
-        .replace('{cancelled}', '1'),
-    ),
-  ).toBeTruthy();
+  expect(screen.getByText(s.totals.replace('{present}', '1').replace('{absent}', '1').replace('{excused}', '0').replace('{cancelled}', '1'))).toBeTruthy();
   expect(screen.getByText(en.reports.downloadPdf)).toBeTruthy();
 });
 
-test("an English (LTR) «Schedule»: the weekly line, the student's time, the upcoming rows and the empty states", async () => {
+test('an English (LTR) «Schedule»: the weekly line, the student\'s time, the upcoming rows and the empty states', async () => {
   const s = en.sales.student.schedule;
-  mockApi.onRead(() => details());
+  mockApiFetch.mockResolvedValue(details());
   const first = await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.title)).toBeTruthy();
   expect(screen.getByText(/^Sunday · Tuesday · Thursday at .+ your time$/)).toBeTruthy();
   // The teacher's name in English, like the rows under it (their second line: the name · the length).
   const minutes = en.enums.duration['45'];
-  expect(
-    screen.getByText(`${en.today.withTeacher.replace('{teacher}', 'Abrar Mohamed')} · ${minutes}`),
-  ).toBeTruthy();
-  expect(
-    screen.getAllByText(
-      `${en.today.teacherTitled.replace('{teacher}', 'Abrar Mohamed')} · ${minutes}`,
-    ),
-  ).toHaveLength(2);
-  expect(
-    screen.getByText(/^Student's time: Sunday · Tuesday · Thursday at .+ Cairo time$/),
-  ).toBeTruthy();
+  expect(screen.getByText(`${en.today.withTeacher.replace('{teacher}', 'Abrar Mohamed')} · ${minutes}`)).toBeTruthy();
+  expect(screen.getAllByText(`${en.today.teacherTitled.replace('{teacher}', 'Abrar Mohamed')} · ${minutes}`)).toHaveLength(2);
+  expect(screen.getByText(/^Student's time: Sunday · Tuesday · Thursday at .+ Cairo time$/)).toBeTruthy();
   expect(screen.getByText(s.upcoming)).toBeTruthy();
-  expect(
-    screen.getAllByRole('button', {
-      name: new RegExp(`^${en.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد')} · `),
-    }),
-  ).toHaveLength(2);
+  expect(screen.getAllByRole('button', { name: new RegExp(`^${en.lessons.sheet.openRow.replace('{names}', 'يوسف أحمد')} · `) })).toHaveLength(2);
   await first.unmount();
-  mockApi.onRead(() =>
-    details({ schedule: { student_tz: 'Africa/Cairo', weekly: [], upcoming: [] } }),
-  );
+  mockApiFetch.mockResolvedValue(details({ schedule: { student_tz: 'Africa/Cairo', weekly: [], upcoming: [] } }));
   await renderWithQuery(<SalesStudentScreen />);
   expect(await screen.findByText(s.noWeekly)).toBeTruthy();
   expect(screen.getByText(s.noUpcoming)).toBeTruthy();

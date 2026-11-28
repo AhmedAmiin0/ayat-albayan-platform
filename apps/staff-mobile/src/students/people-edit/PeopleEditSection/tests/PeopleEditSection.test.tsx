@@ -3,12 +3,13 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { clientWith, PEOPLE_KEYS, VIEW } from '@/students/people-edit/people-edit.fixtures';
 import { PeopleEditSection } from '@/students/people-edit/PeopleEditSection/PeopleEditSection';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (...mockArgs: unknown[]) => mockApiFetch(...mockArgs),
+  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 
 const E = t.peopleEdit;
@@ -19,10 +20,8 @@ const firstOf = <T,>(list: T[]): T => {
 };
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.onRead(() => VIEW);
-  mockApi.reset('write');
-  mockApi.onWrite(() => ({ id: 'x' }));
+  mockApiFetch.mockReset().mockResolvedValue(VIEW);
+  mockApiSend.mockReset().mockResolvedValue({ id: 'x' });
 });
 
 test('the three actions for a role holding the three keys', async () => {
@@ -43,7 +42,7 @@ test('nothing without people.edit, and no request', async () => {
     clientWith(['students.attach_guardian', 'people.switch_role']),
   );
   expect(screen.queryByRole('button', { name: E.attach })).toBeNull();
-  expect(mockApi.reads()).toHaveLength(0);
+  expect(mockApiFetch).not.toHaveBeenCalled();
 });
 
 test('«تعديل البيانات» sends only the changed fields of each part, then the notice', async () => {
@@ -54,17 +53,9 @@ test('«تعديل البيانات» sends only the changed fields of each part
   await fireEvent.changeText(screen.getByLabelText(E.fields.country), 'SA');
   await fireEvent.press(screen.getByRole('button', { name: E.save }));
   expect(await screen.findByText(E.saved)).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/people/students/s1' });
-  expect(mockApi.writes()).toContainEqual({
-    method: 'PATCH',
-    path: '/people/students/s1',
-    body: { name: 'سهيلة أحمد' },
-  });
-  expect(mockApi.writes()).toContainEqual({
-    method: 'PATCH',
-    path: '/people/guardians/g1',
-    body: { country: 'SA' },
-  });
+  expect(mockApiFetch).toHaveBeenCalledWith('/people/students/s1');
+  expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/people/students/s1', { name: 'سهيلة أحمد' });
+  expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/people/guardians/g1', { country: 'SA' });
 });
 
 test('a bad phone sends nothing; a taken phone reads in MSA', async () => {
@@ -74,8 +65,8 @@ test('a bad phone sends nothing; a taken phone reads in MSA', async () => {
   await fireEvent.changeText(screen.getByLabelText(E.fields.phone), 'abc');
   await fireEvent.press(screen.getByRole('button', { name: E.save }));
   expect(screen.getAllByText(E.invalid).length).toBeGreaterThan(0);
-  expect(mockApi.writes()).toHaveLength(0);
-  mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'phone_taken' })));
+  expect(mockApiSend).not.toHaveBeenCalled();
+  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'phone_taken' }));
   await fireEvent.changeText(screen.getByLabelText(E.fields.phone), '+201000000005');
   await fireEvent.press(screen.getByRole('button', { name: E.save }));
   await waitFor(() => expect(screen.getByText(E.errors.phone_taken)).toBeTruthy());
@@ -89,11 +80,7 @@ test("the student's own number is sent as E.164 (owner 2026-11-17)", async () =>
   await fireEvent.changeText(screen.getByLabelText(E.fields.studentPhone), '+966 50 000 0007');
   await fireEvent.press(screen.getByRole('button', { name: E.save }));
   expect(await screen.findByText(E.saved)).toBeTruthy();
-  expect(mockApi.writes()).toContainEqual({
-    method: 'PATCH',
-    path: '/people/students/s1',
-    body: {
-      phone_e164: '+966500000007',
-    },
+  expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/people/students/s1', {
+    phone_e164: '+966500000007',
   });
 });

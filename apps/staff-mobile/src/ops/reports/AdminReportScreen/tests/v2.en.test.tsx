@@ -5,7 +5,6 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { AdminReportScreen } from '@/ops/reports/AdminReportScreen/AdminReportScreen';
 import { report } from '@/ops/shared/fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
 // An English run: the native flag is LTR, so `t` is en.json and surah names are English.
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -13,10 +12,10 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
@@ -25,11 +24,8 @@ jest.mock('expo-router', () => ({
 
 test('English: the new-form report reads en.json and English surah names', async () => {
   expect(t).toEqual(en);
-  const content = {
-    ...emptyContent(),
-    segments: [{ kind: 'revision' as const, surah: 68, from: 1, to: 20, grade: 'good' as const }],
-  };
-  mockApi.onRead(() => report({ form_version: 2, content, attendance: 'late', homework: null }));
+  const content = { ...emptyContent(), segments: [{ kind: 'revision' as const, surah: 68, from: 1, to: 20, grade: 'good' as const }] };
+  mockApiFetch.mockResolvedValue(report({ form_version: 2, content, attendance: 'late', homework: null }));
   await renderWithQuery(<AdminReportScreen />);
   expect(await screen.findByText('New form')).toBeTruthy();
   expect(screen.getByText('Attended late')).toBeTruthy();

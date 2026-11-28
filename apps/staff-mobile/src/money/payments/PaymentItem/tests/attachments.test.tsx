@@ -5,12 +5,11 @@ import { t } from '@ab/mobile-kit';
 import { payment } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { PaymentItem } from '@/money/payments/PaymentItem/PaymentItem';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
 const file = (over: Partial<PaymentAttachmentView>): PaymentAttachmentView => ({
@@ -25,47 +24,43 @@ const file = (over: Partial<PaymentAttachmentView>): PaymentAttachmentView => ({
 const view = new RegExp(t.payments.viewAttachments);
 
 beforeEach(() => {
-  mockApi.reset('read');
+  mockApiFetch.mockReset();
   jest.restoreAllMocks();
 });
 
 test('a bank payment without receipt_path: «عرض المرفقات», asked only once opened; images inline, a PDF opens outside', async () => {
   const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
-  mockApi.onRead(() => [
+  mockApiFetch.mockResolvedValue([
     file({ id: 'receipt', legacy: true, mime: null, url: 'https://files.test/old.pdf?t=1' }),
     file({}),
   ]);
   await renderWithQuery(<PaymentItem payment={payment({ id: 'p9' })} />);
   expect(screen.queryByText(t.mobileMoney.noReceipt)).toBeNull();
-  expect(mockApi.reads()).toHaveLength(0);
+  expect(mockApiFetch).not.toHaveBeenCalled();
   await fireEvent.press(screen.getByRole('button', { name: view }));
-  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/payments/p9/attachments' });
+  expect(mockApiFetch).toHaveBeenCalledWith('/payments/p9/attachments');
   const image = await screen.findByLabelText(t.payments.attachmentN.replace('{n}', '1'));
   expect(image.props.source).toEqual({ uri: 'https://files.test/a1.jpg?t=1' });
   await fireEvent.press(screen.getByRole('button', { name: new RegExp(t.payments.legacyReceipt) }));
   expect(open).toHaveBeenCalledWith('https://files.test/old.pdf?t=1');
-  await fireEvent.press(
-    screen.getByRole('button', { name: new RegExp(t.mobileMoney.hideAttachments) }),
-  );
+  await fireEvent.press(screen.getByRole('button', { name: new RegExp(t.mobileMoney.hideAttachments) }));
   expect(screen.queryByLabelText(t.payments.attachmentN.replace('{n}', '1'))).toBeNull();
 });
 
 test('none on file says so; a failed read says so', async () => {
-  mockApi.onRead(() => []);
+  mockApiFetch.mockResolvedValue([]);
   const first = await renderWithQuery(<PaymentItem payment={payment({ id: 'p1' })} />);
   await fireEvent.press(screen.getByRole('button', { name: view }));
   expect(await screen.findByText(t.payments.noAttachments)).toBeTruthy();
   await first.unmount();
-  mockApi.onRead(() => Promise.reject(new Error('gone')));
+  mockApiFetch.mockRejectedValue(new Error('gone'));
   await renderWithQuery(<PaymentItem payment={payment({ id: 'p2' })} />);
   await fireEvent.press(screen.getByRole('button', { name: view }));
   expect(await screen.findByText(t.mobileMoney.attachmentsFailed)).toBeTruthy();
 });
 
 test('cash with a stored receipt has «المرفقات»; cash without anything says «بلا إيصال»', async () => {
-  const first = await renderWithQuery(
-    <PaymentItem payment={payment({ method: 'cash', receipt_path: 'sub/slip.jpg' })} />,
-  );
+  const first = await renderWithQuery(<PaymentItem payment={payment({ method: 'cash', receipt_path: 'sub/slip.jpg' })} />);
   expect(screen.getByRole('button', { name: view })).toBeTruthy();
   await first.unmount();
   await renderWithQuery(<PaymentItem payment={payment({ method: 'cash' })} />);

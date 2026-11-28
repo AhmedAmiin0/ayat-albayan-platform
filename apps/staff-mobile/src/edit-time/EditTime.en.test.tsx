@@ -2,7 +2,6 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { renderWithQuery } from '@/test/query';
 import { EditTimeSheet } from './components/EditTimeSheet';
 import { GRID, NOW, SAT_17, SUN_17, held, result, upcoming } from './testing/fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -11,22 +10,23 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.onRead(() => GRID);
-  mockApi.reset('write');
+  mockApiFetch.mockReset().mockResolvedValue(GRID);
+  mockApiSend.mockReset();
   jest.useFakeTimers({ now: NOW, advanceTimers: true });
 });
 afterEach(() => jest.useRealTimers());
 
 test('a move reads in English: the change line, the teacher’s clock, the guardian toggle, the saved note', async () => {
-  mockApi.onWrite(() => result({ notified: 1 }));
+  mockApiSend.mockResolvedValue(result({ notified: 1 }));
   await renderWithQuery(<EditTimeSheet lesson={upcoming} onClose={jest.fn()} />);
   expect(screen.getByRole('header', { name: 'Edit lesson time' })).toBeTruthy();
   await fireEvent.press(await screen.findByRole('radio', { name: '17:00' }));
@@ -34,32 +34,22 @@ test('a move reads in English: the change line, the teacher’s clock, the guard
     screen.getByText('Sunday 4 October 17:00 · 45 minutes ← Saturday 3 October 17:00 · 45 minutes'),
   ).toBeTruthy();
   expect(screen.getByText('Teacher: 17:00 Cairo time')).toBeTruthy();
-  expect(
-    screen.getByRole('switch', { name: 'Send the guardian a confirmation of the new time' }),
-  ).toBeTruthy();
+  expect(screen.getByRole('switch', { name: 'Send the guardian a confirmation of the new time' })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: 'Save the change' }));
-  expect(mockApi.writes()).toContainEqual({
-    method: 'PATCH',
-    path: '/lessons/l-up/time',
-    body: {
-      expectedStartsAt: SUN_17,
-      expectedEndsAt: upcoming.ends_at,
-      startsAt: SAT_17,
-      durationMin: 45,
-      notify: true,
-    },
+  expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/lessons/l-up/time', {
+    expectedStartsAt: SUN_17,
+    expectedEndsAt: upcoming.ends_at,
+    startsAt: SAT_17,
+    durationMin: 45,
+    notify: true,
   });
   expect(await screen.findByText('The time was updated')).toBeTruthy();
-  expect(
-    screen.getByText('The guardian is sent a WhatsApp confirmation of the new time'),
-  ).toBeTruthy();
+  expect(screen.getByText('The guardian is sent a WhatsApp confirmation of the new time')).toBeTruthy();
 });
 
 test('a correction reads in English, its reason marked required', async () => {
   await renderWithQuery(<EditTimeSheet lesson={held} onClose={jest.fn()} />);
   expect(screen.getByRole('header', { name: 'Correct lesson time' })).toBeTruthy();
-  expect(
-    screen.getByText('Day: Thursday 1 October (a correction stays on the same day)'),
-  ).toBeTruthy();
+  expect(screen.getByText('Day: Thursday 1 October (a correction stays on the same day)')).toBeTruthy();
   expect(screen.getByText('Reason *')).toBeTruthy();
 });

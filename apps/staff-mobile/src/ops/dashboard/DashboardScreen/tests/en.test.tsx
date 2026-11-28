@@ -4,7 +4,6 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { DashboardScreen } from '@/ops/dashboard/DashboardScreen/DashboardScreen';
 import { summary as mockSummary, work as mockWork } from '@/ops/shared/fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -12,13 +11,9 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-const mockApi = mockCall();
-mockApi.onRead(async ({ path: p }) =>
-  p.startsWith('/dashboard/summary') ? mockSummary : mockWork,
-);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: async (p: string) => (p.startsWith('/dashboard/summary') ? mockSummary : mockWork),
 }));
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), canGoBack: () => true, back: jest.fn() },

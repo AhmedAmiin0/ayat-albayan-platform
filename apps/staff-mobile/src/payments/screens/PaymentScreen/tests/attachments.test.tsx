@@ -4,12 +4,13 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { balanceOf, payment, SUB_ID, subscription } from '@/payments/fixtures';
 import { PaymentScreen } from '@/payments/screens/PaymentScreen/PaymentScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 const mockUpload = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
@@ -32,7 +33,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   picked = 0;
   signed = 0;
-  mockApi.onRead(() => balanceOf(subscription()));
+  mockApiFetch.mockResolvedValue(balanceOf(subscription()));
   mockUpload.mockResolvedValue({ data: {}, error: null });
   jest.mocked(ImagePicker.launchImageLibraryAsync).mockImplementation(async () => {
     picked += 1;
@@ -49,7 +50,7 @@ beforeEach(() => {
       ],
     };
   });
-  mockApi.onWrite(async ({ method: _m, path }) => {
+  mockApiSend.mockImplementation(async (_m: string, path: string) => {
     if (path !== '/payments/receipt-upload-url') return payment({ id: 'p2' });
     signed += 1;
     return {
@@ -76,14 +77,10 @@ test('«المرفقات» only for a bank transfer; two photos are both sent', 
   await fireEvent.press(screen.getByRole('button', { name: p.mobile.record }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
   expect(mockUpload).toHaveBeenCalledTimes(2);
-  expect(mockApi.writes().at(-1)).toEqual({
-    method: 'POST',
-    path: '/payments',
-    body: expect.objectContaining({
+  expect(mockApiSend).toHaveBeenLastCalledWith('POST', '/payments', expect.objectContaining({
       method: 'bank',
       attachments: [`${SUB_ID}/a1.jpg`, `${SUB_ID}/a2.jpg`],
-    }),
-  });
+    }));
 });
 
 test('moving off the bank clears them: nothing uploaded, no attachments sent', async () => {
@@ -100,9 +97,5 @@ test('moving off the bank clears them: nothing uploaded, no attachments sent', a
   await fireEvent.press(screen.getByRole('button', { name: p.mobile.record }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
   expect(mockUpload).not.toHaveBeenCalled();
-  expect(mockApi.writes()).toContainEqual({
-    method: 'POST',
-    path: '/payments',
-    body: expect.not.objectContaining({ attachments: expect.anything() }),
-  });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', expect.not.objectContaining({ attachments: expect.anything() }));
 });

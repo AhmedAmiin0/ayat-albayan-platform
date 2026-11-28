@@ -4,13 +4,12 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { clientAs, tpl } from './fixtures';
 import { TemplateCreateScreen } from './TemplateCreateScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-mockApi.onRead(async () => []);
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: jest.fn(async () => []),
+  apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }));
 
@@ -32,33 +31,20 @@ test('the category follows the text until the author picks one', async () => {
 });
 
 test('sends the template with its samples and quick replies, then goes back', async () => {
-  mockApi.onWrite(() => tpl({ status: 'pending' }));
+  mockApiSend.mockResolvedValue(tpl({ status: 'pending' }));
   await renderWithQuery(<TemplateCreateScreen />, clientAs('sales'));
-  await fireEvent.changeText(
-    screen.getByLabelText(t.templates.create.body),
-    'عرض خاص يا {{1}} هذا الشهر',
-  );
-  await fireEvent.changeText(
-    screen.getByLabelText(t.templates.create.sample.replace('{n}', '1')),
-    'أحمد',
-  );
+  await fireEvent.changeText(screen.getByLabelText(t.templates.create.body), 'عرض خاص يا {{1}} هذا الشهر');
+  await fireEvent.changeText(screen.getByLabelText(t.templates.create.sample.replace('{n}', '1')), 'أحمد');
   await fireEvent.press(screen.getByRole('button', { name: t.templates.create.addReply }));
-  await fireEvent.changeText(
-    screen.getByLabelText(t.templates.create.buttonText.replace('{n}', '1')),
-    'نعم',
-  );
+  await fireEvent.changeText(screen.getByLabelText(t.templates.create.buttonText.replace('{n}', '1')), 'نعم');
   await fireEvent.press(screen.getByRole('button', { name: t.templates.author.submit }));
   await waitFor(() => expect(router.back).toHaveBeenCalled());
-  expect(mockApi.writes()).toContainEqual({
-    method: 'POST',
-    path: '/messaging/templates/authored',
-    body: {
-      key: null,
-      category: 'marketing',
-      body: 'عرض خاص يا {{1}} هذا الشهر',
-      footer: null,
-      params: [{ name: 'var_1', sample: 'أحمد' }],
-      buttons: [{ type: 'quick_reply', text: 'نعم' }],
-    },
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/messaging/templates/authored', {
+    key: null,
+    category: 'marketing',
+    body: 'عرض خاص يا {{1}} هذا الشهر',
+    footer: null,
+    params: [{ name: 'var_1', sample: 'أحمد' }],
+    buttons: [{ type: 'quick_reply', text: 'نعم' }],
   });
 });

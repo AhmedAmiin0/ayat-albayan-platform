@@ -4,17 +4,16 @@ import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { recording, recordingsPage } from '@/student-file/testing/fixtures';
 import { StudentRecordingsScreen } from '@/student-file/screens/StudentRecordingsScreen/StudentRecordingsScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn(), canGoBack: () => true },
@@ -23,7 +22,7 @@ jest.mock('expo-router', () => ({
 
 test('an English run reads en.json: title, count, English teacher name, status, sizes, actions', async () => {
   expect(t).toEqual(en);
-  mockApi.onRead(async ({ path }) => {
+  mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/auth/me') return { permissions: ['recordings.read', 'recordings.manage'] };
     if (path.startsWith('/students/s1/recordings')) return recordingsPage([recording()]);
     if (path === '/students/teacher-options') return [];

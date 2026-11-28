@@ -4,18 +4,17 @@ import { familyOf, familyThread, kid } from '@/sales-subscribe/testing/fixtures'
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { SalesChatActions } from './SalesChatActions';
 import { thread } from '@/inbox/shared/thread-fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
 // The strip shows only once a pill will, so no empty band over a family or lead chat.
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 function serve(family: unknown, permissions: string[]) {
-  mockApi.onRead(async ({ path: p }) => (p === '/auth/me' ? { permissions } : family));
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/auth/me' ? { permissions } : family));
 }
 
 beforeEach(() => jest.clearAllMocks());
@@ -26,7 +25,7 @@ test('a family chat without self.sales_money: no strip at all', async () => {
     <SalesChatActions thread={familyThread} />,
     createTestQueryClient({ meFromApi: true }),
   );
-  await waitFor(() => expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/auth/me' }));
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
   expect(screen.queryByTestId('sales-chat-actions')).toBeNull();
 });
 
@@ -36,7 +35,7 @@ test('a family with no student of hers: no strip', async () => {
     <SalesChatActions thread={familyThread} />,
     createTestQueryClient({ meFromApi: true }),
   );
-  await waitFor(() => expect(mockApi.reads()).toHaveLength(2));
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(2));
   expect(screen.queryByTestId('sales-chat-actions')).toBeNull();
 });
 
@@ -56,10 +55,7 @@ test('a lead: no strip at all («تسجيل طالب جديد» is in the header
     <SalesChatActions thread={thread} />,
     createTestQueryClient({ meFromApi: true }),
   );
-  await waitFor(() => expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/auth/me' }));
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
   expect(screen.queryByTestId('sales-chat-actions')).toBeNull();
-  expect(mockApi.reads()).not.toContainEqual({
-    method: 'GET',
-    path: expect.stringContaining('/sales/money/family'),
-  });
+  expect(mockApiFetch).not.toHaveBeenCalledWith(expect.stringContaining('/sales/money/family'));
 });

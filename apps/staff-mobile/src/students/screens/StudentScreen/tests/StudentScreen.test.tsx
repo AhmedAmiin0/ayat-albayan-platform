@@ -5,12 +5,11 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { StudentScreen } from '@/students/screens/StudentScreen/StudentScreen';
 import { balanceOf, subscription } from '@/payments/fixtures';
 import { profile } from '@/students/shared/test-data';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 const mockPush = jest.fn();
 const mockBack = jest.fn();
@@ -32,7 +31,7 @@ const full = {
 
 /** GET /students/s1 answers the profile; the money reads 404 unless given (no package yet). */
 function serve(student: typeof full, balance?: unknown) {
-  mockApi.onRead(async ({ path }) => {
+  mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/students/s1') return student;
     if (path === '/students/s1/balance' && balance) return balance;
     throw new ApiError(404);
@@ -41,7 +40,7 @@ function serve(student: typeof full, balance?: unknown) {
 
 let openURL: jest.SpyInstance;
 beforeEach(() => {
-  mockApi.reset('read');
+  mockApiFetch.mockReset();
   mockPush.mockReset();
   openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
 });
@@ -51,7 +50,7 @@ test('header is name + LTR code; non-empty facts only; no teacher says so', asyn
   serve(full);
   await renderWithQuery(<StudentScreen />);
   expect(await screen.findByRole('header', { name: 'هدى' })).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/students/s1' });
+  expect(mockApiFetch).toHaveBeenCalledWith('/students/s1');
   expect(screen.getByText(ltr('AB-0183'))).toBeTruthy();
   expect(screen.getByText(t.enums.program.quran)).toBeTruthy();
   expect(screen.getByText('مبتدئ')).toBeTruthy();
@@ -82,13 +81,13 @@ test('a sibling opens its own quick view; back goes back', async () => {
 });
 
 test('404: «not found» instead of the generic error', async () => {
-  mockApi.onRead(() => Promise.reject(new ApiError(404)));
+  mockApiFetch.mockRejectedValue(new ApiError(404));
   await renderWithQuery(<StudentScreen />);
   expect(await screen.findByText(t.common.notFound)).toBeTruthy();
 });
 
 test('offline with a cached profile: shown, no error (R-MOB-03)', async () => {
-  mockApi.onRead(() => Promise.reject(new Error('offline')));
+  mockApiFetch.mockRejectedValue(new Error('offline'));
   const client = createTestQueryClient();
   client.setQueryData(['students', 's1'], full);
   await renderWithQuery(<StudentScreen />, client);
@@ -109,9 +108,7 @@ test('no balance route answer: the quick view is unchanged', async () => {
   serve(full);
   await renderWithQuery(<StudentScreen />);
   expect(await screen.findByRole('header', { name: 'هدى' })).toBeTruthy();
-  await waitFor(() =>
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/students/s1/balance' }),
-  );
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/balance'));
   expect(screen.queryByText(t.subscriptions.balance)).toBeNull();
 });
 

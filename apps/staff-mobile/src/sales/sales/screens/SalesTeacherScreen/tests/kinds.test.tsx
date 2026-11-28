@@ -3,34 +3,23 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { teacher } from '@/sales/sales/testing/fixtures';
 import { SalesTeacherScreen } from '@/sales/sales/screens/SalesTeacherScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
-  useLocalSearchParams: () => ({ id: 't1' }),
-}));
+jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 't1' }) }));
 
 const L = t.studentLists;
-const PAUSED = {
-  id: 'st3',
-  code: 'AB-0201',
-  name: 'سلمى',
-  program: 'quran' as const,
-  status: 'paused' as const,
-  next_lesson_at: null,
-};
+const PAUSED = { id: 'st3', code: 'AB-0201', name: 'سلمى', program: 'quran' as const, status: 'paused' as const, next_lesson_at: null };
 const tab = (label: string, n: number) => screen.getByRole('tab', { name: `${label} ${n}` });
 
-beforeEach(() => mockApi.reset('read'));
+beforeEach(() => mockApiFetch.mockReset());
 
 test('opens on «مشترك»: only the subscribed students; the counts come from the API', async () => {
   const tc = teacher({ active_count: 1, trial_count: 1 });
-  mockApi.onRead(() => [{ ...tc, students: [...tc.students, PAUSED] }]);
+  mockApiFetch.mockResolvedValue([{ ...tc, students: [...tc.students, PAUSED] }]);
   await renderWithQuery(<SalesTeacherScreen />);
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
   expect(tab(L.active, 1).props.accessibilityState).toMatchObject({ selected: true });
@@ -42,7 +31,7 @@ test('opens on «مشترك»: only the subscribed students; the counts come fro
 
 test('«تجريبي» shows the trial students, «الكل» everyone (paused included)', async () => {
   const tc = teacher();
-  mockApi.onRead(() => [{ ...tc, students: [...tc.students, PAUSED] }]);
+  mockApiFetch.mockResolvedValue([{ ...tc, students: [...tc.students, PAUSED] }]);
   await renderWithQuery(<SalesTeacherScreen />);
   await screen.findByText('يوسف أحمد');
   await fireEvent.press(tab(L.trial, 1));
@@ -56,7 +45,7 @@ test('«تجريبي» shows the trial students, «الكل» everyone (paused i
 
 test('a kind with nobody says so in its own words', async () => {
   const tc = teacher({ trial_count: 0 });
-  mockApi.onRead(() => [{ ...tc, students: tc.students.filter((s) => s.status === 'active') }]);
+  mockApiFetch.mockResolvedValue([{ ...tc, students: tc.students.filter((s) => s.status === 'active') }]);
   await renderWithQuery(<SalesTeacherScreen />);
   await screen.findByText('يوسف أحمد');
   await fireEvent.press(tab(L.trial, 0));

@@ -7,25 +7,21 @@ import { numbersAnswer as mockNumbersAnswer } from '@/ops/numbers/numbers-fixtur
 import { CommunicationsScreen } from '@/ops/settings/CommunicationsScreen';
 import { SettingsScreen } from '@/ops/settings/SettingsScreen/SettingsScreen';
 import { ValuesScreen } from '@/ops/values/screens/ValuesScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-const mockApi = mockCall();
-mockApi.onRead(
-  async ({ path: p }) =>
-    mockNumbersAnswer(p) ?? (p === '/admin/notifications' ? mockCatalogue : mockSettings),
-);
+function mockAnswer(p: string) {
+  return mockNumbersAnswer(p) ?? (p === '/admin/notifications' ? mockCatalogue : mockSettings);
+}
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: async (p: string) => mockAnswer(p),
+  call: async ({ path }: { path: string }) => mockAnswer(path),
 }));
-jest.mock('expo-router', () => ({
-  router: { back: jest.fn(), canGoBack: () => true, push: jest.fn() },
-}));
+jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: () => true, push: jest.fn() } }));
 
 test('English: the list comes from en.json', async () => {
   expect(t).toEqual(en);
@@ -38,23 +34,15 @@ test('English: the list comes from en.json', async () => {
 test('English: «Values» table and sheet', async () => {
   await renderWithQuery(<ValuesScreen />);
   expect(await screen.findByText(en.settings.bookingHorizonWeeks)).toBeTruthy();
-  await fireEvent.press(
-    screen.getByRole('radio', { name: new RegExp(en.settings.sections.accounts) }),
-  );
-  await fireEvent.press(
-    await screen.findByRole('button', { name: new RegExp(en.settings.reportingCurrency) }),
-  );
+  await fireEvent.press(screen.getByRole('radio', { name: new RegExp(en.settings.sections.accounts) }));
+  await fireEvent.press(await screen.findByRole('button', { name: new RegExp(en.settings.reportingCurrency) }));
   expect(screen.getByRole('radio', { name: 'SAR' })).toBeTruthy();
   expect(screen.getByRole('button', { name: en.config.custom.save })).toBeTruthy();
 });
 
 test('English: «Communications» keeps the read-only send state and the catalogue', async () => {
   await renderWithQuery(<CommunicationsScreen />);
-  expect(
-    await screen.findByText(
-      `${en.mobileAdmin.settings.readOnlyNote} ${en.communicationsHub.webOnly}`,
-    ),
-  ).toBeTruthy();
+  expect(await screen.findByText(`${en.mobileAdmin.settings.readOnlyNote} ${en.communicationsHub.webOnly}`)).toBeTruthy();
   await fireEvent.press(screen.getByRole('tab', { name: en.settingsValues.groups.notifications }));
   expect(await screen.findByText(en.notificationCatalogue.entries.report_ready.name)).toBeTruthy();
 });

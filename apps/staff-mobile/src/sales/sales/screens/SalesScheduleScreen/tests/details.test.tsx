@@ -4,17 +4,10 @@ import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
 import { SalesScheduleScreen } from '@/sales/sales/screens/SalesScheduleScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({
-  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
-}));
-jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
-  useLocalSearchParams: () => ({}),
-}));
+const mockApiFetch = jest.fn();
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (mockPath: string) => mockApiFetch(mockPath) }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({}) }));
 
 // 18:00 Riyadh running (now 18:10), and a Cairo teacher with a Muscat student on the 20:00 one.
 const LESSONS = [
@@ -32,18 +25,14 @@ const LESSONS = [
 ];
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.onRead(async ({ path }) =>
-    path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: LESSONS },
-  );
+  mockApiFetch.mockReset();
+  mockApiFetch.mockImplementation(async (path: string) => (path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: LESSONS }));
   fakeNow(new Date('2026-10-12T15:10:00.000Z'));
 });
 afterEach(() => jest.useRealTimers());
 
 const openRow = async (who: string) =>
-  fireEvent.press(
-    await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) }),
-  );
+  fireEvent.press(await screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) }));
 
 test('sales: a tap opens the details with every clock, the lesson link, her move / cancel / confirm and the student file; no admin action', async () => {
   await renderWithQuery(<SalesScheduleScreen />, confirmingQueryClient());
@@ -59,9 +48,7 @@ test('sales: a tap opens the details with every clock, the lesson link, her move
   expect(screen.getAllByRole('button', { name: /^تأكيد/ })).toHaveLength(1);
   expect(screen.getByRole('button', { name: t.sales.lessonActions.confirm })).toBeTruthy();
   expect(screen.getByText(ltr('AB-0200'))).toBeTruthy();
-  expect(
-    screen.getByText(new RegExp(`^${t.schedule.studentTime.replace('{time}', '')}`)),
-  ).toBeTruthy();
+  expect(screen.getByText(new RegExp(`^${t.schedule.studentTime.replace('{time}', '')}`))).toBeTruthy();
   // 12 Oct: Cairo is on summer time, the same clock as the (Riyadh) viewer: no teacher line.
   expect(
     screen.queryByText(new RegExp(`^${t.schedule.teacherTime.replace('{time}', '')}`)),
@@ -79,9 +66,7 @@ test('sales: a tap opens the details with every clock, the lesson link, her move
   expect(screen.getByText('https://meet.example.org/salma')).toBeTruthy();
   expect(screen.getByRole('button', { name: t.lessons.copyLink })).toBeTruthy();
   // Any student's name opens their details.
-  expect(
-    screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') }),
-  ).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.lessons.sheet.openStudent.replace('{name}', 'سلمى') })).toBeTruthy();
   // Not running: no join in the sheet, and never on the rows.
   expect(screen.queryByRole('button', { name: t.classroom.enter })).toBeNull();
 });

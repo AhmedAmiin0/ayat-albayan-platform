@@ -2,20 +2,13 @@ import { setViewerPersonTz } from '@ab/client-core';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import {
-  FIVE_PM,
-  LATE,
-  NOON,
-  OUTSIDE_LIST,
-  TEACHER_ID,
-} from '@/booking/other-time/OtherTime.fixture';
+import { FIVE_PM, LATE, NOON, OUTSIDE_LIST, TEACHER_ID } from '@/booking/other-time/OtherTime.fixture';
 import { OtherTime } from '@/booking/other-time/OtherTime/OtherTime';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
 const onPick = jest.fn();
@@ -30,7 +23,7 @@ const time = (name: string | RegExp) => screen.findByRole('radio', { name });
 beforeEach(() => {
   jest.clearAllMocks();
   setViewerPersonTz('Asia/Riyadh');
-  mockApi.onRead(() => OUTSIDE_LIST);
+  mockApiFetch.mockResolvedValue(OUTSIDE_LIST);
 });
 afterAll(() => setViewerPersonTz(null));
 
@@ -38,13 +31,12 @@ test('nothing is read until «وقت آخر»; then only the server list, with n
   await renderWithQuery(
     <OtherTime teacherId={TEACHER_ID} tz="Asia/Riyadh" durationMin={45} onPick={onPick} />,
   );
-  expect(mockApi.reads()).toHaveLength(0);
+  expect(mockApiFetch).not.toHaveBeenCalled();
   await fireEvent.press(screen.getByRole('button', { name: t.booking.otherTime }));
   expect(await time('12:00')).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({
-    method: 'GET',
-    path: `/booking/outside-slots?teacherId=${TEACHER_ID}&durationMin=45`,
-  });
+  expect(mockApiFetch).toHaveBeenCalledWith(
+    `/booking/outside-slots?teacherId=${TEACHER_ID}&durationMin=45`,
+  );
 });
 
 test('an outside time warns before it is picked; «التالي» sends it with outside = true', async () => {

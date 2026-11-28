@@ -5,13 +5,12 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { TeacherHero } from './TeacherHero';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-mockApi.onRead(() => new Promise(() => undefined));
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: () => new Promise(() => undefined),
+  apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
 }));
 let mockNow = new Date('2026-10-01T13:10:00Z');
 jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => mockNow }));
@@ -53,7 +52,7 @@ test('ahead in room mode: «سأحضر» leads, her word, «تُفتح السا�
 
 test('a refused «سأحضر» (409) says «بدأت الحلقة…»; another lesson clears it', async () => {
   mockNow = new Date('2026-10-01T12:00:00Z');
-  mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'lesson_started' })));
+  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'lesson_started' }));
   const first = lesson({ id: 'a' });
   const { rerender } = await renderWithQuery(
     <Keyed hero={{ kind: 'next', lesson: first, minutes: 60 }} />,

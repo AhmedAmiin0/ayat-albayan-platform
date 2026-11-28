@@ -11,6 +11,7 @@ const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (p: string) => mockApiFetch(p),
+  call: ({ path }: { path: string }) => mockApiFetch(path),
   apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
 }));
 // The test renderer has no native tags: a mounted title gets one here.

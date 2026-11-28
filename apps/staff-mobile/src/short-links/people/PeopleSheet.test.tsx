@@ -4,12 +4,11 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { people } from '@/short-links/testing/link-fixtures';
 import { PeopleSheet } from './PeopleSheet';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
 const P = t.shortLinks.people;
@@ -18,7 +17,7 @@ const guardian = { id: people[0]?.id ?? '', name: 'أحمد علي', role: 'guar
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApi.onRead(() => people);
+  mockApiFetch.mockResolvedValue(people);
 });
 
 test('picked people first; a search lists users by name and role, the chips filter', async () => {
@@ -39,10 +38,7 @@ test('picked people first; a search lists users by name and role, the chips filt
   await fireEvent.changeText(screen.getByLabelText(P.search), 'حس');
   expect(await screen.findByRole('checkbox', { name: 'حسن إبراهيم' })).toBeTruthy();
   await waitFor(() =>
-    expect(mockApi.reads()).toContainEqual({
-      method: 'GET',
-      path: '/short-links/people?search=%D8%AD%D8%B3',
-    }),
+    expect(mockApiFetch).toHaveBeenCalledWith('/short-links/people?search=%D8%AD%D8%B3'),
   );
   expect(screen.getByText(t.activity.roles.teacher)).toBeTruthy();
   await fireEvent.press(screen.getByRole('tab', { name: P.filters.guardians }));

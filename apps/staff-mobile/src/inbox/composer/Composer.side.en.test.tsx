@@ -5,7 +5,6 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { leftToRight } from '@/inbox/shared/physical-row.helpers';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
 // An English phone (LTR): the box on the left, the price tag and paperclip, the round button on the right.
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -13,10 +12,11 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  apiSend: jest.fn(),
 }));
 jest.mock('expo-router', () => ({
   useFocusEffect: jest.fn(),
@@ -30,9 +30,7 @@ const c = en.inbox.composer;
 
 async function show(lastInbound: string, permissions?: string[]) {
   const th = { ...thread, last_inbound_at: lastInbound, reply_line: 'chat' as const };
-  mockApi.onRead(async ({ path: p }) =>
-    p === '/messages/gate' ? gate : detail([inbound], { thread: th }),
-  );
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/messages/gate' ? gate : detail([inbound], { thread: th })));
   const client = createTestQueryClient();
   if (permissions) client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions });
   await renderWithQuery(<ThreadScreen />, client);
@@ -43,26 +41,14 @@ const shown = (names: string[]) => names.filter((n) => n !== '?');
 
 test('open window with pricing.read: [emoji] [text] [price tag] [paperclip] [round], left → right; nothing else', async () => {
   await show(ago(5));
-  expect(leftToRight(screen.getByTestId('open-row'), false)).toEqual([
-    'composer-pill',
-    'round-action',
-  ]);
-  expect(shown(leftToRight(screen.getByTestId('composer-pill'), false))).toEqual([
-    c.emoji,
-    c.placeholder,
-    'quote-button',
-    c.attach,
-  ]);
+  expect(leftToRight(screen.getByTestId('open-row'), false)).toEqual(['composer-pill', 'round-action']);
+  expect(shown(leftToRight(screen.getByTestId('composer-pill'), false))).toEqual([c.emoji, c.placeholder, 'quote-button', c.attach]);
 });
 
 test('open window without pricing.read: [emoji] [text] [paperclip] [round]; no camera; typing shows «Send»', async () => {
   await show(ago(5), ['inbox.read', 'inbox.send']);
   await fireEvent.changeText(screen.getByLabelText(c.placeholder), 'Hello');
-  expect(shown(leftToRight(screen.getByTestId('composer-pill'), false))).toEqual([
-    c.emoji,
-    c.placeholder,
-    c.attach,
-  ]);
+  expect(shown(leftToRight(screen.getByTestId('composer-pill'), false))).toEqual([c.emoji, c.placeholder, c.attach]);
   expect(screen.getByRole('button', { name: c.send })).toBeTruthy();
 });
 

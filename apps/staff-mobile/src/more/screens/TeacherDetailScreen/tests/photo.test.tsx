@@ -5,17 +5,13 @@ import { seedFullAccess } from '@/test/staff-me';
 import { TeacherDetailScreen } from '@/more/screens/TeacherDetailScreen/TeacherDetailScreen';
 import type { Teacher } from '@ab/shared';
 import { teacherFixture } from '@ab/shared/testing';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-jest.mock('expo-router', () => ({
-  router: { back: jest.fn(), push: jest.fn() },
-  useLocalSearchParams: () => ({ id: 't1' }),
-}));
+jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() }, useLocalSearchParams: () => ({ id: 't1' }) }));
 
 const TEACHER: Teacher = teacherFixture({
   id: 't1',
@@ -29,7 +25,7 @@ const TEACHER: Teacher = teacherFixture({
 const photo = () => screen.getByTestId('avatar-photo', { includeHiddenElements: true });
 
 beforeEach(() => {
-  mockApi.onRead(async ({ path }) => {
+  mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/teachers/t1') return TEACHER;
     if (path.startsWith('/teachers/t1/')) return [];
     throw new ApiError(404);

@@ -3,33 +3,22 @@ import type { MessageStatus } from '@ab/catalog';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import {
-  cachedThread,
-  delivered,
-  detail,
-  inbound,
-  listCache,
-  PHONE,
-  thread,
-} from '@/inbox/shared/thread-fixtures';
+import { cachedThread, delivered, detail, inbound, listCache, PHONE, thread } from '@/inbox/shared/thread-fixtures';
 import { refreshLists, threadListKey } from '@/inbox/thread/hooks/inbox-sync';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import type { ThreadListCache } from '@/inbox/thread/hooks/thread-list-cache';
 import { useListCatchUp } from './list-catch-up';
 import { useThreadList } from './use-thread-list';
-import { mockCall } from '@ab/testing/mock-call';
 
 // docs/43 §2 (the owner's «pending in the list»): the list row follows the tick its chat merged.
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 let mockFocused = true;
-jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({
-  useScreenFocused: () => mockFocused,
-}));
+jest.mock('@ab/mobile-kit/ui/connecting/use-screen-focus', () => ({ useScreenFocused: () => mockFocused }));
 
 const KEY = ['threads', 'list', { search: '', unread: false }];
 const row = (last_status: MessageStatus): ThreadView => ({ ...thread, last_status });
@@ -41,14 +30,14 @@ const listed = (client: Client) => client.getQueryData<ThreadListCache>(KEY)?.pa
 
 beforeEach(() => {
   mockFocused = true;
-  mockApi.reset('read');
+  mockApiFetch.mockReset();
 });
 
 const mountList = (client: Client) =>
   renderHook(() => useThreadList({ search: '', unread: false }), { wrapper: queryWrapper(client) });
 
 test('a list answer still saying pending shows the ✓ a newer chat read already merged', async () => {
-  mockApi.onRead(() => new Promise(() => undefined)); // its own refetch never answers
+  mockApiFetch.mockReturnValue(new Promise(() => undefined)); // its own refetch never answers
   const client = createTestQueryClient();
   client.setQueryData(KEY, listCache([row('queued')]), { updatedAt: 1000 });
   client.setQueryData(threadKey(PHONE), chatWith('sent'));
@@ -57,7 +46,7 @@ test('a list answer still saying pending shows the ✓ a newer chat read already
 });
 
 test('a chat copy older than the list never lifts it (a delivered message the server re-queued)', async () => {
-  mockApi.onRead(() => new Promise(() => undefined));
+  mockApiFetch.mockReturnValue(new Promise(() => undefined));
   const client = createTestQueryClient();
   client.setQueryData(threadKey(PHONE), chatWith('delivered'), { updatedAt: 500 });
   client.setQueryData(KEY, listCache([row('queued')]), { updatedAt: 1000 });
@@ -67,15 +56,13 @@ test('a chat copy older than the list never lifts it (a delivered message the se
 });
 
 test('the list answer wins when it is further along, or failed', async () => {
-  mockApi.onRead(() => page('read'));
+  mockApiFetch.mockResolvedValue(page('read'));
   const client = createTestQueryClient();
   client.setQueryData(threadKey(PHONE), chatWith('sent'));
   const wrapper = queryWrapper(client);
-  const { result } = await renderHook(() => useThreadList({ search: '', unread: false }), {
-    wrapper,
-  });
+  const { result } = await renderHook(() => useThreadList({ search: '', unread: false }), { wrapper });
   await waitFor(() => expect(result.current.items[0]?.last_status).toBe('read'));
-  mockApi.onRead(() => page('failed'));
+  mockApiFetch.mockResolvedValue(page('failed'));
   await act(async () => {
     await result.current.refetch();
   });
@@ -91,7 +78,7 @@ async function catchUp(client: Client) {
   });
 }
 
-test("back on screen: the chat's tick lands in the cache at once, keeping the list's time", async () => {
+test('back on screen: the chat\'s tick lands in the cache at once, keeping the list\'s time', async () => {
   const client = createTestQueryClient();
   client.setQueryData(KEY, listCache([row('queued')]), { updatedAt: 1000 });
   const refetch = jest.spyOn(client, 'refetchQueries').mockResolvedValue(undefined);

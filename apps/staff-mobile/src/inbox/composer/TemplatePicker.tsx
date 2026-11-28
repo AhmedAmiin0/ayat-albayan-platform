@@ -7,7 +7,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Modal } from 'react-native';
-import { t, pathKey, Button, Screen, ScreenHeader, call } from '@ab/mobile-kit';
+import { apiFetch, t, pathKey, Button, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { TemplateForm } from './TemplateForm';
 import { TemplateList, templateName } from './TemplateList';
 import type { Outgoing } from '@/inbox/thread/hooks/use-thread';
@@ -19,9 +19,8 @@ const PATH = '/messaging/templates';
 export function useApprovedTemplates(enabled: boolean) {
   return useQuery({
     queryKey: pathKey(PATH),
-    queryFn: () => call<TemplateView[]>({ path: PATH }),
-    select: (rows) =>
-      rows.filter((row) => row.status === 'approved' && row.key !== RATING_TEMPLATE),
+    queryFn: () => apiFetch<TemplateView[]>(PATH),
+    select: (rows) => rows.filter((row) => row.status === 'approved' && row.key !== RATING_TEMPLATE),
     enabled,
   });
 }

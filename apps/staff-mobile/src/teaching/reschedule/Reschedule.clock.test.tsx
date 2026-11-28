@@ -6,27 +6,20 @@ import { renderWithQuery } from '@/test/query';
 import { pending } from '@/today/testing/fixtures';
 import { NOW, SAT_17, SLOTS } from './fixtures';
 import { RescheduleSheet } from './RescheduleSheet';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 
-const clash = {
-  kind: 'teacher_busy',
-  startsAt: SAT_17,
-  endsAt: '2026-10-03T14:45:00.000Z',
-} as const;
+const clash = { kind: 'teacher_busy', startsAt: SAT_17, endsAt: '2026-10-03T14:45:00.000Z' } as const;
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.onRead(() => SLOTS);
-  mockApi.reset('write');
-  mockApi.onWrite(() =>
-    Promise.reject(new ApiError(409, { code: 'conflict', conflicts: [clash] })),
-  );
+  mockApiFetch.mockReset().mockResolvedValue(SLOTS);
+  mockApiSend.mockReset().mockRejectedValue(new ApiError(409, { code: 'conflict', conflicts: [clash] }));
   jest.useFakeTimers({ now: NOW, advanceTimers: true });
 });
 afterEach(() => jest.useRealTimers());

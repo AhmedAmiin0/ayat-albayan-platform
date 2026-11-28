@@ -5,12 +5,13 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { reportFormKey } from '@/teacher/report/hooks/api';
 import { formResponse } from '@/teacher/report/testing/fixtures';
 import { ReportFormScreen } from '@/teacher/report/screens/ReportFormScreen/ReportFormScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
+const mockApiSend = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (p: string) => mockApiFetch(p),
+  apiSend: (m: string, p: string, b?: unknown) => mockApiSend(m, p, b),
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },
@@ -28,7 +29,7 @@ jest.mock('@ab/mobile-kit/lib/http/supabase', () => ({
 const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 
 function serve(form: ReportFormResponse) {
-  mockApi.onRead(async ({ path: p }) => (p === '/teachers/me' ? me : form));
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/teachers/me' ? me : form));
   return renderWithQuery(<ReportFormScreen />);
 }
 
@@ -37,17 +38,15 @@ beforeEach(() => jest.clearAllMocks());
 test('the Google Form’s questions: identity read-only, الحضور, the done fields, 6 rubrics + overall, after fields', async () => {
   await serve(formResponse());
   expect(await screen.findByText(t.reports.readOnlyHint)).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/lessons/l-1/report-form' });
+  expect(mockApiFetch).toHaveBeenCalledWith('/lessons/l-1/report-form');
   expect(screen.getByText('يوسف أحمد')).toBeTruthy();
   expect(screen.getByText(ltr('AB-0182'))).toBeTruthy();
   expect(screen.getByRole('radio', { name: t.enums.program.quran, checked: true })).toBeTruthy();
-  for (const a of Object.values(t.enums.attendance))
-    expect(screen.getByRole('radio', { name: a })).toBeTruthy();
+  for (const a of Object.values(t.enums.attendance)) expect(screen.getByRole('radio', { name: a })).toBeTruthy();
   expect(screen.getAllByRole('radio', { name: t.enums.grade.needs_review })).toHaveLength(7);
   expect(screen.getByText(`${t.reports.overall} *`)).toBeTruthy();
   // Required in the form when attended: «*»; theory and next plan are not.
-  for (const k of ['recited', 'notes', 'homework'] as const)
-    expect(screen.getByText(`${t.reports[k]} *`)).toBeTruthy();
+  for (const k of ['recited', 'notes', 'homework'] as const) expect(screen.getByText(`${t.reports[k]} *`)).toBeTruthy();
   expect(screen.getByText(t.reports.theory)).toBeTruthy();
   expect(screen.getByText(t.reports.nextPlan)).toBeTruthy();
   expect(screen.getByText(t.reports.submit)).toBeTruthy();
@@ -56,28 +55,18 @@ test('the Google Form’s questions: identity read-only, الحضور, the done 
 test('reopening: an older saved copy never seeds the fields over the server’s newer draft', async () => {
   const client = createTestQueryClient();
   client.setQueryData(reportFormKey('l-1'), formResponse());
-  mockApi.onRead(async ({ path: p }) =>
-    p === '/teachers/me' ? me : formResponse({ recited: 'الفاتحة' }),
-  );
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/teachers/me' ? me : formResponse({ recited: 'الفاتحة' })));
   await renderWithQuery(<ReportFormScreen />, client);
   await waitFor(() => expect(screen.getByLabelText(t.reports.recited).props.value).toBe('الفاتحة'));
 });
 
 test('a sent report past its edit window is read-only: no submit, says why', async () => {
-  const sent = {
-    status: 'submitted' as const,
-    version: 2,
-    can_edit: false,
-    attendance: 'on_time' as const,
-    recited: 'الفاتحة',
-  };
+  const sent = { status: 'submitted' as const, version: 2, can_edit: false, attendance: 'on_time' as const, recited: 'الفاتحة' };
   await serve(formResponse(sent));
   expect(await screen.findByText(t.reports.editClosed)).toBeTruthy();
   expect(screen.queryByText(t.reports.submit)).toBeNull();
   expect(screen.queryByText(t.reports.resubmit)).toBeNull();
-  expect(
-    screen.getByRole('radio', { name: t.enums.attendance.on_time }).props.accessibilityState,
-  ).toMatchObject({
+  expect(screen.getByRole('radio', { name: t.enums.attendance.on_time }).props.accessibilityState).toMatchObject({
     checked: true,
     disabled: true,
   });
@@ -89,32 +78,18 @@ test('a photo from the gallery: signed upload of its bytes, then registered on t
   const bytes = new Uint8Array([1, 2, 3]).buffer;
   mockPick.mockResolvedValue({ uri: 'file:///p.jpg', mime: 'image/jpeg', bytes, size: 3 });
   mockUpload.mockResolvedValue({ data: {}, error: null });
-  mockApi.onWrite(async ({ method: _m, path: p }) =>
+  mockApiSend.mockImplementation(async (_m: string, p: string) =>
     p.endsWith('/upload-url')
       ? { bucket: 'report-attachments', path: 'r-1/a.jpg', token: 'tok', signed_url: 'x' }
-      : {
-          id: 'a-1',
-          storage_path: 'r-1/a.jpg',
-          mime: 'image/jpeg',
-          size: 3,
-          created_at: '2026-10-03T14:00:00Z',
-        },
+      : { id: 'a-1', storage_path: 'r-1/a.jpg', mime: 'image/jpeg', size: 3, created_at: '2026-10-03T14:00:00Z' },
   );
   await serve(formResponse());
   await fireEvent.press(await screen.findByText(t.payments.mobile.pickPhoto));
   expect(await screen.findByText(new RegExp(t.reports.fileKind.image))).toBeTruthy();
   expect(mockPick).toHaveBeenCalledWith('library');
-  expect(mockApi.writes()).toContainEqual({
-    method: 'POST',
-    path: '/reports/r-1/attachments/upload-url',
-    body: { mime: 'image/jpeg', size: 3 },
-  });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/reports/r-1/attachments/upload-url', { mime: 'image/jpeg', size: 3 });
   expect(mockUpload).toHaveBeenCalledWith('r-1/a.jpg', 'tok', bytes, { contentType: 'image/jpeg' });
   await waitFor(() =>
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: '/reports/r-1/attachments',
-      body: { mime: 'image/jpeg', size: 3, path: 'r-1/a.jpg' },
-    }),
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/reports/r-1/attachments', { mime: 'image/jpeg', size: 3, path: 'r-1/a.jpg' }),
   );
 });

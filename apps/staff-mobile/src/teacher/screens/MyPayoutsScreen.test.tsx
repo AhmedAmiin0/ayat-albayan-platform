@@ -4,13 +4,9 @@ import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { MyPayoutsScreen } from './MyPayoutsScreen';
 import { breakdownLines, monthLabel, payoutSummary, payoutWhen } from '@/teacher/lib/payout-text';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({
-  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const mockApiFetch = jest.fn();
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
 
 const paid: PayoutView = {
@@ -32,38 +28,28 @@ const paid: PayoutView = {
     statuses: [],
   },
 };
-const draft: PayoutView = {
-  ...paid,
-  id: 'p2',
-  month: '2026-10',
-  status: 'draft',
-  approved_at: null,
-  paid_at: null,
-};
+const draft: PayoutView = { ...paid, id: 'p2', month: '2026-10', status: 'draft', approved_at: null, paid_at: null };
 
 test('lines: month, lessons and EGP amount, the breakdown per length, when it was paid', () => {
   expect(monthLabel('2026-09')).toBe('سبتمبر 2026');
   expect(payoutSummary(paid)).toBe(`${t.payouts.lessons}: 10 · 1600 ${t.payouts.currency}`);
-  expect(breakdownLines(paid)).toEqual([
-    `${t.enums.duration['45']}: 8 × 150 = 1200`,
-    `${t.enums.duration['60']}: 2 × 200 = 400`,
-  ]);
+  expect(breakdownLines(paid)).toEqual([`${t.enums.duration['45']}: 8 × 150 = 1200`, `${t.enums.duration['60']}: 2 × 200 = 400`]);
   expect(payoutWhen(paid)).toBe(t.payouts.paidAt.replace('{date}', '2 أكتوبر'));
   expect(payoutWhen(draft)).toBeNull();
 });
 
 test('«مستحقاتي»: my months from /teachers/me/payouts with their state', async () => {
-  mockApi.onRead(() => [draft, paid]);
+  mockApiFetch.mockResolvedValue([draft, paid]);
   await renderWithQuery(<MyPayoutsScreen />);
   expect(await screen.findByText('سبتمبر 2026')).toBeTruthy();
-  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/teachers/me/payouts' });
+  expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/payouts');
   expect(screen.getByText('أكتوبر 2026')).toBeTruthy();
   expect(screen.getByText(t.enums.payoutStatus.paid)).toBeTruthy();
   expect(screen.getByText(t.enums.payoutStatus.draft)).toBeTruthy();
 });
 
 test('no months yet says so', async () => {
-  mockApi.onRead(() => []);
+  mockApiFetch.mockResolvedValue([]);
   await renderWithQuery(<MyPayoutsScreen />);
   expect(await screen.findByText(t.payouts.empty)).toBeTruthy();
 });

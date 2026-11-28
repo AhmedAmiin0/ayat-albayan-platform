@@ -3,21 +3,20 @@ import { t } from '@ab/mobile-kit';
 import { profile } from '@/students/shared/test-data';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { StudentFileSections } from './StudentFileSections';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 const mockPush = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
 
 const S = t.mobileStudentFile;
-const serve = (permissions: string[]) => mockApi.onRead(() => ({ permissions }));
+const serve = (permissions: string[]) => mockApiFetch.mockResolvedValue({ permissions });
 
 beforeEach(() => {
-  mockApi.reset('read');
+  mockApiFetch.mockReset();
   mockPush.mockReset();
 });
 

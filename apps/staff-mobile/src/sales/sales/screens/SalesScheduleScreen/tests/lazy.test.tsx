@@ -3,12 +3,11 @@ import { fakeNow } from '@/test/fake-now';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { scheduleLesson, teacher } from '@/sales/sales/testing/fixtures';
 import { SalesScheduleScreen } from '@/sales/sales/screens/SalesScheduleScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn() },
@@ -20,7 +19,7 @@ const one = (id: string, name: string) =>
 const LESSONS = [one('a', 'سلمى'), one('b', 'هند')];
 
 beforeEach(() => {
-  mockApi.onRead(async ({ path }) =>
+  mockApiFetch.mockImplementation(async (path: string) =>
     path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: LESSONS },
   );
   fakeNow(new Date('2026-10-12T10:00:00.000Z'));

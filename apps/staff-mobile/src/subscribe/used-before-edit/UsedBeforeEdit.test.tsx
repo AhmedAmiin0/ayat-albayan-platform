@@ -2,20 +2,19 @@ import { screen, waitFor } from '@testing-library/react-native';
 import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient } from '@/test/query';
 import { press, show, stateOf, SUB } from './test-util';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 
 const e = t.salesMoney.usedBeforeEdit;
 
-beforeEach(() => mockApi.reset('read'));
+beforeEach(() => mockApiFetch.mockReset());
 
 test('a normal assistant (subscriptions.set_start_date, no edit_terms): no action', async () => {
-  mockApi.onRead(() => ({ permissions: ['self.sales', 'subscriptions.set_start_date'] }));
+  mockApiFetch.mockResolvedValue({ permissions: ['self.sales', 'subscriptions.set_start_date'] });
   const client = createTestQueryClient({ meFromApi: true });
   await show(SUB, client);
   // /auth/me has ANSWERED (useHolds is false until then), so the hidden button proves the gate.
@@ -34,7 +33,7 @@ test('a start in the future with nothing counted: no action', async () => {
 });
 
 test('a booked course (the server state): its words, no stepper, «إلغاء» only', async () => {
-  mockApi.onRead(() => stateOf({ blocked: 'used_before_course_booked' }));
+  mockApiFetch.mockResolvedValue(stateOf({ blocked: 'used_before_course_booked' }));
   await show();
   await press(e.action);
   expect(await screen.findByText(e.errors.used_before_course_booked)).toBeTruthy();
