@@ -98,7 +98,7 @@ export async function beginCall(rt: CallRuntime, target: CallTarget): Promise<vo
   try {
     const peer = await peerFor(rt, live);
     const sdp = peer ? await peer.offer() : null;
-    if (!sdp || !live()) return dropLocal(rt, peer);
+    if (!sdp || !live()) { dropLocal(rt, peer); return; }
     const view = await sends.startCall({ phone: target.phone, sdp, clientRequestId: rt.platform.requestId() });
     if (!live()) {
       await dropAndEnd(rt, peer, view.id);
@@ -121,7 +121,7 @@ export async function acceptRinging(rt: CallRuntime, input: { row: ActiveCallVie
   try {
     const peer = await peerFor(rt, live);
     const sdp = peer ? await peer.answer(row.offer_sdp ?? '') : null;
-    if (!sdp || !live()) return dropLocal(rt, peer);
+    if (!sdp || !live()) { dropLocal(rt, peer); return; }
     await sends.acceptCall(row.id, sdp);
     if (!live()) {
       await dropAndEnd(rt, peer, row.id);

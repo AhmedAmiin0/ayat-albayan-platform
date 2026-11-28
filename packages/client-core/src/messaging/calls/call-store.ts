@@ -97,7 +97,7 @@ export class CallStore implements CallRuntime {
    * off (or this user lost inbox.send) during a live call (`off`): it is ended, the mic released.
    */
   follow(d: Pick<CallDerived, 'answer' | 'gone' | 'deadline' | 'off'>): void {
-    if (d.off) return this.hangup();
+    if (d.off) { this.hangup(); return; }
     if (d.answer && d.answer !== this.answered) this.applyAnswer((this.answered = d.answer));
     if (d.gone && this.state.session?.ended === false) this.serverEnded();
     this.schedule(d.deadline);

@@ -18,14 +18,6 @@
       "count": 1
     }
   },
-  "src/core/errors/send-error.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 1
-    }
-  },
   "src/core/http/api-client/tests/api-client.test.ts": {
     "typescript/no-base-to-string": {
       "count": 2
@@ -73,9 +65,6 @@
     },
     "stylistic/max-len": {
       "count": 7
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 2
     }
   },
   "src/messaging/calls/call-peer.test.ts": {
@@ -118,9 +107,6 @@
     },
     "stylistic/max-len": {
       "count": 9
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
     }
   },
   "src/messaging/calls/call-words.ts": {
@@ -252,9 +238,6 @@
     }
   },
   "src/people/assistants/terms-form.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 2
-    },
     "complexity": {
       "count": 3
     },
@@ -265,7 +248,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 6
+      "count": 5
     }
   },
   "src/people/users/create-form.ts": {
