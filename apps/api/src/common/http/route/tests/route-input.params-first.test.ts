@@ -16,10 +16,15 @@ const routes = {
   }),
 };
 
+const offered = z.string().refine((key) => key !== 'off', 'unknown_key');
+
 @Controller()
 class ParamsFirstProbeController {
   @Route(routes.put)
-  put(@RouteInput({ paramsFirst: true }) input: RouteInputOf<typeof routes.put>) {
+  put(
+    @RouteInput({ paramsFirst: true, paramChecks: { key: offered } })
+    input: RouteInputOf<typeof routes.put>,
+  ) {
     return { key: input.params.key, value: input.body.value };
   }
 }
@@ -48,6 +53,12 @@ describe('@RouteInput({ paramsFirst: true })', () => {
     const res = await put('/probe/keys/Bad-Key', {});
     expect(res.statusCode).toBe(400);
     expect(res.json()).toMatchObject({ message: 'validation_failed', issues: [{ path: '' }] });
+  });
+
+  it("lets the server's own param rule win over a bad body too", async () => {
+    const res = await put('/probe/keys/off', {});
+    expect(res.statusCode).toBe(400);
+    expect(res.json()).toMatchObject({ issues: [{ path: '', message: 'unknown_key' }] });
   });
 
   it('answers the body issue when the param is good', async () => {
