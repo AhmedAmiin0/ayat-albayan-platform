@@ -18,7 +18,7 @@ describe('GET /threads/:phone?around=', () => {
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    t.queries.thread.mockResolvedValue(threadRow({ unread_count: 3, guardian_id: 'g1' }));
+    t.queries.thread.mockResolvedValue(threadRow({ unread_count: 3, guardian_id: 'c0000000-0000-4000-8000-000000000001' }));
     t.queries.messages.mockResolvedValue([messageRow({ id: HIT, body: 'درس', template_key: null })]);
     t.queries.familyTags.mockResolvedValue(new Map());
     t.queries.people.mockResolvedValue(NO_PEOPLE);

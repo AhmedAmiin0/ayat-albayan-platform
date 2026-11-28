@@ -9,7 +9,7 @@ const kid = (id: string, code: string | null = 'AB-0101') =>
 
 describe('forTeacher (teacher mode thread)', () => {
   it('clears the lead and the money tags and shows my unread, not the admin’s', () => {
-    const view = toThreadView(threadRow({ unread_count: 5, guardian_id: 'g1' }), NOW, { tag: { badge: 'subscribed', unpaid: true } });
+    const view = toThreadView(threadRow({ unread_count: 5, guardian_id: 'c0000000-0000-4000-8000-000000000001' }), NOW, { tag: { badge: 'subscribed', unpaid: true } });
     expect(view).toMatchObject({ subscribed: true, badge: 'subscribed', unpaid: true });
     expect(forTeacher(view, new Map([[PHONE, 2]]))).toMatchObject({
       ...{
@@ -25,7 +25,7 @@ describe('forTeacher (teacher mode thread)', () => {
         unread_count: 2,
         display_name: 'أم ياسمين',
         phone_e164: PHONE,
-        guardian_id: 'g1',
+        guardian_id: 'c0000000-0000-4000-8000-000000000001',
       },
     });
     expect(forTeacher(view, new Map()).unread_count).toBe(0);
@@ -34,10 +34,10 @@ describe('forTeacher (teacher mode thread)', () => {
 
 describe('teacherPeople', () => {
   it('only my children of the guardian, never a package', () => {
-    const row = threadRow({ guardian_id: 'g1', guardian_name: 'أم ياسمين' });
+    const row = threadRow({ guardian_id: 'c0000000-0000-4000-8000-000000000001', guardian_name: 'أم ياسمين' });
     const people = teacherPeople({ row, students: [kid('s1'), kid('s2', null)], mine: new Set(['s2']) });
     expect(people).toEqual({
-      guardian: { id: 'g1', name: 'أم ياسمين' },
+      guardian: { id: 'c0000000-0000-4000-8000-000000000001', name: 'أم ياسمين' },
       lead: null,
       students: [{ id: 's2', name: 's2', code: '', teacher_name: 'أبرار', status: 'active', subscription: null }],
     });

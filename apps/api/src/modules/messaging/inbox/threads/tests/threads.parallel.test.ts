@@ -15,12 +15,12 @@ const slow = <T>(value: T) =>
 
 function service() {
   const queries = {
-    list: slow({ items: [threadRow({ guardian_id: 'g1' })], total: 1 }),
+    list: slow({ items: [threadRow({ guardian_id: 'c0000000-0000-4000-8000-000000000001' })], total: 1 }),
     unsupported: vi.fn(
       (rows: unknown[]) => new Promise((done) => setTimeout(() => done(rows), RTT)),
     ),
     familyTags: slow(new Map()),
-    thread: slow(threadRow({ guardian_id: 'g1' })),
+    thread: slow(threadRow({ guardian_id: 'c0000000-0000-4000-8000-000000000001' })),
     messages: slow([messageRow({ template_key: null, body: 'سلام' })]),
     known: slow(null),
     people: slow(NO_PEOPLE),
@@ -56,7 +56,7 @@ describe('ThreadsService — independent reads in parallel (owner 2026-10-27: en
   it('GET /threads: 2 rounds, the unsupported marks beside the family tags (was 3 when a page has an empty last message)', async () => {
     const { svc, queries } = service();
     expect(await rounds(() => svc.list({ page: 1, pageSize: 20 }))).toBe(2);
-    expect(queries.familyTags).toHaveBeenCalledWith(['g1'], 2);
+    expect(queries.familyTags).toHaveBeenCalledWith(['c0000000-0000-4000-8000-000000000001'], 2);
   });
 
   it('GET /threads/:phone, first page: 2 rounds (was 5: stamp, thread, messages + people, views, lessons, the stamp beside them)', async () => {
@@ -69,7 +69,7 @@ describe('ThreadsService — independent reads in parallel (owner 2026-10-27: en
       people: NO_PEOPLE,
     });
     expect(queries.lessons).toHaveBeenCalledWith(
-      expect.objectContaining({ guardian_id: 'g1' }),
+      expect.objectContaining({ guardian_id: 'c0000000-0000-4000-8000-000000000001' }),
       expect.any(Date),
     );
   });

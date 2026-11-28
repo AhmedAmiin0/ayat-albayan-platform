@@ -9,7 +9,7 @@ const OWN = '+201001234567';
 const TRIAL = '+966500000001';
 const MIXED = '+966500000002';
 const ACTIVE = '+966500000003';
-const ME = { id: 'tch-1', display_name_ar: 'أبرار', phone_e164: OWN };
+const ME = { id: 'e0000000-0000-4000-8000-000000000001', display_name_ar: 'أبرار', phone_e164: OWN };
 const REQ = 'c0000000-0000-4000-8000-000000000003';
 const FRESH = new Date(Date.now() - 3_600_000).toISOString();
 
@@ -41,7 +41,7 @@ describe('trial students: no direct chat between the teacher and the family (own
     t.teacher.guardianStudents.mockResolvedValue([]);
     t.teacher.myStudentIds.mockResolvedValue(new Set());
     t.queries.list.mockResolvedValue({ items: [], total: 0 });
-    t.queries.thread.mockImplementation(async (phone: string) => threadRow({ phone_e164: phone, last_inbound_at: FRESH, guardian_id: 'g1' }));
+    t.queries.thread.mockImplementation(async (phone: string) => threadRow({ phone_e164: phone, last_inbound_at: FRESH, guardian_id: 'c0000000-0000-4000-8000-000000000001' }));
     t.queries.messages.mockResolvedValue([]);
     t.queries.lessons.mockResolvedValue([]);
     t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9', status: 'queued' }));
@@ -75,7 +75,7 @@ describe('trial students: no direct chat between the teacher and the family (own
   });
 
   it('my own chat with the academy stays readable', async () => {
-    t.queries.thread.mockResolvedValue(threadRow({ phone_e164: OWN, lead_id: null, teacher_id: 'tch-1', teacher_name: 'أبرار' }));
+    t.queries.thread.mockResolvedValue(threadRow({ phone_e164: OWN, lead_id: null, teacher_id: 'e0000000-0000-4000-8000-000000000001', teacher_name: 'أبرار' }));
     expect((await t.call({ method: 'GET', url: url(OWN), token: 'teacher' })).statusCode).toBe(200);
   });
 });

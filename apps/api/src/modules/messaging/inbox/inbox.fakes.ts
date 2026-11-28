@@ -13,7 +13,7 @@ export function threadRow(over: Partial<ThreadRow> = {}): ThreadRow {
   return {
     phone_e164: PHONE,
     display_name: 'أم ياسمين',
-    last_message_id: 'm0000000-0000-4000-8000-000000000001',
+    last_message_id: 'a0000000-0000-4000-8000-000000000001',
     last_direction: 'inbound',
     last_body: 'السلام عليكم',
     last_template_key: null,
@@ -27,7 +27,7 @@ export function threadRow(over: Partial<ThreadRow> = {}): ThreadRow {
     last_family_read_at: null,
     last_activity_at: '2026-10-02T08:00:00Z',
     unread_count: 1,
-    lead_id: 'l0000000-0000-4000-8000-000000000001',
+    lead_id: 'b0000000-0000-4000-8000-000000000001',
     lead_name: 'أم ياسمين',
     lead_status: 'new',
     lead_source: 'whatsapp_direct',
