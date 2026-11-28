@@ -1,8 +1,8 @@
 import { messageStatusCalls } from '@ab/client-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
-import { refreshInbox } from './inbox-sync';
-import { replaceMessage, threadKey, type ThreadCache } from './thread-cache';
+import { refreshInbox } from '@/inbox/thread/hooks/inbox-sync';
+import { replaceMessage, threadKey, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 
 const status = messageStatusCalls({ apiFetch, apiSend });
 
