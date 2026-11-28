@@ -10,6 +10,9 @@
    `dark:` follows <html data-theme>, which the boot script in index.html always sets. */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+/* `tall:` = room for a list's own scroll box; below it the page frame is the only scroller (docs/66 §1). */
+@custom-variant tall (@media (min-width: 40rem) and (min-height: 40rem));
+
 /* ---------- theme-independent tokens ---------- */
 @theme {
   /* One legible face for everything (owner, 2026-10-05): titles are the same sans at 700. */

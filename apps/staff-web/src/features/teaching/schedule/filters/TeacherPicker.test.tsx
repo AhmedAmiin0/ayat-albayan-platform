@@ -32,4 +32,19 @@ describe('TeacherPicker (teacher multi-select)', () => {
     expect(summary?.className).toContain('min-h-11');
     expect(summary?.className).not.toMatch(/(?:^|\s)h-\d/);
   });
+
+  it('in the filter panel the list flows in the panel body, which is the only scroller', () => {
+    const { container } = render(
+      <TeacherPicker inline teachers={ALL} value={[]} onChange={vi.fn()} />,
+    );
+    const list = container.querySelector('fieldset')?.className ?? '';
+    expect(list).not.toMatch(/overflow|max-h/);
+  });
+
+  it('the floating list keeps its capped popover scroll', () => {
+    const { container } = render(<TeacherPicker teachers={ALL} value={[]} onChange={vi.fn()} />);
+    const list = container.querySelector('fieldset')?.className ?? '';
+    expect(list).toContain('max-h-72');
+    expect(list).toContain('overflow-y-auto');
+  });
 });

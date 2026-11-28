@@ -46,7 +46,7 @@ test.describe('viewport-high admin frame', () => {
         });
         expect(scrolls).toBe(true);
         await expect(admin.getByRole('textbox').last()).toBeInViewport();
-        // The lead panel folds under a narrow thread, so the reply box keeps a usable width.
+        // Under a 48rem thread the lead panel is a sheet, so the reply box keeps the thread width.
         const replyWidth = await admin
           .getByRole('textbox')
           .last()

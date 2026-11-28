@@ -2,14 +2,16 @@ import type { ReactNode } from 'react';
 import { cn } from '@ab/web-kit';
 
 /**
- * The fixed-height box a list screen's table lives in: it takes the rest of the page frame (a flex
- * column: toolbar auto, this box `h-0 flex-auto`: basis = the 0 height, so the rows never size it;
- * the pager under it) and never less than 320px; rows scroll inside it on both axes and
- * the header row stays pinned (PageFrame's `thead th` sticky rule). Few rows leave the space empty.
- * Phones (< 640px, rows stacked as cards): no box-in-a-scrolling-page; the rows flow with the page.
+ * The box a list screen's table lives in. On a tall window (`tall:`, 40rem wide and high) it takes
+ * the rest of the page frame (`h-0 flex-auto`: the rows never size it, the pager stays under it),
+ * rows scroll inside it and the header row stays pinned (PageFrame's `thead th` sticky rule).
+ * Below that (phones, short laptop windows) it flows with the page, so the frame is the only
+ * scroller and no box sits inside a scrolling page (docs/66 §1).
  */
-export const tableBoxClass =
-  'relative flex h-0 min-h-[320px] flex-auto flex-col overflow-auto overscroll-contain rounded-md border border-rule max-sm:h-auto max-sm:min-h-0 max-sm:flex-none max-sm:overflow-visible';
+export const tableBoxClass = cn(
+  'relative flex flex-col rounded-md border border-rule',
+  'tall:h-0 tall:min-h-60 tall:flex-auto tall:overflow-auto tall:overscroll-contain',
+);
 
 export function TableBox({
   children,
@@ -23,7 +25,7 @@ export function TableBox({
   return (
     <div
       data-table-box
-      className={cn(tableBoxClass, center && 'items-center justify-center p-4', className)}
+      className={cn(tableBoxClass, center && 'items-center justify-center p-4 tall:overflow-visible', className)}
     >
       {children}
     </div>

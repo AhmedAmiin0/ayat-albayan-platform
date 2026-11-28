@@ -14,7 +14,7 @@ export function SurahList({ query, selected, onPick }: SurahListProps) {
   const found = searchSurahs(query);
   if (found.length === 0) return <p className="py-3 text-sm text-ink-3">{p.noMatch}</p>;
   return (
-    <ul className="grid max-h-64 overflow-y-auto rounded-md border border-rule">
+    <ul className="grid rounded-md border border-rule">
       {found.map((n) => (
         <li key={n} className="border-b border-rule last:border-b-0">
           <button

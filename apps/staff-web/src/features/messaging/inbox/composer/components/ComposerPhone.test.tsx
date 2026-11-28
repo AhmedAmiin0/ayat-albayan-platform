@@ -83,3 +83,14 @@ describe('ComposerPhone with no template allowed', () => {
     expect(screen.queryByText(t.inbox.composer.noAllowedHelp)).toBeNull();
   });
 });
+
+describe('ComposerPhone scroll', () => {
+  it('scrolls on its own only below the shell width, so a wide window keeps one scroller', async () => {
+    show({ mode: 'admin', open: true, rows: [] });
+    const box = (await screen.findByRole('textbox', { name: t.inbox.composer.messageLabel })).closest(
+      '.border-t',
+    );
+    const scroll = (box?.className ?? '').split(' ').filter((c) => /(?:overflow|max-h)/.test(c));
+    expect(scroll).toEqual(['max-shell:max-h-[70dvh]', 'max-shell:overflow-y-auto']);
+  });
+});

@@ -6,15 +6,16 @@ export interface ThreadSideSheetProps {
   label: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** The panel that sits beside the chat on wide screens (LeadPanel / SubscribePanel). */
+  /** The panel that sits beside a 48rem thread (LeadPanel / SubscribePanel). */
   children: ReactNode;
   /** The compact chat header: an icon button named by `label` instead of a full-width one. */
   compact?: boolean;
 }
 
 /**
- * Phones (< 640px): the thread's side panel is not stacked under the chat; a
- * button in the thread header opens it as a full-screen Dialog, so the chat keeps its place.
+ * While the thread is under 48rem (phones and most laptop windows) the side panel is not stacked
+ * under the chat; a button in the thread header opens it as a Dialog, so the log stays the only
+ * scroller and the chat keeps its place (docs/66 §2).
  */
 export function ThreadSideSheet({
   label,

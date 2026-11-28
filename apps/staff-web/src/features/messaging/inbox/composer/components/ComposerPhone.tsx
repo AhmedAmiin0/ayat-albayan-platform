@@ -111,7 +111,7 @@ export function ComposerPhone({
   );
 
   return (
-    <div className="grid max-h-[70dvh] shrink-0 gap-1.5 overflow-y-auto border-t border-rule bg-page px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+    <div className="grid shrink-0 gap-1.5 border-t border-rule bg-page px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] max-shell:max-h-[70dvh] max-shell:overflow-y-auto">
       <Notices notes={notes} />
       {!open && <ReopenBar {...{ thread, context, noneAllowed, trying, teacher }} />}
       {!open && <SendRatingButton thread={thread} />}

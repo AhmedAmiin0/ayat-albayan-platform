@@ -38,7 +38,7 @@ export function SheetBell({ onPick }: SheetBellProps) {
         )}
       </button>
       <div id={panelId} hidden={!open} className="border-t border-rule">
-        {open && <NotificationPanel onPick={onPick} />}
+        {open && <NotificationPanel bare onPick={onPick} />}
       </div>
     </div>
   );

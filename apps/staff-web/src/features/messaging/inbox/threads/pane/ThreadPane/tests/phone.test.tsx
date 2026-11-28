@@ -71,11 +71,13 @@ describe('ThreadPane on phones (< 640px): the side panel is a full-screen sheet'
     expect(sheet.getByText(pupil().name)).toBeTruthy();
   });
 
-  it('from 640px nothing changes: the panel sits inline and there is no opener', async () => {
+  it('wide: the panel sits inline from a 48rem thread, where the opener hides', async () => {
     vi.unstubAllGlobals();
     renderThread(LEAD_PAGE);
-    expect(await screen.findByRole('complementary', { name: t.inbox.leadPanel })).toBeTruthy();
-    expect(screen.queryByRole('button', { name: t.inbox.leadSheet })).toBeNull();
+    const panel = await screen.findByRole('complementary', { name: t.inbox.leadPanel });
+    expect(panel.closest('[data-thread-side]')).not.toBeNull();
+    const opener = screen.getByRole('button', { name: t.inbox.leadSheet });
+    expect(opener.closest('.\\@3xl\\/thread\\:hidden')).not.toBeNull();
   });
 
   it('«تسجيل الطالب» in the sheet: it stays open on the family panel, the toast on top', async () => {

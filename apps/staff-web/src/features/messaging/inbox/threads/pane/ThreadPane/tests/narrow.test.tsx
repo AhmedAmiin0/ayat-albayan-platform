@@ -84,3 +84,27 @@ describe('ThreadPane below 900px (a half-screen window, a tablet): the full-scre
     expect(line.className).not.toContain('max-sm:');
   });
 });
+
+describe('ThreadPane from 900px while the thread is under 48rem (docs/66 §2)', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    apiFetch.mockReset();
+  });
+
+  it('the lead panel opens from a header button instead of stacking under the log', async () => {
+    viewport(1280);
+    renderThread();
+    const log = await screen.findByRole('log', { name: t.messages.log });
+    const scroller = log.closest('[class*="overflow-y-auto"]');
+    expect(scroller?.className).toContain('shell:flex-1');
+    expect(scroller?.className).not.toContain('max-h-');
+    const opener = await screen.findByRole('button', { name: t.inbox.leadSheet });
+    expect(opener.closest('.\\@3xl\\/thread\\:hidden')).not.toBeNull();
+    const side = document.querySelector('[data-thread-side]');
+    expect(side?.className.split(' ')).toEqual(expect.arrayContaining(['hidden', '@3xl/thread:flex']));
+    opener.click();
+    const sheet = await screen.findByRole('dialog', { name: t.inbox.leadSheet });
+    expect(within(sheet).getByRole('complementary', { name: t.inbox.leadPanel })).toBeTruthy();
+  });
+});
+
