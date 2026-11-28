@@ -56,7 +56,11 @@ export function currentPackage<T extends { status: SubscriptionStatus }>(
   return live.find((p) => p.status === 'active') ?? live[0] ?? null;
 }
 
-type CancelRow = { status: SubscriptionStatus; paid: number; balance?: { lessons_used: number } };
+interface CancelRow {
+  status: SubscriptionStatus;
+  paid: number;
+  balance?: { lessons_used: number };
+}
 
 /** Cancel needs nothing paid or used; the API checks booked lessons and commission (409). */
 export function cancelOffered(p: CancelRow): boolean {

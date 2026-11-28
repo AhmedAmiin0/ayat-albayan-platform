@@ -55,11 +55,6 @@
       "count": 4
     }
   },
-  "src/assistant/wallet.test.ts": {
-    "typescript/dot-notation": {
-      "count": 6
-    }
-  },
   "src/assistant/wallet.ts": {
     "stylistic/max-len": {
       "count": 7
@@ -112,9 +107,6 @@
     }
   },
   "src/ledger/usage/package-cancel.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 3
     }
