@@ -1,3 +1,4 @@
+import { leadListItem } from '@ab/shared/testing';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -6,7 +7,7 @@ import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
 import { LeadsInbox } from './LeadsInbox';
 import type { LeadSearch } from './types';
-import type { LeadView } from '@ab/shared';
+import type { LeadListItem } from '@ab/shared';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend: vi.fn() }));
@@ -27,7 +28,7 @@ vi.mock('@tanstack/react-router', () => ({
   ),
 }));
 
-const ROW: LeadView = {
+const ROW = leadListItem({
   id: 'l1',
   phone_e164: '+966501234567',
   name: 'أم سهيلة',
@@ -36,11 +37,11 @@ const ROW: LeadView = {
   last_inbound_at: '2026-10-01T10:00:00+00:00',
   last_outbound_at: null,
   created_at: '2026-09-28T10:00:00+00:00',
-};
+});
 
 function renderInbox(
   search: LeadSearch = { page: 1 },
-  opts: { total?: number; items?: LeadView[] } = {},
+  opts: { total?: number; items?: LeadListItem[] } = {},
 ) {
   const items = opts.items ?? [ROW];
   apiFetch.mockResolvedValue({

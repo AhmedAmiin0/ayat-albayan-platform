@@ -10,7 +10,13 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mob
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T09:00:00Z') }));
 
-const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
+const TEACHER = '00000000-0000-4000-8000-0000000000a1';
+const me = {
+  id: TEACHER,
+  display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  meeting_link: null, meeting_mode: null,
+  students: [],
+};
 // What the API answers a teacher: no `reschedule` or admin cancel among her lesson's events.
 const mine = answered(lesson({ id: 'l1', allowed_events: ['confirm'] }));
 
@@ -29,7 +35,7 @@ test('my Riyadh week from /teachers/me/lessons, my availability, and no «غيّ
   expect(mockApiFetch).toHaveBeenCalledWith(
     '/teachers/me/lessons?from=2026-09-25T21%3A00%3A00.000Z&to=2026-10-02T21%3A00%3A00.000Z',
   );
-  expect(mockApiFetch).toHaveBeenCalledWith('/teachers/t-abrar/availability');
+  expect(mockApiFetch).toHaveBeenCalledWith(`/teachers/${TEACHER}/availability`);
   expect(mockApiFetch.mock.calls.some(([p]) => String(p).startsWith('/lessons'))).toBe(false);
   expect(screen.getByRole('header', { name: t.teacherNav.calendar })).toBeTruthy();
   await fireEvent.press(screen.getByText('يوسف أحمد'));

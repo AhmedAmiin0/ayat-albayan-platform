@@ -1,23 +1,12 @@
-import { leadColumnQueryShape, leadWriteRoutes as routes } from '@ab/shared';
-import { LEAD_SOURCES, LEAD_STATUSES } from '@ab/catalog';
-import { Controller, Get, Query } from '@nestjs/common';
+import { leadReadRoutes as reads, leadWriteRoutes as routes } from '@ab/shared';
+import { Controller } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { pageQueryShape } from './http';
+import { searchTerm, toLeadListPage } from './http';
 import { LeadProfileService } from './lead-profile.service';
 import { LeadsService } from './leads.service';
-
-const listQuery = z.object({
-  status: z.enum(LEAD_STATUSES).optional(),
-  source: z.enum(LEAD_SOURCES).optional(),
-  ...pageQueryShape,
-  // R-NFR-08, R-LEAD-05.
-  ...leadColumnQueryShape,
-});
 
 /** Admin lead inbox (R-LEAD-01, R-LEAD-04). Upsert-by-phone has no route: the webhook calls it. */
 @ApiTags('leads')
@@ -29,10 +18,10 @@ export class LeadsController {
     private readonly profile: LeadProfileService,
   ) {}
 
-  @Get('leads')
-  @Permissions('leads.read')
-  list(@Query() query: unknown) {
-    return this.leads.list(parseOrThrow(listQuery, query));
+  @Route(reads.list)
+  async list(@RouteInput() { query }: RouteInputOf<typeof reads.list>) {
+    const page = await this.leads.list({ ...query, q: searchTerm(query.q) });
+    return toLeadListPage(page);
   }
 
   @Route(routes.changeStatus)

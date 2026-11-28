@@ -75,3 +75,4 @@ export * from './teaching/feedback';
 export * from './platform/legal';
 export * from './platform/google-sync';
 export * from './platform/drive-backup';
+export * from './platform/activity';

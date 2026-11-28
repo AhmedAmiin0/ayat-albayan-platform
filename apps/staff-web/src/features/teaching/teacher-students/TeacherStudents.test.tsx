@@ -12,10 +12,12 @@ vi.mock('@tanstack/react-router', async () => ({
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
+const TEACHER = '00000000-0000-4000-8000-0000000000a1';
+const SUHAILA = '00000000-0000-4000-8000-0000000000c1';
 const ME: TeacherMe = {
-  id: 't-abrar', display_name_ar: 'أبرار', gender: 'female', programs: ['quran'],
+  id: TEACHER, display_name_ar: 'أبرار', gender: 'female', programs: ['quran'],
   tz: 'Africa/Cairo', meeting_link: null, meeting_mode: null, platform_classroom: false,
-  students: [{ id: 's1', code: 'AB-0183', name: 'سهيلة', tz: 'Asia/Riyadh', status: 'active' }],
+  students: [{ id: SUHAILA, code: 'AB-0183', name: 'سهيلة', tz: 'Asia/Riyadh', status: 'active' }],
 };
 const answer = (path: string): unknown => (path === '/teachers/me' ? ME : []);
 
@@ -40,7 +42,7 @@ describe('TeacherStudents «الطلاب» (docs/48 thin page)', () => {
     expect(screen.getByText(t.teacherStudents.title)).toBeTruthy();
     const table = await screen.findByRole('table', { name: t.teacherBoard.tab });
     const link = table.querySelector('a');
-    expect(link?.getAttribute('href')).toBe('/teacher/students/s1');
+    expect(link?.getAttribute('href')).toBe(`/teacher/students/${SUHAILA}`);
     expect(calls('/teachers/me/lessons?')).toBe(1);
     expect(apiFetch.mock.calls.filter(([p]) => p === '/teachers/me')).toHaveLength(1);
     expect(document.body.textContent).not.toMatch(/\+\d{8}/);

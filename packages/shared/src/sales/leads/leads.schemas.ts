@@ -1,7 +1,8 @@
 import { LEAD_SOURCES, LEAD_STATUSES } from '@ab/catalog';
-import { instant } from '@ab/core';
+import { instant, pageQuery } from '@ab/core';
 import { z } from 'zod';
 import { FOLLOW_UP_NOTES } from '../../messaging';
+import { leadColumnQueryShape } from '../../people/schemas';
 
 export const leadStatusSchema = z.enum(LEAD_STATUSES);
 export const leadSourceSchema = z.enum(LEAD_SOURCES);
@@ -37,3 +38,18 @@ export const leadRowSchema = z.object({
   updated_at: instant,
 });
 export type LeadRowView = z.infer<typeof leadRowSchema>;
+
+/** GET /leads: status, source, search text, paging and the column sort (R-LEAD-01, R-NFR-08). */
+export const leadListQuerySchema = z.object({
+  status: leadStatusSchema.optional(),
+  source: leadSourceSchema.optional(),
+  ...pageQuery({ size: 25 }),
+  q: z.string().optional(),
+  ...leadColumnQueryShape,
+});
+export type LeadListQuery = z.infer<typeof leadListQuerySchema>;
+export type LeadListQueryInput = z.input<typeof leadListQuerySchema>;
+
+/** A GET /leads row: every lead column and the name of the salesperson who follows it up. */
+export const leadListItemSchema = leadRowSchema.extend({ assigned_to_name: z.string().nullable() });
+export type LeadListItem = z.infer<typeof leadListItemSchema>;

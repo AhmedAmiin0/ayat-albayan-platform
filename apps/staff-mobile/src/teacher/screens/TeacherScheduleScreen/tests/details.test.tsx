@@ -11,7 +11,12 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mob
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T14:00:00Z') }));
 
-const me = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
+const me = {
+  id: '00000000-0000-4000-8000-0000000000a1',
+  display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  meeting_link: null, meeting_mode: null,
+  students: [],
+};
 // What the API answers a teacher: no reschedule or admin cancel; the lesson started an hour ago.
 const mine = answered(lesson({ id: 'l1', status: 'confirmed', allowed_events: ['complete', 'mark_no_show'], students: [{ ...yusuf, report: null }] }));
 

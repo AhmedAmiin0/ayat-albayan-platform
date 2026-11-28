@@ -35,27 +35,4 @@ export const activityListQuery = z.object({
   ...listSortShape(ACTIVITY_SORT_KEYS),
 });
 export type ActivityListQuery = z.output<typeof activityListQuery>;
-
-/** One row of GET /activity (v_activity_log). */
-export interface ActivityView {
-  id: string;
-  at: string;
-  actor_id: string | null;
-  actor_name: string | null;
-  actor_role: string;
-  action: string;
-  method: string;
-  route: string;
-  entity: string | null;
-  entity_id: string | null;
-  status: number;
-  duration_ms: number;
-  meta: Record<string, unknown>;
-}
-
-export interface ActivityPage {
-  items: ActivityView[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
+export type ActivityListQueryInput = z.input<typeof activityListQuery>;

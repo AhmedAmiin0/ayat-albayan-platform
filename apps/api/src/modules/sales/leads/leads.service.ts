@@ -1,6 +1,5 @@
 import { canTransitionLead } from '@ab/catalog';
 import { normalizePhone } from '@ab/core';
-import type { LeadView } from '@ab/shared';
 import type { LeadStatus } from '@ab/catalog';
 import type { Page } from '@ab/core';
 import {
@@ -18,7 +17,7 @@ import {
   type JobApplicantRow,
 } from '@/modules/sales/job-applicants/job-applicants.repo';
 import { LeadsRepo, type LeadListFilter, type LeadRow } from './leads.repo';
-import type { InboundContact, LeadAction } from './leads.types';
+import type { InboundContact, LeadAction, LeadListRow } from './leads.types';
 
 export const invalidTransition = (from: string, to: string) =>
   new ConflictException({ code: 'invalid_transition', from, to });
@@ -78,7 +77,7 @@ export class LeadsService {
     });
   }
 
-  async list(f: LeadListFilter): Promise<Page<LeadView>> {
+  async list(f: LeadListFilter): Promise<Page<LeadListRow>> {
     const { items, total } = await this.leads.list(f);
     const ids = [...new Set(items.flatMap((l) => (l.assigned_to ? [l.assigned_to] : [])))];
     const names = this.sales ? await this.sales.names(ids) : new Map<string, string>();

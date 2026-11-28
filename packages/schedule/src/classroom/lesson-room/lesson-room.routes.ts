@@ -1,5 +1,7 @@
 import { defineRoute } from '@ab/core';
 import { z } from 'zod';
+import { studentJoinSchema } from '../meetings';
+import { roomJoinResultSchema } from '../room-state';
 import {
   roomOpenResultSchema,
   studentJoinLinkUrlSchema,
@@ -28,6 +30,15 @@ export const lessonRoomRoutes = {
     path: '/public/student/:token',
     params: byToken,
     response: studentLinkViewSchema,
+    tags,
+  }),
+  /** The lesson whose room is open now; 404, 403 join_not_open_yet, 410, 429 before a bad name. */
+  studentJoin: defineRoute({
+    method: 'POST',
+    path: '/public/student/:token/join',
+    params: byToken,
+    body: studentJoinSchema,
+    response: roomJoinResultSchema,
     tags,
   }),
   /** Creates or rotates the student's link; the old one stops working. */

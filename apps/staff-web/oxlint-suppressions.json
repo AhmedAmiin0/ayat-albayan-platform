@@ -1979,10 +1979,7 @@
   },
   "src/features/messaging/messaging/gate-api.ts": {
     "stylistic/max-len": {
-      "count": 4
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 3
     },
     "ab/no-shape-checks": {
       "count": 2
@@ -4164,11 +4161,6 @@
       "count": 1
     }
   },
-  "src/features/reporting/activity/activity.api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/features/reporting/dashboard/DashboardPage/DashboardPage.tsx": {
     "ab/module-boundaries": {
       "count": 2
@@ -4406,14 +4398,6 @@
       "count": 1
     },
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/features/sales/leads/leads.api.ts": {
-    "complexity": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -6080,11 +6064,6 @@
   },
   "src/features/teaching/teacher/TeacherDashboard/tests/TeacherDashboard.test.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/features/teaching/teacher/api.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

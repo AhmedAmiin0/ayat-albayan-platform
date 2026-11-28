@@ -48,4 +48,20 @@ describe('studentLinkCalls', () => {
     const { client } = clientAnswering(page);
     await expect(studentLinkCalls(client).view('t')).rejects.toThrow();
   });
+
+  it('joins the open lesson by the token, with the name when one was typed', async () => {
+    const join = { url: 'wss://x', token: 't', room: 'r', role: 'guest' };
+    const { client, apiSend } = clientAnswering(join);
+    await expect(studentLinkCalls(client).join({ token: 'a/b', name: 'سارة' })).resolves.toEqual(
+      join,
+    );
+    expect(apiSend).toHaveBeenCalledWith('POST', '/public/student/a%2Fb/join', { name: 'سارة' });
+    await studentLinkCalls(client).join({ token: 't' });
+    expect(apiSend).toHaveBeenLastCalledWith('POST', '/public/student/t/join', {});
+  });
+
+  it('refuses a join answer without the room credentials', async () => {
+    const { client } = clientAnswering({ url: 'wss://x' });
+    await expect(studentLinkCalls(client).join({ token: 't' })).rejects.toThrow();
+  });
 });

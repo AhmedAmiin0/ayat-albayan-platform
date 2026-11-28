@@ -15,4 +15,11 @@ export interface LessonRoomCalls {
 /** The student's own page with no login, on a public api client. */
 export interface StudentLinkCalls {
   view: (token: string) => Answer<'studentLink'>;
+  /** The lesson whose room is open now; no name = the student's first name. */
+  join: (input: StudentLinkJoin) => Answer<'studentJoin'>;
+}
+
+export interface StudentLinkJoin {
+  token: string;
+  name?: string;
 }

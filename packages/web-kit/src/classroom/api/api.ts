@@ -1,25 +1,22 @@
 import {
   assistantsApi,
+  guestJoinCalls,
   lessonJoinCalls,
   type AssistantPick,
+  type GuestJoinInput,
   type JoinLinkSend,
 } from '@ab/client-core';
-import type { LessonView, RoomJoinResult } from '@ab/schedule';
+import type { LessonView } from '@ab/schedule';
 import { addCalendarDays, localDateIn, wallToUtc } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend, publicApiSend } from '@ab/web-kit/lib/http/api';
+import { apiFetch, apiSend, publicApiFetch, publicApiSend } from '@ab/web-kit/lib/http/api';
 import { viewerZone } from '@ab/web-kit/lib/clock-text';
 
 export const CLASSROOM_KEY = ['classroom'] as const;
 
 const assistants = assistantsApi({ apiFetch, apiSend });
 const joins = lessonJoinCalls({ apiFetch, apiSend });
-
-/** A public join: the link, and the name typed on the page (none when the link names the student). */
-interface GuestJoinInput {
-  linkToken: string;
-  name?: string;
-}
+const guestDoor = guestJoinCalls({ apiFetch: publicApiFetch, apiSend: publicApiSend });
 
 /** Staff, with their own login. A fresh identity per call. */
 export const joinRoom = (lessonId: string) => joins.join(lessonId);
@@ -28,8 +25,7 @@ export const joinRoom = (lessonId: string) => joins.join(lessonId);
  * POST /public/join/:linkToken: the guest's name, never the staff session token. No name for a
  * link that names its student (the family app's): the API takes the student's.
  */
-export const joinAsGuest = ({ linkToken, name }: GuestJoinInput): Promise<RoomJoinResult> =>
-  publicApiSend<RoomJoinResult>('POST', `/public/join/${encodeURIComponent(linkToken)}`, { name });
+export const joinAsGuest = (input: GuestJoinInput) => guestDoor.join(input);
 
 /** Admin: the family's one-lesson link, by WhatsApp. */
 export const sendJoinLink = (send: JoinLinkSend) => joins.sendLink(send);

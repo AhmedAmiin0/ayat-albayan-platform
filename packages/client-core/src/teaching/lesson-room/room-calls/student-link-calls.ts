@@ -7,5 +7,7 @@ export function studentLinkCalls(client: ApiClient): StudentLinkCalls {
   const call = callWith(client);
   return {
     view: (token) => call({ route: lessonRoomRoutes.studentLink, params: { token } }),
+    join: ({ token, name }) =>
+      call({ route: lessonRoomRoutes.studentJoin, params: { token }, body: { name } }),
   };
 }

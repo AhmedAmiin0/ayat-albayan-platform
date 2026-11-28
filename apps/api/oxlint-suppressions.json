@@ -743,9 +743,6 @@
   "src/common/telemetry/activity/activity.controller.ts": {
     "ab/module-boundaries": {
       "count": 1
-    },
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/common/telemetry/activity/activity.entry.ts": {
@@ -6159,11 +6156,6 @@
   },
   "src/modules/sales/leads/leads.controller.test.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/modules/sales/leads/leads.controller.ts": {
-    "ab/zod-inputs": {
       "count": 1
     }
   },

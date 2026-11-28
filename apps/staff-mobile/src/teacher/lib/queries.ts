@@ -1,5 +1,4 @@
 import { payoutListSchema } from '@ab/money';
-import type { TeacherMe } from '@ab/schedule';
 import { reportHistoryCalls, TEACHER_REFRESH_MS, teacherLessonCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
@@ -14,7 +13,7 @@ const lessons = teacherLessonCalls({ apiFetch, apiSend });
 
 /** GET /teachers/me: name, tz, link, students. 404 `teacher_not_linked` without a teachers row. */
 export function useTeacherMe(enabled = true) {
-  return useQuery({ queryKey: pathKey(ME), queryFn: () => apiFetch<TeacherMe>(ME), enabled });
+  return useQuery({ queryKey: pathKey(ME), queryFn: () => lessons.me(), enabled });
 }
 
 export function isNotLinked(error: unknown): boolean {
