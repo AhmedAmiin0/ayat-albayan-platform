@@ -48,6 +48,7 @@ const composeModifiers = {
   __esModule: true,
   semantics: modifier('semantics'),
   defaultMinSize: modifier('defaultMinSize'),
+  fillMaxWidth: modifier('fillMaxWidth'),
   testID: modifier('testID'),
 };
 
@@ -91,9 +92,42 @@ const ComposeSwitch = ({ value, enabled = true, onCheckedChange, colors, modifie
 const ComposeCheckbox = ({ modifiers, ...props }) =>
   createElement(RN.View, { ...props, compose: true, testID: paramOf(modifiers, 'testID') });
 
+// Compose's single-choice segmented row as the radio group TalkBack reads (Material 3 gives the
+// row a selectable group and each segment the radio role): its semantics description names the
+// group, a segment's testID modifier is its test id and a press calls onClick.
+const SegmentRow = ({ modifiers, children }) =>
+  createElement(RN.View, {
+    compose: true,
+    modifiers,
+    accessibilityRole: 'radiogroup',
+    accessibilityLabel: paramOf(modifiers, 'semantics')?.contentDescription,
+    children,
+  });
+const SegmentedButton = ({ selected, enabled = true, onClick, colors, modifiers, children }) =>
+  createElement(RN.Pressable, {
+    compose: true,
+    colors,
+    accessibilityRole: 'radio',
+    accessibilityState: { checked: selected, disabled: !enabled },
+    disabled: !enabled,
+    testID: paramOf(modifiers, 'testID'),
+    onPress: () => onClick?.(),
+    children,
+  });
+SegmentedButton.Label = ({ children }) => children;
+const ComposeText = ({ children, color, style }) =>
+  createElement(RN.Text, { compose: true, color, composeStyle: style }, children);
+
 module.exports = {
   universal: { __esModule: true, BottomSheet, Host, RNHostView, TextInput, useNativeState },
   swiftUiModifiers,
   composeModifiers,
-  jetpackCompose: { __esModule: true, Checkbox: ComposeCheckbox, Switch: ComposeSwitch },
+  jetpackCompose: {
+    __esModule: true,
+    Checkbox: ComposeCheckbox,
+    SegmentedButton,
+    SingleChoiceSegmentedButtonRow: SegmentRow,
+    Switch: ComposeSwitch,
+    Text: ComposeText,
+  },
 };
