@@ -1,4 +1,4 @@
-import { useRouter } from '@tanstack/react-router';
+import { useOptionalRouter } from '@/features/platform/router';
 import type { MouseEvent, ReactNode } from 'react';
 import { isPlainClick } from '@/features/reporting/reports';
 
@@ -15,7 +15,7 @@ export interface HubLinkProps {
  * browser's), so a link can carry any query string without a typed route search.
  */
 export function HubLink({ href, children, className, id }: HubLinkProps) {
-  const router = useRouter({ warn: false });
+  const router = useOptionalRouter();
   const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
     if (!router || !isPlainClick(e)) return;
     e.preventDefault();

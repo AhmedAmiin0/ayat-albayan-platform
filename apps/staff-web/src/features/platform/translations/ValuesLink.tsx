@@ -1,4 +1,4 @@
-import { useRouter } from '@tanstack/react-router';
+import { useOptionalRouter } from '@/features/platform/router';
 import type { MouseEvent } from 'react';
 import { isPlainClick } from '@/features/reporting/reports';
 import { t } from '@ab/web-kit';
@@ -7,7 +7,7 @@ import { valuesHref } from './registry-hints';
 
 /** A real anchor carries the query string without a typed route search; never opens the editor. */
 export function ValuesLink({ hint }: { hint: RegistryHint }) {
-  const router = useRouter({ warn: false });
+  const router = useOptionalRouter();
   const href = valuesHref(hint);
   const onClick = (e: MouseEvent<HTMLAnchorElement>) => {
     e.stopPropagation();

@@ -1,4 +1,4 @@
-import { useRouter, type AnyRouter } from '@tanstack/react-router';
+import { useOptionalRouter } from '@/features/platform/router';
 import { useEffect, useState } from 'react';
 import { oauthReturnNote } from '@/features/platform/google-sync/google-format';
 
@@ -6,7 +6,7 @@ export type OauthNote = NonNullable<ReturnType<typeof oauthReturnNote>>;
 
 /** The query is read once then replaced out of the URL on the same path (docs/26b §3). */
 export function useOauthReturn(): { note: OauthNote | null; clear: () => void } {
-  const router: AnyRouter | undefined = useRouter({ warn: false });
+  const router = useOptionalRouter();
   const [note, setNote] = useState<OauthNote | null>(() => oauthReturnNote(window.location.search));
   const returned = note !== null;
   useEffect(() => {

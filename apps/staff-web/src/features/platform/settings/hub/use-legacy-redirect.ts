@@ -1,4 +1,4 @@
-import { useRouter } from '@tanstack/react-router';
+import { useOptionalRouter } from '@/features/platform/router';
 import { useEffect, useState } from 'react';
 import { legacySettingsTarget } from './legacy-target';
 
@@ -8,7 +8,7 @@ import { legacySettingsTarget } from './legacy-target';
  * (without a router, as in a component test, nothing moves and the hub shows).
  */
 export function useLegacySettingsRedirect(): boolean {
-  const router = useRouter({ warn: false });
+  const router = useOptionalRouter();
   const [target] = useState(() =>
     legacySettingsTarget(window.location.hash, window.location.search),
   );
