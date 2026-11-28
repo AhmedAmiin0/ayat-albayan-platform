@@ -14,6 +14,7 @@ const dockerfile = readFileSync(root('apps/api/Dockerfile'), 'utf8');
 const services = compose.services;
 const pdf = services['ayat-pdf'];
 const SOCK = 'pdf-sock:/run/pdf';
+const COPIES = ['ayat-api-a', 'ayat-api-b', 'ayat-api-c', 'ayat-api-d'];
 
 test('the API image, never built or pulled here, with its own command', () => {
   assert.equal(pdf.image, 'ayat-api:staging');
@@ -48,7 +49,7 @@ test('locked down: read-only root, no capability, no setuid, non-root, tmpfs /tm
   assert.deepEqual(pdf.logging, { driver: 'json-file', options: { 'max-size': '1m', 'max-file': '2' } });
 });
 
-test('the socket volume: a 64 KB tmpfs, only ayat-pdf and the two API copies (read-only there), never the worker', () => {
+test('the socket volume: a 64 KB tmpfs, only ayat-pdf and the API copies (read-only there), never the worker', () => {
   // Never on the host disk the CRM shares: the one path ayat-pdf can write besides its /tmp, bounded.
   assert.deepEqual(compose.volumes['pdf-sock'], {
     driver: 'local',
@@ -58,9 +59,9 @@ test('the socket volume: a 64 KB tmpfs, only ayat-pdf and the two API copies (re
     .filter(([, s]) => (s.volumes ?? []).some((v) => String(v).startsWith('pdf-sock:')))
     .map(([n]) => n)
     .sort();
-  assert.deepEqual(mounting, ['ayat-api-a', 'ayat-api-b', 'ayat-pdf']);
+  assert.deepEqual(mounting, [...COPIES, 'ayat-pdf']);
   assert.deepEqual(pdf.volumes, [SOCK]);
-  for (const name of ['ayat-api-a', 'ayat-api-b']) assert.ok(services[name].volumes.includes(`${SOCK}:ro`), name);
+  for (const name of COPIES) assert.ok(services[name].volumes.includes(`${SOCK}:ro`), name);
   assert.match(dockerfile, /install -d -o node -g node -m 0700 \/run\/pdf/, 'the mount point, node-owned like the tmpfs');
   assert.match(dockerfile, /^FROM node:[\d.]+-slim AS runtime-base$/m, 'the official node image: node is uid 1000 (the tmpfs uid)');
 });
@@ -72,6 +73,6 @@ test('healthy once it listens, rolled before the copies but never gating them, s
     assert.ok(at('roll ayat-pdf') >= 0 && at('roll ayat-pdf') < at('roll ayat-api-a'), branch.slice(0, 80));
     assert.match(branch, /\n {2}roll ayat-pdf \|\| echo '::warning::ayat-pdf not healthy/, branch.slice(0, 80));
   }
-  assert.match(rollback, /stop ayat-api-a ayat-api-b ayat-pdf/);
+  assert.match(rollback, /stop ayat-api-a ayat-api-b ayat-api-c ayat-api-d ayat-pdf/);
 });
 
