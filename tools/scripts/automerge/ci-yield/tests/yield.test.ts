@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { aPull, aRun, aYieldFacts, SELF } from '../testing/yield.builder.ts';
-import { verdict } from '../yield.ts';
+import { verdict } from '../yield/index.ts';
 
 const fixPull = aPull({ number: 5, head: 'fix/a', labels: ['priority'] });
 const fixRun = aRun({ id: 300, head_branch: 'fix/a' });

@@ -5,8 +5,7 @@
 import { createRequire } from 'node:module';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { selfSchema, yieldFactsSchema } from './yield.schemas.ts';
-import { verdict } from './yield.ts';
+import { selfSchema, verdict, yieldFactsSchema } from './yield/index.ts';
 
 const load = createRequire(import.meta.url);
 

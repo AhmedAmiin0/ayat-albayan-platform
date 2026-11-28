@@ -1,5 +1,5 @@
 import type { Pull, Run, Self, YieldFacts } from './yield.schemas.ts';
-import { PRIORITY } from '../priority.ts';
+import { PRIORITY } from '../../priority.ts';
 import type { Verdict } from './yield.types.ts';
 
 /** A merge by lane-automerge dispatches ci on develop instead of pushing. */

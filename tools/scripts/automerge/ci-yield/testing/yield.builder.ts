@@ -1,4 +1,4 @@
-import type { Pull, Run, YieldFacts } from '../yield.schemas.ts';
+import type { Pull, Run, YieldFacts } from '../yield/index.ts';
 
 export const REPO = 'o/r';
 export const SELF = { run: 100, pr: 1, repo: REPO };
