@@ -48,19 +48,20 @@ A part edits only files in its area. A fix that needs a file outside the area (f
 ## Runs
 
 **Part session, every 2 hours.**
-1. Fetch, then check out  and Already up to date..
-2. Exit at once if the newest commit on  that touches your area is under 55 minutes old and lacks the trailer  (another session of your part is still working). Also exit if your part is done; say «done».
-3. Work through your area in the order above for about 50 minutes. Commit by rule and by folder; each commit is , or .
+1. Fetch, then check out `lane/lint-zero` and run `git pull --rebase`.
+2. Exit at once if the newest commit on `lane/lint-zero` that touches your area is under 55 minutes old and lacks the trailer `Run-State: done` (another session of your part is still working). Also exit if your part is done; say «done».
+3. Work through your area in the order above for about 50 minutes. Commit by rule and by folder; each commit is `fix(<scope>): <what>`, or `refactor(<scope>): split … into one class per file`.
 4. Before each push, run:
-   - ;
-   - , which must show no new violations. Run  and commit only the entries for your area;
+   - `pnpm i`;
+   - `pnpm lint`, which must show no new violations. Run `pnpm lint:prune` and commit only the entries for your area;
    - typecheck and unit tests of the touched workspaces;
-   - the guards and the folder cap, as listed earlier.
-5. Push with Already up to date. first. If the push is rejected, rebase and push again. If an  file conflicts, take the incoming side and run  again. Never force-push.
-6. Push every 45 minutes. The last commit of the run ends with . Keep  up to date.
+   - `pnpm guard:units guard:dup guard:knip guard:baselines guard:components guard:comment-language guard:escapes guard:packages guard:tsconfig`;
+   - `node tools/scripts/ci-checks/folder-cap.mjs --strict`.
+5. Push after `git pull --rebase`. If the push is rejected, rebase and push again. If an `oxlint-suppressions.json` file conflicts, take the incoming side and run `pnpm lint:prune` again. Never force-push.
+6. Push every 45 minutes. The last commit of the run ends with the trailer `Run-State: done`. Keep `refactor/lanes/lint-zero/SKIPPED-<part>.txt` up to date: one path per line, with the PR number that holds it.
 
-**Integrator, hourly at :12.**
-1. Merge every `wip/lint-zero/<part>` and `origin/develop` into `lane/lint-zero`.
+**Integrator, every 2 hours.**
+1. Once only: merge every leftover `wip/lint-zero/<part>` branch into `lane/lint-zero`, then delete those branches. On every run after that, merge `origin/develop` into `lane/lint-zero`.
 2. Resolve each `oxlint-suppressions.json` conflict by regenerating the file with `pnpm lint:prune`, never by hand. Resolve code conflicts by keeping both sides' fixes.
 3. Run the full check: `pnpm lint`, `pnpm turbo typecheck test`, and every `pnpm guard:*`. Fix whatever the merge broke, then push.
 4. When every part is done and every SKIPPED list is empty:
