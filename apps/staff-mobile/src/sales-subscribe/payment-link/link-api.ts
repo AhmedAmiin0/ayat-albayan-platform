@@ -1,4 +1,5 @@
-import type { PaymentLinkCreate, PaymentLinkQuoteView, PaymentLinkView } from '@ab/shared';
+import { paymentLinkCalls } from '@ab/client-core';
+import type { PaymentLinkCreate, PaymentLinkView } from '@ab/shared';
 import type { SubscriptionPricing } from '@ab/money';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -8,12 +9,13 @@ import { salesKeys } from '@/core/lib/keys';
 
 // docs/30: requires FEATURE_STRIPE (test or live).
 
+const links = paymentLinkCalls({ apiFetch, apiSend });
+
 /** POST /sales/payment-links/quote: the reference price and the admin's cap. Keyed by its body. */
 export function useLinkQuote(studentId: string, pricing: SubscriptionPricing) {
   return useQuery({
     queryKey: salesKeys.linkQuote(studentId, pricing),
-    queryFn: () =>
-      apiSend<PaymentLinkQuoteView>('POST', '/sales/payment-links/quote', { studentId, pricing }),
+    queryFn: () => links.quote({ studentId, pricing }),
     placeholderData: keepPreviousData,
     enabled: studentId !== '',
   });
@@ -25,7 +27,7 @@ export function useCreateLink() {
   const [clientRequestId] = useState(requestId);
   return useMutation({
     mutationFn: (body: Omit<PaymentLinkCreate, 'clientRequestId'>) =>
-      apiSend<PaymentLinkView>('POST', '/sales/payment-links', { ...body, clientRequestId }),
+      links.create({ ...body, clientRequestId }),
     onSettled: () => client.invalidateQueries({ queryKey: salesKeys.linkList() }),
   });
 }
@@ -34,7 +36,7 @@ export function useCreateLink() {
 export function useLinks() {
   return useQuery({
     queryKey: salesKeys.linkList(),
-    queryFn: () => apiFetch<PaymentLinkView[]>('/sales/payment-links'),
+    queryFn: () => links.list(),
   });
 }
 
@@ -58,7 +60,7 @@ export function useLinkByToken(token: string, wait: boolean) {
   }, [wait, timedOut]);
   const query = useQuery({
     queryKey: salesKeys.linkList(),
-    queryFn: () => apiFetch<PaymentLinkView[]>('/sales/payment-links'),
+    queryFn: () => links.list(),
     refetchInterval: (q) =>
       wait && !timedOut && byToken(q.state.data, token)?.status === 'open' ? 2000 : false,
   });
@@ -74,7 +76,7 @@ export function useCancelLink() {
   const client = useQueryClient();
   return useMutation({
     mutationFn: (id: string) =>
-      apiSend<PaymentLinkView>('POST', `/sales/payment-links/${encodeURIComponent(id)}/cancel`),
+      links.cancel(id),
     onSettled: () => client.invalidateQueries({ queryKey: salesKeys.linkList() }),
   });
 }

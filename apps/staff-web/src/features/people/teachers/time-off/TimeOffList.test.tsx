@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { timeOffFixture } from '@ab/shared/testing';
 import { t, locale } from '@ab/web-kit';
 import { formatTimeOff } from './time-off';
 import { TimeOffList } from './TimeOffList';
@@ -12,7 +13,11 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
-const OFF = { id: 'o1', starts_at: '2026-10-10T06:00:00Z', ends_at: '2026-10-12T18:00:00Z', reason: 'سفر' };
+const OFF = timeOffFixture({
+  starts_at: '2026-10-10T06:00:00Z',
+  ends_at: '2026-10-12T18:00:00Z',
+  reason: 'سفر',
+});
 
 function renderList(rows: unknown[] = [OFF]) {
   apiFetch.mockResolvedValue(rows);
@@ -42,15 +47,15 @@ describe('TimeOffList (R-TCH-02, docs/07 §8)', () => {
   });
 
   it('deletes one entry by its named icon button', async () => {
-    apiSend.mockResolvedValue(null);
+    apiSend.mockResolvedValue(undefined);
     renderList();
     const span = formatTimeOff(OFF.starts_at, OFF.ends_at, C24);
     fireEvent.click(await screen.findByRole('button', { name: `${t.availability.timeOffDelete} ${span}` }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/teachers/t1/time-off/o1'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/teachers/t1/time-off/o1', undefined));
   });
 
   it('adds through the dialog: validates, posts UTC instants, then closes', async () => {
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(OFF);
     renderList([]);
     fireEvent.click(await screen.findByRole('button', { name: t.availability.timeOffAdd }));
     const dialog = screen.getByRole('dialog', { name: t.availability.timeOffAdd });

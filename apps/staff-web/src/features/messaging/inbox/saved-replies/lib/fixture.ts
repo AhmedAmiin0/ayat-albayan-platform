@@ -23,8 +23,20 @@ export const PRICES = savedReply({
   position: 1,
 });
 
-export const MINE = savedReply({ id: 'r-3', scope: 'mine', title: 'متابعة', body: 'هل وصلتكم الرسالة؟' });
+export const MINE = savedReply({
+  id: 'r-3',
+  scope: 'mine',
+  title: 'متابعة',
+  body: 'هل وصلتكم الرسالة؟',
+});
 
 export const REPLIES: SavedReply[] = [savedReply(), PRICES, MINE];
 
-export const PROFILE = { id: 'u1', full_name: 'سارة', email: null, phone_e164: null, avatar_url: null, role: 'sales' };
+export const PROFILE = {
+  id: '3c9e1f7a-2b4d-4e6f-8a1c-5d7e9f0b2c46',
+  full_name: 'سارة',
+  email: null,
+  phone_e164: null,
+  avatar_url: null,
+  role: { base: 'sales', key: 'sales', name_ar: null, name_en: null },
+};

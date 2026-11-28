@@ -9,7 +9,7 @@ export {
   PaymentAttachments,
 } from './attachments/payment-attachments.service';
 export { ReceiptsService } from './attachments/receipts.service';
-export { paymentFilter, paymentListQuery, utcWindow } from './payments.dto';
+export { paymentFilter, utcWindow } from './payments.dto';
 export { PaymentReceived, type ReceivedPayment } from './received/payment-received';
 export { PaymentReceivedRepo } from './received/payment-received.repo';
 export { toPaymentView } from './payments.mapper';

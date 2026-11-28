@@ -1,18 +1,3 @@
-import { z } from 'zod';
-
-/** What expo-notifications getExpoPushTokenAsync returns: «ExponentPushToken[xxxxxxxx]». */
-export const pushTokenSchema = z
-  .string()
-  .regex(/^Expo(nent)?PushToken\[[\w-]+\]$/, { message: 'invalid_push_token' });
-
-/** The key PUT /me/push-tokens handed this device last time (claimDevice): base64url, 32 bytes. */
-export const deviceKeySchema = z.string().regex(/^[\w-]{43}$/, { message: 'invalid_device_key' });
-
-export const pushTokenBody = z.object({
-  token: pushTokenSchema,
-  deviceKey: deviceKeySchema.optional(),
-});
-
 /**
  * A reinstall mints a new token; the dead one stays until Expo reports it DeviceNotRegistered,
  * on a push ticket (expoDeliver) or a receipt (PushReceiptsJob), which delete its session binding

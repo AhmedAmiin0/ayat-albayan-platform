@@ -1,5 +1,5 @@
 import { dayTimesKeeping, type PrefilledPick } from '@ab/shared';
-import type { CourseChangeRequest } from '@ab/schedule';
+import type { ChangeBody, ChangeCalls } from './change-calls.types';
 
 // Teacher, length and zone stay the course's; first picks come from changePicks. Pure.
 
@@ -22,7 +22,7 @@ export function changeRequest({
   tz,
   requestId,
   prefilled,
-}: ChangeInput): CourseChangeRequest | null {
+}: ChangeInput): ChangeBody | null {
   const picked = dayTimesKeeping(picks, tz, prefilled);
   if (!picked) return null;
   const { dayTimes, ...rule } = picked;
@@ -36,8 +36,8 @@ export function changeRequest({
 
 /** Admin targets may change the teacher and override clashes. */
 export interface ChangeTarget {
-  /** POST `${path}/check` and `${path}`. */
-  path: string;
+  /** The route table the flow checks and saves on. */
+  calls: ChangeCalls;
   teacherId?: string | undefined;
   title?: string | undefined;
   /** Open on the review with the course's own (prefilled) days. */
@@ -47,22 +47,7 @@ export interface ChangeTarget {
   lines?: readonly string[] | undefined;
 }
 
-/** The target's route; undefined = the assistant's own. */
-export const targetPath = (target: ChangeTarget | undefined): string | undefined => target?.path;
-
-/** The body with the target's new teacher, when it has one. */
-export function withTeacher(
-  body: CourseChangeRequest | null,
-  target?: ChangeTarget,
-): (CourseChangeRequest & { teacherId?: string }) | null {
-  if (!body || target?.teacherId === undefined) return body;
-  return { ...body, teacherId: target.teacherId };
-}
-
 /** Without a reason the body is unchanged. */
-export function withOverride(
-  body: CourseChangeRequest,
-  reason: string | undefined,
-): CourseChangeRequest {
+export function withOverride(body: ChangeBody, reason: string | undefined): ChangeBody {
   return reason ? { ...body, override: { reason } } : body;
 }

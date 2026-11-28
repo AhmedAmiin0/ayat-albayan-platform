@@ -1,8 +1,8 @@
 import { ownProfileQuery } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 
-const ownProfile = ownProfileQuery({ apiFetch });
+const ownProfile = ownProfileQuery({ apiFetch, apiSend });
 
 /** GET /me/profile (R-ACC-01), parsed: the name, number, email and photo of who signed in. */
 export function useOwnProfile() {

@@ -1,4 +1,5 @@
 import {
+  trialHistorySchema,
   upcomingTrial,
   type BookingRequest,
   type TrialDateResult,
@@ -7,6 +8,7 @@ import {
 import type { BookingResult, Conflict } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
+import { asResponse } from '@/common/http/returns';
 import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
 import { gateConfirmations } from '@/common/rules/confirmations';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules/policy/policy';
@@ -46,7 +48,8 @@ export class TrialDates {
     if (!student) throw httpError(HttpStatus.NOT_FOUND, 'student_not_found');
     const lessons = trialLessonsOf(await this.queries.trialLessons(studentId));
     const names = await this.queries.names([...new Set(lessons.flatMap((l) => (l.created_by ? [l.created_by] : [])))]);
-    return trialHistory({ student, lessons, names, now: new Date() });
+    const history = trialHistory({ student, lessons, names, now: new Date() });
+    return asResponse(trialHistorySchema, history);
   }
 
   /** 400 trial_date_invalid, 404 student_not_found, 409 trial_date_subscribed; the trial to move */

@@ -3,6 +3,7 @@ export * from './room';
 export * from './schemas';
 export * from './moderation/moderation';
 export * from './meetings';
+export * from './meetings.routes';
 export * from './student-lesson';
 export * from './internal-meetings';
 export * from './meeting-invites';

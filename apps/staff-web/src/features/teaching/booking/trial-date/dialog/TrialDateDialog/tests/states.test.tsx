@@ -35,7 +35,8 @@ describe('TrialDateDialog states (PR #164 review)', () => {
   });
 
   it('no «اخترنا معلم/ة آخر حلقة» note when that teacher is not in the list (not preselected)', async () => {
-    const last = row({ teacher: { id: NOOR.id, name: NOOR.display_name_ar } });
+    const away = { id: '4b1d2c3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e', name: NOOR.display_name_ar };
+    const last = row({ teacher: away });
     routeTrialFetch(apiFetch, { base: '/booking', history: history({ items: [last] }) });
     open();
     await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });

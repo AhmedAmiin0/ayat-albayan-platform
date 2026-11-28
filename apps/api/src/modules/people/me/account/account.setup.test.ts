@@ -7,7 +7,7 @@ const body = accountSetupSchema.parse({ email: 'Teacher@Example.test', password:
 
 function setupKit(email = SYNTHETIC) {
   const kit = accountKit();
-  kit.auth.emails.set('user-1', email);
+  kit.auth.emails.set(ME.id, email);
   return kit;
 }
 
@@ -16,9 +16,9 @@ describe('PUT /me/setup (docs/46 A4)', () => {
     const kit = setupKit();
     await kit.setup.setup({ ...ME, sessionId: 's-1' }, body);
     expect(kit.auth.updates).toEqual([
-      { id: 'user-1', patch: { email: 'teacher@example.test', password: 'Brand-new-1' } },
+      { id: ME.id, patch: { email: 'teacher@example.test', password: 'Brand-new-1' } },
     ]);
-    expect(kit.auth.revoked).toEqual([{ userId: 'user-1', keep: 's-1' }]);
+    expect(kit.auth.revoked).toEqual([{ userId: ME.id, keep: 's-1' }]);
   });
 
   it('409 setup_done once the email is real, and for any role but teacher', async () => {
@@ -27,7 +27,7 @@ describe('PUT /me/setup (docs/46 A4)', () => {
       response: { code: 'setup_done' },
     });
     const guardian = setupKit('g-1@family.invalid');
-    const row = guardian.store.rows.get('user-1');
+    const row = guardian.store.rows.get(ME.id);
     if (row) row.role = { ...row.role, base: 'guardian' };
     await expect(guardian.setup.setup(ME, body)).rejects.toMatchObject({
       response: { code: 'setup_done' },

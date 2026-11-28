@@ -5,14 +5,28 @@ import { usePagedActions, withTracked } from './paged-result';
 import { flattenPages, nextPageParam, type WithId } from '@ab/client-core';
 import type { Page } from '@ab/core';
 
-interface PagedListOptions {
+interface PageAt {
+  page: number;
+  pageSize: number;
+}
+
+type PageRead<T> = (at: PageAt, signal: AbortSignal) => Promise<Page<T>>;
+
+interface PagedListOptions<T> {
   /** List endpoint, e.g. '/leads'. Also the query key: ['leads', 'list', params]. */
   path: string;
   /** Filters and `q`; undefined and '' are left out of the request. */
   params?: ListParams;
   /** Rows per request (API default 25, max 100). */
   pageSize?: number;
+  /** The list's route call; without it the page is read from `path` with `params`. */
+  read?: PageRead<T> | undefined;
 }
+
+const pathRead =
+  <T>(path: string, params: ListParams): PageRead<T> =>
+  (at, signal) =>
+    apiFetch<Page<T>>(`${path}${toQueryString({ ...params, ...at })}`, { signal });
 
 /**
  * Infinite list over a `{ items, total, page, pageSize }` endpoint. Feed `items` to a LazyList,
@@ -22,14 +36,13 @@ export function usePagedList<T extends WithId>({
   path,
   params = {},
   pageSize = 25,
-}: PagedListOptions) {
+  read,
+}: PagedListOptions<T>) {
+  const readPage = read ?? pathRead<T>(path, params);
   const query = useInfiniteQuery({
     queryKey: listKey(path, params),
     // TanStack's signal (docs/43 AU8): a superseded search or a closed screen frees its read.
-    queryFn: ({ pageParam, signal }) => {
-      const query = toQueryString({ ...params, page: pageParam, pageSize });
-      return apiFetch<Page<T>>(`${path}${query}`, { signal });
-    },
+    queryFn: ({ pageParam, signal }) => readPage({ page: pageParam, pageSize }, signal),
     initialPageParam: 1,
     getNextPageParam: nextPageParam,
   });

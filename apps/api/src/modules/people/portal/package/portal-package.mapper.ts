@@ -1,5 +1,12 @@
-import type { PortalPackage, PortalPackageView, PortalPayment, PortalStudent } from '@ab/shared';
+import {
+  portalPackageViewSchema,
+  type PortalPackage,
+  type PortalPackageView,
+  type PortalPayment,
+  type PortalStudent,
+} from '@ab/shared';
 import type { StudentBalanceView } from '@ab/money';
+import { asResponse } from '@/common/http/returns';
 import { toFamilyBalance } from '@/modules/finance/subscriptions';
 
 /**
@@ -38,9 +45,9 @@ interface PackageParts {
 
 /** GET …/package: whitelisted fields only (never the price, quote, fx, notes or receipts). */
 export function toPortalPackageView(parts: PackageParts): PortalPackageView {
-  return {
+  return asResponse(portalPackageViewSchema, {
     package: toPortalPackage(parts.balance),
     payments: parts.payments,
     payment_instructions: parts.instructions.trim(),
-  };
+  });
 }

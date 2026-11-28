@@ -5,7 +5,6 @@ export {
   type BookSearch,
   createBooking,
   guardianQuery,
-  type GuardianRow,
   parseBookSearch,
 } from './api';
 export {
@@ -17,7 +16,7 @@ export {
 } from './booking-entries';
 export { AdminCourseChange, type AdminCourseChangeProps } from './course-change/AdminCourseChange';
 export { CourseChangeForm, type CourseChangeFormProps } from './course-change/CourseChangeForm';
-export { type CourseChangeTarget, CourseChangeTargetContext } from './course-change/api';
+export { CourseChangeTargetContext, type CourseChangeTarget } from './course-change/api';
 export { changeBody, currentPicks } from './course-change/change-body';
 export { daysText as courseDaysText } from './course-change/change-text';
 export { ChangeReview, type ChangeReviewProps } from './course-change/ChangeReview';
@@ -66,7 +65,6 @@ export {
 } from './invoice/api.invoice';
 export { forgetAllKept } from './kept';
 export {
-  bookingBase,
   BookingModeContext,
   ChatReturnContext,
   useBookingMode,

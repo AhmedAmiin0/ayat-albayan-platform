@@ -1,12 +1,11 @@
 import type { Gender, Program, StudentStatus } from '@ab/catalog';
+import type { z } from 'zod';
+import type { familyPhoneSchema } from '../guardians';
 
 // Response shapes of apps/api people/students (students.mapper.ts), as the clients read them.
 
 /** One number of a family: GET /guardians/:id `phones`, the student profile's `guardian.phones`. */
-export interface FamilyPhone {
-  phone_e164: string;
-  is_primary: boolean;
-}
+export type FamilyPhone = z.infer<typeof familyPhoneSchema>;
 
 export interface StudentRef {
   id: string;

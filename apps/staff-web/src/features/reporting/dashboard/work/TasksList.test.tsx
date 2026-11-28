@@ -35,11 +35,12 @@ describe('TasksList (R-SUB-02 admin tasks)', () => {
   });
 
   it('«خلصت» closes the task, says so and refreshes the dashboard', async () => {
-    apiSend.mockResolvedValue(undefined);
+    const { balance: _balance, ...done } = WORK.tasks.items[0] ?? {};
+    apiSend.mockResolvedValue({ ...done, done_at: '2026-10-03T09:00:00Z' });
     const { invalidate } = renderList();
     fireEvent.click(screen.getByRole('button', { name: t.dashboard.taskDone }));
     await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.dashboard.taskClosed));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/admin-tasks/k1/done');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/admin-tasks/k1/done', undefined);
     expect(invalidate).toHaveBeenCalledWith({ queryKey: dashboardKeys.all });
   });
 

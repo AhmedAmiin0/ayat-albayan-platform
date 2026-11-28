@@ -10,12 +10,11 @@ export {
   type CodeRoutes,
   isEmailIdentifier,
   RESEND_SECONDS,
-  SIGN_IN_ERRORS,
   signInApi,
   signInError,
   type SignInApi,
-  type SignInError,
 } from './sign-in';
-export { meLocaleOf, meLocalePath, meLocaleSend } from './locale';
+export { SIGN_IN_ERRORS, signInErrorSchema, type SignInError } from './sign-in-errors.schemas';
+export { meLocaleOf, meLocaleSend } from './locale';
 export { meQueryOptions } from './me-query';
 export type { MeQuery } from './me-query';

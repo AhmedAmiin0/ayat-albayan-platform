@@ -28,7 +28,7 @@ export const receiptsSchema = z
   .looseObject({ data: z.record(z.string(), receiptSchema).optional() })
   .transform((body) => body.data ?? {});
 
-/** Unanchored version of me/push-tokens.ts pushTokenSchema. */
+/** Unanchored version of @ab/shared pushTokenSchema. */
 const TOKEN = /Expo(?:nent)?PushToken\[[\w-]+\]/;
 
 /**

@@ -20,11 +20,14 @@ class ProbeController {
   }
 }
 
+const uuid = (n: number) => `00000000-0000-4000-8000-00000000000${n}`;
+const [ADMIN, TEACHER, ACCOUNTANT] = [uuid(1), uuid(2), uuid(3)];
 const USERS: Record<string, AuthUser> = {
-  'admin-token': { id: 'a1', email: 'admin@x.com', role: 'admin' },
-  'teacher-token': { id: 't1', email: 't@x.com', role: 'teacher' },
-  'accountant-token': { id: 'c1', email: 'c@x.com', role: 'admin' },
-  'norole-token': { id: 'n1', email: null, role: null },
+  'admin-token': { id: ADMIN, email: 'admin@x.com', role: 'admin' },
+  'teacher-token': { id: TEACHER, email: 't@x.com', role: 'teacher' },
+  'accountant-token': { id: ACCOUNTANT, email: 'c@x.com', role: 'admin' },
+  'norole-token': { id: uuid(4), email: null, role: null },
+  'off-schema-token': { id: 'not-a-uuid', email: null, role: null },
 };
 const fakeVerify: TokenVerifier = async (token) => {
   const user = USERS[token];
@@ -34,8 +37,8 @@ const fakeVerify: TokenVerifier = async (token) => {
 // The accountant holds a custom role (base admin) with payments.read only.
 // The teacher is a test account (profiles.is_test, read by the resolver from the database).
 const resolver: PermissionResolver = Object.assign(
-  async (user: AuthUser) => (user.id === 'c1' ? ['payments.read' as const] : systemResolver(user)),
-  { isTest: async (user: AuthUser) => user.id === 't1' },
+  async (user: AuthUser) => (user.id === ACCOUNTANT ? ['payments.read' as const] : systemResolver(user)),
+  { isTest: async (user: AuthUser) => user.id === TEACHER },
 );
 
 describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
@@ -48,8 +51,8 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(fakeVerify)
       .overrideProvider(MeZoneRepo).useValue({
-        zoneOf: async (id: string) => (id === 'c1' ? 'Africa/Cairo' : null),
-        localeOf: async (id: string) => (id === 'c1' ? 'en' : null),
+        zoneOf: async (id: string) => (id === ACCOUNTANT ? 'Africa/Cairo' : null),
+        localeOf: async (id: string) => (id === ACCOUNTANT ? 'en' : null),
       })
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -97,6 +100,12 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
     const res = await get('/auth/me', 'norole-token');
     expect(res.statusCode).toBe(200);
     expect(res.json()).toMatchObject({ role: null, permissions: [], tz: null, locale: null });
+  });
+
+  it('GET /auth/me answers 500 response_invalid when the session does not fit its schema', async () => {
+    const res = await get('/auth/me', 'off-schema-token');
+    expect(res.statusCode).toBe(500);
+    expect(res.json()).toMatchObject({ code: 'response_invalid' });
   });
 
   it('@Permissions blocks a role without the permission with 403 and admits one with it', async () => {

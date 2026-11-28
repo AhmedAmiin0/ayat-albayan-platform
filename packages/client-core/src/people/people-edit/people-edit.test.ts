@@ -5,7 +5,6 @@ import {
   familyPatchOf,
   newFamilyOf,
   peopleEditErrorText,
-  peopleEditPaths,
   roleActions,
   studentFormOf,
   studentPatchOf,
@@ -120,15 +119,7 @@ describe('roleActions', () => {
   });
 });
 
-describe('paths and errors', () => {
-  it('encodes ids, phones and searches', () => {
-    expect(peopleEditPaths.secondPhone('g1', '+201000000002')).toBe(
-      '/people/guardians/g1/phones/%2B201000000002',
-    );
-    expect(peopleEditPaths.families('AB 0183')).toBe('/people/guardians?search=AB%200183');
-    expect(peopleEditPaths.toGuardian('s1')).toBe('/people/students/s1/to-guardian');
-  });
-
+describe('errors', () => {
   it('maps an API code to its sentence, anything else to the generic one', () => {
     const text = { generic: 'تعذّر الحفظ.', same_guardian: 'في هذه العائلة أصلًا.' };
     expect(peopleEditErrorText(new ApiError(409, { code: 'same_guardian' }), text)).toBe(

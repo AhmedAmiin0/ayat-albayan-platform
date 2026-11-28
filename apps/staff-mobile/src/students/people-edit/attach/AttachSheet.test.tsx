@@ -32,7 +32,7 @@ beforeEach(() => {
     .mockImplementation(async (path: string) =>
       path.startsWith('/people/guardians') ? [OTHER] : VIEW,
     );
-  mockApiSend.mockReset().mockResolvedValue({ guardian_id: 'g2' });
+  mockApiSend.mockReset().mockResolvedValue({ student_id: 's1', guardian_id: 'g2' });
 });
 afterEach(() => jest.useRealTimers());
 

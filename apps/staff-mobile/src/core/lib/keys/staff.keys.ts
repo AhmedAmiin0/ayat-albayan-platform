@@ -8,6 +8,7 @@ const booking = pathKey('/sales/booking');
 
 export const studentKeys: StudentKeys = {
   all: students,
+  one: (id) => [...students, id],
   statusCounts: (filters) => [...students, 'status-counts', filters],
   teacherOptions: () => [...students, 'teacher-options'],
 };
@@ -21,5 +22,5 @@ export const invoiceKeys: InvoiceKeys = {
 export const salesCourseKeys: SalesCourseKeys = {
   course: (studentId) => [...course, { studentId }],
   check: (body) => [...booking, 'check', body],
-  changeCheck: (path, body) => [...booking, 'course-change', 'check', path, body],
+  changeCheck: (scope, body) => [...booking, 'course-change', 'check', scope, body],
 };

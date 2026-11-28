@@ -1,35 +1,19 @@
-import type { FamilyPhone } from '@ab/shared';
-import type { LeadSource } from '@ab/catalog';
+import type { GuardianUpdate } from '@ab/shared';
+import { guardianCalls } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { guardianKeys } from '@/features/people/keys';
 
-// apps/api/src/modules/guardians (R-STU-02, R-STU-04): GET / PATCH /guardians/:id, admin only.
-
 export const GUARDIANS_KEY = guardianKeys.all;
 
-export type GuardianDetail = {
-  id: string;
-  name: string;
-  phone_e164: string;
-  country: string | null;
-  tz: string;
-  source: LeadSource | null;
-  notes: string | null;
-  /** Every family number: the main one (is_primary) and at most one second; older APIs omit it. */
-  phones?: (FamilyPhone & { created_at: string })[];
-};
+const guardians = guardianCalls({ apiFetch, apiSend });
 
-/** Same key as the booking wizard's guardian row (same endpoint, every column). */
+/** Same key as the booking wizard's guardian row (same route, every column). */
 export const guardianDetailQuery = (id: string) =>
-  queryOptions({
-    queryKey: guardianKeys.detail(id),
-    queryFn: () => apiFetch<GuardianDetail>(`/guardians/${id}`),
-  });
+  queryOptions({ queryKey: guardianKeys.detail(id), queryFn: () => guardians.get(id) });
 
-export const updateGuardian = ({ id, patch }: { id: string; patch: object }) =>
-  apiSend<GuardianDetail>('PATCH', `/guardians/${id}`, patch);
+export const updateGuardian = ({ id, patch }: { id: string; patch: GuardianUpdate }) =>
+  guardians.update(id, patch);
 
-/** Removes the family's SECOND number (204); its chat is a lead chat again. 404 phone_not_found for any other. */
-export const removeGuardianPhone = ({ id, phone }: { id: string; phone: string }) =>
-  apiSend('DELETE', `/guardians/${id}/phones/${encodeURIComponent(phone)}`);
+/** Removes the family's second number; its chat becomes a lead chat again. */
+export const removeGuardianPhone = guardians.removePhone;

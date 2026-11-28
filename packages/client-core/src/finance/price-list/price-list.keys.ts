@@ -1,9 +1,8 @@
+import { pricingRoutes } from '@ab/shared';
 import { pathKey } from '../../core/keys';
 import type { PriceListKeys } from './price-list.types';
 
-export const PRICE_LIST_PATH = '/pricing/list';
-
-const all = pathKey(PRICE_LIST_PATH);
+const all = pathKey(pricingRoutes.list.path);
 
 export const priceListKeys: PriceListKeys = {
   all,

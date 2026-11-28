@@ -1,17 +1,16 @@
+import { pricingCalls, toQueryString } from '@ab/client-core';
 import {
   CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
   DEFAULT_ROUNDING,
   STUDENTS_MIN,
-  type CatalogResponse,
   type PackageId,
   type PricingDuration,
-  type QuoteResponse,
   type Rounding,
   type SiteCountry,
 } from '@ab/money';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { pricingKeys } from '@/features/finance/keys';
 
 // Shapes returned by apps/api/src/modules/pricing (docs/08). The client never prices anything:
@@ -44,16 +43,11 @@ export const INITIAL_SELECTION: Selection = {
 
 type CatalogSelection = Pick<Selection, 'country' | 'duration'>;
 
-// `country` is left out (never empty) for another country: `country=` is a 400.
-function baseParams(sel: CatalogSelection): URLSearchParams {
-  const params = new URLSearchParams();
-  if (sel.country !== OTHER) params.set('country', sel.country);
-  params.set('duration', String(sel.duration));
-  return params;
-}
+const pricing = pricingCalls({ apiFetch, apiSend });
 
-export function catalogSearch(sel: CatalogSelection): string {
-  return baseParams(sel).toString();
+/** `country` is left out (never empty) for another country: `country=` is a 400. */
+function catalogParams(sel: CatalogSelection) {
+  return { country: sel.country === OTHER ? undefined : sel.country, duration: sel.duration };
 }
 
 /**
@@ -61,31 +55,40 @@ export function catalogSearch(sel: CatalogSelection): string {
  * rounding and is left out, so only the chat's quote sheet, which offers the choice, ever sends
  * one: the calculator and the package forms keep their requests and their cache keys.
  */
-export function quoteSearch(sel: Selection, rounding: Rounding = DEFAULT_ROUNDING): string {
-  const params = baseParams(sel);
-  if (sel.pkg === 'custom') params.set('count', String(sel.count));
-  else params.set('tier', sel.pkg);
-  params.set('students', String(sel.students));
-  params.set('discount', String(sel.discount));
-  if (rounding !== DEFAULT_ROUNDING) params.set('rounding', rounding);
-  return params.toString();
+function quoteParams(sel: Selection, rounding: Rounding = DEFAULT_ROUNDING) {
+  const pick = sel.pkg === 'custom' ? { count: sel.count } : { tier: sel.pkg };
+  return {
+    ...catalogParams(sel),
+    ...pick,
+    students: sel.students,
+    discount: sel.discount,
+    rounding: rounding === DEFAULT_ROUNDING ? undefined : rounding,
+  };
 }
+
+const searchOf = (params: Record<string, string | number | undefined>) =>
+  toQueryString(params).slice(1);
+
+export const catalogSearch = (sel: CatalogSelection): string => searchOf(catalogParams(sel));
+
+export const quoteSearch = (sel: Selection, rounding?: Rounding): string =>
+  searchOf(quoteParams(sel, rounding));
 
 // keepPreviousData: the result keeps showing the last quote while the next one loads.
 export const quoteQuery = (sel: Selection, rounding?: Rounding) => {
-  const search = quoteSearch(sel, rounding);
+  const params = quoteParams(sel, rounding);
   return queryOptions({
-    queryKey: pricingKeys.quote(search),
-    queryFn: () => apiFetch<QuoteResponse>(`/pricing/quote?${search}`),
+    queryKey: pricingKeys.quote(searchOf(params)),
+    queryFn: () => pricing.quote(params),
     placeholderData: keepPreviousData,
   });
 };
 
 export const catalogQuery = (sel: CatalogSelection) => {
-  const search = catalogSearch(sel);
+  const params = catalogParams(sel);
   return queryOptions({
-    queryKey: pricingKeys.catalog(search),
-    queryFn: () => apiFetch<CatalogResponse>(`/pricing/catalog?${search}`),
+    queryKey: pricingKeys.catalog(searchOf(params)),
+    queryFn: () => pricing.catalog(params),
     placeholderData: keepPreviousData,
   });
 };

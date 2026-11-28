@@ -14,7 +14,7 @@ import { t } from '@ab/mobile-kit';
 import { Note } from '@/more';
 import { SheetActions } from '@/students/course-pause/SheetActions';
 import { FamilyEditFields } from './FamilyEditFields';
-import { saveFamily, saveStudent, usePeopleWrite } from './people-edit-api';
+import { peopleWrites, usePeopleWrite } from './people-edit-api';
 import type { PeopleSheetProps } from './PeopleEditSection';
 import { SecondPhoneRow } from './SecondPhoneRow';
 import { StudentEditFields } from './StudentEditFields';
@@ -33,8 +33,9 @@ const hasChange = <P extends object>(patch: P | null): patch is P =>
 async function saveBoth(input: { view: PeopleEditView; initial: Forms; current: Forms }) {
   const student = studentPatchOf(input.initial.student, input.current.student).patch;
   const family = familyPatchOf(input.initial.family, input.current.family).patch;
-  if (hasChange(student)) await saveStudent({ id: input.view.student.id, patch: student });
-  if (hasChange(family)) await saveFamily({ id: input.view.guardian.id, patch: family });
+  const { student: s, guardian: g } = input.view;
+  if (hasChange(student)) await peopleWrites.saveStudent({ id: s.id, patch: student });
+  if (hasChange(family)) await peopleWrites.saveFamily({ id: g.id, patch: family });
 }
 
 export function EditDataSheet({ view, onClose, onDone }: PeopleSheetProps) {

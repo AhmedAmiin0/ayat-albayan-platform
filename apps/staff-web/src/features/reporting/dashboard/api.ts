@@ -1,3 +1,4 @@
+import { adminTaskCalls } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import type { DayRange } from './search';
@@ -25,4 +26,4 @@ export const workQuery = queryOptions({
 });
 
 /** POST /admin-tasks/:id/done (docs/11 S8, the money module). */
-export const markTaskDone = (id: string) => apiSend('POST', `/admin-tasks/${id}/done`);
+export const markTaskDone = adminTaskCalls({ apiFetch, apiSend }).done;

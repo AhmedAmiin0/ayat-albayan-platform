@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
 import { accessProblems } from './access-problems.test-util';
-import { walkRoutes, type RouteAccess } from './route-walk.test-util';
+import { permissionKeys, walkRoutes, type RouteAccess } from './route-walk.test-util';
 
 // Every non-public endpoint has catalog permissions from one source: its handler, its class or its
 // route object (dynamic roles). A missing or misspelt key fails here, before review.
@@ -53,6 +53,7 @@ describe('permission coverage', () => {
   it('guards role management with roles.manage', () => {
     const roleRoutes = routes.filter((r) => /^(Roles|StaffUsers)Controller\./.test(r.key));
     expect(roleRoutes.length).toBeGreaterThanOrEqual(7);
-    expect(roleRoutes.filter((r) => r.permission !== 'roles.manage').map((r) => r.key)).toEqual([]);
+    const others = roleRoutes.filter((r) => permissionKeys(r).join() !== 'roles.manage');
+    expect(others.map((r) => r.key)).toEqual([]);
   });
 });

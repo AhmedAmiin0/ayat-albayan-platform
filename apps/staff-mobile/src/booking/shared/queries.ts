@@ -1,7 +1,7 @@
 import type { Gender, Program } from '@ab/catalog';
-import type { BookingTeacherOption, SlotsResponse } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
+import { pathKey } from '@ab/mobile-kit';
+import { bookingCallsOf } from './booking-calls';
 import { bookingPath, useBookingMode } from './booking-mode';
 
 /** GET /booking/teachers?program&gender? (docs/10 route 12; sales: /sales/booking/teachers): active teachers by name, with load. */
@@ -11,10 +11,10 @@ export function useBookingTeachers(f: {
   enabled?: boolean;
 }) {
   const params = { program: f.program, gender: f.gender ?? undefined };
-  const path = bookingPath(useBookingMode(), '/teachers');
+  const mode = useBookingMode();
   return useQuery({
-    queryKey: [...pathKey(path), params],
-    queryFn: () => apiFetch<BookingTeacherOption[]>(`${path}${toQueryString(params)}`),
+    queryKey: [...pathKey(bookingPath(mode, '/teachers')), params],
+    queryFn: () => bookingCallsOf[mode].teachers(params),
     enabled: f.enabled ?? true,
   });
 }
@@ -33,9 +33,9 @@ interface SlotsParams {
 
 /** GET /booking/slots (docs/10 route 13; sales: /sales/booking/slots): candidate starts, each with its clashes ([] = free). */
 export function useSlots(params: SlotsParams) {
-  const path = bookingPath(useBookingMode(), '/slots');
+  const mode = useBookingMode();
   return useQuery({
-    queryKey: [...pathKey(path), params],
-    queryFn: () => apiFetch<SlotsResponse>(`${path}${toQueryString({ ...params })}`),
+    queryKey: [...pathKey(bookingPath(mode, '/slots')), params],
+    queryFn: () => bookingCallsOf[mode].slots(params),
   });
 }

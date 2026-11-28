@@ -1,6 +1,6 @@
-import type { Gender, LeadSource, StudentStatus } from '@ab/catalog';
-import type { Page } from '@ab/core';
-import type { DuplicateStudentBody, StudentListItem, StudentProfile, StudentRef, TeacherOption } from '@ab/shared';
+import type { StudentStatus } from '@ab/catalog';
+import type { DuplicateStudentBody, StudentRef } from '@ab/shared';
+import { studentCalls } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@ab/web-kit';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
@@ -8,6 +8,8 @@ import { studentKeys } from '@/features/people/keys';
 import { filterParams, type StudentsFilters } from './list/filters';
 
 export const PAGE_SIZE = 20;
+
+const students = studentCalls({ apiFetch, apiSend });
 
 /** Invalidate this after any write. */
 export const STUDENTS_KEY = studentKeys.all;
@@ -29,16 +31,16 @@ export const studentListQuery = (search: string, page: number, view: StudentList
       ...view.sort,
       columns: view.columns,
     }),
-    queryFn: () => {
-      const qs = new URLSearchParams([
-        ['search', search],
-        ['page', String(page)],
-        ['pageSize', String(PAGE_SIZE)],
-        ...filterParams(view.filters ?? {}),
-        ...sortFilterParams(view.sort ?? {}, view.columns),
-      ]);
-      return apiFetch<Page<StudentListItem>>(`/students?${qs}`);
-    },
+    queryFn: () =>
+      students.list(
+        Object.fromEntries([
+          ['search', search],
+          ['page', String(page)],
+          ['pageSize', String(PAGE_SIZE)],
+          ...filterParams(view.filters ?? {}),
+          ...sortFilterParams(view.sort ?? {}, view.columns),
+        ]),
+      ),
     placeholderData: keepPreviousData,
   });
 
@@ -48,45 +50,27 @@ export type StatusCounts = Record<StudentStatus, number>;
 export const studentStatusCountsQuery = (filters: StudentsFilters) =>
   queryOptions({
     queryKey: studentKeys.statusCounts(filters),
-    queryFn: () => apiFetch<StatusCounts>(`/students/status-counts?${new URLSearchParams(filterParams(filters))}`),
+    queryFn: () => students.statusCounts(Object.fromEntries(filterParams(filters))),
   });
 
 export const studentQuery = (id: string) =>
   queryOptions({
     queryKey: studentKeys.detail(id),
-    queryFn: () => apiFetch<StudentProfile>(`/students/${id}`),
+    queryFn: () => students.get(id),
   });
 
 export const teacherOptionsQuery = queryOptions({
   queryKey: studentKeys.teacherOptions(),
-  queryFn: () => apiFetch<TeacherOption[]>('/students/teacher-options'),
+  queryFn: () => students.teacherOptions(),
   staleTime: 5 * 60_000,
 });
 
-export type CreateStudentBody = {
-  name: string;
-  age: number | null;
-  gender: Gender | null;
-  tz: string;
-  program: string;
-  teacher_id?: string;
-  /** Absent means the contact is the guardian (docs/30 §1). */
-  contact_is_self?: boolean;
-  guardian: { name: string; phone_e164: string; tz: string; source: LeadSource | null };
-  force: boolean;
-  /** The inbox lead this registration converts (R-LEAD-06). */
-  lead_id?: string;
-};
+export const createStudent = students.create;
 
-export const createStudent = (body: CreateStudentBody) =>
-  apiSend<StudentRef>('POST', '/students', body);
-
-export const updateStudent = (id: string, patch: object) =>
-  apiSend<StudentProfile>('PATCH', `/students/${id}`, patch);
+export const updateStudent = students.update;
 
 /** `mergedId` is folded into `keptId`, which survives (R-STU-03). */
-export const mergeStudents = ({ keptId, mergedId }: { keptId: string; mergedId: string }) =>
-  apiSend<{ merge_id: string }>('POST', `/students/${keptId}/merge`, { merged_id: mergedId });
+export const mergeStudents = students.merge;
 
 /** Duplicate candidates from a 409 on create, else null. */
 export function duplicateCandidates(error: unknown): StudentRef[] | null {

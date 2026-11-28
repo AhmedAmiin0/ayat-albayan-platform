@@ -1,30 +1,21 @@
-import { Controller, Delete, HttpCode, Put } from '@nestjs/common';
-import { z } from 'zod';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { pushTokenRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { MeService } from './me.service';
-import { pushTokenBody, pushTokenSchema } from './push/push-tokens';
 
 /** The admin app's device registration (R-MOB-01). Always the caller's own profile, never an id. */
-@ApiTags('me')
 @ApiBearerAuth()
-@Permissions('notifications.push')
-@Controller('me/push-tokens')
+@Controller()
 export class MeController {
   constructor(private readonly me: MeService) {}
 
-  /**
-   * Idempotent; (re)binds the token to the caller's session, taking it off any other profile, and
-   * answers the device key to send next time. 409 when it is another person's live device.
-   */
-  @Put()
+  /** (Re)binds the token to the caller's session, taking it off any other profile. */
+  @Route(routes.add)
   @HttpCode(200)
-  add(
-    @ZodBody(pushTokenBody) body: z.output<typeof pushTokenBody>,
-    @CurrentUser() user: AuthUser,
-  ): Promise<{ deviceKey: string }> {
+  add(@RouteInput() { body }: RouteInputOf<typeof routes.add>, @CurrentUser() user: AuthUser) {
     const { token, deviceKey } = body;
     return this.me.addPushToken({
       userId: user.id,
@@ -34,13 +25,13 @@ export class MeController {
     });
   }
 
-  /** The client sends the token URL-encoded (the brackets); 204 even when it was not stored. */
-  @Delete(':token')
+  /** The client sends the token URL-encoded (the brackets). */
+  @Route(routes.remove)
   @HttpCode(204)
   remove(
-    @ZodParam('token', pushTokenSchema) token: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
     @CurrentUser() user: AuthUser,
-  ): Promise<void> {
-    return this.me.removePushToken(user.id, token);
+  ) {
+    return this.me.removePushToken(user.id, params.token);
   }
 }

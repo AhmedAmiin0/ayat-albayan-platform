@@ -119,10 +119,7 @@
   },
   "src/lessons/makeup-views.ts": {
     "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/module-boundaries": {
-      "count": 1
+      "count": 2
     }
   },
   "src/lessons/overview.ts": {
@@ -147,7 +144,7 @@
   },
   "src/lessons/views.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "ab/module-boundaries": {
       "count": 1

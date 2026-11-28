@@ -1,7 +1,7 @@
-import type { AvailabilityRow, Teacher } from '@ab/shared';
 import type { LessonView } from '@ab/schedule';
+import { availabilityCalls, teacherCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 
 // Calendar reads. Keys are the API path's segments (lib/query-keys), so a lesson change that
 // invalidates ['lessons'] refreshes the week, and the app's persisted cache keeps the last week
@@ -21,13 +21,17 @@ export function useWeekLessons(params: WeekParams) {
   });
 }
 
+const teachers = teacherCalls({ apiFetch, apiSend });
+const availability = availabilityCalls({ apiFetch, apiSend });
+
 export function useTeacher(id: string) {
-  const path = `/teachers/${id}`;
-  return useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<Teacher>(path) });
+  return useQuery({ queryKey: pathKey(`/teachers/${id}`), queryFn: () => teachers.get(id) });
 }
 
 /** GET /teachers/:id/availability: the weekly grid, wall clock in its own tz. */
 export function useAvailability(id: string) {
-  const path = `/teachers/${id}/availability`;
-  return useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<AvailabilityRow[]>(path) });
+  return useQuery({
+    queryKey: pathKey(`/teachers/${id}/availability`),
+    queryFn: () => availability.grid(id),
+  });
 }

@@ -1,33 +1,27 @@
-import {
-  subscriptionCancelSchema,
-  subscriptionCreateSchema,
-  subscriptionUpdateSchema,
-  type QuoteResponse,
-  type StudentBalanceView,
-  type TeacherBalanceView,
-  type SubscriptionView,
+import type {
+  QuoteResponse,
+  StudentBalanceAnswer,
+  SubscriptionPage,
+  SubscriptionView,
 } from '@ab/money';
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { studentBalanceRoutes, subscriptionRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow, sentOnly } from '@/common/http/http';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { SubscriptionCancel } from './cancel/subscription-cancel.service';
 import { toTeacherBalance } from './money/balance.teacher';
 import { PackagesService } from './money/packages.service';
 import { StudentAccess } from './student-lifecycle/student-access';
-import { subscriptionListQuery, subscriptionQuoteSchema } from './subscriptions.dto';
 import { SubscriptionCreator } from './shared/subscription-creator';
 import { SubscriptionsService } from './shared/subscriptions.service';
 import { assertUsedBefore } from './used-before';
-import type { Page } from '@ab/core';
 
 /** Packages (S1–S5, R-SUB-01). Admin only; the price comes from the catalog, never the body. */
-@ApiTags('subscriptions')
 @ApiBearerAuth()
-@Permissions('subscriptions.read')
-@Controller('subscriptions')
+@Controller()
 export class SubscriptionsController {
   constructor(
     private readonly subs: SubscriptionsService,
@@ -35,80 +29,77 @@ export class SubscriptionsController {
     private readonly cancels: SubscriptionCancel,
   ) {}
 
-  @Get()
-  list(@Query() query: unknown): Promise<Page<SubscriptionView>> {
-    return this.subs.list(parseOrThrow(subscriptionListQuery, query));
+  @Route(routes.list)
+  list(@RouteInput() { query }: RouteInputOf<typeof routes.list>): Promise<SubscriptionPage> {
+    return this.subs.list(query);
   }
 
-  @Post()
-  @Permissions('subscriptions.write')
-  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SubscriptionView> {
-    const input = parseOrThrow(subscriptionCreateSchema, body);
-    assertUsedBefore(input, user);
-    return this.creator.create(input, user.id);
+  @Route(routes.create)
+  create(
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SubscriptionView> {
+    assertUsedBefore(body, user);
+    return this.creator.create(body, user.id);
   }
 
   /** The price the create would store, shown in the dialog before saving. */
-  @Post('quote')
+  @Route(routes.quote)
   @HttpCode(200)
-  quote(@Body() body: unknown): Promise<QuoteResponse> {
-    return this.creator.quote(parseOrThrow(subscriptionQuoteSchema, body));
+  quote(@RouteInput() { body }: RouteInputOf<typeof routes.quote>): Promise<QuoteResponse> {
+    return this.creator.quote(body);
   }
 
-  @Get(':id')
-  get(@Param('id', ParseUUIDPipe) id: string): Promise<SubscriptionView> {
-    return this.subs.get(id);
+  @Route(routes.get)
+  get(@RouteInput() { params }: RouteInputOf<typeof routes.get>): Promise<SubscriptionView> {
+    return this.subs.get(params.id);
   }
 
-  @Patch(':id')
-  @Permissions('subscriptions.write')
+  @Route(routes.update)
   update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.update>,
     @CurrentUser() user: AuthUser,
   ): Promise<SubscriptionView> {
-    return this.subs.update(
-      id,
-      sentOnly(parseOrThrow(subscriptionUpdateSchema, body), body),
-      user.id,
-    );
+    return this.subs.update(params.id, body, user.id);
   }
 
   /** The package stays, marked cancelled; 409 already_cancelled, has_payments or has_lessons. */
-  @Post(':id/cancel')
+  @Route(routes.cancel)
   @HttpCode(200)
-  @Permissions('subscriptions.write')
-  async cancel(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SubscriptionView> {
-    const input = parseOrThrow(subscriptionCancelSchema, body ?? {});
-    return this.cancels.cancel(await this.cancels.view(id), { ...input, actorId: user.id });
+  async cancel(
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.cancel>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SubscriptionView> {
+    const view = await this.cancels.view(params.id);
+    return this.cancels.cancel(view, { ...body, actorId: user.id });
   }
 
-  @Delete(':id')
+  @Route(routes.remove)
   @HttpCode(204)
-  @Permissions('subscriptions.write')
-  async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
-    await this.subs.remove(id, user.id);
+  remove(
+    @CurrentUser() user: AuthUser,
+    @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
+  ): Promise<void> {
+    return this.subs.remove(params.id, user.id);
   }
 }
 
 /** GET /students/:id/balance (S6, R-SUB-01/03): admin, or the student's teacher. */
-@ApiTags('students')
 @ApiBearerAuth()
-@Permissions('students.balance')
-@Controller('students/:id/balance')
+@Controller()
 export class StudentBalanceController {
   constructor(
     private readonly packages: PackagesService,
     private readonly access: StudentAccess,
   ) {}
 
-  @Get()
+  @Route(studentBalanceRoutes.get)
   async balance(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof studentBalanceRoutes.get>,
     @CurrentUser() user: AuthUser,
-  ): Promise<StudentBalanceView | TeacherBalanceView> {
-    await this.access.check(user, id);
-    const balance = await this.packages.studentBalance(id);
+  ): Promise<StudentBalanceAnswer> {
+    await this.access.check(user, params.id);
+    const balance = await this.packages.studentBalance(params.id);
     // Permission, not scope: who may see the full package money view (the admin; a teacher not).
     return can(user, 'subscriptions.read') ? balance : toTeacherBalance(balance);
   }

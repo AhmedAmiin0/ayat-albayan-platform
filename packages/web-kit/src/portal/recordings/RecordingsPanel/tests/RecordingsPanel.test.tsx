@@ -70,6 +70,6 @@ describe('RecordingsPanel parts', () => {
     const second = await screen.findByRole('radio', { name: 'الجزء 2 · 44 دقيقة' });
     fireEvent.click(second);
     expect((second as HTMLInputElement).checked).toBe(true);
-    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/B/url');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/B/url', undefined);
   });
 });

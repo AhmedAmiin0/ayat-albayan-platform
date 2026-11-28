@@ -9,10 +9,22 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-const GUARDIAN = { id: 'g1', name: 'أم جود', phone_e164: '+966501234567', country: 'SA', tz: 'Asia/Riyadh', source: null, notes: null };
+const GUARDIAN = {
+  id: 'g1',
+  name: 'أم جود',
+  phone_e164: '+966501234567',
+  country: 'SA',
+  tz: 'Asia/Riyadh',
+  source: null,
+  notes: null,
+  profile_id: null,
+  created_by: null,
+  created_at: '2026-10-29T10:00:00Z',
+  updated_at: '2026-10-29T10:00:00Z',
+};
 
 function open() {
-  routeFetch(apiFetch, [['/guardians/g1', GUARDIAN]]);
+  routeFetch(apiFetch, [['/guardians/g1', { ...GUARDIAN, students: [], phones: [] }]]);
   const onDone = vi.fn();
   renderWithClient(<GuardianEditDialog guardianId="g1" onClose={vi.fn()} onDone={onDone} />);
   return onDone;
