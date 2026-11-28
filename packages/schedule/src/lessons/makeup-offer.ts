@@ -1,4 +1,4 @@
-import { MAKEUP_WINDOW_DAYS, makeupEligible } from '../schemas/booking-extras';
+import { MAKEUP_WINDOW_DAYS, makeupEligible } from './makeup-eligible';
 import type { LessonStudentView, LessonView } from './views';
 
 /** Who a lesson's makeup is for: a makeup to book, and a makeup already booked. */

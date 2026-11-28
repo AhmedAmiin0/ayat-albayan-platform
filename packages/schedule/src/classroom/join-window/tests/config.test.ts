@@ -1,8 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { makeupOffer } from '../../../lessons/makeup-offer';
 import type { LessonView } from '../../../lessons/views';
-import { makeupEligible } from '../../../schemas/booking-extras';
-import { canJoinNow, DEFAULT_JOIN_WINDOW, joinWindow, joinWindowConfig, roomClosesAt } from '../join-window';
+import { makeupEligible } from '../../../lessons/makeup-eligible';
+import {
+  canJoinNow,
+  DEFAULT_JOIN_WINDOW,
+  joinWindow,
+  joinWindowConfig,
+  roomClosesAt,
+} from '../join-window';
 import { pickStudentLesson } from '../../student-lesson';
 
 const lesson = { starts_at: '2026-10-05T16:00:00Z', ends_at: '2026-10-05T16:30:00Z' };
@@ -40,7 +46,13 @@ describe('joinWindow with the settings (join_opens_before_min / join_closes_afte
 });
 
 describe('makeup window (settings.makeup_window_days)', () => {
-  const missed = { status: 'no_show' as const, chargeable: true, trial: false, makeup: false, startsAt: '2026-08-01T10:00:00Z' };
+  const missed = {
+    status: 'no_show' as const,
+    chargeable: true,
+    trial: false,
+    makeup: false,
+    startsAt: '2026-08-01T10:00:00Z',
+  };
   const now = at('2026-10-05T10:00:00Z'); // 65 days later
 
   it('60 days by default; a longer window lets the same miss be made up', () => {
@@ -50,7 +62,10 @@ describe('makeup window (settings.makeup_window_days)', () => {
 
   it('makeupOffer follows the window too', () => {
     const view = {
-      status: 'no_show', trial: false, makeup: false, starts_at: missed.startsAt,
+      status: 'no_show',
+      trial: false,
+      makeup: false,
+      starts_at: missed.startsAt,
       students: [{ id: 's1', chargeable: true, makeup: null }],
     } as unknown as LessonView;
     expect(makeupOffer(view, now).open).toHaveLength(0);

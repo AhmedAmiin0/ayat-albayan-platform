@@ -1,6 +1,6 @@
 import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
-import { LESSON_STATUSES, type LessonStatus } from '@ab/catalog';
+import { LESSON_STATUSES } from '@ab/catalog';
 
 // Booking kind, invoice and makeup (R-SCH-10, R-PAY-03, R-MSG-06). Kept apart from scheduling.ts
 // (file size); scheduling.ts adds `bookingExtras` to the booking body and refines it.
@@ -75,37 +75,6 @@ export function bookingKindOf(req: {
 /** A trial or a makeup is one lesson on one day; only a package repeats weekly. */
 export const isSingleLesson = (kind: BookingKind): boolean => kind !== 'package';
 
-export interface MakeupOriginal {
-  status: LessonStatus;
-  /** lesson_students.chargeable of the student being made up for. */
-  chargeable: boolean;
-  /** Its rule is a trial. */
-  trial: boolean;
-  /** It is itself a makeup. */
-  makeup: boolean;
-  /** ISO instant. */
-  startsAt: string;
-}
-export type MakeupVerdict = 'ok' | 'status' | 'not_charged' | 'trial' | 'too_old' | 'is_makeup';
-
-const DAY_MS = 86_400_000;
-
-/** settings.makeup_window_days default, pinned by shared join-window.registry.test.ts. */
-export const MAKEUP_WINDOW_DAYS = 60;
-
-/** Only a charged own miss within `windowDays`; teacher or admin cancels are rescheduled. */
-export function makeupEligible(
-  original: MakeupOriginal,
-  now: Date,
-  windowDays: number = MAKEUP_WINDOW_DAYS,
-): MakeupVerdict {
-  if (original.makeup) return 'is_makeup';
-  if (original.trial) return 'trial';
-  if (original.status !== 'no_show' && original.status !== 'excused') return 'status';
-  if (!original.chargeable) return 'not_charged';
-  return Date.parse(original.startsAt) >= now.getTime() - windowDays * DAY_MS ? 'ok' : 'too_old';
-}
-
 interface KindFacts {
   kind?: BookingKind | undefined;
   package?: string | undefined;
@@ -125,16 +94,29 @@ function makeupProblems(req: KindFacts): string[] {
   return out;
 }
 
+type PackageFit = (pkg: string | undefined) => string | null;
+
+/** The package each kind needs: a trial package for a trial, a size for a package. */
+const PACKAGE_FITS: Readonly<Record<BookingKind, PackageFit>> = {
+  trial: (pkg) => (pkg === 'trial' ? null : 'package:trial_package'),
+  package: (pkg) => (pkg === undefined || pkg === 'trial' ? 'package:package_size' : null),
+  makeup: () => null,
+};
+
+function makeupLinkProblems(kind: BookingKind, req: KindFacts): string[] {
+  if (kind === 'makeup') return makeupProblems(req);
+  return req.makeupOfLessonId === undefined ? [] : ['makeupOfLessonId:makeup_only'];
+}
+
+function bookingKindProblems(req: KindFacts): string[] {
+  const kind = bookingKindOf(req);
+  const pkg = PACKAGE_FITS[kind](req.package);
+  return [...(pkg === null ? [] : [pkg]), ...makeupLinkProblems(kind, req)];
+}
+
 /** Which of kind / package / students / makeup link fit together (R-SCH-10). */
 export function refineBookingKind(req: KindFacts, ctx: z.RefinementCtx): void {
-  const kind = bookingKindOf(req);
-  const found: string[] = [];
-  if (kind === 'trial' && req.package !== 'trial') found.push('package:trial_package');
-  if (kind === 'package' && (req.package === undefined || req.package === 'trial'))
-    found.push('package:package_size');
-  if (kind === 'makeup') found.push(...makeupProblems(req));
-  else if (req.makeupOfLessonId !== undefined) found.push('makeupOfLessonId:makeup_only');
-  for (const f of found) {
+  for (const f of bookingKindProblems(req)) {
     const [path = '', message = ''] = f.split(':');
     ctx.addIssue({ code: 'custom', path: [path], message });
   }

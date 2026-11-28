@@ -10,6 +10,8 @@ export type * from './overview';
 export * from './teacher-name';
 export type * from './makeup-views';
 export * from './makeup-offer';
+export * from './makeup-eligible';
+export type * from './makeup-eligible.types';
 export * from './series/day-times';
 export * from './pick-progress';
 export * from './auto-held';
