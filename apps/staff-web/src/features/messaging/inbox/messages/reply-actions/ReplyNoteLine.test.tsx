@@ -23,6 +23,7 @@ vi.mock('@/features/teaching/schedule', async (orig) => ({
 }));
 
 const NO = 'لم تتأكد أي حلقة بهذا الرد';
+const MOVED_ID = 'a1000000-0000-4000-8000-000000000001';
 const LESSON: ThreadLesson = {
   id: 'l-1',
   starts_at: '2099-10-04T14:00:00Z',
@@ -93,11 +94,12 @@ describe('reply note actions (owner 2026-10-28)', () => {
   });
 
   it('«ايوة»: «تأكيد الحلقة» by sales’ route, then the chat re-reads; never «no lesson was confirmed»', async () => {
-    apiSend.mockResolvedValue({ id: 'l-1', status: 'confirmed' });
+    apiSend.mockResolvedValue({ id: MOVED_ID, starts_at: LESSON.starts_at, status: 'confirmed' });
     renderNote(YES, { mode: 'sales', permissions: ['lessons.confirm'] });
     expect(screen.queryByText(NO)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: /^تأكيد حلقة/ }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/lessons/l-1/confirm'));
+    const path = '/sales/lessons/l-1/confirm';
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', path, undefined));
   });
 
   it('«ايوة» without the right to confirm: no button and no «not confirmed»; a confirmed lesson: «تم تأكيد حلقة …»', () => {

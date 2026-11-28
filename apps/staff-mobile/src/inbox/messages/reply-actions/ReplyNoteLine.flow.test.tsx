@@ -31,6 +31,7 @@ function mockSheet(who: string) {
 jest.mock('@/teaching', () => ({ ...jest.requireActual('@/teaching'), RescheduleSheet: mockSheet('admin') }));
 jest.mock('@/sales/sales', () => ({ ...jest.requireActual('@/sales/sales'), SalesRescheduleSheet: mockSheet('sales') }));
 
+const MOVED_ID = 'a1000000-0000-4000-8000-000000000001';
 const ROW = answered(lessonRow({ id: 'l-1', starts_at: '2099-10-04T14:00:00.000Z' }));
 const LESSON: ThreadLesson = {
   id: ROW.id,
@@ -99,11 +100,12 @@ test('no right to move: «طلب تغيير الموعد» and no button', async
 });
 
 test('«ايوة»: «تأكيد الحلقة» on its scheduled lesson, never «no lesson was confirmed»', async () => {
-  mockApiSend.mockResolvedValue({ id: ROW.id, status: 'confirmed' });
+  mockApiSend.mockResolvedValue({ id: MOVED_ID, starts_at: ROW.starts_at, status: 'confirmed' });
   await renderNote(YES, SALES);
   expect(screen.queryByText(NO)).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: /^تأكيد حلقة/ }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', `/sales/lessons/${ROW.id}/confirm`));
+  const path = `/sales/lessons/${ROW.id}/confirm`;
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', path, undefined));
 });
 
 test('«ايوة» without the right to confirm: nothing at all', async () => {
