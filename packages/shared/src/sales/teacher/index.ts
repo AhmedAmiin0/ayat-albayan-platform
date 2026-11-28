@@ -5,3 +5,5 @@ export * from './academy-day.schemas';
 export * from './academy-day.routes';
 export * from './academy-lists.schemas';
 export * from './academy-lists.routes';
+export * from './academy-students.schemas';
+export * from './academy-students.routes';

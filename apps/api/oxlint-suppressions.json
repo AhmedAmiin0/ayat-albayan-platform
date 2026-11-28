@@ -6467,9 +6467,6 @@
   },
   "src/modules/sales/sales/academy/sales-academy.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/zod-inputs": {
       "count": 1
     }
   },

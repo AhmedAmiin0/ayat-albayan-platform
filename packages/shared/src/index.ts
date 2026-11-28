@@ -17,7 +17,7 @@ export * from './sales/pick-sales';
 export * from './sales/leads';
 export * from './sales/views';
 export * from './sales/sales-portal.routes';
-export * from './sales/academy';
+export * from './sales/student/student-views.schemas';
 export * from './sales/teacher-filter/teacher-filter';
 export * from './sales/money';
 export * from './sales/money-views';
