@@ -57,7 +57,9 @@ export const passwordChangeSchema = z.object({
 });
 export type PasswordChange = z.output<typeof passwordChangeSchema>;
 
-/** POST /me/avatar/upload-url (R-ACC-05): the browser or phone then PUTs the file to the signed URL. */
+/**
+ * POST /me/avatar/upload-url (R-ACC-05): the browser or phone then PUTs the file to the signed URL.
+ */
 export const avatarUploadSchema = z.object({
   mime: z.enum(AVATAR_MIMES, { message: 'avatar_type' }),
   size: z.int().min(1).max(AVATAR_MAX_BYTES, { message: 'avatar_too_large' }),

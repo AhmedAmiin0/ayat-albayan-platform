@@ -14,7 +14,10 @@ import type { TrialHistory, TrialOutcome } from './trial-date';
 /** From this many dates on (the new one included) the form warns; never a block. */
 export const TRIAL_DATE_WARN_FROM = 3;
 
-/** new / trial / pending_subscription: a subscriber changes their course instead (409 trial_date_subscribed). */
+/**
+ * new / trial / pending_subscription: a subscriber changes their course instead (409
+ * trial_date_subscribed).
+ */
 export const canPickTrialDate = (status: StudentStatus | null | undefined): boolean =>
   isNotSubscribed(status);
 

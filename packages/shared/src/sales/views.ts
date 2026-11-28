@@ -2,7 +2,9 @@ import { z } from 'zod';
 import type { JoinWindow } from '@ab/schedule';
 import type { LessonStatus, PackageSize, SubscriptionStatus } from '@ab/catalog';
 
-/** GET /sales/subscriptions rows: who and which package, never a price, currency, fx rate or note. */
+/**
+ * GET /sales/subscriptions rows: who and which package, never a price, currency, fx rate or note.
+ */
 export interface SalesSubscriptionView {
   id: string;
   student: { id: string; code: string; name: string };

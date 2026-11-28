@@ -12,7 +12,9 @@ import type { TrialOutcome } from '../../people/students';
 
 // Student details for any student (docs/16 row 36); every assistant sees every student.
 
-/** A subscription without its payments or audit trail: package, status, dates, lessons used / left. */
+/**
+ * A subscription without its payments or audit trail: package, status, dates, lessons used / left.
+ */
 /** Sent only to self.sales_money holders and only when 0 < paid < price (docs/16 row 36). */
 export interface SalesPartPaid {
   paid: number;
@@ -47,7 +49,10 @@ export interface SalesTrialLesson {
 
 /** GET /sales/students/:id: 404 student_not_found for an unknown id only. */
 export interface SalesStudentDetails {
-  /** Hers, or any while SalesOwnershipRule does not enforce: the money actions. Every student reads the same. Absent: old cache (= hers). */
+  /**
+   * Hers, or any while SalesOwnershipRule does not enforce: the money actions. Every student reads
+   * the same. Absent: old cache (= hers).
+   */
   mine?: boolean;
   student: {
     id: string;
@@ -63,7 +68,9 @@ export interface SalesStudentDetails {
   current_id: string | null;
   /** The latest past lessons, newest first, and their totals per kind. */
   attendance: { items: SalesAttendanceDay[]; totals: Record<AttendanceKind, number> };
-  /** The sent reports newest first, the teacher's rows (ReportSummaryView), and how many there are. */
+  /**
+   * The sent reports newest first, the teacher's rows (ReportSummaryView), and how many there are.
+   */
   reports: { items: ReportSummaryView[]; total: number };
   /** Weekly slots and next lessons, no link; absent in an old cache. */
   schedule?: SalesStudentSchedule;
@@ -78,7 +85,9 @@ export interface SalesStudentDetails {
   family?: SalesStudentFamily;
 }
 
-/** POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override. */
+/**
+ * POST /sales/lessons/:id/reschedule: one lesson only, no substitute teacher, no clash override.
+ */
 export const salesRescheduleSchema = z.strictObject({
   startsAt: instant,
   reason: moveReasonSchema,

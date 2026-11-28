@@ -41,7 +41,8 @@ export const studentCreateSchema = z.object({
 });
 /**
  * PATCH /students/:id. `expected_status`: the status the client last saw; the API writes only while
- * the row still has it, else 409 `status_changed` (R-STU-05: stale forms never undo automatic moves).
+ * the row still has it, else 409 `status_changed` (R-STU-05: stale forms never undo automatic
+ * moves).
  */
 export const studentUpdateSchema = studentCreateSchema
   .omit({ guardian_id: true })
@@ -68,7 +69,10 @@ export const teacherCreateSchema = z.object({
   status: z.enum(TEACHER_STATUSES).default('active'),
   tz: timeZone,
 });
-/** `username`: written to the teacher's login profile (docs/30); null clears it. Needs a linked login. */
+/**
+ * `username`: written to the teacher's login profile (docs/30); null clears it. Needs a linked
+ * login.
+ */
 export const teacherUpdateSchema = partialOf(teacherCreateSchema).extend({
   username: username.nullish(),
 });

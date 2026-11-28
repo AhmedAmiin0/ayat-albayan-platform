@@ -2,10 +2,14 @@ import { z } from 'zod';
 import type { NotificationKey } from './catalogue/catalogue';
 import type { NotificationChannel } from './catalogue/catalogue.types';
 
-// docs/23 §3 phase 4 (amended by docs/26 §6 23-P4): the admin's overrides of the catalogue, one row of
-// public.notification_rules per catalogue key that was copied or edited. Code still defines what exists.
+// docs/23 §3 phase 4 (amended by docs/26 §6 23-P4): the admin's overrides of the catalogue, one row
+// of public.notification_rules per catalogue key that was copied or edited. Code still defines what
+// exists.
 
-/** Where producers read a row's choices: legacy settings keys, or notification_rules (settings.comms_source). */
+/**
+ * Where producers read a row's choices: legacy settings keys, or notification_rules
+ * (settings.comms_source).
+ */
 export type RulesMode = 'legacy' | 'module';
 
 /** Whole hours a select offers (never free text); null means at the lesson's own time. */
@@ -54,7 +58,10 @@ export type AnyRuleTiming = { [K in TimedNotificationKey]: RuleTiming<K> }[Timed
 export const isTimedKey = (key: string): key is TimedNotificationKey =>
   Object.hasOwn(RULE_TIMING_SCHEMAS, key);
 
-/** One stored row (public.notification_rules). channels / timing / number_id null = the entry's default. */
+/**
+ * One stored row (public.notification_rules). channels / timing / number_id null = the entry's
+ * default.
+ */
 export interface NotificationRuleRow {
   key: string;
   enabled: boolean;
@@ -75,7 +82,9 @@ export interface EffectiveRule {
   number_id: string | null;
 }
 
-/** The typed confirmation an essential row's OFF needs (ar.json notificationRules.essentialWord). */
+/**
+ * The typed confirmation an essential row's OFF needs (ar.json notificationRules.essentialWord).
+ */
 export const ESSENTIAL_OFF_TEXT = 'إيقاف';
 
 /**
@@ -97,7 +106,10 @@ export const rulePatchSchema = z
   .strict();
 export type RulePatchInput = z.infer<typeof rulePatchSchema>;
 
-/** The row as GET /admin/notifications shows it to tagged clients (X-AB-Client), next to its v1 fields. */
+/**
+ * The row as GET /admin/notifications shows it to tagged clients (X-AB-Client), next to its v1
+ * fields.
+ */
 export interface NotificationRuleView {
   key: NotificationKey;
   enabled: boolean;
@@ -112,7 +124,9 @@ export interface NotificationRuleView {
   updated_by: string | null;
 }
 
-/** PATCH errors: 422 invalid / locked / unknown_number, 428 confirmation_required, 404 unknown key. */
+/**
+ * PATCH errors: 422 invalid / locked / unknown_number, 428 confirmation_required, 404 unknown key.
+ */
 export const RULE_ERRORS = [
   'invalid',
   'locked',

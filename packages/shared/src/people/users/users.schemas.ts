@@ -10,12 +10,16 @@ export const USER_STATUSES = ['active', 'disabled'] as const;
 export const userStatusSchema = z.enum(USER_STATUSES);
 export type UserStatus = z.infer<typeof userStatusSchema>;
 
-/** set = the admin types it; generate = the API makes one, shown once; link = recovery link, shown once. */
+/**
+ * set = the admin types it; generate = the API makes one, shown once; link = recovery link, shown
+ * once.
+ */
 export const CREDENTIAL_MODES = ['set', 'generate', 'link'] as const;
 export type CredentialMode = (typeof CREDENTIAL_MODES)[number];
 
 const blank = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
-// The family logins' synthetic domain (docs/30 §2) is the API's alone: never typed for a staff login.
+// The family logins' synthetic domain (docs/30 §2) is the API's alone: never typed for a staff
+// login.
 const email = z
   .string()
   .trim()

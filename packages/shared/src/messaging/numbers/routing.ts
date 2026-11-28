@@ -1,9 +1,13 @@
 import type { WaLine } from '@ab/catalog';
 
-// Routing per number (docs/23 §3 phase 5, contract docs/23c). Pure: the API feeds it the loaded numbers
-// and approvals. Used ONLY while settings.comms_source = 'module'; legacy keeps lineOf() / replyLine().
+// Routing per number (docs/23 §3 phase 5, contract docs/23c). Pure: the API feeds it the loaded
+// numbers and approvals. Used ONLY while settings.comms_source = 'module'; legacy keeps lineOf() /
+// replyLine().
 
-/** What routing needs of one wa_numbers row (no credentials: `sendable` says whether it can send now). */
+/**
+ * What routing needs of one wa_numbers row (no credentials: `sendable` says whether it can send
+ * now).
+ */
 export interface RoutableNumber {
   id: string;
   purpose: WaLine;
@@ -11,7 +15,9 @@ export interface RoutableNumber {
   is_default: boolean;
   fallback_rank: number;
   created_at: string;
-  /** Enabled AND its credentials make a working client (checked by the API, never a secret here). */
+  /**
+   * Enabled AND its credentials make a working client (checked by the API, never a secret here).
+   */
   sendable: boolean;
 }
 
@@ -51,7 +57,8 @@ export function templateCandidates(input: TemplateRouteInput): string[] {
 
 /**
  * The number a template row leaves from: the first candidate that is enabled, can send and has the
- * template approved. null = none: the row stays queued, untouched (fail closed, like an unconfigured line).
+ * template approved. null = none: the row stays queued, untouched (fail closed, like an
+ * unconfigured line).
  */
 export function routeTemplate(input: TemplateRouteInput): string | null {
   const byId = new Map(input.numbers.map((n) => [n.id, n]));
@@ -64,8 +71,8 @@ export function routeTemplate(input: TemplateRouteInput): string | null {
 
 /**
  * The number a session text / file leaves from: the number it was stamped with at enqueue, else the
- * default of its line. Never another number: Meta allows a session message only inside THAT number's
- * 24 h window. null = it cannot leave now (stays queued).
+ * default of its line. Never another number: Meta allows a session message only inside THAT
+ * number's 24 h window. null = it cannot leave now (stays queued).
  */
 export function routeSession(
   numbers: readonly RoutableNumber[],

@@ -39,8 +39,8 @@ export interface MergeOptions {
 }
 
 /**
- * Messages and calls in one list, oldest → newest by their own time (a message's created_at, a call's
- * started_at); a tie keeps the message first. Both inputs may come in any order.
+ * Messages and calls in one list, oldest → newest by their own time (a message's created_at, a
+ * call's started_at); a tie keeps the message first. Both inputs may come in any order.
  */
 export function mergeChat<M extends { created_at: string }, C extends { started_at: string }>(
   messages: readonly M[],

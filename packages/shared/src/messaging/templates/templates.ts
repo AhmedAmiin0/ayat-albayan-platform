@@ -45,7 +45,10 @@ export interface TemplateDocument {
 
 /** messages.template_params: body variables by position, plus the button and header parts. */
 export interface TemplateParams extends Partial<Record<BodySlot, string>> {
-  /** URL-button suffix: the Meet code, the Jitsi room slug, the signed feedback token or the classroom guest token. */
+  /**
+   * URL-button suffix: the Meet code, the Jitsi room slug, the signed feedback token or the
+   * classroom guest token.
+   */
   button?: string;
   /** Each URL button's {{1}} suffix in the buttons' order (a template with two link buttons). */
   buttons?: string[];
@@ -72,7 +75,9 @@ interface LinkVariant<K extends TemplateKey> {
   button: string | null;
 }
 
-/** Same-day guardian reminder (lesson_reminder_v2 on Meta): Jitsi → base, Meet → _meet, else _plain. */
+/**
+ * Same-day guardian reminder (lesson_reminder_v2 on Meta): Jitsi → base, Meet → _meet, else _plain.
+ */
 export function lessonReminderTemplate(
   link: string | null | undefined,
 ): LinkVariant<'lesson_reminder' | 'lesson_reminder_meet' | 'lesson_reminder_plain'> {

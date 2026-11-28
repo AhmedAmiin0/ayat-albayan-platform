@@ -4,7 +4,10 @@ import { listSortShape } from '@ab/core';
 
 // Teacher reports list sort and filters (R-REP-02, R-NFR-08).
 
-/** No `sort` = newest submit first. The lesson date has no sort: lesson_reports has no FK to lessons. */
+/**
+ * No `sort` = newest submit first. The lesson date has no sort: lesson_reports has no FK to
+ * lessons.
+ */
 export const TEACHER_REPORT_SORT_KEYS = ['submitted', 'attendance', 'grade'] as const;
 export type TeacherReportSortKey = (typeof TEACHER_REPORT_SORT_KEYS)[number];
 

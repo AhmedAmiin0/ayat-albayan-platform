@@ -18,7 +18,9 @@ export function passwordProblem(
   return null;
 }
 
-/** Base roles whose login must be LINKED to an existing record (registration creates the record). */
+/**
+ * Base roles whose login must be LINKED to an existing record (registration creates the record).
+ */
 export const LINKED_ROLES = [
   'teacher',
   'student',

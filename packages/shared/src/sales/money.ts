@@ -11,18 +11,20 @@ import {
 } from '@ab/money';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): she subscribes
-// a student she brought and records the family's bank transfer with its receipt. Same rules as the admin's
-// commands, narrower: no typed price ever, no notes, no refund, no invoice, the method is always 'bank',
-// every write carries its clientRequestId (rule 8). docs/16 rows 24–25: the receipt is
-// OPTIONAL now (old students have none) and the files go in `attachments` (0..5); `startsOn` is honoured only
-// with subscriptions.set_start_date (salesStartDate), a past day only with `alreadyStarted`. The API narrows further
-// (docs/16 rows 20–22): only the site's discount pills (403 discount_not_allowed) and the package currency
-// (400 currency_mismatch; `currency` stays for client compatibility). Strict objects: a field
-// the admin's form has but hers does not (kind, method, invoiceId…) is a 400, never silently dropped.
+// a student she brought and records the family's bank transfer with its receipt. Same rules as the
+// admin's commands, narrower: no typed price ever, no notes, no refund, no invoice, the method is
+// always 'bank', every write carries its clientRequestId (rule 8). docs/16 rows 24–25: the receipt
+// is OPTIONAL now (old students have none) and the files go in `attachments` (0..5); `startsOn` is
+// honoured only with subscriptions.set_start_date (salesStartDate), a past day only with
+// `alreadyStarted`. The API narrows further (docs/16 rows 20–22): only the site's discount pills
+// (403 discount_not_allowed) and the package currency (400 currency_mismatch; `currency` stays for
+// client compatibility). Strict objects: a field the admin's form has but hers does not (kind,
+// method, invoiceId…) is a 400, never silently dropped.
 
 /**
  * The chat the write comes from (docs/16 row 38). Never an access check
- * (sales.renew_any renews ANY student): it only picks which of the student's family chats the receipt files come from.
+ * (sales.renew_any renews ANY student): it only picks which of the student's family chats the
+ * receipt files come from.
  */
 const chatPhone = phoneE164.optional();
 
@@ -51,7 +53,10 @@ export const salesSubscriptionCreateSchema = z.strictObject({
   phone: chatPhone,
 });
 
-/** POST /sales/payments: one bank transfer; its files (from the chat or uploaded) optional, in `attachments`. */
+/**
+ * POST /sales/payments: one bank transfer; its files (from the chat or uploaded) optional, in
+ * `attachments`.
+ */
 export const salesPaymentCreateSchema = z.strictObject({
   subscriptionId: z.uuid(),
   amount: moneyAmount,
@@ -65,17 +70,26 @@ export const salesPaymentCreateSchema = z.strictObject({
   phone: chatPhone,
 });
 
-/** POST /sales/payments/receipt-upload-url: same body as the admin's, the subscription must be her student's. */
+/**
+ * POST /sales/payments/receipt-upload-url: same body as the admin's, the subscription must be her
+ * student's.
+ */
 export const salesReceiptUploadSchema = receiptUploadSchema.extend({ phone: chatPhone });
 
-/** POST /sales/payments/receipt-from-chat: copy one image / PDF of the family's chat into receipts/{subscriptionId}/. */
+/**
+ * POST /sales/payments/receipt-from-chat: copy one image / PDF of the family's chat into
+ * receipts/{subscriptionId}/.
+ */
 export const salesChatReceiptCopySchema = z.strictObject({
   subscriptionId: z.uuid(),
   messageId: z.uuid(),
   phone: chatPhone,
 });
 
-/** GET /sales/money/family?phone: her students in the family of this chat (every one with sales.renew_any). */
+/**
+ * GET /sales/money/family?phone: her students in the family of this chat (every one with
+ * sales.renew_any).
+ */
 export const salesFamilyQuerySchema = z.object({ phone: phoneE164 });
 
 /** GET /sales/money/chat-receipts?studentId (and /:messageId): the receipts the family sent. */
@@ -88,8 +102,9 @@ export type SalesChatReceiptCopy = z.output<typeof salesChatReceiptCopySchema>;
 export type SalesReceiptUpload = z.output<typeof salesReceiptUploadSchema>;
 
 /**
- * The `phone` a client adds to a sales money write (docs/16 row 38): the chat's phone for a student the family
- * view lists with `mine: false` (sales.renew_any), nothing for hers, so the bodies for her own stay as they were.
+ * The `phone` a client adds to a sales money write (docs/16 row 38): the chat's phone for a student
+ * the family view lists with `mine: false` (sales.renew_any), nothing for hers, so the bodies for
+ * her own stay as they were.
  */
 export function chatBinding(
   students: readonly { id: string; mine?: boolean }[],

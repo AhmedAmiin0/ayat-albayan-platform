@@ -11,7 +11,8 @@ import {
 } from '@ab/settings';
 
 /** /admin/settings field order before the registry was split by domain: it must not move.
- * comms_source (docs/23 phase 3) joined after crm_cutover_done; it has its own control, not a field. */
+ * comms_source (docs/23 phase 3) joined after crm_cutover_done; it has its own control, not a
+ * field. */
 const LEGACY_PAGE_ORDER = [
   'messaging_enabled',
   'auto_messages_enabled',

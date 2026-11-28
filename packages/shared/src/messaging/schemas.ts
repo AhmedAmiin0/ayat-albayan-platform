@@ -56,16 +56,25 @@ const slotsShape = Object.fromEntries(BODY_SLOTS.map((s) => [s, paramText])) as 
   typeof paramText
 >;
 
-/** messages.template_params an admin can fill ({{1}}…{{9}}); documents and payloads are set by the API. */
+/**
+ * messages.template_params an admin can fill ({{1}}…{{9}}); documents and payloads are set by the
+ * API.
+ */
 export const templateParamsInputSchema = z.object({
   ...slotsShape,
   button: z.string().trim().min(1).max(200).optional(),
 });
 
-/** A registry key: a producer's (TEMPLATE_KEYS) or a template imported from Meta (key = its Meta name). */
+/**
+ * A registry key: a producer's (TEMPLATE_KEYS) or a template imported from Meta (key = its Meta
+ * name).
+ */
 export const TEMPLATE_KEY_PATTERN = /^[a-z0-9_]{1,512}$/;
 
-/** POST /threads/:phone/template: any approved template, from the inbox (the API's registry validates the key). */
+/**
+ * POST /threads/:phone/template: any approved template, from the inbox (the API's registry
+ * validates the key).
+ */
 export const threadTemplateSchema = z.object({
   key: z.string().trim().regex(TEMPLATE_KEY_PATTERN),
   params: templateParamsInputSchema,
@@ -90,7 +99,10 @@ export const templateHealthSchema = z.object({ line: z.enum(WA_LINES).optional()
 /** PATCH /messaging/templates/:key/line: the number this template goes from (audited). */
 export const templateLineSchema = z.object({ line: z.enum(WA_LINES) });
 
-/** The two statuses an admin may set by hand on a template whose line is on the crm driver (docs/19). */
+/**
+ * The two statuses an admin may set by hand on a template whose line is on the crm driver
+ * (docs/19).
+ */
 export const CRM_TEMPLATE_STATUSES = ['approved', 'missing'] as const;
 /** Audited CRM approval status of a template. */
 export const templateCrmStatusSchema = z.object({ status: z.enum(CRM_TEMPLATE_STATUSES) });

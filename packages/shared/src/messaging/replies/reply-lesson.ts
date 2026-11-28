@@ -5,7 +5,10 @@ import type { MessageView, ThreadLesson } from '../chat/views';
 
 // Which lesson a guardian's quick reply refers to and what the viewer may do from the chat; pure.
 
-/** The lesson a reply refers to; `status` null = an old cache's family lesson (open, by the API's filter). */
+/**
+ * The lesson a reply refers to; `status` null = an old cache's family lesson (open, by the API's
+ * filter).
+ */
 export interface ReplyLesson {
   id: string;
   starts_at: string;
@@ -24,8 +27,8 @@ const isOpen = (status: LessonStatus | null) => status === null || isOpenLesson(
 
 /**
  * messages.lesson when the reply is linked to one (a platform reminder's), else the family's first
- * open lesson (ThreadDetail.lessons: the guardian's students') that starts on or after the message's
- * Riyadh day and has not ended at `now`. Null when there is none.
+ * open lesson (ThreadDetail.lessons: the guardian's students') that starts on or after the
+ * message's Riyadh day and has not ended at `now`. Null when there is none.
  */
 export function replyLesson(
   m: ReplyOf,
@@ -57,7 +60,10 @@ export function replyLesson(
   return candidates[0] ?? null;
 }
 
-/** Whose confirm route: sales' POST /sales/lessons/:id/confirm (lessons.confirm) or the admin's (lessons.status). */
+/**
+ * Whose confirm route: sales' POST /sales/lessons/:id/confirm (lessons.confirm) or the admin's
+ * (lessons.status).
+ */
 export type ConfirmRoute = 'sales' | 'admin';
 
 export interface ReplyRights {
@@ -69,9 +75,10 @@ export const NO_REPLY_RIGHTS: ReplyRights = { reschedule: false, confirm: null }
 
 /**
  * The chat viewer's lesson actions (docs/16 rows 37, 37b). `flow` = whose reschedule sheet the app
- * opens: sales' one-lesson sheet (GET /sales/schedule for the lesson, her /sales/booking/slots) or the admin's
- * (GET /lessons, GET /booking/slots, POST /lessons/:id/reschedule); null = none (teacher mode). Confirm: lessons.confirm
- * on sales' route (ANY lesson), else the admin's lessons.status route outside sales.
+ * opens: sales' one-lesson sheet (GET /sales/schedule for the lesson, her /sales/booking/slots) or
+ * the admin's (GET /lessons, GET /booking/slots, POST /lessons/:id/reschedule); null = none
+ * (teacher mode). Confirm: lessons.confirm on sales' route (ANY lesson), else the admin's
+ * lessons.status route outside sales.
  */
 export function replyRights(
   can: (key: Permission) => boolean,

@@ -17,7 +17,10 @@ export interface ResolveInput {
   settings: RuleSettings;
 }
 
-/** The default timing of a timed row: today's behaviour (read from the legacy settings where one exists). */
+/**
+ * The default timing of a timed row: today's behaviour (read from the legacy settings where one
+ * exists).
+ */
 export function defaultTiming(key: string, s: RuleSettings): AnyRuleTiming | null {
   if (key === 'lesson_reminder') return { minutes_before: s.reminder_minutes_before };
   if (key === 'lesson_reminder_24h') return { send_at_local: null };
@@ -36,7 +39,10 @@ export function defaultTiming(key: string, s: RuleSettings): AnyRuleTiming | nul
 export const optionalChannels = (entry: NotificationEntry): NotificationChannel[] =>
   entry.channels.slice(1);
 
-/** A stored channel list, kept only when it is a subset of the entry's that includes its first channel. */
+/**
+ * A stored channel list, kept only when it is a subset of the entry's that includes its first
+ * channel.
+ */
 function validChannels(
   entry: NotificationEntry,
   stored: readonly string[] | null,
@@ -55,10 +61,10 @@ export function validTiming(key: string, stored: unknown): AnyRuleTiming | null 
 }
 
 /**
- * A row's effective choices (pure). legacy mode: the legacy settings decide the mapped parts (today's
- * behaviour, byte-identical); the row decides only what has no legacy key (day-before hour, teacher
- * lead time, rows without a switch today). module mode: the row decides; the legacy settings are the
- * fallback for a missing or malformed part. Manual and locked rows are always on.
+ * A row's effective choices (pure). legacy mode: the legacy settings decide the mapped parts
+ * (today's behaviour, byte-identical); the row decides only what has no legacy key (day-before
+ * hour, teacher lead time, rows without a switch today). module mode: the row decides; the legacy
+ * settings are the fallback for a missing or malformed part. Manual and locked rows are always on.
  */
 export function resolveRule(
   entry: NotificationEntry<NotificationKey>,

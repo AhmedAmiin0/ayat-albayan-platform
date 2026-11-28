@@ -28,7 +28,9 @@ export interface V2Values {
   nextPlan: string | null;
 }
 
-/** A stored value equal to one of the content's suggestions: the teacher never changed it (null). */
+/**
+ * A stored value equal to one of the content's suggestions: the teacher never changed it (null).
+ */
 const untouched = <T>(stored: T | null, suggestions: readonly (T | null)[]): T | null =>
   stored !== null && suggestions.includes(stored) ? null : stored;
 
@@ -126,7 +128,10 @@ export function segmentsOf(
   );
 }
 
-/** Replace, add (index = -1) or remove (segment = null) one part; an add to a full form (MAX_SEGMENTS) is refused. */
+/**
+ * Replace, add (index = -1) or remove (segment = null) one part; an add to a full form
+ * (MAX_SEGMENTS) is refused.
+ */
 export function withSegment(
   content: ReportContent,
   change: { index: number; segment: ReportSegment | null },

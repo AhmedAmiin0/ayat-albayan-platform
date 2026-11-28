@@ -18,11 +18,15 @@ export interface CatalogueInputs {
   gateReason: 'not_configured' | 'switch_off' | null;
   templates: ReadonlyMap<string, { status: TemplateStatus; line: WaLine }>;
   /**
-   * Each row's effective rule (NotificationPolicy, docs/23b): when given, a row's own switch and its
-   * timing come from here (a missing key falls back to the legacy switch). Left out: today's settings.
+   * Each row's effective rule (NotificationPolicy, docs/23b): when given, a row's own switch and
+   * its timing come from here (a missing key falls back to the legacy switch). Left out: today's
+   * settings.
    */
   rules?: ReadonlyMap<string, EffectiveRule>;
-  /** false: the academy classroom is not in use (LiveKit not configured): lesson_join_link is held. Default true. */
+  /**
+   * false: the academy classroom is not in use (LiveKit not configured): lesson_join_link is held.
+   * Default true.
+   */
   classroom?: boolean;
 }
 
@@ -52,7 +56,10 @@ function whatsappBlocker(
   return rowBlocker(entry, inputs, templates);
 }
 
-/** After the row's own switch: the classroom (lesson_join_link only, PR #134 item 8), then the template. */
+/**
+ * After the row's own switch: the classroom (lesson_join_link only, PR #134 item 8), then the
+ * template.
+ */
 function rowBlocker(
   entry: NotificationEntry,
   inputs: CatalogueInputs,

@@ -2,9 +2,10 @@ import { GENDERS, type Gender } from '@ab/catalog';
 import { leadQualificationPatchSchema, type LeadQualificationPatch } from '../messaging/schemas';
 import { FILLED_BY, GROUP_KINDS, type FilledBy, type GroupKind } from '../people/schemas/leads';
 
-// R-LEAD-03: the lead's structured qualification form of both apps (docs/27 E5), with the questions the first
-// registration form asked (research-forms 8–9). All optional; a field emptied by the admin is sent as null
-// (clears it); untouched fields are not sent (L1 merges). Each app injects its own words (QualText).
+// R-LEAD-03: the lead's structured qualification form of both apps (docs/27 E5), with the questions
+// the first registration form asked (research-forms 8–9). All optional; a field emptied by the
+// admin is sent as null (clears it); untouched fields are not sent (L1 merges). Each app injects
+// its own words (QualText).
 
 export const QUAL_TEXT_FIELDS = [
   'student_name',
@@ -37,7 +38,10 @@ export type QualResult =
   | { ok: true; patch: LeadQualificationPatch }
   | { ok: false; errors: QualErrors };
 
-/** The app's error words: `t.students.ageInvalid` and the `t.common` time / phone / generic messages. */
+/**
+ * The app's error words: `t.students.ageInvalid` and the `t.common` time / phone / generic
+ * messages.
+ */
 export interface QualText {
   ageInvalid: string;
   invalidTimeZone: string;
@@ -104,7 +108,10 @@ function errorsOf(
   return errors;
 }
 
-/** Only what changed, validated with the API's own schema (leadQualificationPatchSchema, the v1 keys included). */
+/**
+ * Only what changed, validated with the API's own schema (leadQualificationPatchSchema, the v1 keys
+ * included).
+ */
 export function leadQualPatch(form: QualForm, before: QualForm, text: QualText): QualResult {
   const patch: Record<string, unknown> = {};
   for (const key of Object.keys(form) as (keyof QualForm)[]) {

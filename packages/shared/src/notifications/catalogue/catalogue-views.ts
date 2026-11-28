@@ -6,7 +6,10 @@ import type { NotificationRuleView } from '../rules.types';
 // GET /admin/notifications (docs/23 §3 phase 1): the catalogue with each row's effective state,
 // computed from today's settings, the send gate and the template registry. Read-only.
 
-/** on = goes out when its trigger happens; off = held by the first blocker; manual = a person sends it. */
+/**
+ * on = goes out when its trigger happens; off = held by the first blocker; manual = a person sends
+ * it.
+ */
 export type NotificationState = 'on' | 'off' | 'manual';
 
 /** The catalogue's tabs: one audience, or manual (every manual row). */
@@ -19,8 +22,9 @@ export const NOTIFICATION_BLOCKERS = [
   'auto_off',
   'row_off',
   'template_not_approved',
-  // v2 only (tagged clients; the frozen v1 shape maps it to row_off): lesson_join_link while the academy
-  // classroom is not in use (LiveKit not configured, or no lesson uses the classroom). PR #134 item 8.
+  // v2 only (tagged clients; the frozen v1 shape maps it to row_off): lesson_join_link while the
+  // academy classroom is not in use (LiveKit not configured, or no lesson uses the classroom). PR
+  // #134 item 8.
   'classroom_off',
 ] as const;
 export type NotificationBlocker = (typeof NOTIFICATION_BLOCKERS)[number];
@@ -45,7 +49,10 @@ export interface NotificationEntryView {
   state: NotificationState;
   blocker: NotificationBlocker | null;
   templates: NotificationTemplateView[];
-  /** The WhatsApp numbers it leaves from (its templates' lines); empty for bell / push and free text. */
+  /**
+   * The WhatsApp numbers it leaves from (its templates' lines); empty for bell / push and free
+   * text.
+   */
   lines: WaLine[];
   /** When it is sent: the governing setting and its current value, as text. */
   timing: { key: TimingKey; value: string } | null;
@@ -55,7 +62,9 @@ export interface NotificationEntryView {
   rule?: NotificationRuleView;
 }
 
-/** The last good line check, kept so the number shows without asking Meta again (docs/23a §E H2). */
+/**
+ * The last good line check, kept so the number shows without asking Meta again (docs/23a §E H2).
+ */
 export interface LineHealthView {
   line: WaLine;
   display_phone_e164: string | null;

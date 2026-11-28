@@ -66,7 +66,8 @@ describe('changePicks / changeOpensOn', () => {
     expect(changePicks(pending, new Date(now)).map((p) => p.at)).toEqual(['2026-10-20T16:30:00.000Z', '2026-10-25T14:00:00.000Z']);
   });
   it('booked ahead + a pending change: changeOpensOn is opensOn, the picks on the new set\'s start', () => {
-    // Renewal from Sun 8 Nov on Sun+Tue, Sunday swapped for Monday from Mon 9 Nov: latest set [Mon, Tue].
+    // Renewal from Sun 8 Nov on Sun+Tue, Sunday swapped for Monday from Mon 9 Nov: latest set [Mon,
+    // Tue].
     const monTue = [{ weekday: 1, startTimeLocal: '17:00' }, { weekday: 2, startTimeLocal: '19:30' }];
     const ahead = { ...course, days: monTue, startsOn: '2026-11-09', opensOn: '2026-11-08', running: false };
     expect(changeOpensOn(ahead, new Date(now))).toBe('2026-11-08');

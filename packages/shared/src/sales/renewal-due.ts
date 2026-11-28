@@ -11,7 +11,10 @@ export interface SalesRenewalInput {
   status: StudentStatus;
   /** Lessons left across all the student's packages (studentRemaining). */
   remaining: number;
-  /** settings.renewal_alert_remaining: the admin's «renewal due» task fires at this many lessons left. */
+  /**
+   * settings.renewal_alert_remaining: the admin's «renewal due» task fires at this many lessons
+   * left.
+   */
   threshold: number;
   packages: readonly RenewalPackage[];
 }
@@ -23,8 +26,8 @@ export interface SalesRenewal {
 
 /**
  * Due when the package ended (pending_renewal, expired) or an active student is down to the admin's
- * renewal-alert threshold. The seed is renewalPricing of the last priced package; a discount that is
- * not one of the site's pills (the admin's free field) is dropped: she may only offer the pills.
+ * renewal-alert threshold. The seed is renewalPricing of the last priced package; a discount that
+ * is not one of the site's pills (the admin's free field) is dropped: she may only offer the pills.
  */
 export function salesRenewal(input: SalesRenewalInput): SalesRenewal {
   const ended = isPackageEnded(input.status);

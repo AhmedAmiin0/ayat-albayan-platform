@@ -7,7 +7,8 @@ import {
   type RoutableNumber,
 } from './routing';
 
-// docs/23c decisions 3–5: rule → template → role default → role fallbacks; sessions never fall back.
+// docs/23c decisions 3–5: rule → template → role default → role fallbacks; sessions never fall
+// back.
 const num = (id: string, over: Partial<RoutableNumber> = {}): RoutableNumber => ({
   id,
   purpose: 'notifications',

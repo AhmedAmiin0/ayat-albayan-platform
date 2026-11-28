@@ -18,7 +18,9 @@ const PUNCT = '،,.!?؟؛;:';
 const isPlaceholder = (key: string): key is SavedReplyPlaceholder =>
   SAVED_REPLY_PLACEHOLDERS.some((p) => p === key);
 
-/** Removed placeholders and what they leave behind, in order; text away from a gap is never touched. */
+/**
+ * Removed placeholders and what they leave behind, in order; text away from a gap is never touched.
+ */
 const TIDY: readonly [RegExp, string][] = [
   [new RegExp(`${GAP}([ \\t]*${GAP})+`, 'g'), GAP], // two removed side by side are one gap
   [new RegExp(`[(\\[«][ \\t]*${GAP}[ \\t]*[)\\]»]`, 'g'), GAP], // «({student})» empty brackets
@@ -30,8 +32,8 @@ const TIDY: readonly [RegExp, string][] = [
 ];
 
 /**
- * The reply's text with {name}, {student} and {assistant} filled from `values` (trimmed); an empty or
- * missing value removes its placeholder cleanly. Other braces («{x}») stay as written. Pure.
+ * The reply's text with {name}, {student} and {assistant} filled from `values` (trimmed); an empty
+ * or missing value removes its placeholder cleanly. Other braces («{x}») stay as written. Pure.
  */
 export function resolveSavedReply(body: string, values: SavedReplyValues): string {
   const filled = body.replace(TOKEN, (_all, key: string) => {

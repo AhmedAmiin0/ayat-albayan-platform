@@ -95,14 +95,18 @@ export function identifierKey(raw: string): string {
  * GET /auth/code/status: `available` = family codes can be sent now (flag on, template approved,
  * configured); `staff` = staff codes (teacher sign-in, staff reset) can, whatever the family flag.
  */
-// `staff` falls back to false: a web or app build ahead of the API never shows a code link it cannot use.
+// `staff` falls back to false: a web or app build ahead of the API never shows a code link it
+// cannot use.
 export const codeStatusSchema = z.object({
   available: z.boolean(),
   staff: z.boolean().catch(false),
 });
 export type CodeStatus = z.infer<typeof codeStatusSchema>;
 
-/** POST /auth/(staff-)code/verify: the client finishes with supabase.auth.verifyOtp({ type, token_hash }). */
+/**
+ * POST /auth/(staff-)code/verify: the client finishes with supabase.auth.verifyOtp({ type,
+ * token_hash }).
+ */
 export const codeSessionSchema = z.object({
   token_hash: z.string().min(1),
   type: z.literal('magiclink'),

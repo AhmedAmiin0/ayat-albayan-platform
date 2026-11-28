@@ -49,7 +49,8 @@ export type PortalTeacher = z.infer<typeof portalTeacherSchema>;
 
 /**
  * How the family enters: `classroom` = our platform room (POST …/join admits the student as a guest
- * inside the window), `external` = the lesson's own meeting link, `none` = no way in known (or not open).
+ * inside the window), `external` = the lesson's own meeting link, `none` = no way in known (or not
+ * open).
  */
 export const PORTAL_WAYS_IN = ['classroom', 'external', 'none'] as const;
 export type PortalWayIn = (typeof PORTAL_WAYS_IN)[number];

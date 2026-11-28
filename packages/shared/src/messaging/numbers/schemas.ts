@@ -4,7 +4,9 @@ import { COMMS_SOURCES } from '@ab/settings';
 import { evolutionFieldsSchema } from './evolution';
 import { NUMBER_SECRET_NAMES } from './views';
 
-/** A Meta id (phone number, WABA, app): letters, digits, _ and -, at most 64 (wa_numbers checks). */
+/**
+ * A Meta id (phone number, WABA, app): letters, digits, _ and -, at most 64 (wa_numbers checks).
+ */
 export const META_ID_RE = /^[A-Za-z0-9_-]{1,64}$/;
 const metaId = z.string().trim().regex(META_ID_RE, 'invalid_id');
 export const numberLabelSchema = z.string().trim().min(1).max(60);
@@ -40,7 +42,9 @@ export const numberCreateSchema = z
   .refine(evolutionModeFits, { message: 'evolution_mode_needed', path: ['evolution_mode'] });
 export type NumberCreate = z.infer<typeof numberCreateSchema>;
 
-/** PATCH /admin/numbers/:id: any subset; is_default true makes it its role's default (enabled only). */
+/**
+ * PATCH /admin/numbers/:id: any subset; is_default true makes it its role's default (enabled only).
+ */
 export const numberUpdateSchema = z
   .object({
     label: numberLabelSchema,

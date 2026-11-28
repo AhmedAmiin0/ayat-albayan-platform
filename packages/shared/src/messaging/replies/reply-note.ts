@@ -5,8 +5,8 @@ import { quickReplyIntent } from './quick-reply';
 import { lessonNotEnded, type ReplyLesson, type ReplyRights } from './reply-lesson';
 import type { MessageView } from '../chat/views';
 
-// The line under an inbound quick reply (R-MSG-05, R-SCH-03): what the system did, and what staff can
-// do now. Pure; the web and the app fill inbox.quickReply.<key> with `when` and
+// The line under an inbound quick reply (R-MSG-05, R-SCH-03): what the system did, and what staff
+// can do now. Pure; the web and the app fill inbox.quickReply.<key> with `when` and
 // draw `action` as a secondary button (inbox.replyAction).
 
 export type ReplyNoteKey =
@@ -34,7 +34,10 @@ export interface ReplyNoteContext {
   lesson: ReplyLesson | null;
   rights: ReplyRights;
   now: Date;
-  /** Staff moved this reply's lesson from its button (the app remembers it: the family lesson is gone from the list). */
+  /**
+   * Staff moved this reply's lesson from its button (the app remembers it: the family lesson is
+   * gone from the list).
+   */
   moved?: boolean;
   /** The viewer's clock; `tz` = their zone (docs/34), the academy's when not given. */
   clock?: { locale: Locale; cycle: ClockCycle; tz?: string };

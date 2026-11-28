@@ -7,8 +7,8 @@ export type CallDirection = (typeof CALL_DIRECTIONS)[number];
 
 /**
  * connecting = our row exists, the SDP offer went (or is going) to WhatsApp; ringing = the family's
- * phone rings (outbound) or ours does (inbound); accepting = one staff member took an inbound call and
- * its pre_accept / accept are in flight; active = talking; ended = final (end_reason says how).
+ * phone rings (outbound) or ours does (inbound); accepting = one staff member took an inbound call
+ * and its pre_accept / accept are in flight; active = talking; ended = final (end_reason says how).
  */
 export const CALL_STATUSES = ['connecting', 'ringing', 'accepting', 'active', 'ended'] as const;
 export type CallStatus = (typeof CALL_STATUSES)[number];
@@ -30,7 +30,10 @@ export const CALL_END_REASONS = [
 ] as const;
 export type CallEndReason = (typeof CALL_END_REASONS)[number];
 
-/** A call as the clients see it (GET /calls, /calls/active). SDPs only on /calls/active, to the parties. */
+/**
+ * A call as the clients see it (GET /calls, /calls/active). SDPs only on /calls/active, to the
+ * parties.
+ */
 export interface CallView {
   id: string;
   phone_e164: string;
@@ -66,7 +69,9 @@ export interface CallIceServer {
 export interface CallConfigView {
   /** whatsapp_calls_enabled (default false). false = every call route answers 404. */
   enabled: boolean;
-  /** The chat line is on the Kapso driver and configured; false = the icon shows why it cannot call. */
+  /**
+   * The chat line is on the Kapso driver and configured; false = the icon shows why it cannot call.
+   */
   available: boolean;
   /** May this user call from the chat (inbox.send)? */
   canCall: boolean;

@@ -3,7 +3,9 @@ import { normalizeArabic } from '@ab/core';
 // Quick replies (R-MSG-04, R-SCH-03): a guardian answers a reminder with a button or a short text.
 // Precision over recall: anything unclear is null, and the admin reads it in the inbox.
 
-/** rate_* = the three lesson_rating buttons (migration 195, rating.ts); never read from typed text. */
+/**
+ * rate_* = the three lesson_rating buttons (migration 195, rating.ts); never read from typed text.
+ */
 export const QUICK_REPLY_INTENTS = [
   'confirm',
   'reschedule',

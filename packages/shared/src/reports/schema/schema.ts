@@ -45,8 +45,8 @@ export const REPORT_REQUIRED_TEXT = [
 
 /**
  * POST /reports/:id/submit: the whole form. Attendance is required; when the student attended
- * (on time or late) the six rubric grades and the overall grade are required too (`missing_grades`),
- * then the REPORT_REQUIRED_TEXT fields (`missing_text`).
+ * (on time or late) the six rubric grades and the overall grade are required too
+ * (`missing_grades`), then the REPORT_REQUIRED_TEXT fields (`missing_text`).
  * `expectedVersion` is the version the form was loaded at (409 `version_conflict` otherwise).
  */
 export const reportSubmitSchema = reportDraftSchema

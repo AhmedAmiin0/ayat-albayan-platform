@@ -14,7 +14,10 @@ export interface SalesTeacherFilter {
 
 export const NO_TEACHER_FILTER: SalesTeacherFilter = { q: '', program: '', gender: '' };
 
-/** Name (Arabic-normalised, or the English name) contains the search; program and gender match when picked. */
+/**
+ * Name (Arabic-normalised, or the English name) contains the search; program and gender match when
+ * picked.
+ */
 export function filterSalesTeachers(
   list: readonly SalesTeacherView[],
   f: SalesTeacherFilter,

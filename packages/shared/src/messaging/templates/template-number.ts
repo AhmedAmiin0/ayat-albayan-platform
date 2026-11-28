@@ -2,10 +2,13 @@ import type { WaLine } from '@ab/catalog';
 import { z } from 'zod';
 import type { TemplateView } from './template-views';
 
-// Routing per number (docs/23 phase 5, docs/23c decision 9): a template's own number and the per-number
-// template sync. Ids only, never a token.
+// Routing per number (docs/23 phase 5, docs/23c decision 9): a template's own number and the
+// per-number template sync. Ids only, never a token.
 
-/** PUT /messaging/templates/:key/number: the template's own number; null = its role's default number. */
+/**
+ * PUT /messaging/templates/:key/number: the template's own number; null = its role's default
+ * number.
+ */
 export const templateNumberSchema = z.object({ number_id: z.uuid().nullable() });
 export type TemplateNumberInput = z.infer<typeof templateNumberSchema>;
 
