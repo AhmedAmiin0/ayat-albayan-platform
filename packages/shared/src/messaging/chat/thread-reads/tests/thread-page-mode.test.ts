@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { onePageMode } from '@/modules/messaging/inbox/reads/page-mode';
+import { onePageMode } from '../thread-page-mode';
 
 const AT = '2026-10-22T10:00:00.000Z';
 const ID = 'b1111111-1111-4111-8111-111111111111';

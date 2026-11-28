@@ -1,2 +1,2 @@
 export { salesAssignCalls } from './assign-api';
-export type { SalesAssignCalls } from './assign-api.types';
+export type { LeadAssignment, SalesAssignCalls } from './assign-api.types';

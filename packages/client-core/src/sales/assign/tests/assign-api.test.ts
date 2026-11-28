@@ -1,8 +1,11 @@
+import { leadRow } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError, type ApiClient } from '../../../core/http';
 import { salesAssignCalls } from '../assign-api';
 
 const PERSON = { id: '11111111-1111-4111-8111-111111111111', name: 'سارة', open_leads: 1 };
+
+const LEAD = '22222222-2222-4222-8222-222222222222';
 
 const clientAnswering = (answer: unknown) => {
   const apiFetch = vi.fn(async () => answer);
@@ -31,5 +34,17 @@ describe('sales assign calls', () => {
       .catch((e: unknown) => e);
     expect(failure).toBeInstanceOf(ApiError);
     expect(failure).toMatchObject({ body: { code: 'bad_response' } });
+  });
+
+  it('posts a lead to a salesperson, and null to take it back', async () => {
+    const lead = leadRow({ id: LEAD, assigned_to: PERSON.id });
+    const { client, apiSend } = clientAnswering(lead);
+    const calls = salesAssignCalls(client);
+    await expect(calls.assign({ leadId: LEAD, profileId: PERSON.id })).resolves.toEqual(lead);
+    await calls.assign({ leadId: LEAD, profileId: null });
+    expect(apiSend.mock.calls).toEqual([
+      ['POST', `/leads/${LEAD}/assign`, { profileId: PERSON.id }],
+      ['POST', `/leads/${LEAD}/assign`, { profileId: null }],
+    ]);
   });
 });

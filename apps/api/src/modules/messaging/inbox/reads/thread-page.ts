@@ -1,4 +1,4 @@
-import type { MessageView, ThreadView } from '@ab/shared';
+import type { MessageView, ThreadDetailQuery, ThreadView } from '@ab/shared';
 import type { ThreadMessageRow } from '@/modules/messaging/whatsapp';
 import type { ReadReceipts } from './read-receipts';
 import type { KnownNumber } from '@/modules/messaging/inbox/threads/known-number';
@@ -10,13 +10,9 @@ import type { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store
  * GET /threads/:phone's page: `before` (+ `before_id`) = the oldest loaded message (the page before
  * it), or `around` = the window around one message (a search hit, docs/37).
  */
-export interface ThreadPageQuery {
+export type ThreadPageQuery = Omit<Extract<ThreadDetailQuery, { mode: 'page' }>, 'mode'> & {
   phone: string;
-  before?: string;
-  before_id?: string;
-  around?: string;
-  limit: number;
-}
+};
 
 /** The newest page: only it stamps reads and carries people, lessons and lists (never a window). */
 export const isFirstPage = (q: Pick<ThreadPageQuery, 'before' | 'around'>): boolean =>

@@ -840,6 +840,23 @@
   },
   "response": "empty"
  },
+ "DELETE /me/web-push": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "endpoint": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 2048
+    }
+   },
+   "required": [
+    "endpoint"
+   ]
+  },
+  "response": "empty"
+ },
  "DELETE /people/guardians/:id/phones/:phone": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -9824,6 +9841,155 @@
    ]
   }
  },
+ "GET /me/notifications": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10000
+    },
+    "pageSize": {
+     "default": 20,
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 50
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+       },
+       "kind": {
+        "type": "string",
+        "enum": [
+         "new_lead",
+         "new_message",
+         "lesson_needs_confirmation",
+         "report_submitted",
+         "reminder_failed",
+         "payment_due",
+         "new_student",
+         "meeting_invite",
+         "google_sync_alert",
+         "channel_message",
+         "commission_earned",
+         "lesson_rescheduled",
+         "lesson_cancelled",
+         "course_paused",
+         "course_resumed",
+         "payment_received",
+         "lesson_starting",
+         "report_sent",
+         "lesson_live",
+         "lesson_request_declined"
+        ]
+       },
+       "title": {
+        "type": "string"
+       },
+       "body": {
+        "type": "string"
+       },
+       "data": {
+        "type": "object",
+        "propertyNames": {
+         "type": "string"
+        },
+        "additionalProperties": {
+         "type": "string"
+        }
+       },
+       "created_at": {
+        "type": "string",
+        "format": "date-time",
+        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+       },
+       "read_at": {
+        "anyOf": [
+         {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "kind",
+       "title",
+       "body",
+       "data",
+       "created_at",
+       "read_at"
+      ]
+     }
+    },
+    "total": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "page": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "pageSize": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "unread": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    }
+   },
+   "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize",
+    "unread"
+   ]
+  }
+ },
+ "GET /me/web-push/key": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "publicKey": {
+     "type": [
+      "string",
+      "null"
+     ]
+    }
+   },
+   "required": [
+    "publicKey"
+   ]
+  }
+ },
  "GET /meetings": {
   "response": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18139,6 +18305,234 @@
    }
   }
  },
+ "GET /sales/subscriptions/:id/history": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "subscription_id": {
+     "type": "string"
+    },
+    "student": {
+     "type": "object",
+     "properties": {
+      "id": {
+       "type": "string"
+      },
+      "code": {
+       "type": "string"
+      },
+      "name": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "id",
+      "code",
+      "name"
+     ]
+    },
+    "subscriptions": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "package": {
+        "anyOf": [
+         {
+          "type": "string",
+          "enum": [
+           "4",
+           "8",
+           "12",
+           "16",
+           "20",
+           "28",
+           "trial"
+          ]
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "trial",
+         "active",
+         "paused",
+         "expired",
+         "unpaid",
+         "cancelled"
+        ]
+       },
+       "starts_on": {
+        "type": "string"
+       },
+       "lessons_total": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+       },
+       "renews_on": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "ended_at": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "created_at": {
+        "type": "string"
+       },
+       "lessons_used": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+       },
+       "lessons_remaining": {
+        "type": "integer",
+        "minimum": -9007199254740991,
+        "maximum": 9007199254740991
+       },
+       "lessons_used_before": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+       },
+       "status_changes": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "at": {
+           "type": "string"
+          },
+          "from": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "trial",
+              "active",
+              "paused",
+              "expired",
+              "unpaid",
+              "cancelled"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "to": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "trial",
+              "active",
+              "paused",
+              "expired",
+              "unpaid",
+              "cancelled"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          }
+         },
+         "required": [
+          "at",
+          "from",
+          "to"
+         ]
+        }
+       },
+       "payments": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": "string"
+          },
+          "paid_at": {
+           "type": "string"
+          },
+          "kind": {
+           "type": "string",
+           "enum": [
+            "payment",
+            "refund"
+           ]
+          },
+          "amount": {
+           "type": "number"
+          },
+          "currency": {
+           "type": "string"
+          }
+         },
+         "required": [
+          "id",
+          "paid_at",
+          "kind",
+          "amount",
+          "currency"
+         ]
+        }
+       }
+      },
+      "required": [
+       "id",
+       "package",
+       "status",
+       "starts_on",
+       "lessons_total",
+       "renews_on",
+       "ended_at",
+       "created_at",
+       "lessons_used",
+       "lessons_remaining",
+       "status_changes",
+       "payments"
+      ]
+     }
+    }
+   },
+   "required": [
+    "subscription_id",
+    "student",
+    "subscriptions"
+   ]
+  }
+ },
  "GET /sales/subscriptions/teachers": {
   "response": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -18158,6 +18552,145 @@
     "required": [
      "id",
      "name"
+    ]
+   }
+  }
+ },
+ "GET /sales/teachers": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "array",
+   "items": {
+    "type": "object",
+    "properties": {
+     "id": {
+      "type": "string"
+     },
+     "name": {
+      "type": "string"
+     },
+     "name_en": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "gender": {
+      "type": "string",
+      "enum": [
+       "male",
+       "female"
+      ]
+     },
+     "programs": {
+      "type": "array",
+      "items": {
+       "type": "string",
+       "enum": [
+        "quran",
+        "arabic",
+        "islamic_studies"
+       ]
+      }
+     },
+     "lessons_today": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     },
+     "live_now": {
+      "type": "boolean"
+     },
+     "active_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     },
+     "trial_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+     },
+     "meeting_link": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "platform_classroom": {
+      "type": "boolean"
+     },
+     "avatar_url": {
+      "type": [
+       "string",
+       "null"
+      ]
+     },
+     "students": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "properties": {
+        "id": {
+         "type": "string"
+        },
+        "code": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        },
+        "program": {
+         "type": "string",
+         "enum": [
+          "quran",
+          "arabic",
+          "islamic_studies"
+         ]
+        },
+        "status": {
+         "type": "string",
+         "enum": [
+          "new",
+          "trial",
+          "pending_subscription",
+          "active",
+          "pending_renewal",
+          "expired",
+          "paused",
+          "churned"
+         ]
+        },
+        "next_lesson_at": {
+         "type": [
+          "string",
+          "null"
+         ]
+        }
+       },
+       "required": [
+        "id",
+        "code",
+        "name",
+        "program",
+        "status",
+        "next_lesson_at"
+       ]
+      }
+     }
+    },
+    "required": [
+     "id",
+     "name",
+     "name_en",
+     "gender",
+     "programs",
+     "lessons_today",
+     "live_now",
+     "active_count",
+     "trial_count",
+     "meeting_link",
+     "students"
     ]
    }
   }
@@ -18447,6 +18980,446 @@
    },
    "required": [
     "data"
+   ]
+  }
+ },
+ "GET /settings": {
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "messaging_enabled": {
+     "type": "boolean"
+    },
+    "auto_messages_enabled": {
+     "type": "boolean"
+    },
+    "crm_cutover_done": {
+     "type": "boolean"
+    },
+    "comms_source": {
+     "type": "string",
+     "enum": [
+      "legacy",
+      "module"
+     ]
+    },
+    "whatsapp_calls_enabled": {
+     "type": "boolean"
+    },
+    "calls_permission_template": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 512
+    },
+    "quick_reply_window_hours": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 168
+    },
+    "chat_reopen_template": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 512
+    },
+    "crm_media_host": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 100
+    },
+    "crm_media_copy_all": {
+     "type": "boolean"
+    },
+    "short_link_base": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 100
+    },
+    "short_link_default_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 365
+    },
+    "short_link_purge_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 365
+    },
+    "short_link_extra_hosts": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 500
+    },
+    "reminder_minutes_before": {
+     "type": "integer",
+     "minimum": 5,
+     "maximum": 720
+    },
+    "reminder_24h_enabled": {
+     "type": "boolean"
+    },
+    "teacher_whatsapp_new_student": {
+     "type": "boolean"
+    },
+    "teacher_whatsapp_lesson_reminder": {
+     "type": "boolean"
+    },
+    "reminder_lookahead_hours": {
+     "type": "integer",
+     "minimum": 25,
+     "maximum": 72
+    },
+    "follow_up_hours": {
+     "minItems": 1,
+     "maxItems": 5,
+     "type": "array",
+     "items": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 720
+     }
+    },
+    "follow_up_slots_from_hours": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 168
+    },
+    "follow_up_slots_to_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 30
+    },
+    "feedback_mode": {
+     "type": "string",
+     "enum": [
+      "buttons",
+      "link"
+     ]
+    },
+    "feedback_rate_window_min": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 120
+    },
+    "booking_horizon_weeks": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 12
+    },
+    "late_cancel_hours": {
+     "anyOf": [
+      {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 168
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "makeup_window_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 365
+    },
+    "teachers_always_available": {
+     "type": "boolean"
+    },
+    "lesson_confirmation_required": {
+     "type": "boolean"
+    },
+    "lesson_outcome_grace_minutes": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 720
+    },
+    "join_opens_before_min": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 180
+    },
+    "join_closes_after_min": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 720
+    },
+    "default_meeting_title": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 60
+    },
+    "meeting_max_minutes": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 1440
+    },
+    "meeting_link_auto": {
+     "type": "boolean"
+    },
+    "meetings_in_app": {
+     "type": "boolean"
+    },
+    "recording_consent_notice": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "ar": {
+         "type": "string",
+         "minLength": 1,
+         "maxLength": 1000
+        },
+        "en": {
+         "type": "string",
+         "minLength": 1,
+         "maxLength": 1000
+        }
+       },
+       "additionalProperties": false
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "recording_retention_days": {
+     "anyOf": [
+      {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 3650
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "report_teacher_edit_minutes": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 1440
+    },
+    "report_teacher_edit_hours": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 168
+    },
+    "report_form_v2": {
+     "type": "boolean"
+    },
+    "renewal_alert_remaining": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 10
+    },
+    "subscription_expiry_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 90
+    },
+    "flag_future_lessons_when_unpaid": {
+     "type": "boolean"
+    },
+    "refund_attended_rate_percent": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 300
+    },
+    "payout_count_late": {
+     "type": "boolean"
+    },
+    "payout_count_no_show": {
+     "type": "boolean"
+    },
+    "payout_count_trials": {
+     "type": "boolean"
+    },
+    "reporting_currency": {
+     "type": "string",
+     "pattern": "^[A-Z]{3}$"
+    },
+    "fx_fresh_hours": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 168
+    },
+    "upload_max_mb": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10
+    },
+    "academy_whatsapp_e164": {
+     "type": "string",
+     "pattern": "^\\+[1-9][0-9]{7,14}$"
+    },
+    "academy_timezone": {
+     "type": "string"
+    },
+    "academy_contact": {
+     "type": "object",
+     "properties": {
+      "site": {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 100,
+       "pattern": "^(?=.{1,100}$)[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$"
+      },
+      "email": {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 120,
+       "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+      }
+     },
+     "additionalProperties": false
+    },
+    "maintenance_mode": {
+     "type": "boolean"
+    },
+    "sales_auto_assign": {
+     "type": "boolean"
+    },
+    "sales_require_assignee": {
+     "type": "boolean"
+    },
+    "renewal_commission_enabled": {
+     "type": "boolean"
+    },
+    "renewal_commission_percent": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 100
+    },
+    "activity_retention_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 3650
+    },
+    "family_login_enabled": {
+     "type": "boolean"
+    },
+    "login_code_ttl_minutes": {
+     "type": "integer",
+     "minimum": 3,
+     "maximum": 30
+    },
+    "login_code_max_attempts": {
+     "type": "integer",
+     "minimum": 3,
+     "maximum": 10
+    },
+    "family_chat_enabled": {
+     "type": "boolean"
+    },
+    "family_meetings_in_app": {
+     "type": "boolean"
+    },
+    "family_payment_instructions": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 1000
+    },
+    "presence_enabled": {
+     "type": "boolean"
+    },
+    "teacher_chats_enabled": {
+     "type": "boolean"
+    },
+    "teacher_student_messages_enabled": {
+     "type": "boolean"
+    },
+    "teacher_earnings_enabled": {
+     "type": "boolean"
+    },
+    "teacher_statements_enabled": {
+     "type": "boolean"
+    },
+    "teacher_feedback_enabled": {
+     "type": "boolean"
+    },
+    "teacher_internal_meetings_enabled": {
+     "type": "boolean"
+    },
+    "teacher_scheduled_meetings_enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "messaging_enabled",
+    "auto_messages_enabled",
+    "crm_cutover_done",
+    "comms_source",
+    "whatsapp_calls_enabled",
+    "calls_permission_template",
+    "quick_reply_window_hours",
+    "chat_reopen_template",
+    "crm_media_host",
+    "crm_media_copy_all",
+    "short_link_base",
+    "short_link_default_days",
+    "short_link_purge_days",
+    "short_link_extra_hosts",
+    "reminder_minutes_before",
+    "reminder_24h_enabled",
+    "teacher_whatsapp_new_student",
+    "teacher_whatsapp_lesson_reminder",
+    "reminder_lookahead_hours",
+    "follow_up_hours",
+    "follow_up_slots_from_hours",
+    "follow_up_slots_to_days",
+    "feedback_mode",
+    "feedback_rate_window_min",
+    "booking_horizon_weeks",
+    "late_cancel_hours",
+    "makeup_window_days",
+    "teachers_always_available",
+    "lesson_confirmation_required",
+    "lesson_outcome_grace_minutes",
+    "join_opens_before_min",
+    "join_closes_after_min",
+    "default_meeting_title",
+    "meeting_max_minutes",
+    "meeting_link_auto",
+    "meetings_in_app",
+    "recording_consent_notice",
+    "recording_retention_days",
+    "report_teacher_edit_minutes",
+    "report_teacher_edit_hours",
+    "report_form_v2",
+    "renewal_alert_remaining",
+    "subscription_expiry_days",
+    "flag_future_lessons_when_unpaid",
+    "refund_attended_rate_percent",
+    "payout_count_late",
+    "payout_count_no_show",
+    "payout_count_trials",
+    "reporting_currency",
+    "fx_fresh_hours",
+    "upload_max_mb",
+    "academy_whatsapp_e164",
+    "academy_timezone",
+    "academy_contact",
+    "maintenance_mode",
+    "sales_auto_assign",
+    "sales_require_assignee",
+    "renewal_commission_enabled",
+    "renewal_commission_percent",
+    "activity_retention_days",
+    "family_login_enabled",
+    "login_code_ttl_minutes",
+    "login_code_max_attempts",
+    "family_chat_enabled",
+    "family_meetings_in_app",
+    "family_payment_instructions",
+    "presence_enabled",
+    "teacher_chats_enabled",
+    "teacher_student_messages_enabled",
+    "teacher_earnings_enabled",
+    "teacher_statements_enabled",
+    "teacher_feedback_enabled",
+    "teacher_internal_meetings_enabled",
+    "teacher_scheduled_meetings_enabled"
    ]
   }
  },
@@ -24586,6 +25559,2865 @@
    "required": [
     "phone"
    ]
+  },
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "anyOf": [
+    {
+     "type": "object",
+     "properties": {
+      "before_id": {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+      },
+      "limit": {
+       "default": 50,
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 100
+      },
+      "after": {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      "pending": {
+       "type": "string"
+      },
+      "around": {
+       "not": {}
+      }
+     },
+     "required": [
+      "after"
+     ]
+    },
+    {
+     "type": "object",
+     "properties": {
+      "before": {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      "before_id": {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+      },
+      "around": {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+      },
+      "limit": {
+       "default": 50,
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 100
+      },
+      "after": {}
+     }
+    }
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "anyOf": [
+    {
+     "type": "object",
+     "properties": {
+      "thread": {
+       "anyOf": [
+        {
+         "type": "object",
+         "properties": {
+          "last_note": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "deleted",
+              "ad_welcome",
+              "unsupported"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "ring": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "subscribed",
+              "renewal"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "badge": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "subscribed",
+              "expired",
+              "none"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "unpaid": {
+           "type": "boolean"
+          },
+          "last_unsupported": {
+           "type": "boolean"
+          },
+          "last_inbound_line": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "notifications",
+              "chat",
+              "calls"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "last_chat_inbound_at": {
+           "anyOf": [
+            {
+             "type": "string",
+             "format": "date-time",
+             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "last_notifications_inbound_at": {
+           "anyOf": [
+            {
+             "type": "string",
+             "format": "date-time",
+             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "reply_line": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "notifications",
+              "chat"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "reactable": {
+           "type": "boolean"
+          },
+          "try_after_window": {
+           "type": "boolean"
+          },
+          "reopen_choice": {
+           "type": "string",
+           "enum": [
+            "template",
+            "wait"
+           ]
+          },
+          "reopen_sent": {
+           "anyOf": [
+            {
+             "type": "object",
+             "properties": {
+              "id": {
+               "type": "string",
+               "format": "uuid",
+               "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+              },
+              "template_key": {
+               "type": "string"
+              },
+              "status": {
+               "type": "string",
+               "enum": [
+                "queued",
+                "sent",
+                "delivered",
+                "read",
+                "failed",
+                "sent_manually"
+               ]
+              }
+             },
+             "required": [
+              "id",
+              "template_key",
+              "status"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "reopen_template": {
+           "type": "string"
+          },
+          "phone_e164": {
+           "type": "string"
+          },
+          "display_name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "last_message_id": {
+           "type": "string",
+           "format": "uuid",
+           "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+          },
+          "last_direction": {
+           "type": "string",
+           "enum": [
+            "inbound",
+            "outbound"
+           ]
+          },
+          "last_body": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "last_template_key": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "last_status": {
+           "type": "string",
+           "enum": [
+            "queued",
+            "sent",
+            "delivered",
+            "read",
+            "failed",
+            "sent_manually"
+           ]
+          },
+          "last_media_mime": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "last_message_at": {
+           "type": "string",
+           "format": "date-time",
+           "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "last_inbound_at": {
+           "anyOf": [
+            {
+             "type": "string",
+             "format": "date-time",
+             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "unread_count": {
+           "type": "integer",
+           "minimum": 0,
+           "maximum": 9007199254740991
+          },
+          "lead_id": {
+           "anyOf": [
+            {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "lead_name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "lead_status": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "new",
+              "contacted",
+              "interested_no_slot",
+              "trial_booked",
+              "trial_done",
+              "converted",
+              "no_reply",
+              "lost"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "lead_source": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "facebook_ad",
+              "instagram_ad",
+              "whatsapp_direct",
+              "referral",
+              "other"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "guardian_id": {
+           "anyOf": [
+            {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "guardian_name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "guardian_tz": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "teacher_id": {
+           "anyOf": [
+            {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "teacher_name": {
+           "type": [
+            "string",
+            "null"
+           ]
+          },
+          "session_open": {
+           "type": "boolean"
+          },
+          "subscribed": {
+           "type": "boolean"
+          }
+         },
+         "required": [
+          "phone_e164",
+          "display_name",
+          "last_message_id",
+          "last_direction",
+          "last_body",
+          "last_template_key",
+          "last_status",
+          "last_media_mime",
+          "last_message_at",
+          "last_inbound_at",
+          "unread_count",
+          "lead_id",
+          "lead_name",
+          "lead_status",
+          "lead_source",
+          "guardian_id",
+          "guardian_name",
+          "guardian_tz",
+          "teacher_id",
+          "teacher_name",
+          "session_open",
+          "subscribed"
+         ]
+        },
+        {
+         "type": "null"
+        }
+       ]
+      },
+      "messages": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "hidden": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "by_name": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+             }
+            },
+            "required": [
+             "by_name",
+             "at"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "corrects_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_by_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "edited": {
+          "type": "boolean"
+         },
+         "deleted": {
+          "type": "boolean"
+         },
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "direction": {
+          "type": "string",
+          "enum": [
+           "inbound",
+           "outbound"
+          ]
+         },
+         "status": {
+          "type": "string",
+          "enum": [
+           "queued",
+           "sent",
+           "delivered",
+           "read",
+           "failed",
+           "sent_manually"
+          ]
+         },
+         "phone_e164": {
+          "type": "string"
+         },
+         "lead_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "guardian_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "lesson_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "template_key": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "template_params": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "1": {
+              "type": "string"
+             },
+             "2": {
+              "type": "string"
+             },
+             "3": {
+              "type": "string"
+             },
+             "4": {
+              "type": "string"
+             },
+             "5": {
+              "type": "string"
+             },
+             "6": {
+              "type": "string"
+             },
+             "7": {
+              "type": "string"
+             },
+             "8": {
+              "type": "string"
+             },
+             "9": {
+              "type": "string"
+             },
+             "button": {
+              "type": "string"
+             },
+             "buttons": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              }
+             },
+             "payloads": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              }
+             },
+             "document": {
+              "type": "object",
+              "properties": {
+               "bucket": {
+                "type": "string"
+               },
+               "path": {
+                "type": "string"
+               },
+               "filename": {
+                "type": "string"
+               }
+              },
+              "required": [
+               "bucket",
+               "path",
+               "filename"
+              ]
+             },
+             "crm": {
+              "type": "object",
+              "properties": {
+               "body": {
+                "type": "array",
+                "items": {
+                 "type": "string"
+                }
+               },
+               "buttons": {
+                "type": "array",
+                "items": {
+                 "type": "string"
+                }
+               },
+               "report": {
+                "type": "string",
+                "enum": [
+                 "trial",
+                 "regular"
+                ]
+               }
+              }
+             }
+            }
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "template": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "header": {
+              "anyOf": [
+               {
+                "type": "object",
+                "properties": {
+                 "type": {
+                  "type": "string",
+                  "enum": [
+                   "text",
+                   "image",
+                   "video",
+                   "document",
+                   "location"
+                  ]
+                 },
+                 "text": {
+                  "type": "string"
+                 }
+                },
+                "required": [
+                 "type"
+                ]
+               },
+               {
+                "type": "null"
+               }
+              ]
+             },
+             "footer": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "buttons": {
+              "type": "array",
+              "items": {
+               "type": "object",
+               "properties": {
+                "type": {
+                 "type": "string",
+                 "enum": [
+                  "quick_reply",
+                  "url",
+                  "phone_number",
+                  "copy_code"
+                 ]
+                },
+                "text": {
+                 "type": "string"
+                },
+                "url": {
+                 "type": "string"
+                },
+                "phone": {
+                 "type": "string"
+                }
+               },
+               "required": [
+                "type",
+                "text"
+               ]
+              }
+             }
+            },
+            "required": [
+             "header",
+             "footer",
+             "buttons"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "body": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "media_mime": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "media_url": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "media_name": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "reply_to_wa_id": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "reply_to_message_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "reply_to": {
+          "anyOf": [
+           {
+            "anyOf": [
+             {
+              "type": "object",
+              "properties": {
+               "unavailable": {
+                "type": "boolean",
+                "const": true
+               }
+              },
+              "required": [
+               "unavailable"
+              ]
+             },
+             {
+              "type": "object",
+              "properties": {
+               "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+               },
+               "direction": {
+                "type": "string",
+                "enum": [
+                 "inbound",
+                 "outbound"
+                ]
+               },
+               "body": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "media_mime": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "template_key": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "sender_name": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               }
+              },
+              "required": [
+               "id",
+               "direction",
+               "body",
+               "media_mime",
+               "template_key",
+               "sender_name"
+              ]
+             }
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "replyable": {
+          "type": "boolean"
+         },
+         "forwardable": {
+          "type": "boolean"
+         },
+         "forwarded": {
+          "type": "boolean"
+         },
+         "reactions": {
+          "type": "object",
+          "properties": {
+           "theirs": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "ours": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "ours_by": {
+            "type": [
+             "string",
+             "null"
+            ]
+           }
+          },
+          "required": [
+           "theirs",
+           "ours",
+           "ours_by"
+          ]
+         },
+         "interactive_payload": {},
+         "error_code": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "error_text": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "attempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+         },
+         "next_attempt_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "scheduled_for": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "delivered_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "read_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_manually_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "app_send_until": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_by_teacher_name": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "sender_name": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "automatic": {
+          "type": "boolean"
+         },
+         "line": {
+          "anyOf": [
+           {
+            "type": "string",
+            "enum": [
+             "notifications",
+             "chat",
+             "calls"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         "click_to_chat": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "lesson": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "starts_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+             },
+             "ends_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+             },
+             "status": {
+              "type": "string",
+              "enum": [
+               "scheduled",
+               "confirmed",
+               "completed",
+               "late",
+               "excused",
+               "no_show",
+               "cancelled_by_teacher",
+               "cancelled_by_admin",
+               "rescheduled"
+              ]
+             }
+            },
+            "required": [
+             "starts_at",
+             "status"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         }
+        },
+        "required": [
+         "id",
+         "direction",
+         "status",
+         "phone_e164",
+         "lead_id",
+         "guardian_id",
+         "lesson_id",
+         "template_key",
+         "template_params",
+         "body",
+         "media_mime",
+         "media_url",
+         "reply_to_wa_id",
+         "interactive_payload",
+         "error_code",
+         "error_text",
+         "attempts",
+         "next_attempt_at",
+         "scheduled_for",
+         "sent_at",
+         "delivered_at",
+         "read_at",
+         "sent_manually_at",
+         "created_at",
+         "click_to_chat",
+         "lesson"
+        ]
+       }
+      },
+      "has_more": {
+       "type": "boolean"
+      },
+      "lessons": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "starts_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         "meeting_link": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "student_names": {
+          "type": "array",
+          "items": {
+           "type": "string"
+          }
+         },
+         "tz": {
+          "type": "string"
+         },
+         "status": {
+          "type": "string",
+          "enum": [
+           "scheduled",
+           "confirmed",
+           "completed",
+           "late",
+           "excused",
+           "no_show",
+           "cancelled_by_teacher",
+           "cancelled_by_admin",
+           "rescheduled"
+          ]
+         },
+         "ends_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         }
+        },
+        "required": [
+         "id",
+         "starts_at",
+         "meeting_link",
+         "student_names",
+         "tz"
+        ]
+       }
+      },
+      "people": {
+       "type": "object",
+       "properties": {
+        "guardian": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "id": {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            "name": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "id",
+            "name"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "lead": {
+         "anyOf": [
+          {
+           "type": "object",
+           "properties": {
+            "id": {
+             "type": "string",
+             "format": "uuid",
+             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+            },
+            "status": {
+             "type": "string",
+             "enum": [
+              "new",
+              "contacted",
+              "interested_no_slot",
+              "trial_booked",
+              "trial_done",
+              "converted",
+              "no_reply",
+              "lost"
+             ]
+            }
+           },
+           "required": [
+            "id",
+            "status"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "students": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "properties": {
+           "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           "name": {
+            "type": "string"
+           },
+           "code": {
+            "type": "string"
+           },
+           "teacher_name": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "status": {
+            "type": "string",
+            "enum": [
+             "new",
+             "trial",
+             "pending_subscription",
+             "active",
+             "pending_renewal",
+             "expired",
+             "paused",
+             "churned"
+            ]
+           },
+           "subscription": {
+            "anyOf": [
+             {
+              "type": "object",
+              "properties": {
+               "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+               },
+               "status": {
+                "type": "string",
+                "enum": [
+                 "trial",
+                 "active",
+                 "paused",
+                 "expired",
+                 "unpaid",
+                 "cancelled"
+                ]
+               },
+               "package_size": {
+                "anyOf": [
+                 {
+                  "type": "string",
+                  "enum": [
+                   "4",
+                   "8",
+                   "12",
+                   "16",
+                   "20",
+                   "28",
+                   "trial"
+                  ]
+                 },
+                 {
+                  "type": "null"
+                 }
+                ]
+               },
+               "lessons_total": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+               },
+               "lessons_used": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+               },
+               "lessons_remaining": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+               },
+               "price": {
+                "type": "number"
+               },
+               "currency": {
+                "type": "string"
+               },
+               "paid_amount": {
+                "type": "number"
+               },
+               "due_amount": {
+                "type": "number"
+               },
+               "renews_on": {
+                "anyOf": [
+                 {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                 },
+                 {
+                  "type": "null"
+                 }
+                ]
+               },
+               "starts_on": {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+               }
+              },
+              "required": [
+               "id",
+               "status",
+               "package_size",
+               "lessons_total",
+               "lessons_used",
+               "lessons_remaining",
+               "price",
+               "currency",
+               "paid_amount",
+               "due_amount",
+               "renews_on",
+               "starts_on"
+              ]
+             },
+             {
+              "type": "null"
+             }
+            ]
+           }
+          },
+          "required": [
+           "id",
+           "name",
+           "code",
+           "teacher_name",
+           "status",
+           "subscription"
+          ]
+         }
+        }
+       },
+       "required": [
+        "guardian",
+        "lead",
+        "students"
+       ]
+      },
+      "lists": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "id": {
+          "type": "string"
+         },
+         "name": {
+          "type": "string"
+         }
+        },
+        "required": [
+         "id",
+         "name"
+        ]
+       }
+      }
+     },
+     "required": [
+      "thread",
+      "messages",
+      "has_more",
+      "lessons",
+      "people"
+     ]
+    },
+    {
+     "type": "object",
+     "properties": {
+      "messages": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "hidden": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "by_name": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+             }
+            },
+            "required": [
+             "by_name",
+             "at"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "corrects_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_by_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "edited": {
+          "type": "boolean"
+         },
+         "deleted": {
+          "type": "boolean"
+         },
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "direction": {
+          "type": "string",
+          "enum": [
+           "inbound",
+           "outbound"
+          ]
+         },
+         "status": {
+          "type": "string",
+          "enum": [
+           "queued",
+           "sent",
+           "delivered",
+           "read",
+           "failed",
+           "sent_manually"
+          ]
+         },
+         "phone_e164": {
+          "type": "string"
+         },
+         "lead_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "guardian_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "lesson_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "template_key": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "template_params": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "1": {
+              "type": "string"
+             },
+             "2": {
+              "type": "string"
+             },
+             "3": {
+              "type": "string"
+             },
+             "4": {
+              "type": "string"
+             },
+             "5": {
+              "type": "string"
+             },
+             "6": {
+              "type": "string"
+             },
+             "7": {
+              "type": "string"
+             },
+             "8": {
+              "type": "string"
+             },
+             "9": {
+              "type": "string"
+             },
+             "button": {
+              "type": "string"
+             },
+             "buttons": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              }
+             },
+             "payloads": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              }
+             },
+             "document": {
+              "type": "object",
+              "properties": {
+               "bucket": {
+                "type": "string"
+               },
+               "path": {
+                "type": "string"
+               },
+               "filename": {
+                "type": "string"
+               }
+              },
+              "required": [
+               "bucket",
+               "path",
+               "filename"
+              ]
+             },
+             "crm": {
+              "type": "object",
+              "properties": {
+               "body": {
+                "type": "array",
+                "items": {
+                 "type": "string"
+                }
+               },
+               "buttons": {
+                "type": "array",
+                "items": {
+                 "type": "string"
+                }
+               },
+               "report": {
+                "type": "string",
+                "enum": [
+                 "trial",
+                 "regular"
+                ]
+               }
+              }
+             }
+            }
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "template": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "header": {
+              "anyOf": [
+               {
+                "type": "object",
+                "properties": {
+                 "type": {
+                  "type": "string",
+                  "enum": [
+                   "text",
+                   "image",
+                   "video",
+                   "document",
+                   "location"
+                  ]
+                 },
+                 "text": {
+                  "type": "string"
+                 }
+                },
+                "required": [
+                 "type"
+                ]
+               },
+               {
+                "type": "null"
+               }
+              ]
+             },
+             "footer": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "buttons": {
+              "type": "array",
+              "items": {
+               "type": "object",
+               "properties": {
+                "type": {
+                 "type": "string",
+                 "enum": [
+                  "quick_reply",
+                  "url",
+                  "phone_number",
+                  "copy_code"
+                 ]
+                },
+                "text": {
+                 "type": "string"
+                },
+                "url": {
+                 "type": "string"
+                },
+                "phone": {
+                 "type": "string"
+                }
+               },
+               "required": [
+                "type",
+                "text"
+               ]
+              }
+             }
+            },
+            "required": [
+             "header",
+             "footer",
+             "buttons"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "body": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "media_mime": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "media_url": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "media_name": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "reply_to_wa_id": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "reply_to_message_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "reply_to": {
+          "anyOf": [
+           {
+            "anyOf": [
+             {
+              "type": "object",
+              "properties": {
+               "unavailable": {
+                "type": "boolean",
+                "const": true
+               }
+              },
+              "required": [
+               "unavailable"
+              ]
+             },
+             {
+              "type": "object",
+              "properties": {
+               "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+               },
+               "direction": {
+                "type": "string",
+                "enum": [
+                 "inbound",
+                 "outbound"
+                ]
+               },
+               "body": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "media_mime": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "template_key": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "sender_name": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               }
+              },
+              "required": [
+               "id",
+               "direction",
+               "body",
+               "media_mime",
+               "template_key",
+               "sender_name"
+              ]
+             }
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "replyable": {
+          "type": "boolean"
+         },
+         "forwardable": {
+          "type": "boolean"
+         },
+         "forwarded": {
+          "type": "boolean"
+         },
+         "reactions": {
+          "type": "object",
+          "properties": {
+           "theirs": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "ours": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "ours_by": {
+            "type": [
+             "string",
+             "null"
+            ]
+           }
+          },
+          "required": [
+           "theirs",
+           "ours",
+           "ours_by"
+          ]
+         },
+         "interactive_payload": {},
+         "error_code": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "error_text": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "attempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+         },
+         "next_attempt_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "scheduled_for": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "delivered_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "read_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_manually_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "app_send_until": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_by_teacher_name": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "sender_name": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "automatic": {
+          "type": "boolean"
+         },
+         "line": {
+          "anyOf": [
+           {
+            "type": "string",
+            "enum": [
+             "notifications",
+             "chat",
+             "calls"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         "click_to_chat": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "lesson": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "starts_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+             },
+             "ends_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+             },
+             "status": {
+              "type": "string",
+              "enum": [
+               "scheduled",
+               "confirmed",
+               "completed",
+               "late",
+               "excused",
+               "no_show",
+               "cancelled_by_teacher",
+               "cancelled_by_admin",
+               "rescheduled"
+              ]
+             }
+            },
+            "required": [
+             "starts_at",
+             "status"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         }
+        },
+        "required": [
+         "id",
+         "direction",
+         "status",
+         "phone_e164",
+         "lead_id",
+         "guardian_id",
+         "lesson_id",
+         "template_key",
+         "template_params",
+         "body",
+         "media_mime",
+         "media_url",
+         "reply_to_wa_id",
+         "interactive_payload",
+         "error_code",
+         "error_text",
+         "attempts",
+         "next_attempt_at",
+         "scheduled_for",
+         "sent_at",
+         "delivered_at",
+         "read_at",
+         "sent_manually_at",
+         "created_at",
+         "click_to_chat",
+         "lesson"
+        ]
+       }
+      },
+      "has_more": {
+       "type": "boolean"
+      },
+      "pending": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "properties": {
+         "hidden": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "by_name": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+             }
+            },
+            "required": [
+             "by_name",
+             "at"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "corrects_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_by_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "edited": {
+          "type": "boolean"
+         },
+         "deleted": {
+          "type": "boolean"
+         },
+         "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+         },
+         "direction": {
+          "type": "string",
+          "enum": [
+           "inbound",
+           "outbound"
+          ]
+         },
+         "status": {
+          "type": "string",
+          "enum": [
+           "queued",
+           "sent",
+           "delivered",
+           "read",
+           "failed",
+           "sent_manually"
+          ]
+         },
+         "phone_e164": {
+          "type": "string"
+         },
+         "lead_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "guardian_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "lesson_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "template_key": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "template_params": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "1": {
+              "type": "string"
+             },
+             "2": {
+              "type": "string"
+             },
+             "3": {
+              "type": "string"
+             },
+             "4": {
+              "type": "string"
+             },
+             "5": {
+              "type": "string"
+             },
+             "6": {
+              "type": "string"
+             },
+             "7": {
+              "type": "string"
+             },
+             "8": {
+              "type": "string"
+             },
+             "9": {
+              "type": "string"
+             },
+             "button": {
+              "type": "string"
+             },
+             "buttons": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              }
+             },
+             "payloads": {
+              "type": "array",
+              "items": {
+               "type": "string"
+              }
+             },
+             "document": {
+              "type": "object",
+              "properties": {
+               "bucket": {
+                "type": "string"
+               },
+               "path": {
+                "type": "string"
+               },
+               "filename": {
+                "type": "string"
+               }
+              },
+              "required": [
+               "bucket",
+               "path",
+               "filename"
+              ]
+             },
+             "crm": {
+              "type": "object",
+              "properties": {
+               "body": {
+                "type": "array",
+                "items": {
+                 "type": "string"
+                }
+               },
+               "buttons": {
+                "type": "array",
+                "items": {
+                 "type": "string"
+                }
+               },
+               "report": {
+                "type": "string",
+                "enum": [
+                 "trial",
+                 "regular"
+                ]
+               }
+              }
+             }
+            }
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "template": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "header": {
+              "anyOf": [
+               {
+                "type": "object",
+                "properties": {
+                 "type": {
+                  "type": "string",
+                  "enum": [
+                   "text",
+                   "image",
+                   "video",
+                   "document",
+                   "location"
+                  ]
+                 },
+                 "text": {
+                  "type": "string"
+                 }
+                },
+                "required": [
+                 "type"
+                ]
+               },
+               {
+                "type": "null"
+               }
+              ]
+             },
+             "footer": {
+              "type": [
+               "string",
+               "null"
+              ]
+             },
+             "buttons": {
+              "type": "array",
+              "items": {
+               "type": "object",
+               "properties": {
+                "type": {
+                 "type": "string",
+                 "enum": [
+                  "quick_reply",
+                  "url",
+                  "phone_number",
+                  "copy_code"
+                 ]
+                },
+                "text": {
+                 "type": "string"
+                },
+                "url": {
+                 "type": "string"
+                },
+                "phone": {
+                 "type": "string"
+                }
+               },
+               "required": [
+                "type",
+                "text"
+               ]
+              }
+             }
+            },
+            "required": [
+             "header",
+             "footer",
+             "buttons"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "body": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "media_mime": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "media_url": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "media_name": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "reply_to_wa_id": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "reply_to_message_id": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "reply_to": {
+          "anyOf": [
+           {
+            "anyOf": [
+             {
+              "type": "object",
+              "properties": {
+               "unavailable": {
+                "type": "boolean",
+                "const": true
+               }
+              },
+              "required": [
+               "unavailable"
+              ]
+             },
+             {
+              "type": "object",
+              "properties": {
+               "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+               },
+               "direction": {
+                "type": "string",
+                "enum": [
+                 "inbound",
+                 "outbound"
+                ]
+               },
+               "body": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "media_mime": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "template_key": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               },
+               "sender_name": {
+                "type": [
+                 "string",
+                 "null"
+                ]
+               }
+              },
+              "required": [
+               "id",
+               "direction",
+               "body",
+               "media_mime",
+               "template_key",
+               "sender_name"
+              ]
+             }
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "replyable": {
+          "type": "boolean"
+         },
+         "forwardable": {
+          "type": "boolean"
+         },
+         "forwarded": {
+          "type": "boolean"
+         },
+         "reactions": {
+          "type": "object",
+          "properties": {
+           "theirs": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "ours": {
+            "type": [
+             "string",
+             "null"
+            ]
+           },
+           "ours_by": {
+            "type": [
+             "string",
+             "null"
+            ]
+           }
+          },
+          "required": [
+           "theirs",
+           "ours",
+           "ours_by"
+          ]
+         },
+         "interactive_payload": {},
+         "error_code": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "error_text": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "attempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+         },
+         "next_attempt_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "scheduled_for": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "delivered_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "read_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_manually_at": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "app_send_until": {
+          "anyOf": [
+           {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "sent_by_teacher_name": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "sender_name": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "automatic": {
+          "type": "boolean"
+         },
+         "line": {
+          "anyOf": [
+           {
+            "type": "string",
+            "enum": [
+             "notifications",
+             "chat",
+             "calls"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+         },
+         "click_to_chat": {
+          "type": [
+           "string",
+           "null"
+          ]
+         },
+         "lesson": {
+          "anyOf": [
+           {
+            "type": "object",
+            "properties": {
+             "starts_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+             },
+             "ends_at": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+             },
+             "status": {
+              "type": "string",
+              "enum": [
+               "scheduled",
+               "confirmed",
+               "completed",
+               "late",
+               "excused",
+               "no_show",
+               "cancelled_by_teacher",
+               "cancelled_by_admin",
+               "rescheduled"
+              ]
+             }
+            },
+            "required": [
+             "starts_at",
+             "status"
+            ]
+           },
+           {
+            "type": "null"
+           }
+          ]
+         }
+        },
+        "required": [
+         "id",
+         "direction",
+         "status",
+         "phone_e164",
+         "lead_id",
+         "guardian_id",
+         "lesson_id",
+         "template_key",
+         "template_params",
+         "body",
+         "media_mime",
+         "media_url",
+         "reply_to_wa_id",
+         "interactive_payload",
+         "error_code",
+         "error_text",
+         "attempts",
+         "next_attempt_at",
+         "scheduled_for",
+         "sent_at",
+         "delivered_at",
+         "read_at",
+         "sent_manually_at",
+         "created_at",
+         "click_to_chat",
+         "lesson"
+        ]
+       }
+      },
+      "thread": {
+       "type": "object",
+       "properties": {
+        "last_inbound_at": {
+         "anyOf": [
+          {
+           "type": "string",
+           "format": "date-time",
+           "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "session_open": {
+         "type": "boolean"
+        },
+        "unread_count": {
+         "type": "integer",
+         "minimum": 0,
+         "maximum": 9007199254740991
+        },
+        "reply_line": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "notifications",
+            "chat"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "last_inbound_line": {
+         "anyOf": [
+          {
+           "type": "string",
+           "enum": [
+            "notifications",
+            "chat",
+            "calls"
+           ]
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "last_chat_inbound_at": {
+         "anyOf": [
+          {
+           "type": "string",
+           "format": "date-time",
+           "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        },
+        "last_notifications_inbound_at": {
+         "anyOf": [
+          {
+           "type": "string",
+           "format": "date-time",
+           "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          {
+           "type": "null"
+          }
+         ]
+        }
+       },
+       "required": [
+        "last_inbound_at",
+        "session_open",
+        "unread_count"
+       ]
+      }
+     },
+     "required": [
+      "messages",
+      "has_more",
+      "pending"
+     ]
+    }
+   ]
   }
  },
  "GET /threads/:phone/media": {
@@ -26593,6 +30425,835 @@
     "recitation_url",
     "notes",
     "from_lead_id",
+    "created_by",
+    "created_at",
+    "updated_at"
+   ]
+  }
+ },
+ "PATCH /leads/:id/follow-up": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "paused": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "paused"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "source": {
+     "type": "string",
+     "enum": [
+      "facebook_ad",
+      "instagram_ad",
+      "whatsapp_direct",
+      "referral",
+      "other"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "contacted",
+      "interested_no_slot",
+      "trial_booked",
+      "trial_done",
+      "converted",
+      "no_reply",
+      "lost"
+     ]
+    },
+    "tz": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "qualification": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {}
+    },
+    "assigned_to": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "converted_guardian_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "follow_up_paused": {
+     "type": "boolean"
+    },
+    "follow_up_paused_by": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "lead",
+        "admin"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "follow_up_stage": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "follow_up_note": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "queued",
+        "waiting_template",
+        "no_slots"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "next_follow_up_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_inbound_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_outbound_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "updated_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   },
+   "required": [
+    "id",
+    "phone_e164",
+    "name",
+    "source",
+    "status",
+    "tz",
+    "qualification",
+    "assigned_to",
+    "converted_guardian_id",
+    "follow_up_paused",
+    "follow_up_paused_by",
+    "follow_up_stage",
+    "follow_up_note",
+    "next_follow_up_at",
+    "last_inbound_at",
+    "last_outbound_at",
+    "created_by",
+    "created_at",
+    "updated_at"
+   ]
+  }
+ },
+ "PATCH /leads/:id/qualification": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "student_name": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "age": {
+     "anyOf": [
+      {
+       "type": "integer",
+       "minimum": 3,
+       "maximum": 99
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "gender": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "male",
+        "female"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "country": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "city": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "filled_by": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "guardian",
+        "student"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "guardian_name": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "guardian_relation": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "alt_phone": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "tz": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "level": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "memorized": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "goal": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "riwaya": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "available_days": {
+     "anyOf": [
+      {
+       "type": "array",
+       "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 6
+       }
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "preferred_from": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "preferred_to": {
+     "anyOf": [
+      {
+       "type": "string",
+       "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "group_kind": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "individual",
+        "group"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "notes": {
+     "anyOf": [
+      {
+       "type": "string",
+       "minLength": 1
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   }
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "source": {
+     "type": "string",
+     "enum": [
+      "facebook_ad",
+      "instagram_ad",
+      "whatsapp_direct",
+      "referral",
+      "other"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "contacted",
+      "interested_no_slot",
+      "trial_booked",
+      "trial_done",
+      "converted",
+      "no_reply",
+      "lost"
+     ]
+    },
+    "tz": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "qualification": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {}
+    },
+    "assigned_to": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "converted_guardian_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "follow_up_paused": {
+     "type": "boolean"
+    },
+    "follow_up_paused_by": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "lead",
+        "admin"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "follow_up_stage": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "follow_up_note": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "queued",
+        "waiting_template",
+        "no_slots"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "next_follow_up_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_inbound_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_outbound_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "updated_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   },
+   "required": [
+    "id",
+    "phone_e164",
+    "name",
+    "source",
+    "status",
+    "tz",
+    "qualification",
+    "assigned_to",
+    "converted_guardian_id",
+    "follow_up_paused",
+    "follow_up_paused_by",
+    "follow_up_stage",
+    "follow_up_note",
+    "next_follow_up_at",
+    "last_inbound_at",
+    "last_outbound_at",
+    "created_by",
+    "created_at",
+    "updated_at"
+   ]
+  }
+ },
+ "PATCH /leads/:id/status": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "contacted",
+      "interested_no_slot",
+      "trial_booked",
+      "trial_done",
+      "converted",
+      "no_reply",
+      "lost"
+     ]
+    }
+   },
+   "required": [
+    "status"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "source": {
+     "type": "string",
+     "enum": [
+      "facebook_ad",
+      "instagram_ad",
+      "whatsapp_direct",
+      "referral",
+      "other"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "contacted",
+      "interested_no_slot",
+      "trial_booked",
+      "trial_done",
+      "converted",
+      "no_reply",
+      "lost"
+     ]
+    },
+    "tz": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "qualification": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {}
+    },
+    "assigned_to": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "converted_guardian_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "follow_up_paused": {
+     "type": "boolean"
+    },
+    "follow_up_paused_by": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "lead",
+        "admin"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "follow_up_stage": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "follow_up_note": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "queued",
+        "waiting_template",
+        "no_slots"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "next_follow_up_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_inbound_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_outbound_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "updated_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   },
+   "required": [
+    "id",
+    "phone_e164",
+    "name",
+    "source",
+    "status",
+    "tz",
+    "qualification",
+    "assigned_to",
+    "converted_guardian_id",
+    "follow_up_paused",
+    "follow_up_paused_by",
+    "follow_up_stage",
+    "follow_up_note",
+    "next_follow_up_at",
+    "last_inbound_at",
+    "last_outbound_at",
     "created_by",
     "created_at",
     "updated_at"
@@ -30274,6 +34935,617 @@
     "type": "string"
    },
    "additionalProperties": {}
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "messaging_enabled": {
+     "type": "boolean"
+    },
+    "auto_messages_enabled": {
+     "type": "boolean"
+    },
+    "crm_cutover_done": {
+     "type": "boolean"
+    },
+    "comms_source": {
+     "type": "string",
+     "enum": [
+      "legacy",
+      "module"
+     ]
+    },
+    "whatsapp_calls_enabled": {
+     "type": "boolean"
+    },
+    "calls_permission_template": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 512
+    },
+    "quick_reply_window_hours": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 168
+    },
+    "chat_reopen_template": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 512
+    },
+    "crm_media_host": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 100
+    },
+    "crm_media_copy_all": {
+     "type": "boolean"
+    },
+    "short_link_base": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 100
+    },
+    "short_link_default_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 365
+    },
+    "short_link_purge_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 365
+    },
+    "short_link_extra_hosts": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 500
+    },
+    "reminder_minutes_before": {
+     "type": "integer",
+     "minimum": 5,
+     "maximum": 720
+    },
+    "reminder_24h_enabled": {
+     "type": "boolean"
+    },
+    "teacher_whatsapp_new_student": {
+     "type": "boolean"
+    },
+    "teacher_whatsapp_lesson_reminder": {
+     "type": "boolean"
+    },
+    "reminder_lookahead_hours": {
+     "type": "integer",
+     "minimum": 25,
+     "maximum": 72
+    },
+    "follow_up_hours": {
+     "minItems": 1,
+     "maxItems": 5,
+     "type": "array",
+     "items": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 720
+     }
+    },
+    "follow_up_slots_from_hours": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 168
+    },
+    "follow_up_slots_to_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 30
+    },
+    "feedback_mode": {
+     "type": "string",
+     "enum": [
+      "buttons",
+      "link"
+     ]
+    },
+    "feedback_rate_window_min": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 120
+    },
+    "booking_horizon_weeks": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 12
+    },
+    "late_cancel_hours": {
+     "anyOf": [
+      {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 168
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "makeup_window_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 365
+    },
+    "teachers_always_available": {
+     "type": "boolean"
+    },
+    "lesson_confirmation_required": {
+     "type": "boolean"
+    },
+    "lesson_outcome_grace_minutes": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 720
+    },
+    "join_opens_before_min": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 180
+    },
+    "join_closes_after_min": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 720
+    },
+    "default_meeting_title": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 60
+    },
+    "meeting_max_minutes": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 1440
+    },
+    "meeting_link_auto": {
+     "type": "boolean"
+    },
+    "meetings_in_app": {
+     "type": "boolean"
+    },
+    "recording_consent_notice": {
+     "anyOf": [
+      {
+       "type": "object",
+       "properties": {
+        "ar": {
+         "type": "string",
+         "minLength": 1,
+         "maxLength": 1000
+        },
+        "en": {
+         "type": "string",
+         "minLength": 1,
+         "maxLength": 1000
+        }
+       },
+       "additionalProperties": false
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "recording_retention_days": {
+     "anyOf": [
+      {
+       "type": "integer",
+       "minimum": 1,
+       "maximum": 3650
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "report_teacher_edit_minutes": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 1440
+    },
+    "report_teacher_edit_hours": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 168
+    },
+    "report_form_v2": {
+     "type": "boolean"
+    },
+    "renewal_alert_remaining": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 10
+    },
+    "subscription_expiry_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 90
+    },
+    "flag_future_lessons_when_unpaid": {
+     "type": "boolean"
+    },
+    "refund_attended_rate_percent": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 300
+    },
+    "payout_count_late": {
+     "type": "boolean"
+    },
+    "payout_count_no_show": {
+     "type": "boolean"
+    },
+    "payout_count_trials": {
+     "type": "boolean"
+    },
+    "reporting_currency": {
+     "type": "string",
+     "pattern": "^[A-Z]{3}$"
+    },
+    "fx_fresh_hours": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 168
+    },
+    "upload_max_mb": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10
+    },
+    "academy_whatsapp_e164": {
+     "type": "string",
+     "pattern": "^\\+[1-9][0-9]{7,14}$"
+    },
+    "academy_timezone": {
+     "type": "string"
+    },
+    "academy_contact": {
+     "type": "object",
+     "properties": {
+      "site": {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 100,
+       "pattern": "^(?=.{1,100}$)[a-z0-9]([a-z0-9-]*[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$"
+      },
+      "email": {
+       "type": "string",
+       "minLength": 1,
+       "maxLength": 120,
+       "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+      }
+     },
+     "additionalProperties": false
+    },
+    "maintenance_mode": {
+     "type": "boolean"
+    },
+    "sales_auto_assign": {
+     "type": "boolean"
+    },
+    "sales_require_assignee": {
+     "type": "boolean"
+    },
+    "renewal_commission_enabled": {
+     "type": "boolean"
+    },
+    "renewal_commission_percent": {
+     "type": "integer",
+     "minimum": 0,
+     "maximum": 100
+    },
+    "activity_retention_days": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 3650
+    },
+    "family_login_enabled": {
+     "type": "boolean"
+    },
+    "login_code_ttl_minutes": {
+     "type": "integer",
+     "minimum": 3,
+     "maximum": 30
+    },
+    "login_code_max_attempts": {
+     "type": "integer",
+     "minimum": 3,
+     "maximum": 10
+    },
+    "family_chat_enabled": {
+     "type": "boolean"
+    },
+    "family_meetings_in_app": {
+     "type": "boolean"
+    },
+    "family_payment_instructions": {
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 1000
+    },
+    "presence_enabled": {
+     "type": "boolean"
+    },
+    "teacher_chats_enabled": {
+     "type": "boolean"
+    },
+    "teacher_student_messages_enabled": {
+     "type": "boolean"
+    },
+    "teacher_earnings_enabled": {
+     "type": "boolean"
+    },
+    "teacher_statements_enabled": {
+     "type": "boolean"
+    },
+    "teacher_feedback_enabled": {
+     "type": "boolean"
+    },
+    "teacher_internal_meetings_enabled": {
+     "type": "boolean"
+    },
+    "teacher_scheduled_meetings_enabled": {
+     "type": "boolean"
+    },
+    "saved": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "messaging_enabled",
+       "auto_messages_enabled",
+       "crm_cutover_done",
+       "comms_source",
+       "whatsapp_calls_enabled",
+       "calls_permission_template",
+       "quick_reply_window_hours",
+       "chat_reopen_template",
+       "crm_media_host",
+       "crm_media_copy_all",
+       "short_link_base",
+       "short_link_default_days",
+       "short_link_purge_days",
+       "short_link_extra_hosts",
+       "reminder_minutes_before",
+       "reminder_24h_enabled",
+       "teacher_whatsapp_new_student",
+       "teacher_whatsapp_lesson_reminder",
+       "reminder_lookahead_hours",
+       "follow_up_hours",
+       "follow_up_slots_from_hours",
+       "follow_up_slots_to_days",
+       "feedback_mode",
+       "feedback_rate_window_min",
+       "booking_horizon_weeks",
+       "late_cancel_hours",
+       "makeup_window_days",
+       "teachers_always_available",
+       "lesson_confirmation_required",
+       "lesson_outcome_grace_minutes",
+       "join_opens_before_min",
+       "join_closes_after_min",
+       "default_meeting_title",
+       "meeting_max_minutes",
+       "meeting_link_auto",
+       "meetings_in_app",
+       "recording_consent_notice",
+       "recording_retention_days",
+       "report_teacher_edit_minutes",
+       "report_teacher_edit_hours",
+       "report_form_v2",
+       "renewal_alert_remaining",
+       "subscription_expiry_days",
+       "flag_future_lessons_when_unpaid",
+       "refund_attended_rate_percent",
+       "payout_count_late",
+       "payout_count_no_show",
+       "payout_count_trials",
+       "reporting_currency",
+       "fx_fresh_hours",
+       "upload_max_mb",
+       "academy_whatsapp_e164",
+       "academy_timezone",
+       "academy_contact",
+       "maintenance_mode",
+       "sales_auto_assign",
+       "sales_require_assignee",
+       "renewal_commission_enabled",
+       "renewal_commission_percent",
+       "activity_retention_days",
+       "family_login_enabled",
+       "login_code_ttl_minutes",
+       "login_code_max_attempts",
+       "family_chat_enabled",
+       "family_meetings_in_app",
+       "family_payment_instructions",
+       "presence_enabled",
+       "teacher_chats_enabled",
+       "teacher_student_messages_enabled",
+       "teacher_earnings_enabled",
+       "teacher_statements_enabled",
+       "teacher_feedback_enabled",
+       "teacher_internal_meetings_enabled",
+       "teacher_scheduled_meetings_enabled"
+      ]
+     }
+    },
+    "moved": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "invalid": {
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "messaging_enabled",
+       "auto_messages_enabled",
+       "crm_cutover_done",
+       "comms_source",
+       "whatsapp_calls_enabled",
+       "calls_permission_template",
+       "quick_reply_window_hours",
+       "chat_reopen_template",
+       "crm_media_host",
+       "crm_media_copy_all",
+       "short_link_base",
+       "short_link_default_days",
+       "short_link_purge_days",
+       "short_link_extra_hosts",
+       "reminder_minutes_before",
+       "reminder_24h_enabled",
+       "teacher_whatsapp_new_student",
+       "teacher_whatsapp_lesson_reminder",
+       "reminder_lookahead_hours",
+       "follow_up_hours",
+       "follow_up_slots_from_hours",
+       "follow_up_slots_to_days",
+       "feedback_mode",
+       "feedback_rate_window_min",
+       "booking_horizon_weeks",
+       "late_cancel_hours",
+       "makeup_window_days",
+       "teachers_always_available",
+       "lesson_confirmation_required",
+       "lesson_outcome_grace_minutes",
+       "join_opens_before_min",
+       "join_closes_after_min",
+       "default_meeting_title",
+       "meeting_max_minutes",
+       "meeting_link_auto",
+       "meetings_in_app",
+       "recording_consent_notice",
+       "recording_retention_days",
+       "report_teacher_edit_minutes",
+       "report_teacher_edit_hours",
+       "report_form_v2",
+       "renewal_alert_remaining",
+       "subscription_expiry_days",
+       "flag_future_lessons_when_unpaid",
+       "refund_attended_rate_percent",
+       "payout_count_late",
+       "payout_count_no_show",
+       "payout_count_trials",
+       "reporting_currency",
+       "fx_fresh_hours",
+       "upload_max_mb",
+       "academy_whatsapp_e164",
+       "academy_timezone",
+       "academy_contact",
+       "maintenance_mode",
+       "sales_auto_assign",
+       "sales_require_assignee",
+       "renewal_commission_enabled",
+       "renewal_commission_percent",
+       "activity_retention_days",
+       "family_login_enabled",
+       "login_code_ttl_minutes",
+       "login_code_max_attempts",
+       "family_chat_enabled",
+       "family_meetings_in_app",
+       "family_payment_instructions",
+       "presence_enabled",
+       "teacher_chats_enabled",
+       "teacher_student_messages_enabled",
+       "teacher_earnings_enabled",
+       "teacher_statements_enabled",
+       "teacher_feedback_enabled",
+       "teacher_internal_meetings_enabled",
+       "teacher_scheduled_meetings_enabled"
+      ]
+     }
+    }
+   },
+   "required": [
+    "messaging_enabled",
+    "auto_messages_enabled",
+    "crm_cutover_done",
+    "comms_source",
+    "whatsapp_calls_enabled",
+    "calls_permission_template",
+    "quick_reply_window_hours",
+    "chat_reopen_template",
+    "crm_media_host",
+    "crm_media_copy_all",
+    "short_link_base",
+    "short_link_default_days",
+    "short_link_purge_days",
+    "short_link_extra_hosts",
+    "reminder_minutes_before",
+    "reminder_24h_enabled",
+    "teacher_whatsapp_new_student",
+    "teacher_whatsapp_lesson_reminder",
+    "reminder_lookahead_hours",
+    "follow_up_hours",
+    "follow_up_slots_from_hours",
+    "follow_up_slots_to_days",
+    "feedback_mode",
+    "feedback_rate_window_min",
+    "booking_horizon_weeks",
+    "late_cancel_hours",
+    "makeup_window_days",
+    "teachers_always_available",
+    "lesson_confirmation_required",
+    "lesson_outcome_grace_minutes",
+    "join_opens_before_min",
+    "join_closes_after_min",
+    "default_meeting_title",
+    "meeting_max_minutes",
+    "meeting_link_auto",
+    "meetings_in_app",
+    "recording_consent_notice",
+    "recording_retention_days",
+    "report_teacher_edit_minutes",
+    "report_teacher_edit_hours",
+    "report_form_v2",
+    "renewal_alert_remaining",
+    "subscription_expiry_days",
+    "flag_future_lessons_when_unpaid",
+    "refund_attended_rate_percent",
+    "payout_count_late",
+    "payout_count_no_show",
+    "payout_count_trials",
+    "reporting_currency",
+    "fx_fresh_hours",
+    "upload_max_mb",
+    "academy_whatsapp_e164",
+    "academy_timezone",
+    "academy_contact",
+    "maintenance_mode",
+    "sales_auto_assign",
+    "sales_require_assignee",
+    "renewal_commission_enabled",
+    "renewal_commission_percent",
+    "activity_retention_days",
+    "family_login_enabled",
+    "login_code_ttl_minutes",
+    "login_code_max_attempts",
+    "family_chat_enabled",
+    "family_meetings_in_app",
+    "family_payment_instructions",
+    "presence_enabled",
+    "teacher_chats_enabled",
+    "teacher_student_messages_enabled",
+    "teacher_earnings_enabled",
+    "teacher_statements_enabled",
+    "teacher_feedback_enabled",
+    "teacher_internal_meetings_enabled",
+    "teacher_scheduled_meetings_enabled",
+    "saved",
+    "moved",
+    "invalid"
+   ]
   }
  },
  "PATCH /short-links/:code": {
@@ -38781,6 +44053,219 @@
    ]
   }
  },
+ "POST /leads/:id/assign": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "profileId": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "uuid",
+       "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    }
+   },
+   "required": [
+    "profileId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "source": {
+     "type": "string",
+     "enum": [
+      "facebook_ad",
+      "instagram_ad",
+      "whatsapp_direct",
+      "referral",
+      "other"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "contacted",
+      "interested_no_slot",
+      "trial_booked",
+      "trial_done",
+      "converted",
+      "no_reply",
+      "lost"
+     ]
+    },
+    "tz": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "qualification": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "additionalProperties": {}
+    },
+    "assigned_to": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "converted_guardian_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "follow_up_paused": {
+     "type": "boolean"
+    },
+    "follow_up_paused_by": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "lead",
+        "admin"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "follow_up_stage": {
+     "type": "integer",
+     "minimum": -9007199254740991,
+     "maximum": 9007199254740991
+    },
+    "follow_up_note": {
+     "anyOf": [
+      {
+       "type": "string",
+       "enum": [
+        "queued",
+        "waiting_template",
+        "no_slots"
+       ]
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "next_follow_up_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_inbound_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "last_outbound_at": {
+     "anyOf": [
+      {
+       "type": "string",
+       "format": "date-time",
+       "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+      },
+      {
+       "type": "null"
+      }
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "updated_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   },
+   "required": [
+    "id",
+    "phone_e164",
+    "name",
+    "source",
+    "status",
+    "tz",
+    "qualification",
+    "assigned_to",
+    "converted_guardian_id",
+    "follow_up_paused",
+    "follow_up_paused_by",
+    "follow_up_stage",
+    "follow_up_note",
+    "next_follow_up_at",
+    "last_inbound_at",
+    "last_outbound_at",
+    "created_by",
+    "created_at",
+    "updated_at"
+   ]
+  }
+ },
  "POST /leads/:id/link-family": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -38822,6 +44307,103 @@
     "linked"
    ],
    "additionalProperties": false
+  }
+ },
+ "POST /leads/:id/reclassify": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})$"
+    }
+   },
+   "required": [
+    "id"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string"
+    },
+    "phone_e164": {
+     "type": "string"
+    },
+    "name": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "new",
+      "reviewing",
+      "interview",
+      "accepted",
+      "rejected"
+     ]
+    },
+    "cv_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "recitation_url": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "from_lead_id": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_by": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "created_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "updated_at": {
+     "type": "string",
+     "format": "date-time",
+     "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    }
+   },
+   "required": [
+    "id",
+    "phone_e164",
+    "name",
+    "status",
+    "cv_url",
+    "recitation_url",
+    "notes",
+    "from_lead_id",
+    "created_by",
+    "created_at",
+    "updated_at"
+   ]
   }
  },
  "POST /leads/assign-unassigned": {
@@ -44305,6 +49887,26 @@
     "size"
    ]
   }
+ },
+ "POST /me/notifications/read": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "ids": {
+     "minItems": 1,
+     "maxItems": 100,
+     "type": "array",
+     "items": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+     }
+    }
+   },
+   "additionalProperties": false
+  },
+  "response": "empty"
  },
  "POST /meetings": {
   "body": {

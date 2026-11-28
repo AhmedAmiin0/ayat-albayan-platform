@@ -1,1 +1,1 @@
-export { type ThreadPeople } from './thread-people';
+export * from './thread-people.schemas';

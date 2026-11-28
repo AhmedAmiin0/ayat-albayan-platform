@@ -1,11 +1,6 @@
-import type {
-  SalesScheduleDay,
-  SalesSubscriptionKind,
-  SalesSubscriptionHistory,
-  SalesTeacherView,
-} from '@ab/shared';
+import type { SalesScheduleDay, SalesSubscriptionKind } from '@ab/shared';
 import { riyadhToday } from '@ab/time';
-import { salesAcademyDayCalls, salesPortalCalls } from '@ab/client-core';
+import { salesAcademyDayCalls, salesAcademyListCalls, salesPortalCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
@@ -15,11 +10,9 @@ import { salesKeys } from '@/core/lib/keys';
 /** The running lessons are re-read every minute: one ends, another starts (same as the web). */
 const LIVE_REFRESH_MS = 60_000;
 
-/** A body that is not a list (an older API, a stub) reads as an empty list rather than crashing. */
-const asList = <T>(data: T[]): T[] => (Array.isArray(data) ? data : []);
-
 const salesPortal = salesPortalCalls({ apiFetch, apiSend });
 const academyDay = salesAcademyDayCalls({ apiFetch, apiSend });
+const academyLists = salesAcademyListCalls({ apiFetch, apiSend });
 
 /** GET /sales/subscriptions?kind= — my pending or my confirmed subscriptions, one list per kind. */
 export const useSalesSubscriptions = (kind: SalesSubscriptionKind) =>
@@ -32,7 +25,7 @@ export const useSalesSubscriptions = (kind: SalesSubscriptionKind) =>
 export const useSubscriptionHistory = (id: string) =>
   useQuery({
     queryKey: pathKey(`/sales/subscriptions/${id}/history`),
-    queryFn: () => apiFetch<SalesSubscriptionHistory>(`/sales/subscriptions/${id}/history`),
+    queryFn: () => academyLists.history(id),
     enabled: id !== '',
   });
 
@@ -40,8 +33,7 @@ export const useSubscriptionHistory = (id: string) =>
 export const useSalesTeachers = () =>
   useQuery({
     queryKey: pathKey('/sales/teachers'),
-    queryFn: () => apiFetch<SalesTeacherView[]>('/sales/teachers'),
-    select: asList,
+    queryFn: () => academyLists.teachers(),
   });
 
 /** GET /sales/live — the lessons running now across the academy. */

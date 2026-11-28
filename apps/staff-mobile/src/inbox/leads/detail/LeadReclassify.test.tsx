@@ -1,3 +1,4 @@
+import { jobApplicant } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -40,10 +41,10 @@ test('«أبقِها هنا» closes the question without a request', async () =
 });
 
 test('confirm: POST reclassify, pop back, refetch every lead list', async () => {
-  mockApiSend.mockResolvedValue({ id: 'j1' });
+  mockApiSend.mockResolvedValue(jobApplicant({ id: 'j1' }));
   const { invalidate } = await ask();
   await fireEvent.press(screen.getByRole('button', { name: t.leads.reclassifyAsApplicant }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/leads/a1/reclassify');
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/leads/a1/reclassify', undefined);
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
   expect(invalidate).toHaveBeenCalledWith({ queryKey: leadKeys.all });
 });

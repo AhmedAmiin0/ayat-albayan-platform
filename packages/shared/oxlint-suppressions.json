@@ -211,7 +211,7 @@
   },
   "src/messaging/thread-delta.ts": {
     "stylistic/max-len": {
-      "count": 6
+      "count": 2
     }
   },
   "src/messaging/wa.ts": {
@@ -455,14 +455,6 @@
       "count": 1
     },
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/sales/academy.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
-    "ab/module-boundaries": {
       "count": 1
     }
   },

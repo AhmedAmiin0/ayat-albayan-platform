@@ -6,6 +6,7 @@ export * from './validation/schema/schema';
 export * from './validation/validate';
 export * from './public';
 export * from './meta';
+export * from './academy';
 export * from './domains';
 export * from './ownership';
 export * from './gate';

@@ -459,7 +459,7 @@
       "count": 2
     },
     "ab/zod-inputs": {
-      "count": 4
+      "count": 1
     }
   },
   "src/common/push/notifications.http.test.ts": {
@@ -2900,15 +2900,9 @@
   },
   "src/modules/messaging/inbox/threads/threads.controller.ts": {
     "stylistic/max-len": {
-      "count": 2
-    },
-    "ab/module-boundaries": {
       "count": 1
     },
-    "ab/zod-inputs": {
-      "count": 3
-    },
-    "typescript/dot-notation": {
+    "ab/module-boundaries": {
       "count": 1
     }
   },
@@ -6170,7 +6164,7 @@
   },
   "src/modules/sales/leads/leads.controller.ts": {
     "ab/zod-inputs": {
-      "count": 8
+      "count": 1
     }
   },
   "src/modules/sales/leads/leads.module.ts": {
@@ -6476,7 +6470,7 @@
       "count": 2
     },
     "ab/zod-inputs": {
-      "count": 2
+      "count": 1
     }
   },
   "src/modules/sales/sales/academy/sales-academy.fakes.ts": {
@@ -6562,11 +6556,6 @@
   "src/modules/sales/sales/history/tests/sales-history.mapper.test.ts": {
     "stylistic/max-len": {
       "count": 1
-    }
-  },
-  "src/modules/sales/sales/sales-admin.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 2
     }
   },
   "src/modules/sales/sales/sales-ownership.ts": {

@@ -1,4 +1,5 @@
 import type { IntegrationConfigItem } from '@ab/catalog';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -64,7 +65,7 @@ test('without settings.write the choice is shown, not offered', async () => {
 test('module mode (comms_source = module): each number\'s provider sends, so a note and no switch', async () => {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/auth/me') return { permissions: mockPermissions };
-    return path === '/settings' ? { comms_source: 'module' } : ITEMS;
+    return path === '/settings' ? { ...SETTING_DEFAULTS, comms_source: 'module' } : ITEMS;
   });
   await renderWithQuery(<LineDrivers />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(h.driverModule)).toBeTruthy();

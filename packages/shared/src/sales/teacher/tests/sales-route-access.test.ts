@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { jobApplicantRoutes } from '../../job-applicants';
+import { jobApplicantRoutes } from '../../leads/job-applicants';
 import { registrationCheckRoutes } from '../../registration-check';
 import { usedBeforeRoutes } from '../../used-before/used-before.routes';
 import { salesTeacherOverviewRoutes } from '../teacher-overview.routes';

@@ -1739,24 +1739,10 @@
   "src/inbox/leads/detail/LeadAssign.tsx": {
     "complexity": {
       "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/inbox/leads/detail/LeadFacts.tsx": {
     "max-lines-per-function": {
-      "count": 1
-    }
-  },
-  "src/inbox/leads/detail/LeadReclassify.tsx": {
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -2308,7 +2294,7 @@
   },
   "src/inbox/qualification/lib/queries.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 3
+      "count": 2
     }
   },
   "src/inbox/rating/SendRating.test.tsx": {
@@ -3592,11 +3578,6 @@
       "count": 6
     }
   },
-  "src/ops/settings/use-settings.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/ops/shared/fixtures.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -3610,9 +3591,6 @@
   "src/ops/values/hooks/use-save-value.ts": {
     "ab/no-shape-checks": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/ops/values/hooks/use-value-sheet.ts": {
@@ -4481,9 +4459,6 @@
   "src/sales/sales/lib/sales-api.ts": {
     "stylistic/max-len": {
       "count": 3
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/sales/sales/lib/sales-href.ts": {

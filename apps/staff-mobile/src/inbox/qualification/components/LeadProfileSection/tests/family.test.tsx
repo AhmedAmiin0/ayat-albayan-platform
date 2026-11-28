@@ -2,7 +2,7 @@ import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { huda } from '@/inbox/shared/fixtures';
-import { answer, hudaProfile, QUALIFICATION } from '@/inbox/qualification/lib/fixtures';
+import { answer, hudaProfile, QUALIFICATION, hudaRow } from '@/inbox/qualification/lib/fixtures';
 import { LeadProfileSection } from '@/inbox/qualification/components/LeadProfileSection/LeadProfileSection';
 
 const mockApiFetch = jest.fn();
@@ -66,7 +66,7 @@ test('«حفظ» sends the family answers; the other number goes as E.164, a bad
   expect(screen.getByText(t.common.phoneErrors.missing_country_code)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
 
-  mockApiSend.mockResolvedValue(hudaProfile);
+  mockApiSend.mockResolvedValue(hudaRow());
   await fireEvent.changeText(screen.getByLabelText(t.leads.altPhone), '01012345678');
   await fireEvent.changeText(screen.getByLabelText(t.guardians.name), 'أبو سهيلة');
   await fireEvent.press(

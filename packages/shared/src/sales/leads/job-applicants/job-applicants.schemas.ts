@@ -1,7 +1,7 @@
 import { JOB_APPLICANT_STATUSES } from '@ab/catalog';
 import { hasAnyValue, instant, pageQuery, partialOf } from '@ab/core';
 import { z } from 'zod';
-import { applicantColumnQueryShape, jobApplicantCreateSchema } from '../../people/schemas';
+import { applicantColumnQueryShape, jobApplicantCreateSchema } from '../../../people/schemas';
 
 export const jobApplicantStatusSchema = z.enum(JOB_APPLICANT_STATUSES);
 

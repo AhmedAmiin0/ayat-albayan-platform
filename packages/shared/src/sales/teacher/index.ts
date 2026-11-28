@@ -3,3 +3,5 @@ export * from './teacher-overview.schemas';
 export * from './teacher-overview.routes';
 export * from './academy-day.schemas';
 export * from './academy-day.routes';
+export * from './academy-lists.schemas';
+export * from './academy-lists.routes';

@@ -1,4 +1,3 @@
-import type { LeadQualificationPatch } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t, Button, ErrorLine } from '@ab/mobile-kit';
@@ -7,7 +6,7 @@ import { Heading } from './Heading';
 import { PreferenceFields } from './PreferenceFields';
 import { qualForm, qualPatch, type QualErrors, type QualForm } from '@/inbox/qualification/lib/qualification-form';
 import { QualificationFields } from './QualificationFields';
-import { saveErrorText, useLeadPatch, type LeadProfile } from '@/inbox/qualification/lib/queries';
+import { saveErrorText, useLeadPatch, saveQualification, type LeadProfile } from '@/inbox/qualification/lib/queries';
 
 export interface QualificationFormProps {
   lead: LeadProfile;
@@ -17,7 +16,7 @@ export interface QualificationFormProps {
 
 /** R-LEAD-03: saves only changed fields (API merges, emptied fields clear); offline has no save. */
 export function QualificationForm({ lead, offline }: QualificationFormProps) {
-  const save = useLeadPatch<LeadQualificationPatch>('qualification');
+  const save = useLeadPatch(saveQualification);
   const [initial, setInitial] = useState(() => qualForm(lead.qualification));
   const [form, setForm] = useState<QualForm>(initial);
   const [errors, setErrors] = useState<QualErrors>({});

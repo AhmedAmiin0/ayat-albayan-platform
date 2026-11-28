@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Permission } from '@ab/catalog';
-import type { ThreadLesson } from '../chat/views';
+import type { ThreadLesson } from '../chat/thread-reads';
 import { replyConfirmPath, replyLesson, replyRights } from './reply-lesson';
 
 const NOW = new Date('2026-10-28T12:00:00Z');

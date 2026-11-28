@@ -34,6 +34,3 @@ export const webPushSubscriptionSchema = z.object({
   keys: z.object({ p256dh: base64url(87), auth: base64url(22) }),
 });
 export type WebPushSubscriptionInput = z.infer<typeof webPushSubscriptionSchema>;
-
-/** DELETE /me/web-push?endpoint=…: any URL-ish string (removing never reaches out). */
-export const webPushEndpointQuery = z.object({ endpoint: z.string().min(1).max(2048) });

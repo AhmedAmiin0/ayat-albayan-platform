@@ -1,29 +1,11 @@
 import { z } from 'zod';
 import { pageQuery } from '@ab/core';
 import type { AnyPushKind } from '@ab/catalog';
+import type { NotificationsPage } from './me/me-push.schemas';
 
 // The bell (R-NOT-01): GET /me/notifications and POST /me/notifications/read. The rows are
 // public.push_notifications addressed to the caller; `data` is what the push carried ({ phone },
 // { studentId, lessonId }, { meetingId }), untrusted: webNotificationPath checks every field.
-
-export interface NotificationItem {
-  id: string;
-  kind: AnyPushKind;
-  title: string;
-  body: string;
-  data: Record<string, string>;
-  created_at: string;
-  read_at: string | null;
-}
-
-export interface NotificationsPage {
-  items: NotificationItem[];
-  total: number;
-  page: number;
-  pageSize: number;
-  /** The caller's unread rows (the badge), whatever the page. */
-  unread: number;
-}
 
 export const NOTIFICATIONS_PAGE_MAX = 50;
 
@@ -49,8 +31,3 @@ export const notificationsReadSchema = z.strictObject({
   ids: z.array(z.uuid()).min(1).max(100).optional(),
 });
 export type NotificationsRead = z.infer<typeof notificationsReadSchema>;
-
-/** GET /me/web-push/key: null = browser push is off (a WEB_PUSH_* key is unset). */
-export interface WebPushKey {
-  publicKey: string | null;
-}

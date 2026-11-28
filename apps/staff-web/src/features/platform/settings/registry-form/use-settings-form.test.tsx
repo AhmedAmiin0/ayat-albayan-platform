@@ -9,6 +9,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const SAVED: AcademySettings = { ...SETTING_DEFAULTS, booking_horizon_weeks: 6 };
+const lists = (saved: string[], moved: string[] = []) => ({ saved, moved, invalid: [] });
 const KEYS: SettingKey[] = ['booking_horizon_weeks', 'late_cancel_hours'];
 
 function setup(keys?: SettingKey[]) {
@@ -53,7 +54,7 @@ describe('useSettingsForm (a page’s settings form)', () => {
   });
 
   it('one PATCH with the changed key only; settings, meta and public config refetched (cache never written); then the baseline', async () => {
-    apiSend.mockResolvedValue({ ...SAVED, booking_horizon_weeks: 8 });
+    apiSend.mockResolvedValue({ ...SAVED, booking_horizon_weeks: 8, ...lists(['booking_horizon_weeks']) });
     const { client, invalidate, onSaved, result } = setup(KEYS);
     act(() => result.current.set({ bookingHorizonWeeks: '8' }));
     act(() => result.current.submit());
@@ -73,7 +74,7 @@ describe('useSettingsForm (a page’s settings form)', () => {
   });
 
   it('`{saved, moved}`: a moved key is reported and stays unsaved', async () => {
-    apiSend.mockResolvedValue({ saved: [], moved: ['bookingHorizonWeeks'] });
+    apiSend.mockResolvedValue({ ...SAVED, ...lists([], ['bookingHorizonWeeks']) });
     const { onSaved, result } = setup(KEYS);
     act(() => result.current.set({ bookingHorizonWeeks: '8' }));
     act(() => result.current.submit());
