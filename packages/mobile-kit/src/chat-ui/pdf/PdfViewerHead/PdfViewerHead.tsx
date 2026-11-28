@@ -1,24 +1,10 @@
 import { View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
-import { palette, type } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
 import { ContentText } from '../../../ui/primitives/ContentText';
 import { PDF_LINE } from '../use-current-page';
-
-interface PdfViewerHeadProps {
-  name: string;
-  meta: string;
-  /** The page in view. */
-  current: number;
-  pages: number;
-}
-
-const NAME = {
-  ...PDF_LINE,
-  fontFamily: type.ui[600],
-  fontSize: type.size.sm,
-  color: palette.dark.ink,
-};
+import type { PdfViewerHeadProps } from './PdfViewerHead.types';
+import { NAME } from './pdf-viewer-head.helpers';
 
 export function PdfViewerHead({ name, meta, current, pages }: PdfViewerHeadProps) {
   const at = t.inbox.pdf.pageOf.replace('{n}', String(current)).replace('{total}', String(pages));

@@ -2,12 +2,13 @@ import { View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { shape, type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
+import type { PdfBadgeProps } from './PdfBadge.types';
 
 /**
  * «PDF», white on the brand green: beside the name, and large where page 1 is not shown (WhatsApp's
  * document glyph).
  */
-export function PdfBadge({ large = false }: { large?: boolean }) {
+export function PdfBadge({ large = false }: PdfBadgeProps) {
   const { color } = useTheme();
   const size = large ? type.size.base : type.size['2xs'];
   return (

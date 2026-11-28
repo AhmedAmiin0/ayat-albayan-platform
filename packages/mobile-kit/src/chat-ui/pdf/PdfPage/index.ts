@@ -1,1 +1,2 @@
-export { PdfPage, type PdfPageProps, type PdfZoom } from './PdfPage';
+export { PdfPage } from './PdfPage';
+export type { PdfPageProps, PdfZoom } from './PdfPage.types';
