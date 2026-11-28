@@ -1,9 +1,15 @@
-import type { Attendance, Gender, LessonStatus, Program, ReportStatus, StudentStatus } from '@ab/catalog';
+import type {
+  Attendance,
+  Gender,
+  LessonStatus,
+  Program,
+  ReportStatus,
+  StudentStatus,
+} from '@ab/catalog';
 import type { Conflict } from './conflicts';
 import type { LessonEvent } from './state-machine';
 import type { LessonTimeEditView, TimeEditMode } from './series/time-edit';
-import type { TeacherMeetingMode } from '../classroom/meeting-mode';
-import type { LessonRoomState } from '../classroom';
+import type { LessonRoomState, TeacherMeetingMode } from '../classroom';
 import type { LessonProposalView } from './proposals/proposals';
 
 // API response shapes (docs/10-phase2-contracts.md §3): snake_case rows, ISO UTC, IANA tz.
@@ -23,8 +29,14 @@ export interface LessonStudentView {
   /** The active makeup booked for this student's miss; others in a group may have none. */
   makeup?: { lesson_id: string; starts_at: string } | null;
   /** This student's lesson report, null before one is opened; edit window per docs/46 B7. */
-  report?: { id: string; status: ReportStatus; submitted_at?: string | null;
-    sent_at?: string | null; can_edit?: boolean; edit_until?: string | null } | null;
+  report?: {
+    id: string;
+    status: ReportStatus;
+    submitted_at?: string | null;
+    sent_at?: string | null;
+    can_edit?: boolean;
+    edit_until?: string | null;
+  } | null;
 }
 
 /** GET /lessons, /lessons/day, /teachers/me/lessons, /students/:id/lessons items. */
@@ -89,7 +101,6 @@ export interface LessonView {
   /** The last in-place time edit (the time it replaced), null when never edited. */
   time_edit?: LessonTimeEditView | null;
 }
-
 
 /** GET /teachers/me (R-TCH-03). */
 export interface TeacherMe {

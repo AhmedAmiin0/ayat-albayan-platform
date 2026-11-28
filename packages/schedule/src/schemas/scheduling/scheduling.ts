@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { DURATIONS, PACKAGE_SIZES } from '@ab/catalog';
-import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../../lessons/state-machine';
+import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../../lessons';
 import { bookingExtras } from '../booking-extras';
 import { clientRequestId, instant, localDate, requiredText, timeOfDay, timeZone } from '@ab/core';
 import { dayTimesSchema } from '../day-times';

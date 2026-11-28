@@ -1,6 +1,6 @@
 import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
-import { lessonDuration, overrideSchema } from '../schemas/scheduling';
+import { lessonDuration, overrideSchema } from '../schemas';
 import type { JoinWindow } from './join-window';
 
 // A meeting with students is always a lesson, except the standalone internal meeting.

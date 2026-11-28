@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { LessonView } from '../lessons/views';
+import type { LessonView } from '../lessons';
 import { instant } from '@ab/core';
 import { lessonDuration, overrideSchema } from './scheduling';
 
