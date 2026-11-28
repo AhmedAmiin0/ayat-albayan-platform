@@ -20,3 +20,14 @@ export interface LessonJoinCalls {
   /** A family link opened while signed in: the lesson whose staff room to enter. */
   staffLessonOf: (token: string) => Answer<'staffLessonOf'>;
 }
+
+/** The link, and the name typed on the page (none when the link names its student). */
+export interface GuestJoinInput {
+  linkToken: string;
+  name?: string;
+}
+
+/** A lesson's guest link with no login, on a public api client. */
+export interface GuestJoinCalls {
+  join: (input: GuestJoinInput) => Answer<'guestJoin'>;
+}
