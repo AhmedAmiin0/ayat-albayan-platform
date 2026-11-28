@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { ApiError, type ApiClient } from '../../../core/http';
-import { notificationRuleCalls } from './notification-rules-api';
+import { ApiError, type ApiClient } from '../../../../core/http';
+import { notificationRuleCalls } from '../notification-rules-api';
 
 const ENTRY = {
   key: 'lesson_reminder',
