@@ -1,11 +1,11 @@
-import type { ChannelMessageView } from '@ab/shared';
 import { t } from '../../../lib/i18n/i18n';
 import { AppText } from '../../../ui/primitives/AppText';
-import { useSmallText } from '../../../chat-ui/bubble/use-small-text';
 import { BubbleText } from '../BubbleText';
+import type { BubbleContentProps } from './BubbleContent.types';
+import { useBubbleContent } from './use-bubble-content';
 
-export function BubbleContent({ message: m }: { message: ChannelMessageView }) {
-  const small = useSmallText('ink3');
+export function BubbleContent({ message: m }: BubbleContentProps) {
+  const { small } = useBubbleContent();
   if (m.deleted) {
     return (
       <AppText style={{ ...small, fontStyle: 'italic' }}>

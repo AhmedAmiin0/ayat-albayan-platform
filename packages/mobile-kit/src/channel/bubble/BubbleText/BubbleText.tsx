@@ -1,16 +1,14 @@
 import { splitLinks } from '@ab/shared';
-import { Linking } from 'react-native';
 import { type, useTheme } from '../../../theme';
-import { AppText } from '../../../ui/primitives/AppText';
 import { ContentText } from '../../../ui/primitives/ContentText';
-
-const open = (href: string) => void Linking.openURL(href).catch(() => undefined);
+import type { BubbleTextProps } from './BubbleText.types';
+import { BubblePart } from './BubblePart';
 
 /**
  * A message's words (the ChatX boards: 15pt Noto, 24 line, ink), aligned by their own language,
  * links clickable (splitLinks).
  */
-export function BubbleText({ body }: { body: string }) {
+export function BubbleText({ body }: BubbleTextProps) {
   const { color } = useTheme();
   return (
     <ContentText
@@ -22,20 +20,9 @@ export function BubbleText({ body }: { body: string }) {
         color: color.ink,
       }}
     >
-      {splitLinks(body).map((part, i) =>
-        part.href ? (
-          <AppText
-            key={i}
-            accessibilityRole="link"
-            onPress={() => open(part.href ?? '')}
-            style={{ color: color.lapis, textDecorationLine: 'underline' }}
-          >
-            {part.text}
-          </AppText>
-        ) : (
-          part.text
-        ),
-      )}
+      {splitLinks(body).map((part, i) => (
+        <BubblePart key={i} part={part} />
+      ))}
     </ContentText>
   );
 }
