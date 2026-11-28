@@ -14,7 +14,7 @@ afterEach(() => {
   apiFetch.mockReset();
 });
 
-it('the bubbles (compiled) share the thread\'s one clock: «13:00» gains its date after midnight', async () => {
+it('the bubbles (compiled) share the thread\'s one clock: «1:00 م» gains its date after midnight', async () => {
   const timers = vi.spyOn(globalThis, 'setInterval');
   apiFetch.mockResolvedValue(channelPage());
   render(
@@ -24,10 +24,10 @@ it('the bubbles (compiled) share the thread\'s one clock: «13:00» gains its da
   );
   await screen.findByText('غدًا إن شاء الله');
   const times = () => [...document.querySelectorAll('ol li [data-time]')].map((p) => p.textContent);
-  expect(times()).toEqual(['13:00', '13:05']);
+  expect(times()).toEqual(['1:00 م', '1:05 م']);
   expect(timers.mock.calls.filter((c) => c[1] === 60_000)).toHaveLength(1);
   act(() => {
     vi.advanceTimersByTime(2 * 60_000);
   });
-  expect(times().every((text) => text.includes('27') && text !== '13:00' && text !== '13:05')).toBe(true);
+  expect(times().every((text) => text.includes('27') && text !== '1:00 م' && text !== '1:05 م')).toBe(true);
 });

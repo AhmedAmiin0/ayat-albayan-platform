@@ -5,24 +5,27 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 import { ApiError, t } from '@ab/web-kit';
 import { PayPage } from './PayPage';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const call = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), call }));
 
 const P = t.paymentLinks.pay;
 const LINK: PublicPaymentLink = { status: 'open', first_name: 'أم سهيلة', amount: 261, currency: 'SAR', package: '8', lessons: 8, sandbox: true };
 
 const show = (link: Partial<PublicPaymentLink>, back = {}) => {
-  apiFetch.mockResolvedValue({ ...LINK, ...link });
+  call.mockResolvedValue({ ...LINK, ...link });
   renderWithClient(<PayPage token="tok_1" back={back} />);
 };
 
 describe('/pay/:token «الدفع» (public, no login)', () => {
-  afterEach(() => apiFetch.mockReset());
+  afterEach(() => call.mockReset());
 
   it('an open link: the greeting, amount, lessons, the test notice and «ادفع الآن» to the API checkout', async () => {
     show({});
     expect(await screen.findByText(P.greeting.replace('{name}', 'أم سهيلة'))).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith('/pay/tok_1', { headers: { Accept: 'application/json' } });
+    expect(call).toHaveBeenCalledWith({
+      path: '/pay/tok_1',
+      headers: { Accept: 'application/json' },
+    });
     expect(screen.getByRole('heading', { level: 1, name: P.title })).toBeTruthy();
     expect(screen.getByText(P.amount.replace('{amount}', '261').replace('{currency}', 'ر.س'))).toBeTruthy();
     expect(screen.getByText(t.paymentLinks.lessons.replace('{count}', '8'))).toBeTruthy();
@@ -60,7 +63,7 @@ describe('/pay/:token «الدفع» (public, no login)', () => {
   });
 
   it('a wrong token (404): «هذا الرابط غير صحيح»', async () => {
-    apiFetch.mockRejectedValue(new ApiError(404, { code: 'link_not_found' }));
+    call.mockRejectedValue(new ApiError(404, { code: 'link_not_found' }));
     renderWithClient(<PayPage token="nope" back={{}} />);
     expect(await screen.findByText(P.notFound)).toBeTruthy();
   });

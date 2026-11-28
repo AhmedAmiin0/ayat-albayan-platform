@@ -79,7 +79,7 @@ describe('TodayLessons', () => {
     const { container } = wrap(<TodayLessons lessons={[lessonAt({ id: 'a', startsAt: '2026-10-05T09:50:00.000Z', student: 'سارة' })]} />);
     expect(container.querySelector('section')?.className).toContain('@container');
     const item = screen.getByRole('listitem');
-    expect(item.className).toContain('@xl:grid-cols-[4.5rem_minmax(0,1fr)_auto]');
+    expect(item.className).toContain('@xl:grid-cols-[6.5rem_minmax(0,1fr)_auto]');
     expect(item.className).not.toMatch(/(^|\s)sm:grid-cols/);
     expect(item.querySelector('[data-join]')?.className).toContain('col-start-2');
   });

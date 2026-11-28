@@ -12,12 +12,12 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
 }));
 
 describe('AccountPage appearance (moved out of the sidebar foot)', () => {
-  it('shows the theme and time-format switches while the profile still loads', () => {
+  it('shows the theme switch and no time-format switch while the profile still loads', () => {
     mockApi.onRead(() => new Promise(() => undefined));
     renderWithClient(<AccountPage />);
     const region = screen.getByRole('region', { name: t.settings.sections.appearance });
     expect(within(region).getByRole('group', { name: t.theme.label })).toBeTruthy();
-    expect(within(region).getByRole('group', { name: t.clock.label })).toBeTruthy();
+    expect(within(region).queryByRole('group', { name: t.clock.label })).toBeNull();
   });
 
   it('stays when the profile fails to load (a browser setting, not a profile field)', async () => {

@@ -13,7 +13,7 @@ describe('TrialHistoryTable (R-STU-05, R-SCH-07)', () => {
     render(<TrialHistoryTable history={history({ items: six.slice(0, 3) })} />);
     const rows = within(table()).getAllByRole('row').slice(1);
     expect(rows).toHaveLength(3);
-    expect(rows[0]?.textContent).toContain('17:00');
+    expect(rows[0]?.textContent).toContain('5:00 م');
     expect(rows[0]?.textContent).toContain('أبرار');
     expect(rows[0]?.textContent).toContain(t.trialDate.outcome.upcoming);
     expect(rows[1]?.textContent).toContain(t.trialDate.outcome.moved);
@@ -24,7 +24,7 @@ describe('TrialHistoryTable (R-STU-05, R-SCH-07)', () => {
 
   it('adds the family’s time under each date when their zone differs', () => {
     render(<TrialHistoryTable history={history({ family_tz: 'Europe/London' })} />);
-    expect(within(table()).getByText(t.trialDate.familyTime.replace('{time}', 'الاثنين 5 أكتوبر 15:00'))).toBeTruthy();
+    expect(within(table()).getByText(t.trialDate.familyTime.replace('{time}', 'الاثنين 5 أكتوبر 3:00 م'))).toBeTruthy();
   });
 
   it('no family line in the viewer’s own zone', () => {

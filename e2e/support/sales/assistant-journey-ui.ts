@@ -1,6 +1,7 @@
 import { DISCOUNTS } from '@ab/money';
 import type { Locator, Page } from '@playwright/test';
 import { ar, expect } from '../core/fixtures';
+import { webClock } from '../core/locale';
 import { fillStable } from '../core/fill';
 
 // Journey 7: sales mode books a free trial only; the receipt on a bank transfer is optional.
@@ -24,7 +25,7 @@ export async function registerWithTrial(
   await next();
   const step = dialog.getByRole('region', { name: ar.booking.steps.slot });
   await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-  await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: /16:00/ }).click();
+  await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: new RegExp(webClock('16:00')) }).click();
   await next();
   await dialog.getByRole('button', { name: ar.booking.submit }).click();
   await expect(dialog.getByRole('heading', { name: ar.booking.booked })).toBeVisible();

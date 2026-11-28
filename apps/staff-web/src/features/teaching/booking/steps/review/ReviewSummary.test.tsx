@@ -45,8 +45,8 @@ function renderSummary(o: Partial<BookingDraft>) {
 describe('ReviewSummary: each day with its time (owner 2026-10-18)', () => {
   it('lists every picked day at its own time and how often', () => {
     renderSummary({ extra: [TUE] });
-    expect(screen.getByText(dayAt(0, '17:00'))).toBeTruthy();
-    expect(screen.getByText(dayAt(2, '19:30'))).toBeTruthy();
+    expect(screen.getByText(dayAt(0, '5:00 م'))).toBeTruthy();
+    expect(screen.getByText(dayAt(2, '7:30 م'))).toBeTruthy();
     expect(screen.getByText(`(${counted(t.booking.perWeek, 2)})`)).toBeTruthy();
     expect(screen.getByText(t.booking.invoice.label)).toBeTruthy();
   });

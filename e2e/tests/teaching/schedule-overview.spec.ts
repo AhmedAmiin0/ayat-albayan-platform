@@ -1,7 +1,11 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClock } from '../../support/core/locale';
 import { openFilters, showResults } from '../../support/core/filters';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
+
+const freeGap = (from: string, to: string): string =>
+  ar.schedule.free.replace('{from}', webClock(from)).replace('{to}', webClock(to));
 
 // Rows come from the teachers table (R-SCH-01), so a teacher with nothing booked still shows.
 
@@ -67,11 +71,11 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
       await expect(row(page, OTHER)).toContainText(ar.schedule.noLessons);
       // Other journeys may leave students on this teacher: the count is theirs plus ours.
       await expect(abrar).toContainText(new RegExp(ar.dashboard.ofMax.replace('{n}', '\\d+').replace('{max}', '10')));
-      const chip = abrar.getByRole('button', { name: new RegExp(`17:00.*${STUDENT}`) });
+      const chip = abrar.getByRole('button', { name: new RegExp(`${webClock('17:00')}.*${STUDENT}`) });
       await expect(chip).toContainText(ar.schedule.trialTag);
-      const gap = abrar.getByRole('link', { name: /متاح 16:00 – 17:00/ });
+      const gap = abrar.getByRole('link', { name: freeGap('16:00', '17:00') });
       await expect(gap).toBeVisible();
-      await expect(abrar.getByRole('link', { name: /متاح 17:45 – 20:00/ })).toBeVisible();
+      await expect(abrar.getByRole('link', { name: freeGap('17:45', '20:00') })).toBeVisible();
 
       // Monday: the whole day off is one note with the reason.
       await page.getByRole('button', { name: ar.schedule.nextDay }).click();
@@ -87,7 +91,7 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
 
       // A free gap opens the booking wizard with that teacher and start.
       await page.goto(`/admin/schedule?view=day&day=${s.sunday}`);
-      await row(page, 'أبرار').getByRole('link', { name: /متاح 16:00 – 17:00/ }).click();
+      await row(page, 'أبرار').getByRole('link', { name: freeGap('16:00', '17:00') }).click();
       await expect(page).toHaveURL(new RegExp(`/admin/book\\?.*teacherId=${s.abrarId}`));
       // The gap stays in sight (chip) while the admin searches and picks the student: the
       // teacher and start survive the reopen for that student (not dropped by the navigation).
@@ -118,7 +122,7 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
         await expect(grid.getByText(ar.schedule.noLessons)).toHaveCount(7);
       }
       await page.goto(`/admin/schedule?week=${addDays(s.sunday, -1)}&teacher=${s.abrarId}`);
-      await expect(grid.getByRole('button', { name: new RegExp(`17:00.*${STUDENT}`) })).toContainText(ar.schedule.trialTag);
+      await expect(grid.getByRole('button', { name: new RegExp(`${webClock('17:00')}.*${STUDENT}`) })).toContainText(ar.schedule.trialTag);
     } finally {
       await cleanUp(s);
     }

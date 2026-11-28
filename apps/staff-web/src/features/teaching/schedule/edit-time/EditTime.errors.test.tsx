@@ -27,7 +27,7 @@ describe('«عدّل الوقت» refusals (R-SCH-11)', () => {
     apiSend.mockRejectedValueOnce(refuse(409, 'conflict', { conflicts: [CLASH] }));
     moveToMonday();
     expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
-    expect(screen.getByText(/المعلم\/ة مشغول\/ة بحلقة أخرى/).textContent).toContain('18:00');
+    expect(screen.getByText(/المعلم\/ة مشغول\/ة بحلقة أخرى/).textContent).toContain('6:00 م');
     expect(screen.queryByRole('button', { name: t.lessons.timeEdit.submit })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t.booking.changeSlot }));
     await waitFor(() => expect(screen.queryByText(t.booking.conflictTitle)).toBeNull());

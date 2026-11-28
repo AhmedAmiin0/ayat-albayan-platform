@@ -12,10 +12,10 @@ describe('SlotGrid multi-pick (owner 2026-10-18)', () => {
     const onPick = vi.fn();
     render(<SlotGrid week="2026-10-03" slots={[slot(SUN), slot(TUE), slot(WED)]} studentTz="Asia/Riyadh" value={SUN} also={[TUE]} onPick={onPick} />);
     const pressed = (name: RegExp) => screen.getByRole('button', { name }).getAttribute('aria-pressed');
-    expect(pressed(/^17:00/)).toBe('true');
-    expect(pressed(/19:30/)).toBe('true');
+    expect(pressed(/^5:00 م/)).toBe('true');
+    expect(pressed(/7:30 م/)).toBe('true');
     expect(screen.getAllByRole('button', { pressed: false })).toHaveLength(1);
-    fireEvent.click(screen.getByRole('button', { name: /19:30/ }));
+    fireEvent.click(screen.getByRole('button', { name: /7:30 م/ }));
     expect(onPick).toHaveBeenCalledWith(slot(TUE));
   });
 });

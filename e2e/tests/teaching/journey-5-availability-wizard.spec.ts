@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../../support/core/fixtures';
+import { webClock } from '../../support/core/locale';
 import { uploadInvoice } from '../../support/finance/invoice';
 import { lessonsOf, queuedFor, resetAbrar, ruleOf, seedFamily } from '../../support/core/schedule';
 import { fillLessonRow } from '../../support/teaching/lesson-rows';
@@ -46,7 +47,7 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     await expect(nearest).toHaveCount(2);
     await nearest.first().click();
     await expect(step.getByText(ar.lessonTimes.free)).toBeVisible();
-    const dayAt = ar.booking.dayAt.replace('{day}', WEDNESDAY).replace('{time}', '16:00');
+    const dayAt = ar.booking.dayAt.replace('{day}', WEDNESDAY).replace('{time}', webClock('16:00'));
     await expect(step.getByRole('region', { name: new RegExp(ar.booking.pickDays) }).getByText(dayAt)).toBeVisible();
     await expect(admin.getByRole('button', { name: ar.booking.next })).toBeEnabled();
 

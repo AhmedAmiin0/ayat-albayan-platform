@@ -66,6 +66,6 @@ describe('GuestJoinPage', () => {
     submit('سهيلة');
     const alert = await screen.findByRole('alert');
     expect(alert.textContent).toMatch(t.classroom.opensAt.split('{')[0] as string);
-    expect(alert.textContent).toMatch(/\d{2}:\d{2}/);
+    expect(alert.textContent).toMatch(/\d{1,2}:\d{2} [صم]/);
   });
 });

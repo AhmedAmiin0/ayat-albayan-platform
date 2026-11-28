@@ -4496,9 +4496,6 @@
   "src/features/sales/payment-links/api.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/features/sales/payment-links/errors.ts": {

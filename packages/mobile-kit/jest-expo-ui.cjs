@@ -48,6 +48,7 @@ const composeModifiers = {
   __esModule: true,
   semantics: modifier('semantics'),
   defaultMinSize: modifier('defaultMinSize'),
+  testID: modifier('testID'),
 };
 
 const paramOf = (modifiers, $type) => modifiers?.find((m) => m.$type === $type)?.params;
@@ -74,8 +75,25 @@ const TextInput = ({ value, modifiers, onChangeText, onFocus, onBlur, ...props }
   });
 };
 
+// Compose's Switch as React Native's: its semantics description becomes the label a test queries
+// by, `enabled` the disabled flag and a flip calls onCheckedChange. `compose` marks it.
+const ComposeSwitch = ({ value, enabled = true, onCheckedChange, colors, modifiers }) =>
+  createElement(RN.Switch, {
+    compose: true,
+    value,
+    colors,
+    disabled: !enabled,
+    accessibilityLabel: paramOf(modifiers, 'semantics')?.contentDescription,
+    onValueChange: (next) => onCheckedChange?.(next),
+  });
+
+// Compose's Checkbox as a plain view carrying its props; its testID modifier becomes the test id.
+const ComposeCheckbox = ({ modifiers, ...props }) =>
+  createElement(RN.View, { ...props, compose: true, testID: paramOf(modifiers, 'testID') });
+
 module.exports = {
   universal: { __esModule: true, BottomSheet, Host, RNHostView, TextInput, useNativeState },
   swiftUiModifiers,
   composeModifiers,
+  jetpackCompose: { __esModule: true, Checkbox: ComposeCheckbox, Switch: ComposeSwitch },
 };

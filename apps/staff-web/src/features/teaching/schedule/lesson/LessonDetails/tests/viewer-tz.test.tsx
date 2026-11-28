@@ -16,7 +16,7 @@ const WINTER = '2026-11-05T15:00:00.000Z'; // 18:00 in Riyadh, 17:00 in Cairo
 const SUMMER = '2026-10-22T15:00:00.000Z'; // 18:00 in both
 const FAMILY_18 = t.schedule.studentTime.replace(
   '{time}',
-  t.schedule.inCity.replace('{time}', '18:00').replace('{city}', t.tz['Asia/Riyadh']),
+  t.schedule.inCity.replace('{time}', '6:00 م').replace('{city}', t.tz['Asia/Riyadh']),
 );
 
 function details(startsAt: string): string {
@@ -34,23 +34,23 @@ function details(startsAt: string): string {
 afterEach(() => setViewerPersonTz('Asia/Riyadh'));
 
 describe('LessonDetails in the viewer zone', () => {
-  it('a Cairo viewer sees 17:00 «بتوقيتك» and the family 18:00 under it', () => {
+  it('a Cairo viewer sees 5:00 م «بتوقيتك» and the family 6:00 م under it', () => {
     setViewerPersonTz('Africa/Cairo');
     const text = details(WINTER);
-    expect(text).toContain(`17:00 ${t.schedule.viewerTime}`);
+    expect(text).toContain(`5:00 م ${t.schedule.viewerTime}`);
     expect(text).toContain(FAMILY_18);
   });
 
-  it('a Riyadh viewer sees 18:00 and no family line', () => {
+  it('a Riyadh viewer sees 6:00 م and no family line', () => {
     const text = details(WINTER);
-    expect(text).toContain(`18:00 ${t.schedule.viewerTime}`);
+    expect(text).toContain(`6:00 م ${t.schedule.viewerTime}`);
     expect(text).not.toContain(FAMILY_18);
   });
 
   it('Cairo summer time (2026-10-22): same clock as Riyadh, no family line', () => {
     setViewerPersonTz('Africa/Cairo');
     const text = details(SUMMER);
-    expect(text).toContain(`18:00 ${t.schedule.viewerTime}`);
+    expect(text).toContain(`6:00 م ${t.schedule.viewerTime}`);
     expect(text).not.toContain(FAMILY_18);
   });
 });
@@ -62,10 +62,10 @@ describe('LessonChip in the viewer zone', () => {
     }).container
       .textContent;
 
-  it('Cairo viewer in winter: 17:00 with the family 18:00', () => {
+  it('Cairo viewer in winter: 5:00 م with the family 6:00 م', () => {
     setViewerPersonTz('Africa/Cairo');
     const text = chip(WINTER);
-    expect(text).toContain('17:00');
+    expect(text).toContain('5:00 م');
     expect(text).toContain(FAMILY_18);
   });
 

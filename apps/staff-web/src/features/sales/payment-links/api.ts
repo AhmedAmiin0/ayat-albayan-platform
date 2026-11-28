@@ -2,7 +2,7 @@ import type { PaymentLinkCreate, PublicPaymentLink } from '@ab/shared';
 import { paymentLinkCalls, stripeFeatureCall } from '@ab/client-core';
 import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend, env } from '@ab/web-kit';
+import { apiFetch, apiSend, call, env } from '@ab/web-kit';
 import { paymentLinkKeys, publicLinkKeys, stripeKeys } from '@/features/sales/keys';
 
 // Payment links (docs/30) need FEATURE_STRIPE; reads go behind stripeBuild(); 404 means no Stripe.
@@ -37,7 +37,11 @@ export const cancelPaymentLink = (id: string) => links.cancel(id);
 export const publicLinkQuery = (token: string) =>
   queryOptions({
     queryKey: publicLinkKeys.link(token),
-    queryFn: () => apiFetch<PublicPaymentLink>(`/pay/${encodeURIComponent(token)}`, { headers: { Accept: 'application/json' } }),
+    queryFn: () =>
+      call<PublicPaymentLink>({
+        path: `/pay/${encodeURIComponent(token)}`,
+        headers: { Accept: 'application/json' },
+      }),
     retry: false,
   });
 

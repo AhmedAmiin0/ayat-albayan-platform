@@ -25,7 +25,7 @@ describe('all-teachers calendar in English', () => {
     const abrar = screen.getByRole('region', { name: 'أبرار' });
     expect(within(abrar).getByText('Trial')).toBeTruthy();
     expect(within(abrar).getByText('4 of 10')).toBeTruthy();
-    expect(within(abrar).getByText('Free 16:00 – 17:00')).toBeTruthy();
+    expect(within(abrar).getByText('Free 4:00 PM – 5:00 PM')).toBeTruthy();
     expect(within(screen.getByRole('region', { name: 'نور' })).getByText(en.schedule.noWindows)).toBeTruthy();
   });
 

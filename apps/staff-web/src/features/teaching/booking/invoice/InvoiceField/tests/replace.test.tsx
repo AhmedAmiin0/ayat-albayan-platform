@@ -9,7 +9,7 @@ import type { InvoiceDraft } from '@/features/teaching/booking/draft/draft';
 import { InvoiceField } from '@/features/teaching/booking/invoice/InvoiceField/InvoiceField';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+const C12 = { cycle: '12', locale } as const;
 
 const apiSend = vi.hoisted(() => vi.fn());
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -90,7 +90,7 @@ describe('InvoiceField: replacing and removing (R-PAY-03)', () => {
     fireEvent.change(screen.getByLabelText(t.booking.invoice.upload), { target: { files: [file('image/png')] } });
     await screen.findByRole('alert');
     fireEvent.click(screen.getByRole('button', { name: t.booking.invoice.fromChat }));
-    fireEvent.click(await screen.findByRole('button', { name: mediaCardLabel(PHOTO, C24) }));
+    fireEvent.click(await screen.findByRole('button', { name: mediaCardLabel(PHOTO, C12) }));
     await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
     expect(screen.getByText(t.booking.invoice.sourceWhatsapp)).toBeTruthy();
   });

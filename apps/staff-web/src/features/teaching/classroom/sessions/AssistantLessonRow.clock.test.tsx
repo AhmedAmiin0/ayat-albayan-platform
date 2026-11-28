@@ -1,11 +1,11 @@
 import type { AssistantLessonView } from '@ab/schedule';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { act, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { CLOCK_STORAGE_KEY } from '@ab/time';
 import { afterEach, describe, expect, it } from 'vitest';
-import { setClockPref } from '@ab/web-kit';
 import { AssistantLessonRow } from './AssistantLessonRow';
 
-// jsdom's zone is UTC: 14:30Z reads 14:30 or 2:30 PM.
+// jsdom's zone is UTC: 14:30Z reads 2:30 PM.
 const LESSON: AssistantLessonView = {
   lesson_id: 'l-1',
   starts_at: '2026-10-03T14:30:00Z',
@@ -15,10 +15,11 @@ const LESSON: AssistantLessonView = {
   student_names: ['سهيلة'],
 };
 
-afterEach(() => setClockPref('24'));
+afterEach(() => localStorage.removeItem(CLOCK_STORAGE_KEY));
 
-describe('«تنسيق الوقت» on a screen', () => {
-  it('switches a lesson time between 24 h and 12 h at once, no reload', () => {
+describe('a lesson time on the web', () => {
+  it('reads 12 h even when the browser saved a 24 h choice', () => {
+    localStorage.setItem(CLOCK_STORAGE_KEY, '24');
     render(
       <QueryClientProvider client={new QueryClient()}>
         <ul>
@@ -26,10 +27,7 @@ describe('«تنسيق الوقت» on a screen', () => {
         </ul>
       </QueryClientProvider>,
     );
-    expect(screen.getByText('14:30')).toBeTruthy();
-    act(() => setClockPref('12'));
     expect(screen.getByText('2:30 م').getAttribute('dir')).toBe('rtl');
-    act(() => setClockPref('24'));
-    expect(screen.getByText('14:30').getAttribute('dir')).toBe('ltr');
+    expect(screen.queryByText('14:30')).toBeNull();
   });
 });

@@ -10,13 +10,13 @@ beforeEach(() => {
 afterEach(() => vi.useRealTimers());
 
 describe('RunningHead', () => {
-  it('shows crumbs, both calendars and the Riyadh / Cairo clocks', () => {
+  it('shows crumbs, both calendars and the Riyadh / Cairo clocks in 12 h', () => {
     render(<RunningHead crumbs={<nav aria-label={t.common.breadcrumbs}>{t.nav.students}</nav>} />);
     expect(screen.getByRole('navigation', { name: t.common.breadcrumbs }).textContent).toBe(t.nav.students);
     expect(screen.getByText('الخميس 1 أكتوبر 2026')).toBeTruthy();
     expect(screen.getByText('20 ربيع الآخر 1448 هـ')).toBeTruthy();
-    expect(screen.getByText(t.runningHead.riyadh).textContent).toBe(`${t.runningHead.riyadh}15:20`);
-    expect(screen.getByText(t.runningHead.cairo).textContent).toBe(`${t.runningHead.cairo}15:20`);
+    expect(screen.getByText(t.runningHead.riyadh).textContent).toBe(`${t.runningHead.riyadh}3:20 م`);
+    expect(screen.getByText(t.runningHead.cairo).textContent).toBe(`${t.runningHead.cairo}3:20 م`);
     expect(screen.queryByRole('status')).toBeNull();
   });
 
@@ -30,8 +30,8 @@ describe('RunningHead', () => {
   it('ticks on the minute boundary', () => {
     render(<RunningHead />);
     act(() => vi.advanceTimersByTime(30_000));
-    expect(screen.getByText(t.runningHead.riyadh).textContent).toContain('15:21');
+    expect(screen.getByText(t.runningHead.riyadh).textContent).toContain('3:21 م');
     act(() => vi.advanceTimersByTime(60_000));
-    expect(screen.getByText(t.runningHead.riyadh).textContent).toContain('15:22');
+    expect(screen.getByText(t.runningHead.riyadh).textContent).toContain('3:22 م');
   });
 });

@@ -66,7 +66,7 @@ describe('LessonRows: a date and a time per lesson day (owner 2026-11-07)', () =
     fill(1, '2026-10-04', '17:45');
     expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
     const nearest = screen.getByRole('group', { name: t.lessonTimes.nearest });
-    fireEvent.click(within(nearest).getByRole('button', { name: t.lessonTimes.useTime.replace('{time}', '18:30') }));
+    fireEvent.click(within(nearest).getByRole('button', { name: t.lessonTimes.useTime.replace('{time}', '6:30 م') }));
     expect(onChange).toHaveBeenLastCalledWith({ startsAt: '2026-10-04T15:30:00.000Z', extra: [] });
   });
 
