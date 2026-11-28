@@ -138,7 +138,7 @@ export class BookingRepo {
     if (uniqueViolationMentions(error, 'lessons_makeup_of_key')) {
       throw httpError(HttpStatus.CONFLICT, 'makeup_exists');
     }
-    // A new guardian on a family's SECOND number (migration 973): guardianByPhone reads main numbers only.
+    // guardianByPhone reads main numbers only, so a family's second number can collide here.
     if (uniqueViolationMentions(error, 'guardian_phones_pkey'))
       throw httpError(HttpStatus.CONFLICT, 'number_taken');
     if (error) throw pgError(error);

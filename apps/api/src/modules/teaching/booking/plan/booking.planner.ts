@@ -10,51 +10,22 @@ import {
 import { uploadMaxBytes } from '@ab/settings';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
-import { meetingLinkFor, type BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
-import { bookingPayload, type CourseLabel } from '@/modules/teaching/booking/core/booking.payload';
-import { BookingParties, type Resolved } from '@/modules/teaching/booking/core/booking.parties';
+import { meetingLinkFor } from '@/modules/teaching/booking/core/booking.mapper';
+import { bookingPayload } from '@/modules/teaching/booking/core/booking.payload';
+import { BookingParties } from '@/modules/teaching/booking/core/booking.parties';
 import type { Plan } from './booking.plan';
-import type { BookingTeacher } from '@/modules/teaching/booking/core/types';
 import type { Occurrence } from '@ab/schedule';
+import type { PrepareOptions, Prepared, Series, SeriesContext } from './booking.planner.types';
 import { planSeries } from './booking.series-plan';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { assertNotPast, bookableConflicts } from './outside-hours';
 import { httpError } from '@/common/http/errors';
 
-export interface Prepared {
-  payload: BookingPayload;
-  conflicts: Conflict[];
-  /** E.164 of every booked guardian: the only chats an invoice may be saved from (R-MSG-06). */
-  phones: string[];
-  /** settings.upload_max_mb in bytes: the invoice file must not be larger. */
-  invoiceMaxBytes: number;
-  /** The booking may go without an invoice (PrepareOptions.invoiceWaived). */
-  invoiceWaived: boolean;
-}
-
-/**
- * Server-side choices of the caller, never of the request body: the assistant's course of a
- * subscription she sold (SalesBookingService) has no invoice (the transfer is recorded later on the
- * subscription, decision 2) and ends on its N-th lesson (decision 1). The admin
- * passes none: invoice_required and open-ended rules, as before.
- */
-export interface PrepareOptions {
-  invoiceWaived?: boolean;
-  /**
-   * Every rule's ends_on (plannedCourseEnd): the whole course is planned and checked, nothing after
-   * it.
-   */
-  endsOn?: string | null;
-  /** The subscription it books: every rule's package and subscription_id (CourseLabel). */
-  course?: CourseLabel;
-  /** The upcoming trial being moved. */
-  excludeLessonIds?: readonly string[];
-}
-interface Series { plan: Plan; siblings: Plan[]; first: Occurrence; conflicts: Conflict[] }
 
 /** Before the plan: a missing invoice is not a clash the admin can override away. */
 function assertInvoice(req: BookingRequest, invoiceWaived: boolean): void {
-  if (bookingKindOf(req) !== 'trial' && !req.invoice && !invoiceWaived) throw httpError(HttpStatus.BAD_REQUEST, 'invoice_required');
+  const needsInvoice = bookingKindOf(req) !== 'trial' && !invoiceWaived;
+  if (needsInvoice && !req.invoice) throw httpError(HttpStatus.BAD_REQUEST, 'invoice_required');
 }
 
 /**
@@ -80,7 +51,8 @@ export class BookingPlanner {
   async conflicts(req: BookingRequest, opts: PrepareOptions = {}): Promise<Conflict[]> {
     const { teacher, lead } = await this.parties.lookup(req);
     const who = await this.parties.resolve(req, lead);
-    return (await this.series(req, { teacher, who, endsOn: opts.endsOn, exclude: opts.excludeLessonIds })).conflicts;
+    const ctx = { teacher, who, endsOn: opts.endsOn, exclude: opts.excludeLessonIds };
+    return (await this.series(req, ctx)).conflicts;
   }
 
   async prepare(req: BookingRequest, opts: PrepareOptions = {}): Promise<Prepared> {
@@ -90,7 +62,8 @@ export class BookingPlanner {
     const { teacher, lead } = await this.parties.lookup(req);
     const who = await this.parties.resolve(req, lead);
     const makeupOf = kind === 'makeup' ? await this.parties.missed(req) : null;
-    const { plan, siblings, first, conflicts } = await this.series(req, { teacher, who, endsOn: opts.endsOn, exclude: opts.excludeLessonIds });
+    const ctx = { teacher, who, endsOn: opts.endsOn, exclude: opts.excludeLessonIds };
+    const { plan, siblings, first, conflicts } = await this.series(req, ctx);
     if (conflicts.length > 0 && !req.override) {
       throw httpError(HttpStatus.CONFLICT, 'conflict', { conflicts });
     }
@@ -104,9 +77,13 @@ export class BookingPlanner {
     // id yet, so no classroom token).
     const platform = usesPlatform(meetingModeOf(teacher.meeting_mode), settings.meeting_link_auto);
     const confirmationLink = platform ? null : meetingLink;
-    const payload = bookingPayload({ req, kind, teacher, who, lead, plan, siblings, first, conflicts, meetingLink, confirmationLink, makeupOf, course: opts.course });
-    const phones = [...who.booked.map((s) => s.guardian.phone_e164), ...(lead?.phone_e164 ? [lead.phone_e164] : [])];
-    return { payload, conflicts, phones: [...new Set(phones)], invoiceMaxBytes: uploadMaxBytes(settings), invoiceWaived };
+    const parts = { req, kind, teacher, who, lead, plan, siblings, first, conflicts };
+    const links = { meetingLink, confirmationLink, makeupOf, course: opts.course };
+    const payload = bookingPayload({ ...parts, ...links });
+    const leadPhone = lead?.phone_e164 ? [lead.phone_e164] : [];
+    const phones = [...who.booked.map((s) => s.guardian.phone_e164), ...leadPhone];
+    const invoiceMaxBytes = uploadMaxBytes(settings);
+    return { payload, conflicts, phones: [...new Set(phones)], invoiceMaxBytes, invoiceWaived };
   }
 
   /**
@@ -118,7 +95,8 @@ export class BookingPlanner {
   private async series(req: BookingRequest, ctx: SeriesContext): Promise<Series> {
     const horizonWeeks = (await this.settings.read()).booking_horizon_weeks;
     const single = isSingleLesson(bookingKindOf(req));
-    const plans = planSeries({ rule: { ...req, single }, now: new Date(), horizonWeeks, endsOn: ctx.endsOn });
+    const rule = { ...req, single };
+    const plans = planSeries({ rule, now: new Date(), horizonWeeks, endsOn: ctx.endsOn });
     const [plan, ...siblings] = plans;
     const first = plan?.occurrences[0];
     if (!plan || !first) throw httpError(HttpStatus.BAD_REQUEST, 'no_occurrences');
@@ -134,8 +112,6 @@ export class BookingPlanner {
     return { plan, siblings, first, conflicts: bookableConflicts(found, req) };
   }
 }
-
-interface SeriesContext { teacher: BookingTeacher; who: Resolved; endsOn?: string | null | undefined; exclude?: readonly string[] | undefined }
 
 /** The plan's rule a week around each DST change after its last generated lesson. */
 function probeAfter(plan: Plan, tzs: readonly string[]): Occurrence[] {

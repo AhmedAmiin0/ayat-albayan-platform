@@ -4,7 +4,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ar } from '@/common/infra/i18n/server-text';
-import type { PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner';
+import type { PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner.types';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { SalesBookingScope } from './sales-booking.ownership';
 import { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-course.service';

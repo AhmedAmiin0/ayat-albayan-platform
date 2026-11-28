@@ -17,7 +17,8 @@ export class InstantRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async create(payload: BookingPayload, actorId: string): Promise<BookingResult> {
-    const p_booking = payload as unknown as Json; // typed payload; create_booking validates it in SQL
+    // create_booking validates the typed payload in SQL.
+    const p_booking = payload as unknown as Json;
     const call = () => this.db.rpc('create_instant_lesson', { p_booking, p_actor: actorId });
     let { data, error } = await call();
     // Two replays at once: the loser hits client_request_id's unique key; the retry returns the

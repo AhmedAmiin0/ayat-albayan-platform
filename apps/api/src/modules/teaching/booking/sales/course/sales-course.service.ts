@@ -14,7 +14,7 @@ import { can } from '@/common/auth/permissions';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { plannedCourseEnd } from '@/modules/teaching/booking/core/booking.course-end';
 import { courseFacts } from '@/modules/teaching/booking/core/course-read';
-import type { PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner';
+import type { PrepareOptions } from '@/modules/teaching/booking/plan/booking.planner.types';
 import { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';
 import { assertOwnStudents } from '@/modules/teaching/booking/sales/booking/sales-booking.scope';
 import { CourseDraftRepo } from '@/modules/teaching/booking/sales/course-draft/course-draft.repo';

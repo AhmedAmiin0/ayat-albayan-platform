@@ -1,6 +1,6 @@
 import { registrationStatus, type BookingRequest } from '@ab/shared';
 import type { LeadStatus, PackageSize } from '@ab/catalog';
-import { bookingKindOf, type BookingKind, type Conflict } from '@ab/schedule';
+import { bookingKindOf, type BookingKind, type Conflict, type DayTime } from '@ab/schedule';
 import type { Occurrence } from '@ab/schedule';
 import {
   leadTarget,
@@ -71,12 +71,12 @@ export function clientRequest(req: BookingRequest, role: string | null): Booking
   return { ...req, newStudent: { ...req.newStudent, status: registrationStatus(bookingKindOf(req) === 'trial') } };
 }
 
-
 /** Other times' rules and lessons: the first one's link, package, subscription and override. */
 function siblingRows(input: PayloadInput, pkg: PackageSize | null): SiblingRow[] {
   const { req, conflicts } = input;
+  const tie = { meeting_link: req.meetingLink ?? null, package: pkg, ...courseTie(input.course) };
   return input.siblings.map((p) => ({
-    rule: { ...p.timing, meeting_link: req.meetingLink ?? null, package: pkg, ...courseTie(input.course) },
+    rule: { ...p.timing, ...tie },
     lessons: lessonRows({
       occurrences: p.occurrences,
       conflicts,
@@ -87,8 +87,9 @@ function siblingRows(input: PayloadInput, pkg: PackageSize | null): SiblingRow[]
 }
 
 /** audit.after.day_times only with per-day times (an old body's audit is unchanged). */
+const dayTimeRow = (d: DayTime) => ({ weekday: d.weekday, start_time_local: d.startTimeLocal });
 const dayTimesAudit = (req: BookingRequest) =>
-  req.dayTimes?.length ? { day_times: req.dayTimes.map((d) => ({ weekday: d.weekday, start_time_local: d.startTimeLocal })) } : {};
+  req.dayTimes?.length ? { day_times: req.dayTimes.map(dayTimeRow) } : {};
 
 /** What create_booking writes (docs/10 §5 #14), minus the invoice the service resolves later. */
 export function bookingPayload(input: PayloadInput): BookingPayload {

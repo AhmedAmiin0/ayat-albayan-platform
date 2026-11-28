@@ -78,8 +78,9 @@ function fakeAvailability() {
  * Occupying lessons (BusyQueries) and not-yet-generated rule occurrences (RuleProjectionQueries).
  */
 function fakeBusy() {
+  const none = () => vi.fn().mockResolvedValue([]);
   return {
-    busy: { teacherLessons: vi.fn().mockResolvedValue([]), studentLessons: vi.fn().mockResolvedValue([]), courseLessonIds: vi.fn().mockResolvedValue([]) },
+    busy: { teacherLessons: none(), studentLessons: none(), courseLessonIds: none() },
     projection: { busy: vi.fn().mockResolvedValue({ teacher: [], students: [] }) },
   };
 }
@@ -131,7 +132,8 @@ const RULE = {
 
 /** Sundays 17:00 Riyadh, 45 min, 8 lessons, siblings S1 + S2 unless overridden. */
 export function bookingRequest(over: Record<string, unknown> = {}): BookingRequest {
-  return bookingRequestSchema.parse({ ...RULE, invoice: INVOICE, studentIds: [IDS.s1, IDS.s2], ...over });
+  const studentIds = [IDS.s1, IDS.s2];
+  return bookingRequestSchema.parse({ ...RULE, invoice: INVOICE, studentIds, ...over });
 }
 
 /** A lead-path trial: new guardian + new student from the conversation. */

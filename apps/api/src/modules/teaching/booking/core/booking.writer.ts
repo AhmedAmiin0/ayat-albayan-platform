@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { BookingFollowUps } from './booking.follow-ups';
 import { BookingInvoices } from '@/modules/teaching/booking/invoice/booking.invoice';
 import { withInvoice } from './booking.payload';
-import type { Prepared } from '@/modules/teaching/booking/plan/booking.planner';
+import type { Prepared } from '@/modules/teaching/booking/plan/booking.planner.types';
 import { BookingRepo } from './booking.repo';
 
 interface BookingWrite {
