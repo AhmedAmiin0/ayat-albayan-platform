@@ -3,18 +3,11 @@ import { screen } from '@testing-library/react-native';
 import { t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { InboxScreen } from '@/inbox/screens/InboxScreen/InboxScreen';
-import { mockCall } from '@ab/testing/mock-call';
 
 let mockHeld: string[] = [];
-const mockApi = mockCall();
-mockApi.onRead(async ({ path }) =>
-  path === '/auth/me'
-    ? { role: 'admin', permissions: mockHeld }
-    : { items: [], total: 0, page: 1, pageSize: 25 },
-);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: async (path: string) => (path === '/auth/me' ? { role: 'admin', permissions: mockHeld } : { items: [], total: 0, page: 1, pageSize: 25 }),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 

@@ -3,18 +3,13 @@ import { AppText, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
 import { AgendaLessonRow } from '@/calendar/agenda/AgendaLessonRow/AgendaLessonRow';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-mockApi.onRead(() => new Promise(() => undefined));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: () => new Promise(() => undefined),
 }));
 // 16:50 Riyadh: the 16:00–16:45 lesson ended; its classroom window stays open (docs/48).
-jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({
-  useNow: () => new Date('2026-10-01T13:50:00Z'),
-}));
+jest.mock('@ab/mobile-kit/lib/time/use-now', () => ({ useNow: () => new Date('2026-10-01T13:50:00Z') }));
 
 const row = lesson({ id: 'a', status: 'confirmed' });
 

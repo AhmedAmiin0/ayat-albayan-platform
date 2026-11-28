@@ -3,15 +3,9 @@ import { pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import type { PendingReportRow, UnpaidRow } from '@ab/money';
 import { PendingRow, UnpaidListRow } from './WorkRows';
-import { mockCall } from '@ab/testing/mock-call';
 
 let mockHeld: string[] = [];
-const mockApi = mockCall();
-mockApi.onRead(async () => ({ permissions: mockHeld }));
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({
-  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
-}));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: async () => ({ permissions: mockHeld }) }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
 
@@ -24,16 +18,8 @@ const pending: PendingReportRow = {
   student,
 };
 const unpaid: UnpaidRow = {
-  id: 'u1',
-  student,
-  package: null,
-  lessons_total: 8,
-  price: 100,
-  paid: 0,
-  owed: 100,
-  reason: 'owes',
-  currency: 'SAR',
-  starts_on: '2026-09-01',
+  id: 'u1', student, package: null, lessons_total: 8, price: 100, paid: 0, owed: 100,
+  reason: 'owes', currency: 'SAR', starts_on: '2026-09-01',
 };
 
 async function show(ui: React.ReactElement, held: string[]) {

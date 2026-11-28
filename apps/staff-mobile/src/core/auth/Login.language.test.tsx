@@ -1,13 +1,12 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { setLocale, t } from '@ab/mobile-kit';
 import Login from '../../../app/login';
-import { mockCall } from '@ab/testing/mock-call';
 
 // LoginStaff board: the same compact «English» the family sign-in has, under the sign-in.
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (p: string) => mockApiFetch(p),
 }));
 jest.mock('@ab/mobile-kit/lib/i18n/locale-switch', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/i18n/locale-switch'),
@@ -17,7 +16,7 @@ jest.mock('@ab/mobile-kit/lib/i18n/locale-switch', () => ({
 beforeEach(() => jest.clearAllMocks());
 
 test('the other language by its own name, no «اللغة» heading; one confirm, then the switch', async () => {
-  mockApi.onRead(() => ({ available: false, staff: false }));
+  mockApiFetch.mockResolvedValue({ available: false, staff: false });
   await render(<Login />);
   expect(screen.queryByRole('header', { name: t.language.label })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: t.language.en }));

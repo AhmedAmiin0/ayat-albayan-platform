@@ -2,12 +2,11 @@ import { screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import TodayRoute from '../../app/(tabs)/index';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 jest.mock('@/today/requests/FamilyRequests', () => ({ FamilyRequests: () => null }));
@@ -17,13 +16,13 @@ jest.mock('@ab/mobile-kit/lib/profile/my-profile', () => ({
 }));
 
 beforeEach(() => {
-  mockApi.reset('read');
+  mockApiFetch.mockReset();
   jest.useFakeTimers({ now: new Date('2026-10-01T13:20:00Z'), advanceTimers: true });
 });
 afterEach(() => jest.useRealTimers());
 
 test("the day's page sits in the LazyList, with pull to refresh", async () => {
-  mockApi.onRead(() => []);
+  mockApiFetch.mockResolvedValue([]);
   await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(await screen.findByRole('header', { name: t.today.greeting.afternoon })).toBeTruthy();
   const list = screen.getByTestId('today-list');

@@ -5,16 +5,14 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { Composer } from '@/inbox/composer/Composer';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { cachedThread, detail, PHONE, thread } from '@/inbox/shared/thread-fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
 // The paperclip's sheet: everything that left the bar, most used first.
-const mockApi = mockCall();
-mockApi.onRead(async ({ path: mockPath }) =>
-  mockPath === '/messages/gate' ? { open: true, reason: null, queued: 0 } : [],
-);
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: jest.fn(async (mockPath: string) =>
+    mockPath === '/messages/gate' ? { open: true, reason: null, queued: 0 } : [],
+  ),
+  apiSend: jest.fn(),
 }));
 jest.mock('expo-image-picker', () => ({
   launchCameraAsync: jest.fn(),

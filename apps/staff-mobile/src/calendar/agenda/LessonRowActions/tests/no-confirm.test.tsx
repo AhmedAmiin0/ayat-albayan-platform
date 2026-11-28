@@ -3,7 +3,6 @@ import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, noConfirmQueryClient, renderWithQuery } from '@/test/query';
 import { OVERVIEW } from '@/calendar/overview/overview-fixtures';
 import { LessonRowActions } from '@/calendar/agenda/LessonRowActions/LessonRowActions';
-import { mockCall } from '@ab/testing/mock-call';
 
 // No confirmation required, plus the status correction action.
 const action = {
@@ -25,11 +24,9 @@ const show = (over: Partial<ReturnType<typeof lesson>>, client = noConfirmQueryC
   return renderWithQuery(ui, client);
 };
 
-const mockApi = mockCall();
-mockApi.onRead(() => new Promise(() => undefined));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: () => new Promise(() => undefined),
 }));
 
 beforeEach(() => jest.clearAllMocks());
@@ -47,9 +44,7 @@ test('settled by the job: the three other statuses, each sent through action.cor
   // Each choice asks first (and says whether the lesson counts).
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.correct.to.no_show }));
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.correct.confirm }));
-  await fireEvent.press(
-    screen.getByRole('button', { name: t.lessons.correct.to.cancelled_by_teacher }),
-  );
+  await fireEvent.press(screen.getByRole('button', { name: t.lessons.correct.to.cancelled_by_teacher }));
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.correct.confirm }));
   expect(action.correct.mock.calls).toEqual([
     ['l-pending', 'no_show'],

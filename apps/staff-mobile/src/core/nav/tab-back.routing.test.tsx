@@ -6,14 +6,11 @@ import { pushInTab } from '@/core/nav/back-within';
 import { StudentScreen } from '@/students/screens/StudentScreen';
 import { createTestQueryClient } from '@/test/query';
 import { openTabApp, tabApp, TabsLayout } from '@/test/nav/tab-app';
-import { mockCall } from '@ab/testing/mock-call';
 
 // The real tab stacks and StudentScreen (its profile still loading) under the real tabs.
-const mockApi = mockCall();
-mockApi.onRead(() => new Promise(() => undefined));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: () => new Promise(() => undefined),
 }));
 
 const client = createTestQueryClient();

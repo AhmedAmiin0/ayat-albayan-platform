@@ -5,19 +5,19 @@ import { catalogue, settings } from '@/ops/shared/fixtures';
 import { NotificationCatalogue } from './NotificationCatalogue';
 import { whenOf } from './catalogue-words';
 import { openAudience } from '@/ops/notif-rules/testing/rules-fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (p: string) => mockApiFetch(p),
+  call: ({ path }: { path: string }) => mockApiFetch(path),
 }));
 
 const c = t.notificationCatalogue;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApi.onRead(async ({ path: p }) => (p === '/admin/notifications' ? catalogue : settings));
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/admin/notifications' ? catalogue : settings));
 });
 
 test('lists every notification with its state and the first blocker in words; nothing to switch', async () => {
@@ -33,19 +33,15 @@ test('lists every notification with its state and the first blocker in words; no
 
 test('the kept number shows without a live check; a line never checked says so', async () => {
   await renderWithQuery(<NotificationCatalogue />);
-  expect(
-    await screen.findByText(`${c.lines.notifications}: ${ltr('+966 55 123 4567')}`),
-  ).toBeTruthy();
+  expect(await screen.findByText(`${c.lines.notifications}: ${ltr('+966 55 123 4567')}`)).toBeTruthy();
   expect(screen.getByText(`${c.lines.chat}: ${c.notChecked}`)).toBeTruthy();
 });
 
 test('a failed read says so and retries', async () => {
-  mockApi.onRead(async ({ path: p }) =>
-    p === '/admin/notifications' ? Promise.reject(new Error('down')) : settings,
-  );
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/admin/notifications' ? Promise.reject(new Error('down')) : settings));
   await renderWithQuery(<NotificationCatalogue />);
   expect(await screen.findByText(c.loadError)).toBeTruthy();
-  mockApi.onRead(async ({ path: p }) => (p === '/admin/notifications' ? catalogue : settings));
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/admin/notifications' ? catalogue : settings));
   fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText(c.entries.report_ready.name)).toBeTruthy();
   expect(screen.queryByText(c.loadError)).toBeNull();
