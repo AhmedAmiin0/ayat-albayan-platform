@@ -19,7 +19,7 @@ export { CRM_NO_MEDIA };
 export const MEDIA_FETCH_DAYS = 29;
 const DAY_MS = 86_400_000;
 
-export type InboundFile = { bucket: typeof BUCKETS.waMedia; path: string; mime: string };
+export interface InboundFile { bucket: typeof BUCKETS.waMedia; path: string; mime: string }
 
 /** «image/jpeg; codecs=…» → «image/jpeg» (shared). */
 export { baseMime };

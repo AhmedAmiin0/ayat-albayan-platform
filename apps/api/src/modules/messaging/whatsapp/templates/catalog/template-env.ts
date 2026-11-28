@@ -8,7 +8,7 @@ import { httpError } from '@/common/http/errors';
 // What every registry action checks first (docs/12 §3.4, §13.9), out of template.registry.ts (150-line cap).
 
 /** Read per call, so tests can vi.stubEnv it. */
-export const syncOn = (): boolean => loadEnv().WA_TEMPLATE_SYNC !== false;
+export const syncOn = (): boolean =>  loadEnv().WA_TEMPLATE_SYNC;
 
 /** WA_TEMPLATE_SYNC=false (docs/12 §13.9): staging on Meta TEST credentials must not touch the registry. */
 export function requireSync(): void {

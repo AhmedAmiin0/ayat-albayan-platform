@@ -12,12 +12,12 @@ export interface ListName {
   name_key: string;
 }
 
-type CountedRow = {
+interface CountedRow {
   id: string;
   name: string;
   auto_rule: string | null;
   members: { count: number }[];
-};
+}
 
 const COUNTED = 'id, name, auto_rule, members:chat_list_threads(count)' as const;
 

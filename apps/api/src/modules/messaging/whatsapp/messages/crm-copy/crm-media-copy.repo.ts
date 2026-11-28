@@ -6,7 +6,7 @@ import { pgError } from '@/common/db/errors';
  * The totals of a finished copy (its one audit row). `remaining`: CRM file links on ANY host still
  * without a copy or a failure row (the batch picks only crm_media_host's); the old bucket goes private at 0.
  */
-export type CrmCopyCounts = { copied: number; failed: number; skipped: number; remaining: number };
+export interface CrmCopyCounts { copied: number; failed: number; skipped: number; remaining: number }
 
 const count = (v: unknown): number => (typeof v === 'number' ? v : 0);
 

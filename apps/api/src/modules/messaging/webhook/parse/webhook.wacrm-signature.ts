@@ -24,8 +24,8 @@ type WacrmVerdict = 'ok' | 'bad' | 'stale';
 /** The t and v1 parts, in any order; null when either is missing or malformed. */
 export function signatureParts(header: string): { t: string; v1: string } | null {
   const parts = Object.fromEntries(header.split(',').map((p) => p.trim().split('=', 2) as [string, string | undefined]));
-  const t = parts['t'];
-  const v1 = parts['v1']?.toLowerCase();
+  const t = parts.t;
+  const v1 = parts.v1?.toLowerCase();
   return t && /^\d{1,12}$/.test(t) && v1 && /^[0-9a-f]{64}$/.test(v1) ? { t, v1 } : null;
 }
 

@@ -13,7 +13,7 @@ import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
  * `sameRequest` (a correction's replay only) = that first row IS this request (round 4 of #694);
  * `echo` = what the STORED row holds (a hidden row's view shows no body: #694 follow-up, item 1).
  */
-export type Sent = { view: MessageView; replayed: boolean; sameRequest?: boolean; echo?: Echo };
+export interface Sent { view: MessageView; replayed: boolean; sameRequest?: boolean; echo?: Echo }
 
 /** The stored row's fields a correction's retry is compared with (correction-checks.ts). */
 type Echo = Pick<MessageRow, 'body' | 'corrects_id' | 'correction_text'>;

@@ -44,11 +44,11 @@ async function run(op: Op, bytes: Uint8Array): Promise<unknown> {
 
 /** 200 the answer; 400 an unknown request; 413 no or too big a Content-Length; 503 queue full; 500 poppler failed. */
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
-  if (req.method === 'GET' && req.url === '/health') return send(res, 200, { ok: true });
+  if (req.method === 'GET' && req.url === '/health') { send(res, 200, { ok: true }); return; }
   const op = parseOp(req.method, req.url);
-  if (!op) return send(res, 400, { error: 'bad_request' });
+  if (!op) { send(res, 400, { error: 'bad_request' }); return; }
   const length = Number(req.headers['content-length']);
-  if (!(length >= 1 && length <= INVOICE_MAX_BYTES)) return send(res, 413, { error: 'too_large' });
+  if (!(length >= 1 && length <= INVOICE_MAX_BYTES)) { send(res, 413, { error: 'too_large' }); return; }
   try {
     const out = await inSlot(async () => {
       // The body is read only here, so the PDFs waiting stay in their senders, not in this container's memory.

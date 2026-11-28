@@ -8,7 +8,7 @@ export const PDF_RUN = 5;
 /** A crafted «Pages: 99999999999» is stored as this many: never a column overflow, a 500 and a probe per view. */
 const PDF_PAGES_MAX = 100_000;
 
-export type PageRange = { first: number; last: number };
+export interface PageRange { first: number; last: number }
 
 /** Page 1 alone (the bubble's thumb), else the run of PDF_RUN it falls in, cut at the page count and PDF_PREVIEW_PAGES. */
 export function pageRange(page: number, pages: number): PageRange {

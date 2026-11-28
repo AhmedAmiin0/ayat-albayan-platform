@@ -93,14 +93,14 @@ export class NumbersRepo {
   async makeDefault(id: string, actorId: string): Promise<boolean> {
     const { data, error } = await this.db.rpc('wa_number_make_default', { p_id: id, p_actor: actorId });
     if (error) conflictOf(error);
-    return data === true;
+    return data;
   }
 
   /** false = missing or still enabled. Deletes its Vault entries in the same call. */
   async remove(id: string): Promise<boolean> {
     const { data, error } = await this.db.rpc('wa_number_delete', { p_id: id });
     if (error) throw pgError(error);
-    return data === true;
+    return data;
   }
 
   /**

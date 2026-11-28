@@ -54,9 +54,9 @@ interface StatusOpts {
 export function statusValue(o: StatusOpts): object {
   const s: Record<string, unknown> = { id: o.id ?? 'wamid.OUT1', status: o.status, timestamp: String(TS), recipient_id: '966501234567' };
   if (o.status === 'sent' || o.status === 'delivered') {
-    s['conversation'] = { id: 'conv-966501234567', origin: { type: 'utility' } };
-    s['pricing'] = { billable: true, pricing_model: 'PMP', category: 'utility' };
+    s.conversation = { id: 'conv-966501234567', origin: { type: 'utility' } };
+    s.pricing = { billable: true, pricing_model: 'PMP', category: 'utility' };
   }
-  if (o.status === 'failed') s['errors'] = [{ code: o.errorCode ?? 131026, title: 'Message undeliverable' }];
+  if (o.status === 'failed') s.errors = [{ code: o.errorCode ?? 131026, title: 'Message undeliverable' }];
   return { statuses: [s] };
 }

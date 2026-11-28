@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { ChatListsRepo } from './chat-lists.repo';
 
-type Result = { data?: unknown; error?: { code: string; message: string } | null; count?: number };
+interface Result { data?: unknown; error?: { code: string; message: string } | null; count?: number }
 
 /** A PostgREST builder that records every call and resolves to `result` when awaited. */
 function fake(result: Result) {

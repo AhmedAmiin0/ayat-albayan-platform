@@ -18,7 +18,7 @@ import { ZodBody } from '@/common/http/zod-inputs';
 import { confirmationRequired } from './gate.errors';
 import { GateSettings, type GateKey } from './gate.settings';
 
-type KeyWrite = { key: GateKey; value: boolean; action: string };
+interface KeyWrite { key: GateKey; value: boolean; action: string }
 type SwitchBody = z.output<typeof gateSwitchSchema>;
 type CutoverBody = z.output<typeof gateCutoverSchema>;
 

@@ -74,7 +74,7 @@ function memoryTable() {
   return { t, fake };
 }
 
-type GateState = { open: boolean; reason: 'not_configured' | 'switch_off' | null };
+interface GateState { open: boolean; reason: 'not_configured' | 'switch_off' | null }
 
 export async function rulesApp(initial: Partial<AcademySettings> = {}) {
   const state: Partial<AcademySettings> = { ...initial };

@@ -31,12 +31,12 @@ export interface RolePlan extends ImportRoleView {
   row: RowDraft | null;
 }
 
-type RowDraft = {
+interface RowDraft {
   provider: string;
   phone_number_id: string;
   waba_id: string | null;
   app_id: string | null;
-};
+}
 
 /** The ids of a row draft checked like wa_numbers does (label and provider are never legacy values). */
 const ID_FIELDS = ['phone_number_id', 'waba_id', 'app_id'] as const;

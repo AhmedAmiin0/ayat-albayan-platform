@@ -93,7 +93,7 @@ export class HttpWhatsappClient implements WhatsappClient {
   async submitTemplate(template: TemplateRow, opts: { headerHandle?: string } = {}): Promise<{ metaId: string; status: string }> {
     const { env, http } = this.connection();
     const payload = submitPayload(template, opts.headerHandle);
-    const edit = { category: payload['category'], components: payload['components'] };
+    const edit = { category: payload.category, components: payload.components };
     const req =
       template.status === 'rejected' && template.meta_id
         ? { path: templateEditPath(env, template.meta_id), json: edit }

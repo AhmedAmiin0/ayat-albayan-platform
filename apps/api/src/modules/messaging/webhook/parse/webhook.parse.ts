@@ -113,7 +113,7 @@ function readChange(change: unknown, ctx: ParseOptions & { batch: WebhookBatch }
   const number = field(value, 'metadata.phone_number_id') ?? undefined;
   const at = receiving(number, ctx);
   if (!at) return;
-  if (kind === 'calls') return readCalls(value, { now: ctx.now, phoneNumberId: number ?? null, out: (ctx.batch.calls ??= []) });
+  if (kind === 'calls') { readCalls(value, { now: ctx.now, phoneNumberId: number ?? null, out: (ctx.batch.calls ??= []) }); return; }
   if (kind === ECHO_FIELD) return void ctx.batch.echoes.push(...readEchoes(value, at));
   readMessages(value, { ...ctx, at });
 }

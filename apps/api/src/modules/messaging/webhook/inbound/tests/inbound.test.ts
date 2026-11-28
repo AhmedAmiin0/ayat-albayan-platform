@@ -131,6 +131,6 @@ describe('inboundPush', () => {
       newLeadId: null,
       intent: null,
     });
-    expect(push.event.vars['name']).toBe(PHONE);
+    expect(push.event.vars.name).toBe(PHONE);
   });
 });

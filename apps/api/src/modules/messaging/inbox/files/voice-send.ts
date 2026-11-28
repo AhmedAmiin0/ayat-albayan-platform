@@ -10,7 +10,7 @@ interface SentMedia {
   media_name: string;
 }
 
-type ObjectRef = { bucket: Bucket; path: string };
+interface ObjectRef { bucket: Bucket; path: string }
 
 const log = new Logger('VoiceSend');
 

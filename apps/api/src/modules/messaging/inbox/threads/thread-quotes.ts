@@ -32,7 +32,7 @@ export interface ReplyFields {
 }
 
 /** The number a send leaves from (sendLine): a line (legacy) and/or a number (module mode). */
-export type SendFrom = { line?: string | null; number_id?: string | null };
+export interface SendFrom { line?: string | null; number_id?: string | null }
 
 /**
  * Meta's context only names a wamid of the sending number: a known, different line or number drops

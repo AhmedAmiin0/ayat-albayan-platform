@@ -43,7 +43,7 @@ describe('KapsoCallsApi (the stub-only fake fetch: no hosted call)', () => {
     await kapso.accept(LINE, { waCallId: 'w1', sdp: 'v=0 a', ref: 'c1' });
     await kapso.reject(LINE, 'w2');
     await kapso.terminate(LINE, 'w3');
-    expect([0, 1, 2, 3].map((i) => bodyOf(fetch, i)['action'])).toEqual(['pre_accept', 'accept', 'reject', 'terminate']);
+    expect([0, 1, 2, 3].map((i) => bodyOf(fetch, i).action)).toEqual(['pre_accept', 'accept', 'reject', 'terminate']);
     expect(bodyOf(fetch, 1)).toMatchObject({ call_id: 'w1', session: { sdp_type: 'answer', sdp: 'v=0 a' }, biz_opaque_callback_data: 'c1' });
   });
 

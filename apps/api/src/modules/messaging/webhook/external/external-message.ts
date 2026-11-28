@@ -59,7 +59,7 @@ export function templateParams(components: unknown): Record<string, string> | nu
   texts(body).forEach((t, i) => (out[String(i + 1)] = t));
   const button = parts.find((c) => field(c, 'type')?.toLowerCase() === 'button');
   const tap = texts(button)[0];
-  if (tap) out['button'] = tap;
+  if (tap) out.button = tap;
   return Object.keys(out).length > 0 ? out : null;
 }
 

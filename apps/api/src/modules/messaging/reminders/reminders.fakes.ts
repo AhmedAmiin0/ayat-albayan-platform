@@ -40,7 +40,7 @@ export function sampleLesson(over: Partial<ReminderLesson> = {}): ReminderLesson
 /** `at` as a Date (tests read better with ISO strings). */
 export const at = (iso: string) => new Date(iso);
 
-type JobOpts = {
+interface JobOpts {
   settings?: Partial<AcademySettings>;
   approved?: string[];
   pushed?: string[];
@@ -53,7 +53,7 @@ type JobOpts = {
    */
   rules?: Omit<FakePolicyInput, 'settings'>;
   teacherLinks?: Map<string, TeacherLinks>;
-};
+}
 
 /** A RemindersJob over mocked queries, settings and push; `queued` collects every queued row. */
 export function fakeJob(opts: JobOpts = {}) {

@@ -21,7 +21,7 @@ export class CallsGate {
   ) {}
 
   async enabled(): Promise<boolean> {
-    return (await this.settings.read()).whatsapp_calls_enabled === true;
+    return (await this.settings.read()).whatsapp_calls_enabled;
   }
 
   async assertOn(): Promise<void> {

@@ -3,7 +3,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { pgError } from '@/common/db/errors';
 
 /** What pdfinfo said about a message's PDF: its page count (0 = no preview) and its size in bytes. */
-export type PdfDoc = { pages: number; bytes: number };
+export interface PdfDoc { pages: number; bytes: number }
 
 /**
  * messages.media_pages / media_bytes (migration 20261030000982), read and written only here: the shared

@@ -44,15 +44,15 @@ export class ThreadFileController {
   @Get(':phone/messages/:messageId/pdf/:page')
   async pdf(@Param() params: Params, @CurrentUser() user: AuthUser): Promise<ThreadPdfPage> {
     const target = await this.target(params);
-    const page = parseOrThrow(pageSchema, params['page']);
+    const page = parseOrThrow(pageSchema, params.page);
     await this.allow(user);
     return this.pdfs.page({ ...target, page });
   }
 
   /** 400 invalid_phone or a bad message id, before anything is read. */
   private async target(params: Params): Promise<{ phone: string; messageId: string }> {
-    const phone = phoneParam(params['phone'] ?? '');
-    const messageId = await uuid.transform(params['messageId'] ?? '', { type: 'param', data: 'messageId' });
+    const phone = phoneParam(params.phone ?? '');
+    const messageId = await uuid.transform(params.messageId ?? '', { type: 'param', data: 'messageId' });
     return { phone, messageId };
   }
 

@@ -122,10 +122,10 @@ export class ThreadForwardService {
   }
 }
 
-type SendBase = {
+interface SendBase {
   phone: string;
   actorId: string;
   scope: TeacherScope | null;
   sales: SalesScope | null;
   forwardedFrom: string;
-};
+}

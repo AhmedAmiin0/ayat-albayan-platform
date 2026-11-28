@@ -8,7 +8,7 @@ const spawn = vi.hoisted(() => vi.fn());
 vi.mock('node:child_process', () => ({ spawn }));
 
 const PDF = new TextEncoder().encode('%PDF-1.4 fake');
-type End = { code: number | null; killed?: boolean; stdout?: string; enoent?: boolean };
+interface End { code: number | null; killed?: boolean; stdout?: string; enoent?: boolean }
 
 /** A child that ends as `end` says; `killed` is what node sets when ITS timeout killed the child. */
 function child(end: End) {

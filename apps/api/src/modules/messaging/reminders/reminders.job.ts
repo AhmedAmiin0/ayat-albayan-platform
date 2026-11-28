@@ -22,8 +22,8 @@ const FIRST_RUN_MS = 30_000;
 /** How far back push_notifications is read to skip lessons already pushed (> any reminder window). */
 const PUSHED_SINCE_MS = 48 * 60 * MINUTE;
 
-export type ReminderSummary = { lessons: number; queued: number; dropped: number; pushed: number };
-type QueueInput = { settings: RemindersSettingsValues; rules: ReminderRules; lessons: readonly ReminderLesson[]; now: Date };
+export interface ReminderSummary { lessons: number; queued: number; dropped: number; pushed: number }
+interface QueueInput { settings: RemindersSettingsValues; rules: ReminderRules; lessons: readonly ReminderLesson[]; now: Date }
 
 /**
  * R-MSG-02 reminder scheduler (docs/12 §7): every 5 minutes, single flight. Queues the same-day

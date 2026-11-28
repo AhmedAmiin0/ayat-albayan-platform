@@ -57,7 +57,7 @@ export class SendGate {
   /** Which gate is closed, for the admin: WhatsApp config, or their own switch. */
   async state(): Promise<Omit<SendGateView, 'queued'>> {
     if (!whatsappEnv(this.env)) return { open: false, reason: 'not_configured' };
-    const on = (await this.settings.read()).messaging_enabled === true;
+    const on =  (await this.settings.read()).messaging_enabled;
     return on ? { open: true, reason: null } : { open: false, reason: 'switch_off' };
   }
 

@@ -10,7 +10,7 @@ import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 // a Storage 4xx on a family's first voice note of that type.
 const dir = MIGRATIONS_DIR;
 const sql = readFileSync(join(dir, '20261019000500_wa_media_audio_video.sql'), 'utf8');
-const allowed = sql.match(/allowed_mime_types = array\[([^\]]*)\]/)?.[1] ?? '';
+const allowed = (/allowed_mime_types = array\[([^\]]*)\]/.exec(sql))?.[1] ?? '';
 
 describe('migration 20261019000500: wa-media takes voice notes and videos', () => {
   it('allows every image/PDF and every playable type', () => {

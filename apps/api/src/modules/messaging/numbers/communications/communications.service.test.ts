@@ -82,9 +82,9 @@ describe('POST /admin/communications/source', () => {
     const legacy: Record<string, number> = {};
     let rule = 30;
     t.rules.copyToLegacy.mockImplementation(async () => {
-      legacy['reminder_minutes_before'] = rule;
+      legacy.reminder_minutes_before = rule;
       rule = 45; // the PATCH lands right after the first copy, still in module mode
-      return { reminder_minutes_before: legacy['reminder_minutes_before'] };
+      return { reminder_minutes_before: legacy.reminder_minutes_before };
     });
     await t.svc.setSource('legacy', 'actor');
     expect(legacy).toEqual({ reminder_minutes_before: 45 });

@@ -105,7 +105,7 @@ export class CallEvents implements CallEventsPort {
     if (!(await this.gate.enabled()) || !e.sdp) return;
     if (await this.kit.queries.byWaCallId(e.waCallId)) return;
     const phone = e.peer ? waIdToE164(e.peer) : null;
-    if (!phone) return this.log.warn(`call ${e.waCallId}: the caller's wa_id is not a phone`);
+    if (!phone) { this.log.warn(`call ${e.waCallId}: the caller's wa_id is not a phone`); return; }
     const thread = await this.kit.threads.thread(phone);
     await this.kit.queries.insert({
       ...{

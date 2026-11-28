@@ -11,6 +11,6 @@ const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
 
 /** The echoes of one change's value (`message_echoes`), stamped with where they came in. */
 export function readEchoes(value: unknown, at: Receiving): EchoEvent[] {
-  const echoes = value !== null && typeof value === 'object' ? (value as Record<string, unknown>)['message_echoes'] : undefined;
+  const echoes = value !== null && typeof value === 'object' ? (value as Record<string, unknown>).message_echoes : undefined;
   return list(echoes).map((message) => ({ message, ...where(at) }));
 }

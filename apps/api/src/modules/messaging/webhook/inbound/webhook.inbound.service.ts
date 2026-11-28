@@ -112,7 +112,8 @@ export class InboundService {
     try {
       owners = kind === 'new_lead' ? [] : await this.store.owners(from.who, from.lead);
     } catch (e) {
-      return this.log.warn(`inbound ${event.subject}: owners lookup failed, no sales push: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(`inbound ${event.subject}: owners lookup failed, no sales push: ${e instanceof Error ? e.message : String(e)}`);
+      return;
     }
     await this.push.notifySales(kind, event, owners);
   }
@@ -138,7 +139,8 @@ export class InboundService {
   /** Unstores the row so Meta's re-send runs the reply again, only while Meta still waits. */
   private async undo(waMessageId: string, deadline: number | undefined): Promise<void> {
     if (deadline !== undefined && Date.now() > deadline - UNDO_MARGIN_MS) {
-      return this.log.error(`inbound ${waMessageId}: quick reply failed after the 200; row kept`);
+      this.log.error(`inbound ${waMessageId}: quick reply failed after the 200; row kept`);
+      return;
     }
     try {
       await this.store.forget(waMessageId);
