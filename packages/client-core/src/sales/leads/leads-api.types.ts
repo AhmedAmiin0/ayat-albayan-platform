@@ -1,7 +1,9 @@
 import type { RouteResult } from '@ab/core';
 import type {
   LeadFollowUp,
+  LeadListQueryInput,
   LeadQualificationPatch,
+  leadReadRoutes,
   LeadStatusBody,
   leadWriteRoutes,
 } from '@ab/shared';
@@ -28,4 +30,8 @@ export interface LeadWriteCalls {
   reclassify: (id: string) => Answer<'reclassify'>;
   qualification: (input: LeadQualificationEdit) => Answer<'qualification'>;
   followUp: (input: LeadPause) => Answer<'followUp'>;
+}
+
+export interface LeadReadCalls {
+  list: (query: LeadListQueryInput) => Promise<RouteResult<typeof leadReadRoutes.list>>;
 }

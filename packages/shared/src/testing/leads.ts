@@ -1,4 +1,4 @@
-import type { JobApplicantView, LeadRowView } from '../sales/leads';
+import type { JobApplicantView, LeadListItem, LeadRowView } from '../sales/leads';
 
 /** A leads row as the lead writes answer it: a fresh lead nobody owns, follow-ups running. */
 export const leadRow = (patch: Partial<LeadRowView> = {}): LeadRowView => ({
@@ -21,6 +21,13 @@ export const leadRow = (patch: Partial<LeadRowView> = {}): LeadRowView => ({
   created_by: null,
   created_at: '2026-11-01T10:00:00+00:00',
   updated_at: '2026-11-01T10:00:00+00:00',
+  ...patch,
+});
+
+/** A GET /leads row: the lead row and the follower's name. */
+export const leadListItem = (patch: Partial<LeadListItem> = {}): LeadListItem => ({
+  ...leadRow(),
+  assigned_to_name: null,
   ...patch,
 });
 
