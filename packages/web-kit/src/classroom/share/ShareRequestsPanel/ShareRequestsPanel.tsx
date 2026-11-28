@@ -1,37 +1,36 @@
-import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import { REQUEST_TEXT } from '@ab/web-kit/classroom/share/request-text';
-import type { ShareRequests } from '@ab/web-kit/classroom/share/use-share-requests';
+import { PanelNotice } from './PanelNotice';
+import { PendingAsk } from './PendingAsk';
+import { StopButton } from './StopButton';
+import { isQuiet } from './share-requests-panel.helpers';
+import type { ShareRequestsPanelProps } from './ShareRequestsPanel.types';
 
-const S = t.classroom.shareRequest;
-
-export function ShareRequestsPanel({ share }: { share: ShareRequests }) {
-  const { pending, granted, drawers, notice } = share;
-  if (pending.length === 0 && granted.length === 0 && drawers.length === 0 && !notice) return null;
+export function ShareRequestsPanel({ share }: ShareRequestsPanelProps) {
+  const stopShare = t.classroom.shareRequest.stop;
+  const stopDraw = t.classroom.boardRequest.draw.stop;
+  if (isQuiet(share)) return null;
   return (
-    <section aria-label={t.classroom.boardRequest.title} className="flex flex-wrap items-center gap-2">
-      {notice && (
-        <p role="status" className="flex items-center gap-2 rounded-md border border-rule bg-raised px-3 py-1.5 text-sm">
-          {notice}
-          <Button type="button" variant="ghost" size="sm" onClick={share.dismiss}>{t.common.close}</Button>
-        </p>
-      )}
-      {pending.map((p) => (
-        <div key={`${p.tile.identity}:${p.what}`} role="alert" className="flex flex-wrap items-center gap-2 rounded-md border border-lapis bg-lapis-wash px-3 py-1.5 text-sm">
-          <span>{REQUEST_TEXT[p.what].asks.replace('{name}', p.tile.name)}</span>
-          <Button type="button" size="sm" onClick={() => share.allow(p)}>{S.allow}</Button>
-          <Button type="button" variant="secondary" size="sm" onClick={() => share.deny(p)}>{S.deny}</Button>
-        </div>
+    <section
+      aria-label={t.classroom.boardRequest.title}
+      className="flex flex-wrap items-center gap-2"
+    >
+      <PanelNotice notice={share.notice} onDismiss={share.dismiss} />
+      {share.pending.map((p) => (
+        <PendingAsk key={`${p.tile.identity}:${p.what}`} share={share} ask={p} />
       ))}
-      {granted.map((tile) => (
-        <Button key={tile.identity} type="button" variant="secondary" size="sm" onClick={() => share.revoke(tile)}>
-          {S.stop.replace('{name}', tile.name)}
-        </Button>
+      {share.granted.map((tile) => (
+        <StopButton
+          key={tile.identity}
+          label={stopShare.replace('{name}', tile.name)}
+          onStop={() => share.revoke(tile)}
+        />
       ))}
-      {drawers.map((tile) => (
-        <Button key={`${tile.identity}:draw`} type="button" variant="secondary" size="sm" onClick={() => share.revokeDraw(tile)}>
-          {t.classroom.boardRequest.draw.stop.replace('{name}', tile.name)}
-        </Button>
+      {share.drawers.map((tile) => (
+        <StopButton
+          key={`${tile.identity}:draw`}
+          label={stopDraw.replace('{name}', tile.name)}
+          onStop={() => share.revokeDraw(tile)}
+        />
       ))}
     </section>
   );
