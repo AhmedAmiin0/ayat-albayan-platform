@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { thread } from '@/inbox/shared/thread-fixtures';
-import { useThreadList } from './use-thread-list';
+import { useThreadList } from '@/inbox/threads-list/use-thread-list/use-thread-list';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

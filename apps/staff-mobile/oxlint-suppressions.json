@@ -2873,7 +2873,7 @@
       "count": 5
     }
   },
-  "src/inbox/threads-list/use-thread-list.ts": {
+  "src/inbox/threads-list/use-thread-list/use-thread-list.ts": {
     "complexity": {
       "count": 1
     },

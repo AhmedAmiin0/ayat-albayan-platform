@@ -7,8 +7,8 @@ import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { useInboxLive, useLiveWatch } from '@/inbox/thread/live';
 import { useStoredThreads } from '@/inbox/thread/local';
 import { threadReads } from '@/inbox/thread/hooks/thread-cache';
-import { waitingForReply } from './chat-filter';
-import { useListCatchUp, withChatTicks } from './list-catch-up';
+import { waitingForReply } from '@/inbox/threads-list/chat-filter';
+import { useListCatchUp, withChatTicks } from '@/inbox/threads-list/list-catch-up';
 
 const PAGE_SIZE = 25;
 
