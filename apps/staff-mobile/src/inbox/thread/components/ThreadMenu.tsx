@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
-import { t, Button } from '@ab/mobile-kit';
-import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
+import { t, Button, Sheet } from '@ab/mobile-kit';
 
 /** iOS presents one modal at a time, so what an item opens waits for this one to close. */
 const AFTER_MENU_MS = Platform.OS === 'ios' ? 350 : 0;
@@ -31,11 +30,11 @@ export function ThreadMenu({ open, items, label = t.inbox.chatMenu, onClose }: T
     pending.current = setTimeout(item.onPress, AFTER_MENU_MS);
   };
   return (
-    <MenuSheet open={open} label={label} testID="thread-menu" onClose={onClose}>
+    <Sheet open={open} label={label} testID="thread-menu" onClose={onClose}>
       {items.map((item) => (
         <Button key={item.label} variant="secondary" label={item.label} onPress={() => run(item)} />
       ))}
       <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
-    </MenuSheet>
+    </Sheet>
   );
 }

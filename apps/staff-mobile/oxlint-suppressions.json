@@ -1949,11 +1949,6 @@
       "count": 1
     }
   },
-  "src/inbox/messages/copy-download/CopySheet.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    }
-  },
   "src/inbox/messages/copy-download/chat-tools.ts": {
     "stylistic/max-len": {
       "count": 2

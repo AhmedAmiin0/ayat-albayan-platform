@@ -2,9 +2,8 @@ import { canPickTrialDate, type SalesFamilyStudent, type ThreadView } from '@ab/
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Platform } from 'react-native';
-import { useHolds, t, Button } from '@ab/mobile-kit';
+import { useHolds, t, Button, Sheet } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
-import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 import { PillButton } from '@/core/ui/primitives/PillButton';
 import { ownStudents, useSalesFamily } from '@/sales-subscribe/lib/family';
 import { chatTrialHref } from '@/trial-date/lib/trial-href';
@@ -38,12 +37,12 @@ export function SalesTrialPills({ thread }: { thread: ThreadView | null }) {
   return (
     <>
       <PillButton label={t.trialDate.action} onPress={() => setOpen(true)} />
-      <MenuSheet open={open} label={t.trialDate.mobile.pickStudent} testID="trial-student-sheet" onClose={() => setOpen(false)}>
+      <Sheet open={open} label={t.trialDate.mobile.pickStudent} testID="trial-student-sheet" onClose={() => setOpen(false)}>
         {students.map((s) => (
           <Button key={s.id} variant="secondary" label={childLabel(s)} onPress={() => pick(s)} />
         ))}
         <Button variant="secondary" label={t.common.cancel} onPress={() => setOpen(false)} />
-      </MenuSheet>
+      </Sheet>
     </>
   );
 }
