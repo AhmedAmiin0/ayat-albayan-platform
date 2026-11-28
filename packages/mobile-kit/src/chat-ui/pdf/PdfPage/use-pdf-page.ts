@@ -1,19 +1,16 @@
 import { useState } from 'react';
-import type { ImageLoadEvent } from 'react-native';
-import { A4, imageRatio } from './pdf-ratio';
-import type { PdfPageProps } from './PdfPage';
-
-/** What a tap does: ask again when it failed, open the page once it has an image, else nothing. */
-function pressOf(p: { failed: boolean; retry: () => void; zoom?: () => void }) {
-  if (p.failed) return p.retry;
-  return p.zoom;
-}
+import { type ImageLoadEvent, useWindowDimensions } from 'react-native';
+import { A4, imageRatio } from '../pdf-ratio';
+import { pageLabel, pageWidth, pressOf } from './pdf-page.helpers';
+import type { PdfPageProps } from './PdfPage.types';
 
 /**
  * A PDF page's state: its box's ratio (A4 until the image says its own), an image that broke, and
  * whether the image itself (not just its URL) has loaded.
  */
-export function usePdfPage(p: PdfPageProps, label: string) {
+export function usePdfPage(p: PdfPageProps) {
+  const width = pageWidth(useWindowDimensions().width);
+  const label = pageLabel(p.page, p.pages);
   const [ratio, setRatio] = useState(A4);
   const [broken, setBroken] = useState(false);
   const [loaded, setLoaded] = useState<string | null>(null);
@@ -29,7 +26,9 @@ export function usePdfPage(p: PdfPageProps, label: string) {
     setLoaded(uri ?? null);
   };
   return {
-    ratio,
+    width,
+    height: width * ratio,
+    label,
     uri,
     failed,
     waiting: !failed && (!uri || loaded !== uri),
