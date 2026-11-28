@@ -1,7 +1,6 @@
 import type { ThreadDetail } from '@ab/shared';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { isListId, seesLists } from '@/modules/messaging/chat-lists/chat-lists.guard';
-import type { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
+import { type ChatListsRepo, isListId, seesLists } from '@/modules/messaging/chat-lists';
 import type { ThreadListFilter } from './threads.list';
 
 /**

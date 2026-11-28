@@ -1,8 +1,8 @@
 import type { ReopenChoice, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
+import type { ExtrasInput, PageExtras } from './threads.service.types';
 import type { Page } from '@ab/core';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { ReopenPick, ReopenRequest } from '@/modules/messaging/whatsapp';
-import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
+import { MessageViews, ReopenPick, ReopenRequest } from '@/modules/messaging/whatsapp';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
 import { InboxSettings, renewalThreshold } from '@/modules/messaging/inbox/inbox.settings';
 import { familyTag, type FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
@@ -61,31 +61,44 @@ export class ThreadsService {
    * (`before`) gets the list's cheap tags instead (one read, not 1 + 3 a child).
    */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
-    const first = isFirstPage(q);
     const [at, threshold] = await Promise.all([
       pageRows({ threads: this.queries, messages: this.messages }, q),
       renewalThreshold(this.settings),
     ]);
     const page = at.rows.slice(0, q.limit).reverse();
-    const [people, lessons, messages, tag, read, reopenUsable] = await Promise.all([
-      first ? this.queries.people(at.who) : NO_PEOPLE,
-      first && at.who ? this.queries.lessons(at.who, now) : [],
+    const [extras, messages, read, reopenUsable] = await Promise.all([
+      this.extras({ first: isFirstPage(q), at, now, threshold }),
       Promise.all(page.map((m) => this.views.view(m))),
-      first ? null : this.tagOf(at.found, threshold),
       stampRead(this.receipts, { q, page: at, now }),
       this.reopenUsable(),
     ]);
-    const opts = { tag: first ? familyTag(people.students, threshold) : tag, reopenUsable };
+    const opts = { tag: extras.tag, reopenUsable };
     const view = at.found ? toThreadView(at.found, now, opts) : null;
-    const thread = view && this.pick ? await this.pick.thread(view, now) : view;
     const detail: ThreadDetail = {
-      thread,
+      thread: await this.picked(view, now),
       messages,
       has_more: at.rows.length > q.limit,
-      lessons,
-      people,
+      lessons: extras.lessons,
+      people: extras.people,
     };
     return read ? asRead(detail, now) : detail;
+  }
+
+  /** The first page carries the people and lessons; an older page only the list's cheap tags. */
+  private async extras(x: ExtrasInput): Promise<PageExtras> {
+    if (!x.first) {
+      return { people: NO_PEOPLE, lessons: [], tag: await this.tagOf(x.at.found, x.threshold) };
+    }
+    const who = x.at.who;
+    const [people, lessons] = await Promise.all([
+      this.queries.people(who),
+      who ? this.queries.lessons(who, x.now) : [],
+    ]);
+    return { people, lessons, tag: familyTag(people.students, x.threshold) };
+  }
+
+  private async picked(view: ThreadView | null, now: Date): Promise<ThreadView | null> {
+    return view && this.pick ? this.pick.thread(view, now) : view;
   }
 
   /** A closed Kapso chat is offered only while it can reopen (review 11-05): template or wait. */

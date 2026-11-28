@@ -1,7 +1,8 @@
 import type { ForwardResult, ForwardSkip, ThreadForward } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import type { SalesScope } from '@/modules/sales/sales/sales-scope';
-import type { ThreadMessageRow } from '@/modules/messaging/whatsapp/messages/message.mapper';
+import { z } from 'zod';
+import type { SalesScope } from '@/modules/sales/sales';
+import type { ThreadMessageRow } from '@/modules/messaging/whatsapp';
 import { ForwardFiles, type ForwardFile } from './forward-files';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { visibleToSales } from '@/modules/messaging/inbox/sales-threads/sales-threads';
@@ -20,13 +21,15 @@ interface ForwardInput {
 /** One target's outcome, with the row it queued (the controller audits the new ones). */
 export type ForwardOutcome = ForwardResult & { replayed?: boolean };
 
-const SKIPS: ReadonlySet<string> = new Set<ForwardSkip>([
+const SEND_REFUSALS = [
   'session_closed',
   'not_your_thread',
   'own_thread_read_only',
   'line_not_configured',
   'files_forbidden',
-]);
+] as const satisfies readonly ForwardSkip[];
+const sendRefusalSchema = z.enum(SEND_REFUSALS);
+const refusalBody = z.object({ code: sendRefusalSchema });
 
 /**
  * A send path refusal → the target's reason. Any other error (a DB or outbox failure) is that
@@ -35,9 +38,8 @@ const SKIPS: ReadonlySet<string> = new Set<ForwardSkip>([
  */
 export function skipOf(e: unknown): ForwardSkip {
   if (!(e instanceof HttpException)) return 'send_failed';
-  const body = e.getResponse();
-  const code = typeof body === 'object' && body !== null && 'code' in body ? String(body.code) : '';
-  return SKIPS.has(code) ? (code as ForwardSkip) : 'send_failed';
+  const body = refusalBody.safeParse(e.getResponse());
+  return body.success ? body.data.code : 'send_failed';
 }
 
 /**
@@ -48,14 +50,21 @@ function assertForwardable(
   row: ThreadMessageRow | null,
   who: Omit<ForwardInput, 'input' | 'actorId'>,
 ): ThreadMessageRow {
-  const hidden =
-    !row ||
-    (who.scope && !who.scope.phones.has(row.phone_e164)) ||
-    (who.sales && !visibleToSales(row));
-  if (hidden) throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
+  if (!row || hiddenFrom(row, who)) throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
   if (nothingToCopy(row)) throw httpError(HttpStatus.BAD_REQUEST, 'not_forwardable');
   return row;
 }
+
+type Reader = Omit<ForwardInput, 'input' | 'actorId'>;
+
+const outsideTeacher = (row: ThreadMessageRow, who: Reader): boolean =>
+  who.scope !== null && !who.scope.phones.has(row.phone_e164);
+
+const outsideSales = (row: ThreadMessageRow, who: Reader): boolean =>
+  who.sales !== null && !visibleToSales(row);
+
+const hiddenFrom = (row: ThreadMessageRow, who: Reader): boolean =>
+  outsideTeacher(row, who) || outsideSales(row, who);
 
 const nothingToCopy = (row: ThreadMessageRow): boolean =>
   row.template_key !== null || row.hidden_at !== null || (!row.body?.trim() && !row.media_mime);

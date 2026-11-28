@@ -2,19 +2,20 @@ import type { ThreadLesson, ThreadPeople } from '@ab/shared';
 import { onMessagingLine } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
-import { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
+import { BalanceRepo, PackagesService } from '@/modules/finance/subscriptions';
 import { knownNumber, type KnownNumber } from './known-number';
 import type { ThreadWindow } from '@/modules/messaging/inbox/send/send-number';
 import { upcomingLessons, type LessonsOf } from './thread-lessons';
-import { familyTagsOf, threadPeople, type PeopleOf } from '@/modules/messaging/inbox/people/thread-people';
+import type { PeopleOf } from '@/modules/messaging/inbox/people/thread-people';
+import { familyTagsOf, threadPeople } from '@/modules/messaging/inbox/people/thread-people.repo';
 import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
 import { readPage } from '@/common/db/page';
-import { THREAD_SORT, threadsSource, type ThreadListFilter } from './threads.list';
-import { threadSearchFilter, type ThreadRow } from './threads.mapper';
+import { THREAD_SORT, threadSearchFilter, type ThreadListFilter } from './threads.list';
+import type { ThreadRow } from './threads.mapper';
 import { markUnsupported, type ListedThreadRow } from './last-unsupported';
 import { isUnreadBadge, unreadThreadCount } from './threads-unread.repo';
 import { check } from './store/check';
+import { phoneList } from '@/modules/messaging/numbers';
 
 export type { ThreadListFilter } from './threads.list';
 
@@ -39,12 +40,20 @@ export class ThreadsRepo {
   }
 
   private listQuery(f: ThreadListFilter) {
-    let query = threadsSource(this.db, f);
+    let query = this.source(f);
     if (f.unread) query = query.gt('unread_count', 0);
     if (f.phones) query = query.in('phone_e164', [...f.phones]);
     if (f.status) query = query.eq('lead_status', f.status);
     const search = f.search ? threadSearchFilter(f.search) : null;
     return search ? query.or(search) : query;
+  }
+
+  /** Never the academy's own numbers. */
+  private source(f: ThreadListFilter) {
+    const query = f.list
+      ? this.db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
+      : this.db.from('v_threads').select('*', { count: 'exact' });
+    return f.hide?.length ? query.not('phone_e164', 'in', phoneList(f.hide)) : query;
   }
 
   /**
@@ -69,7 +78,7 @@ export class ThreadsRepo {
   async numberWindows(phone: string): Promise<ThreadWindow[]> {
     const { data, error } = await this.db.from('v_thread_numbers').select('number_id, line, last_inbound_at').eq('phone_e164', phone);
     check(error, 'thread number windows read');
-    return (data ?? []).filter(onMessagingLine).map((r) => ({ // the calls number: no window (§10)
+    return data.filter(onMessagingLine).map((r) => ({ // the calls number: no window (§10)
       numberId: r.number_id, line: r.line ?? 'notifications', lastInboundAt: r.last_inbound_at,
     }));
   }

@@ -4,19 +4,8 @@ import { join } from 'node:path';
 import { inTempDir } from '@/modules/messaging/inbox/files/temp-dir';
 import { z } from 'zod';
 import { pageOfFile, pdfinfoPages, pdftoppmArgs, type PageRange } from './pdf-pages';
-import { popplerToolSchema, type PdfFailure, type PopplerTool } from './pdf.schemas';
-
-/**
- * How a run ended: the exit code (null when killed), the start of stdout, and whether our timeout
- * killed it.
- */
-export interface PdfExit { code: number | null; stdout: string; timedOut: boolean }
-/**
- * Runs a poppler tool on files in a temp folder; rejects (PdfToolError 'failed') only when it
- * cannot start.
- */
-export type PdfRun = (tool: PopplerTool, args: readonly string[]) => Promise<PdfExit>;
-export interface PdfPageImage { page: number; jpg: Uint8Array }
+import { popplerToolSchema, type PdfFailure } from './pdf.schemas';
+import type { PdfPageImage, PdfRun } from './pdf-render.types';
 
 /**
  * 'busy': the render queue is full, try again; 'failed': the tool crashed, hung or could not start
@@ -65,7 +54,8 @@ const QUEUE_MAX = 8;
  */
 const spawnPoppler: PdfRun = (tool, args) =>
   new Promise((resolve, reject) => {
-    const argv = ['-n', '10', 'choom', '-n', '1000', '--', 'prlimit', `--as=${AS_BYTES}`, '--', tool, ...args];
+    const limits = ['choom', '-n', '1000', '--', 'prlimit', `--as=${AS_BYTES}`, '--'];
+    const argv = ['-n', '10', ...limits, tool, ...args];
     const child = spawn('/usr/bin/nice', argv, {
       stdio: ['ignore', 'pipe', 'ignore'],
       env: { PATH: '/usr/bin:/bin' },
@@ -73,8 +63,8 @@ const spawnPoppler: PdfRun = (tool, args) =>
       killSignal: 'SIGKILL',
     });
     let stdout = '';
-    child.stdout?.setEncoding('utf8');
-    child.stdout?.on('data', (s: string) => {
+    child.stdout.setEncoding('utf8');
+    child.stdout.on('data', (s: string) => {
       if (stdout.length < STDOUT_MAX) stdout += s;
     });
     child.once('error', () => reject(new PdfToolError('failed')));

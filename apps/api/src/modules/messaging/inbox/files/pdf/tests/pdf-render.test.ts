@@ -2,7 +2,8 @@ import { existsSync } from 'node:fs';
 import { writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { inSlot, pdfPageCount, renderPdfPages, type PdfExit, type PdfRun } from '@/modules/messaging/inbox/files/pdf/pdf-render';
+import { inSlot, pdfPageCount, renderPdfPages } from '@/modules/messaging/inbox/files/pdf/pdf-render';
+import type { PdfExit, PdfRun } from '@/modules/messaging/inbox/files/pdf/pdf-render.types';
 
 // A fake poppler: never the real binaries in a unit test (the image build smoke-renders them,
 // apps/api/Dockerfile).

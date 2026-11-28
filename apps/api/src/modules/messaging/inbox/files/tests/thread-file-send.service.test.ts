@@ -1,32 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { StorageService } from '@/common/storage/storage.service';
 import { PHONE, threadRow } from '@/modules/messaging/inbox/inbox.fakes';
-import type { InboxSettings } from '@/modules/messaging/inbox/inbox.settings';
-import type { Outbox } from '@/modules/messaging/inbox/send/outbox';
-import { ThreadFileSender } from '@/modules/messaging/inbox/files/thread-file-send.service';
-import type { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
-
-const NOW = new Date('2026-10-02T09:00:00Z');
-const ACTOR = 's0000000-0000-4000-8000-000000000001';
-const REQ = 'c0000000-0000-4000-8000-000000000001';
-const PATH = `out/${ACTOR}/${REQ}/f.png`;
-const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0]);
-const PDF = new TextEncoder().encode('%PDF-1.7\n   ');
-const MB = 1024 * 1024;
-
-const queries = { thread: vi.fn() };
-const outbox = { queue: vi.fn() };
-const storage = { info: vi.fn(), head: vi.fn(), signedUpload: vi.fn() };
-const sender = (maxMb?: number) => {
-  const s = new ThreadFileSender(queries as unknown as ThreadsRepo, outbox as unknown as Outbox, storage as unknown as StorageService);
-  if (maxMb !== undefined) Object.assign(s, { settings: { read: async () => ({ upload_max_mb: maxMb, renewal_alert_remaining: 2 }) } satisfies Pick<InboxSettings, 'read'> });
-  return s;
-};
-const input = (over: object = {}) => ({ clientRequestId: REQ, path: PATH, filename: 'الواجب.png', ...over });
-const send = (over: object = {}, s = sender()) =>
-  s.send({ phone: PHONE, input: input(over), actorId: ACTOR, sales: { salesId: ACTOR } }, NOW);
-const code = (e: unknown) => (e as { getResponse(): { code: string } }).getResponse().code;
-const status = (e: unknown) => (e as { getStatus(): number }).getStatus();
+import {
+  ACTOR,
+  code,
+  MB,
+  outbox,
+  PATH,
+  PDF,
+  PNG,
+  queries,
+  REQ,
+  send,
+  sender,
+  status,
+  storage,
+} from './fixtures/file-sender.fixture';
 
 describe('ThreadFileSender.send (owner 2026-10-19 #2)', () => {
   beforeEach(() => {
@@ -103,48 +91,12 @@ describe('ThreadFileSender.send (owner 2026-10-19 #2)', () => {
     storage.info.mockResolvedValue({ size: 3 * MB, contentType: 'application/pdf' });
     storage.head.mockResolvedValue(PDF);
     expect(code(await send({}, sender(2)).catch((x: unknown) => x))).toBe('file_too_large');
-    await expect(send({}, sender())).resolves.toBeTruthy(); // the 10 MB registry default without InboxSettings
+    // the 10 MB registry default without InboxSettings
+    await expect(send({}, sender())).resolves.toBeTruthy();
   });
 
   it('a replayed request id returns the first row', async () => {
     outbox.queue.mockResolvedValue({ view: { id: 'first' }, replayed: true });
     await expect(send()).resolves.toEqual({ view: { id: 'first' }, replayed: true });
-  });
-});
-
-describe('ThreadFileSender.uploadUrl', () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-    vi.stubEnv('WA_CHAT_PHONE_NUMBER_ID', '');
-    queries.thread.mockResolvedValue(threadRow());
-    storage.signedUpload.mockResolvedValue({ bucket: 'wa-media', path: 'p', token: 't', signed_url: 'http://up' });
-  });
-  const upload = (mime: string, size: number, s = sender()) =>
-    s.uploadUrl({ phone: PHONE, input: { clientRequestId: REQ, mime, size } as never, actorId: ACTOR }, NOW);
-  afterEach(() => vi.unstubAllEnvs());
-
-  it('signs a wa-media path out/{actor}/{request}/{uuid}.{ext}', async () => {
-    await expect(upload('application/pdf', 1000)).resolves.toMatchObject({ signed_url: 'http://up' });
-    const [ref] = storage.signedUpload.mock.calls[0] as [{ bucket: string; path: string }];
-    expect(ref.bucket).toBe('wa-media');
-    expect(ref.path).toMatch(new RegExp(`^out/${ACTOR}/${REQ}/[0-9a-f-]{36}\\.pdf$`));
-  });
-
-  it('refuses a wrong type (400) or a too large file (413) before signing', async () => {
-    const e1 = await upload('image/heic', 1000).catch((x: unknown) => x);
-    const e2 = await upload('image/jpeg', 6 * MB).catch((x: unknown) => x);
-    expect([status(e1), code(e1), status(e2), code(e2)]).toEqual([400, 'file_type', 413, 'file_too_large']);
-    expect(storage.signedUpload).not.toHaveBeenCalled();
-  });
-
-  it('a closed window or no thread: 409 session_closed, nothing signed (no orphan upload)', async () => {
-    queries.thread.mockResolvedValueOnce(threadRow({ last_inbound_at: '2026-09-01T08:00:00Z', last_notifications_inbound_at: '2026-09-01T08:00:00Z' }));
-    queries.thread.mockResolvedValueOnce(null);
-    for (let i = 0; i < 2; i++) {
-      const e = await upload('image/png', 1000).catch((x: unknown) => x);
-      expect([status(e), code(e)]).toEqual([409, 'session_closed']);
-    }
-    expect(queries.thread).toHaveBeenCalledWith(PHONE);
-    expect(storage.signedUpload).not.toHaveBeenCalled();
   });
 });

@@ -6,12 +6,14 @@ import { BUCKETS, pdfPagePath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
 import type { InboundFile } from '@/modules/messaging/whatsapp';
 import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media.service';
-import { FailedRecently, InFlight, pageRange, type PageRange } from './pdf-pages';
+import { FailedRecently } from './failed-recently';
+import { InFlight, pageRange, type PageRange } from './pdf-pages';
 import { PdfPreviewRepo, type PdfDoc } from './pdf-preview.repo';
 // poppler runs in ayat-pdf (pdf-client.ts over its socket), never here; pdf-render gives the slot
 // and the error.
 import { pdfPageCount, renderPdfPages, sandboxReady } from './pdf-client';
-import { inSlot, PdfToolError, type PdfPageImage } from './pdf-render';
+import { inSlot, PdfToolError } from './pdf-render';
+import type { PdfPageImage } from './pdf-render.types';
 import { pdfFailureSchema } from './pdf.schemas';
 import { httpError } from '@/common/http/errors';
 

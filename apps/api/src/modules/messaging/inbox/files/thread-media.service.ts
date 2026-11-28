@@ -3,9 +3,19 @@ import type { ThreadMediaItem } from '@ab/schedule';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BUCKETS } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { InboundMediaRepo, type MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
-import { baseMime, chatServable, InboundMedia, type InboundFile, mediaExpired, servable } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.service';
-import { isCrmHistoryRow, receiptMime, receiptName } from '@/modules/messaging/whatsapp';
+import {
+  baseMime,
+  chatServable,
+  InboundMedia,
+  type InboundFile,
+  InboundMediaRepo,
+  isCrmHistoryRow,
+  mediaExpired,
+  type MediaMessage,
+  receiptMime,
+  receiptName,
+  servable,
+} from '@/modules/messaging/whatsapp';
 import { downloadName } from './download-name';
 import { httpError } from '@/common/http/errors';
 
@@ -19,6 +29,10 @@ interface PickedFile {
   msg: MediaMessage;
   file: InboundFile;
 }
+
+/** Only a file the guardian sent is a receipt the picker lists. */
+const inboundReceiptMime = (msg: MediaMessage): string | null =>
+  msg.direction === 'inbound' ? receiptMime(msg) : null;
 
 /** Photos and PDFs only (R-MSG-06); files are fetched from Meta lazily and signed. */
 @Injectable()
@@ -63,7 +77,7 @@ export class ThreadMediaService {
     if (msg?.phone_e164 !== input.phone || msg.hidden_at) {
       throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
     }
-    const mime = msg.direction === 'inbound' ? receiptMime(msg) : null;
+    const mime = inboundReceiptMime(msg);
     if (!mime) return null;
     const path = msg.media_path;
     if (path) return { msg, file: { bucket: BUCKETS.waMedia, path, mime } };

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { FailedRecently, InFlight, pageOfFile, pageRange, pdfinfoPages, pdftoppmArgs } from '@/modules/messaging/inbox/files/pdf/pdf-pages';
+import { FailedRecently } from '@/modules/messaging/inbox/files/pdf/failed-recently';
+import { InFlight, pageOfFile, pageRange, pdfinfoPages, pdftoppmArgs } from '@/modules/messaging/inbox/files/pdf/pdf-pages';
 
 describe('pageRange: page 1 alone, then runs of 5 cut at the page count and at 30', () => {
   it.each([

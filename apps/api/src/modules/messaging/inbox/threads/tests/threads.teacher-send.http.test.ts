@@ -26,7 +26,9 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    t.teacher.teacher.mockImplementation(async (profileId: string) => (profileId === TEACHER.id ? ME : null));
+    t.teacher.teacher.mockImplementation(async (profileId: string) =>
+      profileId === TEACHER.id ? ME : null,
+    );
     t.teacher.phones.mockResolvedValue([PHONE, OWN]);
     t.queries.lessonTeacher.mockResolvedValue('tch-1');
     t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, guardian_id: 'g1' }));

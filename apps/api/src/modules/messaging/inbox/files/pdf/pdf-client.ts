@@ -2,7 +2,8 @@ import { lstat } from 'node:fs/promises';
 import { request } from 'node:http';
 import { z } from 'zod';
 import type { PageRange } from './pdf-pages';
-import { PdfToolError, type PdfPageImage } from './pdf-render';
+import { PdfToolError } from './pdf-render';
+import type { PdfPageImage } from './pdf-render.types';
 import { PDF_SOCKET, readCapped } from './pdf-wire';
 
 // The API's side of the PDF sandbox (docs/09 «PDF sandbox»): the two calls of pdf-render.ts,
@@ -69,7 +70,6 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
   return r.data;
 }
 
-/** 200 → its JSON; 503 → 'busy' (its queue is full); anything else → 'failed'. */
 async function call(input: {
   path: string;
   bytes: Uint8Array;
@@ -77,20 +77,27 @@ async function call(input: {
 }): Promise<unknown> {
   const socketPath = input.opts.socket ?? PDF_SOCKET;
   if (!(await sandboxReady(socketPath))) throw new PdfToolError('unavailable');
-  const { status, body } = await post({
-    socketPath,
-    path: input.path,
-    bytes: input.bytes,
-    timeoutMs: input.opts.timeoutMs ?? TIMEOUT_MS,
-  });
-  if (status === 503) throw new PdfToolError('busy');
-  if (status !== 200 || body === null) throw new PdfToolError('failed');
-  try {
-    return JSON.parse(body.toString('utf8'));
-  } catch {
-    throw new PdfToolError('failed');
-  }
+  const timeoutMs = input.opts.timeoutMs ?? TIMEOUT_MS;
+  return answerOf(await post({ socketPath, path: input.path, bytes: input.bytes, timeoutMs }));
 }
+
+/** 200 → its JSON; 503 → 'busy' (its queue is full); anything else → 'failed'. */
+async function answerOf(answer: { status: number; body: Buffer | null }): Promise<unknown> {
+  if (answer.status === 503) throw new PdfToolError('busy');
+  if (answer.status !== 200 || answer.body === null) throw new PdfToolError('failed');
+  return new Response(answer.body).json().catch(() => {
+    throw new PdfToolError('failed');
+  });
+}
+
+const errnoError = z.object({ code: z.string() });
+
+/** A socket that is not there (or not ours to open) is the sandbox down; anything else failed. */
+const toolError = (e: unknown): PdfToolError => {
+  const errno = errnoError.safeParse(e);
+  const unreachable = errno.success && UNREACHABLE.has(errno.data.code);
+  return new PdfToolError(unreachable ? 'unavailable' : 'failed');
+};
 
 interface Post { socketPath: string; path: string; bytes: Uint8Array; timeoutMs: number }
 
@@ -100,10 +107,7 @@ interface Post { socketPath: string; path: string; bytes: Uint8Array; timeoutMs:
  */
 function post(input: Post): Promise<{ status: number; body: Buffer | null }> {
   return new Promise((resolve, reject) => {
-    const fail = (e: unknown) => {
-      const code = e instanceof Error && 'code' in e ? String(e.code) : '';
-      reject(new PdfToolError(UNREACHABLE.has(code) ? 'unavailable' : 'failed'));
-    };
+    const fail = (e: unknown) => reject(toolError(e));
     const req = request(
       {
         socketPath: input.socketPath,
@@ -113,11 +117,12 @@ function post(input: Post): Promise<{ status: number; body: Buffer | null }> {
         signal: AbortSignal.timeout(input.timeoutMs),
         headers: { 'content-type': 'application/pdf', 'content-length': input.bytes.byteLength },
       },
-      (res) =>
+      (res) => {
         readCapped(res, ANSWER_MAX).then(
           (body) => resolve({ status: res.statusCode ?? 0, body }),
           fail,
-        ),
+        );
+      },
     );
     req.once('error', fail);
     req.end(input.bytes);

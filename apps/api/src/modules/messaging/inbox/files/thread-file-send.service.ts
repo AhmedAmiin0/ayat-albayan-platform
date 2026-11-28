@@ -9,9 +9,9 @@ import {
 } from '@ab/shared';
 import { SETTING_DEFAULTS, uploadMaxBytes } from '@ab/settings';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { BUCKETS, chatOutPath, isChatOutPathOf } from '@/common/storage/storage.paths';
+import { BUCKETS, chatOutPath, isChatOutPathOf, type Bucket } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { sniffMime, SNIFF_BYTES } from '@/modules/teaching/booking/invoice/invoice-sniff';
+import { sniffMime, SNIFF_BYTES } from '@/modules/teaching/booking';
 import { InboxSettings } from '@/modules/messaging/inbox/inbox.settings';
 import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
 import { ThreadQuotes } from '@/modules/messaging/inbox/threads/thread-quotes';
@@ -39,6 +39,12 @@ export const sentFileName = (name: string, mime: string): string =>
   mime !== 'application/pdf' || /\.pdf$/i.test(name) ? name : `${name.slice(0, 196)}.pdf`;
 
 const filePath = () => httpError(HttpStatus.BAD_REQUEST, 'file_path');
+
+interface FileRef {
+  bucket: Bucket;
+  path: string;
+}
+type SentMedia = Awaited<ReturnType<typeof voiceMedia>>;
 
 /**
  * Staff send a JPEG/PNG image or a PDF from the chat, inside the 24 h window
@@ -97,17 +103,9 @@ export class ThreadFileSender {
     if (!isChatOutPathOf(path, { actorId: s.actorId, requestId: clientRequestId }))
       throw filePath();
     const ref = { bucket: BUCKETS.waMedia, path };
-    const info = await this.storage.info(ref);
-    if (!info) throw filePath();
-    const mime = baseMime(info.contentType);
-    assertSendable({ mime, size: info.size, maxBytes: await this.maxBytes() });
-    const head = await this.storage.head(ref, SNIFF_BYTES);
-    if (!head) throw filePath();
-    if (sniffMime(head) !== mime) throw httpError(HttpStatus.BAD_REQUEST, 'file_type');
+    const mime = await this.storedMime(ref);
     const reply = await replyOf(this.quotes, s, line);
-    const media = mime === CHAT_VOICE_MIME
-      ? await voiceMedia(this.storage, ref, this.toOgg)
-      : { media_path: path, media_mime: mime, media_name: sentFileName(filename, mime) };
+    const media = await this.mediaOf(ref, mime, filename);
     return this.outbox.queue({
       ...outboundBase(s, thread),
       dedup_key: key,
@@ -116,6 +114,23 @@ export class ThreadFileSender {
       ...line,
       ...reply,
     });
+  }
+
+  /** Storage's own type and size, then the first bytes must be that type. */
+  private async storedMime(ref: FileRef): Promise<string> {
+    const info = await this.storage.info(ref);
+    if (!info) throw filePath();
+    const mime = baseMime(info.contentType);
+    assertSendable({ mime, size: info.size, maxBytes: await this.maxBytes() });
+    const head = await this.storage.head(ref, SNIFF_BYTES);
+    if (!head) throw filePath();
+    if (sniffMime(head) !== mime) throw httpError(HttpStatus.BAD_REQUEST, 'file_type');
+    return mime;
+  }
+
+  private async mediaOf(ref: FileRef, mime: string, filename: string): Promise<SentMedia> {
+    if (mime === CHAT_VOICE_MIME) return voiceMedia(this.storage, ref, this.toOgg);
+    return { media_path: ref.path, media_mime: mime, media_name: sentFileName(filename, mime) };
   }
 
   private async maxBytes(): Promise<number> {

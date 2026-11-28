@@ -1,7 +1,7 @@
 import { PDF_PREVIEW_PAGES } from '@ab/shared';
 
 // The pure part of the chat PDF preview: which pages one request renders, poppler's
-// arguments and outputs, and two per-process maps (shared in-flight work, recent failures).
+// arguments and outputs, and the per-process map of shared in-flight work.
 
 /** Pages 2+ render in runs of this many (2–6, 7–11 …), so page 2 never waits for page 30. */
 export const PDF_RUN = 5;
@@ -63,28 +63,5 @@ export class InFlight<T> {
     const job = fn().finally(() => this.running.delete(key));
     this.running.set(key, job);
     return job;
-  }
-}
-
-/**
- * Keys that failed within `ms`: a PDF whose render always fails or hangs does not take the slot on
- * every view.
- */
-export class FailedRecently {
-  private readonly until = new Map<string, number>();
-
-  constructor(
-    private readonly ms: number,
-    private readonly now: () => number = Date.now,
-  ) {}
-
-  has(key: string): boolean {
-    return (this.until.get(key) ?? 0) > this.now();
-  }
-
-  add(key: string): void {
-    const now = this.now();
-    for (const [k, t] of this.until) if (t <= now) this.until.delete(k);
-    this.until.set(key, now + this.ms);
   }
 }

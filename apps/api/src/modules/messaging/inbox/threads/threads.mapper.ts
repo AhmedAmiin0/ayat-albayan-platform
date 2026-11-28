@@ -6,47 +6,27 @@ import {
   type ReopenChoice,
   type TemplateParamsInput,
   type TemplateView,
-  type ThreadNote,
   type ThreadView,
 } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
-import { searchDigits } from '@ab/core';
 import { lineEnvs, loadEnv } from '@/config/env/env';
-import { orFilterTerm } from '@/common/db/or-filter';
 import { looksCrmHistory, windowless } from '@/modules/messaging/whatsapp';
 import type { FamilyTag } from '@/modules/messaging/inbox/people/thread-people.mapper';
+import type { ChatLine, ListedRow, ReplyAt, ThreadViewOpts } from './threads.mapper.types';
 
 export type ThreadRow = Tables<'v_threads'>;
 
-/** The family tags (null: none), and how a closed chat reopens (ReopenRequest.usable). */
-interface ThreadViewOpts {
-  tag?: FamilyTag | null;
-  reopenUsable?: ReopenChoice | null;
-}
-
 /** A thread exists only with a message, so last-message fields are set despite nullable types. */
-export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: boolean }, now: Date, opts: ThreadViewOpts = {}): ThreadView {
+export function toThreadView(row: ListedRow, now: Date, opts: ThreadViewOpts = {}): ThreadView {
   const chat = lineEnvs(loadEnv()).chat;
-  const tag = opts.tag ?? null;
   return {
-    phone_e164: row.phone_e164 ?? '',
-    display_name: row.display_name,
-    last_message_id: row.last_message_id ?? '',
-    last_direction: row.last_direction ?? 'inbound',
-    last_body: lastBody(row),
-    last_template_key: row.last_template_key,
-    last_status: row.last_status ?? 'delivered',
-    last_media_mime: row.last_media_mime,
-    ...(row.last_unsupported ? { last_unsupported: true } : {}),
-    ...(row.last_note ? { last_note: row.last_note } : {}),
-    last_message_at: row.last_message_at ?? '',
+    ...lastFields(row),
     last_inbound_at: row.last_inbound_at,
     last_inbound_line: row.last_inbound_line,
     last_chat_inbound_at: row.last_chat_inbound_at,
     last_notifications_inbound_at: row.last_notifications_inbound_at,
     reply_line: shownReplyLine(row, { chatConfigured: Boolean(chat), now }),
-    // A Kapso chat line holds a late text while it can reopen; reopen_choice picks the note.
-    ...tryAfterWindow(chat?.provider === 'kapso' ? (opts.reopenUsable ?? null) : null),
+    ...tryAfterWindow(kapsoReopen(chat, opts)),
     unread_count: row.unread_count ?? 0,
     lead_id: row.lead_id,
     lead_name: row.lead_name,
@@ -59,16 +39,44 @@ export function toThreadView(row: ThreadRow & ThreadNote & { last_unsupported?: 
     teacher_name: row.teacher_name,
     // An Evolution Baileys chat line has no 24 h window: free text at any time (docs/19).
     session_open: messagingWindowOpen(row, now) || windowless(chat),
-    ...familyFields(row.guardian_id ? (tag ?? NO_TAG) : null),
+    ...familyFields(row.guardian_id ? (opts.tag ?? NO_TAG) : null),
   };
 }
+
+function lastFields(row: ListedRow) {
+  return {
+    phone_e164: row.phone_e164 ?? '',
+    display_name: row.display_name,
+    last_message_id: row.last_message_id ?? '',
+    last_direction: row.last_direction ?? 'inbound',
+    last_body: lastBody(row),
+    last_template_key: row.last_template_key,
+    last_status: row.last_status ?? 'delivered',
+    last_media_mime: row.last_media_mime,
+    ...markFields(row),
+    last_message_at: row.last_message_at ?? '',
+  };
+}
+
+const markFields = (row: ListedRow) => ({
+  ...(row.last_unsupported ? { last_unsupported: true } : {}),
+  ...(row.last_note ? { last_note: row.last_note } : {}),
+});
+
+/** A Kapso chat line holds a late text while it can reopen; reopen_choice picks the note. */
+const kapsoReopen = (chat: ChatLine, opts: ThreadViewOpts): ReopenChoice | null =>
+  chat?.provider === 'kapso' ? (opts.reopenUsable ?? null) : null;
 
 const tryAfterWindow = (choice: ReopenChoice | null) =>
   choice ? { try_after_window: true, reopen_choice: choice } : {};
 
 /** An old-CRM file's last body is only its storage link: the list shows the media label instead. */
 function lastBody(row: ThreadRow): string | null {
-  const shape = { direction: row.last_direction, media_mime: row.last_media_mime, body: row.last_body };
+  const shape = {
+    direction: row.last_direction,
+    media_mime: row.last_media_mime,
+    body: row.last_body,
+  };
   return looksCrmHistory(shape) ? null : row.last_body;
 }
 
@@ -94,18 +102,19 @@ export function messagingWindowOpen(
 }
 
 /** replyLine() over the view's two per-line windows (docs/12 §13.3 rule 2). */
-export function threadReplyLine(row: ThreadRow, opts: { chatConfigured: boolean; now: Date }): WaLine | null {
-  const { last_chat_inbound_at: lastChatInboundAt, last_notifications_inbound_at: lastNotificationsInboundAt } = row;
+export function threadReplyLine(row: ThreadRow, opts: ReplyAt): WaLine | null {
+  const lastChatInboundAt = row.last_chat_inbound_at;
+  const lastNotificationsInboundAt = row.last_notifications_inbound_at;
   return replyLine({ lastChatInboundAt, lastNotificationsInboundAt, ...opts });
 }
 
 /**
  * The «replying from» line (13.10): the line ThreadSendService.text stamps, so null on a single
  * line (no note, as before two lines) and 'chat' when only the chat window is open but its line
- * cannot send (the reply answers 503).
+ * cannot send (the reply answers 503). Chat first: a notifications window never answers a staff
+ * send beside a chat line.
  */
-function shownReplyLine(row: ThreadRow, at: { chatConfigured: boolean; now: Date }): WaLine | null {
-  // Chat first (2026-11-21): a notifications window never answers a staff send beside a chat line.
+function shownReplyLine(row: ThreadRow, at: ReplyAt): WaLine | null {
   const chatFirst = at.chatConfigured ? { ...row, last_notifications_inbound_at: null } : row;
   const line = threadReplyLine(chatFirst, at);
   return at.chatConfigured || line === 'chat' ? line : null;
@@ -123,20 +132,13 @@ function familyFields(tag: FamilyTag | null): FamilyFields {
   return { subscribed: badge === 'subscribed', badge, unpaid, ring: tag.ring ?? null };
 }
 
-/** H1 search: a phone in any format → its digits; else the display name. */
-export function threadSearchFilter(term: string): string | null {
-  const digits = searchDigits(term);
-  if (digits) return `phone_e164.ilike.*${digits}*`;
-  const safe = orFilterTerm(term);
-  return safe ? `display_name.ilike.*${safe}*` : null;
-}
-
 /**
  * H4: what the admin left empty. Every {{n}} of the template is required, and the URL button's
  * suffix when its url has a {{1}} (the meeting code). Names are the TemplateParams keys.
  */
 export function missingParams(template: TemplateView, params: TemplateParamsInput): string[] {
-  const missing = template.params.map((_, i) => String(i + 1)).filter((k) => !params[k as BodySlot]);
+  const slots = template.params.map((_, i) => String(i + 1));
+  const missing = slots.filter((k) => !params[k as BodySlot]);
   const needsButton = template.buttons.some((b) => b.type === 'url' && b.url.includes('{{1}}'));
   return needsButton && !params.button ? [...missing, 'button'] : missing;
 }

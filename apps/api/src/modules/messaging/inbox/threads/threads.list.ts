@@ -1,10 +1,9 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/catalog';
-import { listSortShape, type ListSort } from '@ab/core';
+import { listSortShape, searchDigits, type ListSort } from '@ab/core';
 import { z } from 'zod';
 import type { SortSpec } from '@/common/db/list-sort';
-import type { Db } from '@/common/db/db.module';
+import { orFilterTerm } from '@/common/db/or-filter';
 import { pageQuerySchema } from '@/common/http/http';
-import { phoneList } from '@/modules/messaging/numbers';
 
 // H1 list order and filters (R-LEAD-02, R-NFR-08). No `sort` = newest message first (the old
 // order).
@@ -64,10 +63,10 @@ export function teacherListFilter(
   return out;
 }
 
-/** Never the academy's own numbers. */
-export function threadsSource(db: Db, f: ThreadListFilter) {
-  const query = f.list
-    ? db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
-    : db.from('v_threads').select('*', { count: 'exact' });
-  return f.hide?.length ? query.not('phone_e164', 'in', phoneList(f.hide)) : query;
+/** H1 search: a phone in any format → its digits; else the display name. */
+export function threadSearchFilter(term: string): string | null {
+  const digits = searchDigits(term);
+  if (digits) return `phone_e164.ilike.*${digits}*`;
+  const safe = orFilterTerm(term);
+  return safe ? `display_name.ilike.*${safe}*` : null;
 }

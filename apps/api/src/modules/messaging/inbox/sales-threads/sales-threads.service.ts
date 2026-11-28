@@ -13,7 +13,7 @@ import { InboxSettings, renewalThreshold } from '@/modules/messaging/inbox/inbox
 import { forSales, salesLessons, salesPeople, visibleToSales, withoutLinks } from './sales-threads';
 import { toThreadView, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import type { PeopleOf } from '@/modules/messaging/inbox/people/thread-people';
-import type { LessonsOf } from '@/modules/messaging/inbox/threads/thread-lessons.types';
+import type { LessonsOf } from '@/modules/messaging/inbox/threads/thread-lessons';
 import { ThreadsRepo, type ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import {

@@ -1,8 +1,8 @@
 import { QUOTE_BODY_MAX, UNAVAILABLE_QUOTE, type MessageQuote, type MessageView } from '@ab/shared';
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '@/common/db/db.module';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { looksCrmHistory } from '@/modules/messaging/whatsapp';
 import { httpError } from '@/common/http/errors';
+import { ThreadQuotesRepo } from './thread-quotes.repo';
 
 /** A quoted row as read here: what the bubble shows, and who of staff sent it. */
 export interface QuotedRow {
@@ -43,25 +43,29 @@ export function sameNumber(quoted: SendFrom, from: SendFrom): boolean {
   return !(from.line && quoted.line && from.line !== quoted.line);
 }
 
-const QUOTE_SELECT =
-  'id, direction, body, media_mime, template_key, deleted_at, hidden_at, sender:profiles!messages_created_by_fkey(full_name)' as const;
-
 /**
  * A template's text is never quoted (a signed link could be in it): the bubble names it a template.
  * Nor an old-CRM file's body (only its storage link): the quote names the media.
  */
 export function quoteOf(row: QuotedRow): MessageQuote {
   const gone = goneFromQuotes(row);
-  const hidden = gone || row.template_key || looksCrmHistory(row);
   return {
     id: row.id,
     direction: row.direction,
-    body: hidden ? null : (row.body?.slice(0, QUOTE_BODY_MAX) ?? null),
+    body: hidesBody(row) ? null : quotedBody(row.body),
     media_mime: gone ? null : row.media_mime,
     template_key: row.template_key,
-    sender_name: row.direction === 'outbound' ? (row.sender?.full_name ?? null) : null,
+    sender_name: row.direction === 'outbound' ? senderName(row) : null,
   };
 }
+
+const hidesBody = (row: QuotedRow): boolean =>
+  goneFromQuotes(row) || Boolean(row.template_key) || looksCrmHistory(row);
+
+const quotedBody = (body: string | null): string | null =>
+  body === null ? null : body.slice(0, QUOTE_BODY_MAX);
+
+const senderName = (row: QuotedRow): string | null => row.sender?.full_name ?? null;
 
 /** Deleted for everyone, or hidden from the platform: the quote shows nothing of it. */
 const goneFromQuotes = (row: QuotedRow): boolean =>
@@ -82,17 +86,11 @@ export function withQuotes(
 /** A reply quotes a message of the same chat that WhatsApp knows (a wamid). */
 @Injectable()
 export class ThreadQuotes {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(private readonly repo: ThreadQuotesRepo) {}
 
   /** 400 reply_not_in_thread for another chat's message, an unknown id or one without a wamid. */
   async target(phone: string, messageId: string, from: SendFrom = {}): Promise<ReplyFields> {
-    const { data, error } = await this.db
-      .from('messages')
-      .select('id, wa_message_id, line, number_id')
-      .eq('id', messageId)
-      .eq('phone_e164', phone)
-      .maybeSingle();
-    if (error) throw new Error(`reply target read failed: ${error.message}`);
+    const data = await this.repo.replyTarget(phone, messageId);
     if (!data?.wa_message_id) throw httpError(HttpStatus.BAD_REQUEST, 'reply_not_in_thread');
     // The bubble still quotes it; WhatsApp gets no context it would refuse or drop.
     return {
@@ -109,12 +107,7 @@ export class ThreadQuotes {
       ...new Set(views.flatMap((v) => (v.reply_to_message_id ? [v.reply_to_message_id] : []))),
     ];
     if (ids.length === 0) return withQuotes(views, new Map());
-    const { data, error } = await this.db
-      .from('messages')
-      .select(QUOTE_SELECT)
-      .in('id', ids)
-      .eq('phone_e164', phone);
-    if (error) throw new Error(`quoted messages read failed: ${error.message}`);
-    return withQuotes(views, new Map((data ?? []).map((r) => [r.id, quoteOf(r)])));
+    const rows = await this.repo.quoted(ids, phone);
+    return withQuotes(views, new Map(rows.map((r) => [r.id, quoteOf(r)])));
   }
 }

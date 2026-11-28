@@ -8,7 +8,7 @@ import {
   type ThreadText,
 } from '@ab/shared';
 import { phoneE164 } from '@ab/core';
-import { Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
@@ -16,9 +16,9 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
 import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
-import { invalidPhone, phoneParam } from './phone-param';
+import { invalidPhone } from './phone-param';
 import { onePageMode } from '@/modules/messaging/inbox/reads/page-mode';
-import type { SalesScope } from '@/modules/sales/sales/sales-scope';
+import type { SalesScope } from '@/modules/sales/sales';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
 import { threadListQuery } from './threads.list';
@@ -34,10 +34,7 @@ const detailQuery = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),
 });
 
-/**
- * ?after= (the delta refresh) with the client's outgoing rows still moving:
- * `pending=<uuid>,<uuid>`.
- */
+/** ?after= (the delta refresh) with the client's outgoing rows still moving: `pending=a,b`. */
 const deltaQuery = detailQuery.omit({ before: true }).extend({
   after: z.iso.datetime({ offset: true }),
   pending: z
@@ -94,13 +91,13 @@ export class ThreadsController {
   @HttpCode(201)
   @Permissions('inbox.send')
   async text(
-    @Param('phone') raw: string,
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
     @ZodBody(threadTextSchema) input: ThreadText,
     @CurrentUser() user: AuthUser,
   ) {
     const { scope, sales } = await this.scopes(user);
     const sent = await this.sends.text({
-      phone: phoneParam(raw),
+      phone,
       input,
       actorId: user.id,
       scope,
@@ -117,14 +114,14 @@ export class ThreadsController {
   @HttpCode(201)
   @Permissions('inbox.send')
   async template(
-    @Param('phone') raw: string,
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
     @ZodBody(threadTemplateSchema) input: ThreadTemplate,
     @CurrentUser() user: AuthUser,
   ) {
     const { scope, sales } = await this.scopes(user);
     const restricted = !sendsAllTemplates(user);
     const sent = await this.sends.template({
-      phone: phoneParam(raw),
+      phone,
       input,
       actorId: user.id,
       scope,
@@ -134,10 +131,7 @@ export class ThreadsController {
     return this.audited({ sent, action: 'thread_template', user, scope, sales });
   }
 
-  /**
-   * Who is sending: a salesperson (their SalesScope), a teacher (TeacherScope) or the admin
-   * (neither).
-   */
+  /** Who sends: a salesperson (SalesScope), a teacher (TeacherScope) or the admin (neither). */
   private async scopes(
     user: AuthUser,
   ): Promise<{ scope: TeacherScope | null; sales: SalesScope | null }> {

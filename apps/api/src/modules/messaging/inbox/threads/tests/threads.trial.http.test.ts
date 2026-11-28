@@ -37,7 +37,9 @@ describe('trial students: no direct chat between the teacher and the family (own
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    t.teacher.teacher.mockImplementation(async (profileId: string) => (profileId === TEACHER.id ? ME : null));
+    t.teacher.teacher.mockImplementation(async (profileId: string) =>
+      profileId === TEACHER.id ? ME : null,
+    );
     t.teacher.phones.mockResolvedValue(scopePhones());
     t.teacher.unread.mockResolvedValue(new Map());
     t.teacher.guardianStudents.mockResolvedValue([]);
@@ -52,7 +54,9 @@ describe('trial students: no direct chat between the teacher and the family (own
 
   it('the list pages only the active and mixed families and my own chat, never the trial family', async () => {
     await t.call({ method: 'GET', url: '/threads', token: 'teacher' });
-    expect(t.queries.list).toHaveBeenCalledWith(expect.objectContaining({ phones: [MIXED, ACTIVE, OWN] }));
+    expect(t.queries.list).toHaveBeenCalledWith(
+      expect.objectContaining({ phones: [MIXED, ACTIVE, OWN] }),
+    );
   });
 
   it('opening a trial family’s thread → 403 not_your_thread; nothing is read or stamped', async () => {
