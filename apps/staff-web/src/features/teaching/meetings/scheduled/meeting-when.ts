@@ -10,11 +10,17 @@ export const whenText = (iso: string, tz: string, clock: Clock): string =>
   lessonWhenAt(new Date(iso), { tz, ...clock });
 
 export function scheduleLine(m: Pick<MeetingView, 'starts_at'>, tz: string, clock: Clock): string {
-  return m.starts_at ? L.scheduledFor.replace('{when}', whenText(m.starts_at, tz, clock)) : L.instant;
+  return m.starts_at
+    ? L.scheduledFor.replace('{when}', whenText(m.starts_at, tz, clock))
+    : L.instant;
 }
 
 /** Null once the window opened. */
-export function opensLine(m: Pick<MeetingView, 'window' | 'cancelled_at'>, tz: string, clock: Clock): string | null {
+export function opensLine(
+  m: Pick<MeetingView, 'window' | 'cancelled_at'>,
+  tz: string,
+  clock: Clock,
+): string | null {
   if (m.cancelled_at || m.window?.state !== 'early') return null;
   return L.opensAt.replace('{when}', whenText(m.window.opens_at, tz, clock));
 }

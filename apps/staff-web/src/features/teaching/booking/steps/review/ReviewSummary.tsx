@@ -55,7 +55,8 @@ function PackageValue({ draft, students }: { draft: BookingDraft; students: numb
 /** The assistant's course shows its lesson count and end, no price or invoice (R-SCH-06). */
 export function ReviewSummary({ draft }: { draft: BookingDraft }) {
   const clock = { ...useClock(), tz: useViewerTz() };
-  const names = draft.students.length > 0 ? draft.students.map((s) => s.name) : [draft.newStudent?.name ?? ''];
+  const names =
+    draft.students.length > 0 ? draft.students.map((s) => s.name) : [draft.newStudent?.name ?? ''];
   const students = Math.max(1, draft.students.length);
   const { kind, missed, invoice } = draft;
   return (
@@ -69,7 +70,10 @@ export function ReviewSummary({ draft }: { draft: BookingDraft }) {
       )}
       <Row label={t.students.teacher}>{draft.teacher && teacherLabel(draft.teacher)}</Row>
       <Row label={kind === 'makeup' ? t.booking.makeup.timeLabel : t.booking.startsOn}>
-        {draft.startsAt && (kind === 'makeup' ? pickedText(draft.startsAt, draft.tz, clock) : t.booking.firstLesson.replace('{when}', pickedText(draft.startsAt, draft.tz, clock)))}
+        {draft.startsAt &&
+          (kind === 'makeup'
+            ? pickedText(draft.startsAt, draft.tz, clock)
+            : t.booking.firstLesson.replace('{when}', pickedText(draft.startsAt, draft.tz, clock)))}
       </Row>
       {kind !== 'makeup' && (
         <Row label={t.booking.pickDays}>
@@ -82,7 +86,11 @@ export function ReviewSummary({ draft }: { draft: BookingDraft }) {
           <PackageValue draft={draft} students={students} />
         </Row>
       )}
-      {kind !== 'trial' && !draft.course && <Row label={t.booking.invoice.label}>{invoice ? <InvoiceRow invoice={invoice} /> : '—'}</Row>}
+      {kind !== 'trial' && !draft.course && (
+        <Row label={t.booking.invoice.label}>
+          {invoice ? <InvoiceRow invoice={invoice} /> : '—'}
+        </Row>
+      )}
     </dl>
   );
 }

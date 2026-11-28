@@ -5,7 +5,8 @@ import { matchesQuery } from '@ab/core';
 /** Arabic order for names (ignores case; «10» after «9»). */
 const collator = new Intl.Collator('ar', { numeric: true, sensitivity: 'base' });
 
-const isEmpty = (v: unknown): v is null | undefined | '' => v === null || v === undefined || v === '';
+const isEmpty = (v: unknown): v is null | undefined | '' =>
+  v === null || v === undefined || v === '';
 
 /** Ascending compare: numbers numerically, dates by time, the rest as Arabic text; empty values last. */
 export function compareValues(a: unknown, b: unknown): number {

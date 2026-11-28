@@ -5,7 +5,8 @@ import { BUTTON_ICON } from './template-buttons';
 
 const words = t.inbox.templateBubble;
 
-const ROW = 'flex min-h-11 w-full items-center justify-center gap-1.5 px-3 py-2 text-center text-sm font-semibold text-lapis';
+const ROW =
+  'flex min-h-11 w-full items-center justify-center gap-1.5 px-3 py-2 text-center text-sm font-semibold text-lapis';
 
 function ButtonRow({ button: b }: { button: TemplateDisplayButton }) {
   const href = templateButtonLink(b);
@@ -53,7 +54,10 @@ function ButtonRow({ button: b }: { button: TemplateDisplayButton }) {
 export function TemplateButtons({ buttons }: { buttons: readonly TemplateDisplayButton[] }) {
   if (buttons.length === 0) return null;
   return (
-    <ul aria-label={t.inbox.templateBubble.buttons} className="-mx-3.5 mt-2 border-t border-rule-strong">
+    <ul
+      aria-label={t.inbox.templateBubble.buttons}
+      className="-mx-3.5 mt-2 border-t border-rule-strong"
+    >
       {buttons.map((b, i) => (
         <ButtonRow key={`${b.type}-${i}`} button={b} />
       ))}

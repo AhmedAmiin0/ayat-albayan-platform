@@ -58,7 +58,10 @@ export function BookedPanel({
   const { first, week } = firstLesson(result, clock.tz);
   const offer = !!subscribeFor && !subscribed;
   // The assistant never has an invoice (her course follows the subscription she made).
-  const invoices = useQuery({ ...invoicesQuery({ ruleId: result.rule_id }), enabled: !sales && !!kind && kind !== 'trial' });
+  const invoices = useQuery({
+    ...invoicesQuery({ ruleId: result.rule_id }),
+    enabled: !sales && !!kind && kind !== 'trial',
+  });
   const invoice = invoices.data?.[0];
   return (
     <section aria-labelledby="booked-title" className="grid justify-items-start gap-3 py-2">
@@ -69,9 +72,15 @@ export function BookedPanel({
         </h2>
         {subscribed && <p className="mt-1 font-semibold text-ok">{t.subscriptions.saved}</p>}
       </div>
-      {first && <p>{t.booking.firstLesson.replace('{when}', pickedText(first.starts_at, tz, clock))}</p>}
-      <p className="text-sm text-ink-2 tabular-nums">{counted(t.schedule.lessonCount, result.lessons.length)}</p>
-      {result.message_ids.length > 0 && <p className="text-sm text-ink-2">{t.booking.confirmationNote}</p>}
+      {first && (
+        <p>{t.booking.firstLesson.replace('{when}', pickedText(first.starts_at, tz, clock))}</p>
+      )}
+      <p className="text-sm text-ink-2 tabular-nums">
+        {counted(t.schedule.lessonCount, result.lessons.length)}
+      </p>
+      {result.message_ids.length > 0 && (
+        <p className="text-sm text-ink-2">{t.booking.confirmationNote}</p>
+      )}
       <div className="flex flex-wrap gap-2">
         {offer && (
           <Button type="button" onClick={() => setDialog(true)}>
@@ -103,7 +112,11 @@ export function BookedPanel({
           </Button>
         )}
         {chatPhone && !backToChat && (
-          <Link to={sales ? '/sales/inbox' : '/admin/inbox'} search={{ phone: chatPhone, page: 1 }} className={buttonVariants({ variant: 'ghost' })}>
+          <Link
+            to={sales ? '/sales/inbox' : '/admin/inbox'}
+            search={{ phone: chatPhone, page: 1 }}
+            className={buttonVariants({ variant: 'ghost' })}
+          >
             {t.inbox.subscription.backToChat}
           </Link>
         )}

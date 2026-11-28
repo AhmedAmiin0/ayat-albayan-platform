@@ -45,7 +45,9 @@ function Row({
             <span className="min-w-0 truncate text-sm font-semibold text-ink" dir="auto">
               {th.display_name ?? formatPhone(th.phone_e164)}
             </span>
-            {phone && th.display_name && <Ltr className="shrink-0 text-2xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
+            {phone && th.display_name && (
+              <Ltr className="shrink-0 text-2xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>
+            )}
           </span>
           {!may && (
             <span id={hintId} className="block text-2xs text-ink-2">

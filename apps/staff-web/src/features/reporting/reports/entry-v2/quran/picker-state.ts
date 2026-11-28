@@ -1,4 +1,12 @@
-import { ayahCount, segmentsOf, suggestRange, type MemoryView, type ReportContent, type SegmentKind, type SurahRange } from '@ab/shared';
+import {
+  ayahCount,
+  segmentsOf,
+  suggestRange,
+  type MemoryView,
+  type ReportContent,
+  type SegmentKind,
+  type SurahRange,
+} from '@ab/shared';
 
 /** What the picker edits: a part (index in content.segments) or a new one (-1) of a track. */
 export interface PickTarget {

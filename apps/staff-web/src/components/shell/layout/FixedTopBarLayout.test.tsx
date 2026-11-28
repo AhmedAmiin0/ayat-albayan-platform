@@ -15,7 +15,10 @@ vi.mock('@tanstack/react-router', async () => ({
   useNavigate: () => vi.fn(),
 }));
 vi.mock('@ab/web-kit/auth/me/me', async () => ({
-  meQuery: { queryKey: (await import('@ab/client-core')).pathKey('/auth/me'), queryFn: async () => null },
+  meQuery: {
+    queryKey: (await import('@ab/client-core')).pathKey('/auth/me'),
+    queryFn: async () => null,
+  },
 }));
 vi.mock('@/components/shell/header/MenuBar', () => ({ MenuBar: () => null }));
 vi.mock('@/features/messaging/notifications/NotificationBell/NotificationBell', () => ({
@@ -27,7 +30,11 @@ function renderAt(pathname: string, wide = false) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={client}>
-      <FixedTopBarLayout topNav={<nav aria-label={t.sales.nav.label} />} bar={{ home: '/sales', title: t.sales.nav.chats }} wide={wide}>
+      <FixedTopBarLayout
+        topNav={<nav aria-label={t.sales.nav.label} />}
+        bar={{ home: '/sales', title: t.sales.nav.chats }}
+        wide={wide}
+      >
         <p>page</p>
       </FixedTopBarLayout>
     </QueryClientProvider>,
@@ -53,10 +60,19 @@ describe('FixedTopBarLayout', () => {
     // bell: hidden there, the separate row shows until 1340px; the inline box clips as a guard (round 2 E).
     const inline = riyadh[0]?.closest('.min-h-0');
     const box = inline?.parentElement?.className.split(' ');
-    expect(box).toEqual(expect.arrayContaining(['hidden', 'min-[1340px]:block', 'overflow-hidden', 'whitespace-nowrap']));
+    expect(box).toEqual(
+      expect.arrayContaining([
+        'hidden',
+        'min-[1340px]:block',
+        'overflow-hidden',
+        'whitespace-nowrap',
+      ]),
+    );
     expect(box).not.toContain('min-[1100px]:block');
     expect(inline?.className.split(' ')).toContain('whitespace-nowrap');
-    const row = all.find((el) => !header().contains(el))?.closest('.min-h-\\[54px\\]')?.parentElement;
+    const row = all
+      .find((el) => !header().contains(el))
+      ?.closest('.min-h-\\[54px\\]')?.parentElement;
     expect(row?.className.split(' ')).toContain('min-[1340px]:hidden');
     expect(row?.className.split(' ')).not.toContain('shell:hidden');
     const bell = screen.getByRole('button', { name: t.bell.open });
@@ -89,10 +105,23 @@ describe('FixedTopBarLayout', () => {
     expect(root(container)).not.toContain('max-w-[1180px]');
     const riyadh = screen.getAllByText(t.runningHead.riyadh);
     expect(riyadh.filter((el) => header().contains(el))).toHaveLength(1);
-    const row = riyadh.find((el) => !header().contains(el))?.closest('.min-h-\\[54px\\]')?.parentElement;
+    const row = riyadh
+      .find((el) => !header().contains(el))
+      ?.closest('.min-h-\\[54px\\]')?.parentElement;
     expect(row?.className.split(' ')).toContain('min-[1340px]:hidden');
-    const page = screen.getByText('page').closest('[data-page-scroll]')?.parentElement?.className.split(' ');
-    expect(page).toEqual(expect.arrayContaining(['shell:m-0', 'shell:px-3', 'shell:pt-3', 'shell:pb-3', 'max-sm:px-2']));
+    const page = screen
+      .getByText('page')
+      .closest('[data-page-scroll]')
+      ?.parentElement?.className.split(' ');
+    expect(page).toEqual(
+      expect.arrayContaining([
+        'shell:m-0',
+        'shell:px-3',
+        'shell:pt-3',
+        'shell:pb-3',
+        'max-sm:px-2',
+      ]),
+    );
     expect(page).not.toContain('max-sm:[&>div]:pb-0');
   });
 });

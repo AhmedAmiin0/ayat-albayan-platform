@@ -27,7 +27,9 @@ export async function openMic(deps: RtcDeps | null): Promise<MediaStream> {
     return await deps.getMic();
   } catch (e) {
     const name = e instanceof Error ? e.name : '';
-    throw new MicError(name === 'NotFoundError' || name === 'NotSupportedError' ? 'unsupported' : 'denied');
+    throw new MicError(
+      name === 'NotFoundError' || name === 'NotSupportedError' ? 'unsupported' : 'denied',
+    );
   }
 }
 

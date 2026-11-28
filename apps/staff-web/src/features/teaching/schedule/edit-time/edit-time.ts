@@ -5,7 +5,8 @@ import { addDays, wallInstant, zonedPartsIn } from '@ab/time';
 
 const STEP = 15;
 const MIN = 60_000;
-const hhmm = (min: number) => `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`;
+const hhmm = (min: number) =>
+  `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`;
 
 /** Time select options in 15-minute steps; an off-grid current value (16:10) is kept. */
 export function timeOptions15(current?: string): string[] {

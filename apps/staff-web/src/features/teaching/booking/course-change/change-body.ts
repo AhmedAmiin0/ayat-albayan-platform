@@ -8,12 +8,16 @@ import type { CourseChangeBody } from './api';
  * the later of changeOpensOn (today while it runs, else its opensOn) and startsOn (changePicks): a
  * course booked ahead opens on its own week, a pending change's picks on its new set's first day.
  */
-export const currentPicks = (course: Pick<BookedCourse, 'days' | 'tz' | 'opensOn' | 'running' | 'startsOn'>, now: Date): PrefilledPick[] =>
-  changePicks(course, now);
+export const currentPicks = (
+  course: Pick<BookedCourse, 'days' | 'tz' | 'opensOn' | 'running' | 'startsOn'>,
+  now: Date,
+): PrefilledPick[] => changePicks(course, now);
 
 /** Exactly the plan's days a week; a custom count (perWeek null) needs at least one. */
-export const picksReady = (course: Pick<BookedCourse, 'perWeek'>, picks: readonly string[]): boolean =>
-  course.perWeek === null ? picks.length > 0 : picks.length === course.perWeek;
+export const picksReady = (
+  course: Pick<BookedCourse, 'perWeek'>,
+  picks: readonly string[],
+): boolean => (course.perWeek === null ? picks.length > 0 : picks.length === course.perWeek);
 
 export interface ChangeBodyInput {
   course: Pick<BookedCourse, 'subscriptionId' | 'tz'>;

@@ -14,9 +14,7 @@ export function LineSyncResult({ sync }: { sync: TemplateLineSync }) {
   const p = t.templates.perNumber;
   if (!sync.ok) {
     return (
-      <p className="text-xs font-semibold whitespace-normal text-danger">
-        {syncFailedText(sync)}
-      </p>
+      <p className="text-xs font-semibold whitespace-normal text-danger">{syncFailedText(sync)}</p>
     );
   }
   const [before, between, after] = p.skipReason.split(/\{name\}|\{reason\}/);

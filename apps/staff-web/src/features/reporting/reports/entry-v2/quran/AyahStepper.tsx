@@ -17,7 +17,13 @@ export function AyahStepper({ label, value, onChange }: AyahStepperProps) {
     <div role="group" aria-label={label} className="grid gap-1">
       <span className="text-xs text-ink-3">{label}</span>
       <div className="flex items-center gap-1.5">
-        <Button type="button" variant="secondary" size="sm" aria-label={p.dec} onClick={() => onChange(value - 1)}>
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          aria-label={p.dec}
+          onClick={() => onChange(value - 1)}
+        >
           −
         </Button>
         {/* Typed digits apply on blur / Enter, so typing «25» never passes through «2» (the other end stays). */}
@@ -31,7 +37,13 @@ export function AyahStepper({ label, value, onChange }: AyahStepperProps) {
           onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
           className={cn(controlClass, 'w-16 text-center tabular-nums')}
         />
-        <Button type="button" variant="secondary" size="sm" aria-label={p.inc} onClick={() => onChange(value + 1)}>
+        <Button
+          type="button"
+          variant="secondary"
+          size="sm"
+          aria-label={p.inc}
+          onClick={() => onChange(value + 1)}
+        >
           +
         </Button>
       </div>

@@ -30,7 +30,9 @@ function Note({ children }: { children: string }) {
 }
 
 /** Each side breaks as a unit, so the length never splits across lines. */
-const Side = ({ children }: { children: string }) => <span className="whitespace-nowrap">{children}</span>;
+const Side = ({ children }: { children: string }) => (
+  <span className="whitespace-nowrap">{children}</span>
+);
 
 /** Shown once something differs (R-SCH-11); corrections show payout and report effects. */
 export function EditTimeConfirm(p: EditTimeConfirmProps) {
@@ -41,7 +43,9 @@ export function EditTimeConfirm(p: EditTimeConfirmProps) {
   // The teacher's own clock is only worth a line when it reads differently from the viewer's.
   const sameClock = sameClockAt(new Date(next.startsAt), { a: teacherTz, b: tz });
   const clocks = [
-    ...(sameClock ? [] : [t.schedule.teacherTime.replace('{time}', timeInCity(next.startsAt, teacherTz, clock))]),
+    ...(sameClock
+      ? []
+      : [t.schedule.teacherTime.replace('{time}', timeInCity(next.startsAt, teacherTz, clock))]),
     ...studentTimes({ starts_at: next.startsAt, students: lesson.students }, tz, clock),
   ];
   const correct = mode === 'correct';
@@ -59,7 +63,9 @@ export function EditTimeConfirm(p: EditTimeConfirmProps) {
         <span className="ms-1.5 text-xs font-normal text-ink-3">{t.schedule.viewerTime}</span>
       </p>
       {clocks.map((line, i) => (
-        <p key={`${i}-${line}`} className="text-xs text-ink-2">{line}</p>
+        <p key={`${i}-${line}`} className="text-xs text-ink-2">
+          {line}
+        </p>
       ))}
       <p className="text-xs text-ink-3">{t.lessons.timeEdit.sameLesson}</p>
       {correct && <Note>{t.lessons.timeEdit.heldNote}</Note>}
@@ -67,7 +73,12 @@ export function EditTimeConfirm(p: EditTimeConfirmProps) {
       {correct && <Note>{t.lessons.timeEdit.pdfRefresh}</Note>}
       {canNotify && (
         <label className="flex min-h-11 items-center gap-2 text-sm sm:min-h-8">
-          <input type="checkbox" checked={notify} onChange={(e) => onNotify(e.target.checked)} className="size-4 accent-[var(--lapis)]" />
+          <input
+            type="checkbox"
+            checked={notify}
+            onChange={(e) => onNotify(e.target.checked)}
+            className="size-4 accent-[var(--lapis)]"
+          />
           <span>{t.lessons.timeEdit.notify}</span>
         </label>
       )}

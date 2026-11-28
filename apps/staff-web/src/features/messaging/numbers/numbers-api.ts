@@ -32,14 +32,17 @@ export const parityQuery = queryOptions({
   queryFn: () => apiFetch<ParityView>('/admin/communications/parity'),
 });
 
-export const createNumber = (body: NumberCreate) => apiSend<NumberView>('POST', '/admin/numbers', body);
+export const createNumber = (body: NumberCreate) =>
+  apiSend<NumberView>('POST', '/admin/numbers', body);
 
 export const updateNumber = (input: { id: string; body: NumberUpdate }) =>
   apiSend<NumberView>('PATCH', `/admin/numbers/${encodeURIComponent(input.id)}`, input.body);
 
-export const deleteNumber = (id: string) => apiSend('DELETE', `/admin/numbers/${encodeURIComponent(id)}`);
+export const deleteNumber = (id: string) =>
+  apiSend('DELETE', `/admin/numbers/${encodeURIComponent(id)}`);
 
-const secretPath = (id: string, name: NumberSecretName) => `/admin/numbers/${encodeURIComponent(id)}/secrets/${name}`;
+const secretPath = (id: string, name: NumberSecretName) =>
+  `/admin/numbers/${encodeURIComponent(id)}/secrets/${name}`;
 
 /** PUT …/secrets/:name: write-only (Vault); the answer never carries the value. */
 export const putNumberSecret = (input: { id: string; name: NumberSecretName; value: string }) =>
@@ -49,11 +52,16 @@ export const clearNumberSecret = (input: { id: string; name: NumberSecretName })
   apiSend<NumberView>('DELETE', secretPath(input.id, input.name));
 
 /** POST /admin/numbers/import: dryRun true previews, false applies (idempotent). */
-export const importNumbers = (dryRun: boolean) => apiSend<ImportResult>('POST', '/admin/numbers/import', { dryRun });
+export const importNumbers = (dryRun: boolean) =>
+  apiSend<ImportResult>('POST', '/admin/numbers/import', { dryRun });
 
 /** POST /admin/communications/source: 409 parity_not_empty while a difference remains (to module). */
-export const setCommsSource = (source: CommsSource) => apiSend<CommsSourceView>('POST', '/admin/communications/source', { source });
+export const setCommsSource = (source: CommsSource) =>
+  apiSend<CommsSourceView>('POST', '/admin/communications/source', { source });
 
 /** POST /admin/numbers/:id/templates/sync (templates.manage): that number's WABA list → its approvals. */
 export const syncNumberTemplates = (id: string) =>
-  apiSend<TemplateNumberSyncView>('POST', `/admin/numbers/${encodeURIComponent(id)}/templates/sync`);
+  apiSend<TemplateNumberSyncView>(
+    'POST',
+    `/admin/numbers/${encodeURIComponent(id)}/templates/sync`,
+  );

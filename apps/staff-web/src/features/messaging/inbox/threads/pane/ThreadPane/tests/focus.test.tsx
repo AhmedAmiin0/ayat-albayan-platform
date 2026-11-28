@@ -7,9 +7,12 @@ import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/T
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
-const threadCalls = () => apiFetch.mock.calls.filter(([path]) => path === '/threads/%2B966501234567').length;
+const threadCalls = () =>
+  apiFetch.mock.calls.filter(([path]) => path === '/threads/%2B966501234567').length;
 
 afterEach(() => {
   apiFetch.mockReset();
@@ -20,7 +23,10 @@ describe('the open chat after another window had focus (W13)', () => {
   it('no focus: no poll; the window gets focus back → /threads/:phone is fetched again', async () => {
     const focus = vi.spyOn(document, 'hasFocus').mockReturnValue(false);
     routeFetch(apiFetch, [
-      ['/threads/%2B966501234567', detail([message({ body: 'السلام عليكم' })], { session_open: true })],
+      [
+        '/threads/%2B966501234567',
+        detail([message({ body: 'السلام عليكم' })], { session_open: true }),
+      ],
       ['/messaging/templates', []],
       ['/messages/gate', { open: true, reason: null, queued: 0 }],
       ['/settings', {}],

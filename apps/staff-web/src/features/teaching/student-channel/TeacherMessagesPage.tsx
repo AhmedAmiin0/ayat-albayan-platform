@@ -43,10 +43,21 @@ export function TeacherMessagesPage({ studentId, onPick }: Props) {
           <div className={picked ? undefined : 'max-shell:hidden'}>
             {picked ? (
               <div className="grid gap-3">
-                <Button type="button" variant="ghost" size="sm" className="justify-self-start shell:hidden" onClick={() => onPick(null)}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="justify-self-start shell:hidden"
+                  onClick={() => onPick(null)}
+                >
                   {t.studentChannel.back}
                 </Button>
-                <ChannelThread key={picked} refs={{ audience: 'teacher', studentId: picked }} tz={tz} named />
+                <ChannelThread
+                  key={picked}
+                  refs={{ audience: 'teacher', studentId: picked }}
+                  tz={tz}
+                  named
+                />
               </div>
             ) : (
               <p className="text-sm text-ink-3">{t.studentChannel.pick}</p>

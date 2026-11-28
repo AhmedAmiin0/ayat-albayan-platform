@@ -7,7 +7,9 @@ import { GradePicker } from './GradePicker';
 describe('GradePicker (R-REP-02)', () => {
   it('every tile spells its grade, so a teacher never counts dots; the radios keep their names', () => {
     const onChange = vi.fn();
-    const { container } = render(<GradePicker name="g" label="التجويد" value={null} onChange={onChange} />);
+    const { container } = render(
+      <GradePicker name="g" label="التجويد" value={null} onChange={onChange} />,
+    );
     const words = [...container.querySelectorAll('label > span')].map((s) => s.textContent);
     expect(words).toEqual(GRADES.map((g) => t.enums.grade[g]));
     expect(screen.queryByText(t.reports.chart.noGrade)).toBeNull(); // said only after a send attempt
@@ -18,7 +20,9 @@ describe('GradePicker (R-REP-02)', () => {
 
 describe('GradePicker required / invalid (the failed-submit state)', () => {
   it('a required row carries an aria-hidden « *»; an invalid one is marked and red-edged', () => {
-    const { container } = render(<GradePicker name="g" label="التجويد" value={null} onChange={vi.fn()} required invalid />);
+    const { container } = render(
+      <GradePicker name="g" label="التجويد" value={null} onChange={vi.fn()} required invalid />,
+    );
     const group = container.querySelector('fieldset');
     expect(group?.getAttribute('aria-invalid')).toBe('true');
     expect(group?.className).toContain('border-s-danger');
@@ -28,7 +32,9 @@ describe('GradePicker required / invalid (the failed-submit state)', () => {
   });
 
   it('not required, not invalid: plain', () => {
-    const { container } = render(<GradePicker name="g" label="التجويد" value={null} onChange={vi.fn()} />);
+    const { container } = render(
+      <GradePicker name="g" label="التجويد" value={null} onChange={vi.fn()} />,
+    );
     expect(container.querySelector('fieldset')?.getAttribute('aria-invalid')).toBeNull();
     expect(container.querySelector('legend [aria-hidden]')).toBeNull();
   });

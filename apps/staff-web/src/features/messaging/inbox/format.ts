@@ -110,7 +110,10 @@ export const fullTime = (iso: string, clock: Clock): string =>
 
 /** Plain replies are allowed until 24 h after their last message. */
 export function sessionUntil(lastInboundAt: string, clock: Clock): string {
-  return t.inbox.sessionOpenUntil.replace('{time}', fullTime(new Date(Date.parse(lastInboundAt) + SESSION_WINDOW_MS).toISOString(), clock));
+  return t.inbox.sessionOpenUntil.replace(
+    '{time}',
+    fullTime(new Date(Date.parse(lastInboundAt) + SESSION_WINDOW_MS).toISOString(), clock),
+  );
 }
 
 export function errorText(m: Pick<MessageView, 'error_code' | 'error_text'>): string {

@@ -10,10 +10,14 @@ import { DownloadButton } from '@/features/messaging/inbox/messages/components/D
 import { MediaPlayer } from '@/features/messaging/inbox/messages/components/MediaPlayer';
 import { PdfCard } from '@/features/messaging/inbox/messages/pdf/PdfCard';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
-import { StickerMedia, stickerOrGif } from '@/features/messaging/inbox/messages/sticker/StickerMedia';
+import {
+  StickerMedia,
+  stickerOrGif,
+} from '@/features/messaging/inbox/messages/sticker/StickerMedia';
 
 /** #120: a long sent file name (media_name, up to 200 chars) wraps instead of widening the log. */
-const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4 [overflow-wrap:anywhere]';
+const LINK =
+  'text-xs font-semibold text-lapis underline underline-offset-4 [overflow-wrap:anywhere]';
 
 /** An image the browser draws inline; HEIC is a named link like a PDF. */
 const inlineImage = (mime: string): boolean => mime.startsWith('image/') && mime !== 'image/heic';
@@ -22,7 +26,10 @@ const inlineImage = (mime: string): boolean => mime.startsWith('image/') && mime
 function Label({ kind, forbidden = false }: { kind: string; forbidden?: boolean }) {
   return (
     <p className="text-xs font-semibold text-ink-2">
-      {kind} <span className="font-normal text-ink-3">· {forbidden ? t.inbox.mediaNotAllowed : t.inbox.mediaNotDownloaded}</span>
+      {kind}{' '}
+      <span className="font-normal text-ink-3">
+        · {forbidden ? t.inbox.mediaNotAllowed : t.inbox.mediaNotDownloaded}
+      </span>
     </p>
   );
 }
@@ -48,7 +55,11 @@ function Loaded({
   }
   return (
     <a href={file.url} target="_blank" rel="noopener noreferrer" className="block w-fit">
-      <img src={file.url} alt={name} className="max-h-48 max-w-full rounded-md border border-rule object-contain" />
+      <img
+        src={file.url}
+        alt={name}
+        className="max-h-48 max-w-full rounded-md border border-rule object-contain"
+      />
     </a>
   );
 }
@@ -60,7 +71,10 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
   if (!asked) {
     return (
       <Button size="sm" variant="ghost" className="-ms-3" onClick={() => setAsked(true)}>
-        {(isPlayableMime(m.media_mime) ? t.inbox.playMedia : t.inbox.viewMedia).replace('{kind}', kind)}
+        {(isPlayableMime(m.media_mime) ? t.inbox.playMedia : t.inbox.viewMedia).replace(
+          '{kind}',
+          kind,
+        )}
       </Button>
     );
   }

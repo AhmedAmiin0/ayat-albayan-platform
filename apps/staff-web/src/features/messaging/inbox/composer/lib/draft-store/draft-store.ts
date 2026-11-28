@@ -50,7 +50,6 @@ export function subscribeDrafts(listener: () => void): () => void {
   return () => listeners.delete(listener);
 }
 
-
 /**
  * The failed attempt still owns the box's next send: the same text (rule 8), or any text after a
  * send with no answer (docs/44 BUG7: an edited retry must not become a second message).

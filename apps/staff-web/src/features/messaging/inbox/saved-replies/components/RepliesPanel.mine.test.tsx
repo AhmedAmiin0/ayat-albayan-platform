@@ -9,7 +9,11 @@ import { ReplyComposer } from './ReplyComposer';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const S = t.savedReplies;
 
@@ -38,10 +42,20 @@ describe('«ردودي» behind «إدارة» in the picker', () => {
     await openMine();
     fireEvent.click(screen.getByRole('button', { name: S.add }));
     const dialog = await screen.findByRole('dialog', { name: S.addTitle });
-    fireEvent.change(within(dialog).getByRole('textbox', { name: new RegExp(S.fieldTitle) }), { target: { value: 'شكر' } });
-    fireEvent.change(within(dialog).getByRole('textbox', { name: new RegExp(S.fieldBody) }), { target: { value: 'شكرًا لكم' } });
+    fireEvent.change(within(dialog).getByRole('textbox', { name: new RegExp(S.fieldTitle) }), {
+      target: { value: 'شكر' },
+    });
+    fireEvent.change(within(dialog).getByRole('textbox', { name: new RegExp(S.fieldBody) }), {
+      target: { value: 'شكرًا لكم' },
+    });
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.save }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/saved-replies', { scope: 'mine', title: 'شكر', body: 'شكرًا لكم' }));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('POST', '/saved-replies', {
+        scope: 'mine',
+        title: 'شكر',
+        body: 'شكرًا لكم',
+      }),
+    );
   });
 
   it('each row edits and deletes its own reply, whatever row is highlighted', async () => {
@@ -53,10 +67,17 @@ describe('«ردودي» behind «إدارة» in the picker', () => {
     expect(second.getAttribute('aria-selected')).toBe('true');
     fireEvent.click(screen.getByRole('button', { name: S.editReply.replace('{title}', 'متابعة') }));
     const dialog = await screen.findByRole('dialog', { name: S.editTitle });
-    expect(within(dialog).getByRole<HTMLInputElement>('textbox', { name: new RegExp(S.fieldTitle) }).value).toBe('متابعة');
+    expect(
+      within(dialog).getByRole<HTMLInputElement>('textbox', { name: new RegExp(S.fieldTitle) })
+        .value,
+    ).toBe('متابعة');
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
-    fireEvent.click(screen.getByRole('button', { name: S.deleteReply.replace('{title}', 'متابعة') }));
-    expect(await screen.findByRole('dialog', { name: S.deleteTitle.replace('{title}', 'متابعة') })).toBeTruthy();
+    fireEvent.click(
+      screen.getByRole('button', { name: S.deleteReply.replace('{title}', 'متابعة') }),
+    );
+    expect(
+      await screen.findByRole('dialog', { name: S.deleteTitle.replace('{title}', 'متابعة') }),
+    ).toBeTruthy();
   });
 
   it('the pick list is clean: no add / edit / delete until «إدارة»', async () => {
@@ -71,9 +92,13 @@ describe('«ردودي» behind «إدارة» in the picker', () => {
     fireEvent.click(await screen.findByRole('tab', { name: S.tabMine }));
     await screen.findByRole('option', { name: /متابعة/ });
     expect(screen.queryByRole('button', { name: S.add })).toBeNull();
-    expect(screen.queryByRole('button', { name: S.editReply.replace('{title}', 'متابعة') })).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: S.editReply.replace('{title}', 'متابعة') }),
+    ).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: S.manage }));
-    expect(screen.getByRole('button', { name: S.editReply.replace('{title}', 'متابعة') })).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: S.editReply.replace('{title}', 'متابعة') }),
+    ).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: S.manageDone }));
     expect(screen.queryByRole('button', { name: S.add })).toBeNull();
   });
@@ -84,7 +109,9 @@ describe('«ردودي» behind «إدارة» in the picker', () => {
     expect(within(option).queryByRole('button')).toBeNull();
     fireEvent.click(screen.getByRole('tab', { name: S.tabShared }));
     await screen.findByRole('option', { name: /الترحيب/ });
-    expect(screen.queryByRole('button', { name: S.editReply.replace('{title}', 'الترحيب') })).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: S.editReply.replace('{title}', 'الترحيب') }),
+    ).toBeNull();
   });
 
   it('says so when there is none yet', async () => {

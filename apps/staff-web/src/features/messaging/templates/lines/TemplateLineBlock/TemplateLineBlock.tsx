@@ -22,9 +22,17 @@ function NumberFacts({ facts, phone }: Pick<TemplateLineBlockProps, 'facts' | 'p
   return (
     <dl className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1 text-xs">
       <dt className="text-ink-3">{p.phone}</dt>
-      <dd>{phone ? <Ltr>{phone}</Ltr> : <span className="text-ink-3">{t.templates.phoneUnknown}</span>}</dd>
+      <dd>
+        {phone ? (
+          <Ltr>{phone}</Ltr>
+        ) : (
+          <span className="text-ink-3">{t.templates.phoneUnknown}</span>
+        )}
+      </dd>
       <dt className="text-ink-3">{p.wabaId}</dt>
-      <dd>{facts?.waba_id ? <Ltr className="whitespace-normal break-all">{facts.waba_id}</Ltr> : '—'}</dd>
+      <dd>
+        {facts?.waba_id ? <Ltr className="whitespace-normal break-all">{facts.waba_id}</Ltr> : '—'}
+      </dd>
       <dt className="text-ink-3">{p.provider}</dt>
       <dd>{facts ? optionText(facts.provider) : '—'}</dd>
     </dl>
@@ -32,7 +40,16 @@ function NumberFacts({ facts, phone }: Pick<TemplateLineBlockProps, 'facts' | 'p
 }
 
 /** A configured number: its facts and last sync; a crm one (docs/39) also notes the CRM. */
-function LineBody({ line, facts, phone, shown, crm }: Pick<TemplateLineBlockProps, 'line' | 'facts' | 'phone'> & { shown: TemplateLineSync | null; crm: boolean }) {
+function LineBody({
+  line,
+  facts,
+  phone,
+  shown,
+  crm,
+}: Pick<TemplateLineBlockProps, 'line' | 'facts' | 'phone'> & {
+  shown: TemplateLineSync | null;
+  crm: boolean;
+}) {
   return (
     <>
       <NumberFacts facts={facts} phone={phone} />
@@ -53,7 +70,11 @@ function LastSync({ at }: { at: string | undefined }) {
   const clock = useClock();
   return (
     <p className="text-xs text-ink-3">
-      {at ? <time dateTime={at}>{p.lastSync.replace('{time}', fullTime(at, clock))}</time> : p.neverSynced}
+      {at ? (
+        <time dateTime={at}>{p.lastSync.replace('{time}', fullTime(at, clock))}</time>
+      ) : (
+        p.neverSynced
+      )}
     </p>
   );
 }
@@ -77,16 +98,32 @@ export function TemplateLineBlock({ line, facts, phone, onNotice }: TemplateLine
   // A crm line (docs/39) syncs too: it reads the statuses the CRM synced from Meta.
   const crm = facts?.provider === 'crm';
   return (
-    <section data-testid="template-line" data-line={line} aria-busy={syncing} className="grid min-w-0 content-start gap-2 rounded-md border border-rule p-3">
+    <section
+      data-testid="template-line"
+      data-line={line}
+      aria-busy={syncing}
+      className="grid min-w-0 content-start gap-2 rounded-md border border-rule p-3"
+    >
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <h4 className="text-sm font-bold">{name}</h4>
         {!off && (
-          <Button variant="secondary" size="sm" className="ms-auto" aria-label={(syncing ? p.syncingFor : p.syncFor).replace('{line}', name)} disabled={syncing} onClick={sync}>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="ms-auto"
+            aria-label={(syncing ? p.syncingFor : p.syncFor).replace('{line}', name)}
+            disabled={syncing}
+            onClick={sync}
+          >
             {syncing ? p.syncing : p.sync}
           </Button>
         )}
       </div>
-      {off ? <p className="text-xs text-ink-3">{p.notConfigured}</p> : <LineBody line={line} facts={facts} phone={phone} shown={shown} crm={crm} />}
+      {off ? (
+        <p className="text-xs text-ink-3">{p.notConfigured}</p>
+      ) : (
+        <LineBody line={line} facts={facts} phone={phone} shown={shown} crm={crm} />
+      )}
     </section>
   );
 }

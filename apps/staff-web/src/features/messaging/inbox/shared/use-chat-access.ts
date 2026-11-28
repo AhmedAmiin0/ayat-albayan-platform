@@ -22,8 +22,15 @@ export interface ChatAccess {
  */
 export function useChatAccess(mode: InboxMode): ChatAccess {
   const me = useQuery(meQuery).data;
-  const lacks = (p: 'inbox.send' | 'messages.read' | 'pricing.read') => mode !== 'admin' && !!me && !canDo(me, p);
+  const lacks = (p: 'inbox.send' | 'messages.read' | 'pricing.read') =>
+    mode !== 'admin' && !!me && !canDo(me, p);
   const send = !lacks('inbox.send');
   const staff = send && mode !== 'teacher';
-  return { send, templates: !lacks('messages.read'), files: staff, replies: staff, quote: staff && !lacks('pricing.read') };
+  return {
+    send,
+    templates: !lacks('messages.read'),
+    files: staff,
+    replies: staff,
+    quote: staff && !lacks('pricing.read'),
+  };
 }

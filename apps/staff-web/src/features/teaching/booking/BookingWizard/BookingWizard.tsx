@@ -5,7 +5,13 @@ import { Button, useFocusOnChange, t } from '@ab/web-kit';
 import { chatPhone, subscribeTarget } from '@/features/teaching/booking/steps/review/booked';
 import { BookedPanel } from '@/features/teaching/booking/steps/review/BookedPanel';
 import { GapChip } from '@/features/teaching/booking/steps/slots/GapChip';
-import { stepReady, stepsOf, type BookingDraft, type PickedStudent, type StepKey } from '@/features/teaching/booking/draft/draft';
+import {
+  stepReady,
+  stepsOf,
+  type BookingDraft,
+  type PickedStudent,
+  type StepKey,
+} from '@/features/teaching/booking/draft/draft';
 import type { BookHint } from '@/features/teaching/booking/hint';
 import { isNewStudent } from '@/features/teaching/booking/steps/who/new-student';
 import { useCourseClean } from '@/features/teaching/booking/steps/review/SeriesCheck';
@@ -40,7 +46,12 @@ type BackProps = { first: boolean; exit: BookingWizardProps['exit']; onBack: () 
 function BackButton({ first, exit, onBack }: BackProps) {
   const leave = first ? exit : undefined;
   return (
-    <Button type="button" variant="ghost" disabled={first && !leave} onClick={leave ? leave.onExit : onBack}>
+    <Button
+      type="button"
+      variant="ghost"
+      disabled={first && !leave}
+      onClick={leave ? leave.onExit : onBack}
+    >
       {leave ? leave.label : t.booking.back}
     </Button>
   );
@@ -99,7 +110,12 @@ export function BookingWizard(props: BookingWizardProps) {
     <>
       {hint?.startsAt && <GapChip startsAt={hint.startsAt} />}
       <WizardSteps steps={steps} step={step} />
-      <section ref={section} tabIndex={-1} aria-label={t.booking.steps[step]} className="outline-none">
+      <section
+        ref={section}
+        tabIndex={-1}
+        aria-label={t.booking.steps[step]}
+        className="outline-none"
+      >
         <WizardBody
           step={step}
           draft={draft}

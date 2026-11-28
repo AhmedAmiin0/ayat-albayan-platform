@@ -65,9 +65,16 @@ export function BubbleMenu(props: BubbleMenuProps) {
         </button>
       )}
       {/* Touch screens have no tooltip, so the reason reply is off is shown in words. */}
-      {offers.reply && blocked && <p className="max-w-64 px-3 pb-1 text-2xs text-ink-3">{blocked}</p>}
+      {offers.reply && blocked && (
+        <p className="max-w-64 px-3 pb-1 text-2xs text-ink-3">{blocked}</p>
+      )}
       {offers.copy && (
-        <button type="button" aria-label={t.inbox.copy.label} onClick={pick(() => tools.copy(m))} className={item}>
+        <button
+          type="button"
+          aria-label={t.inbox.copy.label}
+          onClick={pick(() => tools.copy(m))}
+          className={item}
+        >
           <Icon name="copy" className="text-ink-3" />
           {t.inbox.copy.action}
         </button>
@@ -79,7 +86,12 @@ export function BubbleMenu(props: BubbleMenuProps) {
         </button>
       )}
       {offers.download && (
-        <button type="button" aria-label={downloadLabel(m)} onClick={pick(() => tools.download(m))} className={item}>
+        <button
+          type="button"
+          aria-label={downloadLabel(m)}
+          onClick={pick(() => tools.download(m))}
+          className={item}
+        >
           <Icon name="download" className="text-ink-3" />
           {t.inbox.download.action}
         </button>

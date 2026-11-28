@@ -1,7 +1,10 @@
 import type { MessageView } from '@ab/shared';
 import { useState } from 'react';
 import { cn, useClock } from '@ab/web-kit';
-import { BubbleActions, useHasBubbleActions } from '@/features/messaging/inbox/messages/components/BubbleActions';
+import {
+  BubbleActions,
+  useHasBubbleActions,
+} from '@/features/messaging/inbox/messages/components/BubbleActions';
 import { DeliveryTicks } from '@/features/messaging/inbox/messages/components/DeliveryTicks';
 import { ReactionPill } from '@/features/messaging/inbox/messages/reactions/ReactionPill';
 import { clockText, fullTime } from '@/features/messaging/inbox/format';
@@ -11,10 +14,19 @@ import { LineBadge } from '@/features/messaging/inbox/shared/LineBadge';
 import { MessageActions } from '@/features/messaging/inbox/messages/components/MessageActions';
 import { Content, SenderLine } from '@/features/messaging/inbox/messages/components/MessageContent';
 import { useInboxMode } from '@/features/messaging/inbox/shared/mode';
-import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from '@/features/messaging/inbox/messages/lib/message-notes';
+import {
+  canRetry,
+  canSendByHand,
+  deliveryTitle,
+  isHandedOff,
+  outboundNotes,
+} from '@/features/messaging/inbox/messages/lib/message-notes';
 import { TemplateButtons } from '@/features/messaging/inbox/messages/template/TemplateButtons';
 import { stickerOrGif } from '@/features/messaging/inbox/messages/sticker/StickerMedia';
-import { hasWhatsAppLine, WhatsAppSendLine } from '@/features/messaging/inbox/messages/whatsapp-send';
+import {
+  hasWhatsAppLine,
+  WhatsAppSendLine,
+} from '@/features/messaging/inbox/messages/whatsapp-send';
 import { CorrectedMark } from '@/features/messaging/inbox/messages/hide/CorrectedMark';
 
 /** Some of the bubble's text is selected with the mouse. */
@@ -90,7 +102,11 @@ export function MessageBubble(props: MessageBubbleProps) {
         <footer className="mt-1.5 flex flex-wrap items-center justify-end gap-2 text-2xs text-ink-3">
           <LineBadge line={m.line} />
           {correctedBy && <CorrectedMark correction={correctedBy} />}
-          <time dateTime={m.created_at} title={fullTime(m.created_at, clock)} className="tabular-nums">
+          <time
+            dateTime={m.created_at}
+            title={fullTime(m.created_at, clock)}
+            className="tabular-nums"
+          >
             {/* The day separators are hidden from screen readers: they hear the full date here. */}
             <span aria-hidden="true">{clockText(m.created_at, clock)}</span>
             <span className="sr-only">{fullTime(m.created_at, clock)}</span>

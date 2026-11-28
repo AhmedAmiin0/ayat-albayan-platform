@@ -76,7 +76,12 @@ export function SendFromCell({ tpl, numbers, manage, onPick, busy = false }: Sen
       ) : (
         <span className="text-ink-2">
           <Label text={s.header} />
-          <bdi>{readOnlyText(tpl, numbers?.find((n) => n.id === tpl.number_id))}</bdi>
+          <bdi>
+            {readOnlyText(
+              tpl,
+              numbers?.find((n) => n.id === tpl.number_id),
+            )}
+          </bdi>
         </span>
       )}
       {numbers && tpl.numbers !== undefined && (

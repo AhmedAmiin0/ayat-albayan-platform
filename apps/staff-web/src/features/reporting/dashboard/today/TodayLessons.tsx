@@ -30,19 +30,34 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
       className={cn(
         'grid items-start gap-x-3 gap-y-2 border-b border-rule py-3.5 last:border-b-0',
         // The 12 h time is wider, so the time column grows.
-        clock.cycle === '12' ? 'grid-cols-[6.5rem_minmax(0,1fr)] @xl:grid-cols-[6.5rem_minmax(0,1fr)_auto]' : 'grid-cols-[4.5rem_minmax(0,1fr)] @xl:grid-cols-[4.5rem_minmax(0,1fr)_auto]',
+        clock.cycle === '12'
+          ? 'grid-cols-[6.5rem_minmax(0,1fr)] @xl:grid-cols-[6.5rem_minmax(0,1fr)_auto]'
+          : 'grid-cols-[4.5rem_minmax(0,1fr)] @xl:grid-cols-[4.5rem_minmax(0,1fr)_auto]',
       )}
     >
       <span className="flex items-center gap-2">
         <span dir={clockDir(clock)} className="text-lg font-semibold tabular-nums">
           {clockOf(new Date(lesson.starts_at), clock)}
         </span>
-        {live && <span title={t.dashboard.home.live} className="size-2 rounded-full bg-ok motion-safe:animate-pulse" />}
+        {live && (
+          <span
+            title={t.dashboard.home.live}
+            className="size-2 rounded-full bg-ok motion-safe:animate-pulse"
+          />
+        )}
       </span>
       <div className="grid min-w-0 gap-1">
-        <p className="truncate font-semibold">{lesson.students.map((s) => s.name).join(t.common.listSeparator)}</p>
+        <p className="truncate font-semibold">
+          {lesson.students.map((s) => s.name).join(t.common.listSeparator)}
+        </p>
         <p className="flex items-center gap-2 text-sm text-ink-2">
-          <Avatar name={teacherLabel(lesson.teacher)} id={lesson.teacher.id} src={lesson.teacher.avatar_url} size="sm" decorative />
+          <Avatar
+            name={teacherLabel(lesson.teacher)}
+            id={lesson.teacher.id}
+            src={lesson.teacher.avatar_url}
+            size="sm"
+            decorative
+          />
           {t.dashboard.home.teacher.replace('{name}', teacherLabel(lesson.teacher))}
         </p>
         <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -69,7 +84,13 @@ export function TodayLessons({
   const win = useJoinWindow();
   const list = lessons ? todaysLessons(lessons) : undefined;
   return (
-    <section aria-labelledby="dash-today" className={cn('@container grid content-start gap-2 rounded-md border border-rule p-4', className)}>
+    <section
+      aria-labelledby="dash-today"
+      className={cn(
+        '@container grid content-start gap-2 rounded-md border border-rule p-4',
+        className,
+      )}
+    >
       <h2 id="dash-today" className={sectionTitle}>
         {t.dashboard.home.todayList}
       </h2>

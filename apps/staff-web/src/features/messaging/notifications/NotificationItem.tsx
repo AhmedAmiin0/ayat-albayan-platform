@@ -37,7 +37,10 @@ export function NotificationItem({ item, onPick, now }: NotificationItemProps) {
           unread && 'bg-act-soft/40',
         )}
       >
-        <span aria-hidden="true" className={cn('mt-1.5 size-2 rounded-full', unread ? 'bg-act' : 'bg-transparent')} />
+        <span
+          aria-hidden="true"
+          className={cn('mt-1.5 size-2 rounded-full', unread ? 'bg-act' : 'bg-transparent')}
+        />
         <span className="grid min-w-0 gap-0.5">
           <span className={cn('text-sm text-ink', unread ? 'font-bold' : 'font-medium')}>
             {unread && <span className="sr-only">{`${t.bell.unread}: `}</span>}

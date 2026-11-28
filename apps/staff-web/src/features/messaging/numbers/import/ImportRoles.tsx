@@ -36,7 +36,11 @@ export function ImportRoles({ roles }: { roles: readonly ImportRoleView[] }) {
       {roles.map((r) => (
         <section key={r.role} aria-label={t.numbers.purpose[r.role]} className="grid gap-1 text-sm">
           <h3 className="font-bold">{t.numbers.purpose[r.role]}</h3>
-          {r.not_importable ? <NotImportable block={r.not_importable} /> : <p className="text-ink-2">{im.action[r.action]}</p>}
+          {r.not_importable ? (
+            <NotImportable block={r.not_importable} />
+          ) : (
+            <p className="text-ink-2">{im.action[r.action]}</p>
+          )}
           {r.fields.length > 0 && (
             <ul className="grid gap-1 text-xs">
               {r.fields.map((f) => (
@@ -46,7 +50,12 @@ export function ImportRoles({ roles }: { roles: readonly ImportRoleView[] }) {
           )}
           {r.secrets_to_copy.length > 0 && (
             <p className="text-xs text-ink-2">
-              {im.willCopy.replace('{{names}}', r.secrets_to_copy.map((name) => t.numbers.fields[name]).join(t.common.listSeparator))}
+              {im.willCopy.replace(
+                '{{names}}',
+                r.secrets_to_copy
+                  .map((name) => t.numbers.fields[name])
+                  .join(t.common.listSeparator),
+              )}
             </p>
           )}
         </section>

@@ -21,7 +21,9 @@ interface OneProps {
 function OneButton({ lessonId, student, named, approved }: OneProps) {
   const send = useMutation({ mutationFn: requestFeedback });
   const sent = send.isSuccess;
-  const label = named ? t.feedback.requestFor.replace('{name}', student.name) : t.feedback.sendRequest;
+  const label = named
+    ? t.feedback.requestFor.replace('{name}', student.name)
+    : t.feedback.sendRequest;
   return (
     <div className="grid gap-1.5">
       <Button
@@ -32,7 +34,11 @@ function OneButton({ lessonId, student, named, approved }: OneProps) {
       >
         {send.isPending ? t.feedback.requestSending : sent ? t.feedback.requestSent : label}
       </Button>
-      {sent && <p role="status" className="text-xs text-ink-2">{t.feedback.requestDone}</p>}
+      {sent && (
+        <p role="status" className="text-xs text-ink-2">
+          {t.feedback.requestDone}
+        </p>
+      )}
       {send.isError && <FormAlert>{requestErrorText(send.error)}</FormAlert>}
     </div>
   );
@@ -44,16 +50,26 @@ export function FeedbackRequestButton({ lesson }: { lesson: LessonView }) {
   const eligible = students.length > 0;
   const templates = useQuery({ ...templatesQuery, enabled: eligible });
   if (!eligible) return null;
-  const approved = templates.data?.some((x) => x.key === FEEDBACK_TEMPLATE && x.status === 'approved') ?? false;
+  const approved =
+    templates.data?.some((x) => x.key === FEEDBACK_TEMPLATE && x.status === 'approved') ?? false;
   return (
     <div className="grid gap-2 border-t border-rule pt-3">
       {students.map((s) => (
-        <OneButton key={s.id} lessonId={lesson.id} student={s} named={lesson.students.length > 1} approved={approved} />
+        <OneButton
+          key={s.id}
+          lessonId={lesson.id}
+          student={s}
+          named={lesson.students.length > 1}
+          approved={approved}
+        />
       ))}
       {!approved && templates.isSuccess && (
         <p className="text-xs text-ink-3">
           {t.feedback.templateNotApproved}{' '}
-          <a href="/admin/settings/communications?tab=templates" className="font-semibold text-lapis underline underline-offset-4">
+          <a
+            href="/admin/settings/communications?tab=templates"
+            className="font-semibold text-lapis underline underline-offset-4"
+          >
             {t.feedback.templateSettings}
           </a>
         </p>

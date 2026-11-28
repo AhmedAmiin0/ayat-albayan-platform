@@ -6,7 +6,11 @@ import { ConflictNotice } from '@/features/teaching/schedule/reschedule/Conflict
 import { toBookingRequest, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { useBookingMode } from '@/features/teaching/booking/mode';
 import { ReviewSummary } from '@/features/teaching/booking/steps/review/ReviewSummary';
-import { createTrialDate, refreshAfterTrialDate, TRIAL_DATES_KEY } from '@/features/teaching/booking/trial-date/api';
+import {
+  createTrialDate,
+  refreshAfterTrialDate,
+  TRIAL_DATES_KEY,
+} from '@/features/teaching/booking/trial-date/api';
 import { TrialDateNotes } from './TrialDateNotes';
 
 export interface TrialReviewStepProps {
@@ -85,7 +89,12 @@ export function TrialReviewStep({ draft, onChangeSlot, onPatch, onDone }: TrialR
       )}
       {!conflicts && (
         <div className="flex justify-end">
-          <Button type="button" size="lg" disabled={send.isPending} onClick={() => send.mutate(undefined)}>
+          <Button
+            type="button"
+            size="lg"
+            disabled={send.isPending}
+            onClick={() => send.mutate(undefined)}
+          >
             {send.isPending ? t.trialDate.submitting : t.trialDate.submit}
           </Button>
         </div>

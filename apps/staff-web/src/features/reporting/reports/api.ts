@@ -35,7 +35,8 @@ export const reportFormQuery = (lessonId: string) =>
 export const studentReportsQuery = (studentId: string, page: number) =>
   queryOptions({
     queryKey: reportKeys.student(studentId, page),
-    queryFn: () => apiFetch<StudentReportsResponse>(`/students/${studentId}/reports?page=${page}&pageSize=10`),
+    queryFn: () =>
+      apiFetch<StudentReportsResponse>(`/students/${studentId}/reports?page=${page}&pageSize=10`),
   });
 
 /** R11: polled every 30 s with her lessons (docs/48). */
@@ -44,7 +45,6 @@ export const pendingReportsQuery = queryOptions({
   queryFn: () => apiFetch<PendingReportView[]>('/teachers/me/pending-reports'),
   refetchInterval: TEACHER_REFRESH_MS,
 });
-
 
 export const saveDraft = ({ id, body }: { id: string; body: DraftBody }) =>
   apiSend<ReportView>('PUT', `/reports/${id}/draft`, body);
@@ -81,7 +81,10 @@ export async function uploadAttachment({
   const slot = await apiSend<SignedUpload>('POST', `/reports/${id}/attachments/upload-url`, meta);
   const { error } = await uploadSigned(slot, { body: file, contentType: file.type });
   if (error) throw new ApiError(400, { code: 'attachment_path' });
-  return apiSend<ReportAttachmentView>('POST', `/reports/${id}/attachments`, { ...meta, path: slot.path });
+  return apiSend<ReportAttachmentView>('POST', `/reports/${id}/attachments`, {
+    ...meta,
+    path: slot.path,
+  });
 }
 
 /**

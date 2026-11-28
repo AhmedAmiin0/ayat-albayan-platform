@@ -4,7 +4,11 @@ import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
 
 /** A lead still in the funnel, not yet a family. */
 export const canRegisterFrom = (th: ThreadView): th is ThreadView & { lead_id: string } =>
-  !!th.lead_id && !th.guardian_id && !th.teacher_id && th.lead_status !== 'converted' && th.lead_status !== 'lost';
+  !!th.lead_id &&
+  !th.guardian_id &&
+  !th.teacher_id &&
+  th.lead_status !== 'converted' &&
+  th.lead_status !== 'lost';
 
 /** What the thread already knows prefills step 1: the number, the WhatsApp name and the lead's source. */
 export function draftFromThread(th: ThreadView & { lead_id: string }): BookingDraft {

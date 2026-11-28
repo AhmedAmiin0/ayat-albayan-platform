@@ -36,8 +36,16 @@ function RowView({ entry, lines, row }: ViewProps) {
   const name = t.notificationCatalogue.entries[entry.key].name;
   return (
     <>
-      <tr data-key={entry.key} aria-busy={row?.saving || undefined} className={cn(dirty && 'bg-lapis-wash')}>
-        <th scope="row" abbr={name} className={cn(cell, 'font-normal', dirty && 'border-s-[3px] border-s-lapis')}>
+      <tr
+        data-key={entry.key}
+        aria-busy={row?.saving || undefined}
+        className={cn(dirty && 'bg-lapis-wash')}
+      >
+        <th
+          scope="row"
+          abbr={name}
+          className={cn(cell, 'font-normal', dirty && 'border-s-[3px] border-s-lapis')}
+        >
           <span className="grid gap-1.5">
             <NamePart entry={entry} />
             <TimingPart entry={entry} row={row} />

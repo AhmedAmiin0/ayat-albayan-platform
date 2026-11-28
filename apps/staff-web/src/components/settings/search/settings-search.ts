@@ -11,6 +11,8 @@ export function matchesText(text: string, query: string): boolean {
 export function matchesSetting(key: SettingKey, query: string): boolean {
   const words = settingText(key);
   const def = settingDef(key);
-  const extra = [textAt(def.labelKey), words.hint, words.toggle, words.toggleHint].filter(Boolean).join(' ');
+  const extra = [textAt(def.labelKey), words.hint, words.toggle, words.toggleHint]
+    .filter(Boolean)
+    .join(' ');
   return matchesText(`${extra} ${key}`, query);
 }

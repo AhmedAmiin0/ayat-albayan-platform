@@ -14,7 +14,12 @@ export function CrmNameButton({
   const [before, after = ''] = s.current.split('{crm}');
   return (
     <>
-      <Button size="sm" variant="ghost" aria-label={s.editFor.replace('{name}', templateName(tpl.key))} onClick={() => onEdit(tpl)}>
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label={s.editFor.replace('{name}', templateName(tpl.key))}
+        onClick={() => onEdit(tpl)}
+      >
         {s.edit}
       </Button>
       <span className="self-center text-2xs text-ink-3">

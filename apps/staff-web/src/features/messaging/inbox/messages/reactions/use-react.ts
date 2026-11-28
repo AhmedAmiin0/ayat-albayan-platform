@@ -21,7 +21,11 @@ export function useReact(phone: string, onFail: (text: string) => void) {
   const { queryKey } = threadQuery(phone);
   return useMutation(
     reactionMutation({
-      send: ({ message, emoji }) => apiSend<ReactionResult>('PUT', reactionPath(phone, message.id), { emoji, clientRequestId: crypto.randomUUID() }),
+      send: ({ message, emoji }) =>
+        apiSend<ReactionResult>('PUT', reactionPath(phone, message.id), {
+          emoji,
+          clientRequestId: crypto.randomUUID(),
+        }),
       cancel: () => client.cancelQueries({ queryKey }),
       // The live chat and any anchored window of it (docs/37 review 1) show the same reactions.
       patch: (id, reactions) => {

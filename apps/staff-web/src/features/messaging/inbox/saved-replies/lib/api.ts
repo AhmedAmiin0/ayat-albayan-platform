@@ -27,9 +27,11 @@ export const savedRepliesQuery = queryOptions({
 
 const replyPath = (id: string) => `/saved-replies/${encodeURIComponent(id)}`;
 
-export const createReply = (body: SavedReplyCreate) => apiSend<SavedReply>('POST', '/saved-replies', body);
+export const createReply = (body: SavedReplyCreate) =>
+  apiSend<SavedReply>('POST', '/saved-replies', body);
 
-export const updateReply = (input: { id: string; body: SavedReplyUpdate }) => apiSend<SavedReply>('PATCH', replyPath(input.id), input.body);
+export const updateReply = (input: { id: string; body: SavedReplyUpdate }) =>
+  apiSend<SavedReply>('PATCH', replyPath(input.id), input.body);
 
 export const deleteReply = (id: string) => apiSend('DELETE', replyPath(id));
 
@@ -38,11 +40,16 @@ export const moveReply = (input: { id: string; direction: 'up' | 'down' }) =>
 
 /** The attachment copied as this sender's chat file; POST /threads/:phone/file sends it next. */
 export const stageReply = (input: { id: string; clientRequestId: string }) =>
-  apiSend<SavedReplyStaged>('POST', `${replyPath(input.id)}/stage`, { clientRequestId: input.clientRequestId });
+  apiSend<SavedReplyStaged>('POST', `${replyPath(input.id)}/stage`, {
+    clientRequestId: input.clientRequestId,
+  });
 
 /** Uploads a picked image or PDF under the uploader's folder; resolves to its storage path. */
 export async function uploadReplyFile(input: { file: File; mime: ChatSendMime }): Promise<string> {
-  const signed = await apiSend<SignedUpload>('POST', '/saved-replies/attachment-upload-url', { mime: input.mime, size: input.file.size });
+  const signed = await apiSend<SignedUpload>('POST', '/saved-replies/attachment-upload-url', {
+    mime: input.mime,
+    size: input.file.size,
+  });
   const { error } = await uploadSigned(signed, { body: input.file, contentType: input.mime });
   if (error) throw new ChatUploadError(error.message);
   return signed.path;
@@ -56,7 +63,8 @@ const FILE_ERRORS: Record<string, string | undefined> = t.inbox.error;
 export function replyErrorText(error: unknown): string {
   if (error instanceof ChatUploadError) return t.inbox.error.file_upload;
   const code = errorCode(error);
-  if (code === 'saved_reply_not_found' || code === 'saved_replies_forbidden') return t.savedReplies.errors[code];
+  if (code === 'saved_reply_not_found' || code === 'saved_replies_forbidden')
+    return t.savedReplies.errors[code];
   if (isSavedReplyError(code)) return FILE_ERRORS[code] ?? t.savedReplies.errors.generic;
   return t.savedReplies.errors.generic;
 }

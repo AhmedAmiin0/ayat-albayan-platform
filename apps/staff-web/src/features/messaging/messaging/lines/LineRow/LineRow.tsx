@@ -43,7 +43,13 @@ function Webhook({ view }: { view: LineCheckView }) {
   return (
     <div className="grid gap-1 text-xs">
       <p className="text-ink-3">{s.webhook}</p>
-      <p data-tone={tone} className={cn('flex items-start gap-1.5 rounded-md border px-2 py-1 font-semibold', toneClass[tone])}>
+      <p
+        data-tone={tone}
+        className={cn(
+          'flex items-start gap-1.5 rounded-md border px-2 py-1 font-semibold',
+          toneClass[tone],
+        )}
+      >
         <NuqtaGlyph shape={GLYPH[tone]} className="mt-0.5" />
         <span>{s[text]}</span>
       </p>
@@ -100,10 +106,16 @@ export function LineRow({ line, view }: { line: WaLine; view: LineCheckView | nu
           ) : (
             <StatusChip size="sm" tone="neutral" glyph="hollow" label={s.notConfigured} />
           ))}
-        {view && <span className="ms-auto text-2xs text-ink-3">{s.checkedAt.replace('{time}', fullTime(view.checked_at, clock))}</span>}
+        {view && (
+          <span className="ms-auto text-2xs text-ink-3">
+            {s.checkedAt.replace('{time}', fullTime(view.checked_at, clock))}
+          </span>
+        )}
       </div>
       <LineDriver view={view} />
-      {view && !view.configured && line === 'chat' && <p className="text-xs text-ink-3">{s.chatOptional}</p>}
+      {view && !view.configured && line === 'chat' && (
+        <p className="text-xs text-ink-3">{s.chatOptional}</p>
+      )}
       {view?.configured && (
         <>
           <LineFacts view={view} />

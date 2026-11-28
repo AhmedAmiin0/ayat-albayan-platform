@@ -1,6 +1,11 @@
 import { resolveSavedReply, type SavedReply, type ThreadView } from '@ab/shared';
 import { useId, useSyncExternalStore, type ReactNode } from 'react';
-import { getDraft, keptFailed, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
+import {
+  getDraft,
+  keptFailed,
+  setDraft,
+  subscribeDrafts,
+} from '@/features/messaging/inbox/composer/lib/draft-store';
 import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 import { TextComposer } from '@/features/messaging/inbox/composer/components/TextComposer';
 import { fillComposer, slashQuery } from '@/features/messaging/inbox/saved-replies/lib/filter';
@@ -8,7 +13,11 @@ import { RepliesPanel } from '@/features/messaging/inbox/saved-replies/component
 import { optionId } from '@/features/messaging/inbox/saved-replies/components/ReplyOptions';
 import { SavedRepliesButton } from '@/features/messaging/inbox/saved-replies/components/SavedRepliesButton';
 import { StagedChip } from '@/features/messaging/inbox/saved-replies/components/StagedChip';
-import { getStaged, setStaged, subscribeStaged } from '@/features/messaging/inbox/saved-replies/lib/staged-store';
+import {
+  getStaged,
+  setStaged,
+  subscribeStaged,
+} from '@/features/messaging/inbox/saved-replies/lib/staged-store';
 import { useReplyDialogs } from '@/features/messaging/inbox/saved-replies/hooks/use-reply-dialogs';
 import { useReplyValues } from '@/features/messaging/inbox/saved-replies/hooks/use-reply-values';
 import { useRepliesPicker } from '@/features/messaging/inbox/saved-replies/hooks/use-replies-picker';
@@ -94,7 +103,11 @@ export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) 
   const extras = {
     above,
     onKey: (e: Parameters<typeof picker.keys.onKey>[0]) => picker.bySlash && picker.keys.onKey(e),
-    boxProps: { id: boxId, 'aria-controls': picker.bySlash ? listId : undefined, 'aria-activedescendant': active },
+    boxProps: {
+      id: boxId,
+      'aria-controls': picker.bySlash ? listId : undefined,
+      'aria-activedescendant': active,
+    },
     // The staged file follows that text only if it is still the one staged.
     onSubmit: () => {
       const at = getStaged(phone)?.requestId;

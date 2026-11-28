@@ -25,10 +25,16 @@ const SLOTS: readonly ParamSlot[] = BODY_SLOTS;
 const NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 
 /** Imported var_n variables get a numbered generic label. */
-export function paramFields(tpl: Pick<TemplateView, 'params'>): { slot: ParamSlot; label: string; fromLesson: boolean }[] {
+export function paramFields(
+  tpl: Pick<TemplateView, 'params'>,
+): { slot: ParamSlot; label: string; fromLesson: boolean }[] {
   return SLOTS.slice(0, tpl.params.length).map((slot, i) => {
     const name = tpl.params[i] ?? '';
-    return { slot, label: NAMES[name] ?? t.inbox.composer.param.replace('{n}', slot), fromLesson: LESSON_TIME_PARAMS.includes(name) };
+    return {
+      slot,
+      label: NAMES[name] ?? t.inbox.composer.param.replace('{n}', slot),
+      fromLesson: LESSON_TIME_PARAMS.includes(name),
+    };
   });
 }
 
@@ -42,7 +48,8 @@ export function urlButton(tpl: Pick<TemplateView, 'buttons'>): string | null {
 }
 
 /** Teacher templates go to teachers only, and a teacher gets nothing else (docs/12 §2.1). */
-export const forAudience = (tpl: Pick<TemplateView, 'key'>, teacher: boolean): boolean => audienceOf(tpl.key, teacher);
+export const forAudience = (tpl: Pick<TemplateView, 'key'>, teacher: boolean): boolean =>
+  audienceOf(tpl.key, teacher);
 
 export interface PrefillContext extends TemplatePrefill {
   /** The family's first student (ThreadDetail.people.students[0]): a saved reply's {student}. */
@@ -52,14 +59,22 @@ export interface PrefillContext extends TemplatePrefill {
 }
 
 /** What the thread already knows: the student's, the teacher's or the recipient's name (still editable; shared with mobile). */
-export const prefillParams = (tpl: Pick<TemplateView, 'params'>, ctx: PrefillContext): ParamValues => prefillTemplateParams(tpl, ctx);
+export const prefillParams = (
+  tpl: Pick<TemplateView, 'params'>,
+  ctx: PrefillContext,
+): ParamValues => prefillTemplateParams(tpl, ctx);
 
 /** The picked lesson's values: its time in the recipient's tz, the names, the meeting code. */
-export const lessonValues = (tpl: Pick<TemplateView, 'params' | 'buttons'>, lesson: ThreadLesson): ParamValues =>
-  lessonParams(tpl, lesson);
+export const lessonValues = (
+  tpl: Pick<TemplateView, 'params' | 'buttons'>,
+  lesson: ThreadLesson,
+): ParamValues => lessonParams(tpl, lesson);
 
 /** Every variable and the button suffix are required (Meta rejects a missing one: 132000). */
-export function missingParams(tpl: Pick<TemplateView, 'params' | 'buttons'>, values: ParamValues): (ParamSlot | 'button')[] {
+export function missingParams(
+  tpl: Pick<TemplateView, 'params' | 'buttons'>,
+  values: ParamValues,
+): (ParamSlot | 'button')[] {
   const needed: (ParamSlot | 'button')[] = paramFields(tpl).map((f) => f.slot);
   if (urlButton(tpl)) needed.push('button');
   return needed.filter((k) => !values[k]?.trim());

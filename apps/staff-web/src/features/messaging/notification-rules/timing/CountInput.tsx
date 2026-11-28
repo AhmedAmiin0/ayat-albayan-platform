@@ -2,7 +2,8 @@ import { useId } from 'react';
 import { Input, cn } from '@ab/web-kit';
 
 // The browser's spin arrows sit over the digits of a narrow box: hidden (the keyboard still steps).
-const NO_SPIN = '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none';
+const NO_SPIN =
+  '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none';
 
 export interface CountInputProps {
   label: string;

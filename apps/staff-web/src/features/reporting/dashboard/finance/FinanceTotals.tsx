@@ -28,8 +28,14 @@ export function FinanceTotals({ finance }: { finance: DashboardResponse['finance
       </dl>
       <ul className="grid gap-1 text-xs text-ink-2">
         {financeNotes(finance, tz).map((n) => (
-          <li key={n.text} className={cn('flex items-center gap-1.5', n.warn && 'font-semibold text-ink')}>
-            <NuqtaGlyph shape={n.warn ? 'hollow' : 'fill'} className={cn('size-[9px] shrink-0', n.warn ? 'text-act' : 'text-gold')} />
+          <li
+            key={n.text}
+            className={cn('flex items-center gap-1.5', n.warn && 'font-semibold text-ink')}
+          >
+            <NuqtaGlyph
+              shape={n.warn ? 'hollow' : 'fill'}
+              className={cn('size-[9px] shrink-0', n.warn ? 'text-act' : 'text-gold')}
+            />
             {n.text}
           </li>
         ))}

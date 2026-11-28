@@ -26,7 +26,9 @@ const MUST_ACT: Record<LineField, readonly string[]> = {
 };
 const SETTLED = ['APPROVED', 'AVAILABLE_WITHOUT_REVIEW', 'VERIFIED', 'CONNECTED', 'GREEN'];
 const UNDERWAY = ['YELLOW', 'NONE'];
-const WAITING: Partial<Record<LineField, readonly string[]>> = { code_verification_status: ['NOT_VERIFIED', 'EXPIRED'] };
+const WAITING: Partial<Record<LineField, readonly string[]>> = {
+  code_verification_status: ['NOT_VERIFIED', 'EXPIRED'],
+};
 
 /** Tone + glyph of one raw Graph word (CONNECTED, GREEN, PENDING_REVIEW, …) for its field. */
 export function lineTone(field: LineField, value: string): LineTone {
@@ -47,13 +49,23 @@ export function lineTone(field: LineField, value: string): LineTone {
  * through the academy CRM: its conversations stay there, ticks come via /webhooks/wacrm: neutral),
  * crmNoSecret (WACRM_WEBHOOK_SECRET unset: no delivery ticks: act).
  */
-export type WebhookState = 'unknown' | 'none' | 'ours' | 'other' | 'unverified' | 'kapso' | 'kapsoNoSecret' | 'crm' | 'crmNoSecret';
+export type WebhookState =
+  | 'unknown'
+  | 'none'
+  | 'ours'
+  | 'other'
+  | 'unverified'
+  | 'kapso'
+  | 'kapsoNoSecret'
+  | 'crm'
+  | 'crmNoSecret';
 
 type WebhookView = Pick<LineCheckView, 'app_id' | 'subscribed_apps'> &
   Partial<Pick<LineCheckView, 'provider' | 'kapso_webhook_secret' | 'crm_webhook_secret'>>;
 
 export function webhookState(view: WebhookView): WebhookState {
-  if (view.provider === 'kapso') return view.kapso_webhook_secret === false ? 'kapsoNoSecret' : 'kapso';
+  if (view.provider === 'kapso')
+    return view.kapso_webhook_secret === false ? 'kapsoNoSecret' : 'kapso';
   if (view.provider === 'crm') return view.crm_webhook_secret === false ? 'crmNoSecret' : 'crm';
   const apps = view.subscribed_apps;
   if (apps === null) return 'unknown';

@@ -33,7 +33,11 @@ export function ResendDialog({
       <Button type="button" variant="ghost" onClick={close}>
         {t.common.cancel}
       </Button>
-      <Button type="button" disabled={send.isPending || send.isSuccess} onClick={() => send.mutate()}>
+      <Button
+        type="button"
+        disabled={send.isPending || send.isSuccess}
+        onClick={() => send.mutate()}
+      >
         {send.isPending ? t.inbox.resend.sending : t.inbox.resend.send}
       </Button>
     </>

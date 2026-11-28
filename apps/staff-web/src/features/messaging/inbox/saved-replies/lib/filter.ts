@@ -15,7 +15,10 @@ export function filterReplies(
 
 /** The «/» list (as WhatsApp): both tabs in one list, the served order kept. */
 export function matchReplies(replies: readonly SavedReply[], query: string): SavedReply[] {
-  return [...filterReplies(replies, { scope: 'shared', query }), ...filterReplies(replies, { scope: 'mine', query })];
+  return [
+    ...filterReplies(replies, { scope: 'shared', query }),
+    ...filterReplies(replies, { scope: 'mine', query }),
+  ];
 }
 
 /** Only a slash at the start of the box or a line counts; null otherwise. */

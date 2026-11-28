@@ -1,14 +1,22 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { LanguageSwitch, Button, Cartouche, FormAlert, Logo, t } from '@ab/web-kit';
-import { publicFeedbackQuery, publicProblem, type PublicProblem } from '@/features/teaching/feedback/api';
+import {
+  publicFeedbackQuery,
+  publicProblem,
+  type PublicProblem,
+} from '@/features/teaching/feedback/api';
 import { FeedbackForm } from './FeedbackForm';
 import { ThankYou } from './ThankYou';
 
 type Closing = 'sent' | 'already' | 'expired' | 'invalid';
 
 /** Which closing screen applies, if any: a sent form, a link already used, or a link that is not valid. */
-function closingOf(outcome: 'sent' | PublicProblem | null, loadProblem: PublicProblem | null, used: boolean): Closing | null {
+function closingOf(
+  outcome: 'sent' | PublicProblem | null,
+  loadProblem: PublicProblem | null,
+  used: boolean,
+): Closing | null {
   if (outcome === 'sent') return 'sent';
   if (outcome === 'already' || loadProblem === 'already' || used) return 'already';
   if (outcome === 'expired' || loadProblem === 'expired') return 'expired';
@@ -42,8 +50,14 @@ export function FeedbackPublicPage({ token }: { token: string }) {
         )}
         {retryable && (
           <div className="grid gap-3">
-            <FormAlert>{loadProblem === 'too_many' ? t.feedback.tooMany : t.feedback.loadFailed}</FormAlert>
-            <Button variant="secondary" onClick={() => void query.refetch()} className="justify-self-start">
+            <FormAlert>
+              {loadProblem === 'too_many' ? t.feedback.tooMany : t.feedback.loadFailed}
+            </FormAlert>
+            <Button
+              variant="secondary"
+              onClick={() => void query.refetch()}
+              className="justify-self-start"
+            >
               {t.feedback.retry}
             </Button>
           </div>

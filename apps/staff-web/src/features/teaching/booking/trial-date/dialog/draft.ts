@@ -1,6 +1,10 @@
 import { trialLength, type TrialHistory } from '@ab/shared';
 import type { Gender, Program } from '@ab/catalog';
-import { emptyDraft, type BookingDraft, type PickedStudent } from '@/features/teaching/booking/draft/draft';
+import {
+  emptyDraft,
+  type BookingDraft,
+  type PickedStudent,
+} from '@/features/teaching/booking/draft/draft';
 import type { BookHint } from '@/features/teaching/booking/hint';
 
 // One trial lesson for one existing student in the family's zone, teacher to slot to review; pure.

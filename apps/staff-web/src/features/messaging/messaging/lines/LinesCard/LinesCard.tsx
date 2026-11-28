@@ -30,7 +30,13 @@ export function LinesCard() {
       <div className="mb-1 flex flex-wrap items-center gap-x-4 gap-y-2">
         <h3 className="text-sm font-bold">{s.title}</h3>
         {!views && <span className="text-xs text-ink-3">{s.notChecked}</span>}
-        <Button variant="secondary" size="sm" className="ms-auto" disabled={check.isPending} onClick={() => check.mutate()}>
+        <Button
+          variant="secondary"
+          size="sm"
+          className="ms-auto"
+          disabled={check.isPending}
+          onClick={() => check.mutate()}
+        >
           {check.isPending ? s.checking : s.check}
         </Button>
       </div>

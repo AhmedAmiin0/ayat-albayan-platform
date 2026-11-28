@@ -20,8 +20,16 @@ export function leftText(ms: number): string {
   return t.inbox.window.minutes.replace('{n}', String(Math.max(1, Math.ceil(ms / 60_000))));
 }
 
-export function windowText(lastInboundAt: string | null, now: Date, mode: InboxMode = 'admin'): { open: boolean; text: string } {
+export function windowText(
+  lastInboundAt: string | null,
+  now: Date,
+  mode: InboxMode = 'admin',
+): { open: boolean; text: string } {
   const left = windowLeftMs(lastInboundAt, now);
-  if (left <= 0) return { open: false, text: mode === 'admin' ? t.inbox.window.closed : t.inbox.window.closedStaff };
+  if (left <= 0)
+    return {
+      open: false,
+      text: mode === 'admin' ? t.inbox.window.closed : t.inbox.window.closedStaff,
+    };
   return { open: true, text: t.inbox.window.open.replace('{left}', leftText(left)) };
 }

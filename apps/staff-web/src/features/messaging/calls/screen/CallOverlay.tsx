@@ -58,7 +58,9 @@ export function CallOverlay({ s, showsPhone, ask, onAsk, onSilence }: CallOverla
         />
       )}
       <SessionView s={s} />
-      {ask && <PermissionDialog ask={ask} onClose={() => onAsk('closed')} onSent={() => onAsk('sent')} />}
+      {ask && (
+        <PermissionDialog ask={ask} onClose={() => onAsk('closed')} onSent={() => onAsk('sent')} />
+      )}
     </>
   );
 }

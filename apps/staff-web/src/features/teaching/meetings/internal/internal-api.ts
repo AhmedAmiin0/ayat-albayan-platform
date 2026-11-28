@@ -37,11 +37,9 @@ export const publicMeetingQuery = (token: string) =>
 
 /** POST /public/meetings/:token/join {name}: a guest token. */
 export const joinMeetingAsGuest = ({ linkToken, name }: { linkToken: string; name: string }) =>
-  publicApiSend<RoomJoinResult>(
-    'POST',
-    `/public/meetings/${encodeURIComponent(linkToken)}/join`,
-    { name },
-  );
+  publicApiSend<RoomJoinResult>('POST', `/public/meetings/${encodeURIComponent(linkToken)}/join`, {
+    name,
+  });
 
 /** Copies to the clipboard; false when the browser refuses (the URL stays on screen to copy by hand). */
 export async function copyText(text: string): Promise<boolean> {

@@ -21,5 +21,6 @@ export const linkedText = (r: LeadFamilyLinked): string =>
 
 /** The chat now shows the family (v_threads), the lead is converted, and the family's money reads change. */
 export async function refreshAfterLink(client: QueryClient): Promise<void> {
-  for (const queryKey of [['threads'], ['leads'], SALES_MONEY_KEY]) await client.invalidateQueries({ queryKey });
+  for (const queryKey of [['threads'], ['leads'], SALES_MONEY_KEY])
+    await client.invalidateQueries({ queryKey });
 }

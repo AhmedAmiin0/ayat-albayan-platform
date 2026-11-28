@@ -1,4 +1,10 @@
-import { askOf, ringWhile, type CallTarget, type CallsUi, type PermissionAsk } from '@ab/client-core';
+import {
+  askOf,
+  ringWhile,
+  type CallTarget,
+  type CallsUi,
+  type PermissionAsk,
+} from '@ab/client-core';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
@@ -60,7 +66,13 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
     : null;
   const overlay = (
     <>
-      <CallOverlay s={s} showsPhone={showsPhone} ask={ask} onAsk={(next) => (setAsk(null), setSent(next === 'sent'))} onSilence={setSilenced} />
+      <CallOverlay
+        s={s}
+        showsPhone={showsPhone}
+        ask={ask}
+        onAsk={(next) => (setAsk(null), setSent(next === 'sent'))}
+        onSilence={setSilenced}
+      />
       {sent && <Toast message={t.calls.permission.requestSent} onDismiss={() => setSent(false)} />}
       {s.notice && <Toast tone="error" message={s.notice} onDismiss={() => s.store.notify(null)} />}
       {/* The family's voice (the device's output; the web has no speaker switch). */}

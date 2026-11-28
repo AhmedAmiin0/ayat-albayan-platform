@@ -33,13 +33,29 @@ export function StaffJoinButton({ lesson, size = 'md', variant }: Props) {
   const early = joinWindow(shown, now, win).state === 'early';
   return (
     <div className="grid gap-1.5">
-      <EnterButton lesson={shown} size={size} now={now} variant={variant} className="justify-items-stretch" />
+      <EnterButton
+        lesson={shown}
+        size={size}
+        now={now}
+        variant={variant}
+        className="justify-items-stretch"
+      />
       {early && (
-        <Button type="button" variant="secondary" size={size} disabled={open.isPending} onClick={() => open.mutate(lesson.id)}>
+        <Button
+          type="button"
+          variant="secondary"
+          size={size}
+          disabled={open.isPending}
+          onClick={() => open.mutate(lesson.id)}
+        >
           {open.isPending ? t.classroom.opening : t.classroom.openNow}
         </Button>
       )}
-      {open.isSuccess && !early && <p role="status" className="text-xs text-ink-2">{t.classroom.openedHint}</p>}
+      {open.isSuccess && !early && (
+        <p role="status" className="text-xs text-ink-2">
+          {t.classroom.openedHint}
+        </p>
+      )}
       {open.isError && <FormAlert>{classroomErrorText(open.error)}</FormAlert>}
     </div>
   );

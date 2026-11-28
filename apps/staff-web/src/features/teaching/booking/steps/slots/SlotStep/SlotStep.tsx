@@ -19,7 +19,9 @@ export function pickedText(startsAt: string, tz: string, clock: Clock & { tz: st
   const viewer = clock.tz;
   const mine = `${lessonWhenAt(at, clock)} ${t.schedule.viewerTime}`;
   if (sameClockAt(at, { a: tz, b: viewer })) return mine;
-  const local = t.schedule.inCity.replace('{time}', lessonWhenAt(at, { ...clock, tz })).replace('{city}', tzCity(tz) ?? tz);
+  const local = t.schedule.inCity
+    .replace('{time}', lessonWhenAt(at, { ...clock, tz }))
+    .replace('{city}', tzCity(tz) ?? tz);
   return `${mine}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
 }
 

@@ -1,7 +1,8 @@
 // A real invisible checkbox over the track; it must come right before the track for `peer` styles.
 
 /** The invisible checkbox: it covers its whole wrapper, which is the hit area. */
-export const switchInputClass = 'peer absolute inset-0 z-10 m-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed';
+export const switchInputClass =
+  'peer absolute inset-0 z-10 m-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed';
 
 /** The track and knob; the knob starts at the inline-start (right in RTL) and slides to the end when ON. */
 export function SwitchTrack() {

@@ -7,7 +7,9 @@ const s = t.templates.settings;
 
 function chipOf(on: boolean, risky: boolean) {
   if (risky) return { tone: 'act', glyph: 'hollow' } as const;
-  return on ? ({ tone: 'ok', glyph: 'fill' } as const) : ({ tone: 'neutral', glyph: 'struck' } as const);
+  return on
+    ? ({ tone: 'ok', glyph: 'fill' } as const)
+    : ({ tone: 'neutral', glyph: 'struck' } as const);
 }
 
 /** The question before switching: turning ON says who is reached, OFF what stops (and what does not). */
@@ -42,7 +44,11 @@ export function AutoMessagesSwitch({ settings }: { settings: AcademySettings }) 
           {on ? s.autoDisable : s.autoEnable}
         </Button>
       </div>
-      {risky && <p className="border-s border-s-rule ps-3 text-xs font-semibold text-act">{s.autoCheckScript}</p>}
+      {risky && (
+        <p className="border-s border-s-rule ps-3 text-xs font-semibold text-act">
+          {s.autoCheckScript}
+        </p>
+      )}
       <p className="text-xs text-ink-3">{s.autoMessagesHint}</p>
       {save.isError && !confirming && <FormAlert>{t.common.error}</FormAlert>}
       {confirming && (

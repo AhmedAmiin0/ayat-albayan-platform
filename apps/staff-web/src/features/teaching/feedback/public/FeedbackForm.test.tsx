@@ -8,7 +8,12 @@ import type { FeedbackFormView } from '@/features/teaching/feedback/types';
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
 
-const FORM: FeedbackFormView = { teacherName: 'أبرار', kind: 'trial', contactPhone: '+201001234567', alreadySubmitted: false };
+const FORM: FeedbackFormView = {
+  teacherName: 'أبرار',
+  kind: 'trial',
+  contactPhone: '+201001234567',
+  alreadySubmitted: false,
+};
 
 const reply = (status: number, body: unknown = null) =>
   new Response(body === null ? null : JSON.stringify(body), { status });
@@ -42,9 +47,9 @@ describe('FeedbackForm «رأيك يهمّنا»', () => {
     expect(at.every((i) => i >= 0)).toBe(true);
     expect([...at].sort((a, b) => a - b)).toEqual(at);
     expect(screen.getByLabelText(t.feedback.teacher)).toHaveProperty('readOnly', true);
-    expect((screen.getByLabelText<HTMLInputElement>(t.feedback.teacher)).value).toBe('أبرار');
+    expect(screen.getByLabelText<HTMLInputElement>(t.feedback.teacher).value).toBe('أبرار');
     // The family can correct the number; the lesson type is the lesson's own, shown as a fixed line.
-    expect((screen.getByLabelText<HTMLInputElement>(t.feedback.contact)).value).toBe('+201001234567');
+    expect(screen.getByLabelText<HTMLInputElement>(t.feedback.contact).value).toBe('+201001234567');
     expect(screen.getByLabelText(t.feedback.contact)).toHaveProperty('readOnly', false);
     expect(screen.getByText(t.enums.feedbackKind.trial)).toBeTruthy();
     expect(screen.queryByText(t.enums.feedbackKind.subscription)).toBeNull();
@@ -71,7 +76,9 @@ describe('FeedbackForm «رأيك يهمّنا»', () => {
     fireEvent.click(screen.getByRole('button', { name: t.feedback.submit }));
     expect(screen.getByText(t.feedback.phoneInvalid)).toBeTruthy();
     expect(fetchMock).not.toHaveBeenCalled();
-    fireEvent.change(screen.getByLabelText(t.feedback.contact), { target: { value: '0551234567' } });
+    fireEvent.change(screen.getByLabelText(t.feedback.contact), {
+      target: { value: '0551234567' },
+    });
     fireEvent.click(screen.getByRole('button', { name: t.feedback.submit }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith('sent'));
     const init = fetchMock.mock.calls[0]?.[1] as RequestInit;
@@ -83,7 +90,9 @@ describe('FeedbackForm «رأيك يهمّنا»', () => {
     const onDone = renderForm();
     fireEvent.click(screen.getByRole('radio', { name: t.feedback.rowRating.replace('{n}', '5') }));
     fireEvent.click(screen.getByRole('radio', { name: t.enums.feedbackRecommend.yes }));
-    fireEvent.change(screen.getByLabelText(t.feedback.note), { target: { value: ' ما شاء الله ' } });
+    fireEvent.change(screen.getByLabelText(t.feedback.note), {
+      target: { value: ' ما شاء الله ' },
+    });
     fireEvent.click(screen.getByRole('button', { name: t.feedback.submit }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith('sent'));
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
@@ -99,7 +108,9 @@ describe('FeedbackForm «رأيك يهمّنا»', () => {
   });
 
   it('a second send (409) closes on «already sent»; too many tries (429) stays on the form with a line', async () => {
-    fetchMock.mockResolvedValueOnce(reply(429, { message: 'x' })).mockResolvedValueOnce(reply(409, { code: 'already_submitted' }));
+    fetchMock
+      .mockResolvedValueOnce(reply(429, { message: 'x' }))
+      .mockResolvedValueOnce(reply(409, { code: 'already_submitted' }));
     const onDone = renderForm();
     fireEvent.click(screen.getByRole('radio', { name: t.feedback.rowRating.replace('{n}', '3') }));
     fireEvent.click(screen.getByRole('radio', { name: t.enums.feedbackRecommend.maybe }));

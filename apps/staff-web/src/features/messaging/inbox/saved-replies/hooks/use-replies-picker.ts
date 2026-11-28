@@ -2,7 +2,12 @@ import type { SavedReply, SavedReplyScope } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { savedRepliesQuery } from '@/features/messaging/inbox/saved-replies/lib/api';
-import { filterReplies, matchReplies, slashQuery, slashStart } from '@/features/messaging/inbox/saved-replies/lib/filter';
+import {
+  filterReplies,
+  matchReplies,
+  slashQuery,
+  slashStart,
+} from '@/features/messaging/inbox/saved-replies/lib/filter';
 import { usePickerKeys, type PickerKeys } from './use-picker-keys';
 
 export interface RepliesPicker {
@@ -57,7 +62,9 @@ export function useRepliesPicker({ text, enabled, onPick, onClose }: PickerInput
   const bySlash = open && !manual;
   const replies = useQuery({ ...savedRepliesQuery, enabled: open });
   const all = replies.data ?? [];
-  const list = bySlash ? matchReplies(all, slash ?? '') : filterReplies(all, { scope: tab, query: search });
+  const list = bySlash
+    ? matchReplies(all, slash ?? '')
+    : filterReplies(all, { scope: tab, query: search });
   const dismiss = () => {
     setManual(false);
     setManage(false);

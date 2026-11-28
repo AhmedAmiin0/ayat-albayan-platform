@@ -3,7 +3,12 @@ import { useId, useState, type SubmitEvent } from 'react';
 import { Button, Dialog, FormAlert, t } from '@ab/web-kit';
 import { numberErrorCode, numberErrorText } from './number-errors';
 import {
-  createBody, draftErrors, draftOf, switchErrors, updateBody, type DraftErrors,
+  createBody,
+  draftErrors,
+  draftOf,
+  switchErrors,
+  updateBody,
+  type DraftErrors,
 } from './number-form';
 import { createNumber, updateNumber } from '@/features/messaging/numbers/numbers-api';
 import { NumberFormFields } from './NumberFormFields';
@@ -28,7 +33,8 @@ export function NumberFormDialog({ view, onClose }: { view?: NumberView; onClose
   const [errors, setErrors] = useState<DraftErrors>({});
   const save = useNumbersMutation(saveNumber, { onDone: onClose });
   const serverCode = numberErrorCode(save.error);
-  const shown: DraftErrors = serverCode === 'phone_taken' ? { ...errors, phone_number_id: s.errors.phone_taken } : errors;
+  const shown: DraftErrors =
+    serverCode === 'phone_taken' ? { ...errors, phone_number_id: s.errors.phone_taken } : errors;
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const found = { ...draftErrors(draft), ...switchErrors(view, draft) };
@@ -41,8 +47,12 @@ export function NumberFormDialog({ view, onClose }: { view?: NumberView; onClose
       onClose={onClose}
       actions={
         <>
-          <Button variant="ghost" onClick={onClose}>{s.actions.cancel}</Button>
-          <Button type="submit" form={formId} disabled={save.isPending}>{s.actions.save}</Button>
+          <Button variant="ghost" onClick={onClose}>
+            {s.actions.cancel}
+          </Button>
+          <Button type="submit" form={formId} disabled={save.isPending}>
+            {s.actions.save}
+          </Button>
         </>
       }
     >

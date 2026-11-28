@@ -47,45 +47,56 @@ export function InboxPage({ search, onSearch, head }: InboxPageProps) {
     /* From 900px the inbox is exactly the frame's height: the browser page never scrolls, the
        list, the log and the side panel each scroll on their own. Phones: one pane, it flows. */
     <ChatAnchorContext value={anchor}>
-    <div
-      data-testid="inbox-layout"
-      className="grid flex-auto gap-4 shell:h-0 shell:min-h-[400px] shell:grid-cols-[clamp(300px,30%,400px)_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]"
-    >
       <div
-        className={cn(
-          'min-w-0 transition-opacity duration-[120ms]',
-          paneScroll,
-          phone && 'max-shell:hidden',
-          threads.isPlaceholderData && 'opacity-60',
-        )}
-        aria-busy={threads.isPlaceholderData || undefined}
+        data-testid="inbox-layout"
+        className="grid flex-auto gap-4 shell:h-0 shell:min-h-[400px] shell:grid-cols-[clamp(300px,30%,400px)_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]"
       >
-        <InboxListHead total={threads.data?.total} head={head} onOpen={(next) => onSearch({ ...listSearch, phone: next })} />
-        <CallsTabs calls={callsLog} onPick={(calls) => filter({ calls: calls || undefined })} />
-        {callsLog && <CallsLog />}
-        {!callsLog && lists && <ChatListsBar active={list} onPick={(next) => filter({ list: next })} />}
-        {!callsLog && threads.isError && <p role="alert">{t.common.error}</p>}
-        {!callsLog && threads.isPending && <ListSkeleton rows={6} />}
-        {!callsLog && threads.data && (
-          <>
-            <ThreadList search={shown} threads={threads.data.items} onFilter={filter} total={threads.isPlaceholderData ? undefined : threads.data.total} />
-            <Pager
-              page={shown.page}
-              total={threads.data.total}
-              pageSize={threads.data.pageSize}
-              onPage={(page) => onSearch({ ...shown, page })}
-            />
-          </>
+        <div
+          className={cn(
+            'min-w-0 transition-opacity duration-[120ms]',
+            paneScroll,
+            phone && 'max-shell:hidden',
+            threads.isPlaceholderData && 'opacity-60',
+          )}
+          aria-busy={threads.isPlaceholderData || undefined}
+        >
+          <InboxListHead
+            total={threads.data?.total}
+            head={head}
+            onOpen={(next) => onSearch({ ...listSearch, phone: next })}
+          />
+          <CallsTabs calls={callsLog} onPick={(calls) => filter({ calls: calls || undefined })} />
+          {callsLog && <CallsLog />}
+          {!callsLog && lists && (
+            <ChatListsBar active={list} onPick={(next) => filter({ list: next })} />
+          )}
+          {!callsLog && threads.isError && <p role="alert">{t.common.error}</p>}
+          {!callsLog && threads.isPending && <ListSkeleton rows={6} />}
+          {!callsLog && threads.data && (
+            <>
+              <ThreadList
+                search={shown}
+                threads={threads.data.items}
+                onFilter={filter}
+                total={threads.isPlaceholderData ? undefined : threads.data.total}
+              />
+              <Pager
+                page={shown.page}
+                total={threads.data.total}
+                pageSize={threads.data.pageSize}
+                onPage={(page) => onSearch({ ...shown, page })}
+              />
+            </>
+          )}
+        </div>
+        {phone ? (
+          <ThreadPane key={phone} phone={phone} listSearch={listSearch} />
+        ) : (
+          <EmptyState title={t.inbox.pickThread} className="self-start max-shell:hidden">
+            {t.inbox.pickThreadHint}
+          </EmptyState>
         )}
       </div>
-      {phone ? (
-        <ThreadPane key={phone} phone={phone} listSearch={listSearch} />
-      ) : (
-        <EmptyState title={t.inbox.pickThread} className="self-start max-shell:hidden">
-          {t.inbox.pickThreadHint}
-        </EmptyState>
-      )}
-    </div>
     </ChatAnchorContext>
   );
 }

@@ -15,7 +15,10 @@ export interface CallBarProps {
  * so the app header and its navigation stay reachable; tap to go back to the call.
  */
 export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
-  const now = useSyncExternalStore(phase === 'active' ? callClock.subscribe : callClock.still, callClock.read);
+  const now = useSyncExternalStore(
+    phase === 'active' ? callClock.subscribe : callClock.still,
+    callClock.read,
+  );
   return (
     <button
       type="button"
@@ -26,7 +29,11 @@ export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
       <Icon name="call" className="size-4" />
       <span className="truncate">{session.name}</span>
       <span aria-hidden="true">·</span>
-      <span aria-hidden="true" className="tabular-nums" dir={phase === 'active' ? 'ltr' : undefined}>
+      <span
+        aria-hidden="true"
+        className="tabular-nums"
+        dir={phase === 'active' ? 'ltr' : undefined}
+      >
         {callStatusText(phase, { row, now, text: t.calls })}
       </span>
     </button>

@@ -1,4 +1,9 @@
-import { FORWARD_MAX_TARGETS, type ForwardResponse, type MessageView, type ThreadView } from '@ab/shared';
+import {
+  FORWARD_MAX_TARGETS,
+  type ForwardResponse,
+  type MessageView,
+  type ThreadView,
+} from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { Button, Dialog, FormAlert, SearchInput, t } from '@ab/web-kit';
@@ -50,7 +55,9 @@ export function ForwardDialog({ message, from, onClose, onDone }: ForwardDialogP
     send.mutate({ messageId: message.id, targets, clientRequestId: request.current.id });
   };
   const threads = (list.data?.items ?? []).filter((th) => th.phone_e164 !== from);
-  const counter = t.inbox.forward.selected.replace('{count}', String(picked.size)).replace('{max}', max);
+  const counter = t.inbox.forward.selected
+    .replace('{count}', String(picked.size))
+    .replace('{max}', max);
 
   return (
     <Dialog

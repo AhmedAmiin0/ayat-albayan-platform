@@ -30,13 +30,19 @@ export function PeriodSection({ period, onPeriod, data, stale }: PeriodSectionPr
         <PeriodFilter key={`${period.from}_${period.to}`} value={period} onChange={onPeriod} />
       </header>
       {data ? (
-        <div className={cn('grid grid-cols-1 gap-8 transition-opacity', stale && 'opacity-60')} aria-busy={stale || undefined}>
+        <div
+          className={cn('grid grid-cols-1 gap-8 transition-opacity', stale && 'opacity-60')}
+          aria-busy={stale || undefined}
+        >
           <div className="grid grid-cols-1 gap-6 @3xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
             <div className="grid grid-cols-1 content-start gap-2">
               <h3 className={sub}>
                 {t.dashboard.funnel}
                 <span className="ms-3 font-normal text-ink-3">
-                  {t.dashboard.activeStudents}: <span className="font-semibold tabular-nums text-ink">{data.active_students}</span>
+                  {t.dashboard.activeStudents}:{' '}
+                  <span className="font-semibold tabular-nums text-ink">
+                    {data.active_students}
+                  </span>
                 </span>
               </h3>
               <FunnelChart funnel={data.funnel} />

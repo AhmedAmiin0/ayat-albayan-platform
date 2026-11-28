@@ -15,7 +15,13 @@ export function CheckField({ label, checked, onChange, hint, ...row }: CheckFiel
       {(p) => (
         // A real checkbox (role, name, keyboard) laid invisibly over a drawn track and knob.
         <span className="relative inline-flex items-center">
-          <input {...p} type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className={switchInputClass} />
+          <input
+            {...p}
+            type="checkbox"
+            checked={checked}
+            onChange={(e) => onChange(e.target.checked)}
+            className={switchInputClass}
+          />
           <SwitchTrack />
         </span>
       )}

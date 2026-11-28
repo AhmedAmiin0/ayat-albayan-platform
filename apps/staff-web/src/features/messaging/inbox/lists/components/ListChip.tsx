@@ -21,7 +21,9 @@ export function ListChip({ pressed, className, ...props }: ListChipProps) {
       aria-pressed={pressed}
       className={cn(
         CHIP_CLASS,
-        pressed ? 'border-primary bg-lapis-wash font-semibold text-ink' : 'border-rule-strong bg-card text-ink-2',
+        pressed
+          ? 'border-primary bg-lapis-wash font-semibold text-ink'
+          : 'border-rule-strong bg-card text-ink-2',
         className,
       )}
       {...props}

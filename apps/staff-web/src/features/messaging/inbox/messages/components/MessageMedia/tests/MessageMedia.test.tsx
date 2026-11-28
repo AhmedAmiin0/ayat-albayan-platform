@@ -11,9 +11,11 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 
 const SIGNED = 'https://storage.test/wa-media/m-1.png?token=x';
 const FILE_PATH = '/threads/%2B966501234567/messages/m-1/file';
-const row = (patch: Partial<MessageView>) => message({ id: 'm-1', body: 'صورة الاستمارة', ...patch });
+const row = (patch: Partial<MessageView>) =>
+  message({ id: 'm-1', body: 'صورة الاستمارة', ...patch });
 const renderAt = (m: MessageView) => renderWithClient(<MessageMedia message={m} />);
-const view = (kind: string) => screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind) });
+const view = (kind: string) =>
+  screen.getByRole('button', { name: t.inbox.viewMedia.replace('{kind}', kind) });
 /** The opened PDF; its page 1 has no preview (422), so it stays today's named link (PdfCard.test.tsx has the card). */
 const servePdf = () =>
   apiFetch.mockImplementation(async (path: string) => {
@@ -25,11 +27,17 @@ describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
   afterEach(() => apiFetch.mockReset());
 
   it('an image row makes no request on render; a click fetches the file and shows the thumbnail', async () => {
-    apiFetch.mockResolvedValue({ url: SIGNED, expires_at: '2026-10-19T12:00:00Z', mime: 'image/png' });
+    apiFetch.mockResolvedValue({
+      url: SIGNED,
+      expires_at: '2026-10-19T12:00:00Z',
+      mime: 'image/png',
+    });
     renderAt(row({ media_mime: 'image/png' }));
     expect(apiFetch).not.toHaveBeenCalled();
     fireEvent.click(view(t.inbox.media.image));
-    const img = await screen.findByRole('img', { name: t.inbox.openMedia.replace('{kind}', t.inbox.media.image) });
+    const img = await screen.findByRole('img', {
+      name: t.inbox.openMedia.replace('{kind}', t.inbox.media.image),
+    });
     expect(apiFetch).toHaveBeenCalledWith(FILE_PATH);
     expect(img.getAttribute('src')).toBe(SIGNED);
     const link = img.closest('a');
@@ -40,17 +48,31 @@ describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
   it('a PDF with no preview becomes a named link, not an image', async () => {
     servePdf();
     renderAt(row({ media_mime: 'application/pdf' }));
-    fireEvent.click(await screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', t.inbox.media.document) }));
-    const link = await screen.findByRole('link', { name: t.inbox.openMedia.replace('{kind}', t.inbox.media.document) });
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: t.inbox.viewMedia.replace('{kind}', t.inbox.media.document),
+      }),
+    );
+    const link = await screen.findByRole('link', {
+      name: t.inbox.openMedia.replace('{kind}', t.inbox.media.document),
+    });
     expect(link.getAttribute('href')).toBe(SIGNED);
     expect(screen.queryByRole('img')).toBeNull();
   });
 
   it('HEIC (no browser draws it) is a link too', async () => {
-    apiFetch.mockResolvedValue({ url: SIGNED, expires_at: '2026-10-19T12:00:00Z', mime: 'image/heic' });
+    apiFetch.mockResolvedValue({
+      url: SIGNED,
+      expires_at: '2026-10-19T12:00:00Z',
+      mime: 'image/heic',
+    });
     renderAt(row({ media_mime: 'image/heic' }));
     fireEvent.click(view(t.inbox.media.image));
-    expect(await screen.findByRole('link', { name: t.inbox.openMedia.replace('{kind}', t.inbox.media.image) })).toBeTruthy();
+    expect(
+      await screen.findByRole('link', {
+        name: t.inbox.openMedia.replace('{kind}', t.inbox.media.image),
+      }),
+    ).toBeTruthy();
     expect(screen.queryByRole('img')).toBeNull();
   });
 
@@ -67,19 +89,33 @@ describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
   });
 
   it('a voice note says «تشغيل رسالة صوتية», fetches nothing on render, then plays the signed file', async () => {
-    apiFetch.mockResolvedValue({ url: SIGNED, expires_at: '2026-10-19T12:00:00Z', mime: 'audio/ogg' });
+    apiFetch.mockResolvedValue({
+      url: SIGNED,
+      expires_at: '2026-10-19T12:00:00Z',
+      mime: 'audio/ogg',
+    });
     renderAt(row({ media_mime: 'audio/ogg; codecs=opus' }));
     expect(apiFetch).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole('button', { name: t.inbox.playMedia.replace('{kind}', t.inbox.media.audio) }));
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: t.inbox.playMedia.replace('{kind}', t.inbox.media.audio),
+      }),
+    );
     await waitFor(() => expect(document.querySelector('audio')?.getAttribute('src')).toBe(SIGNED));
     expect(apiFetch).toHaveBeenCalledWith(FILE_PATH);
   });
 
   it('an outbound PDF we sent opens too, its link named by media_name', async () => {
     servePdf();
-    renderAt(row({ direction: 'outbound', media_mime: 'application/pdf', media_name: 'جدول الحلقات.pdf' }));
+    renderAt(
+      row({ direction: 'outbound', media_mime: 'application/pdf', media_name: 'جدول الحلقات.pdf' }),
+    );
     // Page 1 is requested as the card shows; with no preview the plain view button stays.
-    fireEvent.click(await screen.findByRole('button', { name: t.inbox.viewMedia.replace('{kind}', t.inbox.media.document) }));
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: t.inbox.viewMedia.replace('{kind}', t.inbox.media.document),
+      }),
+    );
     const link = await screen.findByRole('link', { name: 'جدول الحلقات.pdf' });
     expect(link.getAttribute('href')).toBe(SIGNED);
     // #120: a 200-char name with no break point wraps inside the bubble at 390px.

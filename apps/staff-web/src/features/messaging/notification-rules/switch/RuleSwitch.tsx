@@ -1,7 +1,12 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { useState } from 'react';
 import { ConfirmSwitchDialog, t } from '@ab/web-kit';
-import { failureText, fillText, isFamilyFacing, reachText } from '@/features/messaging/notification-rules/rule-text';
+import {
+  failureText,
+  fillText,
+  isFamilyFacing,
+  reachText,
+} from '@/features/messaging/notification-rules/rule-text';
 import { useRules } from '@/features/messaging/notification-rules/rules-context';
 import type { RuleRowState } from '@/features/messaging/notification-rules/table/use-rule-row';
 import { EssentialOffDialog } from './EssentialOffDialog';
@@ -11,7 +16,10 @@ const r = t.notificationRules;
 type Asking = 'family-on' | 'family-off' | 'essential-off' | null;
 
 /** What a switch press asks first: family ON says whom it reaches; essential OFF is typed; family OFF a plain dialog. */
-export function askFor(entry: Pick<NotificationEntryView, 'audience' | 'essential'>, on: boolean): Asking {
+export function askFor(
+  entry: Pick<NotificationEntryView, 'audience' | 'essential'>,
+  on: boolean,
+): Asking {
   if (!on && entry.essential) return 'essential-off';
   if (!isFamilyFacing(entry)) return null;
   return on ? 'family-on' : 'family-off';

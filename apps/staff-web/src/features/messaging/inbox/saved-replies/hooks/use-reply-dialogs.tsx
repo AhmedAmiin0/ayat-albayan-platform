@@ -3,7 +3,10 @@ import { useState, type ReactNode } from 'react';
 import { DeleteReplyDialog } from '@/features/messaging/inbox/saved-replies/components/DeleteReplyDialog';
 import { ReplyEditorDialog } from '@/features/messaging/inbox/saved-replies/components/ReplyEditorDialog';
 
-type Open = { kind: 'edit'; reply: SavedReply | null } | { kind: 'delete'; reply: SavedReply } | null;
+type Open =
+  | { kind: 'edit'; reply: SavedReply | null }
+  | { kind: 'delete'; reply: SavedReply }
+  | null;
 
 /** The add / edit / delete dialogs of one list (`scope` for a new reply), opened from a row or a button. */
 export function useReplyDialogs(scope: SavedReplyScope): {

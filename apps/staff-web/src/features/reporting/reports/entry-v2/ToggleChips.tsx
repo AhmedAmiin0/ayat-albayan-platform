@@ -27,7 +27,9 @@ export function ToggleChips<V extends string>({
             onClick={() => onToggle(o.value)}
             className={cn(
               'min-h-11 rounded-full border px-3 text-sm font-semibold sm:min-h-9',
-              on ? 'border-primary bg-primary text-primary-foreground' : 'border-rule bg-sunk text-ink-2 hover:bg-lapis-wash',
+              on
+                ? 'border-primary bg-primary text-primary-foreground'
+                : 'border-rule bg-sunk text-ink-2 hover:bg-lapis-wash',
               'disabled:cursor-not-allowed disabled:opacity-60',
             )}
           >

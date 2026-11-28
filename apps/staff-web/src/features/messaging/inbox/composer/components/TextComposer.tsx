@@ -5,12 +5,26 @@ import { Icon, IconButton, controlClass, usePhone, t, cn } from '@ab/web-kit';
 import type { ComposerExtras } from '@/features/messaging/inbox/composer/lib/composer-extras';
 import { sendsOnKey } from '@/features/messaging/inbox/composer/lib/composer-keys';
 import { ComposerError } from './ComposerError';
-import { draftGeneration, getDraft, keepsFailed, keptFailed, setDraft, subscribeDrafts } from '@/features/messaging/inbox/composer/lib/draft-store';
-import { correctionPrefixes, textSentOf, useTextSend } from '@/features/messaging/inbox/composer/lib/use-text-send';
+import {
+  draftGeneration,
+  getDraft,
+  keepsFailed,
+  keptFailed,
+  setDraft,
+  subscribeDrafts,
+} from '@/features/messaging/inbox/composer/lib/draft-store';
+import {
+  correctionPrefixes,
+  textSentOf,
+  useTextSend,
+} from '@/features/messaging/inbox/composer/lib/use-text-send';
 import { ownSendGeneration } from '@/features/messaging/inbox/composer/lib/own-send';
 import { ReplyStrip } from './ReplyStrip';
 import { EditStrip } from './EditStrip';
-import { sendErrorCodeText, sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
+import {
+  sendErrorCodeText,
+  sendErrorText,
+} from '@/features/messaging/inbox/composer/lib/send-error';
 import {
   useEditTarget,
   useReplyTarget,
@@ -104,7 +118,10 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
             e.preventDefault();
             submit();
           }}
-          className={cn(controlClass, 'min-h-11 min-w-0 flex-1 resize-none rounded-[22px] py-2.5 leading-normal')}
+          className={cn(
+            controlClass,
+            'min-h-11 min-w-0 flex-1 resize-none rounded-[22px] py-2.5 leading-normal',
+          )}
         />
         <IconButton
           type="submit"

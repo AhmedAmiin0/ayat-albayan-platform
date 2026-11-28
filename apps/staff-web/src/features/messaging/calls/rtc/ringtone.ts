@@ -23,7 +23,10 @@ export function startRingtone(make: AudioCtor | null = audioCtor()): Ringtone {
   }
   const ring = () => {
     const at = ctx.currentTime;
-    for (const [offset, freq] of [[0, 440], [0.4, 480]] as const) {
+    for (const [offset, freq] of [
+      [0, 440],
+      [0.4, 480],
+    ] as const) {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.frequency.value = freq;

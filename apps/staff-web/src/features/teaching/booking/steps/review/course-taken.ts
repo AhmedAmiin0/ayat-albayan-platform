@@ -27,4 +27,6 @@ export function takenDays(d: TakenInput, conflicts: readonly Conflict[]): number
 
 /** One line per day. */
 export const takenTexts = (d: TakenInput, conflicts: readonly Conflict[]): string[] =>
-  takenDays(d, conflicts).map((w) => t.booking.courseChange.continueTaken.replace('{day}', weekday[String(w)] ?? ''));
+  takenDays(d, conflicts).map((w) =>
+    t.booking.courseChange.continueTaken.replace('{day}', weekday[String(w)] ?? ''),
+  );

@@ -2,18 +2,35 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
 import { ApiError, t } from '@ab/web-kit';
-import { detail, lead, message, PHONE, template } from '@/features/messaging/inbox/testing/inbox-fixture';
+import {
+  detail,
+  lead,
+  message,
+  PHONE,
+  template,
+} from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
 const PATH = '/threads/%2B966501234567';
 const ID = '6f1c1d3e-8c1a-4a57-9d0e-2b7f9a1c0e11';
-const THEIRS = message({ id: ID, body: 'متى الحلقة؟\nسطر ثانٍ', replyable: true, forwardable: true });
+const THEIRS = message({
+  id: ID,
+  body: 'متى الحلقة؟\nسطر ثانٍ',
+  replyable: true,
+  forwardable: true,
+});
 
 function renderThread(open = true) {
   routeFetch(apiFetch, [
@@ -62,7 +79,9 @@ describe('«رد» in the chat (owner 2026-10-25)', () => {
   it('the send answers the message (replyToMessageId); a sent answer clears the strip', async () => {
     renderThread();
     await pickReply();
-    apiSend.mockResolvedValue(message({ id: 'm-out', direction: 'outbound', status: 'queued', body: 'الساعة الخامسة' }));
+    apiSend.mockResolvedValue(
+      message({ id: 'm-out', direction: 'outbound', status: 'queued', body: 'الساعة الخامسة' }),
+    );
     fireEvent.change(box(), { target: { value: 'الساعة الخامسة' } });
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.send }));
     await waitFor(() => expect(strip()).toBeNull());

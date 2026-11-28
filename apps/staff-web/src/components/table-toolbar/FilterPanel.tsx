@@ -44,7 +44,9 @@ export function FilterPanel({
             </Button>
           )}
           <Button ref={primary} type="button" onClick={onClose}>
-            {resultCount === undefined ? t.table.showResults : t.table.showResultsCount.replace('{n}', String(resultCount))}
+            {resultCount === undefined
+              ? t.table.showResults
+              : t.table.showResultsCount.replace('{n}', String(resultCount))}
           </Button>
         </>
       }

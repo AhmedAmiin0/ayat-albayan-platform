@@ -20,7 +20,11 @@ export function ThreadListChips({ phone, lists, listSearch }: ThreadListChipsPro
   const mode = useInboxMode();
   if (!lists?.length || mode === 'teacher') return null;
   return (
-    <span role="group" aria-label={t.inbox.lists.chatLists} className="inline-flex shrink-0 items-center gap-1">
+    <span
+      role="group"
+      aria-label={t.inbox.lists.chatLists}
+      className="inline-flex shrink-0 items-center gap-1"
+    >
       {lists.map((l) => (
         <Link
           key={l.id}

@@ -45,7 +45,9 @@ export function useNoneAllowed(teacher: boolean): NoneReason | null {
   const templates = useQuery({ ...templatesQuery, enabled: reads });
   if (!staff) return null;
   if (!reads) return known ? 'no_permission' : null;
-  return templates.isSuccess && allowedTemplates(templates.data, teacher).length === 0 ? 'no_template' : null;
+  return templates.isSuccess && allowedTemplates(templates.data, teacher).length === 0
+    ? 'no_template'
+    : null;
 }
 
 /** The refusal line: the permission one for no messages.read (round 2 J), else the template one given. */

@@ -3,15 +3,27 @@ import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { meQuery, type Me, t } from '@ab/web-kit';
 import { SETTINGS } from '@/test/settings-fixture';
-import { detail, lead, message, PHONE, template } from '@/features/messaging/inbox/testing/inbox-fixture';
+import {
+  detail,
+  lead,
+  message,
+  PHONE,
+  template,
+} from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadPane } from '@/features/messaging/inbox/threads/pane/ThreadPane/ThreadPane';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
 /** A window this wide in px: each (max-width: Nrem) query answers as the browser would (1rem = 16px). */
 function viewport(px: number) {
@@ -69,7 +81,12 @@ describe('ThreadPane below 900px (a half-screen window, a tablet): the full-scre
     ]);
     // The shells load /auth/me first (requireRole): seeded the same way here.
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    const me: Me = { id: 'u-1', email: null, role: 'sales', permissions: ['inbox.read', 'messages.read'] };
+    const me: Me = {
+      id: 'u-1',
+      email: null,
+      role: 'sales',
+      permissions: ['inbox.read', 'messages.read'],
+    };
     client.setQueryData(meQuery.queryKey, me);
     render(
       <QueryClientProvider client={client}>

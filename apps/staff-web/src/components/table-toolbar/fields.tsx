@@ -36,7 +36,15 @@ export interface DateFilterFieldProps {
 export function DateFilterField({ label, value, onChange }: DateFilterFieldProps) {
   return (
     <Field label={label}>
-      {(p) => <Input {...p} type="date" dir="ltr" value={value ?? ''} onChange={(e) => onChange(e.target.value || undefined)} />}
+      {(p) => (
+        <Input
+          {...p}
+          type="date"
+          dir="ltr"
+          value={value ?? ''}
+          onChange={(e) => onChange(e.target.value || undefined)}
+        />
+      )}
     </Field>
   );
 }

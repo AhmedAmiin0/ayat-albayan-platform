@@ -16,7 +16,12 @@ export function valueText(c: ColumnFilterControl): string {
 export function controlChips(controls: ColumnFilterControl[]): FilterChip[] {
   return controls
     .filter((c) => c.value !== '')
-    .map((c) => ({ id: `col:${c.id}`, label: c.label, value: valueText(c), onRemove: () => c.onChange('') }));
+    .map((c) => ({
+      id: `col:${c.id}`,
+      label: c.label,
+      value: valueText(c),
+      onRemove: () => c.onChange(''),
+    }));
 }
 
 /** Splits the column controls: the toolbar's search (unless the page brings its own) and the panel's. */

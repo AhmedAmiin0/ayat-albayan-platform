@@ -38,6 +38,8 @@ export function filterControls<T extends RowData>(
     }
     const current = column.getFilterValue();
     const onChange = (value: string) => column.setFilterValue(value === '' ? undefined : value);
-    return [{ ...base, key: column.id, value: typeof current === 'string' ? current : '', onChange }];
+    return [
+      { ...base, key: column.id, value: typeof current === 'string' ? current : '', onChange },
+    ];
   });
 }

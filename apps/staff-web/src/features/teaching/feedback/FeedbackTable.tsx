@@ -1,5 +1,10 @@
 import { useMemo } from 'react';
-import { DataTable, type DataTableFilters, type DataTableSort, type FilterOption } from '@/components/data-table/DataTable';
+import {
+  DataTable,
+  type DataTableFilters,
+  type DataTableSort,
+  type FilterOption,
+} from '@/components/data-table/DataTable';
 import { t } from '@ab/web-kit';
 import { feedbackColumns } from './feedback-columns';
 import type { FeedbackListRow } from '@ab/shared';

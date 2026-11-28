@@ -8,7 +8,12 @@ const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
 
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status });
-const OK = { teacherName: 'أبرار', kind: 'subscription', contactPhone: '', alreadySubmitted: false };
+const OK = {
+  teacherName: 'أبرار',
+  kind: 'subscription',
+  contactPhone: '',
+  alreadySubmitted: false,
+};
 
 function open(token = 'tok') {
   render(
@@ -37,8 +42,12 @@ describe('FeedbackPublicPage (no login)', () => {
     expect(screen.queryByText(t.feedback.expired)).toBeNull();
     expect(screen.queryByRole('button', { name: t.feedback.submit })).toBeNull();
     // One feedback read (no retry); the page also reads GET /settings/public for the WhatsApp number.
-    expect(fetchMock.mock.calls.filter(([url]) => String(url).includes('/public/feedback/'))).toHaveLength(1);
-    expect(screen.getByRole('link', { name: t.feedback.openWhatsapp }).getAttribute('href')).toMatch(/^https:\/\/wa\.me\/\d+$/);
+    expect(
+      fetchMock.mock.calls.filter(([url]) => String(url).includes('/public/feedback/')),
+    ).toHaveLength(1);
+    expect(
+      screen.getByRole('link', { name: t.feedback.openWhatsapp }).getAttribute('href'),
+    ).toMatch(/^https:\/\/wa\.me\/\d+$/);
   });
 
   it('an expired link (410) says expired, and also offers the WhatsApp way to a new one', async () => {
@@ -73,9 +82,13 @@ describe('FeedbackPublicPage (no login)', () => {
   });
 
   it('shows the thanks screen after a send', async () => {
-    fetchMock.mockImplementation(async (_url: string, init?: RequestInit) => (init?.method === 'POST' ? new Response(null, { status: 204 }) : json(200, OK)));
+    fetchMock.mockImplementation(async (_url: string, init?: RequestInit) =>
+      init?.method === 'POST' ? new Response(null, { status: 204 }) : json(200, OK),
+    );
     open();
-    fireEvent.click(await screen.findByRole('radio', { name: t.feedback.rowRating.replace('{n}', '4') }));
+    fireEvent.click(
+      await screen.findByRole('radio', { name: t.feedback.rowRating.replace('{n}', '4') }),
+    );
     fireEvent.click(screen.getByRole('radio', { name: t.enums.feedbackRecommend.yes }));
     fireEvent.click(screen.getByRole('button', { name: t.feedback.submit }));
     expect(await screen.findByText(t.feedback.thanksTitle)).toBeTruthy();

@@ -36,18 +36,36 @@ export function NumberActions({ view }: { view: NumberView }) {
   return (
     <div className="grid gap-2">
       <div className="flex flex-wrap items-center gap-2">
-        <Button size="sm" variant="secondary" onClick={() => setEditing(true)}>{a.edit}</Button>
+        <Button size="sm" variant="secondary" onClick={() => setEditing(true)}>
+          {a.edit}
+        </Button>
         <Button size="sm" variant="secondary" disabled={patch.isPending} onClick={toggle}>
           {view.enabled ? a.disable : a.enable}
         </Button>
         {view.is_default && (
-          <Button size="sm" variant="ghost" disabled={patch.isPending} onClick={() => ask({ is_default: false }, a.confirmUnsetDefault)}>{a.unsetDefault}</Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            disabled={patch.isPending}
+            onClick={() => ask({ is_default: false }, a.confirmUnsetDefault)}
+          >
+            {a.unsetDefault}
+          </Button>
         )}
         {view.enabled && !view.is_default && (
-          <Button size="sm" variant="ghost" disabled={patch.isPending} onClick={() => ask({ is_default: true }, a.confirmMakeDefault)}>{a.makeDefault}</Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            disabled={patch.isPending}
+            onClick={() => ask({ is_default: true }, a.confirmMakeDefault)}
+          >
+            {a.makeDefault}
+          </Button>
         )}
         {!view.enabled && (
-          <Button size="sm" variant="danger-quiet" onClick={() => setDeleting(true)}>{a.delete}</Button>
+          <Button size="sm" variant="danger-quiet" onClick={() => setDeleting(true)}>
+            {a.delete}
+          </Button>
         )}
       </div>
       {patch.isError && !asking && <FormAlert>{numberErrorText(patch.error)}</FormAlert>}
@@ -75,7 +93,9 @@ export function NumberActions({ view }: { view: NumberView }) {
           pending={remove.isPending}
           failed={false}
         >
-          {remove.isError && <FormAlert className="mt-3">{numberErrorText(remove.error)}</FormAlert>}
+          {remove.isError && (
+            <FormAlert className="mt-3">{numberErrorText(remove.error)}</FormAlert>
+          )}
         </ConfirmSwitchDialog>
       )}
     </div>

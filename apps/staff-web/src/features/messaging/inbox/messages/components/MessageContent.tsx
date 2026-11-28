@@ -34,7 +34,8 @@ function ForwardedLabel() {
 export function SenderLine({ message: m }: { message: MessageView }) {
   const line = senderLine(m);
   if (!line) return null;
-  const text = line.kind === 'name' ? t.inbox.sentBy.replace('{name}', line.name) : t.inbox.automaticMessage;
+  const text =
+    line.kind === 'name' ? t.inbox.sentBy.replace('{name}', line.name) : t.inbox.automaticMessage;
   return <p className="mt-1 text-2xs font-semibold text-ink-2">{text}</p>;
 }
 
@@ -79,7 +80,9 @@ export function Content({ message: m }: { message: MessageView }) {
     <>
       {m.forwarded && <ForwardedLabel />}
       {m.reply_to && <QuoteBlock quote={m.reply_to} outbound={m.direction === 'outbound'} />}
-      {m.template_key && <p className="mb-1 text-2xs font-semibold text-ink-3">{templateLine(m.template_key)}</p>}
+      {m.template_key && (
+        <p className="mb-1 text-2xs font-semibold text-ink-3">{templateLine(m.template_key)}</p>
+      )}
       <TappedLabel message={m} />
       <TemplateFrame block={m.template} hasMedia={media}>
         {media && <MessageMedia message={m} />}
