@@ -8,6 +8,7 @@ describe('pricingRoutes (docs/08)', () => {
       'GET /pricing/catalog',
       'GET /pricing/quote',
       'GET /pricing/list',
+      'POST /pricing/list-pdf',
     ]);
   });
 

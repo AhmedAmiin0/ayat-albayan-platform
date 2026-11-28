@@ -10,6 +10,9 @@ import { FX_FETCHER } from '@/modules/finance/fx/fx.fetcher';
 import { FxRepo } from '@/modules/finance/fx/fx.repo';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
+import { StorageService } from '@/common/storage/storage.service';
+import { PdfRenderer } from '@/modules/reporting/report-pdf';
+import { pdfFakes } from './list-pdf/tests/price-list-pdf.fakes';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'admin-1', email: 'admin@x.com', role: 'admin' },
@@ -23,6 +26,7 @@ const verify: TokenVerifier = async (token) => {
 
 export async function pricingApp() {
   const fx = fakeFx();
+  const pdf = pdfFakes();
   const mod = await Test.createTestingModule({ imports: [featureRoot(PricingModule)] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
     .useValue(verify)
@@ -31,11 +35,15 @@ export async function pricingApp() {
     .overrideProvider(FxRepo)
     .useValue(fx.queries)
     .overrideProvider(SettingsService).useValue(fakeSettings())
+    .overrideProvider(PdfRenderer).useValue(pdf.renderer)
+    .overrideProvider(StorageService).useValue(pdf.storage)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   const get = (url: string, token: 'admin' | 'teacher' = 'admin') =>
     app.inject({ method: 'GET', url, headers: { authorization: `Bearer ${token}` } });
-  return { app, fetcher: fx.fetcher, queries: fx.queries, get };
+  const post = (url: string, body: object, token: 'admin' | 'teacher' = 'admin') =>
+    app.inject({ method: 'POST', url, payload: body, headers: { authorization: `Bearer ${token}` } });
+  return { app, fetcher: fx.fetcher, queries: fx.queries, get, post, pdf };
 }

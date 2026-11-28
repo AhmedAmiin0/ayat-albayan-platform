@@ -12,6 +12,8 @@ export {
   timeWithZone,
   weekdayName,
 } from './render/pdf-text';
+export { pdfAssets, type PdfAssets } from './pdf-assets';
+export { PdfRenderer } from './render/pdf-renderer';
 export { ReportPdfJob, RETRY_DELAYS_MS, RulesUnreadError, type RunSummary } from './report-pdf.job';
 export { ReportPdfModule } from './report-pdf.module';
 export { ReportPdfSettings, type ReportPdfSettingsValues } from './report-pdf.settings';

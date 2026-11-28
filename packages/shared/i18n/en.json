@@ -1943,6 +1943,29 @@
       "rateDate": "Exchange rate as of {date}",
       "stale": "We couldn't update the exchange rate right now. This is the latest available rate, from {date}.",
       "fallback": "No exchange rate is available right now, so prices use the SAR–USD peg (3.75)"
+    },
+    "pdf": {
+      "title": "Price list",
+      "country": "Country",
+      "currency": "Currency",
+      "issued": "Issued on",
+      "discount": "{pct}% off every package",
+      "duration": "Lesson length {duration}",
+      "lessons": "Lessons",
+      "price": "Package price",
+      "priceBefore": "Price before discount",
+      "priceAfter": "Price after discount",
+      "weekly": "Weekly lesson (90 minutes)",
+      "currencyNames": {
+        "SAR": "Saudi riyal",
+        "AED": "UAE dirham",
+        "QAR": "Qatari riyal",
+        "KWD": "Kuwaiti dinar",
+        "OMR": "Omani rial",
+        "USD": "US dollar"
+      },
+      "download": "Download the price list PDF",
+      "failed": "Could not prepare the price list file. Try again."
     }
   },
   "studentRecordings": {
@@ -3553,7 +3576,15 @@
         "down": "Round down"
       },
       "clientCountry": "Client's country by number: {country} ({code})",
-      "countryJoin": "or"
+      "countryJoin": "or",
+      "pdf": {
+        "create": "Prepare a PDF",
+        "creating": "Preparing the file…",
+        "open": "Open the file",
+        "send": "Send the file",
+        "sending": "Sending the file…",
+        "failed": "Could not prepare the price list file. Try again."
+      }
     },
     "templateBubble": {
       "buttons": "Template buttons",
