@@ -1,5 +1,5 @@
 import type { RouteBody } from '@ab/core';
-import type { reportRoutes, ReportView, SignedDownload } from '@ab/shared';
+import type { ReportFormResponse, reportRoutes, ReportView, SignedDownload } from '@ab/shared';
 
 type Routes = typeof reportRoutes;
 interface ById {
@@ -7,6 +7,7 @@ interface ById {
 }
 
 export interface ReportCalls {
+  form: (params: ById) => Promise<ReportFormResponse>;
   get: (params: ById) => Promise<ReportView>;
   draft: (params: ById, body: RouteBody<Routes['draft']>) => Promise<ReportView>;
   submit: (params: ById, body: RouteBody<Routes['submit']>) => Promise<ReportView>;

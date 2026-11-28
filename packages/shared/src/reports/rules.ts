@@ -8,6 +8,7 @@ import {
 import { isClosedLesson, statusRouteEventSchema } from '@ab/schedule';
 import { gradeStyle } from '@ab/money';
 import { z } from 'zod';
+import type { ReportBlock } from './report-routes/report-form.schemas';
 
 const MINUTE = 60_000;
 
@@ -51,8 +52,6 @@ export function attended(attendance: Attendance): boolean {
 export function gradeScore(grade: Grade | null): number | null {
   return grade === null ? null : gradeStyle[grade].pips;
 }
-
-export type ReportBlock = 'lesson_cancelled' | 'not_started';
 
 /**
  * Can a report be submitted for this lesson now? (R-REP-02 "date not in future, not before lesson

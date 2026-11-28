@@ -10,19 +10,7 @@ import {
   type ReportSegment,
   type SegmentKind,
 } from './content';
-
-/** A saved surah range. */
-export interface SurahRange {
-  surah: number;
-  from: number;
-  to: number;
-}
-
-/** Per track, the last range in a submitted v2 report and the surahs used lately. */
-export interface MemoryView {
-  last: Record<SegmentKind, SurahRange | null>;
-  recent_surahs: number[];
-}
+import type { MemoryView, SurahRange } from '../report-routes/report-form.schemas';
 
 const RECENT = 4;
 

@@ -21,7 +21,7 @@ const argsOf = <T>(controller: Type<T>, method: keyof T & string): [string, Rout
   );
 
 const runPipes =
-  (pipes: PipeTransform[], type: 'body' | 'param') =>
+  (pipes: PipeTransform[], type: 'param') =>
   async (raw: unknown): Promise<unknown> => {
     let value = raw;
     for (const pipe of pipes) value = await pipe.transform(value, { type });

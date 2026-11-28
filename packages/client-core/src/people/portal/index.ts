@@ -3,7 +3,7 @@ export {
   type PortalHistoryInput, type PortalHistoryPages, type PortalQueries, type PortalRead,
 } from './portal-api';
 export {
-  portalSends, roomJoinResultSchema,
+  portalSends,
   type PortalFileInput, type PortalFileKind, type PortalJoinInput, type PortalSends,
 } from './portal-sends';
 export {

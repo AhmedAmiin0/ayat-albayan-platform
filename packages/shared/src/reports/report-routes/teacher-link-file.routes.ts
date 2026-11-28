@@ -9,7 +9,7 @@ import { attachmentRegisterSchema, attachmentUploadSchema } from '../schema/sche
 import { teacherLinkReportParamsSchema as byReport } from './teacher-link.schemas';
 
 const byFile = byReport.extend({ attachmentId: z.uuid() });
-const tags = ['reports'] as const;
+const access = { tags: ['reports'], isPublic: true } as const;
 const base = '/public/teacher-report/:token/reports/:id/attachments';
 
 /**
@@ -24,7 +24,7 @@ export const teacherLinkFileRoutes = {
     params: byReport,
     body: attachmentUploadSchema,
     response: signedUploadSchema,
-    tags,
+    ...access,
   }),
   register: defineRoute({
     method: 'POST',
@@ -32,20 +32,20 @@ export const teacherLinkFileRoutes = {
     params: byReport,
     body: attachmentRegisterSchema,
     response: reportAttachmentViewSchema,
-    tags,
+    ...access,
   }),
   remove: defineRoute({
     method: 'DELETE',
     path: `${base}/:attachmentId`,
     params: byFile,
     response: 'empty',
-    tags,
+    ...access,
   }),
   url: defineRoute({
     method: 'GET',
     path: `${base}/:attachmentId/url`,
     params: byFile,
     response: signedDownloadSchema,
-    tags,
+    ...access,
   }),
 };

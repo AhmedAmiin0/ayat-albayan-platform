@@ -40,8 +40,18 @@ describe('report calls', () => {
     const link = { url: 'https://files.test/r.pdf', expires_at: '2026-11-20T18:00:00Z' };
     const { client, apiFetch, apiSend } = clientAnswering(link);
     await expect(reportCalls(client).pdf({ id: ID })).resolves.toEqual(link);
-    await reportCalls(client).retryPdf({ id: ID }).catch(() => null);
+    await reportCalls(client)
+      .retryPdf({ id: ID })
+      .catch(() => null);
     expect(apiFetch).toHaveBeenCalledWith(`/reports/${ID}/pdf`);
     expect(apiSend.mock.calls[0]?.slice(0, 2)).toEqual(['POST', `/reports/${ID}/pdf/retry`]);
+  });
+
+  it('opens the lesson report form on the path of today and refuses a bad answer', async () => {
+    const { client, apiFetch } = clientAnswering({ entries: [] });
+    await expect(reportCalls(client).form({ id: ID })).rejects.toMatchObject({
+      body: { code: 'bad_response' },
+    });
+    expect(apiFetch).toHaveBeenCalledWith(`/lessons/${ID}/report-form`);
   });
 });
