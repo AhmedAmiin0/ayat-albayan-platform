@@ -7,27 +7,9 @@
   "src/assistant/first-paid/first-paid.ts": {
     "complexity": {
       "count": 3
-    },
-    "stylistic/max-len": {
-      "count": 9
-    }
-  },
-  "src/assistant/first-paid/tests/sales.test.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/assistant/kind.ts": {
-    "stylistic/max-len": {
-      "count": 4
     }
   },
   "src/assistant/renewal.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/assistant/renewal.ts": {
     "stylistic/max-len": {
       "count": 1
     }
@@ -37,31 +19,8 @@
       "count": 1
     }
   },
-  "src/assistant/started.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/assistant/started.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/assistant/statement.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/assistant/wallet.ts": {
-    "stylistic/max-len": {
-      "count": 7
-    }
-  },
-  "src/ledger/alerts.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -72,19 +31,6 @@
   },
   "src/ledger/earnings/earning-sync.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/ledger/earnings/earnings-pay.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/ledger/earnings/earnings-schemas.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -106,26 +52,13 @@
       "count": 1
     }
   },
-  "src/ledger/usage/package-cancel.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "src/ledger/usage/package-progress.ts": {
     "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
       "count": 1
     }
   },
   "src/ledger/usage/payment-state.ts": {
     "typescript/no-unnecessary-type-conversion": {
-      "count": 1
-    }
-  },
-  "src/ledger/usage/tests/before.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -136,19 +69,6 @@
   },
   "src/ledger/usage/usage.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/pricing/currency.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/pricing/price/price.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -161,9 +81,6 @@
     "complexity": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     },
@@ -172,17 +89,11 @@
     }
   },
   "src/status-style/commission-status-style.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     }
   },
   "src/status-style/status-style.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
     }

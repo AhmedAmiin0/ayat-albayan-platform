@@ -13,9 +13,9 @@ export interface StartFact {
 
 /**
  * The course started before the package was recorded: its first day is before the Riyadh day of its
- * created_at, or it carries lessons used before. Such a package earns no assistant commission, neither
- * 'first' nor 'renewal'; it still counts by order (commissionKindOf). Same-day and future starts earn.
- * The forms pass now as created_at for their note.
+ * created_at, or it carries lessons used before. Such a package earns no assistant commission,
+ * neither 'first' nor 'renewal'; it still counts by order (commissionKindOf). Same-day and future
+ * starts earn. The forms pass now as created_at for their note.
  */
 export function subscriptionAlreadyStarted(sub: StartFact): boolean {
   if ((sub.lessons_used_before ?? 0) > 0) return true;

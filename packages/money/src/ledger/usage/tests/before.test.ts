@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { subscriptionBalances, type PackageLesson } from '../usage';
 
 // Migration 932: lessons taken before the platform count as used; the package fills
-// with platform lessons only up to lessonsTotal − lessonsUsedBefore, then the next package takes over.
+// with platform lessons only up to lessonsTotal − lessonsUsedBefore, then the next package takes
+// over.
 let seq = 0;
 function done(day: string): PackageLesson {
   seq += 1;

@@ -127,7 +127,10 @@ export const payoutStatusStyle: Record<PayoutStatus, StatusStyle> = {
   paid: { tone: 'ok', glyph: 'fill' },
 };
 
-/** Per-session teacher earnings: waiting (hollow), underway (half), settled (fill). Never `act`: the teacher isn't the one to act. */
+/**
+ * Per-session teacher earnings: waiting (hollow), underway (half), settled (fill). Never `act`: the
+ * teacher isn't the one to act.
+ */
 export const earningStatusStyle: Record<EarningStatus, StatusStyle> = {
   earned: { tone: 'neutral', glyph: 'hollow' },
   partially_paid: { tone: 'neutral', glyph: 'half' },

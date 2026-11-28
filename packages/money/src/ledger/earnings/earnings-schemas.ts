@@ -33,7 +33,10 @@ export const earningsListQuery = z.object({
   ...listSortShape(EARNING_SORT_KEYS),
 });
 
-/** GET .../payments: method, voided (`true` = only voided, `false` = only standing), note contains, sort. */
+/**
+ * GET .../payments: method, voided (`true` = only voided, `false` = only standing), note contains,
+ * sort.
+ */
 export const teacherPaymentListQuery = z.object({
   method: z.enum(PAYMENT_METHODS).optional(),
   voided: z.enum(['true', 'false']).optional(),

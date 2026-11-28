@@ -2,8 +2,9 @@ import type { Duration } from '@ab/catalog';
 import { earningStatus, type EarningStatus } from './earnings';
 import { lessonCountsForPay, teacherRateFor } from './pay-rule';
 
-// Executable specification of public.sync_teacher_earning (migrations 177, 20261005000200): the database trigger
-// is the only writer, this twin pins its decisions in unit tests (the cloud run has no database).
+// Executable specification of public.sync_teacher_earning (migrations 177, 20261005000200): the
+// database trigger is the only writer, this twin pins its decisions in unit tests (the cloud run
+// has no database).
 
 export interface SyncLesson {
   status: string;
@@ -47,7 +48,10 @@ function counts(i: SyncInput): boolean {
   );
 }
 
-/** The rate the earning carries: frozen while the length and teacher are unchanged, else the teacher's now. */
+/**
+ * The rate the earning carries: frozen while the length and teacher are unchanged, else the
+ * teacher's now.
+ */
 function rateFor(i: SyncInput): number | null {
   const { earning, lesson } = i;
   if (earning?.minutes === lesson.minutes && earning.teacherId === lesson.teacherId)

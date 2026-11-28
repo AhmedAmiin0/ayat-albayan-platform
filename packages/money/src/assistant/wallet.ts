@@ -6,7 +6,10 @@ import { monthOf } from './statement';
 
 // A commission is owed until a paid statement holds it; per currency, never summed across them.
 
-/** The reasons the database writes itself (codes of assistantReasons); an admin's typed text is never shown. */
+/**
+ * The reasons the database writes itself (codes of assistantReasons); an admin's typed text is
+ * never shown.
+ */
 export const WALLET_VOID_REASONS = ['payment_voided', 'student_merged'] as const;
 export type WalletVoidReason = (typeof WALLET_VOID_REASONS)[number];
 
@@ -21,9 +24,10 @@ export function walletState(
 }
 
 /**
- * One money line of the wallet. Frozen: a commission line or a reversal line of an approved or paid statement,
- * as the statement holds it (not the commission row, which a later re-earn or a merge changes). Open: an
- * earned commission with no statement or a draft one, and a reversal (negative) not in a frozen statement yet.
+ * One money line of the wallet. Frozen: a commission line or a reversal line of an approved or paid
+ * statement, as the statement holds it (not the commission row, which a later re-earn or a merge
+ * changes). Open: an earned commission with no statement or a draft one, and a reversal (negative)
+ * not in a frozen statement yet.
  */
 export interface WalletLine {
   /** Signed: a reversal is negative. */
@@ -40,9 +44,10 @@ export interface WalletEarning {
 }
 
 /**
- * The wallet per currency in exact cents: a line on a paid statement is paid, any other line is due; this
- * month = the commissions earned in `at.month` (the assistant's tz). A commission voided inside an approved
- * statement nets to 0 owed with its reversal; voided after it was paid: paid stays, due goes negative.
+ * The wallet per currency in exact cents: a line on a paid statement is paid, any other line is
+ * due; this month = the commissions earned in `at.month` (the assistant's tz). A commission voided
+ * inside an approved statement nets to 0 owed with its reversal; voided after it was paid: paid
+ * stays, due goes negative.
  */
 export function walletTotals(
   lines: readonly WalletLine[],

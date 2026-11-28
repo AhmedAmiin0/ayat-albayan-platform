@@ -15,9 +15,15 @@ export interface CancelFacts {
   status: SubscriptionStatus;
   /** Net paid (payments − refunds) in the package currency. */
   paid: number;
-  /** Non-cancelled lessons on a course rule of it, plus the lessons it used FIFO (v_subscription_balance). */
+  /**
+   * Non-cancelled lessons on a course rule of it, plus the lessons it used FIFO
+   * (v_subscription_balance).
+   */
   lessons: number;
-  /** A later live priced package of the student already has an assistant commission (kind 'renewal' by this one). */
+  /**
+   * A later live priced package of the student already has an assistant commission (kind 'renewal'
+   * by this one).
+   */
   laterCommission?: boolean;
 }
 
@@ -41,7 +47,9 @@ export const countsForMoney = (p: {
 /** countsForMoney as a PostgREST `.or()` filter on subscriptions. */
 export const COUNTS_FOR_MONEY = 'status.neq.cancelled,cancel_kind.eq.stopped';
 
-/** The packages that still count (owed, current, alerts, renewals): every one but a cancelled one. */
+/**
+ * The packages that still count (owed, current, alerts, renewals): every one but a cancelled one.
+ */
 export function livePackages<T extends { status: SubscriptionStatus }>(
   packages: readonly T[],
 ): T[] {

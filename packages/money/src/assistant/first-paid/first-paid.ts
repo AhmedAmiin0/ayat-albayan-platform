@@ -4,9 +4,10 @@ import { commissionKindOf } from '../kind';
 import { subscriptionAlreadyStarted, type StartFact } from '../started';
 import { localDateIn } from '@ab/time';
 
-// "Fully paid" and "first" (migration 20261006000272: subscription_full_at, evaluate_assistant_commission).
-// Derived from the payments, never stored: net paid (payments - refunds, in the package currency) has
-// reached the price, and the price is above zero (a free package brings nothing).
+// "Fully paid" and "first" (migration 20261006000272: subscription_full_at,
+// evaluate_assistant_commission). Derived from the payments, never stored: net paid (payments -
+// refunds, in the package currency) has reached the price, and the price is above zero (a free
+// package brings nothing).
 
 export interface PaymentFact {
   amount: number;
@@ -31,8 +32,9 @@ const byTime = (a: PaymentFact, b: PaymentFact) =>
   (a.id ?? '').localeCompare(b.id ?? '');
 
 /**
- * When the subscription became fully paid: the paid_at of the payment that LAST took the running net
- * from below the price to the price (a refund then a new payment moves it); null when it is not.
+ * When the subscription became fully paid: the paid_at of the payment that LAST took the running
+ * net from below the price to the price (a refund then a new payment moves it); null when it is
+ * not.
  */
 export function subscriptionFullAt(sub: Pick<SubscriptionFact, 'price' | 'payments'>): string | null {
   const price = toCents(sub.price);
@@ -88,7 +90,9 @@ export interface PlannedCommission extends CommissionAmount {
   baseCurrency: string;
 }
 
-/** Who brought the student, when, on which terms and zone: what every commission is checked against. */
+/**
+ * Who brought the student, when, on which terms and zone: what every commission is checked against.
+ */
 export interface CommissionContext {
   broughtBy: string | null;
   /** When the student was brought (students.brought_at, an instant). */
@@ -98,10 +102,10 @@ export interface CommissionContext {
 }
 
 /**
- * What one subscription earns at `share` % of the normal commission: null unless somebody brought the
- * student, the assistant has terms, it is fully paid on or after BOTH startsOn and the day the student was
- * brought (in the assistant's tz: nothing is retroactive), the course did not start before it was recorded
- * (subscriptionAlreadyStarted) and the amount is above zero.
+ * What one subscription earns at `share` % of the normal commission: null unless somebody brought
+ * the student, the assistant has terms, it is fully paid on or after BOTH startsOn and the day the
+ * student was brought (in the assistant's tz: nothing is retroactive), the course did not start
+ * before it was recorded (subscriptionAlreadyStarted) and the amount is above zero.
  */
 export function planOn(
   ctx: CommissionContext,
@@ -121,10 +125,10 @@ export function planOn(
 }
 
 /**
- * The student's ONE 'first' commission (evaluate_assistant_commission): on the first fully paid of its
- * candidates, the first subscription BY ORDER (commissionKindOf) and the subscription an
- * existing 'first' row already sits on (`firstRowSubscriptionId`: a row never flips). A later package is a
- * renewal (planRenewalCommission), never a second first.
+ * The student's ONE 'first' commission (evaluate_assistant_commission): on the first fully paid of
+ * its candidates, the first subscription BY ORDER (commissionKindOf) and the subscription an
+ * existing 'first' row already sits on (`firstRowSubscriptionId`: a row never flips). A later
+ * package is a renewal (planRenewalCommission), never a second first.
  */
 export function planCommission(input: CommissionContext & {
   subscriptions: readonly SubscriptionFact[];

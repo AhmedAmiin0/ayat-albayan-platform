@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { planCommission, type PaymentFact, type SubscriptionFact } from '../first-paid';
 
-// Owner 2026-10-12: the salesperson records the family's bank transfer herself (POST /sales/payments). The
-// commission (migration 272 trigger, twin planCommission) reads only the payments, never who recorded them,
-// so her own transfer that completes the first package earns her commission exactly as an admin's would.
+// Owner 2026-10-12: the salesperson records the family's bank transfer herself (POST
+// /sales/payments). The commission (migration 272 trigger, twin planCommission) reads only the
+// payments, never who recorded them, so her own transfer that completes the first package earns her
+// commission exactly as an admin's would.
 
 const TERMS = { type: 'percent', value: 10, currency: null, startsOn: '2026-10-01' } as const;
 const bank = (amount: number, paid_at: string): PaymentFact => ({ amount, kind: 'payment', paid_at });

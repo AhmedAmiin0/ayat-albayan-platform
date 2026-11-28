@@ -1,7 +1,8 @@
 import { counted, type PluralForm } from '@ab/core';
 
 // docs/07 §6: one pure function for the package line on the students hamish, the mobile card, the
-// guardian portal and the PDF footer. Strings come from ar.json `subscriptions.progress` (passed in:
+// guardian portal and the PDF footer. Strings come from ar.json `subscriptions.progress` (passed
+// in:
 // @ab/shared source cannot import ar.json).
 
 type Forms = Readonly<Record<PluralForm, string>>;

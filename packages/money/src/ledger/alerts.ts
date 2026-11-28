@@ -54,8 +54,9 @@ export interface StatusInput {
 
 /**
  * The derived status after a payment, an outcome or a renewal (R-SUB-01/02, journey 3):
- * paused, trial and cancelled are set by hand and stay (a cancelled package never comes back); money still owed → unpaid; used up → expired when a
- * newer package took over, else unpaid (renewal needed); otherwise active.
+ * paused, trial and cancelled are set by hand and stay (a cancelled package never comes back);
+ * money still owed → unpaid; used up → expired when a newer package took over, else unpaid (renewal
+ * needed); otherwise active.
  */
 const KEPT: ReadonlySet<SubscriptionStatus> = new Set(['paused', 'trial', 'cancelled']);
 
