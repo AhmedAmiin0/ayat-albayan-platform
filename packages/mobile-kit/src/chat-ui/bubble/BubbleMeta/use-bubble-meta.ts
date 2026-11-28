@@ -6,5 +6,6 @@ export function useBubbleMeta({ ticks, ink }: Pick<BubbleMetaProps, 'ticks' | 'i
   const small = useSmallText(ink);
   const [open, setOpen] = useState(false);
   const times = ticks?.times ?? '';
-  return { small, open, setOpen, times };
+  const toggle = () => setOpen((v) => !v);
+  return { small, open, toggle, times };
 }

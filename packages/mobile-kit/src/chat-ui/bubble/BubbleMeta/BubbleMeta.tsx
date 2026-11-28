@@ -11,7 +11,7 @@ import { useBubbleMeta } from './use-bubble-meta';
  * bubble.
  */
 export function BubbleMeta({ time, ticks, lead, mark, ink }: BubbleMetaProps) {
-  const { small, open, setOpen, times } = useBubbleMeta({ ticks, ink });
+  const { small, open, toggle, times } = useBubbleMeta({ ticks, ink });
   return (
     <>
       <View style={ROW}>
@@ -19,7 +19,7 @@ export function BubbleMeta({ time, ticks, lead, mark, ink }: BubbleMetaProps) {
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
           {mark}
           <AppText style={small}>{time}</AppText>
-          {ticks ? <DeliveryTicks {...ticks} onLongPress={() => setOpen((v) => !v)} /> : null}
+          {ticks ? <DeliveryTicks {...ticks} onLongPress={toggle} /> : null}
         </View>
       </View>
       {open && times ? (
