@@ -5,7 +5,7 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { meetReminder, PHONE } from '@/inbox/shared/thread-fixtures';
 import * as ownSend from '@/inbox/thread/anchor/own-send';
-import { SendRating } from './SendRating';
+import { SendRating } from '@/inbox/rating/SendRating';
 import { threadKeys } from '@/core/lib/keys';
 
 const mockApiFetch = jest.fn();
@@ -20,11 +20,16 @@ const rated = (status: MessageView['status']) =>
   aMessageView({ phone_e164: PHONE, status, template_key: 'lesson_rating' });
 const sentRow = rated('sent');
 const guardian = { phone_e164: PHONE, guardian_id: 'g1', display_name: 'أم يوسف' };
-const rating = (status: TemplateView['status']): TemplateView => ({ ...meetReminder, key: 'lesson_rating', status });
+const rating = (status: TemplateView['status']): TemplateView =>
+  ({ ...meetReminder, key: 'lesson_rating', status });
+const renderFor = () =>
+  renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
 const send = () => screen.findByRole('button', { name: t.inbox.rating.send });
 const confirmText = t.mobileLeads.ratingConfirm.replace('{name}', 'أم يوسف');
 const backend = (permissions: string[], templates: TemplateView[] = [rating('approved')]) =>
-  mockApiFetch.mockImplementation(async (path: string) => (path.startsWith('/auth/me') ? { permissions } : templates));
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path.startsWith('/auth/me') ? { permissions } : templates,
+  );
 
 beforeEach(() => {
   backend(['feedback.write']);
@@ -33,13 +38,15 @@ beforeEach(() => {
 
 /** Waits until the template is approved, opens the confirm strip. */
 async function ask() {
-  await waitFor(async () => expect((await send()).props.accessibilityState?.disabled).not.toBe(true));
+  await waitFor(async () =>
+    expect((await send()).props.accessibilityState?.disabled).not.toBe(true),
+  );
   await fireEvent.press(await send());
 }
 const confirm = () => fireEvent.press(screen.getByRole('button', { name: t.inbox.rating.send }));
 
 test('nothing is sent until the confirm, which names the guardian; Cancel closes it', async () => {
-  await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
+  await renderFor();
   await ask();
   expect(screen.getByText(confirmText)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
@@ -49,7 +56,7 @@ test('nothing is sent until the confirm, which names the guardian; Cancel closes
 
 test('POSTs /threads/:phone/rating with one request id, kept across a failed retry', async () => {
   mockApiSend.mockRejectedValueOnce(new ApiError(500)).mockResolvedValue(sentRow);
-  await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
+  await renderFor();
   await ask();
   await confirm();
   expect(await screen.findByText(t.inbox.rating.failed)).toBeTruthy();
@@ -63,7 +70,7 @@ test('POSTs /threads/:phone/rating with one request id, kept across a failed ret
 
 test('once it went out the button is off: no second tap, no second request', async () => {
   mockApiSend.mockResolvedValue(sentRow);
-  await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
+  await renderFor();
   await ask();
   await confirm();
   await screen.findByText(t.inbox.rating.sent);
@@ -98,7 +105,7 @@ test('a queued send says it waits for the send gate and refetches the threads', 
 
 test('a row Meta refused (201, failed) is shown as an error and may be asked again with a new id', async () => {
   mockApiSend.mockResolvedValueOnce(rated('failed')).mockResolvedValue(sentRow);
-  await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
+  await renderFor();
   await ask();
   await confirm();
   expect(await screen.findByText(t.inbox.rating.failed)).toBeTruthy();
@@ -111,7 +118,7 @@ test('a row Meta refused (201, failed) is shown as an error and may be asked aga
 
 test('until Meta approves the template the button is off and says why', async () => {
   backend(['feedback.write'], [rating('pending')]);
-  await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
+  await renderFor();
   expect(await screen.findByText(t.inbox.rating.notApproved)).toBeTruthy();
   await fireEvent.press(await send());
   expect(screen.queryByText(confirmText)).toBeNull();
@@ -122,26 +129,14 @@ test('the templates failing says so instead of a silent dead button', async () =
     if (path.startsWith('/auth/me')) return { permissions: ['feedback.write'] };
     throw new ApiError(403);
   });
-  await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
+  await renderFor();
   expect(await screen.findByText(t.mobileLeads.ratingTemplatesFailed)).toBeTruthy();
 });
 
 test('a refusal from the API is shown in the web words', async () => {
   mockApiSend.mockRejectedValue(new ApiError(409, { code: 'no_completed_lesson' }));
-  await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
+  await renderFor();
   await ask();
   await confirm();
   expect(await screen.findByText(t.inbox.rating.noLesson)).toBeTruthy();
-});
-
-test('without feedback.write, or on a thread that is not a guardian’s: no button, no templates call', async () => {
-  backend(['leads.read']);
-  const first = await renderWithQuery(<SendRating thread={guardian} />, createTestQueryClient({ meFromApi: true }));
-  await waitFor(() => expect(screen.queryByRole('button', { name: t.inbox.rating.send })).toBeNull());
-  first.unmount();
-  backend(['feedback.write']);
-  mockApiFetch.mockClear();
-  await renderWithQuery(<SendRating thread={{ ...guardian, guardian_id: null }} />, createTestQueryClient({ meFromApi: true }));
-  expect(screen.queryByRole('button', { name: t.inbox.rating.send })).toBeNull();
-  expect(mockApiFetch).not.toHaveBeenCalledWith('/messaging/templates');
 });

@@ -24,9 +24,8 @@ export function useChatLists(enabled: boolean) {
   });
 }
 
-/** Keeps a list answer usable even if a mock or an older API answers something else. */
-export const listsOf = (data: unknown): ChatList[] =>
-  Array.isArray(data) ? (data as ChatList[]) : [];
+/** The cached lists, or none before the first answer. */
+export const listsOf = (data: ChatList[] | undefined): ChatList[] => data ?? [];
 
 /** The new list enters the cache at once so the caller's active chip already exists. */
 export function useCreateList() {

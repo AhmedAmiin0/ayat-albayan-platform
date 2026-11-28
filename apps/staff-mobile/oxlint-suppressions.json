@@ -1474,12 +1474,6 @@
   "src/inbox/composer/TemplatePicker.tsx": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/forbidden-imports": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/inbox/composer/TemplatePreview.test.tsx": {
@@ -2176,14 +2170,6 @@
       "count": 3
     }
   },
-  "src/inbox/rating/SendRating.test.tsx": {
-    "stylistic/max-len": {
-      "count": 10
-    },
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/inbox/rating/SendRating.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -2193,9 +2179,6 @@
     },
     "ab/forbidden-imports": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/inbox/rating/rating-words.ts": {
@@ -3317,9 +3300,6 @@
   "src/ops/notif-rules/hooks/use-toggle-rule.ts": {
     "stylistic/max-len": {
       "count": 4
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     },
     "ab/no-shape-checks": {
       "count": 1
