@@ -89,7 +89,7 @@ export class FxService {
 
 /** Rejects provider faults: a SAR→USD rate far from the peg, or a publication time in the future. */
 function plausible(snap: FxSnapshot): FxSnapshot {
-  const usd = snap.rates['USD'];
+  const usd = snap.rates.USD;
   if (usd !== undefined && !(Math.abs(usd * SAR_PER_USD_PEG - 1) <= USD_TOLERANCE)) {
     throw new Error(`fx: implausible SAR→USD rate ${usd}`);
   }

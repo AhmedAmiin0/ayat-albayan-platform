@@ -49,7 +49,7 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
   });
 
   it('list: forwards the filters; junk filters → 400 (R-STU-01)', async () => {
-    results['v_student_list'] = [{ data: [], count: 0 }];
+    results.v_student_list = [{ data: [], count: 0 }];
     const ok = await send({ method: 'GET', url: '/students?status=trial,active&teacher=none&package=unpaid&weekly=yes' });
     expect(ok.statusCode).toBe(200);
     expect(fake.argsOf('v_student_list', 'in')).toEqual(['status', ['trial', 'active']]);
@@ -60,7 +60,7 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
 
   it('status-counts returns a count per status', async () => {
     const n = [1, 2, 4, 3, 5, 6, 0, 0];
-    results['v_student_list'] = n.map((count) => ({ count }));
+    results.v_student_list = n.map((count) => ({ count }));
     const res = await send({ method: 'GET', url: '/students/status-counts?teacher=none' });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({
@@ -83,7 +83,7 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
 
   it('same phone in another format + similar name → 409 with candidates', async () => {
     const SUHAILA = { id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'trial' };
-    results['guardians'] = [{ data: G }, { data: { ...G, students: [SUHAILA] } }];
+    results.guardians = [{ data: G }, { data: { ...G, students: [SUHAILA] } }];
     const res = await send({ method: 'POST', url: '/students', payload: BODY });
     expect(res.statusCode).toBe(409);
     expect(res.json()).toMatchObject({ message: 'duplicate_student', candidates: [SUHAILA] });
@@ -91,15 +91,15 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
   });
 
   it('force: true creates (201)', async () => {
-    results['guardians'] = [{ data: G }];
-    results['students'] = [{ data: { id: 's2', name: 'سهيله' } }];
+    results.guardians = [{ data: G }];
+    results.students = [{ data: { id: 's2', name: 'سهيله' } }];
     const res = await send({ method: 'POST', url: '/students', payload: { ...BODY, force: true } });
     expect(res.statusCode).toBe(201);
   });
 
   it('PATCH with a stale expected_status → 409 status_changed (R-STU-05)', async () => {
     const id = '11111111-1111-4111-8111-111111111111';
-    results['students'] = [{ data: { id, status: 'pending_renewal' } }, { data: null }];
+    results.students = [{ data: { id, status: 'pending_renewal' } }, { data: null }];
     const res = await send({ method: 'PATCH', url: `/students/${id}`, payload: { status: 'paused', expected_status: 'active' } });
     expect(res.statusCode).toBe(409);
     expect(res.json()).toMatchObject({ code: 'status_changed', message: 'status_changed' });

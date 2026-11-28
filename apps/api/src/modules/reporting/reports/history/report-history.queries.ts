@@ -7,7 +7,7 @@ import { maybe, pgError } from '@/common/db/errors';
 const HISTORY_COLUMNS =
   'id, lesson_id, teacher_id, attendance, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, status, version, pdf_status, sent_at, submitted_at' as const;
 
-export type HistoryRow = {
+export interface HistoryRow {
   id: string;
   lesson_id: string;
   teacher_id: string;
@@ -24,23 +24,23 @@ export type HistoryRow = {
   pdf_status: PdfStatus | null;
   sent_at: string | null;
   submitted_at: string | null;
-};
+}
 
-export type HistoryLesson = {
+export interface HistoryLesson {
   id: string;
   starts_at: string;
   teacher: { id: string; display_name_ar: string } | null;
-};
+}
 
 /** Lessons a report is still owed for: started, not cancelled or moved (docs/11 §4 R11). */
 export const REPORTABLE_STATUSES = ['scheduled', 'confirmed', 'completed', 'late', 'no_show', 'excused'] as const;
 
-export type PendingRow = {
+export interface PendingRow {
   lesson_id: string;
   student: { id: string; code: string | null; name: string } | null;
   lessons: { starts_at: string; status: LessonStatus };
   lesson_reports: { id: string; status: ReportStatus } | null;
-};
+}
 
 /** Report history (R5, R-REP-05) and pending reports (R11, R-TCH-03). Service role; callers guard. */
 @Injectable()
@@ -92,7 +92,7 @@ export class ReportHistoryQueries {
       p_student_id: input.studentId,
     });
     if (error) throw pgError(error);
-    return data === true;
+    return  data;
   }
 
   /**

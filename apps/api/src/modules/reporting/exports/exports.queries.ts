@@ -12,7 +12,7 @@ const PAYMENT =
   'id, paid_at, amount, currency, method, note, kind, original_amount, original_currency, subscription:subscriptions!inner(student_id, package, lessons_total, student:students(code, name))';
 
 /** payments.csv filters besides the range (the payments page's own filters). */
-export type PaymentCsvFilter = { studentId?: string; method?: PaymentMethod; kind?: PaymentKind };
+export interface PaymentCsvFilter { studentId?: string; method?: PaymentMethod; kind?: PaymentKind }
 const PAYOUT =
   'id, month, lessons_count, amount, currency, status, paid_at, breakdown, teacher:teachers(display_name_ar)';
 

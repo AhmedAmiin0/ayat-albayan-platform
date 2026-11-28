@@ -17,7 +17,7 @@ const STALE_MS = 10 * 60_000;
 /** Three attempts per claim, 2 s then 8 s apart; then `failed` and the admin retries (R12). */
 export const RETRY_DELAYS_MS = [2_000, 8_000] as const;
 
-export type RunSummary = { recovered: number; rendered: number; failed: number; skipped: number; held: number };
+export interface RunSummary { recovered: number; rendered: number; failed: number; skipped: number; held: number }
 type Outcome = 'rendered' | 'failed' | 'skipped' | 'held';
 
 /** The notification rules could not be read: hold the report (back to pending), never fail or send it. */

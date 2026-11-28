@@ -10,14 +10,14 @@ import { PaymentAttachmentsRepo } from './payment-attachments.repo';
 import { PaymentsRepo } from '@/modules/finance/payments/payments.repo';
 
 /** A client-sent path that passed every check: the mime is the sniffed one, never the client's. */
-export type CheckedAttachment = { path: string; mime: string; size: number | null };
-type WithReceipt = { id: string; receipt_path: string | null };
+export interface CheckedAttachment { path: string; mime: string; size: number | null }
+interface WithReceipt { id: string; receipt_path: string | null }
 /** paymentId: a path this payment already holds is fine (its own replay / edit); any other owner is 409. */
-export type AttachmentCheck = {
+export interface AttachmentCheck {
   subscriptionId: string;
   paths: readonly string[];
   paymentId?: string | undefined;
-};
+}
 
 const MIMES: ReadonlySet<string> = new Set(RECEIPT_MIMES);
 

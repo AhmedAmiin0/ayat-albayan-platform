@@ -4,7 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { rows } from '@/common/db/errors';
 
 /** The only student columns a teacher gets: no phone, guardian or money (R-TCH-03). */
-export type TeacherStudentRow = {
+export interface TeacherStudentRow {
   id: string;
   code: string | null;
   name: string;
@@ -12,12 +12,12 @@ export type TeacherStudentRow = {
   program: Program;
   level: string | null;
   age: number | null;
-};
-export type TeacherLessonRow = {
+}
+export interface TeacherLessonRow {
   starts_at: string;
   status: string;
   lesson_students: { student_id: string }[];
-};
+}
 
 const COLUMNS = 'id, code, name, status, program, level, age' as const;
 

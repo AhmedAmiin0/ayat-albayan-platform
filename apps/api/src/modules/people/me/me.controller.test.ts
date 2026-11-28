@@ -37,7 +37,7 @@ beforeAll(async () => {
 });
 afterAll(() => app.close());
 
-type Call = { method: 'PUT' | 'DELETE'; url: string; token?: string; body?: object };
+interface Call { method: 'PUT' | 'DELETE'; url: string; token?: string; body?: object }
 const call = ({ method, url, token = 'admin', body }: Call) =>
   app.inject({ method, url, headers: { authorization: `Bearer ${token}` }, payload: body });
 
@@ -59,7 +59,7 @@ describe('/me/push-tokens HTTP (R-MOB-01)', () => {
 
   it('PUT stores the token on the caller’s profile: 200 with the device key to keep', async () => {
     results['rpc:claim_push_device'] = [{ data: 'bound' }];
-    results['profiles'] = [{ data: { push_tokens: [] } }, {}];
+    results.profiles = [{ data: { push_tokens: [] } }, {}];
     const res = await call({ method: 'PUT', url: '/me/push-tokens', body: { token: TOKEN } });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({ deviceKey: expect.stringMatching(/^[\w-]{43}$/) });
@@ -86,7 +86,7 @@ describe('/me/push-tokens HTTP (R-MOB-01)', () => {
   });
 
   it('DELETE takes the URL-encoded bracketed token: 204', async () => {
-    results['profiles'] = [{ data: { push_tokens: [TOKEN] } }, {}];
+    results.profiles = [{ data: { push_tokens: [TOKEN] } }, {}];
     fake.calls.length = 0;
     const res = await call({ method: 'DELETE', url: `/me/push-tokens/${encodeURIComponent(TOKEN)}` });
     expect(res.statusCode).toBe(204);

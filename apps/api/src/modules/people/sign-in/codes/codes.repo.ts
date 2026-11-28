@@ -57,7 +57,7 @@ export class CodesRepo implements CodeStore {
   async spend(id: string): Promise<boolean> {
     const { data, error } = await this.db.rpc('login_code_spend', { p_id: id });
     if (error) throw pgError(error);
-    return data === true;
+    return  data;
   }
 
   async delivered(id: string, sendError: string | null): Promise<void> {

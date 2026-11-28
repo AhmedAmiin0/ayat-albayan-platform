@@ -73,7 +73,7 @@ const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'obj
 
 /** breakdown.lines as B3 writes them (PayoutLine[]); anything malformed is skipped, never guessed. */
 export function payoutLines(breakdown: Json): Line[] {
-  const lines = isRecord(breakdown) ? breakdown['lines'] : null;
+  const lines = isRecord(breakdown) ? breakdown.lines : null;
   if (!Array.isArray(lines)) return [];
   return lines.flatMap((l) => {
     if (!isRecord(l)) return [];

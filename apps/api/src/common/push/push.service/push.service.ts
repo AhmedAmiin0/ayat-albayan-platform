@@ -29,14 +29,14 @@ export interface PushTarget extends PushEvent {
   profileIds: readonly string[];
 }
 
-type Delivery = {
+interface Delivery {
   profile: Recipient;
   target: PushTarget;
   text: PushText;
   /** What the browser / app shows (lock screen): lockScreenText; the bell row keeps `text`. */
   device: PushText;
   data: Record<string, string>;
-};
+}
 
 /**
  * The bell and its pushes (R-MOB-01, R-NOT-01, R-NOT-02; docs/12 §6). One push_notifications row per

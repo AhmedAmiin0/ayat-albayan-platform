@@ -11,7 +11,7 @@ import {
 export const MY_COMMISSION_SELECT =
   'id, kind, share_percent, amount, currency, earned_at, status, void_reason, student:students(code, name), statement:assistant_statements(status, month), subscription:subscriptions(payments(method, kind, paid_at))';
 
-type PaymentFact = { method: PaymentMethod; kind: PaymentKind; paid_at: string };
+interface PaymentFact { method: PaymentMethod; kind: PaymentKind; paid_at: string }
 
 export interface MyCommissionSource {
   id: string;

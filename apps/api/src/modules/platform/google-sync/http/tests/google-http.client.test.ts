@@ -10,7 +10,7 @@ import { GoogleOAuthApi } from '@/modules/platform/google-sync/http/google-http.
 
 // The real adapter against a local recording server (never Google): paths, auth, bodies, errors.
 
-type Seen = { method: string; url: string; auth: string; type: string; body: string };
+interface Seen { method: string; url: string; auth: string; type: string; body: string }
 const seen: Seen[] = [];
 let reply: (r: Seen) => [number, unknown] = () => [200, {}];
 let server: Server;

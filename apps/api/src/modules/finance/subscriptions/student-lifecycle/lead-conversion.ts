@@ -5,7 +5,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { maybe, pgError, rows } from '@/common/db/errors';
 import { canTransitionLead } from '@ab/catalog';
 
-type LeadRef = { id: string; status: LeadStatus; converted_guardian_id: string | null };
+interface LeadRef { id: string; status: LeadStatus; converted_guardian_id: string | null }
 
 /** Converts the booking's lead, else the guardian phone's (R-LEAD-01); compare-and-set. */
 @Injectable()

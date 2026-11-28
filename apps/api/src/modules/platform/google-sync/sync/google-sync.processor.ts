@@ -9,7 +9,7 @@ import type { WriteCtx } from './write-context';
 /** ponytail: 25 a pass is far above a few dozen lessons and reports a day; the pass loops while full. */
 const BATCH = 25;
 
-type PassSummary = {
+interface PassSummary {
   claimed: number;
   synced: number;
   skipped: number;
@@ -17,7 +17,7 @@ type PassSummary = {
   failed: number;
   retried: number;
   stopped: boolean;
-};
+}
 
 /**
  * One outbox pass (docs/24 §3): nothing while sync is OFF; dry_run plans every item with NO Google

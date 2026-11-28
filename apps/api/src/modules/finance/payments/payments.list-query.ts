@@ -23,11 +23,11 @@ export const PAYMENT_SORT: SortSpec<PaymentSortKey> = {
   fallback: [{ column: 'paid_at', ascending: false }],
 };
 
-type Filterable<Q> = {
+interface Filterable<Q> {
   eq: (c: string, v: string) => Q;
   gte: (c: string, v: string) => Q;
   lt: (c: string, v: string) => Q;
-};
+}
 
 /** The list filters, shared by the page and its totals (embedded package for the student filter). */
 export function filtered<Q extends Filterable<Q>>(q: Q, f: PaymentFilter): Q {

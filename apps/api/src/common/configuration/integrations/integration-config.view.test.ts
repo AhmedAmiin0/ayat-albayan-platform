@@ -13,11 +13,11 @@ describe('integrationItems (GET /settings/integrations)', () => {
     });
     expect(items.map((i) => i.key)).toEqual(INTEGRATION_KEYS.filter((d) => d.group !== 'stripe').map((d) => d.key));
     const by = Object.fromEntries(items.map((i) => [i.key, i]));
-    expect(by['WA_WABA_ID']).toMatchObject({ value: 'db-waba', source: 'db', set: true, updated_at: AT });
-    expect(by['WA_APP_ID']).toMatchObject({ value: 'env-app', source: 'env', updated_at: null });
-    expect(by['WA_APP_SECRET']).toMatchObject({ value: null, source: 'db', set: true, secret: true, updated_at: AT });
-    expect(by['WA_ACCESS_TOKEN']).toMatchObject({ value: null, source: 'env', set: true });
-    expect(by['LIVEKIT_URL']).toMatchObject({ value: null, source: 'unset', set: false });
+    expect(by.WA_WABA_ID).toMatchObject({ value: 'db-waba', source: 'db', set: true, updated_at: AT });
+    expect(by.WA_APP_ID).toMatchObject({ value: 'env-app', source: 'env', updated_at: null });
+    expect(by.WA_APP_SECRET).toMatchObject({ value: null, source: 'db', set: true, secret: true, updated_at: AT });
+    expect(by.WA_ACCESS_TOKEN).toMatchObject({ value: null, source: 'env', set: true });
+    expect(by.LIVEKIT_URL).toMatchObject({ value: null, source: 'unset', set: false });
   });
 
   it('never carries a secret value, from env or anywhere', () => {

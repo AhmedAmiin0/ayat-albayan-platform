@@ -11,13 +11,13 @@ import { GoogleSyncAcademySettings } from './google-sync.settings';
  * A lesson as the calendar writer needs it. origin: platform-origin (§2.2); managed: its events are
  * the platform's to write — platform-origin, or its teacher's calendar_owner is 'platform'.
  */
-export type LessonSource = {
+export interface LessonSource {
   origin: boolean;
   managed: boolean;
   teacherId: string;
   ownerChangedAt: string | null;
   lesson: EventLesson;
-};
+}
 
 /** A platform report as the Drive and Sheets writers need it. */
 export interface ReportSource {

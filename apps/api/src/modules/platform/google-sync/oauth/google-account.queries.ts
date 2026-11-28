@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pgError } from '@/common/db/errors';
 
-export type AccountRow = {
+export interface AccountRow {
   status: 'disconnected' | 'connected' | 'error';
   email: string | null;
   scopes: string[];
@@ -16,7 +16,7 @@ export type AccountRow = {
   summary_sheet_id: string | null;
   drive_confirmed_at: string | null;
   last_run_at: string | null;
-};
+}
 type AccountPatch = Partial<AccountRow> & { drive_confirmed_by?: string | null };
 
 const COLUMNS =

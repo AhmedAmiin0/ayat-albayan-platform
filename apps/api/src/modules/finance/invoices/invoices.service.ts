@@ -8,7 +8,7 @@ import { notFound } from '@/common/http/errors';
 import type { RecentFilter } from './invoices.dto';
 import { InvoicesRepo, type InvoiceRowOut } from './invoices.repo';
 
-export type InvoiceFilter = { ruleId?: string | undefined; studentId?: string | undefined };
+export interface InvoiceFilter { ruleId?: string | undefined; studentId?: string | undefined }
 
 /** The API view: everything but the storage path (a file is only opened through download). */
 function view(row: InvoiceRowOut): InvoiceView {

@@ -15,7 +15,7 @@ const openApiPath = (path: string): string => path.replace(/:(\w+)/g, '{$1}');
 describe('OpenAPI document', () => {
   let doc: OpenAPIObject;
   beforeAll(async () => {
-    process.env['SUPABASE_URL'] ??= 'http://127.0.0.1:54321';
+    process.env.SUPABASE_URL ??= 'http://127.0.0.1:54321';
     const mod = await Test.createTestingModule({ imports: [AppModule] }).compile();
     const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

@@ -53,7 +53,7 @@ describe('GuardiansController is admin-only (R-STU-02, R-NFR-02)', () => {
   });
 
   it('an admin gets the page (200)', async () => {
-    results['guardians'] = [{ data: [], count: 0 }];
+    results.guardians = [{ data: [], count: 0 }];
     const res = await send({ method: 'GET', url: '/guardians', token: 'admin' });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({ items: [], total: 0, page: 1, pageSize: 20 });

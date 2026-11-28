@@ -8,7 +8,7 @@ import { LinkDeps } from './link-deps';
 import { LinkPackages } from './link-packages';
 import { isAdmin } from '@/common/auth/roles';
 
-type Found = { api: StripeApi; id: string; status: Stripe.Checkout.Session['status'] };
+interface Found { api: StripeApi; id: string; status: Stripe.Checkout.Session['status'] }
 
 /** Asks Stripe first (502 if unsure); a payment under way never loses its package. */
 @Injectable()

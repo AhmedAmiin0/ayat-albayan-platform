@@ -6,7 +6,7 @@ import { StripeClients } from '@/modules/finance/stripe/gate/stripe-clients';
 import { StripeEventsRepo } from './stripe-events.repo';
 import { WebhookHandlers } from './webhook-handlers';
 
-type WebhookPost = { rawBody: Buffer | undefined; signature: string | undefined };
+interface WebhookPost { rawBody: Buffer | undefined; signature: string | undefined }
 
 /**
  * POST /webhooks/stripe (docs/30): the ONLY place a link is fulfilled. The signature is checked

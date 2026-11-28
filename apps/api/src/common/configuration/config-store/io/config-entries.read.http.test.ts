@@ -5,14 +5,14 @@ import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
 import { configEntriesApp, USERS, type Token } from './config-entries.test-util';
 import { configRow } from '@/common/configuration/config-store/config-store.fakes';
 
-type Entry = {
+interface Entry {
   key: string;
   version: number;
   stored: boolean;
   value: unknown;
   updatedAt: string | null;
   updatedByName: string | null;
-};
+}
 
 describe('GET /config/entries, PUT …/description, GET /admin/config/parity', () => {
   let h: Awaited<ReturnType<typeof configEntriesApp>>;
@@ -63,7 +63,7 @@ describe('GET /config/entries, PUT …/description, GET /admin/config/parity', (
     const res = await describeKey('upload_max_mb', 'حد حجم الملف');
     expect(res.statusCode).toBe(200);
     expect(res.json().entry.key).toBe('upload_max_mb');
-    expect(h.store.describe).toHaveBeenCalledWith({ key: 'upload_max_mb', text: 'حد حجم الملف', actorId: USERS['admin']?.id });
+    expect(h.store.describe).toHaveBeenCalledWith({ key: 'upload_max_mb', text: 'حد حجم الملف', actorId: USERS.admin?.id });
     expect(h.audit.record).toHaveBeenCalledWith(expect.objectContaining({
       entity: 'settings', entityId: SINGLETON_ENTITY_ID, action: 'describe:upload_max_mb', after: { description: 'حد حجم الملف' },
     }));

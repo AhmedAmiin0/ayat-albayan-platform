@@ -26,6 +26,6 @@ export class PayLimit {
       this.log.warn(`payment page limit not counted: ${error.message}`);
       return;
     }
-    if (data === false) throw new HttpException({ code: 'too_many_requests', message: 'too_many_requests' }, HttpStatus.TOO_MANY_REQUESTS);
+    if (!data) throw new HttpException({ code: 'too_many_requests', message: 'too_many_requests' }, HttpStatus.TOO_MANY_REQUESTS);
   }
 }

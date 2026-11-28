@@ -1,6 +1,6 @@
 import { UNTAGGED } from './client-tag';
 /** One counted request: the matched route template (never the raw URL) and the parsed client tag. */
-export type UsageHit = { method: string; route: string; client: string };
+export interface UsageHit { method: string; route: string; client: string }
 
 const DEFAULT_MAX_ENTRIES = 500;
 export const OTHER_BUCKET = 'other';

@@ -12,12 +12,12 @@ const trialLesson = (student_id: string, status: 'scheduled' | 'completed' | 'no
   lesson: { status, rule_id: 'r1', instant: false, makeup_of_id: null, rule: { package: 'trial' } },
 });
 
-type SetupOpts = {
+interface SetupOpts {
   statuses?: Record<string, string>;
   rows?: TrialLessonRow[];
   moved?: boolean;
   paid?: boolean;
-};
+}
 function setup(o: SetupOpts = {}) {
   const map = o.statuses ?? { s1: 'new' };
   const statuses = {
@@ -38,7 +38,7 @@ function setup(o: SetupOpts = {}) {
   );
   return { s, statuses, queries, listeners };
 }
-type Audited = { from: string; to: string; reason: string; actorId?: string | null };
+interface Audited { from: string; to: string; reason: string; actorId?: string | null }
 const audit = ({ from, to, reason, actorId = 'a1' }: Audited) => [
   { studentId: 's1', from, to },
   { actorId, after: { via: 'trial', from, to, reason } },

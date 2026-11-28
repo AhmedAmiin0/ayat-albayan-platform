@@ -7,7 +7,7 @@ import { TZ } from '@/modules/platform/google-sync/google-format';
 import { pgError } from '@/common/db/errors';
 
 const planned = z.object({ method: z.string(), target: z.string(), summary: z.string() });
-type Raw = {
+interface Raw {
   id: string;
   kind: GoogleSyncKind;
   state: GoogleSyncState;
@@ -19,7 +19,7 @@ type Raw = {
   updated_at: string;
   lesson_id: string | null;
   student_id: string | null;
-};
+}
 
 /** The sync log (GET /admin/google/items): the last 100 rows, each named by its student and date. */
 @Injectable()

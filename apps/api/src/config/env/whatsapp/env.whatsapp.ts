@@ -116,7 +116,7 @@ export function whatsappEnv(env: Env): WhatsappEnv | null {
  * the registry default, false). Either off → rows stay queued. Notifications line mandatory, chat optional.
  */
 export function sendingAllowed(env: Env, messagingEnabledSetting: boolean): boolean {
-  return whatsappEnv(env) !== null && messagingEnabledSetting === true;
+  return whatsappEnv(env) !== null &&  messagingEnabledSetting;
 }
 
 /** POST /webhooks/kapso's HMAC key; never one of the Meta app secrets' routes (docs/19). */

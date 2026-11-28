@@ -9,14 +9,14 @@ import { SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/subscr
 
 /** What triggered the evaluation: a payment create (its id), the periodic sweep, or any other write / lesson change. */
 export type RenewalCause = { via: 'payment'; paymentId: string } | { via: 'sweep' } | { via: 'event' };
-type RenewalInput = {
+interface RenewalInput {
   studentId: string;
   student: StudentTz;
   state: StudentState;
   actorId: string | null;
   now: Date;
   cause: RenewalCause;
-};
+}
 
 /** The packages as subscriptionEnded reads them (stored row + balance + payments). */
 function endPackages(state: StudentState): EndPackage[] {

@@ -6,14 +6,14 @@ import { maybe, pgError } from '@/common/db/errors';
 type Sub = Tables<'subscriptions'>;
 /** Whitelisted subscription columns: never price, currency, fx_*, price_source or notes. */
 export type HistorySubscriptionRow = Pick<Sub, 'id' | 'package' | 'status' | 'starts_on' | 'renews_on' | 'lessons_total' | 'lessons_used_before' | 'created_at'>;
-export type HistoryBalanceRow = { subscription_id: string | null; lessons_used: number | null; remaining: number | null; ended_at: string | null };
+export interface HistoryBalanceRow { subscription_id: string | null; lessons_used: number | null; remaining: number | null; ended_at: string | null }
 /** A payment as date, kind, amount and currency: never method, receipt, fx or note. */
 export type HistoryPaymentRow = Pick<Tables<'payments'>, 'id' | 'subscription_id' | 'paid_at' | 'kind' | 'amount' | 'currency'>;
 /**
  * An audit row reduced to its date and the status before / after (json paths, nothing else of the
  * row).
  */
-export type HistoryAuditRow = { entity_id: string; at: string; before_status: string | null; after_status: string | null };
+export interface HistoryAuditRow { entity_id: string; at: string; before_status: string | null; after_status: string | null }
 
 export interface HistoryBundle {
   student: { id: string; code: string | null; name: string };

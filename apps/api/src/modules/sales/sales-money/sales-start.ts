@@ -4,7 +4,7 @@ import { badRequest, forbidden } from '@/common/http/errors';
 import { assertUsedBefore } from '@/modules/finance/subscriptions';
 import { riyadhToday } from '@/modules/sales/sales';
 
-type StartInput = { startsOn?: string | undefined; alreadyStarted?: boolean | undefined; lessonsUsedBefore?: number | undefined };
+interface StartInput { startsOn?: string | undefined; alreadyStarted?: boolean | undefined; lessonsUsedBefore?: number | undefined }
 
 /** docs/16 row 24: today in Riyadh unless allowed; past only with alreadyStarted, max a year. */
 export function salesStartsOn(input: StartInput, user: AuthUser, now: Date): string {

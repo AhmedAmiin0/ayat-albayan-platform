@@ -53,7 +53,7 @@ describe('/config/custom (admin CRUD)', () => {
   it('PUT creates an entry and audits it as a create', async () => {
     const res = await call('PUT', '/config/custom/promo', { payload: { value: 'hi', isPublic: true } });
     expect(res.statusCode).toBe(200);
-    expect(custom.upsert).toHaveBeenCalledWith('promo', { value: 'hi', isPublic: true }, USERS['admin']?.id);
+    expect(custom.upsert).toHaveBeenCalledWith('promo', { value: 'hi', isPublic: true }, USERS.admin?.id);
     expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'custom_config', entityId: SINGLETON_ENTITY_ID, action: 'create:promo', before: null, after: VIEW }));
   });
 

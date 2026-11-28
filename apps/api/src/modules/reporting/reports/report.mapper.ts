@@ -13,7 +13,7 @@ import type { ReportRow } from './report-row';
 import { v2Fields } from './v2/report-v2.mapper';
 
 /** Who reads the report and when: drives can_edit / edit_until (R-REP-02). */
-export type ViewContext = { role: UserRole | null; now: Date; minutes: number };
+export interface ViewContext { role: UserRole | null; now: Date; minutes: number }
 
 const instant = (iso: string | null) => (iso === null ? null : new Date(iso));
 
@@ -113,7 +113,7 @@ export function formColumns(form: Partial<ReportDraft>): FormColumns {
   return out;
 }
 
-const EMPTY: Required<{ [K in FormColumn]: null }> = {
+const EMPTY: Required<Record<FormColumn, null>> = {
   attendance: null,
   // The submit RPC keeps the stored program when this is null (migration 167).
   program: null,

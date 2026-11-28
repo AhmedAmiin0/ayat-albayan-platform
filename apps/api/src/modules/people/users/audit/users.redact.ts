@@ -11,7 +11,7 @@ const SECRET_KEY = /pass|token|secret|jwt|link$|credential$/i;
 export function redact(value: Json): Json {
   if (Array.isArray(value)) return value.map(redact);
   if (value === null || typeof value !== 'object') return value;
-  const out: { [key: string]: Json } = {};
+  const out: Record<string, Json> = {};
   for (const [key, v] of Object.entries(value)) {
     if (v !== undefined && !SECRET_KEY.test(key)) out[key] = redact(v);
   }

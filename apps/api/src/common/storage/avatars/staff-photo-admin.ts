@@ -10,7 +10,7 @@ import { AvatarWriter, type AvatarSlot } from './avatar-writer';
 import { profileSlot, teacherSlot } from './photo-slots';
 import { NOT_STAFF } from './staff-photos';
 
-type Who = { kind: 'teacher' | 'user'; id: string };
+interface Who { kind: 'teacher' | 'user'; id: string }
 
 interface Found<T> {
   data: T | null;

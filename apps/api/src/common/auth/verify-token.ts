@@ -42,9 +42,9 @@ export function createTokenVerifier(opts: VerifierOptions) {
         ? await jwtVerify(token, secret ?? failNoSecret(), verifyOpts)
         : await jwtVerify(token, jwks, verifyOpts);
     if (!payload.sub) throw new Error('token has no subject');
-    const email = typeof payload['email'] === 'string' ? payload['email'] : null;
-    const sessionId = typeof payload['session_id'] === 'string' ? payload['session_id'] : null;
-    return { id: payload.sub, email, role: toRole(payload['user_role']), sessionId };
+    const email = typeof payload.email === 'string' ? payload.email : null;
+    const sessionId = typeof payload.session_id === 'string' ? payload.session_id : null;
+    return { id: payload.sub, email, role: toRole(payload.user_role), sessionId };
   };
 }
 

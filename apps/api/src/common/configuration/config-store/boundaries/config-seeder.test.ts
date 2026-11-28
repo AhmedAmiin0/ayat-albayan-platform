@@ -27,7 +27,7 @@ describe('runConfigSeed', () => {
     await runConfigSeed(db, log());
     expect(rpc).toHaveBeenCalledWith('config_seed', expect.objectContaining({ registry_version: REGISTRY_VERSION }));
     const entries = sentEntries(rpc);
-    expect(entries.map((e) => e['key'])).toEqual(SEED_ENTRIES.map((e) => e.key));
+    expect(entries.map((e) => e.key)).toEqual(SEED_ENTRIES.map((e) => e.key));
     for (const e of entries) {
       expect(e).not.toHaveProperty('value');
       expect(Object.keys(e).sort()).toEqual(['default_value', 'description_seed', 'is_public', 'key', 'module', 'retired', 'scope', 'value_type']);
@@ -37,8 +37,8 @@ describe('runConfigSeed', () => {
   it('description_seed is the BUNDLED Arabic hint (not an override)', async () => {
     const { db, rpc } = dbAnswering({ data: { applied: 0, failed: [] } });
     await runConfigSeed(db, log());
-    const upload = sentEntries(rpc).find((e) => e['key'] === 'upload_max_mb');
-    expect(upload?.['description_seed']).toBe(arBundle.settings.hints.uploadMaxMb.trim());
+    const upload = sentEntries(rpc).find((e) => e.key === 'upload_max_mb');
+    expect(upload?.description_seed).toBe(arBundle.settings.hints.uploadMaxMb.trim());
   });
 
   it('logs applied / failed, and an older-build or locked skip', async () => {

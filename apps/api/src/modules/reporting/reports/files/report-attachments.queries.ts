@@ -5,16 +5,16 @@ import type { ReportAttachmentRow } from '@/modules/reporting/reports/report-row
 
 const COLUMNS = 'id, storage_path, mime, size, created_at' as const;
 
-type NewAttachment = {
+interface NewAttachment {
   report_id: string;
   storage_path: string;
   mime: string;
   size: number;
   /** null: the teacher wrote through their no-login link and has no account. */
   created_by: string | null;
-};
+}
 
-type PdfNameInput = { code: string; startsAt: Date; tz: string };
+interface PdfNameInput { code: string; startsAt: Date; tz: string }
 
 /** report_attachments rows (R-REP-02); the objects live in the report-attachments bucket. */
 @Injectable()

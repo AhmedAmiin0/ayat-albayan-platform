@@ -4,13 +4,13 @@ import { activatesStudent, StudentActivation } from '@/modules/finance/subscript
 import type { DeletedPayment } from '@/modules/finance/subscriptions/student-lifecycle/student-deactivation';
 import { FollowUpEnv } from './follow-up.env';
 
-type Write = {
+interface Write {
   entity: string;
   entityId?: string;
   action: string;
   before?: unknown;
   after?: unknown;
-};
+}
 
 const isDeletedPayment = (row: unknown): row is DeletedPayment =>
   typeof row === 'object' && row !== null && 'id' in row && typeof row.id === 'string' && activatesStudent(row);

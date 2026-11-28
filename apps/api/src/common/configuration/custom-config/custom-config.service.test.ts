@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { CustomConfigService } from './custom-config.service';
 
-type Result = { data: unknown; error: { message: string } | null };
+interface Result { data: unknown; error: { message: string } | null }
 
 /** A PostgREST-like chain: every builder call is recorded, and awaiting it answers `result`. */
 function service(result: Result) {

@@ -34,7 +34,7 @@ describe('OpenErApiFetcher (docs/08 §4)', () => {
     const { rates, ...rest } = BODY;
     stubFetch({ ...rest, conversion_rates: rates });
     const snap = await new OpenErApiFetcher('https://v6.exchangerate-api.com/v6/SECRET/latest/SAR').latest();
-    expect(snap.rates['USD']).toBe(0.266667);
+    expect(snap.rates.USD).toBe(0.266667);
     expect(snap.provider).toBe('v6.exchangerate-api.com');
   });
 

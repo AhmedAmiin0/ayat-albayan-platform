@@ -35,6 +35,6 @@ export class StudentAccess {
   private async taughtBy(studentId: string, teacherId: string): Promise<boolean> {
     const { data, error } = await this.db.rpc('teacher_has_student', { p_teacher_id: teacherId, p_student_id: studentId });
     if (error) throw pgError(error);
-    return data === true;
+    return  data;
   }
 }

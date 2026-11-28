@@ -45,7 +45,7 @@ export class ReportPdfWriter implements ItemWriter {
     if (item.google_id) {
       const f = await google.getFile(item.google_id);
       if (!f || f.trashed) return { state: 'gone', error: 'deleted_in_google' };
-      if (f.appProperties['ab_report_id'] !== src.reportId)
+      if (f.appProperties.ab_report_id !== src.reportId)
         return { state: 'failed', error: 'not_platform_file', attempts: item.attempts };
       if (hash === item.content_hash)
         return synced({ googleId: f.id, parentId: place.folderId, hash });

@@ -45,7 +45,7 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07, dynamic roles)', () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
-    process.env['SUPABASE_URL'] ??= 'http://127.0.0.1:54321';
+    process.env.SUPABASE_URL ??= 'http://127.0.0.1:54321';
     const imports = [featureRoot(HealthModule, StudentsModule)];
     const mod = await Test.createTestingModule({ imports, controllers: [ProbeController] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)

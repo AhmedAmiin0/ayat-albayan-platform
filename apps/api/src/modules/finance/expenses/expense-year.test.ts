@@ -7,13 +7,13 @@ const conversion = {
   missing: ['AED'],
   date: '2026-10-01T00:00:00Z',
 };
-type In = {
+interface In {
   month: string;
   category: string;
   amount: number;
   currency?: string;
   is_draft?: boolean;
-};
+}
 const row = ({ currency = 'EGP', is_draft = false, ...r }: In) => ({ ...r, currency, is_draft });
 
 describe('expenseYear (12-month table in the reporting currency)', () => {

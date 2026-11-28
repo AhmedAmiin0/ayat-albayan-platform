@@ -6,13 +6,13 @@ import { badRequest } from '@/common/http/errors';
 import { PaymentAttachments, type CheckedAttachment } from './payment-attachments.service';
 import { ReceiptsService } from './receipts.service';
 
-type FilesInput = {
+interface FilesInput {
   method: PaymentMethod;
   receiptPath?: string | null | undefined;
   attachments?: readonly string[] | undefined;
-};
+}
 /** The booked row a late save lands on: its method and count rule, never the form's. */
-type BookedRow = { id: string; subscription_id: string; method: PaymentMethod };
+interface BookedRow { id: string; subscription_id: string; method: PaymentMethod }
 interface ReceiptPatch {
   receiptPath?: string | null | undefined;
   method?: PaymentMethod | undefined;
@@ -22,7 +22,7 @@ interface PatchedRow {
   subscription_id: string;
   receipt_path: string | null;
 }
-type LateInput = { subscriptionId: string; attachments?: readonly string[] | undefined };
+interface LateInput { subscriptionId: string; attachments?: readonly string[] | undefined }
 
 const reason = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
@@ -82,7 +82,7 @@ export class PaymentFiles {
     const sent = [...new Set(input.attachments ?? [])];
     if (sent.length === 0 || row.subscription_id !== input.subscriptionId) return;
     try {
-      if (row.method !== 'bank') return this.log.warn(`payment ${row.id}: ${row.method} payment, replayed files dropped`);
+      if (row.method !== 'bank') {  this.log.warn(`payment ${row.id}: ${row.method} payment, replayed files dropped`);; return; }
       // By key: a file the move marked «minio:» is the same file (docs/45 §6).
       const stored = new Set((await this.attachments.paths(row.id)).map(storageKeyOf));
       const fresh = sent.filter((p) => !stored.has(storageKeyOf(p)));

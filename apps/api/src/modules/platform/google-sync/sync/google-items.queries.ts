@@ -7,7 +7,7 @@ import { pgError } from '@/common/db/errors';
 type ItemUpdate = Database['public']['Tables']['google_sync_items']['Update'];
 
 /** A claimed outbox row (google_sync_items). */
-export type SyncItem = {
+export interface SyncItem {
   id: string;
   kind: GoogleSyncKind;
   subject_id: string;
@@ -20,7 +20,7 @@ export type SyncItem = {
   state: GoogleSyncState;
   attempts: number;
   claim_token: string | null;
-};
+}
 
 /** How one item ends this pass. `retry` keeps it pending until `at`. */
 export type ItemResult =

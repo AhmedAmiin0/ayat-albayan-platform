@@ -37,26 +37,26 @@ describe('buildEarnings: this month so far', () => {
 
   it('a commission already inside an approved or paid statement is not counted again; a draft one still is', () => {
     const out = buildEarnings({ ...base, commissions: [commission('c1', 29, { statement: { status: 'paid' } }), commission('c2', 5, { statement: { status: 'draft' } })] });
-    expect(out.this_month['SAR']?.commissions).toBe(5);
+    expect(out.this_month.SAR?.commissions).toBe(5);
     expect(out.commissions_total).toEqual({ SAR: 34 });
   });
 
   it('an open negative adjustment lowers it; a frozen one does not', () => {
     const adj = (id: string, statement: MyAdjustment['statement']) => ({ id, kind: 'manual', amount: -4, currency: 'SAR', effective_month: '2026-10-01', statement });
     const out = buildEarnings({ ...base, adjustments: [adj('x', null), adj('y', { status: 'approved' })] });
-    expect(out.this_month['SAR']).toMatchObject({ adjustments: -4, total: 996 });
+    expect(out.this_month.SAR).toMatchObject({ adjustments: -4, total: 996 });
   });
 
   it('no salary before its start day; terms not set at all: nothing but the commissions', () => {
     const late = { ...TERMS, salary: { amount: 1000, currency: 'SAR', starts_on: '2026-11-01' } };
     expect(buildEarnings({ ...base, terms: late }).this_month).toEqual({});
-    expect(buildEarnings({ ...base, terms: null, commissions: [commission('c1', 7)] }).this_month['SAR']).toMatchObject({ salary: 0, commissions: 7 });
+    expect(buildEarnings({ ...base, terms: null, commissions: [commission('c1', 7)] }).this_month.SAR).toMatchObject({ salary: 0, commissions: 7 });
   });
 
   it('months follow the assistant time zone: earned 21:30 UTC on the 31st is already the 1st in Riyadh, so next month', () => {
     const late = commission('c1', 3, { earned_at: '2026-10-31T21:30:00Z' });
-    expect(buildEarnings({ ...base, now: '2026-10-31T10:00:00Z', commissions: [late] }).this_month['SAR']?.commissions).toBe(0);
-    expect(buildEarnings({ ...base, now: '2026-10-31T10:00:00Z', tz: 'UTC', commissions: [late] }).this_month['SAR']?.commissions).toBe(3);
+    expect(buildEarnings({ ...base, now: '2026-10-31T10:00:00Z', commissions: [late] }).this_month.SAR?.commissions).toBe(0);
+    expect(buildEarnings({ ...base, now: '2026-10-31T10:00:00Z', tz: 'UTC', commissions: [late] }).this_month.SAR?.commissions).toBe(3);
   });
 
   it('the month already has an approved or paid statement: its frozen totals, not a second salary', () => {

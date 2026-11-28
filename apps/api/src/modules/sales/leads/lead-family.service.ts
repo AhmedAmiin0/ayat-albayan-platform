@@ -5,7 +5,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { conflict, notFound } from '@/common/http/errors';
 import { isUniqueViolation, maybe, pgError, uniqueViolationMentions } from '@/common/db/errors';
 
-type LinkInput = { leadId: string; code: string; actorId: string; admin: boolean };
+interface LinkInput { leadId: string; code: string; actorId: string; admin: boolean }
 
 const NOT_FOUND: readonly string[] = ['lead_not_found', 'student_not_found'];
 

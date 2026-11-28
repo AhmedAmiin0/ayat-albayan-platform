@@ -8,13 +8,13 @@ import type { PaymentRow, PaymentSubscription } from './payments.repo';
 import { PaymentFiles } from './attachments/payment-files';
 import type { ReceiptsService } from './attachments/receipts.service';
 
-export type Converted = {
+export interface Converted {
   amount: number;
   currency: string;
   original_amount: number | null;
   original_currency: string | null;
   fx_rate: number | null;
-};
+}
 
 /**
  * What a payment needs besides its row: an amount sent in another currency

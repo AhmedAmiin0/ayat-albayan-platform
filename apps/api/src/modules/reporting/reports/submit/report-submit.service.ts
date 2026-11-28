@@ -11,17 +11,17 @@ import type { ReportRow } from '@/modules/reporting/reports/report-row';
 import { ReportsQueries } from '@/modules/reporting/reports/shared/reports.queries';
 import { submitPayload } from './submit-plan';
 
-type SubmitInput = { id: string; form: ReportSubmit; user: ReportCaller };
-type RetryInput = { id: string; user: ReportCaller };
+interface SubmitInput { id: string; form: ReportSubmit; user: ReportCaller }
+interface RetryInput { id: string; user: ReportCaller }
 type Editable = Awaited<ReturnType<ReportGate['editable']>> & { user: ReportCaller };
 /** What a v1 or v2 form sends, as the submit writes it. content: v2 only. */
-type SubmitWrite = {
+interface SubmitWrite {
   expectedVersion: number;
   attendance: Attendance | null | undefined;
   program: Program | undefined;
   columns: FormColumns;
   content?: Json;
-};
+}
 
 /**
  * POST /reports/:id/submit (docs/11 §4 R3; R-REP-02/03/04): first submit or an edit in one

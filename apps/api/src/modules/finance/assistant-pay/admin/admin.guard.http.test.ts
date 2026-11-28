@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { A, assistantApp, ID, STUDENT } from '@/modules/finance/assistant-pay/shared/assistant-pay.fakes';
 
 type App = Awaited<ReturnType<typeof assistantApp>>;
-type Route = { method: 'GET' | 'POST' | 'PUT'; url: string; body?: object };
+interface Route { method: 'GET' | 'POST' | 'PUT'; url: string; body?: object }
 const REASON = { reason: 'سبب واضح' };
 const TERMS = { commission: { type: 'percent', value: 10, startsOn: '2026-10-01' }, salary: { amount: 1000, currency: 'SAR', startsOn: '2026-10-01' } };
 

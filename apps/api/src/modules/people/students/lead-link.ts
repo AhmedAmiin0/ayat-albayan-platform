@@ -6,8 +6,8 @@ import { peopleErrors } from '@/modules/people/guardians/http';
 import { done, maybe } from '@/common/db/errors';
 import { canTransitionLead } from '@ab/catalog';
 
-export type LinkedLead = { id: string; status: LeadStatus; converted_guardian_id: string | null };
-type LeadLinkInput = { lead: LinkedLead; guardianId: string; actorId: string };
+export interface LinkedLead { id: string; status: LeadStatus; converted_guardian_id: string | null }
+interface LeadLinkInput { lead: LinkedLead; guardianId: string; actorId: string }
 
 /** R-LEAD-06, R-STU-02: compare-and-set on status; a terminal status only gets the link. */
 export class LeadLink {

@@ -7,13 +7,13 @@ import { PushService } from '@/common/push/push.service';
 /** An earning this recent is news; an older one was told already, or before this bell existed. */
 const FRESH_MS = 5 * 60_000;
 
-type Earned = {
+interface Earned {
   id: string;
   assistant_id: string;
   amount: number;
   currency: string;
   student: { code: string | null; name: string } | null;
-};
+}
 
 /** EGP uses the web's symbol, site currencies theirs, else the ISO code; read at send. */
 function currencyText(currency: string): string {

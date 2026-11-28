@@ -69,7 +69,7 @@ export const replaced = (state: UserState, next: StaffProfile): UserState => ({
 
 export const disabledCopy = (p: StaffProfile): StaffProfile => ({ ...p, disabled_at: p.disabled_at ?? 'now' });
 
-type RoleChoice = { role: UserRole; role_id: string | null };
+interface RoleChoice { role: UserRole; role_id: string | null }
 type Roles = readonly RoleRecord[];
 type Chosen = { choice: RoleChoice; record: RoleRecord } | 'unknown_role' | 'role_mismatch' | null;
 

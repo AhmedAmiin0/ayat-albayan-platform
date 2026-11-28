@@ -52,9 +52,9 @@ describe('/me/notifications (R-NOT-01)', () => {
   it('lists the caller’s own rows, whatever the query names', async () => {
     const res = await call({ method: 'GET', url: `/me/notifications?page=2&pageSize=10&profileId=${ID}` });
     expect(res.statusCode).toBe(200);
-    expect(q.list).toHaveBeenCalledWith(USERS['teacher']?.id, { page: 2, pageSize: 10 });
+    expect(q.list).toHaveBeenCalledWith(USERS.teacher?.id, { page: 2, pageSize: 10 });
     await call({ method: 'GET', url: '/me/notifications', token: 'sales' });
-    expect(q.list).toHaveBeenLastCalledWith(USERS['sales']?.id, { page: 1, pageSize: 20 });
+    expect(q.list).toHaveBeenLastCalledWith(USERS.sales?.id, { page: 1, pageSize: 20 });
   });
 
   it('400 on a bad page size', async () => {
@@ -64,9 +64,9 @@ describe('/me/notifications (R-NOT-01)', () => {
 
   it('marks the given ids or all, always for the caller only', async () => {
     expect((await call({ method: 'POST', url: '/me/notifications/read', payload: { ids: [ID] } })).statusCode).toBe(204);
-    expect(q.readMine).toHaveBeenCalledWith(USERS['teacher']?.id, [ID]);
+    expect(q.readMine).toHaveBeenCalledWith(USERS.teacher?.id, [ID]);
     expect((await call({ method: 'POST', url: '/me/notifications/read' })).statusCode).toBe(204);
-    expect(q.readMine).toHaveBeenLastCalledWith(USERS['teacher']?.id, undefined);
+    expect(q.readMine).toHaveBeenLastCalledWith(USERS.teacher?.id, undefined);
   });
 
   it('400 on bad ids or extra fields', async () => {

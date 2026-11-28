@@ -33,7 +33,7 @@ export function inSalesScope(row: SalesLessonRow, own: SalesOwnership): boolean 
   return row.rule?.package === 'trial' && row.lesson_students.some((s) => own.studentIds.includes(s.student_id));
 }
 
-type Range = { from: string; to: string };
+interface Range { from: string; to: string }
 /** Their meetings starting in [from, to], by start time. */
 export async function salesLessonsBetween(db: Db, input: { own: SalesOwnership } & Range): Promise<SalesLessonRow[]> {
   const [booked, trials] = await Promise.all([bookedFromLeads(db, input), trialsOfStudents(db, input)]);

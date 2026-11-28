@@ -16,7 +16,7 @@ export function notCancelled(row: PaymentRow): PaymentRow {
   return row;
 }
 
-export type Prechecked = { files: CheckedAttachment[]; converted: Converted };
+export interface Prechecked { files: CheckedAttachment[]; converted: Converted }
 
 /**
  * Every check a new payment passes before its insert (not a cancelled package, the form's files,

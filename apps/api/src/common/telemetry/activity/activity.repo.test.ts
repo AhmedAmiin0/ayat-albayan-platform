@@ -19,7 +19,7 @@ function fakeDb(result: {
       return builder;
     };
   }
-  builder['then'] = (resolve: (v: unknown) => unknown) => resolve(result);
+  builder.then = (resolve: (v: unknown) => unknown) => resolve(result);
   const db = {
     from: (table: string) => {
       calls.push(['from', table]);

@@ -20,7 +20,7 @@ describe('GoogleItemsQueries.requeueReportRows', () => {
     const calls: [string, unknown[]][] = [];
     const chain: Record<string, unknown> = {};
     for (const m of ['update', 'in', 'neq', 'or']) chain[m] = (...args: unknown[]) => (calls.push([m, args]), chain);
-    chain['then'] = (ok: (v: { error: null }) => unknown) => ok({ error: null });
+    chain.then = (ok: (v: { error: null }) => unknown) => ok({ error: null });
     const db = { from: vi.fn().mockReturnValue(chain) };
     await new GoogleItemsQueries(db as unknown as Db).requeueReportRows({ reportId: 'r1', studentId: 's1' });
     expect(calls.some(([m]) => m === 'neq')).toBe(false);
@@ -33,10 +33,10 @@ describe('GoogleItemsQueries.finish', () => {
   it('a lesson that changed while its event was found gone is re-queued WITHOUT the dead id (recreated, §2.4)', async () => {
     const updates: unknown[] = [];
     const chain: Record<string, unknown> = {};
-    chain['update'] = (p: unknown) => (updates.push(p), chain);
+    chain.update = (p: unknown) => (updates.push(p), chain);
     for (const m of ['eq', 'is']) chain[m] = () => chain;
-    chain['select'] = () => Promise.resolve({ data: [{ dirty: true }], error: null });
-    chain['then'] = (ok: (v: { error: null }) => unknown) => ok({ error: null });
+    chain.select = () => Promise.resolve({ data: [{ dirty: true }], error: null });
+    chain.then = (ok: (v: { error: null }) => unknown) => ok({ error: null });
     const db = { from: vi.fn().mockReturnValue(chain) };
     await new GoogleItemsQueries(db as unknown as Db).finish({ id: 'i', claim_token: 't' }, { state: 'gone', error: 'deleted_in_google' });
     expect(updates[1]).toMatchObject({ state: 'pending', google_id: null });

@@ -12,7 +12,7 @@ import type { AvailabilityRow, TimeOff } from '@ab/shared';
 import type { BusyLesson } from '@ab/schedule';
 import { maybe, one, pgError } from '@/common/db/errors';
 import { TeachersSettings } from '@/modules/people/teachers/teachers.settings';
-type Owned = { teacherId: string; actorId: string };
+interface Owned { teacherId: string; actorId: string }
 
 /** Postgres `time` comes back as "HH:MM:SS"; the API speaks "HH:MM" like the input schema. */
 const hhmm = (time: string) => time.slice(0, 5);

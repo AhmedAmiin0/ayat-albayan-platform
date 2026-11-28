@@ -40,7 +40,7 @@ const verify: TokenVerifier = async (token) => {
 
 /** A key of USERS, or 'none': no Authorization header (the public routes). */
 type Token = string;
-export type InjectArgs = { method: 'GET' | 'POST' | 'PUT' | 'DELETE'; url: string; token?: Token; body?: object };
+export interface InjectArgs { method: 'GET' | 'POST' | 'PUT' | 'DELETE'; url: string; token?: Token; body?: object }
 
 function mocks() {
   return {

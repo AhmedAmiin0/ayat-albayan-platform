@@ -7,8 +7,8 @@ import { maybe, pgError } from '@/common/db/errors';
 import { readChunked } from '@/common/db/read-all';
 import type { StatusChangeRow } from './student-renewal.plan';
 
-type StatusMove = { studentId: string; from: StudentStatus; to: StudentStatus };
-type MoveAudit = { actorId: string | null; after: Record<string, Json> };
+interface StatusMove { studentId: string; from: StudentStatus; to: StudentStatus }
+interface MoveAudit { actorId: string | null; after: Record<string, Json> }
 interface StudentTzRow {
   status: StudentStatus;
   tz: string;

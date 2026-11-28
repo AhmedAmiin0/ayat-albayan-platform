@@ -76,5 +76,5 @@ export const isOurEvent = (
   e: { extendedProperties?: { private?: Record<string, string> } },
   lessonId: string,
 ): boolean =>
-  e.extendedProperties?.private?.['ab_source'] === PLATFORM_SOURCE &&
-  e.extendedProperties.private['ab_lesson_id'] === lessonId;
+  e.extendedProperties?.private?.ab_source === PLATFORM_SOURCE &&
+  e.extendedProperties.private.ab_lesson_id === lessonId;

@@ -11,7 +11,7 @@ function formStudent(s: ReportLessonStudent): ReportFormEntry['student'] {
   return { id: s.student_id, code: st?.code ?? '', name: st?.name ?? '', tz: st?.tz ?? '', program: st?.program ?? 'quran' };
 }
 
-type FormParts = {
+interface FormParts {
   lesson: ReportLessonRow;
   reports: readonly ReportRow[];
   numbers: ReadonlyMap<string, number>;
@@ -20,7 +20,7 @@ type FormParts = {
   memory: ReadonlyMap<string, MemoryView>;
   ctx: ViewContext;
   block: ReportFormResponse['submit_block'];
-};
+}
 
 /**
  * GET /lessons/:id/report-form (R-REP-01, issue D1): the read-only identity comes only from the

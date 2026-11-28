@@ -9,7 +9,7 @@ import { CUSTOM_COLUMNS, toCustomView } from './custom-config.mapper';
 /** The public rows' shared copy (Redis only): GET /settings/public is read by every page load. */
 const PUBLIC_ROWS_TTL_MS = 60_000;
 
-type PublicRow = { key: string; value: Json; is_public: boolean };
+interface PublicRow { key: string; value: Json; is_public: boolean }
 
 /** `custom_config` (migration 20261005000250): free-form admin entries, written by the service role. */
 @Injectable()

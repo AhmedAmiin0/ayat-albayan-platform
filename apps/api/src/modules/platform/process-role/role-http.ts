@@ -31,7 +31,7 @@ export function registerRoleHttp(app: NestFastifyApplication, role: AppRole): vo
     .getHttpAdapter()
     .getInstance()
     .addHook('onRequest', (req, reply, done) => {
-      if (!closedPath(role, req.url)) return done();
+      if (!closedPath(role, req.url)) {  done();; return; }
       void reply.code(404).send({ code: 'not_found', message: 'not_found' });
     });
 }

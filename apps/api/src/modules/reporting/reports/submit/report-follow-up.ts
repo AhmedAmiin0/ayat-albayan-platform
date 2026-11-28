@@ -9,7 +9,7 @@ import { ReportPdfQueue } from './report-pdf.queue';
  * per report id, so an edit never pushes again). All are already safe in the database (the lesson row,
  * pdf_status = pending), so a failure here is logged, never thrown: the sweeps catch up.
  */
-type SubmittedReport = { id: string; lesson_id: string; student_id: string };
+interface SubmittedReport { id: string; lesson_id: string; student_id: string }
 
 @Injectable()
 export class ReportFollowUp {

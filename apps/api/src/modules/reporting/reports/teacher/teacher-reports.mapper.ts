@@ -2,14 +2,14 @@ import { canEditReport, editUntil, type TeacherReportView } from '@ab/shared';
 import { iso } from '@/modules/reporting/reports/submit/report-form.mapper';
 import type { ReportStudent, TeacherReportRow } from './teacher-reports.queries';
 
-export type TeacherReportParts = {
+export interface TeacherReportParts {
   /** lesson id → starts_at. */
   lessons: ReadonlyMap<string, string>;
   students: ReadonlyMap<string, ReportStudent>;
   now: Date;
   /** settings.report_teacher_edit_minutes. */
   minutes: number;
-};
+}
 
 /** Read-only identity from the lesson and the student; a missing embed degrades to ''. */
 function identity(row: TeacherReportRow, p: TeacherReportParts): Pick<TeacherReportView, 'starts_at' | 'student'> {

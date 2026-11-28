@@ -6,7 +6,7 @@ import type { SortSpec } from '@/common/db/list-sort';
 import { maybe, pgError } from '@/common/db/errors';
 import type { InvoiceSortKey, RecentFilter } from './invoices.dto';
 
-export type InvoiceRowOut = {
+export interface InvoiceRowOut {
   id: string;
   rule_id: string | null;
   kind: 'package' | 'makeup';
@@ -16,7 +16,7 @@ export type InvoiceRowOut = {
   source: 'upload' | 'whatsapp';
   created_at: string;
   students: { id: string; name: string; code: string }[];
-};
+}
 
 const SELECT =
   'id, rule_id, kind, storage_path, mime, size_bytes, source, created_at, rule:schedule_rules(schedule_rule_students(student:students(id, name, code)))';
@@ -91,7 +91,7 @@ export class InvoicesRepo {
   }
 }
 
-type Fetched = {
+interface Fetched {
   id: string;
   rule_id: string | null;
   kind: 'trial' | 'package' | 'makeup';
@@ -103,7 +103,7 @@ type Fetched = {
   rule: {
     schedule_rule_students: { student: { id: string; name: string; code: string | null } | null }[];
   } | null;
-};
+}
 
 /** A trial never has an invoice (check constraint), so a trial row cannot occur and is skipped. */
 function toRow(r: Fetched): InvoiceRowOut[] {

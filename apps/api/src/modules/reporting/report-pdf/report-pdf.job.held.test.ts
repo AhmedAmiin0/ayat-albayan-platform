@@ -6,7 +6,7 @@ import type { ReportPdfPublisher } from './report-pdf.publisher';
 import type { Finish, ReportPdfQueries } from './report-pdf.queries';
 
 const NOW = new Date('2026-10-02T08:00:00Z');
-type Row = { status: string; version: number };
+interface Row { status: string; version: number }
 
 /** A stateful pdf_status queue (claim / finish compare-and-set) and a dedup'd messages table. */
 function world() {

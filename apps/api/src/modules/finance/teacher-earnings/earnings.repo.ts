@@ -15,7 +15,7 @@ export type SessionRow = EarningRow & {
 };
 export type PaymentRow = Tables<'teacher_payments'> & { items: { earning_id: string }[] };
 export type MoneyRow = Pick<EarningRow, 'id' | 'amount' | 'paid_amount'>;
-export type RecordResult = { payment_id: string; replayed: boolean };
+export interface RecordResult { payment_id: string; replayed: boolean }
 export type SessionFilter = EarningsListQuery;
 
 // Reads (balance, sessions, allocation) go through the view of migration 183: only sessions of

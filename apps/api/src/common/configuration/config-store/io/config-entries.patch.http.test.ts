@@ -29,7 +29,7 @@ describe('PATCH /config/entries/:key (docs/26 §2f)', () => {
   it('saves one key at its version and answers the row after; audited like PATCH /settings', async () => {
     const res = await patch('upload_max_mb', { value: 8, expectedVersion: 7 });
     expect(res.statusCode).toBe(200);
-    expect(h.store.set).toHaveBeenCalledExactlyOnceWith([{ key: 'upload_max_mb', value: 8, expectedVersion: 7 }], USERS['admin']?.id);
+    expect(h.store.set).toHaveBeenCalledExactlyOnceWith([{ key: 'upload_max_mb', value: 8, expectedVersion: 7 }], USERS.admin?.id);
     expect(res.json().entry).toMatchObject({ key: 'upload_max_mb', version: 7, updatedByName: 'منى', bounds: { min: 1, max: 10 } });
     expect(h.audit.record).toHaveBeenCalledWith(expect.objectContaining({
       entity: 'settings', entityId: SINGLETON_ENTITY_ID, action: 'update', before: { upload_max_mb: 4 }, after: { upload_max_mb: 8 },

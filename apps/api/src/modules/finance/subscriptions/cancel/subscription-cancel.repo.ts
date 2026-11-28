@@ -8,9 +8,9 @@ import type { SubRow } from '@/modules/finance/subscriptions/shared/subscription
 
 const CANCELLED_LESSONS = '(cancelled_by_teacher,cancelled_by_admin)';
 
-type CancelWrite = { id: string; actorId: string; reason: string | null; now: Date };
+interface CancelWrite { id: string; actorId: string; reason: string | null; now: Date }
 /** The package being cancelled, as ordered by subscription_commission_kind: (created_at, id). */
-type LaterOf = { id: string; studentId: string; createdAt: string };
+interface LaterOf { id: string; studentId: string; createdAt: string }
 /** The cancelled row; null when it was already cancelled (a race); a block the DB guard raised (934). */
 type CancelResult = { row: SubRow } | { row: null; block: CancelBlock };
 

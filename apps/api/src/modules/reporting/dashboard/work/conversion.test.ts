@@ -27,7 +27,7 @@ describe('conversionFrom (R-RPT-02 FX)', () => {
 
   it('reporting EGP: amounts in SAR go through the SAR→EGP rate', () => {
     const c = conversionFrom({ reporting: 'EGP', base: rate('EGP', 13), quotes: [['SAR', SAR]] });
-    expect(c.rates['SAR']).toBeCloseTo(1 / 13);
+    expect(c.rates.SAR).toBeCloseTo(1 / 13);
     expect(round2(convert(c, 100, 'SAR') ?? 0)).toBe(1300);
   });
 

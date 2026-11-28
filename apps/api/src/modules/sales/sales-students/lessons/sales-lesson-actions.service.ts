@@ -21,9 +21,9 @@ const AFTER_END = z.record(cancelBySchema, z.boolean()).readonly().decode({
   student: true,
 });
 
-type Move = { lessonId: string; body: SalesReschedule; actor: AuthUser };
-type Cancel = { lessonId: string; body: SalesCancel; actor: AuthUser };
-type Confirm = { lessonId: string; actor: AuthUser };
+interface Move { lessonId: string; body: SalesReschedule; actor: AuthUser }
+interface Cancel { lessonId: string; body: SalesCancel; actor: AuthUser }
+interface Confirm { lessonId: string; actor: AuthUser }
 interface Correct {
   lessonId: string;
   body: LessonCorrect;

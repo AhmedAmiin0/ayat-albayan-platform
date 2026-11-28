@@ -5,7 +5,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { done, pgError } from '@/common/db/errors';
 
 /** A path already held by a payment, as an attachment or its single legacy receipt. */
-export type PathOwner = { path: string; paymentId: string };
+export interface PathOwner { path: string; paymentId: string }
 export type PaymentAttachmentRow = Pick<Tables<'payment_attachments'>, 'id' | 'path' | 'mime' | 'size' | 'created_at'>;
 
 /** All supabase access for `payment_attachments` (service role; the API is the only writer), plus who holds a path. */
