@@ -3,6 +3,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { StyleSheet } from 'react-native';
 import { ApiError } from '../../lib/http/api';
 import { t } from '../../lib/i18n/i18n';
+import { keyboardAt, laidOut } from '../../testing/keyboard-fake';
 import { freshQueryClient, renderWithQuery } from '../../testing/query';
 import { palette } from '../../theme';
 import { ChannelThread } from '../ChannelThread';
@@ -137,4 +138,13 @@ test('the menu (ChatXMenu): its rows in order, no «إلغاء» row; the held b
   expect(menu.queryByRole('button', { name: t.common.cancel })).toBeNull();
   const box = StyleSheet.flatten(screen.getByTestId('channel-bubble-m1').props.style);
   expect(box.borderColor).toBe(palette.light.lapis);
+});
+
+test('editing: the field rides the keyboard in the sheet (a Modal, outside the thread)', async () => {
+  const menu = await hold('teacher', msg({}));
+  await fireEvent.press(menu.getByRole('button', { name: a.edit }));
+  const frame = await laidOut('channel-message-menu-keyboard');
+  expect(within(frame).getByLabelText(a.editTitle)).toBeTruthy();
+  await keyboardAt(500);
+  expect(frame).toHaveStyle({ paddingBottom: 300 });
 });

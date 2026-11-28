@@ -1076,33 +1076,12 @@
       "count": 1
     }
   },
-  "src/core/ui/lists/LazyList/LazyList.tsx": {
-    "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 8
-    }
-  },
-  "src/core/ui/lists/LazyList/tests/LazyList.test.tsx": {
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/core/ui/lists/ReportRows.tsx": {
     "no-nested-ternary": {
       "count": 2
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/core/ui/surface/use-inset-rows.tsx": {
-    "stylistic/max-len": {
-      "count": 3
     },
     "ab/no-restricted-syntax": {
       "count": 1
@@ -1946,11 +1925,6 @@
   },
   "src/inbox/messages/components/hide/use-hide-message.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/inbox/messages/copy-download/CopySheet.tsx": {
-    "max-lines-per-function": {
       "count": 1
     }
   },

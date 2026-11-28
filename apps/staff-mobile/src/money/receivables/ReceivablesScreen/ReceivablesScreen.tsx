@@ -3,17 +3,17 @@ import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
 import {
-  t,
-  useTheme,
   BackButton,
   EmptyState,
   ErrorState,
   Screen,
-  useTabBarInset,
   ScreenHeader,
+  t,
+  useInsetRows,
+  useTabBarInset,
+  useTheme,
 } from '@ab/mobile-kit';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useReceivables } from '@/money/shared/queries';
 import { ReceivableItem } from '@/money/receivables/ReceivableItem';
 import { filterReceivables } from '@/money/receivables/receivables';

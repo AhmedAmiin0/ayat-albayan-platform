@@ -96,13 +96,36 @@ jest.mock('./src/biometric/core/bio-lock', () => {
   return bioLockMock;
 });
 
-// @expo/ui's BottomSheet is a native sheet (SwiftUI / Jetpack Compose) with no jest module: a
-// stand-in View that shows its children only while presented and carries its props (the lesson
-// room's participants; the family app's children sheet), so a test reads and dismisses it.
+// @expo/ui renders SwiftUI / Jetpack Compose views with no jest module: stand-in Views that carry
+// their props, so a test reads them. The BottomSheet shows its children only while presented (the
+// lesson room's participants; the family app's children sheet), so a test reads and dismisses it.
 jest.mock('@expo/ui', () => {
   const { createElement } = require('react');
   const { View } = require('react-native');
   const BottomSheet = ({ isPresented, children, ...props }) =>
     isPresented ? createElement(View, { testID: 'native-bottom-sheet', ...props }, children) : null;
-  return { __esModule: true, BottomSheet };
+  const Host = ({ children, ...props }) => createElement(View, props, children);
+  const RNHostView = ({ children, ...props }) => createElement(View, props, children);
+  return { __esModule: true, BottomSheet, Host, RNHostView };
 });
+
+// FlashList measures nothing in jest (zero layout = no rows): a 400×900 window and 100pt rows, as the
+// library's own jestSetup (whose first mock, FlashList → RecyclerView, breaks on 2.0.2: not exported).
+// A private dist path: re-check it when FlashList is upgraded.
+jest.mock('@shopify/flash-list/dist/recyclerview/utils/measureLayout', () => {
+  const actual = jest.requireActual('@shopify/flash-list/dist/recyclerview/utils/measureLayout');
+  const window = () => ({ x: 0, y: 0, width: 400, height: 900 });
+  return {
+    ...actual,
+    measureParentSize: jest.fn(window),
+    measureFirstChildLayout: jest.fn(window),
+    measureItemLayout: jest.fn(() => ({ x: 0, y: 0, width: 100, height: 100 })),
+  };
+});
+
+// A native module: the library's own jest mock, but its KeyboardAvoidingView pads by the library's
+// formula against a fake keyboard (src/testing/keyboard-fake), so a test sees a frame clear it.
+jest.mock('react-native-keyboard-controller', () => ({
+  ...require('react-native-keyboard-controller/jest'),
+  KeyboardAvoidingView: require('./src/testing/keyboard-fake').FakeKeyboardAvoidingView,
+}));

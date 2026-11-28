@@ -3,8 +3,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { CodeStep } from '@ab/web-kit/auth/code/CodeStep';
 import { useCodeFlow } from '@ab/web-kit/auth/code/use-code-flow';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch: vi.fn(), apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const send = vi.fn(() => Promise.resolve());
 const F = t.familyAuth;

@@ -4,17 +4,17 @@ import { ActivityIndicator, FlatList, type ListRenderItemInfo, View } from 'reac
 import { AssistantLessonItem } from '@/classroom/assistants/AssistantLessonItem';
 import { joinableRows } from '@/classroom/assistants/assistant-lessons';
 import {
-  t,
-  useTheme,
   BackButton,
   EmptyState,
   ErrorState,
   Screen,
   ScreenHeader,
-  useTabBarInset,
+  t,
+  useInsetRows,
   usePullRefresh,
+  useTabBarInset,
+  useTheme,
 } from '@ab/mobile-kit';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useSalesLive } from '@/sales/sales/lib/sales-api';
 
 type Row = ReturnType<typeof joinableRows>[number];

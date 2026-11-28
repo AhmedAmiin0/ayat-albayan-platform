@@ -2,10 +2,9 @@ import type { ThreadView } from '@ab/shared';
 import type { ReactElement, ReactNode } from 'react';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { t, EmptyState, ErrorState } from '@ab/mobile-kit';
+import { EmptyState, ErrorState, LazyList, t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { SearchField } from '@/core/ui/form/SearchField';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { useThreadList } from '@/inbox/threads-list/use-thread-list';
 
 const keyOf = (th: ThreadView) => th.phone_e164;

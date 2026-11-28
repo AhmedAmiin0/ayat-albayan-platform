@@ -309,6 +309,7 @@
   "ReportPublicController.verify": "public",
   "PricingController.catalog": ["admin","sales"],
   "PricingController.list": ["admin","sales"],
+  "PricingController.listPdf": ["admin","sales"],
   "PricingController.quote": ["admin","sales"],
   "PublicConfigController.get": "public",
   "RatingController.send": ["admin"],

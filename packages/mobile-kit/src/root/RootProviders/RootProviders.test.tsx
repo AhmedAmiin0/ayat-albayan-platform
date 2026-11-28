@@ -15,3 +15,13 @@ test('the screens below read the root gate', async () => {
   );
   expect(screen.getByText('teacher')).toBeOnTheScreen();
 });
+
+test('the keyboard provider holds every app root, so frames and sheets follow the keyboard', async () => {
+  await render(
+    <RootProviders gate="out">
+      <AppText>app</AppText>
+    </RootProviders>,
+  );
+  expect(await screen.findByText('app')).toBeTruthy();
+  expect(screen.toJSON()).toMatchObject({ type: 'KeyboardProvider' });
+});

@@ -448,6 +448,7 @@ POST /portal/students/:id/lessons/:lessonId/room-link access=self.portal guards=
 POST /portal/students/:id/lessons/:lessonId/withdraw access=self.portal guards=- code=200 PortalLessonActionsController.withdraw
 POST /portal/students/:id/recordings/:recordingId/url access=self.portal guards=- code=200 PortalRecordsController.recordingUrl
 POST /portal/students/:id/reports/:reportId/url access=self.portal guards=- code=200 PortalRecordsController.reportUrl
+POST /pricing/list-pdf access=pricing.read guards=- code=201 PricingController.listPdf
 POST /public/feedback/:token access=public guards=- code=200 FeedbackPublicController.submit
 POST /public/join/:linkToken access=public guards=- code=200 ClassroomPublicController.join
 POST /public/meetings/:token/join access=public guards=- code=200 InternalMeetingsPublicController.join

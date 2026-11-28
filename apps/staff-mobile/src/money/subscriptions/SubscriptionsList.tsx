@@ -2,10 +2,17 @@ import { SUBSCRIPTION_STATUSES } from '@ab/catalog';
 import { subscriptionStatusStyle, type SubscriptionView } from '@ab/money';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
-import { t, useTheme, EmptyState, ErrorState, FilterPills, type FilterPill } from '@ab/mobile-kit';
+import {
+  EmptyState,
+  ErrorState,
+  type FilterPill,
+  FilterPills,
+  LazyList,
+  t,
+  useTheme,
+} from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { useRenewalThreshold } from '@/payments/hooks/queries';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { SearchField } from '@/core/ui/form/SearchField';
 import type { SubscriptionFilter } from '@ab/client-core';
 import { subscriptionParams } from '@/money/payments/filters';

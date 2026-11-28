@@ -4,10 +4,10 @@ import { pathKey } from '../lib/query/query-keys';
 import { SAVED_ROLE_WAIT_MS, verifyRole } from './verify-role';
 
 // A slow first /auth/me with the role the last run saved: the app opens on the saved one.
-const mockApiFetch = jest.fn();
+const mockRead = jest.fn();
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockRead(request),
 }));
 const mockSignOut = jest.fn();
 jest.mock('../lib/http/supabase', () => ({ supabase: { auth: { signOut: () => mockSignOut() } } }));
@@ -24,7 +24,7 @@ afterEach(() => jest.useRealTimers());
 
 test('saved role and a slow network: open on it after the short wait', async () => {
   queryClient.setQueryData(pathKey('/auth/me'), { role: 'teacher' });
-  mockApiFetch.mockImplementation(hang);
+  mockRead.mockImplementation(hang);
   const role = verifyRole(session);
   await jest.advanceTimersByTimeAsync(SAVED_ROLE_WAIT_MS);
   await expect(role).resolves.toBe('teacher');
@@ -32,13 +32,13 @@ test('saved role and a slow network: open on it after the short wait', async () 
 
 test('a fast live answer wins over the saved one', async () => {
   queryClient.setQueryData(pathKey('/auth/me'), { role: 'teacher' });
-  mockApiFetch.mockResolvedValue({ role: 'admin' });
+  mockRead.mockResolvedValue({ role: 'admin' });
   await expect(verifyRole(session)).resolves.toBe('admin');
 });
 
 test('nothing saved: it waits for the live answer', async () => {
   let answer: (me: unknown) => void = () => undefined;
-  mockApiFetch.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
+  mockRead.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
   const role = verifyRole(session);
   await jest.advanceTimersByTimeAsync(SAVED_ROLE_WAIT_MS * 10);
   answer({ role: 'sales' });
@@ -48,7 +48,7 @@ test('nothing saved: it waits for the live answer', async () => {
 test('a late answer that revokes the role still signs out', async () => {
   queryClient.setQueryData(pathKey('/auth/me'), { role: 'teacher' });
   let answer: (me: unknown) => void = () => undefined;
-  mockApiFetch.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
+  mockRead.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
   const role = verifyRole(session);
   await jest.advanceTimersByTimeAsync(SAVED_ROLE_WAIT_MS);
   await expect(role).resolves.toBe('teacher');
@@ -60,7 +60,7 @@ test('a late answer that revokes the role still signs out', async () => {
 test('saved admin, live teacher: the late answer moves the gate to the teacher app', async () => {
   queryClient.setQueryData(pathKey('/auth/me'), { role: 'admin' });
   let answer: (me: unknown) => void = () => undefined;
-  mockApiFetch.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
+  mockRead.mockImplementation(() => new Promise((resolve) => (answer = resolve)));
   const onLive = jest.fn();
   const role = verifyRole(session, onLive);
   await jest.advanceTimersByTimeAsync(SAVED_ROLE_WAIT_MS);

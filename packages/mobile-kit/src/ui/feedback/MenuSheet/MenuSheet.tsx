@@ -1,14 +1,19 @@
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { shape, useTheme } from '../../../theme';
+import { KeyboardFrame } from '../../layout/KeyboardFrame';
 import type { MenuSheetProps } from './MenuSheet.types';
 
-/** A tap outside closes it; screen readers get a cancel after the rows. */
+/** A tap outside closes it; screen readers get a cancel after the rows; it rides the keyboard. */
 export function MenuSheet({ open, label, testID, onClose, children }: MenuSheetProps) {
   const { color } = useTheme();
   return (
     <Modal visible={open} transparent animationType="fade" onRequestClose={onClose}>
-      <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+      <KeyboardFrame
+        inScreen={false}
+        testID={`${testID}-keyboard`}
+        style={{ flex: 1, justifyContent: 'flex-end' }}
+      >
         {/* A sibling so VoiceOver reaches each row, not one cancel over the sheet. */}
         <Pressable
           accessibilityRole="button"
@@ -31,7 +36,7 @@ export function MenuSheet({ open, label, testID, onClose, children }: MenuSheetP
         >
           {children}
         </View>
-      </View>
+      </KeyboardFrame>
     </Modal>
   );
 }

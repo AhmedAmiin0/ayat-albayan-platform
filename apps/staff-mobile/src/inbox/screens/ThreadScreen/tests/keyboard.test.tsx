@@ -1,7 +1,8 @@
-import { act, fireEvent, screen, within } from '@testing-library/react-native';
-import { DeviceEventEmitter, Platform } from 'react-native';
+import { fireEvent, screen, within } from '@testing-library/react-native';
+import { Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { t } from '@ab/mobile-kit';
+import { keyboardAt } from '@ab/mobile-kit/testing';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
@@ -25,8 +26,9 @@ const metrics = {
 };
 const KEYBOARD = 280;
 const os = Platform.OS;
-afterEach(() => {
+afterEach(async () => {
   Platform.OS = os;
+  await keyboardAt(null);
 });
 
 async function open() {
@@ -47,36 +49,28 @@ async function open() {
   return frame;
 }
 
-async function keyboard(name: string, screenY: number) {
-  const endCoordinates = { screenX: 0, screenY, width: 400, height: 800 - 48 - screenY };
-  await act(async () => {
-    DeviceEventEmitter.emit(name, { endCoordinates, duration: 0, easing: 'keyboard' });
-    await Promise.resolve();
-  });
-}
-
 test('the composer is inside the frame that clears the keyboard, with the list above it', async () => {
   const frame = await open();
   expect(within(frame).getByLabelText(t.inbox.composer.placeholder)).toBeTruthy();
   expect(within(frame).getByText(inbound.body ?? '')).toBeTruthy();
 });
 
-test('Android, keyboard open: the composer’s bottom sits on the keyboard’s top, closed: no gap', async () => {
-  Platform.OS = 'android';
+// The keyboard's top in window points, as the library reports it on both platforms; it moves the
+// frame with the keyboard (React Native's own padded only after Android's keyboardDidShow).
+const PLATFORMS = ['android', 'ios'] as const;
+test.each(PLATFORMS)('%s: the composer sits on the keyboard, closed: no gap', async (os) => {
+  Platform.OS = os;
   const frame = await open();
   expect(frame).toHaveStyle({ paddingBottom: 0 });
-  // ReactRootView: screenY = the visible frame's bottom, the keyboard's top above the bar.
-  await keyboard('keyboardDidShow', 800 - 48 - KEYBOARD);
+  await keyboardAt(800 - 48 - KEYBOARD);
   expect(frame).toHaveStyle({ paddingBottom: KEYBOARD });
-  await keyboard('keyboardDidHide', 800);
+  await keyboardAt(null);
   expect(frame).toHaveStyle({ paddingBottom: 0 });
 });
 
 test('iOS: the keyboard covers the home indicator too, so the frame pads the rest of it', async () => {
   Platform.OS = 'ios';
   const frame = await open();
-  await keyboard('keyboardWillShow', 800 - 336);
+  await keyboardAt(800 - 336);
   expect(frame).toHaveStyle({ paddingBottom: 336 - 48 });
-  await keyboard('keyboardWillHide', 800);
-  expect(frame).toHaveStyle({ paddingBottom: 0 });
 });

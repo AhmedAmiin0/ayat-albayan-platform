@@ -5,6 +5,7 @@ import { catalogQuery, INITIAL_SELECTION, quoteQuery, type Selection } from '@/f
 import { CalcSteps } from '@/features/finance/pricing/calculator/CalcSteps';
 import { quoteSummary } from '@/features/finance/pricing/format';
 import { FxNote } from '@/features/finance/pricing/calculator/FxNote';
+import { PdfDownload } from '@/features/finance/pricing/PdfDownload';
 import { PlansTable } from '@/features/finance/pricing/PlansTable';
 import { QuoteResult } from '@/features/finance/pricing/calculator/QuoteResult';
 import { useDebounced } from '@/features/finance/pricing/use-debounced';
@@ -76,6 +77,7 @@ function CatalogSection({ asked }: { asked: Selection }) {
         </h2>
         <p className="text-xs text-ink-3">{t.pricing.tableSubtitle}</p>
       </div>
+      <PdfDownload sel={asked} />
       {catalog.isError && <FormAlert>{t.common.error}</FormAlert>}
       {catalog.isPending && <ListSkeleton />}
       {catalog.data && <PlansTable packages={catalog.data.packages} />}
