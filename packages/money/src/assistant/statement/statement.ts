@@ -1,5 +1,5 @@
 import { fromCents, toCents } from '@ab/core';
-import { localDay } from './first-paid';
+import { localDay } from '../first-paid';
 import { addCalendarDays, addCalendarMonths } from '@ab/time';
 import { z } from 'zod';
 import type {
