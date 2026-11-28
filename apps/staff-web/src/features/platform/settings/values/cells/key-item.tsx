@@ -1,5 +1,4 @@
-import { t } from '@ab/web-kit';
-import type { RowMenuItem } from '@/features/platform/settings/values/sheet/RowMenu';
+import { t, type RowMenuItem } from '@ab/web-kit';
 
 const v = t.settingsValues;
 

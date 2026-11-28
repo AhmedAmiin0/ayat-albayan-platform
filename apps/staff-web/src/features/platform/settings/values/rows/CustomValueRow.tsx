@@ -1,11 +1,10 @@
 import type { CustomConfigView } from '@ab/settings';
 import { useId } from 'react';
 import { formatDateTime } from '@/features/sales/leads';
-import { t, useClock } from '@ab/web-kit';
+import { t, useClock, RowMenu } from '@ab/web-kit';
 import { DefaultCell } from '@/features/platform/settings/values/cells/InfoCells';
 import { keyItem } from '@/features/platform/settings/values/cells/key-item';
 import { NameCell } from '@/features/platform/settings/values/cells/NameCell';
-import { RowMenu } from '@/features/platform/settings/values/sheet/RowMenu';
 import { cellClass, headClass, rowClass } from './row-classes';
 
 const c = t.config.custom;

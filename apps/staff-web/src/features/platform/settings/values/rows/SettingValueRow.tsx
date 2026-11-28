@@ -1,6 +1,6 @@
 import { isEditableValueKey, type SettingKey } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t } from '@ab/web-kit';
+import { t, RowMenu } from '@ab/web-kit';
 import { isModified } from '@/features/platform/settings/registry-form/row-form';
 import { ActionCell } from '@/features/platform/settings/values/cells/ActionCell';
 import { DefaultCell, LastCell } from '@/features/platform/settings/values/cells/InfoCells';
@@ -10,7 +10,6 @@ import { useRowIds } from '@/features/platform/settings/values/editors/editor-pr
 import { ValueEditor } from '@/features/platform/settings/values/editors/ValueEditor';
 import { ConflictRow } from '@/features/platform/settings/values/conflicts/ConflictRow';
 import { describeItem, rowDescription, settingTarget } from '@/features/platform/settings/values/description/row-description';
-import { RowMenu } from '@/features/platform/settings/values/sheet/RowMenu';
 import { defaultNote, defaultText, valueText } from '@/features/platform/settings/values/lib/value-format';
 import { isOwnedGroup, type ValuesGroupId } from '@/features/platform/settings/values/lib/value-groups-view';
 import { useValues } from '@/features/platform/settings/values/values-context';

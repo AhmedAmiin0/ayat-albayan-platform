@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { RowMenu } from './RowMenu';
+import { RowMenu } from '@ab/web-kit/components/ui/overlay/RowMenu';
 
 function setup() {
   const a = vi.fn();

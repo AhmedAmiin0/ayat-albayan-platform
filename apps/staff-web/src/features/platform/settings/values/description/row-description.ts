@@ -1,10 +1,9 @@
 import { settingDef, type SettingKey } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
-import { t, locale } from '@ab/web-kit';
+import { t, locale, type RowMenuItem } from '@ab/web-kit';
 import type { DescribeTarget } from './describe-target';
 import { shownDescription } from './description';
 import type { ValuesApi } from '@/features/platform/settings/values/hooks/use-values-controller.types';
-import type { RowMenuItem } from '@/features/platform/settings/values/sheet/RowMenu';
 
 /** A settings row's dialog target: its key, label and registry hint key. */
 export const settingTarget = (key: SettingKey): DescribeTarget => ({

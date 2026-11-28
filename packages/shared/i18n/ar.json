@@ -447,7 +447,8 @@
     "showing": "عرض {shown} من {total}",
     "breadcrumbs": "مسار الصفحة",
     "listSeparator": "، ",
-    "more": "المزيد"
+    "more": "المزيد",
+    "rowActions": "إجراءات {name}"
   },
   "nav": {
     "dashboard": "لوحة التحكم",
@@ -2564,8 +2565,10 @@
       "confirm": "تأكيد التعديل",
       "same": "المبلغ الجديد يساوي المبلغ الحالي",
       "saved": "تم تعديل المبلغ",
-      "fromStripe": "دفع إلكتروني: المبلغ من Stripe"
-    }
+      "fromStripe": "دفع إلكتروني: المبلغ من Stripe",
+      "elsewhere": "غيّر المبلغ من «تعديل المبلغ»."
+    },
+    "editDetails": "تعديل التاريخ والطريقة والملاحظة"
   },
   "payouts": {
     "title": "مستحقات المعلمين",

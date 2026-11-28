@@ -447,7 +447,8 @@
     "showing": "Showing {shown} of {total}",
     "breadcrumbs": "Breadcrumbs",
     "listSeparator": ", ",
-    "more": "More"
+    "more": "More",
+    "rowActions": "Actions for {name}"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -2564,8 +2565,10 @@
       "confirm": "Confirm the change",
       "same": "The new amount equals the current amount",
       "saved": "Amount updated",
-      "fromStripe": "Online payment: the amount comes from Stripe"
-    }
+      "fromStripe": "Online payment: the amount comes from Stripe",
+      "elsewhere": "Change the amount with «Edit amount»."
+    },
+    "editDetails": "Edit date, method and note"
   },
   "payouts": {
     "title": "Teacher payouts",

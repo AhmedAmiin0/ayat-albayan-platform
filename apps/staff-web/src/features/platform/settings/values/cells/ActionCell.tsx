@@ -1,10 +1,9 @@
 import type { SettingKey } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
-import { Button, t } from '@ab/web-kit';
+import { Button, t, RowMenu, type RowMenuItem } from '@ab/web-kit';
 import { defaultForm, isModified, rowForm } from '@/features/platform/settings/registry-form/row-form';
 import { isDirty } from '@/features/platform/settings/registry-form/settings-dirty';
 import { describeItem, settingTarget } from '@/features/platform/settings/values/description/row-description';
-import { RowMenu, type RowMenuItem } from '@/features/platform/settings/values/sheet/RowMenu';
 import { valueText } from '@/features/platform/settings/values/lib/value-format';
 import type { ValuesApi } from '@/features/platform/settings/values/hooks/use-values-controller.types';
 import { useValues } from '@/features/platform/settings/values/values-context';

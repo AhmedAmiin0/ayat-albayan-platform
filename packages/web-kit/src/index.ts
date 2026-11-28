@@ -84,6 +84,7 @@ export * from './components/ui/overlay/Drawer';
 export * from './components/ui/overlay/RouteLeaveGuard';
 export * from './components/ui/overlay/dialog';
 export * from './components/ui/overlay/more-menu';
+export * from './components/ui/overlay/RowMenu';
 export * from './components/ui/overlay/toast';
 export * from './components/ui/overlay/use-dismiss';
 export * from './components/ui/overlay/use-focus-on-change';
