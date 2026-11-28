@@ -1738,7 +1738,7 @@
   },
   "src/modules/messaging/calls/access/call-access.ts": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 2
@@ -1802,11 +1802,6 @@
   },
   "src/modules/messaging/calls/flow/calls-number-permission.ts": {
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/calls/flow/calls.sweeper.idle.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -2319,7 +2314,7 @@
       "count": 1
     },
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1
@@ -2486,7 +2481,7 @@
   },
   "src/modules/messaging/inbox/threads/tests/threads.trial.http.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     }
   },
   "src/modules/messaging/inbox/threads/thread-lessons.ts": {
@@ -2612,7 +2607,7 @@
   },
   "src/modules/messaging/notification-rules/rules.migration.test.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     },
     "typescript/no-unnecessary-condition": {
       "count": 1
@@ -2727,9 +2722,6 @@
   "src/modules/messaging/numbers/config/numbers.config.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/modules/messaging/numbers/config/numbers.env.crm.test.ts": {
@@ -3153,7 +3145,7 @@
   },
   "src/modules/messaging/webhook/external/tests/external.fakes.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/webhook/external/tests/store.read.test.ts": {
@@ -3241,9 +3233,6 @@
   "src/modules/messaging/webhook/lines/tests/reload.test.ts": {
     "no-nested-ternary": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/modules/messaging/webhook/lines/webhook.lines.ts": {
@@ -3440,7 +3429,7 @@
       "count": 2
     },
     "stylistic/max-len": {
-      "count": 8
+      "count": 6
     }
   },
   "src/modules/messaging/whatsapp/drivers/crm/crm-body.ts": {
@@ -3540,7 +3529,7 @@
   },
   "src/modules/messaging/whatsapp/lines/line-health.store.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 1
     },
     "ab/forbidden-imports": {
       "count": 2
@@ -3737,7 +3726,7 @@
   },
   "src/modules/messaging/whatsapp/messages/wa-json.ts": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "src/modules/messaging/whatsapp/numbers/media-client.ts": {
@@ -3975,12 +3964,12 @@
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.mapper.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 3
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/template.registry.ts": {
     "stylistic/max-len": {
-      "count": 7
+      "count": 4
     }
   },
   "src/modules/messaging/whatsapp/templates/catalog/templates.controller.ts": {
