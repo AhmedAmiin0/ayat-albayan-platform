@@ -2,12 +2,12 @@ import { useState } from 'react';
 import type { StudentListItem } from '@ab/shared';
 
 import { t, EmptyState, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
-import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { LazyList } from '@/core/ui/lists/LazyList';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { StudentFilterBar } from '@/students/list/StudentFilterBar';
 import { activeCount, listParams, NO_FILTERS, type StudentFilters } from '@/students/list/student-filters';
 import { StudentRow } from '@/students/list/StudentRow';
+import { useStudentList } from '@/students/list/use-student-list-data';
 
 const keyOf = (s: StudentListItem) => s.id;
 const renderRow = ({ item }: { item: StudentListItem }) => <StudentRow student={item} />;
@@ -16,7 +16,7 @@ const renderRow = ({ item }: { item: StudentListItem }) => <StudentRow student={
 export function StudentsScreen() {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<StudentFilters>(NO_FILTERS);
-  const list = usePagedList<StudentListItem>({ path: '/students', params: { search, ...listParams(filters) } });
+  const list = useStudentList({ search, ...listParams(filters) });
   const filtered = search !== '' || activeCount(filters) > 0;
   const empty = filtered ? t.common.notFound : t.students.empty;
   return (

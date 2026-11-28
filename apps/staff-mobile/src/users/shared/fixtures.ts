@@ -52,6 +52,7 @@ export function usersGet({
   failList = false,
 }: FakeUsers = {}) {
   return async (path: string): Promise<unknown> => {
+    if (path === '/presence/staff') return { enabled: false, staff: [] };
     if (path.startsWith('/users/role-options')) return OPTIONS;
     if (path.startsWith('/users/link-candidates')) {
       const q = decodeURIComponent(path.split('&q=')[1] ?? '');

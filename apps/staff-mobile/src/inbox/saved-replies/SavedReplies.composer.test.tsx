@@ -1,10 +1,14 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
+import { savedProfile } from '@/test/account';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, inbound, message, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 import { REPLIES } from './testing/fixtures';
+
+/** The signed-in staff member the composer greets with. */
+const ME = savedProfile({ full_name: 'سارة' });
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -26,7 +30,7 @@ const people = { guardian: null, lead: null, students: [student] };
 async function open(last = minutesAgo(5), teacher = false) {
   const th = detail([inbound], { thread: { ...thread, last_inbound_at: last }, people });
   mockApiFetch.mockImplementation(async (p: string) =>
-    p === '/saved-replies' ? REPLIES : p === '/me/profile' ? { full_name: 'سارة' } : p === '/messages/gate' ? { open: true, reason: null, queued: 0 } : th,
+    p === '/saved-replies' ? REPLIES : p === '/me/profile' ? ME : p === '/messages/gate' ? { open: true, reason: null, queued: 0 } : th,
   );
   const ui = <ThreadScreen />;
   await renderWithQuery(teacher ? <ThreadModeProvider value={{ kind: 'teacher', teacherId: 't1' }}>{ui}</ThreadModeProvider> : ui, createTestQueryClient());

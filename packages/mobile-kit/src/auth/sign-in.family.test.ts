@@ -27,6 +27,7 @@ jest.mock('../lib/http/supabase', () => ({
 }));
 
 const tokens = { access_token: 'a', refresh_token: 'r' };
+const session = { ...tokens, expires_in: 3600, expires_at: null };
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -44,7 +45,7 @@ test('a guardian: the family code routes → verifyOtp with the token hash → i
 });
 
 test('a student code + password goes through POST /auth/login and enters', async () => {
-  mockApiSend.mockResolvedValue(tokens);
+  mockApiSend.mockResolvedValue(session);
   mockApiFetch.mockResolvedValue({ role: 'student' });
   expect(await signIn({ identifier: 'AB-1234', password: 'pw' })).toEqual({ ok: true });
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/login', {
@@ -55,7 +56,7 @@ test('a student code + password goes through POST /auth/login and enters', async
 });
 
 test('a staff login is refused in the family app with the inverted notice', async () => {
-  mockApiSend.mockResolvedValue(tokens);
+  mockApiSend.mockResolvedValue(session);
   mockApiFetch.mockResolvedValue({ role: 'teacher' });
   const res = await signIn({ identifier: 'omar.t', password: 'pw' });
   expect(res).toEqual({ ok: false, error: t.familyApp.wrongApp });

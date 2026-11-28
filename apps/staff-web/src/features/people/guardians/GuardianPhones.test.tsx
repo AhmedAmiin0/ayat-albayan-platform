@@ -13,10 +13,22 @@ const G = t.guardians;
 const MAIN = '+966501234567';
 const SECOND = '+966552220000';
 const at = '2026-10-29T10:00:00Z';
-const GUARDIAN = { id: 'g1', name: 'أم جود', phone_e164: MAIN, country: 'SA', tz: 'Asia/Riyadh', source: null, notes: null };
+const GUARDIAN = {
+  id: 'g1',
+  name: 'أم جود',
+  phone_e164: MAIN,
+  country: 'SA',
+  tz: 'Asia/Riyadh',
+  source: null,
+  notes: null,
+  profile_id: null,
+  created_by: null,
+  created_at: '2026-10-29T10:00:00Z',
+  updated_at: '2026-10-29T10:00:00Z',
+};
 
 function open(phones: { phone_e164: string; is_primary: boolean; created_at: string }[]) {
-  routeFetch(apiFetch, [['/guardians/g1', { ...GUARDIAN, phones }]]);
+  routeFetch(apiFetch, [['/guardians/g1', { ...GUARDIAN, students: [], phones }]]);
   const onDone = vi.fn();
   const client = renderWithClient(<GuardianEditDialog guardianId="g1" onClose={vi.fn()} onDone={onDone} />);
   return { onDone, invalidate: vi.spyOn(client, 'invalidateQueries') };
@@ -54,7 +66,7 @@ describe('«تعديل ولي الأمر»: the family’s second number (owner 
     expect(apiSend).not.toHaveBeenCalled();
     fireEvent.click(confirm.getByRole('button', { name: G.removePhone }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(G.phoneRemoved));
-    expect(apiSend).toHaveBeenCalledWith('DELETE', '/guardians/g1/phones/%2B966552220000');
+    expect(apiSend).toHaveBeenCalledWith('DELETE', '/guardians/g1/phones/%2B966552220000', undefined);
     expect(invalidate.mock.calls.map(([f]) => f?.queryKey)).toEqual([['guardians'], ['students'], ['threads']]);
   });
 

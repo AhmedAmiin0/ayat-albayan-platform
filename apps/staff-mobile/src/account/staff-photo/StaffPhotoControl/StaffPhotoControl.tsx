@@ -3,21 +3,20 @@ import { View } from 'react-native';
 import { t, Avatar, Button, AppText, type, useTheme, AccountCard } from '@ab/mobile-kit';
 import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 import { useConfirmFocus } from '@/account/staff-photo/use-confirm-focus';
-import { type StaffPhotoOptions, useStaffPhoto } from '@/account/staff-photo/use-staff-photo';
+import { useStaffPhoto } from '@/account/staff-photo/use-staff-photo';
+import type { StaffPhotoOptions } from '@/account/staff-photo/staff-photo.types';
 
 const s = t.staffPhoto;
 
 interface StaffPhotoControlProps extends StaffPhotoOptions {
   /** The person's name (the initials, the confirm question). */
   name: string;
-  /** The tone seed (the person's id). */
-  id: string;
 }
 
 /** Only shown to who may write it, never for a student or guardian; focus returns after confirm. */
 export function StaffPhotoControl({ name, id, ...options }: StaffPhotoControlProps) {
   const { color } = useTheme();
-  const photo = useStaffPhoto(options);
+  const photo = useStaffPhoto({ id, ...options });
   const [confirming, setConfirming] = useState(false);
   const { confirm, back } = useConfirmFocus(confirming);
   const busy = photo.uploading || photo.removing;

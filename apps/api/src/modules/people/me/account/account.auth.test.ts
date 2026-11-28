@@ -20,6 +20,9 @@ describe('SupabaseAccountAuth.revokeOtherSessions: a failed revoke answers throu
   });
 
   it('any other error is the plain 500 of the default map', async () => {
-    expect(await revokeWith(PG_ERRORS.other)).toEqual({ status: 500, body: 'db error XX000: boom' });
+    expect(await revokeWith(PG_ERRORS.other)).toEqual({
+      status: 500,
+      body: 'db error XX000: boom',
+    });
   });
 });

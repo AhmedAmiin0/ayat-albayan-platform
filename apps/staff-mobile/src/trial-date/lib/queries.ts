@@ -1,13 +1,20 @@
-import type { TrialDateResult, TrialHistory } from '@ab/shared';
-import type { Conflict } from '@ab/schedule';
-import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
-import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
-import type { BookingMode } from '@ab/client-core';
+import {
+  skipToken,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from '@tanstack/react-query';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+import { salesTrialDateCalls, trialDateCalls, type BookingMode } from '@ab/client-core';
 import { salesKeys } from '@/core/lib/keys';
 import { bookingPath, useBookingMode } from '@/booking/shared/booking-mode';
 import type { TrialDateBody } from './trial-date-body';
 
 // Trial booking (R-SCH-06/07, R-STU-05, R-ASST-01) under /booking, or /sales/booking for sales.
+
+const client = { apiFetch, apiSend };
+const trialCalls = { admin: trialDateCalls(client), sales: salesTrialDateCalls(client) };
 
 const historyKey = (mode: BookingMode, studentId: string) => [
   ...pathKey(bookingPath(mode, '/trial-dates')),
@@ -17,15 +24,10 @@ const historyKey = (mode: BookingMode, studentId: string) => [
 /** GET {base}/trial-dates?studentId: every trial time picked for the student, newest pick first. */
 export function useTrialHistory(studentId: string, enabled = true) {
   const mode = useBookingMode();
-  const path = bookingPath(mode, '/trial-dates');
   return useQuery({
     queryKey: historyKey(mode, studentId),
-    queryFn: async () => {
-      const history = await apiFetch<TrialHistory | null>(`${path}${toQueryString({ studentId })}`);
-      // A wrong shape is a failed read (with its retry), never a crash of the student file around it.
-      if (!Array.isArray(history?.items)) throw new Error('trial_history_shape');
-      return history;
-    },
+    // A wrong shape is a failed read (with its retry), never a crash of the student file around it.
+    queryFn: () => trialCalls[mode].history(studentId),
     enabled: enabled && studentId !== '',
   });
 }
@@ -36,12 +38,12 @@ export function useTrialHistory(studentId: string, enabled = true) {
  * meeting link is part of the key or the probe: typing the link never re-checks).
  */
 export function useTrialDateCheck(body: TrialDateBody | null) {
-  const path = bookingPath(useBookingMode(), '/trial-date/check');
+  const mode = useBookingMode();
+  const path = bookingPath(mode, '/trial-date/check');
   const probe = body ? { ...body, meetingLink: undefined } : null;
   return useQuery({
     queryKey: [...pathKey(path), probe ? { ...probe, clientRequestId: undefined } : null],
-    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', path, probe),
-    enabled: body !== null,
+    queryFn: probe ? () => trialCalls[mode].check(probe) : skipToken,
     gcTime: 0,
   });
 }
@@ -64,8 +66,7 @@ export function useTrialDate(studentId: string) {
   const mode = useBookingMode();
   return useMutation({
     mutationKey: ['booking', 'trial-date', studentId],
-    mutationFn: (body: TrialDateBody) =>
-      apiSend<TrialDateResult>('POST', bookingPath(mode, '/trial-date'), body),
+    mutationFn: (body: TrialDateBody) => trialCalls[mode].pick(body),
     onSuccess: () => refreshAfterTrialDate(client, { mode, studentId }),
     // trial_changed and the like: the history (and what the next pick moves) is read again.
     onError: () => client.invalidateQueries({ queryKey: historyKey(mode, studentId) }),

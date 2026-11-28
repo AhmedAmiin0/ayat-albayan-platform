@@ -1,4 +1,5 @@
 import type { ReportSummaryView } from '@ab/shared';
+import { studentProfileFixture } from '@ab/shared/testing';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
@@ -37,7 +38,7 @@ const row: ReportSummaryView = {
 beforeEach(() => {
   jest.clearAllMocks();
   mockApiFetch.mockImplementation(async (p: string) => {
-    if (p === '/students/s1') return { id: 's1', name: 'يوسف أحمد' };
+    if (p === '/students/s1') return studentProfileFixture({ id: 's1', name: 'يوسف أحمد' });
     return { items: [row], total: 1, page: 1, pageSize: 10, series: [] };
   });
 });

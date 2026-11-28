@@ -17,7 +17,7 @@ export interface PauseWindow {
 export interface CourseKeys {
   stopPreview: (ref: CourseRef) => CourseKey;
   move: (ref: CourseRef, kind: CourseMoveKind) => CourseKey;
-  current: (studentId: string, path: string | null) => CourseKey;
+  current: (studentId: string, source: string | null) => CourseKey;
   teachers: (studentId: string) => CourseKey;
   card: (studentId: string, tree: CardTree) => CourseKey;
   extend: (ref: CourseRef) => CourseKey;

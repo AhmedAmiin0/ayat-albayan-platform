@@ -2,9 +2,10 @@ import { tidyUsername, usernameApiError, usernameChange } from '@ab/client-core'
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions, apiSend, t, Field, AppText, Button, type, useTheme } from '@ab/mobile-kit';
+import { usePermissions, t, Field, AppText, Button, type, useTheme } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import type { Teacher } from '@ab/shared';
+import { teachers } from './teacher-calls';
 
 /** docs/30 §7: needs teachers.write; lower-cased, sent only when changed, empty clears it. */
 export function TeacherUsername({ teacher }: { teacher: Teacher }) {
@@ -15,7 +16,7 @@ export function TeacherUsername({ teacher }: { teacher: Teacher }) {
   const [value, setValue] = useState(teacher.username ?? '');
   const [error, setError] = useState<string | null>(null);
   const save = useMutation({
-    mutationFn: (body: { username?: string | null }) => apiSend<Teacher>('PATCH', `/teachers/${teacher.id}`, body),
+    mutationFn: (body: { username?: string | null }) => teachers.update(teacher.id, body),
     onSuccess: () => queryClient.invalidateQueries({ predicate: (q) => ['teachers', 'users'].includes(String(q.queryKey[0])) }),
     onError: (e) => setError(usernameApiError(e, T) ?? t.common.error),
   });

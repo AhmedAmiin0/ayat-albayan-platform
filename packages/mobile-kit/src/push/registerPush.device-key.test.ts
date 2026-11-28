@@ -16,7 +16,10 @@ jest.mock('./silence-push', () => ({
 }));
 jest.mock('./live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
 jest.mock('expo-device', () => ({ __esModule: true, isDevice: true }));
-jest.mock('expo-constants', () => ({ __esModule: true, default: { expoConfig: { extra: { eas: { projectId: 'proj-1' } } } } }));
+jest.mock('expo-constants', () => ({
+  __esModule: true,
+  default: { expoConfig: { extra: { eas: { projectId: 'proj-1' } } } },
+}));
 jest.mock('expo-notifications', () => ({
   getExpoPushTokenAsync: jest.fn(async () => ({ type: 'expo', data: 'ExponentPushToken[x]' })),
   setNotificationChannelAsync: jest.fn(),
@@ -43,10 +46,15 @@ test('first registration: no key sent, the answered key kept', async () => {
 test('later registrations send the kept key; sign-out keeps it (a handed-over phone proves itself)', async () => {
   await AsyncStorage.setItem(DEVICE_KEY, KEY);
   await AsyncStorage.setItem(TOKEN_KEY, TOKEN);
-  mockApiSend.mockResolvedValue(undefined);
+  mockApiSend.mockImplementation(async (method: unknown) =>
+    method === 'PUT' ? { deviceKey: KEY } : undefined,
+  );
   await unregisterPush();
   await registerPush();
-  expect(mockApiSend).toHaveBeenLastCalledWith('PUT', '/me/push-tokens', { token: TOKEN, deviceKey: KEY });
+  expect(mockApiSend).toHaveBeenLastCalledWith('PUT', '/me/push-tokens', {
+    token: TOKEN,
+    deviceKey: KEY,
+  });
   expect(await AsyncStorage.getItem(DEVICE_KEY)).toBe(KEY);
 });
 

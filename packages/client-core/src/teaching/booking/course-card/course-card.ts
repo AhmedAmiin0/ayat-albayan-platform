@@ -1,50 +1,16 @@
-import {
-  courseCardSchema,
-  courseExtendPreviewSchema,
-  courseExtendResultSchema,
-  courseResumePreviewSchema,
-  type CourseCardView,
-  type CourseExtendPreview,
-  type CourseExtendResult,
-  type CourseResumePreview,
-} from '@ab/shared';
+import type { CourseCardView } from '@ab/shared';
 import type { StudentStatus } from '@ab/catalog';
 import { apiErrorCode } from '../../../core/http';
 import { courseActionsKey } from '../course-actions';
 
-// Course card paths, query key and parsers (rule 12) for web and mobile.
-
-const student = (studentId: string): string => `/students/${studentId}`;
-
-/** Whose route reads the card: the admin's file (students.read) or an assistant's screen. */
-export type CardTree = 'admin' | 'sales';
-const CARD_BASE: Record<CardTree, (studentId: string) => string> = {
-  admin: student,
-  sales: (studentId) => `/sales${student(studentId)}`,
-};
-
-/** GET the card of the student's current package. */
-export const courseCardPath = (input: { studentId: string; tree: CardTree }): string =>
-  `${CARD_BASE[input.tree](input.studentId)}/course-card`;
+// Course card query key, paths and parsers (rule 12) for web and mobile; the card's own calls are
+// in course-card-api.
 
 /** The card's query key: under the course actions' (every action's re-read refreshes it). */
 export const courseCardKey = (studentId: string): readonly ['course-actions', string, 'card'] => [
   ...courseActionsKey(studentId),
   'card',
 ];
-
-export const courseExtendPath = (studentId: string): string => `${student(studentId)}/course-extend`;
-
-export function courseExtendPreviewPath(input: {
-  studentId: string;
-  subscriptionId: string;
-}): string {
-  const q = encodeURIComponent(input.subscriptionId);
-  return `${courseExtendPath(input.studentId)}?subscriptionId=${q}`;
-}
-
-export const courseResumePreviewPath = (studentId: string): string =>
-  `${student(studentId)}/course-pause/resume-preview`;
 
 const MINUTE_MS = 60_000;
 
@@ -67,25 +33,6 @@ export async function readLessonAt<L extends { id: string }>(
   const rows = await fetch(lessonAtPath(lesson.startsAt));
   return rows.find((l) => l.id === lesson.id) ?? null;
 }
-
-export const parseCourseCard = (data: unknown): CourseCardView => courseCardSchema.parse(data);
-export const parseExtendPreview = (data: unknown): CourseExtendPreview =>
-  courseExtendPreviewSchema.parse(data);
-
-/** The app's authenticated fetch (each app's apiFetch). */
-type Fetch = (path: string, init?: RequestInit) => Promise<unknown>;
-
-export async function postCourseExtend(
-  fetch: Fetch,
-  input: { studentId: string; subscriptionId: string },
-): Promise<CourseExtendResult> {
-  const headers = { 'Content-Type': 'application/json' };
-  const body = JSON.stringify({ subscriptionId: input.subscriptionId });
-  const answer = await fetch(courseExtendPath(input.studentId), { method: 'POST', headers, body });
-  return courseExtendResultSchema.parse(answer);
-}
-export const parseResumePreview = (data: unknown): CourseResumePreview =>
-  courseResumePreviewSchema.parse(data);
 
 /** Extending is offered only when package lessons are left without a date. */
 export const extendOffered = (card: CourseCardView | undefined): boolean =>

@@ -1,4 +1,4 @@
-import { paymentViewSchema, type PaymentView } from '@ab/money';
+import type { PaymentView } from '@ab/money';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
@@ -64,10 +64,10 @@ describe('«تعديل المبلغ» never for a card payment: its amount is St
     expect(screen.getByText(t.payments.editAmount.fromStripe)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
     await vi.waitFor(() => expect(apiSend).toHaveBeenCalledTimes(1));
-    const [method, path, options] = apiSend.mock.calls[0] ?? [];
+    const [method, path, body] = apiSend.mock.calls[0] ?? [];
     expect([method, path]).toEqual(['PATCH', '/payments/pay-2']);
-    expect(options).toHaveProperty('body');
-    expect(options.body).not.toHaveProperty('amount');
+    expect(body).toHaveProperty('method');
+    expect(body).not.toHaveProperty('amount');
   });
 
   it('a bank payment edit still sends its amount', async () => {
@@ -78,10 +78,11 @@ describe('«تعديل المبلغ» never for a card payment: its amount is St
     );
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('PATCH', '/payments/pay-1', {
-        body: expect.objectContaining({ amount: 145 }),
-        schema: paymentViewSchema,
-      }),
+      expect(apiSend).toHaveBeenCalledWith(
+        'PATCH',
+        '/payments/pay-1',
+        expect.objectContaining({ amount: 145 }),
+      ),
     );
   });
 });

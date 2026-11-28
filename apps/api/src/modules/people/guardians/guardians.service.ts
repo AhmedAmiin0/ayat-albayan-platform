@@ -1,10 +1,10 @@
 import type { Tables } from '@ab/db';
-import type { GuardianCreate, GuardianUpdate } from '@ab/shared';
+import type { GuardianCreate, GuardianUpdate, PeopleListQuery } from '@ab/shared';
 import { searchDigits } from '@ab/core';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { guardianSearchFilter, toGuardianInsert, toGuardianPatch } from './guardians.mapper';
-import { peopleErrors, type ListQuery } from './http';
+import { peopleErrors } from './http';
 import type { SortSpec } from '@/common/db/list-sort';
 import { readPage, toPage } from '@/common/db/page';
 import { maybe, one, rows } from '@/common/db/errors';
@@ -26,7 +26,7 @@ const GUARDIAN_ORDER: SortSpec<never> = {
 export class GuardiansService {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async list(q: ListQuery): Promise<Page<Guardian>> {
+  async list(q: PeopleListQuery): Promise<Page<Guardian>> {
     const digits = searchDigits(q.search);
     const ids = digits ? await this.idsByNumber(digits) : null;
     const filter = digits ? null : guardianSearchFilter(q.search);

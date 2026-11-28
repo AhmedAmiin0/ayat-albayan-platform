@@ -1,5 +1,7 @@
+import { PACKAGE_SIZES } from '@ab/catalog';
+import { PACKAGE_IDS } from '@ab/money';
 import { describe, expect, it } from 'vitest';
-import { bookingRequestSchema } from './booking-request';
+import { bookingBodySchema, bookingRequestSchema, packageSizeOf } from './booking-request';
 
 const T = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';
 const S1 = '0b7c6a52-6a7e-4b38-9a3f-1c2d3e4f5a61';
@@ -82,5 +84,37 @@ describe('BookingRequest: lead conversion (R-LEAD-06)', () => {
 
   it('rejects neither shape', () => {
     expect(bookingRequestSchema.safeParse(RULE).success).toBe(false);
+  });
+});
+
+describe('packageSizeOf (docs/08 catalog → package_size)', () => {
+  it('maps every catalog package to its lesson count', () => {
+    const sizes = Object.fromEntries(PACKAGE_IDS.map((pkg) => [pkg, packageSizeOf(pkg)]));
+    expect(sizes).toEqual({
+      starter: '8',
+      standard: '12',
+      premium: '16',
+      bulk: '28',
+      weekly: '4',
+      monthly: '20',
+    });
+    for (const pkg of PACKAGE_IDS) expect(PACKAGE_SIZES).toContain(packageSizeOf(pkg));
+  });
+});
+
+describe('bookingBodySchema (POST /booking, its check and the trial-date routes)', () => {
+  const body = { ...RULE, studentIds: [S1] };
+
+  it('rewrites a catalog id before the booking schema reads it', () => {
+    expect(bookingBodySchema.parse({ ...body, package: 'bulk' }).package).toBe('28');
+  });
+
+  it('passes a package size through untouched', () => {
+    expect(bookingBodySchema.parse({ ...body, package: '12' }).package).toBe('12');
+  });
+
+  it('fails like bookingRequestSchema on an unknown package or a bad body', () => {
+    expect(bookingBodySchema.safeParse({ ...body, package: 'gold' }).success).toBe(false);
+    expect(bookingBodySchema.safeParse(null).success).toBe(false);
   });
 });

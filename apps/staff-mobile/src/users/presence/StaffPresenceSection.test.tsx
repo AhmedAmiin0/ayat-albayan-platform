@@ -1,4 +1,4 @@
-import { STAFF_PRESENCE_PATH } from '@ab/client-core';
+import { presenceRoutes } from '@ab/shared';
 import type { StaffPresenceRow } from '@ab/shared';
 import { act, screen, waitFor, within } from '@testing-library/react-native';
 import { t, pathKey } from '@ab/mobile-kit';
@@ -60,7 +60,7 @@ test('online first, then newest last seen, never seen last; «متصلون ال�
   mockApiFetch.mockResolvedValue({ enabled: true, staff });
   await renderWithQuery(<StaffPresenceSection />);
   expect(await screen.findByText('اسم a', { exact: false })).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith(STAFF_PRESENCE_PATH);
+  expect(mockApiFetch).toHaveBeenCalledWith(presenceRoutes.staff.path);
   await waitFor(() => expect(realtime.isOpen('d')).toBe(true));
   await act(async () => {
     realtime.joinAll();

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Button, FormAlert, t, cn } from '@ab/web-kit';
 import { PhotoPick } from '@/features/people/account';
 import { usePermissions } from '@/features/people/auth';
-import type { StaffPhotoKind } from './api';
+import type { StaffPhotoKind } from './staff-photo.schemas';
 import { RemoveConfirm } from './RemoveConfirm';
 import { useStaffPhoto } from './use-staff-photo';
 
@@ -59,7 +59,12 @@ function PhotoButtons({ kind, id, name, hasPhoto, className }: StaffPhotoControl
             inputRef={picker}
           />
           {hasPhoto && (
-            <Button type="button" variant="danger-quiet" disabled={busy} onClick={() => photo.setConfirming(true)}>
+            <Button
+              type="button"
+              variant="danger-quiet"
+              disabled={busy}
+              onClick={() => photo.setConfirming(true)}
+            >
               {P.remove}
             </Button>
           )}

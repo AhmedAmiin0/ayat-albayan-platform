@@ -16,6 +16,7 @@ import {
   S1,
   SUB,
   SUB_ID,
+  VIEW,
 } from '@/modules/teaching/booking/course-change/course-change.fakes';
 import { CourseLessonRepo } from '@/modules/teaching/booking/course-change/course-change.lessons';
 import { CourseChangeRepo } from '@/modules/teaching/booking/course-change/course-change.repo';
@@ -95,10 +96,7 @@ function reset(m: ReturnType<typeof mocks>): void {
   m.repo.assignTeacher.mockResolvedValue(true);
   m.drafts.status.mockResolvedValue('active');
   m.ruleExtend.extend.mockResolvedValue({ rule_id: 'ra', until: '', inserted: 1, conflicts: [] });
-  m.views.view.mockResolvedValue({
-    student: { id: S1, name: 'سهيلة', code: 'AB-0001', tz: 'Asia/Riyadh' },
-    course: { tz: 'Asia/Riyadh' },
-  });
+  m.views.view.mockResolvedValue(VIEW);
 }
 
 /** `settings`: the academy switches (default: the ownership rule off, any student). */

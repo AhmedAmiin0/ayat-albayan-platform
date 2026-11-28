@@ -1,24 +1,11 @@
-import {
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Inject,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { studentColumnQueryShape, studentListFiltersSchema } from '@ab/shared';
-import { z } from 'zod';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { studentRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { DB, type Db } from '@/common/db/db.module';
-import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
-import { blanksToNull, listQuerySchema } from '@/modules/people/guardians/http';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { MergeService } from './merge.service';
-import { mergeRequestSchema, studentCreateRequestSchema, studentPatchSchema } from './students.dto';
 import {
   countStudentsByStatus,
   getStudentProfile,
@@ -27,23 +14,9 @@ import {
 } from './students.repo';
 import { StudentsService } from './students.service';
 
-const Uuid = new ParseUUIDPipe();
-/**
- * Search + paging + filters (R-STU-01): ?status=trial,active&teacher=<id>|none&program=&package=&weekly=&tz=,
- * column text filters ?code=&name=&guardian= and ?sort=&dir= (R-NFR-08).
- */
-const studentListQuerySchema = listQuerySchema.extend({
-  ...studentListFiltersSchema.shape,
-  ...studentColumnQueryShape,
-});
-const createBody = blanksToNull(studentCreateRequestSchema);
-const patchBody = blanksToNull(studentPatchSchema);
-
 /** Admin-only students CRUD + merge (R-STU-01..05). */
-@ApiTags('students')
 @ApiBearerAuth()
-@Permissions('students.read')
-@Controller('students')
+@Controller()
 export class StudentsController {
   constructor(
     @Inject(DB) private readonly db: Db,
@@ -51,62 +24,56 @@ export class StudentsController {
     private readonly merges: MergeService,
   ) {}
 
-  @Get()
-  list(@ZodQuery(studentListQuerySchema) query: z.output<typeof studentListQuerySchema>) {
+  @Route(routes.list)
+  list(@RouteInput() { query }: RouteInputOf<typeof routes.list>) {
     return listStudents(this.db, query);
   }
 
-  /** Students per status under the same filters (the teacher profile's header counts). */
-  @Get('status-counts')
-  statusCounts(
-    @ZodQuery(studentListFiltersSchema) query: z.output<typeof studentListFiltersSchema>,
-  ) {
+  @Route(routes.statusCounts)
+  statusCounts(@RouteInput() { query }: RouteInputOf<typeof routes.statusCounts>) {
     return countStudentsByStatus(this.db, query);
   }
 
-  @Get('teacher-options')
+  @Route(routes.teacherOptions)
   teacherOptions() {
     return listTeacherOptions(this.db);
   }
 
-  @Get(':id')
-  get(@Param('id', Uuid) id: string) {
-    return getStudentProfile(this.db, id);
+  @Route(routes.get)
+  get(@RouteInput() { params }: RouteInputOf<typeof routes.get>) {
+    return getStudentProfile(this.db, params.id);
   }
 
-  /** 409 `{ message: 'duplicate_student', candidates }` unless `force: true` (R-STU-03). */
-  @Post()
-  @Permissions('students.write')
-  create(@ZodBody(createBody) body: z.output<typeof createBody>, @CurrentUser() user: AuthUser) {
+  @Route(routes.create)
+  create(
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
+    @CurrentUser() user: AuthUser,
+  ) {
     return this.students.create(body, user.id);
   }
 
-  @Patch(':id')
-  @Permissions('students.write')
+  @Route(routes.update)
   update(
-    @Param('id', Uuid) id: string,
-    @ZodBody(patchBody) body: z.output<typeof patchBody>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.update>,
     @CurrentUser() user: AuthUser,
   ) {
-    return this.students.update(id, body, user.id);
+    return this.students.update(params.id, body, user.id);
   }
 
-  @Delete(':id')
+  @Route(routes.remove)
   @HttpCode(204)
-  @Permissions('students.write')
-  remove(@Param('id', Uuid) id: string, @CurrentUser() user: AuthUser) {
-    return this.students.remove(id, user.id);
-  }
-
-  /** Folds `merged_id` into `:id`, which is kept (R-STU-03). */
-  @Post(':id/merge')
-  @Permissions('students.write')
-  merge(
-    @Param('id', Uuid) id: string,
-    @ZodBody(mergeRequestSchema) body: z.output<typeof mergeRequestSchema>,
+  remove(
+    @RouteInput() { params }: RouteInputOf<typeof routes.remove>,
     @CurrentUser() user: AuthUser,
   ) {
-    const { merged_id } = body;
-    return this.merges.merge({ keptId: id, mergedId: merged_id, actorId: user.id });
+    return this.students.remove(params.id, user.id);
+  }
+
+  @Route(routes.merge)
+  merge(
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.merge>,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.merges.merge({ keptId: params.id, mergedId: body.merged_id, actorId: user.id });
   }
 }

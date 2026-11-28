@@ -5,6 +5,7 @@ import { featureRoot } from '@/common/infra/test-root';
 import { InvoicesModule } from './invoices.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { ResponseCheckInterceptor } from '@/common/http/returns';
 import { StorageService } from '@/common/storage/storage.service';
 import { InvoicesRepo, type InvoiceRowOut } from './invoices.repo';
 
@@ -53,6 +54,7 @@ describe('invoice routes (R-PAY-03): admin only', () => {
       .useValue(storage)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
+    app.useGlobalInterceptors(ResponseCheckInterceptor.fromEnv());
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
   });
@@ -113,6 +115,13 @@ describe('invoice routes (R-PAY-03): admin only', () => {
       path: `${RULE}/a.png`,
       download: 'AB-0183_فاتورة.png',
     });
+  });
+
+  it('download: a bad id is the 400 validation envelope, nothing is read (docs/62 §6)', async () => {
+    const res = await call('/invoices/nope/download');
+    expect(res.statusCode).toBe(400);
+    expect(res.json()).toMatchObject({ message: 'validation_failed', issues: [{ path: 'id' }] });
+    expect(queries.get).not.toHaveBeenCalled();
   });
 
   it('download: 404 invoice_not_found', async () => {

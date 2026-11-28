@@ -1,46 +1,14 @@
-import type { PaymentMethod, PayoutStatus } from '@ab/catalog';
+import type { PayoutStatus } from '@ab/catalog';
 import { fromCents, toCents } from '@ab/core';
 import type { AssistantCommissionStatus } from './commission';
-import type { AssistantCommissionKind } from './kind';
+import type { WalletState, WalletTotals } from './my-view.schemas';
 import { monthOf } from './statement';
 
 // A commission is owed until a paid statement holds it; per currency, never summed across them.
 
-/** due: no statement or a draft one; in_statement: an approved one; paid: a paid one; voided: taken back. */
-export type WalletState = 'due' | 'in_statement' | 'paid' | 'voided';
-
 /** The reasons the database writes itself (codes of assistantReasons); an admin's typed text is never shown. */
 export const WALLET_VOID_REASONS = ['payment_voided', 'student_merged'] as const;
 export type WalletVoidReason = (typeof WALLET_VOID_REASONS)[number];
-
-/** One currency of the wallet. */
-export interface WalletTotals {
-  /** Not on a paid statement yet, less unpaid reversals (negative after a paid one is voided). */
-  due: number;
-  /** On paid statements; a reversal paid back lowers it. */
-  paid: number;
-  /** Earned this month, in the assistant's time zone. */
-  this_month: number;
-}
-
-/** GET /sales/me/commissions rows: mine only, newest first. No price, base amount or subscription. */
-export interface MyCommissionRow {
-  id: string;
-  student: { code: string; name: string };
-  kind: AssistantCommissionKind;
-  /** 100 for a first commission, the renewal share it was earned at for a renewal. */
-  share_percent: number;
-  amount: number;
-  currency: string;
-  earned_at: string;
-  /** How the package was paid (the payment that completed it); null without one. */
-  method: PaymentMethod | null;
-  state: WalletState;
-  /** YYYY-MM-01 of the approved or paid statement it sits in; null otherwise. */
-  statement_month: string | null;
-  /** A voided row's system reason; null when an admin voided it by hand. */
-  void_reason: WalletVoidReason | null;
-}
 
 /** A commission's place in the wallet: voided wins; then the statement it sits in, if any. */
 export function walletState(

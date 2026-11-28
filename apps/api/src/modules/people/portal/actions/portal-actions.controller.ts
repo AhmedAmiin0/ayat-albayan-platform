@@ -1,79 +1,70 @@
 import {
-  portalCancelSchema,
-  portalRequestSchema,
-  portalSlotsQuerySchema,
+  portalLessonRoutes as routes,
   type PortalActionResult,
-  type PortalCancel,
-  type PortalRequest,
   type PortalSlots,
-  type PortalSlotsQuery,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller, HttpCode, Inject } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParams, ZodQuery } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { PortalLessonActions } from './portal-actions.service';
 import { PortalSlotsService } from './portal-slots.service';
 
-const ids = z.object({ id: z.uuid(), lessonId: z.uuid() });
-type Ids = z.infer<typeof ids>;
+type Ids = RouteInputOf<typeof routes.confirm>['params'];
 
 const call = (p: Ids, user: AuthUser) => ({ user, studentId: p.id, lessonId: p.lessonId });
 
 /** Lesson actions on the login's own student, scoped like PortalController. */
-@ApiTags('portal')
 @ApiBearerAuth()
-@Permissions('self.portal')
-@Controller('portal/students/:id/lessons/:lessonId')
+@Controller()
 export class PortalLessonActionsController {
   constructor(
     @Inject(PortalLessonActions) private readonly actions: PortalLessonActions,
     @Inject(PortalSlotsService) private readonly slots: PortalSlotsService,
   ) {}
 
-  @Post('confirm')
+  @Route(routes.confirm)
   @HttpCode(200)
-  confirm(@ZodParams(ids) p: Ids, @CurrentUser() user: AuthUser): Promise<PortalActionResult> {
-    return this.actions.confirm(call(p, user));
+  confirm(
+    @RouteInput() { params }: RouteInputOf<typeof routes.confirm>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PortalActionResult> {
+    return this.actions.confirm(call(params, user));
   }
 
-  /** The answer's `counts`: whether the cancelled lesson counts from the package. */
-  @Post('cancel')
+  @Route(routes.cancel)
   @HttpCode(200)
   cancel(
-    @ZodParams(ids) p: Ids,
-    @ZodBody(portalCancelSchema, { orEmpty: true }) body: PortalCancel,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.cancel>,
     @CurrentUser() user: AuthUser,
   ): Promise<PortalActionResult> {
-    return this.actions.cancel(call(p, user), body);
+    return this.actions.cancel(call(params, user), body);
   }
 
-  /** 409 proposal_pending (one waiting request per lesson), 400 date_in_past. */
-  @Post('request')
+  @Route(routes.request)
   @HttpCode(200)
   request(
-    @ZodParams(ids) p: Ids,
-    @ZodBody(portalRequestSchema) body: PortalRequest,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.request>,
     @CurrentUser() user: AuthUser,
   ): Promise<PortalActionResult> {
-    return this.actions.request(call(p, user), body);
+    return this.actions.request(call(params, user), body);
   }
 
-  /** 409 no_request when nothing waits. */
-  @Post('withdraw')
+  @Route(routes.withdraw)
   @HttpCode(200)
-  withdraw(@ZodParams(ids) p: Ids, @CurrentUser() user: AuthUser): Promise<PortalActionResult> {
-    return this.actions.withdraw(call(p, user));
+  withdraw(
+    @RouteInput() { params }: RouteInputOf<typeof routes.withdraw>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<PortalActionResult> {
+    return this.actions.withdraw(call(params, user));
   }
 
-  @Get('slots')
+  @Route(routes.slots)
   free(
-    @ZodParams(ids) p: Ids,
-    @ZodQuery(portalSlotsQuerySchema) q: PortalSlotsQuery,
+    @RouteInput() { params, query }: RouteInputOf<typeof routes.slots>,
     @CurrentUser() user: AuthUser,
   ): Promise<PortalSlots> {
-    return this.slots.free(call(p, user), q);
+    return this.slots.free(call(params, user), query);
   }
 }

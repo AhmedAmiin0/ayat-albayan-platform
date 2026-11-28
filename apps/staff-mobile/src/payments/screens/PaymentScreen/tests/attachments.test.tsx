@@ -1,4 +1,3 @@
-import { paymentViewSchema } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { t } from '@ab/mobile-kit';
@@ -78,13 +77,10 @@ test('«المرفقات» only for a bank transfer; two photos are both sent', 
   await fireEvent.press(screen.getByRole('button', { name: p.mobile.record }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
   expect(mockUpload).toHaveBeenCalledTimes(2);
-  expect(mockApiSend).toHaveBeenLastCalledWith('POST', '/payments', {
-    body: expect.objectContaining({
+  expect(mockApiSend).toHaveBeenLastCalledWith('POST', '/payments', expect.objectContaining({
       method: 'bank',
       attachments: [`${SUB_ID}/a1.jpg`, `${SUB_ID}/a2.jpg`],
-    }),
-    schema: paymentViewSchema,
-  });
+    }));
 });
 
 test('moving off the bank clears them: nothing uploaded, no attachments sent', async () => {
@@ -101,8 +97,5 @@ test('moving off the bank clears them: nothing uploaded, no attachments sent', a
   await fireEvent.press(screen.getByRole('button', { name: p.mobile.record }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
   expect(mockUpload).not.toHaveBeenCalled();
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', {
-    body: expect.not.objectContaining({ attachments: expect.anything() }),
-    schema: paymentViewSchema,
-  });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', expect.not.objectContaining({ attachments: expect.anything() }));
 });

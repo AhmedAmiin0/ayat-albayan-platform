@@ -1,4 +1,3 @@
-import { paymentViewSchema } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
@@ -43,9 +42,6 @@ test('80 against 81 due: the note, and «سجّل دفعة» still records it', 
   await fireEvent.press(screen.getByRole('radio', { name: t.enums.paymentMethod.cash }));
   await fireEvent.press(screen.getByRole('button', { name: t.payments.mobile.record }));
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', {
-      body: expect.objectContaining({ amount: 80 }),
-      schema: paymentViewSchema,
-    }),
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', expect.objectContaining({ amount: 80 })),
   );
 });

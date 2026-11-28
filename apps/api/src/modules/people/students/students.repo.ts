@@ -1,21 +1,20 @@
-import type { StudentListFilters } from '@ab/shared';
+import type { PeopleListQuery, StudentListFilters } from '@ab/shared';
 import { STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
 import { pageWindow, searchDigits } from '@ab/core';
 import type { TeacherOption } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { Db } from '@/common/db/db.module';
-import { peopleErrors, type ListQuery } from '@/modules/people/guardians/http';
+import { peopleErrors } from '@/modules/people/guardians/http';
 import { maybe, pgError, rows } from '@/common/db/errors';
 import { applySort } from '@/common/db/list-sort';
 import { applyStudentFilters } from './students.filters';
+import type { StudentListItemView, StudentProfileView } from '@ab/shared';
 import {
   studentNameOrCodeFilter,
   studentPhoneOrCodeFilter,
   toListItem,
   toProfile,
-  type StudentListItem,
   type StudentListRow,
-  type StudentProfile,
 } from './students.mapper';
 import {
   applyStudentColumnFilters,
@@ -29,14 +28,20 @@ import type { Page } from '@ab/core';
 const LIST_COLUMNS = `id, code, name, status, program, tz, created_at, package_remaining, has_weekly, guardian:guardians!inner(name, phone_e164), teacher:teachers(display_name_ar)`;
 const PROFILE_COLUMNS = `*, guardian:guardians!inner(id, name, phone_e164, students(id, code, name, status), phones:guardian_phones(phone_e164, is_primary)), teacher:teachers(id, display_name_ar, display_name_en, meeting_link)`;
 
-type StudentListQuery = ListQuery & StudentListFilters & StudentColumnFilters & StudentListSort;
+type StudentListQuery = PeopleListQuery &
+  StudentListFilters &
+  StudentColumnFilters &
+  StudentListSort;
 
 /**
  * Paginated list (v_student_list), searchable by name / code / guardian phone and filtered by
  * status, teacher, program, package, weekly lesson, tz (R-STU-01), the column text filters and
  * an allowlisted sort, newest first by default (R-NFR-08).
  */
-export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<StudentListItem>> {
+export async function listStudents(
+  db: Db,
+  q: StudentListQuery,
+): Promise<Page<StudentListItemView>> {
   const base = db.from('v_student_list').select(LIST_COLUMNS, { count: 'exact' });
   let query = applySort(
     applyStudentColumnFilters(applyStudentFilters(base, q), q),
@@ -55,7 +60,7 @@ export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<St
     db,
     data.map((r) => r.id),
   );
-  const items = data.map((r) => ({ ...toListItem(r), is_test: tests.has(r.id) }));
+  const items = data.map((r) => toListItem({ ...r, is_test: tests.has(r.id) }));
   return { items, total: count ?? 0, page: q.page, pageSize: q.pageSize };
 }
 
@@ -107,7 +112,7 @@ export async function countStudentsByStatus(db: Db, f: StudentListFilters): Prom
 }
 
 /** Profile with guardian (+ siblings) and teacher (R-STU-04, R-STU-05). */
-export async function getStudentProfile(db: Db, id: string): Promise<StudentProfile> {
+export async function getStudentProfile(db: Db, id: string): Promise<StudentProfileView> {
   const data = maybe(
     await db
       .from('students')

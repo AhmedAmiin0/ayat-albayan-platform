@@ -1,7 +1,6 @@
 import type { PublicPaymentLink } from '@ab/shared';
-import { Controller, Get, Header, Ip, Param, Redirect, Req, Res, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { Public } from '@/common/auth/decorators';
+import { Controller, Header, Ip, Param, Redirect, Req, Res, UseGuards } from '@nestjs/common';
+import { Route } from '@/common/http/route';
 import { notFound } from '@/common/http/errors';
 import { stripeLiveAllowed } from '@/config/env/env.stripe';
 import { StripeEnabledGuard } from '@/modules/finance/stripe/gate/stripe-gate';
@@ -11,14 +10,13 @@ import { PaymentLinksRepo } from '@/modules/finance/stripe/links/payment-links.r
 import { CheckoutService } from './checkout.service';
 import { notFoundPageHtml, payPageHtml, resultPageHtml } from './pay-html';
 import { PayLimit } from './pay-limit';
+import { payPageRoutes as routes } from './pay.routes';
 import { appCookie, appPlatform, appReturnUrl, fromApp } from './pay-return';
 import { html, isLinkToken, wantsJson, type HtmlReply, type PayRequest } from './pay-reply';
 
 /** Public pages (docs/30): no personal data beyond the first name; rate-limited; 404 when off. */
-@ApiTags('stripe')
-@Public()
 @UseGuards(StripeEnabledGuard)
-@Controller('pay')
+@Controller()
 export class PayController {
   constructor(
     private readonly links: PaymentLinksRepo,
@@ -26,7 +24,7 @@ export class PayController {
     private readonly limit: PayLimit,
   ) {}
 
-  @Get(':token')
+  @Route(routes.page)
   @Header('Cache-Control', 'no-store')
   async get(
     @Req() req: PayRequest,
@@ -48,7 +46,7 @@ export class PayController {
     return html(res, { status: 200, body: payPageHtml(view, token) });
   }
 
-  @Get(':token/checkout')
+  @Route(routes.checkout)
   @Redirect()
   @Header('Cache-Control', 'no-store')
   async go(@Param('token') token: string, @Ip() ip: string): Promise<{ url: string; statusCode: number }> {
@@ -56,12 +54,12 @@ export class PayController {
     return { url: await this.checkout.target(token), statusCode: 303 };
   }
 
-  @Get(':token/done')
+  @Route(routes.done)
   async done(@Req() req: PayRequest, @Res({ passthrough: true }) res: HtmlReply): Promise<string> {
     return this.result({ kind: 'done', req, res });
   }
 
-  @Get(':token/cancelled')
+  @Route(routes.cancelled)
   async cancelled(
     @Req() req: PayRequest,
     @Res({ passthrough: true }) res: HtmlReply,

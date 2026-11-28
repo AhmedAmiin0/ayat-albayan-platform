@@ -11,9 +11,8 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const INVOICE = {
-  id: 'inv-1',
-  rule_id: 'r-1',
-  invoice_id: null,
+  id: 'e3333333-3333-4333-8333-333333333333',
+  rule_id: 'e1111111-1111-4111-8111-111111111111',
   kind: 'package',
   mime: 'image/png',
   size_bytes: 10,

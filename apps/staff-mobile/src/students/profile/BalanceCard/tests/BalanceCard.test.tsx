@@ -25,7 +25,7 @@ function serve(balance: unknown, threshold = 2) {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/students/s1/balance') return balance;
     if (path === '/settings') return { renewal_alert_remaining: threshold };
-    if (path.startsWith('/payments?')) return page([payment()]);
+    if (path.startsWith('/payments?')) return { ...page([payment()]), totals: [] };
     throw new ApiError(404);
   });
 }

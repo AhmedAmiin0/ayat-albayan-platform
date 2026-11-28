@@ -1,18 +1,17 @@
+import { instantLessonCall } from '@ab/client-core';
 import type {
-  InstantLessonRequest,
-  InstantLessonResult,
   RoomJoinResult,
   RoomOpenResult,
   StudentJoinLinkUrl,
   StudentLinkView,
 } from '@ab/schedule';
-import { apiSend, publicApiFetch, publicApiSend } from '@ab/web-kit';
+import { apiFetch, apiSend, publicApiFetch, publicApiSend } from '@ab/web-kit';
 
 /** Admin or the lesson's teacher. */
 export const openRoom = (lessonId: string) => apiSend<RoomOpenResult>('POST', `/lessons/${lessonId}/room/open`);
 
 /** Admin only: 409 conflict unless override.reason. */
-export const startInstant = (body: InstantLessonRequest) => apiSend<InstantLessonResult>('POST', '/lessons/instant', body);
+export const startInstant = instantLessonCall({ apiFetch, apiSend });
 
 /** Admin only: creates or rotates the link. */
 export const issueStudentLink = (studentId: string) => apiSend<StudentJoinLinkUrl>('POST', `/students/${studentId}/join-link`);

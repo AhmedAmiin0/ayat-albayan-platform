@@ -3,10 +3,10 @@ import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-import { ApiError, apiSend } from '../lib/http/api';
+import { ApiError } from '../lib/http/api';
 import { t } from '../lib/i18n/i18n';
 import { logWarning } from '../lib/log/log';
-import { pushOptedOut, putPushToken, TOKEN_KEY } from './device-key';
+import { pushOptedOut, pushTokens, putPushToken, TOKEN_KEY } from './device-key';
 import { hasLiveSession } from './live-session';
 import { ensurePushPermission } from './permission';
 import { silenceSettled } from './silence-push';
@@ -74,7 +74,7 @@ export async function unregisterPush(): Promise<void> {
   try {
     const token = await AsyncStorage.getItem(TOKEN_KEY);
     if (!token) return;
-    await apiSend('DELETE', `/me/push-tokens/${encodeURIComponent(token)}`);
+    await pushTokens.remove(token);
     await AsyncStorage.removeItem(TOKEN_KEY);
   } catch {
     // Kept locally, so the next sign-out retries.
