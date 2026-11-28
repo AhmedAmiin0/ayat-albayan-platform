@@ -6,7 +6,7 @@ import {
   scheduleRuleCalls,
   type BookingMode,
 } from '@ab/client-core';
-import type { CorrectTo, LessonTimeEdit, TimeEditResult } from '@ab/schedule';
+import type { CorrectTo, LessonTimeEdit } from '@ab/schedule';
 import type {
   CancelRequest,
   Conflict,

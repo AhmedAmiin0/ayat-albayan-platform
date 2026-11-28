@@ -1,1 +1,2 @@
-export { type Conflict } from './conflicts.schemas';
+export * from './conflicts.schemas';
+export type * from './conflicts';

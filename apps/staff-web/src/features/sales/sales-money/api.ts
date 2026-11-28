@@ -1,4 +1,4 @@
-import { salesPaymentRoutes, type SalesCourseView } from '@ab/shared';
+import { salesPaymentRoutes } from '@ab/shared';
 import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
