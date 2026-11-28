@@ -4,9 +4,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { BalanceCard } from '@/features/finance/subscriptions/balance/BalanceCard/BalanceCard';
 import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 // 81 due with 80 received is still unpaid and shows what is left.
 const PART = { ...WEEKLY, price: 81, paid: 80 };
@@ -14,7 +18,7 @@ const LINE = 'مدفوعة جزئيًا: 80 من 81 ر.س · الباقي 1';
 const SHORT = 'المبلغ أقل من المستحق بـ 1 ر.س، ستبقى الباقة غير مدفوعة حتى يكتمل المبلغ';
 
 function renderCard(sub = PART) {
-  apiFetch.mockResolvedValue(balanceOf([sub]));
+  mockApi.onRead(() => balanceOf([sub]));
   render(
     <QueryClientProvider client={new QueryClient()}>
       <BalanceCard student={{ id: 'stu-1', name: 'سهيلة', code: 'AB-0183' }} />
@@ -23,7 +27,7 @@ function renderCard(sub = PART) {
 }
 
 describe('BalanceCard: a part-paid package', () => {
-  beforeEach(() => apiFetch.mockReset());
+  beforeEach(() => mockApi.reset('read'));
 
   it('80 of 81: the status stays unpaid and the line says 1 is left', async () => {
     renderCard();

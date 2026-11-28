@@ -5,33 +5,47 @@ import { scheduleLesson, teacher } from '@/features/sales/sales/academy.fixtures
 import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { salesClockLines } from './SalesLessonDetails';
 import { SalesSchedule } from './SalesSchedule';
+import { mockCall } from '@ab/testing/mock-call';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;
 /** …read in the suite's viewer zone (the academy's, Riyadh). */
 const Z24 = { ...C24, tz: 'Asia/Riyadh' };
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const iso = (min: number) => new Date(Date.now() + min * 60_000).toISOString();
 const LATER = scheduleLesson({
-  id: 'l-later', starts_at: iso(120), ends_at: iso(165), status: 'scheduled', trial: true,
+  id: 'l-later',
+  starts_at: iso(120),
+  ends_at: iso(165),
+  status: 'scheduled',
+  trial: true,
   teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar', tz: 'Africa/Cairo' },
   students: [{ id: 's1', code: 'AB-0183', name: 'سهيلة', tz: 'Asia/Muscat' }],
 });
-const NOW_LESSON = scheduleLesson({ id: 'l-now', starts_at: iso(-5), ends_at: iso(25), students: [{ id: 's3', code: 'AB-0200', name: 'يوسف' }] });
+const NOW_LESSON = scheduleLesson({
+  id: 'l-now',
+  starts_at: iso(-5),
+  ends_at: iso(25),
+  students: [{ id: 's3', code: 'AB-0200', name: 'يوسف' }],
+});
 
 function renderDay() {
-  apiFetch.mockImplementation(async (path: string) => {
-    if (path.startsWith('/sales/schedule')) return { date: '2026-10-12', lessons: [LATER, NOW_LESSON] };
+  mockApi.onRead(async ({ path }) => {
+    if (path.startsWith('/sales/schedule'))
+      return { date: '2026-10-12', lessons: [LATER, NOW_LESSON] };
     if (path === '/sales/teachers') return [teacher()];
     throw new Error(path);
   });
   renderWithQuery(<SalesSchedule search={{ date: '2026-10-12' }} onSearch={vi.fn()} />);
 }
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 const ADMIN_ONLY = [
   t.lessons.cancelTitle,
@@ -63,7 +77,11 @@ describe('sales: a lesson chip opens the read-only admin drawer', () => {
     expect(within(drawer).getByText(t.lessons.joinLink)).toBeTruthy();
     expect(within(drawer).getByText(t.lessons.noLink)).toBeTruthy();
     // Only close: no confirm, cancel, move, edit, invoice or report button.
-    expect(within(drawer).getAllByRole('button').map((b) => b.getAttribute('aria-label') ?? b.textContent)).toEqual([t.common.close]);
+    expect(
+      within(drawer)
+        .getAllByRole('button')
+        .map((b) => b.getAttribute('aria-label') ?? b.textContent),
+    ).toEqual([t.common.close]);
     fireEvent.click(within(drawer).getByRole('button', { name: t.common.close }));
     expect(screen.queryByRole('dialog')).toBeNull();
   });

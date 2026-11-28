@@ -4,18 +4,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { formResponse } from '@/features/reporting/reports/report-fixture';
 import { ReportFormPage } from '@/features/reporting/reports/ReportFormPage/ReportFormPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const pick = (group: string, option: string) =>
-  fireEvent.click(within(screen.getByRole('group', { name: group })).getByRole('radio', { name: option }));
+  fireEvent.click(
+    within(screen.getByRole('group', { name: group })).getByRole('radio', { name: option }),
+  );
 
 describe('ReportFormPage: required marks and a failed submit (web matches the app)', () => {
   beforeEach(() => {
     Element.prototype.scrollIntoView = vi.fn();
-    apiFetch.mockImplementation((path: string) => Promise.resolve(path === '/lessons/l-1/report-form' ? formResponse() : []));
+    mockApi.onRead(({ path }) =>
+      Promise.resolve(path === '/lessons/l-1/report-form' ? formResponse() : []),
+    );
     render(
       <QueryClientProvider
         client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
@@ -25,18 +32,22 @@ describe('ReportFormPage: required marks and a failed submit (web matches the ap
     );
   });
   afterEach(() => {
-    apiFetch.mockReset();
-    apiSend.mockReset();
+    mockApi.reset('read');
+    mockApi.reset('write');
   });
 
   it('a «* مطلوب» legend; attendance and the six grades + overall carry the mark', async () => {
     await screen.findByRole('region', { name: t.reports.identity });
     expect(screen.getByText(t.common.requiredLegend)).toBeTruthy();
     for (const name of [t.reports.attendance, t.reports.overall, t.reports.rubric.tajweed]) {
-      expect(screen.getByRole('group', { name }).querySelector('legend [aria-hidden="true"]')).toBeTruthy();
+      expect(
+        screen.getByRole('group', { name }).querySelector('legend [aria-hidden="true"]'),
+      ).toBeTruthy();
     }
     // The theory line was never required on the form.
-    expect(screen.getByLabelText(t.reports.theory).closest('div')?.querySelector('[aria-hidden="true"]')).toBeNull();
+    expect(
+      screen.getByLabelText(t.reports.theory).closest('div')?.querySelector('[aria-hidden="true"]'),
+    ).toBeNull();
   });
 
   it('a failed submit marks every empty grade row and lands on the first one', async () => {
@@ -46,11 +57,20 @@ describe('ReportFormPage: required marks and a failed submit (web matches the ap
     fireEvent.click(screen.getByRole('button', { name: t.reports.submit }));
     expect(await screen.findByText(t.reports.error.missing_grades)).toBeTruthy();
     const bad = ['memorization', 'revision', 'tajweed', 'engagement', 'commitment'] as const;
-    for (const r of bad) expect(screen.getByRole('group', { name: t.reports.rubric[r] }).getAttribute('aria-invalid')).toBe('true');
-    expect(screen.getByRole('group', { name: t.reports.overall }).getAttribute('aria-invalid')).toBe('true');
-    expect(screen.getByRole('group', { name: t.reports.rubric.recitation }).getAttribute('aria-invalid')).toBeNull();
+    for (const r of bad)
+      expect(
+        screen.getByRole('group', { name: t.reports.rubric[r] }).getAttribute('aria-invalid'),
+      ).toBe('true');
+    expect(
+      screen.getByRole('group', { name: t.reports.overall }).getAttribute('aria-invalid'),
+    ).toBe('true');
+    expect(
+      screen.getByRole('group', { name: t.reports.rubric.recitation }).getAttribute('aria-invalid'),
+    ).toBeNull();
     // First empty row: its first radio has focus.
-    const first = screen.getByRole('group', { name: t.reports.rubric.memorization }).querySelector('input');
+    const first = screen
+      .getByRole('group', { name: t.reports.rubric.memorization })
+      .querySelector('input');
     expect(document.activeElement).toBe(first);
   });
 });

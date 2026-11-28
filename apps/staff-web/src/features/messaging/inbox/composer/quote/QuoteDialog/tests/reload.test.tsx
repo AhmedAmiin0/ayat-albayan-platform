@@ -7,18 +7,22 @@ import {
   press,
   showSheet,
 } from '@/features/messaging/inbox/composer/quote/testing/quote-sheet';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const q = t.inbox.quote;
 const gates = () => [q.send, q.edit, q.copy].map(isOff);
-const answers = () => apiFetch.mockImplementation(async (path: string) => fakePricingApi(path));
-const down = () => apiFetch.mockRejectedValue(new Error('down'));
+const answers = () => mockApi.onRead(async ({ path }) => fakePricingApi(path));
+const down = () => mockApi.onRead(() => Promise.reject(new Error('down')));
 
 beforeEach(answers);
 afterEach(() => {
-  apiFetch.mockReset();
+  mockApi.reset('read');
   cleanup();
 });
 

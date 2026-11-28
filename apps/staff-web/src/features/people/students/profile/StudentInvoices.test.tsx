@@ -4,9 +4,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { InvoiceView } from '@/features/teaching/booking/draft/contract';
 import { t } from '@ab/web-kit';
 import { StudentInvoices } from './StudentInvoices';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const INVOICE: InvoiceView = {
   id: 'e3333333-3333-4333-8333-333333333331',
@@ -29,14 +33,17 @@ function renderInvoices() {
   );
 }
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 describe('StudentInvoices «الفواتير» (R-PAY-03)', () => {
   it('lists the student’s invoices with type and source, each openable', async () => {
-    apiFetch.mockResolvedValue([INVOICE, { ...INVOICE, id: 'e3333333-3333-4333-8333-333333333332', kind: 'package', source: 'upload' }]);
+    mockApi.onRead(() => [
+      INVOICE,
+      { ...INVOICE, id: 'e3333333-3333-4333-8333-333333333332', kind: 'package', source: 'upload' },
+    ]);
     renderInvoices();
     expect(await screen.findByRole('heading', { name: t.booking.invoice.list })).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith('/invoices?studentId=s-1');
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/invoices?studentId=s-1' });
     expect(screen.getByText(t.booking.kind.makeup)).toBeTruthy();
     expect(screen.getByText(t.booking.invoice.sourceWhatsapp)).toBeTruthy();
     expect(screen.getByText(t.booking.invoice.sourceUpload)).toBeTruthy();
@@ -44,16 +51,16 @@ describe('StudentInvoices «الفواتير» (R-PAY-03)', () => {
   });
 
   it('renders nothing without invoices, and nothing when the endpoint refuses (a teacher)', async () => {
-    apiFetch.mockResolvedValue([]);
+    mockApi.onRead(() => []);
     renderInvoices();
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalled());
+    await vi.waitFor(() => expect(mockApi.reads()).not.toHaveLength(0));
     expect(screen.queryByRole('heading')).toBeNull();
   });
 
   it('a refused request shows nothing either', async () => {
-    apiFetch.mockRejectedValue(new Error('403'));
+    mockApi.onRead(() => Promise.reject(new Error('403')));
     renderInvoices();
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalled());
+    await vi.waitFor(() => expect(mockApi.reads()).not.toHaveLength(0));
     expect(screen.queryByRole('heading')).toBeNull();
   });
 });

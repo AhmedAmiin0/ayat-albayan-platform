@@ -4,12 +4,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { BalanceCard } from '@/features/finance/subscriptions/balance/BalanceCard';
 import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
+import { mockCall } from '@ab/testing/mock-call';
 
 // Confirm with an optional reason.
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const STUDENT = { id: 'stu-1', name: 'سهيلة', code: 'AB-0183' };
 // A package made by mistake: nothing paid and no lesson used (WEEKLY has used 2).
@@ -19,7 +22,7 @@ const FRESH = {
 };
 
 function renderCard(view = balanceOf([FRESH])) {
-  apiFetch.mockResolvedValue(view);
+  mockApi.onRead(() => view);
   render(
     <QueryClientProvider client={new QueryClient()}>
       <BalanceCard student={STUDENT} />
@@ -34,28 +37,40 @@ async function openDialog() {
 
 describe('CancelPackageDialog from the BalanceCard', () => {
   beforeEach(() => {
-    apiFetch.mockReset();
-    apiSend.mockReset();
+    mockApi.reset('read');
+    mockApi.reset('write');
   });
 
   it('nothing paid: «إلغاء الباقة» → confirm with the reason → POST /subscriptions/:id/cancel, then «أُلغيت الباقة»', async () => {
     renderCard();
     const dialog = await openDialog();
     expect(dialog.textContent).toContain(t.subscriptions.cancel.body);
-    fireEvent.change(within(dialog).getByLabelText(t.subscriptions.cancel.reason), { target: { value: '  أُنشئت بالخطأ ' } });
-    apiSend.mockResolvedValue({ ...WEEKLY, status: 'cancelled' });
+    fireEvent.change(within(dialog).getByLabelText(t.subscriptions.cancel.reason), {
+      target: { value: '  أُنشئت بالخطأ ' },
+    });
+    mockApi.onWrite(() => ({ ...WEEKLY, status: 'cancelled' }));
     fireEvent.click(within(dialog).getByRole('button', { name: t.subscriptions.cancel.confirm }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `/subscriptions/${WEEKLY.id}/cancel`, { reason: 'أُنشئت بالخطأ' }));
+    await vi.waitFor(() =>
+      expect(mockApi.writes()).toContainEqual({
+        method: 'POST',
+        path: `/subscriptions/${WEEKLY.id}/cancel`,
+        body: { reason: 'أُنشئت بالخطأ' },
+      }),
+    );
     expect(await screen.findByText(t.subscriptions.cancel.done)).toBeTruthy();
   });
 
   it('no reason sends an empty body; a 409 has_lessons reads in Arabic and the dialog stays', async () => {
     renderCard();
     const dialog = await openDialog();
-    apiSend.mockRejectedValue(new ApiError(409, { code: 'has_lessons' }));
+    mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'has_lessons' })));
     fireEvent.click(within(dialog).getByRole('button', { name: t.subscriptions.cancel.confirm }));
     expect(await within(dialog).findByText(t.subscriptions.cancel.errors.has_lessons)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', `/subscriptions/${WEEKLY.id}/cancel`, {});
+    expect(mockApi.writes()).toContainEqual({
+      method: 'POST',
+      path: `/subscriptions/${WEEKLY.id}/cancel`,
+      body: {},
+    });
   });
 
   it('a package with money paid offers no cancel', async () => {
@@ -75,6 +90,6 @@ describe('CancelPackageDialog from the BalanceCard', () => {
     const dialog = await openDialog();
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.back }));
     expect(screen.queryByRole('dialog')).toBeNull();
-    expect(apiSend).not.toHaveBeenCalled();
+    expect(mockApi.writes()).toHaveLength(0);
   });
 });

@@ -3,10 +3,12 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { StaffPanel } from '@/features/people/auth/login/StaffPanel/StaffPanel';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signIn: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useSearch: () => ({}) }));
 
@@ -26,12 +28,13 @@ function renderPanel() {
 
 describe('StaffPanel «نسيت كلمة المرور؟» (docs/30 §4)', () => {
   beforeEach(() => {
-    apiFetch.mockReset();
-    apiSend.mockReset().mockResolvedValue(undefined);
+    mockApi.reset('read');
+    mockApi.reset('write');
+    mockApi.onWrite(() => undefined);
   });
 
   it('codes off: the admin resets it; back returns to the sign-in form', async () => {
-    apiFetch.mockResolvedValue({ available: false, staff: false });
+    mockApi.onRead(() => ({ available: false, staff: false }));
     renderPanel();
     click(F.forgot);
     expect(await screen.findByText(F.staffResetByAdmin)).toBeTruthy();
@@ -41,7 +44,7 @@ describe('StaffPanel «نسيت كلمة المرور؟» (docs/30 §4)', () => 
   });
 
   it('codes on: the reset flow, then «حُفظت كلمة المرور» above the sign-in form', async () => {
-    apiFetch.mockResolvedValue({ available: false, staff: true });
+    mockApi.onRead(() => ({ available: false, staff: true }));
     renderPanel();
     click(F.forgot);
     await screen.findByLabelText(F.identifier);

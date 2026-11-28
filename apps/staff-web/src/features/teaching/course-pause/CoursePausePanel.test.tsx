@@ -6,11 +6,14 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit';
 import { CoursePausePanel } from './CoursePausePanel';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 const perms = vi.hoisted(() => ({ list: ['courses.pause'] }));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),
   usePermissions: () => ({ permissions: perms.list, can: (p: string) => perms.list.includes(p) }),
@@ -19,12 +22,18 @@ vi.mock('@/features/people/auth', async (orig) => ({
 const today = riyadhToday();
 const words = t.coursePause;
 const PAUSE: CoursePauseView = {
-  id: 'p1', from_date: today, until_date: addDays(today, 9), reason: 'سفر الأسرة', created_at: `${today}T08:00:00Z`,
-  created_by_name: 'سارة', resumed_at: null, extended_days: null,
+  id: 'p1',
+  from_date: today,
+  until_date: addDays(today, 9),
+  reason: 'سفر الأسرة',
+  created_at: `${today}T08:00:00Z`,
+  created_by_name: 'سارة',
+  resumed_at: null,
+  extended_days: null,
 };
 
 function show(open: CoursePauseView | null, history: CoursePauseView[] = []) {
-  apiFetch.mockResolvedValue({ open, history });
+  mockApi.onRead(() => ({ open, history }));
   const onDone = vi.fn();
   renderWithClient(<CoursePausePanel studentId="s1" onDone={onDone} />);
   return { onDone };
@@ -32,16 +41,20 @@ function show(open: CoursePauseView | null, history: CoursePauseView[] = []) {
 
 describe('CoursePausePanel: the banner', () => {
   beforeEach(() => {
-    apiFetch.mockReset();
-    apiSend.mockReset();
+    mockApi.reset('read');
+    mockApi.reset('write');
     perms.list = ['courses.pause'];
   });
 
   it('a pause with an end: «حتى …» and the reason', async () => {
     show(PAUSE);
-    expect(await screen.findByText(words.bannerUntil.replace('{date}', dateLabel(PAUSE.until_date ?? '')))).toBeTruthy();
+    expect(
+      await screen.findByText(
+        words.bannerUntil.replace('{date}', dateLabel(PAUSE.until_date ?? '')),
+      ),
+    ).toBeTruthy();
     expect(screen.getByText(words.bannerReason.replace('{reason}', 'سفر الأسرة'))).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith('/students/s1/course-pause');
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/students/s1/course-pause' });
   });
 
   it('open-ended and starting later: «حتى الاستئناف» and «يبدأ الإيقاف في …»', async () => {
@@ -61,7 +74,9 @@ describe('CoursePausePanel: the banner', () => {
   it('without courses.pause the banner has no actions', async () => {
     perms.list = [];
     show(PAUSE);
-    expect(await screen.findByText(words.bannerReason.replace('{reason}', 'سفر الأسرة'))).toBeTruthy();
+    expect(
+      await screen.findByText(words.bannerReason.replace('{reason}', 'سفر الأسرة')),
+    ).toBeTruthy();
     expect(screen.queryByRole('button', { name: words.resume })).toBeNull();
   });
 
@@ -70,10 +85,16 @@ describe('CoursePausePanel: the banner', () => {
     fireEvent.click(await screen.findByRole('button', { name: words.resume }));
     const dialog = within(screen.getByRole('dialog', { name: words.resumeTitle }));
     expect(dialog.getByText(words.resumeBody)).toBeTruthy();
-    apiSend.mockResolvedValue({ pause: PAUSE, cancelled: 0, left: 0, reopened: 3, conflicts: 2 });
+    mockApi.onWrite(() => ({ pause: PAUSE, cancelled: 0, left: 0, reopened: 3, conflicts: 2 }));
     fireEvent.click(dialog.getByRole('button', { name: words.resumeConfirm }));
-    await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(words.resumedConflicts.replace('{n}', '2')));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-pause/resume', {});
+    await vi.waitFor(() =>
+      expect(onDone).toHaveBeenCalledWith(words.resumedConflicts.replace('{n}', '2')),
+    );
+    expect(mockApi.writes()).toContainEqual({
+      method: 'POST',
+      path: '/students/s1/course-pause/resume',
+      body: {},
+    });
   });
 
   it('«تغيير نهاية الإيقاف»: emptied = until resume, PATCH …/until', async () => {
@@ -81,9 +102,13 @@ describe('CoursePausePanel: the banner', () => {
     fireEvent.click(await screen.findByRole('button', { name: words.changeUntil }));
     const dialog = within(screen.getByRole('dialog', { name: words.changeUntilTitle }));
     fireEvent.change(dialog.getByLabelText(words.until), { target: { value: '' } });
-    apiSend.mockResolvedValue({ pause: PAUSE, cancelled: 0, left: 0, reopened: 0, conflicts: 0 });
+    mockApi.onWrite(() => ({ pause: PAUSE, cancelled: 0, left: 0, reopened: 0, conflicts: 0 }));
     fireEvent.click(dialog.getByRole('button', { name: words.save }));
     await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(words.saved));
-    expect(apiSend).toHaveBeenCalledWith('PATCH', '/students/s1/course-pause/until', { untilDate: null });
+    expect(mockApi.writes()).toContainEqual({
+      method: 'PATCH',
+      path: '/students/s1/course-pause/until',
+      body: { untilDate: null },
+    });
   });
 });

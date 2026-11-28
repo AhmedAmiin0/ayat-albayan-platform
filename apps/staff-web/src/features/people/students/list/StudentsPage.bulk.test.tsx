@@ -4,10 +4,14 @@ import { studentListItemFixture } from '@ab/shared/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { StudentsPage } from './StudentsPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 const held = vi.hoisted(() => ({ list: [] as string[] }));
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: held.list, can: (p: string) => held.list.includes(p) }),
 }));
@@ -17,7 +21,7 @@ const row = (id: string, name: string) =>
 
 function renderPage() {
   const page = { items: [row('1', 'سهيلة'), row('2', 'جود')], total: 2, page: 1, pageSize: 20 };
-  apiFetch.mockImplementation((path: string) => Promise.resolve(path.startsWith('/students?') ? page : []));
+  mockApi.onRead(({ path }) => Promise.resolve(path.startsWith('/students?') ? page : []));
   const onOpen = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -29,17 +33,23 @@ function renderPage() {
 
 describe('students list: bulk «تعيين مسؤول مبيعات» (R-ASST-01)', () => {
   beforeEach(() => {
-    apiFetch.mockReset();
+    mockApi.reset('read');
   });
 
   it('an admin who may write assistant pay can tick students; the button counts them and the tick does not open the profile', async () => {
     held.list = ['assistantpay.write'];
     const { onOpen } = renderPage();
-    const tick = await screen.findByRole('checkbox', { name: t.assistants.brought.pick.replace('{name}', 'سهيلة') });
+    const tick = await screen.findByRole('checkbox', {
+      name: t.assistants.brought.pick.replace('{name}', 'سهيلة'),
+    });
     expect(screen.queryByRole('button', { name: /تعيين مسؤول مبيعات/ })).toBeNull();
     fireEvent.click(tick);
-    fireEvent.click(screen.getByRole('checkbox', { name: t.assistants.brought.pick.replace('{name}', 'جود') }));
-    expect(screen.getByRole('button', { name: t.assistants.brought.bulk.replace('{count}', '2') })).toBeTruthy();
+    fireEvent.click(
+      screen.getByRole('checkbox', { name: t.assistants.brought.pick.replace('{name}', 'جود') }),
+    );
+    expect(
+      screen.getByRole('button', { name: t.assistants.brought.bulk.replace('{count}', '2') }),
+    ).toBeTruthy();
     expect(onOpen).not.toHaveBeenCalled();
   });
 

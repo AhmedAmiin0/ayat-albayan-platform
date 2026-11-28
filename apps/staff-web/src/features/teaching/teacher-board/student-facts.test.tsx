@@ -4,19 +4,32 @@ import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { factsLine, useStudentFacts } from './student-facts';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const QURAN = t.enums.program.quran;
 const fact = (id: string, over: object = {}) => ({
-  id, code: `AB-${id}`, name: id, status: 'active', program: 'quran', level: 'جزء عمّ', age: 9,
-  next_lesson_at: null, ...over,
+  id,
+  code: `AB-${id}`,
+  name: id,
+  status: 'active',
+  program: 'quran',
+  level: 'جزء عمّ',
+  age: 9,
+  next_lesson_at: null,
+  ...over,
 });
 
 describe('factsLine (docs/48)', () => {
   it('program · level · age, in that order', () => {
-    expect(factsLine({ program: 'quran', level: 'جزء عمّ', age: 9 })).toBe(`${QURAN} · جزء عمّ · 9 سنوات`);
+    expect(factsLine({ program: 'quran', level: 'جزء عمّ', age: 9 })).toBe(
+      `${QURAN} · جزء عمّ · 9 سنوات`,
+    );
   });
 
   it('drops nulls, never «—»', () => {
@@ -37,17 +50,24 @@ function wrapper({ children }: { children: ReactNode }) {
 
 describe('useStudentFacts', () => {
   it('reads both ?kind lists into one Map by id', async () => {
-    apiFetch.mockImplementation(async (path: string) =>
-      path.endsWith('kind=trial') ? [fact('s-2', { age: null })] : [fact('s-1')]);
+    mockApi.onRead(async ({ path }) =>
+      path.endsWith('kind=trial') ? [fact('s-2', { age: null })] : [fact('s-1')],
+    );
     const { result } = renderHook(() => useStudentFacts(), { wrapper });
     await waitFor(() => expect(result.current.size).toBe(2));
-    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/students?kind=subscribed');
-    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/students?kind=trial');
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/teachers/me/students?kind=subscribed',
+    });
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/teachers/me/students?kind=trial',
+    });
     expect(result.current.get('s-2')).toBe(`${QURAN} · جزء عمّ`);
   });
 
   it('a failing kind only drops its own lines', async () => {
-    apiFetch.mockImplementation(async (path: string) => {
+    mockApi.onRead(async ({ path }) => {
       if (path.endsWith('kind=trial')) throw new Error('boom');
       return [fact('s-1')];
     });

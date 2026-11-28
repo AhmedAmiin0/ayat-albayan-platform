@@ -5,15 +5,18 @@ import { t } from '@ab/web-kit';
 import type { Scope } from '@/features/finance/teacher-earnings/api';
 import { page, PAYMENT } from '@/features/finance/teacher-earnings/fixtures';
 import { PaymentsHistory } from './PaymentsHistory';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const VOIDED = { ...PAYMENT, id: 'p2', voided_at: '2026-10-05T09:00:00Z', void_reason: 'مبلغ خطأ' };
 
 function show(scope: Scope) {
-  apiFetch.mockResolvedValue(page([PAYMENT, VOIDED]));
+  mockApi.onRead(() => page([PAYMENT, VOIDED]));
   render(
     <QueryClientProvider client={new QueryClient()}>
       <PaymentsHistory scope={scope} />
@@ -23,8 +26,8 @@ function show(scope: Scope) {
 
 describe('PaymentsHistory: voiding a teacher payment', () => {
   beforeEach(() => {
-    apiFetch.mockReset();
-    apiSend.mockReset();
+    mockApi.reset('read');
+    mockApi.reset('write');
   });
 
   it('a voided payment stays listed, struck through with its reason, and cannot be voided again', async () => {
@@ -35,13 +38,19 @@ describe('PaymentsHistory: voiding a teacher payment', () => {
 
   it('«إلغاء الدفعة» asks for a reason, then voids', async () => {
     show({ kind: 'admin', teacherId: 't1' });
-    apiSend.mockResolvedValue(VOIDED);
+    mockApi.onWrite(() => VOIDED);
     fireEvent.click(await screen.findByRole('button', { name: t.finance.voidPayment }));
     const dialog = await screen.findByRole('dialog');
-    fireEvent.change(within(dialog).getByLabelText(t.finance.reason), { target: { value: 'حُوّل مرتين' } });
+    fireEvent.change(within(dialog).getByLabelText(t.finance.reason), {
+      target: { value: 'حُوّل مرتين' },
+    });
     fireEvent.click(within(dialog).getByRole('button', { name: t.finance.voidPayment }));
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/teacher-earnings/payments/p1/void', { reason: 'حُوّل مرتين' }),
+      expect(mockApi.writes()).toContainEqual({
+        method: 'POST',
+        path: '/teacher-earnings/payments/p1/void',
+        body: { reason: 'حُوّل مرتين' },
+      }),
     );
   });
 

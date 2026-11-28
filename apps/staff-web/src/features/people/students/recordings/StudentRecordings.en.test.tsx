@@ -4,15 +4,29 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { pageOf, recordingView } from './recordings-fixture';
 import { StudentRecordings } from './StudentRecordings';
+import { mockCall } from '@ab/testing/mock-call';
 
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({
+  ...(await orig<object>()),
+  locale: 'en',
+}));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 describe('StudentRecordings, English', () => {
   it('title, status, facts, toggle and the admin delete read in English', async () => {
-    apiFetch.mockImplementation(async (path: string) => (path.includes('/recordings') ? pageOf([recordingView(), recordingView({ id: 'x', lesson_id: 'l-x', status: 'deleted', url: null })]) : []));
+    mockApi.onRead(async ({ path }) =>
+      path.includes('/recordings')
+        ? pageOf([
+            recordingView(),
+            recordingView({ id: 'x', lesson_id: 'l-x', status: 'deleted', url: null }),
+          ])
+        : [],
+    );
     render(
       <QueryClientProvider client={new QueryClient()}>
         <StudentRecordings studentId="s-1" role="admin" />

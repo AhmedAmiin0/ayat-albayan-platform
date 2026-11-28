@@ -6,11 +6,14 @@ import { BroughtByField } from './students/BroughtByField';
 import { BulkAssign } from './students/BulkAssign';
 import { ASSISTANT, termsRowOf } from './fixtures';
 import type { StudentPick } from './students/use-student-pick';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 const held = vi.hoisted(() => ({ list: [] as string[] }));
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: held.list, can: (p: string) => held.list.includes(p) }),
 }));
@@ -20,12 +23,14 @@ const client = () => new QueryClient();
 let broughtBy: unknown;
 
 beforeEach(() => {
-  apiFetch.mockReset();
-  apiSend.mockReset();
-  apiSend.mockResolvedValue({ changed: 1 });
+  mockApi.reset('read');
+  mockApi.reset('write');
+  mockApi.onWrite(() => ({ changed: 1 }));
   held.list = ['assistantpay.read', 'assistantpay.write'];
   broughtBy = { assistant: null, brought_at: null };
-  apiFetch.mockImplementation(async (path: string) => (path.startsWith('/assistant-pay/brought-by') ? broughtBy : [termsRowOf(ASSISTANT)]));
+  mockApi.onRead(async ({ path }) =>
+    path.startsWith('/assistant-pay/brought-by') ? broughtBy : [termsRowOf(ASSISTANT)],
+  );
 });
 
 describe('BroughtByField on the student profile (R-ASST-01)', () => {
@@ -44,7 +49,11 @@ describe('BroughtByField on the student profile (R-ASST-01)', () => {
     fireEvent.change(await screen.findByLabelText(B.select), { target: { value: 'a1' } });
     fireEvent.click(save);
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/assistant-pay/brought-by', { studentIds: ['s1'], assistantId: 'a1' }),
+      expect(mockApi.writes()).toContainEqual({
+        method: 'POST',
+        path: '/assistant-pay/brought-by',
+        body: { studentIds: ['s1'], assistantId: 'a1' },
+      }),
     );
   });
 
@@ -55,11 +64,21 @@ describe('BroughtByField on the student profile (R-ASST-01)', () => {
     fireEvent.change(screen.getByLabelText(B.broughtAt), { target: { value: '2026-09-20' } });
     fireEvent.click(screen.getByRole('button', { name: B.save }));
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/assistant-pay/brought-by', { studentIds: ['s1'], assistantId: 'a1', broughtAt: '2026-09-20T09:00:00.000Z' }),
+      expect(mockApi.writes()).toContainEqual({
+        method: 'POST',
+        path: '/assistant-pay/brought-by',
+        body: { studentIds: ['s1'], assistantId: 'a1', broughtAt: '2026-09-20T09:00:00.000Z' },
+      }),
     );
     fireEvent.change(screen.getByLabelText(B.select), { target: { value: '' } });
     fireEvent.click(screen.getByRole('button', { name: B.save }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenLastCalledWith('POST', '/assistant-pay/brought-by', { studentIds: ['s1'], assistantId: null }));
+    await vi.waitFor(() =>
+      expect(mockApi.writes().at(-1)).toEqual({
+        method: 'POST',
+        path: '/assistant-pay/brought-by',
+        body: { studentIds: ['s1'], assistantId: null },
+      }),
+    );
   });
 
   it('read-only: shows who brought them, no controls; without assistantpay.read nothing', async () => {
@@ -101,14 +120,18 @@ describe('BulkAssign in the students head', () => {
   it('assigns every ticked student in one request, clears the ticks and reports the count', async () => {
     const p = pick(['s1', 's2']);
     const onDone = vi.fn();
-    apiSend.mockResolvedValue({ changed: 2 });
+    mockApi.onWrite(() => ({ changed: 2 }));
     mount(p, onDone);
     fireEvent.click(screen.getByRole('button', { name: B.bulk.replace('{count}', '2') }));
     const dialog = await screen.findByRole('dialog');
     fireEvent.change(await within(dialog).findByLabelText(B.select), { target: { value: 'a1' } });
     fireEvent.click(within(dialog).getByRole('button', { name: B.bulkApply }));
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/assistant-pay/brought-by', { studentIds: ['s1', 's2'], assistantId: 'a1' }),
+      expect(mockApi.writes()).toContainEqual({
+        method: 'POST',
+        path: '/assistant-pay/brought-by',
+        body: { studentIds: ['s1', 's2'], assistantId: 'a1' },
+      }),
     );
     await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(B.bulkDone.replace('{count}', '2')));
     expect(p.clear).toHaveBeenCalled();

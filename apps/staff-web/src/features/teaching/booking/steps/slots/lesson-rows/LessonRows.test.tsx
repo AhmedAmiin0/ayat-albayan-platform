@@ -5,26 +5,48 @@ import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft
 import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
 import { t } from '@ab/web-kit';
 import { LessonRows } from './LessonRows';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 // Sunday 4 October, Riyadh: 17:00 free, 17:45 busy (another lesson), 18:30 free; 45-min grid.
 const slot = (at: string, busy = false) => ({
   starts_at: at,
   ends_at: at,
-  conflicts: busy ? [{ kind: 'teacher_busy', startsAt: at, endsAt: at, lessonId: 'e7777777-7777-4777-8777-777777777773' }] : [],
+  conflicts: busy
+    ? [
+        {
+          kind: 'teacher_busy',
+          startsAt: at,
+          endsAt: at,
+          lessonId: 'e7777777-7777-4777-8777-777777777773',
+        },
+      ]
+    : [],
 });
 const SLOTS = {
   teacher_tz: 'Asia/Riyadh',
   step_min: 45,
-  slots: [slot('2026-10-04T14:00:00.000Z'), slot('2026-10-04T14:45:00.000Z', true), slot('2026-10-04T15:30:00.000Z')],
+  slots: [
+    slot('2026-10-04T14:00:00.000Z'),
+    slot('2026-10-04T14:45:00.000Z', true),
+    slot('2026-10-04T15:30:00.000Z'),
+  ],
 };
 
 function setup(draft: Partial<BookingDraft> = {}) {
   const onChange = vi.fn();
-  apiFetch.mockResolvedValue(SLOTS);
-  const full = { ...emptyDraft(), tz: 'Asia/Riyadh', teacher: { ...ABRAR, tz: 'Asia/Riyadh' }, ...draft };
+  mockApi.onRead(() => SLOTS);
+  const full = {
+    ...emptyDraft(),
+    tz: 'Asia/Riyadh',
+    teacher: { ...ABRAR, tz: 'Asia/Riyadh' },
+    ...draft,
+  };
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
     <QueryClientProvider client={client}>
@@ -34,7 +56,8 @@ function setup(draft: Partial<BookingDraft> = {}) {
   return onChange;
 }
 
-const row = (n: number) => screen.getByRole('group', { name: t.lessonTimes.row.replace('{n}', String(n)) });
+const row = (n: number) =>
+  screen.getByRole('group', { name: t.lessonTimes.row.replace('{n}', String(n)) });
 function fill(n: number, date: string, time: string) {
   fireEvent.change(within(row(n)).getByLabelText(t.lessonTimes.date), { target: { value: date } });
   fireEvent.change(within(row(n)).getByLabelText(t.lessonTimes.time), { target: { value: time } });
@@ -47,7 +70,7 @@ describe('LessonRows: a date and a time per lesson day (owner 2026-11-07)', () =
   });
   afterEach(() => {
     vi.useRealTimers();
-    apiFetch.mockReset();
+    mockApi.reset('read');
   });
 
   it('native date and time inputs; the date bounded from today; a free time is said free', async () => {
@@ -66,7 +89,11 @@ describe('LessonRows: a date and a time per lesson day (owner 2026-11-07)', () =
     fill(1, '2026-10-04', '17:45');
     expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
     const nearest = screen.getByRole('group', { name: t.lessonTimes.nearest });
-    fireEvent.click(within(nearest).getByRole('button', { name: t.lessonTimes.useTime.replace('{time}', '18:30') }));
+    fireEvent.click(
+      within(nearest).getByRole('button', {
+        name: t.lessonTimes.useTime.replace('{time}', '18:30'),
+      }),
+    );
     expect(onChange).toHaveBeenLastCalledWith({ startsAt: '2026-10-04T15:30:00.000Z', extra: [] });
   });
 
@@ -90,13 +117,18 @@ describe('LessonRows: a date and a time per lesson day (owner 2026-11-07)', () =
     expect(await screen.findByText(t.lessonTimes.sameDay)).toBeTruthy();
     expect(onChange).toHaveBeenLastCalledWith({ startsAt: null, extra: [] });
     fill(2, '2026-10-07', '19:30');
-    expect(onChange).toHaveBeenLastCalledWith({ startsAt: '2026-10-04T14:00:00.000Z', extra: ['2026-10-07T16:30:00.000Z'] });
+    expect(onChange).toHaveBeenLastCalledWith({
+      startsAt: '2026-10-04T14:00:00.000Z',
+      extra: ['2026-10-07T16:30:00.000Z'],
+    });
   });
 
   it('a course: exactly its days a week, from its first day, no add or remove', () => {
     const course = { perWeek: 2, lessonsTotal: 8, package: '8' as const, startsOn: '2026-10-10' };
     setup({ course });
-    expect(screen.getAllByRole('group', { name: new RegExp(t.lessonTimes.row.replace(' {n}', '')) })).toHaveLength(2);
+    expect(
+      screen.getAllByRole('group', { name: new RegExp(t.lessonTimes.row.replace(' {n}', '')) }),
+    ).toHaveLength(2);
     const date = within(row(2)).getByLabelText(t.lessonTimes.date);
     expect(date.getAttribute('min')).toBe('2026-10-10');
     expect(screen.queryByRole('button', { name: t.lessonTimes.addDay })).toBeNull();

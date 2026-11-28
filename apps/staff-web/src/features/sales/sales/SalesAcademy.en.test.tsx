@@ -6,19 +6,31 @@ import { renderWithQuery } from './academy.test-utils';
 import { SalesLive } from './live/SalesLive';
 import { SalesTeachers } from './teachers/SalesTeachers';
 import { SubscriptionHistory } from './subscriptions/SubscriptionHistory';
+import { mockCall } from '@ab/testing/mock-call';
 
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
+vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({
+  ...(await orig<object>()),
+  locale: 'en',
+}));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
+}));
 
 describe('the sales assistant side, English', () => {
   it('teachers, running lessons and a subscription history read in English', async () => {
-    apiFetch.mockImplementation(async (path: string) => {
-      if (path === '/sales/teachers') return [teacher({ name: 'Abrar', students: [pupil({ name: 'Suhaila' })] })];
-      if (path === '/sales/live') return [liveLesson({ teacher_name: 'Abrar', student_names: ['Suhaila'] })];
-      if (path.endsWith('/history')) return { ...history(), student: { id: 's1', code: 'AB-0183', name: 'Suhaila' } };
+    mockApi.onRead(async ({ path }) => {
+      if (path === '/sales/teachers')
+        return [teacher({ name: 'Abrar', students: [pupil({ name: 'Suhaila' })] })];
+      if (path === '/sales/live')
+        return [liveLesson({ teacher_name: 'Abrar', student_names: ['Suhaila'] })];
+      if (path.endsWith('/history'))
+        return { ...history(), student: { id: 's1', code: 'AB-0183', name: 'Suhaila' } };
       return {};
     });
     renderWithQuery(
@@ -39,14 +51,22 @@ describe('the sales assistant side, English', () => {
   });
 
   it('a teacher reads «Subscribed 1 · Trial 0», the drawer splits the students and shows the fixed link', async () => {
-    apiFetch.mockImplementation(async (path: string) => (path === '/sales/teachers' ? [teacher({ name: 'Abrar', students: [pupil({ name: 'Suhaila' })] })] : {}));
+    mockApi.onRead(async ({ path }) =>
+      path === '/sales/teachers'
+        ? [teacher({ name: 'Abrar', students: [pupil({ name: 'Suhaila' })] })]
+        : {},
+    );
     renderWithQuery(<SalesTeachers />);
     fireEvent.click(await screen.findByRole('button', { name: /Subscribed 1 · Trial 0/ }));
     const drawer = screen.getByRole('dialog');
-    expect(within(drawer).getByRole('group', { name: 'Student type' }).textContent).toBe('Subscribed1Trial0All1');
+    expect(within(drawer).getByRole('group', { name: 'Student type' }).textContent).toBe(
+      'Subscribed1Trial0All1',
+    );
     expect(within(drawer).getByText('Suhaila')).toBeTruthy();
     expect(within(drawer).getByText('Fixed lesson link')).toBeTruthy();
-    expect(within(drawer).getByRole('link', { name: 'Open link' }).getAttribute('href')).toBe('https://meet.example.org/abrar-fixed');
+    expect(within(drawer).getByRole('link', { name: 'Open link' }).getAttribute('href')).toBe(
+      'https://meet.example.org/abrar-fixed',
+    );
     expect(within(drawer).getByRole('button', { name: 'Copy link' })).toBeTruthy();
   });
 });

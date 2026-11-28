@@ -15,7 +15,7 @@ import {
   type StatementFilter,
 } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit';
+import { apiFetch, apiSend, call } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 import { assistantPayKeys } from '@/features/people/keys';
 
@@ -74,34 +74,45 @@ export const voidCommission = (input: { id: string; reason: string }) =>
 export const statementsQuery = (f: StatementFilter) =>
   queryOptions({
     queryKey: assistantPayKeys.statements(f),
-    queryFn: () => apiFetch<AssistantStatementView[]>(`/assistant-pay/statements${qs({ ...f })}`),
+    queryFn: () =>
+      call<AssistantStatementView[]>({ path: `/assistant-pay/statements${qs({ ...f })}` }),
   });
 
 /** Builds or rebuilds the DRAFT of one assistant's month (idempotent; a frozen one answers invalid_transition). */
 export const generateStatement = (input: { assistantId: string; month: string }) =>
-  apiSend<AssistantStatementView>('POST', '/assistant-pay/statements', input);
+  call<AssistantStatementView>({ method: 'POST', path: '/assistant-pay/statements', body: input });
 
 const act = (id: string, verb: string, body?: unknown) =>
-  apiSend<AssistantStatementView>('POST', `/assistant-pay/statements/${id}/${verb}`, body);
+  call<AssistantStatementView>({
+    method: 'POST',
+    path: `/assistant-pay/statements/${id}/${verb}`,
+    body,
+  });
 
 export const approveStatement = (id: string) => act(id, 'approve');
 export const reopenStatement = (id: string) => act(id, 'reopen');
-export const unpayStatement = (input: { id: string; reason: string }) => act(input.id, 'unpay', { reason: input.reason });
+export const unpayStatement = (input: { id: string; reason: string }) =>
+  act(input.id, 'unpay', { reason: input.reason });
 
-export type PayStatementBody = {
+export interface PayStatementBody {
   paidAt: string;
   method: PaymentMethod;
   note: string | null;
   receiptPath: string | null;
-};
+}
 export const payStatement = (input: { id: string; body: PayStatementBody }) =>
   act(input.id, 'pay', input.body);
 
-export const statementReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/assistant-pay/statements/${id}/receipt`);
+export const statementReceiptUrl = (id: string) =>
+  call<SignedDownload>({ path: `/assistant-pay/statements/${id}/receipt` });
 
 /** Straight to the private bucket through a one-off signed URL; the path is then sent with the pay. */
 export async function uploadStatementReceipt(file: File, assistantId: string): Promise<string> {
-  const signed = await apiSend<SignedUpload>('POST', '/assistant-pay/receipt-upload-url', { assistantId, mime: file.type, size: file.size });
+  const signed = await call<SignedUpload>({
+    method: 'POST',
+    path: '/assistant-pay/receipt-upload-url',
+    body: { assistantId, mime: file.type, size: file.size },
+  });
   const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
   return signed.path;

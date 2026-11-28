@@ -4,13 +4,19 @@ import { describe, expect, it, vi } from 'vitest';
 import { meetingRow } from '@/features/teaching/meetings/meeting-fixture';
 import { t } from '@ab/web-kit';
 import { SalesMeetings } from './SalesMeetings';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 describe('SalesMeetings /sales/meetings «الاجتماعات»', () => {
   it('lists my meetings and creates an instant or a scheduled one', async () => {
-    apiFetch.mockImplementation(async (path: string) => (path === '/meetings' ? [meetingRow({ title: 'لقاء المبيعات', can_manage: false })] : []));
+    mockApi.onRead(async ({ path }) =>
+      path === '/meetings' ? [meetingRow({ title: 'لقاء المبيعات', can_manage: false })] : [],
+    );
     render(
       <QueryClientProvider client={new QueryClient()}>
         <SalesMeetings />
@@ -18,7 +24,9 @@ describe('SalesMeetings /sales/meetings «الاجتماعات»', () => {
     );
     expect(screen.getByText(t.meetingInvites.list.title)).toBeTruthy();
     expect(await screen.findByText('لقاء المبيعات')).toBeTruthy();
-    expect(screen.getByRole('link', { name: t.meetingInvites.list.enter }).getAttribute('href')).toBe('/meeting/m-1');
+    expect(
+      screen.getByRole('link', { name: t.meetingInvites.list.enter }).getAttribute('href'),
+    ).toBe('/meeting/m-1');
     fireEvent.click(screen.getByRole('button', { name: t.meetingInvites.scheduledItem }));
     expect(screen.getByRole('dialog', { name: t.meetingInvites.scheduleTitle })).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));

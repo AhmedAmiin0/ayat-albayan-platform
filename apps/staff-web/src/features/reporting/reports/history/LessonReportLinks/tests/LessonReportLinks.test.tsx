@@ -6,9 +6,13 @@ import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixt
 import { t } from '@ab/web-kit';
 import { LessonReportLinks } from '@/features/reporting/reports/history/LessonReportLinks/LessonReportLinks';
 import { PendingReports } from '@/features/reporting/reports/history/PendingReports';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const STARTED = '2026-10-03T13:00:00.000Z';
 const AYA = { ...SUHAILA, id: 's-2', name: 'آية', code: 'AB-0184' };
@@ -23,24 +27,48 @@ describe('LessonReportLinks (R-REP-01: «تقرير الحلقة» from the less
   it('teacher, one student: one control labelled by the stage', () => {
     render(<LessonReportLinks lesson={lesson({ id: 'l-1', starts_at: STARTED })} role="teacher" />);
     const links = screen.getAllByRole('link');
-    expect(links.map((a) => [a.textContent, a.getAttribute('href')])).toEqual([[t.reports.open, '/teacher/report/l-1']]);
+    expect(links.map((a) => [a.textContent, a.getAttribute('href')])).toEqual([
+      [t.reports.open, '/teacher/report/l-1'],
+    ]);
   });
 
   it('admin: one per student of a group lesson', () => {
-    render(<LessonReportLinks lesson={lesson({ id: 'l-1', starts_at: STARTED, students: [SUHAILA, AYA] })} role="admin" />);
+    render(
+      <LessonReportLinks
+        lesson={lesson({ id: 'l-1', starts_at: STARTED, students: [SUHAILA, AYA] })}
+        role="admin"
+      />,
+    );
     expect(screen.getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual([
       `/admin/students/${SUHAILA.id}/reports/l-1`,
       '/admin/students/s-2/reports/l-1',
     ]);
-    expect(screen.getByRole('link', { name: t.reports.entryFor.replace('{name}', 'آية') })).toBeTruthy();
+    expect(
+      screen.getByRole('link', { name: t.reports.entryFor.replace('{name}', 'آية') }),
+    ).toBeTruthy();
   });
 
   it('nothing before the start or for a cancelled lesson', () => {
-    render(<LessonReportLinks lesson={lesson({ starts_at: STARTED, status: 'cancelled_by_admin' })} role="teacher" />);
+    render(
+      <LessonReportLinks
+        lesson={lesson({ starts_at: STARTED, status: 'cancelled_by_admin' })}
+        role="teacher"
+      />,
+    );
     expect(screen.queryByRole('link')).toBeNull();
-    const { container } = render(<LessonReportLinks lesson={lesson({ starts_at: '2026-10-03T15:00:00.000Z' })} role="teacher" />);
+    const { container } = render(
+      <LessonReportLinks
+        lesson={lesson({ starts_at: '2026-10-03T15:00:00.000Z' })}
+        role="teacher"
+      />,
+    );
     expect(container.textContent).toBe('');
-    render(<LessonReportLinks lesson={lesson({ starts_at: STARTED, status: 'cancelled_by_admin' })} role="admin" />);
+    render(
+      <LessonReportLinks
+        lesson={lesson({ starts_at: STARTED, status: 'cancelled_by_admin' })}
+        role="admin"
+      />,
+    );
     expect(screen.queryByRole('link')).toBeNull();
   });
 });
@@ -56,7 +84,14 @@ describe('PendingReports (R11, R-TCH-03)', () => {
   });
 
   it('lists the missing reports with a count; a draft reads «أكمل التقرير»', async () => {
-    apiFetch.mockResolvedValue([row({}), row({ lesson_id: 'l-2', report_id: 'r-2', student: { id: 's-2', code: 'AB-0184', name: 'آية' } })]);
+    mockApi.onRead(() => [
+      row({}),
+      row({
+        lesson_id: 'l-2',
+        report_id: 'r-2',
+        student: { id: 's-2', code: 'AB-0184', name: 'آية' },
+      }),
+    ]);
     render(
       <QueryClientProvider
         client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
@@ -65,14 +100,18 @@ describe('PendingReports (R11, R-TCH-03)', () => {
       </QueryClientProvider>,
     );
     expect(await screen.findByText('تقريران معلّقان')).toBeTruthy();
-    expect(screen.getByRole('link', { name: t.reports.open }).getAttribute('href')).toBe('/teacher/report/l-1');
-    expect(screen.getByRole('link', { name: t.reports.resume }).getAttribute('href')).toBe('/teacher/report/l-2');
-    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/pending-reports');
+    expect(screen.getByRole('link', { name: t.reports.open }).getAttribute('href')).toBe(
+      '/teacher/report/l-1',
+    );
+    expect(screen.getByRole('link', { name: t.reports.resume }).getAttribute('href')).toBe(
+      '/teacher/report/l-2',
+    );
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/teachers/me/pending-reports' });
   });
 
   it('in a student file: only that student’s (docs/47)', async () => {
     const aya = { id: 's-2', code: 'AB-0184', name: 'آية' };
-    apiFetch.mockResolvedValue([row({}), row({ lesson_id: 'l-2', student: aya })]);
+    mockApi.onRead(() => [row({}), row({ lesson_id: 'l-2', student: aya })]);
     const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(
       <QueryClientProvider client={client}>

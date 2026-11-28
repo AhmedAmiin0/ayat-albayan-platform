@@ -5,10 +5,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { setTeacherPages } from '@/lib/settings/teacher-pages-testing';
 import { TeacherPageGate } from './TeacherPageGate';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 const navigateTo = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@tanstack/react-router', () => ({
   Navigate: ({ to }: { to: string }) => {
     navigateTo(to);
@@ -30,12 +34,12 @@ const freshClient = () => new QueryClient({ defaultOptions: { queries: { retry: 
 
 describe('TeacherPageGate (settings «صفحات المعلم»)', () => {
   beforeEach(() => {
-    apiFetch.mockReset();
+    mockApi.reset('read');
     navigateTo.mockReset();
   });
 
   it('waits for GET /settings/public: no page and no redirect while it loads', () => {
-    apiFetch.mockReturnValue(new Promise(() => undefined));
+    mockApi.onRead(() => new Promise(() => undefined));
     renderGate(freshClient());
     expect(screen.queryByText('the page')).toBeNull();
     expect(screen.getByRole('status')).toBeTruthy();
@@ -43,7 +47,7 @@ describe('TeacherPageGate (settings «صفحات المعلم»)', () => {
   });
 
   it('a fetched answer with the switch off goes back to /teacher', async () => {
-    apiFetch.mockResolvedValue({ ...PUBLIC_SETTING_DEFAULTS, custom: {} });
+    mockApi.onRead(() => ({ ...PUBLIC_SETTING_DEFAULTS, custom: {} }));
     renderGate(freshClient());
     await vi.waitFor(() => expect(navigateTo).toHaveBeenCalledWith('/teacher'));
     expect(screen.queryByText('the page')).toBeNull();
@@ -51,14 +55,14 @@ describe('TeacherPageGate (settings «صفحات المعلم»)', () => {
 
   it('a fetched answer with the switch on (a hard refresh) shows the page', async () => {
     const on = { ...PUBLIC_SETTING_DEFAULTS, custom: {}, teacher_earnings_enabled: true };
-    apiFetch.mockResolvedValue(on);
+    mockApi.onRead(() => on);
     renderGate(freshClient());
     expect(await screen.findByText('the page')).toBeTruthy();
     expect(navigateTo).not.toHaveBeenCalled();
   });
 
   it('settings that cannot be read: an error, never a silent redirect', async () => {
-    apiFetch.mockRejectedValue(new Error('offline'));
+    mockApi.onRead(() => Promise.reject(new Error('offline')));
     renderGate(freshClient());
     expect(await screen.findByText(t.common.error)).toBeTruthy();
     expect(navigateTo).not.toHaveBeenCalled();

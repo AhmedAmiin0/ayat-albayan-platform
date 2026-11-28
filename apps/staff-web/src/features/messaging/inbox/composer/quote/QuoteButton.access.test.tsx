@@ -6,21 +6,32 @@ import { ComposerPhone } from '@/features/messaging/inbox/composer/components/Co
 import { template, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({
   supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } },
 }));
 
 const OPEN = { session_open: true, last_inbound_at: new Date().toISOString() };
 const CLOSED = { session_open: false, last_inbound_at: null };
-const props = { context: {}, gateNote: null, mode: 'text' as const, onMode: vi.fn(), teacher: false };
+const props = {
+  context: {},
+  gateNote: null,
+  mode: 'text' as const,
+  onMode: vi.fn(),
+  teacher: false,
+};
 
 async function show(input: { mode: InboxMode; open?: boolean; permissions?: string[] }) {
   const permissions = input.permissions ?? ['messages.read', 'inbox.send', 'pricing.read'];
-  apiFetch.mockImplementation(async (path: string) => {
-    if (path.startsWith('/auth/me')) return { id: 'u1', email: null, role: input.mode, permissions };
+  mockApi.onRead(async ({ path }) => {
+    if (path.startsWith('/auth/me'))
+      return { id: 'u1', email: null, role: input.mode, permissions };
     if (path.startsWith('/pricing/')) return fakePricingApi(path);
     return path.startsWith('/messaging/templates') ? [template()] : [];
   });
@@ -34,7 +45,7 @@ async function show(input: { mode: InboxMode; open?: boolean; permissions?: stri
 const button = () => screen.queryByRole('button', { name: t.inbox.quote.open });
 
 afterEach(() => {
-  apiFetch.mockReset();
+  mockApi.reset('read');
   cleanup();
 });
 

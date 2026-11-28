@@ -1,16 +1,26 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { domainError, invalid, PROFILE, renderWithClient, section } from '@/features/people/account/account-test-kit';
+import {
+  domainError,
+  invalid,
+  PROFILE,
+  renderWithClient,
+  section,
+} from '@/features/people/account/account-test-kit';
 import { AccountPage } from '@/features/people/account/AccountPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 beforeEach(() => {
-  apiFetch.mockReset().mockResolvedValue(PROFILE);
-  apiSend.mockReset();
+  mockApi.reset('read');
+  mockApi.onRead(() => PROFILE);
+  mockApi.reset('write');
 });
 
 const P = t.account.phone;
@@ -31,15 +41,19 @@ describe('PhoneSection (R-ACC-02)', () => {
   it('the number is LTR; a saved change is sent as E.164 with the current password', async () => {
     const { s, type } = await phoneSection();
     expect(s.getByLabelText(P.label).getAttribute('dir')).toBe('ltr');
-    apiSend.mockResolvedValue({ ...PROFILE, phone_e164: '+966501234567' });
+    mockApi.onWrite(() => ({ ...PROFILE, phone_e164: '+966501234567' }));
     type('0501234567', 'secret-1');
     expect(await screen.findByText(t.account.toast.phone)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('PATCH', '/me/profile', { phone_e164: '+966501234567', current_password: 'secret-1' });
+    expect(mockApi.writes()).toContainEqual({
+      method: 'PATCH',
+      path: '/me/profile',
+      body: { phone_e164: '+966501234567', current_password: 'secret-1' },
+    });
   });
 
   it('409 phone_taken shows at the number', async () => {
     const { s, type } = await phoneSection();
-    apiSend.mockRejectedValue(domainError(409, 'phone_taken'));
+    mockApi.onWrite(() => Promise.reject(domainError(409, 'phone_taken')));
     type('+966501234567', 'secret-1');
     expect(await s.findByText(E.phone_taken)).toBeTruthy();
     expect(s.getByLabelText(P.label).getAttribute('aria-invalid')).toBe('true');
@@ -47,7 +61,7 @@ describe('PhoneSection (R-ACC-02)', () => {
 
   it('400 wrong_password shows at the current password', async () => {
     const { s, type } = await phoneSection();
-    apiSend.mockRejectedValue(domainError(400, 'wrong_password'));
+    mockApi.onWrite(() => Promise.reject(domainError(400, 'wrong_password')));
     type('+966501234567', 'nope');
     expect(await s.findByText(E.wrong_password)).toBeTruthy();
     expect(s.getByLabelText(t.account.currentPassword).getAttribute('aria-invalid')).toBe('true');
@@ -55,7 +69,7 @@ describe('PhoneSection (R-ACC-02)', () => {
 
   it('a phone reason from validation_failed reads as invalid_phone', async () => {
     const { s, type } = await phoneSection();
-    apiSend.mockRejectedValue(invalid('phone_e164', 'invalid_length'));
+    mockApi.onWrite(() => Promise.reject(invalid('phone_e164', 'invalid_length')));
     type('+966501234567', 'secret-1');
     expect(await s.findByText(E.invalid_phone)).toBeTruthy();
   });
@@ -65,15 +79,19 @@ describe('PhoneSection (R-ACC-02)', () => {
     type('abc', '');
     expect(s.getByText(E.invalid_phone)).toBeTruthy();
     expect(s.getByText(E.password_required)).toBeTruthy();
-    expect(apiSend).not.toHaveBeenCalled();
+    expect(mockApi.writes()).toHaveLength(0);
   });
 
   it('«إزالة الرقم» empties the field; saving sends null', async () => {
     const { s, type } = await phoneSection();
     fireEvent.click(s.getByRole('button', { name: P.remove }));
-    apiSend.mockResolvedValue({ ...PROFILE, phone_e164: null });
+    mockApi.onWrite(() => ({ ...PROFILE, phone_e164: null }));
     type('', 'secret-1');
     expect(await screen.findByText(t.account.toast.phone)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('PATCH', '/me/profile', { phone_e164: null, current_password: 'secret-1' });
+    expect(mockApi.writes()).toContainEqual({
+      method: 'PATCH',
+      path: '/me/profile',
+      body: { phone_e164: null, current_password: 'secret-1' },
+    });
   });
 });

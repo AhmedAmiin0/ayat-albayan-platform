@@ -5,14 +5,10 @@ import {
   type PaymentUpdateBody,
 } from '@ab/client-core';
 import type { PaymentKind } from '@ab/catalog';
-import {
-  PAYMENT_SORT_KEYS,
-  paymentAttachmentListSchema,
-  receiptUploadSchema,
-} from '@ab/money';
+import { PAYMENT_SORT_KEYS, paymentAttachmentListSchema, receiptUploadSchema } from '@ab/money';
 import { RIYADH_TZ, riyadhToday, wallInstant } from '@ab/time';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit';
+import { apiFetch, apiSend, call } from '@ab/web-kit';
 import { z } from 'zod';
 import type { SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
@@ -26,13 +22,13 @@ const calls = paymentCalls({ apiFetch, apiSend });
 const paymentSortKey = z.enum(PAYMENT_SORT_KEYS);
 
 /** The payments page filters (all optional); from/to are Riyadh days, inclusive. */
-export type PaymentFilters = {
+export interface PaymentFilters {
   studentId?: string;
   from?: string;
   to?: string;
   method?: PaymentListQuery['method'];
   kind?: PaymentKind;
-};
+}
 
 /** Only the set filters, as query parameters (shared by the list and its CSV). */
 export function filterParams(f: PaymentFilters): Record<string, string> {
@@ -76,7 +72,7 @@ export const receiptUrl = calls.receipt;
 export const attachmentsQuery = (path: string) =>
   queryOptions({
     queryKey: financeFileKeys.attachments(path),
-    queryFn: () => apiFetch(path, { schema: paymentAttachmentListSchema }),
+    queryFn: () => call({ path, schema: paymentAttachmentListSchema }),
     staleTime: 30 * 60_000,
   });
 

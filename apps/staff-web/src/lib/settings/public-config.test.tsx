@@ -5,11 +5,15 @@ import { EnterButton } from '@/features/teaching/classroom/join/JoinButton';
 import { receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { t, publicConfigQuery, usePublicConfig } from '@ab/web-kit';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 function Probe() {
   const c = usePublicConfig();
@@ -24,19 +28,28 @@ describe('usePublicConfig (GET /settings/public)', () => {
 
   it('shows the registry defaults until the API answers, then the academy values', async () => {
     let answer: (v: unknown) => void = () => undefined;
-    apiFetch.mockImplementation(() => new Promise((r) => (answer = r)));
+    mockApi.onRead(() => new Promise((r) => (answer = r)));
     renderWithClient(<Probe />);
-    expect(screen.getByTestId('probe').textContent).toBe(`${PUBLIC_SETTING_DEFAULTS.join_opens_before_min}|10`);
+    expect(screen.getByTestId('probe').textContent).toBe(
+      `${PUBLIC_SETTING_DEFAULTS.join_opens_before_min}|10`,
+    );
     answer({ ...PUBLIC_SETTING_DEFAULTS, join_opens_before_min: 60, upload_max_mb: 2 });
     await waitFor(() => expect(screen.getByTestId('probe').textContent).toBe('60|2'));
-    expect(apiFetch).toHaveBeenCalledWith('/settings/public');
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/settings/public' });
   });
 
   it('a wider join window from the settings enables «ادخل الحلقة» earlier', async () => {
-    const lesson = { id: 'l1', starts_at: new Date(Date.now() + 40 * 60_000).toISOString(), ends_at: new Date(Date.now() + 85 * 60_000).toISOString() };
-    apiFetch.mockResolvedValue({ ...PUBLIC_SETTING_DEFAULTS, join_opens_before_min: 60 });
+    const lesson = {
+      id: 'l1',
+      starts_at: new Date(Date.now() + 40 * 60_000).toISOString(),
+      ends_at: new Date(Date.now() + 85 * 60_000).toISOString(),
+    };
+    mockApi.onRead(() => ({ ...PUBLIC_SETTING_DEFAULTS, join_opens_before_min: 60 }));
     renderWithClient(<EnterButton lesson={lesson} />);
-    expect(screen.getByRole('button', { name: t.classroom.enter })).toHaveProperty('disabled', true);
+    expect(screen.getByRole('button', { name: t.classroom.enter })).toHaveProperty(
+      'disabled',
+      true,
+    );
     expect(await screen.findByRole('link', { name: t.classroom.enter })).toBeTruthy();
   });
 

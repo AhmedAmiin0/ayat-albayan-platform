@@ -3,18 +3,23 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { MoneyKpis } from './MoneyKpis';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  apiFetch,
+  call: (request: unknown) => mockApi.call(request),
 }));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));
 
 const OWED = { rows: [], totals: [], total: 300, currency: 'SAR', fx_missing: [] };
-const DUES = { currency: 'EGP', rows: [], totals: { earned: 0, paid: 0, owed: 120, teachers_owed: 1 } };
+const DUES = {
+  currency: 'EGP',
+  rows: [],
+  totals: { earned: 0, paid: 0, owed: 120, teachers_owed: 1 },
+};
 
 function show() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -25,11 +30,11 @@ function show() {
   );
 }
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 describe('MoneyKpis', () => {
   it('shows busy tiles while loading, not «—»', () => {
-    apiFetch.mockReturnValue(new Promise(() => undefined));
+    mockApi.onRead(() => new Promise(() => undefined));
     show();
     expect(screen.queryByText('—')).toBeNull();
     expect(document.querySelectorAll('[aria-busy=true]')).toHaveLength(2);
@@ -37,7 +42,7 @@ describe('MoneyKpis', () => {
 
   it('shows a failed tile with a retry that reads again', async () => {
     let fail = true;
-    apiFetch.mockImplementation(async (path: string) => {
+    mockApi.onRead(async ({ path }) => {
       if (path === '/receivables' && fail) throw new Error('down');
       return path === '/receivables' ? OWED : DUES;
     });

@@ -4,11 +4,15 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 import { SubscriptionsPage } from '@/features/finance/subscriptions/SubscriptionsPage';
+import { mockCall } from '@ab/testing/mock-call';
 
 // A cancelled package is history only, with no money action.
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSize: 20 });
 const FRESH = {
@@ -24,7 +28,9 @@ const CANCELLED = {
 
 describe('subscription rows: cancel offered, cancelled shown', () => {
   it('an unpaid row offers «إلغاء الباقة»; a cancelled row shows «ملغاة» and no action at all', async () => {
-    apiFetch.mockImplementation(async (path: string) => (path.startsWith('/admin-tasks') ? page([]) : page([FRESH, CANCELLED])));
+    mockApi.onRead(async ({ path }) =>
+      path.startsWith('/admin-tasks') ? page([]) : page([FRESH, CANCELLED]),
+    );
     render(
       <QueryClientProvider client={new QueryClient()}>
         <SubscriptionsPage search={{}} onSearch={vi.fn()} onOpenStudent={vi.fn()} />

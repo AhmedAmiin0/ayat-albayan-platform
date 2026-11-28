@@ -6,16 +6,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { WEEKLY } from './money-fixture';
 import { SubscriptionsPage } from './SubscriptionsPage';
+import { mockCall } from '@ab/testing/mock-call';
 
 // The pause is the student's course pause, not a package flag.
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 const perms = vi.hoisted(() => ({ list: ['courses.pause'] }));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  apiFetch,
-  apiSend,
+  call: (request: unknown) => mockApi.call(request),
 }));
 vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),
@@ -31,7 +30,7 @@ const PAUSED = {
 };
 
 async function rowOf(name: string) {
-  apiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path.includes('/course-pause/preview'))
       return { from_date: riyadhToday(), until_date: null, lessons: 0 };
     return path.startsWith('/admin-tasks') ? page([]) : page([WEEKLY, PAUSED]);
@@ -46,8 +45,8 @@ async function rowOf(name: string) {
 
 describe('subscription rows: the course pause', () => {
   beforeEach(() => {
-    apiFetch.mockReset();
-    apiSend.mockReset();
+    mockApi.reset('read');
+    mockApi.reset('write');
     perms.list = ['courses.pause'];
   });
 
@@ -56,22 +55,33 @@ describe('subscription rows: the course pause', () => {
     fireEvent.click(row.getByRole('button', { name: t.coursePause.action }));
     expect(await screen.findByRole('dialog', { name: t.coursePause.title })).toBeTruthy();
     expect(await screen.findByText(t.coursePause.preview.zero)).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith(
-      expect.stringMatching(new RegExp(`^/students/${WEEKLY.student.id}/course-pause/preview`)),
-    );
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: expect.stringMatching(
+        new RegExp(`^/students/${WEEKLY.student.id}/course-pause/preview`),
+      ),
+    });
   });
 
   it('a paused package reads «استئناف» and resumes that package (its pause, or its old package-only pause)', async () => {
     const row = await rowOf('ياسمين');
     fireEvent.click(row.getByRole('button', { name: t.coursePause.resume }));
     const dialog = within(await screen.findByRole('dialog', { name: t.coursePause.resumeTitle }));
-    apiSend.mockResolvedValue(coursePauseResultFixture({ reopened: 2 }));
+    mockApi.onWrite(() => coursePauseResultFixture({ reopened: 2 }));
     fireEvent.click(dialog.getByRole('button', { name: t.coursePause.resumeConfirm }));
     expect(await screen.findByText(t.coursePause.resumed)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/students/stu-2/course-pause/resume', {
-      subscriptionId: 'sub-p',
+    expect(mockApi.writes()).toContainEqual({
+      method: 'POST',
+      path: '/students/stu-2/course-pause/resume',
+      body: {
+        subscriptionId: 'sub-p',
+      },
     });
-    expect(apiSend).not.toHaveBeenCalledWith('PATCH', expect.anything(), expect.anything());
+    expect(mockApi.writes()).not.toContainEqual({
+      method: 'PATCH',
+      path: expect.anything(),
+      body: expect.anything(),
+    });
   });
 
   it('without courses.pause no row offers it', async () => {

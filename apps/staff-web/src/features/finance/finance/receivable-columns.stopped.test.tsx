@@ -3,11 +3,12 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { ReceivablesPage } from './ReceivablesPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  apiFetch,
+  call: (request: unknown) => mockApi.call(request),
 }));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
@@ -32,13 +33,13 @@ const STOPPED = {
 
 describe('receivables: a stopped course', () => {
   it('«دُفع 100 من 150»: of what it is owed for', async () => {
-    apiFetch.mockResolvedValue({
+    mockApi.onRead(() => ({
       rows: [STOPPED],
       totals: [],
       total: 50,
       currency: 'SAR',
       fx_missing: [],
-    });
+    }));
     render(
       <QueryClientProvider
         client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}

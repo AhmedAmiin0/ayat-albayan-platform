@@ -6,14 +6,18 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { TrialChatNote } from '@/features/teaching/teacher/lessons/TrialChatNote';
 import { StudentReportsPage } from '@/features/reporting/reports/history/StudentReportsPage/StudentReportsPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const EMPTY: StudentReportsResponse = { items: [], total: 0, page: 1, pageSize: 10, series: [] };
 
 function renderPage(notice: ReactNode) {
-  apiFetch.mockResolvedValue(EMPTY);
+  mockApi.onRead(() => EMPTY);
   render(
     <QueryClientProvider
       client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
@@ -29,7 +33,7 @@ function renderPage(notice: ReactNode) {
   );
 }
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 describe('teacher student file: a trial family is reached through sales (owner, 2026-10-11)', () => {
   it('a trial student: the note under the heading, while loading and once loaded', async () => {

@@ -9,12 +9,12 @@ import { JOUD, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesso
 import { LessonChip } from '@/features/teaching/schedule/lesson/LessonChip';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
 import { configWrapper } from '@ab/web-kit/testing';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  apiFetch,
-  apiSend: vi.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({
@@ -43,7 +43,7 @@ const INVOICE: InvoiceView = {
 };
 
 function renderDrawer(l: LessonView, invoices: InvoiceView[] = []) {
-  apiFetch.mockImplementation(async (path: string) =>
+  mockApi.onRead(async ({ path }) =>
     path.startsWith('/invoices?')
       ? invoices
       : path === '/messaging/templates'
@@ -59,7 +59,7 @@ function renderDrawer(l: LessonView, invoices: InvoiceView[] = []) {
   );
 }
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 describe('«تعويضية» tag (R-SCH-10)', () => {
   it('a makeup lesson wears the tag next to its status; a normal one does not', () => {
@@ -76,13 +76,23 @@ describe('LessonDrawer «حجز تعويضي» (R-SCH-10)', () => {
   it('a no-show opens the wizard for that student with the lesson preselected', () => {
     renderDrawer(lesson({ id: 'l-9', status: 'no_show' }));
     const link = screen.getByRole('link', { name: t.booking.makeup.action });
-    expect(link.getAttribute('href')).toBe('/admin/book?kind=makeup&studentId=s-1&missedLessonId=l-9');
+    expect(link.getAttribute('href')).toBe(
+      '/admin/book?kind=makeup&studentId=s-1&missedLessonId=l-9',
+    );
   });
 
   it('an excused lesson too, one link per charged student of a group', () => {
-    renderDrawer(lesson({ status: 'excused', students: [SUHAILA, { ...JOUD, chargeable: false }, { ...JOUD, id: 's-3', name: 'نور' }] }));
+    renderDrawer(
+      lesson({
+        status: 'excused',
+        students: [SUHAILA, { ...JOUD, chargeable: false }, { ...JOUD, id: 's-3', name: 'نور' }],
+      }),
+    );
     const links = screen.getAllByRole('link', { name: new RegExp(t.booking.makeup.action) });
-    expect(links.map((l) => l.textContent)).toEqual([`${t.booking.makeup.action} · سهيلة`, `${t.booking.makeup.action} · نور`]);
+    expect(links.map((l) => l.textContent)).toEqual([
+      `${t.booking.makeup.action} · سهيلة`,
+      `${t.booking.makeup.action} · نور`,
+    ]);
   });
 
   it('is not offered on a completed lesson, a trial, a makeup, or an uncharged absence', () => {
@@ -101,7 +111,7 @@ describe('LessonDrawer «حجز تعويضي» (R-SCH-10)', () => {
 
 describe('rescheduling a makeup (R-SCH-10)', () => {
   it('only this lesson can move: «وكل اللي بعدها» would drop its link to the missed one', () => {
-    apiFetch.mockImplementation(async (path: string) =>
+    mockApi.onRead(async ({ path }) =>
       path.startsWith('/invoices?') ? [] : { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [] },
     );
     render(
@@ -112,8 +122,14 @@ describe('rescheduling a makeup (R-SCH-10)', () => {
       </QueryClientProvider>,
     );
     fireEvent.click(screen.getByRole('button', { name: t.lessons.event.reschedule }));
-    expect(screen.getByRole('radio', { name: t.lessons.scope.rule })).toHaveProperty('disabled', true);
-    expect(screen.getByRole('radio', { name: t.lessons.scope.one })).toHaveProperty('disabled', false);
+    expect(screen.getByRole('radio', { name: t.lessons.scope.rule })).toHaveProperty(
+      'disabled',
+      true,
+    );
+    expect(screen.getByRole('radio', { name: t.lessons.scope.one })).toHaveProperty(
+      'disabled',
+      false,
+    );
   });
 });
 
@@ -121,18 +137,28 @@ describe('LessonDrawer invoice row (R-PAY-03, admin only)', () => {
   it('shows «الفاتورة» for the booking’s rule and opens it', async () => {
     renderDrawer(lesson({ rule_id: 'r-1' }), [INVOICE]);
     const open = await screen.findByRole('button', { name: t.booking.invoice.view });
-    expect(apiFetch).toHaveBeenCalledWith('/invoices?ruleId=r-1');
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/invoices?ruleId=r-1' });
     fireEvent.click(open);
     const dialog = await screen.findByRole('dialog', { name: new RegExp(t.booking.invoice.label) });
-    expect((await within(dialog).findByTitle(new RegExp(t.booking.invoice.label))).getAttribute('src')).toBe('https://signed/inv');
+    expect(
+      (await within(dialog).findByTitle(new RegExp(t.booking.invoice.label))).getAttribute('src'),
+    ).toBe('https://signed/inv');
   });
 
   it('asks nothing for a trial, and shows nothing when there is no invoice', async () => {
     renderDrawer(lesson({ trial: true }));
-    expect(apiFetch).not.toHaveBeenCalledWith(expect.stringContaining('/invoices'));
+    expect(mockApi.reads()).not.toContainEqual({
+      method: 'GET',
+      path: expect.stringContaining('/invoices'),
+    });
     cleanup();
     renderDrawer(lesson());
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('/invoices')));
+    await vi.waitFor(() =>
+      expect(mockApi.reads()).toContainEqual({
+        method: 'GET',
+        path: expect.stringContaining('/invoices'),
+      }),
+    );
     expect(screen.queryByRole('button', { name: t.booking.invoice.view })).toBeNull();
   });
 });

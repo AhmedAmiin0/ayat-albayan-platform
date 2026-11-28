@@ -9,20 +9,24 @@ import {
   shownText,
   showSheet,
 } from '@/features/messaging/inbox/composer/quote/testing/quote-sheet';
+import { mockCall } from '@ab/testing/mock-call';
 
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({
   ...(await orig<object>()),
   locale: 'en',
 }));
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const line = () => screen.queryByTestId('quote-client-country')?.textContent;
 
-beforeEach(() => apiFetch.mockImplementation(async (path: string) => fakePricingApi(path)));
+beforeEach(() => mockApi.onRead(async ({ path }) => fakePricingApi(path)));
 afterEach(() => {
-  apiFetch.mockReset();
+  mockApi.reset('read');
   cleanup();
 });
 

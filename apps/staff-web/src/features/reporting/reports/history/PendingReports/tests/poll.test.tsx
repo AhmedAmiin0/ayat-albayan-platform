@@ -4,9 +4,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { t } from '@ab/web-kit';
 import { PendingReports } from '@/features/reporting/reports/history/PendingReports/PendingReports';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@tanstack/react-router', async (orig) => ({
   ...(await orig<object>()),
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
@@ -28,18 +32,18 @@ describe('PendingReports poll', () => {
   });
   afterEach(() => {
     vi.useRealTimers();
-    apiFetch.mockReset();
+    mockApi.reset('read');
   });
 
   it('polls every 30 s and keeps its rows when a poll fails', async () => {
-    apiFetch.mockResolvedValue([ROW]);
+    mockApi.onRead(() => [ROW]);
     renderWithClient(<PendingReports tz="Africa/Cairo" />);
     expect(await screen.findByRole('region', { name: t.reports.pending })).toBeTruthy();
-    apiFetch.mockRejectedValue(new Error('down'));
+    mockApi.onRead(() => Promise.reject(new Error('down')));
     await act(async () => {
       vi.advanceTimersByTime(30_000);
     });
-    await waitFor(() => expect(apiFetch).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(mockApi.reads()).toHaveLength(2));
     expect(screen.getByText('سهيلة')).toBeTruthy();
   });
 });

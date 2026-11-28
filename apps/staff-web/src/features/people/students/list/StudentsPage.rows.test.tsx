@@ -4,14 +4,18 @@ import { studentListItemFixture } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { StudentsPage } from './StudentsPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const ROW = studentListItemFixture({ id: 's1', status: 'trial', guardian_name: 'أم جود' });
 
 function renderPage(page: { items: object[]; total: number }, search = '') {
-  apiFetch.mockImplementation((path: string) =>
+  mockApi.onRead(({ path }) =>
     Promise.resolve(path.startsWith('/students?') ? { ...page, page: 1, pageSize: 20 } : []),
   );
   const onOpen = vi.fn();
@@ -29,7 +33,12 @@ describe('StudentsPage rows (docs/07 §6 Data table)', () => {
     expect(screen.getByRole('heading', { level: 1, name: t.students.title })).toBeTruthy();
     expect(await screen.findByText(t.students.count.replace('{n}', '45'))).toBeTruthy();
     expect(screen.getByText('AB-0183').getAttribute('dir')).toBe('ltr');
-    expect(within(screen.getByRole('table')).getByText(t.enums.studentStatus.trial).closest('[data-tone]')?.getAttribute('data-tone')).toBe('neutral');
+    expect(
+      within(screen.getByRole('table'))
+        .getByText(t.enums.studentStatus.trial)
+        .closest('[data-tone]')
+        ?.getAttribute('data-tone'),
+    ).toBe('neutral');
   });
 
   it('no teacher: «يحتاج معلم/ة» in the hamish column and folded under the name', async () => {
@@ -42,9 +51,13 @@ describe('StudentsPage rows (docs/07 §6 Data table)', () => {
   it('«تعيين» and the row actions open the profile once; WhatsApp goes to the guardian', async () => {
     const onOpen = renderPage({ items: [ROW], total: 1 });
     fireEvent.click(await screen.findByRole('button', { name: t.students.assign }));
-    fireEvent.click(screen.getByRole('button', { name: t.students.openProfile.replace('{name}', 'سهيلة') }));
+    fireEvent.click(
+      screen.getByRole('button', { name: t.students.openProfile.replace('{name}', 'سهيلة') }),
+    );
     expect(onOpen).toHaveBeenCalledTimes(2);
-    const wa = screen.getByRole('link', { name: t.students.whatsappTo.replace('{name}', 'أم جود') });
+    const wa = screen.getByRole('link', {
+      name: t.students.whatsappTo.replace('{name}', 'أم جود'),
+    });
     expect(wa.getAttribute('href')).toBe('https://wa.me/966501234567');
   });
 

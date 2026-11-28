@@ -5,9 +5,13 @@ import { ChatActionsProvider } from '@/features/messaging/inbox/shared/ChatActio
 import { message, PHONE, thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from './MessageLog';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const base = {
   phone: PHONE,
@@ -18,7 +22,14 @@ const base = {
 };
 const BODY = 'السلام عليكم\nموعد الحلقة الساعة ٥';
 const TEXT = message({ id: 'm1', body: BODY, replyable: true, forwardable: true });
-const PDF = message({ id: 'm1', body: null, media_mime: 'application/pdf', media_name: 'خطة الحفظ.pdf', replyable: true, forwardable: true });
+const PDF = message({
+  id: 'm1',
+  body: null,
+  media_mime: 'application/pdf',
+  media_name: 'خطة الحفظ.pdf',
+  replyable: true,
+  forwardable: true,
+});
 const writeText = vi.fn();
 
 function openMenu(m: typeof TEXT) {
@@ -34,14 +45,18 @@ const menu = () => {
   if (!box) throw new Error('no menu');
   return within(box);
 };
-const menuLabels = () => menu().getAllByRole('button').map((b) => b.textContent);
-const menuDownload = () => menu().getByRole('button', { name: t.inbox.download.label.replace('{name}', 'خطة الحفظ.pdf') });
+const menuLabels = () =>
+  menu()
+    .getAllByRole('button')
+    .map((b) => b.textContent);
+const menuDownload = () =>
+  menu().getByRole('button', { name: t.inbox.download.label.replace('{name}', 'خطة الحفظ.pdf') });
 
 beforeEach(() => {
   writeText.mockReset().mockResolvedValue(undefined);
   Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
 });
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 describe('the bubble menu’s «نسخ» and «تنزيل» (owner 2026-10-26)', () => {
   it('a text message: WhatsApp’s order, no «تنزيل»; «نسخ» puts the exact body on the clipboard', async () => {
@@ -67,11 +82,11 @@ describe('the bubble menu’s «نسخ» and «تنزيل» (owner 2026-10-26)',
     const click = vi
       .spyOn(HTMLAnchorElement.prototype, 'click')
       .mockImplementation(() => undefined);
-    apiFetch.mockResolvedValue({
+    mockApi.onRead(() => ({
       url: 'https://storage.test/a.pdf?token=x&download=x',
       expires_at: '',
       mime: 'application/pdf',
-    });
+    }));
     openMenu(PDF);
     expect(menuLabels()).toEqual([
       t.inbox.reply.action,
@@ -79,15 +94,16 @@ describe('the bubble menu’s «نسخ» and «تنزيل» (owner 2026-10-26)',
       t.inbox.download.action,
     ]);
     fireEvent.click(menuDownload());
-    expect(apiFetch).toHaveBeenCalledWith(
-      `/threads/${encodeURIComponent(PHONE)}/messages/m1/file?download=1`,
-    );
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: `/threads/${encodeURIComponent(PHONE)}/messages/m1/file?download=1`,
+    });
     await waitFor(() => expect(click).toHaveBeenCalledOnce());
     click.mockRestore();
   });
 
   it('a 403 on download keeps today’s «غير مسموح» text', async () => {
-    apiFetch.mockRejectedValue(new ApiError(403, { code: 'media_forbidden' }));
+    mockApi.onRead(() => Promise.reject(new ApiError(403, { code: 'media_forbidden' })));
     openMenu(PDF);
     fireEvent.click(menuDownload());
     expect(await screen.findByText(t.inbox.mediaNotAllowed)).toBeTruthy();

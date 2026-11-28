@@ -5,15 +5,21 @@ import { t } from '@ab/web-kit';
 import type { InvoiceDraft } from '@/features/teaching/booking/draft/draft';
 import { InvoiceField } from '@/features/teaching/booking/invoice/InvoiceField/InvoiceField';
 import { invoiceProblem } from '@/features/teaching/booking/invoice/invoice-file';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiSend = vi.hoisted(() => vi.fn());
-const apiFetch = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 const uploadToSignedUrl = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl }) } } }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({
+  supabase: { storage: { from: () => ({ uploadToSignedUrl }) } },
+}));
 
 const SIGNED = { bucket: 'invoices', path: 'req-1/abc.png', token: 'tok', signed_url: 'https://x' };
-const file = (type: string, name = 'inv', size = 10) => new File([new Uint8Array(size)], name, { type });
+const file = (type: string, name = 'inv', size = 10) =>
+  new File([new Uint8Array(size)], name, { type });
 
 function renderField(over: { value?: InvoiceDraft | null; chatPhone?: string | null } = {}) {
   const onChange = vi.fn();
@@ -37,12 +43,12 @@ const choose = (f: File) =>
 describe('InvoiceField (R-PAY-03)', () => {
   beforeEach(() => {
     URL.createObjectURL = vi.fn(() => 'blob:inv');
-    apiSend.mockResolvedValue(SIGNED);
+    mockApi.onWrite(() => SIGNED);
     uploadToSignedUrl.mockResolvedValue({ error: null });
   });
   afterEach(() => {
-    apiSend.mockReset();
-    apiFetch.mockReset();
+    mockApi.reset('write');
+    mockApi.reset('read');
     uploadToSignedUrl.mockReset();
   });
 
@@ -50,25 +56,43 @@ describe('InvoiceField (R-PAY-03)', () => {
     renderField();
     expect(screen.getByText(t.booking.invoice.label).textContent).toContain('*');
     expect(screen.getByText(t.booking.invoice.hint)).toBeTruthy();
-    expect(screen.getByLabelText(t.booking.invoice.upload).hasAttribute('aria-required')).toBe(true);
+    expect(screen.getByLabelText(t.booking.invoice.upload).hasAttribute('aria-required')).toBe(
+      true,
+    );
   });
 
   it('uploads an image at once through a signed URL and reports the path with its preview', async () => {
     const onChange = renderField();
     choose(file('image/png', 'receipt.png'));
-    await waitFor(() => expect(onChange).toHaveBeenLastCalledWith({
-      source: 'upload',
-      path: 'req-1/abc.png',
-      name: 'receipt.png',
-      mime: 'image/png',
-      preview: 'blob:inv',
-    }));
-    expect(apiSend).toHaveBeenCalledWith('POST', '/booking/invoice-upload-url', { clientRequestId: 'req-1', mime: 'image/png', size: 10 });
-    expect(uploadToSignedUrl).toHaveBeenCalledWith('req-1/abc.png', 'tok', expect.any(File), { contentType: 'image/png' });
+    await waitFor(() =>
+      expect(onChange).toHaveBeenLastCalledWith({
+        source: 'upload',
+        path: 'req-1/abc.png',
+        name: 'receipt.png',
+        mime: 'image/png',
+        preview: 'blob:inv',
+      }),
+    );
+    expect(mockApi.writes()).toContainEqual({
+      method: 'POST',
+      path: '/booking/invoice-upload-url',
+      body: { clientRequestId: 'req-1', mime: 'image/png', size: 10 },
+    });
+    expect(uploadToSignedUrl).toHaveBeenCalledWith('req-1/abc.png', 'tok', expect.any(File), {
+      contentType: 'image/png',
+    });
   });
 
   it('a PDF is accepted and shown as a tile with its name, not an image', () => {
-    renderField({ value: { source: 'upload', path: 'p', name: 'inv.pdf', mime: 'application/pdf', preview: null } });
+    renderField({
+      value: {
+        source: 'upload',
+        path: 'p',
+        name: 'inv.pdf',
+        mime: 'application/pdf',
+        preview: null,
+      },
+    });
     expect(screen.getByText(t.booking.invoice.pdf)).toBeTruthy();
     expect(screen.getByText('inv.pdf')).toBeTruthy();
     expect(screen.queryByRole('img')).toBeNull();
@@ -80,7 +104,7 @@ describe('InvoiceField (R-PAY-03)', () => {
     expect(screen.getByRole('alert').textContent).toBe(t.booking.error.invoice_type);
     choose(file('application/pdf', 'big.pdf', 10 * 1024 * 1024 + 1));
     expect(screen.getByRole('alert').textContent).toBe(t.booking.error.invoice_too_large);
-    expect(apiSend).not.toHaveBeenCalled();
+    expect(mockApi.writes()).toHaveLength(0);
     expect(invoiceProblem(null)).toBeNull();
     expect(invoiceProblem(file('image/heic'))).toBeNull();
   });
@@ -94,7 +118,9 @@ describe('InvoiceField (R-PAY-03)', () => {
   });
 
   it('«أزلها» removes it, «استبدلها» replaces it', () => {
-    const onChange = renderField({ value: { source: 'whatsapp', messageId: 'm-1', mime: 'image/png', preview: 'blob:x' } });
+    const onChange = renderField({
+      value: { source: 'whatsapp', messageId: 'm-1', mime: 'image/png', preview: 'blob:x' },
+    });
     expect(screen.getByLabelText(t.booking.invoice.replace)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.booking.invoice.remove }));
     expect(onChange).toHaveBeenCalledWith(null);

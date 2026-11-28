@@ -5,13 +5,14 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { EditStartDateAction } from './EditStartDateAction';
+import { mockCall } from '@ab/testing/mock-call';
 
 // Only with subscriptions.edit_terms.
-const apiSend = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 const perms = vi.hoisted(() => ({ list: ['subscriptions.edit_terms'] }));
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  apiSend,
+  call: (request: unknown) => mockApi.call(request),
 }));
 vi.mock('@/features/people/auth', async (importOriginal) => ({
   ...(await importOriginal<object>()),
@@ -42,7 +43,7 @@ const openDialog = () => {
 
 describe('EditStartDateAction', () => {
   beforeEach(() => {
-    apiSend.mockReset();
+    mockApi.reset('write');
     perms.list = ['subscriptions.edit_terms'];
   });
 
@@ -58,14 +59,23 @@ describe('EditStartDateAction', () => {
     renderAction();
     const { dialog, input } = openDialog();
     expect([input.type, input.value, input.min, input.max]).toEqual([
-      'date', FROM, daysBefore(today, 365), '',
+      'date',
+      FROM,
+      daysBefore(today, 365),
+      '',
     ]);
     const save = dialog.getByRole<HTMLButtonElement>('button', { name: e.save });
     expect(save.disabled).toBe(true);
     fireEvent.change(input, { target: { value: TO } });
-    apiSend.mockResolvedValue({ subscription_id: 'sub-1', starts_on: TO });
+    mockApi.onWrite(() => ({ subscription_id: 'sub-1', starts_on: TO }));
     fireEvent.click(save);
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', URL, { startsOn: TO }));
+    await vi.waitFor(() =>
+      expect(mockApi.writes()).toContainEqual({
+        method: 'PATCH',
+        path: URL,
+        body: { startsOn: TO },
+      }),
+    );
     expect(await screen.findByText(e.saved)).toBeTruthy();
   });
 
@@ -74,7 +84,9 @@ describe('EditStartDateAction', () => {
     const { dialog, input } = openDialog();
     expect(input.max).toBe(daysBefore(today, 1));
     fireEvent.change(input, { target: { value: TO } });
-    apiSend.mockRejectedValue(new ApiError(400, { code: 'used_before_needs_past_start' }));
+    mockApi.onWrite(() =>
+      Promise.reject(new ApiError(400, { code: 'used_before_needs_past_start' })),
+    );
     fireEvent.click(dialog.getByRole('button', { name: e.save }));
     expect(await dialog.findByText(e.errors.used_before_needs_past_start)).toBeTruthy();
   });

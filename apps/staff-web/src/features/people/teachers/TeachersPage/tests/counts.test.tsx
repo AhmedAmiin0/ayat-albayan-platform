@@ -5,10 +5,16 @@ import { t } from '@ab/web-kit';
 import { TeachersPage } from '@/features/people/teachers/TeachersPage/TeachersPage';
 import type { TeacherListRow } from '@ab/shared';
 import { teacherRowFixture } from '@ab/shared/testing';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
+}));
 
 const ABRAR: TeacherListRow = teacherRowFixture({
   id: 't-abrar',
@@ -32,7 +38,7 @@ const ABRAR: TeacherListRow = teacherRowFixture({
 });
 
 function renderPage() {
-  apiFetch.mockResolvedValue({ items: [ABRAR], total: 1, page: 1, pageSize: 25 });
+  mockApi.onRead(() => ({ items: [ABRAR], total: 1, page: 1, pageSize: 25 }));
   const onOpen = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -43,7 +49,9 @@ function renderPage() {
 }
 
 const link = (key: 'activeLink' | 'trialLink', n: number) =>
-  screen.getByRole('link', { name: t.studentLists[key].replace('{name}', 'أبرار').replace('{n}', String(n)) });
+  screen.getByRole('link', {
+    name: t.studentLists[key].replace('{name}', 'أبرار').replace('{n}', String(n)),
+  });
 
 describe('TeachersPage «مشترك · تجريبي» columns (R-TCH-03, owner 2026-10-12)', () => {
   it('heads the two columns, not sortable, and shows the counts in the row', async () => {
@@ -61,8 +69,12 @@ describe('TeachersPage «مشترك · تجريبي» columns (R-TCH-03, owner 2
   it('each count links to the students list filtered by teacher and status', async () => {
     renderPage();
     await screen.findByText('أبرار');
-    expect(link('activeLink', 7).getAttribute('href')).toBe('/admin/students?teacher=t-abrar&status=active');
-    expect(link('trialLink', 2).getAttribute('href')).toBe('/admin/students?teacher=t-abrar&status=new%2Ctrial%2Cpending_subscription');
+    expect(link('activeLink', 7).getAttribute('href')).toBe(
+      '/admin/students?teacher=t-abrar&status=active',
+    );
+    expect(link('trialLink', 2).getAttribute('href')).toBe(
+      '/admin/students?teacher=t-abrar&status=new%2Ctrial%2Cpending_subscription',
+    );
   });
 
   it('a count click follows its link, not the row (the row opens the profile)', async () => {

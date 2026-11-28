@@ -5,9 +5,13 @@ import { ApiError, t } from '@ab/web-kit';
 import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft/draft';
 import { ReviewStep } from '@/features/teaching/booking/steps/review/ReviewStep/ReviewStep';
 import { ABRAR, SLOT, STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const DRAFT: BookingDraft = {
   ...emptyDraft(),
@@ -34,7 +38,7 @@ function renderReview() {
   return onInvoice;
 }
 
-afterEach(() => apiSend.mockReset());
+afterEach(() => mockApi.reset('write'));
 
 describe('ReviewStep invoice errors (R-PAY-03, R-MSG-06)', () => {
   it('shows the invoice summary row with «من المحادثة»', () => {
@@ -44,7 +48,11 @@ describe('ReviewStep invoice errors (R-PAY-03, R-MSG-06)', () => {
   });
 
   it('a makeup reads «موعد التعويض», not «أول حلقة»', () => {
-    const makeup: BookingDraft = { ...DRAFT, kind: 'makeup', missed: { lessonId: 'l-1', startsAt: SLOT, teacherId: ABRAR.id, durationMin: 45 } };
+    const makeup: BookingDraft = {
+      ...DRAFT,
+      kind: 'makeup',
+      missed: { lessonId: 'l-1', startsAt: SLOT, teacherId: ABRAR.id, durationMin: 45 },
+    };
     render(
       <QueryClientProvider client={new QueryClient()}>
         <ReviewStep
@@ -59,14 +67,18 @@ describe('ReviewStep invoice errors (R-PAY-03, R-MSG-06)', () => {
     );
     expect(screen.getByText(t.booking.makeup.timeLabel)).toBeTruthy();
     expect(screen.queryByText(t.booking.startsOn)).toBeNull();
-    expect(screen.queryByText(new RegExp(t.booking.firstLesson.split('{when}')[0] ?? ''))).toBeNull();
+    expect(
+      screen.queryByText(new RegExp(t.booking.firstLesson.split('{when}')[0] ?? '')),
+    ).toBeNull();
   });
 
   it.each([
     ['invoice_required', t.booking.error.invoice_required],
     ['media_expired', t.booking.error.media_expired],
   ])('%s: says so in Arabic and sends the admin back to the invoice step', async (code, text) => {
-    apiSend.mockRejectedValue(new ApiError(code === 'media_expired' ? 410 : 400, { code, message: code }));
+    mockApi.onWrite(() =>
+      Promise.reject(new ApiError(code === 'media_expired' ? 410 : 400, { code, message: code })),
+    );
     const onInvoice = renderReview();
     fireEvent.click(screen.getByRole('button', { name: t.booking.submit }));
     expect((await screen.findByRole('alert')).textContent).toContain(text);
@@ -75,7 +87,9 @@ describe('ReviewStep invoice errors (R-PAY-03, R-MSG-06)', () => {
   });
 
   it('a makeup refusal is worded without a way back to the invoice', async () => {
-    apiSend.mockRejectedValue(new ApiError(409, { code: 'makeup_exists', message: 'makeup_exists' }));
+    mockApi.onWrite(() =>
+      Promise.reject(new ApiError(409, { code: 'makeup_exists', message: 'makeup_exists' })),
+    );
     renderReview();
     fireEvent.click(screen.getByRole('button', { name: t.booking.submit }));
     expect((await screen.findByRole('alert')).textContent).toBe(t.booking.error.makeup_exists);

@@ -4,14 +4,19 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { formResponse, reportView } from '@/features/reporting/reports/report-fixture';
 import { ReportFormPage } from '@/features/reporting/reports/ReportFormPage/ReportFormPage';
+import { mockCall } from '@ab/testing/mock-call';
 
 // The form's section headings, field titles and their order, matching the original form.
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 async function open(over: Parameters<typeof formResponse>[1] = {}) {
-  apiFetch.mockImplementation((path: string) => Promise.resolve(path === '/lessons/l-1/report-form' ? formResponse({}, over) : []));
+  mockApi.onRead(({ path }) =>
+    Promise.resolve(path === '/lessons/l-1/report-form' ? formResponse({}, over) : []),
+  );
   render(
     <QueryClientProvider
       client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
@@ -24,8 +29,8 @@ async function open(over: Parameters<typeof formResponse>[1] = {}) {
 
 describe('تقرير الحلقة: titles and order', () => {
   afterEach(() => {
-    apiFetch.mockReset();
-    apiSend.mockReset();
+    mockApi.reset('read');
+    mockApi.reset('write');
   });
 
   it('«بيانات الحلقة» runs: id, teacher, student, date, number, program *, attendance *, link', async () => {
@@ -45,18 +50,24 @@ describe('تقرير الحلقة: titles and order', () => {
     expect(at.every((i) => i >= 0)).toBe(true);
     expect([...at].sort((a, b) => a - b)).toEqual(at);
     expect(within(identity).getByText('AB-0183')).toBeTruthy();
-    expect(within(identity).getByRole('group', { name: 'البرنامج' }).querySelector('legend')?.textContent).toBe('البرنامج *');
+    expect(
+      within(identity).getByRole('group', { name: 'البرنامج' }).querySelector('legend')
+        ?.textContent,
+    ).toBe('البرنامج *');
   });
 
   it('the program is the form’s three options, the student’s one picked, and the other sections have its headings', async () => {
     const identity = await open();
     const program = within(identity).getByRole('group', { name: 'البرنامج' });
-    expect(within(program).getAllByRole('radio').map((r) => r.closest('label')?.textContent)).toEqual([
-      'القرآن الكريم',
-      'اللغة العربية',
-      'الدراسات الإسلامية',
-    ]);
-    expect(within(program).getByRole('radio', { name: 'القرآن الكريم' })).toHaveProperty('checked', true);
+    expect(
+      within(program)
+        .getAllByRole('radio')
+        .map((r) => r.closest('label')?.textContent),
+    ).toEqual(['القرآن الكريم', 'اللغة العربية', 'الدراسات الإسلامية']);
+    expect(within(program).getByRole('radio', { name: 'القرآن الكريم' })).toHaveProperty(
+      'checked',
+      true,
+    );
     for (const heading of ['محتوى الحلقة', 'التقييم التفصيلي', 'الملاحظات والواجب']) {
       expect(screen.getByRole('heading', { name: heading })).toBeTruthy();
     }
@@ -65,13 +76,17 @@ describe('تقرير الحلقة: titles and order', () => {
 
   it('a changed program is saved with the draft', async () => {
     vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout'], shouldAdvanceTime: true });
-    apiSend.mockResolvedValue(reportView());
+    mockApi.onWrite(() => reportView());
     const identity = await open();
     fireEvent.click(within(identity).getByRole('radio', { name: 'اللغة العربية' }));
     await vi.advanceTimersByTimeAsync(1000);
     // React 19 renders the debounce timer update in a later scheduler task, after the advance.
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('PUT', '/reports/r-1/draft', expect.objectContaining({ program: 'arabic' })),
+      expect(mockApi.writes()).toContainEqual({
+        method: 'PUT',
+        path: '/reports/r-1/draft',
+        body: expect.objectContaining({ program: 'arabic' }),
+      }),
     );
     vi.useRealTimers();
     expect(t.enums.program.islamic_studies).toBe('الدراسات الإسلامية');

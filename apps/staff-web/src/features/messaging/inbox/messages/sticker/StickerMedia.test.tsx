@@ -6,15 +6,30 @@ import { t } from '@ab/web-kit';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble';
 import { InboxModeContext, type InboxMode } from '@/features/messaging/inbox/shared/mode';
+import { mockCall } from '@ab/testing/mock-call';
 
 // Stickers and GIFs in the chat: shown at once, a sticker with no bubble.
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const SIGNED = 'https://storage.test/wa-media/m-1.webp?token=x';
 const NOW = new Date('2026-11-01T12:00:00Z');
-const sticker = { id: 'm-1', body: null, media_mime: 'image/webp', interactive_payload: { type: 'sticker' } };
-const gif = { id: 'm-1', body: null, direction: 'outbound' as const, media_mime: 'video/mp4', interactive_payload: { type: 'gif' } };
+const sticker = {
+  id: 'm-1',
+  body: null,
+  media_mime: 'image/webp',
+  interactive_payload: { type: 'sticker' },
+};
+const gif = {
+  id: 'm-1',
+  body: null,
+  direction: 'outbound' as const,
+  media_mime: 'video/mp4',
+  interactive_payload: { type: 'gif' },
+};
 
 function show(patch: Partial<MessageView>, mode: InboxMode = 'admin') {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -32,11 +47,11 @@ function show(patch: Partial<MessageView>, mode: InboxMode = 'admin') {
 describe('a sticker and a GIF in the chat', () => {
   afterEach(() => {
     cleanup();
-    apiFetch.mockReset();
+    mockApi.reset('read');
   });
 
   it('a sticker: signed at once, 150 px, uncut, no «تنزيل» and no bubble around it', async () => {
-    apiFetch.mockResolvedValue({ url: SIGNED, expires_at: '2026-11-01T13:00:00Z', mime: 'image/webp' });
+    mockApi.onRead(() => ({ url: SIGNED, expires_at: '2026-11-01T13:00:00Z', mime: 'image/webp' }));
     show(sticker);
     const img = await screen.findByRole('img', { name: t.inbox.media.sticker });
     expect(img.getAttribute('src')).toBe(SIGNED);
@@ -48,7 +63,7 @@ describe('a sticker and a GIF in the chat', () => {
   });
 
   it('a GIF plays at once, muted and looping, in its bubble', async () => {
-    apiFetch.mockResolvedValue({ url: SIGNED, expires_at: '2026-11-01T13:00:00Z', mime: 'video/mp4' });
+    mockApi.onRead(() => ({ url: SIGNED, expires_at: '2026-11-01T13:00:00Z', mime: 'video/mp4' }));
     show(gif);
     const video = await screen.findByLabelText(t.inbox.media.gif);
     expect(video.tagName).toBe('VIDEO');
@@ -61,6 +76,6 @@ describe('a sticker and a GIF in the chat', () => {
   it('teacher mode keeps the label and asks for no file', () => {
     show(sticker, 'teacher');
     expect(screen.getByText(`· ${t.inbox.mediaNotAllowed}`)).toBeTruthy();
-    expect(apiFetch).not.toHaveBeenCalled();
+    expect(mockApi.reads()).toHaveLength(0);
   });
 });

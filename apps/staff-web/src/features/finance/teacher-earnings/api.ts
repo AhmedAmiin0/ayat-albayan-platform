@@ -8,7 +8,7 @@ import {
 import { myEarningCalls, teacherEarningCalls, type SessionFilter } from '@ab/client-core';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { moneyKeys } from '@/features/finance/keys';
-import { apiFetch, apiSend } from '@ab/web-kit';
+import { apiFetch, apiSend, call } from '@ab/web-kit';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
 
@@ -47,12 +47,16 @@ export const sessionsQuery = (
       qs.set('page', String(q.page));
       qs.set('pageSize', String(EARNINGS_PAGE_SIZE));
       if (q.status !== 'all') qs.set('status', q.status);
-      return apiFetch<Page<TeacherEarningView>>(`${listPath(s, 'sessions')}?${qs}`);
+      return call<Page<TeacherEarningView>>({ path: `${listPath(s, 'sessions')}?${qs}` });
     },
     placeholderData: keepPreviousData,
   });
 
-export type PaymentsList = { page: number; sort?: SortSearch; filters?: FilterSearch };
+export interface PaymentsList {
+  page: number;
+  sort?: SortSearch;
+  filters?: FilterSearch;
+}
 
 /** One page of payments, sorted and filtered (method, voided, note) server-side; no sort = newest first. */
 export const paymentsQuery = (s: Scope, q: PaymentsList) =>
@@ -62,7 +66,7 @@ export const paymentsQuery = (s: Scope, q: PaymentsList) =>
       const qs = new URLSearchParams(sortFilterParams(q.sort ?? {}, q.filters));
       qs.set('page', String(q.page));
       qs.set('pageSize', String(EARNINGS_PAGE_SIZE));
-      return apiFetch<Page<TeacherPaymentView>>(`${listPath(s, 'payments')}?${qs}`);
+      return call<Page<TeacherPaymentView>>({ path: `${listPath(s, 'payments')}?${qs}` });
     },
     placeholderData: keepPreviousData,
   });

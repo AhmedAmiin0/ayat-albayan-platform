@@ -3,15 +3,14 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { EditUsedBeforeAction } from './EditUsedBeforeAction';
+import { mockCall } from '@ab/testing/mock-call';
 
 // Needs subscriptions.edit_terms; the dialog reads the server state first.
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 const perms = vi.hoisted(() => ({ list: ['subscriptions.edit_terms'] }));
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  apiFetch,
-  apiSend,
+  call: (request: unknown) => mockApi.call(request),
 }));
 vi.mock('@/features/people/auth', async (importOriginal) => ({
   ...(await importOriginal<object>()),
@@ -19,14 +18,25 @@ vi.mock('@/features/people/auth', async (importOriginal) => ({
 }));
 
 const e = t.salesMoney.usedBeforeEdit;
-const PKG = { id: 'sub-1', lessons_used_before: 1, status: 'unpaid' as const, starts_on: '2026-01-01' };
+const PKG = {
+  id: 'sub-1',
+  lessons_used_before: 1,
+  status: 'unpaid' as const,
+  starts_on: '2026-01-01',
+};
 const STATE = { subscription_id: 'sub-1', lessons_used_before: 1, max: 6, blocked: null };
-const RESULT = { subscription_id: 'sub-1', lessons_total: 8, lessons_used_before: 6, lessons_used: 6, remaining: 2 };
+const RESULT = {
+  subscription_id: 'sub-1',
+  lessons_total: 8,
+  lessons_used_before: 6,
+  lessons_used: 6,
+  remaining: 2,
+};
 const URL = '/subscriptions/sub-1/lessons-used-before';
 
 type Pkg = Partial<Omit<typeof PKG, 'status'>> | { status: 'cancelled' };
 function renderAction(pkg: Pkg = {}, state: object = STATE) {
-  apiFetch.mockResolvedValue({ ...STATE, ...state });
+  mockApi.onRead(() => ({ ...STATE, ...state }));
   render(
     <QueryClientProvider client={new QueryClient()}>
       <EditUsedBeforeAction pkg={{ ...PKG, ...pkg }} />
@@ -46,8 +56,8 @@ const press = (d: Awaited<ReturnType<typeof openDialog>>, name: string, times = 
 
 describe('EditUsedBeforeAction', () => {
   beforeEach(() => {
-    apiFetch.mockReset();
-    apiSend.mockReset();
+    mockApi.reset('read');
+    mockApi.reset('write');
     perms.list = ['subscriptions.edit_terms'];
   });
 
@@ -63,11 +73,17 @@ describe('EditUsedBeforeAction', () => {
   it('reads the state, − / + up to its max, PATCH, then «عُدِّل»', async () => {
     renderAction();
     const dialog = await openDialog();
-    expect(apiFetch).toHaveBeenCalledWith(URL);
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: URL });
     press(dialog, t.salesMoney.usedBeforeMore, 9);
-    apiSend.mockResolvedValue(RESULT);
+    mockApi.onWrite(() => RESULT);
     press(dialog, e.save);
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', URL, { lessonsUsedBefore: 6 }));
+    await vi.waitFor(() =>
+      expect(mockApi.writes()).toContainEqual({
+        method: 'PATCH',
+        path: URL,
+        body: { lessonsUsedBefore: 6 },
+      }),
+    );
     expect(await screen.findByText(e.saved)).toBeTruthy();
   });
 
@@ -80,13 +96,22 @@ describe('EditUsedBeforeAction', () => {
   });
 
   it('a future start with 2 counted (max 0): starts at 0 and saves 0', async () => {
-    renderAction({ starts_on: '2999-01-01', lessons_used_before: 2 }, { lessons_used_before: 2, max: 0 });
+    renderAction(
+      { starts_on: '2999-01-01', lessons_used_before: 2 },
+      { lessons_used_before: 2, max: 0 },
+    );
     fireEvent.click(screen.getByRole('button', { name: e.action }));
     const dialog = within(screen.getByRole('dialog'));
     const save = await dialog.findByRole('button', { name: e.save });
-    apiSend.mockResolvedValue({ ...RESULT, lessons_used_before: 0 });
+    mockApi.onWrite(() => ({ ...RESULT, lessons_used_before: 0 }));
     fireEvent.click(save);
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', URL, { lessonsUsedBefore: 0 }));
+    await vi.waitFor(() =>
+      expect(mockApi.writes()).toContainEqual({
+        method: 'PATCH',
+        path: URL,
+        body: { lessonsUsedBefore: 0 },
+      }),
+    );
   });
 
   it('the same number: «حفظ» stays off; a 400 reads in Arabic and the dialog stays', async () => {
@@ -94,7 +119,9 @@ describe('EditUsedBeforeAction', () => {
     const dialog = await openDialog();
     expect(dialog.getByRole<HTMLButtonElement>('button', { name: e.save }).disabled).toBe(true);
     press(dialog, t.salesMoney.usedBeforeMore);
-    apiSend.mockRejectedValue(new ApiError(400, { code: 'used_before_needs_past_start' }));
+    mockApi.onWrite(() =>
+      Promise.reject(new ApiError(400, { code: 'used_before_needs_past_start' })),
+    );
     press(dialog, e.save);
     expect(await dialog.findByText(e.errors.used_before_needs_past_start)).toBeTruthy();
   });

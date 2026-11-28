@@ -5,15 +5,19 @@ import { t } from '@ab/web-kit';
 import type { StudentsFilters } from './filters';
 import { StudentFilters, studentFilterOptions } from './StudentFilters';
 import { studentFilterChips } from './use-student-filters';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const T = '11111111-1111-4111-8111-111111111111';
 const s = t.students;
 
 function renderFields(value: StudentsFilters = {}) {
-  apiFetch.mockResolvedValue([{ id: T, display_name_ar: 'أبرار', meeting_link: null }]);
+  mockApi.onRead(() => [{ id: T, display_name_ar: 'أبرار', meeting_link: null }]);
   const onChange = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -26,7 +30,10 @@ function renderFields(value: StudentsFilters = {}) {
 describe('StudentFilters (R-STU-01, the «تصفية» panel fields)', () => {
   it('status chips add to the comma-joined status', () => {
     const onChange = renderFields({ status: 'trial' });
-    expect(screen.getByRole('checkbox', { name: t.enums.studentStatus.trial })).toHaveProperty('checked', true);
+    expect(screen.getByRole('checkbox', { name: t.enums.studentStatus.trial })).toHaveProperty(
+      'checked',
+      true,
+    );
     fireEvent.click(screen.getByRole('checkbox', { name: t.enums.studentStatus.active }));
     expect(onChange).toHaveBeenCalledWith({ status: 'trial,active' });
   });
@@ -44,16 +51,24 @@ describe('StudentFilters (R-STU-01, the «تصفية» panel fields)', () => {
 
   it('package and weekly selects; «الكل» removes the filter', () => {
     const onChange = renderFields({ weekly: 'yes' });
-    fireEvent.change(screen.getByRole('combobox', { name: s.package }), { target: { value: 'low' } });
+    fireEvent.change(screen.getByRole('combobox', { name: s.package }), {
+      target: { value: 'low' },
+    });
     expect(onChange).toHaveBeenCalledWith({ weekly: 'yes', package: 'low' });
-    fireEvent.change(screen.getByRole('combobox', { name: s.weeklyFilter }), { target: { value: '' } });
+    fireEvent.change(screen.getByRole('combobox', { name: s.weeklyFilter }), {
+      target: { value: '' },
+    });
     expect(onChange).toHaveBeenLastCalledWith({});
   });
 
   it('chips: one per checked status, then each set select by its option label; removing one drops only it', () => {
     const onChange = vi.fn();
     const value: StudentsFilters = { status: 'trial,paused', teacher: T, program: 'quran' };
-    const chips = studentFilterChips(value, studentFilterOptions([{ id: T, display_name_ar: 'أبرار' }]), onChange);
+    const chips = studentFilterChips(
+      value,
+      studentFilterOptions([{ id: T, display_name_ar: 'أبرار' }]),
+      onChange,
+    );
     expect(chips.map((c) => `${c.label}: ${c.value}`)).toEqual([
       `${s.status}: ${t.enums.studentStatus.trial}`,
       `${s.status}: ${t.enums.studentStatus.paused}`,

@@ -7,9 +7,13 @@ import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ThreadList } from '@/features/messaging/inbox/threads/list/ThreadList';
 import { emptyTitle } from '@/features/messaging/inbox/threads/list/empty-title';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
 }));
@@ -38,57 +42,67 @@ function show(q: string, opts: { threads?: ReturnType<typeof thread>[]; msg?: st
   return open;
 }
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 describe('«الرسائل» in the chats list (docs/37 NEW 1)', () => {
   it('1–2 characters: the hint, no section and no request', () => {
     show('اَبْ');
     expect(screen.getByText(W.hint)).toBeTruthy();
     expect(screen.queryByRole('heading', { name: W.section })).toBeNull();
-    expect(apiFetch).not.toHaveBeenCalled();
+    expect(mockApi.reads()).toHaveLength(0);
   });
 
   it('from 3 characters: the hits with the match marked, «عرض مزيد من الرسائل» while a cursor remains', async () => {
-    apiFetch.mockResolvedValue({ items: [HIT], next_cursor: 'c_1' });
+    mockApi.onRead(() => ({ items: [HIT], next_cursor: 'c_1' }));
     show('اسلام');
     expect(await screen.findByText(HIT.display_name)).toBeTruthy();
     expect(screen.getByRole('heading', { name: W.section })).toBeTruthy();
     expect(screen.queryByText(emptyTitle({ page: 1, q: 'اسلام' }))).toBeNull();
     expect(document.querySelector('mark')?.textContent).toBe('إسلام');
-    expect(apiFetch).toHaveBeenCalledWith(`/threads/search?q=${encodeURIComponent('اسلام')}`);
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: `/threads/search?q=${encodeURIComponent('اسلام')}`,
+    });
     fireEvent.click(screen.getByRole('button', { name: W.more }));
-    expect(apiFetch).toHaveBeenLastCalledWith(`/threads/search?q=${encodeURIComponent('اسلام')}&cursor=c_1`);
+    expect(mockApi.reads().at(-1)).toEqual({
+      method: 'GET',
+      path: `/threads/search?q=${encodeURIComponent('اسلام')}&cursor=c_1`,
+    });
   });
 
   it('a tap opens that chat at that message; the open hit is marked current', async () => {
-    apiFetch.mockResolvedValue({ items: [HIT], next_cursor: null });
+    mockApi.onRead(() => ({ items: [HIT], next_cursor: null }));
     const open = show('اسلام', { msg: ID });
     fireEvent.click(await screen.findByRole('button', { name: new RegExp(HIT.display_name) }));
     expect(open).toHaveBeenCalledWith({ phone: HIT.phone_e164, msg: ID });
-    expect(screen.getByRole('button', { name: new RegExp(HIT.display_name) }).getAttribute('aria-current')).toBe('true');
+    expect(
+      screen
+        .getByRole('button', { name: new RegExp(HIT.display_name) })
+        .getAttribute('aria-current'),
+    ).toBe('true');
     expect(screen.queryByRole('button', { name: W.more })).toBeNull();
   });
 
   it('no chat but message hits: no «no chats» empty state; with chats, «المحادثات» labels them', async () => {
-    apiFetch.mockResolvedValue({ items: [HIT], next_cursor: null });
+    mockApi.onRead(() => ({ items: [HIT], next_cursor: null }));
     show('اسلام', { threads: [thread()] });
     expect(await screen.findByText(W.chats)).toBeTruthy();
   });
 
   it('nothing found says so', async () => {
-    apiFetch.mockResolvedValue({ items: [], next_cursor: null });
+    mockApi.onRead(() => ({ items: [], next_cursor: null }));
     show('وداعا');
     expect(await screen.findByText(W.empty)).toBeTruthy();
   });
 
   it('a failed search says so', async () => {
-    apiFetch.mockRejectedValue(new Error('down'));
+    mockApi.onRead(() => Promise.reject(new Error('down')));
     show('وداعا');
     expect(await screen.findByText(W.failed)).toBeTruthy();
   });
 
   it('a chat without a name shows its number as an LTR island', async () => {
-    apiFetch.mockResolvedValue({ items: [{ ...HIT, display_name: null }], next_cursor: null });
+    mockApi.onRead(() => ({ items: [{ ...HIT, display_name: null }], next_cursor: null }));
     show('اسلام');
     const phone = await screen.findByText(formatPhone(HIT.phone_e164));
     expect(phone.closest('bdi')?.getAttribute('dir')).toBe('ltr');

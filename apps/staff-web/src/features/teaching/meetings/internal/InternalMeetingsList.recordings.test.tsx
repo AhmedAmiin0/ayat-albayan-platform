@@ -5,17 +5,29 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { InternalMeetingsList } from './InternalMeetingsList';
 import { meetingRow } from '@/features/teaching/meetings/meeting-fixture';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const R = t.classroom.recordings;
 const row = (over: Partial<MeetingView> = {}): MeetingView =>
   meetingRow({ ends_at: '2026-10-05T10:00:00.000Z', state: 'ended', can_join: false, ...over });
-const REC: LessonRecordingView[] = [{ id: 'r1', status: 'done', started_at: '2026-10-05T09:01:00Z', ended_at: '2026-10-05T09:59:00Z', url: 'https://files.test/r1.mp4' }];
+const REC: LessonRecordingView[] = [
+  {
+    id: 'r1',
+    status: 'done',
+    started_at: '2026-10-05T09:01:00Z',
+    ended_at: '2026-10-05T09:59:00Z',
+    url: 'https://files.test/r1.mp4',
+  },
+];
 
 function open(status: { configured: boolean }) {
-  apiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path === '/meetings') return [row(), row({ id: 'm-2', title: 'لغيري', can_manage: false })];
     if (path === '/recordings/status') return status;
     return REC;
@@ -36,8 +48,10 @@ describe('InternalMeetingsList «التسجيلات»', () => {
     expect(buttons).toHaveLength(1);
     fireEvent.click(buttons[0] as HTMLElement);
     const panel = screen.getByRole('dialog', { name: R.title });
-    expect((await within(panel).findByRole('link')).getAttribute('href')).toBe('https://files.test/r1.mp4');
-    expect(apiFetch).toHaveBeenCalledWith('/meetings/m-1/recordings');
+    expect((await within(panel).findByRole('link')).getAttribute('href')).toBe(
+      'https://files.test/r1.mp4',
+    );
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/meetings/m-1/recordings' });
     expect(within(panel).queryByText(R.notConfigured)).toBeNull();
   });
 

@@ -6,9 +6,13 @@ import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
 import type { StudentsSearch } from './search';
 import { StudentsPage } from './StudentsPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const ROW = studentListItemFixture({
   id: 's1',
@@ -17,8 +21,12 @@ const ROW = studentListItemFixture({
 });
 
 function renderPage(state: Partial<StudentsSearch>, total = 1) {
-  apiFetch.mockImplementation((path: string) =>
-    Promise.resolve(path.startsWith('/students?') ? { items: total ? [ROW] : [], total, page: 1, pageSize: 20 } : []),
+  mockApi.onRead(({ path }) =>
+    Promise.resolve(
+      path.startsWith('/students?')
+        ? { items: total ? [ROW] : [], total, page: 1, pageSize: 20 }
+        : [],
+    ),
   );
   const onChange = vi.fn();
   render(
@@ -34,17 +42,29 @@ const filterLabel = (col: string) => t.table.filterBy.replace('{col}', col);
 describe('StudentsPage sort + column filters (R-NFR-08)', () => {
   it('sends sort, dir and the column filters to GET /students', () => {
     renderPage({ sort: { sort: 'guardian', dir: 'desc' }, columns: { code: '018' } });
-    const qs = new URLSearchParams([['page', '2'], ['pageSize', '20'], ['sort', 'guardian'], ['dir', 'desc'], ['code', '018']]);
-    expect(apiFetch).toHaveBeenCalledWith(`/students?${qs}`);
+    const qs = new URLSearchParams([
+      ['page', '2'],
+      ['pageSize', '20'],
+      ['sort', 'guardian'],
+      ['dir', 'desc'],
+      ['code', '018'],
+    ]);
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: `/students?${qs}` });
   });
 
   it('six data columns sort; a header click goes to page 1 and keeps the filters', async () => {
     const onChange = renderPage({ filters: { program: 'quran' } });
     await screen.findByText('أم جود');
-    expect(screen.getAllByRole('columnheader').filter((th) => th.hasAttribute('aria-sort'))).toHaveLength(6);
+    expect(
+      screen.getAllByRole('columnheader').filter((th) => th.hasAttribute('aria-sort')),
+    ).toHaveLength(6);
     fireEvent.click(screen.getByRole('button', { name: t.students.teacher }));
     expect(onChange).toHaveBeenCalledWith(
-      expect.objectContaining({ page: 1, filters: { program: 'quran' }, sort: { sort: 'teacher', dir: 'asc' } }),
+      expect.objectContaining({
+        page: 1,
+        filters: { program: 'quran' },
+        sort: { sort: 'teacher', dir: 'asc' },
+      }),
     );
   });
 

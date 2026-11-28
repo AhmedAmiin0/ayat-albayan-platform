@@ -4,9 +4,13 @@ import { t } from '@ab/web-kit';
 import { PAYMENT } from '@/features/finance/subscriptions/money-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { PaymentsPage } from './PaymentsPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: {} }));
 
 const page = (amount: unknown) => ({
@@ -19,10 +23,10 @@ const page = (amount: unknown) => ({
 
 /** The raw answer: the call parses it with the route's schema, as the real client does. */
 function answer(body: unknown) {
-  apiFetch.mockResolvedValue(body);
+  mockApi.onRead(() => body);
 }
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 it('a payments answer that breaks the contract shows the load error, and retry reads again', async () => {
   answer(page('145'));

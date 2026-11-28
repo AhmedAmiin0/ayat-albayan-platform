@@ -6,10 +6,16 @@ import type { ListUrlState } from '@/lib/list/list-url';
 import { TeachersPage } from '@/features/people/teachers/TeachersPage/TeachersPage';
 import type { TeacherListRow } from '@ab/shared';
 import { teacherRowFixture } from '@ab/shared/testing';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
+}));
 
 const FATMA: TeacherListRow = teacherRowFixture({
   id: 't1',
@@ -35,7 +41,7 @@ const FATMA: TeacherListRow = teacherRowFixture({
 const LIST: ListUrlState = { page: 1, sort: {}, filters: {} };
 
 function renderPage(page: { items: TeacherListRow[]; total: number }, list: ListUrlState = LIST) {
-  apiFetch.mockResolvedValue({ ...page, page: 1, pageSize: 25 });
+  mockApi.onRead(() => ({ ...page, page: 1, pageSize: 25 }));
   const onOpen = vi.fn();
   const onList = vi.fn();
   render(
@@ -51,7 +57,7 @@ describe('TeachersPage (R-TCH-01, docs/07 §6)', () => {
     renderPage({ items: [FATMA], total: 1 });
     expect(screen.getByRole('heading', { level: 1, name: t.teachers.title })).toBeTruthy();
     expect(await screen.findByText(t.teachers.count.replace('{n}', '1'))).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith('/teachers?page=1&pageSize=25');
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/teachers?page=1&pageSize=25' });
   });
 
   it('renders a row: name + gender line, programs, LTR phone, status chip with its glyph', async () => {
@@ -60,7 +66,11 @@ describe('TeachersPage (R-TCH-01, docs/07 §6)', () => {
     if (!row) throw new Error('row missing');
     const cells = within(row);
     expect(cells.getByText(t.teachers.genderLabel.female)).toBeTruthy();
-    expect(cells.getByText(`${t.enums.program.quran}${t.common.listSeparator}${t.enums.program.islamic_studies}`)).toBeTruthy();
+    expect(
+      cells.getByText(
+        `${t.enums.program.quran}${t.common.listSeparator}${t.enums.program.islamic_studies}`,
+      ),
+    ).toBeTruthy();
     expect(cells.getByText('+20 10 6612 3049').getAttribute('dir')).toBe('ltr');
     const chip = cells.getByText(t.enums.teacherStatus.inactive).parentElement;
     expect(chip?.querySelector('[data-glyph="struck"]')).toBeTruthy();

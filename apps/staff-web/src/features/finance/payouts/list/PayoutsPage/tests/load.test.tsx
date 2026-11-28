@@ -4,21 +4,26 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYOUT } from '@/features/finance/subscriptions/money-fixture';
 import { t } from '@ab/web-kit';
 import { PayoutsPage } from '@/features/finance/payouts/list/PayoutsPage/PayoutsPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  apiFetch,
+  call: (request: unknown) => mockApi.call(request),
 }));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));
 
-const SUMMARY = { currency: 'EGP', rows: [], totals: { earned: 0, paid: 0, owed: 0, teachers_owed: 0 } };
+const SUMMARY = {
+  currency: 'EGP',
+  rows: [],
+  totals: { earned: 0, paid: 0, owed: 0, teachers_owed: 0 },
+};
 
 function renderPage(failing: string) {
   let fail = true;
-  apiFetch.mockImplementation(async (path: unknown) => {
+  mockApi.onRead(async ({ path }) => {
     if (String(path).startsWith(failing) && fail) throw new Error('down');
     return path === '/teacher-earnings/summary' ? SUMMARY : [PAYOUT];
   });
@@ -32,7 +37,7 @@ function renderPage(failing: string) {
 }
 
 describe('PayoutsPage load states (R-PAY-01)', () => {
-  beforeEach(() => apiFetch.mockReset());
+  beforeEach(() => mockApi.reset('read'));
 
   it('a failed month read shows the error line, and retry reads it again', async () => {
     const { heal } = renderPage('/payouts');

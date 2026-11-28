@@ -5,9 +5,13 @@ import { t } from '@ab/web-kit';
 import { liveLesson } from '@/features/sales/sales/academy.fixtures';
 import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesLiveStrip } from './SalesLiveStrip';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 // The router's Link (a client-side move keeps the drafts); a plain <a href> would reload the page.
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, children, ...rest }: { to: string; children: ReactNode }) => (
@@ -16,9 +20,10 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   ),
 }));
-const live = (rows: unknown[]) => apiFetch.mockImplementation(async (path: string) => (path === '/sales/live' ? rows : {}));
+const live = (rows: unknown[]) =>
+  mockApi.onRead(async ({ path }) => (path === '/sales/live' ? rows : {}));
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 describe('SalesLiveStrip compact (the inbox list head)', () => {
   it('renders ONE chip link with the count, to /sales/live, and no band', async () => {
@@ -35,13 +40,15 @@ describe('SalesLiveStrip compact (the inbox list head)', () => {
   it('renders nothing with nothing running', async () => {
     live([]);
     const { container } = renderWithQuery(<SalesLiveStrip enabled compact />);
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/sales/live'));
+    await vi.waitFor(() =>
+      expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/sales/live' }),
+    );
     expect(container.textContent).toBe('');
   });
 
   it('renders nothing and fetches nothing without the scope key', () => {
     const { container } = renderWithQuery(<SalesLiveStrip enabled={false} compact />);
     expect(container.textContent).toBe('');
-    expect(apiFetch).not.toHaveBeenCalled();
+    expect(mockApi.reads()).toHaveLength(0);
   });
 });

@@ -6,10 +6,16 @@ import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
 import type { ListUrlState } from '@/lib/list/list-url';
 import { TeachersPage } from '@/features/people/teachers/TeachersPage/TeachersPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
+}));
 
 const ROW = teacherRowFixture({
   display_name_ar: 'فاطمة',
@@ -18,7 +24,7 @@ const ROW = teacherRowFixture({
 });
 
 function renderPage(list: ListUrlState, total = 1) {
-  apiFetch.mockResolvedValue({ items: total ? [ROW] : [], total, page: list.page, pageSize: 25 });
+  mockApi.onRead(() => ({ items: total ? [ROW] : [], total, page: list.page, pageSize: 25 }));
   const onList = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -30,18 +36,35 @@ function renderPage(list: ListUrlState, total = 1) {
 
 describe('TeachersPage sort + column filters (R-NFR-08)', () => {
   it('sends the sort and filters with the page to GET /teachers', () => {
-    renderPage({ page: 2, sort: { sort: 'max_students', dir: 'desc' }, filters: { status: 'active', name: 'فاط' } });
-    const qs = new URLSearchParams([['page', '2'], ['pageSize', '25'], ['sort', 'max_students'], ['dir', 'desc'], ['status', 'active'], ['name', 'فاط']]);
-    expect(apiFetch).toHaveBeenCalledWith(`/teachers?${qs}`);
+    renderPage({
+      page: 2,
+      sort: { sort: 'max_students', dir: 'desc' },
+      filters: { status: 'active', name: 'فاط' },
+    });
+    const qs = new URLSearchParams([
+      ['page', '2'],
+      ['pageSize', '25'],
+      ['sort', 'max_students'],
+      ['dir', 'desc'],
+      ['status', 'active'],
+      ['name', 'فاط'],
+    ]);
+    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: `/teachers?${qs}` });
   });
 
   it('a header click sorts on page 1; every data column sorts', async () => {
     const onList = renderPage({ page: 3, sort: {}, filters: {} });
     await screen.findByText('فاطمة');
-    const sortable = screen.getAllByRole('columnheader').filter((th) => th.hasAttribute('aria-sort'));
+    const sortable = screen
+      .getAllByRole('columnheader')
+      .filter((th) => th.hasAttribute('aria-sort'));
     expect(sortable).toHaveLength(5);
     fireEvent.click(screen.getByRole('button', { name: t.teachers.maxStudents }));
-    expect(onList).toHaveBeenCalledWith({ page: 1, sort: { sort: 'max_students', dir: 'asc' }, filters: {} });
+    expect(onList).toHaveBeenCalledWith({
+      page: 1,
+      sort: { sort: 'max_students', dir: 'asc' },
+      filters: {},
+    });
   });
 
   it('a select filter goes back to page 1', async () => {
@@ -49,7 +72,9 @@ describe('TeachersPage sort + column filters (R-NFR-08)', () => {
     await screen.findByText('فاطمة');
     const label = t.table.filterBy.replace('{col}', t.teachers.status);
     openFilters();
-    fireEvent.change(screen.getByRole('combobox', { name: label }), { target: { value: 'inactive' } });
+    fireEvent.change(screen.getByRole('combobox', { name: label }), {
+      target: { value: 'inactive' },
+    });
     expect(onList).toHaveBeenCalledWith({ page: 1, sort: {}, filters: { status: 'inactive' } });
   });
 

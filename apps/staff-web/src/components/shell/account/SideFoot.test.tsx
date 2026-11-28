@@ -3,13 +3,22 @@ import { render as rtlRender, screen } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { SideFoot } from './SideFoot';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
-const apiFetch = vi.hoisted(() => vi.fn(() => Promise.reject(new Error('offline'))));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
+}));
+const mockApi = mockCall();
+mockApi.onRead(() => Promise.reject(new Error('offline')));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 vi.mock('./LogoutButton', () => ({ LogoutButton: () => <button type="button">out</button> }));
-vi.mock('@ab/web-kit/components/shell/LanguageSwitch', () => ({ LanguageSwitch: () => <button type="button">lang</button> }));
+vi.mock('@ab/web-kit/components/shell/LanguageSwitch', () => ({
+  LanguageSwitch: () => <button type="button">lang</button>,
+}));
 
 // The profile query fails here and the foot still shows the email.
 const render = (ui: ReactElement) =>

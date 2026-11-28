@@ -5,19 +5,40 @@ import { scheduleLesson, teacher } from '@/features/sales/sales/academy.fixtures
 import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesSchedule } from '@/features/sales/sales/schedule/SalesSchedule/SalesSchedule';
 import type { SalesScheduleSearch } from '@/features/sales/sales/schedule/schedule-search';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const iso = (min: number) => new Date(Date.now() + min * 60_000).toISOString();
-const NOW_LESSON = scheduleLesson({ id: 'l-now', starts_at: iso(-5), ends_at: iso(25), trial: true });
-const LATER = scheduleLesson({ id: 'l-later', starts_at: iso(120), ends_at: iso(150), status: 'scheduled' });
-const OTHER = scheduleLesson({ id: 'l-b', teacher: { id: 'tc2', display_name_ar: 'محمد', display_name_en: null }, students: [{ id: 's3', code: 'AB-0200', name: 'يوسف' }], status: 'completed', makeup: true });
+const NOW_LESSON = scheduleLesson({
+  id: 'l-now',
+  starts_at: iso(-5),
+  ends_at: iso(25),
+  trial: true,
+});
+const LATER = scheduleLesson({
+  id: 'l-later',
+  starts_at: iso(120),
+  ends_at: iso(150),
+  status: 'scheduled',
+});
+const OTHER = scheduleLesson({
+  id: 'l-b',
+  teacher: { id: 'tc2', display_name_ar: 'محمد', display_name_en: null },
+  students: [{ id: 's3', code: 'AB-0200', name: 'يوسف' }],
+  status: 'completed',
+  makeup: true,
+});
 
 function renderDay(search: SalesScheduleSearch, lessons = [NOW_LESSON, LATER, OTHER]) {
-  apiFetch.mockImplementation(async (path: string) => {
+  mockApi.onRead(async ({ path }) => {
     if (path.startsWith('/sales/schedule')) return { date: search.date ?? '2026-10-12', lessons };
-    if (path === '/sales/teachers') return [teacher(), teacher({ id: 'c2000000-0000-4000-8000-0000000000c2', name: 'محمد' })];
+    if (path === '/sales/teachers')
+      return [teacher(), teacher({ id: 'c2000000-0000-4000-8000-0000000000c2', name: 'محمد' })];
     throw new Error(path);
   });
   const onSearch = vi.fn();
@@ -25,13 +46,16 @@ function renderDay(search: SalesScheduleSearch, lessons = [NOW_LESSON, LATER, OT
   return onSearch;
 }
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 describe('SalesSchedule «جدول الحلقات» (read-only)', () => {
   it('the day by teacher: time, students, status, trial / makeup badges; join only on the running lesson', async () => {
     renderDay({ date: '2026-10-12' });
     const board = await screen.findByRole('region', { name: t.schedule.dayBoard });
-    expect(apiFetch).toHaveBeenCalledWith('/sales/schedule?date=2026-10-12');
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/sales/schedule?date=2026-10-12',
+    });
     const abrar = within(board).getByRole('region', { name: 'أبرار' });
     expect(within(abrar).getAllByText('سهيلة')).toHaveLength(2);
     expect(within(abrar).getByText(t.schedule.trialTag)).toBeTruthy();
@@ -52,9 +76,17 @@ describe('SalesSchedule «جدول الحلقات» (read-only)', () => {
   it('no edit, cancel, move, book or report action: the only buttons are the chips opening the read-only details', async () => {
     renderDay({ date: '2026-10-12' });
     const board = await screen.findByRole('region', { name: t.schedule.dayBoard });
-    const live = within(board).queryAllByRole('button').filter((b) => !b.hasAttribute('disabled'));
-    expect(live.map((b) => b.textContent?.includes('سهيلة') || b.textContent?.includes('يوسف'))).toEqual([true, true, true]);
-    expect(board.textContent).not.toMatch(new RegExp([t.lessons.event.cancel_by_admin, t.lessons.event.reschedule, t.schedule.book].join('|')));
+    const live = within(board)
+      .queryAllByRole('button')
+      .filter((b) => !b.hasAttribute('disabled'));
+    expect(
+      live.map((b) => b.textContent?.includes('سهيلة') || b.textContent?.includes('يوسف')),
+    ).toEqual([true, true, true]);
+    expect(board.textContent).not.toMatch(
+      new RegExp(
+        [t.lessons.event.cancel_by_admin, t.lessons.event.reschedule, t.schedule.book].join('|'),
+      ),
+    );
   });
 
   it('date navigation and the teacher filter go to the URL; today stays out of it', async () => {
@@ -66,12 +98,18 @@ describe('SalesSchedule «جدول الحلقات» (read-only)', () => {
     const select = screen.getByRole('combobox', { name: t.schedule.teacherFilter });
     await within(select).findByText('محمد');
     fireEvent.change(select, { target: { value: 'c2000000-0000-4000-8000-0000000000c2' } });
-    expect(onSearch).toHaveBeenLastCalledWith({ date: '2030-11-20', teacherId: 'c2000000-0000-4000-8000-0000000000c2' });
+    expect(onSearch).toHaveBeenLastCalledWith({
+      date: '2030-11-20',
+      teacherId: 'c2000000-0000-4000-8000-0000000000c2',
+    });
   });
 
   it('an empty day for one teacher says so; the API gets the teacher', async () => {
     renderDay({ date: '2026-10-12', teacherId: 'c2000000-0000-4000-8000-0000000000c2' }, []);
     expect(await screen.findByText(t.sales.academySchedule.emptyTeacher)).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith('/sales/schedule?date=2026-10-12&teacherId=c2000000-0000-4000-8000-0000000000c2');
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/sales/schedule?date=2026-10-12&teacherId=c2000000-0000-4000-8000-0000000000c2',
+    });
   });
 });

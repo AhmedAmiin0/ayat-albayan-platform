@@ -4,12 +4,16 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { fakePricingApi } from '@/features/finance/pricing/fake-pricing-api';
 import { PricingPage } from '@/features/finance/pricing/PricingPage/PricingPage';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 function renderPage() {
-  apiFetch.mockImplementation((path: string) => Promise.resolve(fakePricingApi(path)));
+  mockApi.onRead(({ path }) => Promise.resolve(fakePricingApi(path)));
   render(
     <QueryClientProvider client={new QueryClient()}>
       <PricingPage />
@@ -28,10 +32,14 @@ describe('PricingPage (docs/08)', () => {
     renderPage();
     expect(screen.getByRole('heading', { level: 1, name: t.pricing.title })).toBeTruthy();
     expect((await price()).textContent).toContain('180 ر.س');
-    expect(apiFetch).toHaveBeenCalledWith(
-      '/pricing/quote?country=SA&duration=45&tier=standard&students=1&discount=0',
-    );
-    expect(apiFetch).toHaveBeenCalledWith('/pricing/catalog?country=SA&duration=45');
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/pricing/quote?country=SA&duration=45&tier=standard&students=1&discount=0',
+    });
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/pricing/catalog?country=SA&duration=45',
+    });
   });
 
   it('re-asks after a change and shows the new quote (الكويت, 3 مرات → 18 د.ك)', async () => {
@@ -39,9 +47,10 @@ describe('PricingPage (docs/08)', () => {
     await price();
     pick(t.pricing.steps.country, t.pricing.countries.KW);
     await waitFor(async () => expect((await price()).textContent).toContain('18 د.ك'));
-    expect(apiFetch).toHaveBeenCalledWith(
-      '/pricing/quote?country=KW&duration=45&tier=standard&students=1&discount=0',
-    );
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/pricing/quote?country=KW&duration=45&tier=standard&students=1&discount=0',
+    });
   });
 
   it('quotes another country in USD with the rate date and the attribution link', async () => {
@@ -54,9 +63,10 @@ describe('PricingPage (docs/08)', () => {
       expect(link.getAttribute('href')).toBe('https://www.exchangerate-api.com');
     }
     expect((await price()).textContent).toContain('48 $');
-    expect(apiFetch).toHaveBeenCalledWith(
-      '/pricing/quote?duration=45&tier=standard&students=1&discount=0',
-    );
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/pricing/quote?duration=45&tier=standard&students=1&discount=0',
+    });
   });
 
   it('hides the duration for the weekly package and says it is a fixed 90 minutes', async () => {
@@ -77,9 +87,10 @@ describe('PricingPage (docs/08)', () => {
     expect(
       await screen.findByRole('heading', { level: 3, name: t.pricing.packages.custom.name }),
     ).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith(
-      '/pricing/quote?country=SA&duration=45&count=20&students=1&discount=0',
-    );
+    expect(mockApi.reads()).toContainEqual({
+      method: 'GET',
+      path: '/pricing/quote?country=SA&duration=45&count=20&students=1&discount=0',
+    });
   });
 
   it('shows the discount line and the featured saving only when they apply', async () => {

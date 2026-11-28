@@ -3,10 +3,12 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { StaffPanel } from '@/features/people/auth/login/StaffPanel/StaffPanel';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@ab/web-kit/auth/sign-in/sign-in', () => ({ signIn: vi.fn(), signInWithCode: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn(), useSearch: () => ({}) }));
 
@@ -23,12 +25,13 @@ function renderPanel() {
 
 describe('StaffPanel «الدخول برمز واتساب» (docs/46 A6)', () => {
   beforeEach(() => {
-    apiFetch.mockReset();
-    apiSend.mockReset().mockResolvedValue(undefined);
+    mockApi.reset('read');
+    mockApi.reset('write');
+    mockApi.onWrite(() => undefined);
   });
 
   it('shows the link while staff codes can be sent, even with the family flag off', async () => {
-    apiFetch.mockResolvedValue({ available: false, staff: true });
+    mockApi.onRead(() => ({ available: false, staff: true }));
     renderPanel();
     fireEvent.click(await screen.findByRole('button', { name: T.withCode }));
     expect(screen.getByText(T.codeIntro)).toBeTruthy();
@@ -37,8 +40,12 @@ describe('StaffPanel «الدخول برمز واتساب» (docs/46 A6)', () =>
     });
     fireEvent.click(screen.getByRole('button', { name: t.familyAuth.sendCode }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/auth/staff-code/request', {
-        phone: '+966500000005',
+      expect(mockApi.writes()).toContainEqual({
+        method: 'POST',
+        path: '/auth/staff-code/request',
+        body: {
+          phone: '+966500000005',
+        },
       }),
     );
     fireEvent.click(screen.getByRole('button', { name: t.familyAuth.changePhone }));
@@ -47,9 +54,9 @@ describe('StaffPanel «الدخول برمز واتساب» (docs/46 A6)', () =>
   });
 
   it('no link while staff codes are off', async () => {
-    apiFetch.mockResolvedValue({ available: true, staff: false });
+    mockApi.onRead(() => ({ available: true, staff: false }));
     renderPanel();
-    await waitFor(() => expect(apiFetch).toHaveBeenCalled());
+    await waitFor(() => expect(mockApi.reads()).not.toHaveLength(0));
     expect(screen.getByRole('button', { name: t.familyAuth.forgot })).toBeTruthy();
     expect(screen.queryByRole('button', { name: T.withCode })).toBeNull();
   });
@@ -62,8 +69,8 @@ describe('the teacher code tab speaks for teachers (review)', () => {
       ok: false,
       error: t.familyAuth.errors.codes_unavailable,
     });
-    apiFetch.mockResolvedValue({ available: false, staff: true });
-    apiSend.mockResolvedValue(undefined);
+    mockApi.onRead(() => ({ available: false, staff: true }));
+    mockApi.onWrite(() => undefined);
     renderPanel();
     fireEvent.click(await screen.findByRole('button', { name: T.withCode }));
     fireEvent.change(screen.getByLabelText(t.familyAuth.phone), {
