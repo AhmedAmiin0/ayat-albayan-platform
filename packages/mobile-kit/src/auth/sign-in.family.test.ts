@@ -7,6 +7,7 @@ import { mockCall } from '@ab/testing/mock-call';
 // check is the family's (audience).
 
 const mockApi = mockCall();
+const mockApiSend = jest.fn();
 const mockVerifyOtp = jest.fn();
 const mockSetSession = jest.fn();
 const mockSignOut = jest.fn();
@@ -14,6 +15,7 @@ jest.mock('./audience', () => ({ audience: () => 'family' }));
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
   call: (request: unknown) => mockApi.call(request),
+  apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
 }));
 jest.mock('../lib/http/supabase', () => ({
   supabase: {
@@ -30,41 +32,34 @@ const session = { ...tokens, expires_in: 3600, expires_at: null };
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockApi.reset();
   mockVerifyOtp.mockResolvedValue({ error: null });
   mockSetSession.mockResolvedValue({ error: null });
 });
 
 test('a guardian: the family code routes → verifyOtp with the token hash → in', async () => {
-  mockApi.onWrite(() => ({ token_hash: 'hash', type: 'magiclink' }));
-  mockApi.onRead(() => ({ role: 'guardian' }));
+  mockApiSend.mockResolvedValue({ token_hash: 'hash', type: 'magiclink' });
+  mockApi.answer('GET', '/auth/me', { role: 'guardian' });
   const body = { phone: '+966500000005', code: '123456' };
   expect(await signInWithCode(body, authApi.familyCodes)).toEqual({ ok: true });
-  expect(mockApi.writes()).toContainEqual({
-    method: 'POST',
-    path: '/auth/code/verify',
-    body: body,
-  });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/code/verify', body);
   expect(mockVerifyOtp).toHaveBeenCalledWith({ type: 'magiclink', token_hash: 'hash' });
 });
 
 test('a student code + password goes through POST /auth/login and enters', async () => {
-  mockApi.onWrite(() => session);
-  mockApi.onRead(() => ({ role: 'student' }));
+  mockApiSend.mockResolvedValue(session);
+  mockApi.answer('GET', '/auth/me', { role: 'student' });
   expect(await signIn({ identifier: 'AB-1234', password: 'pw' })).toEqual({ ok: true });
-  expect(mockApi.writes()).toContainEqual({
-    method: 'POST',
-    path: '/auth/login',
-    body: {
-      username: 'AB-1234',
-      password: 'pw',
-    },
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/login', {
+    username: 'AB-1234',
+    password: 'pw',
   });
   expect(mockSetSession).toHaveBeenCalledWith(tokens);
 });
 
 test('a staff login is refused in the family app with the inverted notice', async () => {
-  mockApi.onWrite(() => session);
-  mockApi.onRead(() => ({ role: 'teacher' }));
+  mockApiSend.mockResolvedValue(session);
+  mockApi.answer('GET', '/auth/me', { role: 'teacher' });
   const res = await signIn({ identifier: 'omar.t', password: 'pw' });
   expect(res).toEqual({ ok: false, error: t.familyApp.wrongApp });
   expect(mockSignOut).toHaveBeenCalled();

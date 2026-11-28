@@ -1,10 +1,9 @@
 import { changePassword } from './account-api';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const mockApiSend = jest.fn();
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 
 const body = { current_password: 'old-secret', new_password: 'new-secret-1' };
@@ -12,17 +11,17 @@ const body = { current_password: 'old-secret', new_password: 'new-secret-1' };
 beforeEach(() => jest.clearAllMocks());
 
 test('PUT /me/password through its route object, with no answer body', async () => {
-  mockApi.onWrite(() => undefined);
+  mockApiSend.mockResolvedValue(undefined);
   await expect(changePassword(body)).resolves.toBeUndefined();
-  expect(mockApi.writes()).toContainEqual({ method: 'PUT', path: '/me/password', body: body });
+  expect(mockApiSend).toHaveBeenCalledWith('PUT', '/me/password', body);
 });
 
 test('an answer with a body breaks the route and is refused', async () => {
-  mockApi.onWrite(() => ({ ok: true }));
+  mockApiSend.mockResolvedValue({ ok: true });
   await expect(changePassword(body)).rejects.toThrow();
 });
 
 test('a refusal is passed on to the form', async () => {
-  mockApi.onWrite(() => Promise.reject(new Error('wrong_password')));
+  mockApiSend.mockRejectedValue(new Error('wrong_password'));
   await expect(changePassword(body)).rejects.toThrow('wrong_password');
 });

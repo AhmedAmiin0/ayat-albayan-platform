@@ -3,17 +3,13 @@ import * as Notifications from 'expo-notifications';
 import { ApiError } from '../lib/http/api';
 import { ensurePushPermission } from './permission';
 import { registerPush, TOKEN_KEY } from './registerPush';
-import { mockCall } from '@ab/testing/mock-call';
 
 // A role without notifications.push (sales, a classroom assistant): PUT /me/push-tokens answers 403.
-const mockApi = mockCall();
+const mockApiSend = jest.fn();
 // Signed in with a valid token (live-session.test.ts covers the check itself).
 jest.mock('./live-session', () => ({ hasLiveSession: jest.fn(async () => true) }));
 jest.mock('expo-device', () => ({ __esModule: true, isDevice: true }));
-jest.mock('expo-constants', () => ({
-  __esModule: true,
-  default: { expoConfig: { extra: { eas: { projectId: 'proj-1' } } } },
-}));
+jest.mock('expo-constants', () => ({ __esModule: true, default: { expoConfig: { extra: { eas: { projectId: 'proj-1' } } } } }));
 jest.mock('expo-notifications', () => ({
   getExpoPushTokenAsync: jest.fn(async () => ({ type: 'expo', data: 'ExponentPushToken[x]' })),
   setNotificationChannelAsync: jest.fn(),
@@ -22,7 +18,7 @@ jest.mock('expo-notifications', () => ({
 jest.mock('./permission', () => ({ ensurePushPermission: jest.fn(async () => true) }));
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 
 beforeEach(async () => {
@@ -32,7 +28,7 @@ beforeEach(async () => {
 
 test('a 403 from PUT /me/push-tokens is swallowed: no throw, no warning, no token kept', async () => {
   const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
-  mockApi.onWrite(() => Promise.reject(new ApiError(403, { code: 'forbidden' })));
+  mockApiSend.mockRejectedValue(new ApiError(403, { code: 'forbidden' }));
   await expect(registerPush()).resolves.toBeUndefined();
   expect(ensurePushPermission).toHaveBeenCalled();
   expect(Notifications.getExpoPushTokenAsync).toHaveBeenCalled();
@@ -43,7 +39,7 @@ test('a 403 from PUT /me/push-tokens is swallowed: no throw, no warning, no toke
 
 test('any other failure still resolves (dev builds warn why)', async () => {
   const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
-  mockApi.onWrite(() => Promise.reject(new ApiError(500)));
+  mockApiSend.mockRejectedValue(new ApiError(500));
   await expect(registerPush()).resolves.toBeUndefined();
   expect(warn).toHaveBeenCalledWith('registerPush', expect.any(ApiError));
   warn.mockRestore();
