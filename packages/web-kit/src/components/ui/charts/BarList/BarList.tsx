@@ -1,7 +1,7 @@
 import { Bar } from '@ab/web-kit/components/ui/charts/Bar';
 import type { BarListProps } from './BarList.types';
 import { listMax, printedValue } from './bar-list.helpers';
-import { RowLabel } from './RowLabel';
+import { RowLabel } from '@ab/web-kit/components/ui/charts/RowLabel';
 
 /**
  * Horizontal bars, one per row, with the value printed beside each, so the list reads without the
