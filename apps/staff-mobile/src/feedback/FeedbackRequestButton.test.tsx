@@ -1,7 +1,9 @@
 import type { LessonView } from '@ab/schedule';
+import type { TemplateView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
+import { meetReminder } from '@/inbox/shared/thread-fixtures';
 import { FeedbackRequestButton } from './FeedbackRequestButton';
 
 const mockApiSend = jest.fn();
@@ -11,7 +13,9 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
   apiFetch: (...mockArgs: unknown[]) => mockApiFetch(...mockArgs),
 }));
-const template = (status: string) => [{ key: 'lesson_feedback_request', status }];
+const template = (status: TemplateView['status']): TemplateView[] => [
+  { ...meetReminder, key: 'lesson_feedback_request', status },
+];
 
 const text = t.mobile.feedback;
 const lesson = (status: string, names = ['يوسف أحمد']) =>
