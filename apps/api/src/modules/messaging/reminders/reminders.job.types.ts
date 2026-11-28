@@ -14,4 +14,6 @@ export interface QueueInput {
   rules: ReminderRules;
   lessons: readonly ReminderLesson[];
   now: Date;
+  /** The web origin the classroom links are built on. */
+  origin: string;
 }

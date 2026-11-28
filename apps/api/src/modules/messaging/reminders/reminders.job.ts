@@ -10,6 +10,8 @@ import { ReminderQueue } from './reminders.queue';
 import { RemindersSettings } from './reminders.settings';
 import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
+import { loadEnv } from '@/config/env/env';
+import { firstWebOrigin } from '@/modules/teaching/classroom/classroom.config';
 
 const MINUTE = 60_000;
 /** R-MSG-02: every 5 minutes. */
@@ -88,7 +90,8 @@ export class RemindersJob extends TickerJob {
     summary.lessons = lessons.length;
     // Automatic messages OFF (docs/09 cut-over: the old Apps Script still reminds): queue nothing.
     if (settings.auto_messages_enabled) {
-      summary.queued = await this.reminderQueue.queue({ settings, rules, lessons, now });
+      const origin = firstWebOrigin(loadEnv().WEB_ORIGIN);
+      summary.queued = await this.reminderQueue.queue({ settings, rules, lessons, now, origin });
     }
     if (rules.confirmPush && settings.lesson_confirmation_required) {
       const at = { now, minutesBefore: rules.minutesBefore };

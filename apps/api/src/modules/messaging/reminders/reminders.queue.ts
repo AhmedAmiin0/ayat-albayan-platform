@@ -1,7 +1,6 @@
 import { joinWindowConfig } from '@ab/schedule';
 import { Injectable, Logger } from '@nestjs/common';
 import { livekitEnv, loadEnv } from '@/config/env/env';
-import { firstWebOrigin } from '@/modules/teaching/classroom/classroom.config';
 import type { QueuedMessage } from './queued-row';
 import {
   joinCandidates,
@@ -31,7 +30,7 @@ export class ReminderQueue {
    * This tick's reminders, with the link each lesson's teacher mode picks (ctx.auto = the academy
    * default), and the families' own classroom links. LiveKit and the origin are read every tick.
    */
-  async queue({ settings, rules, lessons, now }: QueueInput): Promise<number> {
+  async queue({ settings, rules, lessons, now, origin }: QueueInput): Promise<number> {
     const env = loadEnv();
     const livekit = livekitEnv(env) !== null;
     const wanted = wantedTemplates(rules, livekit);
@@ -40,7 +39,7 @@ export class ReminderQueue {
       auto: settings.meeting_link_auto,
       livekit,
       joinOk: approved.has('lesson_join_link'),
-      origin: firstWebOrigin(env.WEB_ORIGIN),
+      origin,
     };
     const { minutesBefore, sameDay, dayBeforeAt, teacherMinutesBefore } = rules;
     const plan = { minutesBefore, sameDay, dayBeforeAt, teacherMinutesBefore, origin: ctx.origin };

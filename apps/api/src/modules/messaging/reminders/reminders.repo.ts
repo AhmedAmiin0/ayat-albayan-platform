@@ -9,7 +9,7 @@ import type { QueuedMessage } from './queued-row';
 import type { RoomCandidate } from './plan/reminders.links';
 import { REMINDER_LESSON_STATUSES } from './plan/reminders.plan';
 import type { ReminderLesson } from './plan/reminders.plan.types';
-import { roomLinkRows } from './plan/reminders.room.repo';
+import { roomLinkRows } from './plan/reminders.room';
 
 const LESSON_SELECT =
   'id, starts_at, ends_at, status, meeting_link, teacher:teachers(id, display_name_ar, phone_e164, tz, meeting_mode, status, profile:profiles!teachers_profile_id_fkey(disabled_at)), lesson_students(student:students(id, name, code, guardian:guardians(id, phone_e164, tz)))' as const;

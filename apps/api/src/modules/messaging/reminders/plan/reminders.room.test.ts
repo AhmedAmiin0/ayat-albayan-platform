@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { hashLinkToken, looksLikeLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
 import { callsOf, chainDb } from '@/modules/messaging/reminders/chain-db.fake';
 import type { RoomCandidate } from './reminders.links';
-import { roomLinkRows } from './reminders.room.repo';
+import { roomLinkRows } from './reminders.room';
 
 // The family's classroom link minted by the reminders job (settings.meeting_link_auto). Invented
 // data.
