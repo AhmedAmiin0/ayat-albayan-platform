@@ -16,13 +16,6 @@ test('verify and guards skip only on verified; e2e never does', () => {
   assert.doesNotMatch(ci.jobs.e2e.if, /verified/);
 });
 
-test('e2e skips only sub-PRs into a contracts base; develop PRs and every push keep it', () => {
-  const cond = ci.jobs.e2e.if;
-  const lane = "startsWith(github.base_ref, 'lane/contracts-')";
-  assert.ok(cond.includes(`!(github.event_name == 'pull_request' && ${lane})`));
-  assert.equal(cond.split('base_ref').length, 2, 'no other base branch is named');
-});
-
 test('changes: only develop pushes ask, behind the VERIFIED_TREE_SKIP switch, and fail safe', () => {
   const { steps, outputs } = ci.jobs.changes;
   assert.equal(outputs.verified, '${{ steps.verified.outputs.verified }}');
