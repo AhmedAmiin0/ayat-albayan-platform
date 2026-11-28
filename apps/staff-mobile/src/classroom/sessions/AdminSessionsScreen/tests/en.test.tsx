@@ -12,7 +12,10 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: jest.fn(async () => [jest.requireActual('@/today/testing/fixtures').lesson({ id: 'now' })]),
+  apiFetch: jest.fn(async () => {
+    const { lesson } = jest.requireActual('@/today/testing/fixtures');
+    return [jest.requireActual('@/today/testing/answered').answered(lesson({ id: 'now' }))];
+  }),
   apiSend: jest.fn(),
 }));
 
@@ -21,7 +24,9 @@ afterEach(() => jest.useRealTimers());
 test('the live board reads in English', async () => {
   fakeNow(new Date('2026-10-01T13:10:00Z'));
   await renderWithQuery(<AdminSessionsScreen />);
-  expect(await screen.findByRole('header', { name: 'Live lessons' }, { timeout: 5000 })).toBeTruthy();
+  expect(
+    await screen.findByRole('header', { name: 'Live lessons' }, { timeout: 5000 }),
+  ).toBeTruthy();
   expect(await screen.findByRole('header', { name: 'Now 1' }, { timeout: 5000 })).toBeTruthy(); // after the query, not the frame
   expect(screen.getByRole('button', { name: 'Send the lesson link' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Previous day' })).toBeTruthy();

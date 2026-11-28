@@ -1,4 +1,5 @@
 import { act, screen, waitFor } from '@testing-library/react-native';
+import { answered } from '@/today/testing/answered';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import TodayRoute from '../../app/(tabs)/index';
@@ -29,16 +30,20 @@ test('offline with a saved day: lessons stay, no error, and «آخر تحديث�
   client.setQueryData(dayKey, [pending]);
   await renderWithQuery(<TodayRoute />, client);
   expect(screen.getByText('يوسف أحمد')).toBeTruthy();
-  expect(await screen.findByText(new RegExp(t.mobile.lastUpdated.replace(' {time}', '')))).toBeTruthy();
+  expect(
+    await screen.findByText(new RegExp(t.mobile.lastUpdated.replace(' {time}', ''))),
+  ).toBeTruthy();
   expect(screen.queryByRole('alert')).toBeNull();
 });
 
 test('pull to refresh asks the API again', async () => {
-  mockApiFetch.mockResolvedValue([pending]);
+  mockApiFetch.mockResolvedValue([pending].map(answered));
   const { container } = await renderWithQuery(<TodayRoute />);
   await screen.findByText('يوسف أحمد');
   const [scroll] = container.queryAll((node) => node.props['refreshControl'] !== undefined);
-  const control = scroll?.props['refreshControl'] as { props: { onRefresh: () => void } } | undefined;
+  const control = scroll?.props['refreshControl'] as
+    | { props: { onRefresh: () => void } }
+    | undefined;
   if (!control) throw new Error('no pull-to-refresh on the list');
   await act(async () => control.props.onRefresh());
   await waitFor(() => expect(dayCalls()).toBe(2));

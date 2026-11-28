@@ -1,6 +1,6 @@
 import { leadReadRoutes as reads, leadWriteRoutes as routes } from '@ab/shared';
 import { Controller } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -9,7 +9,6 @@ import { LeadProfileService } from './lead-profile.service';
 import { LeadsService } from './leads.service';
 
 /** Admin lead inbox (R-LEAD-01, R-LEAD-04). Upsert-by-phone has no route: the webhook calls it. */
-@ApiTags('leads')
 @ApiBearerAuth()
 @Controller()
 export class LeadsController {

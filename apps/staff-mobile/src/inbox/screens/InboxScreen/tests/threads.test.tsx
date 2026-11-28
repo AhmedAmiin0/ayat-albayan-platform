@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { InboxScreen } from '@/inbox/screens/InboxScreen/InboxScreen';
-import { thread } from '@/inbox/shared/thread-fixtures';
+import { thread, uid } from '@/inbox/shared/thread-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -24,7 +24,7 @@ const guardian: ThreadView = {
   lead_id: null,
   lead_status: null,
   lead_source: null,
-  guardian_id: 'g-1',
+  guardian_id: uid('g1'),
   guardian_name: 'أم إيمان',
 };
 const teacher: ThreadView = {
@@ -36,7 +36,7 @@ const teacher: ThreadView = {
   lead_id: null,
   lead_status: null,
   lead_source: null,
-  teacher_id: 't-1',
+  teacher_id: uid('t1'),
   teacher_name: 'أ. فاطمة',
 };
 const failedSend: ThreadView = { ...thread, phone_e164: '+966552147732', display_name: 'أم نور', last_status: 'failed' };

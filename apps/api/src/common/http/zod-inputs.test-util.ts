@@ -3,7 +3,7 @@ import { ROUTE_ARGS_METADATA } from '@nestjs/common/constants';
 import { RouteParamtypes } from '@nestjs/common/enums/route-paramtypes.enum';
 import { z } from 'zod';
 
-// Test-only: a handler's `@ZodBody` / `@ZodParam` pipe, so a test that calls the controller
+// Test-only: a handler's `@ZodParam` pipe, so a test that calls the controller
 // directly still proves the input is parsed (Nest runs the pipe; a direct call does not).
 
 const pipeSchema = z.custom<PipeTransform>(

@@ -4,7 +4,7 @@ import { SLOTS } from '@/teaching/reschedule/fixtures';
 import { muscat, pending } from '@/today/testing/fixtures';
 import { answered } from '@/today/testing/answered';
 import { FakeBackend } from '@/test/fake-backend';
-import { abrar, omar } from '@/calendar/overview/overview-fixtures';
+import { abrar, answeredOverview, omar } from '@/calendar/overview/overview-fixtures';
 
 // Week 26 Sep - 2 Oct 2026 (Riyadh, UTC+3); now is Thursday 1 Oct 16:20.
 
@@ -40,7 +40,16 @@ export function calendarBackend() {
     .on('GET /teachers/:id', () => teacherFixture(TEACHER))
     .on('GET /teachers/:id/availability', () => [])
     .on('GET /teachers/:id/time-off', () => [])
-    .on('GET /students/status-counts', () => ({ new: 0, trial: 0, pending_subscription: 0, active: 0, pending_renewal: 0, expired: 0, paused: 0, churned: 0 }))
+    .on('GET /students/status-counts', () => ({
+      new: 0,
+      trial: 0,
+      pending_subscription: 0,
+      active: 0,
+      pending_renewal: 0,
+      expired: 0,
+      paused: 0,
+      churned: 0,
+    }))
     .on('GET /students', () => ({ items: [], total: 0, page: 1, pageSize: 50 }))
     .on('GET /settings', () => ({ renewal_alert_remaining: 2, follow_up_hours: [2, 24, 72] }))
     .on('GET /lessons', ({ query }) =>
@@ -48,22 +57,34 @@ export function calendarBackend() {
         .filter((l) => l.teacher.id === query['teacherId'] && within(l, query['from'], query['to']))
         .map(answered),
     )
-    .on('GET /lessons/overview', ({ query }) => ({
-      from: query['from'],
-      to: query['to'],
-      teachers: TEACHERS,
-      lessons: state.lessons.filter((l) => within(l, query['from'], query['to'])),
-    }))
-    .on('GET /lessons/day', ({ query }) => state.lessons.filter((l) => riyadhDate(l.starts_at) === query['date']))
+    .on('GET /lessons/overview', ({ query }) =>
+      answeredOverview({
+        from: query['from'] ?? '',
+        to: query['to'] ?? '',
+        teachers: TEACHERS,
+        lessons: state.lessons.filter((l) => within(l, query['from'], query['to'])),
+      }),
+    )
+    .on('GET /lessons/day', ({ query }) =>
+      state.lessons.filter((l) => riyadhDate(l.starts_at) === query['date']).map(answered),
+    )
     .on('GET /booking/slots', () => state.slots)
     .on('POST /lessons/:id/reschedule', ({ params, body }) => {
-      const move = body as { scope: 'one' | 'rule'; startsAt?: string; newRule?: { startsOn: string; startTimeLocal: string } };
+      const move = body as {
+        scope: 'one' | 'rule';
+        startsAt?: string;
+        newRule?: { startsOn: string; startTimeLocal: string };
+      };
       const startsAt = move.startsAt ?? `${move.newRule?.startsOn}T14:00:00.000Z`;
       const asked = params['id'];
-      // The week list answers uuid ids; the overview and day still answer the readable ones.
-      const old = state.lessons.find((l) => l.id === asked || answered(l).id === asked);
+      const old = state.lessons.find((l) => answered(l).id === asked);
       if (!old) throw new Error('no such lesson');
-      const moved: LessonView = { ...old, starts_at: startsAt, ends_at: new Date(Date.parse(startsAt) + 45 * MINUTE).toISOString(), status: 'scheduled' };
+      const moved: LessonView = {
+        ...old,
+        starts_at: startsAt,
+        ends_at: new Date(Date.parse(startsAt) + 45 * MINUTE).toISOString(),
+        status: 'scheduled',
+      };
       state.lessons = state.lessons.map((l) => (l.id === old.id ? moved : l));
       return answered(moved);
     });

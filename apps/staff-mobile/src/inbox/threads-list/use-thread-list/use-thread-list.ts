@@ -1,15 +1,14 @@
 import { INBOX_LIST_REFRESH_MS, liveInterval, nextPageParam } from '@ab/client-core';
-import type { ThreadView } from '@ab/shared';
 import type { LeadStatus } from '@ab/catalog';
-import type { Page } from '@ab/core';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
-import { apiFetch, toQueryString, useScreenFocused } from '@ab/mobile-kit';
+import { useScreenFocused } from '@ab/mobile-kit';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
 import { useInboxLive, useLiveWatch } from '@/inbox/thread/live';
 import { useStoredThreads } from '@/inbox/thread/local';
-import { waitingForReply } from './chat-filter';
-import { useListCatchUp, withChatTicks } from './list-catch-up';
+import { threadReads } from '@/inbox/thread/hooks/thread-cache';
+import { waitingForReply } from '@/inbox/threads-list/chat-filter';
+import { useListCatchUp, withChatTicks } from '@/inbox/threads-list/list-catch-up';
 
 const PAGE_SIZE = 25;
 
@@ -50,9 +49,16 @@ export function useThreadList({
     queryKey,
     // TanStack's signal: a list nobody shows drops its read, so a later mount starts a new one.
     queryFn: ({ pageParam, signal }) =>
-      apiFetch<Page<ThreadView>>(
-        `/threads${toQueryString({ search, unread: unread ? 'true' : undefined, list, status, page: pageParam, pageSize: PAGE_SIZE })}`,
-        { signal },
+      threadReads.list(
+        {
+          search,
+          unread: unread ? 'true' : undefined,
+          list,
+          status,
+          page: pageParam,
+          pageSize: PAGE_SIZE,
+        },
+        signal,
       ),
     initialPageParam: 1,
     getNextPageParam: nextPageParam,

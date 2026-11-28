@@ -1,8 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { uuidFor } from '@/today/testing/answered';
 import { ApiError, t } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { DayScheduleScreen } from '@/calendar/screens/DayScheduleScreen/DayScheduleScreen';
-import { OVERVIEW, THIS_WEEK } from '@/calendar/overview/overview-fixtures';
+import { answeredOverview, OVERVIEW, THIS_WEEK } from '@/calendar/overview/overview-fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -16,8 +17,8 @@ jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }
 beforeEach(() => {
   jest.clearAllMocks();
   mockApiFetch.mockImplementation(async (path: string) => {
-    if (path === THIS_WEEK) return OVERVIEW;
-    if (path.startsWith('/lessons/overview')) return { ...OVERVIEW, lessons: [] };
+    if (path === THIS_WEEK) return answeredOverview(OVERVIEW);
+    if (path.startsWith('/lessons/overview')) return answeredOverview({ ...OVERVIEW, lessons: [] });
     if (path.startsWith('/booking/slots'))
       return { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [] };
     throw new ApiError(404);
@@ -36,7 +37,11 @@ test('«تأكيد» is in view on the row: «مؤكدة» at once, then the con
   mockApiSend.mockReturnValue(new Promise((r) => (resolve = r)));
   await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await action(t.today.confirm, 'يوسف أحمد'));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/confirm', undefined);
+  expect(mockApiSend).toHaveBeenCalledWith(
+    'POST',
+    `/lessons/${uuidFor('l-pending')}/confirm`,
+    undefined,
+  );
   // The row shows confirmed before the server answers.
   await waitFor(() => expect(screen.getAllByText(t.enums.lessonStatus.confirmed)).toHaveLength(2));
   resolve({});
@@ -63,5 +68,7 @@ test('a held lesson has no confirm / cancel / reschedule, only «أرسل طلب
   for (const label of [t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit]) {
     expect(screen.queryByRole('button', { name: `${label} — جودى خالد` })).toBeNull();
   }
-  expect(screen.getByRole('button', { name: t.mobile.feedback.sendFor.replace('{name}', 'جودى خالد') })).toBeTruthy();
+  expect(
+    screen.getByRole('button', { name: t.mobile.feedback.sendFor.replace('{name}', 'جودى خالد') }),
+  ).toBeTruthy();
 });

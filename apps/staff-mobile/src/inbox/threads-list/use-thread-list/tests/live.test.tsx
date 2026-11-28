@@ -3,7 +3,7 @@ import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { inboxLive } from '@/inbox/thread/live';
-import { useThreadList } from './use-thread-list';
+import { useThreadList } from '@/inbox/threads-list/use-thread-list/use-thread-list';
 
 // The chats tab re-reads its list while focused, so unread counts and order update.
 

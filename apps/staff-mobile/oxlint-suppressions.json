@@ -645,11 +645,6 @@
       "count": 1
     }
   },
-  "src/calendar/overview/use-overview.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/calendar/screens/DayScheduleScreen/DayScheduleScreen.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -2100,11 +2095,6 @@
       "count": 2
     }
   },
-  "src/inbox/messages/reply-actions/ReplyConfirmButton.tsx": {
-    "ab/forbidden-imports": {
-      "count": 1
-    }
-  },
   "src/inbox/messages/reply-actions/ReplyNoteLine.tsx": {
     "stylistic/max-len": {
       "count": 3
@@ -2878,7 +2868,7 @@
       "count": 5
     }
   },
-  "src/inbox/threads-list/use-thread-list.ts": {
+  "src/inbox/threads-list/use-thread-list/use-thread-list.ts": {
     "complexity": {
       "count": 1
     },
@@ -2886,9 +2876,6 @@
       "count": 2
     },
     "ab/no-restricted-syntax": {
-      "count": 1
-    },
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },
@@ -5240,11 +5227,6 @@
   },
   "src/today/lib/today-plan.ts": {
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/today/lib/use-day-lessons.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

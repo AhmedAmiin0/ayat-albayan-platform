@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { answered, uuidFor } from '@/today/testing/answered';
 import { ApiError, t } from '@ab/mobile-kit';
 import { lesson, muscat, pending } from './testing/fixtures';
 import { openSheet, openToday, inSheet } from './testing/today-sheet';
@@ -28,7 +29,9 @@ beforeEach(() => {
 afterEach(() => jest.useRealTimers());
 
 test('a series cancel by the student sends the body, the lesson leaves Today, and it is said', async () => {
-  mockApiFetch.mockResolvedValueOnce([pending, muscat]).mockResolvedValue([muscat]);
+  mockApiFetch
+    .mockResolvedValueOnce([pending, muscat].map(answered))
+    .mockResolvedValue([muscat].map(answered));
   mockApiSend.mockResolvedValue([]);
   await openToday();
   await openSheet();
@@ -39,7 +42,7 @@ test('a series cancel by the student sends the body, the lesson leaves Today, an
   await fireEvent.changeText(screen.getByLabelText(t.lessons.reason), '  سفر  ');
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.cancelSubmit }));
 
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/cancel', {
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/lessons/${uuidFor('l-pending')}/cancel`, {
     scope: 'rule',
     by: 'student',
     reason: 'سفر',
@@ -51,7 +54,7 @@ test('a series cancel by the student sends the body, the lesson leaves Today, an
 });
 
 test('a refused cancel brings the lesson back with its error', async () => {
-  mockApiFetch.mockResolvedValue([pending]);
+  mockApiFetch.mockResolvedValue([pending].map(answered));
   mockApiSend.mockRejectedValue(new ApiError(409, { code: 'invalid_transition' }));
   await openToday();
   await openSheet();
@@ -62,7 +65,7 @@ test('a refused cancel brings the lesson back with its error', async () => {
 
   expect((await screen.findAllByText(t.lessons.invalidTransition)).length).toBeGreaterThan(0);
   expect(screen.getAllByText('يوسف أحمد').length).toBeGreaterThan(0);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/cancel', {
+  expect(mockApiSend).toHaveBeenCalledWith('POST', `/lessons/${uuidFor('l-pending')}/cancel`, {
     scope: 'one',
     by: 'admin',
     reason: 'ظرف طارئ',
@@ -70,7 +73,7 @@ test('a refused cancel brings the lesson back with its error', async () => {
 });
 
 test('a lesson outside a series cannot cancel «كل اللي بعدها»', async () => {
-  mockApiFetch.mockResolvedValue([lesson({ id: 'solo', rule_id: null })]);
+  mockApiFetch.mockResolvedValue([lesson({ id: 'solo', rule_id: null })].map(answered));
   await openToday();
   await openSheet();
   await fireEvent.press(screen.getByRole('button', inSheet(t.today.cancel)));
