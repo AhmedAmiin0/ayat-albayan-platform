@@ -2,13 +2,15 @@
 // so the compose project must stay self-contained, and two API copies must never both run the jobs.
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { APPS, compose, mb, roll, services } from './compose.fixture.mjs';
+import { APPS, COPIES, compose, mb, roll, services } from './compose.fixture.mjs';
 
 test('the project and its services', () => {
   assert.equal(compose.name, 'ayat-albayan-staging');
   assert.deepEqual(Object.keys(services).sort(), [
     'ayat-api-a',
     'ayat-api-b',
+    'ayat-api-c',
+    'ayat-api-d',
     'ayat-lb',
     'ayat-minio',
     'ayat-minio-init',
@@ -27,7 +29,7 @@ test('only the load balancer and the MinIO console are published, both on localh
   assert.deepEqual(services['ayat-minio'].ports, ['127.0.0.1:9001:9001']);
 });
 
-test('one image built once, reused by the three app services, never pulled', () => {
+test('one image built once, reused by every app service, never pulled', () => {
   const builds = APPS.filter((n) => services[n].build);
   assert.deepEqual(builds, ['ayat-worker']);
   for (const name of APPS) {
@@ -40,17 +42,18 @@ test('one image built once, reused by the three app services, never pulled', () 
   }
 });
 
-test('roles: two API copies (no jobs, 2 trusted hops, the worker for kicks) and one worker', () => {
+test('roles: four API copies (no jobs, 2 trusted hops, the worker for kicks) and one worker', () => {
   assert.equal(services['ayat-worker'].environment.APP_ROLE, 'worker');
-  for (const name of ['ayat-api-a', 'ayat-api-b']) {
+  for (const name of COPIES) {
     const env = services[name].environment;
     assert.equal(env.APP_ROLE, 'api', name);
     assert.equal(env.TRUST_PROXY_HOPS, '2', name);
     assert.equal(env.WORKER_URL, 'http://ayat-worker:3000', name);
+    // Each copy reloads the others' config after an admin save (kickConfigReload), never itself
+    // or the worker.
+    const peers = COPIES.filter((n) => n !== name).map((n) => `http://${n}:3000`);
+    assert.equal(env.PEER_URLS, peers.join(','), name);
   }
-  // Each copy reloads the other's config after an admin save (kickConfigReload), never itself or the worker.
-  assert.equal(services['ayat-api-a'].environment.PEER_URLS, 'http://ayat-api-b:3000');
-  assert.equal(services['ayat-api-b'].environment.PEER_URLS, 'http://ayat-api-a:3000');
   assert.equal(services['ayat-worker'].environment.PEER_URLS, undefined);
   assert.equal(
     APPS.filter((n) => services[n].environment.APP_ROLE !== 'api').length,
@@ -59,7 +62,7 @@ test('roles: two API copies (no jobs, 2 trusted hops, the worker for kicks) and 
   );
 });
 
-test('memory limits fit the 8 GB VPS beside the CRM', () => {
+test('memory limits fit the 16 GB VPS beside the CRM', () => {
   const limits = Object.fromEntries(
     Object.entries(services).map(([n, s]) => [n, mb(s.deploy?.resources?.limits?.memory)]),
   );
@@ -67,18 +70,20 @@ test('memory limits fit the 8 GB VPS beside the CRM', () => {
     'ayat-worker': 1024,
     'ayat-api-a': 512,
     'ayat-api-b': 512,
+    'ayat-api-c': 512,
+    'ayat-api-d': 512,
     'ayat-pdf': 128,
     'ayat-lb': 64,
     'ayat-redis': 96,
     'ayat-minio': 512,
     'ayat-minio-init': 192,
   });
-  // ≈ 2.3 GB of the 8 GB beside the CRM (the worker's 1 GB: Node heap + Chromium; the PDF sandbox's own 128 MB on
+  // ≈ 3.3 GB of the 16 GB beside the CRM (the worker's 1 GB: Node heap + Chromium; the PDF sandbox's own 128 MB on
   // top: the copies keep 512 MB, they hold each preview's PDF and JPEGs, docs/09).
   // + MinIO and its one-shot init (docs/45; the init needs 192 MB:
   // Chainguard's mc is OOM-killed at 64 MB):
-  // ≈ 3.0 GB, inside the ~4.6 GB the VPS has free.
-  assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 3040);
+  // ≈ 4.0 GB, a quarter of the VPS.
+  assert.ok(Object.values(limits).reduce((a, b) => a + b, 0) <= 4064);
 });
 
 test('every other container log rotates (json-file, size-capped): never the disk the CRM shares', () => {

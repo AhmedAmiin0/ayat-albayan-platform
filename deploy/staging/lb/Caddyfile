@@ -18,7 +18,7 @@
 	@internal path /internal /internal/*
 	respond @internal 404
 
-	reverse_proxy ayat-api-a:3000 ayat-api-b:3000 {
+	reverse_proxy ayat-api-a:3000 ayat-api-b:3000 ayat-api-c:3000 ayat-api-d:3000 {
 		lb_policy round_robin
 		# A copy that is down or restarting refuses the connection: try the other one (never re-sent
 		# once the request reached a copy, so a POST is never applied twice).

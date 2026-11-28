@@ -18,12 +18,12 @@ test('src from before APP_ROLE: refused before any docker call, build and --env-
   }
 });
 
-test('a normal roll: one build, worker → pdf sandbox → api-a → api-b (each healthy), then the changed LB validated and reloaded', () => {
+test('a normal roll: one build, worker → pdf sandbox → api-a … api-d (each healthy), then the changed LB validated and reloaded', () => {
   const r = run('roll.sh', { up: ['ayat-worker', 'ayat-pdf', 'ayat-api-a', 'ayat-api-b', 'ayat-lb'] });
   assert.equal(r.code, 0, r.out);
   assert.match(r.log[0], new RegExp(`^docker ${P} build ayat-worker$`));
   const order = ['up -d --no-deps ayat-worker', 'up -d --no-deps ayat-pdf', 'up -d --no-deps ayat-api-a', 'up -d --no-deps ayat-api-b',
-    'run --rm --network none', 'exec -T ayat-lb caddy reload', 'up -d --no-deps ayat-lb', 'curl'];
+    'up -d --no-deps ayat-api-c', 'up -d --no-deps ayat-api-d', 'run --rm --network none', 'exec -T ayat-lb caddy reload', 'up -d --no-deps ayat-lb', 'curl'];
   const idx = order.map((o) => at(r.log, o));
   assert.ok(idx.every((i, n) => i >= 0 && (n === 0 || i > idx[n - 1])), `order: ${r.log.join('\n')}`);
   assert.ok(at(r.log, 'stop') < 0, 'nothing is stopped');
@@ -31,11 +31,11 @@ test('a normal roll: one build, worker → pdf sandbox → api-a → api-b (each
   assert.ok(r.text('.lb.sha256'));
 });
 
-test('a PDF sandbox that never gets healthy only warns: api-a, api-b and the LB still roll, the deploy succeeds', () => {
+test('a PDF sandbox that never gets healthy only warns: the copies and the LB still roll, the deploy succeeds', () => {
   const r = run('roll.sh', { up: ['ayat-worker', 'ayat-api-a', 'ayat-api-b', 'ayat-lb'], fail: ['up -d --no-deps ayat-pdf'] });
   assert.equal(r.code, 0, r.out);
   assert.match(r.out, /::warning::ayat-pdf not healthy: chat PDF previews answer pdf_unavailable/);
-  const idx = ['up -d --no-deps ayat-pdf', 'up -d --no-deps ayat-api-a', 'up -d --no-deps ayat-api-b', 'up -d --no-deps ayat-lb', 'curl']
+  const idx = ['up -d --no-deps ayat-pdf', 'up -d --no-deps ayat-api-a', 'up -d --no-deps ayat-api-d', 'up -d --no-deps ayat-lb', 'curl']
     .map((o) => at(r.log, o));
   assert.ok(idx.every((i, n) => i >= 0 && (n === 0 || i > idx[n - 1])), `order: ${r.log.join('\n')}`);
 });
@@ -47,7 +47,7 @@ test('first switch: LB pulled and Caddyfile validated, copies up, then `stop <le
   const valid = at(r.log, 'run --rm --network none');
   const sandbox = at(r.log, 'up -d --no-deps ayat-pdf');
   const a = at(r.log, 'up -d --no-deps ayat-api-a');
-  const b = at(r.log, 'up -d --no-deps ayat-api-b');
+  const b = at(r.log, 'up -d --no-deps ayat-api-d');
   const stop = at(r.log, 'stop -t 30 id-ayat-api');
   const rm = at(r.log, 'rm id-ayat-api');
   const lbUp = at(r.log, 'up -d --no-deps ayat-lb');
@@ -72,7 +72,7 @@ test('a reload Caddy refuses fails the roll the same way; first switch: an inval
   const first = run('roll.sh', { up: ['ayat-api'], fail: ['caddy validate'] });
   assert.notEqual(first.code, 0);
   // Only the shared cache (ayat-redis, started before every roll) may come up: no sandbox, copy, worker or LB, no stop.
-  const started = ['ayat-pdf', 'ayat-api-a', 'ayat-api-b', 'ayat-worker', 'ayat-lb'].map((svc) => at(first.log, `up -d --no-deps ${svc}`));
+  const started = ['ayat-pdf', 'ayat-api-a', 'ayat-api-d', 'ayat-worker', 'ayat-lb'].map((svc) => at(first.log, `up -d --no-deps ${svc}`));
   assert.ok(at(first.log, 'stop') < 0 && started.every((i) => i < 0), first.log.join('\n'));
 });
 
