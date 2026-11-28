@@ -9,16 +9,46 @@ import { LivekitWebhookController } from '@/modules/teaching/classroom/livekit/l
 import { StudentLinkPublicController } from '@/modules/teaching/classroom/student-link/student-link.controller';
 
 const doors = [
-  ['guest join', ClassroomPublicController, 'join', lessonJoinRoutes.guestJoin],
-  ['meeting view', InternalMeetingsPublicController, 'view', meetingRoomRoutes.publicView],
-  ['meeting guest join', InternalMeetingsPublicController, 'join', meetingRoomRoutes.guestJoin],
-  ['student link', StudentLinkPublicController, 'view', lessonRoomRoutes.studentLink],
-  ['student join', StudentLinkPublicController, 'join', lessonRoomRoutes.studentJoin],
-  ['livekit webhook', LivekitWebhookController, 'receive', livekitWebhookRoutes.receive],
+  {
+    name: 'guest join',
+    cls: ClassroomPublicController,
+    key: 'join',
+    route: lessonJoinRoutes.guestJoin,
+  },
+  {
+    name: 'meeting view',
+    cls: InternalMeetingsPublicController,
+    key: 'view',
+    route: meetingRoomRoutes.publicView,
+  },
+  {
+    name: 'meeting guest join',
+    cls: InternalMeetingsPublicController,
+    key: 'join',
+    route: meetingRoomRoutes.guestJoin,
+  },
+  {
+    name: 'student link',
+    cls: StudentLinkPublicController,
+    key: 'view',
+    route: lessonRoomRoutes.studentLink,
+  },
+  {
+    name: 'student join',
+    cls: StudentLinkPublicController,
+    key: 'join',
+    route: lessonRoomRoutes.studentJoin,
+  },
+  {
+    name: 'livekit webhook',
+    cls: LivekitWebhookController,
+    key: 'receive',
+    route: livekitWebhookRoutes.receive,
+  },
 ] as const;
 
 describe('classroom doors with no login: public through their route objects', () => {
-  it.each(doors)('%s serves its route and is public from it alone', (_name, cls, key, route) => {
+  it.each(doors)('$name serves its route and is public from it alone', ({ cls, key, route }) => {
     const handler: object = Object(Reflect.get(cls.prototype, key));
     expect(routeOf(handler)).toBe(route);
     expect(Reflect.getMetadata(IS_PUBLIC, handler)).toBe(true);

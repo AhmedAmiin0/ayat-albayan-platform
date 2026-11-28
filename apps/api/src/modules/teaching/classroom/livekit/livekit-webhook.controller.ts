@@ -1,6 +1,5 @@
 import { Controller, Headers, HttpCode, Req } from '@nestjs/common';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Public } from '@/common/auth/decorators';
 import { Route } from '@/common/http/route';
 import { livekitWebhookRoutes as routes } from './livekit-webhook.routes';
 import { LivekitWebhookService } from './livekit-webhook.service';
@@ -23,7 +22,6 @@ interface RawRequest {
 }
 
 /** Public: authenticated by LiveKit's signed Authorization JWT (LivekitWebhookService). */
-@Public()
 @Controller()
 export class LivekitWebhookController {
   constructor(private readonly webhook: LivekitWebhookService) {}

@@ -1,7 +1,7 @@
 import { meetingRoomRoutes as routes, type RoomJoinResult } from '@ab/schedule';
 import { Body, Controller, HttpCode, Injectable, Ip, Param } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { CurrentUser, Public } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { mintedIdentity } from '@/modules/teaching/classroom/moderation/participant-param';
@@ -86,7 +86,6 @@ export class InternalMeetingsController {
 }
 
 /** The link's door (no login): the token in the path is the whole credential. */
-@Public()
 @Controller()
 export class InternalMeetingsPublicController {
   constructor(private readonly joins: InternalMeetingJoinService) {}

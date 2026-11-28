@@ -1,7 +1,7 @@
 import { defineRoute } from '@ab/core';
 import { z } from 'zod';
 
-const tags = ['lesson-links'] as const;
+const open = { isPublic: true, tags: ['lesson-links'] } as const;
 
 /**
  * Public links opened in a browser, which no client calls (docs/62 part 3 §1): each answers a 302
@@ -14,13 +14,13 @@ export const lessonLinkRoutes = {
     path: '/join/:token',
     params: z.object({ token: z.string().max(100) }),
     response: 'redirect',
-    tags,
+    ...open,
   }),
   /** The old report redirector forwards every /r/<path> here; the handler reads the raw path. */
   legacyReport: defineRoute({
     method: 'GET',
     path: '/report-link/legacy/*',
     response: 'redirect',
-    tags,
+    ...open,
   }),
 };
