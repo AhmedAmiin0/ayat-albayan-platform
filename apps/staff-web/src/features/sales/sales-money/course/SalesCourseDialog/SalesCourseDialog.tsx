@@ -1,4 +1,4 @@
-import { type CourseSubscription, type SalesCourseView } from '@ab/shared';
+import type { CourseSubscription, SalesCourseView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Dialog, FormAlert, t } from '@ab/web-kit';

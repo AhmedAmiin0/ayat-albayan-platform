@@ -1,4 +1,4 @@
-import { type BookedCourse, type SalesCourseView } from '@ab/shared';
+import type { BookedCourse, SalesCourseView } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { Button, t } from '@ab/web-kit';
 import { CourseChangeForm } from '@/features/teaching/booking';
