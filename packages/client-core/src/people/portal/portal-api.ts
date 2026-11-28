@@ -65,9 +65,10 @@ interface Schema<T> {
 
 /** A read of `path`, parsed, keyed by its path segments, re-read when the family comes back. */
 function reader(client: ApiClient) {
+  const call = callWith(client);
   return <T>(path: string, schema: Schema<T>): PortalRead<T> => ({
     queryKey: pathKey(path),
-    queryFn: async (): Promise<T> => schema.parse(await client.request({ path })),
+    queryFn: async (): Promise<T> => schema.parse(await call({ path })),
     refetchOnWindowFocus: true,
   });
 }

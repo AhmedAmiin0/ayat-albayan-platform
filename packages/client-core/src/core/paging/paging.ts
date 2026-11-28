@@ -1,6 +1,6 @@
 import type { Page } from '@ab/core';
 import type { z } from 'zod';
-import { toQueryString, type ApiClient } from '../http';
+import { callWith, toQueryString, type ApiClient } from '../http';
 import { listKey, type ListParams } from '../keys';
 import type { InfinitePageOptions, ListEndpoint, PageOptions, WithId } from './paging.types';
 
@@ -25,7 +25,7 @@ export function pageOptions<S extends z.ZodType<Page<unknown>>>(
   return {
     queryKey: listKey(list.path, params),
     queryFn: () =>
-      client.request({ path: `${list.path}${toQueryString(params)}`, schema: list.page }),
+      callWith(client)({ path: `${list.path}${toQueryString(params)}`, schema: list.page }),
   };
 }
 
@@ -39,7 +39,7 @@ export function infinitePageOptions<S extends z.ZodType<Page<unknown>>>(
   return {
     queryKey: listKey(list.path, params),
     initialPageParam: 1,
-    queryFn: ({ pageParam }) => client.request({ path: read(pageParam), schema: list.page }),
+    queryFn: ({ pageParam }) => callWith(client)({ path: read(pageParam), schema: list.page }),
     getNextPageParam: nextPageParam,
   };
 }
