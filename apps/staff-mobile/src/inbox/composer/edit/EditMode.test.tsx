@@ -21,14 +21,14 @@ jest.mock('expo-router', () => ({
 
 const PATH = '/threads/%2B966552147730/text';
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
-const ME = { id: 'u1', role: 'sales', permissions: ['inbox.read', 'inbox.send'] };
+const ME = { id: uid('u1'), role: 'sales', permissions: ['inbox.read', 'inbox.send'] };
 const OWN_ID = uid('o1');
 const own = message({
   id: OWN_ID,
   status: 'delivered',
   body: 'الحلقة غدًا الساعة 5',
   replyable: true,
-  sent_by_id: 'u1',
+  sent_by_id: uid('u1'),
   created_at: minutesAgo(9),
 });
 const box = () => screen.getByLabelText(t.inbox.composer.placeholder);

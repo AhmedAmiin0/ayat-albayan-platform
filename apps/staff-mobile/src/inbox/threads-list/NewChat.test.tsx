@@ -5,7 +5,7 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { renderWithQuery } from '@/test/query';
 import { NewChatSheet } from './NewChatSheet';
 import { InboxHeaderActions } from './InboxHeaderActions';
-import { plainReminder } from '@/inbox/shared/thread-fixtures';
+import { message, plainReminder, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 const mockApiFetch = jest.fn();
@@ -66,7 +66,7 @@ test('the header keeps only the sales bell: no «محادثة جديدة» up th
 
 // Owner report 2026-10-12 («it is not able to start the conversation»): the same path as the web.
 test('«محادثة جديدة»: a bad number is refused in words; a local Saudi number is read as E.164', async () => {
-  mockApiFetch.mockResolvedValue({ ...EMPTY, messages: [{ id: 'm1' }] });
+  mockApiFetch.mockResolvedValue({ ...EMPTY, messages: [message({ id: uid('m1') })] });
   await renderWithQuery(<NewChatSheet />);
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.newChat.title }));
   const box = screen.getByLabelText(t.inbox.newChat.phone);

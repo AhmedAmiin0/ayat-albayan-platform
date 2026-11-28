@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { renderApp, resetApp } from '@/test/app-router';
 import { t } from '@ab/mobile-kit';
 import { GUARDIAN_PHONE, inboxBackend } from '@/inbox/shared/flow-backend';
-import { inbound, PHONE } from '@/inbox/shared/thread-fixtures';
+import { inbound, PHONE, uid } from '@/inbox/shared/thread-fixtures';
 import { ticksLabel } from '@/inbox/shared/ticks.helpers';
 
 beforeEach(resetApp);
@@ -61,7 +61,7 @@ test('a closed session: no free text, the template sheet → params → POST /th
     key: 'lesson_reminder_plain',
     params: { '1': 'سهيلة', '2': '17:00' },
     clientRequestId: UUID,
-    lessonId: 'l-1',
+    lessonId: uid('l1'),
   });
   expect(backend.sent('POST /threads/:phone/text')).toHaveLength(0);
 });

@@ -2,7 +2,7 @@ import type { TemplateView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, inbound, plainReminder, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, plainReminder, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 // After the 24 h window a known chat shows the reopen bar.
@@ -48,7 +48,7 @@ test('a Kapso chat line after the window: the reopen bar over the box and the pa
 });
 
 test('a reopen template live: «sent» with its tick, texts still held, no button', async () => {
-  const sent = { id: 'm-reopen', template_key: 'welcome_greeting', status: 'delivered' as const };
+  const sent = { id: uid('mrop'), template_key: 'welcome_greeting', status: 'delivered' as const };
   await open({ ...CLOSED, try_after_window: true, reopen_sent: sent });
   expect(await screen.findByText(t.inbox.reopenBar.sent)).toBeTruthy();
   const tick = t.inbox.reopenBar.status.replace('{status}', t.enums.messageStatus.delivered);

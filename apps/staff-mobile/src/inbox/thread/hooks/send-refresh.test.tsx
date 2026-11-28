@@ -18,7 +18,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 
 const at = (minute: number) => `2026-10-02T08:${String(minute).padStart(2, '0')}:00Z`;
-const row = (id: string, minute: number) => message({ id, created_at: at(minute) });
+const row = (label: string, minute: number) => message({ id: uid(label), created_at: at(minute) });
 /** Five loaded pages, newest first. */
 const fivePages = () =>
   cachedThread(
@@ -54,7 +54,7 @@ test('with five pages loaded a send reads only the newest page, then folds it in
   const data = client.getQueryData<ThreadCache>(threadKey(PHONE));
   expect(data?.pages).toHaveLength(5);
   const shown = threadMessages(data);
-  expect(shown.map((m) => m.id)).toEqual(['m01', 'm10', 'm20', 'm30', 'm40', S1]);
+  expect(shown.map((m) => m.id)).toEqual([...['m01', 'm10', 'm20', 'm30', 'm40'].map(uid), S1]);
   expect(shown.at(-1)?.status).toBe('delivered');
 });
 
@@ -89,7 +89,7 @@ test('an older page read in flight never brings the queued row back: the chat re
   const page = (path: string) => (path.includes('before=') ? detail([row('m00', 0)]) : detail([server]));
   const held = () => new Promise((resolve) => (older = resolve));
   mockApiFetch.mockImplementation((path: string) =>
-    path.includes('before_id=m01') ? held() : Promise.resolve(page(path)),
+    path.includes(`before_id=${uid('m01')}`) ? held() : Promise.resolve(page(path)),
   );
   const client = createTestQueryClient();
   const five = fivePages();

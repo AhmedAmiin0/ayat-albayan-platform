@@ -35,7 +35,7 @@ async function openWith(cached: MessageStatus) {
   const page = detail([inbound, { ...delivered, status: cached }]);
   await act(async () => void client.setQueryData(threadKey(PHONE), cachedThread(page)));
   // The cache itself (what every screen reads), not a render of it.
-  const m2 = () => threadMessages(client.getQueryData(threadKey(PHONE))).find((m) => m.id === 'm2');
+  const m2 = () => threadMessages(client.getQueryData(threadKey(PHONE))).find((m) => m.id === delivered.id);
   return { client, m2 };
 }
 
