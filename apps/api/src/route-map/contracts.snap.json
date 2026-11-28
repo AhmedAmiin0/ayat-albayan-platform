@@ -74757,6 +74757,69 @@
    ]
   }
  },
+ "POST /portal/students/:id/lessons/:lessonId/join": {
+  "params": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "id": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "lessonId": {
+     "type": "string",
+     "format": "uuid",
+     "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+   },
+   "required": [
+    "id",
+    "lessonId"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "url": {
+     "type": "string"
+    },
+    "token": {
+     "type": "string"
+    },
+    "room": {
+     "type": "string"
+    },
+    "role": {
+     "type": "string",
+     "enum": [
+      "teacher",
+      "admin",
+      "assistant",
+      "sales",
+      "guest"
+     ]
+    },
+    "recording": {
+     "type": "string",
+     "enum": [
+      "on",
+      "off"
+     ]
+    },
+    "chat": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "url",
+    "token",
+    "room",
+    "role"
+   ]
+  }
+ },
  "POST /portal/students/:id/lessons/:lessonId/request": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
