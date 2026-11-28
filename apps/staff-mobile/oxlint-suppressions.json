@@ -3335,9 +3335,6 @@
     "stylistic/max-len": {
       "count": 4
     },
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }

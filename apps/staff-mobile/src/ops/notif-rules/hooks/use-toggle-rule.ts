@@ -1,7 +1,9 @@
 import type { NotificationEntryView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { meQueryOptions } from '@ab/client-core';
+import { meQueryOptions, notificationRuleCalls } from '@ab/client-core';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
+
+const rules = notificationRuleCalls({ apiFetch, apiSend });
 
 /** The catalogue's query key prefix (NotificationCatalogue adds the settings' fetch time). */
 export const CATALOGUE_KEY = ['admin', 'notifications'] as const;
@@ -18,11 +20,10 @@ export function useToggleRule() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ key, enabled, confirmText }: RuleToggle) =>
-      apiSend<NotificationEntryView>(
-        'PATCH',
-        `/admin/notifications/${encodeURIComponent(key)}`,
-        confirmText === undefined ? { enabled } : { enabled, confirmText },
-      ),
+      rules.update({
+        key,
+        body: confirmText === undefined ? { enabled } : { enabled, confirmText },
+      }),
     onSuccess: () => qc.invalidateQueries({ queryKey: CATALOGUE_KEY }),
   });
 }
