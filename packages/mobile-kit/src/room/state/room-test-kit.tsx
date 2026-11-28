@@ -100,7 +100,12 @@ export function tile(over: Partial<RoomTile> = {}): RoomTile {
 }
 
 export const LESSON = { kind: 'lesson', id: '0a5c2b1e-6c3e-4d61-9a43-1b2f9b8e7d10' } as const;
-export const CREDS = { url: 'wss://lk.example.org', token: 'tok-1', role: 'teacher', chat: true } as const;
+export const CREDS = {
+  url: 'wss://lk.example.org',
+  token: 'tok-1',
+  role: 'teacher',
+  chat: true,
+} as const;
 
 const METRICS = {
   frame: { x: 0, y: 0, width: 390, height: 844 },

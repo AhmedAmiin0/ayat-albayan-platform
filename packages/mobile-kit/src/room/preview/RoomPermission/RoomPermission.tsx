@@ -3,14 +3,8 @@ import { t } from '../../../lib/i18n/i18n';
 import { AppText, Button } from '../../../ui';
 import { type, useTheme } from '../../../theme';
 import { CallCameraIcon, CallMicIcon } from '../../../ui';
-
-const P = t.mobileRoom.permission;
-
-interface RoomPermissionProps {
-  onAllow: () => void;
-  onSkip: () => void;
-  onBrowser: (() => void) | null;
-}
+import type { RoomPermissionProps } from './RoomPermission.types';
+import { P } from './room-permission.helpers';
 
 /**
  * Before the system dialog: why the room needs the camera and the microphone, in MSA (docs/35 §3).

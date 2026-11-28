@@ -2,7 +2,8 @@ import { View } from 'react-native';
 import type { AudioOutput } from '../../model/audio-output';
 import { t } from '../../../lib/i18n/i18n';
 import { HangUpIcon, RoundButton } from '../../../ui';
-import { CameraButton, MicButton } from '../../preview/MediaButtons';
+import { CameraButton } from '../../preview/CameraButton';
+import { MicButton } from '../../preview/MicButton';
 import { AudioButton } from '../AudioButton';
 import { ChatButton } from '../ChatButton';
 

@@ -1,11 +1,6 @@
 import { useReducer, useState, useSyncExternalStore } from 'react';
 import { nextPhase, type RoomPhase } from '../model/room-phase';
-import type {
-  MediaWish,
-  RoomCredentials,
-  RoomPlatform,
-  RoomTarget,
-} from '../model/room-types';
+import type { MediaWish, RoomCredentials, RoomPlatform, RoomTarget } from '../model/room-types';
 import { useAutoJoin } from './use-auto-join';
 import { useRoomControls } from './use-room-controls';
 import { useRoomJoin } from './use-room-join';
