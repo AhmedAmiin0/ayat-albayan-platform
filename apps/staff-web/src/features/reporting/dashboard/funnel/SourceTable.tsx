@@ -10,8 +10,21 @@ const sourceLabel = (s: SourceRow['source']) => (s === 'unknown' ? t.dashboard.u
 type SourceKey = 'source' | 'leads' | 'converted' | 'conversion' | 'revenue' | 'teacher_cost' | 'gross_margin';
 const conversion = (r: SourceRow) => (r.leads > 0 ? r.converted / r.leads : null);
 /** What each column sorts by: the shown label for the source, the numbers as numbers. */
+const DERIVED = { source: (r: SourceRow) => sourceLabel(r.source), conversion };
+const isDerived = (key: SourceKey): key is keyof typeof DERIVED =>
+  key === 'source' || key === 'conversion';
 const valueOf = (r: SourceRow, key: SourceKey): unknown =>
-  key === 'source' ? sourceLabel(r.source) : key === 'conversion' ? conversion(r) : r[key];
+  isDerived(key) ? DERIVED[key](r) : r[key];
+const HEADS: readonly { key: SourceKey; label: string; className: string }[] = [
+  { key: 'source', label: t.guardians.source, className: 'text-start' },
+  { key: 'leads', label: t.dashboard.leads, className: 'text-end' },
+  { key: 'converted', label: t.dashboard.converted, className: 'text-end' },
+  { key: 'conversion', label: t.dashboard.conversion, className: 'text-end' },
+  { key: 'revenue', label: t.dashboard.revenue, className: 'text-start' },
+  { key: 'teacher_cost', label: t.dashboard.teacherCost, className: 'text-end' },
+  { key: 'gross_margin', label: t.dashboard.grossMargin, className: 'pe-0 text-end' },
+];
+const headProps = (h: (typeof HEADS)[number]) => ({ label: h.label, className: h.className });
 
 /**
  * R-RPT-02 attribution (issue E4): lead source → leads → converted → revenue, teacher cost and
@@ -29,13 +42,9 @@ export function SourceTable({ rows }: { rows: readonly SourceRow[] }) {
           <caption className="sr-only">{t.dashboard.bySource}</caption>
           <thead>
             <tr className="border-b border-rule text-xs text-ink-3">
-              <SortableTh label={t.guardians.source} sortKey="source" sorter={sorter} className="text-start" />
-              <SortableTh label={t.dashboard.leads} sortKey="leads" sorter={sorter} className="text-end" />
-              <SortableTh label={t.dashboard.converted} sortKey="converted" sorter={sorter} className="text-end" />
-              <SortableTh label={t.dashboard.conversion} sortKey="conversion" sorter={sorter} className="text-end" />
-              <SortableTh label={t.dashboard.revenue} sortKey="revenue" sorter={sorter} className="text-start" />
-              <SortableTh label={t.dashboard.teacherCost} sortKey="teacher_cost" sorter={sorter} className="text-end" />
-              <SortableTh label={t.dashboard.grossMargin} sortKey="gross_margin" sorter={sorter} className="pe-0 text-end" />
+              {HEADS.map((h) => (
+                <SortableTh key={h.key} sortKey={h.key} sorter={sorter} {...headProps(h)} />
+              ))}
             </tr>
           </thead>
           <tbody>

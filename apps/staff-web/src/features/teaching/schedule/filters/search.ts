@@ -8,7 +8,7 @@ import {
 } from '@ab/catalog';
 import { weekStart } from '@ab/time';
 /** /admin/schedule URL state; defaults (this week, everyone, open lessons) stay out of the URL. */
-export type ScheduleSearch = {
+export interface ScheduleSearch {
   /** The day board instead of the week grid. */
   view?: 'day' | undefined;
   /** Riyadh day of the day board, "YYYY-MM-DD"; none = today. */
@@ -21,17 +21,19 @@ export type ScheduleSearch = {
   program?: Program | undefined;
   status?: LessonStatus | undefined;
   closed?: true | undefined;
-};
+}
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 const dateOf = (v: unknown): string | undefined =>
   typeof v === 'string' && DATE.test(v) && !Number.isNaN(Date.parse(v)) ? v : undefined;
 
+const splitText = (raw: unknown): unknown[] => (typeof raw === 'string' ? raw.split(',') : []);
+
 /** The router JSON-encodes arrays; a typed URL may say `teachers=a,b`. */
 function idsOf(s: Record<string, unknown>): string[] | undefined {
   const raw = s.teachers ?? s.teacher;
-  const list = Array.isArray(raw) ? raw : typeof raw === 'string' ? raw.split(',') : [];
+  const list = Array.isArray(raw) ? raw : splitText(raw);
   const ids = [
     ...new Set(
       list

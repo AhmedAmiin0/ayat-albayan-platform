@@ -24,6 +24,7 @@ function OneButton({ lessonId, student, named, approved }: OneProps) {
   const label = named
     ? t.feedback.requestFor.replace('{name}', student.name)
     : t.feedback.sendRequest;
+  const idleLabel = sent ? t.feedback.requestSent : label;
   return (
     <div className="grid gap-1.5">
       <Button
@@ -32,7 +33,7 @@ function OneButton({ lessonId, student, named, approved }: OneProps) {
         disabled={!approved || send.isPending || sent}
         onClick={() => send.mutate({ lessonId, studentId: student.id })}
       >
-        {send.isPending ? t.feedback.requestSending : sent ? t.feedback.requestSent : label}
+        {send.isPending ? t.feedback.requestSending : idleLabel}
       </Button>
       {sent && (
         <p role="status" className="text-xs text-ink-2">

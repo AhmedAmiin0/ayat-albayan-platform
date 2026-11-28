@@ -10,6 +10,8 @@ export interface InvoiceThumbProps {
   className?: string;
 }
 
+const imageMark = (mime: string) => (canShow(mime) ? '…' : 'HEIC');
+
 /** An invoice's thumbnail: the image, or a PDF tile (icon + name) if not an image or loading. */
 export function InvoiceThumb({ src, mime, name, className }: InvoiceThumbProps) {
   if (canShow(mime) && src) {
@@ -30,7 +32,7 @@ export function InvoiceThumb({ src, mime, name, className }: InvoiceThumbProps) 
     >
       <Icon name="receipt" className="size-6" />
       <span className="text-xs font-semibold" dir="ltr">
-        {!isImage(mime) ? t.booking.invoice.pdf : canShow(mime) ? '…' : 'HEIC'}
+        {isImage(mime) ? imageMark(mime) : t.booking.invoice.pdf}
       </span>
       {name && !canShow(mime) && (
         <span className="max-w-32 truncate text-2xs" dir="ltr">

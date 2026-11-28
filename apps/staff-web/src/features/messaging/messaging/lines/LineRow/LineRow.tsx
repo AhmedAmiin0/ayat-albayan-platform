@@ -30,8 +30,10 @@ const CREDENTIAL = {
   evolution: t.numbers.evolution.failed,
 } as const;
 /** A known Meta code in words, or Kapso / the CRM refusing its key in its own words (docs/19). */
+const metaError = (code: number | null): string | undefined =>
+  code === null ? undefined : ERRORS[String(code)];
 const known = (e: LineCheckView['errors'][number]): string | undefined =>
-  e.credential ? CREDENTIAL[e.credential] : e.code === null ? undefined : ERRORS[String(e.code)];
+  e.credential ? CREDENTIAL[e.credential] : metaError(e.code);
 
 /** Do inbound messages reach us: one wrapping chip (a sentence), then each subscribed app. */
 function Webhook({ view }: { view: LineCheckView }) {

@@ -17,11 +17,8 @@ function OneLinkButton({ lessonId, student, named, approved }: OneProps) {
   const label = named
     ? `${t.classroom.sendLink} ${t.classroom.sendLinkTo.replace('{name}', student.name)}`
     : t.classroom.sendLink;
-  const done = send.data
-    ? send.data.replayed
-      ? t.classroom.linkResent
-      : t.classroom.linkSent
-    : null;
+  const sentText = send.data?.replayed ? t.classroom.linkResent : t.classroom.linkSent;
+  const done = send.data ? sentText : null;
   return (
     <div className="grid gap-1.5">
       <Button

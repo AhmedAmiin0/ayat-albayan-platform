@@ -6,18 +6,22 @@ import type { SaveState } from '@ab/client-core';
 import { WindowLines } from '@/features/reporting/reports/send/WindowLines';
 import { useWindowClose } from '@/features/reporting/reports/send/use-window-close';
 
+const unsavedText = (kind: 'saving' | 'failed') =>
+  kind === 'saving' ? t.reports.autosaving : t.reports.saveFailed;
+
 /** Draft save status (R-REP-02). */
 export function SaveStatus({ state, tz }: { state: SaveState; tz: string }) {
   const clock = useClock();
   if (state.kind === 'idle') return null;
   const text =
-    state.kind === 'saving'
-      ? t.reports.autosaving
-      : state.kind === 'saved'
-        ? t.reports.draftSaved.replace('{time}', clockOf(state.at, { tz, ...clock }))
-        : t.reports.saveFailed;
+    state.kind === 'saved'
+      ? t.reports.draftSaved.replace('{time}', clockOf(state.at, { tz, ...clock }))
+      : unsavedText(state.kind);
   return (
-    <p role="status" className={state.kind === 'failed' ? 'text-xs text-danger' : 'text-xs text-ink-3'}>
+    <p
+      role="status"
+      className={state.kind === 'failed' ? 'text-xs text-danger' : 'text-xs text-ink-3'}
+    >
       {text}
     </p>
   );
@@ -35,9 +39,15 @@ export function SubmittedNote({ report, tz }: { report: ReportView; tz: string }
     <div className="grid gap-1.5">
       <p role="status" className="flex flex-wrap items-center gap-2">
         <StatusChip {...reportStatusStyle.submitted} label={t.reports.submitted} />
-        <span className="text-xs text-ink-3">{t.reports.version.replace('{n}', String(report.version))}</span>
+        <span className="text-xs text-ink-3">
+          {t.reports.version.replace('{n}', String(report.version))}
+        </span>
         {pdf && (
-          <StatusChip {...pdfStatusStyle[pdf]} size="sm" label={`${t.reports.pdfLabel}: ${t.enums.pdfStatus[pdf]}`} />
+          <StatusChip
+            {...pdfStatusStyle[pdf]}
+            size="sm"
+            label={`${t.reports.pdfLabel}: ${t.enums.pdfStatus[pdf]}`}
+          />
         )}
       </p>
       <WindowLines report={report} tz={tz} />

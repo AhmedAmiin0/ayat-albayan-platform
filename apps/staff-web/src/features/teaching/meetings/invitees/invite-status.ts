@@ -24,9 +24,11 @@ export function inviteStatusText(i: Outcome): string {
   return linkOnly(i) ? R.linkOnly : BY_STATUS[i.status];
 }
 
+const closedHint = (i: Outcome): string => (linkOnly(i) ? R.linkOnlyHint : R.windowClosedHint);
+
 /** Why nothing went out on WhatsApp (a window_closed row), or null. */
 export const notSentHint = (i: Outcome): string | null =>
-  i.status !== 'window_closed' ? null : linkOnly(i) ? R.linkOnlyHint : R.windowClosedHint;
+  i.status === 'window_closed' ? closedHint(i) : null;
 
 /** The text a copy puts on the clipboard: the invitation (it carries the link), else the link. */
 export const copyPayload = (i: {

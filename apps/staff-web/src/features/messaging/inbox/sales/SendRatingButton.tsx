@@ -18,12 +18,17 @@ const ERRORS: Record<string, string | undefined> = {
 
 const errorText = (error: unknown): string => ERRORS[errorCode(error) ?? ''] ?? r.failed;
 /** queued = the send gate is closed: it waits; anything else went to WhatsApp. */
-const doneText = (sent: MessageView | undefined): string | null => (sent ? (sent.status === 'queued' ? r.queued : r.sent) : null);
+const sentText = (sent: MessageView): string => (sent.status === 'queued' ? r.queued : r.sent);
+const doneText = (sent: MessageView | undefined): string | null => (sent ? sentText(sent) : null);
 const isApproved = (templates: readonly TemplateView[] | undefined): boolean =>
   templates?.some((x) => x.key === RATING_TEMPLATE && x.status === 'approved') ?? false;
 
 /** Admin only; one request id per press kept across retries (rule 8); needs Meta approval. */
-export function SendRatingButton({ thread }: { thread: Pick<ThreadView, 'phone_e164' | 'guardian_id'> }) {
+export function SendRatingButton({
+  thread,
+}: {
+  thread: Pick<ThreadView, 'phone_e164' | 'guardian_id'>;
+}) {
   const queryClient = useQueryClient();
   const admin = useInboxMode() === 'admin';
   const templates = useQuery({ ...templatesQuery, enabled: admin });
@@ -55,7 +60,11 @@ export function SendRatingButton({ thread }: { thread: Pick<ThreadView, 'phone_e
         {send.isPending ? r.sending : r.send}
       </Button>
       {!approved && templates.isSuccess && <p className="text-xs text-ink-3">{r.notApproved}</p>}
-      {done && <p role="status" className="text-xs text-ink-2">{done}</p>}
+      {done && (
+        <p role="status" className="text-xs text-ink-2">
+          {done}
+        </p>
+      )}
       {send.isError && <FormAlert>{errorText(send.error)}</FormAlert>}
     </div>
   );

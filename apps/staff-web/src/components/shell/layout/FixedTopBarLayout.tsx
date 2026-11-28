@@ -15,6 +15,8 @@ export interface FixedTopBarLayoutProps {
   children: ReactNode;
 }
 
+const wideClass = (wide: boolean) => (wide ? WIDE_PAGE_TOPBAR : undefined);
+
 /** Only the page content scrolls; from 1340px the inbox's clocks sit in the header row. */
 export function FixedTopBarLayout({ topNav, bar, wide = false, children }: FixedTopBarLayoutProps) {
   const { data: me } = useQuery(meQuery);
@@ -28,15 +30,17 @@ export function FixedTopBarLayout({ topNav, bar, wide = false, children }: Fixed
       )}
     >
       <MenuBar {...bar} nav={topNav} email={me?.email} className="shell:hidden" />
-      <WideHeader clocks={full ? <RunningHead className="min-h-0 flex-nowrap whitespace-nowrap" /> : undefined} />
+      <WideHeader
+        clocks={
+          full ? <RunningHead className="min-h-0 flex-nowrap whitespace-nowrap" /> : undefined
+        }
+      />
       <div className="hidden shrink-0 px-1.5 pt-3 shell:block">{topNav}</div>
       {/* The full-width row only below 1340px, where the wide header does not hold its clocks. */}
       <div className={cn('shrink-0', full && 'min-[1340px]:hidden')}>
         <RunningHead />
       </div>
-      <PageFrame pageClassName={inbox ? INBOX_PAGE_TOPBAR : wide ? WIDE_PAGE_TOPBAR : undefined}>
-        {children}
-      </PageFrame>
+      <PageFrame pageClassName={inbox ? INBOX_PAGE_TOPBAR : wideClass(wide)}>{children}</PageFrame>
     </div>
   );
 }

@@ -8,6 +8,9 @@ import { ComposerPhone, type ComposerMode as Mode } from './ComposerPhone';
 import type { PrefillContext } from '@/features/messaging/inbox/composer/lib/template-params';
 import { useTextOnReply } from '@/features/messaging/inbox/composer/lib/use-reply-target';
 
+const offNote = (reason: string): string =>
+  reason === 'switch_off' ? t.inbox.messagingOff : t.inbox.messagingOffServer;
+
 /** Reply box (R-LEAD-02): plain or template inside the 24 h window, approved templates after it. */
 export function Composer({
   thread,
@@ -24,13 +27,8 @@ export function Composer({
   useTextOnReply(() => setMode('text'));
   const closed = gate.data && !gate.data.open ? gate.data.reason : null;
   const teacher = !!thread.teacher_id && !thread.guardian_id;
-  const gateNote = !closed
-    ? null
-    : asTeacher
-      ? t.inbox.messagingOffTeacher
-      : closed === 'switch_off'
-        ? t.inbox.messagingOff
-        : t.inbox.messagingOffServer;
+  const teacherNote = asTeacher ? t.inbox.messagingOffTeacher : null;
+  const gateNote = closed ? (teacherNote ?? offNote(closed)) : null;
   return (
     <ComposerPhone
       thread={thread}

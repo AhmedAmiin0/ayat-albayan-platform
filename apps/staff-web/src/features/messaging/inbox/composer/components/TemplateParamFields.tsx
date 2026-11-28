@@ -1,6 +1,13 @@
 import { renderTemplateBody, templateBlock, type TemplateView } from '@ab/shared';
 import { Field, Input, Ltr, cn, t } from '@ab/web-kit';
-import { freeTextField, paramFields, toParamsInput, urlButton, type ParamSlot, type ParamValues } from '@/features/messaging/inbox/composer/lib/template-params';
+import {
+  freeTextField,
+  paramFields,
+  toParamsInput,
+  urlButton,
+  type ParamSlot,
+  type ParamValues,
+} from '@/features/messaging/inbox/composer/lib/template-params';
 import { TemplateButtons } from '@/features/messaging/inbox/messages/template/TemplateButtons';
 import { TemplateFrame } from '@/features/messaging/inbox/messages/template/TemplateFrame';
 import { FreeTextField } from '@/features/messaging/inbox/composer/free-text';
@@ -14,8 +21,13 @@ export interface TemplateParamFieldsProps {
 }
 
 const c = t.inbox.composer;
-interface FreeSlot { tpl: TemplateView; slot: ParamSlot }
+interface FreeSlot {
+  tpl: TemplateView;
+  slot: ParamSlot;
+}
 const required = (label: string) => c.required.replace('{field}', label);
+const slotError = (label: string, fromLesson: boolean) =>
+  fromLesson ? c.pickLesson : required(label);
 
 function FreeText(props: Omit<TemplateParamFieldsProps, 'template'> & FreeSlot) {
   const { tpl, slot, values, onChange } = props;
@@ -58,9 +70,7 @@ export function TemplateParamFields({
             <Field
               key={slot}
               label={label}
-              error={
-                missing.includes(slot) ? (fromLesson ? c.pickLesson : required(label)) : undefined
-              }
+              error={missing.includes(slot) ? slotError(label, fromLesson) : undefined}
             >
               {(p) => (
                 <Input
@@ -79,10 +89,17 @@ export function TemplateParamFields({
           >
             {(p) => (
               <>
-                <Input {...p} dir="ltr" value={values.button ?? ''} onChange={(e) => onChange({ ...values, button: e.target.value })} />
+                <Input
+                  {...p}
+                  dir="ltr"
+                  value={values.button ?? ''}
+                  onChange={(e) => onChange({ ...values, button: e.target.value })}
+                />
                 <p className="text-xs text-ink-3">
                   {c.buttonUrl.replace('{url}', '')}
-                  <Ltr className="[overflow-wrap:anywhere]">{url.replace('{{1}}', values.button?.trim() || '{{1}}')}</Ltr>
+                  <Ltr className="[overflow-wrap:anywhere]">
+                    {url.replace('{{1}}', values.button?.trim() || '{{1}}')}
+                  </Ltr>
                 </p>
               </>
             )}

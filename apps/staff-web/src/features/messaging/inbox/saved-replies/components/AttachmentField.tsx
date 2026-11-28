@@ -8,6 +8,10 @@ import { replyErrorText, uploadReplyFile } from '@/features/messaging/inbox/save
 import { fileName, type DraftFile } from '@/features/messaging/inbox/saved-replies/lib/reply-draft';
 
 const S = t.savedReplies;
+const isFileProblem = (p: string): p is 'file_type' | 'file_too_large' =>
+  p === 'file_type' || p === 'file_too_large';
+const uploadErrorText = (error: Error): string =>
+  isFileProblem(error.message) ? t.inbox.error[error.message] : replyErrorText(error);
 
 export interface AttachmentFieldProps {
   file: DraftFile;
@@ -33,25 +37,42 @@ export function AttachmentField({ file, onChange, onBusy }: AttachmentFieldProps
     onSuccess: (done) => onChange({ kind: 'new', ...done }),
   });
   const shown = file.kind === 'none' ? null : file.attachment;
-  const problem = upload.error?.message;
-  const error = !upload.isError ? null : problem === 'file_type' || problem === 'file_too_large' ? t.inbox.error[problem] : replyErrorText(upload.error);
+  const error = upload.error ? uploadErrorText(upload.error) : null;
+  const pickLabel = shown ? S.attachReplace : S.attach;
   return (
     <div className="grid gap-1.5">
       <p className="text-sm font-semibold text-ink">{S.attachment}</p>
       {shown && (
         <span className="flex min-w-0 items-center gap-1.5 rounded-md border border-rule bg-sunk px-2 py-1.5 text-xs text-ink-2">
-          <Icon name={shown.mime === 'application/pdf' ? 'template' : 'paperclip'} className="size-5" />
-          <span className="min-w-0 flex-1 truncate font-semibold" dir="auto">{shown.name}</span>
+          <Icon
+            name={shown.mime === 'application/pdf' ? 'template' : 'paperclip'}
+            className="size-5"
+          />
+          <span className="min-w-0 flex-1 truncate font-semibold" dir="auto">
+            {shown.name}
+          </span>
           <span className="shrink-0 text-ink-3">{sizeText(shown.size)}</span>
         </span>
       )}
       <div className="flex flex-wrap gap-2">
-        <Button type="button" size="sm" variant="secondary" disabled={upload.isPending} onClick={() => input.current?.click()}>
+        <Button
+          type="button"
+          size="sm"
+          variant="secondary"
+          disabled={upload.isPending}
+          onClick={() => input.current?.click()}
+        >
           <Icon name="paperclip" />
-          {upload.isPending ? S.attachUploading : shown ? S.attachReplace : S.attach}
+          {upload.isPending ? S.attachUploading : pickLabel}
         </Button>
         {shown && (
-          <Button type="button" size="sm" variant="ghost" disabled={upload.isPending} onClick={() => onChange({ kind: 'none' })}>
+          <Button
+            type="button"
+            size="sm"
+            variant="ghost"
+            disabled={upload.isPending}
+            onClick={() => onChange({ kind: 'none' })}
+          >
             {S.attachRemove}
           </Button>
         )}

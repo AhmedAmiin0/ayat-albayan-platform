@@ -3,7 +3,10 @@
 
 export type SortDir = 'asc' | 'desc';
 /** What DataTable's `sort` prop reads and reports. */
-export type SortSearch = { sort?: string; dir?: SortDir };
+export interface SortSearch {
+  sort?: string;
+  dir?: SortDir;
+}
 export type FilterSearch = Record<string, string>;
 
 /** Filter params are namespaced so they never clash with `page`, `search` or a route's own keys. */

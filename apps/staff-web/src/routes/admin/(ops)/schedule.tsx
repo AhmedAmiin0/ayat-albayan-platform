@@ -17,7 +17,7 @@ function ScheduleRoute() {
   return (
     <WeekSchedule
       search={search}
-      onSearch={(next) => void navigate({ search: parseScheduleSearch(next) })}
+      onSearch={(next) => void navigate({ search: parseScheduleSearch({ ...next }) })}
     />
   );
 }

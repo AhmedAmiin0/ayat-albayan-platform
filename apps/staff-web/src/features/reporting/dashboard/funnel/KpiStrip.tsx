@@ -14,12 +14,17 @@ export interface KpiStripProps {
 const tile =
   'ab-lift flex h-full flex-col gap-1.5 rounded-md px-3 py-3 no-underline hover:bg-sunk/75';
 
+const actTone = (kpi: Kpi) => (kpi.act ? 'text-act' : 'text-ink');
+
 function Figure({ kpi, loading }: { kpi: Kpi; loading: boolean }): ReactNode {
   return (
     <>
       <span
         data-act={kpi.act || undefined}
-        className={cn('font-display text-[28px] leading-none font-bold', loading ? 'text-ink-3' : kpi.act ? 'text-act' : 'text-ink')}
+        className={cn(
+          'font-display text-[28px] leading-none font-bold',
+          loading ? 'text-ink-3' : actTone(kpi),
+        )}
       >
         {loading ? '—' : kpi.value}
       </span>{' '}
@@ -48,7 +53,10 @@ export function KpiStrip({ summary, work }: KpiStripProps) {
             ) : (
               <Link
                 to="/admin"
-                search={(prev) => ({ ...prev, work: k.key === 'reports' ? undefined : (k.key as WorkTab) })}
+                search={(prev) => ({
+                  ...prev,
+                  work: k.key === 'reports' ? undefined : (k.key as WorkTab),
+                })}
                 // exact: the reports tile ({} search) must not count as active on ?work=tasks.
                 activeOptions={{ exact: true, includeSearch: true }}
                 aria-current={work === k.key ? 'true' : undefined}

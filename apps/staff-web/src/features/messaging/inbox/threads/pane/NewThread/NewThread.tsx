@@ -17,17 +17,14 @@ export function NewThread({ phone, lessons }: { phone: string; lessons: readonly
   const none = useNoneAllowed(false);
   const noneAllowed = mode === 'sales' ? none : null;
   const composes = writes && !noneAllowed;
+  const firstHint = composes ? t.inbox.newChat.firstTemplate : null;
   return (
     <section aria-label={t.inbox.newChat.title} className="grid content-start gap-4">
       <h2 className="text-lg font-semibold">
         {writes ? <Ltr>{formatPhone(phone)}</Ltr> : t.inbox.newChat.title}
       </h2>
       <EmptyState title={t.inbox.noThread}>
-        {noneAllowed
-          ? noneAllowedText(noneAllowed, t.inbox.newChat.noAllowed)
-          : composes
-            ? t.inbox.newChat.firstTemplate
-            : null}
+        {noneAllowed ? noneAllowedText(noneAllowed, t.inbox.newChat.noAllowed) : firstHint}
       </EmptyState>
       {composes && (
         <TemplateComposer

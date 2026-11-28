@@ -18,6 +18,8 @@ export interface BookingPageProps {
 
 type Choice = Pick<BookingDraft, 'kind' | 'pkg'>;
 
+const newTitle = (trial: boolean) => (trial ? t.booking.trialTitle : t.booking.title);
+
 /** Entry points per R-SCH-06, R-LEAD-06 and R-SCH-10, or bare (search a student first). */
 export function BookingPage({ search, onOpenStudent, onUnfinished }: BookingPageProps) {
   // The title follows the admin's pick; a new URL (another lead or package) forgets the pick.
@@ -33,13 +35,7 @@ export function BookingPage({ search, onOpenStudent, onUnfinished }: BookingPage
   return (
     <>
       <PageHead>
-        <Cartouche>
-          {kind === 'makeup'
-            ? t.booking.makeup.title
-            : trial
-              ? t.booking.trialTitle
-              : t.booking.title}
-        </Cartouche>
+        <Cartouche>{kind === 'makeup' ? t.booking.makeup.title : newTitle(trial)}</Cartouche>
       </PageHead>
       {search.studentId ? (
         <StudentBooking search={search} studentId={search.studentId} {...entry} />

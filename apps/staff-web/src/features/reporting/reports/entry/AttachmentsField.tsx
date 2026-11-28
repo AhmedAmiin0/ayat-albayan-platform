@@ -14,9 +14,11 @@ export interface AttachmentsFieldProps {
   addLabel?: string;
 }
 
+const mediaKind = (mime: string) => (mime.startsWith('audio/') ? 'audio' : 'image');
+
 /** File kind and its size in MB (one decimal, Western digits). */
 export function fileLabel(file: Pick<ReportAttachmentView, 'mime' | 'size'>): string {
-  const kind = file.mime === 'application/pdf' ? 'pdf' : file.mime.startsWith('audio/') ? 'audio' : 'image';
+  const kind = file.mime === 'application/pdf' ? 'pdf' : mediaKind(file.mime);
   const mb = t.reports.sizeMb.replace('{n}', Math.max(0.1, file.size / 1_048_576).toFixed(1));
   return `${t.reports.fileKind[kind]} · ${mb}`;
 }
@@ -68,7 +70,13 @@ export function AttachmentsField({
                 {t.reports.openFile}
               </Button>
               {editable && (
-                <Button type="button" variant="danger-quiet" size="sm" disabled={remove.isPending} onClick={() => remove.mutate({ id: reportId, attachmentId: f.id })}>
+                <Button
+                  type="button"
+                  variant="danger-quiet"
+                  size="sm"
+                  disabled={remove.isPending}
+                  onClick={() => remove.mutate({ id: reportId, attachmentId: f.id })}
+                >
                   {t.reports.removeAttachment}
                 </Button>
               )}
@@ -78,8 +86,20 @@ export function AttachmentsField({
       )}
       {editable && (
         <div className="flex flex-wrap items-center gap-3">
-          <input ref={input} type="file" accept={ATTACHMENT_MIMES.join(',')} className="sr-only" tabIndex={-1} onChange={(e) => pick(e.target.files?.[0])} />
-          <Button type="button" variant="secondary" disabled={upload.isPending} onClick={() => input.current?.click()}>
+          <input
+            ref={input}
+            type="file"
+            accept={ATTACHMENT_MIMES.join(',')}
+            className="sr-only"
+            tabIndex={-1}
+            onChange={(e) => pick(e.target.files?.[0])}
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={upload.isPending}
+            onClick={() => input.current?.click()}
+          >
             {upload.isPending ? t.reports.uploading : addLabel}
           </Button>
           <span className="text-xs text-ink-3">{t.reports.attachmentHint}</span>
