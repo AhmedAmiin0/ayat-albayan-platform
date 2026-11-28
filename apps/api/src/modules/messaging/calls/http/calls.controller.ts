@@ -4,19 +4,22 @@ import {
   startCallSchema,
   type ActiveCallView,
 } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { id } from '@ab/core';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { CallAccess } from '@/modules/messaging/calls/access/call-access';
 import { CallReads } from '@/modules/messaging/calls/flow/call-reads.service';
 import { CallFlows } from '@/modules/messaging/calls/flow/call-flows';
 
 type StartBody = z.output<typeof startCallSchema>;
 type AcceptBody = z.output<typeof acceptCallSchema>;
+type ListQuery = z.output<typeof callListQuerySchema>;
+
+const callId = id();
 
 /**
  * WhatsApp voice calls (docs/28 §4). Reads need inbox.read, every action inbox.send (the same guard
@@ -45,10 +48,8 @@ export class CallsController {
   }
 
   @Get()
-  async list(@Query() query: unknown, @CurrentUser() user: AuthUser) {
-    // The actor's 403/404 (TeacherScopes) still win over a bad query: parsed after it.
-    const actor = await this.access.actor(user);
-    return this.reads.list(actor, parseOrThrow(callListQuerySchema, query));
+  async list(@ZodQuery(callListQuerySchema) query: ListQuery, @CurrentUser() user: AuthUser) {
+    return this.reads.list(await this.access.actor(user), query);
   }
 
   @Post()
@@ -63,7 +64,7 @@ export class CallsController {
   @HttpCode(200)
   @Permissions('inbox.send')
   async accept(
-    @Param('id', ParseUUIDPipe) id: string,
+    @ZodParam('id', callId) id: string,
     @ZodBody(acceptCallSchema) { sdp }: AcceptBody,
     @CurrentUser() user: AuthUser,
   ) {
@@ -74,14 +75,14 @@ export class CallsController {
   @Post(':id/reject')
   @HttpCode(200)
   @Permissions('inbox.send')
-  async reject(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser) {
+  async reject(@ZodParam('id', callId) id: string, @CurrentUser() user: AuthUser) {
     return this.flows.inbound.reject(await this.access.actor(user), id);
   }
 
   @Post(':id/end')
   @HttpCode(200)
   @Permissions('inbox.send')
-  async end(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser) {
+  async end(@ZodParam('id', callId) id: string, @CurrentUser() user: AuthUser) {
     return this.flows.outbound.end(await this.access.actor(user), id);
   }
 

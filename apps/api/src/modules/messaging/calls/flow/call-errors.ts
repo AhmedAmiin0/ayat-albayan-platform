@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import type { Logger } from '@nestjs/common';
-import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { WaError } from '@/modules/messaging/whatsapp';
 
 /**
  * A short code for wa_calls.error_code and the 502 body: Meta's code, «uncertain» or «error». Never

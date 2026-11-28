@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { z } from 'zod';
 import { PERMISSION_RESOLVER, systemResolver } from '@/common/auth/permissions';
 import { DB } from '@/common/db/db.module';
 import { expoMessages, type ExpoMessage } from '@/common/push/expo/expo-push';
@@ -31,7 +32,7 @@ async function transport(): Promise<PushTransport> {
 function stubFetch() {
   const bodies: ExpoMessage[][] = [];
   const fetchMock = vi.fn(async (_url: string, init: RequestInit) => {
-    const batch = JSON.parse(String(init.body)) as ExpoMessage[];
+    const batch = JSON.parse(z.string().parse(init.body)) as ExpoMessage[];
     bodies.push(batch);
     return new Response(JSON.stringify({ data: batch.map((m) => ({ status: 'ok', id: `ticket-${m.to}` })) }));
   });

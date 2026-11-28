@@ -2,8 +2,11 @@ import { FOLLOW_UP_STATUSES, type FollowUpNote } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { OwnNumbers } from '@/modules/messaging/numbers';
-import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
-import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.repo';
+import {
+  approvedTemplates,
+  queueMessages,
+  type QueuedMessage,
+} from '@/modules/messaging/reminders';
 import { readAll } from '@/common/db/read-all';
 import { wakeOn } from '@/common/jobs';
 import { done, maybe, rows } from '@/common/db/errors';

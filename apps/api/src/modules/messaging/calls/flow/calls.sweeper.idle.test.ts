@@ -12,8 +12,11 @@ const at = (ms: number) => new Date(T0 + ms);
 function setup(on: boolean | 'unreadable' = true) {
   const { kit, queries } = fakeKit();
   const live = vi.spyOn(queries, 'live');
-  const enabled = vi.fn(() => (on === 'unreadable' ? Promise.reject(new Error('db down')) : Promise.resolve(on)));
-  return { sweeper: new CallsSweeper(kit, { enabled } as unknown as CallsGate), queries, live, enabled };
+  const enabled = vi.fn(() =>
+    on === 'unreadable' ? Promise.reject(new Error('db down')) : Promise.resolve(on),
+  );
+  const sweeper = new CallsSweeper(kit, { enabled } as unknown as CallsGate);
+  return { sweeper, queries, live, enabled };
 }
 
 afterEach(() => {

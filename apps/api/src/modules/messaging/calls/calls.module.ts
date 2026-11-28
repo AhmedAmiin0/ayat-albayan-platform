@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { SalesModule } from '@/modules/sales/sales/sales.module';
-import { InboxModule } from '@/modules/messaging/inbox/inbox.module';
+import { SalesModule } from '@/modules/sales/sales';
+import { InboxModule } from '@/modules/messaging/inbox';
 import { CallAccess } from './access/call-access';
 import { CallsGate } from './access/calls-gate';
 import { CallsSettings } from './calls.settings';

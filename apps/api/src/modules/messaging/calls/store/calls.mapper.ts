@@ -18,6 +18,12 @@ export function toCallView(row: CallRow, names: ReadonlyMap<string, string>): Ca
   };
 }
 
+/** The caller of an outbound call; the taker of an inbound one, or anyone while it rings. */
+const ownsCall = (row: CallRow, userId: string): boolean =>
+  row.direction === 'outbound'
+    ? row.created_by === userId
+    : row.accepted_by === userId || row.status === 'ringing';
+
 /**
  * A live call for the device that runs its WebRTC: the family's offer of a ringing inbound call, or
  * WhatsApp's answer to the caller's own outbound offer. Nobody else gets either SDP.
@@ -26,10 +32,7 @@ export function toActiveView(
   row: CallRow,
   input: { names: ReadonlyMap<string, string>; userId: string },
 ): ActiveCallView {
-  const own =
-    row.direction === 'outbound'
-      ? row.created_by === input.userId
-      : row.accepted_by === input.userId || row.status === 'ringing';
+  const own = ownsCall(row, input.userId);
   return {
     ...toCallView(row, input.names),
     offer_sdp: own && row.direction === 'inbound' ? row.offer_sdp : null,

@@ -1,11 +1,21 @@
 import { waIdToE164, type CallEvent } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
-import type { CallPermissionReplyEvent, CallWebhookEvent } from '@/modules/messaging/webhook/webhook.events';
+import type {
+  CallPermissionReplyEvent,
+  CallWebhookEvent,
+} from '@/modules/messaging/webhook';
 import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
 import { callingLine, type CallingLine } from '@/modules/messaging/calls/kapso/calling-line';
 import type { CallRow } from '@/modules/messaging/calls/store/call-row';
 import { logCallError } from './call-errors';
+import {
+  callerPhone,
+  isInboundOffer,
+  KIND_EVENTS,
+  onLine,
+  stillUpOnWhatsapp,
+} from './call-webhook.mapper';
 import { CallsKit } from './call-kit';
 import { CallsNumberRepo } from '@/modules/messaging/calls/store/calls-number.repo';
 import { CallsSweeper } from './calls.sweeper';
@@ -18,28 +28,17 @@ export interface CallEventsPort {
 }
 export const CALL_EVENTS = Symbol('CALL_EVENTS');
 
-const isUuid = (v: string | null): v is string => v !== null && z.uuid().safeParse(v).success;
-
-/**
- * The machine event a webhook item stands for; null = nothing to do (an inbound offer is handled
- * apart).
- */
-export function machineEvent(e: CallWebhookEvent): CallEvent | null {
-  const at = e.at.toISOString();
-  if (e.kind === 'terminate') return { type: 'terminate', at, failed: e.status === 'FAILED', duration: e.duration };
-  if (e.kind === 'connect') return e.direction === 'outbound' && e.sdp ? { type: 'answer_sdp', sdp: e.sdp } : null;
-  if (e.status === 'RINGING') return { type: 'ringing' };
-  if (e.status === 'ACCEPTED') return { type: 'accepted', at };
-  return e.status === 'REJECTED' ? { type: 'rejected', at } : null;
+interface RingingAt {
+  line: CallingLine;
+  phone: string;
+  sdp: string;
 }
 
-/**
- * Our outbound row already ended (a connect that timed out, a hang-up before WhatsApp named the
- * call) but WhatsApp says the call rings, was answered or got its answer: it is still up there, so
- * end it.
- */
-function stillUpOnWhatsapp(row: CallRow, event: CallEvent): boolean {
-  return row.direction === 'outbound' && row.status === 'ended' && ['ringing', 'accepted', 'answer_sdp'].includes(event.type);
+const isUuid = (v: string | null): v is string => v !== null && z.uuid().safeParse(v).success;
+
+/** The machine event a webhook item stands for; null = nothing to do (an inbound offer rings). */
+export function machineEvent(e: CallWebhookEvent): CallEvent | null {
+  return KIND_EVENTS[e.kind](e, e.at.toISOString());
 }
 
 /**
@@ -80,10 +79,13 @@ export class CallEvents implements CallEventsPort {
 
   async handle(e: CallWebhookEvent): Promise<void> {
     const line = callingLine();
-    if (!line || (e.phoneNumberId !== null && e.phoneNumberId !== line.env.phoneNumberId)) return;
-    if (e.kind === 'connect' && e.direction === 'inbound') return this.ring(e, line);
+    if (!line || !onLine(e, line)) return;
+    if (isInboundOffer(e)) return this.ring(e, line);
     const row = await this.find(e);
-    if (!row) return;
+    if (row) await this.move(row, e, line);
+  }
+
+  private async move(row: CallRow, e: CallWebhookEvent, line: CallingLine): Promise<void> {
     if (!row.wa_call_id) await this.kit.queries.setWaCallId(row.id, e.waCallId);
     const event = machineEvent(e);
     if (!event) return;
@@ -108,8 +110,18 @@ export class CallEvents implements CallEventsPort {
   private async ring(e: CallWebhookEvent, line: CallingLine): Promise<void> {
     if (!(await this.gate.enabled()) || !e.sdp) return;
     if (await this.kit.queries.byWaCallId(e.waCallId)) return;
-    const phone = e.peer ? waIdToE164(e.peer) : null;
-    if (!phone) { this.log.warn(`call ${e.waCallId}: the caller's wa_id is not a phone`); return; }
+    const phone = callerPhone(e);
+    if (!phone) {
+      this.log.warn(`call ${e.waCallId}: the caller's wa_id is not a phone`);
+      return;
+    }
+    await this.insertRinging(e, { line, phone, sdp: e.sdp });
+    // The sweeper (on the worker) ends it as missed if its terminate webhook is lost.
+    void this.sweeper.wake();
+  }
+
+  private async insertRinging(e: CallWebhookEvent, at: RingingAt): Promise<void> {
+    const { line, phone } = at;
     const thread = await this.kit.threads.thread(phone);
     await this.kit.queries.insert({
       ...{
@@ -117,7 +129,7 @@ export class CallEvents implements CallEventsPort {
         status: 'ringing',
         phone_e164: phone,
         wa_call_id: e.waCallId,
-        offer_sdp: e.sdp,
+        offer_sdp: at.sdp,
       },
       ...{
         number_id: line.numberId,
@@ -126,7 +138,5 @@ export class CallEvents implements CallEventsPort {
       },
       started_at: e.at.toISOString(),
     });
-    // The sweeper (on the worker) ends it as missed if its terminate webhook is lost.
-    void this.sweeper.wake();
   }
 }

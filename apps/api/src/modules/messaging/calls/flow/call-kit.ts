@@ -1,7 +1,6 @@
 import { nextCall, type CallEvent, type CallStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
-import { ThreadMessagesRepo } from '@/modules/messaging/inbox';
+import { ThreadMessagesRepo, ThreadsRepo } from '@/modules/messaging/inbox';
 import { CALLS_API, type CallsApi } from '@/modules/messaging/calls/kapso/calls-api';
 import { callState, type CallMove, type CallRow } from '@/modules/messaging/calls/store/call-row';
 import { CallsRepo } from '@/modules/messaging/calls/store/calls.repo';

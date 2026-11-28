@@ -1,13 +1,13 @@
+import { phoneE164 } from '@ab/core';
 import { callPermissionRequestSchema } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import type { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
-import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
-import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
+import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { invalidPhone, recordSend } from '@/modules/messaging/inbox';
 import { CallAccess } from '@/modules/messaging/calls/access/call-access';
 import { CallPermissions } from '@/modules/messaging/calls/flow/call-permission.service';
 
@@ -26,19 +26,22 @@ export class CallPermissionController {
   ) {}
 
   @Get(':phone')
-  async state(@Param('phone') raw: string, @CurrentUser() user: AuthUser) {
-    return this.permissions.state(await this.access.actor(user), phoneParam(raw));
+  async state(
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
+    @CurrentUser() user: AuthUser,
+  ) {
+    return this.permissions.state(await this.access.actor(user), phone);
   }
 
   @Post(':phone/request')
   @HttpCode(201)
   async request(
-    @Param('phone') raw: string,
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
     @ZodBody(callPermissionRequestSchema) { clientRequestId }: RequestBody,
     @CurrentUser() user: AuthUser,
   ) {
     const actor = await this.access.actor(user);
-    const sent = await this.permissions.request(actor, { phone: phoneParam(raw), clientRequestId });
+    const sent = await this.permissions.request(actor, { phone, clientRequestId });
     return recordSend(this.audit, {
       sent,
       action: 'call_permission_request',

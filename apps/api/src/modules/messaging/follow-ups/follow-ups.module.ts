@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TeachersModule } from '@/modules/people/teachers/teachers.module';
+import { TeachersModule } from '@/modules/people/teachers';
 import { FollowUpSlots } from './follow-up-slots';
 import { FollowUpsJob } from './follow-ups.job';
 import { FollowUpsRepo } from './follow-ups.repo';

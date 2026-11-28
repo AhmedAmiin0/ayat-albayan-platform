@@ -17,7 +17,7 @@ export const RECEIPTS_TRANSPORT = Symbol('RECEIPTS_TRANSPORT');
  * no receipts, nothing is fetched.
  */
 export function expoReceiptsTransport({ base, accessToken }: ExpoConn): ReceiptsTransport {
-  if (!base) return async () => ({});
+  if (!base) return () => Promise.resolve({});
   const http = expoHttp({ base, accessToken, label: 'expo receipts' });
   return async (ids) => {
     const out: Record<string, ExpoReceipt> = {};

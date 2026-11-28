@@ -1,13 +1,13 @@
 import { z } from 'zod';
 import type { Http } from '@/common/infra/http/http.types';
 import {
+  DEFAULT_TIMEOUT_MS,
   graphHttp,
   graphSend,
   type FetchLike,
   type GraphConn,
-} from '@/modules/messaging/whatsapp/drivers/meta/graph';
-import { waTo } from '@/modules/messaging/whatsapp/messages/wa-components';
-import { DEFAULT_TIMEOUT_MS } from '@/modules/messaging/whatsapp/whatsapp.client';
+  waTo,
+} from '@/modules/messaging/whatsapp';
 import type { CallingLine } from './calling-line';
 import type { CallPermissionFacts, CallsApi, PermissionRequest } from './calls-api';
 import { permissionRequestBody } from './permission-body';
@@ -40,7 +40,7 @@ export class KapsoCallsApi implements CallsApi {
 
   async permission(line: CallingLine, to: string): Promise<CallPermissionFacts> {
     const q = new URLSearchParams({ user_wa_id: waTo(to) });
-    const path = `${line.env.phoneNumberId}/call_permissions?${q}`;
+    const path = `${line.env.phoneNumberId}/call_permissions?${q.toString()}`;
     const res = await this.http(line).json({ path, schema: permissionSchema });
     const can = (name: string) =>
       res.actions?.some((a) => a.action_name === name && a.can_perform_action) ?? false;
@@ -102,9 +102,8 @@ export class KapsoCallsApi implements CallsApi {
 
   /** graphSend for the `/messages` POST: a 2xx without a message id is uncertain (h8b). */
   private http(line: CallingLine, profile: (c: GraphConn) => Http = graphHttp): Http {
-    const fetchLike = this.opts.fetch ?? fetch;
     const timeoutMs = this.opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-    return profile({ env: line.env, fetch: fetchLike, timeoutMs });
+    return profile({ env: line.env, fetch: this.opts.fetch, timeoutMs });
   }
 }
 

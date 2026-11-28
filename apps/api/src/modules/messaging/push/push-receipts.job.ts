@@ -52,18 +52,26 @@ export class PushReceiptsJob extends TickerJob {
       summary.rows = rows.length;
       if (rows.length === 0) return summary;
       const receipts = await this.transport(rows.flatMap((r) => r.ticket_ids));
-      const done = new Set<string>();
-      for (const row of rows) {
-        const tokens = await this.settle(row, receipts);
-        if (tokens === null) continue;
-        summary.settled += 1;
-        summary.pruned += await this.prune(row, tokens, done);
-      }
+      await this.settleAll(rows, receipts, summary);
     } catch (e) {
       this.log.warn(`push receipts run aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
     if (summary.settled > 0) this.log.log(`push receipts: ${JSON.stringify(summary)}`);
     return summary;
+  }
+
+  private async settleAll(
+    rows: readonly TicketRow[],
+    receipts: Readonly<Record<string, ExpoReceipt>>,
+    summary: ReceiptsSummary,
+  ): Promise<void> {
+    const done = new Set<string>();
+    for (const row of rows) {
+      const tokens = await this.settle(row, receipts);
+      if (tokens === null) continue;
+      summary.settled += 1;
+      summary.pruned += await this.prune(row, tokens, done);
+    }
   }
 
   /** Records what Expo answered for one row; its dead tokens, or null when no receipt is in yet. */

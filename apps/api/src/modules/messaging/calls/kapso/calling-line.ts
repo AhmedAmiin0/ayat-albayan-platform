@@ -23,10 +23,14 @@ export interface CallingLine {
   calls?: true;
 }
 
-export function callingLine(): CallingLine | null {
-  const calls = callsNumber();
-  if (calls) return calls.env ? { env: calls.env, numberId: calls.id, calls: true } : null;
+function chatLine(): CallingLine | null {
   const env = lineEnvs(loadEnv()).chat;
   if (env?.provider !== 'kapso') return null;
   return { env, numberId: numbersOverlay()?.numberIds.chat ?? null };
+}
+
+export function callingLine(): CallingLine | null {
+  const calls = callsNumber();
+  if (!calls) return chatLine();
+  return calls.env ? { env: calls.env, numberId: calls.id, calls: true } : null;
 }

@@ -13,7 +13,8 @@ import { TeacherThreadsRepo } from '@/modules/messaging/inbox/teacher-threads/te
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ThreadMessagesRepo, ThreadReadsRepo } from '@/modules/messaging/inbox';
 import { CallsSettings } from './calls.settings';
-import { FakeCallsRepo, fakeApi, FAMILY } from './calls.fakes';
+import { fakeApi, FAMILY } from './calls.fakes';
+import { FakeCallsRepo } from './store/calls.repo.fakes';
 import { CALLS_API } from './kapso/calls-api';
 import { CallsRepo } from './store/calls.repo';
 

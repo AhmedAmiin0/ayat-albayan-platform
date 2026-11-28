@@ -75,12 +75,17 @@ export class OutboundCalls {
     const row = await this.kit.queries.get(id);
     if (!row || !isPartyOf(row, actor.user.id)) throw notFound('call_not_found');
     if (row.status === 'ended') return this.view(row, actor.user.id);
-    const line = row.wa_call_id ? this.gate.line() : null;
-    if (line && row.wa_call_id) {
-      await this.kit.api.terminate(line, row.wa_call_id).catch((e: unknown) => logCallError(this.log, { what: 'terminate', callId: id, error: e }));
-    }
+    await this.terminateOnWhatsapp(row);
     const ended = await this.kit.apply(row, { type: 'hangup', at: new Date().toISOString() });
     return this.view(ended ?? (await this.kit.queries.get(id)) ?? row, actor.user.id);
+  }
+
+  /** Only a call WhatsApp already named; a failed terminate is logged, never thrown. */
+  private async terminateOnWhatsapp(row: CallRow): Promise<void> {
+    const line = row.wa_call_id ? this.gate.line() : null;
+    if (line && row.wa_call_id) {
+      await this.kit.api.terminate(line, row.wa_call_id).catch((e: unknown) => logCallError(this.log, { what: 'terminate', callId: row.id, error: e }));
+    }
   }
 
   /**

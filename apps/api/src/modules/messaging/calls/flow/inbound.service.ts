@@ -53,10 +53,15 @@ export class InboundCalls {
   /** The visible, still ringing inbound call; 404 call_not_found / 409 already_taken otherwise. */
   private async ringing(actor: CallActor, id: string): Promise<CallRow & { wa_call_id: string }> {
     await this.gate.assertOn();
-    const row = await this.kit.queries.get(id);
-    if (row?.direction !== 'inbound' || !maySee(actor, row.phone_e164)) throw notFound('call_not_found');
+    const row = await this.visibleInbound(actor, id);
     if (row.status === 'ended') throw conflict('call_ended');
     if (row.status !== 'ringing' || !row.wa_call_id) throw conflict('already_taken');
     return { ...row, wa_call_id: row.wa_call_id };
+  }
+
+  private async visibleInbound(actor: CallActor, id: string): Promise<CallRow> {
+    const row = await this.kit.queries.get(id);
+    if (row?.direction !== 'inbound' || !maySee(actor, row.phone_e164)) throw notFound('call_not_found');
+    return row;
   }
 }

@@ -1,21 +1,39 @@
 import type { CallPermissionView } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
+import { z } from 'zod';
 import { conflict } from '@/common/http/errors';
 import { ar } from '@/common/infra/i18n/server-text';
-import { Outbox, type Sent } from '@/modules/messaging/inbox/send/outbox';
-import { pickSend, type SendPick } from '@/modules/messaging/inbox/send/send-number';
-import { dedupKey, outboundBase } from '@/modules/messaging/inbox/send/thread-send.service';
+import {
+  dedupKey,
+  Outbox,
+  outboundBase,
+  pickSend,
+  type SendPick,
+  type Sent,
+} from '@/modules/messaging/inbox';
 import { assertMayCall, type CallActor } from '@/modules/messaging/calls/access/call-access';
 import type { CallingLine } from '@/modules/messaging/calls/kapso/calling-line';
-import { CALL_PERMISSION_PAYLOAD } from '@/modules/messaging/whatsapp/messages/wa-call-permission';
+import { CALL_PERMISSION_PAYLOAD } from '@/modules/messaging/whatsapp';
 import { callFailed, logCallError } from './call-errors';
 import { CallsKit } from './call-kit';
 import { CallsNumberPermission } from './calls-number-permission';
 
+/** A pick that names a line or number; a refusal carries a `code` instead. */
+const sendablePickSchema = z.object({
+  line: z.string().optional(),
+  number_id: z.string().optional(),
+  code: z.never().optional(),
+});
+
 /** The reply window of the CALLING number is open: a session message may go from it now. */
-export function fromCallingNumber(pick: SendPick, line: CallingLine): pick is { line?: 'chat'; number_id?: string } {
-  if ('code' in pick) return false;
-  return line.numberId ? pick.number_id === line.numberId : pick.line === 'chat';
+export function fromCallingNumber(
+  pick: SendPick,
+  line: CallingLine,
+): pick is { line?: 'chat'; number_id?: string } {
+  const sendable = sendablePickSchema.safeParse(pick);
+  if (!sendable.success) return false;
+  const { line: waLine, number_id: numberId } = sendable.data;
+  return line.numberId ? numberId === line.numberId : waLine === 'chat';
 }
 
 /** Kapso decides (docs/28 §3.1); inside the 24 h window the request goes via the outbox. */
