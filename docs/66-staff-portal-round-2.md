@@ -251,3 +251,5 @@ One open PR of this plan at a time. Kit first, then the shell, then one area per
 | 9 fix/portal-r2-9 | open |
 | 10 fix/portal-r2-10 | open |
 | 11 fix/portal-r2-11 | open |
+
+Shared with docs/65: UX-7 (U2, `fix/ux-payment-actions`) puts the payment rows on the kit `RowMenu` (labelled per row, destructive items last, confirm dialogs kept). UX-R2-41 and UX-R2-49 reuse it for the other tables instead of `MoreMenu`, which stays the page-header menu.
