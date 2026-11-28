@@ -39,3 +39,18 @@ test('on Android every field stays on the React Native input', async () => {
   await render(<Field label={t.auth.email} value="a@b.c" />);
   expect(screen.getByLabelText(t.auth.email)).not.toHaveProp('expoUi', true);
 });
+
+test('a prop the native input lacks sends the field to React Native, never dropped', async () => {
+  const onKeyPress = jest.fn();
+  await render(<Field label={t.auth.email} value="" onKeyPress={onKeyPress} selectTextOnFocus />);
+  const input = screen.getByLabelText(t.auth.email);
+  expect(input).not.toHaveProp('expoUi', true);
+  expect(input).toHaveProp('selectTextOnFocus', true);
+  await fireEvent(input, 'keyPress', { nativeEvent: { key: 'a' } });
+  expect(onKeyPress).toHaveBeenCalledTimes(1);
+});
+
+test('a top-aligned multiline field stays native: the native field already starts at the top', async () => {
+  await render(<Field label={t.auth.email} value="" multiline textAlignVertical="top" />);
+  expect(screen.getByLabelText(t.auth.email)).toHaveProp('expoUi', true);
+});

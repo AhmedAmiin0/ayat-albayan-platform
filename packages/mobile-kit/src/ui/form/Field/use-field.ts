@@ -2,15 +2,9 @@ import { useState } from 'react';
 import { t } from '../../../lib/i18n/i18n';
 import type { FieldInput, FieldProps } from './Field.types';
 import { nativeInputOn } from './field-input.registry';
+import { nativeHonours } from './native-props';
 
-/**
- * @expo/ui's input has no React Native selection event, and a SwiftUI SecureField in its own host
- * loses the username/password pairing that password managers rely on: those stay on React Native.
- */
-const needsReactNative = (input: FieldInput) =>
-  input.secureTextEntry === true || input.onSelectionChange !== undefined;
-
-const usesNativeInput = (input: FieldInput) => nativeInputOn() && !needsReactNative(input);
+const usesNativeInput = (input: FieldInput) => nativeInputOn() && nativeHonours(input);
 
 export function useField({ label, ltr = false, required = false, ...input }: FieldProps) {
   const [focused, setFocused] = useState(false);
