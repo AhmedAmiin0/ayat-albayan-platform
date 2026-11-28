@@ -1,6 +1,6 @@
 import type { SavedReply } from '@ab/shared';
 import { useCallback, useState } from 'react';
-import { FlatList, type ListRenderItemInfo, View } from 'react-native';
+import { View } from 'react-native';
 import {
   Button,
   ErrorLine,
@@ -8,8 +8,8 @@ import {
   IconButton,
   Screen,
   t,
-  useInsetRows,
   useTheme,
+  LazyList,
 } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { DownIcon, TrashIcon, UpIcon } from '@/inbox/shared/chat-icons';
@@ -49,7 +49,7 @@ export function SharedRepliesScreen() {
   const { mutate, isPending } = move;
   const count = shared.length;
   const renderRow = useCallback(
-    ({ item, index }: ListRenderItemInfo<SavedReply>) => (
+    ({ item, index }: { item: SavedReply; index: number }) => (
       <View>
         <ReplyRow
           reply={item}
@@ -72,7 +72,6 @@ export function SharedRepliesScreen() {
     ),
     [count, isPending, mutate, deleting],
   );
-  const cells = useInsetRows(renderRow, count);
   if (editing) {
     return (
       <Screen>
@@ -91,11 +90,11 @@ export function SharedRepliesScreen() {
         <Button variant="secondary" label={t.savedReplies.add} onPress={() => setEditing({ reply: null })} />
         {move.isError ? <ErrorLine message={replyError(move.error)} /> : null}
       </View>
-      <FlatList
-        style={{ flex: 1 }}
+      <LazyList
         data={shared}
         keyExtractor={(r) => r.id}
-        {...cells}
+        renderItem={renderRow}
+        tabBar={false}
         ListEmptyComponent={
           replies.isError ? (
             <ErrorState onRetry={() => void replies.refetch()} />
