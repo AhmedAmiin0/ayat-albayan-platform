@@ -6,11 +6,22 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit';
 import { JoinButton } from './JoinButton';
+import { mockCall } from '@ab/testing/mock-call';
 
 // GET /settings/public never answers here: the window stays on the registry defaults (15 / 120 min).
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: () => new Promise(() => undefined) }));
+const mockApi = mockCall();
+mockApi.onRead(() => new Promise(() => undefined));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
-const L = lesson({ id: 'l-5', status: 'confirmed', starts_at: '2026-10-03T16:00:00.000Z', minutes: 60 });
+const L = lesson({
+  id: 'l-5',
+  status: 'confirmed',
+  starts_at: '2026-10-03T16:00:00.000Z',
+  minutes: 60,
+});
 const at = (iso: string) => vi.setSystemTime(new Date(iso));
 /** The window comes from GET /settings/public; with no answer yet, the registry defaults (15 / 120 min). */
 const render = (ui: ReactElement) =>
@@ -26,7 +37,10 @@ describe('JoinButton «ادخل الحلقة»', () => {
   it('is disabled with «تُفتح الساعة …» before the window', () => {
     at('2026-10-03T15:30:00.000Z');
     render(<JoinButton lesson={L} />);
-    expect(screen.getByRole('button', { name: t.classroom.enter })).toHaveProperty('disabled', true);
+    expect(screen.getByRole('button', { name: t.classroom.enter })).toHaveProperty(
+      'disabled',
+      true,
+    );
     expect(screen.getByText(/\d{1,2}:\d{2} [صم]/)).toBeTruthy();
     expect(screen.queryByRole('link')).toBeNull();
   });
@@ -39,13 +53,18 @@ describe('JoinButton «ادخل الحلقة»', () => {
       vi.setSystemTime(new Date('2026-10-03T15:45:30.000Z'));
       vi.advanceTimersByTime(60_000);
     });
-    expect(screen.getByRole('link', { name: t.classroom.enter }).getAttribute('href')).toBe('/classroom/l-5');
+    expect(screen.getByRole('link', { name: t.classroom.enter }).getAttribute('href')).toBe(
+      '/classroom/l-5',
+    );
   });
 
   it('closes again 2 hours after the end', () => {
     at('2026-10-03T19:00:01.000Z');
     render(<JoinButton lesson={L} />);
-    expect(screen.getByRole('button', { name: t.classroom.enter })).toHaveProperty('disabled', true);
+    expect(screen.getByRole('button', { name: t.classroom.enter })).toHaveProperty(
+      'disabled',
+      true,
+    );
     expect(screen.getByText(t.classroom.closedHint)).toBeTruthy();
   });
 

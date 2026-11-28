@@ -1,7 +1,7 @@
 import { payoutCalls, teacherEarningCalls } from '@ab/client-core';
 import { riyadhToday } from '@ab/time';
 import { queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend } from '@ab/web-kit';
+import { apiFetch, apiSend, call } from '@ab/web-kit';
 import { moneyKeys } from '@/features/finance/keys';
 
 // apps/api/src/modules/payouts (docs/11 §8, R-PAY-02, R-TCH-04). Teacher money is EGP.
@@ -42,7 +42,7 @@ export const earningsSummaryQuery = () =>
  * text decoding drops it and Excel needs it for Arabic.
  */
 export async function downloadPayoutsCsv(month: string): Promise<void> {
-  const text: unknown = await apiFetch(`/exports/payouts.csv?month=${month}`);
+  const text: unknown = await call({ path: `/exports/payouts.csv?month=${month}` });
   const csv = typeof text === 'string' ? text : JSON.stringify(text);
   const bom = String.fromCharCode(0xfeff);
   const body = bom + (csv.startsWith(bom) ? csv.slice(1) : csv);

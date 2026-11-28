@@ -8,8 +8,13 @@ import { LessonsByStatus } from './LessonsByStatus';
 import { lessonAt } from './today-fixture';
 import { TodayKpis } from './TodayKpis';
 import { TodayLessons } from './TodayLessons';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@tanstack/react-router', async () => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));
@@ -31,11 +36,15 @@ describe('dashboard without a lesson confirmation (owner 2026-11-02, the default
       wrapper: configWrapper(true),
     });
     expect(screen.getAllByRole('listitem')).toHaveLength(4);
-    expect(screen.getByRole('link', { name: `${NEEDS} 2` }).getAttribute('href')).toContain('scheduled');
+    expect(screen.getByRole('link', { name: `${NEEDS} 2` }).getAttribute('href')).toContain(
+      'scheduled',
+    );
   });
 
   it('KpiStrip: no «يحتاج تأكيد» filter link while off, as before while on', () => {
-    const { unmount } = render(<KpiStrip summary={SUMMARY} work="reports" />, { wrapper: configWrapper() });
+    const { unmount } = render(<KpiStrip summary={SUMMARY} work="reports" />, {
+      wrapper: configWrapper(),
+    });
     expect(screen.queryByText(NEEDS)).toBeNull();
     expect(screen.getAllByRole('listitem')).toHaveLength(3);
     unmount();

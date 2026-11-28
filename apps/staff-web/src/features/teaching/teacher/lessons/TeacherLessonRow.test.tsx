@@ -6,8 +6,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t, publicConfigQuery } from '@ab/web-kit';
 import { TeacherLessonRow } from './TeacherLessonRow';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 // 4 Oct 14:00Z, 45 min, on her own Meet link (not platform): the lead is a link when it joins.
 const L = lesson({ id: 'l-7', starts_at: '2026-10-04T14:00:00.000Z', platform_classroom: false });
@@ -34,7 +39,9 @@ describe('TeacherLessonRow', () => {
 
   it('before the window: «سأحضر», secondary', () => {
     const li = row('2026-10-04T10:00:00.000Z');
-    expect(li.getByRole('button', { name: t.teacherBoard.confirm }).className).not.toContain(FILLED);
+    expect(li.getByRole('button', { name: t.teacherBoard.confirm }).className).not.toContain(
+      FILLED,
+    );
     expect(li.queryByRole('link')).toBeNull();
   });
 

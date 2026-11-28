@@ -1,8 +1,7 @@
 import type { PayoutView } from '@ab/money';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { FlatList, type ListRenderItemInfo, View } from 'react-native';
-import { BackButton, Screen, ScreenHeader, t, useInsetRows } from '@ab/mobile-kit';
+import { BackButton, LazyList, Screen, ScreenHeader, t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { currentMonth } from '@/finance/shared/month';
 import { MonthPicker } from '@/finance/shared/MonthPicker';
@@ -20,12 +19,11 @@ export function PayoutsScreen() {
   const payouts = usePayouts(month);
   const open = payouts.data?.find((p) => p.id === openId) ?? null;
   const renderRow = useCallback(
-    ({ item }: ListRenderItemInfo<PayoutView>) => (
+    ({ item }: { item: PayoutView }) => (
       <PayoutRow payout={item} onPress={() => setOpenId(item.id)} />
     ),
     [],
   );
-  const cells = useInsetRows(renderRow, payouts.data?.length ?? 0);
   const back = () => {
     if (paying) setPaying(false);
     else if (open) setOpenId(null);
@@ -44,15 +42,15 @@ export function PayoutsScreen() {
         <>
           <MonthPicker month={month} onChange={setMonth} />
           <StaleNote isError={payouts.isError} hasData={!!payouts.data} />
-          <FlatList
-            style={{ flex: 1 }}
+          <LazyList
             data={payouts.data ?? []}
             keyExtractor={(p) => p.id}
-            {...cells}
+            renderItem={renderRow}
+            tabBar={false}
+            endSpace={24}
             refreshing={payouts.isRefetching}
             onRefresh={() => void payouts.refetch()}
             ListEmptyComponent={<StateNote status={payouts} empty emptyTitle={t.payouts.empty} />}
-            ListFooterComponent={<View style={{ height: 24 }} />}
           />
         </>
       )}

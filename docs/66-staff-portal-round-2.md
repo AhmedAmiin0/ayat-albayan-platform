@@ -240,7 +240,7 @@ One open PR of this plan at a time. Kit first, then the shell, then one area per
 
 | PR | state |
 |---|---|
-| 1 fix/portal-r2-1 | open |
+| 1 fix/portal-r2-1 | in review: kit units built; their root index exports and the SwitchTrack and ChildBody swaps wait for #1325 |
 | 2 fix/portal-r2-2 | open |
 | 3 fix/portal-r2-3 | open |
 | 4 fix/portal-r2-4 | open |

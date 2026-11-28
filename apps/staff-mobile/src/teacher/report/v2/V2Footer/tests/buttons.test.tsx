@@ -5,10 +5,13 @@ import { t, palette } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { formResponseV2 } from '@/teacher/report/testing/fixtures';
 import { ReportEntryCardV2 } from '@/teacher/report/v2/ReportEntryCardV2';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onWrite(() => new Promise(() => undefined));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiSend: () => new Promise(() => undefined),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const v2 = t.reports.v2;
@@ -27,7 +30,9 @@ async function open(content: ReportContent) {
 
 test('docs/07 §6 form: «أرسل» (filled) then «احفظ مسودة» (outlined) as ONE ButtonRow', async () => {
   await open(emptyContent());
-  const cells = within(screen.getByTestId('report-footer-actions')).getAllByTestId('button-row-cell');
+  const cells = within(screen.getByTestId('report-footer-actions')).getAllByTestId(
+    'button-row-cell',
+  );
   expect(cells).toHaveLength(2);
   expect(within(cells[0] as (typeof cells)[number]).getByText(v2.send)).toBeTruthy();
   expect(within(cells[1] as (typeof cells)[number]).getByText(v2.saveDraft)).toBeTruthy();
@@ -35,7 +40,9 @@ test('docs/07 §6 form: «أرسل» (filled) then «احفظ مسودة» (outl
 
 test('«احذف هذا المقطع» is a danger button: outlined in the bad tone', async () => {
   await open(graded);
-  const [remove] = screen.getAllByRole('button', { name: `${v2.removeSegment} — ${v2.segment.new}` });
+  const [remove] = screen.getAllByRole('button', {
+    name: `${v2.removeSegment} — ${v2.segment.new}`,
+  });
   if (!remove) throw new Error('no remove');
   expect(StyleSheet.flatten(remove.props.style)).toMatchObject({
     borderWidth: 1,

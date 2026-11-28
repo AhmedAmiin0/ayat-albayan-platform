@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { THREAD_FULL_MS } from '../channels/channels';
+import { INBOX_REFRESH_MS, THREAD_FULL_MS } from '../channels/channels';
 import {
   catchUpPlan,
   changedPhone,
@@ -41,9 +41,10 @@ describe('the thread_changed event → what refreshes', () => {
     expect(throttleMsOf('badge')).toBe(3_000);
   });
 
-  it('connected: the 20 s safety net; not connected: the caller’s own poll', () => {
-    expect(INBOX_FALLBACK_MS).toBe(20_000);
-    expect(liveInterval(true, 10_000)).toBe(20_000);
+  it('connected: a 10 s safety net (a lost event costs no more than the offline poll)', () => {
+    expect(INBOX_FALLBACK_MS).toBe(10_000);
+    expect(INBOX_FALLBACK_MS).toBeLessThanOrEqual(INBOX_REFRESH_MS);
+    expect(liveInterval(true, 15_000)).toBe(10_000);
     expect(liveInterval(false, 10_000)).toBe(10_000);
     expect(liveInterval(false, 30_000)).toBe(30_000);
   });

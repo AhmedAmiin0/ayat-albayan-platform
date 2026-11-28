@@ -29,7 +29,7 @@ export interface TabsProps<V extends string> {
    * `aria-labelledby` its tab. Without it the tabs carry no ids (as before).
    */
   idPrefix?: string;
-  /** A sideways-scrolling strip keeps its selected tab in view (keepInStrip). */
+  /** Keeps a sideways strip's selected tab in view (keepInStrip); on by default for horizontal. */
   followSelected?: boolean;
 }
 
@@ -76,7 +76,7 @@ export function Tabs<V extends string>({
   orientation = 'horizontal',
   className,
   idPrefix,
-  followSelected = false,
+  followSelected = orientation === 'horizontal',
 }: TabsProps<V>) {
   const vertical = orientation === 'vertical';
   const wide = useSyncExternalStore(subscribe, isWide);
