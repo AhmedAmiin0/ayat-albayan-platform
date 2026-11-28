@@ -19,8 +19,8 @@ describe('GET /sales/money/family: her students of this chat, with the packages 
     resetMocks(m);
     salesDefaults(m);
     m.family.studentsOfPhone.mockResolvedValue([
-      { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'trial' },
-      { id: SIBLING, code: 'AB-0184', name: 'أخوها', status: 'active' },
+      { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'trial', teacher_id: null },
+      { id: SIBLING, code: 'AB-0184', name: 'أخوها', status: 'active', teacher_id: null },
     ]);
   });
 

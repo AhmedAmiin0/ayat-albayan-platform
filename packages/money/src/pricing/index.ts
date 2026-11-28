@@ -7,4 +7,5 @@ export * from './quote/quote.schemas';
 export * from './quote/rounding.schemas';
 export * from './price-list';
 export * from './renewal';
+export * from './renewal-pricing.schemas';
 export * from './phone-country';

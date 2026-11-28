@@ -4,11 +4,6 @@
       "count": 1
     }
   },
-  "src/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
   "src/messaging/calls/call-entry.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -481,11 +476,6 @@
   "src/sales/course/course.ts": {
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/sales/money-views.ts": {
-    "stylistic/max-len": {
-      "count": 5
     }
   },
   "src/sales/money.ts": {

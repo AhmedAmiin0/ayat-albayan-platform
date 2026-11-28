@@ -4165,11 +4165,6 @@
       "count": 1
     }
   },
-  "src/sales-subscribe/lib/family.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/sales-subscribe/lib/sales-errors.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -4485,9 +4480,6 @@
     },
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 1
     },
     "typescript/no-unnecessary-condition": {
       "count": 1

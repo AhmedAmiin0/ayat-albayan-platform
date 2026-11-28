@@ -26,3 +26,5 @@ export type {
   SalesReceiptCopyBody,
   SalesReceiptUploadBody,
 } from './payments-api.types';
+export { salesMoneyFamilyCalls } from './money-family-api';
+export type { SalesMoneyFamilyCalls } from './money-family-api.types';

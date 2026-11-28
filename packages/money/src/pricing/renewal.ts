@@ -6,23 +6,13 @@ import {
   DEFAULT_DURATION,
   PACKAGE_IDS,
   PRICING_DURATIONS,
-  type PackageId,
-  type PricingDuration,
 } from './catalog';
-import { SITE_COUNTRIES, type SiteCountry } from './currency';
+import { SITE_COUNTRIES } from './currency';
+import type { RenewalPricing } from './renewal-pricing.schemas';
 
 // Renewal (docs/18) starts from the last package's quote; else it keeps the lesson count.
 
 export type LastPackage = Pick<SubscriptionView, 'price_source' | 'lessons_total' | 'duration'>;
-
-/** The calculator inputs of a renewal. `country` '' = the guardian's country (the API's default). */
-export interface RenewalPricing {
-  pkg: PackageId | 'custom';
-  count: number;
-  duration: PricingDuration;
-  discount: number;
-  country: SiteCountry | '';
-}
 
 /** Without a last package: the calculator's defaults. */
 export const DEFAULT_RENEWAL_PRICING: RenewalPricing = {

@@ -1,19 +1,18 @@
+import { salesMoneyFamilyCalls } from '@ab/client-core';
 import type { SalesFamilyView, SalesMoneySubscriptionView } from '@ab/shared';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
-import { apiFetch, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
 
 // GET /sales/money/family?phone (R-ASST-01): HER students in this chat's family, each with the
 // packages still owed. Only hers: an empty list means nothing of the family is hers to sell.
 
-export function familyPath(phone: string): string {
-  return `/sales/money/family?phone=${encodeURIComponent(phone)}`;
-}
+const families = salesMoneyFamilyCalls({ apiFetch, apiSend });
 
 export function useSalesFamily(phone: string, enabled = true) {
   return useQuery({
     queryKey: salesKeys.family(phone),
-    queryFn: () => apiFetch<SalesFamilyView>(familyPath(phone)),
+    queryFn: () => families.family({ phone }),
     enabled: enabled && phone !== '',
   });
 }

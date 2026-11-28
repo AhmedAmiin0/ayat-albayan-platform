@@ -7,13 +7,14 @@ import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { InboxModeContext } from '@/features/messaging/inbox/shared/mode';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
 import { SalesChatFrame } from '@/features/sales/sales-money/SalesChatFrame/SalesChatFrame';
+import { student } from '@/features/sales/sales-money/sales-money-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
 
-const FAMILY = { students: [{ id: 's1', code: 'AB-0001', name: 'سهيلة', status: 'trial', open: [] }] };
+const FAMILY = { students: [student({ id: 's1', code: 'AB-0001', name: 'سهيلة' })] };
 
 /** The chat as the poll sees it: a lead, then (after the booking) the family it became. */
 function Pane() {
