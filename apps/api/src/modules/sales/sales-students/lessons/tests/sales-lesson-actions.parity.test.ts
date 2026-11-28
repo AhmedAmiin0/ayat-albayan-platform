@@ -4,12 +4,21 @@ import { readerOf } from '@/common/settings/settings.fakes';
 import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import type { ScheduleRepo } from '@/modules/teaching/scheduling/schedule.repo';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow } from '@/modules/teaching/lessons/lessons.fakes';
+import {
+  ADMIN,
+  appliedChange,
+  fakeStore,
+  LESSON_ID,
+  lessonRow,
+} from '@/modules/teaching/lessons/lessons.fakes';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { LessonCancelService, RescheduleOneService } from '@/modules/teaching/lessons';
 import type { SalesStudentRepo } from '@/modules/sales/sales-students/shared/sales-student.repo';
 import type { SalesStudentScope } from '@/modules/sales/sales-students/shared/sales-student-scope';
-import { type LessonServices, SalesLessonActions } from '@/modules/sales/sales-students/lessons/sales-lesson-actions.service';
+import {
+  type LessonServices,
+  SalesLessonActions,
+} from '@/modules/sales/sales-students/lessons/sales-lesson-actions.service';
 import { fakeCorrection } from '@/modules/teaching/lessons/auto-held/auto-held.fakes';
 
 // The owner's rule (docs/16 row 37): a salesperson's move / cancel has the admin's side effects exactly —
@@ -22,13 +31,34 @@ const checker = { check: vi.fn() };
 
 function rig() {
   const deps = fakeStore(lessonRow());
-  const one = new RescheduleOneService(deps.store, { get: vi.fn() } as unknown as TeachersRepo, checker as unknown as ConflictChecker);
+  const one = new RescheduleOneService(
+    deps.store,
+    { get: vi.fn() } as unknown as TeachersRepo,
+    checker as unknown as ConflictChecker,
+  );
   const settings = readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null });
   const { correction } = fakeCorrection(deps.store, settings);
-  const cancels = new LessonCancelService(deps.store, { rule: vi.fn() } as unknown as ScheduleRepo, settings, correction);
+  const cancels = new LessonCancelService(
+    deps.store,
+    { rule: vi.fn() } as unknown as ScheduleRepo,
+    settings,
+    correction,
+  );
   const scope = { assertLesson: vi.fn(async () => undefined) } as unknown as SalesStudentScope;
-  const queries = { lesson: vi.fn(async (id: string) => ({ id, starts_at: NEW_START, ends_at: NEW_START, status: 'scheduled', lesson_students: [] })) };
-  const actions = new SalesLessonActions(scope, queries as unknown as SalesStudentRepo, { one, cancels } as LessonServices);
+  const queries = {
+    lesson: vi.fn(async (id: string) => ({
+      id,
+      starts_at: NEW_START,
+      ends_at: NEW_START,
+      status: 'scheduled',
+      lesson_students: [],
+    })),
+  };
+  const actions = new SalesLessonActions(
+    scope,
+    queries as unknown as SalesStudentRepo,
+    { one, cancels } as LessonServices,
+  );
   return { ...deps, one, cancels, actions };
 }
 
@@ -47,29 +77,57 @@ describe('sales move / cancel = the admin path (docs/16 row 37)', () => {
   });
   afterEach(() => vi.useRealTimers());
 
-  it('reschedule: the same change set, confirmation messages and audit as the admin\'s scope-one move', async () => {
+  it("reschedule: the same change set, confirmation messages and audit as the admin's scope-one move", async () => {
     const admin = rig();
-    await admin.one.reschedule({ lessonId: LESSON_ID, body: { scope: 'one', startsAt: NEW_START }, actor: ADMIN });
+    await admin.one.reschedule({
+      lessonId: LESSON_ID,
+      body: { scope: 'one', startsAt: NEW_START },
+      actor: ADMIN,
+    });
     const sales = rig();
-    await sales.actions.reschedule({ lessonId: LESSON_ID, body: { startsAt: NEW_START }, actor: SALES });
+    await sales.actions.reschedule({
+      lessonId: LESSON_ID,
+      body: { startsAt: NEW_START },
+      actor: SALES,
+    });
     expect(normalised(sales.writer)).toEqual(normalised(admin.writer));
     expect(normalised(sales.writer).messages).toHaveLength(1);
     expect(appliedChange(sales.writer)?.actor).toBe(SALES.id);
-    expect(sales.record.mock.calls[0]?.[0]).toMatchObject({ actorId: SALES.id, action: 'reschedule' });
-    expect(sales.record.mock.calls[0]?.[0].after).toEqual({ ...admin.record.mock.calls[0]?.[0].after, lesson_id: expect.any(String) });
+    expect(sales.record.mock.calls[0]?.[0]).toMatchObject({
+      actorId: SALES.id,
+      action: 'reschedule',
+    });
+    expect(sales.record.mock.calls[0]?.[0].after).toEqual({
+      ...admin.record.mock.calls[0]?.[0].after,
+      lesson_id: expect.any(String),
+    });
   });
 
-  it('cancel: the admin\'s «ألغتها الإدارة» change minus the reason; no message queued on either path', async () => {
+  it("cancel: the admin's «ألغتها الإدارة» change minus the reason; no message queued on either path", async () => {
     const admin = rig();
-    await admin.cancels.cancel({ lessonId: LESSON_ID, body: { scope: 'one', by: 'admin', reason: 'ظرف' }, actor: ADMIN });
+    await admin.cancels.cancel({
+      lessonId: LESSON_ID,
+      body: { scope: 'one', by: 'admin', reason: 'ظرف' },
+      actor: ADMIN,
+    });
     const sales = rig();
     await sales.actions.cancel({ lessonId: LESSON_ID, body: {}, actor: SALES });
     const { cancel_reason: reason, ...adminChange } = appliedChange(admin.writer)?.changes[0] ?? {};
     expect(reason).toBe('ظرف');
     expect(appliedChange(sales.writer)?.changes).toEqual([adminChange]);
-    expect(appliedChange(sales.writer)?.changes[0]).toMatchObject({ to_status: 'cancelled_by_admin', chargeable: false });
-    for (const path of [admin, sales]) expect(appliedChange(path.writer)?.messages ?? []).toEqual([]);
-    expect(sales.record).toHaveBeenCalledWith(expect.objectContaining({ actorId: SALES.id, action: 'cancel', after: expect.objectContaining({ reason: null }) }));
+    expect(appliedChange(sales.writer)?.changes[0]).toMatchObject({
+      to_status: 'cancelled_by_admin',
+      chargeable: false,
+    });
+    for (const path of [admin, sales])
+      expect(appliedChange(path.writer)?.messages ?? []).toEqual([]);
+    expect(sales.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        actorId: SALES.id,
+        action: 'cancel',
+        after: expect.objectContaining({ reason: null }),
+      }),
+    );
   });
 
   it('touches only the one lesson: no rule end, no other lesson', async () => {

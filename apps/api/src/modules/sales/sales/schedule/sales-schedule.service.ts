@@ -2,7 +2,14 @@ import type { SalesScheduleDay, SalesScheduleQuery, SalesTeacherView } from '@ab
 import { Injectable } from '@nestjs/common';
 import { toSalesTeacher } from '@/modules/sales/sales/academy/sales-academy.mapper';
 import { SalesAcademyRepo } from '@/modules/sales/sales/academy/sales-academy.repo';
-import { nextLessons, riyadhDayRange, riyadhToday, teacherDayFacts, toScheduleLesson, upcomingRange } from './sales-schedule.mapper';
+import {
+  nextLessons,
+  riyadhDayRange,
+  riyadhToday,
+  teacherDayFacts,
+  toScheduleLesson,
+  upcomingRange,
+} from './sales-schedule.mapper';
 import { SalesScheduleRepo } from './sales-schedule.repo';
 import { SalesSettings } from '@/modules/sales/sales/shared';
 
@@ -25,7 +32,11 @@ export class SalesScheduleService {
       this.schedule.upcoming(upcomingRange(now)),
       this.settings.read(),
     ]);
-    const ctx = { facts: teacherDayFacts(today, now), next: nextLessons(upcoming), academyAuto: settings.meeting_link_auto };
+    const ctx = {
+      facts: teacherDayFacts(today, now),
+      next: nextLessons(upcoming),
+      academyAuto: settings.meeting_link_auto,
+    };
     return rows.map((row) => toSalesTeacher(row, ctx));
   }
 

@@ -82,7 +82,10 @@ export class LeadsService {
     const { items, total } = await this.leads.list(f);
     const ids = [...new Set(items.flatMap((l) => (l.assigned_to ? [l.assigned_to] : [])))];
     const names = this.sales ? await this.sales.names(ids) : new Map<string, string>();
-    const views = items.map((l) => ({ ...l, assigned_to_name: l.assigned_to ? (names.get(l.assigned_to) ?? null) : null }));
+    const views = items.map((l) => ({
+      ...l,
+      assigned_to_name: l.assigned_to ? (names.get(l.assigned_to) ?? null) : null,
+    }));
     return { items: views, total, page: f.page, pageSize: f.pageSize };
   }
 

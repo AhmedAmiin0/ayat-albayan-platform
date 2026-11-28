@@ -20,7 +20,9 @@ export class ExpenseReceipts {
   }
 
   async check(path: string): Promise<void> {
-    const ok = isPathOf(path, EXPENSE_FOLDER) && (await this.storage.exists({ bucket: BUCKETS.receipts, path }));
+    const ok =
+      isPathOf(path, EXPENSE_FOLDER) &&
+      (await this.storage.exists({ bucket: BUCKETS.receipts, path }));
     if (!ok) throw badRequest('receipt_path');
   }
 

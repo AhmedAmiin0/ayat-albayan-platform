@@ -19,18 +19,36 @@ const LINK_TABLE = {
 
 export async function linkTarget(db: Db, kind: LinkKind, id: string): Promise<LinkTarget | null> {
   if (kind === 'teacher') {
-    const data = maybe(await db.from('teachers').select('id, display_name_ar, profile_id').eq('id', id).maybeSingle());
+    const data = maybe(
+      await db
+        .from('teachers')
+        .select('id, display_name_ar, profile_id')
+        .eq('id', id)
+        .maybeSingle(),
+    );
     return data && { id: data.id, name: data.display_name_ar, hasLogin: data.profile_id !== null };
   }
   const table = kind === 'student' ? 'students' : 'guardians';
-  const { data, error } = await db.from(table).select('id, name, profile_id').eq('id', id).maybeSingle();
+  const { data, error } = await db
+    .from(table)
+    .select('id, name, profile_id')
+    .eq('id', id)
+    .maybeSingle();
   if (error) throw pgError(error);
   return data && { id: data.id, name: data.name, hasLogin: data.profile_id !== null };
 }
 
 /** Sets profile_id only while it is null; false = somebody linked it first. */
-export async function link(db: Db, ctx: { kind: LinkKind; id: string; profileId: string }): Promise<boolean> {
-  const { data, error } = await db.from(LINK_TABLE[ctx.kind]).update({ profile_id: ctx.profileId }).eq('id', ctx.id).is('profile_id', null).select('id');
+export async function link(
+  db: Db,
+  ctx: { kind: LinkKind; id: string; profileId: string },
+): Promise<boolean> {
+  const { data, error } = await db
+    .from(LINK_TABLE[ctx.kind])
+    .update({ profile_id: ctx.profileId })
+    .eq('id', ctx.id)
+    .is('profile_id', null)
+    .select('id');
   if (error) throw pgError(error);
   return data.length > 0;
 }
@@ -49,10 +67,16 @@ export async function phoneTaken(db: Db, ctx: { phone: string; except: string })
   if (p.error) throw pgError(p.error);
   if (t.error) throw pgError(t.error);
   if (mine.error) throw pgError(mine.error);
-  return p.data.some((r) => r.id !== ctx.except) || (mine.data !== null && t.data.some((r) => r.profile_id !== ctx.except));
+  return (
+    p.data.some((r) => r.id !== ctx.except) ||
+    (mine.data !== null && t.data.some((r) => r.profile_id !== ctx.except))
+  );
 }
 
-export async function syncTeacher(db: Db, ctx: { profileId: string; patch: { display_name_ar?: string; phone_e164?: string | null } }): Promise<void> {
+export async function syncTeacher(
+  db: Db,
+  ctx: { profileId: string; patch: { display_name_ar?: string; phone_e164?: string | null } },
+): Promise<void> {
   done(await db.from('teachers').update(ctx.patch).eq('profile_id', ctx.profileId));
 }
 
@@ -83,21 +107,33 @@ function rowsOf<T>({ data, error }: Found<T>): T[] {
 /** Per kind: records without a login, by name (students also by code, guardians by phone). */
 const LINK_SOURCES = {
   teacher: async (db, term) => {
-    const query = db.from('teachers').select('id, display_name_ar').is('profile_id', null)
-      .order('display_name_ar').limit(LIMIT);
+    const query = db
+      .from('teachers')
+      .select('id, display_name_ar')
+      .is('profile_id', null)
+      .order('display_name_ar')
+      .limit(LIMIT);
     const rows = rowsOf(await (term ? query.ilike('display_name_ar', `%${term}%`) : query));
     return rows.map((r) => ({ kind: 'teacher', id: r.id, name: r.display_name_ar, code: null }));
   },
   student: async (db, term) => {
-    const query = db.from('students').select('id, name, code').is('profile_id', null)
-      .order('name').limit(LIMIT);
+    const query = db
+      .from('students')
+      .select('id, name, code')
+      .is('profile_id', null)
+      .order('name')
+      .limit(LIMIT);
     const search = `name.ilike.%${term}%,code.ilike.%${term}%`;
     const rows = rowsOf(await (term ? query.or(search) : query));
     return rows.map((r) => ({ kind: 'student', id: r.id, name: r.name, code: r.code }));
   },
   guardian: async (db, term) => {
-    const query = db.from('guardians').select('id, name').is('profile_id', null)
-      .order('name').limit(LIMIT);
+    const query = db
+      .from('guardians')
+      .select('id, name')
+      .is('profile_id', null)
+      .order('name')
+      .limit(LIMIT);
     const search = `name.ilike.%${term}%,phone_e164.ilike.%${term}%`;
     const rows = rowsOf(await (term ? query.or(search) : query));
     return rows.map((r) => ({ kind: 'guardian', id: r.id, name: r.name, code: null }));

@@ -52,17 +52,29 @@ export class SalesSubscribeController {
 
   /** The teacher is saved once the package exists; a replay assigns again as a no-op. */
   @Post()
-  async create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
+  async create(
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SalesMoneySubscriptionView> {
     const input = parseOrThrow(salesSubscriptionCreateSchema, body);
     if (input.teacherId) await this.teachers.ensureActive(input.teacherId);
     const view = await this.money.subscribe(input, user);
-    if (input.teacherId) await this.teachers.assign({ studentId: input.studentId, teacherId: input.teacherId, actorId: user.id });
+    if (input.teacherId)
+      await this.teachers.assign({
+        studentId: input.studentId,
+        teacherId: input.teacherId,
+        actorId: user.id,
+      });
     return view;
   }
 
   @Post(':id/cancel')
   @HttpCode(200)
-  cancel(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesMoneySubscriptionView> {
+  cancel(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SalesMoneySubscriptionView> {
     return this.cancels.cancel(id, parseOrThrow(subscriptionCancelSchema, body ?? {}), user);
   }
 }
@@ -88,16 +100,28 @@ export class SalesPaymentsController {
   /** A signed PUT for receipts/{subscription_id}/{uuid}.{ext} (a photo or a file she uploads). */
   @Post('receipt-upload-url')
   @HttpCode(200)
-  async receiptUploadUrl(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SignedUpload> {
+  async receiptUploadUrl(
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SignedUpload> {
     const input = parseOrThrow(salesReceiptUploadSchema, body);
-    return this.money.uploadUrl(input, { user, maxBytes: uploadMaxBytes(await this.settings.read()) });
+    return this.money.uploadUrl(input, {
+      user,
+      maxBytes: uploadMaxBytes(await this.settings.read()),
+    });
   }
 
   @Post('receipt-from-chat')
   @HttpCode(200)
-  async receiptFromChat(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesReceiptCopied> {
+  async receiptFromChat(
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<SalesReceiptCopied> {
     const input = parseOrThrow(salesChatReceiptCopySchema, body);
-    return this.receipts.copy(input, { user, maxBytes: uploadMaxBytes(await this.settings.read()) });
+    return this.receipts.copy(input, {
+      user,
+      maxBytes: uploadMaxBytes(await this.settings.read()),
+    });
   }
 
   /** Needs subscriptions.edit_terms, never payments.write. */

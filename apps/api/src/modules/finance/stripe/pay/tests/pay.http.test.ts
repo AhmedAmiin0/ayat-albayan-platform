@@ -1,9 +1,20 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { STUDENT_ID, SUB_ID, subRow } from '@/modules/finance/subscriptions/money/tests/money.fakes';
+import {
+  STUDENT_ID,
+  SUB_ID,
+  subRow,
+} from '@/modules/finance/subscriptions/money/tests/money.fakes';
 import { resetMocks, SALES_A, type Mocks } from '@/modules/finance/subscriptions/tests/test-app';
 import { stripeApp } from '@/modules/finance/stripe/testing/stripe-app.fakes';
-import { LINK_ID, linkRow, SESSION, stripeDefaults, TOKEN, type StripeMocks } from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
+import {
+  LINK_ID,
+  linkRow,
+  SESSION,
+  stripeDefaults,
+  TOKEN,
+  type StripeMocks,
+} from '@/modules/finance/stripe/testing/stripe-mocks.fakes';
 
 vi.hoisted(() => {
   process.env.FEATURE_STRIPE = 'test';
@@ -17,7 +28,8 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
   let m: Mocks;
   let s: StripeMocks;
   const get = (url: string) => app.inject({ method: 'GET', url });
-  const json = (url: string) => app.inject({ method: 'GET', url, headers: { accept: 'application/json' } });
+  const json = (url: string) =>
+    app.inject({ method: 'GET', url, headers: { accept: 'application/json' } });
 
   beforeAll(async () => ({ app, m, s } = await stripeApp()));
   afterAll(() => app.close());
@@ -25,13 +37,24 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
     resetMocks(m);
     stripeDefaults(s);
     m.subs.get.mockResolvedValue(subRow({ price: 120 })); // the link's package: unpaid, nothing paid yet
-    s.stripe.checkout.sessions.create.mockResolvedValue({ id: SESSION, url: 'https://checkout.stripe.com/c/pay/cs_test_a1' });
+    s.stripe.checkout.sessions.create.mockResolvedValue({
+      id: SESSION,
+      url: 'https://checkout.stripe.com/c/pay/cs_test_a1',
+    });
   });
 
   it('no login; the first name, the amount and the package only; rate-limited per IP and link', async () => {
     const res = await json(`/pay/${TOKEN}`);
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ status: 'open', first_name: 'سهيلة', amount: 120, currency: 'SAR', package: '4', lessons: 4, sandbox: true });
+    expect(res.json()).toEqual({
+      status: 'open',
+      first_name: 'سهيلة',
+      amount: 120,
+      currency: 'SAR',
+      package: '4',
+      lessons: 4,
+      sandbox: true,
+    });
     expect(s.limit.check).toHaveBeenCalledWith(expect.any(String), TOKEN);
     s.links.byToken.mockResolvedValue(linkRow({ expires_at: '2020-01-01T00:00:00Z' }));
     expect((await json(`/pay/${TOKEN}`)).json().status).toBe('expired');
@@ -41,7 +64,10 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
 
   it('checkout: a new session (payment mode, inline SAR minor units, NO payment_method_types), 303 to Stripe', async () => {
     const res = await get(`/pay/${TOKEN}/checkout`);
-    expect([res.statusCode, res.headers.location]).toEqual([303, 'https://checkout.stripe.com/c/pay/cs_test_a1']);
+    expect([res.statusCode, res.headers.location]).toEqual([
+      303,
+      'https://checkout.stripe.com/c/pay/cs_test_a1',
+    ]);
     const params = s.stripe.checkout.sessions.create.mock.calls[0]?.[0];
     expect(params).toMatchObject({
       mode: 'payment',
@@ -63,19 +89,36 @@ describe('the public payment page: GET /pay/:token and GET /pay/:token/checkout'
 
   it('an open session is reused; a lost race expires its own session and follows the winner', async () => {
     s.links.byToken.mockResolvedValue(linkRow({ stripe_session_id: 'cs_test_old' }));
-    s.stripe.checkout.sessions.retrieve.mockResolvedValue({ id: 'cs_test_old', status: 'open', url: 'https://checkout.stripe.com/old' });
-    expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe('https://checkout.stripe.com/old');
+    s.stripe.checkout.sessions.retrieve.mockResolvedValue({
+      id: 'cs_test_old',
+      status: 'open',
+      url: 'https://checkout.stripe.com/old',
+    });
+    expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe(
+      'https://checkout.stripe.com/old',
+    );
     expect(s.stripe.checkout.sessions.create).not.toHaveBeenCalled();
     s.links.byToken.mockResolvedValue(linkRow());
     s.links.setSession.mockResolvedValue(false);
     s.links.get.mockResolvedValue(linkRow({ stripe_session_id: 'cs_winner' }));
-    s.stripe.checkout.sessions.retrieve.mockResolvedValue({ id: 'cs_winner', status: 'open', url: 'https://checkout.stripe.com/winner' });
-    expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe('https://checkout.stripe.com/winner');
+    s.stripe.checkout.sessions.retrieve.mockResolvedValue({
+      id: 'cs_winner',
+      status: 'open',
+      url: 'https://checkout.stripe.com/winner',
+    });
+    expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe(
+      'https://checkout.stripe.com/winner',
+    );
     expect(s.stripe.checkout.sessions.expire).toHaveBeenCalledWith(SESSION);
   });
 
   it('a paid, expired, cancelled or processing link goes back to the API’s page, no session made', async () => {
-    for (const patch of [{ status: 'paid' }, { expires_at: '2020-01-01T00:00:00Z' }, { status: 'cancelled' }, { processing: true }]) {
+    for (const patch of [
+      { status: 'paid' },
+      { expires_at: '2020-01-01T00:00:00Z' },
+      { status: 'cancelled' },
+      { processing: true },
+    ]) {
       s.links.byToken.mockResolvedValue(linkRow(patch));
       expect((await get(`/pay/${TOKEN}/checkout`)).headers.location).toBe(PAGE);
     }

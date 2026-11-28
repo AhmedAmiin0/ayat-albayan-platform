@@ -14,7 +14,10 @@ import { salesDefaults } from '@/modules/sales/sales-money/tests/sales-money.fak
 // GET /sales/money/family with sales.renew_any (docs/16 row 38): every child, `mine` says whose.
 const SIBLING = '5a000000-0000-4000-8000-0000000000aa';
 const URL = '/sales/money/family?phone=%2B966551110000';
-const withRenewAny: PermissionResolver = async (user) => [...(await systemResolver(user)), ...(user.role === 'sales' ? ['sales.renew_any' as const] : [])];
+const withRenewAny: PermissionResolver = async (user) => [
+  ...(await systemResolver(user)),
+  ...(user.role === 'sales' ? ['sales.renew_any' as const] : []),
+];
 
 /** Her child STUDENT_ID (salesA) and a sibling nobody owns, no package owed. */
 function twoChildren(m: Mocks): void {
@@ -31,14 +34,20 @@ describe('GET /sales/money/family and sales.renew_any', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
   let call: Awaited<ReturnType<typeof salesMoneyApp>>['call'];
-  const family = async (token: 'salesA' | 'salesB') => (await call({ method: 'GET', url: URL, token })).json().students;
+  const family = async (token: 'salesA' | 'salesB') =>
+    (await call({ method: 'GET', url: URL, token })).json().students;
 
   beforeAll(async () => ({ app, m, call } = await salesMoneyApp(withRenewAny)));
   afterAll(() => app.close());
   beforeEach(() => twoChildren(m));
 
   it('lists every child of this chat’s family, hers marked mine: true, the others mine: false', async () => {
-    expect((await family('salesA')).map((s: { id: string; mine: boolean }) => [s.id, s.mine])).toEqual([[STUDENT_ID, true], [SIBLING, false]]);
+    expect(
+      (await family('salesA')).map((s: { id: string; mine: boolean }) => [s.id, s.mine]),
+    ).toEqual([
+      [STUDENT_ID, true],
+      [SIBLING, false],
+    ]);
     expect((await family('salesB')).map((s: { mine: boolean }) => s.mine)).toEqual([false, false]);
     expect(m.family.studentsOfPhone).toHaveBeenCalledWith('+966551110000');
   });
@@ -71,7 +80,11 @@ describe('GET /sales/money/family without sales.renew_any: unchanged', () => {
 
   it('only her own child (mine: true); nothing for a salesperson who owns none of them', async () => {
     const mine = (await call({ method: 'GET', url: URL, token: 'salesA' })).json().students;
-    expect(mine.map((s: { id: string; mine: boolean }) => [s.id, s.mine])).toEqual([[STUDENT_ID, true]]);
-    expect((await call({ method: 'GET', url: URL, token: 'salesB' })).json()).toEqual({ students: [] });
+    expect(mine.map((s: { id: string; mine: boolean }) => [s.id, s.mine])).toEqual([
+      [STUDENT_ID, true],
+    ]);
+    expect((await call({ method: 'GET', url: URL, token: 'salesB' })).json()).toEqual({
+      students: [],
+    });
   });
 });

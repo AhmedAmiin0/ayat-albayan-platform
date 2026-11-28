@@ -30,20 +30,40 @@ export class SalesAssignService {
       if (lead.assigned_to || !(await this.settings.read()).sales_auto_assign) return lead;
       const picked = pickSales((await this.people()).candidates);
       if (!picked) return lead;
-      return (await this.queries.setAssignee({ leadId: lead.id, profileId: picked, onlyIfFree: true })) ?? lead;
+      return (
+        (await this.queries.setAssignee({
+          leadId: lead.id,
+          profileId: picked,
+          onlyIfFree: true,
+        })) ?? lead
+      );
     } catch (e) {
-      this.log.warn(`auto-assign of lead ${lead.id} failed: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(
+        `auto-assign of lead ${lead.id} failed: ${e instanceof Error ? e.message : String(e)}`,
+      );
       return lead;
     }
   }
 
   /** POST /leads/:id/assign: a salesperson, or null to unassign. */
-  async assign(input: { leadId: string; profileId: string | null; actorId: string }): Promise<Tables<'leads'>> {
+  async assign(input: {
+    leadId: string;
+    profileId: string | null;
+    actorId: string;
+  }): Promise<Tables<'leads'>> {
     const { leadId, profileId, actorId } = input;
-    if (profileId && !(await this.queries.isSalesperson(profileId))) throw badRequest('not_a_salesperson');
+    if (profileId && !(await this.queries.isSalesperson(profileId)))
+      throw badRequest('not_a_salesperson');
     const lead = await this.queries.setAssignee({ leadId, profileId });
     if (!lead) throw notFound('lead_not_found');
-    await this.audit.record({ actorId, entity: 'leads', entityId: leadId, action: 'assign', before: null, after: { assigned_to: profileId } });
+    await this.audit.record({
+      actorId,
+      entity: 'leads',
+      entityId: leadId,
+      action: 'assign',
+      before: null,
+      after: { assigned_to: profileId },
+    });
     return lead;
   }
 
@@ -54,7 +74,8 @@ export class SalesAssignService {
     for (const leadId of ids) {
       const picked = pickSales((await this.people()).candidates);
       if (!picked) break;
-      if (await this.queries.setAssignee({ leadId, profileId: picked, onlyIfFree: true })) assigned += 1;
+      if (await this.queries.setAssignee({ leadId, profileId: picked, onlyIfFree: true }))
+        assigned += 1;
     }
     return { assigned };
   }
@@ -75,7 +96,11 @@ export class SalesAssignService {
     const ids = sales.map((s) => s.id);
     const candidates = toCandidates(ids, await this.queries.assignedLeads(ids));
     const open = new Map(candidates.map((c) => [c.id, c.openLeads]));
-    const views = sales.map((s) => ({ id: s.id, name: s.full_name, open_leads: open.get(s.id) ?? 0 }));
+    const views = sales.map((s) => ({
+      id: s.id,
+      name: s.full_name,
+      open_leads: open.get(s.id) ?? 0,
+    }));
     return { candidates, views };
   }
 }

@@ -20,8 +20,16 @@ export interface SalesScheduleRow {
   teacher_confirmed_at?: string | null;
   rule: { package: string | null } | null;
   /** tz and meeting_mode optional in test fakes. */
-  teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz?: string; meeting_mode?: string | null } | null;
-  lesson_students: { student: { id: string; code: string | null; name: string; tz?: string } | null }[];
+  teacher: {
+    id: string;
+    display_name_ar: string;
+    display_name_en: string | null;
+    tz?: string;
+    meeting_mode?: string | null;
+  } | null;
+  lesson_students: {
+    student: { id: string; code: string | null; name: string; tz?: string } | null;
+  }[];
 }
 
 export interface UpcomingRow {
@@ -60,13 +68,15 @@ export class SalesScheduleRepo {
 
   /** Open lessons starting inside [from, to), by start, with their students' ids only. */
   async upcoming(range: DayRange): Promise<UpcomingRow[]> {
-    const data = rows(await this.db
-      .from('lessons')
-      .select('starts_at, lesson_students(student_id)')
-      .gte('starts_at', range.from.toISOString())
-      .lt('starts_at', range.to.toISOString())
-      .in('status', [...OPEN_LESSON_STATUSES])
-      .order('starts_at'));
+    const data = rows(
+      await this.db
+        .from('lessons')
+        .select('starts_at, lesson_students(student_id)')
+        .gte('starts_at', range.from.toISOString())
+        .lt('starts_at', range.to.toISOString())
+        .in('status', [...OPEN_LESSON_STATUSES])
+        .order('starts_at'),
+    );
     return data;
   }
 }

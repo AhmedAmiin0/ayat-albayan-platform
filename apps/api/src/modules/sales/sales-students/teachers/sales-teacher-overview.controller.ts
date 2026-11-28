@@ -12,7 +12,10 @@ export class SalesTeacherOverviewService {
 
   async overview(teacherId: string, now = new Date()): Promise<SalesTeacherOverview> {
     if (!(await this.queries.exists(teacherId))) throw notFound('teacher_not_found');
-    const [rules, lessons] = await Promise.all([this.queries.rules(teacherId), this.queries.lessons(teacherId, overviewWindow(now))]);
+    const [rules, lessons] = await Promise.all([
+      this.queries.rules(teacherId),
+      this.queries.lessons(teacherId, overviewWindow(now)),
+    ]);
     return toTeacherOverview({ rules, lessons }, now);
   }
 }

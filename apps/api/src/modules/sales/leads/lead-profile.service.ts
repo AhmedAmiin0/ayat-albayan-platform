@@ -18,7 +18,10 @@ interface LeadPatch<T> {
 }
 
 /** L1 merge: sent keys overwrite, null clears, keys not sent stay (R-LEAD-03). */
-export function mergeQualification(current: Json, patch: LeadQualificationPatch): Record<string, Json> {
+export function mergeQualification(
+  current: Json,
+  patch: LeadQualificationPatch,
+): Record<string, Json> {
   const base = current && typeof current === 'object' && !Array.isArray(current) ? current : {};
   const merged: Record<string, Json | undefined> = { ...base, ...patch };
   return Object.fromEntries(
@@ -41,7 +44,12 @@ export class LeadProfileService {
     const lead = await this.find(id);
     const qualification = mergeQualification(lead.qualification, patch);
     const updated = await this.leads.update(id, { qualification });
-    await this.record({ lead: updated, action: 'qualification_update', before: { qualification: lead.qualification }, actorId });
+    await this.record({
+      lead: updated,
+      action: 'qualification_update',
+      before: { qualification: lead.qualification },
+      actorId,
+    });
     return updated;
   }
 
@@ -55,7 +63,12 @@ export class LeadProfileService {
       follow_up_paused_by: patch.paused ? 'admin' : null,
       next_follow_up_at: next ? next.toISOString() : null,
     });
-    await this.record({ lead: updated, action: 'follow_up_pause', before: { follow_up_paused: lead.follow_up_paused }, actorId });
+    await this.record({
+      lead: updated,
+      action: 'follow_up_pause',
+      before: { follow_up_paused: lead.follow_up_paused },
+      actorId,
+    });
     return updated;
   }
 
@@ -64,7 +77,10 @@ export class LeadProfileService {
    * send: an unreadable rule falls back to the registry default (logged) instead of failing the request.
    */
   private async followUpHours(): Promise<readonly number[]> {
-    const timing = validTiming('follow_up_slots', (await this.policy.rule('follow_up_slots')).timing);
+    const timing = validTiming(
+      'follow_up_slots',
+      (await this.policy.rule('follow_up_slots')).timing,
+    );
     if (timing && 'hours' in timing) return timing.hours;
     this.log.warn('follow_up_slots timing unread: the next follow-up shown uses the default hours');
     return SETTING_DEFAULTS.follow_up_hours;
@@ -76,10 +92,26 @@ export class LeadProfileService {
     return lead;
   }
 
-  private record(input: { lead: LeadRow; action: string; before: Json; actorId: string }): Promise<void> {
-    const after = input.action === 'qualification_update'
-      ? { qualification: input.lead.qualification }
-      : { follow_up_paused: input.lead.follow_up_paused, next_follow_up_at: input.lead.next_follow_up_at };
-    return this.audit.record({ actorId: input.actorId, entity: 'leads', entityId: input.lead.id, action: input.action, before: input.before, after });
+  private record(input: {
+    lead: LeadRow;
+    action: string;
+    before: Json;
+    actorId: string;
+  }): Promise<void> {
+    const after =
+      input.action === 'qualification_update'
+        ? { qualification: input.lead.qualification }
+        : {
+            follow_up_paused: input.lead.follow_up_paused,
+            next_follow_up_at: input.lead.next_follow_up_at,
+          };
+    return this.audit.record({
+      actorId: input.actorId,
+      entity: 'leads',
+      entityId: input.lead.id,
+      action: input.action,
+      before: input.before,
+      after,
+    });
   }
 }

@@ -1,0 +1,2 @@
+apps/api/src/modules/platform/translations/translations.controller.ts #1313
+apps/api/src/modules/platform/translations/translations.http.test.ts #1313
