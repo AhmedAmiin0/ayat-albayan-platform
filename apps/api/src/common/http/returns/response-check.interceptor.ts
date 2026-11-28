@@ -11,6 +11,14 @@ import { z } from 'zod';
 import { returnsOf } from './returns';
 
 const log = new Logger('ResponseCheck');
+const NOT_MODIFIED = 304;
+
+const replySchema = z.looseObject({ statusCode: z.number().catch(0) }).catch({ statusCode: 0 });
+
+/** A 304 carries no body (RFC 9110 §15.4.5), so it has no answer to compare. */
+const isNotModified = (ctx: ExecutionContext): boolean =>
+  replySchema.parse(ctx.switchToHttp().getResponse()).statusCode === NOT_MODIFIED;
+
 const switchSchema = z.object({ API_CHECK_RESPONSES: z.literal('1').optional().catch(undefined) });
 
 /** The body as the client reads it: JSON text read back (dates as text, undefined keys gone). */
@@ -42,7 +50,7 @@ export class ResponseCheckInterceptor implements NestInterceptor {
   }
 
   private async checked(schema: z.ZodType, body: unknown, ctx: ExecutionContext): Promise<unknown> {
-    if (await fits(schema, body)) return body;
+    if (isNotModified(ctx) || (await fits(schema, body))) return body;
     log.error(`response_contract on ${ctx.getClass().name}.${ctx.getHandler().name}`);
     throw new InternalServerErrorException({
       code: 'response_contract',
