@@ -240,8 +240,8 @@ One open PR of this plan at a time. Kit first, then the shell, then one area per
 
 | PR | state |
 |---|---|
-| 1 fix/portal-r2-1 | in review: kit units built; their root index exports and the SwitchTrack and ChildBody swaps wait for #1325 |
-| 2 fix/portal-r2-2 | open |
+| 1 fix/portal-r2-1 | merged (#1330); its root index exports and the SwitchTrack and ChildBody swaps wait for #1325 |
+| 2 fix/portal-r2-2 | in review: Bar, BarList, StackedBar, ColumnChart and ChartFigure built with showcases; their root index exports, the dashboard Bar swap and the «رسم / جدول» strings wait for #1325 |
 | 3 fix/portal-r2-3 | open |
 | 4 fix/portal-r2-4 | open |
 | 5 fix/portal-r2-5 | open |
