@@ -1,12 +1,9 @@
-# 68 · Feature-organized folders: one domain/feature tree in every layer
-
-The owner asked on 2026-11-28 for a more feature-organized folder structure with one folder per unit, in the frontend and the backend. This doc sets the target and the rules. The move map lives in refactor/structure/map.json and the review findings in refactor/structure/findings.md. The moves are made by a script in ONE PR (the owner: no small batches), after the lint-zero PR merges.
-
 # 68. Feature folders in every layer
 
 The owner asked for a feature-organised tree, one folder per unit, in the frontend and the backend. This doc fixes one
 list of domains and features and gives the path each feature has in every layer. The move map that gets there is in
-`refactor/structure/plan.json`.
+`refactor/structure/map.json` and the review findings in `refactor/structure/findings.md`. The moves
+are made by a script in one PR, after the lint-zero PR merges.
 
 ## Target tree
 
@@ -278,12 +275,12 @@ Also in this work: folder-cap.mjs appRoots().mobile gains apps/family-mobile/src
 
 This reuses tools/scripts/ci-checks/move-module.ts and adds two flags. Everything runs in a cloud session or CI, never on the owner's PC.
 
-1. Input map: refactor/structure/plan.json holds this plan's moves (layer, from, to). `from` is a `dir/`, a file, or a one-folder glob (`dir/stem.*`).
+1. Input map: refactor/structure/map.json holds this plan's moves (layer, from, to). `from` is a `dir/`, a file, or a one-folder glob (`dir/stem.*`).
    - Pass = how deeply `from` is nested inside other entries' folders, deepest first. Pass 0 is moves[0..37] (38 entries), pass 1 is moves[38..255] (218), and pass 2 is moves[256..575] (320).
    - Passes are needed because expandMap throws "moved twice" when one map holds both `dir/x.*` and `dir/`. A stem or sub-folder carve-out therefore runs in a map before the folder it leaves.
    - Entries in the same pass are disjoint, and no earlier pass moves files into a folder that a later pass walks. One case depends on this: staff-web `messaging/notifications/` becomes `notifications/bell/` in the same pass as the rules and catalogue moves into `notifications/`, so the bell move must not be split into a later map.
 
-2. Generator: `move-module.ts --plan refactor/structure/plan.json --layer <layer> [--domain <d>]` writes refactor/moves/s<seq>-<layer>[-<domain>]-p<pass>.json, one map per pass, with seq after the last committed map. Each map carries:
+2. Generator: `move-module.ts --plan refactor/structure/map.json --layer <layer> [--domain <d>]` writes refactor/moves/s<seq>-<layer>[-<domain>]-p<pass>.json, one map per pass, with seq after the last committed map. Each map carries:
    - `barrels` for new folders that have no index.ts: the shared notifications group root, client-core inbox/search, the family-web people/portal units, and the staff-mobile and family-mobile features roots.
    - no identifier `renames`, because only folders change.
 
@@ -301,6 +298,6 @@ This reuses tools/scripts/ci-checks/move-module.ts and adds two flags. Everythin
    - a simulated tree that breaks folder-cap or guard:structure.
    I ran the same simulation against origin/develop at 8936decfc: all 576 entries match, with no clash, no same-pass overlap and no re-walk. The only folders over the cap are staff-web features/people (its keys/ folder is dissolved by hand) and client-core people (roster/ is left holding only index.ts). Both clear with the hand splits.
 
-5. Re-run on a fresh develop: rebase the branch, then run `move-module.ts --replay` so earlier committed maps follow. Then regenerate the layer's maps from plan.json and run --dry-run. Any entry that develop has since broken (a file renamed or added) is fixed in plan.json before the PR. Running a map twice gives no diff.
+5. Re-run on a fresh develop: rebase the branch, then run `move-module.ts --replay` so earlier committed maps follow. Then regenerate the layer's maps from map.json and run --dry-run. Any entry that develop has since broken (a file renamed or added) is fixed in map.json before the PR. Running a map twice gives no diff.
 
 6. PRs: one per layer, or per api domain. The branch is refactor/* so the pure-move check runs. The title is `refactor(<scope>): move <domain> into feature folders`. Checks: folder-cap --strict, guard:structure for that layer, guard:baselines, the route-map snapshot tests (URLs unchanged) and the full CI. Hand splits follow on lane/<name> branches.
