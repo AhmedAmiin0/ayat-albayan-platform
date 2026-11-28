@@ -19,9 +19,10 @@ import { setMessaging, stubReset } from '../../support/core/wa-stub';
 // what leaves goes through the stub's Kapso prefix with X-API-Key, never a bearer: on a single line
 // a staff reply and a file (docs/21 D2); with a chat line the reply is refused (chat first) and a
 // template goes instead. A bad
-// signature is 401 and stores nothing. Provider meta is ALWAYS restored, so other specs are unaffected.
-// Messaging opens only AFTER the switch and closes BEFORE the switch back: a row an earlier spec left
-// queued can then only leave through Kapso, never through Meta inside this spec's window.
+// signature is 401 and stores nothing. Provider meta is ALWAYS restored, so other specs are
+// unaffected. Messaging opens only AFTER the switch and closes BEFORE the switch back: a row an
+// earlier spec left queued can then only leave through Kapso, never through Meta inside this spec's
+// window.
 
 const WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };
 const MESSAGES = `/${NOTIF_PN}/messages`;
@@ -94,7 +95,8 @@ async function replyAndFile(admin: Page, at: Contact): Promise<void> {
     expect.objectContaining({ body: reply, status: 'sent' }),
   ]);
 
-  // docs/21 D2: a file leaves through Kapso with the same body as on Meta (type image, by link), X-API-Key.
+  // docs/21 D2: a file leaves through Kapso with the same body as on Meta (type image, by link),
+  // X-API-Key.
   await admin.locator('input[type="file"][accept*="image/png"]').setInputFiles(AVATAR_PNG);
   await admin.getByRole('button', { name: ar.inbox.composer.sendFile, exact: true }).click();
   const images = async () => (await sentVia(NOTIF_PN)).filter((m) => m.to === digits && m.type === 'image');

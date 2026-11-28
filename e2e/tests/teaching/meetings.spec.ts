@@ -22,7 +22,8 @@ test.describe('meetings', () => {
     await dialog.getByRole('checkbox').first().check();
     await dialog.getByLabel(ar.meetings.teacher).selectOption(teacherId);
     await dialog.getByRole('button', { name: ar.meetings.start }).click();
-    // Abrar has no availability left (resetAbrar), so the start is a clash: start anyway with a reason.
+    // Abrar has no availability left (resetAbrar), so the start is a clash: start anyway with a
+    // reason.
     await expect(dialog.getByText(ar.meetings.conflict)).toBeVisible();
     await dialog.getByLabel(ar.meetings.overrideReason).fill('حلقة طارئة');
     await dialog.getByRole('button', { name: ar.meetings.start }).click();

@@ -15,7 +15,10 @@ type Course = DaySeed & {
   lessons: { id: string; rule_id: string; starts_at: string }[];
 };
 
-/** One child, an 8-lesson subscription and its course: 17:00 on BASE's weekday + 19:30 two days later, two weeks each. */
+/**
+ * One child, an 8-lesson subscription and its course: 17:00 on BASE's weekday + 19:30 two days
+ * later, two weeks each.
+ */
 export async function seedCourse(tx: Tx): Promise<Course> {
   const seed = await seedSiblings(tx);
   const s = { ...seed, students: seed.students.slice(0, 1) };
@@ -82,8 +85,8 @@ interface ChangeOptions {
 }
 
 /**
- * The rules end the day before the change point; their seeded lessons from it move; two new rules (18:00
- * one day after it, 20:00 three days after) with two lessons each.
+ * The rules end the day before the change point; their seeded lessons from it move; two new rules
+ * (18:00 one day after it, 20:00 three days after) with two lessons each.
  */
 export function changeOf(c: Course, o: ChangeOptions) {
   const at = o.at ?? CHANGE;

@@ -26,7 +26,10 @@ async function seedAssistant(): Promise<string> {
   });
 }
 
-/** A student the assistant brought, with a 500 SAR package paid in full now (a trigger earns the commission). */
+/**
+ * A student the assistant brought, with a 500 SAR package paid in full now (a trigger earns the
+ * commission).
+ */
 async function seedPaidStudent(assistantId: string): Promise<void> {
   await withSql(async (sql) => {
     const [g] = await sql<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
@@ -52,7 +55,8 @@ test.describe('assistants — terms → commission → monthly statement (R-ASST
     await expect(row).toContainText(ar.assistants.notSet);
     await row.getByRole('link', { name: NAME }).click();
 
-    // Terms: 3000 EGP a month and 10 % of the first paid package. A percent over 100 is refused in the form.
+    // Terms: 3000 EGP a month and 10 % of the first paid package. A percent over 100 is refused in
+    // the form.
     const terms = admin.getByRole('form', { name: ar.assistants.terms.title });
     await terms.getByLabel(ar.assistants.terms.salaryAmount).fill('3000');
     await terms.getByLabel(ar.assistants.terms.commissionType).selectOption('percent');
@@ -68,7 +72,8 @@ test.describe('assistants — terms → commission → monthly statement (R-ASST
     );
     expect(saved[0]).toMatchObject({ commission_type: 'percent', commission_value: '10.00', salary_amount: '3000.00' });
 
-    // The brought student pays 500 SAR in full: 10 % = 50 SAR in the ledger, totalled in its own currency.
+    // The brought student pays 500 SAR in full: 10 % = 50 SAR in the ledger, totalled in its own
+    // currency.
     await seedPaidStudent(assistantId);
     await admin.reload();
     const ledger = admin.getByRole('table').first();

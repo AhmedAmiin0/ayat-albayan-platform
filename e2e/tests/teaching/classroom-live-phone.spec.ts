@@ -1,7 +1,8 @@
 import { ar, expect, test } from '../../support/core/fixtures';
 import { BOARD, boardInk, expectConnected, LIVE, MEDIA_FLAGS, newMeeting, pageScrollWidth, roomPage, shot, touchStroke } from '../../support/teaching/classroom-live';
 
-// The live classroom on a phone (390×844, touch), against a real LiveKit: see classroom-live.spec.ts.
+// The live classroom on a phone (390×844, touch), against a real LiveKit: see
+// classroom-live.spec.ts.
 
 const C = ar.classroom;
 const PHONE = {

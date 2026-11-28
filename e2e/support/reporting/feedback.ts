@@ -5,7 +5,10 @@ import { templateParam } from '../core/stub-template';
 
 export const TEMPLATE = 'lesson_feedback_request';
 
-/** The template exists on the stub and is approved there and in the DB (an explicit admin action in prod). */
+/**
+ * The template exists on the stub and is approved there and in the DB (an explicit admin action in
+ * prod).
+ */
 export async function approveTemplate(): Promise<void> {
   const created = await fetch(`${STUB_URL}/v21.0/e2e-waba/message_templates`, {
     method: 'POST',
@@ -28,12 +31,17 @@ export async function approveTemplate(): Promise<void> {
   });
 }
 
-/** The seeded state (migration 166): not on Meta yet. approveTemplate() changes it, so a journey puts it back. */
+/**
+ * The seeded state (migration 166): not on Meta yet. approveTemplate() changes it, so a journey
+ * puts it back.
+ */
 export async function unapproveTemplate(): Promise<void> {
   await withSql((sql) => sql`update public.message_templates set status = 'not_submitted' where key = ${TEMPLATE}`);
 }
 
-/** A student with a completed lesson next week (the API only asks about lessons that took place). */
+/**
+ * A student with a completed lesson next week (the API only asks about lessons that took place).
+ */
 export async function completedLesson(
   teacherId: string,
   student: string,

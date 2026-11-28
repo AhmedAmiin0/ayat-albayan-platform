@@ -5,9 +5,10 @@ import { money } from '../../support/finance/assistant-money';
 import { USERS } from '../../support/core/users';
 
 // The month's statement and the assistant's own pages through the REAL API and database (R-ASST-03,
-// R-ASST-04, R-ASST-06). P has a salary of 1000 SAR and 10 percent; two of her students pay in full, one
-// in SAR and one in USD: the statement keeps one block per currency and sums nothing across them.
-// Q is another assistant with her own student and payment: neither sees the other's rows.
+// R-ASST-04, R-ASST-06). P has a salary of 1000 SAR and 10 percent; two of her students pay in
+// full, one in SAR and one in USD: the statement keeps one block per currency and sums nothing
+// across them. Q is another assistant with her own student and payment: neither sees the other's
+// rows.
 
 const need = <T>(v: T | undefined): T => {
   if (v === undefined) throw new Error('an earlier step did not run');

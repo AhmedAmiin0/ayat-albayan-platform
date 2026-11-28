@@ -24,7 +24,9 @@ export async function studentStatusOf(studentId: string): Promise<string | undef
   return row?.status;
 }
 
-/** Every status_change audit row of the student, oldest first: before → after status and the reason. */
+/**
+ * Every status_change audit row of the student, oldest first: before → after status and the reason.
+ */
 export async function statusTrail(studentId: string): Promise<StatusStep[]> {
   return withSql(
     (sql) => sql<StatusStep[]>`
@@ -40,7 +42,10 @@ export function profileChip(page: Page, label: string): Locator {
   return page.getByTitle(label, { exact: true }).first();
 }
 
-/** POST /booking as the admin: one free trial lesson next Sunday 17:00 Riyadh; returns the lesson id. */
+/**
+ * POST /booking as the admin: one free trial lesson next Sunday 17:00 Riyadh; returns the lesson
+ * id.
+ */
 export async function bookTrial(
   page: Page,
   input: { teacherId: string; studentId: string },
@@ -70,8 +75,8 @@ export async function bookTrial(
 }
 
 /**
- * The booked trial is moved to «already started today» (test data, SQL): an outcome is only accepted
- * after the start (409 not_started), and the booking wizard never books in the past.
+ * The booked trial is moved to «already started today» (test data, SQL): an outcome is only
+ * accepted after the start (409 not_started), and the booking wizard never books in the past.
  */
 export async function startNow(lessonId: string): Promise<void> {
   const start = startedToday();
@@ -115,7 +120,9 @@ export async function unpaidPackage(studentId: string): Promise<UnpaidPackage> {
   return { subscriptionId: sub.id, price: offer.afterDiscount, currency: offer.currency };
 }
 
-/** POST /payments as the admin (P2): the full price by bank transfer, a minute ago. The status code. */
+/**
+ * POST /payments as the admin (P2): the full price by bank transfer, a minute ago. The status code.
+ */
 export async function recordPayment(page: Page, pkg: UnpaidPackage): Promise<number> {
   const res = await page.request.post(`${API}/payments`, {
     headers: await bearer(page),

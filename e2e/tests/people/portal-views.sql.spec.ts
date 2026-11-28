@@ -3,10 +3,10 @@ import { as, rolledBack, userId } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
 import { errorCode } from '../../support/core/db-error';
 
-// The family views are read-only (migration 981, review authz-db-1): portal_* and student_self are owner-rights
-// views (they bypass the RLS of the tables under them), so `authenticated` keeps SELECT only. Read from the
-// database's own privileges, so a later migration that drops and creates a view again (Supabase's default
-// write grants come back) fails here. Rolled back; database only.
+// The family views are read-only (migration 981, review authz-db-1): portal_* and student_self are
+// owner-rights views (they bypass the RLS of the tables under them), so `authenticated` keeps
+// SELECT only. Read from the database's own privileges, so a later migration that drops and creates
+// a view again (Supabase's default write grants come back) fails here. Rolled back; database only.
 
 const VIEWS = ['portal_students', 'portal_guardians', 'portal_lessons', 'portal_reports', 'portal_packages', 'portal_recordings', 'student_self'];
 

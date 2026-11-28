@@ -73,7 +73,8 @@ test.describe('settings switches — kill switch and automatic messages', () => 
       .toBe(2);
     expect((await messageState(`+${digits}`)).map((m) => m.status)).toEqual(['sent', 'sent']);
 
-    // OFF asks first too (cancel changes nothing); confirmed, the row is written before the next tick reads it.
+    // OFF asks first too (cancel changes nothing); confirmed, the row is written before the next
+    // tick reads it.
     await admin.getByRole('button', { name: s.disable }).click();
     const off = admin.getByRole('dialog', { name: s.disableTitle });
     await off.getByRole('button', { name: ar.common.cancel }).click();

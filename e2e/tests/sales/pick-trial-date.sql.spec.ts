@@ -54,7 +54,8 @@ test.describe('pick_trial_date: a new trial date in one transaction (R-SCH-07, R
   test('a booking (no upcoming trial): a new trial rule and lesson, the student → trial', async () => {
     await rolledBack(async (tx) => {
       const s = await seedTrial(tx);
-      // No upcoming trial (the seeded one was cancelled), else the booking is refused (migration 661).
+      // No upcoming trial (the seeded one was cancelled), else the booking is refused (migration
+      // 661).
       await tx`update public.lessons set status = 'cancelled_by_admin' where id = ${s.lesson}`;
       const [row] = await pick(tx, bookPayload(s));
       expect(row?.r.moved_from_id).toBeNull();

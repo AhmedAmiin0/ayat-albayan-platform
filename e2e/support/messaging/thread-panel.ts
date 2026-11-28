@@ -8,7 +8,10 @@ import { ar, expect } from '../core/fixtures';
 const PANEL = { lead: ar.inbox.leadPanel, family: ar.inbox.subscription.title } as const;
 const OPENER = { lead: ar.inbox.leadSheet, family: ar.inbox.subscriptionSheet } as const;
 
-/** True below the shell breakpoint (900px), where the open chat is full-screen and the panel a sheet. */
+/**
+ * True below the shell breakpoint (900px), where the open chat is full-screen and the panel a
+ * sheet.
+ */
 const isPhone = (page: Page): boolean => (page.viewportSize()?.width ?? 1280) < 900;
 
 /** On a phone it opens the sheet first unless open; elsewhere it is the inline aside. */

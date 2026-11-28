@@ -46,7 +46,8 @@ test.describe('sales double role', () => {
     await expect(day).toContainText(names.mine);
     await expect(day).toContainText(ar.sales.academySchedule.liveNow);
     await expect(day.getByRole('link', { name: ar.classroom.enter })).toBeVisible();
-    // The only buttons are the lesson chips: one opens the read-only lesson drawer (no admin action).
+    // The only buttons are the lesson chips: one opens the read-only lesson drawer (no admin
+    // action).
     const board = page.getByRole('region', { name: ar.schedule.dayBoard });
     await expect(board.getByRole('button', { disabled: false })).toHaveCount(1);
     await board.getByRole('button', { name: new RegExp(names.mine) }).click();
@@ -81,7 +82,10 @@ test.describe('sales double role', () => {
   });
 });
 
-/** Owner report 2026-10-12: a family that never wrote; sales opens the chat with an approved starter. */
+/**
+ * Owner report 2026-10-12: a family that never wrote; sales opens the chat with an approved
+ * starter.
+ */
 async function startsWithTemplate(browser: Browser): Promise<void> {
   const me = await makeAssistant(`dc${test.info().project.name}`);
   const names = { student: `بداية${TAG}`, teacher: `معلمة بداية${TAG}`, reply: `وعليكم السلام ${TAG}` };

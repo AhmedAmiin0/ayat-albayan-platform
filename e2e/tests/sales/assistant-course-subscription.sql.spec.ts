@@ -3,9 +3,9 @@ import { expect, test } from '@playwright/test';
 import { book, dayTimesPayload, seedSiblings, type DaySeed } from '../../support/teaching/day-times';
 import { rolledBack, type Tx } from '../../support/edit-time';
 
-// create_booking v6 (migration 20261018000470, PR #113 review M3): every rule of the assistant's course
-// carries the subscription it books, the first rule and its siblings, so one paid plan books one course.
-// Rolled back; payloads have the shape the API's bookingPayload builds.
+// create_booking v6 (migration 20261018000470, PR #113 review M3): every rule of the assistant's
+// course carries the subscription it books, the first rule and its siblings, so one paid plan books
+// one course. Rolled back; payloads have the shape the API's bookingPayload builds.
 
 async function subscriptionOf(tx: Tx, s: DaySeed): Promise<string> {
   const [row] = await tx<{ id: string }[]>`insert into public.subscriptions

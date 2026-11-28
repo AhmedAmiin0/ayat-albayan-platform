@@ -63,7 +63,8 @@ test.describe('lesson_recordings for guardians (migration 240)', () => {
     });
   });
 
-  // Migration 260: egress uploads one MP3 per room as audio/mpeg; without it every upload is refused.
+  // Migration 260: egress uploads one MP3 per room as audio/mpeg; without it every upload is
+  // refused.
   test('the recordings bucket accepts audio/mpeg and still video/mp4', async () => {
     await rolledBack(async (tx) => {
       const [b] = await tx<{ mp3: boolean; mp4: boolean }[]>`select 'audio/mpeg' = any(allowed_mime_types) as mp3,

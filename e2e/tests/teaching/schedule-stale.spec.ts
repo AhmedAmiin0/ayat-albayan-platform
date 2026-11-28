@@ -4,8 +4,9 @@ import { API, bearer, messagesFor } from '../../support/core/messages';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../../support/core/schedule';
 import { setMessaging, stubReset, stubSent } from '../../support/core/wa-stub';
 
-// The sender drops a queued booking confirmation whose lesson was cancelled meanwhile (send-stale.ts,
-// docs/12 §3.3): status failed, error_code 'stale', and nothing reaches «Meta». S6 / R-MSG-01.
+// The sender drops a queued booking confirmation whose lesson was cancelled meanwhile
+// (send-stale.ts, docs/12 §3.3): status failed, error_code 'stale', and nothing reaches «Meta». S6
+// / R-MSG-01.
 
 /** The sender ticks every 30 s: wait past one tick (journey 1). */
 const SENDER_WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };

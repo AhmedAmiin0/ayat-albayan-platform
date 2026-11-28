@@ -34,7 +34,8 @@ test.describe('teacher earnings pages', () => {
     await expect(admin.getByRole('status')).toHaveText(ar.earnings.saved);
     expect(await paidOf(lessonId)).toEqual({ paid: 70, status: 'paid' });
 
-    // Void: a reason is required; the payment stays listed, struck through; the lesson is owed again.
+    // Void: a reason is required; the payment stays listed, struck through; the lesson is owed
+    // again.
     const history = admin.getByRole('region', { name: ar.earnings.history });
     await history.getByRole('button', { name: ar.finance.voidPayment }).click();
     const confirm = admin.getByRole('dialog', { name: ar.finance.voidTitle });

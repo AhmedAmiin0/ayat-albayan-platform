@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { withSql } from '../../support/core/schedule';
 
-// The update trigger of migration 20261028000921 (thread_summaries) must refresh a phone on every status / text tick,
-// with no unlocked "is it the newest?" pre-filter: here one session deletes the phone's newest row
-// while another ticks the next row; once both commit the summary shows the tick. Two real sessions
-// (committed rows, deleted at the end); database only, no message is ever sent.
+// The update trigger of migration 20261028000921 (thread_summaries) must refresh a phone on every
+// status / text tick, with no unlocked "is it the newest?" pre-filter: here one session deletes the
+// phone's newest row while another ticks the next row; once both commit the summary shows the tick.
+// Two real sessions (committed rows, deleted at the end); database only, no message is ever sent.
 
 const C = '+966500000852';
 
@@ -47,7 +47,8 @@ test.describe('thread_summaries under two concurrent sessions', () => {
             done = true;
           }),
         );
-        // The first commits only once the tick has run (old pre-filter) or waits on the phone's lock (fix).
+        // The first commits only once the tick has run (old pre-filter) or waits on the phone's
+        // lock (fix).
         await withSql(async (watch) => {
           for (let i = 0; i < 200 && !done; i += 1) {
             const [w] = await watch<{ blocked: boolean }[]>`select exists (select 1 from pg_locks

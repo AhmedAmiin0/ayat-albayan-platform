@@ -2,13 +2,17 @@ import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/core/rls';
 import { errorCode } from '../../support/core/db-error';
 
-// Migration 20261028000935 (docs/09 «Two API copies + one worker»): rate_limit_take is the sign-in limits'
-// sliding window shared by every API copy. Run against Postgres: max hits pass, the next one is refused,
-// the first full bucket stops the later ones untouched; only the service role may call it. Rolled back.
+// Migration 20261028000935 (docs/09 «Two API copies + one worker»): rate_limit_take is the sign-in
+// limits' sliding window shared by every API copy. Run against Postgres: max hits pass, the next
+// one is refused, the first full bucket stops the later ones untouched; only the service role may
+// call it. Rolled back.
 
 const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
 
-/** Runs `q` as `role` (JWT role claim too), then back to the owner with no claims (a failed `q` inside a savepoint is undone with it). */
+/**
+ * Runs `q` as `role` (JWT role claim too), then back to the owner with no claims (a failed `q`
+ * inside a savepoint is undone with it).
+ */
 async function as<T>(tx: Tx, role: 'service_role' | 'anon' | 'authenticated', q: () => Promise<T>): Promise<T> {
   await tx`select set_config('request.jwt.claims', ${JSON.stringify({ role })}, true)`;
   await tx.unsafe(`set local role ${role}`);

@@ -107,7 +107,9 @@ export async function pushesForPhone(input: { phone: string; kind: string }): Pr
   return row?.n ?? 0;
 }
 
-/** One profile's push rows (the bell) of a kind for a phone (E.164): who was alerted (docs/21 D3). */
+/**
+ * One profile's push rows (the bell) of a kind for a phone (E.164): who was alerted (docs/21 D3).
+ */
 export async function pushesForProfile(input: {
   profileId: string;
   kind: string;

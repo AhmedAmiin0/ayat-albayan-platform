@@ -3,8 +3,8 @@ import type { APIRequestContext } from '@playwright/test';
 import { seedUser } from '../core/db';
 import { nextWeekSaturday, withSql } from '../core/schedule';
 
-// Helpers of the assistant API specs (real API on :3100, real database): logins, a typed call wrapper,
-// leads of an assistant, and the sales booking body. Nothing here is mocked.
+// Helpers of the assistant API specs (real API on :3100, real database): logins, a typed call
+// wrapper, leads of an assistant, and the sales booking body. Nothing here is mocked.
 
 export const API = 'http://localhost:3100';
 export const TAG = String(Date.now()).slice(-6);
@@ -61,7 +61,10 @@ export async function leadOf(assistantId: string, phone: string): Promise<string
   });
 }
 
-/** POST /sales/booking: a new family and a free trial, from her lead, at `time` (Riyadh) next Saturday. */
+/**
+ * POST /sales/booking: a new family and a free trial, from her lead, at `time` (Riyadh) next
+ * Saturday.
+ */
 export function trialBody(input: {
   teacherId: string;
   leadId: string;
@@ -95,7 +98,10 @@ export interface Family {
   phone: string;
 }
 
-/** A guardian with one child, brought by the assistant (null: by nobody). Written with SQL: this is test data, not the flow under test. */
+/**
+ * A guardian with one child, brought by the assistant (null: by nobody). Written with SQL: this is
+ * test data, not the flow under test.
+ */
 export async function family(broughtBy: string | null, name: string): Promise<Family> {
   const phone = freshPhone();
   return withSql(async (sql) => {
@@ -108,7 +114,10 @@ export async function family(broughtBy: string | null, name: string): Promise<Fa
   });
 }
 
-/** A payment keyed in by `by` (payments.recorded_by): an assistant has no route to record one, so SQL does. */
+/**
+ * A payment keyed in by `by` (payments.recorded_by): an assistant has no route to record one, so
+ * SQL does.
+ */
 export async function paymentBy(subscriptionId: string, by: string, amount: number): Promise<void> {
   await withSql((sql) => sql`insert into public.payments (subscription_id, amount, currency, method, paid_at, kind, recorded_by)
     values (${subscriptionId}, ${amount}, (select currency from public.subscriptions where id = ${subscriptionId}), 'bank', now(), 'payment', ${by})`);
@@ -124,7 +133,10 @@ interface ChatMessage {
   line?: 'chat' | 'notifications';
 }
 
-/** A chat message of a number (guardian_id links it to the family); a template key makes it a template send. */
+/**
+ * A chat message of a number (guardian_id links it to the family); a template key makes it a
+ * template send.
+ */
 export async function message(input: ChatMessage): Promise<void> {
   await withSql(async (sql) => {
     const { direction: d, phone, guardian, body, template } = input;

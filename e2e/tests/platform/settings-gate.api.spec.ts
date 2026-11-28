@@ -3,9 +3,9 @@ import { API, tokenOf } from '../../support/sales/assistant-api';
 import { restoreSettings, settingText, snapshotSettings } from '../../support/platform/settings';
 import { USERS } from '../../support/core/users';
 
-// docs/26 §2f / §5 (26-P0), through the REAL API and database: the send-gate switches have their own
-// routes (ON needs the exact confirmation text, OFF is always accepted) and PATCH /settings no longer
-// writes the owned keys (they come back in `moved`). This file NEVER turns sending ON.
+// docs/26 §2f / §5 (26-P0), through the REAL API and database: the send-gate switches have their
+// own routes (ON needs the exact confirmation text, OFF is always accepted) and PATCH /settings no
+// longer writes the owned keys (they come back in `moved`). This file NEVER turns sending ON.
 
 const KEYS = [
   'messaging_enabled',

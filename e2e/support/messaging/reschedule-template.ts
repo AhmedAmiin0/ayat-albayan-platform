@@ -11,7 +11,10 @@ export const RESCHEDULE = 'trial_reschedule';
 export const CHAT_WABA = 'e2e-chat-waba';
 const BODY = 'السلام عليكم {{1}}،\nنودّ إعادة جدولة موعد الحلقة التجريبية.\nما الوقت الذي يناسبكم؟';
 
-/** The row exactly as migration 460 seeds it (a previous spec may have submitted, moved or dropped it). */
+/**
+ * The row exactly as migration 460 seeds it (a previous spec may have submitted, moved or dropped
+ * it).
+ */
 export async function seedReschedule(): Promise<void> {
   await withSql((sql) => sql`
     insert into public.message_templates (key, meta_name, language, category, body_ar, params, status, line, sales_starter)
@@ -47,7 +50,10 @@ async function adminCall(
   });
 }
 
-/** Admin API: submit to the chat number, the stub approves it on the chat WABA, the chat number syncs. */
+/**
+ * Admin API: submit to the chat number, the stub approves it on the chat WABA, the chat number
+ * syncs.
+ */
 export async function approveReschedule(adminToken: string): Promise<void> {
   await seedReschedule();
   expect((await adminCall(adminToken, { method: 'POST', path: `/messaging/templates/${RESCHEDULE}/submit` })).status).toBe(200);

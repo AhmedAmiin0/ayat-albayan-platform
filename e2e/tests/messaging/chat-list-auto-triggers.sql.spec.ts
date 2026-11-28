@@ -2,9 +2,10 @@ import { expect, test } from '@playwright/test';
 import { guardian, listOf, members, rerunMigration, someone, student, teacher } from '../../support/auto-lists';
 import { rolledBack } from '../../support/core/rls';
 
-// The automatic lists' triggers (migration 20261025000710, docs/22 §10): each path that adds a member, and
-// nothing ever removed (an ended subscription, an inactive teacher, a deleted student, a hand row). The
-// backfill, the attach and the grants: chat-list-auto-rules.sql.spec.ts. Rolled back; database only.
+// The automatic lists' triggers (migration 20261025000710, docs/22 §10): each path that adds a
+// member, and nothing ever removed (an ended subscription, an inactive teacher, a deleted student,
+// a hand row). The backfill, the attach and the grants: chat-list-auto-rules.sql.spec.ts. Rolled
+// back; database only.
 
 test.describe('automatic chat lists: the triggers (migration 710)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
@@ -22,7 +23,8 @@ test.describe('automatic chat lists: the triggers (migration 710)', () => {
       await tx`update public.students set guardian_id = ${await guardian(tx, '+966500000725')} where id = ${trial}`;
       await tx`update public.students set status = 'pending_renewal' where id = ${trial}`;
       expect(await members(tx, list)).toEqual(['+966500000722']);
-      // A hand removal survives the package ending (active → pending_renewal); a renewal adds it again.
+      // A hand removal survives the package ending (active → pending_renewal); a renewal adds it
+      // again.
       await tx`delete from public.chat_list_threads where list_id = ${list} and phone_e164 = '+966500000722'`;
       await tx`update public.students set status = 'pending_renewal' where id = ${act}`;
       expect(await members(tx, list)).toEqual([]);

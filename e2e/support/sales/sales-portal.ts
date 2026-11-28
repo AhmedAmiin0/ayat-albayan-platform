@@ -12,7 +12,10 @@ const PASSWORD = 'Assistant-e2e-123';
 
 export const salesNav = async (page: Page) => (await openNav(page)).getByRole('navigation', { name: ar.sales.nav.label });
 
-/** A salesperson's page, signed in through the login form (Arabic UI). `videoDir` records the page (saved on context close). */
+/**
+ * A salesperson's page, signed in through the login form (Arabic UI). `videoDir` records the page
+ * (saved on context close).
+ */
 export async function signInSales(
   browser: Browser,
   email: string,
@@ -30,7 +33,10 @@ export async function signInSales(
   return page;
 }
 
-/** A fresh teacher; a lesson of theirs for the student starting `minutes` from now (negative = running). */
+/**
+ * A fresh teacher; a lesson of theirs for the student starting `minutes` from now (negative =
+ * running).
+ */
 async function teacherWithLesson(input: {
   student: string;
   teacher: string;
@@ -48,7 +54,10 @@ async function teacherWithLesson(input: {
   });
 }
 
-/** My student with a confirmed (active) package paid 333, taught by a fresh teacher, in a lesson running now. */
+/**
+ * My student with a confirmed (active) package paid 333, taught by a fresh teacher, in a lesson
+ * running now.
+ */
 export async function seedMine(input: {
   salesId: string;
   name: string;
@@ -80,7 +89,9 @@ export async function setSalesStarter(key: string, on: boolean): Promise<void> {
   await withSql((sql) => sql`update public.message_templates set sales_starter = ${on} where key = ${key}`);
 }
 
-/** Removes a registry row the health check imported (no foreign key points at message_templates). */
+/**
+ * Removes a registry row the health check imported (no foreign key points at message_templates).
+ */
 export async function dropTemplate(key: string): Promise<void> {
   await withSql((sql) => sql`delete from public.message_templates where key = ${key}`);
 }

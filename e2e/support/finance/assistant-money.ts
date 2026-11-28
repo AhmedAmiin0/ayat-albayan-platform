@@ -3,7 +3,8 @@ import type { APIRequestContext } from '@playwright/test';
 import type { AssistantCommissionView } from '@ab/money';
 import { call, dayOffset } from '../sales/assistant-api';
 
-// Admin-side money steps of the assistant API specs: a package for a student, a payment, the ledger.
+// Admin-side money steps of the assistant API specs: a package for a student, a payment, the
+// ledger.
 
 interface Sub {
   id: string;
@@ -18,8 +19,9 @@ export function money(request: APIRequestContext, admin: string) {
   const as = <T>(method: 'GET' | 'POST', path: string, body?: object) => call<T>(request, { token: admin, method, path, ...(body ? { body } : {}) });
   return {
     /**
-     * POST /subscriptions: the starter package, priced for `country` (SA -> SAR, US -> USD), starting today in
-     * Riyadh: a UTC day (behind Riyadh from 21:00 UTC) reads as a course already started, which earns nothing.
+     * POST /subscriptions: the starter package, priced for `country` (SA -> SAR, US -> USD),
+     * starting today in Riyadh: a UTC day (behind Riyadh from 21:00 UTC) reads as a course already
+     * started, which earns nothing.
      */
     async subscribe(studentId: string, country: 'SA' | 'US'): Promise<Sub> {
       const pricing = { tier: 'starter', country };

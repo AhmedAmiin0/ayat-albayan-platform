@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import { assistant, brought, code, commissionOf, one, openMonth, paidStatement, pay, riyadhDay } from '../../support/sales/assistant';
 import { rolledBack } from '../../support/core/rls';
 
-// Terms start days, a student merge and a retried adjustment (migrations 20261006000272-273) against the
-// real database. Each case is rolled back.
+// Terms start days, a student merge and a retried adjustment (migrations 20261006000272-273)
+// against the real database. Each case is rolled back.
 
 const PERCENT = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01' } as const;
 const NOBODY = '00000000-0000-4000-8000-000000000000';
@@ -33,7 +33,8 @@ test.describe('assistant terms, merge and adjustment retries (20261006000272-273
         salary_currency: 'EGP',
         salary_starts_on: salary,
       });
-      // tx.json sends a real jsonb: a plain string parameter cast to jsonb would be stored as a JSON string, not an object.
+      // tx.json sends a real jsonb: a plain string parameter cast to jsonb would be stored as a
+      // JSON string, not an object.
       const set = (p: Record<string, string | number | null>, who = a) => code(tx, () => tx`select public.set_assistant_terms(${who}, ${tx.json(p)}, null)`);
       expect(await set(terms(yesterday, today))).toBe('commission_start_in_past');
       expect(await set(terms(today, yesterday))).toBe('salary_start_in_past');

@@ -6,7 +6,10 @@ import type { Tx } from './core/rls';
 
 const MIGRATION = fileURLToPath(new URL('../../packages/db/supabase/migrations/20261025000710_chat_list_auto_rules.sql', import.meta.url));
 
-/** Runs the migration again inside the test's transaction (it is idempotent: attach, backfill, triggers). */
+/**
+ * Runs the migration again inside the test's transaction (it is idempotent: attach, backfill,
+ * triggers).
+ */
 export const rerunMigration = (tx: Tx) => tx.unsafe(readFileSync(MIGRATION, 'utf8'));
 
 export async function listOf(tx: Tx, rule: 'subscribed' | 'teachers'): Promise<string> {
@@ -15,7 +18,10 @@ export async function listOf(tx: Tx, rule: 'subscribed' | 'teachers'): Promise<s
   return row.id;
 }
 
-/** The test's members (+9665000007…), each as its phone, then «*» when a person added it (added_by set). */
+/**
+ * The test's members (+9665000007…), each as its phone, then «*» when a person added it (added_by
+ * set).
+ */
 export async function members(tx: Tx, list: string): Promise<string[]> {
   const rows = await tx<{ phone_e164: string; added_by: string | null }[]>`select phone_e164, added_by
     from public.chat_list_threads where list_id = ${list} and phone_e164 like '+9665000007%' order by phone_e164`;

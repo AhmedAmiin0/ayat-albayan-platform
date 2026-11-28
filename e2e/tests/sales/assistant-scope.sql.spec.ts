@@ -6,7 +6,8 @@ import { USERS } from '../../support/core/users';
 // The second wall (RLS, migrations 271 and 274) against the real database: a salesperson who reads
 // PostgREST directly gets her own rows only, never a draft statement, never the subscription price,
 // never a student's row (notes, links, teacher); a guardian, a teacher or nobody gets none of it.
-// The API serves the portal with the service role; this is what a stolen login could reach. Rolled back.
+// The API serves the portal with the service role; this is what a stolen login could reach. Rolled
+// back.
 
 const TERMS = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01',
   salary_amount: 1000, salary_currency: 'EGP', salary_starts_on: '2000-01-01' } as const;

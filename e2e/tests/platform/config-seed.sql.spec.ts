@@ -3,10 +3,11 @@ import { expect, test } from '@playwright/test';
 import { runConfigSeed } from '../../support/platform/config-seed';
 import { rolledBack, type Tx } from '../../support/core/rls';
 
-// 26-P2 «Copy» (docs/26 §2b, §4) against the real database, every test rolled back: the seeder's real
-// payload (SEED_ENTRIES + the Arabic hints) booted twice changes no value, version or updated_at, and a
-// missing row, a JSON null and a seeded null read the same in the SQL readers. The send-gate rows are
-// only deleted inside the rolled-back transaction: nothing here can turn sending on.
+// 26-P2 «Copy» (docs/26 §2b, §4) against the real database, every test rolled back: the seeder's
+// real payload (SEED_ENTRIES + the Arabic hints) booted twice changes no value, version or
+// updated_at, and a missing row, a JSON null and a seeded null read the same in the SQL readers.
+// The send-gate rows are only deleted inside the rolled-back transaction: nothing here can turn
+// sending on.
 
 interface Row { key: string; value: unknown; version: string; updated_at: Date }
 const all = (tx: Tx) => tx<Row[]>`select key, value, version::text as version, updated_at from public.settings order by key`;
@@ -47,8 +48,8 @@ test.describe('config seeder (26-P2, real payload)', () => {
       expect(await runConfigSeed(tx)).toEqual({ applied: 0, failed: [] });
       expect(await rev(tx)).toBe(r1);
       expect(await all(tx)).toEqual(after);
-      // The seeder never moves a switch: the deleted messaging_enabled is now JSON null (= OFF), and
-      // auto_messages_enabled keeps whatever the e2e database holds (seedSettings turns it on).
+      // The seeder never moves a switch: the deleted messaging_enabled is now JSON null (= OFF),
+      // and auto_messages_enabled keeps whatever the e2e database holds (seedSettings turns it on).
       expect(await gateRows(tx)).toEqual([...gateBefore, { key: 'messaging_enabled', on: false }].sort(byKey));
     });
   });

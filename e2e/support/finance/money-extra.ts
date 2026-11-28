@@ -89,7 +89,9 @@ export function thisMonthStart(now = new Date()): string {
   return `${riyadhToday(now).slice(0, 7)}-01`;
 }
 
-/** `base` + a per-run suffix in Arabic letters (digits in a name could be read as a phone search). */
+/**
+ * `base` + a per-run suffix in Arabic letters (digits in a name could be read as a phone search).
+ */
 export function uniqueName(base: string): string {
   const letters = 'ابتثجحخدذر';
   const tail = [...String(Date.now()).slice(-5)].map((d) => letters.charAt(Number(d))).join('');

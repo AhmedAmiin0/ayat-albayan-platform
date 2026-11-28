@@ -5,13 +5,15 @@ import { withSql } from '../../support/core/schedule';
 import { USERS } from '../../support/core/users';
 import { stubInbound, stubReset } from '../../support/core/wa-stub';
 
-// docs/21 D3 (R-NOT-01): the bell of a chat goes to its owning assistant only; an unowned chat and a
-// new lead go to every assistant; the admin is alerted as before. API level against tools/wa-stub, with
-// push delivery off in CI: only the bell rows (push_notifications) are read. Parallel specs create other
-// assistants, so only A and B are asserted on.
+// docs/21 D3 (R-NOT-01): the bell of a chat goes to its owning assistant only; an unowned chat and
+// a new lead go to every assistant; the admin is alerted as before. API level against
+// tools/wa-stub, with push delivery off in CI: only the bell rows (push_notifications) are read.
+// Parallel specs create other assistants, so only A and B are asserted on.
 
 const WAIT = { timeout: 30_000, intervals: [500, 1_000, 2_000] };
-/** = webhook.inbound.ts PUSH_BUCKET_MS: one new_message row per phone and profile per 10 minutes. */
+/**
+ * = webhook.inbound.ts PUSH_BUCKET_MS: one new_message row per phone and profile per 10 minutes.
+ */
 const BUCKET_MS = 10 * 60_000;
 
 async function adminId(): Promise<string> {

@@ -51,7 +51,8 @@ test.describe('رأيك يهمّنا (feedback)', () => {
     const guardian = await (await browser.newContext({ locale: AR_LOCALE })).newPage();
     await guardian.goto(`/feedback/${token}`);
     await expect(guardian.getByLabel(ar.feedback.teacher)).toHaveValue('أبرار');
-    // The lesson’s own kind is shown as a fixed line (the server sets it); the number is hers to correct.
+    // The lesson’s own kind is shown as a fixed line (the server sets it); the number is hers to
+    // correct.
     await expect(guardian.getByText(ar.enums.feedbackKind.subscription)).toBeVisible();
     await expect(guardian.getByRole('radio', { name: ar.enums.feedbackKind.subscription })).toHaveCount(0);
     await expect(guardian.getByLabel(ar.feedback.contact)).toBeEditable();

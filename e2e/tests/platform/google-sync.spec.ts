@@ -28,7 +28,8 @@ test.describe('Google sync alongside the old script (docs/24)', () => {
     await expect(admin.getByRole('heading', { name: g.title })).toBeVisible();
     await expect(admin.getByRole('textbox', { name: g.connection.redirect })).toHaveValue('http://localhost:3100/integrations/google/callback');
     await admin.getByRole('button', { name: g.connection.connect }).click();
-    // The return chain really ran: the page's note (oauthReturnNote) is up, and the query is cleared.
+    // The return chain really ran: the page's note (oauthReturnNote) is up, and the query is
+    // cleared.
     await expect(admin.getByRole('status').filter({ hasText: g.connection.connected })).toBeVisible({ timeout: 20_000 });
     await expect(admin).toHaveURL(returnCleared);
     await expect(admin.getByText('academy@stub.test').first()).toBeVisible();

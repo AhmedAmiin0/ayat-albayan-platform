@@ -1,11 +1,12 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../../support/core/rls';
 
-// Fast chats list (migration 20261028000921): v_threads now reads thread_summaries, kept by triggers on
-// messages. It must return exactly what the old aggregate over all messages returned (migration 290's
-// select, the newest message picked by created_at then id: the old distinct on had no tiebreak), on the
-// seeded data and after inserts, read stamps, status ticks and deletes; and the unread badge's count must
-// equal the list's total. Rolled back; database only, no message is ever sent.
+// Fast chats list (migration 20261028000921): v_threads now reads thread_summaries, kept by
+// triggers on messages. It must return exactly what the old aggregate over all messages returned
+// (migration 290's select, the newest message picked by created_at then id: the old distinct on had
+// no tiebreak), on the seeded data and after inserts, read stamps, status ticks and deletes; and
+// the unread badge's count must equal the list's total. Rolled back; database only, no message is
+// ever sent.
 
 const A = '+966500000850';
 const B = '+966500000851';

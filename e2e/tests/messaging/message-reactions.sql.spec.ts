@@ -3,9 +3,9 @@ import { rolledBack, type Tx } from '../../support/edit-time';
 import { captureEvents } from './inbox-live.helpers';
 
 // Message reactions (migration 20261028000930): their_reaction / our_reaction are columns
-// of the reacted message; reaction ROWS (stored before, and our reaction sends) are never a preview or
-// unread; the backfill fills their_reaction from the stored rows (same phone, latest wins) and deletes
-// nothing; a failed reaction send puts ours back. Example numbers only. Rolled back.
+// of the reacted message; reaction ROWS (stored before, and our reaction sends) are never a preview
+// or unread; the backfill fills their_reaction from the stored rows (same phone, latest wins) and
+// deletes nothing; a failed reaction send puts ours back. Example numbers only. Rolled back.
 
 const A = '+966500000901';
 const B = '+966500000902';

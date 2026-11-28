@@ -4,10 +4,10 @@ import { seedFamily, withSql } from '../../support/core/schedule';
 import { restoreSettings, snapshotSettings } from '../../support/platform/settings';
 import { stubSent } from '../../support/core/wa-stub';
 
-// 26-P4 (docs/26 §5): on staging-shaped data (both sending switches OFF, a fake family with an old queued
-// message) the API boots twice and runs its sender (a 300 ms tick); the gate stays closed: the queued row is
-// never claimed, no `messages` row is created, the stub receives nothing for the family and both switches stay
-// false. The switches are only set to false, then put back.
+// 26-P4 (docs/26 §5): on staging-shaped data (both sending switches OFF, a fake family with an old
+// queued message) the API boots twice and runs its sender (a 300 ms tick); the gate stays closed:
+// the queued row is never claimed, no `messages` row is created, the stub receives nothing for the
+// family and both switches stay false. The switches are only set to false, then put back.
 
 const KEYS = ['messaging_enabled', 'auto_messages_enabled'];
 interface Msg { id: string; status: string }

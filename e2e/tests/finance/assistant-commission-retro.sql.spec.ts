@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import { assistant, brought, commissionOf, iso, openMonth, one, paidStatement, pay, renewalOf, student, subscription } from '../../support/sales/assistant';
 import { rolledBack } from '../../support/core/rls';
 
-// Nothing is retroactive, and a re-attributed student's commission (migration 20261006000272) against
-// the real database. Each case is rolled back.
+// Nothing is retroactive, and a re-attributed student's commission (migration 20261006000272)
+// against the real database. Each case is rolled back.
 
 const PERCENT = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01' } as const;
 const FIXED = { commission_type: 'fixed', commission_value: 30, commission_currency: 'EGP', commission_starts_on: '2000-01-01' } as const;

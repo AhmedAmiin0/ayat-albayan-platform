@@ -2,8 +2,9 @@ import type { Tx } from '../edit-time';
 import { USERS } from '../core/users';
 import { errorMessage } from '../core/db-error';
 
-// Helpers of e2e/tests/course-pause.sql.spec.ts: the course pause RPCs (migrations 955–957, docs/11 §7b) against
-// the real database inside a transaction that is rolled back. Days are Riyadh days relative to the tx's now().
+// Helpers of e2e/tests/course-pause.sql.spec.ts: the course pause RPCs (migrations 955–957, docs/11
+// §7b) against the real database inside a transaction that is rolled back. Days are Riyadh days
+// relative to the tx's now().
 
 interface PauseSeed {
   today: string;
@@ -59,8 +60,8 @@ export async function generate(
 }
 
 /**
- * A student alone on a daily rule (lessons on days 1–10) with an 8-lesson package renewing on day 30, and a group
- * rule with another student (lessons on days 2 and 4, 10:00Z).
+ * A student alone on a daily rule (lessons on days 1–10) with an 8-lesson package renewing on day
+ * 30, and a group rule with another student (lessons on days 2 and 4, 10:00Z).
  */
 export async function seedPause(tx: Tx): Promise<PauseSeed> {
   const [teacher] = await tx<{ id: string; profile_id: string }[]>`
