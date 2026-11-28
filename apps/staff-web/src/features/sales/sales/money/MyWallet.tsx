@@ -2,9 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button, EmptyState, FormAlert, ListSkeleton, Pager, t } from '@ab/web-kit';
 import { useBellSignal } from '@/features/messaging/notifications';
-import { MY_COMMISSIONS_PAGE_SIZE, MY_MONEY_KEY, myCommissionsQuery, myEarningsQuery } from '@/features/sales/sales/api';
+import {
+  MY_COMMISSIONS_PAGE_SIZE,
+  MY_MONEY_KEY,
+  myCommissionsQuery,
+  myEarningsQuery,
+} from '@/features/sales/sales/api';
 import { CommissionEntry } from './CommissionEntry';
 import { WalletCard } from './WalletCard';
+import { listView, readView } from './wallet-view';
 
 const W = t.assistantPortal.wallet;
 
@@ -27,32 +33,31 @@ export function MyWallet() {
   const list = useQuery(myCommissionsQuery(page));
   useBellSignal('commission_earned', MY_MONEY_KEY);
   const rows = list.data?.items ?? [];
+  const balance = {
+    data: earnings.data && <WalletCard wallet={earnings.data.wallet} />,
+    error: <Failed retry={earnings.refetch} />,
+    loading: <ListSkeleton rows={1} />,
+  };
+  const entries = {
+    rows: (
+      <ul aria-labelledby="wallet-list-title">
+        {rows.map((c) => (
+          <CommissionEntry key={c.id} entry={c} />
+        ))}
+      </ul>
+    ),
+    data: <EmptyState title={W.empty}>{W.emptyHint}</EmptyState>,
+    error: <Failed retry={list.refetch} />,
+    loading: <ListSkeleton />,
+  };
   return (
     <div className="grid gap-4">
-      {earnings.data ? (
-        <WalletCard wallet={earnings.data.wallet ?? {}} />
-      ) : earnings.isError ? (
-        <Failed retry={earnings.refetch} />
-      ) : (
-        <ListSkeleton rows={1} />
-      )}
+      {balance[readView(earnings)]}
       <section aria-labelledby="wallet-list-title" className="grid gap-1">
         <h2 id="wallet-list-title" className="font-display text-h3 font-bold">
           {W.list}
         </h2>
-        {rows.length > 0 ? (
-          <ul aria-labelledby="wallet-list-title">
-            {rows.map((c) => (
-              <CommissionEntry key={c.id} entry={c} />
-            ))}
-          </ul>
-        ) : list.data ? (
-          <EmptyState title={W.empty}>{W.emptyHint}</EmptyState>
-        ) : list.isError ? (
-          <Failed retry={list.refetch} />
-        ) : (
-          <ListSkeleton />
-        )}
+        {entries[listView(rows.length, list)]}
         <Pager
           page={page}
           total={list.data?.total ?? 0}
