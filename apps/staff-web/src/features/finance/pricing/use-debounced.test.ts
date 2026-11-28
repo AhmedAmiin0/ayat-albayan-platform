@@ -11,11 +11,17 @@ describe('useDebounced', () => {
       initialProps: { v: 1 },
     });
     rerender({ v: 2 });
-    act(() => vi.advanceTimersByTime(200));
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
     rerender({ v: 3 });
-    act(() => vi.advanceTimersByTime(200));
+    act(() => {
+      vi.advanceTimersByTime(200);
+    });
     expect(result.current).toBe(1);
-    act(() => vi.advanceTimersByTime(50));
+    act(() => {
+      vi.advanceTimersByTime(50);
+    });
     expect(result.current).toBe(3);
   });
 });

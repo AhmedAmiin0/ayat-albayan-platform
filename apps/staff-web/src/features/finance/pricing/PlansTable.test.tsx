@@ -35,13 +35,23 @@ describe('PlansTable (clientSort + clientFilter)', () => {
   it('filters by the plan name (what the row shows) and by duration', () => {
     render(<PlansTable packages={PACKAGES} />);
     const name = t.pricing.packages.weekly.name;
-    fireEvent.change(screen.getByRole('searchbox', { name: by(t.pricing.planColumn) }), { target: { value: name } });
-    act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));
+    fireEvent.change(screen.getByRole('searchbox', { name: by(t.pricing.planColumn) }), {
+      target: { value: name },
+    });
+    act(() => {
+      vi.advanceTimersByTime(FILTER_DEBOUNCE_MS);
+    });
     expect(plans()).toEqual([name]);
-    fireEvent.change(screen.getByRole('searchbox', { name: by(t.pricing.planColumn) }), { target: { value: '' } });
-    act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));
+    fireEvent.change(screen.getByRole('searchbox', { name: by(t.pricing.planColumn) }), {
+      target: { value: '' },
+    });
+    act(() => {
+      vi.advanceTimersByTime(FILTER_DEBOUNCE_MS);
+    });
     openFilters();
-    fireEvent.change(screen.getByRole('combobox', { name: by(t.pricing.steps.duration) }), { target: { value: '90' } });
+    fireEvent.change(screen.getByRole('combobox', { name: by(t.pricing.steps.duration) }), {
+      target: { value: '90' },
+    });
     // Only the weekly plan comes back as 90 minutes at a 45-minute catalog.
     expect(plans()).toEqual([name]);
   });

@@ -23,7 +23,10 @@ export function usePaymentFilters({
   const [picked, setPicked] = useState<string | null>(null);
   const name = picked ?? studentName ?? '';
   const chips = [
-    ...chipIfSet({ id: 'student', label: t.subscriptions.student, value: value.studentId, text: name || '…', onRemove: () => (setPicked(null), onChange({ studentId: undefined })) }),
+    ...chipIfSet({ id: 'student', label: t.subscriptions.student, value: value.studentId, text: name || '…', onRemove: () => {
+      setPicked(null);
+      onChange({ studentId: undefined });
+    } }),
     ...chipIfSet({ id: 'from', label: t.finance.from, value: value.from, onRemove: () => onChange({ from: undefined }) }),
     ...chipIfSet({ id: 'to', label: t.finance.to, value: value.to, onRemove: () => onChange({ to: undefined }) }),
     ...chipIfSet({

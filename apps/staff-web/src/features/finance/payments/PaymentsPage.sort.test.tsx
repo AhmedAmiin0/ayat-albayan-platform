@@ -23,7 +23,10 @@ function Harness() {
   return (
     <PaymentsPage
       search={search}
-      onSearch={(patch) => (onSearch(patch), setSearch((s) => ({ ...s, ...patch })))}
+      onSearch={(patch) => {
+        onSearch(patch);
+        setSearch((s) => ({ ...s, ...patch }));
+      }}
     />
   );
 }

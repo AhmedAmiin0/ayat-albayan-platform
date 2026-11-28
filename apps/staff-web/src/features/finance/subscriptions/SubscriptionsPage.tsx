@@ -100,7 +100,7 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
               onChange: (next) => reset(toSortSearch(next)),
             }}
             filters={{ values: filterValues, onChange: (key, v) => reset(toFilterSearch(key, v)) }}
-            toolbar={{ extra, total: list.isPlaceholderData ? undefined : list.data?.total }}
+            toolbar={{ extra, total: list.isPlaceholderData ? undefined : list.data.total }}
           />
           <Pager
             page={list.data.page}

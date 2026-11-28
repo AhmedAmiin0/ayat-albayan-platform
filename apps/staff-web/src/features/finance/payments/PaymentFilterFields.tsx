@@ -26,12 +26,18 @@ export function PaymentFilterFields({
       {value.studentId ? (
         <p className="flex min-h-11 items-center gap-2 text-sm">
           <span className="font-semibold text-ink">{name}</span>
-          <Button type="button" variant="ghost" size="sm" onClick={() => (setPicked(null), onChange({ studentId: undefined }))}>
+          <Button type="button" variant="ghost" size="sm" onClick={() => {
+            setPicked(null);
+            onChange({ studentId: undefined });
+          }}>
             {t.finance.allStudents}
           </Button>
         </p>
       ) : (
-        <StudentPicker onPick={(s) => (setPicked(s.name), onChange({ studentId: s.id }))} />
+        <StudentPicker onPick={(s) => {
+            setPicked(s.name);
+            onChange({ studentId: s.id });
+          }} />
       )}
       <div className="grid grid-cols-2 gap-3">
         <DateFilterField

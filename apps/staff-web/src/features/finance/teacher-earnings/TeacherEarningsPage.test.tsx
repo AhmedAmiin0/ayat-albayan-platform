@@ -5,11 +5,19 @@ import { t } from '@ab/web-kit';
 import { BALANCE, page, PAYMENT, SESSIONS } from './fixtures';
 import { TeacherEarningsPage } from './TeacherEarningsPage';
 
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
+}));
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: vi.fn() }) } } }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+  apiSend,
+}));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({
+  supabase: { storage: { from: () => ({ uploadToSignedUrl: vi.fn() }) } },
+}));
 
 function open() {
   apiFetch.mockImplementation((path: string) => {
@@ -24,11 +32,17 @@ function open() {
   );
 }
 const openDialog = async () => {
-  fireEvent.click(screen.getByRole('button', { name: new RegExp(`${t.earnings.pay}|${t.earnings.payChosen.split('{count}')[0]}`) }));
+  fireEvent.click(
+    screen.getByRole('button', {
+      name: new RegExp(`${t.earnings.pay}|${t.earnings.payChosen.split('{count}').at(0) ?? ''}`),
+    }),
+  );
   return screen.findByRole('dialog');
 };
-const amountBox = (d: HTMLElement) => within(d).getByRole('textbox', { name: new RegExp(t.payments.amount) });
-const confirm = (d: HTMLElement) => fireEvent.click(within(d).getByRole('button', { name: t.earnings.confirm }));
+const amountBox = (d: HTMLElement) =>
+  within(d).getByRole('textbox', { name: new RegExp(t.payments.amount) });
+const confirm = (d: HTMLElement) =>
+  fireEvent.click(within(d).getByRole('button', { name: t.earnings.confirm }));
 
 describe('TeacherEarningsPage «مستحقات المعلم»', () => {
   beforeEach(() => {
@@ -54,7 +68,9 @@ describe('TeacherEarningsPage «مستحقات المعلم»', () => {
     expect(boxes[3]?.disabled).toBe(true);
     fireEvent.click(boxes[1] as HTMLElement);
     fireEvent.click(boxes[2] as HTMLElement);
-    expect(screen.getByRole('button', { name: t.earnings.payChosen.replace('{count}', '2') })).toBeTruthy();
+    expect(
+      screen.getByRole('button', { name: t.earnings.payChosen.replace('{count}', '2') }),
+    ).toBeTruthy();
   });
 
   it('paying the ticked sessions: the amount defaults to what they owe and the ids go with the payment', async () => {
@@ -67,9 +83,17 @@ describe('TeacherEarningsPage «مستحقات المعلم»', () => {
     apiSend.mockResolvedValue({ payment: PAYMENT, replayed: false });
     confirm(dialog);
     await waitFor(() => expect(apiSend).toHaveBeenCalled());
-    expect(apiSend).toHaveBeenCalledWith('POST', '/teacher-earnings/t1/payments', expect.objectContaining({
-      amount: 25.5, method: 'bank', earningIds: ['e2'], receiptPath: null, clientRequestId: expect.any(String),
-    }));
+    expect(apiSend).toHaveBeenCalledWith(
+      'POST',
+      '/teacher-earnings/t1/payments',
+      expect.objectContaining({
+        amount: 25.5,
+        method: 'bank',
+        earningIds: ['e2'],
+        receiptPath: null,
+        clientRequestId: expect.any(String),
+      }),
+    );
     expect(await screen.findByText(t.earnings.saved)).toBeTruthy();
   });
 
@@ -80,7 +104,9 @@ describe('TeacherEarningsPage «مستحقات المعلم»', () => {
     const dialog = await openDialog();
     fireEvent.change(amountBox(dialog), { target: { value: '60.01' } });
     confirm(dialog);
-    expect(await within(dialog).findByText(t.earnings.overpayment.replace('{amount}', '60 ج.م'))).toBeTruthy();
+    expect(
+      await within(dialog).findByText(t.earnings.overpayment.replace('{amount}', '60 ج.م')),
+    ).toBeTruthy();
     expect(apiSend).not.toHaveBeenCalled();
   });
 
@@ -89,7 +115,9 @@ describe('TeacherEarningsPage «مستحقات المعلم»', () => {
     await screen.findByText(t.earnings.statusName.partially_paid);
     const dialog = await openDialog();
     expect((amountBox(dialog) as HTMLInputElement).value).toBe('110');
-    apiSend.mockRejectedValueOnce(new TypeError('network')).mockResolvedValue({ payment: PAYMENT, replayed: true });
+    apiSend
+      .mockRejectedValueOnce(new TypeError('network'))
+      .mockResolvedValue({ payment: PAYMENT, replayed: true });
     confirm(dialog);
     expect(await within(dialog).findByText(t.payments.mobile.offline)).toBeTruthy();
     confirm(dialog);

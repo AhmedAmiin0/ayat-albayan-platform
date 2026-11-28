@@ -37,7 +37,10 @@ export function ExpensesPage({ month, onMonth }: Props) {
   const [removing, setRemoving] = useState<ExpenseView | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const refresh = () => queryClient.invalidateQueries({ queryKey: MONEY_KEY });
-  const remove = useMutation({ mutationFn: deleteExpense, onSuccess: async () => (setRemoving(null), await refresh()) });
+  const remove = useMutation({ mutationFn: deleteExpense, onSuccess: async () => {
+    setRemoving(null);
+    await refresh();
+  } });
   const confirm = useMutation({ mutationFn: confirmDraft, onSuccess: refresh });
   const receipt = useMutation({ mutationFn: expenseReceiptUrl, onSuccess: (r) => void window.open(r.url, '_blank', 'noopener') });
   const csv = useMutation({ mutationFn: () => downloadCsv({ kind: 'expenses', params: year ? { year: month.slice(0, 4) } : { month } }) });
@@ -104,7 +107,10 @@ export function ExpensesPage({ month, onMonth }: Props) {
           month={month}
           expense={editing === 'new' ? null : editing}
           onClose={() => setEditing(null)}
-          onSaved={() => (setEditing(null), setToast(t.expenses.saved))}
+          onSaved={() => {
+            setEditing(null);
+            setToast(t.expenses.saved);
+          }}
         />
       )}
       {removing && (

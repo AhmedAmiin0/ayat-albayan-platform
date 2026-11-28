@@ -64,7 +64,10 @@ export function PaymentsHistory({ scope }: { scope: Scope }) {
           data={list.data.items}
           getRowId={(p) => p.id}
           emptyText={t.earnings.noPayments}
-          sort={{ key: sort.sort, dir: sort.dir, onChange: (n) => (setSort(n.key ? { sort: n.key, ...(n.dir ? { dir: n.dir } : {}) } : {}), setPage(1)) }}
+          sort={{ key: sort.sort, dir: sort.dir, onChange: (n) => {
+            setSort(n.key ? { sort: n.key, ...(n.dir ? { dir: n.dir } : {}) } : {});
+            setPage(1);
+          } }}
           filters={{ values: filters, onChange: onFilter }}
           toolbar={{ total: list.data.total }}
         />

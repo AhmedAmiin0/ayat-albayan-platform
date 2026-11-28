@@ -18,8 +18,9 @@ interface Props {
   discountExtra?: ReactNode;
 }
 
-const discountLabel = (d: number) =>
-  t.pricing.discounts[`${d}` as keyof typeof t.pricing.discounts] ?? `${d}%`;
+const discountNames = new Map(Object.entries(t.pricing.discounts));
+
+const discountLabel = (d: number) => discountNames.get(`${d}`) ?? `${d}%`;
 
 /** Package, count, duration, discount and country: the calculator's inputs, never a price. */
 export function PricingFields({ form, set, discounts, discountExtra }: Props) {

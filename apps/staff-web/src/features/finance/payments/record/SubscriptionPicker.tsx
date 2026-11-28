@@ -43,7 +43,10 @@ export function SubscriptionPicker({ student, onStudent, picked, onPick }: Props
         <button
           type="button"
           className="text-xs text-lapis underline underline-offset-4"
-          onClick={() => (onStudent(null), onPick(null))}
+          onClick={() => {
+            onStudent(null);
+            onPick(null);
+          }}
         >
           {t.finance.changeStudent}
         </button>

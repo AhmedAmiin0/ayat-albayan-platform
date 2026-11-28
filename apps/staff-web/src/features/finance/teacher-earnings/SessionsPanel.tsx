@@ -81,12 +81,12 @@ export function SessionsPanel({ scope, selected, onSelected }: Props) {
               sort={{
                 key: sort.sort,
                 dir: sort.dir,
-                onChange: (next) => (
+                onChange: (next) => {
                   setSort(
                     next.key ? { sort: next.key, ...(next.dir ? { dir: next.dir } : {}) } : {},
-                  ),
-                  setPage(1)
-                ),
+                  );
+                  setPage(1);
+                },
               }}
             />
           </PickContext.Provider>
