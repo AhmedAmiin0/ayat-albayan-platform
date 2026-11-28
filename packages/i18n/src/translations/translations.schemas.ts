@@ -11,6 +11,9 @@ export const translationKeyParamsSchema = z.object({
 });
 export type TranslationKeyParams = z.infer<typeof translationKeyParamsSchema>;
 
+export const translationLocaleParamsSchema = translationKeyParamsSchema.pick({ locale: true });
+export type TranslationLocaleParams = z.infer<typeof translationLocaleParamsSchema>;
+
 export const translationValueSchema = z.object({
   value: z.string().trim().min(1).max(MAX_TRANSLATION_LENGTH),
 });
