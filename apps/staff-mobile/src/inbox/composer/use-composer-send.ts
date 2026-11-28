@@ -67,10 +67,7 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
     if (inFlight || send.isPending || sendStaged.isPending) return;
     const body = text.trim();
     const tapped = staged?.requestId;
-    if (target.bare(body)) {
-      sendFile(staged);
-      return;
-    }
+    if (target.bare(body)) return sendFile(staged);
     setText('');
     const out = target.out(body);
     const session = target.session;
@@ -95,22 +92,11 @@ export function useComposerSend({ phone, text, setText, staged, clearStaged }: C
   const errors = [textLine, sendStaged.isError ? fileError(sendStaged.error) : null];
   const pending = inFlight || send.isPending || sendStaged.isPending;
   // A box with only the correction prefix, or no room for it, has nothing to send (#694).
-  return {
-    sendTemplate,
-    sendText,
-    renew: boxId.renew,
-    errors,
-    pending,
-    blocked: target.blocked(text),
-  };
+  return { sendTemplate, sendText, renew: boxId.renew, errors, pending, blocked: target.blocked(text) };
 }
 
 /** The failures under the box: the text's always; the file's only while the window is open. */
-export function errorLines(input: {
-  errors: (string | null)[];
-  fileError: string | null;
-  open: boolean;
-}): string[] {
+export function errorLines(input: { errors: (string | null)[]; fileError: string | null; open: boolean }): string[] {
   const [text, staged] = input.errors;
   const lines = input.open ? [text, input.fileError, staged] : [text];
   return lines.filter((l): l is string => !!l);

@@ -22,11 +22,7 @@ import { OpenPackagePicker } from '@/sales-subscribe/components/OpenPackagePicke
 import { TransferDone } from '@/sales-subscribe/components/TransferDone';
 import { TransferForm } from '@/sales-subscribe/components/TransferForm';
 
-type ParamKey =
-  | 'phone'
-  | 'subscriptionId';
-
-type Params = Partial<Record<ParamKey, string>>;
+type Params = { phone?: string; subscriptionId?: string };
 
 /** Bank transfer for her owed package (R-ASST-04); a paid trial makes the student subscribed. */
 export function SalesTransferScreen() {
@@ -38,9 +34,7 @@ export function SalesTransferScreen() {
   const [done, setDone] = useState<SalesPaymentView | null>(null);
   const sub = chosenOpen(open, picked);
   // A child not hers (sales.renew_any, docs/16 row 38) gets the transfer only, never cancel.
-  const bind = sub
-    ? chatBinding(family.data?.students ?? [], { studentId: sub.student.id, phone })
-    : {};
+  const bind = sub ? chatBinding(family.data?.students ?? [], { studentId: sub.student.id, phone }) : {};
   const base = useTreeBase();
   const back = () => backWithin(inTree(base, '/inbox'));
   return (
@@ -60,11 +54,7 @@ export function SalesTransferScreen() {
         ) : family.isError ? (
           <ErrorState onRetry={() => void family.refetch()} />
         ) : !family.data ? null : open.length === 0 ? (
-          <EmptyState
-            title={
-              family.data.students.length ? t.salesMoney.nothingDue : t.salesMoney.noOwnStudents
-            }
-          />
+          <EmptyState title={family.data.students.length ? t.salesMoney.nothingDue : t.salesMoney.noOwnStudents} />
         ) : (
           <>
             <OpenPackagePicker packages={open} value={sub} onChange={setPicked} />
@@ -75,9 +65,7 @@ export function SalesTransferScreen() {
                 stale={[salesKeys.family(phone)]}
               />
             ) : null}
-            {sub ? (
-              <TransferForm key={sub.id} sub={sub} phone={phone} bind={bind} onDone={setDone} />
-            ) : null}
+            {sub ? <TransferForm key={sub.id} sub={sub} phone={phone} bind={bind} onDone={setDone} /> : null}
           </>
         )}
       </KeyboardScroll>

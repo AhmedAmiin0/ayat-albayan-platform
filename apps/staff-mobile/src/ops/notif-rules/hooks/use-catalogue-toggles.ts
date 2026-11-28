@@ -36,22 +36,16 @@ export function useCatalogueToggles() {
       {
         onSuccess: () => {
           setAsk(null);
-          const words = enabled
-            ? t.mobileNotificationRules.savedOn
-            : t.mobileNotificationRules.savedOff;
+          const words = enabled ? t.mobileNotificationRules.savedOn : t.mobileNotificationRules.savedOff;
           const line = words.replace('{name}', nameOf(entry.key) ?? entry.key);
           setSaved(line);
           announce(line);
         },
         onError: (e) => {
           // The API knows the row is essential even when this build did not: ask for the word then.
-          if (needsTypedWord(e) && confirmText === undefined)
-            setAsk({ key: entry.key, kind: 'typed' });
+          if (needsTypedWord(e) && confirmText === undefined) setAsk({ key: entry.key, kind: 'typed' });
           else if (ask?.kind !== 'typed' || ask.key !== entry.key) setAsk(null);
-          setError(
-            entry.key,
-            needsTypedWord(e) && confirmText === undefined ? null : ruleErrorText(e),
-          );
+          setError(entry.key, needsTypedWord(e) && confirmText === undefined ? null : ruleErrorText(e));
         },
       },
     );
@@ -61,10 +55,7 @@ export function useCatalogueToggles() {
   const request = (entry: NotificationEntryView, next: boolean) => {
     const kind = askOf(entry, next);
     setError(entry.key, null);
-    if (kind === 'plain') {
-      send(entry, next);
-      return;
-    }
+    if (kind === 'plain') return send(entry, next);
     setAsk({ key: entry.key, kind });
   };
 

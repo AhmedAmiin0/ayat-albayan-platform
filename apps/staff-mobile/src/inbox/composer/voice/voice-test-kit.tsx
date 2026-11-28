@@ -36,10 +36,7 @@ export const rec: FakeRecorder = {
     isRecording: rec.isRecording,
   })),
 };
-interface Perm {
-  granted: boolean;
-  canAskAgain: boolean;
-}
+type Perm = Record<'granted' | 'canAskAgain', boolean>;
 export const perms: { now: Perm; asked: Perm } = {
   now: { granted: true, canAskAgain: true },
   asked: { granted: true, canAskAgain: true },
@@ -138,16 +135,16 @@ const at = (x: number, y = 500) => ({ nativeEvent: { pageX: x, pageY: y } });
 /** Press the microphone (the finger at x, y). */
 export async function hold(x = 300, y = 500) {
   await act(async () => {
-    fireEvent(mic(), 'responderGrant', at(x, y));
+    await fireEvent(mic(), 'responderGrant', at(x, y));
   });
 }
 export async function moveTo(x: number, y = 500) {
   await act(async () => {
-    fireEvent(mic(), 'responderMove', at(x, y));
+    await fireEvent(mic(), 'responderMove', at(x, y));
   });
 }
 export async function lift() {
   await act(async () => {
-    fireEvent(mic(), 'responderRelease', at(0));
+    await fireEvent(mic(), 'responderRelease', at(0));
   });
 }

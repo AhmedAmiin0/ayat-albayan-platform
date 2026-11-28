@@ -62,12 +62,7 @@ export function SlotStep(props: SlotStepProps) {
   const viewer = useViewerClock();
   const viewerZone = viewer.tz;
   const [now] = useState(() => new Date());
-  const slots = useSlots({
-    teacherId,
-    ...slotWindow(windowStart(now, from)),
-    durationMin,
-    ...excludeParams(exclude, excludeLessonId),
-  });
+  const slots = useSlots({ teacherId, ...slotWindow(windowStart(now, from)), durationMin, ...excludeParams(exclude, excludeLessonId) });
   const days = slots.data ? freeSlotDays(slots.data.slots, viewerZone) : [];
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 };
   const picks = multi?.picks ?? [];
@@ -77,11 +72,7 @@ export function SlotStep(props: SlotStepProps) {
   return (
     <View style={{ gap: 12 }}>
       <FormLabel required>{multi ? t.booking.pickDayTimes : t.booking.pickTime}</FormLabel>
-      {multi?.need ? (
-        <AppText style={{ ...note, color: color.ink }}>
-          {counted(t.booking.pickNDays, multi.need)}
-        </AppText>
-      ) : null}
+      {multi?.need ? <AppText style={{ ...note, color: color.ink }}>{counted(t.booking.pickNDays, multi.need)}</AppText> : null}
       <AppText style={note}>{zoneNote(viewerZone)}</AppText>
       <SlotsStatus slots={slots} empty={days.length === 0} />
       {days.length > 0 && !multi ? <FormLabel>{t.booking.startsOn}</FormLabel> : null}
@@ -114,29 +105,19 @@ export function SlotStep(props: SlotStepProps) {
   );
 }
 
-interface ExcludeParams {
-  studentIds?: string;
-  excludeCourse?: string;
-  excludeLessonId?: string;
-}
+type ExcludeParams = { studentIds?: string; excludeCourse?: string; excludeLessonId?: string };
 
 /** GET /booking/slots `studentIds` + `excludeCourse` when a course's own lessons move; `excludeLessonId` a trial. */
-export function excludeParams(
-  exclude: SlotStepProps['exclude'],
-  excludeLessonId?: string,
-): ExcludeParams {
+export function excludeParams(exclude: SlotStepProps['exclude'], excludeLessonId?: string): ExcludeParams {
   const lesson = excludeLessonId ? { excludeLessonId } : {};
-  return exclude
-    ? { studentIds: exclude.studentIds.join(','), excludeCourse: exclude.course, ...lesson }
-    : lesson;
+  return exclude ? { studentIds: exclude.studentIds.join(','), excludeCourse: exclude.course, ...lesson } : lesson;
 }
 
 /** Loading, a failed read (retry) or no free start at all. */
 function SlotsStatus({ slots, empty }: { slots: ReturnType<typeof useSlots>; empty: boolean }) {
   const { color } = useTheme();
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 };
-  if (slots.isError)
-    return <ErrorState message={t.booking.slotsError} onRetry={() => void slots.refetch()} />;
+  if (slots.isError) return <ErrorState message={t.booking.slotsError} onRetry={() => void slots.refetch()} />;
   if (slots.isPending) return <AppText style={note}>{t.common.loading}</AppText>;
   return empty ? <AppText style={note}>{t.booking.mobile.noSlots}</AppText> : null;
 }

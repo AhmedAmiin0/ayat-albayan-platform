@@ -6,7 +6,7 @@ import { joinLinkUrl, linkError } from '@/classroom/links/link-api';
 import { Dismissed } from './dismissed.error';
 import { ShareFailed } from './share-failed.error';
 
-/** A fresh URL every tap (it is a short-lived secret: never kept), handed to the share sheet, which has Copy. */
+/** A fresh short-lived URL every tap, never kept, handed to the share sheet (it has Copy). */
 async function shareLink(lessonId: string): Promise<void> {
   const { url } = await joinLinkUrl(lessonId);
   const result = await Share.share({ message: url }).catch(() => {

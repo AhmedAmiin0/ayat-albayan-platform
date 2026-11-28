@@ -17,21 +17,14 @@ export function AvatarSection({ profile }: { profile: AccountProfile }) {
     fallback: 'avatar',
     onDone: () => setPicked(null),
   });
-  const remove = useAccountAction({
-    run: removeAvatar,
-    success: t.account.toast.avatarRemoved,
-    fallback: 'avatar',
-  });
+  const remove = useAccountAction({ run: removeAvatar, success: t.account.toast.avatarRemoved, fallback: 'avatar' });
   const busy = upload.pending || remove.pending;
 
   async function pick(source: AvatarSource) {
     try {
       const photo = await pickAvatar(source);
       if (!photo) return;
-      if (photo.size > AVATAR_MAX_BYTES) {
-        upload.reject({ avatar: accountMessage('avatar_too_large') });
-        return;
-      }
+      if (photo.size > AVATAR_MAX_BYTES) return upload.reject({ avatar: accountMessage('avatar_too_large') });
       upload.reject({});
       setPicked(photo);
     } catch {
@@ -44,12 +37,7 @@ export function AvatarSection({ profile }: { profile: AccountProfile }) {
   return (
     <AccountCard title={a.title} error={error} notice={upload.notice ?? remove.notice}>
       <View style={{ alignItems: 'center', gap: 8 }}>
-        <Avatar
-          name={profile.full_name}
-          id={profile.avatar_seed ?? profile.id}
-          src={picked?.uri ?? profile.avatar_url}
-          size="lg"
-        />
+        <Avatar name={profile.full_name} id={profile.avatar_seed ?? profile.id} src={picked?.uri ?? profile.avatar_url} size="lg" />
       </View>
       <AvatarButtons
         picked={picked !== null}

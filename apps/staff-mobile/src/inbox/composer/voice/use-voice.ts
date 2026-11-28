@@ -6,16 +6,7 @@ import { fileError } from '@/inbox/composer/send-file';
 import { useSendVoice } from './send-voice';
 import { useVoiceRecorder } from './use-voice-recorder';
 import type { VoiceNote } from './VoiceNoteLine';
-import {
-  IDLE,
-  isRecording,
-  keptTake,
-  onRelease,
-  type Take,
-  type VoiceEvent,
-  type VoiceState,
-  voiceReducer,
-} from './voice-machine';
+import { IDLE, isRecording, keptTake, onRelease, type Take, type VoiceEvent, type VoiceState, voiceReducer } from './voice-machine';
 
 const say = (text: string) => AccessibilityInfo.announceForAccessibility(text);
 
@@ -40,10 +31,7 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
     setState(now.current);
   };
   // One hook per declarator: the React Compiler cached an array of these refs and skipped them.
-  const down = useRef(false),
-    startedAt = useRef(0),
-    keeping = useRef(false),
-    aborted = useRef(false);
+  const down = useRef(false), startedAt = useRef(0), keeping = useRef(false), aborted = useRef(false);
   const [drag] = useState(() => new Animated.Value(0));
   const [hint] = useState(() => new Animated.Value(1));
   const sender = useSendVoice(phone);
@@ -67,10 +55,7 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
   const send = async (take: Take) => {
     if (now.current.kind === 'sending') return;
     // Another send of this chat is under way: the recording waits in the bar, never lost.
-    if (busy) {
-      go({ type: 'keep', take });
-      return;
-    }
+    if (busy) return go({ type: 'keep', take });
     go({ type: 'send', take });
     if ((now.current as VoiceState).kind !== 'sending') return; // cancelled or deleted meanwhile: never sent
     onError(null);
@@ -150,16 +135,8 @@ export function useVoice({ phone, onError, busy }: VoiceInput) {
   };
 
   return {
-    state,
-    note,
-    ms: rec.ms,
-    level: rec.level,
-    drag,
-    hint,
-    press,
-    release,
-    keep,
-    finish,
+    state, note, ms: rec.ms, level: rec.level, drag, hint,
+    press, release, keep, finish,
     cancel: () => discard(true),
     lock: () => {
       settle();

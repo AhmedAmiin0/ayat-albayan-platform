@@ -21,19 +21,10 @@ import { CourseDone } from '@/sales-course/components/CourseDone';
 import { CourseHeld } from '@/sales-course/components/CourseHeld';
 import { CourseOpening, type CourseChangeEntry } from '@/sales-course/components/CourseOpening';
 import { CourseStarts } from '@/sales-course/components/CourseStarts';
-import {
-  COURSE_STEPS,
-  firstStep,
-  stepBack,
-  stepNumber,
-  type CourseStep,
-} from '@/sales-course/lib/course-steps';
+import { COURSE_STEPS, firstStep, stepBack, stepNumber, type CourseStep } from '@/sales-course/lib/course-steps';
 import { useKnownTeacher } from '@/sales-course/hooks/use-known-teacher';
 
-interface Teacher {
-  id: string;
-  name: string;
-}
+type Teacher = { id: string; name: string };
 
 interface CourseWizardProps {
   /** A bookable course (courseBlock is null): a subscription and its weekly days are known. */
@@ -67,7 +58,7 @@ export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardPr
   };
   const back = () => {
     const prev = book.isSuccess ? null : stepBack({ step, same, renewal: previous !== null });
-    prev ? go(prev) : onLeave();
+    return prev ? go(prev) : onLeave();
   };
   const position = t.booking.stepOf
     .replace('{n}', String(stepNumber(step)))
@@ -94,29 +85,11 @@ export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardPr
   const content = () => {
     if (book.isSuccess && body) {
       if (book.data === null) return <CourseHeld onDone={onLeave} />;
-      return (
-        <CourseDone
-          result={book.data}
-          body={body}
-          view={view}
-          onDone={onLeave}
-          transfer={transfer}
-        />
-      );
+      return <CourseDone result={book.data} body={body} view={view} onDone={onLeave} transfer={transfer} />;
     }
     if (step === 'continue' || step === 'teacher') {
       const handlers = { onSame: continueSame, onOther: other, onPick: pickTeacher };
-      return (
-        <CourseOpening
-          view={view}
-          step={step}
-          opensOn={opensOn}
-          known={known}
-          change={change}
-          {...handlers}
-          transfer={transfer}
-        />
-      );
+      return <CourseOpening view={view} step={step} opensOn={opensOn} known={known} change={change} {...handlers} transfer={transfer} />;
     }
     if (step === 'slot') {
       return (
@@ -126,12 +99,7 @@ export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardPr
           durationMin={sub?.duration ?? 45}
           opens={opensOn ?? wallParts(now, view.student.tz).date}
           {...from}
-          multi={{
-            picks,
-            onChange: setPicks,
-            onNext: () => go('confirm'),
-            need: view.perWeek ?? 0,
-          }}
+          multi={{ picks, onChange: setPicks, onNext: () => go('confirm'), need: view.perWeek ?? 0 }}
         />
       );
     }

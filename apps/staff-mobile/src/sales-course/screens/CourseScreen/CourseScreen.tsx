@@ -22,12 +22,7 @@ import { CurrentCourse } from '@/sales-course/change/CurrentCourse';
 import { CourseWizard } from '@/sales-course/components/CourseWizard';
 import { useCourseView, type CourseViewState } from '@/sales-course/hooks/use-course-view';
 
-type ParamKey =
-  | 'studentId'
-  | 'phone'
-  | 'subscriptionId';
-
-type Params = Partial<Record<ParamKey, string>>;
+type Params = { studentId?: string; phone?: string; subscriptionId?: string };
 
 /** R-ASST-01: a blocked student shows why; an existing course offers the change flow instead. */
 export function CourseScreen() {
@@ -40,10 +35,7 @@ export function CourseScreen() {
   const { phone, subscriptionId } = params;
   const transfer =
     phone && subscriptionId
-      ? () =>
-          router.replace(
-            inTree(base, { pathname: '/inbox/sales-transfer', params: { phone, subscriptionId } }),
-          )
+      ? () => router.replace(inTree(base, { pathname: '/inbox/sales-transfer', params: { phone, subscriptionId } }))
       : undefined;
   const change = current ? { course: current, open: () => setChanging(true) } : undefined;
   // An existing course shown with the change action answers course_exists, so no refusal line.
@@ -100,10 +92,8 @@ function CourseStatus({ course, block, missing }: CourseStatusProps) {
   if (missing) return <EmptyState title={t.common.notFound} />;
   if (course.isError) {
     const failure = bookFailure(course.error, cycle, tz);
-    if (failure.kind === 'error' && isCodedRefusal(course.error))
-      return <EmptyState title={failure.text} />;
-    const message =
-      failure.kind === 'error' || failure.kind === 'invoice' ? failure.text : t.common.error;
+    if (failure.kind === 'error' && isCodedRefusal(course.error)) return <EmptyState title={failure.text} />;
+    const message = failure.kind === 'error' || failure.kind === 'invoice' ? failure.text : t.common.error;
     return <ErrorState message={message} onRetry={() => void course.refetch()} />;
   }
   if (block) return <EmptyState title={t.booking.courseBlocked[block]} />;
