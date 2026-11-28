@@ -4,13 +4,14 @@ import { freshQueryClient, renderWithQuery } from '../../../testing/query';
 import { ChannelThread } from '../ChannelThread';
 import type { ChannelMediaPort, ChannelPickedFile } from '../../media-port';
 import { channelPage } from '../../testing/channel-fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
 // Photos, PDFs and voice notes through the app's port: POST upload-url → PUT → POST message.
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
+const mockApiSend = jest.fn();
 jest.mock('../../../lib/http/api', () => ({
   ...jest.requireActual('../../../lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 
 const c = t.studentChannel;
@@ -30,10 +31,12 @@ afterAll(() => {
 });
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.onRead(() => channelPage());
-  mockApi.reset('write');
-  mockApi.onWrite(async ({ method: _m, path }) => (path.endsWith('/upload-url') ? signed : {}));
+  mockApiFetch.mockReset().mockResolvedValue(channelPage());
+  mockApiSend
+    .mockReset()
+    .mockImplementation(async (_m: string, path: string) =>
+      path.endsWith('/upload-url') ? signed : {},
+    );
   put.mockClear();
   globalThis.fetch = put as never;
 });
@@ -50,20 +53,16 @@ test('a photo: the signed upload, then the message that carries it', async () =>
   await fireEvent.press(screen.getByRole('button', { name: c.media.gallery }));
   const upload = { mime: 'image/jpeg', size: 3, name: 'photo.jpg' };
   await waitFor(() =>
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: `${BASE}/attachments/upload-url`,
-      body: upload,
-    }),
+    expect(mockApiSend).toHaveBeenCalledWith('POST', `${BASE}/attachments/upload-url`, upload),
   );
   expect(put).toHaveBeenCalledWith(signed.signed_url, expect.objectContaining({ method: 'PUT' }));
   const attachment = { ...upload, path: signed.path };
   await waitFor(() =>
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: `${BASE}/messages`,
-      body: expect.objectContaining({ body: '', attachment }),
-    }),
+    expect(mockApiSend).toHaveBeenCalledWith(
+      'POST',
+      `${BASE}/messages`,
+      expect.objectContaining({ body: '', attachment }),
+    ),
   );
 });
 
@@ -86,11 +85,11 @@ test('a voice note: the microphone records, «أرسل» sends it with its lengt
   expect(await screen.findByText(c.media.recording)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: c.send }));
   await waitFor(() =>
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: `${BASE}/messages`,
-      body: expect.objectContaining({ attachment: expect.objectContaining({ duration_ms: 7200 }) }),
-    }),
+    expect(mockApiSend).toHaveBeenCalledWith(
+      'POST',
+      `${BASE}/messages`,
+      expect.objectContaining({ attachment: expect.objectContaining({ duration_ms: 7200 }) }),
+    ),
   );
 });
 

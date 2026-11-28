@@ -1,5 +1,5 @@
 import { connectivity } from '../connectivity/connectivity';
-import { call } from './api';
+import { apiFetch, apiSend } from './api';
 import { READ_TIMEOUT_MS, SEND_TIMEOUT_MS } from '@ab/client-core';
 import { supabase } from './supabase';
 
@@ -33,7 +33,7 @@ async function expectNoAnswerAtDeadline(read: Promise<unknown>, failures: number
 test('getSession() never resolves: the GET fails at the deadline, the API is not blamed', async () => {
   getSession.mockImplementation(never);
   // A hung token refresh: one /health probe decides, no reconnect refetch to hang on it again.
-  await expectNoAnswerAtDeadline(call({ path: '/threads' }), 0);
+  await expectNoAnswerAtDeadline(apiFetch('/threads'), 0);
   expect(connectivity.probeNow).toHaveBeenCalledTimes(1);
   expect(mockFetch).not.toHaveBeenCalled();
 });
@@ -41,7 +41,7 @@ test('getSession() never resolves: the GET fails at the deadline, the API is not
 test('a sent GET with no answer rejects at the deadline and its fetch is aborted', async () => {
   getSession.mockResolvedValue(session as never);
   mockFetch.mockImplementation(never);
-  await expectNoAnswerAtDeadline(call({ path: '/threads/x' }), 1);
+  await expectNoAnswerAtDeadline(apiFetch('/threads/x'), 1);
   const [, init] = mockFetch.mock.calls[0] as [string, RequestInit];
   expect(init.signal?.aborted).toBe(true);
 });
@@ -51,7 +51,7 @@ test('a write (POST) keeps waiting past the read deadline, then ends as no answe
   getSession.mockResolvedValue(session as never);
   mockFetch.mockImplementation(never);
   const onDone = jest.fn();
-  const send = call({ method: 'POST', path: '/threads/x/text', body: { text: 'hi' } });
+  const send = apiSend('POST', '/threads/x/text', { text: 'hi' });
   void send.then(onDone, onDone);
   await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS);
   expect(onDone).not.toHaveBeenCalled();
@@ -63,18 +63,15 @@ test('a write (POST) keeps waiting past the read deadline, then ends as no answe
 });
 
 test('a failed token refresh is no answer, not an unauthenticated request', async () => {
-  getSession.mockResolvedValue({
-    data: { session: null },
-    error: new Error('fetch failed'),
-  } as never);
-  await expect(call({ path: '/threads' })).rejects.toBeInstanceOf(TypeError);
+  getSession.mockResolvedValue({ data: { session: null }, error: new Error('fetch failed') } as never);
+  await expect(apiFetch('/threads')).rejects.toBeInstanceOf(TypeError);
   expect(mockFetch).not.toHaveBeenCalled();
 });
 
-test('signed out (no session, no error) still sends, without a token', async () => {
+test("signed out (no session, no error) still sends, without a token", async () => {
   getSession.mockResolvedValue({ data: { session: null }, error: null });
   mockFetch.mockResolvedValue(new Response('{}', { status: 200 }));
-  await call({ path: '/public' });
+  await apiFetch('/public');
   const [, init] = mockFetch.mock.calls[0] as [string, RequestInit];
   expect(new Headers(init.headers).get('Authorization')).toBeNull();
 });
@@ -83,7 +80,7 @@ test("the caller's signal (TanStack's) aborts the fetch", async () => {
   getSession.mockResolvedValue(session as never);
   mockFetch.mockImplementation(never);
   const caller = new AbortController();
-  const read = call({ path: '/threads', signal: caller.signal });
+  const read = apiFetch('/threads', { signal: caller.signal });
   await jest.advanceTimersByTimeAsync(0);
   caller.abort();
   await expect(read).rejects.toMatchObject({ name: 'AbortError' });
@@ -96,7 +93,7 @@ test('a chat PDF page (rendered by the API first) is not cut at 20 s', async () 
   getSession.mockResolvedValue(session as never);
   mockFetch.mockImplementation(never);
   const onDone = jest.fn();
-  void call({ path: '/threads/%2B9665/messages/m1/pdf/1' }).then(onDone, onDone);
+  void apiFetch('/threads/%2B9665/messages/m1/pdf/1').then(onDone, onDone);
   await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS * 3);
   expect(onDone).not.toHaveBeenCalled();
 });
@@ -105,7 +102,7 @@ test('a booking/invoice file (downloaded from WhatsApp first) is not cut at 20 s
   getSession.mockResolvedValue(session as never);
   mockFetch.mockImplementation(never);
   const onDone = jest.fn();
-  void call({ path: '/threads/%2B9665/media/m1' }).then(onDone, onDone);
+  void apiFetch('/threads/%2B9665/media/m1').then(onDone, onDone);
   await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS * 3);
   expect(onDone).not.toHaveBeenCalled();
   expect(connectivity.reportFailure).not.toHaveBeenCalled();

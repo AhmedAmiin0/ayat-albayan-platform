@@ -5,20 +5,19 @@ import { freshQueryClient, renderWithQuery } from '../../../testing/query';
 import { ChannelThread } from '../ChannelThread';
 import type { ChannelMediaPort, ChannelPickedFile } from '../../media-port';
 import { channelPage } from '../../testing/channel-fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
 // The composer per the ChatX boards: the pending row, the emoji panel, the attach tiles, the clock.
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
+const mockApiSend = jest.fn();
 jest.mock('../../../lib/http/api', () => ({
   ...jest.requireActual('../../../lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 
 const mockFrames: (boolean | undefined)[] = [];
 jest.mock('../../../ui/layout/KeyboardFrame/KeyboardFrame', () => {
-  const actual = jest.requireActual<typeof FrameModule>(
-    '../../../ui/layout/KeyboardFrame/KeyboardFrame',
-  );
+  const actual = jest.requireActual<typeof FrameModule>('../../../ui/layout/KeyboardFrame/KeyboardFrame');
   return {
     ...actual,
     KeyboardFrame: (p: Parameters<typeof actual.KeyboardFrame>[0]) => {
@@ -37,15 +36,13 @@ const open = (media: ChannelMediaPort = {}) =>
   );
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.onRead(() => channelPage());
-  mockApi.reset('write');
-  mockApi.onWrite(() => ({}));
+  mockApiFetch.mockReset().mockResolvedValue(channelPage());
+  mockApiSend.mockReset().mockResolvedValue({});
 });
 
 test('a send shows at once as «جارٍ الإرسال…»; a failure takes it away and keeps the words', async () => {
   let fail: (e: Error) => void = () => undefined;
-  mockApi.onWrite(({ method: _m, path }) =>
+  mockApiSend.mockImplementation((_m: string, path: string) =>
     path === PATH ? new Promise((_r, reject) => (fail = reject)) : Promise.resolve({}),
   );
   await open();

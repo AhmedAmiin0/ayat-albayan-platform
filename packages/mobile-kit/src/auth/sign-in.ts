@@ -1,10 +1,5 @@
-import {
-  type CodeRoutes,
-  isAccountDisabled,
-  isEmailIdentifier,
-  signInError,
-} from '@ab/client-core';
-import { call } from '../lib/http/api';
+import { type CodeRoutes, isAccountDisabled, isEmailIdentifier, signInError } from '@ab/client-core';
+import { apiFetch } from '../lib/http/api';
 import { t } from '../lib/i18n/i18n';
 import { supabase } from '../lib/http/supabase';
 import { authApi } from './forgot/auth-api';
@@ -44,7 +39,7 @@ async function openSession({ identifier, password }: Credentials): Promise<strin
 async function checkRole(): Promise<SignInResult> {
   let me: Me;
   try {
-    me = await call<Me>({ path: '/auth/me' });
+    me = await apiFetch<Me>('/auth/me');
   } catch (error) {
     // Signed in but the role is unknown: don't leave a half-checked session behind.
     await supabase.auth.signOut();
