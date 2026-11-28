@@ -6,7 +6,7 @@ const FALLBACK = 'https://app.ayatalbayan.com';
  * slash is dropped so a path can be appended.
  */
 export function webOrigin(): string {
-  const raw = process.env['EXPO_PUBLIC_WEB_ORIGIN']?.trim();
+  const raw = process.env.EXPO_PUBLIC_WEB_ORIGIN?.trim();
   return (raw ? raw : FALLBACK).replace(/\/+$/, '');
 }
 

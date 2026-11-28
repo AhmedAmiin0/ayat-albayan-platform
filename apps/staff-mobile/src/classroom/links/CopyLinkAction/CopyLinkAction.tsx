@@ -2,12 +2,11 @@ import { useMutation } from '@tanstack/react-query';
 import { Share, View } from 'react-native';
 import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { joinLinkUrl, linkError } from './link-api';
+import { joinLinkUrl, linkError } from '@/classroom/links/link-api';
+import { Dismissed } from './dismissed.error';
+import { ShareFailed } from './share-failed.error';
 
 /** A fresh URL every tap (it is a short-lived secret: never kept), handed to the share sheet, which has Copy. */
-class ShareFailed extends Error {}
-class Dismissed extends Error {}
-
 async function shareLink(lessonId: string): Promise<void> {
   const { url } = await joinLinkUrl(lessonId);
   const result = await Share.share({ message: url }).catch(() => {
