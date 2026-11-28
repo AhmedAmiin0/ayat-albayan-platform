@@ -1,8 +1,15 @@
 import type { UserDetail, UserRoleOption } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { ScrollView } from 'react-native';
-import { t, Button, BackButton, Screen, ScreenHeader, ErrorLine } from '@ab/mobile-kit';
+import {
+  t,
+  Button,
+  BackButton,
+  Screen,
+  ScreenHeader,
+  ErrorLine,
+  KeyboardScroll,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { ActionPanel } from '@/users/panels/ActionPanel';
 import { updateUser, USERS_KEY } from '@/users/shared/api';
@@ -50,11 +57,9 @@ export function UserEditor({ user, options, canWrite }: UserEditorProps) {
   };
   return (
     <Screen>
-      <ScrollView
+      <KeyboardScroll
         style={{ flex: 1, marginHorizontal: -16 }}
         contentContainerStyle={{ gap: 16, paddingHorizontal: 16, paddingBottom: 32 }}
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustKeyboardInsets
       >
         <ScreenHeader
           title={t.users.detail.title}
@@ -90,7 +95,7 @@ export function UserEditor({ user, options, canWrite }: UserEditorProps) {
             {canWrite ? <UserActions user={user} onMode={setMode} onDone={done} /> : null}
           </>
         )}
-      </ScrollView>
+      </KeyboardScroll>
     </Screen>
   );
 }

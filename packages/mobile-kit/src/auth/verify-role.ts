@@ -1,7 +1,7 @@
 import { isAccountDisabled } from '@ab/client-core';
 import type { Session } from '@supabase/supabase-js';
 import { z } from 'zod';
-import { ApiError, apiFetch } from '../lib/http/api';
+import { ApiError, call } from '../lib/http/api';
 import { pathKey } from '../lib/query/query-keys';
 import { cacheRestored, queryClient } from '../lib/query/query-client';
 import { supabase } from '../lib/http/supabase';
@@ -15,7 +15,10 @@ import { appRole, roleClaim, type AppRole } from './role-claim';
  */
 export const meSchema = z.union([
   z.looseObject({ role: z.string().nullable().catch(null) }),
-  z.unknown().refine((body) => body != null).transform(() => ({ role: null })),
+  z
+    .unknown()
+    .refine((body) => body != null)
+    .transform(() => ({ role: null })),
 ]);
 export type Me = z.infer<typeof meSchema>;
 
@@ -40,7 +43,10 @@ function savedRoleLater(): Promise<AppRole> {
  * revoked session or a role that lost the app signs out (SIGNED_OUT moves the gate), as below, and
  * another app role goes to `onLive` (the gate), so a changed role never keeps the saved tree.
  */
-export function verifyRole(session: Session, onLive?: (role: AppRole) => void): Promise<AppRole | 'out'> {
+export function verifyRole(
+  session: Session,
+  onLive?: (role: AppRole) => void,
+): Promise<AppRole | 'out'> {
   const live = checkRole(session);
   void live.then((role) => (role !== 'out' ? onLive?.(role) : undefined));
   return Promise.race([live, savedRoleLater()]);
@@ -54,7 +60,7 @@ const ROLE_APP = {
 } satisfies Record<'app' | 'none', (me: Me) => void>;
 
 async function liveRole(): Promise<AppRole | null> {
-  const me = meSchema.parse(await apiFetch('/auth/me'));
+  const me = meSchema.parse(await call({ path: '/auth/me' }));
   const role = appRole(me.role);
   ROLE_APP[role ? 'app' : 'none'](me);
   return role;

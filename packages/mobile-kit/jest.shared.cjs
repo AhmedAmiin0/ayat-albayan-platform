@@ -120,3 +120,10 @@ jest.mock('@shopify/flash-list/dist/recyclerview/utils/measureLayout', () => {
     measureItemLayout: jest.fn(() => ({ x: 0, y: 0, width: 100, height: 100 })),
   };
 });
+
+// A native module: the library's own jest mock, but its KeyboardAvoidingView pads by the library's
+// formula against a fake keyboard (src/testing/keyboard-fake), so a test sees a frame clear it.
+jest.mock('react-native-keyboard-controller', () => ({
+  ...require('react-native-keyboard-controller/jest'),
+  KeyboardAvoidingView: require('./src/testing/keyboard-fake').FakeKeyboardAvoidingView,
+}));

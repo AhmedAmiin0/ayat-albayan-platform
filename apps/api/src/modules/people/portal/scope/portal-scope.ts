@@ -29,6 +29,17 @@ export class PortalScopes {
     return { kind: user.role, students: await this.queries.studentsOf(user.id) };
   }
 
+  /**
+   * The scope with each student's test flag (docs/56), which the family app reads for the
+   * screen-capture check. A failed flag read counts as a real student.
+   */
+  async withTestFlags(user: AuthUser): Promise<PortalScope> {
+    const scope = await this.of(user);
+    const ids = scope.students.map((s) => s.id);
+    const tests = await this.queries.testIdsOf(ids).catch(() => new Set<string>());
+    return { ...scope, students: scope.students.map((s) => ({ ...s, is_test: tests.has(s.id) })) };
+  }
+
   async student(user: AuthUser, studentId: string): Promise<PortalStudent> {
     return (await this.withFamily(user, studentId)).student;
   }

@@ -1,5 +1,5 @@
 import { lessonOptions } from '@ab/client-core';
-import { AppText, Button, ErrorLine, MenuSheet, type, useTheme } from '@ab/mobile-kit';
+import { AppText, Button, ErrorLine, Sheet, type, useTheme } from '@ab/mobile-kit';
 import { DeclineForm } from '@/lessons/options/DeclineForm';
 import type { OptionsMenuProps } from './OptionsMenu.types';
 import { VARIANT } from './options-menu.helpers';
@@ -22,7 +22,7 @@ export function OptionsMenu(props: OptionsMenuProps) {
     A,
   } = useOptionsMenu(props);
   return (
-    <MenuSheet open={open} label={A.menuTitle} testID="lesson-options" onClose={close}>
+    <Sheet open={open} label={A.menuTitle} testID="lesson-options" onClose={close}>
       <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>
         {title.heading}
       </AppText>
@@ -47,6 +47,6 @@ export function OptionsMenu(props: OptionsMenuProps) {
           />
         ))
       )}
-    </MenuSheet>
+    </Sheet>
   );
 }

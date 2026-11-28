@@ -10,7 +10,7 @@ test.describe('admin shell: keyboard focus', () => {
     test.skip(test.info().project.name !== 'desktop', 'sizes its own viewport; once is enough');
   });
 
-  test('on a 560px-high screen no focused sidebar link hides behind the sticky foot', async ({ asRole }) => {
+  test('on a 560px-high screen no focused sidebar link hides behind the foot and the logo stays', async ({ asRole }) => {
     const page = await asRole('admin');
     await page.setViewportSize({ width: 1280, height: 560 });
     await page.goto('/admin/students');
@@ -19,11 +19,12 @@ test.describe('admin shell: keyboard focus', () => {
     const foot = page.locator('aside [data-side-foot]');
     const covered: string[] = [];
     for (const link of await page.locator('aside nav a').all()) {
-      await link.focus(); // the browser scrolls it into view, honouring the aside's scroll padding
+      await link.focus(); // only the nav's own scroller moves
       const [at, under] = [await link.boundingBox(), await foot.boundingBox()];
       if (at && under && at.y + at.height > under.y + 0.5) covered.push((await link.textContent()) ?? '?');
     }
     expect(covered).toEqual([]);
+    await expect(page.locator('aside > a').first()).toBeInViewport();
   });
 
   test('the dashboard\'s wide table is a named region: Tab can land on it and the arrow keys scroll it', async ({ asRole }) => {

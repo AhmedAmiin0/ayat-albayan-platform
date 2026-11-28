@@ -1,5 +1,6 @@
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import type { ReactNode } from 'react';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import type { GateStatus } from '../auth/use-auth-gate';
 import { retryGate } from '../auth/gate-retry';
 import { RootGateProvider } from '../auth/root-gate';
@@ -14,16 +15,21 @@ export function retryStartup() {
   connectivity.probeNow();
 }
 
-/** The persisted query cache and the root's gate, around every app's root (staff and family). */
+/**
+ * The keyboard's frame-by-frame position (KeyboardFrame, KeyboardScroll; on Android it also follows
+ * into a Modal's window), the persisted query cache and the root's gate, around every app's root.
+ */
 export function RootProviders({ gate, children }: { gate: GateStatus; children: ReactNode }) {
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={persistOptions}
-      onSuccess={onCacheRestored}
-      onError={onCacheRestored}
-    >
-      <RootGateProvider value={gate}>{children}</RootGateProvider>
-    </PersistQueryClientProvider>
+    <KeyboardProvider>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={persistOptions}
+        onSuccess={onCacheRestored}
+        onError={onCacheRestored}
+      >
+        <RootGateProvider value={gate}>{children}</RootGateProvider>
+      </PersistQueryClientProvider>
+    </KeyboardProvider>
   );
 }

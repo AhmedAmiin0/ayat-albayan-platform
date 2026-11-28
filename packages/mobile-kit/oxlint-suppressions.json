@@ -352,14 +352,6 @@
       "count": 1
     }
   },
-  "src/ui/layout/KeyboardFrame/KeyboardFrame.test.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "src/ui/layout/KeyboardFrame/KeyboardFrame.tsx": {
     "ab/no-restricted-syntax": {
       "count": 1

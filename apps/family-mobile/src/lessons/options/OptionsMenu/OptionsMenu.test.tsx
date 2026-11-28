@@ -60,11 +60,11 @@ test('an error shows its line', async () => {
   expect(screen.getByText('تعذّر الإرسال')).toBeTruthy();
 });
 
-test('closing hands the close over and leaves the decline form', async () => {
+test('a drag down hands the close over and leaves the decline form', async () => {
   const { view, onClose } = show();
   await view;
   await fireEvent.press(screen.getByRole('button', { name: A.decline }));
-  await fireEvent.press(screen.getByLabelText(t.common.cancel, { includeHiddenElements: true }));
+  await fireEvent(screen.getByTestId('lesson-options'), 'dismiss');
   expect(onClose).toHaveBeenCalledTimes(1);
   expect(screen.getByRole('button', { name: A.confirm })).toBeTruthy();
 });

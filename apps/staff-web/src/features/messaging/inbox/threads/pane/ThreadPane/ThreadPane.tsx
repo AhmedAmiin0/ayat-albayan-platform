@@ -95,7 +95,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const line = mode === 'sales' && people && <SalesFamilyLine phone={phone} people={people} lessons={first?.lessons ?? []} />;
   const readOnly = ownThread ? t.inbox.ownThreadReadOnly : access.send ? null : t.inbox.sendNotAllowed;
   const headerProps = { thread: th, listSearch, headingId, badge: admin && people ? threadBadge(people) : null, line, lists: first?.lists, callable: !readOnly };
-  const log = (fill: 'shell' | 'xl' | 'phone') => (
+  const log = (fill: 'shell' | 'beside' | 'phone') => (
     <>
       {(detail.isError || chat.problem) && (
         <p role="status" className="shrink-0 px-3 py-1 text-xs text-danger shell:px-0">
@@ -140,7 +140,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
         {!sheetOpen && toast}
       </PhoneChat>
     ) : (
-      <ThreadPaneWide labelledBy={headingId} header={<ThreadHeader {...headerProps} action={actions} />} log={log(aside ? 'xl' : 'shell')} reply={reply} aside={aside} side={side} toast={toast} />
+      <ThreadPaneWide labelledBy={headingId} header={<ThreadHeader {...headerProps} action={actions} />} log={log(aside ? 'beside' : 'shell')} reply={reply} aside={aside} side={side} toast={toast} />
     );
   const frame = <SalesChatFrame key={phone} thread={th} lists={first?.lists} compact={phoneView}>{body}</SalesChatFrame>;
   return <ChatActionsProvider thread={th} enabled={!readOnly && !teacherMode}>{frame}</ChatActionsProvider>;
