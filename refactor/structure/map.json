@@ -244,11 +244,6 @@
    "layer": "api"
   },
   {
-   "from": "apps/api/src/config/role/",
-   "to": "apps/api/src/config/role/ (stays; 8 common/ importers)",
-   "layer": "api"
-  },
-  {
    "from": "apps/api/src/modules/finance/stripe/links/",
    "to": "apps/api/src/modules/finance/stripe/payment-links/",
    "layer": "api"
@@ -586,11 +581,6 @@
   {
    "from": "apps/api/src/modules/teaching/classroom/internal-meetings/",
    "to": "apps/api/src/modules/teaching/classroom/meetings/internal/",
-   "layer": "api"
-  },
-  {
-   "from": "apps/api/src/modules/teaching/classroom/join/",
-   "to": "apps/api/src/modules/teaching/classroom/join/ (stays; drop the move to room-open)",
    "layer": "api"
   },
   {
@@ -1889,11 +1879,6 @@
    "layer": "staff-mobile"
   },
   {
-   "from": "apps/staff-mobile/src/app-config.*",
-   "to": "apps/staff-mobile/src/ (stays; drop the move to src/tests/)",
-   "layer": "staff-mobile"
-  },
-  {
    "from": "apps/staff-mobile/src/assistant-app/",
    "to": "apps/staff-mobile/src/shell/assistant-tabs/",
    "layer": "staff-mobile"
@@ -2024,11 +2009,6 @@
    "layer": "staff-mobile"
   },
   {
-   "from": "apps/staff-mobile/src/finance/index.ts",
-   "to": "DELETE (parent barrel; it would otherwise become features/finance/expenses/index.ts)",
-   "layer": "staff-mobile"
-  },
-  {
    "from": "apps/staff-mobile/src/finance/invoices/",
    "to": "apps/staff-mobile/src/features/finance/invoices/",
    "layer": "staff-mobile"
@@ -2051,16 +2031,6 @@
   {
    "from": "apps/staff-mobile/src/finance/summary/",
    "to": "apps/staff-mobile/src/features/reporting/dashboard/finance/",
-   "layer": "staff-mobile"
-  },
-  {
-   "from": "apps/staff-mobile/src/fonts.*",
-   "to": "apps/staff-mobile/src/ (stays; drop the move to src/tests/)",
-   "layer": "staff-mobile"
-  },
-  {
-   "from": "apps/staff-mobile/src/i18n-literals.*",
-   "to": "apps/staff-mobile/src/ (stays; drop the move to src/tests/)",
    "layer": "staff-mobile"
   },
   {
@@ -2121,11 +2091,6 @@
   {
    "from": "apps/staff-mobile/src/money/attachments/",
    "to": "apps/staff-mobile/src/features/finance/payments/attachments/",
-   "layer": "staff-mobile"
-  },
-  {
-   "from": "apps/staff-mobile/src/money/index.ts",
-   "to": "DELETE (parent barrel; payments, receivables and subscriptions each export from their own index.ts)",
    "layer": "staff-mobile"
   },
   {
@@ -2231,11 +2196,6 @@
   {
    "from": "apps/staff-mobile/src/ops/google-sync/",
    "to": "apps/staff-mobile/src/features/platform/google-sync/",
-   "layer": "staff-mobile"
-  },
-  {
-   "from": "apps/staff-mobile/src/ops/index.ts",
-   "to": "DELETE (parent barrel; each ops feature exports from its own index.ts)",
    "layer": "staff-mobile"
   },
   {
@@ -3102,6 +3062,23 @@
    "from": "apps/staff-web/src/lib/settings/teacher-pages*",
    "to": "apps/staff-web/src/features/teaching/teacher-home/teacher-pages/",
    "layer": "staff-web"
+  }
+ ],
+ "drops": [
+  {
+   "drop": "apps/staff-mobile/src/finance/index.ts",
+   "layer": "staff-mobile",
+   "why": "parent barrel; it would otherwise become features/finance/expenses/index.ts"
+  },
+  {
+   "drop": "apps/staff-mobile/src/money/index.ts",
+   "layer": "staff-mobile",
+   "why": "parent barrel; payments, receivables and subscriptions each export from their own index.ts"
+  },
+  {
+   "drop": "apps/staff-mobile/src/ops/index.ts",
+   "layer": "staff-mobile",
+   "why": "parent barrel; each ops feature exports from its own index.ts"
   }
  ],
  "splits": [
