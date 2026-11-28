@@ -1,10 +1,9 @@
-import { paymentViewSchema } from '@ab/money';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { BalanceCard } from '@/features/finance/subscriptions/balance/BalanceCard/BalanceCard';
-import { balanceOf, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
+import { balanceOf, PAYMENT, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -62,21 +61,22 @@ describe('BalanceCard (S6: the student package on the profile)', () => {
     fireEvent.click(await screen.findByRole('button', { name: t.payments.record }));
     const dialog = await screen.findByRole('dialog');
     expect(dialog.textContent).toContain(t.payments.mobile.recordFor.replace('{student}', 'سهيلة'));
-    apiSend.mockResolvedValue({ id: 'pay-1' });
+    apiSend.mockResolvedValue(PAYMENT);
     fireEvent.click(
       screen.getAllByRole('button', { name: t.payments.record }).at(-1) as HTMLElement,
     );
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/payments', {
-        body: expect.objectContaining({
+      expect(apiSend).toHaveBeenCalledWith(
+        'POST',
+        '/payments',
+        expect.objectContaining({
           subscriptionId: 'sub-1',
           amount: 145,
           currency: 'SAR',
           method: 'bank',
           receiptPath: null,
         }),
-        schema: paymentViewSchema,
-      }),
+      ),
     );
     expect(await screen.findByRole('status')).toBeTruthy();
   });

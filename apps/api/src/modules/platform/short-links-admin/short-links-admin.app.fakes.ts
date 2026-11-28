@@ -13,6 +13,7 @@ import {
 } from '@/common/auth/auth.guard';
 import { DB } from '@/common/db/db.module';
 import { RateLimitRepo } from '@/common/http/rate-limit.repo';
+import { ResponseCheckInterceptor } from '@/common/http/returns';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { ShortLinks } from '@/modules/platform/short-links';
 import { LinkTargets } from './managed/link-targets';
@@ -53,7 +54,7 @@ const fakes = () => ({
     familyNames: vi.fn(async () => new Map<string, string>()),
   },
   targets: { base: vi.fn(async () => 'https://l.example/'), expiry: vi.fn() },
-  sender: { sendAll: vi.fn(async () => ({ sent: 0, failed: 0 })) },
+  sender: { sendAll: vi.fn(async () => ({ queued: 0, failed: 0 })) },
   sync: { replace: vi.fn() },
   audit: { record: vi.fn() },
   system: { row: vi.fn() },
@@ -83,6 +84,7 @@ export async function linksApp() {
     )
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
+  app.useGlobalInterceptors(ResponseCheckInterceptor.fromEnv());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   const call = (req: {

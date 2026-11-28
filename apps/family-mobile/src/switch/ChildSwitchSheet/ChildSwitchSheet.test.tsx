@@ -4,7 +4,8 @@ import { freshQueryClient, renderWithQuery } from '@ab/mobile-kit/testing';
 import { closeChildSwitch, openChildSwitch, useChildSwitch } from '@/nav';
 import { ChildSwitchSheet } from './ChildSwitchSheet';
 
-// The children sheet is the native @expo/ui BottomSheet (jest.setup.cjs stands in for it).
+// The children sheet is the kit Sheet on the native @expo/ui BottomSheet (the kit's jest setup
+// stands in for it).
 
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
@@ -22,4 +23,12 @@ test('presented while the switch is open; a swipe down (onDismiss) closes it', a
   await act(() => sheet.props.onDismiss());
   const state = await renderHook(() => useChildSwitch());
   expect(state.result.current.open).toBe(false);
+});
+
+test('sized to its rows and named for screen readers', async () => {
+  await renderWithQuery(<ChildSwitchSheet />, freshQueryClient());
+  await act(() => openChildSwitch());
+  const sheet = screen.getByTestId('child-switch-sheet');
+  expect(sheet.props.snapPoints).toBeUndefined();
+  expect(screen.getByLabelText(t.portal.app.pick.title)).toBeTruthy();
 });

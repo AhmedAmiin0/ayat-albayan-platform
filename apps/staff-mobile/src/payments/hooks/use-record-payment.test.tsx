@@ -1,4 +1,3 @@
-import { paymentViewSchema } from '@ab/money';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
@@ -63,16 +62,13 @@ test('row and paid show at once, only for this student; POST /payments without a
   expect(client.getQueryData(balanceKey)).toMatchObject({ current: { paid: 145 } });
   expect(mockUpload).not.toHaveBeenCalled();
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', {
-    body: {
       clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
       subscriptionId: SUB_ID,
       amount: 145,
       currency: 'SAR',
       method: 'bank',
       paidAt: input.paidAt,
-    },
-    schema: paymentViewSchema,
-  });
+    });
   await act(async () => resolve(payment({ id: 'p2' })));
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
 });
@@ -99,10 +95,7 @@ test('the receipt goes up first; a retry after a failed POST reuses its path', a
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   expect(mockUpload).toHaveBeenCalledTimes(1);
   expect(mockUpload).toHaveBeenCalledWith(SUB_ID, receipt);
-  expect(mockApiSend).toHaveBeenLastCalledWith('POST', '/payments', {
-    body: expect.objectContaining({ receiptPath: `${SUB_ID}/a.jpg` }),
-    schema: paymentViewSchema,
-  });
+  expect(mockApiSend).toHaveBeenLastCalledWith('POST', '/payments', expect.objectContaining({ receiptPath: `${SUB_ID}/a.jpg` }));
 });
 
 test('a failed upload never records the payment', async () => {
@@ -127,7 +120,7 @@ test('a lost reply: the retry re-sends the same clientRequestId; the next paymen
   await act(async () => result.current.mutate({ ...input, amount: 50 }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(3));
   const [lost, retry, next] = mockApiSend.mock.calls.map(
-    (c) => (c[2] as { body: { clientRequestId: string } }).body.clientRequestId,
+    (c) => (c[2] as { clientRequestId: string }).clientRequestId,
   );
   expect(retry).toBe(lost);
   expect(next).not.toBe(lost);

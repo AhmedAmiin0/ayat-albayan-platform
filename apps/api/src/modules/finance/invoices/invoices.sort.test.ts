@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { invoiceRecentQuery, recentFilter } from './invoices.dto';
+import { invoiceRecentQuerySchema } from '@ab/shared';
+import { recentFilter } from './invoices.dto';
 import { InvoicesRepo } from './invoices.repo';
 
 const page = { page: 1, pageSize: 25 };
@@ -44,9 +45,9 @@ describe('GET /invoices/recent sort + filters (R-NFR-08)', () => {
   });
 
   it('schema: own allowlist (not the payments one); days become a UTC window', () => {
-    expect(invoiceRecentQuery.safeParse({ sort: 'amount' }).success).toBe(false);
-    expect(invoiceRecentQuery.safeParse({ kind: 'trial' }).success).toBe(false);
-    const q = invoiceRecentQuery.parse({ from: '2026-09-01', to: '2026-09-30', sort: 'kind', dir: 'desc' });
+    expect(invoiceRecentQuerySchema.safeParse({ sort: 'amount' }).success).toBe(false);
+    expect(invoiceRecentQuerySchema.safeParse({ kind: 'trial' }).success).toBe(false);
+    const q = invoiceRecentQuerySchema.parse({ from: '2026-09-01', to: '2026-09-30', sort: 'kind', dir: 'desc' });
     expect(recentFilter(q)).toEqual({
       ...page,
       sort: 'kind',

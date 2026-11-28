@@ -666,7 +666,7 @@ Arabic agreement rules for `remainingLabel`:
 
 ## 9. Inbox row (R-LEAD-02/04/05)
 
-- **Grid:** `38px avatar | 1fr | 156px status | 184px actions`. Column widths are fixed so chips line up across rows.
+- **Grid:** `38px avatar | 1fr | 196px status | 184px actions`. Column widths are fixed so chips line up across rows.
   - Line 1: unread saffron 7px dot (+ sr-only «رسالة جديدة من») · **name** (700 if unread) · E.164 phone (ltr, 12px) · source (12px ink-3) · age at the inline-end (12px tabular).
   - Line 2: the last message, one line with an ellipsis. Outbound messages get the prefix «إنت:» in ink-3.
   - Line 3 (optional): a marginal note for the automated follow-up, «المتابعة الجاية: بكرة 10:00، رسالة تلقائية بميعادين فاضيين» (R-LEAD-05).

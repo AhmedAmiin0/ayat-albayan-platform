@@ -1,7 +1,15 @@
-import { passwordProblem, type AccountProfile, type EmailChange, type PasswordChange, type ProfileUpdate } from '@ab/shared';
+import {
+  accountProfileSchema,
+  passwordProblem,
+  type AccountProfile,
+  type EmailChange,
+  type PasswordChange,
+  type ProfileUpdate,
+} from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { badRequest, conflict, notFound } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 import { AVATAR_FILES } from '@/common/storage/avatars/avatar-files';
 import {
   ACCOUNT_AUTH,
@@ -26,6 +34,11 @@ export class AccountService {
 
   /** R-ACC-01. */
   async profile(user: AuthUser): Promise<AccountProfile> {
+    return asResponse(accountProfileSchema, await this.current(user));
+  }
+
+  /** A write's answer: the profile it just wrote, not checked (the write already ran). */
+  async current(user: AuthUser): Promise<AccountProfile> {
     const row = await this.store.get(user.id);
     if (!row) throw notFound('profile_not_found');
     const email = (await this.auth.emailOf(user.id)) ?? user.email;
@@ -47,17 +60,18 @@ export class AccountService {
     const patch = selfWritable({ full_name: input.full_name, phone_e164: input.phone_e164 });
     if (patch.phone_e164 !== undefined) {
       await this.checkPassword(user, { password: input.current_password ?? '' });
-      if (patch.phone_e164 !== null && (await this.store.phoneTaken(patch.phone_e164, user.id))) throw conflict('phone_taken');
+      if (patch.phone_e164 !== null && (await this.store.phoneTaken(patch.phone_e164, user.id)))
+        throw conflict('phone_taken');
     }
     await this.store.update(user.id, patch);
-    return this.profile(user);
+    return this.current(user);
   }
 
   /** R-ACC-03: confirmed at once (staging has no SMTP); 409 email_taken. */
   async changeEmail(user: AuthUser, input: EmailChange): Promise<AccountProfile> {
     await this.checkPassword(user, { password: input.current_password });
     await this.auth.update(user.id, { email: input.email });
-    return this.profile(user);
+    return this.current(user);
   }
 
   /**
@@ -66,7 +80,8 @@ export class AccountService {
    */
   async changePassword(user: AuthUser, input: PasswordChange): Promise<void> {
     const problem = passwordProblem(input.new_password, this.config.passwordMinLength);
-    if (problem) throw badRequest(problem === 'too_long' ? 'password_too_long' : 'password_too_short');
+    if (problem)
+      throw badRequest(problem === 'too_long' ? 'password_too_long' : 'password_too_short');
     if (input.new_password === input.current_password) throw badRequest('password_same');
     await this.checkPassword(user, { password: input.current_password });
     await this.auth.update(user.id, { password: input.new_password });
@@ -81,5 +96,4 @@ export class AccountService {
       email !== null && (await this.auth.passwordMatches({ email, password: input.password }));
     if (!ok) throw badRequest('wrong_password');
   }
-
 }

@@ -10,7 +10,7 @@ import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '@/common/http/errors';
 import { assertPauseDates, assertStudent } from './preview/course-pause.guards';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
-import { toPauseView, type RpcOut } from './course-pause.mapper';
+import { pauseViewOf, toPauseView, type RpcOut } from './course-pause.mapper';
 import { CoursePauseRepo } from './course-pause.repo';
 
 type Actor = { id: string };
@@ -97,7 +97,7 @@ export class CoursePauseService {
     const row = await this.queries.pause(out.id);
     if (!row) throw notFound('pause_not_found');
     const reopened = out.reopened.length + out.rejoined.length;
-    return { pause: toPauseView(row), cancelled: out.cancelled.length, left: out.left.length, reopened, conflicts };
+    return { pause: pauseViewOf(row), cancelled: out.cancelled.length, left: out.left.length, reopened, conflicts };
   }
 
   private async openId(studentId: string): Promise<string> {

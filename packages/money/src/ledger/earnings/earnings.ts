@@ -1,4 +1,5 @@
 import { fromCents, toCents } from '@ab/core';
+import type { EarningsBalance } from './earnings-view-schemas';
 
 // Per-session teacher earnings (migrations 176-179). Money is compared in piasters (integers):
 // numeric(12,2) comes back from the API as a JS number and 0.1 + 0.2 must not break a balance.
@@ -20,16 +21,6 @@ export function outstanding(e: EarningMoney): number {
 export function earningStatus(e: EarningMoney): EarningStatus {
   if (toCents(e.paid_amount) >= toCents(e.amount)) return 'paid';
   return e.paid_amount > 0 ? 'partially_paid' : 'earned';
-}
-
-export interface EarningsBalance {
-  earned: number;
-  paid: number;
-  outstanding: number;
-  /** Paid above a session's corrected amount; shown apart, never netted against other sessions. */
-  overpaid: number;
-  sessions: number;
-  unpaid_sessions: number;
 }
 
 /** The three cards: earned (all counted sessions), paid (money out), outstanding (still owed). */

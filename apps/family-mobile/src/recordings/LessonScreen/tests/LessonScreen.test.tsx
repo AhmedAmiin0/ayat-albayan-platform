@@ -40,7 +40,7 @@ test('the recording plays in the app; the report PDF and the files are listed', 
   expect(screen.getByText(/^سارة · .+$/)).toBeTruthy();
   expect(screen.getByText(F.kinds.voice_note)).toBeTruthy();
   expect(await screen.findByRole('button', { name: t.audioPlayer.play })).toBeTruthy();
-  expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/A/url');
+  expect(mockSend).toHaveBeenCalledWith('POST', '/portal/students/s1/recordings/A/url', undefined);
 });
 
 test('a signed link never reaches the disk cache (noPersist)', async () => {

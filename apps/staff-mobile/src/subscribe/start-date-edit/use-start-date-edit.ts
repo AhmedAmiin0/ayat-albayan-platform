@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { z } from 'zod';
-import { ApiError, apiSend, t } from '@ab/mobile-kit';
+import { startDateEditCall } from '@ab/client-core';
+import { ApiError, apiFetch, apiSend, t } from '@ab/mobile-kit';
 
 /** The package as both cards hold it. */
 export interface StartDatePackage {
@@ -21,6 +22,8 @@ export function startDateErrorText(error: unknown): string {
   return MESSAGES[code] ?? t.salesMoney.startDateEdit.errors.generic;
 }
 
+const editStartDate = startDateEditCall({ apiFetch, apiSend });
+
 /**
  * PATCH /subscriptions/:id/start-date { startsOn }, then the screens holding
  * the package (`stale`) refetch.
@@ -28,8 +31,7 @@ export function startDateErrorText(error: unknown): string {
 export function useStartDateEdit(id: string, stale: readonly QueryKey[]) {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: (startsOn: string) =>
-      apiSend('PATCH', `/subscriptions/${id}/start-date`, { startsOn }),
+    mutationFn: (startsOn: string) => editStartDate(id, startsOn),
     onSuccess: async () => {
       await Promise.all(stale.map((queryKey) => client.invalidateQueries({ queryKey })));
     },

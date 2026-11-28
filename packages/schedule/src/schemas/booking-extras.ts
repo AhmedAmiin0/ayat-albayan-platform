@@ -1,6 +1,6 @@
 import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
-import type { LessonStatus } from '@ab/catalog';
+import { LESSON_STATUSES, type LessonStatus } from '@ab/catalog';
 
 // Booking kind, invoice and makeup (R-SCH-10, R-PAY-03, R-MSG-06). Kept apart from scheduling.ts
 // (file size); scheduling.ts adds `bookingExtras` to the booking body and refines it.
@@ -44,6 +44,19 @@ export const bookingExtras = {
 
 export type InvoiceInput = z.infer<typeof invoiceInputSchema>;
 export type InvoiceUpload = z.infer<typeof invoiceUploadSchema>;
+
+/** GET /booking/makeup-candidates?studentId (R-SCH-10). */
+export const makeupCandidatesQuerySchema = z.object({ studentId: z.uuid() });
+
+/** A missed lesson that can still be made up; snake_case like every row, instants in UTC. */
+export const makeupCandidateSchema = z.object({
+  lesson_id: z.string(),
+  starts_at: z.string(),
+  status: z.enum(LESSON_STATUSES),
+  duration_min: z.number(),
+  teacher: z.object({ id: z.string(), display_name_ar: z.string() }),
+});
+export type MakeupCandidate = z.infer<typeof makeupCandidateSchema>;
 
 export function bookingKindOf(req: {
   kind?: BookingKind | undefined;

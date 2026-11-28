@@ -1,9 +1,9 @@
-import { pendingRequestId, uploadOnce } from '@ab/client-core';
+import { paymentCalls, pendingRequestId, uploadOnce } from '@ab/client-core';
 import type { Page } from '@ab/core';
-import { paymentViewSchema, type PaymentView, type StudentBalanceView } from '@ab/money';
+import { paymentCreateSchema, type PaymentView, type StudentBalanceView } from '@ab/money';
 import { useMutation, useQueryClient, type Query } from '@tanstack/react-query';
 import { useState } from 'react';
-import { apiSend } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { useAttachmentPaths } from '@/payments/receipts/attachments';
 import {
@@ -14,6 +14,8 @@ import {
 } from '@/payments/lib/optimistic';
 import { balanceKey } from './queries';
 import { uploadReceipt } from '@/core/lib/receipts/upload-receipt';
+
+const payments = paymentCalls({ apiFetch, apiSend });
 
 /** Cached GET /payments lists of this student (their params carry its studentId). */
 function studentLists(studentId: string) {
@@ -42,7 +44,7 @@ function paymentBody(input: PaymentInput, sent: SentFiles) {
     subscriptionId: input.subscriptionId,
     amount: input.amount,
     currency: input.currency,
-    method: input.method,
+    method: paymentCreateSchema.shape.method.parse(input.method),
     paidAt: input.paidAt,
     ...(path === undefined ? {} : { receiptPath: path }),
     ...(attachments.length ? { attachments } : {}),
@@ -70,7 +72,7 @@ export function useRecordPayment(studentId: string) {
       const path = await receiptPath(input);
       const attachments = await attachmentPaths(input.subscriptionId, input.attachments ?? []);
       const body = paymentBody(input, { clientRequestId: request.current(), path, attachments });
-      return apiSend('POST', '/payments', { body, schema: paymentViewSchema });
+      return payments.create(body);
     },
     onMutate: async (input) => {
       const lists = studentLists(studentId);

@@ -1,81 +1,58 @@
-import { guardianCreateSchema, guardianUpdateSchema } from '@ab/shared';
-import { phoneE164 } from '@ab/core';
-import {
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
-import { z } from 'zod';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { guardianRoutes as routes } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { GuardianPhonesService } from './guardian-phones.service';
 import { GuardiansService } from './guardians.service';
-import { blanksToNull, listQuerySchema, type ListQuery } from './http';
-
-const createBody = blanksToNull(guardianCreateSchema);
-const updateBody = blanksToNull(guardianUpdateSchema);
 
 /** Admin-only guardians CRUD (R-STU-02, R-STU-04). */
-@ApiTags('guardians')
 @ApiBearerAuth()
-@Permissions('guardians.write')
-@Controller('guardians')
+@Controller()
 export class GuardiansController {
   constructor(
     private readonly guardians: GuardiansService,
     private readonly phones: GuardianPhonesService,
   ) {}
 
-  @Get()
-  @Permissions('guardians.read')
-  list(@ZodQuery(listQuerySchema) query: ListQuery) {
+  @Route(routes.list)
+  list(@RouteInput() { query }: RouteInputOf<typeof routes.list>) {
     return this.guardians.list(query);
   }
 
-  @Get(':id')
-  @Permissions('guardians.read')
-  get(@Param('id', ParseUUIDPipe) id: string) {
-    return this.guardians.get(id);
+  @Route(routes.get)
+  get(@RouteInput() { params }: RouteInputOf<typeof routes.get>) {
+    return this.guardians.get(params.id);
   }
 
-  @Post()
-  create(@ZodBody(createBody) body: z.output<typeof createBody>, @CurrentUser() user: AuthUser) {
+  @Route(routes.create)
+  create(
+    @RouteInput() { body }: RouteInputOf<typeof routes.create>,
+    @CurrentUser() user: AuthUser,
+  ) {
     return this.guardians.create(body, user.id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodBody(updateBody) body: z.output<typeof updateBody>,
-  ) {
-    return this.guardians.update(id, body);
+  @Route(routes.update)
+  update(@RouteInput() { params, body }: RouteInputOf<typeof routes.update>) {
+    return this.guardians.update(params.id, body);
   }
 
-  @Delete(':id')
+  @Route(routes.remove)
   @HttpCode(204)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.guardians.remove(id);
+  remove(@RouteInput() { params }: RouteInputOf<typeof routes.remove>) {
+    return this.guardians.remove(params.id);
   }
 
-  /** The family's second number, `phone` URL-encoded (%2B…); 404 phone_not_found. */
-  @Delete(':id/phones/:phone')
+  /** `phone` arrives URL-encoded (%2B…). */
+  @Route(routes.removePhone)
   @HttpCode(204)
   removePhone(
-    @Param('id', ParseUUIDPipe) id: string,
-    @ZodParam('phone', phoneE164) phone: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.removePhone>,
     @CurrentUser() user: AuthUser,
   ) {
-    return this.phones.removeSecond({
-      guardianId: id,
-      phone,
-      actorId: user.id,
-    });
+    const { id: guardianId, phone } = params;
+    return this.phones.removeSecond({ guardianId, phone, actorId: user.id });
   }
 }

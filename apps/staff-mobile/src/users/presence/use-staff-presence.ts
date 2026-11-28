@@ -1,12 +1,13 @@
-import { STAFF_PRESENCE_PATH, staffPresenceKey } from '@ab/client-core';
+import { staffPresenceCall, staffPresenceKey } from '@ab/client-core';
 import type { StaffPresence, StaffPresenceRow } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useIsAdmin, apiFetch, useScreenFocused } from '@ab/mobile-kit';
+import { useIsAdmin, apiFetch, apiSend, useScreenFocused } from '@ab/mobile-kit';
 import { usePresenceClock, usePresenceWatch } from '@/core/lib/presence';
 import { staffOrder, watchOrder } from './staff-order';
 
 /** Last seen moves by the minute at most (the API's throttle): re-read it once a minute. */
 const STAFF_REFRESH_MS = 60_000;
+const readStaff = staffPresenceCall({ apiFetch, apiSend });
 
 const NO_STAFF: StaffPresenceRow[] = [];
 
@@ -30,7 +31,7 @@ export function useStaffPresence() {
   const focused = useScreenFocused();
   const query = useQuery({
     queryKey: staffPresenceKey,
-    queryFn: () => apiFetch<StaffPresence>(STAFF_PRESENCE_PATH),
+    queryFn: readStaff,
     enabled: admin,
     refetchInterval: admin && focused ? STAFF_REFRESH_MS : false,
   });

@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { parseArgs } from 'node:util';
 import { z } from 'zod';
 import { changedRatio, compareReport } from '../support/screens/compare';
+import { pixelsFromBase64 } from '../support/screens/pixels';
 
 const args = z.object({ base: z.string().min(1), head: z.string().min(1) });
 const { values } = parseArgs({ options: { base: { type: 'string' }, head: { type: 'string' } } });
@@ -16,8 +17,6 @@ const pngsIn = (dir: string): string[] =>
     .filter((f) => f.endsWith('.png'))
     .toSorted();
 
-const pixelsSchema = z.array(z.number());
-
 // A string, not a function: e2e compiles without the DOM lib, and the page decodes the PNG.
 const DECODE = `(async (src) => {
   const img = new Image();
@@ -25,13 +24,18 @@ const DECODE = `(async (src) => {
   await img.decode();
   const ctx = new OffscreenCanvas(img.width, img.height).getContext('2d');
   ctx.drawImage(img, 0, 0);
-  return Array.from(ctx.getImageData(0, 0, img.width, img.height).data);
+  const bytes = ctx.getImageData(0, 0, img.width, img.height).data;
+  const parts = [];
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    parts.push(String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)));
+  }
+  return btoa(parts.join(''));
 })`;
 
 async function pixelsOf(page: Page, file: string): Promise<Uint8ClampedArray> {
   const url = `data:image/png;base64,${readFileSync(file).toString('base64')}`;
   const raw = await page.evaluate<unknown>(`${DECODE}(${JSON.stringify(url)})`);
-  return Uint8ClampedArray.from(pixelsSchema.parse(raw));
+  return pixelsFromBase64(z.string().parse(raw));
 }
 
 async function main(): Promise<void> {

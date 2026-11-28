@@ -32,11 +32,11 @@ const LIST = {
   slots: [at(SUN_17, true), at(NOON, false)],
 };
 const RESULT = {
-  rule_id: 'r1',
+  rule_id: 'e7777777-7777-4777-8777-777777777771',
   student_ids: [STUDENT_ID],
-  guardian_ids: ['g-1'],
+  guardian_ids: ['e7777777-7777-4777-8777-777777777772'],
   lessons: [],
-  message_ids: ['m1'],
+  message_ids: ['e7777777-7777-4777-8777-777777777774'],
   invoice_id: null,
 };
 

@@ -1,33 +1,42 @@
 import {
-  type DashboardResponse,
-  type ExpenseCategoryView,
-  type ExpenseView,
-  payoutListSchema,
-  type TeacherEarningsSummaryView,
-} from '@ab/money';
+  expenseCalls,
+  expenseCategoryCalls,
+  payoutCalls,
+  teacherEarningCalls,
+} from '@ab/client-core';
+import type { DashboardResponse } from '@ab/money';
 import type { InvoiceView } from '@ab/schedule';
+import { routePath } from '@ab/core';
+import { payoutRoutes, teacherEarningRoutes } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, listKey, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, listKey, pathKey } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 
 // Admin finance reads. Keys are the API path's segments, so invalidating ['payouts'] reaches a month.
 
+const payouts = payoutCalls({ apiFetch, apiSend });
+
 export const usePayouts = (month: string) =>
   useQuery({
-    queryKey: listKey('/payouts', { month }),
-    queryFn: () => apiFetch(`/payouts?month=${month}`, { schema: payoutListSchema }),
+    queryKey: listKey(routePath(payoutRoutes.month), { month }),
+    queryFn: () => payouts.month(month),
   });
+
+const calls = expenseCalls({ apiFetch, apiSend });
+const earnings = teacherEarningCalls({ apiFetch, apiSend });
 
 export const useExpenses = (month: string) =>
   useQuery({
     queryKey: listKey('/expenses', { month }),
-    queryFn: () => apiFetch<ExpenseView[]>(`/expenses?month=${month}`),
+    queryFn: () => calls.list({ month }),
   });
+
+const categoryCalls = expenseCategoryCalls({ apiFetch, apiSend });
 
 export const useExpenseCategories = () =>
   useQuery({
     queryKey: pathKey('/expense-categories'),
-    queryFn: () => apiFetch<ExpenseCategoryView[]>('/expense-categories'),
+    queryFn: categoryCalls.list,
     staleTime: 10 * 60_000,
   });
 
@@ -45,7 +54,7 @@ export const useFinanceSummary = (range: { from: string; to: string }) =>
 
 export const useTeacherDues = () =>
   useQuery({
-    queryKey: pathKey('/teacher-earnings/summary'),
-    queryFn: () => apiFetch<TeacherEarningsSummaryView>('/teacher-earnings/summary'),
+    queryKey: pathKey(routePath(teacherEarningRoutes.summary)),
+    queryFn: earnings.summary,
     staleTime: 60_000,
   });

@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { UserDetailDialog } from './UserDetailDialog';
-import { fakeApi, renderWithClient } from '@/features/people/users/users-test-kit';
+import { DETAIL, fakeApi, renderWithClient } from '@/features/people/users/users-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -20,7 +20,7 @@ describe('UserDetailDialog', () => {
   });
 
   it('saves only the fields that changed', async () => {
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(DETAIL);
     open();
     fireEvent.change(await screen.findByLabelText(new RegExp(`^${t.users.form.fullName}`)), { target: { value: 'سارة محمد' } });
     fireEvent.click(await button(t.users.detail.save));
@@ -38,7 +38,7 @@ describe('UserDetailDialog', () => {
   });
 
   it('disables with an optional reason', async () => {
-    apiSend.mockResolvedValue({});
+    apiSend.mockResolvedValue(DETAIL);
     open();
     fireEvent.click(await button(t.users.actions.disable));
     const dialog = screen.getByRole('dialog', { name: t.users.disable.title });
@@ -48,7 +48,7 @@ describe('UserDetailDialog', () => {
   });
 
   it('resets the password and shows the generated one once', async () => {
-    apiSend.mockResolvedValue({ user: {}, credential: { kind: 'password', value: 'Reset-Pass-9' } });
+    apiSend.mockResolvedValue({ user: DETAIL, credential: { kind: 'password', value: 'Reset-Pass-9' } });
     open();
     fireEvent.click(await button(t.users.actions.resetPassword));
     fireEvent.click(screen.getByRole('button', { name: t.users.reset.confirm }));
@@ -60,7 +60,7 @@ describe('UserDetailDialog', () => {
     apiSend.mockResolvedValue(undefined);
     open();
     fireEvent.click(await button(t.users.actions.signOut));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/users/u1/sign-out', {}));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/users/u1/sign-out', undefined));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.users.toast.signedOut));
   });
 
@@ -69,7 +69,7 @@ describe('UserDetailDialog', () => {
     open();
     fireEvent.click(await button(t.users.actions.delete));
     fireEvent.click(screen.getByRole('button', { name: t.users.delete.confirm }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/users/u1'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/users/u1', undefined));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.users.toast.deleted));
   });
 
@@ -77,7 +77,7 @@ describe('UserDetailDialog', () => {
     const references = [{ table: 'payments', column: 'created_by', count: 4 }, { table: 'brand_new_table', column: 'x', count: 2 }];
     apiSend.mockImplementation(async (method: string) => {
       if (method === 'DELETE') throw new ApiError(409, { code: 'users_has_history', message: 'users_has_history', references, hint: 'disable_instead' });
-      return {};
+      return DETAIL;
     });
     open();
     fireEvent.click(await button(t.users.actions.delete));

@@ -1,5 +1,5 @@
 import type { PaymentKind } from '@ab/catalog';
-import { parseAmount } from '@ab/money';
+import { parseAmount, paymentCreateSchema } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { MONEY_KEY, type SubscriptionView } from '@/features/finance/subscriptions/api';
@@ -46,7 +46,7 @@ export function useRecordPayment(onSaved: () => void) {
         currency,
         kind,
         ...(invoiceId ? { invoiceId } : {}),
-        method: form.method,
+        method: paymentCreateSchema.shape.method.parse(form.method),
         paidAt: paidAtFor(form.day),
         receiptPath,
         ...(attachments.length > 0 ? { attachments } : {}),

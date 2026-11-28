@@ -11,7 +11,7 @@ import {
 } from '@ab/money';
 import { Injectable } from '@nestjs/common';
 import { FxService } from '@/modules/finance/fx/fx.service';
-import type { CatalogQuery, ListQuery, QuoteQuery } from './pricing.dto';
+import type { CatalogQuery, PriceListQueryParams, QuoteQuery } from '@ab/shared';
 
 /** Site prices in the guardian's currency (docs/08); USD goes through FxService. */
 @Injectable()
@@ -32,7 +32,7 @@ export class PricingService {
     return { ...quote({ ...q, usdRate: fx?.rate }), fx };
   }
 
-  async list(q: ListQuery): Promise<PriceListResponse> {
+  async list(q: PriceListQueryParams): Promise<PriceListResponse> {
     const fx = await this.usdRate(q.country);
     return { ...priceList({ ...q, usdRate: fx?.rate }), fx };
   }

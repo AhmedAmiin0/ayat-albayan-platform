@@ -75,3 +75,12 @@ export type ConvertedStudent = z.infer<typeof convertedStudentSchema>;
 
 /** After a move or switch: the family the student is in now, or that remains. */
 export const familyReplySchema = z.object({ guardian_id: z.string() });
+
+/** PATCH /people/students/:id and /people/guardians/:id: the edited row. */
+export const peopleEditReplySchema = z.object({ id: z.string() });
+
+/** POST /people/students/:id/guardian: the moved student and the family it is in now. */
+export const familyMoveReplySchema = familyReplySchema.extend({ student_id: z.string() });
+
+/** PATCH /people/students/:id/contact-self. */
+export const contactSelfReplySchema = z.object({ id: z.string(), contact_is_self: z.boolean() });

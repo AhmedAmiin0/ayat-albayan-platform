@@ -7,8 +7,11 @@ import { stubInboundAnswerable } from '../../support/messaging/wa-lines';
 
 const openThread = (name: string) => ar.inbox.openThread.replace('{name}', name);
 
-/** A lesson on today's Riyadh date is always inside the schedule's current week. */
-const riyadhToday = () => new Date(Date.now() + 3 * 3_600_000).toISOString().slice(0, 10);
+/**
+ * Her calendar opens on her own week (the e2e teacher's zone is Africa/Cairo), so today is read in
+ * that zone: Riyadh is already on Saturday, the next week, for an hour each Friday night.
+ */
+const teacherToday = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Africa/Cairo' });
 
 /** A second, login-less teacher for the other family. */
 async function seedOtherTeacher(name: string): Promise<string> {
@@ -70,7 +73,7 @@ test.describe('teacher mode (R-TCH-03, R-MSG-05)', () => {
         guardianId: theirs.guardianId,
         teacherId: other,
       });
-      const today = riyadhToday();
+      const today = teacherToday();
       await seedLesson({ teacherId: abrar, studentId: rim, startsAt: riyadh(today, '10:00'), minutes: 30 });
       await seedLesson({ teacherId: other, studentId: hala, startsAt: riyadh(today, '11:00'), minutes: 30 });
       for (const [phone, name] of [[myPhone, `أم ريم ${tag}`], [theirPhone, `أم هالة ${tag}`]] as const) {

@@ -24,7 +24,7 @@ export interface TrialDateBody {
   byday: number[];
   startTimeLocal: string;
   tz: string;
-  durationMin: number;
+  durationMin: Duration;
   startsOn: string;
   startsAt: string;
   clientRequestId: string;

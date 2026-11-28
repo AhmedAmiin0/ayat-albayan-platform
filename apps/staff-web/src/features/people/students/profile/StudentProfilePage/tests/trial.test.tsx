@@ -1,3 +1,4 @@
+import { studentProfileFixture } from '@ab/shared/testing';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { history } from '@/features/teaching/booking/trial-date/trial-fixture';
@@ -13,24 +14,19 @@ vi.mock('@/features/finance/subscriptions/balance/BalanceCard/BalanceCard', () =
 vi.mock('@/features/people/students/profile/StudentProfileForm/StudentProfileForm', () => ({ StudentProfileForm: () => null }));
 vi.mock('@/features/people/students/duplicates/SiblingMerge', () => ({ SiblingMerge: () => null }));
 
-const STUDENT = {
+const STUDENT = studentProfileFixture({
   id: 's1',
-  code: 'AB-0183',
-  name: 'سهيلة',
   status: 'trial',
-  program: 'quran',
-  tz: 'Asia/Riyadh',
-  guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: '+966500000001' },
-  meeting_link: null,
-  siblings: [],
-};
+  guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: '+966500000001', students: [], phones: [] },
+  teacher: null,
+});
 
 describe('StudentProfilePage: «مواعيد الحلقة التجريبية» (R-STU-05)', () => {
   it('shows the history and «موعد تجريبي جديد» in the student file', async () => {
     routeFetch(apiFetch, [
       ['/students/s1/', []], // the cards below the head (assistants, recordings…): empty
       ['/students/s1', STUDENT],
-      ['/booking/trial-dates?studentId=s1', history({ student_id: 's1' })],
+      ['/booking/trial-dates?studentId=s1', history()],
     ]);
     renderWithClient(<StudentProfilePage studentId="s1" />);
     expect(await screen.findByTestId('trial-date-history')).toBeTruthy();

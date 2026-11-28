@@ -6,6 +6,7 @@ import { FormAlert, Dialog, t } from '@ab/web-kit';
 import { CourseChangeForm } from '@/features/teaching/booking';
 import { profileCourseQuery, useInvalidateCourseActions } from './api';
 import { MoveFrame } from './MoveFrame';
+import { timesMoveTarget } from './move-target';
 import type { CourseActionDialogProps } from './StopCourseDialog';
 
 export type MoveDialogProps = CourseActionDialogProps & { mode: BookingMode };
@@ -38,7 +39,7 @@ export function ChangeTimesDialog({
         <FormAlert>{t.courseActions.errors[courseMoveErrorCode(view.error)]}</FormAlert>
       )}
       {view.data && (
-        <MoveFrame studentId={studentId} kind="times" mode={mode}>
+        <MoveFrame mode={mode} target={timesMoveTarget(studentId)}>
           <CourseChangeForm
             view={fromNextLesson(view.data)}
             onBack={onClose}

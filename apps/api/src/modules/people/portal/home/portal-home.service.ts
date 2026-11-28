@@ -1,8 +1,9 @@
-import type { PortalGuardian, PortalHome } from '@ab/shared';
+import { portalHomeSchema, type PortalGuardian, type PortalHome } from '@ab/shared';
 import { clickToChatLink } from '@ab/core';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { MeZoneRepo } from '@/common/auth/me-zone.repo';
 import type { AuthUser } from '@/common/auth/verify-token';
+import { asResponse } from '@/common/http/returns';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
 import { ChatNumber } from './chat-number';
 import { PortalGuardianRepo } from './portal-guardian.repo';
@@ -21,13 +22,14 @@ export class PortalHomeService {
   /** `locale`: null while the login never chose one (the app keeps its own). */
   async home(user: AuthUser): Promise<PortalHome> {
     const reads = [
-      this.scopes.of(user),
+      this.scopes.withTestFlags(user),
       this.renewUrl(),
       this.me.localeOf(user.id),
       this.guardianOf(user),
     ] as const;
     const [scope, renew_url, locale, guardian] = await Promise.all(reads);
-    return { kind: scope.kind, students: scope.students, renew_url, locale, guardian };
+    const home = { kind: scope.kind, students: scope.students, renew_url, locale, guardian };
+    return asResponse(portalHomeSchema, home);
   }
 
   /** Only a guardian login has a guardian row; a student login gets null. */

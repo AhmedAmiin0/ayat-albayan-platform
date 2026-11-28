@@ -23,7 +23,8 @@ const totals = [{ currency: 'SAR', net: 250, payments: 270, refunds: 20 }];
 function backend(items = [slip, refund, pdf]) {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path.endsWith('/receipt')) {
-      return { url: path.includes('p3') ? 'https://files.test/slip.pdf?t=1' : 'https://files.test/slip.jpg?t=1' };
+      const url = path.includes('p3') ? 'https://files.test/slip.pdf?t=1' : 'https://files.test/slip.jpg?t=1';
+      return { url, expires_at: '2026-10-02T10:00:00.000Z' };
     }
     return { items, total: items.length, page: 1, pageSize: 25, totals };
   });

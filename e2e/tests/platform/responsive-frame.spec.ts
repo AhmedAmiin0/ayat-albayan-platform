@@ -46,6 +46,12 @@ test.describe('viewport-high admin frame', () => {
         });
         expect(scrolls).toBe(true);
         await expect(admin.getByRole('textbox').last()).toBeInViewport();
+        // The lead panel folds under a narrow thread, so the reply box keeps a usable width.
+        const replyWidth = await admin
+          .getByRole('textbox')
+          .last()
+          .evaluate((el) => el.getBoundingClientRect().width);
+        expect(replyWidth, 'reply width @1280').toBeGreaterThanOrEqual(320);
       }
     }
   });

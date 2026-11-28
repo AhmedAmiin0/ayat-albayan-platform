@@ -1,4 +1,5 @@
-import type { AccountProfile, EmailChange, PasswordChange, ProfileUpdate, SignedUpload } from '@ab/shared';
+import { accountCalls, type PhotoSteps } from '@ab/client-core';
+import { avatarUploadSchema } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
@@ -6,38 +7,41 @@ import { uploadSigned } from '@/lib/storage/upload-slot';
 /** Every /me call acts on the signed-in caller only (R-ACC-01..05). */
 export const PROFILE_KEY = ['me', 'profile'] as const;
 
-/** GET /me/profile (R-ACC-01): name, email, phone, photo and role of the signed-in user. */
+const account = accountCalls({ apiFetch, apiSend });
+
+/** R-ACC-01: name, email, phone, photo and role of the signed-in user. */
 export const profileQuery = queryOptions({
   queryKey: PROFILE_KEY,
-  queryFn: () => apiFetch<AccountProfile>('/me/profile'),
+  queryFn: account.profile,
   staleTime: 60_000,
   retry: 1,
 });
 
-/** PATCH /me/profile (R-ACC-02): the name, or the phone with the current password. */
-export const updateProfile = (body: ProfileUpdate) => apiSend<AccountProfile>('PATCH', '/me/profile', body);
+/** R-ACC-02: the name, or the phone with the current password. */
+export const updateProfile = account.updateProfile;
 
-/** PUT /me/email (R-ACC-03): confirmed at once; the next sign-in uses the new email. */
-export const changeEmail = (body: EmailChange) => apiSend<AccountProfile>('PUT', '/me/email', body);
+/** R-ACC-03: confirmed at once; the next sign-in uses the new email. */
+export const changeEmail = account.changeEmail;
 
-/** PUT /me/password (R-ACC-04): 204, the session stays. */
-export const changePassword = (body: PasswordChange) => apiSend('PUT', '/me/password', body);
+/** R-ACC-04: no answer, the session stays. */
+export const changePassword = account.changePassword;
 
 /**
  * A photo goes straight to the private `avatars` bucket through a one-off signed URL (same flow as
- * the payment receipt): POST `{base}/upload-url` {mime,size} → upload to it → PUT `{base}` {path}
- * (the API re-checks it). `base` is '/me/avatar' (R-ACC-05) or an admin's '/teachers/:id/avatar' /
- * '/users/:id/avatar'.
+ * the payment receipt): ask the slot, upload to it, then store the path (the API re-checks it).
+ * The steps are the caller's own photo (R-ACC-05) or an admin's write for a teacher or a login.
  */
-export async function uploadPhoto<T>(base: string, file: File): Promise<T> {
-  const signed = await apiSend<SignedUpload>('POST', `${base}/upload-url`, { mime: file.type, size: file.size });
+export async function uploadPhoto<T>(steps: PhotoSteps<T>, file: File): Promise<T> {
+  const slot = avatarUploadSchema.parse({ mime: file.type, size: file.size });
+  const signed = await steps.uploadUrl(slot);
   const { error } = await uploadSigned(signed, { body: file, contentType: file.type });
   if (error) throw error;
-  return apiSend<T>('PUT', base, { path: signed.path });
+  return steps.set({ path: signed.path });
 }
 
 /** R-ACC-05: the caller's own photo. */
-export const uploadAvatar = (file: File) => uploadPhoto<AccountProfile>('/me/avatar', file);
+export const uploadAvatar = (file: File) =>
+  uploadPhoto({ uploadUrl: account.avatarUploadUrl, set: account.setAvatar }, file);
 
-/** DELETE /me/avatar: back to the initials. */
-export const removeAvatar = () => apiSend<AccountProfile>('DELETE', '/me/avatar');
+/** Back to the initials. */
+export const removeAvatar = account.removeAvatar;

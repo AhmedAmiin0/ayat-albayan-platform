@@ -1,21 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { MAX_PUSH_TOKENS, pushTokenSchema, withoutPushToken, withPushToken } from './push-tokens';
+import { MAX_PUSH_TOKENS, withoutPushToken, withPushToken } from './push-tokens';
 
 const A = 'ExponentPushToken[aaaaaaaaaaaaaaaaaaaaaa]';
 const B = 'ExponentPushToken[bbbbbbbbbbbbbbbbbbbbbb]';
-
-describe('push token format (R-MOB-01)', () => {
-  it.each([A, 'ExpoPushToken[xxxx-yyyy_zz]'])('accepts %s', (token) => {
-    expect(pushTokenSchema.safeParse(token).success).toBe(true);
-  });
-
-  it.each(['', 'abc', 'ExponentPushToken[]', 'ExponentPushToken[a b]', `${A} `, 'fcm:ExponentPushToken[a]'])(
-    'rejects %j',
-    (token) => {
-      expect(pushTokenSchema.safeParse(token).success).toBe(false);
-    },
-  );
-});
 
 describe('withPushToken / withoutPushToken (R-MOB-01)', () => {
   it('adds once: a known token returns the same array (no write)', () => {

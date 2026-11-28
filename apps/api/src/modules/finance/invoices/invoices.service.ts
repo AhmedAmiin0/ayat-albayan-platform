@@ -1,5 +1,5 @@
-import type { SignedDownload } from '@ab/shared';
 import type { InvoiceView } from '@ab/schedule';
+import type { InvoiceRecentPage, SignedDownload } from '@ab/shared';
 import { ar } from '@/common/infra/i18n/server-text';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, extFor } from '@/common/storage/storage.paths';
@@ -39,7 +39,7 @@ export class InvoicesService {
   }
 
   /** The admin list page (newest first unless sorted), with the payment recorded from each (if any). */
-  async recent(f: RecentFilter) {
+  async recent(f: RecentFilter): Promise<InvoiceRecentPage> {
     const { rows, total } = await this.queries.recent(f);
     const paid = await this.queries.paymentsOf(rows.map((r) => r.id));
     return {

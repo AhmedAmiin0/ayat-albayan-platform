@@ -1,7 +1,7 @@
 import { ActivityIndicator, View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { useTheme } from '../../../theme';
-import { MenuSheet } from '../../../ui/feedback/MenuSheet';
+import { Sheet } from '../../../ui/feedback/Sheet';
 import { AppText } from '../../../ui/primitives/AppText';
 import { Button } from '../../../ui/primitives/Button';
 import { ReadsList } from '../ReadsList';
@@ -16,7 +16,13 @@ export function ReadsSheet({ refs, messageId, onClose }: ReadsSheetProps) {
   const { color } = useTheme();
   const { reads, rowOf, data, r } = useReadsSheet({ refs, messageId });
   return (
-    <MenuSheet open={messageId !== null} label={r.title} testID="channel-reads" onClose={onClose}>
+    <Sheet
+      open={messageId !== null}
+      label={r.title}
+      testID="channel-reads"
+      onClose={onClose}
+      scroll
+    >
       {reads.isLoading ? (
         <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} />
       ) : null}
@@ -32,6 +38,6 @@ export function ReadsSheet({ refs, messageId, onClose }: ReadsSheetProps) {
         </View>
       ) : null}
       <Button variant="secondary" label={t.common.close} onPress={onClose} />
-    </MenuSheet>
+    </Sheet>
   );
 }

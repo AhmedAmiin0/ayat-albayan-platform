@@ -6,6 +6,7 @@ export { ErrorLine } from './feedback/ErrorLine';
 export { ErrorState } from './feedback/ErrorState';
 export { InlineConfirm } from './feedback/InlineConfirm';
 export { MenuSheet } from './feedback/MenuSheet';
+export { Sheet, type SheetProps, type SheetSize, type SheetSurface } from './feedback/Sheet';
 export { Note } from './feedback/Note';
 export { Notice } from './feedback/Notice';
 export { PresenceLabel } from './feedback/PresenceLabel';
