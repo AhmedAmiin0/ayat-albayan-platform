@@ -67,7 +67,7 @@ interface Schema<T> {
 function reader(client: ApiClient) {
   return <T>(path: string, schema: Schema<T>): PortalRead<T> => ({
     queryKey: pathKey(path),
-    queryFn: async (): Promise<T> => schema.parse(await client.apiFetch(path)),
+    queryFn: async (): Promise<T> => schema.parse(await client.request({ path })),
     refetchOnWindowFocus: true,
   });
 }

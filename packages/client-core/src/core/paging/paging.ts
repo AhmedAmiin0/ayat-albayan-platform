@@ -24,7 +24,8 @@ export function pageOptions<S extends z.ZodType<Page<unknown>>>(
 ): PageOptions<S> {
   return {
     queryKey: listKey(list.path, params),
-    queryFn: () => client.apiFetch(`${list.path}${toQueryString(params)}`, { schema: list.page }),
+    queryFn: () =>
+      client.request({ path: `${list.path}${toQueryString(params)}`, schema: list.page }),
   };
 }
 
@@ -38,7 +39,7 @@ export function infinitePageOptions<S extends z.ZodType<Page<unknown>>>(
   return {
     queryKey: listKey(list.path, params),
     initialPageParam: 1,
-    queryFn: ({ pageParam }) => client.apiFetch(read(pageParam), { schema: list.page }),
+    queryFn: ({ pageParam }) => client.request({ path: read(pageParam), schema: list.page }),
     getNextPageParam: nextPageParam,
   };
 }
