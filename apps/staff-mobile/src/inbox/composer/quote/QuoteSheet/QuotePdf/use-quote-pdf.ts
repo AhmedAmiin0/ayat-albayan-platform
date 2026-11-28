@@ -34,14 +34,19 @@ export function useQuotePdf({ phone, choice, onSent }: QuotePdfProps) {
     ...fileSendSteps(client, phone),
   });
   const made = make.data;
+  const ready = made !== undefined && sameChoice(made.choice, choice) ? made : null;
+  const withReady = (act: (pdf: MadePdf) => void) => () => {
+    if (ready) act(ready);
+  };
   return {
-    pdf: made !== undefined && sameChoice(made.choice, choice) ? made : null,
+    ready: ready !== null,
+    words: t.inbox.quote.pdf,
     creating: make.isPending,
     makeError: make.isError ? t.inbox.quote.pdf.failed : null,
     sending: send.isPending,
     sendError: send.isError ? fileError(send.error) : null,
     create: () => make.mutate(choice),
-    view: (pdf: MadePdf) => void Linking.openURL(pdf.url),
-    send: (pdf: MadePdf) => send.mutate(pdf, { onSuccess: onSent }),
+    view: withReady((pdf) => void Linking.openURL(pdf.url)),
+    send: withReady((pdf) => send.mutate(pdf, { onSuccess: onSent })),
   };
 }
