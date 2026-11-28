@@ -1788,8 +1788,9 @@
   },
   {
    "from": "packages/shared/src/schedule/classroom/",
-   "to": "packages/shared/src/teaching/classroom/",
-   "layer": "shared"
+   "to": "packages/shared/src/teaching/tests/",
+   "layer": "shared",
+   "why": "only tests of @ab/schedule room rules: the domain tests/ folder takes them"
   },
   {
    "from": "packages/shared/src/schedule/lessons/",
@@ -1804,8 +1805,9 @@
   },
   {
    "from": "packages/shared/src/schedule/schemas/scheduling.*",
-   "to": "packages/shared/src/teaching/scheduling/",
-   "layer": "shared"
+   "to": "packages/shared/src/teaching/tests/",
+   "layer": "shared",
+   "why": "only a test: the domain tests/ folder takes it"
   },
   {
    "from": "packages/shared/src/schedule/tests/",
@@ -2879,8 +2881,9 @@
   },
   {
    "from": "apps/staff-web/src/features/sales/sales/SalesAutoAssignSwitch.*",
-   "to": "apps/staff-web/src/features/sales/assignment/",
-   "layer": "staff-web"
+   "to": "apps/staff-web/src/features/sales/academy/",
+   "layer": "staff-web",
+   "why": "an academy setting switch with no importer; staff-web has no assignment feature of its own"
   },
   {
    "from": "apps/staff-web/src/features/sales/sales/SalesNav/",

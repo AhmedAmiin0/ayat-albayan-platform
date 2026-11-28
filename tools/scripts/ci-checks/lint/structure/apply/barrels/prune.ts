@@ -20,10 +20,11 @@ const inside = (file: string, dir: string): boolean => file.startsWith(`${dir}/`
 export function prunePlan(ctx: Ctx, barrel: string, place: Place): Pruned {
   const { lines, own } = barrelLines(ctx, barrel);
   const home = place.home(place.to(barrel));
-  const local = (target: string): boolean =>
-    !target.startsWith('pkg:') && inside(place.to(target), home);
+  const isPackage = (target: string): boolean => target.startsWith('pkg:');
+  const placed = (target: string): boolean => inside(place.to(target), home);
+  const kept = own > 0 || lines.some((l) => !isPackage(l.target) && placed(l.target));
+  const local = (target: string): boolean => (isPackage(target) ? kept : placed(target));
   const foreign = lines.filter((l) => !local(l.target));
-  const kept = own > 0 || lines.some((l) => local(l.target));
   const packages = foreign.filter((l) => l.star && l.target.startsWith('pkg:'));
   const external = packages.length === 1 ? packages[0]?.target.slice(4) : undefined;
   const names = new Map(foreign.flatMap((l) => lineNames(ctx, l)));

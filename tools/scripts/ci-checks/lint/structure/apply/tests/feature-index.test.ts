@@ -57,14 +57,17 @@ test('imports the moves made cross-feature go through the feature index, which g
   );
 });
 
-test('a name the index already exports from another file is a clash', () => {
+test('an import whose name the index exports for another file stays deep', () => {
   const root = tree({
     ...files,
     [`${F}/finance/payouts/index.ts`]: "export { Row } from './other';\n",
     [`${F}/finance/payouts/other.ts`]: 'export const Row = 2;\n',
   });
   const work = fixFeatureIndexes(ctx(root, { old: {} }), [`${W}/app/payouts.tsx`]);
-  assert.deepEqual(work.problems, [`${F}/finance/payouts/index.ts already exports another Row`]);
+  assert.deepEqual(work.problems, [
+    `${W}/app/payouts.tsx: kept @/features/finance/payouts/Row, its feature index exports another name`,
+  ]);
+  assert.equal(work.writes.get(`${W}/app/payouts.tsx`), undefined);
 });
 
 test('a barrel import the redirect wrote is fixed even across old modules', () => {
@@ -103,4 +106,28 @@ test('a feature with no index gets one from every import into it', () => {
   );
   assert.equal(work.writes.get(file), "import { Row } from '@/features/finance/payouts';\n");
   assert.equal(work.writes.get(`${F}/finance/payouts/index.ts`), "export { Row } from './Row';\n");
+});
+
+test('a package feature index re-exports whole files; a value use beats a type use in an app', () => {
+  const root = tree({
+    ...files,
+    [`${F}/finance/expenses/Typed.tsx`]:
+      "import type { Row } from '@/features/finance/payouts/Row';\n",
+  });
+  const old = {
+    [`${F}/finance/expenses/Typed.tsx`]: `${W}/src/money/Typed.tsx`,
+    [`${F}/finance/payouts/Row.tsx`]: `${W}/src/money/Row.tsx`,
+    [`${F}/finance/expenses/ExpensesScreen.tsx`]: `${W}/src/money/E.tsx`,
+  };
+  const app = fixFeatureIndexes(ctx(root, { old }), [
+    `${F}/finance/expenses/Typed.tsx`,
+    `${F}/finance/expenses/ExpensesScreen.tsx`,
+  ]);
+  assert.equal(
+    app.writes.get(`${F}/finance/payouts/index.ts`),
+    "export { Row, type RowProps } from './Row';\n",
+  );
+  const pkg = { ...ctx(root, { old }), layer: { ...layer, alias: false } };
+  const out = fixFeatureIndexes(pkg, [`${F}/finance/expenses/Typed.tsx`]);
+  assert.equal(out.writes.get(`${F}/finance/payouts/index.ts`), "export * from './Row';\n");
 });
