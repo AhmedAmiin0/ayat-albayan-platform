@@ -1946,16 +1946,93 @@
     },
     "pdf": {
       "title": "Price list",
-      "country": "Country",
-      "currency": "Currency",
-      "issued": "Issued on",
+      "kicker": "Ayat Al-Bayan Academy · Prices and packages",
+      "headline": {
+        "lead": "Flexible packages",
+        "accent": "that suit your journey",
+        "tail": "with the Quran"
+      },
+      "pricedIn": "{country} · prices in {currency} ({symbol})",
       "discount": "{pct}% off every package",
-      "duration": "Lesson length {duration}",
+      "intro": "Live one-to-one online lessons with licensed male and female teachers — for men, women and children.",
+      "basics": "Core packages",
+      "wholePackage": "Price for the whole package",
+      "afterDiscount": "Prices after {pct}% off",
+      "forStudents": "Prices for {n} students",
       "lessons": "Lessons",
-      "price": "Package price",
-      "priceBefore": "Price before discount",
-      "priceAfter": "Price after discount",
-      "weekly": "Weekly lesson (90 minutes)",
+      "perLesson": "minutes per lesson",
+      "cadence": {
+        "starter": "Twice a week",
+        "standard": "3 lessons a week",
+        "premium": "4 lessons a week",
+        "bulk": "A lesson every day",
+        "weekly": "One 90-minute lesson every week",
+        "monthly": "5 days a week"
+      },
+      "badges": {
+        "popular": "Most popular",
+        "featured": "Best price per lesson"
+      },
+      "insteadOf": "instead of",
+      "forPackage": "per package",
+      "lessonMinutes": "{duration} per lesson",
+      "monthlyChoice": "You choose the days and times",
+      "programs": {
+        "title": "Our programmes",
+        "caption": "Learning paths for every age and goal",
+        "quran": {
+          "title": "The Holy Quran",
+          "p1": "Al-Qaida An-Nuraniyya and Nur Al-Bayan",
+          "p2": "Recitation and tajweed",
+          "p3": "Memorization and revision",
+          "p4": "Preparation for an ijazah with a connected chain"
+        },
+        "arabic": {
+          "title": "Arabic language",
+          "p1": "Letters and vowel marks",
+          "p2": "Reading, writing and spelling",
+          "p3": "Conversation in Modern Standard Arabic",
+          "p4": "Basics of grammar and morphology"
+        },
+        "islamic": {
+          "title": "Islamic studies",
+          "p1": "Creed",
+          "p2": "Fiqh and acts of worship",
+          "p3": "The Prophet's biography and manners",
+          "p4": "Simple tafsir and selected hadiths"
+        }
+      },
+      "features": {
+        "private": {
+          "title": "Live one-to-one lessons",
+          "sub": "One teacher per student"
+        },
+        "licensed": {
+          "title": "Licensed male and female teachers",
+          "sub": "With a connected chain"
+        },
+        "reports": {
+          "title": "Regular progress reports",
+          "sub": "After the lessons"
+        },
+        "women": {
+          "title": "A separate section for women",
+          "sub": "And special programmes for children"
+        }
+      },
+      "trial": {
+        "title": "The trial lesson is completely free",
+        "body": "Every package starts with a free trial session — try first, then decide, with no obligation to buy."
+      },
+      "guarantee": {
+        "title": "The golden guarantee",
+        "body": "A full refund of the package if the lessons do not start on time, or the teacher misses lessons without a make-up — your satisfaction is our aim."
+      },
+      "cta": {
+        "title": "Book your free trial lesson now",
+        "sub": "Message us on WhatsApp and we will arrange the right teacher and time for you",
+        "whatsapp": "WhatsApp"
+      },
       "currencyNames": {
         "SAR": "Saudi riyal",
         "AED": "UAE dirham",
