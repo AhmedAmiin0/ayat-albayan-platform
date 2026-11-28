@@ -9,7 +9,8 @@ import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-ale
 import type { TrialLessonRead } from './trial-date.history';
 import type { TrialPick } from './trial-date.plan';
 import type { TrialDateRepo } from './trial-date.repo';
-import { TrialDateDeps, TrialDates } from './trial-date.service';
+import { TrialDateDeps } from './trial-date.deps';
+import { TrialDates } from './trial-date.service';
 import { fakeFamilyMove } from '@/modules/teaching/schedule-notices/schedule-notices.fakes';
 
 export const ACTOR = 'a0000000-0000-4000-8000-000000000001';

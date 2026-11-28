@@ -3,7 +3,8 @@ import { BookingSharedModule } from '@/modules/teaching/booking/booking-shared.m
 import { ScheduleNoticesModule } from '@/modules/teaching/schedule-notices';
 import { SalesTrialDates } from './sales-trial-date.service';
 import { SalesTrialDateController, TrialDateController } from './trial-date.controller';
-import { TrialDateDeps, TrialDates } from './trial-date.service';
+import { TrialDateDeps } from './trial-date.deps';
+import { TrialDates } from './trial-date.service';
 
 @Module({
   imports: [BookingSharedModule, ScheduleNoticesModule],
