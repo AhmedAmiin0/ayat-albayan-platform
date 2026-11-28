@@ -20,7 +20,10 @@ function owns(node: HTMLElement): boolean {
 /** Tab past the last control → the first; Shift+Tab past the first → the last; lost → in. */
 function cycle(node: HTMLElement, e: KeyboardEvent): void {
   const items = focusables(node);
-  if (items.length === 0) return e.preventDefault();
+  if (items.length === 0) {
+    e.preventDefault();
+    return;
+  }
   const active = document.activeElement;
   const lost = !active || active === document.body || active === node;
   const [edge, wrapTo] = e.shiftKey ? [items[0], items.at(-1)] : [items.at(-1), items[0]];

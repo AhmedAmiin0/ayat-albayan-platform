@@ -151,16 +151,8 @@
       "count": 1
     }
   },
-  "src/classroom/board/use-board-share.ts": {
-    "typescript/no-confusing-void-expression": {
-      "count": 1
-    }
-  },
   "src/classroom/board/use-board-sync.ts": {
     "ab/no-restricted-syntax": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
       "count": 1
     }
   },
@@ -293,9 +285,6 @@
     },
     "ab/no-restricted-syntax": {
       "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 2
     }
   },
   "src/classroom/stage/StageScreen/StageScreen.tsx": {
@@ -347,18 +336,8 @@
       "count": 1
     }
   },
-  "src/components/ui/display/mark.test.tsx": {
-    "typescript/dot-notation": {
-      "count": 3
-    }
-  },
   "src/components/ui/display/mark.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/components/ui/display/status-chip.test.tsx": {
-    "typescript/dot-notation": {
       "count": 1
     }
   },
@@ -503,9 +482,6 @@
     },
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
     }
   },
   "src/lib/clock-text.ts": {
@@ -538,9 +514,6 @@
     "typescript/no-unsafe-assignment": {
       "count": 1
     },
-    "typescript/dot-notation": {
-      "count": 4
-    },
     "typescript/no-unsafe-argument": {
       "count": 6
     }
@@ -570,11 +543,6 @@
     },
     "ab/no-untyped-api-calls": {
       "count": 1
-    }
-  },
-  "src/lib/theme.test.ts": {
-    "typescript/dot-notation": {
-      "count": 2
     }
   },
   "src/lib/utils.ts": {

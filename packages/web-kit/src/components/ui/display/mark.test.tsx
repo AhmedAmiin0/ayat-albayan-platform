@@ -7,16 +7,16 @@ describe('Mark (the academy emblem, docs/07 §11)', () => {
   it('32px and below shows the Mushaf crop, larger sizes the full emblem', () => {
     const { container, rerender } = render(<Mark size={32} />);
     const img = () => container.querySelector('img') as HTMLImageElement;
-    expect(img().dataset['mark']).toBe('small');
+    expect(img().dataset.mark).toBe('small');
     expect(img().getAttribute('src')).toMatch(/brand\/mark-small\.png$/);
     rerender(<Mark size={33} />);
-    expect(img().dataset['mark']).toBe('large');
+    expect(img().dataset.mark).toBe('large');
     expect(img().getAttribute('src')).toMatch(/brand\/mark\.png$/);
   });
 
   it('labelled is an image named «آيات البيان»', () => {
     render(<Mark size={42} labelled />);
-    expect(screen.getByRole('img', { name: t.app.brand }).dataset['mark']).toBe('large');
+    expect(screen.getByRole('img', { name: t.app.brand }).dataset.mark).toBe('large');
   });
 
   it('decorative by default: out of the accessibility tree', () => {
