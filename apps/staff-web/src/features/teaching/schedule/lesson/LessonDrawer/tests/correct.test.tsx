@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { setConfirmationRequired } from '@ab/web-kit/testing';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { answered, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
 
 const apiSend = vi.hoisted(() => vi.fn());
@@ -49,7 +49,7 @@ describe('LessonDrawer: no confirmation (owner 2026-11-02) and «تصحيح ال
   });
 
   it('held automatically: the three other statuses; «غائب» posts { to } and says it is done', async () => {
-    apiSend.mockResolvedValue(AUTO_HELD);
+    apiSend.mockResolvedValue(answered(AUTO_HELD));
     const { drawer } = renderDrawer(AUTO_HELD);
     expect(within(drawer).getByText(c.outcomeHint)).toBeTruthy();
     expect(within(drawer).queryByRole('button', { name: c.to.completed })).toBeNull();
@@ -66,6 +66,15 @@ describe('LessonDrawer: no confirmation (owner 2026-11-02) and «تصحيح ال
     for (const to of ['completed', 'no_show', 'excused', 'cancelled_by_teacher'] as const) {
       expect(within(drawer).getByRole('button', { name: c.to[to] })).toBeTruthy();
     }
+  });
+
+  it('an answer that is not a lesson is an error, never «done»', async () => {
+    apiSend.mockResolvedValue({ id: 'l-7' });
+    renderDrawer(AUTO_HELD);
+    fireEvent.click(screen.getByRole('button', { name: c.to.excused }));
+    fireEvent.click(screen.getByRole('button', { name: c.confirm }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-7/correct', { to: 'excused' }));
+    expect(screen.queryByText(c.done)).toBeNull();
   });
 
   it('a 409 not_auto_held reads in the lessons’ words', async () => {

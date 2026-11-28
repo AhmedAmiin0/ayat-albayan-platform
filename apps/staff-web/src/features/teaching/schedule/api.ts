@@ -1,17 +1,17 @@
 import {
   lessonActionCalls,
+  lessonListCalls,
   lessonMoveCalls,
   proposalDecisionCalls,
   type BookingMode,
 } from '@ab/client-core';
-import type { LessonTimeEdit } from '@ab/schedule';
+import type { CorrectTo, LessonTimeEdit } from '@ab/schedule';
 import type {
   CancelRequest,
   Conflict,
   RescheduleRequest,
   SlotsResponse,
   StatusRouteEvent,
-  ScheduleOverview,
 } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend, errorCode, t } from '@ab/web-kit';
@@ -24,16 +24,18 @@ import { lessonKeys } from './lesson.keys';
 /** Invalidate after any lesson write: the week grid, the teacher dashboard and slot pickers. */
 export const LESSONS_KEY = lessonKeys.all;
 
+const lists = lessonListCalls({ apiFetch, apiSend });
+
 /**
  * GET /lessons/overview?from&to (≤ 31 days): every teacher with hours, time off, load and free
  * gaps, plus the window's lessons (every status). One request; the filters run on this payload.
  * Under LESSONS_KEY, so every lesson write refreshes the calendar.
  */
 export const overviewQuery = (w: Window) => {
-  const params = new URLSearchParams({ from: w.from.toISOString(), to: w.to.toISOString() });
+  const window = { from: w.from.toISOString(), to: w.to.toISOString() };
   return queryOptions({
-    queryKey: lessonKeys.overview(params.toString()),
-    queryFn: () => apiFetch<ScheduleOverview>(`/lessons/overview?${params}`),
+    queryKey: lessonKeys.overview(new URLSearchParams(window).toString()),
+    queryFn: () => lists.overview(window),
     placeholderData: keepPreviousData,
   });
 };
@@ -89,6 +91,9 @@ export const setLessonStatus = ({ id, event }: { id: string; event: StatusRouteE
 
 export const cancelLesson = ({ id, body }: { id: string; body: CancelRequest }) =>
   actions.cancel({ id }, body);
+
+/** An ended lesson set to another outcome on the admin's route; sales has its own. */
+export const correctLesson = (id: string, to: CorrectTo) => actions.correct({ id }, { to });
 
 const moves = lessonMoveCalls({ apiFetch, apiSend });
 

@@ -3,7 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
+import { guidOf, lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { overview } from '@/features/teaching/schedule/overview-fixture';
 import type { ScheduleSearch } from '@/features/teaching/schedule/filters/search';
 import { WeekSchedule } from '@/features/teaching/schedule/grid/WeekSchedule';
@@ -79,7 +79,9 @@ describe('DayBoard — one day across every teacher (R-SCH-01)', () => {
       `${t.schedule.book}: متاح 16:00 – 17:00`,
       `${t.schedule.book}: متاح 17:45 – 20:00`,
     ]);
-    expect(gaps[0]?.getAttribute('href')).toBe('/admin/book?teacherId=t-abrar&startsAt=2026-10-04T13%3A00%3A00.000Z');
+    expect(gaps[0]?.getAttribute('href')).toBe(
+      `/admin/book?teacherId=${guidOf('t-abrar')}&startsAt=2026-10-04T13%3A00%3A00.000Z`,
+    );
   });
 
   it('a chip opens the lesson drawer', async () => {
