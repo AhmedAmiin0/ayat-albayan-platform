@@ -1,14 +1,8 @@
-import type { ChannelReplyView } from '@ab/shared';
 import { QuoteCard } from '../../../chat-ui/quote/QuoteCard';
 import { QuoteGlyph } from '../QuoteGlyph';
 import { quoteSender, quoteText } from '../quote-text';
 import { ROLE_INK } from '../role-ink';
-
-interface ChannelQuoteProps {
-  reply: ChannelReplyView;
-  /** Goes to the original when it is loaded. */
-  onJump?: (id: string) => void;
-}
+import type { ChannelQuoteProps } from './ChannelQuote.types';
 
 /** The message a bubble answers, on top of it (the kit's QuoteCard) in its sender's role ink. */
 export function ChannelQuote({ reply, onJump }: ChannelQuoteProps) {

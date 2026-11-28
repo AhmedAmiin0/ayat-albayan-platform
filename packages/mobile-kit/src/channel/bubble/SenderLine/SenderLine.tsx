@@ -1,18 +1,19 @@
-import type { ChannelSenderLabel } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
 import { ROLE_INK } from '../role-ink';
+import type { SenderLineProps } from './SenderLine.types';
+import { senderLabel } from './sender-line.helpers';
 
 /** Over someone else's message: the name in the role's colour, then the role word in ink-3. */
-export function SenderLine({ name, role }: { name: string; role: ChannelSenderLabel }) {
+export function SenderLine({ name, role }: SenderLineProps) {
   const { color } = useTheme();
   const word = t.studentChannel.roles[role];
   return (
     <View
       accessible
-      accessibilityLabel={[name, word].filter(Boolean).join(' · ')}
+      accessibilityLabel={senderLabel(name, word)}
       style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6, flexWrap: 'wrap' }}
     >
       {name ? (
