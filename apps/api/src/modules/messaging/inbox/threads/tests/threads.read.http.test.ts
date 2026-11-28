@@ -27,42 +27,42 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
 
   it('H1 tags per row from its guardian, one read for the page: «مشترك», «اشتراكه خلص», «غير مدفوع»', async () => {
     const rows = [
-      threadRow({ guardian_id: 'g1' }),
-      threadRow({ phone_e164: '+966551112222', guardian_id: 'g2' }),
-      threadRow({ phone_e164: '+966551113333', guardian_id: 'g3' }),
+      threadRow({ guardian_id: 'c0000000-0000-4000-8000-000000000001' }),
+      threadRow({ phone_e164: '+966551112222', guardian_id: 'c0000000-0000-4000-8000-000000000002' }),
+      threadRow({ phone_e164: '+966551113333', guardian_id: 'c0000000-0000-4000-8000-000000000003' }),
       threadRow(),
     ];
     t.queries.list.mockResolvedValue({ items: rows, total: 4 });
     t.queries.familyTags.mockResolvedValue(new Map([
-      ['g1', { badge: 'subscribed', unpaid: true, ring: 'subscribed' }],
-      ['g2', { badge: 'expired', unpaid: false, ring: 'renewal' }],
+      ['c0000000-0000-4000-8000-000000000001', { badge: 'subscribed', unpaid: true, ring: 'subscribed' }],
+      ['c0000000-0000-4000-8000-000000000002', { badge: 'expired', unpaid: false, ring: 'renewal' }],
     ]));
     const items = (await t.call({ method: 'GET', url: '/threads' })).json().items;
     const tags = items.map((i: { subscribed: boolean; badge: string | null; unpaid: boolean }) => [i.subscribed, i.badge, i.unpaid]);
     expect(tags).toEqual([[true, 'subscribed', true], [false, 'expired', false], [false, 'none', false], [false, null, false]]);
     expect(items.map((i: { ring: string | null }) => i.ring)).toEqual(['subscribed', 'renewal', null, null]);
-    expect(t.queries.familyTags).toHaveBeenCalledWith(['g1', 'g2', 'g3'], expect.any(Number));
+    expect(t.queries.familyTags).toHaveBeenCalledWith(['c0000000-0000-4000-8000-000000000001', 'c0000000-0000-4000-8000-000000000002', 'c0000000-0000-4000-8000-000000000003'], expect.any(Number));
   });
 
   it('H2 first page: people, and the thread’s tags from the same badge', async () => {
     t.queries.messages.mockResolvedValue([]);
-    const people = { guardian: { id: 'g1', name: 'أم ياسمين' }, lead: null, students: [threadStudent()] };
+    const people = { guardian: { id: 'c0000000-0000-4000-8000-000000000001', name: 'أم ياسمين' }, lead: null, students: [threadStudent()] };
     t.queries.people.mockResolvedValue(people);
-    t.queries.thread.mockResolvedValue(threadRow({ guardian_id: 'g1' }));
+    t.queries.thread.mockResolvedValue(threadRow({ guardian_id: 'c0000000-0000-4000-8000-000000000001' }));
     const body = (await t.call({ method: 'GET', url: URL })).json();
     expect([body.people, body.thread.subscribed, body.thread.badge]).toEqual([people, true, 'subscribed']);
-    expect(t.queries.people).toHaveBeenCalledWith(threadRow({ guardian_id: 'g1' }));
+    expect(t.queries.people).toHaveBeenCalledWith(threadRow({ guardian_id: 'c0000000-0000-4000-8000-000000000001' }));
   });
 
   it('H2 an older page skips the people (1 + 3 reads a child) and takes the list’s tags', async () => {
     t.queries.messages.mockResolvedValue([]);
-    t.queries.thread.mockResolvedValue(threadRow({ guardian_id: 'g1' }));
-    t.queries.familyTags.mockResolvedValue(new Map([['g1', { badge: 'subscribed', unpaid: false }]]));
+    t.queries.thread.mockResolvedValue(threadRow({ guardian_id: 'c0000000-0000-4000-8000-000000000001' }));
+    t.queries.familyTags.mockResolvedValue(new Map([['c0000000-0000-4000-8000-000000000001', { badge: 'subscribed', unpaid: false }]]));
     const body = (await t.call({ method: 'GET', url: `${URL}?before=2026-10-02T08:00:00Z` })).json();
     expect(body.people).toEqual(NO_PEOPLE);
     expect(body.thread.subscribed).toBe(true);
     expect(t.queries.people).not.toHaveBeenCalled();
-    expect(t.queries.familyTags).toHaveBeenCalledWith(['g1'], expect.any(Number));
+    expect(t.queries.familyTags).toHaveBeenCalledWith(['c0000000-0000-4000-8000-000000000001'], expect.any(Number));
   });
 
   it('admin and teacher (teacher mode, threads.teacher.http.test); a guardian gets 403', async () => {

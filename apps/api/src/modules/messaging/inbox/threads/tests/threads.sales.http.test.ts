@@ -21,14 +21,14 @@ describe('sales mode H1-H4: every chat, with the sales redactions (docs/16)', ()
   afterAll(() => t.app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    t.queries.list.mockResolvedValue({ items: [threadRow({ guardian_id: 'g1', guardian_name: 'أم ياسمين' })], total: 1 });
-    t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, guardian_id: 'g1', guardian_name: 'أم ياسمين' }));
+    t.queries.list.mockResolvedValue({ items: [threadRow({ guardian_id: 'c0000000-0000-4000-8000-000000000001', guardian_name: 'أم ياسمين' })], total: 1 });
+    t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, guardian_id: 'c0000000-0000-4000-8000-000000000001', guardian_name: 'أم ياسمين' }));
     t.queries.messages.mockResolvedValue([]);
     t.queries.markInboundRead.mockResolvedValue([]);
     t.queries.lessons.mockResolvedValue([]);
-    t.queries.familyTags.mockResolvedValue(new Map([['g1', { badge: 'subscribed' as const, unpaid: true, ring: 'renewal' as const }]]));
+    t.queries.familyTags.mockResolvedValue(new Map([['c0000000-0000-4000-8000-000000000001', { badge: 'subscribed' as const, unpaid: true, ring: 'renewal' as const }]]));
     t.queries.people.mockResolvedValue({
-      guardian: { id: 'g1', name: 'أم ياسمين' },
+      guardian: { id: 'c0000000-0000-4000-8000-000000000001', name: 'أم ياسمين' },
       lead: { id: 'l1', status: 'converted' },
       students: [threadStudent(), threadStudent({ id: 'other-kid' })],
     });

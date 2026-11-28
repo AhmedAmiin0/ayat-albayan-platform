@@ -31,7 +31,7 @@ describe('H3/H4 sends (docs/12 §4, R-LEAD-02, R-MSG-01)', () => {
     expect(t.queries.get).not.toHaveBeenCalled();
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({
       direction: 'outbound', status: 'queued', phone_e164: PHONE, body: 'أهلًا', created_by: ADMIN.id,
-      dedup_key: `admin:${PHONE}:${REQ}`, lead_id: 'l0000000-0000-4000-8000-000000000001',
+      dedup_key: `admin:${PHONE}:${REQ}`, lead_id: 'b0000000-0000-4000-8000-000000000001',
     }));
     expect(t.sender.kick).toHaveBeenCalledTimes(1);
     expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'thread_text', entityId: 'm9' }));
