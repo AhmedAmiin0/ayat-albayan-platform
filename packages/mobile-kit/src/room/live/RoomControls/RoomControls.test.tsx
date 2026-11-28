@@ -1,12 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '../../../lib/i18n/i18n';
-import type { RoomControlsActions } from './RoomControls';
 import { RoomControls } from './RoomControls';
 
 const C = t.mobileRoom.controls;
 const ON = { micOn: true, camOn: true, output: 'speaker', chatUnread: 0 } as const;
 
-const actions = (): { [K in keyof RoomControlsActions]: jest.Mock } => ({
+const actions = () => ({
   toggleMic: jest.fn(),
   toggleCam: jest.fn(),
   nextOutput: jest.fn(),
