@@ -1,7 +1,7 @@
 export * from './checks';
 export * from './keys/keys';
 export * from './recipients';
-export * from './views';
+export type * from './views';
 export * from './driver-keys';
 export * from './wa-errors';
 export * from './evolution';
