@@ -241,8 +241,8 @@ One open PR of this plan at a time. Kit first, then the shell, then one area per
 | PR | state |
 |---|---|
 | 1 fix/portal-r2-1 | merged (#1330); its root index exports and the SwitchTrack and ChildBody swaps wait for #1325 |
-| 2 fix/portal-r2-2 | in review: Bar, BarList, StackedBar, ColumnChart and ChartFigure built with showcases; their root index exports, the dashboard Bar swap and the «رسم / جدول» strings wait for #1325 |
-| 3 fix/portal-r2-3 | open |
+| 2 fix/portal-r2-2 | merged (#1345); its root index exports, the dashboard Bar swap and the «رسم / جدول» strings follow #1325 in a later PR of this plan |
+| 3 fix/portal-r2-3 | in review: tall: variant, TableBox flows below it, rail observer removed, composer scroll phone-only, teacher, link and surah lists flow in their dialog, bare bell panel in the menu sheet, thread side panel as a sheet below a 48rem thread |
 | 4 fix/portal-r2-4 | open |
 | 5 fix/portal-r2-5 | open |
 | 6 fix/portal-r2-6 | open |
