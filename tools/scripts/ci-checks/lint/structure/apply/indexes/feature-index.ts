@@ -10,6 +10,8 @@ export interface IndexWork {
   /** New text per file: importers pointed at feature indexes, indexes with the names they need. */
   writes: Map<string, string>;
   problems: string[];
+  /** Names now re-exported by a feature index. */
+  names: string[];
 }
 
 const indexOf = (root: string, feature: string): string =>
@@ -76,10 +78,11 @@ function pointImporters(
 
 /** Points the deep imports that the moves made cross-feature at the feature index, and fills it. */
 export function fixFeatureIndexes(ctx: DeepCtx, files: readonly string[]): IndexWork {
-  const work: IndexWork = { writes: new Map(), problems: [] };
+  const work: IndexWork = { writes: new Map(), problems: [], names: [] };
   for (const [feature, uses] of pointImporters(ctx, files, work)) {
     const index = indexOf(ctx.r.root, feature);
     const lines = indexLines(ctx, index, uses);
+    work.names.push(...uses.flatMap((u) => u.bindings.map((b) => b.name)));
     const before = work.writes.get(index) ?? textOf(ctx.r.root, index);
     if (lines.length > 0) work.writes.set(index, `${before}${lines.join('\n')}\n`);
   }

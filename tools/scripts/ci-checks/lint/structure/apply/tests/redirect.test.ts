@@ -33,9 +33,9 @@ test('a barrel exports names with the files that hold them', () => {
   const root = tree(files);
   const ctx = { project: newProject(), r: { root, aliases: [], renamed: new Map() } };
   assert.deepEqual(Object.fromEntries(exportSources(ctx, BARREL)), {
-    A: { file: 'p/src/ops/a/A.ts', name: 'A' },
-    B: { file: 'p/src/ops/b/B.ts', name: 'B' },
-    U: { file: 'p/src/ops/t.ts', name: 'T' },
+    A: { file: 'p/src/ops/a/A.ts', name: 'A', typeOnly: false },
+    B: { file: 'p/src/ops/b/B.ts', name: 'B', typeOnly: false },
+    U: { file: 'p/src/ops/t.ts', name: 'T', typeOnly: true },
   });
 });
 

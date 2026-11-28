@@ -1,37 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { newProject } from '../../../../move-module/rewrite.ts';
-import { allowedTree } from '../../tree/names/allowed.ts';
 import { fixFeatureIndexes } from '../indexes/feature-index.ts';
 import { tree } from './fixture.ts';
-
-const W = 'apps/w';
-const F = `${W}/src/features`;
-const layer = { workspace: W, root: F, extras: [], routes: [`${W}/app`], alias: true };
-const domains = [{ domain: 'finance', groups: [], features: ['expenses', 'payouts'] }];
-const alias = { prefix: '@/', dir: `${W}/src`, scope: W };
-
-function ctx(root: string, opts: { old: Record<string, string>; forced?: string[] }) {
-  return {
-    project: newProject(),
-    r: { root, aliases: [alias], renamed: new Map<string, string>() },
-    layer,
-    allowed: allowedTree(domains),
-    old: 'src/[^/]+',
-    oldOf: (file: string) => opts.old[file] ?? file,
-    forced: new Set(opts.forced ?? []),
-    open: new Set<string>(),
-  };
-}
-
-const files = {
-  [`${F}/finance/expenses/index.ts`]: "export { ExpensesScreen } from './ExpensesScreen';\n",
-  [`${F}/finance/expenses/ExpensesScreen.tsx`]:
-    "import { Row, type RowProps } from '@/features/finance/payouts/Row';\n",
-  [`${F}/finance/payouts/Row.tsx`]: 'export const Row = 1;\nexport type RowProps = {};\n',
-  [`${W}/app/payouts.tsx`]: "import { Row } from '@/features/finance/payouts/Row';\n",
-  [`${F}/finance/expenses/Old.tsx`]: "import { Row } from '@/features/finance/payouts/Row';\n",
-};
+import { ctx, F, files, W } from './feature-index.fixture.ts';
 
 test('imports the moves made cross-feature go through the feature index, which gains the names', () => {
   const root = tree(files);
@@ -106,28 +77,4 @@ test('a feature with no index gets one from every import into it', () => {
   );
   assert.equal(work.writes.get(file), "import { Row } from '@/features/finance/payouts';\n");
   assert.equal(work.writes.get(`${F}/finance/payouts/index.ts`), "export { Row } from './Row';\n");
-});
-
-test('a package feature index re-exports whole files; a value use beats a type use in an app', () => {
-  const root = tree({
-    ...files,
-    [`${F}/finance/expenses/Typed.tsx`]:
-      "import type { Row } from '@/features/finance/payouts/Row';\n",
-  });
-  const old = {
-    [`${F}/finance/expenses/Typed.tsx`]: `${W}/src/money/Typed.tsx`,
-    [`${F}/finance/payouts/Row.tsx`]: `${W}/src/money/Row.tsx`,
-    [`${F}/finance/expenses/ExpensesScreen.tsx`]: `${W}/src/money/E.tsx`,
-  };
-  const app = fixFeatureIndexes(ctx(root, { old }), [
-    `${F}/finance/expenses/Typed.tsx`,
-    `${F}/finance/expenses/ExpensesScreen.tsx`,
-  ]);
-  assert.equal(
-    app.writes.get(`${F}/finance/payouts/index.ts`),
-    "export { Row, type RowProps } from './Row';\n",
-  );
-  const pkg = { ...ctx(root, { old }), layer: { ...layer, alias: false } };
-  const out = fixFeatureIndexes(pkg, [`${F}/finance/expenses/Typed.tsx`]);
-  assert.equal(out.writes.get(`${F}/finance/payouts/index.ts`), "export * from './Row';\n");
 });

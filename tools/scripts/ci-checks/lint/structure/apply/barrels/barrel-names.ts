@@ -32,7 +32,7 @@ function reExported(
   const deeper = exportSources(ctx, target, at.depth + 1);
   return at.ref.bindings.map((b) => [
     b.alias ?? b.name,
-    deeper.get(b.name) ?? { file: target, name: b.name },
+    { ...(deeper.get(b.name) ?? { file: target, name: b.name }), typeOnly: b.isType },
   ]);
 }
 

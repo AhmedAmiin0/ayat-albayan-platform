@@ -10,6 +10,7 @@ import type { Allowed } from '../tree/tree.types.ts';
 import { allowedTree } from '../tree/names/allowed.ts';
 import { BOUNDARIES } from './lint/boundaries.data.ts';
 import { editBoundaries } from './lint/boundaries.ts';
+import { entryPins } from './indexes/entry-pins.ts';
 import { fixFeatureIndexes } from './indexes/feature-index.ts';
 import { rewriteLintPaths } from './lint/lint-paths.ts';
 import type { Moves } from '../tree/tree.types.ts';
@@ -54,6 +55,8 @@ export function fixLayers(run: LayerRun): string[] {
     const open = withoutIndex(run.root, files, { layer, allowed });
     const second = fixFeatureIndexes({ ...ctx, open }, files);
     second.writes.forEach((text, file) => writeIfChanged(run.root, file, text));
+    const pin = entryPins(ctx, [...first.names, ...second.names]);
+    if (pin !== undefined) writeIfChanged(run.root, pin.file, pin.text);
     return [...first.problems, ...second.problems];
   });
 }

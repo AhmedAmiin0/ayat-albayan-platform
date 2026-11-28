@@ -39,4 +39,6 @@ export interface Pruned {
 export interface Source {
   file: string;
   name: string;
+  /** Re-exported with `type` only: a value import cannot use it. */
+  typeOnly?: boolean;
 }

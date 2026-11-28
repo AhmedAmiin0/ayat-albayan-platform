@@ -144,11 +144,6 @@
    "layer": "api"
   },
   {
-   "from": "apps/api/src/common/configuration/config-store/io/",
-   "to": "apps/api/src/modules/platform/settings/values/",
-   "layer": "api"
-  },
-  {
    "from": "apps/api/src/common/configuration/custom-config/",
    "to": "apps/api/src/modules/platform/custom-config/",
    "layer": "api"
@@ -3131,6 +3126,12 @@
    "to": "apps/staff-mobile/src/features/teaching/courses/course-pause/change-until/",
    "layer": "staff-mobile",
    "why": "course-pause would hold 13 code files with its index"
+  },
+  {
+   "from": "apps/staff-mobile/src/inbox/leads/sales/",
+   "to": "apps/staff-mobile/src/features/sales/registration/chat-register/",
+   "layer": "staff-mobile",
+   "why": "the same register-from-chat units as staff-web sales/registration/chat-register"
   }
  ],
  "drops": [
@@ -3387,7 +3388,9 @@
   "staff-mobile app/_layout.tsx: GatedRoot and its effect go to src/shell/root-gate. app/login.tsx: its mode state goes to features/people/sign-in/pages/LoginScreen. Both route files keep one import.",
   "family-mobile shell/hrefs.ts and portal/recordings/hrefs.ts: each href goes to the index.ts of the feature it opens, so shell keeps none.",
   "family-web routes (portal, reports, children/index, children/$studentId, package): the WithHome and WithPick render-prop wrappers move into the pages, so each route maps a URL to one page.",
-  "Loose units brought into view by the moves (booking/core booking.* stems, whatsapp/sender message.*, family-mobile observed-root and room-way, and others): pnpm units:fold in a later PR, not in the move PRs."
+  "Loose units brought into view by the moves (booking/core booking.* stems, whatsapp/sender message.*, family-mobile observed-root and room-way, and others): pnpm units:fold in a later PR, not in the move PRs.",
+  "api common/configuration/config-store/io: its controller and services register in config-store.module, so moving io/ to platform/settings/values waits for the module split (config-store.module keeps store/ and boundaries/).",
+  "api config/env/env.web-push.ts imports the VapidKeys type from messaging/notifications/push after the move: move the type into config/env (rule 15)."
  ],
  "renames": [
   "people/me -> people/account: api",

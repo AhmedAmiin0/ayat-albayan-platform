@@ -14,23 +14,40 @@ const relSpec = (index: string, target: string): string => {
   return rel.startsWith('.') ? rel : `./${rel}`;
 };
 
-/** Names an index already exports for another declaration: those imports stay where they are. */
+interface Use {
+  target: string;
+  b: Binding;
+}
+
+/** Names wanted from two declarations: the index can only carry one, so both stay deep. */
+function contested(wanted: readonly Use[], declOf: (w: Use) => string): string[] {
+  const byName = new Map<string, Set<string>>();
+  wanted.forEach((w) => byName.set(w.b.name, (byName.get(w.b.name) ?? new Set()).add(declOf(w))));
+  return [...byName].filter(([, decls]) => decls.size > 1).map(([name]) => name);
+}
+
+/** Names the index exports for another declaration, or as a type only to a value importer. */
+function taken(has: Map<string, Source>, w: Use, declOf: (w: Use) => string): boolean {
+  const now = has.get(w.b.name);
+  if (now === undefined) return false;
+  return now.file !== declOf(w) || (now.typeOnly === true && !w.b.isType);
+}
+
+/** Names an index cannot carry for these imports: those imports stay where they are. */
 export function clashes(ctx: DeepCtx, index: string, uses: readonly DeepImport[]): Set<string> {
-  if (!ctx.layer.alias || !existsSync(posix.join(ctx.r.root, index))) return new Set();
-  const has = exportSources(ctx, index);
+  if (!ctx.layer.alias) return new Set();
+  const has = existsSync(posix.join(ctx.r.root, index))
+    ? exportSources(ctx, index)
+    : new Map<string, Source>();
   const seen = new Map<string, Map<string, Source>>();
-  const declOf = (target: string, name: string): string => {
-    const names = seen.get(target) ?? exportSources(ctx, target);
-    seen.set(target, names);
-    return names.get(name)?.file ?? target;
+  const declOf = (w: Use): string => {
+    const names = seen.get(w.target) ?? exportSources(ctx, w.target);
+    seen.set(w.target, names);
+    return names.get(w.b.name)?.file ?? w.target;
   };
-  const bad = uses.flatMap((u) =>
-    u.bindings.filter((b) => {
-      const now = has.get(b.name)?.file;
-      return now !== undefined && now !== declOf(u.target, b.name);
-    }),
-  );
-  return new Set(bad.map((b) => b.name));
+  const wanted = uses.flatMap((u) => u.bindings.map((b) => ({ target: u.target, b })));
+  const bad = wanted.filter((w) => taken(has, w, declOf)).map((w) => w.b.name);
+  return new Set([...bad, ...contested(wanted, declOf)]);
 }
 
 /** App index: named re-exports it lacks; a name any importer uses as a value is a value. */
