@@ -28,9 +28,10 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 
 const SHOWN = 'a1111111-1111-4111-8111-111111111111';
 const OLD = 'b2222222-2222-4222-8222-222222222222';
+const NEWER = 'c3333333-3333-4333-8333-333333333333';
 const shown = message({ id: SHOWN, created_at: '2026-10-02T08:00:00Z', body: 'درس اليوم' });
 const old = message({ id: OLD, created_at: '2026-03-01T08:00:00Z', body: 'درس قديم' });
-const newer = message({ id: 'c3', created_at: '2026-03-01T09:00:00Z', body: 'بعده' });
+const newer = message({ id: NEWER, created_at: '2026-03-01T09:00:00Z', body: 'بعده' });
 
 function answer(path: string): Promise<unknown> {
   const around = path.includes('?around=');
@@ -70,7 +71,7 @@ test('a hit not loaded opens the window around it with one request', async () =>
     // TanStack's signal travels with it (docs/43 AU8).
     [`/threads/${encodeURIComponent(PHONE)}?around=${OLD}`, { signal: expect.any(AbortSignal) }],
   ]);
-  expect(result.current.query.data?.pages[0]?.messages.map((m) => m.id)).toEqual([OLD, 'c3']);
+  expect(result.current.query.data?.pages[0]?.messages.map((m) => m.id)).toEqual([OLD, NEWER]);
   expect(result.current.to).toBe(newer.created_at);
 });
 
@@ -139,5 +140,5 @@ test('from one window to the next: the old window stays, anchored, until the nex
   await rerender({});
   await waitFor(() => expect(result.current.target).toEqual({ id: OTHER, ready: false }));
   expect(result.current.anchored).toBe(true);
-  expect(result.current.query.data?.pages[0]?.messages.map((m) => m.id)).toEqual([OLD, 'c3']);
+  expect(result.current.query.data?.pages[0]?.messages.map((m) => m.id)).toEqual([OLD, NEWER]);
 });

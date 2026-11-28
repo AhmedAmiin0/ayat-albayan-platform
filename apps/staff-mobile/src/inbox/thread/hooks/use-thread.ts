@@ -1,4 +1,3 @@
-import type { ThreadDetail } from '@ab/shared';
 import { refreshNewest, threadNextParam, threadPageQuery, type ThreadPageParam } from '@ab/client-core';
 import {
   infiniteQueryOptions,
@@ -7,7 +6,6 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import { apiFetch } from '@ab/mobile-kit';
 import { markOwnSend } from '@/inbox/thread/anchor/own-send';
 import { useStoredView } from '@/inbox/thread/local/stored-view';
 import { rollback, unanswered } from '@/inbox/thread/send/after-send';
@@ -22,14 +20,10 @@ import {
   replaceMessage,
   sendKey,
   threadKey,
-  threadPath,
+  threadReads,
   type ThreadCache,
 } from './thread-cache';
 import { useThreadPoll } from './thread-poll';
-
-/** One page of a chat (the live pages and the window around a search hit, docs/37). */
-export const threadGet = (path: string, init?: { signal?: AbortSignal }) =>
-  apiFetch<ThreadDetail>(path, init);
 
 export const threadQuery = (phone: string) =>
   infiniteQueryOptions({
@@ -37,7 +31,7 @@ export const threadQuery = (phone: string) =>
     // TanStack's signal: closing the chat drops its read, so a later push tap never joins it.
     // Older builds persisted a bare `before` string: threadPageQuery still pages back from it.
     queryFn: ({ pageParam, signal }) =>
-      threadGet(`${threadPath(phone)}${threadPageQuery(pageParam)}`, { signal }),
+      threadReads.page({ phone, query: threadPageQuery(pageParam), signal }),
     initialPageParam: null as ThreadPageParam,
     getNextPageParam: threadNextParam,
     meta: { noPersist: true },
@@ -69,7 +63,7 @@ export function refreshSent(client: QueryClient, phone: string, own: string[] = 
     busy: () => client.isFetching({ queryKey }) > 0,
     read: () => client.getQueryData<ThreadCache>(queryKey),
     write: (edit) => client.setQueryData<ThreadCache>(queryKey, edit),
-    newest: () => threadGet(threadPath(phone)),
+    newest: () => threadReads.page({ phone, query: {} }),
     reload: () => client.invalidateQueries({ queryKey }),
   });
 }

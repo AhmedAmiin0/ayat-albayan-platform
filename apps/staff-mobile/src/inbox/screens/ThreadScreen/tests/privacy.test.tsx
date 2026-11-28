@@ -3,7 +3,7 @@ import { t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { readable, SHOWN } from '@/inbox/screens/privacy.helpers';
-import { detail, inbound, NOW, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, NOW, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
@@ -18,7 +18,7 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
 
-const family = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null, lead_source: null };
+const family = { ...thread, guardian_id: uid('g1'), lead_id: null, lead_status: null, lead_source: null };
 
 function render(teacher: boolean, name: string | null) {
   const body = detail([inbound], { thread: { ...family, display_name: name } });

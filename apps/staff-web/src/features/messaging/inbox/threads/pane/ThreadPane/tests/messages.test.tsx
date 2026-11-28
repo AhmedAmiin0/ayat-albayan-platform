@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { viewerTz } from '@ab/client-core';
 import { lessonWhenAt } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
@@ -25,7 +26,7 @@ const FAILED = message({
   created_at: '2026-10-01T11:00:00Z',
 });
 const WAITING = message({
-  id: 'm-w',
+  id: uid('m-w'),
   direction: 'outbound',
   status: 'queued',
   template_key: 'renewal_due',
@@ -33,16 +34,16 @@ const WAITING = message({
   click_to_chat: LINK,
   created_at: '2026-10-01T12:00:00Z',
 });
-const PHOTO = message({ id: 'm-p', body: null, media_mime: 'image/jpeg', media_url: 'https://sb.test/signed/p.jpg' });
+const PHOTO = message({ id: uid('m-p'), body: null, media_mime: 'image/jpeg', media_url: 'https://sb.test/signed/p.jpg' });
 const CONFIRM = message({
-  id: 'm-c',
+  id: uid('m-c'),
   body: 'تمام، هنحضر',
-  guardian_id: 'g-1',
+  guardian_id: uid('g-1'),
   interactive_payload: { payload: 'confirm:l-1' },
-  lesson_id: 'l-1',
+  lesson_id: uid('l-1'),
   lesson: { starts_at: '2026-10-04T14:00:00Z', status: 'confirmed' },
 });
-const UNLINKED = message({ id: 'm-u', body: 'تمام', guardian_id: 'g-1' });
+const UNLINKED = message({ id: uid('m-u'), body: 'تمام', guardian_id: uid('g-1') });
 const HANDED = message({
   ...FAILED,
   id: 'f6666666-6666-4666-8666-666666666666',

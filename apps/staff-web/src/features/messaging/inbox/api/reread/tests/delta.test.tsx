@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -14,7 +15,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 vi.mock('@/features/messaging/inbox/api/api', async (orig) => ({ ...(await orig<object>()), inboxPollMs: () => 3_600_000 }));
 
 const PATH = '/threads/%2B966501234567';
-const first = message({ id: 'm1', created_at: '2026-11-07T10:00:00Z' });
+const first = message({ id: uid('m1'), created_at: '2026-11-07T10:00:00Z' });
 const quiet = { messages: [], has_more: false, pending: [] };
 const paths = () => apiFetch.mock.calls.map(([p]) => String(p));
 const deltaReads = () => paths().filter((p) => p.startsWith(`${PATH}?after=`)).length;
@@ -48,12 +49,12 @@ it('N events on the open chat: N delta reads and no full read', async () => {
 });
 
 it('an event whose delta merges: the new row lands in the chat', async () => {
-  const fresh = message({ id: 'm2', created_at: '2026-11-07T10:05:00Z' });
+  const fresh = message({ id: uid('m2'), created_at: '2026-11-07T10:05:00Z' });
   const { client, hook } = open([first], { ...quiet, messages: [fresh] });
   await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
   rereadChat(client, PHONE);
   await waitFor(() =>
-    expect(hook.result.current.data?.pages[0]?.messages.map((m) => m.id)).toEqual(['m1', 'm2']),
+    expect(hook.result.current.data?.pages[0]?.messages.map((m) => m.id)).toEqual([uid('m1'), uid('m2')]),
   );
 });
 

@@ -6,7 +6,7 @@ import { TreeBaseProvider, type TreeBase } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { answer } from '@/inbox/lists/lib/list-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
-import { detail, inbound, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, PHONE, thread, uid } from '@/inbox/shared/thread-fixtures';
 
 // First in a salesperson's menu on a lead still in the funnel.
 const mockApiFetch = jest.fn();
@@ -55,7 +55,7 @@ test('a salesperson on a lead: first in «⋮», it opens the sales wizard prefi
   await waitFor(() =>
     expect(router.push).toHaveBeenCalledWith({
       pathname: '/sales/inbox/book',
-      params: { leadId: 'a1', phone: PHONE, mode: 'register', name: 'هدى سالم', source: 'facebook_ad' },
+      params: { leadId: uid('a1'), phone: PHONE, mode: 'register', name: 'هدى سالم', source: 'facebook_ad' },
     }),
   );
 });
@@ -66,8 +66,8 @@ test('not without self.sales (the admin), on the same lead chat', async () => {
 });
 
 test.each<[string, ThreadView]>([
-  ['a family chat', { ...thread, guardian_id: 'g-1', guardian_name: 'أم يوسف', lead_id: null }],
-  ['a teacher chat', { ...thread, teacher_id: 't-1', teacher_name: 'أ. هدى' }],
+  ['a family chat', { ...thread, guardian_id: uid('g1'), guardian_name: 'أم يوسف', lead_id: null }],
+  ['a teacher chat', { ...thread, teacher_id: uid('t1'), teacher_name: 'أ. هدى' }],
   ['a converted lead', { ...thread, lead_status: 'converted' }],
   ['a lost lead', { ...thread, lead_status: 'lost' }],
   ['a number with no lead', { ...thread, lead_id: null, lead_name: null, lead_status: null }],

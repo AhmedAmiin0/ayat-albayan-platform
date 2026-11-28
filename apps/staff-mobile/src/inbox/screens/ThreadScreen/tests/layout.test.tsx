@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { t, pathKey } from '@ab/mobile-kit';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
 const mockApiFetch = jest.fn();
@@ -68,6 +68,6 @@ test('a lead: no strip; «تسجيل طالب جديد» is the first item of «
 });
 
 test('a teacher’s chat (no lead, no family): no strip at all', async () => {
-  await open({ ...thread, lead_id: null, lead_status: null, teacher_id: 't-1' }, BASE);
+  await open({ ...thread, lead_id: null, lead_status: null, teacher_id: uid('t1') }, BASE);
   expect(screen.queryByTestId('sales-chat-actions')).toBeNull();
 });

@@ -1,9 +1,10 @@
 import type { ThreadPeople, ThreadView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t, isolate, money } from '@ab/mobile-kit';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { threadKey } from '@/inbox/thread/hooks/thread-cache';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from '@/inbox/subscription/people-fixtures';
-import { detail, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, PHONE, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
 const mockApiFetch = jest.fn();
@@ -26,7 +27,7 @@ jest.mock('expo-router', () => ({
 const s = t.inbox.subscription;
 const guardianThread: ThreadView = {
   ...thread,
-  guardian_id: 'g-1',
+  guardian_id: uid('gd1'),
   lead_id: null,
   lead_status: null,
 };
@@ -67,11 +68,11 @@ test.each([
 
 test('a family is ONE folded row (the messages get the room); a tap opens a line per package and one «بلا باقة»', async () => {
   const paid = child({
-    id: 'c2',
+    id: uid('c2'),
     name: 'سارة',
     subscription: sub({ due_amount: 0, lessons_used: 2 }),
   });
-  await open(family([child(), paid, child({ id: 'c3', name: 'علي', subscription: null })]));
+  await open(family([child(), paid, child({ id: uid('c3'), name: 'علي', subscription: null })]));
   expect(await screen.findByText(s.subscribedOf.replace('{n}', '2').replace('{total}', '3'))).toBeTruthy();
   // Folded: what needs the admin stays in sight, the rows do not.
   expect(screen.getAllByText(t.enums.subscriptionStatus.unpaid)).toHaveLength(1);
@@ -89,7 +90,7 @@ test('a family is ONE folded row (the messages get the room); a tap opens a line
 });
 
 test('guardian: «جدّد الاشتراك — يوسف» names the child whose package ended and opens the renewal', async () => {
-  await open(family([child({ id: 'c2', name: 'سارة' }), child({ subscription: usedUp })]));
+  await open(family([child({ id: uid('c2'), name: 'سارة' }), child({ subscription: usedUp })]));
   await fireEvent.press(await screen.findByRole('button', { name: `${s.renew} — يوسف` }));
   expect(mockPush).toHaveBeenCalledWith({
     pathname: '/inbox/subscribe',
@@ -98,10 +99,10 @@ test('guardian: «جدّد الاشتراك — يوسف» names the child whose
 });
 
 test('a lost lead: «غير مشترك» but no «اشترك» (as the web); a converted one: no badge, «اشترك» stays', async () => {
-  await open({ ...leadOnly, lead: { id: 'a1', status: 'lost' } }, thread);
+  await open({ ...leadOnly, lead: { id: uid('a1'), status: 'lost' } }, thread);
   expect(await screen.findByText(s.badge.none)).toBeTruthy();
   expect(screen.queryByRole('button', { name: s.subscribe })).toBeNull();
-  await open({ ...leadOnly, lead: { id: 'a1', status: 'converted' } }, { ...thread, lead_status: 'converted' });
+  await open({ ...leadOnly, lead: { id: uid('a1'), status: 'converted' } }, { ...thread, lead_status: 'converted' });
   expect(await screen.findByRole('button', { name: s.subscribe })).toBeTruthy();
   expect(screen.queryByText(s.badge.none)).toBeNull();
   expect(screen.queryByText(s.badge.subscribed)).toBeNull();
@@ -113,18 +114,22 @@ test('a lead with no guardian yet: «غير مشترك», and «اشترك» ope
   await fireEvent.press(screen.getByRole('button', { name: s.subscribe }));
   expect(mockPush).toHaveBeenCalledWith({
     pathname: '/inbox/book',
-    params: { leadId: 'a1', phone: PHONE, mode: 'subscribe', name: 'هدى سالم' },
+    params: { leadId: uid('a1'), phone: PHONE, mode: 'subscribe', name: 'هدى سالم' },
   });
 });
 
 test('a teacher’s chat, or a thread saved before `people` existed: no subscription panel', async () => {
-  const teacher = { ...thread, lead_id: null, lead_status: null, teacher_id: 't-1' };
+  const teacher = { ...thread, lead_id: null, lead_status: null, teacher_id: uid('t1') };
   await open({ guardian: null, lead: null, students: [] }, teacher);
   expect(await screen.findByText(t.inbox.empty)).toBeTruthy();
   expect(screen.queryByText(s.badge.none)).toBeNull();
 
-  mockApiFetch.mockResolvedValue({ thread, messages: [], has_more: false, lessons: [] });
-  await renderWithQuery(<ThreadScreen />);
+  const before = { thread, messages: [], has_more: false, lessons: [] };
+  mockApiFetch.mockResolvedValue(before);
+  // The strict parse refuses that answer now, so the old page can only come from the saved cache.
+  const client = createTestQueryClient();
+  client.setQueryData(threadKey(PHONE), { pages: [before], pageParams: [undefined] });
+  await renderWithQuery(<ThreadScreen />, client);
   expect((await screen.findAllByText(t.inbox.empty)).length).toBeGreaterThan(0);
   expect(screen.queryByRole('button', { name: s.subscribe })).toBeNull();
 });

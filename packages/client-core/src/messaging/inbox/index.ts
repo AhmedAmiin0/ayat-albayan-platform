@@ -1,4 +1,4 @@
-export { deltaSearch, mergeDelta, needsFullRead, type ThreadPages } from './thread-delta';
+export { deltaQuery, mergeDelta, needsFullRead, type ThreadPages } from './thread-delta';
 export {
   catchUpPlan,
   changedPhone,

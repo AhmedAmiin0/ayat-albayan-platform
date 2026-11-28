@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import * as ImagePicker from 'expo-image-picker';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, message, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
 // A photo sent while replying to a message carries replyToMessageId.
@@ -28,7 +28,7 @@ jest.mock('expo-router', () => ({
 }));
 
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
-const asked = message({ id: 'm1', direction: 'inbound', status: 'delivered', body: 'أرسلي صورة الإيصال', replyable: true, created_at: minutesAgo(9) });
+const asked = message({ id: uid('m1'), direction: 'inbound', status: 'delivered', body: 'أرسلي صورة الإيصال', replyable: true, created_at: minutesAgo(9) });
 const signed = { bucket: 'wa-media', path: 'out/u1/r1/x.jpg', token: 'tok', signed_url: 'https://s.test/up' };
 const photo = { uri: 'file:///p.jpg', width: 1, height: 1, base64: 'aGVsbG8=', mimeType: 'image/jpeg' };
 
@@ -36,7 +36,7 @@ async function answerWithPhoto() {
   const data = detail([asked], { thread: { ...thread, last_inbound_at: minutesAgo(5) } });
   mockApiFetch.mockImplementation(async (path: string) => (path === '/messages/gate' ? { open: true, reason: null, queued: 0 } : data));
   await renderWithQuery(<ThreadScreen />, createTestQueryClient());
-  await fireEvent(await screen.findByTestId('bubble-m1'), 'longPress');
+  await fireEvent(await screen.findByTestId(`bubble-${uid('m1')}`), 'longPress');
   await fireEvent.press(within(screen.getByTestId('message-menu')).getByRole('button', { name: t.inbox.reply.action }));
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.attach }));
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.gallery }));
@@ -53,7 +53,7 @@ test('the file goes with replyToMessageId, and the strip clears once it is sent'
   mockApiSend.mockResolvedValueOnce(signed).mockResolvedValueOnce(message({ id: 'c3333333-3333-4333-8333-333333333333', media_mime: 'image/jpeg', body: null }));
   await answerWithPhoto();
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
-  expect(mockApiSend.mock.calls[1]?.[2]).toMatchObject({ path: signed.path, replyToMessageId: 'm1' });
+  expect(mockApiSend.mock.calls[1]?.[2]).toMatchObject({ path: signed.path, replyToMessageId: uid('m1') });
   expect(mockApiSend.mock.calls[0]?.[2]).not.toHaveProperty('replyToMessageId');
   await waitFor(() => expect(screen.queryByTestId('reply-strip')).toBeNull());
 });

@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
@@ -16,7 +17,7 @@ const PATH = '/threads/%2B966501234567';
 const HOUR = 3_600_000;
 const RATING = template({ key: 'lesson_rating', params: ['student_name', 'lesson_date'] });
 const tap = message({
-  id: 'm-tap',
+  id: uid('m-tap'),
   body: 'جيدة',
   interactive_payload: { type: 'button', button: { text: 'جيدة', payload: 'rate_good:l-1' } },
 });
@@ -29,7 +30,7 @@ function renderThread(input: {
   const last = new Date(Date.now() - input.lastInboundAgoMs).toISOString();
   const open = input.lastInboundAgoMs < 24 * HOUR;
   routeFetch(apiFetch, [
-    [PATH, detail([tap], { session_open: open, last_inbound_at: last, guardian_id: input.guardian === false ? null : 'g-1' })],
+    [PATH, detail([tap], { session_open: open, last_inbound_at: last, guardian_id: input.guardian === false ? null : uid('g-1') })],
     ['/messaging/templates', input.templates ?? [template(), RATING]],
     ['/messages/gate', { open: true, reason: null, queued: 0 }],
     ['/settings', SETTINGS],

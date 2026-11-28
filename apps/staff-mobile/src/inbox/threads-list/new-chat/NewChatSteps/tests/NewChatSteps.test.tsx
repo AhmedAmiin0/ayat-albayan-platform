@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import { message, plainReminder, uid } from '@/inbox/shared/thread-fixtures';
+import { message, plainReminder, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { NewChatSheet } from '@/inbox/threads-list/NewChatSheet';
 import { ApiError } from '@ab/client-core';
 
@@ -66,7 +66,7 @@ test('a new number: its templates, the params, «أرسل» sends once and opens
 });
 
 test('a number that has a chat opens it, as WhatsApp: no template step, nothing sent', async () => {
-  serve({ ...EMPTY, thread: { phone: '+966501234567' }, messages: [ROW] });
+  serve({ ...EMPTY, thread: { ...thread, phone_e164: '+966501234567' }, messages: [ROW] });
   await typeNumber();
   await waitFor(() => expect(router.push).toHaveBeenCalledWith('/inbox/thread/%2B966501234567'));
   expect(screen.queryByText(t.inbox.composer.chooseTemplate)).toBeNull();

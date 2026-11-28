@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import type { ThreadDetail } from '@ab/shared';
 import type { TeacherMe } from '@ab/schedule';
 import { screen, within } from '@testing-library/react';
@@ -14,10 +15,10 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-const ME = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } as unknown as TeacherMe;
-const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, lead_source: null } as const;
+const ME = { id: uid('t-abr'), display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } as unknown as TeacherMe;
+const FAMILY = { guardian_id: uid('g-1'), lead_id: null, lead_status: null, lead_source: null } as const;
 // A failed send by the teacher: the admin may retry it; the teacher only sees who sent it.
-const SENT = { ...message({ id: 'm-out', direction: 'outbound', status: 'failed', body: 'تمام' }), sent_by_teacher_name: 'أبرار' };
+const SENT = { ...message({ id: uid('m-out'), direction: 'outbound', status: 'failed', body: 'تمام' }), sent_by_teacher_name: 'أبرار' };
 
 function render(mode: InboxMode, ui: ReactElement) {
   renderWithClient(<InboxModeContext.Provider value={mode}>{ui}</InboxModeContext.Provider>);
@@ -34,7 +35,7 @@ function renderThread(mode: InboxMode, page: ThreadDetail) {
 
 const family = (): ThreadDetail => ({
   ...detail([SENT], FAMILY),
-  people: { guardian: { id: 'g-1', name: 'أم سهيلة' }, lead: null, students: [pupil({}, null)] },
+  people: { guardian: { id: uid('g-1'), name: 'أم سهيلة' }, lead: null, students: [pupil({}, null)] },
 });
 
 afterEach(() => apiFetch.mockReset());
@@ -56,7 +57,7 @@ describe('teacher mode in the chat (R-TCH-03, R-MSG-05)', () => {
   });
 
   it('my own chat with the academy is read-only', async () => {
-    renderThread('teacher', detail([message()], { lead_id: null, lead_status: null, teacher_id: 't-abrar', teacher_name: 'أبرار' }));
+    renderThread('teacher', detail([message()], { lead_id: null, lead_status: null, teacher_id: uid('t-abr'), teacher_name: 'أبرار' }));
     expect(await screen.findByText(t.inbox.ownThreadReadOnly)).toBeTruthy();
     expect(screen.queryByRole('textbox', { name: t.inbox.composer.messageLabel })).toBeNull();
   });

@@ -1,4 +1,5 @@
-import type { MessageView, ThreadDetail } from '@ab/shared';
+import { aThreadDetail } from '@ab/shared/testing';
+import type { MessageView } from '@ab/shared';
 import { InfiniteQueryObserver, QueryClient } from '@tanstack/react-query';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { heldRead, msg, PHONE } from '@/features/messaging/inbox/api/patch-fixtures';
@@ -18,7 +19,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
 
 const KEY = threadQuery(PHONE).queryKey;
 const page = (has_more: boolean, ...messages: MessageView[]) =>
-  ({ messages, has_more }) as ThreadDetail;
+  aThreadDetail({ messages, has_more });
 const focused = (on: boolean) => vi.spyOn(document, 'hasFocus').mockReturnValue(on);
 
 const deltas = vi.fn(async (): Promise<unknown> => 0);

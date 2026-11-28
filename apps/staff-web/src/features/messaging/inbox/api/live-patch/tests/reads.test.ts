@@ -1,5 +1,6 @@
+import { aThreadDetail } from '@ab/shared/testing';
 import { canReply } from '@ab/shared';
-import type { MessageView, ThreadDetail, ThreadView } from '@ab/shared';
+import type { MessageView, ThreadView } from '@ab/shared';
 import { QueryClient, type QueryKey } from '@tanstack/react-query';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { threadsQuery } from '@/features/messaging/inbox/api/api';
@@ -19,7 +20,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
 
 const KEY = threadQuery(PHONE).queryKey;
 const LIST = threadsQuery({ page: 1 });
-const page = (...messages: MessageView[]) => ({ messages, has_more: false }) as ThreadDetail;
+const page = (...messages: MessageView[]) => aThreadDetail({ messages });
 const list = (...items: ThreadView[]) => ({ items, total: items.length, page: 1, pageSize: 30 });
 const first = (client: QueryClient) => client.getQueryData(KEY)?.pages[0]?.messages[0];
 const listed = (client: QueryClient) => client.getQueryData(LIST.queryKey)?.items[0]?.last_status;
@@ -52,7 +53,7 @@ it('an older chat read in flight is never cancelled by a patch; the re-read supe
   const cancel = vi.spyOn(client, 'cancelQueries');
   patchLiveCaches(client, PHONE, [live('a', 'delivered')]);
   expect([cancel.mock.calls.length, first(client)?.status]).toEqual([0, 'delivered']);
-  const fresh = page(msg('a', 'delivered', { delivered_at: '2026-11-07T10:01' }));
+  const fresh = page(msg('a', 'delivered', { delivered_at: '2026-11-07T10:01:00Z' }));
   mockApiFetch.mockResolvedValueOnce(fresh);
   const next = reread(client, KEY);
   old.resolve(page(msg('a', 'sent')));

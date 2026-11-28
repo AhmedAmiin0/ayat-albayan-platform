@@ -18,7 +18,7 @@ const THEIRS = message({ id: ID, body: 'متى الحلقة؟\nسطر ثانٍ',
 
 function renderThread(open = true) {
   routeFetch(apiFetch, [
-    [PATH, detail([THEIRS], { session_open: open, guardian_id: 'g-1' })],
+    [PATH, detail([THEIRS], { session_open: open, guardian_id: uid('g-1') })],
     ['/messaging/templates', [template()]],
     ['/messages/gate', { open: true, reason: null, queued: 0 }],
     ['/settings', SETTINGS],

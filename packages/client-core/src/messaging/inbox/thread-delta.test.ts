@@ -1,6 +1,6 @@
 import type { MessageView, ThreadDelta, ThreadDetail, ThreadView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { deltaSearch, mergeDelta, needsFullRead, type ThreadPages } from './thread-delta';
+import { deltaQuery, mergeDelta, needsFullRead, type ThreadPages } from './thread-delta';
 
 const NOW = Date.parse('2026-10-27T10:00:00Z');
 const id = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
@@ -27,7 +27,7 @@ const page = (messages: MessageView[], has_more = false): ThreadDetail => ({
 const cache = (...pages: ThreadDetail[]): ThreadPages => ({ pages, pageParams: pages.map(() => '') });
 const delta = (over: Partial<ThreadDelta> = {}): ThreadDelta => ({ messages: [], has_more: false, pending: [], ...over });
 
-describe('deltaSearch: the delta request of an open chat', () => {
+describe('deltaQuery: the delta request of an open chat', () => {
   it('after = the newest row held; pending = outgoing rows still moving, failed / read / old ones left out', () => {
     const rows = [
       msg(90, { direction: 'outbound', status: 'queued' }),
@@ -37,18 +37,19 @@ describe('deltaSearch: the delta request of an open chat', () => {
       msg(97),
     ];
     const old = msg(1, { direction: 'outbound', status: 'sent' }); // 99 minutes ago: past the pending window
-    const q = new URLSearchParams(deltaSearch(cache(page(rows), page([old])), NOW) ?? '');
-    expect(q.get('after')).toBe(msg(97).created_at);
-    expect(q.get('pending')).toBe([id(90), id(95)].join(','));
+    expect(deltaQuery(cache(page(rows), page([old])), NOW)).toEqual({
+      after: msg(97).created_at,
+      pending: [id(90), id(95)].join(','),
+    });
   });
 
   it('nothing to anchor on (no cache, an empty chat): null, the caller reads the whole thread', () => {
-    expect(deltaSearch(undefined, NOW)).toBeNull();
-    expect(deltaSearch(cache(page([])), NOW)).toBeNull();
+    expect(deltaQuery(undefined, NOW)).toBeNull();
+    expect(deltaQuery(cache(page([])), NOW)).toBeNull();
   });
 
   it('no pending row: no pending param', () => {
-    expect(deltaSearch(cache(page([msg(97)])), NOW)).toBe(`?after=${encodeURIComponent(msg(97).created_at)}`);
+    expect(deltaQuery(cache(page([msg(97)])), NOW)).toEqual({ after: msg(97).created_at });
   });
 });
 

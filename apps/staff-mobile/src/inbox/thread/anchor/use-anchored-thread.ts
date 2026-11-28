@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useEffectEvent } from 'react';
 import { ApiError, t } from '@ab/mobile-kit';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
-import { threadGet } from '@/inbox/thread/hooks/use-thread';
+import { threadReads } from '@/inbox/thread/hooks/thread-cache';
 import { useStoredTicks } from '@/inbox/thread/local';
 import { leaveAnchor } from './use-anchor-param';
 
@@ -50,7 +50,7 @@ const failureOf = (id: string | undefined, q: WindowRead): Failure | null => {
 export function useAnchoredThread(phone: string, id: string | undefined) {
   const { say } = useChatActions();
   const query = useInfiniteQuery({
-    ...anchoredThreadPages(phone, id ?? '', threadGet),
+    ...anchoredThreadPages(phone, id ?? '', threadReads.page),
     enabled: id !== undefined,
     meta: { noPersist: true },
     refetchInterval: false,

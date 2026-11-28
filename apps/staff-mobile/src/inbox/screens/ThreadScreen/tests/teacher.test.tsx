@@ -3,7 +3,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { detail, failed, inbound, message, NOW, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, failed, inbound, message, NOW, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
@@ -24,20 +24,21 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
 
+const ABRAR = uid('abrar');
 // The 24 h window is read off the clock, so «he wrote a moment ago» must be relative to now.
 const justNow = new Date(Date.now() - 5 * 60_000).toISOString();
-const guardianThread = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null, session_open: true, last_inbound_at: justNow };
+const guardianThread = { ...thread, guardian_id: uid('g1'), lead_id: null, lead_status: null, session_open: true, last_inbound_at: justNow };
 // Teacher mode: the guardian's students she teaches, with no money (subscription null).
 const people: ThreadPeople = {
-  guardian: { id: 'g-1', name: 'أم يوسف' },
+  guardian: { id: uid('g1'), name: 'أم يوسف' },
   lead: null,
-  students: [{ id: 's-1', code: 'AB-0182', name: 'يوسف أحمد', teacher_name: 'أبرار', status: 'active', subscription: null }],
+  students: [{ id: uid('s1'), code: 'AB-0182', name: 'يوسف أحمد', teacher_name: 'أبرار', status: 'active', subscription: null }],
 };
-const byAbrar = { ...message({ id: 'm9', body: 'الحلقة الساعة 5', status: 'delivered' }), sent_by_teacher_name: 'أبرار' };
+const byAbrar = { ...message({ id: uid('m9'), body: 'الحلقة الساعة 5', status: 'delivered' }), sent_by_teacher_name: 'أبرار' };
 
 function render() {
   return renderWithQuery(
-    <ThreadModeProvider value={{ kind: 'teacher', teacherId: 't-abrar' }}>
+    <ThreadModeProvider value={{ kind: 'teacher', teacherId: ABRAR }}>
       <ThreadScreen />
     </ThreadModeProvider>,
   );
@@ -68,7 +69,7 @@ test('a guardian’s chat: messages, «بعتها», the composer; no subscripti
 });
 
 test('her own chat with the academy is read-only: the note, no composer', async () => {
-  const own = { ...thread, teacher_id: 't-abrar', lead_id: null, lead_status: null };
+  const own = { ...thread, teacher_id: ABRAR, lead_id: null, lead_status: null };
   mockApiFetch.mockImplementation(async (p: string) => (p.startsWith('/threads') ? detail([inbound], { thread: own }) : { open: true }));
   await render();
   expect(await screen.findByText(t.inbox.ownThreadReadOnly)).toBeTruthy();

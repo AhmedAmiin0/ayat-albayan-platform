@@ -1,4 +1,4 @@
-import { deltaSearch } from '@ab/client-core';
+import { deltaQuery } from '@ab/client-core';
 import type { QueryClient } from '@tanstack/react-query';
 import { deltaWasEmpty, forgetDelta } from './delta-news';
 import { threadKey, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
@@ -22,7 +22,7 @@ async function rereadPage(client: QueryClient, phone: string): Promise<void> {
  */
 export async function refreshOpenChat(client: QueryClient, phone: string): Promise<void> {
   const cache = client.getQueryData<ThreadCache>(threadKey(phone));
-  if (deltaSearch(cache, Date.now()) === null) return rereadPage(client, phone);
+  if (deltaQuery(cache, Date.now()) === null) return rereadPage(client, phone);
   forgetDelta(phone);
   await client.refetchQueries({ queryKey: threadDeltaKey(phone) });
   if (deltaWasEmpty(phone)) await rereadPage(client, phone);

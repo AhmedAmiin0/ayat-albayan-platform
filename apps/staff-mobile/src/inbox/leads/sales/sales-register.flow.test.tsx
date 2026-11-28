@@ -4,7 +4,7 @@ import { booked, maryam, SUN_17 } from '@/booking/testing/fixtures';
 import { fakeBookingApi, walkToConfirm } from '@/booking/testing/test-utils';
 import { t } from '@ab/mobile-kit';
 import { inboxBackend } from '@/inbox/shared/flow-backend';
-import { inbound, PHONE } from '@/inbox/shared/thread-fixtures';
+import { inbound, PHONE, uid } from '@/inbox/shared/thread-fixtures';
 
 beforeEach(resetApp);
 
@@ -50,7 +50,7 @@ test('a salesperson registers a new student from the chat: sales wizard → POST
   expect(backend.sent('POST /sales/booking')[0]?.body).toMatchObject({
     kind: 'trial',
     teacherId: maryam.id,
-    leadId: 'a1',
+    leadId: uid('a1'),
     newStudent: { name: 'يوسف' },
     guardian: { name: 'هدى سالم', phone_e164: PHONE, source: 'facebook_ad' },
   });

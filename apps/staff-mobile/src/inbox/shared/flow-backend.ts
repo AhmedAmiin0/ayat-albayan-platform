@@ -28,7 +28,7 @@ export const GUARDIAN_PHONE = '+966501112223';
 /** The id of the lead's first message, a uuid as the API writes it. */
 export const LEAD_FIRST_ID = uid('m1');
 const LESSON: ThreadLesson = {
-  id: 'l-1',
+  id: uid('l1'),
   starts_at: '2026-10-04T14:00:00Z',
   meeting_link: null,
   student_names: ['سهيلة'],
@@ -64,7 +64,7 @@ const guardianThread: ThreadView = {
   lead_name: null,
   lead_status: null,
   lead_source: null,
-  guardian_id: 'g-1',
+  guardian_id: uid('gd1'),
   guardian_name: 'أم يوسف',
   session_open: false,
   subscribed: true,

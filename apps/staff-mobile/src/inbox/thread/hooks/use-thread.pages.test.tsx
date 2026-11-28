@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { detail, message, PHONE, uid } from '@/inbox/shared/thread-fixtures';
 import { threadKey } from './thread-cache';
 import { useThread } from './use-thread';
 
@@ -15,7 +15,8 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 
 const AT = '2026-10-02T08:00:00.123456+00:00';
-const oldest = message({ id: 'm-old', created_at: AT, body: 'أ' });
+const OLDEST = uid('m-old');
+const oldest = message({ id: OLDEST, created_at: AT, body: 'أ' });
 const path = `/threads/${encodeURIComponent(PHONE)}`;
 const asked = () => mockApiFetch.mock.calls.map(([p]) => String(p));
 
@@ -27,7 +28,7 @@ test('the next older page asks before + before_id of the oldest loaded row', asy
   const { result } = await renderHook(() => useThread(PHONE), { wrapper: queryWrapper(client) });
   await waitFor(() => expect(result.current.hasNextPage).toBe(true));
   await act(() => result.current.fetchNextPage());
-  expect(asked()).toContain(`${path}?before=${encodeURIComponent(AT)}&before_id=m-old`);
+  expect(asked()).toContain(`${path}?before=${encodeURIComponent(AT)}&before_id=${OLDEST}`);
 });
 
 test('a cache persisted by an older build (bare `before` strings) still refetches', async () => {
@@ -38,6 +39,6 @@ test('a cache persisted by an older build (bare `before` strings) still refetche
   const { result } = await renderHook(() => useThread(PHONE), { wrapper: queryWrapper(client) });
   await act(() => result.current.refetch());
   expect(asked()).toContain(path);
-  expect(asked()).toContain(`${path}?before=${encodeURIComponent(AT)}&before_id=m-old`);
+  expect(asked()).toContain(`${path}?before=${encodeURIComponent(AT)}&before_id=${OLDEST}`);
   expect(result.current.isError).toBe(false);
 });

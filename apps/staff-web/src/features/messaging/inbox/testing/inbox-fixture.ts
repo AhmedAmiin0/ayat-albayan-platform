@@ -8,6 +8,7 @@ import type {
   ThreadView,
 } from '@ab/shared';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
+import { uid } from './uid';
 
 // Test rows shaped like the Phase 4 API (docs/12 §4). Not imported by app code.
 
@@ -15,6 +16,7 @@ export const PHONE = '+966501234567';
 /** A chat row's ids are uuids, as the shared chat view reads them. */
 export const THREAD_LAST_ID = 'd0000000-0000-4000-8000-000000000001';
 export const THREAD_LEAD_ID = 'd0000000-0000-4000-8000-000000000002';
+export const MESSAGE_ID = 'd0000000-0000-4000-8000-000000000003';
 
 export function thread(patch: Partial<ThreadView> = {}): ThreadView {
   return {
@@ -48,10 +50,10 @@ export function thread(patch: Partial<ThreadView> = {}): ThreadView {
 export function message(patch: Partial<MessageView> = {}): MessageView {
   const now = new Date('2026-10-01T10:00:00Z');
   return {
-    ...provisionalMessage({ id: 'm-in', phone: PHONE, body: 'السلام عليكم', now }),
+    ...provisionalMessage({ id: MESSAGE_ID, phone: PHONE, body: 'السلام عليكم', now }),
     direction: 'inbound',
     status: 'delivered',
-    lead_id: 'lead-1',
+    lead_id: THREAD_LEAD_ID,
     ...patch,
   };
 }
@@ -70,7 +72,7 @@ export function pupil(
   sub?: Partial<ThreadSubscriptionView> | null,
 ): ThreadStudentView {
   const package8: ThreadSubscriptionView = {
-    id: 'sub-1',
+    id: uid('sub-1'),
     status: 'unpaid',
     package_size: '8',
     lessons_total: 8,
@@ -85,7 +87,7 @@ export function pupil(
   };
   const subscription = sub === null ? null : { ...package8, ...sub };
   return {
-    id: 's-1',
+    id: uid('s-1'),
     name: 'سهيلة',
     code: 'AB-0183',
     teacher_name: 'أبرار',

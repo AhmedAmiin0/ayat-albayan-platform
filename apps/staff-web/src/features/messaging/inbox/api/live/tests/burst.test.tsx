@@ -1,4 +1,5 @@
-import type { ThreadDetail, ThreadView } from '@ab/shared';
+import { aThreadDetail } from '@ab/shared/testing';
+import type { ThreadView } from '@ab/shared';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 import { act, renderHook } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -81,7 +82,7 @@ const slowChat = vi.fn(
     new Promise<unknown>((resolve) => {
       const messages = ids.map((id) => msg(id, 'sent'));
       const delta = { messages: [], has_more: false, pending: [msg('m0', 'read')] };
-      const full = { messages, has_more: false } as ThreadDetail;
+      const full = aThreadDetail({ messages });
       setTimeout(() => resolve(path.includes('?after=') ? delta : full), 400);
     }),
 );

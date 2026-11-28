@@ -12,3 +12,4 @@ export {
   threadMessages,
   threadPath,
 } from './thread-cache';
+export { threadReads } from './thread-reads';

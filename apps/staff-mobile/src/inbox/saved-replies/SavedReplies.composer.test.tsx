@@ -20,7 +20,7 @@ jest.mock('expo-router', () => ({
 }));
 
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
-const student = { id: 'st1', name: 'سلمى', code: 'AB-0001', teacher_name: null, status: 'active' as const, subscription: null };
+const student = { id: uid('st1'), name: 'سلمى', code: 'AB-0001', teacher_name: null, status: 'active' as const, subscription: null };
 const people = { guardian: null, lead: null, students: [student] };
 
 async function open(last = minutesAgo(5), teacher = false) {

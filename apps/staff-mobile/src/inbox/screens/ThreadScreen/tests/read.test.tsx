@@ -2,7 +2,16 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { threadKey } from '@/inbox/thread/hooks/thread-cache';
-import { cachedThread, delivered, detail, inbound, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import {
+  cachedThread,
+  delivered,
+  detail,
+  inbound,
+  message,
+  PHONE,
+  thread,
+  uid,
+} from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 import { ticksLabel } from '@/inbox/shared/ticks.helpers';
 
@@ -40,7 +49,7 @@ test('the thread: who it is, their messages and ours with its delivery ticks', a
 });
 
 test('a number with no name or messages yet: titled by its phone, empty, the first template only', async () => {
-  mockApiFetch.mockResolvedValue({ thread: null, messages: [], has_more: false });
+  mockApiFetch.mockResolvedValue(detail([], { thread: null }));
   await renderWithQuery(<ThreadScreen />);
   expect(await screen.findByText(t.inbox.empty)).toBeTruthy();
   expect(screen.getByRole('header', { name: ltr('+966 55 214 7730') })).toBeTruthy();
@@ -49,10 +58,10 @@ test('a number with no name or messages yet: titled by its phone, empty, the fir
 });
 
 test('media: the kind as a link once the file is there; unsupported says so', async () => {
-  const photo = message({ id: 'p', direction: 'inbound', media_mime: 'image/jpeg', media_url: 'https://x/p' });
-  const odd = message({ id: 'o', direction: 'inbound', body: null });
+  const photo = message({ id: uid('p'), direction: 'inbound', media_mime: 'image/jpeg', media_url: 'https://x/p' });
+  const odd = message({ id: uid('o'), direction: 'inbound', body: null });
   const gone = message({
-    id: 'g',
+    id: uid('g'),
     direction: 'inbound',
     body: null,
     interactive_payload: { type: 'unsupported', errors: [{ code: 131060 }], unsupported: { type: 'unknown' } },
@@ -66,14 +75,14 @@ test('media: the kind as a link once the file is there; unsupported says so', as
 
 test('a guardian’s «تمام» says what it did: the lesson it confirmed; nothing when none was (owner 2026-10-28)', async () => {
   const yes = message({
-    id: 'c',
+    id: uid('c'),
     direction: 'inbound',
     body: 'تمام',
-    guardian_id: 'g-1',
-    lesson_id: 'l-1',
+    guardian_id: uid('g1'),
+    lesson_id: uid('l1'),
     lesson: { starts_at: '2026-10-04T14:00:00Z', status: 'confirmed' },
   });
-  const nothing = message({ id: 'n', direction: 'inbound', body: 'نعم', guardian_id: 'g-1' });
+  const nothing = message({ id: uid('n'), direction: 'inbound', body: 'نعم', guardian_id: uid('g1') });
   mockApiFetch.mockResolvedValue(detail([yes, nothing]));
   await renderWithQuery(<ThreadScreen />);
   expect(await screen.findByText(t.inbox.quickReply.confirmed.replace('{when}', 'الأحد 4 أكتوبر 17:00'))).toBeTruthy();
@@ -108,7 +117,7 @@ test('pull to refresh asks the API again', async () => {
 });
 
 test('reaching the top pages back from the oldest loaded message, with no button (owner 2026-10-27)', async () => {
-  const older = message({ id: 'm0', direction: 'inbound', body: 'رسالة قديمة', created_at: '2026-09-29T10:00:00Z' });
+  const older = message({ id: uid('m0'), direction: 'inbound', body: 'رسالة قديمة', created_at: '2026-09-29T10:00:00Z' });
   const pages = [detail([inbound, delivered], { has_more: true }), detail([older])];
   mockApiFetch.mockImplementation(async (path: string) =>
     path.startsWith('/threads') ? pages.shift() : { open: true, reason: null, queued: 0 },

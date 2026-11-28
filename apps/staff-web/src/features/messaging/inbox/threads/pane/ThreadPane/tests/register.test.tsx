@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import type { ThreadDetail } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -14,11 +15,11 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 
 const LEAD_PAGE: ThreadDetail = {
   ...detail([]),
-  people: { guardian: null, lead: { id: 'lead-1', status: 'new' }, students: [] },
+  people: { guardian: null, lead: { id: uid('lead-1'), status: 'new' }, students: [] },
 };
 const FAMILY_PAGE: ThreadDetail = {
-  ...detail([], { guardian_id: 'g-1', lead_id: null, lead_status: null }),
-  people: { guardian: { id: 'g-1', name: 'أم سهيلة' }, lead: null, students: [] },
+  ...detail([], { guardian_id: uid('g-1'), lead_id: null, lead_status: null }),
+  people: { guardian: { id: uid('g-1'), name: 'أم سهيلة' }, lead: null, students: [] },
 };
 
 afterEach(() => {
@@ -46,7 +47,7 @@ describe('«تسجيل الطالب» from the thread (R-LEAD-06, R-STU-02)', ()
     const dialog = within(screen.getByRole('dialog', { name: t.inbox.registerStudent }));
     apiSend.mockImplementation(async () => {
       page = FAMILY_PAGE;
-      return { id: 's1', code: 'AB-0001', name: 'عمر', status: 'trial' };
+      return { id: uid('s1'), code: 'AB-0001', name: 'عمر', status: 'trial' };
     });
     fireEvent.click(dialog.getByRole('button', { name: t.common.save }));
     expect(await screen.findByRole('complementary', { name: t.inbox.subscription.title })).toBeTruthy();

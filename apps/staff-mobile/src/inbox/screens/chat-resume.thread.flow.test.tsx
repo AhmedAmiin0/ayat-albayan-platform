@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { READ_TIMEOUT_MS } from '@ab/client-core';
 import { native } from '@/test/native-mocks';
 import { GUARDIAN_PHONE, inboxBackend } from '@/inbox/shared/flow-backend';
-import { message } from '@/inbox/shared/thread-fixtures';
+import { message, uid } from '@/inbox/shared/thread-fixtures';
 import {
   backgroundThenActive,
   captureAppState,
@@ -44,7 +44,12 @@ async function openChat() {
   await act(async () => native.listeners.received?.(pushArrives(GUARDIAN_PHONE)));
   expect(stall.stalled.length).toBeGreaterThan(0);
   const writes = () => {
-    const row = message({ id: 'g2', phone_e164: GUARDIAN_PHONE, direction: 'inbound', body: NEW });
+    const row = message({
+      id: uid('g2'),
+      phone_e164: GUARDIAN_PHONE,
+      direction: 'inbound',
+      body: NEW,
+    });
     log[GUARDIAN_PHONE] = [...(log[GUARDIAN_PHONE] ?? []), row];
   };
   return { backend, stall, writes };

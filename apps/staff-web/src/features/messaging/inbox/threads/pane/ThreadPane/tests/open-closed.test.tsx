@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { cleanup, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
@@ -17,7 +18,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 
 function openThread(over: object) {
   routeFetch(apiFetch, [
-    ['/threads/%2B966501234567', detail([message()], { guardian_id: 'g-1', ...over })],
+    ['/threads/%2B966501234567', detail([message()], { guardian_id: uid('g-1'), ...over })],
     ['/messaging/templates', [template()]],
     ['/messages/gate', { open: true, reason: null, queued: 0 }],
     ['/settings', SETTINGS],

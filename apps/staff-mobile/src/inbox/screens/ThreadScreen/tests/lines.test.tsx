@@ -4,7 +4,7 @@ import { t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { readable, SHOWN } from '@/inbox/screens/privacy.helpers';
-import { detail, inbound, message, NOW, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, message, NOW, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadModeProvider } from '@/inbox/thread/hooks/thread-mode';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
@@ -51,14 +51,14 @@ beforeEach(() => {
 });
 
 test('a chat-line bubble says so after its time; a bubble with no line says nothing', async () => {
-  const sent = message({ id: 'm2', body: 'أهلًا وسهلًا', status: 'sent', line: null, created_at: minutesAgo(4) });
+  const sent = message({ id: uid('m2'), body: 'أهلًا وسهلًا', status: 'sent', line: null, created_at: minutesAgo(4) });
   await render({ messages: [{ ...inbound, line: 'chat', created_at: minutesAgo(5) }, sent], thread: openWindow });
   expect(screen.getAllByText(CHAT)).toHaveLength(1);
   expect(screen.queryByText(NOTIFICATIONS)).toBeNull();
 });
 
 test('each bubble names its own line', async () => {
-  const reply = message({ id: 'm2', body: 'أهلًا وسهلًا', status: 'sent', line: 'notifications' });
+  const reply = message({ id: uid('m2'), body: 'أهلًا وسهلًا', status: 'sent', line: 'notifications' });
   await render({ messages: [{ ...inbound, line: 'chat' }, reply] });
   expect(screen.getAllByText(CHAT)).toHaveLength(1);
   expect(screen.getAllByText(NOTIFICATIONS)).toHaveLength(1);
@@ -91,7 +91,7 @@ test('a thread with no line data (an old cache) renders as before: no word, no n
 });
 
 test('teacher: the line is named, never a digit of the number', async () => {
-  const family = { ...openWindow, guardian_id: 'g-1', lead_id: null, lead_status: null, lead_source: null };
+  const family = { ...openWindow, guardian_id: uid('g1'), lead_id: null, lead_status: null, lead_source: null };
   const named = { ...family, display_name: 'أم يوسف', last_inbound_line: 'chat' as const, reply_line: 'chat' as const };
   await render({ messages: [{ ...inbound, line: 'chat' }], thread: named, teacher: true });
   expect(screen.getByText(CHAT)).toBeTruthy();

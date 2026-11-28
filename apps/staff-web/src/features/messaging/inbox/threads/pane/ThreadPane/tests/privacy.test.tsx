@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import type { ThreadDetail } from '@ab/shared';
 import type { TeacherMe } from '@ab/schedule';
 import { screen } from '@testing-library/react';
@@ -14,7 +15,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
 const ME = { id: 't-abrar', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } as unknown as TeacherMe;
-const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, lead_source: null } as const;
+const FAMILY = { guardian_id: uid('g-1'), lead_id: null, lead_status: null, lead_source: null } as const;
 // Every way the number is written on screen: grouped, bare, and its last four digits.
 const SHOWN = ['+966 50 123 4567', '966501234567', '4567'];
 

@@ -20,7 +20,7 @@ jest.mock('expo-router', () => ({
 
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
 const asked = message({
-  id: 'm1',
+  id: uid('m1'),
   direction: 'inbound',
   status: 'delivered',
   body: 'السلام عليكم\nأريد تسجيل ابنتي',
@@ -28,8 +28,8 @@ const asked = message({
   forwardable: true,
   created_at: minutesAgo(10),
 });
-const ours = message({ id: 'm2', body: 'أهلًا وسهلًا', status: 'sent', replyable: true, created_at: minutesAgo(8) });
-const forwarded = message({ id: 'm3', body: 'رابط الحلقة', status: 'sent', forwarded: true, created_at: minutesAgo(6) });
+const ours = message({ id: uid('m2'), body: 'أهلًا وسهلًا', status: 'sent', replyable: true, created_at: minutesAgo(8) });
+const forwarded = message({ id: uid('m3'), body: 'رابط الحلقة', status: 'sent', forwarded: true, created_at: minutesAgo(6) });
 
 async function open(inboundAt = minutesAgo(5), teacher = false) {
   const data = detail([asked, ours, forwarded], {
@@ -64,7 +64,7 @@ beforeEach(() => {
 
 test('a long press opens the menu with «رد» and «إعادة توجيه», each a 44pt button', async () => {
   await open();
-  await fireEvent(screen.getByTestId('bubble-m1'), 'longPress');
+  await fireEvent(screen.getByTestId(`bubble-${asked.id}`), 'longPress');
   expect(within(menu()).getByRole('button', { name: t.inbox.reply.action })).toBeTruthy();
   expect(within(menu()).getByRole('button', { name: t.inbox.forward.action })).toBeTruthy();
   await fireEvent.press(within(menu()).getByRole('button', { name: t.common.cancel }));
@@ -80,7 +80,7 @@ test('a bubble with actions tells the screen reader how to reach them', async ()
 
 test('«رد» shows one strip: the chat name and only the first line; ✕ cancels it', async () => {
   await open();
-  await replyTo('m1');
+  await replyTo(asked.id);
   // The sender and the line are two texts in one row (each on the side of its own language).
   expect(within(strip() ?? menu()).getByText('هدى سالم ·')).toBeTruthy();
   expect(within(strip() ?? menu()).getByText('السلام عليكم')).toBeTruthy();
@@ -90,7 +90,7 @@ test('«رد» shows one strip: the chat name and only the first line; ✕ cance
 
 test('answering our own message names its sender, else «أنت»', async () => {
   await open();
-  await replyTo('m2');
+  await replyTo(ours.id);
   expect(within(strip() ?? menu()).getByText(`${t.inbox.reply.you} ·`)).toBeTruthy();
   expect(within(strip() ?? menu()).getByText('أهلًا وسهلًا')).toBeTruthy();
 });
@@ -99,15 +99,15 @@ test('the text goes with replyToMessageId; its row shows the quote at once; succ
   let answer: (row: unknown) => void = () => undefined;
   mockApiSend.mockReturnValue(new Promise((resolve) => (answer = resolve)));
   await open();
-  await replyTo('m1');
+  await replyTo(asked.id);
   await fireEvent.changeText(box(), 'أهلًا بك');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/threads/%2B966552147730/text', {
     text: 'أهلًا بك',
     clientRequestId: expect.any(String),
-    replyToMessageId: 'm1',
+    replyToMessageId: asked.id,
   });
-  expect(await screen.findByTestId('quote-m1')).toBeTruthy();
+  expect(await screen.findByTestId(`quote-${asked.id}`)).toBeTruthy();
   expect(strip()).toBeTruthy();
   answer(sentText({ id: uid('srv'), body: 'أهلًا بك', status: 'sent' }));
   await waitFor(() => expect(strip()).toBeNull());
@@ -116,7 +116,7 @@ test('the text goes with replyToMessageId; its row shows the quote at once; succ
 test('a refused answer keeps the strip (and the text) for another try', async () => {
   mockApiSend.mockRejectedValue(new ApiError(400, { code: 'reply_not_in_thread' }));
   await open();
-  await replyTo('m1');
+  await replyTo(asked.id);
   await fireEvent.changeText(box(), 'أهلًا بك');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   expect(await screen.findByText(t.inbox.error.reply_not_in_thread)).toBeTruthy();
@@ -126,7 +126,7 @@ test('a refused answer keeps the strip (and the text) for another try', async ()
 
 test('after the 24 h window «رد» is off in the menu, with why', async () => {
   await open(minutesAgo(3 * 24 * 60));
-  await fireEvent(screen.getByTestId('bubble-m1'), 'longPress');
+  await fireEvent(screen.getByTestId(`bubble-${asked.id}`), 'longPress');
   const reply = within(menu()).getByRole('button', { name: t.inbox.reply.action });
   expect(reply.props.accessibilityState).toMatchObject({ disabled: true });
   expect(within(menu()).getByText(t.inbox.sessionClosed)).toBeTruthy();
@@ -136,13 +136,14 @@ test('after the 24 h window «رد» is off in the menu, with why', async () => 
 
 test('a forwarded message says so on top of its bubble', async () => {
   await open();
-  expect(within(screen.getByTestId('bubble-m3')).getByText(t.inbox.forward.forwarded)).toBeTruthy();
-  expect(within(screen.getByTestId('bubble-m1')).queryByText(t.inbox.forward.forwarded)).toBeNull();
+  const bubble = (row: { id: string }) => within(screen.getByTestId(`bubble-${row.id}`));
+  expect(bubble(forwarded).getByText(t.inbox.forward.forwarded)).toBeTruthy();
+  expect(bubble(asked).queryByText(t.inbox.forward.forwarded)).toBeNull();
 });
 
 test('a teacher\'s chat has no menu: the actions are the admin\'s and sales\'', async () => {
   await open(minutesAgo(5), true);
-  await fireEvent(screen.getByTestId('bubble-m1'), 'longPress');
+  await fireEvent(screen.getByTestId(`bubble-${asked.id}`), 'longPress');
   expect(screen.queryByTestId('message-menu')).toBeNull();
   expect(screen.getByText(asked.body ?? '').props.accessibilityHint).toBeUndefined();
 });

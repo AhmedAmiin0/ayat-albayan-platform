@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
@@ -37,8 +38,8 @@ describe('two WhatsApp lines in the inbox (docs/12 §13.10, R-LEAD-02 / R-MSG-05
 
   it('bubbles carry their own line, the composer names the reply line, the window banner is unchanged', async () => {
     const messages = [
-      message({ id: 'm-chat', body: 'من خط المحادثات', line: 'chat', created_at: fresh }),
-      message({ id: 'm-old', body: 'رسالة قديمة', line: null, created_at: '2026-10-01T09:00:00Z' }),
+      message({ id: uid('m-chat'), body: 'من خط المحادثات', line: 'chat', created_at: fresh }),
+      message({ id: uid('m-old'), body: 'رسالة قديمة', line: null, created_at: '2026-10-01T09:00:00Z' }),
     ];
     routeFetch(apiFetch, [
       [`/threads/${encodeURIComponent(PHONE)}`, detail(messages, { last_inbound_line: 'chat', reply_line: 'chat', last_inbound_at: fresh, session_open: true })],

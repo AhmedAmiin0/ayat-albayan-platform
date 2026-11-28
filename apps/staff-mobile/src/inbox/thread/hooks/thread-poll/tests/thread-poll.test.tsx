@@ -4,7 +4,15 @@ import { focusManager } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { cachedThread, delivered, detail, failed, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
+import {
+  cachedThread,
+  delivered,
+  detail,
+  failed,
+  inbound,
+  PHONE,
+  uid,
+} from '@/inbox/shared/thread-fixtures';
 import { provisionalMessage, sendKey, threadKey, threadMessages, threadPath } from '@/inbox/thread/hooks/thread-cache';
 import { useThread } from '@/inbox/thread/hooks/use-thread';
 
@@ -55,7 +63,8 @@ test('focused: a delta per interval after the newest row, and a new message show
   const { hook } = await open();
   serve({ messages: [delivered] });
   await tick();
-  await waitFor(() => expect(threadMessages(hook.result.current.data).map((m) => m.id)).toEqual(['m1', 'm2']));
+  const ids = () => threadMessages(hook.result.current.data).map((m) => m.id);
+  await waitFor(() => expect(ids()).toEqual([inbound.id, delivered.id]));
   expect(new URLSearchParams(deltas()[0]?.split('?')[1]).get('after')).toBe('2026-10-02T08:00:00.000Z');
   expect(fulls()).toBe(1); // the open
 });
@@ -90,10 +99,10 @@ test('a provisional row still sending survives a delta', async () => {
   await act(
     async () => void client.setQueryData(threadKey(PHONE), cachedThread(detail([inbound, temp]))),
   );
-  serve({ pending: [{ ...delivered, id: 'other' }] });
+  serve({ pending: [{ ...delivered, id: uid('other') }] });
   await tick();
   await waitFor(() => expect(deltas().length).toBeGreaterThan(0));
-  expect(threadMessages(hook.result.current.data).map((m) => m.id)).toEqual(['m1', 'tmp']);
+  expect(threadMessages(hook.result.current.data).map((m) => m.id)).toEqual([inbound.id, 'tmp']);
 });
 
 test('a send in flight: the delta leaves the cache to the send', async () => {
@@ -102,7 +111,7 @@ test('a send in flight: the delta leaves the cache to the send', async () => {
   const isMutating = jest.spyOn(client, 'isMutating').mockImplementation((f) => (f?.mutationKey ? 1 : 0));
   await tick();
   expect(isMutating).toHaveBeenCalledWith({ mutationKey: sendKey(PHONE) });
-  expect(threadMessages(hook.result.current.data).map((m) => m.id)).toEqual(['m1']);
+  expect(threadMessages(hook.result.current.data).map((m) => m.id)).toEqual([inbound.id]);
 });
 
 test('more new rows than one delta: the whole thread is read again, not merged with a gap', async () => {

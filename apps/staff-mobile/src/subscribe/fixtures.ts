@@ -7,13 +7,14 @@ import { profile as student } from '@/students/shared/test-data';
 
 export const CHILD = '44444444-4444-4444-8444-444444444444';
 export const SISTER = '55555555-5555-4555-8555-555555555555';
+const GUARDIAN = '33333333-3333-4333-8333-333333333333';
 
 export const profile: StudentProfile = {
   ...student,
   id: CHILD,
-  guardian_id: 'g-1',
+  guardian_id: GUARDIAN,
   name: 'يوسف',
-  guardian: { id: 'g-1', name: 'أم يوسف', phone_e164: '+966552147730' },
+  guardian: { id: GUARDIAN, name: 'أم يوسف', phone_e164: '+966552147730' },
   siblings: [{ id: SISTER, code: 'AB-0184', name: 'سارة', status: 'active' }],
 };
 

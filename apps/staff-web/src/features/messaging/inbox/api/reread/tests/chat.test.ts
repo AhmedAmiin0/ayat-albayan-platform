@@ -1,4 +1,5 @@
-import type { MessageView, ThreadDetail } from '@ab/shared';
+import { aThreadDetail } from '@ab/shared/testing';
+import type { MessageView } from '@ab/shared';
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { patchLiveCaches } from '@/features/messaging/inbox/api/live-patch';
@@ -17,7 +18,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
 
 const KEY = threadQuery(PHONE).queryKey;
 const page = (has_more: boolean, ...messages: MessageView[]) =>
-  ({ messages, has_more }) as ThreadDetail;
+  aThreadDetail({ messages, has_more });
 const statuses = (client: QueryClient) =>
   client.getQueryData(KEY)?.pages.map((p) => p.messages[0]?.status);
 

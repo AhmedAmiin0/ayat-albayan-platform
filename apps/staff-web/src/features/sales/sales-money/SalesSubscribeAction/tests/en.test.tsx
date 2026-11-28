@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import en from '@ab/shared/i18n/en.json';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
@@ -16,7 +17,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 describe('the sales money actions, English', () => {
   it('the buttons and the transfer step read in English', async () => {
     routeFetch(apiFetch, [
-      ['/threads/%2B966501234567', detail([], { guardian_id: 'g-1', lead_id: null, lead_status: null })],
+      ['/threads/%2B966501234567', detail([], { guardian_id: uid('g-1'), lead_id: null, lead_status: null })],
       ['/messaging/templates', []],
       ['/settings', {}],
       ['/sales/money/family', { students: [student({ open: [OPEN_SUB] })] }],
