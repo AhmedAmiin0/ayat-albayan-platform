@@ -25,8 +25,13 @@ const IGNORES = [
 ];
 const JS = '**/*.{js,mjs,cjs}';
 
-// docs/62 §4: page queries and windows come from @ab/core's page unit in every workspace.
-const DATA_RULES = { 'ab/no-hand-paging': 'error' };
+// docs/62 §4 and part 3: page queries and windows come from @ab/core's page unit, and every
+// path is written once, in its route object, in every workspace.
+const DATA_RULES = {
+  'ab/no-hand-paging': 'error',
+  'ab/route-from-contract': 'error',
+  'ab/no-api-path-literal': 'error',
+};
 
 /** The base rules (plain or React) before the package's own blocks. */
 const baseBlocks = (react) => [
