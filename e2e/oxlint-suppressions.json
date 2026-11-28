@@ -146,11 +146,6 @@
       "count": 1
     }
   },
-  "support/messaging/thread-panel.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "support/people/admin-extra.ts": {
     "stylistic/max-len": {
       "count": 1
