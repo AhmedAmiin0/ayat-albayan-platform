@@ -96,15 +96,17 @@ jest.mock('./src/biometric/core/bio-lock', () => {
   return bioLockMock;
 });
 
-// @expo/ui's BottomSheet is a native sheet (SwiftUI / Jetpack Compose) with no jest module: a
-// stand-in View that shows its children only while presented and carries its props (the lesson
-// room's participants; the family app's children sheet), so a test reads and dismisses it.
+// @expo/ui renders SwiftUI / Jetpack Compose views with no jest module: stand-in Views that carry
+// their props, so a test reads them. The BottomSheet shows its children only while presented (the
+// lesson room's participants; the family app's children sheet), so a test reads and dismisses it.
 jest.mock('@expo/ui', () => {
   const { createElement } = require('react');
   const { View } = require('react-native');
   const BottomSheet = ({ isPresented, children, ...props }) =>
     isPresented ? createElement(View, { testID: 'native-bottom-sheet', ...props }, children) : null;
-  return { __esModule: true, BottomSheet };
+  const Host = ({ children, ...props }) => createElement(View, props, children);
+  const RNHostView = ({ children, ...props }) => createElement(View, props, children);
+  return { __esModule: true, BottomSheet, Host, RNHostView };
 });
 
 // A native module: the library's own jest mock, but its KeyboardAvoidingView pads by the library's
