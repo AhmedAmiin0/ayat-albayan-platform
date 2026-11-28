@@ -10,13 +10,13 @@
 
 export const PLACEHOLDER = /^\[([a-z_]+)\]$/;
 const MARKERS = new Set(['edit', 'revoke', 'reaction']);
-const MEDIA = {
-  image: 'image/jpeg',
-  sticker: 'image/webp',
-  audio: 'audio/ogg',
-  video: 'video/mp4',
-  document: 'application/octet-stream',
-};
+const MEDIA = new Map([
+  ['image', 'image/jpeg'],
+  ['sticker', 'image/webp'],
+  ['audio', 'audio/ogg'],
+  ['video', 'video/mp4'],
+  ['document', 'application/octet-stream'],
+]);
 
 /** The placeholder's type of a candidate row, else null (any other row is never touched). */
 export function placeholderOf(row) {
@@ -33,14 +33,20 @@ function markerPatch(type, row) {
   return { kind: target ? 'applied' : 'hidden', payload, apply };
 }
 
-function notePatch(type, row) {
-  if (type in MEDIA) {
-    const mime = row.media_mime ?? (row.media_id ? MEDIA[type] : null);
-    const payload = row.interactive_payload ?? { type, [type]: null };
-    return { kind: row.media_id ? 'file' : 'file_missing', payload, mime };
-  }
+function mediaPatch(type, row) {
+  const mime = row.media_mime ?? (row.media_id ? MEDIA.get(type) : null);
+  const payload = row.interactive_payload ?? { type, [type]: null };
+  return { kind: row.media_id ? 'file' : 'file_missing', payload, mime };
+}
+
+function otherPatch(type, row) {
   if (type === 'errors') return { kind: 'ad_welcome', payload: { type, errors: null, welcome: null } };
-  return { kind: type === 'unsupported' ? 'unsupported' : 'other', payload: row.interactive_payload ?? { type } };
+  const kind = type === 'unsupported' ? 'unsupported' : 'other';
+  return { kind, payload: row.interactive_payload ?? { type } };
+}
+
+function notePatch(type, row) {
+  return MEDIA.has(type) ? mediaPatch(type, row) : otherPatch(type, row);
 }
 
 /** One row → its update ({id, type, kind, payload, mime?, apply?}); null = not a candidate. */

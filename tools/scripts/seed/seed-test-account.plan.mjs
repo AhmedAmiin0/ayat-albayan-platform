@@ -13,16 +13,24 @@ export function parseOptions(argv) {
 
 /** The teacher login's email + password from env; both required (the password only to create). */
 export function readCredentials(env, { remove } = { remove: false }) {
+  const email = readEmail(env);
+  return { email, password: remove ? null : readPassword(env) };
+}
+
+function readEmail(env) {
   const email = (env.TEST_TEACHER_EMAIL ?? '').trim().toLowerCase();
   if (!email) throw new Error('TEST_TEACHER_EMAIL missing');
   if (!EMAIL.test(email)) throw new Error('TEST_TEACHER_EMAIL is not an email address');
-  if (remove) return { email, password: null };
+  return email;
+}
+
+function readPassword(env) {
   const password = env.TEST_ACCOUNT_PASSWORD ?? '';
   if (!password) throw new Error('TEST_ACCOUNT_PASSWORD missing');
   if (password.length < MIN_PASSWORD) {
     throw new Error(`TEST_ACCOUNT_PASSWORD must be at least ${MIN_PASSWORD} characters`);
   }
-  return { email, password };
+  return password;
 }
 
 /**
