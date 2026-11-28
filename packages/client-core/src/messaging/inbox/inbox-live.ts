@@ -13,9 +13,10 @@ export const INBOX_LIVE_EVENT = 'thread_changed';
 /**
  * While the channel is SUBSCRIBED the open chat, the chats list and the badge still re-read this
  * often: a safety net for a socket that died quietly (mobile networks) while it still reads
- * SUBSCRIBED (60 s left a chat up to a minute late). Events re-read sooner.
+ * SUBSCRIBED, or a broadcast the server dropped. No slower than the offline poll, so a lost
+ * event never costs more than being offline. Events re-read sooner.
  */
-export const INBOX_FALLBACK_MS = 20_000;
+export const INBOX_FALLBACK_MS = 10_000;
 /** A burst of events becomes one fetch now and one at the end: an open chat once a second… */
 export const LIVE_CHAT_THROTTLE_MS = 1_000;
 /** …the chats list and the unread badge once every 3 s (GET /threads is the costliest read). */
