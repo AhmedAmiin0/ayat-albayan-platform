@@ -103,6 +103,10 @@ A call file (`x-api.ts` in client-core) is read by people who did not write it. 
 
 A call file already on a base that breaks these lines is put right by the builder of its area in its next part, with its tests; `teacher-earnings-api` (finance) is the first.
 
+## One handler moves from C1 to C2 (2026-11-28)
+
+`POST /portal/students/:id/lessons/:lessonId/join` (`people/portal`) needs the classroom join answer schema, which exists only on the C2 base, and the C2 base takes develop only after C1 lands. So C1 does not wait for it: «Who opens what» counts C1 as finished with this one handler still on plain decorators. Builder 1 lists it in the C1 PR body under «Left for C2». After C1 is on develop and the C2 base has merged develop, builder 5 (classroom) moves it on the C2 base, next to the schema it needs.
+
 ## Who opens what
 
 Only the keeper named for it opens a base's PR into develop, and only when no handler of the base's areas is left on plain decorators and no sub-PR into the base is open. No other builder opens a PR into develop, labels a PR or runs `gh pr merge`. When a base's PR into develop is open, its builders stop adding to it.
