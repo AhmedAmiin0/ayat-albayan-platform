@@ -96,8 +96,8 @@ describe('«اشتراك جديد» → «دفع إلكتروني» (owner 2026-
       currency: SALES_QUOTE.currency,
       teacherId: TRIAL,
     });
-    expect(body?.['startsOn']).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-    expect(typeof body?.['clientRequestId']).toBe('string');
+    expect(body?.startsOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(typeof body?.clientRequestId).toBe('string');
     expect(body).not.toHaveProperty('phone');
     expect(posted('/sales/subscriptions')).toHaveLength(0);
   });

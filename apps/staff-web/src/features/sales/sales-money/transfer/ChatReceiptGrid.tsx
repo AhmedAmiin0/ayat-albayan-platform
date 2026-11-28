@@ -6,14 +6,14 @@ import { ChatReceiptThumb } from './ChatReceiptThumb';
 import { salesErrorText } from '@/features/sales/sales-money/errors';
 import { chatReceiptLabel, type ReceiptChoice } from './receipt';
 
-type Props = {
+interface Props {
   sub: { id: string; student: { id: string } };
   /** Messages already in the list: shown as picked, never copied again. */
   picked: ReadonlySet<string>;
   onPicked: (choice: ReceiptChoice & { kind: 'chat' }) => void;
   /** The chat's phone for a child not hers (chatBinding). */
   bind?: Bind | undefined;
-};
+}
 
 /** Newest first as the API sends them; expired files disabled; a pick copies into the receipts. */
 export function ChatReceiptGrid({ sub, picked, onPicked, bind = {} }: Props) {
@@ -22,12 +22,19 @@ export function ChatReceiptGrid({ sub, picked, onPicked, bind = {} }: Props) {
     mutationFn: (r: SalesChatReceipt) =>
       receiptFromChat({ subscriptionId: sub.id, messageId: r.message_id, ...bind }),
     onSuccess: (res, r) =>
-      onPicked({ kind: 'chat', messageId: r.message_id, subscriptionId: sub.id, path: res.receipt_path, label: chatReceiptLabel(r) }),
+      onPicked({
+        kind: 'chat',
+        messageId: r.message_id,
+        subscriptionId: sub.id,
+        path: res.receipt_path,
+        label: chatReceiptLabel(r),
+      }),
   });
 
   if (list.isPending) return <p className="text-sm text-ink-3">{t.common.loading}</p>;
   if (list.isError) return <FormAlert>{salesErrorText(list.error)}</FormAlert>;
-  if (list.data.length === 0) return <p className="text-sm text-ink-2">{t.salesMoney.noChatReceipts}</p>;
+  if (list.data.length === 0)
+    return <p className="text-sm text-ink-2">{t.salesMoney.noChatReceipts}</p>;
   return (
     <div className="grid gap-2">
       <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -46,7 +53,9 @@ export function ChatReceiptGrid({ sub, picked, onPicked, bind = {} }: Props) {
               )}
             >
               <ChatReceiptThumb studentId={sub.student.id} receipt={r} bind={bind} />
-              {r.expired && <span className="text-2xs text-ink-3">{t.salesMoney.receiptExpired}</span>}
+              {r.expired && (
+                <span className="text-2xs text-ink-3">{t.salesMoney.receiptExpired}</span>
+              )}
             </button>
           </li>
         ))}

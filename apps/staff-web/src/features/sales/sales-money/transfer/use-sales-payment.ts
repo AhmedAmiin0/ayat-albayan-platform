@@ -4,7 +4,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments/api';
 import { useUploadOnce } from '@/features/finance/payments/attachments/attachments';
-import { recordSalesPayment, refreshAfterSalesWrite, uploadSalesReceipt, type Bind } from '@/features/sales/sales-money/api';
+import {
+  recordSalesPayment,
+  refreshAfterSalesWrite,
+  uploadSalesReceipt,
+  type Bind,
+} from '@/features/sales/sales-money/api';
 import type { ReceiptChoice } from './receipt';
 
 export interface TransferForm {
@@ -15,11 +20,11 @@ export interface TransferForm {
   note: string;
 }
 
-export type TransferInput = {
+export interface TransferInput {
   sub: SalesMoneySubscriptionView;
   form: TransferForm;
   attachments: ReceiptChoice[];
-};
+}
 
 /** One clientRequestId per step, re-sent on retry; each upload sent once; package's currency. */
 export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void, bind: Bind = {}) {

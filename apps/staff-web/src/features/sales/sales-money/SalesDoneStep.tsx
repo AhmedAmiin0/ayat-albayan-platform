@@ -5,15 +5,18 @@ import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { studentLabel } from '@/features/finance/subscriptions';
 
 /** `onBookCourse` books the course days for the paid package's student. */
-type Props = {
+interface Props {
   payment: SalesPaymentView;
   onClose: () => void;
   onBookCourse?: (() => void) | undefined;
-};
+}
 
 /** The transfer is recorded and counts at once (R-ASST-04). */
 export function SalesDoneStep({ payment, onClose, onBookCourse }: Props) {
-  const title = payment.student.status === 'active' ? t.salesMoney.becameSubscribed : t.salesMoney.transferSaved;
+  const title =
+    payment.student.status === 'active'
+      ? t.salesMoney.becameSubscribed
+      : t.salesMoney.transferSaved;
   return (
     <Dialog
       title={title}
@@ -21,7 +24,11 @@ export function SalesDoneStep({ payment, onClose, onBookCourse }: Props) {
       compact
       actions={
         <>
-          <Link to="/sales/earnings" search={{ view: 'payments' }} className={buttonVariants({ variant: 'secondary' })}>
+          <Link
+            to="/sales/earnings"
+            search={{ view: 'payments' }}
+            className={buttonVariants({ variant: 'secondary' })}
+          >
             {t.salesMoney.openMyPayments}
           </Link>
           {onBookCourse && (

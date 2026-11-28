@@ -8,14 +8,14 @@ import type { Bind } from '@/features/sales/sales-money/api';
 import { ChatReceiptGrid } from './ChatReceiptGrid';
 import { addChatChoice, attachmentItem, pickedMessages, type ReceiptChoice } from './receipt';
 
-type Props = {
+interface Props {
   sub: { id: string; student: { id: string } };
   value: ReceiptChoice[];
   onChange: (list: ReceiptChoice[]) => void;
   maxBytes: number;
   /** The chat's phone for a child not hers (chatBinding). */
   bind?: Bind | undefined;
-};
+}
 
 /** Optional attachments (R-ASST-04, up to five): chat files copied on pick, uploads checked. */
 export function ReceiptChooser({ sub, value, onChange, maxBytes, bind }: Props) {

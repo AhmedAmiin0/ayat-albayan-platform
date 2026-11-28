@@ -6,7 +6,11 @@ import type { Bind } from '@/features/sales/sales-money/api';
 import { salesErrorText } from '@/features/sales/sales-money/errors';
 import { useSalesQuote } from './use-sales-quote';
 
-type Props = { studentId: string; pricing: SubscriptionPricing; bind?: Bind | undefined };
+interface Props {
+  studentId: string;
+  pricing: SubscriptionPricing;
+  bind?: Bind | undefined;
+}
 
 /** The price the create will store, in the family's currency; shown, never typed. */
 export function SalesQuotePreview({ studentId, pricing, bind }: Props) {
@@ -15,7 +19,11 @@ export function SalesQuotePreview({ studentId, pricing, bind }: Props) {
   if (quote.isError) return <FormAlert>{salesErrorText(quote.error)}</FormAlert>;
   const q = quote.data;
   return (
-    <figure aria-live="polite" aria-busy={quote.isFetching} className="grid gap-1.5 border-y border-rule py-3.5">
+    <figure
+      aria-live="polite"
+      aria-busy={quote.isFetching}
+      className="grid gap-1.5 border-y border-rule py-3.5"
+    >
       <figcaption className="text-xs text-ink-3">{t.salesMoney.price}</figcaption>
       {q ? (
         <>

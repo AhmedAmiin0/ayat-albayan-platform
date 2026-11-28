@@ -1,15 +1,24 @@
-import { salesStartDate, usedBeforeProblem, type SalesStartProblem, type UsedBeforeProblem } from '@ab/shared';
+import {
+  salesStartDate,
+  usedBeforeProblem,
+  type SalesStartProblem,
+  type UsedBeforeProblem,
+} from '@ab/shared';
 import type { StartValue } from './SalesStartField';
 
 /** The start fields of POST /sales/subscriptions: none without the permission (the API's default day). */
-export type StartBody = { startsOn?: string; alreadyStarted?: true; lessonsUsedBefore?: number };
+export interface StartBody {
+  startsOn?: string;
+  alreadyStarted?: true;
+  lessonsUsedBefore?: number;
+}
 
-type StartOpts = {
+interface StartOpts {
   canSet: boolean;
   today: string;
   /** Lessons of the chosen package (usedBeforeProblem's bound). */
   lessonsTotal: number;
-};
+}
 
 /**
  * The same rules as the API (salesStartDate, usedBeforeProblem) before posting: without

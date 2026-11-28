@@ -53,8 +53,15 @@ export function SalesSubscribeStep(props: SalesSubscribeStepProps) {
   const bind = chatBinding(students, { studentId, phone });
   const price = useSalesCustomPrice({ studentId: online ? '' : studentId, pricing, bind });
   const lessonsTotal = pricingLessons(pricing);
-  const { canSet, today, shown: startShown, usedMax, patch, error, setError } =
-    useSubscribeStart(lessonsTotal);
+  const {
+    canSet,
+    today,
+    shown: startShown,
+    usedMax,
+    patch,
+    error,
+    setError,
+  } = useSubscribeStart(lessonsTotal);
   const requestId = useBodyRequestId();
 
   const save = useMutation({
@@ -72,7 +79,10 @@ export function SalesSubscribeStep(props: SalesSubscribeStepProps) {
     const custom = price.check();
     if (!checked.ok || !custom) return;
     // The link never carries the chat's phone: online is for her own children only.
-    if (online) return pay.submit({ ...checked.body, ...teacher.body });
+    if (online) {
+      pay.submit({ ...checked.body, ...teacher.body });
+      return;
+    }
     const body = { studentId, pricing, ...custom, ...checked.body, ...teacher.body, ...bind };
     save.mutate({ ...body, clientRequestId: requestId(body) });
   };
@@ -88,7 +98,11 @@ export function SalesSubscribeStep(props: SalesSubscribeStepProps) {
           <Button type="button" variant="ghost" onClick={onClose}>
             {t.common.cancel}
           </Button>
-          <Button type="submit" form={formId} disabled={!studentId || (online ? !pay.ready : save.isPending)}>
+          <Button
+            type="submit"
+            form={formId}
+            disabled={!studentId || (online ? !pay.ready : save.isPending)}
+          >
             {online ? onlineLabel : bankLabel}
           </Button>
         </>

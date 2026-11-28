@@ -17,7 +17,10 @@ const LINE: Record<Exclude<PayScreen, 'open'>, { text: string; tone: 'ok' | 'act
   cancelled: { text: P.cancelled, tone: 'act' },
 };
 
-type Props = { token: string; back: PayReturn };
+interface Props {
+  token: string;
+  back: PayReturn;
+}
 
 /** A wrong token (404 link_not_found) gets its own line; anything else the generic one. */
 const loadErrorText = (e: unknown): string =>
@@ -44,11 +47,25 @@ export function PayPage({ token, back }: Props) {
         )}
         {query.isError && <FormAlert>{loadErrorText(query.error)}</FormAlert>}
         {line && (
-          <p role="status" data-tone={line.tone} className={line.tone === 'ok' ? 'text-body font-semibold text-ok' : 'text-sm font-semibold text-ink'}>
+          <p
+            role="status"
+            data-tone={line.tone}
+            className={
+              line.tone === 'ok'
+                ? 'text-body font-semibold text-ok'
+                : 'text-sm font-semibold text-ink'
+            }
+          >
             {line.text}
           </p>
         )}
-        {query.data && <PayDetails token={token} link={query.data} payable={screen === 'open' || screen === 'back'} />}
+        {query.data && (
+          <PayDetails
+            token={token}
+            link={query.data}
+            payable={screen === 'open' || screen === 'back'}
+          />
+        )}
       </div>
     </main>
   );

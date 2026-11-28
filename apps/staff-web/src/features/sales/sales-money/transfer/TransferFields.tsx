@@ -2,14 +2,14 @@ import { Field, Input, t } from '@ab/web-kit';
 import { dateLabel } from '@/features/teaching/schedule';
 import type { TransferForm } from './use-sales-payment';
 
-type Props = {
+interface Props {
   form: TransferForm;
   set: (patch: Partial<TransferForm>) => void;
   /** The package's currency: the only one a sales transfer is recorded in (read-only). */
   packageCurrency: string;
   today: string;
   amountError?: string | null;
-};
+}
 
 /**
  * Amount, the package currency (fixed), transfer day (never in the future) and an
@@ -20,14 +20,31 @@ export function TransferFields({ form, set, packageCurrency, today, amountError 
     <div className="grid gap-4 sm:grid-cols-2">
       <Field label={t.salesMoney.amount} error={amountError ?? undefined}>
         {(p) => (
-          <Input {...p} type="text" inputMode="decimal" dir="ltr" value={form.amount} onChange={(e) => set({ amount: e.target.value })} required />
+          <Input
+            {...p}
+            type="text"
+            inputMode="decimal"
+            dir="ltr"
+            value={form.amount}
+            onChange={(e) => set({ amount: e.target.value })}
+            required
+          />
         )}
       </Field>
       <Field label={t.salesMoney.currency}>
         {(p) => <Input {...p} dir="ltr" value={packageCurrency} readOnly />}
       </Field>
       <Field label={t.salesMoney.paidOn} hint={dateLabel(form.day)}>
-        {(p) => <Input {...p} type="date" dir="ltr" max={today} value={form.day} onChange={(e) => set({ day: e.target.value })} />}
+        {(p) => (
+          <Input
+            {...p}
+            type="date"
+            dir="ltr"
+            max={today}
+            value={form.day}
+            onChange={(e) => set({ day: e.target.value })}
+          />
+        )}
       </Field>
       <Field label={t.salesMoney.note}>
         {(p) => <Input {...p} value={form.note} onChange={(e) => set({ note: e.target.value })} />}

@@ -17,7 +17,7 @@ import { SalesMoneyFlow, type FlowStart } from './SalesMoneyFlow';
 import { SalesPrimaryAction } from './SalesPrimaryAction';
 import { hasCourse } from './SalesSubscribeAction';
 
-type Opened = { start: FlowStart; studentId?: string; renew?: boolean };
+interface Opened { start: FlowStart; studentId?: string; renew?: boolean }
 type Choice = 'course' | 'trial';
 type LeadThread = ThreadView & { lead_id: string };
 

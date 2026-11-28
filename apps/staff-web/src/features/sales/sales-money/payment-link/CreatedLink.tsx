@@ -9,7 +9,7 @@ import { fillComposer } from '@/features/messaging/inbox';
 
 const P = t.paymentLinks;
 
-type Props = {
+interface Props {
   link: PaymentLinkView;
   /** The chat whose box gets the message. */
   phone: string;
@@ -18,7 +18,7 @@ type Props = {
   onClose: () => void;
   /** Opens the course dialog over this one; the picks are kept until paid. */
   onBookCourse?: (() => void) | undefined;
-};
+}
 
 /** She sends the message herself; the course picks wait as a draft and are booked once paid. */
 export function CreatedLink({ link, phone, canSend, onClose, onBookCourse }: Props) {
@@ -69,10 +69,17 @@ export function CreatedLink({ link, phone, canSend, onClose, onBookCourse }: Pro
             <Amount amount={link.reference_price} currency={link.currency} />
           </dd>
         </dl>
-        <p dir="ltr" className="break-all rounded-md border border-rule bg-sunk p-3 text-start text-sm">
+        <p
+          dir="ltr"
+          className="break-all rounded-md border border-rule bg-sunk p-3 text-start text-sm"
+        >
           {link.url}
         </p>
-        {!canSend && <p className="rounded-md bg-gold-wash px-3 py-2 text-xs text-ink">{t.inbox.sessionClosed}</p>}
+        {!canSend && (
+          <p className="rounded-md bg-gold-wash px-3 py-2 text-xs text-ink">
+            {t.inbox.sessionClosed}
+          </p>
+        )}
       </div>
       {copied && (
         <Toast

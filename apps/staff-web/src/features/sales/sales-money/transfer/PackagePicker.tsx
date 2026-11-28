@@ -3,11 +3,11 @@ import { Field, Select, t } from '@ab/web-kit';
 import { packageName, studentLabel } from '@/features/finance/subscriptions';
 import { dueLine } from './due-line';
 
-type Props = {
+interface Props {
   packages: SalesMoneySubscriptionView[];
   value: string;
   onChange: (id: string) => void;
-};
+}
 
 export function PackagePicker({ packages, value, onChange }: Props) {
   return (

@@ -1,6 +1,11 @@
 import { Button, Icon, type IconName, IconButton } from '@ab/web-kit';
 
-type Props = { label: string; icon: IconName; compact: boolean; onClick: () => void };
+interface Props {
+  label: string;
+  icon: IconName;
+  compact: boolean;
+  onClick: () => void;
+}
 
 /** The sales chat header's one visible action: a small secondary button, an icon button on phones (`compact`). */
 export function SalesPrimaryAction({ label, icon, compact, onClick }: Props) {
