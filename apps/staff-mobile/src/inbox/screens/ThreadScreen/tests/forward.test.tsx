@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react-nativ
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { selectedLine } from '@/inbox/thread/hooks/forward-text';
-import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, message, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
 const mockApiFetch = jest.fn();
@@ -21,7 +21,7 @@ jest.mock('expo-router', () => ({
 
 const UUID = /^[0-9a-f-]{36}$/;
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
-const link = message({ id: 'm1', direction: 'inbound', status: 'delivered', body: 'رابط الحلقة', forwardable: true, created_at: minutesAgo(9) });
+const link = message({ id: uid('m1'), direction: 'inbound', status: 'delivered', body: 'رابط الحلقة', forwardable: true, created_at: minutesAgo(9) });
 const chat = (n: number, fields: Partial<ThreadView> = {}): ThreadView => ({
   ...thread,
   phone_e164: `+96650000000${n}`,
@@ -45,7 +45,7 @@ async function openPicker() {
     return data;
   });
   await renderWithQuery(<ThreadScreen />, createTestQueryClient());
-  await fireEvent(await screen.findByTestId('bubble-m1'), 'longPress');
+  await fireEvent(await screen.findByTestId(`bubble-${link.id}`), 'longPress');
   await fireEvent.press(within(screen.getByTestId('message-menu')).getByRole('button', { name: t.inbox.forward.action }));
   await screen.findByTestId('forward-list');
   await screen.findByText('ولي أمر 1');
@@ -81,7 +81,7 @@ test('up to five: the sixth is off and the counter says why; unpicking one frees
 test('«أرسل» posts the message, the picks in order and an id; the chat shows what was sent and skipped', async () => {
   mockApiSend.mockResolvedValue({
     results: [
-      { phone: '+966500000003', sent: true, message_id: 'c3' },
+      { phone: '+966500000003', sent: true, message_id: uid('c3') },
       { phone: '+966500000002', sent: false, reason: 'session_closed' },
     ],
   });
@@ -90,7 +90,7 @@ test('«أرسل» posts the message, the picks in order and an id; the chat sho
   await pick('ولي أمر 2');
   await fireEvent.press(sendButton());
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/threads/forward', {
-    messageId: 'm1',
+    messageId: link.id,
     targets: ['+966500000003', '+966500000002'],
     clientRequestId: expect.stringMatching(UUID),
   });
@@ -104,7 +104,7 @@ test('«أرسل» posts the message, the picks in order and an id; the chat sho
 
 test('a failed post keeps the picks and says so; sending again reuses the same clientRequestId', async () => {
   mockApiSend.mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce({
-    results: [{ phone: '+966500000001', sent: true, message_id: 'c1' }],
+    results: [{ phone: '+966500000001', sent: true, message_id: uid('c1') }],
   });
   await openPicker();
   await pick('ولي أمر 1');

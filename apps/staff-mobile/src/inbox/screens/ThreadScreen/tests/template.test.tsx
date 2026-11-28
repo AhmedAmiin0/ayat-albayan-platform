@@ -2,7 +2,7 @@ import type { ThreadLesson } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import { detail, inbound, meetReminder, notApproved, plainReminder, thread } from '@/inbox/shared/thread-fixtures';
+import { detail, inbound, meetReminder, notApproved, plainReminder, thread, uid } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 
 const mockApiFetch = jest.fn();
@@ -22,7 +22,7 @@ const names = t.templates.names;
 const labels = t.inbox.composer.paramNames;
 const twoDaysAgo = new Date(Date.now() - 2 * 24 * 3_600_000).toISOString();
 const LESSON: ThreadLesson = {
-  id: 'l-1',
+  id: uid('l1'),
   starts_at: '2026-10-04T14:00:00Z',
   meeting_link: null,
   student_names: ['سهيلة'],
@@ -30,7 +30,7 @@ const LESSON: ThreadLesson = {
 };
 const teacherTemplate = { ...plainReminder, key: 'teacher_lesson_reminder', params: ['teacher_name', 'lesson_slot'] };
 const closed = detail([inbound], {
-  thread: { ...thread, last_inbound_at: twoDaysAgo, session_open: true, guardian_id: 'g-1' },
+  thread: { ...thread, last_inbound_at: twoDaysAgo, session_open: true, guardian_id: uid('g1') },
   lessons: [LESSON],
 });
 
@@ -88,7 +88,7 @@ test('the lesson time is picked, never typed (rule 6); the send carries the less
     key: 'lesson_reminder_plain',
     params: { '1': 'سهيلة', '2': '17:00' },
     clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
-    lessonId: 'l-1',
+    lessonId: LESSON.id,
   });
   await waitFor(() => expect(screen.queryByLabelText(labels.lesson_time)).toBeNull());
   // The sent row lands through the virtualized list a render later: wait for it, don't read at once.

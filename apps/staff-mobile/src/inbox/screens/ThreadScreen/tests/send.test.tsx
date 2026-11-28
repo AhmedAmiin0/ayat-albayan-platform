@@ -2,7 +2,15 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { threadKey, threadMessages, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
-import { detail, inbound, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import {
+  detail,
+  inbound,
+  message,
+  PHONE,
+  sentText,
+  thread,
+  uid,
+} from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen/ThreadScreen';
 import { ticksLabel } from '@/inbox/shared/ticks.helpers';
 
@@ -56,10 +64,10 @@ test('inside 24 h: free text shows at once as queued, then becomes the API row',
   expect(screen.getByLabelText(ticksLabel(t.enums.messageStatus.queued))).toBeTruthy();
   expect(box().props.value).toBe('');
 
-  const after = detail([inbound, message({ id: 'srv', body: 'أهلًا يا أم سلمى', status: 'sent' })]);
+  const after = detail([inbound, message({ id: uid('srv'), body: 'أهلًا يا أم سلمى', status: 'sent' })]);
   mockApiFetch.mockImplementation(async (path: string) => (path === '/messages/gate' ? { open: true, reason: null, queued: 0 } : after));
-  answer(message({ id: 'srv', body: 'أهلًا يا أم سلمى', status: 'sent' }));
-  await waitFor(() => expect(cached(client).map((m) => m.id)).toEqual(['m1', 'srv']));
+  answer(sentText({ id: uid('srv'), body: 'أهلًا يا أم سلمى', status: 'sent' }));
+  await waitFor(() => expect(cached(client).map((m) => m.id)).toEqual([inbound.id, uid('srv')]));
   expect(await screen.findByLabelText(ticksLabel(t.enums.messageStatus.sent))).toBeTruthy();
 });
 
@@ -69,7 +77,7 @@ test('a refused send rolls back: the row goes, the text comes back, the reason s
   await fireEvent.changeText(box(), 'لسه فاكرة؟');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
   expect(await screen.findByText(t.inbox.error.session_closed)).toBeTruthy();
-  expect(cached(client).map((m) => m.id)).toEqual(['m1']);
+  expect(cached(client).map((m) => m.id)).toEqual([inbound.id]);
   expect(box().props.value).toBe('لسه فاكرة؟');
 });
 

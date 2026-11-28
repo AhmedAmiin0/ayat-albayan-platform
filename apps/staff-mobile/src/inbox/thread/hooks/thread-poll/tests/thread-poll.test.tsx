@@ -4,7 +4,15 @@ import { focusManager } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { cachedThread, delivered, detail, failed, inbound, PHONE, uid } from '@/inbox/shared/thread-fixtures';
+import {
+  cachedThread,
+  delivered,
+  detail,
+  failed,
+  inbound,
+  PHONE,
+  uid,
+} from '@/inbox/shared/thread-fixtures';
 import { provisionalMessage, sendKey, threadKey, threadMessages, threadPath } from '@/inbox/thread/hooks/thread-cache';
 import { useThread } from '@/inbox/thread/hooks/use-thread';
 
@@ -55,7 +63,8 @@ test('focused: a delta per interval after the newest row, and a new message show
   const { hook } = await open();
   serve({ messages: [delivered] });
   await tick();
-  await waitFor(() => expect(threadMessages(hook.result.current.data).map((m) => m.id)).toEqual([inbound.id, delivered.id]));
+  const ids = () => threadMessages(hook.result.current.data).map((m) => m.id);
+  await waitFor(() => expect(ids()).toEqual([inbound.id, delivered.id]));
   expect(new URLSearchParams(deltas()[0]?.split('?')[1]).get('after')).toBe('2026-10-02T08:00:00.000Z');
   expect(fulls()).toBe(1); // the open
 });
