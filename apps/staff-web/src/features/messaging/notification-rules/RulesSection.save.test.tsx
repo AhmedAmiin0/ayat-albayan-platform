@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { findRow, overview, renderRules } from './rules-test-kit';
+import { findRow, overview, renderRules, savedRow } from './rules-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -50,7 +50,7 @@ describe('«الإشعارات»: a row saves on its own', () => {
     expect((select as HTMLSelectElement).value).toBe('');
     expect(document.querySelector('[data-unsaved="lesson_reminder"]')).toBeNull();
     fireEvent.change(select, { target: { value: 'num-2' } });
-    apiSend.mockResolvedValue(undefined);
+    apiSend.mockResolvedValue(savedRow('lesson_reminder'));
     fireEvent.click(screen.getByRole('button', { name: saveName }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/admin/notifications/lesson_reminder', { number_id: 'num-2' }));
   });
