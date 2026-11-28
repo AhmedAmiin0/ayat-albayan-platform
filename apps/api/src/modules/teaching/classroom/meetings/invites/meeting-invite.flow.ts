@@ -15,6 +15,7 @@ import { inviteDedupKey, invitationText, inviteeWhen, inviteSubject } from './me
 import type { ResolvedInvitee } from './meeting-invitee.resolver';
 import { MeetingInviteesRepo, type StoredInvitee } from './meeting-invitees.repo';
 import { toInviteeView } from './meeting-invites.mapper';
+import { inviteeRow } from './meeting-invite.rows';
 
 const DAY_MS = 86_400_000;
 
@@ -58,13 +59,15 @@ export class MeetingInviteFlow {
 
   async invite(run: InviteRun): Promise<MeetingInviteResult[]> {
     const existing = await this.invitees.forMeeting(run.meeting.id);
-    const taken = new Set(existing.flatMap((e) => [e.profile_id, e.phone_e164]).filter((k) => k !== null));
+    const keys = existing.flatMap((e) => [e.profile_id, e.phone_e164]);
+    const taken = new Set(keys.filter((k) => k !== null));
     const fresh = run.invitees.filter((i) => !taken.has(i.profileId ?? i.phone ?? ''));
     if (existing.filter((e) => e.status !== 'cancelled').length + fresh.length > MAX_MEETING_INVITEES) {
       throw new BadRequestException({ code: 'too_many_invitees', message: 'too_many_invitees' });
     }
-    await this.assertDailyLimit({ actorId: run.actorId, now: run.now, adding: chatCount(fresh, run.policy) });
-    const rows = await this.invitees.insert(fresh.map((i) => this.rowOf(run, i)));
+    const adding = chatCount(fresh, run.policy);
+    await this.assertDailyLimit({ actorId: run.actorId, now: run.now, adding });
+    const rows = await this.invitees.insert(fresh.map((i) => inviteeRow(run, i)));
     const results: MeetingInviteResult[] = [];
     for (const invitee of rows) {
       if (invitee.kind === 'staff') results.push(await this.staff({ run, invitee }));
@@ -94,18 +97,22 @@ export class MeetingInviteFlow {
     const token = newMeetingToken();
     await this.invitees.update(p.invitee.id, { token_hash: hashMeetingToken(token) });
     const link = this.linkOf(token);
-    const body = invitationText({ title: meeting.title, when: inviteeWhen(meeting.starts_at, p.invitee), link });
-    const dedupKey = p.dedupKey ?? inviteDedupKey({ meetingId: meeting.id, phone, startsAt: meeting.starts_at });
+    const when = inviteeWhen(meeting.starts_at, p.invitee);
+    const body = invitationText({ title: meeting.title, when, link });
+    const key = { meetingId: meeting.id, phone, startsAt: meeting.starts_at };
+    const dedupKey = p.dedupKey ?? inviteDedupKey(key);
     const { actorId, policy } = p.run;
+    const chat = { phone, body, dedupKey, actorId, teacherId: policy.teacherId, now };
     const out = policy.mayChat(phone)
-      ? await this.sender.chat({ phone, body, dedupKey, actorId, teacherId: policy.teacherId, expiresAt: this.expiry(p.run), now })
+      ? await this.sender.chat({ ...chat, expiresAt: this.expiry(p.run) })
       : LINK_ONLY;
     return { ...(await this.record(p.invitee, out, p.run)), link, invitation_text: body };
   }
 
   async assertDailyLimit(v: { actorId: string; now: Date; adding: number }): Promise<void> {
     if (v.adding === 0) return;
-    const used = await this.invitees.whatsappSince(v.actorId, new Date(v.now.getTime() - DAY_MS).toISOString());
+    const since = new Date(v.now.getTime() - DAY_MS).toISOString();
+    const used = await this.invitees.whatsappSince(v.actorId, since);
     if (used + v.adding > MAX_DAILY_WHATSAPP_INVITES) throw new ConflictException({ code: 'invite_limit', message: 'invite_limit' });
   }
 
@@ -130,20 +137,5 @@ export class MeetingInviteFlow {
     const day = run.now.getTime() + DAY_MS;
     const closes = meetingWindow(run.meeting, run.now, run.win)?.closes_at;
     return new Date(closes ? Math.min(day, Date.parse(closes)) : day).toISOString();
-  }
-
-  private rowOf(run: InviteRun, i: ResolvedInvitee) {
-    return {
-      meeting_id: run.meeting.id,
-      kind: i.kind,
-      profile_id: i.profileId,
-      student_id: i.studentId,
-      phone_e164: i.phone,
-      display_name: i.displayName.slice(0, 120),
-      tz: i.tz,
-      channel: i.kind === 'staff' ? 'in_app' : run.policy.mayChat(i.phone ?? '') ? 'whatsapp' : 'link',
-      status: 'pending',
-      created_by: run.actorId,
-    };
   }
 }
