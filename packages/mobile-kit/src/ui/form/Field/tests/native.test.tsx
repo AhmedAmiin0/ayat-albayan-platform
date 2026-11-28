@@ -103,3 +103,11 @@ test('a value the screen cleans replaces what was typed', async () => {
   await fireEvent.changeText(input(), '12a');
   expect(input()).toHaveDisplayValue('12');
 });
+
+test('a keystroke the screen cleans back to its old value is undone in the native text', async () => {
+  await render(<DigitsOnly />);
+  await fireEvent.changeText(input(), '12');
+  expect(input()).toHaveDisplayValue('12');
+  await fireEvent.changeText(input(), '12a');
+  expect(input()).toHaveDisplayValue('12');
+});
