@@ -1,4 +1,4 @@
-/// <reference types="../../../assets/images.d.ts" />
+/// <reference types="../../../../assets/images.d.ts" />
 import { Animated, Image, View } from 'react-native';
 import mark from '../../../../assets/brand/mark.png';
 import { ConnectingRing } from '../ConnectingRing';
