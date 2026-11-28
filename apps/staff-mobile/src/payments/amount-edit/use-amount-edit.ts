@@ -1,7 +1,8 @@
-import { salesPaymentCalls } from '@ab/client-core';
+import { paymentCalls, salesPaymentCalls } from '@ab/client-core';
 import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
+const payments = paymentCalls({ apiFetch, apiSend });
 const salesPayments = salesPaymentCalls({ apiFetch, apiSend });
 
 /** The amount edit the sheet runs: the new amount in, nothing back (the lists refetch). */
@@ -22,7 +23,9 @@ function useAmountEdit(send: (amount: number) => Promise<unknown>, stale: readon
 /** Patches the amount only; payments, package paid state, receivables and balance refetch. */
 export function useAdminAmountEdit(payment: { id: string; student: { id: string } }) {
   return useAmountEdit(
-    (amount) => apiSend('PATCH', `/payments/${payment.id}`, { amount }),
+    async (amount) => {
+      await payments.update(payment.id, { amount });
+    },
     [pathKey('/payments'), pathKey('/subscriptions'), pathKey('/receivables'), ['students', payment.student.id]],
   );
 }

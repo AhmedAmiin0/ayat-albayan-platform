@@ -13,8 +13,9 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object
 const PHONE = '+966500000005';
 const P = t.portal.app.profile;
 const A = t.portal.app.account;
+const ID = '0b6f1a52-6d1e-4c43-9a37-3c5c8f1e2a10';
 const profile = (over: Record<string, unknown> = {}) => ({
-  id: 'p1', full_name: 'أم سارة', email: null, phone_e164: PHONE, avatar_url: null,
+  id: ID, full_name: 'أم سارة', email: null, phone_e164: PHONE, avatar_url: null,
   role: { base: null, key: null, name_ar: null, name_en: null }, ...over,
 });
 

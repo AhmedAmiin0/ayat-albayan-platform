@@ -8,7 +8,7 @@ import { ApiError } from '@ab/web-kit';
 // Each test file mocks '@/lib/api'.
 
 export const PROFILE: AccountProfile = {
-  id: 'u1',
+  id: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11',
   full_name: 'سارة أحمد',
   email: 'sara@ab.co',
   phone_e164: '+966551234567',

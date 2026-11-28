@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { studentListItemFixture } from '@ab/shared/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { StudentsPage } from './StudentsPage';
@@ -11,18 +12,8 @@ vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: held.list, can: (p: string) => held.list.includes(p) }),
 }));
 
-const row = (id: string, name: string) => ({
-  id,
-  code: `AB-${id}`,
-  name,
-  status: 'active',
-  program: 'quran',
-  tz: 'Asia/Riyadh',
-  created_at: '2026-10-01T00:00:00Z',
-  guardian_name: 'ام جود',
-  guardian_phone: '+966501234567',
-  teacher_name: null,
-});
+const row = (id: string, name: string) =>
+  studentListItemFixture({ id, code: `AB-${id}`, name, guardian_name: 'ام جود' });
 
 function renderPage() {
   const page = { items: [row('1', 'سهيلة'), row('2', 'جود')], total: 2, page: 1, pageSize: 20 };

@@ -1,5 +1,5 @@
 import type { QuoteResponse, StudentBalanceView, SubscriptionView } from '@ab/money';
-import type { StudentProfile } from '@ab/shared';
+import type { StudentProfileView } from '@ab/shared';
 import { subscription } from '@/payments/fixtures';
 import { profile as student } from '@/students/shared/test-data';
 
@@ -9,12 +9,12 @@ export const CHILD = '44444444-4444-4444-8444-444444444444';
 export const SISTER = '55555555-5555-4555-8555-555555555555';
 const GUARDIAN = '33333333-3333-4333-8333-333333333333';
 
-export const profile: StudentProfile = {
+export const profile: StudentProfileView = {
   ...student,
   id: CHILD,
   guardian_id: GUARDIAN,
   name: 'يوسف',
-  guardian: { id: GUARDIAN, name: 'أم يوسف', phone_e164: '+966552147730' },
+  guardian: { ...student.guardian, id: GUARDIAN, name: 'أم يوسف', students: [] },
   siblings: [{ id: SISTER, code: 'AB-0184', name: 'سارة', status: 'active' }],
 };
 

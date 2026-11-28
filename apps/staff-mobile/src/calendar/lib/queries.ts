@@ -1,5 +1,4 @@
-import type { AvailabilityRow, Teacher } from '@ab/shared';
-import { lessonListCalls } from '@ab/client-core';
+import { availabilityCalls, lessonListCalls, teacherCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
@@ -23,13 +22,17 @@ export function useWeekLessons(params: WeekParams) {
   });
 }
 
+const teachers = teacherCalls({ apiFetch, apiSend });
+const availability = availabilityCalls({ apiFetch, apiSend });
+
 export function useTeacher(id: string) {
-  const path = `/teachers/${id}`;
-  return useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<Teacher>(path) });
+  return useQuery({ queryKey: pathKey(`/teachers/${id}`), queryFn: () => teachers.get(id) });
 }
 
 /** GET /teachers/:id/availability: the weekly grid, wall clock in its own tz. */
 export function useAvailability(id: string) {
-  const path = `/teachers/${id}/availability`;
-  return useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<AvailabilityRow[]>(path) });
+  return useQuery({
+    queryKey: pathKey(`/teachers/${id}/availability`),
+    queryFn: () => availability.grid(id),
+  });
 }

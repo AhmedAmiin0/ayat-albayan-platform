@@ -1,8 +1,14 @@
-import { PORTAL_LESSON_DAYS, type PortalLessons, type PortalRoomLink } from '@ab/shared';
+import {
+  PORTAL_LESSON_DAYS,
+  portalLessonsSchema,
+  type PortalLessons,
+  type PortalRoomLink,
+} from '@ab/shared';
 import { isOpenLesson, joinWindowConfig, type RoomJoinResult } from '@ab/schedule';
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { notFound } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 import { StudentLinkService } from '@/modules/teaching/classroom';
 import { withRoom } from '@/modules/teaching/lessons';
 import { PortalScopes } from '@/modules/people/portal/scope/portal-scope';
@@ -69,7 +75,7 @@ export class PortalLessonsService {
       ...withRoom(toPortalLesson(row, ctx), rooms),
       family: familyOf(row, fam),
     });
-    return { lessons: rows.map(lesson), ...extras };
+    return asResponse(portalLessonsSchema, { lessons: rows.map(lesson), ...extras });
   }
 
   async join(call: RoomCall, now = new Date()): Promise<RoomJoinResult> {

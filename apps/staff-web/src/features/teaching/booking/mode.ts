@@ -1,4 +1,5 @@
-import type { BookingMode } from '@ab/client-core';
+import { bookingCalls, salesBookingCalls, type BookingMode } from '@ab/client-core';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { createContext, useContext } from 'react';
 
 // Same wizard for admin and the sales registration dialog; admin is the default, no provider.
@@ -17,5 +18,7 @@ export const CourseHeldContext = createContext<(() => void) | null>(null);
 
 export const useCourseHeld = (): (() => void) | null => useContext(CourseHeldContext);
 
+const client = { apiFetch, apiSend };
+
 /** Sales mirror routes take the same bodies and shapes as the admin's, scoped to the assistant. */
-export const bookingBase = (mode: BookingMode): string => (mode === 'sales' ? '/sales/booking' : '/booking');
+export const bookingCallsOf = { admin: bookingCalls(client), sales: salesBookingCalls(client) };

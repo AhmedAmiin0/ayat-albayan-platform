@@ -64,7 +64,9 @@ describe('RolesPage «استعادة الافتراضي»', () => {
     expect(apiSend).not.toHaveBeenCalled();
     const calls = apiFetch.mock.calls.length;
     fireEvent.click(dialog.getByRole('button', { name: P.resetConfirm }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/roles/sys-sales/reset'));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('POST', '/roles/sys-sales/reset', undefined),
+    );
     expect(await screen.findByText(P.resetDone)).toBeTruthy();
     expect(apiFetch.mock.calls.length).toBeGreaterThan(calls);
     expect(dialog.getByRole('checkbox', { name: t.permissions.items[CHECK] })).toHaveProperty('checked', true);

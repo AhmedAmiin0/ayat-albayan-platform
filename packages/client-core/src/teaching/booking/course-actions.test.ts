@@ -1,27 +1,9 @@
 import ar from '@ab/shared/i18n/ar.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '../../core/http';
-import {
-  courseMoveErrorCode,
-  courseMoveViewPath,
-  courseStopErrorCode,
-  courseStopLessonsText,
-  courseStopPath,
-  courseStopPreviewPath,
-  courseTeacherOptionsPath,
-} from './course-actions';
+import { courseMoveErrorCode, courseStopErrorCode, courseStopLessonsText } from './course-actions';
 
 const fail = (code: unknown) => new ApiError(409, { code });
-
-describe('course actions paths (owner 2026-10-30)', () => {
-  it('builds the profile routes', () => {
-    expect(courseStopPath('s1')).toBe('/students/s1/course-stop');
-    expect(courseStopPreviewPath({ studentId: 's1', subscriptionId: 'p 1' })).toBe('/students/s1/course-stop?subscriptionId=p%201');
-    expect(courseMoveViewPath({ studentId: 's1', kind: 'teacher', subscriptionId: 'p1' })).toBe('/students/s1/course-teacher/change?subscriptionId=p1');
-    expect(courseMoveViewPath({ studentId: 's1', kind: 'times', subscriptionId: 'p1' })).toBe('/students/s1/course-times/change?subscriptionId=p1');
-    expect(courseTeacherOptionsPath('s1')).toBe('/students/s1/course-teacher/teachers');
-  });
-});
 
 describe('the stop sheet line (MSA)', () => {
   const words = ar.courseActions.stop.lessons;
@@ -44,12 +26,24 @@ describe('error codes', () => {
   });
 
   it('maps the change codes; every code has an Arabic message', () => {
-    for (const code of ['conflict', 'same_teacher', 'course_finished', 'teacher_inactive', 'no_change'])
+    for (const code of [
+      'conflict',
+      'same_teacher',
+      'course_finished',
+      'teacher_inactive',
+      'no_change',
+    ])
       expect(courseMoveErrorCode(fail(code))).toBe(code);
     expect(courseMoveErrorCode(fail(42))).toBe('generic');
     expect(courseMoveErrorCode(new ApiError(500, null))).toBe('generic');
     const errors: Record<string, string> = ar.courseActions.errors;
-    for (const code of ['already_cancelled', 'teacher_not_found', 'course_exists', 'course_unattributed', 'generic'])
+    for (const code of [
+      'already_cancelled',
+      'teacher_not_found',
+      'course_exists',
+      'course_unattributed',
+      'generic',
+    ])
       expect(errors[code]).toBeTruthy();
     expect(courseMoveErrorCode(fail('course_unattributed'))).toBe('course_unattributed');
   });

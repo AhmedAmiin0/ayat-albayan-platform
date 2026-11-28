@@ -42,7 +42,7 @@ function urlOf({ route, params, query }: AnyCallRequest): string {
 async function askRoute(ask: Ask, request: AnyCallRequest): Promise<unknown> {
   const { route, body, signal } = request;
   const path = urlOf(request);
-  const answer = await ask({ method: route.method, path, body, signal });
+  const answer = await ask({ method: route.method, path, body, ...(signal ? { signal } : {}) });
   return parseResponse(answerSchema.parse(route.response), answer, path);
 }
 

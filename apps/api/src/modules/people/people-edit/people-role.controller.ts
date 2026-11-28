@@ -1,30 +1,16 @@
-import { blanksToNull } from '@ab/core';
-import {
-  contactSelfSchema,
-  familyMoveSchema,
-  familySearchSchema,
-  peopleIdSchema,
-  type ContactSelf,
-  type ConvertedStudent,
-  type FamilyMove,
-  type FamilyOption,
-} from '@ab/shared';
-import { Controller, Get, HttpCode, Patch, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import type { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { peopleEditRoutes as routes, type ConvertedStudent, type FamilyOption } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { FamilyMoveService, type MoveTarget } from './family-move.service';
 import { RoleSwitchService } from './role-switch.service';
 import { PeopleOwnership } from './access/people-ownership';
 
-const moveBody = blanksToNull(familyMoveSchema);
-
 /** Every write is audited; nothing with money, lessons or chats is moved or deleted. */
-@ApiTags('people')
 @ApiBearerAuth()
-@Controller('people')
+@Controller()
 export class PeopleRoleController {
   constructor(
     private readonly families: FamilyMoveService,
@@ -33,63 +19,51 @@ export class PeopleRoleController {
   ) {}
 
   /** The guardian picker: ?search= a name, a number (main or second) or a child's code. */
-  @Get('guardians')
-  @Permissions('students.attach_guardian')
-  search(
-    @ZodQuery(familySearchSchema) query: z.output<typeof familySearchSchema>,
-  ): Promise<FamilyOption[]> {
+  @Route(routes.families)
+  search(@RouteInput() { query }: RouteInputOf<typeof routes.families>): Promise<FamilyOption[]> {
     return this.families.families(query.search);
   }
 
-  /** { guardian_id } or { guardian: { name, phone_e164, tz, country } }; 409 same_guardian. */
-  @Post('students/:id/guardian')
+  /** { guardian_id } or { guardian: { name, phone_e164, tz, country } }. */
+  @Route(routes.move)
   @HttpCode(200)
-  @Permissions('students.attach_guardian')
   async move(
-    @ZodParam('id', peopleIdSchema) id: string,
-    @ZodBody(moveBody) move: FamilyMove,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.move>,
     @CurrentUser() user: AuthUser,
   ) {
-    await this.owners.student(user, id);
+    await this.owners.student(user, params.id);
     // The resolved family must be hers too while the rule is on, unless this move created it.
     const allowed = (target: MoveTarget) => this.owners.target(user, target);
-    return this.families.move({ studentId: id, move, actorId: user.id, allowed });
+    return this.families.move({ studentId: params.id, move: body, actorId: user.id, allowed });
   }
 
-  /** 409 family_has_self. */
-  @Patch('students/:id/contact-self')
-  @Permissions('people.switch_role')
+  @Route(routes.contactSelf)
   async contactSelf(
-    @ZodParam('id', peopleIdSchema) id: string,
-    @ZodBody(contactSelfSchema) body: ContactSelf,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.contactSelf>,
     @CurrentUser() user: AuthUser,
   ) {
-    await this.owners.student(user, id);
-    const value = body.contact_is_self;
-    const row = await this.roles.setSelf({ studentId: id, value, actorId: user.id });
+    await this.owners.student(user, params.id);
+    const self = { studentId: params.id, value: body.contact_is_self, actorId: user.id };
+    const row = await this.roles.setSelf(self);
     return { id: row.id, contact_is_self: row.contact_is_self };
   }
 
-  /** 409 guardian_has_self or duplicate_student. */
-  @Post('guardians/:id/to-student')
-  @Permissions('people.switch_role')
+  @Route(routes.toStudent)
   async toStudent(
-    @ZodParam('id', peopleIdSchema) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.toStudent>,
     @CurrentUser() user: AuthUser,
   ): Promise<ConvertedStudent> {
-    await this.owners.family(user, id);
-    return this.roles.guardianToStudent(id, user.id);
+    await this.owners.family(user, params.id);
+    return this.roles.guardianToStudent(params.id, user.id);
   }
 
-  /** 409 student_has_login or student_has_records. */
-  @Post('students/:id/to-guardian')
+  @Route(routes.toGuardian)
   @HttpCode(200)
-  @Permissions('people.switch_role')
   async toGuardian(
-    @ZodParam('id', peopleIdSchema) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.toGuardian>,
     @CurrentUser() user: AuthUser,
   ): Promise<{ guardian_id: string }> {
-    await this.owners.student(user, id);
-    return this.roles.studentToGuardian(id, user.id);
+    await this.owners.student(user, params.id);
+    return this.roles.studentToGuardian(params.id, user.id);
   }
 }

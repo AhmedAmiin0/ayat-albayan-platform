@@ -28,7 +28,7 @@ function open(subscription?: typeof WEEKLY) {
   return { dialog, amount, save, onSaved };
 }
 
-const posts = () => apiSend.mock.calls.filter(([, path]) => path === '/payments').map(([m, p, options]) => [m, p, (options as { body: unknown }).body]);
+const posts = () => apiSend.mock.calls.filter(([, path]) => path === '/payments').map(([m, p, body]) => [m, p, body]);
 
 describe('RecordPaymentDialog (R-PAY-01)', () => {
   beforeEach(() => {

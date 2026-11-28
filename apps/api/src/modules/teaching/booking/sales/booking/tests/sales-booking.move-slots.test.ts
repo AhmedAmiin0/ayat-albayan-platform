@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { errorCode } from '@/common/http/errors';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
-import type { SlotsQuery } from '@/modules/teaching/booking/booking.dto';
+import type { SlotsQuery } from '@ab/schedule';
 import type { SlotsService } from '@/modules/teaching/booking/plan/slots.service';
 import type { TeacherOptionsService } from '@/modules/teaching/booking/teacher/teacher-options.service';
 import { SalesBookingScope } from '@/modules/teaching/booking/sales/booking/sales-booking.ownership';

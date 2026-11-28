@@ -1,3 +1,4 @@
+import { studentProfileFixture } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { ApiError, t, money } from '@ab/mobile-kit';
@@ -21,7 +22,7 @@ let permissions = ['payments.read', 'invoices.read'];
 function serve(invoices: unknown[] = [invoice]) {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/auth/me') return { permissions };
-    if (path === '/students/s1') return { name: 'هدى' };
+    if (path === '/students/s1') return studentProfileFixture({ id: 's1', name: 'هدى' });
     if (path.startsWith('/payments?')) {
       return { items: [payment()], total: 1, page: 1, pageSize: 25, totals: [{ currency: 'SAR', net: 145, payments: 145, refunds: 0 }] };
     }

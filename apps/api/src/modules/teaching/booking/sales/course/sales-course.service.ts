@@ -4,6 +4,7 @@ import {
   courseLessonCount,
   type BookingRequest,
   type CourseSubscription,
+  salesCourseViewSchema,
   type SalesCourseView,
 } from '@ab/shared';
 import { wallParts } from '@ab/schedule';
@@ -21,6 +22,7 @@ import { draftCourse } from '@/modules/teaching/booking/sales/course-draft/cours
 import { SalesCourseRepo } from './sales-course.repo';
 import { courseBlock, courseProblem } from './sales-course.rules';
 import { httpError } from '@/common/http/errors';
+import { asResponse } from '@/common/http/returns';
 
 /**
  * The assistant books the weekly course of the subscription she sold (R-ASST-01,
@@ -96,7 +98,7 @@ export class SalesCourse {
     const after = previous ? addLocalDays(previous.endsOn, 1) : today;
     const from = after > today ? after : today;
     const held = await this.holdOf(sub, previous);
-    return {
+    return asResponse(salesCourseViewSchema, {
       student,
       subscription: sub,
       perWeek: sub && courseDaysPerWeek(sub),
@@ -106,7 +108,7 @@ export class SalesCourse {
       current,
       hold: held.hold,
       draft: held.draft,
-    };
+    });
   }
 
   /** Unpaid with an open link saves a draft, which also returns as `previous` for prefill. */

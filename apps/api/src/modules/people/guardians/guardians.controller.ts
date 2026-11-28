@@ -1,16 +1,14 @@
 import { guardianRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { GuardianPhonesService } from './guardian-phones.service';
 import { GuardiansService } from './guardians.service';
 
 /** Admin-only guardians CRUD (R-STU-02, R-STU-04). */
-@ApiTags('guardians')
 @ApiBearerAuth()
-@Permissions('guardians.write')
 @Controller()
 export class GuardiansController {
   constructor(
@@ -19,13 +17,11 @@ export class GuardiansController {
   ) {}
 
   @Route(routes.list)
-  @Permissions('guardians.read')
   list(@RouteInput() { query }: RouteInputOf<typeof routes.list>) {
     return this.guardians.list(query);
   }
 
   @Route(routes.get)
-  @Permissions('guardians.read')
   get(@RouteInput() { params }: RouteInputOf<typeof routes.get>) {
     return this.guardians.get(params.id);
   }

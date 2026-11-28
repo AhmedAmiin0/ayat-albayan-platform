@@ -1,15 +1,19 @@
 import type { SignedDownload, SignedUpload } from '@ab/shared';
 import type { PaymentMethod } from '@ab/catalog';
 import type {
-  AssistantCommissionView,
   AssistantStatementView,
   AssistantTermsInput,
-  AssistantTermsRow,
-  AssistantTermsView,
   BroughtByInput,
+  BroughtByView,
 } from '@ab/money';
 import { monthRangeIn } from '@ab/time';
-import type { AssistantRow, LedgerFilter, StatementFilter } from '@ab/client-core';
+import {
+  assistantPayCalls,
+  type AssistantLedgerQuery,
+  type AssistantRow,
+  type LedgerFilter,
+  type StatementFilter,
+} from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
@@ -24,17 +28,19 @@ export type {
 
 export const ASSISTANTS_KEY = assistantPayKeys.all;
 
+const calls = assistantPayCalls({ apiFetch, apiSend });
+
 /** GET /assistant-pay/terms: every assistant (base role sales) with their terms, reshaped to the list's row. */
 export const assistantsQuery = queryOptions({
   queryKey: assistantPayKeys.assistants(),
   queryFn: async (): Promise<AssistantRow[]> => {
-    const rows = await apiFetch<AssistantTermsRow[]>('/assistant-pay/terms');
+    const rows = await calls.terms();
     return rows.map(({ name, ...terms }) => ({ id: terms.assistant_id, name, terms }));
   },
 });
 
 export const saveTerms = (input: { assistantId: string; body: AssistantTermsInput }) =>
-  apiSend<AssistantTermsView>('PUT', `/assistant-pay/terms/${input.assistantId}`, input.body);
+  calls.saveTerms(input.assistantId, input.body);
 
 const qs = (params: Record<string, string>) => {
   const q = new URLSearchParams(Object.entries(params).filter(([, v]) => v !== ''));
@@ -49,14 +55,21 @@ export const ledgerMonthRange = (month: string): Record<string, string> => {
   return { from: from.toISOString(), to: to.toISOString() };
 };
 
+/** An empty filter is left out of the query. */
+const ledgerQuery = (f: LedgerFilter): AssistantLedgerQuery => ({
+  assistantId: f.assistantId || undefined,
+  status: f.status || undefined,
+  ...ledgerMonthRange(f.month),
+});
+
 export const commissionsQuery = (f: LedgerFilter) =>
   queryOptions({
     queryKey: assistantPayKeys.commissions(f),
-    queryFn: () => apiFetch<AssistantCommissionView[]>(`/assistant-pay/commissions${qs({ assistantId: f.assistantId, status: f.status, ...ledgerMonthRange(f.month) })}`),
+    queryFn: () => calls.ledger(ledgerQuery(f)),
   });
 
 export const voidCommission = (input: { id: string; reason: string }) =>
-  apiSend<{ id: string }>('POST', `/assistant-pay/commissions/${input.id}/void`, { reason: input.reason });
+  calls.voidCommission(input.id, input.reason);
 
 export const statementsQuery = (f: StatementFilter) =>
   queryOptions({
@@ -94,16 +107,13 @@ export async function uploadStatementReceipt(file: File, assistantId: string): P
   return signed.path;
 }
 
-export type BroughtBy = {
-  assistant: { id: string; name: string } | null;
-  brought_at: string | null;
-};
+export type BroughtBy = BroughtByView;
 
 export const broughtByQuery = (studentId: string) =>
   queryOptions({
     queryKey: assistantPayKeys.broughtBy(studentId),
-    queryFn: () => apiFetch<BroughtBy>(`/assistant-pay/brought-by/${studentId}`),
+    queryFn: () => calls.broughtByOf(studentId),
   });
 
 /** One student or many (bulk); assistantId null clears it. Audited by the API. */
-export const setBroughtBy = (body: BroughtByInput) => apiSend<{ changed: number }>('POST', '/assistant-pay/brought-by', body);
+export const setBroughtBy = (body: BroughtByInput) => calls.setBroughtBy(body);

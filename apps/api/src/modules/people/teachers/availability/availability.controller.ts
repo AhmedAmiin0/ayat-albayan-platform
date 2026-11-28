@@ -1,86 +1,62 @@
-import { availabilityReplaceSchema, timeOffCreateSchema } from '@ab/schedule';
-import {
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  NotFoundException,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
-import { z } from 'zod';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { availabilityRoutes as routes, type AvailabilityRow, type TimeOff } from '@ab/shared';
+import { Controller, HttpCode, NotFoundException, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { orNotFound } from '@/common/http/http';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { OwnTeacherGuard } from '@/modules/people/teachers/own-teacher.guard';
-import { AvailabilityRepo, type TimeOff } from './availability.repo';
-import type { AvailabilityRow } from '@ab/shared';
-
-const uuid = new ParseUUIDPipe();
+import { AvailabilityRepo } from './availability.repo';
 
 /** Weekly grid + time-off (R-TCH-02). Admin for anyone; a teacher only for their own row. */
-@ApiTags('teachers')
 @ApiBearerAuth()
 @UseGuards(OwnTeacherGuard)
-@Permissions('availability.write')
-@Controller('teachers/:id')
+@Controller()
 export class AvailabilityController {
   constructor(private readonly availability: AvailabilityRepo) {}
 
-  @Get('availability')
-  @Permissions('availability.read')
-  grid(@Param('id', uuid) id: string): Promise<AvailabilityRow[]> {
-    return this.availability.listSlots(id);
+  @Route(routes.grid)
+  grid(@RouteInput() { params }: RouteInputOf<typeof routes.grid>): Promise<AvailabilityRow[]> {
+    return this.availability.listSlots(params.id);
   }
 
   /** Replaces every row of the teacher's weekly grid with `slots`. */
-  @Put('availability')
+  @Route(routes.replaceGrid)
   replaceGrid(
-    @Param('id', uuid) id: string,
-    @ZodBody(availabilityReplaceSchema) body: z.output<typeof availabilityReplaceSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.replaceGrid>,
     @CurrentUser() user: AuthUser,
   ): Promise<AvailabilityRow[]> {
     const { slots } = body;
-    return this.availability.replaceSlots({ teacherId: id, actorId: user.id, slots });
+    return this.availability.replaceSlots({ teacherId: params.id, actorId: user.id, slots });
   }
 
-  @Get('time-off')
-  @Permissions('availability.read')
-  timeOff(@Param('id', uuid) id: string): Promise<TimeOff[]> {
-    return this.availability.listTimeOff(id);
+  @Route(routes.timeOff)
+  timeOff(@RouteInput() { params }: RouteInputOf<typeof routes.timeOff>): Promise<TimeOff[]> {
+    return this.availability.listTimeOff(params.id);
   }
 
-  @Post('time-off')
+  @Route(routes.addTimeOff)
   addTimeOff(
-    @Param('id', uuid) id: string,
-    @ZodBody(timeOffCreateSchema) body: z.output<typeof timeOffCreateSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.addTimeOff>,
     @CurrentUser() user: AuthUser,
   ): Promise<TimeOff> {
-    return this.availability.insertTimeOff({ teacherId: id, actorId: user.id, body });
+    return this.availability.insertTimeOff({ teacherId: params.id, actorId: user.id, body });
   }
 
-  @Put('time-off/:timeOffId')
+  @Route(routes.editTimeOff)
   async editTimeOff(
-    @Param('id', uuid) id: string,
-    @Param('timeOffId', uuid) timeOffId: string,
-    @ZodBody(timeOffCreateSchema) body: z.output<typeof timeOffCreateSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.editTimeOff>,
   ): Promise<TimeOff> {
-    return orNotFound(
-      await this.availability.updateTimeOff({ teacherId: id, id: timeOffId, body }),
-    );
+    const edit = { teacherId: params.id, id: params.timeOffId, body };
+    return orNotFound(await this.availability.updateTimeOff(edit));
   }
 
-  @Delete('time-off/:timeOffId')
+  @Route(routes.removeTimeOff)
   @HttpCode(204)
   async removeTimeOff(
-    @Param('id', uuid) id: string,
-    @Param('timeOffId', uuid) timeOffId: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.removeTimeOff>,
   ): Promise<void> {
-    if (!(await this.availability.deleteTimeOff(id, timeOffId))) throw new NotFoundException();
+    const removed = await this.availability.deleteTimeOff(params.id, params.timeOffId);
+    if (!removed) throw new NotFoundException();
   }
 }

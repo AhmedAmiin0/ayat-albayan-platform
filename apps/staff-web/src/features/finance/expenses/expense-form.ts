@@ -1,9 +1,13 @@
-import type { PaymentMethod } from '@ab/catalog';
+import { PAYMENT_METHODS } from '@ab/catalog';
 import { parseAmount } from '@ab/money';
+import { z } from 'zod';
 import { t } from '@ab/web-kit';
 import type { ExpenseBody, ExpenseView } from './api';
 
 // The expense dialog's form ↔ the API body (pure, unit-tested).
+
+/** The form offers the manual methods only, so a stored platform method opens blank. */
+const formMethod = z.union([z.enum(PAYMENT_METHODS), z.literal('')]).catch('');
 
 export type ExpenseForm = {
   category: string;
@@ -11,7 +15,7 @@ export type ExpenseForm = {
   currency: string;
   paidOn: string;
   vendor: string;
-  method: PaymentMethod | '';
+  method: z.infer<typeof formMethod>;
   recurring: boolean;
   note: string;
 };
@@ -23,7 +27,7 @@ export function expenseForm(e: ExpenseView | null, today: string): ExpenseForm {
     currency: e?.currency ?? 'EGP',
     paidOn: e?.paid_on ?? today,
     vendor: e?.vendor ?? '',
-    method: e?.method ?? '',
+    method: formMethod.parse(e?.method ?? ''),
     recurring: e?.recurring ?? false,
     note: e?.note ?? '',
   };

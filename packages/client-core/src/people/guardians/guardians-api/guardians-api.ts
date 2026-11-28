@@ -1,4 +1,4 @@
-import { guardianRoutes as routes } from '@ab/shared';
+import { guardianRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { GuardianCalls } from './guardians-api.types';
 
@@ -6,8 +6,8 @@ import type { GuardianCalls } from './guardians-api.types';
 export function guardianCalls(client: ApiClient): GuardianCalls {
   const call = callWith(client);
   return {
-    get: (id) => call({ route: routes.get, params: { id } }),
-    update: (id, body) => call({ route: routes.update, params: { id }, body }),
-    removePhone: (params) => call({ route: routes.removePhone, params }),
+    get: (id) => call({ route: guardianRoutes.get, params: { id } }),
+    update: (id, body) => call({ route: guardianRoutes.update, params: { id }, body }),
+    removePhone: (params) => call({ route: guardianRoutes.removePhone, params }),
   };
 }

@@ -1,5 +1,5 @@
 export {
-  PORTAL_KEY, PORTAL_REFRESH_MS, portalHistoryPath, portalQueries,
+  PORTAL_KEY, PORTAL_REFRESH_MS, portalQueries,
   type PortalHistoryInput, type PortalHistoryPages, type PortalQueries, type PortalRead,
 } from './portal-api';
 export {

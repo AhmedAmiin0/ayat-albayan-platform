@@ -6,10 +6,11 @@ type Routes = typeof testAccountRoutes;
 /** Which row the switch is on: a login or a student. */
 export type TestFlagTarget = keyof Routes;
 
-export interface TestFlagWrite {
-  target: TestFlagTarget;
+export interface TestFlagFlip {
   id: string;
   isTest: boolean;
 }
 
-export type TestFlagCall = (write: TestFlagWrite) => Promise<RouteResult<Routes['user']>>;
+export type TestFlagCall = (flip: TestFlagFlip) => Promise<RouteResult<Routes['user']>>;
+
+export type TestFlagCalls = Readonly<Record<TestFlagTarget, TestFlagCall>>;

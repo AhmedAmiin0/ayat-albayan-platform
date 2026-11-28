@@ -1,8 +1,8 @@
-import { testFlagCall } from '@ab/client-core';
+import { testFlagCalls } from '@ab/client-core';
 import { ApiError, apiFetch, apiSend, t } from '@ab/web-kit';
 
 /** The whole family flips on the server; the reads refresh. */
-export const setTestFlag = testFlagCall({ apiFetch, apiSend });
+export const testFlags = testFlagCalls({ apiFetch, apiSend });
 
 const MESSAGES: Readonly<Record<number, string>> = { 409: t.testAccounts.mismatch };
 

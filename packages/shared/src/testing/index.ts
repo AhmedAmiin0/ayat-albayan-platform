@@ -11,3 +11,5 @@ export * from './thread-pages';
 export * from './leads';
 export * from './sales-student';
 export * from './sales-family';
+export * from './course-pause';
+export * from './students';

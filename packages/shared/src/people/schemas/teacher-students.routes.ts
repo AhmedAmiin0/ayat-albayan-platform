@@ -9,5 +9,7 @@ export const teacherStudentRoutes = {
     path: '/teachers/me/students',
     query: teacherStudentsQuerySchema,
     response: z.array(teacherStudentViewSchema),
+    permissions: ['self.teacher'],
+    tags: ['teachers'],
   }),
 };

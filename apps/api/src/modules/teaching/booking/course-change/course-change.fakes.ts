@@ -12,7 +12,15 @@ import type { SalesBookingScope } from '@/modules/teaching/booking/sales/booking
 export const S1 = 'c0000000-0000-4000-8000-000000000001';
 export const SUB_ID = '00000000-0000-4000-8000-000000000001';
 export const REQUEST_ID = '00000000-0000-4000-8000-0000000000aa';
-export const SUB: CourseSub = { id: SUB_ID, student_id: S1, package: '8', duration: 45, lessons_total: 8, lessons_used_before: 0, starts_on: '2026-10-01' };
+export const SUB: CourseSub = {
+  id: SUB_ID,
+  student_id: S1,
+  package: '8',
+  duration: 45,
+  lessons_total: 8,
+  lessons_used_before: 0,
+  starts_on: '2026-10-01',
+};
 const student = { student_id: S1, student: { meeting_link_override: null } };
 export const RULE_A: ChangeRule = {
   id: 'ra',
@@ -31,8 +39,14 @@ export const RULE_A: ChangeRule = {
   schedule_rule_students: [student],
 };
 export const RULE_B: ChangeRule = { ...RULE_A, id: 'rb', byday: [3], first_rule_id: 'ra' };
-export const SALES: ChangeActor = { user: { id: 'b1000000-0000-4000-8000-00000000000b', email: null, role: 'sales' }, role: 'sales' };
-export const ADMIN: ChangeActor = { user: { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'admin' }, role: 'admin' };
+export const SALES: ChangeActor = {
+  user: { id: 'b1000000-0000-4000-8000-00000000000b', email: null, role: 'sales' },
+  role: 'sales',
+};
+export const ADMIN: ChangeActor = {
+  user: { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'admin' },
+  role: 'admin',
+};
 /** Sun 25 Oct 17:00 + Tue 27 Oct 19:30 (Riyadh). */
 export const BODY = {
   subscriptionId: SUB_ID,
@@ -43,14 +57,26 @@ export const BODY = {
   startsAt: '2026-10-25T14:00:00.000Z',
   clientRequestId: REQUEST_ID,
 };
-export const CLASH = { kind: 'teacher_lesson', startsAt: '2026-10-27T16:30:00.000Z', endsAt: '2026-10-27T17:15:00.000Z' };
+export const CLASH = {
+  kind: 'teacher_lesson',
+  startsAt: '2026-10-27T16:30:00.000Z',
+  endsAt: '2026-10-27T17:15:00.000Z',
+};
 
 export function setup(o: { rules?: ChangeRule[]; owned?: string[] } = {}) {
   const queries = {
     subscription: vi.fn().mockResolvedValue(SUB),
     rules: vi.fn().mockResolvedValue(o.rules ?? [RULE_A, RULE_B]),
     others: vi.fn().mockResolvedValue([]),
-    contacts: vi.fn().mockResolvedValue([{ id: S1, name: 'سهيلة', guardian: { id: 'g1', phone_e164: '+966500000001', tz: 'Asia/Riyadh' } }]),
+    contacts: vi
+      .fn()
+      .mockResolvedValue([
+        {
+          id: S1,
+          name: 'سهيلة',
+          guardian: { id: 'g1', phone_e164: '+966500000001', tz: 'Asia/Riyadh' },
+        },
+      ]),
     teacherLink: vi.fn().mockResolvedValue('https://meet.google.com/abc-defg-hij'),
     teacherMode: vi.fn().mockResolvedValue(null),
   };
@@ -60,10 +86,16 @@ export function setup(o: { rules?: ChangeRule[]; owned?: string[] } = {}) {
     openFrom: vi.fn().mockResolvedValue([{ id: 'l9', status: 'scheduled', rule_id: 'ra' }]),
     held: vi.fn().mockResolvedValue(new Set(['ra:2026-10-19', 'rb:2026-10-21'])),
   };
-  const scope = { of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: o.owned ?? [S1], phones: [] }) };
+  const scope = {
+    of: vi
+      .fn()
+      .mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: o.owned ?? [S1], phones: [] }),
+  };
   const writer = {
     replay: vi.fn().mockResolvedValue(null),
-    apply: vi.fn().mockResolvedValue({ subscriptionId: SUB_ID, ruleIds: ['n1', 'n2'], endsOn: '2026-11-17' }),
+    apply: vi
+      .fn()
+      .mockResolvedValue({ subscriptionId: SUB_ID, ruleIds: ['n1', 'n2'], endsOn: '2026-11-17' }),
   };
   const planner = new CourseChangePlanner(
     lessons as unknown as CourseLessonRepo,
@@ -78,3 +110,22 @@ export function setup(o: { rules?: ChangeRule[]; owned?: string[] } = {}) {
   );
   return { queries, lessons, scope, deps, writer, service };
 }
+
+/** The read of SUB's course as CourseChangeViews answers it (a whole BookedCourse). */
+export const VIEW = {
+  student: { id: S1, name: 'سهيلة', code: 'AB-0001', tz: 'Asia/Riyadh' },
+  course: {
+    subscriptionId: SUB_ID,
+    teacherId: 'd0000000-0000-4000-8000-0000000000e1',
+    teacherTz: 'Africa/Cairo',
+    durationMin: 45,
+    tz: 'Asia/Riyadh',
+    startsOn: '2026-10-01',
+    endsOn: '2026-10-28',
+    running: true,
+    opensOn: '2026-10-18',
+    days: [{ weekday: 2, startTimeLocal: '17:00' }],
+    lessonsTotal: 8,
+    perWeek: 2,
+  },
+};

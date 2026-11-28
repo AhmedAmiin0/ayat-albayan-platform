@@ -74,4 +74,20 @@ describe('payments v2 routes', () => {
     const res = await call({ method: 'GET', url: `/payments/${PAYMENT_ID}` });
     expect(res.json()).toMatchObject({ kind: 'payment', original: { amount: 1300, currency: 'EGP', fx_rate: 0.0769 }, invoice_id: INVOICE });
   });
+
+  const ID_ROUTES = [
+    ['GET', ''],
+    ['GET', '/receipt'],
+    ['GET', '/attachments'],
+    ['PATCH', ''],
+    ['DELETE', ''],
+  ] as const;
+
+  it.each(ID_ROUTES)('%s /payments/not-a-uuid%s answers 400 validation_failed', async (method, tail) => {
+    const sent = method === 'PATCH' ? { amount: 10 } : undefined;
+    const res = await call({ method, url: `/payments/not-a-uuid${tail}`, body: sent });
+    expect(res.statusCode).toBe(400);
+    expect(res.json().code).toBe('validation_failed');
+    expect(m.payments.get).not.toHaveBeenCalled();
+  });
 });

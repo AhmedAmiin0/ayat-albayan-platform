@@ -1,6 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
+import { savedProfile } from '@/test/account';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { AssistantHomeScreen } from './AssistantHomeScreen';
@@ -14,7 +15,10 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 // /me/profile answers a profile (the «More» header reads its name); every list answers empty.
-const PROFILE = { id: 'u1', full_name: 'Sara Ali', email: null, phone_e164: null, avatar_url: null, role: 'assistant' };
+const PROFILE = savedProfile({
+  full_name: 'Sara Ali',
+  role: { base: 'assistant', key: null, name_ar: null, name_en: null },
+});
 const mockApiFetch = jest.fn(async (p: string) => (p === '/me/profile' ? PROFILE : []));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 

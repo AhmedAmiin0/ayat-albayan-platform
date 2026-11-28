@@ -17,12 +17,12 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 // A made-up number (the sign-in tests use it too).
 const PHONE = '+966500000005';
 const profile = (over: Record<string, unknown>) => ({
-  id: 'p1',
+  id: '0b6f1a52-6d1e-4c43-9a37-3c5c8f1e2a10',
   full_name: 'أم سارة',
   email: null,
   phone_e164: PHONE,
   avatar_url: null,
-  role: {},
+  role: { base: null, key: null, name_ar: null, name_en: null },
   ...over,
 });
 const answer = (me: unknown, prof: unknown) => {

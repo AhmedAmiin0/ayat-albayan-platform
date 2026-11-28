@@ -5,9 +5,7 @@ import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import {
-  apiFetch,
   t,
-  pathKey,
   Button,
   BackButton,
   ErrorState,
@@ -16,6 +14,7 @@ import {
   ScreenHeader,
   ErrorLine,
 } from '@ab/mobile-kit';
+import { studentProfileQuery } from '@/students';
 import { localDate } from '@/today';
 import { CustomAmountPill } from '@/payments';
 import { CustomPriceField } from '@/subscribe/custom-price/CustomPriceField';
@@ -27,7 +26,7 @@ import { pricingOf, startDays, subscribeErrorText } from '@/subscribe/subscribe-
 import { PriceSection, SavedPanel, StartDayField, StudentPills } from '@/subscribe/SubscribeParts';
 import { useCreateSubscription, useSubscriptionQuote } from '@/subscribe/use-subscribe';
 import { usePastUsedBefore } from '@/subscribe/UsedBeforeField';
-import type { StudentProfile, StudentRef } from '@ab/shared';
+import type { StudentProfileView, StudentRef } from '@ab/shared';
 
 type Params = FormPrefill & { studentId?: string; startsOn?: string; renew?: string };
 
@@ -35,16 +34,11 @@ const back = () => backWithin('/inbox');
 
 /** GET /students/:id (the student screen's key): name, code, zone and the siblings to pick from. */
 function useProfile(id: string) {
-  const path = `/students/${id}`;
-  return useQuery({
-    queryKey: pathKey(path),
-    queryFn: () => apiFetch<StudentProfile>(path),
-    enabled: id !== '',
-  });
+  return useQuery({ ...studentProfileQuery(id), enabled: id !== '' });
 }
 
 /** The child with its siblings (the pills) and the family's zone (the day chips). */
-const familyOf = (p: StudentProfile | undefined) =>
+const familyOf = (p: StudentProfileView | undefined) =>
   // docs/34 b: no family yet reads as the academy's zone (a data default, not a display).
   p ? { family: [p, ...p.siblings], tz: p.tz } : { family: [], tz: RIYADH_TZ };
 

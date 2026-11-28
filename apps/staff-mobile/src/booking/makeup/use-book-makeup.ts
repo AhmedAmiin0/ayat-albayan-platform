@@ -1,6 +1,5 @@
-import type { BookingResult } from '@ab/schedule';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiSend } from '@ab/mobile-kit';
+import { bookingCallsOf } from '@/booking/shared/booking-calls';
 import { makeupRequest } from './makeup-body';
 import type { MakeupDraft } from './makeup-draft';
 
@@ -12,7 +11,7 @@ export function useBookMakeup(requestId: string) {
     mutationFn: (draft: MakeupDraft) => {
       const body = makeupRequest(draft, requestId);
       if (!body) throw new Error('booking_incomplete');
-      return apiSend<BookingResult>('POST', '/booking', body);
+      return bookingCallsOf.admin.book(body);
     },
     onSuccess: () => {
       void client.invalidateQueries({ queryKey: ['lessons'] });
