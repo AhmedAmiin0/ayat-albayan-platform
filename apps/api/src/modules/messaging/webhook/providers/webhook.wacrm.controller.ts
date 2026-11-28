@@ -1,5 +1,4 @@
 import { Controller, Headers, HttpCode, Inject, Logger, Req, UnauthorizedException } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { Route } from '@/common/http/route';
 import { RESPONSE_BUDGET_MS, within, type WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
 import { webhookRoutes as routes } from '@/modules/messaging/webhook/shared';
@@ -26,7 +25,6 @@ interface RawRequest {
  * the notifications number) is queued by its wamid and the mirror job kicked: it lands in the
  * inbox. Deduped on the delivery id. Never sends anything.
  */
-@Public()
 @Controller()
 export class WacrmWebhookController {
   private readonly log = new Logger(WacrmWebhookController.name);

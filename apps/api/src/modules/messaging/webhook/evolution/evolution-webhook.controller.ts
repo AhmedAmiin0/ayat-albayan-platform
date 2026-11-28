@@ -3,7 +3,6 @@ import {
   ServiceUnavailableException, UnauthorizedException,
 } from '@nestjs/common';
 import { z } from 'zod';
-import { Public } from '@/common/auth/decorators';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { webhookRoutes as routes } from '@/modules/messaging/webhook/shared';
 import { verifyEvolution } from '@/modules/messaging/webhook/parse/webhook.evolution-auth';
@@ -28,7 +27,6 @@ const notLoaded = () => new ServiceUnavailableException();
  * header the instance's webhook sends; constant time). Idempotent: a replayed message id
  * stores nothing new.
  */
-@Public()
 @Controller()
 export class EvolutionWebhookController {
   private readonly log = new Logger(EvolutionWebhookController.name);

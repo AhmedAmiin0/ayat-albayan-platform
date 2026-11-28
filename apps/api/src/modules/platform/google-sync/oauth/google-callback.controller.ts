@@ -1,6 +1,5 @@
 import { Controller, Redirect } from '@nestjs/common';
 import { ApiExcludeController } from '@nestjs/swagger';
-import { Public } from '@/common/auth/decorators';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { loadEnv } from '@/config/env/env';
 import { firstWebOrigin } from '@/modules/teaching/classroom/classroom.config';
@@ -18,7 +17,6 @@ export class GoogleCallbackController {
   constructor(private readonly oauth: GoogleOAuthService) {}
 
   @Route(routes.callback)
-  @Public()
   @Redirect()
   async callback(
     @RouteInput() { query }: RouteInputOf<typeof routes.callback>,

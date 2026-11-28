@@ -9,6 +9,8 @@ import { CustomConfigService } from '@/common/configuration/custom-config/custom
 import { fakeConfigStore } from '@/common/configuration/config-store/config-store.fakes';
 import type { Db } from '@/common/db/db.module';
 import { SettingsService } from '@/common/settings/settings.service';
+import { IS_PUBLIC, OWN_PUBLIC } from '@/common/auth/decorators';
+import { PublicConfigController } from './public-config.controller';
 
 const settings = { publicView: vi.fn() };
 const custom = { publicRows: vi.fn() };
@@ -68,5 +70,13 @@ describe('GET /settings/public (no login)', () => {
     settings.publicView.mockResolvedValue({ join_opens_before_min: 10 });
     const res = await app.inject({ method: 'GET', url: '/settings/public', headers: { authorization: 'Bearer junk' } });
     expect(res.statusCode).toBe(200);
+  });
+});
+
+describe('public settings access', () => {
+  it('is open through its route object alone', () => {
+    const get: object = Object(Reflect.get(PublicConfigController.prototype, 'get'));
+    expect(Reflect.getOwnMetadata(IS_PUBLIC, get)).toBe(true);
+    expect(Reflect.getOwnMetadata(OWN_PUBLIC, get)).toBeUndefined();
   });
 });

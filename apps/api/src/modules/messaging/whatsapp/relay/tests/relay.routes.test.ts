@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { OWN_PUBLIC } from '@/common/auth/decorators';
+import { RelayController } from '@/modules/messaging/whatsapp/relay/relay.controller';
 import { relayRoutes as routes } from '@/modules/messaging/whatsapp/relay/relay.routes';
 
 const ME = { data: { account: { name: 'relay' }, key: { scopes: ['messages:send'] } } };
@@ -10,11 +12,16 @@ describe('relayRoutes', () => {
     expect(lines).toEqual(['GET /script-relay/api/v1/me', 'POST /script-relay/api/v1/messages']);
   });
 
-  it('tags both webhooks and asks no permission of the script', () => {
+  it('tags both webhooks, marks them public and asks no permission of the script', () => {
     for (const route of Object.values(routes)) {
       expect(route.tags).toEqual(['webhooks']);
+      expect(route.isPublic).toBe(true);
       expect(route).not.toHaveProperty('permissions');
     }
+  });
+
+  it('leaves the public mark to the route objects, not to the controller', () => {
+    expect(Reflect.getMetadata(OWN_PUBLIC, RelayController)).toBeUndefined();
   });
 
   it('leaves the body to the controller, parsed after the key check in the CRM wording', () => {

@@ -1,6 +1,5 @@
 import type { Readiness } from '@ab/shared';
 import { Controller, Header, Inject, Res } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { Route } from '@/common/http/route';
 import { healthRoutes as routes } from './health.routes';
 import { httpStatusOf } from './readiness.rollup';
@@ -21,7 +20,6 @@ export class ReadyController {
    * uptime monitor read it. The load balancer keeps /health, so a database blip never takes both
    * API copies out at once.
    */
-  @Public()
   @Route(routes.ready)
   @Header('Cache-Control', 'no-store')
   async check(@Res({ passthrough: true }) reply: StatusReply): Promise<Readiness> {

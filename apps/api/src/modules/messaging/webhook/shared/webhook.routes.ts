@@ -2,7 +2,7 @@ import { EVOLUTION_INSTANCE_RE } from '@ab/catalog';
 import { defineRoute } from '@ab/core';
 import { z } from 'zod';
 
-const TAGS = ['webhooks'] as const;
+const ACCESS = { tags: ['webhooks'], isPublic: true } as const;
 
 /**
  * Provider callbacks no client calls (docs/62 part 3 §1). Each payload stays in its controller,
@@ -14,16 +14,16 @@ export const webhookRoutes = {
     method: 'GET',
     path: '/webhooks/whatsapp',
     response: z.string(),
-    tags: TAGS,
+    ...ACCESS,
   }),
-  meta: defineRoute({ method: 'POST', path: '/webhooks/whatsapp', response: 'empty', tags: TAGS }),
-  kapso: defineRoute({ method: 'POST', path: '/webhooks/kapso', response: 'empty', tags: TAGS }),
-  wacrm: defineRoute({ method: 'POST', path: '/webhooks/wacrm', response: 'empty', tags: TAGS }),
+  meta: defineRoute({ method: 'POST', path: '/webhooks/whatsapp', response: 'empty', ...ACCESS }),
+  kapso: defineRoute({ method: 'POST', path: '/webhooks/kapso', response: 'empty', ...ACCESS }),
+  wacrm: defineRoute({ method: 'POST', path: '/webhooks/wacrm', response: 'empty', ...ACCESS }),
   evolution: defineRoute({
     method: 'POST',
     path: '/webhooks/evolution/:instance',
     params: z.object({ instance: z.string().regex(EVOLUTION_INSTANCE_RE) }),
     response: 'empty',
-    tags: TAGS,
+    ...ACCESS,
   }),
 };

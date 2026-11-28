@@ -10,10 +10,12 @@ export const internalJobRoutes = {
     params: z.object({ name: z.string() }),
     query: kickQuerySchema,
     response: 'empty',
+    isPublic: true,
   }),
   peerReload: defineRoute({
     method: 'POST',
     path: '/internal/jobs/config-reload/here',
     response: 'empty',
+    isPublic: true,
   }),
 };

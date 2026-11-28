@@ -11,5 +11,6 @@ export const googleOAuthRoutes = {
     path: '/integrations/google/callback',
     query: z.object({ code: sent, state: sent, error: sent }),
     response: 'redirect',
+    isPublic: true,
   }),
 };
