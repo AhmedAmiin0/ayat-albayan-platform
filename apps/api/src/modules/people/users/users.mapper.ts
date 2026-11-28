@@ -34,11 +34,16 @@ export function toUserView(r: UserRow, avatarUrl?: string | null): UserView {
   return asResponse(userViewSchema, viewOf(r, avatarUrl));
 }
 
-export function toUserDetail(r: UserRow, avatarUrl?: string | null): UserDetail {
-  return asResponse(userDetailSchema, {
+/** A write's answer: built from the row it just wrote, not checked (the write already ran). */
+export function userDetailOf(r: UserRow, avatarUrl?: string | null): UserDetail {
+  return {
     ...viewOf(r, avatarUrl),
     locale: r.locale ?? 'ar',
     tz: r.tz ?? 'Asia/Riyadh',
     disabled_reason: r.disabled_reason ?? null,
-  });
+  };
+}
+
+export function toUserDetail(r: UserRow, avatarUrl?: string | null): UserDetail {
+  return asResponse(userDetailSchema, userDetailOf(r, avatarUrl));
 }

@@ -15,17 +15,20 @@ export type PauseRow = {
   creator: { full_name: string | null } | null;
 };
 
+/** A write's answer: built from the row it just wrote, not checked (the write already ran). */
+export const pauseViewOf = (r: PauseRow): CoursePauseView => ({
+  id: r.id,
+  from_date: r.from_date,
+  until_date: r.until_date,
+  reason: r.reason,
+  created_at: r.created_at,
+  created_by_name: r.creator?.full_name ?? null,
+  resumed_at: r.resumed_at,
+  extended_days: r.extended_days,
+});
+
 export const toPauseView = (r: PauseRow): CoursePauseView =>
-  asResponse(coursePauseViewSchema, {
-    id: r.id,
-    from_date: r.from_date,
-    until_date: r.until_date,
-    reason: r.reason,
-    created_at: r.created_at,
-    created_by_name: r.creator?.full_name ?? null,
-    resumed_at: r.resumed_at,
-    extended_days: r.extended_days,
-  });
+  asResponse(coursePauseViewSchema, pauseViewOf(r));
 
 const ids = z.array(z.string()).default([]);
 

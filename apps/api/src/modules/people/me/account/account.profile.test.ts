@@ -1,6 +1,9 @@
 import { NotFoundException } from '@nestjs/common';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { asResponse } from '@/common/http/returns';
 import { accountKit, ME } from './account.fakes';
+
+vi.mock('@/common/http/returns', { spy: true });
 
 describe('GET /me/profile (R-ACC-01)', () => {
   it('returns the caller’s name, email from Auth, phone, role label and no photo', async () => {
@@ -31,5 +34,17 @@ describe('GET /me/profile (R-ACC-01)', () => {
     await expect(kit.account.profile({ ...ME, id: 'nobody' })).rejects.toBeInstanceOf(
       NotFoundException,
     );
+  });
+});
+
+describe('the profile answer (docs/62 part 2 §3: asResponse on read routes only)', () => {
+  it('checks GET /me/profile and not the answer of a profile or photo write', async () => {
+    const kit = accountKit();
+    vi.mocked(asResponse).mockClear();
+    await kit.account.updateProfile(ME, { full_name: 'Huda A.' });
+    await kit.avatar.remove(ME);
+    expect(asResponse).not.toHaveBeenCalled();
+    await kit.account.profile(ME);
+    expect(asResponse).toHaveBeenCalledTimes(1);
   });
 });
