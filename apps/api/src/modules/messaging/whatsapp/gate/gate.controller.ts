@@ -1,7 +1,7 @@
 import {
   gateConfirmed,
+  gateRoutes as routes,
   GATE_SWITCH_KEY,
-  sendGateRoutes as routes,
   type AcademySettings,
   type GateSwitch,
   SETTING_DEFAULTS,
@@ -17,8 +17,8 @@ import { confirmationRequired } from './gate.errors';
 import { GateSettings, type GateKey } from './gate.settings';
 
 type KeyWrite = { key: GateKey; value: boolean; action: string };
-type SwitchInput = RouteInputOf<typeof routes.sending>;
-type SwitchBody = SwitchInput['body'];
+type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
+type SwitchBody = Input<'sending'>['body'];
 
 /**
  * The send-gate switches' own routes (docs/26 §2f, §5, 26-P0): the ONLY writers of messaging_enabled,
@@ -39,7 +39,7 @@ export class GateController {
   @Route(routes.sending)
   @HttpCode(200)
   sending(
-    @RouteInput() { body }: SwitchInput,
+    @RouteInput() { body }: Input<'sending'>,
     @CurrentUser() user: AuthUser,
   ): Promise<AcademySettings> {
     return this.toggle('sending', body, user);
@@ -48,7 +48,7 @@ export class GateController {
   @Route(routes.auto)
   @HttpCode(200)
   auto(
-    @RouteInput() { body }: SwitchInput,
+    @RouteInput() { body }: Input<'auto'>,
     @CurrentUser() user: AuthUser,
   ): Promise<AcademySettings> {
     return this.toggle('auto', body, user);
@@ -58,11 +58,13 @@ export class GateController {
   @Route(routes.cutover)
   @HttpCode(200)
   cutover(
-    @RouteInput() { body }: RouteInputOf<typeof routes.cutover>,
+    @RouteInput() { body }: Input<'cutover'>,
     @CurrentUser() user: AuthUser,
   ): Promise<AcademySettings> {
-    const w: KeyWrite = { key: 'crm_cutover_done', value: body.done, action: 'gate_cutover' };
-    return this.writeOne(w, user);
+    return this.writeOne(
+      { key: 'crm_cutover_done', value: body.done, action: 'gate_cutover' },
+      user,
+    );
   }
 
   private toggle(sw: GateSwitch, body: SwitchBody, user: AuthUser): Promise<AcademySettings> {

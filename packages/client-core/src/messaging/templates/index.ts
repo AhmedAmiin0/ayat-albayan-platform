@@ -9,9 +9,7 @@ export { templateErrorWords } from './template-errors';
 export { bodyVarCount, draftParams, previewParams, retexted } from './template-draft';
 export { lineCheckCalls, type LineCheckCalls } from './line-check';
 export { crmWebhookCalls, type CrmWebhookCalls } from './crm-webhook';
-export {
-  communicationsCalls, type CommunicationsCalls, sendGateCalls, type SendGateCalls,
-} from './communications';
+export { communicationsCalls, type CommunicationsCalls } from './communications';
 export {
   evolutionCalls, numbersCalls, type EvolutionCalls, type EvolutionConfigSave, type NumbersCalls,
   type NumberSecretTarget, numberTemplateCalls, type NumberTemplateCalls,

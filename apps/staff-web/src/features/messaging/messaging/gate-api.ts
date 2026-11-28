@@ -5,15 +5,14 @@ import { apiFetch, apiSend } from '@ab/web-kit';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 import type { SettingSwitchOptions } from '@/lib/settings/use-setting-switch';
 
-const gate = sendGateCalls({ apiFetch, apiSend });
-
 /** One change to the messaging gate: the sending switch, automatic messages, or the CRM cut-over tick. */
 export type GateChange = { sending: boolean } | { auto: boolean } | { cutover: boolean };
 
-/** PUT /messages/gate/{sending|auto}: ON carries the confirmation text (checked by the server), OFF never does. */
+const gate = sendGateCalls({ apiFetch, apiSend });
+
+/** ON carries the confirmation text (checked by the server), OFF never does. */
 function putSwitch(sw: GateSwitch, on: boolean): Promise<AcademySettings> {
-  const body = on ? { on, confirmText: GATE_CONFIRM_TEXT[sw] } : { on };
-  return gate[sw](body);
+  return gate[sw](on ? { on, confirmText: GATE_CONFIRM_TEXT[sw] } : { on });
 }
 
 /**
@@ -23,7 +22,7 @@ function putSwitch(sw: GateSwitch, on: boolean): Promise<AcademySettings> {
 export function sendGateChange(change: GateChange): Promise<AcademySettings> {
   if ('sending' in change) return putSwitch('sending', change.sending);
   if ('auto' in change) return putSwitch('auto', change.auto);
-  return gate.cutover(change.cutover);
+  return gate.cutover({ done: change.cutover });
 }
 
 /** useSettingSwitch for the gate routes: the answer replaces ['settings'] in the cache, then onSaved. */
