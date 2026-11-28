@@ -1,26 +1,11 @@
 {
-  "src/integrations/checks.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
-  "src/integrations/driver-keys.ts": {
-    "ab/module-boundaries": {
-      "count": 1
-    }
-  },
   "src/permissions/catalog.ts": {
     "ab/no-shape-checks": {
-      "count": 2
+      "count": 1
     }
   },
   "src/permissions/roles/roles.ts": {
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/theme/theme.ts": {
-    "typescript/explicit-module-boundary-types": {
       "count": 1
     }
   }
