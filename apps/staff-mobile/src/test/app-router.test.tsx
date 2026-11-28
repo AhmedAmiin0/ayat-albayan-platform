@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { renderApp, resetApp } from './app-router';
 import { t } from '@ab/mobile-kit';
@@ -7,7 +8,7 @@ function emptyBackend() {
   const empty = { items: [], total: 0, page: 1, pageSize: 25 };
   return new FakeBackend()
     .on('GET /lessons/day', () => [])
-    .on('GET /settings', () => ({}))
+    .on('GET /settings', () => SETTING_DEFAULTS)
     .on('GET /threads', () => empty)
     .on('GET /leads', () => empty);
 }

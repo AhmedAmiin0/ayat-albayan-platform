@@ -3525,11 +3525,8 @@
     }
   },
   "src/payments/hooks/queries.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/payments/hooks/use-record-payment.ts": {

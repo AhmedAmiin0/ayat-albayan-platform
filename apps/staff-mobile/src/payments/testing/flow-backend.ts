@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import type { PaymentView, SubscriptionView } from '@ab/money';
 import { listItem, profile } from '@/students/shared/test-data';
 import { FakeBackend } from '@/test/fake-backend';
@@ -23,7 +24,7 @@ export function paymentBackend() {
     .on('GET /students/:id', () => profile)
     .on('GET /students/:id/balance', () => balanceOf(state.sub))
     .on('GET /payments', () => page(state.payments))
-    .on('GET /settings', () => ({ renewal_alert_remaining: 2, follow_up_hours: [2, 24, 72] }))
+    .on('GET /settings', () => ({ ...SETTING_DEFAULTS, follow_up_hours: [2, 24, 72] }))
     .on('POST /payments/receipt-upload-url', () => SIGNED)
     .on('POST /payments', ({ body }) => {
       const input = body as { amount: number; method: PaymentView['method']; receiptPath?: string };

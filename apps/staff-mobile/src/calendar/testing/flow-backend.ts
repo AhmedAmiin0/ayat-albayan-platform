@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import type { LessonView, OverviewTeacher } from '@ab/schedule';
 import { teacherFixture, teacherRowFixture } from '@ab/shared/testing';
 import { SLOTS } from '@/teaching/reschedule/fixtures';
@@ -51,7 +52,7 @@ export function calendarBackend() {
       churned: 0,
     }))
     .on('GET /students', () => ({ items: [], total: 0, page: 1, pageSize: 50 }))
-    .on('GET /settings', () => ({ renewal_alert_remaining: 2, follow_up_hours: [2, 24, 72] }))
+    .on('GET /settings', () => ({ ...SETTING_DEFAULTS, follow_up_hours: [2, 24, 72] }))
     .on('GET /lessons', ({ query }) =>
       state.lessons
         .filter((l) => l.teacher.id === query['teacherId'] && within(l, query['from'], query['to']))
