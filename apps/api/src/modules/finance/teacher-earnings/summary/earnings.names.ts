@@ -15,7 +15,7 @@ export async function lessonNames(db: Db, lessonIds: string[]): Promise<Map<stri
       .from('lesson_students')
       .select('lesson_id, student:students(name)')
       .in('lesson_id', lessonIds)
-      .returns<NameRow[]>(),
+      .overrideTypes<NameRow[], { merge: false }>(),
   );
   for (const r of data)
     byLesson.set(r.lesson_id, [...(byLesson.get(r.lesson_id) ?? []), { student: r.student }]);

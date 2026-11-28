@@ -50,7 +50,7 @@ export class EarningsRepo {
         .order('starts_at')
         .order('id')
         .range(from, to)
-        .returns<MoneyRow[]>(),
+        .overrideTypes<MoneyRow[], { merge: false }>(),
     );
   }
 
@@ -66,7 +66,7 @@ export class EarningsRepo {
       .order('starts_at')
       .order('id')
       .limit(CHUNK)
-      .returns<EarningRow[]>();
+      .overrideTypes<EarningRow[], { merge: false }>();
     if (error) throw pgError(error);
     return data;
   }

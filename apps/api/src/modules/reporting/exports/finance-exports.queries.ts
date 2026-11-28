@@ -41,7 +41,7 @@ export class FinanceExportsQueries {
         .order('starts_at')
         .order('lesson_id')
         .range(from, to)
-        .returns<SessionIn[]>();
+        .overrideTypes<SessionIn[], { merge: false }>();
     });
   }
 
