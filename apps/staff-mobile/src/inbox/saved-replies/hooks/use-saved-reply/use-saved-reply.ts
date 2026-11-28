@@ -51,7 +51,7 @@ export function useSavedReplyDraft(input: { text: string; setText: (text: string
       else if (slashSearch(next, slash) === null) setSlash(null);
     },
     fill: Object.assign((reply: string, picked: SavedReply) => {
-      // A «/search» still in the box is replaced (from the list or the sheet); else the reply follows the text.
+      // A «/search» left in the box is replaced; else the reply follows the text.
       const open = slashSearch(input.text, slash) === null ? null : slash;
       input.setText(filledText({ text: input.text, reply, slash: open }));
       const file = picked.attachment;

@@ -7,7 +7,7 @@ import { requestId } from '@/core/lib/http/request-id';
 import { refreshFamily, withOpenPackage } from '@/sales-subscribe/lib/family';
 import { salesKeys } from '@/core/lib/keys';
 
-/** POST /sales/subscriptions/quote: the price she tells the family (no fx details). Keyed by its body. */
+/** POST /sales/subscriptions/quote: the price she quotes (no fx details), keyed by its body. */
 export function useSalesQuote(
   studentId: string,
   pricing: SubscriptionPricing,

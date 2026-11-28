@@ -4,7 +4,7 @@ import type { MicAnswer, RtcDeps } from './media';
 
 type WebRtc = typeof WebRtcModule;
 
-/** RECORD_AUDIO at call time (the manifest declares it, docs/28 PR 2); iOS prompts on getUserMedia. */
+/** RECORD_AUDIO at call time (the manifest declares it, docs/28); iOS prompts on getUserMedia. */
 async function askMic(): Promise<MicAnswer> {
   if (Platform.OS !== 'android') return 'granted';
   const result = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO);

@@ -17,11 +17,11 @@ import RootLayout from '../../../app/_layout';
 import SalesLayout from '../../../app/sales/_layout';
 import TeacherLayout from '../../../app/teacher/_layout';
 
-// The real root, tree and chat-group layouts with stub screens: each tree's chat is its own route group
-// above the tabs (a full screen, react-native-screens#4132), behind its tree's gate, under the same URL.
+// The real root, tree and chat-group layouts with stub screens: each tree's chat is its own route
+// group above the tabs (react-native-screens#4132), behind its tree's gate, under the same URL.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
-// /auth/me holding every permission of its role: nothing hidden, so each tree opens on its first tab.
+// /auth/me holds every permission of its role: nothing hidden, each tree opens on its first tab.
 const mockMe = { answer: {} as object };
 const mockTeacher = { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] };
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

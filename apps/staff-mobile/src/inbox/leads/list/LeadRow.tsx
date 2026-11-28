@@ -6,7 +6,7 @@ import { leadStatusChip } from '@/inbox/leads/detail/lead-words';
 import { leadRowSubtitle } from './lead-row';
 import type { LeadView } from '@ab/shared';
 
-/** One lead: initial, name (or the LTR phone), source line with its age at `now`, status chip. Tap → the lead. */
+/** One lead: initial, name (or LTR phone), source line with its age at `now`, status chip. */
 export const LeadRow = memo(function LeadRow({ lead, now }: { lead: LeadView; now: number }) {
   const phone = formatPhone(lead.phone_e164);
   return (

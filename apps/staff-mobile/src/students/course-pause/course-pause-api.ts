@@ -35,7 +35,7 @@ function useRefresh(studentId: string) {
     ]);
 }
 
-/** POST /students/:id/course-pause { fromDate, untilDate, reason }. Never a message to the family. */
+/** POST /students/:id/course-pause; it never sends the family a message. */
 export function useStartPause(studentId: string) {
   const refresh = useRefresh(studentId);
   return useMutation({

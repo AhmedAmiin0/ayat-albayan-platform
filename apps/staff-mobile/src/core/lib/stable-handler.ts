@@ -1,8 +1,8 @@
 import { useCallback, useLayoutEffect, useRef } from 'react';
 
 /**
- * A handler whose identity never changes but always runs the latest `fn` (it reads the last render's
- * state). For callbacks handed to memo rows and lists, where a new function each render would redraw
+ * A handler whose identity never changes but always runs the latest `fn` (last render's state).
+ * For callbacks handed to memo rows and lists, where a new function each render would redraw
  * every row. Call it from events, never during render.
  */
 export function useStableHandler<A extends unknown[], R>(fn: (...args: A) => R): (...args: A) => R {

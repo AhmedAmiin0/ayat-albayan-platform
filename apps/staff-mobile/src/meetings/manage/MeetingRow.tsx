@@ -16,7 +16,7 @@ function detailLine(meeting: MeetingView, tz: string, cycle: ClockCycle): string
   return [when, count, meeting.my_invite ? M.invitedYou : null].filter(Boolean).join(' · ');
 }
 
-/** One meeting (mine or one I am invited to): title, open/ended/cancelled chip, its time, and the actions I may take. */
+/** One meeting I created or am invited to: title, state chip, time and my allowed actions. */
 export function MeetingRow({ meeting, tz }: { meeting: MeetingView; tz: string }) {
   const { color } = useTheme();
   const cycle = useClockCycle();

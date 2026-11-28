@@ -1,4 +1,3 @@
-// Test fixtures for the earnings screens (test-only). BALANCE and PAYMENT live in @ab/shared/testing (shared).
 import type { TeacherEarningView } from '@ab/money';
 
 export { BALANCE, PAYMENT } from '@ab/shared/testing';

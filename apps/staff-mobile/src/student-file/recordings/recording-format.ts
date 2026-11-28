@@ -5,7 +5,7 @@ const R = t.mobileStudentFile.recordings;
 const MB = 1024 * 1024;
 const GB = 1024 * MB;
 
-/** `1:02:05` / `12:30`: Western digits, no unit words. Unknown (still running, old rows) shows «—». */
+/** `1:02:05` / `12:30`: Western digits, no unit words. Unknown (running, old rows) shows «—». */
 export function durationText(seconds: number | null): string {
   if (seconds === null) return R.unknown;
   const pad = (n: number) => String(n).padStart(2, '0');

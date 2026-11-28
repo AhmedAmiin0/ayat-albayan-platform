@@ -20,7 +20,7 @@ interface StatementActionBarProps {
   onNotice: (text: string) => void;
 }
 
-/** The web's actions for the state and permission; approve and reopen ask once, un-pay asks why, pay opens the form. */
+/** As the web: approve and reopen ask once, un-pay asks why, pay opens the form. */
 export function StatementActionBar({
   statement: s,
   can,

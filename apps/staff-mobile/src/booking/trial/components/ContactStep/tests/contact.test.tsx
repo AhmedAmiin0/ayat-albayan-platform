@@ -19,7 +19,7 @@ test('defaults to «ولي الأمر»; tapping «الطالب نفسه» patch
   );
   expect(screen.getByText(C.label)).toBeTruthy();
   expect(screen.getByRole('radio', { name: C.guardian }).props.accessibilityState).toMatchObject({ checked: true });
-  fireEvent.press(screen.getByRole('radio', { name: C.self }));
+  await fireEvent.press(screen.getByRole('radio', { name: C.self }));
   expect(onChange).toHaveBeenCalledWith({ contactIsSelf: true });
 });
 

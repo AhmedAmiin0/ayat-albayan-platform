@@ -12,7 +12,7 @@ interface LinkPriceSectionProps {
   custom: boolean;
 }
 
-/** The calculator price (POST /sales/payment-links/quote) as the reference, and the admin's lowest amount. */
+/** The calculator price (POST /sales/payment-links/quote) as reference, and the admin's minimum. */
 export function LinkPriceSection({ quote, custom }: LinkPriceSectionProps) {
   const { color } = useTheme();
   if (quote.isError) return <ErrorState message={linkErrorText(quote.error)} onRetry={() => void quote.refetch()} />;

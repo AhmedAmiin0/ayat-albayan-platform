@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 
-/** Is the app in the foreground? Calls poll, subscribe and ring only then (docs/28 §1: no push in PR 2). */
+/** Is the app in the foreground? Calls poll, subscribe and ring only then (docs/28 §1: no push). */
 export function useForeground(): boolean {
   const [state, setState] = useState<AppStateStatus>(AppState.currentState);
   useEffect(() => {

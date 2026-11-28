@@ -34,8 +34,7 @@ interface RecordingRowProps {
 }
 
 /**
- * One recording: when, who taught, length, size, status, play, the visibility switch and delete. No fill
- * or rule of its own: the list's inset card draws them (one container rule).
+ * No fill or rule of its own: the list's inset card draws them (one container rule).
  */
 const RecordingRow = memo(function RecordingRow(props: RecordingRowProps) {
   const { rec, studentId, tz, canManage, canDelete, admin, getUrl } = props;
@@ -79,7 +78,7 @@ interface RecordingRowsOptions {
   freshUrl: (id: string) => Promise<string | null>;
 }
 
-/** The list's renderItem, stable while its options are: a refetch redraws only the changed recordings. */
+/** Stable renderItem while its options are: a refetch redraws only the changed recordings. */
 export function useRecordingRow({ studentId, manage, admin, freshUrl }: RecordingRowsOptions) {
   const tz = useViewerTz();
   const getUrl = useStableHandler(freshUrl);

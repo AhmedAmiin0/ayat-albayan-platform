@@ -12,7 +12,7 @@ test('the body filled in, the footer and the meeting button with the code typed 
   await renderWithQuery(<TemplatePreview template={{ ...meetReminder, footer_ar: 'Ayat Al-Bayan' }} params={{ button: 'abc-defg-hij' }} />);
   expect(screen.getByText(t.inbox.composer.preview)).toBeTruthy();
   expect(screen.getByTestId('template-footer').props.children).toBe('Ayat Al-Bayan');
-  fireEvent.press(screen.getByTestId('template-button-url'));
+  await fireEvent.press(screen.getByTestId('template-button-url'));
   expect(open).toHaveBeenCalledWith('https://meet.google.com/abc-defg-hij');
   open.mockRestore();
 });

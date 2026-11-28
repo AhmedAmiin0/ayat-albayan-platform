@@ -4,7 +4,7 @@ import { renderWithQuery } from '@/test/query';
 import { PRICES } from '@/inbox/saved-replies/testing/fixtures';
 import { QuickReplyRow } from '@/inbox/saved-replies/quick-list/QuickReplyRow/QuickReplyRow';
 
-// Arabic UI (jest.setup: RTL): each line aligns by its own language, never a forced writingDirection.
+// Arabic UI (jest.setup: RTL): each line aligns by its own language, never a forced direction.
 const english = { ...PRICES, id: 'en1', title: 'prices', body: 'Hello, the prices are attached.' };
 const styleOf = (text: string | RegExp) => StyleSheet.flatten(screen.getByText(text).props.style);
 

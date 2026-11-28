@@ -2,7 +2,7 @@ import type { AssistantLessonView, AssistantView } from '@ab/schedule';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString, pathKey } from '@ab/mobile-kit';
 
-/** A body that is not a list (an older API, a stub) reads as no assistants rather than crashing the student screen. */
+/** A non-list body (older API, a stub) reads as no assistants, not a student-screen crash. */
 const asList = (data: AssistantView[]): AssistantView[] => (Array.isArray(data) ? data : []);
 
 /** GET /students/:id/assistants. */
@@ -36,7 +36,7 @@ export const removeAssistant = ({
   profileId: string;
 }) => apiSend<AssistantView[]>('DELETE', `/students/${studentId}/assistants/${profileId}`);
 
-/** GET /assistants/me/lessons for a [from, to) day (the assistant's own sessions; role `assistant`). */
+/** GET /assistants/me/lessons for a [from, to) day: the assistant's own sessions. */
 export const useAssistantLessons = (day: { from: string; to: string }) =>
   useQuery({
     queryKey: [...pathKey('/assistants/me/lessons'), day],

@@ -11,7 +11,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: jest.fn(),
 }));
-// The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
+// The bell reads its own API (BellButton.test); here it would take the day's mocked answers.
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 
 beforeEach(() => {

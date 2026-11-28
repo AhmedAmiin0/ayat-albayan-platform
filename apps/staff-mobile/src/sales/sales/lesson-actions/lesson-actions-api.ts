@@ -34,7 +34,7 @@ const useRefreshSchedule = () => {
     ]);
 };
 
-/** POST /sales/lessons/:id/reschedule { startsAt, reason? }: the admin's one-lesson move (confirmation to the family queued). */
+/** POST /sales/lessons/:id/reschedule: the admin's one-lesson move; queues the family's notice. */
 export function useSalesReschedule(lessonId: string) {
   const refresh = useRefreshSchedule();
   return useMutation({

@@ -5,7 +5,7 @@ import { withTracked } from '@/core/lib/query/paged-result';
 
 const PATH = '/sales/people';
 
-/** GET /sales/people (admin, leads.assign): the salespeople. Same key as the web, so one refetch covers both. */
+/** GET /sales/people (admin, leads.assign). Same key as the web, so one refetch covers both. */
 export function useSalesPeople(enabled: boolean) {
   const query = useQuery({
     queryKey: pathKey(PATH),

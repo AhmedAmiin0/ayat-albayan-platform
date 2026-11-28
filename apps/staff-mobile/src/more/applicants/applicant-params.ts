@@ -14,7 +14,7 @@ export const applicantSortChoices = (): { value: string; label: string }[] => [
 
 const KEYS = ['created_at', 'name', 'status'];
 
-/** GET /job-applicants params (the web's `status`, `sort`, `dir`); an unknown sort value is the default. */
+/** GET /job-applicants params (web's `status`, `sort`, `dir`); an unknown sort is the default. */
 export function applicantParams(status: ApplicantStatusFilter, sortValue: string): ListParams {
   const [key, dir] = sortValue.split(':');
   const sort = KEYS.find((k) => k === key);
@@ -25,6 +25,6 @@ export function applicantParams(status: ApplicantStatusFilter, sortValue: string
   };
 }
 
-/** Only web links open from the app (a stored `javascript:` or `file:` value never reaches the OS). */
+/** Only web links open (a stored `javascript:` or `file:` value never reaches the OS). */
 export const safeLink = (url: string | null | undefined): string | null =>
   url && /^https?:\/\//i.test(url.trim()) ? url.trim() : null;

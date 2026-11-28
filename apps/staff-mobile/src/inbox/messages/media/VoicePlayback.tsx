@@ -16,7 +16,7 @@ interface VoicePlaybackProps {
   id: string;
   url: string;
   kind: string;
-  /** Never loaded (network, a storage error, a codec the phone lacks): the bubble offers another try. */
+  /** Never loaded (network, storage error, a codec the phone lacks): the bubble offers a retry. */
   onFail: () => void;
   onLongPress?: () => void;
 }

@@ -5,9 +5,9 @@ import { supabase } from '@ab/mobile-kit';
 import { CALLS_KEY } from './calls-api';
 
 /**
- * A nudge, not a data path (docs/28 §4): a change to a wa_calls row the user may read (RLS) makes the
- * calls queries re-read through the API (@ab/client-core subscribeCalls). While the app is in the
- * background (`active` false) nothing is subscribed.
+ * A nudge, not a data path (docs/28 §4): a change to a wa_calls row the user may read (RLS) makes
+ * the calls queries re-read through the API (@ab/client-core subscribeCalls). While the app is in
+ * the background (`active` false) nothing is subscribed.
  */
 export function useCallsRealtime(input: { enabled: boolean; active: boolean }): void {
   const client = useQueryClient();

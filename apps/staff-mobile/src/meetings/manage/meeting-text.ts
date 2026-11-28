@@ -14,7 +14,7 @@ export function meetingWhen(iso: string, timeZone: string, cycle: ClockCycle): s
 
 const R = t.meetings.internal.refusal;
 
-/** A refused join in a meeting's words (never a lesson's): not open yet names when it opens on the viewer's clock. */
+/** Refused join, in meeting words (not lesson ones); not open yet names the opening time. */
 function refusal(code: unknown, opensAt: unknown, clock: { tz: string; cycle: ClockCycle }) {
   if (code !== 'join_not_open_yet') return code === 'join_closed' ? R.closed : null;
   if (typeof opensAt !== 'string') return R.notOpen;
@@ -40,7 +40,7 @@ export function meetingsBase(segment: string | undefined): string {
   return '/more/live';
 }
 
-/** Its creator (or an admin) may act on an open, not cancelled meeting; a scheduled one may also move. */
+/** Its creator or an admin may act on an open, uncancelled meeting; a scheduled one may move. */
 export function manageOf(m: Pick<MeetingView, 'state' | 'can_manage' | 'cancelled_at' | 'starts_at'>): { manage: boolean; startsAt: string | null } {
   const manage = m.state === 'open' && m.can_manage && !m.cancelled_at;
   return { manage, startsAt: manage ? m.starts_at : null };

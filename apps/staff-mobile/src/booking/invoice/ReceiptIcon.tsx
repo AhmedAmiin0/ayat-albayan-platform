@@ -1,7 +1,7 @@
 import Svg, { Path } from 'react-native-svg';
 import { useTheme } from '@ab/mobile-kit';
 
-/** The web's receipt line icon (a paper with a torn edge and two lines): for a file with no picture. */
+/** The web's receipt line icon (paper with a torn edge, two lines), for a file with no picture. */
 export function ReceiptIcon({ size = 28 }: { size?: number }) {
   const { color } = useTheme();
   return (

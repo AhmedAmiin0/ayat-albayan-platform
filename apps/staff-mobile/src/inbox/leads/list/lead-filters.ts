@@ -2,7 +2,7 @@ import type { LeadSource, LeadStatus } from '@ab/catalog';
 import type { ListParams } from '@ab/mobile-kit';
 import { leadSortValue, type LeadSort } from '@ab/client-core';
 
-/** The inbox's own filters beside the status pills and the search (the web LeadSearch minus paging). */
+/** The inbox's own filters beside the status pills and search (web LeadSearch minus paging). */
 export type LeadFilters = LeadSort & { source?: LeadSource; assignee?: string };
 
 export const NO_FILTERS: LeadFilters = {};

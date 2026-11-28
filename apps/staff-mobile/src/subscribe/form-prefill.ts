@@ -57,7 +57,7 @@ export function formFrom(p: FormPrefill): SubscribeForm {
   };
 }
 
-/** A renewal's calculator inputs (renewalPricing, e.g. GET /sales/money/family `renewal`) as the form. */
+/** A renewal's calculator inputs (e.g. GET /sales/money/family `renewal`) as the form. */
 export function renewalForm(p: RenewalPricing): SubscribeForm {
   return { plan: p.pkg, count: p.count, duration: `${p.duration}`, discount: String(p.discount), country: p.country || 'guardian' };
 }

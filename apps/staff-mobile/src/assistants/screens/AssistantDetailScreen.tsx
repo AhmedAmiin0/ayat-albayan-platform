@@ -13,9 +13,9 @@ const TABS = (): { value: Tab; label: string }[] => [
   { value: 'statements', label: t.assistants.tabs.statements },
 ];
 
-/** One salesperson (web /admin/assistants/:id): terms (edited with assistantpay.write), their commissions, their statements. */
+/** Web /admin/assistants/:id: terms (edited with assistantpay.write), commissions, statements. */
 export function AssistantDetailScreen() {
-  const { id = '' } = useLocalSearchParams<{ id: string }>();
+  const { id = '' } = useLocalSearchParams<{ id?: string }>();
   const [tab, setTab] = useState<Tab>('terms');
   const [notice, setNotice] = useState<string | null>(null);
   const can = useStatementCan();

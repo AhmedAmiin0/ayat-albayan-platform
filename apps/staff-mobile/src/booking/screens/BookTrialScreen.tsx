@@ -5,16 +5,17 @@ import { BookingModeProvider } from '@/booking/shared/booking-mode';
 import { isLeadSource, type BookingLead } from '@/booking/trial/lib/draft';
 import { TrialWizard } from '@/booking/trial/components/TrialWizard';
 
-type Params = {
-  leadId?: string;
+type ParamKey =
+  | 'leadId'
   /** From a chat: the lead's number and WhatsApp name, so no cached inbox list is needed. */
-  phone?: string;
-  name?: string;
+  | 'phone'
+  | 'name'
   /** 'subscribe' offers paid packages too; 'register' books a sales trial, credited to her. */
-  mode?: string;
+  | 'mode'
   /** The lead's source from the chat, for the how-did-you-hear question. */
-  source?: string;
-};
+  | 'source';
+
+type Params = Partial<Record<ParamKey, string>>;
 
 /** The chat's own lead, from the route params (none without its id and number). */
 function chatLead({ leadId, phone, name, source }: Params): BookingLead | undefined {

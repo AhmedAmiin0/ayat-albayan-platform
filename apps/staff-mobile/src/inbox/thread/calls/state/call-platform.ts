@@ -6,7 +6,7 @@ import { restorePlayback, routeCallAudio } from '@/inbox/thread/calls/rtc/audio-
 import { createCallPeer } from '@/inbox/thread/calls/rtc/call-peer';
 import type { RtcDeps } from '@/inbox/thread/calls/rtc/media';
 
-/** Mobile's side of the shared call steps: its API, ids and words, and the earpiece / speaker route. */
+/** Mobile's side of the shared call steps: API, ids, words and the earpiece / speaker route. */
 export const mobileCalls: CallPlatform = {
   sends: callApi,
   requestId,

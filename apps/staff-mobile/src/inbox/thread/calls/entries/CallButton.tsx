@@ -10,9 +10,9 @@ interface CallButtonProps {
 }
 
 /**
- * The phone icon in the chat header, WhatsApp's (docs/28 §5). Hidden while calls are off, for a role
- * without inbox.send and in a read-only chat; shown but disabled, its reason read out, while the chat
- * line is not on Kapso or a call is already going on.
+ * The phone icon in the chat header, WhatsApp's (docs/28 §5). Hidden while calls are off, for a
+ * role without inbox.send and in a read-only chat; shown but disabled, its reason read out, while
+ * the chat line is not on Kapso or a call is already going on.
  */
 export function CallButton({ phone, name, canSend }: CallButtonProps) {
   const { color } = useTheme();

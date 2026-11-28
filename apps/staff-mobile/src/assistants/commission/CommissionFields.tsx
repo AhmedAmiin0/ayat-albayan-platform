@@ -8,7 +8,7 @@ import { StartDayPicker } from '@/assistants/terms/StartDayPicker';
 
 const T = t.assistants.terms;
 
-/** The commission block (web TermsFields): none / percent / fixed, the value, a fixed one's currency, the start day. */
+/** Web TermsFields: none / percent / fixed, the value, a fixed one's currency, the start day. */
 export function CommissionFields({ form, errors, set, min }: TermsFieldsProps) {
   const fixed = form.commType === 'fixed';
   const types: { value: '' | AssistantCommissionType; label: string }[] = [

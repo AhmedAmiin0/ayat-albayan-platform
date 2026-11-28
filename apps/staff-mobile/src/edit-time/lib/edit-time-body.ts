@@ -10,7 +10,7 @@ import { editMode } from './types';
 
 const MINUTE = 60_000;
 const STEP = 15 * MINUTE;
-/** How far either side of the recorded start a correction looks. ponytail: the same-day filter does the rest. */
+/** How far around the recorded start a correction looks; the same-day filter does the rest. */
 const REACH = 4 * 60 * MINUTE;
 export const REASON_MAX = 300;
 
@@ -55,17 +55,17 @@ export function isChanged(lesson: LessonView, s: EditState): boolean {
   return moved || s.durationMin !== lengthOf(lesson);
 }
 
-/** A move to a later start sends the guardian the new time; a length-only change or a correction does not. */
+/** Only a move to a later start notifies the guardian; a length change or correction does not. */
 export function willNotify(lesson: LessonView, s: EditState, now: Date): boolean {
   const start = Date.parse(chosenStart(lesson, s.picked));
   return editMode(lesson) === 'move' && start !== Date.parse(lesson.starts_at) && start > now.getTime();
 }
 
-/** A length the API and the slot grid accept (30 / 45 / 60 / 90); an odd recorded one must be replaced. */
+/** A length the API and slot grid accept (30/45/60/90); an odd recorded one must be replaced. */
 export const isBookable = (durationMin: number): boolean =>
   DURATIONS.some((d) => d === durationMin);
 
-/** The submit is ready: a bookable length, something changed, a move starts ahead, a correction says why. */
+/** Ready: bookable length, something changed, a move starts ahead, a correction says why. */
 export function canSubmit(lesson: LessonView, s: EditState, now: Date): boolean {
   const mode = editMode(lesson);
   if (mode === null || !isBookable(s.durationMin) || !isChanged(lesson, s)) return false;
@@ -82,7 +82,7 @@ export function editBody(lesson: LessonView, s: EditState, now: Date): LessonTim
   const reason = s.reason.trim().slice(0, REASON_MAX);
   return {
     expectedStartsAt: lesson.starts_at,
-    // The time the admin saw, length included: a length-only edit on an older length is refused (stale_time).
+    // What the admin saw, length included: an edit on a stale length is refused (stale_time).
     expectedEndsAt: lesson.ends_at,
     startsAt: chosenStart(lesson, s.picked),
     durationMin: length.data,

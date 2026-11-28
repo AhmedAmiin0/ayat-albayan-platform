@@ -24,7 +24,7 @@ interface CreateMeetingFormProps {
   onCancel: () => void;
 }
 
-/** The create form: a title, the time (scheduled only), and invitees (optional on an instant one). */
+/** Title, time (scheduled only) and invitees (optional on an instant meeting). */
 export function CreateMeetingForm({
   scheduled,
   tz,

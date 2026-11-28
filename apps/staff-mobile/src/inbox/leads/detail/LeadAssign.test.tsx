@@ -81,7 +81,7 @@ test('the people list failing offers a retry; no leads.assign renders nothing', 
   );
   expect(await screen.findByText(t.mobileLeads.peopleFailed)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.mobile.retry })).toBeTruthy();
-  first.unmount();
+  await first.unmount();
   mockApiFetch.mockImplementation(leadsBackend(['leads.read']));
   await renderWithQuery(<LeadAssign lead={free} />, createTestQueryClient({ meFromApi: true }));
   await waitFor(() => expect(screen.queryByText(t.mobileLeads.assignTitle)).toBeNull());

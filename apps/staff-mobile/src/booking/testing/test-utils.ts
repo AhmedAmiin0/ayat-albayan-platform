@@ -53,7 +53,7 @@ export const PHOTO = {
   size: 3,
 };
 
-/** Steps 1 → 4: the child's name, the first teacher, then the free slot at `time` (Riyadh clock). */
+/** Steps 1 → 4: the child's name, the first teacher, the free slot at `time` (Riyadh clock). */
 export async function walkToConfirm(time = '17:00') {
   await fireEvent.changeText(await screen.findByLabelText(t.leads.studentName), 'يوسف');
   await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));

@@ -40,7 +40,7 @@ const row = (fields: Partial<MessageView>) =>
 const show = (m: MessageView) => renderWithQuery(<MessageBubble message={m} phone={PHONE} />);
 const press = (label: string) => fireEvent.press(screen.getByRole('button', { name: label }));
 const openURL = jest.spyOn(Linking, 'openURL');
-/** A PDF's page 1: no preview (422), so the bubble keeps today's opener (PdfPreview.test.tsx has the card). */
+/** PDF page 1 has no preview (422): the bubble keeps its opener (PdfPreview.test has the card). */
 const PDF_1 = '/threads/%2B966552147730/messages/f1/pdf/1';
 const noPreview = () => Promise.reject(new ApiError(422, { code: 'pdf_no_preview' }));
 /** W6 answers `file`; the bubble's other reads (/auth/me for its actions) get nothing. */

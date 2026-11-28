@@ -7,8 +7,8 @@ import { type MoneyAction, pickMoneyAction } from './money-action';
 import { salesKeys } from '@/core/lib/keys';
 
 /**
- * GET /sales/money/family?phone under the chat money pills' own key (sales-subscribe lib/family.ts), so
- * both share one cache and its refresh after a transfer; read here because @/sales-subscribe imports @/sales.
+ * GET /sales/money/family?phone under the chat money pills' key (sales-subscribe lib/family.ts), so
+ * both share one cache and refresh after a transfer; read here: @/sales-subscribe imports @/sales.
  */
 const useFamily = (phone: string, enabled: boolean) =>
   useQuery({

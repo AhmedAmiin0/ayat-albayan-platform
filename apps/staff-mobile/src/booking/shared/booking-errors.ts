@@ -21,8 +21,8 @@ export type BookFailure =
   | { kind: 'invoice'; text: string }
   | { kind: 'error'; text: string };
 
-// Every booking/lesson domain code (booking.error.*, lessons.error.*), like web's ERROR_TEXT: the course
-// guard also answers date_in_past, no_occurrences, not_your_student, student_not_found.
+// Every booking/lesson domain code, like the web's ERROR_TEXT: the course guard also answers
+// date_in_past, no_occurrences, not_your_student, student_not_found.
 const messages: Record<string, string | undefined> = { ...t.lessons.error, ...t.booking.error };
 const isInvoiceCode = (code: string) => code.startsWith('invoice_') || code === 'media_expired';
 
@@ -76,7 +76,7 @@ function conflictFailure(
   return null;
 }
 
-/** The API refused on purpose with a code it explains (a guard: course_exists…), not a failure to retry. */
+/** A deliberate refusal with an explained code (a guard: course_exists…), not one to retry. */
 export function isCodedRefusal(error: unknown): boolean {
   return (
     error instanceof ApiError && isRecord(error.body) && codedFailure(error.body.code) !== null

@@ -7,7 +7,7 @@ import { useSubscriptionHistory } from '@/sales/sales/lib/sales-api';
 
 /** Only one of mine answers; anything else is a 404. */
 export function SubscriptionHistoryScreen() {
-  const { id = '' } = useLocalSearchParams<{ id: string }>();
+  const { id = '' } = useLocalSearchParams<{ id?: string }>();
   const history = useSubscriptionHistory(id);
   const back = <BackButton onPress={() => router.back()} />;
   const data = history.data;

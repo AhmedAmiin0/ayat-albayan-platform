@@ -20,7 +20,7 @@ function show(
   over: { student?: typeof STUDENT | null; permissions?: string[] } = {},
 ) {
   const permissions = over.permissions ?? ['self.sales', 'self.sales_money'];
-  // /auth/me answered before the render, so a hidden action is hidden for its reason, not still loading.
+  // /auth/me answered before render, so a hidden action is hidden for its reason, not loading.
   const client = createTestQueryClient({ meFromApi: true });
   client.setQueryDefaults(pathKey('/auth/me'), { staleTime: Infinity });
   client.setQueryData(pathKey('/auth/me'), { role: 'sales', permissions });

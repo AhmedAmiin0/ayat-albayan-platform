@@ -15,7 +15,7 @@ interface FailedSheetProps {
   onError: (text: string) => void;
 }
 
-/** The sender claimed the row meanwhile (409 not_manual): it is going out, never send it by hand too. */
+/** The sender claimed the row (409 not_manual): it is going out, never send it by hand too. */
 const claimed = (e: unknown) => e instanceof ApiError && (e.body as { code?: unknown } | null)?.code === 'not_manual';
 
 /** R-MSG-03/05: the server holds the row before WhatsApp opens so it is never sent twice. */
@@ -25,8 +25,8 @@ export function FailedSheet({ phone, message: m, onClose, onError }: FailedSheet
   const handOff = useMessageAction(phone, 'hand-off');
   const sentManually = useMessageAction(phone, 'sent-manually');
   const failed = m?.status === 'failed';
-  // Why, for a queued row too once it has a reason (an auth hold: 190, kapso_auth…); 'sending' is the
-  // sender's claim, not a reason.
+  // Why, for a queued row too once it has a reason (an auth hold: 190, kapso_auth…); 'sending'
+  // is the sender's claim, not a reason.
   const why = failed || (!!m?.error_code && m.error_code !== 'sending');
   // A text stopped by the 24 h window offers send via WhatsApp instead of the wa.me hand-off.
   const viaWhatsApp = m !== null && canSendViaWhatsApp(m);

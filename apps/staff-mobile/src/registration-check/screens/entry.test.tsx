@@ -85,7 +85,7 @@ test('hidden without students.check_registration, in both headers', async () => 
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.chatMenu }));
   expect(screen.getByRole('button', { name: t.inbox.copy.phone })).toBeTruthy();
   expect(action()).toBeNull();
-  screen.unmount();
+  await screen.unmount();
   await renderWithQuery(<AllStudentsScreen asTab />, asSales(BASE));
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalled());
   expect(action()).toBeNull();

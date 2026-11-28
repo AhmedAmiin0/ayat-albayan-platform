@@ -70,7 +70,7 @@ interface FamilyToggleProps {
   onToggle: () => void;
 }
 
-/** The folded family: the family chip, what needs the admin, the count and a chevron; a tap opens it. */
+/** The folded family: its chip, what needs the admin, the count and a chevron; a tap opens it. */
 function FamilyToggle({ chip, summary, open, onToggle }: FamilyToggleProps) {
   const { color } = useTheme();
   const s = t.inbox.subscription;

@@ -5,7 +5,7 @@ import { t, ListRow, ltr, StatusChip } from '@ab/mobile-kit';
 import type { JobApplicant } from '@/core/lib/staff/types';
 import { ApplicantLinks } from './ApplicantLinks';
 
-/** One applicant: name + LTR phone, the CV / recitation links, the status. Not a button (the web moves them). */
+/** Name + LTR phone, CV / recitation links, status. Not a button: the web moves applicants. */
 export const ApplicantRow = memo(function ApplicantRow({ applicant }: { applicant: JobApplicant }) {
   const phone = formatPhone(applicant.phone_e164);
   return (

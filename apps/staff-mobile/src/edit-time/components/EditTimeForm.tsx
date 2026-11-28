@@ -30,7 +30,7 @@ export function EditTimeForm({ lesson, onClose }: EditTimeFormProps) {
   const edit = useEditTime(lesson.id);
   const [now] = useState(() => new Date());
   const [state, setState] = useState<EditState>({ picked: null, durationMin: lengthOf(lesson), reason: '', notify: true });
-  // payout_locked outlives edit.reset(): it holds the length back however the form changes after it.
+  // payout_locked outlives edit.reset(): it holds the length back whatever the form does next.
   const [lock, setLock] = useState<PayoutLock | null>(null);
   const failure = edit.isError ? editTimeFailure(edit.error, cycle, viewerZone) : null;
   const clash = failure?.kind === 'conflict' ? failure : null;

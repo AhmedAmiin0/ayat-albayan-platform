@@ -34,7 +34,7 @@ export function defaultSlot(now: Date, tz: string): Slot {
   return { ...zonedClock(next, tz), durationMin: DEFAULT_MEETING_DURATION };
 }
 
-/** A meeting's current time as a form (reschedule); its length from planned_end_at, else the default. */
+/** A meeting's time as a form (reschedule); length from planned_end_at, else the default. */
 export function slotOf(startsAt: string, plannedEnd: string | null, tz: string): Slot {
   const length = plannedEnd
     ? Math.round((Date.parse(plannedEnd) - Date.parse(startsAt)) / MIN)

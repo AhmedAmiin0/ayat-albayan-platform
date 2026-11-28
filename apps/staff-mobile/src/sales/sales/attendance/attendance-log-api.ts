@@ -6,7 +6,7 @@ import type { TreeBase } from '@/core/nav/tree-base';
 import { openStudentReportPdf } from '@/sales/sales/student/student-api';
 import { salesKeys } from '@/core/lib/keys';
 
-/** GET /sales/students/:id/attendance in the sales tree, the admin's GET /students/:id/attendance otherwise. */
+/** Sales tree: /sales/students/:id/attendance; else the admin's /students/:id/attendance. */
 export const attendancePath = (base: TreeBase, id: string): string =>
   base === '/sales' ? `/sales/students/${id}/attendance` : `/students/${id}/attendance`;
 

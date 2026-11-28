@@ -1,6 +1,6 @@
 import { Vibration } from 'react-native';
 
-/** A calm ring: a long pulse, a pause, repeated (no sound file: an asset would be a native change). */
+/** A calm ring: a long pulse, a pause, repeated (a sound file would be a native change). */
 export const RING_PATTERN = [0, 700, 1300];
 
 interface Ringtone {

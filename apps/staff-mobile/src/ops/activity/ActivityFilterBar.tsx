@@ -21,7 +21,7 @@ const pills = (values: readonly string[], label: (v: string) => string) => [
   ...values.map((v) => ({ value: v, label: label(v) })),
 ];
 
-/** Who (role), what (item) and when (from / to day): the filters the API takes, applied as typed. */
+/** Who (role), what (item) and when (from / to day): the API's filters, applied as typed. */
 export function ActivityFilterBar({ value, onChange }: ActivityFilterBarProps) {
   const a = t.mobileAdmin.activity;
   const err = dateError(value);

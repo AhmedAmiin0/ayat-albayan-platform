@@ -2,7 +2,7 @@ import { triesAfterWindow } from '@ab/client-core';
 import type { ThreadLesson, ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
-import { usePermissions, ErrorLine } from '@ab/mobile-kit';
+import { usePermissions, ErrorLine, useNow } from '@ab/mobile-kit';
 import { ClosedRow } from '@/inbox/threads-list/ClosedRow';
 import { useComposerText, useForgetDraftOnLeave } from './draft-store';
 import { QuoteSheet } from './quote/QuoteSheet';
@@ -36,6 +36,7 @@ export function Composer({
   /** No message yet (the server answered since the chat opened): the first one is a template. */
   fresh?: boolean;
 }) {
+  const now = useNow();
   const staff = useThreadMode().kind !== 'teacher';
   const can = usePermissions();
   const quote = staff && can('pricing.read');
@@ -55,7 +56,7 @@ export function Composer({
   };
   // Why a photo / PDF did not go (AttachFile), until the next pick.
   const [fileError, setFileError] = useState<string | null>(null);
-  const chat = sendState(thread, new Date());
+  const chat = sendState(thread, now);
   const open = chat.open;
   // A Kapso chat line still tries every staff send after the window.
   const trying = triesAfterWindow(chat, staff);

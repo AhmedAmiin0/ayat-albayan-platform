@@ -53,7 +53,7 @@ test('a failed read says so and retries', async () => {
   await renderWithQuery(<NumbersList />);
   expect(await screen.findByText(n.loadError)).toBeTruthy();
   mockApiFetch.mockImplementation(answer(numbers, parityOk));
-  fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
+  await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText('Main line')).toBeTruthy();
   expect(screen.queryByText(n.loadError)).toBeNull();
 });

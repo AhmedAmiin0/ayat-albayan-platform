@@ -16,7 +16,7 @@ export function familyTz(lesson: Pick<LessonView, 'students'>): string {
   return lesson.students[0]?.tz ?? RIYADH_TZ;
 }
 
-/** The lesson's length when it is a bookable duration (slots and a new rule need one), else null. */
+/** The lesson's length if bookable (slots and a new rule need one), else null. */
 export function lessonDuration(lesson: Pick<LessonView, 'starts_at' | 'ends_at'>): Duration | null {
   const min = Math.round((Date.parse(lesson.ends_at) - Date.parse(lesson.starts_at)) / MINUTE);
   return DURATIONS.find((d) => d === min) ?? null;

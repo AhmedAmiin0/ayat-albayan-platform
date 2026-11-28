@@ -1,7 +1,7 @@
 import { makeupOffer, type LessonView } from '@ab/schedule';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t, type, useTheme, AppText, Button } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, Button, useNow } from '@ab/mobile-kit';
 import { usePublicConfig } from '@/core/lib/query/public-config';
 import { makeupParams } from '@/booking/makeup/makeup-draft';
 import { useClockCycle, useViewerTz, whenIn } from '@/core/lib/clock';
@@ -18,7 +18,7 @@ export function MakeupAction({
   const tz = useViewerTz();
   const { color } = useTheme();
   const { makeup_window_days: days } = usePublicConfig();
-  const { open, booked } = makeupOffer(lesson, new Date(), days);
+  const { open, booked } = makeupOffer(lesson, useNow(), days);
   if (open.length + booked.length === 0) return null;
   const group = lesson.students.length > 1;
   return (

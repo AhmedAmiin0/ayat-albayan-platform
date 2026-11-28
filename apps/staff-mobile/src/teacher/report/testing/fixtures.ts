@@ -43,7 +43,7 @@ const MEMORY: MemoryView = {
   recent_surahs: [67, 68],
 };
 
-/** The same lesson on the new form (form_version 2): a 12-lesson package and the student's history. */
+/** The same lesson on form_version 2: a 12-lesson package and the student's history. */
 export function formResponseV2(
   opts: { report?: Partial<ReportView>; memory?: MemoryView | null; program?: Program } = {},
 ): ReportFormResponse {

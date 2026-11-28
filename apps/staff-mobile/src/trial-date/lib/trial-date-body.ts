@@ -48,7 +48,7 @@ const linkOf = (link: string): { meetingLink?: string } => {
   return meetingLink ? { meetingLink } : {};
 };
 
-/** The body once a teacher and a time are picked: one lesson on the slot's local day (invariant 4). */
+/** Once a teacher and time are picked: one lesson on the slot's local day (invariant 4). */
 export function trialDateBody(d: TrialDateDraft, requestId: string): TrialDateBody | null {
   if (!d.teacher || !d.startsAt) return null;
   const rule = ruleFromSlot(d.startsAt, d.tz);

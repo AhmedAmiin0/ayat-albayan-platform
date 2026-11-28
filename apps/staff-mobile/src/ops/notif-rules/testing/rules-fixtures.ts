@@ -2,7 +2,7 @@ import type { NotificationEntryView, NotificationsOverview } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { catalogue, settings } from '@/ops/shared/fixtures';
 
-// GET /admin/notifications as a tagged phone sees it (v2: rule, approval, mode, reach), for the switch tests.
+// GET /admin/notifications as a tagged phone sees it (v2: rule, approval, mode, reach).
 
 /** /auth/me with and without notifications.manage. */
 export const MANAGER = { role: 'admin', permissions: ['settings.read', 'settings.write', 'notifications.manage'] };
@@ -53,7 +53,7 @@ export const answer =
     return settings;
   };
 
-/** Presses an audience pill (its name carries the count), e.g. t.notificationCatalogue.audience.teacher. */
+/** Presses an audience pill; its accessible name carries the count. */
 export const openAudience = async (label: string): Promise<void> => {
   await fireEvent.press(await screen.findByRole('tab', { name: new RegExp(`^${label}`) }));
 };

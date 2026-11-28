@@ -105,8 +105,8 @@ function guardianAction(
   const [only] = kinds;
   if (!only) return null;
   if (kinds.length === 1) return { label: only.word, accessibilityLabel: `${only.word} — ${only.child.name}`, href: only.href };
-  // The code tells same-name children apart (and keeps the sheet's keys unique); isolated, a Latin name
-  // and the code never merge into one LTR run in an Arabic row.
+  // The code tells same-name children apart and keeps the sheet's keys unique; isolated, a Latin
+  // name and the code never merge into one LTR run in an Arabic row.
   const targets = kinds.map((k) => ({ label: `${isolate(k.child.name)} · ${ltr(k.child.code)} — ${k.word}`, href: k.href }));
   return { label: kinds.every((k) => k.renew) ? s().renew : t.subscriptions.new, targets };
 }

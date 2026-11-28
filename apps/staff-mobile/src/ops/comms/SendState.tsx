@@ -10,7 +10,7 @@ import { gateChip, gateLine } from './gate-words';
 const GATE_PATH = '/messages/gate';
 
 /**
- * The effective gate under the switches, folded: the chip and one line (reason, then the queue) side
+ * The effective gate under the switches, folded: the chip and one line (reason, then queue) side
  * by side. Quiet while loading or when the read fails (the switches still show).
  */
 function GateLine() {
@@ -31,7 +31,7 @@ function GateLine() {
 
 /**
  * The send state on the overview, read-only (it sends real WhatsApp messages): messaging, automatic
- * messages and the CRM move from GET /settings (its note also says what is managed on the web), then
+ * messages and the CRM move from GET /settings (its note says what is managed on the web), then
  * the server's gate and queue from GET /messages/gate.
  */
 export function SendState() {

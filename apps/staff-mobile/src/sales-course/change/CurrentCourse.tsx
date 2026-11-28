@@ -15,7 +15,7 @@ interface CurrentCourseProps {
 
 /**
  * A student with a course (view.current): whether it runs now or is booked to start later (the
- * server's `running`), so the block says which package it is about; its days, and the way to change them.
+ * server's `running`), so the block names its package; its days, and the way to change them.
  */
 export function CurrentCourse({ course, onChange, secondary, hideDays }: CurrentCourseProps) {
   const cycle = useClockCycle();

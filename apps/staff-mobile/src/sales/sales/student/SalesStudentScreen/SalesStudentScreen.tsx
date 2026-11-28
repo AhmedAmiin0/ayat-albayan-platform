@@ -41,7 +41,7 @@ function headLines({ code, guardian_phone: phone, program, teacher_name: teacher
 
 /** Any student reads as hers (docs/16 row 36); `mine` absent in an old cache means hers. */
 export function SalesStudentScreen() {
-  const { id = '' } = useLocalSearchParams<{ id: string }>();
+  const { id = '' } = useLocalSearchParams<{ id?: string }>();
   const student = useSalesStudent(id);
   // sales.renew_any: the money action of ANY student, not only hers.
   const renewsAny = useHolds('sales.renew_any');

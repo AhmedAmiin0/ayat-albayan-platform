@@ -4,7 +4,10 @@ import { ApiError } from '@ab/mobile-kit';
 /** Why a bubble's file cannot be shown (W6): what the bubble says instead of the file. */
 export type MediaProblem = 'expired' | 'forbidden' | 'crm' | 'failed';
 
-/** 410: imported history or a purged voice note; 403: a role that may not open files; 409 crm_no_media: the CRM holds it (docs/19). */
+/**
+ * 410: imported history or a purged voice note; 403: a role that may not open files;
+ * 409 crm_no_media: the CRM holds it (docs/19).
+ */
 export function mediaProblem(e: unknown): MediaProblem {
   if (!(e instanceof ApiError)) return 'failed';
   if (e.status === 410) return 'expired';

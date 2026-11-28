@@ -37,7 +37,7 @@ function Footer({ text }: { text: string | null }) {
   );
 }
 
-/** A template's header over its content (the file, the body) and its footer under it; anything else as it is. */
+/** A template's header over its content (file, body) and its footer under it; else as it is. */
 export function TemplateFrame({ block, hasMedia, children }: { block?: MessageTemplateBlock | null; hasMedia: boolean; children: ReactNode }) {
   if (!block) return <>{children}</>;
   return (

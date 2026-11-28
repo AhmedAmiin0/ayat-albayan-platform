@@ -9,7 +9,7 @@ import { RowsCard } from './RowsCard';
 interface EndedFoldProps<L extends TodayLesson> {
   lessons: readonly L[];
   onOpen: (lesson: L) => void;
-  /** Open from the start under a column filter (the filtered ended lessons are in view). Read on mount. */
+  /** Open from the start under a column filter (filtered ended lessons in view). Read on mount. */
   open?: boolean;
   /** The unfolded rows in place of the compact RowsCard (the teacher's own rows, docs/48). */
   rows?: ReactNode;

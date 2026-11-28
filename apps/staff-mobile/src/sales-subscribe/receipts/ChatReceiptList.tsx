@@ -14,7 +14,7 @@ interface ChatReceiptListProps {
   onPick: (item: SalesChatReceipt) => void;
 }
 
-/** The family's recent images and PDFs (GET /sales/money/chat-receipts), newest as the API sends them. */
+/** The family's recent images and PDFs (GET /sales/money/chat-receipts), in the API's order. */
 export function ChatReceiptList({ studentId, bind, busyId, onPick }: ChatReceiptListProps) {
   const list = useChatReceipts(studentId, true, bind);
   if (list.isError) return <ErrorState onRetry={() => void list.refetch()} />;

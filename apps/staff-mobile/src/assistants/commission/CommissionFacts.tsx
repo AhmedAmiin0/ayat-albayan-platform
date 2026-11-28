@@ -10,7 +10,7 @@ import { useViewerTz } from '@/core/lib/clock';
 
 const L = t.assistants.ledger;
 
-/** One commission (web commission-columns): student and code, salesperson, rate of the price, amount, day, status and why voided. */
+/** Web commission-columns: student, code, salesperson, rate, amount, day, status, void reason. */
 export function CommissionFacts({ commission: c }: { commission: AssistantCommissionView }) {
   const tz = useViewerTz();
   const rate = c.type === 'percent' ? L.ratePercent.replace('{value}', formatAmount(c.rate)) : L.rateFixed;

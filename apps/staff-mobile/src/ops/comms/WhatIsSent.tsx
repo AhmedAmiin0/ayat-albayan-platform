@@ -18,7 +18,7 @@ import { sentCounts, type SentRow } from './sent-counts';
 
 const h = () => t.communicationsHub;
 
-/** One cell: the audience takes the room (up to two lines), the two counts are narrow and centred. */
+/** The audience takes the room (up to two lines); the two counts stay narrow and centred. */
 function Cell({ text, wide, strong }: { text: string; wide?: boolean; strong?: boolean }) {
   const { color } = useTheme();
   return (

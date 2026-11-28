@@ -4,7 +4,7 @@ import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useNotificationHandling } from '@/core/push/useNotificationHandling';
 import { usePushRegistration } from '@/core/push/usePushRegistration/usePushRegistration';
 
-// The sales and classroom-assistant trees: registration waits for /auth/me to list notifications.push.
+// Sales and classroom-assistant trees: registration waits for /auth/me to list notifications.push.
 jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 jest.mock('@/core/push/useNotificationHandling/useNotificationHandling', () => ({ useNotificationHandling: jest.fn() }));
 const mockApiFetch = jest.fn();

@@ -4,7 +4,7 @@ import { type, useTheme, AppText, Ltr } from '@ab/mobile-kit';
 import { AmountText } from './AmountText';
 import { lineText } from '@/sales-money/lib/money-text';
 
-/** What a statement is made of: the salary, each commission (student and code), each adjustment (reason). */
+/** A statement: the salary, each commission (student, code), each adjustment (reason). */
 export function StatementLines({ lines }: { lines: readonly AssistantStatementLineView[] }) {
   const { color } = useTheme();
   return (

@@ -4,7 +4,7 @@ import { Linking, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { t, shape, type, useTheme, AppText, IconButton, CloseIcon } from '@ab/mobile-kit';
 
-/** A notice goes by itself after this long (ms), like the chat's; one with an action stays until closed. */
+/** A notice closes itself after this long (ms); one with an action stays until closed. */
 const CALL_NOTICE_MS = 6000;
 
 interface CallNoticeProps {

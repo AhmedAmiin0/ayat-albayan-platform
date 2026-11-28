@@ -5,7 +5,7 @@ import { t, shape, useTheme, AppText } from '@ab/mobile-kit';
 
 interface ReactionBarProps {
   message: MessageView;
-  /** Window y of the held bubble: the row floats just above it (WhatsApp); null = at the top of the menu. */
+  /** Window y of the held bubble: the row floats just above it; null = at the menu's top. */
   top: number | null;
   /** The emoji to set, or null to remove ours (a tap on our current one). */
   onReact: (emoji: string | null) => void;

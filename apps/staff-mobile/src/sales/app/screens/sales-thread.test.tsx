@@ -7,7 +7,7 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { fakeNow } from '@/test/fake-now';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
-// The salesperson's own tree (base role sales): the shared thread screen in sales mode under /sales.
+// The salesperson's tree (base role sales): the shared thread screen in sales mode under /sales.
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),

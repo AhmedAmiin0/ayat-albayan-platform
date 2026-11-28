@@ -37,7 +37,7 @@ function Chip({ children }: { children: string }) {
   );
 }
 
-/** The v2 form's head (R-REP-01): student · code, then lesson number, time and teacher, never typed. */
+/** The v2 form's head (R-REP-01): student · code, lesson number, time and teacher, never typed. */
 export function V2Header({ lesson, entry }: { lesson: ReportFormLesson; entry: ReportFormEntry }) {
   const { color } = useTheme();
   const cycle = useClockCycle();

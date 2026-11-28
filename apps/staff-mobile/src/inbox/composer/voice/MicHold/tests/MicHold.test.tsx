@@ -100,8 +100,8 @@ test('slide up locks: the bar shows delete and «أرسل»; «أرسل» stops 
   expect(screen.getByRole('button', { name: t.inbox.composer.voice.delete })).toBeTruthy();
   const send = screen.getByRole('button', { name: t.inbox.composer.send });
   await act(async () => {
-    fireEvent.press(send);
-    fireEvent.press(send);
+    await fireEvent.press(send);
+    await fireEvent.press(send);
   });
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
   await act(async () => undefined);

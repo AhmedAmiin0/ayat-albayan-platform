@@ -14,8 +14,9 @@ export interface Loaded {
 }
 
 /**
- * The day separators among the rows on screen, from the rows as they are now (a token whose index no
- * longer holds its message is skipped): each chip's top is its row's gap and DayChip's margin down.
+ * The day separators among the rows on screen, from the rows as they are now (a token whose
+ * index no longer holds its message is skipped): each chip's top is its row's gap and DayChip's
+ * margin down.
  */
 export function separatorsOf(
   { rows, more }: Loaded,

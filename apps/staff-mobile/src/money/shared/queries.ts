@@ -12,7 +12,7 @@ const payments = paymentCalls({ apiFetch, apiSend });
 // would show a dead receipt.
 const meta = { noPersist: true };
 
-/** GET /receivables: every package that still owes, in one answer (no paging), oldest debt first. */
+/** GET /receivables: every package that still owes, unpaged, oldest debt first. */
 export function useReceivables() {
   return useQuery({
     queryKey: pathKey('/receivables'),

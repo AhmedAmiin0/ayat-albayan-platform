@@ -6,14 +6,14 @@ import { apiFetch, apiSend } from '@ab/mobile-kit';
 /** The catalogue's query key prefix (NotificationCatalogue adds the settings' fetch time). */
 export const CATALOGUE_KEY = ['admin', 'notifications'] as const;
 
-/** PATCH /admin/notifications/:key body: the new state and, for an essential OFF, the typed word. */
+/** PATCH /admin/notifications/:key body: new state and, for an essential OFF, the typed word. */
 interface RuleToggle {
   key: NotificationEntryView['key'];
   enabled: boolean;
   confirmText?: string;
 }
 
-/** One row's switch, then the catalogue refetches (state, blockers and the switch all come from it). */
+/** One row's switch, then a catalogue refetch: state, blockers and the switch all come from it. */
 export function useToggleRule() {
   const qc = useQueryClient();
   return useMutation({
@@ -27,14 +27,14 @@ export function useToggleRule() {
   });
 }
 
-/** Does GET /auth/me list this key? Raw strings: the key may be newer than this build's Permission list. */
+/** Raw strings: the key may be newer than this build's Permission list. */
 export function holdsIn(me: unknown, permission: string): boolean {
   if (typeof me !== 'object' || me === null) return false;
   const list: unknown = Reflect.get(me, 'permissions');
   return Array.isArray(list) && list.includes(permission);
 }
 
-/** notifications.manage held (strict: false until /auth/me answers, so nothing switches by mistake). */
+/** Strict: false until /auth/me answers, so nothing switches by mistake. */
 export function useCanManageNotifications(): boolean {
   const me = useQuery(meQueryOptions({ apiFetch }));
   return holdsIn(me.data, 'notifications.manage');

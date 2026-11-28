@@ -4,9 +4,9 @@ import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { type ChatFileSource, fileError, pickChatFile, useSendFile } from '@/inbox/composer/send-file';
 
 /**
- * Pick a photo (gallery or camera) or a PDF and send it at once, as the family's message (owner
- * 2026-10-19 #1/#2): its own clientRequestId (the dedup namespace is shared with text sends), the
- * reply quote included and cleared once sent; refused, the quote stays and the reason goes to `onError`.
+ * Pick a photo (gallery or camera) or a PDF and send it at once, as the family's message: its own
+ * clientRequestId (the dedup namespace is shared with text sends), the reply quote included and
+ * cleared once sent; refused, the quote stays and the reason goes to `onError`.
  * The paperclip's sheet uses it.
  */
 export function usePickSend(phone: string, onError: (message: string | null) => void) {

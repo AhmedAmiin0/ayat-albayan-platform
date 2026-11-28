@@ -23,9 +23,9 @@ import { adminReportFields } from '@/ops/reports/report-v2-fields';
 
 const back = () => backWithin('/students');
 
-/** One lesson report, read-only, from GET /reports/:id (admin may read any); its PDF opens when ready. */
+/** A lesson report, read-only, from GET /reports/:id (admin reads any); PDF opens when ready. */
 export function AdminReportScreen() {
-  const { reportId = '' } = useLocalSearchParams<{ reportId: string }>();
+  const { reportId = '' } = useLocalSearchParams<{ reportId?: string }>();
   const path = `/reports/${reportId}`;
   const query = useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<ReportView>(path) });
   const [pdfFailed, setPdfFailed] = useState(false);

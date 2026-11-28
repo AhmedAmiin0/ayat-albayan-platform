@@ -3,7 +3,7 @@ import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import type { ReportField } from '@/ops/reports/report-fields';
 
-/** A label over its value (aligned by its own words); a blank field says so in ink-3 instead of disappearing. */
+/** A label over its value; a blank field says so in ink-3 instead of disappearing. */
 export function ReportFieldRow({ field }: { field: ReportField }) {
   const { color } = useTheme();
   return (

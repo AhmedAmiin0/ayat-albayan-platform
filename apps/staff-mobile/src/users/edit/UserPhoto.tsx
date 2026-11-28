@@ -3,7 +3,7 @@ import { StaffPhotoControl, userPhotos } from '@/account';
 import { pathKey, Avatar } from '@ab/mobile-kit';
 import { USERS_KEY } from '@/users/shared/api';
 
-/** The users list and page, and a teacher's own pages (a teacher login's photo is the teacher's). */
+/** The users list and page, and a teacher's pages (a teacher login's photo is the teacher's). */
 const PHOTO_KEYS = [USERS_KEY, pathKey('/teachers'), pathKey('/sales/teachers')];
 
 /** Students and guardians never carry a photo (initials only). */

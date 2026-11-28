@@ -8,7 +8,7 @@ import { profile, quote, saved } from './fixtures';
 
 // The finished package makes a new subscription turn the chat to subscribed on refetch.
 
-/** `hold`: POST /subscriptions waits for state.release(), so a test can tap twice while it is in flight. */
+/** `hold`: POST /subscriptions waits for state.release(), so a test can tap twice in flight. */
 export function subscribeBackend({ hold = false } = {}) {
   const { backend, rows, log } = inboxBackend();
   const state = {

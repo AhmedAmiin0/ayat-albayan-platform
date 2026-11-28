@@ -23,7 +23,7 @@ import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 export function TeacherCalendarScreen() {
   const cycle = useClockCycle();
   const tz = useViewerTz();
-  const { id = '' } = useLocalSearchParams<{ id: string }>();
+  const { id = '' } = useLocalSearchParams<{ id?: string }>();
   // The viewer's days (docs/34): week window, day buckets and clock are one zone.
   const today = viewerToday(useNow(), tz);
   const [start, setStart] = useFollowingDay(weekStart(today));

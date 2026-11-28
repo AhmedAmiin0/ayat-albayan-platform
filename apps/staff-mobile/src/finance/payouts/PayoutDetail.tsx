@@ -13,7 +13,7 @@ interface PayoutDetailProps {
   onNotice: (text: string) => void;
 }
 
-/** A statement and its actions. A refused action keeps the form and says why: the server decides. */
+/** A refused action keeps the form and says why: the server decides. */
 export function PayoutDetail({ payout, paying, onPaying, onNotice }: PayoutDetailProps) {
   const done = t.mobileFinance.payouts.done;
   if (paying) {

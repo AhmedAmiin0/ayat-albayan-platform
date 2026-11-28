@@ -75,7 +75,7 @@ export function StartDayField(p: StartDayFieldProps) {
   );
 }
 
-/** The package is saved: said like the booking's success (a fill nuqta, an Amiri title), then back to the chat. */
+/** Styled like the booking's success (a fill nuqta, an Amiri title), then back to the chat. */
 export function SavedPanel({ onBack }: { onBack: () => void }) {
   const { color } = useTheme();
   return (

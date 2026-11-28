@@ -6,7 +6,7 @@ import type { TrialDateDraft } from '@/trial-date/lib/trial-date-body';
 import { whenLines } from '@/trial-date/lib/trial-date-text';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
-/** The review's picks: the new time (the viewer's clock, the family's under it when it differs), the teacher. */
+/** The new time (viewer's clock, the family's under it when it differs) and the teacher. */
 export function PickedLines({ draft }: { draft: TrialDateDraft }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

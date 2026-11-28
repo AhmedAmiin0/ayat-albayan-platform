@@ -56,7 +56,7 @@ export function MediaCard({ phone, item, onPick }: MediaCardProps) {
   );
 }
 
-/** What the 96pt tile shows: the thumbnail, the PDF icon, the expired badge, the failure, or a spinner. */
+/** The 96pt tile: the thumbnail, the PDF icon, the expired badge, the failure, or a spinner. */
 function Tile(p: { uri: string | null; image: boolean; expired: boolean; failed: boolean }) {
   const { color } = useTheme();
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2, textAlign: 'center' as const };

@@ -43,7 +43,7 @@ test('«رسائل الطلاب»: my current students with the last message and
   expect(screen.getByLabelText(c.unread.replace('{n}', '2'))).toHaveTextContent('2');
   expect(screen.getByText(c.noMessageYet)).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/channels');
-  fireEvent.press(screen.getByText('سلمى'));
+  await fireEvent.press(screen.getByText('سلمى'));
   expect(mockPush).toHaveBeenCalledWith('/teacher/more/messages/s1');
 });
 

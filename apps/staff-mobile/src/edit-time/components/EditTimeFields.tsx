@@ -45,7 +45,7 @@ export function EditTimeFields({ lesson, mode, state, tz, now, onPick, onDuratio
       {mode === 'correct' ? (
         <CorrectTimes lesson={lesson} durationMin={state.durationMin} tz={tz} now={now} value={state.picked} onPick={onPick} />
       ) : !isBookable(state.durationMin) ? (
-        // An odd recorded length has no slot grid (the API takes 30 / 45 / 60 / 90): pick a length first.
+        // An odd recorded length has no slot grid (API takes 30/45/60/90): pick a length first.
         <AppText style={note}>{t.editTime.pickLength}</AppText>
       ) : (
         <LessonSlotPicker

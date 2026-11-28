@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Linking, View } from 'react-native';
 import { copyOrShare } from '@/core/lib/clipboard';
-import { t, AppText, Button, ltr, type, useTheme, ErrorLine } from '@ab/mobile-kit';
+import { t, AppText, Button, ltr, type, useTheme, ErrorLine, useNow } from '@ab/mobile-kit';
 import { appOpenUrl } from '@/core/lib/stripe-flag';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { appendComposerText, chatMaySend } from '@/inbox';
@@ -27,6 +27,7 @@ const pl = t.paymentLinks;
 
 /** The text goes into the chat box for her to send; ?from=<platform> returns her to /pay-done. */
 export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
+  const now = useNow();
   const tz = useViewerTz();
   const base = useTreeBase();
   const course = { pathname: '/inbox/sales-course', params: { studentId: link.student.id } };
@@ -34,7 +35,7 @@ export function LinkCreated({ link, phone, onSent }: LinkCreatedProps) {
   const { color } = useTheme();
   const client = useQueryClient();
   // Read at render, as the web dialog: the button is off (with the box's note) where no text goes.
-  const closed = !chatMaySend(client, phone, new Date());
+  const closed = !chatMaySend(client, phone, now);
   const [copy, setCopy] = useState<'copied' | 'shared' | 'failed' | null>(null);
   const send = () => {
     // After a reply she had half-written (drafts outlive the chat), never over it.

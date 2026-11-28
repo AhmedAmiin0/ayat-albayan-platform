@@ -45,7 +45,7 @@ test('money owed: one «غير مدفوع» for the family (the rows’ packageC
   // Active in the DB but with money due must still read as unpaid in the folded line.
   const owing = sub({ status: 'active', due_amount: 120 });
   expect(familySummary([kid('a', owing), kid('b', owing), kid('c', paid)]).chips).toEqual([unpaidChip]);
-  // Paid in full and used up: the DB keeps `unpaid`, the rows show no chip, neither does the summary.
+  // Paid and used up: the DB keeps `unpaid`, but neither the rows nor the summary show a chip.
   const usedPaid = sub({ status: 'unpaid', due_amount: 0, lessons_remaining: 0 });
   expect(familySummary([kid('a', usedPaid), kid('b', null)]).chips).toEqual([]);
 });

@@ -22,7 +22,7 @@ describe('CallEntry (a call in the chat)', () => {
     expect(screen.getByTestId('call-entry-c1')).toBeDisabled();
   });
 
-  // Arabic (jest.setup: RTL): flex-end is the left, so ours sits on the left and the family's on the right.
+  // Arabic (jest.setup: RTL): flex-end is the left, so ours sits left and the family's right.
   it("sits on the caller's side as the bubbles: ours at the inline-end, theirs at the start", async () => {
     expect(await callSides()).toEqual({ ours: 'flex-end', theirs: 'flex-start' });
   });

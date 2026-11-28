@@ -11,7 +11,7 @@ export function AssignUnassigned({ owners }: { owners: number }) {
   const [asking, setAsking] = useState(false);
   const run = useMutation({
     mutationFn: () => apiSend<{ assigned: number }>('POST', '/leads/assign-unassigned'),
-    // Settled, not success: the API assigns lead by lead, so even a 504 on a big backlog moved some.
+    // Settled, not success: the API assigns one by one, so even a 504 on a big backlog moved some.
     onSettled: () => {
       setAsking(false);
       void client.invalidateQueries({ queryKey: pathKey('/leads') });

@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react-native';
 import { View } from 'react-native';
 
-// babel.config.cjs: jest runs the code the React Compiler built, as the OTA bundle does. A compiled component
+// babel.config.cjs: jest runs the compiled code, as the OTA bundle does. A compiled component
 // takes its memo cache from react/compiler-runtime on every render.
 jest.mock('react/compiler-runtime', () => {
   const actual = jest.requireActual<{ c: (size: number) => unknown[] }>('react/compiler-runtime');

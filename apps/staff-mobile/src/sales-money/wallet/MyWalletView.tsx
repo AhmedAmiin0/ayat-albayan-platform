@@ -19,7 +19,7 @@ export function MyWalletView() {
   const earnings = useMyEarnings();
   const list = usePagedList<MyCommissionRow>({ path: '/sales/me/commissions', pageSize: 20 });
   useBellSignal('commission_earned', MINE);
-  // After `paged`: the pull runs the list's refresh (its spinner) and the balance's refetch together.
+  // After `paged`: the pull runs the list's refresh (its spinner) and the balance refetch.
   const pull = () => {
     list.refresh();
     void earnings.refetch();

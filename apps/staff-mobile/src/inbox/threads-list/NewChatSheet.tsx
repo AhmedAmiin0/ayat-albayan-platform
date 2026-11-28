@@ -4,7 +4,7 @@ import { t, useTheme, Screen, useTabBarInset } from '@ab/mobile-kit';
 import { ComposeIcon } from '@/inbox/shared/chat-icons';
 import { NewChatSteps } from './new-chat/NewChatSteps';
 
-/** The floating button's size; the chats list leaves this much room (plus 16pt) under its last row. */
+/** The FAB's size; the chats list leaves this much room (plus 16pt) under its last row. */
 export const FAB = 56;
 
 /** Admin and sales only; render it last inside the list's frame so it floats above. */

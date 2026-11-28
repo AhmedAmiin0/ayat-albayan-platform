@@ -9,7 +9,7 @@ export function useSalesTeachers() {
     queryKey: salesKeys.teachers(),
     queryFn: async () => {
       const rows = await apiFetch<SalesTeacherOption[]>('/sales/subscriptions/teachers');
-      // An API without the route answers something else: no choices, the student's own teacher stays.
+      // An older API without the route: no choices, so the student's own teacher stays.
       return Array.isArray(rows) ? rows : [];
     },
     staleTime: 5 * 60_000,

@@ -7,7 +7,7 @@ export interface StatementCan {
   approve: boolean;
 }
 
-/** What this admin may do here (web use-statement-can): read, write (terms, void, generate, pay), approve. */
+/** Web use-statement-can: read, write (terms, void, generate, pay), approve. */
 export function useStatementCan(): StatementCan {
   const can = usePermissions();
   const [read, write, approve] = [

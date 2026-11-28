@@ -5,7 +5,7 @@ import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
 interface ReactionPillProps {
   message: MessageView;
-  /** On the bubble's inline-end edge for ours, start for theirs (WhatsApp), so it mirrors with the language. */
+  /** Inline-end edge of the bubble for ours, start for theirs, so it mirrors with the language. */
   side: 'start' | 'end';
   /** A tap: who reacted (the reactors sheet). */
   onPress: () => void;

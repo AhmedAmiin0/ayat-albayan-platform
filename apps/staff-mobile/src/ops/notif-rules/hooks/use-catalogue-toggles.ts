@@ -10,7 +10,7 @@ type Key = NotificationEntryView['key'];
 /** Family ON asks inline under its row; typed OFF uses a bottom sheet. */
 type OpenAsk = { key: Key; kind: 'family' | 'typed' } | null;
 
-/** The line after a save, announced here once (no live region repeats it); also shown above the list. */
+/** Announced here once (no live region repeats it); the same line also shows above the list. */
 function announce(text: string) {
   try {
     AccessibilityInfo.announceForAccessibility(text);
@@ -19,7 +19,7 @@ function announce(text: string) {
   }
 }
 
-/** The catalogue's switches: what each asks first, one PATCH per row, the errors per row, the saved line. */
+/** The switches: what each asks first, one PATCH per row, per-row errors, the saved line. */
 export function useCatalogueToggles() {
   const toggle = useToggleRule();
   const [ask, setAsk] = useState<OpenAsk>(null);

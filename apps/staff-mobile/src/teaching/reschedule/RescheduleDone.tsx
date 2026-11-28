@@ -6,7 +6,7 @@ import type { Scope } from './reschedule-body';
 import { useViewerClock } from '@/core/lib/clock';
 
 interface RescheduleDoneProps {
-  /** The API's answer: the new lesson (for a series, its first lesson); sales get its time and status only. */
+  /** The new lesson (a series' first one); sales get only its time and status. */
   moved: Pick<LessonView, 'starts_at' | 'status'>;
   scope: Scope;
   /** The family's zone, for the student's clock. */

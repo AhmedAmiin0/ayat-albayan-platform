@@ -48,7 +48,7 @@ export function useTrialDateCheck(body: TrialDateBody | null) {
   });
 }
 
-/** What a new trial date changes: its history, the lessons and calendars, the student and the chats. */
+/** A new trial date changes its history, the lessons, calendars, the student and the chats. */
 function refreshAfterTrialDate(
   client: QueryClient,
   o: { mode: BookingMode; studentId: string },

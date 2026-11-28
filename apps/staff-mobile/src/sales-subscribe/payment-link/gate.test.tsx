@@ -8,7 +8,7 @@ import { PaymentLinksRow } from './list/PaymentLinksRow';
 import { PaymentLinksScreen } from './list/PaymentLinksScreen';
 import { PaymentDoneScreen } from './PaymentDoneScreen';
 
-// The owner's hard rule (docs/30): Stripe exists only in the test build. The build flag is read first.
+// Hard rule (docs/30): Stripe exists only in the test build. The build flag is read first.
 const mockFlag = { on: false };
 jest.mock('./flag', () => ({
   get STRIPE_FEATURE() {

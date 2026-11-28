@@ -2,7 +2,7 @@ import { sessionWindowOpen, type ThreadView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
-import { useHolds, t, ErrorState, KeyboardFrame, ltr, Screen, Avatar } from '@ab/mobile-kit';
+import { useHolds, t, ErrorState, KeyboardFrame, ltr, Screen, Avatar, useNow } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { ChatActionsProvider } from '@/inbox/thread/components/ChatActionsProvider';
 import { ChatHeader } from '@/inbox/thread/components/ChatHeader';
@@ -60,9 +60,10 @@ function subtitleOf(
 
 /** R-MOB-02, R-MSG-05, R-MOB-03: teachers get no subscription panel and a read-only own chat. */
 export function ThreadScreen() {
+  const now = useNow();
   const cycle = useClockCycle();
   const tz = useViewerTz();
-  const { phone = '' } = useLocalSearchParams<{ phone: string }>();
+  const { phone = '' } = useLocalSearchParams<{ phone?: string }>();
   const mode = useThreadMode();
   const base = useTreeBase();
   const teacher = mode.kind === 'teacher';
@@ -117,7 +118,7 @@ export function ThreadScreen() {
             <ChatNotice />
             {mode.kind === 'admin' &&
             thread?.guardian_id &&
-            !sessionWindowOpen(thread.last_inbound_at, new Date()) ? (
+            !sessionWindowOpen(thread.last_inbound_at, now) ? (
               <SendRating thread={thread} />
             ) : null}
             {isOwnThread(mode, thread) ? (

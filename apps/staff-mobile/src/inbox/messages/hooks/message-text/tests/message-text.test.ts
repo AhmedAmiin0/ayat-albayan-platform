@@ -85,7 +85,7 @@ test('error line: Meta code in Arabic, else the unknown line with the code', () 
   const reason = (r: string) => t.messages.errorLine.replace('{reason}', r);
   expect(errorLine({ error_code: '131026' })).toBe(reason(t.messages.errors['131026']));
   expect(errorLine({ error_code: 'expired' })).toBe(reason(t.messages.errors.expired));
-  // The account cannot pay Meta (the owner's screenshot, 2026-10-29): the honest reason, not «(131042)».
+  // The account cannot pay Meta: the honest reason, not «(131042)».
   expect(errorLine({ error_code: '131042' })).toBe(reason(t.messages.errors['131042']));
   expect(errorLine({ error_code: '131042' })).not.toContain('131042');
   expect(errorLine({ error_code: 'http_500' })).toBe(

@@ -32,10 +32,11 @@ import {
 } from '@/registration-check/lib/registration-check';
 
 /** The chat's number and its lead (ThreadView.lead_id), from the chat's «⋮» menu. */
-type Params = {
-  phone?: string;
-  leadId?: string;
-};
+type ParamKey =
+  | 'phone'
+  | 'leadId';
+
+type Params = Partial<Record<ParamKey, string>>;
 
 /** The confirm question with the family's name and code, the code kept left-to-right. */
 const confirmText = (m: RegistrationMatch) =>

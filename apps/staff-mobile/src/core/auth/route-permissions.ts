@@ -18,7 +18,7 @@ export const ROUTE_PERMISSION = {
   settings: 'settings.read',
   activity: 'activity.read',
   chats: 'inbox.read',
-  // The salesperson's pages (docs/16), the web's SALES_NAV_ITEMS keys: base-role scopes, never grantable.
+  // The salesperson's pages (docs/16), web SALES_NAV_ITEMS keys: base-role scopes, never grantable.
   salesSubscriptions: 'self.sales',
   salesTeachers: 'self.sales_academy',
   salesStudents: 'self.sales_academy',
@@ -29,7 +29,7 @@ export const ROUTE_PERMISSION = {
   salesMeetings: 'meetings.read',
   // Sales team: the sales staff's terms, commissions and statements.
   assistants: 'assistantpay.read',
-  // The classroom assistant's tree (web /assistant/): the lessons they assist and internal meetings.
+  // The classroom assistant's tree (web /assistant/): lessons they assist and internal meetings.
   assistantLessons: 'self.assistant',
   meetings: 'meetings.read',
   // Allow-list templates: sales by default and the admin.
@@ -47,7 +47,7 @@ export function canOpen(can: Can, route: RouteKey): boolean {
 
 export type TabRoute = 'today' | 'schedule' | 'inbox' | 'students';
 
-/** Is this bottom tab in the bar? The Inbox tab also hosts the leads list, so leads.read keeps it. */
+/** The Inbox tab also hosts the leads list, so leads.read keeps it in the bar. */
 export function tabOpen(can: Can, tab: TabRoute): boolean {
   return tab === 'inbox' ? canOpen(can, 'inbox') || can('leads.read') : canOpen(can, tab);
 }

@@ -23,7 +23,7 @@ interface CourseRowsInput {
   viewer: ViewerClock;
 }
 
-/** The review's lines: the student, the teacher (no row while her name is unknown), the plan, the first lesson. */
+/** Review lines: student, teacher (no row while her name is unknown), plan, first lesson. */
 export function courseRows({ view, teacherName, body, viewer }: CourseRowsInput): SummaryRow[] {
   const rows: SummaryRow[] = [
     [t.booking.studentSection, view.student.name],

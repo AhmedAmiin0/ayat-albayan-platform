@@ -20,7 +20,7 @@ interface MessageMenuProps {
   message: MessageView | null;
   /** Download asks this chat's file endpoint. */
   phone: string;
-  /** The held bubble's window y. Unused for now: the reaction row sits at the top of the sheet (review of #332). */
+  /** The held bubble's window y; unused: the reaction row sits at the top of the sheet (#332). */
   at: number | null;
   onClose: () => void;
   /** «+» on the reaction row: the emoji sheet for this message. */

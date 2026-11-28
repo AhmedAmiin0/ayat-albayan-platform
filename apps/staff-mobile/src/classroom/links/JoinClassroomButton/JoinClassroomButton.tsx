@@ -13,7 +13,7 @@ const text = t.classroom;
 interface JoinClassroomButtonProps {
   lesson: JoinableLesson;
   /**
-   * A sheet puts the live button on top (its one primary) and the waiting one under the other actions:
+   * A sheet puts the live button on top (its one primary), the waiting one under the others:
    * it renders the first with `open` and the second with `waiting`. Unset = either, in place.
    */
   only?: 'open' | 'waiting';

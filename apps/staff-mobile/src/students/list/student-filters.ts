@@ -13,7 +13,7 @@ export type StudentFilters = Record<FilterKey, string> & { sort: SortChoice };
 
 export const NO_FILTERS: StudentFilters = { status: '', teacher: '', program: '', package: '', weekly: '', tz: '', sort: 'newest' };
 
-/** Query params of GET /students/status-counts: the filters except `status` (the counts are per status). */
+/** GET /students/status-counts params: all filters but `status` (counts are per status). */
 export function countParams(f: StudentFilters): Record<string, string | undefined> {
   const out: Record<string, string | undefined> = {};
   for (const k of STUDENT_FILTER_KEYS) if (k !== 'status') out[k] = f[k] || undefined;
@@ -29,7 +29,7 @@ export function listParams(f: StudentFilters): Record<string, string | undefined
 /** How many filters are set (the sort is not a filter). */
 export const activeCount = (f: StudentFilters): number => STUDENT_FILTER_KEYS.filter((k) => f[k] !== '').length;
 
-/** The API's count for a status; undefined unless the answer really is a number (never shown as «NaN»). */
+/** The API's count for a status; undefined unless it is a number (never shown as «NaN»). */
 export function countOf(counts: unknown, status: StudentStatus): number | undefined {
   const n: unknown = typeof counts === 'object' && counts !== null ? Reflect.get(counts, status) : undefined;
   return typeof n === 'number' ? n : undefined;

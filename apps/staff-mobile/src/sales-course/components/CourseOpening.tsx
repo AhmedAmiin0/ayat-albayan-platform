@@ -28,7 +28,7 @@ interface CourseOpeningProps {
 export function CourseOpening(props: CourseOpeningProps) {
   const { view, step, opensOn, known, change, transfer } = props;
   const previous = view.previous ?? null;
-  // The renewal's choice names the previous course's days: the same course above does not repeat them.
+  // The renewal choice already names the previous course's days, so the course above omits them.
   const repeats = step === 'continue' && previous?.subscriptionId === change?.course.subscriptionId;
   return (
     <View style={{ gap: 16 }}>

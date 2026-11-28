@@ -9,15 +9,15 @@ import { useCalls, useCallsEnabled } from '@/inbox/thread/calls/state/call-conte
 
 const NONE: readonly CallView[] = [];
 
-/** One chat's calls for its list; nothing is asked while calls are off (or outside a staff tree). */
+/** One chat's calls for its list; none are asked while calls are off or outside a staff tree. */
 export function useThreadCalls(phone: string): readonly CallView[] {
   const enabled = useCallsEnabled();
   return useQuery(callListQuery({ enabled, phone })).data ?? NONE;
 }
 
 /**
- * A call entry's «call back», as the header's phone icon allows it: calls on, inbox.send, a loaded chat
- * and never a teacher's own chat; undefined = the entry is plain text.
+ * A call entry's «call back», as the header's phone icon allows it: calls on, inbox.send, a loaded
+ * chat and never a teacher's own chat; undefined = the entry is plain text.
  */
 export function useCallBack(input: {
   phone: string;

@@ -13,7 +13,7 @@ export function hasAttachments(p: Pick<PaymentView, 'method'> & { receipt_path?:
 /** A PDF by its name or URL (the `.pdf` extension, the query string ignored). */
 export const isPdfName = (name: string) => name.split('?')[0]?.toLowerCase().endsWith('.pdf') ?? false;
 
-/** A PDF is opened outside the app, an image shown inline. The stored path or the signed URL says which. */
+/** A PDF opens outside the app, an image inline; the stored path or the signed URL says which. */
 export function isPdfReceipt(p: Pick<PaymentView, 'receipt_path'>, url?: string): boolean {
   return (
     (p.receipt_path !== null && isPdfName(p.receipt_path)) || (url !== undefined && isPdfName(url))

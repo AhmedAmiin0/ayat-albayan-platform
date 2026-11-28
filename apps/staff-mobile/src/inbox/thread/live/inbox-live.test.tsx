@@ -2,7 +2,7 @@ import { chatLiveKey } from '@ab/client-core';
 import { renderHook } from '@testing-library/react-native';
 import { inboxLive, useInboxLive, useLiveWatch } from './inbox-live';
 
-// A chat screen that unmounts forgets its key: nothing of it stays in the registry (no leak, no refresh).
+// An unmounted chat screen forgets its key: nothing stays in the registry (no leak, no refresh).
 
 const PHONE = '+966500000001';
 

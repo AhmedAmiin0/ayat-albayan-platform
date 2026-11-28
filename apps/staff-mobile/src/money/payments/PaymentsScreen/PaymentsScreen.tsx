@@ -23,7 +23,7 @@ import { PaymentTotals } from '@/money/payments/PaymentTotals';
 import { periodTotals } from '@/money/shared/queries';
 
 const keyOf = (p: PaymentView) => p.id;
-// Keyed by the payment: its receipt viewers hold state (open, loading) that a recycled row must not carry over.
+// Keyed by payment: receipt viewers hold state (open, loading) a recycled row must not keep.
 const renderPayment = ({ item }: { item: PaymentView }) => <PaymentItem key={item.id} payment={item} />;
 
 /** Read-only: editing or voiding stays on the web. */

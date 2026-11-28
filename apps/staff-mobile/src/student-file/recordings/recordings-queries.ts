@@ -7,7 +7,7 @@ import { flattenPages, nextPageParam } from '@ab/client-core';
 
 const PAGE_SIZE = 10;
 
-/** The key prefix of one student's recordings, for invalidation after a visibility change or delete. */
+/** One student's recordings key prefix, invalidated after a visibility change or delete. */
 export const recordingsKey = (studentId: string) => ['students', studentId, 'recordings'];
 
 // The rows carry 1-hour signed URLs: `noPersist` keeps them off the disk cache (lib/query-client),

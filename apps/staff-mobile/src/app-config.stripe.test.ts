@@ -5,8 +5,8 @@ import eas from '../eas.json';
 import appConfig from '../app.config';
 
 // docs/30: EXPO_PUBLIC_FEATURE_STRIPE is inlined at bundle time, so a
-// profile that sets it ships the Stripe UI (still gated by GET /stripe/feature): the normal APK (`preview`) and
-// `stripe-test`. Only `stripe-test`'s APP_VARIANT makes a separate app (own package, own name) installable beside
+// profile that sets it ships the Stripe UI (still gated by GET /stripe/feature): `preview` and
+// `stripe-test`. Only `stripe-test`'s APP_VARIANT makes a separate app installable beside
 // the normal one, on its own update channel.
 
 interface Profile {
@@ -79,7 +79,7 @@ test('APP_VARIANT=stripetest: .stripetest ids, the test name, no share target; n
   expect(test.android?.package).toBe(`${app.expo.android.package}.stripetest`);
   expect(test.ios?.bundleIdentifier).toBe(`${app.expo.ios.bundleIdentifier}.stripetest`);
   expect(test.name).toBe('Ayat – Stripe test');
-  // The API's pay page names this package to bring the payer back into the test app (pay-return.ts).
+  // The API's pay page names this package to return the payer to the test app (pay-return.ts).
   expect(test.android?.package).toBe(STRIPE_TEST_APP_PACKAGE);
   // docs/38: expo-sharing is off in the test app (app-config.share.test.ts): one share target.
   const { name, android, ios, plugins } = normal;

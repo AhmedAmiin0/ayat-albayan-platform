@@ -15,7 +15,7 @@ export interface PickerStart {
   afterAyah: number | null;
 }
 
-/** An existing part opens on its own range; an empty one right after the last saved ayah; else nothing picked. */
+/** An existing part opens on its range; an empty one after the last saved ayah; else none. */
 export function startDraft(opts: {
   current: SurahRange | null;
   last: SurahRange | null;

@@ -11,7 +11,7 @@ interface SheetProps {
   onDone: () => void;
 }
 
-/** Still reading the lesson, or it is gone (moved or cancelled meanwhile): the same frame, a line in it. */
+/** Loading, or the lesson is gone (moved or cancelled meanwhile): a line in the same frame. */
 function Waiting({ loading, onClose }: { loading: boolean; onClose: () => void }) {
   return (
     <RescheduleFrame open onClose={onClose}>

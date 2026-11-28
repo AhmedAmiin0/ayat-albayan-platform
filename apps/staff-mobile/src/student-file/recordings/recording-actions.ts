@@ -7,7 +7,7 @@ const R = t.mobileStudentFile.recordings;
 const codeOf = (e: unknown): string | undefined =>
   e instanceof ApiError && typeof e.body === 'object' && e.body !== null ? String(Reflect.get(e.body, 'code') ?? '') : undefined;
 
-/** The line under the toggle: a group lesson's file cannot be shown to one student (409), else a generic failure. */
+/** A group lesson's file cannot be shown to one student (409); else a generic failure. */
 export const visibilityError = (e: unknown): string =>
   e instanceof ApiError && e.status === 409 && codeOf(e) === 'recording_group_lesson' ? R.visible.groupLesson : R.visible.failed;
 

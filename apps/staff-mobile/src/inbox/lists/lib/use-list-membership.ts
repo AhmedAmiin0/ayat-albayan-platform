@@ -43,7 +43,7 @@ export function useListMembership(phone: string) {
       await client.cancelQueries({ queryKey });
       client.setQueryData<ThreadCache>(queryKey, (old) => withMembership(old, change));
     },
-    // Undo only this toggle: a snapshot would also undo a later toggle or a message cached meanwhile.
+    // Undo only this toggle: a snapshot would also undo later toggles or messages cached since.
     onError: (_error, change) =>
       client.setQueryData<ThreadCache>(queryKey, (old) => withMembership(old, undoChange(change))),
     onSettled: () => {

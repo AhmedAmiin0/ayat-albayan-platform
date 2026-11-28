@@ -35,7 +35,7 @@ import { useLessonStatusText } from '@/core/ui/feedback/lesson-status';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
-/** A status pill that hides the day's lessons says so; else the day (or the teacher's day) is empty. */
+/** A status pill that hides the day's lessons says so; else the day (or teacher's day) is empty. */
 function emptyTitle(filteredOut: boolean, teacherId: string): string {
   const s = t.sales.academySchedule;
   if (filteredOut) return s.status.empty;

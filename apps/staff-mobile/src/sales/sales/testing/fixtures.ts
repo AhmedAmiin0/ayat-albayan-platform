@@ -8,7 +8,8 @@ import type {
 } from '@ab/shared';
 import type { AssistantLessonView } from '@ab/schedule';
 
-// Test data shaped like the sales API (docs/16): no price; the guardian's (fake) phone only on a student row; a teacher's fixed link only where a test sets one.
+// Shaped like the sales API (docs/16): no price; a fake guardian phone only on a student row;
+// a teacher's fixed link only where a test sets one.
 
 export const subscription = (over: Partial<SalesSubscriptionView> = {}): SalesSubscriptionView => ({
   id: 's1',

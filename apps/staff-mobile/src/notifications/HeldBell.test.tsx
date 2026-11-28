@@ -36,6 +36,6 @@ test.each([
 ] as const)('with notifications.push the %s bell opens %s', async (tree, href) => {
   answer(['notifications.push']);
   await renderWithQuery(<HeldBell tree={tree} />, createTestQueryClient({ meFromApi: true }));
-  fireEvent.press(await screen.findByRole('button', { name: t.bell.mobile.open }));
+  await fireEvent.press(await screen.findByRole('button', { name: t.bell.mobile.open }));
   expect(router.push).toHaveBeenCalledWith(href);
 });

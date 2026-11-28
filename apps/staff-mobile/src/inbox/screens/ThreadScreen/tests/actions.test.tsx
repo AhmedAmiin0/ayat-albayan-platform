@@ -8,7 +8,7 @@ import { ticksLabel } from '@/inbox/shared/ticks.helpers';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-// The actions need messages.manage (the admin's): /auth/me grants it, every other GET is the thread.
+// The actions need messages.manage: /auth/me grants it, every other GET is the thread.
 const mockAdminMe = { role: 'admin', permissions: ['inbox.read', 'inbox.send', 'messages.read', 'messages.manage'] };
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
@@ -124,7 +124,7 @@ test('queued with sending off: a tap on the clock offers sending by hand, no ret
   const later = message({ id: 'l', body: 'تذكير', status: 'queued', scheduled_for: '2099-01-01T10:00:00Z' });
   await open([inbound, parked, later]);
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
-  // Only the parked row's clock is a button (the later one has no wa.me link): getBy finds exactly one.
+  // Only the parked row's clock is a button (the later has no wa.me link): getBy finds one.
   await fireEvent.press(screen.getByRole('button', { name: parkedClock }));
   const sheet = within(screen.getByTestId('failed-sheet'));
   expect(sheet.getByRole('button', { name: t.messages.clickToChat })).toBeTruthy();

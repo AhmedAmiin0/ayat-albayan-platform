@@ -37,13 +37,13 @@ test('a screen reader’s «activate» records locked (no hold), announced; the 
   const say = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
   await openChat(mockApiFetch);
   await act(async () => {
-    fireEvent(mic(), 'accessibilityAction', { nativeEvent: { actionName: 'activate' } });
+    await fireEvent(mic(), 'accessibilityAction', { nativeEvent: { actionName: 'activate' } });
   });
   expect(rec.record).toHaveBeenCalled();
   expect(say).toHaveBeenCalledWith(t.inbox.composer.voice.locked);
   expect(screen.getByRole('button', { name: t.inbox.composer.voice.delete })).toBeTruthy();
   await act(async () => {
-    fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.voice.delete }));
+    await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.voice.delete }));
   });
   expect(say).toHaveBeenCalledWith(t.inbox.composer.voice.cancelled);
   expect(screen.queryByTestId('recording-bar')).toBeNull();

@@ -14,7 +14,7 @@ export function useInboxLive(): boolean {
 }
 
 /**
- * `key` refreshes on its events while `onScreen`; under another screen a change waits for its return.
+ * `key` refreshes on its events while `onScreen`; when covered, a change waits for its return.
  * null: this mount is not a live target (a picker), so it neither watches nor forgets the key.
  */
 export function useLiveWatch(key: LiveKey | null, onScreen: boolean): void {

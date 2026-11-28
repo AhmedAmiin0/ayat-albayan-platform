@@ -13,7 +13,7 @@ const focused = jest.mocked(focusNode);
 
 const show = () =>
   renderWithQuery(<StaffPhotoControl name="هدى سالم" id="00000000-0000-4000-8000-0000000000a1" calls={teacherPhotos} photo="https://cdn/t1.jpg" invalidate={[['teachers']]} />);
-/** Whether `target` (what focusNode got) is the named button: the host Pressable shares its onClick with the screen's element. */
+/** Is `target` (focusNode's arg) the named button? The host Pressable shares its onClick. */
 const isButton = (name: string) => (target: unknown) =>
   screen.getByRole('button', { name }).props.onClick === (target as { props: { onClick: unknown } }).props.onClick;
 

@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { openRoom } from '@/classroom';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
-/** GET /meetings: all for an admin, else the caller's own and the ones they are invited to. Key ['meetings'] reaches every call below. */
+/** GET /meetings: all for an admin, else own and invited. ['meetings'] prefixes every key below. */
 export const useMeetings = () =>
   useQuery({ queryKey: [...pathKey('/meetings'), 'list'], queryFn: () => apiFetch<MeetingView[]>('/meetings') });
 

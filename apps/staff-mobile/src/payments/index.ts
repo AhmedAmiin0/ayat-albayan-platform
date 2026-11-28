@@ -1,5 +1,5 @@
 export { PaymentScreen } from './screens/PaymentScreen';
-// The chat's camera and gallery (inbox/composer) reuse the receipt picker and its camera permission.
+// The chat's camera and gallery (inbox/composer) reuse the receipt picker and its permission.
 export { pickReceipt } from '@/core/lib/receipts/receipt';
 export { ensureCameraPermission } from '@/core/lib/receipts/camera-permission';
 export { CancelPackage } from './components/CancelPackage';

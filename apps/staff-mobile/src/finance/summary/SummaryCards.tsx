@@ -8,7 +8,7 @@ import { summaryCards } from './summary-cards';
 import { summaryWarnings } from './summary-lines';
 import type { DashboardResponse } from '@ab/money';
 
-/** The year's four totals (reporting currency) and the two balances: owed to teachers, owed by students. */
+/** The year's four totals (reporting currency) plus what is owed to teachers and by students. */
 export function SummaryCards({ finance }: { finance: DashboardResponse['finance'] | undefined }) {
   const dues = useTeacherDues();
   const owed = useReceivables();

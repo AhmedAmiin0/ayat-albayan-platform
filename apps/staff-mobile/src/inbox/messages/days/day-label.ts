@@ -31,8 +31,8 @@ export function rowTime(
 }
 
 /**
- * Whether rows[index] (newest first, as the inverted list holds them) is the first message of its
- * day: the older neighbour above it, if any, is another day. The oldest loaded row always opens one.
+ * Whether rows[index] (newest first, as the inverted list holds them) is the first message of
+ * its day: the older neighbour, if any, is another day. The oldest loaded row always opens one.
  */
 export function opensDay(
   rows: readonly { created_at: string }[],
@@ -48,7 +48,10 @@ export function opensDay(
   );
 }
 
-/** Whether rows[index] shows its day chip: the oldest loaded row only once no older page (`more`) can continue its day. */
+/**
+ * Whether rows[index] shows its day chip: the oldest loaded row only once no older page
+ * (`more`) can continue its day.
+ */
 export function hasDayChip(
   rows: readonly { created_at: string }[],
   index: number,

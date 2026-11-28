@@ -26,7 +26,7 @@ export function hintOf(key: SettingKey): string | undefined {
   return def.type === 'int' && def.toggleHintKey ? textAt(def.toggleHintKey) : undefined;
 }
 
-/** What a confirmed change does, as the web's confirmation says it: the switch hint, else the hint. */
+/** The confirmation's impact line, as the web: the switch hint, else the hint. */
 export function impactOf(key: SettingKey): string | undefined {
   const def = settingDef(key);
   const toggle = def.type === 'int' && def.toggleHintKey ? textAt(def.toggleHintKey) : undefined;

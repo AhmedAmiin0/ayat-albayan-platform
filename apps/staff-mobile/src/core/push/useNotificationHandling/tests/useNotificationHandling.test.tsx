@@ -4,16 +4,16 @@ import * as Notifications from 'expo-notifications';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { FOREGROUND, useNotificationHandling } from '@/core/push/useNotificationHandling/useNotificationHandling';
 
-// GET /auth/me answers mockMe, so a mount refetch never swaps seeded permissions for «hide nothing».
+// /auth/me answers mockMe, so a mount refetch never swaps seeded permissions for «hide nothing».
 let mockMe: unknown = {};
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? mockMe : {}),
 }));
 const mockPush = jest.fn();
-// The root stack shows the tabs (no chat open): every tap is a push (useNotificationHandling.chat.test).
+// The root stack shows the tabs (no chat open), so every tap is a push (see the .chat test).
 const mockTabsRoot = { routes: [{ name: '__root', state: { index: 0, routes: [{ name: '(tabs)' }] } }] };
-// One ref for every render, like the real hook: a fresh object would re-run the tap effect on any re-render.
+// One ref for every render, like the real hook: a fresh object would re-run the tap effect.
 const mockNav = {
   isReady: () => true,
   getRootState: () => mockTabsRoot,

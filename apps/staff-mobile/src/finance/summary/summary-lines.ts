@@ -7,7 +7,7 @@ export const activeMonths = (months: readonly MonthFinance[]): MonthFinance[] =>
     .filter((m) => m.revenue !== 0 || m.teacher_cost !== 0 || m.expenses !== 0)
     .sort((a, b) => b.month.localeCompare(a.month));
 
-/** Warnings under the cards: currencies with no rate (left out of the totals) and lessons with no rate. */
+/** Warnings: currencies with no rate (left out of the totals) and lessons with no rate. */
 export function summaryWarnings(f: DashboardResponse['finance']): string[] {
   const lines: string[] = [];
   if (f.fx_missing.length > 0) lines.push(t.finance.fxMissing.replace('{currencies}', f.fx_missing.join(t.common.listSeparator)));

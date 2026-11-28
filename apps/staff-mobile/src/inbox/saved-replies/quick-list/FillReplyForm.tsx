@@ -18,7 +18,7 @@ interface FillReplyFormProps {
   onCancel: () => void;
 }
 
-/** A slot's value: what was typed in it, else the known name (an auto placeholder) or empty (a blank). */
+/** A slot's value: what was typed, else the known name (auto placeholder) or empty (a blank). */
 const valueOf = (slot: ReplySlot, typed: Record<string, string>, known: SavedReplyValues): string =>
   typed[slot.key] ?? (slot.kind === 'auto' ? (known[slot.key]?.trim() ?? '') : '');
 

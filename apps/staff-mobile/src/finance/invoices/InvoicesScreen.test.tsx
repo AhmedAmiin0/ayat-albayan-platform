@@ -25,7 +25,7 @@ test('no invoices, and a failed load with nothing cached', async () => {
   mockApiFetch.mockResolvedValue(page([]));
   const first = await renderWithQuery(<InvoicesScreen />);
   expect(await screen.findByText(t.mobileFinance.invoices.empty)).toBeTruthy();
-  first.unmount();
+  await first.unmount();
   mockApiFetch.mockRejectedValue(new Error('x'));
   await renderWithQuery(<InvoicesScreen />);
   expect(await screen.findByText(t.mobileFinance.loadFailed)).toBeTruthy();

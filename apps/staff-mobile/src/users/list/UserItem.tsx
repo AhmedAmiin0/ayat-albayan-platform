@@ -12,7 +12,7 @@ interface UserItemProps {
   onOpen: (id: string) => void;
 }
 
-/** One login, like the web's stacked row: name + status, then role and record, email, username, phone, last sign-in. */
+/** As the web's stacked row: name + status, then role, record, email, username, phone, sign-in. */
 export const UserItem = memo(function UserItem({ user, onOpen }: UserItemProps) {
   const open = useCallback(() => onOpen(user.id), [onOpen, user.id]);
   const cycle = useClockCycle();

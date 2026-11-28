@@ -18,8 +18,8 @@ interface LogInput {
 }
 
 /**
- * The inverted list's rows, newest first: the loaded messages (oldest → newest) with the chat's calls
- * merged in by time. While older pages are not loaded, a call before the oldest message waits for them.
+ * The inverted list's rows, newest first: the loaded messages (oldest → newest) with the chat's
+ * calls merged in by time. A call before the oldest loaded message waits for older pages.
  */
 export function logRows(messages: readonly MessageView[], input: LogInput): LogRow[] {
   const from = input.hasMore ? (messages[0]?.created_at ?? null) : null;

@@ -21,7 +21,7 @@ interface PayoutActionBarProps {
   onDone: (move: Move) => void;
 }
 
-/** The web's actions for the state: approve and reopen ask once; unpay asks why; pay opens the form. */
+/** As the web: approve and reopen ask once; unpay asks why; pay opens the form. */
 export function PayoutActionBar({ payout, onPay, onDone }: PayoutActionBarProps) {
   const [asking, setAsking] = useState<Move | null>(null);
   const [receiptError, setReceiptError] = useState(false);

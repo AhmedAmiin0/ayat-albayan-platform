@@ -4,7 +4,7 @@ import { t, type, useTheme, AppText, StatusChip } from '@ab/mobile-kit';
 import { lastSignIn, recordText, statusStyle } from '@/users/shared/format';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 
-/** Status (and why it is disabled), the linked record and the last sign-in, above the edit fields. */
+/** Status (and why disabled), the linked record and the last sign-in, above the edit fields. */
 export function UserSummary({ user }: { user: UserDetail }) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

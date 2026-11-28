@@ -1,6 +1,6 @@
 import { daysBefore, SALES_START_BACK_DAYS } from '@ab/shared';
 import { Switch, View } from 'react-native';
-import { t, type, useTheme, AppText, ErrorLine, Section, slotDayLabel } from '@ab/mobile-kit';
+import { t, type, useTheme, AppText, ErrorLine, Section, slotDayLabel, useNow } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { DatePickerField } from '@/core/ui/form/date-picker';
 import { NoCommissionNote, UsedBeforeField } from '@/subscribe';
@@ -9,7 +9,7 @@ import { type StartDraft, usedBeforeOf } from '@/sales-subscribe/lib/start-date'
 interface StartDateFieldProps {
   /** Holds subscriptions.set_start_date. */
   canSet: boolean;
-  /** The days offered from the academy's (Riyadh) today (the API's floor): the date dialog's bounds. */
+  /** Days offered from the academy's (Riyadh) today, the API's floor: the date dialog's bounds. */
   days: readonly string[];
   academyToday: string;
   draft: StartDraft;
@@ -40,6 +40,7 @@ function StartedSwitch({ on, onChange }: { on: boolean; onChange: StartDateField
 
 /** docs/16 row 24: rule 6, never typed; a past start goes back at most a year. */
 export function StartDateField({ canSet, days, academyToday, draft, onChange, error, lessonsTotal }: StartDateFieldProps) {
+  const now = useNow();
   const m = t.salesMoney;
   if (!canSet) {
     return (
@@ -69,7 +70,7 @@ export function StartDateField({ canSet, days, academyToday, draft, onChange, er
             range={{ min: daysBefore(academyToday, SALES_START_BACK_DAYS), max: academyToday }}
             onChange={(past) => onChange({ past })}
           />
-          <NoCommissionNote startsOn={draft.past} usedBefore={usedBeforeOf(draft, lessonsTotal)} now={new Date()} />
+          <NoCommissionNote startsOn={draft.past} usedBefore={usedBeforeOf(draft, lessonsTotal)} now={now} />
           <UsedBeforeField
             value={usedBeforeOf(draft, lessonsTotal)}
             lessonsTotal={lessonsTotal}

@@ -5,7 +5,7 @@ import { ApiError, apiSend, t } from '@ab/mobile-kit';
 import { requestId } from '@/core/lib/http/request-id';
 import { threadKey, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 
-/** Why a reaction did not go, in words (the CRM line has no reaction call: 409 reaction_unsupported). */
+/** Why a reaction did not go (the CRM line has no reaction call: 409 reaction_unsupported). */
 function reactionError(e: unknown): string {
   const code = e instanceof ApiError && typeof e.body === 'object' && e.body !== null ? Reflect.get(e.body, 'code') : undefined;
   return code === 'reaction_unsupported' ? t.inbox.reactions.unsupported : t.inbox.reactions.failed;

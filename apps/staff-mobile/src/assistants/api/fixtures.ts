@@ -1,9 +1,9 @@
-// Test data shaped like apps/api assistant-pay; the rows live in @ab/shared/testing (shared with the web).
+// Shaped like apps/api assistant-pay; the rows live in @ab/shared/testing (shared with the web).
 export { ASSISTANT, commission, statement, termsRowOf } from '@ab/shared/testing';
 
 export const ALL = ['assistantpay.read', 'assistantpay.write', 'assistantpay.approve'];
 
-/** A mocked apiFetch: /auth/me answers `permissions`, each other path its own body (a function may throw). */
+/** Mock apiFetch: /auth/me gives `permissions`, other paths their body (a function may throw). */
 export function routes(permissions: readonly string[], bodies: Record<string, unknown>) {
   return (path: string): Promise<unknown> => {
     if (path === '/auth/me') return Promise.resolve({ permissions });

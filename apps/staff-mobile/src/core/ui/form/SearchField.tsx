@@ -17,7 +17,7 @@ interface SearchFieldProps {
 
 type Theme = ReturnType<typeof useTheme>;
 
-/** The box: the 44pt bordered field, or the compact pill (WhatsApp's grey fill and a hairline edge). */
+/** The 44pt bordered field, or the compact pill (WhatsApp's grey fill and a hairline edge). */
 const boxStyle = ({ color, glass }: Theme, compact: boolean) =>
   compact
     ? {
@@ -37,7 +37,7 @@ const boxStyle = ({ color, glass }: Theme, compact: boolean) =>
         backgroundColor: color.raised,
       };
 
-/** 16pt search input (no iOS zoom), 44pt tall (or the compact pill), debounced. Put the query into usePagedList params.q. */
+/** 16pt input (no iOS zoom), 44pt or the compact pill, debounced; feeds usePagedList params.q. */
 export function SearchField({
   onSearch,
   initial = '',

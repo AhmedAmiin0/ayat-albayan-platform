@@ -16,7 +16,7 @@ interface CourseDoneProps {
   transfer?: (() => void) | undefined;
 }
 
-/** After POST /sales/booking 201: the first lesson the API made, when the course ends, the way on. */
+/** After POST /sales/booking 201: the first lesson made, when the course ends, the way on. */
 export function CourseDone({ result, body, view, onDone, transfer }: CourseDoneProps) {
   const cycle = useClockCycle();
   const tz = useViewerTz();

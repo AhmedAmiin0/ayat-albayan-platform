@@ -83,8 +83,8 @@ interface CourseStatusProps {
 }
 
 /**
- * Why there is no wizard: no student, loading, the course she cannot book, or a failed read: a refusal
- * (403 not_your_student, 404 student_not_found) shows its line with no retry, anything else retries.
+ * No wizard without a student, while loading, for a course she cannot book, or on a failed read.
+ * A refusal (403 not_your_student, 404 student_not_found) has no retry; anything else retries.
  */
 function CourseStatus({ course, block, missing }: CourseStatusProps) {
   const cycle = useClockCycle();

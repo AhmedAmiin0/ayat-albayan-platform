@@ -29,7 +29,7 @@ export function LeadDetailScreen() {
     );
   }
   const { name, phone_e164: phone, status } = lead.data;
-  // As the web lead panel: a converted lead (its number may be a family's now) or a lost one books no trial here.
+  // As on the web: a converted lead (its number may be a family's now) or a lost one books no trial
   const open = status !== 'converted' && status !== 'lost';
   return (
     <Screen>

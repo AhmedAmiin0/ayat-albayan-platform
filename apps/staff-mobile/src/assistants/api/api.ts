@@ -9,10 +9,10 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/mobile-kit';
 
-// apps/api assistant-pay (web apps/staff-web/src/features/assistants/api.ts). Reads need
-// assistantpay.read, writes assistantpay.write, approve/reopen/unpay assistantpay.approve. Per currency.
+// apps/api assistant-pay (web features/assistants/api.ts), per currency. Reads need
+// assistantpay.read, writes assistantpay.write, approve/reopen/unpay assistantpay.approve.
 
-/** Every query and write of this module lives under it: one invalidation re-reads all (as the web). */
+/** One root key for the module, so one invalidation re-reads everything (as the web). */
 export const ASSISTANTS_KEY = ['assistant-pay'] as const;
 
 /** The admin calls of this module, shared by its reads and writes. */

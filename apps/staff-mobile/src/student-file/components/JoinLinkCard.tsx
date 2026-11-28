@@ -8,7 +8,7 @@ import { InlineConfirm } from '@/core/ui/feedback/InlineConfirm';
 
 const J = t.mobileStudentFile.joinLink;
 
-/** POST /students/:id/join-link: the new link (it rotates the old one, so the admin confirms first), then shared. */
+/** POST /students/:id/join-link rotates the old link, so the admin confirms first. */
 function issueJoinLink(studentId: string): Promise<{ url: string }> {
   return apiSend<{ url: string }>('POST', `/students/${studentId}/join-link`);
 }

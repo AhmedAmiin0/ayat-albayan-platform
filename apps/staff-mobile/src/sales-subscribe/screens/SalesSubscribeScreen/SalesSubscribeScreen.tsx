@@ -18,11 +18,12 @@ import { useSalesFamily } from '@/sales-subscribe/lib/family';
 import { SalesSubscribeForm } from '@/sales-subscribe/components/SalesSubscribeForm';
 
 /** A zone in the link is ignored (academy day rules); `renew` '1' opens the last package. */
-type Params = {
-  phone?: string;
-  studentId?: string;
-  renew?: string;
-};
+type ParamKey =
+  | 'phone'
+  | 'studentId'
+  | 'renew';
+
+type Params = Partial<Record<ParamKey, string>>;
 
 /** The picked child (one of hers), else the route's, else the only one, else none yet (''). */
 function childOf(

@@ -36,7 +36,7 @@ const openRow = async (label: string, group?: Parameters<typeof groupLabel>[0]) 
   return screen.getByTestId('value-sheet');
 };
 
-/** No ancestor groups the element into one accessible control (a screen reader reaches it alone). */
+/** No ancestor groups it into one accessible control, so a screen reader reaches it alone. */
 const reachableAlone = (el: ReturnType<typeof screen.getByTestId>) => {
   for (let node = el.parent; node; node = node.parent) {
     if (typeof node.type === 'string' && node.props.accessible === true) return false;

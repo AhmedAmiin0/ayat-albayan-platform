@@ -3,7 +3,7 @@ import { NavigationContext } from 'expo-router/build/react-navigation/core/Navig
 import type { ComponentProps, ReactNode } from 'react';
 import { ScreenHeader, claimBarSlot, useBarSlotClaimed, useScreenFocused } from '@ab/mobile-kit';
 
-// Where the bar goes: a focused screen's large title claims it; otherwise the root shows it under the safe area.
+// A focused screen's large title claims the bar; otherwise the root shows it under the safe area.
 type Navigation = NonNullable<ComponentProps<typeof NavigationContext.Provider>['value']>;
 
 function fakeNavigation(focused: boolean) {

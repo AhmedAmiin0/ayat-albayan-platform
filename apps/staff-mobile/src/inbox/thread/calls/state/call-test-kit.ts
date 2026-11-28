@@ -48,7 +48,7 @@ function fakePeer(): FakePeer {
   return pc;
 }
 
-/** A fake device: the mic track (and its release), every peer made, and the answer to the mic prompt. */
+/** A fake device: the mic track and its release, every peer made, and the mic prompt's answer. */
 export function fakeRtc(askMic: () => Promise<MicAnswer> = async () => 'granted') {
   const track = { enabled: true, stop: jest.fn() };
   const release = jest.fn();
@@ -73,7 +73,7 @@ export function deferred<T>() {
   return { promise, resolve };
 }
 
-/** apiFetch answers: config, the active rows (a value, or a function per call), the permission state and the lists. */
+/** apiFetch answers: config, active rows (a value or a per-call function), permission, lists. */
 export function routes(input: {
   config: CallConfigView;
   active?: ActiveCallView[] | (() => Promise<ActiveCallView[]>);

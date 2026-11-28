@@ -2,7 +2,7 @@ import type { AcademySettings } from '@ab/settings';
 import { t, ListRow, InsetGroup, Section } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 
-/** Joins the web note with a caller's own line into one note (the overview stays one phone high). */
+/** One note from the web note and the caller's line, so the overview stays one phone high. */
 export const readOnlyNoteText = (more?: string): string =>
   more ? `${t.mobileAdmin.settings.readOnlyNote} ${more}` : t.mobileAdmin.settings.readOnlyNote;
 

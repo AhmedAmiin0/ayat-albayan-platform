@@ -5,7 +5,7 @@ const messages: Record<string, string | undefined> = { ...t.assistants.error };
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 
-/** The API's `{ code }`, else the first issue message of a zod `validation_failed` (the web's apiErrorText). */
+/** The API's `{ code }`, else the first issue of a zod `validation_failed` (web apiErrorText). */
 function codeOf(body: unknown): string | undefined {
   if (!isRecord(body)) return undefined;
   if (typeof body.code === 'string') return body.code;

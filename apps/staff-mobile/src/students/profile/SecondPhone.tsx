@@ -18,7 +18,7 @@ import { Note } from '@/more';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import { useRemoveSecondPhone } from './use-remove-second-phone';
 
-/** 404 phone_not_found: no longer this family's second number (removed elsewhere, or the main one). */
+/** 404 phone_not_found: no longer this family's second number (removed, or now the main one). */
 const removeError = (error: unknown): string =>
   error instanceof ApiError && error.status === 404 ? t.guardians.phoneNotFound : t.common.error;
 

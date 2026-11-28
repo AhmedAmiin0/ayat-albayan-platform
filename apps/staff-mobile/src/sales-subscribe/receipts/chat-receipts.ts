@@ -4,8 +4,8 @@ import { apiFetch, apiSend } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
 
 // The receipts the family already sent in its WhatsApp chat (R-ASST-04): their list, a short-lived
-// thumbnail per image (fetched only when its row is on screen) and the copy into receipts/. `bind`: the
-// chat's phone for a child not hers (chatBinding, sales.renew_any); nothing for hers.
+// thumbnail per image (fetched only when its row is on screen) and the copy into receipts/.
+// `bind`: the chat's phone for a child not hers (chatBinding, sales.renew_any); none for hers.
 interface Bind {
   phone?: string;
 }
@@ -22,7 +22,7 @@ export function useChatReceipts(studentId: string, enabled: boolean, bind: Bind 
   });
 }
 
-/** An image's signed URL; none for a PDF or an expired file. Fresh for a minute (the URL is short-lived). */
+/** An image's signed URL (none for a PDF or expired file), fresh for a minute (short-lived). */
 export function useChatReceiptThumb(studentId: string, item: SalesChatReceipt, bind: Bind = {}) {
   const wanted = !item.expired && item.mime.startsWith('image/');
   return useQuery({

@@ -43,7 +43,7 @@ test('the session ran an hour: the reason is required before «احفظ التع
   await open();
   await fireEvent.press(screen.getByRole('radio', { name: t.enums.duration['60'] }));
   expect(screen.getByText(t.editTime.sameLesson)).toBeTruthy();
-  // Before saving: attendance and status stay, the payout moves with the length, the PDF is made again.
+  // Before saving: attendance and status stay, payout follows the length, the PDF is remade.
   expect(screen.getByText(t.editTime.heldNote)).toBeTruthy();
   expect(screen.getByText(t.editTime.payoutWarn)).toBeTruthy();
   expect(screen.getByText(t.editTime.pdfRefresh)).toBeTruthy();

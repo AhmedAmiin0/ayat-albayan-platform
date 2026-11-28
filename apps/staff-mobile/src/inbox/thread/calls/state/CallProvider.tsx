@@ -28,7 +28,7 @@ function SessionNotice({ s }: { s: CallSessionApi }) {
 
 interface CallProviderProps {
   children: ReactNode;
-  /** A staff tree that may call; false (assistant, signed out) = a plain wrapper, no query at all. */
+  /** A staff tree that may call; false (assistant, signed out) = a plain wrapper, no query. */
   enabled?: boolean;
   /** Teachers never see a family's number. */
   showsPhone?: boolean;
@@ -37,7 +37,7 @@ interface CallProviderProps {
 }
 
 /**
- * WhatsApp voice calls for a signed-in staff tree (docs/28 §5, PR 2): the config, the realtime nudge,
+ * WhatsApp voice calls for a signed-in staff tree (docs/28 §5): the config, the realtime nudge,
  * the one call of this device, the incoming ring on any screen (foreground only, no push), the
  * full-screen call and its minimised bar. Dormant (no poll, no subscription) while calls are off.
  */
@@ -61,7 +61,7 @@ export function CallProvider({ children, enabled = true, showsPhone = true, rtc 
     if (starting.current || s.store.currentSession()) return;
     starting.current = true;
     try {
-      const p = await client.fetchQuery(callPermissionQuery(target.phone));
+      const p = await client.query(callPermissionQuery(target.phone));
       const sheet = askOf(target.phone, p);
       if (sheet) setAsk(sheet);
       else s.store.begin(target);

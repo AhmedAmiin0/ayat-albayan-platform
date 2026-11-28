@@ -1,7 +1,7 @@
 import { routePath } from '@ab/core';
 import { myEarningRoutes as mine, teacherEarningRoutes as admin } from '@ab/shared';
 
-/** Whose earnings: an admin names the teacher, a teacher reads their own (the API takes the id from the session). */
+/** An admin names the teacher; a teacher reads their own (the API takes it from the session). */
 export interface EarningsScope {
   teacherId?: string;
 }

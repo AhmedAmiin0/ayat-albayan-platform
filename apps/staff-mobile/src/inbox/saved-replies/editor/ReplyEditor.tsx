@@ -15,7 +15,7 @@ interface ReplyEditorProps {
   onDone: () => void;
 }
 
-/** POST for a new reply; PATCH sends the file only when it changed (null removes it, a new path replaces it). */
+/** POST a new reply; PATCH sends the file only if changed (null removes, a new path replaces). */
 function saveInput(input: { reply: SavedReply | null; scope: SavedReplyScope; title: string; body: string; file: EditorFile }): ReplySave {
   const { reply, scope, title, body, file } = input;
   const attachment = file?.path ? { path: file.path, name: file.name } : null;
@@ -27,7 +27,7 @@ function saveInput(input: { reply: SavedReply | null; scope: SavedReplyScope; ti
 /** A title and a text, and no upload still running. */
 const canSave = (d: { title: string; body: string; uploading: boolean }): boolean => d.title.trim() !== '' && d.body.trim() !== '' && !d.uploading;
 
-/** Add or edit one reply: title (≤ 60), text (≤ 4096) with its placeholder pills, and an optional file. */
+/** Add or edit a reply: title (≤ 60), text (≤ 4096) with placeholder pills, an optional file. */
 export function ReplyEditor({ reply, scope, onDone }: ReplyEditorProps) {
   const save = useSaveReply();
   const [title, setTitle] = useState(reply?.title ?? '');

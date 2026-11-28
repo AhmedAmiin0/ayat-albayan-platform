@@ -3,7 +3,7 @@ import { ReceiptUploadError } from '@/core/lib/receipts/upload-receipt';
 
 const messages: Record<string, string | undefined> = t.earnings.error;
 
-/** What the pay form says when recording failed (a lost reply is safe to retry: same clientRequestId). */
+/** The pay form's failure line (a lost reply is safe to retry: same clientRequestId). */
 export function earningsErrorText(error: unknown): string {
   if (error instanceof ReceiptUploadError) return t.payments.mobile.uploadFailed;
   if (error instanceof TypeError) return t.payments.mobile.offline;

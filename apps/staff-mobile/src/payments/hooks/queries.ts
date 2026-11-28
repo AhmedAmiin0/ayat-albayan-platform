@@ -26,7 +26,7 @@ export function useStudentBalance(studentId: string) {
   });
 }
 
-/** settings.renewal_alert_remaining (R-SUB-02); undefined until it loads (lines use the default). */
+/** settings.renewal_alert_remaining (R-SUB-02); undefined while loading (default applies). */
 export function useRenewalThreshold(): number | undefined {
   const { data } = useQuery({
     queryKey: pathKey('/settings'),

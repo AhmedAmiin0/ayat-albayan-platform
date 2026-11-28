@@ -59,9 +59,9 @@ function ButtonRow({ button: b, first, onLongPress }: RowProps) {
 }
 
 /**
- * The buttons right under a template's time, as WhatsApp draws them: rows across the whole bubble split by thin
- * lines, a centred label after its icon. Ours are display-only (the family taps them in WhatsApp);
- * a URL button opens its link. `inset` = the bubble's padding, so the rows reach its edges.
+ * The buttons right under a template's time, as WhatsApp draws them: rows across the whole bubble
+ * split by thin lines, a centred label after its icon. Ours are display-only (the family taps them
+ * in WhatsApp); a URL button opens its link. `inset` = the bubble's padding, so rows reach it.
  */
 interface TemplateButtonsProps {
   buttons: readonly TemplateDisplayButton[];

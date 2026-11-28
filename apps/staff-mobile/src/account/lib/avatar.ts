@@ -16,7 +16,7 @@ export interface PickedAvatar {
   size: number;
 }
 
-/** Square crop, JPEG 0.7 (a face stays sharp, far under the 2 MB bucket limit), no EXIF (no location). */
+/** Square JPEG 0.7 (sharp face, far under the 2 MB bucket limit), no EXIF (no location). */
 const OPTIONS: ImagePicker.ImagePickerOptions = {
   mediaTypes: 'images',
   allowsEditing: true,
@@ -26,7 +26,7 @@ const OPTIONS: ImagePicker.ImagePickerOptions = {
   exif: false,
 };
 
-/** The picker's asset as an avatar: its own type when the bucket takes it, else JPEG (re-encoded bytes). */
+/** The asset keeps its type when the bucket takes it, else it is re-encoded as JPEG. */
 export function toAvatar(asset: ImagePicker.ImagePickerAsset): PickedAvatar | null {
   if (!asset.base64) return null;
   const bytes = decodeBase64(asset.base64);

@@ -26,8 +26,8 @@ export function LineDriverRow({ line, items, canWrite, busy, onSave }: LineDrive
   const h = t.communicationsHub;
   const current = lineDriver(items, line);
   const [picked, setPicked] = useState<LineProvider | null>(null);
-  // Cleared once the save lands (the cache then reads the new driver), so a later change elsewhere never
-  // reopens it; a failed save keeps the confirm to retry.
+  // Cleared once the save lands (the cache then has the new driver), so a later change elsewhere
+  // never reopens it; a failed save keeps the confirm to retry.
   if (picked !== null && picked === current) setPicked(null);
   const lineName = t.enums.waLine[line];
   const options = LINE_PROVIDERS.map((p) => ({

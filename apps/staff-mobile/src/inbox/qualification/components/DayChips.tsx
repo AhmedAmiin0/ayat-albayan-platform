@@ -8,7 +8,7 @@ interface DayChipsProps {
   /** Sunday is 0; sorted. */
   value: readonly number[];
   onChange: (days: number[]) => void;
-  /** The picked slot's weekday: always on, not a toggle (a series repeats on it), with a line saying so. */
+  /** The picked slot's weekday: always on, not a toggle (a series repeats on it), with a note. */
   locked?: number;
   accessibilityLabel?: string;
 }

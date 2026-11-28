@@ -20,7 +20,7 @@ interface LessonDetailsSheetProps<L extends DetailsLesson> {
   sheets?: ReactNode;
   /** Sales' default; false on a lesson she may move or cancel (docs/16 row 37). */
   readOnly?: boolean;
-  /** Opened from this student's own file: their name stays plain (no second copy of that screen). */
+  /** Opened from this student's file: the name is not a link (no second copy of the screen). */
   hereStudentId?: string | undefined;
   /** The teacher's report button goes here, in the current tab (docs/48); else reportHref. */
   onReport?: (lessonId: string) => void;

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@ab/mobile-kit';
 import { ASSISTANTS_KEY, calls } from './api';
 
-// The admin's writes (web api.ts + the dialogs): each re-reads everything under ['assistant-pay'] on success.
+// The admin's writes (web api.ts + dialogs): each re-reads all of ['assistant-pay'] on success.
 
 const useRefresh = () => {
   const client = useQueryClient();
@@ -20,7 +20,7 @@ export function useSaveTerms() {
   });
 }
 
-/** POST /assistant-pay/commissions/:id/void {reason}: audited; the money side effects are the database's. */
+/** POST /assistant-pay/commissions/:id/void {reason}: audited; the DB owns the money effects. */
 export function useVoidCommission() {
   const refresh = useRefresh();
   return useMutation({

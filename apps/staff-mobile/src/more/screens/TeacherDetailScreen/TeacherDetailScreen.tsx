@@ -31,7 +31,7 @@ const TEACHER_KEYS = [pathKey('/teachers'), pathKey('/sales/teachers')];
 
 /** R-TCH-01, R-TCH-02: read-only except the login username (teachers.write, docs/30 §7). */
 export function TeacherDetailScreen() {
-  const { id = '', status } = useLocalSearchParams<{ id: string; status?: string }>();
+  const { id = '', status } = useLocalSearchParams<{ id?: string; status?: string }>();
   const path = `/teachers/${id}`;
   const teacher = useQuery({ queryKey: pathKey(path), queryFn: () => teachers.get(id) });
   const admin = useIsAdmin();

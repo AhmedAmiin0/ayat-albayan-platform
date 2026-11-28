@@ -17,7 +17,7 @@ const leadsPage = (items: LeadView[]): Page<LeadView> => ({
   pageSize: 25,
 });
 
-/** An apiFetch mock: /auth/me grants `permissions`, /sales/people lists the salespeople, /leads the rows. */
+/** apiFetch mock: /auth/me grants `permissions`, /sales/people the salespeople, /leads the rows. */
 export function leadsBackend(permissions: string[], items: LeadView[] = [owned, free]) {
   return (path: string): Promise<unknown> => {
     if (path.startsWith('/auth/me')) return Promise.resolve({ permissions });

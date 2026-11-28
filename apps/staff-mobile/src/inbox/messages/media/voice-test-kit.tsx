@@ -37,7 +37,7 @@ const subscribe = (listener: () => void) => {
   listeners.add(listener);
   return () => listeners.delete(listener);
 };
-// Like expo-audio's hook, a status change re-renders the player itself: a parent the React Compiler did not
+// Like expo-audio's hook, a status change re-renders the player itself: a parent that did not
 // re-render (same props) cannot hide it.
 const useFakeStatus = () => useSyncExternalStore(subscribe, () => status);
 
