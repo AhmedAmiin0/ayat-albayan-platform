@@ -2,11 +2,9 @@ import { z } from 'zod';
 import { E164_RE, timeZone } from '@ab/core';
 import {
   SETTING_FIELD_OF,
-  SETTING_KEY_OF,
   SETTING_KEYS,
   SETTINGS_REGISTRY,
   type AcademySettings,
-  type SettingField,
   type SettingsUpdate,
 } from '../../registry';
 import { shapeZod } from '../shape';
@@ -68,9 +66,9 @@ export const settingsUpdateSchema = z.object(shape) as unknown as z.ZodType<Sett
 /** PATCH body (camelCase, only sent keys) → settings rows to write (snake_case). */
 export function settingsChanges(update: SettingsUpdate): Partial<AcademySettings> {
   const out: Partial<Record<string, unknown>> = {};
-  for (const [field, value] of Object.entries(update) as [SettingField, unknown][]) {
-    const key = SETTING_KEY_OF[field];
-    if (key && value !== undefined) out[key] = value;
+  for (const key of SETTING_KEYS) {
+    const value = update[SETTING_FIELD_OF[key]];
+    if (value !== undefined) out[key] = value;
   }
   return out;
 }

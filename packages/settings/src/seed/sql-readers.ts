@@ -10,7 +10,8 @@ export interface SqlObject {
   body: string;
 }
 
-const FUNC_RE = /create\s+(?:or\s+replace\s+)?function\s+([\w.]+)\s*\([\s\S]*?\$(\w*)\$([\s\S]*?)\$\2\$/gi;
+const FUNC_RE =
+  /create\s+(?:or\s+replace\s+)?function\s+([\w.]+)\s*\([\s\S]*?\$(\w*)\$([\s\S]*?)\$\2\$/gi;
 const VIEW_RE = /create\s+(?:or\s+replace\s+)?view\s+([\w.]+)([\s\S]*?);/gi;
 const DROP_RE = /drop\s+(?:function|view)\s+(?:if\s+exists\s+)?([\w.]+)/gi;
 
@@ -26,19 +27,33 @@ export function liveSqlObjects(
   const live = new Map<string, SqlObject>();
   for (const file of Object.keys(migrations).sort()) {
     const sql = stripComments(migrations[file] ?? '');
-    const events: { at: number; apply: () => void }[] = [];
-    for (const m of sql.matchAll(FUNC_RE)) {
-      const name = m[1] ?? '';
-      events.push({ at: m.index, apply: () => live.set(name, { name, body: m[3] ?? '' }) });
-    }
-    for (const m of sql.matchAll(VIEW_RE)) {
-      const name = m[1] ?? '';
-      events.push({ at: m.index, apply: () => live.set(name, { name, body: m[2] ?? '' }) });
-    }
-    for (const m of sql.matchAll(DROP_RE)) events.push({ at: m.index, apply: () => live.delete(m[1] ?? '') });
-    for (const e of events.sort((a, b) => a.at - b.at)) e.apply();
+    for (const e of eventsOf(sql, live).sort((a, b) => a.at - b.at)) e.apply();
   }
   return live;
+}
+
+interface SqlEvent {
+  at: number;
+  apply: () => unknown;
+}
+
+/** Each create or drop in one migration, as a change to `live` at its offset. */
+function eventsOf(sql: string, live: Map<string, SqlObject>): SqlEvent[] {
+  const define = (name: string, body: string) => () => live.set(name, { name, body });
+  return [
+    ...[...sql.matchAll(FUNC_RE)].map((m) => ({
+      at: m.index,
+      apply: define(m[1] ?? '', m[3] ?? ''),
+    })),
+    ...[...sql.matchAll(VIEW_RE)].map((m) => ({
+      at: m.index,
+      apply: define(m[1] ?? '', m[2] ?? ''),
+    })),
+    ...[...sql.matchAll(DROP_RE)].map((m) => ({
+      at: m.index,
+      apply: () => live.delete(m[1] ?? ''),
+    })),
+  ];
 }
 
 /** Keys a body names next to public.settings: `key = 'k'` (any alias) and `key in ('a', 'b')`. */

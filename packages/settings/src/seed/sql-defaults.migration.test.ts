@@ -7,7 +7,10 @@ import { liveSqlObjects, sqlSettingsReaders } from './sql-readers';
 // way.
 declare global {
   interface ImportMeta {
-    glob<T>(pattern: string | string[], options: { query: '?raw'; import: 'default'; eager: true }): Record<string, T>;
+    glob<T>(
+      pattern: string | string[],
+      options: { query: '?raw'; import: 'default'; eager: true },
+    ): Record<string, T>;
   }
 }
 
@@ -17,6 +20,7 @@ const MIGRATIONS = import.meta.glob<string>('../../../db/supabase/migrations/*.s
   eager: true,
 });
 const live = liveSqlObjects(MIGRATIONS);
+const bodyOf = (fn: string): string => live.get(fn)?.body ?? '';
 
 /**
  * docs/26 §2b: a key read by SQL keeps its own fallback, and that fallback must equal the registry
@@ -31,16 +35,38 @@ interface Pin {
 }
 const bool = (s: string): boolean => s === 'true';
 const PINS: Pin[] = [
-  { fn: 'public.prune_activity_log', key: 'activity_retention_days', re: /days int := (\d+);/, parse: Number },
+  {
+    fn: 'public.prune_activity_log',
+    key: 'activity_retention_days',
+    re: /days int := (\d+);/,
+    parse: Number,
+  },
   ...(['payout_count_late', 'payout_count_no_show', 'payout_count_trials'] as const).map((key) => ({
     fn: 'public.lesson_counts_for_pay',
     key,
-    re: new RegExp(`coalesce\\(bool_or\\(key = '${key}' and value = 'true'::jsonb\\), (true|false)\\)`),
+    re: new RegExp(
+      `coalesce\\(bool_or\\(key = '${key}' and value = 'true'::jsonb\\), (true|false)\\)`,
+    ),
     parse: bool,
   })),
-  { fn: 'public.v_student_list', key: 'renewal_alert_remaining', re: /where key = 'renewal_alert_remaining'\), (\d+)\)/, parse: Number },
-  { fn: 'public.set_assistant_terms', key: 'academy_timezone', re: /s\.key = 'academy_timezone'\), '([^']+)'\)/, parse: String },
-  { fn: 'public.google_sync_on', key: 'google_sync_enabled', re: /s\.key = 'google_sync_enabled'\), (true|false)\)/, parse: bool },
+  {
+    fn: 'public.v_student_list',
+    key: 'renewal_alert_remaining',
+    re: /where key = 'renewal_alert_remaining'\), (\d+)\)/,
+    parse: Number,
+  },
+  {
+    fn: 'public.set_assistant_terms',
+    key: 'academy_timezone',
+    re: /s\.key = 'academy_timezone'\), '([^']+)'\)/,
+    parse: String,
+  },
+  {
+    fn: 'public.google_sync_on',
+    key: 'google_sync_enabled',
+    re: /s\.key = 'google_sync_enabled'\), (true|false)\)/,
+    parse: bool,
+  },
   {
     fn: 'public.google_sync_window_days',
     key: 'google_calendar_window_days',
@@ -91,18 +117,19 @@ const entry = (key: string) => SEED_ENTRIES.find((e) => e.key === key);
 describe('SQL coalesce defaults = registry defaults (sql-defaults.migration)', () => {
   it('every key a live SQL reader names has a pin', () => {
     const pinned = new Set(PINS.map((p) => `${p.fn}:${p.key}`));
-    const named = [...sqlSettingsReaders(MIGRATIONS)].flatMap(([fn, keys]) => keys.map((k) => `${fn}:${k}`));
+    const named = [...sqlSettingsReaders(MIGRATIONS)].flatMap(([fn, keys]) =>
+      keys.map((k) => `${fn}:${k}`),
+    );
     expect(named.filter((n) => !pinned.has(n))).toEqual([]);
   });
 
   it.each(PINS.map((p) => [`${p.fn}:${p.key}`, p] as const))('%s', (id, pin) => {
-    const body = live.get(pin.fn)?.body ?? '';
-    const hit = pin.re.exec(body);
+    const hit = pin.re.exec(bodyOf(pin.fn));
     expect([id, hit !== null]).toEqual([id, true]);
     const sqlDefault = pin.parse(hit?.[1] ?? '');
     const registryDefault = entry(pin.key)?.default_value;
-    if (EXPECTED_MISMATCHES.has(id)) expect(sqlDefault).not.toEqual(registryDefault);
-    else expect(sqlDefault).toEqual(registryDefault);
+    const check = EXPECTED_MISMATCHES.has(id) ? expect(sqlDefault).not : expect(sqlDefault);
+    check.toEqual(registryDefault);
   });
 
   it('google_sync_window_days clamps to the seed bounds (7..180)', () => {
@@ -110,7 +137,10 @@ describe('SQL coalesce defaults = registry defaults (sql-defaults.migration)', (
     const m = /least\(greatest\(\(s\.value #>> '\{\}'\)::int, (\d+)\), (\d+)\)/.exec(body);
     const { min, max } = GOOGLE_SEED_DEFS.google_calendar_window_days;
     expect(m?.slice(1, 3).map(Number)).toEqual([min, max]);
-    expect(entry('google_calendar_window_days')).toMatchObject({ value_type: 'int', default_value: 60 });
+    expect(entry('google_calendar_window_days')).toMatchObject({
+      value_type: 'int',
+      default_value: 60,
+    });
   });
 
   it('prune_activity_log keeps its own fallback when the stored value is not a 1–4 digit number', () => {

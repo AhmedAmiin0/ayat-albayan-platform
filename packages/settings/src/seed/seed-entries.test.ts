@@ -3,12 +3,22 @@ import type { SettingDef } from '../defs';
 import { GOOGLE_SEED_DEFS } from '../google-defs';
 import { SETTING_GROUPS } from '../groups';
 import { SETTING_KEYS, SETTINGS_REGISTRY } from '../registry';
-import { looksLikeSecretKey, REGISTRY_VERSION, SEED_ENTRIES, SEED_KEY_RE, seedEntry } from './seed-entries';
+import {
+  looksLikeSecretKey,
+  REGISTRY_VERSION,
+  SEED_ENTRIES,
+  SEED_KEY_RE,
+  seedEntry,
+  type SeedEntry,
+} from './seed-entries';
 
 /** The google-sync rows (google/seed-defs.test.ts pins them to GOOGLE_SETTING_KEYS). */
 const GOOGLE_KEYS = Object.keys(GOOGLE_SEED_DEFS);
 const keys = SEED_ENTRIES.map((e) => e.key);
 const byKey = new Map(SEED_ENTRIES.map((e) => [e.key, e]));
+const MODULE_GROUPS = ['notifications', 'safety', 'google'];
+const isModuleScoped = (e: SeedEntry): boolean =>
+  e.ownedBy !== null || MODULE_GROUPS.includes(e.group ?? '');
 
 describe('SEED_ENTRIES (docs/26 §2b, inert until 26-P2)', () => {
   it('= the registry ∪ the three google rows, each key once', () => {
@@ -18,7 +28,8 @@ describe('SEED_ENTRIES (docs/26 §2b, inert until 26-P2)', () => {
   });
 
   it('REGISTRY_VERSION is a positive integer', () => {
-    expect(Number.isInteger(REGISTRY_VERSION) && REGISTRY_VERSION >= 1).toBe(true);
+    expect(Number.isInteger(REGISTRY_VERSION)).toBe(true);
+    expect(REGISTRY_VERSION).toBeGreaterThanOrEqual(1);
   });
 
   it('every key has the code-key format and every entry a module and a known group', () => {
@@ -43,28 +54,48 @@ describe('SEED_ENTRIES (docs/26 §2b, inert until 26-P2)', () => {
     }
   });
 
-  it('google rows: module google_sync, group google, owned by google_sync, scope module, today\'s defaults', () => {
-    expect(byKey.get('google_sync_enabled')).toMatchObject({ value_type: 'bool', default_value: false });
-    expect(byKey.get('google_sync_mode')).toMatchObject({ value_type: 'enum', default_value: 'dry_run' });
-    expect(byKey.get('google_calendar_window_days')).toMatchObject({ value_type: 'int', default_value: 60 });
+  it("google rows: module google_sync, group google, owned by google_sync, scope module, today's defaults", () => {
+    expect(byKey.get('google_sync_enabled')).toMatchObject({
+      value_type: 'bool',
+      default_value: false,
+    });
+    expect(byKey.get('google_sync_mode')).toMatchObject({
+      value_type: 'enum',
+      default_value: 'dry_run',
+    });
+    expect(byKey.get('google_calendar_window_days')).toMatchObject({
+      value_type: 'int',
+      default_value: 60,
+    });
     expect(GOOGLE_SEED_DEFS.google_calendar_window_days).toMatchObject({ min: 7, max: 180 });
     expect(GOOGLE_SEED_DEFS.google_sync_mode.options).toEqual(['dry_run', 'live']);
     for (const key of GOOGLE_KEYS) {
-      expect(byKey.get(key)).toMatchObject({ module: 'google_sync', group: 'google', ownedBy: 'google_sync', scope: 'module', is_public: false });
+      expect(byKey.get(key)).toMatchObject({
+        module: 'google_sync',
+        group: 'google',
+        ownedBy: 'google_sync',
+        scope: 'module',
+        is_public: false,
+      });
     }
   });
 
   it('scope is module for owned keys and the «تُدار من صفحة أخرى» groups, config otherwise', () => {
     for (const e of SEED_ENTRIES) {
-      const moduleScoped = e.ownedBy !== null || ['notifications', 'safety', 'google'].includes(e.group ?? '');
-      expect([e.key, e.scope]).toEqual([e.key, moduleScoped ? 'module' : 'config']);
+      expect([e.key, e.scope]).toEqual([e.key, isModuleScoped(e) ? 'module' : 'config']);
     }
     expect(byKey.get('comms_source')?.scope).toBe('module');
     expect(byKey.get('booking_horizon_weeks')?.scope).toBe('config');
   });
 
   it('a retired flag is carried only when set explicitly', () => {
-    const def = { type: 'bool', default: false, labelKey: 'x', module: 'm', group: 'sales' } as const;
+    const def = {
+      type: 'bool',
+      default: false,
+      labelKey: 'x',
+      module: 'm',
+      group: 'sales',
+    } as const;
     expect(seedEntry('old_flag', def).retired).toBe(false);
     expect(seedEntry('old_flag', { ...def, retired: true }).retired).toBe(true);
   });
@@ -77,8 +108,10 @@ describe('SEED_ENTRIES (docs/26 §2b, inert until 26-P2)', () => {
 
 describe('secret-looking keys (docs/26 §2a: secrets live in Vault only)', () => {
   it('the predicate catches *_token, *_secret, *_key', () => {
-    for (const k of ['wa_token', 'app_secret', 'api_key']) expect([k, looksLikeSecretKey(k)]).toEqual([k, true]);
-    for (const k of ['token_count', 'secretary_name', 'keyboard', 'monkey']) expect([k, looksLikeSecretKey(k)]).toEqual([k, false]);
+    for (const k of ['wa_token', 'app_secret', 'api_key'])
+      expect([k, looksLikeSecretKey(k)]).toEqual([k, true]);
+    for (const k of ['token_count', 'secretary_name', 'keyboard', 'monkey'])
+      expect([k, looksLikeSecretKey(k)]).toEqual([k, false]);
   });
 
   it('no seed key looks like a secret', () => {

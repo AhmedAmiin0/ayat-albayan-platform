@@ -1,6 +1,12 @@
 import { z } from 'zod';
 import { ownedKeyOfField } from '../ownership';
-import { SETTING_KEY_OF, SETTINGS_REGISTRY, type AcademySettings, type SettingField, type SettingKey } from '../registry';
+import {
+  SETTING_KEY_OF,
+  SETTINGS_REGISTRY,
+  type AcademySettings,
+  type SettingField,
+  type SettingKey,
+} from '../registry';
 import { settingZod } from './schema';
 import type { SettingDef } from '../defs';
 
@@ -65,7 +71,13 @@ export function parseSettingField(input: {
 }): ParsedSettingField {
   const parsed = settingZod(SETTINGS_REGISTRY[input.key]).safeParse(input.value);
   if (parsed.success) return { ok: true, value: parsed.data };
-  return { ok: false, issues: parsed.error.issues.map((i) => ({ path: [input.field, ...i.path.map(String)].join('.'), message: i.message })) };
+  return {
+    ok: false,
+    issues: parsed.error.issues.map((i) => ({
+      path: [input.field, ...i.path.map(String)].join('.'),
+      message: i.message,
+    })),
+  };
 }
 
 /**
@@ -75,29 +87,38 @@ export function parseSettingField(input: {
  */
 export function splitSettingsPatch(body: Readonly<Record<string, unknown>>): SettingsPatchSplit {
   const out: SettingsPatchSplit = { changes: {}, saved: [], moved: [], invalid: [], issues: [] };
-  const changes: Partial<Record<SettingKey, unknown>> = {};
-  for (const [field, value] of Object.entries(body)) {
-    const owned = ownedKeyOfField(field);
-    if (owned) {
-      pushOnce(out.moved, owned);
-      continue;
-    }
-    const key = registryKeyOf(field);
-    if (!key || value === undefined) continue;
-    const def: SettingDef = SETTINGS_REGISTRY[key];
-    if (def.patch === false) {
-      pushOnce(out.moved, key);
-      continue;
-    }
-    const parsed = parseSettingField({ field, key, value });
-    if (parsed.ok) {
-      changes[key] = parsed.value;
-      pushOnce(out.saved, key);
-    } else {
-      pushOnce(out.invalid, key);
-      out.issues.push(...parsed.issues);
-    }
-  }
-  out.changes = changes as Partial<AcademySettings>;
+  const acc: PatchAcc = { out, changes: {} };
+  for (const [field, value] of Object.entries(body)) splitField(acc, field, value);
+  out.changes = acc.changes as Partial<AcademySettings>;
   return out;
+}
+
+interface PatchAcc {
+  out: SettingsPatchSplit;
+  changes: Partial<Record<SettingKey, unknown>>;
+}
+
+function splitField(acc: PatchAcc, field: string, value: unknown): void {
+  const owned = ownedKeyOfField(field);
+  const key = owned ? null : registryKeyOf(field);
+  if (owned) pushOnce(acc.out.moved, owned);
+  if (!key || value === undefined) return;
+  const def: SettingDef = SETTINGS_REGISTRY[key];
+  if (def.patch === false) {
+    pushOnce(acc.out.moved, key);
+    return;
+  }
+  writeField(acc, { field, key, value });
+}
+
+function writeField(acc: PatchAcc, input: { field: string; key: SettingKey; value: unknown }) {
+  const { key } = input;
+  const parsed = parseSettingField(input);
+  if (!parsed.ok) {
+    pushOnce(acc.out.invalid, key);
+    acc.out.issues.push(...parsed.issues);
+    return;
+  }
+  acc.changes[key] = parsed.value;
+  pushOnce(acc.out.saved, key);
 }

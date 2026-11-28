@@ -11,12 +11,15 @@ export const customKeySchema = z
   .regex(CUSTOM_KEY_RE)
   .refine((k) => !isSettingKey(k), 'reserved_key');
 
+/** Code points from these up take one more UTF-8 byte each (1 to 4 bytes). */
+const UTF8_STEPS = [0x80, 0x800, 0x10000] as const;
+
 /** UTF-8 byte length (the shared lib has no TextEncoder typings). */
 function utf8Bytes(text: string): number {
   let n = 0;
   for (const ch of text) {
     const c = ch.codePointAt(0) ?? 0;
-    n += c < 0x80 ? 1 : c < 0x800 ? 2 : c < 0x10000 ? 3 : 4;
+    n += 1 + UTF8_STEPS.filter((step) => c >= step).length;
   }
   return n;
 }
@@ -24,7 +27,10 @@ const jsonBytes = (v: unknown): number => utf8Bytes(JSON.stringify(v));
 
 /** PUT /config/custom/:key. A JSON null is not a value (delete the entry instead). */
 export const customConfigUpsertSchema = z.object({
-  value: z.json().refine((v) => v !== null, 'null_value').refine((v) => jsonBytes(v) <= CUSTOM_VALUE_MAX_BYTES, 'too_large'),
+  value: z
+    .json()
+    .refine((v) => v !== null, 'null_value')
+    .refine((v) => jsonBytes(v) <= CUSTOM_VALUE_MAX_BYTES, 'too_large'),
   description: z.string().max(300).nullable().optional(),
   isPublic: z.boolean().default(false),
 });
