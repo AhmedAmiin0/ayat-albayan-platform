@@ -5,7 +5,7 @@ import { Animated, Easing } from 'react-native';
  * The design's dash travel (24 → 0), mapped onto the tick's real length so it draws over the full
  * 360 ms.
  */
-export const TRAVEL = 24;
+const TRAVEL = 24;
 export const TICK_LENGTH = 11.4;
 const POP_MS = 320;
 const DRAW_MS = 360;
