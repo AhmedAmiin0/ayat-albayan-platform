@@ -88,12 +88,3 @@ export const courseExtendResultSchema = z.object({
   conflicts: z.number().int(),
 });
 export type CourseExtendResult = z.infer<typeof courseExtendResultSchema>;
-
-/** What resuming the course does now. */
-export const courseResumePreviewSchema = z.object({
-  /** The instants of the lessons booked back (from today on), earliest first. */
-  back: z.array(z.string()),
-  /** The days the package moves forward (0 = the pause has not started: nothing moves). */
-  extendDays: z.number().int(),
-});
-export type CourseResumePreview = z.infer<typeof courseResumePreviewSchema>;

@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, pathKey } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { CourseActionsSection } from './CourseActionsSection';
-import { BASE, serve, stopPreview, SUB } from './fixtures';
+import { BASE, serve, stopPreview, stopResult, SUB } from './fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -40,7 +40,7 @@ test('the sheet says what happens: 3 lessons, the schedule, money kept, history,
 });
 
 test('the reason is required; sent trimmed with one request id, then the done block', async () => {
-  mockApiSend.mockResolvedValue({ subscriptionId: SUB, cancelledLessons: 3, endedRules: 1, studentStatus: 'churned', stoppedAt: 'x' });
+  mockApiSend.mockResolvedValue(stopResult());
   await openSheet();
   await fireEvent.press(await screen.findByRole('button', { name: s.confirm }));
   expect(mockApiSend).not.toHaveBeenCalled();
@@ -66,8 +66,8 @@ test('the reason is required; sent trimmed with one request id, then the done bl
   expect(screen.getByText(s.done)).toBeTruthy();
 });
 
-test('the done block opens the guardian\'s chat (the sheet closes first)', async () => {
-  mockApiSend.mockResolvedValue({ subscriptionId: SUB, studentStatus: 'churned', refund: null });
+test("the done block opens the guardian's chat (the sheet closes first)", async () => {
+  mockApiSend.mockResolvedValue(stopResult());
   await openSheet();
   await fireEvent.changeText(await screen.findByPlaceholderText(s.reasonHint), 'سفر');
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
@@ -102,14 +102,18 @@ test('without the keys nothing shows', async () => {
 });
 
 test('without a package id the stop preview names the current one, and the stop uses it', async () => {
-  mockApiSend.mockResolvedValue({ subscriptionId: SUB, cancelledLessons: 3, endedRules: 1, studentStatus: 'churned', stoppedAt: 'x' });
+  mockApiSend.mockResolvedValue(stopResult());
   await renderWithQuery(<CourseActionsSection studentId="s1" subscriptionId={null} />);
   await fireEvent.press(await screen.findByRole('button', { name: s.action }));
   expect(mockApiFetch).toHaveBeenCalledWith(`${BASE}/course-stop`);
   await fireEvent.changeText(await screen.findByPlaceholderText(s.reasonHint), 'سفر');
   await fireEvent.press(screen.getByRole('button', { name: s.confirm }));
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', `${BASE}/course-stop`, expect.objectContaining({ subscriptionId: SUB })),
+    expect(mockApiSend).toHaveBeenCalledWith(
+      'POST',
+      `${BASE}/course-stop`,
+      expect.objectContaining({ subscriptionId: SUB }),
+    ),
   );
 });
 

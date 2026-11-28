@@ -1,4 +1,3 @@
-import { paymentViewSchema } from '@ab/money';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { t } from '@ab/mobile-kit';
@@ -104,7 +103,6 @@ test('bank: a photo in «المرفقات» → signed upload → POST /payments
     contentType: 'image/jpeg',
   });
   expect(mockApiSend).toHaveBeenLastCalledWith('POST', '/payments', {
-    body: {
       clientRequestId: expect.any(String),
       subscriptionId: SUB_ID,
       amount: 145,
@@ -112,9 +110,7 @@ test('bank: a photo in «المرفقات» → signed upload → POST /payments
       method: 'bank',
       paidAt: expect.any(String),
       attachments: [signed.path],
-    },
-    schema: paymentViewSchema,
-  });
+    });
   answer(payment({ id: 'p2' }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
 });
@@ -127,10 +123,7 @@ test('no photo (cash): straight to POST /payments, no upload', async () => {
   await fireEvent.press(screen.getByRole('button', { name: m.record }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
   expect(mockApiSend).toHaveBeenCalledTimes(1);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', {
-    body: expect.not.objectContaining({ receiptPath: expect.anything() }),
-    schema: paymentViewSchema,
-  });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', expect.not.objectContaining({ receiptPath: expect.anything() }));
   expect(mockUpload).not.toHaveBeenCalled();
 });
 
@@ -144,6 +137,6 @@ test('«اليوم السابق» moves the day back to أمس; «اليوم ا�
   await fill('145');
   await fireEvent.press(screen.getByRole('button', { name: m.record }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
-  const sent = mockApiSend.mock.calls[0]?.[2] as { body: { paidAt: string } } | undefined;
-  expect(sent?.body.paidAt).toMatch(/T09:00:00\.000Z$/);
+  const sent = mockApiSend.mock.calls[0]?.[2] as { paidAt: string } | undefined;
+  expect(sent?.paidAt).toMatch(/T09:00:00\.000Z$/);
 });

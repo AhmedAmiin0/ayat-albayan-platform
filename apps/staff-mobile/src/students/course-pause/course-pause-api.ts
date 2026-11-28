@@ -1,28 +1,17 @@
-import {
-  courseActionsKey,
-  coursePauseKey,
-  coursePausePath,
-  coursePausePreviewPath,
-  coursePauseResumePath,
-  coursePauseUntilPath,
-  pauseKeys,
-} from '@ab/client-core';
-import type {
-  CoursePausePreview,
-  CoursePauseResult,
-  CoursePauseStart,
-  CoursePauseState,
-} from '@ab/shared';
+import { courseActionsKey, coursePauseCalls, coursePauseKey, pauseKeys } from '@ab/client-core';
+import type { CoursePauseStart } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 
 // Course pause (docs/11 §7b): same routes in admin and sales trees (courses.pause).
 
+const pauses = coursePauseCalls({ apiFetch, apiSend });
+
 /** GET /students/:id/course-pause: the open pause (or null) and the past ones. */
 export const useCoursePause = (studentId: string) =>
   useQuery({
     queryKey: coursePauseKey(studentId),
-    queryFn: () => apiFetch<CoursePauseState>(coursePausePath(studentId)),
+    queryFn: () => pauses.state(studentId),
     enabled: studentId !== '',
   });
 
@@ -30,7 +19,7 @@ export const useCoursePause = (studentId: string) =>
 export const usePausePreview = (input: { studentId: string; from: string; until: string | null }) =>
   useQuery({
     queryKey: pauseKeys.preview(input),
-    queryFn: () => apiFetch<CoursePausePreview>(coursePausePreviewPath(input)),
+    queryFn: () => pauses.preview(input),
   });
 
 /** Lessons are cancelled or booked back, so sales' schedule and details refresh too. */
@@ -50,8 +39,7 @@ function useRefresh(studentId: string) {
 export function useStartPause(studentId: string) {
   const refresh = useRefresh(studentId);
   return useMutation({
-    mutationFn: (body: CoursePauseStart) =>
-      apiSend<CoursePauseResult>('POST', coursePausePath(studentId), body),
+    mutationFn: (body: CoursePauseStart) => pauses.start(studentId, body),
     onSuccess: refresh,
   });
 }
@@ -60,8 +48,7 @@ export function useStartPause(studentId: string) {
 export function useChangeUntil(studentId: string) {
   const refresh = useRefresh(studentId);
   return useMutation({
-    mutationFn: (untilDate: string | null) =>
-      apiSend<CoursePauseResult>('PATCH', coursePauseUntilPath(studentId), { untilDate }),
+    mutationFn: (untilDate: string | null) => pauses.until(studentId, untilDate),
     onSuccess: refresh,
   });
 }
@@ -70,7 +57,7 @@ export function useChangeUntil(studentId: string) {
 export function useResumePause(studentId: string) {
   const refresh = useRefresh(studentId);
   return useMutation({
-    mutationFn: () => apiSend<CoursePauseResult>('POST', coursePauseResumePath(studentId)),
+    mutationFn: () => pauses.resume(studentId),
     // A 409 (already resumed elsewhere) refetches too, so the stale banner goes.
     onSettled: refresh,
   });

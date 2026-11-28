@@ -62,7 +62,7 @@
   },
   "ci-checks/compose/compose.test.mjs": {
     "stylistic/max-len": {
-      "count": 3
+      "count": 2
     }
   },
   "ci-checks/e2e-areas/areas.mjs": {

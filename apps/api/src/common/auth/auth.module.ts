@@ -1,8 +1,10 @@
-import type { Locale } from '@ab/core';
-import { Controller, Get, Global, Module } from '@nestjs/common';
+import { authMeRoutes, authMeSchema, type AuthMe } from '@ab/shared';
+import { Controller, Global, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { loadEnv } from '@/config/env/env';
+import { Route } from '@/common/http/route';
+import { asResponse } from '@/common/http/returns';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { DB, type Db } from '@/common/db/db.module';
 import { AuthGuard, TOKEN_VERIFIER } from './auth.guard';
@@ -14,29 +16,22 @@ import { PERMISSION_RESOLVER } from './permissions';
 import { TestFlagRepo, TestFlagReader } from './test-flag';
 import { createTokenVerifier, type AuthUser } from './verify-token';
 
-@ApiTags('auth')
 @ApiBearerAuth()
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private readonly zones: MeZoneRepo) {}
 
   /** tz null means the device's zone, locale null keeps the app's language (docs/34 §2). */
-  @Get('me')
+  @Route(authMeRoutes.me)
   @SignedIn()
   async me(@CurrentUser() user: AuthUser): Promise<AuthMe> {
     const { isTest = false, ...me } = user;
     const reads = [this.zones.zoneOf(user.id), this.zones.localeOf(user.id)] as const;
     const [tz, locale] = await Promise.all(reads);
-    return { ...me, permissions: user.permissions ?? [], tz, locale, is_test: isTest };
+    const permissions = [...(user.permissions ?? [])];
+    return asResponse(authMeSchema, { ...me, permissions, tz, locale, is_test: isTest });
   }
 }
-
-type AuthMe = Omit<AuthUser, 'isTest'> & {
-  permissions: readonly string[];
-  tz: string | null;
-  locale: Locale | null;
-  is_test: boolean;
-};
 
 /**
  * Global so the roles module can clear the permission cache after a change, PushAudience can check

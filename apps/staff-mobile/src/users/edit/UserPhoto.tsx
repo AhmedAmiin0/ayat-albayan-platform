@@ -1,5 +1,5 @@
 import type { UserDetail } from '@ab/shared';
-import { StaffPhotoControl } from '@/account';
+import { StaffPhotoControl, userPhotos } from '@/account';
 import { pathKey, Avatar } from '@ab/mobile-kit';
 import { USERS_KEY } from '@/users/shared/api';
 
@@ -17,7 +17,7 @@ export function UserPhoto({ user, canWrite }: { user: UserDetail; canWrite: bool
       <StaffPhotoControl
         name={user.full_name}
         id={user.id}
-        base={`/users/${user.id}/avatar`}
+        calls={userPhotos}
         photo={photo}
         invalidate={PHOTO_KEYS}
       />

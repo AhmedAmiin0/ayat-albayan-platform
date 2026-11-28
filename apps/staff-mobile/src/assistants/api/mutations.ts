@@ -1,7 +1,7 @@
-import type { AssistantStatementView, AssistantTermsInput, AssistantTermsView } from '@ab/money';
+import type { AssistantStatementView, AssistantTermsInput } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiSend } from '@ab/mobile-kit';
-import { ASSISTANTS_KEY } from './api';
+import { ASSISTANTS_KEY, calls } from './api';
 
 // The admin's writes (web api.ts + the dialogs): each re-reads everything under ['assistant-pay'] on success.
 
@@ -15,7 +15,7 @@ export function useSaveTerms() {
   const refresh = useRefresh();
   return useMutation({
     mutationFn: (input: { assistantId: string; body: AssistantTermsInput }) =>
-      apiSend<AssistantTermsView>('PUT', `/assistant-pay/terms/${input.assistantId}`, input.body),
+      calls.saveTerms(input.assistantId, input.body),
     onSuccess: refresh,
   });
 }
@@ -25,7 +25,7 @@ export function useVoidCommission() {
   const refresh = useRefresh();
   return useMutation({
     mutationFn: (input: { id: string; reason: string }) =>
-      apiSend<{ id: string }>('POST', `/assistant-pay/commissions/${input.id}/void`, { reason: input.reason }),
+      calls.voidCommission(input.id, input.reason),
     onSuccess: refresh,
   });
 }

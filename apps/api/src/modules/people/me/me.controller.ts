@@ -1,15 +1,13 @@
 import { pushTokenRoutes as routes } from '@ab/shared';
 import { Controller, HttpCode } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { MeService } from './me.service';
 
 /** The admin app's device registration (R-MOB-01). Always the caller's own profile, never an id. */
-@ApiTags('me')
 @ApiBearerAuth()
-@Permissions('notifications.push')
 @Controller()
 export class MeController {
   constructor(private readonly me: MeService) {}

@@ -4,22 +4,13 @@ import {
   courseStopBody,
   stopDoneLines,
   type StopDone,
-  courseMoveBase,
-  courseMoveErrorCode,
-  courseMoveViewPath,
-  courseStopPath,
-  courseStopPreviewPath,
-  courseTeacherOptionsPath,
+  courseStopCalls,
+  courseTeacherCalls,
+  courseTimesCalls,
   type CourseMoveKind,
   type StopMoneyAsk,
 } from '@ab/client-core';
-import type {
-  CourseStopPreview,
-  CourseStopRequest,
-  CourseStopResult,
-  ProfileCourseView,
-} from '@ab/shared';
-import type { BookingTeacherOption } from '@ab/schedule';
+import type { CourseStopRequest, CourseStopResult } from '@ab/shared';
 import { queryOptions, useMutation, useQueryClient } from '@tanstack/react-query';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t, apiFetch, apiSend } from '@ab/web-kit';
@@ -33,47 +24,31 @@ interface Course {
   subscriptionId: string;
 }
 
+const stops = courseStopCalls({ apiFetch, apiSend });
+const teacherMoves = courseTeacherCalls({ apiFetch, apiSend });
+const moves = { teacher: teacherMoves, times: courseTimesCalls({ apiFetch, apiSend }) };
+
 export const courseStopPreviewQuery = (input: Course) =>
   queryOptions({
     queryKey: courseKeys.stopPreview(input),
-    queryFn: () => apiFetch<CourseStopPreview>(courseStopPreviewPath(input)),
+    queryFn: () => stops.preview(input.studentId, { subscriptionId: input.subscriptionId }),
   });
 
 export const stopCourse = (studentId: string, body: CourseStopRequest) =>
-  apiSend<CourseStopResult>('POST', courseStopPath(studentId), body);
+  stops.stop(studentId, body);
 
 export const profileCourseQuery = (input: Course & { kind: CourseMoveKind }) =>
   queryOptions({
     queryKey: courseKeys.move(input, input.kind),
-    queryFn: () => apiFetch<ProfileCourseView>(courseMoveViewPath(input)),
+    queryFn: () =>
+      moves[input.kind].view(input.studentId, { subscriptionId: input.subscriptionId }),
   });
 
 export const courseTeachersQuery = (studentId: string) =>
   queryOptions({
     queryKey: courseKeys.teachers(studentId),
-    queryFn: () => apiFetch<BookingTeacherOption[]>(courseTeacherOptionsPath(studentId)),
+    queryFn: () => teacherMoves.teachers(studentId),
   });
-
-const OWN = new Set([
-  'same_teacher',
-  'teacher_inactive',
-  'teacher_not_found',
-  'subscription_not_found',
-]);
-
-/** The CourseChangeForm's routes for this student and kind, and the profile's own refusal codes. */
-export const moveTarget = (input: {
-  studentId: string;
-  kind: CourseMoveKind;
-  teacherId?: string;
-}) => ({
-  base: courseMoveBase(input),
-  teacherId: input.teacherId,
-  errorText: (error: unknown): string | null => {
-    const code = courseMoveErrorCode(error);
-    return OWN.has(code) ? t.courseActions.errors[code] : null;
-  },
-});
 
 /**
  * After a write: the actions, the student (file, lists, status chip), the money and the lessons.

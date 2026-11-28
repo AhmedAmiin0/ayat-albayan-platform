@@ -1,5 +1,4 @@
-import { payoutListSchema, type PayoutView } from '@ab/money';
-import { parseResponse } from '@ab/client-core';
+import type { PayoutView } from '@ab/money';
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
@@ -61,7 +60,7 @@ describe('«مستحقاتي» (R-TCH-04)', () => {
     expect(screen.getByText(monthLabel('2026-08'))).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.payouts.approve })).toBeNull();
     expect(screen.queryByRole('button', { name: t.payouts.markPaid })).toBeNull();
-    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/payouts', { schema: payoutListSchema });
+    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/payouts');
   });
 
   it('none yet says so', async () => {
@@ -72,9 +71,7 @@ describe('«مستحقاتي» (R-TCH-04)', () => {
 
   it('an answer that breaks the contract shows the load error with a retry', async () => {
     const broken = [{ ...payout({}), amount: '700' }];
-    apiFetch.mockImplementation(async (path: string, init: { schema: typeof payoutListSchema }) =>
-      parseResponse(init.schema, broken, path),
-    );
+    apiFetch.mockResolvedValue(broken);
     renderWithClient(<MyPayouts />);
     expect(await screen.findByText(t.common.loadFailed, { exact: false })).toBeTruthy();
     expect(screen.getByRole('button', { name: t.common.retry })).toBeTruthy();

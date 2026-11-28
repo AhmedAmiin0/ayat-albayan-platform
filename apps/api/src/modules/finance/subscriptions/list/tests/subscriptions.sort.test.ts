@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
-import { subscriptionListQuery } from '@/modules/finance/subscriptions/subscriptions.dto';
+import { subscriptionListQuerySchema } from '@ab/shared';
 import { listSelect } from '@/modules/finance/subscriptions/list/subscriptions.list-query';
 import { SubscriptionsRepo } from '@/modules/finance/subscriptions/shared/subscriptions.repo';
 
@@ -35,8 +35,8 @@ describe('GET /subscriptions sort + filters (R-NFR-08)', () => {
   });
 
   it('schema: allowlisted keys; balance (derived) is not one', () => {
-    expect(subscriptionListQuery.parse({ sort: 'price', dir: 'desc' })).toMatchObject({ sort: 'price', dir: 'desc' });
-    expect(subscriptionListQuery.safeParse({ sort: 'balance' }).success).toBe(false);
-    expect(subscriptionListQuery.safeParse({ package: 'huge' }).success).toBe(false);
+    expect(subscriptionListQuerySchema.parse({ sort: 'price', dir: 'desc' })).toMatchObject({ sort: 'price', dir: 'desc' });
+    expect(subscriptionListQuerySchema.safeParse({ sort: 'balance' }).success).toBe(false);
+    expect(subscriptionListQuerySchema.safeParse({ package: 'huge' }).success).toBe(false);
   });
 });

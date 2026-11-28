@@ -127,11 +127,6 @@
       "count": 1
     }
   },
-  "src/lessons/views.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/schemas/booking-extras.ts": {
     "complexity": {
       "count": 2

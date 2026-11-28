@@ -9,6 +9,8 @@ import {
 } from './course-card';
 
 const byStudent = z.object({ id: z.uuid() });
+const tags = ['course-actions'] as const;
+const reschedule = { permissions: ['courses.reschedule'], tags } as const;
 
 /** The course card and extending its schedule, written once for the api and its clients. */
 export const courseCardRoutes = {
@@ -17,6 +19,8 @@ export const courseCardRoutes = {
     path: '/students/:id/course-card',
     params: byStudent,
     response: courseCardSchema,
+    permissions: ['students.read'],
+    tags,
   }),
   /** The same card for an assistant, any student. */
   salesCard: defineRoute({
@@ -24,6 +28,8 @@ export const courseCardRoutes = {
     path: '/sales/students/:id/course-card',
     params: byStudent,
     response: courseCardSchema,
+    permissions: ['self.sales_academy'],
+    tags,
   }),
   /** Without `subscriptionId`: the current package. */
   extendPreview: defineRoute({
@@ -32,6 +38,7 @@ export const courseCardRoutes = {
     params: byStudent,
     query: courseExtendQuerySchema,
     response: courseExtendPreviewSchema,
+    ...reschedule,
   }),
   /** 200; with nothing left to book it answers inserted 0. */
   extend: defineRoute({
@@ -40,5 +47,6 @@ export const courseCardRoutes = {
     params: byStudent,
     body: courseExtendSchema,
     response: courseExtendResultSchema,
+    ...reschedule,
   }),
 };

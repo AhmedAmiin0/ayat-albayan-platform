@@ -1,4 +1,3 @@
-import type { Tables } from '@ab/db';
 import {
   OCCUPYING_LESSON_STATUSES,
   type AvailabilitySlot,
@@ -9,11 +8,10 @@ import {
 import { RIYADH_TZ } from '@ab/time';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import type { AvailabilityRow } from '@ab/shared';
+import type { AvailabilityRow, TimeOff } from '@ab/shared';
 import type { BusyLesson } from '@ab/schedule';
 import { maybe, one, pgError } from '@/common/db/errors';
 import { TeachersSettings } from '@/modules/people/teachers/teachers.settings';
-export type TimeOff = Tables<'teacher_time_off'>;
 type Owned = { teacherId: string; actorId: string };
 
 /** Postgres `time` comes back as "HH:MM:SS"; the API speaks "HH:MM" like the input schema. */

@@ -8,10 +8,8 @@ export {
   courseCardKey,
   type CourseExtendErrorCode,
   courseExtendErrorCode,
-  courseResumePreviewPath,
   extendOffered,
   readLessonAt,
-  parseResumePreview,
   statusRoute,
   type StatusRoute,
 } from './course-card';

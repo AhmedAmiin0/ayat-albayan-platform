@@ -89,7 +89,7 @@ describe('system-role parity with the old @Roles table', () => {
   });
 
   it('pricing.read gates the pricing routes only, for admin and sales', () => {
-    const gated = routes.filter((r) => r.permission === 'pricing.read').map((r) => r.key).sort();
+    const gated = routes.filter((r) => permissionKeys(r).join('|') === 'pricing.read').map((r) => r.key).sort();
     expect(gated).toEqual(['catalog', 'list', 'quote'].map((h) => `PricingController.${h}`));
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('pricing.read'))).toEqual(['admin', 'sales']);
   });
@@ -103,7 +103,7 @@ describe('system-role parity with the old @Roles table', () => {
 
   // Course pause has its own routes only, admin and sales (docs/16 row 37c).
   it('courses.pause gates exactly the course pause routes, for admin and sales', () => {
-    const keys = routes.filter((r) => r.permission === 'courses.pause').map((r) => r.key).sort();
+    const keys = routes.filter((r) => permissionKeys(r).join('|') === 'courses.pause').map((r) => r.key).sort();
     // Resume previews what it does before acting (resumePreview).
     const handlers = ['preview', 'resume', 'resumePreview', 'start', 'state', 'until'];
     expect(keys).toEqual(handlers.map((h) => `CoursePauseController.${h}`));

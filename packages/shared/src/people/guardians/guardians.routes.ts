@@ -17,18 +17,24 @@ export const guardianRoutes = {
     path: '/guardians',
     query: peopleListQuerySchema,
     response: pageOf(guardianViewSchema),
+    permissions: ['guardians.read'],
+    tags: ['guardians'],
   }),
   get: defineRoute({
     method: 'GET',
     path: '/guardians/:id',
     params: byId,
     response: guardianDetailSchema,
+    permissions: ['guardians.read'],
+    tags: ['guardians'],
   }),
   create: defineRoute({
     method: 'POST',
     path: '/guardians',
     body: guardianCreateBodySchema,
     response: guardianViewSchema,
+    permissions: ['guardians.write'],
+    tags: ['guardians'],
   }),
   update: defineRoute({
     method: 'PATCH',
@@ -36,12 +42,16 @@ export const guardianRoutes = {
     params: byId,
     body: guardianUpdateBodySchema,
     response: guardianViewSchema,
+    permissions: ['guardians.write'],
+    tags: ['guardians'],
   }),
   remove: defineRoute({
     method: 'DELETE',
     path: '/guardians/:id',
     params: byId,
     response: 'empty',
+    permissions: ['guardians.write'],
+    tags: ['guardians'],
   }),
   /** The family's second number only; 404 phone_not_found for any other. */
   removePhone: defineRoute({
@@ -49,5 +59,7 @@ export const guardianRoutes = {
     path: '/guardians/:id/phones/:phone',
     params: byId.extend({ phone: phoneE164 }),
     response: 'empty',
+    permissions: ['guardians.write'],
+    tags: ['guardians'],
   }),
 };

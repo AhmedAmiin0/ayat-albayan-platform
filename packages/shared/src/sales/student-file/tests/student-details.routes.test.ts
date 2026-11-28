@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { salesStudentDetails, salesStudentSubscription } from '../../../testing/sales-student';
+import { salesStudentDetails, salesStudentSubscription } from '../../../testing/sales/sales-student';
 import { salesStudentFileRoutes as routes } from '../student-file.routes';
 
 const ID = '11111111-1111-4111-8111-111111111111';

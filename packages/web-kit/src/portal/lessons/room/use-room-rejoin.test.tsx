@@ -35,7 +35,7 @@ describe('the room overlay’s own «ادخل مرة أخرى»', () => {
     expect(props().context?.title).toBe(t.roomFlow.title.replace('{student}', 'سلمى').replace('{teacher}', 'أبرار'));
     act(() => props().onRejoin?.());
     expect(await screen.findByText('t2')).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lessons/l1/join');
+    expect(apiSend).toHaveBeenCalledWith('POST', '/portal/students/s1/lessons/l1/join', undefined);
   });
 
   it('410 lesson_ended makes it final; another refusal stays in its own words', async () => {

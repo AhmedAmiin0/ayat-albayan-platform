@@ -1,4 +1,4 @@
-import { adminTaskRoutes as routes } from '@ab/shared';
+import { adminTaskRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { AdminTaskCalls } from './admin-tasks-api.types';
 
@@ -6,7 +6,7 @@ import type { AdminTaskCalls } from './admin-tasks-api.types';
 export function adminTaskCalls(client: ApiClient): AdminTaskCalls {
   const call = callWith(client);
   return {
-    list: (query) => call({ route: routes.list, query }),
-    done: (id) => call({ route: routes.done, params: { id } }),
+    list: (query) => call({ route: adminTaskRoutes.list, query }),
+    done: (id) => call({ route: adminTaskRoutes.done, params: { id } }),
   };
 }

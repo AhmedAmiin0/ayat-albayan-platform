@@ -10,7 +10,7 @@ import { renderWithQuery } from '@/test/query';
 import { daysText } from '@/sales-course/lib/course-days';
 import { fakeCourseApi, isDisabled, pressEnabled } from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen';
-import { bookedCourse, courseView } from '@/sales-course/testing/fixtures';
+import { bookedCourse, courseView, SUB_ID } from '@/sales-course/testing/fixtures';
 
 const R24 = { tz: 'Asia/Riyadh', cycle: '24' } as const;
 
@@ -39,7 +39,7 @@ beforeEach(() => {
 afterEach(() => jest.useRealTimers());
 
 test('a previous course and a start weeks in the past: the days land in the coming week, from today', async () => {
-  const sub = { id: 's', package: '8' as const, duration: 45 as const, lessons_total: 8, starts_on: '2026-09-01' };
+  const sub = { id: SUB_ID, package: '8' as const, duration: 45 as const, lessons_total: 8, starts_on: '2026-09-01' };
   serve({ subscription: sub, previous: bookedCourse({ endsOn: '2026-08-20' }) });
   await renderWithQuery(<CourseScreen />);
   const hint = t.booking.courseChange.continueHint

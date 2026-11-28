@@ -5,7 +5,8 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { at, run } from '../roll-fake.mjs';
 
-const UP = ['ayat-worker', 'ayat-pdf', 'ayat-api-a', 'ayat-api-b', 'ayat-lb'];
+const COPIES = ['ayat-api-a', 'ayat-api-b', 'ayat-api-c', 'ayat-api-d'];
+const UP = ['ayat-worker', 'ayat-pdf', ...COPIES, 'ayat-lb'];
 const SHA = `${'b'.repeat(40)}\n`;
 const files = { 'src/.release-sha': SHA, '.api.sha': `${'a'.repeat(40)}\n` };
 const ups = (log) => log.filter((l) => l.includes(' up -d --no-deps ayat-'));
@@ -21,8 +22,7 @@ test('--no-build: no build, the same roll without forcing a recreate; .api.sha k
   const r = run('roll.sh', { args: ['--no-build'], up: UP, files });
   assert.equal(r.code, 0, r.out);
   assert.ok(at(r.log, ' build') < 0, r.log.join('\n'));
-  const order = ['ayat-worker', 'ayat-pdf', 'ayat-api-a', 'ayat-api-b', 'ayat-lb'];
-  assert.deepEqual(ups(r.log).map((l) => l.split(' ').at(-1)), ['ayat-redis', ...order]);
+  assert.deepEqual(ups(r.log).map((l) => l.split(' ').at(-1)), ['ayat-redis', ...UP]);
   assert.ok(ups(r.log).every((l) => !l.includes('--force-recreate')));
   assert.equal(r.text('.api.sha'), SHA);
 });
@@ -31,7 +31,7 @@ test('--env-only: no build, every API container recreated to read the new .env',
   const r = run('roll.sh', { args: ['--env-only'], up: UP, files });
   assert.equal(r.code, 0, r.out);
   assert.ok(at(r.log, ' build') < 0);
-  for (const svc of ['ayat-worker', 'ayat-pdf', 'ayat-api-a', 'ayat-api-b'])
+  for (const svc of ['ayat-worker', 'ayat-pdf', ...COPIES])
     assert.ok(at(r.log, `up -d --no-deps --force-recreate ${svc}`) >= 0, svc);
 });
 

@@ -85,3 +85,10 @@ test('offline with a cached list: rows stay, no error (R-MOB-03)', async () => {
   expect(screen.getByText('هدى')).toBeTruthy();
   expect(screen.queryByText(t.common.error)).toBeNull();
 });
+
+test('an answer that is not a page of student rows shows the error, not a broken row', async () => {
+  mockApiFetch.mockResolvedValue({ items: [{ id: 's1', name: 'هدى' }], total: 1, page: 1, pageSize: 25 });
+  await renderWithQuery(<StudentsScreen />);
+  expect(await screen.findByRole('alert')).toBeTruthy();
+  expect(screen.queryByText('هدى')).toBeNull();
+});

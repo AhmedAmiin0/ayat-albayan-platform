@@ -1,4 +1,4 @@
-import type { SubscriptionView } from '../ledger/views';
+import type { SubscriptionView } from '../ledger/subscription-view.schemas';
 import {
   CUSTOM_COUNT_DEFAULT,
   CUSTOM_COUNT_MAX,

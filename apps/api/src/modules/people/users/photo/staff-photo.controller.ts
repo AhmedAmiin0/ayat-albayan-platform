@@ -1,24 +1,19 @@
 import {
-  avatarSetSchema,
-  avatarUploadSchema,
+  teacherPhotoRoutes as teacher,
+  userPhotoRoutes as user,
   type SignedUpload,
   type StaffPhotoView,
 } from '@ab/shared';
-import { Controller, Delete, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
-import { z } from 'zod';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { StaffPhotoAdmin } from '@/common/storage/avatars/staff-photo-admin';
 import { UserAccess } from '@/modules/people/users/users.access';
 import { assertMayTouch } from '@/modules/people/users/users.rules';
 
-const uuid = new ParseUUIDPipe();
-type Kind = 'teacher' | 'user';
-
 /** Same upload flow as self photos; users.write and the usual login rules; staff only. */
-@ApiTags('staff-photos')
 @ApiBearerAuth()
 @Controller()
 export class StaffPhotoController {
@@ -27,75 +22,59 @@ export class StaffPhotoController {
     private readonly access: UserAccess,
   ) {}
 
-  @Post('teachers/:id/avatar/upload-url')
-  @Permissions('teachers.write')
+  @Route(teacher.uploadUrl)
   teacherUploadUrl(
-    @Param('id', uuid) id: string,
-    @ZodBody(avatarUploadSchema) body: z.output<typeof avatarUploadSchema>,
+    @RouteInput() { params, body }: RouteInputOf<typeof teacher.uploadUrl>,
   ): Promise<SignedUpload> {
-    return this.photos.uploadUrl({ kind: 'teacher', id }, body);
+    return this.photos.uploadUrl({ kind: 'teacher', id: params.id }, body);
   }
 
-  @Put('teachers/:id/avatar')
-  @Permissions('teachers.write')
+  @Route(teacher.set)
   teacherSet(
-    @Param('id', uuid) id: string,
-    @ZodBody(avatarSetSchema) body: z.output<typeof avatarSetSchema>,
-    @CurrentUser() user: AuthUser,
+    @RouteInput() { params, body }: RouteInputOf<typeof teacher.set>,
+    @CurrentUser() actor: AuthUser,
   ): Promise<StaffPhotoView> {
-    return this.set({ kind: 'teacher', id }, { body, user });
+    const who = { kind: 'teacher', id: params.id } as const;
+    return this.photos.set(who, { path: body.path, actorId: actor.id });
   }
 
-  @Delete('teachers/:id/avatar')
-  @Permissions('teachers.write')
+  @Route(teacher.remove)
   teacherRemove(
-    @Param('id', uuid) id: string,
-    @CurrentUser() user: AuthUser,
+    @RouteInput() { params }: RouteInputOf<typeof teacher.remove>,
+    @CurrentUser() actor: AuthUser,
   ): Promise<StaffPhotoView> {
-    return this.photos.remove({ kind: 'teacher', id }, user.id);
+    return this.photos.remove({ kind: 'teacher', id: params.id }, actor.id);
   }
 
-  @Post('users/:id/avatar/upload-url')
-  @Permissions('users.write')
+  @Route(user.uploadUrl)
   async userUploadUrl(
-    @Param('id', uuid) id: string,
-    @ZodBody(avatarUploadSchema) input: z.output<typeof avatarUploadSchema>,
-    @CurrentUser() user: AuthUser,
+    @RouteInput() { params, body }: RouteInputOf<typeof user.uploadUrl>,
+    @CurrentUser() actor: AuthUser,
   ): Promise<SignedUpload> {
-    await this.mayTouch(id, user);
-    return this.photos.uploadUrl({ kind: 'user', id }, input);
+    await this.mayTouch(params.id, actor);
+    return this.photos.uploadUrl({ kind: 'user', id: params.id }, body);
   }
 
-  @Put('users/:id/avatar')
-  @Permissions('users.write')
+  @Route(user.set)
   async userSet(
-    @Param('id', uuid) id: string,
-    @ZodBody(avatarSetSchema) body: z.output<typeof avatarSetSchema>,
-    @CurrentUser() user: AuthUser,
+    @RouteInput() { params, body }: RouteInputOf<typeof user.set>,
+    @CurrentUser() actor: AuthUser,
   ): Promise<StaffPhotoView> {
-    await this.mayTouch(id, user);
-    return this.set({ kind: 'user', id }, { body, user });
+    await this.mayTouch(params.id, actor);
+    return this.photos.set({ kind: 'user', id: params.id }, { path: body.path, actorId: actor.id });
   }
 
-  @Delete('users/:id/avatar')
-  @Permissions('users.write')
+  @Route(user.remove)
   async userRemove(
-    @Param('id', uuid) id: string,
-    @CurrentUser() user: AuthUser,
+    @RouteInput() { params }: RouteInputOf<typeof user.remove>,
+    @CurrentUser() actor: AuthUser,
   ): Promise<StaffPhotoView> {
-    await this.mayTouch(id, user);
-    return this.photos.remove({ kind: 'user', id }, user.id);
+    await this.mayTouch(params.id, actor);
+    return this.photos.remove({ kind: 'user', id: params.id }, actor.id);
   }
 
-  private set(
-    who: { kind: Kind; id: string },
-    req: { body: z.output<typeof avatarSetSchema>; user: AuthUser },
-  ): Promise<StaffPhotoView> {
-    return this.photos.set(who, { path: req.body.path, actorId: req.user.id });
-  }
-
-  private async mayTouch(id: string, user: AuthUser): Promise<void> {
+  private async mayTouch(id: string, actor: AuthUser): Promise<void> {
     const { state, target } = await this.access.target(id);
-    assertMayTouch({ id: user.id, permissions: user.permissions ?? [] }, state, target);
+    assertMayTouch({ id: actor.id, permissions: actor.permissions ?? [] }, state, target);
   }
 }

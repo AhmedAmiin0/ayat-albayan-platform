@@ -1,1 +1,1 @@
-export { FamilyRootLayout } from './FamilyRootLayout';
+export { ObservedRootLayout } from './observed-root';

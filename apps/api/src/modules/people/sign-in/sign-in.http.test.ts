@@ -1,4 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { IS_PUBLIC, OWN_PUBLIC } from '@/common/auth/decorators';
+import { SignInController } from './sign-in.controller';
 import { PHONES } from './sign-in.fakes.accounts';
 import { signInApp } from './sign-in.test-app';
 
@@ -100,5 +102,18 @@ describe('public sign-in routes (docs/30 §6)', () => {
       nextIp(),
     );
     expect(res.statusCode).toBe(204);
+  });
+});
+
+describe('sign-in access', () => {
+  const handlers = Object.getOwnPropertyNames(SignInController.prototype)
+    .filter((name) => name !== 'constructor')
+    .map((name): unknown => Reflect.get(SignInController.prototype, name));
+  const marks = (key: string) => handlers.map((h) => Reflect.getOwnMetadata(key, Object(h)));
+
+  it('takes its public flag from each route object, not from a class or handler mark', () => {
+    expect(Reflect.getOwnMetadata(IS_PUBLIC, SignInController)).toBeUndefined();
+    expect(marks(IS_PUBLIC)).toEqual(Array(8).fill(true));
+    expect(marks(OWN_PUBLIC)).toEqual(Array(8).fill(undefined));
   });
 });

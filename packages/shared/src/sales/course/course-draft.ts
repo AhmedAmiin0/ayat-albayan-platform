@@ -22,8 +22,3 @@ export const courseDraftSavedSchema = z.discriminatedUnion('state', [
   z.object({ state: z.literal('booked'), booking: bookingResultSchema }),
 ]);
 export type CourseDraftSaved = z.infer<typeof courseDraftSavedSchema>;
-
-/** SalesCourseView.draft: the picks saved before the payment (the wizard prefills them). */
-export interface CourseDraftInfo {
-  saved_at: string;
-}

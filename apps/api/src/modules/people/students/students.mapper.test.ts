@@ -1,4 +1,3 @@
-import type { Tables } from '@ab/db';
 import { describe, expect, it } from 'vitest';
 import {
   studentNameOrCodeFilter,
@@ -9,6 +8,7 @@ import {
   toStudentPatch,
   type StudentProfileRow,
 } from './students.mapper';
+import { family, studentRow } from '@/modules/people/students/testing/students.rows';
 
 describe('students mapper', () => {
   it('insert: drops request-only keys, sets guardian, name_normalized, created_by (R-STU-01, R-STU-03)', () => {
@@ -47,6 +47,7 @@ describe('students mapper', () => {
       created_at: '2026-10-01T00:00:00Z',
       package_remaining: 2,
       has_weekly: true,
+      is_test: false,
     };
     const out = toListItem({ ...row, guardian: { name: 'ام جود', phone_e164: '+966501234567' }, teacher: null });
     expect(out).toEqual({ ...row, guardian_name: 'ام جود', guardian_phone: '+966501234567', teacher_name: null });
@@ -54,12 +55,11 @@ describe('students mapper', () => {
 
   describe('profile (R-STU-05)', () => {
     const sib = (id: string) => ({ id, code: `AB-${id}`, name: id, status: 'trial' as const });
-    const base = {
-      id: 's1',
-      meeting_link_override: null,
-      guardian: { id: 'g1', name: 'ام جود', phone_e164: '+966501234567', students: [sib('s1'), sib('s2')] },
-      teacher: { id: 't1', display_name_ar: 'أبرار', meeting_link: 'https://meet.google.com/abc' },
-    } as Partial<Tables<'students'>> as StudentProfileRow;
+    const base: StudentProfileRow = {
+      ...studentRow('s1'),
+      guardian: { ...family, students: [sib('s1'), sib('s2')] },
+      teacher: { id: 't1', display_name_ar: 'أبرار', display_name_en: null, meeting_link: 'https://meet.google.com/abc' },
+    };
 
     it("meeting link defaults to the teacher's", () => {
       expect(toProfile(base).meeting_link).toBe('https://meet.google.com/abc');
