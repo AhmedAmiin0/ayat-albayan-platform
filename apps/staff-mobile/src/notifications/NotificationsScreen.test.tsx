@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { mockCall } from '@ab/testing/mock-call';
 import { router } from 'expo-router';
 import { t } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
@@ -8,10 +9,13 @@ import { NotificationsScreen } from './NotificationsScreen';
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
+const mockApi = mockCall();
+mockApi.onRead((request) => mockApiFetch(request.path));
+mockApi.onWrite((request) => mockApiSend(request.method, request.path, request.body));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
   apiFetch: (p: string) => mockApiFetch(p),
-  apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
 
 const B = t.bell.mobile;

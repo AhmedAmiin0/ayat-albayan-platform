@@ -1,11 +1,18 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { mockCall } from '@ab/testing/mock-call';
 import { t, isolate } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { commissionPage, earnings, myCommission, myPayment } from '@/sales-money/testing/fixtures';
 import { MyMoneyScreen } from '@/sales-money/screens/MyMoneyScreen/MyMoneyScreen';
 
 const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+const mockApi = mockCall();
+mockApi.onRead((request) => mockApiFetch(request.path));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
+}));
 const mockParams = jest.fn((): { view?: string } => ({}));
 jest.mock('expo-router', () => ({ router: { back: jest.fn() }, useLocalSearchParams: () => mockParams() }));
 

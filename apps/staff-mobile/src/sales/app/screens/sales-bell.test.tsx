@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
+import { mockCall } from '@ab/testing/mock-call';
 import { router } from 'expo-router';
 import { AssistantHomeScreen } from '@/assistant-app/AssistantHomeScreen';
 import { InboxScreen } from '@/inbox/screens/InboxScreen';
@@ -8,7 +9,13 @@ import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 
 const mockApiFetch = jest.fn();
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+const mockApi = mockCall();
+mockApi.onRead((request) => mockApiFetch(request.path));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
+}));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 const page = { items: [], total: 0, page: 1, pageSize: 20, unread: 2 };

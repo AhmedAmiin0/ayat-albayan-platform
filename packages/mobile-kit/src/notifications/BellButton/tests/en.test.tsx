@@ -9,7 +9,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('../../../lib/http/api', () => ({
   ...jest.requireActual('../../../lib/http/api'),
-  apiFetch: jest.fn(async () => ({ items: [], total: 0, page: 1, pageSize: 20, unread: 4 })),
+  call: jest.fn(async () => ({ items: [], total: 0, page: 1, pageSize: 20, unread: 4 })),
 }));
 
 test('the bell reads in English', async () => {
