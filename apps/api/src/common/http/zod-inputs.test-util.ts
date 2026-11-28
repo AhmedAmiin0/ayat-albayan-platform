@@ -3,7 +3,7 @@ import { ROUTE_ARGS_METADATA } from '@nestjs/common/constants';
 import { RouteParamtypes } from '@nestjs/common/enums/route-paramtypes.enum';
 import { z } from 'zod';
 
-// Test-only: a handler's `@ZodBody` / `@ZodParam` pipe, so a test that calls the controller
+// Test-only: a handler's `@ZodParam` pipe, so a test that calls the controller
 // directly still proves the input is parsed (Nest runs the pipe; a direct call does not).
 
 const pipeSchema = z.custom<PipeTransform>(
@@ -27,17 +27,6 @@ const runPipes =
     for (const pipe of pipes) value = await pipe.transform(value, { type });
     return value;
   };
-
-const isBody = (key: string): boolean => key.startsWith(`${RouteParamtypes.BODY}:`);
-
-/** Runs the pipes of `controller.method`'s @Body parameter on a raw body. */
-export function bodyPipeOf<T>(
-  controller: Type<T>,
-  method: keyof T & string,
-): (raw: unknown) => Promise<unknown> {
-  const pipes = argsOf(controller, method).find(([key]) => isBody(key))?.[1].pipes ?? [];
-  return runPipes(pipes, 'body');
-}
 
 const isParam = (key: string): boolean => key.startsWith(`${RouteParamtypes.PARAM}:`);
 
