@@ -38,4 +38,17 @@ describe('leadReadRoutes', () => {
     ];
     for (const row of bad) expect(routes.list.response.safeParse(page([row])).success).toBe(false);
   });
+
+  it('answers a paused lead with who paused it and the follow-up note', () => {
+    const row = { ...ITEM, follow_up_paused_by: 'lead', follow_up_note: 'no_slots' };
+    const read = routes.list.response.parse(page([row])).items[0];
+    expect([read?.follow_up_paused_by, read?.follow_up_note]).toEqual(['lead', 'no_slots']);
+  });
+
+  it('refuses a qualification stored as text or null', () => {
+    for (const qualification of ['{}', null]) {
+      const answer = routes.list.response.safeParse(page([{ ...ITEM, qualification }]));
+      expect(answer.success).toBe(false);
+    }
+  });
 });
