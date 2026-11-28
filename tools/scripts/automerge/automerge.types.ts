@@ -1,4 +1,4 @@
-export type Action = 'merge' | 'comment' | 'skip';
+export type Action = 'merge' | 'update' | 'comment' | 'skip';
 
 export interface Decision {
   action: Action;

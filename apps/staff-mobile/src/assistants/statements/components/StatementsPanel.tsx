@@ -1,10 +1,10 @@
 import { PAYOUT_STATUSES } from '@ab/catalog';
 import { payoutStatusStyle } from '@ab/money';
 import { useState } from 'react';
-import { FlatList, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { currentMonth } from '@/finance/shared/month';
 import { MonthPicker } from '@/finance/shared/MonthPicker';
-import { t } from '@ab/mobile-kit';
+import { LazyList, t } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useStatements } from '@/assistants/api/api';
 import { AssistantPills } from '@/assistants/list/AssistantPills';
@@ -45,10 +45,12 @@ export function StatementsPanel({ assistants, assistantId = '', can, onNotice }:
   }
   const ids = chosen ? [chosen] : assistants.map((a) => a.id);
   return (
-    <FlatList
+    <LazyList
       accessibilityLabel={t.assistants.tabs.statements}
-      style={{ flex: 1 }}
-      contentContainerStyle={{ gap: 8, paddingBottom: 24 }}
+      inset={false}
+      gap={8}
+      tabBar={false}
+      endSpace={24}
       data={rows}
       keyExtractor={(s) => s.id}
       renderItem={({ item }) => <StatementItem statement={item} can={can} onPay={() => setPayingId(item.id)} onNotice={onNotice} />}

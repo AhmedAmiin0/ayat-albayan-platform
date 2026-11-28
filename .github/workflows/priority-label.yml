@@ -1,0 +1,28 @@
+name: priority-label
+# A PR from a fix/, hotfix/ or ci/ branch gets the `priority` label: its ci runs first and it merges
+# itself once green (docs/09 «Priority»). No secret: the built-in token only.
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  label:
+    name: priority label
+    # A fork PR's token cannot label; fork heads never merge themselves either.
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository
+      && (startsWith(github.head_ref, 'fix/') || startsWith(github.head_ref, 'hotfix/')
+          || startsWith(github.head_ref, 'ci/'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      pull-requests: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: gh api -X POST "repos/$REPO/issues/$PR/labels" -f 'labels[]=priority' --silent

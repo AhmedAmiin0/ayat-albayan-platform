@@ -4,15 +4,16 @@ import { t, locale } from '@ab/web-kit';
 import { fullTime } from '@/features/messaging/inbox/format';
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog/MessageLog';
+import { mockCall } from '@ab/testing/mock-call';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;
 
 // Day separators at every width; each bubble shows the clock only, the full date in its tooltip (W10).
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  apiFetch: vi.fn(),
-  apiSend: vi.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const base = {
@@ -37,7 +38,9 @@ describe('MessageLog day separators (W10)', () => {
 
   it('fill shell: «أمس» then «اليوم», each before its day', () => {
     render(<MessageLog {...base} messages={[Y, T1, T2]} fill="shell" />);
-    const rows = [...screen.getByRole('log').querySelectorAll('ol > li')].map((li) => li.textContent ?? '');
+    const rows = [...screen.getByRole('log').querySelectorAll('ol > li')].map(
+      (li) => li.textContent ?? '',
+    );
     expect(rows[0]).toBe(t.inbox.dayYesterday);
     expect(rows[1]).toContain('من الأمس');
     expect(rows[2]).toBe(t.inbox.dayToday);
@@ -57,7 +60,9 @@ describe('MessageLog day separators (W10)', () => {
     expect(times[0]?.getAttribute('title')).toBe(fullTime(Y.created_at, C24));
     // The day separators are aria-hidden: the date is read from the bubble's own <time>.
     expect(times[0]?.querySelector('.sr-only')?.textContent).toBe(fullTime(Y.created_at, C24));
-    const visible = within(screen.getAllByRole('article')[0] as HTMLElement).queryAllByText(/أكتوبر|Oct/);
+    const visible = within(screen.getAllByRole('article')[0] as HTMLElement).queryAllByText(
+      /أكتوبر|Oct/,
+    );
     expect(visible.every((el) => el.classList.contains('sr-only'))).toBe(true);
   });
 

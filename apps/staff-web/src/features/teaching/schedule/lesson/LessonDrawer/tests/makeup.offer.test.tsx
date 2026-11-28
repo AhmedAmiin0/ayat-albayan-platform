@@ -6,9 +6,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { JOUD, lesson, SUHAILA } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 vi.mock('@tanstack/react-router', () => ({
   useRouter: () => undefined,
   Link: ({
@@ -26,7 +30,7 @@ const recently = () => new Date(Date.now() - 2 * 86_400_000).toISOString();
 const BOOKED = { lesson_id: 'm-1', starts_at: '2026-10-05T14:00:00.000Z' };
 
 function renderDrawer(l: LessonView) {
-  apiFetch.mockImplementation(async (path: string) =>
+  mockApi.onRead(async ({ path }) =>
     path.startsWith('/invoices?') ? [] : { url: 'https://signed/inv' },
   );
   render(
@@ -37,11 +41,15 @@ function renderDrawer(l: LessonView) {
     </QueryClientProvider>,
   );
 }
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 describe('the drawer of a makeup lesson (R-SCH-10)', () => {
   it('wears «تعويضية» and says which lesson it replaces', () => {
-    renderDrawer({ ...lesson({ id: 'm-1' }), makeup: true, makeup_of: { id: 'l-9', starts_at: '2026-10-01T14:00:00.000Z' } });
+    renderDrawer({
+      ...lesson({ id: 'm-1' }),
+      makeup: true,
+      makeup_of: { id: 'l-9', starts_at: '2026-10-01T14:00:00.000Z' },
+    });
     expect(screen.getByText(t.booking.makeup.tag)).toBeTruthy();
     expect(screen.getByText(t.booking.makeup.missedLabel)).toBeTruthy();
     expect(screen.getByText(t.booking.makeup.noUnit)).toBeTruthy();
@@ -61,19 +69,42 @@ describe('the drawer of a makeup lesson (R-SCH-10)', () => {
 
 describe('«حجز تعويضي» once the makeup exists (R-SCH-10)', () => {
   it('the button gives way to «التعويض محجوز · <date>»', () => {
-    renderDrawer(lesson({ status: 'no_show', starts_at: recently(), students: [{ ...SUHAILA, makeup: BOOKED }] }));
+    renderDrawer(
+      lesson({
+        status: 'no_show',
+        starts_at: recently(),
+        students: [{ ...SUHAILA, makeup: BOOKED }],
+      }),
+    );
     expect(screen.queryByRole('link', { name: t.booking.makeup.action })).toBeNull();
-    expect(screen.getByText(new RegExp(t.booking.makeup.bookedChip.split('{when}')[0] ?? ''))).toBeTruthy();
+    expect(
+      screen.getByText(new RegExp(t.booking.makeup.bookedChip.split('{when}')[0] ?? '')),
+    ).toBeTruthy();
   });
 
   it('in a group each child has their own: one booked, the other still offered', () => {
-    renderDrawer(lesson({ status: 'no_show', starts_at: recently(), students: [{ ...SUHAILA, makeup: BOOKED }, JOUD] }));
-    expect(screen.getByRole('link', { name: `${t.booking.makeup.action} · ${JOUD.name}` })).toBeTruthy();
-    expect(screen.queryByRole('link', { name: `${t.booking.makeup.action} · ${SUHAILA.name}` })).toBeNull();
+    renderDrawer(
+      lesson({
+        status: 'no_show',
+        starts_at: recently(),
+        students: [{ ...SUHAILA, makeup: BOOKED }, JOUD],
+      }),
+    );
+    expect(
+      screen.getByRole('link', { name: `${t.booking.makeup.action} · ${JOUD.name}` }),
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole('link', { name: `${t.booking.makeup.action} · ${SUHAILA.name}` }),
+    ).toBeNull();
   });
 
   it('is not offered after 60 days (the same rule as the app)', () => {
-    renderDrawer(lesson({ status: 'no_show', starts_at: new Date(Date.now() - 61 * 86_400_000).toISOString() }));
+    renderDrawer(
+      lesson({
+        status: 'no_show',
+        starts_at: new Date(Date.now() - 61 * 86_400_000).toISOString(),
+      }),
+    );
     expect(screen.queryByRole('link', { name: t.booking.makeup.action })).toBeNull();
   });
 });

@@ -5,9 +5,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t, publicConfigQuery } from '@ab/web-kit';
 import { scheduleLesson } from '@/features/sales/sales/academy.fixtures';
 import { LessonMeetingLink } from './LessonMeetingLink';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 const LINK = 'https://meet.example.org/room-with-a-long-name?pwd=abc';
 const L = t.studentLists;
@@ -30,10 +34,12 @@ function show(over: Parameters<typeof scheduleLesson>[0]) {
 
 describe('LessonMeetingLink «رابط الحلقة» (sales lesson details, owner 2026-10-26)', () => {
   const writeText = vi.fn();
-  beforeEach(() => Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true }));
+  beforeEach(() =>
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true }),
+  );
   afterEach(() => {
     writeText.mockReset();
-    apiFetch.mockReset();
+    mockApi.reset('read');
   });
 
   it('shows the full URL LTR, opens it in a new tab and copies exactly it', async () => {
@@ -41,7 +47,11 @@ describe('LessonMeetingLink «رابط الحلقة» (sales lesson details, own
     show({ meeting_link: LINK, platform_classroom: false });
     expect(screen.getByText(LINK).getAttribute('dir')).toBe('ltr');
     const open = screen.getByRole('link', { name: L.openLink });
-    expect([open.getAttribute('href'), open.getAttribute('target'), open.getAttribute('rel')]).toEqual([LINK, '_blank', 'noopener noreferrer']);
+    expect([
+      open.getAttribute('href'),
+      open.getAttribute('target'),
+      open.getAttribute('rel'),
+    ]).toEqual([LINK, '_blank', 'noopener noreferrer']);
     fireEvent.click(screen.getByRole('button', { name: L.copyLink }));
     expect((await screen.findByRole('status')).textContent).toBe(L.copied);
     expect(writeText).toHaveBeenCalledWith(LINK);

@@ -6,8 +6,14 @@ import { SCHEDULED } from './edit-time-fixture';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer';
 import { LessonTags } from '@/features/teaching/schedule/lesson/LessonTags';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend: vi.fn() }));
+const mockApi = mockCall();
+mockApi.onRead(async () => []);
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 describe('«عدّل الوقت» next to «غيّر الموعد» (R-SCH-11)', () => {
   it('each button says what it does, in the drawer, before anything is opened', () => {
@@ -24,7 +30,11 @@ describe('«عدّل الوقت» next to «غيّر الموعد» (R-SCH-11)',
 
   it('the «عُدّل الوقت» tag is a note with «كان …» as its tooltip, not a pill that looks pressable', () => {
     const edited = lesson({
-      time_edit: { at: '2026-10-03T08:00:00.000Z', reason: null, was: { starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T13:45:00.000Z' } },
+      time_edit: {
+        at: '2026-10-03T08:00:00.000Z',
+        reason: null,
+        was: { starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T13:45:00.000Z' },
+      },
     });
     render(<LessonTags lesson={edited} />);
     const tag = screen.getByText(t.lessons.timeEdit.tag);

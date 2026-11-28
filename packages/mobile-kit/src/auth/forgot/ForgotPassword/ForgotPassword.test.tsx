@@ -105,3 +105,9 @@ test('too many requests on send says to wait', async () => {
   await fireEvent.press(screen.getByRole('button', { name: t.familyAuth.sendCode }));
   expect(await screen.findByText(t.familyAuth.errors.too_many_requests)).toBeTruthy();
 });
+
+test('the identifier asks for username autofill (the native input reads autoComplete)', async () => {
+  await render(<ForgotPassword onBack={onBack} />);
+  const identifier = await screen.findByLabelText(t.familyAuth.identifier);
+  expect(identifier).toHaveProp('autoComplete', 'username');
+});

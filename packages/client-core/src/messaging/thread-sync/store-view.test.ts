@@ -1,7 +1,13 @@
 import type { MessageView, SyncMessage, ThreadDetail } from '@ab/shared';
 import type { MessageStatus } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
-import { furtherOf, storedStatus, withStoredRows, withStoredTicks } from './store-view';
+import {
+  furtherOf,
+  storedMessageStatus,
+  storedStatus,
+  withStoredRows,
+  withStoredTicks,
+} from './store-view';
 
 const at = (s: number) => `2026-11-06T10:00:${String(s).padStart(2, '0')}.000000+00:00`;
 const msg = (n: number, status: MessageStatus = 'sent'): MessageView =>
@@ -67,5 +73,20 @@ describe('storedStatus / furtherOf: a chats-list row tick from the stored rows',
     expect(furtherOf(is('sent'), is(undefined))(row)).toBe('sent');
     expect(furtherOf(is(undefined), is(undefined))(row)).toBeUndefined();
     expect(furtherOf(is('failed'), is('read'))(row)).toBe('failed');
+  });
+});
+
+describe('storedMessageStatus: a chats-list row tick from the stored message row', () => {
+  const row = { phone_e164: '+1', last_message_id: 'm2', last_status: 'queued' as const };
+  const chats = new Map([['+1', [synced(1, 'read'), synced(2, 'delivered')]]]);
+  const rowsOf = (phone: string) => chats.get(phone) ?? [];
+
+  it("the stored message's status for the row's last message id", () => {
+    expect(storedMessageStatus(rowsOf)(row)).toBe('delivered');
+  });
+
+  it('nothing for another id or a chat the store does not hold', () => {
+    expect(storedMessageStatus(rowsOf)({ ...row, last_message_id: 'm9' })).toBeUndefined();
+    expect(storedMessageStatus(rowsOf)({ ...row, phone_e164: '+2' })).toBeUndefined();
   });
 });

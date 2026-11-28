@@ -6,17 +6,30 @@ import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble/MessageBubble';
 import { emptyText } from '@/features/messaging/inbox/messages/components/MessageContent';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 // A lead's first message arrived as Meta's `unsupported`: no body, no file.
 const NOW = new Date('2026-10-01T12:00:00Z');
-const unsupported = (code: number) => ({ type: 'unsupported', errors: [{ code }], unsupported: { type: 'unknown' } });
+const unsupported = (code: number) => ({
+  type: 'unsupported',
+  errors: [{ code }],
+  unsupported: { type: 'unknown' },
+});
 
 function renderBubble(patch: Partial<MessageView>) {
   renderWithClient(
     <ul>
-      <MessageBubble message={message({ direction: 'inbound', body: null, ...patch })} waitingTemplate={false} now={NOW} />
+      <MessageBubble
+        message={message({ direction: 'inbound', body: null, ...patch })}
+        waitingTemplate={false}
+        now={NOW}
+      />
     </ul>,
   );
   return screen.getByRole('article');
@@ -39,12 +52,20 @@ describe('MessageBubble: a message whose content never reached us', () => {
     expect(emptyText({ interactive_payload: unsupported(131051) })).toBe(t.inbox.unsupported);
     expect(emptyText({ interactive_payload: null })).toBe(t.inbox.media.other);
     // A contact card did arrive: it cannot be shown here, but nobody is asked to send it again.
-    expect(emptyText({ interactive_payload: { type: 'contacts', contacts: [] } })).toBe(t.inbox.media.other);
+    expect(emptyText({ interactive_payload: { type: 'contacts', contacts: [] } })).toBe(
+      t.inbox.media.other,
+    );
   });
 
   it('a WhatsApp reaction row names its emoji (owner 2026-10-27), never «رسالة لا يمكن عرضها هنا»', () => {
-    const bubble = renderBubble({ interactive_payload: { type: 'reaction', reaction: { emoji: '👍🏻', message_id: 'wamid.x' } } });
+    const bubble = renderBubble({
+      interactive_payload: { type: 'reaction', reaction: { emoji: '👍🏻', message_id: 'wamid.x' } },
+    });
     expect(bubble.textContent).toContain(t.inbox.reacted.replace('{emoji}', '👍🏻'));
-    expect(emptyText({ interactive_payload: { type: 'reaction', reaction: { emoji: '', message_id: 'wamid.x' } } })).toBe(t.inbox.reactionRemoved);
+    expect(
+      emptyText({
+        interactive_payload: { type: 'reaction', reaction: { emoji: '', message_id: 'wamid.x' } },
+      }),
+    ).toBe(t.inbox.reactionRemoved);
   });
 });

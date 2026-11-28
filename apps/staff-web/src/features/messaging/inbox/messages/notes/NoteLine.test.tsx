@@ -5,11 +5,12 @@ import { t } from '@ab/web-kit';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  apiFetch: vi.fn(),
-  apiSend: vi.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 // WhatsApp edits and deletes never show as their own bubbles; the original reflects them.

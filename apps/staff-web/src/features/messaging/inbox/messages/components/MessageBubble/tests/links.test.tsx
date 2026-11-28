@@ -3,13 +3,22 @@ import { describe, expect, it, vi } from 'vitest';
 import { message } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageBubble } from '@/features/messaging/inbox/messages/components/MessageBubble/MessageBubble';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 function renderBody(body: string) {
   renderWithClient(
     <ul>
-      <MessageBubble message={message({ body })} waitingTemplate={false} now={new Date('2026-10-01T12:00:00Z')} />
+      <MessageBubble
+        message={message({ body })}
+        waitingTemplate={false}
+        now={new Date('2026-10-01T12:00:00Z')}
+      />
     </ul>,
   );
   return screen.getByRole('article');

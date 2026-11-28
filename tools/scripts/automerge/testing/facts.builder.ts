@@ -60,3 +60,10 @@ export function aReviewedFacts(): Facts {
   const pr = { ...facts.pr, headRefName: 'fix/wa-lane-hold', labels };
   return { ...facts, pr, events: labelled(REVIEWED_AT) };
 }
+
+/** A `fix/` PR flagged `priority`, with no auto-merge or reviewed label: merges on the flag. */
+export function aPriorityFacts(): Facts {
+  const facts = aFacts();
+  const pr = { ...facts.pr, headRefName: 'fix/wa-retry', labels: [{ name: 'priority' }] };
+  return { ...facts, pr };
+}

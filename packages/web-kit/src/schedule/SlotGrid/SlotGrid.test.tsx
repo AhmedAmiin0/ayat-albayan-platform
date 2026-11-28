@@ -49,3 +49,13 @@ describe('SlotGrid multi-pick (owner 2026-10-18)', () => {
     expect(onPick).toHaveBeenCalledWith(busy);
   });
 });
+
+describe('SlotGrid scroll owner (docs/66 §2)', () => {
+  it('no day column scrolls or caps its height on a wide page; the page or dialog body scrolls', () => {
+    const slots = [slot(SUN), slot(TUE), slot(WED)];
+    render(<SlotGrid week="2026-10-03" slots={slots} studentTz="Asia/Riyadh" value={null} onPick={vi.fn()} />);
+    const lists = screen.getByRole('group').querySelectorAll('ul');
+    expect(lists.length).toBeGreaterThan(0);
+    for (const list of lists) expect(list.className).not.toMatch(/overflow-(y-)?(auto|scroll)|max-h-/);
+  });
+});

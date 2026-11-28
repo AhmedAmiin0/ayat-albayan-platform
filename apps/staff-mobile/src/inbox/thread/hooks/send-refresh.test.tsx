@@ -2,7 +2,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
+import { cachedThread, detail, listCache, message, PHONE, thread } from '@/inbox/shared/thread-fixtures';
+import type { ThreadListCache } from './thread-list-cache';
 import { threadKey, threadMessages, threadPath, type ThreadCache } from './thread-cache';
 import { threadQuery, useSendMessage } from './use-thread';
 
@@ -104,4 +105,19 @@ test('an older page read in flight never brings the queued row back: the chat re
   const shown = threadMessages(client.getQueryData<ThreadCache>(threadKey(PHONE)));
   expect(shown.map((m) => m.id)).not.toContain('p1');
   expect(shown.filter((m) => m.id === 's1')).toHaveLength(1);
+});
+
+test('the chats list row of a send takes the API id and tick: never stuck on pending', async () => {
+  const server = message({ id: 's1', body: 'وصلت', status: 'sent', created_at: at(50) });
+  mockApiSend.mockResolvedValue(server);
+  mockApiFetch.mockResolvedValue(detail([row('m40', 40), server]));
+  const client = createTestQueryClient();
+  const LIST = ['threads', 'list', { search: '', unread: false }];
+  client.setQueryData(LIST, listCache([thread]));
+  client.setQueryData(threadKey(PHONE), fivePages());
+  const { result } = await renderHook(useOpenSend, { wrapper: queryWrapper(client) });
+  await act(async () => result.current.mutate({ id: 'p1', out: { kind: 'text', text: 'وصلت' } }));
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  const listed = client.getQueryData<ThreadListCache>(LIST)?.pages[0]?.items[0];
+  expect([listed?.last_message_id, listed?.last_status]).toEqual(['s1', 'sent']);
 });

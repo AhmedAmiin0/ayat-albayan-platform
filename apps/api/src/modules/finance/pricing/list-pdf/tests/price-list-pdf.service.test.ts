@@ -1,18 +1,27 @@
-import { priceList, type PriceListResponse } from '@ab/money';
+import {
+  formatAmount,
+  priceList,
+  type PriceList,
+  type PriceListResponse,
+  type Quote,
+} from '@ab/money';
 import type { PriceListQueryParams } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';
 import type { PdfRenderer } from '@/modules/reporting/report-pdf';
 import type { PricingService } from '@/modules/finance/pricing/pricing.service';
 import { PriceListPdf } from '@/modules/finance/pricing/list-pdf/price-list-pdf.service';
+import type { PriceListPdfSettings } from '@/modules/finance/pricing/list-pdf/price-list-pdf.settings';
 
 const REQUEST = '7f0c2b9e-6f4a-4c1d-9a51-2f3c8e1d4b60';
 const BYTES: Uint8Array = new TextEncoder().encode('%PDF-1.7 fake');
+const CONTACT = { whatsapp: '+000 00 000 0000', site: 'example.test' };
 
 function harness() {
-  const list = vi.fn(
-    async (q: PriceListQueryParams): Promise<PriceListResponse> => ({ ...priceList(q), fx: null }),
-  );
+  const list = vi.fn(async (q: PriceListQueryParams): Promise<PriceListResponse> => ({
+    ...priceList(q),
+    fx: null,
+  }));
   const render = vi.fn(async (_html: string): Promise<Uint8Array> => BYTES);
   const close = vi.fn(async () => undefined);
   const upload = vi.fn(async (ref: { path: string }) => ref.path);
@@ -21,6 +30,7 @@ function harness() {
     { list } as unknown as PricingService,
     { render, close } as unknown as PdfRenderer,
     { upload, signedDownload } as unknown as StorageService,
+    { contact: async () => CONTACT } as unknown as PriceListPdfSettings,
   );
   return { pdf, list, render, close, upload, signedDownload };
 }
@@ -32,6 +42,12 @@ const body = (discount: number) => ({
   rounding: 'down' as const,
   clientRequestId: REQUEST,
 });
+
+function secondOfSecond(list: PriceList): Quote {
+  const q = list.groups[1]?.packages[2];
+  if (!q) throw new Error('no package 1/2');
+  return q;
+}
 
 describe('PriceListPdf.create', () => {
   it('prices through the list, renders it and stores it as this request chat file', async () => {
@@ -57,15 +73,16 @@ describe('PriceListPdf.create', () => {
     const h = harness();
     await h.pdf.create({ body: body(10), actorId: 'staff-1' });
     const html = h.render.mock.calls[0]?.[0] ?? '';
-    const q = priceList(body(10)).groups[1]?.packages[2];
-    expect(html).toContain(`<s class="was">${String(q?.total)} ر.ق</s>`);
-    expect(html).toContain(`<td class="now">${String(q?.afterDiscount)} ر.ق</td>`);
+    const q = secondOfSecond(priceList(body(10)));
+    expect(html).toContain(`<s>${formatAmount(q.total)}</s>`);
+    expect(html).toContain(`<b class="now">${formatAmount(q.afterDiscount)}</b>`);
+    expect(html).toContain(CONTACT.whatsapp);
   });
 
   it('without a discount renders no struck price', async () => {
     const h = harness();
     await h.pdf.create({ body: body(0), actorId: 'staff-1' });
-    expect(h.render.mock.calls[0]?.[0]).not.toContain('<s class="was">');
+    expect(h.render.mock.calls[0]?.[0]).not.toContain('<s>');
   });
 
   it('a list without a site country is named for USD', async () => {

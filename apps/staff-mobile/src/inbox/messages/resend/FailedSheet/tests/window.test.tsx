@@ -4,11 +4,13 @@ import { renderWithQuery } from '@/test/query';
 import { failed, PHONE } from '@/inbox/shared/thread-fixtures';
 import { errorLine } from '@/inbox/messages/hooks/message-text';
 import { FailedSheet } from '@/inbox/messages/resend/FailedSheet/FailedSheet';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onRead(async () => ({}));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({}),
-  apiSend: jest.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 // A text tried after the 24 h window that WhatsApp

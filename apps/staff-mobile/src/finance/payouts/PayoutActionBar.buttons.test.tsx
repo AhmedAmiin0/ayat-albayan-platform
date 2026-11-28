@@ -4,14 +4,18 @@ import { t, palette } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { APPROVED, PAID } from '@/finance/shared/fixtures';
 import { PayoutActionBar } from './PayoutActionBar';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onRead(() => new Promise(() => undefined));
+mockApi.onWrite(() => new Promise(() => undefined));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: () => new Promise(() => undefined),
-  apiSend: () => new Promise(() => undefined),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
-const style = (name: string) => StyleSheet.flatten(screen.getByRole('button', { name }).props.style);
+const style = (name: string) =>
+  StyleSheet.flatten(screen.getByRole('button', { name }).props.style);
 const light = palette.light;
 
 test('approved: «تأكيد الدفع» filled and alone; «إعادة فتح» an outlined cell, never ghost', async () => {

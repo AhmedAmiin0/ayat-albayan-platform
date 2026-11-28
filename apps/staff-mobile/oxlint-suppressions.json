@@ -12,11 +12,6 @@
       "count": 1
     }
   },
-  "app/_layout.tsx": {
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/account/components/AccountSummary.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -1369,9 +1364,6 @@
     }
   },
   "src/finance/payouts/PayoutsScreen/PayoutsScreen.tsx": {
-    "complexity": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
@@ -2855,11 +2847,6 @@
   "src/inbox/thread/hooks/thread-mode.tsx": {
     "ab/no-restricted-syntax": {
       "count": 2
-    }
-  },
-  "src/inbox/thread/hooks/thread-poll/tests/live.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/inbox/thread/hooks/thread-poll/thread-poll.ts": {

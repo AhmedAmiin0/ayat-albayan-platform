@@ -6,10 +6,20 @@ import { t } from '@ab/web-kit';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
 import { setConfirmationRequired } from '@ab/web-kit/testing';
+import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
-const PENDING = { id: 'p1', proposed_starts_at: '2026-10-06T15:30:00.000Z', note: null, created_at: '2026-10-03T08:00:00.000Z' };
+const PENDING = {
+  id: 'p1',
+  proposed_starts_at: '2026-10-06T15:30:00.000Z',
+  note: null,
+  created_at: '2026-10-03T08:00:00.000Z',
+};
 
 function renderDrawer(l: LessonView) {
   render(
@@ -79,6 +89,8 @@ describe('LessonDrawer buttons (docs/07 «الأزرار»)', () => {
 
   it('no proposal: «تأكيد الحلقة» is the filled primary, full width', () => {
     renderDrawer(lesson());
-    expect(button(t.lessons.event.confirm).className.split(' ')).toEqual(expect.arrayContaining(['bg-primary', 'w-full']));
+    expect(button(t.lessons.event.confirm).className.split(' ')).toEqual(
+      expect.arrayContaining(['bg-primary', 'w-full']),
+    );
   });
 });

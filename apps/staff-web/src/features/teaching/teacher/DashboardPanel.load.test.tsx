@@ -5,10 +5,13 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { DashboardPanel, type DashboardPanelProps } from './DashboardPanel';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onRead(() => Promise.resolve([]));
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  apiFetch: vi.fn(() => Promise.resolve([])),
+  call: (request: unknown) => mockApi.call(request),
 }));
 vi.mock('@tanstack/react-router', async (importOriginal) => ({
   ...(await importOriginal<object>()),

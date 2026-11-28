@@ -11,9 +11,9 @@ export function SlotDay({ day, studentTz, onPick }: SlotDayProps) {
           —
         </p>
       ) : (
-        // Wide: each day column scrolls past ~9 starts (48 a day while teachers are 24/7);
-        // the padding keeps the picked ring and focus outline inside the scroll box.
-        <ul className="flex flex-wrap gap-1.5 @[640px]:grid @[640px]:max-h-[26rem] @[640px]:overflow-y-auto @[640px]:p-0.5">
+        // Wide: the columns grow; the page or dialog body is the one scroller (docs/66 §1);
+        // the padding keeps the picked ring and focus outline clear of the next column.
+        <ul className="flex flex-wrap gap-1.5 @[640px]:grid @[640px]:p-0.5">
           {day.slots.map(({ slot, picked }) => (
             <li key={slot.starts_at}>
               <SlotButton slot={slot} studentTz={studentTz} picked={picked} onPick={onPick} />
