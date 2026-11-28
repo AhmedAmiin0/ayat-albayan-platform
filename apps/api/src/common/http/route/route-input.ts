@@ -1,6 +1,6 @@
 import { createParamDecorator, type ExecutionContext, type PipeTransform } from '@nestjs/common';
 import { z } from 'zod';
-import { ZodParamPipe, ZodPipe, type ParamFailure } from '@/common/http/zod-inputs';
+import { ZodParamPipe, ZodPipe } from '@/common/http/zod-inputs';
 import { routeOf } from './route';
 import type { RawRouteInput, RouteInputOptions } from './route.types';
 
@@ -33,7 +33,7 @@ const eachParamFirst = async ({ route, params }: RawRouteInput, options: RouteIn
   });
   await Promise.all(checks);
 };
-const ORDER = { bodyFirst: async () => undefined, paramsFirst: eachParamFirst };
+const ORDER = { bodyFirst: () => Promise.resolve(), paramsFirst: eachParamFirst };
 
 /**
  * Body and query parse through ZodPipe, params through ZodParamPipe, in that order, so a bad body
