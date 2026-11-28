@@ -2,21 +2,19 @@ import {
   INTEGRATION_SECRET_KEYS,
   integrationRoutes as routes,
   integrationSecretCheck,
-  integrationSecretSchema,
   integrationValuesSchema,
   type IntegrationConfigItem,
   type IntegrationPlainKey,
   type IntegrationSecretKey,
 } from '@ab/catalog';
-import { Body, Controller, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { z } from 'zod';
 import { parseOrThrow } from '@/common/http/http';
 import { asResponse } from '@/common/http/returns';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { ZodParam } from '@/common/http/zod-inputs';
 import { AuditService } from '@/common/audit/audit.service';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { integrationKeyAvailable, stripeServerKey } from '@/config/env/env.stripe';
 import { IntegrationConfigService, INTEGRATIONS_ENTITY_ID } from './integration-config.service';
@@ -67,19 +65,13 @@ export class IntegrationConfigController {
     return this.config.items();
   }
 
-  /**
-   * A key's own format is checked too: a live Stripe key is 400 stripe_live_key_refused (test).
-   * Kept off its route object: there the body is read first, so a bad key would no longer win.
-   */
-  @Put('settings/integrations/secrets/:key')
-  @Permissions('settings.write')
-  @ApiTags('settings')
+  /** A key's own format is checked too: a live Stripe key is 400 stripe_live_key_refused (test). */
+  @Route(routes.saveSecret)
   async putSecret(
-    @ZodParam('key', secretKey) key: IntegrationSecretKey,
-    @Body() body: unknown,
+    @RouteInput({ paramsFirst: true, paramChecks: { key: secretKey } })
+    { params: { key }, body: { value } }: RouteInputOf<typeof routes.saveSecret>,
     @CurrentUser() user: AuthUser,
   ): Promise<IntegrationConfigItem[]> {
-    const { value } = parseOrThrow(integrationSecretSchema, body);
     await this.config.setSecret({ key, value: parseOrThrow(secretCheck(key), value) });
     await this.record(user, { action: `secret_set:${key}`, keys: [key] });
     return this.config.items();

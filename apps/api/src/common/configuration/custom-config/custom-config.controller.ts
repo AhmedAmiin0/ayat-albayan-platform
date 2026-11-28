@@ -1,18 +1,11 @@
-import {
-  customConfigRoutes as routes,
-  customConfigUpsertSchema,
-  customKeySchema,
-  type CustomConfigView,
-} from '@ab/settings';
-import { Body, Controller, HttpCode, NotFoundException, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { parseOrThrow } from '@/common/http/http';
+import { customConfigRoutes as routes, type CustomConfigView } from '@ab/settings';
+import { Controller, HttpCode, NotFoundException } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { asResponse } from '@/common/http/returns';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { ZodParam } from '@/common/http/zod-inputs';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { CustomConfigService } from './custom-config.service';
 
@@ -30,19 +23,13 @@ export class CustomConfigController {
     return asResponse(routes.list.response, await this.custom.list());
   }
 
-  /**
-   * 400 on a bad key (or one reserved by a registry setting), a null or a value over 8 KB.
-   * Kept off its route object: there the body is read first, so a bad key would no longer win.
-   */
-  @Put('config/custom/:key')
-  @Permissions('settings.write')
-  @ApiTags('config')
+  /** 400 on a bad key (or one reserved by a registry setting), a null or a value over 8 KB. */
+  @Route(routes.put)
   async put(
-    @ZodParam('key', customKeySchema) key: string,
-    @Body() body: unknown,
+    @RouteInput({ paramsFirst: true })
+    { params: { key }, body: input }: RouteInputOf<typeof routes.put>,
     @CurrentUser() user: AuthUser,
   ): Promise<CustomConfigView> {
-    const input = parseOrThrow(customConfigUpsertSchema, body);
     const before = await this.custom.find(key);
     const after = await this.custom.upsert(key, input, user.id);
     await this.audit.record({
