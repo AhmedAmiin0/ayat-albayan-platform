@@ -2,24 +2,11 @@
   "src/classroom/internal-meetings.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/classroom/join-window/join-window.ts": {
     "no-nested-ternary": {
       "count": 1
-    }
-  },
-  "src/classroom/meeting-invites.ts": {
-    "stylistic/max-len": {
-      "count": 6
-    }
-  },
-  "src/classroom/meeting-mode.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/classroom/meetings.ts": {
@@ -28,27 +15,11 @@
     }
   },
   "src/classroom/moderation/moderation.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
   },
-  "src/classroom/room.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/classroom/schemas.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/classroom/student-recordings.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "typescript/no-deprecated": {
       "count": 1
     }
@@ -79,32 +50,14 @@
       "count": 2
     }
   },
-  "src/engine/occurrences/occurrences.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/lessons/chargeable.ts": {
     "typescript/switch-exhaustiveness-check": {
       "count": 1
     }
   },
   "src/lessons/makeup-offer.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/module-boundaries": {
       "count": 1
-    }
-  },
-  "src/lessons/makeup-views.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/lessons/overview.ts": {
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/lessons/series/time-edit.ts": {
@@ -112,20 +65,7 @@
       "count": 1
     }
   },
-  "src/lessons/state-machine/state-machine.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/lessons/teacher-name.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/lessons/views.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/module-boundaries": {
       "count": 1
     }
@@ -133,14 +73,6 @@
   "src/schemas/booking-extras.ts": {
     "complexity": {
       "count": 2
-    },
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/schemas/day-times.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/schemas/lesson-time.ts": {
@@ -149,9 +81,6 @@
     }
   },
   "src/schemas/scheduling/scheduling.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    },
     "ab/module-boundaries": {
       "count": 1
     }

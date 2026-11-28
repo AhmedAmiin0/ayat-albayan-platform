@@ -41,7 +41,9 @@ export const bookingBaseSchema = weeklyRuleSchema.extend({
   override: overrideSchema.optional(),
   /** Idempotency key: a replay with the same id returns the first booking (rule 8). */
   clientRequestId: clientRequestId.optional(),
-  /** The slot the admin picked; pins the first lesson when its wall time repeats (DST fall-back). */
+  /**
+   * The slot the admin picked; pins the first lesson when its wall time repeats (DST fall-back).
+   */
   startsAt: instant.optional(),
   /** A package's weekdays with their own time (only those differing from startTimeLocal). */
   dayTimes: dayTimesSchema,
@@ -83,7 +85,9 @@ export const ruleCancelRequestSchema = z.object({
   from: localDate.optional(),
 });
 
-/** POST /schedule-rules/:id/extend — weeks ahead from now (default settings.booking_horizon_weeks). */
+/**
+ * POST /schedule-rules/:id/extend — weeks ahead from now (default settings.booking_horizon_weeks).
+ */
 export const ruleExtendRequestSchema = z.object({ weeks: z.int().min(1).max(12).optional() });
 
 /**

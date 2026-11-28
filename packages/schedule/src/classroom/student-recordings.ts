@@ -25,7 +25,10 @@ export interface StudentRecordingView {
   size_bytes: number | null;
   media: StudentRecordingMedia;
   visible_to_student: boolean;
-  /** The viewer may show/hide it (PATCH /recordings/:id/visibility): an admin, or the lesson's own teacher. */
+  /**
+   * The viewer may show/hide it (PATCH /recordings/:id/visibility): an admin, or the lesson's own
+   * teacher.
+   */
   can_manage: boolean;
   url: string | null;
 }
@@ -70,7 +73,9 @@ export function mediaOfPath(path: string): StudentRecordingMedia {
   return /\.(mp3|m4a|aac|ogg|wav)$/i.test(path) ? 'audio' : 'video';
 }
 
-/** Whole seconds between the start and the end of a recording; null while it runs or on bad dates. */
+/**
+ * Whole seconds between the start and the end of a recording; null while it runs or on bad dates.
+ */
 export function durationSeconds(startedAt: string, endedAt: string | null): number | null {
   if (!endedAt) return null;
   const ms = new Date(endedAt).getTime() - new Date(startedAt).getTime();

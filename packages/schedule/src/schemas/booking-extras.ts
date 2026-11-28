@@ -10,9 +10,10 @@ export const BOOKING_KINDS = ['trial', 'package', 'makeup'] as const;
 export type BookingKind = (typeof BOOKING_KINDS)[number];
 
 /**
- * Same files as receipts (RECEIPT_MIMES / RECEIPT_MAX_BYTES, migration 170 buckets): images and PDF,
- * 10 MB: the buckets' hard ceiling. The academy's own limit is settings.upload_max_mb (≤ 10),
- * checked by the API. Spelled out here because money/schemas imports scheduling, which imports this file.
+ * Same files as receipts (RECEIPT_MIMES / RECEIPT_MAX_BYTES, migration 170 buckets): images and
+ * PDF, 10 MB: the buckets' hard ceiling. The academy's own limit is settings.upload_max_mb (≤ 10),
+ * checked by the API. Spelled out here because money/schemas imports scheduling, which imports this
+ * file.
  */
 export const INVOICE_MIMES = [
   'image/jpeg',

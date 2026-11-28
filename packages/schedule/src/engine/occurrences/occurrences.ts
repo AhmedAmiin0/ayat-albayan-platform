@@ -1,6 +1,8 @@
 import { DAY_MS, dayInZone, dayWallToUtc, MINUTE_MS, minutesOfHhmm, weekdayOfDay } from '@ab/time';
 
-/** The schedule_rules columns that decide when lessons happen; a Tables<'schedule_rules'> row fits. */
+/**
+ * The schedule_rules columns that decide when lessons happen; a Tables<'schedule_rules'> row fits.
+ */
 export interface OccurrenceTiming {
   /** 0 = Sunday ... 6 = Saturday. */
   byday: readonly number[];

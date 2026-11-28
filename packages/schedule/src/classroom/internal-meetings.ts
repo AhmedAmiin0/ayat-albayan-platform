@@ -77,7 +77,10 @@ export interface MeetingTimes {
   planned_end_at?: string | null | undefined;
 }
 
-/** A scheduled meeting's window (the lesson rules: opens N min before, closes M min after); null if instant. */
+/**
+ * A scheduled meeting's window (the lesson rules: opens N min before, closes M min after); null if
+ * instant.
+ */
 export function meetingWindow(
   row: MeetingTimes,
   now: Date,

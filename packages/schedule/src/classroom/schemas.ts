@@ -33,7 +33,10 @@ export interface JoinLinkResult {
   message_status: MessageStatus;
 }
 
-/** A teaching assistant as the admin's manager lists them (GET /assistants, GET /students/:id/assistants). */
+/**
+ * A teaching assistant as the admin's manager lists them (GET /assistants, GET
+ * /students/:id/assistants).
+ */
 export interface AssistantView {
   profile_id: string;
   full_name: string;

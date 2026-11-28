@@ -2,7 +2,8 @@ import type { Gender, Program, TeacherStatus } from '@ab/catalog';
 import type { LessonView } from './views';
 
 // GET /lessons/overview (R-SCH-09 all-teachers calendar): every teacher with their weekly windows,
-// time off, load and free time, plus the lessons of the window, in one payload. Instants are ISO UTC.
+// time off, load and free time, plus the lessons of the window, in one payload. Instants are ISO
+// UTC.
 
 /** Half-open [starts_at, ends_at). */
 export interface Span {
@@ -30,7 +31,9 @@ export interface OverviewTeacher {
   /** Students with this teacher whose status is trial | active. */
   students_count: number;
   max_students: number | null;
-  /** Weekly availability inside the window, merged (a 22:00–24:00 + 00:00–02:00 pair is one span). */
+  /**
+   * Weekly availability inside the window, merged (a 22:00–24:00 + 00:00–02:00 pair is one span).
+   */
   windows: Span[];
   /** teacher_time_off rows overlapping the window, as stored. */
   time_off: OverviewTimeOff[];

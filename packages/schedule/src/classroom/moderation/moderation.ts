@@ -1,9 +1,9 @@
 import type { JoinRole } from '../room';
 
 /**
- * The JSON in every LiveKit token's `metadata` (participant.metadata in the room): the role, so each
- * client knows who may remove whom and labels the teacher. Never a user id or a link id: those stay
- * on the server (classroom_participants), keyed by the identity.
+ * The JSON in every LiveKit token's `metadata` (participant.metadata in the room): the role, so
+ * each client knows who may remove whom and labels the teacher. Never a user id or a link id: those
+ * stay on the server (classroom_participants), keyed by the identity.
  */
 export interface ParticipantMeta {
   role: JoinRole;

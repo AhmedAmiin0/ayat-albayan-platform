@@ -21,7 +21,9 @@ interface DayTimeFacts {
   dayTimes?: { weekday: number }[] | undefined;
 }
 
-/** day_not_in_byday, duplicate_day, package_only (a trial or a makeup is one lesson at one time). */
+/**
+ * day_not_in_byday, duplicate_day, package_only (a trial or a makeup is one lesson at one time).
+ */
 export function refineDayTimes(req: DayTimeFacts, ctx: z.RefinementCtx): void {
   const days = req.dayTimes ?? [];
   if (days.length === 0) return;

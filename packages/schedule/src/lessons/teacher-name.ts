@@ -1,6 +1,8 @@
 import { localizedName, type Locale } from '@ab/core';
 
-/** The name to show for a teacher: the English one in the English UI when it exists, else Arabic. */
+/**
+ * The name to show for a teacher: the English one in the English UI when it exists, else Arabic.
+ */
 export function teacherName(
   teacher: { display_name_ar: string; display_name_en?: string | null },
   locale: Locale,
