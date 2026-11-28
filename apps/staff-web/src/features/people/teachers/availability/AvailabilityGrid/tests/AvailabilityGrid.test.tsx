@@ -68,7 +68,7 @@ describe('AvailabilityGrid (R-TCH-02)', () => {
     const starts = screen.getAllByLabelText(`${SAT} ${t.availability.from}`);
     fireEvent.change(starts[1] as HTMLSelectElement, { target: { value: '17:00' } });
     const alert = screen.getByRole('alert');
-    const span = t.availability.overlapSpan.replace('{from}', '17:00').replace('{to}', '18:30');
+    const span = t.availability.overlapSpan.replace('{from}', '5:00 م').replace('{to}', '6:30 م');
     expect(alert.textContent).toBe(`${t.availability.overlap}${t.common.listSeparator}${span}`);
     expect(starts[1]?.getAttribute('aria-invalid')).toBe('true');
     expect(starts[1]?.getAttribute('aria-describedby')).toBe(alert.id);

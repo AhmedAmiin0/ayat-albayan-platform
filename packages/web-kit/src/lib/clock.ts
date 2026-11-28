@@ -1,65 +1,14 @@
 import type { Locale } from '@ab/core';
-import {
-  CLOCK_STORAGE_KEY,
-  engineHourCycle,
-  parseClockPref,
-  resolveHourCycle,
-  uses24FromHourCycle,
-  type ClockCycle,
-  type ClockPref,
-} from '@ab/time';
-import { useMemo, useSyncExternalStore } from 'react';
+import type { ClockCycle } from '@ab/time';
 import { locale } from './i18n/locale';
 
-// Follow the browser's locale, or a 12 h/24 h pick saved in localStorage; changes need no reload.
+// The web shows 12-hour times only: a saved «ab.clock» value or a 24-hour locale is ignored.
+// The phones keep their own 12/24 h setting.
+const WEB_CYCLE: ClockCycle = '12';
 
-function readPref(): ClockPref {
-  try {
-    return parseClockPref(localStorage.getItem(CLOCK_STORAGE_KEY));
-  } catch {
-    return 'auto'; // storage blocked (private mode)
-  }
-}
-
-/** Does this browser's locale use 24-hour times? h11/h12 → no; unknown → null (reads as 24 h). */
-export function deviceUses24(): boolean | null {
-  try {
-    return uses24FromHourCycle(engineHourCycle());
-  } catch {
-    return null;
-  }
-}
-
-let pref: ClockPref = readPref();
-const device = deviceUses24();
-const listeners = new Set<() => void>();
-
-function subscribe(listener: () => void): () => void {
-  listeners.add(listener);
-  return () => void listeners.delete(listener);
-}
-
-/** The cycle in effect now (for code outside React); components use useClock(). */
+/** The cycle every web screen formats with, for code outside React. */
 export function clockCycle(): ClockCycle {
-  return resolveHourCycle(pref, device);
-}
-
-const clockPref = (): ClockPref => pref;
-
-/** Applies at once («auto» clears the saved choice), then saves. */
-export function setClockPref(next: ClockPref): void {
-  pref = next;
-  try {
-    if (next === 'auto') localStorage.removeItem(CLOCK_STORAGE_KEY);
-    else localStorage.setItem(CLOCK_STORAGE_KEY, next);
-  } catch {
-    // storage blocked: the choice still applies for this page view
-  }
-  listeners.forEach((listener) => listener());
-}
-
-export function useClockPref(): ClockPref {
-  return useSyncExternalStore(subscribe, clockPref);
+  return WEB_CYCLE;
 }
 
 /** What a screen formats times with: the cycle in effect and the UI language. */
@@ -68,8 +17,9 @@ export interface Clock {
   locale: Locale;
 }
 
+const WEB_CLOCK: Clock = { cycle: WEB_CYCLE, locale };
+
 /** `{ cycle, locale }` for the shared clock formatters (clockOf, clockOfHhmm, clockRange). */
 export function useClock(): Clock {
-  const cycle = useSyncExternalStore(subscribe, clockCycle);
-  return useMemo(() => ({ cycle, locale }), [cycle]);
+  return WEB_CLOCK;
 }

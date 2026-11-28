@@ -27,7 +27,7 @@ async function toReview(answers: unknown[], count = 1) {
   next();
   next(); // The last trial's length is kept.
   const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
-  fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
+  fireEvent.click(within(sunday).getByRole('button', { name: /5:00 م/ }));
   next();
   return onClose;
 }
@@ -52,7 +52,7 @@ describe('TrialDateDialog, admin (owner 2026-10-25, R-SCH-06)', () => {
 
   it('posts the trial body to /booking/trial-date, then shows «نُقلت» done', async () => {
     const onClose = await toReview([DONE]);
-    expect(screen.getByText(/الاثنين 5 أكتوبر 17:00/)).toBeTruthy(); // the «moves» note names the old time
+    expect(screen.getByText(/الاثنين 5 أكتوبر 5:00 م/)).toBeTruthy(); // the «moves» note names the old time
     fireEvent.click(screen.getByRole('button', { name: t.trialDate.submit }));
     expect(await screen.findByText(t.trialDate.doneMoved)).toBeTruthy();
     const [body] = sentTo(apiSend, '/booking/trial-date');
@@ -98,7 +98,7 @@ describe('TrialDateDialog, admin (owner 2026-10-25, R-SCH-06)', () => {
     fireEvent.change(length, { target: { value: '30' } });
     next();
     const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
-    fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
+    fireEvent.click(within(sunday).getByRole('button', { name: /5:00 م/ }));
     next();
     fireEvent.click(screen.getByRole('button', { name: t.trialDate.submit }));
     await screen.findByText(t.trialDate.doneMoved);

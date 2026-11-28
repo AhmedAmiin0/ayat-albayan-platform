@@ -9,7 +9,7 @@ import { CHANGE_VIEW, changeBodies, CHECK, CLASH, NOW, routeChange, routeChangeS
 import { CourseChangeForm } from '@/features/teaching/booking/course-change/CourseChangeForm/CourseChangeForm';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale, tz: 'Asia/Riyadh' } as const;
+const C12 = { cycle: '12', locale, tz: 'Asia/Riyadh' } as const;
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -28,7 +28,7 @@ async function toReview(mode: BookingMode, onDone = vi.fn()) {
       <CourseChangeForm view={CHANGE_VIEW} onDone={onDone} />
     </BookingModeContext.Provider>,
   );
-  await screen.findAllByRole('button', { name: /17:00/ });
+  await screen.findAllByRole('button', { name: /5:00 م/ });
   await swapSundayForMonday();
   fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
   return onDone;
@@ -69,7 +69,7 @@ describe('«تغيير أيام الحلقات» over a clash (owner 2026-10-18,
     routeChangeSend(apiSend, { ...CHECK, conflicts: [off] });
     await toReview('sales');
     expect(
-      await screen.findByText(conflictText(off, C24, CHANGE_VIEW.course.teacherTz)),
+      await screen.findByText(conflictText(off, C12, CHANGE_VIEW.course.teacherTz)),
     ).toBeTruthy();
   });
 

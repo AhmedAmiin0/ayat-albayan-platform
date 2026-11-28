@@ -64,6 +64,6 @@ export const changeBodies = (apiSend: Mock): Record<string, unknown>[] =>
 /** Monday 18:00 instead of Sunday, so the check has a change. */
 export async function swapSundayForMonday(): Promise<void> {
   const monday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[1]} `) });
-  fireEvent.click(within(monday).getByRole('button', { name: /18:00/ }));
+  fireEvent.click(within(monday).getByRole('button', { name: /6:00 م/ }));
   fireEvent.click(screen.getByRole('button', { name: t.booking.removeDay.replace('{day}', t.enums.weekday[0]) }));
 }

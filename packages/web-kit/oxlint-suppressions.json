@@ -383,11 +383,6 @@
       "count": 1
     }
   },
-  "src/components/ui/form/SegmentedControl/SegmentedControl.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/components/ui/form/Select/Select.tsx": {
     "stylistic/max-len": {
       "count": 1
@@ -414,9 +409,6 @@
     }
   },
   "src/components/ui/layout/running-head.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-restricted-syntax": {
       "count": 1
     }
@@ -438,11 +430,6 @@
     },
     "stylistic/max-len": {
       "count": 4
-    }
-  },
-  "src/components/ui/layout/theme-toggle.test.tsx": {
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "src/components/ui/layout/use-narrow.ts": {
@@ -505,11 +492,6 @@
   },
   "src/lib/clock-text.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/lib/clock.ts": {
-    "ab/no-restricted-syntax": {
       "count": 1
     }
   },

@@ -111,8 +111,8 @@ describe('reply note actions (owner 2026-10-28)', () => {
 
   it('names the lesson time in the viewer’s zone and follows a zone change in place', () => {
     renderNote(YES, { mode: 'admin', permissions: [], lessons: [{ ...LESSON, status: 'confirmed' }] });
-    expect(screen.getByText(/^تم تأكيد حلقة/).textContent).toContain('17:00'); // Riyadh
+    expect(screen.getByText(/^تم تأكيد حلقة/).textContent).toContain('5:00 م'); // Riyadh
     act(() => setViewerPersonTz('Europe/London'));
-    expect(screen.getByText(/^تم تأكيد حلقة/).textContent).toContain('15:00');
+    expect(screen.getByText(/^تم تأكيد حلقة/).textContent).toContain('3:00 م');
   });
 });

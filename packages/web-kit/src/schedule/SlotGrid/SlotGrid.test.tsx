@@ -23,10 +23,10 @@ describe('SlotGrid multi-pick (owner 2026-10-18)', () => {
     );
     const pressed = (name: RegExp) =>
       screen.getByRole('button', { name }).getAttribute('aria-pressed');
-    expect(pressed(/^17:00/)).toBe('true');
-    expect(pressed(/19:30/)).toBe('true');
+    expect(pressed(/^5:00 م/)).toBe('true');
+    expect(pressed(/7:30 م/)).toBe('true');
     expect(screen.getAllByRole('button', { pressed: false })).toHaveLength(1);
-    fireEvent.click(screen.getByRole('button', { name: /19:30/ }));
+    fireEvent.click(screen.getByRole('button', { name: /7:30 م/ }));
     expect(onPick).toHaveBeenCalledWith(slot(TUE));
   });
 
@@ -45,7 +45,7 @@ describe('SlotGrid multi-pick (owner 2026-10-18)', () => {
     );
     expect(screen.getByText(t.booking.slotBusy)).toBeTruthy();
     expect(screen.getAllByText('—')).toHaveLength(6);
-    fireEvent.click(screen.getByRole('button', { name: /17:00/ }));
+    fireEvent.click(screen.getByRole('button', { name: /^5:00 م/ }));
     expect(onPick).toHaveBeenCalledWith(busy);
   });
 });

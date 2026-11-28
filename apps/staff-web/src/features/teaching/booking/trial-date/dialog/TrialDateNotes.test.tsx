@@ -18,7 +18,7 @@ describe('TrialDateNotes (owner 2026-10-25)', () => {
 
   it('says the upcoming trial moves, with its time', () => {
     render(<TrialDateNotes trial={{ ...UPCOMING, count: 1 }} tz="Asia/Riyadh" />);
-    expect(screen.getByText(/الاثنين 5 أكتوبر 17:00/).textContent).toContain(t.trialDate.moves.split('(')[0] ?? '');
+    expect(screen.getByText(/الاثنين 5 أكتوبر 5:00 م/).textContent).toContain(t.trialDate.moves.split('(')[0] ?? '');
   });
 
   it('without one, a new trial lesson is booked', () => {

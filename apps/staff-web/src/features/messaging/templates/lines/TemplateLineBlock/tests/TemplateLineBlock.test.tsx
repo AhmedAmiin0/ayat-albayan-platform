@@ -10,8 +10,8 @@ import {
 } from '@/features/messaging/templates/lines/TemplateLineBlock/TemplateLineBlock';
 import { mockCall } from '@ab/testing/mock-call';
 
-/** The cycle the suite reads times in (test-setup saves 24 h). */
-const C24 = { cycle: '24', locale } as const;
+/** The web reads every time in 12 h. */
+const C12 = { cycle: '12', locale } as const;
 
 const mockApi = mockCall();
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
@@ -49,7 +49,7 @@ describe('TemplateLineBlock', () => {
     );
     expect(screen.getByText('+20 100 000 0000').closest('bdi')?.getAttribute('dir')).toBe('ltr');
     expect(
-      screen.getByText(p.lastSync.replace('{time}', fullTime('2026-10-17T06:30:00Z', C24))),
+      screen.getByText(p.lastSync.replace('{time}', fullTime('2026-10-17T06:30:00Z', C12))),
     ).toBeTruthy();
     expect(screen.getByText(p.metaCount).nextElementSibling?.textContent).toBe('12');
     expect(screen.getByText(p.noneImported)).toBeTruthy();

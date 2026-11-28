@@ -100,6 +100,7 @@ jest.mock('./src/biometric/core/bio-lock', () => {
 // their props (jest-expo-ui.cjs), so a test reads, types into and dismisses them.
 jest.mock('@expo/ui', () => require('./jest-expo-ui.cjs').universal);
 jest.mock('@expo/ui/swift-ui/modifiers', () => require('./jest-expo-ui.cjs').swiftUiModifiers);
+jest.mock('@expo/ui/jetpack-compose', () => require('./jest-expo-ui.cjs').jetpackCompose);
 jest.mock('@expo/ui/jetpack-compose/modifiers', () => require('./jest-expo-ui.cjs').composeModifiers);
 
 // FlashList measures nothing in jest (zero layout = no rows): a 400×900 window and 100pt rows, as the

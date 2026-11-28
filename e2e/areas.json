@@ -356,6 +356,7 @@
         "sales/sales-start-date-revoke.spec.ts",
         "platform/shell-focus.spec.ts",
         "platform/shell-menu.spec.ts",
+        "platform/shell-header.spec.ts",
         "people/student-filters.spec.ts",
         "people/student-lists.spec.ts",
         "people/student-own-phone.api.spec.ts",

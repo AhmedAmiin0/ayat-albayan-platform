@@ -5,6 +5,7 @@ import { Logo, RunningHead, meQuery, t, cn } from '@ab/web-kit';
 import { NotificationBell } from '@/features/messaging/notifications/NotificationBell';
 import { Crumbs } from '@/components/shell/nav/Crumbs';
 import { INBOX_PAGE, isInboxPath } from './inbox-route';
+import { HeadPrefs } from '@/components/shell/header/HeadPrefs';
 import { MenuBar } from '@/components/shell/header/MenuBar';
 import { PageFrame } from './PageFrame';
 import { SideFoot } from '@/components/shell/account/SideFoot';
@@ -51,11 +52,13 @@ export function AdminLayout({ nav, title, children }: AdminLayoutProps) {
       </aside>
       <div className="flex min-h-0 min-w-0 flex-1 flex-col pb-[env(safe-area-inset-bottom)] sm:px-2 sm:pb-[max(0.625rem,env(safe-area-inset-bottom))] shell:h-dvh shell:px-4 shell:pb-5">
         <div className="shrink-0 max-sm:hidden">
-          {/* The bell from 900px only: below it the compact bar carries it (640–900px show both). */}
+          {/* From 900px only: below it the compact bar's sheet carries them (640–900px show both). */}
           <RunningHead
+            layout="fit"
             crumbs={<Crumbs />}
             end={
-              <div className="hidden shell:block">
+              <div data-head-end className="hidden items-center gap-1.5 shell:flex">
+                <HeadPrefs />
                 <NotificationBell />
               </div>
             }

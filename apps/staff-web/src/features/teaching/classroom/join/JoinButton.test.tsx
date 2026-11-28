@@ -41,7 +41,7 @@ describe('JoinButton «ادخل الحلقة»', () => {
       'disabled',
       true,
     );
-    expect(screen.getByText(/\d{2}:\d{2}/)).toBeTruthy();
+    expect(screen.getByText(/\d{1,2}:\d{2} [صم]/)).toBeTruthy();
     expect(screen.queryByRole('link')).toBeNull();
   });
 

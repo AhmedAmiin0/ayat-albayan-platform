@@ -1,19 +1,17 @@
 import { useTheme } from '../../../theme';
-import { rowStyle } from './checkbox.style';
-import type { CheckboxLogic, CheckboxProps } from './Checkbox.types';
+import { boxStyle } from './checkbox.style';
+import type { CheckboxLook, CheckboxProps } from './Checkbox.types';
 
-export function useCheckbox(props: CheckboxProps): CheckboxLogic {
+export function useCheckbox({ checked }: CheckboxProps): CheckboxLook {
   const { color } = useTheme();
-  const { checked, onChange } = props;
-  const look = {
-    disabled: props.disabled ?? false,
-    inset: props.inset ?? false,
-    side: props.side ?? 'start',
-    wash: color.sunk,
-  };
+  const edge = checked ? color.lapisFill : color.ruleInput;
   return {
-    boxColor: checked ? color.lapisFill : color.ruleInput,
-    onPress: () => onChange(!checked),
-    style: ({ pressed }) => rowStyle({ ...look, pressed }),
+    box: boxStyle(checked ? color.lapisFill : 'transparent', edge),
+    tick: color.onLapis,
+    colors: {
+      checkedColor: color.lapisFill,
+      uncheckedColor: color.ruleInput,
+      checkmarkColor: color.onLapis,
+    },
   };
 }
