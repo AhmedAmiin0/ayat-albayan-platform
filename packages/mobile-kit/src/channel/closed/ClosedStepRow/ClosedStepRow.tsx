@@ -2,26 +2,21 @@ import { View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
-import type { ClosedStep } from '@ab/client-core';
 import { CurrentPill } from '../CurrentPill';
 import { StepMark } from '../StepMark';
+import type { ClosedStepRowProps } from './ClosedStepRow.types';
+import { noteOf, stepLabel } from './closed-step-row.helpers';
 
-const noteOf = (step: ClosedStep): string => {
-  const c = t.studentChannel.closedCard;
-  return step.state === 'done' ? c.done : c.notes[step.key];
-};
-
-export function ClosedStepRow({ step, n }: { step: ClosedStep; n: number }) {
+export function ClosedStepRow({ step, n }: ClosedStepRowProps) {
   const { color } = useTheme();
   const c = t.studentChannel.closedCard;
   const current = step.state === 'current';
   const note = noteOf(step);
+  const label = stepLabel(step);
   return (
     <View
       accessible
-      accessibilityLabel={[c.steps[step.key], current ? c.current : '', note]
-        .filter(Boolean)
-        .join('، ')}
+      accessibilityLabel={label}
       style={{
         flexDirection: 'row',
         alignItems: 'flex-start',

@@ -1,11 +1,11 @@
 import { closedReasonKey, closedSteps } from '@ab/client-core';
-import type { ChannelClosedReason } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { shape, type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
 import { ClosedStepRow } from '../ClosedStepRow';
 import { DiamondOrnament } from '../DiamondOrnament';
+import type { ChannelClosedProps } from './ChannelClosed.types';
 
 /**
  * A participant's closed chat (the ChatXClosed board): a raised card at the top
@@ -13,7 +13,7 @@ import { DiamondOrnament } from '../DiamondOrnament';
  * steps left (the subscription, the teacher, then it opens by itself). The chat switched off for
  * the family says only that.
  */
-export function ChannelClosed({ reason }: { reason: ChannelClosedReason | null }) {
+export function ChannelClosed({ reason }: ChannelClosedProps) {
   const { color } = useTheme();
   const key = closedReasonKey(reason);
   const steps = closedSteps(key);

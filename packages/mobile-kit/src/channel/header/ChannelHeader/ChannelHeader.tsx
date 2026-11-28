@@ -1,22 +1,11 @@
 import { router } from 'expo-router';
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { type, useTheme } from '../../../theme';
 import { BackButton } from '../../../ui/navigation/BackButton';
 import { AppText } from '../../../ui/primitives/AppText';
 import { Avatar } from '../../../ui/primitives/Avatar';
-import type { ChannelRef } from '../../channel-api';
 import { ChannelPresenceLine } from '../../ChannelPresenceLine';
-
-interface ChannelHeaderProps {
-  refs: ChannelRef;
-  title: string;
-  /** Whose initials the avatar shows (the student, or the family's first other speaker). */
-  avatarName: string;
-  /** The viewer is listed last; empty while nothing is loaded. */
-  names: string;
-  trailing?: ReactNode;
-}
+import type { ChannelHeaderProps } from './ChannelHeader.types';
 
 /** Presence shows only when allowed. */
 export function ChannelHeader(props: ChannelHeaderProps) {

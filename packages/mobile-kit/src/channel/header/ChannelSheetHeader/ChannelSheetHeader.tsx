@@ -4,13 +4,7 @@ import { t } from '../../../lib/i18n/i18n';
 import { shape, type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
 import { IconButton } from '../../../ui/primitives/IconButton';
-
-interface ChannelSheetHeaderProps {
-  title: string;
-  /** The viewer is listed last; empty while nothing is loaded. */
-  names: string;
-  onClose: () => void;
-}
+import type { ChannelSheetHeaderProps } from './ChannelSheetHeader.types';
 
 export function ChannelSheetHeader({ title, names, onClose }: ChannelSheetHeaderProps) {
   const { color } = useTheme();
