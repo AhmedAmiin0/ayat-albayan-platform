@@ -4582,6 +4582,11 @@
       "count": 1
     }
   },
+  "src/student-file/recordings/teacher-choices/teacher-choices.ts": {
+    "ab/no-restricted-syntax": {
+      "count": 1
+    }
+  },
   "src/student-file/screens/StudentMoneyScreen.test.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -5425,11 +5430,6 @@
   },
   "src/users/shared/validation.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/student-file/recordings/teacher-choices/teacher-choices.ts": {
-    "ab/no-restricted-syntax": {
       "count": 1
     }
   }

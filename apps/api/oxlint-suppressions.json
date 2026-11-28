@@ -447,9 +447,6 @@
   "src/common/push/notifications.controller.ts": {
     "stylistic/max-len": {
       "count": 2
-    },
-    "ab/zod-inputs": {
-      "count": 1
     }
   },
   "src/common/push/notifications.http.test.ts": {
@@ -510,14 +507,6 @@
     }
   },
   "src/common/push/web/web-push.crypto.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/common/push/web/web-push.endpoint.ts": {
-    "complexity": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     }

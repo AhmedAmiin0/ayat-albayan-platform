@@ -100025,6 +100025,46 @@
   },
   "response": "empty"
  },
+ "PUT /me/web-push": {
+  "body": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "endpoint": {
+     "type": "string",
+     "maxLength": 2048
+    },
+    "expirationTime": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "keys": {
+     "type": "object",
+     "properties": {
+      "p256dh": {
+       "type": "string",
+       "pattern": "^[A-Za-z0-9_-]{87}$"
+      },
+      "auth": {
+       "type": "string",
+       "pattern": "^[A-Za-z0-9_-]{22}$"
+      }
+     },
+     "required": [
+      "p256dh",
+      "auth"
+     ]
+    }
+   },
+   "required": [
+    "endpoint",
+    "keys"
+   ]
+  },
+  "response": "empty"
+ },
  "PUT /messages/gate/auto": {
   "body": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",
