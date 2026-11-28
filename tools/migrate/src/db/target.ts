@@ -85,12 +85,12 @@ export function createTargetDb(config: TargetConfig): TargetDb {
   return {
     name: config.name,
     async loadImportItems(entities) {
-      type Item = {
+      interface Item {
         entity: string;
         natural_key: string;
         target_id: string | null;
         payload_hash: string;
-      };
+      }
       const rows = await run<Item>(sql, {
         text: 'select entity, natural_key, target_id::text, payload_hash from public.import_items where entity = any($1)',
         params: [entities],

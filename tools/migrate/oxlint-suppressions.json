@@ -33,9 +33,6 @@
     },
     "no-empty-function": {
       "count": 1
-    },
-    "typescript/consistent-type-definitions": {
-      "count": 1
     }
   },
   "src/db/unqueue-imported.ts": {
@@ -192,11 +189,6 @@
       "count": 1
     }
   },
-  "src/plan/stale-refs.test.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "src/plan/stale-refs.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -296,9 +288,6 @@
     }
   },
   "src/types.ts": {
-    "typescript/consistent-indexed-object-style": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 5
     }

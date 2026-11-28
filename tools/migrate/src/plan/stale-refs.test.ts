@@ -4,7 +4,10 @@ import { dropOrphanLessons, dropStaleRefs, findStale } from './stale-refs.ts';
 
 const guardian = { entity: 'guardians' as const, key: '+966500000001' };
 const lead = { entity: 'leads' as const, key: '+966500000002' };
-type Ref = { entity: 'guardians' | 'leads'; key: string };
+interface Ref {
+  entity: 'guardians' | 'leads';
+  key: string;
+}
 const message = (key: string, refs: Record<string, Ref>) => ({
   key: { entity: 'messages' as const, key },
   action: 'create' as const,

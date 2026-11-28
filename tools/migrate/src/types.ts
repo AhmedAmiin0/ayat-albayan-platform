@@ -88,7 +88,7 @@ export type Scalar = string | number | boolean | null;
 export type ColumnValue =
   | Scalar
   | readonly Scalar[]
-  | { readonly [k: string]: unknown }
+  | Readonly<Record<string, unknown>>
   | readonly object[];
 
 /**
