@@ -4,13 +4,17 @@ import { describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@ab/web-kit/lib/http/api';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RecordingsPanel } from './RecordingsPanel';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 describe('RecordingsPanel', () => {
   it('shows the error line when the list fails, and closes', async () => {
-    apiFetch.mockRejectedValue(new ApiError(500, null));
+    mockApi.onRead(() => Promise.reject(new ApiError(500, null)));
     const onClose = vi.fn();
     render(
       <QueryClientProvider
