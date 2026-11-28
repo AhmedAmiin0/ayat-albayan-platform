@@ -5,6 +5,7 @@ import { t } from '@ab/mobile-kit';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { lesson } from '@/today/testing/fixtures';
+import { answered, uuidFor } from '@/today/testing/answered';
 import { AdminSessionsScreen } from '@/classroom/sessions/AdminSessionsScreen/AdminSessionsScreen';
 
 const mockApiFetch = jest.fn();
@@ -21,9 +22,13 @@ beforeEach(() => jest.clearAllMocks());
 // 13:10Z: the 16:00 Riyadh lesson is open (now); the 18:00 one is upcoming; the 08:00 one is over.
 const rows = [
   lesson({ id: 'now' }),
-  lesson({ id: 'later', starts_at: '2026-10-01T15:00:00.000Z', ends_at: '2026-10-01T15:45:00.000Z' }),
+  lesson({
+    id: 'later',
+    starts_at: '2026-10-01T15:00:00.000Z',
+    ends_at: '2026-10-01T15:45:00.000Z',
+  }),
   lesson({ id: 'old', starts_at: '2026-10-01T05:00:00.000Z', ends_at: '2026-10-01T05:45:00.000Z' }),
-];
+].map(answered);
 
 async function open() {
   fakeNow(new Date('2026-10-01T13:10:00Z'));
@@ -33,8 +38,12 @@ async function open() {
 test('the day groups its lessons: now, upcoming, ended, each with its count and the actions', async () => {
   mockApiFetch.mockResolvedValue(rows);
   await open();
-  expect(await screen.findByRole('header', { name: `${t.classroom.admin.groups.now} 1` })).toBeTruthy();
-  expect(screen.getByRole('header', { name: `${t.classroom.admin.groups.upcoming} 1` })).toBeTruthy();
+  expect(
+    await screen.findByRole('header', { name: `${t.classroom.admin.groups.now} 1` }),
+  ).toBeTruthy();
+  expect(
+    screen.getByRole('header', { name: `${t.classroom.admin.groups.upcoming} 1` }),
+  ).toBeTruthy();
   expect(screen.getByRole('header', { name: `${t.classroom.admin.groups.ended} 1` })).toBeTruthy();
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(3);
   // the ended lesson's link is past its expiry: nothing to send or copy there
@@ -46,7 +55,7 @@ test('«التسجيلات» opens that lesson’s recordings', async () => {
   mockApiFetch.mockResolvedValue([rows[0]]);
   await open();
   await fireEvent.press(await screen.findByRole('button', { name: t.classroom.recordings.title }));
-  expect(router.push).toHaveBeenCalledWith('/more/live/recordings/now');
+  expect(router.push).toHaveBeenCalledWith(`/more/live/recordings/${uuidFor('now')}`);
 });
 
 test('the day switcher asks for the next day, and «اليوم» comes back', async () => {
@@ -56,7 +65,9 @@ test('the day switcher asks for the next day, and «اليوم» comes back', as
   expect(screen.getByRole('header', { name: dayLabel('2026-10-01') })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.schedule.nextDay }));
   expect(await screen.findByRole('header', { name: dayLabel('2026-10-02') })).toBeTruthy();
-  await waitFor(() => expect(mockApiFetch).toHaveBeenLastCalledWith(expect.stringContaining('date=2026-10-02')));
+  await waitFor(() =>
+    expect(mockApiFetch).toHaveBeenLastCalledWith(expect.stringContaining('date=2026-10-02')),
+  );
   await fireEvent.press(screen.getByRole('button', { name: t.schedule.today }));
   expect(await screen.findByRole('header', { name: dayLabel('2026-10-01') })).toBeTruthy();
 });
@@ -67,5 +78,7 @@ test('a failed read with nothing cached shows the error with retry', async () =>
   expect(await screen.findByRole('alert')).toBeTruthy();
   mockApiFetch.mockResolvedValue(rows);
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
-  expect(await screen.findByRole('header', { name: `${t.classroom.admin.groups.now} 1` })).toBeTruthy();
+  expect(
+    await screen.findByRole('header', { name: `${t.classroom.admin.groups.now} 1` }),
+  ).toBeTruthy();
 });

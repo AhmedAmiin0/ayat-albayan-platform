@@ -1,5 +1,6 @@
 import type { OverviewTeacher, ScheduleOverview } from '@ab/schedule';
 import { cancelled, done, lesson, muscat, pending } from '@/today/testing/fixtures';
+import { answered, uuidFor } from '@/today/testing/answered';
 
 // Test-only overview rows for the week of Saturday 26 Sep 2026 (Riyadh UTC+3).
 
@@ -78,3 +79,13 @@ export const overviewPath = (from: string, to: string) =>
   `/lessons/overview?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
 
 export const THIS_WEEK = overviewPath(OVERVIEW.from, OVERVIEW.to);
+
+/** The overview as the API answers it: every id a uuid, since answers are parsed strictly. */
+export function answeredOverview(o: ScheduleOverview): ScheduleOverview {
+  const teacher = (t: OverviewTeacher): OverviewTeacher => ({
+    ...t,
+    id: uuidFor(t.id),
+    time_off: t.time_off.map((off) => ({ ...off, id: uuidFor(off.id) })),
+  });
+  return { ...o, teachers: o.teachers.map(teacher), lessons: o.lessons.map(answered) };
+}

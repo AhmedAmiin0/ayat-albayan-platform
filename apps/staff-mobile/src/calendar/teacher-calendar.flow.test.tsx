@@ -1,5 +1,6 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { uuidFor } from '@/today/testing/answered';
 import { ApiError, t } from '@ab/mobile-kit';
 import { SAT_18, SUN_17 } from '@/teaching/reschedule/fixtures';
 import { calendarBackend, NOW } from './testing/flow-backend';
@@ -8,7 +9,8 @@ const THIS_WEEK = { from: '2026-09-25T21:00:00.000Z', to: '2026-10-02T21:00:00.0
 const NEXT_WEEK = { from: '2026-10-02T21:00:00.000Z', to: '2026-10-09T21:00:00.000Z' };
 const press = async (name: string | RegExp, role: 'button' | 'radio' = 'button') =>
   fireEvent.press(await screen.findByRole(role, { name }));
-const lastWeek = (b: ReturnType<typeof calendarBackend>['backend']) => b.sent('GET /lessons').at(-1)?.query;
+const lastWeek = (b: ReturnType<typeof calendarBackend>['backend']) =>
+  b.sent('GET /lessons').at(-1)?.query;
 
 beforeEach(async () => {
   await resetApp();
@@ -44,7 +46,10 @@ test('«الجدول»: every teacher on the day with Riyadh time and the Cairo 
   const { backend, state } = calendarBackend();
   backend.failOnce(
     'POST /lessons/:id/reschedule',
-    new ApiError(409, { code: 'conflict', conflicts: [{ kind: 'teacher_busy', startsAt: SUN_17, endsAt: '2026-10-04T14:45:00.000Z' }] }),
+    new ApiError(409, {
+      code: 'conflict',
+      conflicts: [{ kind: 'teacher_busy', startsAt: SUN_17, endsAt: '2026-10-04T14:45:00.000Z' }],
+    }),
   );
   const app = await renderApp({ url: '/', backend });
   await press(t.schedule.nav);
@@ -62,7 +67,9 @@ test('«الجدول»: every teacher on the day with Riyadh time and the Cairo 
   if (!submit) throw new Error('no submit in the sheet');
   await fireEvent.press(submit);
   expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
-  expect(screen.getByText(t.booking.conflict.teacher_busy.replace('{when}', 'الأحد 4 أكتوبر 17:00'))).toBeTruthy();
+  expect(
+    screen.getByText(t.booking.conflict.teacher_busy.replace('{when}', 'الأحد 4 أكتوبر 17:00')),
+  ).toBeTruthy();
 
   await press(t.booking.changeSlot);
   await press('السبت 3 أكتوبر', 'radio');
@@ -73,7 +80,7 @@ test('«الجدول»: every teacher on the day with Riyadh time and the Cairo 
   expect(await screen.findByText(t.lessons.rescheduled)).toBeTruthy();
   const posts = backend.sent('POST /lessons/:id/reschedule');
   expect(posts).toHaveLength(2);
-  expect(posts[0]?.path).toBe('/lessons/l-pending/reschedule');
+  expect(posts[0]?.path).toBe(`/lessons/${uuidFor('l-pending')}/reschedule`);
   expect(posts[1]?.body).toEqual({ scope: 'one', startsAt: SAT_18 });
   expect(state.lessons.find((l) => l.id === 'l-pending')?.starts_at).toBe(SAT_18);
 
