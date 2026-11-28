@@ -1,1 +1,2 @@
-export { LiveSheet, type SheetName } from './LiveSheet';
+export { LiveSheet } from './LiveSheet';
+export type { SheetName } from './LiveSheet.types';
