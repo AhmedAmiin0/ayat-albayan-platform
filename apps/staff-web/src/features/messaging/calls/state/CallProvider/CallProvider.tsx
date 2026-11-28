@@ -70,10 +70,7 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
         s={s}
         showsPhone={showsPhone}
         ask={ask}
-        onAsk={(next) => {
-          setAsk(null);
-          setSent(next === 'sent');
-        }}
+        onAsk={(next) => (setAsk(null), setSent(next === 'sent'))}
         onSilence={setSilenced}
       />
       {sent && <Toast message={t.calls.permission.requestSent} onDismiss={() => setSent(false)} />}
