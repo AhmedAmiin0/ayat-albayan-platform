@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { t } from '../../../lib/i18n/i18n';
-import { shape } from '../../../theme';
-import { ComposerBar } from '../ComposerBar';
-import { RoundAction } from './RoundAction';
+import { t } from '../../../../lib/i18n/i18n';
+import { shape } from '../../../../theme';
+import { ComposerBar } from '../../ComposerBar';
+import { RoundAction } from '../RoundAction';
 
 const styleOf = (id: string) => StyleSheet.flatten(screen.getByTestId(id).props.style);
 

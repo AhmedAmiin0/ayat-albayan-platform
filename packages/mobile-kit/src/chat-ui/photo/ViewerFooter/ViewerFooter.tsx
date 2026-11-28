@@ -1,8 +1,8 @@
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { shape, useTheme } from '../../../theme';
+import type { ViewerFooterProps } from './ViewerFooter.types';
 
-export function ViewerFooter({ children }: { children?: ReactNode }) {
+export function ViewerFooter({ children }: ViewerFooterProps) {
   const { color } = useTheme();
   return (
     <View style={{ alignItems: 'center', paddingVertical: 8 }}>

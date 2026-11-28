@@ -1,16 +1,8 @@
-import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { shape, type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
-
-interface AttachTileProps {
-  /** The full name, for the screen reader. */
-  label: string;
-  /** One line under the circle; falls back to the label when absent. */
-  short?: string;
-  onPress: () => void;
-  children: ReactNode;
-}
+import type { AttachTileProps } from './AttachTile.types';
+import { tileStyle } from './attach-tile.helpers';
 
 /**
  * One cell of the attach sheet's even three-column grid (WhatsApp's attach grid): a 56pt circle and
@@ -23,13 +15,7 @@ export function AttachTile({ label, short, onPress, children }: AttachTileProps)
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
-      style={({ pressed }) => ({
-        width: '33.333%',
-        alignItems: 'center',
-        gap: 6,
-        paddingHorizontal: 4,
-        opacity: pressed ? 0.7 : 1,
-      })}
+      style={tileStyle}
     >
       <View
         style={{
