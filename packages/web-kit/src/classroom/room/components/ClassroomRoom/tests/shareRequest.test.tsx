@@ -12,13 +12,14 @@ import {
 } from '@ab/web-kit/classroom/share/share-messages';
 import type * as ApiModule from '@ab/web-kit/lib/http/api/api';
 
-const call = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
+const apiSend = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<typeof ApiModule>()),
-  call,
+  apiSend,
 }));
 
 const S = t.classroom.shareRequest;
+const SHARE_PATH = '/lessons/L1/room/participants/guest-1/share';
 const guestRoom = () =>
   fakeClient({
     shareAllowed: false,
@@ -35,7 +36,7 @@ const deliver = (
 ) => act(() => c.receive({ bytes: encodeShare(msg), topic: SHARE_TOPIC, from }));
 
 describe('«اطلب مشاركة الشاشة»', () => {
-  afterEach(() => call.mockClear());
+  afterEach(() => apiSend.mockClear());
 
   it('a guest asks instead of a share button that would fail; «سماح» arrives as the permission', async () => {
     const c = openRoom('guest', guestRoom());
@@ -68,11 +69,7 @@ describe('«اطلب مشاركة الشاشة»', () => {
     deliver(c, { t: 'request', what: 'screen' }, { identity: 'guest-1', role: 'guest' });
     expect(screen.getAllByText(S.asks.replace('{name}', 'سهيلة'))).toHaveLength(1);
     fireEvent.click(screen.getByRole('button', { name: S.allow }));
-    expect(call).toHaveBeenCalledWith({
-      method: 'POST',
-      path: '/lessons/L1/room/participants/guest-1/share',
-      body: { allow: true },
-    });
+    expect(apiSend).toHaveBeenCalledWith('POST', SHARE_PATH, { allow: true });
     act(() =>
       c.push({
         tiles: [
@@ -82,11 +79,7 @@ describe('«اطلب مشاركة الشاشة»', () => {
       }),
     );
     fireEvent.click(await screen.findByRole('button', { name: S.stop.replace('{name}', 'سهيلة') }));
-    expect(call).toHaveBeenLastCalledWith({
-      method: 'POST',
-      path: '/lessons/L1/room/participants/guest-1/share',
-      body: { allow: false },
-    });
+    expect(apiSend).toHaveBeenLastCalledWith('POST', SHARE_PATH, { allow: false });
   });
 
   it('«رفض» sends share-denied naming the guest and clears the prompt', async () => {
@@ -102,7 +95,7 @@ describe('«اطلب مشاركة الشاشة»', () => {
       to: undefined,
     });
     await waitFor(() => expect(screen.queryByText(S.asks.replace('{name}', 'سهيلة'))).toBeNull());
-    expect(call).not.toHaveBeenCalled();
+    expect(apiSend).not.toHaveBeenCalled();
   });
 });
 
