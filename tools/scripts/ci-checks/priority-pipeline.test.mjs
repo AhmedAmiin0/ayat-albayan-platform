@@ -50,7 +50,7 @@ test('ci: only non-priority PR runs wait, at most 30 minutes, by polling once a 
   assert.match(wait, /# poll: GitHub Actions has no run-priority event/);
   assert.match(wait, /end=\$\(\(SECONDS \+ 1800\)\)/);
   assert.match(wait, /sleep 60/);
-  assert.match(wait, /node tools\/scripts\/ci-yield\/cli\.ts "\$d"/);
+  assert.match(wait, /node tools\/scripts\/automerge\/ci-yield\/cli\.ts "\$d"/);
   assert.ok(job['timeout-minutes'] > 31, 'the wait ends before the job times out');
 });
 

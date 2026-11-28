@@ -75,7 +75,7 @@ jobs:
             gh api "repos/$REPO/pulls?state=open&per_page=100" --paginate \
               --jq '.[] | {number, head: .head.ref, repo: .head.repo.full_name, labels: [.labels[].name]}' \
               | jq -s . > "$d/pulls.json" || break
-            out=$(node tools/scripts/ci-yield/cli.ts "$d") || break
+            out=$(node tools/scripts/automerge/ci-yield/cli.ts "$d") || break
             echo "$out" | sed -n 's/^reason=//p'
             grep -qx 'wait=true' <<< "$out" || break
             sleep 60

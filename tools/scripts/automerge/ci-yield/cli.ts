@@ -1,5 +1,5 @@
 // ci job «yield to priority»: should this PR run wait?
-// Usage: node tools/scripts/ci-yield/cli.ts <dir>
+// Usage: node tools/scripts/automerge/ci-yield/cli.ts <dir>
 // <dir> holds runs.json and pulls.json as the job gathered them with gh; RUN_ID, PR and REPO come
 // from the environment. Prints wait=true|false and reason=.
 import { createRequire } from 'node:module';

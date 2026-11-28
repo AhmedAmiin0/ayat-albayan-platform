@@ -1,8 +1,7 @@
 import type { Pull, Run, Self, YieldFacts } from './yield.schemas.ts';
+import { PRIORITY } from '../priority.ts';
 import type { Verdict } from './yield.types.ts';
 
-/** The label lane-automerge reads too (automerge/priority.ts); kept apart so ci needs no import. */
-const PRIORITY = 'priority';
 /** A merge by lane-automerge dispatches ci on develop instead of pushing. */
 const DEVELOP_EVENTS = new Set(['push', 'workflow_dispatch']);
 
