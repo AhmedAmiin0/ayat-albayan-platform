@@ -11,6 +11,7 @@ const BottomSheet = ({ isPresented, children, ...props }) =>
 
 const Host = ({ children, ...props }) =>
   createElement(RN.View, { testID: 'native-host', ...props }, children);
+const RNHostView = ({ children, ...props }) => createElement(RN.View, props, children);
 
 // The observable native text: one object for the field's life, as the native one is. Only the
 // stand-in input re-renders on a write, as only the native view redraws; React never sees it.
@@ -75,7 +76,7 @@ const TextInput = ({ value, modifiers, onChangeText, onFocus, onBlur, ...props }
 };
 
 module.exports = {
-  universal: { __esModule: true, BottomSheet, Host, TextInput, useNativeState },
+  universal: { __esModule: true, BottomSheet, Host, RNHostView, TextInput, useNativeState },
   swiftUiModifiers,
   composeModifiers,
 };
