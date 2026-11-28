@@ -1,4 +1,5 @@
 import { defineRoute } from '@ab/core';
+import { roomJoinResultSchema } from '@ab/schedule';
 import { z } from 'zod';
 import {
   portalFileUrlSchema,
@@ -37,6 +38,14 @@ export const portalRoutes = {
     params: byStudent,
     query: portalHistoryQuerySchema,
     response: portalHistorySchema,
+    ...access,
+  }),
+  /** A guest in our classroom, inside the window only: 403 before it, 410 after, 503. */
+  join: defineRoute({
+    method: 'POST',
+    path: `${student}/lessons/:lessonId/join`,
+    params: byStudent.extend({ lessonId: z.uuid() }),
+    response: roomJoinResultSchema,
     ...access,
   }),
   /** A signed link with no second sign-in, until the room closes. */

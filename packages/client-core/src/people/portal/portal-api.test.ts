@@ -73,7 +73,7 @@ describe('portal sends', () => {
     apiSend.mockResolvedValueOnce(room);
     await expect(sends.join({ studentId: 's1', lessonId: 'l1' })).resolves.toEqual(room);
     expect(apiSend).toHaveBeenLastCalledWith('POST', `${LESSON}/join`, undefined);
-    apiSend.mockResolvedValueOnce({ url: 1 });
+    apiSend.mockResolvedValueOnce({ ...room, role: 'owner' });
     await expect(sends.join({ studentId: 's1', lessonId: 'l1' })).rejects.toThrow();
   });
 
