@@ -5,17 +5,16 @@ import { queryClient } from '../lib/query/query-client';
 import { setLoginNotice, useLoginNotice } from './login-notice';
 import { appRole, isOtherAppRole, roleClaim } from './role-claim';
 import { verifyRole } from './verify-role';
-import { mockCall } from '@ab/testing/mock-call';
 
 // docs/50 §7: the family app's gate is the staff gate with the role sets swapped. Guardians and
 // students enter; staff are signed out with the inverted «wrongApp» notice.
 
-const mockApi = mockCall();
+const mockApiFetch = jest.fn();
 const mockSignOut = jest.fn();
 jest.mock('./audience', () => ({ audience: () => 'family' }));
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
-  call: (request: unknown) => mockApi.call(request),
+  call: ({ path }: { path: string }) => mockApiFetch(path),
 }));
 jest.mock('../lib/http/supabase', () => ({
   supabase: { auth: { signOut: () => mockSignOut() } },
@@ -32,7 +31,7 @@ beforeEach(() => {
 });
 
 test.each([['guardian'], ['student']])('a %s enters the family app', async (role) => {
-  mockApi.onRead(() => ({ role }));
+  mockApiFetch.mockResolvedValue({ role });
   expect(await verifyRole(session(role))).toBe(role);
   expect(mockSignOut).not.toHaveBeenCalled();
   expect(await shownNotice()).toBeNull();
@@ -41,7 +40,7 @@ test.each([['guardian'], ['student']])('a %s enters the family app', async (role
 test.each([['admin'], ['teacher'], ['sales'], ['assistant']])(
   'staff (%s) are signed out with the inverted «wrongApp»',
   async (role) => {
-    mockApi.onRead(() => ({ role }));
+    mockApiFetch.mockResolvedValue({ role });
     expect(await verifyRole(session(role))).toBe('out');
     expect(mockSignOut).toHaveBeenCalled();
     expect(await shownNotice()).toBe(t.familyApp.wrongApp);

@@ -34,7 +34,7 @@ test('non-2xx throws ApiError with status and body', async () => {
   expect(err).toMatchObject({ status: 409, body: { code: 'duplicate_phone' } });
 });
 
-test('apiSend PATCHes JSON and resolves undefined on 204', async () => {
+test('call PATCHes JSON and resolves undefined on 204', async () => {
   mockFetch.mockResolvedValue(reply(204));
   expect(
     await call({ method: 'PATCH', path: '/leads/1/status', body: { status: 'contacted' } }),

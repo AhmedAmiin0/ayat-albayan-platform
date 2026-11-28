@@ -1,7 +1,7 @@
 import { connectivity } from '../connectivity/connectivity';
 import { ApiError, call } from './api';
 
-// apiFetch tells the connection state what happened (jest.setup.cjs gives a still store with spies).
+// call tells the connection state what happened (jest.setup.cjs gives a still store with spies).
 jest.mock('./env', () => ({ env: { apiUrl: 'http://api' } }));
 
 const mockFetch = jest.fn();

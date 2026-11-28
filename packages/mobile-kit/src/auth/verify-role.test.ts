@@ -11,7 +11,7 @@ const mockApiFetch = jest.fn();
 const mockSignOut = jest.fn();
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
+  call: ({ path }: { path: string }) => mockApiFetch(path),
 }));
 jest.mock('../lib/http/supabase', () => ({ supabase: { auth: { signOut: () => mockSignOut() } } }));
 

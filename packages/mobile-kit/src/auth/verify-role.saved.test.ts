@@ -7,7 +7,7 @@ import { SAVED_ROLE_WAIT_MS, verifyRole } from './verify-role';
 const mockApiFetch = jest.fn();
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
+  call: ({ path }: { path: string }) => mockApiFetch(path),
 }));
 const mockSignOut = jest.fn();
 jest.mock('../lib/http/supabase', () => ({ supabase: { auth: { signOut: () => mockSignOut() } } }));
