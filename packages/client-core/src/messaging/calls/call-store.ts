@@ -16,7 +16,8 @@ export interface CallStoreState {
 
 /**
  * The one call of this device (docs/28 §3), outside React: WebRTC is imperative, so the steps run
- * here and the components read the state with useSyncExternalStore. `refresh` re-reads the calls queries.
+ * here and the components read the state with useSyncExternalStore. `refresh` re-reads the calls
+ * queries.
  */
 export class CallStore implements CallRuntime {
   makePeer: PeerMaker | null = null;
@@ -91,10 +92,11 @@ export class CallStore implements CallRuntime {
   }
 
   /**
-   * Follows one poll's verdict (call it when `answer`, `gone` or `deadline` change): WhatsApp's answer to
-   * our offer (the connect webhook) is applied once; a call the server stopped listing ended (hung up,
-   * rejected, missed, swept); unanswered for 45 s from the server id, it is ended here too; calls switched
-   * off (or this user lost inbox.send) during a live call (`off`): it is ended, the mic released.
+   * Follows one poll's verdict (call it when `answer`, `gone` or `deadline` change): WhatsApp's
+   * answer to our offer (the connect webhook) is applied once; a call the server stopped listing
+   * ended (hung up, rejected, missed, swept); unanswered for 45 s from the server id, it is ended
+   * here too; calls switched off (or this user lost inbox.send) during a live call (`off`): it is
+   * ended, the mic released.
    */
   follow(d: Pick<CallDerived, 'answer' | 'gone' | 'deadline' | 'off'>): void {
     if (d.off) { this.hangup(); return; }
@@ -113,7 +115,10 @@ export class CallStore implements CallRuntime {
     this.clearTimer = setTimeout(() => this.setSession(() => null), 1_500);
   }
 
-  /** The provider goes away (sign-out, calls off): cancel a start in flight and end a live call on WhatsApp too. */
+  /**
+   * The provider goes away (sign-out, calls off): cancel a start in flight and end a live call on
+   * WhatsApp too.
+   */
   dispose(): void {
     if (this.clearTimer) clearTimeout(this.clearTimer);
     if (this.deadline) clearTimeout(this.deadline.timer);

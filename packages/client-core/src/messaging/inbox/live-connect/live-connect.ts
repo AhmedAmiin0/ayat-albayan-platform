@@ -16,15 +16,17 @@ export interface LiveClient {
 }
 
 /**
- * A leaving channel (removeChannel waits for the server's reply): realtime-js hands the same topic's
- * channel back until it is gone, and subscribe() on it does nothing. A new join waits for it.
+ * A leaving channel (removeChannel waits for the server's reply): realtime-js hands the same
+ * topic's channel back until it is gone, and subscribe() on it does nothing. A new join waits for
+ * it.
  */
 let leaving: Promise<void> = Promise.resolve();
 
 /**
- * Leaves, then closes the socket when no other feature holds a channel on it. realtime-js 2.117 only
- * schedules that close 2 × heartbeat (50 s) after the last channel goes, keeping the socket and its
- * heartbeat alive in the background meanwhile. Settles with nothing: the module keeps no closure.
+ * Leaves, then closes the socket when no other feature holds a channel on it. realtime-js 2.117
+ * only schedules that close 2 × heartbeat (50 s) after the last channel goes, keeping the socket
+ * and its heartbeat alive in the background meanwhile. Settles with nothing: the module keeps no
+ * closure.
  */
 async function leave(client: LiveClient, channel: LiveChannel): Promise<void> {
   try {
@@ -35,7 +37,9 @@ async function leave(client: LiveClient, channel: LiveChannel): Promise<void> {
   }
 }
 
-/** A joined (or joining) inbox channel: `stop` leaves for good, `retryNow` rejoins a dropped one. */
+/**
+ * A joined (or joining) inbox channel: `stop` leaves for good, `retryNow` rejoins a dropped one.
+ */
 export interface LiveConnection {
   stop(): void;
   retryNow(): void;
@@ -43,9 +47,9 @@ export interface LiveConnection {
 
 /**
  * Joins the private topic as the signed-in user and feeds `live`; returns the connection (unmount,
- * sign-out: stop). setAuth() before every join: the join carries the session's JWT (the policy reads
- * it), not the anon key a join could otherwise go out with before supabase-js has read the session.
- * supabase-js keeps it current itself afterwards (TOKEN_REFRESHED → realtime.setAuth).
+ * sign-out: stop). setAuth() before every join: the join carries the session's JWT (the policy
+ * reads it), not the anon key a join could otherwise go out with before supabase-js has read the
+ * session. supabase-js keeps it current itself afterwards (TOKEN_REFRESHED → realtime.setAuth).
  * A drop (CHANNEL_ERROR, TIMED_OUT, CLOSED) leaves that channel and joins a fresh one with
  * backoff (messaging/live-rejoin); SUBSCRIBED again resyncs what is on screen. Statuses of a
  * channel already left are ignored. Never throws: without realtime the apps simply keep polling

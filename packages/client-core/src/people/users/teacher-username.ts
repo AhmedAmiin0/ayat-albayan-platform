@@ -10,7 +10,9 @@ export interface TeacherUsernameText {
   needsLogin: string;
 }
 
-/** What the PATCH carries: nothing (unchanged), a username, or null (cleared); or the invalid text. */
+/**
+ * What the PATCH carries: nothing (unchanged), a username, or null (cleared); or the invalid text.
+ */
 export type UsernameChange = { ok: true; body: { username?: string | null } } | { ok: false; error: string };
 
 /** The typed value as it is kept: trimmed, lower-case (on blur and on submit). */

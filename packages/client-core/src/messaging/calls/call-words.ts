@@ -2,8 +2,8 @@ import { callEntryKind, formatCallDuration, type ActiveCallView, type CallEntryK
 import { ApiError } from '../../core/http';
 import { talkedSeconds, type CallPhase } from './call-phase';
 
-// The calls' sentences, shared by web and mobile. Each app injects its `t.calls`, read on every call
-// (the admins' translation overrides land after import).
+// The calls' sentences, shared by web and mobile. Each app injects its `t.calls`, read on every
+// call (the admins' translation overrides land after import).
 
 /** The part of the app's `t.calls` read here. */
 export interface CallsText {

@@ -4,7 +4,9 @@ import { ApiError } from '../../core/http';
 
 // Course pause (docs/11 §7b) for web and mobile; words are injected and dates arrive formatted.
 
-/** The query key of a student's pause state (invalidate it with the student's file after a write). */
+/**
+ * The query key of a student's pause state (invalidate it with the student's file after a write).
+ */
 export const coursePauseKey = (studentId: string): readonly ['course-pause', string] => [
   'course-pause',
   studentId,

@@ -7,8 +7,9 @@ import {
   type AssistantTermsView,
 } from '@ab/money';
 
-// The assistant terms editor of both apps (docs/27 E5): the same state, the shared schema and the start-day rule.
-// Each app passes its own "today" (YYYY-MM-DD, Riyadh); the app modules keep their old default.
+// The assistant terms editor of both apps (docs/27 E5): the same state, the shared schema and the
+// start-day rule. Each app passes its own "today" (YYYY-MM-DD, Riyadh); the app modules keep their
+// old default.
 
 /** The terms editor's state: every field a string, so half-typed input never throws. */
 export interface TermsForm {
@@ -54,13 +55,19 @@ const FIELD_OF: Record<string, TermsField> = {
   'commission.startsOn': 'commStartsOn',
 };
 
-/** What the start days are checked against: the saved terms (null = none yet) and today (YYYY-MM-DD, Riyadh). */
+/**
+ * What the start days are checked against: the saved terms (null = none yet) and today (YYYY-MM-DD,
+ * Riyadh).
+ */
 export interface TermsRules {
   current: AssistantTermsView | null;
   today: string;
 }
 
-/** The earliest start day each part accepts now: its saved day, or today for a part that is not set yet. */
+/**
+ * The earliest start day each part accepts now: its saved day, or today for a part that is not set
+ * yet.
+ */
 export const termStartMins = ({ current, today }: TermsRules) => ({
   salary: earliestTermStart(current?.salary?.starts_on, today),
   commission: earliestTermStart(current?.commission?.starts_on, today),
@@ -68,7 +75,10 @@ export const termStartMins = ({ current, today }: TermsRules) => ({
 
 const isDay = (v: string) => /^\d{4}-\d{2}-\d{2}$/.test(v);
 
-/** Nothing is retroactive (termStartError, as the API's RPC): keys of t.assistants.error, per start field. */
+/**
+ * Nothing is retroactive (termStartError, as the API's RPC): keys of t.assistants.error, per start
+ * field.
+ */
 function startErrors(f: TermsForm, { current, today }: TermsRules): TermsErrors {
   const out: TermsErrors = {};
   const salary =
@@ -86,8 +96,9 @@ function startErrors(f: TermsForm, { current, today }: TermsRules): TermsErrors 
 
 /**
  * Form → the PUT body. An empty salary amount or no commission type clears that part. Validation is
- * the shared schema (percent ≤ 100 and no currency, fixed needs one, two decimals) and, with `rules`, the
- * start-day rule (a new part not in the past, a saved day never earlier), so the API agrees.
+ * the shared schema (percent ≤ 100 and no currency, fixed needs one, two decimals) and, with
+ * `rules`, the start-day rule (a new part not in the past, a saved day never earlier), so the API
+ * agrees.
  */
 export function termsToInput(
   f: TermsForm,

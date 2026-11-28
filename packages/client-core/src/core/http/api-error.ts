@@ -1,4 +1,6 @@
-/** Non-2xx API response. `body` is the parsed JSON error (e.g. duplicate candidates on 409), if any. */
+/**
+ * Non-2xx API response. `body` is the parsed JSON error (e.g. duplicate candidates on 409), if any.
+ */
 export class ApiError extends Error {
   readonly status: number;
   readonly body: unknown;

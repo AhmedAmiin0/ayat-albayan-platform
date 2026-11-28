@@ -27,10 +27,11 @@ export function deltaSearch(data: ThreadPages | undefined, now: number): string 
 }
 
 /**
- * A delta folded into the cache: rows it carries replace the cached ones by id on every page (a status
- * moved, a quote arrived), rows the cache does not know join the newest page in time order, and a new
- * inbound row's window lands on pages[0].thread. Older pages never shift. A delta with `has_more` must
- * not be merged (rows in between would be missing): re-read the thread instead (needsFullRead).
+ * A delta folded into the cache: rows it carries replace the cached ones by id on every page (a
+ * status moved, a quote arrived), rows the cache does not know join the newest page in time order,
+ * and a new inbound row's window lands on pages[0].thread. Older pages never shift. A delta with
+ * `has_more` must not be merged (rows in between would be missing): re-read the thread instead
+ * (needsFullRead).
  */
 export function mergeDelta<T extends ThreadPages>(data: T | undefined, delta: ThreadDelta): T | undefined {
   const head = data?.pages[0];

@@ -1,16 +1,23 @@
 import type { ActiveCallView, CallConfigView, CallPermissionView, CallView, MessageView } from '@ab/shared';
 import type { ApiClient } from '../../core/http';
 
-// WhatsApp voice calls (docs/28 §4), the routes both apps use. Everything but /calls/config answers 404
-// while the setting is off, so every other query is enabled only once the config says `enabled`. The
-// queries are plain TanStack Query options (no React here); each app spreads them into useQuery.
+// WhatsApp voice calls (docs/28 §4), the routes both apps use. Everything but /calls/config answers
+// 404 while the setting is off, so every other query is enabled only once the config says
+// `enabled`. The queries are plain TanStack Query options (no React here); each app spreads them
+// into useQuery.
 
 export const CALLS_KEY = ['calls'] as const;
-/** While a call of mine is live the screen follows it closely; otherwise a slower poll catches rings. */
+/**
+ * While a call of mine is live the screen follows it closely; otherwise a slower poll catches
+ * rings.
+ */
 export const ACTIVE_POLL_MS = 3_000;
 export const LIVE_POLL_MS = 1_500;
 
-/** One poll of /calls/active and when it STARTED: a slow poll begun before a call existed must not read as «ended». */
+/**
+ * One poll of /calls/active and when it STARTED: a slow poll begun before a call existed must not
+ * read as «ended».
+ */
 export interface ActivePoll {
   startedAt: number;
   rows: ActiveCallView[];
@@ -38,7 +45,10 @@ export function callSends({ client, requestId }: CallsApiDeps) {
 
 export type CallSends = ReturnType<typeof callSends>;
 
-/** The calls queries: the config, the active calls, a chat's calls (or the whole log) and a number's permission. */
+/**
+ * The calls queries: the config, the active calls, a chat's calls (or the whole log) and a number's
+ * permission.
+ */
 export function callQueries(client: ApiClient) {
   return {
     callConfigQuery: {

@@ -1,9 +1,13 @@
 import { ApiError } from '../../core/http';
 
-// The words for a failed report call (docs/11 §3), shared by both apps (docs/27 E5). Each app injects its `t`;
-// what a call that never reached the API says (no ApiError) stays the app's choice.
+// The words for a failed report call (docs/11 §3), shared by both apps (docs/27 E5). Each app
+// injects its `t`; what a call that never reached the API says (no ApiError) stays the app's
+// choice.
 
-/** The domain `code` of an API error, else its first validation issue (`missing_grades`, `attachment_type`, …). */
+/**
+ * The domain `code` of an API error, else its first validation issue (`missing_grades`,
+ * `attachment_type`, …).
+ */
 export function reportErrorCode(error: unknown): string | null {
   if (!(error instanceof ApiError) || typeof error.body !== 'object' || error.body === null) return null;
   const body = error.body as { code?: unknown; issues?: { message?: unknown }[] };

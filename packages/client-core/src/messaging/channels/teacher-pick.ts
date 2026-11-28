@@ -9,13 +9,17 @@ export interface TeacherPick {
 interface ChoiceInput {
   studentId: string;
   pick: TeacherPick | null;
-  /** The active teachers once loaded: a student's own teacher not among them (inactive) is no default. */
+  /**
+   * The active teachers once loaded: a student's own teacher not among them (inactive) is no
+   * default.
+   */
   options?: readonly { id: string }[] | undefined;
 }
 
 /**
- * The teacher to send: her pick for this student, else the student's own (students.teacher_id, the trial's)
- * while still active; '' = none. `body` is what POST /sales/subscriptions carries: teacherId only when set.
+ * The teacher to send: her pick for this student, else the student's own (students.teacher_id, the
+ * trial's) while still active; '' = none. `body` is what POST /sales/subscriptions carries:
+ * teacherId only when set.
  */
 export function teacherChoice(
   students: readonly { id: string; teacher_id: string | null }[],

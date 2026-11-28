@@ -20,7 +20,10 @@ export interface ReactionPorts {
   fail: (error: unknown) => void;
 }
 
-/** Ours at once; the server's answer wins; a refusal or a failed send puts the bubble back and says so. */
+/**
+ * Ours at once; the server's answer wins; a refusal or a failed send puts the bubble back and says
+ * so.
+ */
 export function reactionMutation(p: ReactionPorts) {
   return {
     mutationFn: p.send,

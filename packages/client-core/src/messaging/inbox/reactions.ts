@@ -15,7 +15,10 @@ export function withOurs(r: MessageReactions | undefined, ours: { emoji: string 
   return { ...(r ?? NO_REACTIONS), ours: ours.emoji, ours_by: ours.emoji ? ours.by : null };
 }
 
-/** One message of a cached page list replaced by `patch` (the optimistic change, the server's answer or the rollback). */
+/**
+ * One message of a cached page list replaced by `patch` (the optimistic change, the server's answer
+ * or the rollback).
+ */
 export function patchMessage<P extends { messages: readonly MessageView[] }>(pages: readonly P[], id: string, patch: Partial<MessageView>): P[] {
   return pages.map((p) => (p.messages.some((m) => m.id === id) ? { ...p, messages: p.messages.map((m) => (m.id === id ? { ...m, ...patch } : m)) } : p));
 }
@@ -25,7 +28,10 @@ export interface PillItem {
   count: number;
 }
 
-/** The pill under a bubble: theirs then ours, one emoji counted twice when both chose it; [] = no pill. */
+/**
+ * The pill under a bubble: theirs then ours, one emoji counted twice when both chose it; [] = no
+ * pill.
+ */
 export function reactionPill(r: MessageReactions | undefined): PillItem[] {
   const all = [r?.theirs, r?.ours].filter((e): e is string => Boolean(e));
   return all.reduce<PillItem[]>((out, emoji) => {
@@ -39,7 +45,9 @@ export function reactionPill(r: MessageReactions | undefined): PillItem[] {
 /** `mine` marks ours, which is removable. */
 export interface ReactorLine {
   emoji: string;
-  /** The contact's name (the chat's title) or the staff member's; null = say «you» / «the academy». */
+  /**
+   * The contact's name (the chat's title) or the staff member's; null = say «you» / «the academy».
+   */
   name: string | null;
   mine: boolean;
 }
