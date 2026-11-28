@@ -13,3 +13,4 @@ export {
   whatsappDigits,
   whatsappSendUrl,
 } from './whatsapp-send';
+export { sendGateCalls, type SendGateCalls } from './send-gate';

@@ -5,9 +5,10 @@ const write = { permissions: ['settings.write'], tags: ['messaging'] };
 
 describe('gateRoutes', () => {
   it('keeps the method, path, permission and tag of each send-gate switch', () => {
-    expect(routes.sending).toMatchObject({ method: 'PUT', path: '/messages/gate/sending', ...write });
-    expect(routes.auto).toMatchObject({ method: 'PUT', path: '/messages/gate/auto', ...write });
-    expect(routes.cutover).toMatchObject({ method: 'PUT', path: '/messages/gate/cutover', ...write });
+    const at = (name: string) => ({ method: 'PUT', path: `/messages/gate/${name}`, ...write });
+    expect(routes.sending).toMatchObject(at('sending'));
+    expect(routes.auto).toMatchObject(at('auto'));
+    expect(routes.cutover).toMatchObject(at('cutover'));
   });
 
   it('takes a switch with or without its confirmation text, and refuses one without on', () => {

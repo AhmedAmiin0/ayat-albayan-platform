@@ -14,9 +14,8 @@ describe('send gate calls', () => {
   it('turns a switch on with its confirmation text and answers the settings', async () => {
     const { client, apiSend } = clientAnswering(SETTING_DEFAULTS);
     const calls = sendGateCalls(client);
-    await expect(calls.sending({ on: true, confirmText: GATE_CONFIRM_TEXT.sending })).resolves.toEqual(
-      SETTING_DEFAULTS,
-    );
+    const on = { on: true, confirmText: GATE_CONFIRM_TEXT.sending };
+    await expect(calls.sending(on)).resolves.toEqual(SETTING_DEFAULTS);
     expect(apiSend.mock.calls).toEqual([
       ['PUT', '/messages/gate/sending', { on: true, confirmText: GATE_CONFIRM_TEXT.sending }],
     ]);
@@ -36,7 +35,7 @@ describe('send gate calls', () => {
   it('refuses an answer that is not the full settings', async () => {
     const { client } = clientAnswering({ messaging_enabled: true });
     await expect(sendGateCalls(client).sending({ on: false })).rejects.toMatchObject({
-      code: 'bad_response',
+      body: { code: 'bad_response' },
     });
   });
 });
