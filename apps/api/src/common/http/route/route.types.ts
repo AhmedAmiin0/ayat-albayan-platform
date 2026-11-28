@@ -15,6 +15,10 @@ export interface RouteInputOf<R extends RouteSpec> {
 export interface RouteInputOptions {
   /** The route's own error for a bad `:param` (a 404 code); default the 400 envelope. */
   badParam?: ParamFailure;
+  /** Each `:param` is checked alone before the body and query: a bad one wins, issue path ''. */
+  paramsFirst?: true;
+  /** With `paramsFirst`: a server-only rule a `:param` must also pass (an env-gated key). */
+  paramChecks?: Readonly<Record<string, z.ZodType>>;
 }
 
 /** The request parts @RouteInput() reads, with the route of the handler. */
