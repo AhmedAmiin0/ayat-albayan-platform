@@ -2,6 +2,7 @@ import { Pressable, View } from 'react-native';
 import { shape, type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
 import type { AttachTileProps } from './AttachTile.types';
+import { tileStyle } from './attach-tile.helpers';
 
 /**
  * One cell of the attach sheet's even three-column grid (WhatsApp's attach grid): a 56pt circle and
@@ -14,13 +15,7 @@ export function AttachTile({ label, short, onPress, children }: AttachTileProps)
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
-      style={({ pressed }) => ({
-        width: '33.333%',
-        alignItems: 'center',
-        gap: 6,
-        paddingHorizontal: 4,
-        opacity: pressed ? 0.7 : 1,
-      })}
+      style={tileStyle}
     >
       <View
         style={{

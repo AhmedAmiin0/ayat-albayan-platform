@@ -1,1 +1,2 @@
-export { RoundAction, type RoundActionProps } from './RoundAction';
+export { RoundAction } from './RoundAction';
+export type { RoundActionProps } from './RoundAction.types';
