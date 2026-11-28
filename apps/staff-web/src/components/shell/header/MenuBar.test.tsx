@@ -38,13 +38,12 @@ describe('MenuBar — the compact bar under 900px', () => {
     expect(screen.getByRole('button', { name: t.nav.menu }).className).toContain('min-h-11');
   });
 
-  it('«القائمة» opens the nav in a sheet with theme, language and logout at its foot', () => {
+  it('«القائمة» opens the nav in a sheet with the account, language and logout at its foot', () => {
     bar();
     fireEvent.click(screen.getByRole('button', { name: t.nav.menu }));
     const sheet = screen.getByRole('dialog', { name: t.nav.menu });
     expect(within(sheet).getByRole('navigation', { name: t.nav.label })).toBeTruthy();
     expect(within(sheet).getByRole('button', { name: t.auth.logout })).toBeTruthy();
-    expect(within(sheet).getByRole('group', { name: t.theme.label })).toBeTruthy();
     expect(within(sheet).getByText('admin@example.com')).toBeTruthy();
     expect(within(sheet).getByRole('link', { name: new RegExp(t.account.nav) }).getAttribute('href')).toBe('/account');
   });
@@ -65,5 +64,20 @@ describe('MenuBar — the compact bar under 900px', () => {
     fireEvent.click(screen.getByRole('button', { name: t.nav.menu }));
     const nav = within(screen.getByRole('dialog', { name: t.nav.menu })).getByRole('navigation', { name: t.nav.label });
     expect(within(nav).getAllByRole('link').map((a) => a.textContent)).toEqual([t.payments.title]);
+  });
+
+  it('puts the compact theme and time switches in one row at the top, before the nav', () => {
+    bar();
+    fireEvent.click(screen.getByRole('button', { name: t.nav.menu }));
+    const sheet = screen.getByRole('dialog', { name: t.nav.menu });
+    const theme = within(sheet).getByRole('group', { name: t.theme.label });
+    const clock = within(sheet).getByRole('group', { name: t.clock.label });
+    const row = theme.parentElement;
+    expect(row).toBe(clock.parentElement);
+    expect(row?.previousElementSibling).toBeNull();
+    const nav = within(sheet).getByRole('navigation', { name: t.nav.label });
+    expect((row?.compareDocumentPosition(nav) ?? 0) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(sheet).getAllByRole('group', { name: t.theme.label })).toHaveLength(1);
+    expect(within(theme).getByRole('button', { name: t.theme.dark }).textContent).toBe('');
   });
 });

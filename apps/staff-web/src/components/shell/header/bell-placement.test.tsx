@@ -69,7 +69,7 @@ describe('compact bar (< 900px): ONE button «القائمة»', () => {
     expect(screen.queryByRole('button', { name: t.bell.open })).toBeNull();
   });
 
-  it('the sheet starts with «الإشعارات» (count in its name); a tap reveals the panel inline', async () => {
+  it('«الإشعارات» under the switches (count in its name); a tap reveals the panel', async () => {
     renderWithClient(
       <MenuBar home="/teacher" title={t.nav.dashboard} nav={<nav aria-label={t.nav.label} />} />,
     );
@@ -89,10 +89,11 @@ describe('compact bar (< 900px): ONE button «القائمة»', () => {
 });
 
 describe('wide header (≥ 900px) keeps the bell', () => {
-  it('before language, theme and logout', async () => {
+  it('right after the language, theme and time switches, before logout', async () => {
     renderWithClient(<WideHeader />);
     const bell = await screen.findByRole('button', { name: t.bell.openUnread.replace('{n}', '1') });
     expect(follows(bell, screen.getByRole('button', { name: t.auth.logout }))).toBe(true);
-    expect(follows(bell, screen.getByRole('group', { name: t.theme.label }))).toBe(true);
+    expect(follows(screen.getByRole('group', { name: t.theme.label }), bell)).toBe(true);
+    expect(follows(screen.getByRole('group', { name: t.clock.label }), bell)).toBe(true);
   });
 });

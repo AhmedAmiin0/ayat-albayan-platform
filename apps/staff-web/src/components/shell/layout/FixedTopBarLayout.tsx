@@ -28,7 +28,7 @@ export function FixedTopBarLayout({ topNav, bar, wide = false, children }: Fixed
       )}
     >
       <MenuBar {...bar} nav={topNav} email={me?.email} className="shell:hidden" />
-      <WideHeader clocks={full ? <RunningHead className="min-h-0 flex-nowrap whitespace-nowrap" /> : undefined} />
+      <WideHeader clocks={full ? <RunningHead layout="inline" /> : undefined} />
       <div className="hidden shrink-0 px-1.5 pt-3 shell:block">{topNav}</div>
       {/* The full-width row only below 1340px, where the wide header does not hold its clocks. */}
       <div className={cn('shrink-0', full && 'min-[1340px]:hidden')}>

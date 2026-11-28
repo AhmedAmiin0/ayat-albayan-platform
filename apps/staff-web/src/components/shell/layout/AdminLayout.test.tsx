@@ -1,6 +1,7 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { t } from '@ab/web-kit';
 import { AdminLayout } from './AdminLayout';
 
 vi.mock('@tanstack/react-query', async (importOriginal) => ({
@@ -19,7 +20,13 @@ vi.mock('@ab/web-kit/auth/me/me', () => ({ meQuery: {} }));
 vi.mock('@/components/shell/nav/Crumbs', () => ({ Crumbs: () => null }));
 vi.mock('@/components/shell/header/MenuBar', () => ({ MenuBar: () => <header data-menu-bar /> }));
 vi.mock('@/components/shell/account/SideFoot', () => ({ SideFoot: () => <div data-side-foot /> }));
-vi.mock('@ab/web-kit/components/ui/layout/running-head', () => ({ RunningHead: ({ end }: { end?: ReactNode }) => <div data-running-head>{end}</div> }));
+vi.mock('@ab/web-kit/components/ui/layout/running-head', () => ({
+  RunningHead: ({ end, layout }: { end?: ReactNode; layout?: string }) => (
+    <div data-running-head data-layout={layout}>
+      {end}
+    </div>
+  ),
+}));
 vi.mock('@/features/messaging/notifications/NotificationBell/NotificationBell', () => ({ NotificationBell: () => <button type="button" data-bell /> }));
 
 const nav = (
@@ -85,5 +92,29 @@ describe('AdminLayout sidebar', () => {
   it('puts the bell at the end of the running head (from 640px; the compact bar has its own)', () => {
     const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
     expect(container.querySelector('[data-running-head] [data-bell]')).not.toBeNull();
+  });
+
+  it('from 900px the compact theme and time switches sit right before the bell, on one row', () => {
+    const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
+    const end = container.querySelector('[data-running-head] [data-head-end]');
+    expect(end?.className.split(' ')).toEqual(expect.arrayContaining(['hidden', 'shell:flex']));
+    expect(container.querySelector('[data-running-head]')?.getAttribute('data-layout')).toBe('fit');
+    const theme = screen.getByRole('group', { name: t.theme.label });
+    const clock = screen.getByRole('group', { name: t.clock.label });
+    expect(end?.contains(theme) && end.contains(clock)).toBe(true);
+    expect(end?.lastElementChild?.hasAttribute('data-bell')).toBe(true);
+    expect(screen.getByRole('button', { name: t.theme.dark }).getAttribute('aria-label')).toBe(t.theme.dark);
+  });
+
+  it('tabs through the theme, then the time format, then the bell', () => {
+    const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
+    const buttons = [...(container.querySelector('[data-head-end]')?.querySelectorAll('button') ?? [])];
+    const at = (el: Element) => buttons.indexOf(el as HTMLButtonElement);
+    const bell = container.querySelector('[data-bell]');
+    expect(bell).not.toBeNull();
+    expect(at(screen.getByRole('button', { name: t.theme.light }))).toBe(1);
+    expect(at(screen.getByRole('button', { name: t.clock.h24 }))).toBe(5);
+    expect(buttons.at(-1)).toBe(bell);
+    expect(buttons.every((b) => b.tabIndex === 0)).toBe(true);
   });
 });
