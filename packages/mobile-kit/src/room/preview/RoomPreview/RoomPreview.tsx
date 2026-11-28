@@ -1,23 +1,11 @@
 import { View } from 'react-native';
-import type { RoomPlatform } from '../../model/room-types';
-import type { useRoomPreview } from '../../state/use-room-preview';
 import { t } from '../../../lib/i18n/i18n';
 import { AppText, Button } from '../../../ui';
 import { shape, type, useTheme } from '../../../theme';
 import { CameraButton, MicButton } from '../MediaButtons';
 import { PreviewNotice } from '../PreviewNotice';
-
-const R = t.mobileRoom;
-
-interface RoomPreviewProps {
-  PreviewVideo: RoomPlatform['PreviewVideo'];
-  preview: Pick<
-    ReturnType<typeof useRoomPreview>,
-    'streamUrl' | 'wanted' | 'toggleMic' | 'toggleCam'
-  >;
-  notice: 'denied' | 'blocked' | null;
-  onJoin: () => void;
-}
+import type { RoomPreviewProps } from './RoomPreview.types';
+import { R } from './room-preview.helpers';
 
 /** The first time only: the device choice is kept. */
 export function RoomPreview({ PreviewVideo, preview, notice, onJoin }: RoomPreviewProps) {
