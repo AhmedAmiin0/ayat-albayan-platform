@@ -9,8 +9,7 @@ const BottomSheet = ({ isPresented, children, ...props }) =>
     ? createElement(RN.View, { testID: 'native-bottom-sheet', ...props }, children)
     : null;
 
-const Host = ({ children, ...props }) =>
-  createElement(RN.View, { testID: 'native-host', ...props }, children);
+const Host = ({ children, ...props }) => createElement(RN.View, props, children);
 const RNHostView = ({ children, ...props }) => createElement(RN.View, props, children);
 
 // The observable native text: one object for the field's life, as the native one is. Only the

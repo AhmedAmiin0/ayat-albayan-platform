@@ -84,12 +84,15 @@ test('typing reports the text; a new value from the screen replaces the native t
 
 test('an ltr field lays its native host out left to right', async () => {
   await render(<Field label={t.auth.email} ltr value="a@b.c" />);
-  expect(screen.getByTestId('native-host')).toHaveProp('layoutDirection', 'leftToRight');
+  expect(input().parent).toHaveProp('layoutDirection', 'leftToRight');
 });
 
-test('a free-text field keeps the UI direction on its host', async () => {
+test('a free-text field sits in the kit host: the app direction and theme', async () => {
   await render(<Field label={t.auth.email} value="سلام" />);
-  expect(screen.getByTestId('native-host').props.layoutDirection).toBeUndefined();
+  const host = input().parent;
+  expect(host).toHaveProp('layoutDirection', 'rightToLeft');
+  expect(host).toHaveProp('colorScheme', 'light');
+  expect(host).toHaveProp('matchContents', { vertical: true });
 });
 
 function DigitsOnly() {

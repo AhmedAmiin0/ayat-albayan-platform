@@ -9,11 +9,10 @@ import { useNativeText } from '../../use-native-text';
  * twin: each caller also sets `autoComplete`, which @expo/ui turns into it on iOS.
  */
 export function useNativeFieldInput(props: FieldInputProps) {
-  const { label, hint, ltr, focused, onFocusChange, input } = props;
+  const { label, hint, focused, onFocusChange, input } = props;
   const { color } = useTheme();
   const { text, onChange } = useNativeText(input);
   return {
-    layoutDirection: ltr ? ('leftToRight' as const) : undefined,
     input: {
       value: text,
       onChangeText: onChange,
