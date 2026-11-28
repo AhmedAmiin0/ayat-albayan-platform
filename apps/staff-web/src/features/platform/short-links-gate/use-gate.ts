@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { signOut } from '@ab/web-kit';
 import { profileQuery } from '@/features/people/account';
 import { type Me, meQuery } from '@/features/people/auth';
-import { gateSends, gateViewQuery } from './gate-api';
+import { gateCalls } from './gate-api';
 import { type GatePhone, useGatePhone } from './use-gate-phone';
 
 /** The page's way to the target: a full load (the target may be another site). */
@@ -53,7 +53,7 @@ const nameOf = (profile: AccountProfile | undefined, me: Me | null | undefined):
  */
 export function useGate(code: string, go: Go): Gate {
   const queryClient = useQueryClient();
-  const view = useQuery({ ...gateViewQuery(code), retry: false });
+  const view = useQuery({ ...gateCalls.viewQuery(code), retry: false });
   const me = useQuery({ ...meQuery, retry: false });
   const signedIn = Boolean(me.data);
   const profile = useQuery({ ...profileQuery, enabled: signedIn });
@@ -65,7 +65,7 @@ export function useGate(code: string, go: Go): Gate {
     if (target !== null) go(target);
   };
   const phone = useGatePhone({ code, onStep: setStep, onResult: settle });
-  const opener = useMutation({ mutationFn: gateSends.open, onSuccess: settle });
+  const opener = useMutation({ mutationFn: gateCalls.open, onSuccess: settle });
   const restart = (next: GateStep) => {
     setResult(null);
     setStep(next);

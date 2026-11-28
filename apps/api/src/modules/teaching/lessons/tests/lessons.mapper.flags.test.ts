@@ -7,7 +7,7 @@ const CLASH = {
   kind: 'teacher_busy',
   startsAt: '2026-11-01T15:00:00.000Z',
   endsAt: '2026-11-01T16:00:00.000Z',
-  lessonId: 'e0000000-0000-4000-8000-000000000001',
+  lessonId: '00000000-0000-4000-8000-0000000000c1',
 };
 const proposal = (status: 'pending' | 'approved' | 'rejected') => ({
   id: `p-${status}`,
