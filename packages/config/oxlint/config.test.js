@@ -15,6 +15,8 @@ test('packageOverrides: base rules, .ts complexity, JS-only rules, tests, then t
   assert.deepEqual(overrides[0].files, ['e2e/**/*']);
   assert.equal(level(overrides[0], 'stylistic/max-len')[1].code, 100);
   assert.equal(level(overrides[0], 'ab/no-hand-paging'), 'error');
+  assert.equal(level(overrides[0], 'ab/route-from-contract'), 'error');
+  assert.equal(level(overrides[0], 'ab/no-api-path-literal'), 'error');
   assert.deepEqual(level(overrides[1], 'complexity'), ['error', { max: 6, variant: 'classic' }]);
   assert.deepEqual(overrides[2].files, ['e2e/**/*.{js,mjs,cjs,jsx}']);
   assert.equal(level(overrides[3], 'typescript/no-unsafe-call'), 'off');
