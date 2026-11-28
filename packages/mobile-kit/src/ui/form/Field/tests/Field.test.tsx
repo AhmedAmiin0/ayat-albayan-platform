@@ -21,7 +21,8 @@ test('a plain field has no eye', async () => {
   expect(screen.queryByTestId('password-toggle')).toBeNull();
 });
 
-// The Arabic UI (jest.setup: RTL). Free text aligns by what is typed; an ltr value is an LTR island.
+// The Arabic UI (jest.setup: RTL). Free text aligns by what is typed; an ltr value is an LTR
+// island.
 const inputStyle = (label: string) => StyleSheet.flatten(screen.getByLabelText(label).props.style);
 
 test('a free-text field sets no textAlign or writingDirection (the typed text decides)', async () => {

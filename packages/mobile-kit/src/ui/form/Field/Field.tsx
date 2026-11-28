@@ -16,10 +16,10 @@ export interface FieldProps extends Omit<TextInputProps, 'style'> {
 /**
  * Label + 16pt input, 44pt tall (docs/07 §4: the iOS zoom floor and mobile touch size).
  * Edge is the 3:1 ruleInput; focus turns it a 2px lapis ring (border + outline, so nothing shifts).
- * The label starts at the inline-start (AppText). Free text aligns by what is typed (no textAlign, no
- * writingDirection: the platform's first-strong rule); an `ltr` field is wrapped in direction 'ltr',
- * and so is a password (its dots and Latin characters start at the left like the identifier's).
- * A `secureTextEntry` field gets the eye toggle at the inline-end (PasswordToggle).
+ * The label starts at the inline-start (AppText). Free text aligns by what is typed (no textAlign,
+ * no writingDirection: the platform's first-strong rule); an `ltr` field is wrapped in direction
+ * 'ltr', and so is a password (its dots and Latin characters start at the left like the
+ * identifier's). A `secureTextEntry` field gets the eye toggle at the inline-end (PasswordToggle).
  */
 export function Field({
   label,

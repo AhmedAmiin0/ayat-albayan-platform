@@ -2,7 +2,8 @@ import { render, screen } from '@testing-library/react-native';
 import { Animated } from 'react-native';
 import { ConnectingDots, STILL_DOT_OPACITY } from './ConnectingDots';
 
-// Three 5 pt dots, 4 pt apart: a 1.2 s wave staggered 0 / 150 / 300 ms; Reduce Motion: still at 0.7.
+// Three 5 pt dots, 4 pt apart: a 1.2 s wave staggered 0 / 150 / 300 ms; Reduce Motion: still at
+// 0.7.
 const timing = jest.spyOn(Animated, 'timing');
 const delay = jest.spyOn(Animated, 'delay');
 const dots = () => screen.getAllByTestId('connecting-dot', { includeHiddenElements: true });

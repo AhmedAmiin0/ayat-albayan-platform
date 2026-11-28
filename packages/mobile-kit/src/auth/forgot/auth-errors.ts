@@ -1,7 +1,10 @@
 import { signInError } from '@ab/client-core';
 import { t } from '../../lib/i18n/i18n';
 
-/** The words for a failed public auth call (docs/30 §6): the API's `code`, else the caller's fallback. */
+/**
+ * The words for a failed public auth call (docs/30 §6): the API's `code`, else the caller's
+ * fallback.
+ */
 export function authErrorText(error: unknown, fallback: string): string {
   const code = signInError(error);
   if (code === null) return fallback;

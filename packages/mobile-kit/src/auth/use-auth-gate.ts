@@ -42,8 +42,9 @@ export async function resolveGate(
 
 /**
  * Root-layout gate (R-MOB-01, R-AUTH-01): 'booting' until the stored session is restored and
- * checked, then the app role ('admin', 'teacher', 'sales', 'assistant') or 'out'. Every sign-out path (button, 401, failed refresh)
- * arrives here as SIGNED_OUT. Only the latest event may set the status, so a slow check can't reopen a signed-out app.
+ * checked, then the app role ('admin', 'teacher', 'sales', 'assistant') or 'out'. Every sign-out
+ * path (button, 401, failed refresh) arrives here as SIGNED_OUT. Only the latest event may set the
+ * status, so a slow check can't reopen a signed-out app.
  */
 export function useAuthGate(): GateStatus {
   const [status, setStatus] = useState<GateStatus>('booting');
@@ -62,8 +63,9 @@ export function useAuthGate(): GateStatus {
       // Supabase holds its auth lock during this callback; calling back into it here deadlocks.
       setTimeout(() => void check(session), 0);
     });
-    // Still booting (a slow /auth/me): ask again; the newest check wins, as above. Only with a session
-    // in hand: offline, an expired token whose refresh failed reads as none, and that must never sign out.
+    // Still booting (a slow /auth/me): ask again; the newest check wins, as above. Only with a
+    // session in hand: offline, an expired token whose refresh failed reads as none, and that must
+    // never sign out.
     const offRetry = onGateRetry(() => {
       void supabase.auth
         .getSession()

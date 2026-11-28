@@ -33,9 +33,9 @@ const mayRegister = async (): Promise<boolean> =>
   (await hasLiveSession()) && !(await pushOptedOut());
 
 /**
- * On every admin start: real device + EAS project + permission (re-asked weekly) → Expo push token →
- * PUT /me/push-tokens (idempotent). Best effort: Expo Go, offline or a refused prompt skip silently
- * and the next start tries again. Never throws.
+ * On every admin start: real device + EAS project + permission (re-asked weekly) → Expo push token
+ * → PUT /me/push-tokens (idempotent). Best effort: Expo Go, offline or a refused prompt skip
+ * silently and the next start tries again. Never throws.
  */
 export async function registerPush(): Promise<void> {
   if (!Device.isDevice) return;

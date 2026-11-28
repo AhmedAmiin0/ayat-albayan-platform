@@ -22,11 +22,16 @@ export const meSchema = z.union([
 ]);
 export type Me = z.infer<typeof meSchema>;
 
-/** With the role the last run saved (/auth/me in the persisted cache), the app opens on it after this
- *  long instead of waiting on a slow network; the saved lists show, the reconnecting bar takes over. */
+/** With the role the last run saved (/auth/me in the persisted cache), the app opens on it after
+ * this
+ *  long instead of waiting on a slow network; the saved lists show, the reconnecting bar takes
+ * over. */
 export const SAVED_ROLE_WAIT_MS = 800;
 
-/** The saved role once the cache is back and SAVED_ROLE_WAIT_MS has passed; never settles without one. */
+/**
+ * The saved role once the cache is back and SAVED_ROLE_WAIT_MS has passed; never settles without
+ * one.
+ */
 function savedRoleLater(): Promise<AppRole> {
   return new Promise((resolve) => {
     void cacheRestored.then(() =>

@@ -68,7 +68,9 @@ export const persistOptions: Omit<PersistQueryClientOptions, 'queryClient'> = {
 };
 
 let markRestored: () => void = () => undefined;
-/** Settles once PersistQueryClientProvider has put the saved cache back (or given up): app/_layout. */
+/**
+ * Settles once PersistQueryClientProvider has put the saved cache back (or given up): app/_layout.
+ */
 export const cacheRestored = new Promise<void>((resolve) => {
   markRestored = resolve;
 });

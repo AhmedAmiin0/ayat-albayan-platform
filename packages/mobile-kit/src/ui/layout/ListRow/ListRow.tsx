@@ -14,11 +14,16 @@ interface ListRowProps {
   subtitle?: string;
   /** Before the subtitle on its line: a thread's delivery ticks when its last message is ours. */
   subtitleLeading?: ReactNode;
-  /** What the reader says for the subtitle when it differs (the ticks' status word, then the text). */
+  /**
+   * What the reader says for the subtitle when it differs (the ticks' status word, then the text).
+   */
   subtitleLabel?: string;
   /** LTR value beside the title: «AB-0183» or formatPhone(phone). */
   meta?: string;
-  /** The meta at the subtitle's size in ink-2 (a code the reader must read), not the quiet 2xs ink-3. */
+  /**
+   * The meta at the subtitle's size in ink-2 (a code the reader must read), not the quiet 2xs
+   * ink-3.
+   */
   metaStrong?: boolean;
   /** Third line: chips and short words that wrap (a thread's lead status + source). */
   tags?: ReactNode;
@@ -33,8 +38,9 @@ interface ListRowProps {
 }
 
 /**
- * One list row, 56pt minimum. Inside an inset group (LazyList, InsetGroup: the app's container rule)
- * the group draws the fill and the rules between rows; alone it keeps its own fill and hairline below.
+ * One list row, 56pt minimum. Inside an inset group (LazyList, InsetGroup: the app's container
+ * rule) the group draws the fill and the rules between rows; alone it keeps its own fill and
+ * hairline below.
  */
 export function ListRow(props: ListRowProps) {
   const {

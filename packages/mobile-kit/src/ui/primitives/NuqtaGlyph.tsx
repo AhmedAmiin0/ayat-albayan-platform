@@ -1,9 +1,10 @@
 import type { Glyph } from '@ab/money';
 import Svg, { Path } from 'react-native-svg';
 
-// The calligrapher's rhombic dot (docs/07 §5–6, docs/design/motif-nuqta-glyphs.svg). Shape carries the
-// state, colour only confirms it: fill = settled, half = underway, hollow = waiting, struck = stopped.
-// Never above 16px (the empty-state rhombus is its own drawing). Always decorative: the word says it.
+// The calligrapher's rhombic dot (docs/07 §5–6, docs/design/motif-nuqta-glyphs.svg). Shape carries
+// the state, colour only confirms it: fill = settled, half = underway, hollow = waiting, struck =
+// stopped. Never above 16px (the empty-state rhombus is its own drawing). Always decorative: the
+// word says it.
 const OUTLINE = 'M8 2.9 13.1 8 8 13.1 2.9 8Z';
 
 interface NuqtaGlyphProps {

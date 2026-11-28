@@ -21,9 +21,13 @@ function useAnnounce(phase: BarPhase) {
 
 interface ConnectingBarProps {
   store?: ConnectivityStore;
-  /** Space kept above the card (the top safe area when the bar sits above a screen with no header). */
+  /**
+   * Space kept above the card (the top safe area when the bar sits above a screen with no header).
+   */
   inset?: number;
-  /** Paints the inset and the card's margins (the screen's own background), when there is an inset. */
+  /**
+   * Paints the inset and the card's margins (the screen's own background), when there is an inset.
+   */
   background?: string;
   /** The card's side margin (16 pt from the screen edge either way). */
   gutter?: number;

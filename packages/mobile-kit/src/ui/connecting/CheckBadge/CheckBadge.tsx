@@ -5,7 +5,10 @@ import { useTheme } from '../../../theme';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const SIZE = 20;
-/** The design's dash travel (24 → 0), mapped onto the tick's real length so it draws over the full 360 ms. */
+/**
+ * The design's dash travel (24 → 0), mapped onto the tick's real length so it draws over the full
+ * 360 ms.
+ */
 const TRAVEL = 24;
 const TICK_LENGTH = 11.4;
 const POP_MS = 320;

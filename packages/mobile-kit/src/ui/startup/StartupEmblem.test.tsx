@@ -3,7 +3,8 @@ import { Animated, Easing, useColorScheme } from 'react-native';
 import { palette } from '../../theme';
 import { emblemColors, StartupEmblem } from './StartupEmblem';
 
-// The 220 pt emblem: glow disc, track + gold arc, the 112 × 120 mark; its loops; light and dark tokens.
+// The 220 pt emblem: glow disc, track + gold arc, the 112 × 120 mark; its loops; light and dark
+// tokens.
 jest.mock('react-native/Libraries/Utilities/useColorScheme', () => ({ __esModule: true, default: jest.fn(() => 'light') }));
 const scheme = jest.mocked(useColorScheme);
 const timing = jest.spyOn(Animated, 'timing');

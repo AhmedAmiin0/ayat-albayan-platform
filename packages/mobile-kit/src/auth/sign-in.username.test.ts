@@ -2,7 +2,8 @@ import { ApiError } from '../lib/http/api';
 import { t } from '../lib/i18n/i18n';
 import { signIn } from './sign-in';
 
-// docs/30 §5: an identifier without @ signs in through POST /auth/login, then setSession, then the same role check.
+// docs/30 §5: an identifier without @ signs in through POST /auth/login, then setSession, then the
+// same role check.
 const mockSignInWithPassword = jest.fn();
 const mockSetSession = jest.fn();
 const mockSignOut = jest.fn();

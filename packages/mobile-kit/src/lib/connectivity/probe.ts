@@ -1,4 +1,7 @@
-/** A probe that gets no answer within this long counts as failed (a hanging request never ends the loop). */
+/**
+ * A probe that gets no answer within this long counts as failed (a hanging request never ends the
+ * loop).
+ */
 const PROBE_TIMEOUT_MS = 8000;
 
 interface ProbeOptions {
@@ -9,7 +12,8 @@ interface ProbeOptions {
 
 /**
  * One GET to the API's public liveness route (`/health`, no auth, `{ status: 'ok' }`). Any HTTP
- * response means the network and the API are reachable; only no response (or a timeout) is a failure.
+ * response means the network and the API are reachable; only no response (or a timeout) is a
+ * failure.
  */
 export async function probeApi({
   url,
