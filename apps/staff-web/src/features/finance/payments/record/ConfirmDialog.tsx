@@ -1,7 +1,7 @@
 import { useId, useState, type SubmitEvent, type ReactNode } from 'react';
 import { Button, Dialog, Field, FormAlert, Input, t } from '@ab/web-kit';
 
-type Props = {
+interface Props {
   title: string;
   children?: ReactNode;
   confirmLabel: string;
@@ -11,7 +11,7 @@ type Props = {
   error: string | null;
   onConfirm: (reason: string) => void;
   onClose: () => void;
-};
+}
 
 /** A money correction asks once more before it happens (delete a payment, void, un-pay, reopen). */
 export function ConfirmDialog({

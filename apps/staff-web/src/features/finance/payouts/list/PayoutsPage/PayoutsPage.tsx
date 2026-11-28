@@ -22,7 +22,7 @@ import { payoutColumns } from '@/features/finance/payouts/list/payout-columns';
 import { PayoutDialogs, type PayoutDialog } from '@/features/finance/payouts/pay/PayoutDialogs';
 import { TeacherDuesSummary } from '@/features/finance/payouts/list/TeacherDuesSummary';
 
-type Props = { month: string; onMonth: (month: string) => void };
+interface Props { month: string; onMonth: (month: string) => void }
 
 /** /admin/payouts (R-PAY-02, R-TCH-04, E3): what every teacher is owed, then a month's drafts, approve, pay, correct, CSV. */
 export function PayoutsPage({ month, onMonth }: Props) {

@@ -88,12 +88,12 @@ export const approveStatement = (id: string) => act(id, 'approve');
 export const reopenStatement = (id: string) => act(id, 'reopen');
 export const unpayStatement = (input: { id: string; reason: string }) => act(input.id, 'unpay', { reason: input.reason });
 
-export type PayStatementBody = {
+export interface PayStatementBody {
   paidAt: string;
   method: PaymentMethod;
   note: string | null;
   receiptPath: string | null;
-};
+}
 export const payStatement = (input: { id: string; body: PayStatementBody }) =>
   act(input.id, 'pay', input.body);
 

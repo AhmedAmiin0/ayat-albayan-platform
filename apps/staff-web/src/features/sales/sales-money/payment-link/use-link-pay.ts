@@ -21,13 +21,13 @@ type LinkExtra = Omit<
   'studentId' | 'pricing' | 'amount' | 'currency' | 'clientRequestId' | 'kind'
 >;
 
-type Opts = {
+interface Opts {
   /** Empty while online payment is not picked: nothing is asked. */
   studentId: string;
   /** One object per form (the step keeps it): the debounce settles on this very object. */
   pricing: SubscriptionPricing;
   onCreated: (link: PaymentLinkView) => Promise<void>;
-};
+}
 
 const positive = (text: string, amount: number) =>
   text.trim() !== '' && Number.isFinite(amount) && amount > 0;

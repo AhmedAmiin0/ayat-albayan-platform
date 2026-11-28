@@ -7,7 +7,7 @@ import { MergeDialog } from './MergeDialog';
 import { SavedNote } from '@/features/people/students/profile/SavedNote';
 import type { StudentRef } from '@ab/shared';
 
-type SiblingMergeProps = { student: StudentRef; siblings: StudentRef[] };
+interface SiblingMergeProps { student: StudentRef; siblings: StudentRef[] }
 
 /**
  * Merge tool on the profile (R-STU-03): fold another student on the same guardian phone into

@@ -8,7 +8,7 @@ import { DuplicateDialog } from '@/features/people/students/duplicates/Duplicate
 import { MergeDialog } from '@/features/people/students/duplicates/MergeDialog';
 import type { StudentRef } from '@ab/shared';
 
-type CreateStudentDialogProps = {
+interface CreateStudentDialogProps {
   onClose: () => void;
   onDone: (notice: string) => void;
   /** Pre-filled values; given → the compact form (see CreateStudentForm). */
@@ -16,7 +16,7 @@ type CreateStudentDialogProps = {
   /** The inbox lead this registration converts (R-LEAD-06); sent on every create, merge included. */
   leadId?: string;
   title?: string;
-};
+}
 
 /**
  * Create a student (R-STU-01..04). On a duplicate (409, R-STU-03) the admin either merges the

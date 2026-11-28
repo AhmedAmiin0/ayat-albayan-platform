@@ -6,12 +6,12 @@ import { MeetingModeWarnings } from './MeetingModeWarnings';
 import type { SetField, TeacherForm } from './teacher-form';
 import type { Teacher } from '@ab/shared';
 
-type Props = {
+interface Props {
   form: TeacherForm;
   set: SetField;
   /** The teacher being edited (null when adding): their resolved mode stands in until the settings load. */
   teacher?: Teacher | null;
-};
+}
 
 /** The academy default comes from GET /settings/public, so nothing is claimed before it answers. */
 export function TeacherMeetingModeField({ form, set, teacher = null }: Props) {

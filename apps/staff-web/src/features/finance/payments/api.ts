@@ -26,13 +26,13 @@ const calls = paymentCalls({ apiFetch, apiSend });
 const paymentSortKey = z.enum(PAYMENT_SORT_KEYS);
 
 /** The payments page filters (all optional); from/to are Riyadh days, inclusive. */
-export type PaymentFilters = {
+export interface PaymentFilters {
   studentId?: string;
   from?: string;
   to?: string;
   method?: PaymentListQuery['method'];
   kind?: PaymentKind;
-};
+}
 
 /** Only the set filters, as query parameters (shared by the list and its CSV). */
 export function filterParams(f: PaymentFilters): Record<string, string> {

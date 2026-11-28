@@ -1,16 +1,16 @@
 import { useCallback, useMemo, useState } from 'react';
 import { usePermissions } from '@ab/web-kit';
 
-export type PickColumn = { isPicked: (id: string) => boolean; toggle: (id: string) => void };
+export interface PickColumn { isPicked: (id: string) => boolean; toggle: (id: string) => void }
 
-export type StudentPick = {
+export interface StudentPick {
   /** Only an admin who may write assistant pay can pick. */
   enabled: boolean;
   ids: readonly string[];
   /** Undefined when picking is off: the table then has no extra column. */
   column: PickColumn | undefined;
   clear: () => void;
-};
+}
 
 /** Selection is kept while paging. */
 export function useStudentPick(): StudentPick {

@@ -15,11 +15,11 @@ export interface TransferForm {
   note: string;
 }
 
-export type TransferInput = {
+export interface TransferInput {
   sub: SalesMoneySubscriptionView;
   form: TransferForm;
   attachments: ReceiptChoice[];
-};
+}
 
 /** One clientRequestId per step, re-sent on retry; each upload sent once; package's currency. */
 export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void, bind: Bind = {}) {

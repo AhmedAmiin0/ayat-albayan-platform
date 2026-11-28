@@ -11,7 +11,7 @@ import type { Teacher, TeacherListRow } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, TeacherListRow>();
 
-type Handlers = { onEdit: (teacher: Teacher) => void; onOpen: (teacherId: string) => void };
+interface Handlers { onEdit: (teacher: Teacher) => void; onOpen: (teacherId: string) => void }
 
 const text = { kind: 'text' } as const;
 const programOptions = () => PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));

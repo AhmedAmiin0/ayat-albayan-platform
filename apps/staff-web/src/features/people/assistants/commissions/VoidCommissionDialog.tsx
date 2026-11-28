@@ -5,7 +5,7 @@ import { t } from '@ab/web-kit';
 import { ASSISTANTS_KEY, voidCommission, type AssistantCommissionView } from '@/features/people/assistants/api';
 import { errorText } from '@/features/people/assistants/status';
 
-type Props = { commission: AssistantCommissionView; onClose: () => void };
+interface Props { commission: AssistantCommissionView; onClose: () => void }
 
 /** Voiding asks for a reason (audited); the money side effects are the database's (a reversal in a frozen statement). */
 export function VoidCommissionDialog({ commission, onClose }: Props) {

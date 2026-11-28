@@ -7,7 +7,7 @@ import { paidAtFor, recordPayment, uploadReceipt } from '@/features/finance/paym
 import { useUploadOnce } from '@/features/finance/payments/attachments/attachments';
 import type { PaymentForm } from './PaymentFields';
 
-export type SaveInput = {
+export interface SaveInput {
   sub: SubscriptionView;
   form: PaymentForm;
   file: File | null;
@@ -18,7 +18,7 @@ export type SaveInput = {
   kind: PaymentKind;
   /** The booking's invoice is the receipt, so no upload. */
   invoiceId?: string;
-};
+}
 
 /** One clientRequestId per dialog and one upload per file, so a lost reply never books twice. */
 export function useRecordPayment(onSaved: () => void) {

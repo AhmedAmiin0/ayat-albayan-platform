@@ -8,7 +8,7 @@ import { PermissionMatrix } from './PermissionMatrix';
 import { RoleResetButton } from './RoleResetButton';
 import { fixedGrantsOf, resettableRole, roleBody, roleForm, toggleGroup, togglePermission, type RoleForm } from './role-form';
 
-type Props = { role: RoleView | null; onClose: () => void };
+interface Props { role: RoleView | null; onClose: () => void }
 const P = t.permissions.page;
 
 /** Create or edit a role in the side panel: names, base role (fixed once created) and the matrix. */

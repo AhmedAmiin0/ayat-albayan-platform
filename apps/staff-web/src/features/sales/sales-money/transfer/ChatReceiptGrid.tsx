@@ -6,14 +6,14 @@ import { ChatReceiptThumb } from './ChatReceiptThumb';
 import { salesErrorText } from '@/features/sales/sales-money/errors';
 import { chatReceiptLabel, type ReceiptChoice } from './receipt';
 
-type Props = {
+interface Props {
   sub: { id: string; student: { id: string } };
   /** Messages already in the list: shown as picked, never copied again. */
   picked: ReadonlySet<string>;
   onPicked: (choice: ReceiptChoice & { kind: 'chat' }) => void;
   /** The chat's phone for a child not hers (chatBinding). */
   bind?: Bind | undefined;
-};
+}
 
 /** Newest first as the API sends them; expired files disabled; a pick copies into the receipts. */
 export function ChatReceiptGrid({ sub, picked, onPicked, bind = {} }: Props) {

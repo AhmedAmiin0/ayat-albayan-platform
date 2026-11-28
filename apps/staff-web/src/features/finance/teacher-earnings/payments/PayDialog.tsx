@@ -13,14 +13,14 @@ import { ReceiptField, receiptProblem } from '@/features/finance/payments/attach
 import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
 import { usePayTeacher } from './use-pay-teacher';
 
-type Props = {
+interface Props {
   teacher: { id: string; name: string };
   selected: ReadonlyMap<string, TeacherEarningView>;
   /** The teacher's whole outstanding balance (used when no session is ticked). */
   outstanding: number;
   onClose: () => void;
   onSaved: (replayed: boolean) => void;
-};
+}
 
 /** The amount defaults to what the ticked sessions owe. */
 export function PayDialog({ teacher, selected, outstanding, onClose, onSaved }: Props) {

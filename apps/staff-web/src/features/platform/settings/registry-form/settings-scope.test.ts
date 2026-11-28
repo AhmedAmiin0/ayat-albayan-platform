@@ -26,16 +26,16 @@ describe('settings-scope (a page sends only what it changed)', () => {
   it('afterSave: what was sent becomes the baseline of the written keys; a later edit stays dirty', () => {
     const sentForm = { ...base, bookingHorizonWeeks: '9' };
     const pair = afterSave({ form: { ...sentForm, bookingHorizonWeeks: '10' }, initial: base }, ['booking_horizon_weeks'], sentForm);
-    expect(pair.initial['bookingHorizonWeeks']).toBe('9');
-    expect(pair.form['bookingHorizonWeeks']).toBe('10');
+    expect(pair.initial.bookingHorizonWeeks).toBe('9');
+    expect(pair.form.bookingHorizonWeeks).toBe('10');
   });
 
   it('refreshed: clean keys take the fresh value, dirty ones keep the edit', () => {
     const fresh = settingsForm({ ...SETTING_DEFAULTS, booking_horizon_weeks: 2, upload_max_mb: 5 });
     const pair = refreshed({ form: { ...base, bookingHorizonWeeks: '9' }, initial: base }, fresh);
-    expect(pair.form['bookingHorizonWeeks']).toBe('9');
-    expect(pair.form['uploadMaxMb']).toBe('5');
-    expect(pair.initial['uploadMaxMb']).toBe('5');
+    expect(pair.form.bookingHorizonWeeks).toBe('9');
+    expect(pair.form.uploadMaxMb).toBe('5');
+    expect(pair.initial.uploadMaxMb).toBe('5');
     expect(fieldsOf(['upload_max_mb'], fresh)).toEqual({ uploadMaxMb: '5' });
   });
 

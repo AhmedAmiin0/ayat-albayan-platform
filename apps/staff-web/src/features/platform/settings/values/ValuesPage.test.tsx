@@ -4,10 +4,10 @@ import { t } from '@ab/web-kit';
 import { LeaveGuard } from './sheet/LeaveGuard';
 import { ValuesPage } from './ValuesPage';
 
-type BlockOpts = {
+interface BlockOpts {
   shouldBlockFn: (a: { current: { pathname: string }; next: { pathname: string } }) => boolean;
   enableBeforeUnload: boolean;
-};
+}
 const router = vi.hoisted(() => ({
   opts: null as BlockOpts | null,
   status: 'idle',

@@ -7,12 +7,12 @@ import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { uploadTeacherReceipt } from '@/features/finance/teacher-earnings/api';
 import { payPayout, type PayoutView } from '@/features/finance/payouts/api';
 
-export type PayPayoutInput = {
+export interface PayPayoutInput {
   day: string;
   method: PaymentMethod;
   note: string;
   file: File | null;
-};
+}
 
 /** The receipt is uploaded once per file, then the payout is paid. */
 export function usePayPayout(payout: PayoutView, onSaved: () => void) {

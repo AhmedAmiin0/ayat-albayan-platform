@@ -1,7 +1,7 @@
 import { Icon, IconButton, Select, t, useClock, ClockOptions, clockDir, cn } from '@ab/web-kit';
 import { timeOptions, type Range } from './grid';
 
-type Props = {
+interface Props {
   dayName: string;
   range: Range;
   /** Which select the day's error points at, linked to the error line by `errorId`. */
@@ -9,7 +9,7 @@ type Props = {
   errorId: string;
   onChange: (patch: Partial<Range>) => void;
   onRemove: () => void;
-};
+}
 
 // 16px / 40px on phones is the iOS zoom floor (docs/07 §8); the 12 h format is wider.
 const timeClass = 'min-h-10 ps-2.5 pe-7 text-base tabular-nums sm:min-h-8 sm:text-xs';

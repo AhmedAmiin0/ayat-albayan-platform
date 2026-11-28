@@ -14,7 +14,7 @@ import { CourseSaved } from '@/features/sales/sales-money/course/CourseSaved';
 import { SalesPackageCancel } from '@/features/sales/sales-money/course/SalesPackageCancel';
 import { SalesRunningCourse } from '@/features/sales/sales-money/course/SalesRunningCourse';
 
-type Props = { studentId: string; onClose: () => void };
+interface Props { studentId: string; onClose: () => void }
 
 const noop = () => undefined;
 
@@ -34,7 +34,7 @@ function CourseBlocked({ view }: { view: SalesCourseView }) {
 const wizardStart = (plan: ContinuePlan | null, continuing: boolean): ContinuePlan | null =>
   continuing ? plan : null;
 
-type BookingProps = { view: SalesCourseView; draft: BookingDraft; onClose: () => void };
+interface BookingProps { view: SalesCourseView; draft: BookingDraft; onClose: () => void }
 
 /** When the previous days do not fit the new plan's days a week she adds or removes a day. */
 function CourseBooking({ view, draft, onClose }: BookingProps) {

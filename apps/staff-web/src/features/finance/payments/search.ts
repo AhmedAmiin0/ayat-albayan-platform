@@ -7,7 +7,7 @@ import type { PaymentFilters } from './api';
 // URL state of /admin/payments: the bar's student/range/kind, the table's sort and method filter.
 // Defaults (page 1, no filter, newest first) stay out of the URL.
 
-export type PaymentsUrlSearch = {
+export interface PaymentsUrlSearch {
   page?: number;
   studentId?: string;
   from?: string;
@@ -16,7 +16,7 @@ export type PaymentsUrlSearch = {
   sort?: string;
   dir?: SortDir;
   f_method?: PaymentMethod;
-};
+}
 
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const ID = /^[0-9a-f-]{36}$/i;
@@ -27,10 +27,10 @@ export function parsePaymentsSearch(s: Record<string, unknown>): PaymentsUrlSear
   const { method } = parseFilterSearch(s, ['method']);
   return {
     ...parsePage(s),
-    studentId: str(s['studentId'], ID),
-    from: str(s['from'], DAY),
-    to: str(s['to'], DAY),
-    kind: oneOf(PAYMENT_KINDS, s['kind']),
+    studentId: str(s.studentId, ID),
+    from: str(s.from, DAY),
+    to: str(s.to, DAY),
+    kind: oneOf(PAYMENT_KINDS, s.kind),
     ...parseSortSearch(s, PAYMENT_SORT_KEYS),
     f_method: oneOf(PAYMENT_METHODS, method),
   };

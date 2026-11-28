@@ -29,7 +29,7 @@ const whenText = (l: PaymentLinkView) =>
     ? fillText(P.paidAt, { when: formatDate(l.paid_at) })
     : fillText(P.expiresAt, { when: formatDate(l.expires_at) });
 
-type Opts = { now: Date; onCancel: (link: PaymentLinkView) => void };
+interface Opts { now: Date; onCancel: (link: PaymentLinkView) => void }
 
 // An open link past its expiry reads as expired; cancel only on an open one.
 export const linkColumns = ({ now, onCancel }: Opts) =>

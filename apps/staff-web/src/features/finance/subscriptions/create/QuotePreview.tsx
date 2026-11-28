@@ -6,7 +6,7 @@ import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { apiErrorText } from '@/features/finance/subscriptions/format';
 import { useSubscriptionQuote } from './use-subscription-quote';
 
-type Props = { studentId: string; pricing: SubscriptionPricing };
+interface Props { studentId: string; pricing: SubscriptionPricing }
 
 /**
  * The price the package will be stored with: POST /subscriptions/quote, the same quote as the

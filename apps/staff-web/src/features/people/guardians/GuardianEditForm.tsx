@@ -53,7 +53,7 @@ function GuardianForm({ guardian, onClose, onDone }: { guardian: GuardianDetail 
       onSubmit={(e) => {
         e.preventDefault();
         const r = guardianPatch(values);
-        if (!r.ok) return setErrors(r.errors);
+        if (!r.ok) {  setErrors(r.errors);; return; }
         setErrors({});
         save.mutate({ id: guardian.id, patch: r.patch });
       }}

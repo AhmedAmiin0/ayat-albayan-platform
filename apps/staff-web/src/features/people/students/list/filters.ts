@@ -11,14 +11,14 @@ import type { Program, StudentStatus } from '@ab/catalog';
  * Filters of /admin/students as they sit in the URL (and go to GET /students as they are).
  * `status` stays a comma-joined string («trial,active»): TanStack JSON-encodes arrays in the URL.
  */
-export type StudentsFilters = {
+export interface StudentsFilters {
   status?: string;
   teacher?: string;
   program?: Program;
   package?: StudentPackageFilter;
   weekly?: StudentWeeklyFilter;
   tz?: string;
-};
+}
 type FilterKey = keyof StudentsFilters;
 const SHAPE = studentListFiltersSchema.shape;
 

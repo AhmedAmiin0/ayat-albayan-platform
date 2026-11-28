@@ -7,7 +7,7 @@ import { DuplicateCompare } from './DuplicateCompare';
 import { SiblingsStrip } from './SiblingsStrip';
 import type { StudentRef } from '@ab/shared';
 
-export type DuplicateDialogProps = {
+export interface DuplicateDialogProps {
   typed: CreateStudentValues;
   /** From the 409 body; never empty. */
   candidates: StudentRef[];
@@ -16,7 +16,7 @@ export type DuplicateDialogProps = {
   onClose: () => void;
   onMerge: (candidate: StudentRef) => void;
   onCreateAnyway: () => void;
-};
+}
 
 /**
  * R-STU-03 duplicate warning (docs/07 §6 Dialog): calm saffron hollow glyph, no red. The typed

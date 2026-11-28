@@ -6,12 +6,12 @@ import { studentSubscriptionsQuery, type SubscriptionView } from '@/features/fin
 import { moneyText, packageName } from '@/features/finance/subscriptions';
 import { StudentPicker, type PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
 
-type Props = {
+interface Props {
   student: PickedStudent | null;
   onStudent: (s: PickedStudent | null) => void;
   picked: SubscriptionView | null;
   onPick: (s: SubscriptionView | null) => void;
-};
+}
 
 const owed = (s: SubscriptionView) => dueOf(s, s.paid);
 const optionText = (s: SubscriptionView) =>

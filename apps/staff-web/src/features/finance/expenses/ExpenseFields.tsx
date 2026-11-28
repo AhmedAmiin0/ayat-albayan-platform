@@ -9,12 +9,12 @@ import type { ExpenseForm } from './expense-form';
 /** The owner's tracker is in EGP; the site currencies are there for things paid abroad. */
 const CURRENCIES = [...new Set(['EGP', ...CURRENCY_ISOS])];
 
-type Props = {
+interface Props {
   form: ExpenseForm;
   set: (patch: Partial<ExpenseForm>) => void;
   categories: readonly ExpenseCategoryView[];
   amountError?: string | undefined;
-};
+}
 
 export function ExpenseFields({ form, set, categories, amountError }: Props) {
   return (

@@ -11,7 +11,7 @@ import type { Clock } from '@ab/web-kit';
 import { dateAndClock, viewerZone, t, locale } from '@ab/web-kit';
 
 /** Whole days with the end day included, as typed. */
-export type TimeOffDraft = { from: string; to: string; reason: string };
+export interface TimeOffDraft { from: string; to: string; reason: string }
 export const emptyTimeOffDraft: TimeOffDraft = { from: '', to: '', reason: '' };
 
 // ponytail: whole days in the browser's zone (usually the teacher's own); converting from

@@ -19,7 +19,7 @@ import { myMoneyKeys, salesMoneyKeys, salesSubscriptionKeys } from '@/features/s
 // /sales/subscriptions and /sales/payments. Only her students; the price always from the API. `Bind`: the chat's
 // phone for a child not hers (chatBinding, sales.renew_any, docs/16 row 38); nothing for hers.
 
-export type Bind = { phone?: string };
+export interface Bind { phone?: string }
 const scopeQuery = (studentId: string, bind: Bind) =>
   `studentId=${studentId}${bind.phone ? `&phone=${encodeURIComponent(bind.phone)}` : ''}`;
 

@@ -11,10 +11,10 @@ import { StatementTotals } from './StatementTotals';
 const col = createColumnHelper<DataTableFeatures, AssistantStatementView>();
 const S = t.assistants.statements;
 
-type Handlers = {
+interface Handlers {
   can: StatementCan;
   onAction: (s: AssistantStatementView, action: StatementAction) => void;
-};
+}
 
 /** Statements of a month: assistant, per-currency totals, status (draft → approved → paid), actions. */
 export function statementColumns({ can, onAction }: Handlers) {

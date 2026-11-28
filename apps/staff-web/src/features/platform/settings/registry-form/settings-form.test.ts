@@ -7,8 +7,8 @@ import { FORM_KEYS, settingsForm, settingsUpdate } from './settings-form';
 describe('settings form (generated from the settings registry)', () => {
   it('round-trips the defaults: late cancel OFF is null, follow-ups as «24، 72», the new keys too', () => {
     const form = settingsForm(SETTINGS);
-    expect(form['lateCancelHoursOn']).toBe(false);
-    expect(form['followUpHours']).toBe('24، 72');
+    expect(form.lateCancelHoursOn).toBe(false);
+    expect(form.followUpHours).toBe('24، 72');
     const result = settingsUpdate(form);
     expect(result).toEqual({
       ok: true,
@@ -77,9 +77,9 @@ describe('settings form (generated from the settings registry)', () => {
       join_closes_after_min: 30,
     });
     expect([
-      form['lateCancelHoursOn'],
-      form['lateCancelHours'],
-      form['joinClosesAfterMin'],
+      form.lateCancelHoursOn,
+      form.lateCancelHours,
+      form.joinClosesAfterMin,
     ]).toEqual([true, '6', '30']);
   });
 });

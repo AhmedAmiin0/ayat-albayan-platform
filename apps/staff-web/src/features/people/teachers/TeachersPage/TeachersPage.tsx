@@ -19,12 +19,12 @@ import { TeacherDialog } from '@/features/people/teachers/form/TeacherDialog';
 import type { Teacher, TeacherListRow } from '@ab/shared';
 import type { Page } from '@ab/core';
 
-type Props = {
+interface Props {
   /** Page, column sort and filters, kept in the route search (R-NFR-08). */
   list: ListUrlState;
   onList: (next: ListUrlState) => void;
   onOpen: (teacherId: string) => void;
-};
+}
 
 type TableProps = Props & {
   data: Page<TeacherListRow>;

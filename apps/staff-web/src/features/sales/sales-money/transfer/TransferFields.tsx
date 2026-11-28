@@ -2,14 +2,14 @@ import { Field, Input, t } from '@ab/web-kit';
 import { dateLabel } from '@/features/teaching/schedule';
 import type { TransferForm } from './use-sales-payment';
 
-type Props = {
+interface Props {
   form: TransferForm;
   set: (patch: Partial<TransferForm>) => void;
   /** The package's currency: the only one a sales transfer is recorded in (read-only). */
   packageCurrency: string;
   today: string;
   amountError?: string | null;
-};
+}
 
 /**
  * Amount, the package currency (fixed), transfer day (never in the future) and an

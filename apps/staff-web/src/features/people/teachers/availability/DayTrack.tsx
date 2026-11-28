@@ -17,13 +17,13 @@ const place = (range: Range): CSSProperties | null => {
   return box && { insetInlineStart: `${box.start}%`, width: `${box.width}%` };
 };
 
-type Props = {
+interface Props {
   ranges: readonly Range[];
   /** Minute of the day on today's row, else null. */
   now: number | null;
   /** Index of the range whose selects have focus: drawn as the band being edited. */
   editing?: number | null;
-};
+}
 
 const grip = 'absolute top-1/2 h-3.5 w-[5px] -translate-y-1/2 rounded-[2px] bg-lapis';
 

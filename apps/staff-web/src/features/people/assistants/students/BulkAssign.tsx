@@ -8,7 +8,7 @@ import { errorText } from '@/features/people/assistants/status';
 import type { StudentPick } from './use-student-pick';
 
 const B = t.assistants.brought;
-type Props = { pick: StudentPick; onDone: (message: string) => void };
+interface Props { pick: StudentPick; onDone: (message: string) => void }
 
 /** One salesperson for every ticked student, audited by the API (R-ASST-01). */
 export function BulkAssign({ pick, onDone }: Props) {

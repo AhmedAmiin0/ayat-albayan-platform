@@ -5,7 +5,7 @@ import { parseAge } from '@/features/people/students/create/create-student';
 import type { StudentProfile } from '@ab/shared';
 
 /** Editable profile fields (R-STU-05). Inputs hold strings; '' means "not set". */
-export type ProfileValues = {
+export interface ProfileValues {
   name: string;
   age: string;
   gender: Gender | '';
@@ -21,7 +21,7 @@ export type ProfileValues = {
   notes: string;
   /** False means the number belongs to the guardian (docs/30 §1). */
   contact_is_self: boolean;
-};
+}
 
 export const PROFILE_LABELS: Record<keyof ProfileValues, string> = {
   name: t.students.name,
@@ -73,8 +73,8 @@ export function toStudentPatch(values: ProfileValues, loaded: StudentStatus): Pa
   const raw: Record<string, unknown> = Object.fromEntries(
     Object.entries({ ...text, age: '' }).map(([k, v]) => [k, v.trim() === '' ? null : v.trim()]),
   );
-  raw['age'] = age;
-  raw['contact_is_self'] = contactIsSelf;
+  raw.age = age;
+  raw.contact_is_self = contactIsSelf;
   const r = studentUpdateSchema.safeParse(raw);
   if (r.success) return { ok: true, patch: withStatus(r.data, { status: values.status, loaded }) };
   const key = String(r.error.issues[0]?.path[0] ?? '') as keyof ProfileValues;

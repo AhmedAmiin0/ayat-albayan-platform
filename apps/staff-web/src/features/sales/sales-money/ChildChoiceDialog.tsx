@@ -2,12 +2,12 @@ import type { SalesFamilyStudent } from '@ab/shared';
 import { Button, Dialog, t } from '@ab/web-kit';
 import { studentLabel } from '@/features/finance/subscriptions';
 
-type Props = {
+interface Props {
   title: string;
   students: SalesFamilyStudent[];
   onPick: (student: SalesFamilyStudent) => void;
   onClose: () => void;
-};
+}
 
 /** No child names in chat actions: one action per family, then this picks the child. */
 export function ChildChoiceDialog({ title, students, onPick, onClose }: Props) {

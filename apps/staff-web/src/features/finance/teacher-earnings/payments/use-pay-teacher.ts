@@ -9,7 +9,7 @@ import { earningsKey, payTeacher, uploadTeacherReceipt, type Scope } from '@/fea
 /** The form lists the manual methods only; the platform's card is never a teacher payment. */
 const manualMethod = teacherPaymentCreateSchema.shape.method;
 
-export type PayInput = { form: PaymentForm; file: File | null; earningIds: string[] | undefined };
+export interface PayInput { form: PaymentForm; file: File | null; earningIds: string[] | undefined }
 
 /** One clientRequestId per dialog and one upload per file, so a lost reply never pays twice. */
 export function usePayTeacher(teacherId: string, onSaved: (replayed: boolean) => void) {

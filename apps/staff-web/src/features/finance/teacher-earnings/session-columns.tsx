@@ -8,12 +8,12 @@ import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 
 const col = createColumnHelper<DataTableFeatures, TeacherEarningView>();
 
-export type Pick = {
+export interface Pick {
   selected: ReadonlyMap<string, TeacherEarningView>;
   onToggle: (row: TeacherEarningView) => void;
   rows: readonly TeacherEarningView[];
   onToggleAll: (rows: readonly TeacherEarningView[], on: boolean) => void;
-};
+}
 
 /**
  * The ticks live in a context, not in the column definitions: new column functions on every tick

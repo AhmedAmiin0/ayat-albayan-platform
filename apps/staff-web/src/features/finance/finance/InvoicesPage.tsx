@@ -9,11 +9,11 @@ import { invoiceColumns } from './invoice-columns';
 import { invoicesList, type InvoicesUrlSearch } from './search';
 import { invoiceRangeFilters } from './invoice-range-filters';
 
-type Props = {
+interface Props {
   search: InvoicesUrlSearch;
   /** A patch of the URL search (the route re-validates it); `page: undefined` = page 1. */
   onSearch: (patch: Record<string, unknown>) => void;
-};
+}
 
 /** Every booking invoice (R-PAY-03); range, sort and filters live in the URL. */
 export function InvoicesPage({ search, onSearch }: Props) {

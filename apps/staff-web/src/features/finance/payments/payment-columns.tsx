@@ -12,7 +12,7 @@ const col = createColumnHelper<DataTableFeatures, PaymentView>();
 
 export type PaymentAction = 'receipt' | 'attachments' | 'amount' | 'edit' | 'delete';
 /** Amount edits need payments.write, which PATCH /payments/:id requires. */
-type Handlers = { onAction: (p: PaymentView, action: PaymentAction) => void; canWrite: boolean };
+interface Handlers { onAction: (p: PaymentView, action: PaymentAction) => void; canWrite: boolean }
 
 const methodOptions = PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 

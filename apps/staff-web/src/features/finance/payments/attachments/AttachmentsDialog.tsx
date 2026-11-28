@@ -4,13 +4,13 @@ import { apiErrorText } from '@/features/finance/subscriptions';
 import { attachmentsQuery } from '@/features/finance/payments/api';
 import { attachmentLabels } from './attachments';
 
-type Props = {
+interface Props {
   /** GET …/attachments: /payments/:id/attachments (admin) or /sales/me/payments/:id/attachments (her own). */
   path: string;
   /** Whose payment (the student). */
   description: string;
   onClose: () => void;
-};
+}
 
 /** 1-hour signed links, the legacy receipt first, each opened in a new tab. */
 export function AttachmentsDialog({ path, description, onClose }: Props) {

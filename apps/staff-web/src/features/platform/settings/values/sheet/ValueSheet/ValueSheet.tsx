@@ -56,7 +56,7 @@ export function ValueSheet({
       <Button
         disabled={status === 'saving'}
         onClick={() => {
-          if (!dirty) return onClose();
+          if (!dirty) {  onClose();; return; }
           api.save(settingKey);
         }}
       >

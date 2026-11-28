@@ -5,12 +5,12 @@ import type { CreateStudentValues } from '@/features/people/students/create/crea
 import { CompareRow, cell } from './CompareRow';
 import type { StudentProfile, StudentRef } from '@ab/shared';
 
-type DuplicateCompareProps = {
+interface DuplicateCompareProps {
   typed: CreateStudentValues;
   candidate: StudentRef;
   /** The candidate's profile; undefined while loading (or if it failed). */
   profile: StudentProfile | undefined;
-};
+}
 
 const sub = 'w-full text-2xs font-normal text-ink-3';
 

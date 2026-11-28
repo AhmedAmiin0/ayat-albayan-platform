@@ -7,12 +7,12 @@ import { ExpenseActions, type ExpenseAction } from './ExpenseActions';
 
 const col = createColumnHelper<DataTableFeatures, ExpenseView>();
 
-type Options = {
+interface Options {
   /** Category key → its label (the categories table, else the seeded names). */
   label: (key: string) => string;
   categories: FilterOption[];
   onAction: (e: ExpenseView, action: ExpenseAction) => void;
-};
+}
 
 const stateOptions: FilterOption[] = [
   { value: 'draft', label: t.finance.draftMark },

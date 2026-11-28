@@ -14,10 +14,10 @@ import type { PayoutView } from '@/features/finance/payouts/api';
 const col = createColumnHelper<DataTableFeatures, PayoutView>();
 
 export type PayoutAction = 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';
-type Handlers = {
+interface Handlers {
   onAction: (p: PayoutView, action: PayoutAction) => void;
   teachers: FilterOption[];
-};
+}
 
 /** Also used by the teacher's own statements. */
 export const payoutStatusOptions: FilterOption[] = PAYOUT_STATUSES.map((s) => ({

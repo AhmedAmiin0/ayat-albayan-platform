@@ -6,7 +6,7 @@ import { PayStatementDialog } from './PayStatementDialog';
 import { errorText } from '@/features/people/assistants/status';
 import { StatementLinesDialog } from './StatementLinesDialog';
 
-export type StatementDialog = { statement: AssistantStatementView; kind: 'details' | 'pay' | 'reopen' | 'unpay' };
+export interface StatementDialog { statement: AssistantStatementView; kind: 'details' | 'pay' | 'reopen' | 'unpay' }
 
 /** The dialog behind a statement row action: details, pay (receipt), reopen, un-pay (with a reason). */
 export function StatementDialogs({

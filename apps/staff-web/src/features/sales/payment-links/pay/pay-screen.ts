@@ -1,7 +1,7 @@
 import type { PublicPaymentLink } from '@ab/shared';
 
 /** Where Stripe sent the payer back: `?done=1` (paid) or `?cancelled=1` (left the checkout). */
-export type PayReturn = { done?: true; cancelled?: true };
+export interface PayReturn { done?: true; cancelled?: true }
 
 export type PayScreen = 'open' | 'back' | 'thanks' | PublicPaymentLink['status'];
 
@@ -15,5 +15,5 @@ export function payScreen(status: PublicPaymentLink['status'], back: PayReturn):
 /** The route's search: only `done=1` / `cancelled=1` count, anything else is dropped. */
 export function parsePayReturn(search: Record<string, unknown>): PayReturn {
   const on = (v: unknown) => v === 1 || v === '1';
-  return { ...(on(search['done']) ? { done: true } : {}), ...(on(search['cancelled']) ? { cancelled: true } : {}) };
+  return { ...(on(search.done) ? { done: true } : {}), ...(on(search.cancelled) ? { cancelled: true } : {}) };
 }

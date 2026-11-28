@@ -18,7 +18,7 @@ const RESULT: Record<Match | 'phone', { icon: IconName; label: string; className
   differs: { icon: 'x', label: t.students.differs, className: 'text-ink-2' },
 };
 
-export type CompareRowProps = {
+export interface CompareRowProps {
   label: string;
   now: ReactNode;
   /** Empty until the existing student's profile has loaded. */
@@ -27,7 +27,7 @@ export type CompareRowProps = {
   /** The name row: values at 16px. */
   large?: boolean;
   last?: boolean;
-};
+}
 
 /** One field of the compare: label | typed | existing | result. On phones the label heads the row. */
 export function CompareRow({ label, now, existing, match, large, last }: CompareRowProps) {

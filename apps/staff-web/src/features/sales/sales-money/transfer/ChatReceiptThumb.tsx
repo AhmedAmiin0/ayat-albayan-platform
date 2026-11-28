@@ -2,7 +2,7 @@ import type { SalesChatReceipt } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { chatReceiptFileQuery, type Bind } from '@/features/sales/sales-money/api';
 
-type Props = { studentId: string; receipt: SalesChatReceipt; bind?: Bind | undefined };
+interface Props { studentId: string; receipt: SalesChatReceipt; bind?: Bind | undefined }
 
 /**
  * One chat file's thumbnail: an image asks for its short-lived signed URL only when shown (one request

@@ -5,12 +5,12 @@ import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments/api';
 import { ASSISTANTS_KEY, payStatement, uploadStatementReceipt } from '@/features/people/assistants/api';
 
-export type PayStatementInput = {
+export interface PayStatementInput {
   day: string;
   method: PaymentMethod;
   note: string;
   file: File | null;
-};
+}
 
 /** The receipt uploads once per file before the pay request. */
 export function usePayStatement(statementId: string, assistantId: string, onSaved: () => void) {

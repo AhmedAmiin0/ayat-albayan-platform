@@ -27,12 +27,12 @@ import { subscriptionsTable, type SubscriptionsUrlSearch } from './search';
 import { subscriptionColumns } from './subscription-columns';
 import { useSubscriptionFilters } from './use-subscription-filters';
 
-type Props = {
+interface Props {
   search: SubscriptionsUrlSearch;
   /** A patch of the URL search (the route re-validates it); filter and sort changes pass `page: undefined`. */
   onSearch: (patch: Record<string, unknown>) => void;
   onOpenStudent: (studentId: string) => void;
-};
+}
 
 /** /admin/subscriptions (R-SUB-01/02): packages by status, sort + filters (URL), new, pay, tasks. */
 export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {

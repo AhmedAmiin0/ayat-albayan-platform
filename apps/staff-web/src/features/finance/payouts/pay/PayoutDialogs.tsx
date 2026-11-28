@@ -6,7 +6,7 @@ import { t, teacherLabel } from '@ab/web-kit';
 import { reopenPayout, unpayPayout, type PayoutView } from '@/features/finance/payouts/api';
 import { PayPayoutDialog } from './PayPayoutDialog';
 
-export type PayoutDialog = { payout: PayoutView; kind: 'pay' | 'reopen' | 'unpay' };
+export interface PayoutDialog { payout: PayoutView; kind: 'pay' | 'reopen' | 'unpay' }
 
 /** The dialog behind a payout row action: pay (confirm + receipt), reopen, un-pay (with a reason). */
 export function PayoutDialogs({ open, onClose }: { open: PayoutDialog; onClose: () => void }) {

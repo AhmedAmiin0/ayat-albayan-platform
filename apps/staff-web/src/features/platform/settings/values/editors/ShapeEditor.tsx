@@ -19,7 +19,7 @@ function ShapeDialog({ settingKey, onClose }: { settingKey: SettingKey; onClose:
   const words = settingText(settingKey);
   const save = () => {
     const r = rowUpdate(settingKey, form);
-    if (!r.ok) return setError(r.error);
+    if (!r.ok) {  setError(r.error);; return; }
     api.apply(settingKey, form);
     onClose();
   };

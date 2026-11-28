@@ -9,7 +9,7 @@ import type { AssistantStatementView } from '@/features/people/assistants/api';
 import { errorText } from '@/features/people/assistants/status';
 import { usePayStatement } from './use-pay-statement';
 
-type Props = { statement: AssistantStatementView; onClose: () => void };
+interface Props { statement: AssistantStatementView; onClose: () => void }
 
 /** One request freezes the statement as paid. */
 export function PayStatementDialog({ statement, onClose }: Props) {

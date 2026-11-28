@@ -5,13 +5,13 @@ import { t } from '@ab/web-kit';
 import type { GuardianDetail } from '@ab/shared';
 
 /** Inputs hold strings; '' means not set. */
-export type GuardianValues = {
+export interface GuardianValues {
   name: string;
   phone: string;
   country: string;
   source: LeadSource | '';
   notes: string;
-};
+}
 
 export type GuardianErrors = Partial<Record<keyof GuardianValues, string>>;
 export type GuardianPatchResult =

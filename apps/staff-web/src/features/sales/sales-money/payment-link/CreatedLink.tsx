@@ -9,7 +9,7 @@ import { fillComposer } from '@/features/messaging/inbox';
 
 const P = t.paymentLinks;
 
-type Props = {
+interface Props {
   link: PaymentLinkView;
   /** The chat whose box gets the message. */
   phone: string;
@@ -18,7 +18,7 @@ type Props = {
   onClose: () => void;
   /** Opens the course dialog over this one; the picks are kept until paid. */
   onBookCourse?: (() => void) | undefined;
-};
+}
 
 /** She sends the message herself; the course picks wait as a draft and are booked once paid. */
 export function CreatedLink({ link, phone, canSend, onClose, onBookCourse }: Props) {

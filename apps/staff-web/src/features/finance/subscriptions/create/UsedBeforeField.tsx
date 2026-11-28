@@ -1,14 +1,14 @@
 import { Stepper } from '@/features/finance/pricing';
 import { t } from '@ab/web-kit';
 
-type Props = {
+interface Props {
   value: number;
   /** usedBeforeMax(lessons of the chosen package): every lesson but one. */
   max: number;
   onChange: (value: number) => void;
   /** false: not asked (a start from today on); default shown. */
   shown?: boolean | undefined;
-};
+}
 
 /** Lessons used before the platform count as used; steppers only, never typed. */
 export function UsedBeforeField({ value, max, onChange, shown = true }: Props) {

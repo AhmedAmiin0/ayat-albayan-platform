@@ -2,13 +2,13 @@ import type { PaymentLinkQuoteView } from '@ab/shared';
 import { FormAlert, t } from '@ab/web-kit';
 import { fillText, moneySlots, paymentLinkErrorText } from '@/features/sales/payment-links';
 
-type Props = {
+interface Props {
   quote: PaymentLinkQuoteView | undefined;
   fetching: boolean;
   error: unknown;
   /** With a custom amount, the admin's lowest amount is shown too. */
   custom: boolean;
-};
+}
 
 /** The calculator price is the reference the agreed amount starts from. */
 export function LinkQuote({ quote, fetching, error, custom }: Props) {

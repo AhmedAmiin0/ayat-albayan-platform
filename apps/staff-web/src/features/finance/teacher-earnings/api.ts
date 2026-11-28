@@ -52,7 +52,7 @@ export const sessionsQuery = (
     placeholderData: keepPreviousData,
   });
 
-export type PaymentsList = { page: number; sort?: SortSearch; filters?: FilterSearch };
+export interface PaymentsList { page: number; sort?: SortSearch; filters?: FilterSearch }
 
 /** One page of payments, sorted and filtered (method, voided, note) server-side; no sort = newest first. */
 export const paymentsQuery = (s: Scope, q: PaymentsList) =>

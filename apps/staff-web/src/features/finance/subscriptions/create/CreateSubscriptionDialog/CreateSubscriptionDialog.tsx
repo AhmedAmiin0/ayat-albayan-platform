@@ -16,14 +16,14 @@ import { useBodyRequestId } from '@/features/finance/subscriptions/create/use-bo
 import { useStartDay } from '@/features/finance/subscriptions/create/use-start-day';
 import { usePricingBody, useSubscriptionQuote } from '@/features/finance/subscriptions/create/use-subscription-quote';
 
-type Props = {
+interface Props {
   /** Preset from the student profile; otherwise the admin picks one. */
   student?: PickedStudent;
   /** The calculator's first inputs (a renewal starts from the last package); else the defaults. */
   initial?: PricingForm;
   onClose: () => void;
   onSaved: () => void;
-};
+}
 
 /** Priced by the API's quote (R-SUB-01); a past start with set_start_date asks used lessons. */
 export function CreateSubscriptionDialog({ student: preset, initial, onClose, onSaved }: Props) {

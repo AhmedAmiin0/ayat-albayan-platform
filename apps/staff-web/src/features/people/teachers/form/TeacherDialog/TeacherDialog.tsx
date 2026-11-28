@@ -16,7 +16,7 @@ import { TeacherFormFields } from '@/features/people/teachers/form/TeacherFormFi
 import { TeacherUsernameField } from '@/features/people/teachers/form/TeacherUsernameField';
 import { TeacherWorkFields } from '@/features/people/teachers/form/TeacherWorkFields';
 
-type Props = { teacher: Teacher | null; onClose: () => void };
+interface Props { teacher: Teacher | null; onClose: () => void }
 /** The POST / PATCH body; `username` only when it changed (docs/30). */
 type Payload = TeacherCreate & { username?: string | null };
 
@@ -43,12 +43,12 @@ export function TeacherDialog({ teacher, onClose }: Props) {
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
     const result = validateTeacher(form);
-    if (!result.ok) return setError(result.error);
+    if (!result.ok) {  setError(result.error);; return; }
     setUsername(tidyUsername(username));
     const name = teacher
       ? usernameChange(teacher.username, username, t.familyAuth.teacherUsername)
       : null;
-    if (name && !name.ok) return setError(name.error);
+    if (name && !name.ok) {  setError(name.error);; return; }
     setError(null);
     save.mutate({ ...result.payload, ...name?.body });
   };

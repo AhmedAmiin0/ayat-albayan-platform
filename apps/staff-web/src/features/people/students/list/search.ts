@@ -11,14 +11,14 @@ import type { DataTableFilters, DataTableSort } from '@/components/data-table/Da
 import { activeFilterCount, parseStudentFilters, type StudentsFilters } from './filters';
 
 /** The list's state: search, page, the R-STU-01 filters, the column sort and text filters. */
-export type StudentsSearch = {
+export interface StudentsSearch {
   search: string;
   page: number;
   filters?: StudentsFilters;
   sort?: SortSearch;
   /** Column text filters (code, name, guardian), `f_<key>` in the URL. */
   columns?: FilterSearch;
-};
+}
 
 /** URL search of /admin/students; defaults (no search, page 1, no filter, no sort) are left out. */
 export type StudentsUrlSearch = { search?: string; page?: number } & StudentsFilters &
@@ -26,8 +26,8 @@ export type StudentsUrlSearch = { search?: string; page?: number } & StudentsFil
 
 export function parseStudentsSearch(s: Record<string, unknown>): StudentsUrlSearch {
   const out: StudentsUrlSearch = {
-    search: typeof s['search'] === 'string' && s['search'] ? s['search'] : undefined,
-    page: Number(s['page']) > 1 ? Math.floor(Number(s['page'])) : undefined,
+    search: typeof s.search === 'string' && s.search ? s.search : undefined,
+    page: Number(s.page) > 1 ? Math.floor(Number(s.page)) : undefined,
     ...parseStudentFilters(s),
     ...parseSortSearch(s, STUDENT_SORT_KEYS),
   };
@@ -38,10 +38,11 @@ export function parseStudentsSearch(s: Record<string, unknown>): StudentsUrlSear
 }
 
 /** URL search → the page's state. */
-export function fromStudentsUrl(url: Record<string, unknown>): StudentsSearch {
-  const { search = '', page = 1 } = parseStudentsSearch(url);
+export function fromStudentsUrl(search: StudentsUrlSearch): StudentsSearch {
+  const url: Record<string, unknown> = { ...search };
+  const { search: text = '', page = 1 } = parseStudentsSearch(url);
   return {
-    search,
+    search: text,
     page,
     filters: parseStudentFilters(url),
     sort: parseSortSearch(url, STUDENT_SORT_KEYS),

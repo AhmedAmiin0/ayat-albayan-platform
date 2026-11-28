@@ -4,9 +4,9 @@ import { NoCommissionNote, UsedBeforeField } from '@/features/finance/subscripti
 import { dateLabel } from '@/features/teaching/schedule';
 
 /** `usedBefore` is lessons already used, only when started before (0 otherwise). */
-export type StartValue = { startsOn: string; alreadyStarted: boolean; usedBefore: number };
+export interface StartValue { startsOn: string; alreadyStarted: boolean; usedBefore: number }
 
-type Props = {
+interface Props {
   /** Holds subscriptions.set_start_date. */
   canSet: boolean;
   /** Today in Riyadh (YYYY-MM-DD): the default day. */
@@ -16,7 +16,7 @@ type Props = {
   usedMax: number;
   onChange: (patch: Partial<StartValue>) => void;
   error?: string | null;
-};
+}
 
 const startHint = (day: string, min: string): string =>
   `${dateLabel(day)} · ${t.datePicker.earliest.replace('{date}', dateLabel(min))}`;

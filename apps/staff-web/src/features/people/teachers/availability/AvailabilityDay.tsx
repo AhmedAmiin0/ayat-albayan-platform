@@ -22,13 +22,13 @@ export const weekRowClass =
 export const cellClass = 'flex min-w-0 items-center px-0 py-1.5 @min-[640px]:px-2.5 @min-[640px]:py-[9px]';
 export const trackCellClass = cn(cellClass, 'pb-3 @min-[640px]:col-start-2 @min-[1000px]:col-start-3 @min-[1000px]:row-start-1');
 
-type Props = {
+interface Props {
   day: Weekday;
   ranges: Range[];
   /** Minute of the day when this row is today (in the grid tz), else null. */
   now: number | null;
   onChange: (ranges: Range[]) => void;
-};
+}
 
 /** One inline run (docs/07 §14.3). */
 function problemText(problem: 'endBeforeStart' | 'overlap', ranges: readonly Range[], clock: Clock): string {

@@ -8,12 +8,12 @@ import type { SessionFilter } from '@ab/client-core';
 import { sessionsQuery, type Scope } from './api';
 import { PickContext, sessionColumns, type Pick } from './session-columns';
 
-type Props = {
+interface Props {
   scope: Scope;
   /** Admin only: the ticked sessions (kept across pages and filters). */
   selected?: ReadonlyMap<string, TeacherEarningView>;
   onSelected?: (next: Map<string, TeacherEarningView>) => void;
-};
+}
 
 const FILTERS: SessionFilter[] = ['all', 'unpaid', 'paid'];
 

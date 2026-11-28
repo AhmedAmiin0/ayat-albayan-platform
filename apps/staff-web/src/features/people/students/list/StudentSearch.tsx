@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Icon, IconButton, Input, t } from '@ab/web-kit';
 
-type StudentSearchProps = {
+interface StudentSearchProps {
   initial: string;
   onSearch: (term: string) => void;
   /** Search while typing (300 ms after the last key) instead of only on Enter / the icon. */
   live?: boolean;
-};
+}
 
 /** Name / phone / code search; the search icon is the submit button (R-STU-01). */
 export function StudentSearch({ initial, onSearch, live = false }: StudentSearchProps) {

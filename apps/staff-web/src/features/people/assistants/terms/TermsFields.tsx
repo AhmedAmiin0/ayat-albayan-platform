@@ -4,13 +4,13 @@ import { CurrencySelect } from '@/features/people/assistants/commissions/Currenc
 import { fieldError } from '@/features/people/assistants/status';
 import type { TermsErrors, TermsForm } from './terms-form';
 
-type Props = {
+interface Props {
   form: TermsForm;
   errors: TermsErrors;
   set: (patch: Partial<TermsForm>) => void;
   /** The earliest start day of each part (a new part: today; a saved one: its day). */
   mins?: { salary: string; commission: string };
-};
+}
 
 const T = t.assistants.terms;
 

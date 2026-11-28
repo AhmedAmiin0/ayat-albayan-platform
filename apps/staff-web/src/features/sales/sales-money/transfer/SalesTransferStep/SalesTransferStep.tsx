@@ -14,7 +14,7 @@ import { dueLine } from '@/features/sales/sales-money/transfer/due-line';
 import { TransferFields } from '@/features/sales/sales-money/transfer/TransferFields';
 import { useSalesPayment, type TransferForm } from '@/features/sales/sales-money/transfer/use-sales-payment';
 
-type Props = {
+interface Props {
   /** The package just created in step 1; else she picks one of `packages`. */
   fixed: SalesMoneySubscriptionView | null;
   packages: SalesMoneySubscriptionView[];
@@ -24,7 +24,7 @@ type Props = {
   onBookCourse?: (() => void) | undefined;
   /** The chat's phone for a child not hers (sales.renew_any): transfer only, never cancel. */
   bindOf?: ((studentId: string) => Bind) | undefined;
-};
+}
 
 const formFor = (s: SalesMoneySubscriptionView | undefined, day: string): TransferForm => ({
   amount: s ? String(s.due || s.price) : '',

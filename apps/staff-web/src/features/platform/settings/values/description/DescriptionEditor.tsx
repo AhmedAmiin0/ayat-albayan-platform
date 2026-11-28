@@ -53,7 +53,7 @@ export function DescriptionEditor({
     e.preventDefault();
     setTried(true);
     if (empty) return;
-    if (text.trim() === start.trim()) return onClose();
+    if (text.trim() === start.trim()) {  onClose();; return; }
     send(text.trim(), d.saved);
   };
   const count = d.count.replace('{n}', String(text.length)).replace('{max}', String(DESCRIPTION_MAX));

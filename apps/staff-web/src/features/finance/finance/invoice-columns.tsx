@@ -7,7 +7,7 @@ import type { InvoiceView } from './api';
 const col = createColumnHelper<DataTableFeatures, InvoiceView>();
 
 export type InvoiceAction = 'open' | 'record';
-type Handlers = { onAction: (invoice: InvoiceView, action: InvoiceAction) => void };
+interface Handlers { onAction: (invoice: InvoiceView, action: InvoiceAction) => void }
 
 const kindLabel = (kind: InvoiceView['kind']) => (kind === 'makeup' ? t.finance.invoiceMakeup : t.finance.invoicePackage);
 const kindOptions = (['package', 'makeup'] as const).map((k) => ({ value: k, label: kindLabel(k) }));

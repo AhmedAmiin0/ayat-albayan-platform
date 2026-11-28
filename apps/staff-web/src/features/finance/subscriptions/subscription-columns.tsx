@@ -17,7 +17,7 @@ import { partPaidText } from './payment-lines';
 
 const col = createColumnHelper<DataTableFeatures, SubscriptionView>();
 
-type Handlers = {
+interface Handlers {
   onPay: (s: SubscriptionView, kind: 'payment' | 'refund') => void;
   /** Pauses the student's whole course, not this package alone. */
   onPause: (s: SubscriptionView) => void;
@@ -26,7 +26,7 @@ type Handlers = {
   canPause: boolean;
   onCancel: (s: SubscriptionView) => void;
   onOpen: (studentId: string) => void;
-};
+}
 
 /** A trial is never a package. */
 const packageOptions = PACKAGE_SIZES.filter((p) => p !== 'trial').map((p) => ({ value: p, label: t.enums.packageSize[p] }));

@@ -12,14 +12,14 @@ export function shortfallText(input: {
   return t.packagePayment.shortfall.replace('{amount}', formatAmount(short)).replace('{currency}', input.currencyLabel);
 }
 
-type Props = {
+interface Props {
   /** The amount field as typed (Arabic digits too). */
   amount: string;
   /** What the package still owes: price − net paid; null = nothing to compare (a refund, another currency). */
   due: number | null;
   /** The package currency as shown (currencySymbol). */
   currencyLabel: string;
-};
+}
 
 /** Before saving: says the package stays unpaid when the amount is short; saving is allowed. */
 export function ShortfallNote({ amount, due, currencyLabel }: Props) {

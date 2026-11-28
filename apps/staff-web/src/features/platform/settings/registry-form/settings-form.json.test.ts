@@ -11,7 +11,7 @@ const sent = (f: typeof form) => {
 
 describe('settings form: the custom-config settings', () => {
   it('the defaults round-trip: contact kept, no consent notice, recordings kept forever', () => {
-    expect(form['recordingRetentionDaysOn']).toBe(false);
+    expect(form.recordingRetentionDaysOn).toBe(false);
     expect(sent(form)).toMatchObject({
       academyContact: { site: 'ayatalbayan.com' },
       recordingConsentNotice: null,

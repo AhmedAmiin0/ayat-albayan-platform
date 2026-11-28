@@ -11,7 +11,7 @@ import { commissionStatusStyle } from '@/features/people/assistants/status';
 const col = createColumnHelper<DataTableFeatures, AssistantCommissionView>();
 const L = t.assistants.ledger;
 
-type Handlers = { canWrite: boolean; onVoid: (c: AssistantCommissionView) => void };
+interface Handlers { canWrite: boolean; onVoid: (c: AssistantCommissionView) => void }
 
 /** A renewal earns only its share percent of the full first-subscription commission. */
 const kindText = (c: AssistantCommissionView): string => (c.kind === 'renewal' ? L.kind.renewal.replace('{n}', String(c.share_percent)) : L.kind.first);

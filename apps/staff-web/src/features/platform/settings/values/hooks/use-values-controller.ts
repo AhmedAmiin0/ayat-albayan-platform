@@ -37,13 +37,13 @@ export function useValuesController(input: ControllerInput) {
     const prev = settings[key];
     const name = settingText(key).label;
     const end = await saves.run(key, save);
-    if (end === 'failed') return setSaid(v.saveErrorNamed.replace('{name}', name));
+    if (end === 'failed') {  setSaid(v.saveErrorNamed.replace('{name}', name));; return; }
     // The server wants the typed number (its stored value differs from ours): ask for it.
-    if (end === 'confirm') return setPending({ key, kind: 'typed', value: save.value, version: save.version });
+    if (end === 'confirm') {  setPending({ key, kind: 'typed', value: save.value, version: save.version });; return; }
     if (end === 'conflict') return; // the conflict row is an alert: it announces itself
     // Saved, or refused as owned by a module page: either way the edit is no longer pending here.
     raw.discard(key);
-    if (end === 'moved') return setSaid(v.moved);
+    if (end === 'moved') {  setSaid(v.moved);; return; }
     const at = Date.now();
     setHistory((all) => ({ ...all, [key]: { prev, at } }));
     setNote({ key, prev, id: at });
@@ -53,9 +53,9 @@ export function useValuesController(input: ControllerInput) {
   const saveForm = (key: SettingKey, form: SettingsForm, version?: number) => {
     if (!canWrite || !isEditableValueKey(key)) return;
     const r = rowUpdate(key, form);
-    if (!r.ok) return setSaid(r.error);
+    if (!r.ok) {  setSaid(r.error);; return; }
     const kind = confirmKind(key, r.value, settings[key]);
-    if (kind) return setPending({ key, kind, value: r.value, version });
+    if (kind) {  setPending({ key, kind, value: r.value, version });; return; }
     void commit(key, { value: r.value, version });
   };
   const api: ValuesApi = {

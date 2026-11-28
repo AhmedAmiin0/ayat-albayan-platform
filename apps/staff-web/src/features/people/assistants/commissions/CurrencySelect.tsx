@@ -5,12 +5,12 @@ import { currencySymbol } from '@/features/finance/subscriptions';
 /** The academy pays in EGP; the site currencies follow (a commission keeps the package's own). */
 const CURRENCIES = [...new Set(['EGP', ...CURRENCY_ISOS])];
 
-type Props = {
+interface Props {
   label: string;
   value: string;
   onChange: (currency: string) => void;
   error?: string | undefined;
-};
+}
 
 export function CurrencySelect({ label, value, onChange, error }: Props) {
   return (

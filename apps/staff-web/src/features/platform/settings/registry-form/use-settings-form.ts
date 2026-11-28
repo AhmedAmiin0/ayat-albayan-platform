@@ -56,10 +56,10 @@ export function useSettingsForm(
   const changed = changedKeys(keys, pair);
   const submit = () => {
     const result = settingsUpdate(pair.form, changed);
-    if (!result.ok) return setErrors(result.errors);
+    if (!result.ok) {  setErrors(result.errors);; return; }
     setErrors({});
     const sent = changed;
-    if (sent.length === 0) return options.onSaved({ moved: [] });
+    if (sent.length === 0) {  options.onSaved({ moved: [] });; return; }
     const snapshot = pair.form;
     save.mutate(result.value, {
       onSuccess: (res: unknown) => {

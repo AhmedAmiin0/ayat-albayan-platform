@@ -13,7 +13,7 @@ import { ShortfallNote } from './ShortfallNote';
 import { SubscriptionPicker } from './SubscriptionPicker';
 import { useRecordPayment } from './use-record-payment';
 
-type Props = {
+interface Props {
   subscription?: SubscriptionView;
   /** The booking's invoice is the receipt, so nothing to upload. */
   invoiceId?: string;
@@ -23,7 +23,7 @@ type Props = {
   student?: PickedStudent;
   onClose: () => void;
   onSaved: () => void;
-};
+}
 
 const defaultAmount = (s: SubscriptionView, kind: PaymentKind) => String(kind === 'refund' ? s.paid : dueOf(s, s.paid) || owedFor(s));
 /** What a `currency` payment still owes (less stays unpaid); null for a refund or another one. */

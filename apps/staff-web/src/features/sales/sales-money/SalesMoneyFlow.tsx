@@ -15,7 +15,7 @@ type Step =
   | { kind: 'link'; link: PaymentLinkView };
 
 /** `studentId` is picked up front; `renew` prefills from the student's `renewal`. */
-type Props = {
+interface Props {
   start: FlowStart;
   studentId?: string | undefined;
   renew?: boolean | undefined;
@@ -25,7 +25,7 @@ type Props = {
   /** A text may go in the chat now (useMaySend): a payment link's text goes into its box. */
   canSend?: boolean | undefined;
   onClose: () => void;
-};
+}
 
 /** Her packages still owed, across her students of the family (the transfer step's picker). */
 export const openPackages = (students: SalesFamilyStudent[]): SalesMoneySubscriptionView[] =>

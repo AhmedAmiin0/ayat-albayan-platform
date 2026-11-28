@@ -3,8 +3,8 @@ import { currentMonth } from '@/features/finance/payouts/api';
 import { monthLabel, monthOptions } from '@/features/finance/payouts/shared/MonthSelect';
 import type { AssistantRow } from '@ab/client-core';
 
-export type Filter<S extends string> = { assistantId: string; month: string; status: '' | S };
-type Props<S extends string> = {
+export interface Filter<S extends string> { assistantId: string; month: string; status: '' | S }
+interface Props<S extends string> {
   value: Filter<S>;
   onChange: (next: Filter<S>) => void;
   statuses: readonly { value: S; label: string }[];
@@ -13,7 +13,7 @@ type Props<S extends string> = {
   /** Statements need one month; the ledger can span all. */
   anyMonth?: boolean;
   label: string;
-};
+}
 
 const L = t.assistants.ledger;
 

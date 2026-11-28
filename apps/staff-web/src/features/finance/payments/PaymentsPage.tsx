@@ -28,7 +28,7 @@ import { usePaymentFilters } from './use-payment-filters';
 import { usePermissions } from '@/features/people/auth';
 
 /** A filter or sort change goes back to page 1 (the route drops `page: undefined`). */
-type Props = { search: PaymentsUrlSearch; onSearch: (patch: Partial<PaymentsUrlSearch>) => void };
+interface Props { search: PaymentsUrlSearch; onSearch: (patch: Partial<PaymentsUrlSearch>) => void }
 
 /** «yyyy-01-01 … today»: a CSV needs a range; the filter's own, else this year so far. */
 function csvRange(f: PaymentFilters): { from: string; to: string } {

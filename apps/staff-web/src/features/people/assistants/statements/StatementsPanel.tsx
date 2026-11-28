@@ -14,12 +14,12 @@ import { StatementDialogs, type StatementDialog } from './StatementDialogs';
 import { errorText } from '@/features/people/assistants/status';
 import type { AssistantRow, StatementFilter } from '@ab/client-core';
 
-type Props = {
+interface Props {
   assistants: readonly AssistantRow[];
   /** One assistant's own page: no assistant filter. */
   assistantId?: string;
   can: StatementCan;
-};
+}
 
 const STATUSES = PAYOUT_STATUSES.map((value) => ({ value, label: t.enums.payoutStatus[value] }));
 

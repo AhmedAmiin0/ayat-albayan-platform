@@ -9,7 +9,7 @@ import type { ExpenseBody, ExpenseView } from './api';
 /** The form offers the manual methods only, so a stored platform method opens blank. */
 const formMethod = z.union([z.enum(PAYMENT_METHODS), z.literal('')]).catch('');
 
-export type ExpenseForm = {
+export interface ExpenseForm {
   category: string;
   amount: string;
   currency: string;
@@ -18,7 +18,7 @@ export type ExpenseForm = {
   method: z.infer<typeof formMethod>;
   recurring: boolean;
   note: string;
-};
+}
 
 export function expenseForm(e: ExpenseView | null, today: string): ExpenseForm {
   return {
