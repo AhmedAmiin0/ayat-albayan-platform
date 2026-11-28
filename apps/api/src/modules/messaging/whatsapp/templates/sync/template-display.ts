@@ -25,9 +25,13 @@ const BUTTONS = z.record(z.string(), templateButtonKindSchema).readonly().decode
 
 type MetaButton = NonNullable<Component['buttons']>[number];
 
+/** Meta's header format as ours; a header with no format is a text one. */
+const headerKind = (part: Component): TemplateHeader['type'] | undefined =>
+  templateHeaderKindSchema.safeParse((part.format ?? 'TEXT').toLowerCase()).data;
+
 function header(comps: readonly Component[]): TemplateHeader | null {
   const part = comps.find((c) => c.type === 'HEADER');
-  const kind = templateHeaderKindSchema.safeParse((part?.format ?? 'TEXT').toLowerCase()).data;
+  const kind = part ? headerKind(part) : undefined;
   if (!part || !kind) return null;
   if (kind !== 'text') return { type: kind };
   return part.text ? { type: 'text', text: part.text } : null;
@@ -37,10 +41,16 @@ function header(comps: readonly Component[]): TemplateHeader | null {
 function button(b: MetaButton): TemplateDisplayButton[] {
   const type = own(BUTTONS, b.type.toUpperCase());
   if (!type) return [];
-  const text = b.text ?? '';
-  if (type === 'url') return [{ type, text, ...(b.url ? { url: b.url } : {}) }];
-  if (type === 'phone_number') return [{ type, text, ...(b.phone_number ? { phone: b.phone_number } : {}) }];
-  return [{ type, text }];
+  return [{ type, text: b.text ?? '', ...target(type, b) }];
+}
+
+/** The link of a url button, the number of a phone one, when Meta sent it. */
+function target(
+  type: TemplateDisplayButton['type'],
+  b: MetaButton,
+): Pick<TemplateDisplayButton, 'url' | 'phone'> {
+  if (type === 'url') return b.url ? { url: b.url } : {};
+  return type === 'phone_number' && b.phone_number ? { phone: b.phone_number } : {};
 }
 
 /** The header and buttons as Meta reports them, as message_templates.display (a jsonb value). */

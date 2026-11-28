@@ -36,13 +36,17 @@ function namedPdf(row: PickRow): boolean {
   return names.some((n) => typeof n === 'string' && PDF_NAME.test(n));
 }
 
+const isPhotoOrPdf = (mime: string): boolean => PHOTOS.includes(mime) || mime === PDF;
+const namedPhotoOrFile = (type: string | null): boolean =>
+  type !== null && WEBP_TYPES.includes(type);
+
 /** The mime a candidate is served as (a named PDF as application/pdf); null = not a candidate. */
 export function receiptMime(row: PickRow): string | null {
   const type = payloadType(row.interactive_payload);
   const mime = baseMime(row.media_mime);
   if (type === 'sticker') return null;
-  if (PHOTOS.includes(mime) || mime === PDF) return mime;
-  if (mime === WEBP) return type !== null && WEBP_TYPES.includes(type) ? mime : null;
+  if (isPhotoOrPdf(mime)) return mime;
+  if (mime === WEBP) return namedPhotoOrFile(type) ? mime : null;
   return namedPdf(row) ? PDF : null;
 }
 

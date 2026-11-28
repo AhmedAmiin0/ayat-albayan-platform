@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { APP_ENV, RECORDED_UPLOAD, RENEWAL_DUE_SEED, REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
 import { SAMPLE_REPORT } from '@/modules/messaging/whatsapp/template-review';
-import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
+import { httpFailure, templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
 import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
 import { RECORDED, scriptedFetch, STUB_ENV } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -21,10 +21,7 @@ function submit(row: TemplateRow, env: typeof STUB_ENV, ...replies: Reply[]) {
   const registry = templateServices(queries, lines, audit);
   const result = registry.admin.submit(row.key, 'admin-1').then(
     (view) => ({ view, error: null }),
-    (e: { getStatus: () => number; getResponse: () => unknown }) => ({
-      view: null,
-      error: [e.getStatus(), e.getResponse()],
-    }),
+    (e: unknown) => ({ view: null, error: httpFailure(e) }),
   );
   return { result, requests: f.requests };
 }
@@ -92,7 +89,8 @@ describe('POST /messaging/templates/:key/submit with a document header (report_r
       const { result, requests } = submit(RENEWAL_DUE_SEED, env, RECORDED.createTemplate);
       expect((await result).error).toBeNull();
       expect(requests.map((r) => r.url)).toEqual(['http://127.0.0.1:4010/v21.0/stub-waba/message_templates']);
-      expect((requests[0]?.body as { components: { type: string }[] }).components.map((c) => c.type)).toEqual(['BODY', 'FOOTER']);
+      const sent = requests[0]?.body as { components: { type: string }[] } | undefined;
+      expect(sent?.components.map((c) => c.type)).toEqual(['BODY', 'FOOTER']);
     }
   });
 

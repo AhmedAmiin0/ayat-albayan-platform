@@ -42,11 +42,9 @@ async function readList(
 }
 
 type Meta = Pick<ApprovalWrite, 'meta_id' | 'quality' | 'last_error'>;
-const kept = (prev: ApprovalRow | undefined): Meta => ({
-  meta_id: prev?.meta_id ?? null,
-  quality: prev?.quality ?? null,
-  last_error: prev?.last_error ?? null,
-});
+const NO_META: Meta = { meta_id: null, quality: null, last_error: null };
+const kept = (prev: ApprovalRow | undefined): Meta =>
+  prev ? { meta_id: prev.meta_id, quality: prev.quality, last_error: prev.last_error } : NO_META;
 
 /** Meta's view when found; a mapped WABA name (template-waba-match.ts) never brings its meta_id. */
 function metaOf(p: TemplatePatch, prev: ApprovalRow | undefined): Meta {
@@ -55,10 +53,7 @@ function metaOf(p: TemplatePatch, prev: ApprovalRow | undefined): Meta {
   return { meta_id, quality: p.quality, last_error: p.last_error ?? null };
 }
 
-/**
- * One key on one number: Meta's view, or (absent) not_submitted stays not_submitted and anything
- * else is missing.
- */
+/** One key on one number: Meta's view, or (absent) not_submitted stays so, the rest is missing. */
 function approval(
   input: { row: TemplateRow; prev: ApprovalRow | undefined; meta: readonly MetaTemplate[] },
   numberId: string,
@@ -97,32 +92,45 @@ export async function syncNumber(
   requireSync();
   const all = deps.numbers();
   if (all === null) return syncByLine(deps, numberId, now);
-  const n = all.find((x) => x.id === numberId);
-  if (!n) throw httpError(404, 'unknown_number');
+  const n = numberOf(all, numberId);
   const base = unread(n.id, now);
   if (!n.env) return { ...base, ok: false, error: 'not_configured' };
   const elsewhere = NOT_A_WABA_LIST[n.env.provider ?? 'meta'];
   if (elsewhere) return elsewhere(deps, n, now);
   const list = await readList(deps, { ...n, env: n.env });
   if (!Array.isArray(list)) return { ...base, ok: false, ...list };
+  const { targets, synced } = await writeApprovals(deps, { n, all, list, now });
+  return { ...base, ok: true, meta_count: list.length, synced, number_ids: targets };
+}
+
+function numberOf(all: readonly OverlayNumber[], numberId: string): OverlayNumber {
+  const n = all.find((x) => x.id === numberId);
+  if (!n) throw httpError(404, 'unknown_number');
+  return n;
+}
+
+interface ListRead {
+  n: OverlayNumber;
+  all: readonly OverlayNumber[];
+  list: readonly MetaTemplate[];
+  now: Date;
+}
+
+/** Every registry key's approval on the number and every other one on its waba_id. */
+async function writeApprovals(
+  deps: NumberSyncDeps,
+  { n, all, list, now }: ListRead,
+): Promise<{ targets: string[]; synced: number }> {
   // A crm number on the same waba_id keeps its hand-set status (docs/19): Meta's view is never
   // written to it.
   const sameWaba = (x: OverlayNumber) => x.waba_id === n.waba_id && x.env?.provider !== 'crm';
   const targets = n.waba_id ? all.filter(sameWaba).map((x) => x.id) : [n.id];
   const [rows, prev] = await Promise.all([deps.queries.all(), deps.queries.approvals()]);
+  const prevOf = (key: string, id: string) =>
+    prev.find((a) => a.template_key === key && a.number_id === id);
   const writes = targets.flatMap((id) =>
-    rows.map((row) =>
-      approval(
-        {
-          row,
-          prev: prev.find((a) => a.template_key === row.key && a.number_id === id),
-          meta: list,
-        },
-        id,
-        now,
-      ),
-    ),
+    rows.map((row) => approval({ row, prev: prevOf(row.key, id), meta: list }, id, now)),
   );
   await deps.queries.upsertApprovals(writes);
-  return { ...base, ok: true, meta_count: list.length, synced: rows.length, number_ids: targets };
+  return { targets, synced: rows.length };
 }

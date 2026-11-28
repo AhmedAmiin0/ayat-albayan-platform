@@ -1,9 +1,14 @@
+import { id } from '@ab/core';
 import type { TemplateNumberSyncView } from '@ab/shared';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post, UseGuards } from '@nestjs/common';
+import { Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '@/common/auth/decorators';
+import { ZodParam } from '@/common/http/zod-inputs';
 import { TemplateManagerGuard } from '@/modules/messaging/whatsapp/templates/catalog/template-manager.guard';
 import { TemplateNumbers } from './template-numbers.service';
+
+/** Any 8-4-4-4-12 hex id, as ParseUUIDPipe accepted before. */
+const numberId = id();
 
 /** docs/23c decision 9: needs templates.manage, never a sales, assistant or teacher based role. */
 @ApiTags('messaging')
@@ -16,7 +21,7 @@ export class TemplateNumbersController {
   @Post(':id/templates/sync')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
-  sync(@Param('id', new ParseUUIDPipe()) id: string): Promise<TemplateNumberSyncView> {
+  sync(@ZodParam('id', numberId) id: string): Promise<TemplateNumberSyncView> {
     return this.templates.sync(id);
   }
 }

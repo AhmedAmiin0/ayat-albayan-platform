@@ -3,7 +3,7 @@ import type { TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { MESSAGE_SELECT, type ThreadMessageRow } from './message.mapper';
-import { stampDelivered } from './delivered';
+import { stampDelivered } from './delivered.repo';
 import { HANDED_OFF, SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { pgError } from '@/common/db/errors';
 

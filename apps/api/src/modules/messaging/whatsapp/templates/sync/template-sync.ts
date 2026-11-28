@@ -55,21 +55,29 @@ export function components(raw: readonly unknown[]): Component[] {
   });
 }
 
+type MetaButton = NonNullable<Component['buttons']>[number];
+
+const urlButton = (b: MetaButton): TemplateButton | null =>
+  b.url ? { type: 'url', url: b.url, ...(b.text ? { text: b.text } : {}) } : null;
+
+/** Our intent kept by index, else read from the button text; null when neither names one. */
+function replyButton(b: MetaButton, mine: TemplateButton | undefined): TemplateButton | null {
+  if (!b.text) return null;
+  const intent = mine?.type === 'quick_reply' ? mine.intent : quickReplyIntent(b.text);
+  return intent ? { type: 'quick_reply', text: b.text, intent } : null;
+}
+
+function toButton(b: MetaButton, mine: TemplateButton | undefined): TemplateButton | null {
+  const type = b.type.toUpperCase();
+  if (type === 'URL') return urlButton(b);
+  return type === 'QUICK_REPLY' ? replyButton(b, mine) : null;
+}
+
 /**
  * Meta's buttons with our quick-reply intents kept by index (else read from the button text).
  * null = a button we can't model (phone, copy code, an unknown reply): keep ours, so the button
  * indexes the sender uses stay right.
  */
-type MetaButton = NonNullable<Component['buttons']>[number];
-
-function toButton(b: MetaButton, mine: TemplateButton | undefined): TemplateButton | null {
-  const type = b.type.toUpperCase();
-  if (type === 'URL' && b.url) return { type: 'url', url: b.url, ...(b.text ? { text: b.text } : {}) };
-  if (type !== 'QUICK_REPLY' || !b.text) return null;
-  const intent = mine?.type === 'quick_reply' ? mine.intent : quickReplyIntent(b.text);
-  return intent ? { type: 'quick_reply', text: b.text, intent } : null;
-}
-
 export function metaButtons(
   comps: readonly Component[],
   ours: readonly TemplateButton[],
@@ -94,15 +102,21 @@ export function syncPatch(
   const checked = { last_checked_at: now.toISOString() };
   if (!meta) return { ...checked, status: row.status === 'not_submitted' ? 'not_submitted' : 'missing' };
   const status = ourStatus(meta.status);
-  const comps = components(meta.components);
-  const body = comps.find((c) => c.type === 'BODY')?.text;
-  const buttons = metaButtons(comps, templateButtons(row.buttons));
   return {
     ...checked,
     status,
     meta_id: meta.id,
     quality: meta.quality,
     last_error: status === 'rejected' ? meta.rejectedReason : null,
+    ...metaParts(components(meta.components), row),
+  };
+}
+
+/** Meta's own BODY / FOOTER / BUTTONS over ours; a body or button list we can't take keeps ours. */
+function metaParts(comps: readonly Component[], row: TemplateRow): TemplatePatch {
+  const body = comps.find((c) => c.type === 'BODY')?.text;
+  const buttons = metaButtons(comps, templateButtons(row.buttons));
+  return {
     ...(body ? { body_ar: body } : {}),
     footer_ar: comps.find((c) => c.type === 'FOOTER')?.text ?? null,
     ...(buttons ? { buttons } : {}),

@@ -3,7 +3,7 @@ import type { OverlayNumber } from '@/common/configuration/integrations/numbers-
 import { CrmWhatsappClient } from '@/modules/messaging/whatsapp/drivers/crm/crm.client';
 import { CRM_ENV, CRM_SENT, crmFailure } from '@/modules/messaging/whatsapp/drivers/crm/crm.fakes';
 import { syncNumber } from '@/modules/messaging/whatsapp/templates/sync/template-number-sync';
-import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
+import { httpFailure, templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
 import type { TemplateAdmin } from '@/modules/messaging/whatsapp/templates/catalog/template-admin';
 import { scriptedFetch, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
@@ -34,14 +34,7 @@ const onCrm = (g: ReturnType<typeof scriptedFetch>) =>
 const services = (g: ReturnType<typeof scriptedFetch>) =>
   templateServices(queries, { ...lines, notifications: onCrm(g) }, audit);
 const crmStatus = () => ({ set: (input: Parameters<TemplateAdmin['setCrmStatus']>[0], actor: string) => registry().admin.setCrmStatus(input, actor) });
-const rejected = (p: Promise<unknown>) =>
-  p.then(
-    () => null,
-    (e: { getStatus: () => number; getResponse: () => unknown }) => [
-      e.getStatus(),
-      e.getResponse(),
-    ],
-  );
+const rejected = (p: Promise<unknown>) => p.then(() => null, httpFailure);
 
 beforeEach(() => {
   vi.resetAllMocks();

@@ -12,7 +12,13 @@ const errText = (e: unknown): string => (e instanceof Error ? e.message : String
 
 /** The newest last_checked_at of one line's rows. */
 const newest = (rows: readonly TemplateRow[], line: WaLine): string | null =>
-  rows.reduce<string | null>((max, r) => (r.line === line && r.last_checked_at && (!max || r.last_checked_at > max) ? r.last_checked_at : max), null);
+  rows.reduce<string | null>(
+    (max, r) =>
+      r.line === line && r.last_checked_at && (!max || r.last_checked_at > max)
+        ? r.last_checked_at
+        : max,
+    null,
+  );
 
 /**
  * The template catalog (R-MSG-01, issue C1, docs/12 §3.4), per number: what the rows
@@ -34,7 +40,10 @@ export class TemplateRegistry {
    * without numbers[].
    */
   async list(): Promise<TemplateView[]> {
-    const [rows, approvals] = await Promise.all([this.queries.all(), this.queries.approvals().catch((e: unknown) => this.unread(e, null))]);
+    const [rows, approvals] = await Promise.all([
+      this.queries.all(),
+      this.queries.approvals().catch((e: unknown) => this.unread(e, null)),
+    ]);
     return approvals ? withNumbers(rows, approvals) : rows.map((row) => toTemplateView(row));
   }
 
@@ -60,7 +69,11 @@ export class TemplateRegistry {
    * (stored, so the copy that ran the sync and the one answering may differ; unreadable = none).
    */
   async lineViews(): Promise<TemplateLineView[]> {
-    const [rows, last] = await Promise.all([this.queries.all(), this.queries.lineSyncs().catch((e: unknown) => this.unread(e, new Map<WaLine, TemplateLineSync>()))]);
+    const none = new Map<WaLine, TemplateLineSync>();
+    const [rows, last] = await Promise.all([
+      this.queries.all(),
+      this.queries.lineSyncs().catch((e: unknown) => this.unread(e, none)),
+    ]);
     return WA_LINES.map((line) => ({
       ...lineFacts(line, this.lines[line]),
       last_checked_at: newest(rows, line),

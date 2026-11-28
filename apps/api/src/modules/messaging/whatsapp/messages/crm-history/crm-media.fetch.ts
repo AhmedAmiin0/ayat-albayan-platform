@@ -39,19 +39,25 @@ export async function fetchCrmMedia(input: CrmFetchInput): Promise<Uint8Array> {
   const res = await fetch(input.url.href, { redirect: 'manual', signal }).catch(() => {
     throw unreachable();
   });
-  if (transient(res.status)) {
+  const refusal = refusalOf(res, input);
+  if (refusal !== null || res.body === null) {
     await res.body?.cancel().catch(() => undefined);
-    throw unreachable();
-  }
-  if (res.status !== 200 || !res.body || !sameFamily(res.headers.get('content-type'), input.mime)) {
-    await res.body?.cancel().catch(() => undefined);
-    throw gone();
-  }
-  if (Number(res.headers.get('content-length') ?? 0) > input.maxBytes) {
-    await res.body.cancel().catch(() => undefined);
-    throw tooBig();
+    throw (refusal ?? gone)();
   }
   return readCapped(res.body, input.maxBytes);
+}
+
+/** A 200 with a body of the row's family: the storage's answer that it holds this file. */
+const holdsFile = (res: Response, mime: string): boolean =>
+  res.status === 200 && res.body !== null && sameFamily(res.headers.get('content-type'), mime);
+
+const declaredBytes = (res: Response): number => Number(res.headers.get('content-length') ?? 0);
+
+/** Why the response is refused before its body is read; null when the body may be read. */
+function refusalOf(res: Response, input: CrmFetchInput): (() => Error) | null {
+  if (transient(res.status)) return unreachable;
+  if (!holdsFile(res, input.mime)) return gone;
+  return declaredBytes(res) > input.maxBytes ? tooBig : null;
 }
 
 /**

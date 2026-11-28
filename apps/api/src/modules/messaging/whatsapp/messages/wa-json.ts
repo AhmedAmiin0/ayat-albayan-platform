@@ -23,7 +23,12 @@ const buttonSchema = z.discriminatedUnion('type', [
 const displaySchema = z.object({
   header: z.object({ type: z.enum(TEMPLATE_HEADER_KINDS), text: z.string().optional() }).nullable(),
   buttons: z.array(
-    z.object({ type: z.enum(TEMPLATE_BUTTON_KINDS), text: z.string(), url: z.string().optional(), phone: z.string().optional() }),
+    z.object({
+      type: z.enum(TEMPLATE_BUTTON_KINDS),
+      text: z.string(),
+      url: z.string().optional(),
+      phone: z.string().optional(),
+    }),
   ),
 });
 

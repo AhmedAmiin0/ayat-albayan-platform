@@ -1,16 +1,13 @@
 import {
   restrictedMay, sendsAllTemplates, templateCreateSchema, templateHealthSchema,
-  type TemplateHealthView, type TemplateLineView, type TemplateView,
+  type TemplateHealthInput, type TemplateHealthView, type TemplateLineView, type TemplateView,
 } from '@ab/shared';
-import {
-  Body, Controller, Get, HttpCode, Post, Query, UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ZodBody } from '@/common/http/zod-inputs';
-import { parseOrThrow } from '@/common/http/http';
+import { ZodBody, ZodQuery } from '@/common/http/zod-inputs';
 import { TemplateCreator } from '@/modules/messaging/whatsapp/templates/create/template-create';
 import { TemplateManagerGuard } from './template-manager.guard';
 import { TemplateVerifier } from '@/modules/messaging/whatsapp/templates/sync/template-verifier';
@@ -66,13 +63,17 @@ export class TemplatesController {
    * One number's sync with Meta (`line` in the body or the query), or every configured number: its
    * rows' status, quality and text from its own WABA, and that WABA's new templates imported
    * (flagged only for RESTRICTED_TEMPLATE_DEFAULTS from the chat WABA). A line's read failure is
-   * that line's error (200). 503 not_configured, 409 template_sync_off.
+   * that line's error (200); the body's line wins over the query's. 503 not_configured, 409
+   * template_sync_off.
    */
   @Post('health')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
-  health(@Body() body: unknown, @Query('line') line?: string): Promise<TemplateHealthView> {
-    const input = parseOrThrow(templateHealthSchema, body ?? (line ? { line } : {}));
-    return this.verifier.verifyAll(input.line ? { line: input.line } : {});
+  health(
+    @ZodBody(templateHealthSchema, { orEmpty: true }) body: TemplateHealthInput,
+    @ZodQuery(templateHealthSchema) query: TemplateHealthInput,
+  ): Promise<TemplateHealthView> {
+    const line = body.line ?? query.line;
+    return this.verifier.verifyAll(line ? { line } : {});
   }
 }

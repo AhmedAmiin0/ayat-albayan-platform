@@ -4,7 +4,11 @@ import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound
 export const CRM_MEDIA_PREFIX = '/storage/v1/object/public/chat-media/';
 
 /** The columns that tell an imported CRM file (a messages row, or a v_threads last message). */
-interface CrmHistoryShape { direction: string | null; media_mime: string | null; body: string | null }
+interface CrmHistoryShape {
+  direction: string | null;
+  media_mime: string | null;
+  body: string | null;
+}
 
 /**
  * The body as an old-CRM file link, or null: the whole (trimmed) body is ONE https URL in canonical
@@ -14,10 +18,17 @@ interface CrmHistoryShape { direction: string | null; media_mime: string | null;
  */
 export function crmMediaUrl(body: string | null): URL | null {
   const text = body?.trim() ?? '';
-  if (!text.startsWith('https://') || /[\s\\]|%2e|%2f|%5c/i.test(text)) return null;
-  const url = parsed(text);
-  return url?.href === text && bare(url) && underPrefix(url.pathname) ? url : null;
+  const url = plainHttps(text) ? parsed(text) : null;
+  return url && isCrmLink(url, text) ? url : null;
 }
+
+/** An https link with no space, backslash, or encoded dot, slash or backslash. */
+const plainHttps = (text: string): boolean =>
+  text.startsWith('https://') && !/[\s\\]|%2e|%2f|%5c/i.test(text);
+
+/** Canonical (parsing changes nothing), bare, and a file under CRM_MEDIA_PREFIX. */
+const isCrmLink = (url: URL, text: string): boolean =>
+  url.href === text && bare(url) && underPrefix(url.pathname);
 
 const parsed = (text: string): URL | null => {
   try {

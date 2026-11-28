@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
+import { httpFailure, templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
 import { RENEWAL_DUE_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
 import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
 import type { WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -25,7 +25,7 @@ const audit = { record: vi.fn() };
 const lines = { notifications: client, chat: chatClient } as unknown as WhatsappLines;
 const registry = () => templateServices(queries, lines, audit);
 const status = (p: Promise<unknown>) =>
-  p.then(() => 'ok', (e: { getStatus?: () => number; getResponse?: () => unknown }) => [e.getStatus?.(), e.getResponse?.()]);
+  p.then(() => 'ok', httpFailure);
 const OFF = [409, { code: 'template_sync_off', message: 'template_sync_off' }];
 
 describe('TemplateRegistry with WA_TEMPLATE_SYNC=false (docs/12 §13.9)', () => {

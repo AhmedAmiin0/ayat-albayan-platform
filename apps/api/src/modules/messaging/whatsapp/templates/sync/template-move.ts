@@ -1,8 +1,10 @@
 import type { TemplateLineSync, TemplateMoveView } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
-import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
-import { requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
+import {
+  requireSync,
+  requireTemplate,
+} from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { syncLine, type LineSyncDeps } from './template-line-sync';
 import { templateStamp } from '@/modules/messaging/whatsapp/sender/send-line';
 import { REGISTRY_ENTITY_ID, toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
@@ -17,7 +19,14 @@ interface MoveDeps extends LineSyncDeps {
   remember: (sync: TemplateLineSync) => Promise<void>;
 }
 
-const FRESH = { status: 'not_submitted', meta_id: null, quality: null, last_error: null, submitted_at: null, last_checked_at: null } as const;
+const FRESH = {
+  status: 'not_submitted',
+  meta_id: null,
+  quality: null,
+  last_error: null,
+  submitted_at: null,
+  last_checked_at: null,
+} as const;
 
 /** PATCH /messaging/templates/:key/line (audited, template_line_set); the same line is a no-op. */
 export async function moveTemplate(
@@ -27,8 +36,7 @@ export async function moveTemplate(
 ): Promise<TemplateMoveView> {
   requireSync();
   const { key, line } = input;
-  const row = await deps.queries.get(key);
-  if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
+  const row = await requireTemplate(deps.queries, key);
   if (row.line === line) return { template: toTemplateView(row), sync: null };
   const moved = await deps.queries.update(key, { line, ...FRESH });
   // Its queued rows follow it to the new line's lane (docs/42 42-7, #695 review item 2).
@@ -41,8 +49,15 @@ export async function moveTemplate(
     before: { key, line: row.line, status: row.status, meta_id: row.meta_id },
     after: { key, line, status: FRESH.status },
   });
-  const sync = deps.lines[line].configured() ? await syncLine(deps, line, new Date()) : null;
-  if (sync) await deps.remember(sync);
+  const sync = await syncMoved(deps, line);
   const after = (await deps.queries.get(key)) ?? moved ?? { ...row, line, ...FRESH };
   return { template: toTemplateView(after), sync };
+}
+
+/** The new line's sync, kept as its last one; null while that line is not configured. */
+async function syncMoved(deps: MoveDeps, line: WaLine): Promise<TemplateLineSync | null> {
+  if (!deps.lines[line].configured()) return null;
+  const sync = await syncLine(deps, line, new Date());
+  await deps.remember(sync);
+  return sync;
 }

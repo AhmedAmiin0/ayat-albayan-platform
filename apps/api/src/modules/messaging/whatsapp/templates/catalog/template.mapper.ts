@@ -42,15 +42,22 @@ export function toTemplateView(row: TemplateRow, numbers?: readonly ApprovalRow[
 }
 
 function toApproval(a: ApprovalRow): TemplateNumberApproval {
-  return { number_id: a.number_id, status: a.status, last_checked_at: a.last_checked_at, last_error: a.last_error };
+  return {
+    number_id: a.number_id,
+    status: a.status,
+    last_checked_at: a.last_checked_at,
+    last_error: a.last_error,
+  };
 }
 
-/**
- * Every row with its approvals per number (one read of message_template_numbers, docs/23c decision
- * 9).
- */
-export function withNumbers(rows: readonly TemplateRow[], approvals: readonly ApprovalRow[]): TemplateView[] {
-  return rows.map((row) => toTemplateView(row, approvals.filter((a) => a.template_key === row.key)));
+/** Every row with its approvals per number (one read of message_template_numbers, docs/23c). */
+export function withNumbers(
+  rows: readonly TemplateRow[],
+  approvals: readonly ApprovalRow[],
+): TemplateView[] {
+  return rows.map((row) =>
+    toTemplateView(row, approvals.filter((a) => a.template_key === row.key)),
+  );
 }
 
 /** What renderTemplateBody / fallbackText need from a registry row. */
@@ -86,7 +93,9 @@ const unsupportedHttp: ToHttp = (e) => {
 };
 
 const scopeHttp: ToHttp = (e) =>
-  (e.info.missingScope ? httpError(502, CRM_SCOPE_MISSING, { scope: e.info.missingScope }) : undefined);
+  e.info.missingScope
+    ? httpError(502, CRM_SCOPE_MISSING, { scope: e.info.missingScope })
+    : undefined;
 
 const credentialHttp: ToHttp = (e) => {
   const code = e.info.credential ? CREDENTIAL_CODE[e.info.credential] : undefined;

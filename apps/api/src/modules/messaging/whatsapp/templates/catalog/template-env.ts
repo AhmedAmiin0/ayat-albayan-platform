@@ -1,12 +1,17 @@
 import type { TemplateLineFacts } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
-import { isGraphEnv, lineEnvs, lineProvider, loadEnv } from '@/config/env/env';
+import { isGraphEnv, lineEnvs, lineProvider, loadEnv, type Env, type GraphEnv } from '@/config/env/env';
 import { graphHttpError } from './template.mapper';
-import { WaError, type WhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { NotFoundException } from '@nestjs/common';
+import {
+  WaError,
+  type TemplateRow,
+  type WhatsappClient,
+} from '@/modules/messaging/whatsapp/whatsapp.types';
 import { httpError } from '@/common/http/errors';
+import type { TemplatesRepo } from './templates.repo';
 
-// What every registry action checks first (docs/12 §3.4, §13.9), out of template.registry.ts
-// (150-line cap).
+// What every registry action checks first (docs/12 §3.4, §13.9).
 
 /** Read per call, so tests can vi.stubEnv it. */
 export const syncOn = (): boolean =>  loadEnv().WA_TEMPLATE_SYNC;
@@ -19,6 +24,16 @@ export function requireSync(): void {
   if (!syncOn()) throw httpError(409, 'template_sync_off');
 }
 
+/** The row of `key`; 404 template_not_found when there is none. */
+export async function requireTemplate(
+  queries: Pick<TemplatesRepo, 'get'>,
+  key: string,
+): Promise<TemplateRow> {
+  const row = await queries.get(key);
+  if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
+  return row;
+}
+
 /** 503 not_configured naming the line: the action needs that line's WABA. */
 export function requireLine(client: WhatsappClient, line: WaLine): void {
   if (!client.configured()) throw httpError(503, 'not_configured', { line });
@@ -29,12 +44,19 @@ export function requireLine(client: WhatsappClient, line: WaLine): void {
  */
 export const onCrm = (line: WaLine): boolean => lineProvider(loadEnv(), line) === 'crm';
 
-/** One line as env names it: ids only, no Graph call; `configured` is its client's. */
-export function lineFacts(line: WaLine, client: Pick<WhatsappClient, 'configured'>): TemplateLineFacts {
-  const env = loadEnv();
+/** A crm line has no ids of ours: the number and its WABA are the CRM's (docs/19). */
+function graphIds(env: Env, line: WaLine): GraphEnv | null {
   const ids = lineEnvs(env)[line];
-  // A crm line has no ids of ours: the number and its WABA are the CRM's (docs/19).
-  const graph = ids && isGraphEnv(ids) ? ids : null;
+  return ids && isGraphEnv(ids) ? ids : null;
+}
+
+/** One line as env names it: ids only, no Graph call; `configured` is its client's. */
+export function lineFacts(
+  line: WaLine,
+  client: Pick<WhatsappClient, 'configured'>,
+): TemplateLineFacts {
+  const env = loadEnv();
+  const graph = graphIds(env, line);
   return {
     line,
     configured: client.configured(),

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { SINGLETON_ENTITY_ID } from '@/common/audit/singleton-entity';
-import { CrmMediaCopyRepo, type CrmCopyCounts } from './crm-media-copy.repo';
+import { CrmMediaCopyRepo } from './crm-media-copy.repo';
+import type { CrmCopyCounts } from './crm-media-copy.schemas';
 import { CrmMediaCopySettings } from './crm-media-copy.settings';
 
 /**

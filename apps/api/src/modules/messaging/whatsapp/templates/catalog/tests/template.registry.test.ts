@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { byDriver } from '@/modules/messaging/whatsapp/drivers/meta/graph';
 import { KAPSO_ENV } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
 import { toMetaTemplate } from '@/modules/messaging/whatsapp/drivers/meta/meta-shapes';
-import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
+import { httpFailure, templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
 import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
 import { RECORDED, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -23,10 +23,7 @@ const client = {
   canUploadSamples: vi.fn(),
   uploadSample: vi.fn(),
 };
-/**
- * Not configured (reset mocks answer undefined): one line, as before the chat line
- * (template.registry.lines.test).
- */
+/** Not configured (reset mocks answer undefined): one line, as before the chat line. */
 const chatClient = { configured: vi.fn(), getTemplates: vi.fn() };
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
@@ -37,7 +34,7 @@ const recorded = RECORDED.templates.body.data.map((t) =>
 
 const registry = () =>
   templateServices(queries, { notifications: client, chat: chatClient }, audit);
-const status = (p: Promise<unknown>) => p.then(() => 'ok', (e: { getStatus?: () => number; getResponse?: () => unknown }) => [e.getStatus?.(), e.getResponse?.()]);
+const status = (p: Promise<unknown>) => p.then(() => 'ok', httpFailure);
 
 describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {
   beforeEach(() => {

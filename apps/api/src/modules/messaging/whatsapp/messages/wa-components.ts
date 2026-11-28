@@ -1,4 +1,4 @@
-import { BODY_SLOTS, type TemplateParams } from '@ab/shared';
+import { BODY_SLOTS, type TemplateParams, type WaSendKind } from '@ab/shared';
 import { WA_ERROR } from '@ab/catalog';
 import { templateButtons } from './wa-json';
 import { WaError, type MediaSend, type TemplateRow, type TemplateSend } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -88,26 +88,36 @@ export function textMessage(input: {
     ...envelope(input.to),
     type: 'text',
     text: { body: input.text, preview_url: true },
-    ...(input.replyTo ? { context: { message_id: input.replyTo } } : {}),
+    ...replyContext(input.replyTo),
   };
 }
 
-/**
- * A session file by link (`{type: kind, [kind]: {link, caption?, filename?}}`); a filename is a
- * document's only, Meta takes no caption on an audio, and `voice: true` only on an audio (an
- * ogg/opus voice note). A reply carries the quoted wamid as context.
- */
+/** A reply carries the quoted wamid as context. */
+const replyContext = (replyTo: string | null | undefined): GraphBody =>
+  replyTo ? { context: { message_id: replyTo } } : {};
+
+/** Meta takes a filename on a document only. */
+const fileName = (kind: WaSendKind, filename: string | undefined): GraphBody =>
+  kind === 'document' && filename ? { filename } : {};
+
+/** Meta takes no caption on an audio. */
+const captionOf = (kind: WaSendKind, caption: string | null | undefined): GraphBody =>
+  kind !== 'audio' && caption ? { caption } : {};
+
+/** `voice: true` only on an audio (an ogg/opus voice note). */
+const voiceOf = (kind: WaSendKind, voice: boolean | undefined): GraphBody =>
+  kind === 'audio' && voice ? { voice: true } : {};
+
+/** A session file by link: `{type: kind, [kind]: {link, caption?, filename?, voice?}}`. */
 export function mediaMessage(input: MediaSend): GraphBody {
   const kind = input.kind ?? 'document';
-  const filename = kind === 'document' && input.filename ? { filename: input.filename } : {};
-  const caption = kind !== 'audio' && input.caption ? { caption: input.caption } : {};
-  const voice = kind === 'audio' && input.voice ? { voice: true } : {};
-  const context = input.replyTo ? { context: { message_id: input.replyTo } } : {};
+  const caption = captionOf(kind, input.caption);
+  const filename = fileName(kind, input.filename);
   return {
     ...envelope(input.to),
     type: kind,
-    [kind]: { link: input.url, ...caption, ...filename, ...voice },
-    ...context,
+    [kind]: { link: input.url, ...caption, ...filename, ...voiceOf(kind, input.voice) },
+    ...replyContext(input.replyTo),
   };
 }
 

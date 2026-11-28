@@ -1,4 +1,5 @@
 import { HttpException, Injectable, Logger } from '@nestjs/common';
+import { errorCode } from '@/common/http/errors';
 import { allowedCrmUrl, isCrmHistoryRow } from '@/modules/messaging/whatsapp/messages/crm-history/crm-history-url';
 import { CRM_UNREACHABLE } from '@/modules/messaging/whatsapp/messages/crm-history/crm-media.fetch';
 import type { MediaMessage } from '@/modules/messaging/whatsapp/messages/inbound-media/inbound-media.repo';
@@ -39,11 +40,7 @@ const copyable = (msg: MediaMessage, host: string): boolean =>
  * message).
  */
 function reason(e: unknown): string {
-  if (e instanceof HttpException) {
-    const body = e.getResponse();
-    return typeof body === 'object' && 'code' in body ? String(body.code) : e.message;
-  }
-  return e instanceof Error ? e.message : String(e);
+  return errorCode(e) ?? (e instanceof Error ? e.message : String(e));
 }
 
 /**
