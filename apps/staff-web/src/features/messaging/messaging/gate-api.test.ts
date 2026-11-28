@@ -1,17 +1,17 @@
 import { GATE_CONFIRM_TEXT, SETTING_DEFAULTS } from '@ab/settings';
 import ar from '@ab/shared/i18n/ar.json';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { sendGateChange } from './gate-api';
 
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
+beforeEach(() => apiSend.mockResolvedValue(SETTING_DEFAULTS));
 afterEach(() => apiSend.mockReset());
 
 describe('sendGateChange: the gate routes (docs/26 §2f, 26-P0)', () => {
   it('sending ON: PUT /messages/gate/sending with the confirmation text; answers the settings', async () => {
-    apiSend.mockResolvedValue(SETTING_DEFAULTS);
-    await expect(sendGateChange({ sending: true })).resolves.toBe(SETTING_DEFAULTS);
+    await expect(sendGateChange({ sending: true })).resolves.toEqual(SETTING_DEFAULTS);
     expect(apiSend).toHaveBeenCalledWith('PUT', '/messages/gate/sending', {
       on: true,
       confirmText: GATE_CONFIRM_TEXT.sending,
