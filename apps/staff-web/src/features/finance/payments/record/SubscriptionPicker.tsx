@@ -2,16 +2,22 @@ import { countsForMoney, dueOf, owedFor } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Field, Select, t } from '@ab/web-kit';
-import { studentSubscriptionsQuery, type SubscriptionView } from '@/features/finance/subscriptions/api';
+import {
+  studentSubscriptionsQuery,
+  type SubscriptionView,
+} from '@/features/finance/subscriptions/api';
 import { moneyText, packageName } from '@/features/finance/subscriptions';
-import { StudentPicker, type PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
+import {
+  StudentPicker,
+  type PickedStudent,
+} from '@/features/finance/subscriptions/create/StudentPicker';
 
-type Props = {
+interface Props {
   student: PickedStudent | null;
   onStudent: (s: PickedStudent | null) => void;
   picked: SubscriptionView | null;
   onPick: (s: SubscriptionView | null) => void;
-};
+}
 
 const owed = (s: SubscriptionView) => dueOf(s, s.paid);
 const optionText = (s: SubscriptionView) =>
@@ -25,7 +31,10 @@ const optionText = (s: SubscriptionView) =>
  * owes, an unused-cancelled one never: countsForMoney). The one that still owes is chosen first.
  */
 export function SubscriptionPicker({ student, onStudent, picked, onPick }: Props) {
-  const list = useQuery({ ...studentSubscriptionsQuery(student?.id ?? ''), enabled: student !== null });
+  const list = useQuery({
+    ...studentSubscriptionsQuery(student?.id ?? ''),
+    enabled: student !== null,
+  });
   const open = (list.data?.items ?? []).filter((s) => s.status !== 'expired' && countsForMoney(s));
   useEffect(() => {
     if (picked || open.length === 0) return;
@@ -37,7 +46,11 @@ export function SubscriptionPicker({ student, onStudent, picked, onPick }: Props
     <div className="grid gap-2">
       <p className="flex items-center gap-2 text-sm">
         <span className="font-semibold text-ink">{student.name}</span>
-        <button type="button" className="text-xs text-lapis underline underline-offset-4" onClick={() => (onStudent(null), onPick(null))}>
+        <button
+          type="button"
+          className="text-xs text-lapis underline underline-offset-4"
+          onClick={() => (onStudent(null), onPick(null))}
+        >
           {t.finance.changeStudent}
         </button>
       </p>
@@ -46,7 +59,11 @@ export function SubscriptionPicker({ student, onStudent, picked, onPick }: Props
         hint={list.isSuccess && open.length === 0 ? t.finance.noOpenPackages : undefined}
       >
         {(p) => (
-          <Select {...p} value={picked?.id ?? ''} onChange={(e) => onPick(open.find((s) => s.id === e.target.value) ?? null)}>
+          <Select
+            {...p}
+            value={picked?.id ?? ''}
+            onChange={(e) => onPick(open.find((s) => s.id === e.target.value) ?? null)}
+          >
             <option value="" disabled>
               {t.payments.mobile.chooseSubscription}
             </option>

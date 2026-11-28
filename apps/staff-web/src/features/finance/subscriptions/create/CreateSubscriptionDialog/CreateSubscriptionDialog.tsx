@@ -7,23 +7,33 @@ import { CustomAmountToggle } from '@/features/finance/subscriptions/custom-pric
 import { CustomPriceField } from '@/features/finance/subscriptions/custom-price/CustomPriceField';
 import { useCustomPrice } from '@/features/finance/subscriptions/custom-price/use-custom-price';
 import { NoCommissionNote } from '@/features/finance/subscriptions/create/NoCommissionNote';
-import { INITIAL_PRICING, pricingLessons, type PricingForm } from '@/features/finance/subscriptions/create/pricing-form';
+import {
+  INITIAL_PRICING,
+  pricingLessons,
+  type PricingForm,
+} from '@/features/finance/subscriptions/create/pricing-form';
 import { PricingFields } from '@/features/finance/subscriptions/create/PricingFields';
 import { QuotePreview } from '@/features/finance/subscriptions/create/QuotePreview';
-import { StudentPicker, type PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
+import {
+  StudentPicker,
+  type PickedStudent,
+} from '@/features/finance/subscriptions/create/StudentPicker';
 import { UsedBeforeField } from '@/features/finance/subscriptions/create/UsedBeforeField';
 import { useBodyRequestId } from '@/features/finance/subscriptions/create/use-body-request-id';
 import { useStartDay } from '@/features/finance/subscriptions/create/use-start-day';
-import { usePricingBody, useSubscriptionQuote } from '@/features/finance/subscriptions/create/use-subscription-quote';
+import {
+  usePricingBody,
+  useSubscriptionQuote,
+} from '@/features/finance/subscriptions/create/use-subscription-quote';
 
-type Props = {
+interface Props {
   /** Preset from the student profile; otherwise the admin picks one. */
   student?: PickedStudent;
   /** The calculator's first inputs (a renewal starts from the last package); else the defaults. */
   initial?: PricingForm;
   onClose: () => void;
   onSaved: () => void;
-};
+}
 
 /** Priced by the API's quote (R-SUB-01); a past start with set_start_date asks used lessons. */
 export function CreateSubscriptionDialog({ student: preset, initial, onClose, onSaved }: Props) {
@@ -90,7 +100,16 @@ export function CreateSubscriptionDialog({ student: preset, initial, onClose, on
         <CustomPriceField price={price} />
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label={t.subscriptions.startsOn}>
-            {(p) => <Input {...p} type="date" dir="ltr" value={startsOn} onChange={(e) => pickDay(e.target.value)} required />}
+            {(p) => (
+              <Input
+                {...p}
+                type="date"
+                dir="ltr"
+                value={startsOn}
+                onChange={(e) => pickDay(e.target.value)}
+                required
+              />
+            )}
           </Field>
           <Field label={t.subscriptions.notes}>
             {(p) => <Input {...p} value={notes} onChange={(e) => setNotes(e.target.value)} />}

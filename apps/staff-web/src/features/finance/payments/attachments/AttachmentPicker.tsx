@@ -2,7 +2,11 @@ import { RECEIPT_MIMES } from '@ab/money';
 import { useId } from 'react';
 import { buttonVariants, cn } from '@ab/web-kit';
 
-type Props = { label: string; onPick: (files: File[]) => void; invalid?: boolean };
+interface Props {
+  label: string;
+  onPick: (files: File[]) => void;
+  invalid?: boolean;
+}
 
 /** A native input kept for keyboard and screen readers, its chrome hidden. */
 export function AttachmentPicker({ label, onPick, invalid }: Props) {

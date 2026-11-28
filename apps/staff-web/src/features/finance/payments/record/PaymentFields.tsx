@@ -12,7 +12,7 @@ export interface PaymentForm {
   note: string;
 }
 
-type Props = {
+interface Props {
   form: PaymentForm;
   set: (patch: Partial<PaymentForm>) => void;
   currency: string;
@@ -20,7 +20,7 @@ type Props = {
   amountError?: string | null;
   /** A card payment (amountFromStripe): its amount comes from Stripe, shown but never edited. */
   amountLocked?: boolean;
-};
+}
 
 /** Amount (in the package currency, fixed in v1), method, date and note. */
 export function PaymentFields({ form, set, currency, today, amountError, amountLocked }: Props) {

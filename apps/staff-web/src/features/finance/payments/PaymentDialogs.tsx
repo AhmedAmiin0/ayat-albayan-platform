@@ -11,12 +11,12 @@ import { AttachmentsDialog } from './attachments/AttachmentsDialog';
 import type { PaymentAction } from './payment-columns';
 import { ReceiptDialog } from './attachments/ReceiptDialog';
 
-type Props = {
+interface Props {
   payment: PaymentView;
   action: PaymentAction;
   onClose: () => void;
   onDone: (message: string) => void;
-};
+}
 
 /** Delete asks first and is audited by the API. */
 export function PaymentDialogs({ payment, action, onClose, onDone }: Props) {
@@ -41,7 +41,13 @@ export function PaymentDialogs({ payment, action, onClose, onDone }: Props) {
   }
   if (action === 'receipt') return <ReceiptDialog payment={payment} onClose={onClose} />;
   if (action === 'attachments') {
-    return <AttachmentsDialog path={`/payments/${payment.id}/attachments`} description={studentLabel(payment.student)} onClose={onClose} />;
+    return (
+      <AttachmentsDialog
+        path={`/payments/${payment.id}/attachments`}
+        description={studentLabel(payment.student)}
+        onClose={onClose}
+      />
+    );
   }
   if (action === 'edit') return <EditPaymentDialog payment={payment} onClose={onClose} />;
   return (

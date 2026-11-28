@@ -8,12 +8,12 @@ import type { SessionFilter } from '@ab/client-core';
 import { sessionsQuery, type Scope } from './api';
 import { PickContext, sessionColumns, type Pick } from './session-columns';
 
-type Props = {
+interface Props {
   scope: Scope;
   /** Admin only: the ticked sessions (kept across pages and filters). */
   selected?: ReadonlyMap<string, TeacherEarningView>;
   onSelected?: (next: Map<string, TeacherEarningView>) => void;
-};
+}
 
 const FILTERS: SessionFilter[] = ['all', 'unpaid', 'paid'];
 
@@ -67,7 +67,9 @@ export function SessionsPanel({ scope, selected, onSelected }: Props) {
       </div>
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.isPending && <ListSkeleton />}
-      {list.data?.total === 0 && <EmptyState title={status === 'all' ? t.earnings.empty : t.earnings.emptyFilter} />}
+      {list.data?.total === 0 && (
+        <EmptyState title={status === 'all' ? t.earnings.empty : t.earnings.emptyFilter} />
+      )}
       {list.data && list.data.total > 0 && (
         <>
           <PickContext.Provider value={pick ?? null}>

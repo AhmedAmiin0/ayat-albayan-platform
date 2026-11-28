@@ -10,13 +10,13 @@ import { Field, Input, Select, SegmentedControl, t } from '@ab/web-kit';
 import { durationLabel, packageCopy } from '@/features/finance/pricing/format';
 import type { PricingForm } from './pricing-form';
 
-type Props = {
+interface Props {
   form: PricingForm;
   set: (patch: Partial<PricingForm>) => void;
   /** Only these discounts as pills (sales: the site's 0/5/10/15 %); omitted = a free 0–100 number. */
   discounts?: readonly number[];
   discountExtra?: ReactNode;
-};
+}
 
 const discountLabel = (d: number) =>
   t.pricing.discounts[`${d}` as keyof typeof t.pricing.discounts] ?? `${d}%`;

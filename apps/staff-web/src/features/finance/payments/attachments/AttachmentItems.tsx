@@ -1,8 +1,18 @@
 import { Button } from '@ab/web-kit';
 
-export type AttachmentItem = { key: string; name: string };
-type Texts = { attachmentN: string; attachmentRemove: string };
-type Props = { items: AttachmentItem[]; texts: Texts; onRemove: (index: number) => void };
+export interface AttachmentItem {
+  key: string;
+  name: string;
+}
+interface Texts {
+  attachmentN: string;
+  attachmentRemove: string;
+}
+interface Props {
+  items: AttachmentItem[];
+  texts: Texts;
+  onRemove: (index: number) => void;
+}
 
 export function AttachmentItems({ items, texts, onRemove }: Props) {
   if (items.length === 0) return null;
@@ -16,7 +26,13 @@ export function AttachmentItems({ items, texts, onRemove }: Props) {
             <span className="min-w-0 truncate text-ink-2" dir="auto">
               {item.name}
             </span>
-            <Button type="button" variant="ghost" size="sm" aria-label={`${texts.attachmentRemove} ${label}`} onClick={() => onRemove(i)}>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              aria-label={`${texts.attachmentRemove} ${label}`}
+              onClick={() => onRemove(i)}
+            >
               {texts.attachmentRemove}
             </Button>
           </li>

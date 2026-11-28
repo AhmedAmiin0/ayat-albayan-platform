@@ -14,10 +14,10 @@ import type { PayoutView } from '@/features/finance/payouts/api';
 const col = createColumnHelper<DataTableFeatures, PayoutView>();
 
 export type PayoutAction = 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';
-type Handlers = {
+interface Handlers {
   onAction: (p: PayoutView, action: PayoutAction) => void;
   teachers: FilterOption[];
-};
+}
 
 /** Also used by the teacher's own statements. */
 export const payoutStatusOptions: FilterOption[] = PAYOUT_STATUSES.map((s) => ({
@@ -43,7 +43,10 @@ export function payoutColumns({ onAction, teachers }: Handlers) {
       id: 'teacher',
       header: () => t.payouts.teacher,
       cell: (c) => <span className="font-semibold text-ink">{c.getValue()}</span>,
-      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]', filter: { kind: 'select', options: teachers } },
+      meta: {
+        className: 'max-sm:order-1 max-sm:flex-[1_1_60%]',
+        filter: { kind: 'select', options: teachers },
+      },
     }),
     col.accessor('lessons_count', {
       header: () => t.payouts.lessons,
@@ -79,12 +82,19 @@ export function payoutColumns({ onAction, teachers }: Handlers) {
         const when = p.paid_at ?? p.approved_at;
         return (
           <div className="grid justify-items-start gap-0.5">
-            <StatusChip size="sm" {...payoutStatusStyle[p.status]} label={t.enums.payoutStatus[p.status]} />
+            <StatusChip
+              size="sm"
+              {...payoutStatusStyle[p.status]}
+              label={t.enums.payoutStatus[p.status]}
+            />
             {when && <span className="text-2xs text-ink-3">{formatDate(when)}</span>}
           </div>
         );
       },
-      meta: { className: 'max-sm:order-2', filter: { kind: 'select', options: payoutStatusOptions } },
+      meta: {
+        className: 'max-sm:order-2',
+        filter: { kind: 'select', options: payoutStatusOptions },
+      },
     }),
     col.display({
       id: 'actions',

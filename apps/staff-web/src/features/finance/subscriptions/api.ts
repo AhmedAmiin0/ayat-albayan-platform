@@ -21,7 +21,12 @@ export type { AdminTaskView, QuoteResponse, StudentBalanceView, SubscriptionView
 export const MONEY_KEY = moneyKeys.all;
 export const PAGE_SIZE = 20;
 
-type SubscriptionsListQuery = { status?: SubscriptionStatus | 'partial' | undefined; page: number; sort?: SortSearch; filters?: FilterSearch };
+interface SubscriptionsListQuery {
+  status?: SubscriptionStatus | 'partial' | undefined;
+  page: number;
+  sort?: SortSearch;
+  filters?: FilterSearch;
+}
 
 /** GET /subscriptions: one page, filtered and (R-NFR-08) sorted server-side; default newest first. */
 export const subscriptionsQuery = (q: SubscriptionsListQuery) =>
@@ -42,7 +47,8 @@ export const subscriptionsQuery = (q: SubscriptionsListQuery) =>
 export const studentSubscriptionsQuery = (studentId: string) =>
   queryOptions({
     queryKey: moneyKeys.studentSubscriptions(studentId),
-    queryFn: () => apiFetch<Page<SubscriptionView>>(`/subscriptions?studentId=${studentId}&pageSize=100`),
+    queryFn: () =>
+      apiFetch<Page<SubscriptionView>>(`/subscriptions?studentId=${studentId}&pageSize=100`),
   });
 
 export const studentBalanceQuery = (studentId: string) =>
@@ -58,7 +64,7 @@ export const openTasksQuery = queryOptions({
   queryFn: () => taskCalls.list({ open: 'true', pageSize: 50 }),
 });
 
-export type CreateSubscriptionBody = {
+export interface CreateSubscriptionBody {
   studentId: string;
   pricing: SubscriptionPricing;
   startsOn: string;
@@ -69,7 +75,7 @@ export type CreateSubscriptionBody = {
   customPrice?: number;
   /** Rule 8: the same body re-sent (a retry) carries the same id, so the API replays the first package. */
   clientRequestId?: string;
-};
+}
 
 export const quoteSubscription = (body: Pick<CreateSubscriptionBody, 'studentId' | 'pricing'>) =>
   apiSend<QuoteResponse>('POST', '/subscriptions/quote', body);

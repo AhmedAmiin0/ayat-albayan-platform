@@ -1,7 +1,6 @@
 import { addCalendarMonths, dateText } from '@ab/time';
 import { Field, Select, locale } from '@ab/web-kit';
 
-
 export function monthLabel(month: string): string {
   const first = new Date(`${addCalendarMonths(month, 0)}T00:00:00Z`);
   return dateText(first, { tz: 'UTC', locale }, { month: 'long', year: 'numeric' });
@@ -15,7 +14,12 @@ export function monthOptions(latest: string, opts: { count: number; value: strin
   return months.includes(opts.value) ? months : [...months, opts.value];
 }
 
-type Props = { label: string; value: string; latest: string; onChange: (month: string) => void };
+interface Props {
+  label: string;
+  value: string;
+  latest: string;
+  onChange: (month: string) => void;
+}
 
 /** A month picker as a select (rule 6: no free-text dates; Safari has no `type=month`). */
 export function MonthSelect({ label, value, latest, onChange }: Props) {

@@ -2,7 +2,7 @@ import { RECEIPT_MAX_BYTES, RECEIPT_MIMES } from '@ab/money';
 import { useEffect, useId, useMemo } from 'react';
 import { Button, buttonVariants, t, cn } from '@ab/web-kit';
 
-type Props = { file: File | null; onChange: (file: File | null) => void; error?: string | null };
+interface Props { file: File | null; onChange: (file: File | null) => void; error?: string | null }
 
 /** The native input stays for keyboard and screen readers with its English chrome hidden. */
 export function ReceiptField({ file, onChange, error }: Props) {

@@ -4,7 +4,11 @@ import { Field, Input, Ltr, t } from '@ab/web-kit';
 import { useDebounced } from '@/features/finance/pricing/use-debounced';
 import { studentListQuery } from '@/features/people/students/api';
 
-export type PickedStudent = { id: string; name: string; code: string | null };
+export interface PickedStudent {
+  id: string;
+  name: string;
+  code: string | null;
+}
 
 /** Search by name, phone or code (the students list API) and pick one student. */
 export function StudentPicker({ onPick }: { onPick: (student: PickedStudent) => void }) {

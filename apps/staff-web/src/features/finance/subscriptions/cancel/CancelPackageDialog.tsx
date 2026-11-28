@@ -4,9 +4,9 @@ import { Button, Field, FormAlert, Input, Dialog, t } from '@ab/web-kit';
 import { MONEY_KEY } from '@/features/finance/subscriptions/api';
 import { apiErrorText } from '@/features/finance/subscriptions/format';
 
-export type CancelBody = { reason?: string };
+export interface CancelBody { reason?: string }
 
-type Props = {
+interface Props {
   label: string;
   /** POST /subscriptions/:id/cancel (admin) or POST /sales/subscriptions/:id/cancel (her own student's). */
   cancel: (body: CancelBody) => Promise<unknown>;
@@ -14,7 +14,7 @@ type Props = {
   staleKey?: readonly unknown[];
   onClose: () => void;
   onDone: () => void;
-};
+}
 
 /** Cancelled, never deleted; the API refuses a package with money or lessons (409). */
 export function CancelPackageDialog({ label, cancel, staleKey = MONEY_KEY, onClose, onDone }: Props) {

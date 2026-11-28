@@ -2,7 +2,10 @@ import { Button, t } from '@ab/web-kit';
 import type { ExpenseView } from './api';
 
 export type ExpenseAction = 'edit' | 'delete' | 'confirm' | 'receipt';
-type Props = { expense: ExpenseView; onAction: (e: ExpenseView, action: ExpenseAction) => void };
+interface Props {
+  expense: ExpenseView;
+  onAction: (e: ExpenseView, action: ExpenseAction) => void;
+}
 
 /** One expense's actions: confirm a monthly draft, its receipt, edit, delete. */
 export function ExpenseActions({ expense: e, onAction }: Props) {

@@ -25,7 +25,7 @@ import { expenseColumns } from '@/features/finance/expenses/expense-columns';
 import { ExpenseYearTable } from '@/features/finance/expenses/ExpenseYearTable';
 import { TableBox } from '@/components/data-table/TableBox';
 
-type Props = { month: string; onMonth: (month: string) => void };
+interface Props { month: string; onMonth: (month: string) => void }
 
 /** /admin/expenses (R-RPT-02, E4): a month's expenses (drafts to confirm; every column sorts/filters), or the 12-month table; CSV. */
 export function ExpensesPage({ month, onMonth }: Props) {

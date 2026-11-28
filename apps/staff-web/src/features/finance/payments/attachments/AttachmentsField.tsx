@@ -5,7 +5,11 @@ import { AttachmentItems } from './AttachmentItems';
 import { AttachmentPicker } from './AttachmentPicker';
 import { addAttachments, type AttachmentProblem } from './attachments';
 
-type Props = { files: File[]; onChange: (files: File[]) => void; maxBytes: number };
+interface Props {
+  files: File[];
+  onChange: (files: File[]) => void;
+  maxBytes: number;
+}
 
 /** Bank payments only, up to five images or PDFs, uploaded on save. */
 export function AttachmentsField({ files, onChange, maxBytes }: Props) {
@@ -24,7 +28,11 @@ export function AttachmentsField({ files, onChange, maxBytes }: Props) {
     <fieldset className="grid content-start gap-1.5">
       <legend className="mb-1.5 text-sm font-semibold text-ink">{t.payments.attachments}</legend>
       <p className="text-xs text-ink-3">{t.payments.attachmentsHint}</p>
-      <AttachmentItems items={files.map((f, i) => ({ key: `${i}-${f.name}`, name: f.name }))} texts={t.payments} onRemove={remove} />
+      <AttachmentItems
+        items={files.map((f, i) => ({ key: `${i}-${f.name}`, name: f.name }))}
+        texts={t.payments}
+        onRemove={remove}
+      />
       {files.length < PAYMENT_ATTACHMENTS_MAX ? (
         <AttachmentPicker
           label={t.payments.attachmentsAdd}

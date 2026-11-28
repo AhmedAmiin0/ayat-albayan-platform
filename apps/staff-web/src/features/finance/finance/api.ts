@@ -18,13 +18,13 @@ export const receivablesQuery = queryOptions({
 
 export const INVOICE_PAGE_SIZE = 25;
 
-type InvoicesList = {
+interface InvoicesList {
   page: number;
   from?: string;
   to?: string;
   sort?: SortSearch;
   filters?: FilterSearch;
-};
+}
 
 /** GET /invoices/recent?from&to&kind&student&sort&dir&page: booking invoices (newest first unless sorted), with their payment. */
 export const invoicesQuery = (q: InvoicesList) =>

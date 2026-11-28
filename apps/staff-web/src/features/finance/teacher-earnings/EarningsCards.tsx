@@ -3,11 +3,21 @@ import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t, cn } from '@ab/web-kit';
 
-type CardProps = { label: string; amount: number; hint?: string; strong?: boolean };
+interface CardProps {
+  label: string;
+  amount: number;
+  hint?: string;
+  strong?: boolean;
+}
 
 function Card({ label, amount, hint, strong }: CardProps) {
   return (
-    <div className={cn('grid content-start gap-1 rounded-md border border-rule bg-surface px-4 py-3.5', strong && 'border-gold-soft')}>
+    <div
+      className={cn(
+        'grid content-start gap-1 rounded-md border border-rule bg-surface px-4 py-3.5',
+        strong && 'border-gold-soft',
+      )}
+    >
       <span className="text-xs text-ink-3">{label}</span>
       <Amount amount={amount} currency="EGP" className="text-2xl font-semibold text-ink" />
       {hint && <span className="text-2xs text-ink-3">{hint}</span>}
@@ -16,10 +26,15 @@ function Card({ label, amount, hint, strong }: CardProps) {
 }
 
 export function EarningsCards({ balance }: { balance: TeacherEarningsBalanceView }) {
-  const count = (key: 'sessionsCount' | 'unpaidCount', n: number) => t.earnings[key].replace('{count}', String(n));
+  const count = (key: 'sessionsCount' | 'unpaidCount', n: number) =>
+    t.earnings[key].replace('{count}', String(n));
   return (
     <section aria-label={t.earnings.sessions} className="mb-5 grid gap-3 sm:grid-cols-3">
-      <Card label={t.earnings.earned} amount={balance.earned} hint={count('sessionsCount', balance.sessions)} />
+      <Card
+        label={t.earnings.earned}
+        amount={balance.earned}
+        hint={count('sessionsCount', balance.sessions)}
+      />
       <Card label={t.earnings.paid} amount={balance.paid} />
       <Card
         strong

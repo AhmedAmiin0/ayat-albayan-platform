@@ -8,12 +8,12 @@ import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 
 const col = createColumnHelper<DataTableFeatures, TeacherEarningView>();
 
-export type Pick = {
+export interface Pick {
   selected: ReadonlyMap<string, TeacherEarningView>;
   onToggle: (row: TeacherEarningView) => void;
   rows: readonly TeacherEarningView[];
   onToggleAll: (rows: readonly TeacherEarningView[], on: boolean) => void;
-};
+}
 
 /**
  * The ticks live in a context, not in the column definitions: new column functions on every tick
@@ -71,7 +71,9 @@ function TickRow({ row }: { row: TeacherEarningView }) {
 
 /** The session's date and time in the viewer's cycle (12 or 24 h). */
 function SessionDate({ iso }: { iso: string }) {
-  return <span className="font-semibold tabular-nums text-ink">{formatDateTime(iso, useClock())}</span>;
+  return (
+    <span className="font-semibold tabular-nums text-ink">{formatDateTime(iso, useClock())}</span>
+  );
 }
 
 const pickColumn = col.display({
@@ -101,7 +103,11 @@ export function sessionColumns(selectable: boolean) {
     }),
     col.accessor('minutes', {
       header: () => t.earnings.duration,
-      cell: (c) => <span className="tabular-nums">{t.earnings.minutes.replace('{count}', String(c.getValue()))}</span>,
+      cell: (c) => (
+        <span className="tabular-nums">
+          {t.earnings.minutes.replace('{count}', String(c.getValue()))}
+        </span>
+      ),
       meta: { className: 'max-sm:order-4 max-sm:text-xs', sortKey: 'minutes' },
     }),
     col.accessor('amount', {
@@ -121,7 +127,13 @@ export function sessionColumns(selectable: boolean) {
     }),
     col.accessor('status', {
       header: () => t.earnings.status,
-      cell: (c) => <StatusChip size="sm" {...earningStatusStyle[c.getValue()]} label={t.earnings.statusName[c.getValue()]} />,
+      cell: (c) => (
+        <StatusChip
+          size="sm"
+          {...earningStatusStyle[c.getValue()]}
+          label={t.earnings.statusName[c.getValue()]}
+        />
+      ),
       meta: { className: 'max-sm:order-2', sortKey: 'status' },
     }),
   ]);

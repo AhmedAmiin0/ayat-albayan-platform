@@ -9,10 +9,10 @@ import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 const col = createColumnHelper<DataTableFeatures, TeacherPaymentView>();
 
 export type TeacherPaymentAction = 'receipt' | 'void';
-type Options = {
+interface Options {
   admin: boolean;
   onAction: (p: TeacherPaymentView, action: TeacherPaymentAction) => void;
-};
+}
 
 const methodOptions = PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 const voidedOptions = [
@@ -34,24 +34,47 @@ export function teacherPaymentColumns({ admin, onAction }: Options) {
     }),
     col.accessor('amount', {
       header: () => t.earnings.amount,
-      cell: (c) => <Amount amount={c.getValue()} currency="EGP" className={c.row.original.voided_at ? 'text-ink-3 line-through' : 'font-semibold'} />,
+      cell: (c) => (
+        <Amount
+          amount={c.getValue()}
+          currency="EGP"
+          className={c.row.original.voided_at ? 'text-ink-3 line-through' : 'font-semibold'}
+        />
+      ),
       meta: { className: 'max-sm:order-2', sortKey: 'amount' },
     }),
     col.accessor('voided_at', {
       header: () => t.finance.voidedColumn,
-      cell: (c) => (c.getValue() ? <span className="text-xs text-danger">{t.finance.voided.replace('{reason}', c.row.original.void_reason ?? '')}</span> : null),
-      meta: { className: 'max-sm:order-3 whitespace-normal', filterKey: 'voided', filter: { kind: 'select', options: voidedOptions } },
+      cell: (c) =>
+        c.getValue() ? (
+          <span className="text-xs text-danger">
+            {t.finance.voided.replace('{reason}', c.row.original.void_reason ?? '')}
+          </span>
+        ) : null,
+      meta: {
+        className: 'max-sm:order-3 whitespace-normal',
+        filterKey: 'voided',
+        filter: { kind: 'select', options: voidedOptions },
+      },
     }),
     col.accessor('method', {
       header: () => t.payments.method,
-      cell: (c) => <span className="text-sm text-ink-2">{t.enums.paymentMethod[c.getValue()]}</span>,
-      meta: { className: 'max-sm:order-4', sortKey: 'method', filter: { kind: 'select', options: methodOptions } },
+      cell: (c) => (
+        <span className="text-sm text-ink-2">{t.enums.paymentMethod[c.getValue()]}</span>
+      ),
+      meta: {
+        className: 'max-sm:order-4',
+        sortKey: 'method',
+        filter: { kind: 'select', options: methodOptions },
+      },
     }),
     col.accessor('sessions', {
       header: () => t.earnings.sessions,
       cell: (c) => (
         <span className="text-xs text-ink-3">
-          {c.row.original.payout_id ? t.earnings.fromPayout : t.earnings.paymentSessions.replace('{count}', String(c.getValue()))}
+          {c.row.original.payout_id
+            ? t.earnings.fromPayout
+            : t.earnings.paymentSessions.replace('{count}', String(c.getValue()))}
         </span>
       ),
       meta: { className: 'max-sm:order-5' },
@@ -60,7 +83,10 @@ export function teacherPaymentColumns({ admin, onAction }: Options) {
       id: 'note',
       header: () => t.expenses.note,
       cell: (c) => <span className="text-xs text-ink-3">{c.getValue()}</span>,
-      meta: { className: 'max-sm:order-6 max-sm:basis-full whitespace-normal', filter: { kind: 'text' } },
+      meta: {
+        className: 'max-sm:order-6 max-sm:basis-full whitespace-normal',
+        filter: { kind: 'text' },
+      },
     }),
     col.display({
       id: 'actions',
@@ -70,12 +96,22 @@ export function teacherPaymentColumns({ admin, onAction }: Options) {
         return (
           <span className="flex gap-1.5">
             {p.has_receipt && (
-              <Button type="button" variant="secondary" size="sm" onClick={() => onAction(p, 'receipt')}>
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => onAction(p, 'receipt')}
+              >
                 {t.earnings.viewReceipt}
               </Button>
             )}
             {admin && !p.voided_at && (
-              <Button type="button" variant="danger-quiet" size="sm" onClick={() => onAction(p, 'void')}>
+              <Button
+                type="button"
+                variant="danger-quiet"
+                size="sm"
+                onClick={() => onAction(p, 'void')}
+              >
                 {t.finance.voidPayment}
               </Button>
             )}

@@ -18,7 +18,11 @@ import { apiErrorText, moneyText } from '@/features/finance/subscriptions';
 import type { PayoutView } from '@/features/finance/payouts/api';
 import { usePayPayout } from './use-pay-payout';
 
-type Props = { payout: PayoutView; onClose: () => void; onSaved: () => void };
+interface Props {
+  payout: PayoutView;
+  onClose: () => void;
+  onSaved: () => void;
+}
 
 /** Cash due is the amount minus per-session payments; one request settles ledger and payout. */
 export function PayPayoutDialog({ payout, onClose, onSaved }: Props) {
@@ -54,12 +58,18 @@ export function PayPayoutDialog({ payout, onClose, onSaved }: Props) {
     >
       <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
         <p className="text-sm text-ink-2">
-          {t.finance.payPayoutDue.replace('{month}', payout.month).replace('{amount}', moneyText(due, 'EGP'))}
+          {t.finance.payPayoutDue
+            .replace('{month}', payout.month)
+            .replace('{amount}', moneyText(due, 'EGP'))}
         </p>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label={t.payments.method}>
             {(p) => (
-              <Select {...p} value={method} onChange={(e) => setMethod(e.target.value as PaymentMethod)}>
+              <Select
+                {...p}
+                value={method}
+                onChange={(e) => setMethod(e.target.value as PaymentMethod)}
+              >
                 {PAYMENT_METHODS.map((m) => (
                   <option key={m} value={m}>
                     {t.enums.paymentMethod[m]}
@@ -69,12 +79,27 @@ export function PayPayoutDialog({ payout, onClose, onSaved }: Props) {
             )}
           </Field>
           <Field label={t.payments.paidAt}>
-            {(p) => <Input {...p} type="date" dir="ltr" max={paidAtDay()} value={day} onChange={(e) => setDay(e.target.value)} />}
+            {(p) => (
+              <Input
+                {...p}
+                type="date"
+                dir="ltr"
+                max={paidAtDay()}
+                value={day}
+                onChange={(e) => setDay(e.target.value)}
+              />
+            )}
           </Field>
-          <Field label={t.payments.note}>{(p) => <Input {...p} value={note} onChange={(e) => setNote(e.target.value)} />}</Field>
+          <Field label={t.payments.note}>
+            {(p) => <Input {...p} value={note} onChange={(e) => setNote(e.target.value)} />}
+          </Field>
         </div>
         <ReceiptField file={file} onChange={setFile} error={problem} />
-        {save.isError && <FormAlert>{apiErrorText(save.error, { ...t.payouts.error, ...t.earnings.error })}</FormAlert>}
+        {save.isError && (
+          <FormAlert>
+            {apiErrorText(save.error, { ...t.payouts.error, ...t.earnings.error })}
+          </FormAlert>
+        )}
       </form>
     </Dialog>
   );
