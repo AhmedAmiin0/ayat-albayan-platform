@@ -1,17 +1,24 @@
 import { screen } from '@testing-library/react';
+import { mockCall, type CallHandler } from '@ab/testing/mock-call';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { renderAt } from '@/test/render-at';
 import { Bell } from './Bell';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const bellRead = vi.fn<CallHandler>();
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
-const answer = (unread: number) => apiFetch.mockResolvedValue({ items: [], unread });
+const answer = (unread: number) => bellRead.mockResolvedValue({ items: [], unread });
 const named = (n: number) => t.bell.openUnread.replace('{n}', String(n));
 
 beforeEach(() => {
-  apiFetch.mockReset();
+  mockApi.reset();
+  mockApi.onRead(bellRead);
+  bellRead.mockReset();
 });
 
 describe('Bell', () => {
