@@ -10,6 +10,7 @@ import { maybe, pgError, rows } from '@/common/db/errors';
 import type { Contact } from './status/confirmation-messages';
 import { LESSON_SELECT, type LessonRow } from './store/lesson-row';
 import { LessonsSettings } from './lessons.settings';
+import { seqChunks, seqMap } from './lesson-seq';
 import type { Page } from '@ab/core';
 
 export interface LessonWindow { from: Date; to: Date; teacherId?: string }
@@ -130,17 +131,8 @@ export class LessonsRepo {
    * v_lesson_sequence counts `completed` only; owner to confirm whether `late` counts.
    */
   async seq(lessonIds: readonly string[]): Promise<SeqMap> {
-    const out = new Map<string, number>();
-    const chunks = Array.from({ length: Math.ceil(lessonIds.length / SEQ_CHUNK) }, (_, i) => lessonIds.slice(i * SEQ_CHUNK, (i + 1) * SEQ_CHUNK));
-    const reads = await Promise.all(chunks.map((ids) => this.db.from('v_lesson_sequence').select('lesson_id, student_id, seq').in('lesson_id', ids)));
-    for (const { data, error } of reads) {
-      if (error) throw pgError(error);
-      for (const r of data) {
-        if (r.lesson_id && r.student_id && r.seq !== null) out.set(`${r.lesson_id}:${r.student_id}`, r.seq);
-      }
-    }
-    return out;
+    const view = () => this.db.from('v_lesson_sequence').select('lesson_id, student_id, seq');
+    const reads = await Promise.all(seqChunks(lessonIds).map((ids) => view().in('lesson_id', ids)));
+    return seqMap(reads.flatMap((read) => rows(read)));
   }
 }
-
-const SEQ_CHUNK = 100;

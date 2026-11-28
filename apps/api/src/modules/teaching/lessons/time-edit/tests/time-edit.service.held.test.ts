@@ -16,7 +16,8 @@ describe('LessonTimeService — correct a held lesson (R-SCH-11)', () => {
   it('completed, ran 60 not 45: same row, new end, PDF refresh, audited with the reason, no notice', async () => {
     const { run, writer, record } = timeSetup(heldRow());
     const res = await run(correction());
-    expect(writer.apply).not.toHaveBeenCalled(); // status, attendance and chargeable are frozen: no change set
+    // Status, attendance and chargeable are frozen, so there is no change set.
+    expect(writer.apply).not.toHaveBeenCalled();
     expect(retimed(writer)).toEqual({
       actor: ADMIN.id,
       lesson_id: LESSON_ID,

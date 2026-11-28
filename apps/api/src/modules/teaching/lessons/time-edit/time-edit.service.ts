@@ -1,28 +1,28 @@
-import {
-  timeEditMode,
-  type Conflict,
-  type LessonTimeEdit,
-  type TimeEditResult,
-} from '@ab/schedule';
+import type { Conflict, LessonTimeEdit, TimeEditResult } from '@ab/schedule';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';
-import type { TimeEditChange } from '@/modules/teaching/scheduling/change-set';
-import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
-import { conflict, errorCode } from '@/common/http/errors';
+import { ConflictChecker, type TimeEditChange } from '@/modules/teaching/scheduling';
+import { errorCode } from '@/common/http/errors';
 import { studentIdsOf, type LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { TimeEditPayout } from './time-edit.payout';
-import { isSameTime, planTimeEdit, type TimeEditInput, type TimeEditPlan } from './time-edit.plan';
+import { isSameTime, planTimeEdit, type TimeEditPlan } from './time-edit.plan';
+import { admit, changeOf, iso, movedNotice, overrideOf } from './time-edit.change';
 import { forMessages } from '@/modules/teaching/lessons/status/confirmation-messages';
 import { timeEditMessages } from './time-edit.messages';
 
 interface TimeEditArgs { lessonId: string; body: LessonTimeEdit; actor: AuthUser }
+interface RetimeArgs {
+  change: TimeEditChange;
+  notice: ScheduleChange | undefined;
+  lessonId: string;
+  body: LessonTimeEdit;
+}
 /** What the edit set in motion; the controller adds the lesson view. */
 type TimeEditEffects = Omit<TimeEditResult, 'lesson'>;
 
 const NOTHING: TimeEditEffects = { notified: 0, payout: 'none', pdf_refresh: false };
-const iso = (d: Date): string => d.toISOString();
 
 /** R-SCH-11, docs/10 §10: edited in place, admin only; approved or paid payouts block it. */
 @Injectable()
@@ -39,20 +39,25 @@ export class LessonTimeService {
     // A replay (the edit already holds) is a 200 that writes nothing.
     if (!input) return NOTHING;
     const plan = planTimeEdit(input);
-    const clashes = await this.clashes(row, plan);
-    if (clashes.length > 0 && !body.override) throw conflict('conflict', { conflicts: clashes });
+    const overrideReason = overrideOf(await this.clashes(row, plan), body);
     const payout = await this.payout.check(row, plan);
     const messages = plan.notify ? await this.notices(row, plan) : [];
-    const overrideReason = clashes.length > 0 ? (body.override?.reason ?? null) : null;
+    const change = changeOf({ row, plan, actor, messages, overrideReason });
+    const notice = movedNotice({ row, plan, actor });
+    if (!(await this.retime({ change, notice, lessonId, body }))) return NOTHING;
+    return { notified: messages.length, payout, pdf_refresh: plan.refreshPdf };
+  }
+
+  /** False when this is the loser of two identical requests and its edit is already in place. */
+  private async retime(w: RetimeArgs): Promise<boolean> {
     try {
-      const change = changeOf({ row, plan, actor, messages, overrideReason });
-      await this.store.retime(change, movedNotice({ row, plan, actor }));
+      await this.store.retime(w.change, w.notice);
+      return true;
     } catch (e) {
-      // Two identical requests at once: the loser finds the edit it asked for already in place.
-      if (errorCode(e) === 'stale_time' && (await this.alreadyHolds(lessonId, body))) return NOTHING;
+      const held = errorCode(e) === 'stale_time' && (await this.alreadyHolds(w.lessonId, w.body));
+      if (held) return false;
       throw e;
     }
-    return { notified: messages.length, payout, pdf_refresh: plan.refreshPdf };
   }
 
   private async alreadyHolds(lessonId: string, body: LessonTimeEdit): Promise<boolean> {
@@ -69,7 +74,8 @@ export class LessonTimeService {
    */
   private async notices(row: LessonRow, plan: TimeEditPlan): Promise<TimeEditChange['messages']> {
     const contacts = await this.store.queries.contacts(studentIdsOf(row));
-    const lesson = forMessages({ ...row, starts_at: iso(plan.start) }, await this.store.queries.meetingLinkAuto({ teacherId: row.teacher_id }));
+    const linkAuto = await this.store.queries.meetingLinkAuto({ teacherId: row.teacher_id });
+    const lesson = forMessages({ ...row, starts_at: iso(plan.start) }, linkAuto);
     return timeEditMessages(lesson, contacts);
   }
 
@@ -82,69 +88,4 @@ export class LessonTimeService {
     });
     return found.filter((c) => !plan.ignoredConflicts.includes(c.kind));
   }
-}
-
-/**
- * 409 `time_edit_not_allowed` (closed status) or `stale_time` (the admin saw another start); null
- * for a replay. Otherwise the input of the plan.
- */
-function admit(row: LessonRow, body: LessonTimeEdit): TimeEditInput | null {
-  const mode = timeEditMode(row.status);
-  if (!mode) throw conflict('time_edit_not_allowed', { status: row.status });
-  const current = { startsAt: new Date(row.starts_at), endsAt: new Date(row.ends_at) };
-  const request = { ...body, startsAt: new Date(body.startsAt) };
-  if (isSameTime(current, request)) return null;
-  const seenEnd = body.expectedEndsAt === undefined ? current.endsAt.getTime() : Date.parse(body.expectedEndsAt);
-  if (Date.parse(body.expectedStartsAt) !== current.startsAt.getTime() || seenEnd !== current.endsAt.getTime()) {
-    throw conflict('stale_time', { starts_at: iso(current.startsAt), ends_at: iso(current.endsAt) });
-  }
-  const zones = [row.teacher?.tz ?? 'UTC', ...row.lesson_students.map((s) => s.student?.tz ?? 'UTC')];
-  return { mode, now: new Date(), current, request, zones };
-}
-
-interface NoticeInput {
-  row: LessonRow;
-  plan: TimeEditPlan;
-  actor: AuthUser;
-}
-
-/**
- * The teacher and the family hear the new time (ScheduleNotices; a past lesson: nobody), only when
- * the admin left «notify» on AND the start moved: a length-only edit or notify:false tells nobody.
- */
-function movedNotice({ row, plan, actor }: NoticeInput): ScheduleChange | undefined {
-  if (!plan.notify || !plan.startChanged) return undefined;
-  const fromStartsAt = row.starts_at;
-  return { kind: 'lesson_rescheduled', lessonId: row.id, fromStartsAt, actorId: actor.id };
-}
-
-interface ChangeInput {
-  row: LessonRow;
-  plan: TimeEditPlan;
-  actor: AuthUser;
-  messages: TimeEditChange['messages'];
-  overrideReason: string | null;
-}
-
-function changeOf({ row, plan, actor, messages, overrideReason }: ChangeInput): TimeEditChange {
-  const before = { starts_at: iso(new Date(row.starts_at)), ends_at: iso(new Date(row.ends_at)) };
-  const to = { starts_at: iso(plan.start), ends_at: iso(plan.end) };
-  return {
-    actor: actor.id,
-    lesson_id: row.id,
-    from: { status: row.status, ...before },
-    to,
-    reason: plan.reason,
-    override_reason: overrideReason,
-    retime_open: plan.retimeOpen,
-    refresh_pdf: plan.refreshPdf,
-    messages,
-    audit: {
-      entity: 'lessons',
-      entity_id: row.id,
-      action: 'time_edit',
-      before,
-      after: { ...to, reason: plan.reason, override_reason: overrideReason, notified: messages.length, mode: plan.mode },
-    },
-  };
 }
