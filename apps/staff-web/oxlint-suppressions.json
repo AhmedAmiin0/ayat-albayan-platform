@@ -1984,10 +1984,7 @@
   },
   "src/features/messaging/messaging/gate-api.ts": {
     "stylistic/max-len": {
-      "count": 4
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 3
     },
     "ab/no-shape-checks": {
       "count": 2
