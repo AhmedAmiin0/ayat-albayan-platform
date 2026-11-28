@@ -133,11 +133,6 @@
       "count": 1
     }
   },
-  "src/components/shell/account/SideFoot.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/components/shell/header/SheetBell.tsx": {
     "ab/module-boundaries": {
       "count": 2
@@ -145,7 +140,7 @@
   },
   "src/components/shell/layout/AdminLayout.tsx": {
     "stylistic/max-len": {
-      "count": 2
+      "count": 1
     },
     "ab/module-boundaries": {
       "count": 1

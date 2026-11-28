@@ -1,7 +1,7 @@
 import type { SettingKey, SettingMeta } from '@ab/settings';
 import { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { t, shape, useTheme, ScreenHeader } from '@ab/mobile-kit';
+import { AccessibilityInfo, Modal, Pressable, StyleSheet, View } from 'react-native';
+import { t, shape, useTheme, ScreenHeader, KeyboardScroll } from '@ab/mobile-kit';
 import type { AppTextNode } from '@ab/mobile-kit';
 import { useValueSheet } from '@/ops/values/hooks/use-value-sheet';
 import { DescriptionEditor } from './DescriptionEditor';
@@ -80,10 +80,8 @@ export function ValueSheet(props: ValueSheetProps) {
             backgroundColor: color.raised,
           }}
         >
-          <ScrollView
+          <KeyboardScroll
             contentContainerStyle={{ padding: 16, paddingBottom: 32 }}
-            keyboardShouldPersistTaps="handled"
-            automaticallyAdjustKeyboardInsets
           >
             {describing ? (
               <Describing
@@ -98,7 +96,7 @@ export function ValueSheet(props: ValueSheetProps) {
                 onDescribe={() => setDescribing(true)}
               />
             )}
-          </ScrollView>
+          </KeyboardScroll>
         </View>
       </View>
     </Modal>

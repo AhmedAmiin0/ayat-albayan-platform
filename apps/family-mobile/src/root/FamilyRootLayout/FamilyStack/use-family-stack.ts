@@ -1,11 +1,13 @@
 import { useMeReady, useProfileLocaleSync } from '@ab/mobile-kit';
 import { useFamilyCodes } from '@/sign-in';
 import { isFamilySignedIn } from '@/root/family-gate';
+import { useFamilyCapture } from '@/root/use-family-capture';
 import { useFamilyPush } from '@/root/use-family-push';
 import type { FamilyStackProps } from './FamilyStack.types';
 
 export function useFamilyStack({ gate, boot }: FamilyStackProps) {
   const signedIn = isFamilySignedIn(gate);
+  useFamilyCapture(signedIn);
   // Inside the query provider: the persisted /auth/me counts (docs/27 E2).
   const meReady = useMeReady(signedIn);
   // Signed out, the sign-in opens on WhatsApp or the password by GET /auth/code/status: the cover

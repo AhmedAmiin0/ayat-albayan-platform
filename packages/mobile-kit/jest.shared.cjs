@@ -101,3 +101,10 @@ jest.mock('./src/biometric/core/bio-lock', () => {
 jest.mock('@expo/ui', () => require('./jest-expo-ui.cjs').universal);
 jest.mock('@expo/ui/swift-ui/modifiers', () => require('./jest-expo-ui.cjs').swiftUiModifiers);
 jest.mock('@expo/ui/jetpack-compose/modifiers', () => require('./jest-expo-ui.cjs').composeModifiers);
+
+// A native module: the library's own jest mock, but its KeyboardAvoidingView pads by the library's
+// formula against a fake keyboard (src/testing/keyboard-fake), so a test sees a frame clear it.
+jest.mock('react-native-keyboard-controller', () => ({
+  ...require('react-native-keyboard-controller/jest'),
+  KeyboardAvoidingView: require('./src/testing/keyboard-fake').FakeKeyboardAvoidingView,
+}));

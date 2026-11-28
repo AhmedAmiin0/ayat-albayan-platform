@@ -27,3 +27,13 @@ test('false on a real account and on an older API without the field', async () =
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
   expect(result.current).toBe(false);
 });
+
+test('signed out (not enabled): never fetches, and false even with a test answer cached', async () => {
+  const client = freshQueryClient();
+  client.setQueryData(['auth', 'me'], { id: 'g1', is_test: true });
+  const { result } = await renderHook(() => useIsTestAccount(false), {
+    wrapper: queryWrapper(client),
+  });
+  expect(result.current).toBe(false);
+  expect(mockApiFetch).not.toHaveBeenCalled();
+});

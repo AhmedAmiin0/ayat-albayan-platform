@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/schedule';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { SectionList } from 'react-native';
+import { SectionList, type ScrollViewProps } from 'react-native';
 import { JoinAround } from '@/classroom';
 import { EditTimeSheet } from '@/edit-time/components/EditTimeSheet';
 import {
@@ -14,6 +14,7 @@ import {
   useTabBarInset,
   Notice,
   useNow,
+  KeyboardScroll,
 } from '@ab/mobile-kit';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
 import { Note } from '@/core/ui/feedback/Note';
@@ -41,6 +42,7 @@ import { useClockCycle, useViewerTz, zoneNote } from '@/core/lib/clock';
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ALL: TeacherFilter = { program: 'all', gender: 'all' };
+const keyboardScroll = (scroll: ScrollViewProps) => <KeyboardScroll {...scroll} />;
 
 /** R-SCH-01, R-TCH-02: every teacher even with nothing booked; fetched once per week. */
 export function DayScheduleScreen({ back = false, initialDate }: { back?: boolean; initialDate?: string }) {
@@ -86,9 +88,8 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
       <SectionList
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 24 + inset }}
-        // The cancel reason is typed inside the list, so a tap must land with the keyboard up.
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustKeyboardInsets
+        // The cancel reason is typed inside the list: it scrolls above the keyboard, taps land.
+        renderScrollComponent={keyboardScroll}
         // Android defaults to false: the teacher stays on top while their day scrolls.
         stickySectionHeadersEnabled
         ListHeaderComponent={

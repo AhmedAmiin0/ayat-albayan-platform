@@ -91,4 +91,15 @@ describe('/portal scope over HTTP', () => {
     expect((await t.call('GET', `/portal/students/${S1}/lessons`, 'guardianA')).statusCode).toBe(200);
     expect(t.lessons.requests).toHaveBeenLastCalledWith({ lessonIds: [L1], userId: 'g-a' });
   });
+
+  it('GET /portal/me: a test flag per student (docs/56); a failed read is real', async () => {
+    t.scope.testIdsOf.mockResolvedValueOnce(new Set([S1]));
+    const flags = (await t.call('GET', '/portal/me', 'guardianA')).json().students;
+    expect(flags.map((s: { is_test: boolean }) => s.is_test)).toEqual([true, false]);
+    expect(t.scope.testIdsOf).toHaveBeenCalledWith([S1, S2]);
+    t.scope.testIdsOf.mockRejectedValueOnce(new Error('db down'));
+    const res = await t.call('GET', '/portal/me', 'guardianA');
+    const after = res.json().students.map((s: { is_test: boolean }) => s.is_test);
+    expect([res.statusCode, after]).toEqual([200, [false, false]]);
+  });
 });

@@ -1,6 +1,6 @@
 import type { MessageView } from '@ab/shared';
 import { Platform } from 'react-native';
-import { t, type, useTheme, Button, useHideRights, useMeActor } from '@ab/mobile-kit';
+import { t, type, useTheme, Button, useHideRights, useMeActor, Sheet } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { ContentText } from '@/core/ui/primitives/ContentText';
 import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
@@ -9,7 +9,6 @@ import { bubbleOffers, downloadLabel } from '@/inbox/messages/hooks/bubble-offer
 import { copyText, downloadFile, downloadProblem } from '@/inbox/messages/copy-download/chat-tools';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { ReactionBar } from '@/inbox/messages/reactions/ReactionBar';
-import { MenuSheet } from '@/core/ui/feedback/MenuSheet';
 import { HideActions } from '@/inbox/messages/components/hide/HideActions';
 import { StickerFavourite } from '@/inbox/messages/components/sticker/StickerFavourite';
 
@@ -54,7 +53,7 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
       }} onMore={() => later(() => onMoreEmoji(m))} />
   ) : null;
   return (
-    <MenuSheet open={m !== null} label={t.inbox.reply.menu} testID="message-menu" onClose={onClose}>
+    <Sheet open={m !== null} label={t.inbox.reply.menu} testID="message-menu" onClose={onClose}>
       {bar}
       {m ? (
         <ContentText
@@ -110,6 +109,6 @@ export function MessageMenu({ message: m, phone, onClose, onMoreEmoji }: Message
         <HideActions key={m.id} message={m} offers={offers} phone={phone} onClose={onClose} />
       ) : null}
       <Button variant="secondary" label={t.common.cancel} onPress={onClose} />
-    </MenuSheet>
+    </Sheet>
   );
 }

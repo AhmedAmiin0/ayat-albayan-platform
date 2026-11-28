@@ -83,8 +83,11 @@ export function useMeActor(): CorrectionActor | null {
 
 const testFlagSchema = z.object({ is_test: z.literal(true) });
 
-/** /auth/me `is_test` (docs/56); false until it answers and on an older API. */
-export function useIsTestAccount(): boolean {
-  const me = useQuery(meQuery());
-  return testFlagSchema.safeParse(me.data).success;
+/**
+ * /auth/me `is_test` (docs/56); false until it answers, on an older API and while not enabled
+ * (signed out: no fetch, and a cached answer is not trusted).
+ */
+export function useIsTestAccount(enabled = true): boolean {
+  const me = useQuery({ ...meQuery(), enabled });
+  return enabled && testFlagSchema.safeParse(me.data).success;
 }

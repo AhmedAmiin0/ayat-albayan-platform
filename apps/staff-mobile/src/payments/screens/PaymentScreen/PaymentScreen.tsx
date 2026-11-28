@@ -1,7 +1,15 @@
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
-import { ScrollView } from 'react-native';
-import { t, BackButton, EmptyState, ErrorState, ltr, Screen, ScreenHeader } from '@ab/mobile-kit';
+import {
+  t,
+  BackButton,
+  EmptyState,
+  ErrorState,
+  ltr,
+  Screen,
+  ScreenHeader,
+  KeyboardScroll,
+} from '@ab/mobile-kit';
 import { isOffline } from '@/core/lib/money/payment-errors';
 import { PaymentForm } from '@/payments/components/PaymentForm';
 import { useStudentBalance } from '@/payments/hooks/queries';
@@ -29,12 +37,10 @@ export function PaymentScreen() {
         leading={<BackButton onPress={back} />}
       />
       {data && current ? (
-        <ScrollView
+        <KeyboardScroll
           style={{ flex: 1 }}
           contentContainerStyle={{ paddingBottom: 32 }}
-          keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
-          automaticallyAdjustKeyboardInsets
         >
           <PaymentForm
             studentId={id}
@@ -43,7 +49,7 @@ export function PaymentScreen() {
             onRetry={retry}
             onDone={back}
           />
-        </ScrollView>
+        </KeyboardScroll>
       ) : data ? (
         <EmptyState title={t.subscriptions.empty} />
       ) : balance.isError ? (
