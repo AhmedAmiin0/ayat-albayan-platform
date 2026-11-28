@@ -33,17 +33,24 @@ export const folderOf = (rel) => (rel.includes('/') ? rel.split('/')[0] : null);
 /** `Map<folder, Set<folder>>` from `{ path, text }` files (root-relative paths). */
 export function folderGraph(files) {
   const graph = new Map();
-  for (const { path, text } of files) {
-    const from = folderOf(path);
+  for (const file of files) {
+    const from = folderOf(file.path);
     if (from === null) continue;
-    for (const spec of specsOf(text)) {
-      const to = folderOf(posix.normalize(posix.join(posix.dirname(path), spec)));
-      if (to === null || to === from || to.startsWith('..')) continue;
-      if (!graph.has(from)) graph.set(from, new Set());
-      graph.get(from).add(to);
-    }
+    const edges = graph.get(from) ?? new Set();
+    for (const to of targetsOf(file, from)) edges.add(to);
+    if (edges.size > 0) graph.set(from, edges);
   }
   return graph;
+}
+
+const isEdge = (from, to) => to !== null && to !== from && !to.startsWith('..');
+
+/** The other top folders a file imports from. */
+function targetsOf({ path, text }, from) {
+  const folders = specsOf(text).map((spec) =>
+    folderOf(posix.normalize(posix.join(posix.dirname(path), spec))),
+  );
+  return folders.filter((to) => isEdge(from, to));
 }
 
 /** The strongly connected components with more than one folder (Tarjan), each sorted. */
@@ -92,7 +99,9 @@ function filesOf(root, rel = '') {
   return readdirSync(join(root, rel), { withFileTypes: true }).flatMap((e) => {
     const path = rel === '' ? e.name : `${rel}/${e.name}`;
     if (e.isDirectory()) return filesOf(root, path);
-    return CODE.test(e.name) && !TEST.test(e.name) ? [{ path, text: readFileSync(join(root, path), 'utf8') }] : [];
+    return CODE.test(e.name) && !TEST.test(e.name)
+      ? [{ path, text: readFileSync(join(root, path), 'utf8') }]
+      : [];
   });
 }
 
@@ -109,8 +118,11 @@ function main() {
   const now = Object.fromEntries(ROOTS.map((r) => [r, cycleEdges(graphs[r]).length]));
   const dir = process.env.GUARD_BASE;
   const base = dir ? counts(dir) : now;
-  console.log(`cycles: ${JSON.stringify(now)} (base branch ${dir ? JSON.stringify(base) : 'not given'})`);
-  for (const r of ROOTS) for (const scc of cycles(graphs[r])) console.log(`  ${r}: ${scc.join(' ↔ ')}`);
+  console.log(
+    `cycles: ${JSON.stringify(now)} (base branch ${dir ? JSON.stringify(base) : 'not given'})`,
+  );
+  for (const r of ROOTS)
+    for (const scc of cycles(graphs[r])) console.log(`  ${r}: ${scc.join(' ↔ ')}`);
   const problems = check(now, base);
   for (const p of problems) console.log(`  ${p}`);
   if (problems.length > 0) process.exit(1);

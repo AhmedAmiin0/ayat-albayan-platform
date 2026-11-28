@@ -8,20 +8,27 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const nameOf = (item) => (Array.isArray(item) ? item.map(nameOf).join('|') : (item?.name ?? String(item)));
+const nameOf = (item) =>
+  Array.isArray(item) ? item.map(nameOf).join('|') : (item?.name ?? String(item));
 
 /** One sorted `<file> <kind> <name>` line per issue of a knip json report. */
 export function flatten(report) {
   const out = (report.files ?? []).map((f) => `${f} files`);
   // `owners` (CODEOWNERS) is metadata of the row, not an issue.
   for (const { file, owners: _owners, ...kinds } of report.issues ?? []) {
-    for (const [kind, items] of Object.entries(kinds)) {
-      const list = Array.isArray(items) ? items.map(nameOf) : Object.keys(items ?? {}).flatMap((k) => (items[k] ?? []).map((i) => `${k}.${nameOf(i)}`));
-      for (const name of list) out.push(`${file} ${kind} ${name}`);
-    }
+    const lines = Object.entries(kinds).flatMap(([kind, items]) =>
+      issueNames(items).map((name) => `${file} ${kind} ${name}`),
+    );
+    out.push(...lines);
   }
   return [...new Set(out)].sort();
 }
+
+const keyedNames = (items) =>
+  Object.entries(items ?? {}).flatMap(([k, list]) => (list ?? []).map((i) => `${k}.${nameOf(i)}`));
+
+/** A kind's items: a list of names, or names grouped by a key (`Class.member`). */
+const issueNames = (items) => (Array.isArray(items) ? items.map(nameOf) : keyedNames(items));
 
 /** `{ added, fixed }` against the baseline lines. */
 export function compare(now, baseline) {
@@ -37,7 +44,9 @@ function main(args) {
   if (args.includes('--write')) writeFileSync(file, `${JSON.stringify(now, null, 2)}\n`);
   const baseline = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : [];
   const { added, fixed } = compare(now, baseline);
-  console.log(`knip: ${now.length} issues, baseline ${baseline.length}, new ${added.length}, fixed ${fixed.length}`);
+  console.log(
+    `knip: ${now.length} issues, baseline ${baseline.length}, new ${added.length}, fixed ${fixed.length}`,
+  );
   for (const l of added) console.log(`  new: ${l}`);
   for (const l of fixed) console.log(`  fixed: ${l} (develop drops it from the baseline)`);
   if (added.length > 0) process.exit(1);
