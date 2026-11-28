@@ -1,39 +1,12 @@
 import { Inject, Injectable, InternalServerErrorException, Logger, Optional } from '@nestjs/common';
-import type { LineNumbers } from '@/config/env/env';
 import { InboundService } from './inbound/webhook.inbound.service';
-import type { ReceivingNumber } from './lines/webhook.lines';
 import { WebhookConfigReload } from './lines/webhook.reload';
 import { parseWebhook } from './parse/webhook.parse';
 import { StatusService } from './status/webhook.status.service';
-import { CALL_EVENTS, type CallEventsPort } from '@/modules/messaging/calls/flow/call-events.service';
+import { CALL_EVENTS, type CallEventsPort } from '@/modules/messaging/calls';
 import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
-
-/** WhatsApp webhook settings from env (docs/12 §3.1, §13.6), provided as WEBHOOK_CONFIG. */
-export interface WebhookConfig {
-  /**
-   * [WA_APP_SECRET, WA_CHAT_APP_SECRET]: X-Hub-Signature-256 keys, any may match. None → every POST
-   * is 401.
-   */
-  appSecrets: readonly string[];
-  /** WA_VERIFY_TOKEN: GET subscribe handshake (one token for both Meta apps). Unset → 403. */
-  verifyToken: string | undefined;
-  /** Each line's phone-number id: changes for any other number are ignored. */
-  numbers: LineNumbers;
-  /** KAPSO_WEBHOOK_SECRET: POST /webhooks/kapso only (docs/19). Unset → every Kapso POST is 401. */
-  kapsoSecret?: string;
-  /**
-   * WACRM_WEBHOOK_SECRET: POST /webhooks/wacrm only (docs/19 «crm driver»). Unset → every CRM POST
-   * is 401.
-   */
-  wacrmSecret?: string;
-  /**
-   * Module mode (docs/23c decision 7): every wa_numbers row, enabled or not; absent / null = legacy
-   * (`numbers`).
-   */
-  overlay?: readonly ReceivingNumber[] | null;
-  /** The dedicated calls number (docs/28 §10), read per access; null / absent = none. */
-  calls?: ReceivingNumber | null;
-}
+import type { WebhookConfig } from '@/modules/messaging/webhook/shared/webhook.types';
+import type { WebhookBatch } from './webhook.events';
 
 /**
  * the work runs inline; after this budget Meta gets its 200 and the rest finishes in
@@ -41,6 +14,8 @@ export interface WebhookConfig {
  * after ~20 s without an answer. Move to a pg-boss queue if a batch ever needs longer.
  */
 export const RESPONSE_BUDGET_MS = 5_000;
+
+type BatchItem = readonly [id: string, work: () => Promise<unknown>];
 
 /** Waits for `work` at most `ms`; past that the caller moves on and `work` finishes on its own. */
 export async function within(work: Promise<unknown>, ms: number): Promise<boolean> {
@@ -90,20 +65,31 @@ export class WebhookService {
     // it.
     const deadline = now.getTime() + RESPONSE_BUDGET_MS;
     let failed = 0;
-    for (const m of batch.messages)
-      failed += await this.safely(m.waMessageId, () => this.inbound.handle(m, { deadline }));
-    for (const s of batch.statuses)
-      failed += await this.safely(s.waMessageId, () => this.statuses.handle(s));
-    for (const e of batch.echoes) failed += await this.safely('echo', () => this.statuses.echo(e));
-    for (const c of batch.calls ?? [])
-      failed += await this.safely(c.waCallId, () => this.calls?.handle(c) ?? Promise.resolve());
-    for (const p of batch.permissions ?? [])
-      failed += await this.safely(
-        'call_permission',
-        () => this.calls?.permissionReply(p) ?? Promise.resolve(),
-      );
+    for (const [id, work] of this.items(batch, deadline)) failed += await this.safely(id, work);
     if (failed > 0)
       throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
+  }
+
+  /** Every item in order: messages, statuses, echoes, calls, then call permission replies. */
+  private items(batch: WebhookBatch, deadline: number): BatchItem[] {
+    const calls = batch.calls ?? [];
+    const permissions = batch.permissions ?? [];
+    return [
+      ...batch.messages.map((m): BatchItem => [
+        m.waMessageId,
+        () => this.inbound.handle(m, { deadline }),
+      ]),
+      ...batch.statuses.map((s): BatchItem => [s.waMessageId, () => this.statuses.handle(s)]),
+      ...batch.echoes.map((e): BatchItem => ['echo', () => this.statuses.echo(e)]),
+      ...calls.map((c): BatchItem => [
+        c.waCallId,
+        () => this.calls?.handle(c) ?? Promise.resolve(),
+      ]),
+      ...permissions.map((p): BatchItem => [
+        'call_permission',
+        () => this.calls?.permissionReply(p) ?? Promise.resolve(),
+      ]),
+    ];
   }
 
   /**

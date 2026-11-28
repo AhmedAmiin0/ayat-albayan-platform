@@ -4,7 +4,8 @@ import { PushService } from '@/common/push/push.service';
 import { CrmConfirm } from '@/modules/messaging/webhook/crm-confirm';
 import { ExternalStatus } from '@/modules/messaging/webhook/external/external-status';
 import type { EchoEvent, StatusEvent } from '@/modules/messaging/webhook/webhook.events';
-import { WebhookRepo, type OutboundRow } from '@/modules/messaging/webhook/shared/webhook.repo';
+import { WebhookRepo } from '@/modules/messaging/webhook/shared/webhook.repo';
+import type { OutboundRow } from '@/modules/messaging/webhook/shared/webhook.types';
 import { statusPatch } from './webhook.status';
 
 const TEMPLATE_NAMES: Record<string, string> = ar.templates.names;
@@ -36,14 +37,16 @@ export class StatusService {
   async handle(e: StatusEvent): Promise<void> {
     // Two tries: the compare-and-set loses only when another status landed meanwhile.
     for (let attempt = 0; attempt < 2; attempt++) {
-      const row = await this.queries.outboundByWaId(e.waMessageId);
-      if (row) {
-        if (await this.move(row, e)) return;
-        continue;
-      }
-      // Stored (with this status) or found stored: the next pass moves it on if it is behind.
-      if (attempt > 0 || !(await this.adopt(e))) return;
+      if (!(await this.pass(e, attempt))) return;
     }
+  }
+
+  /** One read and move; true = read the row again. */
+  private async pass(e: StatusEvent, attempt: number): Promise<boolean> {
+    const row = await this.queries.outboundByWaId(e.waMessageId);
+    if (row) return !(await this.move(row, e));
+    // Stored (with this status) or found stored: the next pass moves it on if it is behind.
+    return attempt === 0 && (await this.adopt(e));
   }
 
   /** The CRM's status confirms a timed-out send; any other is read back from Kapso (or ignored). */

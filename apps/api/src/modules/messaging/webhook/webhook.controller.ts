@@ -2,11 +2,9 @@ import {
   Controller,
   ForbiddenException,
   Get,
-  Headers,
   HttpCode,
   Inject,
   Post,
-  Query,
   Req,
   Res,
   UnauthorizedException,
@@ -14,20 +12,21 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
 import { verifyChallenge, verifySignature } from './parse/webhook.signature';
-import { RESPONSE_BUDGET_MS, WebhookService, within, type WebhookConfig } from './webhook.service';
+import { RESPONSE_BUDGET_MS, WebhookService, within } from './webhook.service';
+import type { WebhookConfig } from '@/modules/messaging/webhook/shared/webhook.types';
 import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
+import { hubQuerySchema, metaHeadersSchema } from './webhook-inputs.schemas';
 
 /** The bits of the Fastify request / reply used here (no direct `fastify` dependency). */
 interface RawRequest {
   /** Set by NestFactory.create(…, { rawBody: true }) in main.ts. */
   rawBody?: Buffer;
   body: unknown;
+  headers: unknown;
 }
 interface TypedReply {
   type(contentType: string): unknown;
 }
-
-type HubQuery = Partial<Record<'hub.mode' | 'hub.verify_token' | 'hub.challenge', string>>;
 
 /**
  * Meta WhatsApp Cloud API webhook (R-MSG-04, R-MSG-05, R-LEAD-01, R-SCH-03; docs/12 §3.5).
@@ -44,8 +43,13 @@ export class WebhookController {
 
   /** Subscribe handshake: echo hub.challenge as plain text when the verify token matches. */
   @Get()
-  challenge(@Query() q: HubQuery, @Res({ passthrough: true }) reply: TypedReply): string {
-    const query = { mode: q['hub.mode'], token: q['hub.verify_token'], challenge: q['hub.challenge'] };
+  challenge(@Req() req: { query: unknown }, @Res({ passthrough: true }) reply: TypedReply): string {
+    const q = hubQuerySchema.parse(req.query);
+    const query = {
+      mode: q['hub.mode'],
+      token: q['hub.verify_token'],
+      challenge: q['hub.challenge'],
+    };
     const challenge = verifyChallenge(query, this.config.verifyToken);
     if (challenge === null) throw new ForbiddenException();
     reply.type('text/plain');
@@ -58,13 +62,9 @@ export class WebhookController {
    */
   @Post()
   @HttpCode(200)
-  async receive(
-    @Req() req: RawRequest,
-    @Headers('x-hub-signature-256') signature?: string,
-  ): Promise<void> {
-    if (
-      !verifySignature({ rawBody: req.rawBody, header: signature, secrets: this.config.appSecrets })
-    ) {
+  async receive(@Req() req: RawRequest): Promise<void> {
+    const header = metaHeadersSchema.parse(req.headers)['x-hub-signature-256'];
+    if (!verifySignature({ rawBody: req.rawBody, header, secrets: this.config.appSecrets })) {
       throw new UnauthorizedException();
     }
     await within(this.webhook.handle(req.body), RESPONSE_BUDGET_MS);

@@ -31,37 +31,56 @@ interface ExternalRowInput {
   event?: StatusEvent;
 }
 
-
 /**
  * Status and times: Kapso's status (else sent) at WhatsApp's time, moved forward by the event
  * (statusPatch: never backwards). A failed message never went out (as the chat import stores it).
  */
 function delivery(msg: ExternalMessage, event: StatusEvent | undefined): TablesUpdate<'messages'> {
-  const base = { status: msg.status ?? 'sent', sent_at: msg.at.toISOString(), delivered_at: null, read_at: null } as const;
+  const base = {
+    status: msg.status ?? 'sent',
+    sent_at: msg.at.toISOString(),
+    delivered_at: null,
+    read_at: null,
+  } as const;
   const out: TablesUpdate<'messages'> = { ...base, ...(event ? statusPatch(base, event) : null) };
   return out.status === 'failed' ? { ...out, sent_at: null } : out;
 }
 
 /** Where it was sent from: only the keys known (a single-line insert carries no `line`). */
-const origin = ({ line, numberId }: ExternalRowInput['from']) => ({ ...(line ? { line } : {}), ...(numberId ? { number_id: numberId } : {}) });
+const origin = ({ line, numberId }: ExternalRowInput['from']) => ({
+  ...(line ? { line } : {}),
+  ...(numberId ? { number_id: numberId } : {}),
+});
 
-export function externalRow({ msg, phone, who, from, at, event }: ExternalRowInput): TablesInsert<'messages'> {
-  const templateKey = msg.templateName ? templateKeyFor(msg.templateName) : null;
-  // A sign-in code (docs/30 §4, on the chat line since 2026-10-29) is kept as a bare marker: its
-  // text and params hold the code, which staff must never read in the chat.
+const ownerOf = (who: Contact) => ({
+  guardian_id: who.guardian?.id ?? null,
+  lead_id: who.guardian ? null : (who.lead?.id ?? null),
+});
+
+/**
+ * Only real text or a caption, never a «[image]» placeholder: the payload says what a row without
+ * text is (migration 992 lets an outbound row carry only it). A sign-in code (docs/30 §4) is kept
+ * as a bare marker: its text and params hold the code, which staff must never read in the chat.
+ */
+function textOf(msg: ExternalMessage, templateKey: string | null) {
   const secret = templateKey === ACCOUNT_CODE_TEMPLATE;
+  return {
+    body: secret ? null : msg.body,
+    template_key: templateKey,
+    template_params: secret ? null : msg.templateParams,
+  };
+}
+
+export function externalRow(input: ExternalRowInput): TablesInsert<'messages'> {
+  const { msg, phone, who, from, at, event } = input;
+  const templateKey = msg.templateName ? templateKeyFor(msg.templateName) : null;
   return {
     ...delivery(msg, event),
     ...origin(from),
     direction: 'outbound',
     phone_e164: phone,
-    guardian_id: who.guardian?.id ?? null,
-    lead_id: who.guardian ? null : (who.lead?.id ?? null),
-    // Only real text or a caption, never a «[image]» placeholder: the
-    // payload says what a row without text is (migration 992 lets an outbound row carry only it).
-    body: secret ? null : msg.body,
-    template_key: templateKey,
-    template_params: secret ? null : msg.templateParams,
+    ...ownerOf(who),
+    ...textOf(msg, templateKey),
     wa_message_id: msg.waMessageId,
     reply_to_wa_id: msg.replyTo,
     media_id: msg.mediaId,

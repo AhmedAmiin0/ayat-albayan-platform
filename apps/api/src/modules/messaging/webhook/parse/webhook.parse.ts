@@ -1,91 +1,25 @@
-import type { Json } from '@ab/db';
 import {
   DELIVERY_STATUSES,
-  MEDIA_TYPES,
   type DeliveryStatus,
-  type InboundEvent,
   type StatusEvent,
   type WebhookBatch,
 } from '@/modules/messaging/webhook/webhook.events';
+import {
+  receiving,
+  where,
+  type ReceiveOptions,
+  type Receiving,
+} from '@/modules/messaging/webhook/lines/webhook.lines';
 import { readCalls, readPermissionReplies } from './webhook.calls';
-import { receiving, where, type ReceiveOptions, type Receiving } from '@/modules/messaging/webhook/lines/webhook.lines';
 import { ECHO_FIELD, readEchoes } from './webhook.echoes';
-import { mediaFileName } from './file-name';
+import { field, first, get, list, metaTime } from './webhook.fields';
+import { toInbound } from './webhook.message';
 
 // Meta's webhook envelope → flat inbound messages and delivery statuses (docs/12 §3.5). Fields
 // are read by their Meta path («interactive.button_reply.id»). Lenient: an item we can't read is
 // skipped, never a 500 (Meta would retry it forever).
 
-/** The value at a dotted path («errors.0.code») of parsed JSON; undefined when absent. */
-export function get(value: unknown, path: string): unknown {
-  let at: unknown = value;
-  for (const key of path.split('.')) {
-    at = at !== null && typeof at === 'object' ? (at as Record<string, unknown>)[key] : undefined;
-  }
-  return at;
-}
-
-/** A string (or number, as text) at a dotted path; null otherwise. */
-export function field(value: unknown, path: string): string | null {
-  const at = get(value, path);
-  if (typeof at === 'number') return String(at);
-  return typeof at === 'string' ? at : null;
-}
-
-const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
-const first = (...values: (string | null)[]): string | null =>
-  values.find((v) => v !== null) ?? null;
-
-/** Unix-seconds string → Date; a missing or bad timestamp is "now". */
-export function metaTime(ts: string | null | undefined, now: Date): Date {
-  const n = Number(ts);
-  return ts && Number.isFinite(n) && n > 0 ? new Date(n * 1000) : now;
-}
-
-/** The type-specific part as Meta sent it (+ errors of an «unsupported» message); null for text. */
-function payloadOf(m: unknown, type: string): Json | null {
-  if (type === 'text') return null;
-  const errors = get(m, 'errors');
-  return {
-    type,
-    [type]: get(m, type) ?? null,
-    ...(errors === undefined ? {} : { errors }),
-  } as Json;
-}
-
-interface MessageContext {
-  names: Map<string, string>;
-  now: Date;
-  at: Receiving;
-}
-
-/** One Meta message object → an InboundEvent (also Kapso's inbound history, external/inbound). */
-export function toInbound(m: unknown, ctx: MessageContext): InboundEvent | null {
-  const [from, id, type] = [field(m, 'from'), field(m, 'id'), field(m, 'type')];
-  if (!from || !id || !type) return null;
-  const f = (path: string) => field(m, path);
-  const media = (MEDIA_TYPES as readonly string[]).includes(type) ? type : null;
-  const mf = (key: string) => (media ? f(`${media}.${key}`) : null);
-  // A document's name (Meta's document.filename, Kapso's media_data): the chat's PDF card shows it.
-  const fileName = media === 'document' ? mediaFileName(first(mf('filename'), f('kapso.media_data.filename'))) : null;
-  return {
-    waMessageId: id,
-    from,
-    name: ctx.names.get(from) || null,
-    at: metaTime(f('timestamp'), ctx.now),
-    type,
-    body: first(f('text.body'), mf('caption'), f('button.text'), f('interactive.button_reply.title'), f('interactive.list_reply.title')),
-    replyKey: first(f('button.payload'), f('interactive.button_reply.id'), f('interactive.list_reply.id')),
-    replyTo: f('context.id'),
-    mediaId: mf('id'),
-    mediaMime: mf('mime_type'),
-    ...(fileName ? { mediaName: fileName } : {}),
-    payload: payloadOf(m, type),
-    ...where(ctx.at),
-  };
-}
-
-function toStatus(s: unknown, ctx: Omit<MessageContext, 'names'>): StatusEvent | null {
+function toStatus(s: unknown, ctx: { now: Date; at: Receiving }): StatusEvent | null {
   const [id, status] = [field(s, 'id'), field(s, 'status')];
   if (!id || !(DELIVERY_STATUSES as readonly (string | null)[]).includes(status)) return null;
   const f = (path: string) => field(s, path);
@@ -105,20 +39,40 @@ export interface ParseOptions extends ReceiveOptions {
   now: Date;
 }
 
+type ChangeContext = ParseOptions & { batch: WebhookBatch };
+
+interface ChangeRead {
+  value: unknown;
+  number: string | undefined;
+  at: Receiving;
+  ctx: ChangeContext;
+}
+
 /**
  * `messages` → the batch; `smb_message_echoes` → echoes; `calls` → batch.calls (docs/28, never
- * ticks); else skipped.
+ * ticks); any other field is skipped.
  */
-function readChange(change: unknown, ctx: ParseOptions & { batch: WebhookBatch }): void {
-  const kind = field(change, 'field');
-  if (kind !== 'messages' && kind !== ECHO_FIELD && kind !== 'calls') return;
+const CHANGE_READERS = new Map<string, (read: ChangeRead) => void>([
+  ['messages', ({ value, at, ctx }) => readMessages(value, { ...ctx, at })],
+  [ECHO_FIELD, ({ value, at, ctx }) => ctx.batch.echoes.push(...readEchoes(value, at))],
+  [
+    'calls',
+    ({ value, number, ctx }) =>
+      readCalls(value, {
+        now: ctx.now,
+        phoneNumberId: number ?? null,
+        out: (ctx.batch.calls ??= []),
+      }),
+  ],
+]);
+
+function readChange(change: unknown, ctx: ChangeContext): void {
+  const read = CHANGE_READERS.get(field(change, 'field') ?? '');
+  if (!read) return;
   const value = get(change, 'value');
   const number = field(value, 'metadata.phone_number_id') ?? undefined;
   const at = receiving(number, ctx);
-  if (!at) return;
-  if (kind === 'calls') { readCalls(value, { now: ctx.now, phoneNumberId: number ?? null, out: (ctx.batch.calls ??= []) }); return; }
-  if (kind === ECHO_FIELD) return void ctx.batch.echoes.push(...readEchoes(value, at));
-  readMessages(value, { ...ctx, at });
+  if (at) read({ value, number, at, ctx });
 }
 
 /** A `messages` change's inbound messages and delivery statuses. */
@@ -127,7 +81,9 @@ function readMessages(
   ctx: ParseOptions & { batch: WebhookBatch; at: Receiving },
 ): void {
   const contacts = list(get(value, 'contacts'));
-  const names = new Map(contacts.map((c) => [field(c, 'wa_id') ?? '', field(c, 'profile.name')?.trim() ?? '']));
+  const names = new Map(
+    contacts.map((c) => [field(c, 'wa_id') ?? '', field(c, 'profile.name')?.trim() ?? '']),
+  );
   for (const m of list(get(value, 'messages'))) {
     const event = toInbound(m, { names, now: ctx.now, at: ctx.at });
     if (event) ctx.batch.messages.push(event);

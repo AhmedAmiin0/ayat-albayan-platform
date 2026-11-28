@@ -1,15 +1,29 @@
-import { Controller, Headers, HttpCode, Inject, Logger, Post, Req, UnauthorizedException } from '@nestjs/common';
+import {
+  Controller,
+  HttpCode,
+  Inject,
+  Logger,
+  Post,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
-import { presentSignatureHeaders, verifyKapsoSignature, type KapsoSignedRequest } from '@/modules/messaging/webhook/parse/webhook.kapso-signature';
-import { RESPONSE_BUDGET_MS, WebhookService, within, type WebhookConfig } from './webhook.service';
+import {
+  presentSignatureHeaders,
+  verifyKapsoSignature,
+} from '@/modules/messaging/webhook/parse/webhook.kapso-signature';
+import { RESPONSE_BUDGET_MS, WebhookService, within } from './webhook.service';
+import type { WebhookConfig } from '@/modules/messaging/webhook/shared/webhook.types';
 import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
+import { kapsoHeadersSchema } from './webhook-inputs.schemas';
 
 /** The bits of the Fastify request used here (no direct `fastify` dependency). */
 interface RawRequest {
   /** Set by NestFactory.create(…, { rawBody: true }) in main.ts. */
   rawBody?: Buffer;
   body: unknown;
+  headers: unknown;
 }
 
 /**
@@ -36,7 +50,8 @@ export class KapsoWebhookController {
    */
   @Post()
   @HttpCode(200)
-  async receive(@Req() req: RawRequest, @Headers() headers: KapsoSignedRequest['headers']): Promise<void> {
+  async receive(@Req() req: RawRequest): Promise<void> {
+    const headers = kapsoHeadersSchema.parse(req.headers);
     if (!verifyKapsoSignature({ rawBody: req.rawBody, headers, secret: this.config.kapsoSecret })) {
       const names = presentSignatureHeaders(headers);
       // Debug only, like the Meta route (silent on 401): a public URL gets probed; names, never

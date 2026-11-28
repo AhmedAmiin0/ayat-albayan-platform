@@ -11,7 +11,8 @@ async function bodyFor(count: number): Promise<string> {
   vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
   const push = { notifyAdmins: vi.fn().mockResolvedValue(undefined) };
   await new InboundGapAlert(push as unknown as PushService).raise(n, { count, now: NOW });
-  return (push.notifyAdmins.mock.calls[0]?.[1] as { vars: { text: string } }).vars.text;
+  const event = push.notifyAdmins.mock.calls[0]?.[1] as { vars: { text: string } } | undefined;
+  return event?.vars.text ?? '';
 }
 
 afterEach(() => vi.restoreAllMocks());

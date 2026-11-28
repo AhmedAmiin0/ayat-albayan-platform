@@ -2,7 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { BackgroundJob } from '@/config/role/background-job';
 import { Ticker, TickerJob } from '@/common/jobs';
 import { EVERY_MS } from '@/modules/messaging/webhook/external/external-catchup.job';
-import { kapsoChatNumbers } from '@/modules/messaging/webhook/external/kapso-numbers';
+import {
+  kapsoChatNumbers,
+  type KapsoNumber,
+} from '@/modules/messaging/webhook/external/kapso-numbers';
 import { InboundCatchUp, type InboundCounts } from './inbound-catchup.service';
 import { InboundGapAlert } from './inbound-gap.alert';
 
@@ -39,16 +42,18 @@ export class InboundCatchUpJob extends TickerJob {
 
   async runOnce(now = new Date()): Promise<InboundCounts[]> {
     const out: InboundCounts[] = [];
-    for (const n of kapsoChatNumbers()) {
-      const key = n.numberId ?? n.line;
-      const full = !this.fullDone.has(key);
-      const counts = await this.catchUp.number(n, { now, full });
-      if (full && counts.complete) this.fullDone.add(key);
-      const late = { count: counts.late, now };
-      if (late.count > 0) await this.raise(() => this.alert.raise(n, late));
-      out.push(counts);
-    }
+    for (const n of kapsoChatNumbers()) out.push(await this.runNumber(n, now));
     return out;
+  }
+
+  private async runNumber(n: KapsoNumber, now: Date): Promise<InboundCounts> {
+    const key = n.numberId ?? n.line;
+    const full = !this.fullDone.has(key);
+    const counts = await this.catchUp.number(n, { now, full });
+    if (full && counts.complete) this.fullDone.add(key);
+    const late = { count: counts.late, now };
+    if (late.count > 0) await this.raise(() => this.alert.raise(n, late));
+    return counts;
   }
 
   /** An alert failure is logged; the next number still runs. */

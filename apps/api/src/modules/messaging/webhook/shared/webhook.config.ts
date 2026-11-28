@@ -2,7 +2,7 @@ import { callsNumber } from '@/common/configuration/integrations/calls-number';
 import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { crmWebhookSecret } from '@/config/env/whatsapp/env.crm';
 import { appSecrets, kapsoWebhookSecret, lineNumbers, type Env } from '@/config/env/env';
-import type { WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import type { WebhookConfig } from './webhook.types';
 
 /** A token so tests can swap the webhook settings. */
 export const WEBHOOK_CONFIG = Symbol('WEBHOOK_CONFIG');

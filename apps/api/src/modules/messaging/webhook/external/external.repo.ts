@@ -3,7 +3,7 @@ import type { WaLine } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
-import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
+import { SENDING } from '@/modules/messaging/whatsapp';
 import { pgError } from '@/common/db/errors';
 
 function check(error: PostgrestError | null): void {

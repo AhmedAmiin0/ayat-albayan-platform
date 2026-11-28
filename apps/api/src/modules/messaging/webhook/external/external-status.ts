@@ -9,6 +9,8 @@ export const KAPSO_HISTORY = Symbol('KAPSO_HISTORY');
 
 const reason = (e: unknown): string => (e instanceof Error ? e.message : String(e)).slice(0, 200);
 
+const numberFor = (e: StatusEvent) => (e.phoneNumberId ? kapsoNumberFor(e.phoneNumberId) : null);
+
 /**
  * A delivery status for a wamid we hold no row for, on a number whose driver is Kapso: staff sent
  * it from Kapso's own inbox. The message is read back from Kapso and stored as an outbound row with
@@ -34,7 +36,7 @@ export class ExternalStatus {
   /** True when a row for the wamid now exists (stored now, or by a concurrent run). */
   async adopt(e: StatusEvent): Promise<boolean> {
     try {
-      const number = e.phoneNumberId ? kapsoNumberFor(e.phoneNumberId) : null;
+      const number = numberFor(e);
       if (!number) return false;
       const message = await this.kapso.message(number.env, e.waMessageId);
       if (!message) return false;

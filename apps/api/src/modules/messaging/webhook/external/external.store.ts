@@ -17,6 +17,14 @@ interface ExternalInput {
   event?: StatusEvent;
 }
 
+interface NewRow {
+  msg: ExternalMessage;
+  phone: string;
+  line: NumberPurpose | null;
+  numberId: string | null;
+  event: StatusEvent | undefined;
+}
+
 /** known also covers confirming a manual-send row; skipped is not a readable outbound message. */
 export type ExternalOutcome = 'stored' | 'known' | 'skipped';
 
@@ -49,21 +57,31 @@ export class ExternalStore {
     if (!read) return 'skipped';
     const { msg, phone } = read;
     if ((await this.queries.existing([msg.waMessageId])).size > 0) return 'known';
-    const numberId =
-      from.numberId ??
-      (from.phoneNumberId ? await this.webhook.numberIdFor(from.phoneNumberId) : null);
+    const numberId = await this.numberIdOf(from);
     // Skip while our own send is unrecorded, as its status may be this message (catch-up retries).
     if (await this.queries.inFlight(phone)) return 'skipped';
     const origin = { line: from.line, numberId };
     if (await this.manual.attach({ msg, phone, from: origin, event }))
       return this.attached(phone, msg.at);
+    return this.insert({ msg, phone, line: from.line, numberId, event });
+  }
+
+  private async numberIdOf(from: ExternalInput['from']): Promise<string | null> {
+    return (
+      from.numberId ??
+      (from.phoneNumberId ? await this.webhook.numberIdFor(from.phoneNumberId) : null)
+    );
+  }
+
+  private async insert(input: NewRow): Promise<ExternalOutcome> {
+    const { msg, phone, event } = input;
     const who = await this.webhook.identify(phone);
     const at = orderedAt(msg.at, await this.webhook.latestInSecond(phone, msg.at));
     const row = externalRow({
       msg,
       phone,
       who,
-      from: { line: from.line, numberId },
+      from: { line: input.line, numberId: input.numberId },
       at,
       ...(event ? { event } : {}),
     });

@@ -84,6 +84,11 @@ export interface ReceiveOptions {
   calls?: ReceivingNumber | null;
 }
 
+function ignored(number: string | undefined, ctx: ReceiveOptions): null {
+  if (number) ctx.onIgnored?.(number);
+  return null;
+}
+
 /** Where a change for `number` came in; null = ignored (reported via onIgnored). */
 export function receiving(number: string | undefined, ctx: ReceiveOptions): Receiving | null {
   const numbers = ctx.numbers ?? {};
@@ -91,9 +96,6 @@ export function receiving(number: string | undefined, ctx: ReceiveOptions): Rece
     callsReceiving(ctx.calls, number) ??
     (acceptsNumber(numbers, number) ? { line: lineFor(numbers, number) } : null);
   const at = ctx.overlay ? receivingNumber(ctx.overlay, number) : legacy();
-  if (!at) {
-    if (number) ctx.onIgnored?.(number);
-    return null;
-  }
+  if (!at) return ignored(number, ctx);
   return number ? { ...at, phoneNumberId: number } : at;
 }

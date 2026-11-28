@@ -7,6 +7,7 @@ import { InboundService } from './webhook.inbound.service';
 import { InboundStore } from './webhook.inbound.store';
 import { QuickReplies } from './webhook.quick-reply';
 import { InboundReactions } from './webhook.reaction';
+import { ReactionsRepo } from './reactions.repo';
 
 /**
  * A family's message, button reply or reaction stored in the inbox. InboundService reaches
@@ -14,7 +15,7 @@ import { InboundReactions } from './webhook.reaction';
  */
 @Module({
   imports: [WebhookSharedModule, LeadsModule, LessonsModule, LessonRatingModule],
-  providers: [InboundService, InboundStore, InboundReactions, QuickReplies],
+  providers: [InboundService, InboundStore, InboundReactions, ReactionsRepo, QuickReplies],
   exports: [InboundService],
 })
 export class WebhookInboundModule {}

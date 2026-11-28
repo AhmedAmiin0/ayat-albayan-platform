@@ -1,20 +1,19 @@
-import { RATING_TEMPLATE, type QuickReplyIntent } from '@ab/shared';
+import { RATING_TEMPLATE } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
-import { LessonStatusService } from '@/modules/teaching/lessons/status/lesson-status.service';
+import { LessonStatusService } from '@/modules/teaching/lessons';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { payloadLesson } from './webhook.inbound';
-import { WebhookRepo, type Contact } from '@/modules/messaging/webhook/shared/webhook.repo';
+import { WebhookRepo } from '@/modules/messaging/webhook/shared/webhook.repo';
+import type { Contact } from '@/modules/messaging/webhook/shared/webhook.types';
+import type { ReplyAction } from './inbound.types';
 
 /** Audit trail marker for what the webhook does on a guardian's / lead's behalf. */
 const WHATSAPP_ACTOR = 'system:whatsapp';
 
-interface ReplyAction {
-  intent: QuickReplyIntent | null;
-  m: InboundEvent;
-  lessonId: string | null;
-  leadId: string | null;
-}
+/** A rating answers only a lesson_rating message; any other reply answers any lesson message. */
+const answersKind = (rating: boolean, templateKey: string | null): boolean =>
+  !rating || templateKey === RATING_TEMPLATE;
 
 /** R-MSG-04, R-SCH-03: a reschedule is the admin's job, carried by the push (docs/12 §3.5). */
 @Injectable()
@@ -44,19 +43,18 @@ export class QuickReplies {
     const { m, phone, who, rating = false } = input;
     if (!who.guardian) return null;
     const fromPayload = payloadLesson(m);
-    if (fromPayload) {
-      const theirs = await this.queries.guardianLesson({
-        lessonId: fromPayload,
-        guardianId: who.guardian.id,
-      });
-      return theirs ? fromPayload : null;
-    }
+    if (fromPayload) return this.theirLesson(fromPayload, who.guardian.id);
     const answered = await this.answeredLesson({ m, phone, rating });
     if (answered || rating) return answered; // A typed yes counts only within the reply window.
     const windowMs = await this.queries.replyWindowMs();
     const since = new Date(m.at.getTime() - windowMs);
     const until = new Date(Math.floor(m.at.getTime() / 1000) * 1000 + 999);
     return this.queries.recentLessonOutbound({ phone, since, until });
+  }
+
+  private async theirLesson(lessonId: string, guardianId: string): Promise<string | null> {
+    const theirs = await this.queries.guardianLesson({ lessonId, guardianId });
+    return theirs ? lessonId : null;
   }
 
   /**
@@ -70,7 +68,7 @@ export class QuickReplies {
     if (!input.m.replyTo) return null;
     const answered = await this.queries.outboundByWaId(input.m.replyTo);
     if (!answered?.lesson_id || answered.phone_e164 !== input.phone) return null;
-    return !input.rating || answered.template_key === RATING_TEMPLATE ? answered.lesson_id : null;
+    return answersKind(input.rating, answered.template_key) ? answered.lesson_id : null;
   }
 
   async act({ intent, m, lessonId, leadId }: ReplyAction): Promise<void> {

@@ -1,11 +1,13 @@
-import { Controller, Headers, HttpCode, Inject, Logger, Post, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, HttpCode, Inject, Logger, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
-import { RESPONSE_BUDGET_MS, within, type WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import { RESPONSE_BUDGET_MS, within } from '@/modules/messaging/webhook/webhook.service';
+import type { WebhookConfig } from '@/modules/messaging/webhook/shared/webhook.types';
 import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
 import { StatusService } from '@/modules/messaging/webhook/status/webhook.status.service';
 import { verifyWacrmSignature, WACRM_TOLERANCE_MS } from '@/modules/messaging/webhook/parse/webhook.wacrm-signature';
 import { CrmInbound, CrmInboundJob } from '@/modules/messaging/webhook/crm-inbound';
+import { wacrmHeadersSchema } from '@/modules/messaging/webhook/webhook-inputs.schemas';
 import { parseWacrm, SeenDeliveries, type WacrmDelivery } from './webhook.wacrm';
 
 type Kind = WacrmDelivery['kind'];
@@ -16,6 +18,7 @@ interface RawRequest {
   /** Set by NestFactory.create(…, { rawBody: true }) in main.ts. */
   rawBody?: Buffer;
   body: unknown;
+  headers: unknown;
 }
 
 /**
@@ -45,7 +48,8 @@ export class WacrmWebhookController {
    */
   @Post()
   @HttpCode(200)
-  async receive(@Req() req: RawRequest, @Headers('x-wacrm-signature') signature?: string): Promise<void> {
+  async receive(@Req() req: RawRequest): Promise<void> {
+    const signature = wacrmHeadersSchema.parse(req.headers)['x-wacrm-signature'];
     const now = new Date();
     const verdict = verifyWacrmSignature({
       rawBody: req.rawBody,

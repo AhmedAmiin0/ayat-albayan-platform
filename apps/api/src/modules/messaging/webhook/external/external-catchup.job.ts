@@ -1,6 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Ticker, TickerJob } from '@/common/jobs';
-import { field } from '@/modules/messaging/webhook/parse/webhook.parse';
+import { field } from '@/modules/messaging/webhook/parse/webhook.fields';
 import { KAPSO_HISTORY } from './external-status';
 import { ExternalRepo } from './external.repo';
 import { ExternalStore, type ExternalOutcome } from './external.store';
@@ -23,6 +23,12 @@ export const LOOKBACK_MS = 24 * 3_600_000;
 export const MAX_PAGES = 20;
 
 type CatchUpCounts = Record<ExternalOutcome | 'listed', number>;
+
+interface PagesRun {
+  since: string;
+  counts: CatchUpCounts;
+  label: string;
+}
 
 /**
  * From the newest stored external message (none: FLOOR), or the last day when that is newer; never
@@ -79,19 +85,7 @@ export class ExternalCatchUpJob extends TickerJob {
     const counts: CatchUpCounts = { listed: 0, stored: 0, known: 0, skipped: 0 };
     const label = tail(n.env.phoneNumberId);
     try {
-      const newest = await this.queries.newestExternal({
-        line: n.line,
-        numberId: n.numberId ?? null,
-      });
-      const since = catchUpSince(newest, now).toISOString();
-      let after: string | undefined;
-      for (let page = 0; page < MAX_PAGES; page++) {
-        const res = await this.kapso.outbound(n.env, { since, ...(after ? { after } : {}) });
-        await this.page(n, res.messages, counts);
-        after = res.after;
-        if (!after) break;
-      }
-      if (after) this.log.warn(`external catch-up ${label}: capped at ${MAX_PAGES} pages, the rest next run`);
+      await this.pages(n, { since: await this.sinceFor(n, now), counts, label });
     } catch (e) {
       this.log.error(`external catch-up ${label} stopped: ${(e instanceof Error ? e.message : String(e)).slice(0, 200)}`);
     }
@@ -99,14 +93,41 @@ export class ExternalCatchUpJob extends TickerJob {
     return counts;
   }
 
+  private async sinceFor(n: KapsoNumber, now: Date): Promise<string> {
+    const newest = await this.queries.newestExternal({
+      line: n.line,
+      numberId: n.numberId ?? null,
+    });
+    return catchUpSince(newest, now).toISOString();
+  }
+
+  /** Up to MAX_PAGES pages of the number's history; a cursor still left waits for the next run. */
+  private async pages(n: KapsoNumber, run: PagesRun): Promise<void> {
+    let after: string | undefined;
+    for (let page = 0; page < MAX_PAGES; page++) {
+      const query = { since: run.since, ...(after ? { after } : {}) };
+      const res = await this.kapso.outbound(n.env, query);
+      await this.page(n, res.messages, run.counts);
+      after = res.after;
+      if (!after) break;
+    }
+    if (after) this.log.warn(`external catch-up ${run.label}: capped at ${MAX_PAGES} pages, the rest next run`);
+  }
+
   /** Stores the page's messages we don't hold yet, oldest first (same-second order, orderedAt). */
   private async page(n: KapsoNumber, messages: unknown[], counts: CatchUpCounts): Promise<void> {
     counts.listed += messages.length;
     const ids = messages.flatMap((m) => field(m, 'id') ?? []);
     const held = await this.queries.existing(ids);
-    const missing = messages.filter((m) => !held.has(field(m, 'id') ?? '')).sort((a, b) => timeOf(a) - timeOf(b));
+    const missing = messages
+      .filter((m) => !held.has(field(m, 'id') ?? ''))
+      .sort((a, b) => timeOf(a) - timeOf(b));
     counts.known += messages.length - missing.length;
-    const from = { line: n.line, numberId: n.numberId ?? null, phoneNumberId: n.env.phoneNumberId };
+    const from = {
+      line: n.line,
+      numberId: n.numberId ?? null,
+      phoneNumberId: n.env.phoneNumberId,
+    };
     for (const message of missing) counts[await this.store.store({ message, from })] += 1;
   }
 }

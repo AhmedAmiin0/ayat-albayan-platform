@@ -35,6 +35,23 @@ export interface StatusRow {
   read_at: string | null;
 }
 
+const failure = (e: StatusEvent): TablesUpdate<'messages'> => ({
+  error_code: e.errorCode ?? 'unknown',
+  error_text: e.errorText,
+});
+
+/** Each *_at up to the new status, keeping one already set. */
+const progress = (row: StatusRow, to: MessageStatus, at: string): TablesUpdate<'messages'> => ({
+  sent_at: row.sent_at ?? at,
+  ...(to === 'sent' ? {} : { delivered_at: row.delivered_at ?? at }),
+  ...(to === 'read' ? { read_at: at } : {}),
+});
+
+const billing = (e: StatusEvent): TablesUpdate<'messages'> => ({
+  ...(e.conversationId ? { wa_conversation_id: e.conversationId } : {}),
+  ...(e.pricingCategory ? { wa_pricing_category: e.pricingCategory } : {}),
+});
+
 /**
  * The messages patch for one status event, or null when nothing changes. A skipped step
  * («read» before «delivered») fills the earlier *_at with the same instant.
@@ -42,17 +59,6 @@ export interface StatusRow {
 export function statusPatch(row: StatusRow, e: StatusEvent): TablesUpdate<'messages'> | null {
   const to = nextStatus(row.status, e.status);
   if (!to) return null;
-  const at = e.at.toISOString();
-  const patch: TablesUpdate<'messages'> = { status: to };
-  if (to === 'failed') {
-    patch.error_code = e.errorCode ?? 'unknown';
-    patch.error_text = e.errorText;
-  } else {
-    patch.sent_at = row.sent_at ?? at;
-    if (to !== 'sent') patch.delivered_at = row.delivered_at ?? at;
-    if (to === 'read') patch.read_at = at;
-  }
-  if (e.conversationId) patch.wa_conversation_id = e.conversationId;
-  if (e.pricingCategory) patch.wa_pricing_category = e.pricingCategory;
-  return patch;
+  const step = to === 'failed' ? failure(e) : progress(row, to, e.at.toISOString());
+  return { status: to, ...step, ...billing(e) };
 }

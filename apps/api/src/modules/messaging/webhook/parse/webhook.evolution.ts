@@ -3,7 +3,7 @@ import { z } from 'zod';
 import type { InboundEvent, StatusEvent } from '@/modules/messaging/webhook/webhook.events';
 import type { Receiving } from '@/modules/messaging/webhook/lines/webhook.lines';
 import { evolutionMetaMessage } from './webhook.evolution-message';
-import { toInbound } from './webhook.parse';
+import { toInbound } from './webhook.message';
 import { EVOLUTION_SEND_ERROR } from '@/modules/messaging/numbers';
 import { own } from '@/common/infra/own-value';
 import { deliveryStatusSchema } from '@/modules/messaging/webhook/webhook.events';

@@ -54,7 +54,14 @@ export function kapsoText(over: Record<string, unknown> = {}): Record<string, un
 /** ExternalQueries over a shared in-memory messages list (the unique wa_message_id included). */
 export function fakeExternalQueries(stored: TablesInsert<'messages'>[]) {
   return {
-    existing: vi.fn(async (ids: readonly string[]) => new Set(stored.flatMap((r) => (r.wa_message_id && ids.includes(r.wa_message_id) ? [r.wa_message_id] : [])))),
+    existing: vi.fn(
+      async (ids: readonly string[]) =>
+        new Set(
+          stored.flatMap((r) =>
+            r.wa_message_id && ids.includes(r.wa_message_id) ? [r.wa_message_id] : [],
+          ),
+        ),
+    ),
     insert: vi.fn(async (row: TablesInsert<'messages'>) => {
       if (stored.some((r) => r.wa_message_id === row.wa_message_id)) return false;
       stored.push(row);

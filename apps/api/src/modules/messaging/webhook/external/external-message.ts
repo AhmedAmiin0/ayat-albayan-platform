@@ -5,7 +5,7 @@ import {
   MEDIA_TYPES,
   type DeliveryStatus,
 } from '@/modules/messaging/webhook/webhook.events';
-import { field, get } from '@/modules/messaging/webhook/parse/webhook.parse';
+import { field, first, get, list } from '@/modules/messaging/webhook/parse/webhook.fields';
 import { mediaFileName } from '@/modules/messaging/webhook/parse/file-name';
 
 // A message the business sent outside the app, read out of Meta's message object: an
@@ -36,10 +36,6 @@ export interface ExternalMessage {
   payload: Json | null;
 }
 
-const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
-const first = (...values: (string | null)[]): string | null =>
-  values.find((v) => v !== null) ?? null;
-
 /**
  * Unix seconds (Meta; 13 digits = milliseconds) or an ISO string → Date; null when missing or
  * unreadable.
@@ -52,7 +48,8 @@ export function messageTime(ts: string | null): Date | null {
 }
 
 /** The text parameters of one template component, in order. */
-const texts = (c: unknown): string[] => list(get(c, 'parameters')).map((p) => field(p, 'text') ?? field(p, 'payload') ?? '');
+const texts = (c: unknown): string[] =>
+  list(get(c, 'parameters')).map((p) => field(p, 'text') ?? field(p, 'payload') ?? '');
 
 /** Body parameters as «1», «2», …; the first button's parameter as «button». */
 export function templateParams(components: unknown): Record<string, string> | null {
@@ -80,12 +77,29 @@ function mimeOf(m: unknown, media: string | null): string | null {
   return first(field(m, `${media}.mime_type`), kapso, defaultMediaMime(media));
 }
 
+/** The customer's wa_id: Meta's `to`, else Kapso's phone_number, without a leading +. */
+const recipient = (m: unknown): string | null =>
+  first(field(m, 'to'), field(m, 'kapso.phone_number'))?.replace(/^\+/, '') ?? null;
+
+const mediaOf = (type: string): string | null =>
+  (MEDIA_TYPES as readonly string[]).includes(type) ? type : null;
+
+type TemplatePart = Pick<ExternalMessage, 'templateName' | 'templateParams'>;
+
+function templateOf(m: unknown, type: string): TemplatePart {
+  if (type !== 'template') return { templateName: null, templateParams: null };
+  return {
+    templateName: field(m, 'template.name'),
+    templateParams: templateParams(get(m, 'template.components')),
+  };
+}
+
 export function externalMessage(m: unknown): ExternalMessage | null {
   const f = (path: string) => field(m, path);
-  const to = first(f('to'), f('kapso.phone_number'))?.replace(/^\+/, '') ?? null;
+  const to = recipient(m);
   const [id, type, at] = [f('id'), f('type') ?? 'unknown', messageTime(f('timestamp'))];
   if (!id || !to || !at) return null;
-  const media = (MEDIA_TYPES as readonly string[]).includes(type) ? type : null;
+  const media = mediaOf(type);
   const mf = (key: string) => (media ? f(`${media}.${key}`) : null);
   return {
     waMessageId: id,
@@ -93,8 +107,7 @@ export function externalMessage(m: unknown): ExternalMessage | null {
     at,
     type,
     body: first(f('text.body'), mf('caption')),
-    templateName: type === 'template' ? f('template.name') : null,
-    templateParams: type === 'template' ? templateParams(get(m, 'template.components')) : null,
+    ...templateOf(m, type),
     mediaId: mf('id'),
     mediaMime: mimeOf(m, media),
     mediaName: mediaFileName(first(mf('filename'), f('kapso.media_data.filename'))),

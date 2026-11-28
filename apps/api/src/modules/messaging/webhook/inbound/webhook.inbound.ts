@@ -11,9 +11,10 @@ import type { PushKind } from '@ab/catalog';
 import { ar } from '@/common/infra/i18n/server-text';
 import { z } from 'zod';
 import type { PushEvent } from '@/common/push/push.service';
-import { fill } from '@/modules/reporting/report-pdf/render/pdf-text';
+import { fill } from '@/modules/reporting/report-pdf';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
-import type { Contact } from '@/modules/messaging/webhook/shared/webhook.repo';
+import type { Contact } from '@/modules/messaging/webhook/shared/webhook.types';
+import type { RowInput } from './inbound.types';
 
 // Pure parts of storing an inbound message (R-MSG-04, R-LEAD-01) and the admin push (R-MOB-01).
 
@@ -44,26 +45,28 @@ export function payloadLesson(m: InboundEvent): string | null {
   return ref && z.uuid().safeParse(ref).success ? ref : null;
 }
 
-export interface RowInput {
-  m: InboundEvent;
-  phone: string;
-  who: Contact;
-  leadId: string | null;
-  lessonId: string | null;
-  /**
-   * One of the academy's own numbers (OwnNumbers): stored already read, so it never counts as
-   * unread.
-   */
-  read?: boolean;
-}
-
 /**
  * The messages row. Inbound rows are «delivered» (they reached us); read_at stays null until an
  * admin opens the thread (= unread). Media is stored by id only; the file is fetched later.
  * created_at is when the person sent it (Meta's timestamp), not when the webhook arrived: a late
  * or re-sent webhook must not stretch the 24 h window or reorder the thread.
  */
-export function inboundRow({ m, phone, who, leadId, lessonId, read }: RowInput): TablesInsert<'messages'> {
+/**
+ * Keys set only when known (none = no key, as a single-line insert carries no `line`): a
+ * document's name (the PDF card's), the read stamp, the line (docs/12 §13.2) and the receiving
+ * number (docs/23c decision 7; legacy: looked up by phone_number_id, InboundStore).
+ */
+function knownKeys(m: InboundEvent, read: boolean | undefined) {
+  return {
+    ...(m.mediaName ? { media_name: m.mediaName } : {}),
+    ...(read ? { read_at: m.at.toISOString() } : {}),
+    ...(m.line ? { line: m.line } : {}),
+    ...(m.numberId ? { number_id: m.numberId } : {}),
+  };
+}
+
+export function inboundRow(input: RowInput): TablesInsert<'messages'> {
+  const { m, phone, who, leadId, lessonId, read } = input;
   return {
     direction: 'inbound',
     status: 'delivered',
@@ -76,16 +79,9 @@ export function inboundRow({ m, phone, who, leadId, lessonId, read }: RowInput):
     reply_to_wa_id: m.replyTo,
     media_id: m.mediaId,
     media_mime: m.mediaMime,
-    // Only a document's name (the PDF card's); none = no key, as today.
-    ...(m.mediaName ? { media_name: m.mediaName } : {}),
     interactive_payload: m.payload,
     created_at: m.at.toISOString(),
-    ...(read ? { read_at: m.at.toISOString() } : {}),
-    // Only when stamped (docs/12 §13.2): a single-line insert carries no `line` key at all.
-    ...(m.line ? { line: m.line } : {}),
-    // The receiving number (docs/23c decision 7; legacy: looked up by phone_number_id,
-    // InboundStore); none = no key.
-    ...(m.numberId ? { number_id: m.numberId } : {}),
+    ...knownKeys(m, read),
   };
 }
 
@@ -120,8 +116,10 @@ interface PushInput {
 /**
  * How the admin knows this phone: guardian, lead, teacher, WhatsApp profile name, else the number.
  */
+const known = <T>(value: T | null | undefined): value is T => value !== null && value !== undefined;
+
 function senderName({ m, phone, who }: Pick<PushInput, 'm' | 'phone' | 'who'>): string {
-  return who.guardian?.name ?? who.lead?.name ?? who.teacher?.name ?? m.name ?? phone;
+  return [who.guardian?.name, who.lead?.name, who.teacher?.name, m.name].find(known) ?? phone;
 }
 
 /**

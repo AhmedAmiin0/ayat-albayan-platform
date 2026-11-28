@@ -1,9 +1,5 @@
 import type { KapsoLineEnv } from '@/config/env/env';
-import {
-  graphHttp,
-  type FetchLike,
-  type GraphConn,
-} from '@/modules/messaging/whatsapp/drivers/meta/graph';
+import { graphHttp, type FetchLike, type GraphConn } from '@/modules/messaging/whatsapp';
 import { historyPageSchema, messageSchema, type KapsoMessage } from './kapso-history.schema';
 
 // Kapso's message history (its Meta proxy, docs/19): read-only, with the line's project key
@@ -50,7 +46,10 @@ export class KapsoHistory {
   async message(env: KapsoLineEnv, waMessageId: string): Promise<KapsoMessage> {
     const path = `${encodeURIComponent(env.phoneNumberId)}/messages/${encodeURIComponent(waMessageId)}`;
     const query = new URLSearchParams({ fields: KAPSO_FIELDS });
-    return graphHttp(this.conn(env)).json({ path: `${path}?${query}`, schema: messageSchema });
+    return graphHttp(this.conn(env)).json({
+      path: `${path}?${query.toString()}`,
+      schema: messageSchema,
+    });
   }
 
   /**
@@ -72,7 +71,7 @@ export class KapsoHistory {
     const fields = direction === 'inbound' ? INBOUND_FIELDS : KAPSO_FIELDS;
     const params = new URLSearchParams({ direction, since, limit, fields });
     if (q.after) params.set('after', q.after);
-    const path = `${encodeURIComponent(env.phoneNumberId)}/messages?${params}`;
+    const path = `${encodeURIComponent(env.phoneNumberId)}/messages?${params.toString()}`;
     const page = await graphHttp(this.conn(env)).json({ path, schema: historyPageSchema });
     return { messages: page.data, after: nextOf(page.paging?.cursors.after, page.data.length) };
   }
