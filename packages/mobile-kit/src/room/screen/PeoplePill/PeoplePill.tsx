@@ -1,13 +1,8 @@
 import { Pressable, View } from 'react-native';
-import type { RoomTile } from '../../model/room-types';
 import { t } from '../../../lib/i18n/i18n';
 import { AppText, Avatar } from '../../../ui';
 import { shape, type, useTheme } from '../../../theme';
-
-interface PeoplePillProps {
-  people: readonly RoomTile[];
-  onPress: () => void;
-}
+import type { PeoplePillProps } from './PeoplePill.types';
 
 export function PeoplePill({ people, onPress }: PeoplePillProps) {
   const { color } = useTheme();

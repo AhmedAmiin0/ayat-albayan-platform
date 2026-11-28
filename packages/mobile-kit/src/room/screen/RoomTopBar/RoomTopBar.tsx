@@ -1,29 +1,15 @@
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { RoomTile } from '../../model/room-types';
 import { AppText } from '../../../ui';
 import { type, useTheme } from '../../../theme';
 import { PeoplePill } from '../PeoplePill';
 import { RecordingPill } from '../RecordingPill';
-
-interface LiveHeader {
-  people: readonly RoomTile[];
-  openPeople: () => void;
-  recording: boolean;
-  /** «04:12» since one joined. */
-  elapsed: string | null;
-}
-
-interface RoomTopBarProps {
-  title: string;
-  /** In the room only: the recording notice and the people pill. */
-  live: LiveHeader | null;
-}
+import type { RoomTopBarProps } from './RoomTopBar.types';
+import { useRoomTopBar } from './use-room-top-bar';
 
 /** Open in browser lives in the panel and pre-room steps since it overflowed 358pt. */
 export function RoomTopBar({ title, live }: RoomTopBarProps) {
   const { color } = useTheme();
-  const insets = useSafeAreaInsets();
+  const { insets } = useRoomTopBar();
   return (
     <View
       style={{

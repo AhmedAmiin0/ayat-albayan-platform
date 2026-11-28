@@ -1,19 +1,11 @@
-import type { RoomPresence } from '@ab/schedule';
-import type { ReactNode } from 'react';
 import { AlertIcon, RemoveIcon } from '../../live/room-icons';
-import type { ClosedWhy, RoomPhase } from '../../model/room-phase';
+import type { ClosedWhy } from '../../model/room-phase';
 import type { RoomKind } from '../../model/room-types';
 import { t } from '../../../lib/i18n/i18n';
 import { HangUpIcon, PhoneIcon } from '../../../ui';
 import { RoomNotice } from '../RoomNotice';
-
-interface ClosedLook {
-  message: (kind: RoomKind) => string;
-  detail?: string;
-  /** A rejoin learns a final end via 410. */
-  again: boolean;
-  icon: (ink: string) => ReactNode;
-}
+import type { ClosedLook, RoomEndProps } from './RoomEnd.types';
+import { teacherIn } from './room-end.helpers';
 
 const ENDED: Record<RoomKind, string> = {
   lesson: t.classroom.closedHint,
@@ -48,20 +40,6 @@ const CLOSED: Record<ClosedWhy, ClosedLook> = {
     icon: (ink) => <PhoneIcon color={ink} size={40} />,
   },
 };
-
-interface RoomEndProps {
-  phase: Extract<RoomPhase, { step: 'failed' | 'closed' }>;
-  kind: RoomKind;
-  presence: readonly RoomPresence[];
-  /** Back to the preview with a fresh token. */
-  onAgain: () => void;
-  onBack: () => void;
-  /** Null where the app offers no web room. */
-  onBrowser: (() => void) | null;
-}
-
-const teacherIn = (presence: readonly RoomPresence[]): string | null =>
-  presence.some((p) => p.role === 'teacher') ? t.portal.app.live.teacherIn : null;
 
 export function RoomEnd({ phase, kind, presence, onAgain, onBack, onBrowser }: RoomEndProps) {
   if (phase.step === 'failed') {

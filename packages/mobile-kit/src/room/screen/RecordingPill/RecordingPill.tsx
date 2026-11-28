@@ -2,9 +2,10 @@ import { View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { AppText, Ltr } from '../../../ui';
 import { shape, type, useTheme } from '../../../theme';
+import type { RecordingPillProps } from './RecordingPill.types';
 
 /** The elapsed time is a timer in an LTR island. */
-export function RecordingPill({ elapsed }: { elapsed: string | null }) {
+export function RecordingPill({ elapsed }: RecordingPillProps) {
   const { color } = useTheme();
   const ink = { fontFamily: type.ui[700], fontSize: 12, color: color.bad };
   return (
