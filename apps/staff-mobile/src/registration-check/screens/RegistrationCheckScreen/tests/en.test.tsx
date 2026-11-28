@@ -26,7 +26,9 @@ test('an English run: the registration check reads en.json', async () => {
   await renderWithQuery(<RegistrationCheckScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByRole('header', { name: en.registrationCheck.title })).toBeTruthy();
   // The form waits for /auth/me (D6) while the header is already up: wait for it, as the Arabic tests do.
-  expect(await screen.findByRole('radio', { name: en.registrationCheck.byName, checked: true })).toBeTruthy();
+  expect(
+    await screen.findByRole('radio', { name: en.registrationCheck.byName, checked: true }),
+  ).toBeTruthy();
   expect(screen.getByText(en.registrationCheck.queryHint)).toBeTruthy();
   await fireEvent.changeText(screen.getByLabelText(en.registrationCheck.query), 'Yusuf');
   await fireEvent.press(screen.getByRole('button', { name: en.registrationCheck.submit }));

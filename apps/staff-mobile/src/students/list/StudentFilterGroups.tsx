@@ -11,16 +11,39 @@ import type { TeacherOption } from '@ab/shared';
 const S = t.students;
 const L = t.mobileStudentFile.list;
 const cities: Record<string, string | undefined> = t.tz;
-type Pill = { value: string; label: string };
+interface Pill {
+  value: string;
+  label: string;
+}
 
 /** The all option comes first with value '' meaning no filter. */
-function filterOptions(teachers: TeacherOption[], tz: string): Record<Exclude<FilterKey, 'status'>, Pill[]> {
+function filterOptions(
+  teachers: TeacherOption[],
+  tz: string,
+): Record<Exclude<FilterKey, 'status'>, Pill[]> {
   return {
-    teacher: [{ value: '', label: S.teacherAll }, { value: NO_TEACHER, label: S.teacherNone }, ...teachers.map((x) => ({ value: x.id, label: teacherName(x, locale) }))],
-    program: [{ value: '', label: S.programAll }, ...PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }))],
-    package: [{ value: '', label: S.packageAll }, ...STUDENT_PACKAGE_FILTERS.map((p) => ({ value: p, label: S.packageFilter[p] }))],
-    weekly: [{ value: '', label: S.weeklyAll }, { value: 'yes', label: S.weeklyYes }, { value: 'no', label: S.weeklyNo }],
-    tz: [{ value: '', label: S.tzAll }, ...tzChoices(tz).map((id) => ({ value: id, label: tzOptionLabel(id, cities[id]) }))],
+    teacher: [
+      { value: '', label: S.teacherAll },
+      { value: NO_TEACHER, label: S.teacherNone },
+      ...teachers.map((x) => ({ value: x.id, label: teacherName(x, locale) })),
+    ],
+    program: [
+      { value: '', label: S.programAll },
+      ...PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] })),
+    ],
+    package: [
+      { value: '', label: S.packageAll },
+      ...STUDENT_PACKAGE_FILTERS.map((p) => ({ value: p, label: S.packageFilter[p] })),
+    ],
+    weekly: [
+      { value: '', label: S.weeklyAll },
+      { value: 'yes', label: S.weeklyYes },
+      { value: 'no', label: S.weeklyNo },
+    ],
+    tz: [
+      { value: '', label: S.tzAll },
+      ...tzChoices(tz).map((id) => ({ value: id, label: tzOptionLabel(id, cities[id]) })),
+    ],
   };
 }
 

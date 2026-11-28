@@ -34,7 +34,10 @@ export function EmailSection({ profile }: { profile: AccountProfile }) {
       ...(typed.includes('@') ? {} : { email: accountMessage('invalid_email') }),
       ...(password === '' ? { current_password: accountMessage('password_required') } : {}),
     };
-    if (Object.keys(found).length > 0) return action.reject(found);
+    if (Object.keys(found).length > 0) {
+      action.reject(found);
+      return;
+    }
     action.submit({ email: typed, current_password: password });
   };
 
@@ -55,7 +58,9 @@ export function EmailSection({ profile }: { profile: AccountProfile }) {
           color: color.ink2,
         }}
       >
-        {profile.email ? t.account.email.current.replace('{email}', ltr(profile.email)) : t.account.mobile.emailNone}
+        {profile.email
+          ? t.account.email.current.replace('{email}', ltr(profile.email))
+          : t.account.mobile.emailNone}
       </AppText>
       <AccountField
         label={t.account.email.label}

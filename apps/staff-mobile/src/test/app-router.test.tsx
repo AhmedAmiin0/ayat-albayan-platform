@@ -23,7 +23,7 @@ test('smoke: the real tabs open on Today; tapping «المحادثات» lands o
   // One for the tab badge (unread, pageSize=1), one for the list itself.
   const sent = app.backend.sent('GET /threads');
   expect(sent).toHaveLength(2);
-  expect(sent.filter((c) => c.query['pageSize'] === '25')).toHaveLength(1);
+  expect(sent.filter((c) => c.query.pageSize === '25')).toHaveLength(1);
 });
 
 test('the harness records calls and fails loudly on a route nobody faked', async () => {

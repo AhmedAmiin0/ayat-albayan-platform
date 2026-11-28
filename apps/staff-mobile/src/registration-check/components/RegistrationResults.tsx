@@ -10,13 +10,18 @@ import type { RegistrationCheckBy } from '@ab/shared';
  * more; else the not-found line for the mode searched. With `onPick` each child is a button (the
  * link-family picker).
  */
-export function RegistrationResults({ view, by, onPick }: {
+export function RegistrationResults({
+  view,
+  by,
+  onPick,
+}: {
   view: RegistrationCheckView;
   by: RegistrationCheckBy;
   onPick?: (m: RegistrationMatch) => void;
 }) {
   const rc = t.registrationCheck;
-  if (!view.found) return <EmptyState title={by === 'phone' ? rc.notFoundPhone : rc.notFoundName} />;
+  if (!view.found)
+    return <EmptyState title={by === 'phone' ? rc.notFoundPhone : rc.notFoundName} />;
   return (
     <Section title={rc.found.replace('{n}', String(view.matches.length))}>
       <InsetGroup>
@@ -28,7 +33,13 @@ export function RegistrationResults({ view, by, onPick }: {
             // In the picker the code is what tells two children of the same name apart.
             metaStrong={!!onPick}
             subtitle={`${rc.teacher}: ${m.teacher_name ?? rc.noTeacher}`}
-            trailing={<StatusChip {...studentStatusStyle[m.status]} label={t.enums.studentStatus[m.status]} size="sm" />}
+            trailing={
+              <StatusChip
+                {...studentStatusStyle[m.status]}
+                label={t.enums.studentStatus[m.status]}
+                size="sm"
+              />
+            }
             onPress={onPick ? () => onPick(m) : undefined}
             accessibilityHint={onPick ? t.inbox.linkFamily.pickHint : undefined}
           />

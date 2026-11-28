@@ -20,7 +20,10 @@ jest.mock('expo-router', () => ({
 }));
 jest.mock('expo-image-picker', () => ({}));
 
-const shortBy = (n: string) => t.packagePayment.shortfall.replace('{amount}', ltr(n)).replace('{currency}', t.pricing.currencies.SAR);
+const shortBy = (n: string) =>
+  t.packagePayment.shortfall
+    .replace('{amount}', ltr(n))
+    .replace('{currency}', t.pricing.currencies.SAR);
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -36,6 +39,10 @@ test('the due prefilled covers it: no note; 80 against 81: the note, and saving 
   expect(screen.getByText(shortBy('1'))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.salesMoney.saveTransfer }));
   await waitFor(() =>
-    expect(mockApiSend).toHaveBeenCalledWith('POST', '/sales/payments', expect.objectContaining({ subscriptionId: SUB, amount: 80 })),
+    expect(mockApiSend).toHaveBeenCalledWith(
+      'POST',
+      '/sales/payments',
+      expect.objectContaining({ subscriptionId: SUB, amount: 80 }),
+    ),
   );
 });

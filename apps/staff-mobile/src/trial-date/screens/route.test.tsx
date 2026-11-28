@@ -7,7 +7,9 @@ import TrialDateRoute from '../../../app/(tabs)/students/trial-date/[studentId]'
 // From the admin student file: its own screen in the Students tab's stack (behind the root's admin gate).
 jest.mock('@ab/mobile-kit/auth/use-permissions', () => ({ usePermissions: () => () => true }));
 jest.mock('@/core/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
-jest.mock('@/core/push/usePushRegistration/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
+jest.mock('@/core/push/usePushRegistration/usePushRegistration', () => ({
+  usePushRegistration: () => undefined,
+}));
 jest.mock('./TrialDateFlow', () => ({
   TrialDateFlow: (p: { studentId: string; name: string; program: string }) => {
     const { Text: T } = jest.requireActual('react-native');
@@ -31,7 +33,9 @@ const app = {
 };
 
 test('/students/trial-date/:studentId opens the admin flow with the student’s name and program', async () => {
-  const pending = renderRouter(app, { initialUrl: '/students/trial-date/s1?name=%D8%B1%D9%8A%D9%85&program=arabic' });
+  const pending = renderRouter(app, {
+    initialUrl: '/students/trial-date/s1?name=%D8%B1%D9%8A%D9%85&program=arabic',
+  });
   await pending;
   expect(pending.getPathname()).toBe('/students/trial-date/s1');
   expect(screen.getByText('flow:s1:ريم:arabic:admin')).toBeTruthy();

@@ -32,7 +32,13 @@ export function RegistrationForm({
   const phone = by === 'phone';
   return (
     <View style={{ gap: 12 }}>
-      <FilterPills items={MODES()} value={by} onChange={onBy} accessibilityLabel={rc.title} role="radiogroup" />
+      <FilterPills
+        items={MODES()}
+        value={by}
+        onChange={onBy}
+        accessibilityLabel={rc.title}
+        role="radiogroup"
+      />
       <Field
         key={by}
         label={phone ? rc.phone : rc.query}

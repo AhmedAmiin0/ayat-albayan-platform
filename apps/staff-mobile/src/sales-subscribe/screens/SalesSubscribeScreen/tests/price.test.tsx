@@ -21,10 +21,15 @@ const c = t.subscriptions.customPrice;
 const LABEL = new RegExp(c.label.split(' (')[0] ?? '');
 const PREMIUM = { pkg: 'premium', count: 10, duration: 60, discount: 10, country: 'AE' } as const;
 const saves = () =>
-  mockApiSend.mock.calls.filter((call: unknown[]) => call[1] === '/sales/subscriptions').map((call: unknown[]) => call[2]);
-const toggle = () => fireEvent.press(screen.getByRole('checkbox', { name: t.paymentLinks.customAmount }));
+  mockApiSend.mock.calls
+    .filter((call: unknown[]) => call[1] === '/sales/subscriptions')
+    .map((call: unknown[]) => call[2]);
+const toggle = () =>
+  fireEvent.press(screen.getByRole('checkbox', { name: t.paymentLinks.customAmount }));
 const save = async () =>
-  fireEvent.press(await screen.findByRole('button', { name: t.salesMoney.saveSubscription, disabled: false }));
+  fireEvent.press(
+    await screen.findByRole('button', { name: t.salesMoney.saveSubscription, disabled: false }),
+  );
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -56,19 +61,25 @@ test('on: «سعر الباقة» starts from the quote; the typed price is sent
 
 test('«جدّد الاشتراك»: the renewal sends the custom price with its last package', async () => {
   mockParams.current = { phone: PHONE, studentId: KID, renew: '1' };
-  mockApiFetch.mockResolvedValue(familyOf(kid({ status: 'expired', renew_due: true, renewal: PREMIUM })));
+  mockApiFetch.mockResolvedValue(
+    familyOf(kid({ status: 'expired', renew_due: true, renewal: PREMIUM })),
+  );
   await renderWithQuery(<SalesSubscribeScreen />);
   await screen.findByRole('button', { name: t.salesMoney.saveSubscription, disabled: false });
   await toggle();
   await fireEvent.changeText(screen.getByLabelText(LABEL), '170');
   await save();
   await waitFor(() => expect(saves()).toHaveLength(1));
-  expect(saves()[0]).toMatchObject({ pricing: { tier: 'premium', duration: 60 }, customPrice: 170 });
+  expect(saves()[0]).toMatchObject({
+    pricing: { tier: 'premium', duration: 60 },
+    customPrice: 170,
+  });
 });
 
 test('below the admin’s lowest amount: the API’s refusal is said', async () => {
   mockApiSend.mockImplementation(async (_m: string, path: string) => {
-    if (path === '/sales/subscriptions') throw new ApiError(400, { code: 'discount_too_large', min: 150 });
+    if (path === '/sales/subscriptions')
+      throw new ApiError(400, { code: 'discount_too_large', min: 150 });
     return salesQuote;
   });
   await renderWithQuery(<SalesSubscribeScreen />);

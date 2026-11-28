@@ -12,14 +12,16 @@ export function bookingBackend() {
   const booking = fakeBookingApi();
   const backend = new FakeBackend()
     .on('GET /leads', ({ query }) => {
-      const items = state.leads.filter((l) => !query['status'] || l.status === query['status']);
+      const items = state.leads.filter((l) => !query.status || l.status === query.status);
       return { items, total: items.length, page: 1, pageSize: 25 };
     })
     .on('GET /settings', () => ({ follow_up_hours: [2, 24, 72], renewal_alert_remaining: 2 }))
     .on('GET /booking/teachers', ({ path }) => booking.fetch(path))
     .on('GET /booking/slots', ({ path }) => booking.fetch(path))
     .on('POST /booking', () => {
-      state.leads = state.leads.map((l) => (l.id === huda.id ? { ...l, status: 'trial_booked' } : l));
+      state.leads = state.leads.map((l) =>
+        l.id === huda.id ? { ...l, status: 'trial_booked' } : l,
+      );
       return booked(SUN_17);
     });
   return { backend, state, slots: booking.api };

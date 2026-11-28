@@ -2,7 +2,17 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { instantDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
-import { chatImage, expiredImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
+import {
+  chatImage,
+  expiredImage,
+  familyOf,
+  KID,
+  kid,
+  MSG,
+  openSub,
+  salesPayment,
+  SUB,
+} from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from '@/sales-subscribe/screens/SalesTransferScreen/SalesTransferScreen';
 import type { HttpApi } from '@ab/mobile-kit/testing';
 
@@ -24,7 +34,10 @@ jest.mock('expo-router', () => ({
     canDismiss: () => true,
     replace: jest.fn(),
   },
-  useLocalSearchParams: () => ({ phone: '+966501112223', subscriptionId: '88888888-8888-4888-8888-888888888888' }),
+  useLocalSearchParams: () => ({
+    phone: '+966501112223',
+    subscriptionId: '88888888-8888-4888-8888-888888888888',
+  }),
 }));
 jest.mock('expo-image-picker', () => ({}));
 
@@ -38,7 +51,8 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path.startsWith('/sales/money/family')) return familyOf(kid({ open: [openSub()] }));
-    if (path.startsWith(`/sales/money/chat-receipts/${MSG}`)) return { url: 'https://x/t.jpg', expires_at: '', mime: 'image/jpeg' };
+    if (path.startsWith(`/sales/money/chat-receipts/${MSG}`))
+      return { url: 'https://x/t.jpg', expires_at: '', mime: 'image/jpeg' };
     if (path.startsWith('/sales/money/chat-receipts')) return [chatImage, expiredImage];
     return {};
   });
@@ -67,10 +81,15 @@ test('a file from the chat → receipt-from-chat → POST /sales/payments with i
   const name = `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}`;
   const expired = await screen.findByRole('button', { name: new RegExp(m.receiptExpired) });
   expect(expired).toBeDisabled();
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/chat-receipts/${MSG}?studentId=${KID}`));
+  await waitFor(() =>
+    expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/chat-receipts/${MSG}?studentId=${KID}`),
+  );
   await fireEvent.press(screen.getByRole('button', { name }));
   expect(await screen.findByText(FIRST)).toBeTruthy();
-  expect(sent('/sales/payments/receipt-from-chat')[0]?.[2]).toEqual({ subscriptionId: SUB, messageId: MSG });
+  expect(sent('/sales/payments/receipt-from-chat')[0]?.[2]).toEqual({
+    subscriptionId: SUB,
+    messageId: MSG,
+  });
 
   await fireEvent.changeText(screen.getByLabelText(m.note), 'تحويل الراجحي');
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
@@ -101,7 +120,11 @@ test('an expired chat file (410): the reason, nothing chosen', async () => {
   mockApiSend.mockRejectedValue(new ApiError(410, { code: 'media_expired' }));
   await renderWithQuery(<SalesTransferScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: m.receiptFromChat }));
-  await fireEvent.press(await screen.findByRole('button', { name: `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}` }));
+  await fireEvent.press(
+    await screen.findByRole('button', {
+      name: `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}`,
+    }),
+  );
   expect(await screen.findByText(m.error.media_expired)).toBeTruthy();
   expect(screen.queryByText(FIRST)).toBeNull();
 });

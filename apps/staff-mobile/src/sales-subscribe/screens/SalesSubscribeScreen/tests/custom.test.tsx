@@ -21,15 +21,24 @@ jest.mock('expo-router', () => ({
 
 const pl = t.paymentLinks;
 const LABEL = new RegExp(pl.agreedAmount.split(' (')[0] ?? '');
-const created = () => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === '/sales/payment-links').map((c: unknown[]) => c[2]);
+const created = () =>
+  mockApiSend.mock.calls
+    .filter((c: unknown[]) => c[1] === '/sales/payment-links')
+    .map((c: unknown[]) => c[2]);
 const toggle = () => fireEvent.press(screen.getByRole('checkbox', { name: pl.customAmount }));
 const make = () => fireEvent.press(screen.getByRole('button', { name: pl.create }));
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/stripe/feature' ? { stripe: true } : familyOf(kid())));
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/stripe/feature' ? { stripe: true } : familyOf(kid()),
+  );
   mockApiSend.mockImplementation(async (_m: string, path: string) =>
-    path === '/sales/payment-links/quote' ? linkQuote() : path === '/sales/subscriptions/quote' ? salesQuote : paymentLink(),
+    path === '/sales/payment-links/quote'
+      ? linkQuote()
+      : path === '/sales/subscriptions/quote'
+        ? salesQuote
+        : paymentLink(),
   );
 });
 

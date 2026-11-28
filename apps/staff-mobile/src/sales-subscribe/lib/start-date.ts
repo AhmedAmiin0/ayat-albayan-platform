@@ -19,7 +19,11 @@ export const usedBeforeOf = (draft: StartDraft, lessonsTotal: number): number =>
   draft.alreadyStarted ? usedBefore(draft.usedBefore, lessonsTotal) : 0;
 
 /** What POST /sales/subscriptions gets: nothing, a day, or a past day with alreadyStarted (and the used lessons). */
-type StartBody = { startsOn?: string; alreadyStarted?: true; lessonsUsedBefore?: number };
+interface StartBody {
+  startsOn?: string;
+  alreadyStarted?: true;
+  lessonsUsedBefore?: number;
+}
 type StartCheck = { ok: true; body: StartBody } | { ok: false; error: string };
 
 interface StartContext {

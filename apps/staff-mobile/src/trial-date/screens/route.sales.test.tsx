@@ -12,7 +12,9 @@ import SalesLayout from '../../../app/sales/_layout';
 // From a salesperson's family chat: a route of the (sales-chat) group beside its book route, so the
 // chat's screens stay full screens with no tab bar under them (react-native-screens#4132).
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({
+  registerPush: jest.fn(async () => undefined),
+}));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: async (path: string) => (path === '/auth/me' ? { role: 'sales' } : { total: 0 }),

@@ -14,7 +14,11 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   apiFetch: async (path: string) =>
     path === '/auth/me'
       ? { role: 'admin', permissions: ['students.check_registration', 'leads.link_family'] }
-      : { found: true, more: false, matches: [{ name: 'Reem', code: 'AB-0201', status: 'active', teacher_name: null }] },
+      : {
+          found: true,
+          more: false,
+          matches: [{ name: 'Reem', code: 'AB-0201', status: 'active', teacher_name: null }],
+        },
 }));
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },

@@ -38,17 +38,31 @@ beforeEach(() => {
     picked += 1;
     return {
       canceled: false,
-      assets: [{ uri: `file:///cache/slip-${picked}.jpg`, width: 9, height: 12, base64: 'aGVsbG8=', mimeType: 'image/jpeg' }],
+      assets: [
+        {
+          uri: `file:///cache/slip-${picked}.jpg`,
+          width: 9,
+          height: 12,
+          base64: 'aGVsbG8=',
+          mimeType: 'image/jpeg',
+        },
+      ],
     };
   });
   mockApiSend.mockImplementation(async (_m: string, path: string) => {
     if (path !== '/sales/payments/receipt-upload-url') return salesPayment('active');
     signedCount += 1;
-    return { bucket: 'receipts', path: `${SUB}/f${signedCount}.jpg`, token: 'tok', signed_url: 'http://x/s' };
+    return {
+      bucket: 'receipts',
+      path: `${SUB}/f${signedCount}.jpg`,
+      token: 'tok',
+      signed_url: 'http://x/s',
+    };
   });
 });
 
-const addPhoto = async () => fireEvent.press(await screen.findByRole('button', { name: m.receiptLibrary }));
+const addPhoto = async () =>
+  fireEvent.press(await screen.findByRole('button', { name: m.receiptLibrary }));
 
 test('two photos: each is uploaded once and both paths go in attachments, in order', async () => {
   await renderWithQuery(<SalesTransferScreen />);
@@ -59,14 +73,18 @@ test('two photos: each is uploaded once and both paths go in attachments, in ord
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   expect(await screen.findByText(m.becameSubscribed)).toBeTruthy();
   expect(mockUpload).toHaveBeenCalledTimes(2);
-  expect(sent('/sales/payments')[0]?.[2]).toMatchObject({ attachments: [`${SUB}/f1.jpg`, `${SUB}/f2.jpg`] });
+  expect(sent('/sales/payments')[0]?.[2]).toMatchObject({
+    attachments: [`${SUB}/f1.jpg`, `${SUB}/f2.jpg`],
+  });
 });
 
 test('one removed before saving: only the other is uploaded and sent', async () => {
   await renderWithQuery(<SalesTransferScreen />);
   await addPhoto();
   await addPhoto();
-  await fireEvent.press(await screen.findByRole('button', { name: `${m.attachmentRemove} · ${nth(1)}` }));
+  await fireEvent.press(
+    await screen.findByRole('button', { name: `${m.attachmentRemove} · ${nth(1)}` }),
+  );
   await waitFor(() => expect(screen.queryByText(nth(2))).toBeNull());
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   expect(await screen.findByText(m.becameSubscribed)).toBeTruthy();

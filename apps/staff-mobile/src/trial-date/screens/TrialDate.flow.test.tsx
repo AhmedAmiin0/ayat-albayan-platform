@@ -45,19 +45,25 @@ beforeEach(() => {
 
 test('admin: history → the last teacher kept → a free slot → review «سيُنقل…» → POST /booking/trial-date', async () => {
   const { client } = await renderWithQuery(<TrialDateScreen />);
-  expect(await screen.findByRole('header', { name: t.trialDate.title.replace('{name}', 'ريم') })).toBeTruthy();
+  expect(
+    await screen.findByRole('header', { name: t.trialDate.title.replace('{name}', 'ريم') }),
+  ).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith(`/booking/trial-dates?studentId=${STUDENT}`);
   // The header shows before the history query answers: wait for its rows, never read them at once.
   expect(await screen.findByText(t.trialDate.count.one)).toBeTruthy();
   expect(screen.getByText(t.trialDate.lastTeacher)).toBeTruthy();
 
   await walkToReview();
-  const slots = mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).find((p) => p.startsWith('/booking/slots'));
+  const slots = mockApiFetch.mock.calls
+    .map((c: unknown[]) => String(c[0]))
+    .find((p) => p.startsWith('/booking/slots'));
   expect(slots).toContain(`teacherId=${maryam.id}`);
   expect(slots).toContain(`excludeLessonId=${UPCOMING}`);
   expect(screen.getByText(effectLine(history, R24))).toBeTruthy();
   expect(screen.queryByTestId('trial-date-warn')).toBeNull();
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/booking/trial-date/check', BODY));
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('POST', '/booking/trial-date/check', BODY),
+  );
 
   const invalidate = jest.spyOn(client, 'invalidateQueries');
   await fireEvent.press(await screen.findByRole('button', { name: t.trialDate.submit }));
@@ -65,7 +71,13 @@ test('admin: history → the last teacher kept → a free slot → review «سي
   expect(screen.getByText(t.trialDate.doneNote)).toBeTruthy();
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/booking/trial-date', BODY);
   const keys = invalidate.mock.calls.map((c) => JSON.stringify(c[0]?.queryKey));
-  expect(keys).toEqual(expect.arrayContaining([JSON.stringify(['booking', 'trial-dates', STUDENT]), '["lessons"]', `["students","${STUDENT}"]`]));
+  expect(keys).toEqual(
+    expect.arrayContaining([
+      JSON.stringify(['booking', 'trial-dates', STUDENT]),
+      '["lessons"]',
+      `["students","${STUDENT}"]`,
+    ]),
+  );
 
   await fireEvent.press(screen.getByRole('button', { name: t.trialDate.close }));
   expect(mockBack).toHaveBeenCalled();

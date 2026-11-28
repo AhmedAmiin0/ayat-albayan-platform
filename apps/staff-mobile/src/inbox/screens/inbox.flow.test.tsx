@@ -39,7 +39,9 @@ test('list → lead thread → reply → back: no row tags, the reply is sent on
   await fireEvent.press(screen.getByRole('button', { name: t.common.back }));
   expect(app.pathname()).toBe('/inbox');
   // The list follows the send with no pull to refresh.
-  expect(await within(screen.getByRole('button', { name: /هدى سالم/ })).findByText(/أهلًا يا هدى/)).toBeTruthy();
+  expect(
+    await within(screen.getByRole('button', { name: /هدى سالم/ })).findByText(/أهلًا يا هدى/),
+  ).toBeTruthy();
 });
 
 test('a closed session: no free text, the template sheet → params → POST /threads/:phone/template', async () => {
@@ -71,7 +73,7 @@ test('searching with Arabic digits sends the term as typed; the number is found,
   await renderApp({ url: '/inbox', backend });
   await screen.findByRole('button', { name: /أم يوسف/ });
   await fireEvent.changeText(screen.getByLabelText(t.inbox.searchPlaceholder), '٥٠١١١٢');
-  await waitFor(() => expect(backend.sent('GET /threads').at(-1)?.query['search']).toBe('٥٠١١١٢'));
+  await waitFor(() => expect(backend.sent('GET /threads').at(-1)?.query.search).toBe('٥٠١١١٢'));
   expect(await screen.findByRole('button', { name: /أم يوسف/ })).toBeTruthy();
   expect(screen.queryByRole('button', { name: /هدى سالم/ })).toBeNull();
 });

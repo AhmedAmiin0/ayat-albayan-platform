@@ -7,7 +7,7 @@ import { z } from 'zod';
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 
 export function pushKind(data: unknown): PushKind | null {
-  const kind = isRecord(data) ? data['kind'] : undefined;
+  const kind = isRecord(data) ? data.kind : undefined;
   return PUSH_KINDS.find((k) => k === kind) ?? null;
 }
 

@@ -27,7 +27,10 @@ const found: RegistrationCheckView = {
     { name: 'سلمى', code: 'AB-0202', status: 'trial', teacher_name: null },
   ],
 };
-const checks = () => mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith('/sales/registration'));
+const checks = () =>
+  mockApiFetch.mock.calls
+    .map((c: unknown[]) => String(c[0]))
+    .filter((p) => p.startsWith('/sales/registration'));
 
 function answer(view: RegistrationCheckView | Error) {
   mockApiFetch.mockImplementation(async (path: string) => {
@@ -81,7 +84,12 @@ test('too short a name, an empty or a bad phone: said here, nothing sent', async
 });
 
 test('the API refuses: its validation issue or code in her words, else generic', async () => {
-  answer(new ApiError(400, { message: 'validation_failed', issues: [{ path: 'q', message: 'query_too_short' }] }));
+  answer(
+    new ApiError(400, {
+      message: 'validation_failed',
+      issues: [{ path: 'q', message: 'query_too_short' }],
+    }),
+  );
   await renderWithQuery(<RegistrationCheckScreen />, createTestQueryClient({ meFromApi: true }));
   await fireEvent.changeText(await screen.findByLabelText(rc.query), 'AB-0201');
   await fireEvent.press(screen.getByRole('button', { name: rc.submit }));

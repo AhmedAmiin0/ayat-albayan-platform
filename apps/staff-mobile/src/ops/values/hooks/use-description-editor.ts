@@ -2,7 +2,13 @@ import type { ConfigEntry, SettingKey } from '@ab/settings';
 import { useState } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import { useIsAdmin, usePermissions, t, locale } from '@ab/mobile-kit';
-import { canDescribe, checkDescription, counterText, describeError, descriptionOf } from '@/ops/values/lib/description-text';
+import {
+  canDescribe,
+  checkDescription,
+  counterText,
+  describeError,
+  descriptionOf,
+} from '@/ops/values/lib/description-text';
 import { useConfigEntry, useSaveDescription } from './use-config-entries';
 import { hintOf } from '@/ops/values/lib/value-text';
 
@@ -53,7 +59,10 @@ export function useDescriptionEditor({ valueKey, initial, onDone }: DescriptionE
     );
   const submit = () => {
     const checked = checkDescription(text);
-    if (!checked.ok) return setError(checked.error);
+    if (!checked.ok) {
+      setError(checked.error);
+      return;
+    }
     send(checked.text, d.saved);
   };
   return {

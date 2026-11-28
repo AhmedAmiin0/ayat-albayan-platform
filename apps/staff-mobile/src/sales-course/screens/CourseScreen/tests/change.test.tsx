@@ -23,7 +23,10 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ studentId: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc' }),
 }));
 
-const current = t.booking.courseChange.currentDays.replace('{days}', daysText(runningCourse.days, TZ, R24));
+const current = t.booking.courseChange.currentDays.replace(
+  '{days}',
+  daysText(runningCourse.days, TZ, R24),
+);
 /** The filled (primary) buttons on screen: no input edge. */
 const primaries = () =>
   screen
@@ -41,7 +44,9 @@ afterEach(() => jest.useRealTimers());
 test('a renewal with the course still running: «تغيير أيام الحلقات» the secondary beside «تابِع بنفس الأيام»', async () => {
   serve({ previous: runningCourse, current: runningCourse });
   await renderWithQuery(<CourseScreen />);
-  expect(await screen.findByRole('button', { name: t.booking.courseChange.continueSameDays })).toBeTruthy();
+  expect(
+    await screen.findByRole('button', { name: t.booking.courseChange.continueSameDays }),
+  ).toBeTruthy();
   // The block says which package it is about; its days are named once (in the renewal's line).
   expect(screen.getByText(t.booking.courseChange.running)).toBeTruthy();
   expect(screen.queryByText(current)).toBeNull();
@@ -52,7 +57,9 @@ test('a renewal with the course still running: «تغيير أيام الحلق�
   expect(primaries()).toHaveLength(1);
   await press('button', t.booking.courseChange.changeDays);
   expect(await screen.findByText(t.booking.courseChange.changeHint)).toBeTruthy(); // the change flow
-  expect(screen.queryByRole('button', { name: t.booking.courseChange.continueSameDays })).toBeNull();
+  expect(
+    screen.queryByRole('button', { name: t.booking.courseChange.continueSameDays }),
+  ).toBeNull();
 });
 
 test('a bookable student with a course booked ahead: «محجوزة تبدأ لاحقًا», its days, the change beside the teacher list', async () => {
@@ -65,14 +72,26 @@ test('a bookable student with a course booked ahead: «محجوزة تبدأ ل�
 });
 
 test('a renewal whose current course is another one (booked ahead): its own days are named in its block', async () => {
-  serve({ previous: runningCourse, current: { ...runningCourse, subscriptionId: 'f0000000-0000-4000-8000-0000000000f1', running: false } });
+  serve({
+    previous: runningCourse,
+    current: {
+      ...runningCourse,
+      subscriptionId: 'f0000000-0000-4000-8000-0000000000f1',
+      running: false,
+    },
+  });
   await renderWithQuery(<CourseScreen />);
   expect(await screen.findByText(t.booking.courseChange.upcoming)).toBeTruthy();
   expect(screen.getByText(current)).toBeTruthy();
 });
 
 test('another refusal with a course: the refusal line and the change both', async () => {
-  serve({ subscription: null, perWeek: null, blocked: 'subscription_required', current: runningCourse });
+  serve({
+    subscription: null,
+    perWeek: null,
+    blocked: 'subscription_required',
+    current: runningCourse,
+  });
   await renderWithQuery(<CourseScreen />);
   expect(await screen.findByText(t.booking.courseBlocked.subscription_required)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.booking.courseChange.changeDays })).toBeTruthy();

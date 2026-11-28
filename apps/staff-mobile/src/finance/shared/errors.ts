@@ -14,10 +14,10 @@ const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'obj
 /** The API's `{ code }`, or the first known message of a zod `validation_failed`. */
 function codeOf(body: unknown): string | undefined {
   if (!isRecord(body)) return undefined;
-  if (typeof body['code'] === 'string') return body['code'];
-  const issues: unknown[] = Array.isArray(body['issues']) ? body['issues'] : [];
+  if (typeof body.code === 'string') return body.code;
+  const issues: unknown[] = Array.isArray(body.issues) ? body.issues : [];
   return issues
-    .map((i) => (isRecord(i) ? i['message'] : undefined))
+    .map((i) => (isRecord(i) ? i.message : undefined))
     .find((m): m is string => typeof m === 'string' && messages[m] !== undefined);
 }
 

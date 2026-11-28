@@ -18,10 +18,10 @@ export function isOffline(error: unknown): boolean {
 /** The API's code: `{ code }` (docs/11 §3), or the first known zod issue of `validation_failed`. */
 function codeOf(body: unknown): string | undefined {
   if (!isRecord(body)) return undefined;
-  if (typeof body['code'] === 'string') return body['code'];
-  const issues: unknown[] = Array.isArray(body['issues']) ? body['issues'] : [];
+  if (typeof body.code === 'string') return body.code;
+  const issues: unknown[] = Array.isArray(body.issues) ? body.issues : [];
   return issues
-    .map((i) => (isRecord(i) ? i['message'] : undefined))
+    .map((i) => (isRecord(i) ? i.message : undefined))
     .find((m): m is string => typeof m === 'string' && messages[m] !== undefined);
 }
 
@@ -33,6 +33,6 @@ export function paymentErrorText(error: unknown): string {
   const code = codeOf(error.body);
   const text = code === undefined ? undefined : messages[code];
   if (text === undefined) return t.common.error;
-  const currency = isRecord(error.body) ? error.body['currency'] : undefined;
+  const currency = isRecord(error.body) ? error.body.currency : undefined;
   return text.replace('{currency}', typeof currency === 'string' ? currency : '');
 }

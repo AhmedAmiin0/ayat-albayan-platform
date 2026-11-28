@@ -31,22 +31,17 @@ function isRecord(v: unknown): v is Record<string, unknown> {
 }
 
 function isConflict(v: unknown): v is Conflict {
-  return (
-    isRecord(v) && CONFLICT_KINDS.some((k) => k === v['kind']) && typeof v['startsAt'] === 'string'
-  );
+  return isRecord(v) && CONFLICT_KINDS.some((k) => k === v.kind) && typeof v.startsAt === 'string';
 }
 
 function toCandidate(v: unknown): Candidate | null {
-  if (!isRecord(v) || typeof v['id'] !== 'string' || typeof v['name'] !== 'string') return null;
-  return { id: v['id'], name: v['name'], code: typeof v['code'] === 'string' ? v['code'] : null };
+  if (!isRecord(v) || typeof v.id !== 'string' || typeof v.name !== 'string') return null;
+  return { id: v.id, name: v.name, code: typeof v.code === 'string' ? v.code : null };
 }
 
 /** In the viewer's tz. */
 export function conflictLine(c: Conflict, cycle: ClockCycle, tz: string): string {
-  return t.booking.conflict[c.kind].replace(
-    '{when}',
-    whenIn(new Date(c.startsAt), tz, cycle),
-  );
+  return t.booking.conflict[c.kind].replace('{when}', whenIn(new Date(c.startsAt), tz, cycle));
 }
 
 /** The API's own refusal (invoice, makeup, the course guard): its code has a line in messages. */
@@ -66,14 +61,16 @@ function conflictFailure(
     const v = body[key];
     return Array.isArray(v) ? v : [];
   };
-  if (body['code'] === 'conflict') {
-    const lines = list('conflicts').filter(isConflict).map((c) => conflictLine(c, cycle, tz));
+  if (body.code === 'conflict') {
+    const lines = list('conflicts')
+      .filter(isConflict)
+      .map((c) => conflictLine(c, cycle, tz));
     return { kind: 'conflict', lines };
   }
   const candidates = list('candidates')
     .map(toCandidate)
     .filter((c): c is Candidate => c !== null);
-  if (body['code'] === 'duplicate_student' && candidates.length > 0) {
+  if (body.code === 'duplicate_student' && candidates.length > 0) {
     return { kind: 'duplicate', candidates };
   }
   return null;
@@ -81,7 +78,9 @@ function conflictFailure(
 
 /** The API refused on purpose with a code it explains (a guard: course_exists…), not a failure to retry. */
 export function isCodedRefusal(error: unknown): boolean {
-  return error instanceof ApiError && isRecord(error.body) && codedFailure(error.body['code']) !== null;
+  return (
+    error instanceof ApiError && isRecord(error.body) && codedFailure(error.body.code) !== null
+  );
 }
 
 /** `cycle`, `tz`: the screen's (useClockCycle, useViewerTz), for the clash lines. */
@@ -90,7 +89,7 @@ export function bookFailure(error: unknown, cycle: ClockCycle, tz: string): Book
   if (!(error instanceof ApiError) || !isRecord(error.body)) {
     return { kind: 'error', text: t.common.error };
   }
-  const coded = codedFailure(error.body['code']);
+  const coded = codedFailure(error.body.code);
   if (coded) return coded;
   const data = error.status === 409 ? conflictFailure(error.body, cycle, tz) : null;
   return data ?? { kind: 'error', text: t.common.error };

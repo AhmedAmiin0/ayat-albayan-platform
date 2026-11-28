@@ -57,7 +57,8 @@ export function TemplateForm(props: TemplateFormProps) {
   // Meta 132018: normalised (one line, single spaces), a free text also cut to fit (free-text.ts).
   const sendable = sendableTemplateParams(template, params);
   const free = freeTextSlot(template.key);
-  const set = (key: Position | 'button', value: string) => setParams((p) => ({ ...p, [key]: value }));
+  const set = (key: Position | 'button', value: string) =>
+    setParams((p) => ({ ...p, [key]: value }));
   const pick = (id: string) => {
     const lesson = lessons.find((l) => l.id === id);
     setLessonId(id);
@@ -68,7 +69,10 @@ export function TemplateForm(props: TemplateFormProps) {
     const filled =
       positions.every((n) => params[n]?.trim()) && (!withButton || params.button?.trim());
     const parsed = threadTemplateSchema.safeParse({ key: template.key, params: sendable });
-    if (!filled || !parsed.success || (withLesson && !lessonId)) return setMissing(true);
+    if (!filled || !parsed.success || (withLesson && !lessonId)) {
+      setMissing(true);
+      return;
+    }
     const { key, params: clean } = parsed.data;
     // The thread row shows what the API stores for a template row: the rendered body, no footer.
     const preview = renderTemplateBody(template.body_ar, clean);

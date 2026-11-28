@@ -9,7 +9,9 @@ import type { DayRow } from './day-separators';
 export const TOP_DAY_HIDE_MS = 1200;
 const FADE_MS = 200;
 
-type Viewable = { viewableItems: ViewToken<DayRow>[] };
+interface Viewable {
+  viewableItems: ViewToken<DayRow>[];
+}
 
 /**
  * The floating day chip (as WhatsApp): while she scrolls, the day of the topmost message on screen

@@ -28,7 +28,9 @@ test('nothing paid: «إلغاء الباقة» → confirm → POST /sales/subs
   await screen.findByText(t.subscriptions.cancel.action);
   await fireEvent.press(screen.getByRole('button', { name: t.subscriptions.cancel.action }));
   await fireEvent.press(screen.getByRole('button', { name: t.subscriptions.cancel.confirm }));
-  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', `/sales/subscriptions/${sub.id}/cancel`, {}));
+  await waitFor(() =>
+    expect(mockApiSend).toHaveBeenCalledWith('POST', `/sales/subscriptions/${sub.id}/cancel`, {}),
+  );
 });
 
 test('part paid: no cancel offered', async () => {

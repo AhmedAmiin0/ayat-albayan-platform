@@ -20,18 +20,22 @@ jest.mock('expo-router', () => ({
 
 const m = t.salesMoney;
 const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
-const lastBody = () => sent('/sales/subscriptions').at(-1)?.[2] as Record<string, unknown> | undefined;
+const lastBody = () =>
+  sent('/sales/subscriptions').at(-1)?.[2] as Record<string, unknown> | undefined;
 
 function asSales(...permissions: string[]) {
   mockApiFetch.mockImplementation(async (path: string) =>
-    path === '/auth/me' ? { role: 'sales', permissions: ['self.sales_money', ...permissions] } : familyOf(kid()),
+    path === '/auth/me'
+      ? { role: 'sales', permissions: ['self.sales_money', ...permissions] }
+      : familyOf(kid()),
   );
 }
 async function open() {
   await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(money(180, 'SAR'))).toBeTruthy();
 }
-const save = async () => fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
+const save = async () =>
+  fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
 
 beforeEach(() => {
   jest.useFakeTimers({ now: new Date('2026-10-12T09:00:00Z'), advanceTimers: true });
@@ -60,7 +64,10 @@ test('with it: the date dialog (today on, no past day), sent as startsOn without
   await open();
   await fireEvent.press(await screen.findByTestId('start-day-open'));
   const bounds = await dialogProps();
-  expect([dayOf(bounds.minimumDate), dayOf(bounds.maximumDate)]).toEqual(['2026-10-12', '2026-10-18']);
+  expect([dayOf(bounds.minimumDate), dayOf(bounds.maximumDate)]).toEqual([
+    '2026-10-12',
+    '2026-10-18',
+  ]);
   await act(() => bounds.onValueChange({}, new Date(2026, 9, 12, 12)));
   expect(screen.queryByText(m.startsOnDefault.split('(')[0] ?? '')).toBeNull();
   await save();
@@ -71,25 +78,40 @@ test('with it: the date dialog (today on, no past day), sent as startsOn without
 test('a past day only with «بدأ الاشتراك سابقًا»: picked on the calendar (never typed), then alreadyStarted is sent', async () => {
   asSales('subscriptions.set_start_date');
   await open();
-  await fireEvent(await screen.findByRole('switch', { name: m.alreadyStarted }), 'valueChange', true);
+  await fireEvent(
+    await screen.findByRole('switch', { name: m.alreadyStarted }),
+    'valueChange',
+    true,
+  );
   expect(screen.queryByTestId('start-day-open')).toBeNull();
   expect(screen.getByText(m.startedOn)).toBeTruthy();
   expect(screen.queryByDisplayValue('2026-10-12')).toBeNull();
-  expect(screen.getByText(t.datePicker.earliest.replace('{date}', localDay('2025-10-12')))).toBeTruthy();
+  expect(
+    screen.getByText(t.datePicker.earliest.replace('{date}', localDay('2025-10-12'))),
+  ).toBeTruthy();
 
   await pickDay('date-picker-open', '2025-11-13');
   expect(screen.queryByTestId('native-date-time-picker')).toBeNull();
   expect(screen.getByText(localDay('2025-11-13'))).toBeTruthy();
   await save();
-  await waitFor(() => expect(lastBody()).toMatchObject({ startsOn: '2025-11-13', alreadyStarted: true }));
+  await waitFor(() =>
+    expect(lastBody()).toMatchObject({ startsOn: '2025-11-13', alreadyStarted: true }),
+  );
   expect(screen.queryByText(m.error.start_date_too_old)).toBeNull();
 });
 
 test('the past-day dialog stops a year back and at today (the API’s bounds)', async () => {
   asSales('subscriptions.set_start_date');
   await open();
-  await fireEvent(await screen.findByRole('switch', { name: m.alreadyStarted }), 'valueChange', true);
+  await fireEvent(
+    await screen.findByRole('switch', { name: m.alreadyStarted }),
+    'valueChange',
+    true,
+  );
   await fireEvent.press(screen.getByTestId('date-picker-open'));
   const bounds = await dialogProps();
-  expect([dayOf(bounds.minimumDate), dayOf(bounds.maximumDate)]).toEqual(['2025-10-12', '2026-10-12']);
+  expect([dayOf(bounds.minimumDate), dayOf(bounds.maximumDate)]).toEqual([
+    '2025-10-12',
+    '2026-10-12',
+  ]);
 });

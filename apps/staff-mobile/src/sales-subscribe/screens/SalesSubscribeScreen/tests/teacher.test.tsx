@@ -19,16 +19,27 @@ jest.mock('expo-router', () => ({
 const m = t.salesMoney;
 const TRIAL = '7a000000-0000-4000-8000-000000000001';
 const OTHER = '7a000000-0000-4000-8000-000000000002';
-const creates = () => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === '/sales/subscriptions').map((c) => c[2] as Record<string, unknown>);
+const creates = () =>
+  mockApiSend.mock.calls
+    .filter((c: unknown[]) => c[1] === '/sales/subscriptions')
+    .map((c) => c[2] as Record<string, unknown>);
 const answer = (teacherId: string | null) =>
   mockApiFetch.mockImplementation(async (path: string) =>
-    path === '/sales/subscriptions/teachers' ? [{ id: TRIAL, name: 'أبرار' }, { id: OTHER, name: 'هدى' }] : familyOf(kid({ teacher_id: teacherId })),
+    path === '/sales/subscriptions/teachers'
+      ? [
+          { id: TRIAL, name: 'أبرار' },
+          { id: OTHER, name: 'هدى' },
+        ]
+      : familyOf(kid({ teacher_id: teacherId })),
   );
-const save = async () => fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
+const save = async () =>
+  fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiSend.mockImplementation(async (_m: string, path: string) => (path === '/sales/subscriptions/quote' ? salesQuote : openSub()));
+  mockApiSend.mockImplementation(async (_m: string, path: string) =>
+    path === '/sales/subscriptions/quote' ? salesQuote : openSub(),
+  );
 });
 
 // The assistant assigns the teacher when the student subscribes (the chat opens after).

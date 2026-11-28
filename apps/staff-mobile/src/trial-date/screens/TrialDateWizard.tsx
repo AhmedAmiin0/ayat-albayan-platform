@@ -8,7 +8,11 @@ import { t, BackButton, ScreenHeader } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { useTrialDate } from '@/trial-date/lib/queries';
-import { trialDateBody, trialDateDraft, type TrialDateDraft } from '@/trial-date/lib/trial-date-body';
+import {
+  trialDateBody,
+  trialDateDraft,
+  type TrialDateDraft,
+} from '@/trial-date/lib/trial-date-body';
 import { TrialDateDone } from '@/trial-date/components/TrialDateDone';
 import { TrialDateReview } from '@/trial-date/components/TrialDateReview';
 import { TrialHistoryList } from '@/trial-date/components/TrialHistoryList';
@@ -48,7 +52,9 @@ export function TrialDateWizard({ history, title, program, fallback }: TrialDate
   const leave = () => backOr(fallback);
   const back = () => (book.isSuccess || at === 0 ? leave() : go(STEPS[at - 1] ?? 'teacher'));
   const body = trialDateBody(draft, requestId);
-  const position = t.booking.stepOf.replace('{n}', String(at + 1)).replace('{total}', String(STEPS.length));
+  const position = t.booking.stepOf
+    .replace('{n}', String(at + 1))
+    .replace('{total}', String(STEPS.length));
   return (
     <>
       <ScreenHeader
@@ -56,9 +62,18 @@ export function TrialDateWizard({ history, title, program, fallback }: TrialDate
         subtitle={book.isSuccess ? undefined : `${position} · ${stepName(step)}`}
         leading={<BackButton busy={book.isPending} onPress={back} />}
       />
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ gap: 16, paddingBottom: 32 }}
+        keyboardShouldPersistTaps="handled"
+      >
         {book.isSuccess ? (
-          <TrialDateDone result={book.data} teacherName={draft.teacher?.name ?? ''} tz={draft.tz} onClose={leave} />
+          <TrialDateDone
+            result={book.data}
+            teacherName={draft.teacher?.name ?? ''}
+            tz={draft.tz}
+            onClose={leave}
+          />
         ) : step === 'teacher' ? (
           <View style={{ gap: 16 }}>
             <TrialHistoryList history={history} />

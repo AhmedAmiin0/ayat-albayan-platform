@@ -20,19 +20,24 @@ jest.mock('expo-router', () => ({
 
 const m = t.salesMoney;
 const lastBody = () =>
-  mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === '/sales/subscriptions').at(-1)?.[2] as Record<string, unknown> | undefined;
+  mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === '/sales/subscriptions').at(-1)?.[2] as
+    | Record<string, unknown>
+    | undefined;
 const shown = (n: number) => screen.getByLabelText(`${m.usedBefore}: ${n}`);
 const more = () => screen.getByRole('button', { name: m.usedBeforeMore });
 const press = async (name: string, times = 1) => {
   for (let i = 0; i < times; i += 1) await fireEvent.press(screen.getByRole('button', { name }));
 };
-const switchTo = async (on: boolean) => fireEvent(await screen.findByRole('switch', { name: m.alreadyStarted }), 'valueChange', on);
+const switchTo = async (on: boolean) =>
+  fireEvent(await screen.findByRole('switch', { name: m.alreadyStarted }), 'valueChange', on);
 
 beforeEach(() => {
   jest.useFakeTimers({ now: new Date('2026-10-12T09:00:00Z'), advanceTimers: true });
   jest.clearAllMocks();
   mockApiFetch.mockImplementation(async (path: string) =>
-    path === '/auth/me' ? { role: 'sales', permissions: ['self.sales_money', 'subscriptions.set_start_date'] } : familyOf(kid()),
+    path === '/auth/me'
+      ? { role: 'sales', permissions: ['self.sales_money', 'subscriptions.set_start_date'] }
+      : familyOf(kid()),
   );
   // 12 lessons for the default package, 4 for the weekly one.
   mockApiSend.mockImplementation(
@@ -58,7 +63,9 @@ test('only with the switch on, from 0 with its note; off again resets it to 0', 
   expect(screen.getByText(m.usedBefore)).toBeTruthy();
   expect(screen.getByText(m.usedBeforeHint)).toBeTruthy();
   expect(shown(0)).toBeTruthy();
-  expect(screen.getByRole('button', { name: m.usedBeforeLess }).props.accessibilityState).toMatchObject({ disabled: true });
+  expect(
+    screen.getByRole('button', { name: m.usedBeforeLess }).props.accessibilityState,
+  ).toMatchObject({ disabled: true });
   await press(m.usedBeforeMore, 2);
   expect(shown(2)).toBeTruthy();
   await switchTo(false);
@@ -72,8 +79,12 @@ const saveWith = async (used: number) => {
   await switchTo(true);
   await pickDay('date-picker-open', '2026-10-11');
   await press(m.usedBeforeMore, used);
-  await fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
-  await waitFor(() => expect(lastBody()).toMatchObject({ startsOn: '2026-10-11', alreadyStarted: true }));
+  await fireEvent.press(
+    await screen.findByRole('button', { name: m.saveSubscription, disabled: false }),
+  );
+  await waitFor(() =>
+    expect(lastBody()).toMatchObject({ startsOn: '2026-10-11', alreadyStarted: true }),
+  );
 };
 
 test('a past day and 1 used: the body carries lessonsUsedBefore', async () => {

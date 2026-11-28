@@ -5,7 +5,12 @@ import { t, Button, ErrorLine } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { Heading } from './Heading';
 import { PreferenceFields } from './PreferenceFields';
-import { qualForm, qualPatch, type QualErrors, type QualForm } from '@/inbox/qualification/lib/qualification-form';
+import {
+  qualForm,
+  qualPatch,
+  type QualErrors,
+  type QualForm,
+} from '@/inbox/qualification/lib/qualification-form';
 import { QualificationFields } from './QualificationFields';
 import { saveErrorText, useLeadPatch, type LeadProfile } from '@/inbox/qualification/lib/queries';
 
@@ -28,7 +33,10 @@ export function QualificationForm({ lead, offline }: QualificationFormProps) {
   };
   const submit = () => {
     const result = qualPatch(form, initial);
-    if (!result.ok) return setErrors(result.errors);
+    if (!result.ok) {
+      setErrors(result.errors);
+      return;
+    }
     setErrors({});
     if (Object.keys(result.patch).length === 0) return;
     // The saved values become the baseline, so the next save sends only newer changes.

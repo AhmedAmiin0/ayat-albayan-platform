@@ -43,26 +43,44 @@ beforeEach(() => jest.clearAllMocks());
 
 test('the sales chat header opens the check for this number, in the sales tree', async () => {
   const client = asSales([...BASE, 'students.check_registration']);
-  await renderWithQuery(<TreeBaseProvider value="/sales"><ThreadScreen /></TreeBaseProvider>, client);
+  await renderWithQuery(
+    <TreeBaseProvider value="/sales">
+      <ThreadScreen />
+    </TreeBaseProvider>,
+    client,
+  );
   await screen.findByText(inbound.body ?? '');
   // An item of the header's overflow menu.
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.chatMenu }));
   await fireEvent.press(await screen.findByRole('button', { name: t.registrationCheck.action }));
   await waitFor(() =>
-    expect(mockPush).toHaveBeenCalledWith({ pathname: '/sales/inbox/registration-check', params: { phone: '+966552147730' } }),
+    expect(mockPush).toHaveBeenCalledWith({
+      pathname: '/sales/inbox/registration-check',
+      params: { phone: '+966552147730' },
+    }),
   );
 });
 
 test('the «الطلاب» tab header opens it too', async () => {
   const client = asSales([...BASE, 'students.check_registration']);
-  await renderWithQuery(<TreeBaseProvider value="/sales"><AllStudentsScreen asTab /></TreeBaseProvider>, client);
+  await renderWithQuery(
+    <TreeBaseProvider value="/sales">
+      <AllStudentsScreen asTab />
+    </TreeBaseProvider>,
+    client,
+  );
   await fireEvent.press(await screen.findByRole('button', { name: t.registrationCheck.action }));
   expect(mockPush).toHaveBeenCalledWith('/sales/students/registration-check');
 });
 
 test('hidden without students.check_registration, in both headers', async () => {
   const client = asSales(BASE);
-  await renderWithQuery(<TreeBaseProvider value="/sales"><ThreadScreen /></TreeBaseProvider>, client);
+  await renderWithQuery(
+    <TreeBaseProvider value="/sales">
+      <ThreadScreen />
+    </TreeBaseProvider>,
+    client,
+  );
   await screen.findByText(inbound.body ?? '');
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.chatMenu }));
   expect(screen.getByRole('button', { name: t.inbox.copy.phone })).toBeTruthy();

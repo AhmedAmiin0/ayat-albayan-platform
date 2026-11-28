@@ -49,7 +49,14 @@ function Row({ row, onOpen }: { row: SentRow; onOpen: (audience: NotificationAud
       accessibilityRole="button"
       accessibilityLabel={rowLabel(row)}
       onPress={() => onOpen(row.audience)}
-      style={({ pressed }) => ({ minHeight: shape.control.touch, flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, backgroundColor: pressed ? color.sunk : undefined })}
+      style={({ pressed }) => ({
+        minHeight: shape.control.touch,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        paddingHorizontal: 16,
+        backgroundColor: pressed ? color.sunk : undefined,
+      })}
     >
       <Cell text={row.label} wide />
       <Cell text={String(row.on)} />
@@ -91,9 +98,7 @@ export function WhatIsSent({ onOpen }: { onOpen: (audience: NotificationAudience
       ) : (
         <Note>{t.common.loading}</Note>
       )}
-      {data && settings && settings.messaging_enabled !== true ? (
-        <Note>{h().inAppOnlyNote}</Note>
-      ) : null}
+      {data && settings && !settings.messaging_enabled ? <Note>{h().inAppOnlyNote}</Note> : null}
     </Section>
   );
 }

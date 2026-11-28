@@ -58,8 +58,8 @@ test('«الجدول» today: every teacher, the free one too, with load, window
   await fireEvent.press(screen.getByRole('header', { name: 'سارة' }));
   expect(router.push).toHaveBeenCalledWith('/more/teachers/t2', { withAnchor: true });
   // Each teacher's name stays on top while their day scrolls (Android's default is off).
-  const [list] = container.queryAll((n) => Array.isArray(n.props['stickyHeaderIndices']));
-  expect(list?.props['stickyHeaderIndices']).toHaveLength(3);
+  const [list] = container.queryAll((n) => Array.isArray(n.props.stickyHeaderIndices));
+  expect(list?.props.stickyHeaderIndices).toHaveLength(3);
 });
 
 test('filters: gender and program narrow the teachers', async () => {

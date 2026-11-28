@@ -37,7 +37,9 @@ test('the check finds a clash: the booking’s conflict notice, no «احجز»,
 
 test('409 conflict on the booking itself: the same notice', async () => {
   mockApiSend.mockImplementation((_m: string, path: string) =>
-    path.endsWith('/check') ? Promise.resolve({ conflicts: [] }) : Promise.reject(new ApiError(409, { code: 'conflict', conflicts: [clash] })),
+    path.endsWith('/check')
+      ? Promise.resolve({ conflicts: [] })
+      : Promise.reject(new ApiError(409, { code: 'conflict', conflicts: [clash] })),
   );
   await renderWithQuery(<TrialDateScreen />);
   await walkToReview();
@@ -45,12 +47,17 @@ test('409 conflict on the booking itself: the same notice', async () => {
   expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
 });
 
-test.each(['trial_date_subscribed', 'trial_date_invalid'] as const)('409/400 %s: its own line', async (code) => {
-  mockApiSend.mockImplementation((_m: string, path: string) =>
-    path.endsWith('/check') ? Promise.resolve({ conflicts: [] }) : Promise.reject(new ApiError(409, { code })),
-  );
-  await renderWithQuery(<TrialDateScreen />);
-  await walkToReview();
-  await fireEvent.press(await screen.findByRole('button', { name: t.trialDate.submit }));
-  expect(await screen.findByText(t.booking.error[code])).toBeTruthy();
-});
+test.each(['trial_date_subscribed', 'trial_date_invalid'] as const)(
+  '409/400 %s: its own line',
+  async (code) => {
+    mockApiSend.mockImplementation((_m: string, path: string) =>
+      path.endsWith('/check')
+        ? Promise.resolve({ conflicts: [] })
+        : Promise.reject(new ApiError(409, { code })),
+    );
+    await renderWithQuery(<TrialDateScreen />);
+    await walkToReview();
+    await fireEvent.press(await screen.findByRole('button', { name: t.trialDate.submit }));
+    expect(await screen.findByText(t.booking.error[code])).toBeTruthy();
+  },
+);

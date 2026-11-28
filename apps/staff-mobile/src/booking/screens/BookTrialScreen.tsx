@@ -43,9 +43,7 @@ export function BookTrialScreen() {
         <>
           <ScreenHeader
             title={subscribe ? t.subscriptions.new : t.booking.trialTitle}
-            leading={
-              <BackButton onPress={() => router.back()} />
-            }
+            leading={<BackButton onPress={() => router.back()} />}
           />
           {cached.isError ? (
             <ErrorState message={t.common.notFound} onRetry={() => void cached.refetch()} />

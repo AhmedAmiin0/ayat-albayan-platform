@@ -71,7 +71,10 @@ export function PhotoPreview({ message: m, phone, box, kind, onLongPress }: Phot
   }
   if (broken) return <RetryLine onPress={retry} />;
   const onError = () => {
-    if (resigned.has(m.id)) return setBroken(true);
+    if (resigned.has(m.id)) {
+      setBroken(true);
+      return;
+    }
     resigned.add(m.id);
     void client.invalidateQueries({ queryKey: query.queryKey, exact: true });
   };
@@ -121,7 +124,12 @@ export function PhotoPreview({ message: m, phone, box, kind, onLongPress }: Phot
       </Pressable>
       {box.download ? <DownloadLink message={m} phone={phone} /> : null}
       {open && uri ? (
-        <PhotoViewer uri={uri} label={m.body ? `${kind} · ${m.body}` : kind} footer={<DownloadLink message={m} phone={phone} />} onClose={() => setOpen(false)} />
+        <PhotoViewer
+          uri={uri}
+          label={m.body ? `${kind} · ${m.body}` : kind}
+          footer={<DownloadLink message={m} phone={phone} />}
+          onClose={() => setOpen(false)}
+        />
       ) : null}
     </View>
   );

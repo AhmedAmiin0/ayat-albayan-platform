@@ -5,7 +5,11 @@ import { t, BackButton, EmptyState, Screen, ScreenHeader } from '@ab/mobile-kit'
 import { programOf } from '@/trial-date/lib/trial-href';
 import { TrialDateFlow } from './TrialDateFlow';
 
-type Params = { studentId?: string; name?: string; program?: string };
+type Params = {
+  studentId?: string;
+  name?: string;
+  program?: string;
+};
 
 /** Admin books through /booking, the sales tree through /sales/booking for her own students. */
 export function TrialDateScreen() {

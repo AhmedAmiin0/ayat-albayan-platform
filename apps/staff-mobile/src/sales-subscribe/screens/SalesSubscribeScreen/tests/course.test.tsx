@@ -11,7 +11,8 @@ const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: () => Promise.resolve(jest.requireActual('@/sales-subscribe/testing/fixtures').salesQuote),
+  apiSend: () =>
+    Promise.resolve(jest.requireActual('@/sales-subscribe/testing/fixtures').salesQuote),
 }));
 const mockPush = jest.fn();
 const mockParams: { current: Record<string, string> } = { current: {} };
@@ -39,14 +40,20 @@ test('a preselected child of hers: «أيام الحلقات» opens the course 
   mockParams.current = { phone: PHONE, studentId: KID };
   await renderWithQuery(<SalesSubscribeScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.booking.courseDays }));
-  expect(mockPush).toHaveBeenCalledWith({ pathname: '/inbox/sales-course', params: { studentId: KID } });
+  expect(mockPush).toHaveBeenCalledWith({
+    pathname: '/inbox/sales-course',
+    params: { studentId: KID },
+  });
 });
 
 test('the only child, from the chat strip (no studentId): «أيام الحلقات» too', async () => {
   mockParams.current = { phone: PHONE };
   await renderWithQuery(<SalesSubscribeScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.booking.courseDays }));
-  expect(mockPush).toHaveBeenCalledWith({ pathname: '/inbox/sales-course', params: { studentId: KID } });
+  expect(mockPush).toHaveBeenCalledWith({
+    pathname: '/inbox/sales-course',
+    params: { studentId: KID },
+  });
 });
 
 test('the course is booked already: no «أيام الحلقات»', async () => {

@@ -60,8 +60,13 @@ export const imagePickerMock = () => ({
 /** The camera is allowed and takes one photo: 5 bytes of «JPEG», as the picker hands them over. */
 export function armCamera(uri = 'file:///cache/slip.jpg'): void {
   const picker = jest.requireMock<Record<string, jest.Mock>>('expo-image-picker');
-  picker['getCameraPermissionsAsync']?.mockResolvedValue({ granted: true, canAskAgain: true, status: 'granted', expires: 'never' });
-  picker['launchCameraAsync']?.mockResolvedValue({
+  picker.getCameraPermissionsAsync?.mockResolvedValue({
+    granted: true,
+    canAskAgain: true,
+    status: 'granted',
+    expires: 'never',
+  });
+  picker.launchCameraAsync?.mockResolvedValue({
     canceled: false,
     assets: [{ uri, width: 900, height: 1200, base64: 'aGVsbG8=', mimeType: 'image/jpeg' }],
   });
@@ -75,6 +80,9 @@ export function armCamera(uri = 'file:///cache/slip.jpg'): void {
 export function mockClipboard(): jest.Mock {
   const setString = jest.fn();
   const clipboard = { setString, getString: jest.fn(async () => '') };
-  Object.defineProperty(jest.requireActual('react-native'), 'Clipboard', { value: clipboard, configurable: true });
+  Object.defineProperty(jest.requireActual('react-native'), 'Clipboard', {
+    value: clipboard,
+    configurable: true,
+  });
   return setString;
 }

@@ -29,7 +29,8 @@ const found: RegistrationCheckView = {
     { name: 'سلمى', code: 'AB-0202', status: 'trial', teacher_name: null },
   ],
 };
-const confirmOf = (name: string, code: string) => lf.confirm.replace('{name}', name).replace('{code}', ltr(code));
+const confirmOf = (name: string, code: string) =>
+  lf.confirm.replace('{name}', name).replace('{code}', ltr(code));
 
 async function openAndPick(me: unknown = LINKER) {
   mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? me : found));
@@ -49,7 +50,9 @@ beforeEach(() => {
 
 test('the hint, then the search by name: the children as buttons; picking one asks to confirm by name and code', async () => {
   await openAndPick();
-  expect(mockApiFetch).toHaveBeenCalledWith(`/sales/registration-check?q=${encodeURIComponent('سلمى')}`);
+  expect(mockApiFetch).toHaveBeenCalledWith(
+    `/sales/registration-check?q=${encodeURIComponent('سلمى')}`,
+  );
   expect(screen.getByText(confirmOf('سلمى', 'AB-0202'))).toBeTruthy();
   expect(screen.queryByText('ريم')).toBeNull();
   expect(screen.queryByText(lf.hint)).toBeNull();
@@ -66,9 +69,13 @@ test('«ربط الرقم» posts the code, refreshes the chats, leads and famil
   const refresh = jest.spyOn(client, 'invalidateQueries');
   await fireEvent.press(screen.getByRole('button', { name: lf.submit }));
   expect(await screen.findByText(lf.done)).toBeTruthy();
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/leads/lead-1/link-family', { code: 'AB-0202' });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/leads/lead-1/link-family', {
+    code: 'AB-0202',
+  });
   const keys = refresh.mock.calls.map((c) => c[0]?.queryKey);
-  expect(keys).toEqual(expect.arrayContaining([['threads'], ['leads'], ['sales', 'money', 'family']]));
+  expect(keys).toEqual(
+    expect.arrayContaining([['threads'], ['leads'], ['sales', 'money', 'family']]),
+  );
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.subscription.backToChat }));
   expect(router.back).toHaveBeenCalled();
 });
@@ -81,7 +88,9 @@ test('{ linked: false }: the number already was this family’s', async () => {
 });
 
 test('a 409 says why in her words and keeps the confirm to try another child', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'family_has_second_number', message: 'family_has_second_number' }));
+  mockApiSend.mockRejectedValue(
+    new ApiError(409, { code: 'family_has_second_number', message: 'family_has_second_number' }),
+  );
   await openAndPick();
   await fireEvent.press(screen.getByRole('button', { name: lf.submit }));
   expect(await screen.findByText(lf.errors.family_has_second_number)).toBeTruthy();
@@ -104,7 +113,9 @@ test('a one-letter name says it is too short and asks nothing; a search in fligh
   await fireEvent.changeText(field, 'س');
   await fireEvent(field, 'submitEditing');
   expect(await screen.findByText(t.registrationCheck.error.query_too_short)).toBeTruthy();
-  expect(mockApiFetch).not.toHaveBeenCalledWith(expect.stringContaining('/sales/registration-check'));
+  expect(mockApiFetch).not.toHaveBeenCalledWith(
+    expect.stringContaining('/sales/registration-check'),
+  );
   await fireEvent.changeText(field, 'سلمى');
   await fireEvent(field, 'submitEditing');
   expect(await screen.findByText(t.registrationCheck.checking)).toBeTruthy();

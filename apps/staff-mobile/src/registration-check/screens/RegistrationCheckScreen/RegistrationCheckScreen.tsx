@@ -6,12 +6,18 @@ import { ScrollView } from 'react-native';
 import { usePermissions, t, BackButton, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import type { RegistrationCheckBy, RegistrationCheckQuery } from '@ab/shared';
-import { checkErrorText, searchOf, useRegistrationCheck } from '@/registration-check/lib/registration-check';
+import {
+  checkErrorText,
+  searchOf,
+  useRegistrationCheck,
+} from '@/registration-check/lib/registration-check';
 import { RegistrationForm } from '@/registration-check/components/RegistrationForm';
 import { RegistrationResults } from '@/registration-check/components/RegistrationResults';
 
 /** The chat's number (from the thread header), checked at once. */
-type Params = { phone?: string };
+type Params = {
+  phone?: string;
+};
 
 /**
  * /…/registration-check[?phone=…] (docs/16 row 23), from the sales chat header
@@ -24,8 +30,13 @@ export function RegistrationCheckScreen() {
   const can = usePermissions();
   const base = useTreeBase();
   const [by, setBy] = useState<RegistrationCheckBy>(params.phone ? 'phone' : 'name');
-  const [text, setText] = useState({ phone: params.phone ? formatPhone(params.phone) : '', name: '' });
-  const [search, setSearch] = useState<RegistrationCheckQuery | null>('search' in first ? first.search : null);
+  const [text, setText] = useState({
+    phone: params.phone ? formatPhone(params.phone) : '',
+    name: '',
+  });
+  const [search, setSearch] = useState<RegistrationCheckQuery | null>(
+    'search' in first ? first.search : null,
+  );
   const [invalid, setInvalid] = useState<string>();
   const check = useRegistrationCheck(search);
   const back = () => backWithin(inTree(base, '/inbox'));
@@ -34,7 +45,8 @@ export function RegistrationCheckScreen() {
     const next = searchOf(by, text[by]);
     if ('error' in next) {
       setInvalid(t.registrationCheck.error[next.error]);
-      return setSearch(null);
+      setSearch(null);
+      return;
     }
     setInvalid(undefined);
     if (JSON.stringify(next.search) === JSON.stringify(search)) void check.refetch();
@@ -53,10 +65,7 @@ export function RegistrationCheckScreen() {
         contentContainerStyle={{ gap: 20, paddingHorizontal: 16, paddingBottom: 32 }}
         keyboardShouldPersistTaps="handled"
       >
-        <ScreenHeader
-          title={t.registrationCheck.title}
-          leading={<BackButton onPress={back} />}
-        />
+        <ScreenHeader title={t.registrationCheck.title} leading={<BackButton onPress={back} />} />
         {can('students.check_registration') ? (
           <>
             <RegistrationForm

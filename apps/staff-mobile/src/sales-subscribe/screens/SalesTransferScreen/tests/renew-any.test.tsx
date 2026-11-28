@@ -2,7 +2,16 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { instantDay } from '@/core/lib/money/format';
 import { renderWithQuery } from '@/test/query';
-import { chatImage, familyOf, KID, kid, MSG, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
+import {
+  chatImage,
+  familyOf,
+  KID,
+  kid,
+  MSG,
+  openSub,
+  salesPayment,
+  SUB,
+} from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from '@/sales-subscribe/screens/SalesTransferScreen/SalesTransferScreen';
 
 // sales.renew_any (docs/16 row 38): a child of the chat's family that is not hers (mine: false).
@@ -26,25 +35,43 @@ const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c
 beforeEach(() => {
   jest.clearAllMocks();
   mockApiSend.mockImplementation(async (_m: string, path: string) =>
-    path === '/sales/payments/receipt-from-chat' ? { receipt_path: `${SUB}/c.jpg` } : salesPayment('active'),
+    path === '/sales/payments/receipt-from-chat'
+      ? { receipt_path: `${SUB}/c.jpg` }
+      : salesPayment('active'),
   );
 });
 
 test('not hers: the transfer and the chat receipts carry the chat phone; «إلغاء الباقة» is not offered', async () => {
   mockApiFetch.mockImplementation(async (path: string) => {
-    if (path.startsWith('/sales/money/family')) return familyOf(kid({ mine: false, open: [openSub()] }));
-    if (path.startsWith('/sales/money/chat-receipts/')) return { url: 'https://x/t.jpg', expires_at: '', mime: 'image/jpeg' };
+    if (path.startsWith('/sales/money/family'))
+      return familyOf(kid({ mine: false, open: [openSub()] }));
+    if (path.startsWith('/sales/money/chat-receipts/'))
+      return { url: 'https://x/t.jpg', expires_at: '', mime: 'image/jpeg' };
     return path.startsWith('/sales/money/chat-receipts') ? [chatImage] : {};
   });
   await renderWithQuery(<SalesTransferScreen />);
   expect(await screen.findByLabelText(t.payments.amount)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.subscriptions.cancel.action })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: m.receiptFromChat }));
-  expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/chat-receipts?studentId=${KID}&phone=${encodeURIComponent(CHAT)}`);
-  await fireEvent.press(await screen.findByRole('button', { name: `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}` }));
-  await waitFor(() => expect(sent('/sales/payments/receipt-from-chat')[0]?.[2]).toEqual({ subscriptionId: SUB, messageId: MSG, phone: CHAT }));
+  expect(mockApiFetch).toHaveBeenCalledWith(
+    `/sales/money/chat-receipts?studentId=${KID}&phone=${encodeURIComponent(CHAT)}`,
+  );
+  await fireEvent.press(
+    await screen.findByRole('button', {
+      name: `${instantDay(chatImage.created_at, 'Asia/Riyadh')} · ${chatImage.caption ?? ''}`,
+    }),
+  );
+  await waitFor(() =>
+    expect(sent('/sales/payments/receipt-from-chat')[0]?.[2]).toEqual({
+      subscriptionId: SUB,
+      messageId: MSG,
+      phone: CHAT,
+    }),
+  );
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
-  await waitFor(() => expect(sent('/sales/payments')[0]?.[2]).toMatchObject({ subscriptionId: SUB, phone: CHAT }));
+  await waitFor(() =>
+    expect(sent('/sales/payments')[0]?.[2]).toMatchObject({ subscriptionId: SUB, phone: CHAT }),
+  );
   expect(await screen.findByRole('button', { name: m.openMyPayments })).toBeTruthy();
   expect(screen.getByRole('button', { name: t.booking.bookCourseDays })).toBeTruthy();
 });

@@ -12,7 +12,10 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => jest.requireActual('@/sales-subscribe/testing/fixtures').familyOf(jest.requireActual('@/sales-subscribe/testing/fixtures').kid()),
+  apiFetch: async () =>
+    jest
+      .requireActual('@/sales-subscribe/testing/fixtures')
+      .familyOf(jest.requireActual('@/sales-subscribe/testing/fixtures').kid()),
   apiSend: async () => jest.requireActual('@/sales-subscribe/testing/fixtures').salesQuote,
 }));
 jest.mock('expo-router', () => ({
@@ -26,7 +29,9 @@ test('an English run: the sales subscribe screen reads en.json', async () => {
   expect(salesQuote.currency).toBe('SAR');
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByRole('header', { name: en.salesMoney.newSubscription })).toBeTruthy();
-  expect(await screen.findByRole('button', { name: en.salesMoney.saveSubscription, disabled: false })).toBeTruthy();
+  expect(
+    await screen.findByRole('button', { name: en.salesMoney.saveSubscription, disabled: false }),
+  ).toBeTruthy();
   expect(screen.getByText(en.salesMoney.price)).toBeTruthy();
   expect(screen.getByText(en.salesMoney.priceHint)).toBeTruthy();
 });

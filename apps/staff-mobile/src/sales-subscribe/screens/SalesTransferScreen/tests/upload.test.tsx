@@ -2,7 +2,14 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import { familyOf, KID2, kid, openSub, salesPayment, SUB } from '@/sales-subscribe/testing/fixtures';
+import {
+  familyOf,
+  KID2,
+  kid,
+  openSub,
+  salesPayment,
+  SUB,
+} from '@/sales-subscribe/testing/fixtures';
 import { SalesTransferScreen } from '@/sales-subscribe/screens/SalesTransferScreen/SalesTransferScreen';
 
 const mockApiFetch = jest.fn();
@@ -24,8 +31,17 @@ jest.mock('expo-image-picker', () => ({ launchImageLibraryAsync: jest.fn() }));
 
 const m = t.salesMoney;
 const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
-const signed = { bucket: 'receipts', path: `${SUB}/9f.jpg`, token: 'tok', signed_url: 'http://x/sign' };
-const other = openSub({ id: 'sub-2', student: { id: KID2, code: 'AB-0202', name: 'سلمى' }, due: 90 });
+const signed = {
+  bucket: 'receipts',
+  path: `${SUB}/9f.jpg`,
+  token: 'tok',
+  signed_url: 'http://x/sign',
+};
+const other = openSub({
+  id: 'sub-2',
+  student: { id: KID2, code: 'AB-0202', name: 'سلمى' },
+  due: 90,
+});
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -35,7 +51,15 @@ beforeEach(() => {
   mockUpload.mockResolvedValue({ data: { path: signed.path }, error: null });
   jest.mocked(ImagePicker.launchImageLibraryAsync).mockResolvedValue({
     canceled: false,
-    assets: [{ uri: 'file:///cache/slip.jpg', width: 900, height: 1200, base64: 'aGVsbG8=', mimeType: 'image/jpeg' }],
+    assets: [
+      {
+        uri: 'file:///cache/slip.jpg',
+        width: 900,
+        height: 1200,
+        base64: 'aGVsbG8=',
+        mimeType: 'image/jpeg',
+      },
+    ],
   });
 });
 
@@ -55,16 +79,24 @@ test('two owed packages: pick one → photo → sales upload once, one key acros
   expect(await screen.findByText(m.attachmentN.replace('{n}', '1'))).toBeTruthy();
 
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
-  expect(await screen.findByText(m.error.currency_mismatch.replace('{currency}', 'SAR'))).toBeTruthy();
+  expect(
+    await screen.findByText(m.error.currency_mismatch.replace('{currency}', 'SAR')),
+  ).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   expect(await screen.findByText(m.transferSaved)).toBeTruthy();
 
   expect(sent('/sales/payments/receipt-upload-url')).toEqual([
-    ['POST', '/sales/payments/receipt-upload-url', { subscriptionId: SUB, mime: 'image/jpeg', size: 5 }],
+    [
+      'POST',
+      '/sales/payments/receipt-upload-url',
+      { subscriptionId: SUB, mime: 'image/jpeg', size: 5 },
+    ],
   ]);
   expect(mockUpload).toHaveBeenCalledTimes(1);
   expect(sent('/payments/receipt-upload-url')).toHaveLength(0);
-  const [first, second] = sent('/sales/payments').map((c) => c[2] as { clientRequestId: string; attachments: string[] });
+  const [first, second] = sent('/sales/payments').map(
+    (c) => c[2] as { clientRequestId: string; attachments: string[] },
+  );
   expect(first?.attachments).toEqual([signed.path]);
   expect(first).not.toHaveProperty('receiptPath');
   expect(second?.clientRequestId).toBe(first?.clientRequestId);

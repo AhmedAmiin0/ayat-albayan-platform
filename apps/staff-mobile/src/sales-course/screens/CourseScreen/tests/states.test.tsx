@@ -3,7 +3,12 @@ import { booked, maryam, SUN_17 } from '@/booking/testing/fixtures';
 import { ApiError, t, pathKey } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { fakeCourseApi, isDisabled, press, walkToReview } from '@/sales-course/testing/course-test-utils';
+import {
+  fakeCourseApi,
+  isDisabled,
+  press,
+  walkToReview,
+} from '@/sales-course/testing/course-test-utils';
 import { CourseScreen } from '@/sales-course/screens/CourseScreen/CourseScreen';
 import { courseView, STUDENT_ID, SUB_ID } from '@/sales-course/testing/fixtures';
 import { fakeNow } from '@/test/fake-now';
@@ -51,19 +56,32 @@ test('after «احجز» the refetched course (now hers: course_exists) keeps th
 });
 
 test('a subscription that starts ahead: its first day in the header and the slots from then', async () => {
-  const sub = { id: SUB_ID, package: '8' as const, duration: 45 as const, lessons_total: 8, starts_on: '2099-01-04' };
+  const sub = {
+    id: SUB_ID,
+    package: '8' as const,
+    duration: 45 as const,
+    lessons_total: 8,
+    starts_on: '2099-01-04',
+  };
   mockApiFetch.mockImplementation(fakeCourseApi(courseView({ subscription: sub })).fetch);
   await renderWithQuery(<CourseScreen />);
-  expect(await screen.findByText(t.booking.subscriptionStarts.replace('{date}', localDay('2099-01-04')))).toBeTruthy();
+  expect(
+    await screen.findByText(t.booking.subscriptionStarts.replace('{date}', localDay('2099-01-04'))),
+  ).toBeTruthy();
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
   await screen.findByTestId('lesson-date-0');
   // Midnight of 4 Jan 2099 in Riyadh (+03).
-  expect(reads('/sales/booking/slots')[0]).toContain(`from=${encodeURIComponent('2099-01-03T21:00:00.000Z')}`);
+  expect(reads('/sales/booking/slots')[0]).toContain(
+    `from=${encodeURIComponent('2099-01-03T21:00:00.000Z')}`,
+  );
 });
 
 test('a stale cached bookable view does not latch: the fresh course_exists shows the blocked line', async () => {
   const client = createTestQueryClient();
-  client.setQueryData([...pathKey('/sales/booking/course'), { studentId: STUDENT_ID }], courseView());
+  client.setQueryData(
+    [...pathKey('/sales/booking/course'), { studentId: STUDENT_ID }],
+    courseView(),
+  );
   mockApiFetch.mockImplementation(fakeCourseApi(courseView({ blocked: 'course_exists' })).fetch);
   await renderWithQuery(<CourseScreen />, client);
   expect(await screen.findByText(t.booking.courseBlocked.course_exists)).toBeTruthy();
@@ -72,14 +90,17 @@ test('a stale cached bookable view does not latch: the fresh course_exists shows
 test.each([
   [403, 'not_your_student'],
   [404, 'student_not_found'],
-] as const)('a refused course read (%i %s): its line, no retry, and still the transfer', async (status, code) => {
-  mockParams.current = { studentId: STUDENT_ID, phone: '+966501112223', subscriptionId: 'sub-1' };
-  mockApiFetch.mockRejectedValue(new ApiError(status, { code, message: 'x' }));
-  await renderWithQuery(<CourseScreen />);
-  expect(await screen.findByText(t.booking.error[code])).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.mobile.retry })).toBeNull();
-  expect(screen.getByRole('button', { name: t.salesMoney.stepTransfer })).toBeTruthy();
-});
+] as const)(
+  'a refused course read (%i %s): its line, no retry, and still the transfer',
+  async (status, code) => {
+    mockParams.current = { studentId: STUDENT_ID, phone: '+966501112223', subscriptionId: 'sub-1' };
+    mockApiFetch.mockRejectedValue(new ApiError(status, { code, message: 'x' }));
+    await renderWithQuery(<CourseScreen />);
+    expect(await screen.findByText(t.booking.error[code])).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t.mobile.retry })).toBeNull();
+    expect(screen.getByRole('button', { name: t.salesMoney.stepTransfer })).toBeTruthy();
+  },
+);
 
 test('a read that failed without a code says the common line, with a retry', async () => {
   mockApiFetch.mockRejectedValue(new ApiError(500, { code: 'internal', message: 'x' }));

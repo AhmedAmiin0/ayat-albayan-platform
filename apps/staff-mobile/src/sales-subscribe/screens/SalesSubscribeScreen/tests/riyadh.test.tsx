@@ -21,7 +21,9 @@ jest.mock('expo-router', () => ({
 
 const m = t.salesMoney;
 const lastBody = () =>
-  mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === '/sales/subscriptions').at(-1)?.[2] as Record<string, unknown> | undefined;
+  mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === '/sales/subscriptions').at(-1)?.[2] as
+    | Record<string, unknown>
+    | undefined;
 
 beforeEach(() => {
   jest.useFakeTimers({ now: new Date('2026-10-12T21:30:00Z'), advanceTimers: true });

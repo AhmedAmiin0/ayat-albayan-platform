@@ -9,7 +9,12 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-const mockParams = { value: { studentId: '44444444-4444-4444-8444-444444444444', name: 'ريم' } as Record<string, string> };
+const mockParams = {
+  value: { studentId: '44444444-4444-4444-8444-444444444444', name: 'ريم' } as Record<
+    string,
+    string
+  >,
+};
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => mockParams.value,
@@ -18,7 +23,10 @@ jest.mock('expo-router', () => ({
 beforeEach(() => jest.clearAllMocks());
 
 test('a subscriber: the history with the reason in place of the wizard', async () => {
-  const history = historyOf([trialRow({ lesson_id: OLD, outcome: 'attended' })], { status: 'active', allowed: false });
+  const history = historyOf([trialRow({ lesson_id: OLD, outcome: 'attended' })], {
+    status: 'active',
+    allowed: false,
+  });
   mockApiFetch.mockResolvedValue(history);
   await renderWithQuery(<TrialDateScreen />);
   expect(await screen.findByText(t.trialDate.notAllowed)).toBeTruthy();
@@ -31,7 +39,9 @@ test('a failed read: the header and «تعذّر تحميل…» with a retry', 
   mockApiFetch.mockRejectedValue(new Error('net'));
   await renderWithQuery(<TrialDateScreen />);
   expect(await screen.findByText(t.trialDate.loadError)).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.trialDate.title.replace('{name}', 'ريم') })).toBeTruthy();
+  expect(
+    screen.getByRole('header', { name: t.trialDate.title.replace('{name}', 'ريم') }),
+  ).toBeTruthy();
 });
 
 test('a link without the student says so', async () => {

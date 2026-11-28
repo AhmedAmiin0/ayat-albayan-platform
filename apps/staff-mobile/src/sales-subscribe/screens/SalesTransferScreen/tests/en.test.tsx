@@ -11,7 +11,10 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('@ab/mobile-kit/lib/http/api', () => {
   const f = jest.requireActual('@/sales-subscribe/testing/fixtures');
-  return { ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: async () => f.familyOf(f.kid({ open: [f.openSub()] })) };
+  return {
+    ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+    apiFetch: async () => f.familyOf(f.kid({ open: [f.openSub()] })),
+  };
 });
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn() },

@@ -20,13 +20,19 @@ jest.mock('expo-router', () => ({
 const p = t.pricing;
 const PREMIUM = { pkg: 'premium', count: 10, duration: 60, discount: 10, country: 'AE' } as const;
 const CUSTOM = { pkg: 'custom', count: 14, duration: 30, discount: 5, country: '' } as const;
-const lastQuote = () => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === '/sales/subscriptions/quote').at(-1)?.[2];
+const lastQuote = () =>
+  mockApiSend.mock.calls
+    .filter((c: unknown[]) => c[1] === '/sales/subscriptions/quote')
+    .at(-1)?.[2];
 
 beforeEach(() => {
   jest.clearAllMocks();
   mockApiSend.mockResolvedValue(salesQuote);
   mockApiFetch.mockResolvedValue(
-    familyOf(kid({ status: 'expired', renew_due: true, renewal: PREMIUM }), kid({ id: KID2, name: 'سلمى', status: 'active', renew_due: true, renewal: CUSTOM })),
+    familyOf(
+      kid({ status: 'expired', renew_due: true, renewal: PREMIUM }),
+      kid({ id: KID2, name: 'سلمى', status: 'active', renew_due: true, renewal: CUSTOM }),
+    ),
   );
 });
 
@@ -35,9 +41,16 @@ test('«جدّد الاشتراك»: titled as a renewal, the form prefilled fro
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByRole('header', { name: t.students.renew })).toBeTruthy();
   // The title shows before the family loads: wait for the form itself.
-  expect(await screen.findByRole('radio', { name: p.packages.premium.sessions, checked: true })).toBeTruthy();
+  expect(
+    await screen.findByRole('radio', { name: p.packages.premium.sessions, checked: true }),
+  ).toBeTruthy();
   expect(screen.getByRole('radio', { name: p.discounts['10'], checked: true })).toBeTruthy();
-  await waitFor(() => expect(lastQuote()).toEqual({ studentId: KID, pricing: { tier: 'premium', duration: 60, discount: 10, country: 'AE' } }));
+  await waitFor(() =>
+    expect(lastQuote()).toEqual({
+      studentId: KID,
+      pricing: { tier: 'premium', duration: 60, discount: 10, country: 'AE' },
+    }),
+  );
   await fireEvent.press(screen.getByRole('radio', { name: p.discounts['0'] }));
   await waitFor(() => expect(lastQuote()).toMatchObject({ pricing: { discount: 0 } }));
 });
@@ -58,19 +71,39 @@ test('«اشتراك جديد» (no renew): the empty calculator, whatever her l
   mockParams.current = { phone: PHONE, studentId: KID };
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByRole('header', { name: t.salesMoney.newSubscription })).toBeTruthy();
-  await waitFor(() => expect(lastQuote()).toEqual({ studentId: KID, pricing: { tier: 'standard', duration: 45, discount: 0 } }));
+  await waitFor(() =>
+    expect(lastQuote()).toEqual({
+      studentId: KID,
+      pricing: { tier: 'standard', duration: 45, discount: 0 },
+    }),
+  );
 });
 
 test('the one «جدّد الاشتراك» with several children (no studentId): all hers listed; only the due one is prefilled and titled a renewal', async () => {
-  mockApiFetch.mockResolvedValue(familyOf(kid({ status: 'expired', renew_due: true, renewal: PREMIUM }), kid({ id: KID2, name: 'سلمى', status: 'active', renewal: CUSTOM })));
+  mockApiFetch.mockResolvedValue(
+    familyOf(
+      kid({ status: 'expired', renew_due: true, renewal: PREMIUM }),
+      kid({ id: KID2, name: 'سلمى', status: 'active', renewal: CUSTOM }),
+    ),
+  );
   mockParams.current = { phone: PHONE, renew: '1' };
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByRole('header', { name: t.students.renew })).toBeTruthy();
   await fireEvent.press(await screen.findByRole('radio', { name: /ريم/ }));
-  await waitFor(() => expect(lastQuote()).toEqual({ studentId: KID, pricing: { tier: 'premium', duration: 60, discount: 10, country: 'AE' } }));
+  await waitFor(() =>
+    expect(lastQuote()).toEqual({
+      studentId: KID,
+      pricing: { tier: 'premium', duration: 60, discount: 10, country: 'AE' },
+    }),
+  );
   expect(screen.getByRole('header', { name: t.students.renew })).toBeTruthy();
   await fireEvent.press(screen.getByRole('radio', { name: /سلمى/ }));
-  await waitFor(() => expect(lastQuote()).toEqual({ studentId: KID2, pricing: { tier: 'standard', duration: 45, discount: 0 } }));
+  await waitFor(() =>
+    expect(lastQuote()).toEqual({
+      studentId: KID2,
+      pricing: { tier: 'standard', duration: 45, discount: 0 },
+    }),
+  );
   // A sibling not due gets a new package: the title says so.
   expect(screen.getByRole('header', { name: t.salesMoney.newSubscription })).toBeTruthy();
 });

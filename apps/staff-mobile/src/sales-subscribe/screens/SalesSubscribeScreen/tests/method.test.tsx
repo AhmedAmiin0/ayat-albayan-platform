@@ -27,35 +27,51 @@ jest.mock('expo-router', () => ({
 const m = t.salesMoney;
 const posted = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
 const serve = (child = kid()) =>
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/stripe/feature' ? { stripe: true } : familyOf(child)));
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/stripe/feature' ? { stripe: true } : familyOf(child),
+  );
 
 beforeEach(() => {
   jest.clearAllMocks();
   serve();
   mockApiSend.mockImplementation(async (_m: string, path: string) =>
-    path === '/sales/payment-links/quote' ? linkQuote() : path === '/sales/subscriptions/quote' ? salesQuote : openSub(),
+    path === '/sales/payment-links/quote'
+      ? linkQuote()
+      : path === '/sales/subscriptions/quote'
+        ? salesQuote
+        : openSub(),
   );
 });
 
 test('her own child: two methods, «تحويل بنكي» first and picked; saving is today’s package, then its weekly days', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
-  expect(await screen.findByRole('radio', { name: t.enums.paymentMethod.bank, checked: true })).toBeTruthy();
+  expect(
+    await screen.findByRole('radio', { name: t.enums.paymentMethod.bank, checked: true }),
+  ).toBeTruthy();
   expect(await screen.findByRole('radio', { name: m.payOnline, checked: false })).toBeTruthy();
   expect(screen.getByText(t.payments.method)).toBeTruthy();
-  await fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
+  await fireEvent.press(
+    await screen.findByRole('button', { name: m.saveSubscription, disabled: false }),
+  );
   await waitFor(() => expect(posted('/sales/subscriptions')).toHaveLength(1));
   expect(posted('/sales/payment-links')).toHaveLength(0);
-  expect(mockReplace).toHaveBeenCalledWith(expect.objectContaining({ pathname: expect.stringContaining('/inbox/sales-course') }));
+  expect(mockReplace).toHaveBeenCalledWith(
+    expect.objectContaining({ pathname: expect.stringContaining('/inbox/sales-course') }),
+  );
 });
 
 test('«دفع إلكتروني»: the amount to transfer gives way to the reference and «مبلغ مخصص»; the button makes the link', async () => {
   await renderWithQuery(<SalesSubscribeScreen />);
   expect(await screen.findByText(m.price)).toBeTruthy();
   // Bank transfer has its own custom amount on the package price, off by default.
-  expect(screen.getByRole('checkbox', { name: t.paymentLinks.customAmount, checked: false })).toBeTruthy();
+  expect(
+    screen.getByRole('checkbox', { name: t.paymentLinks.customAmount, checked: false }),
+  ).toBeTruthy();
   await fireEvent.press(await screen.findByRole('radio', { name: m.payOnline }));
   await fireEvent.press(await screen.findByRole('checkbox', { name: t.paymentLinks.customAmount }));
-  expect(await screen.findByLabelText(new RegExp(t.paymentLinks.agreedAmount.split(' (')[0] ?? ''))).toBeTruthy();
+  expect(
+    await screen.findByLabelText(new RegExp(t.paymentLinks.agreedAmount.split(' (')[0] ?? '')),
+  ).toBeTruthy();
   expect(screen.queryByText(m.price)).toBeNull();
   expect(screen.getByRole('button', { name: t.paymentLinks.create })).toBeTruthy();
   expect(screen.queryByRole('button', { name: m.saveSubscription })).toBeNull();
