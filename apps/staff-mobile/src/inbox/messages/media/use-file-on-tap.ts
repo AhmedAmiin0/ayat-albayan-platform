@@ -10,9 +10,9 @@ type TapFile =
   | { step: 'problem'; problem: MediaProblem };
 
 /**
- * A voice note's or video's signed URL, asked ONLY on the tap (W6): rendering or refetching the thread
- * never signs one. A second tap while fetching, or once ready while the URL is fresh, asks nothing; after
- * a failure, or once the signed URL is (nearly) expired, it asks again.
+ * A voice note's or video's signed URL, asked ONLY on the tap (W6): rendering or refetching the
+ * thread never signs one. A second tap while fetching, or once ready while the URL is fresh, asks
+ * nothing; after a failure, or once the signed URL is (nearly) expired, it asks again.
  */
 export function useFileOnTap(phone: string, messageId: string) {
   const fetchFile = useThreadFile(phone, messageId);

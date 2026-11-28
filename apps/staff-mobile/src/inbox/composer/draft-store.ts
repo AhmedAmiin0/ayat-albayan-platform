@@ -15,13 +15,13 @@ export function setComposerText(phone: string, text: string): void {
   listeners.forEach((l) => l());
 }
 
-/** Another screen's text after her unsent draft, a new line between (never overwrites what she typed). */
+/** Appends another screen's text to her unsent draft on a new line, never overwriting it. */
 export function appendComposerText(phone: string, text: string): void {
   const now = getComposerText(phone).trim();
   setComposerText(phone, now ? `${now}\n${text}` : text);
 }
 
-/** A sign-out (the gate is out): nobody else on this phone reads the last user's half-written replies. */
+/** On sign-out: nobody else on this phone reads the last user's half-written replies. */
 export function clearComposerDrafts(): void {
   if (drafts.size === 0) return;
   drafts.clear();
@@ -40,7 +40,7 @@ export function useComposerDraft(phone: string): string {
 
 type Next = string | ((now: string) => string);
 
-/** The chat's box text and its setter (a value or an updater, as useState's); kept until sent or signed out. */
+/** The chat's box text and its setter (as useState's); kept until sent or signed out. */
 export function useComposerText(phone: string): [string, (next: Next) => void] {
   const text = useComposerDraft(phone);
   const set = useCallback(

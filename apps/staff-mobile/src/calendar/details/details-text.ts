@@ -106,7 +106,7 @@ export function seriesLine(lesson: Pick<DetailsLesson, 'rule_id' | 'rule_byday' 
 
 export type ReportState = 'submitted' | 'draft' | 'none';
 
-/** The student's report once one can be written (the lesson started, not cancelled or moved); else null. */
+/** The report once one can be written (lesson started, not cancelled or moved); else null. */
 export function reportState(
   lesson: Pick<DetailsLesson, 'status' | 'starts_at'>,
   student: DetailsStudent,

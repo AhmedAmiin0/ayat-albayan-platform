@@ -4,7 +4,7 @@ import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 import { SavedReplyIcon } from '@/inbox/shared/chat-icons';
 
 export interface SavedRepliesButtonProps {
-  /** The 24 h window: outside it the composer is templates only and the button only explains why. */
+  /** The 24 h window: outside it only templates go, and the button only explains why. */
   open: boolean;
   onPress: () => void;
 }

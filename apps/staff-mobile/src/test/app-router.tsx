@@ -90,7 +90,7 @@ export async function resetApp(): Promise<void> {
 }
 
 export async function renderApp({ url, backend, gate = 'admin', storage = {} }: AppOptions) {
-  // Staff holding every permission unless the test answers GET /auth/me itself (staff-me.ts); seeded as
+  // Full permissions unless the test answers GET /auth/me itself (staff-me.ts); seeded as
   // verifyRole does before the gate opens a tree, so the tab bar is there on the first render.
   const own = backend.handles('GET /auth/me');
   const me = fullAccessMe(gate === 'out' ? 'admin' : gate);

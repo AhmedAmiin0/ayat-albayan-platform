@@ -4,7 +4,7 @@ import { FakeBackend } from '@/test/fake-backend';
 import { balanceOf, page, payment, SUB_ID, subscription } from '@/payments/fixtures';
 
 // The students + money API for the student → payment flow. POST /payments adds to the package's
-// `paid`, and a package paid in full turns `active`, so the balance card shows the truth on refetch.
+// `paid` and a package paid in full turns `active`, so the balance card is right on refetch.
 
 export const SIGNED = {
   bucket: 'receipts',

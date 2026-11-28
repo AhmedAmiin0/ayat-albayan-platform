@@ -1,6 +1,6 @@
 import { t, shape, type, useTheme, AppText } from '@ab/mobile-kit';
 
-/** In place of the composer on a teacher's own chat with the academy: she reads, the academy answers. */
+/** Instead of the composer in a teacher's own chat with the academy: the academy answers. */
 export function OwnThreadNote() {
   const { color } = useTheme();
   return (

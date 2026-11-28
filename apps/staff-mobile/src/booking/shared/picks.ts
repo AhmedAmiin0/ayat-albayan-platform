@@ -5,13 +5,13 @@ import { t, cityOf } from '@ab/mobile-kit';
 
 // One slot per weekday; earliest is startsAt, others in extra, so one-slot bookings are unchanged.
 
-/** The earliest pick (the first lesson) and the other picks' UTC instants (a package only), sorted. */
+/** The earliest pick (first lesson) and the other picks' UTC instants (a package only), sorted. */
 export type PickFields = BookingPickFields;
 
 /** No slot picked: what a new teacher, length or package resets to (the slots depend on them). */
 export const NO_PICKS: PickFields = { startsAt: null, extra: [] };
 
-/** Every pick, earliest first; the picks back into the draft, the earliest as startsAt (@ab/client-core, docs/27 E5). */
+/** Every pick, earliest first; back into the draft, the earliest as startsAt (docs/27 E5). */
 export { bookingPicks as picksOf, bookingPicksFrom as fromPicks } from '@ab/client-core';
 
 const weekdays: Record<string, string | undefined> = t.enums.weekday;

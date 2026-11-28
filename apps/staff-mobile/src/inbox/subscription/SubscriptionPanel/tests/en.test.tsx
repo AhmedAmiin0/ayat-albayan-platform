@@ -26,7 +26,7 @@ test('an LTR run words the chat’s subscription from en.json', async () => {
   expect(screen.getByText(en.inbox.subscription.badge.expired)).toBeTruthy();
   // The short pill shows the kind; its spoken name says which child.
   expect(screen.getByRole('button', { name: `${en.inbox.subscription.renew} — يوسف` })).toBeTruthy();
-  // An only child with a package keeps its name beside the chip (the guardian's name is not the child's).
+  // An only child keeps its name beside the chip: the guardian's name is not the child's.
   expect(screen.getByText('يوسف')).toBeTruthy();
   // Ended: the package by its name, no «0 left» under «Package finished».
   expect(screen.getByText(en.enums.packageSize['8'])).toBeTruthy();

@@ -14,7 +14,7 @@ interface BodyOptions {
   choice?: StudentChoice;
 }
 
-/** The invoice as the API takes it: the signed path of the upload, or the chat message to copy (@ab/client-core). */
+/** Invoice for the API: the upload's signed path, or the chat message to copy. */
 export const toInvoiceInput: (invoice: InvoiceDraft) => InvoiceInput = bookingInvoiceInput;
 
 /**

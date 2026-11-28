@@ -12,7 +12,7 @@ export interface PayoutLock {
 
 const statuses: Record<string, string | undefined> = t.enums.payoutStatus;
 
-/** The lock a failed PATCH reports, else null. An older API sends no month: the general line then. */
+/** The lock a failed PATCH reports, else null. An older API sends no month: the general line. */
 export function payoutLockOf(error: unknown): PayoutLock | null {
   if (failureCode(error) !== 'payout_locked') return null;
   const body =

@@ -11,7 +11,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch, pathKey } from '@ab/mobile-kit';
 import { salesKeys } from '@/core/lib/keys';
 
-// The salesperson's pages (docs/16, web parity with apps/staff-web/src/features/sales): read-only, no money.
+// The salesperson's pages (docs/16, parity with the web's features/sales): read-only, no money.
 
 /** The running lessons are re-read every minute: one ends, another starts (same as the web). */
 const LIVE_REFRESH_MS = 60_000;
@@ -27,7 +27,7 @@ export const useSalesSubscriptions = (kind: SalesSubscriptionKind) =>
     select: asList,
   });
 
-/** GET /sales/subscriptions/:id/history — one of my confirmed subscriptions and its student's history. */
+/** GET /sales/subscriptions/:id/history: one of my confirmed subscriptions and its history. */
 export const useSubscriptionHistory = (id: string) =>
   useQuery({
     queryKey: pathKey(`/sales/subscriptions/${id}/history`),
@@ -52,7 +52,7 @@ export const useSalesLive = () =>
     refetchInterval: LIVE_REFRESH_MS,
   });
 
-/** GET /sales/schedule?date&teacherId — one Riyadh day of the academy, read-only, re-read every minute. */
+/** GET /sales/schedule?date&teacherId: one Riyadh day of the academy, re-read every minute. */
 const salesScheduleQuery = (date: string, teacherId: string) => ({
   queryKey: salesKeys.schedule(date, teacherId),
   queryFn: () =>

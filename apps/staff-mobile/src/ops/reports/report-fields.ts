@@ -12,7 +12,7 @@ export interface ReportField {
   value: string | null;
 }
 
-/** The report's text in the form's order and words (the web's form, read-only); blank stays visible. */
+/** The report's text in the web form's order and words, read-only; a blank stays visible. */
 export function reportFields(r: FieldsReport): ReportField[] {
   const m = t.reports;
   const grade = (g: FieldsReport['grade_overall']) => (g ? t.enums.grade[g] : null);

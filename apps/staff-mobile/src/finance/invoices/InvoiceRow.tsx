@@ -4,7 +4,7 @@ import { t, ListRow, StatusChip } from '@ab/mobile-kit';
 import { invoiceStudents, invoiceSubtitle } from './invoice-text';
 import { useViewerTz } from '@/core/lib/clock';
 
-/** One booking invoice: its students, day and source, and whether a payment was recorded from it. */
+/** A booking invoice: its students, day, source, and whether a payment was recorded from it. */
 export const InvoiceRow = memo(function InvoiceRow({ invoice }: { invoice: InvoiceView }) {
   const tz = useViewerTz();
   return (

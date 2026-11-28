@@ -16,8 +16,8 @@ interface CallBarProps {
 }
 
 /**
- * The minimised call (WhatsApp's green bar): a pill at the top, under the safe area and the screen's
- * one-line header, so it never covers the newest bubble or the composer; a tap goes back to the call.
+ * The minimised call (WhatsApp's green bar): a pill at the top, under the safe area and the
+ * screen's one-line header, so it never covers the newest bubble or the composer; a tap reopens it.
  */
 export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
   const { color } = useTheme();

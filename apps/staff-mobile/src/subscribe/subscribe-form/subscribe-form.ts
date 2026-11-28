@@ -35,7 +35,7 @@ export const INITIAL_FORM: SubscribeForm = {
   discount: '0',
 };
 
-/** The `pricing` of POST /subscriptions(/quote): `tier` xor `count`; no `country` = the guardian's. */
+/** The `pricing` of POST /subscriptions(/quote): `tier` xor `count`; no `country` = guardian's. */
 export function pricingOf(f: SubscribeForm): SubscriptionPricing {
   const common = {
     duration: PRICING_DURATIONS.find((d) => `${d}` === f.duration) ?? DEFAULT_DURATION,

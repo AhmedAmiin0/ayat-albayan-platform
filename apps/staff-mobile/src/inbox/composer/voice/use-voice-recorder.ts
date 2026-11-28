@@ -9,7 +9,7 @@ import { claimPlayback, releasePlayback, voiceOptions } from '@/core/lib/audio';
 
 const OWNER = 'voice-recorder';
 
-/** recording; asked = the system prompt was shown (the next press records, as WhatsApp); blocked = only Settings can allow it. */
+/** asked: the prompt was shown, the next press records; blocked: only Settings can allow it. */
 type StartResult = 'recording' | 'asked' | 'blocked' | 'failed';
 
 /** A stopped recording's file and length. */

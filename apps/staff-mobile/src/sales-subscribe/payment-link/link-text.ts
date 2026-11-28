@@ -29,7 +29,7 @@ interface Reference {
 
 type AmountCheck = { ok: true; amount: number } | { ok: false; error: string };
 
-/** The agreed amount: a positive number (≤ 2 decimals, Arabic digits too), not below the admin's minimum. */
+/** A positive amount (≤ 2 decimals, Arabic digits too), not below the admin's minimum. */
 export function checkAmount(text: string, ref: Reference): AmountCheck {
   const amount = parseAmount(text);
   if (amount === null) return { ok: false, error: t.salesMoney.error.amount };
@@ -39,7 +39,7 @@ export function checkAmount(text: string, ref: Reference): AmountCheck {
   return { ok: true, amount };
 }
 
-/** The chat text she sends herself: the localized message with the platform link (never sent for her). */
+/** The chat text she sends herself: localized message plus platform link (never sent for her). */
 export function linkMessage(link: PaymentLinkView): string {
   return fill(pl.message, {
     student: link.student.name,
@@ -63,7 +63,7 @@ export function linkErrorText(error: unknown, fallback: string = pl.error.generi
   return typeof currency === 'string' ? text.replace('{currency}', currency) : text;
 }
 
-/** Status grammar (docs/07 §6): paid is settled; open waits on the family; expired / cancelled stopped. */
+/** docs/07 §6: paid is settled; open waits on the family; expired / cancelled stopped. */
 export const linkStatusStyle: Record<PaymentLinkStatus, StatusStyle> = {
   open: { tone: 'neutral', glyph: 'hollow' },
   paid: { tone: 'ok', glyph: 'fill' },

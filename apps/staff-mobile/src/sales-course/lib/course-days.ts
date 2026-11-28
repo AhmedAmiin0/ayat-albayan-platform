@@ -23,7 +23,7 @@ export function daysText(days: readonly DayTime[], tz: string, viewer: ViewerClo
     .join(t.common.listSeparator);
 }
 
-/** The weekdays and times a change request asks for (its own groups, so a kept day keeps its time). */
+/** The days and times a change asks for (its own groups, so a kept day keeps its time). */
 export function requestDays(
   body: Pick<CourseChangeRequest, 'byday' | 'startTimeLocal' | 'dayTimes'>,
 ): DayTime[] {

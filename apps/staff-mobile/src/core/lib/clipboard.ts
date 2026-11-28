@@ -7,7 +7,7 @@ import { Clipboard, Share } from 'react-native';
  */
 export function copyToClipboard(text: string): boolean {
   try {
-    // ponytail: RN core Clipboard is deprecated; swap to expo-clipboard when APK 0.3.0 ships it (#272).
+    // ponytail: RN Clipboard is deprecated; swap to expo-clipboard when APK 0.3.0 ships it (#272).
     Clipboard.setString(text);
     return true;
   } catch {

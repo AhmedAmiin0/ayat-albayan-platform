@@ -55,7 +55,7 @@ async function open(gate: string, url: string) {
 
 const tabLabels = () => screen.getAllByRole('button').map((tab) => tab.props.accessibilityLabel);
 
-// The persisted cache (AsyncStorage) would carry one test's /auth/me into the next, as a sign-out would not.
+// The persisted cache would carry one test's /auth/me into the next, as a sign-out would not.
 beforeEach(async () => {
   jest.clearAllMocks();
   queryClient.clear();
@@ -107,7 +107,7 @@ test.each([['admin'], ['teacher'], ['out']])('%s never reaches the sales or assi
   expect(screen.queryByText('assistant-lessons')).toBeNull();
 });
 
-// Back from Stripe into the test app (pay-return): only those who make payment links reach /pay-done.
+// Back from Stripe into the test app: only those who make payment links reach /pay-done.
 test.each([['sales', true], ['admin', true], ['teacher', false], ['assistant', false], ['out', false]])('%s opening /pay-done: %s', async (gate, reached) => {
   mockMe.answer = { role: gate, permissions: gate === 'sales' ? SALES : [] };
   await open(gate, '/pay-done?token=t&r=done');

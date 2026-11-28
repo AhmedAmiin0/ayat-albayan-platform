@@ -4,8 +4,8 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { detail, message, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
-// Shared by the voice tests: a fake expo-audio recorder (no native module, nothing recorded) and a
-// chat with an open window. Each test file mocks with `jest.mock('expo-audio', () => require(kit).audioMock())`.
+// Voice tests' shared fake expo-audio recorder (no native module, nothing recorded) and open chat.
+// Use: `jest.mock('expo-audio', () => require(kit).audioMock())`.
 
 interface FakeRecorder {
   isRecording: boolean;

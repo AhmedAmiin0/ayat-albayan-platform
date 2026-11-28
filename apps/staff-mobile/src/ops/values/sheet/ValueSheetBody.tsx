@@ -54,7 +54,7 @@ function Actions({ sheet }: { sheet: ValueSheetState }) {
   );
 }
 
-/** The sheet's content (docs/26b §2 phone): title, description, editor, bounds, default, last change, actions. */
+/** docs/26b §2 phone: title, description, editor, bounds, default, last change, actions. */
 export function ValueSheetBody(props: ValueSheetBodyProps) {
   const { valueKey, saved, canWrite, meta, sheet } = props;
   const editable = canWrite && editorOf(valueKey) !== 'readonly';

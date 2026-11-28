@@ -1,4 +1,4 @@
-// Drag the quick-replies sheet down to close it (ReplySheetFrame): pure, so it is tested without a gesture.
+// Drag the quick-replies sheet down to close it; pure, so it is tested without a gesture.
 
 /** A drag starts once the finger moved this far down (pt), more down than sideways. */
 const START = 8;

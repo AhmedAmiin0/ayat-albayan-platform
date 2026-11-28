@@ -15,7 +15,7 @@ interface HistoryEntryCardProps {
 }
 
 /**
- * One subscription in the history: package and status, dates, lessons used / left, the status changes
+ * One subscription in the history: package and status, dates, lessons used / left, status changes
  * and the linked payments with date, kind and amount. The opened subscription is outlined in lapis.
  */
 export function HistoryEntryCard({ entry, current, brief = false }: HistoryEntryCardProps) {

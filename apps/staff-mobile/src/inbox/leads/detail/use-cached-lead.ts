@@ -9,7 +9,7 @@ import type { LeadView } from '@ab/shared';
 import type { Page } from '@ab/core';
 import { leadKeys } from '@/core/lib/keys';
 
-/** The lead with this id in any cached inbox list, freshest list first; undefined if none has it. */
+/** The lead with this id in any cached inbox list, freshest first; undefined if none has it. */
 export function findCachedLead(client: QueryClient, id: string): LeadView | undefined {
   const lists = client
     .getQueryCache()

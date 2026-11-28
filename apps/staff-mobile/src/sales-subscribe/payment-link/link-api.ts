@@ -21,7 +21,7 @@ export function useLinkQuote(studentId: string, pricing: SubscriptionPricing) {
   });
 }
 
-/** POST /sales/payment-links with ONE clientRequestId per open form (rule 8): a retry replays the same link. */
+/** POST /sales/payment-links, ONE clientRequestId per open form (rule 8): a retry replays it. */
 export function useCreateLink() {
   const client = useQueryClient();
   const [clientRequestId] = useState(requestId);
@@ -46,10 +46,10 @@ const byToken = (rows: PaymentLinkView[] | undefined, token: string) =>
 const WAIT_MS = 60_000;
 
 /**
- * Back from Stripe (/pay-done): the link of `token` among hers (GET /sales/payment-links: only the links she
- * made, all for an admin), from our API, never from Stripe. While `wait` and the link is still open (the
- * webhook may land after Stripe's redirect) it asks again every 2 s, for a minute at most; then `timedOut`
- * (the screen says so) until `retry` asks at once and waits another minute.
+ * Back from Stripe (/pay-done): the link of `token` among hers (GET /sales/payment-links: only
+ * the links she made, all for an admin), from our API, never from Stripe. While `wait` and the
+ * link is still open (the webhook may land after Stripe's redirect) it asks again every 2 s, for a
+ * minute at most; then `timedOut` (the screen says so) until `retry` asks at once and waits again.
  */
 export function useLinkByToken(token: string, wait: boolean) {
   const [timedOut, setTimedOut] = useState(false);

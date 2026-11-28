@@ -14,7 +14,7 @@ interface AssistantTabBodyProps {
   onNotice: (text: string) => void;
 }
 
-/** One salesperson's open tab: terms (edited with assistantpay.write, else read-only), commissions, statements. */
+/** Open tab: terms (read-only without assistantpay.write), commissions, statements. */
 export function AssistantTabBody({ tab, assistant, can, onNotice }: AssistantTabBodyProps) {
   if (tab === 'commissions')
     return <CommissionLedger assistantId={assistant.id} canWrite={can.write} onNotice={onNotice} />;

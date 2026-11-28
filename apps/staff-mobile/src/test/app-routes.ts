@@ -29,7 +29,7 @@ import StudentRoute from '../../app/(tabs)/students/[id]';
 import StudentsLayout from '../../app/(tabs)/students/_layout';
 import StudentsIndex from '../../app/(tabs)/students/index';
 
-/** The admin app's real route modules (the teacher tree stays out: the gate never opens it here). */
+/** The admin app's real route modules (no teacher tree: the gate never opens it here). */
 export const routes = {
   _layout: AppLayout,
   login: Login,
@@ -39,7 +39,7 @@ export const routes = {
   '(tabs)/inbox/_layout': InboxLayout,
   '(tabs)/inbox/index': InboxIndex,
   '(tabs)/inbox/[id]': LeadRoute,
-  // The chat and what it opens: a full screen above the tabs (same URLs, the group adds no segment).
+  // The chat and what it opens: full screens above the tabs (the group adds no URL segment).
   '(admin-chat)/_layout': ChatLayout,
   '(admin-chat)/inbox/thread/[phone]': ThreadRoute,
   '(admin-chat)/inbox/book': BookRoute,

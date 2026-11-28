@@ -53,15 +53,14 @@ export function SalesSubscribeForm({ phone, students, studentId, onPick, renew =
     if (renew) setForm(seedOf(id));
   };
   const [now] = useState(() => new Date());
-  // The academy's (Riyadh) day everywhere: the API checks the start against it, whatever the family's zone.
-  // academy day (docs/34 b): a subscription starts on an academy day.
+  // A subscription starts on an academy (Riyadh) day, whatever the family's zone (docs/34 b).
   const academyToday = localDate(now, RIYADH_TZ);
   const canSet = useHolds('subscriptions.set_start_date');
   const [start, setStart] = useState<StartDraft>({ day: academyToday, alreadyStarted: false, past: academyToday, usedBefore: 0 });
   const [tried, setTried] = useState(false);
   const base = useTreeBase();
   const pricing = pricingOf(form);
-  // A child not hers (sales.renew_any, docs/16 row 38): the chat's phone rides along; the payment link stays hers.
+  // A child not hers (sales.renew_any, docs/16 row 38) sends the chat's phone; the link stays hers.
   const bind = chatBinding(students, { studentId, phone });
   const quote = useSalesQuote(studentId, pricing, bind);
   const lessonsTotal = quoteLessons(quote.data);

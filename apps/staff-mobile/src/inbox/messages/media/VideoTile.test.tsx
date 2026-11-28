@@ -5,7 +5,7 @@ import { renderWithQuery } from '@/test/query';
 import { message, PHONE } from '@/inbox/shared/thread-fixtures';
 import { VideoTile, VIDEO_TILE } from './VideoTile';
 
-// The ring and the unloaded waveform are hidden from screen readers (their button speaks): still queried.
+// The ring and unloaded waveform are hidden from screen readers (their button speaks).
 const ALL = { includeHiddenElements: true };
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

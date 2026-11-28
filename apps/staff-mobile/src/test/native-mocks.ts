@@ -73,7 +73,7 @@ export function armCamera(uri = 'file:///cache/slip.jpg'): void {
 }
 
 /**
- * React Native core's `Clipboard` as a plain double: its export is a deprecated getter whose warnOnce
+ * React Native's `Clipboard` as a plain double: its export is a deprecated getter whose warnOnce
  * would print in every suite that copies, so the getter is replaced here (not by muting warnings).
  * Returns setString; make it throw for a missing or failing native module.
  */

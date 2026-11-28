@@ -8,8 +8,8 @@ import { byCurrency } from '@/sales-money/lib/money-text';
 const PARTS = ['salary', 'commissions', 'adjustments', 'total'] as const;
 
 /**
- * A month's totals, one block per currency (web CurrencyTotalsList): salary, commissions, adjustments
- * and the total; zero parts still show so the four lines always read the same way. Never summed across currencies.
+ * One block per currency (web CurrencyTotalsList), never summed across currencies; zero parts
+ * still show so the four lines always read the same way.
  */
 export function CurrencyTotalsBlock({
   totals,

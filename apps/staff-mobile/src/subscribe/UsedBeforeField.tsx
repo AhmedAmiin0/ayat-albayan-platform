@@ -9,7 +9,7 @@ import { Note } from '@/more';
 interface UsedBeforeFieldProps {
   /** Already clamped to the package (usedBefore). */
   value: number;
-  /** The picked package's lessons (the quote's): the stepper stops one lesson short of it (usedBeforeMax). */
+  /** The picked package's lessons (the quote's): the stepper stops one short (usedBeforeMax). */
   lessonsTotal: number;
   onChange: (value: number) => void;
 }
@@ -17,7 +17,7 @@ interface UsedBeforeFieldProps {
 /** The picked package's lessons: the quote's, 0 until it is known. */
 export const quoteLessons = (quote: { lessons: number } | undefined): number => quote?.lessons ?? 0;
 
-/** What is sent: the picked count, never past usedBeforeMax of the package now picked (it may have shrunk). */
+/** Never past usedBeforeMax of the package now picked (it may have shrunk). */
 export const usedBefore = (value: number, lessonsTotal: number): number =>
   Math.min(value, usedBeforeMax(lessonsTotal));
 
@@ -48,7 +48,7 @@ interface PastStartInput {
   /** The quote of the picked package (its lessons), while known. */
   quote: { lessons: number } | undefined;
   now: Date;
-  /** The form's default first day (the family's today): never «past» by itself, even west of Riyadh. */
+  /** The default first day (the family's today): never «past» by itself, even west of Riyadh. */
   today: string;
 }
 

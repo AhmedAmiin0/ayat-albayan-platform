@@ -4,7 +4,7 @@ import { renderWithQuery } from '@/test/query';
 import { MessageBubble } from '@/inbox/messages/components/MessageBubble/MessageBubble';
 import { delivered, inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 
-// Arabic (jest.setup: RTL), as WhatsApp in Arabic: ours at the inline-end (the left), theirs at the start (the right).
+// Arabic (jest.setup: RTL), as WhatsApp: ours at the inline-end (left), theirs at start (right).
 test('Arabic: ours at flex-end (the left), theirs at flex-start (the right), the sharp corner at the screen edge', async () => {
   await renderWithQuery(<MessageBubble message={delivered} phone={PHONE} />);
   const ours = StyleSheet.flatten(screen.getByTestId(`bubble-${delivered.id}`).props.style);

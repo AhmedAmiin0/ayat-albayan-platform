@@ -56,7 +56,7 @@ function SurahRow({ n, on, onPick }: { n: number; on: boolean; onPick: (surah: n
   );
 }
 
-/** The 114 surahs (or those matching the search): number, name, ayah count and juz; the picked one in mint. */
+/** The 114 surahs or the search's matches: number, name, ayahs and juz; the picked one in mint. */
 export function SurahList({ query, selected, onPick }: SurahListProps) {
   const { color } = useTheme();
   const found = searchSurahs(query);

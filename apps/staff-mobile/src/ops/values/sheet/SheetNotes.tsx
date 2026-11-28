@@ -44,7 +44,7 @@ function tagOf(key: SettingKey): string | undefined {
   return kind === 'typed' ? t.settingsValues.tags.deletes : t.settingsValues.tags.confirm;
 }
 
-/** The small lines under the editor: why read-only, bounds, default (+ reset), last change, tag, key. */
+/** Lines under the editor: why read-only, bounds, default (+ reset), last change, tag, key. */
 export function SheetNotes({
   valueKey,
   saved,

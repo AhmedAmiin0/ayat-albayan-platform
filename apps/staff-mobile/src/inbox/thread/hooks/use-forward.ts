@@ -6,7 +6,7 @@ import { requestId } from '@/core/lib/http/request-id';
 import { refreshInbox } from './inbox-sync';
 
 /**
- * POST /threads/forward: one message to 1–5 chats, each answered on its own (sent, or skipped and why).
+ * POST /threads/forward: one message to 1–5 chats, each answered alone (sent, or skipped and why).
  * Every chat's cache (the list and the threads, ours too) refetches after.
  */
 export function useForward() {
@@ -18,8 +18,8 @@ export function useForward() {
 }
 
 /**
- * The clientRequestId of a forward (rule 8): the same message to the same chats again (after an error)
- * reuses it, so a lost answer never sends twice; another pick gets a new one.
+ * The clientRequestId of a forward (rule 8): the same message to the same chats again (after an
+ * error) reuses it, so a lost answer never sends twice; another pick gets a new one.
  */
 export function useForwardId(): (messageId: string, targets: readonly string[]) => string {
   const last = useRef<{ key: string; id: string } | null>(null);

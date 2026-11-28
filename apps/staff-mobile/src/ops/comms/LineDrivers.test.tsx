@@ -4,7 +4,7 @@ import { t, ltr } from '@ab/mobile-kit';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { LineDrivers } from './LineDrivers';
 
-// docs/19: each line's driver on the phone, saved like the web (PUT /settings/integrations, audited there).
+// docs/19: each line's driver, saved like the web (PUT /settings/integrations, audited there).
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();

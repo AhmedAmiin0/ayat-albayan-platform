@@ -5,7 +5,7 @@ import { ApiError, t, locale, cityOf } from '@ab/mobile-kit';
 
 const L = t.meetingInvites;
 const errors: Record<string, string | undefined> = L.errors;
-/** Codes the meetings API shares with the room (a 410 on a cancel after the meeting ended), like web EXTRA. */
+/** Codes the meetings API shares with the room (410 on cancel after it ended), like web EXTRA. */
 const extra: Record<string, string | undefined> = {
   meeting_ended: t.classroom.error.meeting_ended,
 };
@@ -29,7 +29,6 @@ type Outcome = Pick<MeetingInviteResult, 'status' | 'channel'> & { error_code?: 
 /** The creator may not send WhatsApp: the invitation is a link to share. */
 const linkOnly = (r: Outcome): boolean => r.error_code === 'chat_not_allowed';
 
-/** One recipient's outcome in words: in-app, sent on WhatsApp, window closed, a link to share, failed… */
 export function resultLabel(r: Outcome): string {
   if (r.status === 'sent') return r.channel === 'in_app' ? L.results.inApp : L.results.sent;
   if (r.status === 'window_closed') return linkOnly(r) ? L.results.linkOnly : L.results.windowClosed;

@@ -3,7 +3,7 @@ import { t } from '@ab/mobile-kit';
 import type { ListParams } from '@ab/mobile-kit';
 import { ascii } from '@/ops/shared/ascii-digits';
 
-/** The server's filters of GET /activity that fit a phone: who (role), what (entity), when (days). */
+/** GET /activity's filters that fit a phone: who (role), what (entity), when (days). */
 export interface ActivityFilters {
   role: string;
   entity: string;

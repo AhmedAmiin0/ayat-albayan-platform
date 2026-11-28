@@ -7,6 +7,6 @@ export type { BookingKind, InvoiceInput, ThreadMediaItem } from '@ab/schedule';
 /** The invoice the wizard holds: its input, plus what the preview needs. */
 export type InvoiceDraft = InvoiceInput & {
   mime: string;
-  /** A local photo, or the chat file's signed thumbnail; null for a PDF or an unloaded thumbnail. */
+  /** A local photo or the chat file's signed thumbnail; null for a PDF or an unloaded one. */
   uri: string | null;
 };

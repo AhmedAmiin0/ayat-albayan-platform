@@ -1,7 +1,7 @@
 import { AFTER_FIELDS, DONE_FIELDS, REPORT_RUBRICS } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 
-// The form logic (valuesOf, submitProblem, shouldSave…) is tested in @ab/shared reports/form-values.
+// The form logic (valuesOf, submitProblem, shouldSave…) is tested in @ab/shared form-values.
 
 test('the form’s questions in the Google Form’s order, labels verbatim (as the web form)', () => {
   const labels = [

@@ -9,7 +9,7 @@ interface CurrencyPillsProps {
   error?: string | undefined;
 }
 
-/** The term's currency (web CurrencySelect): EGP first, then the site currencies, every option in view. */
+/** The term's currency (web CurrencySelect): EGP first, then the site currencies, all in view. */
 export function CurrencyPills({ label, value, onChange, error }: CurrencyPillsProps) {
   const items = TERM_CURRENCIES.map((c) => ({ value: c, label: `${currencyName(c)} (${c})` }));
   return (

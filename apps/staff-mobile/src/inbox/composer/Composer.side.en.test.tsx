@@ -6,7 +6,7 @@ import { leftToRight } from '@/inbox/shared/physical-row.helpers';
 import { detail, inbound, thread } from '@/inbox/shared/thread-fixtures';
 import { ThreadScreen } from '@/inbox/screens/ThreadScreen';
 
-// An English phone (LTR): the box on the left, the price tag and paperclip, the round button on the right.
+// An English phone (LTR): the box left, then the price tag and paperclip, the round button right.
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });

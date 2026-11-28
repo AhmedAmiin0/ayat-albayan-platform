@@ -38,7 +38,7 @@ export function TableFrame({ children }: { children: ReactNode }) {
   );
 }
 
-/** The selected group as a two-column table (docs/26b §2 phone): name and value, a tap opens the sheet. */
+/** The selected group as a two-column table (docs/26b §2 phone); a tap opens the sheet. */
 export function ValuesTable({ keys, settings, canWrite, onOpen }: ValuesTableProps) {
   const saving = useSavingKeys();
   return (

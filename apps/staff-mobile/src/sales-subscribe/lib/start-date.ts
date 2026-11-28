@@ -18,7 +18,7 @@ export interface StartDraft {
 export const usedBeforeOf = (draft: StartDraft, lessonsTotal: number): number =>
   draft.alreadyStarted ? usedBefore(draft.usedBefore, lessonsTotal) : 0;
 
-/** What POST /sales/subscriptions gets: nothing, a day, or a past day with alreadyStarted (and the used lessons). */
+/** The start sent: none, a day, or a past day with alreadyStarted and the used lessons. */
 interface StartBody {
   startsOn?: string;
   alreadyStarted?: true;

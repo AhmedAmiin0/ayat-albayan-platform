@@ -48,7 +48,7 @@ export function AmountField({
             fontFamily: type.ui[600],
             fontSize: type.size.base,
             fontVariant: ['tabular-nums'],
-            // Digits read LTR in both languages: Yoga direction, so the caret and textAlign follow it.
+            // Digits read LTR in both languages; the caret and textAlign follow Yoga direction.
             direction: 'ltr',
             textAlign: 'left',
           }}

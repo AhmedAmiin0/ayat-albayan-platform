@@ -9,12 +9,12 @@ export interface CopyRequest {
   text: string;
 }
 
-/** Copies by showing the text in a selectable sheet (CopySheet): the OS selection copies all or part. */
+/** Shows the text in a selectable sheet (CopySheet): the OS selection copies all or part. */
 export function copyText(req: CopyRequest, show: (req: CopyRequest) => void): void {
   show(req);
 }
 
-/** Hands the signed URL to the phone's browser, which saves or opens it (Content-Disposition: its name). */
+/** The phone's browser saves or opens the signed URL (Content-Disposition gives its name). */
 async function saveFile(url: string): Promise<void> {
   await Linking.openURL(url);
 }

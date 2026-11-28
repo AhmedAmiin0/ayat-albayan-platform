@@ -13,8 +13,8 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
 
-// English (LTR): the same row and pill, English names; the pill sits at the bubble's inline-end for ours
-// (the right) and at the start for theirs (the left), mirrored by the language as the bubbles are.
+// English (LTR): English names; the pill sits at the bubble's inline-end for ours (the right)
+// and at the start for theirs (the left), mirrored by the language as the bubbles are.
 const now = new Date().toISOString();
 const open = { ...thread, reactable: true, last_inbound_at: now };
 const reacted = { theirs: '😂', ours: '😂', ours_by: 'Heba' };

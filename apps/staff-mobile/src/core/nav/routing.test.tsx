@@ -53,7 +53,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-/** RNTL 14 renders asynchronously, so renderRouter hands back the pending render with getters on it. */
+/** RNTL 14 renders asynchronously: renderRouter returns the pending render with getters on it. */
 async function open(initialUrl: string) {
   const pending = renderRouter(app, { initialUrl });
   await pending;

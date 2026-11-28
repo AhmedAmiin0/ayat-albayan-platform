@@ -6,7 +6,7 @@ import { breakdownLines, monthLabel, payoutWhen } from '@/teacher/lib/payout-tex
 import { amountText } from '@/finance/shared/format';
 import { dueOf } from './payout-actions';
 
-/** One statement: teacher, month, status, lessons × rate per length, what was already paid, when. */
+/** One statement: teacher, month, status, lessons × rate per length, already paid, when. */
 export function PayoutFacts({ payout }: { payout: PayoutView }) {
   const { color } = useTheme();
   const when = payoutWhen(payout);

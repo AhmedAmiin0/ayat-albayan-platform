@@ -3,7 +3,7 @@ import { ApiError, t } from '@ab/mobile-kit';
 import { LOAD_MS } from './VoicePlayback';
 import { pathOf, players, resetPlayers, showVoice, signed, statusIs, tapPlay, voiceNote } from './voice-test-kit';
 
-// The ring and the unloaded waveform are hidden from screen readers (their button speaks): still queried.
+// The ring and unloaded waveform are hidden from screen readers (their button speaks).
 const ALL = { includeHiddenElements: true };
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({

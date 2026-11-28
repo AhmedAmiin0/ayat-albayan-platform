@@ -13,7 +13,7 @@ export function categoryLabel(
   return own ?? seeded[key] ?? key;
 }
 
-/** Categories offered for a new expense: the active ones; the seeded words while the table has not loaded. */
+/** A new expense offers the active categories; the seeded words until the table loads. */
 export function activeCategories(
   categories: readonly ExpenseCategoryView[] | undefined,
 ): ExpenseCategoryView[] {

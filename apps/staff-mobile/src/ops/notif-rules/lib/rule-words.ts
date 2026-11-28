@@ -7,7 +7,7 @@ import { counted } from '@ab/core';
 import { ApiError, t } from '@ab/mobile-kit';
 
 // The catalogue's switches on the phone (docs/23b §4, docs/26b §6b m7), in words. Every v2 field is
-// guarded: an APK on an older API (v1, no `rule`) or a newer API (an unknown blocker) never crashes.
+// guarded: an APK on an older API (v1, no `rule`) or newer API (unknown blocker) never crashes.
 
 const r = () => t.mobileNotificationRules;
 
@@ -32,7 +32,7 @@ export function controlOf(entry: NotificationEntryView, canManage: boolean): Row
   return rule.editable && !entry.manual ? { kind: 'switch', enabled: rule.enabled } : { kind: 'none' };
 }
 
-/** What a switch asks first: family ON names whom it reaches; essential OFF needs the typed word. */
+/** A switch's first ask: family ON names whom it reaches; essential OFF needs the typed word. */
 type ToggleAsk = 'plain' | 'family' | 'typed';
 
 export function askOf(entry: Pick<NotificationEntryView, 'audience' | 'essential'>, next: boolean): ToggleAsk {
@@ -67,7 +67,7 @@ export function nameOf(key: string): string | null {
   return Object.hasOwn(entries, key) ? (entries[key]?.name ?? null) : null;
 }
 
-/** PATCH /admin/notifications/:key errors in words (403, 428, 422 locked / not_editable / invalid). */
+/** PATCH /admin/notifications/:key errors in words (403, 428, 422 locked/not_editable/invalid). */
 export function ruleErrorText(error: unknown): string {
   const e = r().errors;
   if (!(error instanceof ApiError)) return e.failed;

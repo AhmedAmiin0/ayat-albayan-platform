@@ -2,10 +2,10 @@ import { GRANTABLE_PERMISSIONS, selfPermissionsOf, type UserRole } from '@ab/cat
 import type { QueryClient } from '@tanstack/react-query';
 import { pathKey } from '@ab/mobile-kit';
 
-// Tests that are not about permissions sign in as staff holding every key: since docs/27 E2 (owner D6)
-// nothing is granted until /auth/me has answered, where it used to hide nothing.
+// Tests not about permissions sign in as staff holding every key: since docs/27 E2 (D6)
+// nothing is granted until /auth/me has answered.
 
-/** /auth/me of a signed-in staff member holding every grantable key plus its own role's self.* scope. */
+/** /auth/me of staff holding every grantable key plus its own role's self.* scope. */
 export function fullAccessMe(role: UserRole = 'admin') {
   return { role, permissions: [...GRANTABLE_PERMISSIONS, ...selfPermissionsOf(role)] };
 }

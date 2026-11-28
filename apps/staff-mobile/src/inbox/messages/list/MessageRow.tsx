@@ -25,9 +25,9 @@ interface MessageRowProps {
 }
 
 /**
- * One cell of the thread. Memo on primitives and the cached message / call objects (TanStack keeps an
- * unchanged message the same object), so a new message, a tick or a jump redraws only the rows it changes.
- * Each cell is flipped back upright by the inverted list, so its top is the visual top: the older neighbour.
+ * One cell of the thread. Memo on primitives and the cached message / call objects (TanStack keeps
+ * an unchanged message the same object), so a new message, tick or jump redraws only changed rows.
+ * The inverted list flips each cell back upright, so its top is the visual top: the older one.
  */
 export const MessageRow = memo(function MessageRow(props: MessageRowProps) {
   const { id, message, call, gap, day, phone, onJump, highlight, onCallBack, correctedBy } = props;

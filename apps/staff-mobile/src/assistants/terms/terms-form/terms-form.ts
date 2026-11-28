@@ -3,8 +3,8 @@ import { CURRENCY_ISOS, type AssistantTermsView } from '@ab/money';
 import { addCalendarDays, RIYADH_TZ, shiftCalendarMonths } from '@ab/time';
 import { localDate } from '@/today/lib/timeline';
 
-// The web's terms-form.ts on the phone: the state, schema and start-day rule live in @ab/client-core (docs/27 E5);
-// this module keeps the phone's names, its default "today" and the phone-only helpers.
+// The web's terms-form.ts on the phone: state, schema and start-day rule live in @ab/client-core
+// (docs/27 E5); this module keeps the phone's names, its default "today" and phone-only helpers.
 export {
   TERMS_DEFAULT_CURRENCY as DEFAULT_CURRENCY,
   termStartMins as startMins,
@@ -28,7 +28,7 @@ export function formOf(terms: AssistantTermsView | null, today = todayDay()): Te
   return termsFormOf(terms, today);
 }
 
-/** `2026-10-31` + 1 → `2026-11-01`; months clamp to the last day (`2026-01-31` + 1 month → `2026-02-28`). */
+/** Months clamp to the last day: `2026-01-31` + 1 month → `2026-02-28`. */
 export function shiftDay(day: string, step: { days?: number; months?: number }): string {
   return addCalendarDays(shiftCalendarMonths(day, step.months ?? 0), step.days ?? 0);
 }

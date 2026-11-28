@@ -10,7 +10,7 @@ interface CardProps {
   children: ReactNode;
 }
 
-/** One block of the v2 form (docs/design/report-form): a raised rounded card, its title, its content. */
+/** One v2 form block (docs/design/report-form): a raised rounded card, title and content. */
 export function Card({ title, aside, optional, tone = 'raised', children }: CardProps) {
   const { color } = useTheme();
   const wash = tone === 'wash';

@@ -4,7 +4,7 @@ import { Note } from '@/core/ui/feedback/Note';
 import { NumberRow } from '@/ops/numbers/NumberRow';
 import { useNumbers } from '@/ops/numbers/use-numbers';
 
-/** How many numbers the overview shows in full; the rest are counted (the screen stays one phone high). */
+/** Numbers shown in full; the rest are counted so the overview stays one phone high. */
 const SHOWN_NUMBERS = 1;
 
 const h = () => t.communicationsHub;

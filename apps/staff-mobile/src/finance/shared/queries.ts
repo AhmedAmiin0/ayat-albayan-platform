@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch, apiSend, listKey, pathKey } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 
-// Admin finance reads. Keys are the API path's segments, so invalidating ['payouts'] reaches a month.
+// Keys are the API path's segments, so invalidating ['payouts'] reaches a month.
 
 const payouts = payoutCalls({ apiFetch, apiSend });
 
@@ -45,7 +45,7 @@ export const useInvoices = () => usePagedList<InvoiceView>({ path: '/invoices/re
 
 export const useFinanceSummary = (range: { from: string; to: string }) =>
   useQuery({
-    // 'finance': its own cache entry (other staleTime and projection than the dashboard's useSummary).
+    // Own cache entry: other staleTime and projection than the dashboard's useSummary.
     queryKey: [...pathKey('/dashboard/summary'), 'finance', range],
     queryFn: () =>
       apiFetch<DashboardResponse>(`/dashboard/summary?from=${range.from}&to=${range.to}`),

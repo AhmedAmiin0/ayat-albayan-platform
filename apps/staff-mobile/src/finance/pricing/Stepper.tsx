@@ -43,7 +43,7 @@ function StepButton({ glyph, name, hint, disabled, onPress }: StepButtonProps) {
   );
 }
 
-/** − n + with 44pt targets (docs/07 §4), clamped to [min, max] (or wrapping). Western digits, LTR island. */
+/** 44pt targets (docs/07 §4); clamps to [min, max] or wraps. Western digits, LTR island. */
 export function Stepper({ label, value, min, max, onChange, ...o }: StepperProps) {
   const { color } = useTheme();
   const range = { min, max, step: o.step ?? 1, wrap: o.wrap === true };

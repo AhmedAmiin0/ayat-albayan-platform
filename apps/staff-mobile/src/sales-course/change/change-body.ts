@@ -15,7 +15,7 @@ interface ChangeInput {
   prefilled: readonly PrefilledPick[];
 }
 
-/** POST /sales/booking/course/change (and …/check): the change point is the earliest pick; null without one. */
+/** POST /sales/booking/course/change(/check): changes from the earliest pick; null if none. */
 export function changeRequest({
   subscriptionId,
   picks,

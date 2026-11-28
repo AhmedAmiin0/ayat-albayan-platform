@@ -6,7 +6,7 @@ import { assistantRouteFor, salesRouteFor } from './notification-route.roles';
 const PHONE = '+966552147730';
 
 /**
- * Does an expo-router file serve this href (`x.tsx`, `x/index.tsx`, or a `[phone].tsx` last segment),
+ * Does an expo-router file serve this href (`x.tsx`, `x/index.tsx`, or a `[phone].tsx` last part),
  * in the tree or in its full-screen chat group (`app/(sales-chat)/sales/…`, same URL)? A student
  * chat's id is its `channel/[id].tsx`.
  */

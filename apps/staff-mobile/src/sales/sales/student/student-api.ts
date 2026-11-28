@@ -11,7 +11,7 @@ import { apiFetch, pathKey } from '@ab/mobile-kit';
 import { useSalesCourse } from '@/sales-course';
 import { openSigned } from '@/core/lib/http/open-signed';
 
-/** GET /sales/students/:id — one of my students: subscriptions, attendance and sent reports (404 otherwise). */
+/** GET /sales/students/:id: subscriptions, attendance and sent reports; 404 if not mine. */
 export const useSalesStudent = (id: string) =>
   useQuery({
     queryKey: pathKey(`/sales/students/${id}`),

@@ -11,7 +11,7 @@ const press = async (role: 'button' | 'radio', name: string) => fireEvent.press(
 
 beforeEach(resetApp);
 
-/** The chats API as a salesperson with self.sales_money; her student of the family pays on the transfer. */
+/** Chats API as a salesperson with self.sales_money; her student of the family pays on transfer. */
 function salesMoneyBackend() {
   const { backend } = inboxBackend();
   let student: SalesFamilyStudent = kid();

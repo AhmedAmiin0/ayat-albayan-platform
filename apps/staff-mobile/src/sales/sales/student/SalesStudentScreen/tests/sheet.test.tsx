@@ -18,7 +18,7 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useLocalSearchParams: () => ({ id: 'st1' }) }));
 jest.mock('@ab/mobile-kit/lib/clock/device-clock', () => ({ deviceUses24: () => true }));
 
-// «Now» Thursday 1 Oct 13:00 Riyadh; the student's lessons Friday 2 Oct and Sunday 4 Oct, 18:00 Riyadh.
+// «Now» Thu 1 Oct 13:00 Riyadh; the student's lessons Fri 2 Oct and Sun 4 Oct, 18:00 Riyadh.
 const FRI = upcoming('u1', '2026-10-02T15:00:00.000Z');
 const SUN = upcoming('u2', '2026-10-04T15:00:00.000Z');
 const a = t.sales.lessonActions;

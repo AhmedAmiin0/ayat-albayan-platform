@@ -24,7 +24,7 @@ function subscriptionProgress(sub: SubscriptionView, threshold?: number) {
   });
 }
 
-/** The status word; a status newer than this bundle (an old OTA) shows its code instead of nothing. */
+/** A status newer than this bundle (an old OTA) shows its code instead of nothing. */
 const statusLabel = (status: SubscriptionView['status']): string => t.enums.subscriptionStatus[status] ?? status;
 
 /** docs/07 §6: full width, never shrink-wrapped in the tag line. */

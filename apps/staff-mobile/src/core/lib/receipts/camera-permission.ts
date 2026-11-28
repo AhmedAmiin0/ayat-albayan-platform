@@ -37,9 +37,9 @@ function explainDenied(): false {
 }
 
 /**
- * true when the camera may open (R-MOB-02 receipt photo). Already granted: no question. Never asked:
+ * True when the camera may open (R-MOB-02 receipt photo). Granted: no question. Never asked:
  * the Arabic rationale, then the system prompt. Refused for good: say where to turn it back on.
- * The gallery needs none of this (the system photo picker asks nothing). The avatar passes its own copy.
+ * The gallery needs none of this (the system picker asks nothing). The avatar passes its own copy.
  */
 export async function ensureCameraPermission(copy: CameraCopy = RECEIPT_COPY): Promise<boolean> {
   const current = await ImagePicker.getCameraPermissionsAsync();

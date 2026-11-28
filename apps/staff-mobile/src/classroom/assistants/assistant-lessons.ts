@@ -2,7 +2,7 @@ import { LESSON_STATUSES } from '@ab/catalog';
 import { isOpenLesson, type AssistantLessonView } from '@ab/schedule';
 import type { JoinableLesson } from '@/classroom/links/JoinClassroomButton';
 
-/** The entry data of an assistant's session, or null when it is cancelled/finished (or an unknown status from a newer API). */
+/** An assistant's session entry, or null when cancelled/finished or of an unknown newer status. */
 export function joinableOf(l: AssistantLessonView): JoinableLesson | null {
   const status = LESSON_STATUSES.find((s) => s === l.status);
   if (!status || !isOpenLesson(status)) return null;

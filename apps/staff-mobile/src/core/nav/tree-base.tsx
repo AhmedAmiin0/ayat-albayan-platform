@@ -32,7 +32,7 @@ export const studentDetailsHref = (base: TreeBase, id: string): Href =>
 
 const InChatContext = createContext(false);
 
-/** ChatStack's: the screens below run inside a chat group (app/(admin-chat), (sales-chat), (teacher-chat)). */
+/** Set by ChatStack: the screens below run in a chat group ((admin-chat), (sales-chat), …). */
 export function InChatProvider({ children }: { children: ReactNode }) {
   return <InChatContext.Provider value>{children}</InChatContext.Provider>;
 }
@@ -49,7 +49,7 @@ const asIs = (href: Href): Href => href;
 /** Whether the screen runs inside a chat group (its stack already holds the chat). */
 export const useInChat = (): boolean => useContext(InChatContext);
 
-/** The student links of a shared screen: the tab's routes in the tabs, the chat group's copies in a chat. */
+/** Student links: the tab's routes in the tabs, the chat group's copies in a chat. */
 export function useStudentHref(): (href: Href) => Href {
   return useContext(InChatContext) ? chatStudentHref : asIs;
 }

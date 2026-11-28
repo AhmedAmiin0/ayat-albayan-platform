@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@ab/mobile-kit';
 import { invoiceKeys } from '@/core/lib/keys';
 
-/** GET /invoices?studentId=: every booking invoice of the student, newest first (a plain list, no paging). */
+/** GET /invoices?studentId=: the student's booking invoices, newest first, unpaged. */
 export const useStudentInvoices = (studentId: string, enabled: boolean) =>
   useQuery({
     queryKey: invoiceKeys.ofStudent(studentId),

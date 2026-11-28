@@ -14,7 +14,7 @@ interface RescheduleSlotsParams {
   stepMin?: number;
   /** The lesson being edited is not a clash with itself. */
   excludeLessonId?: string;
-  /** The slots route: the admin's GET /booking/slots, or sales' scoped GET /sales/booking/slots (her students only). */
+  /** Admin GET /booking/slots, or sales' GET /sales/booking/slots (her students only). */
   path?: string;
   /** Sales: the lesson being moved, so its students may be any family's (docs/16 row 37). */
   lessonId?: string;

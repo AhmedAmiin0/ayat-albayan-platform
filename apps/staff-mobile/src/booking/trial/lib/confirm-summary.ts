@@ -34,7 +34,7 @@ export function summary(d: TrialDraft, viewer: ViewerClock): SummaryRow[] {
   return rows;
 }
 
-/** A makeup's review: the type, the student, the missed lesson, the teacher, the new time, the invoice. */
+/** A makeup's review: type, student, missed lesson, teacher, new time, invoice. */
 export function makeupSummary(d: MakeupDraft, viewer: ViewerClock): SummaryRow[] {
   const { source } = d;
   const rows: SummaryRow[] = [

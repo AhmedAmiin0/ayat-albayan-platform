@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-/** As the bubble's Pressable (delayLongPress={350}): RN's Text has no delayLongPress, its own is 500 ms. */
+/** As the bubble's delayLongPress: RN's Text has no delayLongPress and its own is 500 ms. */
 export const HOLD_MS = 350;
 
 interface HoldPress {
@@ -10,9 +10,9 @@ interface HoldPress {
 }
 
 /**
- * A tap or a hold on a span of text: a finger held HOLD_MS runs `onHold` and the release that follows
- * is not a tap; a release or a scroll (press out) before then cancels the hold. Without `onHold` it is
- * a plain tap.
+ * A tap or a hold on a span of text: a finger held HOLD_MS runs `onHold` and the release that
+ * follows is not a tap; a release or a scroll (press out) before then cancels the hold. Without
+ * `onHold` it is a plain tap.
  */
 export function useHoldPress(p: {
   onPress: () => void;

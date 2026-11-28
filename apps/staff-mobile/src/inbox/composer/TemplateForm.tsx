@@ -29,7 +29,7 @@ const NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 interface TemplateFormProps {
   template: TemplateView;
   lessons: readonly ThreadLesson[];
-  /** The thread's display name (guardian ?? lead's WhatsApp name ?? teacher): contact_name starts as it. */
+  /** Thread display name (guardian ?? lead's WhatsApp name ?? teacher): contact_name's default. */
   contactName?: string | null;
   onBack: () => void;
   onSend: (out: Outgoing) => void;

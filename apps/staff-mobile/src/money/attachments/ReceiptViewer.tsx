@@ -5,7 +5,7 @@ import { t, shape, type, useTheme, AppText, Button } from '@ab/mobile-kit';
 import { useReceiptUrl } from '@/money/shared/queries';
 import { isPdfReceipt } from './receipt-file';
 
-/** The opened receipt: a spinner, the failure, a PDF button, or the image whole (contain, nothing cropped). */
+/** A spinner, the failure, a PDF button, or the whole image (contain, nothing cropped). */
 function ReceiptBody({ payment, open }: { payment: PaymentView; open: boolean }) {
   const { color } = useTheme();
   const file = useReceiptUrl(payment.id, open);

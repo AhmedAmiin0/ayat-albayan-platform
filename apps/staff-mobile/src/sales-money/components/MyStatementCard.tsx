@@ -9,7 +9,7 @@ import { MoneyCard } from './MoneyCard';
 import { statementMonth, statementWhen } from '@/sales-money/lib/money-text';
 import { useViewerTz } from '@/core/lib/clock';
 
-/** One month's statement of mine (web StatementCard): status, when, the totals per currency, its lines. */
+/** One month's statement of mine (web StatementCard): status, when, totals, its lines. */
 export function MyStatementCard({ statement: s }: { statement: AssistantStatementView }) {
   const tz = useViewerTz();
   const when = statementWhen(s, tz);

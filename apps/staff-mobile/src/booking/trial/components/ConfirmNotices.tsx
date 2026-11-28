@@ -14,7 +14,7 @@ interface FailureNoticeProps {
   onChangeInvoice: () => void;
 }
 
-/** What went wrong, with its way out: another slot or invoice, the child on file, or the message. */
+/** What went wrong and the way out: another slot or invoice, the child on file, or the message. */
 export function FailureNotice({ failure, busy, onSubmit, ...go }: FailureNoticeProps) {
   if (failure.kind === 'conflict') {
     return <ConflictNotice lines={failure.lines} onChangeSlot={go.onChangeSlot} />;
@@ -38,7 +38,7 @@ export function FailureNotice({ failure, busy, onSubmit, ...go }: FailureNoticeP
   );
 }
 
-/** The package/days mismatch as a hamish line (double gold-soft rule), in act: the admin's to fix. */
+/** The package/days mismatch as a hamish line (double gold-soft rule): the admin's to fix. */
 export function PackageDaysNote({ pkg, days }: { pkg: TrialDraft['pkg']; days: number }) {
   const { color } = useTheme();
   const note = packageDaysNote(pkg, days);

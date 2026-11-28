@@ -7,7 +7,7 @@ import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { useSendMessage } from '@/inbox/thread/hooks/use-thread';
 import { chatSendError } from '@/inbox/thread/send/send-error';
 
-/** What goes to the family: always the Arabic text, whatever the UI language (parent-facing output). */
+/** Always the Arabic text, whatever the UI language: it goes to the family. */
 const RESEND_TEXT = ar.inbox.resend.text;
 
 /** One clientRequestId per bubble, so double taps and retries send once. */
@@ -15,7 +15,7 @@ export function ResendSheet({ phone, id, onClose }: { phone: string; id: string;
   const { color } = useTheme();
   const { say } = useChatActions();
   const send = useSendMessage(phone);
-  // While it goes, the sheet stays: closing then could lose the answer of a send already on its way.
+  // The sheet stays while sending: closing could lose the answer of a send already on its way.
   const close = () => (send.isPending ? undefined : onClose());
   const confirm = () => {
     if (send.isPending || send.isSuccess) return;

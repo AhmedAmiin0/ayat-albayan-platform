@@ -12,7 +12,7 @@ interface DayStateProps {
   onRetry: () => void;
 }
 
-/** Today's empty and error states (docs/29 §6: as before), or nothing while there is a day to show. */
+/** Today's empty and error states (docs/29 §6), or nothing while there is a day to show. */
 export function DayState({ pending, failed, empty, filteredOut, onRetry }: DayStateProps) {
   if (pending) return null;
   if (failed) return <ErrorState onRetry={onRetry} />;

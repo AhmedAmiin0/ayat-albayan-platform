@@ -1,7 +1,7 @@
 import type { MessageView, ThreadPdfPage } from '@ab/shared';
 import { message } from '@/inbox/shared/thread-fixtures';
 
-// The photo and PDF tests' shared rows and answers (PhotoPreview, PhotoViewer, PdfPreview, PdfViewer).
+// Shared rows and answers of the PhotoPreview, PhotoViewer, PdfPreview and PdfViewer tests.
 export const PATH = '/threads/%2B966552147730/messages/p1/file';
 export const SIGNED = 'https://storage.test/wa-media/p1.jpg?token=x';
 export const signed = (url = SIGNED) => ({ url, mime: 'image/jpeg', expires_at: new Date(Date.now() + 60 * 60_000).toISOString() });

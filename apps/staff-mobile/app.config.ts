@@ -1,6 +1,6 @@
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
-/** The eas.json `stripe-test` profile's APP_VARIANT: a separate app installable beside the normal one. */
+/** The eas.json `stripe-test` APP_VARIANT: a separate app installable beside the normal one. */
 const STRIPE_TEST = 'stripetest';
 
 type Plugins = NonNullable<ExpoConfig['plugins']>;
@@ -11,7 +11,7 @@ const noShareTarget = (plugins: Plugins = []): Plugins =>
 
 /**
  * The Stripe test variant (docs/30): its own package / bundle id and name, and NO
- * android.googleServicesFile: Firebase knows only the normal package, so the test app has no FCM push
+ * android.googleServicesFile: Firebase knows only the normal package, so no FCM push in it
  * (registerPush fails soft: no token, no crash). Everything else is the normal app's config.
  */
 function stripeTestVariant(config: ExpoConfig): ExpoConfig {
@@ -33,7 +33,7 @@ function stripeTestVariant(config: ExpoConfig): ExpoConfig {
  * app.json stays the source of truth; this only adds the Firebase config the Android build needs
  * for push (FCM). The file is not in git: EAS passes it as the GOOGLE_SERVICES_JSON file secret
  * (environments preview/production). Locally, a google-services.json next to this file works too.
- * APP_VARIANT=stripetest (eas.json `stripe-test` only) renames the app, suffixes its ids and drops the
+ * APP_VARIANT=stripetest (eas.json `stripe-test`) renames the app, suffixes its ids, drops the
  * Firebase file (no push in the test app). With APP_VARIANT unset the config is exactly as before.
  */
 export default ({ config }: ConfigContext): ExpoConfig => {

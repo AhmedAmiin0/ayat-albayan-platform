@@ -66,7 +66,7 @@ export const work: DashboardWork = {
   },
 };
 
-/** The registry's defaults (so a new setting never leaves this stale) plus the values the tests read. */
+/** The registry's defaults (so a new setting never goes stale here) plus the values tests read. */
 export const settings: AcademySettings = {
   ...SETTING_DEFAULTS,
   late_cancel_hours: null,

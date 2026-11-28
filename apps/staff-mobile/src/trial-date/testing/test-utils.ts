@@ -22,7 +22,7 @@ export function fakeTrialSend(result: unknown, conflicts: unknown[] = []) {
     path.endsWith('/trial-date/check') ? Promise.resolve({ conflicts }) : Promise.resolve(result);
 }
 
-/** Keep the last trial's teacher, then the free 17:00 slot: on the review, once its check answered. */
+/** Keep the last trial's teacher, pick the free 17:00 slot, and wait for the review's check. */
 export async function walkToReview(time = '17:00') {
   await fireEvent.press(await screen.findByRole('button', { name: t.booking.mobile.keepTeacher.replace('{teacher}', maryam.display_name_ar) }));
   await fireEvent.press(await screen.findByRole('button', { name: new RegExp(`^${time}`) }));

@@ -19,7 +19,7 @@ interface StatementItemProps {
   onNotice: (text: string) => void;
 }
 
-/** One salesperson's month (web statement-columns): name and month, status and when, totals per currency, its actions. */
+/** A salesperson's month (web statement-columns): status and when, totals per currency, actions. */
 export function StatementItem({ statement: s, can, onPay, onNotice }: StatementItemProps) {
   const tz = useViewerTz();
   const [linesOpen, setLinesOpen] = useState(false);

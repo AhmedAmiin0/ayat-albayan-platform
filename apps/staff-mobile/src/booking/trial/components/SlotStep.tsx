@@ -107,7 +107,7 @@ export function SlotStep(props: SlotStepProps) {
 
 type ExcludeParams = { studentIds?: string; excludeCourse?: string; excludeLessonId?: string };
 
-/** GET /booking/slots `studentIds` + `excludeCourse` when a course's own lessons move; `excludeLessonId` a trial. */
+/** `studentIds` + `excludeCourse` when a course's own lessons move; `excludeLessonId` a trial. */
 export function excludeParams(exclude: SlotStepProps['exclude'], excludeLessonId?: string): ExcludeParams {
   const lesson = excludeLessonId ? { excludeLessonId } : {};
   return exclude ? { studentIds: exclude.studentIds.join(','), excludeCourse: exclude.course, ...lesson } : lesson;

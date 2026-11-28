@@ -12,8 +12,8 @@ import { t, locale, ltr, money } from '@ab/mobile-kit';
 import type { SalesSubscriptionView } from '@ab/shared';
 
 // Row lines of the salesperson's pages (docs/16), same words as the web. Western digits; dates and
-// codes are LTR islands. Never a price or link: the API does not send them (the guardian's phone, owner
-// 2026-10-27, is its own LTR element, PhoneText).
+// codes are LTR islands. No price or link: the API does not send them (the guardian's phone is
+// its own LTR element, PhoneText).
 
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const PACKAGE: Record<string, string | undefined> = t.enums.packageSize;
@@ -47,7 +47,7 @@ export function startsLine(sub: SalesSubscriptionView): string | undefined {
   return sub.starts_on ? t.sales.subscriptions.startsOn.replace('{date}', ltr(sub.starts_on)) : undefined;
 }
 
-/** The teacher's name in the app's language (the English one when set and the app runs in English). */
+/** The English name when set and the app runs in English, else the Arabic one. */
 export function teacherLabel(teacher: SalesTeacherView): string {
   return localizedName({ ar: teacher.name, en: teacher.name_en }, locale);
 }

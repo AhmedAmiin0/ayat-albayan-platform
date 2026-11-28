@@ -16,7 +16,7 @@ export interface CallSessionApi extends Pick<CallDerived, 'row' | 'phase' | 'inc
 
 const NO_ICE: CallConfigView['iceServers'] = [];
 
-/** Back from the background during a call: no foreground service (docs/28 §9), so the mic may have been off. */
+/** Back in front mid-call: no foreground service (docs/28 §9), so the mic may have been off. */
 function useBackgroundNote(input: { store: CallStore; foreground: boolean; live: boolean }): void {
   const { store, foreground, live } = input;
   const was = useRef(foreground);
@@ -26,7 +26,7 @@ function useBackgroundNote(input: { store: CallStore; foreground: boolean; live:
   }, [store, foreground, live]);
 }
 
-/** The device's call and the incoming rings (docs/28 §3), polled while calls are on and the app is in front. */
+/** The device's call and incoming rings (docs/28 §3), polled while calls are on and in front. */
 export function useCallSession(input: { config: CallConfigView | undefined; rtc: () => Promise<RtcDeps | null>; foreground: boolean }): CallSessionApi {
   const client = useQueryClient();
   const [store] = useState(() => new CallStore(mobileCalls, () => void client.invalidateQueries({ queryKey: CALLS_KEY })));
@@ -43,7 +43,7 @@ export function useCallSession(input: { config: CallConfigView | undefined; rtc:
   useEffect(() => () => store.dispose(), [store]);
   useBackgroundNote({ store, foreground: input.foreground, live });
 
-  // WhatsApp's answer, the call gone from the server, the 45 s timer, calls switched off (CallStore.follow).
+  // WhatsApp's answer, the call gone on the server, the 45 s timer, calls off (CallStore.follow).
   const { answer, gone, deadline, off } = d;
   useEffect(() => store.follow({ answer, gone, deadline, off }), [store, answer, gone, deadline, off]);
 

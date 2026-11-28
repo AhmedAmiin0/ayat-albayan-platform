@@ -3,7 +3,7 @@ import type { CallIceServer } from '@ab/shared';
 
 // The phone side of a WhatsApp call (docs/28 §2): this device IS the WebRTC peer, its audio flows
 // directly to Meta; only the SDP goes through our API. The shapes below are the part of
-// react-native-webrtc the call uses (@ab/client-core's, plus addTrack), injected so tests run with fakes.
+// react-native-webrtc the call uses (@ab/client-core's plus addTrack), injected for test fakes.
 
 /** react-native-webrtc's connection: the shared shape plus the microphone's track. */
 export interface NativePeer extends PeerLike {
@@ -12,7 +12,7 @@ export interface NativePeer extends PeerLike {
 
 export interface RtcDeps {
   createPeer: (config: { iceServers: CallIceServer[] }) => NativePeer;
-  /** Android's runtime prompt for RECORD_AUDIO (iOS asks inside getMic); `blocked` = «don't ask again». */
+  /** Android's RECORD_AUDIO prompt (iOS asks inside getMic); `blocked` = «don't ask again». */
   askMic: () => Promise<MicAnswer>;
   getMic: () => Promise<StreamLike>;
 }

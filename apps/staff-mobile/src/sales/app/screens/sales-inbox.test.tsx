@@ -13,10 +13,10 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-// Even a salesperson granted leads.read gets no leads list in the sales tree (its rows are admin routes).
+// A salesperson with leads.read still gets no leads list in the sales tree (rows are admin routes).
 const ME = { role: 'sales', permissions: ['inbox.read', 'inbox.send', 'messages.read', 'leads.read', 'self.sales'] };
 
-// A family on file whose running package owes money: the payload's flag, as an admin's list carries it.
+// A family on file whose running package owes money: the payload's flag, as an admin list has it.
 const owing = { ...thread, phone_e164: '+966552147731', display_name: 'أم إيمان', guardian_id: 'g-1', lead_status: null, unpaid: true };
 const rowOf = (name: string) => within(screen.getByRole('button', { name: new RegExp(name) }));
 

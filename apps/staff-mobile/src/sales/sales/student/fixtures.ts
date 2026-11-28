@@ -1,6 +1,6 @@
 import type { SalesStudentDetails, SalesStudentLesson } from '@ab/shared';
 
-// GET /sales/students/:id as the API answers it (docs/16 row 36): no price, payment or note; the guardian's (fake) phone.
+// GET /sales/students/:id (docs/16 row 36): no price, payment or note; a fake guardian phone.
 
 /** One of the student's upcoming lessons (hers: `mine`), no link: 45 minutes from `starts_at`. */
 export const upcoming = (id: string, starts_at: string): SalesStudentLesson => ({
@@ -9,7 +9,7 @@ export const upcoming = (id: string, starts_at: string): SalesStudentLesson => (
   students: [{ id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', tz: 'Africa/Cairo', mine: true }],
 });
 
-/** An imported-style rule (in Riyadh): Sun, Tue, Thu 20:00 Riyadh (19:00 Cairo) from Sunday 1 November 2026. */
+/** Imported-style rule: Sun, Tue, Thu 20:00 Riyadh (19:00 Cairo) from Sunday 1 November 2026. */
 export const weeklySlot = { rule_id: 'r1', byday: [0, 2, 4], start_time_local: '20:00', tz: 'Asia/Riyadh', duration_min: 45,
   teacher: { display_name_ar: 'أبرار محمد', display_name_en: 'Abrar Mohamed' },
   next: ['2026-11-01T17:00:00.000Z', '2026-11-03T17:00:00.000Z', '2026-11-05T17:00:00.000Z'] };

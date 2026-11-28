@@ -1,7 +1,7 @@
 import { formatPhone } from '@ab/core';
 import { type, useTheme, Ltr } from '@ab/mobile-kit';
 
-/** A guardian's E.164 phone, readable («+966 55 111 0000»): LTR island, tabular, xs ink-2, never cut. */
+/** A guardian's E.164 phone, readable («+966 55 111 0000»): LTR island, tabular, never cut. */
 export function PhoneText({ phone }: { phone: string }) {
   const { color } = useTheme();
   return (

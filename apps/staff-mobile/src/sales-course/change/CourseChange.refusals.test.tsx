@@ -90,7 +90,7 @@ const slotsFrom = () => {
 };
 
 test('booked ahead with a pending change: slots and picks from the new set\'s start, checked, unchanged = no_change', async () => {
-  // A renewal from Sun 11 Oct on Sun+Thu, Sunday swapped for Monday 19:00 from Mon 12 Oct before it starts: Sun 11 stays.
+  // Renewal from Sun 11 Oct on Sun+Thu; Sunday moved to Mon 19:00 from Mon 12 Oct: Sun 11 stays.
   const days = [{ weekday: 1, startTimeLocal: '19:00' }, { weekday: 4, startTimeLocal: '18:00' }];
   const ahead = { ...runningCourse, days, startsOn: '2026-10-12', opensOn: '2026-10-11', endsOn: '2026-11-05', running: false };
   const api = changeApi(courseView({ blocked: 'course_exists', current: ahead }));

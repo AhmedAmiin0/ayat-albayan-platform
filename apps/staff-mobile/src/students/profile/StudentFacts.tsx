@@ -4,7 +4,7 @@ import { profileFacts } from './profile-facts';
 import { SectionLabel } from '@/core/ui/surface/SectionLabel';
 import type { StudentProfile } from '@ab/shared';
 
-/** Program, level…, tz, teacher, then the effective meeting link, which opens in the browser/app. */
+/** Program, level, tz, teacher, then the effective meeting link (opens in the browser/app). */
 export function StudentFacts({ student }: { student: StudentProfile }) {
   const { color } = useTheme();
   const value = { fontFamily: type.ui[500], fontSize: type.size.body, color: color.ink };

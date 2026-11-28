@@ -21,7 +21,7 @@ export function fromOption(option: MeetingInviteeOption): DraftInvitee {
   return { key: `student:${option.id}`, label: `${option.name} · ${option.code}`, input: { kind: 'student', studentId: option.id } };
 }
 
-/** A typed phone (rule 7: E.164 only; the label alone is formatted and isolated), or null when normalizePhone refuses it. */
+/** A typed phone, E.164 only (rule 7; only the label is formatted), else null. */
 export function fromPhone(typed: string): DraftInvitee | null {
   const result = normalizePhone(typed);
   if (!result.ok) return null;

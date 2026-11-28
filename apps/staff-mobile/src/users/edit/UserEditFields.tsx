@@ -19,7 +19,7 @@ export interface UserEditFieldsProps {
 
 const city = (id: string): string | undefined => (t.tz as Record<string, string | undefined>)[id];
 
-/** The web's UserEditFields: identity, language, zone (picked, never typed) and role; all off without users.write. */
+/** Identity, language, zone (picked, never typed) and role; all disabled without users.write. */
 export function UserEditFields({ form, onChange, errors, options, readOnly, roleLocked }: UserEditFieldsProps) {
   const F = t.users.form;
   const set = (patch: Partial<EditForm>) => onChange({ ...form, ...patch });

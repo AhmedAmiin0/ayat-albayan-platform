@@ -42,7 +42,7 @@ export function withMethod(draft: PaymentDraft, method: PaymentMethod): PaymentD
 // decision (owedFor).
 const owed = (p: SubscriptionView) => countsForMoney(p) && owesMore(p);
 
-/** Packages a payment can go to: the current one and any older one still owed money, oldest first. */
+/** Payable packages: the current one and any older one still owed money, oldest first. */
 export function payablePackages(balance: StudentBalanceView): SubscriptionView[] {
   return balance.packages.filter((p) => p.id === balance.current?.id || owed(p));
 }

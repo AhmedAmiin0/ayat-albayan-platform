@@ -17,7 +17,7 @@ interface StartDayPickerProps {
   error?: string | undefined;
 }
 
-/** A start day without typing (rule 6, no date-picker dependency): the day, then a day or a month back and forward. */
+/** A start day without typing (rule 6, no date-picker dependency): step a day or a month. */
 export function StartDayPicker({ label, day, min, max, onChange, error }: StartDayPickerProps) {
   const { color } = useTheme();
   const m = t.mobileSalesMoney;

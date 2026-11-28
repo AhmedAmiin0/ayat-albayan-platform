@@ -11,7 +11,7 @@ import { useBoxId } from '@/inbox/thread/send/box-id';
 import { PINS, useReplayed } from '@/inbox/thread/send/pinned-send';
 import { t } from '@ab/mobile-kit';
 
-/** One template draft = one key + params: re-sending it after an error keeps its clientRequestId. */
+/** One template draft = one key + params: resending it after an error keeps its clientRequestId. */
 const draftOf = (out: Outgoing): string =>
   out.kind === 'template' ? JSON.stringify([out.key, out.params, out.lessonId]) : '';
 

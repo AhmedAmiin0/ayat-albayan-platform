@@ -14,7 +14,7 @@ interface CourseContinueProps {
   opensOn: string;
   /** Enabled only once the previous teacher is bookable. */
   teacher: Pick<KnownTeacher, 'bookable' | 'pending' | 'failed' | 'unavailable' | 'refetch'>;
-  /** The new plan's days a week when it differs from the previous course's (!continueFits), else null. */
+  /** The new plan's days a week when they differ from the previous course's, else null. */
   adjustTo: number | null;
   onSame: () => void;
   onOther: () => void;

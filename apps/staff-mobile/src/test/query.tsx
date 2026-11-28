@@ -19,12 +19,12 @@ interface TestClientOptions {
 
 export function createTestQueryClient({ meFromApi = false }: TestClientOptions = {}): QueryClient {
   const client = freshQueryClient();
-  // Signed in with every permission (staff-me.ts); a permissions test seeds or serves its own /auth/me.
+  // Every permission (staff-me.ts); a permissions test seeds or serves its own /auth/me.
   if (!meFromApi) seedFullAccess(client);
   return client;
 }
 
-/** `await renderWithQuery(<Screen />)`; seed with `client.setQueryData(key, data)` before or after. */
+/** Seed with `client.setQueryData(key, data)` before or after rendering. */
 export const renderWithQuery = (ui: ReactElement, client = createTestQueryClient()) =>
   render(ui, client);
 

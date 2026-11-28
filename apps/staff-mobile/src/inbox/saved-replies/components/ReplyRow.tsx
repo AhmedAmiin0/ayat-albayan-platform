@@ -11,7 +11,7 @@ interface ReplyRowProps {
   trailing?: ReactNode;
 }
 
-/** One saved reply: its title, the first line of its text and a paperclip when a file goes with it; 56pt. */
+/** One saved reply: title, first line of its text, a paperclip when it has a file; 56pt tall. */
 export function ReplyRow({ reply, onPress, trailing }: ReplyRowProps) {
   const { color } = useTheme();
   const file = reply.attachment !== null;

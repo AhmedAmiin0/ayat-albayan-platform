@@ -6,7 +6,7 @@ import type { AppTextNode } from '@ab/mobile-kit';
 const FOCUS_DELAY_MS = 250;
 
 /**
- * On mount, puts TalkBack/VoiceOver on `ref` (a sheet's title): accessibilityViewIsModal is iOS-only,
+ * On mount, moves the reader to `ref` (a sheet's title): accessibilityViewIsModal is iOS-only,
  * so on Android the reader would otherwise stay on the screen behind the sheet.
  */
 export function useFocusOnOpen(ref: RefObject<AppTextNode | null>): void {

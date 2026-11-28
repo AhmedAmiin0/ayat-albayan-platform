@@ -7,7 +7,7 @@ import { CopyLinkAction } from '@/classroom/links/CopyLinkAction';
 import { JoinClassroomButton } from '@/classroom/links/JoinClassroomButton';
 import { SendLinkAction } from '@/classroom/links/SendLinkAction';
 
-/** The admin's actions on a session: enter, send the link (per student), copy the link, recordings. */
+/** The admin's session actions: enter, send the link per student, copy the link, recordings. */
 export function SessionActions({ lesson, group }: { lesson: LessonView; group: SessionGroup }) {
   const can = usePermissions();
   // An ended lesson's link is already past its expiry: nothing to send or copy.

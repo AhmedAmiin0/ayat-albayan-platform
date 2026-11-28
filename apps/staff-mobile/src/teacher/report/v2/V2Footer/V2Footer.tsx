@@ -12,7 +12,7 @@ import type { V2EntryState } from '@/teacher/report/v2/hooks/use-v2-entry';
 
 const ERRORS: Record<string, string> = t.reports.error;
 
-/** What stops the send: the form's own check, an API refusal or no connection, the lesson's state. */
+/** What blocks the send: the form's check, an API refusal or no connection, the lesson's state. */
 function Problems({ s, block }: { s: V2EntryState; block: ReportFormResponse['submit_block'] }) {
   const lines = [
     s.problem ? (ERRORS[s.problem] ?? t.common.error) : null,

@@ -14,7 +14,7 @@ test('docs/07 «الأزرار»: «إلغاء الباقة» is danger, full wi
   );
   const box = screen.getByTestId('subscription-actions');
   expect(StyleSheet.flatten(box.props.style)).toMatchObject({ width: '100%' });
-  // The row itself is the screen reader's button, so the edge is read off the label's pressable host.
+  // The row is the screen reader's button, so the edge is read off the label's pressable host.
   const cancel = within(box).getByText(t.subscriptions.cancel.action).parent;
   expect(cancel?.props.accessibilityRole).toBe('button');
   expect(StyleSheet.flatten(cancel?.props.style)).toMatchObject({ borderColor: palette.light.bad });

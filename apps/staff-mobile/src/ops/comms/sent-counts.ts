@@ -13,7 +13,7 @@ export interface SentRow {
 
 const isAudience = (value: AudienceTab): value is NotificationAudience => value !== 'manual';
 
-/** One row per audience, in the pills' order; rows this build has no name for are not counted (the list hides them). */
+/** One row per audience in the pills' order; audiences this build cannot name are skipped. */
 export function sentCounts(entries: readonly NotificationEntryView[]): SentRow[] {
   const known = entries.filter((e) => nameOf(e.key) !== null);
   return audienceTabs(known).flatMap(({ value, label }) => {

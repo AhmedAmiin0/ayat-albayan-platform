@@ -1,8 +1,8 @@
 import { leadQualPatch, type QualForm, type QualResult } from '@ab/shared';
 import { t } from '@ab/mobile-kit';
 
-// R-LEAD-03: the lead's qualification form lives in @ab/shared (docs/27 E5), shared with the web; this module
-// keeps the phone's names, injects `t` and adds the phone's time choices.
+// R-LEAD-03: the lead's qualification form lives in @ab/shared (docs/27 E5), shared with the web;
+// this module keeps the phone's names, injects `t` and adds the phone's time choices.
 export {
   QUAL_TEXT_FIELDS as TEXT_FIELDS,
   leadQualForm as qualForm,

@@ -74,7 +74,7 @@ const errorWords = reportErrorWords(() => ({
 
 /**
  * The line for a failed report call: the domain `code` or first validation issue, said in the
- * form's words (@ab/client-core). No connection: the report was not sent, and the form says so (R-MOB-03).
+ * form's words (@ab/client-core). Offline: the form says the report was not sent (R-MOB-03).
  */
 export function reportErrorText(error: unknown): string {
   if (!(error instanceof ApiError)) return t.reports.offlineNotSent;

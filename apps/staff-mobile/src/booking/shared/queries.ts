@@ -4,7 +4,7 @@ import { pathKey } from '@ab/mobile-kit';
 import { bookingCallsOf } from './booking-calls';
 import { bookingPath, useBookingMode } from './booking-mode';
 
-/** GET /booking/teachers?program&gender? (docs/10 route 12; sales: /sales/booking/teachers): active teachers by name, with load. */
+/** GET /booking/teachers (docs/10 route 12; sales prefix /sales): active teachers with load. */
 export function useBookingTeachers(f: {
   program: Program;
   gender: Gender | null;
@@ -31,7 +31,7 @@ interface SlotsParams {
   excludeLessonId?: string;
 }
 
-/** GET /booking/slots (docs/10 route 13; sales: /sales/booking/slots): candidate starts, each with its clashes ([] = free). */
+/** GET /booking/slots (docs/10 route 13; sales prefix /sales): each start's clashes ([] = free). */
 export function useSlots(params: SlotsParams) {
   const mode = useBookingMode();
   return useQuery({

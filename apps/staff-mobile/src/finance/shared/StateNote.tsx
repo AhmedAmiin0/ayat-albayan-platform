@@ -10,7 +10,7 @@ interface StateNoteProps {
 
 /**
  * Loading / error / empty for a finance list, as the other screens do it: an error only when nothing
- * is cached (offline keeps the last list on screen, with `stale` below). Renders nothing when there are rows.
+ * is cached (offline keeps the last list, with `stale` below). Renders nothing when there are rows.
  */
 export function StateNote({ status, empty, emptyTitle }: StateNoteProps) {
   if (!status.data) {

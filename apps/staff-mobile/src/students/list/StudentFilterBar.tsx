@@ -13,7 +13,7 @@ const L = t.mobileStudentFile.list;
 interface StudentFilterBarProps {
   value: StudentFilters;
   onChange: (next: StudentFilters) => void;
-  /** A search is set: the counts know the filters only, so the pills show none (they would not match the list). */
+  /** Searching: counts know only the filters, so the pills show none (they would not match). */
   searching?: boolean;
 }
 

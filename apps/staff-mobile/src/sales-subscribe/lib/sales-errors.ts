@@ -25,7 +25,8 @@ function codeOf(body: { code?: unknown; issues?: unknown }): string | undefined 
 
 /**
  * What the sales money screens say when a call failed: the API's code in her words
- * (not_your_student, media_expired, start_date_*, attachment_*…; currency_mismatch names the package's), an honest «no answer» offline, else generic.
+ * (not_your_student, media_expired, start_date_*, attachment_*…; currency_mismatch names the
+ * package's), an honest «no answer» offline, else generic.
  */
 export function salesErrorText(error: unknown): string {
   if (error instanceof ReceiptUploadError) return t.payments.mobile.uploadFailed;

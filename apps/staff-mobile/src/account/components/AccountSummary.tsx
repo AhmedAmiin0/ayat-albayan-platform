@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { t, type, useTheme, AppText } from '@ab/mobile-kit';
 import { roleLabel } from '@/account/hooks/queries';
 
-/** Who is signed in (R-ACC-01): the role, and that the name families see is the admin's to change. */
+/** R-ACC-01: the role, and that the name families see is the admin's to change. */
 export function AccountSummary({ profile }: { profile: AccountProfile }) {
   const { color } = useTheme();
   const role = roleLabel(profile);

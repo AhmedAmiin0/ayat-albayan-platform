@@ -3,8 +3,8 @@ import { setAudioModeAsync } from 'expo-audio';
 // docs/28 §5: react-native-webrtc cannot route audio, so expo-audio's mode does; best effort.
 
 /**
- * The app's playback mode, chosen deliberately: Android takes audio focus («doNotMix», the players'
- * behaviour so far: other apps pause), iOS respects the silent switch, the speaker plays, no recording.
+ * The app's playback mode, chosen deliberately: Android takes audio focus («doNotMix», so other
+ * apps pause), iOS respects the silent switch, the speaker plays, no recording.
  */
 export const PLAYBACK = {
   playsInSilentMode: false,
@@ -33,7 +33,7 @@ export async function routeCallAudio(speaker: boolean): Promise<void> {
   await setAudioModeAsync(call).catch(() => undefined);
 }
 
-/** After a call (or a failed start that had routed): the app's playback mode again; a no-op otherwise. */
+/** After a call (or a failed start that had routed): back to the playback mode; else a no-op. */
 export async function restorePlayback(): Promise<void> {
   if (!routed) return;
   routed = false;

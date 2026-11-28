@@ -11,7 +11,7 @@ interface SummaryCardProps {
 }
 
 /**
- * Three equal columns (docs/29 §2): the day's lessons, the ones that need confirmation (in `act`, with
+ * Three equal columns (docs/29 §2): the day's lessons, those needing confirmation (`act`, with
  * its dot) and the ended ones. Each column filters the list; the active one takes the lapis wash, a
  * second tap on it shows everything again. Every label stays on ONE line in both languages:
  * short words, shrunk to fit at a large font scale, and the number and label centred alike in

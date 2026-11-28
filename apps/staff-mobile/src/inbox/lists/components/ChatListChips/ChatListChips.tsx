@@ -11,8 +11,8 @@ import { ListChip } from '@/inbox/lists/components/ListChip';
 import { listsOf, useChatLists } from '@/inbox/lists/lib/use-chat-lists';
 
 /**
- * The row's one choice (single, as WhatsApp): every chat, the unread ones, those waiting for her reply,
- * one lead stage, or one list by id.
+ * The row's one choice (single, as WhatsApp): every chat, the unread ones, those waiting for her
+ * reply, one lead stage, or one list by id.
  */
 export type ChatChoice = 'all' | 'unread' | 'waiting' | { stage: LeadStatus } | { list: string };
 
@@ -51,7 +51,7 @@ interface ListExtrasProps {
   onClose: () => void;
 }
 
-/** Under the row, for a lists holder only: the auto list's note, the quiet load error, the two sheets. */
+/** Under the row, for list holders only: the auto list's note, the quiet load error, the sheets. */
 function ListExtras({ active, loadError, creating, editing, onCreated, onClose }: ListExtrasProps) {
   return (
     <>
@@ -85,7 +85,7 @@ export function ChatListChips({
         accessibilityRole="tablist"
         accessibilityLabel={t.inbox.filterRow}
         style={{ flexGrow: 0, flexShrink: 0 }}
-        // 6 + 32 + 6: the row is 44pt, so each chip's 6pt hitSlop stays inside it (a ScrollView clips touches).
+        // 6 + 32 + 6 = 44pt, so each chip's 6pt hitSlop stays inside (a ScrollView clips touches).
         contentContainerStyle={{ gap: 8, paddingVertical: 6 }}
       >
         <ListChip label={t.inbox.filterAll} selected={value === 'all' || gone} onPress={() => onChange('all')} />

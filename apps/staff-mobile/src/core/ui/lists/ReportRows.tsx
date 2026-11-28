@@ -100,7 +100,7 @@ interface ReportHistoryRowProps {
   tz: string;
   /** Shown once the PDF is ready. */
   onPdf: () => void;
-  /** Opens the report (the teacher's own lesson, the admin); without it the row is a history line. */
+  /** Opens the report (teacher's own lesson, admin); without it the row is a history line. */
   onPress?: () => void;
 }
 

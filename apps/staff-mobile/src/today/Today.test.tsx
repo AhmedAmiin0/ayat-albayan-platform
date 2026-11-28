@@ -9,11 +9,11 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
-// The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
+// The bell reads its own API (BellButton.test); here it would take the day's mocked answers.
 jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 // Family requests read their own route and are tested separately.
 jest.mock('@/today/requests/FamilyRequests', () => ({ FamilyRequests: () => null }));
-// The greeting's first name reads /me/profile (TodayHeader.test); here it would take the day's mocked answers.
+// The greeting reads /me/profile (TodayHeader.test); here it would take the day's mocked answers.
 jest.mock('@ab/mobile-kit/lib/profile/my-profile', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/profile/my-profile'),
   useMyProfile: () => ({ data: undefined }),

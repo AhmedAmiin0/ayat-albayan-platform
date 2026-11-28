@@ -9,7 +9,7 @@ interface CancelBody {
 }
 
 interface CancelPackageProps {
-  /** POST /subscriptions/:id/cancel (admin) or POST /sales/subscriptions/:id/cancel (her own student's). */
+  /** POST /subscriptions/:id/cancel (admin) or /sales/subscriptions/:id/cancel (her student's). */
   cancel: (body: CancelBody) => Promise<unknown>;
   /** The reads a cancel makes stale (the balance, the list, her family's owed packages). */
   stale: readonly QueryKey[];

@@ -105,7 +105,7 @@ export function teacherAgendas(o: ScheduleOverview, opts: AgendaOptions): Teache
     });
 }
 
-/** A row's key inside its teacher's section (lesson ids are unique; days and gaps are per teacher). */
+/** A row's key in its teacher's section (lesson ids are unique; days and gaps per teacher). */
 export function itemKey(item: AgendaItem): string {
   if (item.kind === 'lesson') return item.lesson.id;
   return item.kind === 'day' ? `day-${item.date}` : `free-${item.span.starts_at}`;

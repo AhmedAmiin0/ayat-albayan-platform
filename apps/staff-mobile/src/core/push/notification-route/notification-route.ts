@@ -7,7 +7,7 @@ import { pushKind, pushPhone, pushStudentId } from '@/core/push/push-data';
 
 // Where a tapped push (or a bell row) opens (R-MOB-01, R-NOT-01); the data is checked in push-data.
 
-/** The app's signed-in trees: admins get (tabs); teachers, sales and assistants their own routes. */
+/** Signed-in trees: admins get (tabs); teachers, sales and assistants their own routes. */
 export type PushTree = 'admin' | 'teacher' | 'sales' | 'assistant';
 
 export { pushKind, pushPhone } from '@/core/push/push-data';

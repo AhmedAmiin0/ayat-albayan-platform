@@ -14,14 +14,14 @@ export const SUN_4 = '2026-10-04T14:00:00.000Z';
 
 export const runningCourse = bookedCourse({ subscriptionId: SUB_ID, endsOn: '2026-10-29' });
 
-/** GET answers: course_exists with the running course; her teachers and free slots (Monday 19:00 too). */
+/** GET answers: course_exists, the running course, her teachers, free slots incl. Mon 19:00. */
 export function changeApi(view = courseView({ blocked: 'course_exists', current: runningCourse })) {
   const api = fakeCourseApi(view);
   api.api.slots.push(slot(MON_19));
   return api;
 }
 
-/** A GET answerer that honours the slot read's from/to (only the slots inside its window come back). */
+/** A GET answerer that honours the slot read's from/to: only slots inside it come back. */
 export function windowed(fetch: (path: string) => Promise<unknown>) {
   return async (path: string): Promise<unknown> => {
     const answer = await fetch(path);

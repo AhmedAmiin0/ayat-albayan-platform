@@ -5,8 +5,8 @@ export interface NavState {
 }
 
 /**
- * Each tree's chat (and what a chat opens) is a root route group beside its tabs, so a chat is a full
- * screen above them with no tab bar under it (react-native-screens#4132: a hidden bar still took the
+ * Each tree's chat (and what a chat opens) is a root route group beside its tabs, so a chat is a
+ * full screen above them with no tab bar (react-native-screens#4132: a hidden bar still took the
  * touches at the bottom). The groups add no URL segment. The one place that knows their names.
  */
 const CHAT_GROUPS: readonly string[] = ['(admin-chat)', '(sales-chat)', '(teacher-chat)'];

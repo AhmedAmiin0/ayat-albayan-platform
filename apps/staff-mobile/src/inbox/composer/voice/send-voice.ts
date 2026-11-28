@@ -4,7 +4,7 @@ import { useChatActions } from '@/inbox/thread/hooks/chat-actions';
 import { type ChatFilePick, useSendFile } from '@/inbox/composer/send-file';
 import type { Take } from './voice-machine';
 
-/** The recorded m4a's bytes (fetch on the local file, as a picked PDF is read: no file-system module). */
+/** The m4a's bytes: fetch on the local file, as for a picked PDF (no file-system module). */
 async function voiceFile(uri: string): Promise<ChatFilePick> {
   const bytes = await (await fetch(uri)).arrayBuffer();
   return { mime: CHAT_VOICE_MIME, bytes, size: bytes.byteLength, filename: 'voice.m4a' };
@@ -12,7 +12,7 @@ async function voiceFile(uri: string): Promise<ChatFilePick> {
 
 /**
  * Sends a take through the chat's own file send (signed upload, then POST …/file) to THIS chat's
- * phone, with the take's one id (a retry returns the first row) and the reply quote, cleared once sent.
+ * phone, with the take's one id (a retry returns the first row) and the reply quote (then cleared).
  */
 export function useSendVoice(phone: string) {
   const send = useSendFile(phone);

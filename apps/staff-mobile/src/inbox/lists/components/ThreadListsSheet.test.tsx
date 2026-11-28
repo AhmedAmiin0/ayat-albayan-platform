@@ -52,7 +52,7 @@ test('a tap saves at once (optimistic) with PUT / DELETE on the chat’s number'
   await openSheet();
   mockApiSend.mockReturnValueOnce(new Promise(() => undefined));
   await fireEvent.press(box(TRIAL.name));
-  // The optimistic cache write lands a tick after the press (TanStack runs onMutate asynchronously).
+  // The optimistic write lands a tick after the press (TanStack runs onMutate asynchronously).
   await waitFor(() => expect(box(TRIAL.name).props.accessibilityState).toEqual({ checked: true }));
   expect(mockApiSend).toHaveBeenCalledWith('PUT', `/chat-lists/${TRIAL.id}${MEMBERS}`);
   mockApiSend.mockResolvedValueOnce(undefined);

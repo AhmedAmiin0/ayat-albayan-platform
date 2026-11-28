@@ -11,7 +11,7 @@ export const profileFixture: AccountProfile = {
   role: { base: 'admin', key: 'admin', name_ar: 'Admin', name_en: 'Admin' },
 };
 
-/** apiFetch for a screen that also reads its own data: /me/profile gets the profile, the rest `other`. */
+/** apiFetch for a screen with its own data: /me/profile gets the profile, the rest `other`. */
 export const fetchWithProfile =
   (other: unknown, profile: AccountProfile = profileFixture) =>
   async (url: string): Promise<unknown> =>

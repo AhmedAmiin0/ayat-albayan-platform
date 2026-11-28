@@ -16,7 +16,7 @@ import type { LeadView } from '@ab/shared';
 
 // R-MOB-02, R-LEAD-06: the wizard state; pure, sent by booking-body.ts.
 
-/** What the wizard needs of the lead: a cached GET /leads row (with its answers), or the chat's lead. */
+/** The lead the wizard needs: a cached GET /leads row (with its answers), or the chat's lead. */
 export type BookingLead = Pick<LeadView, 'id' | 'name' | 'phone_e164'> & {
   source?: LeadSource;
   /** leads.qualification jsonb prefills the child (R-LEAD-03). */

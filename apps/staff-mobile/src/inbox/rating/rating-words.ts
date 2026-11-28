@@ -22,6 +22,6 @@ export function ratingDone(sent: MessageView | undefined): { text: string; error
   return { text: sent.status === 'queued' ? r.queued : r.sent, error: false };
 }
 
-/** Meta has approved lesson_rating (the only state it can be sent in); anything but a list is «not yet». */
+/** lesson_rating can only be sent once Meta approved it; anything but a list is «not yet». */
 export const ratingApproved = (templates: readonly TemplateView[] | undefined): boolean =>
   Array.isArray(templates) && templates.some((x) => x.key === RATING_TEMPLATE && x.status === 'approved');

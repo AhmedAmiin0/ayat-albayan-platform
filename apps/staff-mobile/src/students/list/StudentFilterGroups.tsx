@@ -61,7 +61,7 @@ interface StudentFilterGroupsProps {
   onChange: (next: StudentFilters) => void;
 }
 
-/** The panel's groups: sort, then teacher, program, package, weekly and time zone, each a wrapping pill group. */
+/** Sort, then teacher, program, package, weekly and time zone, each a wrapping pill group. */
 export function StudentFilterGroups({ value, teachers, onChange }: StudentFilterGroupsProps) {
   const options = filterOptions(teachers, value.tz);
   const sorts = SORT_CHOICES.map((s) => ({ value: s, label: L.sort[s] }));

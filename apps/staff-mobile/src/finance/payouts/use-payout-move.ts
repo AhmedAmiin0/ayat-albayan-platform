@@ -8,7 +8,7 @@ import { payBody, type PayDraft } from './payout-actions';
 
 const payouts = payoutCalls({ apiFetch, apiSend });
 
-/** Money moved: the month list, the teacher's ledger, the summaries and the money lists (payments, receivables) all re-read. */
+/** Money moved: re-read the month list, ledger, summaries, payments and receivables. */
 export const refreshMoney = (client: QueryClient) =>
   Promise.all(
     ['payouts', 'teacher-earnings', 'dashboard', 'payments', 'receivables'].map((key) =>
@@ -20,7 +20,7 @@ type PayoutMove =
   | { id: string; move: 'approve' | 'reopen' }
   | { id: string; move: 'unpay'; reason: string };
 
-/** approve / reopen / unpay: the server owns every rule (month over, reports done, a reason of 3+ letters). */
+/** The server owns every rule here (month over, reports done, a reason of 3+ letters). */
 export function usePayoutMove() {
   const client = useQueryClient();
   return useMutation({

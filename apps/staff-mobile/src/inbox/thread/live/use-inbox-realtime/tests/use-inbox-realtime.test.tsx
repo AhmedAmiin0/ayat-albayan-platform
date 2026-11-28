@@ -11,7 +11,7 @@ import { useInboxRealtime } from '@/inbox/thread/live/use-inbox-realtime/use-inb
 
 jest.mock('@/inbox/thread/live/list-marks', () => ({ changeLists: jest.fn() }));
 
-// The staff inbox's realtime nudge (docs/12 §15): events trigger the same reads the polls run, throttled.
+// The inbox realtime nudge (docs/12 §15): events trigger the same reads the polls run, throttled.
 
 const OPEN = '+966500000001';
 const OTHER = '+966500000002';

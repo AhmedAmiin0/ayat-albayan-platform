@@ -12,7 +12,7 @@ const renderPayment = ({ item }: { item: PaymentView }) => (
   <PaymentItem key={item.id} payment={item} />
 );
 
-/** GET /payments?studentId=: the student's payments and refunds, newest first, with the net; each with its receipt. */
+/** GET /payments?studentId=: payments and refunds, newest first, with the net and receipts. */
 export function StudentPaymentsList({ studentId }: { studentId: string }) {
   const { color } = useTheme();
   const list = usePagedList<PaymentView>({ path: '/payments', params: { studentId } });

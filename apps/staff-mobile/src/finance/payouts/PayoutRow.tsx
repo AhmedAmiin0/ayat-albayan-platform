@@ -2,7 +2,7 @@ import { payoutStatusStyle, type PayoutView } from '@ab/money';
 import { t, ListRow, StatusChip } from '@ab/mobile-kit';
 import { amountText } from '@/finance/shared/format';
 
-/** A teacher's statement for the month: name, lessons and amount, its state; taps open the detail. */
+/** A teacher's month statement: name, lessons, amount and state; a tap opens the detail. */
 export function PayoutRow({ payout, onPress }: { payout: PayoutView; onPress: () => void }) {
   return (
     <ListRow

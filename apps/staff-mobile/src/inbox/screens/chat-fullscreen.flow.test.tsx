@@ -7,10 +7,10 @@ import { inbound, PHONE } from '@/inbox/shared/thread-fixtures';
 
 beforeEach(resetApp);
 
-// The real root, tabs and (admin-chat) layouts. A chat is its own full screen above the tabs (the root
-// stack holds the group over (tabs)), never a screen inside a tab with the bar hidden: on Android a
-// hidden bar still took the touches at the bottom (react-native-screens#4132). In jest the covered
-// tabs stay mounted, so the invariant is read from the router, not from the bar's buttons.
+// The real root, tabs and (admin-chat) layouts. A chat is its own full screen above the tabs (the
+// root stack holds the group over (tabs)), never a screen inside a tab with the bar hidden: on
+// Android a hidden bar still took the touches at the bottom (react-native-screens#4132). In jest
+// the covered tabs stay mounted, so the invariant is read from the router, not the bar's buttons.
 
 test('a chat opens above the tabs, not inside one; back pops it to the list, same URLs', async () => {
   const { backend } = inboxBackend();

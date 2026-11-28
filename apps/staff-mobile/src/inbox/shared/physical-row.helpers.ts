@@ -7,7 +7,7 @@ type Host = ReturnType<typeof screen.getByTestId>;
 
 const hosts = (node: Host) => node.children.filter((c): c is Host => typeof c !== 'string');
 
-/** A child's name: its testID, accessibilityLabel or text, else the first one inside it ('?' when none). */
+/** A child's name: its testID, accessibilityLabel or text, else its first child's ('?' if none). */
 function nameOf(node: Host): string {
   const own: unknown = node.props.testID ?? node.props.accessibilityLabel;
   if (typeof own === 'string') return own;

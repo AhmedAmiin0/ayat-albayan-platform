@@ -9,7 +9,7 @@ import { linkError, sendJoinLink } from '@/classroom/links/link-api';
 
 type Student = LessonView['students'][number];
 
-/** What a resolved send says: queued (the sending gate is closed) is not «sent»; a replay says so. */
+/** Queued (the sending gate is closed) is not «sent»; a replay says so. */
 const sentNote = (r: JoinLinkResult): string =>
   r.message_status === 'queued' ? t.inbox.messagingOff : r.replayed ? t.classroom.linkResent : t.classroom.linkSent;
 

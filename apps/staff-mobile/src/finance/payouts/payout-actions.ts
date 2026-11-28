@@ -6,7 +6,7 @@ import type { Receipt } from '@/core/lib/receipts/receipt';
 
 type PayoutAction = 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';
 
-/** The web's buttons per state: draft → approve; approved → pay / reopen; paid → receipt / unpay. */
+/** As the web: draft → approve; approved → pay / reopen; paid → receipt / unpay. */
 export function payoutActions(p: Pick<PayoutView, 'status' | 'has_receipt'>): PayoutAction[] {
   if (p.status === 'draft') return ['approve'];
   if (p.status === 'approved') return ['pay', 'reopen'];

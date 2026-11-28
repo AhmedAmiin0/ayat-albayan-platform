@@ -47,7 +47,7 @@ test('a tap on the ticks opens the thread, as anywhere on the row', async () => 
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('أم سارة');
   const ticks = screen.getByTestId('ticks-read', hidden);
-  // Nothing in the ticks takes the touch (RNTL would bubble a press past a nested Pressable anyway).
+  // Nothing in the ticks takes the touch (RNTL would bubble a press past a nested Pressable).
   expect(ticks.props.onStartShouldSetResponder).toBeUndefined();
   await fireEvent.press(ticks);
   expect(router.push).toHaveBeenCalledTimes(1);
