@@ -6,8 +6,9 @@ import { StorageService } from '@/common/storage/storage.service';
 import { PricingService } from '@/modules/finance/pricing/pricing.service';
 import { pdfAssets, PdfRenderer } from '@/modules/reporting/report-pdf';
 import { priceListPdfModel } from './price-list-pdf.model';
-import { priceListHtml } from './price-list-pdf.template';
+import { PriceListPdfSettings } from './price-list-pdf.settings';
 import type { PriceListPdfInput } from './price-list-pdf.types';
+import { priceListHtml } from './template';
 
 const PDF = 'application/pdf';
 
@@ -34,12 +35,13 @@ export class PriceListPdf {
     private readonly pricing: PricingService,
     private readonly renderer: PdfRenderer,
     private readonly storage: StorageService,
+    private readonly settings: PriceListPdfSettings,
   ) {}
 
-  async create(input: PriceListPdfInput, now = new Date()): Promise<PriceListPdfResponse> {
+  async create(input: PriceListPdfInput): Promise<PriceListPdfResponse> {
     const { clientRequestId, ...choice } = input.body;
-    const list = await this.pricing.list(choice);
-    const model = priceListPdfModel(list, { country: choice.country, now });
+    const [list, contact] = await Promise.all([this.pricing.list(choice), this.settings.contact()]);
+    const model = priceListPdfModel(list, { country: choice.country, contact });
     const bytes = await this.render(priceListHtml(model, pdfAssets()));
     const ref = { bucket: BUCKETS.waMedia, path: pdfPath(input.actorId, clientRequestId) };
     const path = await this.storage.upload({ ...ref, body: bytes, contentType: PDF });
