@@ -1,24 +1,7 @@
-import type { Gender, Program, StudentStatus } from '@ab/catalog';
+import type { Gender, Program } from '@ab/catalog';
 import type { Conflict } from './conflicts';
-import type { TeacherMeetingMode } from '../classroom/meeting-mode';
 
 // API response shapes (docs/10-phase2-contracts.md §3): snake_case rows, ISO UTC, IANA tz.
-
-/** GET /teachers/me (R-TCH-03). */
-export interface TeacherMe {
-  id: string;
-  display_name_ar: string;
-  gender: Gender;
-  programs: Program[];
-  tz: string;
-  meeting_link: string | null;
-  /** teachers.meeting_mode as stored: null = the academy default (migration 490). */
-  meeting_mode: TeacherMeetingMode | null;
-  /** usesPlatform(meeting_mode, settings.meeting_link_auto): the fixed link is hidden then. Absent
-   * in a payload cached before migration 490: clients use the academy default. */
-  platform_classroom?: boolean;
-  students: { id: string; code: string; name: string; tz: string; status: StudentStatus }[];
-}
 
 /** GET /booking/teachers items (R-SCH-06). */
 export interface BookingTeacherOption {

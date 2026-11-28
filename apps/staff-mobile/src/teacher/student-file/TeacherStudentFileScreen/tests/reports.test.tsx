@@ -2,7 +2,7 @@ import type { ReportSummaryView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
-import { fileAnswers, LESSON, STUDENT_ID } from '@/teacher/student-file/file-fixtures';
+import { fileAnswers, LESSON, STUDENT_ID, TEACHER_ID } from '@/teacher/student-file/file-fixtures';
 import { TeacherStudentFileScreen } from '@/teacher/student-file/TeacherStudentFileScreen/TeacherStudentFileScreen';
 
 const mockApiFetch = jest.fn();
@@ -28,7 +28,7 @@ const report: ReportSummaryView = {
   lesson_id: LESSON.edit,
   starts_at: '2026-11-10T15:00:00Z',
   lesson_no: 5,
-  teacher: { id: 't-abrar', display_name_ar: 'أبرار' },
+  teacher: { id: TEACHER_ID, display_name_ar: 'أبرار' },
   attendance: 'on_time',
   grade_overall: 'excellent',
   status: 'submitted',

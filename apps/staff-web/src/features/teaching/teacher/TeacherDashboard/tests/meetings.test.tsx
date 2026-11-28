@@ -13,8 +13,9 @@ vi.mock('@tanstack/react-router', async (importOriginal) => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));
 
+const TEACHER = '00000000-0000-4000-8000-0000000000a1';
 const ME: TeacherMe = {
-  id: 't-1', display_name_ar: 'معلمة', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  id: TEACHER, display_name_ar: 'معلمة', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
   meeting_link: null, meeting_mode: null, platform_classroom: true, students: [],
 };
 const INSTANT = t.meetings.internal.item;

@@ -15,8 +15,9 @@ vi.mock('@tanstack/react-router', async (importOriginal) => ({
   Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
 }));
 
+const TEACHER = '00000000-0000-4000-8000-0000000000a1';
 const ME: TeacherMe = {
-  id: 't-abrar', display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  id: TEACHER, display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
   meeting_link: 'https://meet.jit.si/ayat-abrar', meeting_mode: null, platform_classroom: false, students: [],
 };
 // Saturday 3 Oct, 12:00 Cairo (09:00Z): 16:00 and 18:00 today, one ended at 10:00, Monday's.

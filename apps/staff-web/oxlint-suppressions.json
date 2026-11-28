@@ -6085,11 +6085,6 @@
       "count": 1
     }
   },
-  "src/features/teaching/teacher/api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/features/teaching/teacher/lessons/MyWeek/MyWeek.tsx": {
     "complexity": {
       "count": 1

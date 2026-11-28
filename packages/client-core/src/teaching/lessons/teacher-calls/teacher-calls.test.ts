@@ -12,6 +12,12 @@ const clientAnswering = (answer: unknown) => {
 };
 
 describe('teacherLessonCalls (docs/46 C3, C4)', () => {
+  it('reads her own profile, and refuses one with a readable id', async () => {
+    const { client, apiFetch } = clientAnswering({ id: 't1', students: [] });
+    await expect(teacherLessonCalls(client).me()).rejects.toThrow(ApiError);
+    expect(apiFetch).toHaveBeenCalledWith('/teachers/me');
+  });
+
   it('reads her week by its window, and refuses an answer that is no lesson list', async () => {
     const { client, apiFetch } = clientAnswering([{ id: LESSON }]);
     const week = { from: '2026-10-04T00:00:00.000Z', to: '2026-10-11T00:00:00.000Z' };
