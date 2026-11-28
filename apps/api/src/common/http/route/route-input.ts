@@ -2,7 +2,7 @@ import { createParamDecorator, type ExecutionContext, type PipeTransform } from 
 import { z } from 'zod';
 import { ZodParamPipe, ZodPipe } from '@/common/http/zod-inputs';
 import { routeOf } from './route';
-import type { RawRouteInput, RouteInputOptions } from './route.types';
+import type { ParamError, RawRouteInput, RouteInputOptions } from './route.types';
 
 const requestSchema = z.object({ params: z.unknown(), query: z.unknown(), body: z.unknown() });
 
@@ -33,6 +33,19 @@ const eachParamFirst = async ({ route, params }: RawRouteInput, options: RouteIn
   });
   await Promise.all(checks);
 };
+
+const fieldsOf = ({ params }: RawRouteInput['route']) =>
+  new Map(Object.entries(params instanceof z.ZodObject ? params.shape : {}));
+
+const eachNamedParam = async ({ route, params }: RawRouteInput, named: readonly ParamError[]) => {
+  const values = paramValues.parse(params);
+  const fields = fieldsOf(route);
+  const checks = named.map(({ name, fail }) =>
+    new ZodParamPipe(z.unknown().pipe(fields.get(name) ?? z.never()), fail).transform(values[name]),
+  );
+  await Promise.all(checks);
+};
+
 const ORDER = { bodyFirst: () => Promise.resolve(), paramsFirst: eachParamFirst };
 
 /**
@@ -48,6 +61,7 @@ class RouteInputPipe implements PipeTransform<RawRouteInput, Promise<object>> {
     await ORDER[paramsFirst === true ? 'paramsFirst' : 'bodyFirst'](raw, this.options);
     const body = await parsed(route.body && new ZodPipe(route.body), raw.body);
     const query = await parsed(route.query && new ZodPipe(route.query), raw.query);
+    await eachNamedParam(raw, this.options.paramErrors ?? []);
     const paramPipe = route.params && new ZodParamPipe(route.params, badParam);
     const params = await parsed(paramPipe, raw.params);
     return { params, query, body };
