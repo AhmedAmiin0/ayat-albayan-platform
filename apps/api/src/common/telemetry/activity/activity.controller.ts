@@ -2,7 +2,7 @@ import { activityListQuery, type ActivityPage } from '@ab/shared';
 import { Controller, Get, HttpCode, HttpException, HttpStatus, Ip, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '@/common/http/http';
-import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.rate-limit';
+import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.window-counter';
 import { CurrentUser, Permissions, Public, SignedIn } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { ActivityRepo } from './activity.repo';

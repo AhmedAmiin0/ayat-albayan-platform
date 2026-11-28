@@ -5,7 +5,7 @@ import {
 } from '@ab/shared';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.rate-limit';
+import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.window-counter';
 import { SalesRegistrationRepo } from './sales-registration.repo';
 
 /** Checks per user per 10 minutes (WindowCounter's default window): plenty for a chat, too few to walk the roll. */

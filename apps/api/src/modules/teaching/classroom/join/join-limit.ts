@@ -1,6 +1,6 @@
 import { canSkip, userOnlyFlags } from '@ab/shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.rate-limit';
+import { WindowCounter } from '@/modules/teaching/feedback/public/feedback.window-counter';
 
 /** A bucket key; userIsTest: the login's is_test (portal calls), absent on public routes. */
 interface LimitKey {
