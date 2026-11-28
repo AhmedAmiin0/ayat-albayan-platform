@@ -4,13 +4,14 @@ import { t } from '../lib/i18n/i18n';
 import { freshQueryClient, renderWithQuery } from '../testing/query';
 import { ChannelScreen } from './ChannelScreen';
 import { channelMessage, channelPage } from './testing/channel-fixtures';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
+mockApi.onWrite(async () => ({}));
 jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
-  apiSend: jest.fn(async () => ({})),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const page = channelPage({
@@ -22,11 +23,10 @@ const page = channelPage({
 });
 
 beforeEach(() => {
-  mockApiFetch
-    .mockReset()
-    .mockImplementation(async (path: string) =>
-      path.endsWith('/presence') ? { enabled: false, peers: [] } : page,
-    );
+  mockApi.reset('read');
+  mockApi.onRead(async ({ path }) =>
+    path.endsWith('/presence') ? { enabled: false, peers: [] } : page,
+  );
 });
 
 test('the family’s head: the app’s title with the student, the people, «أنت» last', async () => {
@@ -44,7 +44,7 @@ test('the API’s members name the people, teacher first, whoever spoke', async 
     { name: 'أم يوسف', role: 'guardian', me: true },
     { name: 'سارة', role: 'sales', me: false },
   ] as const;
-  mockApiFetch.mockImplementation(async (path: string) =>
+  mockApi.onRead(async ({ path }) =>
     path.endsWith('/presence')
       ? { enabled: false, peers: [] }
       : { ...page, participants: participants.map((x) => ({ ...x })) },

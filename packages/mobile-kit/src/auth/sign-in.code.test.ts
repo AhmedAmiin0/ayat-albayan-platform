@@ -2,11 +2,12 @@ import { ApiError } from '../lib/http/api';
 import { t } from '../lib/i18n/i18n';
 import { noticeText } from './login-notice';
 import { signInWithCode } from './sign-in';
+import { mockCall } from '@ab/testing/mock-call';
 
-const mockApiSend = jest.fn();
+const mockApi = mockCall();
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
-  apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
+  call: (request: unknown) => mockApi.call(request),
 }));
 jest.mock('../lib/http/supabase', () => ({
   supabase: { auth: { verifyOtp: jest.fn(), signOut: jest.fn() } },
@@ -19,8 +20,12 @@ test.each([
   [401, 'invalid_code', t.familyAuth.errors.invalid_code],
   [403, 'account_disabled', noticeText('accountDisabled')],
 ])("a %s %s from the staff verify is said in the teacher's words", async (status, code, words) => {
-  mockApiSend.mockRejectedValue(new ApiError(status, { code }));
+  mockApi.onWrite(() => Promise.reject(new ApiError(status, { code })));
   const res = await signInWithCode(body);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/staff-code/verify', body);
+  expect(mockApi.writes()).toContainEqual({
+    method: 'POST',
+    path: '/auth/staff-code/verify',
+    body: body,
+  });
   expect(res).toEqual({ ok: false, error: words });
 });
