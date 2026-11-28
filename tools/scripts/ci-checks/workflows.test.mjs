@@ -1,4 +1,4 @@
-// Guards for .github/workflows: the repo is PUBLIC, so these must stay true (docs/09 «GitHub Actions»).
+// Guards for .github/workflows: the repo is public, so these must hold (docs/09 «GitHub Actions»).
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
 import { test } from 'node:test';
@@ -16,8 +16,8 @@ const section = docs.slice(docs.indexOf('## GitHub Actions'));
 const secretsIn = (x) => [...JSON.stringify(x).matchAll(/secrets\.([A-Za-z_][A-Za-z0-9_]*)/g)].map((m) => m[1]);
 const jobsOf = (w) => Object.entries(w.doc.jobs ?? {});
 /**
- * Server-only messaging values (docs/12 §13.13): set by hand, never by a workflow. Sending itself is
- * the admin's switch in the database (docs/23: the env fuse is gone), which no workflow can reach.
+ * Server-only messaging values (docs/12 §13.13): set by hand, never by a workflow. Sending is the
+ * admin's switch in the database (docs/23), which no workflow can reach.
  */
 const FLAGS = /\b(WA_PHONE_NUMBER_ID|WA_CHAT_PHONE_NUMBER_ID|WA_ALLOWED_RECIPIENTS)\b/;
 
@@ -71,7 +71,8 @@ test('the flag guard catches every server-only messaging switch, as whole words 
 
 /** Where a workflow sets a flag: workflow, job and step env (keys AND values), run, with, if. */
 function flagHits(w) {
-  const steps = [{ env: w.doc.env }, ...jobsOf(w).flatMap(([, j]) => [{ env: j.env }, ...(j.steps ?? [])])];
+  const jobSteps = jobsOf(w).flatMap(([, j]) => [{ env: j.env }, ...(j.steps ?? [])]);
+  const steps = [{ env: w.doc.env }, ...jobSteps];
   const hits = [];
   for (const s of steps) {
     if (FLAGS.test(Object.keys(s.env ?? {}).join(' '))) hits.push(`${w.file}: env key`);
@@ -111,7 +112,6 @@ test('secrets are only used in jobs that bind an environment (or call a workflow
   };
   for (const w of workflows) {
     const top = secretsIn({ env: w.doc.env });
-    // No exception left: the Turborepo cache is the GitHub Actions cache, no TURBO_TOKEN (2026-10-30).
     assert.deepEqual(top, [], `${w.file}: workflow-level secret`);
     for (const [name, j] of jobsOf(w)) {
       const used = secretsIn(j);

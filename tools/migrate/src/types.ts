@@ -1,6 +1,9 @@
 // Contracts shared by every stage: extract → map → resolve → plan → apply → validate (README.md).
 
-/** Target entities in apply (dependency) order. Same names as the target tables, except report_pdfs (Storage). */
+/**
+ * Target entities in apply (dependency) order. Same names as the target tables, except report_pdfs
+ * (Storage).
+ */
 export const APPLY_ORDER = [
   'teachers',
   'guardians',
@@ -31,7 +34,10 @@ export type Cell = string | number | boolean | null;
 
 export type SourceAlias = 'HUB' | 'BOOK' | 'REP' | 'SUBS' | 'HEART' | 'FIN' | 'ATT' | 'CRM';
 
-/** Where a value came from. `row` is the 1-based sheet row (CRM: 0); `file` only for multi-file specs (ATT). */
+/**
+ * Where a value came from. `row` is the 1-based sheet row (CRM: 0); `file` only for multi-file
+ * specs (ATT).
+ */
 export interface SourceRef {
   source: SourceAlias;
   tab: string;
@@ -77,7 +83,10 @@ export interface RowIssue {
   detail?: string;
 }
 
-/** Natural key: stable across runs, built only by src/keys.ts. Stored in import_items(entity, natural_key). */
+/**
+ * Natural key: stable across runs, built only by src/keys.ts. Stored in
+ * import_items(entity, natural_key).
+ */
 export interface NaturalKey {
   entity: EntityName;
   key: string;
@@ -98,7 +107,7 @@ export type ColumnValue =
 export interface TargetRecord {
   columns: Record<string, ColumnValue>;
   refs: Record<string, NaturalKey>;
-  /** Other spellings of a student's name (rows merged by AB code): matching only, never written or hashed. */
+  /** Other name spellings (rows merged by AB code): for matching only, never written or hashed. */
   aliases?: readonly string[];
 }
 
@@ -106,7 +115,10 @@ export type Mapped<T = TargetRecord> =
   | { ok: true; key: NaturalKey; value: T; ref: SourceRef; issues: RowIssue[] }
   | { ok: false; ref: SourceRef; issues: RowIssue[] };
 
-/** What the target already holds for a natural key. hash null = adopted (found by unique column, no import_item yet). */
+/**
+ * What the target already holds for a natural key. hash null = adopted: found by a unique column,
+ * with no import_item yet.
+ */
 export interface Existing {
   targetId: string | null;
   hash: string | null;

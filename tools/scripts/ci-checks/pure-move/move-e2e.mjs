@@ -1,5 +1,7 @@
 // Whether a move PR may skip e2e (ci.yml «changes», step «move PR»; docs/32 g1). Usage:
-//   git diff --name-status -M50% <base>...HEAD | node tools/scripts/ci-checks/pure-move/move-e2e.mjs   exit 0 = may skip
+//   git diff --name-status -M50% <base>...HEAD |
+//     node tools/scripts/ci-checks/pure-move/move-e2e.mjs
+//   exit 0 = may skip
 // pure-move-check must pass too (the step runs it after). Only plain folder moves qualify: the diff
 // adds or changes a move map, no map renames an identifier, no file changes its name (a stem rename
 // lets string literals follow it), no web route moves (its URL would change), and nothing e2e reads

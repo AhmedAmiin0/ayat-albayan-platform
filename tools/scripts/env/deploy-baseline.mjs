@@ -1,10 +1,12 @@
 // What did staging last receive? Used by deploy-staging.yml «plan» (GitHub API, actions: read, no
 // secret).
-//   migrate_base  the newest green deploy-staging run whose «deploy» job passed and that did not skip
-//                 migrations: run-name «deploy-staging <sha>» with no marker (a marker = env-only / no-migrate)
+//   migrate_base  the newest green deploy-staging run whose «deploy» job passed and that did not
+//                 skip migrations: run-name «deploy-staging <sha>» with no marker (env-only or
+//                 no-migrate)
 //   code_base     the newest green deploy-staging run that shipped code (no «env-only» marker)
 //   ota_base      the commit of the newest green mobile run that shipped an OTA to preview
-//                 (run-name «mobile ota-update preview» / «mobile both preview»); empty if none is known
+//                 (run-name «mobile ota-update preview» / «mobile both preview»); empty if
+//                 none is known
 //   family_ota_base / family_build_base  the commits of the newest green family app preview OTA /
 //                 preview build (run-name «mobile <action> family-preview», lane L06)
 // An empty value means «unknown»: the workflow then fails safe (the gated migrate job runs; no

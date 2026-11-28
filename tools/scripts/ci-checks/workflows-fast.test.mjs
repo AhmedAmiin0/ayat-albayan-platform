@@ -1,4 +1,4 @@
-// Guards for the faster pipelines (2026-10-23): every shortcut must fail safe (docs/09 «GitHub Actions»).
+// Guards for the faster pipelines: every shortcut must fail safe (docs/09 «GitHub Actions»).
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
@@ -78,7 +78,8 @@ test('ci: Wave F guards fail the build (folder cap strict, jscpd, knip, queries,
 
 test('ci: e2e keeps the RUN_E2E switch and one database per shard', () => {
   assert.match(ci.jobs.e2e.if, /vars\.RUN_E2E != 'false'/);
-  // The matrix comes from «changes»; its fallback (pushes, any failure) is the full one (e2e-areas/workflow.test.mjs).
+  // The matrix comes from «changes»; its fallback (pushes, any failure) is the full one
+  // (e2e-areas/workflow.test.mjs).
   const fallback = JSON.parse(ci.jobs.e2e.strategy.matrix.match(/\|\| '(\{.*\})'\) \}\}$/)[1]);
   assert.deepEqual(
     fallback.include.map((m) => m.shard),
