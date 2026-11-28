@@ -9,6 +9,7 @@ describe('publicConfigRoutes', () => {
     expect(lines).toEqual(['GET /settings/public settings']);
     expect(routes.get.path).toBe(PUBLIC_CONFIG_PATH);
     expect('permissions' in routes.get).toBe(false);
+    expect(routes.get.isPublic).toBe(true);
   });
 
   it('answers the public settings and the public custom values', () => {

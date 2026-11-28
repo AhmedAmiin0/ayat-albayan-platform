@@ -10,6 +10,7 @@ describe('internalJobRoutes', () => {
   it('answers with no body and asks no permission: the internal token is checked inside', () => {
     for (const route of Object.values(routes)) {
       expect(route.response).toBe('empty');
+      expect(route.isPublic).toBe(true);
       expect(route).not.toHaveProperty('permissions');
       expect(route).not.toHaveProperty('body');
     }

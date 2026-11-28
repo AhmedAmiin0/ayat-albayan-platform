@@ -37,5 +37,6 @@ export const publicConfigRoutes = {
     path: PUBLIC_CONFIG_PATH,
     response: publicConfigSchema,
     tags: ['settings'],
+    isPublic: true,
   }),
 };

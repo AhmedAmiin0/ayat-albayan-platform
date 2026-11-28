@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ApiExcludeController } from '@nestjs/swagger';
-import { Public } from '@/common/auth/decorators';
 import { kickable } from '@/config/role/background-job';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { kickOptionsOfQuery } from '@/config/role/kick-options';
@@ -30,7 +29,6 @@ const forbidden = () => new ForbiddenException({ code: 'forbidden', message: 'fo
 export class InternalJobsController {
   constructor(private readonly refs: ModuleRef) {}
 
-  @Public()
   @Route(routes.kick)
   @HttpCode(202)
   async kick(
@@ -50,7 +48,6 @@ export class InternalJobsController {
   }
 
   /** PEER_RELOAD_PATH: another API copy took an admin save; reload this process's config (any role). */
-  @Public()
   @Route(routes.peerReload)
   @HttpCode(204)
   async peerReload(@Headers(INTERNAL_HEADER) token: string | undefined): Promise<void> {

@@ -8,6 +8,7 @@ describe('shortLinkRedirectRoutes', () => {
     expect(go.response).toBe('redirect');
     expect(go).not.toHaveProperty('permissions');
     expect(go.tags).toEqual(['short-links']);
+    expect(go.isPublic).toBe(true);
   });
 
   it('reads any code as text, so a code that cannot be ours still gets the same 404 page', () => {

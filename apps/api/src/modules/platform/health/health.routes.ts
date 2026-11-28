@@ -11,7 +11,7 @@ const liveSchema = z.object({
   storage: z.object({ driver: z.enum(STORAGE_DRIVERS), status: storageStateSchema }),
 });
 
-const probe = { tags: ['health'] } as const;
+const probe = { tags: ['health'], isPublic: true } as const;
 
 /** Probes no client app calls (docs/62 part 3 §1): the load balancer and monitors read them. */
 export const healthRoutes = {
