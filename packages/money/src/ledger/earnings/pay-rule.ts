@@ -22,9 +22,13 @@ export interface PayLesson {
  * later does not shrink the teacher's history.
  */
 export function lessonCountsForPay(l: PayLesson, s: PayRuleSettings): boolean {
-  const status = l.status === 'completed' || (l.status === 'late' && s.countLate) || (l.status === 'no_show' && s.countNoShow);
-  return status && (!l.isTrial || s.countTrials);
+  return statusCountsForPay(l.status, s) && (!l.isTrial || s.countTrials);
 }
+
+const statusCountsForPay = (status: string, s: PayRuleSettings): boolean =>
+  status === 'completed' ||
+  (status === 'late' && s.countLate) ||
+  (status === 'no_show' && s.countNoShow);
 
 export type Rates = Record<Duration, number | null>;
 

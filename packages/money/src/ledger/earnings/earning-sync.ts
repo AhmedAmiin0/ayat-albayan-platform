@@ -61,14 +61,20 @@ function rateFor(i: SyncInput): number | null {
 
 export function planEarningSync(i: SyncInput): SyncAction {
   const rate = counts(i) ? rateFor(i) : null;
-  const { earning } = i;
-  if (rate !== null) {
-    if (!earning) return { kind: 'insert', rate, amount: rate };
-    if (earning.status === 'paid') return { kind: 'none' };
-    const status = earningStatus({ amount: rate, paid_amount: earning.paid_amount });
-    return { kind: 'update', rate, amount: rate, status };
-  }
+  return rate === null ? uncountedAction(i.earning) : countedAction(i.earning, rate);
+}
+
+function countedAction(earning: SyncEarning | null, rate: number): SyncAction {
+  if (!earning) return { kind: 'insert', rate, amount: rate };
+  if (earning.status === 'paid') return { kind: 'none' };
+  const status = earningStatus({ amount: rate, paid_amount: earning.paid_amount });
+  return { kind: 'update', rate, amount: rate, status };
+}
+
+function uncountedAction(earning: SyncEarning | null): SyncAction {
   if (!earning) return { kind: 'none' };
   if (earning.paid_amount === 0) return { kind: 'delete' };
-  return earning.status === 'paid' ? { kind: 'none' } : { kind: 'cap', amount: earning.paid_amount };
+  return earning.status === 'paid'
+    ? { kind: 'none' }
+    : { kind: 'cap', amount: earning.paid_amount };
 }

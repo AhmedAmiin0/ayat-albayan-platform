@@ -70,18 +70,24 @@ export function allocatePayment(input: {
   amount: number;
   earnings: readonly Allocatable[];
 }): Allocation {
-  let left = toCents(input.amount);
-  if (!Number.isFinite(left) || left <= 0) return { ok: false, error: 'invalid_amount' };
+  const cents = toCents(input.amount);
+  if (!Number.isFinite(cents) || cents <= 0) return { ok: false, error: 'invalid_amount' };
   const open = input.earnings
     .filter((e) => outstanding(e) > 0)
     .sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at) || a.id.localeCompare(b.id));
   if (open.length === 0) return { ok: false, error: 'nothing_outstanding' };
+  const { items, left } = spreadOldestFirst(open, cents);
+  return left > 0 ? { ok: false, error: 'overpayment' } : { ok: true, items };
+}
+
+function spreadOldestFirst(open: readonly Allocatable[], cents: number) {
   const items: AllocationItem[] = [];
+  let left = cents;
   for (const e of open) {
     if (left === 0) break;
     const take = Math.min(left, toCents(outstanding(e)));
     items.push({ earning_id: e.id, amount: fromCents(take) });
     left -= take;
   }
-  return left > 0 ? { ok: false, error: 'overpayment' } : { ok: true, items };
+  return { items, left };
 }

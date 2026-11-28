@@ -61,6 +61,9 @@ function packageOf(o: QuoteOptions): { id: Quote['package']; lessons: number; ba
   return { id: 'custom', lessons: o.count, base: customBase(o.count, o.duration) };
 }
 
+const savingsPctOf = (price: number, insteadOf: number | null): number | null =>
+  insteadOf === null ? null : Math.round((1 - price / insteadOf) * 100);
+
 export function quote(o: QuoteOptions): Quote {
   const { id, lessons, base } = packageOf(o);
   const at = { country: o.country, usdRate: o.usdRate };
@@ -84,7 +87,7 @@ export function quote(o: QuoteOptions): Quote {
     afterDiscount: roundPrice(total * keep, o.rounding),
     perLesson: roundCents((price * keep) / lessons),
     insteadOf,
-    savingsPct: insteadOf === null ? null : Math.round((1 - price / insteadOf) * 100),
+    savingsPct: savingsPctOf(price, insteadOf),
     popular: tier?.popular === true,
     featured: tier?.featured === true,
   };

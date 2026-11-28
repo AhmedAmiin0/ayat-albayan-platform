@@ -78,6 +78,8 @@ export function consumesPackage(
 
 const byTime = (a: PackageLesson, b: PackageLesson) =>
   Date.parse(a.startsAt) - Date.parse(b.startsAt) || a.lessonId.localeCompare(b.lessonId);
+const startOfNth = (lessons: readonly PackageLesson[], n: number): string | null =>
+  lessons[n - 1]?.startsAt ?? null;
 const byStart = (a: PackageSubscription, b: PackageSubscription) =>
   a.startsOn.localeCompare(b.startsOn) ||
   Date.parse(a.createdAt) - Date.parse(b.createdAt) ||
@@ -116,8 +118,8 @@ export function subscriptionBalances(input: {
       lessonsUsed,
       remaining: s.lessonsTotal - lessonsUsed,
       isLast,
-      endedAt: used[capTo - 1]?.startsAt ?? null,
-      projectedEndAt: left > 0 ? (booked[left - 1]?.startsAt ?? null) : null,
+      endedAt: startOfNth(used, capTo),
+      projectedEndAt: left > 0 ? startOfNth(booked, left) : null,
     };
     capFrom = capTo;
     return balance;
