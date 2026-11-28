@@ -2,54 +2,23 @@ import { fromCents, toCents } from '@ab/core';
 import { localDay } from './first-paid';
 import { addCalendarDays, addCalendarMonths } from '@ab/time';
 import { z } from 'zod';
+import type {
+  CurrencyTotals,
+  StatementLine,
+  StatementPlan,
+  StatementSalary,
+  StatementCommissionInput,
+  StatementAdjustmentInput,
+} from './statement.types';
 
 // An assistant's monthly statement (migration 20261006000273: build_assistant_statement) in pure
 // code: salary + the commissions earned up to that month +/- adjustments, per currency, never
 // summed across currencies. The status flow is the teacher payouts' (canTransitionPayout,
 // PAYOUT_CORRECTIONS).
 
-export interface StatementSalary {
-  amount: number;
-  currency: string;
-  /** YYYY-MM-DD: the first day the salary runs. A full month, no proration. */
-  startsOn: string;
-}
-export interface StatementCommissionInput {
-  id: string;
-  amount: number;
-  currency: string;
-  /** ISO instant: when the subscription became fully paid. */
-  earnedAt: string;
-}
-export interface StatementAdjustmentInput {
-  id: string;
-  /** Signed: a reversal is negative. */
-  amount: number;
-  currency: string;
-  /** YYYY-MM-01: the first statement month that may take it. */
-  effectiveMonth: string;
-}
-
 export const STATEMENT_LINE_KINDS = ['salary', 'commission', 'adjustment'] as const;
 export const statementLineKindSchema = z.enum(STATEMENT_LINE_KINDS);
 export type StatementLineKind = z.infer<typeof statementLineKindSchema>;
-export interface StatementLine {
-  kind: StatementLineKind;
-  /** The commission or adjustment id; null for the salary. */
-  ref: string | null;
-  amount: number;
-  currency: string;
-}
-export interface CurrencyTotals {
-  salary: number;
-  commissions: number;
-  adjustments: number;
-  total: number;
-}
-export interface StatementPlan {
-  lines: StatementLine[];
-  totals: Record<string, CurrencyTotals>;
-}
 
 /** The first day of the month an instant falls in, in a time zone: YYYY-MM-01. */
 export const monthOf = (iso: string, tz: string): string => `${localDay(iso, tz).slice(0, 7)}-01`;
@@ -67,18 +36,29 @@ export function planStatement(input: {
   commissions: readonly StatementCommissionInput[];
   adjustments: readonly StatementAdjustmentInput[];
 }): StatementPlan {
-  const lines: StatementLine[] = [];
-  const { salary } = input;
-  if (salary && salary.amount > 0 && salary.startsOn <= lastDayOf(input.month)) {
-    lines.push({ kind: 'salary', ref: null, amount: salary.amount, currency: salary.currency });
-  }
-  for (const c of input.commissions) {
-    if (monthOf(c.earnedAt, input.tz) <= input.month) lines.push({ kind: 'commission', ref: c.id, amount: c.amount, currency: c.currency });
-  }
-  for (const a of input.adjustments) {
-    if (a.effectiveMonth <= input.month) lines.push({ kind: 'adjustment', ref: a.id, amount: a.amount, currency: a.currency });
-  }
+  const { month } = input;
+  const commissions = input.commissions.filter((c) => monthOf(c.earnedAt, input.tz) <= month);
+  const adjustments = input.adjustments.filter((a) => a.effectiveMonth <= month);
+  const lines = [
+    ...salaryLines(input.salary, month),
+    ...commissions.map((c) => lineOf('commission', c.id, c)),
+    ...adjustments.map((a) => lineOf('adjustment', a.id, a)),
+  ];
   return { lines, totals: totalsOf(lines) };
+}
+
+type Amount = Pick<StatementLine, 'amount' | 'currency'>;
+
+const lineOf = (kind: StatementLineKind, ref: string | null, src: Amount): StatementLine => ({
+  kind,
+  ref,
+  amount: src.amount,
+  currency: src.currency,
+});
+
+function salaryLines(salary: StatementSalary | null, month: string): StatementLine[] {
+  const due = salary !== null && salary.amount > 0 && salary.startsOn <= lastDayOf(month);
+  return due ? [lineOf('salary', null, salary)] : [];
 }
 
 const FIELD = { salary: 'salary', commission: 'commissions', adjustment: 'adjustments' } as const;

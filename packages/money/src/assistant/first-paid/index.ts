@@ -1,9 +1,7 @@
-export {
-  type CommissionContext,
-  localDay,
-  type PaymentFact,
-  planCommission,
-  type PlannedCommission,
-  planOn,
-  type SubscriptionFact,
-} from './first-paid';
+export { localDay, planCommission, planOn } from './first-paid';
+export type {
+  CommissionContext,
+  PaymentFact,
+  PlannedCommission,
+  SubscriptionFact,
+} from './first-paid.types';

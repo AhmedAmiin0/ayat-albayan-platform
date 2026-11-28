@@ -44,18 +44,31 @@ const roundDiv = (n: number, d: number): number => Math.floor((n + d / 2) / d);
  */
 export function computeCommission(input: CommissionInput): CommissionAmount | null {
   const share = input.share ?? 100;
-  if (!(input.value > 0) || !(input.base >= 0) || !(share >= 0 && share <= 100)) return null;
-  if (input.type === 'fixed') {
-    if (!input.currency) return null;
-    const fixed = roundDiv(toCents(input.value) * share, 100);
-    return fixed > 0 ? { amount: fromCents(fixed), currency: input.currency } : null;
-  }
-  if (input.value > 100) return null;
+  if (!isCommissionable(input, share)) return null;
+  return commissionByType[input.type](input, share);
+}
+
+const isCommissionable = (input: CommissionInput, share: number): boolean =>
+  input.value > 0 && input.base >= 0 && share >= 0 && share <= 100;
+
+const earned = (cents: number, currency: string): CommissionAmount | null =>
+  cents > 0 ? { amount: fromCents(cents), currency } : null;
+
+type CommissionRule = (input: CommissionInput, share: number) => CommissionAmount | null;
+
+const commissionByType: Readonly<Record<AssistantCommissionType, CommissionRule>> = {
+  fixed: (input, share) =>
+    input.currency ? earned(roundDiv(toCents(input.value) * share, 100), input.currency) : null,
   // price in cents x value in hundredths of a percent x share, / 1 000 000, rounded half up:
   // exact integer maths.
-  const cents = roundDiv(toCents(input.base) * toCents(input.value) * share, 1_000_000);
-  return cents > 0 ? { amount: fromCents(cents), currency: input.baseCurrency } : null;
-}
+  percent: (input, share) =>
+    input.value > 100
+      ? null
+      : earned(
+          roundDiv(toCents(input.base) * toCents(input.value) * share, 1_000_000),
+          input.baseCurrency,
+        ),
+};
 
 /** What happens to the student's one commission when a payment, refund or price change lands. */
 export type CommissionAction = 'earn' | 'reinstate' | 'void' | 'keep' | 'none';
@@ -81,6 +94,10 @@ export function commissionAction(
   eligible: boolean,
 ): CommissionAction {
   if (!existing) return eligible ? 'earn' : 'none';
+  return existingCommissionAction(existing, eligible);
+}
+
+function existingCommissionAction(existing: CommissionState, eligible: boolean): CommissionAction {
   if (existing.status === 'earned') return existing.stillFullyPaid ? 'keep' : 'void';
   if (existing.voidAuto === false) return 'keep';
   return eligible ? 'reinstate' : 'none';

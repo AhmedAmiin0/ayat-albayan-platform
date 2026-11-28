@@ -1,10 +1,12 @@
 export * from './commission';
 export * from './first-paid/first-paid';
+export type * from './first-paid/first-paid.types';
 export * from './kind';
 export * from './renewal';
 export * from './schemas';
 export * from './started';
 export * from './statement';
+export type * from './statement.types';
 export * from './statement-view.schemas';
 export * from './terms-dates';
 export * from './wallet';

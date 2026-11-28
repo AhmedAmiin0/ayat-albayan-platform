@@ -1,9 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { firstFullyPaid, localDay, planCommission, subscriptionFullAt, type PaymentFact, type SubscriptionFact } from '../first-paid';
+import { firstFullyPaid, localDay, planCommission, subscriptionFullAt } from '../first-paid';
+import type { PaymentFact, SubscriptionFact } from '../first-paid.types';
 
-const pay = (amount: number, paid_at: string, kind: PaymentFact['kind'] = 'payment'): PaymentFact => ({ amount, kind, paid_at });
-const sub = (id: string, price: number, payments: PaymentFact[]): SubscriptionFact =>
-  ({ id, price, currency: 'SAR', created_at: '2026-09-01T00:00:00Z', payments });
+const pay = (
+  amount: number,
+  paid_at: string,
+  kind: PaymentFact['kind'] = 'payment',
+): PaymentFact => ({ amount, kind, paid_at });
+const sub = (id: string, price: number, payments: PaymentFact[]): SubscriptionFact => ({
+  id,
+  price,
+  currency: 'SAR',
+  created_at: '2026-09-01T00:00:00Z',
+  payments,
+});
 const TERMS = { type: 'percent', value: 10, currency: null, startsOn: '2026-10-01' } as const;
 const plan = (
   subscriptions: SubscriptionFact[],
@@ -20,35 +30,63 @@ const plan = (
 
 describe('subscriptionFullAt (twin of subscription_full_at)', () => {
   it('is null until the net paid reaches the price, then the date of the completing payment', () => {
-    const payments = [pay(100, '2026-10-01T10:00:00Z'), pay(150, '2026-10-05T10:00:00Z'), pay(20, '2026-10-09T10:00:00Z')];
+    const payments = [
+      pay(100, '2026-10-01T10:00:00Z'),
+      pay(150, '2026-10-05T10:00:00Z'),
+      pay(20, '2026-10-09T10:00:00Z'),
+    ];
     expect(subscriptionFullAt({ price: 250, payments: payments.slice(0, 1) })).toBeNull();
     expect(subscriptionFullAt({ price: 250, payments })).toBe('2026-10-05T10:00:00Z');
   });
 
   it('counts a refund against it and moves the date when it is paid again', () => {
     const base = [pay(250, '2026-10-01T10:00:00Z')];
-    expect(subscriptionFullAt({ price: 250, payments: [...base, pay(50, '2026-10-02T10:00:00Z', 'refund')] })).toBeNull();
     expect(
-      subscriptionFullAt({ price: 250, payments: [...base, pay(50, '2026-10-02T10:00:00Z', 'refund'), pay(50, '2026-10-03T10:00:00Z')] }),
+      subscriptionFullAt({
+        price: 250,
+        payments: [...base, pay(50, '2026-10-02T10:00:00Z', 'refund')],
+      }),
+    ).toBeNull();
+    expect(
+      subscriptionFullAt({
+        price: 250,
+        payments: [
+          ...base,
+          pay(50, '2026-10-02T10:00:00Z', 'refund'),
+          pay(50, '2026-10-03T10:00:00Z'),
+        ],
+      }),
     ).toBe('2026-10-03T10:00:00Z');
   });
 
   it('is exact to the cent and never full for a free package', () => {
-    expect(subscriptionFullAt({ price: 0.3, payments: [pay(0.1, '2026-10-01T00:00:00Z'), pay(0.2, '2026-10-02T00:00:00Z')] })).toBe('2026-10-02T00:00:00Z');
-    expect(subscriptionFullAt({ price: 0, payments: [pay(10, '2026-10-01T00:00:00Z')] })).toBeNull();
+    expect(
+      subscriptionFullAt({
+        price: 0.3,
+        payments: [pay(0.1, '2026-10-01T00:00:00Z'), pay(0.2, '2026-10-02T00:00:00Z')],
+      }),
+    ).toBe('2026-10-02T00:00:00Z');
+    expect(
+      subscriptionFullAt({ price: 0, payments: [pay(10, '2026-10-01T00:00:00Z')] }),
+    ).toBeNull();
     expect(subscriptionFullAt({ price: 100, payments: [] })).toBeNull();
   });
 
   it('orders by paid_at, not by the order the rows arrive in', () => {
     const late = pay(100, '2026-10-04T00:00:00Z');
     const early = pay(100, '2026-10-02T00:00:00Z');
-    expect(subscriptionFullAt({ price: 200, payments: [late, early] })).toBe('2026-10-04T00:00:00Z');
+    expect(subscriptionFullAt({ price: 200, payments: [late, early] })).toBe(
+      '2026-10-04T00:00:00Z',
+    );
   });
 });
 
 describe('firstFullyPaid: only the first subscription to be paid counts', () => {
   const a = sub('a', 100, [pay(100, '2026-10-05T00:00:00Z')]);
-  const b = { ...sub('b', 100, [pay(100, '2026-10-02T00:00:00Z')]), created_at: '2026-09-20T00:00:00Z' };
+  const b = {
+    ...sub('b', 100, [pay(100, '2026-10-02T00:00:00Z')]),
+    created_at: '2026-09-20T00:00:00Z',
+  };
   it('picks the earliest fully paid date, not the earliest created', () => {
     expect(firstFullyPaid([a, b])?.subscription.id).toBe('b');
   });
@@ -65,10 +103,18 @@ describe('localDay', () => {
 });
 
 describe('planCommission (twin of evaluate_assistant_commission)', () => {
-  const paid = (price: number, at: string, over: Partial<SubscriptionFact> = {}) => ({ ...sub('s1', price, [pay(price, at)]), ...over });
+  const paid = (price: number, at: string, over: Partial<SubscriptionFact> = {}) => ({
+    ...sub('s1', price, [pay(price, at)]),
+    ...over,
+  });
 
   it('percent of the price on the first fully paid subscription', () => {
-    expect(plan([paid(250, '2026-10-05T10:00:00Z')])).toMatchObject({ amount: 25, currency: 'SAR', subscriptionId: 's1', base: 250 });
+    expect(plan([paid(250, '2026-10-05T10:00:00Z')])).toMatchObject({
+      amount: 25,
+      currency: 'SAR',
+      subscriptionId: 's1',
+      base: 250,
+    });
   });
 
   it('a second subscription earns nothing once the first was paid', () => {
@@ -97,6 +143,8 @@ describe('planCommission (twin of evaluate_assistant_commission)', () => {
 
   it('a fixed commission keeps its own currency', () => {
     const fixed = { type: 'fixed', value: 30, currency: 'EGP', startsOn: '2026-10-01' } as const;
-    expect(plan([paid(100, '2026-10-05T10:00:00Z', { currency: 'USD' })], { terms: fixed })).toMatchObject({ amount: 30, currency: 'EGP', baseCurrency: 'USD' });
+    expect(
+      plan([paid(100, '2026-10-05T10:00:00Z', { currency: 'USD' })], { terms: fixed }),
+    ).toMatchObject({ amount: 30, currency: 'EGP', baseCurrency: 'USD' });
   });
 });
