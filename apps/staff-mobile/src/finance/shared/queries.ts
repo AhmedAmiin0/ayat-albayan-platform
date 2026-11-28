@@ -1,10 +1,10 @@
 import {
+  dashboardCalls,
   expenseCalls,
   expenseCategoryCalls,
   payoutCalls,
   teacherEarningCalls,
 } from '@ab/client-core';
-import type { DashboardResponse } from '@ab/money';
 import type { InvoiceView } from '@ab/schedule';
 import { routePath } from '@ab/core';
 import { payoutRoutes, teacherEarningRoutes } from '@ab/shared';
@@ -43,12 +43,13 @@ export const useExpenseCategories = () =>
 /** GET /invoices/recent (the web's list): newest first, each with the payment recorded from it. */
 export const useInvoices = () => usePagedList<InvoiceView>({ path: '/invoices/recent' });
 
+const dashboard = dashboardCalls({ apiFetch, apiSend });
+
 export const useFinanceSummary = (range: { from: string; to: string }) =>
   useQuery({
     // 'finance': its own cache entry (other staleTime and projection than the dashboard's useSummary).
     queryKey: [...pathKey('/dashboard/summary'), 'finance', range],
-    queryFn: () =>
-      apiFetch<DashboardResponse>(`/dashboard/summary?from=${range.from}&to=${range.to}`),
+    queryFn: () => dashboard.summary(range),
     staleTime: 60_000,
   });
 
