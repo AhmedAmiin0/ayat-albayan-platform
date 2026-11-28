@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '@/common/audit/audit.service';
 import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
 import { GuardiansService } from '@/modules/people/guardians/guardians.service';
-import { studentCreateRequestSchema, studentPatchSchema } from './students.dto';
+import { studentCreateRequestSchema, studentPatchSchema } from '@ab/shared';
 import { StudentsService } from './students.service';
 
 // POST and PATCH /students save contact_is_self (docs/30 §1).

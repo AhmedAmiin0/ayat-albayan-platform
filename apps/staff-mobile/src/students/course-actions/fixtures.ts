@@ -1,11 +1,11 @@
-import type { CourseStopPreview, ProfileCourseView } from '@ab/shared';
+import type { CourseStopPreview, CourseStopResult, ProfileCourseView } from '@ab/shared';
 import { MON_19, maryam, noAvailability, slot, SUN_17, THU_18 } from '@/booking/testing/fixtures';
 import { ApiError } from '@ab/mobile-kit';
 import { runningCourse } from '@/sales-course/change/change-test-setup';
 
 // The student profile's course actions as the API answers them (tests only).
 
-const STUDENT = 's1';
+const STUDENT = '1b000000-0000-4000-8000-000000000001';
 export const SUB = 'dddddddd-dddd-4ddd-8ddd-dddddddddddd';
 export const BASE = '/students/s1';
 
@@ -26,6 +26,17 @@ export const stopPreview = (over: Partial<CourseStopPreview> = {}): CourseStopPr
   ...over,
 });
 
+/** A stop's answer: three lessons cancelled, one rule ended, no refund unless given. */
+export const stopResult = (over: Partial<CourseStopResult> = {}): CourseStopResult => ({
+  subscriptionId: SUB,
+  cancelledLessons: 3,
+  endedRules: 1,
+  studentStatus: 'churned',
+  stoppedAt: '2026-11-27T10:00:00.000Z',
+  refund: null,
+  ...over,
+});
+
 const moveView = (): ProfileCourseView => ({
   student: { id: STUDENT, name: 'ريم', code: 'AB-0101', tz: 'Asia/Riyadh' },
   course: { ...runningCourse, subscriptionId: SUB },
@@ -39,7 +50,11 @@ export function serve(preview: CourseStopPreview = stopPreview()) {
     if (path.startsWith(`${BASE}/course-teacher/teachers`)) return [maryam, noAvailability];
     if (/\/course-(times|teacher)\/change/.test(path)) return moveView();
     if (path.includes('/booking/slots')) {
-      return { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [SUN_17, THU_18, MON_19].map((s) => slot(s)) };
+      return {
+        teacher_tz: 'Africa/Cairo',
+        step_min: 45,
+        slots: [SUN_17, THU_18, MON_19].map((s) => slot(s)),
+      };
     }
     throw new ApiError(404);
   };

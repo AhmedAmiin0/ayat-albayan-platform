@@ -1,8 +1,7 @@
-import { paymentViewSchema } from '@ab/money';
-import { signedDownloadSchema } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { useState } from 'react';
+import { studentListItemFixture } from '@ab/shared/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYMENT, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
 import { t } from '@ab/web-kit';
@@ -21,7 +20,7 @@ const SIGNED = { bucket: 'receipts', path: 'sub-1/abc.jpg', token: 'tok', signed
 const file = (type: string, size = 2048) => new File([new Uint8Array(size)], 'receipt.jpg', { type });
 const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSize: 20 });
 
-const STUDENT = { id: 'stu-1', name: 'سهيلة', code: 'AB-0183', guardian_name: 'أم سهيلة' };
+const STUDENT = studentListItemFixture({ id: 'stu-1', guardian_name: 'أم سهيلة' });
 
 /** The route's URL search, held in state. */
 function Harness() {
@@ -110,7 +109,7 @@ describe('PaymentsPage', () => {
     fireEvent.click(within(row).getByRole('button', { name: t.payments.viewReceipt }));
     const dialog = await screen.findByRole('dialog', { name: t.payments.receipt });
     expect((await within(dialog).findByRole('img')).getAttribute('src')).toBe('https://signed/receipt.jpg');
-    expect(apiFetch).toHaveBeenCalledWith('/payments/pay-1/receipt', { schema: signedDownloadSchema });
+    expect(apiFetch).toHaveBeenCalledWith('/payments/pay-1/receipt');
   });
 
   it('records a payment: search the student, their open package is chosen', async () => {
@@ -128,7 +127,7 @@ describe('PaymentsPage', () => {
     apiSend.mockResolvedValue(PAYMENT);
     fireEvent.click(within(dialog).getByRole('button', { name: t.payments.record }));
     await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('POST', '/payments', { body: expect.objectContaining({ subscriptionId: 'sub-1', amount: 145 }), schema: paymentViewSchema }),
+      expect(apiSend).toHaveBeenCalledWith('POST', '/payments', expect.objectContaining({ subscriptionId: 'sub-1', amount: 145 })),
     );
     expect(await screen.findByText(t.payments.saved)).toBeTruthy();
   });
@@ -139,6 +138,6 @@ describe('PaymentsPage', () => {
     const dialog = await screen.findByRole('dialog', { name: t.finance.deletePaymentTitle });
     apiSend.mockResolvedValue(undefined);
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.delete }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/payments/pay-1'));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/payments/pay-1', undefined));
   });
 });

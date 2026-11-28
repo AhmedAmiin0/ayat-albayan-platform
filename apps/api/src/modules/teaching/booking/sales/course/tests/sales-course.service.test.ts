@@ -12,9 +12,10 @@ import { SalesCourse } from '@/modules/teaching/booking/sales/course/sales-cours
 const noDrafts = { held: async () => false, get: async () => null };
 
 const S1 = 'c0000000-0000-4000-8000-000000000001';
+const SUB1 = 'e1000000-0000-4000-8000-000000000001';
 const S2 = 'c0000000-0000-4000-8000-000000000002';
 const USER: AuthUser = { id: 'b1000000-0000-4000-8000-00000000000b', email: null, role: 'sales' };
-const SUB: CourseSubscription = { id: 'sub1', package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-10' };
+const SUB: CourseSubscription = { id: SUB1, package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-10' };
 const STUDENT = { id: S1, code: 'AB-0001', name: 'سهيلة', tz: 'Asia/Riyadh', program: 'quran' as const, teacher_gender_pref: null, teacher_id: null };
 const BODY = {
   teacherId: 'a0000000-0000-4000-8000-000000000001',
@@ -48,9 +49,9 @@ describe('SalesCourse.options — the course guard (R-ASST-01, R-ASST-04)', () =
 
   it('an allowed course: no invoice, every rule ends on the 8th lesson (Sun 18 → Tue 10 Nov), the subscription’s label', async () => {
     const { course, queries } = setup();
-    const course8 = { package: '8', subscriptionId: 'sub1', follows: null };
+    const course8 = { package: '8', subscriptionId: SUB1, follows: null };
     expect(await course.options(bookingRequestSchema.parse(BODY))).toEqual({ invoiceWaived: true, endsOn: '2026-11-10', course: course8 });
-    expect(queries.subscriptionBooked).toHaveBeenCalledWith('sub1');
+    expect(queries.subscriptionBooked).toHaveBeenCalledWith(SUB1);
     expect(queries.subscription).toHaveBeenCalledWith(S1, undefined);
     expect(queries.rules).toHaveBeenCalledWith(S1);
   });
@@ -107,5 +108,11 @@ describe('SalesCourse.view — GET /sales/booking/course', () => {
     const { course, queries } = setup();
     expect(errorCode(await course.view(S2, USER).catch((e: unknown) => e))).toBe('not_your_student');
     expect(queries.student).not.toHaveBeenCalled();
+  });
+
+  it('a student row the wizard cannot read is 500 response_invalid, not a broken view', async () => {
+    const { course, queries } = setup();
+    queries.student.mockResolvedValue({ ...STUDENT, program: 'math' });
+    expect(errorCode(await course.view(S1, USER).catch((e: unknown) => e))).toBe('response_invalid');
   });
 });

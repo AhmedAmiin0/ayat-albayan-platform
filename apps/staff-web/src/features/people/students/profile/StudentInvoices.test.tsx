@@ -9,14 +9,14 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const INVOICE: InvoiceView = {
-  id: 'inv-1',
-  rule_id: 'r-1',
+  id: 'e3333333-3333-4333-8333-333333333331',
+  rule_id: 'e1111111-1111-4111-8111-111111111111',
   kind: 'makeup',
   mime: 'image/png',
   size_bytes: 9,
   source: 'whatsapp',
   created_at: '2026-10-03T09:00:00.000Z',
-  students: [{ id: 's-1', name: 'سهيلة', code: 'AB-0183' }],
+  students: [{ id: 'e2222222-2222-4222-8222-222222222222', name: 'سهيلة', code: 'AB-0183' }],
 };
 
 function renderInvoices() {
@@ -33,7 +33,7 @@ afterEach(() => apiFetch.mockReset());
 
 describe('StudentInvoices «الفواتير» (R-PAY-03)', () => {
   it('lists the student’s invoices with type and source, each openable', async () => {
-    apiFetch.mockResolvedValue([INVOICE, { ...INVOICE, id: 'inv-2', kind: 'package', source: 'upload' }]);
+    apiFetch.mockResolvedValue([INVOICE, { ...INVOICE, id: 'e3333333-3333-4333-8333-333333333332', kind: 'package', source: 'upload' }]);
     renderInvoices();
     expect(await screen.findByRole('heading', { name: t.booking.invoice.list })).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/invoices?studentId=s-1');

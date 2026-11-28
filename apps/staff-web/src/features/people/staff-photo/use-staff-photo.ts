@@ -2,7 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, type ChangeEvent } from 'react';
 import { accountMessage, avatarFileProblem, PROFILE_KEY } from '@/features/people/account';
 import { t } from '@ab/web-kit';
-import { removeStaffPhoto, uploadStaffPhoto, type StaffPhotoTarget } from './api';
+import { removeStaffPhoto, uploadStaffPhoto } from './api';
+import type { StaffPhotoTarget } from './staff-photo.schemas';
 import { photoErrorText } from './photo-error';
 
 /** Every list or page that shows staff photos (a teacher is also a login; the admin may be editing their own). */

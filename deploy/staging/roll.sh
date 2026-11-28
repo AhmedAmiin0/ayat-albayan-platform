@@ -1,7 +1,7 @@
 #!/bin/sh
 # Rolling deploy of the staging API (docs/09 «Two API copies + one worker»). Run in /opt/ayat-albayan-staging:
-#   sh roll.sh             build the image once, roll ayat-worker → ayat-pdf → ayat-api-a → ayat-api-b (each healthy
-#                          before the next; ayat-lb keeps serving from the other copy), reload ayat-lb if its config changed
+#   sh roll.sh             build the image once, roll ayat-worker → ayat-pdf → ayat-api-a … ayat-api-d (each healthy
+#                          before the next; ayat-lb keeps serving from the other copies), reload ayat-lb if its config changed
 #   sh roll.sh --env-only  no build: recreate the same way so every container reads the new .env
 #   sh roll.sh --no-build  no build: the same roll, recreating only what compose sees changed (deploy-staging, when
 #                          nothing the image depends on changed since the commit in .api.sha and the .env did not)
@@ -98,6 +98,8 @@ if [ -n "$legacy" ]; then
   roll ayat-pdf || echo '::warning::ayat-pdf not healthy: chat PDF previews answer pdf_unavailable'
   roll ayat-api-a
   roll ayat-api-b
+  roll ayat-api-c
+  roll ayat-api-d
   # shellcheck disable=SC2086
   docker stop -t 30 $legacy >/dev/null && docker rm $legacy >/dev/null
   lb
@@ -109,6 +111,8 @@ else
   roll ayat-pdf || echo '::warning::ayat-pdf not healthy: chat PDF previews answer pdf_unavailable'
   roll ayat-api-a
   roll ayat-api-b
+  roll ayat-api-c
+  roll ayat-api-d
   lb
 fi
 

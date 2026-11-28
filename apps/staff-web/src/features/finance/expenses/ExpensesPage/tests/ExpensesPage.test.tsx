@@ -12,10 +12,10 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await i
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: vi.fn() }) } } }));
 
 const ADS: ExpenseView = {
-  id: 'e1', month: '2026-09', category: 'ads', amount: 8000, currency: 'EGP', note: 'فيسبوك', created_at: '2026-09-02T09:00:00Z',
+  id: '00000000-0000-4000-8000-000000000001', month: '2026-09', category: 'ads', amount: 8000, currency: 'EGP', note: 'فيسبوك', created_at: '2026-09-02T09:00:00Z',
   paid_on: '2026-09-02', vendor: null, method: null, has_receipt: false, recurring: false, is_draft: false,
 };
-const TOOLS: ExpenseView = { ...ADS, id: 'e2', category: 'tools', amount: 120.5, currency: 'USD', note: null };
+const TOOLS: ExpenseView = { ...ADS, id: '00000000-0000-4000-8000-000000000002', category: 'tools', amount: 120.5, currency: 'USD', note: null };
 const CATEGORIES = [
   { key: 'ads', label_ar: 'إعلانات', label_en: 'Ads', active: true },
   { key: 'rent', label_ar: 'إيجار', label_en: 'Rent', active: true },
@@ -37,13 +37,13 @@ describe('ExpensesPage (R-RPT-02, E4)', () => {
   });
 
   it('lists the month with one total per currency; a draft is not counted and can be confirmed', async () => {
-    renderPage([ADS, TOOLS, { ...ADS, id: 'e3', amount: 500, note: null }, { ...ADS, id: 'e4', amount: 999, is_draft: true, note: null }]);
+    renderPage([ADS, TOOLS, { ...ADS, id: '00000000-0000-4000-8000-000000000003', amount: 500, note: null }, { ...ADS, id: '00000000-0000-4000-8000-000000000004', amount: 999, is_draft: true, note: null }]);
     expect(await screen.findByText(/فيسبوك/)).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/expenses?month=2026-09');
     expect(screen.getByText('8,500')).toBeTruthy();
     apiSend.mockResolvedValue(ADS);
     fireEvent.click(screen.getByRole('button', { name: t.finance.confirmDraft }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/expenses/e4', { isDraft: false }));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/expenses/00000000-0000-4000-8000-000000000004', { isDraft: false }));
   });
 
   it('adds an expense: a missing amount is a field error; the category comes from the table', async () => {
@@ -71,11 +71,11 @@ describe('ExpensesPage (R-RPT-02, E4)', () => {
     const dialog = await screen.findByRole('dialog');
     apiSend.mockResolvedValue(ADS);
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.save }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/expenses/e1', expect.objectContaining({ amount: 8000 })));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/expenses/00000000-0000-4000-8000-000000000001', expect.objectContaining({ amount: 8000 })));
     fireEvent.click(screen.getByRole('button', { name: t.common.delete }));
     const confirm = await screen.findByRole('dialog', { name: t.expenses.deleteConfirm });
     fireEvent.click(within(confirm).getByRole('button', { name: t.common.delete }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/expenses/e1'));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/expenses/00000000-0000-4000-8000-000000000001', undefined));
   });
 
   it('the year table shows the months in the reporting currency and warns about a missing rate', async () => {

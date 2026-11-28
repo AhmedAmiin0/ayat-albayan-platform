@@ -17,7 +17,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const PROFILE: AccountProfile = {
-  id: 'u1',
+  id: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11',
   full_name: 'سارة أحمد',
   email: 'sara@ab.co',
   phone_e164: null,
@@ -49,7 +49,11 @@ describe('«حسابي» in the shells (R-ACC-01)', () => {
     apiFetch.mockResolvedValue(PROFILE);
     const { container } = shown(ui);
     expect(accountLink().getAttribute('href')).toBe('/account');
-    await vi.waitFor(() => expect(container.querySelector('a[href="/account"] img')?.getAttribute('src')).toBe(PROFILE.avatar_url));
+    await vi.waitFor(() =>
+      expect(container.querySelector('a[href="/account"] img')?.getAttribute('src')).toBe(
+        PROFILE.avatar_url,
+      ),
+    );
     expect(apiFetch).toHaveBeenCalledWith('/me/profile');
   });
 
@@ -63,7 +67,9 @@ describe('«حسابي» in the shells (R-ACC-01)', () => {
     apiFetch.mockResolvedValue({ ...PROFILE, avatar_url: null, avatar_seed: 't1' });
     const { container } = shown(<SideFoot email="sara@ab.co" />);
     await screen.findByText('س');
-    expect(container.querySelector('[data-avatar-tone]')?.getAttribute('data-avatar-tone')).toBe(String(avatarTone('t1') + 1));
+    expect(container.querySelector('[data-avatar-tone]')?.getAttribute('data-avatar-tone')).toBe(
+      String(avatarTone('t1') + 1),
+    );
   });
 
   it('the profile fails: the link and the email stay (initial from the email)', async () => {

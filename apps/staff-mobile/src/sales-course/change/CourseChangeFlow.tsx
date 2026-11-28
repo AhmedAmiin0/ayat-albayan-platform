@@ -5,7 +5,7 @@ import { bookFailure, dayStartUtc, LessonTimesStep } from '@/booking';
 import { t, AppText, BackButton, ScreenHeader, type, useTheme } from '@ab/mobile-kit';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { daysText } from '@/sales-course/lib/course-days';
-import { changeRequest, withOverride, withTeacher, type ChangeTarget } from './change-body';
+import { changeRequest, withOverride, type ChangeTarget } from './change-body';
 import { useChangeCourse } from './change-queries';
 import { CourseChangeDone } from './CourseChangeDone';
 import { CourseChangeReview } from './CourseChangeReview';
@@ -41,9 +41,9 @@ export function CourseChangeFlow({
   const from = dayStartUtc(opens, course.tz).toISOString();
   const [picks, setPicks] = useState(() => first.map((p) => p.at));
   const [requestId] = useState(newRequestId);
-  const change = useChangeCourse(target?.path);
+  const change = useChangeCourse(target?.calls);
   const draft = { subscriptionId: course.subscriptionId, picks, tz: course.tz, requestId };
-  const body = withTeacher(changeRequest({ ...draft, prefilled: first }), target);
+  const body = changeRequest({ ...draft, prefilled: first });
   const go = (next: 'slot' | 'review') => {
     change.reset();
     setStep(next);

@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import { studentListItemFixture } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { StudentsPage } from './StudentsPage';
@@ -7,18 +8,7 @@ import { StudentsPage } from './StudentsPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
-const ROW = {
-  id: 's1',
-  code: 'AB-0183',
-  name: 'سهيلة',
-  status: 'active',
-  program: 'quran',
-  tz: 'Asia/Riyadh',
-  created_at: '2026-10-01T00:00:00Z',
-  guardian_name: 'ام جود',
-  guardian_phone: '+966501234567',
-  teacher_name: null,
-};
+const ROW = studentListItemFixture({ id: 's1', guardian_name: 'ام جود' });
 
 function renderPage(props: { search?: string; page?: number } = {}) {
   const page = { items: [ROW], total: 45, page: props.page ?? 1, pageSize: 20 };
@@ -40,7 +30,7 @@ describe('StudentsPage (R-STU-01, R-NFR-08)', () => {
     expect(onOpen).toHaveBeenCalledWith('s1');
     expect(within(screen.getByRole('table')).getByText(t.enums.studentStatus.active)).toBeTruthy();
     expect(screen.getByText(t.students.noTeacher)).toBeTruthy();
-    expect(apiFetch).toHaveBeenCalledWith('/students?search=&page=1&pageSize=20');
+    expect(apiFetch).toHaveBeenCalledWith('/students?page=1&pageSize=20');
   });
 
   it('search resets to page 1', async () => {

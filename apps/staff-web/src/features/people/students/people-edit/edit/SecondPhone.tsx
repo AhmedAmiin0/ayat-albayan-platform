@@ -2,7 +2,7 @@ import type { PeopleEditView } from '@ab/shared';
 import { formatPhone } from '@ab/core';
 import { useState } from 'react';
 import { Ltr, Button, FormAlert, t } from '@ab/web-kit';
-import { removeSecondPhone } from '@/features/people/students/people-edit/api';
+import { peopleWrites } from '@/features/people/students/people-edit/api';
 import { usePeopleWrite } from '@/features/people/students/people-edit/use-people-write';
 
 const E = t.peopleEdit;
@@ -15,7 +15,7 @@ export function SecondPhone({
   onDone: (notice: string) => void;
 }) {
   const [confirming, setConfirming] = useState(false);
-  const remove = usePeopleWrite(removeSecondPhone, () => onDone(E.saved));
+  const remove = usePeopleWrite(peopleWrites.removeSecondPhone, () => onDone(E.saved));
   const second = guardian.phones.find((p) => !p.is_primary);
   if (!second) return null;
   const phone = formatPhone(second.phone_e164);

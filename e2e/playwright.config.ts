@@ -112,6 +112,8 @@ export default defineConfig({
         PORT: String(API_PORT),
         WEB_ORIGIN: `${WEB_URL},${FAMILY_URL}`, // staff app first (its links), docs/51 §4
         FX_API_URL: 'http://127.0.0.1:9/',
+        // A declared answer that does not match its schema is a 500 (docs/62 part 1 §1).
+        API_CHECK_RESPONSES: '1',
         ...E2E_WA,
         ...E2E_WA_CHAT,
         ...E2E_KAPSO,

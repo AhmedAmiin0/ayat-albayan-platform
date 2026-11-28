@@ -5,6 +5,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import { AuthModule } from '@/common/auth/auth.module';
 import { DB, DbModule } from '@/common/db/db.module';
 import { fakeDb, type FakeResult } from '@/common/db/testing/fake-db';
+import { ResponseCheckInterceptor } from '@/common/http/returns';
 import { GuardiansModule } from './guardians.module';
 
 const results: Record<string, FakeResult[]> = {};
@@ -26,6 +27,7 @@ describe('GuardiansController is admin-only (R-STU-02, R-NFR-02)', () => {
       .useValue(verify)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
+    app.useGlobalInterceptors(ResponseCheckInterceptor.fromEnv());
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
   });
@@ -78,6 +80,33 @@ describe('GuardiansController is admin-only (R-STU-02, R-NFR-02)', () => {
     expect([res.statusCode, res.json().message]).toEqual([400, 'validation_failed']);
     expect(fake.calls.length).toBe(before);
     const both = await send({ method: 'DELETE', url: '/guardians/nope/phones/abc', token: 'admin' });
-    expect(both.json().message).toBe('Validation failed (uuid is expected)');
+    const idIssue = expect.objectContaining({ path: 'id' });
+    expect(both.json()).toMatchObject({ message: 'validation_failed' });
+    expect(both.json().issues).toEqual(expect.arrayContaining([idIssue]));
+  });
+
+  it.each(['GET', 'PATCH', 'DELETE'] as const)('%s with a bad id → 400 validation_failed', async (method) => {
+    const res = await send({ method, url: '/guardians/nope', token: 'admin' });
+    expect([res.statusCode, res.json().message]).toEqual([400, 'validation_failed']);
+  });
+
+  it('GET /guardians/:id answers the row, its students and its numbers as declared', async () => {
+    const row = {
+      id: ID,
+      name: 'أم سهيلة',
+      phone_e164: '+966501234567',
+      country: 'SA',
+      tz: 'Asia/Riyadh',
+      source: null,
+      notes: null,
+      profile_id: null,
+      created_by: null,
+      created_at: '2026-10-03T09:00:00.000Z',
+      updated_at: '2026-10-03T09:00:00.000Z',
+    };
+    const detail = { ...row, students: [], phones: [] };
+    results.guardians = [{ data: detail }];
+    const res = await send({ method: 'GET', url: `/guardians/${ID}`, token: 'admin' });
+    expect([res.statusCode, res.json()]).toEqual([200, detail]);
   });
 });

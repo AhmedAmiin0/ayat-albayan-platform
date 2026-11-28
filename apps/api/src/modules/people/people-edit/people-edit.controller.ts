@@ -1,36 +1,23 @@
-import {
-  notesFreeSchema,
-  peopleGuardianPatchSchema,
-  peopleStudentPatchSchema,
-  peopleIdSchema,
-  type PeopleEditView,
-  type PeopleGuardianPatch,
-  type PeopleStudentPatch,
-} from '@ab/shared';
-import { phoneE164 } from '@ab/core';
-import { Controller, Delete, Get, HttpCode, Patch } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { notesFreeSchema, peopleEditRoutes as routes, type PeopleEditView } from '@ab/shared';
+import { Controller, HttpCode } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
-import { blanksToNull, GuardianPhonesService } from '@/modules/people/guardians';
+import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
+import { GuardianPhonesService } from '@/modules/people/guardians';
 import { PeopleEditService } from './people-edit.service';
 import { PeopleViewService } from './people-view.service';
 import { PeopleOwnership } from './access/people-ownership';
 import { isAdmin } from '@/common/auth/roles';
 
-const studentBody = blanksToNull(peopleStudentPatchSchema);
-const guardianBody = blanksToNull(peopleGuardianPatchSchema);
 /** Notes stay the admin's: anyone else's `notes` key answers 400. */
 const notesRule = (user: AuthUser): z.ZodType => (isAdmin(user) ? z.object({}) : notesFreeSchema);
 
 /** people.edit only, never students.write; admin-only fields and notes are refused with 400. */
-@ApiTags('people')
 @ApiBearerAuth()
-@Permissions('people.edit')
-@Controller('people')
+@Controller()
 export class PeopleEditController {
   constructor(
     private readonly people: PeopleEditService,
@@ -39,53 +26,51 @@ export class PeopleEditController {
     private readonly owners: PeopleOwnership,
   ) {}
 
-  @Get('students/:id')
+  @Route(routes.view)
   async view(
-    @ZodParam('id', peopleIdSchema) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.view>,
     @CurrentUser() user: AuthUser,
   ): Promise<PeopleEditView> {
-    await this.owners.student(user, id);
-    return this.views.view(id, isAdmin(user));
+    await this.owners.student(user, params.id);
+    return this.views.view(params.id, isAdmin(user));
   }
 
-  @Patch('students/:id')
+  @Route(routes.editStudent)
   async editStudent(
-    @ZodParam('id', peopleIdSchema) id: string,
-    @ZodBody(studentBody) patch: PeopleStudentPatch,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.editStudent>,
     @CurrentUser() user: AuthUser,
   ): Promise<{ id: string }> {
-    parseOrThrow(notesRule(user), patch);
-    await this.owners.student(user, id);
-    const edit = { id, patch, actorId: user.id, admin: isAdmin(user) };
+    parseOrThrow(notesRule(user), body);
+    await this.owners.student(user, params.id);
+    const edit = { id: params.id, patch: body, actorId: user.id, admin: isAdmin(user) };
     const row = await this.people.editStudent(edit);
     return { id: row.id };
   }
 
-  @Patch('guardians/:id')
+  @Route(routes.editGuardian)
   async editGuardian(
-    @ZodParam('id', peopleIdSchema) id: string,
-    @ZodBody(guardianBody) patch: PeopleGuardianPatch,
+    @RouteInput() { params, body }: RouteInputOf<typeof routes.editGuardian>,
     @CurrentUser() user: AuthUser,
   ): Promise<{ id: string }> {
-    parseOrThrow(notesRule(user), patch);
-    await this.owners.family(user, id);
-    const edit = { id, patch, actorId: user.id, admin: isAdmin(user) };
+    parseOrThrow(notesRule(user), body);
+    await this.owners.family(user, params.id);
+    const edit = { id: params.id, patch: body, actorId: user.id, admin: isAdmin(user) };
     const row = await this.people.editGuardian(edit);
     return { id: row.id };
   }
 
   /**
    * The family's second number, `phone` URL-encoded (%2B…), deleted with its audit row in one
-   * transaction (remove_family_phone); 404 phone_not_found for the main one.
+   * transaction (remove_family_phone).
    */
-  @Delete('guardians/:id/phones/:phone')
+  @Route(routes.removePhone)
   @HttpCode(204)
   async removePhone(
-    @ZodParam('id', peopleIdSchema) id: string,
-    @ZodParam('phone', phoneE164) phone: string,
+    @RouteInput() { params }: RouteInputOf<typeof routes.removePhone>,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.owners.family(user, id);
-    await this.phones.removeSecond({ guardianId: id, phone, actorId: user.id });
+    await this.owners.family(user, params.id);
+    const remove = { guardianId: params.id, phone: params.phone, actorId: user.id };
+    await this.phones.removeSecond(remove);
   }
 }

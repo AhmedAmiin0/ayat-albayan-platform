@@ -130,4 +130,16 @@ describe('users routes through the real guards', () => {
     expect((await call('PATCH', '/users/not-a-uuid', { payload: { full_name: 'خالد علي' } })).statusCode).toBe(400);
     expect((await call('GET', '/users?role=owner')).statusCode).toBe(400);
   });
+
+  // docs/62 part 1 §6: the ids move from ParseUUIDPipe to the route's params schema.
+  it.each([
+    ['GET', '/users/x'],
+    ['POST', '/users/x/enable'],
+    ['POST', '/users/x/sign-out'],
+    ['DELETE', '/users/x'],
+  ] as const)('%s %s answers 400 validation_failed for an id that is not a uuid', async (m, url) => {
+    const res = await call(m, url, { payload: {} });
+    expect(res.statusCode).toBe(400);
+    expect(res.json().code).toBe('validation_failed');
+  });
 });

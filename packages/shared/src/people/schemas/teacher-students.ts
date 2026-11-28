@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Program, StudentStatus } from '@ab/catalog';
+import { PROGRAMS, STUDENT_STATUSES, type StudentStatus } from '@ab/catalog';
 
 /** The teacher's students tab keeps two separate lists, never one mixed list. */
 export const TEACHER_STUDENT_KINDS = ['subscribed', 'trial'] as const;
@@ -24,14 +24,15 @@ export type TeacherStudentsQuery = z.output<typeof teacherStudentsQuerySchema>;
  * One of my students. Deliberately nothing else: no phone, guardian or money field ever reaches a
  * teacher (R-TCH-03).
  */
-export interface TeacherStudentView {
-  id: string;
-  code: string;
-  name: string;
-  status: StudentStatus;
-  program: Program;
-  level: string | null;
-  age: number | null;
+export const teacherStudentViewSchema = z.object({
+  id: z.string(),
+  code: z.string(),
+  name: z.string(),
+  status: z.enum(STUDENT_STATUSES),
+  program: z.enum(PROGRAMS),
+  level: z.string().nullable(),
+  age: z.number().nullable(),
   /** Start (ISO UTC) of my next scheduled lesson with them, if any. */
-  next_lesson_at: string | null;
-}
+  next_lesson_at: z.string().nullable(),
+});
+export type TeacherStudentView = z.infer<typeof teacherStudentViewSchema>;

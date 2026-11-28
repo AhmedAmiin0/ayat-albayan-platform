@@ -2,7 +2,6 @@ export {
   balanceQuery,
   EARNINGS_PAGE_SIZE,
   earningsKey,
-  type PayBody,
   type PaymentsList,
   paymentsQuery,
   payTeacher,

@@ -6,19 +6,27 @@ import { accountKit, ME, PASSWORD } from './account.fakes';
 describe('PUT /me/password (R-ACC-04)', () => {
   it('sets the new password after checking the current one', async () => {
     const kit = accountKit();
-    await kit.account.changePassword(ME, { current_password: PASSWORD, new_password: 'Brand-new-9' });
-    expect(kit.auth.updates).toEqual([{ id: 'user-1', patch: { password: 'Brand-new-9' } }]);
+    await kit.account.changePassword(ME, {
+      current_password: PASSWORD,
+      new_password: 'Brand-new-9',
+    });
+    expect(kit.auth.updates).toEqual([{ id: ME.id, patch: { password: 'Brand-new-9' } }]);
   });
 
   it('ends every other session of the user (their devices stop getting pushes), keeping the caller’s', async () => {
     const kit = accountKit();
-    await kit.account.changePassword({ ...ME, sessionId: 'sess-1' }, { current_password: PASSWORD, new_password: 'Brand-new-9' });
-    expect(kit.auth.revoked).toEqual([{ userId: 'user-1', keep: 'sess-1' }]);
+    await kit.account.changePassword(
+      { ...ME, sessionId: 'sess-1' },
+      { current_password: PASSWORD, new_password: 'Brand-new-9' },
+    );
+    expect(kit.auth.revoked).toEqual([{ userId: ME.id, keep: 'sess-1' }]);
   });
 
   it('applies the configured minimum length', async () => {
     const kit = accountKit(12);
-    await expect(kit.account.changePassword(ME, { current_password: PASSWORD, new_password: 'short-123' })).rejects.toMatchObject({
+    await expect(
+      kit.account.changePassword(ME, { current_password: PASSWORD, new_password: 'short-123' }),
+    ).rejects.toMatchObject({
       response: { code: 'password_too_short' },
     });
     expect(kit.auth.updates).toEqual([]);
@@ -38,7 +46,12 @@ describe('PUT /me/password (R-ACC-04)', () => {
 
   it('400 wrong_password, password untouched', async () => {
     const kit = accountKit();
-    await expect(kit.account.changePassword(ME, { current_password: 'wrong-pass', new_password: 'Brand-new-9' })).rejects.toMatchObject({
+    await expect(
+      kit.account.changePassword(ME, {
+        current_password: 'wrong-pass',
+        new_password: 'Brand-new-9',
+      }),
+    ).rejects.toMatchObject({
       response: { code: 'wrong_password' },
     });
     expect(kit.auth.updates).toEqual([]);

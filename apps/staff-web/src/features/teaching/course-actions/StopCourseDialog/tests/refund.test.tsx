@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';
-import { SUB } from '@/features/teaching/course-actions/course-actions-fixture';
+import { STOPPED, SUB } from '@/features/teaching/course-actions/course-actions-fixture';
 import { StopCourseDialog } from '@/features/teaching/course-actions/StopCourseDialog/StopCourseDialog';
 
 // Cancel only with what is owed, or cancel with a refund; a summary line says the outcome.
@@ -14,7 +14,11 @@ vi.mock('@/features/people/auth', async (orig) => ({
 }));
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const words = t.courseActions.stop;
 const refund = {
@@ -62,7 +66,7 @@ describe('StopCourseDialog: the money choices', () => {
   beforeEach(() => {
     apiFetch.mockReset();
     apiSend.mockReset();
-    apiSend.mockResolvedValue({ subscriptionId: SUB, refund: null });
+    apiSend.mockResolvedValue(STOPPED);
   });
 
   it('«إلغاء فقط» by default, attended × rate owed (shown), the summary says 0 back / 0 due', async () => {
@@ -97,11 +101,7 @@ describe('StopCourseDialog: the money choices', () => {
       dialog.getByRole('radio', { name: words.refundAll.replace('{amount}', money(290)) }),
     );
     expect(dialog.getByText(summary(290, 0))).toBeTruthy();
-    apiSend.mockResolvedValue({
-      subscriptionId: SUB,
-      refund: { amount: 290, card: 0, manual: 290 },
-      studentStatus: 'churned',
-    });
+    apiSend.mockResolvedValue({ ...STOPPED, refund: { amount: 290, card: 0, manual: 290 } });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'paid' } });
     expect(await screen.findByText(words.next.replace('{amount}', money(290)))).toBeTruthy();

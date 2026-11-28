@@ -1,3 +1,5 @@
+import type { StopRefund } from './stop-refund.schemas';
+
 // Refund split card-first (Stripe), rest manual; amounts round to ISO 4217 decimals, at most 2.
 
 /** ISO 4217 decimals that differ from 2. */
@@ -34,18 +36,6 @@ export interface StopRefundInput {
   attended: number;
   ratePercent: number;
   currency: string;
-}
-
-/** The sheet's lines: paid, attended × per-lesson price × rate, refund. */
-export interface StopRefund {
-  paid: number;
-  perLesson: number;
-  attended: number;
-  ratePercent: number;
-  /** What the attended lessons cost at the rate, never above the price. */
-  charged: number;
-  /** The most that may be refunded: paid − charged, never below 0. */
-  refund: number;
 }
 
 /**

@@ -1,12 +1,16 @@
 export * from './status-flow/status-flow';
 export * from './trial-dates';
+export * from './trial-date';
 export * from './portal';
 export * from './family';
 export * from './portal-family';
 export * from './course-pause';
 export * from './course-stop';
 export * from './stop-refund/stop-refund';
+export * from './stop-refund/stop-refund.schemas';
 export * from './stop-choices/stop-choices';
+export * from './stop-choices/stop-choices.schemas';
 export * from './board-students';
 export type * from './student-views';
 export type { TeacherStudentCounts } from './student-lists';
+export * from './roster';

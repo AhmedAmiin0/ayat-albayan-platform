@@ -5,6 +5,7 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod';
 import { notFound } from '@/common/http/errors';
+import { returnsOf } from '@/common/http/returns';
 import { Route, RouteInput, routeOf, type RouteInputOf } from '@/common/http/route';
 
 const item = z.object({ id: z.string(), name: z.string() });
@@ -111,5 +112,12 @@ describe('@RouteInput', () => {
     const res = await send('DELETE', '/probe/items/x');
     expect(res.statusCode).toBe(400);
     expect(res.json()).toMatchObject({ message: 'validation_failed', issues: [{ path: 'id' }] });
+  });
+});
+
+describe('@Route answers', () => {
+  it('declares a JSON answer for the response check and none for an empty one', () => {
+    expect(returnsOf(RouteProbeController.prototype.rename)).toBe(item);
+    expect(returnsOf(RouteProbeController.prototype.remove)).toBeUndefined();
   });
 });

@@ -27,11 +27,19 @@ const child = {
   tz: 'Asia/Riyadh',
   contact_is_self: false,
 };
+const GUARDIAN_PROFILE = {
+  id: '0b6f1a52-6d1e-4c43-9a37-3c5c8f1e2a10',
+  full_name: 'أم سارة',
+  email: null,
+  phone_e164: null,
+  avatar_url: null,
+  role: { base: null, key: null, name_ar: null, name_en: null },
+};
 let mockMe: unknown = { kind: 'guardian', students: [child], renew_url: null };
 const mockAnswer = (path: string): unknown => {
   const answers: Record<string, unknown> = {
     '/portal/me': mockMe,
-    '/me/profile': { id: 'g1', full_name: 'أم سارة', role: {} },
+    '/me/profile': GUARDIAN_PROFILE,
   };
   return (
     answers[path.split('?')[0] ?? ''] ?? { items: [], total: 0, page: 1, pageSize: 20, unread: 0 }

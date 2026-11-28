@@ -59,7 +59,7 @@ describe('«روابط الدفع» under «مدفوعاتي»', () => {
     const dialog = screen.getByRole('dialog', { name: P.cancel });
     expect(within(dialog).getByText(P.cancelConfirm)).toBeTruthy();
     fireEvent.click(within(dialog).getByRole('button', { name: P.cancel }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/payment-links/link-1/cancel'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/sales/payment-links/link-1/cancel', undefined));
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
   });
 

@@ -1,9 +1,4 @@
 {
-  "src/account/account-api.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/account/account-errors.ts": {
     "ab/no-shape-checks": {
       "count": 2
@@ -180,11 +175,6 @@
       "count": 1
     }
   },
-  "src/lib/profile/my-profile.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/lib/query/pull-refresh.ts": {
     "ab/no-restricted-syntax": {
       "count": 1
@@ -209,14 +199,6 @@
     }
   },
   "src/notifications/use-notifications.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
-  "src/push/device-key.ts": {
-    "complexity": {
-      "count": 1
-    },
     "ab/no-untyped-api-calls": {
       "count": 1
     }

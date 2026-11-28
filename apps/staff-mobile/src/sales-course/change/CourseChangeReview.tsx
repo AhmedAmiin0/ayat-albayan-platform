@@ -1,13 +1,13 @@
 import type { BookedCourse } from '@ab/shared';
 import { counted } from '@ab/core';
-import type { CourseChangeRequest } from '@ab/schedule';
 import { View } from 'react-native';
 import { type BookFailure, ConflictNotice } from '@/booking';
 import { t, AppText, Button, type, useTheme, ErrorLine, whenText } from '@ab/mobile-kit';
 import { localDay } from '@/core/lib/money/format';
 import { CourseCheckNotice } from '@/sales-course/components/CourseCheckNotice';
 import { daysText, requestDays } from '@/sales-course/lib/course-days';
-import { targetPath, type ChangeTarget } from './change-body';
+import type { ChangeTarget } from './change-body';
+import type { ChangeBody } from './change-calls.types';
 import { useCourseChangeCheck } from './change-queries';
 import { useOverride } from './OverrideField';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
@@ -16,7 +16,7 @@ interface CourseChangeReviewProps {
   course: BookedCourse;
   picks: readonly string[];
   /** Null until a day is picked. */
-  body: CourseChangeRequest | null;
+  body: ChangeBody | null;
   /** reason: the admin's clash override (target.override), else none. */
   saving: { busy: boolean; failure: BookFailure | null; submit: (reason?: string) => void };
   onChangeSlot: () => void;
@@ -30,7 +30,7 @@ export function CourseChangeReview(props: CourseChangeReviewProps) {
   const tz = useViewerTz();
   const viewer = { tz, cycle };
   const { color } = useTheme();
-  const check = useCourseChangeCheck(body, targetPath(target));
+  const check = useCourseChangeCheck(body, target?.calls);
   const need = course.perWeek ?? course.days.length;
   const override = useOverride({ target, check });
   const ready = body !== null && picks.length === need && !override.blocked;

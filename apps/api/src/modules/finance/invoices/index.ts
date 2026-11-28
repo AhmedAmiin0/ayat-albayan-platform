@@ -1,5 +1,4 @@
 export {
-  invoiceRecentQuery,
   type InvoiceSortKey,
   recentFilter,
   type RecentFilter,

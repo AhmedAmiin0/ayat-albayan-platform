@@ -1,7 +1,7 @@
 import { askedRounding, priceListQueryOptions } from '@ab/client-core';
 import { offerText, priceListText } from '@ab/money';
 import ar from '@ab/shared/i18n/ar.json';
-import { apiFetch } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { quoteQuery } from '@/features/finance/pricing';
 import { useQuoteCustom } from './use-quote-custom';
@@ -27,7 +27,7 @@ export function useListOffer(asked: QuoteChoice, shown: boolean) {
   const { country, students, discount } = asked;
   const rounding = askedRounding(discount, asked.rounding);
   const query = useQuery({
-    ...priceListQueryOptions({ apiFetch }, { country, students, discount, rounding }),
+    ...priceListQueryOptions({ apiFetch, apiSend }, { country, students, discount, rounding }),
     // The last list keeps showing while the next one loads; `isPlaceholderData` blocks sending it.
     placeholderData: keepPreviousData,
     enabled: shown,

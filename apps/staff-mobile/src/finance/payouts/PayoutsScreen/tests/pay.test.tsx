@@ -1,4 +1,3 @@
-import { payoutViewSchema } from '@ab/money';
 import { Linking } from 'react-native';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t, isolate } from '@ab/mobile-kit';
@@ -58,10 +57,11 @@ test('«تأكيد الدفع» uploads the receipt once and POSTs method, day, 
   await fireEvent.press(screen.getByText(t.finance.confirmPaid));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalled());
   expect(mockUpload).toHaveBeenCalledWith('t2', mockPicked);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/payouts/p2/pay', {
-    body: expect.objectContaining({ method: 'wallet', note: 'محفظة', receiptPath: 't2/r.jpg' }),
-    schema: payoutViewSchema,
-  });
+  expect(mockApiSend).toHaveBeenCalledWith(
+    'POST',
+    '/payouts/p2/pay',
+    expect.objectContaining({ method: 'wallet', note: 'محفظة', receiptPath: 't2/r.jpg' }),
+  );
   expect(await screen.findByText(t.mobileFinance.payouts.done.pay)).toBeTruthy();
 });
 

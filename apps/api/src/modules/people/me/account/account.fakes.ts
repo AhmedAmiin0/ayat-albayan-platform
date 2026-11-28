@@ -9,15 +9,16 @@ import { AccountSetupService } from './account.setup.service';
 
 // Test helper (not a test): in-memory ports of the account services.
 
-export const ME: AuthUser = { id: 'user-1', email: 'old@example.test', role: 'teacher' };
+const ME_ID = '00000000-0000-4000-8000-000000000001';
+export const ME: AuthUser = { id: ME_ID, email: 'old@example.test', role: 'teacher' };
 export const PASSWORD = 'Current-pass-1';
 
 class FakeAccountStore implements AccountStore {
   rows = new Map<string, AccountRow>([
     [
-      'user-1',
+      ME_ID,
       {
-        id: 'user-1',
+        id: ME_ID,
         full_name: 'Huda',
         phone_e164: null,
         avatar_path: null,
@@ -43,7 +44,7 @@ class FakeAccountStore implements AccountStore {
 }
 
 class FakeAccountAuth implements AccountAuth {
-  emails = new Map([['user-1', 'old@example.test']]);
+  emails = new Map([[ME_ID, 'old@example.test']]);
   passwords = new Map([['old@example.test', PASSWORD]]);
   updates: { id: string; patch: { email?: string; password?: string } }[] = [];
   takenEmails = new Set<string>();

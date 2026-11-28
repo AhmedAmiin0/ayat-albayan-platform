@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
+import { ResponseCheckInterceptor } from './common/http/returns';
 import { registerClientUsage } from './common/telemetry/client-usage/client-usage.hook';
 import { ClientUsageService } from './common/telemetry/client-usage/client-usage.service';
 import { apiErrorReporter } from './common/infra/http/error-report';
@@ -27,6 +28,8 @@ async function bootstrap(): Promise<void> {
     logger: new ReportingLogger(apiErrorReporter(process.env)),
   });
   registerRequestId(app);
+  // Off in production: e2e sets API_CHECK_RESPONSES=1 so every declared answer is checked.
+  app.useGlobalInterceptors(ResponseCheckInterceptor.fromEnv());
   // APP_ROLE (docs/09): the worker answers /health and its kick route only; the API copies never /internal.
   registerRoleHttp(app, role);
   // LiveKit posts application/webhook+json (POST /livekit/webhook), kept as raw bytes for its signature.
