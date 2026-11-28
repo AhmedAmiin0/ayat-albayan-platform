@@ -4,11 +4,12 @@ import type { ReportView } from '@ab/shared';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { reportView } from '@/teacher/report/testing/fixtures';
 import { useReportEntry } from '@/teacher/report/hooks/use-report-entry/use-report-entry';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: jest.fn(),
-  apiSend: jest.fn(),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const SENT = {

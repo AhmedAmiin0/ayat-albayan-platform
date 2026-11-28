@@ -6,15 +6,19 @@ import { MessageList } from '@/inbox/messages/components/MessageList/MessageList
 import { dayLabel } from '@/inbox/messages/days/day-label';
 import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
+import { mockCall } from '@ab/testing/mock-call';
 
 // The floating day hides while an inline separator is in its band, as WhatsApp does.
+const mockApi = mockCall();
+mockApi.onRead(async () => ({ id: 'u1', role: 'admin', permissions: [] }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 type ThreadQuery = ReturnType<typeof useThread>;
-const at = (id: string, created_at: string) => message({ id, direction: 'inbound', body: `نص ${id}`, created_at });
+const at = (id: string, created_at: string) =>
+  message({ id, direction: 'inbound', body: `نص ${id}`, created_at });
 const A = at('a', '2026-09-29T10:00:00Z');
 const B = at('b', '2026-09-29T16:39:00Z');
 const C = at('c', '2026-10-02T08:00:00Z');
@@ -37,7 +41,9 @@ async function open() {
   await renderWithQuery(<MessageList phone={PHONE} query={query()} />);
   for (const m of ROWS) {
     const { y, height } = FRAMES[m.id as keyof typeof FRAMES];
-    await fireEvent(screen.getByTestId(`message-row-${m.id}`), 'layout', { nativeEvent: { layout: { x: 0, y, width: 360, height } } });
+    await fireEvent(screen.getByTestId(`message-row-${m.id}`), 'layout', {
+      nativeEvent: { layout: { x: 0, y, width: 360, height } },
+    });
   }
   await fireEvent(list(), 'scrollBeginDrag');
 }

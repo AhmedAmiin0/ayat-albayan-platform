@@ -1,0 +1,3191 @@
+{
+ "base": "4a73f510b",
+ "domains": [
+  {
+   "domain": "finance",
+   "groups": [],
+   "features": [
+    "assistant-pay",
+    "expenses",
+    "fx",
+    "invoices",
+    "payments",
+    "payouts",
+    "pricing",
+    "receivables",
+    "stripe",
+    "subscriptions",
+    "teacher-earnings"
+   ]
+  },
+  {
+   "domain": "messaging",
+   "groups": [
+    "notifications"
+   ],
+   "features": [
+    "calls",
+    "inbox",
+    "numbers",
+    "templates",
+    "webhook",
+    "whatsapp",
+    "notifications/bell",
+    "notifications/catalogue",
+    "notifications/family-push",
+    "notifications/follow-ups",
+    "notifications/push",
+    "notifications/reminders",
+    "notifications/rules",
+    "notifications/schedule-notices",
+    "notifications/teacher-alert"
+   ]
+  },
+  {
+   "domain": "people",
+   "groups": [],
+   "features": [
+    "account",
+    "guardians",
+    "people-edit",
+    "portal",
+    "presence",
+    "roles",
+    "sign-in",
+    "students",
+    "teacher-students",
+    "teachers",
+    "test-accounts",
+    "users"
+   ]
+  },
+  {
+   "domain": "platform",
+   "groups": [],
+   "features": [
+    "custom-config",
+    "drive-backup",
+    "google-sync",
+    "health",
+    "integrations",
+    "legal",
+    "process-role",
+    "settings",
+    "short-links",
+    "translations"
+   ]
+  },
+  {
+   "domain": "reporting",
+   "groups": [],
+   "features": [
+    "activity",
+    "dashboard",
+    "exports",
+    "report-page",
+    "report-pdf",
+    "reports"
+   ]
+  },
+  {
+   "domain": "sales",
+   "groups": [],
+   "features": [
+    "academy",
+    "assignment",
+    "course",
+    "job-applicants",
+    "leads",
+    "money",
+    "registration",
+    "schedule",
+    "students"
+   ]
+  },
+  {
+   "domain": "teaching",
+   "groups": [
+    "courses"
+   ],
+   "features": [
+    "booking",
+    "classroom",
+    "feedback",
+    "lesson-files",
+    "lesson-links",
+    "lesson-rating",
+    "lessons",
+    "scheduling",
+    "student-channels",
+    "teacher-home",
+    "courses/course-card",
+    "courses/course-change",
+    "courses/course-extend",
+    "courses/course-pause",
+    "courses/course-stop",
+    "courses/profile-course"
+   ]
+  }
+ ],
+ "moves": [
+  {
+   "from": "apps/api/src/common/config-boundaries.*",
+   "to": "apps/api/src/common/config-store/tests/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/config-store.boundaries.*",
+   "to": "apps/api/src/common/config-store/tests/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/configuration/config-store/",
+   "to": "apps/api/src/common/config-store/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/configuration/config-store/io/",
+   "to": "apps/api/src/modules/platform/settings/values/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/configuration/custom-config/",
+   "to": "apps/api/src/modules/platform/custom-config/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/configuration/integrations/",
+   "to": "apps/api/src/modules/platform/integrations/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/configuration/integrations/integration-overlay.*",
+   "to": "apps/api/src/common/config-store/overlays/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/configuration/integrations/numbers-overlay.*",
+   "to": "apps/api/src/common/config-store/overlays/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/configuration/public-config/",
+   "to": "apps/api/src/modules/platform/settings/public-config/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/push/",
+   "to": "apps/api/src/modules/messaging/notifications/push/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/push/dispatch/",
+   "to": "apps/api/src/modules/messaging/notifications/push/dispatch/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/push/expo/",
+   "to": "apps/api/src/modules/messaging/notifications/push/expo/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/push/family-readers.*",
+   "to": "apps/api/src/modules/messaging/notifications/bell/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/push/notification-bell.*",
+   "to": "apps/api/src/modules/messaging/notifications/bell/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/push/notifications.*",
+   "to": "apps/api/src/modules/messaging/notifications/bell/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/push/push.service/",
+   "to": "apps/api/src/modules/messaging/notifications/push/service/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/push/web/",
+   "to": "apps/api/src/modules/messaging/notifications/push/web/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/rules/",
+   "to": "apps/api/src/modules/messaging/notifications/rules/rule-of/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/settings/",
+   "to": "apps/api/src/modules/platform/settings/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/storage/avatars/",
+   "to": "apps/api/src/modules/people/users/photos/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/storage/probe/",
+   "to": "apps/api/src/modules/platform/health/storage/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/student-ids.*",
+   "to": "apps/api/src/modules/people/students/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/common/telemetry/activity/",
+   "to": "apps/api/src/modules/reporting/activity/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/config/role/",
+   "to": "apps/api/src/config/role/ (stays; 8 common/ importers)",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/finance/stripe/links/",
+   "to": "apps/api/src/modules/finance/stripe/payment-links/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/finance/subscriptions/alerts/admin-tasks.*",
+   "to": "apps/api/src/modules/finance/subscriptions/admin-tasks/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/finance/subscriptions/alerts/tests/admin-tasks.*",
+   "to": "apps/api/src/modules/finance/subscriptions/admin-tasks/tests/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/finance/subscriptions/tests/used-before.*",
+   "to": "apps/api/src/modules/finance/subscriptions/used-before/tests/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/finance/subscriptions/used-before-edit/",
+   "to": "apps/api/src/modules/finance/subscriptions/used-before/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/finance/subscriptions/used-before.*",
+   "to": "apps/api/src/modules/finance/subscriptions/used-before/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/chat-lists/",
+   "to": "apps/api/src/modules/messaging/inbox/chat-lists/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/follow-ups/",
+   "to": "apps/api/src/modules/messaging/notifications/follow-ups/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/inbox/delta/",
+   "to": "apps/api/src/modules/messaging/inbox/thread-sync/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/inbox/hide/",
+   "to": "apps/api/src/modules/messaging/inbox/message-hide/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/inbox/people/",
+   "to": "apps/api/src/modules/messaging/inbox/threads/people/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/inbox/reads/",
+   "to": "apps/api/src/modules/messaging/inbox/threads/reads/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/inbox/reads/search/",
+   "to": "apps/api/src/modules/messaging/inbox/search/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/inbox/reopen/",
+   "to": "apps/api/src/modules/messaging/inbox/threads/reopen/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/inbox/sales-threads/",
+   "to": "apps/api/src/modules/messaging/inbox/threads/sales-threads/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/inbox/teacher-threads/",
+   "to": "apps/api/src/modules/messaging/inbox/threads/teacher-threads/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/inbox/threads.module.ts",
+   "to": "apps/api/src/modules/messaging/inbox/threads/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/inbox/threads/chat-list-filter.*",
+   "to": "apps/api/src/modules/messaging/inbox/chat-lists/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/messaging-jobs/",
+   "to": "apps/api/src/modules/messaging/notifications/family-push/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/messaging-jobs/family-push/",
+   "to": "apps/api/src/modules/messaging/notifications/family-push/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/notification-rules/",
+   "to": "apps/api/src/modules/messaging/notifications/rules/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/numbers/lines/",
+   "to": "apps/api/src/modules/messaging/whatsapp/lines/numbers-health/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/push/",
+   "to": "apps/api/src/modules/messaging/notifications/push/receipts/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/reminders/",
+   "to": "apps/api/src/modules/messaging/notifications/reminders/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/saved-replies/",
+   "to": "apps/api/src/modules/messaging/inbox/saved-replies/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/webhook/crm-confirm/",
+   "to": "apps/api/src/modules/messaging/webhook/crm/confirm/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/webhook/crm-inbound/",
+   "to": "apps/api/src/modules/messaging/webhook/crm/inbound/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/webhook/crm-register/",
+   "to": "apps/api/src/modules/messaging/webhook/crm/register/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/webhook/lines/",
+   "to": "apps/api/src/modules/messaging/webhook/line-resolve/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/webhook/parse/",
+   "to": "apps/api/src/modules/messaging/webhook/inbound/parse/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/webhook/providers/",
+   "to": "apps/api/src/modules/messaging/webhook/wacrm/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/whatsapp/numbers/",
+   "to": "apps/api/src/modules/messaging/whatsapp/number-routes/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/whatsapp/template-review.*",
+   "to": "apps/api/src/modules/messaging/templates/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/whatsapp/templates/",
+   "to": "apps/api/src/modules/messaging/templates/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/messaging/whatsapp/tests/template-review.*",
+   "to": "apps/api/src/modules/messaging/templates/tests/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/people/me/",
+   "to": "apps/api/src/modules/people/account/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/people/me/account/",
+   "to": "apps/api/src/modules/people/account/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/people/me/push/",
+   "to": "apps/api/src/modules/people/account/push-tokens/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/people/teachers/photo/",
+   "to": "apps/api/src/modules/people/users/photos/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/people/users/photo/",
+   "to": "apps/api/src/modules/people/users/photos/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/platform/short-links-admin/",
+   "to": "apps/api/src/modules/platform/short-links/admin/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/platform/short-links-admin/gate/",
+   "to": "apps/api/src/modules/platform/short-links/gate/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/leads/lead-family.*",
+   "to": "apps/api/src/modules/sales/leads/family-link/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales-money/",
+   "to": "apps/api/src/modules/sales/money/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales-money/chat/",
+   "to": "apps/api/src/modules/sales/money/receipts/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales-money/reads/",
+   "to": "apps/api/src/modules/sales/money/views/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales-money/teacher/",
+   "to": "apps/api/src/modules/sales/students/teachers/assign/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales-money/used-before/",
+   "to": "apps/api/src/modules/finance/subscriptions/used-before/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales-registration/",
+   "to": "apps/api/src/modules/sales/registration/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales-students/",
+   "to": "apps/api/src/modules/sales/students/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales-students/lessons/",
+   "to": "apps/api/src/modules/sales/students/lesson-actions/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales/",
+   "to": "apps/api/src/modules/sales/assignment/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales/academy/",
+   "to": "apps/api/src/modules/sales/academy/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/sales/sales/schedule/",
+   "to": "apps/api/src/modules/sales/schedule/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/booking-extras.*",
+   "to": "apps/api/src/modules/teaching/booking/booking-extras/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/card/",
+   "to": "apps/api/src/modules/teaching/courses/course-card/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/course-change.module.*",
+   "to": "apps/api/src/modules/teaching/courses/course-change/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/course-change/",
+   "to": "apps/api/src/modules/teaching/courses/course-change/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/extend/",
+   "to": "apps/api/src/modules/teaching/courses/course-extend/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/plan/",
+   "to": "apps/api/src/modules/teaching/booking/slots/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/profile/",
+   "to": "apps/api/src/modules/teaching/courses/profile-course/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/sales/",
+   "to": "apps/api/src/modules/sales/course/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/teacher/",
+   "to": "apps/api/src/modules/teaching/booking/slots/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/teacher/teacher-alert.*",
+   "to": "apps/api/src/modules/messaging/notifications/teacher-alert/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/teacher/teacher-options.*",
+   "to": "apps/api/src/modules/teaching/booking/slots/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/booking/teacher/tests/teacher-alert.*",
+   "to": "apps/api/src/modules/messaging/notifications/teacher-alert/tests/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/classroom/family-link/",
+   "to": "apps/api/src/modules/teaching/lesson-links/family-link/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/classroom/internal-meetings/",
+   "to": "apps/api/src/modules/teaching/classroom/meetings/internal/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/classroom/join/",
+   "to": "apps/api/src/modules/teaching/classroom/join/ (stays; drop the move to room-open)",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/classroom/join/join-link.*",
+   "to": "apps/api/src/modules/teaching/classroom/join/join-link/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/classroom/join/tests/join-link.*",
+   "to": "apps/api/src/modules/teaching/classroom/join/join-link/tests/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/classroom/moderation.module.*",
+   "to": "apps/api/src/modules/teaching/classroom/moderation/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/classroom/room-open.module.*",
+   "to": "apps/api/src/modules/teaching/classroom/join/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/classroom/student-link/",
+   "to": "apps/api/src/modules/teaching/lesson-links/student-link/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/course-pause/",
+   "to": "apps/api/src/modules/teaching/courses/course-pause/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/course-stop/",
+   "to": "apps/api/src/modules/teaching/courses/course-stop/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/lessons/live-room/",
+   "to": "apps/api/src/modules/teaching/classroom/live/room-state/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/lessons/teacher-me/",
+   "to": "apps/api/src/modules/teaching/teacher-home/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/schedule-notices/",
+   "to": "apps/api/src/modules/messaging/notifications/schedule-notices/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/student-recordings/",
+   "to": "apps/api/src/modules/teaching/lesson-files/",
+   "layer": "api"
+  },
+  {
+   "from": "apps/api/src/modules/teaching/student-recordings/lesson-files/",
+   "to": "apps/api/src/modules/teaching/lesson-files/assets/",
+   "layer": "api"
+  },
+  {
+   "from": "packages/client-core/src/core/auth/sign-in*",
+   "to": "packages/client-core/src/people/sign-in/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/core/errors/chat-list-errors.*",
+   "to": "packages/client-core/src/messaging/inbox/chat-lists/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/core/errors/send-error.*",
+   "to": "packages/client-core/src/messaging/inbox/send/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/admin-tasks/",
+   "to": "packages/client-core/src/finance/subscriptions/admin-tasks/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/list-filters/",
+   "to": "packages/client-core/src/finance/subscriptions/list-filters/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/payments/assistant-pay-api/",
+   "to": "packages/client-core/src/finance/assistant-pay/assistant-pay-api/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/payments/my-earnings-api/",
+   "to": "packages/client-core/src/finance/teacher-earnings/my-earnings-api/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/payments/my-payouts-api/",
+   "to": "packages/client-core/src/finance/payouts/my-payouts-api/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/payments/my-sales-api/",
+   "to": "packages/client-core/src/finance/assistant-pay/my-sales-api/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/payments/payment-links-api/",
+   "to": "packages/client-core/src/finance/stripe/payment-links/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/payments/payouts-api/",
+   "to": "packages/client-core/src/finance/payouts/payouts-api/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/payments/request-id.*",
+   "to": "packages/client-core/src/core/http/upload/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/payments/teacher-earnings-api/",
+   "to": "packages/client-core/src/finance/teacher-earnings/teacher-earnings-api/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/payments/upload-once.*",
+   "to": "packages/client-core/src/core/http/upload/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/price-list/",
+   "to": "packages/client-core/src/finance/pricing/price-list/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/quote-custom/",
+   "to": "packages/client-core/src/finance/pricing/quote-custom/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/quote-sheet/",
+   "to": "packages/client-core/src/finance/pricing/quote-sheet/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/start-date-edit/",
+   "to": "packages/client-core/src/finance/subscriptions/start-date-edit/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/finance/stripe-feature/",
+   "to": "packages/client-core/src/finance/stripe/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/channels/",
+   "to": "packages/client-core/src/teaching/student-channels/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/channels/presence*",
+   "to": "packages/client-core/src/people/presence/live/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/channels/teacher-pick.*",
+   "to": "packages/client-core/src/teaching/booking/teacher-pick/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/chat-search/",
+   "to": "packages/client-core/src/messaging/inbox/search/chat-search/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/chat-send/",
+   "to": "packages/client-core/src/messaging/inbox/send/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/inbox/thread-delta.*",
+   "to": "packages/client-core/src/messaging/inbox/thread-sync/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/live-rejoin/",
+   "to": "packages/client-core/src/messaging/inbox/live-rejoin/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/message-search/",
+   "to": "packages/client-core/src/messaging/inbox/search/message-search/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/thread-pages/",
+   "to": "packages/client-core/src/messaging/inbox/thread-pages/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/thread-sync/",
+   "to": "packages/client-core/src/messaging/inbox/thread-sync/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/ticks/",
+   "to": "packages/client-core/src/messaging/inbox/ticks/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/messaging/whatsapp-send/",
+   "to": "packages/client-core/src/messaging/inbox/whatsapp-send/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/assistants/",
+   "to": "packages/client-core/src/finance/assistant-pay/assistants/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/family-auth/",
+   "to": "packages/client-core/src/people/sign-in/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/family-auth/countries.*",
+   "to": "packages/client-core/src/core/phone-countries/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/family-auth/country-*",
+   "to": "packages/client-core/src/core/phone-countries/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/phone-countries/",
+   "to": "packages/client-core/src/core/phone-countries/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/portal/profile/",
+   "to": "packages/client-core/src/people/account/profile/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/push-tokens/",
+   "to": "packages/client-core/src/people/account/push-tokens/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/roster/students/",
+   "to": "packages/client-core/src/people/students/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/roster/teacher-students/",
+   "to": "packages/client-core/src/people/teacher-students/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/users/account-api/",
+   "to": "packages/client-core/src/people/account/account-api/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/users/roles-api/",
+   "to": "packages/client-core/src/people/roles/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/people/users/staff-photo-api/",
+   "to": "packages/client-core/src/people/users/photos/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/platform/translation-overrides/",
+   "to": "packages/client-core/src/platform/translations/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/sales/lead-sort/",
+   "to": "packages/client-core/src/sales/leads/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/audio-player/",
+   "to": "packages/client-core/src/core/audio-player/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking-extras/",
+   "to": "packages/client-core/src/teaching/booking/booking-extras/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/course-actions.*",
+   "to": "packages/client-core/src/teaching/courses/course-change/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/course-card/",
+   "to": "packages/client-core/src/teaching/courses/course-card/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/course-change-api/",
+   "to": "packages/client-core/src/teaching/courses/course-change/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/course-move-api/",
+   "to": "packages/client-core/src/teaching/courses/course-change/move-api/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/course-pause-api/",
+   "to": "packages/client-core/src/teaching/courses/course-pause/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/course-pause.*",
+   "to": "packages/client-core/src/teaching/courses/course-pause/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/course-refund.*",
+   "to": "packages/client-core/src/teaching/courses/course-stop/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/course-stop-*",
+   "to": "packages/client-core/src/teaching/courses/course-stop/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/course-stop-api/",
+   "to": "packages/client-core/src/teaching/courses/course-stop/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/package-cancel.*",
+   "to": "packages/client-core/src/teaching/courses/course-stop/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/sales-course-api/",
+   "to": "packages/client-core/src/sales/course/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/booking/schedule-rules-api/",
+   "to": "packages/client-core/src/teaching/scheduling/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/instant-lesson/",
+   "to": "packages/client-core/src/teaching/booking/instant/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/lesson-room/",
+   "to": "packages/client-core/src/teaching/classroom/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/lessons/attendance-table-schema.*",
+   "to": "packages/client-core/src/people/teacher-students/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/lessons/teacher-student-head-schema.*",
+   "to": "packages/client-core/src/people/teacher-students/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/report-draft/",
+   "to": "packages/client-core/src/reporting/reports/draft/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/reports/",
+   "to": "packages/client-core/src/reporting/reports/",
+   "layer": "client-core"
+  },
+  {
+   "from": "packages/client-core/src/teaching/room-host/",
+   "to": "packages/client-core/src/teaching/classroom/room-host/",
+   "layer": "client-core"
+  },
+  {
+   "from": "apps/family-mobile/src/account/",
+   "to": "apps/family-mobile/src/features/people/account/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/account/LegalLinks/",
+   "to": "apps/family-mobile/src/features/platform/legal/LegalLinks/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/account/PushSwitchRow/",
+   "to": "apps/family-mobile/src/features/people/account/push-tokens/PushSwitchRow/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/account/use-device-push.*",
+   "to": "apps/family-mobile/src/features/people/account/push-tokens/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/chat/",
+   "to": "apps/family-mobile/src/features/teaching/student-channels/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/child/",
+   "to": "apps/family-mobile/src/features/people/portal/child/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/home/",
+   "to": "apps/family-mobile/src/features/people/portal/home/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/home/home-state.*",
+   "to": "apps/family-mobile/src/features/people/portal/home/StudentsBody/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/home/PickChildScreen/",
+   "to": "apps/family-mobile/src/features/people/portal/family-pick/PickChildScreen/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/home/StudentsBody.*",
+   "to": "apps/family-mobile/src/features/people/portal/home/StudentsBody/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/lessons/",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/lessons/JoinAction/",
+   "to": "apps/family-mobile/src/features/teaching/classroom/join/JoinAction/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/lessons/JoinButton/",
+   "to": "apps/family-mobile/src/features/teaching/classroom/join/JoinButton/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/lessons/live/",
+   "to": "apps/family-mobile/src/features/teaching/classroom/join/live/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/lessons/options/",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/options/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/lessons/use-join.*",
+   "to": "apps/family-mobile/src/features/teaching/classroom/join/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/nav/",
+   "to": "apps/family-mobile/src/shell/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/nav/AlertRow/",
+   "to": "apps/family-mobile/src/features/messaging/notifications/bell/AlertRow/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/nav/AlertSections/",
+   "to": "apps/family-mobile/src/features/messaging/notifications/bell/AlertSections/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/nav/AlertsScreen/",
+   "to": "apps/family-mobile/src/features/messaging/notifications/bell/AlertsScreen/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/nav/ChildSwitchLink/",
+   "to": "apps/family-mobile/src/features/people/portal/family-pick/ChildSwitchLink/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/nav/FamilyBell/",
+   "to": "apps/family-mobile/src/features/messaging/notifications/bell/FamilyBell/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/nav/switch-store.*",
+   "to": "apps/family-mobile/src/features/people/portal/family-pick/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/package/",
+   "to": "apps/family-mobile/src/features/people/portal/package/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/portal/",
+   "to": "apps/family-mobile/src/features/people/portal/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/profile/",
+   "to": "apps/family-mobile/src/features/people/account/profile/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/push/",
+   "to": "apps/family-mobile/src/features/messaging/notifications/push/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/recordings/",
+   "to": "apps/family-mobile/src/features/people/portal/recordings/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/recordings/api.*",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/lesson-page/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/recordings/file-text.*",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/lesson-page/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/recordings/LessonBody/",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/lesson-page/LessonBody/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/recordings/LessonFileRow/",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/lesson-page/LessonFileRow/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/recordings/LessonFiles/",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/lesson-page/LessonFiles/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/recordings/LessonScreen/",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/lesson-page/LessonScreen/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/recordings/listen-note.*",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/lesson-page/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/recordings/use-assets.*",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/lesson-page/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/recordings/VoiceNote/",
+   "to": "apps/family-mobile/src/features/people/portal/lessons/lesson-page/VoiceNote/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/report/",
+   "to": "apps/family-mobile/src/features/people/portal/reports/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/room/",
+   "to": "apps/family-mobile/src/features/teaching/classroom/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/root/",
+   "to": "apps/family-mobile/src/shell/root/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/root/use-family-push.*",
+   "to": "apps/family-mobile/src/features/messaging/notifications/push/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/schedule/",
+   "to": "apps/family-mobile/src/features/people/portal/schedule/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/sign-in/",
+   "to": "apps/family-mobile/src/features/people/sign-in/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/switch/",
+   "to": "apps/family-mobile/src/features/people/portal/family-pick/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/switch/SwitchTabs/",
+   "to": "apps/family-mobile/src/shell/SwitchTabs/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-mobile/src/ui/",
+   "to": "apps/family-mobile/src/components/",
+   "layer": "family-mobile"
+  },
+  {
+   "from": "apps/family-web/src/features/account/",
+   "to": "apps/family-web/src/features/people/account/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/alerts/",
+   "to": "apps/family-web/src/features/messaging/notifications/bell/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/children/",
+   "to": "apps/family-web/src/features/people/portal/child/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/children/child-tabs.*",
+   "to": "apps/family-web/src/features/people/portal/child/child-tabs/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/children/package/",
+   "to": "apps/family-web/src/features/people/portal/package/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/children/PickChildPage/",
+   "to": "apps/family-web/src/features/people/portal/family-pick/PickChildPage/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/children/use-chat-tab.*",
+   "to": "apps/family-web/src/features/people/portal/child/child-tabs/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/children/WithPick/",
+   "to": "apps/family-web/src/features/people/portal/family-pick/WithPick/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/home/",
+   "to": "apps/family-web/src/features/people/portal/home/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/legal/",
+   "to": "apps/family-web/src/features/platform/legal/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/next-lesson/",
+   "to": "apps/family-web/src/features/people/portal/lessons/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/recordings/",
+   "to": "apps/family-web/src/features/people/portal/recordings/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/recordings/FamilyLessonPage/",
+   "to": "apps/family-web/src/features/people/portal/lessons/FamilyLessonPage/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/recordings/lesson-search.*",
+   "to": "apps/family-web/src/features/people/portal/lessons/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/recordings/StudentOf/",
+   "to": "apps/family-web/src/features/people/portal/home/StudentOf/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/recordings/use-lesson-nav.*",
+   "to": "apps/family-web/src/features/people/portal/lessons/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/reports/",
+   "to": "apps/family-web/src/features/people/portal/reports/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/schedule/",
+   "to": "apps/family-web/src/features/people/portal/schedule/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/shell/",
+   "to": "apps/family-web/src/shell/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/shell/Bell/",
+   "to": "apps/family-web/src/features/messaging/notifications/bell/Bell/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/shell/ChildSwitch/",
+   "to": "apps/family-web/src/features/people/portal/family-pick/ChildSwitch/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/shell/use-family-pick.*",
+   "to": "apps/family-web/src/features/people/portal/family-pick/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/shell/use-portal-home.*",
+   "to": "apps/family-web/src/features/people/portal/home/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/shell/WithHome/",
+   "to": "apps/family-web/src/features/people/portal/home/WithHome/",
+   "layer": "family-web"
+  },
+  {
+   "from": "apps/family-web/src/features/sign-in/",
+   "to": "apps/family-web/src/features/people/sign-in/",
+   "layer": "family-web"
+  },
+  {
+   "from": "packages/shared/src/catalog/",
+   "to": "packages/shared/src/package-checks/catalog/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/finance/admin-tasks/",
+   "to": "packages/shared/src/finance/subscriptions/admin-tasks/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/finance/earnings/",
+   "to": "packages/shared/src/finance/teacher-earnings/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/finance/ledger/",
+   "to": "packages/shared/src/package-checks/money/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/i18n/",
+   "to": "packages/shared/src/package-checks/i18n/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/channel/",
+   "to": "packages/shared/src/teaching/student-channels/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/chat/",
+   "to": "packages/shared/src/messaging/inbox/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/chat/chat-files/",
+   "to": "packages/shared/src/messaging/inbox/files/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/chat/chat-lists.*",
+   "to": "packages/shared/src/messaging/inbox/chat-lists/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/chat/crm-*",
+   "to": "packages/shared/src/messaging/whatsapp/crm/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/chat/thread-people/",
+   "to": "packages/shared/src/messaging/inbox/threads/people/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/chat/thread-reopen/",
+   "to": "packages/shared/src/messaging/inbox/threads/reopen/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/lesson/",
+   "to": "packages/shared/src/messaging/notifications/reminders/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/lesson/meeting-link.*",
+   "to": "packages/shared/src/teaching/lesson-links/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/lesson/rating.*",
+   "to": "packages/shared/src/teaching/lesson-rating/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/lesson/trial-chat.*",
+   "to": "packages/shared/src/teaching/teacher-home/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/markers/",
+   "to": "packages/shared/src/messaging/inbox/markers/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/message-actions/",
+   "to": "packages/shared/src/messaging/inbox/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/message-actions/channel-actions.*",
+   "to": "packages/shared/src/teaching/student-channels/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/message-actions/chat-search.*",
+   "to": "packages/shared/src/messaging/inbox/search/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/message-actions/correction/",
+   "to": "packages/shared/src/messaging/inbox/send/correction/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/message-actions/hidden.*",
+   "to": "packages/shared/src/messaging/inbox/message-hide/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/message-actions/message-search.*",
+   "to": "packages/shared/src/messaging/inbox/search/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/message-actions/search-snippet.*",
+   "to": "packages/shared/src/messaging/inbox/search/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/message-actions/whatsapp-send/",
+   "to": "packages/shared/src/messaging/whatsapp/send/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/payload/",
+   "to": "packages/shared/src/messaging/webhook/payload/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/reactions/",
+   "to": "packages/shared/src/messaging/inbox/reactions/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/replies/",
+   "to": "packages/shared/src/messaging/inbox/saved-replies/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/replies/reply-forward.*",
+   "to": "packages/shared/src/messaging/inbox/send/reply/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/replies/reply-lesson.*",
+   "to": "packages/shared/src/messaging/inbox/send/reply/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/replies/reply-line.*",
+   "to": "packages/shared/src/messaging/inbox/send/reply/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/replies/reply-note.*",
+   "to": "packages/shared/src/messaging/inbox/send/reply/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/replies/reply-number.*",
+   "to": "packages/shared/src/messaging/inbox/send/reply/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/replies/reply-slots.*",
+   "to": "packages/shared/src/messaging/inbox/saved-replies/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/schemas.*",
+   "to": "packages/shared/src/messaging/inbox/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/stickers/",
+   "to": "packages/shared/src/messaging/inbox/stickers/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/sync-cursor.*",
+   "to": "packages/shared/src/messaging/inbox/thread-sync/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/thread-delta.*",
+   "to": "packages/shared/src/messaging/inbox/thread-sync/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/thread-sync.*",
+   "to": "packages/shared/src/messaging/inbox/thread-sync/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/messaging/wa.*",
+   "to": "packages/shared/src/messaging/whatsapp/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/notifications/",
+   "to": "packages/shared/src/messaging/notifications/bell/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/notifications/catalogue/",
+   "to": "packages/shared/src/messaging/notifications/catalogue/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/notifications/course-notice.*",
+   "to": "packages/shared/src/messaging/notifications/schedule-notices/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/notifications/kind-permissions.*",
+   "to": "packages/shared/src/messaging/notifications/rules/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/notifications/push-readers.*",
+   "to": "packages/shared/src/messaging/notifications/push/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/notifications/push-wake.*",
+   "to": "packages/shared/src/messaging/notifications/push/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/notifications/rules.*",
+   "to": "packages/shared/src/messaging/notifications/rules/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/push-tokens/",
+   "to": "packages/shared/src/people/account/push-tokens/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/schemas/",
+   "to": "packages/shared/src/people/students/schemas/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/schemas/contact-is-self.*",
+   "to": "packages/shared/src/people/people-edit/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/schemas/lead-views.*",
+   "to": "packages/shared/src/sales/leads/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/schemas/leads.*",
+   "to": "packages/shared/src/sales/leads/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/schemas/people-edit*",
+   "to": "packages/shared/src/people/people-edit/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/schemas/teacher-students*",
+   "to": "packages/shared/src/people/teacher-students/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/students/board-students.*",
+   "to": "packages/shared/src/teaching/teacher-home/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/students/course-pause/",
+   "to": "packages/shared/src/teaching/courses/course-pause/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/students/course-stop/",
+   "to": "packages/shared/src/teaching/courses/course-stop/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/students/family/",
+   "to": "packages/shared/src/people/portal/family/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/students/portal*",
+   "to": "packages/shared/src/people/portal/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/students/stop-choices/",
+   "to": "packages/shared/src/teaching/courses/course-stop/stop-choices/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/students/stop-refund/",
+   "to": "packages/shared/src/teaching/courses/course-stop/stop-refund/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/students/trial-date/",
+   "to": "packages/shared/src/teaching/booking/trial-date/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/students/trial-dates.*",
+   "to": "packages/shared/src/teaching/booking/trial-date/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/users/auth-me.*",
+   "to": "packages/shared/src/people/account/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/people/users/sign-in*",
+   "to": "packages/shared/src/people/sign-in/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/reports/",
+   "to": "packages/shared/src/reporting/reports/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/reports/lesson-files/",
+   "to": "packages/shared/src/teaching/lesson-files/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/reports/page-access.*",
+   "to": "packages/shared/src/reporting/report-page/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/reports/page.*",
+   "to": "packages/shared/src/reporting/report-page/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/academy*",
+   "to": "packages/shared/src/sales/academy/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/chat-binding.*",
+   "to": "packages/shared/src/sales/money/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/course/course-card/",
+   "to": "packages/shared/src/teaching/courses/course-card/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/course/course-change/",
+   "to": "packages/shared/src/teaching/courses/course-change/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/family-link.*",
+   "to": "packages/shared/src/sales/leads/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/money*",
+   "to": "packages/shared/src/sales/money/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/payment-link/",
+   "to": "packages/shared/src/finance/stripe/payment-links/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/pick-sales.*",
+   "to": "packages/shared/src/sales/assignment/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/qualification-form.*",
+   "to": "packages/shared/src/sales/leads/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/registration.*",
+   "to": "packages/shared/src/sales/registration/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/renewal-due.*",
+   "to": "packages/shared/src/sales/money/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/schedule.*",
+   "to": "packages/shared/src/sales/schedule/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/start-date-edit/",
+   "to": "packages/shared/src/finance/subscriptions/start-date-edit/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/start-date.*",
+   "to": "packages/shared/src/finance/subscriptions/start-date-edit/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/student/",
+   "to": "packages/shared/src/sales/students/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/student/teacher-board-lessons.*",
+   "to": "packages/shared/src/teaching/teacher-home/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/student/teacher-course.*",
+   "to": "packages/shared/src/teaching/teacher-home/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/teacher-filter/",
+   "to": "packages/shared/src/sales/students/teacher-filter/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/teacher/",
+   "to": "packages/shared/src/sales/students/teachers/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/used-before.*",
+   "to": "packages/shared/src/finance/subscriptions/used-before/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/used-before/",
+   "to": "packages/shared/src/finance/subscriptions/used-before/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/sales/views.*",
+   "to": "packages/shared/src/sales/assignment/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schedule/booking-extras/",
+   "to": "packages/shared/src/teaching/booking/booking-extras/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schedule/booking/",
+   "to": "packages/shared/src/teaching/booking/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schedule/classroom/",
+   "to": "packages/shared/src/teaching/classroom/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schedule/lessons/",
+   "to": "packages/shared/src/teaching/lessons/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schedule/schemas/",
+   "to": "packages/shared/src/teaching/booking/tests/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schedule/schemas/scheduling.*",
+   "to": "packages/shared/src/teaching/scheduling/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schedule/tests/",
+   "to": "packages/shared/src/teaching/booking/tests/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schemas/activity*",
+   "to": "packages/shared/src/reporting/activity/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schemas/booking-request.*",
+   "to": "packages/shared/src/teaching/booking/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schemas/chat-media.*",
+   "to": "packages/shared/src/messaging/inbox/files/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schemas/events/",
+   "to": "packages/shared/src/events/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schemas/feedback.*",
+   "to": "packages/shared/src/teaching/feedback/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schemas/outside-slots.*",
+   "to": "packages/shared/src/teaching/booking/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schemas/readiness.*",
+   "to": "packages/shared/src/platform/health/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/schemas/short-link*",
+   "to": "packages/shared/src/platform/short-links/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/settings/",
+   "to": "packages/shared/src/package-checks/settings/",
+   "layer": "shared"
+  },
+  {
+   "from": "packages/shared/src/time/",
+   "to": "packages/shared/src/package-checks/time/",
+   "layer": "shared"
+  },
+  {
+   "from": "apps/staff-mobile/src/account/",
+   "to": "apps/staff-mobile/src/features/people/account/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/account/staff-photo/",
+   "to": "apps/staff-mobile/src/features/people/users/photos/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/app-config.*",
+   "to": "apps/staff-mobile/src/ (stays; drop the move to src/tests/)",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/assistant-app/",
+   "to": "apps/staff-mobile/src/shell/assistant-tabs/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/assistant-app/assistant-day.*",
+   "to": "apps/staff-mobile/src/features/teaching/classroom/assistants/home/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/assistant-app/AssistantHomeScreen.*",
+   "to": "apps/staff-mobile/src/features/teaching/classroom/assistants/home/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/assistants/",
+   "to": "apps/staff-mobile/src/features/finance/assistant-pay/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/booking/",
+   "to": "apps/staff-mobile/src/features/teaching/booking/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/calendar/",
+   "to": "apps/staff-mobile/src/features/teaching/lessons/overview/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/classroom/",
+   "to": "apps/staff-mobile/src/features/teaching/classroom/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/classroom/links/",
+   "to": "apps/staff-mobile/src/features/teaching/classroom/join/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/auth/code/",
+   "to": "apps/staff-mobile/src/features/people/sign-in/code/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/auth/Login.*",
+   "to": "apps/staff-mobile/src/features/people/sign-in/tests/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/auth/setup/",
+   "to": "apps/staff-mobile/src/features/people/sign-in/setup/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/lib/money/",
+   "to": "apps/staff-mobile/src/features/finance/payments/money/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/lib/presence/",
+   "to": "apps/staff-mobile/src/features/people/presence/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/lib/receipts/",
+   "to": "apps/staff-mobile/src/features/finance/payments/receipts/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/lib/staff/",
+   "to": "apps/staff-mobile/src/features/people/users/staff/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/lib/stripe-flag.*",
+   "to": "apps/staff-mobile/src/features/finance/stripe/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/nav/",
+   "to": "apps/staff-mobile/src/shell/nav/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/nav/LessonFilesLink.*",
+   "to": "apps/staff-mobile/src/features/teaching/lesson-files/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/nav/use-inbox-badge.*",
+   "to": "apps/staff-mobile/src/features/messaging/inbox/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/push/",
+   "to": "apps/staff-mobile/src/features/messaging/notifications/push/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/core/root/",
+   "to": "apps/staff-mobile/src/shell/root/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/earnings/",
+   "to": "apps/staff-mobile/src/features/finance/teacher-earnings/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/edit-time/",
+   "to": "apps/staff-mobile/src/features/teaching/lessons/time-edit/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/feedback/",
+   "to": "apps/staff-mobile/src/features/teaching/feedback/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/finance/",
+   "to": "apps/staff-mobile/src/features/finance/expenses/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/finance/expenses/",
+   "to": "apps/staff-mobile/src/features/finance/expenses/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/finance/index.ts",
+   "to": "DELETE (parent barrel; it would otherwise become features/finance/expenses/index.ts)",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/finance/invoices/",
+   "to": "apps/staff-mobile/src/features/finance/invoices/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/finance/payouts/",
+   "to": "apps/staff-mobile/src/features/finance/payouts/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/finance/pricing/",
+   "to": "apps/staff-mobile/src/features/finance/pricing/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/finance/shared/",
+   "to": "apps/staff-mobile/src/features/finance/expenses/shared/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/finance/summary/",
+   "to": "apps/staff-mobile/src/features/reporting/dashboard/finance/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/fonts.*",
+   "to": "apps/staff-mobile/src/ (stays; drop the move to src/tests/)",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/i18n-literals.*",
+   "to": "apps/staff-mobile/src/ (stays; drop the move to src/tests/)",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/inbox/",
+   "to": "apps/staff-mobile/src/features/messaging/inbox/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/inbox/composer/templates/",
+   "to": "apps/staff-mobile/src/features/messaging/templates/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/inbox/leads/",
+   "to": "apps/staff-mobile/src/features/sales/leads/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/inbox/lists/",
+   "to": "apps/staff-mobile/src/features/messaging/inbox/chat-lists/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/inbox/qualification/",
+   "to": "apps/staff-mobile/src/features/sales/leads/qualification/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/inbox/rating/",
+   "to": "apps/staff-mobile/src/features/teaching/lesson-rating/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/inbox/saved-replies/",
+   "to": "apps/staff-mobile/src/features/messaging/inbox/saved-replies/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/inbox/subscription/",
+   "to": "apps/staff-mobile/src/features/sales/money/chat-subscribe/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/inbox/thread/calls/",
+   "to": "apps/staff-mobile/src/features/messaging/calls/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/meetings/",
+   "to": "apps/staff-mobile/src/features/teaching/classroom/meetings/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/money/",
+   "to": "apps/staff-mobile/src/features/finance/payments/shared/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/money/attachments/",
+   "to": "apps/staff-mobile/src/features/finance/payments/attachments/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/money/index.ts",
+   "to": "DELETE (parent barrel; payments, receivables and subscriptions each export from their own index.ts)",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/money/payments/",
+   "to": "apps/staff-mobile/src/features/finance/payments/admin-list/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/money/receivables/",
+   "to": "apps/staff-mobile/src/features/finance/receivables/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/money/rows.permissions.test.*",
+   "to": "apps/staff-mobile/src/features/finance/payments/admin-list/tests/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/money/shared/",
+   "to": "apps/staff-mobile/src/features/finance/payments/shared/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/money/subscriptions/",
+   "to": "apps/staff-mobile/src/features/finance/subscriptions/list/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/money/tasks/",
+   "to": "apps/staff-mobile/src/features/finance/subscriptions/admin-tasks/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/more/",
+   "to": "apps/staff-mobile/src/shell/more/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/more/appearance/",
+   "to": "apps/staff-mobile/src/features/people/account/appearance/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/more/applicants/",
+   "to": "apps/staff-mobile/src/features/sales/job-applicants/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/more/availability/",
+   "to": "apps/staff-mobile/src/features/people/teachers/availability/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/more/screens/JobApplicantsScreen/",
+   "to": "apps/staff-mobile/src/features/sales/job-applicants/JobApplicantsScreen/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/more/screens/MoreScreen/",
+   "to": "apps/staff-mobile/src/shell/more/MoreScreen/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/more/screens/TeacherDetailScreen/",
+   "to": "apps/staff-mobile/src/features/people/teachers/TeacherDetailScreen/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/more/screens/TeachersScreen.*",
+   "to": "apps/staff-mobile/src/features/people/teachers/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/more/teachers/",
+   "to": "apps/staff-mobile/src/features/people/teachers/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/notifications/",
+   "to": "apps/staff-mobile/src/features/messaging/notifications/bell/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/",
+   "to": "apps/staff-mobile/src/features/platform/settings/shared/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/activity/",
+   "to": "apps/staff-mobile/src/features/reporting/activity/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/comms/",
+   "to": "apps/staff-mobile/src/features/messaging/numbers/communications/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/dashboard/",
+   "to": "apps/staff-mobile/src/features/reporting/dashboard/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/google-sync/",
+   "to": "apps/staff-mobile/src/features/platform/google-sync/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/index.ts",
+   "to": "DELETE (parent barrel; each ops feature exports from its own index.ts)",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/notif-rules/",
+   "to": "apps/staff-mobile/src/features/messaging/notifications/rules/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/numbers/",
+   "to": "apps/staff-mobile/src/features/messaging/numbers/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/reports/",
+   "to": "apps/staff-mobile/src/features/reporting/reports/admin/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/reports/ReportPage*",
+   "to": "apps/staff-mobile/src/features/reporting/report-page/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/reports/use-report-page.*",
+   "to": "apps/staff-mobile/src/features/reporting/report-page/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/settings/",
+   "to": "apps/staff-mobile/src/features/platform/settings/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/settings/catalogue-words.*",
+   "to": "apps/staff-mobile/src/features/messaging/notifications/catalogue/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/settings/CommunicationsScreen.*",
+   "to": "apps/staff-mobile/src/features/messaging/numbers/communications/CommunicationsScreen/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/settings/NotificationCatalogue.*",
+   "to": "apps/staff-mobile/src/features/messaging/notifications/catalogue/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/settings/SharedRepliesScreen.*",
+   "to": "apps/staff-mobile/src/features/messaging/inbox/saved-replies/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/settings/stripe/",
+   "to": "apps/staff-mobile/src/features/finance/stripe/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/shared/",
+   "to": "apps/staff-mobile/src/features/platform/settings/shared/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/ops/values/",
+   "to": "apps/staff-mobile/src/features/platform/settings/values/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/payments/",
+   "to": "apps/staff-mobile/src/features/finance/payments/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/registration-check/",
+   "to": "apps/staff-mobile/src/features/sales/registration/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales-course/",
+   "to": "apps/staff-mobile/src/features/sales/course/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales-money/",
+   "to": "apps/staff-mobile/src/features/sales/money/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales-money/wallet/",
+   "to": "apps/staff-mobile/src/features/finance/assistant-pay/wallet/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales-subscribe/",
+   "to": "apps/staff-mobile/src/features/sales/money/subscribe/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales-subscribe/payment-link/",
+   "to": "apps/staff-mobile/src/features/finance/stripe/payment-links/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/app/",
+   "to": "apps/staff-mobile/src/shell/sales-tabs/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/",
+   "to": "apps/staff-mobile/src/features/sales/students/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/attendance/",
+   "to": "apps/staff-mobile/src/features/sales/students/attendance/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/family/",
+   "to": "apps/staff-mobile/src/features/sales/students/family/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/lesson-actions/",
+   "to": "apps/staff-mobile/src/features/sales/students/lesson-actions/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/money-action/",
+   "to": "apps/staff-mobile/src/features/sales/money/money-action/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/roster/",
+   "to": "apps/staff-mobile/src/features/sales/students/roster/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/screens/",
+   "to": "apps/staff-mobile/src/features/sales/students/screens/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/screens/SalesLiveScreen.*",
+   "to": "apps/staff-mobile/src/features/teaching/classroom/live/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/screens/SalesScheduleScreen/",
+   "to": "apps/staff-mobile/src/features/sales/schedule/SalesScheduleScreen/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/screens/SalesSubscriptionsScreen/",
+   "to": "apps/staff-mobile/src/features/sales/money/SalesSubscriptionsScreen/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/screens/SalesTodayScreen/",
+   "to": "apps/staff-mobile/src/features/sales/schedule/SalesTodayScreen/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/screens/SubscriptionHistoryScreen.*",
+   "to": "apps/staff-mobile/src/features/sales/money/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/student/",
+   "to": "apps/staff-mobile/src/features/sales/students/details/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/sales/sales/teacher/",
+   "to": "apps/staff-mobile/src/features/sales/students/teachers/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/short-links/",
+   "to": "apps/staff-mobile/src/features/platform/short-links/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/student-file/",
+   "to": "apps/staff-mobile/src/features/people/students/file/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/student-file/channel/",
+   "to": "apps/staff-mobile/src/features/teaching/student-channels/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/student-file/money/",
+   "to": "apps/staff-mobile/src/features/finance/payments/student-money/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/student-file/recordings/",
+   "to": "apps/staff-mobile/src/features/teaching/lesson-files/recordings/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/students/",
+   "to": "apps/staff-mobile/src/features/people/students/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/students/course-actions/",
+   "to": "apps/staff-mobile/src/features/teaching/courses/course-change/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/students/course-actions/CourseStop*",
+   "to": "apps/staff-mobile/src/features/teaching/courses/course-stop/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/students/course-actions/StopDoneView.*",
+   "to": "apps/staff-mobile/src/features/teaching/courses/course-stop/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/students/course-actions/StopMoneyChoice.*",
+   "to": "apps/staff-mobile/src/features/teaching/courses/course-stop/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/students/course-card/",
+   "to": "apps/staff-mobile/src/features/teaching/courses/course-card/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/students/course-pause/",
+   "to": "apps/staff-mobile/src/features/teaching/courses/course-pause/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/students/people-edit/",
+   "to": "apps/staff-mobile/src/features/people/people-edit/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/subscribe/",
+   "to": "apps/staff-mobile/src/features/finance/subscriptions/create/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/subscribe/start-date-edit/",
+   "to": "apps/staff-mobile/src/features/finance/subscriptions/start-date-edit/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/subscribe/used-before-edit/",
+   "to": "apps/staff-mobile/src/features/finance/subscriptions/used-before/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/",
+   "to": "apps/staff-mobile/src/shell/teacher-tabs/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/alerts/",
+   "to": "apps/staff-mobile/src/features/teaching/teacher-home/alerts/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/board/",
+   "to": "apps/staff-mobile/src/features/teaching/teacher-home/board/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/components/",
+   "to": "apps/staff-mobile/src/shell/teacher-tabs/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/components/StudentRow.*",
+   "to": "apps/staff-mobile/src/features/people/teacher-students/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/components/TrialChatNote.*",
+   "to": "apps/staff-mobile/src/features/people/teacher-students/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/lesson-actions/",
+   "to": "apps/staff-mobile/src/features/teaching/teacher-home/lesson-actions/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/lessons/",
+   "to": "apps/staff-mobile/src/features/teaching/teacher-home/lessons/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/lib/",
+   "to": "apps/staff-mobile/src/features/teaching/teacher-home/lib/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/lib/payout-text.*",
+   "to": "apps/staff-mobile/src/features/finance/payouts/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/lib/students-queries.*",
+   "to": "apps/staff-mobile/src/features/people/teacher-students/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/lib/teacher-pages.*",
+   "to": "apps/staff-mobile/src/shell/teacher-tabs/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/report/",
+   "to": "apps/staff-mobile/src/features/reporting/reports/teacher/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/schedule/",
+   "to": "apps/staff-mobile/src/features/teaching/teacher-home/schedule/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/",
+   "to": "apps/staff-mobile/src/features/teaching/teacher-home/pages/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/MyAvailabilityScreen.*",
+   "to": "apps/staff-mobile/src/features/people/teachers/availability/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/MyFeedbackScreen.*",
+   "to": "apps/staff-mobile/src/features/teaching/feedback/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/MyPayoutsScreen.*",
+   "to": "apps/staff-mobile/src/features/finance/payouts/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/NotLinkedScreen.*",
+   "to": "apps/staff-mobile/src/shell/teacher-tabs/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/StudentReportsScreen/",
+   "to": "apps/staff-mobile/src/features/reporting/reports/teacher/StudentReportsScreen/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/TeacherChatsScreen.*",
+   "to": "apps/staff-mobile/src/features/messaging/inbox/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/TeacherMeetingsScreen.*",
+   "to": "apps/staff-mobile/src/features/teaching/classroom/meetings/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/TeacherMoreScreen/",
+   "to": "apps/staff-mobile/src/shell/teacher-tabs/TeacherMoreScreen/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/TeacherReportsScreen/",
+   "to": "apps/staff-mobile/src/features/reporting/reports/teacher/TeacherReportsScreen/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/screens/TeacherStudentsScreen.*",
+   "to": "apps/staff-mobile/src/features/people/teacher-students/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/student-file/",
+   "to": "apps/staff-mobile/src/features/people/teacher-students/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teacher/today/",
+   "to": "apps/staff-mobile/src/features/teaching/teacher-home/today/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teaching/",
+   "to": "apps/staff-mobile/src/features/teaching/lessons/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teaching/correct/",
+   "to": "apps/staff-mobile/src/features/teaching/lessons/status/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teaching/lesson-files/",
+   "to": "apps/staff-mobile/src/features/teaching/lesson-files/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/teaching/reschedule/",
+   "to": "apps/staff-mobile/src/features/teaching/lessons/reschedule/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/test/",
+   "to": "apps/staff-mobile/src/testing/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/today/",
+   "to": "apps/staff-mobile/src/features/teaching/lessons/day/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/today/requests/",
+   "to": "apps/staff-mobile/src/features/teaching/lessons/family-requests/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/trial-date/",
+   "to": "apps/staff-mobile/src/features/teaching/booking/trial-date/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/users/",
+   "to": "apps/staff-mobile/src/features/people/users/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-mobile/src/users/presence/",
+   "to": "apps/staff-mobile/src/features/people/presence/",
+   "layer": "staff-mobile"
+  },
+  {
+   "from": "apps/staff-web/src/components/settings/",
+   "to": "apps/staff-web/src/features/platform/settings/components/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/components/shell/",
+   "to": "apps/staff-web/src/shell/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/finance/finance/",
+   "to": "apps/staff-web/src/features/finance/invoices/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/finance/finance/FinanceSummaryPage.*",
+   "to": "apps/staff-web/src/features/reporting/dashboard/finance/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/finance/finance/invoice-*",
+   "to": "apps/staff-web/src/features/finance/invoices/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/finance/finance/InvoicesPage.*",
+   "to": "apps/staff-web/src/features/finance/invoices/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/finance/finance/kpi-tile/",
+   "to": "apps/staff-web/src/features/reporting/dashboard/finance/kpi-tile/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/finance/finance/MoneyKpis.*",
+   "to": "apps/staff-web/src/features/reporting/dashboard/finance/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/finance/finance/receivable-*",
+   "to": "apps/staff-web/src/features/finance/receivables/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/finance/finance/Receivables*",
+   "to": "apps/staff-web/src/features/finance/receivables/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/finance/subscriptions/start-date/",
+   "to": "apps/staff-web/src/features/finance/subscriptions/start-date-edit/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/inbox/lead/",
+   "to": "apps/staff-web/src/features/sales/leads/lead-panel/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/inbox/lists/",
+   "to": "apps/staff-web/src/features/messaging/inbox/chat-lists/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/inbox/sales/",
+   "to": "apps/staff-web/src/features/sales/money/chat-subscribe/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/inbox/sales/RatingChip.*",
+   "to": "apps/staff-web/src/features/teaching/lesson-rating/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/inbox/sales/register-drafts.*",
+   "to": "apps/staff-web/src/features/sales/registration/chat-register/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/inbox/sales/sales-register.*",
+   "to": "apps/staff-web/src/features/sales/registration/chat-register/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/inbox/sales/SalesRegisterAction.*",
+   "to": "apps/staff-web/src/features/sales/registration/chat-register/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/inbox/sales/SendRatingButton.*",
+   "to": "apps/staff-web/src/features/teaching/lesson-rating/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/messaging/",
+   "to": "apps/staff-web/src/features/messaging/whatsapp/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/notification-catalogue/",
+   "to": "apps/staff-web/src/features/messaging/notifications/catalogue/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/notification-rules/",
+   "to": "apps/staff-web/src/features/messaging/notifications/rules/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/messaging/notifications/",
+   "to": "apps/staff-web/src/features/messaging/notifications/bell/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/people/assistants/",
+   "to": "apps/staff-web/src/features/finance/assistant-pay/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/people/auth/",
+   "to": "apps/staff-web/src/features/people/sign-in/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/people/staff-photo/",
+   "to": "apps/staff-web/src/features/people/users/photos/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/people/students/people-edit/",
+   "to": "apps/staff-web/src/features/people/people-edit/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/people/students/recordings/",
+   "to": "apps/staff-web/src/features/teaching/lesson-files/recordings/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/platform/presence/",
+   "to": "apps/staff-web/src/features/people/presence/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/platform/settings/pages/communications-test-kit.*",
+   "to": "apps/staff-web/src/features/messaging/numbers/communications/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/platform/settings/pages/communications/",
+   "to": "apps/staff-web/src/features/messaging/numbers/communications/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/platform/settings/pages/CommunicationsPage*",
+   "to": "apps/staff-web/src/features/messaging/numbers/communications/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/platform/settings/pages/GooglePage.*",
+   "to": "apps/staff-web/src/features/platform/google-sync/pages/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/platform/settings/pages/IntegrationsPage.*",
+   "to": "apps/staff-web/src/features/platform/integrations/pages/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/platform/short-links-gate/",
+   "to": "apps/staff-web/src/features/platform/short-links/gate/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/reporting/reports/link/",
+   "to": "apps/staff-web/src/features/reporting/reports/teacher-link/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/leads/applicantColumns.*",
+   "to": "apps/staff-web/src/features/sales/job-applicants/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/leads/JobApplicantsList*",
+   "to": "apps/staff-web/src/features/sales/job-applicants/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/payment-links/",
+   "to": "apps/staff-web/src/features/finance/stripe/payment-links/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales-money/",
+   "to": "apps/staff-web/src/features/sales/money/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales-money/course/",
+   "to": "apps/staff-web/src/features/sales/course/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales-money/payment-link/",
+   "to": "apps/staff-web/src/features/finance/stripe/payment-links/subscribe-link/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/",
+   "to": "apps/staff-web/src/features/sales/students/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/academy*",
+   "to": "apps/staff-web/src/features/sales/academy/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/first-sales-route.*",
+   "to": "apps/staff-web/src/shell/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/live/",
+   "to": "apps/staff-web/src/features/teaching/classroom/live/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/money/",
+   "to": "apps/staff-web/src/features/sales/money/my-payments/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/money/CommissionEntry.*",
+   "to": "apps/staff-web/src/features/finance/assistant-pay/wallet/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/money/CurrencyTotalsList.*",
+   "to": "apps/staff-web/src/features/finance/assistant-pay/wallet/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/money/links/",
+   "to": "apps/staff-web/src/features/finance/stripe/payment-links/section/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/money/MyWallet.*",
+   "to": "apps/staff-web/src/features/finance/assistant-pay/wallet/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/money/StatementCard.*",
+   "to": "apps/staff-web/src/features/finance/assistant-pay/wallet/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/money/WalletCard.*",
+   "to": "apps/staff-web/src/features/finance/assistant-pay/wallet/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/registration/",
+   "to": "apps/staff-web/src/features/sales/registration/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/SalesAcademy*",
+   "to": "apps/staff-web/src/features/sales/academy/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/SalesAutoAssignSwitch.*",
+   "to": "apps/staff-web/src/features/sales/assignment/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/SalesNav/",
+   "to": "apps/staff-web/src/shell/SalesNav/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/schedule/",
+   "to": "apps/staff-web/src/features/sales/schedule/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/students/",
+   "to": "apps/staff-web/src/features/sales/students/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/subscriptions/",
+   "to": "apps/staff-web/src/features/sales/money/subscriptions/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/teachers/",
+   "to": "apps/staff-web/src/features/sales/students/teachers/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/teachers/EarningsTerms.*",
+   "to": "apps/staff-web/src/features/finance/assistant-pay/my-earnings/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/sales/sales/teachers/MyEarnings/",
+   "to": "apps/staff-web/src/features/finance/assistant-pay/my-earnings/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/booking/course-change/",
+   "to": "apps/staff-web/src/features/teaching/courses/course-change/admin/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/classroom/student-link/",
+   "to": "apps/staff-web/src/features/teaching/lesson-links/student-link/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/course-actions/",
+   "to": "apps/staff-web/src/features/teaching/courses/course-change/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/course-actions/card/",
+   "to": "apps/staff-web/src/features/teaching/courses/course-card/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/course-actions/refund/",
+   "to": "apps/staff-web/src/features/teaching/courses/course-stop/refund/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/course-actions/StopCourseDialog/",
+   "to": "apps/staff-web/src/features/teaching/courses/course-stop/StopCourseDialog/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/course-actions/StopDoneDialog.*",
+   "to": "apps/staff-web/src/features/teaching/courses/course-stop/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/course-actions/StopSummary.*",
+   "to": "apps/staff-web/src/features/teaching/courses/course-stop/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/course-pause/",
+   "to": "apps/staff-web/src/features/teaching/courses/course-pause/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/meetings/",
+   "to": "apps/staff-web/src/features/teaching/classroom/meetings/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/schedule/",
+   "to": "apps/staff-web/src/features/teaching/lessons/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/schedule/correct/",
+   "to": "apps/staff-web/src/features/teaching/lessons/status/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/schedule/edit-time/",
+   "to": "apps/staff-web/src/features/teaching/lessons/time-edit/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/student-channel/",
+   "to": "apps/staff-web/src/features/teaching/student-channels/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/teacher-board/",
+   "to": "apps/staff-web/src/features/teaching/teacher-home/board/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/teacher-students/",
+   "to": "apps/staff-web/src/features/people/teacher-students/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/teacher/",
+   "to": "apps/staff-web/src/features/teaching/teacher-home/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/teacher/MyPayouts.*",
+   "to": "apps/staff-web/src/features/finance/payouts/mine/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/teacher/proposals/",
+   "to": "apps/staff-web/src/features/people/teachers/availability/proposals/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/features/teaching/teacher/reports/",
+   "to": "apps/staff-web/src/features/teaching/feedback/mine/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/lib/settings/",
+   "to": "apps/staff-web/src/features/platform/settings/data/",
+   "layer": "staff-web"
+  },
+  {
+   "from": "apps/staff-web/src/lib/settings/teacher-pages*",
+   "to": "apps/staff-web/src/features/teaching/teacher-home/teacher-pages/",
+   "layer": "staff-web"
+  }
+ ],
+ "splits": [
+  "api sales/sales/sales.controller.ts (lands in sales/assignment): its my-subscriptions routes go to sales/money/views and its my-meetings routes go to teaching/classroom/meetings. The admin assign, rule, history, ownership and scope parts stay in assignment.",
+  "api finance/subscriptions/alerts: admin-tasks.controller, repo and tests leave by stem. subscription-alerts.module is split so that admin-tasks gets its own Nest module. alerts.job, repo, service and unpaid-flags stay.",
+  "api finance/subscriptions/used-before: the controller and module from sales/sales-money/used-before and the repo and service from used-before-edit are merged into one Nest module.",
+  "api common/push (lands in messaging/notifications/push): push.module is split into a push module (dispatch, expo, web, service, token migrations) and a bell module (notifications.controller, repo and mapper, family-readers, the notification-bell migration test), each in its own feature folder.",
+  "api messaging/messaging-jobs: the wiring module and index.ts are deleted. family-push's own module is imported where messaging-jobs was.",
+  "api messaging/inbox/thread-files.module.ts stays out of the map. It is merged into the files feature's module by hand, because files/ already has 12 code files.",
+  "api whatsapp/lines/numbers-health (from numbers/lines): the two line-health checks become one job and one repo.",
+  "api teaching/lesson-links: family-link and student-link (from classroom) and join-token resolve the same join-link concept. Merge them into one token service.",
+  "api teaching/classroom/live/room-state (from lessons/live-room) is registered in the live-room module.",
+  "api teaching/booking: booking.module drops the teacher-alert providers, which go to notifications/teacher-alert. booking/teacher/tests left after the stem moves goes to slots/tests.",
+  "shared messaging/schemas.ts (lands in inbox): the template schemas (threadTemplate, templateStarter, templateHealth, templateLine) go to messaging/templates. The thread text and file schemas stay.",
+  "shared messaging/wa.ts (lands in whatsapp): send retry and errors stay. The session window goes to inbox/send and waIdToE164 goes to webhook. The generic backoff is deleted in favour of @ab/core async/retry, which is already a dependency (a deletion, not a move).",
+  "shared people/students/schemas/people.ts: the guardian schemas go to people/guardians and the teacher schemas to people/teachers. The student schemas stay. The old schemas index.ts barrel is removed.",
+  "shared sales/assignment/views.ts: leadAssignSchema stays. The salesperson's subscription and meeting views go to sales/money.",
+  "shared schemas/index.ts and schemas.test.ts: the barrel is deleted, src/index.ts exports each feature, and schemas.test is split per feature.",
+  "shared messaging/notifications/bell/index.ts (the old notifications barrel): it keeps only the bell exports. messaging/index.ts re-exports each notifications feature.",
+  "shared sales/students/package-cancel.ts duplicates CancelBlock in @ab/money ledger/usage. The copy is deleted and importers use @ab/money.",
+  "client-core finance/subscriptions/list-filters: SessionFilter goes to teacher-earnings and SubscriptionFilter stays.",
+  "client-core people/roster/index.ts re-exports only, so it is deleted. core/errors keeps index.ts and errors.test.ts once its two files leave; fold them into core/http.",
+  "client-core messaging/inbox/search: a new index.ts re-exports chat-search and message-search (map barrels).",
+  "staff-web finance/finance api.ts, search.ts, index.ts and its two tests (land in invoices): invoicesQuery stays in invoices, receivablesQuery goes to receivables, and the summary query goes to reporting/dashboard/finance-summary. No finance/finance folder is left.",
+  "staff-web finance, messaging, people, platform, reporting and sales /keys: each key factory goes to its feature as x.keys.ts, or to client-core when web and mobile both read it. The six folders are then deleted.",
+  "staff-web sales/sales leftovers (api.ts, ViewHead, search, use-sales-unread, SalesLists and SalesViews tests, land in sales/students): each file goes to the feature that imports it.",
+  "staff-web teaching/courses/course-change/api.ts (from course-actions): the stop calls go to course-stop.",
+  "staff-web sales/money/chat-subscribe (from inbox/sales): SalesFamilyLine goes to sales/leads/family-link if it reads the lead family link.",
+  "staff-mobile leftovers (finance/shared, money/shared, ops/shared, sales/sales components, lib and testing, teacher lib, components and screens): each queries file goes to the feature that calls it. MonthPicker, StateNote and SubScreenHeader go to src/core/ui, ascii-digits to src/core/lib, and month helpers stay until an @ab/time follow-up.",
+  "staff-mobile core/lib/keys: one x.keys.ts per feature, then the folder is deleted.",
+  "staff-mobile teaching/courses/course-change/course-actions-api.ts (from students/course-actions): the stop calls go to course-stop.",
+  "staff-mobile app/_layout.tsx: GatedRoot and its effect go to src/shell/root-gate. app/login.tsx: its mode state goes to features/people/sign-in/pages/LoginScreen. Both route files keep one import.",
+  "family-mobile shell/hrefs.ts and portal/recordings/hrefs.ts: each href goes to the index.ts of the feature it opens, so shell keeps none.",
+  "family-web routes (portal, reports, children/index, children/$studentId, package): the WithHome and WithPick render-prop wrappers move into the pages, so each route maps a URL to one page.",
+  "Loose units brought into view by the moves (booking/core booking.* stems, whatsapp/sender message.*, family-mobile observed-root and room-way, and others): pnpm units:fold in a later PR, not in the move PRs."
+ ],
+ "renames": [
+  "people/me -> people/account: api",
+  "people/me/push -> people/account/push-tokens: api; people/push-tokens -> people/account/push-tokens: shared, client-core",
+  "finance/earnings -> finance/teacher-earnings: shared; earnings -> finance/teacher-earnings: staff-mobile",
+  "finance/stripe-feature -> finance/stripe: client-core",
+  "finance/stripe/links -> finance/stripe/payment-links: api; sales/payment-link -> finance/stripe/payment-links: shared; sales/payment-links -> finance/stripe/payment-links: staff-web; finance/payments/payment-links-api -> finance/stripe/payment-links: client-core; sales-subscribe/payment-link -> finance/stripe/payment-links: staff-mobile",
+  "teaching/student-recordings -> teaching/lesson-files: api; reports/lesson-files -> teaching/lesson-files: shared",
+  "messaging/channel -> teaching/student-channels: shared; messaging/channels -> teaching/student-channels: client-core; teaching/student-channel -> teaching/student-channels: staff-web; student-file/channel -> teaching/student-channels: staff-mobile; chat -> teaching/student-channels: family-mobile",
+  "people/auth -> people/sign-in: staff-web; people/family-auth -> people/sign-in: client-core",
+  "platform/translation-overrides -> platform/translations: client-core",
+  "sales/lead-sort -> sales/leads: client-core",
+  "sales/sales-money -> sales/money: api, staff-web; sales-money -> sales/money: staff-mobile",
+  "sales/sales-registration -> sales/registration: api; registration-check -> sales/registration: staff-mobile",
+  "sales/sales-students -> sales/students: api; sales/sales -> sales/students: staff-mobile",
+  "sales/sales -> sales/assignment (with sales/academy and sales/schedule split out): api",
+  "teaching/booking/sales -> sales/course: api; sales-course -> sales/course: staff-mobile; teaching/booking/sales-course-api -> sales/course: client-core",
+  "teaching/booking/card -> teaching/courses/course-card, course-change -> courses/course-change, extend -> courses/course-extend, profile -> courses/profile-course: api",
+  "teaching/course-pause and course-stop -> teaching/courses/course-pause and course-stop: api; people/students/course-pause and course-stop -> teaching/courses/*: shared; teaching/booking/course-* -> teaching/courses/*: client-core; teaching/course-pause and course-actions -> teaching/courses/*: staff-web; students/course-* -> teaching/courses/*: staff-mobile",
+  "sales/course/course-card and course-change -> teaching/courses/course-card and course-change: shared",
+  "teaching/booking/plan -> teaching/booking/slots: api",
+  "teaching/lessons/teacher-me -> teaching/teacher-home: api; teaching/teacher and teacher-board -> teaching/teacher-home: staff-web; teacher/* -> teaching/teacher-home/*: staff-mobile",
+  "teaching/schedule -> teaching/lessons: staff-web",
+  "teaching/classroom/join -> classroom/room-open, internal-meetings -> classroom/meetings/internal: api; teaching/meetings -> teaching/classroom/meetings: staff-web; meetings -> teaching/classroom/meetings: staff-mobile",
+  "teaching/instant-lesson -> teaching/booking/instant; lesson-room and room-host -> teaching/classroom: client-core",
+  "messaging/notification-rules -> messaging/notifications/rules: api, staff-web; ops/notif-rules -> messaging/notifications/rules: staff-mobile; notifications/rules.* -> messaging/notifications/rules: shared",
+  "messaging/notification-catalogue -> messaging/notifications/catalogue: staff-web; notifications/catalogue -> messaging/notifications/catalogue: shared",
+  "messaging/notifications -> messaging/notifications/bell: staff-web; notifications -> messaging/notifications/bell: staff-mobile; alerts -> messaging/notifications/bell: family-web; nav/Alert* and FamilyBell -> messaging/notifications/bell: family-mobile; common/push bell files -> messaging/notifications/bell: api; notifications/views -> messaging/notifications/bell: shared",
+  "messaging/push and common/push -> messaging/notifications/push: api; push -> messaging/notifications/push: family-mobile",
+  "messaging/messaging-jobs -> messaging/notifications/family-push: api",
+  "messaging/reminders, follow-ups and teaching/schedule-notices -> messaging/notifications/reminders, follow-ups and schedule-notices: api; messaging/lesson -> messaging/notifications/reminders and notifications/course-notice -> messaging/notifications/schedule-notices: shared",
+  "messaging/inbox/delta -> inbox/thread-sync, hide -> inbox/message-hide, reads/search -> inbox/search: api",
+  "messaging/chat-lists and saved-replies -> messaging/inbox/chat-lists and saved-replies: api; messaging/inbox/lists -> messaging/inbox/chat-lists: staff-web; inbox/lists -> messaging/inbox/chat-lists: staff-mobile",
+  "messaging/chat -> messaging/inbox; messaging/replies -> messaging/inbox/saved-replies and inbox/send/reply: shared",
+  "messaging/chat-send -> inbox/send, chat-search and message-search -> inbox/search, thread-pages, thread-sync, ticks, live-rejoin and whatsapp-send -> inbox/*: client-core",
+  "messaging/whatsapp/templates -> messaging/templates: api; inbox/composer/templates -> messaging/templates: staff-mobile",
+  "messaging/whatsapp/numbers -> messaging/whatsapp/number-routes: api",
+  "messaging/messaging -> messaging/whatsapp: staff-web",
+  "messaging/webhook/crm-confirm, crm-inbound, crm-register -> webhook/crm/{confirm,inbound,register}, providers -> webhook/wacrm, lines -> webhook/line-resolve: api",
+  "platform/short-links-admin -> platform/short-links/admin and short-links/gate: api; platform/short-links-gate -> platform/short-links/gate: staff-web",
+  "common/telemetry/activity -> reporting/activity: api; schemas/activity -> reporting/activity: shared; ops/activity -> reporting/activity: staff-mobile",
+  "reports -> reporting, schedule -> teaching, notifications -> messaging/notifications (domain folders): shared",
+  "teaching/reports and report-draft -> reporting/reports: client-core",
+  "platform/presence -> people/presence: staff-web",
+  "people/staff-photo -> people/users/photos: staff-web; account/staff-photo -> people/users/photos: staff-mobile; users/photo, teachers/photo and common/storage/avatars -> people/users/photos: api",
+  "people/assistants -> finance/assistant-pay: staff-web, client-core; assistants -> finance/assistant-pay: staff-mobile",
+  "finance/finance -> finance/invoices, finance/receivables and reporting/dashboard/finance-summary: staff-web; finance/summary -> reporting/dashboard/finance-summary: staff-mobile",
+  "next-lesson -> people/portal/lessons, children -> people/portal/{child,family-pick,package}, home -> people/portal/home, recordings -> people/portal/{recordings,lessons}, reports and schedule -> people/portal/*, legal -> platform/legal: family-web",
+  "home, child, switch, lessons, recordings, report, schedule, package and portal -> people/portal/*; room -> teaching/classroom; profile -> people/account/profile: family-mobile",
+  "calendar -> teaching/lessons/overview, today -> teaching/lessons/day, edit-time -> teaching/lessons/time-edit, teaching/correct -> teaching/lessons/status: staff-mobile"
+ ]
+}

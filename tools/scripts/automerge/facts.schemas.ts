@@ -81,3 +81,7 @@ export type Suite = z.infer<typeof suiteSchema>;
 
 /** The combined commit status (`commits/<sha>/status`); its own `state` is pending with none. */
 export const combinedStatusSchema = z.object({ statuses: z.array(statusSchema) });
+
+/** `gh pr list --json number,labels`: the open PRs that may merge themselves. */
+export const listedSchema = z.array(prSchema.pick({ number: true, labels: true }));
+export type Listed = z.infer<typeof listedSchema>;
