@@ -84,12 +84,12 @@ export type ThreadPdfPage = SignedDownload & { page: number; pages: number; byte
 export type ThreadFile = SignedDownload & { mime: string };
 
 /** The strings of inbox.pdf (ar.json / en.json) the meta line reads. */
-export type PdfMetaStrings = {
+export interface PdfMetaStrings {
   type: string;
   pages: Readonly<Record<PluralForm, string>>;
   kb: string;
   mb: string;
-};
+}
 
 const MB = 1024 * 1024;
 /** First-strong isolate (FSI … PDI): in an Arabic line «1.2» never takes its direction from «PDF» (bidi W7). */

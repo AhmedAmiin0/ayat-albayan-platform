@@ -15,7 +15,9 @@ export const leadFamilyLinkSchema = z.strictObject({
 export type LeadFamilyLink = z.output<typeof leadFamilyLinkSchema>;
 
 /** true = the number was added now; false = it already was a number of that family (main or second). */
-export type LeadFamilyLinked = { linked: boolean };
+export interface LeadFamilyLinked {
+  linked: boolean;
+}
 
 /**
  * The error codes of POST /leads/:id/link-family (404: the first two; 409: the rest).

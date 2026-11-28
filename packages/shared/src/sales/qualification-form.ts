@@ -55,8 +55,8 @@ const pick = <T extends string>(list: readonly T[], v: unknown): T | '' =>
 /** leads.qualification (jsonb, anything) → the form's strings. */
 export function leadQualForm(q: unknown): QualForm {
   const r = q && typeof q === 'object' ? (q as Record<string, unknown>) : {};
-  const days = Array.isArray(r['available_days'])
-    ? r['available_days'].filter((d): d is number => Number.isInteger(d))
+  const days = Array.isArray(r.available_days)
+    ? r.available_days.filter((d): d is number => Number.isInteger(d))
     : [];
   const text = Object.fromEntries(QUAL_TEXT_FIELDS.map((k) => [k, str(r[k])])) as Record<
     QualTextField,
@@ -64,14 +64,14 @@ export function leadQualForm(q: unknown): QualForm {
   >;
   return {
     ...text,
-    age: str(r['age']),
-    gender: pick(GENDERS, r['gender']),
-    filled_by: pick(FILLED_BY, r['filled_by']),
-    group_kind: pick(GROUP_KINDS, r['group_kind']),
-    tz: str(r['tz']),
+    age: str(r.age),
+    gender: pick(GENDERS, r.gender),
+    filled_by: pick(FILLED_BY, r.filled_by),
+    group_kind: pick(GROUP_KINDS, r.group_kind),
+    tz: str(r.tz),
     available_days: [...days].sort((a, b) => a - b),
-    preferred_from: str(r['preferred_from']),
-    preferred_to: str(r['preferred_to']),
+    preferred_from: str(r.preferred_from),
+    preferred_to: str(r.preferred_to),
   };
 }
 

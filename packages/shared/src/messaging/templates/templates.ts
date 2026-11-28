@@ -67,7 +67,10 @@ export interface OutboundTemplate {
   params: TemplateParams;
 }
 
-type LinkVariant<K extends TemplateKey> = { key: K; button: string | null };
+interface LinkVariant<K extends TemplateKey> {
+  key: K;
+  button: string | null;
+}
 
 /** Same-day guardian reminder (lesson_reminder_v2 on Meta): Jitsi → base, Meet → _meet, else _plain. */
 export function lessonReminderTemplate(

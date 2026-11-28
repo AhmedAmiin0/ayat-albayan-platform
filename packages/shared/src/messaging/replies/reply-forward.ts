@@ -66,7 +66,10 @@ export interface ForwardResponse {
   results: ForwardResult[];
 }
 
-type Quotable = { replyable?: boolean; template_key: string | null };
+interface Quotable {
+  replyable?: boolean;
+  template_key: string | null;
+}
 
 /** A message WhatsApp knows (has a wamid), template or not. */
 export const canReply = (m: Pick<Quotable, 'replyable'>): boolean => m.replyable === true;
