@@ -5,16 +5,10 @@ import { t } from '@ab/web-kit';
 import { TeacherDetailPage } from './TeacherDetailPage';
 import type { Teacher } from '@ab/shared';
 import { teacherFixture, timeOffFixture } from '@ab/shared/testing';
-import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@tanstack/react-router', async () => ({
-  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
-}));
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const FATMA: Teacher = teacherFixture({
   id: 't1',
@@ -36,14 +30,12 @@ const FATMA: Teacher = teacherFixture({
 });
 const RESPONSES: Record<string, unknown> = {
   '/teachers/t1': FATMA,
-  '/teachers/t1/availability': [
-    { id: 'a1', weekday: 6, start_time: '15:00', end_time: '18:00', tz: 'Africa/Cairo' },
-  ],
+  '/teachers/t1/availability': [{ id: 'a1', weekday: 6, start_time: '15:00', end_time: '18:00', tz: 'Africa/Cairo' }],
   '/teachers/t1/time-off': [timeOffFixture({ reason: 'سفر' })],
 };
 
 function renderPage() {
-  mockApi.onRead(({ path }) => Promise.resolve(RESPONSES[path]));
+  apiFetch.mockImplementation((path: string) => Promise.resolve(RESPONSES[path]));
   render(
     <QueryClientProvider client={new QueryClient()}>
       <TeacherDetailPage teacherId="t1" />
@@ -57,15 +49,9 @@ describe('TeacherDetailPage (R-TCH-01, R-TCH-02, docs/07 §8)', () => {
     expect(await screen.findByRole('heading', { level: 1, name: 'فاطمة الزهراء' })).toBeTruthy();
     const chip = screen.getByText(t.enums.teacherStatus.active).parentElement;
     expect(chip?.querySelector('[data-glyph="fill"]')).toBeTruthy();
-    expect(
-      screen.getByText(
-        `${t.teachers.genderLabel.female}${t.common.listSeparator}${t.enums.program.quran}`,
-      ),
-    ).toBeTruthy();
+    expect(screen.getByText(`${t.teachers.genderLabel.female}${t.common.listSeparator}${t.enums.program.quran}`)).toBeTruthy();
     expect(screen.getAllByText('+20 10 6612 3049')[0]?.getAttribute('dir')).toBe('ltr');
-    expect(
-      screen.getByRole('link', { name: 'meet.google.com/xqa-ngdu-fpe' }).getAttribute('href'),
-    ).toBe(FATMA.meeting_link);
+    expect(screen.getByRole('link', { name: 'meet.google.com/xqa-ngdu-fpe' }).getAttribute('href')).toBe(FATMA.meeting_link);
   });
 
   it('opens on the availability tab: week editor, time-off and rates in Western digits', async () => {
@@ -84,9 +70,7 @@ describe('TeacherDetailPage (R-TCH-01, R-TCH-02, docs/07 §8)', () => {
   it('keeps one filled primary on screen (حفظ المواعيد); editing is secondary', async () => {
     renderPage();
     await screen.findByRole('table', { name: t.availability.title });
-    const primaries = [...document.querySelectorAll('button')].filter((b) =>
-      b.className.includes('bg-primary '),
-    );
+    const primaries = [...document.querySelectorAll('button')].filter((b) => b.className.includes('bg-primary '));
     expect(primaries.map((b) => b.textContent)).toEqual([t.availability.save]);
     fireEvent.click(screen.getByRole('button', { name: t.teachers.edit }));
     expect(screen.getByRole('dialog', { name: t.teachers.edit })).toBeTruthy();
@@ -106,9 +90,7 @@ describe('TeacherDetailPage (R-TCH-01, R-TCH-02, docs/07 §8)', () => {
     renderPage();
     fireEvent.click(await screen.findByRole('tab', { name: t.teachers.tabData }));
     const row = screen.getByText(t.teachers.meetingMode).parentElement;
-    expect(row?.textContent).toContain(
-      `${t.teachers.meetingModeOption.academy} ${t.teachers.meetingModeResolves.platform}`,
-    );
+    expect(row?.textContent).toContain(`${t.teachers.meetingModeOption.academy} ${t.teachers.meetingModeResolves.platform}`);
     RESPONSES['/teachers/t1'] = FATMA;
   });
 
@@ -127,10 +109,7 @@ describe('TeacherDetailPage (R-TCH-01, R-TCH-02, docs/07 §8)', () => {
     fireEvent.click(await screen.findByRole('tab', { name: t.teachers.tabStudents }));
     const panel = screen.getByRole('tabpanel', { name: t.teachers.tabStudents });
     expect(within(panel).getByRole('heading', { name: t.teachers.studentsTitle })).toBeTruthy();
-    expect(mockApi.reads()).toContainEqual({
-      method: 'GET',
-      path: '/students/status-counts?teacher=t1',
-    });
+    expect(apiFetch).toHaveBeenCalledWith('/students/status-counts?teacher=t1');
   });
 
   it('links to «مستحقات المعلم» for this teacher', async () => {

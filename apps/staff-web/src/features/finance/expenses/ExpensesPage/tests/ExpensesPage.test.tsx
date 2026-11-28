@@ -5,47 +5,24 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { totalsByCurrency } from '@/features/finance/expenses/api';
 import { ExpensesPage } from '@/features/finance/expenses/ExpensesPage/ExpensesPage';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
-vi.mock('@ab/web-kit/lib/http/supabase', () => ({
-  supabase: { storage: { from: () => ({ uploadToSignedUrl: vi.fn() }) } },
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl: vi.fn() }) } } }));
 
 const ADS: ExpenseView = {
-  id: '00000000-0000-4000-8000-000000000001',
-  month: '2026-09',
-  category: 'ads',
-  amount: 8000,
-  currency: 'EGP',
-  note: 'فيسبوك',
-  created_at: '2026-09-02T09:00:00Z',
-  paid_on: '2026-09-02',
-  vendor: null,
-  method: null,
-  has_receipt: false,
-  recurring: false,
-  is_draft: false,
+  id: '00000000-0000-4000-8000-000000000001', month: '2026-09', category: 'ads', amount: 8000, currency: 'EGP', note: 'فيسبوك', created_at: '2026-09-02T09:00:00Z',
+  paid_on: '2026-09-02', vendor: null, method: null, has_receipt: false, recurring: false, is_draft: false,
 };
-const TOOLS: ExpenseView = {
-  ...ADS,
-  id: '00000000-0000-4000-8000-000000000002',
-  category: 'tools',
-  amount: 120.5,
-  currency: 'USD',
-  note: null,
-};
+const TOOLS: ExpenseView = { ...ADS, id: '00000000-0000-4000-8000-000000000002', category: 'tools', amount: 120.5, currency: 'USD', note: null };
 const CATEGORIES = [
   { key: 'ads', label_ar: 'إعلانات', label_en: 'Ads', active: true },
   { key: 'rent', label_ar: 'إيجار', label_en: 'Rent', active: true },
 ];
 
 function renderPage(rows: ExpenseView[]) {
-  mockApi.onRead(async ({ path }) => (path === '/expense-categories' ? CATEGORIES : rows));
+  apiFetch.mockImplementation(async (path: string) => (path === '/expense-categories' ? CATEGORIES : rows));
   render(
     <QueryClientProvider client={new QueryClient()}>
       <ExpensesPage month="2026-09" onMonth={vi.fn()} />
@@ -55,35 +32,18 @@ function renderPage(rows: ExpenseView[]) {
 
 describe('ExpensesPage (R-RPT-02, E4)', () => {
   beforeEach(() => {
-    mockApi.reset('read');
-    mockApi.reset('write');
+    apiFetch.mockReset();
+    apiSend.mockReset();
   });
 
   it('lists the month with one total per currency; a draft is not counted and can be confirmed', async () => {
-    renderPage([
-      ADS,
-      TOOLS,
-      { ...ADS, id: '00000000-0000-4000-8000-000000000003', amount: 500, note: null },
-      {
-        ...ADS,
-        id: '00000000-0000-4000-8000-000000000004',
-        amount: 999,
-        is_draft: true,
-        note: null,
-      },
-    ]);
+    renderPage([ADS, TOOLS, { ...ADS, id: '00000000-0000-4000-8000-000000000003', amount: 500, note: null }, { ...ADS, id: '00000000-0000-4000-8000-000000000004', amount: 999, is_draft: true, note: null }]);
     expect(await screen.findByText(/فيسبوك/)).toBeTruthy();
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/expenses?month=2026-09' });
+    expect(apiFetch).toHaveBeenCalledWith('/expenses?month=2026-09');
     expect(screen.getByText('8,500')).toBeTruthy();
-    mockApi.onWrite(() => ADS);
+    apiSend.mockResolvedValue(ADS);
     fireEvent.click(screen.getByRole('button', { name: t.finance.confirmDraft }));
-    await vi.waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'PATCH',
-        path: '/expenses/00000000-0000-4000-8000-000000000004',
-        body: { isDraft: false },
-      }),
-    );
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/expenses/00000000-0000-4000-8000-000000000004', { isDraft: false }));
   });
 
   it('adds an expense: a missing amount is a field error; the category comes from the table', async () => {
@@ -93,31 +53,15 @@ describe('ExpensesPage (R-RPT-02, E4)', () => {
     const dialog = await screen.findByRole('dialog', { name: t.expenses.add });
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.save }));
     expect(await within(dialog).findByText(t.common.required)).toBeTruthy();
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
     await within(dialog).findByRole('option', { name: 'إيجار' });
-    fireEvent.change(within(dialog).getByLabelText(t.expenses.category), {
-      target: { value: 'rent' },
-    });
-    fireEvent.change(within(dialog).getByLabelText(t.expenses.amount), {
-      target: { value: '8000' },
-    });
-    fireEvent.change(within(dialog).getByLabelText(t.finance.paidOn), {
-      target: { value: '2026-09-15' },
-    });
-    mockApi.onWrite(() => ADS);
+    fireEvent.change(within(dialog).getByLabelText(t.expenses.category), { target: { value: 'rent' } });
+    fireEvent.change(within(dialog).getByLabelText(t.expenses.amount), { target: { value: '8000' } });
+    fireEvent.change(within(dialog).getByLabelText(t.finance.paidOn), { target: { value: '2026-09-15' } });
+    apiSend.mockResolvedValue(ADS);
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.save }));
     await vi.waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'POST',
-        path: '/expenses',
-        body: expect.objectContaining({
-          month: '2026-09',
-          category: 'rent',
-          amount: 8000,
-          paidOn: '2026-09-15',
-          recurring: false,
-        }),
-      }),
+      expect(apiSend).toHaveBeenCalledWith('POST', '/expenses', expect.objectContaining({ month: '2026-09', category: 'rent', amount: 8000, paidOn: '2026-09-15', recurring: false })),
     );
   });
 
@@ -125,56 +69,28 @@ describe('ExpensesPage (R-RPT-02, E4)', () => {
     renderPage([ADS]);
     fireEvent.click(await screen.findByRole('button', { name: t.common.edit }));
     const dialog = await screen.findByRole('dialog');
-    mockApi.onWrite(() => ADS);
+    apiSend.mockResolvedValue(ADS);
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.save }));
-    await vi.waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'PATCH',
-        path: '/expenses/00000000-0000-4000-8000-000000000001',
-        body: expect.objectContaining({ amount: 8000 }),
-      }),
-    );
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/expenses/00000000-0000-4000-8000-000000000001', expect.objectContaining({ amount: 8000 })));
     fireEvent.click(screen.getByRole('button', { name: t.common.delete }));
     const confirm = await screen.findByRole('dialog', { name: t.expenses.deleteConfirm });
     fireEvent.click(within(confirm).getByRole('button', { name: t.common.delete }));
-    await vi.waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'DELETE',
-        path: '/expenses/00000000-0000-4000-8000-000000000001',
-        body: undefined,
-      }),
-    );
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/expenses/00000000-0000-4000-8000-000000000001', undefined));
   });
 
   it('the year table shows the months in the reporting currency and warns about a missing rate', async () => {
     renderPage([ADS]);
-    mockApi.onRead(async ({ path }) => {
+    apiFetch.mockImplementation(async (path: string) => {
       if (path === '/expense-categories') return CATEGORIES;
       if (path.startsWith('/expenses/year')) {
-        const months = Array.from({ length: 12 }, (_, i) => ({
-          month: `2026-${String(i + 1).padStart(2, '0')}`,
-          total: i === 8 ? 615 : 0,
-          by_category: i === 8 ? { ads: 615 } : {},
-        }));
-        return {
-          year: '2026',
-          currency: 'SAR',
-          months,
-          categories: ['ads'],
-          total: 615,
-          fx_missing: ['AED'],
-          fx_date: null,
-        };
+        const months = Array.from({ length: 12 }, (_, i) => ({ month: `2026-${String(i + 1).padStart(2, '0')}`, total: i === 8 ? 615 : 0, by_category: i === 8 ? { ads: 615 } : {} }));
+        return { year: '2026', currency: 'SAR', months, categories: ['ads'], total: 615, fx_missing: ['AED'], fx_date: null };
       }
       return [ADS];
     });
-    fireEvent.click(
-      await screen.findByRole('button', { name: t.finance.yearView.replace('{year}', '2026') }),
-    );
-    expect(
-      await screen.findByText(t.finance.fxMissing.replace('{currencies}', 'AED')),
-    ).toBeTruthy();
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/expenses/year?year=2026' });
+    fireEvent.click(await screen.findByRole('button', { name: t.finance.yearView.replace('{year}', '2026') }));
+    expect(await screen.findByText(t.finance.fxMissing.replace('{currencies}', 'AED'))).toBeTruthy();
+    expect(apiFetch).toHaveBeenCalledWith('/expenses/year?year=2026');
   });
 });
 

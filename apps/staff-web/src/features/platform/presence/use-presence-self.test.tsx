@@ -4,13 +4,9 @@ import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { type Me, meQuery } from '@/features/people/auth';
 import { usePresenceSelf } from './use-presence-self';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: {} }));
 const track = vi.hoisted(() => ({ calls: [] as string[], leaves: 0 }));
 vi.mock('@ab/client-core', async (orig) => ({
@@ -37,16 +33,16 @@ const setVisibility = (state: DocumentVisibilityState) => {
 
 describe('usePresenceSelf: track while the tab is visible (docs/33 §1.1)', () => {
   afterEach(() => {
-    mockApi.reset('read');
+    apiFetch.mockReset();
     Object.assign(track, { calls: [], leaves: 0 });
     setVisibility('visible');
   });
 
   it('enabled: tracks the user, leaves when hidden, tracks again when shown, leaves on unmount', async () => {
-    mockApi.onRead(() => ({ enabled: true }));
+    apiFetch.mockResolvedValue({ enabled: true });
     const hook = mount({ id: 'u1' });
     await waitFor(() => expect(track.calls).toEqual(['u1']));
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/presence/me' });
+    expect(apiFetch).toHaveBeenCalledWith('/presence/me');
     setVisibility('hidden');
     expect(track.leaves).toBe(1);
     setVisibility('visible');
@@ -56,15 +52,15 @@ describe('usePresenceSelf: track while the tab is visible (docs/33 §1.1)', () =
   });
 
   it('presence off: never tracks', async () => {
-    mockApi.onRead(() => ({ enabled: false }));
+    apiFetch.mockResolvedValue({ enabled: false });
     mount({ id: 'u1' });
-    await waitFor(() => expect(mockApi.reads()).not.toHaveLength(0));
+    await waitFor(() => expect(apiFetch).toHaveBeenCalled());
     expect(track.calls).toEqual([]);
   });
 
   it('signed out: no request, no track', () => {
     mount(null);
-    expect(mockApi.reads()).toHaveLength(0);
+    expect(apiFetch).not.toHaveBeenCalled();
     expect(track.calls).toEqual([]);
   });
 });

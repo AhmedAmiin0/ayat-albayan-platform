@@ -4,15 +4,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { WEEKLY } from './money-fixture';
 import { SubscriptionsPage } from './SubscriptionsPage';
-import { mockCall } from '@ab/testing/mock-call';
 
 // A stopped package keeps owing (migration 991) and takes payments or refunds, never a pause.
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend: vi.fn() }));
 vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),
   usePermissions: () => ({ permissions: ['courses.pause'], can: () => true }),
@@ -28,22 +24,12 @@ const STOPPED = {
   paid: 50,
   student: student('stu-s', 'ياسمين'),
 };
-const UNUSED = {
-  ...STOPPED,
-  id: 'sub-unused',
-  cancel_kind: 'unused',
-  student: student('stu-u', 'مريم'),
-};
+const UNUSED = { ...STOPPED, id: 'sub-unused', cancel_kind: 'unused', student: student('stu-u', 'مريم') };
 // A refund stop stored owed = the net paid left, so nothing more is due.
-const SETTLED = {
-  ...STOPPED,
-  id: 'sub-settled',
-  stop_owed_amount: 50,
-  student: student('stu-r', 'هدى'),
-};
+const SETTLED = { ...STOPPED, id: 'sub-settled', stop_owed_amount: 50, student: student('stu-r', 'هدى') };
 
 async function rowOf(name: string) {
-  mockApi.onRead(async ({ path }) =>
+  apiFetch.mockImplementation(async (path: string) =>
     path.startsWith('/subscriptions') ? page([STOPPED, UNUSED, SETTLED]) : page([]),
   );
   render(

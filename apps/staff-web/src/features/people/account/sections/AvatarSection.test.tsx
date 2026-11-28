@@ -9,13 +9,14 @@ import {
   section,
 } from '@/features/people/account/account-test-kit';
 import { AccountPage } from '@/features/people/account/AccountPage';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const apiFetch = vi.hoisted(() => vi.fn());
+const apiSend = vi.hoisted(() => vi.fn());
 const uploadToSignedUrl = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch,
+  apiSend,
 }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({
   supabase: { storage: { from: () => ({ uploadToSignedUrl }) } },
@@ -31,9 +32,8 @@ const SIGNED = {
 const SAVED = { ...PROFILE, avatar_url: 'https://sb.test/avatars/u1/avatar-1.png' };
 
 beforeEach(() => {
-  mockApi.reset('read');
-  mockApi.onRead(() => PROFILE);
-  mockApi.reset('write');
+  apiFetch.mockReset().mockResolvedValue(PROFILE);
+  apiSend.mockReset();
   uploadToSignedUrl.mockReset().mockResolvedValue({ data: {}, error: null });
   URL.createObjectURL = vi.fn(() => 'blob:preview');
   URL.revokeObjectURL = vi.fn();
@@ -60,7 +60,7 @@ describe('AvatarSection (R-ACC-05)', () => {
     pick(png(AVATAR_MAX_BYTES + 1));
     expect(s.getByText(t.account.errors.avatar_too_large)).toBeTruthy();
     expect(s.queryByRole('button', { name: A.upload })).toBeNull();
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
   });
 
   it('a GIF is refused here', async () => {
@@ -74,26 +74,20 @@ describe('AvatarSection (R-ACC-05)', () => {
     const file = png();
     pick(file);
     expect(s.getByRole('img', { name: A.preview }).getAttribute('src')).toBe('blob:preview');
-    mockApi.onWrite(({ method }) => Promise.resolve(method === 'POST' ? SIGNED : SAVED));
-    mockApi.onRead(() => SAVED);
+    apiSend.mockImplementation((method: string) =>
+      Promise.resolve(method === 'POST' ? SIGNED : SAVED),
+    );
+    apiFetch.mockResolvedValue(SAVED);
     fireEvent.click(s.getByRole('button', { name: A.upload }));
     expect(await screen.findByText(t.account.toast.avatar)).toBeTruthy();
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: '/me/avatar/upload-url',
-      body: {
-        mime: 'image/png',
-        size: 1024,
-      },
+    expect(apiSend).toHaveBeenCalledWith('POST', '/me/avatar/upload-url', {
+      mime: 'image/png',
+      size: 1024,
     });
     expect(uploadToSignedUrl).toHaveBeenCalledWith(SIGNED.path, 'tok', file, {
       contentType: 'image/png',
     });
-    expect(mockApi.writes()).toContainEqual({
-      method: 'PUT',
-      path: '/me/avatar',
-      body: { path: SIGNED.path },
-    });
+    expect(apiSend).toHaveBeenCalledWith('PUT', '/me/avatar', { path: SIGNED.path });
     const saved = await s.findByRole('img', { name: A.alt.replace('{name}', PROFILE.full_name) });
     expect(saved.getAttribute('src')).toBe(SAVED.avatar_url);
     expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:preview');
@@ -102,7 +96,7 @@ describe('AvatarSection (R-ACC-05)', () => {
   it('a server refusal (avatar_type) is shown under the photo', async () => {
     const { s, pick } = await avatarSection();
     pick(png());
-    mockApi.onWrite(({ method }) =>
+    apiSend.mockImplementation((method: string) =>
       method === 'POST' ? Promise.resolve(SIGNED) : Promise.reject(domainError(400, 'avatar_type')),
     );
     fireEvent.click(s.getByRole('button', { name: A.upload }));
@@ -110,15 +104,11 @@ describe('AvatarSection (R-ACC-05)', () => {
   });
 
   it('«إزالة الصورة»: DELETE /me/avatar and a toast', async () => {
-    mockApi.onRead(() => SAVED);
+    apiFetch.mockResolvedValue(SAVED);
     const { s } = await avatarSection();
-    mockApi.onWrite(() => PROFILE);
+    apiSend.mockResolvedValue(PROFILE);
     fireEvent.click(s.getByRole('button', { name: A.remove }));
     expect(await screen.findByText(t.account.toast.avatarRemoved)).toBeTruthy();
-    expect(mockApi.writes()).toContainEqual({
-      method: 'DELETE',
-      path: '/me/avatar',
-      body: undefined,
-    });
+    expect(apiSend).toHaveBeenCalledWith('DELETE', '/me/avatar', undefined);
   });
 });

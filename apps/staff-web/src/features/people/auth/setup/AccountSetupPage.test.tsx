@@ -3,9 +3,9 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { AccountSetupPage } from './AccountSetupPage';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const apiFetch = vi.hoisted(() => vi.fn());
+const apiSend = vi.hoisted(() => vi.fn());
 const navigate = vi.hoisted(() => vi.fn());
 const search = vi.hoisted((): { value: Record<string, unknown> } => ({ value: {} }));
 const auth = vi.hoisted(() => ({
@@ -13,9 +13,7 @@ const auth = vi.hoisted(() => ({
   getSession: vi.fn(),
   signOut: vi.fn(),
 }));
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({
-  call: (request: unknown) => mockApi.call(request),
-}));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch, apiSend }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => navigate,
@@ -42,29 +40,25 @@ describe('/account-setup «أكمل حسابك» (docs/46 A4, A6)', () => {
     search.value = {};
     auth.signInWithPassword.mockResolvedValue({ error: null });
     auth.getSession.mockResolvedValue({ data: { session: { access_token: 'tok' } } });
-    mockApi.onRead(() => ({
+    apiFetch.mockResolvedValue({
       id: 'u1',
       role: 'teacher',
       email: 'teacher@example.com',
       permissions: [],
-    }));
+    });
   });
 
   it('sends email + password, refreshes the session (the JWT email), then opens the teacher home', async () => {
-    mockApi.onWrite(() => undefined);
+    apiSend.mockResolvedValue(undefined);
     renderPage();
     type(S.email, ' teacher@example.com ');
     type(S.password, 'Long-enough-1');
     type(S.confirm, 'Long-enough-1');
     fireEvent.click(screen.getByRole('button', { name: S.submit }));
     await waitFor(() => expect(navigate).toHaveBeenCalledWith({ href: '/teacher' }));
-    expect(mockApi.writes()).toContainEqual({
-      method: 'PUT',
-      path: '/me/setup',
-      body: {
-        email: 'teacher@example.com',
-        password: 'Long-enough-1',
-      },
+    expect(apiSend).toHaveBeenCalledWith('PUT', '/me/setup', {
+      email: 'teacher@example.com',
+      password: 'Long-enough-1',
     });
     expect(auth.signInWithPassword).toHaveBeenCalledWith({
       email: 'teacher@example.com',
@@ -73,7 +67,7 @@ describe('/account-setup «أكمل حسابك» (docs/46 A4, A6)', () => {
   });
 
   it('?redirect=<the report link>: lands on that page once set up (owner 2026-11-14)', async () => {
-    mockApi.onWrite(() => undefined);
+    apiSend.mockResolvedValue(undefined);
     search.value = { redirect: '/teacher/report/L1' };
     renderPage();
     type(S.email, 'teacher@example.com');
@@ -88,9 +82,9 @@ describe('/account-setup «أكمل حسابك» (docs/46 A4, A6)', () => {
     type(S.email, 'nope');
     fireEvent.click(screen.getByRole('button', { name: S.submit }));
     expect(screen.getByText(S.errors.invalid_email)).toBeTruthy();
-    expect(mockApi.writes()).toHaveLength(0);
-    mockApi.onWrite(() =>
-      Promise.reject(Object.assign(new Error('x'), { status: 409, body: { code: 'email_taken' } })),
+    expect(apiSend).not.toHaveBeenCalled();
+    apiSend.mockRejectedValue(
+      Object.assign(new Error('x'), { status: 409, body: { code: 'email_taken' } }),
     );
     type(S.email, 'taken@example.com');
     type(S.password, 'Long-enough-1');

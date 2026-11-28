@@ -7,12 +7,11 @@ import { t } from '@ab/web-kit';
 import { closeFilters, openFilters } from '@/test/open-filters';
 import { PaymentsPage } from './PaymentsPage';
 import { parsePaymentsSearch, paymentsView, type PaymentsUrlSearch } from './search';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch,
 }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: {} }));
 
@@ -30,7 +29,7 @@ function Harness() {
 }
 
 function renderPage(items = [PAYMENT]) {
-  mockApi.onRead(() => ({ items, total: items.length, page: 1, pageSize: 20, totals: [] }));
+  apiFetch.mockResolvedValue({ items, total: items.length, page: 1, pageSize: 20, totals: [] });
   render(
     <QueryClientProvider client={new QueryClient()}>
       <Harness />
@@ -39,24 +38,18 @@ function renderPage(items = [PAYMENT]) {
 }
 
 describe('PaymentsPage sort + filters (R-NFR-08)', () => {
-  beforeEach(() => (mockApi.reset('read'), onSearch.mockReset()));
+  beforeEach(() => (apiFetch.mockReset(), onSearch.mockReset()));
 
   it('a header click sorts server-side (asc, then desc) and goes back to page 1', async () => {
     renderPage();
     fireEvent.click(await screen.findByRole('button', { name: t.payments.amount }));
     expect(onSearch).toHaveBeenLastCalledWith({ sort: 'amount', dir: undefined, page: undefined });
     await vi.waitFor(() =>
-      expect(mockApi.reads()).toContainEqual({
-        method: 'GET',
-        path: '/payments?sort=amount&page=1&pageSize=20',
-      }),
+      expect(apiFetch).toHaveBeenCalledWith('/payments?sort=amount&page=1&pageSize=20'),
     );
     fireEvent.click(screen.getByRole('button', { name: t.payments.amount }));
     await vi.waitFor(() =>
-      expect(mockApi.reads()).toContainEqual({
-        method: 'GET',
-        path: expect.stringContaining('sort=amount&dir=desc'),
-      }),
+      expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('sort=amount&dir=desc')),
     );
   });
 
@@ -75,10 +68,7 @@ describe('PaymentsPage sort + filters (R-NFR-08)', () => {
       target: { value: 'cash' },
     });
     await vi.waitFor(() =>
-      expect(mockApi.reads()).toContainEqual({
-        method: 'GET',
-        path: expect.stringContaining('method=cash'),
-      }),
+      expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('method=cash')),
     );
     expect(onSearch).toHaveBeenLastCalledWith({ f_method: 'cash', page: undefined });
     expect(screen.getByRole('combobox', { name: by(t.payments.method) })).toBeTruthy();

@@ -6,19 +6,12 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { type Me, meQuery } from '@/features/people/auth';
 import { t } from '@ab/web-kit';
 import { StaffPresencePanel } from './StaffPresencePanel';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: {} }));
 /** No Realtime (as CI's e2e stack): online comes from a recent last seen. */
-vi.mock('@ab/client-core', async (orig) => ({
-  ...(await orig<object>()),
-  watchPresence: () => () => undefined,
-}));
+vi.mock('@ab/client-core', async (orig) => ({ ...(await orig<object>()), watchPresence: () => () => undefined }));
 
 const p = t.presence;
 const ago = (minutes: number) => new Date(Date.now() - minutes * 60_000).toISOString();
@@ -38,28 +31,20 @@ const show = (role: UserRole = 'admin') => {
     </QueryClientProvider>,
   );
 };
-const answer = (body: StaffPresence) => mockApi.onRead(() => body);
+const answer = (body: StaffPresence) => apiFetch.mockResolvedValue(body);
 const region = () => screen.getByRole('region', { name: p.staffTitle });
 
 describe('StaffPresencePanel: «حالة الفريق» (docs/33 §2)', () => {
-  afterEach(() => mockApi.reset('read'));
+  afterEach(() => apiFetch.mockReset());
 
   it('online first, then the newest last seen, never seen last; the online count', async () => {
     answer({
       enabled: true,
-      staff: [
-        row('هدى', 'sales', null),
-        row('سالم', 'teacher', ago(30)),
-        row('منى', 'admin', ago(1)),
-      ],
+      staff: [row('هدى', 'sales', null), row('سالم', 'teacher', ago(30)), row('منى', 'admin', ago(1))],
     });
     show();
     const items = await within(region()).findAllByRole('listitem');
-    expect(items.map((li) => li.querySelector('span')?.textContent)).toEqual([
-      'منى',
-      'سالم',
-      'هدى',
-    ]);
+    expect(items.map((li) => li.querySelector('span')?.textContent)).toEqual(['منى', 'سالم', 'هدى']);
     expect(items[0]?.textContent).toContain(p.online);
     expect(items[0]?.textContent).toContain(t.activity.roles.admin);
     expect(items[1]?.textContent).toContain(p.lastSeen.replace('{when}', ''));
@@ -82,7 +67,7 @@ describe('StaffPresencePanel: «حالة الفريق» (docs/33 §2)', () => {
   });
 
   it('a failed read: the error line', async () => {
-    mockApi.onRead(() => Promise.reject(new Error('boom')));
+    apiFetch.mockRejectedValue(new Error('boom'));
     show();
     expect((await screen.findByText(p.loadError)).getAttribute('role')).toBe('alert');
   });
@@ -90,6 +75,6 @@ describe('StaffPresencePanel: «حالة الفريق» (docs/33 §2)', () => {
   it('not an admin: nothing, no request', () => {
     const { container } = show('sales');
     expect(container.textContent).toBe('');
-    expect(mockApi.reads()).toHaveLength(0);
+    expect(apiFetch).not.toHaveBeenCalled();
   });
 });

@@ -4,13 +4,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { t } from '@ab/web-kit';
 import { PendingReports } from '@/features/reporting/reports/history/PendingReports/PendingReports';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const row = (n: number, studentId = 's-1'): PendingReportView => ({
   lesson_id: `l-${n}`,
@@ -23,10 +19,10 @@ const FIVE = [1, 2, 3, 4, 5].map((n) => row(n));
 
 // docs/48: three rows, the rest in a native <details>; the hero's lesson left out; no skeleton.
 describe('PendingReports (docs/48 compact block)', () => {
-  afterEach(() => mockApi.reset('read'));
+  afterEach(() => apiFetch.mockReset());
 
   it('5 rows → 3, then «عرض الباقي (2)» unfolding the rest', async () => {
-    mockApi.onRead(() => FIVE);
+    apiFetch.mockResolvedValue(FIVE);
     renderWithClient(<PendingReports tz="Africa/Cairo" />);
     const block = await screen.findByRole('region', { name: t.reports.pending });
     const more = within(block).getByText(t.reports.pendingMore.replace('{n}', '2'));
@@ -38,7 +34,7 @@ describe('PendingReports (docs/48 compact block)', () => {
   });
 
   it('`except` hides the hero’s lesson', async () => {
-    mockApi.onRead(() => [row(1), row(2)]);
+    apiFetch.mockResolvedValue([row(1), row(2)]);
     renderWithClient(<PendingReports tz="Africa/Cairo" except="l-1" />);
     expect(await screen.findByText('طالب 2')).toBeTruthy();
     expect(screen.queryByText('طالب 1')).toBeNull();
@@ -46,24 +42,24 @@ describe('PendingReports (docs/48 compact block)', () => {
   });
 
   it('`studentId` keeps only that student’s', async () => {
-    mockApi.onRead(() => [row(1), row(2, 's-2')]);
+    apiFetch.mockResolvedValue([row(1), row(2, 's-2')]);
     renderWithClient(<PendingReports tz="Africa/Cairo" studentId="s-2" />);
     expect(await screen.findByText('طالب 2')).toBeTruthy();
     expect(screen.queryByText('طالب 1')).toBeNull();
   });
 
   it('loading renders nothing', () => {
-    mockApi.onRead(() => new Promise(() => undefined));
+    apiFetch.mockReturnValue(new Promise(() => undefined));
     renderWithClient(<PendingReports tz="Africa/Cairo" />);
     expect(document.body.textContent).toBe('');
   });
 
   it('an error with no data shows the alert and a retry that refetches', async () => {
-    mockApi.onRead(() => Promise.reject(new Error('down')));
+    apiFetch.mockRejectedValue(new Error('down'));
     renderWithClient(<PendingReports tz="Africa/Cairo" />);
     const alert = await screen.findByRole('alert');
     expect(alert.textContent).toContain(t.reports.pendingError);
-    mockApi.onRead(() => [row(1)]);
+    apiFetch.mockResolvedValue([row(1)]);
     fireEvent.click(within(alert).getByRole('button', { name: t.teacherStudents.retry }));
     await waitFor(() => expect(screen.getByText('طالب 1')).toBeTruthy());
   });

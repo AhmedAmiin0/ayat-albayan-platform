@@ -5,16 +5,13 @@ import { timeOffFixture } from '@ab/shared/testing';
 import { t, locale } from '@ab/web-kit';
 import { formatTimeOff } from './time-off';
 import { TimeOffList } from './TimeOffList';
-import { mockCall } from '@ab/testing/mock-call';
 
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 
 const OFF = timeOffFixture({
   starts_at: '2026-10-10T06:00:00Z',
@@ -23,7 +20,7 @@ const OFF = timeOffFixture({
 });
 
 function renderList(rows: unknown[] = [OFF]) {
-  mockApi.onRead(() => rows);
+  apiFetch.mockResolvedValue(rows);
   render(
     <QueryClientProvider client={new QueryClient()}>
       <TimeOffList teacherId="t1" />
@@ -33,8 +30,8 @@ function renderList(rows: unknown[] = [OFF]) {
 
 describe('TimeOffList (R-TCH-02, docs/07 §8)', () => {
   beforeEach(() => {
-    mockApi.reset('read');
-    mockApi.reset('write');
+    apiFetch.mockReset();
+    apiSend.mockReset();
   });
 
   it('shows each span with its reason and the device-zone hint', async () => {
@@ -50,49 +47,30 @@ describe('TimeOffList (R-TCH-02, docs/07 §8)', () => {
   });
 
   it('deletes one entry by its named icon button', async () => {
-    mockApi.onWrite(() => undefined);
+    apiSend.mockResolvedValue(undefined);
     renderList();
     const span = formatTimeOff(OFF.starts_at, OFF.ends_at, C24);
-    fireEvent.click(
-      await screen.findByRole('button', { name: `${t.availability.timeOffDelete} ${span}` }),
-    );
-    await waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'DELETE',
-        path: '/teachers/t1/time-off/o1',
-        body: undefined,
-      }),
-    );
+    fireEvent.click(await screen.findByRole('button', { name: `${t.availability.timeOffDelete} ${span}` }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/teachers/t1/time-off/o1', undefined));
   });
 
   it('adds through the dialog: validates, posts UTC instants, then closes', async () => {
-    mockApi.onWrite(() => OFF);
+    apiSend.mockResolvedValue(OFF);
     renderList([]);
     fireEvent.click(await screen.findByRole('button', { name: t.availability.timeOffAdd }));
     const dialog = screen.getByRole('dialog', { name: t.availability.timeOffAdd });
-    const submit = () =>
-      fireEvent.click(
-        screen.getAllByRole('button', { name: t.availability.timeOffAdd }).at(-1) as HTMLElement,
-      );
+    const submit = () => fireEvent.click(screen.getAllByRole('button', { name: t.availability.timeOffAdd }).at(-1) as HTMLElement);
     submit();
     expect(screen.getByRole('alert').textContent).toBe(t.common.required);
     expect(screen.getByLabelText(t.availability.startsAt).getAttribute('type')).toBe('date');
-    fireEvent.change(screen.getByLabelText(t.availability.startsAt), {
-      target: { value: '2026-10-05' },
-    });
-    fireEvent.change(screen.getByLabelText(t.availability.endsAt), {
-      target: { value: '2026-10-07' },
-    });
+    fireEvent.change(screen.getByLabelText(t.availability.startsAt), { target: { value: '2026-10-05' } });
+    fireEvent.change(screen.getByLabelText(t.availability.endsAt), { target: { value: '2026-10-07' } });
     submit();
     await waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'POST',
-        path: '/teachers/t1/time-off',
-        body: {
-          starts_at: new Date(2026, 9, 5).toISOString(),
-          ends_at: new Date(2026, 9, 8).toISOString(),
-          reason: null,
-        },
+      expect(apiSend).toHaveBeenCalledWith('POST', '/teachers/t1/time-off', {
+        starts_at: new Date(2026, 9, 5).toISOString(),
+        ends_at: new Date(2026, 9, 8).toISOString(),
+        reason: null,
       }),
     );
     await waitFor(() => expect(dialog.isConnected).toBe(false));

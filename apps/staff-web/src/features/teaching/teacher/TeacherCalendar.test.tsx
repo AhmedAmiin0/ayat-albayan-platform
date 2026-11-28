@@ -5,28 +5,17 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import type { CalendarPeriod } from './calendar-search';
 import { TeacherCalendar } from './TeacherCalendar';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const ME: TeacherMe = {
-  id: 't-1',
-  display_name_ar: 'معلمة',
-  gender: 'female',
-  programs: ['quran'],
-  tz: 'Africa/Cairo',
-  meeting_link: null,
-  meeting_mode: null,
-  platform_classroom: false,
-  students: [],
+  id: 't-1', display_name_ar: 'معلمة', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo',
+  meeting_link: null, meeting_mode: null, platform_classroom: false, students: [],
 };
 
 function renderCalendar(period: CalendarPeriod) {
-  mockApi.onRead(({ path }) => Promise.resolve(path === '/teachers/me' ? ME : []));
+  apiFetch.mockImplementation((path: string) => Promise.resolve(path === '/teachers/me' ? ME : []));
   const onPeriod = vi.fn();
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(

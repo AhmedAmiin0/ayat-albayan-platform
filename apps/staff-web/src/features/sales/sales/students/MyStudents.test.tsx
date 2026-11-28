@@ -4,13 +4,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { MyStudents } from './MyStudents';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const row = (over: Partial<MyStudentRow>): MyStudentRow => ({
   id: 's1',
@@ -30,29 +26,19 @@ const ROWS = [
     code: 'AB-1001',
     name: 'يوسف',
     first_subscription_paid: true,
-    commission: {
-      amount: 120,
-      currency: 'SAR',
-      status: 'earned',
-      earned_at: '2026-10-02T09:00:00.000Z',
-    },
+    commission: { amount: 120, currency: 'SAR', status: 'earned', earned_at: '2026-10-02T09:00:00.000Z' },
   }),
   row({
     id: 's3',
     code: 'AB-1002',
     name: 'جود',
     first_subscription_paid: false,
-    commission: {
-      amount: 50,
-      currency: 'USD',
-      status: 'voided',
-      earned_at: '2026-10-01T09:00:00.000Z',
-    },
+    commission: { amount: 50, currency: 'USD', status: 'voided', earned_at: '2026-10-01T09:00:00.000Z' },
   }),
 ];
 
 function open(rows: MyStudentRow[]) {
-  mockApi.onRead(() => rows);
+  apiFetch.mockResolvedValue(rows);
   render(
     <QueryClientProvider
       client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
@@ -62,13 +48,13 @@ function open(rows: MyStudentRow[]) {
   );
 }
 
-afterEach(() => mockApi.reset('read'));
+afterEach(() => apiFetch.mockReset());
 
 describe('MyStudents «طلابي»', () => {
   it('lists the students I brought with code, date, first-subscription state and my commission', async () => {
     open(ROWS);
     expect(await screen.findByText('سهيلة')).toBeTruthy();
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/sales/me/students' });
+    expect(apiFetch).toHaveBeenCalledWith('/sales/me/students');
     expect(screen.getByRole('table', { name: t.assistantPortal.students.title })).toBeTruthy();
     expect(screen.getByText('AB-1001')).toBeTruthy();
     expect(screen.getAllByText(t.assistantPortal.students.unpaid)).toHaveLength(2);
@@ -100,7 +86,7 @@ describe('MyStudents «طلابي»', () => {
   });
 
   it('a failed load shows the error with a retry that asks again', async () => {
-    mockApi.onRead(() => Promise.reject(new Error('down')));
+    apiFetch.mockRejectedValue(new Error('down'));
     render(
       <QueryClientProvider
         client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
@@ -109,6 +95,6 @@ describe('MyStudents «طلابي»', () => {
       </QueryClientProvider>,
     );
     fireEvent.click(await screen.findByRole('button', { name: t.sales.retry }));
-    expect(mockApi.reads()).toHaveLength(2);
+    expect(apiFetch).toHaveBeenCalledTimes(2);
   });
 });

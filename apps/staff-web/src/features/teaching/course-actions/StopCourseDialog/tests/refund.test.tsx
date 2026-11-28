@@ -5,7 +5,6 @@ import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';
 import { STOPPED, SUB } from '@/features/teaching/course-actions/course-actions-fixture';
 import { StopCourseDialog } from '@/features/teaching/course-actions/StopCourseDialog/StopCourseDialog';
-import { mockCall } from '@ab/testing/mock-call';
 
 // Cancel only with what is owed, or cancel with a refund; a summary line says the outcome.
 const perms = vi.hoisted(() => ({ list: [] as string[] }));
@@ -13,10 +12,12 @@ vi.mock('@/features/people/auth', async (orig) => ({
   ...(await orig<object>()),
   usePermissions: () => ({ permissions: perms.list, can: (p: string) => perms.list.includes(p) }),
 }));
-const mockApi = mockCall();
+const apiFetch = vi.hoisted(() => vi.fn());
+const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch,
+  apiSend,
 }));
 
 const words = t.courseActions.stop;
@@ -39,7 +40,7 @@ const BASE = { subscriptionId: SUB, reason: 'سفر', clientRequestId: expect.an
 
 async function open(keys: string[], preview: object = PREVIEW) {
   perms.list = keys;
-  mockApi.onRead(() => preview);
+  apiFetch.mockResolvedValue(preview);
   const onDone = vi.fn();
   renderWithClient(
     <StopCourseDialog studentId="s1" subscriptionId={SUB} onClose={vi.fn()} onDone={onDone} />,
@@ -58,18 +59,14 @@ const summary = (refund: number, due: number) =>
   words.summary.replace('{refund}', money(refund)).replace('{due}', money(due));
 const sent = async (extra: object) =>
   vi.waitFor(() =>
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: '/students/s1/course-stop',
-      body: { ...BASE, ...extra },
-    }),
+    expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-stop', { ...BASE, ...extra }),
   );
 
 describe('StopCourseDialog: the money choices', () => {
   beforeEach(() => {
-    mockApi.reset('read');
-    mockApi.reset('write');
-    mockApi.onWrite(() => STOPPED);
+    apiFetch.mockReset();
+    apiSend.mockReset();
+    apiSend.mockResolvedValue(STOPPED);
   });
 
   it('«إلغاء فقط» by default, attended × rate owed (shown), the summary says 0 back / 0 due', async () => {
@@ -104,7 +101,7 @@ describe('StopCourseDialog: the money choices', () => {
       dialog.getByRole('radio', { name: words.refundAll.replace('{amount}', money(290)) }),
     );
     expect(dialog.getByText(summary(290, 0))).toBeTruthy();
-    mockApi.onWrite(() => ({ ...STOPPED, refund: { amount: 290, card: 0, manual: 290 } }));
+    apiSend.mockResolvedValue({ ...STOPPED, refund: { amount: 290, card: 0, manual: 290 } });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'paid' } });
     expect(await screen.findByText(words.next.replace('{amount}', money(290)))).toBeTruthy();
@@ -121,7 +118,7 @@ describe('StopCourseDialog: the money choices', () => {
     fireEvent.change(field, { target: { value: '290.01' } });
     expect(dialog.getByText(t.courseActions.errors.refund_exceeds_allowed)).toBeTruthy();
     fireEvent.click(confirm());
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
     fireEvent.change(field, { target: { value: '100' } });
     fireEvent.click(confirm());
     await sent({ refund: { choice: 'custom', amount: 100 } });

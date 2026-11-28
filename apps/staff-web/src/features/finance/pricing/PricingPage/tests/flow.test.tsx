@@ -4,16 +4,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { fakePricingApi } from '@/features/finance/pricing/fake-pricing-api';
 import { PricingPage } from '@/features/finance/pricing/PricingPage/PricingPage';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 function renderPage() {
-  mockApi.onRead(({ path }) => Promise.resolve(fakePricingApi(path)));
+  apiFetch.mockImplementation((path: string) => Promise.resolve(fakePricingApi(path)));
   render(
     <QueryClientProvider client={new QueryClient()}>
       <PricingPage />
@@ -30,10 +26,9 @@ describe('PricingPage: free discount, stale offers, announcements (docs/08 §3)'
     const field = screen.getByRole('spinbutton', { name: t.pricing.steps.discount });
     fireEvent.change(field, { target: { value: '12.5' } });
     await waitFor(() =>
-      expect(mockApi.reads()).toContainEqual({
-        method: 'GET',
-        path: '/pricing/quote?country=SA&duration=45&tier=standard&students=1&discount=12.5',
-      }),
+      expect(apiFetch).toHaveBeenCalledWith(
+        '/pricing/quote?country=SA&duration=45&tier=standard&students=1&discount=12.5',
+      ),
     );
     expect(await screen.findByText(t.pricing.afterDiscount)).toBeTruthy();
   });
@@ -42,10 +37,9 @@ describe('PricingPage: free discount, stale offers, announcements (docs/08 §3)'
     renderPage();
     fireEvent.click(screen.getByRole('button', { name: t.pricing.customLabel }));
     await waitFor(() =>
-      expect(mockApi.reads()).toContainEqual({
-        method: 'GET',
-        path: '/pricing/quote?country=SA&duration=45&count=10&students=1&discount=0',
-      }),
+      expect(apiFetch).toHaveBeenCalledWith(
+        '/pricing/quote?country=SA&duration=45&count=10&students=1&discount=0',
+      ),
     );
   });
 

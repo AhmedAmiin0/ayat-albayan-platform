@@ -6,28 +6,17 @@ import { emptyDraft, withPicks, type BookingDraft } from '@/features/teaching/bo
 import { BookingModeContext } from '@/features/teaching/booking/mode';
 import { ReviewStep } from '@/features/teaching/booking/steps/review/ReviewStep/ReviewStep';
 import { ABRAR, SLOT, STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
 
-const DRAFT: BookingDraft = {
-  ...emptyDraft(),
-  students: [{ id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183' }],
-  teacher: ABRAR,
-  ...withPicks([SLOT]),
-};
+const DRAFT: BookingDraft = { ...emptyDraft(), students: [{ id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183' }], teacher: ABRAR, ...withPicks([SLOT]) };
 
-afterEach(() => mockApi.reset('write'));
+afterEach(() => apiSend.mockReset());
 
 describe('the review when the first lesson already passed (review M3)', () => {
   it('400 date_in_past: says so in words, and «اختر موعدًا آخر» goes back to the slot step', async () => {
-    mockApi.onWrite(() =>
-      Promise.reject(new ApiError(400, { code: 'date_in_past', message: 'date_in_past' })),
-    );
+    apiSend.mockRejectedValue(new ApiError(400, { code: 'date_in_past', message: 'date_in_past' }));
     const onChangeSlot = vi.fn();
     const onPatch = vi.fn();
     render(

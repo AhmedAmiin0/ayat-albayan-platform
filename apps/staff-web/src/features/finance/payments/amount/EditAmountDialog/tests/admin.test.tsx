@@ -5,13 +5,9 @@ import { ApiError, t } from '@ab/web-kit';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { PAYMENT } from '@/features/finance/subscriptions/money-fixture';
 import { PaymentDialogs } from '@/features/finance/payments/PaymentDialogs';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const T = t.payments.editAmount;
 const boxName = T.newAmount.replace('{currency}', 'ر.س');
@@ -37,23 +33,19 @@ const confirm = () => {
 };
 
 describe('«تعديل المبلغ» by the admin (owner 2026-11-02)', () => {
-  afterEach(() => mockApi.reset('write'));
+  afterEach(() => apiSend.mockReset());
 
   it('shows the current amount, asks old → new, then PATCH /payments/:id with the amount only', async () => {
-    mockApi.onWrite(() => ({ ...PAYMENT, amount: 120 }));
+    apiSend.mockResolvedValue({ ...PAYMENT, amount: 120 });
     const { onDone } = open();
     expect(screen.getByText(T.current.replace('{amount}', '145 ر.س'))).toBeTruthy();
     typeAndNext('120');
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
     const body = T.confirmBody.replace('{old}', '145 ر.س').replace('{new}', '120 ر.س');
     expect(screen.getByText(body)).toBeTruthy();
     confirm();
     await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(T.saved));
-    expect(mockApi.writes()).toContainEqual({
-      method: 'PATCH',
-      path: '/payments/pay-1',
-      body: { amount: 120 },
-    });
+    expect(apiSend).toHaveBeenCalledWith('PATCH', '/payments/pay-1', { amount: 120 });
   });
 
   it('the same amount is refused in the box: no confirm, no request', () => {
@@ -61,11 +53,11 @@ describe('«تعديل المبلغ» by the admin (owner 2026-11-02)', () => {
     typeAndNext('145');
     expect(screen.getByText(T.same)).toBeTruthy();
     expect(screen.queryByRole('dialog', { name: T.confirmTitle })).toBeNull();
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
   });
 
   it('an API refusal is said in the confirm (t.payments.error)', async () => {
-    mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'refund_exceeds_paid' })));
+    apiSend.mockRejectedValue(new ApiError(409, { code: 'refund_exceeds_paid' }));
     open();
     typeAndNext('10');
     confirm();

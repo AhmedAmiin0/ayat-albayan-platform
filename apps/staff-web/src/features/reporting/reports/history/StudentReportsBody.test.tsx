@@ -3,13 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { StudentReportsBody } from './StudentReportsBody';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const NO_RETRY = { defaultOptions: { queries: { retry: false } } };
 
@@ -22,19 +18,17 @@ function renderBody() {
 }
 
 describe('StudentReportsBody (the board drawer «التقارير», docs/46 C1)', () => {
-  afterEach(() => mockApi.reset('read'));
+  afterEach(() => apiFetch.mockReset());
 
   it('no reports yet: the empty state, no page heading of its own', async () => {
-    mockApi.onRead(() => ({ items: [], total: 0, page: 1, pageSize: 10, series: [] }));
+    apiFetch.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 10, series: [] });
     renderBody();
     expect(await screen.findByText(t.reports.noReports)).toBeTruthy();
     expect(screen.queryByText(t.reports.history)).toBeNull();
   });
 
   it('403: not hers', async () => {
-    mockApi.onRead(() =>
-      Promise.reject(new ApiError(403, { code: 'forbidden', message: 'forbidden' })),
-    );
+    apiFetch.mockRejectedValue(new ApiError(403, { code: 'forbidden', message: 'forbidden' }));
     renderBody();
     expect(await screen.findByText(t.common.forbidden)).toBeTruthy();
   });

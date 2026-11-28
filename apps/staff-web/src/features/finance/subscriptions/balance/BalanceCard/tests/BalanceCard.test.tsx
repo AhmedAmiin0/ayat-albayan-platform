@@ -4,18 +4,19 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { BalanceCard } from '@/features/finance/subscriptions/balance/BalanceCard/BalanceCard';
 import { balanceOf, PAYMENT, WEEKLY } from '@/features/finance/subscriptions/money-fixture';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const apiFetch = vi.hoisted(() => vi.fn());
+const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch,
+  apiSend,
 }));
 
 const STUDENT = { id: 'stu-1', name: 'سهيلة', code: 'AB-0183' };
 
 function renderCard(view = balanceOf([WEEKLY])) {
-  mockApi.onRead(() => view);
+  apiFetch.mockResolvedValue(view);
   render(
     <QueryClientProvider client={new QueryClient()}>
       <BalanceCard student={STUDENT} />
@@ -25,14 +26,14 @@ function renderCard(view = balanceOf([WEEKLY])) {
 
 describe('BalanceCard (S6: the student package on the profile)', () => {
   beforeEach(() => {
-    mockApi.reset('read');
-    mockApi.reset('write');
+    apiFetch.mockReset();
+    apiSend.mockReset();
   });
 
   it('the packageProgress line, used of total, paid of price, the projected end', async () => {
     renderCard();
     expect(await screen.findByText('بقيت حلقتان')).toBeTruthy();
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/students/stu-1/balance' });
+    expect(apiFetch).toHaveBeenCalledWith('/students/stu-1/balance');
     expect(
       screen.getByText(
         new RegExp(t.subscriptions.usedOf.replace('{used}', '2').replace('{total}', '4')),
@@ -60,22 +61,22 @@ describe('BalanceCard (S6: the student package on the profile)', () => {
     fireEvent.click(await screen.findByRole('button', { name: t.payments.record }));
     const dialog = await screen.findByRole('dialog');
     expect(dialog.textContent).toContain(t.payments.mobile.recordFor.replace('{student}', 'سهيلة'));
-    mockApi.onWrite(() => PAYMENT);
+    apiSend.mockResolvedValue(PAYMENT);
     fireEvent.click(
       screen.getAllByRole('button', { name: t.payments.record }).at(-1) as HTMLElement,
     );
     await vi.waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'POST',
-        path: '/payments',
-        body: expect.objectContaining({
+      expect(apiSend).toHaveBeenCalledWith(
+        'POST',
+        '/payments',
+        expect.objectContaining({
           subscriptionId: 'sub-1',
           amount: 145,
           currency: 'SAR',
           method: 'bank',
           receiptPath: null,
         }),
-      }),
+      ),
     );
     expect(await screen.findByRole('status')).toBeTruthy();
   });

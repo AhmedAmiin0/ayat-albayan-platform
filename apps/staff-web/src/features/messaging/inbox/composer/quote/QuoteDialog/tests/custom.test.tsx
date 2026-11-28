@@ -8,14 +8,10 @@ import { t } from '@ab/web-kit';
 import { thread } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { QuoteDialog } from '@/features/messaging/inbox/composer/quote/QuoteDialog/QuoteDialog';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const apiFetch = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => new Set<string>());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: [...granted], can: (p: string) => granted.has(p) }),
 }));
@@ -40,9 +36,9 @@ async function show(admin = false) {
 }
 const type = (value: string) => fireEvent.change(field(), { target: { value } });
 
-beforeEach(() => mockApi.onRead(async ({ path }) => fakePricingApi(path)));
+beforeEach(() => apiFetch.mockImplementation(async (path: string) => fakePricingApi(path)));
 afterEach(() => {
-  mockApi.reset('read');
+  apiFetch.mockReset();
   cleanup();
 });
 

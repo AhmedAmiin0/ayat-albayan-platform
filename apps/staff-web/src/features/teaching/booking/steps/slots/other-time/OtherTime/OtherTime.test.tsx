@@ -7,12 +7,11 @@ import { emptyDraft, type BookingDraft } from '@/features/teaching/booking/draft
 import { ABRAR } from '@/features/teaching/booking/wizard-fixture';
 import { OtherTime } from './OtherTime';
 import { OutsideNote } from '@/features/teaching/booking/steps/slots/other-time/OutsideNote';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
   ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch,
 }));
 
 // Tue 1 Dec 2026: 21:30Z is 23:30 Tue in Cairo, 00:30 Wed in Riyadh.
@@ -47,13 +46,13 @@ function open(draft: BookingDraft = DRAFT) {
 describe('OtherTime (web «وقت آخر»)', () => {
   beforeEach(() => setViewerPersonTz('Asia/Riyadh'));
   afterEach(() => {
-    mockApi.reset('read');
+    apiFetch.mockReset();
     onPick.mockReset();
     setViewerPersonTz(null);
   });
 
   it('Riyadh viewer: two days, the first shown; each pick hands over its server slot', async () => {
-    mockApi.onRead(() => LIST);
+    apiFetch.mockResolvedValue(LIST);
     open();
     const days = await screen.findByRole('group', { name: t.booking.otherTimeDay });
     expect(within(days).getAllByRole('radio')).toHaveLength(2);
@@ -67,7 +66,7 @@ describe('OtherTime (web «وقت آخر»)', () => {
 
   it('Cairo viewer: one day, the family Riyadh clock beside each time', async () => {
     setViewerPersonTz('Africa/Cairo');
-    mockApi.onRead(() => LIST);
+    apiFetch.mockResolvedValue(LIST);
     open();
     const days = await screen.findByRole('group', { name: t.booking.otherTimeDay });
     expect(within(days).getAllByRole('radio')).toHaveLength(1);
@@ -75,13 +74,13 @@ describe('OtherTime (web «وقت آخر»)', () => {
   });
 
   it('a malformed answer (a free-text time) is an alert, never shown as times', async () => {
-    mockApi.onRead(() => ({ ...LIST, slots: [{ starts_at: 'noon' }] }));
+    apiFetch.mockResolvedValue({ ...LIST, slots: [{ starts_at: 'noon' }] });
     open();
     expect((await screen.findByRole('alert')).textContent).toContain(t.booking.slotsError);
   });
 
   it('an empty fortnight says so, after loading; «إخفاء» closes it', async () => {
-    mockApi.onRead(() => ({ ...LIST, slots: [] }));
+    apiFetch.mockResolvedValue({ ...LIST, slots: [] });
     open({ ...DRAFT, teacher: null });
     expect(screen.getByText(t.common.loading)).toBeTruthy();
     expect(await screen.findByText(t.booking.otherTimeEmpty)).toBeTruthy();

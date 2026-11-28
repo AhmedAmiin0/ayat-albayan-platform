@@ -4,13 +4,9 @@ import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { MyEarnings } from '@/features/sales/sales/teachers/MyEarnings/MyEarnings';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const statement = (over: Partial<AssistantStatementView>): AssistantStatementView => ({
   id: 'st1',
@@ -19,22 +15,8 @@ const statement = (over: Partial<AssistantStatementView>): AssistantStatementVie
   status: 'paid',
   totals: { SAR: { salary: 2000, commissions: 300, adjustments: 0, total: 2300 } },
   lines: [
-    {
-      kind: 'salary',
-      amount: 2000,
-      currency: 'SAR',
-      student: null,
-      reason: null,
-      commission_kind: null,
-    },
-    {
-      kind: 'commission',
-      amount: 300,
-      currency: 'SAR',
-      student: { code: 'AB-1001', name: 'يوسف' },
-      reason: null,
-      commission_kind: 'first',
-    },
+    { kind: 'salary', amount: 2000, currency: 'SAR', student: null, reason: null, commission_kind: null },
+    { kind: 'commission', amount: 300, currency: 'SAR', student: { code: 'AB-1001', name: 'يوسف' }, reason: null, commission_kind: 'first' },
   ],
   approved_at: '2026-10-01T09:00:00.000Z',
   paid_at: '2026-10-02T09:00:00.000Z',
@@ -61,7 +43,7 @@ const EARNINGS: Earnings = {
 };
 
 function open(data: Earnings) {
-  mockApi.onRead(() => data);
+  apiFetch.mockResolvedValue(data);
   render(
     <QueryClientProvider
       client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}
@@ -71,22 +53,16 @@ function open(data: Earnings) {
   );
 }
 
-afterEach(() => mockApi.reset('read'));
+afterEach(() => apiFetch.mockReset());
 
 describe('MyEarnings «الكشوف» of «محفظتي»', () => {
   it('shows my terms: the monthly salary and the percent commission with its start', async () => {
     open(EARNINGS);
-    expect(
-      await screen.findByRole('heading', { name: t.assistantPortal.earnings.terms }),
-    ).toBeTruthy();
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/sales/me/earnings' });
-    const salary = screen
-      .getByText(`${t.assistantPortal.earnings.salary}:`, { exact: false })
-      .closest('p');
+    expect(await screen.findByRole('heading', { name: t.assistantPortal.earnings.terms })).toBeTruthy();
+    expect(apiFetch).toHaveBeenCalledWith('/sales/me/earnings');
+    const salary = screen.getByText(`${t.assistantPortal.earnings.salary}:`, { exact: false }).closest('p');
     expect(salary?.textContent).toContain('2,000');
-    expect(
-      screen.getByText(t.assistantPortal.earnings.commissionPercent.replace('{value}', '10')),
-    ).toBeTruthy();
+    expect(screen.getByText(t.assistantPortal.earnings.commissionPercent.replace('{value}', '10'))).toBeTruthy();
   });
 
   it('a fixed commission shows its amount in its own currency', async () => {
@@ -99,10 +75,7 @@ describe('MyEarnings «الكشوف» of «محفظتي»', () => {
         renewal_share_percent: 50,
       },
     });
-    const fixed = t.assistantPortal.earnings.commissionFixed.replace(
-      '{amount}',
-      `75 ${t.pricing.currencies.USD}`,
-    );
+    const fixed = t.assistantPortal.earnings.commissionFixed.replace('{amount}', `75 ${t.pricing.currencies.USD}`);
     expect(await screen.findByText(fixed)).toBeTruthy();
   });
 
@@ -131,9 +104,7 @@ describe('MyEarnings «الكشوف» of «محفظتي»', () => {
     expect(screen.getByText(t.enums.payoutStatus.paid)).toBeTruthy();
     const totals = screen.getAllByRole('list', { name: month.textContent ?? '' })[0] as HTMLElement;
     expect(within(totals).getByText('2,300')).toBeTruthy();
-    expect(
-      screen.getByText(t.assistantPortal.earnings.line.commission.replace('{student}', 'يوسف')),
-    ).toBeTruthy();
+    expect(screen.getByText(t.assistantPortal.earnings.line.commission.replace('{student}', 'يوسف'))).toBeTruthy();
   });
 
   it('a negative adjustment (a reversal) shows its reason and its sign', async () => {
@@ -144,25 +115,12 @@ describe('MyEarnings «الكشوف» of «محفظتي»', () => {
           status: 'draft',
           paid_at: null,
           approved_at: null,
-          lines: [
-            {
-              kind: 'adjustment',
-              amount: -300,
-              currency: 'SAR',
-              student: null,
-              reason: 'إلغاء دفعة',
-              commission_kind: null,
-            },
-          ],
+          lines: [{ kind: 'adjustment', amount: -300, currency: 'SAR', student: null, reason: 'إلغاء دفعة', commission_kind: null }],
           totals: { SAR: { salary: 0, commissions: 0, adjustments: -300, total: -300 } },
         }),
       ],
     });
-    expect(
-      await screen.findByText(
-        t.assistantPortal.earnings.line.adjustment.replace('{reason}', 'إلغاء دفعة'),
-      ),
-    ).toBeTruthy();
+    expect(await screen.findByText(t.assistantPortal.earnings.line.adjustment.replace('{reason}', 'إلغاء دفعة'))).toBeTruthy();
     expect(screen.getAllByText('-300').length).toBeGreaterThan(0);
   });
 

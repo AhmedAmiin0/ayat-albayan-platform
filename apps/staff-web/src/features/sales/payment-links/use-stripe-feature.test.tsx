@@ -4,13 +4,9 @@ import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@ab/web-kit';
 import { useStripeFeature } from './use-stripe-feature';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 function run() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -22,35 +18,35 @@ function run() {
 
 describe('useStripeFeature: the test build AND the API (docs/30)', () => {
   afterEach(() => {
-    mockApi.reset('read');
+    apiFetch.mockReset();
     vi.unstubAllEnvs();
   });
 
   it('a normal build: off, and GET /stripe/feature is never asked', async () => {
-    mockApi.onRead(() => ({ stripe: true }));
+    apiFetch.mockResolvedValue({ stripe: true });
     const { result } = run();
     await new Promise((r) => setTimeout(r, 20));
     expect(result.current).toBe(false);
-    expect(mockApi.reads()).toHaveLength(0);
+    expect(apiFetch).not.toHaveBeenCalled();
   });
 
   it('the test build with the API on: on', async () => {
     vi.stubEnv('VITE_FEATURE_STRIPE', '1');
-    mockApi.onRead(() => ({ stripe: true }));
+    apiFetch.mockResolvedValue({ stripe: true });
     const { result } = run();
     await waitFor(() => expect(result.current).toBe(true));
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/stripe/feature' });
+    expect(apiFetch).toHaveBeenCalledWith('/stripe/feature');
   });
 
   it('the test build, but the API says no or has no Stripe (404): off', async () => {
     vi.stubEnv('VITE_FEATURE_STRIPE', '1');
-    mockApi.onRead(() => ({ stripe: false }));
+    apiFetch.mockResolvedValue({ stripe: false });
     const off = run();
-    await waitFor(() => expect(mockApi.reads()).not.toHaveLength(0));
+    await waitFor(() => expect(apiFetch).toHaveBeenCalled());
     expect(off.result.current).toBe(false);
-    mockApi.onRead(() => Promise.reject(new ApiError(404, { code: 'not_found' })));
+    apiFetch.mockRejectedValue(new ApiError(404, { code: 'not_found' }));
     const missing = run();
-    await waitFor(() => expect(mockApi.reads()).toHaveLength(2));
+    await waitFor(() => expect(apiFetch).toHaveBeenCalledTimes(2));
     expect(missing.result.current).toBe(false);
   });
 
@@ -58,6 +54,6 @@ describe('useStripeFeature: the test build AND the API (docs/30)', () => {
     vi.stubEnv('VITE_FEATURE_STRIPE', 'true');
     run();
     await new Promise((r) => setTimeout(r, 20));
-    expect(mockApi.reads()).toHaveLength(0);
+    expect(apiFetch).not.toHaveBeenCalled();
   });
 });

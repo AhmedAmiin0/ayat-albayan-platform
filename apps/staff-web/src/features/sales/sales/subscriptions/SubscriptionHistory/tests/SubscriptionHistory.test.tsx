@@ -5,24 +5,11 @@ import { t } from '@ab/web-kit';
 import { history, HISTORY_ID } from '@/features/sales/sales/academy.fixtures';
 import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesSubscriptions } from '@/features/sales/sales/subscriptions/SalesSubscriptions';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
-const CONFIRMED = [
-  {
-    id: HISTORY_ID,
-    student: { id: 's1', code: 'AB-0183', name: 'سهيلة' },
-    package: '8',
-    status: 'active',
-    starts_on: '2026-09-01',
-    lessons_total: 8,
-  },
-];
+const CONFIRMED = [{ id: HISTORY_ID, student: { id: 's1', code: 'AB-0183', name: 'سهيلة' }, package: '8', status: 'active', starts_on: '2026-09-01', lessons_total: 8 }];
 
 /** The route's `kind` and `history` as local state, like /sales/subscriptions?kind=confirmed&history=. */
 function Harness({ kind = 'confirmed' as const }: { kind?: 'confirmed' | 'pending' }) {
@@ -37,52 +24,28 @@ function Harness({ kind = 'confirmed' as const }: { kind?: 'confirmed' | 'pendin
   );
 }
 
-afterEach(() => mockApi.reset('read'));
+afterEach(() => apiFetch.mockReset());
 
 describe('a confirmed subscription’s history («السجل»)', () => {
   it('opens from the row: every subscription of the student, lessons, status changes and payments with their amount', async () => {
-    mockApi.onRead(async ({ path }) => (path.endsWith('/history') ? history() : CONFIRMED));
+    apiFetch.mockImplementation(async (path: string) => (path.endsWith('/history') ? history() : CONFIRMED));
     renderWithQuery(<Harness />);
-    fireEvent.click(
-      await screen.findByRole('button', {
-        name: t.sales.history.openFor.replace('{name}', 'سهيلة'),
-      }),
-    );
-    const section = await screen.findByRole('region', {
-      name: t.sales.history.title.replace('{name}', 'سهيلة'),
-    });
-    expect(mockApi.reads()).toContainEqual({
-      method: 'GET',
-      path: `/sales/subscriptions/${HISTORY_ID}/history`,
-    });
+    fireEvent.click(await screen.findByRole('button', { name: t.sales.history.openFor.replace('{name}', 'سهيلة') }));
+    const section = await screen.findByRole('region', { name: t.sales.history.title.replace('{name}', 'سهيلة') });
+    expect(apiFetch).toHaveBeenCalledWith(`/sales/subscriptions/${HISTORY_ID}/history`);
     expect(await within(section).findByText(t.sales.history.current)).toBeTruthy();
-    expect(
-      within(section)
-        .getAllByRole('listitem')
-        .filter((li) => li.className.includes('rounded-md')),
-    ).toHaveLength(2);
-    expect(within(section).getByText(/3/, { selector: 'p' }).textContent).toContain(
-      t.sales.history.remaining.replace('{n}', '5'),
-    );
-    expect(
-      within(section).getByText(
-        t.sales.history.changed
-          .replace('{from}', t.enums.subscriptionStatus.unpaid)
-          .replace('{to}', t.enums.subscriptionStatus.active),
-        { exact: false },
-      ),
-    ).toBeTruthy();
+    expect(within(section).getAllByRole('listitem').filter((li) => li.className.includes('rounded-md'))).toHaveLength(2);
+    expect(within(section).getByText(/3/, { selector: 'p' }).textContent).toContain(t.sales.history.remaining.replace('{n}', '5'));
+    expect(within(section).getByText(t.sales.history.changed.replace('{from}', t.enums.subscriptionStatus.unpaid).replace('{to}', t.enums.subscriptionStatus.active), { exact: false })).toBeTruthy();
     expect(within(section).getByText(t.enums.paymentKind.payment, { exact: false })).toBeTruthy();
     expect(within(section).getByText('1,290').closest('li')?.textContent).toMatch(/1,290\s+ر\.س/);
     expect(section.textContent).not.toMatch(/SAR|١/);
     fireEvent.click(within(section).getByRole('button', { name: t.sales.history.close }));
-    expect(
-      screen.queryByRole('region', { name: t.sales.history.title.replace('{name}', 'سهيلة') }),
-    ).toBeNull();
+    expect(screen.queryByRole('region', { name: t.sales.history.title.replace('{name}', 'سهيلة') })).toBeNull();
   });
 
   it('only on «مؤكدة»: the pending list has no history button', async () => {
-    mockApi.onRead(() => CONFIRMED.map((s) => ({ ...s, status: 'unpaid' })));
+    apiFetch.mockResolvedValue(CONFIRMED.map((s) => ({ ...s, status: 'unpaid' })));
     renderWithQuery(<Harness kind="pending" />);
     expect(await screen.findByText('سهيلة')).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.sales.history.open })).toBeNull();

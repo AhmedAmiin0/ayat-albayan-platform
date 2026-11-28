@@ -4,28 +4,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { SUMMARY, WORK } from '@/features/reporting/dashboard/dashboard-fixture';
 import { DashboardPage } from '@/features/reporting/dashboard/DashboardPage/DashboardPage';
-import { mockCall } from '@ab/testing/mock-call';
 
 // Overflow guard for the dashboard. jsdom has no layout, so this
 // pins the class contract that fixes it: a single-column grid is `grid-cols-1` (minmax(0, 1fr)), never
 // the implicit `auto` track that grows to a wide table's min-content; wide tables scroll in their own
 // box; row headers wrap instead of forcing the table wider. Measured for real by the responsive e2e.
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
-vi.mock('@tanstack/react-router', async () => ({
-  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
 const answer = (path: string): unknown => {
   if (path === '/dashboard/work') return WORK;
-  if (path === '/teacher-earnings/summary')
-    return { currency: 'EGP', rows: [], totals: { earned: 0, paid: 0, owed: 0, teachers_owed: 0 } };
-  if (path === '/receivables')
-    return { rows: [], totals: [], total: 0, currency: 'SAR', fx_missing: [] };
+  if (path === '/teacher-earnings/summary') return { currency: 'EGP', rows: [], totals: { earned: 0, paid: 0, owed: 0, teachers_owed: 0 } };
+  if (path === '/receivables') return { rows: [], totals: [], total: 0, currency: 'SAR', fx_missing: [] };
   if (path.startsWith('/lessons')) return [];
   if (path.startsWith('/threads')) return { items: [], total: 0, page: 1, pageSize: 30 };
   return SUMMARY;
@@ -49,11 +41,11 @@ describe('dashboard layout never grows past the page', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-10-02T09:00:00.000Z'));
-    mockApi.onRead(({ path }) => Promise.resolve(answer(path)));
+    apiFetch.mockImplementation((path: string) => Promise.resolve(answer(path)));
   });
   afterEach(() => {
     vi.useRealTimers();
-    mockApi.reset('read');
+    apiFetch.mockReset();
   });
 
   it('every grid above a table has explicit tracks (no auto track that a 640px table can stretch)', async () => {
@@ -71,11 +63,7 @@ describe('dashboard layout never grows past the page', () => {
 
   it('the wide tables (by month, by source, teacher load) scroll inside their own box', async () => {
     await renderPage();
-    const names = [
-      `${t.dashboard.byMonth} (${SUMMARY.finance.currency})`,
-      t.dashboard.bySource,
-      t.dashboard.teacherLoad,
-    ];
+    const names = [`${t.dashboard.byMonth} (${SUMMARY.finance.currency})`, t.dashboard.bySource, t.dashboard.teacherLoad];
     for (const name of names) {
       const box = screen.getByRole('table', { name }).closest('.ab-scroll-x');
       expect(box, name).not.toBeNull();
@@ -98,16 +86,13 @@ describe('dashboard layout never grows past the page', () => {
   it('the period totals go one column on a narrow page, then two, then four', async () => {
     const page = await renderPage();
     const totals = page.querySelector('dl');
-    for (const c of ['grid-cols-1', '@sm:grid-cols-2', '@2xl:grid-cols-4'])
-      expect(totals?.className).toContain(c);
+    for (const c of ['grid-cols-1', '@sm:grid-cols-2', '@2xl:grid-cols-4']) expect(totals?.className).toContain(c);
     expect(totals?.querySelector('dd')?.className).not.toContain('whitespace-nowrap');
   });
 
   it('the last column head stays flush: its sort button does not stick out of the scroll box', async () => {
     await renderPage();
-    const last = screen
-      .getByRole('table', { name: t.dashboard.bySource })
-      .querySelector('thead th:last-child button');
+    const last = screen.getByRole('table', { name: t.dashboard.bySource }).querySelector('thead th:last-child button');
     expect(last?.className).toContain('[th:last-child>&]:pe-0');
     expect(last?.className).toContain('[th:last-child>&]:me-0');
   });

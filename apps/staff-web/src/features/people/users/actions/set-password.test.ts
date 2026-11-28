@@ -2,22 +2,18 @@ import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { hasRecoverySession, savePassword, setPasswordError } from './set-password';
-import { mockCall } from '@ab/testing/mock-call';
 
 const auth = vi.hoisted(() => ({ getSession: vi.fn(), updateUser: vi.fn() }));
-const mockApi = mockCall();
+const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 vi.mock('@ab/web-kit/auth/session-activity', () => ({ reportSession: vi.fn() }));
 
 describe('set-password', () => {
   beforeEach(() => {
     auth.getSession.mockReset().mockResolvedValue({ data: { session: { access_token: 'x' } } });
     auth.updateUser.mockReset();
-    mockApi.reset('read');
+    apiFetch.mockReset();
   });
 
   it('checks both typed passwords', () => {
@@ -35,7 +31,7 @@ describe('set-password', () => {
 
   it('saves the password and returns the role home', async () => {
     auth.updateUser.mockResolvedValue({ error: null });
-    mockApi.onRead(() => ({ id: 'u', email: null, role: 'student', permissions: [] }));
+    apiFetch.mockResolvedValue({ id: 'u', email: null, role: 'student', permissions: [] });
     const result = await savePassword('long-enough-1', new QueryClient());
     expect(auth.updateUser).toHaveBeenCalledWith({ password: 'long-enough-1' });
     expect(result).toMatchObject({ ok: true });
@@ -43,9 +39,6 @@ describe('set-password', () => {
 
   it('reports a refused update', async () => {
     auth.updateUser.mockResolvedValue({ error: new Error('expired') });
-    expect(await savePassword('long-enough-1', new QueryClient())).toEqual({
-      ok: false,
-      error: t.users.setPassword.failed,
-    });
+    expect(await savePassword('long-enough-1', new QueryClient())).toEqual({ ok: false, error: t.users.setPassword.failed });
   });
 });

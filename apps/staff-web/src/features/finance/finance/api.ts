@@ -2,7 +2,7 @@ import { invoiceCalls, receivablesCall } from '@ab/client-core';
 import type { Page } from '@ab/core';
 import type { InvoiceView } from '@ab/schedule';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
-import { apiFetch, apiSend, call } from '@ab/web-kit';
+import { apiFetch, apiSend } from '@ab/web-kit';
 import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list/list-search';
 import { moneyKeys } from '@/features/finance/keys';
 
@@ -18,13 +18,13 @@ export const receivablesQuery = queryOptions({
 
 export const INVOICE_PAGE_SIZE = 25;
 
-interface InvoicesList {
+type InvoicesList = {
   page: number;
   from?: string;
   to?: string;
   sort?: SortSearch;
   filters?: FilterSearch;
-}
+};
 
 /** GET /invoices/recent?from&to&kind&student&sort&dir&page: booking invoices (newest first unless sorted), with their payment. */
 export const invoicesQuery = (q: InvoicesList) =>
@@ -36,7 +36,7 @@ export const invoicesQuery = (q: InvoicesList) =>
       qs.set('pageSize', String(INVOICE_PAGE_SIZE));
       if (q.from) qs.set('from', q.from);
       if (q.to) qs.set('to', q.to);
-      return call<Page<InvoiceView>>({ path: `/invoices/recent?${qs}` });
+      return apiFetch<Page<InvoiceView>>(`/invoices/recent?${qs}`);
     },
     placeholderData: keepPreviousData,
   });

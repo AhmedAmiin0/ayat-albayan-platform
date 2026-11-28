@@ -6,16 +6,10 @@ import { t } from '@ab/web-kit';
 import { clearAllFilters, openFilters } from '@/test/open-filters';
 import { TeacherStudentsPanel } from '@/features/people/teachers/detail/TeacherStudentsPanel/TeacherStudentsPanel';
 import { panelView } from '@/features/people/teachers/detail/teacher-students-view';
-import { mockCall } from '@ab/testing/mock-call';
 
-vi.mock('@tanstack/react-router', async () => ({
-  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
-}));
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const ROW = studentListItemFixture({ id: 's1', package_remaining: 3, has_weekly: true });
 const COUNTS = {
@@ -30,12 +24,8 @@ const COUNTS = {
 };
 
 function renderPanel() {
-  mockApi.onRead(({ path }) =>
-    Promise.resolve(
-      path.startsWith('/students/status-counts')
-        ? COUNTS
-        : { items: [ROW], total: 1, page: 1, pageSize: 20 },
-    ),
+  apiFetch.mockImplementation((path: string) =>
+    Promise.resolve(path.startsWith('/students/status-counts') ? COUNTS : { items: [ROW], total: 1, page: 1, pageSize: 20 }),
   );
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -45,37 +35,27 @@ function renderPanel() {
 }
 
 const label = (col: string) => t.table.filterBy.replace('{col}', col);
-const BASE =
-  '/students?page=1&pageSize=20&status=new%2Ctrial%2Cpending_subscription%2Cactive%2Cpending_renewal%2Cexpired&teacher=t1';
+const BASE = '/students?page=1&pageSize=20&status=new%2Ctrial%2Cpending_subscription%2Cactive%2Cpending_renewal%2Cexpired&teacher=t1';
 
 describe('TeacherStudentsPanel sort + column filters (R-TCH-03, R-NFR-08)', () => {
   it('every column sorts server-side', async () => {
     renderPanel();
     await screen.findByText('AB-0183');
-    expect(
-      screen.getAllByRole('columnheader').filter((th) => th.hasAttribute('aria-sort')),
-    ).toHaveLength(5);
+    expect(screen.getAllByRole('columnheader').filter((th) => th.hasAttribute('aria-sort'))).toHaveLength(5);
     fireEvent.click(screen.getByRole('button', { name: t.students.remaining }));
-    expect(mockApi.reads().at(-1)).toEqual({ method: 'GET', path: `${BASE}&sort=remaining` });
+    expect(apiFetch).toHaveBeenLastCalledWith(`${BASE}&sort=remaining`);
   });
 
   it('package left and weekly filter through the list filters; the code through its search box', async () => {
     renderPanel();
     await screen.findByText('AB-0183');
     openFilters();
-    fireEvent.change(screen.getByRole('combobox', { name: label(t.students.remaining) }), {
-      target: { value: 'low' },
-    });
-    expect(mockApi.reads().at(-1)).toEqual({ method: 'GET', path: `${BASE}&package=low` });
-    fireEvent.change(screen.getByRole('combobox', { name: label(t.students.weekly) }), {
-      target: { value: 'no' },
-    });
-    expect(mockApi.reads().at(-1)).toEqual({
-      method: 'GET',
-      path: `${BASE}&package=low&weekly=no`,
-    });
+    fireEvent.change(screen.getByRole('combobox', { name: label(t.students.remaining) }), { target: { value: 'low' } });
+    expect(apiFetch).toHaveBeenLastCalledWith(`${BASE}&package=low`);
+    fireEvent.change(screen.getByRole('combobox', { name: label(t.students.weekly) }), { target: { value: 'no' } });
+    expect(apiFetch).toHaveBeenLastCalledWith(`${BASE}&package=low&weekly=no`);
     clearAllFilters();
-    await vi.waitFor(() => expect(mockApi.reads().at(-1)).toEqual({ method: 'GET', path: BASE }));
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenLastCalledWith(BASE));
   });
 
   it('the name is the search box; the code waits in the panel', async () => {
@@ -86,18 +66,8 @@ describe('TeacherStudentsPanel sort + column filters (R-TCH-03, R-NFR-08)', () =
   });
 
   it('panelView: unknown select values are dropped, text filters stay column filters', () => {
-    const view = panelView({
-      teacherId: 't1',
-      statuses: [],
-      sort: {},
-      columns: { package: 'free', weekly: 'yes', code: '01' },
-    });
-    expect(view.filters).toEqual({
-      teacher: 't1',
-      status: undefined,
-      package: undefined,
-      weekly: 'yes',
-    });
+    const view = panelView({ teacherId: 't1', statuses: [], sort: {}, columns: { package: 'free', weekly: 'yes', code: '01' } });
+    expect(view.filters).toEqual({ teacher: 't1', status: undefined, package: undefined, weekly: 'yes' });
     expect(view.columns).toEqual({ code: '01' });
   });
 });

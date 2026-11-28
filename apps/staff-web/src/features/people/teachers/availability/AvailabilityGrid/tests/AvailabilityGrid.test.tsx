@@ -3,12 +3,9 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { AvailabilityGrid } from '@/features/people/teachers/availability/AvailabilityGrid/AvailabilityGrid';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiSend, apiFetch: vi.fn() }));
 
 const CAIRO = 'Africa/Cairo';
 const SAT = t.enums.weekday[6];
@@ -22,13 +19,12 @@ function renderGrid(rows = ROWS) {
   );
 }
 const save = () => screen.getByRole('button', { name: t.availability.save });
-const note = () =>
-  screen.getByText((_, el) => el?.tagName === 'P' && !!el.textContent?.startsWith(hint));
+const note = () => screen.getByText((_, el) => el?.tagName === 'P' && !!el.textContent?.startsWith(hint));
 const hint = t.availability.tzHint.replace('{tz}', t.tz[CAIRO]);
 
 describe('AvailabilityGrid (R-TCH-02)', () => {
   beforeEach(() => {
-    mockApi.reset('write');
+    apiSend.mockReset();
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-08-01T12:00:00Z')); // no Cairo clock change within 30 days
   });
@@ -37,9 +33,7 @@ describe('AvailabilityGrid (R-TCH-02)', () => {
   it('shows all seven weekdays in Arabic and the stored range', () => {
     renderGrid();
     for (const day of Object.values(t.enums.weekday)) expect(screen.getByText(day)).toBeTruthy();
-    expect(screen.getByLabelText<HTMLSelectElement>(`${SAT} ${t.availability.from}`).value).toBe(
-      '16:00',
-    );
+    expect(screen.getByLabelText<HTMLSelectElement>(`${SAT} ${t.availability.from}`).value).toBe('16:00');
     expect(note().textContent).toBe(hint); // the city, not the raw IANA id
     expect(
       screen.getByLabelText<HTMLSelectElement>(t.availability.tz).selectedOptions[0]?.textContent,
@@ -49,28 +43,22 @@ describe('AvailabilityGrid (R-TCH-02)', () => {
   it('warns about a clock change within 30 days in the same note (docs/07 §8)', () => {
     vi.setSystemTime(new Date('2026-10-01T12:00:00Z'));
     renderGrid();
-    const dst = t.availability.dstBack
-      .replace('{date}', 'الجمعة 30 أكتوبر')
-      .replace('{city}', t.tz[CAIRO]);
+    const dst = t.availability.dstBack.replace('{date}', 'الجمعة 30 أكتوبر').replace('{city}', t.tz[CAIRO]);
     expect(note().textContent).toBe(`${hint}${dst}`);
     expect(note().querySelector('[data-dst]')?.textContent).toBe(dst);
   });
 
   it('adds a range after the last one and saves the whole grid with PUT', async () => {
-    mockApi.onWrite(() => []);
+    apiSend.mockResolvedValue([]);
     renderGrid();
     fireEvent.click(screen.getByRole('button', { name: `${t.availability.addSlot} ${SAT}` }));
     fireEvent.click(save());
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe(t.availability.saved));
-    expect(mockApi.writes()).toContainEqual({
-      method: 'PUT',
-      path: '/teachers/t1/availability',
-      body: {
-        slots: [
-          { weekday: 6, start_time: '16:00', end_time: '18:30', tz: CAIRO },
-          { weekday: 6, start_time: '18:30', end_time: '19:30', tz: CAIRO },
-        ],
-      },
+    expect(apiSend).toHaveBeenCalledWith('PUT', '/teachers/t1/availability', {
+      slots: [
+        { weekday: 6, start_time: '16:00', end_time: '18:30', tz: CAIRO },
+        { weekday: 6, start_time: '18:30', end_time: '19:30', tz: CAIRO },
+      ],
     });
   });
 
@@ -85,47 +73,33 @@ describe('AvailabilityGrid (R-TCH-02)', () => {
     expect(starts[1]?.getAttribute('aria-invalid')).toBe('true');
     expect(starts[1]?.getAttribute('aria-describedby')).toBe(alert.id);
     fireEvent.click(save());
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
     expect(document.activeElement).toBe(starts[1]);
   });
 
   it('flags a range that ends before it starts', () => {
     renderGrid();
-    fireEvent.change(screen.getByLabelText(`${SAT} ${t.availability.to}`), {
-      target: { value: '15:00' },
-    });
+    fireEvent.change(screen.getByLabelText(`${SAT} ${t.availability.to}`), { target: { value: '15:00' } });
     expect(screen.getByRole('alert').textContent).toBe(t.common.endBeforeStart);
   });
 
   it('removing the last range lets an empty grid be saved', async () => {
-    mockApi.onWrite(() => []);
+    apiSend.mockResolvedValue([]);
     renderGrid();
     fireEvent.click(screen.getByRole('button', { name: `${t.availability.removeSlot} ${SAT}` }));
     fireEvent.click(save());
-    await waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'PUT',
-        path: '/teachers/t1/availability',
-        body: { slots: [] },
-      }),
-    );
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/teachers/t1/availability', { slots: [] }));
   });
 
   it('saves in the zone picked in the tz select and shows the weekly summary', async () => {
-    mockApi.onWrite(() => []);
+    apiSend.mockResolvedValue([]);
     renderGrid();
     expect(screen.getByText(t.availability.weeklyHours.other.replace('{n}', '2.5'))).toBeTruthy();
-    fireEvent.change(screen.getByLabelText(t.availability.tz), {
-      target: { value: 'Asia/Riyadh' },
-    });
+    fireEvent.change(screen.getByLabelText(t.availability.tz), { target: { value: 'Asia/Riyadh' } });
     fireEvent.click(save());
     await waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'PUT',
-        path: '/teachers/t1/availability',
-        body: {
-          slots: [{ weekday: 6, start_time: '16:00', end_time: '18:30', tz: 'Asia/Riyadh' }],
-        },
+      expect(apiSend).toHaveBeenCalledWith('PUT', '/teachers/t1/availability', {
+        slots: [{ weekday: 6, start_time: '16:00', end_time: '18:30', tz: 'Asia/Riyadh' }],
       }),
     );
   });
@@ -133,13 +107,9 @@ describe('AvailabilityGrid (R-TCH-02)', () => {
   it('«إلغاء» drops unsaved edits and the zone change', () => {
     renderGrid();
     fireEvent.click(screen.getByRole('button', { name: `${t.availability.removeSlot} ${SAT}` }));
-    fireEvent.change(screen.getByLabelText(t.availability.tz), {
-      target: { value: 'Asia/Riyadh' },
-    });
+    fireEvent.change(screen.getByLabelText(t.availability.tz), { target: { value: 'Asia/Riyadh' } });
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
-    expect(screen.getByLabelText<HTMLSelectElement>(`${SAT} ${t.availability.from}`).value).toBe(
-      '16:00',
-    );
+    expect(screen.getByLabelText<HTMLSelectElement>(`${SAT} ${t.availability.from}`).value).toBe('16:00');
     expect(screen.getByLabelText<HTMLSelectElement>(t.availability.tz).value).toBe(CAIRO);
   });
 });

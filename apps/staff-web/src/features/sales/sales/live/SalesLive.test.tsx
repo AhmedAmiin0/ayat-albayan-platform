@@ -5,17 +5,12 @@ import { liveLesson } from '@/features/sales/sales/academy.fixtures';
 import { renderWithQuery } from '@/features/sales/sales/academy.test-utils';
 import { SalesLive } from './SalesLive';
 import { SalesLiveStrip } from './SalesLiveStrip';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
-const live = (rows: unknown[]) =>
-  mockApi.onRead(async ({ path }) => (path === '/sales/live' ? rows : {}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+const live = (rows: unknown[]) => apiFetch.mockImplementation(async (path: string) => (path === '/sales/live' ? rows : {}));
 
-afterEach(() => mockApi.reset('read'));
+afterEach(() => apiFetch.mockReset());
 
 describe('SalesLive «الحلقات الجارية»', () => {
   it('lists the running lessons with students, teacher and an open «ادخل الحلقة» link', async () => {
@@ -23,10 +18,8 @@ describe('SalesLive «الحلقات الجارية»', () => {
     renderWithQuery(<SalesLive />);
     expect(await screen.findByText(/سهيلة، جود/)).toBeTruthy();
     expect(screen.getByText(/أبرار/)).toBeTruthy();
-    expect(screen.getByRole('link', { name: t.classroom.enter }).getAttribute('href')).toBe(
-      '/classroom/l-live',
-    );
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/sales/live' });
+    expect(screen.getByRole('link', { name: t.classroom.enter }).getAttribute('href')).toBe('/classroom/l-live');
+    expect(apiFetch).toHaveBeenCalledWith('/sales/live');
   });
 
   it('says when nothing is running', async () => {
@@ -41,18 +34,16 @@ describe('SalesLiveStrip (the block on the sales landing)', () => {
     live([liveLesson(), liveLesson({ lesson_id: 'l-2' })]);
     renderWithQuery(<SalesLiveStrip enabled />);
     expect(await screen.findByText(t.sales.live.strip.replace('{n}', '2'))).toBeTruthy();
-    expect(screen.getByRole('link', { name: t.sales.live.open }).getAttribute('href')).toBe(
-      '/sales/live',
-    );
+    expect(screen.getByRole('link', { name: t.sales.live.open }).getAttribute('href')).toBe('/sales/live');
   });
 
   it('renders nothing without the scope key (no request) or with nothing running', async () => {
     const { container } = renderWithQuery(<SalesLiveStrip enabled={false} />);
     expect(container.textContent).toBe('');
-    expect(mockApi.reads()).toHaveLength(0);
+    expect(apiFetch).not.toHaveBeenCalled();
     live([]);
     const empty = renderWithQuery(<SalesLiveStrip enabled />);
-    await vi.waitFor(() => expect(mockApi.reads()).not.toHaveLength(0));
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalled());
     expect(empty.container.textContent).toBe('');
   });
 });

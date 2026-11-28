@@ -6,13 +6,9 @@ import { t } from '@ab/web-kit';
 import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDrawer } from '@/features/teaching/schedule/lesson/LessonDrawer/LessonDrawer';
 import { setConfirmationRequired } from '@ab/web-kit/testing';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(), apiSend }));
 
 function openCancel(l: LessonView) {
   const onDone = vi.fn();
@@ -26,40 +22,32 @@ function openCancel(l: LessonView) {
 }
 
 describe('LessonDrawer cancel (R-SCH-07)', () => {
-  afterEach(() => mockApi.reset('write'));
+  afterEach(() => apiSend.mockReset());
 
   it('needs a reason, then cancels this lesson by the chosen party', async () => {
-    mockApi.onWrite(() => []);
+    apiSend.mockResolvedValue([]);
     const onDone = openCancel(lesson({ id: 'l-3' }));
     const form = screen.getByRole('form', { name: t.lessons.cancelTitle });
     fireEvent.submit(form);
     expect(screen.getByText(t.common.required)).toBeTruthy();
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByLabelText(t.lessons.by.teacher));
     fireEvent.change(screen.getByLabelText(t.lessons.reason), { target: { value: 'مرض' } });
     fireEvent.submit(form);
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.lessons.cancelled));
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: '/lessons/l-3/cancel',
-      body: { scope: 'one', by: 'teacher', reason: 'مرض' },
-    });
+    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-3/cancel', { scope: 'one', by: 'teacher', reason: 'مرض' });
   });
 
   it('scope «هذه الحلقة وكل ما بعدها» cancels the series', async () => {
-    mockApi.onWrite(() => []);
+    apiSend.mockResolvedValue([]);
     const onDone = openCancel(lesson({ id: 'l-3' }));
     fireEvent.click(screen.getByLabelText(t.lessons.scope.rule));
     fireEvent.click(screen.getByLabelText(t.lessons.by.student));
     fireEvent.change(screen.getByLabelText(t.lessons.reason), { target: { value: 'سفر' } });
     fireEvent.submit(screen.getByRole('form', { name: t.lessons.cancelTitle }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.lessons.seriesCancelled));
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: '/lessons/l-3/cancel',
-      body: { scope: 'rule', by: 'student', reason: 'سفر' },
-    });
+    expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-3/cancel', { scope: 'rule', by: 'student', reason: 'سفر' });
   });
 
   it('a one-off lesson (no rule) can only be cancelled alone; back returns to the details', () => {

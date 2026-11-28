@@ -5,13 +5,9 @@ import { t } from '@ab/web-kit';
 import { openFilters } from '@/test/open-filters';
 import type { StudentsFilters } from './filters';
 import { StudentsPage } from './StudentsPage';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const COUNTS = {
   new: 1,
@@ -25,11 +21,9 @@ const COUNTS = {
 };
 
 function renderPage(filters: StudentsFilters, total = 0, search = 'سهيلة') {
-  mockApi.onRead(({ path }) => {
+  apiFetch.mockImplementation((path: string) => {
     if (path.startsWith('/students/status-counts')) return Promise.resolve(COUNTS);
-    return Promise.resolve(
-      path.startsWith('/students?') ? { items: [], total, page: 3, pageSize: 20 } : [],
-    );
+    return Promise.resolve(path.startsWith('/students?') ? { items: [], total, page: 3, pageSize: 20 } : []);
   });
   const onChange = vi.fn();
   render(
@@ -49,15 +43,8 @@ function renderPage(filters: StudentsFilters, total = 0, search = 'سهيلة') 
 describe('StudentsPage filters (R-STU-01)', () => {
   it('sends the filters with the search and page to GET /students', () => {
     renderPage({ status: 'trial,active', teacher: 'none', package: 'unpaid' });
-    const qs = new URLSearchParams({
-      search: 'سهيلة',
-      page: '3',
-      pageSize: '20',
-      status: 'trial,active',
-      teacher: 'none',
-      package: 'unpaid',
-    });
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: `/students?${qs}` });
+    const qs = new URLSearchParams({ search: 'سهيلة', page: '3', pageSize: '20', status: 'trial,active', teacher: 'none', package: 'unpaid' });
+    expect(apiFetch).toHaveBeenCalledWith(`/students?${qs}`);
   });
 
   it('a filter change keeps the search and goes back to page 1', async () => {
@@ -65,11 +52,7 @@ describe('StudentsPage filters (R-STU-01)', () => {
     await screen.findByText(t.common.notFound);
     openFilters();
     fireEvent.click(screen.getByRole('checkbox', { name: t.enums.studentStatus.paused }));
-    expect(onChange).toHaveBeenCalledWith({
-      search: 'سهيلة',
-      page: 1,
-      filters: { teacher: 'none', status: 'paused' },
-    });
+    expect(onChange).toHaveBeenCalledWith({ search: 'سهيلة', page: 1, filters: { teacher: 'none', status: 'paused' } });
   });
 
   it('no match under a filter: the table says not found (not the empty academy state), with the count', async () => {
@@ -83,9 +66,7 @@ describe('StudentsPage filters (R-STU-01)', () => {
     const onChange = renderPage({ teacher: 'none', status: 'paused' });
     const chips = await screen.findByRole('list', { name: t.table.activeFilters });
     expect(chips.textContent).toContain(`${t.students.teacher}: ${t.students.teacherNone}`);
-    expect(
-      screen.getByRole('button', { name: new RegExp(`^${t.table.filter}`) }).textContent,
-    ).toContain('2');
+    expect(screen.getByRole('button', { name: new RegExp(`^${t.table.filter}`) }).textContent).toContain('2');
     fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
     expect(onChange).toHaveBeenCalledWith({ search: 'سهيلة', page: 1, filters: {}, columns: {} });
   });
@@ -95,29 +76,14 @@ describe('StudentsPage filters (R-STU-01)', () => {
     const group = screen.getByRole('group', { name: t.studentLists.kinds });
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(group.querySelector('[aria-pressed="true"]')).toBeNull();
-    expect(mockApi.reads()).toContainEqual({
-      method: 'GET',
-      path: '/students/status-counts?teacher=none',
-    });
+    expect(apiFetch).toHaveBeenCalledWith('/students/status-counts?teacher=none');
     const active = await within(group).findByRole('button', { name: `${t.studentLists.active}9` });
     fireEvent.click(active);
-    expect(onChange).toHaveBeenCalledWith({
-      search: '',
-      page: 1,
-      filters: { teacher: 'none', status: 'active' },
-    });
+    expect(onChange).toHaveBeenCalledWith({ search: '', page: 1, filters: { teacher: 'none', status: 'active' } });
     fireEvent.click(within(group).getByRole('button', { name: `${t.studentLists.trial}4` }));
-    expect(onChange).toHaveBeenLastCalledWith({
-      search: '',
-      page: 1,
-      filters: { teacher: 'none', status: 'new,trial,pending_subscription' },
-    });
+    expect(onChange).toHaveBeenLastCalledWith({ search: '', page: 1, filters: { teacher: 'none', status: 'new,trial,pending_subscription' } });
     fireEvent.click(within(group).getByRole('button', { name: `${t.studentLists.all}15` }));
-    expect(onChange).toHaveBeenLastCalledWith({
-      search: '',
-      page: 1,
-      filters: { teacher: 'none' },
-    });
+    expect(onChange).toHaveBeenLastCalledWith({ search: '', page: 1, filters: { teacher: 'none' } });
   });
 
   it('under a search the segments show no numbers (the counts would not match the list)', async () => {

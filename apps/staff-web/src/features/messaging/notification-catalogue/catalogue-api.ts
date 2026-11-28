@@ -1,6 +1,6 @@
 import type { NotificationsOverview } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
-import { call } from '@ab/web-kit';
+import { apiFetch } from '@ab/web-kit';
 import { catalogueKeys } from '@/features/messaging/keys';
 
 /**
@@ -10,6 +10,6 @@ import { catalogueKeys } from '@/features/messaging/keys';
 export const catalogueQuery = (version: number) =>
   queryOptions({
     queryKey: catalogueKeys.version(version),
-    queryFn: () => call<NotificationsOverview>({ path: '/admin/notifications' }),
+    queryFn: () => apiFetch<NotificationsOverview>('/admin/notifications'),
     placeholderData: (previous) => previous,
   });

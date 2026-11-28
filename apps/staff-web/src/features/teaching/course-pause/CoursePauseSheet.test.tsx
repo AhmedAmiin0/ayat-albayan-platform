@@ -7,12 +7,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ApiError, t } from '@ab/web-kit';
 import { CoursePauseSheet } from './CoursePauseSheet';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
+const apiFetch = vi.hoisted(() => vi.fn());
+const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
+  apiFetch,
+  apiSend,
 }));
 
 const today = riyadhToday();
@@ -20,7 +21,7 @@ const words = t.coursePause;
 
 function open() {
   // The preview counts 2 lessons with an until, 5 open-ended.
-  mockApi.onRead(async ({ path }) => ({
+  apiFetch.mockImplementation(async (path: string) => ({
     from_date: today,
     until_date: null,
     lessons: path.includes('until=') ? 2 : 5,
@@ -36,8 +37,8 @@ function open() {
 
 describe('CoursePauseSheet', () => {
   beforeEach(() => {
-    mockApi.reset('read');
-    mockApi.reset('write');
+    apiFetch.mockReset();
+    apiSend.mockReset();
   });
 
   it('starts today, open-ended; the preview line follows the dates; the no-message note', async () => {
@@ -45,10 +46,7 @@ describe('CoursePauseSheet', () => {
     expect(dialog.getByLabelText<HTMLInputElement>(words.from).value).toBe(today);
     expect(dialog.getByLabelText(words.from).getAttribute('min')).toBe(today);
     expect(await dialog.findByText(coursePausePreviewText(words.preview, 5))).toBeTruthy();
-    expect(mockApi.reads()).toContainEqual({
-      method: 'GET',
-      path: `/students/s1/course-pause/preview?from=${today}`,
-    });
+    expect(apiFetch).toHaveBeenCalledWith(`/students/s1/course-pause/preview?from=${today}`);
     set(words.until, addDays(today, 7));
     expect(await dialog.findByText(words.preview.two)).toBeTruthy();
     expect(dialog.getByText(words.noMessage)).toBeTruthy();
@@ -63,39 +61,31 @@ describe('CoursePauseSheet', () => {
     set(words.until, addDays(today, 2));
     expect(dialog.getByText(words.errors.invalid_range)).toBeTruthy();
     expect(confirm().disabled).toBe(true);
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
   });
 
   it('submits the dates and the trimmed reason, then «أُوقفت الدورة مؤقتًا»', async () => {
     const { set, confirm, onDone } = open();
     set(words.until, addDays(today, 10));
     set(words.reason, '  سفر الأسرة ');
-    mockApi.onWrite(() => coursePauseResultFixture({ cancelled: 2 }));
+    apiSend.mockResolvedValue(coursePauseResultFixture({ cancelled: 2 }));
     fireEvent.click(confirm());
     await vi.waitFor(() => expect(onDone).toHaveBeenCalledWith(words.done));
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: '/students/s1/course-pause',
-      body: {
-        fromDate: today,
-        untilDate: addDays(today, 10),
-        reason: 'سفر الأسرة',
-      },
+    expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-pause', {
+      fromDate: today,
+      untilDate: addDays(today, 10),
+      reason: 'سفر الأسرة',
     });
   });
 
   it('a 409 already_paused reads in Arabic and the sheet stays', async () => {
     const { dialog, confirm, onDone } = open();
-    mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'already_paused' })));
+    apiSend.mockRejectedValue(new ApiError(409, { code: 'already_paused' }));
     fireEvent.click(confirm());
     expect(await dialog.findByText(words.errors.already_paused)).toBeTruthy();
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: '/students/s1/course-pause',
-      body: {
-        fromDate: today,
-        untilDate: null,
-      },
+    expect(apiSend).toHaveBeenCalledWith('POST', '/students/s1/course-pause', {
+      fromDate: today,
+      untilDate: null,
     });
     expect(onDone).not.toHaveBeenCalled();
   });

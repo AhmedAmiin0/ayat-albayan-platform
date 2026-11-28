@@ -4,13 +4,9 @@ import { template } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { ApiError, t } from '@ab/web-kit';
 import { CreateTemplateDialog } from './CreateTemplateDialog';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiSend }));
 
 const S = t.templates.create;
 const nth = (text: string, n: number) => text.replace('{n}', String(n));
@@ -22,13 +18,11 @@ const save = () => fireEvent.click(screen.getByRole('button', { name: S.save }))
 
 function open(onCrm = () => false) {
   const onCreated = vi.fn();
-  renderWithClient(
-    <CreateTemplateDialog line="chat" onCrm={onCrm} onCreated={onCreated} onClose={vi.fn()} />,
-  );
+  renderWithClient(<CreateTemplateDialog line="chat" onCrm={onCrm} onCreated={onCreated} onClose={vi.fn()} />);
   return onCreated;
 }
 
-afterEach(() => mockApi.reset('write'));
+afterEach(() => apiSend.mockReset());
 
 describe('CreateTemplateDialog', () => {
   it('a row per {{n}}, a picked name brings its sample; posts the body and hands the row back', async () => {
@@ -40,29 +34,17 @@ describe('CreateTemplateDialog', () => {
     type(nth(S.sample, 2), 'Sunday');
     fireEvent.click(screen.getByRole('button', { name: S.addReply }));
     type(nth(S.buttonText, 1), 'OK');
-    const saved = template({
-      key: 'welcome_back',
-      meta_name: 'welcome_back',
-      line: 'chat',
-      status: 'not_submitted',
-    });
-    mockApi.onWrite(() => saved);
+    const saved = template({ key: 'welcome_back', meta_name: 'welcome_back', line: 'chat', status: 'not_submitted' });
+    apiSend.mockResolvedValue(saved);
     save();
     await waitFor(() => expect(onCreated).toHaveBeenCalledWith(saved));
-    expect(mockApi.writes()).toContainEqual({
-      method: 'POST',
-      path: '/messaging/templates',
-      body: expect.objectContaining({
-        key: 'welcome_back',
-        line: 'chat',
-        header: null,
-        params: [
-          { name: 'student_name', sample: t.templates.reviewSamples.student_name },
-          { name: 'var_2', sample: 'Sunday' },
-        ],
-        buttons: [{ type: 'quick_reply', text: 'OK', intent: 'confirm' }],
-      }),
-    });
+    expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates', expect.objectContaining({
+      key: 'welcome_back',
+      line: 'chat',
+      header: null,
+      params: [{ name: 'student_name', sample: t.templates.reviewSamples.student_name }, { name: 'var_2', sample: 'Sunday' }],
+      buttons: [{ type: 'quick_reply', text: 'OK', intent: 'confirm' }],
+    }));
   });
 
   it('a name outside Meta’s rules, or a variable without a sample, is marked and never sent', () => {
@@ -72,7 +54,7 @@ describe('CreateTemplateDialog', () => {
     save();
     expect(field(S.key).getAttribute('aria-invalid')).toBe('true');
     expect(screen.getAllByText(S.invalidField).length).toBe(2);
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
   });
 
   it('two link buttons at most: «إضافة زر رابط» waits once there are two', () => {
@@ -91,7 +73,7 @@ describe('CreateTemplateDialog', () => {
     expect(screen.getByText(S.crmNote)).toBeTruthy();
     type(S.key, 'welcome_back');
     type(S.body, 'Hello there.');
-    mockApi.onWrite(() => Promise.reject(new ApiError(409, { code: 'template_exists' })));
+    apiSend.mockRejectedValue(new ApiError(409, { code: 'template_exists' }));
     save();
     expect(await screen.findByText(t.templates.error.template_exists)).toBeTruthy();
   });

@@ -2,14 +2,9 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { fakeNow, HELD, openEditTime, pick, SAVED } from './edit-time-fixture';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-mockApi.onRead(async () => []);
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
 
 vi.mock('@tanstack/react-router', async (importOriginal) => ({
   ...(await importOriginal<object>()),
@@ -31,15 +26,12 @@ vi.mock('@tanstack/react-router', async (importOriginal) => ({
 }));
 
 const TIME = new RegExp(t.lessons.timeEdit.time.replace('{city}', '.+'));
-const optionsOf = () =>
-  within(screen.getByLabelText(TIME))
-    .getAllByRole('option')
-    .map((o) => o.getAttribute('value'));
+const optionsOf = () => within(screen.getByLabelText(TIME)).getAllByRole('option').map((o) => o.getAttribute('value'));
 
 describe('«عدّل الوقت» on a held lesson: correct what was recorded (R-SCH-11)', () => {
   fakeNow();
-  beforeEach(() => mockApi.onWrite(() => ({ ...SAVED, payout: 'draft_stale', pdf_refresh: true })));
-  afterEach(() => mockApi.reset('write'));
+  beforeEach(() => apiSend.mockResolvedValue({ ...SAVED, payout: 'draft_stale', pdf_refresh: true }));
+  afterEach(() => apiSend.mockReset());
 
   it('fixes the day, asks for a reason and says nothing is sent to the guardian', () => {
     openEditTime(HELD);
@@ -76,10 +68,10 @@ describe('«عدّل الوقت» on a held lesson: correct what was recorded (R
     pick.duration(60);
     pick.save();
     expect(screen.getByText(t.lessons.error.reason_required)).toBeTruthy();
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
     pick.reason('   ');
     pick.save();
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
   });
 
   it('saves 45 → 60 with the reason, then shows the payout and report follow-ups until «تمام»', async () => {
@@ -92,20 +84,14 @@ describe('«عدّل الوقت» on a held lesson: correct what was recorded (R
     expect(screen.getByRole('status').textContent).toBe(t.lessons.timeEdit.saved);
     expect(document.activeElement).toBe(screen.getByRole('status')); // focus lands on what was saved
     expect(screen.getByText(/الموعد الجديد: .*4 أكتوبر/)).toBeTruthy(); // what was saved: the lesson as the API returned it
-    expect(
-      screen.getByRole('link', { name: t.lessons.timeEdit.payoutLink }).getAttribute('href'),
-    ).toBe('/admin/payouts?month=2026-10');
+    expect(screen.getByRole('link', { name: t.lessons.timeEdit.payoutLink }).getAttribute('href')).toBe('/admin/payouts?month=2026-10');
     expect(onDone).not.toHaveBeenCalled();
-    expect(mockApi.writes()).toContainEqual({
-      method: 'PATCH',
-      path: '/lessons/l-9/time',
-      body: {
-        expectedStartsAt: '2026-10-03T07:00:00.000Z',
-        expectedEndsAt: '2026-10-03T07:45:00.000Z',
-        startsAt: '2026-10-03T07:00:00.000Z',
-        durationMin: 60,
-        reason: 'الحلقة خدت ساعة بدل 45 دقيقة',
-      },
+    expect(apiSend).toHaveBeenCalledWith('PATCH', '/lessons/l-9/time', {
+      expectedStartsAt: '2026-10-03T07:00:00.000Z',
+      expectedEndsAt: '2026-10-03T07:45:00.000Z',
+      startsAt: '2026-10-03T07:00:00.000Z',
+      durationMin: 60,
+      reason: 'الحلقة خدت ساعة بدل 45 دقيقة',
     });
     fireEvent.click(screen.getByRole('button', { name: t.lessons.timeEdit.close }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.lessons.timeEdit.saved));
@@ -113,7 +99,7 @@ describe('«عدّل الوقت» on a held lesson: correct what was recorded (R
   });
 
   it('a save with nothing left to do closes straight away', async () => {
-    mockApi.onWrite(() => SAVED);
+    apiSend.mockResolvedValue(SAVED);
     const { onDone } = openEditTime(HELD);
     pick.time('09:45');
     pick.reason('الساعة غلط');

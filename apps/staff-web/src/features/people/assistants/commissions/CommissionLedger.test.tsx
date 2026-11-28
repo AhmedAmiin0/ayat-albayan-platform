@@ -4,37 +4,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { CommissionLedger } from './CommissionLedger';
 import { ASSISTANT, COMMISSION } from '@/features/people/assistants/fixtures';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
-vi.mock('@tanstack/react-router', async () => ({
-  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
-const EGP = {
-  ...COMMISSION,
-  id: 'c2',
-  student: { id: 's2', code: 'AB-1002', name: 'جود' },
-  amount: 70,
-  currency: 'EGP',
-  base_currency: 'EGP',
-  base_amount: 700,
-};
-const VOIDED = {
-  ...COMMISSION,
-  id: 'c3',
-  student: { id: 's3', code: 'AB-1003', name: 'منى' },
-  status: 'voided' as const,
-  amount: 30,
-  void_reason: 'دُفع بالخطأ',
-};
+const EGP = { ...COMMISSION, id: 'c2', student: { id: 's2', code: 'AB-1002', name: 'جود' }, amount: 70, currency: 'EGP', base_currency: 'EGP', base_amount: 700 };
+const VOIDED = { ...COMMISSION, id: 'c3', student: { id: 's3', code: 'AB-1003', name: 'منى' }, status: 'voided' as const, amount: 30, void_reason: 'دُفع بالخطأ' };
 
 function renderLedger(rows = [COMMISSION, EGP, VOIDED], canWrite = true) {
-  mockApi.onRead(() => rows);
+  apiFetch.mockResolvedValue(rows);
   render(
     <QueryClientProvider client={new QueryClient()}>
       <CommissionLedger assistants={[ASSISTANT]} canWrite={canWrite} />
@@ -44,8 +24,8 @@ function renderLedger(rows = [COMMISSION, EGP, VOIDED], canWrite = true) {
 
 describe('CommissionLedger (R-ASST-02, R-ASST-05)', () => {
   beforeEach(() => {
-    mockApi.reset('read');
-    mockApi.reset('write');
+    apiFetch.mockReset();
+    apiSend.mockReset();
   });
 
   it('totals the earned commissions per currency, never across them, and leaves voided ones out', async () => {
@@ -54,14 +34,12 @@ describe('CommissionLedger (R-ASST-02, R-ASST-05)', () => {
     const total = screen.getByText(t.assistants.ledger.total).parentElement;
     const lines = [...(total?.querySelectorAll('li') ?? [])].map((li) => li.textContent);
     expect(lines).toEqual(['70 ج.م', '50 ر.س']);
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/assistant-pay/commissions' });
+    expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions');
   });
 
   it('shows the void reason on a voided row and offers «إلغاء العمولة» only on earned ones', async () => {
     renderLedger();
-    expect(
-      await screen.findByText(t.assistants.ledger.voidedWhy.replace('{reason}', 'دُفع بالخطأ')),
-    ).toBeTruthy();
+    expect(await screen.findByText(`${t.assistants.ledger.voidedWhy.replace('{reason}', 'دُفع بالخطأ')}`)).toBeTruthy();
     expect(screen.getAllByRole('button', { name: t.assistants.ledger.void })).toHaveLength(2);
   });
 
@@ -81,48 +59,24 @@ describe('CommissionLedger (R-ASST-02, R-ASST-05)', () => {
   it('the filters go to the API: assistant, month, status', async () => {
     renderLedger();
     await screen.findByText('سهيلة');
-    fireEvent.change(screen.getByLabelText(t.assistants.ledger.assistant), {
-      target: { value: 'a1' },
-    });
-    await vi.waitFor(() =>
-      expect(mockApi.reads()).toContainEqual({
-        method: 'GET',
-        path: '/assistant-pay/commissions?assistantId=a1',
-      }),
-    );
-    fireEvent.change(screen.getByLabelText(t.assistants.ledger.month), {
-      target: { value: '2026-09' },
-    });
-    fireEvent.change(screen.getByLabelText(t.assistants.ledger.statusLabel), {
-      target: { value: 'voided' },
-    });
-    await vi.waitFor(() =>
-      expect(mockApi.reads()).toContainEqual({
-        method: 'GET',
-        path: '/assistant-pay/commissions?assistantId=a1&status=voided&from=2026-09-01T00%3A00%3A00.000Z&to=2026-10-01T00%3A00%3A00.000Z',
-      }),
-    );
+    fireEvent.change(screen.getByLabelText(t.assistants.ledger.assistant), { target: { value: 'a1' } });
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions?assistantId=a1'));
+    fireEvent.change(screen.getByLabelText(t.assistants.ledger.month), { target: { value: '2026-09' } });
+    fireEvent.change(screen.getByLabelText(t.assistants.ledger.statusLabel), { target: { value: 'voided' } });
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions?assistantId=a1&status=voided&from=2026-09-01T00%3A00%3A00.000Z&to=2026-10-01T00%3A00%3A00.000Z'));
   });
 
   it('voiding needs a reason, then posts it', async () => {
     renderLedger([COMMISSION]);
-    mockApi.onWrite(() => COMMISSION);
+    apiSend.mockResolvedValue(COMMISSION);
     fireEvent.click(await screen.findByRole('button', { name: t.assistants.ledger.void }));
     const dialog = await screen.findByRole('dialog');
     fireEvent.click(within(dialog).getByRole('button', { name: t.assistants.ledger.void }));
     expect(await within(dialog).findByText(t.finance.reasonRequired)).toBeTruthy();
-    expect(mockApi.writes()).toHaveLength(0);
-    fireEvent.change(within(dialog).getByLabelText(t.finance.reason), {
-      target: { value: 'اشتراك مسترد' },
-    });
+    expect(apiSend).not.toHaveBeenCalled();
+    fireEvent.change(within(dialog).getByLabelText(t.finance.reason), { target: { value: 'اشتراك مسترد' } });
     fireEvent.click(within(dialog).getByRole('button', { name: t.assistants.ledger.void }));
-    await vi.waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'POST',
-        path: '/assistant-pay/commissions/c1/void',
-        body: { reason: 'اشتراك مسترد' },
-      }),
-    );
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/assistant-pay/commissions/c1/void', { reason: 'اشتراك مسترد' }));
   });
 
   it('an empty ledger says so', async () => {

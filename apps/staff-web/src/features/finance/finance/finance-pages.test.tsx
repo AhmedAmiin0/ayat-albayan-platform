@@ -8,16 +8,11 @@ import { yearRange } from './api';
 import { FinanceSummaryPage } from './FinanceSummaryPage';
 import { InvoicesPage } from './InvoicesPage';
 import { ReceivablesPage } from './ReceivablesPage';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
-vi.mock('@tanstack/react-router', async () => ({
-  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
 const ROW = {
   id: 'sub-1',
@@ -32,31 +27,9 @@ const ROW = {
   days_overdue: 96,
   bucket: '90_plus',
 };
-const OWED = {
-  rows: [ROW],
-  totals: [
-    { currency: 'SAR', owed: 300, buckets: { '0_30': 0, '31_60': 0, '61_90': 0, '90_plus': 300 } },
-  ],
-  total: 300,
-  currency: 'SAR',
-  fx_missing: [],
-};
-const DUES = {
-  currency: 'EGP',
-  rows: [],
-  totals: { earned: 0, paid: 0, owed: 0, teachers_owed: 0 },
-};
-const INVOICE = {
-  id: 'inv-1',
-  rule_id: 'r1',
-  kind: 'package',
-  mime: 'image/png',
-  size_bytes: 10,
-  source: 'upload',
-  created_at: '2026-10-01T09:00:00Z',
-  students: [{ id: 'stu-1', name: 'سهيلة', code: 'AB-0183' }],
-  payment_id: null,
-};
+const OWED = { rows: [ROW], totals: [{ currency: 'SAR', owed: 300, buckets: { '0_30': 0, '31_60': 0, '61_90': 0, '90_plus': 300 } }], total: 300, currency: 'SAR', fx_missing: [] };
+const DUES = { currency: 'EGP', rows: [], totals: { earned: 0, paid: 0, owed: 0, teachers_owed: 0 } };
+const INVOICE = { id: 'inv-1', rule_id: 'r1', kind: 'package', mime: 'image/png', size_bytes: 10, source: 'upload', created_at: '2026-10-01T09:00:00Z', students: [{ id: 'stu-1', name: 'سهيلة', code: 'AB-0183' }], payment_id: null };
 
 function show(node: ReactNode) {
   render(
@@ -70,17 +43,11 @@ function show(node: ReactNode) {
 
 describe('finance pages', () => {
   beforeEach(() => {
-    mockApi.reset('read');
-    mockApi.onRead(async ({ path }) => {
+    apiFetch.mockReset();
+    apiFetch.mockImplementation(async (path: string) => {
       if (path === '/receivables') return OWED;
       if (path === '/teacher-earnings/summary') return DUES;
-      if (path.startsWith('/invoices/recent'))
-        return {
-          items: [INVOICE, { ...INVOICE, id: 'inv-2', payment_id: 'p1' }],
-          total: 2,
-          page: 1,
-          pageSize: 25,
-        };
+      if (path.startsWith('/invoices/recent')) return { items: [INVOICE, { ...INVOICE, id: 'inv-2', payment_id: 'p1' }], total: 2, page: 1, pageSize: 25 };
       if (path.startsWith('/subscriptions')) return { items: [], total: 0, page: 1, pageSize: 100 };
       return SUMMARY;
     });
@@ -101,21 +68,13 @@ describe('finance pages', () => {
     fireEvent.click(buttons[0] as HTMLElement);
     const dialog = await screen.findByRole('dialog');
     expect(within(dialog).getByText(t.finance.invoiceAsReceipt)).toBeTruthy();
-    await vi.waitFor(() =>
-      expect(mockApi.reads()).toContainEqual({
-        method: 'GET',
-        path: '/subscriptions?studentId=stu-1&pageSize=100',
-      }),
-    );
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/subscriptions?studentId=stu-1&pageSize=100'));
   });
 
   it('summary: a year of the dashboard money (this year up to today)', async () => {
     show(<FinanceSummaryPage />);
     expect((await screen.findAllByText(t.dashboard.grossMargin)).length).toBeGreaterThan(0);
-    expect(mockApi.reads()).toContainEqual({
-      method: 'GET',
-      path: expect.stringMatching(/^\/dashboard\/summary\?from=\d{4}-01-01&to=/),
-    });
+    expect(apiFetch).toHaveBeenCalledWith(expect.stringMatching(/^\/dashboard\/summary\?from=\d{4}-01-01&to=/));
     expect(yearRange('2025', '2026-10-05')).toEqual({ from: '2025-01-01', to: '2025-12-31' });
     expect(yearRange('2026', '2026-10-05')).toEqual({ from: '2026-01-01', to: '2026-10-05' });
   });

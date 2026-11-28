@@ -5,13 +5,9 @@ import { t } from '@ab/web-kit';
 import type { MakeupCandidate } from '@/features/teaching/booking/draft/contract';
 import { MissedLessonStep } from './MissedLessonStep';
 import { ABRAR, STUDENT_ID } from '@/features/teaching/booking/wizard-fixture';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const NO_SHOW: MakeupCandidate = {
   lesson_id: 'l-1',
@@ -20,22 +16,11 @@ const NO_SHOW: MakeupCandidate = {
   duration_min: 60,
   teacher: { id: ABRAR.id, display_name_ar: 'أبرار' },
 };
-const EXCUSED: MakeupCandidate = {
-  ...NO_SHOW,
-  lesson_id: 'l-2',
-  starts_at: '2026-09-20T14:00:00.000Z',
-  status: 'excused',
-  duration_min: 30,
-};
-const draft = {
-  students: [{ id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183' }],
-  missed: null,
-  tz: 'Asia/Riyadh',
-  teacher: null,
-};
+const EXCUSED: MakeupCandidate = { ...NO_SHOW, lesson_id: 'l-2', starts_at: '2026-09-20T14:00:00.000Z', status: 'excused', duration_min: 30 };
+const draft = { students: [{ id: STUDENT_ID, name: 'سهيلة', code: 'AB-0183' }], missed: null, tz: 'Asia/Riyadh', teacher: null };
 
 function renderStep(items: MakeupCandidate[], extra: { preselectId?: string } = {}) {
-  mockApi.onRead(() => items);
+  apiFetch.mockResolvedValue(items);
   const onChange = vi.fn();
   render(
     <QueryClientProvider
@@ -47,26 +32,18 @@ function renderStep(items: MakeupCandidate[], extra: { preselectId?: string } = 
   return onChange;
 }
 
-afterEach(() => mockApi.reset('read'));
+afterEach(() => apiFetch.mockReset());
 
 describe('MissedLessonStep (R-SCH-10)', () => {
   it('lists the student’s missed lessons with time, status and teacher; a pick fixes the length', async () => {
     const onChange = renderStep([NO_SHOW, EXCUSED]);
     expect(await screen.findAllByRole('radio')).toHaveLength(2);
-    expect(mockApi.reads()).toContainEqual({
-      method: 'GET',
-      path: `/booking/makeup-candidates?studentId=${STUDENT_ID}`,
-    });
+    expect(apiFetch).toHaveBeenCalledWith(`/booking/makeup-candidates?studentId=${STUDENT_ID}`);
     expect(screen.getByText(t.enums.lessonStatus.no_show)).toBeTruthy();
     expect(screen.getByText(t.enums.lessonStatus.excused)).toBeTruthy();
     fireEvent.click(screen.getAllByRole('radio')[1] as HTMLElement);
     expect(onChange).toHaveBeenCalledWith({
-      missed: {
-        lessonId: 'l-2',
-        startsAt: EXCUSED.starts_at,
-        teacherId: ABRAR.id,
-        durationMin: 30,
-      },
+      missed: { lessonId: 'l-2', startsAt: EXCUSED.starts_at, teacherId: ABRAR.id, durationMin: 30 },
       durationMin: 30,
       startsAt: null,
     });
@@ -80,12 +57,7 @@ describe('MissedLessonStep (R-SCH-10)', () => {
   it('a lesson from the drawer’s «حجز تعويضي» is picked once the list loads', async () => {
     const onChange = renderStep([NO_SHOW, EXCUSED], { preselectId: 'l-1' });
     await waitFor(() => expect(onChange).toHaveBeenCalledTimes(1));
-    expect(onChange).toHaveBeenCalledWith(
-      expect.objectContaining({
-        missed: expect.objectContaining({ lessonId: 'l-1', durationMin: 60 }),
-        durationMin: 60,
-      }),
-    );
+    expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ missed: expect.objectContaining({ lessonId: 'l-1', durationMin: 60 }), durationMin: 60 }));
   });
 
   it('an id that is no longer a candidate selects nothing', async () => {
@@ -107,7 +79,7 @@ describe('MissedLessonStep (R-SCH-10)', () => {
   });
 
   it('a failed list shows an alert', async () => {
-    mockApi.onRead(() => Promise.reject(new Error('down')));
+    apiFetch.mockRejectedValue(new Error('down'));
     render(
       <QueryClientProvider
         client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}

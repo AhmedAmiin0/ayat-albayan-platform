@@ -4,29 +4,20 @@ import { studentListItemFixture } from '@ab/shared/testing';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { StudentsPage } from './StudentsPage';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
-  ...(await importOriginal<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const ROW = studentListItemFixture({ id: 's1', guardian_name: 'ام جود' });
 
 function renderPage(props: { search?: string; page?: number } = {}) {
   const page = { items: [ROW], total: 45, page: props.page ?? 1, pageSize: 20 };
-  mockApi.onRead(({ path }) => Promise.resolve(path.startsWith('/students?') ? page : []));
+  apiFetch.mockImplementation((path: string) => Promise.resolve(path.startsWith('/students?') ? page : []));
   const onChange = vi.fn();
   const onOpen = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <StudentsPage
-        search={props.search ?? ''}
-        page={props.page ?? 1}
-        onChange={onChange}
-        onOpen={onOpen}
-      />
+      <StudentsPage search={props.search ?? ''} page={props.page ?? 1} onChange={onChange} onOpen={onOpen} />
     </QueryClientProvider>,
   );
   return { onChange, onOpen };
@@ -39,14 +30,12 @@ describe('StudentsPage (R-STU-01, R-NFR-08)', () => {
     expect(onOpen).toHaveBeenCalledWith('s1');
     expect(within(screen.getByRole('table')).getByText(t.enums.studentStatus.active)).toBeTruthy();
     expect(screen.getByText(t.students.noTeacher)).toBeTruthy();
-    expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/students?page=1&pageSize=20' });
+    expect(apiFetch).toHaveBeenCalledWith('/students?page=1&pageSize=20');
   });
 
   it('search resets to page 1', async () => {
     const { onChange } = renderPage({ page: 2 });
-    fireEvent.change(screen.getByRole('textbox', { name: t.common.search }), {
-      target: { value: ' 0501 ' },
-    });
+    fireEvent.change(screen.getByRole('textbox', { name: t.common.search }), { target: { value: ' 0501 ' } });
     fireEvent.click(screen.getByRole('button', { name: t.common.search }));
     expect(onChange).toHaveBeenCalledWith({ search: '0501', page: 1, filters: {} });
   });
@@ -55,10 +44,7 @@ describe('StudentsPage (R-STU-01, R-NFR-08)', () => {
     const { onChange } = renderPage({ page: 3 });
     await screen.findByText(t.common.showing.replace('{shown}', '5').replace('{total}', '45'));
     expect(screen.getByRole('button', { current: 'page' }).textContent).toBe('3');
-    expect(screen.getByRole('button', { name: t.common.nextPage })).toHaveProperty(
-      'disabled',
-      true,
-    );
+    expect(screen.getByRole('button', { name: t.common.nextPage })).toHaveProperty('disabled', true);
     fireEvent.click(screen.getByRole('button', { name: t.common.prevPage }));
     expect(onChange).toHaveBeenCalledWith({ search: '', page: 2, filters: {} });
   });

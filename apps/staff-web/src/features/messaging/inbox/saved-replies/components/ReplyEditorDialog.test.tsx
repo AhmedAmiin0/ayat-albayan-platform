@@ -4,73 +4,57 @@ import { t } from '@ab/web-kit';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
 import { PRICES } from '@/features/messaging/inbox/saved-replies/lib/fixture';
 import { ReplyEditorDialog } from './ReplyEditorDialog';
-import { mockCall } from '@ab/testing/mock-call';
 
-const mockApi = mockCall();
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
-  ...(await orig<object>()),
-  call: (request: unknown) => mockApi.call(request),
-}));
+const apiFetch = vi.hoisted(() => vi.fn());
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const S = t.savedReplies;
 const onClose = vi.fn();
 const title = () => screen.getByRole('textbox', { name: new RegExp(S.fieldTitle) });
-const body = () =>
-  screen.getByRole<HTMLTextAreaElement>('textbox', { name: new RegExp(S.fieldBody) });
+const body = () => screen.getByRole<HTMLTextAreaElement>('textbox', { name: new RegExp(S.fieldBody) });
 const save = () => fireEvent.click(screen.getByRole('button', { name: t.common.save }));
 
 afterEach(() => {
-  mockApi.reset('write');
+  apiSend.mockReset();
   onClose.mockReset();
 });
 
 describe('ReplyEditorDialog', () => {
   it('a new reply: title and text required; placeholder chips insert at the caret; POST with its scope', async () => {
-    mockApi.onWrite(() => PRICES);
+    apiSend.mockResolvedValue(PRICES);
     renderWithClient(<ReplyEditorDialog reply={null} scope="shared" onClose={onClose} />);
     save();
     expect(screen.getAllByText(t.common.required)).toHaveLength(2);
-    expect(mockApi.writes()).toHaveLength(0);
+    expect(apiSend).not.toHaveBeenCalled();
     fireEvent.change(title(), { target: { value: ' ترحيب ' } });
     fireEvent.change(body(), { target: { value: 'أهلًا ' } });
     body().setSelectionRange(6, 6);
     fireEvent.click(screen.getByRole('button', { name: new RegExp(S.placeholders.name) }));
     expect(body().value).toBe('أهلًا {name}');
     save();
-    await waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'POST',
-        path: '/saved-replies',
-        body: { scope: 'shared', title: 'ترحيب', body: 'أهلًا {name}' },
-      }),
-    );
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/saved-replies', { scope: 'shared', title: 'ترحيب', body: 'أهلًا {name}' }));
     await waitFor(() => expect(onClose).toHaveBeenCalled());
   });
 
   it('editing: shows the file; removing it sends attachment null', async () => {
-    mockApi.onWrite(() => PRICES);
+    apiSend.mockResolvedValue(PRICES);
     renderWithClient(<ReplyEditorDialog reply={PRICES} scope="shared" onClose={onClose} />);
     expect(screen.getByText('الأسعار.pdf')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: S.attachRemove }));
     expect(screen.queryByText('الأسعار.pdf')).toBeNull();
     save();
     await waitFor(() =>
-      expect(mockApi.writes()).toContainEqual({
-        method: 'PATCH',
-        path: `/saved-replies/${PRICES.id}`,
-        body: { title: PRICES.title, body: PRICES.body, attachment: null },
-      }),
+      expect(apiSend).toHaveBeenCalledWith('PATCH', `/saved-replies/${PRICES.id}`, { title: PRICES.title, body: PRICES.body, attachment: null }),
     );
   });
 
-  it("shows the API's refusal inline", async () => {
+  it('shows the API\'s refusal inline', async () => {
     const { ApiError } = await import('@ab/web-kit');
-    mockApi.onWrite(() => Promise.reject(new ApiError(403, { code: 'saved_replies_forbidden' })));
+    apiSend.mockRejectedValue(new ApiError(403, { code: 'saved_replies_forbidden' }));
     renderWithClient(<ReplyEditorDialog reply={PRICES} scope="shared" onClose={onClose} />);
     save();
-    expect((await screen.findByRole('alert')).textContent).toContain(
-      S.errors.saved_replies_forbidden,
-    );
+    expect((await screen.findByRole('alert')).textContent).toContain(S.errors.saved_replies_forbidden);
     expect(onClose).not.toHaveBeenCalled();
   });
 });
