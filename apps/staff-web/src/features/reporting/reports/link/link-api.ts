@@ -1,7 +1,7 @@
-import { teacherLinkRoutes, type ReportFormResponse } from '@ab/shared';
+import { teacherLinkRoutes } from '@ab/shared';
 import { reportErrorCode } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
-import { ApiError, publicApiFetch, publicCall, t } from '@ab/web-kit';
+import { ApiError, publicCall, t } from '@ab/web-kit';
 import { reportErrorText } from '@/features/reporting/reports/api';
 import type { ReportApi } from '@/features/reporting/reports/report-api';
 import { linkFileCalls } from './link-files';
@@ -49,13 +49,11 @@ function linkErrorText(error: unknown): string {
   return problem ? linkProblemText(problem) : reportErrorText(error);
 }
 
-const base = (token: string) => `/public/teacher-report/${encodeURIComponent(token)}`;
-
 /** GET /public/teacher-report/:token: the lesson's report form, as GET /lessons/:id/report-form. */
 export const linkReportFormQuery = (token: string) =>
   queryOptions({
     queryKey: reportKeys.link(token),
-    queryFn: (): Promise<ReportFormResponse> => publicApiFetch(base(token)),
+    queryFn: () => publicCall({ route: teacherLinkRoutes.form, params: { token } }),
     retry: false,
     refetchOnWindowFocus: false,
   });

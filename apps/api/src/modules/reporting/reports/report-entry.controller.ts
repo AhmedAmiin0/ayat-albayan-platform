@@ -1,13 +1,14 @@
 import {
+  reportFormRoutes,
   reportHistoryRoutes as routes,
   type PendingReportView,
   type ReportFormResponse,
   type StudentReportsResponse,
   type TeacherReportView,
 } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { ReportHistoryService } from '@/modules/reporting/reports/history/report-history.service';
@@ -28,14 +29,12 @@ export class ReportEntryController {
   ) {}
 
   /** R1 (R-REP-01): identity read-only, one draft per student created on first open. */
-  @Get('lessons/:id/report-form')
-  @ApiTags('reports')
-  @Permissions('reports.read')
+  @Route(reportFormRoutes.form)
   form(
-    @Param('id', ParseUUIDPipe) id: string,
+    @RouteInput() { params }: RouteInputOf<typeof reportFormRoutes.form>,
     @CurrentUser() user: AuthUser,
   ): Promise<ReportFormResponse> {
-    return this.reports.form(id, user);
+    return this.reports.form(params.id, user);
   }
 
   /** R5 (R-REP-05): submitted reports newest first + the grade series. */
