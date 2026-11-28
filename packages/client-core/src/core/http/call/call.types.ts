@@ -25,6 +25,11 @@ export interface AnyCallRequest {
   signal?: AbortSignal | null | undefined;
 }
 
+/** What a route's URL is built from. */
+export type RouteUrlInput = Pick<AnyCallRequest, 'params' | 'query'> & {
+  route: Pick<RouteSpec, 'path'>;
+};
+
 /** The route's inputs, each typed by its schema's input; a part the route lacks is left out. */
 export type CallInput<R extends RouteSpec> = Part<'params', RouteParams<R>> &
   Part<'query', RouteQuery<R>> &

@@ -51,12 +51,12 @@ test('a blurred chats tab and the forward picker never poll', async () => {
   expect(mockApiFetch).toHaveBeenCalledTimes(2);
 });
 
-test('realtime SUBSCRIBED: the chats tab re-reads at the safety net only; dropped: its own rate', async () => {
+test('realtime SUBSCRIBED: the chats tab re-reads at the 10 s safety net; dropped: its own rate', async () => {
   await act(async () => inboxLive.setLive(true));
   await mount(true);
-  await tick();
+  await act(() => jest.advanceTimersByTimeAsync(INBOX_FALLBACK_MS / 2));
   expect(mockApiFetch).toHaveBeenCalledTimes(1);
-  await act(() => jest.advanceTimersByTimeAsync(INBOX_FALLBACK_MS - INBOX_LIST_REFRESH_MS));
+  await act(() => jest.advanceTimersByTimeAsync(INBOX_FALLBACK_MS / 2));
   expect(mockApiFetch).toHaveBeenCalledTimes(2);
   await act(async () => inboxLive.setLive(false));
   await tick();

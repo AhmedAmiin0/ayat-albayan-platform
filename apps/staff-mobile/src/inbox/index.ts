@@ -6,6 +6,7 @@ export { ShareGate } from './thread/share/screen/ShareGate';
 export { ShareScreen } from './thread/share/screen/ShareScreen';
 export { shareRedirect } from './thread/share/share-redirect';
 export { threadHref, threadReads } from './thread/hooks/thread-cache';
+export { resumeInbox } from './thread/hooks/inbox-resume';
 export { clockAt } from './shared/format';
 export { StaffCalls } from './thread/calls/state/StaffCalls';
 export { useInboxLive, useInboxRealtime } from './thread/live';

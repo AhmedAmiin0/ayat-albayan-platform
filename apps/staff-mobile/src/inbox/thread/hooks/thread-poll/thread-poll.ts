@@ -7,7 +7,8 @@ import { noteDelta } from '@/inbox/thread/live/delta-news';
 import { leavesGap, mergeNewest, sendKey, threadKey, threadReads, type ThreadCache } from '@/inbox/thread/hooks/thread-cache';
 
 /** The polls' own keys: outside threadKey, so a push's invalidation never runs them too. */
-export const threadPollKey = (phone: string) => ['thread-poll', phone];
+export const threadPollsKey = ['thread-poll'];
+export const threadPollKey = (phone: string) => [...threadPollsKey, phone];
 export const threadDeltaKey = (phone: string) => ['thread-delta', phone];
 
 /**

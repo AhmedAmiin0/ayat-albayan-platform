@@ -1,8 +1,7 @@
 import { teacherName } from '@ab/schedule';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
-import { ScrollView } from 'react-native';
-import { t, BackButton, ScreenHeader, locale } from '@ab/mobile-kit';
+import { t, BackButton, ScreenHeader, locale, KeyboardScroll } from '@ab/mobile-kit';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
 import { requestId as newRequestId } from '@/core/lib/http/request-id';
 import { useTreeBase } from '@/core/nav/tree-base';
@@ -70,11 +69,9 @@ export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
         subtitle={book.isSuccess ? undefined : `${position} · ${stepNames()[step]}`}
         leading={<BackButton busy={book.isPending} onPress={back} />}
       />
-      <ScrollView
+      <KeyboardScroll
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 32 }}
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustKeyboardInsets
       >
         {book.isSuccess ? (
           <BookedPanel
@@ -100,7 +97,7 @@ export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
             }}
           />
         )}
-      </ScrollView>
+      </KeyboardScroll>
     </>
   );
 }

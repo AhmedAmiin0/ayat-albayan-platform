@@ -19,7 +19,7 @@ import { ReclassifyConfirm } from './ReclassifyConfirm';
 import type { LeadListItem as LeadItem } from '@ab/shared';
 
 /** Shared with the list head so chips line up across rows (docs/07 §9). */
-export const leadGridClass = 'sm:grid-cols-[36px_minmax(0,1fr)_156px_168px_120px]';
+export const leadGridClass = 'sm:grid-cols-[36px_minmax(0,1fr)_196px_168px_120px]';
 
 export interface LeadListItemProps {
   lead: LeadItem;

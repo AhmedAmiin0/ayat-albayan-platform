@@ -75,3 +75,9 @@ export const furtherOf =
     const y = b(row);
     return y !== undefined && (x === undefined || ranksAbove(y, x)) ? y : x;
   };
+
+/** A chats-list row's tick from the stored message row of its last message (a chat held). */
+export const storedMessageStatus =
+  (rowsOf: (phone: string) => readonly SyncMessage[]): StatusOf =>
+  (row) =>
+    rowsOf(row.phone_e164).find((m) => m.id === row.last_message_id)?.status;

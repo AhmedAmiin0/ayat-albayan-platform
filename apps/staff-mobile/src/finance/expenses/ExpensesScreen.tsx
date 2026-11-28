@@ -1,10 +1,9 @@
 import { router } from 'expo-router';
 import type { ExpenseView } from '@ab/money';
 import { useCallback, useState } from 'react';
-import { FlatList, type ListRenderItemInfo, ScrollView, View } from 'react-native';
-import { t, Button, BackButton, Screen, ScreenHeader } from '@ab/mobile-kit';
+import { ScrollView } from 'react-native';
+import { BackButton, Button, LazyList, Screen, ScreenHeader, t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { ExpenseForm } from './ExpenseForm';
 import { ExpenseRow } from './ExpenseRow';
 import { ExpenseTotals } from './ExpenseTotals';
@@ -22,10 +21,9 @@ export function ExpensesScreen() {
   const rows = expenses.data ?? [];
   const cats = categories.data;
   const renderRow = useCallback(
-    ({ item }: ListRenderItemInfo<ExpenseView>) => <ExpenseRow expense={item} categories={cats} />,
+    ({ item }: { item: ExpenseView }) => <ExpenseRow expense={item} categories={cats} />,
     [cats],
   );
-  const cells = useInsetRows(renderRow, rows.length);
   const back = <BackButton onPress={() => (adding ? setAdding(false) : router.back())} />;
   if (adding) {
     return (
@@ -49,16 +47,12 @@ export function ExpensesScreen() {
       {saved ? <Note>{t.expenses.saved}</Note> : null}
       <MonthPicker month={month} onChange={setMonth} />
       <StaleNote isError={expenses.isError} hasData={!!expenses.data} />
-      <FlatList
-        style={{ flex: 1 }}
+      <LazyList
         data={rows}
         keyExtractor={(e) => e.id}
-        ListHeaderComponent={
-          <View style={{ paddingBottom: 12 }}>
-            <ExpenseTotals rows={rows} categories={cats} />
-          </View>
-        }
-        {...cells}
+        renderItem={renderRow}
+        tabBar={false}
+        ListHeaderComponent={<ExpenseTotals rows={rows} categories={cats} />}
         refreshing={expenses.isRefetching}
         onRefresh={() => void expenses.refetch()}
         ListEmptyComponent={<StateNote status={expenses} empty emptyTitle={t.expenses.empty} />}

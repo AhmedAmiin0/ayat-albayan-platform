@@ -1,12 +1,11 @@
 import type { InvoiceView } from '@ab/schedule';
-import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
-import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
+import { ActivityIndicator } from 'react-native';
+import { EmptyState, ErrorState, LazyList, t, useTheme } from '@ab/mobile-kit';
 import { useStudentInvoices } from './money-queries';
 import { StudentInvoiceRow } from './StudentInvoiceRow';
 
 const keyOf = (i: InvoiceView) => i.id;
-const renderInvoice = ({ item }: ListRenderItemInfo<InvoiceView>) => (
+const renderInvoice = ({ item }: { item: InvoiceView }) => (
   <StudentInvoiceRow invoice={item} />
 );
 
@@ -17,13 +16,13 @@ const renderInvoice = ({ item }: ListRenderItemInfo<InvoiceView>) => (
 export function StudentInvoicesList({ studentId }: { studentId: string }) {
   const { color } = useTheme();
   const list = useStudentInvoices(studentId, true);
-  const rows = useInsetRows(renderInvoice, list.data?.length ?? 0);
   return (
-    <FlatList
-      style={{ flex: 1 }}
-      contentContainerStyle={{ paddingBottom: 24 }}
+    <LazyList
       data={list.data ?? []}
       keyExtractor={keyOf}
+      renderItem={renderInvoice}
+      tabBar={false}
+      endSpace={24}
       refreshing={list.isRefetching}
       onRefresh={() => void list.refetch()}
       ListEmptyComponent={
@@ -42,7 +41,6 @@ export function StudentInvoicesList({ studentId }: { studentId: string }) {
           />
         )
       }
-      {...rows}
     />
   );
 }

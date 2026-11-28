@@ -5,7 +5,6 @@ import { MenuSheet } from '../../ui/feedback/MenuSheet';
 import type { ChannelRef } from '../channel-api';
 import { ChannelMenuSteps, type MenuExits } from './ChannelMenuSteps';
 import type { MenuOffers } from '@ab/client-core';
-import { useKeyboardInset } from './use-keyboard-inset';
 
 interface ChannelMessageMenuProps extends MenuExits {
   refs: ChannelRef;
@@ -15,7 +14,6 @@ interface ChannelMessageMenuProps extends MenuExits {
 
 /** Edit is the sender's for 15 minutes; delete the sender's for 48 hours, or the admin's any. */
 export function ChannelMessageMenu({ refs, held, ...exits }: ChannelMessageMenuProps) {
-  const inset = useKeyboardInset();
   return (
     <MenuSheet
       open={held !== null}
@@ -23,7 +21,7 @@ export function ChannelMessageMenu({ refs, held, ...exits }: ChannelMessageMenuP
       testID="channel-message-menu"
       onClose={exits.onClose}
     >
-      <View style={{ gap: 8, paddingBottom: inset }}>
+      <View style={{ gap: 8 }}>
         {held ? (
           <ChannelMenuSteps refs={refs} message={held.message} offers={held.offers} {...exits} />
         ) : null}

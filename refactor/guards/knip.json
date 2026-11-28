@@ -40,7 +40,6 @@
   "apps/api/src/modules/messaging/whatsapp/sender/send-stale.ts types DropInput",
   "apps/api/src/modules/people/guardians/guardians.service.ts types Guardian",
   "apps/api/src/modules/people/guardians/guardians.service.ts types GuardianWithStudents",
-  "apps/api/src/modules/people/me/push/push-tokens.ts exports deviceKeySchema",
   "apps/api/src/modules/people/roles/roles.logic.ts types ManagerProblem",
   "apps/api/src/modules/people/students/duplicate-detector.ts types DuplicateCandidate",
   "apps/api/src/modules/people/users/audit/users.audit.ts exports snapshot",

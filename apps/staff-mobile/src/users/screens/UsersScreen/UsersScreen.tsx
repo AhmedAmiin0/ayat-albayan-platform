@@ -3,18 +3,18 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import {
-  t,
-  useTheme,
   BackButton,
   EmptyState,
   ErrorState,
+  LazyList,
   Screen,
   ScreenHeader,
+  t,
+  useTheme,
 } from '@ab/mobile-kit';
 import type { Can } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { PillButton } from '@/core/ui/primitives/PillButton';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { FIRST_VIEW, USERS_PAGE_SIZE } from '@/users/shared/api';
 import { backToMore } from '@/users/shared/nav';

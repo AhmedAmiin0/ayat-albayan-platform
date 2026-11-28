@@ -3,7 +3,6 @@ import { cancelOffered } from '@ab/money';
 import { useLocalSearchParams } from 'expo-router';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
-import { ScrollView } from 'react-native';
 import {
   t,
   BackButton,
@@ -12,6 +11,7 @@ import {
   ltr,
   Screen,
   ScreenHeader,
+  KeyboardScroll,
 } from '@ab/mobile-kit';
 import { CancelPackage } from '@/payments';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
@@ -39,12 +39,10 @@ export function SalesTransferScreen() {
   const back = () => backWithin(inTree(base, '/inbox'));
   return (
     <Screen>
-      <ScrollView
+      <KeyboardScroll
         style={{ flex: 1, marginHorizontal: -16 }}
         contentContainerStyle={{ gap: 20, paddingHorizontal: 16, paddingBottom: 32 }}
-        keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
-        automaticallyAdjustKeyboardInsets
       >
         <ScreenHeader
           title={t.salesMoney.stepTransfer}
@@ -70,7 +68,7 @@ export function SalesTransferScreen() {
             {sub ? <TransferForm key={sub.id} sub={sub} phone={phone} bind={bind} onDone={setDone} /> : null}
           </>
         )}
-      </ScrollView>
+      </KeyboardScroll>
     </Screen>
   );
 }

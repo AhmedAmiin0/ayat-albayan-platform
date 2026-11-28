@@ -19,7 +19,7 @@ interface MockListProps {
   renderItem: (p: { item: unknown }) => unknown;
   ListEmptyComponent: unknown;
 }
-jest.mock('@/core/ui/lists/LazyList/LazyList', () => {
+jest.mock('@ab/mobile-kit/ui/lists/LazyList/LazyList', () => {
   const { createElement, Fragment } = jest.requireActual('react');
   return {
     LazyList: ({ paged, renderItem, ListEmptyComponent }: MockListProps) =>

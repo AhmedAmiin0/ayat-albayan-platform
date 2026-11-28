@@ -1,26 +1,23 @@
 import type { MyPaymentRow } from '@ab/money';
-import { FlatList, type ListRenderItemInfo } from 'react-native';
-import { t } from '@ab/mobile-kit';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
+import { LazyList, t } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useMyPayments } from '@/sales-money/lib/my-api';
 import { MyPaymentItem } from '@/sales-money/components/MyPaymentItem';
 
-const renderRow = ({ item }: ListRenderItemInfo<MyPaymentRow>) => <MyPaymentItem payment={item} />;
+const renderRow = ({ item }: { item: MyPaymentRow }) => <MyPaymentItem payment={item} />;
 
 /** The API answers only with the caller's own payments. */
 export function MyPaymentsView() {
   const list = useMyPayments();
   const P = t.assistantPortal.payments;
-  const cells = useInsetRows(renderRow, list.data?.length ?? 0);
   return (
-    <FlatList
+    <LazyList
       accessibilityLabel={P.list}
-      style={{ flex: 1 }}
-      contentContainerStyle={{ paddingBottom: 24 }}
       data={list.data ?? []}
       keyExtractor={(p) => p.id}
-      {...cells}
+      renderItem={renderRow}
+      tabBar={false}
+      endSpace={24}
       refreshing={list.isRefetching}
       onRefresh={() => void list.refetch()}
       ListEmptyComponent={

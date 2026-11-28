@@ -8,10 +8,18 @@ import { isTest } from './scope.mjs';
 
 const HOOK = /^use[A-Z]/;
 
+// Name.ios.tsx / Name.android.tsx: a native variant Metro picks over the shared Name.tsx, which
+// must sit beside it for web, jest and every other platform.
+const PLATFORMS = ['ios', 'android'];
+
+const isPlatformFile = (tree, path, name) =>
+  PLATFORMS.some((p) => basename(path) === `${name}.${p}.tsx`) &&
+  tree.has(`${dirname(path)}/${name}.tsx`);
+
 export function placeFailure(tree, path, name) {
   const dir = dirname(path);
-  const placed = basename(path) === `${name}.tsx` && basename(dir) === name;
-  if (!placed) return `${name}.tsx belongs in its own folder ${name}/`;
+  const file = basename(path) === `${name}.tsx` || isPlatformFile(tree, path, name);
+  if (!file || basename(dir) !== name) return `${name}.tsx belongs in its own folder ${name}/`;
   return tree.has(`${dir}/index.ts`) ? null : `${name}/ has no index.ts`;
 }
 

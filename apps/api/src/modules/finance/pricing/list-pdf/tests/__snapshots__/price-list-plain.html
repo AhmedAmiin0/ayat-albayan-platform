@@ -1,0 +1,96 @@
+<!doctype html><html lang="ar" dir="rtl" data-theme="light"><head><meta charset="utf-8">
+<title>قائمة الأسعار</title>
+<style>
+:root{--ink:#17201c;--ink3:#4f5b55;--deep:#064e3b;--green:#065f46;--green2:#047857;--gold:#b7891f;--gold-soft:#e4c97e;--cream:#fdf1e1;--brown:#a14b06;--mint:#ecfdf5;--mint2:#d1fae5;--rule:#e2e8e5;--paper:#ffffff;--bad:#b91c1c}
+@page{size:A4 portrait;margin:0}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper)}
+body{color:var(--ink);font:400 12px/1.5 'IBM Plex Sans Arabic','Amiri',sans-serif;
+-webkit-print-color-adjust:exact;print-color-adjust:exact}
+h1,h2,h3,p,ul{margin:0}
+small{display:block;font-size:10px;color:var(--ink3)}
+.ltr{direction:ltr;unicode-bidi:isolate;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sheet{height:297mm;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.sheet>:not(.bar):not(.head):not(.foot){margin-inline:10mm}
+.bar{display:block;height:5px;background:var(--gold);flex:none}
+.bar+.head{margin-top:-10px}
+.head{display:flex;gap:14px;align-items:center;padding:18px 10mm;color:var(--paper);
+background:linear-gradient(135deg,var(--deep),var(--green) 60%,var(--green2))}
+.logo{flex:none;width:104px;height:104px;display:grid;place-items:center;border-radius:16px;
+background:var(--cream);border:2px solid var(--gold-soft)}
+.logo img{width:86px;height:auto}
+.kicker{font-size:11.5px;font-weight:700;color:var(--gold-soft)}
+.title{font:700 28px/1.4 'Amiri',serif}
+.title em{font-style:normal;color:var(--gold-soft)}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.pill{display:inline-block;padding:3px 12px;border-radius:999px;font-weight:700;
+background:color-mix(in srgb,var(--paper) 14%,transparent);
+border:1px solid color-mix(in srgb,var(--paper) 30%,transparent)}
+.pill.gold,.pill.wa{background:var(--gold-soft);border-color:var(--gold);color:var(--deep)}
+.flag{font-family:'Noto Color Emoji',sans-serif}
+.intro{font-size:11.5px;opacity:.92}
+.sec{display:flex;align-items:center;gap:8px;break-after:avoid;
+font:700 19px/1.3 'Amiri',serif;
+color:var(--deep)}
+.sec i{flex:1;height:1.5px;background:var(--gold)}
+.sec small{font:500 11px/1.3 'IBM Plex Sans Arabic',sans-serif;color:var(--ink3)}
+.tiers{width:calc(100% - 20mm);border-collapse:separate;border-spacing:0;
+border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.tiers th{padding:7px 10px;background:var(--deep);color:var(--paper);font-weight:700;
+text-align:start}
+.tiers th.len{text-align:center}
+.tiers th.len b{display:block;font-size:17px;color:var(--gold-soft)}
+.tiers th.len small{color:var(--paper);opacity:.85}
+.tiers td{padding:8px 10px;border-top:1px solid var(--rule);vertical-align:middle}
+.tiers .name{font-size:13.5px;color:var(--deep)}
+.tiers tr.popular td{background:var(--mint)}
+.tiers tr.featured td{background:var(--cream)}
+.tiers tr.featured .now{color:var(--brown)}
+.badge{display:inline-block;margin-inline-start:6px;padding:0 7px;border-radius:999px;
+font-size:9.5px;font-weight:700}
+.badge.popular{background:var(--deep);color:var(--paper)}
+.badge.featured{background:var(--gold);color:var(--paper)}
+.price{text-align:center}
+.amt{display:inline-flex;align-items:baseline;gap:3px}
+.amt .now{font-size:19px;color:var(--deep)}
+.amt small{display:inline;font-size:10px}
+.was{display:block;font-size:9.5px;color:var(--ink3)}
+.was s{color:var(--bad);text-decoration-thickness:1.2px}
+.cards,.promises{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{padding:10px 12px;border:1px solid var(--gold-soft);border-radius:12px;background:var(--paper)}
+.card h3,.program h3,.promise h3{font:700 16px/1.4 'Amiri',serif;color:var(--deep)}
+.card .sub{font-size:10.5px;color:var(--ink3);margin-bottom:4px}
+.card .one{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px}
+.card .one small{display:inline}
+.card .one .was{display:inline}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tile{padding:5px;border-radius:8px;background:var(--mint);text-align:center}
+.programs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.program{padding:8px 12px;border:1px solid var(--rule);border-inline-start:4px solid var(--green2);
+border-radius:10px}
+.program ul{padding-inline-start:16px;font-size:11px}
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.feature{padding:10px 6px;border-radius:10px;background:var(--deep);color:var(--paper);
+text-align:center}
+.feature b{display:block;font-size:12.5px;color:var(--gold-soft)}
+.feature small{color:var(--paper);opacity:.85}
+.promise{padding:10px 12px;border-radius:12px;font-size:11px}
+.promise.mint{background:var(--mint);border:1px solid var(--mint2)}
+.promise.gold{background:var(--cream);border:1px solid var(--gold-soft)}
+.promise.gold h3{color:var(--brown)}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:10px;
+margin-top:auto;margin-bottom:-10px;padding:14px 10mm;background:var(--deep);color:var(--paper)}
+.foot h2{font:700 19px/1.4 'Amiri',serif;color:var(--gold-soft)}
+.foot p{font-size:11.5px}
+.contact{display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex:none}</style></head>
+<body><main class="sheet"><i class="bar"></i>
+<header class="head"><div class="logo"><img src="data:image/png;base64,AA==" alt="أكاديمية آيات البيان"></div><div class="head-text"><p class="kicker">أكاديمية آيات البيان · الأسعار والباقات</p><h1 class="title">باقات مرنة <em>تناسب رحلتك</em> مع القرآن</h1><p class="pills"><span class="pill"><span class="flag">🇶🇦</span> قطر · الأسعار بـريال قطري (ر.ق)</span></p><p class="intro">حلقات فردية مباشرة أونلاين مع معلمين ومعلمات مجازين — للرجال والنساء والأطفال.</p></div></header>
+<h2 class="sec"><span>الباقات الأساسية</span><i></i><small>السعر للباقة كاملة</small></h2><table class="tiers"><thead><tr><th>الباقة</th><th>عدد الحلقات</th><th class="len"><b>30</b><small>دقيقة للحلقة</small></th><th class="len"><b>45</b><small>دقيقة للحلقة</small></th><th class="len"><b>60</b><small>دقيقة للحلقة</small></th></tr></thead><tbody><tr class="plain"><td><b class="name">الباقة الأساسية</b><small>بداية مثالية للانتظام في الحلقات</small></td><td><b>8 حلقات</b><small>حلقتان في الأسبوع</small></td><td class="price"><span class="amt"><b class="now">1,030</b><small>ر.ق</small></span></td><td class="price"><span class="amt"><b class="now">1,045</b><small>ر.ق</small></span></td><td class="price"><span class="amt"><b class="now">1,060</b><small>ر.ق</small></span></td></tr><tr class="popular"><td><b class="name">الباقة المتقدمة</b><span class="badge popular">الأكثر شيوعاً</span><small>الخيار الأنسب للجدية والاستمرار</small></td><td><b>12 حلقة</b><small>3 حلقات في الأسبوع</small></td><td class="price"><span class="amt"><b class="now">1,130</b><small>ر.ق</small></span></td><td class="price"><span class="amt"><b class="now">1,145</b><small>ر.ق</small></span></td><td class="price"><span class="amt"><b class="now">1,160</b><small>ر.ق</small></span></td></tr><tr class="plain"><td><b class="name">الباقة الشاملة</b><small>أقصى وتيرة للحفظ والإتقان</small></td><td><b>16 حلقة</b><small>4 حلقات في الأسبوع</small></td><td class="price"><span class="amt"><b class="now">1,230</b><small>ر.ق</small></span></td><td class="price"><span class="amt"><b class="now">1,245</b><small>ر.ق</small></span></td><td class="price"><span class="amt"><b class="now">1,260</b><small>ر.ق</small></span></td></tr><tr class="featured"><td><b class="name">باقة الـ28 حلقة</b><span class="badge featured">أوفر سعر للحلقة</span><small>خصم خاص لأصحاب الهمّة العالية</small></td><td><b>28 حلقة</b><small>حلقة كل يوم</small></td><td class="price"><span class="amt"><b class="now">1,330</b><small>ر.ق</small></span></td><td class="price"><span class="amt"><b class="now">1,345</b><small>ر.ق</small></span></td><td class="price"><span class="amt"><b class="now">1,360</b><small>ر.ق</small></span></td></tr></tbody></table>
+<section class="cards"><article class="card"><h3>باقة الحلقة الأسبوعية</h3><p class="sub">4 حلقات · 90 دقيقة للحلقة</p><p class="one"><span class="amt"><b class="now">1,590</b><small>ر.ق</small></span><small>للباقة</small>
+</p></article><article class="card"><h3>الاشتراك الشهري المكثّف</h3><p class="sub">20 حلقة في الشهر · 5 أيام في الأسبوع مع معلمك · الأيام والمواعيد باختيارك</p><div class="tiles"><div class="tile"><small>30 دقيقة للحلقة</small><span class="amt"><b class="now">1,430</b><small>ر.ق</small></span>
+</div><div class="tile"><small>45 دقيقة للحلقة</small><span class="amt"><b class="now">1,445</b><small>ر.ق</small></span>
+</div><div class="tile"><small>60 دقيقة للحلقة</small><span class="amt"><b class="now">1,460</b><small>ر.ق</small></span>
+</div></div></article></section>
+<h2 class="sec"><span>برامجنا</span><i></i><small>مسارات تعليمية لكل عمر وهدف</small></h2><section class="programs"><article class="program"><h3>القرآن الكريم</h3><ul><li>القاعدة النورانية ونور البيان</li><li>التلاوة والتجويد</li><li>الحفظ والمراجعة</li><li>التأهيل للإجازة بالسند المتصل</li></ul></article><article class="program"><h3>اللغة العربية</h3><ul><li>الحروف والحركات</li><li>القراءة والكتابة والإملاء</li><li>المحادثة بالفصحى</li><li>أساسيات النحو والصرف</li></ul></article><article class="program"><h3>الدراسات الإسلامية</h3><ul><li>العقيدة</li><li>الفقه وأحكام العبادات</li><li>السيرة النبوية والأخلاق</li><li>تفسير ميسّر وأحاديث مختارة</li></ul></article></section><section class="features"><div class="feature"><b>حلقات فردية مباشرة</b><small>معلم لطالب واحد</small></div><div class="feature"><b>معلمون ومعلمات مجازون</b><small>بالسند المتصل</small></div><div class="feature"><b>تقارير متابعة منتظمة</b><small>بعد الحلقات</small></div><div class="feature"><b>قسم مستقل للنساء</b><small>وبرامج خاصة للأطفال</small></div></section><section class="promises"><article class="promise mint"><h3>الحلقة التجريبية مجانية بالكامل</h3><p>جميع الباقات تبدأ بجلسة تجريبية مجانية — جرّب أولاً ثم قرّر، دون أي التزام بالشراء.</p></article><article class="promise gold"><h3>الضمان الذهبي</h3><p>استرداد كامل لقيمة الباقة إذا لم تبدأ الجلسات في موعدها، أو أخلّ المعلم بالحضور دون تعويض — رضاك غايتنا.</p></article></section>
+<footer class="foot"><div><h2>احجز حلقتك التجريبية المجانية الآن</h2><p>راسلنا على واتساب ونرتّب لك المعلم والموعد المناسب</p></div><p class="contact"><span class="pill wa">واتساب <bdi dir="ltr" class="ltr">+000 00 000 0000</bdi></span><span class="pill site"><bdi dir="ltr" class="ltr">example.test</bdi></span></p></footer>
+<i class="bar"></i></main></body></html>

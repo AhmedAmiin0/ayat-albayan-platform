@@ -13,6 +13,7 @@ import { failPinned, pinGeneration, pinnedOf, settlePinned } from '@/inbox/threa
 import { echoed, type SendDone, type SendInput } from '@/inbox/thread/send/outgoing';
 import { sendOut } from '@/inbox/thread/send/send-out';
 import { refreshLists, touchInbox } from './inbox-sync';
+import { replaceListRows } from './list-edits';
 import {
   appendMessage,
   provisionalMessage,
@@ -78,6 +79,7 @@ function afterSend(client: QueryClient, phone: string, done: SendDone): Promise<
 }
 
 export type { Outgoing } from '@/inbox/thread/send/outgoing'; // what the composer sends
+export { sendKey } from './thread-cache';
 
 /**
  * Optimistic send: the row shows at once as queued; the API's row replaces it, or a refusal takes
@@ -85,8 +87,6 @@ export type { Outgoing } from '@/inbox/thread/send/outgoing'; // what the compos
  * keeps it «unconfirmed» and pins its id for its sender until an answer (docs/44 BUG7,
  * send/pinned-outcome: hook-level, so it settles after the screen closed too).
  */
-export { sendKey } from './thread-cache';
-
 export function useSendMessage(phone: string) {
   const client = useQueryClient();
   const queryKey = threadKey(phone);
@@ -110,9 +110,10 @@ export function useSendMessage(phone: string) {
       await touchInbox(client, row);
       return { generation };
     },
-    // The server row replaces the provisional one (a retry's provisional replaced the older one).
+    // The server row replaces the provisional one in the chat and the lists (ticks key on it).
     onSuccess: (row, input, context) => {
       edit((old) => replaceMessage(old, input.id, row));
+      replaceListRows(client, input.id, row);
       settlePinned(pinned(input, context.generation), row);
     },
     onError: (error, input, context) => {

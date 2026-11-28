@@ -3,18 +3,18 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import {
-  t,
-  useTheme,
   BackButton,
   EmptyState,
   ErrorState,
   FilterPills,
+  LazyList,
   Screen,
   ScreenHeader,
+  t,
+  useTheme,
 } from '@ab/mobile-kit';
 import { CheckRegistrationButton } from '@/registration-check/components/CheckRegistrationButton';
 import { MyStudentsView } from '@/sales-money/screens/MyStudentsView';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { AllStudentRow } from '@/sales/sales/components/AllStudentRow';
 import { useAllStudents } from '@/sales/sales/lib/sales-api';

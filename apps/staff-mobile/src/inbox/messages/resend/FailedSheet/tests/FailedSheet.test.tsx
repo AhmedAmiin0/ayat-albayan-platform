@@ -33,7 +33,7 @@ beforeEach(() => {
 
 test('131042 (WhatsApp Business payment): the honest reason, sending it by hand, never a retry that cannot work', async () => {
   const s = await sheet({ ...failed, error_code: '131042' });
-  expect(screen.getByTestId('failed-sheet').props.accessibilityLabel).toBe(t.messages.failedMenu);
+  expect(within(screen.getByTestId('failed-sheet')).getByLabelText(t.messages.failedMenu)).toBeTruthy();
   expect(s.getByText(why('131042'))).toBeTruthy();
   expect(s.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(s.getByRole('button', { name: t.messages.clickToChat })).toBeTruthy();

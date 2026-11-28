@@ -1,1 +1,1 @@
-export { threadDeltaKey, threadPollKey, useThreadPoll } from './thread-poll';
+export { threadDeltaKey, threadPollKey, threadPollsKey, useThreadPoll } from './thread-poll';

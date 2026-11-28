@@ -23,25 +23,30 @@ export function AdminLayout({ nav, title, children }: AdminLayoutProps) {
   // resolvedLocation: the Link is only aria-current once the (code-split) child route resolved.
   const pathname = useRouterState({ select: (s) => s.resolvedLocation?.pathname });
   useEffect(() => {
-    // Sidebar (≥900px): keep the current section in view; scroll-padding keeps it clear of the foot.
+    // Sidebar (≥900px): keep the current section in view; only the nav scrolls, so the logo stays.
     aside.current?.querySelector('nav [aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
   }, [pathname, nav]); // nav changes when its counts arrive (they shift the items)
   const inbox = isInboxPath(pathname);
   return (
     <div className="flex h-dvh flex-col overflow-hidden shell:grid shell:grid-cols-[236px_minmax(0,1fr)]">
       <MenuBar home="/admin" title={title} nav={nav} email={me?.email} className="shell:hidden sm:mx-2" />
-      {/* scroll-pb-64 exceeds the sticky foot's height so a focused link scrolls clear of it. */}
       <aside
         ref={aside}
         className={cn(
           'relative hidden shrink-0 px-3',
-          'shell:flex shell:h-dvh shell:flex-col shell:gap-y-6 shell:scroll-pb-64 shell:overflow-y-auto shell:overflow-x-hidden shell:border-e shell:border-rule shell:bg-cover shell:pt-6 shell:pb-0',
+          'shell:flex shell:h-dvh shell:flex-col shell:gap-y-6 shell:overflow-x-hidden',
+          'shell:border-e shell:border-rule shell:bg-cover shell:pt-6 shell:pb-0',
         )}
       >
         <Link to="/admin" activeOptions={{ exact: true }} aria-label={t.app.name} className="shrink-0 rounded-md px-1.5 no-underline shell:px-3">
           <Logo />
         </Link>
-        {nav}
+        <div
+          data-side-nav
+          className="shell:-mx-3 shell:min-h-0 shell:flex-1 shell:overflow-y-auto shell:overflow-x-hidden shell:px-3"
+        >
+          {nav}
+        </div>
         <SideFoot email={me?.email} />
       </aside>
       <div className="flex min-h-0 min-w-0 flex-1 flex-col pb-[env(safe-area-inset-bottom)] sm:px-2 sm:pb-[max(0.625rem,env(safe-area-inset-bottom))] shell:h-dvh shell:px-4 shell:pb-5">

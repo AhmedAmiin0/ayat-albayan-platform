@@ -4,11 +4,12 @@ import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { useScreenFocused } from '@ab/mobile-kit';
 import { usePagedActions, withTracked } from '@/core/lib/query/paged-result';
-import { useInboxLive, useLiveWatch } from '@/inbox/thread/live';
-import { useStoredThreads } from '@/inbox/thread/local';
+import { readListHead, useInboxLive, useLiveWatch } from '@/inbox/thread/live';
+import { storeReader, useStoredThreads } from '@/inbox/thread/local';
 import { threadReads } from '@/inbox/thread/hooks/thread-cache';
 import { waitingForReply } from '@/inbox/threads-list/chat-filter';
-import { useListCatchUp, withChatTicks } from '@/inbox/threads-list/list-catch-up';
+import { useListCatchUp } from '@/inbox/threads-list/list-catch-up';
+import { withStoredList } from '@/inbox/threads-list/list-select';
 
 const PAGE_SIZE = 25;
 
@@ -29,7 +30,8 @@ interface ThreadListParams {
 /**
  * GET /threads (docs/12 H1): every WhatsApp conversation — leads, guardians, teachers — newest
  * first, by name / phone, unread, lead stage and chat list. A thread is keyed by its phone (one row per phone).
- * Live, the loaded pages refetch together (TanStack's infinite refetch), so the order stays whole.
+ * Its poll refetches the loaded pages together (TanStack's infinite refetch), so the order stays
+ * whole; an event re-reads page 1 alone.
  */
 export function useThreadList({
   search,
@@ -43,28 +45,23 @@ export function useThreadList({
   useLiveWatch(liveTab ? 'list' : null, focused);
   const client = useQueryClient();
   const queryKey = ['threads', 'list', { search, unread, list, status }];
-  useListCatchUp(queryKey, focused);
-  const stored = useStoredThreads(); // the phone store's ticks (docs/43 43-7)
+  const pageOf = (page: number, signal?: AbortSignal) =>
+    threadReads.list(
+      { search, unread: unread ? 'true' : undefined, list, status, page, pageSize: PAGE_SIZE },
+      signal,
+    );
+  // An event, a return or a resume re-reads page 1 only (readListHead), merged into the pages.
+  useListCatchUp(queryKey, focused, () => readListHead(client, queryKey, () => pageOf(1)));
+  const threads = useStoredThreads(); // the phone store's rows (docs/43 43-7)
   const query = useInfiniteQuery({
     queryKey,
     // TanStack's signal: a list nobody shows drops its read, so a later mount starts a new one.
-    queryFn: ({ pageParam, signal }) =>
-      threadReads.list(
-        {
-          search,
-          unread: unread ? 'true' : undefined,
-          list,
-          status,
-          page: pageParam,
-          pageSize: PAGE_SIZE,
-        },
-        signal,
-      ),
+    queryFn: ({ pageParam, signal }) => pageOf(pageParam, signal),
     initialPageParam: 1,
     getNextPageParam: nextPageParam,
     refetchInterval: liveTab && focused ? liveInterval(live, INBOX_LIST_REFRESH_MS) : false,
-    // A list answer never shows a tick behind the one its chat already merged (docs/43 43-1).
-    select: withChatTicks(client, queryKey, stored),
+    // What the chat and the phone store hold over the last read shows at once (docs/43 43-1).
+    select: withStoredList(client, queryKey, { threads, chat: storeReader.chat }),
   });
   const pages = query.data?.pages;
   const items = useMemo(() => {

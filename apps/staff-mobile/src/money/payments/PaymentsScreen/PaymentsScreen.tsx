@@ -4,18 +4,18 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import {
-  t,
-  type,
-  useTheme,
   AppText,
   BackButton,
   EmptyState,
   ErrorState,
+  LazyList,
   Screen,
   ScreenHeader,
+  t,
+  type,
+  useTheme,
 } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { paymentParams } from '@/money/payments/filters';
 import { PaymentFilters } from '@/money/payments/PaymentFilters';
 import { PaymentItem } from '@/money/payments/PaymentItem';

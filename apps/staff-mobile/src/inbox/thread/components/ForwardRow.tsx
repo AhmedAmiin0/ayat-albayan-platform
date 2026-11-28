@@ -1,9 +1,8 @@
 import { memo } from 'react';
 import { staffMaySend } from '@ab/client-core';
 import type { ThreadView } from '@ab/shared';
-import { Pressable, View } from 'react-native';
-import { t, shape, type, useTheme, AppText, Avatar } from '@ab/mobile-kit';
-import { CheckIcon } from '@/inbox/shared/chat-icons';
+import { View } from 'react-native';
+import { t, type, useTheme, AppText, Avatar, Checkbox } from '@ab/mobile-kit';
 import { chatName } from '@/inbox/thread/hooks/forward-text';
 import { useThreadMode } from '@/inbox/thread/hooks/thread-mode';
 import { sendState } from '@/inbox/thread/hooks/chat-window';
@@ -33,66 +32,55 @@ export const ForwardRow = memo(function ForwardRow({
   // Uses the device clock, like the composer.
   const closed = !staffMaySend(sendState(th, new Date()), staff);
   return (
-    <Pressable
-      accessibilityRole="checkbox"
-      accessibilityLabel={name}
-      accessibilityHint={closed ? t.inbox.forward.skip.session_closed : undefined}
-      accessibilityState={{ checked, disabled }}
-      disabled={disabled}
-      onPress={() => onToggle(th)}
-      style={({ pressed }) => ({
-        minHeight: 56,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 12,
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        opacity: disabled ? 0.45 : 1,
-        // The list's inset card draws the fill and the rules (one container rule).
-        backgroundColor: pressed || checked ? color.lapisWash : 'transparent',
-      })}
-    >
-      <Avatar name={th.display_name ?? ''} id={th.phone_e164} decorative />
-      <View style={{ flex: 1, gap: 2 }}>
-        <AppText
-          numberOfLines={1}
+    // The list's inset card draws the rules; a picked chat keeps its wash.
+    <View style={{ backgroundColor: checked ? color.lapisWash : 'transparent' }}>
+      <Checkbox
+        label={name}
+        hint={closed ? t.inbox.forward.skip.session_closed : undefined}
+        checked={checked}
+        disabled={disabled}
+        onChange={() => onToggle(th)}
+        side="end"
+        inset
+      >
+        <View
           style={{
-            fontFamily: type.ui[600],
-            fontSize: type.size.body,
-            lineHeight: type.lineHeight(type.size.body),
-            color: color.ink,
+            minHeight: 56,
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 12,
+            paddingVertical: 8,
           }}
         >
-          {name}
-        </AppText>
-        {closed ? (
-          <AppText
-            numberOfLines={2}
-            style={{
-              fontFamily: type.ui[400],
-              fontSize: type.size.xs,
-              lineHeight: type.lineHeight(type.size.xs),
-              color: color.ink3,
-            }}
-          >
-            {t.inbox.forward.skip.session_closed}
-          </AppText>
-        ) : null}
-      </View>
-      <View
-        style={{
-          width: 26,
-          height: 26,
-          borderRadius: shape.radius.pill,
-          borderWidth: 1.5,
-          borderColor: checked ? color.lapisFill : color.ruleInput,
-          backgroundColor: checked ? color.lapisFill : 'transparent',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {checked ? <CheckIcon color={color.onLapis} size={16} /> : null}
-      </View>
-    </Pressable>
+          <Avatar name={th.display_name ?? ''} id={th.phone_e164} decorative />
+          <View style={{ flex: 1, gap: 2 }}>
+            <AppText
+              numberOfLines={1}
+              style={{
+                fontFamily: type.ui[600],
+                fontSize: type.size.body,
+                lineHeight: type.lineHeight(type.size.body),
+                color: color.ink,
+              }}
+            >
+              {name}
+            </AppText>
+            {closed ? (
+              <AppText
+                numberOfLines={2}
+                style={{
+                  fontFamily: type.ui[400],
+                  fontSize: type.size.xs,
+                  lineHeight: type.lineHeight(type.size.xs),
+                  color: color.ink3,
+                }}
+              >
+                {t.inbox.forward.skip.session_closed}
+              </AppText>
+            ) : null}
+          </View>
+        </View>
+      </Checkbox>
+    </View>
   );
 });
