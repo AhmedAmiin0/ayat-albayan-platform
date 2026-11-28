@@ -1,8 +1,10 @@
-import type { LessonView } from '@ab/schedule';
+import { lessonListCalls } from '@ab/client-core';
 import { RIYADH_TZ } from '@ab/time';
 import { useQuery } from '@tanstack/react-query';
-import { apiFetch, toQueryString, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { localDate } from './timeline';
+
+const lists = lessonListCalls({ apiFetch, apiSend });
 
 /**
  * GET /lessons/day for today in Riyadh (docs/10 route 2), every teacher. Academy day (docs/34 b):
@@ -15,6 +17,6 @@ export function useDayLessons(now: Date) {
   const params = { date: localDate(now, RIYADH_TZ), tz: RIYADH_TZ };
   return useQuery({
     queryKey: [...pathKey('/lessons/day'), params],
-    queryFn: () => apiFetch<LessonView[]>(`/lessons/day${toQueryString(params)}`),
+    queryFn: () => lists.day(params),
   });
 }

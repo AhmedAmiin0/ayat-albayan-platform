@@ -645,11 +645,6 @@
       "count": 1
     }
   },
-  "src/calendar/overview/use-overview.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/calendar/screens/DayScheduleScreen/DayScheduleScreen.tsx": {
     "max-lines-per-function": {
       "count": 1
@@ -5232,11 +5227,6 @@
   },
   "src/today/lib/today-plan.ts": {
     "complexity": {
-      "count": 1
-    }
-  },
-  "src/today/lib/use-day-lessons.ts": {
-    "ab/no-untyped-api-calls": {
       "count": 1
     }
   },

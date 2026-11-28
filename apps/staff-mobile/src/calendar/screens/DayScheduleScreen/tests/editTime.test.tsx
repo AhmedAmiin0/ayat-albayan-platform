@@ -1,9 +1,10 @@
+import type { LessonView } from '@ab/schedule';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { GRID } from '@/edit-time/testing/fixtures';
 import { ApiError, t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { DayScheduleScreen } from '@/calendar/screens/DayScheduleScreen/DayScheduleScreen';
-import { OVERVIEW, THIS_WEEK } from '@/calendar/overview/overview-fixtures';
+import { answeredOverview, OVERVIEW, THIS_WEEK } from '@/calendar/overview/overview-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -16,10 +17,12 @@ jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }
 beforeEach(() => {
   jest.clearAllMocks();
   // The API offers the time edit on the pending lesson only (an admin's move).
-  const lessons = OVERVIEW.lessons.map((l) => (l.id === 'l-pending' ? { ...l, time_edit_mode: 'move' } : l));
+  const lessons = OVERVIEW.lessons.map((l): LessonView =>
+    l.id === 'l-pending' ? { ...l, time_edit_mode: 'move' } : l,
+  );
   mockApiFetch.mockImplementation(async (path: string) => {
-    if (path === THIS_WEEK) return { ...OVERVIEW, lessons };
-    if (path.startsWith('/lessons/overview')) return { ...OVERVIEW, lessons: [] };
+    if (path === THIS_WEEK) return answeredOverview({ ...OVERVIEW, lessons });
+    if (path.startsWith('/lessons/overview')) return answeredOverview({ ...OVERVIEW, lessons: [] });
     if (path.startsWith('/booking/slots')) return GRID;
     throw new ApiError(404);
   });

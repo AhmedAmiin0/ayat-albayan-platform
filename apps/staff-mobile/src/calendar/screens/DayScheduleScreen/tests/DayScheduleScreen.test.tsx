@@ -1,9 +1,15 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
+import { uuidFor } from '@/today/testing/answered';
 import { router } from 'expo-router';
 import { ApiError, t, ltr } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { DayScheduleScreen } from '@/calendar/screens/DayScheduleScreen/DayScheduleScreen';
-import { OVERVIEW, overviewPath, THIS_WEEK } from '@/calendar/overview/overview-fixtures';
+import {
+  answeredOverview,
+  OVERVIEW,
+  overviewPath,
+  THIS_WEEK,
+} from '@/calendar/overview/overview-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
@@ -13,10 +19,10 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }));
 
 const NEXT_WEEK = overviewPath('2026-10-02T21:00:00.000Z', '2026-10-09T21:00:00.000Z');
-const empty = { ...OVERVIEW, lessons: [] };
+const empty = answeredOverview({ ...OVERVIEW, lessons: [] });
 const serve = () =>
   mockApiFetch.mockImplementation(async (path: string) => {
-    if (path === THIS_WEEK) return OVERVIEW;
+    if (path === THIS_WEEK) return answeredOverview(OVERVIEW);
     if (path.startsWith('/lessons/overview')) return empty;
     throw new ApiError(404);
   });
@@ -56,7 +62,7 @@ test('«الجدول» today: every teacher, the free one too, with load, window
   expect(screen.getByRole('tab', { name: 'الخميس 1 أكتوبر 3', selected: true })).toBeTruthy();
 
   await fireEvent.press(screen.getByRole('header', { name: 'سارة' }));
-  expect(router.push).toHaveBeenCalledWith('/more/teachers/t2', { withAnchor: true });
+  expect(router.push).toHaveBeenCalledWith(`/more/teachers/${uuidFor('t2')}`, { withAnchor: true });
   // Each teacher's name stays on top while their day scrolls (Android's default is off).
   const [list] = container.queryAll((n) => Array.isArray(n.props['stickyHeaderIndices']));
   expect(list?.props['stickyHeaderIndices']).toHaveLength(3);

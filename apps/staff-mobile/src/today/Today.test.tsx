@@ -1,4 +1,5 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react-native';
+import { answered } from '@/today/testing/answered';
 import { ApiError, t, ltr } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import TodayRoute from '../../app/(tabs)/index';
@@ -28,7 +29,9 @@ const column = (key: 'all' | 'scheduled' | 'completed', n: number, active = fals
     .replace('{n}', String(n))
     .replace('{label}', t.today.summary[key]),
 });
-const row = (names: string) => ({ name: new RegExp(`${names}.*${t.today.openLesson.split('. ')[1] ?? ''}`) });
+const row = (names: string) => ({
+  name: new RegExp(`${names}.*${t.today.openLesson.split('. ')[1] ?? ''}`),
+});
 
 beforeEach(() => {
   mockApiFetch.mockReset();
@@ -49,7 +52,7 @@ test('the greeting by the Riyadh clock is the header (no «اليوم» title), 
 });
 
 test('the summary counts the shown day; a column filters the list, a second tap and «الكل» reset it', async () => {
-  mockApiFetch.mockResolvedValue([done, pending, muscat, cancelled]);
+  mockApiFetch.mockResolvedValue([done, pending, muscat, cancelled].map(answered));
   await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(await screen.findByRole('button', column('all', 3))).toBeTruthy();
   expect(screen.getByRole('button', column('completed', 1))).toBeTruthy();
@@ -57,7 +60,9 @@ test('the summary counts the shown day; a column filters the list, a second tap 
 
   // No hero under a filter.
   await fireEvent.press(screen.getByRole('button', column('scheduled', 1)));
-  expect(screen.getByRole('button', { ...column('scheduled', 1, true), selected: true })).toBeTruthy();
+  expect(
+    screen.getByRole('button', { ...column('scheduled', 1, true), selected: true }),
+  ).toBeTruthy();
   expect(screen.getByRole('button', row('يوسف أحمد'))).toBeTruthy();
   expect(screen.queryByRole('button', row('جنى وليد'))).toBeNull();
   expect(screen.queryByText(t.today.running)).toBeNull();
@@ -67,7 +72,9 @@ test('the summary counts the shown day; a column filters the list, a second tap 
 
   await fireEvent.press(screen.getByRole('button', column('completed', 1)));
   expect(screen.getByText('جودى خالد')).toBeTruthy();
-  expect(screen.getByRole('button', { name: 'انتهت حلقة واحدة اليوم', expanded: true })).toBeTruthy();
+  expect(
+    screen.getByRole('button', { name: 'انتهت حلقة واحدة اليوم', expanded: true }),
+  ).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', column('scheduled', 1)));
   await fireEvent.press(screen.getByRole('button', { name: t.today.all }));
   expect(screen.getByRole('button', { ...column('all', 3), selected: true })).toBeTruthy();
@@ -75,7 +82,7 @@ test('the summary counts the shown day; a column filters the list, a second tap 
 });
 
 test('the hero is the lesson under way; the rest are quiet rows with no buttons of their own', async () => {
-  mockApiFetch.mockResolvedValue([muscat, cancelled, pending, done]);
+  mockApiFetch.mockResolvedValue([muscat, cancelled, pending, done].map(answered));
   await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(await screen.findByText(t.today.running)).toBeTruthy();
   expect(screen.getByText('16:00')).toBeTruthy();
@@ -88,7 +95,7 @@ test('the hero is the lesson under way; the rest are quiet rows with no buttons 
 });
 
 test('a row opens «تفاصيل الحلقة» with the student codes; ended lessons fold and unfold', async () => {
-  mockApiFetch.mockResolvedValue([done, pending, muscat]);
+  mockApiFetch.mockResolvedValue([done, pending, muscat].map(answered));
   await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   const fold = await screen.findByRole('button', { name: 'انتهت حلقة واحدة اليوم' });
   expect(screen.queryByText('جودى خالد')).toBeNull();
@@ -104,9 +111,13 @@ test('a row opens «تفاصيل الحلقة» with the student codes; ended le
 
 test('a quiet day: «انتهت حلقات اليوم», tomorrow’s first lesson, and «جدول الغد»', async () => {
   jest.setSystemTime(new Date('2026-10-01T16:00:00Z'));
-  const tomorrow = { ...pending, id: 'tm', starts_at: '2026-10-02T05:00:00.000Z', ends_at: '2026-10-02T05:45:00.000Z' };
+  const at = { starts_at: '2026-10-02T05:00:00.000Z', ends_at: '2026-10-02T05:45:00.000Z' };
+  const tomorrow = [
+    { ...pending, ...at, id: 'tm' },
+    { ...pending, ...at, id: 'tm2' },
+  ];
   mockApiFetch.mockImplementation(async (path: string) =>
-    path.includes('2026-10-02') ? [tomorrow, { ...tomorrow, id: 'tm2' }] : [done, pending],
+    (path.includes('2026-10-02') ? tomorrow : [done, pending]).map(answered),
   );
   await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(await screen.findByRole('header', { name: t.today.quietTitle })).toBeTruthy();
@@ -116,10 +127,12 @@ test('a quiet day: «انتهت حلقات اليوم», tomorrow’s first less
 });
 
 test('no lessons today: the Today empty state; an empty column says so', async () => {
-  mockApiFetch.mockResolvedValue([done, muscat]);
+  mockApiFetch.mockResolvedValue([done, muscat].map(answered));
   await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   await fireEvent.press(await screen.findByRole('button', column('scheduled', 0)));
-  expect(within(screen.getByTestId('screen-body')).getByRole('header', { name: t.today.emptyFilter })).toBeTruthy();
+  expect(
+    within(screen.getByTestId('screen-body')).getByRole('header', { name: t.today.emptyFilter }),
+  ).toBeTruthy();
 
   mockApiFetch.mockResolvedValue([]);
   await renderWithQuery(<TodayRoute />, confirmingQueryClient());
@@ -127,7 +140,7 @@ test('no lessons today: the Today empty state; an empty column says so', async (
 });
 
 test('failed with nothing saved: error and retry', async () => {
-  mockApiFetch.mockRejectedValueOnce(new ApiError(500)).mockResolvedValue([pending]);
+  mockApiFetch.mockRejectedValueOnce(new ApiError(500)).mockResolvedValue([pending].map(answered));
   await renderWithQuery(<TodayRoute />, confirmingQueryClient());
   expect(await screen.findByRole('alert')).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));

@@ -1,8 +1,9 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { uuidFor } from '@/today/testing/answered';
 import { ApiError, t } from '@ab/mobile-kit';
 import { confirmingQueryClient, renderWithQuery } from '@/test/query';
 import { DayScheduleScreen } from '@/calendar/screens/DayScheduleScreen/DayScheduleScreen';
-import { OVERVIEW, THIS_WEEK } from '@/calendar/overview/overview-fixtures';
+import { answeredOverview, OVERVIEW, THIS_WEEK } from '@/calendar/overview/overview-fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -16,8 +17,8 @@ jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }
 beforeEach(() => {
   jest.clearAllMocks();
   mockApiFetch.mockImplementation(async (path: string) => {
-    if (path === THIS_WEEK) return OVERVIEW;
-    if (path.startsWith('/lessons/overview')) return { ...OVERVIEW, lessons: [] };
+    if (path === THIS_WEEK) return answeredOverview(OVERVIEW);
+    if (path.startsWith('/lessons/overview')) return answeredOverview({ ...OVERVIEW, lessons: [] });
     throw new ApiError(404);
   });
   // Thursday 1 Oct 2026, 16:20 in Riyadh.
@@ -25,7 +26,8 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-const openRow = (who: string) => screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) });
+const openRow = (who: string) =>
+  screen.findByRole('button', { name: t.lessons.sheet.openRow.replace('{names}', who) });
 const sheetOpen = () => screen.queryByText(t.lessons.sheet.about) !== null;
 
 test('a tap on the row opens «تفاصيل الحلقة» with the admin’s actions for that lesson', async () => {
@@ -43,8 +45,14 @@ test('a tap on the row opens «تفاصيل الحلقة» with the admin’s ac
 test('a row’s own button fires its action and does not open the sheet', async () => {
   mockApiSend.mockResolvedValue({});
   await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
-  await fireEvent.press(await screen.findByRole('button', { name: `${t.today.confirm} — يوسف أحمد` }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/confirm', undefined);
+  await fireEvent.press(
+    await screen.findByRole('button', { name: `${t.today.confirm} — يوسف أحمد` }),
+  );
+  expect(mockApiSend).toHaveBeenCalledWith(
+    'POST',
+    `/lessons/${uuidFor('l-pending')}/confirm`,
+    undefined,
+  );
   expect(sheetOpen()).toBe(false);
   await fireEvent.press(screen.getByRole('button', { name: `${t.today.cancel} — جنى وليد` }));
   expect(screen.getByText(t.lessons.cancelBy)).toBeTruthy();
@@ -58,22 +66,31 @@ test('«تأكيد» inside the sheet confirms, and the sheet shows the new stat
   const [, inSheet] = screen.getAllByRole('button', { name: `${t.today.confirm} — يوسف أحمد` });
   if (!inSheet) throw new Error('no sheet confirm');
   await fireEvent.press(inSheet);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/confirm', undefined);
+  expect(mockApiSend).toHaveBeenCalledWith(
+    'POST',
+    `/lessons/${uuidFor('l-pending')}/confirm`,
+    undefined,
+  );
   await waitFor(() => expect(screen.getAllByText(t.enums.lessonStatus.confirmed)).toHaveLength(3));
 });
 
 test('«غيّر الميعاد» from the sheet opens the reschedule sheet over it; «إغلاق» closes the details', async () => {
   mockApiFetch.mockImplementation(async (path: string) => {
-    if (path === THIS_WEEK) return OVERVIEW;
-    if (path.startsWith('/booking/slots')) return { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [] };
+    if (path === THIS_WEEK) return answeredOverview(OVERVIEW);
+    if (path.startsWith('/booking/slots'))
+      return { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [] };
     throw new ApiError(404);
   });
   await renderWithQuery(<DayScheduleScreen />, confirmingQueryClient());
   await fireEvent.press(await openRow('يوسف أحمد'));
-  const [, inSheet] = screen.getAllByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` });
+  const [, inSheet] = screen.getAllByRole('button', {
+    name: `${t.lessons.rescheduleSubmit} — يوسف أحمد`,
+  });
   if (!inSheet) throw new Error('no sheet reschedule');
   await fireEvent.press(inSheet);
-  await waitFor(() => expect(screen.getByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy());
+  await waitFor(() =>
+    expect(screen.getByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy(),
+  );
   const closes = screen.getAllByRole('button', { name: t.common.close });
   const first = closes[0];
   if (!first) throw new Error('no close');
