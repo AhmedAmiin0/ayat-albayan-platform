@@ -1,12 +1,13 @@
 import { ApiError } from '../lib/http/api';
 import { t } from '../lib/i18n/i18n';
 import { signIn } from './sign-in';
+import { mockCall } from '@ab/testing/mock-call';
 
 // docs/30 §5: an identifier without @ signs in through POST /auth/login, then setSession, then the same role check.
 const mockSignInWithPassword = jest.fn();
 const mockSetSession = jest.fn();
 const mockSignOut = jest.fn();
-const mockApiFetch = jest.fn();
+const mockApi = mockCall();
 const mockApiSend = jest.fn();
 
 jest.mock('../lib/http/supabase', () => ({
@@ -20,7 +21,7 @@ jest.mock('../lib/http/supabase', () => ({
 }));
 jest.mock('../lib/http/api', () => ({
   ...jest.requireActual('../lib/http/api'),
-  apiFetch: (p: string) => mockApiFetch(p),
+  call: (request: unknown) => mockApi.call(request),
   apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
 }));
 
@@ -29,22 +30,26 @@ const session = { access_token: 'at', refresh_token: 'rt', expires_in: 3600, exp
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockApi.reset();
   mockSetSession.mockResolvedValue({ error: null });
 });
 
 test('a username signs in through /auth/login, sets the session, then checks the role', async () => {
   mockApiSend.mockResolvedValue(session);
-  mockApiFetch.mockResolvedValue({ role: 'teacher' });
+  mockApi.answer('GET', '/auth/me', { role: 'teacher' });
   expect(await signIn(creds)).toEqual({ ok: true });
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/login', { username: 'sara.t', password: 'pw' });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/auth/login', {
+    username: 'sara.t',
+    password: 'pw',
+  });
   expect(mockSetSession).toHaveBeenCalledWith({ access_token: 'at', refresh_token: 'rt' });
-  expect(mockApiFetch).toHaveBeenCalledWith('/auth/me');
+  expect(mockApi.reads()).toContainEqual({ method: 'GET', path: '/auth/me' });
   expect(mockSignInWithPassword).not.toHaveBeenCalled();
 });
 
 test('a username of a family account gets the same wrong-app refusal and is signed out', async () => {
   mockApiSend.mockResolvedValue(session);
-  mockApiFetch.mockResolvedValue({ role: 'guardian' });
+  mockApi.answer('GET', '/auth/me', { role: 'guardian' });
   expect(await signIn(creds)).toEqual({ ok: false, error: t.mobileRoles.wrongApp });
   expect(mockSignOut).toHaveBeenCalled();
 });
@@ -56,7 +61,7 @@ test.each([
   mockApiSend.mockRejectedValue(error);
   expect(await signIn(creds)).toEqual({ ok: false, error: t.auth.invalidCredentials });
   expect(mockSetSession).not.toHaveBeenCalled();
-  expect(mockApiFetch).not.toHaveBeenCalled();
+  expect(mockApi.reads()).toHaveLength(0);
 });
 
 test('429 too_many_requests says to wait', async () => {
@@ -68,5 +73,5 @@ test('a session that will not set is refused before the role check', async () =>
   mockApiSend.mockResolvedValue(session);
   mockSetSession.mockResolvedValue({ error: new Error('bad jwt') });
   expect(await signIn(creds)).toEqual({ ok: false, error: t.auth.invalidCredentials });
-  expect(mockApiFetch).not.toHaveBeenCalled();
+  expect(mockApi.reads()).toHaveLength(0);
 });
