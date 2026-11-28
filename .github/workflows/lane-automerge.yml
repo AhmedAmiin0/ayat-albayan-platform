@@ -1,7 +1,7 @@
 name: lane-automerge
-# Low-risk lane PRs, and PRs labelled `reviewed` after their last push, merge themselves into
-# develop once every check on their head is green (docs/09 «Lane auto-merge»; the conditions are tools/scripts/automerge/decide.ts). Remove the
-# auto-merge label from a PR to stop its merge. No secret: the built-in token only.
+# Low-risk lane PRs, PRs labelled `reviewed` after their last push, and PRs labelled `priority`
+# merge themselves into develop once every check on their head is green (docs/09 «Lane auto-merge»; the conditions are tools/scripts/automerge/decide.ts). Remove the
+# auto-merge label (and `priority`) from a PR to stop its merge. No secret: the built-in token only.
 on:
   workflow_run:
     workflows: [ci]
@@ -26,7 +26,8 @@ jobs:
     if: >-
       github.event_name == 'schedule'
       || (github.event_name == 'workflow_run' && github.event.workflow_run.event == 'pull_request')
-      || (github.event_name == 'pull_request' && github.event.label.name == 'auto-merge'
+      || (github.event_name == 'pull_request'
+          && (github.event.label.name == 'auto-merge' || github.event.label.name == 'priority')
           && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -110,12 +111,23 @@ jobs:
             sha=$(sed -n 's/^sha=//p' "$2/out.txt")
             echo "#$1: $action ($(sed -n 's/^reason=//p' "$2/out.txt"))"
           }
-          prs=$(gh pr list --repo "$REPO" --base develop --label auto-merge --state open --limit 100 \
-            --json number --jq '.[].number')
+          # Priority PRs are decided (merged or updated) first (queue/order.ts).
+          { gh pr list --repo "$REPO" --base develop --label auto-merge --state open --limit 100 \
+              --json number,labels
+            gh pr list --repo "$REPO" --base develop --label priority --state open --limit 100 \
+              --json number,labels; } | jq -s add > "$RUNNER_TEMP/prs.json"
+          prs=$(node tools/scripts/automerge/queue/order.ts "$RUNNER_TEMP/prs.json")
           for n in $prs; do
             d="$RUNNER_TEMP/pr-$n"
             decide "$n" "$d"
             if [ "$action" = comment ]; then gh pr comment "$n" --repo "$REPO" --body-file "$d/comment.txt"; fi
+            # A green priority PR behind develop: merge develop into it on the checked head. That push,
+            # made with the built-in token, starts no workflow, so ci is dispatched on the branch.
+            if [ "$action" = update ]; then
+              gh api -X PUT "repos/$REPO/pulls/$n/update-branch" -f expected_head_sha="$sha" --silent \
+                && gh workflow run ci.yml --repo "$REPO" --ref "$(jq -r .headRefName "$d/pr.json")" \
+                || echo "::warning::#$n: update refused"
+            fi
             [ "$action" = merge ] || continue
             # Re-check right before merging: an earlier merge in this run may have moved develop.
             decide "$n" "$d"

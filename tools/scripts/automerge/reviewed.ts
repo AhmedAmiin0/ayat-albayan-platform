@@ -36,10 +36,14 @@ interface Gate {
   reason: string;
 }
 
-const GATES: readonly Gate[] = [
-  { fails: (f) => !f.pr.labels.some((l) => l.name === REVIEWED), reason: 'not reviewed' },
+const OWNER_GATES: readonly Gate[] = [
   { fails: (f) => OWNER_BRANCHES.includes(f.pr.headRefName), reason: 'the owner merges it' },
   { fails: touchesGated, reason: 'changes a file the owner merges' },
+];
+
+const GATES: readonly Gate[] = [
+  { fails: (f) => !f.pr.labels.some((l) => l.name === REVIEWED), reason: 'not reviewed' },
+  ...OWNER_GATES,
   { fails: (f) => !(reviewedAt(f) > headAt(f)), reason: 'head is newer than the review' },
   { fails: (f) => forcedAt(f) >= reviewedAt(f), reason: 'force-pushed after the review' },
 ];
@@ -47,4 +51,9 @@ const GATES: readonly Gate[] = [
 /** Why a non-lane PR may not merge on its review, or null when it may. */
 export function notReviewed(f: Facts): string | null {
   return GATES.find((g) => g.fails(f))?.reason ?? null;
+}
+
+/** Why only the owner may merge this PR, whatever its labels say, or null. */
+export function ownerMerges(f: Facts): string | null {
+  return OWNER_GATES.find((g) => g.fails(f))?.reason ?? null;
 }
