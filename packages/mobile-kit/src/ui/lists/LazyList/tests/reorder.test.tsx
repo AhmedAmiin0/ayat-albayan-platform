@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
-import { AppText } from '@ab/mobile-kit';
-import { LazyList } from '@/core/ui/lists/LazyList/LazyList';
+import { AppText } from '../../../primitives/AppText';
+import { LazyList } from '../LazyList';
 
 // A newest-first list (the chats) reorders without changing its length: a chat moves to the top.
 // Rows that keep their objects keep their drawn cells in FlashList; each cell's rounded ends must

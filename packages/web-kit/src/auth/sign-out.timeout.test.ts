@@ -8,10 +8,10 @@ const auth = vi.hoisted(() => ({
   signOut: vi.fn(),
   getSession: vi.fn(),
 }));
-const apiFetch = vi.hoisted(() => vi.fn());
+const call = vi.hoisted(() => vi.fn());
 
 vi.mock('@ab/web-kit/lib/http/supabase', () => ({ supabase: { auth } }));
-vi.mock('@ab/web-kit/lib/http/api/api', () => ({ apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', () => ({ call }));
 
 afterEach(() => {
   vi.useRealTimers();
@@ -20,7 +20,7 @@ afterEach(() => {
 describe('signOut never hangs on the activity report', () => {
   it('signs out within the timeout even when the report never answers', async () => {
     vi.useFakeTimers();
-    apiFetch.mockImplementation(() => new Promise(() => undefined));
+    call.mockImplementation(() => new Promise(() => undefined));
     auth.signOut.mockResolvedValue({ error: null });
     let done = false;
     const run = signOut(new QueryClient()).then(() => {
@@ -33,7 +33,7 @@ describe('signOut never hangs on the activity report', () => {
   });
 
   it('still signs out when the report fails', async () => {
-    apiFetch.mockImplementation(() => Promise.reject(new Error('down')));
+    call.mockImplementation(() => Promise.reject(new Error('down')));
     auth.signOut.mockResolvedValue({ error: null });
     await signOut(new QueryClient());
     expect(auth.signOut).toHaveBeenCalled();

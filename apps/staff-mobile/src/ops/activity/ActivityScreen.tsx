@@ -2,13 +2,20 @@ import type { ActivityView } from '@ab/shared';
 import { backWithin } from '@/core/nav/back-within';
 import { useState } from 'react';
 import { clockAt } from '@/inbox/shared/format';
-import { t, BackButton, EmptyState, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
+import {
+  BackButton,
+  EmptyState,
+  ErrorState,
+  LazyList,
+  Screen,
+  ScreenHeader,
+  t,
+} from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
 import { ActivityFilterBar } from './ActivityFilterBar';
 import { ActivityRow } from './ActivityRow';
 import { filterParams, isFiltered, NO_FILTERS, type ActivityFilters } from './activity-filters';
 import { useClockCycle, useViewerTz } from '@/core/lib/clock';
-import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (r: ActivityView) => r.id;
 const renderRow = ({ item }: { item: ActivityView }) => <ActivityRow row={item} />;

@@ -1,9 +1,15 @@
 import { forAudience, type TemplateView } from '@ab/shared';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { FlatList, type ListRenderItemInfo, View } from 'react-native';
-import { useSendsAllTemplates, t, EmptyState, ErrorState, ListRow } from '@ab/mobile-kit';
+import {
+  EmptyState,
+  ErrorState,
+  ListRow,
+  t,
+  useInsetRows,
+  useSendsAllTemplates,
+} from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 
 const names: Record<string, string> = t.templates.names;
 

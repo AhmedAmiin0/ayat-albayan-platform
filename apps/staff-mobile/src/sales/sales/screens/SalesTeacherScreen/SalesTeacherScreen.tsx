@@ -5,20 +5,20 @@ import { pushInTab } from '@/core/nav/back-within';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
 import {
-  t,
-  useTheme,
   BackButton,
   EmptyState,
   ErrorState,
+  FilterPills,
   ListRow,
   Screen,
   ScreenHeader,
   StatusChip,
-  FilterPills,
+  t,
+  useInsetRows,
+  useTheme,
 } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { KIND_EMPTY } from '@/students/list/student-kinds';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useSalesTeachers } from '@/sales/sales/lib/sales-api';
 import { SalesTeacherHeader } from '@/sales/sales/components/SalesTeacherHeader';
 import { nextLessonLine, teacherLabel, teacherSubtitle } from '@/sales/sales/lib/sales-text';

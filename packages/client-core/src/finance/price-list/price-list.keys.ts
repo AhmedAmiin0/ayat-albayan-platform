@@ -1,10 +1,5 @@
 import { pricingRoutes } from '@ab/shared';
-import { pathKey } from '../../core/keys';
 import type { PriceListKeys } from './price-list.types';
 
-const all = pathKey(pricingRoutes.list.path);
-
-export const priceListKeys: PriceListKeys = {
-  all,
-  of: (params) => [...all, params],
-};
+/** The list route's own key: `all` reaches every cached list, `of` is one choice's entry. */
+export const priceListKeys: PriceListKeys = pricingRoutes.list.key;

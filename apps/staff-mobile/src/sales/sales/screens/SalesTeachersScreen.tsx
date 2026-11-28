@@ -9,16 +9,16 @@ import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
 import {
-  t,
-  useTheme,
   BackButton,
   EmptyState,
   ErrorState,
   Screen,
   ScreenHeader,
+  t,
+  useInsetRows,
   useTabBarInset,
+  useTheme,
 } from '@ab/mobile-kit';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import { useSalesTeachers } from '@/sales/sales/lib/sales-api';
 import { SalesTeacherRow } from '@/sales/sales/components/SalesTeacherRow';
 import { TeacherFiltersBar } from '@/sales/sales/components/TeacherFiltersBar';

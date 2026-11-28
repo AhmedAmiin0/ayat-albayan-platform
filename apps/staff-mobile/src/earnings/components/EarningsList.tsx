@@ -1,9 +1,8 @@
 import type { TeacherEarningView, TeacherPaymentView } from '@ab/money';
 import { type ReactElement, useCallback } from 'react';
 
-import { t, EmptyState, ErrorState } from '@ab/mobile-kit';
+import { EmptyState, ErrorState, LazyList, t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { PaymentItem } from './PaymentItem';
 import type { SessionFilter } from '@ab/client-core';
 import { useEarningsPayments, useEarningsSessions } from '@/earnings/hooks/queries';
