@@ -1,6 +1,5 @@
 import { publicConfigRoutes as routes, publicCustom, type PublicConfig } from '@ab/settings';
 import { Controller, Header } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { CustomConfigService } from '@/common/configuration/custom-config/custom-config.service';
 import { Route } from '@/common/http/route';
 import { SettingsService } from '@/common/settings/settings.service';
@@ -19,7 +18,6 @@ export class PublicConfigController {
     private readonly custom: CustomConfigService,
   ) {}
 
-  @Public()
   @Route(routes.get)
   @Header('Cache-Control', 'public, max-age=60')
   async get(): Promise<PublicConfig> {

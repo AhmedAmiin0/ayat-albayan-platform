@@ -1,8 +1,14 @@
-import { CallStore, deriveCall, type CallDerived, type CallSession } from '@ab/client-core';
+import {
+  CallStore,
+  callsKeys,
+  deriveCall,
+  type CallDerived,
+  type CallSession,
+} from '@ab/client-core';
 import type { ActiveCallView, CallConfigView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { activeCallsQuery, CALLS_KEY } from '@/features/messaging/calls/api/calls-api';
+import { activeCallsQuery } from '@/features/messaging/calls/api/calls-api';
 import type { RtcDeps } from '@/features/messaging/calls/rtc/media';
 import { peerMaker, webCalls } from './call-platform';
 
@@ -23,7 +29,7 @@ export function useCallSession(input: {
   const client = useQueryClient();
   const { play, rtc } = input;
   const [store] = useState(
-    () => new CallStore(webCalls, () => void client.invalidateQueries({ queryKey: CALLS_KEY })),
+    () => new CallStore(webCalls, () => void client.invalidateQueries({ queryKey: callsKeys.all })),
   );
   const state = useSyncExternalStore(store.subscribe, store.get);
   const enabled = input.config?.enabled === true && input.config.canCall;

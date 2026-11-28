@@ -12,5 +12,6 @@ export const shortLinkRedirectRoutes = {
     params: z.object({ code: z.string() }),
     response: 'redirect',
     tags: ['short-links'],
+    isPublic: true,
   }),
 };

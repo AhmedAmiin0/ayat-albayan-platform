@@ -1,4 +1,4 @@
-import { CALLS_KEY, shouldRetryUnanswered } from '@ab/client-core';
+import { callsKeys, shouldRetryUnanswered } from '@ab/client-core';
 import { MutationCache, QueryCache, QueryClient, type Query } from '@tanstack/react-query';
 
 export const STALE_MS = 30_000;
@@ -13,7 +13,7 @@ const LIVE_ROOTS: readonly string[] = [
   'reply-moved',
   'chat-lists',
   'saved-replies',
-  ...CALLS_KEY,
+  ...callsKeys.all,
 ];
 
 const isLive = (query: Query): boolean => LIVE_ROOTS.includes(String(query.queryKey[0]));

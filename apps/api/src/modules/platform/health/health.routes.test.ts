@@ -16,6 +16,7 @@ describe('healthRoutes', () => {
   it('leaves the two probes open under the health tag', () => {
     for (const route of [routes.health, routes.ready]) {
       expect(route.tags).toEqual(['health']);
+      expect(route.isPublic).toBe(true);
       expect(route).not.toHaveProperty('permissions');
     }
   });

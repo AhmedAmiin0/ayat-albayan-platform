@@ -76,6 +76,7 @@ export const shortLinkRoutes = {
 };
 
 const gate = { params: byCode, tags: ['short-links'] } as const;
+const open = { ...gate, isPublic: true } as const;
 
 /** The web gate /l/<code> of a managed link (docs/19 «Gate»): no permission, never the target. */
 export const shortLinkGateRoutes = {
@@ -83,21 +84,21 @@ export const shortLinkGateRoutes = {
     method: 'GET',
     path: '/public/short-links/:code',
     response: shortLinkGateViewSchema,
-    ...gate,
+    ...open,
   }),
   start: defineRoute({
     method: 'POST',
     path: '/public/short-links/:code/otp/start',
     body: shortLinkOtpStartSchema,
     response: 'empty',
-    ...gate,
+    ...open,
   }),
   verify: defineRoute({
     method: 'POST',
     path: '/public/short-links/:code/otp/verify',
     body: shortLinkOtpVerifySchema,
     response: shortLinkOpenResultSchema,
-    ...gate,
+    ...open,
   }),
   open: defineRoute({
     method: 'POST',

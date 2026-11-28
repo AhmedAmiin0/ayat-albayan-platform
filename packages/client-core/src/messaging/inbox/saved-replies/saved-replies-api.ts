@@ -1,4 +1,4 @@
-import { savedReplyRoutes as routes } from '@ab/shared';
+import { savedReplyRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { SavedReplyCalls } from './saved-replies-api.types';
 
@@ -6,13 +6,14 @@ import type { SavedReplyCalls } from './saved-replies-api.types';
 export function savedReplyCalls(client: ApiClient): SavedReplyCalls {
   const call = callWith(client);
   return {
-    all: () => call({ route: routes.all }),
-    create: (body) => call({ route: routes.create, body }),
-    update: ({ id, body }) => call({ route: routes.update, params: { id }, body }),
-    remove: (id) => call({ route: routes.remove, params: { id } }),
-    move: ({ id, direction }) => call({ route: routes.move, params: { id }, body: { direction } }),
+    all: () => call({ route: savedReplyRoutes.all }),
+    create: (body) => call({ route: savedReplyRoutes.create, body }),
+    update: ({ id, body }) => call({ route: savedReplyRoutes.update, params: { id }, body }),
+    remove: (id) => call({ route: savedReplyRoutes.remove, params: { id } }),
+    move: ({ id, direction }) =>
+      call({ route: savedReplyRoutes.move, params: { id }, body: { direction } }),
     stage: ({ id, clientRequestId }) =>
-      call({ route: routes.stage, params: { id }, body: { clientRequestId } }),
-    uploadUrl: (body) => call({ route: routes.uploadUrl, body }),
+      call({ route: savedReplyRoutes.stage, params: { id }, body: { clientRequestId } }),
+    uploadUrl: (body) => call({ route: savedReplyRoutes.uploadUrl, body }),
   };
 }
