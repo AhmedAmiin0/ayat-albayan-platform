@@ -3,13 +3,26 @@ import {
   translationKeyParamsSchema,
   translationKeysPageSchema,
   translationKeysQuerySchema,
+  translationLocaleParamsSchema,
+  translationOverridesSchema,
   translationValueSchema,
 } from './translations.schemas';
 
 const access = { permissions: ['translations.manage'], tags: ['i18n'] } as const;
 
-/** The admin translations editor: every bundled key, and one locale's override saved or removed. */
+/**
+ * One locale's overrides for any visitor (the sign-in page reads them before sign-in), and the
+ * admin editor: every bundled key, and one locale's override saved or removed.
+ */
 export const translationRoutes = {
+  overrides: defineRoute({
+    method: 'GET',
+    path: '/i18n/:locale/overrides',
+    params: translationLocaleParamsSchema,
+    response: translationOverridesSchema,
+    tags: ['i18n'],
+    isPublic: true,
+  }),
   keys: defineRoute({
     method: 'GET',
     path: '/i18n/keys',

@@ -1,3 +1,5 @@
+import { routePath } from '@ab/core';
+import { translationRoutes } from '@ab/i18n';
 import { probe, type ProbeAnswer, type ProbeOptions } from '../../core/http';
 import { type Overrides, overridesSchema } from './overrides.schemas';
 import type { OverridesOptions, OverridesRequest } from './read-overrides.types';
@@ -23,7 +25,7 @@ export async function readOverrides(
   req: OverridesRequest,
   opts: OverridesOptions = {},
 ): Promise<Overrides | null> {
-  const url = `${req.apiUrl}/i18n/${req.locale}/overrides`;
+  const url = `${req.apiUrl}${routePath(translationRoutes.overrides, { locale: req.locale })}`;
   const parsed = overridesSchema.safeParse(successBody(await probe(url, probeOptions(opts))));
   return parsed.success ? parsed.data : null;
 }
