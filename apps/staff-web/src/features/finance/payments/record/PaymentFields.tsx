@@ -18,17 +18,18 @@ type Props = {
   currency: string;
   today: string;
   amountError?: string | null;
-  /** A card payment (amountFromStripe): its amount comes from Stripe, shown but never edited. */
-  amountLocked?: boolean;
+  /** Set when the amount is shown but not edited here: says why (Stripe's, or «Edit amount»). */
+  amountLockedReason?: string;
 };
 
 /** Amount (in the package currency, fixed in v1), method, date and note. */
-export function PaymentFields({ form, set, currency, today, amountError, amountLocked }: Props) {
+export function PaymentFields(props: Props) {
+  const { form, set, currency, today, amountError, amountLockedReason } = props;
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <Field
         label={`${t.payments.amount} (${currencySymbol(currency)})`}
-        hint={amountLocked ? t.payments.editAmount.fromStripe : undefined}
+        hint={amountLockedReason}
         error={amountError ?? undefined}
       >
         {(p) => (
@@ -40,7 +41,7 @@ export function PaymentFields({ form, set, currency, today, amountError, amountL
             dir="ltr"
             value={form.amount}
             onChange={(e) => set({ amount: e.target.value })}
-            disabled={amountLocked}
+            disabled={amountLockedReason !== undefined}
             required
           />
         )}

@@ -8,7 +8,7 @@ import { useAdminAmountEdit } from './amount/use-admin-amount-edit';
 import { ConfirmDialog } from './record/ConfirmDialog';
 import { EditPaymentDialog } from './record/EditPaymentDialog';
 import { AttachmentsDialog } from './attachments/AttachmentsDialog';
-import type { PaymentAction } from './payment-columns';
+import type { PaymentAction } from './payment-menu';
 import { ReceiptDialog } from './attachments/ReceiptDialog';
 
 type Props = {

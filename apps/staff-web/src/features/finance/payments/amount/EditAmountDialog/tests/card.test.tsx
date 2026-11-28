@@ -31,8 +31,11 @@ function page(rows: PaymentView[]) {
   renderWithClient(<PaymentsPage search={{}} onSearch={vi.fn()} />);
 }
 
-const actionFor = (row: HTMLElement) =>
-  within(row).queryByRole('button', { name: new RegExp(t.payments.editAmount.action) });
+function actionFor(row: HTMLElement) {
+  const menu = within(row).queryByRole('button', { name: new RegExp(t.common.actions) });
+  if (menu) fireEvent.click(menu);
+  return within(row).queryByRole('menuitem', { name: t.payments.editAmount.action });
+}
 
 describe('«تعديل المبلغ» never for a card payment: its amount is Stripe’s', () => {
   afterEach(() => {
@@ -70,19 +73,17 @@ describe('«تعديل المبلغ» never for a card payment: its amount is St
     expect(body).not.toHaveProperty('amount');
   });
 
-  it('a bank payment edit still sends its amount', async () => {
+  it('a bank payment: the amount is left to «تعديل المبلغ», said, and never sent', async () => {
     apiSend.mockResolvedValue(PAYMENT);
     renderWithClient(<EditPaymentDialog payment={PAYMENT} onClose={vi.fn()} />);
-    expect(screen.getByRole<HTMLInputElement>('textbox', { name: amountName }).disabled).toBe(
-      false,
-    );
+    const box = screen.getByRole<HTMLInputElement>('textbox', { name: amountName });
+    expect(box.disabled).toBe(true);
+    expect(screen.getByText(t.payments.editAmount.elsewhere)).toBeTruthy();
+    expect(screen.queryByText(t.payments.editAmount.fromStripe)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
-    await vi.waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith(
-        'PATCH',
-        '/payments/pay-1',
-        expect.objectContaining({ amount: 145 }),
-      ),
-    );
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledTimes(1));
+    const [, path, body] = apiSend.mock.calls[0] ?? [];
+    expect(path).toBe('/payments/pay-1');
+    expect(body).not.toHaveProperty('amount');
   });
 });

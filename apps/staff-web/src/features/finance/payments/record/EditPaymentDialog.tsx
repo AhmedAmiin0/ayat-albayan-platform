@@ -1,4 +1,4 @@
-import { amountFromStripe, parseAmount } from '@ab/money';
+import { amountFromStripe } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button, Dialog, FormAlert, t } from '@ab/web-kit';
@@ -8,7 +8,10 @@ import { paidAtFor, updatePayment, type PaymentView } from '@/features/finance/p
 import { paidAtDay } from './pay-day';
 import { PaymentFields, type PaymentForm } from './PaymentFields';
 
-/** Audited, and the package status follows; a card payment's amount is Stripe's and never sent. */
+/**
+ * Audited, and the package status follows. The amount is never sent from here: a card's is
+ * Stripe's, any other changes only through «Edit amount», which asks first (UX-7, docs/65).
+ */
 export function EditPaymentDialog({ payment, onClose }: { payment: PaymentView; onClose: () => void }) {
   const formId = useId();
   const queryClient = useQueryClient();
@@ -18,11 +21,12 @@ export function EditPaymentDialog({ payment, onClose }: { payment: PaymentView; 
     day: paidAtDay(new Date(payment.paid_at)),
     note: payment.note ?? '',
   });
-  const [amountError, setAmountError] = useState<string | null>(null);
-  const locked = amountFromStripe(payment.method);
+  const amountHint = amountFromStripe(payment.method)
+    ? t.payments.editAmount.fromStripe
+    : t.payments.editAmount.elsewhere;
   const save = useMutation({
-    mutationFn: (amount: number) =>
-      updatePayment(payment.id, { ...(locked ? {} : { amount }), method: form.method, paidAt: paidAtFor(form.day), note: form.note.trim() || null }),
+    mutationFn: () =>
+      updatePayment(payment.id, { method: form.method, paidAt: paidAtFor(form.day), note: form.note.trim() || null }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: MONEY_KEY });
       onClose();
@@ -30,9 +34,7 @@ export function EditPaymentDialog({ payment, onClose }: { payment: PaymentView; 
   });
   const submit = (e: SubmitEvent) => {
     e.preventDefault();
-    const amount = locked ? payment.amount : parseAmount(form.amount);
-    setAmountError(amount === null ? (form.amount.trim() ? t.payments.mobile.amountInvalid : t.common.required) : null);
-    if (amount !== null) save.mutate(amount);
+    save.mutate();
   };
   return (
     <Dialog
@@ -51,7 +53,7 @@ export function EditPaymentDialog({ payment, onClose }: { payment: PaymentView; 
       }
     >
       <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
-        <PaymentFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} currency={payment.currency} today={paidAtDay()} amountError={amountError} amountLocked={locked} />
+        <PaymentFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} currency={payment.currency} today={paidAtDay()} amountLockedReason={amountHint} />
         {save.isError && <FormAlert>{apiErrorText(save.error, { ...t.payments.error, ...t.finance.error })}</FormAlert>}
       </form>
     </Dialog>

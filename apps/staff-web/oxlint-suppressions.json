@@ -539,9 +539,6 @@
     }
   },
   "src/features/finance/payments/payment-columns.tsx": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "max-lines-per-function": {
       "count": 1
     },
@@ -560,11 +557,8 @@
     }
   },
   "src/features/finance/payments/record/EditPaymentDialog.tsx": {
-    "no-nested-ternary": {
-      "count": 1
-    },
     "stylistic/max-len": {
-      "count": 5
+      "count": 4
     },
     "ab/module-boundaries": {
       "count": 1
@@ -4082,17 +4076,6 @@
   },
   "src/features/platform/settings/values/rows/ValueRowView.tsx": {
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/features/platform/settings/values/sheet/RowMenu.tsx": {
-    "max-lines-per-function": {
-      "count": 1
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
       "count": 1
     }
   },

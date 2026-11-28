@@ -1,23 +1,20 @@
 import { PAYMENT_METHODS } from '@ab/catalog';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
-import { Button, Ltr, t } from '@ab/web-kit';
+import { Ltr, RowMenu, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { moneyText } from '@/features/finance/subscriptions';
 import type { PaymentView } from './api';
-import { amountEditable } from './amount/amount-check';
+import { paymentMenu, type PaymentMenuOptions } from './payment-menu';
 
 const col = createColumnHelper<DataTableFeatures, PaymentView>();
 
-export type PaymentAction = 'receipt' | 'attachments' | 'amount' | 'edit' | 'delete';
-/** Amount edits need payments.write, which PATCH /payments/:id requires. */
-type Handlers = { onAction: (p: PaymentView, action: PaymentAction) => void; canWrite: boolean };
 
 const methodOptions = PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 
 /** Server sort (R-PAY-01, R-NFR-08) on amount, method and date only. */
-export function paymentColumns({ onAction, canWrite }: Handlers) {
+export function paymentColumns({ onAction, canWrite }: PaymentMenuOptions) {
   return col.columns([
     col.accessor('student', {
       header: () => t.subscriptions.student,
@@ -63,41 +60,12 @@ export function paymentColumns({ onAction, canWrite }: Handlers) {
     col.display({
       id: 'actions',
       header: () => t.common.actions,
-      cell: (c) => {
-        const p = c.row.original;
-        const name = p.student.name;
-        return (
-          <div className="flex flex-wrap gap-1.5">
-            {(p.receipt_path || p.invoice_id) && (
-              <Button type="button" variant="secondary" size="sm" onClick={() => onAction(p, 'receipt')}>
-                {t.payments.viewReceipt}
-              </Button>
-            )}
-            {(p.method === 'bank' || p.receipt_path) && (
-              <Button type="button" variant="secondary" size="sm" onClick={() => onAction(p, 'attachments')}>
-                {t.payments.viewAttachments}
-              </Button>
-            )}
-            {canWrite && amountEditable(p) && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                aria-label={`${t.payments.editAmount.action} ${name}`}
-                onClick={() => onAction(p, 'amount')}
-              >
-                {t.payments.editAmount.action}
-              </Button>
-            )}
-            <Button type="button" variant="ghost" size="sm" aria-label={`${t.common.edit} ${name}`} onClick={() => onAction(p, 'edit')}>
-              {t.common.edit}
-            </Button>
-            <Button type="button" variant="danger-quiet" size="sm" aria-label={`${t.common.delete} ${name}`} onClick={() => onAction(p, 'delete')}>
-              {t.common.delete}
-            </Button>
-          </div>
-        );
-      },
+      cell: (c) => (
+        <RowMenu
+          label={t.common.rowActions.replace('{name}', c.row.original.student.name)}
+          items={paymentMenu(c.row.original, { onAction, canWrite })}
+        />
+      ),
       meta: { className: 'w-px max-sm:order-5' },
     }),
   ]);

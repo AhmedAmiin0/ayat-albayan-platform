@@ -106,7 +106,8 @@ describe('PaymentsPage', () => {
     if (!row) throw new Error('row missing');
     expect(within(row).getByText(t.enums.paymentMethod.bank)).toBeTruthy();
     expect(within(row).getByText('مدير')).toBeTruthy();
-    fireEvent.click(within(row).getByRole('button', { name: t.payments.viewReceipt }));
+    fireEvent.click(within(row).getByRole('button', { name: t.common.rowActions.replace('{name}', 'سهيلة') }));
+    fireEvent.click(within(row).getByRole('menuitem', { name: t.payments.viewReceipt }));
     const dialog = await screen.findByRole('dialog', { name: t.payments.receipt });
     expect((await within(dialog).findByRole('img')).getAttribute('src')).toBe('https://signed/receipt.jpg');
     expect(apiFetch).toHaveBeenCalledWith('/payments/pay-1/receipt');
@@ -134,7 +135,8 @@ describe('PaymentsPage', () => {
 
   it('deletes a payment only after the confirm', async () => {
     renderPage();
-    fireEvent.click(await screen.findByRole('button', { name: `${t.common.delete} سهيلة` }));
+    fireEvent.click(await screen.findByRole('button', { name: t.common.rowActions.replace('{name}', 'سهيلة') }));
+    fireEvent.click(screen.getByRole('menuitem', { name: t.common.delete }));
     const dialog = await screen.findByRole('dialog', { name: t.finance.deletePaymentTitle });
     apiSend.mockResolvedValue(undefined);
     fireEvent.click(within(dialog).getByRole('button', { name: t.common.delete }));

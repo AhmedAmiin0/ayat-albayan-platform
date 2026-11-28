@@ -19,7 +19,8 @@ import {
 import { downloadCsv } from '@/features/reporting/exports/api';
 import { toSortSearch } from '@/lib/list/list-search';
 import { filterParams, paymentsQuery, type PaymentFilters, type PaymentView } from './api';
-import { paymentColumns, type PaymentAction } from './payment-columns';
+import { paymentColumns } from './payment-columns';
+import type { PaymentAction } from './payment-menu';
 import { PaymentDialogs } from './PaymentDialogs';
 import { PeriodTotals } from './PeriodTotals';
 import { RecordPaymentDialog } from './record/RecordPaymentDialog';

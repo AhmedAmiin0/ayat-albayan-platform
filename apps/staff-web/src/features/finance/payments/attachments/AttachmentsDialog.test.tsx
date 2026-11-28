@@ -50,7 +50,8 @@ describe('«عرض المرفقات»', () => {
       return { items: [PAYMENT], total: 1, page: 1, pageSize: 20, totals: [] };
     });
     wrap(<Harness />);
-    fireEvent.click(await screen.findByRole('button', { name: t.payments.viewAttachments }));
+    fireEvent.click(await screen.findByRole('button', { name: t.common.rowActions.replace('{name}', 'سهيلة') }));
+    fireEvent.click(screen.getByRole('menuitem', { name: t.payments.viewAttachments }));
     const dialog = within(await screen.findByRole('dialog', { name: t.payments.attachments }));
     const links = await dialog.findAllByRole('link');
     expect(links.map((a) => [a.textContent, a.getAttribute('href')])).toEqual([
@@ -73,8 +74,9 @@ describe('«عرض المرفقات»', () => {
       totals: [],
     });
     wrap(<Harness />);
-    await screen.findByRole('button', { name: `${t.common.delete} سهيلة` });
-    expect(screen.queryByRole('button', { name: t.payments.viewAttachments })).toBeNull();
+    fireEvent.click(await screen.findByRole('button', { name: t.common.rowActions.replace('{name}', 'سهيلة') }));
+    expect(screen.getByRole('menuitem', { name: t.common.delete })).toBeTruthy();
+    expect(screen.queryByRole('menuitem', { name: t.payments.viewAttachments })).toBeNull();
   });
 
   it('none: «لا توجد مرفقات»; a failure says why', async () => {

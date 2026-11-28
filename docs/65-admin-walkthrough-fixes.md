@@ -206,6 +206,7 @@ Each PR sets its rows: `fixed (#n)`, `not a bug: <why>`, `waits for the owner: <
 | UX-4 | fixed (#1076): the nav scrolls in its own box above a plain foot; the theme and time-format switches moved to the account page |
 | UX-5 | fixed (#1076): the side panel sits beside the chat only when the thread is 48rem wide, else it folds under it |
 | UX-6 | fixed (#1076): schedule chips wrap names and statuses, the week grid fits 1408px, the lead status column fits the longest chip, the students note wraps, the inbox search has its own row |
-| UX-7 … UX-16, T-UX-1 … T-UX-9 | open |
+| UX-7 | fixed (U2, `fix/ux-payment-actions`): each payment row has one labelled actions menu (kit `RowMenu`), delete last and still confirmed; «Edit» is now «Edit date, method and note» and the amount changes only through «Edit amount», which asks first |
+| UX-8 … UX-16, T-UX-1 … T-UX-9 | open |
 | DATA-1 … DATA-11, T-DATA-1 … T-DATA-9 | open |
 | DATA-12 | in `fix/users-role-record` |
