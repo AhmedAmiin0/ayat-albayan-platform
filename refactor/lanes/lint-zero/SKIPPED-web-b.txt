@@ -1,20 +1,38 @@
-apps/staff-web/src/features/finance/payouts/api.ts #1349
-apps/staff-web/src/features/finance/payouts/index.ts #1349
-apps/staff-web/src/features/finance/payouts/list/PayoutsPage/PayoutsPage.tsx #1349
-apps/staff-web/src/features/finance/payouts/list/PayoutsPage/tests/csv.test.tsx #1349
-apps/staff-web/src/features/finance/payouts/list/PayoutsPage/tests/helpers.test.tsx #1349
-apps/staff-web/src/features/people/account/AccountPage/tests/appearance.test.tsx #1325
-apps/staff-web/src/features/people/account/sections/AccountAppearance/AccountAppearance.tsx #1325
-apps/staff-web/src/features/people/teachers/availability/AvailabilityGrid/tests/AvailabilityGrid.test.tsx #1325
-apps/staff-web/src/features/people/teachers/availability/AvailabilityGrid/tests/clock.test.tsx #1325
-apps/staff-web/src/features/people/teachers/availability/AvailabilityWeek.test.tsx #1325
-apps/staff-web/src/features/people/teachers/time-off/TimeOffList.test.tsx #1325
-apps/staff-web/src/features/platform/settings/pages/AppearancePage.test.tsx #1325
-apps/staff-web/src/features/platform/settings/sections/AppearanceSection.tsx #1325
-apps/staff-web/src/features/sales/sales-money/course/SalesCourseDialog/tests/change.test.tsx #1325
-apps/staff-web/src/features/sales/sales-money/course/SalesCourseDialog/tests/choice.test.tsx #1325
-apps/staff-web/src/features/sales/sales-money/course/SalesCourseDialog/tests/continue.test.tsx #1325
-apps/staff-web/src/features/sales/sales-money/course/SalesCourseDialog/tests/count.test.tsx #1325
-apps/staff-web/src/features/sales/sales/schedule/SalesLessonDrawer.test.tsx #1325
-apps/staff-web/src/features/sales/sales/schedule/move/SalesMoveLesson.test.tsx #1325
-apps/staff-web/src/features/sales/sales/teachers/SalesTeachers.test.tsx #1325
+apps/staff-web/src/features/finance/payouts/api.ts #1360 (#1349 merged, awaits develop merge)
+apps/staff-web/src/features/finance/payouts/index.ts #1360 (#1349 merged, awaits develop merge)
+apps/staff-web/src/features/finance/payouts/list/PayoutsPage/PayoutsPage.tsx #1360 (#1349 merged, awaits develop merge)
+apps/staff-web/src/features/finance/payouts/list/PayoutsPage/tests/csv.test.tsx #1360 (#1349 merged, awaits develop merge)
+apps/staff-web/src/features/finance/payouts/list/PayoutsPage/tests/helpers.test.tsx #1360 (#1349 merged, awaits develop merge)
+apps/staff-web/src/features/finance/subscriptions/api.ts #1360
+apps/staff-web/src/features/people/account/AccountPage/tests/appearance.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/people/account/sections/AccountAppearance/AccountAppearance.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/people/students/recordings/recordings-api.ts #1360
+apps/staff-web/src/features/people/teachers/availability/AvailabilityGrid/tests/AvailabilityGrid.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/people/teachers/availability/AvailabilityGrid/tests/clock.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/people/teachers/availability/AvailabilityWeek.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/people/teachers/time-off/TimeOffList.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/platform/custom-config/custom-api.ts #1360
+apps/staff-web/src/features/platform/google-sync/connection/ConnectionCard.test.tsx #1360
+apps/staff-web/src/features/platform/google-sync/google-api.ts #1360
+apps/staff-web/src/features/platform/integrations/integrations-api.ts #1360
+apps/staff-web/src/features/platform/settings/pages/AppearancePage.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/platform/settings/sections/AppearanceSection.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/platform/settings/settings-meta-api.ts #1360
+apps/staff-web/src/features/platform/translations/translations.api.ts #1360
+apps/staff-web/src/features/sales/leads/leads.api.ts #1360
+apps/staff-web/src/features/sales/leads/list/LeadListItem.tsx #1360
+apps/staff-web/src/features/sales/payment-links/api.ts #1357
+apps/staff-web/src/features/sales/sales-money/api.ts #1360
+apps/staff-web/src/features/sales/sales-money/course/SalesCourseDialog/tests/change.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/sales/sales-money/course/SalesCourseDialog/tests/choice.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/sales/sales-money/course/SalesCourseDialog/tests/continue.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/sales/sales-money/course/SalesCourseDialog/tests/count.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/sales/sales-money/subscribe/SalesTeacherField.tsx #1360
+apps/staff-web/src/features/sales/sales/academy-api.ts #1360
+apps/staff-web/src/features/sales/sales/api.ts #1360
+apps/staff-web/src/features/sales/sales/registration/RegistrationCheckDialog.tsx #1360
+apps/staff-web/src/features/sales/sales/registration/registration-check.ts #1360
+apps/staff-web/src/features/sales/sales/schedule/SalesConfirmLesson.tsx #1360
+apps/staff-web/src/features/sales/sales/schedule/SalesLessonDrawer.test.tsx #1325 (merged, awaits develop merge)
+apps/staff-web/src/features/sales/sales/schedule/move/SalesMoveLesson.test.tsx #1360 (#1325 merged, awaits develop merge)
+apps/staff-web/src/features/sales/sales/teachers/SalesTeachers.test.tsx #1325 (merged, awaits develop merge)
