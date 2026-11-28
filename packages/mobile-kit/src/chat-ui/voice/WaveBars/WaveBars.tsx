@@ -1,12 +1,11 @@
 import { View } from 'react-native';
 import { shape, useTheme } from '../../../theme';
 import { waveBars } from '@ab/client-core';
-
-const HEIGHT = 28;
-const DOT = 12;
+import type { WaveBarsProps } from './WaveBars.types';
+import { HEIGHT, DOT } from './wave-bars.helpers';
 
 /** The bars and the position dot; `shown` 0–1 is played (or held under the finger). */
-export function WaveBars({ seed, shown }: { seed: string; shown: number }) {
+export function WaveBars({ seed, shown }: WaveBarsProps) {
   const { color, name } = useTheme();
   // Light: the paler rule keeps played vs not readable (lapis vs ruleInput is only 1.4:1).
   const rest = name === 'light' ? color.ruleStrong : color.ruleInput;
