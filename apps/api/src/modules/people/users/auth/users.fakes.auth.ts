@@ -8,19 +8,19 @@ export class FakeAuthAdmin implements AuthAdmin {
   patches: { id: string; patch: AuthPatch }[] = [];
   private seq = 0;
 
-  async findIdByEmail(email: string) {
-    return [...this.users].find(([, u]) => u.email === email)?.[0] ?? null;
+  findIdByEmail(email: string) {
+    return Promise.resolve([...this.users].find(([, u]) => u.email === email)?.[0] ?? null);
   }
 
-  async create(input: { email: string; password?: string; fullName: string }) {
+  create(input: { email: string; password?: string; fullName: string }) {
     this.seq += 1;
     const id = `auth-${this.seq}`;
     this.users.set(id, { email: input.email, password: input.password, banned: false });
     this.calls.push(`create:${id}`);
-    return id;
+    return Promise.resolve(id);
   }
 
-  async update(id: string, patch: AuthPatch) {
+  update(id: string, patch: AuthPatch) {
     const u = this.users.get(id) ?? { email: '', banned: false };
     this.users.set(id, {
       ...u,
@@ -30,18 +30,21 @@ export class FakeAuthAdmin implements AuthAdmin {
     });
     this.calls.push(`update:${id}`);
     this.patches.push({ id, patch });
+    return Promise.resolve();
   }
 
-  async remove(id: string) {
+  remove(id: string) {
     this.users.delete(id);
     this.calls.push(`remove:${id}`);
+    return Promise.resolve();
   }
 
-  async recoveryLink(email: string) {
-    return `https://auth.example.test/verify?token=SECRET&email=${email}`;
+  recoveryLink(email: string) {
+    return Promise.resolve(`https://auth.example.test/verify?token=SECRET&email=${email}`);
   }
 
-  async revokeSessions(id: string) {
+  revokeSessions(id: string) {
     this.calls.push(`revoke:${id}`);
+    return Promise.resolve();
   }
 }

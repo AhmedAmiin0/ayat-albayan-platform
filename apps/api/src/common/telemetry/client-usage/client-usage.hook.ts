@@ -17,14 +17,16 @@ export const UNMATCHED_ROUTE = '(unmatched)';
  * Access-Control-Request-Headers and browsers may send X-AB-Client (client-usage.hook.test.ts).
  */
 function addClientUsageHook(fastify: Fastify, sink: HitSink): void {
-  fastify.addHook('onResponse', async (req) => {
+  fastify.addHook('onResponse', (req) => {
     // CORS preflights carry no client header: noise, not usage.
-    if (req.method === 'OPTIONS') return;
-    sink.hit({
-      method: req.method,
-      route: req.routeOptions.url ?? UNMATCHED_ROUTE,
-      client: parseClientTag(req.headers[CLIENT_HEADER]),
-    });
+    if (req.method !== 'OPTIONS') {
+      sink.hit({
+        method: req.method,
+        route: req.routeOptions.url ?? UNMATCHED_ROUTE,
+        client: parseClientTag(req.headers[CLIENT_HEADER]),
+      });
+    }
+    return Promise.resolve();
   });
 }
 

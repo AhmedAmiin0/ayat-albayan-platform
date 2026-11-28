@@ -29,11 +29,13 @@ const EXTRA: Partial<Record<string, Permission[]>> = {
   [USERS.editor?.id ?? '']: ['settings.read', 'settings.write'],
   [USERS.numbers?.id ?? '']: ['settings.read', 'settings.write', 'numbers.manage'],
 };
-const resolver: PermissionResolver = async (user) => EXTRA[user.id] ?? systemResolver(user);
-const verify: TokenVerifier = async (token) => {
+const resolver: PermissionResolver = (user) => {
+  const extra = EXTRA[user.id];
+  return extra ? Promise.resolve(extra) : systemResolver(user);
+};
+const verify: TokenVerifier = (token) => {
   const user = USERS[token];
-  if (!user) throw new Error('bad token');
-  return user;
+  return user ? Promise.resolve(user) : Promise.reject(new Error('bad token'));
 };
 
 export interface Call {
