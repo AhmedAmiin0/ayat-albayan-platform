@@ -1,6 +1,7 @@
 import { defineRoute } from '@ab/core';
 import { z } from 'zod';
 import { roomJoinResultSchema } from '../room-state';
+import { familyGuestJoinSchema } from '../schemas';
 import {
   joinLinkLessonSchema,
   joinLinkRequestSchema,
@@ -11,6 +12,7 @@ import {
 const byId = z.object({ id: z.uuid() });
 /** Any text: a token that is not ours is answered 404 link_invalid by the api. */
 const byToken = z.object({ token: z.string() });
+const byLink = z.object({ linkToken: z.string() });
 const tags = ['classroom'] as const;
 
 /** A lesson's room for its staff and the family's one-lesson link (R-LES-01). */
@@ -50,6 +52,19 @@ export const lessonJoinRoutes = {
     params: byToken,
     response: joinLinkLessonSchema,
     permissions: ['classroom.join'],
+    tags,
+  }),
+  /**
+   * No login: a random link or the family app's signed one; only the latter may leave the name
+   * out (the api then takes its student's). 404 link_invalid, 410, 403, 429 before a bad name's
+   * 400, 503.
+   */
+  guestJoin: defineRoute({
+    method: 'POST',
+    path: '/public/join/:linkToken',
+    params: byLink,
+    body: familyGuestJoinSchema,
+    response: roomJoinResultSchema,
     tags,
   }),
 };

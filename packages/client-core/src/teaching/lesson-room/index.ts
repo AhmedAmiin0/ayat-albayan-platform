@@ -19,5 +19,13 @@ export {
   studentLinkCalls,
   type LessonRoomCalls,
   type StudentLinkCalls,
+  type StudentLinkJoin,
 } from './room-calls';
-export { lessonJoinCalls, type JoinLinkSend, type LessonJoinCalls } from './join-calls';
+export {
+  guestJoinCalls,
+  lessonJoinCalls,
+  type GuestJoinCalls,
+  type GuestJoinInput,
+  type JoinLinkSend,
+  type LessonJoinCalls,
+} from './join-calls';

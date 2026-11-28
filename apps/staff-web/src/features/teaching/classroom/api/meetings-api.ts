@@ -1,5 +1,9 @@
-import { instantLessonCall, lessonRoomCalls, studentLinkCalls } from '@ab/client-core';
-import type { RoomJoinResult } from '@ab/schedule';
+import {
+  instantLessonCall,
+  lessonRoomCalls,
+  studentLinkCalls,
+  type StudentLinkJoin,
+} from '@ab/client-core';
 import { apiFetch, apiSend, publicApiFetch, publicApiSend } from '@ab/web-kit';
 
 const rooms = lessonRoomCalls({ apiFetch, apiSend });
@@ -17,8 +21,5 @@ export const issueStudentLink = (studentId: string) => rooms.issueStudentLink(st
 /** The student's current or next lesson (no staff session token). */
 export const studentLinkView = (token: string) => studentDoor.view(token);
 
-const studentPath = (token: string): string => `/public/student/${encodeURIComponent(token)}`;
-
-/** POST /public/student/:token/join: the guest join of the lesson whose room is open now. */
-export const joinByStudentLink = ({ token, name }: { token: string; name?: string }) =>
-  publicApiSend<RoomJoinResult>('POST', `${studentPath(token)}/join`, name ? { name } : {});
+/** The guest join of the lesson whose room is open now; no name = the student's first name. */
+export const joinByStudentLink = (input: StudentLinkJoin) => studentDoor.join(input);

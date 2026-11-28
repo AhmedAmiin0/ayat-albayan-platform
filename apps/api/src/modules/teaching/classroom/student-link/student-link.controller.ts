@@ -1,6 +1,6 @@
 import { lessonRoomRoutes as routes, type RoomJoinResult } from '@ab/schedule';
-import { Body, Controller, HttpCode, Ip, Param, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, HttpCode, Ip, Param } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser, Public } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -21,9 +21,8 @@ export class StudentLinkPublicController {
     return this.links.view({ token: params.token, ip });
   }
 
-  /** The guest join of the lesson whose room is open now; the name is checked after the limit. */
-  @ApiTags('classroom')
-  @Post('public/student/:token/join')
+  /** The lesson whose room is open now; the service reads the name after the rate limit. */
+  @Route(routes.studentJoin)
   @HttpCode(200)
   join(
     @Param('token') token: string,

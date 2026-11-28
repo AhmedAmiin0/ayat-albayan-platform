@@ -1,6 +1,6 @@
 import { meetingRoomRoutes as routes, type RoomJoinResult } from '@ab/schedule';
-import { Body, Controller, HttpCode, Injectable, Ip, Param, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, HttpCode, Injectable, Ip, Param } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser, Public } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -99,8 +99,7 @@ export class InternalMeetingsPublicController {
 
   // The name stays unparsed here: the rate limit (429) and LiveKit (503) answer before it does.
   /** {name} → a guest token; 404 link_invalid, 410 meeting_ended, 429, 400, 503. */
-  @ApiTags('classroom')
-  @Post('public/meetings/:token/join')
+  @Route(routes.guestJoin)
   @HttpCode(200)
   join(
     @Param('token') token: string,
