@@ -5,16 +5,29 @@ import { maybe, pgError, raisedAs, rows, type PgErrorMap } from '@/common/db/err
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { rpcOutSchema, type PauseRow, type RpcOut } from './course-pause.mapper';
 
-type RpcName = 'course_pause_start' | 'course_pause_begin' | 'course_pause_set_until' | 'course_pause_resume';
-type UntypedRpc = { rpc(fn: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: PostgrestError | null }> };
+type RpcName =
+  | 'course_pause_start'
+  | 'course_pause_begin'
+  | 'course_pause_set_until'
+  | 'course_pause_resume';
+type RpcResult = PromiseLike<{ data: unknown; error: PostgrestError | null }>;
+interface UntypedRpc {
+  rpc(fn: string, args: Record<string, unknown>): RpcResult;
+}
 /** The window the sheet previews: [start, end) UTC instants, end null = every future lesson. */
-type PreviewWindow = { studentId: string; start: Date; end: Date | null };
+interface PreviewWindow { studentId: string; start: Date; end: Date | null }
 /** A reopened lesson, for the clash check after a resume. */
-type OpenPause = { id: string; subscription_id: string | null };
-export type ReopenedLesson = { id: string; teacher_id: string; starts_at: string; ends_at: string };
+interface OpenPause { id: string; subscription_id: string | null }
+export interface ReopenedLesson {
+  id: string;
+  teacher_id: string;
+  starts_at: string;
+  ends_at: string;
+}
 
-const PAUSE_SELECT = 'id, student_id, from_date, until_date, reason, created_at, resumed_at, extended_days, creator:profiles!course_pauses_created_by_fkey(full_name)';
-/** The RPCs' raised codes (migration 956) → 400 / 409 / 404; a lost race on the one-open index → already_paused. */
+const PAUSE_SELECT =
+  'id, student_id, from_date, until_date, reason, created_at, resumed_at, extended_days, creator:profiles!course_pauses_created_by_fkey(full_name)';
+/** Raised codes (migration 956) → 400 / 409 / 404; a lost race on the one-open index → already_paused. */
 const PAUSE_ERRORS: PgErrorMap = {
   constraints: { course_pauses_one_open: () => conflict('already_paused') },
   raised: {
@@ -26,7 +39,7 @@ const PAUSE_ERRORS: PgErrorMap = {
 
 export const pauseRpcError = (error: PostgrestError): Error => pgError(error, PAUSE_ERRORS);
 
-/** course_pauses reads and the three RPCs (service role; the routes check courses.pause). docs/11 §7b. */
+/** course_pauses reads and the RPCs (service role; routes check courses.pause). docs/11 §7b. */
 @Injectable()
 export class CoursePauseRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -38,7 +51,10 @@ export class CoursePauseRepo {
   }
 
   async studentExists(studentId: string): Promise<boolean> {
-    const { count, error } = await this.db.from('students').select('id', { count: 'exact', head: true }).eq('id', studentId);
+    const { count, error } = await this.db
+      .from('students')
+      .select('id', { count: 'exact', head: true })
+      .eq('id', studentId);
     if (error) throw pgError(error);
     return (count ?? 0) > 0;
   }
@@ -51,26 +67,30 @@ export class CoursePauseRepo {
   }
 
   async pause(id: string): Promise<PauseRow | null> {
-    const data = maybe(await this.db.from('course_pauses').select(PAUSE_SELECT).eq('id', id).maybeSingle());
+    const data = maybe(
+      await this.db.from('course_pauses').select(PAUSE_SELECT).eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
   /** The student's open pause (at most one) and the package it paused (null until it begins). */
   async openPause(studentId: string): Promise<OpenPause | null> {
-    const data = maybe(await this.db.from('course_pauses').select('id, subscription_id').eq('student_id', studentId)
-      .is('resumed_at', null).maybeSingle());
+    const data = maybe(await this.db.from('course_pauses').select('id, subscription_id')
+      .eq('student_id', studentId).is('resumed_at', null).maybeSingle());
     return data;
   }
 
   /** Open pauses whose until day is before `today` (Riyadh): the daily job resumes them. */
   async due(today: string): Promise<string[]> {
-    const data = rows(await this.db.from('course_pauses').select('id').is('resumed_at', null).lt('until_date', today).order('id').limit(500));
+    const data = rows(await this.db.from('course_pauses').select('id').is('resumed_at', null)
+      .lt('until_date', today).order('id').limit(500));
     return data.map((r) => r.id);
   }
 
-  /** Open pauses from a later day whose from day has come (Riyadh `today`): the hourly job begins them. */
+  /** Open pauses whose later from day has come (Riyadh `today`): the hourly job begins them. */
   async dueStarts(today: string): Promise<string[]> {
-    const data = rows(await this.db.from('course_pauses').select('id').is('started_at', null).is('resumed_at', null)
+    const data = rows(await this.db.from('course_pauses').select('id')
+      .is('started_at', null).is('resumed_at', null)
       .lte('from_date', today).order('id').limit(500));
     return data.map((r) => r.id);
   }
@@ -104,7 +124,8 @@ export class CoursePauseRepo {
 
   /** Lifts packages paused by the old package-only button (no course_pauses row) to 'unpaid'. */
   async liftLegacyPause(p: { studentId: string; subscriptionId?: string }): Promise<string[]> {
-    let q = this.db.from('subscriptions').update({ status: 'unpaid' }).eq('student_id', p.studentId).eq('status', 'paused');
+    let q = this.db.from('subscriptions').update({ status: 'unpaid' })
+      .eq('student_id', p.studentId).eq('status', 'paused');
     if (p.subscriptionId) q = q.eq('id', p.subscriptionId);
     const { data, error } = await q.select('id');
     if (error) throw pgError(error);
@@ -113,7 +134,9 @@ export class CoursePauseRepo {
 
   async lessons(ids: readonly string[]): Promise<ReopenedLesson[]> {
     if (ids.length === 0) return [];
-    const data = rows(await this.db.from('lessons').select('id, teacher_id, starts_at, ends_at').in('id', [...ids]));
+    const data = rows(
+      await this.db.from('lessons').select('id, teacher_id, starts_at, ends_at').in('id', [...ids]),
+    );
     return data;
   }
 }
