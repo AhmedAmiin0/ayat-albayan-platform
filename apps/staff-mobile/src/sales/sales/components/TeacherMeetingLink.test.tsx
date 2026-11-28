@@ -6,10 +6,13 @@ import { publicConfigQuery } from '@/core/lib/query/public-config';
 import { mockClipboard } from '@/test/native-mocks';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { TeacherMeetingLink } from './TeacherMeetingLink';
+import { mockCall } from '@ab/testing/mock-call';
 
+const mockApi = mockCall();
+mockApi.onRead(() => new Promise(() => undefined));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: () => new Promise(() => undefined),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 const L = t.studentLists;
@@ -58,12 +61,15 @@ test('a failed share says to copy it by hand', async () => {
   expect(screen.getByText(L.shareFailed)).toBeTruthy();
 });
 
-test.each([null, '', 'javascript:alert(1)', 'meet now'])('no usable link (%p): the «no fixed link» line, no buttons', async (link) => {
-  await renderWithQuery(<TeacherMeetingLink link={link} platform={false} />);
-  expect(screen.getByText(L.meetingLinkNone)).toBeTruthy();
-  expect(screen.queryByRole('button')).toBeNull();
-  expect(screen.queryByText(/javascript/)).toBeNull();
-});
+test.each([null, '', 'javascript:alert(1)', 'meet now'])(
+  'no usable link (%p): the «no fixed link» line, no buttons',
+  async (link) => {
+    await renderWithQuery(<TeacherMeetingLink link={link} platform={false} />);
+    expect(screen.getByText(L.meetingLinkNone)).toBeTruthy();
+    expect(screen.queryByRole('button')).toBeNull();
+    expect(screen.queryByText(/javascript/)).toBeNull();
+  },
+);
 
 /** The academy setting set opposite to the teacher's own flag: only the teacher's flag may count. */
 function academySetting(auto: boolean) {

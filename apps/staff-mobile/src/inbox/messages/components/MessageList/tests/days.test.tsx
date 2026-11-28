@@ -8,16 +8,20 @@ import { TOP_DAY_HIDE_MS } from '@/inbox/messages/days/use-top-day';
 import { clock } from '@/inbox/messages/hooks/message-text';
 import { cachedThread, detail, message, PHONE } from '@/inbox/shared/thread-fixtures';
 import type { useThread } from '@/inbox/thread/hooks/use-thread';
+import { mockCall } from '@ab/testing/mock-call';
 
 // A chip over each day's first message, a floating day while scrolling, and the
 // bubbles' times without the date.
+const mockApi = mockCall();
+mockApi.onRead(async () => ({ id: 'u1', role: 'admin', permissions: [] }));
 jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
-  apiFetch: async () => ({ id: 'u1', role: 'admin', permissions: [] }),
+  call: (request: unknown) => mockApi.call(request),
 }));
 
 type ThreadQuery = ReturnType<typeof useThread>;
-const at = (id: string, created_at: string) => message({ id, direction: 'inbound', body: `نص ${id}`, created_at });
+const at = (id: string, created_at: string) =>
+  message({ id, direction: 'inbound', body: `نص ${id}`, created_at });
 const A = at('a', '2026-09-29T10:00:00Z');
 const B = at('b', '2026-09-29T16:39:00Z');
 const C = at('c', '2026-10-02T08:00:00Z');
@@ -39,7 +43,14 @@ const still = {
   },
 };
 const viewable = (rows: MessageView[]) =>
-  act(() => screen.getByTestId('message-list').props.onViewableItemsChanged({ viewableItems: rows.map((item, i) => ({ item, index: i, key: item.id, isViewable: true })), changed: [] }));
+  act(() =>
+    screen
+      .getByTestId('message-list')
+      .props.onViewableItemsChanged({
+        viewableItems: rows.map((item, i) => ({ item, index: i, key: item.id, isViewable: true })),
+        changed: [],
+      }),
+  );
 
 afterEach(() => {
   jest.restoreAllMocks();

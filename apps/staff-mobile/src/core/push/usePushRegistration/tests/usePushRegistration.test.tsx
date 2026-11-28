@@ -3,10 +3,20 @@ import { registerPush } from '@ab/mobile-kit';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { useNotificationHandling } from '@/core/push/useNotificationHandling';
 import { usePushRegistration } from '@/core/push/usePushRegistration/usePushRegistration';
+import { mockCall } from '@ab/testing/mock-call';
 
-jest.mock('@ab/mobile-kit/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
-jest.mock('@/core/push/useNotificationHandling/useNotificationHandling', () => ({ useNotificationHandling: jest.fn() }));
-jest.mock('@ab/mobile-kit/lib/http/api', () => ({ ...jest.requireActual('@ab/mobile-kit/lib/http/api'), apiFetch: jest.fn(() => new Promise(() => undefined)) }));
+jest.mock('@ab/mobile-kit/push/registerPush', () => ({
+  registerPush: jest.fn(async () => undefined),
+}));
+jest.mock('@/core/push/useNotificationHandling/useNotificationHandling', () => ({
+  useNotificationHandling: jest.fn(),
+}));
+const mockApi = mockCall();
+mockApi.onRead(() => new Promise(() => undefined));
+jest.mock('@ab/mobile-kit/lib/http/api', () => ({
+  ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 async function mount(permissions?: string[], tree?: 'admin' | 'teacher') {
   const client = createTestQueryClient();
