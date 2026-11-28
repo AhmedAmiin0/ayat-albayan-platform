@@ -26,7 +26,7 @@ test('each dot loops every 1.2 s on the native driver, staggered 150 / 300 ms', 
   await render(<ConnectingDots color="gold-token" still={false} />);
   const cycles = timing.mock.calls.map(([, config]) => config);
   expect(cycles).toHaveLength(3);
-  expect(cycles.every((c) => c.duration === 1200 && c.useNativeDriver === true)).toBe(true);
+  expect(cycles.every((c) => c.duration === 1200 && c.useNativeDriver)).toBe(true);
   expect(delay.mock.calls.map(([ms]) => ms)).toEqual([150, 300]);
 });
 

@@ -50,7 +50,7 @@ export function createConnectivity(deps: ConnectivityDeps): ConnectivityStore {
   const schedule = () => {
     stopTimer();
     if (state.status === 'connecting' && state.active)
-      timer = setTimeout(probe, backoffMs(state.attempt));
+      timer = setTimeout(() => void probe(), backoffMs(state.attempt));
   };
   async function probe(): Promise<void> {
     stopTimer();

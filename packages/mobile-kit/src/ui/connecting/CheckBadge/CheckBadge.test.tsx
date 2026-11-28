@@ -14,7 +14,7 @@ beforeEach(() => jest.clearAllMocks());
 test('pops on the native driver and draws its white tick on the ok circle', async () => {
   await render(<CheckBadge still={false} />);
   const configs = timing.mock.calls.map(([, config]) => config);
-  const pop = configs.filter((c) => c.useNativeDriver === true);
+  const pop = configs.filter((c) => c.useNativeDriver);
   expect(pop.map((c) => c.toValue)).toEqual([1.12, 1]);
   expect(pop.reduce((sum, c) => sum + (c.duration ?? 0), 0)).toBe(320);
   expect(configs).toContainEqual(

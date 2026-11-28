@@ -48,7 +48,7 @@ async function reloadInto(next: Locale, current: Locale): Promise<boolean> {
  */
 export function phoneLocale(): Locale {
   try {
-    return getLocales()[0]?.textDirection === 'ltr' ? 'en' : 'ar';
+    return getLocales()[0].textDirection === 'ltr' ? 'en' : 'ar';
   } catch {
     return 'ar';
   }

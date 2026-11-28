@@ -30,9 +30,7 @@ const measure = () =>
   });
 const height = () => screen.getByTestId('connecting-bar-reveal');
 const heightRuns = () =>
-  timing.mock.calls
-    .map(([, config]) => config)
-    .filter((config) => config.useNativeDriver === false);
+  timing.mock.calls.map(([, config]) => config).filter((config) => !config.useNativeDriver);
 
 beforeEach(() => {
   timing.mockClear();

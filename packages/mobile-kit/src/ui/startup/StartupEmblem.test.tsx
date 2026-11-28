@@ -49,7 +49,7 @@ test('the ring turns every 1.6 s linearly; glow and mark breathe in one 2.4 s ea
   await render(<StartupEmblem still={false} />);
   expect(loop).toHaveBeenCalledTimes(2);
   const configs = timing.mock.calls.map(([, config]) => config);
-  expect(configs.every((c) => c.useNativeDriver === true)).toBe(true);
+  expect(configs.every((c) => c.useNativeDriver)).toBe(true);
   expect(configs).toContainEqual(
     expect.objectContaining({ duration: 1600, easing: Easing.linear, toValue: 1 }),
   );
