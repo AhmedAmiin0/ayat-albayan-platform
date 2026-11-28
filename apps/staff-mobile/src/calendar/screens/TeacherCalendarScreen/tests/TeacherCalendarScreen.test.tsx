@@ -125,7 +125,7 @@ test('failed with nothing saved: error and retry; pull to refresh asks again', a
   serve({ [THIS_WEEK]: [pending] });
   await fireEvent.press(retry);
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
-  const [list] = container.queryAll((node) => typeof node.props['onRefresh'] === 'function');
+  const [list] = container.queryAll((node) => typeof node.props.onRefresh === 'function');
   if (!list) throw new Error('no pull-to-refresh on the agenda');
   const before = lessonCalls();
   await fireEvent(list, 'refresh');

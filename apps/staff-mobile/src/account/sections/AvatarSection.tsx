@@ -24,9 +24,9 @@ export function AvatarSection({ profile }: { profile: AccountProfile }) {
     try {
       const photo = await pickAvatar(source);
       if (!photo) return;
-      if (photo.size > AVATAR_MAX_BYTES) return upload.reject({ avatar: accountMessage('avatar_too_large') });
-      upload.reject({});
-      setPicked(photo);
+      const tooLarge = photo.size > AVATAR_MAX_BYTES;
+      upload.reject(tooLarge ? { avatar: accountMessage('avatar_too_large') } : {});
+      if (!tooLarge) setPicked(photo);
     } catch {
       upload.reject({ avatar: t.account.errors.permission });
     }

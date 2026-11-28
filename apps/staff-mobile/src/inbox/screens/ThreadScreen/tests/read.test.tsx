@@ -101,7 +101,7 @@ test('pull to refresh asks the API again', async () => {
   mockApiFetch.mockResolvedValue(detail([inbound]));
   const { container } = await renderWithQuery(<ThreadScreen />);
   await screen.findByText(inbound.body ?? '');
-  const [list] = container.queryAll((node) => typeof node.props['onRefresh'] === 'function');
+  const [list] = container.queryAll((node) => typeof node.props.onRefresh === 'function');
   if (!list) throw new Error('no pull-to-refresh on the list');
   await fireEvent(list, 'refresh');
   await waitFor(() => expect(threadCalls()).toHaveLength(2));

@@ -51,7 +51,7 @@ beforeEach(() => {
 test('the paperclip’s tile opens the sheet; a tap fills the box with the placeholders filled and sends nothing', async () => {
   await open();
   await openReplies();
-  await fireEvent.press(await screen.findByRole('button', { name: `${'ترحيب'}` }));
+  await fireEvent.press(await screen.findByRole('button', { name: 'ترحيب' }));
   expect(box().props.value).toBe('السلام عليكم، كيف نخدمك؟');
   await openReplies();
   await fireEvent.press(await screen.findByRole('button', { name: new RegExp('^الأسعار') }));

@@ -20,9 +20,6 @@
   "src/account/sections/AvatarSection.tsx": {
     "complexity": {
       "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
     }
   },
   "src/account/sections/EmailSection.tsx": {
@@ -483,9 +480,6 @@
   },
   "src/calendar/screens/TeacherCalendarScreen/tests/TeacherCalendarScreen.test.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
       "count": 1
     }
   },
@@ -1617,9 +1611,6 @@
     "no-nested-ternary": {
       "count": 2
     },
-    "typescript/no-unnecessary-template-expression": {
-      "count": 1
-    },
     "typescript/restrict-template-expressions": {
       "count": 1
     }
@@ -1720,9 +1711,6 @@
   },
   "src/inbox/screens/ThreadScreen/tests/read.test.tsx": {
     "stylistic/max-len": {
-      "count": 1
-    },
-    "typescript/dot-notation": {
       "count": 1
     }
   },
@@ -2479,11 +2467,6 @@
   },
   "src/ops/reports/AdminStudentReportsScreen.tsx": {
     "ab/module-boundaries": {
-      "count": 1
-    }
-  },
-  "src/ops/settings/NotificationCatalogue.test.tsx": {
-    "typescript/no-floating-promises": {
       "count": 1
     }
   },
@@ -3272,9 +3255,6 @@
       "count": 1
     },
     "ab/module-boundaries": {
-      "count": 1
-    },
-    "typescript/no-useless-default-assignment": {
       "count": 1
     }
   },

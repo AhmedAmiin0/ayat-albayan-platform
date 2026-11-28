@@ -34,7 +34,7 @@ export function SalesTeacherScreen() {
   const cycle = useClockCycle();
   const tz = useViewerTz();
   const { color } = useTheme();
-  const { id = '' } = useLocalSearchParams<{ id: string }>();
+  const { id = '' } = useLocalSearchParams<{ id?: string }>();
   const list = useSalesTeachers();
   const [kind, setKind] = useState<StudentListKind>('active');
   const [tab, setTab] = useState<TeacherTab>('students');

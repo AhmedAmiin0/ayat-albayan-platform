@@ -43,7 +43,8 @@ test('a London family at 21:30 UTC: «اليوم» is Riyadh 2026-10-13 and is a
   await renderWithQuery(<SalesSubscribeScreen />, createTestQueryClient({ meFromApi: true }));
   expect(await screen.findByText(money(180, 'SAR'))).toBeTruthy();
   expect(await screen.findByText(localDay('2026-10-13'))).toBeTruthy();
-  await fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
+  const saveButton = await screen.findByRole('button', { name: m.saveSubscription, disabled: false });
+  await fireEvent.press(saveButton);
   await waitFor(() => expect(lastBody()).toMatchObject({ startsOn: '2026-10-13' }));
   expect(screen.queryByText(m.error.start_date_past)).toBeNull();
 });

@@ -41,7 +41,7 @@ test('a failed read says so and retries', async () => {
   await renderWithQuery(<NotificationCatalogue />);
   expect(await screen.findByText(c.loadError)).toBeTruthy();
   mockApiFetch.mockImplementation(async (p: string) => (p === '/admin/notifications' ? catalogue : settings));
-  fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
+  await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText(c.entries.report_ready.name)).toBeTruthy();
   expect(screen.queryByText(c.loadError)).toBeNull();
 });
