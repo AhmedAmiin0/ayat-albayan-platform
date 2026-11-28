@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Module } from '@nestjs/common';
+import { Controller, Get, HttpCode, Module, Res } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -37,6 +37,13 @@ class ReturnsProbeController {
   @Get('bare')
   bare(): { anything: boolean } {
     return { anything: true };
+  }
+
+  @Get('not-modified')
+  @Returns(item.optional())
+  notModified(@Res({ passthrough: true }) reply: { status(code: number): unknown }): undefined {
+    reply.status(304);
+    return undefined;
   }
 
   @Get('none')
@@ -85,6 +92,11 @@ describe('@Returns with the response check on', () => {
   it('skips handlers without @Returns and 204 handlers', async () => {
     expect((await get('bare')).json()).toEqual({ anything: true });
     expect((await get('none')).statusCode).toBe(204);
+  });
+
+  it('skips a 304, which carries no body to check', async () => {
+    const res = await get('not-modified');
+    expect([res.statusCode, res.body]).toEqual([304, '']);
   });
 
   it('compares the wire form, as JSON.stringify sends it', async () => {
