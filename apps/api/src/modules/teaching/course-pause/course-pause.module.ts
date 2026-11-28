@@ -4,7 +4,7 @@ import { SchedulingModule } from '@/modules/teaching/scheduling';
 import { CoursePauseController } from './course-pause.controller';
 import { CoursePauseFollowUps } from './course-pause.follow-ups';
 import { CoursePauseJob } from './course-pause.job';
-import { CoursePauseLessonsBack, PauseClashes, PauseScheduling } from './course-pause.lessons-back';
+import { CoursePauseLessonsBack, PauseClashes, PauseScheduling } from './lessons-back';
 import { CoursePausePreviews } from './preview/course-pause.preview';
 import { CoursePauseRepo } from './course-pause.repo';
 import { CoursePauseService } from './course-pause.service';

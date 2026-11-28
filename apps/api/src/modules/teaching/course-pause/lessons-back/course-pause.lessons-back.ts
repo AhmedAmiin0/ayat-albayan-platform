@@ -1,39 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import {
-  ConflictChecker,
-  LessonWriter,
-  OccurrenceGenerator,
-  ScheduleRepo,
-  SchedulingSettings,
-} from '@/modules/teaching/scheduling';
-import { changedLessons, type RpcOut } from './course-pause.mapper';
-import { CoursePauseRepo, type ReopenedLesson } from './course-pause.repo';
+import { changedLessons, type RpcOut } from '@/modules/teaching/course-pause/course-pause.mapper';
+import type { ReopenedLesson } from '@/modules/teaching/course-pause/course-pause.repo';
+import { PauseClashes } from './pause-clashes';
+import { PauseScheduling } from './pause-scheduling';
 
 const occurrence = (l: ReopenedLesson) => ({
   starts_at: new Date(l.starts_at),
   ends_at: new Date(l.ends_at),
 });
-
-/** What generating a resumed rule again needs (max-params). */
-@Injectable()
-export class PauseScheduling {
-  constructor(
-    readonly rules: ScheduleRepo,
-    readonly generator: OccurrenceGenerator,
-    readonly settings: SchedulingSettings,
-  ) {}
-}
-
-/** What clash-checking the lessons booked back needs (max-params). */
-@Injectable()
-export class PauseClashes {
-  constructor(
-    readonly queries: CoursePauseRepo,
-    readonly checker: ConflictChecker,
-    readonly writer: LessonWriter,
-  ) {}
-}
 
 /**
  * The lessons a resume (or a shortened pause) brings back (docs/11 §7b, R-SCH-04): the resumed

@@ -6,7 +6,7 @@ import {
   CoursePauseLessonsBack,
   type PauseClashes,
   type PauseScheduling,
-} from './course-pause.lessons-back';
+} from './lessons-back';
 import { changedLessons, type RpcOut } from './course-pause.mapper';
 
 const clash = { kind: 'teacher_busy', startsAt: '2026-11-12T15:00:00.000Z' };

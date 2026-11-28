@@ -16,7 +16,7 @@ import { SubscriptionAlertsService } from '@/modules/finance/subscriptions';
 import { NotificationPolicy, type RulesReader } from '@/modules/messaging/notification-rules';
 import { ScheduleNoticesModule, ScheduleNoticesRepo } from '@/modules/teaching/schedule-notices';
 import { pauseMocks, resetPauseMocks, verify } from './course-pause.fakes';
-import { CoursePauseLessonsBack } from './course-pause.lessons-back';
+import { CoursePauseLessonsBack } from './lessons-back';
 import { CoursePauseRepo } from './course-pause.repo';
 
 const guardian = {
