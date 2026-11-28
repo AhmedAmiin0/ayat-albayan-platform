@@ -2,9 +2,10 @@ import { Pressable, View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
-import { QUOTE_BOX, QUOTE_LINE, quoteLabel } from '../quote-style';
+import { QUOTE_LINE, quoteLabel } from '../quote-style';
 import { QuoteText } from '../QuoteText';
 import type { QuoteCardProps } from './QuoteCard.types';
+import { quoteBox } from './quote-card.helpers';
 
 /**
  * The message a bubble answers, on top of it as WhatsApp draws it: a bar at the
@@ -22,11 +23,7 @@ export function QuoteCard(p: QuoteCardProps) {
       accessibilityHint={t.inbox.reply.jump}
       disabled={!onJump}
       onPress={() => onJump?.(id)}
-      style={({ pressed }) => ({
-        ...QUOTE_BOX,
-        borderStartColor: color[tone],
-        backgroundColor: pressed ? color.neutralSoft : color.sunk,
-      })}
+      style={quoteBox(color[tone], { rest: color.sunk, pressed: color.neutralSoft })}
     >
       <View style={{ flex: 1, justifyContent: 'center' }}>
         {sender ? (

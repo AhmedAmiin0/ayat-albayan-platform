@@ -1,26 +1,24 @@
 import { View } from 'react-native';
-import { type, useTheme } from '../../../theme';
 import { ContentText } from '../../../ui/primitives/ContentText';
-import { quoteLine } from '../quote-style';
 import type { QuoteTextProps } from './QuoteText.types';
+import { GLYPH_ROW } from './quote-text.helpers';
+import { useQuoteText } from './use-quote-text';
 
 /** The quoted line on the side of its own language, after a file's emoji or drawn icon. */
-export function QuoteText({ text, icon, glyph, style }: QuoteTextProps) {
-  const { color } = useTheme();
-  const line = (
-    <ContentText
-      source={text}
-      numberOfLines={1}
-      style={{ ...style, fontFamily: type.ui[400], color: color.ink2 }}
-    >
-      {glyph ? text : quoteLine(icon, text)}
-    </ContentText>
-  );
-  if (!glyph) return line;
+export function QuoteText(p: QuoteTextProps) {
+  const { lineStyle, words } = useQuoteText(p);
+  if (!p.glyph)
+    return (
+      <ContentText source={p.text} numberOfLines={1} style={lineStyle}>
+        {words}
+      </ContentText>
+    );
   return (
-    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-      {glyph}
-      {line}
+    <View style={GLYPH_ROW}>
+      {p.glyph}
+      <ContentText source={p.text} numberOfLines={1} style={lineStyle}>
+        {words}
+      </ContentText>
     </View>
   );
 }
