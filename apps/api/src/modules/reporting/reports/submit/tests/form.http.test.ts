@@ -105,4 +105,12 @@ describe('GET /lessons/:id/report-form (R1; R-REP-01, R-REP-04, issues A7, D1)',
     expect((await h.call({ method: 'GET', url: URL, token: 'admin' })).statusCode).toBe(200);
     expect(h.reports.ensureDrafts).toHaveBeenCalledTimes(1);
   });
+
+  it('a lesson number the schema refuses is a 500 response_invalid, never the row', async () => {
+    h.lessons.lessonNumbers.mockResolvedValue(new Map([[STUDENT_ID, 2.5]]));
+    const res = await h.call({ method: 'GET', url: URL });
+    expect(res.statusCode).toBe(500);
+    expect(res.json().code).toBe('response_invalid');
+    expect(res.body).not.toContain('سهيلة');
+  });
 });

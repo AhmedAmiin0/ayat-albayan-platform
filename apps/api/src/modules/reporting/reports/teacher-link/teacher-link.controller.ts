@@ -1,17 +1,10 @@
 import { teacherLinkRoutes as routes, type ReportFormResponse, type ReportView } from '@ab/shared';
-import { Controller, Get, HttpCode, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { z } from 'zod';
-import { Public } from '@/common/auth/decorators';
+import { Controller, HttpCode, UseGuards } from '@nestjs/common';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { ZodParam } from '@/common/http/zod-inputs';
 import { TeacherLinkLimit } from './teacher-link.limit';
 import { TeacherLinkReports } from './teacher-link.reports';
 
 type Input<K extends keyof typeof routes> = RouteInputOf<(typeof routes)[K]>;
-
-/** The link's token (≤ 100: Fastify's maxParamLength). */
-const tokenSchema = z.string().min(1).max(100);
 
 /**
  * The teacher's report for ONE lesson without signing in (docs/19 «Teacher
@@ -20,16 +13,14 @@ const tokenSchema = z.string().min(1).max(100);
  * hours. Same bodies, validation and answers as /lessons/:id/report-form and /reports/:id/…;
  * rate-limited. 404 link_not_found, 410 link_expired, 409 link_not_open, 429 too_many_requests.
  */
-@Public()
 @UseGuards(TeacherLinkLimit)
 @Controller()
 export class TeacherLinkController {
   constructor(private readonly reports: TeacherLinkReports) {}
 
-  @Get('public/teacher-report/:token')
-  @ApiTags('reports')
-  async form(@ZodParam('token', tokenSchema) token: string): Promise<ReportFormResponse> {
-    return this.reports.form({ token });
+  @Route(routes.form)
+  form(@RouteInput() { params }: Input<'form'>): Promise<ReportFormResponse> {
+    return this.reports.form({ token: params.token });
   }
 
   @Route(routes.draft)

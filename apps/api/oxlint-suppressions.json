@@ -5833,11 +5833,6 @@
       "count": 1
     }
   },
-  "src/modules/reporting/reports/report-entry.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/reporting/reports/report-row.ts": {
     "typescript/consistent-type-definitions": {
       "count": 4

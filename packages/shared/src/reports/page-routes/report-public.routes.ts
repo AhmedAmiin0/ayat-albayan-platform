@@ -8,7 +8,7 @@ import {
 } from '../page-access';
 
 const params = z.object({ publicId: reportPublicIdSchema });
-const tags = ['reports'] as const;
+const access = { tags: ['reports'], isPublic: true } as const;
 const base = '/public/report-pages/:publicId';
 
 /**
@@ -17,13 +17,19 @@ const base = '/public/report-pages/:publicId';
  * invalid_code, 429 too_many_requests, 503 codes_unavailable.
  */
 export const reportPublicRoutes = {
-  view: defineRoute({ method: 'GET', path: base, params, response: reportPageViewSchema, tags }),
+  view: defineRoute({
+    method: 'GET',
+    path: base,
+    params,
+    response: reportPageViewSchema,
+    ...access,
+  }),
   access: defineRoute({
     method: 'GET',
     path: `${base}/access`,
     params,
     response: reportAccessViewSchema,
-    tags,
+    ...access,
   }),
   /** The code goes only to a number on file (the lesson's teacher or the student's family). */
   code: defineRoute({
@@ -32,7 +38,7 @@ export const reportPublicRoutes = {
     params,
     body: reportCodeRequestSchema,
     response: 'empty',
-    tags,
+    ...access,
   }),
   /** Sets this report's HttpOnly cookie. */
   verify: defineRoute({
@@ -41,6 +47,6 @@ export const reportPublicRoutes = {
     params,
     body: reportCodeVerifySchema,
     response: 'empty',
-    tags,
+    ...access,
   }),
 };

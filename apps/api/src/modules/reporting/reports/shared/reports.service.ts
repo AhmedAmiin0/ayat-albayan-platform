@@ -1,5 +1,6 @@
 import {
   reportBlock,
+  reportFormResponseSchema,
   reportViewSchema,
   type ReportDraft,
   type ReportFormResponse,
@@ -61,7 +62,8 @@ export class ReportsService {
             v2.map((r) => r.student_id),
             reports.map((r) => r.id),
           );
-    return formResponse({ lesson, reports, numbers, packages, memory, ctx, block });
+    const parts = { lesson, reports, numbers, packages, memory, ctx, block };
+    return asResponse(reportFormResponseSchema, formResponse(parts));
   }
 
   /** R4. */

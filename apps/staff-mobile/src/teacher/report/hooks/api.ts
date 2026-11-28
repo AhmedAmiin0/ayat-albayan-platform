@@ -17,6 +17,8 @@ import type { Receipt } from '@/core/lib/receipts/receipt';
 // is the signed-in teacher's own and that its edit window is open.
 
 /** Under ['reports'], so a submit's invalidation reaches the form, the pending list and history. */
+const reports = reportCalls({ apiFetch, apiSend });
+
 export const reportFormKey = (lessonId: string) => [...pathKey('/reports'), 'form', lessonId];
 
 /**
@@ -26,7 +28,7 @@ export const reportFormKey = (lessonId: string) => [...pathKey('/reports'), 'for
 export function useReportForm(lessonId: string) {
   return useQuery({
     queryKey: reportFormKey(lessonId),
-    queryFn: () => apiFetch<ReportFormResponse>(`/lessons/${lessonId}/report-form`),
+    queryFn: () => reports.form({ id: lessonId }),
     retry: false,
   });
 }
@@ -53,8 +55,6 @@ export async function refreshAfterSubmit(client: QueryClient): Promise<void> {
     client.invalidateQueries({ queryKey: pathKey('/teachers/me/students') }),
   ]);
 }
-
-const reports = reportCalls({ apiFetch, apiSend });
 
 export const saveDraft = (id: string, body: DraftBody) => reports.draft({ id }, body);
 
