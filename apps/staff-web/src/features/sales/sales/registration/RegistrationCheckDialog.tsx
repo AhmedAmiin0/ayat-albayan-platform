@@ -14,7 +14,7 @@ import type { RegistrationCheckBy, RegistrationCheckCode } from '@ab/shared';
 import { checkRequest } from './registration-check';
 import { RegistrationMatches } from './RegistrationMatches';
 import { registrationCheckQuery } from './registration-check-query';
-import type { RegistrationAsk } from './registration-check.types';
+import type { RegistrationAsk } from './registration-check';
 
 const R = t.registrationCheck;
 

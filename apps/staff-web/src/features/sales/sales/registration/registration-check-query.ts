@@ -2,7 +2,7 @@ import { registrationCheckCalls } from '@ab/client-core';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { salesKeys } from '@/features/sales/keys';
-import type { RegistrationAsk } from './registration-check.types';
+import type { RegistrationAsk } from './registration-check';
 
 const registration = registrationCheckCalls({ apiFetch, apiSend });
 

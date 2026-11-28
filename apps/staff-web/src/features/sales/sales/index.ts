@@ -17,7 +17,7 @@ export {
 } from './registration/RegistrationCheckDialog';
 export { checkRequest } from './registration/registration-check';
 export { registrationCheckQuery } from './registration/registration-check-query';
-export type { RegistrationAsk } from './registration/registration-check.types';
+export type { RegistrationAsk } from './registration/registration-check';
 export { RegistrationMatches } from './registration/RegistrationMatches';
 export { confirmErrorText } from './schedule/SalesConfirmLesson';
 export { firstSalesRoute } from './first-sales-route';
