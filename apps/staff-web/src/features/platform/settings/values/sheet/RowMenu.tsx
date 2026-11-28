@@ -28,7 +28,10 @@ export function RowMenu({ label, items }: { label: string; items: readonly RowMe
   const move = (e: KeyboardEvent, from: number) => {
     const n = items.length;
     const to = { ArrowDown: from + 1, ArrowUp: from - 1 + n, Home: 0, End: n - 1 }[e.key];
-    if (e.key === 'Tab') return close(false);
+    if (e.key === 'Tab') {
+      close(false);
+      return;
+    }
     if (to === undefined) return;
     e.preventDefault();
     refs.current[to % n]?.focus();

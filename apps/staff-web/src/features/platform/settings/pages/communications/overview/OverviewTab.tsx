@@ -25,7 +25,7 @@ export function OverviewTab({ settings }: { settings: AcademySettings }) {
       </section>
       <div className="grid min-w-0 gap-6">
         <OverviewNumbers />
-        <OverviewWhat messagingOn={settings.messaging_enabled === true} />
+        <OverviewWhat messagingOn={settings.messaging_enabled} />
         <PublicNumber e164={settings.academy_whatsapp_e164} />
         <OwnTraffic />
       </div>

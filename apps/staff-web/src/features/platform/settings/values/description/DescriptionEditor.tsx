@@ -18,7 +18,9 @@ const d = t.settingsValues.describe;
 
 /** 403 `owner_permission`: an owned key's description needs the owning module's right. */
 export const ownerRefused = (error: unknown): boolean =>
-  error instanceof ApiError && error.status === 403 && (error.body as { code?: unknown } | null)?.code === 'owner_permission';
+  error instanceof ApiError &&
+  error.status === 403 &&
+  (error.body as { code?: unknown } | null)?.code === 'owner_permission';
 
 export interface DescriptionEditorProps {
   target: DescribeTarget;
@@ -53,10 +55,15 @@ export function DescriptionEditor({
     e.preventDefault();
     setTried(true);
     if (empty) return;
-    if (text.trim() === start.trim()) return onClose();
+    if (text.trim() === start.trim()) {
+      onClose();
+      return;
+    }
     send(text.trim(), d.saved);
   };
-  const count = d.count.replace('{n}', String(text.length)).replace('{max}', String(DESCRIPTION_MAX));
+  const count = d.count
+    .replace('{n}', String(text.length))
+    .replace('{max}', String(DESCRIPTION_MAX));
   return (
     <Dialog
       layout="center"
@@ -98,7 +105,14 @@ export function DescriptionEditor({
           )}
         </Field>
         {entry.descriptionEdited && (
-          <Button type="button" variant="ghost" size="sm" className="justify-self-start" disabled={save.isPending} onClick={() => send(null, d.restored)}>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="justify-self-start"
+            disabled={save.isPending}
+            onClick={() => send(null, d.restored)}
+          >
             {d.restore}
           </Button>
         )}

@@ -7,8 +7,8 @@ import { FORM_KEYS, settingsForm, settingsUpdate } from './settings-form';
 describe('settings form (generated from the settings registry)', () => {
   it('round-trips the defaults: late cancel OFF is null, follow-ups as «24، 72», the new keys too', () => {
     const form = settingsForm(SETTINGS);
-    expect(form['lateCancelHoursOn']).toBe(false);
-    expect(form['followUpHours']).toBe('24، 72');
+    expect(form.lateCancelHoursOn).toBe(false);
+    expect(form.followUpHours).toBe('24، 72');
     const result = settingsUpdate(form);
     expect(result).toEqual({
       ok: true,
@@ -36,14 +36,24 @@ describe('settings form (generated from the settings registry)', () => {
   });
 
   it('late cancel ON sends its hours; Latin commas and spaces split follow-up hours too', () => {
-    const form = { ...settingsForm(SETTINGS), lateCancelHoursOn: true, lateCancelHours: '12', followUpHours: '12, 48 96' };
+    const form = {
+      ...settingsForm(SETTINGS),
+      lateCancelHoursOn: true,
+      lateCancelHours: '12',
+      followUpHours: '12, 48 96',
+    };
     const result = settingsUpdate(form);
     expect(result.ok && result.value.lateCancelHours).toBe(12);
     expect(result.ok && result.value.followUpHours).toEqual([12, 48, 96]);
   });
 
   it('a blank or out-of-range number is refused in words, never sent as 0', () => {
-    const form = { ...settingsForm(SETTINGS), bookingHorizonWeeks: '', reminderMinutesBefore: '2', joinOpensBeforeMin: '181' };
+    const form = {
+      ...settingsForm(SETTINGS),
+      bookingHorizonWeeks: '',
+      reminderMinutesBefore: '2',
+      joinOpensBeforeMin: '181',
+    };
     expect(settingsUpdate(form)).toEqual({
       ok: false,
       errors: {
@@ -55,7 +65,10 @@ describe('settings form (generated from the settings registry)', () => {
   });
 
   it('a typed local phone becomes E.164; a bad one is refused with the phone message', () => {
-    const ok = settingsUpdate({ ...settingsForm(SETTINGS), academyWhatsappE164: '+966 50 123 4567' });
+    const ok = settingsUpdate({
+      ...settingsForm(SETTINGS),
+      academyWhatsappE164: '+966 50 123 4567',
+    });
     expect(ok.ok && ok.value.academyWhatsappE164).toBe('+966501234567');
     const bad = settingsUpdate({ ...settingsForm(SETTINGS), academyWhatsappE164: '12' });
     expect(bad).toEqual({ ok: false, errors: { academyWhatsappE164: t.settings.invalidPhone } });
@@ -76,10 +89,10 @@ describe('settings form (generated from the settings registry)', () => {
       late_cancel_hours: 6,
       join_closes_after_min: 30,
     });
-    expect([
-      form['lateCancelHoursOn'],
-      form['lateCancelHours'],
-      form['joinClosesAfterMin'],
-    ]).toEqual([true, '6', '30']);
+    expect([form.lateCancelHoursOn, form.lateCancelHours, form.joinClosesAfterMin]).toEqual([
+      true,
+      '6',
+      '30',
+    ]);
   });
 });

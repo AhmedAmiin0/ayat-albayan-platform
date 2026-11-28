@@ -4,7 +4,14 @@ import { useId, useState, type SubmitEvent } from 'react';
 import { Button, Dialog, FormAlert, t } from '@ab/web-kit';
 import { LocaleTextField } from './LocaleTextField';
 import { editedOnValues, registryHintOf } from './registry-hints';
-import { changesFor, defaultOf, draftProblems, draftsOf, overrideOf, type Drafts } from './translation-edit';
+import {
+  changesFor,
+  defaultOf,
+  draftProblems,
+  draftsOf,
+  overrideOf,
+  type Drafts,
+} from './translation-edit';
 import { useOverrideChange } from './translations.api';
 
 export interface TranslationEditorProps {
@@ -16,9 +23,18 @@ export interface TranslationEditorProps {
 
 /** 409 `edit_on_values`: an ar override on a registry hint key, edited on the values page. */
 export function isEditOnValues(error: unknown): boolean {
-  if (typeof error !== 'object' || error === null || !('status' in error) || error.status !== 409 || !('body' in error)) return false;
+  if (
+    typeof error !== 'object' ||
+    error === null ||
+    !('status' in error) ||
+    error.status !== 409 ||
+    !('body' in error)
+  )
+    return false;
   const { body } = error;
-  return typeof body === 'object' && body !== null && 'code' in body && body.code === 'edit_on_values';
+  return (
+    typeof body === 'object' && body !== null && 'code' in body && body.code === 'edit_on_values'
+  );
 }
 
 export function TranslationEditor({ row, onClose, onDone }: TranslationEditorProps) {
@@ -35,7 +51,10 @@ export function TranslationEditor({ row, onClose, onDone }: TranslationEditorPro
     e.preventDefault();
     const changes = changesFor(row, drafts);
     if (Object.keys(problems).length > 0) return;
-    if (changes.length === 0) return onClose();
+    if (changes.length === 0) {
+      onClose();
+      return;
+    }
     change.mutate(changes, { onSuccess: done(t.translations.saved) });
   };
   const restore = (locale: Locale) => () =>
@@ -61,7 +80,9 @@ export function TranslationEditor({ row, onClose, onDone }: TranslationEditorPro
     >
       <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
         {tokens.length > 0 && (
-          <p className="text-sm text-ink-2">{t.translations.placeholderHint.replace('{tokens}', tokens.join(' '))}</p>
+          <p className="text-sm text-ink-2">
+            {t.translations.placeholderHint.replace('{tokens}', tokens.join(' '))}
+          </p>
         )}
         <div className="grid gap-4 sm:grid-cols-2">
           {LOCALES.map((locale) => (

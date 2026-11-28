@@ -4,10 +4,10 @@ import { t } from '@ab/web-kit';
 import { LeaveGuard } from './sheet/LeaveGuard';
 import { ValuesPage } from './ValuesPage';
 
-type BlockOpts = {
+interface BlockOpts {
   shouldBlockFn: (a: { current: { pathname: string }; next: { pathname: string } }) => boolean;
   enableBeforeUnload: boolean;
-};
+}
 const router = vi.hoisted(() => ({
   opts: null as BlockOpts | null,
   status: 'idle',
@@ -38,17 +38,32 @@ describe('ValuesPage and the leave guard', () => {
     render(<ValuesPage />);
     expect(router.view).toHaveBeenCalledWith({ group: 'accounts' });
     fireEvent.click(screen.getByRole('button', { name: 'search' }));
-    expect(router.navigate).toHaveBeenCalledWith({ search: { group: 'accounts', q: 'x' }, replace: true });
+    expect(router.navigate).toHaveBeenCalledWith({
+      search: { group: 'accounts', q: 'x' },
+      replace: true,
+    });
   });
 
   it('blocks leaving the page only with unsaved rows, never a change of group or search', () => {
     render(<LeaveGuard names={['أ']} />);
     const block = router.opts?.shouldBlockFn;
     expect(router.opts?.enableBeforeUnload).toBe(true);
-    expect(block?.({ current: { pathname: '/admin/settings/values' }, next: { pathname: '/admin/students' } })).toBe(true);
-    expect(block?.({ current: { pathname: '/admin/settings/values' }, next: { pathname: '/admin/settings/values' } })).toBe(false);
+    expect(
+      block?.({
+        current: { pathname: '/admin/settings/values' },
+        next: { pathname: '/admin/students' },
+      }),
+    ).toBe(true);
+    expect(
+      block?.({
+        current: { pathname: '/admin/settings/values' },
+        next: { pathname: '/admin/settings/values' },
+      }),
+    ).toBe(false);
     render(<LeaveGuard names={[]} />);
-    expect(router.opts?.shouldBlockFn({ current: { pathname: 'a' }, next: { pathname: 'b' } })).toBe(false);
+    expect(
+      router.opts?.shouldBlockFn({ current: { pathname: 'a' }, next: { pathname: 'b' } }),
+    ).toBe(false);
   });
 
   it('a blocked leave asks, naming the unsaved values; stay or leave', () => {

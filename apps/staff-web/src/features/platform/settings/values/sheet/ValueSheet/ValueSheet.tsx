@@ -10,7 +10,11 @@ import { ValueEditor } from '@/features/platform/settings/values/editors/ValueEd
 import { ConflictNotice } from '@/features/platform/settings/values/conflicts/ConflictNotice';
 import { ImpactNote } from '@/features/platform/settings/values/sheet/ImpactNote';
 import { useSheetDescription } from '@/features/platform/settings/values/description/use-sheet-description';
-import { boundsText, defaultText, valueText } from '@/features/platform/settings/values/lib/value-format';
+import {
+  boundsText,
+  defaultText,
+  valueText,
+} from '@/features/platform/settings/values/lib/value-format';
 import { useValues } from '@/features/platform/settings/values/values-context';
 
 const v = t.settingsValues;
@@ -56,7 +60,10 @@ export function ValueSheet({
       <Button
         disabled={status === 'saving'}
         onClick={() => {
-          if (!dirty) return onClose();
+          if (!dirty) {
+            onClose();
+            return;
+          }
           api.save(settingKey);
         }}
       >
@@ -65,12 +72,22 @@ export function ValueSheet({
     </>
   ) : undefined;
   return (
-    <Dialog layout="sheet" title={words.label} description={description} onClose={close} actions={actions}>
+    <Dialog
+      layout="sheet"
+      title={words.label}
+      description={description}
+      onClose={close}
+      actions={actions}
+    >
       <span id={ids.label} className="sr-only">
         {words.label}
       </span>
       <div className="grid gap-3">
-        {editable ? <ValueEditor settingKey={settingKey} ids={ids} sheet /> : <p className="text-base">{valueText(settingKey, api.settings[settingKey])}</p>}
+        {editable ? (
+          <ValueEditor settingKey={settingKey} ids={ids} sheet />
+        ) : (
+          <p className="text-base">{valueText(settingKey, api.settings[settingKey])}</p>
+        )}
         {bounds && (
           <small id={ids.bounds} className="text-xs text-ink-3">
             {bounds}
@@ -79,16 +96,26 @@ export function ValueSheet({
         <p className="flex flex-wrap items-center gap-x-2 text-sm text-ink-2">
           {v.sheet.default.replace('{value}', defaultText(settingKey))}
           {editable && isModified(settingKey, api.settings) && (
-            <Button size="sm" variant="ghost" onClick={() => api.drafts.put(settingKey, defaultForm(settingKey))}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => api.drafts.put(settingKey, defaultForm(settingKey))}
+            >
               {v.resetDefault}
             </Button>
           )}
         </p>
-        <p className="text-sm text-ink-2">{v.sheet.last.replace('{value}', lastChangeText(api.meta[settingKey], clock))}</p>
+        <p className="text-sm text-ink-2">
+          {v.sheet.last.replace('{value}', lastChangeText(api.meta[settingKey], clock))}
+        </p>
         {confirm && <ImpactNote settingKey={settingKey} />}
         <ConflictNotice settingKey={settingKey} />
         {status === 'moved' && <p className="text-sm text-ink-2">{v.moved}</p>}
-        {status === 'saving' && <span role="status" className="text-sm font-semibold text-ink-2">{v.saving}</span>}
+        {status === 'saving' && (
+          <span role="status" className="text-sm font-semibold text-ink-2">
+            {v.saving}
+          </span>
+        )}
         <details className="text-xs text-ink-3">
           <summary className="min-h-11 cursor-pointer content-center">{v.sheet.dev}</summary>
           <bdi dir="ltr" className="font-mono">
