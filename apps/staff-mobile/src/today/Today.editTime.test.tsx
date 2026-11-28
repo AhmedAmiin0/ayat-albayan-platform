@@ -31,7 +31,7 @@ function serve(day: unknown[]) {
 const edit = (who: string) => ({ name: `${t.editTime.action} — ${who}` });
 
 test('the sheet of an open lesson offers «عدّل الوقت» beside «غيّر الموعد»; it opens the edit sheet', async () => {
-  serve([{ ...pending, time_edit_mode: 'move' }].map(answered));
+  serve([answered({ ...pending, time_edit_mode: 'move' })]);
   await renderWithQuery(<TodayScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));
   expect(

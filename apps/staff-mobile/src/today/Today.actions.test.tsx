@@ -41,7 +41,8 @@ test('the hero’s «تأكيد الحلقة» shows «مؤكدة» before the s
   expect(screen.getAllByText(t.enums.lessonStatus.confirmed)).toHaveLength(2);
   expect(screen.queryByRole('button', { name: t.today.confirmLesson })).toBeNull();
 
-  mockApiFetch.mockResolvedValue([done, { ...pending, status: 'confirmed' }, muscat].map(answered));
+  const confirmed = answered({ ...pending, status: 'confirmed' });
+  mockApiFetch.mockResolvedValue([answered(done), confirmed, answered(muscat)]);
   resolve({ ...pending, status: 'confirmed' });
   expect(await screen.findByText(t.lessons.confirmed)).toBeTruthy();
 });

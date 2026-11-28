@@ -1,3 +1,4 @@
+import type { LessonView } from '@ab/schedule';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { GRID } from '@/edit-time/testing/fixtures';
 import { ApiError, t } from '@ab/mobile-kit';
@@ -16,7 +17,7 @@ jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }
 beforeEach(() => {
   jest.clearAllMocks();
   // The API offers the time edit on the pending lesson only (an admin's move).
-  const lessons = OVERVIEW.lessons.map((l) =>
+  const lessons = OVERVIEW.lessons.map((l): LessonView =>
     l.id === 'l-pending' ? { ...l, time_edit_mode: 'move' } : l,
   );
   mockApiFetch.mockImplementation(async (path: string) => {
