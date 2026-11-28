@@ -9,10 +9,13 @@ import { usePortalMe } from './use-portal-me';
 
 const store = pickStore(AsyncStorage);
 
-/** The student in view: loading, the picker's turn, none, or one (own, only or picked). */
-export function useFamilyPick(): FamilyPick {
-  const me = usePortalMe().data;
-  const saved = savedFor(useSyncExternalStore(store.subscribe, store.current), useMeId(true));
+/**
+ * The student in view: loading, the picker's turn, none, or one (own, only or picked). Not enabled
+ * (signed out), nothing is fetched.
+ */
+export function useFamilyPick(enabled = true): FamilyPick {
+  const me = usePortalMe(enabled).data;
+  const saved = savedFor(useSyncExternalStore(store.subscribe, store.current), useMeId(enabled));
   return familyPick(me, saved.savedId, saved.ready);
 }
 

@@ -4799,6 +4799,9 @@
        },
        "contact_is_self": {
         "type": "boolean"
+       },
+       "is_test": {
+        "type": "boolean"
        }
       },
       "required": [
