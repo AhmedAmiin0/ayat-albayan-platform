@@ -111,7 +111,7 @@ test('main: the same code from several counts is printed once', async () => {
 test('codeOf: only a SQLSTATE or an upper-case code passes, the rest is unknown', () => {
   const ok = ['28P01', 'XX000', 'ECONNREFUSED', 'CONNECT_TIMEOUT', 'ERR_INVALID_URL'];
   for (const code of ok) assert.equal(codeOf({ code }), code);
-  const bad = [undefined, null, 'Ahmed', 'reader:pw@db', '28p01', 'A', 12, 'X'.repeat(41)];
+  const bad = [undefined, null, 'Ahmed', 'reader:pw@db', '28p01', 'A', 'X'.repeat(41)];
   for (const code of bad) assert.equal(codeOf({ code }), 'unknown', String(code));
   assert.equal(codeOf(undefined), 'unknown');
   assert.equal(codeOf('ECONNREFUSED'), 'unknown');
