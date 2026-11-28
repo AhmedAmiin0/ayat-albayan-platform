@@ -19,6 +19,8 @@ const WHITELIST = new Set([
   // Kapso's own conversation record: its Platform API, beside the Meta proxy.
   'modules/messaging/whatsapp/drivers/kapso/kapso-conversations.ts',
   'modules/messaging/whatsapp/lines/lines.check.ts',
+  // The line check's two Graph GETs (out of lines.check.ts, 150-line cap).
+  'modules/messaging/whatsapp/lines/lines.check.graph.ts',
   // The switch preflight (docs/19): one read-only GET of subscribed apps.
   'modules/messaging/whatsapp/lines/lines.check.meta.ts',
   // The script relay (docs/19): the line's current client, its allow-list, the script's own sends.
@@ -37,24 +39,30 @@ const WHITELIST = new Set([
   // Meta's edit and the PDF's sample, done by the admin or the author.
   'modules/messaging/whatsapp/templates/edit/template-edit.meta.ts',
   'modules/messaging/whatsapp/templates/edit/template-editor.ts',
-  // One number's template sync (docs/23c decision 4): a read-only list from that number's own client.
+  // One number's template sync (docs/23c decision 4): a read-only list from that number's own
+  // client.
   'modules/messaging/whatsapp/templates/sync/template-number-sync.ts',
   'modules/messaging/whatsapp/templates/sync/template-numbers.service.ts',
   'modules/messaging/whatsapp/live-client.ts',
-  // Routing per number (docs/23c): one number's own config and client, used only by MessageDispatch.
+  // Routing per number (docs/23c): one number's own config and client, used only by
+  // MessageDispatch.
   'modules/messaging/numbers/config/numbers.env.ts',
   'modules/messaging/whatsapp/numbers/number-clients.ts',
   'modules/messaging/whatsapp/whatsapp.client.ts',
-  // The crm driver (docs/19): the one client factory and the CRM's REST client, used only through the line clients.
+  // The crm driver (docs/19): the one client factory and the CRM's REST client, used only through
+  // the line clients.
   'modules/messaging/whatsapp/client-factory.ts',
   'modules/messaging/whatsapp/drivers/crm/crm.client.ts',
   'modules/messaging/whatsapp/drivers/crm/crm-http.ts',
   'modules/messaging/whatsapp/shared/whatsapp-shared.module.ts',
-  // WhatsApp voice calls (docs/28): the one Kapso calling client, one request per method, never a retry.
+  // WhatsApp voice calls (docs/28): the one Kapso calling client, one request per method, never a
+  // retry.
   'modules/messaging/calls/kapso/kapso-calls.ts',
   'modules/messaging/whatsapp/whatsapp.types.ts',
   // Kapso's message history: read-only GETs that store messages sent outside the app.
   'modules/messaging/webhook/external/kapso-history.ts',
+  // Re-exports only: the whitelisted callers in other modules import through the module's index.
+  'modules/messaging/whatsapp/index.ts',
 ]);
 
 const METHODS = 'sendTemplate|sendText|sendDocument|markRead|getMedia|getTemplates|submitTemplate|editTemplate|uploadSample';
@@ -92,7 +100,9 @@ export function metaCallsIn(source: string): string[] {
  */
 const HOSTS: readonly (readonly [string, RegExp])[] = [['api.kapso.ai', /api\.kapso\.ai/]];
 
-/** `path: label` for every non-whitelisted built source that calls Meta (path relative to src, `/`). */
+/**
+ * `path: label` for every non-whitelisted built source that calls Meta (path relative to src, `/`).
+ */
 export function offenders(files: readonly { path: string; source: string }[]): string[] {
   const built = files.map((f) => ({ ...f, path: f.path.replace(/\\/g, '/') })).filter((f) => !NOT_BUILT.some((re) => re.test(f.path)));
   const calls = built

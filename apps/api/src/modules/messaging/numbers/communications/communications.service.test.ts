@@ -6,8 +6,8 @@ import { CommunicationsService } from './communications.service';
 import type { NumbersConfig } from '@/modules/messaging/numbers/config/numbers.config';
 import type { NumbersSettings } from '@/modules/messaging/numbers/numbers.settings';
 
-// The read switch (docs/23 §2e step 5, docs/23b decision 5): module refused while the numbers or the
-// rules parity differs; legacy always allowed, after copying the rules into the legacy keys.
+// The read switch (docs/23 §2e step 5, docs/23b decision 5): module refused while the numbers or
+// the rules parity differs; legacy always allowed, after copying the rules into the legacy keys.
 function setup(opts: { source: 'legacy' | 'module'; moduleValues: Record<string, string>; rules?: RuleParityDiff[] }) {
   let source = opts.source;
   const order: string[] = [];
@@ -41,7 +41,9 @@ function setup(opts: { source: 'legacy' | 'module'; moduleValues: Record<string,
   return { svc, settings, config, audit, rules, order };
 }
 
-/** The test env has no WhatsApp line: a module side that adds one differs; an empty one does not. */
+/**
+ * The test env has no WhatsApp line: a module side that adds one differs; an empty one does not.
+ */
 const DIFFERENT = { WA_PHONE_NUMBER_ID: '1000000001' };
 const RULE_DIFF: RuleParityDiff = { key: 'lesson_reminder', field: 'timing', legacy: '{"minutes_before":60}', module: '{"minutes_before":30}' };
 

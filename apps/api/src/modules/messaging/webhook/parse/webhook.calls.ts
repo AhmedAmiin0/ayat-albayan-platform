@@ -1,10 +1,12 @@
-import type { CallWebhookEvent, WebhookBatch } from '@/modules/messaging/webhook/webhook.events';
-import { field, get, metaTime } from './webhook.parse';
+import type {
+  CallPermissionReplyEvent,
+  CallWebhookEvent,
+  WebhookBatch,
+} from '@/modules/messaging/webhook/webhook.events';
+import { field, get, list, metaTime } from './webhook.fields';
 
 // A `calls` change (Meta Cloud API Calling, forwarded raw by Kapso's meta-kind webhook) → flat call
 // events (docs/28 §2). Lenient like the message parser: an item without a call id is skipped.
-
-const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
 
 interface CallsContext {
   now: Date;
@@ -19,13 +21,24 @@ function duration(c: unknown): number | null {
   return Number.isFinite(n) && n >= 0 ? Math.round(n) : null;
 }
 
+type Read = (path: string) => string | null;
+
+/**
+ * A missing direction with our callback ref is our own call (only outbound calls carry
+ * biz_opaque_callback_data).
+ */
+function isInboundCall(f: Read): boolean {
+  const direction = upper(f('direction'));
+  return direction === null
+    ? f('biz_opaque_callback_data') === null
+    : direction !== 'BUSINESS_INITIATED';
+}
+
 function toCall(c: unknown, ctx: CallsContext): CallWebhookEvent | null {
   const f = (path: string) => field(c, path);
   const [id, event] = [f('id'), f('event')];
   if (!id || (event !== 'connect' && event !== 'terminate')) return null;
-  // A missing direction with our callback ref is our own call (only outbound calls carry biz_opaque_callback_data).
-  const direction = upper(f('direction'));
-  const inbound = direction === null ? f('biz_opaque_callback_data') === null : direction !== 'BUSINESS_INITIATED';
+  const inbound = isInboundCall(f);
   return {
     kind: event,
     waCallId: id,
@@ -64,6 +77,35 @@ export function readCalls(value: unknown, ctx: CallsContext): void {
   }
 }
 
+type PermissionResponse = CallPermissionReplyEvent['response'];
+
+const RESPONSES = new Map<string, PermissionResponse>([
+  ['accept', 'accepted'],
+  ['reject', 'rejected'],
+]);
+
+/** WhatsApp's expiry counts only for an accepted request. */
+const expiry = (response: PermissionResponse, exp: string | null, now: Date): Date | null =>
+  response === 'accepted' && exp ? metaTime(exp, now) : null;
+
+function toPermissionReply(
+  m: unknown,
+  ctx: { now: Date; phoneNumberId: string },
+): CallPermissionReplyEvent | null {
+  const f = (path: string) => field(m, path);
+  const from = f('from');
+  const response = RESPONSES.get(f('interactive.call_permission_reply.response') ?? '');
+  if (f('interactive.type') !== 'call_permission_reply' || !from || !response) return null;
+  const exp = f('interactive.call_permission_reply.expiration_timestamp');
+  return {
+    phoneNumberId: ctx.phoneNumberId,
+    from,
+    response,
+    expiresAt: expiry(response, exp, ctx.now),
+    at: metaTime(f('timestamp'), ctx.now),
+  };
+}
+
 /**
  * A `messages` change's call_permission_reply items (docs/28 §10): the family's accept / reject of
  * a request, with WhatsApp's expiry. The message itself is still stored as an inbound row (its
@@ -74,23 +116,7 @@ export function readPermissionReplies(
   ctx: { now: Date; phoneNumberId: string; batch: WebhookBatch },
 ): void {
   for (const m of list(get(value, 'messages'))) {
-    const f = (path: string) => field(m, path);
-    const [from, answer] = [f('from'), f('interactive.call_permission_reply.response')];
-    if (
-      f('interactive.type') !== 'call_permission_reply' ||
-      !from ||
-      (answer !== 'accept' && answer !== 'reject')
-    )
-      continue;
-    const exp = f('interactive.call_permission_reply.expiration_timestamp');
-    const response = answer === 'accept' ? 'accepted' : 'rejected';
-    const expiresAt = response === 'accepted' && exp ? metaTime(exp, ctx.now) : null;
-    (ctx.batch.permissions ??= []).push({
-      phoneNumberId: ctx.phoneNumberId,
-      from,
-      response,
-      expiresAt,
-      at: metaTime(f('timestamp'), ctx.now),
-    });
+    const reply = toPermissionReply(m, ctx);
+    if (reply) (ctx.batch.permissions ??= []).push(reply);
   }
 }

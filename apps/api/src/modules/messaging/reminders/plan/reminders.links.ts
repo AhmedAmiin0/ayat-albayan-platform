@@ -1,7 +1,8 @@
 import { reminderDue } from '@ab/shared';
 import { meetingModeOf, usesPlatform, type JoinWindowConfig } from '@ab/schedule';
 import { linkExpiry } from '@/modules/teaching/classroom/join/join-link.token';
-import { isOpen, type ReminderLesson } from './reminders.plan';
+import { isOpen } from './reminders.plan';
+import type { ReminderLesson } from './reminders.plan.types';
 
 // Which link the reminders carry, per lesson: its teacher's meeting_mode (migration 490), else the
 // academy default settings.meeting_link_auto. Pure, decided
@@ -39,8 +40,9 @@ export const teacherReportUrl = (origin: string, lessonId: string): string => `$
 /**
  * The lessons as the reminders should name their link. A room lesson gets the classroom page, a
  * host no template button knows, so the guardian's reminder is lesson_reminder_plain (the family's
- * own link follows as lesson_join_link) and the teacher's is teacher_lesson_reminder with the URL in
- * {{2}}. A platform lesson never falls back to the fixed link: without LiveKit its reminders carry none.
+ * own link follows as lesson_join_link) and the teacher's is teacher_lesson_reminder with the URL
+ * in {{2}}. A platform lesson never falls back to the fixed link: without LiveKit its reminders
+ * carry none.
  */
 export function sentLinks(lessons: readonly ReminderLesson[], ctx: RoomContext): ReminderLesson[] {
   return lessons.map((l) => {
@@ -76,7 +78,8 @@ function lessonCandidates(lesson: ReminderLesson, at: CandidateTiming): RoomCand
     const g = s.guardian;
     if (!g || !reminderDue({ kind: 'same_day', startsAt, tz: g.tz, minutesBefore: at.minutesBefore, now: at.now })) return [];
     // the key reuses the `lesson_reminder:` prefix on purpose, so edit_lesson_time (migration
-    // 175's regex) expires and frees it when the time moves; renaming it means changing that regex too.
+    // 175's regex) expires and frees it when the time moves; renaming it means changing that regex
+    // too.
     const dedupKey = `lesson_reminder:${lesson.id}:${s.id}:room`;
     return [
       {

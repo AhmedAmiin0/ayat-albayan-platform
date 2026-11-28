@@ -27,6 +27,7 @@ const verify: TokenVerifier = async (token) => {
 };
 
 let seq = 0;
+const orNull = <T>(v: T | null | undefined): T | null => v ?? null;
 /** A uuid-shaped id per row, so `:id` params pass the `replyIdSchema` ZodParam. */
 export const replyId = (n: number) => `5a000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 
@@ -45,13 +46,13 @@ function memoryReplies(rows: SavedReplyRow[] = []) {
     insert: vi.fn(async (row: ReplyInsert) => {
       const made: SavedReplyRow = {
         id: replyId(++seq + 100),
-        owner_profile_id: row.owner_profile_id ?? null,
+        owner_profile_id: orNull(row.owner_profile_id),
         title: row.title,
         body: row.body,
-        attachment_path: row.attachment_path ?? null,
-        attachment_mime: row.attachment_mime ?? null,
-        attachment_name: row.attachment_name ?? null,
-        attachment_size: row.attachment_size ?? null,
+        attachment_path: orNull(row.attachment_path),
+        attachment_mime: orNull(row.attachment_mime),
+        attachment_name: orNull(row.attachment_name),
+        attachment_size: orNull(row.attachment_size),
         position: row.position ?? 0,
         updated_at: '2026-10-25T00:00:00Z',
       };

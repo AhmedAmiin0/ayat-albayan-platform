@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { z } from 'zod';
 import { expoReceiptsTransport } from './receipts.transport';
 
 const BASE = 'https://exp.host';
@@ -8,7 +9,7 @@ function stubFetch(status = 200) {
   const calls: { url: string; init: RequestInit }[] = [];
   const fetchMock = vi.fn(async (url: string, init: RequestInit) => {
     calls.push({ url, init });
-    const { ids } = JSON.parse(String(init.body)) as { ids: string[] };
+    const { ids } = JSON.parse(z.string().parse(init.body)) as { ids: string[] };
     const data = Object.fromEntries(ids.map((id) => [id, { status: 'ok' }]));
     return new Response(JSON.stringify({ data }), { status });
   });
@@ -26,7 +27,7 @@ describe('expoReceiptsTransport', () => {
     expect(calls).toHaveLength(2);
     expect(calls[0]?.url).toBe('https://exp.host/--/api/v2/push/getReceipts');
     expect(calls[0]?.init.headers).toMatchObject({ authorization: 'Bearer expo-token' });
-    expect((JSON.parse(String(calls[1]?.init.body)) as { ids: string[] }).ids).toEqual(['t1000']);
+    expect((JSON.parse(z.string().parse(calls[1]?.init.body)) as { ids: string[] }).ids).toEqual(['t1000']);
     expect(Object.keys(receipts)).toHaveLength(1001);
   });
 

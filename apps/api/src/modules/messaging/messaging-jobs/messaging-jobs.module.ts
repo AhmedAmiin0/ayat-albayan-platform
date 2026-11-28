@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { FollowUpsModule } from '@/modules/messaging/follow-ups/follow-ups.module';
-import { PushReceiptsModule } from '@/modules/messaging/push/push-receipts.module';
-import { RemindersModule } from '@/modules/messaging/reminders/reminders.module';
+import { FollowUpsModule } from '@/modules/messaging/follow-ups';
+import { PushReceiptsModule } from '@/modules/messaging/push';
+import { RemindersModule } from '@/modules/messaging/reminders';
 import { FamilyPushModule } from './family-push/family-push.module';
 
 /**

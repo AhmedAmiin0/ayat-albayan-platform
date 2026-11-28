@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { loadEnv } from '@/config/env/env';
-import type { WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import type { WebhookConfig } from './webhook.types';
 import { liveWebhookConfig, WEBHOOK_CONFIG } from './webhook.config';
 import { WebhookRepo } from './webhook.repo';
 import { WebhookSettings } from './webhook.settings';

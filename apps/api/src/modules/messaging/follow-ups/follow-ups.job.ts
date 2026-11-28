@@ -5,9 +5,14 @@ import { Ticker, TickerJob } from '@/common/jobs';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules';
 import { FollowUpSlots, type SlotWindow } from './follow-up-slots';
 import {
-  followUpDedupKey, followUpRow, followUpStep, leadZone, pickTwoSlots, sameInstant,
-  type FollowUpLeadRow,
+  followUpDedupKey,
+  followUpRow,
+  followUpStep,
+  leadZone,
+  pickTwoSlots,
+  sameInstant,
 } from './follow-ups.plan';
+import type { Outcome, Pending, Tick } from './follow-ups.job.types';
 import { FollowUpsSettings } from './follow-ups.settings';
 import { FollowUpsRepo } from './follow-ups.repo';
 import { BackgroundJob } from '@/config/role/background-job';
@@ -15,31 +20,15 @@ import { BackgroundJob } from '@/config/role/background-job';
 const EVERY_MS = 5 * 60_000;
 const FIRST_RUN_MS = 60_000;
 
-type Outcome = 'queued' | 'waiting' | 'advanced' | 'notDue' | 'waitingTemplate' | 'noSlots' | 'failed';
 export type FollowUpSummary = { leads: number } & Record<Outcome, number>;
 
-interface Tick {
-  lead: FollowUpLeadRow;
-  hours: readonly number[];
-  approved: boolean;
-  now: Date;
-  /** Free starts, loaded once per tick and only when a lead is due. */
-  starts: () => Promise<Date[]>;
-}
-
 /**
- * R-LEAD-05 follow-up scheduler (docs/12 §7): every 5 minutes, single flight. A lead in
- * interested_no_slot / no_reply, not paused, whose nextFollowUpAt (follow_up_hours[stage] after its
- * last message) has passed gets follow_up_slots with two real free slots, keyed by this silence and
- * stage (rule 8). The stage advances (compare-and-set) only once that row left, on a later tick
- * (followUpStep); after the last stage nothing more is sent. next_follow_up_at and follow_up_note
- * stay current for the lead panel.
- * - follow_up_slots not approved → nothing queued, the stage stays (note waiting_template): the
- *   follow-up goes out on the first tick after approval.
- * - fewer than two free slots → nothing queued, retried next tick (note no_slots).
- * - settings.auto_messages_enabled OFF, the follow_up_slots rule OFF or unreadable (fail closed) →
- *   the tick does nothing: no row queued, no stage advanced. Stages and slot window: the rule's timing.
- * TODO(owner/integrator): «else an admin task» needs an admin_task_kind value (migration + types).
+ * R-LEAD-05 follow-up scheduler (docs/12 §7), every 5 minutes, single flight: a lead in
+ * interested_no_slot / no_reply, not paused, past nextFollowUpAt gets follow_up_slots with two real
+ * free slots, keyed by this silence and stage (rule 8). The stage advances (compare-and-set) only
+ * once that row left, on a later tick (followUpStep). Template not approved → nothing queued, the
+ * stage stays (waiting_template); under two free slots → retried next tick (no_slots); automatic
+ * messages or the rule OFF or unreadable (fail closed) → the tick does nothing.
  */
 @BackgroundJob({ name: 'follow-ups' })
 @Injectable()
@@ -72,26 +61,31 @@ export class FollowUpsJob extends TickerJob {
       ...{ notDue: 0, waitingTemplate: 0, noSlots: 0, failed: 0 },
     };
     try {
-      const { auto_messages_enabled: auto } = await this.settings.read();
-      if (!auto) return summary; // automatic messages OFF (docs/09 cut-over): nothing queued or advanced
-      const timing = await this.timing();
-      if (!timing) return summary; // the follow_up_slots rule OFF or unread: nothing queued or advanced
-      const { hours, ...win } = timing;
-      const leads = await this.queries.candidates(hours.length);
-      summary.leads = leads.length;
-      const approved = leads.length > 0 && (await this.queries.approved());
-      let starts: Promise<Date[]> | null = null;
-      const lazyStarts = () => (starts ??= this.slots.freeStarts(now, win));
-      for (const lead of leads)
-        summary[await this.process({ lead, hours, approved, now, starts: lazyStarts })] += 1;
+      await this.tick(now, summary);
     } catch (e) {
       this.log.error(`follow-ups run aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
-    if (summary.queued + summary.advanced + summary.failed > 0) this.log.log(`follow-ups: ${JSON.stringify(summary)}`);
+    const acted = summary.queued + summary.advanced + summary.failed;
+    if (acted > 0) this.log.log(`follow-ups: ${JSON.stringify(summary)}`);
     return summary;
   }
 
-  /** The follow_up_slots rule's timing while it is on; null when off or unreadable (logged by the policy). */
+  private async tick(now: Date, summary: FollowUpSummary): Promise<void> {
+    const { auto_messages_enabled: auto } = await this.settings.read();
+    if (!auto) return;
+    const timing = await this.timing();
+    if (!timing) return;
+    const { hours, ...win } = timing;
+    const leads = await this.queries.candidates(hours.length);
+    summary.leads = leads.length;
+    const approved = leads.length > 0 && (await this.queries.approved());
+    let starts: Promise<Date[]> | null = null;
+    const lazyStarts = () => (starts ??= this.slots.freeStarts(now, win));
+    for (const lead of leads)
+      summary[await this.process({ lead, hours, approved, now, starts: lazyStarts })] += 1;
+  }
+
+  /** The follow_up_slots rule's timing while on; null when off or unreadable (policy logs it). */
   private async timing(): Promise<({ hours: readonly number[] } & SlotWindow) | null> {
     const snap = await this.policy.snapshot();
     const rule = snap && ruleOf(snap, 'follow_up_slots');
@@ -115,13 +109,22 @@ export class FollowUpsJob extends TickerJob {
     if (!due || due > now) return this.note(t, { due, note: null, outcome: 'notDue' });
     const prior = await this.queries.stageRow(followUpDedupKey(lead));
     const step = followUpStep(prior);
-    if (step === 'advance') {
-      const next = nextFollowUpAt({ ...lead, follow_up_stage: lead.follow_up_stage + 1 }, hours);
-      await this.queries.advance({ id: lead.id, stage: lead.follow_up_stage, next });
-      return 'advanced';
-    }
+    if (step === 'advance') return this.advance(t);
     if (step === 'wait') return this.note(t, { due, note: 'queued', outcome: 'waiting' });
-    if (!t.approved) return this.note(t, { due, note: 'waiting_template', outcome: 'waitingTemplate' });
+    return this.send(t, { due, prior, step });
+  }
+
+  private async advance({ lead, hours }: Tick): Promise<Outcome> {
+    const next = nextFollowUpAt({ ...lead, follow_up_stage: lead.follow_up_stage + 1 }, hours);
+    await this.queries.advance({ id: lead.id, stage: lead.follow_up_stage, next });
+    return 'advanced';
+  }
+
+  private async send(t: Tick, { due, prior, step }: Pending): Promise<Outcome> {
+    const { lead, now } = t;
+    if (!t.approved) {
+      return this.note(t, { due, note: 'waiting_template', outcome: 'waitingTemplate' });
+    }
     const zone = leadZone(lead);
     const pair = pickTwoSlots(await t.starts(), zone.tz);
     if (!pair) return this.note(t, { due, note: 'no_slots', outcome: 'noSlots' });

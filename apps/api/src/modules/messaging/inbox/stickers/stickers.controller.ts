@@ -6,24 +6,17 @@ import {
   type GifList,
   type MessageView,
   type StickerList,
+  type ThreadGifSend,
+  type ThreadStickerSend,
 } from '@ab/shared';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { id } from '@ab/core';
+import { Controller, Delete, Get, HttpCode, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { parseOrThrow } from '@/common/http/http';
+import { ZodBody, ZodParam, ZodQuery } from '@/common/http/zod-inputs';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
 import type { Sent } from '@/modules/messaging/inbox/send/outbox';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
@@ -73,8 +66,10 @@ export class StickersController {
 
   @Put('stickers/favourites')
   @HttpCode(204)
-  async favourite(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    const { messageId } = parseOrThrow(stickerFavouriteSchema, body);
+  async favourite(
+    @ZodBody(stickerFavouriteSchema) { messageId }: z.output<typeof stickerFavouriteSchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
     await staffOnly(this.reads, user);
     await this.stickers.favourite({ profileId: user.id, messageId });
   }
@@ -82,7 +77,7 @@ export class StickersController {
   @Delete('stickers/favourites/:messageId')
   @HttpCode(204)
   async unfavourite(
-    @Param('messageId', new ParseUUIDPipe()) messageId: string,
+    @ZodParam('messageId', id()) messageId: string,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
     await staffOnly(this.reads, user);
@@ -90,8 +85,10 @@ export class StickersController {
   }
 
   @Get('gifs')
-  async gifList(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<GifList> {
-    const { q } = parseOrThrow(gifQuerySchema, query);
+  async gifList(
+    @ZodQuery(gifQuerySchema) { q }: z.output<typeof gifQuerySchema>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<GifList> {
     await staffOnly(this.reads, user);
     return this.gifs.list(q);
   }
@@ -100,11 +97,10 @@ export class StickersController {
   @HttpCode(201)
   @Permissions('inbox.send')
   sticker(
-    @Param('phone') raw: string,
-    @Body() body: unknown,
+    @ZodParam('phone', z.string()) raw: string,
+    @ZodBody(threadStickerSendSchema) input: ThreadStickerSend,
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
-    const input = parseOrThrow(threadStickerSendSchema, body);
     const run = (s: SendBase) => this.stickers.send({ ...s, input });
     return this.send({ user, raw }, { action: 'thread_sticker', name: 'sticker.webp', run });
   }
@@ -113,11 +109,10 @@ export class StickersController {
   @HttpCode(201)
   @Permissions('inbox.send')
   gif(
-    @Param('phone') raw: string,
-    @Body() body: unknown,
+    @ZodParam('phone', z.string()) raw: string,
+    @ZodBody(threadGifSendSchema) input: ThreadGifSend,
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
-    const input = parseOrThrow(threadGifSendSchema, body);
     const run = (s: SendBase) => this.gifs.send({ ...s, input });
     return this.send({ user, raw }, { action: 'thread_gif', name: 'gif.mp4', run });
   }

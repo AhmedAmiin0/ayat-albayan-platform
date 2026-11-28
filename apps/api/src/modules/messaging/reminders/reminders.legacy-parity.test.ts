@@ -2,8 +2,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { QueuedMessage } from './queued-row';
 import { at, fakeJob } from './reminders.fakes';
 
-// docs/23b §3: legacy mode with no notification_rules rows queues exactly what the job queued before
-// NotificationPolicy (the expectations below were recorded from the pre-change job, commit 30c4b6a1).
+// docs/23b §3: legacy mode with no notification_rules rows queues exactly what the job queued
+// before NotificationPolicy (the expectations below were recorded from the pre-change job, commit
+// 30c4b6a1).
 
 const view = (r: QueuedMessage) => [r.template_key, r.dedup_key, r.phone_e164, r.scheduled_for, r.expires_at].join(' | ');
 

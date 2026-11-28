@@ -9,13 +9,17 @@ import { ThreadMediaService } from '@/modules/messaging/inbox/files/thread-media
 import { FailedRecently } from './failed-recently';
 import { InFlight, pageRange, type PageRange } from './pdf-pages';
 import { PdfPreviewRepo, type PdfDoc } from './pdf-preview.repo';
-// poppler runs in ayat-pdf (pdf-client.ts over its socket), never here; pdf-render gives the slot and the error.
+// poppler runs in ayat-pdf (pdf-client.ts over its socket), never here; pdf-render gives the slot
+// and the error.
 import { pdfPageCount, renderPdfPages, sandboxReady } from './pdf-client';
-import { inSlot, PdfToolError, type PdfPageImage } from './pdf-render';
+import { inSlot, PdfToolError } from './pdf-render';
+import type { PdfPageImage } from './pdf-render.types';
 import { pdfFailureSchema } from './pdf.schemas';
 import { httpError } from '@/common/http/errors';
 
-/** A page run that failed is refused for this long (per process) instead of taking the slot again. */
+/**
+ * A page run that failed is refused for this long (per process) instead of taking the slot again.
+ */
 const FAILED_MS = 10 * 60_000;
 /** The 503's code per PdfToolError reason. */
 const ERROR_CODE = z.record(pdfFailureSchema, z.string()).readonly().decode({
@@ -104,7 +108,10 @@ export class PdfPreviewService {
     );
   }
 
-  /** Storage answers null on any error; the object was just resolved, so it is a blip (503), never 410. */
+  /**
+   * Storage answers null on any error; the object was just resolved, so it is a blip (503), never
+   * 410.
+   */
   private async read(file: InboundFile): Promise<Uint8Array> {
     const bytes = await this.storage.download({ bucket: file.bucket, path: file.path });
     if (!bytes) throw httpError(HttpStatus.SERVICE_UNAVAILABLE, 'pdf_render_failed');
@@ -120,8 +127,8 @@ export class PdfPreviewService {
   }
 
   /**
-   * 'busy' → 503 pdf_busy; 'unavailable' → 503 pdf_unavailable (the sandbox, not the PDF: never remembered);
-   * 'failed' → 503 pdf_render_failed, and the key is refused for FAILED_MS.
+   * 'busy' → 503 pdf_busy; 'unavailable' → 503 pdf_unavailable (the sandbox, not the PDF: never
+   * remembered); 'failed' → 503 pdf_render_failed, and the key is refused for FAILED_MS.
    */
   private async guard<T>(key: string, fn: () => Promise<T>): Promise<T> {
     if (this.failed.has(key)) throw httpError(HttpStatus.SERVICE_UNAVAILABLE, 'pdf_render_failed');

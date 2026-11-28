@@ -4,8 +4,8 @@ import { ask, jpgs, PDF_BYTES, setup, status } from '@/modules/messaging/inbox/f
 import { pdfPageCount, renderPdfPages, sandboxReady } from '@/modules/messaging/inbox/files/pdf/pdf-client';
 import { PdfToolError } from '@/modules/messaging/inbox/files/pdf/pdf-render';
 
-// The limits a hostile or huge PDF meets in PdfPreviewService (the timeouts and the memory cap: pdf-render.spawn.test.ts;
-// the socket's own: pdf-client.test.ts).
+// The limits a hostile or huge PDF meets in PdfPreviewService (the timeouts and the memory cap:
+// pdf-render.spawn.test.ts; the socket's own: pdf-client.test.ts).
 vi.mock('@/modules/messaging/inbox/files/pdf/pdf-client', () => ({ pdfPageCount: vi.fn(), renderPdfPages: vi.fn(), sandboxReady: vi.fn() }));
 const count = vi.mocked(pdfPageCount);
 const render = vi.mocked(renderPdfPages);

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
 import { RECORDED, scriptedFetch, STUB_ENV, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { waInfo } from './fixtures/wa-info';
 
 const params = { '1': 'سلمى', '2': 'الأحد 4 أكتوبر 17:00', button: 'ab-sara-x1' };
 const send = (c: HttpWhatsappClient) => c.sendTemplate({ to: '+966551234567', template: templateRow(), params });
@@ -39,7 +40,7 @@ describe('HttpWhatsappClient against recorded wa-stub answers (no network)', () 
 
   it('a 5xx without a Meta body or a refused connection → code null, safe to retry', async () => {
     const html = { status: 502, body: '<html>bad gateway</html>' };
-    expect(await send(client(html).c).catch((e: WaError) => e.info)).toMatchObject({
+    expect(await send(client(html).c).catch(waInfo)).toMatchObject({
       code: null,
       status: 502,
     });
@@ -53,11 +54,11 @@ describe('HttpWhatsappClient against recorded wa-stub answers (no network)', () 
   it('a timeout or a dropped connection may have reached Meta → flagged uncertain (never resent blindly)', async () => {
     const slow = new HttpWhatsappClient(STUB_ENV, {
       timeoutMs: 5,
-      fetch: (_u, init) => new Promise((_r, reject) => init.signal?.addEventListener('abort', () => reject(init.signal?.reason))),
+      fetch: (_u, init) => new Promise((_r, reject) => init.signal?.addEventListener('abort', () => reject(new Error('aborted', { cause: init.signal?.reason })))),
     });
     const template = templateRow().meta_name;
     const info = { code: null, status: 0, uncertain: true, timedOut: true, template };
-    expect(await send(slow).catch((e: WaError) => e.info)).toEqual(info);
+    expect(await send(slow).catch(waInfo)).toEqual(info);
     const reset = new TypeError('fetch failed', { cause: Object.assign(new Error('socket'), { code: 'ECONNRESET' }) });
     await expect(send(client(reset).c)).rejects.toMatchObject({ info: { uncertain: true } });
   });

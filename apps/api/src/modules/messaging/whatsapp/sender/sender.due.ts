@@ -1,9 +1,6 @@
 import type { Json } from '@ab/db';
 import type { LessonStatus, WaLine } from '@ab/catalog';
-import type { Db } from '@/common/db/db.module';
-import { SENDING } from './send-plan';
-import { AUTO_OFF, AUTOMATIC_KEYS, type StaleLead } from './send-stale';
-import { LANE_ROWS, type Lane } from './drain/lanes';
+import type { StaleLead } from './send-stale';
 import type { SentFile, WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /** A queued outbound row with what expiry, staleness and the failure push need. */
@@ -29,9 +26,14 @@ export interface DueMessage {
   scheduled_for?: string | null;
   /** SENDING = a previous try was claimed and never resolved (send-plan). */
   error_code: string | null;
-  /** The line a session text leaves from (docs/12 §13.3); null = notifications. Templates ignore it. */
+  /**
+   * The line a session text leaves from (docs/12 §13.3); null = notifications. Templates ignore it.
+   */
   line: WaLine | null;
-  /** The number a session text was stamped with at enqueue (module mode, docs/23c decision 5); null = its line's default. */
+  /**
+   * The number a session text was stamped with at enqueue (module mode, docs/23c decision 5); null
+   * = its line's default.
+   */
   number_id: string | null;
   /** A file staff sent from the chat (wa-media out/…); optional so older fixtures compile. */
   media_path?: string | null;
@@ -47,53 +49,8 @@ export interface DueMessage {
 export const DUE_COLUMNS =
   'id, phone_e164, lead_id, lesson_id, template_key, template_params, body, reply_to_wa_id, dedup_key, created_by, sent_by_teacher_id, guardian_id, attempts, expires_at, created_at, scheduled_for, error_code, line, number_id, media_path, media_mime, media_name, interactive_payload, lesson:lessons(starts_at, status), guardian:guardians(name), lead:leads(name, status, follow_up_paused, last_inbound_at, created_at)';
 
-/** anyDue(): now, the allow-list, and (a lane's timer pass) its lane. */
-interface AnyDueInput { now: Date; allowed: readonly string[] | null; lane?: Lane }
-
-/**
- * The idle tick's one read (messages_queue_idx): is any queued outbound row due now (in the allow-list
- * when one is set)? A superset of SenderQueries.due() (any template, any line), so false never skips
- * a row due() would have read; true runs the pass exactly as before.
- */
-export async function anyDue(db: Db, input: AnyDueInput): Promise<boolean> {
-  const now = input.now.toISOString();
-  const all = db
-    .from('messages')
-    .select('id')
-    .eq('direction', 'outbound')
-    .eq('status', 'queued')
-    .or(`scheduled_for.is.null,scheduled_for.lte.${now}`)
-    .or(`next_attempt_at.is.null,next_attempt_at.lte.${now}`);
-  const queued = input.lane ? all.or(LANE_ROWS[input.lane]) : all; // docs/42 42-7: its lane only
-  const { data, error } = await (input.allowed ? queued.in('phone_e164', [...input.allowed]) : queued).limit(1);
-  if (error) throw new Error(`outbound queue probe failed: ${error.message}`);
-  return data.length > 0;
-}
-
 /** docs/19: the platform never sends a row staff may have sent from the app; nothing clears it. */
 export const NOT_APP_SENT = 'app_send_until.is.null';
-
-/**
- * Automatic messages OFF: every job-made reminder / follow-up / renewal still queued is held
- * (failed «auto_off», no push), also under a template Meta has not approved yet, which due()
- * never reads and which would otherwise go out on its own once approved and switched ON. Not a
- * row already claimed (SENDING): Meta may have sent it; the worker asks the admin. The count.
- */
-export async function holdAutomatic(db: Db, allowed: readonly string[] | null): Promise<number> {
-  const held = { status: 'failed' as const, error_code: AUTO_OFF.code, error_text: AUTO_OFF.text };
-  const query = db
-    .from('messages')
-    .update({ ...held, next_attempt_at: null })
-    .eq('direction', 'outbound')
-    .eq('status', 'queued')
-    .is('created_by', null)
-    .in('template_key', [...AUTOMATIC_KEYS])
-    .or(`error_code.is.null,error_code.neq.${SENDING}`);
-  const scoped = allowed ? query.in('phone_e164', [...allowed]) : query;
-  const { data, error } = await scoped.select('id');
-  if (error) throw new Error(`automatic hold failed: ${error.message}`);
-  return data.length;
-}
 
 /** What a send adds to the sent row: Evolution's text-for-a-template, a refused note's m4a. */
 export const sentExtras = (sent: WaSent): { sent_as_text?: true } & Partial<SentFile> => ({

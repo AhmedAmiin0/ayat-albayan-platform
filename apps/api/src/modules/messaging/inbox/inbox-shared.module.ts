@@ -17,7 +17,7 @@ import { TeacherScopes } from './teacher-threads/teacher-scope';
 import { TeacherThreadsRepo } from './teacher-threads/teacher-threads.repo';
 import { TeacherThreadsService } from './teacher-threads/teacher-threads.service';
 import { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
-import { ThreadQuotes } from './threads/thread-quotes';
+import { ThreadQuotes, ThreadQuotesRepo } from './threads/thread-quotes';
 import { ThreadsRepo } from './threads/threads.repo';
 import { ThreadsService } from './threads/threads.service';
 
@@ -34,7 +34,7 @@ import { ThreadsService } from './threads/threads.service';
     ...[ThreadsRepo, ThreadMessagesRepo, ThreadReadsRepo, ThreadsService, ThreadReads],
     ...[ReadReceipts, Outbox, ThreadSendService, CorrectionRepo, ThreadQuotes, InboxSettings],
     ...[TeacherThreadsRepo, TeacherScopes, TeacherThreadsService, SalesThreadsService],
-    ...[ForwardFiles, DeltaRepo, ThreadDeltaService],
+    ...[ForwardFiles, DeltaRepo, ThreadDeltaService, ThreadQuotesRepo],
   ],
   exports: [
     ...[ThreadReads, ThreadsRepo, ThreadMessagesRepo, Outbox, ThreadSendService, TeacherScopes],

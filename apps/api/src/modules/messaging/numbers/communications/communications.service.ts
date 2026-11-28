@@ -13,11 +13,17 @@ import { NumbersSettings } from '@/modules/messaging/numbers/numbers.settings';
 
 /**
  * Parity and the read switch (docs/23 §2e steps 4–5, docs/23b decision 5). The switch to module is
- * REFUSED (409 parity_not_empty) while the legacy and module paths differ anywhere: a number field or
- * a notification rule's mapped part. Back to legacy is always allowed, after copying the rules'
+ * REFUSED (409 parity_not_empty) while the legacy and module paths differ anywhere: a number field
+ * or a notification rule's mapped part. Back to legacy is always allowed, after copying the rules'
  * effective values into the legacy keys. It writes comms_source (and those 8 rule keys) only: never
  * messaging_enabled, the allow-list or any other switch, so flipping never opens the send gate.
  */
+const switchesToModule = (source: CommsSource, before: CommsSource): boolean =>
+  source === 'module' && before !== 'module';
+
+const parityDiffers = (view: ParityView): boolean =>
+  view.differences.length > 0 || (view.rules ?? []).length > 0;
+
 @Injectable()
 export class CommunicationsService {
   constructor(
@@ -42,23 +48,15 @@ export class CommunicationsService {
 
   async setSource(source: CommsSource, actorId: string): Promise<CommsSourceView> {
     const before = await this.config.source();
-    if (source === 'module' && before !== 'module') {
-      const view = await this.parity();
-      if (view.differences.length > 0 || (view.rules ?? []).length > 0) throw new ConflictException({ message: 'parity_not_empty' });
-    }
+    if (switchesToModule(source, before)) await this.assertParity();
     if (before === source) return { source };
-    if (source === 'legacy') await this.rules.copyToLegacy(actorId);
-    try {
-      await this.settings.writeSource(source, actorId);
-    } finally {
-      this.rules.invalidate();
-      await this.config.reload();
-      kickConfigReload();
-    }
+    await this.copyIfLegacy(source, actorId);
+    await this.write(source, actorId);
     try {
       // Again, now that legacy reads: a rule PATCH that landed between the first copy and the flip
-      // wrote only notification_rules (module mode then). Idempotent: an unchanged copy rewrites the same values.
-      if (source === 'legacy') await this.rules.copyToLegacy(actorId);
+      // wrote only notification_rules (module mode then). Idempotent: an unchanged copy rewrites
+      // the same values.
+      await this.copyIfLegacy(source, actorId);
     } finally {
       await this.audit.record({
         actorId,
@@ -70,5 +68,24 @@ export class CommunicationsService {
       });
     }
     return { source: await this.config.source() };
+  }
+
+  private async assertParity(): Promise<void> {
+    const view = await this.parity();
+    if (parityDiffers(view)) throw new ConflictException({ message: 'parity_not_empty' });
+  }
+
+  private async copyIfLegacy(source: CommsSource, actorId: string): Promise<void> {
+    if (source === 'legacy') await this.rules.copyToLegacy(actorId);
+  }
+
+  private async write(source: CommsSource, actorId: string): Promise<void> {
+    try {
+      await this.settings.writeSource(source, actorId);
+    } finally {
+      this.rules.invalidate();
+      await this.config.reload();
+      kickConfigReload();
+    }
   }
 }

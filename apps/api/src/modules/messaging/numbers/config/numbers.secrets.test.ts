@@ -17,7 +17,7 @@ describe('NumbersSecrets (Vault RPCs)', () => {
 
   it('an error never carries the value', async () => {
     const { db } = fakeDb({ 'rpc:wa_number_secret_set': [{ error: { code: '22023', message: 'invalid number secret value token-fake' } }] });
-    const err = await new NumbersSecrets(db).set({ id: ID, name: 'access_token' }, 'token-fake').catch((e: Error) => e);
+    const err = await new NumbersSecrets(db).set({ id: ID, name: 'access_token' }, 'token-fake').catch((e: unknown) => e);
     expect(String(err)).toContain('22023');
     expect(String(err)).not.toContain('token-fake');
   });

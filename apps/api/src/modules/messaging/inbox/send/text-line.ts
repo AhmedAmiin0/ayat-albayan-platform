@@ -4,6 +4,7 @@ import { activeNumberId } from '@/common/configuration/integrations/numbers-over
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { windowless } from '@/modules/messaging/whatsapp';
 import { pickStaffSend } from './chat-first';
+import { refused } from './refusal';
 import type { ThreadWindow } from './send-number';
 import type { SendLineCode } from './send-line';
 import type { ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
@@ -55,7 +56,7 @@ const lineError = (code: SendLineCode) =>
  */
 export async function sendLine(thread: ThreadRow | null, at: LineAt): Promise<SendFromLine> {
   const picked = await pickStaffSend({ thread, now: at.now, windows: at.windows });
-  if (!('code' in picked)) return picked;
+  if (!refused(picked)) return picked;
   if (goesFree(thread, picked.code)) return freeChat();
   throw lineError(picked.code);
 }
@@ -70,7 +71,7 @@ export async function sendLine(thread: ThreadRow | null, at: LineAt): Promise<Se
  */
 export async function textLine(thread: ThreadRow | null, at: LineAt): Promise<SendFromLine> {
   const picked = await pickStaffSend({ thread, now: at.now, windows: at.windows });
-  if (!('code' in picked)) return picked;
+  if (!refused(picked)) return picked;
   if (goesFree(thread, picked.code)) return freeChat();
   if (picked.code !== 'session_closed' || !chatOnKapso()) throw lineError(picked.code);
   const numberId = activeNumberId('chat');

@@ -77,7 +77,7 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
 
   it('automatic messages OFF: every job-made row is held up front (approved template or not), then per row', async () => {
     gate.automaticOn.mockResolvedValue(false);
-    queries.holdAutomatic.mockResolvedValue(2); // e.g. the 2 renewal_due rows under a not-yet-approved template
+    queries.holdAutomatic.mockResolvedValue(2); // renewal_due rows of an unapproved template
     worker.process.mockReset().mockResolvedValueOnce('held').mockResolvedValueOnce('sent');
     const summary = await sender().runOnce(NOW);
     expect(queries.holdAutomatic.mock.invocationCallOrder[0]).toBeLessThan(

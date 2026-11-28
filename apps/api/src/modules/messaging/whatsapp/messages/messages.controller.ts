@@ -1,5 +1,6 @@
+import { id } from '@ab/core';
 import type { MessageView, SendGateView } from '@ab/shared';
-import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -12,6 +13,8 @@ import { z } from 'zod';
 
 /** The row's id (rule 12: zod at the boundary). */
 const messageId = z.uuid();
+/** Any 8-4-4-4-12 hex id, as ParseUUIDPipe accepted before. */
+const rowId = id();
 
 /** M1–M3 (docs/12 §4): what the admin does with an outbound message that did not go out. */
 @ApiTags('messaging')
@@ -33,11 +36,14 @@ export class MessagesController {
     return this.sendGate.view();
   }
 
-  /** failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while OFF). */
+  /**
+   * failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while
+   * OFF).
+   */
   @Post(':id/retry')
   @HttpCode(200)
   async retry(
-    @Param('id', ParseUUIDPipe) id: string,
+    @ZodParam('id', rowId) id: string,
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
     const change = await this.messages.retry(id, {
@@ -49,22 +55,36 @@ export class MessagesController {
   /** R-MSG-03: queued / failed outbound → sent_manually (409 not_manual otherwise). */
   @Post(':id/sent-manually')
   @HttpCode(200)
-  async sentManually(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
-    return this.audited({ change: await this.messages.sentManually(id), action: 'message_sent_manually', user });
+  async sentManually(
+    @ZodParam('id', rowId) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MessageView> {
+    const change = await this.messages.sentManually(id);
+    return this.audited({ change, action: 'message_sent_manually', user });
   }
 
   /** docs/19: held from platform sends for 10 minutes; idempotent; 409 not_app_send otherwise. */
   @Post(':id/app-send')
   @HttpCode(200)
-  async appSend(@ZodParam('id', messageId) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
+  async appSend(
+    @ZodParam('id', messageId) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MessageView> {
     return this.audited({ change: await this.appSends.start(id), action: 'message_app_send', user });
   }
 
-  /** M3: the admin opened wa.me; held (failed «handed_off») until M2 or M1. 409 not_manual otherwise. */
+  /**
+   * M3: the admin opened wa.me; held (failed «handed_off») until M2 or M1. 409 not_manual
+   * otherwise.
+   */
   @Post(':id/hand-off')
   @HttpCode(200)
-  async handOff(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
-    return this.audited({ change: await this.messages.handOff(id), action: 'message_handed_off', user });
+  async handOff(
+    @ZodParam('id', rowId) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MessageView> {
+    const change = await this.messages.handOff(id);
+    return this.audited({ change, action: 'message_handed_off', user });
   }
 
   private async audited(input: {

@@ -3,20 +3,20 @@ import { PDF_PREVIEW_PAGES } from '@ab/shared';
 export { FailedRecently } from './failed-recently';
 
 // The pure part of the chat PDF preview: which pages one request renders, poppler's
-// arguments and outputs, and two per-process maps (shared in-flight work, recent failures).
+// arguments and outputs, and the per-process map of shared in-flight work.
 
 /** Pages 2+ render in runs of this many (2–6, 7–11 …), so page 2 never waits for page 30. */
 export const PDF_RUN = 5;
-/** A crafted «Pages: 99999999999» is stored as this: no column overflow, 500 or probe per view. */
+/**
+ * A crafted «Pages: 99999999999» is stored as this many: never a column overflow, a 500 and a probe
+ * per view.
+ */
 const PDF_PAGES_MAX = 100_000;
 
-export interface PageRange {
-  first: number;
-  last: number;
-}
+export interface PageRange { first: number; last: number }
 
 /**
- * Page 1 alone (the bubble's thumb), else its run of PDF_RUN, cut at the page count and
+ * Page 1 alone (the bubble's thumb), else the run of PDF_RUN it falls in, cut at the page count and
  * PDF_PREVIEW_PAGES.
  */
 export function pageRange(page: number, pages: number): PageRange {
@@ -26,9 +26,10 @@ export function pageRange(page: number, pages: number): PageRange {
 }
 
 /**
- * «Pages:          12» of pdfinfo's report, at most PDF_PAGES_MAX; 0 when none. The LAST such line:
- * the file's own strings (Title, Author …, inner newlines printed as is) come before it, only
- * poppler's lines (Encrypted, Page size …) after, so a crafted «\nPages: 1» in a Title never wins.
+ * «Pages: 12» of pdfinfo's report, at most PDF_PAGES_MAX; 0 when it has none. The LAST such line:
+ * the file's own strings (Title, Author …, a newline inside them printed as is) come before it,
+ * only poppler's lines (Encrypted, Page size …) after, so a crafted «\nPages: 1» in a Title never
+ * wins.
  */
 export function pdfinfoPages(stdout: string): number {
   const m = [...stdout.matchAll(/^Pages:\s+(\d+)$/gm)].at(-1);
@@ -36,8 +37,9 @@ export function pdfinfoPages(stdout: string): number {
 }
 
 /**
- * JPEG at quality 70, long side scaled to 1600 px (A4 ≈ 1131×1600, 150–300 KB), pages `range`
- * only. The smoke render in apps/api/Dockerfile runs these same flags: change both together.
+ * JPEG at quality 70, the long side scaled to 1600 px (an A4 page ≈ 1131×1600, 150–300 KB), pages
+ * `range` only. The smoke render in apps/api/Dockerfile runs these same flags: change both
+ * together.
  */
 export function pdftoppmArgs(input: { pdf: string; outRoot: string; range: PageRange }): string[] {
   const { first, last } = input.range;
@@ -56,7 +58,10 @@ export function pdftoppmArgs(input: { pdf: string; outRoot: string; range: PageR
   ];
 }
 
-/** «p-07.jpg» → 7: pdftoppm pads to the page count's digits, so names are parsed, never built. */
+/**
+ * «p-07.jpg» → 7: pdftoppm pads the number to the digits of the page count, so names are parsed,
+ * never built.
+ */
 export function pageOfFile(name: string): number | null {
   const m = /^p-(\d+)\.jpg$/.exec(name);
   return m ? Number(m[1]) : null;

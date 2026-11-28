@@ -3,7 +3,7 @@ import {
   templateStarterSchema, type TemplateMoveView, type TemplateNumberSetView, type TemplateView,
 } from '@ab/shared';
 import { templateEditSchema, templateKeyParam } from '@ab/shared';
-import { Controller, HttpCode, Inject, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
+import { Controller, HttpCode, Inject, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -48,7 +48,10 @@ export class TemplateEditsController {
   @Post(':key/submit')
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
-  submit(@Param('key') key: string, @CurrentUser() user: AuthUser): Promise<TemplateView> {
+  submit(
+    @ZodParam('key', templateKeyParam) key: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<TemplateView> {
     return this.admin.submit(key, user.id);
   }
 
@@ -57,7 +60,7 @@ export class TemplateEditsController {
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   setLine(
-    @Param('key') key: string,
+    @ZodParam('key', templateKeyParam) key: string,
     @ZodBody(templateLineSchema) input: z.output<typeof templateLineSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateMoveView> {
@@ -69,7 +72,7 @@ export class TemplateEditsController {
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   setNumber(
-    @Param('key') key: string,
+    @ZodParam('key', templateKeyParam) key: string,
     @ZodBody(templateNumberSchema) input: z.output<typeof templateNumberSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateNumberSetView> {
@@ -81,7 +84,7 @@ export class TemplateEditsController {
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   setCrmStatus(
-    @Param('key') key: string,
+    @ZodParam('key', templateKeyParam) key: string,
     @ZodBody(templateCrmStatusSchema) input: z.output<typeof templateCrmStatusSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateView> {
@@ -93,7 +96,7 @@ export class TemplateEditsController {
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   setCrmName(
-    @Param('key') key: string,
+    @ZodParam('key', templateKeyParam) key: string,
     @ZodBody(templateCrmNameSchema) input: z.output<typeof templateCrmNameSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateView> {
@@ -108,7 +111,7 @@ export class TemplateEditsController {
   @HttpCode(200)
   @UseGuards(TemplateManagerGuard)
   setStarter(
-    @Param('key') key: string,
+    @ZodParam('key', templateKeyParam) key: string,
     @ZodBody(templateStarterSchema) input: z.output<typeof templateStarterSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<TemplateView> {

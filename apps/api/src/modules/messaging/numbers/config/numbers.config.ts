@@ -15,11 +15,13 @@ import {
 import { loadEnv } from '@/config/env/env';
 import { callsNumberOf, overlayNumber } from './numbers.env';
 import { moduleOverlay, type DefaultNumber } from '@/modules/messaging/numbers/lines/numbers.lines';
-import { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
+import { NumbersRepo, type NumberRow } from '@/modules/messaging/numbers/numbers.repo';
 import { NumbersSecrets } from './numbers.secrets';
 import { NumbersSettings } from '@/modules/messaging/numbers/numbers.settings';
 
 const MIN_REFRESH_MS = 1_000;
+
+const errorText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
  * NumbersConfig (docs/23 §2c): the port WhatsappModule's config comes through. comms_source =
@@ -82,13 +84,15 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
       if (generation === this.generation) this.install(next, calls);
       return true;
     } catch (e) {
-      if (source === 'module' && !this.loaded && generation === this.generation)
-        setNumbersOverlay(this.overlayOf([]));
-      this.log.warn(
-        `numbers config not loaded, keeping the current one: ${e instanceof Error ? e.message : String(e)}`,
-      );
+      if (this.bootFailsClosed(source, generation)) setNumbersOverlay(this.overlayOf([]));
+      this.log.warn(`numbers config not loaded, keeping the current one: ${errorText(e)}`);
       return false;
     }
+  }
+
+  /** Module mode with nothing loaded yet, and no newer call since: every line blank. */
+  private bootFailsClosed(source: CommsSource | null, generation: number): boolean {
+    return source === 'module' && !this.loaded && generation === this.generation;
   }
 
   private install(next: NumbersOverlay | null, calls: CallsNumber | null): void {
@@ -107,9 +111,7 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
       const row = await this.queries.callsDefault();
       return row ? callsNumberOf(row, loadEnv()) : null;
     } catch (e) {
-      this.log.warn(
-        `calls number not loaded, keeping the current one: ${e instanceof Error ? e.message : String(e)}`,
-      );
+      this.log.warn(`calls number not loaded, keeping the current one: ${errorText(e)}`);
       return callsNumber();
     }
   }
@@ -124,11 +126,9 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
   async numbers(): Promise<OverlayNumber[]> {
     const env = loadEnv();
     const rows = await this.queries.all();
-    return Promise.all(
-      rows.map(async (row) =>
-        overlayNumber({ row, secrets: await this.secrets.read(row.id) }, env),
-      ),
-    );
+    const withSecrets = async (row: NumberRow) =>
+      overlayNumber({ row, secrets: await this.secrets.read(row.id) }, env);
+    return Promise.all(rows.map(withSecrets));
   }
 
   overlayOf(defaults: readonly DefaultNumber[]): NumbersOverlay {

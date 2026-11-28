@@ -16,7 +16,7 @@ import { RULES_CLASSROOM, RulesRepo, type ClassroomOn } from './rules.repo';
 import { RulesReader } from './store/rules.reader';
 import { RulesService } from './rules.service';
 import { DbRulesReader } from './store/rules.store';
-import { RulesTable } from './store/rules.table';
+import { RulesTableRepo } from './store/rules-table.repo';
 import { RulesWriter } from './store/rules.writer';
 
 /**
@@ -39,7 +39,7 @@ import { RulesWriter } from './store/rules.writer';
     RulesSourceSettings,
     RulesRepo,
     RulesFacts,
-    RulesTable,
+    RulesTableRepo,
     DbRulesReader,
     { provide: RulesReader, useExisting: DbRulesReader },
     NotificationPolicy,

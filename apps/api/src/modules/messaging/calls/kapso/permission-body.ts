@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { callPermissionMessage, waTo, type GraphBody } from '@/modules/messaging/whatsapp';
 import type { PermissionRequest } from './calls-api';
 
@@ -13,11 +14,19 @@ export function permissionTemplate(
   return m?.[1] ? { name: m[1], language: m[2] ?? 'ar' } : null;
 }
 
+const textRequestSchema = z.object({ to: z.string(), text: z.string() });
+const templateRequestSchema = z.object({
+  to: z.string(),
+  template: z.object({ name: z.string(), language: z.string() }),
+});
+
 export function permissionRequestBody(input: PermissionRequest): GraphBody {
-  if ('text' in input) return callPermissionMessage(input);
-  const { name, language } = input.template;
+  const text = textRequestSchema.safeParse(input);
+  if (text.success) return callPermissionMessage(text.data);
+  const { to, template } = templateRequestSchema.parse(input);
+  const { name, language } = template;
   return {
-    ...{ messaging_product: 'whatsapp', recipient_type: 'individual', to: waTo(input.to) },
+    ...{ messaging_product: 'whatsapp', recipient_type: 'individual', to: waTo(to) },
     ...{ type: 'template', template: { name, language: { code: language } } },
   };
 }

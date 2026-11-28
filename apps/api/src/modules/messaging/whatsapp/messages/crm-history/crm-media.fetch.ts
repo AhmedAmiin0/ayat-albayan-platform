@@ -4,14 +4,13 @@ import { httpError } from '@/common/http/errors';
 
 /** The old CRM's storage gets this long for the whole file (headers and body). */
 export const CRM_FETCH_TIMEOUT_MS = 10_000;
-/** The storage did not answer about the file (down, timed out, 5xx, 429): try again later, it is not gone. */
+/**
+ * The storage did not answer about the file (down, timed out, 5xx, 429): try again later, it is not
+ * gone.
+ */
 export const CRM_UNREACHABLE = 'crm_unreachable';
 
-interface CrmFetchInput {
-  url: URL;
-  mime: string;
-  maxBytes: number;
-}
+interface CrmFetchInput { url: URL; mime: string; maxBytes: number }
 
 const gone = (): Error => httpError(HttpStatus.GONE, 'media_expired');
 const tooBig = (): Error => httpError(HttpStatus.PAYLOAD_TOO_LARGE, 'invoice_too_large');
@@ -31,31 +30,40 @@ export function sameFamily(got: string | null, want: string): boolean {
 /**
  * GET one old-CRM file (the URL allowedCrmUrl returned, nothing else): no redirect followed (a 3xx
  * is refused), 10 s in all, the body streamed and cut at `maxBytes`. 200 only, with a content type
- * of the row's family. Unreachable (no answer, the timeout, a broken stream), 5xx or 429 → 502 crm_unreachable
- * (CRM_UNREACHABLE: a retry may work); any other status, another type or an empty body → 410 media_expired;
- * larger than the cap → 413 invoice_too_large.
+ * of the row's family. Unreachable (no answer, the timeout, a broken stream), 5xx or 429 → 502
+ * crm_unreachable (CRM_UNREACHABLE: a retry may work); any other status, another type or an empty
+ * body → 410 media_expired; larger than the cap → 413 invoice_too_large.
  */
 export async function fetchCrmMedia(input: CrmFetchInput): Promise<Uint8Array> {
   const signal = AbortSignal.timeout(CRM_FETCH_TIMEOUT_MS);
   const res = await fetch(input.url.href, { redirect: 'manual', signal }).catch(() => {
     throw unreachable();
   });
-  if (transient(res.status)) {
+  const refusal = refusalOf(res, input);
+  if (refusal !== null || res.body === null) {
     await res.body?.cancel().catch(() => undefined);
-    throw unreachable();
-  }
-  if (res.status !== 200 || !res.body || !sameFamily(res.headers.get('content-type'), input.mime)) {
-    await res.body?.cancel().catch(() => undefined);
-    throw gone();
-  }
-  if (Number(res.headers.get('content-length') ?? 0) > input.maxBytes) {
-    await res.body.cancel().catch(() => undefined);
-    throw tooBig();
+    throw (refusal ?? gone)();
   }
   return readCapped(res.body, input.maxBytes);
 }
 
-/** The stream's bytes, cancelled (413) the moment they pass `max`; a broken (or timed-out) stream is 502. */
+/** A 200 with a body of the row's family: the storage's answer that it holds this file. */
+const holdsFile = (res: Response, mime: string): boolean =>
+  res.status === 200 && res.body !== null && sameFamily(res.headers.get('content-type'), mime);
+
+const declaredBytes = (res: Response): number => Number(res.headers.get('content-length') ?? 0);
+
+/** Why the response is refused before its body is read; null when the body may be read. */
+function refusalOf(res: Response, input: CrmFetchInput): (() => Error) | null {
+  if (transient(res.status)) return unreachable;
+  if (!holdsFile(res, input.mime)) return gone;
+  return declaredBytes(res) > input.maxBytes ? tooBig : null;
+}
+
+/**
+ * The stream's bytes, cancelled (413) the moment they pass `max`; a broken (or timed-out) stream is
+ * 502.
+ */
 async function readCapped(body: ReadableStream<Uint8Array>, max: number): Promise<Uint8Array> {
   const reader = body.getReader();
   const chunks: Uint8Array[] = [];

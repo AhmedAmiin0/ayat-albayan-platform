@@ -2,7 +2,9 @@ import { NOTIFICATION_CATALOGUE, notificationEntry, resolveRule, type EffectiveR
 import { Injectable, Logger } from '@nestjs/common';
 import { RulesReader, type RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
 
-/** A row as producers see it when the rules cannot be read: off (fail closed), except locked rows. */
+/**
+ * A row as producers see it when the rules cannot be read: off (fail closed), except locked rows.
+ */
 function closed(key: NotificationKey): EffectiveRule {
   const entry = notificationEntry(key);
   return { enabled: entry.locked, channels: [...entry.channels], timing: null, number_id: null };
@@ -31,7 +33,10 @@ export class NotificationPolicy {
     }
   }
 
-  /** Every catalogue row's effective rule from one snapshot (each one closed when unreadable), and that snapshot. */
+  /**
+   * Every catalogue row's effective rule from one snapshot (each one closed when unreadable), and
+   * that snapshot.
+   */
   async all(): Promise<{
     snapshot: RulesSnapshot | null;
     rules: Map<NotificationKey, EffectiveRule>;
@@ -62,7 +67,9 @@ export class NotificationPolicy {
     });
   }
 
-  /** The rule, or null when the rules cannot be read (a caller that must retry rather than drop). */
+  /**
+   * The rule, or null when the rules cannot be read (a caller that must retry rather than drop).
+   */
   async known(key: NotificationKey): Promise<EffectiveRule | null> {
     const snap = await this.snapshot();
     if (!snap) return null;

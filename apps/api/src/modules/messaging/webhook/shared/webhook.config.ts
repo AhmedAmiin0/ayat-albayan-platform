@@ -2,7 +2,7 @@ import { callsNumber } from '@/common/configuration/integrations/calls-number';
 import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
 import { crmWebhookSecret } from '@/config/env/whatsapp/env.crm';
 import { appSecrets, kapsoWebhookSecret, lineNumbers, type Env } from '@/config/env/env';
-import type { WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import type { WebhookConfig } from './webhook.types';
 
 /** A token so tests can swap the webhook settings. */
 export const WEBHOOK_CONFIG = Symbol('WEBHOOK_CONFIG');
@@ -22,9 +22,9 @@ export function webhookConfig(env: Env): WebhookConfig {
 }
 
 /**
- * The signature keys. Legacy (numbers null): appSecrets(env) exactly. Module mode (docs/23c decision 7):
- * the role keys loadEnv() already laid from each default number (blank = unset, never a legacy key) plus
- * every number's own non-blank app secret, distinct.
+ * The signature keys. Legacy (numbers null): appSecrets(env) exactly. Module mode (docs/23c
+ * decision 7): the role keys loadEnv() already laid from each default number (blank = unset, never
+ * a legacy key) plus every number's own non-blank app secret, distinct.
  */
 export function signatureSecrets(env: Env, numbers: readonly OverlayNumber[] | null): string[] {
   const base = appSecrets(env);

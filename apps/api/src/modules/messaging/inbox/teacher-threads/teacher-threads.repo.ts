@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import { TeacherMeRepo } from '@/modules/teaching/lessons/teacher-me/teacher-me.repo';
+import { TeacherMeRepo } from '@/modules/teaching/lessons';
 import { done, maybe, pgError, rows } from '@/common/db/errors';
 import type { PeopleStudentRow } from '@/modules/messaging/inbox/people/thread-people.mapper';
 
@@ -33,7 +33,10 @@ export class TeacherThreadsRepo {
     return data;
   }
 
-  /** teacher_thread_phones: their subscribed students' guardians (never new / trial / pending_subscription; assigned or taught ≤ 90 days) + their own. */
+  /**
+   * teacher_thread_phones: their subscribed students' guardians (never new / trial /
+   * pending_subscription; assigned or taught ≤ 90 days) + their own.
+   */
   async phones(teacherId: string): Promise<string[]> {
     const { data, error } = await this.db.rpc('teacher_thread_phones', { p_teacher_id: teacherId });
     if (error) throw pgError(error);

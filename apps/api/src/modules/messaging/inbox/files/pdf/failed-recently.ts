@@ -1,4 +1,7 @@
-/** Keys that failed within `ms`: a PDF that always fails or hangs skips the slot on later views. */
+/**
+ * Keys that failed within `ms`: a PDF whose render always fails or hangs does not take the slot on
+ * every view.
+ */
 export class FailedRecently {
   private readonly until = new Map<string, number>();
 

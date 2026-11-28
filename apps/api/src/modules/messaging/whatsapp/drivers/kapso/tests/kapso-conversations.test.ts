@@ -11,7 +11,7 @@ function scripted(...replies: { status: number; body: unknown }[]) {
   const calls: { url: string; method: string; body: unknown; key: unknown }[] = [];
   const fetch = async (url: string, init: RequestInit): Promise<Response> => {
     const headers = init.headers as Record<string, string>;
-    calls.push({ url, method: init.method ?? 'GET', body: init.body ? JSON.parse(String(init.body)) : null, key: headers['x-api-key'] });
+    calls.push({ url, method: init.method ?? 'GET', body: typeof init.body === 'string' ? JSON.parse(init.body) : null, key: headers['x-api-key'] });
     const reply = replies.shift();
     if (!reply) throw new Error(`unscripted ${url}`);
     return new Response(JSON.stringify(reply.body), { status: reply.status });

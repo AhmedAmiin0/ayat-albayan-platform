@@ -15,10 +15,10 @@ import { isUniqueViolation, pgError } from '@/common/db/errors';
 const TEMPLATE_COPY_MS = 60_000; // cached() trusts its copy this long (another copy may write)
 type MaybeRow = TemplateRow | null; // a row, or null when none matched
 
-/** message_templates (R-MSG-01): the API is its only writer (sync and import, create, submit, starter flag). */
+/** message_templates (R-MSG-01): the API is its only writer (sync, import, create, submit…). */
 @Injectable()
 export class TemplatesRepo {
-  /** cached(): one read per key a minute, shared by concurrent callers; cleared by every write here. */
+  /** cached(): one read per key a minute, shared by concurrent callers; cleared by every write. */
   private readonly copies = new Map<string, { row: Promise<TemplateRow | null>; at: number }>();
   /** sendable(): the sender pass's templates; same minute, same clears, crm gate live (42-3). */
   private readonly sendables = sendableCache(() => this.db);
@@ -81,8 +81,8 @@ export class TemplatesRepo {
   }
 
   /**
-   * A template imported from the chat WABA (template-import.ts). Idempotent (rule 8): a row with the same
-   * Meta name + language already there is left as it is, and null comes back.
+   * A template imported from the chat WABA (template-import.ts). Idempotent (rule 8): a row with
+   * the same Meta name + language already there is left as it is, and null comes back.
    */
   async insert(row: ImportRow): Promise<TemplateRow | null> {
     const { data, error } = await this.db
@@ -134,7 +134,7 @@ export class TemplatesRepo {
     return new Map(rows.map(([line, r]) => [line, r.result as unknown as TemplateLineSync]));
   }
 
-  /** A moved template's queued, unclaimed rows take its new lane stamp (sender/drain/relane.repo.ts). */
+  /** A moved template's queued, unclaimed rows take its new lane stamp (relane.repo.ts). */
   relaneQueued(input: RelaneInput): Promise<number> {
     return relaneQueued(this.db, input);
   }

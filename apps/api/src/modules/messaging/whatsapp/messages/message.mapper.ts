@@ -1,18 +1,17 @@
 import type { Tables } from '@ab/db';
 import {
   fallbackText,
-  isChatViewMime,
   renderTemplateBody,
   type MessageLesson,
   type MessageReactions,
   type MessageTemplateBlock,
   type MessageView,
   type RenderableTemplate,
+  type TemplateParams,
 } from '@ab/shared';
 import { clickToChatLink } from '@ab/core';
-import { isSentFilePath } from '@/common/storage/storage.paths';
 import { isCrmHistoryRow } from './crm-history/crm-history-url';
-import { mediaExpired } from './inbound-media/inbound-media.service';
+import { isForwardable } from './message-forwardable';
 import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { templateParams } from './wa-json';
 
@@ -25,7 +24,7 @@ export const MESSAGE_SELECT =
   '*, sent_by_teacher:teachers!messages_sent_by_teacher_id_fkey(display_name_ar), sender:profiles!messages_created_by_fkey(full_name), reactor:profiles!messages_our_reaction_by_fkey(full_name), hider:profiles!messages_hidden_by_fkey(full_name)' as const;
 /** PostgREST filter: not a hidden row (a reaction row, 900; an edit / revoke marker, 992). */
 export const NOT_A_REACTION = 'interactive_payload->>type.is.null,interactive_payload->>type.not.in.(reaction,edit,revoke)' as const;
-/** A thread row: the message with its lesson, sending teacher and staff sender embedded (ThreadsQueries.messages). */
+/** A thread row: the message with its lesson, sending teacher and staff sender embedded. */
 export type ThreadMessageRow = MessageRow & {
   lesson?: MessageLesson | null;
   sent_by_teacher?: { display_name_ar: string } | null;
@@ -52,13 +51,17 @@ export interface MessageViewInput {
  * Not one the sender has claimed (SENDING, under its lease): Meta may be sending it right now, and
  * a hand-off then would send it twice. Once the claim resolves it is sent, queued again or failed.
  */
-export function needsManualSend(row: Pick<MessageRow, 'direction' | 'status' | 'error_code'>): boolean {
-  return row.direction === 'outbound' && (row.status === 'queued' || row.status === 'failed') && row.error_code !== SENDING;
+export function needsManualSend(
+  row: Pick<MessageRow, 'direction' | 'status' | 'error_code'>,
+): boolean {
+  const waiting = row.status === 'queued' || row.status === 'failed';
+  return row.direction === 'outbound' && waiting && row.error_code !== SENDING;
 }
 
 /** The teacher who sent the row from their inbox; null for the academy or a job. */
-const senderName = (row: ThreadMessageRow): string | null => row.sent_by_teacher?.display_name_ar ?? null;
-/** Staff behind an outbound row (D4): the teacher's name wins, else the profile's; null for inbound. */
+const senderName = (row: ThreadMessageRow): string | null =>
+  row.sent_by_teacher?.display_name_ar ?? null;
+/** Staff behind an outbound row (D4): the teacher's name wins, else the profile's. */
 const staffName = (row: ThreadMessageRow): string | null =>
   row.direction === 'outbound' ? (senderName(row) ?? row.sender?.full_name ?? null) : null;
 
@@ -70,22 +73,6 @@ const isAutomatic = (row: ThreadMessageRow): boolean =>
 const fallbackLink = (row: ThreadMessageRow, text: string | undefined): string | null =>
   needsManualSend(row) && !row.media_path ? clickToChatLink(row.phone_e164, text) : null;
 
-/** A file we can still fetch from WhatsApp (theirs, or an echo of the WhatsApp Business app): a bubble type, not expired. */
-const fetchable = (row: ThreadMessageRow): boolean => isChatViewMime(row.media_mime) && !mediaExpired(row, new Date());
-
-/** A sent row's: our stored file (out/…, either store), an echo still fetchable, or a text. */
-const outboundForwardable = (row: ThreadMessageRow): boolean =>
-  isSentFilePath(row.media_path) || (row.media_id ? fetchable(row) : isText(row));
-const isText = (row: ThreadMessageRow): boolean => !row.media_mime && !!row.body?.trim();
-
-/** Never a template; a file only when we hold it or can still fetch it. */
-const isForwardable = (row: ThreadMessageRow): boolean => {
-  if (row.template_key) return false;
-  if (row.direction === 'outbound') return outboundForwardable(row);
-  if (row.media_id || row.media_path) return fetchable(row);
-  return isCrmHistoryRow(row) ? isChatViewMime(row.media_mime) : !!row.body?.trim();
-};
-
 /** Theirs and ours (migration 900), with the staff member behind ours. */
 const reactionsOf = (row: ThreadMessageRow): MessageReactions => ({
   theirs: row.their_reaction ?? null,
@@ -93,18 +80,31 @@ const reactionsOf = (row: ThreadMessageRow): MessageReactions => ({
   ours_by: row.our_reaction ? (row.reactor?.full_name ?? null) : null,
 });
 
-/** An old-CRM file's body is only its storage link: never shown, the row is a file with no caption. */
-const shownBody = (row: ThreadMessageRow): string | null => (isCrmHistoryRow(row) ? null : row.body);
+/** An old-CRM file's body is only its storage link: never shown, a file with no caption. */
+const shownBody = (row: ThreadMessageRow): string | null =>
+  isCrmHistoryRow(row) ? null : row.body;
+
+/** The template params, the wa.me fallback text and the body shown in the bubble. */
+function renderedParts({ row, template, documentUrl }: MessageViewInput): {
+  params: TemplateParams;
+  text: string | undefined;
+  body: string | null;
+} {
+  const params = templateParams(row.template_params);
+  const text = template
+    ? fallbackText({ template, params, documentUrl: documentUrl ?? null })
+    : (shownBody(row) ?? undefined);
+  const body = shownBody(row) ?? (template ? renderTemplateBody(template.body_ar, params) : null);
+  return { params, text, body };
+}
+
 /**
  * messages row → MessageView (R-MSG-05): a template row shows its rendered text; a queued or
  * failed outbound row carries the wa.me link with the same text pre-filled (R-MSG-03).
  */
 export function toMessageView(input: MessageViewInput): MessageView {
-  const { row, template } = input;
-  const params = templateParams(row.template_params);
-  const text = template
-    ? fallbackText({ template, params, documentUrl: input.documentUrl ?? null })
-    : (shownBody(row) ?? undefined);
+  const { row } = input;
+  const { params, text, body } = renderedParts(input);
   return {
     id: row.id,
     direction: row.direction,
@@ -116,7 +116,7 @@ export function toMessageView(input: MessageViewInput): MessageView {
     template_key: row.template_key,
     template_params: row.template_params === null ? null : params,
     template: input.block ?? null,
-    body: shownBody(row) ?? (template ? renderTemplateBody(template.body_ar, params) : null),
+    body,
     media_mime: row.media_mime,
     media_url: input.mediaUrl ?? null,
     media_name: row.media_name,

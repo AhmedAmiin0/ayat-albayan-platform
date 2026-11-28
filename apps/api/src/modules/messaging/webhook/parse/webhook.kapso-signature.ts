@@ -8,7 +8,7 @@ import { hmacSha256Hex } from '@/common/infra/crypto/hmac';
 const KAPSO_SIGNATURE_HEADERS = ['x-webhook-signature', 'x-hub-signature-256'] as const;
 type SignatureHeader = (typeof KAPSO_SIGNATURE_HEADERS)[number];
 
-export interface KapsoSignedRequest {
+interface KapsoSignedRequest {
   /** The exact bytes Kapso sent (req.rawBody); re-serialised JSON would not match. */
   rawBody: Buffer | undefined;
   /** The request's headers (only the two signature headers are read). */
@@ -17,7 +17,11 @@ export interface KapsoSignedRequest {
   secret: string | undefined;
 }
 
-const single = (v: string | string[] | undefined): string | undefined => (typeof v === 'string' ? v.trim().toLowerCase() : undefined);
+const single = (v: string | string[] | undefined): string | undefined =>
+  typeof v === 'string' ? v.trim().toLowerCase() : undefined;
+
+const matches = (sent: string | undefined, expected: string): boolean =>
+  sent !== undefined && safeEqual(sent, expected);
 
 /**
  * True when X-Webhook-Signature is the lowercase hex HMAC-SHA256 of the raw body with the Kapso
@@ -29,7 +33,7 @@ export function verifyKapsoSignature({ rawBody, headers, secret }: KapsoSignedRe
   const hex = hmacSha256Hex(secret, [rawBody]);
   const kapso = single(headers['x-webhook-signature']);
   const hub = single(headers['x-hub-signature-256']);
-  return (kapso !== undefined && safeEqual(kapso, hex)) || (hub !== undefined && safeEqual(hub, `sha256=${hex}`));
+  return matches(kapso, hex) || matches(hub, `sha256=${hex}`);
 }
 
 /** For the 401 log: which signature header NAMES came, never their values. */

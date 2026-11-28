@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TeachersModule } from '@/modules/people/teachers/teachers.module';
+import { TeachersModule } from '@/modules/people/teachers';
 import { FollowUpSlots } from './follow-up-slots';
 import { FollowUpsJob } from './follow-ups.job';
 import { FollowUpsRepo } from './follow-ups.repo';
@@ -7,7 +7,8 @@ import { FollowUpsSettings } from './follow-ups.settings';
 
 /**
  * R-LEAD-05 lead follow-ups with two real free slots (docs/12 §7). TeachersModule exports
- * AvailabilityQuery; DB is global and FollowUpsSettings reads the global settings store. Register in app.module.ts.
+ * AvailabilityQuery; DB is global and FollowUpsSettings reads the global settings store. Register
+ * in app.module.ts.
  */
 @Module({
   imports: [TeachersModule],

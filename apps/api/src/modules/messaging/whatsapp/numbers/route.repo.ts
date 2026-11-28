@@ -9,8 +9,8 @@ import { pgError } from '@/common/db/errors';
 const KEY = /^[a-z0-9_]{1,64}$/;
 
 /**
- * Module mode's reads for routing per number (docs/23c). Only MessageSender's numbers pass calls them:
- * under legacy (comms_source = legacy, staging) neither is ever read.
+ * Module mode's reads for routing per number (docs/23c). Only MessageSender's numbers pass calls
+ * them: under legacy (comms_source = legacy, staging) neither is ever read.
  */
 @Injectable()
 export class RouteRepo {

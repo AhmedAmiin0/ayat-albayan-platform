@@ -1,4 +1,5 @@
-// Test fixtures for message reactions (test-only, excluded from the build by the *.fakes.ts pattern).
+// Test fixtures for message reactions (test-only, excluded from the build by the *.fakes.ts
+// pattern).
 import type { TablesInsert } from '@ab/db';
 import { vi } from 'vitest';
 import type { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
@@ -38,8 +39,9 @@ export const request = (over: Partial<ReactionRequest> = {}): ReactionRequest =>
 });
 
 /**
- * The service over in-memory fakes: one target row, an outbox that keeps ONE row per dedup_key (as the
- * unique index does) and answers `status` for a new row (a failed send also runs the revert, as the trigger).
+ * The service over in-memory fakes: one target row, an outbox that keeps ONE row per dedup_key (as
+ * the unique index does) and answers `status` for a new row (a failed send also runs the revert, as
+ * the trigger).
  */
 export function reactionHarness(t: ReactionTarget | null = target(), status: 'sent' | 'failed' = 'sent') {
   const row: ThreadMessageRow = messageRow({ id: TARGET_ID, direction: 'inbound', wa_message_id: 'wamid.T', template_key: null, body: 'السلام عليكم' });
@@ -58,14 +60,19 @@ export function reactionHarness(t: ReactionTarget | null = target(), status: 'se
     numberWindows: vi.fn(async () => []),
     get: vi.fn(async () => row),
   };
+  const failed = status === 'failed';
+  const firstSend = (key: string, job: TablesInsert<'messages'>) => {
+    jobs.set(key, job);
+    if (failed) row.our_reaction = t?.our_reaction ?? null;
+  };
   const outbox = {
     send: vi.fn(async (job: TablesInsert<'messages'>) => {
-      const replayed = jobs.has(job.dedup_key ?? '');
-      if (!replayed) jobs.set(job.dedup_key ?? '', job);
-      if (!replayed && status === 'failed') row.our_reaction = t?.our_reaction ?? null;
-      const failed = status === 'failed';
-      const view = toMessageView({ row: messageRow({ id: 'r1', status, error_code: failed ? '131047' : null, template_key: null }), template: null });
-      return { view, replayed };
+      const key = job.dedup_key ?? '';
+      const replayed = jobs.has(key);
+      if (!replayed) firstSend(key, job);
+      const error_code = failed ? '131047' : null;
+      const sent = messageRow({ id: 'r1', status, error_code, template_key: null });
+      return { view: toMessageView({ row: sent, template: null }), replayed };
     }),
   };
   const service = new ThreadReactionService(

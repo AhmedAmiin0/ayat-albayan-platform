@@ -14,7 +14,8 @@ import {
 
 // The crm driver (docs/19 «crm driver»): a line that sends through the academy CRM's POST
 // /messages. The CRM owns the number and its conversations; its templates are listed and
-// submitted through the CRM's /templates (docs/39). Samples, inbound media and editing a rejected template stay in the CRM.
+// submitted through the CRM's /templates (docs/39). Samples, inbound media and editing a rejected
+// template stay in the CRM.
 
 interface CrmClientOpts {
   fetch?: FetchLike;
@@ -27,10 +28,12 @@ const DEFAULT_TIMEOUT_MS = 15_000;
 /** The runtime fetch for CRM calls: this file's one global use (H-1). */
 export const crmFetch: FetchLike = fetch;
 
-/** POST /messages answers 201 {data:{message_id, whatsapp_message_id, …}}; only the wamid is kept. */
+/**
+ * POST /messages answers 201 {data:{message_id, whatsapp_message_id, …}}; only the wamid is kept.
+ */
 const sentSchema = z.object({ whatsapp_message_id: z.string().min(1) });
 
-/** What callers recognise as «not supported by the crm driver» (template-env, inbound media, number sync). */
+/** What callers recognise as «not supported by the crm driver» (templates, media, number sync). */
 export const crmUnsupported = (what: string): WaError =>
   new WaError(`${what} is not supported by the crm driver (templates and media live in the CRM)`, { code: null, status: 0, unsupported: 'crm' });
 
@@ -47,8 +50,9 @@ const sentAs = (e: unknown, body: CrmBody): unknown => {
 };
 
 /**
- * WhatsappClient over the CRM's REST API. Without the env every call throws WaError(code null, status 0)
- * before any request, like HttpWhatsappClient. The allow-list is checked before any request.
+ * WhatsappClient over the CRM's REST API. Without the env every call throws WaError(code null,
+ * status 0) before any request, like HttpWhatsappClient. The allow-list is checked before any
+ * request.
  */
 export class CrmWhatsappClient implements WhatsappClient {
   private readonly conn: CrmConn | null;
@@ -93,8 +97,11 @@ export class CrmWhatsappClient implements WhatsappClient {
   }
 
   /** The CRM owns the conversation (and its read receipts): nothing to do. */
-  async markRead(): Promise<void> {
-    this.connection();
+  markRead(): Promise<void> {
+    return new Promise((resolve) => {
+      this.connection();
+      resolve();
+    });
   }
 
   /** The CRM's rows after it re-syncs them from Meta (GET templates?sync=1). */
@@ -128,7 +135,8 @@ export class CrmWhatsappClient implements WhatsappClient {
       throw sentAs(e, body);
     });
     const sent = sentSchema.safeParse(data);
-    // A 2xx means the CRM sent it: without the wamid it cannot be matched, and a resend would duplicate it.
+    // A 2xx means the CRM sent it: without the wamid it cannot be matched, and a resend would
+    // duplicate it.
     if (!sent.success) throw new WaError('the CRM answered without a whatsapp_message_id', { code: null, status: 201, uncertain: true });
     return { waMessageId: sent.data.whatsapp_message_id };
   }

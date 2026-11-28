@@ -10,7 +10,9 @@ const REQ = 'c0000000-0000-4000-8000-000000000003';
 const FRESH = new Date(Date.now() - 3_600_000).toISOString();
 const TEXT = { method: 'POST' as const, url: `${URL}/text`, body: { text: 'أهلًا', clientRequestId: REQ } };
 
-/** The chat line can SEND (lineEnvs(env).chat non-null), read per request (docs/12 §13.16 item 5). */
+/**
+ * The chat line can SEND (lineEnvs(env).chat non-null), read per request (docs/12 §13.16 item 5).
+ */
 function chatConfigured(): void {
   vi.stubEnv('WA_API_BASE', 'http://wa-stub.test');
   vi.stubEnv('WA_CHAT_PHONE_NUMBER_ID', 'chat-phone');

@@ -6,14 +6,15 @@ import {
   type ThreadFileSendInput,
   type ThreadFileUpload,
 } from '@ab/shared';
-import { Controller, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
+import { phoneE164 } from '@ab/core';
+import { Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '@/common/audit/audit.service';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import type { SalesScope } from '@/modules/sales/sales/sales-scope';
-import { ZodBody } from '@/common/http/zod-inputs';
-import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
+import type { SalesScope } from '@/modules/sales/sales';
+import { ZodBody, ZodParam } from '@/common/http/zod-inputs';
+import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { recordSend } from '@/modules/messaging/inbox/send/send-audit';
 import { ThreadFileSender } from './thread-file-send.service';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
@@ -39,24 +40,24 @@ export class ThreadFileSendController {
   @HttpCode(201)
   @Permissions('inbox.send')
   async uploadUrl(
-    @Param('phone') raw: string,
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
     @ZodBody(threadFileUploadSchema) input: ThreadFileUpload,
     @CurrentUser() user: AuthUser,
   ): Promise<SignedUpload> {
     const sales = await this.sender(user);
-    return this.files.uploadUrl({ phone: phoneParam(raw), input, actorId: user.id, sales });
+    return this.files.uploadUrl({ phone, input, actorId: user.id, sales });
   }
 
   @Post(':phone/file')
   @HttpCode(201)
   @Permissions('inbox.send')
   async send(
-    @Param('phone') raw: string,
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
     @ZodBody(threadFileSendSchema) input: ThreadFileSendInput,
     @CurrentUser() user: AuthUser,
   ): Promise<MessageView> {
     const sales = await this.sender(user);
-    const sent = await this.files.send({ phone: phoneParam(raw), input, actorId: user.id, sales });
+    const sent = await this.files.send({ phone, input, actorId: user.id, sales });
     const media = { media_mime: sent.view.media_mime, media_name: input.filename };
     return recordSend(this.audit, { sent, action: 'thread_file', user, scope: null, sales, media });
   }

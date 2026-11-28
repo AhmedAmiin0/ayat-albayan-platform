@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { event, services } from '@/modules/messaging/webhook/tests/webhook.fakes';
 import { InboundReactions } from '@/modules/messaging/webhook/inbound/webhook.reaction';
+import { ReactionsRepo } from '@/modules/messaging/webhook/inbound/reactions.repo';
 
 // Example numbers only.
 const FAMILY = '+966501234567';
@@ -14,7 +15,10 @@ interface Row {
   their_reaction: string | null;
 }
 
-/** messages.update(patch).eq(…).eq(…).select('id') over rows in memory; `fail` = the DB answers an error. */
+/**
+ * messages.update(patch).eq(…).eq(…).select('id') over rows in memory; `fail` = the DB answers an
+ * error.
+ */
 function fakeDb(rows: Row[], fail = false): Db {
   const from = () => ({
     update: (patch: Partial<Row>) => {
@@ -53,7 +57,7 @@ const seeded = (): Row[] => [
 describe('InboundReactions', () => {
   it('sets their_reaction on the named message of the same phone, then clears it on an empty emoji', async () => {
     const rows = seeded();
-    const r = new InboundReactions(fakeDb(rows));
+    const r = new InboundReactions(new ReactionsRepo(fakeDb(rows)));
     await r.apply(reaction('❤️'), FAMILY);
     expect(rows[0]?.their_reaction).toBe('❤️');
     await r.apply(reaction(''), FAMILY);
@@ -65,7 +69,7 @@ describe('InboundReactions', () => {
 
   it('never touches another chat’s message, and ignores an unknown target or text', async () => {
     const rows = seeded();
-    const r = new InboundReactions(fakeDb(rows));
+    const r = new InboundReactions(new ReactionsRepo(fakeDb(rows)));
     await r.apply(reaction('👍', 'wamid.OTHER'), FAMILY);
     await r.apply(reaction('👍', 'wamid.NOPE'), FAMILY);
     await r.apply(reaction('hello'), FAMILY);
@@ -73,7 +77,7 @@ describe('InboundReactions', () => {
   });
 
   it('a failed write is logged, never thrown (the webhook answers 200)', async () => {
-    const reactions = new InboundReactions(fakeDb(seeded(), true));
+    const reactions = new InboundReactions(new ReactionsRepo(fakeDb(seeded(), true)));
     await expect(reactions.apply(reaction('👍'), FAMILY)).resolves.toBe('ignored');
   });
 });

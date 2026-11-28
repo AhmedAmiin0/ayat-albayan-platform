@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { rows } from '@/modules/messaging/whatsapp/gate/send-gate.fakes';
 import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
+import { SendGateRepo } from '@/modules/messaging/whatsapp/gate/send-gate.repo';
 
 /** What SendGate read before the reader existed: the reader lists exactly these. */
 const BEFORE = ['messaging_enabled', 'auto_messages_enabled'] as const;
@@ -9,7 +10,7 @@ const BEFORE = ['messaging_enabled', 'auto_messages_enabled'] as const;
 describe('WhatsappSettings (uncached primary-key read, docs/26 §5 26-P4)', () => {
   it('reads exactly its keys, in order; no rows → both switches OFF', async () => {
     const { db, argsOf } = fakeDb({ settings: [rows({})] });
-    const values = await new WhatsappSettings(db).read();
+    const values = await new WhatsappSettings(new SendGateRepo(db)).read();
     expect(Object.keys(values)).toEqual(BEFORE);
     expect(values).toEqual({ messaging_enabled: false, auto_messages_enabled: false });
     expect(argsOf('settings', 'select')).toEqual(['key, value']);
@@ -20,7 +21,7 @@ describe('WhatsappSettings (uncached primary-key read, docs/26 §5 26-P4)', () =
     const { db } = fakeDb({
       settings: [rows({ messaging_enabled: true, auto_messages_enabled: true })],
     });
-    await expect(new WhatsappSettings(db).read()).resolves.toEqual({
+    await expect(new WhatsappSettings(new SendGateRepo(db)).read()).resolves.toEqual({
       messaging_enabled: true,
       auto_messages_enabled: true,
     });
@@ -28,6 +29,6 @@ describe('WhatsappSettings (uncached primary-key read, docs/26 §5 26-P4)', () =
 
   it('a failed read rejects (never a default that could open the gate)', async () => {
     const { db } = fakeDb({ settings: [{ error: { message: 'db down' } }] });
-    await expect(new WhatsappSettings(db).read()).rejects.toThrow('db down');
+    await expect(new WhatsappSettings(new SendGateRepo(db)).read()).rejects.toThrow('db down');
   });
 });

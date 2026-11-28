@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { REMINDER_24H, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
-import { missingParams, threadSearchFilter, toThreadView } from '@/modules/messaging/inbox/threads/threads.mapper';
+import { missingParams, toThreadView } from '@/modules/messaging/inbox/threads/threads.mapper';
+import { threadSearchFilter } from '@/modules/messaging/inbox/threads/threads.list';
 
 const AT = new Date('2026-10-02T08:00:00Z');
 const hours = (h: number) => new Date(AT.getTime() + h * 3_600_000);

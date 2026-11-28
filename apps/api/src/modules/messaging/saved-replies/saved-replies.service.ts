@@ -1,5 +1,11 @@
-import type { SavedReply, SavedReplyCreate, SavedReplyStaged, SavedReplyUpdate, SignedUpload, SavedReplyUpload } from '@ab/shared';
-import { sameStoredObject } from '@ab/shared';
+import type {
+  SavedReply,
+  SavedReplyCreate,
+  SavedReplyStaged,
+  SavedReplyUpdate,
+  SignedUpload,
+  SavedReplyUpload,
+} from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { forbidden, notFound } from '@/common/http/errors';
@@ -8,18 +14,12 @@ import { inListOrder, toSavedReply, type SavedReplyRow } from './saved-replies.m
 import { SavedReplyFiles, type StoredFile } from './saved-replies.files';
 import { SavedRepliesRepo, type ReplyPatch } from './saved-replies.repo';
 import { movedOrder } from './saved-replies.order';
+import { attachmentColumns, replacesFile, textPatch } from './patch';
 
 type Attachment = SavedReplyCreate['attachment'];
 
 const gone = () => notFound('saved_reply_not_found');
 
-/** The attachment columns for a stored file and its name, or all null. */
-const attachmentColumns = (file: StoredFile | null, name: string | null) => ({
-  attachment_path: file?.path ?? null,
-  attachment_mime: file?.mime ?? null,
-  attachment_size: file?.size ?? null,
-  attachment_name: file ? name : null,
-});
 
 /** Shared list written with saved_replies.manage; another person's personal reply is 404. */
 @Injectable()
@@ -56,13 +56,8 @@ export class SavedRepliesService {
   async update(user: AuthUser, id: string, input: SavedReplyUpdate): Promise<SavedReply> {
     const row = await this.writable(user, id);
     const oldPath = row.attachment_path;
-    const patch: ReplyPatch = { updated_by: user.id };
-    if (input.title !== undefined) patch.title = input.title;
-    if (input.body !== undefined) patch.body = input.body;
-    const sentPath = input.attachment?.path;
-    // A path sent back for the reply's own moved file (docs/45 §6) is no replacement.
-    const changed = sentPath !== oldPath && !sameStoredObject(sentPath, oldPath);
-    const replaced = input.attachment !== undefined && changed;
+    const patch: ReplyPatch = { updated_by: user.id, ...textPatch(input) };
+    const replaced = replacesFile(input.attachment, oldPath);
     Object.assign(
       patch,
       await this.attachmentPatch({ attachment: input.attachment, replaced, actorId: user.id }),
@@ -95,7 +90,10 @@ export class SavedRepliesService {
     return this.files.uploadUrl(user.id, input);
   }
 
-  /** The reply's attachment as this sender's chat file (out/{sender}/{request}/…); 404 when it has none. */
+  /**
+   * The reply's attachment as this sender's chat file (out/{sender}/{request}/…); 404 when it has
+   * none.
+   */
   async stage(user: AuthUser, id: string, requestId: string): Promise<SavedReplyStaged> {
     const row = await this.visible(user, id);
     const {
@@ -125,7 +123,10 @@ export class SavedRepliesService {
     if (row.owner_profile_id === null && !managesShared(user)) throw forbidden('saved_replies_forbidden');
   }
 
-  /** undefined keeps the file; null removes it; the same path only renames it; a new path is checked. */
+  /**
+   * undefined keeps the file; null removes it; the same path only renames it; a new path is
+   * checked.
+   */
   private async attachmentPatch(input: {
     attachment: Attachment;
     replaced: boolean;

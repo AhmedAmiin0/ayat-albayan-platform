@@ -9,11 +9,12 @@ import { httpError } from '@/common/http/errors';
 export type CrmTemplateStatus = (typeof CRM_TEMPLATE_STATUSES)[number];
 
 /**
- * A crm line's template status by hand (docs/19 «crm driver»). The queue gate (teacher-alert.plan.ts,
- * confirmations) and the send gate (sender.queries.ts) read message_templates.status from our db, but a
- * crm line is never synced: its templates live in the CRM. So the admin says whether the CRM holds the
- * template approved. Only while the row's line is on crm (409 not_crm_line otherwise); audited. No sync
- * overwrites it while that line stays on crm (template-line-sync.ts answers crm_managed, touching no row).
+ * A crm line's template status by hand (docs/19 «crm driver»). The queue gate
+ * (teacher-alert.plan.ts, confirmations) and the send gate (sender.queries.ts) read
+ * message_templates.status from our db, but a crm line is never synced: its templates live in the
+ * CRM. So the admin says whether the CRM holds the template approved. Only while the row's line is
+ * on crm (409 not_crm_line otherwise); audited. No sync overwrites it while that line stays on crm
+ * (template-line-sync.ts answers crm_managed, touching no row).
  */
 export interface CrmStatusDeps {
   queries: Pick<TemplatesRepo, 'get' | 'update'>;

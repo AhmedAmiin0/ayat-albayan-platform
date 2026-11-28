@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
 import { KAPSO_ENV, KAPSO_MEDIA, kapsoFetch, kapsoPage } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
 import { RECORDED, scriptedFetch, STUB_ENV, templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
+import { nth } from './fixtures/nth';
 
 // The kapso driver (docs/19): same Cloud API paths and bodies, X-API-Key instead of a bearer, and
 // the three differences: media, template paging and template edits. No network.
@@ -34,12 +35,12 @@ describe('HttpWhatsappClient on kapso', () => {
     await new HttpWhatsappClient(STUB_ENV, { fetch: meta.fetch, timeoutMs: 1_000 }).sendDocument(
       input,
     );
-    const [k] = kapso.requests;
-    expect(k?.url).toBe(`${BASE}/stub-phone/messages`);
-    expect(k?.init.headers).toMatchObject({ 'x-api-key': 'fake-kapso-key' });
-    expect(k?.init.headers).not.toHaveProperty('authorization');
-    expect(k?.body).toMatchObject({ type: 'image', image: { link: 'https://s.local/a.jpg', caption: 'الواجب' } });
-    expect(k?.body).toEqual(meta.requests[0]?.body);
+    const k = nth(kapso.requests, 0);
+    expect(k.url).toBe(`${BASE}/stub-phone/messages`);
+    expect(k.init.headers).toMatchObject({ 'x-api-key': 'fake-kapso-key' });
+    expect(k.init.headers).not.toHaveProperty('authorization');
+    expect(k.body).toMatchObject({ type: 'image', image: { link: 'https://s.local/a.jpg', caption: 'الواجب' } });
+    expect(k.body).toEqual(meta.requests[0]?.body);
   });
 
   it('checks WA_ALLOWED_RECIPIENTS before any request, as on meta', async () => {

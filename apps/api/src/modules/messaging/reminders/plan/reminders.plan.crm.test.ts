@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { at, RIYADH_GUARDIAN, sampleLesson } from '@/modules/messaging/reminders/reminders.fakes';
 import { classroomUrl } from './reminders.links';
-import { planReminders, type ReminderLesson } from './reminders.plan';
+import { planReminders } from './reminders.plan';
+import type { ReminderLesson } from './reminders.plan.types';
 
 // docs/19 «crm driver»: the teacher's same-day reminder carries the CRM's teacher_lesson_reminder
 // values ({{1}} the teacher, {{2}} one line, no buttons) beside the unchanged Meta values.
@@ -18,6 +19,7 @@ const teacherRow = (lesson: ReminderLesson, origin = ORIGIN) =>
   planReminders({ lessons: [lesson], minutesBefore: 60, dayBefore: false, origin, now: NOW }).find(
     (r) => r.dedup_key.startsWith('teacher_lesson_reminder:'),
   );
+const crmOf = (row: ReturnType<typeof teacherRow>) => row?.template_params.crm;
 const coded = (meeting_link: string | null) => sampleLesson({ students: STUDENTS, meeting_link });
 
 describe('planReminders: the teacher row on a crm line (teacher_lesson_reminder)', () => {
@@ -43,8 +45,8 @@ describe('planReminders: the teacher row on a crm line (teacher_lesson_reminder)
     for (const link of [room, null]) {
       const row = teacherRow(coded(link));
       expect(row?.template_key).toBe('teacher_lesson_reminder');
-      expect(row?.template_params.crm?.buttons).toEqual([]);
-      expect(row?.template_params.crm?.body?.[1]).toContain(`رابط الحلقة: ${room} · ${REPORT}`);
+      expect(crmOf(row)?.buttons).toEqual([]);
+      expect(crmOf(row)?.body?.[1]).toContain(`رابط الحلقة: ${room} · ${REPORT}`);
     }
   });
 

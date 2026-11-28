@@ -1,17 +1,17 @@
 import { gateApprovedKeys } from '@ab/shared';
 import { Injectable, Optional } from '@nestjs/common';
 import type { OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
-import { RulesReader } from '@/modules/messaging/notification-rules/store/rules.reader';
+import { RulesReader } from '@/modules/messaging/notification-rules';
 import { messagingNumbers, routable, ruleNumbers, sendableSomewhere, type RoutePass } from './number-route';
 import { RouteRepo } from './route.repo';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 /**
- * Loads what one module-mode send pass routes with (docs/23c): the numbers, every template approval on
- * a number, the templates sendable on some number and each catalogue row's number. RulesReader comes
- * from the global NotificationRulesModule (optional: absent = no rule numbers). An unreadable rules table
- * aborts the pass like the approvals (review: a failed read must never send from a number the admin's
- * rule did not pick); the rows wait for the next pass.
+ * Loads what one module-mode send pass routes with (docs/23c): the numbers, every template approval
+ * on a number, the templates sendable on some number and each catalogue row's number. RulesReader
+ * comes from the global NotificationRulesModule (optional: absent = no rule numbers). An unreadable
+ * rules table aborts the pass like the approvals (review: a failed read must never send from a
+ * number the admin's rule did not pick); the rows wait for the next pass.
  */
 @Injectable()
 export class NumberRoutes {
@@ -20,7 +20,10 @@ export class NumberRoutes {
     @Optional() private readonly rules?: RulesReader,
   ) {}
 
-  /** Throws when the approvals, templates or rules are unreadable: the pass sends nothing (fail closed). */
+  /**
+   * Throws when the approvals, templates or rules are unreadable: the pass sends nothing (fail
+   * closed).
+   */
   async pass(
     numbers: readonly OverlayNumber[],
   ): Promise<{ pass: RoutePass; templates: TemplateRow[] }> {

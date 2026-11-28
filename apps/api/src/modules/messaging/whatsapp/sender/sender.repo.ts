@@ -1,13 +1,13 @@
-import { onMessagingLine, type WaLine } from '@ab/catalog';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
-import type { StaffAtSend } from '@/modules/messaging/reminders/plan/staff-reachable';
+import type { StaffAtSend } from '@/modules/messaging/reminders';
 import { allowedRecipients, lineEnvs, loadEnv } from '@/config/env/env';
-import { stampDelivered } from '@/modules/messaging/whatsapp/messages/delivered';
+import { stampDelivered } from '@/modules/messaging/whatsapp/messages/delivered.repo';
 import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
-import { anyDue, DUE_COLUMNS, holdAutomatic, NOT_APP_SENT, sentExtras, type DueMessage } from './sender.due';
-import { staffAtSend } from './staff-at-send';
-import { LANE_ROWS, type Lane } from './drain';
+import { NOT_APP_SENT, sentExtras, type DueMessage } from './sender.due';
+import type { Lane } from './drain';
+import { DueQueueRepo } from './queue/due-queue.repo';
+import type { ClaimInput, DueInput } from './queue/due-queue.types';
 import { sendableTemplates } from '@/modules/messaging/whatsapp/templates/gate/template-gate.repo';
 import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
 import type { TemplateRow, WaSent } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -15,31 +15,33 @@ import { pgError } from '@/common/db/errors';
 
 export type { DueMessage } from './sender.due';
 
-/** Without a chat client, chat-stamped texts are never read (they would fill the batch forever). */
-const NOT_CHAT_TEXT = 'template_key.not.is.null,line.is.null,line.neq.chat';
-interface DueInput { keys: readonly string[]; now: Date; limit: number; lane?: Lane }
-
-/** The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set. */
+/**
+ * The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set.
+ */
 @Injectable()
 export class SenderRepo {
   /** WA_ALLOWED_RECIPIENTS, read per call (docs/12 §13.5a): rows to other phones are never read. */
   get allowed(): readonly string[] | null {
     return allowedRecipients(loadEnv());
   }
-  /** Chat client configured, read per call: without it chat-stamped texts can never send (review A, C1). */
+  /** Chat client configured, read per call: without it chat-stamped texts can never send. */
   get chatConfigured(): boolean {
     return lineEnvs(loadEnv()).chat !== null;
   }
+
+  private readonly queue: DueQueueRepo;
 
   constructor(
     @Inject(DB) private readonly db: Db,
     /** The 60 s template copy (docs/42 42-3); absent (unit tests) = read each pass. */
     @Optional() @Inject(TemplatesRepo) private readonly templates?: TemplatesRepo,
-  ) {}
+  ) {
+    this.queue = new DueQueueRepo(db);
+  }
 
-  /** A staff alert's teacher as on record now (send-time staffStale); undefined for any other row. */
+  /** A staff alert's teacher as on record now (send-time staffStale); undefined otherwise. */
   staffAtSend(row: DueMessage): Promise<StaffAtSend[] | undefined> {
-    return staffAtSend(this.db, row);
+    return this.queue.staffAtSend(row);
   }
 
   /**
@@ -52,7 +54,7 @@ export class SenderRepo {
 
   /** One cheap read: is anything (of `lane`) due now (sender.due.ts)? false = nothing more read. */
   anyDue(now: Date, lane?: Lane): Promise<boolean> {
-    return anyDue(this.db, { now, allowed: this.allowed, ...(lane ? { lane } : {}) });
+    return this.queue.anyDue({ now, allowed: this.allowed, ...(lane ? { lane } : {}) });
   }
 
   /**
@@ -61,47 +63,31 @@ export class SenderRepo {
    * pile waiting for Meta's approval never starves the rest. Nor are chat-stamped texts while the
    * chat client is not configured (they would fill the batch forever).
    */
-  async due(input: DueInput): Promise<DueMessage[]> {
-    const now = input.now.toISOString();
-    const approved = input.keys.length ? `,template_key.in.(${input.keys.join(',')})` : '';
-    const query = this.db
-      .from('messages')
-      .select(DUE_COLUMNS)
-      .eq('direction', 'outbound')
-      .eq('status', 'queued')
-      .or(`scheduled_for.is.null,scheduled_for.lte.${now}`)
-      .or(`next_attempt_at.is.null,next_attempt_at.lte.${now}`)
-      .or(`template_key.is.null${approved}`)
-      .or(NOT_APP_SENT)
-      .or('line.is.null,line.neq.calls'); // never a row of the calls number (docs/28 §10)
-    const allowed = this.allowed;
-    const laned = input.lane ? query.or(LANE_ROWS[input.lane]) : query; // docs/42 42-7
-    const sendable = this.chatConfigured ? laned : laned.or(NOT_CHAT_TEXT);
-    const scoped = allowed ? sendable.in('phone_e164', [...allowed]) : sendable;
-    const ordered = scoped.order('scheduled_for', { ascending: true, nullsFirst: true }).order('created_at');
-    const { data, error } = await ordered.limit(input.limit);
-    if (error) throw pgError(error);
-    return data.filter(onMessagingLine);
+  due(input: DueInput): Promise<DueMessage[]> {
+    return this.queue.due({ ...input, allowed: this.allowed, chatConfigured: this.chatConfigured });
   }
 
   /** Automatic messages OFF: every job-made row still queued is held (sender.due.ts). */
   holdAutomatic(): Promise<number> {
-    return holdAutomatic(this.db, this.allowed);
+    return this.queue.holdAutomatic(this.allowed);
   }
 
   /**
-   * attempts n → n+1, a lease, and error_code SENDING written ahead of the Meta call: if the outcome
-   * is never recorded (the «sent» write failed, the process died) the next pass sees SENDING and
-   * asks the admin instead of sending again. null when another worker (or the admin) got there first.
-   * `line` (two lines only, docs/12 §13.2) stamps the line used; absent = the update is unchanged.
-   * `numberId` (module mode only, docs/23 phase 3) stamps messages.number_id; absent under legacy.
+   * attempts n → n+1, a lease, and error_code SENDING written ahead of the Meta call: if the
+   * outcome is never recorded (the «sent» write failed, the process died) the next pass sees
+   * SENDING and asks the admin instead of sending again. null when another worker (or the admin)
+   * got there first. `line` (two lines only, docs/12 §13.2) stamps the line used; absent = the
+   * update is unchanged. `numberId` (module mode only, docs/23 phase 3) stamps messages.number_id;
+   * absent under legacy.
    */
-  async claim(input: { id: string; attempts: number; now: Date; line?: WaLine; numberId?: string }): Promise<number | null> {
+  async claim(input: ClaimInput): Promise<number | null> {
     const attempts = input.attempts + 1;
     const lease = new Date(input.now.getTime() + CLAIM_LEASE_MS).toISOString();
+    const line = input.line ? { line: input.line } : {};
+    const numberId = input.numberId ? { number_id: input.numberId } : {};
     const { data, error } = await this.db
       .from('messages')
-      .update({ attempts, next_attempt_at: lease, error_code: SENDING, ...(input.line ? { line: input.line } : {}), ...(input.numberId ? { number_id: input.numberId } : {}) })
+      .update({ attempts, next_attempt_at: lease, error_code: SENDING, ...line, ...numberId })
       .eq('id', input.id)
       .eq('status', 'queued')
       .eq('attempts', input.attempts)
@@ -116,7 +102,15 @@ export class SenderRepo {
     const at = input.at.toISOString();
     const { data, error } = await this.db
       .from('messages')
-      .update({ status: 'sent', sent_at: at, wa_message_id: input.sent.waMessageId, next_attempt_at: null, error_code: null, error_text: null, ...sentExtras(input.sent) })
+      .update({
+        status: 'sent',
+        sent_at: at,
+        wa_message_id: input.sent.waMessageId,
+        next_attempt_at: null,
+        error_code: null,
+        error_text: null,
+        ...sentExtras(input.sent),
+      })
       .eq('id', input.row.id)
       .eq('status', 'queued')
       .select('id');
@@ -136,10 +130,13 @@ export class SenderRepo {
 
   /**
    * Never sent, no push: past its use (`expired`: a reminder after the lesson started), no longer
-   * wanted (`stale`: its lesson was cancelled, the lead paused or replied; the reason in error_text)
-   * or held (`auto_off`: automatic messages are OFF; the admin's retry re-queues it).
+   * wanted (`stale`: its lesson was cancelled, the lead paused or replied; the reason in
+   * error_text) or held (`auto_off`: automatic messages are OFF; the admin's retry re-queues it).
    */
-  async expire(id: string, why: { code: 'expired' | 'stale' | 'auto_off'; text: string }): Promise<void> {
+  async expire(
+    id: string,
+    why: { code: 'expired' | 'stale' | 'auto_off'; text: string },
+  ): Promise<void> {
     const { error } = await this.db
       .from('messages')
       .update({ status: 'failed', error_code: why.code, error_text: why.text, next_attempt_at: null })

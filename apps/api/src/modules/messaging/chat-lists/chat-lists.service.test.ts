@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { describe, expect, it, vi } from 'vitest';
 import type { ChatListsRepo } from './chat-lists.repo';
 import { ChatListsService } from './chat-lists.service';
@@ -19,7 +20,12 @@ function setup() {
   return { q, service: new ChatListsService(q as unknown as ChatListsRepo) };
 }
 
-const code = (p: Promise<unknown>) => p.then(() => 'ok', (e: { response?: { code?: string } }) => e.response?.code);
+const refusal = z.object({ response: z.object({ code: z.string() }) });
+const code = (p: Promise<unknown>) =>
+  p.then(
+    () => 'ok',
+    (e: unknown) => refusal.safeParse(e).data?.response.code,
+  );
 
 describe('ChatListsService', () => {
   it('creates a list with its normalised key and its creator', async () => {

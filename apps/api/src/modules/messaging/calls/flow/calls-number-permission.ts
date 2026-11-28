@@ -12,7 +12,10 @@ import { CALL_PERMISSION_PAYLOAD } from '@/modules/messaging/whatsapp';
 import type { CallActor } from '@/modules/messaging/calls/access/call-access';
 import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
 import type { CallingLine } from '@/modules/messaging/calls/kapso/calling-line';
-import type { CallPermissionFacts } from '@/modules/messaging/calls/kapso/calls-api';
+import type {
+  CallPermissionFacts,
+  PermissionRequest,
+} from '@/modules/messaging/calls/kapso/calls-api';
 import { CallsNumberRepo, IN_FLIGHT } from '@/modules/messaging/calls/store/calls-number.repo';
 import { logCallError, requestFailed } from './call-errors';
 import { CallsKit } from './call-kit';
@@ -56,23 +59,13 @@ export class CallsNumberPermission {
 
   async send(req: CallsNumberRequest): Promise<Sent> {
     if (!(await this.gate.messagingOpen())) throw conflict('messaging_off');
-    const template = req.via === 'template' ? await this.gate.permissionTemplate() : null;
-    if (req.via === 'template' && !template) throw conflict('permission_needs_template');
+    const template = await this.templateFor(req.via);
     const body = ar.calls.permission.requestBody;
     const row = await this.enqueue(req, body);
     if (row.replayed) return { view: await this.store.view(row), replayed: true };
     const to = req.input.phone;
-    let waMessageId: string;
-    try {
-      ({ waMessageId } = await this.kit.api.requestPermission(
-        req.line,
-        template ? { to, template } : { to, text: body },
-      ));
-    } catch (e) {
-      const code = logCallError(this.log, { what: 'permission request', callId: row.id, error: e });
-      await this.store.failed(row.id, code);
-      throw requestFailed(code);
-    }
+    const ask: PermissionRequest = template ? { to, template } : { to, text: body };
+    const waMessageId = await this.request(req.line, row.id, ask);
     // WhatsApp took it: a failed write afterwards is logged, never a 502 inviting a second request.
     const done = await this.store.sent(row.id, waMessageId).catch(
       (e: unknown) =>
@@ -83,6 +76,24 @@ export class CallsNumberPermission {
         }),
     );
     return { view: await this.store.view(done ?? row), replayed: false };
+  }
+
+  /** The configured template for a template request; 409 when none is set. */
+  private async templateFor(via: CallPermissionVia) {
+    const template = via === 'template' ? await this.gate.permissionTemplate() : null;
+    if (via === 'template' && !template) throw conflict('permission_needs_template');
+    return template;
+  }
+
+  /** One request, never retried: a failure marks the row failed and answers 502. */
+  private async request(line: CallingLine, rowId: string, ask: PermissionRequest): Promise<string> {
+    try {
+      return (await this.kit.api.requestPermission(line, ask)).waMessageId;
+    } catch (e) {
+      const code = logCallError(this.log, { what: 'permission request', callId: rowId, error: e });
+      await this.store.failed(rowId, code);
+      throw requestFailed(code);
+    }
   }
 
   /** Its messages row (line `calls`), deduped by the tap's request id (rule 8). */

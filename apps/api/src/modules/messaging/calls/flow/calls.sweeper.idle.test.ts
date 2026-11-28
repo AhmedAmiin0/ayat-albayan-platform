@@ -15,12 +15,8 @@ function setup(on: boolean | 'unreadable' = true) {
   const enabled = vi.fn(() =>
     on === 'unreadable' ? Promise.reject(new Error('db down')) : Promise.resolve(on),
   );
-  return {
-    sweeper: new CallsSweeper(kit, { enabled } as unknown as CallsGate),
-    queries,
-    live,
-    enabled,
-  };
+  const sweeper = new CallsSweeper(kit, { enabled } as unknown as CallsGate);
+  return { sweeper, queries, live, enabled };
 }
 
 afterEach(() => {

@@ -10,22 +10,11 @@ import {
   type NumberView,
   type OwnTrafficView,
 } from '@ab/shared';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  ParseUUIDPipe,
-  Patch,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { id } from '@ab/core';
+import { Controller, Delete, Get, HttpCode, Patch, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { parseOrThrow } from '@/common/http/http';
-import { ZodBody } from '@/common/http/zod-inputs';
+import { ZodBody, ZodParam, ZodParams } from '@/common/http/zod-inputs';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { NumbersImport } from './import/numbers.import';
@@ -34,6 +23,7 @@ import { OwnNumbers } from './own/own-numbers';
 
 /** :id is a uuid, :name one of the two secret names (anything else is 400). */
 const SECRET_PARAMS = z.object({ id: z.uuid(), name: numberSecretNameSchema });
+type SecretParams = z.output<typeof SECRET_PARAMS>;
 
 /** docs/23 §3: reads need settings.read, writes numbers.manage; secrets are write-only. */
 @ApiTags('numbers')
@@ -83,37 +73,39 @@ export class NumbersController {
   @Patch(':id')
   @Permissions('numbers.manage')
   update(
-    @Param('id', ParseUUIDPipe) id: string,
+    @ZodParam('id', id()) numberId: string,
     @ZodBody(numberUpdateSchema) body: NumberUpdate,
     @CurrentUser() user: AuthUser,
   ): Promise<NumberView> {
-    return this.numbers.update(id, body, user.id);
+    return this.numbers.update(numberId, body, user.id);
   }
 
   @Delete(':id')
   @HttpCode(204)
   @Permissions('numbers.manage')
-  remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
-    return this.numbers.remove(id, user.id);
+  remove(
+    @ZodParam('id', id()) numberId: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
+    return this.numbers.remove(numberId, user.id);
   }
 
   @Put(':id/secrets/:name')
   @Permissions('numbers.manage')
   setSecret(
-    @Param() params: unknown,
-    @Body() body: unknown,
+    @ZodParams(SECRET_PARAMS) params: SecretParams,
+    @ZodBody(numberSecretSchema) body: z.output<typeof numberSecretSchema>,
     @CurrentUser() user: AuthUser,
   ): Promise<NumberView> {
-    const target = {
-      ...parseOrThrow(SECRET_PARAMS, params),
-      value: parseOrThrow(numberSecretSchema, body).value,
-    };
-    return this.numbers.setSecret(target, user.id);
+    return this.numbers.setSecret({ ...params, value: body.value }, user.id);
   }
 
   @Delete(':id/secrets/:name')
   @Permissions('numbers.manage')
-  clearSecret(@Param() params: unknown, @CurrentUser() user: AuthUser): Promise<NumberView> {
-    return this.numbers.clearSecret(parseOrThrow(SECRET_PARAMS, params), user.id);
+  clearSecret(
+    @ZodParams(SECRET_PARAMS) params: SecretParams,
+    @CurrentUser() user: AuthUser,
+  ): Promise<NumberView> {
+    return this.numbers.clearSecret(params, user.id);
   }
 }

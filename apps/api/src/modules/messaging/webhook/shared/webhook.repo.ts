@@ -3,13 +3,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { familyOfPhone } from '@/common/db/family-of-phone';
-import { guardianOwnerIds } from '@/modules/sales/sales/sales-ownership';
-import { refillUnsupported } from '@/modules/messaging/webhook/inbound/inbound-refill';
+import { guardianOwnerIds } from '@/modules/sales/sales';
+import { refillUnsupported } from '@/modules/messaging/webhook/inbound/inbound-refill.repo';
 import { WebhookSettings } from './webhook.settings';
 import type { Contact, OutboundRow, ReplyWindow, StatusMove } from './webhook.types';
 import { pgError } from '@/common/db/errors';
-
-export type { Contact, OutboundRow, StatusMove } from './webhook.types';
 
 function check(error: PostgrestError | null): void {
   if (error) throw pgError(error);
@@ -69,14 +67,14 @@ export class WebhookRepo {
     return data ? new Date(data.created_at) : null;
   }
 
-  /** The wa_numbers row Meta names by this phone_number_id (as the chat import stamps it); null when none. */
+  /** The wa_numbers row Meta names by this phone_number_id (as the chat import stamps it). */
   async numberIdFor(phoneNumberId: string): Promise<string | null> {
     const { data, error } = await this.db.from('wa_numbers').select('id').eq('phone_number_id', phoneNumberId).maybeSingle();
     check(error);
     return data?.id ?? null;
   }
 
-  /** Removes an inbound row by wamid (its quick reply failed: Meta's re-send must not be a replay). */
+  /** Removes an inbound row by wamid (its quick reply failed: Meta's re-send is no replay). */
   async deleteInbound(waMessageId: string): Promise<void> {
     const { error } = await this.db.from('messages').delete().eq('wa_message_id', waMessageId).eq('direction', 'inbound');
     check(error);
@@ -107,7 +105,7 @@ export class WebhookRepo {
     return (data ?? []).length > 0;
   }
 
-  /** The lesson exists and one of its students is this guardian's child (a payload is not trusted). */
+  /** The lesson exists and one of its students is this guardian's child (never trust a payload). */
   async guardianLesson(input: { lessonId: string; guardianId: string }): Promise<boolean> {
     const { data, error } = await this.db
       .from('lesson_students')

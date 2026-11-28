@@ -14,8 +14,9 @@ const URL_PHONE = encodeURIComponent(PHONE);
 const M1 = 'b1111111-1111-4111-8111-111111111111';
 const M_OTHER = 'b2222222-2222-4222-8222-222222222222';
 const USERS = { admin: ADMIN, teacher: TEACHER };
+const TOKENS = new Map(Object.entries(USERS));
 const verify: TokenVerifier = async (token) => {
-  const user = USERS[token as keyof typeof USERS];
+  const user = TOKENS.get(token);
   if (!user) throw new Error('bad token');
   return user;
 };

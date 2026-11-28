@@ -18,7 +18,7 @@ import { fakeDeps } from './webhook.fakes';
 import { PHONE_NUMBER_ID } from './meta.fakes';
 import { WebhookModule } from '@/modules/messaging/webhook/webhook.module';
 import { WebhookRepo } from '@/modules/messaging/webhook/shared/webhook.repo';
-import type { WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import type { WebhookConfig } from '@/modules/messaging/webhook/shared/webhook.types';
 import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
 import { CrmInboundRepo } from '@/modules/messaging/webhook/crm-inbound';
 
@@ -96,7 +96,10 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
   /** POSTs `body` as given to /webhooks/kapso with exactly these headers (besides content-type). */
   const postKapso = (body: string, headers: Record<string, string> = { 'x-webhook-signature': kapsoSign(body) }) =>
     app.inject({ method: 'POST', url: '/webhooks/kapso', headers: { 'content-type': 'application/json', ...headers }, payload: body });
-  /** POSTs `body` as given to /webhooks/wacrm, signed now unless `signature` is passed (null = none). */
+  /**
+   * POSTs `body` as given to /webhooks/wacrm, signed now unless `signature` is passed (null =
+   * none).
+   */
   const postWacrm = (body: string, signature: string | null = wacrmSign(body)) =>
     app.inject({
       method: 'POST',

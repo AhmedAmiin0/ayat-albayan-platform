@@ -1,11 +1,13 @@
-import { Controller, Headers, HttpCode, Inject, Logger, Post, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, HttpCode, Inject, Logger, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
-import { RESPONSE_BUDGET_MS, within, type WebhookConfig } from '@/modules/messaging/webhook/webhook.service';
+import { RESPONSE_BUDGET_MS, within } from '@/modules/messaging/webhook/webhook.service';
+import type { WebhookConfig } from '@/modules/messaging/webhook/shared/webhook.types';
 import { WEBHOOK_CONFIG } from '@/modules/messaging/webhook/shared/webhook.config';
 import { StatusService } from '@/modules/messaging/webhook/status/webhook.status.service';
 import { verifyWacrmSignature, WACRM_TOLERANCE_MS } from '@/modules/messaging/webhook/parse/webhook.wacrm-signature';
 import { CrmInbound, CrmInboundJob } from '@/modules/messaging/webhook/crm-inbound';
+import { wacrmHeadersSchema } from '@/modules/messaging/webhook/webhook-inputs.schemas';
 import { parseWacrm, SeenDeliveries, type WacrmDelivery } from './webhook.wacrm';
 
 type Kind = WacrmDelivery['kind'];
@@ -16,14 +18,15 @@ interface RawRequest {
   /** Set by NestFactory.create(…, { rawBody: true }) in main.ts. */
   rawBody?: Buffer;
   body: unknown;
+  headers: unknown;
 }
 
 /**
- * The academy CRM's outbound webhook (docs/19 «crm driver»). Public: authenticated by WACRM_WEBHOOK_SECRET's
- * HMAC over `${t}.${rawBody}` only, within 5 minutes (a replay is refused). message.status_updated moves our
- * outbound row by its wamid (the existing delivery-status path); message.received (a family writing to
- * the notifications number) is queued by its wamid and the mirror job kicked: it lands in the
- * inbox. Deduped on the delivery id. Never sends anything.
+ * The academy CRM's outbound webhook (docs/19 «crm driver»). Public: authenticated by
+ * WACRM_WEBHOOK_SECRET's HMAC over `${t}.${rawBody}` only, within 5 minutes (a replay is refused).
+ * message.status_updated moves our outbound row by its wamid (the existing delivery-status path);
+ * message.received (a family writing to the notifications number) is queued by its wamid and the
+ * mirror job kicked: it lands in the inbox. Deduped on the delivery id. Never sends anything.
  */
 @ApiTags('webhooks')
 @Public()
@@ -39,10 +42,14 @@ export class WacrmWebhookController {
     @Inject(CrmInboundJob) private readonly crmInboundJob: CrmInboundJob,
   ) {}
 
-  /** 401 (nothing read) unless the signature is good and fresh; 500 when a write failed (it may come again). */
+  /**
+   * 401 (nothing read) unless the signature is good and fresh; 500 when a write failed (it may come
+   * again).
+   */
   @Post()
   @HttpCode(200)
-  async receive(@Req() req: RawRequest, @Headers('x-wacrm-signature') signature?: string): Promise<void> {
+  async receive(@Req() req: RawRequest): Promise<void> {
+    const signature = wacrmHeadersSchema.parse(req.headers)['x-wacrm-signature'];
     const now = new Date();
     const verdict = verifyWacrmSignature({
       rawBody: req.rawBody,
@@ -51,7 +58,8 @@ export class WacrmWebhookController {
       now,
     });
     if (verdict !== 'ok') {
-      // Debug only, like the other webhook routes: a public URL gets probed. The verdict, never a value.
+      // Debug only, like the other webhook routes: a public URL gets probed. The verdict, never a
+      // value.
       this.log.debug(`wacrm webhook refused (401): ${signature === undefined ? 'no signature' : verdict}`);
       throw new UnauthorizedException();
     }

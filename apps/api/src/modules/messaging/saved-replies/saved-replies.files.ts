@@ -9,7 +9,7 @@ import { uploadMaxBytes } from '@ab/settings';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, chatOutPath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { sniffMime, SNIFF_BYTES } from '@/modules/teaching/booking/invoice/invoice-sniff';
+import { sniffMime, SNIFF_BYTES } from '@/modules/teaching/booking';
 import { isSavedReplyPathOf, savedReplyPath } from './saved-replies.paths';
 import { SavedReplySettings } from './saved-replies.settings';
 import { httpError } from '@/common/http/errors';
@@ -21,7 +21,9 @@ export interface StoredFile {
   size: number;
 }
 
-/** 400 file_type / 413 file_too_large: the chat's own limits (JPEG/PNG ≤ 5 MB, PDF ≤ upload_max_mb). */
+/**
+ * 400 file_type / 413 file_too_large: the chat's own limits (JPEG/PNG ≤ 5 MB, PDF ≤ upload_max_mb).
+ */
 function assertSendable(f: { mime: string; size: number; maxBytes: number }): void {
   const problem = chatFileProblem(f);
   if (problem === 'file_type') throw httpError(HttpStatus.BAD_REQUEST, 'file_type');
@@ -63,7 +65,9 @@ export class SavedReplyFiles {
     return { path, mime, size: info.size };
   }
 
-  /** Best effort: the reply is already gone or changed; a stale object must not fail the request. */
+  /**
+   * Best effort: the reply is already gone or changed; a stale object must not fail the request.
+   */
   async remove(path: string | null): Promise<void> {
     if (!path) return;
     try {
@@ -73,7 +77,10 @@ export class SavedReplyFiles {
     }
   }
 
-  /** Copied to out/{sender}/{request}/: POST /threads/:phone/file then sends it with every chat check. */
+  /**
+   * Copied to out/{sender}/{request}/: POST /threads/:phone/file then sends it with every chat
+   * check.
+   */
   async stage(input: {
     file: StoredFile;
     name: string;

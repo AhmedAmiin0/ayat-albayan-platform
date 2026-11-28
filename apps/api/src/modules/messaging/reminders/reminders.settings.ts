@@ -4,8 +4,8 @@ import { readSlice, type SettingsSlice } from '@/common/settings/settings-slice'
 import { SettingsService } from '@/common/settings/settings.service';
 
 /**
- * The lookahead, the automatic-messages switch, the academy's default meeting link and the lesson join
- * window (joinWindowConfig), and whether a lesson needs a confirmation at all (the
+ * The lookahead, the automatic-messages switch, the academy's default meeting link and the lesson
+ * join window (joinWindowConfig), and whether a lesson needs a confirmation at all (the
  * lesson_needs_confirmation push). The reminder timing and switches are notification rules
  * (NotificationPolicy).
  */
@@ -19,7 +19,10 @@ const KEYS = [
 ] as const satisfies readonly SettingKey[];
 export type RemindersSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
-/** The reminder job's academy settings (docs/25 §4), read by RemindersJob. One cached store.all(), only these keys. */
+/**
+ * The reminder job's academy settings (docs/25 §4), read by RemindersJob. One cached store.all(),
+ * only these keys.
+ */
 @Injectable()
 export class RemindersSettings {
   constructor(private readonly store: SettingsService) {}

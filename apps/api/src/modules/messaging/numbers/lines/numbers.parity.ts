@@ -8,14 +8,14 @@ import {
 import { WA_LINES, type WaLine } from '@ab/catalog';
 import { lineEnvs, lineNumbers, lineProvider, type Env, type GraphEnv, type WhatsappEnv } from '@/config/env/env';
 
-// GET /admin/communications/parity (docs/23 §2e step 4): per role, the effective config the legacy path
-// and the module path would use, field by field. Secrets are compared in memory and shown only as
-// 'set' / null with a state; their values never leave this file.
+// GET /admin/communications/parity (docs/23 §2e step 4): per role, the effective config the legacy
+// path and the module path would use, field by field. Secrets are compared in memory and shown only
+// as 'set' / null with a state; their values never leave this file.
 
 type Facts = Record<ParityField, string | null>;
 
 function tokenOf(line: GraphEnv): string {
-  return 'accessToken' in line ? line.accessToken : line.apiKey;
+  return line.provider === 'kapso' ? line.apiKey : line.accessToken;
 }
 
 type LineFacts = Pick<Facts, 'phone_number_id' | 'waba_id' | 'app_id' | 'api_base' | 'api_version' | 'access_token'>;
@@ -56,14 +56,23 @@ function factsOf(env: Env, role: WaLine): Facts {
   };
 }
 
-function cell(field: ParityField, a: string | null, b: string | null): ParityCell {
-  const state = a === b ? 'same' : a === null || b === null ? 'missing' : 'different';
-  const secret = SECRET_PARITY_FIELDS.includes(field);
-  const shown = (v: string | null) => (secret ? (v === null ? null : 'set') : v);
-  return { field, state, legacy: shown(a), module: shown(b) };
+function stateOf(a: string | null, b: string | null): ParityCell['state'] {
+  if (a === b) return 'same';
+  return a === null || b === null ? 'missing' : 'different';
 }
 
-/** A role's app secret matters only where that role receives (has a webhook phone id) on either side. */
+const masked = (v: string | null): string | null => (v === null ? null : 'set');
+const asIs = (v: string | null): string | null => v;
+
+function cell(field: ParityField, a: string | null, b: string | null): ParityCell {
+  const shown = SECRET_PARITY_FIELDS.includes(field) ? masked : asIs;
+  return { field, state: stateOf(a, b), legacy: shown(a), module: shown(b) };
+}
+
+/**
+ * A role's app secret matters only where that role receives (has a webhook phone id) on either
+ * side.
+ */
 function relevant(field: ParityField, legacy: Facts, module: Facts): boolean {
   return field !== 'app_secret' || legacy.webhook_phone_number_id !== null || module.webhook_phone_number_id !== null;
 }

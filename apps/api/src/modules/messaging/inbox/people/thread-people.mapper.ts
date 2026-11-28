@@ -16,7 +16,7 @@ import {
   type BalanceView,
   type StudentBalanceView,
 } from '@ab/money';
-import type { BalanceRow } from '@/modules/finance/subscriptions/money/balance.repo';
+import type { BalanceRow } from '@/modules/finance/subscriptions';
 
 export interface PeopleStudentRow {
   id: string;
@@ -26,7 +26,10 @@ export interface PeopleStudentRow {
   teacher: { display_name_ar: string } | null;
 }
 
-/** The newest package with the BalanceCard numbers: lessons across every live package (never a cancelled one), money of this one. */
+/**
+ * The newest package with the BalanceCard numbers: lessons across every live package (never a
+ * cancelled one), money of this one.
+ */
 function subscriptionOf({
   current,
   packages,
@@ -73,11 +76,7 @@ interface BadgeStudentRow {
 }
 
 /** Absent ring means none. */
-export interface FamilyTag {
-  badge: SubscriptionBadge;
-  unpaid: boolean;
-  ring?: FamilyRing | null;
-}
+export interface FamilyTag { badge: SubscriptionBadge; unpaid: boolean; ring?: FamilyRing | null }
 
 /**
  * The chat's people → the same tags the list computes (subscriptionBadge, familyUnpaid, familyRing

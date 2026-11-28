@@ -7,7 +7,8 @@ import { wakeOn } from '@/common/jobs';
 import { pgError } from '@/common/db/errors';
 import type { QueuedMessage } from './queued-row';
 import type { RoomCandidate } from './plan/reminders.links';
-import { REMINDER_LESSON_STATUSES, type ReminderLesson } from './plan/reminders.plan';
+import { REMINDER_LESSON_STATUSES } from './plan/reminders.plan';
+import type { ReminderLesson } from './plan/reminders.plan.types';
 import { roomLinkRows } from './plan/reminders.room';
 
 const LESSON_SELECT =
@@ -82,7 +83,10 @@ export class RemindersRepo {
     return wakeOn(await queueMessages(this.db, rows));
   }
 
-  /** lesson_join_link rows for the candidates not queued yet, each token saved first (reminders.room.ts). */
+  /**
+   * lesson_join_link rows for the candidates not queued yet, each token saved first
+   * (reminders.room.ts).
+   */
   roomLinks(candidates: readonly RoomCandidate[], now: Date): Promise<QueuedMessage[]> {
     return roomLinkRows(this.db, candidates, now);
   }

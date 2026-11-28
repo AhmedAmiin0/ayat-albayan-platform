@@ -1,16 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { SalesScopes, type SalesScope } from '@/modules/sales/sales/sales-scope';
-import {
-  assertCanSend,
-  TeacherScopes,
-  type TeacherScope,
-} from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import { SalesScopes, type SalesScope } from '@/modules/sales/sales';
+import { assertCanSend, TeacherScopes, type TeacherScope } from '@/modules/messaging/inbox';
 
 /**
  * Who is calling, resolved server-side per request exactly like a send from the thread (rule 9,
- * ThreadsController.scopes): a salesperson (every chat), a teacher (their families' chats only, never
- * their own chat with the academy) or the admin. Any other role is refused by TeacherScopes (403).
+ * ThreadsController.scopes): a salesperson (every chat), a teacher (their families' chats only,
+ * never their own chat with the academy) or the admin. Any other role is refused by TeacherScopes
+ * (403).
  */
 export interface CallActor {
   user: AuthUser;

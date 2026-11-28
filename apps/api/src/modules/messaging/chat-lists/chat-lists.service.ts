@@ -7,8 +7,8 @@ const named = (name: string): ListName => ({ name, name_key: chatListNameKey(nam
 
 /**
  * The academy's ONE shared set of chat lists (docs/22): names that only organise
- * chats. Duplicate names (ignoring case and Arabic letter variants) are 409 list_name_taken; the 31st
- * list is 409 list_limit. Nothing here ever sends a message.
+ * chats. Duplicate names (ignoring case and Arabic letter variants) are 409 list_name_taken; the
+ * 31st list is 409 list_limit. Nothing here ever sends a message.
  */
 @Injectable()
 export class ChatListsService {

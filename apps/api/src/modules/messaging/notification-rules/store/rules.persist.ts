@@ -4,16 +4,18 @@ import { kickConfigReload } from '@/config/role/worker-kick';
 import type { RulesSnapshot } from './rules.reader';
 import { RulesSourceSettings } from '@/modules/messaging/notification-rules/rules-source.settings';
 import { DbRulesReader } from './rules.store';
-import { RulesTable, type RuleRowWrite } from './rules.table';
+import { RulesTableRepo } from './rules-table.repo';
+import type { RuleRowWrite } from './rules-table.types';
 
 /**
- * Where the rule writes land: the row, the mirrored legacy keys (legacy mode, the flip back) and the
- * snapshot cache, which is dropped after every write (even a failed one), here and on the worker.
+ * Where the rule writes land: the row, the mirrored legacy keys (legacy mode, the flip back) and
+ * the snapshot cache, which is dropped after every write (even a failed one), here and on the
+ * worker.
  */
 @Injectable()
 export class RulesPersist {
   constructor(
-    private readonly table: RulesTable,
+    private readonly table: RulesTableRepo,
     private readonly settings: RulesSourceSettings,
     private readonly reader: DbRulesReader,
   ) {}

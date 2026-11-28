@@ -6,7 +6,8 @@ import { kapsoEnv, kapsoOverlay } from '@/modules/messaging/webhook/external/tes
 import { envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from '@/modules/messaging/webhook/tests/meta.fakes';
 import { KAPSO_SECRET, kapsoSign, sign, webhookApp } from '@/modules/messaging/webhook/tests/test-app';
 
-// POST /webhooks/kapso (docs/19): Kapso forwards Meta's raw payload; only the Kapso secret signs it.
+// POST /webhooks/kapso (docs/19): Kapso forwards Meta's raw payload; only the Kapso secret signs
+// it.
 
 let ctx: Awaited<ReturnType<typeof webhookApp>> | undefined;
 afterEach(async () => {

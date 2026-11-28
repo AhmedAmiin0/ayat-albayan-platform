@@ -1,19 +1,21 @@
 import type { RuleTiming } from '@ab/shared';
 import { DEFAULT_DURATION } from '@ab/money';
 import { Injectable } from '@nestjs/common';
-import { AvailabilityQuery } from '@/modules/people/teachers/availability/availability.query';
+import { AvailabilityQuery } from '@/modules/people/teachers';
 import { FollowUpsRepo } from './follow-ups.repo';
 
 const HOUR = 60 * 60_000;
 
-/** The follow_up_slots rule's slot window (legacy: settings.follow_up_slots_from_hours / _to_days). */
+/**
+ * The follow_up_slots rule's slot window (legacy: settings.follow_up_slots_from_hours / _to_days).
+ */
 export type SlotWindow = Pick<RuleTiming<'follow_up_slots'>, 'slots_from_hours' | 'slots_to_days'>;
 
 /**
  * Real free starts for a follow-up (R-LEAD-05): every active teacher's weekly grid − time-off −
  * booked lessons (AvailabilityQuery.freeSlots), lesson-length (the pricing default) slots, from
- * the rule's slots_from_hours (12) to slots_to_days (7) ahead (docs/12 §7; FollowUpsJob passes them).
- * The lead's qualification has no program or teacher-gender preference (R-LEAD-03), so every
+ * the rule's slots_from_hours (12) to slots_to_days (7) ahead (docs/12 §7; FollowUpsJob passes
+ * them). The lead's qualification has no program or teacher-gender preference (R-LEAD-03), so every
  * active teacher counts. TODO(owner): narrow by program / teacher gender once the lead has them.
  */
 @Injectable()

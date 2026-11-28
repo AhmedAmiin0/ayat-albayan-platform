@@ -6,9 +6,9 @@ import { isAdmin } from '@/common/auth/roles';
 
 /**
  * What a signed-in teacher may see in the inbox (R-TCH-03, R-MSG-05):
- * the chats of guardians whose children they teach, plus their own chat with the academy. The family
- * of a student not subscribed yet (new, trial, pending_subscription) is not in it
- * (sales or the system manages between them).
+ * the chats of guardians whose children they teach, plus their own chat with the academy. The
+ * family of a student not subscribed yet (new, trial, pending_subscription) is not in it (sales or
+ * the system manages between them).
  */
 export interface TeacherScope {
   teacherId: string;

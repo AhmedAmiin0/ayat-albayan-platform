@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lineEnvs, loadEnv } from '@/config/env/env';
 import { KAPSO_ENV, kapsoFetch } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
 import { RECORDED_UPLOAD, RENEWAL_DUE_SEED, REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
-import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
+import { httpFailure, templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
 import { whatsappClient } from '@/modules/messaging/whatsapp/client-factory';
 import { scriptedFetch } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
@@ -19,13 +19,7 @@ const mock = () => ({
 });
 const registry = (lines: object) => templateServices(queries, lines, audit);
 const failure = (p: Promise<unknown>) =>
-  p.then(
-    () => null,
-    (e: { getStatus: () => number; getResponse: () => unknown }) => [
-      e.getStatus(),
-      e.getResponse(),
-    ],
-  );
+  p.then(() => null, httpFailure);
 /** The chat line on Meta with its own ids (and whatever else `over` sets). */
 function stubChat(over: Record<string, string>): void {
   const all = { WA_CHAT_PROVIDER: 'meta', WA_API_BASE: 'http://127.0.0.1:4010', WA_API_VERSION: 'v21.0', WA_CHAT_PHONE_NUMBER_ID: 'chat-phone', WA_CHAT_WABA_ID: 'chat-waba', WA_CHAT_ACCESS_TOKEN: 'chat-token', WA_CHAT_APP_ID: '', ...over };

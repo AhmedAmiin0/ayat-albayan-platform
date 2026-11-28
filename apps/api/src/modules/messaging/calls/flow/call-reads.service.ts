@@ -10,7 +10,10 @@ import { toActiveView, toCallView } from '@/modules/messaging/calls/store/calls.
 import type { CallRow } from '@/modules/messaging/calls/store/call-row';
 import { CallsKit } from './call-kit';
 
-/** A live row this user's device should show: their own call, or an inbound one ringing in a chat they may answer (inbox.send). */
+/**
+ * A live row this user's device should show: their own call, or an inbound one ringing in a chat
+ * they may answer (inbox.send).
+ */
 function showsLive(row: CallRow, actor: CallActor): boolean {
   const me = actor.user.id;
   if (row.direction === 'outbound') return row.created_by === me;
@@ -26,7 +29,10 @@ export class CallReads {
     private readonly gate: CallsGate,
   ) {}
 
-  /** Always answers (the clients decide from it whether to show the phone icon); ICE only to callers. */
+  /**
+   * Always answers (the clients decide from it whether to show the phone icon); ICE only to
+   * callers.
+   */
   async config(user: AuthUser): Promise<CallConfigView> {
     const enabled = await this.gate.enabled();
     const canCall = can(user, 'inbox.send');
@@ -39,7 +45,9 @@ export class CallReads {
     };
   }
 
-  /** The incoming-call screen and the caller's own call: SDPs to the parties only (calls.mapper.ts). */
+  /**
+   * The incoming-call screen and the caller's own call: SDPs to the parties only (calls.mapper.ts).
+   */
   async active(actor: CallActor): Promise<ActiveCallView[]> {
     await this.gate.assertOn();
     const rows = (await this.kit.queries.live()).filter((r) => showsLive(r, actor));
@@ -47,7 +55,10 @@ export class CallReads {
     return rows.map((r) => toActiveView(r, { names, userId: actor.user.id }));
   }
 
-  /** The calls log (newest first), or one chat's calls for its log; a teacher sees their families' only. */
+  /**
+   * The calls log (newest first), or one chat's calls for its log; a teacher sees their families'
+   * only.
+   */
   async list(
     actor: CallActor,
     q: { phone?: string | undefined; limit: number },

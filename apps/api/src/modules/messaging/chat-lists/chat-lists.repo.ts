@@ -4,7 +4,10 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '@/common/db/db.module';
 import { isUniqueViolation, pgError } from '@/common/db/errors';
 
-/** What a write ran into: a taken name_key (23505) or the 30-list cap trigger (chat_lists_cap, 23514). */
+/**
+ * What a write ran into: a taken name_key (23505) or the 30-list cap trigger (chat_lists_cap,
+ * 23514).
+ */
 export type ListClash = 'taken' | 'limit';
 
 export interface ListName {
@@ -100,7 +103,9 @@ export class ChatListsRepo {
     check(error);
   }
 
-  /** Adding twice is a no-op. `gone` = the list was deleted meanwhile (23503: its FK), not a 500. */
+  /**
+   * Adding twice is a no-op. `gone` = the list was deleted meanwhile (23503: its FK), not a 500.
+   */
   async add(input: { listId: string; phone: string; by: string }): Promise<'added' | 'gone'> {
     const row = { list_id: input.listId, phone_e164: input.phone, added_by: input.by };
     const { error } = await this.db

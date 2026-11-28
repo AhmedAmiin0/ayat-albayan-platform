@@ -43,7 +43,11 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
 
   it('sent: status, wamid, error cleared; stamps the lead and the report it delivered', async () => {
     const row = dueMessage({ lead_id: 'lead-1', dedup_key: 'report_ready:r1' });
-    const { db, argsOf, calls } = fakeDb({ [M]: [{ data: [{ id: row.id }] }], leads: [{}], lesson_reports: [{}] });
+    const { db, argsOf, calls } = fakeDb({
+      [M]: [{ data: [{ id: row.id }] }],
+      leads: [{}],
+      lesson_reports: [{}],
+    });
     await expect(new SenderRepo(db).sent({ row, sent: { waMessageId: 'wamid.1' }, at: NOW })).resolves.toBe(true);
     expect(argsOf(M, 'update')).toEqual([{
       status: 'sent', sent_at: '2026-10-02T08:00:00.000Z', wa_message_id: 'wamid.1', next_attempt_at: null, error_code: null, error_text: null,
@@ -84,7 +88,8 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
     expect(calls.find((c) => c.method === 'update')?.args[0]).toMatchObject({ status: 'failed', error_code: 'auto_off' });
     expect(eqs(calls)).toEqual([['id', 'm4'], ['status', 'queued']]);
     const hold = fakeDb({ [M]: [{ data: [{ id: 'm5' }, { id: 'm6' }] }] });
-    await expect(new SenderRepo(hold.db).holdAutomatic()).resolves.toBe(2); // whatever the template's approval
+    // whatever the template's approval
+    await expect(new SenderRepo(hold.db).holdAutomatic()).resolves.toBe(2);
     expect(hold.argsOf(M, 'update')).toEqual([{ status: 'failed', error_code: 'auto_off', error_text: 'automatic messages are off in settings', next_attempt_at: null }]);
     expect(eqs(hold.calls)).toEqual([['direction', 'outbound'], ['status', 'queued']]);
     expect(hold.argsOf(M, 'is')).toEqual(['created_by', null]); // never an admin's inbox send

@@ -1,7 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { allowedRecipients, loadEnv, recipientAllowed } from '@/config/env/env';
-import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
-import { WHATSAPP_LINES, type WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { SendGate, WHATSAPP_LINES, type WhatsappLines } from '@/modules/messaging/whatsapp';
 import type { ReadMark } from './read-marks';
 import { ThreadReadsRepo } from '@/modules/messaging/inbox/threads/store';
 
@@ -33,8 +32,8 @@ export class ReadReceipts {
   ) {}
 
   /**
-   * `upTo`: the newest row the caller shows (a created_at), or the ids of the rows it shows; a row it
-   * does not show stays unread.
+   * `upTo`: the newest row the caller shows (a created_at), or the ids of the rows it shows; a row
+   * it does not show stays unread.
    */
   async open(
     phone: string,

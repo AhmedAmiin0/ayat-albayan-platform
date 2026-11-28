@@ -9,8 +9,9 @@ import { CommunicationsService } from './communications.service';
 
 /**
  * docs/23 §2e steps 4–5: GET parity (settings.read; ids and «same / different / missing», never a
- * secret value) and the comms_source switch (numbers.manage; module refused with 409 parity_not_empty
- * while parity is non-empty, legacy always allowed). The switch never opens the send gate.
+ * secret value) and the comms_source switch (numbers.manage; module refused with 409
+ * parity_not_empty while parity is non-empty, legacy always allowed). The switch never opens the
+ * send gate.
  */
 @ApiTags('numbers')
 @ApiBearerAuth()

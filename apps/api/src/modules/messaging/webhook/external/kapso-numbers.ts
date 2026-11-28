@@ -1,6 +1,12 @@
 import { isWaLine, type WaLine } from '@ab/catalog';
 import { numberByPhoneId, overlayNumbers } from '@/common/configuration/integrations/numbers-overlay';
-import { lineEnvs, loadEnv, type KapsoLineEnv, type LineEnvs, type WhatsappEnv } from '@/config/env/env';
+import {
+  lineEnvs,
+  loadEnv,
+  type KapsoLineEnv,
+  type LineEnvs,
+  type WhatsappEnv,
+} from '@/config/env/env';
 
 // Which of our numbers run on the Kapso driver, with the Kapso key the senders already use (the
 // integration config / Vault through loadEnv() or the numbers overlay; never a new env var). Holds
@@ -25,17 +31,22 @@ function legacyLines(lines: LineEnvs): KapsoNumber[] {
   return out;
 }
 
-/** The Kapso number Meta names by this phone_number_id; null = not ours or not on Kapso (ignored). */
+/** Module mode: the overlay's number by this phone_number_id, when it runs on Kapso. */
+function overlayNumber(phoneNumberId: string): KapsoNumber | null {
+  const n = numberByPhoneId(phoneNumberId);
+  return n && isKapso(n.env) && isWaLine(n.purpose)
+    ? { env: n.env, line: n.purpose, numberId: n.id }
+    : null;
+}
+
+/**
+ * The Kapso number Meta names by this phone_number_id; null = not ours or not on Kapso (ignored).
+ */
 export function kapsoNumberFor(
   phoneNumberId: string,
   read: () => LineEnvs = () => lineEnvs(loadEnv()),
 ): KapsoNumber | null {
-  if (overlayNumbers()) {
-    const n = numberByPhoneId(phoneNumberId);
-    return n && isKapso(n.env) && isWaLine(n.purpose)
-      ? { env: n.env, line: n.purpose, numberId: n.id }
-      : null;
-  }
+  if (overlayNumbers()) return overlayNumber(phoneNumberId);
   return legacyLines(read()).find((n) => n.env.phoneNumberId === phoneNumberId) ?? null;
 }
 
@@ -43,5 +54,9 @@ export function kapsoNumberFor(
 export function kapsoChatNumbers(read: () => LineEnvs = () => lineEnvs(loadEnv())): KapsoNumber[] {
   const numbers = overlayNumbers();
   if (!numbers) return legacyLines(read()).filter((n) => n.line === 'chat');
-  return numbers.flatMap((n) => (n.enabled && n.purpose === 'chat' && isKapso(n.env) ? [{ env: n.env, line: n.purpose, numberId: n.id }] : []));
+  return numbers.flatMap((n) =>
+    n.enabled && n.purpose === 'chat' && isKapso(n.env)
+      ? [{ env: n.env, line: n.purpose, numberId: n.id }]
+      : [],
+  );
 }

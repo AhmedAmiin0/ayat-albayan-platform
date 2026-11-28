@@ -1,18 +1,27 @@
 import { crmTemplateLanguage, crmTemplateName, type TemplateView } from '@ab/shared';
 import type { TemplateStatus } from '@ab/catalog';
-import { NotFoundException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
 import { lineProvider, loadEnv } from '@/config/env/env';
-import { fromMeta, onCrm, requireLine, requireSync } from '@/modules/messaging/whatsapp/templates/catalog/template-env';
+import {
+  fromMeta,
+  onCrm,
+  requireLine,
+  requireSync,
+  requireTemplate,
+} from '@/modules/messaging/whatsapp/templates/catalog/template-env';
 import { SAMPLE_REPORT, templateProblem } from '@/modules/messaging/whatsapp/template-review';
 import { ourStatus } from './template-sync';
 import { CRM_MANAGED, REGISTRY_ENTITY_ID, toTemplateView } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import type { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
-import type { TemplateRow, WhatsappLines } from '@/modules/messaging/whatsapp/whatsapp.types';
+import type {
+  TemplateRow,
+  WhatsappClient,
+  WhatsappLines,
+} from '@/modules/messaging/whatsapp/whatsapp.types';
 import { httpError } from '@/common/http/errors';
 
-// Submitting a template (T3, docs/12 §3.4), out of template.registry.ts (150-line cap). It goes to the
-// template's OWN line's WABA, chat rows included, under that line's driver.
+// Submitting a template (T3, docs/12 §3.4): it goes to the template's OWN line's WABA, chat rows
+// included, under that line's driver.
 
 /**
  * Made in the CRM dashboard (docs/39): a document header (the CRM has no PDF sample upload), or a
@@ -33,12 +42,12 @@ interface SubmitDeps {
 }
 
 /**
- * POST /messaging/templates/:key/submit. A body Meta would reject is 409 invalid_template before any
- * call; the row's line must be configured (503 not_configured). A document header (report_ready) first
- * uploads the sample PDF for Meta's reviewer: that needs the line's app id (409 needs_app_id without it;
- * 409 needs_meta_driver on a kapso line), both naming the row's line. A rejected row is edited in place
- * by the driver (Kapso: hsm_id). A crm line's document row, or one the CRM knows by another
- * name: 409 crm_managed before anything else.
+ * POST /messaging/templates/:key/submit. A body Meta would reject is 409 invalid_template before
+ * any call; the row's line must be configured (503 not_configured). A document header
+ * (report_ready) first uploads the sample PDF for Meta's reviewer: that needs the line's app id
+ * (409 needs_app_id without it; 409 needs_meta_driver on a kapso line), both naming the row's line.
+ * A rejected row is edited in place by the driver (Kapso: hsm_id). A crm line's document row, or
+ * one the CRM knows by another name: 409 crm_managed before anything else.
  */
 export async function submitTemplate(
   deps: SubmitDeps,
@@ -46,22 +55,11 @@ export async function submitTemplate(
   actorId: string,
 ): Promise<TemplateView> {
   requireSync();
-  const row = await deps.queries.get(key);
-  if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
-  // A crm line submits through the CRM (docs/39); no PDF sample there, so a document is made there.
-  if (crmOnly(row)) throw httpError(409, CRM_MANAGED, { line: row.line });
-  if (!SUBMITTABLE.has(row.status)) throw httpError(409, 'not_submittable', { status: row.status });
-  const problem = templateProblem(row);
-  if (problem) throw httpError(409, 'invalid_template', { reason: problem });
+  const row = await requireTemplate(deps.queries, key);
+  requireSubmittable(row);
   const client = deps.lines[row.line];
   requireLine(client, row.line);
-  const document = row.header_format === 'document';
-  // Kapso has no sample upload (docs/19): WA_APP_ID cannot help there, only switching the line to meta.
-  const noSamples = lineProvider(loadEnv(), row.line) === 'kapso' ? 'needs_meta_driver' : 'needs_app_id';
-  if (document && !client.canUploadSamples()) throw httpError(409, noSamples, { line: row.line });
-  const headerHandle = document
-    ? await fromMeta(() => client.uploadSample(SAMPLE_REPORT))
-    : undefined;
+  const headerHandle = await sampleHandle(row, client);
   const res = await fromMeta(() => client.submitTemplate(row, { headerHandle }));
   const status = ourStatus(res.status);
   const meta_id = res.metaId || row.meta_id;
@@ -80,4 +78,22 @@ export async function submitTemplate(
     after: { key, status, meta_id, line: row.line },
   });
   return toTemplateView(updated ?? row);
+}
+
+/** What refuses a submit before any call: crm_managed, not_submittable, invalid_template. */
+function requireSubmittable(row: TemplateRow): void {
+  // A crm line submits through the CRM (docs/39); no PDF sample there, so a document is made there.
+  if (crmOnly(row)) throw httpError(409, CRM_MANAGED, { line: row.line });
+  if (!SUBMITTABLE.has(row.status)) throw httpError(409, 'not_submittable', { status: row.status });
+  const problem = templateProblem(row);
+  if (problem) throw httpError(409, 'invalid_template', { reason: problem });
+}
+
+/** A document header's sample PDF for Meta's reviewer, uploaded first; none for other headers. */
+async function sampleHandle(row: TemplateRow, client: WhatsappClient): Promise<string | undefined> {
+  if (row.header_format !== 'document') return undefined;
+  // Kapso has no sample upload (docs/19): WA_APP_ID cannot help there, only switching to meta.
+  const noSamples = lineProvider(loadEnv(), row.line) === 'kapso' ? 'needs_meta_driver' : 'needs_app_id';
+  if (!client.canUploadSamples()) throw httpError(409, noSamples, { line: row.line });
+  return fromMeta(() => client.uploadSample(SAMPLE_REPORT));
 }

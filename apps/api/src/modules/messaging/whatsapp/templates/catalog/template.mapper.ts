@@ -17,7 +17,9 @@ import { httpError } from '@/common/http/errors';
 /** audit_log.entity_id is a uuid; the template key goes in before/after (as settings do). */
 export const REGISTRY_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 
-/** `numbers` (its message_template_numbers rows) only where the caller read them: absent otherwise. */
+/**
+ * `numbers` (its message_template_numbers rows) only where the caller read them: absent otherwise.
+ */
 export function toTemplateView(row: TemplateRow, numbers?: readonly ApprovalRow[]): TemplateView {
   return {
     key: row.key,
@@ -56,16 +58,13 @@ function toApproval(a: ApprovalRow): TemplateNumberApproval {
   };
 }
 
-/** Every row with its approvals per number (one read of message_template_numbers, docs/23c decision 9). */
+/** Every row with its approvals per number (one read of message_template_numbers, docs/23c). */
 export function withNumbers(
   rows: readonly TemplateRow[],
   approvals: readonly ApprovalRow[],
 ): TemplateView[] {
   return rows.map((row) =>
-    toTemplateView(
-      row,
-      approvals.filter((a) => a.template_key === row.key),
-    ),
+    toTemplateView(row, approvals.filter((a) => a.template_key === row.key)),
   );
 }
 
@@ -112,9 +111,9 @@ const credentialHttp: ToHttp = (e) => {
 };
 
 /**
- * A driver failure → 502: crm_scope_missing (with `scope`) when the CRM key lacks a scope, kapso_auth
- * / crm_auth when Kapso / the CRM refused its key (docs/19), else meta_error with Meta's code and
- * message; a call the crm driver does not support → 409 crm_managed.
+ * A driver failure → 502: crm_scope_missing (with `scope`) when the CRM key lacks a scope,
+ * kapso_auth / crm_auth when Kapso / the CRM refused its key (docs/19), else meta_error with Meta's
+ * code and message; a call the crm driver does not support → 409 crm_managed.
  */
 export function graphHttpError(e: WaError): HttpException {
   return (

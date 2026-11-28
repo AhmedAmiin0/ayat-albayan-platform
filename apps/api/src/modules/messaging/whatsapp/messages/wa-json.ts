@@ -50,7 +50,8 @@ const paramsSchema = z.object({
   buttons: z.array(z.string()).optional(),
   payloads: z.array(z.string()).optional(),
   document: z.object({ bucket: z.string(), path: z.string(), filename: z.string() }).optional(),
-  // A malformed crm part is dropped, never the whole row's values (the meta and kapso drivers never read it).
+  // A malformed crm part is dropped, never the whole row's values (the meta and kapso drivers never
+  // read it).
   crm: crmValuesSchema.optional().catch(undefined),
 });
 
@@ -59,7 +60,10 @@ export function templateButtons(json: Json | null): TemplateButton[] {
   return r.success ? r.data : [];
 }
 
-/** message_templates.display (what WhatsApp shows); null when never synced or malformed (the columns' fallback). */
+/**
+ * message_templates.display (what WhatsApp shows); null when never synced or malformed (the
+ * columns' fallback).
+ */
 export function templateDisplay(json: Json | null): TemplateDisplay | null {
   const r = displaySchema.safeParse(json);
   return r.success ? r.data : null;

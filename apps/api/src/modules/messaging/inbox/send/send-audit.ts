@@ -1,7 +1,7 @@
 import type { MessageView } from '@ab/shared';
 import type { AuditService } from '@/common/audit/audit.service';
 import type { AuthUser } from '@/common/auth/verify-token';
-import type { SalesScope } from '@/modules/sales/sales/sales-scope';
+import type { SalesScope } from '@/modules/sales/sales';
 import type { Sent } from './outbox';
 import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 

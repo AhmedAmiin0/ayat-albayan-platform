@@ -4,7 +4,8 @@ import { callsOf, chainDb } from '@/modules/messaging/reminders/chain-db.fake';
 import type { RoomCandidate } from './reminders.links';
 import { roomLinkRows } from './reminders.room';
 
-// The family's classroom link minted by the reminders job (settings.meeting_link_auto). Invented data.
+// The family's classroom link minted by the reminders job (settings.meeting_link_auto). Invented
+// data.
 
 const NOW = new Date('2026-10-04T13:10:00Z');
 const candidate = (studentId: string): RoomCandidate => ({

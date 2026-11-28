@@ -39,15 +39,27 @@ export class MessageViews {
       return withHidden(withMarks(toMessageView({ row: stored, template: null }), stored), stored);
     const row = await this.relayed(stored);
     const template = row.template_key ? await this.templates.cached(row.template_key) : null;
+    const view = template
+      ? await this.templated({ row, template, mediaUrl })
+      : toMessageView({ row, template: null, documentUrl: null, mediaUrl, block: null });
+    return withMarks(view, row);
+  }
+
+  /** Rendered text and block, the PDF link while sendable by hand, a CRM send's own text. */
+  private async templated(input: {
+    row: ThreadMessageRow;
+    template: TemplateRow;
+    mediaUrl: string | null;
+  }): Promise<MessageView> {
+    const { row, template, mediaUrl } = input;
     const params = templateParams(row.template_params);
-    const documentUrl =
-      template && needsManualSend(row) ? await documentLink(this.storage, params.document) : null;
-    const block = template ? blockOf(row, template) : null;
-    const shown = template ? renderable(template) : null;
+    const documentUrl = needsManualSend(row)
+      ? await documentLink(this.storage, params.document)
+      : null;
+    const block = blockOf(row, template);
+    const shown = renderable(template);
     const view = toMessageView({ row, template: shown, documentUrl, mediaUrl, block });
-    const crm = template ? this.crmSent : undefined;
-    const sent = template && crm ? await crm.apply(view, { row, template, documentUrl }) : view;
-    return withMarks(sent, row);
+    return this.crmSent ? this.crmSent.apply(view, { row, template, documentUrl }) : view;
   }
 
   /** A template the old script sent through the relay, as our own template row (display only). */
@@ -60,11 +72,9 @@ export class MessageViews {
 }
 
 /**
- * The header, footer and buttons WhatsApp drew around the body, from the
- * registry
- * row of its key (cached: one read per key, never one per row). Only when the body is the
- * template's
- * own: an imported history row that stored its text renders as before.
+ * The header, footer and buttons WhatsApp drew around the body, from the registry row of its key
+ * (cached: one read per key, never one per row). Only when the body is the template's own: an
+ * imported history row that stored its text renders as before.
  */
 export function blockOf(row: ThreadMessageRow, template: TemplateRow): MessageTemplateBlock | null {
   if (row.body !== null) return null;

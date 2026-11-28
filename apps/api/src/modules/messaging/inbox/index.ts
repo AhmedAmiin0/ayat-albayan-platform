@@ -16,6 +16,7 @@ export {
   type TeacherScope,
   TeacherScopes,
 } from './teacher-threads/teacher-scope';
-export { phoneParam } from './threads/phone-param';
+export { invalidPhone, phoneParam } from './threads/phone-param';
 export { type ThreadListFilter, ThreadsRepo } from './threads/threads.repo';
 export { ThreadMessagesRepo, ThreadReadsRepo } from './threads/store';
+export { recordSend } from './send/send-audit';

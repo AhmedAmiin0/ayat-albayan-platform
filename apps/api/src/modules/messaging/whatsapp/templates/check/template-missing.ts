@@ -4,7 +4,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '@/common/audit/audit.service';
 import { REGISTRY_ENTITY_ID } from '@/modules/messaging/whatsapp/templates/catalog/template.mapper';
 import { TemplatesRepo } from '@/modules/messaging/whatsapp/templates/catalog/templates.repo';
-import { WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
+import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 // The CRM cannot list its templates (docs/19), so a #132001 refusal marks the row missing.
 
@@ -18,7 +18,7 @@ const META_ABSENT = 132001;
 /**
  * A crm send refused because the template (name + language) is not on the CRM's WhatsApp account.
  */
-export function absentOnCrm(error: unknown): error is WaError {
+export function absentOnCrm(error: unknown): boolean {
   if (!(error instanceof WaError) || error.info.crmCode !== 'meta_error') return false;
   return ABSENT.test(`${error.info.details ?? ''} ${error.message}`);
 }
@@ -77,13 +77,8 @@ export class TemplateMissing {
 
   /** Compare-and-set: one write and audit however many fail; only the own WABA name counts. */
   private async mark(m: Absent): Promise<void> {
-    const row = await this.queries.get(m.key);
-    if (row?.status !== 'approved' || row.line !== m.line) return;
-    const own = crmTemplateName(row);
-    if (m.error.info.template !== own) {
-      this.log.warn(`template ${m.key} kept: #132001 for ${m.error.info.template ?? '?'}, not ${own}`);
-      return;
-    }
+    const row = await this.approvedOn(m);
+    if (!row || !this.ownName(row, m)) return;
     const last_error = (m.error.info.details ?? m.error.message).slice(0, ERROR_MAX);
     const patch = { status: 'missing' as const, last_error, last_checked_at: m.now.toISOString() };
     if (!(await this.queries.update(m.key, patch, 'approved'))) return;
@@ -96,5 +91,19 @@ export class TemplateMissing {
       before: { key: m.key, status: 'approved', line: m.line },
       after: { key: m.key, status: 'missing', line: m.line, error: last_error },
     });
+  }
+
+  /** The row while it is approved on the failed send's line; null otherwise. */
+  private async approvedOn(m: Absent): Promise<TemplateRow | null> {
+    const row = await this.queries.get(m.key);
+    return row?.status === 'approved' && row.line === m.line ? row : null;
+  }
+
+  /** A #132001 for another WABA name (an older or newer one) keeps the row. */
+  private ownName(row: TemplateRow, m: Absent): boolean {
+    const own = crmTemplateName(row);
+    if (m.error.info.template === own) return true;
+    this.log.warn(`template ${m.key} kept: #132001 for ${m.error.info.template ?? '?'}, not ${own}`);
+    return false;
   }
 }

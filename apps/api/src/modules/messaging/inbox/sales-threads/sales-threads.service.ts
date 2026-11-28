@@ -1,13 +1,19 @@
-import type { ReopenChoice, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
+import type {
+  ReopenChoice,
+  ThreadDetail,
+  ThreadLesson,
+  ThreadPeople,
+  ThreadView,
+} from '@ab/shared';
 import type { Page } from '@ab/core';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { ReopenPick, ReopenRequest } from '@/modules/messaging/whatsapp';
-import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
+import { MessageViews, ReopenPick, ReopenRequest } from '@/modules/messaging/whatsapp';
 import { ReadReceipts } from '@/modules/messaging/inbox/reads/read-receipts';
 import { InboxSettings, renewalThreshold } from '@/modules/messaging/inbox/inbox.settings';
 import { forSales, salesLessons, salesPeople, visibleToSales, withoutLinks } from './sales-threads';
 import { toThreadView, type ThreadRow } from '@/modules/messaging/inbox/threads/threads.mapper';
 import type { PeopleOf } from '@/modules/messaging/inbox/people/thread-people';
+import type { LessonsOf } from '@/modules/messaging/inbox/threads/thread-lessons';
 import { ThreadsRepo, type ThreadListFilter } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import {
@@ -58,28 +64,37 @@ export class SalesThreadsService {
     return { items: items.map(view), total, page: f.page, pageSize: f.pageSize };
   }
 
-  /** One page, oldest → newest, of any chat; the admin's two parallel stages (reads/thread-page.ts). */
+  /**
+   * One page, oldest → newest, of any chat; the admin's two parallel stages (reads/thread-page.ts).
+   */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     const first = isFirstPage(q);
     const at = await pageRows({ threads: this.queries, messages: this.messages }, q);
     const page = at.rows.slice(0, q.limit).reverse().filter(visibleToSales);
     const [people, lessons, messages, read, reopenUsable] = await Promise.all([
       first ? this.people(at.who) : NO_ONE,
-      first && at.who ? this.queries.lessons(at.who, now).then(salesLessons) : [],
+      first ? this.lessons(at.who, now) : [],
       Promise.all(page.map(async (m) => withoutLinks(await this.views.view(m)))),
       stampRead(this.receipts, { q, page: at, now }),
       this.reopenUsable(),
     ]);
-    const view = at.found ? forSales(toThreadView(at.found, now, { reopenUsable })) : null;
-    const thread = view && this.pick ? await this.pick.thread(view, now) : view;
-    const detail: ThreadDetail = {
-      thread,
-      messages,
-      has_more: at.rows.length > q.limit,
-      lessons,
-      people,
-    };
+    const thread = await this.threadOf(at.found, { now, reopenUsable });
+    const has_more = at.rows.length > q.limit;
+    const detail: ThreadDetail = { thread, messages, has_more, lessons, people };
     return read ? asRead(detail, now) : detail;
+  }
+
+  private async threadOf(
+    found: ThreadRow | null,
+    at: { now: Date; reopenUsable: ReopenChoice | null },
+  ): Promise<ThreadView | null> {
+    const { now, reopenUsable } = at;
+    const view = found ? forSales(toThreadView(found, now, { reopenUsable })) : null;
+    return view && this.pick ? this.pick.thread(view, now) : view;
+  }
+
+  private async lessons(who: LessonsOf | null, now: Date): Promise<ThreadLesson[]> {
+    return who ? salesLessons(await this.queries.lessons(who, now)) : [];
   }
 
   private async reopenUsable(): Promise<ReopenChoice | null> {

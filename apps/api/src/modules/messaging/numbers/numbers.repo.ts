@@ -23,7 +23,9 @@ function conflictOf(error: PostgrestError): never {
   throw new ConflictException({ message: reason });
 }
 
-/** public.wa_numbers (migration 20261023000620): the rows only; credentials are numbers.secrets.ts. */
+/**
+ * public.wa_numbers (migration 20261023000620): the rows only; credentials are numbers.secrets.ts.
+ */
 @Injectable()
 export class NumbersRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

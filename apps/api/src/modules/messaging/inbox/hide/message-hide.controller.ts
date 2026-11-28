@@ -1,13 +1,16 @@
-import { Controller, Delete, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { id, phoneE164 } from '@ab/core';
+import { Controller, Delete, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { phoneParam } from '@/modules/messaging/inbox/threads/phone-param';
+import { ZodParam } from '@/common/http/zod-inputs';
+import { invalidPhone } from '@/modules/messaging/inbox/threads/phone-param';
 import { MessageHideService } from './message-hide.service';
 
-const uuid = new ParseUUIDPipe();
-
-/** Hides for staff only; the message stays on the customer's phone; only admin can show. */
+/**
+ * Hides for staff only; the message stays on the customer's phone; only admin can show.
+ * `:phone` comes last so its 400 invalid_phone wins over a bad `:messageId`.
+ */
 @ApiTags('inbox')
 @ApiBearerAuth()
 @Permissions('inbox.send')
@@ -18,29 +21,20 @@ export class MessageHideController {
   @Post()
   @HttpCode(204)
   async hide(
-    @Param() params: Record<string, string | undefined>,
+    @ZodParam('messageId', id()) messageId: string,
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.hides.hide({ ...(await target(params)), user });
+    await this.hides.hide({ phone, messageId, user });
   }
 
   @Delete()
   @HttpCode(204)
   async unhide(
-    @Param() params: Record<string, string | undefined>,
+    @ZodParam('messageId', id()) messageId: string,
+    @ZodParam('phone', phoneE164, invalidPhone) phone: string,
     @CurrentUser() user: AuthUser,
   ): Promise<void> {
-    await this.hides.unhide({ ...(await target(params)), user });
+    await this.hides.unhide({ phone, messageId, user });
   }
-}
-
-async function target(
-  params: Record<string, string | undefined>,
-): Promise<{ phone: string; messageId: string }> {
-  const phone = phoneParam(params.phone ?? '');
-  const messageId = await uuid.transform(params.messageId ?? '', {
-    type: 'param',
-    data: 'messageId',
-  });
-  return { phone, messageId };
 }

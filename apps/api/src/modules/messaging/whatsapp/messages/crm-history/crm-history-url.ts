@@ -12,15 +12,23 @@ interface CrmHistoryShape {
 
 /**
  * The body as an old-CRM file link, or null: the whole (trimmed) body is ONE https URL in canonical
- * form (no space, userinfo, port, query or fragment; no «..» or encoded slash) under CRM_MEDIA_PREFIX.
- * Only the shape: the host is checked against the setting by allowedCrmUrl before any fetch.
+ * form (no space, userinfo, port, query or fragment; no «..» or encoded slash) under
+ * CRM_MEDIA_PREFIX. Only the shape: the host is checked against the setting by allowedCrmUrl before
+ * any fetch.
  */
 export function crmMediaUrl(body: string | null): URL | null {
   const text = body?.trim() ?? '';
-  if (!text.startsWith('https://') || /[\s\\]|%2e|%2f|%5c/i.test(text)) return null;
-  const url = parsed(text);
-  return url?.href === text && bare(url) && underPrefix(url.pathname) ? url : null;
+  const url = plainHttps(text) ? parsed(text) : null;
+  return url && isCrmLink(url, text) ? url : null;
 }
+
+/** An https link with no space, backslash, or encoded dot, slash or backslash. */
+const plainHttps = (text: string): boolean =>
+  text.startsWith('https://') && !/[\s\\]|%2e|%2f|%5c/i.test(text);
+
+/** Canonical (parsing changes nothing), bare, and a file under CRM_MEDIA_PREFIX. */
+const isCrmLink = (url: URL, text: string): boolean =>
+  url.href === text && bare(url) && underPrefix(url.pathname);
 
 const parsed = (text: string): URL | null => {
   try {
@@ -51,7 +59,10 @@ export const looksCrmHistory = (row: CrmHistoryShape): boolean =>
 export const isCrmHistoryRow = (row: CrmHistoryShape & Pick<MediaMessage, 'media_id'>): boolean =>
   !row.media_id && looksCrmHistory(row);
 
-/** A public DNS name: dotted labels ending in letters (never an IP literal, localhost or a bare name). */
+/**
+ * A public DNS name: dotted labels ending in letters (never an IP literal, localhost or a bare
+ * name).
+ */
 const DNS_HOST = /^(?=.{4,100}$)([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,63}$/;
 
 /**

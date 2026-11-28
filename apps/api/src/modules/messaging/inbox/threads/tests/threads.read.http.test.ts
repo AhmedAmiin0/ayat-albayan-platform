@@ -38,7 +38,11 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
       ['g2', { badge: 'expired', unpaid: false, ring: 'renewal' }],
     ]));
     const items = (await t.call({ method: 'GET', url: '/threads' })).json().items;
-    const tags = items.map((i: { subscribed: boolean; badge: string | null; unpaid: boolean }) => [i.subscribed, i.badge, i.unpaid]);
+    const tags = items.map((i: { subscribed: boolean; badge: string | null; unpaid: boolean }) => [
+      i.subscribed,
+      i.badge,
+      i.unpaid,
+    ]);
     expect(tags).toEqual([[true, 'subscribed', true], [false, 'expired', false], [false, 'none', false], [false, null, false]]);
     expect(items.map((i: { ring: string | null }) => i.ring)).toEqual(['subscribed', 'renewal', null, null]);
     expect(t.queries.familyTags).toHaveBeenCalledWith(['g1', 'g2', 'g3'], expect.any(Number));
@@ -81,7 +85,12 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
   it('H1 pages v_threads with search and unread', async () => {
     const res = await t.call({ method: 'GET', url: '/threads?search=0501234567&unread=true&page=2&pageSize=10' });
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toMatchObject({ total: 1, page: 2, pageSize: 10, items: [{ phone_e164: PHONE, unread_count: 1 }] });
+    expect(res.json()).toMatchObject({
+      total: 1,
+      page: 2,
+      pageSize: 10,
+      items: [{ phone_e164: PHONE, unread_count: 1 }],
+    });
     expect(t.queries.list).toHaveBeenCalledWith({ page: 2, pageSize: 10, search: '0501234567', unread: true });
   });
 

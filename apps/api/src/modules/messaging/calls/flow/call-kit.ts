@@ -1,12 +1,13 @@
 import { nextCall, type CallEvent, type CallStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
-import { ThreadMessagesRepo } from '@/modules/messaging/inbox';
+import { ThreadMessagesRepo, ThreadsRepo } from '@/modules/messaging/inbox';
 import { CALLS_API, type CallsApi } from '@/modules/messaging/calls/kapso/calls-api';
 import { callState, type CallMove, type CallRow } from '@/modules/messaging/calls/store/call-row';
 import { CallsRepo } from '@/modules/messaging/calls/store/calls.repo';
 
-/** Concurrent webhook items on one call: each re-read judges the event again, a few times at most. */
+/**
+ * Concurrent webhook items on one call: each re-read judges the event again, a few times at most.
+ */
 const MAX_ATTEMPTS = 4;
 
 /** Extra columns a move may write beside the machine's patch (who took it, why it failed). */
@@ -27,7 +28,8 @@ export class CallsKit {
 
   /**
    * The row after `event`, or null when the machine ignores it (duplicate, late, wrong side). A
-   * concurrent writer that moved the row first means a re-read and the event is judged again (MAX_ATTEMPTS).
+   * concurrent writer that moved the row first means a re-read and the event is judged again
+   * (MAX_ATTEMPTS).
    */
   async apply(row: CallRow, event: CallEvent, extra: MoveExtra = {}): Promise<CallRow | null> {
     let current: CallRow | null = row;

@@ -3,7 +3,8 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migration 20261024000633 (docs/23 §3 phase 5, docs/23c) read as text: expand only, inert under legacy.
+// Migration 20261024000633 (docs/23 §3 phase 5, docs/23c) read as text: expand only, inert under
+// legacy.
 const dir = MIGRATIONS_DIR;
 const FILE = '20261024000633_numbers_routing.sql';
 const sql = readFileSync(join(dir, FILE), 'utf8');

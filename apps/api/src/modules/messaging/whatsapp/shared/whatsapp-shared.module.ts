@@ -3,6 +3,7 @@ import { IntegrationConfigModule } from '@/common/configuration/integrations/int
 import { NumbersModule } from '@/modules/messaging/numbers';
 import { CodeSend } from '@/modules/messaging/whatsapp/direct/code-send';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
+import { SendGateRepo } from '@/modules/messaging/whatsapp/gate/send-gate.repo';
 import { LiveWhatsappClient } from '@/modules/messaging/whatsapp/live-client';
 import {
   CRM_SENT_PROVIDERS, CrmCopiesRepo, CrmSentText,
@@ -70,7 +71,7 @@ const WINDOW_PROVIDERS = [
     ...[TemplatesRepo, TemplateRegistry, TemplateVerifier, TemplateEditor, TemplateNames],
     ...[TemplateMissing, ...CRM_SENT_PROVIDERS],
     ...[WhatsappSettings, SendGate, SenderRepo, RouteRepo, NumberRoutes, MessageDispatch, CodeSend],
-    ...[PaymentHoldRepo, PaymentHolds, LineOutages, EvolutionPaceRepo],
+    ...[PaymentHoldRepo, PaymentHolds, LineOutages, EvolutionPaceRepo, SendGateRepo],
     ...WINDOW_PROVIDERS,
     ...[MessageWorker, MessageSender, SenderWake],
   ],

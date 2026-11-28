@@ -18,7 +18,9 @@ import type { SecretStatus } from '@/modules/messaging/numbers/config/numbers.se
 export interface PlanInput {
   /** The legacy env (integration overlay on process.env, no numbers). */
   legacy: Env;
-  /** The DB values in use (the integration overlay) and the server env: only their presence is read. */
+  /**
+   * The DB values in use (the integration overlay) and the server env: only their presence is read.
+   */
   db: Readonly<Record<string, string>>;
   env: NodeJS.ProcessEnv;
   rows: readonly NumberRow[];
@@ -38,7 +40,9 @@ interface RowDraft {
   app_id: string | null;
 }
 
-/** The ids of a row draft checked like wa_numbers does (label and provider are never legacy values). */
+/**
+ * The ids of a row draft checked like wa_numbers does (label and provider are never legacy values).
+ */
 const ID_FIELDS = ['phone_number_id', 'waba_id', 'app_id'] as const;
 
 /** Field NAMES of the draft's ids that fail META_ID_RE (the migration's check), in field order. */
@@ -56,7 +60,10 @@ function sourceOf(input: PlanInput, key: IntegrationKey): IntegrationSource {
   return present(input.env[key]) ? 'env' : 'unset';
 }
 
-/** The legacy key a secret is read from: the chat token falls back to the notifications one (as chatEnv). */
+/**
+ * The legacy key a secret is read from: the chat token falls back to the notifications one (as
+ * chatEnv).
+ */
 /** The secrets a legacy line key holds (an Evolution token has no legacy key). */
 type LegacySecret = Extract<NumberSecretName, ImportField>;
 const LEGACY_SECRETS: readonly LegacySecret[] = ['access_token', 'app_secret'];
@@ -67,43 +74,74 @@ function secretKey(input: PlanInput, role: WaLine, name: LegacySecret): Integrat
   return ROLE_KEYS.notifications.access_token;
 }
 
+const plainValue = (secret: boolean, raw: unknown): string | null =>
+  !secret && typeof raw === 'string' ? raw : null;
+
 function fieldView(input: PlanInput, role: WaLine, field: ImportField): ImportFieldView {
   const secret = NUMBER_SECRET_NAMES.some((n) => n === field);
   const key = secret ? secretKey(input, role, field as LegacySecret) : ROLE_KEYS[role][field];
   const raw = input.legacy[key];
-  const value = field === 'provider' ? lineProvider(input.legacy, role) : !secret && typeof raw === 'string' ? raw : null;
+  const value = field === 'provider' ? lineProvider(input.legacy, role) : plainValue(secret, raw);
   return { field, secret, source: sourceOf(input, key), value };
 }
 
-function planRole(input: PlanInput, role: WaLine): RolePlan {
-  const raw = IMPORT_FIELDS.map((f) => fieldView(input, role, f));
-  const phone = lineNumbers(input.legacy)[role];
-  if (!phone) return { role, action: 'unconfigured', number_id: null, fields: raw, secrets_to_copy: [], copies: [], row: null };
+type DraftBase = Pick<RowDraft, 'provider' | 'phone_number_id'>;
+
+function rowDraft(raw: readonly ImportFieldView[], base: DraftBase): RowDraft {
   const value = (f: ImportField) => raw.find((x) => x.field === f)?.value ?? null;
-  const row = { provider: lineProvider(input.legacy, role), phone_number_id: phone, waba_id: value('waba_id'), app_id: value('app_id') };
-  const bad = invalidIds(row);
-  // An invalid value may be a pasted secret: its field is named, its value never shown.
-  const fields = raw.map((f) => (bad.includes(f.field) ? { ...f, value: null } : f));
-  const existing = input.rows.find((r) => r.phone_number_id === phone) ?? null;
-  if (!existing && bad.length > 0) {
-    const not_importable = { reason: 'invalid_id' as const, fields: bad };
-    return { role, action: 'create', number_id: null, fields, secrets_to_copy: [], copies: [], row: null, not_importable };
-  }
+  return { ...base, waba_id: value('waba_id'), app_id: value('app_id') };
+}
+
+const existingOf = (input: PlanInput, phone: string): NumberRow | null =>
+  input.rows.find((r) => r.phone_number_id === phone) ?? null;
+
+/** A new number whose ids fail the migration's check is listed, never created. */
+const cannotImport = (existing: NumberRow | null, bad: readonly ImportField[]): boolean =>
+  !existing && bad.length > 0;
+
+function copiesOf(input: PlanInput, role: WaLine, existing: NumberRow | null): RolePlan['copies'] {
   const have = existing ? (input.status.get(existing.id) ?? {}) : {};
-  const copies = LEGACY_SECRETS.flatMap((name) => {
+  return LEGACY_SECRETS.flatMap((name) => {
     const key = secretKey(input, role, name);
     const source = sourceOf(input, key);
     return source === 'unset' || have[name] !== undefined ? [] : [{ name, key, source }];
   });
-  return {
-    role,
-    action: existing ? 'exists' : 'create',
-    number_id: existing?.id ?? null,
-    fields,
-    secrets_to_copy: copies.map((c) => c.name),
-    copies,
-    row,
-  };
+}
+
+interface Planned {
+  role: WaLine;
+  existing: NumberRow | null;
+  fields: ImportFieldView[];
+  copies: RolePlan['copies'];
+  row: RowDraft;
+}
+
+const planned = ({ role, existing, fields, copies, row }: Planned): RolePlan => ({
+  role,
+  action: existing ? 'exists' : 'create',
+  number_id: existing?.id ?? null,
+  fields,
+  secrets_to_copy: copies.map((c) => c.name),
+  copies,
+  row,
+});
+
+function planRole(input: PlanInput, role: WaLine): RolePlan {
+  const raw = IMPORT_FIELDS.map((f) => fieldView(input, role, f));
+  const phone = lineNumbers(input.legacy)[role];
+  if (!phone) {
+    return { role, action: 'unconfigured', number_id: null, fields: raw, secrets_to_copy: [], copies: [], row: null };
+  }
+  const row = rowDraft(raw, { provider: lineProvider(input.legacy, role), phone_number_id: phone });
+  const bad = invalidIds(row);
+  // An invalid value may be a pasted secret: its field is named, its value never shown.
+  const fields = raw.map((f) => (bad.includes(f.field) ? { ...f, value: null } : f));
+  const existing = existingOf(input, phone);
+  if (cannotImport(existing, bad)) {
+    const not_importable = { reason: 'invalid_id' as const, fields: bad };
+    return { role, action: 'create', number_id: null, fields, secrets_to_copy: [], copies: [], row: null, not_importable };
+  }
+  return planned({ role, existing, fields, copies: copiesOf(input, role, existing), row });
 }
 
 export const planAll = (input: PlanInput): RolePlan[] =>

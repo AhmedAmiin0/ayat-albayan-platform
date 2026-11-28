@@ -5,7 +5,8 @@ import { N2, overlayNum, THREE } from '@/modules/messaging/whatsapp/numbers/numb
 import type { RouteRepo } from '@/modules/messaging/whatsapp/numbers/route.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// One module-mode pass's routing input (docs/23c); a failed rules read fails the pass (nothing sends).
+// One module-mode pass's routing input (docs/23c); a failed rules read fails the pass (nothing
+// sends).
 
 const queries = () => ({
   approvals: vi.fn(async () => new Map()),

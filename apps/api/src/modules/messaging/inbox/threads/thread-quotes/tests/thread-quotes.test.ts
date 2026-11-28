@@ -1,7 +1,14 @@
 import { QUOTE_BODY_MAX, UNAVAILABLE_QUOTE, type MessageView } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '@/common/db/db.module';
-import { quoteOf, sameNumber, ThreadQuotes, withQuotes, type QuotedRow } from '@/modules/messaging/inbox/threads/thread-quotes';
+import {
+  quoteOf,
+  sameNumber,
+  ThreadQuotes,
+  ThreadQuotesRepo,
+  withQuotes,
+  type QuotedRow,
+} from '@/modules/messaging/inbox/threads/thread-quotes';
 
 const row = (over: Partial<QuotedRow> = {}): QuotedRow => ({
   id: 'q1', direction: 'inbound', body: 'السلام عليكم', media_mime: null, template_key: null, sender: null, ...over,
@@ -63,20 +70,20 @@ describe('withQuotes', () => {
 describe('ThreadQuotes', () => {
   it('target: the quoted id and wamid, read by id AND phone', async () => {
     const f = fakeDb({ data: { id: 'q1', wa_message_id: 'wamid.Q' }, error: null });
-    await expect(new ThreadQuotes(f.db).target('+966501234567', 'q1')).resolves.toEqual({ reply_to_message_id: 'q1', reply_to_wa_id: 'wamid.Q' });
+    await expect(new ThreadQuotes(new ThreadQuotesRepo(f.db)).target('+966501234567', 'q1')).resolves.toEqual({ reply_to_message_id: 'q1', reply_to_wa_id: 'wamid.Q' });
     expect(f.calls).toContainEqual(['eq', 'phone_e164', '+966501234567']);
   });
 
   it('target: no wamid for Meta when the reply leaves from another line or number (the quote stays ours)', async () => {
     const data = { id: 'q1', wa_message_id: 'wamid.Q', line: 'notifications', number_id: null };
-    const q = new ThreadQuotes(fakeDb({ data, error: null }).db);
+    const q = new ThreadQuotes(new ThreadQuotesRepo(fakeDb({ data, error: null }).db));
     await expect(q.target('+966501234567', 'q1', { line: 'chat' })).resolves.toEqual({ reply_to_message_id: 'q1', reply_to_wa_id: null });
     await expect(q.target('+966501234567', 'q1', { line: 'notifications' })).resolves.toMatchObject({ reply_to_wa_id: 'wamid.Q' });
   });
 
   it('target: 400 reply_not_in_thread for no row (another chat) or no wamid', async () => {
     for (const data of [null, { id: 'q1', wa_message_id: null }]) {
-      await expect(new ThreadQuotes(fakeDb({ data, error: null }).db).target('+966501234567', 'q1')).rejects.toMatchObject({
+      await expect(new ThreadQuotes(new ThreadQuotesRepo(fakeDb({ data, error: null }).db)).target('+966501234567', 'q1')).rejects.toMatchObject({
         response: { code: 'reply_not_in_thread' },
         status: 400,
       });
@@ -86,14 +93,14 @@ describe('ThreadQuotes', () => {
   it('attach: no read when nothing on the page answers a row we hold; the unknown wamid is still marked', async () => {
     const f = fakeDb({ data: [], error: null });
     const views = [{ id: 'a' }, { id: 'b', reply_to_wa_id: 'wamid.N' }] as MessageView[];
-    const out = await new ThreadQuotes(f.db).attach(views, '+966501234567');
+    const out = await new ThreadQuotes(new ThreadQuotesRepo(f.db)).attach(views, '+966501234567');
     expect(f.from).not.toHaveBeenCalled();
     expect(out.map((v) => v.reply_to)).toEqual([undefined, UNAVAILABLE_QUOTE]);
   });
 
   it('attach: one read of the quoted ids in this chat', async () => {
     const f = fakeDb({ data: [row()], error: null });
-    const out = await new ThreadQuotes(f.db).attach([{ id: 'a', reply_to_message_id: 'q1' } as MessageView], '+966501234567');
+    const out = await new ThreadQuotes(new ThreadQuotesRepo(f.db)).attach([{ id: 'a', reply_to_message_id: 'q1' } as MessageView], '+966501234567');
     expect(f.calls).toContainEqual(['in', 'id', ['q1']]);
     expect(out[0]?.reply_to).toMatchObject({ id: 'q1', body: 'السلام عليكم' });
   });

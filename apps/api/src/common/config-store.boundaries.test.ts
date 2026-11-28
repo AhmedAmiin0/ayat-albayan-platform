@@ -49,7 +49,8 @@ const TABLE_ACCESS_ALLOWED = [
   'common/settings/settings-meta.repo.ts', // GET /config/meta
   'common/configuration/custom-config/custom-config.service.ts', // until phase 5 folds custom_config in
   'modules/platform/google-sync/google-settings.ts', // fresh Google read + PUT /admin/google/settings
-  'modules/messaging/whatsapp/whatsapp.settings.ts', // the send gate's uncached primary-key read (docs/26 §5 26-P4), never cached
+  // The send gate's uncached primary-key read (docs/26 §5 26-P4), never cached.
+  'modules/messaging/whatsapp/gate/send-gate.repo.ts',
 ];
 
 describe('config-store boundaries (docs/26 §2e)', () => {

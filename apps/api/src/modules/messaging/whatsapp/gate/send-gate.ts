@@ -1,26 +1,20 @@
 import type { SendGateView } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
-import { DB, type Db } from '@/common/db/db.module';
-import {
-  allowedRecipients,
-  loadEnv,
-  sendingAllowed,
-  whatsappEnv,
-  type Env,
-} from '@/config/env/env';
+import { Injectable } from '@nestjs/common';
+import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv, type Env } from '@/config/env/env';
 import { WhatsappSettings } from '@/modules/messaging/whatsapp/whatsapp.settings';
+import { SendGateRepo } from './send-gate.repo';
 
 /**
  * The one send gate (docs/12 §3.1): WhatsApp configured and the admin's kill switch
- * (settings.messaging_enabled, fail-closed: only a stored true). No env fuse (docs/23 owner answer 2).
- * Closed → rows stay queued; nothing fails, nothing is lost. B2 asks it before an immediate send to
- * tell the admin «inbox.messagingOff».
+ * (settings.messaging_enabled, fail-closed: only a stored true). No env fuse (docs/23 owner answer
+ * 2). Closed → rows stay queued; nothing fails, nothing is lost. B2 asks it before an immediate
+ * send to tell the admin «inbox.messagingOff».
  */
 @Injectable()
 export class SendGate {
   constructor(
     private readonly settings: WhatsappSettings,
-    @Inject(DB) private readonly db: Db,
+    private readonly repo: SendGateRepo,
   ) {}
 
   /** Read per call: the integration config may change at runtime. */
@@ -35,7 +29,8 @@ export class SendGate {
 
   /**
    * Both switches from ONE uncached settings read (the sender asks before every row): open() and
-   * automaticOn() together, so the per-row cost is one round trip instead of two. Closed config = no read.
+   * automaticOn() together, so the per-row cost is one round trip instead of two. Closed config =
+   * no read.
    */
   async switches(): Promise<{ open: boolean; automaticOn: boolean }> {
     if (!sendingAllowed(this.env, true)) return { open: false, automaticOn: false };
@@ -46,7 +41,10 @@ export class SendGate {
     };
   }
 
-  /** settings.auto_messages_enabled: job-made reminders, follow-ups and renewals go out only when ON. */
+  /**
+   * settings.auto_messages_enabled: job-made reminders, follow-ups and renewals go out only when
+   * ON.
+   */
   async automaticOn(): Promise<boolean> {
     return (await this.settings.read()).auto_messages_enabled;
   }
@@ -56,24 +54,14 @@ export class SendGate {
    * `restricted` only when WA_ALLOWED_RECIPIENTS is set (docs/12 §13.5): absent otherwise.
    */
   async view(): Promise<SendGateView> {
-    const [state, queued] = await Promise.all([this.state(), this.queuedCount()]);
+    const [state, queued] = await Promise.all([this.state(), this.repo.queuedCount()]);
     return { ...state, queued, ...(allowedRecipients(this.env) ? { restricted: true } : {}) };
   }
 
   /** Which gate is closed, for the admin: WhatsApp config, or their own switch. */
   async state(): Promise<Omit<SendGateView, 'queued'>> {
     if (!whatsappEnv(this.env)) return { open: false, reason: 'not_configured' };
-    const on = (await this.settings.read()).messaging_enabled;
+    const on =  (await this.settings.read()).messaging_enabled;
     return on ? { open: true, reason: null } : { open: false, reason: 'switch_off' };
-  }
-
-  private async queuedCount(): Promise<number> {
-    const { count, error } = await this.db
-      .from('messages')
-      .select('id', { count: 'exact', head: true })
-      .eq('direction', 'outbound')
-      .eq('status', 'queued');
-    if (error) throw new Error(`queue count failed: ${error.message}`);
-    return count ?? 0;
   }
 }

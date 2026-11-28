@@ -47,22 +47,29 @@ describe('paths', () => {
   });
 });
 
+const ROWS = [
+  row({ n: 1, position: 0 }),
+  row({ n: 2, position: 0, title: 'أ' }),
+  row({ n: 3, position: 5 }),
+];
+const idAt = (i: number): string => ROWS[i]?.id ?? '';
+
 describe('movedOrder', () => {
-  const rows = [row({ n: 1, position: 0 }), row({ n: 2, position: 0, title: 'أ' }), row({ n: 3, position: 5 })];
+  const rows = ROWS;
   it('renumbers the list 0…n−1 with the row swapped, listing only changed rows', () => {
-    expect(movedOrder({ rows, id: rows[2]?.id ?? '', direction: 'up' }).map((m) => m.position)).toEqual([1, 2]);
-    const ids = movedOrder({ rows, id: rows[1]?.id ?? '', direction: 'down' });
+    expect(movedOrder({ rows, id: idAt(2), direction: 'up' }).map((m) => m.position)).toEqual([1, 2]);
+    const ids = movedOrder({ rows, id: idAt(1), direction: 'down' });
     expect(ids).toEqual(
       [
-        { id: rows[0]?.id, position: 0 },
-        { id: rows[1]?.id, position: 1 },
-        { id: rows[2]?.id, position: 2 },
+        { id: idAt(0), position: 0 },
+        { id: idAt(1), position: 1 },
+        { id: idAt(2), position: 2 },
       ].filter((m) => m.position !== 0),
     );
   });
 
   it('does nothing at either end or for an unknown id', () => {
-    expect(movedOrder({ rows, id: rows[1]?.id ?? '', direction: 'up' })).toEqual([]);
+    expect(movedOrder({ rows, id: idAt(1), direction: 'up' })).toEqual([]);
     expect(movedOrder({ rows, id: 'nope', direction: 'down' })).toEqual([]);
   });
 });

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Headers, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
-import { relayError } from './relay.errors';
+import { invalidRequest } from './relay.errors';
 import { RelayLimit } from './relay.limit';
 import { relayRequestSchema } from './relay.schema';
 import { RelayService, type RelaySent } from './relay.service';
@@ -13,16 +13,6 @@ const ME = {
   account: { name: 'Ayat Al-Bayan platform relay' },
   key: { scopes: ['messages:send'] },
 };
-
-/** The first zod issue as the CRM would word it: «<path>: <message>». */
-function invalid(issues: readonly { path: PropertyKey[]; message: string }[]) {
-  const first = issues[0];
-  const where = first?.path.map(String).join('.');
-  const message = where
-    ? `${where}: ${first?.message ?? ''}`
-    : (first?.message ?? 'invalid request');
-  return relayError({ status: 422, code: 'invalid_request', message });
-}
 
 /**
  * The CRM-compatible relay for the old Apps Script (docs/19 «script relay»). Public like
@@ -50,7 +40,7 @@ export class RelayController {
   ): Promise<{ data: RelaySent }> {
     const line = await this.relay.authorize(auth);
     const parsed = relayRequestSchema.safeParse(body);
-    if (!parsed.success) throw invalid(parsed.error.issues);
+    if (!parsed.success) throw invalidRequest(parsed.error.issues);
     return { data: await this.relay.send(line, parsed.data) };
   }
 }

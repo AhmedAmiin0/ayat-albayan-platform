@@ -1,32 +1,28 @@
 import type { Json } from '@ab/db';
 import { chatMarkerOf, markerPayload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { LeadsService } from '@/modules/sales/leads/leads.service';
-import { RatingStore } from '@/modules/teaching/lesson-rating/rating.store';
-import type { RatingTap } from '@/modules/teaching/lesson-rating/rating.rows';
+import { z } from 'zod';
+import { LeadsService } from '@/modules/sales/leads';
+import { RatingStore, type RatingTap } from '@/modules/teaching/lesson-rating';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
-import { inboundRow, orderedAt, type RowInput } from './webhook.inbound';
-import { WebhookRepo, type Contact } from '@/modules/messaging/webhook/shared/webhook.repo';
+import { inboundRow, orderedAt } from './webhook.inbound';
+import type { LeadLink, RowInput, Sender } from './inbound.types';
+import { WebhookRepo } from '@/modules/messaging/webhook/shared/webhook.repo';
+import type { Contact } from '@/modules/messaging/webhook/shared/webhook.types';
 import { orFallback } from '@/common/infra/errors';
 
-export interface LeadLink {
-  id: string | null;
-  /** The lead this message created (first message from an unknown number). */
-  created: string | null;
-  /** Follow-ups already sent; a reply starts the cadence over. */
-  stage: number;
-  /** The lead's assistant (assigned_to, after auto-assign); null for a guardian, teacher or applicant. */
-  owner: string | null;
-}
 
 const NOBODY: Contact = { guardian: null, teacher: null, lead: null };
 
-const asObject = (v: unknown): object => (typeof v === 'object' && v !== null ? v : {});
+const payloadSchema = z.record(z.string(), z.unknown());
 
-export interface Sender {
-  who: Contact;
-  lead: LeadLink;
-}
+/** The lead identify() found, as it is (no upsert): its id and follow-up stage. */
+const knownLead = (who: Contact): LeadLink => ({
+  id: who.lead?.id ?? null,
+  created: null,
+  stage: who.lead?.follow_up_stage ?? 0,
+  owner: null,
+});
 
 /** Who wrote (guardian / teacher / lead, R-LEAD-01), the stored inbound row and a rating tap. */
 @Injectable()
@@ -45,15 +41,9 @@ export class InboundStore {
   async sender(input: { m: InboundEvent; phone: string; at?: Date }): Promise<Sender> {
     const { m, phone, at = m.at } = input;
     const who = await this.queries.identify(phone);
-    const known = {
-      id: who.lead?.id ?? null,
-      created: null,
-      stage: who.lead?.follow_up_stage ?? 0,
-      owner: null,
-    };
-    if (who.guardian || who.teacher) return { who, lead: known };
+    if (who.guardian || who.teacher) return { who, lead: knownLead(who) };
     const row = await this.leads.upsertByPhone({ phone, name: m.name, at });
-    if (!row) return { who, lead: known };
+    if (!row) return { who, lead: knownLead(who) };
     const created = who.lead ? null : row.id;
     return {
       who,
@@ -83,8 +73,8 @@ export class InboundStore {
   }
 
   /**
-   * A message from one of the academy's own numbers (OwnNumbers): the row only, already read, with no
-   * lead, guardian or lesson; false = a replay. Never touches a lead (no follow-up reset).
+   * A message from one of the academy's own numbers (OwnNumbers): the row only, already read, with
+   * no lead, guardian or lesson; false = a replay. Never touches a lead (no follow-up reset).
    */
   saveOwn(m: InboundEvent, phone: string): Promise<boolean> {
     return this.save({ m, phone, who: NOBODY, leadId: null, lessonId: null, stage: 0, read: true });
@@ -96,7 +86,10 @@ export class InboundStore {
    * replay.
    */
   saveMarker(m: InboundEvent, phone: string): Promise<boolean> {
-    const marker = chatMarkerOf({ ...asObject(m.payload), context: { id: m.replyTo } });
+    const marker = chatMarkerOf({
+      ...(payloadSchema.safeParse(m.payload).data ?? {}),
+      context: { id: m.replyTo },
+    });
     if (!marker) return Promise.resolve(false);
     const row = {
       ...m,
@@ -116,12 +109,17 @@ export class InboundStore {
     });
   }
 
-  /** Legacy mode: the wa_numbers row of the receiving phone_number_id, as the chat import stamps it. Never blocks the row. */
+  /**
+   * Legacy mode: the wa_numbers row of the receiving phone_number_id, as the chat import stamps it.
+   * Never blocks the row.
+   */
   private async numberOf(m: InboundEvent): Promise<string | null> {
     return m.phoneNumberId ? orFallback(this.queries.numberIdFor(m.phoneNumberId), null, 'receiving number read') : null;
   }
 
-  /** A guardian's lesson_rating tap on lesson_feedback (migration 195); runs only for a new wamid. */
+  /**
+   * A guardian's lesson_rating tap on lesson_feedback (migration 195); runs only for a new wamid.
+   */
   async rate(tap: RatingTap): Promise<void> {
     await this.ratings.record(tap);
   }

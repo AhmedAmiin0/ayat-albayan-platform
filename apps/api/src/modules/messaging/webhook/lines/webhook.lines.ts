@@ -41,9 +41,10 @@ export function where(at: Receiving): Receiving {
 }
 
 /**
- * Module mode: ANY number row, enabled or not («off = no sends, inbound still logged»), stamps its id and
- * purpose; a change with no id, or any change while no number row exists (as acceptsNumber does with no
- * line: Meta never retries a 200, so nothing is dropped), is kept unstamped; an unknown id → null (ignored).
+ * Module mode: ANY number row, enabled or not («off = no sends, inbound still logged»), stamps its
+ * id and purpose; a change with no id, or any change while no number row exists (as acceptsNumber
+ * does with no line: Meta never retries a 200, so nothing is dropped), is kept unstamped; an
+ * unknown id → null (ignored).
  */
 export function receivingNumber(
   numbers: readonly ReceivingNumber[],
@@ -83,6 +84,11 @@ export interface ReceiveOptions {
   calls?: ReceivingNumber | null;
 }
 
+function ignored(number: string | undefined, ctx: ReceiveOptions): null {
+  if (number) ctx.onIgnored?.(number);
+  return null;
+}
+
 /** Where a change for `number` came in; null = ignored (reported via onIgnored). */
 export function receiving(number: string | undefined, ctx: ReceiveOptions): Receiving | null {
   const numbers = ctx.numbers ?? {};
@@ -90,9 +96,6 @@ export function receiving(number: string | undefined, ctx: ReceiveOptions): Rece
     callsReceiving(ctx.calls, number) ??
     (acceptsNumber(numbers, number) ? { line: lineFor(numbers, number) } : null);
   const at = ctx.overlay ? receivingNumber(ctx.overlay, number) : legacy();
-  if (!at) {
-    if (number) ctx.onIgnored?.(number);
-    return null;
-  }
+  if (!at) return ignored(number, ctx);
   return number ? { ...at, phoneNumberId: number } : at;
 }

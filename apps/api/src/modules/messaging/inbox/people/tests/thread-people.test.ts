@@ -3,7 +3,7 @@ import { fakeDb } from '@/common/db/testing/fake-db';
 import type { BalanceRepo } from '@/modules/finance/subscriptions/money/balance.repo';
 import type { PackagesService } from '@/modules/finance/subscriptions/money/packages.service';
 import { threadRow } from '@/modules/messaging/inbox/inbox.fakes';
-import { familyTagsOf, threadPeople } from '@/modules/messaging/inbox/people/thread-people';
+import { familyTagsOf, threadPeople } from '@/modules/messaging/inbox/people/thread-people.repo';
 
 function deps(results: Parameters<typeof fakeDb>[0]) {
   const { db, calls, argsOf } = fakeDb(results);

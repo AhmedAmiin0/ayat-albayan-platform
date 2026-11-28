@@ -2,8 +2,11 @@ import { FOLLOW_UP_STATUSES, type FollowUpNote } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { OwnNumbers } from '@/modules/messaging/numbers';
-import type { QueuedMessage } from '@/modules/messaging/reminders/queued-row';
-import { approvedTemplates, queueMessages } from '@/modules/messaging/reminders/reminders.repo';
+import {
+  approvedTemplates,
+  queueMessages,
+  type QueuedMessage,
+} from '@/modules/messaging/reminders';
 import { readAll } from '@/common/db/read-all';
 import { wakeOn } from '@/common/jobs';
 import { done, maybe, rows } from '@/common/db/errors';
@@ -34,7 +37,10 @@ export class FollowUpsRepo {
     @Optional() private readonly own?: OwnNumbers,
   ) {}
 
-  /** Leads in a follow-up status, not paused, with a follow-up left (stage < stages); never our own numbers. */
+  /**
+   * Leads in a follow-up status, not paused, with a follow-up left (stage < stages); never our own
+   * numbers.
+   */
   async candidates(stages: number): Promise<FollowUpLeadRow[]> {
     const own = this.own ? await this.own.notIn() : null;
     return readAll((from, to) => {
@@ -79,7 +85,9 @@ export class FollowUpsRepo {
     done(await this.db.from('messages').delete().eq('id', id).eq('status', 'failed'));
   }
 
-  /** Keeps next_follow_up_at (the computed due time) and follow_up_note current for the lead panel. */
+  /**
+   * Keeps next_follow_up_at (the computed due time) and follow_up_note current for the lead panel.
+   */
   async sync(id: string, state: LeadFollowUpState): Promise<void> {
     done(await this.db.from('leads').update(state).eq('id', id));
   }

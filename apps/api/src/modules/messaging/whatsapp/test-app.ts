@@ -1,5 +1,6 @@
 // HTTP test harness for the WhatsApp routes (test-only, excluded from the build). Real controllers,
-// guards, registry and services; the DB-facing queries, the client, storage and the sender are mocks.
+// guards, registry and services; the DB-facing queries, the client, storage and the sender are
+// mocks.
 import type { AuthUser } from '@/common/auth/verify-token';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -25,7 +26,9 @@ export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', ema
 const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
 const SALES: AuthUser = { id: 's0000000-0000-4000-8000-000000000003', email: null, role: 'sales' };
 const ASSISTANT: AuthUser = { id: 's0000000-0000-4000-8000-000000000004', email: null, role: 'assistant' };
-/** A custom role (base sales) for the dynamic-roles cases; its grants come from the test's resolver. */
+/**
+ * A custom role (base sales) for the dynamic-roles cases; its grants come from the test's resolver.
+ */
 const CUSTOM: AuthUser = { id: 's0000000-0000-4000-8000-000000000005', email: null, role: 'sales' };
 const USERS: Record<string, AuthUser> = {
   admin: ADMIN,
@@ -82,7 +85,8 @@ function mocks() {
 
 export async function whatsappApp(resolver: PermissionResolver = systemResolver) {
   const m = mocks();
-  // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between tests.
+  // MessageViews reads TemplatesQueries.cached: the test's `get` mock, never a copy kept between
+  // tests.
   const templates = { ...m.templates, cached: (key: string) => m.templates.get(key) };
   const mod = await Test.createTestingModule({ imports: [messagingRoot(WhatsappModule)] })
     .overrideProvider(PERMISSION_RESOLVER)

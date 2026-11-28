@@ -14,8 +14,9 @@ const PHONE = '+966552147730';
 const M1 = 'b1111111-1111-4111-8111-111111111111';
 const URL = `/threads/${encodeURIComponent(PHONE)}/messages/${M1}/file`;
 const USERS = { admin: ADMIN, sales: SALES, teacher: TEACHER, guardian: { id: 'g9', email: null, role: 'guardian' as const } };
+const TOKENS = new Map(Object.entries(USERS));
 const verify: TokenVerifier = async (token) => {
-  const user = USERS[token as keyof typeof USERS];
+  const user = TOKENS.get(token);
   if (!user) throw new Error('bad token');
   return user;
 };
@@ -42,7 +43,8 @@ describe('W6 GET /threads/:phone/messages/:id/file: bubble media for admin and s
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [messagingRoot(InboxModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(InboundMediaRepo).useValue(queries)
       .overrideProvider(TeacherThreadsRepo).useValue(teachers)
       .overrideProvider(WHATSAPP_CLIENT).useValue(client)
@@ -116,7 +118,8 @@ describe('W6 GET /threads/:phone/messages/:id/file: bubble media for admin and s
   });
 
   it('expired media is 410 media_expired', async () => {
-    queries.message.mockResolvedValue(row({ created_at: new Date(Date.now() - 40 * 86_400_000).toISOString() }));
+    const old = new Date(Date.now() - 40 * 86_400_000).toISOString();
+    queries.message.mockResolvedValue(row({ created_at: old }));
     const res = await call('sales');
     expect([res.statusCode, res.json().code]).toEqual([410, 'media_expired']);
     expect(client.getMedia).not.toHaveBeenCalled();

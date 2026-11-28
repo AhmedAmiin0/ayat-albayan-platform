@@ -1,19 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pgError } from '@/common/db/errors';
-
-/**
- * The totals of a finished copy (its one audit row). `remaining`: CRM file links on ANY host still
- * without a copy or a failure row (the batch picks only crm_media_host's); the old bucket goes private at 0.
- */
-export interface CrmCopyCounts {
-  copied: number;
-  failed: number;
-  skipped: number;
-  remaining: number;
-}
-
-const count = (v: unknown): number => (typeof v === 'number' ? v : 0);
+import { crmCopyCountsSchema, type CrmCopyCounts } from './crm-media-copy.schemas';
 
 /** CrmMediaCopyJob's three statements (migrations 891 and 920; service role). */
 @Injectable()
@@ -48,12 +36,6 @@ export class CrmMediaCopyRepo {
   async counts(host: string): Promise<CrmCopyCounts> {
     const { data, error } = await this.db.rpc('crm_media_copy_counts', { p_host: host });
     if (error) throw pgError(error);
-    const row = data && typeof data === 'object' && !Array.isArray(data) ? data : {};
-    return {
-      copied: count(row.copied),
-      failed: count(row.failed),
-      skipped: count(row.skipped),
-      remaining: count(row.remaining),
-    };
+    return crmCopyCountsSchema.parse(data);
   }
 }

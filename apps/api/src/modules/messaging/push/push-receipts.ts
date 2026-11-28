@@ -39,9 +39,13 @@ const TOKEN = /Expo(?:nent)?PushToken\[[\w-]+\]/;
  */
 export function deadToken(receipt: ExpoReceipt, sentTo?: string): string | null {
   if (receipt.status !== 'error' || receipt.details?.error !== 'DeviceNotRegistered') return null;
-  const named = receipt.details.expoPushToken ?? TOKEN.exec(receipt.message ?? '')?.[0];
-  return sentTo ?? named ?? null;
+  return sentTo ?? namedToken(receipt) ?? null;
 }
+
+type ErrorReceipt = Extract<ExpoReceipt, { status: 'error' }>;
+
+const namedToken = (receipt: ErrorReceipt): string | undefined =>
+  receipt.details?.expoPushToken ?? TOKEN.exec(receipt.message ?? '')?.[0];
 
 interface ReceiptOutcome {
   /** Tickets Expo has no receipt for yet: checked again next run (receipts live 24 h). */
@@ -52,6 +56,13 @@ interface ReceiptOutcome {
   deadTokens: string[];
   /** The first receipt error, or null. */
   error: string | null;
+}
+
+const errorOf = (receipt: ErrorReceipt): string =>
+  receipt.message ?? receipt.details?.error ?? 'error';
+
+function addDead(outcome: ReceiptOutcome, token: string | null): void {
+  if (token && !outcome.deadTokens.includes(token)) outcome.deadTokens.push(token);
 }
 
 const only = (sentTo: Readonly<Record<string, string>>, ids: readonly string[]) =>
@@ -74,9 +85,8 @@ export function readReceipts(
       continue;
     }
     if (receipt.status === 'ok') continue;
-    outcome.error ??= receipt.message ?? receipt.details?.error ?? 'error';
-    const token = deadToken(receipt, sentTo[id]);
-    if (token && !outcome.deadTokens.includes(token)) outcome.deadTokens.push(token);
+    outcome.error ??= errorOf(receipt);
+    addDead(outcome, deadToken(receipt, sentTo[id]));
   }
   outcome.pendingTokens = only(sentTo, outcome.pending);
   return outcome;

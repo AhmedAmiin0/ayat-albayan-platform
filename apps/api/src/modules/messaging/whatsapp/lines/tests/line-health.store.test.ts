@@ -2,6 +2,7 @@ import type { LineCheckView } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fakeDb } from '@/common/db/testing/fake-db';
 import { currentRows, displayE164, healthRows, LineHealthStore } from '@/modules/messaging/whatsapp/lines/line-health.store';
+import { LineHealthRepo } from '@/modules/messaging/whatsapp/lines/line-health.repo';
 
 const view = (patch: Partial<LineCheckView>): LineCheckView => ({
   line: 'notifications',
@@ -53,7 +54,7 @@ describe('healthRows: only a configured line that answered with a number', () =>
 describe('LineHealthStore', () => {
   it('upserts by line; nothing to keep → no write', async () => {
     const { db, calls, argsOf } = fakeDb({ wa_line_health: [{}] });
-    const store = new LineHealthStore(db);
+    const store = new LineHealthStore(new LineHealthRepo(db));
     await store.save([view({ configured: false })]);
     expect(calls).toEqual([]);
     await store.save([view({})]);
@@ -62,7 +63,8 @@ describe('LineHealthStore', () => {
 
   it('a failed write is logged, never thrown (the check still answers)', async () => {
     const { db } = fakeDb({ wa_line_health: [{ error: { message: 'down' } }] });
-    await expect(new LineHealthStore(db).save([view({})])).resolves.toBeUndefined();
+    const store = new LineHealthStore(new LineHealthRepo(db));
+    await expect(store.save([view({})])).resolves.toBeUndefined();
   });
 
   afterEach(() => vi.unstubAllEnvs());
@@ -71,7 +73,7 @@ describe('LineHealthStore', () => {
     vi.stubEnv('WA_CHAT_PHONE_NUMBER_ID', 'chat-1');
     const row = { line: 'chat', display_phone_e164: '+201001234567', verified_name: null, checked_at: '2026-10-22T08:00:00Z' };
     const { db } = fakeDb({ wa_line_health: [{ data: [{ ...row, phone_number_id: 'chat-1' }] }, { error: { message: 'x' } }] });
-    const store = new LineHealthStore(db);
+    const store = new LineHealthStore(new LineHealthRepo(db));
     await expect(store.all()).resolves.toEqual([row]);
     await expect(store.all()).rejects.toThrow('line health read failed');
   });

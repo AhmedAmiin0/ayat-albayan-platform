@@ -3,15 +3,14 @@ import { recipientAllowed, type GraphEnv } from '@/config/env/env';
 import { z } from 'zod';
 import type { Http } from '@/common/infra/http/http.types';
 import { graphHttp, graphSend, type GraphConn } from './drivers/meta/graph';
-import { fetchMedia, templateEditPath } from './drivers/kapso/kapso';
+import { fetchMedia } from './drivers/kapso/kapso';
 import type { CrmBody } from './drivers/crm/crm-body';
 import { sentSchema, submitSchema } from './drivers/meta/meta-shapes';
-import { editMetaTemplate, listTemplates } from './drivers/meta/meta-templates';
+import { editMetaTemplate, listTemplates, submitRequest } from './drivers/meta/meta-templates';
 import { resumableUpload } from './drivers/meta/meta-upload';
 import { relayGraphBody } from './drivers/waba/waba-graph';
 import { sendGraphTemplate } from './drivers/waba/waba-send';
 import { callPermissionMessage } from './messages/wa-call-permission';
-import { submitPayload } from './messages/submit';
 import { mediaMessage, readReceipt, textMessage, type GraphBody } from './messages/wa-components';
 import { reactionMessage } from './drivers/meta/meta-reaction';
 import { capsOf } from './drivers/driver-caps';
@@ -40,7 +39,8 @@ export class HttpWhatsappClient implements WhatsappClient {
   private readonly allowed: readonly string[] | null;
 
   constructor(env: GraphEnv | null, opts: ClientOpts = {}) {
-    this.conn = env ? { env, fetch: opts.fetch ?? fetch, timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS } : null;
+    const seam = opts.fetch ? { fetch: opts.fetch } : {};
+    this.conn = env ? { env, ...seam, timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS } : null;
     this.allowed = opts.allowed ?? null;
   }
 
@@ -48,7 +48,9 @@ export class HttpWhatsappClient implements WhatsappClient {
     return this.conn !== null;
   }
 
-  /** The row's WABA template (the crm driver's too), or the old report's two sends (waba-send.ts). */
+  /**
+   * The row's WABA template (the crm driver's too), or the old report's two sends (waba-send.ts).
+   */
   sendTemplate(input: TemplateSend): Promise<WaSent> {
     const post = (to: string, build: () => GraphBody) => this.send(to, build);
     return sendGraphTemplate(input, { post, document: (d) => this.sendDocument(d) });
@@ -86,18 +88,13 @@ export class HttpWhatsappClient implements WhatsappClient {
     return listTemplates(env, http);
   }
 
-  /**
-   * Creates the template (status PENDING). A rejected one Meta already knows is edited in place
-   * (templateEditPath): creating it again would be a duplicate name.
-   */
-  async submitTemplate(template: TemplateRow, opts: { headerHandle?: string } = {}): Promise<{ metaId: string; status: string }> {
+  /** Creates the template (status PENDING), or edits a rejected one Meta knows (submitRequest). */
+  async submitTemplate(
+    template: TemplateRow,
+    opts: { headerHandle?: string } = {},
+  ): Promise<{ metaId: string; status: string }> {
     const { env, http } = this.connection();
-    const payload = submitPayload(template, opts.headerHandle);
-    const edit = { category: payload.category, components: payload.components };
-    const req =
-      template.status === 'rejected' && template.meta_id
-        ? { path: templateEditPath(env, template.meta_id), json: edit }
-        : { path: `${env.wabaId}/message_templates`, json: payload };
+    const req = submitRequest(env, template, opts.headerHandle);
     const res = await http.json({ ...req, method: 'POST', schema: submitSchema });
     return { metaId: res.id ?? template.meta_id ?? '', status: res.status ?? 'PENDING' };
   }
@@ -130,12 +127,17 @@ export class HttpWhatsappClient implements WhatsappClient {
   /** The allow-list check runs BEFORE any request; only a bug can reach it (after the claim). */
   private async send(to: string, build: () => GraphBody): Promise<WaSent> {
     const { conn, env } = this.connection();
-    if (!recipientAllowed(this.allowed, to)) throw new WaError('recipient not allowed', { code: WA_ERROR.recipientNotAllowed, status: 0 });
+    if (!recipientAllowed(this.allowed, to)) {
+      throw new WaError('recipient not allowed', { code: WA_ERROR.recipientNotAllowed, status: 0 });
+    }
     const body = build();
     const path = `${env.phoneNumberId}/messages`;
     const res = await graphSend(conn).json({ path, method: 'POST', json: body, schema: sentSchema });
     const id = res.messages[0]?.id;
-    if (!id) throw new WaError('WhatsApp answered without a message id', { code: null, status: 200, uncertain: true });
+    if (!id) {
+      const info = { code: null, status: 200, uncertain: true };
+      throw new WaError('WhatsApp answered without a message id', info);
+    }
     return { waMessageId: id };
   }
 

@@ -19,8 +19,9 @@ const PHONE = '+966552147730';
 const M1 = 'b1111111-1111-4111-8111-111111111111';
 const URL = `/threads/${encodeURIComponent(PHONE)}/messages/${M1}/file`;
 const USERS = { admin: ADMIN, sales: SALES, teacher: TEACHER };
+const TOKENS = new Map(Object.entries(USERS));
 const verify: TokenVerifier = async (token) => {
-  const user = USERS[token as keyof typeof USERS];
+  const user = TOKENS.get(token);
   if (!user) throw new Error('bad token');
   return user;
 };

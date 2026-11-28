@@ -22,10 +22,14 @@ interface TemplatePage {
  * The next page's cursor, or undefined when the list is done. Meta says so with paging.next; Kapso
  * never sends it, so there a full page with an `after` cursor means there may be more.
  */
+const HAS_MORE = {
+  kapso: (page) => page.count >= page.limit,
+  meta: (page) => Boolean(page.paging?.next),
+} satisfies Record<ReturnType<typeof providerOf>, (page: TemplatePage) => boolean>;
+
 export function nextTemplateCursor(env: GraphEnv, page: TemplatePage): string | undefined {
   const after = page.paging?.cursors?.after;
-  if (env.provider === 'kapso') return after && page.count >= page.limit ? after : undefined;
-  return page.paging?.next ? after : undefined;
+  return after && HAS_MORE[providerOf(env)](page) ? after : undefined;
 }
 
 /**

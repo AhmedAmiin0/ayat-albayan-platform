@@ -1,16 +1,19 @@
 import { wabaTemplate, type WabaTemplate } from '@/modules/messaging/whatsapp/drivers/waba/waba-template';
 import type { MediaSend, TemplateSend } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// POST {crm}/messages bodies (docs/19 «crm driver»). The CRM resolves the template from its own synced list
-// by name + language and builds Meta's components itself, so we pass the values only: the SAME
-// WabaTemplate the meta driver sends (waba-template.ts), so the same checks refuse the same bad sends.
+// POST {crm}/messages bodies (docs/19 «crm driver»). The CRM resolves the template from its own
+// synced list by name + language and builds Meta's components itself, so we pass the values only:
+// the SAME WabaTemplate the meta driver sends (waba-template.ts), so the same checks refuse the
+// same bad sends.
 
 /** The CRM's structured template params (its SendTimeParams). */
 export interface CrmTemplateParams {
   body?: string[];
   /** A document / image header's link: the 7-day signed Storage URL. */
   headerMediaUrl?: string;
-  /** A URL button's {{1}} suffix or a quick-reply payload, by the button's index in the template. */
+  /**
+   * A URL button's {{1}} suffix or a quick-reply payload, by the button's index in the template.
+   */
   buttonParams?: Record<string, string>;
 }
 
@@ -22,8 +25,8 @@ export type CrmBody = (
 ) & { name?: string };
 
 /**
- * type template: the row's WABA template (waba-template.ts, the one resolution both drivers send) in
- * the CRM's params; an empty part is left out (a static template sends `params: {}`). The CRM
+ * type template: the row's WABA template (waba-template.ts, the one resolution both drivers send)
+ * in the CRM's params; an empty part is left out (a static template sends `params: {}`). The CRM
  * resolves the template from its own synced list by name + language and builds Meta's components.
  */
 export function crmTemplateBody(input: TemplateSend): CrmBody {
@@ -48,7 +51,8 @@ export function crmTextBody(input: { to: string; text: string }): CrmBody {
 
 /**
  * type image / document by link; `text` is the caption, a filename is a document's only. The CRM
- * takes these two only: a forwarded voice note or video goes as a document. No reply context (its uuid).
+ * takes these two only: a forwarded voice note or video goes as a document. No reply context (its
+ * uuid).
  */
 export function crmMediaBody(input: MediaSend): CrmBody {
   const type = input.kind === 'image' ? 'image' : 'document';

@@ -2,9 +2,9 @@ import type { MessageView, ThreadDelta, ThreadDetail, ThreadView } from '@ab/sha
 import type { Page } from '@ab/core';
 import { ForbiddenException, Inject, Injectable, Optional } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ChatListsRepo } from '@/modules/messaging/chat-lists/chat-lists.repo';
+import { ChatListsRepo } from '@/modules/messaging/chat-lists';
 import { OwnNumbers } from '@/modules/messaging/numbers';
-import { SalesScopes, type SalesScope } from '@/modules/sales/sales/sales-scope';
+import { SalesScopes, type SalesScope } from '@/modules/sales/sales';
 import { listFilter, withLists } from '@/modules/messaging/inbox/threads/chat-list-filter';
 import { SalesThreadsService } from '@/modules/messaging/inbox/sales-threads/sales-threads.service';
 import {
@@ -65,8 +65,9 @@ export class ThreadReads {
   }
 
   /**
-   * A chat list (`list`) narrows the admin's and sales' lists; teacher mode never has one. The academy's
-   * own numbers are hidden from every list, search and unread count (the nav counts read this total).
+   * A chat list (`list`) narrows the admin's and sales' lists; teacher mode never has one. The
+   * academy's own numbers are hidden from every list, search and unread count (the nav counts read
+   * this total).
    */
   async list(input: ThreadListFilter, user: AuthUser): Promise<Page<ThreadView>> {
     const f = await this.withoutOwn(input);
@@ -105,13 +106,18 @@ export class ThreadReads {
 
   /** GET /threads/:phone?after=: the same three scopes as detail, resolved per request (rule 9). */
   async delta(q: ThreadDeltaQuery, user: AuthUser): Promise<ThreadDelta> {
-    const mine = await this.salesScope(user);
-    const scope = mine ? null : await this.scopes.of(user);
-    const caller: DeltaCaller = scope ? { kind: 'teacher', scope } : mine ? { kind: 'sales' } : { kind: 'admin' };
+    const caller = await this.deltaCaller(user);
     if (!this.deltas) throw new ForbiddenException();
     const delta = await this.deltas.read(q, caller);
     const all = await this.quotes?.attach([...delta.messages, ...delta.pending], q.phone);
     return all ? { ...delta, ...splitAt(all, delta.messages.length) } : delta;
+  }
+
+  private async deltaCaller(user: AuthUser): Promise<DeltaCaller> {
+    const mine = await this.salesScope(user);
+    const scope = mine ? null : await this.scopes.of(user);
+    if (scope) return { kind: 'teacher', scope };
+    return mine ? { kind: 'sales' } : { kind: 'admin' };
   }
 
   private async withoutOwn(f: ThreadListFilter): Promise<ThreadListFilter> {

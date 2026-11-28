@@ -8,9 +8,15 @@ import {
 import { pgError } from '@/common/db/errors';
 import type { PostgrestError } from '@supabase/supabase-js';
 
-/** The page's own select: the message with its lesson, sending teacher and staff sender (ThreadsQueries.messages). */
+/**
+ * The page's own select: the message with its lesson, sending teacher and staff sender
+ * (ThreadsQueries.messages).
+ */
 const SELECT = `${MESSAGE_SELECT}, lesson:lessons(starts_at, ends_at, status)` as const;
-/** A chat never has more rows in flight than this; past it the NEWEST are kept (the ticks that still move). */
+/**
+ * A chat never has more rows in flight than this; past it the NEWEST are kept (the ticks that still
+ * move).
+ */
 const PENDING_LIMIT = 50;
 
 function check(error: PostgrestError | null): asserts error is null {
@@ -34,13 +40,14 @@ export class DeltaRepo {
       .order('id', { ascending: false })
       .limit(q.limit + 1);
     check(error);
-    return data ?? [];
+    return data;
   }
 
   /**
-   * Outgoing rows whose status may still move: `ids` (validated uuids; this chat's rows only, whatever
-   * the caller passes) and the chat's outbound rows queued / sent / delivered created after `since`.
-   * Also any row an edit, delete or reaction changed after `since` (migration 992 stamps now()).
+   * Outgoing rows whose status may still move: `ids` (validated uuids; this chat's rows only,
+   * whatever the caller passes) and the chat's outbound rows queued / sent / delivered created
+   * after `since`. Also any row an edit, delete or reaction changed after `since` (migration 992
+   * stamps now()).
    */
   async pending(q: {
     phone: string;
@@ -59,6 +66,6 @@ export class DeltaRepo {
       .order('created_at', { ascending: false })
       .limit(PENDING_LIMIT);
     check(error);
-    return data ?? [];
+    return data;
   }
 }

@@ -12,7 +12,7 @@ type MetaReady = NonNullable<LineCheckView['meta_ready']>;
 interface ReadyContext {
   env: Env;
   line: WaLine;
-  fetch: FetchLike;
+  fetch?: FetchLike;
   timeoutMs: number;
   /** GET /{waba}/subscribed_apps (lines.check.ts appsOf). */
   apps: (conn: GraphConn) => Promise<Apps>;

@@ -20,8 +20,13 @@ const toView = (p: RolePlan): ImportRoleView => ({
   ...(p.not_importable ? { not_importable: p.not_importable } : {}),
 });
 
-/** Something to write: a row to create (none for a role that is not importable) or a secret to copy. */
+/**
+ * Something to write: a row to create (none for a role that is not importable) or a secret to copy.
+ */
 const hasWork = (p: RolePlan): boolean => (p.action === 'create' && p.row !== null) || p.copies.length > 0;
+
+type Copy = RolePlan['copies'][number];
+type Copier = (c: Copy, target: { id: string; name: Copy['name'] }) => Promise<void>;
 
 /** Dry run or apply (docs/23 §2e): never deletes; re-apply is a no-op; only key names logged. */
 @Injectable()
@@ -37,28 +42,31 @@ export class NumbersImport {
   async run(dryRun: boolean, actorId: string): Promise<ImportResult> {
     const plans = await this.plan();
     const changed = plans.some(hasWork);
-    if (!dryRun && changed) {
-      try {
-        for (const p of plans) await this.apply(p, actorId);
-      } finally {
-        // One audit row (roles, ids, secret NAMES) and the refresh, even when a role failed half-way.
-        const roles = plans.map((p) => ({
-          role: p.role,
-          action: p.action,
-          number_id: p.number_id,
-          secrets: p.secrets_to_copy,
-          skipped: p.not_importable?.fields,
-        }));
-        await this.effects.after({
-          actorId,
-          entity: 'wa_numbers',
-          entityId: SINGLETON_ENTITY_ID,
-          action: 'import',
-          after: { roles },
-        });
-      }
-    }
+    if (!dryRun && changed) await this.applyAll(plans, actorId);
     return { dry_run: dryRun, changed, roles: plans.map(toView) };
+  }
+
+  private async applyAll(plans: RolePlan[], actorId: string): Promise<void> {
+    try {
+      for (const p of plans) await this.apply(p, actorId);
+    } finally {
+      // One audit row (roles, ids, secret NAMES) and the refresh, even when a role failed
+      // half-way.
+      const roles = plans.map((p) => ({
+        role: p.role,
+        action: p.action,
+        number_id: p.number_id,
+        secrets: p.secrets_to_copy,
+        skipped: p.not_importable?.fields,
+      }));
+      await this.effects.after({
+        actorId,
+        entity: 'wa_numbers',
+        entityId: SINGLETON_ENTITY_ID,
+        action: 'import',
+        after: { roles },
+      });
+    }
   }
 
   private async plan(): Promise<RolePlan[]> {
@@ -76,16 +84,20 @@ export class NumbersImport {
     if (p.action === 'unconfigured' || !p.row) return;
     const id = p.number_id ?? (await this.create(p, actorId));
     p.number_id = id;
-    for (const c of p.copies) {
-      const target = { id, name: c.name };
-      if (c.source === 'db') {
-        if (!(await this.secrets.copy(target, c.key))) this.log.warn(`import: ${c.key} was not in Vault, not copied`);
-        continue;
-      }
+    for (const c of p.copies) await this.copiers[c.source](c, { id, name: c.name });
+  }
+
+  /** Per store: a DB secret is copied inside Vault, an env one is written from process.env. */
+  private readonly copiers: Record<Copy['source'], Copier> = {
+    db: async (c, target) => {
+      const copied = await this.secrets.copy(target, c.key);
+      if (!copied) this.log.warn(`import: ${c.key} was not in Vault, not copied`);
+    },
+    env: async (c, target) => {
       const value = process.env[c.key]?.trim();
       if (value) await this.secrets.set(target, value);
-    }
-  }
+    },
+  };
 
   private async create(p: RolePlan, actorId: string): Promise<string> {
     const row = p.row;

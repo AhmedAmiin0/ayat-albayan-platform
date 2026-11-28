@@ -1,8 +1,7 @@
-import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
+import type { ThreadDetail, ThreadLesson, ThreadPeople, ThreadView } from '@ab/shared';
 import type { Page } from '@ab/core';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { ReopenPick } from '@/modules/messaging/whatsapp';
-import { MessageViews } from '@/modules/messaging/whatsapp/messages/message.views';
+import { MessageViews, ReopenPick } from '@/modules/messaging/whatsapp';
 import { assertPhone, type TeacherScope } from './teacher-scope';
 import { forTeacher, teacherPeople } from './teacher-threads';
 import { TeacherThreadsRepo } from './teacher-threads.repo';
@@ -55,8 +54,10 @@ export class TeacherThreadsService {
     };
   }
 
-  /** One page, oldest → newest; 403 not_your_thread outside the scope. */
-  /** One page, oldest → newest; the first page also carries people and lessons (as the admin's). */
+  /**
+   * One page, oldest → newest; 403 not_your_thread outside the scope. The first page also carries
+   * people and lessons (as the admin's).
+   */
   async detail(q: ThreadPageQuery, scope: TeacherScope, now = new Date()): Promise<ThreadDetail> {
     assertPhone(scope, q.phone);
     const first = isFirstPage(q);
@@ -64,14 +65,26 @@ export class TeacherThreadsService {
       await this.teacher.stampRead({ teacherId: scope.teacherId, phone: q.phone, at: now });
     const page = Promise.all([this.queries.thread(q.phone), this.messages.messages(q)]);
     const [row, rows] = await page;
-    const view = row ? forTeacher(toThreadView(row, now), NO_READS) : null;
-    const thread = view && this.pick ? await this.pick.thread(view, now) : view;
+    const thread = await this.threadOf(row, now);
     const [people, messages, lessons] = await Promise.all([
       first ? this.people(row, scope) : NO_ONE,
       Promise.all(rows.slice(0, q.limit).reverse().map((m) => this.views.view(m))),
-      thread && first ? this.queries.lessons(thread, now, scope.teacherId) : [],
+      first ? this.lessons(thread, scope, now) : [],
     ]);
     return { thread, messages, has_more: rows.length > q.limit, lessons, people };
+  }
+
+  private async threadOf(row: ThreadRow | null, now: Date): Promise<ThreadView | null> {
+    const view = row ? forTeacher(toThreadView(row, now), NO_READS) : null;
+    return view && this.pick ? this.pick.thread(view, now) : view;
+  }
+
+  private async lessons(
+    thread: ThreadView | null,
+    scope: TeacherScope,
+    now: Date,
+  ): Promise<ThreadLesson[]> {
+    return thread ? this.queries.lessons(thread, now, scope.teacherId) : [];
   }
 
   private async people(row: ThreadRow | null, scope: TeacherScope): Promise<ThreadPeople> {

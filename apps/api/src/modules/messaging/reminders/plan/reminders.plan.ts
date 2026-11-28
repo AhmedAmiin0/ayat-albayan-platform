@@ -10,59 +10,21 @@ import type { LessonStatus } from '@ab/catalog';
 import { RIYADH_TZ } from '@ab/time';
 import type { PushEvent } from '@/common/push/push.service';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
-import type { StaffOnRecord } from './staff-reachable';
 import { teacherReminderDue } from './teacher-due';
-import type { TeacherLinks } from './teacher-lesson.crm';
+import type { ReminderGuardian, ReminderLesson, ReminderPlanInput } from './reminders.plan.types';
 import { teacherTemplate } from './teacher-template';
 
 // R-MSG-02 reminder planning (docs/12 §7). Pure: the job calls it every tick; the dedup keys
 // (docs/12 §2.2, one per lesson + recipient + type) make a repeated tick a no-op (rule 8).
 
-export interface ReminderGuardian {
-  id: string;
-  phone_e164: string;
-  tz: string;
-}
-
-export interface ReminderLesson {
-  id: string;
-  starts_at: string;
-  /** The classroom link's expiry (room close) is counted from it. */
-  ends_at: string;
-  status: LessonStatus;
-  meeting_link: string | null;
-  /** meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in fakes. */
-  teacher:
-    | ({ id: string; display_name_ar: string; phone_e164: string | null; tz: string; meeting_mode?: string | null } & StaffOnRecord)
-    | null;
-  students: { id: string; name: string; code?: string | null; guardian: ReminderGuardian | null }[];
-}
-
-export interface ReminderPlanInput {
-  lessons: readonly ReminderLesson[];
-  /** The lesson_reminder rule's minutes_before (legacy: settings.reminder_minutes_before). */
-  minutesBefore: number;
-  /** lesson_reminder on (default); false = no same-day guardian reminder. */
-  sameDay?: boolean;
-  /** lesson_reminder_24h on AND approved in the registry; dayBeforeAt = its send_at_local (null = the lesson's time). */
-  dayBefore: boolean;
-  dayBeforeAt?: string | null;
-  /** teacher_lesson_reminder on (R-NOT-03; default on) and its lead time (default minutesBefore). */
-  teacherReminders?: boolean;
-  teacherMinutesBefore?: number;
-  /** The web origin (firstWebOrigin): the teacher's CRM reminder links are absolute. */
-  origin: string;
-  /** Per lesson: the teacher's signed join and report links (the job makes them). */
-  teacherLinks?: ReadonlyMap<string, TeacherLinks>;
-  /** teacher_lesson_v3 approved: the teacher's reminder goes as it. */
-  teacherV3?: boolean;
-  now: Date;
-}
-
 /** Only these get reminders; a cancelled / rescheduled / past lesson never does. */
-export const REMINDER_LESSON_STATUSES = ['scheduled', 'confirmed'] as const satisfies readonly LessonStatus[];
+export const REMINDER_LESSON_STATUSES = [
+  'scheduled',
+  'confirmed',
+] as const satisfies readonly LessonStatus[];
 
-export const isOpen = (status: LessonStatus): boolean => (REMINDER_LESSON_STATUSES as readonly string[]).includes(status);
+export const isOpen = (status: LessonStatus): boolean =>
+  (REMINDER_LESSON_STATUSES as readonly string[]).includes(status);
 
 /** Each guardian of the lesson's students with their own children in it. */
 function byGuardian(lesson: ReminderLesson): { guardian: ReminderGuardian; names: string[] }[] {
@@ -82,16 +44,25 @@ function guardianRows(lesson: ReminderLesson, input: ReminderPlanInput): QueuedM
   const rows: QueuedMessage[] = [];
   for (const { guardian, names } of byGuardian(lesson)) {
     const message = { names, startsAt, tz: guardian.tz, meetingLink: lesson.meeting_link };
-    const to = { phone: guardian.phone_e164, guardianId: guardian.id, lessonId: lesson.id, now, expiresAt: startsAt };
-    if (input.sameDay !== false && reminderDue({ kind: 'same_day', startsAt, tz: guardian.tz, minutesBefore, now })) {
+    const to = {
+      phone: guardian.phone_e164,
+      guardianId: guardian.id,
+      lessonId: lesson.id,
+      now,
+      expiresAt: startsAt,
+    };
+    const due = { startsAt, tz: guardian.tz, minutesBefore, now };
+    if (input.sameDay !== false && reminderDue({ kind: 'same_day', ...due })) {
       const template = lessonReminderMessage(message);
       rows.push(queuedRow({ ...to, template, dedupKey: `lesson_reminder:${lesson.id}:${guardian.id}` }));
     }
-    if (input.dayBefore && reminderDue({ kind: 'day_before', startsAt, tz: guardian.tz, minutesBefore, sendAtLocal: input.dayBeforeAt, now })) {
+    const dayBefore = { kind: 'day_before', ...due, sendAtLocal: input.dayBeforeAt } as const;
+    if (input.dayBefore && reminderDue(dayBefore)) {
       const template = lessonReminder24hMessage({ ...message, lessonId: lesson.id });
       const dedupKey = `lesson_reminder_24h:${lesson.id}:${guardian.id}`;
       // "Tomorrow" is only true until the lesson's day starts for the guardian; never sent later.
-      rows.push(queuedRow({ ...to, template, dedupKey, expiresAt: localDayStart(startsAt, guardian.tz) }));
+      const expiresAt = localDayStart(startsAt, guardian.tz);
+      rows.push(queuedRow({ ...to, template, dedupKey, expiresAt }));
     }
   }
   return rows;
@@ -105,8 +76,8 @@ function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMes
   const v3 = input.teacherV3 === true;
   const template = teacherTemplate({ teacher, lesson, origin: input.origin, links, v3 });
   const dedupKey = `teacher_lesson_reminder:${lesson.id}:${teacher.id}`;
-  const to = { phone: teacher.phone_e164, lessonId: lesson.id, now: input.now, expiresAt: startsAt };
-  return [queuedRow({ ...to, template, dedupKey })];
+  const to = { phone: teacher.phone_e164, lessonId: lesson.id, now: input.now };
+  return [queuedRow({ ...to, expiresAt: startsAt, template, dedupKey })];
 }
 
 /**
@@ -118,7 +89,10 @@ function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMes
 export function planReminders(input: ReminderPlanInput): QueuedMessage[] {
   return input.lessons
     .filter((l) => isOpen(l.status) && Date.parse(l.starts_at) > input.now.getTime())
-    .flatMap((l) => [...guardianRows(l, input), ...(input.teacherReminders === false ? [] : teacherRow(l, input))]);
+    .flatMap((l) => [
+      ...guardianRows(l, input),
+      ...(input.teacherReminders === false ? [] : teacherRow(l, input)),
+    ]);
 }
 
 /**
@@ -126,7 +100,10 @@ export function planReminders(input: ReminderPlanInput): QueuedMessage[] {
  * (lesson_reminder minutes_before) the lesson is still `scheduled` — nobody confirmed it.
  * PushService's dedup key (lesson id) makes it once per lesson.
  */
-export function needsConfirmation(lessons: readonly ReminderLesson[], at: { now: Date; minutesBefore: number }): ReminderLesson[] {
+export function needsConfirmation(
+  lessons: readonly ReminderLesson[],
+  at: { now: Date; minutesBefore: number },
+): ReminderLesson[] {
   const t = at.now.getTime();
   return lessons.filter((l) => {
     const start = Date.parse(l.starts_at);
@@ -134,7 +111,9 @@ export function needsConfirmation(lessons: readonly ReminderLesson[], at: { now:
   });
 }
 
-/** The push for one such lesson. One text for every admin, so the time is the academy's (Riyadh). */
+/**
+ * The push for one such lesson. One text for every admin, so the time is the academy's (Riyadh).
+ */
 export function confirmationPush(lesson: ReminderLesson): PushEvent {
   return {
     subject: lesson.id,

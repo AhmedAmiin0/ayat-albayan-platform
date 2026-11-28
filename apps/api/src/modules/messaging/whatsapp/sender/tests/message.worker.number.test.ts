@@ -7,7 +7,8 @@ import { dueMessage } from '@/modules/messaging/whatsapp/sender/sender.fakes';
 import type { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// docs/23 phase 3: messages.number_id is stamped at claim in module mode only; legacy claims are unchanged.
+// docs/23 phase 3: messages.number_id is stamped at claim in module mode only; legacy claims are
+// unchanged.
 
 const queries = {
   claim: vi.fn(),

@@ -20,10 +20,10 @@ const MINE: { phone: string; status: Status }[] = [
   { phone: MIXED, status: 'active' },
   { phone: ACTIVE, status: 'active' },
 ];
-/** Migration 20261007000001 in miniature: guardians through non-trial students, plus my own number. */
-const scopePhones = (): string[] => [
-  ...new Set([...MINE.filter((s) => s.status !== 'trial').map((s) => s.phone), OWN]),
-];
+/**
+ * Migration 20261007000001 in miniature: guardians through non-trial students, plus my own number.
+ */
+const scopePhones = (): string[] => [...new Set([...MINE.filter((s) => s.status !== 'trial').map((s) => s.phone), OWN])];
 
 const url = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
 const send = (phone: string) => ({

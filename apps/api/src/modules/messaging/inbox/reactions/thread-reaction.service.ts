@@ -9,26 +9,34 @@ import { sameNumber } from '@/modules/messaging/inbox/threads/thread-quotes';
 import { ThreadsRepo } from '@/modules/messaging/inbox/threads/threads.repo';
 import { ThreadMessagesRepo } from '@/modules/messaging/inbox/threads/store';
 import { sendsOnCrm } from './reaction-line';
-import { assertReactable, reactionPayload, ReactionRepo } from './reaction.repo';
+import { assertReactable, reactionPayload, ReactionRepo, type ReactionTarget } from './reaction.repo';
 import { httpError } from '@/common/http/errors';
 
-/** PUT /threads/:phone/messages/:id/reaction: the text send's ThreadSend plus the reacted message. */
+/**
+ * PUT /threads/:phone/messages/:id/reaction: the text send's ThreadSend plus the reacted message.
+ */
 export type ReactionRequest = ThreadSend<ThreadReaction> & { messageId: string };
 
-/** Rule 8: message id + emoji + who + phone + request id, so a retry is one send and a new tap is a new one. */
+/**
+ * Rule 8: message id + emoji + who + phone + request id, so a retry is one send and a new tap is a
+ * new one.
+ */
 export const reactionKey = (r: ReactionRequest): string => `reaction:${r.messageId}:${r.input.emoji ?? '-'}:${dedupKey(r)}`;
 
 /**
  * A reaction, guarded exactly like a text in that chat: the caller's role and scope
  * (a teacher: own families only, never their own chat), the 24 h window and the chat's send line
  * (sendLine), the target in THIS chat with a wamid and ≤ 30 days old. Not a template, so the
- * restricted-templates rule does not apply. The CRM line has no reaction call: 409 reaction_unsupported.
- * our_reaction is set at once; ONE idempotent row goes through the outbox (the sender's own pass):
- * a failed send puts ours back (migration 900's trigger) and comes back as `failed` with its code.
+ * restricted-templates rule does not apply. The CRM line has no reaction call: 409
+ * reaction_unsupported. our_reaction is set at once; ONE idempotent row goes through the outbox
+ * (the sender's own pass): a failed send puts ours back (migration 900's trigger) and comes back as
+ * `failed` with its code.
  */
 @Injectable()
 export class ThreadReactionService {
-  /** The reacted message's view (property-injected: the constructor is at the 3-parameter limit). */
+  /**
+   * The reacted message's view (property-injected: the constructor is at the 3-parameter limit).
+   */
   @Inject(MessageViews) private readonly views?: MessageViews;
 
   constructor(
@@ -42,20 +50,8 @@ export class ThreadReactionService {
     r: ReactionRequest,
     now = new Date(),
   ): Promise<{ result: ReactionResult; sent: Sent }> {
-    if (r.scope) assertCanSend(r.scope, r.phone);
+    const { target, thread, from } = await this.guarded(r, now);
     const key = reactionKey(r);
-    const target = await this.reactions.target(r.phone, r.messageId);
-    assertReactable(target, now);
-    // Sales never see a feedback request or a join link (migration 187, as forward): not found, nothing sent.
-    if (r.sales && !visibleToSales(target)) throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
-    const thread = await this.threads.thread(r.phone);
-    const from = await sendLine(thread, {
-      now,
-      windows: () => this.threads.numberWindows(r.phone),
-    });
-    if (sendsOnCrm(from)) throw httpError(HttpStatus.CONFLICT, 'reaction_unsupported');
-    // Meta only knows a wamid on the number that sent or received it.
-    if (!sameNumber(target, from)) throw httpError(HttpStatus.CONFLICT, 'reaction_other_number');
     const { emoji } = r.input;
     const where = { targetId: target.id, phone: r.phone };
     if (!(await this.reactions.queued(key))) {
@@ -65,23 +61,56 @@ export class ThreadReactionService {
       });
       await this.reactions.supersede(where);
     }
-    const row = { ...outboundBase(r, thread), dedup_key: key, body: emoji ?? '', interactive_payload: reactionPayload(target, emoji), ...from };
+    const row = {
+      ...outboundBase(r, thread),
+      dedup_key: key,
+      body: emoji ?? '',
+      interactive_payload: reactionPayload(target, emoji),
+      ...from,
+    };
     const sent = await this.outbox.send(row).catch(async (e: unknown) => {
-      // Nothing queued: ours goes back at once. Queued but the read-back failed: the sender (and the
-      // failed-send trigger) decides, so the inbox never disagrees with what WhatsApp got.
-      if (!(await this.reactions.queued(key))) {
-        await this.reactions.setOurs({
-          ...where,
-          ours: {
-            emoji: target.our_reaction,
-            by: target.our_reaction_by,
-            at: target.our_reaction_at,
-          },
-        });
-      }
+      await this.restoreUnqueued(key, where, target);
       throw e;
     });
     return { result: await this.result(target.id, sent, !!r.sales), sent };
+  }
+
+  private async guarded(r: ReactionRequest, now: Date) {
+    if (r.scope) assertCanSend(r.scope, r.phone);
+    const target = await this.reactions.target(r.phone, r.messageId);
+    assertReactable(target, now);
+    // Sales never see a feedback request or a join link (migration 187, as forward): not found,
+    // nothing sent.
+    if (r.sales && !visibleToSales(target)) throw httpError(HttpStatus.NOT_FOUND, 'message_not_found');
+    const thread = await this.threads.thread(r.phone);
+    const from = await sendLine(thread, {
+      now,
+      windows: () => this.threads.numberWindows(r.phone),
+    });
+    if (sendsOnCrm(from)) throw httpError(HttpStatus.CONFLICT, 'reaction_unsupported');
+    // Meta only knows a wamid on the number that sent or received it.
+    if (!sameNumber(target, from)) throw httpError(HttpStatus.CONFLICT, 'reaction_other_number');
+    return { target, thread, from };
+  }
+
+  /**
+   * Nothing queued: ours goes back at once. Queued but the read-back failed: the sender (and the
+   * failed-send trigger) decides, so the inbox never disagrees with what WhatsApp got.
+   */
+  private async restoreUnqueued(
+    key: string,
+    where: { targetId: string; phone: string },
+    target: ReactionTarget,
+  ): Promise<void> {
+    if (await this.reactions.queued(key)) return;
+    await this.reactions.setOurs({
+      ...where,
+      ours: {
+        emoji: target.our_reaction,
+        by: target.our_reaction_by,
+        at: target.our_reaction_at,
+      },
+    });
   }
 
   private async result(targetId: string, sent: Sent, sales: boolean): Promise<ReactionResult> {

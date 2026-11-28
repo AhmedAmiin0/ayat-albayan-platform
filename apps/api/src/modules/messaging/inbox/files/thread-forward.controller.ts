@@ -12,6 +12,8 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { ZodBody } from '@/common/http/zod-inputs';
 import { ThreadForwardService, type ForwardOutcome } from './thread-forward.service';
 import { ThreadReads } from '@/modules/messaging/inbox/reads/thread-reads';
+import type { TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import type { SalesScope } from '@/modules/sales/sales';
 
 /** What the audit row keeps: who got the copy (its id) and who was skipped (why). */
 export function forwardAudit(results: readonly ForwardOutcome[]) {
@@ -27,13 +29,24 @@ const publicResult = (r: ForwardOutcome): ForwardResult =>
     ? { phone: r.phone, sent: true, message_id: r.message_id }
     : { phone: r.phone, sent: false, reason: r.reason };
 
-/** What this request newly did: a copy that already existed (a retry) was audited the first time. */
+/**
+ * What this request newly did: a copy that already existed (a retry) was audited the first time.
+ */
 export const freshResults = (results: readonly ForwardOutcome[]): ForwardOutcome[] =>
   results.filter((r) => !(r.sent && r.replayed === true));
 
 /** A retried forward whose every copy already existed was audited the first time. */
 export const allReplayed = (results: readonly ForwardOutcome[]): boolean =>
   freshResults(results).length === 0;
+
+/** The audit row names the salesperson or the teacher who forwarded; the admin is the actor. */
+export function forwardedBy(
+  sales: Pick<SalesScope, 'salesId'> | null,
+  scope: Pick<TeacherScope, 'teacherId' | 'teacherName'> | null,
+) {
+  if (sales) return { sales_id: sales.salesId };
+  return scope ? { teacher_id: scope.teacherId, teacher_name: scope.teacherName } : {};
+}
 
 /** Copies one message to 1-5 chats via the send path; audited once per forward. */
 @ApiTags('inbox')
@@ -63,11 +76,7 @@ export class ThreadForwardController {
       sales,
     });
     if (!allReplayed(results)) {
-      const by = sales
-        ? { sales_id: sales.salesId }
-        : scope
-          ? { teacher_id: scope.teacherId, teacher_name: scope.teacherName }
-          : {};
+      const by = forwardedBy(sales, scope);
       await this.audit.record({
         actorId: user.id,
         entity: 'messages',

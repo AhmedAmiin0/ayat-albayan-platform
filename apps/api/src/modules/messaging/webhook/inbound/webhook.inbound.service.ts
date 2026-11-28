@@ -1,43 +1,35 @@
-import { isMarkerType, waIdToE164, type LessonRating, type PushKind } from '@ab/shared';
+import { isMarkerType, waIdToE164, type PushKind } from '@ab/shared';
 import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { PushService, type PushEvent } from '@/common/push/push.service';
 import { OwnNumbers } from '@/modules/messaging/numbers';
 import type { InboundEvent } from '@/modules/messaging/webhook/webhook.events';
 import { inboundPush, intentOf, ratingOf } from './webhook.inbound';
-import { InboundStore, type Sender } from './webhook.inbound.store';
-import type { Contact } from '@/modules/messaging/webhook/shared/webhook.repo';
+import { InboundStore } from './webhook.inbound.store';
+import type {
+  InboundOptions,
+  LessonAsk,
+  RateInput,
+  ReplyInput,
+  Sender,
+} from './inbound.types';
 import { QuickReplies } from './webhook.quick-reply';
 import { InboundReactions } from './webhook.reaction';
 
 /** Time an undo (one DELETE) gets before the controller's 200 goes out. */
 const UNDO_MARGIN_MS = 500;
 
-interface InboundOptions {
-  /** Epoch ms when Meta gets its 200 regardless (WebhookService); none = it waits for us. */
-  deadline?: number;
-  /**
-   * A message the catch-up job back-filled (external/inbound, older than LATE_MS when stored): the
-   * row, lead and quick reply as usual, its unread count included, but no admin / assistant push.
-   * Its lead's follow-up cycle starts at `now` (the back-fill), never in the past.
-   */
-  quiet?: boolean;
-  /** The catch-up run's time (a quiet message); defaults to the clock. */
-  now?: Date;
-}
-
 /**
  * One inbound WhatsApp message (R-MSG-04, R-LEAD-01): lead upsert, the stored row, quick reply
  * (a lesson_rating tap is stored on lesson_feedback, migration 195), the admin push and the
- * assistants' push (docs/21 §6: the family's owners, else every assistant). Replay-safe: Meta re-sends a wamid until it gets a 200, and a wamid already
- * stored stops here before any side effect (no second confirm, no second push). If the quick
- * reply fails (DB down) while Meta still waits for our answer, the row just stored is removed and
- * the error goes up (500): Meta's re-send then finds no row and does it all again. Past the
- * deadline Meta already has its 200 and will not re-send, so the row stays (the message is in the
- * inbox; only the confirm / pause and the push are lost) and the error is only logged.
- * a pending flag on the row + a sweeper would retry those too; add it if logs show any.
- * A reaction, edit or revoke stops first (marker()): no lead, reply, push or unread.
- * The ONE gate for the academy's own numbers: a message from one of them is stored
- * (audit, already read) and nothing else runs: no lead, quick reply, rating or push.
+ * assistants' push (docs/21 §6: the family's owners, else every assistant). Replay-safe: Meta
+ * re-sends a wamid until it gets a 200, and a wamid already stored stops here before any side
+ * effect (no second confirm, no second push). If the quick reply fails (DB down) while Meta still
+ * waits for our answer, the row just stored is removed and the error goes up (500): Meta's re-send
+ * then finds no row and does it all again. Past the deadline Meta already has its 200 and will not
+ * re-send, so the row stays (the message is in the inbox; only the confirm / pause and the push are
+ * lost) and the error is only logged. A reaction, edit or revoke stops first (marker()): no lead,
+ * reply, push or unread. The ONE gate for the academy's own numbers: a message from one of them is
+ * stored (audit, already read) and nothing else runs: no lead, quick reply, rating or push.
  */
 @Injectable()
 export class InboundService {
@@ -62,35 +54,41 @@ export class InboundService {
     }
     if (isMarkerType(m.type)) return this.marker(m, phone);
     if (await this.own?.has(phone)) return this.store.saveOwn(m, phone);
+    return this.received(m, phone, opts);
+  }
+
+  private async received(m: InboundEvent, phone: string, opts: InboundOptions): Promise<boolean> {
     const cycle = opts.quiet ? (opts.now ?? new Date()) : m.at;
     const { who, lead } = await this.store.sender({ m, phone, at: cycle });
-    const intent = intentOf(m);
-    const rating = ratingOf(m);
-    const asks = rating !== null || intent === 'confirm' || intent === 'reschedule';
-    const lessonId = asks
-      ? await this.replies.lessonFor({ m, phone, who, rating: rating !== null })
-      : null;
-    const stored = await this.store.save({
-      m,
-      phone,
-      who,
-      leadId: lead.id,
-      lessonId,
-      stage: lead.stage,
-    });
-    if (!stored) return false; // replay of a wamid we already handled
-    try {
-      await this.replies.act({ intent, m, lessonId, leadId: lead.id });
-      await this.rate({ m, who, rating, lessonId });
-    } catch (e) {
-      await this.undo(m.waMessageId, opts.deadline);
-      throw e;
-    }
+    const [intent, rating] = [intentOf(m), ratingOf(m)];
+    const lessonId = await this.lessonOf({ m, phone, who, rating, intent });
+    const row = { m, phone, who, leadId: lead.id, lessonId, stage: lead.stage };
+    if (!(await this.store.save(row))) return false; // replay of a wamid we already handled
+    await this.reply({ m, who, rating, lessonId, intent, leadId: lead.id }, opts.deadline);
     if (opts.quiet) return true;
     const { kind, event } = inboundPush({ m, phone, who, newLeadId: lead.created, intent });
     await this.push.notifyAdmins(kind, event);
     await this.notifySalesFor(kind, event, { who, lead });
     return true;
+  }
+
+  /** The lesson a confirm, reschedule or rating answers; null for any other message. */
+  private async lessonOf({ rating, intent, ...ask }: LessonAsk): Promise<string | null> {
+    const rated = rating !== null;
+    if (!rated && intent !== 'confirm' && intent !== 'reschedule') return null;
+    return this.replies.lessonFor({ ...ask, rating: rated });
+  }
+
+  /** The quick reply and the rating; on a failure the row is undone and the error goes up. */
+  private async reply(input: ReplyInput, deadline: number | undefined): Promise<void> {
+    const { m, lessonId } = input;
+    try {
+      await this.replies.act({ intent: input.intent, m, lessonId, leadId: input.leadId });
+      await this.rate({ m, who: input.who, rating: input.rating, lessonId });
+    } catch (e) {
+      await this.undo(m.waMessageId, deadline);
+      throw e;
+    }
   }
 
   /**
@@ -112,18 +110,14 @@ export class InboundService {
     try {
       owners = kind === 'new_lead' ? [] : await this.store.owners(from.who, from.lead);
     } catch (e) {
-      return this.log.warn(`inbound ${event.subject}: owners lookup failed, no sales push: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(`inbound ${event.subject}: owners lookup failed, no sales push: ${e instanceof Error ? e.message : String(e)}`);
+      return;
     }
     await this.push.notifySales(kind, event, owners);
   }
 
   /** A lesson_rating tap of a guardian on a lesson of theirs → lesson_feedback (migration 195). */
-  private async rate(input: {
-    m: InboundEvent;
-    who: Contact;
-    rating: LessonRating | null;
-    lessonId: string | null;
-  }): Promise<void> {
+  private async rate(input: RateInput): Promise<void> {
     const { m, who, rating, lessonId } = input;
     if (!rating || !lessonId || !who.guardian) return;
     await this.store.rate({
@@ -138,7 +132,8 @@ export class InboundService {
   /** Unstores the row so Meta's re-send runs the reply again, only while Meta still waits. */
   private async undo(waMessageId: string, deadline: number | undefined): Promise<void> {
     if (deadline !== undefined && Date.now() > deadline - UNDO_MARGIN_MS) {
-      return this.log.error(`inbound ${waMessageId}: quick reply failed after the 200; row kept`);
+      this.log.error(`inbound ${waMessageId}: quick reply failed after the 200; row kept`);
+      return;
     }
     try {
       await this.store.forget(waMessageId);

@@ -9,7 +9,7 @@ import {
 } from '@ab/shared';
 import type { MessageStatus } from '@ab/catalog';
 import { dayInZone, RIYADH_TZ } from '@ab/time';
-import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
+import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders';
 // R-LEAD-05 follow-up planning (docs/12 §7). Pure.
 
 /** One `leads` row as the follow-up job reads it. */
@@ -81,9 +81,12 @@ const UNSENT_CODES: ReadonlySet<string> = new Set(['expired', 'stale', 'auto_off
 export function followUpStep(row: StageRow | null): 'queue' | 'requeue' | 'wait' | 'advance' {
   if (!row) return 'queue';
   if (row.status === 'queued') return 'wait';
-  if (row.status !== 'failed') return 'advance';
-  if (row.error_code === 'handed_off') return 'wait';
-  return UNSENT_CODES.has(row.error_code ?? '') ? 'requeue' : 'advance';
+  return row.status === 'failed' ? failedStep(row.error_code) : 'advance';
+}
+
+function failedStep(code: string | null): 'requeue' | 'wait' | 'advance' {
+  if (code === 'handed_off') return 'wait';
+  return UNSENT_CODES.has(code ?? '') ? 'requeue' : 'advance';
 }
 
 interface FollowUpRowInput {

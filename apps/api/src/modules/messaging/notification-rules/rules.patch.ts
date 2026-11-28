@@ -14,7 +14,7 @@ import {
 } from '@ab/shared';
 import { ruleConfirmationRequired, ruleError } from './rules.errors';
 import type { RulesSnapshot } from './store/rules.reader';
-import type { RuleRowWrite } from './store/rules.table';
+import type { RuleRowWrite } from './store/rules-table.types';
 
 interface PlanInput {
   entry: NotificationEntry<NotificationKey>;
@@ -27,13 +27,19 @@ export interface PatchPlan {
   row: RuleRowWrite;
   before: EffectiveRule;
   after: EffectiveRule;
-  /** legacy mode: the mirrored legacy keys to write with the row (parity stays empty); {} in module mode. */
+  /**
+   * legacy mode: the mirrored legacy keys to write with the row (parity stays empty); {} in module
+   * mode.
+   */
   legacy: Partial<RuleSettings>;
   /** An essential row going ON → OFF (confirmed): logged in the activity log too. */
   essentialOff: boolean;
 }
 
-/** A subset of the entry's channels that keeps its first one, in the entry's order; else 422 invalid. */
+/**
+ * A subset of the entry's channels that keeps its first one, in the entry's order; else 422
+ * invalid.
+ */
 function channelsOf(
   entry: NotificationEntry,
   wanted: readonly NotificationChannel[],
@@ -81,27 +87,44 @@ function nextRow(input: {
 
 const confirmed = (text: unknown): boolean => typeof text === 'string' && text.trim() === ESSENTIAL_OFF_TEXT;
 
+/** Manual rows are listed only; a locked row cannot be switched off. */
+function assertEditable(entry: NotificationEntry, enabled: boolean | undefined): void {
+  if (entry.manual) throw ruleError('not_editable');
+  if (entry.locked && enabled === false) throw ruleError('locked');
+}
+
+const isEssentialOff = (entry: NotificationEntry, before: EffectiveRule, row: RuleRowWrite) =>
+  entry.essential && before.enabled && !row.enabled;
+
+function assertConfirmed(essentialOff: boolean, text: unknown): void {
+  if (essentialOff && !confirmed(text)) throw ruleConfirmationRequired();
+}
+
+/** Legacy mode mirrors the row into its legacy keys; module mode writes none. */
+function legacyOf(snapshot: RulesSnapshot, key: NotificationKey, row: RuleRowWrite) {
+  if (snapshot.mode !== 'legacy') return {};
+  return legacyValues(key, { enabled: row.enabled, timing: row.timing as AnyRuleTiming | null });
+}
+
 /**
  * PATCH /admin/notifications/:key, decided without I/O (docs/23b decision 4): manual rows 422
- * not_editable; a locked row's OFF 422 locked; channels / timing / number checked against the entry;
- * an essential row's OFF needs ESSENTIAL_OFF_TEXT (428). Unspecified fields keep the current effective
- * values. In legacy mode the mirrored legacy keys are written too, so both paths keep agreeing.
+ * not_editable; a locked row's OFF 422 locked; channels / timing / number checked against the
+ * entry; an essential row's OFF needs ESSENTIAL_OFF_TEXT (428). Unspecified fields keep the current
+ * effective values. In legacy mode the mirrored legacy keys are written too, so both paths keep
+ * agreeing.
  */
 export function planPatch(input: PlanInput): PatchPlan {
   const { entry, snapshot, patch } = input;
-  if (entry.manual) throw ruleError('not_editable');
-  if (entry.locked && patch.enabled === false) throw ruleError('locked');
+  assertEditable(entry, patch.enabled);
   const before = resolveRule(entry, {
     mode: snapshot.mode,
     row: snapshot.rows.get(entry.key) ?? null,
     settings: snapshot.settings,
   });
   const row = nextRow({ entry, before, patch });
-  const essentialOff = entry.essential && before.enabled && !row.enabled;
-  if (essentialOff && !confirmed(patch.confirmText)) throw ruleConfirmationRequired();
-  const timing = row.timing as AnyRuleTiming | null;
-  const legacy =
-    snapshot.mode === 'legacy' ? legacyValues(entry.key, { enabled: row.enabled, timing }) : {};
+  const essentialOff = isEssentialOff(entry, before, row);
+  assertConfirmed(essentialOff, patch.confirmText);
+  const legacy = legacyOf(snapshot, entry.key, row);
   const after = resolveRule(entry, {
     mode: snapshot.mode,
     row,

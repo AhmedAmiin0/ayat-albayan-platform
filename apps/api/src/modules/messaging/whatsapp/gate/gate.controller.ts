@@ -18,19 +18,16 @@ import { ZodBody } from '@/common/http/zod-inputs';
 import { confirmationRequired } from './gate.errors';
 import { GateSettings, type GateKey } from './gate.settings';
 
-interface KeyWrite {
-  key: GateKey;
-  value: boolean;
-  action: string;
-}
+interface KeyWrite { key: GateKey; value: boolean; action: string }
 type SwitchBody = z.output<typeof gateSwitchSchema>;
 type CutoverBody = z.output<typeof gateCutoverSchema>;
 
 /**
- * The send-gate switches' own routes (docs/26 §2f, §5, 26-P0): the ONLY writers of messaging_enabled,
- * auto_messages_enabled and crm_cutover_done (PATCH /settings moves them). Turning a switch ON needs
- * the exact confirmation text (GATE_CONFIRM_TEXT), checked here → 428 confirmation_required. OFF is
- * always accepted: no version, no 409, no text. GET /messages/gate stays on MessagesController.
+ * The send-gate switches' own routes (docs/26 §2f, §5, 26-P0): the ONLY writers of
+ * messaging_enabled, auto_messages_enabled and crm_cutover_done (PATCH /settings moves them).
+ * Turning a switch ON needs the exact confirmation text (GATE_CONFIRM_TEXT), checked here → 428
+ * confirmation_required. OFF is always accepted: no version, no 409, no text. GET /messages/gate
+ * stays on MessagesController.
  */
 @ApiTags('messaging')
 @ApiBearerAuth()
@@ -80,8 +77,8 @@ export class GateController {
 
   /**
    * The write comes first and is the only step that may fail the request: a failed read before it
-   * (cold cache, DB hiccup) must never refuse an OFF, and a failed audit or re-read after it must not
-   * report a saved switch as failed (the admin would retry). Those are logged instead.
+   * (cold cache, DB hiccup) must never refuse an OFF, and a failed audit or re-read after it must
+   * not report a saved switch as failed (the admin would retry). Those are logged instead.
    */
   private async writeOne(w: KeyWrite, user: AuthUser): Promise<AcademySettings> {
     const before = await this.settled('read', () => this.settings.all());

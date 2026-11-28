@@ -1,7 +1,7 @@
 import type { CrmLineEnv } from '@/config/env/env';
 
-// Test-only (excluded from the build). A line on the academy CRM's REST API (docs/19 «crm driver») pointed
-// at tools/wa-stub's crm prefix, and the CRM's answers. Ids and keys invented.
+// Test-only (excluded from the build). A line on the academy CRM's REST API (docs/19 «crm driver»)
+// pointed at tools/wa-stub's crm prefix, and the CRM's answers. Ids and keys invented.
 
 export const CRM_ENV: CrmLineEnv = { provider: 'crm', base: 'http://127.0.0.1:4010/crm/api/v1', apiKey: 'fake-crm-key' };
 

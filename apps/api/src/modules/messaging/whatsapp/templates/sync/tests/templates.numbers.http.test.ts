@@ -4,8 +4,8 @@ import { ADMIN, whatsappApp } from '@/modules/messaging/whatsapp/test-app';
 import type { ApprovalRow } from '@/modules/messaging/whatsapp/templates/catalog/types';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// Templates per number over HTTP (docs/23c decision 9): numbers[] on the list, PUT …/:key/number and
-// POST /admin/numbers/:id/templates/sync (templates.manage; never sales or a teacher).
+// Templates per number over HTTP (docs/23c decision 9): numbers[] on the list, PUT …/:key/number
+// and POST /admin/numbers/:id/templates/sync (templates.manage; never sales or a teacher).
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 const NUM = 'b0000000-0000-4000-8000-000000000001';

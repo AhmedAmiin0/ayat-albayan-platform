@@ -4,7 +4,8 @@ import type { ApprovalRow, NumberRef } from '@/modules/messaging/whatsapp/templa
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 import type { TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
 
-// PUT /messaging/templates/:key/number (docs/23c decisions 4, 9): the template's own number, audited, never blocked.
+// PUT /messaging/templates/:key/number (docs/23c decisions 4, 9): the template's own number,
+// audited, never blocked.
 
 const SPARE = 'b0000000-0000-4000-8000-000000000002';
 const DEFAULT: NumberRef = { id: 'b0000000-0000-4000-8000-000000000001', purpose: 'notifications', is_default: true, waba_id: 'w1' };

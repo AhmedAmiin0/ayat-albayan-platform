@@ -13,12 +13,13 @@ import {
   textPart,
   TS_DATE,
 } from '@/modules/messaging/webhook/tests/meta.fakes';
-import { metaTime, parseWebhook } from '@/modules/messaging/webhook/parse/webhook.parse';
+import { parseWebhook } from '@/modules/messaging/webhook/parse/webhook.parse';
 
 const NOW = new Date('2026-10-03T13:05:00Z');
 const ONE: LineNumbers = { notifications: PHONE_NUMBER_ID };
 const TWO: LineNumbers = { notifications: PHONE_NUMBER_ID, chat: CHAT_PHONE_NUMBER_ID };
-const parse = (value: object, numbers: LineNumbers = ONE) => parseWebhook(envelope(value), { now: NOW, numbers });
+const parse = (value: object, numbers: LineNumbers = ONE) =>
+  parseWebhook(envelope(value), { now: NOW, numbers });
 
 describe('parseWebhook — inbound messages', () => {
   it('reads a text message with the profile name and Meta’s timestamp', () => {
@@ -129,7 +130,9 @@ describe('parseWebhook — envelope', () => {
   it('accepts a change with no metadata phone_number_id (line null)', () => {
     const body = { entry: [{ changes: [{ field: 'messages', value: inboundValue(textPart('x')) }] }] };
     const onIgnored = vi.fn();
-    expect(parseWebhook(body, { now: NOW, numbers: TWO, onIgnored }).messages).toEqual([expect.objectContaining({ line: null })]);
+    expect(parseWebhook(body, { now: NOW, numbers: TWO, onIgnored }).messages).toEqual([
+      expect.objectContaining({ line: null }),
+    ]);
     expect(onIgnored).not.toHaveBeenCalled();
   });
 
@@ -139,11 +142,5 @@ describe('parseWebhook — envelope', () => {
     expect(chat.messages[0]?.line).toBe('chat');
     expect(parse(statusValue({ status: 'read' }), TWO).statuses).toHaveLength(1);
     expect(parse(inboundValue(textPart('x')), ONE).messages[0]?.line).toBeNull();
-  });
-
-  it('metaTime falls back to now for a missing or bad timestamp', () => {
-    expect(metaTime(undefined, NOW)).toBe(NOW);
-    expect(metaTime('abc', NOW)).toBe(NOW);
-    expect(metaTime('1791032400', NOW)).toEqual(TS_DATE);
   });
 });

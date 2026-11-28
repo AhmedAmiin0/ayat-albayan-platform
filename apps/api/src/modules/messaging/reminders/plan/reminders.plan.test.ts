@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { at, RIYADH_GUARDIAN, sampleLesson, STARTS_AT } from '@/modules/messaging/reminders/reminders.fakes';
-import { planReminders, type ReminderPlanInput } from './reminders.plan';
+import { planReminders } from './reminders.plan';
+import type { ReminderPlanInput } from './reminders.plan.types';
 
 const plan = (over: Partial<ReminderPlanInput> = {}) =>
   planReminders({ lessons: [sampleLesson()], minutesBefore: 60, dayBefore: false, origin: '', now: at('2026-10-04T13:00:00Z'), ...over });

@@ -2,24 +2,30 @@ import { lstat } from 'node:fs/promises';
 import { request } from 'node:http';
 import { z } from 'zod';
 import type { PageRange } from './pdf-pages';
-import { PdfToolError, type PdfPageImage } from './pdf-render';
+import { PdfToolError } from './pdf-render';
+import type { PdfPageImage } from './pdf-render.types';
 import { PDF_SOCKET, readCapped } from './pdf-wire';
 
-// The API's side of the PDF sandbox (docs/09 «PDF sandbox»): the two calls of pdf-render.ts, answered by
-// poppler in ayat-pdf (no secrets, no network). An API copy never runs poppler itself: no socket (local dev,
-// tests, CI) is PdfToolError('unavailable'), a 503 pdf_unavailable.
+// The API's side of the PDF sandbox (docs/09 «PDF sandbox»): the two calls of pdf-render.ts,
+// answered by poppler in ayat-pdf (no secrets, no network). An API copy never runs poppler itself:
+// no socket (local dev, tests, CI) is PdfToolError('unavailable'), a 503 pdf_unavailable.
 
 /** `socket`: tests listen on a temp path; `timeoutMs`: tests wait less. */
-interface SandboxOpts {
-  socket?: string;
-  timeoutMs?: number;
-}
+interface SandboxOpts { socket?: string; timeoutMs?: number }
 
-/** Whole call, queue included: the other copy's 20 s render ahead of ours, then our own 20 s, plus transfer. */
+/**
+ * Whole call, queue included: the other copy's 20 s render ahead of ours, then our own 20 s, plus
+ * transfer.
+ */
 const TIMEOUT_MS = 45_000;
-/** Five 1600 px JPEGs as base64 JSON are a few MB; more is never a preview (a sandbox gone wrong). */
+/**
+ * Five 1600 px JPEGs as base64 JSON are a few MB; more is never a preview (a sandbox gone wrong).
+ */
 const ANSWER_MAX = 16 * 1024 * 1024;
-/** No listener behind the path (ayat-pdf down or restarting): retry later, nothing remembered about the PDF. */
+/**
+ * No listener behind the path (ayat-pdf down or restarting): retry later, nothing remembered about
+ * the PDF.
+ */
 const UNREACHABLE = new Set(['ENOENT', 'ECONNREFUSED', 'EACCES', 'ENOTSOCK']);
 
 const pagesAnswer = z.object({ pages: z.number().int().min(0) });
@@ -41,7 +47,9 @@ export async function pdfPageCount(bytes: Uint8Array, opts: SandboxOpts = {}): P
   return parse(pagesAnswer, await call({ path: '/pages', bytes, opts })).pages;
 }
 
-/** pdf-render's renderPdfPages, in ayat-pdf: the JPEGs of `range` (any page outside it is dropped). */
+/**
+ * pdf-render's renderPdfPages, in ayat-pdf: the JPEGs of `range` (any page outside it is dropped).
+ */
 export async function renderPdfPages(
   bytes: Uint8Array,
   range: PageRange,
@@ -62,7 +70,6 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
   return r.data;
 }
 
-/** 200 → its JSON; 503 → 'busy' (its queue is full); anything else → 'failed'. */
 async function call(input: {
   path: string;
   bytes: Uint8Array;
@@ -70,35 +77,37 @@ async function call(input: {
 }): Promise<unknown> {
   const socketPath = input.opts.socket ?? PDF_SOCKET;
   if (!(await sandboxReady(socketPath))) throw new PdfToolError('unavailable');
-  const { status, body } = await post({
-    socketPath,
-    path: input.path,
-    bytes: input.bytes,
-    timeoutMs: input.opts.timeoutMs ?? TIMEOUT_MS,
-  });
-  if (status === 503) throw new PdfToolError('busy');
-  if (status !== 200 || body === null) throw new PdfToolError('failed');
-  try {
-    return JSON.parse(body.toString('utf8'));
-  } catch {
+  const timeoutMs = input.opts.timeoutMs ?? TIMEOUT_MS;
+  return answerOf(await post({ socketPath, path: input.path, bytes: input.bytes, timeoutMs }));
+}
+
+/** 200 → its JSON; 503 → 'busy' (its queue is full); anything else → 'failed'. */
+async function answerOf(answer: { status: number; body: Buffer | null }): Promise<unknown> {
+  if (answer.status === 503) throw new PdfToolError('busy');
+  if (answer.status !== 200 || answer.body === null) throw new PdfToolError('failed');
+  return new Response(answer.body).json().catch(() => {
     throw new PdfToolError('failed');
-  }
+  });
 }
 
-interface Post {
-  socketPath: string;
-  path: string;
-  bytes: Uint8Array;
-  timeoutMs: number;
-}
+const errnoError = z.object({ code: z.string() });
 
-/** One POST on a fresh connection, aborted as a whole after `timeoutMs` (a slow trickle cannot hold it). */
+/** A socket that is not there (or not ours to open) is the sandbox down; anything else failed. */
+const toolError = (e: unknown): PdfToolError => {
+  const errno = errnoError.safeParse(e);
+  const unreachable = errno.success && UNREACHABLE.has(errno.data.code);
+  return new PdfToolError(unreachable ? 'unavailable' : 'failed');
+};
+
+interface Post { socketPath: string; path: string; bytes: Uint8Array; timeoutMs: number }
+
+/**
+ * One POST on a fresh connection, aborted as a whole after `timeoutMs` (a slow trickle cannot hold
+ * it).
+ */
 function post(input: Post): Promise<{ status: number; body: Buffer | null }> {
   return new Promise((resolve, reject) => {
-    const fail = (e: unknown) => {
-      const code = e instanceof Error && 'code' in e ? String(e.code) : '';
-      reject(new PdfToolError(UNREACHABLE.has(code) ? 'unavailable' : 'failed'));
-    };
+    const fail = (e: unknown) => reject(toolError(e));
     const req = request(
       {
         socketPath: input.socketPath,
@@ -108,11 +117,12 @@ function post(input: Post): Promise<{ status: number; body: Buffer | null }> {
         signal: AbortSignal.timeout(input.timeoutMs),
         headers: { 'content-type': 'application/pdf', 'content-length': input.bytes.byteLength },
       },
-      (res) =>
+      (res) => {
         readCapped(res, ANSWER_MAX).then(
           (body) => resolve({ status: res.statusCode ?? 0, body }),
           fail,
-        ),
+        );
+      },
     );
     req.once('error', fail);
     req.end(input.bytes);

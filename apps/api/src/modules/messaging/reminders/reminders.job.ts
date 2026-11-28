@@ -1,29 +1,28 @@
-import type { TemplateKey } from '@ab/shared';
-import { joinWindowConfig } from '@ab/schedule';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { PushService } from '@/common/push/push.service';
-import { livekitEnv, loadEnv } from '@/config/env/env';
 import { NotificationPolicy } from '@/modules/messaging/notification-rules';
-import { firstWebOrigin } from '@/modules/teaching/classroom/classroom.config';
-import type { QueuedMessage } from './queued-row';
-import { joinCandidates, sentLinks, type RoomCandidate, type RoomContext } from './plan/reminders.links';
-import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson } from './plan/reminders.plan';
+import { confirmationPush, needsConfirmation } from './plan/reminders.plan';
+import type { ReminderLesson } from './plan/reminders.plan.types';
 import { RemindersRepo } from './reminders.repo';
-import { lookaheadHours, reminderRules, type ReminderRules } from './plan/reminders.rules';
-import { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
-import { ReminderTeacherLinks, v3Approved } from './reminders.teacher-links';
+import { lookaheadHours, reminderRules } from './plan/reminders.rules';
+import type { ReminderSummary } from './reminders.job.types';
+import { ReminderQueue } from './reminders.queue';
+import { RemindersSettings } from './reminders.settings';
 import { Ticker, TickerJob } from '@/common/jobs';
 import { BackgroundJob } from '@/config/role/background-job';
+import { loadEnv } from '@/config/env/env';
+import { firstWebOrigin } from '@/modules/teaching/classroom/classroom.config';
 
 const MINUTE = 60_000;
 /** R-MSG-02: every 5 minutes. */
 const EVERY_MS = 5 * MINUTE;
 const FIRST_RUN_MS = 30_000;
-/** How far back push_notifications is read to skip lessons already pushed (> any reminder window). */
+/**
+ * How far back push_notifications is read to skip lessons already pushed (> any reminder window).
+ */
 const PUSHED_SINCE_MS = 48 * 60 * MINUTE;
 
-export type ReminderSummary = { lessons: number; queued: number; dropped: number; pushed: number };
-type QueueInput = { settings: RemindersSettingsValues; rules: ReminderRules; lessons: readonly ReminderLesson[]; now: Date };
+const errorText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
  * R-MSG-02 reminder scheduler (docs/12 §7): every 5 minutes, single flight. Queues the same-day
@@ -31,10 +30,11 @@ type QueueInput = { settings: RemindersSettingsValues; rules: ReminderRules; les
  * teacher (teacher's tz); each row only while its notification rule is on (one NotificationPolicy
  * snapshot per tick; unreadable = nothing queued or pushed), the day-before one only once
  * lesson_reminder_24h is approved; nothing while settings.auto_messages_enabled is OFF. The link is
- * chosen here per lesson (its teacher's meeting_mode, else settings.meeting_link_auto; reminders.links.ts): our classroom adds one
- * lesson_join_link per student. Drops queued reminders of lessons cancelled since, and pushes
- * lesson_needs_confirmation (R-MOB-01) once per lesson (also when OFF), only while
- * settings.lesson_confirmation_required is ON. Only queues: the sender owns the send gate.
+ * chosen here per lesson (its teacher's meeting_mode, else settings.meeting_link_auto;
+ * reminders.links.ts): our classroom adds one lesson_join_link per student. Drops queued reminders
+ * of lessons cancelled since, and pushes lesson_needs_confirmation (R-MOB-01) once per lesson (also
+ * when OFF), only while settings.lesson_confirmation_required is ON. Only queues: the sender owns
+ * the send gate.
  */
 @BackgroundJob({ name: 'reminders' })
 @Injectable()
@@ -56,8 +56,8 @@ export class RemindersJob extends TickerJob {
     super();
   }
 
-  /** The teacher reminder's signed links (property injection keeps the constructor at four). */
-  @Inject(ReminderTeacherLinks) private readonly teacherLinks!: ReminderTeacherLinks;
+  /** What this tick queues (property injection keeps the constructor at four). */
+  @Inject(ReminderQueue) private readonly reminderQueue!: ReminderQueue;
 
   kick(): Promise<unknown> {
     return this.ticker.tick();
@@ -67,57 +67,35 @@ export class RemindersJob extends TickerJob {
   async runOnce(now = new Date()): Promise<ReminderSummary> {
     const summary: ReminderSummary = { lessons: 0, queued: 0, dropped: 0, pushed: 0 };
     try {
-      const settings = await this.settings.read();
-      const snap = await this.policy.snapshot();
-      // Fail closed: rules unread (logged by the policy) = no reminder and no push this tick; the next retries.
-      if (!snap) throw new Error('notification rules unread: nothing queued or pushed');
-      const rules = reminderRules(snap);
-      // reminder_lookahead_hours (≥ 25), or 48 h while a fixed day-before hour (send_at_local) is set.
-      const until = new Date(now.getTime() + lookaheadHours(settings.reminder_lookahead_hours, rules) * 60 * MINUTE);
-      const lessons = await this.queries.upcoming({ now, until });
-      summary.lessons = lessons.length;
-      // Automatic messages OFF (docs/09 cut-over: the old Apps Script still reminds): queue nothing.
-      if (settings.auto_messages_enabled) summary.queued = await this.queue({ settings, rules, lessons, now });
-      if (rules.confirmPush && settings.lesson_confirmation_required) summary.pushed = await this.confirmations(lessons, { now, minutesBefore: rules.minutesBefore });
+      await this.pass(now, summary);
     } catch (e) {
-      this.log.error(`reminders run aborted: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.error(`reminders run aborted: ${errorText(e)}`);
     }
     summary.dropped = await this.dropCancelled(now);
-    if (summary.queued + summary.dropped + summary.pushed > 0) this.log.log(`reminders: ${JSON.stringify(summary)}`);
+    const acted = summary.queued + summary.dropped + summary.pushed > 0;
+    if (acted) this.log.log(`reminders: ${JSON.stringify(summary)}`);
     return summary;
   }
 
-  /**
-   * This tick's reminders, with the link each lesson's teacher mode picks (ctx.auto = the academy default), and the families' own
-   * classroom links. LiveKit and the origin are read every tick. A template is looked up only when it could be used.
-   */
-  private async queue({ settings, rules, lessons, now }: QueueInput): Promise<number> {
-    const env = loadEnv();
-    const livekit = livekitEnv(env) !== null;
-    const wanted: TemplateKey[] = [];
-    if (rules.dayBefore) wanted.push('lesson_reminder_24h');
-    if (livekit && rules.joinLink) wanted.push('lesson_join_link');
-    const approved = wanted.length > 0 ? await this.queries.approved(wanted) : new Set<string>();
-    const ctx: RoomContext = { auto: settings.meeting_link_auto, livekit, joinOk: approved.has('lesson_join_link'), origin: firstWebOrigin(env.WEB_ORIGIN) };
-    const { minutesBefore, sameDay, dayBeforeAt, teacherMinutesBefore } = rules;
-    const plan = { minutesBefore, sameDay, dayBeforeAt, teacherReminders: rules.teacher, teacherMinutesBefore, origin: ctx.origin };
-    const sent = sentLinks(lessons, ctx);
-    const win = joinWindowConfig(settings);
-    const at = { minutesBefore, teacherMinutesBefore, now, origin: ctx.origin, win };
-    const teacherLinks = rules.teacher ? await this.teacherLinks.build(sent, at) : undefined;
-    const teacherV3 = await v3Approved(this.queries, teacherLinks);
-    const rows = planReminders({ ...plan, lessons: sent, teacherLinks, teacherV3, dayBefore: approved.has('lesson_reminder_24h'), now });
-    const candidates = joinCandidates(lessons, ctx, { now, minutesBefore, win });
-    return this.queries.queue([...rows, ...(await this.roomLinks(candidates, now))]);
-  }
-
-  /** The families' links on their own: a failure here never keeps the reminders from being queued (next tick retries). */
-  private async roomLinks(candidates: readonly RoomCandidate[], now: Date): Promise<QueuedMessage[]> {
-    try {
-      return await this.queries.roomLinks(candidates, now);
-    } catch (e) {
-      this.log.warn(`family classroom links failed: ${e instanceof Error ? e.message : String(e)}`);
-      return [];
+  private async pass(now: Date, summary: ReminderSummary): Promise<void> {
+    const settings = await this.settings.read();
+    const snap = await this.policy.snapshot();
+    // Fail closed: rules unread (logged by the policy) = no reminder and no push this tick.
+    if (!snap) throw new Error('notification rules unread: nothing queued or pushed');
+    const rules = reminderRules(snap);
+    // reminder_lookahead_hours (≥ 25), or 48 h while a fixed day-before hour is set.
+    const hours = lookaheadHours(settings.reminder_lookahead_hours, rules);
+    const until = new Date(now.getTime() + hours * 60 * MINUTE);
+    const lessons = await this.queries.upcoming({ now, until });
+    summary.lessons = lessons.length;
+    // Automatic messages OFF (docs/09 cut-over: the old Apps Script still reminds): queue nothing.
+    if (settings.auto_messages_enabled) {
+      const origin = firstWebOrigin(loadEnv().WEB_ORIGIN);
+      summary.queued = await this.reminderQueue.queue({ settings, rules, lessons, now, origin });
+    }
+    if (rules.confirmPush && settings.lesson_confirmation_required) {
+      const at = { now, minutesBefore: rules.minutesBefore };
+      summary.pushed = await this.confirmations(lessons, at);
     }
   }
 
@@ -126,18 +104,23 @@ export class RemindersJob extends TickerJob {
     try {
       return await this.queries.dropCancelled(now);
     } catch (e) {
-      this.log.warn(`dropping cancelled reminders failed: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(`dropping cancelled reminders failed: ${errorText(e)}`);
       return 0;
     }
   }
 
-  private async confirmations(lessons: readonly ReminderLesson[], at: { now: Date; minutesBefore: number }): Promise<number> {
+  private async confirmations(
+    lessons: readonly ReminderLesson[],
+    at: { now: Date; minutesBefore: number },
+  ): Promise<number> {
     const due = needsConfirmation(lessons, at);
     if (due.length === 0) return 0;
     const since = new Date(at.now.getTime() - PUSHED_SINCE_MS);
     const done = await this.queries.pushedSubjects('lesson_needs_confirmation', since);
     const fresh = due.filter((l) => !done.has(l.id));
-    for (const lesson of fresh) await this.push.notifyAdmins('lesson_needs_confirmation', confirmationPush(lesson));
+    for (const lesson of fresh) {
+      await this.push.notifyAdmins('lesson_needs_confirmation', confirmationPush(lesson));
+    }
     return fresh.length;
   }
 }

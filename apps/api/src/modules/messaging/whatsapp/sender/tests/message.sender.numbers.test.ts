@@ -9,7 +9,8 @@ import { dueMessage, fakeSwitches } from '@/modules/messaging/whatsapp/sender/se
 import type { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo';
 import { templateRow } from '@/modules/messaging/whatsapp/whatsapp.fakes';
 
-// docs/23c: legacy keeps today's pass (no new read); module mode routes each row to a number and pauses per number.
+// docs/23c: legacy keeps today's pass (no new read); module mode routes each row to a number and
+// pauses per number.
 
 const gate = fakeSwitches();
 const queries = {

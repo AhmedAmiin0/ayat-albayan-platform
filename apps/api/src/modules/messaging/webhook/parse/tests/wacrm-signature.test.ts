@@ -2,7 +2,8 @@ import { createHmac } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import { signatureParts, verifyWacrmSignature } from '@/modules/messaging/webhook/parse/webhook.wacrm-signature';
 
-// docs/19 «crm driver»: X-Wacrm-Signature = «t=<unix>,v1=<hex HMAC-SHA256(secret, `${t}.${rawBody}`)>», 5-minute window.
+// docs/19 «crm driver»: X-Wacrm-Signature = «t=<unix>,v1=<hex HMAC-SHA256(secret,
+// `${t}.${rawBody}`)>», 5-minute window.
 
 const SECRET = 'fake-wacrm-secret';
 const NOW = new Date('2026-10-25T08:00:00Z');

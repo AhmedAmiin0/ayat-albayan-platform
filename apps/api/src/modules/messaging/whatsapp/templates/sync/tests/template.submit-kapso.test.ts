@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { KAPSO_ENV, kapsoFetch } from '@/modules/messaging/whatsapp/drivers/kapso/kapso.fakes';
 import { REPORT_READY_SEED } from '@/modules/messaging/whatsapp/templates/catalog/seed-templates.fakes';
-import { templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
+import { httpFailure, templateServices } from '@/modules/messaging/whatsapp/templates/sync/template-services.fakes';
 import { HttpWhatsappClient } from '@/modules/messaging/whatsapp/whatsapp.client';
 
 // docs/19: Kapso has no sample upload, so a document-header submit on a kapso notifications line
@@ -26,10 +26,7 @@ describe('submit of a document-header template on a kapso line', () => {
     const registry = templateServices(queries, lines, audit);
     const error = await registry.admin.submit('report_ready', 'admin-1').then(
       () => null,
-      (e: { getStatus: () => number; getResponse: () => unknown }) => [
-        e.getStatus(),
-        e.getResponse(),
-      ],
+      httpFailure,
     );
     expect(error).toEqual([409, { code: 'needs_meta_driver', message: 'needs_meta_driver', line: 'notifications' }]);
     expect(f.requests).toHaveLength(0);

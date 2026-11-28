@@ -1,52 +1,29 @@
 import { PLAYABLE_MIMES } from '@ab/shared';
-import type { NumberPurpose } from '@ab/catalog';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import type { MediaRefusal } from '@/modules/messaging/whatsapp/messages/media-refusal/media-refusal.schemas';
 import { RECEIPT_FILTERS } from '@/modules/messaging/whatsapp/messages/receipts/receipt-candidates';
 import { pgError } from '@/common/db/errors';
+import type { CachedMedia, MediaMessage } from './inbound-media.types';
 
-/** The number a message came in on (messages.number_id → wa_numbers): it decides who can fetch its media. */
-export interface MediaNumber { id: string; provider: string; purpose: NumberPurpose }
+export type { CachedMedia, MediaMessage, MediaNumber } from './inbound-media.types';
 
-/** The columns of an inbound message that carry a file (R-MSG-06). */
-export interface MediaMessage {
-  id: string;
-  phone_e164: string;
-  direction: 'inbound' | 'outbound';
-  media_id: string | null;
-  media_mime: string | null;
-  media_path: string | null;
-  /** A final refusal of the file (media-refusal.ts), answered on later views with no fetch. */
-  media_refusal?: string | null;
-  /** The file's caption. */
-  body: string | null;
-  media_name?: string | null;
-  created_at: string;
-  /** The receiving line: its token is the only one that can fetch the media id (null = notifications; calls = the calls number). */
-  line: NumberPurpose | null;
-  /** Its number (null = not stamped: legacy rows); the old CRM number's history is stamped with it. */
-  number?: MediaNumber | null;
-  /** Its file is refused like an unknown message. */
-  hidden_at?: string | null;
-  /** Meta's message part ({type, [type]: …}); a «sticker» is never a receipt (receiptMime). */
-  interactive_payload?: unknown;
-}
 const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, media_refusal, body, media_name, interactive_payload, created_at, line, hidden_at, number:wa_numbers(id, provider, purpose)';
 
 /** The filters `cached` adds (a select or an update on messages). */
 interface Filterable<Q> { eq(column: 'direction', value: string): Q; not(column: string, op: string, value: unknown): Q }
 
-/** A cached inbound voice note or video, for the 30-day purge (WaMediaRetentionJob); always a Meta media id. */
-export interface CachedMedia { id: string; media_path: string; media_mime: string | null; media_id: string | null }
 /**
- * PostgREST `or`: exactly a PLAYABLE_MIMES base type, bare or with parameters («; codecs=opus»). Not a
- * bare prefix: `audio/mp4*` also matched audio/mp4a-latm, which the job skips and never clears, so a
- * run of them at the old end would stop every later purge.
+ * PostgREST `or`: exactly a PLAYABLE_MIMES base type, bare or with parameters («; codecs=opus»).
+ * Not a bare prefix: `audio/mp4*` also matched audio/mp4a-latm, which the job skips and never
+ * clears, so a run of them at the old end would stop every later purge.
  */
 export const PLAYABLE_FILTER = PLAYABLE_MIMES.flatMap((m) => [`media_mime.ilike.${m}`, `media_mime.ilike.${m};*`]).join(',');
 
-/** DB touches of InboundMedia and of the chat's file picker (service role; the callers are admin-only). */
+/**
+ * DB touches of InboundMedia and of the chat's file picker (service role; the callers are
+ * admin-only).
+ */
 @Injectable()
 export class InboundMediaRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -99,25 +76,40 @@ export class InboundMediaRepo {
    * imported old-CRM file (no media id, cached from the CRM link) is our ONLY copy once the CRM's
    * storage is private, so it is never purged (CrmMediaCopyJob).
    */
-  async cachedBefore(input: { before: string; limit: number; echoes?: boolean }): Promise<CachedMedia[]> {
-    const { data, error } = await this.cached(this.db.from('messages').select('id, media_path, media_mime, media_id'), input.echoes)
+  async cachedBefore(input: {
+    before: string;
+    limit: number;
+    echoes?: boolean;
+  }): Promise<CachedMedia[]> {
+    const select = this.db.from('messages').select('id, media_path, media_mime, media_id');
+    const { data, error } = await this.cached(select, input.echoes)
       .not('media_path', 'is', null)
       .or(PLAYABLE_FILTER)
       .lt('created_at', input.before)
       .order('created_at', { ascending: true })
       .limit(input.limit);
     if (error) throw pgError(error);
-    return data.flatMap((r) => (r.media_path ? [{ id: r.id, media_path: r.media_path, media_mime: r.media_mime, media_id: r.media_id }] : []));
+    return data.flatMap((r) =>
+      r.media_path
+        ? [{ id: r.id, media_path: r.media_path, media_mime: r.media_mime, media_id: r.media_id }]
+        : [],
+    );
   }
 
-  /** Forget the purged copies (inbound, or cached echoes: a file staff sent keeps its path, messages_content_check). */
+  /**
+   * Forget the purged copies (inbound, or cached echoes: a file staff sent keeps its path,
+   * messages_content_check).
+   */
   async clearPaths(ids: readonly string[], echoes = false): Promise<void> {
     if (!ids.length) return;
     const { error } = await this.cached(this.db.from('messages').update({ media_path: null }).in('id', [...ids]), echoes);
     if (error) throw pgError(error);
   }
 
-  /** Inbound rows with Meta's media id (never an old-CRM copy), or echoes: outbound with a media id and a cached copy that is not a sent file. */
+  /**
+   * Inbound rows with Meta's media id (never an old-CRM copy), or echoes: outbound with a media id
+   * and a cached copy that is not a sent file.
+   */
   private cached<Q extends Filterable<Q>>(q: Q, echoes = false): Q {
     if (!echoes) return q.eq('direction', 'inbound').not('media_id', 'is', null);
     return q.eq('direction', 'outbound').not('media_id', 'is', null).not('media_path', 'like', 'out/%').not('media_path', 'like', 'minio:out/%');

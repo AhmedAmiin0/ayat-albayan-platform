@@ -14,7 +14,10 @@ export interface ReactionTarget {
   line: string | null;
   number_id: string | null;
   interactive_payload: Json | null;
-  /** A link template (lesson_feedback_request, lesson_join_link) stays hidden from sales (visibleToSales). */
+  /**
+   * A link template (lesson_feedback_request, lesson_join_link) stays hidden from sales
+   * (visibleToSales).
+   */
   template_key: string | null;
   our_reaction: string | null;
   our_reaction_by: string | null;
@@ -29,8 +32,9 @@ interface OurReaction {
 }
 
 /**
- * 404 message_not_found for another chat's message, an unknown id or a reaction row; 409 not_reactable
- * without a wamid (WhatsApp does not know it); 409 reaction_too_old past WhatsApp's 30 days.
+ * 404 message_not_found for another chat's message, an unknown id or a reaction row; 409
+ * not_reactable without a wamid (WhatsApp does not know it); 409 reaction_too_old past WhatsApp's
+ * 30 days.
  */
 export function assertReactable(
   target: ReactionTarget | null,
@@ -41,7 +45,10 @@ export function assertReactable(
   if (reactionTooOld(target.created_at, now)) throw httpError(HttpStatus.CONFLICT, 'reaction_too_old');
 }
 
-/** The reaction send's marker (dispatch reads `reaction`; the revert trigger `target_id` and `previous`). */
+/**
+ * The reaction send's marker (dispatch reads `reaction`; the revert trigger `target_id` and
+ * `previous`).
+ */
 export const reactionPayload = (target: ReactionTarget, emoji: string | null): Json => ({
   type: 'reaction',
   reaction: { message_id: target.wa_message_id, emoji: emoji ?? '' },
@@ -51,7 +58,9 @@ export const reactionPayload = (target: ReactionTarget, emoji: string | null): J
 
 const TARGET_SELECT = 'id, wa_message_id, created_at, line, number_id, interactive_payload, template_key, our_reaction, our_reaction_by, our_reaction_at' as const;
 
-/** The reaction endpoint's reads and its one optimistic write (service role; the guards run first). */
+/**
+ * The reaction endpoint's reads and its one optimistic write (service role; the guards run first).
+ */
 @Injectable()
 export class ReactionRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -67,12 +76,13 @@ export class ReactionRepo {
   async queued(dedupKey: string): Promise<boolean> {
     const { data, error } = await this.db.from('messages').select('id').eq('dedup_key', dedupKey).limit(1);
     if (error) throw pgError(error);
-    return (data ?? []).length > 0;
+    return data.length > 0;
   }
 
   /**
-   * Older reaction sends to this message still waiting (a retry, a closed gate) never go out after a newer
-   * tap: failed «superseded» (not claimed by the sender; the revert trigger leaves the newer ours alone).
+   * Older reaction sends to this message still waiting (a retry, a closed gate) never go out after
+   * a newer tap: failed «superseded» (not claimed by the sender; the revert trigger leaves the
+   * newer ours alone).
    */
   async supersede(input: { targetId: string; phone: string }): Promise<void> {
     const { error } = await this.db
@@ -87,7 +97,10 @@ export class ReactionRepo {
     if (error) throw pgError(error);
   }
 
-  /** Ours at once (optimistic); a failed send puts back `previous` (trigger messages_reaction_failed). */
+  /**
+   * Ours at once (optimistic); a failed send puts back `previous` (trigger
+   * messages_reaction_failed).
+   */
   async setOurs(input: { targetId: string; phone: string; ours: OurReaction }): Promise<void> {
     const { emoji, by, at } = input.ours;
     const patch = {

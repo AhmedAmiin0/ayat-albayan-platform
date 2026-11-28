@@ -38,6 +38,8 @@ type ReminderInput = Parameters<typeof teacherReminderCrm>[0];
 const remind = (over: Partial<ReminderInput> = {}) =>
   teacherReminderCrm({ teacher: TEACHER, lesson: REMINDED, origin: ORIGIN, ...over });
 
+const bodyOf = (crm: ReturnType<typeof remind>) => crm?.body ?? [];
+
 describe('teacherReminderCrm (teacher_lesson_reminder / _meet → the CRM\'s teacher_lesson_reminder)', () => {
   it('[teacher, one line]: time in the teacher\'s tz · students with codes · join · report; no buttons', () => {
     expect(remind()).toEqual({
@@ -57,9 +59,9 @@ describe('teacherReminderCrm (teacher_lesson_reminder / _meet → the CRM\'s tea
   it('one line for Meta: no newline, no tab, never 4 spaces in a row', () => {
     const students = [{ name: 'سهيلة\n\tبنت     أحمد', code: 'AB-0101' }];
     const crm = remind({ teacher: { ...TEACHER, display_name_ar: 'أ.\n  خالد' }, lesson: { ...REMINDED, students } });
-    expect(crm?.body?.[0]).toBe('أ. خالد');
-    expect(crm?.body?.[1]).toContain(' · سهيلة بنت أحمد (AB-0101) · ');
-    for (const value of crm?.body ?? []) expect(value).not.toMatch(/[\n\t]| {4}/);
+    expect(bodyOf(crm)[0]).toBe('أ. خالد');
+    expect(bodyOf(crm)[1]).toContain(' · سهيلة بنت أحمد (AB-0101) · ');
+    for (const value of bodyOf(crm)) expect(value).not.toMatch(/[\n\t]| {4}/);
   });
 
   it('a missing value (no origin, no teacher name, a student without a code) gives null', () => {

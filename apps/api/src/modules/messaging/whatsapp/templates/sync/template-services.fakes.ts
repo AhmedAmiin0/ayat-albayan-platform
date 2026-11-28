@@ -1,3 +1,4 @@
+import { HttpException } from '@nestjs/common';
 import type { AuditService } from '@/common/audit/audit.service';
 import { TemplateAdmin } from '@/modules/messaging/whatsapp/templates/catalog/template-admin';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
@@ -15,4 +16,10 @@ export function templateServices(queries: object, lines: object, audit: object) 
     verifier: new TemplateVerifier(repo, wa, catalog),
     admin: new TemplateAdmin(repo, wa, audit as AuditService),
   };
+}
+
+/** An HttpException rejection as [status, response]; any other rejection is rethrown. */
+export function httpFailure(e: unknown): [number, unknown] {
+  if (!(e instanceof HttpException)) throw e;
+  return [e.getStatus(), e.getResponse()];
 }

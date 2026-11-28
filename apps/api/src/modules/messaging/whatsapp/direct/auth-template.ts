@@ -13,9 +13,10 @@ const buttonText = (buttons: TemplateRow['buttons']): string | null =>
   parseOrNull(firstButtonText, buttons);
 
 /**
- * POST /message_templates components of an AUTHENTICATION template (docs/30 §4, account_code): Meta writes
- * the text itself, so only the options go: the security line, the expiry footer and one OTP copy-code
- * button. Our row's body and URL-shaped button are the SEND shape (the code fills {{1}} and the button).
+ * POST /message_templates components of an AUTHENTICATION template (docs/30 §4, account_code): Meta
+ * writes the text itself, so only the options go: the security line, the expiry footer and one OTP
+ * copy-code button. Our row's body and URL-shaped button are the SEND shape (the code fills {{1}}
+ * and the button).
  */
 export function authSubmitComponents(row: Pick<TemplateRow, 'buttons'>): GraphBody[] {
   const text = buttonText(row.buttons);

@@ -3,14 +3,8 @@ import type { Db } from '@/common/db/db.module';
 // Test-only supabase-js double: every builder call is recorded per `from(table)`, and awaiting the
 // chain resolves to the next queued result for that table ({ data: [], error: null } by default).
 
-export interface Result {
-  data?: unknown;
-  error?: { message: string } | null;
-}
-interface ChainLog {
-  table: string;
-  calls: [string, unknown[]][];
-}
+export interface Result { data?: unknown; error?: { message: string } | null }
+interface ChainLog { table: string; calls: [string, unknown[]][] }
 
 export function chainDb(results: Record<string, Result[]> = {}) {
   const log: ChainLog[] = [];
