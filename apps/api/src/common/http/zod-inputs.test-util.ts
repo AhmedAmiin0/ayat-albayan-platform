@@ -28,17 +28,6 @@ const runPipes =
     return value;
   };
 
-const isBody = (key: string): boolean => key.startsWith(`${RouteParamtypes.BODY}:`);
-
-/** Runs the pipes of `controller.method`'s @Body parameter on a raw body. */
-export function bodyPipeOf<T>(
-  controller: Type<T>,
-  method: keyof T & string,
-): (raw: unknown) => Promise<unknown> {
-  const pipes = argsOf(controller, method).find(([key]) => isBody(key))?.[1].pipes ?? [];
-  return runPipes(pipes, 'body');
-}
-
 const isParam = (key: string): boolean => key.startsWith(`${RouteParamtypes.PARAM}:`);
 
 /** Runs the pipes of `controller.method`'s `@Param(name)` on a raw path segment. */
