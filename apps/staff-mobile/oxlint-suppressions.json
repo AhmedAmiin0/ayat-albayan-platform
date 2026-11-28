@@ -2294,7 +2294,7 @@
   },
   "src/inbox/qualification/lib/queries.ts": {
     "ab/no-untyped-api-calls": {
-      "count": 2
+      "count": 1
     }
   },
   "src/inbox/rating/SendRating.test.tsx": {
