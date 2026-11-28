@@ -21,7 +21,12 @@ export function healthRows(views: readonly LineCheckView[]): KeptRow[] {
   return views.flatMap((v) => {
     const e164 = v.configured ? displayE164(v.display_phone_number) : null;
     if (!e164) return [];
-    const row = { line: v.line, display_phone_e164: e164, verified_name: v.verified_name?.slice(0, 200) ?? null, checked_at: v.checked_at };
+    const row = {
+      line: v.line,
+      display_phone_e164: e164,
+      verified_name: v.verified_name?.slice(0, 200) ?? null,
+      checked_at: v.checked_at,
+    };
     return [{ ...row, phone_number_id: v.phone_number_id }];
   });
 }
@@ -33,8 +38,13 @@ type KeptRow = LineHealthView & { phone_number_id: string | null };
  * #134 item 9: a kept row counts only while its phone id is still the line's (a swapped number, or a
  * row from before the column, shows «not checked yet» until the next check).
  */
-export function currentRows(rows: readonly KeptRow[], ids: Partial<Record<LineHealthView['line'], string>>): LineHealthView[] {
-  return rows.flatMap(({ phone_number_id: id, ...row }) => (id !== null && id === ids[row.line] ? [row] : []));
+export function currentRows(
+  rows: readonly KeptRow[],
+  ids: Partial<Record<LineHealthView['line'], string>>,
+): LineHealthView[] {
+  return rows.flatMap(({ phone_number_id: id, ...row }) =>
+    id !== null && id === ids[row.line] ? [row] : [],
+  );
 }
 
 /** Migration 20261022000600: last good check per line; never a secret; write failures ignored. */

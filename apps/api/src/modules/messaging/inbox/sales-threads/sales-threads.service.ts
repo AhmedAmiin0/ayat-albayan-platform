@@ -44,7 +44,8 @@ export class SalesThreadsService {
 
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
     const [{ items: rows, total }, threshold] = await Promise.all([
-      this.queries.list(f), renewalThreshold(this.settings),
+      this.queries.list(f),
+      renewalThreshold(this.settings),
     ]);
     const guardians = rows.flatMap((r) => (r.guardian_id ? [r.guardian_id] : []));
     const [items, tags, reopenUsable] = await Promise.all([
@@ -71,7 +72,13 @@ export class SalesThreadsService {
     ]);
     const view = at.found ? forSales(toThreadView(at.found, now, { reopenUsable })) : null;
     const thread = view && this.pick ? await this.pick.thread(view, now) : view;
-    const detail: ThreadDetail = { thread, messages, has_more: at.rows.length > q.limit, lessons, people };
+    const detail: ThreadDetail = {
+      thread,
+      messages,
+      has_more: at.rows.length > q.limit,
+      lessons,
+      people,
+    };
     return read ? asRead(detail, now) : detail;
   }
 

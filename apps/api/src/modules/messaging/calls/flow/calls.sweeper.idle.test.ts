@@ -12,8 +12,15 @@ const at = (ms: number) => new Date(T0 + ms);
 function setup(on: boolean | 'unreadable' = true) {
   const { kit, queries } = fakeKit();
   const live = vi.spyOn(queries, 'live');
-  const enabled = vi.fn(() => (on === 'unreadable' ? Promise.reject(new Error('db down')) : Promise.resolve(on)));
-  return { sweeper: new CallsSweeper(kit, { enabled } as unknown as CallsGate), queries, live, enabled };
+  const enabled = vi.fn(() =>
+    on === 'unreadable' ? Promise.reject(new Error('db down')) : Promise.resolve(on),
+  );
+  return {
+    sweeper: new CallsSweeper(kit, { enabled } as unknown as CallsGate),
+    queries,
+    live,
+    enabled,
+  };
 }
 
 afterEach(() => {
@@ -48,7 +55,13 @@ describe('CallsSweeper.tick — idle costs', () => {
 
   it('a call left live: keeps sweeping every tick until it ends', async () => {
     const { sweeper, queries, live } = setup();
-    await queries.insert({ direction: 'outbound', status: 'ringing', phone_e164: FAMILY, wa_call_id: 'w1', started_at: at(0).toISOString() });
+    await queries.insert({
+      direction: 'outbound',
+      status: 'ringing',
+      phone_e164: FAMILY,
+      wa_call_id: 'w1',
+      started_at: at(0).toISOString(),
+    });
     await sweeper.tick(at(10_000));
     await sweeper.tick(at(20_000));
     expect(await sweeper.tick(at(50_000))).toBe(1);
@@ -60,7 +73,13 @@ describe('CallsSweeper.tick — idle costs', () => {
   it('a wake (an insert, on any API copy) sweeps from the next 10 s tick, so the 45 s timeout is not delayed', async () => {
     const { sweeper, queries, live } = setup();
     await sweeper.tick(at(0));
-    await queries.insert({ direction: 'outbound', status: 'ringing', phone_e164: FAMILY, wa_call_id: 'w2', started_at: at(1_000).toISOString() });
+    await queries.insert({
+      direction: 'outbound',
+      status: 'ringing',
+      phone_e164: FAMILY,
+      wa_call_id: 'w2',
+      started_at: at(1_000).toISOString(),
+    });
     await sweeper.tick(at(10_000));
     expect(live).toHaveBeenCalledTimes(1);
     await sweeper.wake();
@@ -89,7 +108,10 @@ describe('CallsSweeper.tick — idle costs', () => {
     vi.stubEnv('APP_ROLE', 'api');
     vi.stubEnv('WORKER_URL', 'http://ayat-worker:3000');
     const urls: string[] = [];
-    vi.stubGlobal('fetch', (url: string) => (urls.push(url), Promise.resolve(new Response(null, { status: 204 }))));
+    vi.stubGlobal(
+      'fetch',
+      (url: string) => (urls.push(url), Promise.resolve(new Response(null, { status: 204 }))),
+    );
     const { sweeper, live } = setup();
     await sweeper.wake();
     expect(urls).toEqual(['http://ayat-worker:3000/internal/jobs/calls-sweeper/kick?wait=0']);

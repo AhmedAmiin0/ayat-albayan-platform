@@ -5,7 +5,10 @@ import { lineProvider, loadEnv } from '@/config/env/env';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { routeOf } from '@/modules/messaging/whatsapp/numbers/number-route';
 import { NumberRoutes } from '@/modules/messaging/whatsapp/numbers/number-routes';
-import { MessageDispatch, type SendVia } from '@/modules/messaging/whatsapp/sender/message.dispatch';
+import {
+  MessageDispatch,
+  type SendVia,
+} from '@/modules/messaging/whatsapp/sender/message.dispatch';
 import type { DueMessage } from '@/modules/messaging/whatsapp/sender/sender.due';
 import { SenderRepo } from '@/modules/messaging/whatsapp/sender/sender.repo';
 import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp.types';
@@ -14,7 +17,10 @@ import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp
 const CODE_LINE = 'chat' as const;
 
 /** sent | unavailable (gate closed, template not approved, no line / number can send it) | failed (the provider refused). */
-type CodeSendResult = { status: 'sent' } | { status: 'unavailable' } | { status: 'failed'; error: string };
+type CodeSendResult =
+  | { status: 'sent' }
+  | { status: 'unavailable' }
+  | { status: 'failed'; error: string };
 
 /**
  * The sign-in / password code (docs/30 §4): ONE authentication-template send, now, through the same
@@ -55,12 +61,17 @@ export class CodeSend {
       await this.dispatch.send(row, template, via);
       return { status: 'sent' };
     } catch (e) {
-      return { status: 'failed', error: e instanceof WaError && e.info.code !== null ? `wa_${e.info.code}` : 'send_failed' };
+      return {
+        status: 'failed',
+        error: e instanceof WaError && e.info.code !== null ? `wa_${e.info.code}` : 'send_failed',
+      };
     }
   }
 
   private async template(): Promise<TemplateRow | null> {
-    return (await this.queries.approvedTemplates()).find((t) => t.key === ACCOUNT_CODE_TEMPLATE) ?? null;
+    return (
+      (await this.queries.approvedTemplates()).find((t) => t.key === ACCOUNT_CODE_TEMPLATE) ?? null
+    );
   }
 
   /**
@@ -78,13 +89,20 @@ export class CodeSend {
     if (!this.routes) return null;
     const chat = numbers.filter((n) => n.purpose === CODE_LINE && !NO_CODES.has(n.env?.provider));
     const { pass } = await this.routes.pass(chat);
-    const route = routeOf(pass, { row, template: { ...template, line: CODE_LINE, number_id: null } });
+    const route = routeOf(pass, {
+      row,
+      template: { ...template, line: CODE_LINE, number_id: null },
+    });
     return route?.line === CODE_LINE ? route : null;
   }
 }
 
 /** An in-memory row for the dispatch: the code fills {{1}} and the copy-code button; nothing is stored. */
-export function codeRow(input: { phone: string; code: string; template: Pick<TemplateRow, 'key'> }): DueMessage {
+export function codeRow(input: {
+  phone: string;
+  code: string;
+  template: Pick<TemplateRow, 'key'>;
+}): DueMessage {
   return {
     id: 'account-code',
     phone_e164: input.phone,

@@ -16,14 +16,28 @@ import { z } from 'zod';
 // messages.template_params), parsed instead of cast: a malformed row reads as empty, never crashes.
 
 const buttonSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('url'), url: z.string(), text: z.string().optional(), example: z.string().optional() }),
-  z.object({ type: z.literal('quick_reply'), text: z.string(), intent: z.enum(QUICK_REPLY_INTENTS) }),
+  z.object({
+    type: z.literal('url'),
+    url: z.string(),
+    text: z.string().optional(),
+    example: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal('quick_reply'),
+    text: z.string(),
+    intent: z.enum(QUICK_REPLY_INTENTS),
+  }),
 ]);
 
 const displaySchema = z.object({
   header: z.object({ type: z.enum(TEMPLATE_HEADER_KINDS), text: z.string().optional() }).nullable(),
   buttons: z.array(
-    z.object({ type: z.enum(TEMPLATE_BUTTON_KINDS), text: z.string(), url: z.string().optional(), phone: z.string().optional() }),
+    z.object({
+      type: z.enum(TEMPLATE_BUTTON_KINDS),
+      text: z.string(),
+      url: z.string().optional(),
+      phone: z.string().optional(),
+    }),
   ),
 });
 

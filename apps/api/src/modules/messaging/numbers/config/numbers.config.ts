@@ -7,7 +7,11 @@ import {
   setCallsNumber,
   type CallsNumber,
 } from '@/common/configuration/integrations/calls-number';
-import { setNumbersOverlay, type NumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import {
+  setNumbersOverlay,
+  type NumbersOverlay,
+  type OverlayNumber,
+} from '@/common/configuration/integrations/numbers-overlay';
 import { loadEnv } from '@/config/env/env';
 import { callsNumberOf, overlayNumber } from './numbers.env';
 import { moduleOverlay, type DefaultNumber } from '@/modules/messaging/numbers/lines/numbers.lines';
@@ -78,8 +82,11 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
       if (generation === this.generation) this.install(next, calls);
       return true;
     } catch (e) {
-      if (source === 'module' && !this.loaded && generation === this.generation) setNumbersOverlay(this.overlayOf([]));
-      this.log.warn(`numbers config not loaded, keeping the current one: ${e instanceof Error ? e.message : String(e)}`);
+      if (source === 'module' && !this.loaded && generation === this.generation)
+        setNumbersOverlay(this.overlayOf([]));
+      this.log.warn(
+        `numbers config not loaded, keeping the current one: ${e instanceof Error ? e.message : String(e)}`,
+      );
       return false;
     }
   }
@@ -117,16 +124,24 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
   async numbers(): Promise<OverlayNumber[]> {
     const env = loadEnv();
     const rows = await this.queries.all();
-    return Promise.all(rows.map(async (row) => overlayNumber({ row, secrets: await this.secrets.read(row.id) }, env)));
+    return Promise.all(
+      rows.map(async (row) =>
+        overlayNumber({ row, secrets: await this.secrets.read(row.id) }, env),
+      ),
+    );
   }
 
   overlayOf(defaults: readonly DefaultNumber[]): NumbersOverlay {
-    return moduleOverlay(defaults, (key) => this.log.warn(`number value for ${key} is invalid and ignored`));
+    return moduleOverlay(defaults, (key) =>
+      this.log.warn(`number value for ${key} is invalid and ignored`),
+    );
   }
 
   /** Each messaging role's default (a `calls` number is never a line: it supplies no WA_* key). */
   async defaults(): Promise<(DefaultNumber & { label: string })[]> {
-    const rows = (await this.queries.defaults()).flatMap((r) => (isWaLine(r.purpose) ? [{ ...r, purpose: r.purpose }] : []));
+    const rows = (await this.queries.defaults()).flatMap((r) =>
+      isWaLine(r.purpose) ? [{ ...r, purpose: r.purpose }] : [],
+    );
     return Promise.all(rows.map(async (r) => ({ ...r, secrets: await this.secrets.read(r.id) })));
   }
 }

@@ -1,7 +1,15 @@
 import type { RenderableTemplate, TemplateNumberApproval, TemplateView } from '@ab/shared';
 import type { HttpException } from '@nestjs/common';
-import { paramNames, templateButtons, templateDisplay } from '@/modules/messaging/whatsapp/messages/wa-json';
-import { CRM_AUTH, EVOLUTION_AUTH, KAPSO_AUTH } from '@/modules/messaging/whatsapp/sender/send-plan';
+import {
+  paramNames,
+  templateButtons,
+  templateDisplay,
+} from '@/modules/messaging/whatsapp/messages/wa-json';
+import {
+  CRM_AUTH,
+  EVOLUTION_AUTH,
+  KAPSO_AUTH,
+} from '@/modules/messaging/whatsapp/sender/send-plan';
 import type { ApprovalRow } from './types';
 import type { TemplateRow, WaError } from '@/modules/messaging/whatsapp/whatsapp.types';
 import { httpError } from '@/common/http/errors';
@@ -40,12 +48,25 @@ export function toTemplateView(row: TemplateRow, numbers?: readonly ApprovalRow[
 }
 
 function toApproval(a: ApprovalRow): TemplateNumberApproval {
-  return { number_id: a.number_id, status: a.status, last_checked_at: a.last_checked_at, last_error: a.last_error };
+  return {
+    number_id: a.number_id,
+    status: a.status,
+    last_checked_at: a.last_checked_at,
+    last_error: a.last_error,
+  };
 }
 
 /** Every row with its approvals per number (one read of message_template_numbers, docs/23c decision 9). */
-export function withNumbers(rows: readonly TemplateRow[], approvals: readonly ApprovalRow[]): TemplateView[] {
-  return rows.map((row) => toTemplateView(row, approvals.filter((a) => a.template_key === row.key)));
+export function withNumbers(
+  rows: readonly TemplateRow[],
+  approvals: readonly ApprovalRow[],
+): TemplateView[] {
+  return rows.map((row) =>
+    toTemplateView(
+      row,
+      approvals.filter((a) => a.template_key === row.key),
+    ),
+  );
 }
 
 /** What renderTemplateBody / fallbackText need from a registry row. */
@@ -81,7 +102,9 @@ const unsupportedHttp: ToHttp = (e) => {
 };
 
 const scopeHttp: ToHttp = (e) =>
-  (e.info.missingScope ? httpError(502, CRM_SCOPE_MISSING, { scope: e.info.missingScope }) : undefined);
+  e.info.missingScope
+    ? httpError(502, CRM_SCOPE_MISSING, { scope: e.info.missingScope })
+    : undefined;
 
 const credentialHttp: ToHttp = (e) => {
   const code = e.info.credential ? CREDENTIAL_CODE[e.info.credential] : undefined;
@@ -94,6 +117,13 @@ const credentialHttp: ToHttp = (e) => {
  * message; a call the crm driver does not support → 409 crm_managed.
  */
 export function graphHttpError(e: WaError): HttpException {
-  return unsupportedHttp(e) ?? scopeHttp(e) ?? credentialHttp(e)
-    ?? httpError(502, 'meta_error', { meta_code: e.info.code, meta_message: e.info.details ?? e.message });
+  return (
+    unsupportedHttp(e) ??
+    scopeHttp(e) ??
+    credentialHttp(e) ??
+    httpError(502, 'meta_error', {
+      meta_code: e.info.code,
+      meta_message: e.info.details ?? e.message,
+    })
+  );
 }

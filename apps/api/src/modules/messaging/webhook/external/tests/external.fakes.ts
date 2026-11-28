@@ -1,7 +1,10 @@
 // Test fakes for messages sent outside the app (not shipped behaviour). No network: Kapso is a vi.fn().
 import type { TablesInsert } from '@ab/db';
 import { vi } from 'vitest';
-import { setNumbersOverlay, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import {
+  setNumbersOverlay,
+  type OverlayNumber,
+} from '@/common/configuration/integrations/numbers-overlay';
 import type { KapsoLineEnv } from '@/config/env/env';
 import type { WebhookRepo } from '@/modules/messaging/webhook/shared/webhook.repo';
 import { ExternalStatus } from '@/modules/messaging/webhook/external/external-status';
@@ -29,8 +32,20 @@ export const kapsoEnv = (over: Partial<KapsoLineEnv> = {}): KapsoLineEnv => ({
 /** Module mode with one chat number on Kapso (enabled unless told otherwise). */
 export function kapsoOverlay(over: Partial<OverlayNumber> = {}): void {
   const n: OverlayNumber = {
-    ...{ id: KAPSO_NUMBER_ID, label: 'chat', purpose: 'chat', phone_number_id: KAPSO_PHONE_ID, waba_id: 'waba-1' },
-    ...{ enabled: true, is_default: true, fallback_rank: 0, created_at: '2026-10-23T00:00:00Z', appSecret: null },
+    ...{
+      id: KAPSO_NUMBER_ID,
+      label: 'chat',
+      purpose: 'chat',
+      phone_number_id: KAPSO_PHONE_ID,
+      waba_id: 'waba-1',
+    },
+    ...{
+      enabled: true,
+      is_default: true,
+      fallback_rank: 0,
+      created_at: '2026-10-23T00:00:00Z',
+      appSecret: null,
+    },
     env: kapsoEnv(),
     ...over,
   };
@@ -53,14 +68,23 @@ export function kapsoText(over: Record<string, unknown> = {}): Record<string, un
 /** ExternalQueries over a shared in-memory messages list (the unique wa_message_id included). */
 export function fakeExternalQueries(stored: TablesInsert<'messages'>[]) {
   return {
-    existing: vi.fn(async (ids: readonly string[]) => new Set(stored.flatMap((r) => (r.wa_message_id && ids.includes(r.wa_message_id) ? [r.wa_message_id] : [])))),
+    existing: vi.fn(
+      async (ids: readonly string[]) =>
+        new Set(
+          stored.flatMap((r) =>
+            r.wa_message_id && ids.includes(r.wa_message_id) ? [r.wa_message_id] : [],
+          ),
+        ),
+    ),
     insert: vi.fn(async (row: TablesInsert<'messages'>) => {
       if (stored.some((r) => r.wa_message_id === row.wa_message_id)) return false;
       stored.push(row);
       return true;
     }),
     markAnsweredRead: vi.fn(async (phone: string, before: Date, readAt: Date) => {
-      const rows = stored.filter((r) => r.phone_e164 === phone && r.direction === 'inbound' && !r.read_at);
+      const rows = stored.filter(
+        (r) => r.phone_e164 === phone && r.direction === 'inbound' && !r.read_at,
+      );
       const due = rows.filter((r) => Date.parse(r.created_at ?? '') < before.getTime());
       due.forEach((r) => (r.read_at = readAt.toISOString()));
       return due.length;

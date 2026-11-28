@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { SalesScopes, type SalesScope } from '@/modules/sales/sales/sales-scope';
-import { assertCanSend, TeacherScopes, type TeacherScope } from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
+import {
+  assertCanSend,
+  TeacherScopes,
+  type TeacherScope,
+} from '@/modules/messaging/inbox/teacher-threads/teacher-scope';
 
 /**
  * Who is calling, resolved server-side per request exactly like a send from the thread (rule 9,
@@ -26,7 +30,8 @@ export function assertMayCall(actor: CallActor, phone: string): void {
 }
 
 /** The phones a teacher's calls log is narrowed to; null = every chat (admin, sales). */
-export const phonesOf = (actor: CallActor): readonly string[] | null => (actor.teacher ? [...actor.teacher.phones] : null);
+export const phonesOf = (actor: CallActor): readonly string[] | null =>
+  actor.teacher ? [...actor.teacher.phones] : null;
 
 @Injectable()
 export class CallAccess {

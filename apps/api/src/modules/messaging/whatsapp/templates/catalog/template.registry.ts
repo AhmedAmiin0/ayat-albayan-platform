@@ -5,14 +5,22 @@ import { lineFacts } from './template-env';
 import { toTemplateView, withNumbers } from './template.mapper';
 import { TemplatesRepo } from './templates.repo';
 import {
-  WHATSAPP_LINES, type TemplateRow, type WhatsappLines,
+  WHATSAPP_LINES,
+  type TemplateRow,
+  type WhatsappLines,
 } from '@/modules/messaging/whatsapp/whatsapp.types';
 
 const errText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /** The newest last_checked_at of one line's rows. */
 const newest = (rows: readonly TemplateRow[], line: WaLine): string | null =>
-  rows.reduce<string | null>((max, r) => (r.line === line && r.last_checked_at && (!max || r.last_checked_at > max) ? r.last_checked_at : max), null);
+  rows.reduce<string | null>(
+    (max, r) =>
+      r.line === line && r.last_checked_at && (!max || r.last_checked_at > max)
+        ? r.last_checked_at
+        : max,
+    null,
+  );
 
 /**
  * The template catalog (R-MSG-01, issue C1, docs/12 §3.4), per number: what the rows
@@ -33,12 +41,17 @@ export class TemplateRegistry {
    * unreadable approvals table (e.g. the API deployed before migration 633) lists the rows without numbers[].
    */
   async list(): Promise<TemplateView[]> {
-    const [rows, approvals] = await Promise.all([this.queries.all(), this.queries.approvals().catch((e: unknown) => this.unread(e, null))]);
+    const [rows, approvals] = await Promise.all([
+      this.queries.all(),
+      this.queries.approvals().catch((e: unknown) => this.unread(e, null)),
+    ]);
     return approvals ? withNumbers(rows, approvals) : rows.map((row) => toTemplateView(row));
   }
 
   private unread<T>(e: unknown, instead: T): T {
-    this.log.warn(`template ${instead === null ? 'numbers' : 'line syncs'} unread, listing without them: ${errText(e)}`);
+    this.log.warn(
+      `template ${instead === null ? 'numbers' : 'line syncs'} unread, listing without them: ${errText(e)}`,
+    );
     return instead;
   }
 
@@ -59,7 +72,12 @@ export class TemplateRegistry {
    * so the copy that ran the sync and the one answering may differ; unreadable = none).
    */
   async lineViews(): Promise<TemplateLineView[]> {
-    const [rows, last] = await Promise.all([this.queries.all(), this.queries.lineSyncs().catch((e: unknown) => this.unread(e, new Map<WaLine, TemplateLineSync>()))]);
+    const [rows, last] = await Promise.all([
+      this.queries.all(),
+      this.queries
+        .lineSyncs()
+        .catch((e: unknown) => this.unread(e, new Map<WaLine, TemplateLineSync>())),
+    ]);
     return WA_LINES.map((line) => ({
       ...lineFacts(line, this.lines[line]),
       last_checked_at: newest(rows, line),
