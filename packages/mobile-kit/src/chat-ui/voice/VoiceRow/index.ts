@@ -1,1 +1,2 @@
-export { VoiceRow, type VoiceRowProps } from './VoiceRow';
+export { VoiceRow } from './VoiceRow';
+export type { VoiceRowProps } from './VoiceRow.types';

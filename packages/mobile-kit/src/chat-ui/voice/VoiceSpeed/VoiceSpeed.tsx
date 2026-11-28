@@ -2,13 +2,14 @@ import { Pressable } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
 import { shape, type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
-import { useSmallText } from '../../bubble/use-small-text';
-import { type Rate, rateLabel } from '../voice-math';
+import { rateLabel } from '../voice-math';
+import type { VoiceSpeedProps } from './VoiceSpeed.types';
+import { useVoiceSpeed } from './use-voice-speed';
 
 /** The voice note's speed chip («1×» → «1.5×» → «2×»), once playback has started. */
-export function VoiceSpeed({ rate, onPress }: { rate: Rate; onPress: () => void }) {
+export function VoiceSpeed({ rate, onPress }: VoiceSpeedProps) {
   const { color } = useTheme();
-  const small = useSmallText();
+  const { small } = useVoiceSpeed();
   return (
     <Pressable
       testID="voice-speed"
