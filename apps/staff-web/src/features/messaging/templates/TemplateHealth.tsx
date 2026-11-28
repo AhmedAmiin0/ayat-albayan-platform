@@ -46,10 +46,16 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
         saving,
         phones,
         factsOf,
-        sendFrom: { numbers, manage, busy: pickBusy, onPick: (template, numberId) => setPicking({ template, numberId }) },
+        sendFrom: {
+          numbers, manage, busy: pickBusy,
+          onPick: (template, numberId) => setPicking({ template, numberId }),
+        },
         crmStatus: { busyKey: crmBusy, onSet: onCrmSet, onEditName },
       }),
-    [setSubmitting, setMoving, setEditing, toggleStarter, saving, phones, factsOf, numbers, manage, setPicking, pickBusy, crmBusy, onCrmSet, onEditName],
+    [
+      setSubmitting, setMoving, setEditing, toggleStarter, saving, phones, factsOf,
+      numbers, manage, setPicking, pickBusy, crmBusy, onCrmSet, onEditName,
+    ],
   );
   const rows = templates.data ?? [];
   const onEdited = (saved: AuthorTemplate) => {
@@ -83,7 +89,10 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
       {templates.isPending ? (
         <p className="text-sm text-ink-3">{t.common.loading}</p>
       ) : (
-        <DataTable columns={columns} data={rows} getRowId={(r) => r.key} stacked clientSort clientFilter emptyText={t.common.empty} />
+        <DataTable
+          columns={columns} data={rows} getRowId={(r) => r.key}
+          stacked clientSort clientFilter emptyText={t.common.empty}
+        />
       )}
       {a.submitting && (
         <SubmitTemplateDialog
@@ -100,7 +109,9 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
           template={a.moving}
           target={factsOf(otherLine(a.moving.line))}
           busy={a.move.isPending}
-          onConfirm={() => a.moving && a.move.mutate({ key: a.moving.key, line: otherLine(a.moving.line) })}
+          onConfirm={() =>
+            a.moving && a.move.mutate({ key: a.moving.key, line: otherLine(a.moving.line) })
+          }
           onClose={() => setMoving(null)}
         />
       )}
@@ -114,7 +125,10 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
         />
       )}
       {crmName.editing && (
-        <CrmNameDialog template={crmName.editing} busy={crmName.save.isPending} onSave={(input) => crmName.save.mutate(input)} onClose={() => onEditName(null)} />
+        <CrmNameDialog
+          template={crmName.editing} busy={crmName.save.isPending}
+          onSave={(input) => crmName.save.mutate(input)} onClose={() => onEditName(null)}
+        />
       )}
       {editing && (
         <EditTemplateDialog tpl={editing} mode="admin" onSaved={onEdited} onClose={() => setEditing(null)} />

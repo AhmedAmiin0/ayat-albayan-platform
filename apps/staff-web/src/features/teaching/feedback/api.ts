@@ -31,7 +31,7 @@ export function toFormView(raw: unknown): FeedbackFormView {
   };
 }
 
-/** GET /public/feedback/:token. Any 4xx = a link that is wrong (404) or expired (410); retrying cannot help. */
+/** GET /public/feedback/:token. Any 4xx = a wrong (404) or expired (410) link: no retry. */
 export const publicFeedbackQuery = (token: string) =>
   queryOptions({
     queryKey: feedbackKeys.public(token),
@@ -66,7 +66,7 @@ const listParams = (s: ServerListState): URLSearchParams =>
     ...sortFilterParams(s.sort, s.filters),
   ]);
 
-/** GET /feedback (admin): newest first unless sorted; filtered and paged on the server (R-NFR-08). */
+/** GET /feedback (admin): newest first unless sorted; filtered and paged server-side (R-NFR-08). */
 export const feedbackListQuery = (s: ServerListState) =>
   queryOptions({
     queryKey: feedbackKeys.list(s),
@@ -80,7 +80,7 @@ export const feedbackSummaryQuery = queryOptions({
   queryFn: () => apiFetch<TeacherFeedbackSummary[]>('/feedback/summary'),
 });
 
-/** GET /teachers/me/feedback: only my rows (sorted, filtered, paged like the admin's) and my own average. */
+/** GET /teachers/me/feedback: my rows only (sorted, filtered, paged as the admin's), my average. */
 export const myFeedbackQuery = (s: ServerListState) =>
   queryOptions({
     queryKey: feedbackKeys.mine(s),

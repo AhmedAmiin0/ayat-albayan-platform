@@ -20,7 +20,7 @@ const TRIAL_DATE_FLOW: readonly StepKey[] = ['teacher', 'package', 'slot', 'revi
 
 export const stepsFor = (kind: BookingKind): readonly StepKey[] => FLOWS[kind];
 
-/** The steps of this draft: the reduced flow when it books a subscription's course or a new trial date. */
+/** The steps of this draft: a reduced flow for a subscription's course or a new trial date. */
 export function stepsOf(d: Pick<BookingDraft, 'kind' | 'course' | 'trialDate'>): readonly StepKey[] {
   if (d.course) return COURSE_FLOW;
   return d.trialDate ? TRIAL_DATE_FLOW : FLOWS[d.kind];

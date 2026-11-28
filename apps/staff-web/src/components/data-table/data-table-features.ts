@@ -18,7 +18,7 @@ export type ColumnFilterDef = { kind: 'text' } | { kind: 'select'; options: Filt
 export interface DataTableColumnMeta {
   className?: string;
   headClassName?: string;
-  /** Server sort key (the API's `sort=` value); in `clientSort` tables any accessor column sorts. */
+  /** Server sort key (the API's `sort=`); in `clientSort` tables any accessor column sorts. */
   sortKey?: string;
   /** Shown in the filter panel, or as the toolbar's search box (`search`). */
   filter?: ColumnFilterDef;
@@ -45,7 +45,7 @@ export const dataTableFeatures = tableFeatures({
 export type DataTableFeatures = typeof dataTableFeatures;
 export type DataTableColumn<T extends RowData> = ColumnDef<DataTableFeatures, T>;
 
-/** Controlled (server) sort: header clicks cycle asc → desc → none on columns with `meta.sortKey`. */
+/** Server sort: header clicks cycle asc → desc → none on columns with `meta.sortKey`. */
 export interface DataTableSort {
   key?: string | undefined;
   /** Absent with a key = asc (the URL keeps defaults out). */
@@ -61,7 +61,7 @@ export interface DataTableFilters {
   onClear?: (keys: string[]) => void;
 }
 
-/** Table options for the sort/filter mode: local sorting/filtering only in client mode, one column at a time. */
+/** Options per sort/filter mode: local sort/filter only in client mode, one column at a time. */
 export function sortFilterOptions(p: {
   sort?: unknown;
   clientSort?: boolean;

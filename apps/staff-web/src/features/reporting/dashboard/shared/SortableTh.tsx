@@ -12,7 +12,7 @@ export interface SortableThProps<K extends string> {
   className?: string;
 }
 
-/** A column head of a hand-built table: `aria-sort` and a button (label + arrow) like DataTable's. */
+/** Column head of a hand-built table: `aria-sort` and a button (label + arrow) like DataTable's. */
 export function SortableTh<K extends string>({
   label,
   sortKey,

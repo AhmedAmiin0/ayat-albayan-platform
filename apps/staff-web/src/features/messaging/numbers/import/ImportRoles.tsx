@@ -29,7 +29,7 @@ function NotImportable({ block }: { block: ImportBlock }) {
   );
 }
 
-/** The import preview, role by role: what happens, each field with its source, the secrets to copy. */
+/** The import preview by role: what happens, each field with its source, the secrets to copy. */
 export function ImportRoles({ roles }: { roles: readonly ImportRoleView[] }) {
   return (
     <div className="grid gap-4">

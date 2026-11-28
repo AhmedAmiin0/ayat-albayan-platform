@@ -18,7 +18,8 @@ export interface GradePickerProps {
 }
 
 /** Rubric pips (R-REP-02) are ordinal so they read in greyscale; the word is shown, never dots. */
-export function GradePicker({ name, label, value, onChange, disabled, emphasis, invalid, required }: GradePickerProps) {
+export function GradePicker(props: GradePickerProps) {
+  const { name, label, value, onChange, disabled, emphasis, invalid, required } = props;
   return (
     <fieldset
       disabled={disabled}

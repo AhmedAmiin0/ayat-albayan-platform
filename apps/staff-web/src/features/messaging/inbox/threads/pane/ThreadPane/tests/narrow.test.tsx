@@ -13,7 +13,10 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-/** A window this wide in px: each (max-width: Nrem) query answers as the browser would (1rem = 16px). */
+/**
+ * A window this wide in px: each (max-width: Nrem) query answers as the browser would
+ * (1rem = 16px).
+ */
 function viewport(px: number) {
   const query = (media: string) => {
     const rem = Number(/max-width:\s*([\d.]+)rem/.exec(media)?.[1] ?? 'NaN');

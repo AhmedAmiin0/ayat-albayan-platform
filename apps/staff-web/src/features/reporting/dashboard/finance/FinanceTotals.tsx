@@ -15,7 +15,7 @@ export function FinanceTotals({ finance }: { finance: DashboardResponse['finance
   ];
   return (
     <div className="grid gap-3">
-      {/* One column in a narrow page (a 7-digit amount + currency does not fit two across), two, then four. */}
+      {/* 1 column when narrow (a 7-digit amount + currency can't fit 2 across), then 2, then 4. */}
       <dl className="grid grid-cols-1 gap-x-6 gap-y-3 @sm:grid-cols-2 @2xl:grid-cols-4">
         {items.map((i) => (
           <div key={i.label} className="grid min-w-0 gap-0.5">

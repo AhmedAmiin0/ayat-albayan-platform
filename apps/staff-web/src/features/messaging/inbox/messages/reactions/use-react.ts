@@ -9,7 +9,7 @@ import { useMutation, useQueryClient, type InfiniteData } from '@tanstack/react-
 import { ApiError, apiSend, t } from '@ab/web-kit';
 import { threadQuery } from '@/features/messaging/inbox/api/thread-query';
 
-/** The 409 of a chat on the CRM line (no reaction call there) in words; anything else: try again. */
+/** The 409 of a chat on the CRM line (no reaction call there) in words; else: try again. */
 export function reactionProblem(e: unknown): string {
   const body = e instanceof ApiError ? e.body : null;
   const code = typeof body === 'object' && body !== null ? Reflect.get(body, 'code') : undefined;

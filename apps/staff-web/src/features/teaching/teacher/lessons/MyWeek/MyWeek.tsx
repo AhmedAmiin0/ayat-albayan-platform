@@ -31,6 +31,7 @@ export function MyWeek({ toggle }: { toggle?: ReactNode }) {
   const now = useNow();
   const tz = useViewerTz();
   const thisWeek = currentWeekStart(now, tz);
+  const today = zonedPartsIn(now, tz).date;
   const [week, setWeek] = useFollowingDay(thisWeek);
   const me = useQuery(teacherMeQuery);
   const lessons = useQuery(myLessonsQuery(weekWindowIn(week, tz)));
@@ -62,7 +63,7 @@ export function MyWeek({ toggle }: { toggle?: ReactNode }) {
         <span className="ms-1 text-sm font-semibold tabular-nums">{t.schedule.weekOf.replace('{date}', dayMonthLabel(week))}</span>
         <span className="text-xs text-ink-3">{t.schedule.viewerTime}</span>
       </div>
-      <Body lessons={lessons} week={week} today={zonedPartsIn(now, tz).date} onOpen={(l) => setOpenId(l.id)} />
+      <Body lessons={lessons} week={week} today={today} onOpen={(l) => setOpenId(l.id)} />
       {open && (
         <Drawer title={studentNames(open)} onClose={() => setOpenId(null)}>
           <TeacherLessonCard
@@ -95,7 +96,9 @@ function Body({ lessons, week, today, onOpen }: BodyProps) {
   if (!lessons.data) {
     return lessons.isError ? <LoadRetry onRetry={lessons.refetch} /> : <ListSkeleton />;
   }
-  if (lessons.data.length === 0) return <EmptyState title={t.teacherDash.noLessonsWeek}>{t.teacherDash.emptyHint}</EmptyState>;
+  if (lessons.data.length === 0) {
+    return <EmptyState title={t.teacherDash.noLessonsWeek}>{t.teacherDash.emptyHint}</EmptyState>;
+  }
   return (
     <div aria-busy={lessons.isPlaceholderData || undefined} className={cn(lessons.isPlaceholderData && 'opacity-60')}>
       <WeekGrid week={week} today={today} lessons={lessons.data} onOpen={onOpen} />

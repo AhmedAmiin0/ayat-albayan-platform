@@ -20,7 +20,7 @@ const valueOf = (l: Load, key: LoadKey): unknown => (key === 'name' ? l.display_
 /**
  * Teacher load (R-RPT-01): assigned trial/active students against the teacher's maximum (a meter:
  * the bar fills toward max_students) and this week's lessons. Neutral ink; a full teacher is not
- * the admin's work, so no saffron. A short summary: every column sorts (students by count), none filters.
+ * the admin's work, so no saffron. Every column sorts (students by count), none filters.
  */
 export function TeacherLoad({ rows }: { rows: readonly Load[] }) {
   const sorter = useHandSort(rows, valueOf);

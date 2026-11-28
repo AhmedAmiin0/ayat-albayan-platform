@@ -21,7 +21,7 @@ function fakeAudio(state: AudioContextState) {
     createOscillator: node,
     createGain: gain,
   };
-  // A constructor that hands out the fake context (`new` on a function returning an object yields it).
+  // `new` on a function that returns an object yields that object: the fake context.
   const Ctor = function () {
     return ctx;
   } as unknown as new () => AudioContext;

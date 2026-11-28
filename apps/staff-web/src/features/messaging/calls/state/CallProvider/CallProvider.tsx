@@ -26,8 +26,8 @@ export interface CallProviderProps {
 }
 
 /**
- * WhatsApp voice calls for a signed-in staff shell (docs/28 §5): the config, the realtime nudge, the
- * one call of this device, the incoming ring on any page, the full-screen call and its minimised bar.
+ * WhatsApp voice calls for a signed-in staff shell (docs/28 §5): the config, the realtime nudge,
+ * this device's one call, the incoming ring on any page, the full-screen call and its bar.
  * Everything stays dormant (no poll, no subscription) while whatsapp_calls_enabled is off.
  */
 export function CallProvider({ children, showsPhone = true, rtc }: CallProviderProps) {

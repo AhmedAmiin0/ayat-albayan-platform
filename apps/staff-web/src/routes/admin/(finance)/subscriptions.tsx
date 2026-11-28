@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { parseSubscriptionsSearch } from '@/features/finance/subscriptions/search';
 import { SubscriptionsPage } from '@/features/finance/subscriptions/SubscriptionsPage';
 
-/** /admin/subscriptions — packages, new from the calculator, payments, alert tasks (R-SUB-01/02). */
+/** /admin/subscriptions — packages, new from calculator, payments, alert tasks (R-SUB-01/02). */
 export const Route = createFileRoute('/admin/(finance)/subscriptions')({
   validateSearch: parseSubscriptionsSearch,
   component: SubscriptionsRoute,

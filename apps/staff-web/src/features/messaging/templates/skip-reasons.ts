@@ -1,7 +1,7 @@
 import type { TemplateSkipReason } from '@ab/shared';
 import { t } from '@ab/web-kit';
 
-// Why a sync did not import a Meta template, in the admin's language (the API sends codes, never prose).
+// Why a sync did not import a Meta template, in the admin's language (the API sends only codes).
 
 const TEXTS: Record<TemplateSkipReason['code'], string> = t.templates.perNumber.skipReasons;
 

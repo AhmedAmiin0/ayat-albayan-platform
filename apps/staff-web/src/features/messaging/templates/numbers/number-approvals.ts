@@ -3,7 +3,7 @@ import type { TemplateStatus } from '@ab/catalog';
 
 // Per-number approval of one template (docs/23c decisions 3-4).
 
-/** A number's approval: Meta's status there, or not synced yet (no message_template_numbers row). */
+/** A number's approval: Meta's status there, or not synced (no message_template_numbers row). */
 export type NumberApprovalState = TemplateStatus | 'not_synced';
 
 export interface NumberApprovalRow {
@@ -30,8 +30,8 @@ export function shownNumbers(tpl: Tpl, numbers: readonly NumberView[]): NumberVi
 }
 
 /**
- * Its synced row's status; with no row, the role's default counts as the registry status (decision 4:
- * the per-line sync checked the role's WABA), any other number is not synced yet.
+ * Its synced row's status; with no row, the role's default counts as the registry status
+ * (decision 4: the per-line sync checked the role's WABA), any other number is not synced yet.
  */
 export function approvalOf(tpl: Tpl, number: NumberView): NumberApprovalState {
   const row = (tpl.numbers ?? []).find((a) => a.number_id === number.id);

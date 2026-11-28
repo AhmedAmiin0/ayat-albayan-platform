@@ -8,9 +8,10 @@ import { getStaged, setStaged, type Staged } from '@/features/messaging/inbox/sa
 import { rereadSentChat, showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
 /**
- * The staged attachment after its text: POST /saved-replies/:id/stage copies it as the sender's chat
- * file, then the chat's own POST /threads/:phone/file sends it (every send gate stays). It shares the
- * chat's send lock (mutationKey); a failure keeps the chip with its reason and request id for a retry.
+ * The staged attachment after its text: POST /saved-replies/:id/stage copies it as the sender's
+ * chat file, then the chat's own POST /threads/:phone/file sends it (every send gate stays). It
+ * shares the chat's send lock (mutationKey); a failure keeps the chip with its reason and request
+ * id for a retry.
  */
 export function useStagedSend(phone: string) {
   const queryClient = useQueryClient();

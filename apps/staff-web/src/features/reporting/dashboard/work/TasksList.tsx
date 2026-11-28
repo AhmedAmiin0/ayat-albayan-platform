@@ -54,7 +54,7 @@ export function TasksList({ items }: { items: readonly TaskRow[] }) {
           ))}
         </ul>
       )}
-      {toast && <Toast message={toast.message} tone={toast.tone} onDismiss={() => setToast(null)} />}
+      {toast && <Toast {...toast} onDismiss={() => setToast(null)} />}
     </>
   );
 }

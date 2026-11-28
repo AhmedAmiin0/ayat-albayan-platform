@@ -13,7 +13,7 @@ function ButtonRow({ button: b }: { button: TemplateDisplayButton }) {
   const inner = (
     <>
       <Icon name={BUTTON_ICON[b.type]} className="size-4" aria-hidden="true" />
-      {/* Its own direction: an Arabic label in an English UI and back; long labels wrap, never clipped. */}
+      {/* Own direction: Arabic label in an English UI and back; long labels wrap, never clip. */}
       <span dir="auto" className="min-w-0 [overflow-wrap:anywhere]">
         {templateButtonLabel(b, words)}
       </span>
@@ -46,9 +46,9 @@ function ButtonRow({ button: b }: { button: TemplateDisplayButton }) {
 }
 
 /**
- * The buttons right under a template's time, as WhatsApp draws them: full-width rows split by thin lines, each a
- * centred label after its icon. Display-only for ours (the family taps them in WhatsApp); a URL
- * button opens its link.
+ * The buttons right under a template's time, as WhatsApp draws them: full-width rows split by thin
+ * lines, each a centred label after its icon. Display-only for ours (the family taps them in
+ * WhatsApp); a URL button opens its link.
  */
 export function TemplateButtons({ buttons }: { buttons: readonly TemplateDisplayButton[] }) {
   if (buttons.length === 0) return null;

@@ -24,7 +24,7 @@ export function useEditTarget(box: RefObject<HTMLTextAreaElement | null>) {
   return { correctsId: id, session: editSession ?? undefined, done: cancelEdit };
 }
 
-/** Calls `toText` (render phase) when a new target is picked: the template toggle gives way to the box. */
+/** Calls `toText` (render phase) when a new target is picked: the template toggle gives way. */
 export function useTextOnReply(toText: () => void): void {
   const { target, editing } = useChatActions();
   const id = target?.id ?? editing?.id;

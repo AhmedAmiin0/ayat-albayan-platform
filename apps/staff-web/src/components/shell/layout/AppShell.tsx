@@ -19,7 +19,7 @@ export interface AppShellProps {
   topNav?: ReactNode;
   /** The section's pages (nav items and a few deeper pages): the compact bar's page title. */
   titles?: readonly NavTitleItem[];
-  /** Top-bar layout only: every page gets the chat's full width and frame (the assistant's shell). */
+  /** Top-bar layout only: every page gets the chat's full width and frame (assistant's shell). */
   wide?: boolean;
   /** What the section home shows instead of the title cartouche (the family portal's one page). */
   homePage?: ReactNode;

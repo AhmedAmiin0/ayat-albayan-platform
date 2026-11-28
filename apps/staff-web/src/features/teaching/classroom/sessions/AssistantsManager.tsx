@@ -17,7 +17,8 @@ export function AssistantsManager({ studentId }: { studentId: string }) {
   const mine = useQuery(studentAssistantsQuery(studentId));
   const all = useQuery(assistantsQuery);
   const [pick, setPick] = useState('');
-  const refresh = () => queryClient.invalidateQueries({ queryKey: studentAssistantsQuery(studentId).queryKey });
+  const refresh = () =>
+    queryClient.invalidateQueries({ queryKey: studentAssistantsQuery(studentId).queryKey });
   const add = useMutation({ mutationFn: assignAssistant, onSuccess: () => { setPick(''); return refresh(); } });
   const remove = useMutation({ mutationFn: removeAssistant, onSuccess: refresh });
 

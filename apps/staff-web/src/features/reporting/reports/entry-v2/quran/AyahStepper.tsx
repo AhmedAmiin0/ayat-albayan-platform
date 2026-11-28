@@ -20,7 +20,7 @@ export function AyahStepper({ label, value, onChange }: AyahStepperProps) {
         <Button type="button" variant="secondary" size="sm" aria-label={p.dec} onClick={() => onChange(value - 1)}>
           −
         </Button>
-        {/* Typed digits apply on blur / Enter, so typing «25» never passes through «2» (the other end stays). */}
+        {/* Digits apply on blur/Enter: typing «25» never passes «2» (so the other end stays). */}
         <input
           key={value}
           type="number"

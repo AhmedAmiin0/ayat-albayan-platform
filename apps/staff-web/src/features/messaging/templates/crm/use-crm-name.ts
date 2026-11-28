@@ -7,8 +7,8 @@ import { templateName } from '@/features/messaging/templates/template-cells';
 import type { Notice } from '@/features/messaging/templates/use-template-actions';
 
 /**
- * A crm line's template name / language in the CRM (docs/19): `editing` opens CrmNameDialog; the saved row
- * replaces its old one and the dialog closes; every outcome is one toast.
+ * A crm line's template name / language in the CRM (docs/19): `editing` opens CrmNameDialog; the
+ * saved row replaces its old one and the dialog closes; every outcome is one toast.
  */
 export function useCrmName(onNotice: (notice: Notice) => void) {
   const queryClient = useQueryClient();

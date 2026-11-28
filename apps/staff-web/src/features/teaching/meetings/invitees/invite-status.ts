@@ -15,7 +15,7 @@ interface Outcome {
   status: MeetingInviteStatus;
   error_code?: string | null;
 }
-/** The creator may not send WhatsApp (owner policy 2026-10-13): the invitation is a link to copy. */
+/** The creator may not send WhatsApp (owner policy): the invitation is a link to copy. */
 const linkOnly = (i: Outcome) => i.error_code === 'chat_not_allowed';
 
 export function inviteStatusText(i: Outcome): string {
@@ -27,7 +27,7 @@ export function inviteStatusText(i: Outcome): string {
 /** Why nothing went out on WhatsApp (a window_closed row), or null. */
 export const notSentHint = (i: Outcome): string | null => (i.status !== 'window_closed' ? null : linkOnly(i) ? R.linkOnlyHint : R.windowClosedHint);
 
-/** The text a copy puts on the clipboard: the invitation (it already carries the link), else the link. */
+/** The text a copy puts on the clipboard: the invitation (it carries the link), else the link. */
 export const copyPayload = (i: {
   link: string | null;
   invitation_text: string | null;

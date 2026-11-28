@@ -30,7 +30,7 @@ describe('the open chat after another window had focus (W13)', () => {
     await screen.findByRole('log', { name: t.messages.log });
     const before = threadCalls();
     expect(before).toBe(1);
-    // visibilitychange never fires when she only clicks another window: the focus event brings it back.
+    // visibilitychange never fires when she just clicks another window: focus brings it back.
     focus.mockReturnValue(true);
     window.dispatchEvent(new Event('focus'));
     await waitFor(() => expect(threadCalls()).toBe(before + 1));

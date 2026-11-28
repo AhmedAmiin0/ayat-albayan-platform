@@ -37,7 +37,7 @@ export const CHANGE_VIEW: CourseChangeView = {
 export const CHECK = { conflicts: [], remaining: 5, endsOn: '2026-10-21' };
 export const CLASH = { kind: 'teacher_busy', startsAt: MON, endsAt: MON };
 
-/** apiFetch: the teacher's free slots (the current days and Monday 18:00) under either base; the admin's view. */
+/** apiFetch: the teacher's free slots (current days, Monday 18:00) under either base (admin). */
 export function routeChange(apiFetch: Mock): void {
   const slots = { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [SUN, MON, WED].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] })) };
   apiFetch.mockImplementation((path: string) => {

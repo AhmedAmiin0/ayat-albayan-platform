@@ -17,7 +17,7 @@ import { ClassroomRoom } from '@ab/web-kit/room';
 import type { RoomClient } from '@ab/web-kit';
 import { classroomKeys } from '@/features/teaching/classroom/api/classroom.keys';
 
-/** Who mints the token: the lesson's room by default, an internal meeting's (joinMeeting) otherwise. */
+/** Who mints the token: the lesson's room by default, else an internal meeting's (joinMeeting). */
 type Joiner = (id: string) => Promise<RoomJoinResult>;
 
 /** One token per attempt (never cached, never refetched on focus): a fresh identity each time. */
@@ -48,7 +48,7 @@ interface Props {
   lessonId: string;
   make?: () => RoomClient;
   join?: Joiner;
-  /** A refused join in the page's own words (a meeting's, meetingJoinProblem); the lesson's by default. */
+  /** A refused join in the page's words (a meeting's: meetingJoinProblem); else the lesson's. */
   problem?: (error: unknown) => string;
 }
 
@@ -58,7 +58,7 @@ function lessonProblem(error: unknown, cycle: ClockCycle): string {
   return opens !== null ? opensAtText(opens, cycle) : classroomErrorText(error);
 }
 
-/** /classroom/:lessonId for admin, the lesson's teacher and the assigned assistant; /meeting/:id with `join`. */
+/** /classroom/:lessonId for admin, the lesson's teacher and assistant; /meeting/:id with `join`. */
 export function StaffClassroomPage({ lessonId, make, join: joiner = joinRoom, problem }: Props) {
   const { cycle } = useClock();
   const problemOf = problem ?? ((e: unknown) => lessonProblem(e, cycle));

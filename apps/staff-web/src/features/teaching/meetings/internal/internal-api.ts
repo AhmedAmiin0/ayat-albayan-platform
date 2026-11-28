@@ -7,7 +7,7 @@ import { meetingKeys } from './meeting.keys';
 
 export const MEETINGS_KEY = meetingKeys.all;
 
-/** GET /meetings: the newest (all for an admin, else the ones I created or am invited to). POST: meeting-invites-api. */
+/** GET /meetings: the newest (all for an admin, else ones I created or am invited to). */
 export const meetingsQuery = queryOptions({
   queryKey: meetingKeys.list(),
   queryFn: () => apiFetch<MeetingView[]>('/meetings'),
@@ -43,7 +43,7 @@ export const joinMeetingAsGuest = ({ linkToken, name }: { linkToken: string; nam
     { name },
   );
 
-/** Copies to the clipboard; false when the browser refuses (the URL stays on screen to copy by hand). */
+/** Copies to the clipboard; false when the browser refuses (the URL stays on screen to copy). */
 export async function copyText(text: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(text);

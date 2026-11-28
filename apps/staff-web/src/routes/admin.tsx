@@ -4,7 +4,7 @@ import { adminRedirect } from '@/features/people/auth/admin-access';
 import { requireRole } from '@ab/web-kit';
 
 export const Route = createFileRoute('/admin')({
-  // Base role admin gets the admin app; each page then needs its permission (features/auth/admin-access).
+  // Base role admin gets the admin app; each page needs its permission (auth/admin-access).
   beforeLoad: async ({ context, location }) => {
     const me = await requireRole(context.queryClient, 'admin');
     const to = adminRedirect(me, location.pathname);

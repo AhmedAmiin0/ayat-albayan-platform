@@ -46,7 +46,7 @@ afterEach(() => {
   apiSend.mockReset();
 });
 
-// Owner report 2026-10-12 («it is not able to start the conversation»): a number with no message yet.
+// A number with no message yet: the conversation can still be started.
 describe('starting a conversation (no thread yet)', () => {
   it('sales: the number, why a template, the approved templates; sending queues the template', async () => {
     renderNew('sales');
@@ -126,7 +126,8 @@ describe('«محادثة جديدة» form', () => {
     renderWithClient(<NewChatForm onOpen={onOpen} />);
     const box = screen.getByLabelText(t.inbox.newChat.phone);
     expect(box.getAttribute('dir')).toBe('ltr');
-    expect(document.activeElement).toBe(box); // unfolded by the head row's toggle (InboxPage.layout.test)
+    // Unfolded by the head row's toggle (InboxPage.layout.test).
+    expect(document.activeElement).toBe(box);
     fireEvent.change(box, { target: { value: 'abc' } });
     fireEvent.click(screen.getByRole('button', { name: t.inbox.newChat.open }));
     expect(screen.getByText(t.common.phoneErrors.not_a_number)).toBeTruthy();

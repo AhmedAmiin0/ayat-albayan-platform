@@ -4,7 +4,7 @@ import { amount } from '@/features/reporting/dashboard/shared/format';
 
 const seeded = t.enums.expenseCategory as Record<string, string>;
 
-/** R-RPT-02 expenses by category (keys of expense_categories), the categories with spend only, largest first. */
+/** R-RPT-02 expenses by category (expense_categories): only those with spend, largest first. */
 export function ExpensesByCategory({ byCategory }: { byCategory: Record<string, number> }) {
   const rows = Object.entries(byCategory)
     .filter(([, v]) => v > 0)

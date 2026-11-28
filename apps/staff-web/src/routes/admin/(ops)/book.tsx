@@ -3,7 +3,10 @@ import { useState } from 'react';
 import { RouteLeaveGuard, t } from '@ab/web-kit';
 import { BookingPage, parseBookSearch, searchForStudent } from '@/features/teaching/booking';
 
-/** /admin/book?studentId= (+ ?kind=makeup&missedLessonId=) | ?leadId=&phone=&name= (+ ?teacherId&startsAt from a free gap) — the booking wizard (R-SCH-06, R-LEAD-06, R-SCH-10). */
+/**
+ * /admin/book?studentId= (+ ?kind=makeup&missedLessonId=) | ?leadId=&phone=&name=
+ * (+ ?teacherId&startsAt from a free gap) — the booking wizard (R-SCH-06, R-LEAD-06, R-SCH-10).
+ */
 export const Route = createFileRoute('/admin/(ops)/book')({
   validateSearch: parseBookSearch,
   component: BookRoute,

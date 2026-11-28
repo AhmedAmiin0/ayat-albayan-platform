@@ -18,7 +18,10 @@ const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4 [ove
 /** An image the browser draws inline; HEIC is a named link like a PDF. */
 const inlineImage = (mime: string): boolean => mime.startsWith('image/') && mime !== 'image/heic';
 
-/** `forbidden`: refused to this user (teacher mode, 403), for good; else a file we do not keep yet. */
+/**
+ * `forbidden`: refused to this user (teacher mode, 403), for good; else a file we do not keep
+ * yet.
+ */
 function Label({ kind, forbidden = false }: { kind: string; forbidden?: boolean }) {
   return (
     <p className="text-xs font-semibold text-ink-2">
@@ -64,7 +67,7 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
       </Button>
     );
   }
-  // A loaded file stays even when a background refetch fails (the error is only for no file at all).
+  // A loaded file stays when a background refetch fails (the error is only for no file at all).
   if (file.data) {
     // A PDF reaches here only when its card had no page 1 (PdfCard): today's named link.
     return (
@@ -85,7 +88,10 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
   );
 }
 
-/** 410: gone from WhatsApp; 409 crm_no_media: the number runs through the CRM, which holds its files (docs/19). */
+/**
+ * 410: gone from WhatsApp; 409 crm_no_media: the number runs through the CRM, which holds its
+ * files (docs/19).
+ */
 function fileErrorText(error: unknown): string {
   if (errorCode(error) === 'crm_no_media') return t.inbox.mediaInCrm;
   return error instanceof ApiError && error.status === 410 ? t.inbox.mediaExpired : t.common.error;

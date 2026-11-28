@@ -15,5 +15,5 @@ export interface MissedPick {
   durationMin: Duration;
 }
 
-/** The invoice as POST /booking takes it: the upload's path or the chat message (@ab/client-core, docs/27 E5). */
+/** The invoice as POST /booking takes it: the upload's path or the chat message (docs/27 E5). */
 export const invoiceInput: (i: InvoiceDraft) => InvoiceInput = bookingInvoiceInput;

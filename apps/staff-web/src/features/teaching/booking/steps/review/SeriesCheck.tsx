@@ -17,7 +17,8 @@ export const seriesReady = (d: BookingDraft): boolean =>
   !d.course || days(d).length === d.course.perWeek;
 
 /**
- * POST {base}/check (a new trial date: {base}/trial-date/check) for this draft (one cached query, shared by the slot and review steps).
+ * POST {base}/check (a new trial date: {base}/trial-date/check) for this draft: one cached query,
+ * shared by the slot and review steps.
  * `enabled` false only reads the cache (the admin's review and the wizard's chrome never ask).
  */
 export function useSeriesCheck(draft: BookingDraft, enabled = true) {

@@ -48,7 +48,7 @@ function show(input: { mode: InboxMode; open: boolean; rows: unknown[] }) {
 
 afterEach(() => apiFetch.mockReset());
 
-// W7: no template allowed for sales: no toggle to an empty list, and after the window one help line.
+// W7: sales with no template allowed: no toggle to an empty list; after the window, one help line.
 describe('ComposerPhone with no template allowed', () => {
   it('sales, open window: the message box without the template toggle', async () => {
     show({ mode: 'sales', open: true, rows: [] });

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { sectionId } from './section-id';
 
-/** One section of /admin/settings: its title, then its rows (scroll-margin keeps it under the pinned head). */
+/** A /admin/settings section: title, then rows (scroll-margin keeps it under the pinned head). */
 export function Section({
   id,
   title,

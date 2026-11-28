@@ -10,7 +10,8 @@ describe('GradePicker (R-REP-02)', () => {
     const { container } = render(<GradePicker name="g" label="التجويد" value={null} onChange={onChange} />);
     const words = [...container.querySelectorAll('label > span')].map((s) => s.textContent);
     expect(words).toEqual(GRADES.map((g) => t.enums.grade[g]));
-    expect(screen.queryByText(t.reports.chart.noGrade)).toBeNull(); // said only after a send attempt
+    // Said only after a send attempt.
+    expect(screen.queryByText(t.reports.chart.noGrade)).toBeNull();
     fireEvent.click(screen.getByRole('radio', { name: t.enums.grade.very_good }));
     expect(onChange).toHaveBeenCalledWith('very_good');
   });

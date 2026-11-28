@@ -48,7 +48,7 @@ export function newStudentFromLead(
   return { student, tz: q.tz ?? lead?.tz ?? null };
 }
 
-/** A new guardian + student is typed in step 1: from a lead (R-LEAD-06) or an assistant's registration. */
+/** A new guardian + student typed in step 1: from a lead (R-LEAD-06) or an assistant's sign-up. */
 export const isNewStudent = (d: {
   leadId: string | null;
   newStudent: NewStudentDraft | null;

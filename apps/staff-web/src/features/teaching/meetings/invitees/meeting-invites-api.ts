@@ -42,9 +42,9 @@ export const addMeetingInvitees = ({
 }) => apiSend<MeetingInviteResult[]>('POST', `/meetings/${id}/invitees`, { invitees });
 
 /**
- * POST /meetings/:id/invitees/:inviteeId/resend: a new personal link and invitation text. The caller
- * keeps one clientRequestId per click (a retry reuses it, rule 8): a retried id whose text was
- * already queued sends nothing again; one that queued nothing returns a fresh link.
+ * POST /meetings/:id/invitees/:inviteeId/resend: a new personal link and invitation text. The
+ * caller keeps one clientRequestId per click (a retry reuses it, rule 8): a retried id whose
+ * text was already queued sends nothing again; one that queued nothing returns a fresh link.
  */
 export const resendInvite = (v: {
   meetingId: string;
@@ -69,7 +69,7 @@ export const inviteeOptionsQuery = (q: string) =>
 const ERRORS: Record<string, string | undefined> = t.meetingInvites.errors;
 const EXTRA: Record<string, string> = { meeting_ended: t.classroom.error.meeting_ended };
 
-/** The line for a failed meeting command: its own wording when the code has one, else `fallback`. */
+/** The line for a failed meeting command: the code's own wording if it has one, else `fallback`. */
 export function meetingErrorText(
   error: unknown,
   fallback: string = t.meetingInvites.error,

@@ -29,7 +29,7 @@ function InvoiceRow({ invoice }: { invoice: NonNullable<BookingDraft['invoice']>
   );
 }
 
-/** The package row: its name and price; the assistant's course its lesson count (no price: the subscription has it). */
+/** The package row: name and price; the assistant's course shows its lesson count (no price). */
 function PackageValue({ draft, students }: { draft: BookingDraft; students: number }) {
   if (draft.course) return <>{counted(t.schedule.lessonCount, draft.course.lessonsTotal)}</>;
   return (

@@ -17,7 +17,7 @@ export function CrmStatusActions({ tpl, busy, onSet }: CrmStatusActionsProps) {
   const name = templateName(tpl.key);
   const hint = useId();
   const [confirming, setConfirming] = useState(false);
-  // The row stays mounted after the save (same key): close the confirm so the other action comes back.
+  // The row stays mounted after the save (same key): closing the confirm restores the other action.
   const approve = () => {
     setConfirming(false);
     onSet(tpl, 'approved');

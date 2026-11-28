@@ -14,7 +14,7 @@ import { setConfirmationRequired } from '@ab/web-kit/testing';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-// The admin's form is its own feature's (RescheduleForm tests): here only that it opens on the right lesson.
+// The admin's form is its own feature's (RescheduleForm tests); here: it opens on the right lesson.
 vi.mock('@/features/teaching/schedule', async (orig) => ({
   ...(await orig<object>()),
   RescheduleForm: ({ lesson, onDone }: { lesson: { id: string }; onDone: (m: string) => void }) => (

@@ -22,7 +22,7 @@ const optionText = (n: NumberView) => {
   return n.enabled ? text : `${text} ${s.disabledMark}`;
 };
 
-/** The read-only text: the template's number, the role default, or a neutral label for a number not in the list. */
+/** Read-only text: the template's number, the role default, or a neutral label if unlisted. */
 function readOnlyText(tpl: TemplateView, own: NumberView | undefined): string {
   if (own) return optionText(own);
   return tpl.number_id ? s.unknownNumber : s.roleDefault;
@@ -34,7 +34,8 @@ interface SendFromSelectProps {
   cell: Pick<SendFromCellProps, 'onPick' | 'busy'>;
 }
 
-/** The editable select; a saved number missing from the list is its own disabled option, so the select never shows the default. */
+/** The editable select; a saved number missing from the list is its own disabled option, so the
+ * select never shows the default. */
 function SendFromSelect({ tpl, numbers, cell }: SendFromSelectProps) {
   const missing =
     tpl.number_id && !numbers.some((n) => n.id === tpl.number_id) ? tpl.number_id : null;

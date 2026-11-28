@@ -11,8 +11,8 @@ export interface CallBarProps {
 }
 
 /**
- * The minimised call (docs/28 §5): a pill floating above the page's lower edge (and the phone composer),
- * so the app header and its navigation stay reachable; tap to go back to the call.
+ * The minimised call (docs/28 §5): a pill floating above the page's lower edge (and the phone
+ * composer), so the app header and its navigation stay reachable; tap to go back to the call.
  */
 export function CallBar({ session, row, phase, onExpand }: CallBarProps) {
   const now = useSyncExternalStore(phase === 'active' ? callClock.subscribe : callClock.still, callClock.read);

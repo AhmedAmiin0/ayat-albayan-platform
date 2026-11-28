@@ -23,9 +23,12 @@ import { inboxLeadKeys, threadKeys } from '@/features/messaging/inbox/api/keys';
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
 export const THREADS_PAGE_SIZE = 30;
-/** New WhatsApp messages arrive by webhook; the open chat polls for them with a delta (10 s; e2e 1 s). */
+/** New WhatsApp messages come by webhook; the open chat polls for them by delta (10 s; e2e 1 s). */
 export const INBOX_REFRESH_MS = env.inboxRefreshMs;
-/** The inbox's poll: INBOX_FALLBACK_MS while realtime is connected (its events re-read sooner), else the above. */
+/**
+ * The inbox's poll: INBOX_FALLBACK_MS while realtime is connected (its events re-read sooner),
+ * else the above.
+ */
 export const inboxPollMs = () => liveInterval(inboxLive.isLive(), INBOX_REFRESH_MS);
 
 export const threadsQuery = (s: InboxSearch) => {
@@ -52,8 +55,9 @@ export const threadPage = (path: string, init?: RequestInit) => apiFetch<ThreadD
 
 /** A file in a chat bubble as a signed URL of our own copy (ThreadMediaService.file). */
 /**
- * GET /threads/:phone/messages/:messageId/file: an inbound image or PDF, downloaded from WhatsApp on
- * first use; 410 media_expired when it is gone. Asked only after a click; fresh for half the URL's hour.
+ * GET /threads/:phone/messages/:messageId/file: an inbound image or PDF, downloaded from WhatsApp
+ * on first use; 410 media_expired when it is gone. Asked only after a click; fresh for half the
+ * URL's hour.
  */
 export const threadFileQuery = (phone: string, messageId: string) =>
   queryOptions({
@@ -89,7 +93,7 @@ export const sendRating = ({ phone, ...body }: ThreadRating & { phone: string })
 /** M1: a failed row goes back to the queue (attempts 0). */
 export const retryMessage = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/retry`);
 
-/** M3: the admin opened wa.me; the sender holds the row until they confirm (M2) or put it back (M1). */
+/** M3: the admin opened wa.me; the sender holds the row until confirmed (M2) or put back (M1). */
 export const handOffMessage = (id: string) =>
   apiSend<MessageView>('POST', `/messages/${id}/hand-off`);
 

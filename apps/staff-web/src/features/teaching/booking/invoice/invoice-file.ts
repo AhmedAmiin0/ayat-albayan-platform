@@ -12,7 +12,7 @@ export function invoiceMime(file: File): string {
   return file.type === '' && /\.hei[cf]$/i.test(file.name) ? HEIC : file.type;
 }
 
-/** Client-side check before the upload, against settings.upload_max_mb (the API and the bucket check again). */
+/** Checked before upload against settings.upload_max_mb (the API and the bucket check again). */
 export function invoiceProblem(
   file: File | null,
   maxBytes = INVOICE_MAX_BYTES,

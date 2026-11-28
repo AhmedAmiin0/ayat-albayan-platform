@@ -18,7 +18,7 @@ const listeners = new Set<() => void>();
 const notify = () => listeners.forEach((l) => l());
 let generation = 0;
 
-/** Captured at submit; a write carrying an older one (the session it came from ended) is dropped. */
+/** Captured at submit; a write carrying an older one (its session has ended) is dropped. */
 export const draftGeneration = (): number => generation;
 
 /** The chat's draft, or the shared empty one (stable, for useSyncExternalStore). */

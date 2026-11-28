@@ -23,7 +23,7 @@ export interface AdminNavProps {
   can?: (permission: Permission) => boolean;
 }
 
-/** The admin nav: section lists with dot leaders + counts (sidebar) or end-aligned counts (sheet). */
+/** Admin nav: section lists with dot leaders + counts (sidebar) or end-aligned counts (sheet). */
 export function AdminNav({ counts = {}, can = () => true }: AdminNavProps) {
   return (
     <nav aria-label={t.nav.label} className="flex flex-col gap-3 shell:gap-4">

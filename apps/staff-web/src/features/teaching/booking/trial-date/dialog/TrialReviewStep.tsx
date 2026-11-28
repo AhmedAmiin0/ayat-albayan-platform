@@ -31,7 +31,7 @@ export function TrialReviewStep({ draft, onChangeSlot, onPatch, onDone }: TrialR
       await refreshAfterTrialDate(queryClient);
       onDone(result);
     },
-    // trial_changed and the like: the next open builds its draft from a fresh history, not the cache.
+    // trial_changed and the like: the next open builds its draft from a fresh history.
     onError: () => queryClient.invalidateQueries({ queryKey: TRIAL_DATES_KEY }),
   });
   const conflicts = conflictsOf(send.error);

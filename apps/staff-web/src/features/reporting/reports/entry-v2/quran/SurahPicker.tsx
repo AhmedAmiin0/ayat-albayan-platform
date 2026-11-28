@@ -25,7 +25,10 @@ export function SurahPicker({ title, target, recent, onDone, onClose }: SurahPic
     setAfter(null);
     setRange(surahStart(range, surah));
   };
-  const summary = range ? rangeSummary(range, { ayahs: t.reports.v2.ayahs, summary: p.summary }) : null;
+  const words = { ayahs: t.reports.v2.ayahs, summary: p.summary };
+  const summary = range ? rangeSummary(range, words) : null;
+  const step = (change: Parameters<typeof clampRange>[1]) =>
+    range && setRange(clampRange(range, change));
   const actions = (
     <>
       <Button type="button" variant="ghost" onClick={onClose}>{p.cancel}</Button>
@@ -48,8 +51,8 @@ export function SurahPicker({ title, target, recent, onDone, onClose }: SurahPic
         {range && (
           <div className="grid gap-2">
             <div className="flex flex-wrap gap-4">
-              <AyahStepper label={p.from} value={range.from} onChange={(from) => setRange(clampRange(range, { from }))} />
-              <AyahStepper label={p.to} value={range.to} onChange={(to) => setRange(clampRange(range, { to }))} />
+              <AyahStepper label={p.from} value={range.from} onChange={(from) => step({ from })} />
+              <AyahStepper label={p.to} value={range.to} onChange={(to) => step({ to })} />
             </div>
             <p role="status" className="text-sm text-ink-2">
               {summary}

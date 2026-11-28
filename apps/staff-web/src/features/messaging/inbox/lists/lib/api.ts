@@ -30,12 +30,18 @@ export const deleteList = (id: string) => apiSend('DELETE', listPath(id));
 export const setMember = (input: { id: string; phone: string; member: boolean }) =>
   apiSend(input.member ? 'PUT' : 'DELETE', memberPath(input));
 
-/** A change to lists or members: the chips' counts, the filtered thread list and the open chat's lists. */
+/**
+ * A change to lists or members: the chips' counts, the filtered thread list and the open chat's
+ * lists.
+ */
 export const refreshLists = (queryClient: QueryClient) =>
   Promise.all([
     queryClient.invalidateQueries({ queryKey: CHAT_LISTS_KEY }),
     queryClient.invalidateQueries({ queryKey: threadKeys.all }),
   ]);
 
-/** The dialogs' inline error: a taken name, the 30-list cap, a list deleted meanwhile, or a generic one. */
+/**
+ * The dialogs' inline error: a taken name, the 30-list cap, a list deleted meanwhile, or a generic
+ * one.
+ */
 export const listErrorText: (error: unknown) => string = chatListErrorWords(() => t.inbox.lists);

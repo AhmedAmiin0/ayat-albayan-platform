@@ -19,7 +19,7 @@ export function controlChips(controls: ColumnFilterControl[]): FilterChip[] {
     .map((c) => ({ id: `col:${c.id}`, label: c.label, value: valueText(c), onRemove: () => c.onChange('') }));
 }
 
-/** Splits the column controls: the toolbar's search (unless the page brings its own) and the panel's. */
+/** Splits the controls: the toolbar's search (unless the page brings its own) and the panel's. */
 export function splitControls(controls: ColumnFilterControl[], ownSearch: boolean) {
   const search = ownSearch ? undefined : pickSearch(controls);
   return { search, panel: controls.filter((c) => c !== search) };

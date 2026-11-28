@@ -30,12 +30,12 @@ export function pickTarget(
   return { kind, index: -1, start, after: start && last ? last.to : null };
 }
 
-/** A surah picked from the list: the whole surah, unless it is the one already picked (its range stays, as on mobile). */
+/** A picked surah: the whole surah, unless already picked (its range stays, as on mobile). */
 export function surahStart(current: SurahRange | null, surah: number): SurahRange {
   return current?.surah === surah ? current : { surah, from: 1, to: ayahCount(surah) };
 }
 
-/** Stepper / typed change, kept inside the surah with from ≤ to (moving one end pushes the other). */
+/** Stepper or typed change, kept in the surah with from ≤ to (moving one end pushes the other). */
 export function clampRange(range: SurahRange, change: { from?: number; to?: number }): SurahRange {
   const max = ayahCount(range.surah);
   const clamp = (n: number) => Math.min(max, Math.max(1, Math.round(n)));

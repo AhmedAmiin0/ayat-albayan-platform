@@ -9,7 +9,7 @@ const ICON = { asc: 'arrow-up', desc: 'arrow-down', none: 'arrows-up-down' } as 
 
 interface SortState { dir: SortDir | false; toggle: () => void }
 
-/** How a column sorts here: server (`sort` prop + `meta.sortKey`), client (TanStack), or not at all. */
+/** How a column sorts: server (`sort` prop + `meta.sortKey`), client (TanStack), or not at all. */
 function sortStateOf<T extends RowData>(
   header: Header<DataTableFeatures, T>,
   sort?: DataTableSort,

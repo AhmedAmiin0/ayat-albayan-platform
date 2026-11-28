@@ -96,7 +96,7 @@ describe('«رد» in the chat (owner 2026-10-25)', () => {
     const button = await screen.findByRole('button', { name: t.inbox.reply.action });
     expect(button.getAttribute('aria-disabled')).toBe('true');
     expect(button.getAttribute('title')).toBe(t.inbox.sessionClosed);
-    // The reason as the button's own description, never a second (hidden) copy of the notice's text.
+    // The reason as the button's own description, never a second (hidden) copy of the notice.
     expect(button.getAttribute('aria-description')).toBe(t.inbox.sessionClosed);
     fireEvent.click(button);
     expect(strip()).toBeNull();

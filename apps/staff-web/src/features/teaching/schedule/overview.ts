@@ -41,14 +41,11 @@ export interface BoardRow {
   teacher: OverviewTeacher;
   /** Viewer's day → that day's lessons by start time. */
   days: Map<string, LessonView[]>;
-  /** The teacher's photo (OverviewTeacher.avatar_url, so a teacher without lessons in the window still has it); null = initials. */
+  /** OverviewTeacher.avatar_url (set even with no lessons in the window); null = initials. */
   photo: string | null;
 }
 
-/**
- * One row per teacher, lessons or not (a teacher with an empty week still shows); days in `tz`,
- * the viewer's zone (useViewerTz()).
- */
+/** One row per teacher, lessons or not; days in `tz`, the viewer's zone (useViewerTz()). */
 export function boardRows(
   teachers: readonly OverviewTeacher[],
   lessons: readonly LessonView[],
@@ -72,6 +69,8 @@ export interface ClipOptions {
   after?: number | undefined;
 }
 
+const iso = (ms: number): string => new Date(ms).toISOString();
+
 /** Spans cut to one viewer's day; with `after`, only what is left after that instant. */
 export function clipSpans(spans: readonly Span[], { day, tz, after }: ClipOptions): Span[] {
   const bounds = dayBounds(day, tz);
@@ -79,11 +78,11 @@ export function clipSpans(spans: readonly Span[], { day, tz, after }: ClipOption
   return spans.flatMap((s) => {
     const start = Math.max(Date.parse(s.starts_at), from);
     const end = Math.min(Date.parse(s.ends_at), bounds.to);
-    return end > start ? [{ starts_at: new Date(start).toISOString(), ends_at: new Date(end).toISOString() }] : [];
+    return end > start ? [{ starts_at: iso(start), ends_at: iso(end) }] : [];
   });
 }
 
-/** A span of `day` as viewer's "HH:MM" keys (freeText shows them in the viewer's cycle); one that runs to midnight ends at "24:00", not "00:00". */
+/** A span of `day` as viewer's "HH:MM" keys; one that runs to midnight ends at "24:00". */
 export function spanRange(span: Span, day: string, tz: string): Range {
   const end = Date.parse(span.ends_at) >= dayBounds(day, tz).to ? '24:00' : clockTime(new Date(span.ends_at), tz);
   return { start: clockTime(new Date(span.starts_at), tz), end };
@@ -119,22 +118,28 @@ export interface DayInput {
   tz: string;
 }
 
+const spanMin = (s: Span): number => (Date.parse(s.ends_at) - Date.parse(s.starts_at)) / MIN;
+
 /** One teacher's viewer-zone day: availability, time off, lesson ticks and what is still free. */
-export function teacherDay(teacher: OverviewTeacher, { day, lessons, now, tz }: DayInput): TeacherDay {
-  const ranges = (spans: readonly Span[]) => clipSpans(spans, { day, tz }).map((s) => spanRange(s, day, tz));
+export function teacherDay(
+  teacher: OverviewTeacher,
+  { day, lessons, now, tz }: DayInput,
+): TeacherDay {
+  const ranges = (spans: readonly Span[]) =>
+    clipSpans(spans, { day, tz }).map((s) => spanRange(s, day, tz));
   const after = Math.ceil(now.getTime() / QUARTER) * QUARTER;
   const long = (s: Span) => Date.parse(s.ends_at) - Date.parse(s.starts_at) >= MIN_GAP;
   const gaps = clipSpans(teacher.free, { day, tz, after }).filter(long);
   const bounds = dayBounds(day, tz);
+  const coversTrack = (o: Span) =>
+    Date.parse(o.starts_at) <= bounds.from + TRACK_START && Date.parse(o.ends_at) >= bounds.to;
   return {
     windows: ranges(teacher.windows),
     off: ranges(teacher.time_off),
     ticks: ranges(lessons),
     gaps,
-    freeMin: gaps.reduce((sum, s) => sum + (Date.parse(s.ends_at) - Date.parse(s.starts_at)) / MIN, 0),
-    dayOff:
-      teacher.time_off.find((o) => Date.parse(o.starts_at) <= bounds.from + TRACK_START && Date.parse(o.ends_at) >= bounds.to) ??
-      null,
+    freeMin: gaps.reduce((sum, s) => sum + spanMin(s), 0),
+    dayOff: teacher.time_off.find(coversTrack) ?? null,
   };
 }
 

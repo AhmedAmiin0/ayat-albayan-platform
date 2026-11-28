@@ -18,7 +18,7 @@ import { refreshAfterCourseChange } from './refresh';
 
 export interface ChangeReviewProps {
   body: CourseChangeBody;
-  /** Its zone (the family's wall clock), current days and teacher's zone (a clash on their clock). */
+  /** Its zone (the family's clock), current days and teacher's zone (a clash on their clock). */
   course: Pick<BookedCourse, 'tz' | 'days' | 'teacherTz'>;
   onChangeSlot: () => void;
   onDone: (message: string) => void;
@@ -54,7 +54,7 @@ function SaveRefusal({ error }: { error: Error | null }) {
   return <FormAlert>{text(error)}</FormAlert>;
 }
 
-/** The refusal's text: the target's own codes first (the profile's same_teacher…), then the booking's. */
+/** The refusal's text: the target's own codes (the profile's same_teacher…), then the booking's. */
 function useChangeErrorText(): (error: unknown) => string {
   const target = useCourseChangeTarget();
   return (error) => target?.errorText?.(error) ?? lessonErrorText(error);

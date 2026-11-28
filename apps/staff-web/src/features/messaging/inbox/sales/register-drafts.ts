@@ -26,8 +26,8 @@ export const registerDrafts = {
 /**
  * The saved draft as it may resume (review M3): none when it was for another lead than the chat's
  * now; a first lesson no longer in the future is dropped (the server would book the next week's
- * occurrence, a week after what the review showed) with the other picks, back on the slot step at most,
- * and `droppedPast` says so (the dialog shows one line about it).
+ * occurrence, a week after what the review showed) with the other picks, back on the slot step
+ * at most, and `droppedPast` says so (the dialog shows one line about it).
  */
 export function resumable(
   saved: RegisterDraft | undefined,

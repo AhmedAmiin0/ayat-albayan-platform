@@ -3,7 +3,10 @@ import { matchesQuery } from '@ab/core';
 
 // The picker's pure parts: which list, the search, and the «/» trigger of the composer.
 
-/** One tab's replies whose title or text holds `query` (case, tashkeel and letter forms ignored), in served order. */
+/**
+ * One tab's replies whose title or text holds `query` (case, tashkeel and letter forms ignored),
+ * in served order.
+ */
 export function filterReplies(
   replies: readonly SavedReply[],
   input: { scope: SavedReplyScope; query: string },
@@ -29,7 +32,7 @@ export function slashStart(text: string): number {
   return text.length - (slashQuery(text) ?? '').length - 1;
 }
 
-/** The box after picking: the «/query» token replaced by the reply, else the reply after what was typed. */
+/** The box after a pick: the «/query» token replaced by the reply, else the reply after text. */
 export function fillComposer(text: string, reply: string): string {
   const query = slashQuery(text);
   if (query !== null) return text.slice(0, slashStart(text)) + reply;

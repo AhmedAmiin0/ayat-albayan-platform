@@ -35,7 +35,7 @@ export const startsAtOf = (c: TimeChoice): string => startOf(c).toISOString();
 
 export interface DayRule {
   now: Date;
-  /** Correct mode: each person's zone with the day the lesson was on there; the new start stays on it. */
+  /** Correct mode: each person's zone with the lesson's day there; the new start stays on it. */
   sameDay?: readonly { tz: string; date: string }[];
 }
 
@@ -79,7 +79,7 @@ export function willNotify(
 
 export interface BodyInput {
   mode: TimeEditMode;
-  /** The start and end the admin saw: a second admin's length-only edit is refused, not overwritten. */
+  /** The start and end the admin saw: a second admin's length-only edit is refused, not lost. */
   expectedStartsAt: string;
   expectedEndsAt: string;
   choice: TimeChoice;
@@ -88,7 +88,7 @@ export interface BodyInput {
   override?: string | undefined;
 }
 
-/** True for the lengths the API takes (30/45/60/90); a migrated odd length must be changed first. */
+/** The lengths the API takes (30/45/60/90); a migrated odd length must be changed first. */
 export const validLength = (min: number): boolean => lessonDuration.safeParse(min).success;
 
 /** PATCH /lessons/:id/time body: `notify` only when moving; blank reason left out. */

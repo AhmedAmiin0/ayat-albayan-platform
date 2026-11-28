@@ -29,7 +29,7 @@ export function draftProblem(draft: InstantDraft, clashed: boolean): DraftProble
   return null;
 }
 
-/** The POST /lessons/instant body; one request id per dialog so a double click starts one lesson. */
+/** The POST /lessons/instant body; one request id per dialog: a double click starts one lesson. */
 export function instantBody(
   draft: InstantDraft,
   opts: { clashed: boolean; requestId: string },

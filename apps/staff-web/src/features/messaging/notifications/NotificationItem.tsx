@@ -13,8 +13,9 @@ export interface NotificationItemProps {
 
 /**
  * One bell row: title, body, time; an unread row carries the saffron dot (named for screen
- * readers). Title and body are isolated (dir="auto"): a family's Latin name or message keeps its own
- * direction inside the Arabic UI. Opening it marks it read and goes where the push would (webNotificationPath).
+ * readers). Title and body are isolated (dir="auto"): a family's Latin name or message keeps its
+ * own direction inside the Arabic UI. Opening it marks it read and goes where the push would
+ * (webNotificationPath).
  */
 export function NotificationItem({ item, onPick, now }: NotificationItemProps) {
   const role = useQuery(meQuery).data?.role ?? null;

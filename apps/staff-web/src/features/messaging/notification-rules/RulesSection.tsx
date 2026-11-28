@@ -16,7 +16,7 @@ import { RulesTable } from './table/RulesTable';
 const r = t.notificationRules;
 const c = t.notificationCatalogue;
 
-/** Loading: row-shaped bars and the words for screen readers; no role (the page owns role=status). */
+/** Row-shaped bars and the words for screen readers; no role (the page owns role=status). */
 function Loading() {
   return (
     <div aria-busy="true" className="grid gap-3 py-3">
@@ -46,7 +46,8 @@ export function RulesSection({ onSaved, drafts, audience }: RulesSectionProps) {
   const held = drafts ?? own;
   const [tab, setTab] = useState<AudienceTab>(audience ?? 'guardian');
   const [live, setLive] = useState('');
-  const api = { canManage, numbers: numbers.data ?? [], reach: list.data?.reach, onSaved, drafts: held, announce: setLive };
+  const writes = { onSaved, drafts: held, announce: setLive };
+  const api = { canManage, numbers: numbers.data ?? [], reach: list.data?.reach, ...writes };
   const showFirstUnsaved = () => {
     const first = list.data?.entries.find((e) => e.key === held.keys[0]);
     if (first) setTab(first.manual ? 'manual' : first.audience);
@@ -72,7 +73,9 @@ export function RulesSection({ onSaved, drafts, audience }: RulesSectionProps) {
         {list.data && (
           <>
             <NumbersLine lines={list.data.lines} />
-            <RulesTable entries={list.data.entries} lines={list.data.lines} tab={tab} onTab={setTab} />
+            <RulesTable
+              entries={list.data.entries} lines={list.data.lines} tab={tab} onTab={setTab}
+            />
           </>
         )}
         {/* One polite region, always mounted and empty until a row's save fails (docs/26b §7b). */}

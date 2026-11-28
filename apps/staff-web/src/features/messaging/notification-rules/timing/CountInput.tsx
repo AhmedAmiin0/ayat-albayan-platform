@@ -16,7 +16,7 @@ export interface CountInputProps {
   invalid?: boolean;
 }
 
-/** A bounded whole number with its visible label and unit (rule 6: a count, never a time of day). */
+/** A bounded whole number with its visible label and unit: a count, never a time of day. */
 export function CountInput({
   label,
   unit,

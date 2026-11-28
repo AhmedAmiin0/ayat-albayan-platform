@@ -6,7 +6,7 @@ import { templatesQuery } from '@/features/messaging/templates/api';
 import { requestErrorText, requestFeedback } from './api';
 import { FEEDBACK_TEMPLATE } from './types';
 
-/** The students who may be asked: the lesson took place and they did not miss it (the API refuses the rest). */
+/** Who may be asked: the lesson took place and they did not miss it (the API refuses the rest). */
 export const askable = (lesson: Pick<LessonView, 'status' | 'students'>): LessonView['students'] =>
   lesson.students.filter((s) => feedbackEligible(lesson.status, s.attendance));
 

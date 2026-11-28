@@ -14,7 +14,7 @@ import {
 import { TeacherChannelList } from './TeacherChannelList';
 
 interface Props {
-  /** ?student= (a push opens it); null = the list only on a phone, the first prompt on a wide screen. */
+  /** ?student= (a push opens it); null = the list alone on a phone, the first prompt when wide. */
   studentId: string | null;
   onPick: (studentId: string | null) => void;
 }

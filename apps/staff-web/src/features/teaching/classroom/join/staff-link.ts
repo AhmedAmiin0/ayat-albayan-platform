@@ -13,7 +13,7 @@ export const meetingPathOfLink = async (token: string): Promise<string> => {
   return `/meeting/${id}`;
 };
 
-/** /join/<token> opened by the lesson's staff → /classroom/<lesson> (GET /join-links/:token/lesson). */
+/** /join/<token> opened by lesson staff → /classroom/<lesson> (GET /join-links/:token/lesson). */
 export const lessonPathOfLink = async (token: string): Promise<string> => {
   const { lessonId } = await apiFetch<{ lessonId: string }>(`/join-links/${encodeURIComponent(token)}/lesson`);
   return `/classroom/${lessonId}`;

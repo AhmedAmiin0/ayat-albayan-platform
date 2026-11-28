@@ -1,4 +1,4 @@
-/** The template's footer under the body: small grey text, in its own direction (WhatsApp's footer). */
+/** The template's footer under the body: small grey text in its own direction, as WhatsApp. */
 export function TemplateFooter({ text }: { text: string | null }) {
   if (!text) return null;
   return (

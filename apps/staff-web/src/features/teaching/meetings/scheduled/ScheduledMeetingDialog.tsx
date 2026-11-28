@@ -34,7 +34,8 @@ export function ScheduledMeetingDialog({ onClose, tz: pinned }: Props) {
   const submit = () => {
     const problem = scheduleIssue(schedule, { now: new Date(), tz });
     setIssue(problem && L.errors[problem]);
-    if (!problem) create.mutate(createBody({ title, invitees, clientRequestId: requestId, schedule: { value: schedule, tz } }));
+    const body = { title, invitees, clientRequestId: requestId, schedule: { value: schedule, tz } };
+    if (!problem) create.mutate(createBody(body));
   };
   const made = create.data;
   const actions = made ? (
@@ -59,7 +60,9 @@ export function ScheduledMeetingDialog({ onClose, tz: pinned }: Props) {
           <ScheduleFields value={schedule} onChange={setSchedule} tz={tz} />
           <InviteePicker picked={invitees} onPicked={setInvitees} />
           {issue && <FormAlert>{issue}</FormAlert>}
-          {create.isError && <FormAlert>{meetingErrorText(create.error, t.meetings.internal.error)}</FormAlert>}
+          {create.isError && (
+            <FormAlert>{meetingErrorText(create.error, t.meetings.internal.error)}</FormAlert>
+          )}
         </div>
       )}
     </Dialog>

@@ -4,7 +4,7 @@ import type { InboxMode } from '@/features/messaging/inbox/shared/mode';
 
 // WhatsApp's 24 h customer-service window in words (docs/12 §3.5): open with the time left, or
 // closed — then only a template, or the lesson rating, can be sent (and a tap reopens it). The
-// rating is the admin's only (SendRatingButton), so teacher and sales read what reopens it for them.
+// rating is the admin's only (SendRatingButton): teacher and sales read what reopens it for them.
 
 const HOUR = 60 * 60_000;
 

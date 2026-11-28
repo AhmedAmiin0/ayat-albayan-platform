@@ -10,7 +10,8 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
-// docs/19 «crm driver», docs/39: a crm line's row submits through the CRM; its status by hand stays a fallback.
+// docs/19 «crm driver», docs/39: a crm line's row submits through the CRM; its manual status
+// stays a fallback.
 
 const s = t.templates.crmStatus;
 const MISSING = template({ key: 'renewal_due', status: 'missing' });

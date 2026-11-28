@@ -10,11 +10,14 @@ export interface CourseDraft {
   perWeek: number;
   /** Hold mode: unpaid with an open link, booking saves a draft; absent means false. */
   hold?: boolean;
-  /** The lessons to book (courseLessonCount: lessons_total − lessons_used_before): the course stops after it. */
+  /** The lessons to book (lessons_total − lessons_used_before): the course stops after them. */
   lessonsTotal: number;
-  /** The subscription's package; null = a custom count (labels use lessonsTotal, never the body's package). */
+  /** The subscription's package; null = a custom count (labels use lessonsTotal, not this). */
   package: PackageSize | null;
-  /** The first local day it may start (courseOpensOn: the subscription's, or after the previous course): the slot grid opens on its week. */
+  /**
+   * The first local day it may start (the subscription's, or after the previous course): the slot
+   * grid opens on its week.
+   */
   startsOn: string;
   /** A pick equal to a prefilled one keeps its time (DST-safe); a clash names its day. */
   prefilled?: readonly PrefilledPick[];

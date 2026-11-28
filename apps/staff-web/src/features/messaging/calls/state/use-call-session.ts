@@ -14,7 +14,7 @@ export interface CallSessionApi extends Pick<CallDerived, 'row' | 'phase' | 'inc
 
 const NO_ICE: CallConfigView['iceServers'] = [];
 
-/** The device's call and the incoming rings (docs/28 §3), polled while calls are on for this user. */
+/** The device's call and the incoming rings (docs/28 §3), polled while the user has calls on. */
 export function useCallSession(input: {
   config: CallConfigView | undefined;
   rtc: RtcDeps | null;
@@ -36,7 +36,7 @@ export function useCallSession(input: {
   useEffect(() => store.configure(makePeer, iceServers), [store, makePeer, iceServers]);
   useEffect(() => () => store.dispose(), [store]);
 
-  // WhatsApp's answer, the call gone from the server, the 45 s timer, calls switched off (CallStore.follow).
+  // WhatsApp's answer, the call gone from the server, the 45 s timer, calls switched off.
   const { answer, gone, deadline, off } = d;
   useEffect(
     () => store.follow({ answer, gone, deadline, off }),

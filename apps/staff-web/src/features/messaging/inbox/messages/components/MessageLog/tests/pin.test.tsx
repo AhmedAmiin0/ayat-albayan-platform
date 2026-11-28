@@ -4,7 +4,7 @@ import { t } from '@ab/web-kit';
 import { message, PHONE } from '@/features/messaging/inbox/testing/inbox-fixture';
 import { MessageLog } from '@/features/messaging/inbox/messages/components/MessageLog/MessageLog';
 
-// jsdom has no layout: give every box a 1000px tall content in a 400px window, and a real scrollTop.
+// jsdom has no layout: every box gets 1000px of content in a 400px window, and a real scrollTop.
 const tops = new WeakMap<Element, number>();
 const props = ['scrollHeight', 'clientHeight', 'scrollTop'] as const;
 const saved = props.map((p) => [p, Object.getOwnPropertyDescriptor(Element.prototype, p)] as const);

@@ -20,7 +20,7 @@ export const numbersQuery = queryOptions({
   queryFn: () => apiFetch<NumberView[]>('/admin/numbers'),
 });
 
-/** GET /admin/numbers/own-traffic (settings.read): inbound rows from our own numbers, last 7 days. */
+/** GET /admin/numbers/own-traffic (settings.read): inbound rows from our numbers, last 7 days. */
 export const ownTrafficQuery = queryOptions({
   queryKey: NUMBERS_QUERY_KEYS.ownTraffic,
   queryFn: () => apiFetch<OwnTrafficView>('/admin/numbers/own-traffic'),
@@ -51,9 +51,9 @@ export const clearNumberSecret = (input: { id: string; name: NumberSecretName })
 /** POST /admin/numbers/import: dryRun true previews, false applies (idempotent). */
 export const importNumbers = (dryRun: boolean) => apiSend<ImportResult>('POST', '/admin/numbers/import', { dryRun });
 
-/** POST /admin/communications/source: 409 parity_not_empty while a difference remains (to module). */
+/** POST /admin/communications/source: 409 parity_not_empty while a difference remains (module). */
 export const setCommsSource = (source: CommsSource) => apiSend<CommsSourceView>('POST', '/admin/communications/source', { source });
 
-/** POST /admin/numbers/:id/templates/sync (templates.manage): that number's WABA list → its approvals. */
+/** POST /admin/numbers/:id/templates/sync (templates.manage): its WABA list → its approvals. */
 export const syncNumberTemplates = (id: string) =>
   apiSend<TemplateNumberSyncView>('POST', `/admin/numbers/${encodeURIComponent(id)}/templates/sync`);

@@ -39,9 +39,10 @@ export function SenderLine({ message: m }: { message: MessageView }) {
 }
 
 /**
- * No text, file or template: Meta's `unsupported` asks the sender again (131060, often a new number's
- * first message, says why and that it shows in the WhatsApp Business app; ResendAsk offers to ask);
- * anything else (a location, a contact card…) did arrive and only cannot be shown here.
+ * No text, file or template: Meta's `unsupported` asks the sender again (131060, often a new
+ * number's first message, says why and that it shows in the WhatsApp Business app; ResendAsk
+ * offers to ask); anything else (a location, a contact card…) did arrive and only cannot be shown
+ * here.
  */
 export function emptyText(m: Pick<MessageView, 'interactive_payload'>): string {
   const reacted = reactionText(m.interactive_payload, {

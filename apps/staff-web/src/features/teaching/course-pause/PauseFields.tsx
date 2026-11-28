@@ -13,7 +13,7 @@ interface PauseFieldsProps {
   onChange: (patch: Partial<PauseDraft>) => void;
 }
 
-/** From (min today), until (optional, min from), reason, then the live preview line and the no-message note. */
+/** From (min today), until (optional, min from), reason, live preview, the no-message note. */
 export function PauseFields({ studentId, today, draft, onChange }: PauseFieldsProps) {
   const problem = draftProblem(draft, today);
   const words = t.coursePause;

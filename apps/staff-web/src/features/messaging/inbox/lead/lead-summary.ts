@@ -10,7 +10,10 @@ export interface SummaryRow { label: string; value: string }
 const CITY: Record<string, string | undefined> = t.tz;
 const WEEKDAY: Record<string, string | undefined> = t.enums.weekday;
 
-/** The lead's key facts (the hours in the viewer's clock), only the filled ones, in the registration form's order. */
+/**
+ * The lead's key facts (the hours in the viewer's clock), only the filled ones, in the
+ * registration form's order.
+ */
 export function leadSummary(lead: InboxLead, clock: Clock): SummaryRow[] {
   const q = qualForm(lead.qualification);
   const tz = q.tz || lead.tz || '';

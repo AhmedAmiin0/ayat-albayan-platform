@@ -5,7 +5,7 @@ import type { BookHint } from '@/features/teaching/booking/hint';
 
 // One trial lesson for one existing student in the family's zone, teacher to slot to review; pure.
 
-/** What the caller knows of the student besides the history (the admin's profile); else the history's prefill. */
+/** What the caller knows of the student (the admin's profile); else the history's prefill. */
 export interface TrialStudentFacts {
   program?: Program | undefined;
   genderPref?: Gender | null | undefined;

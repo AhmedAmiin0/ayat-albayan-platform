@@ -21,7 +21,10 @@ export interface ThreadHeaderProps {
   headingId: string;
   /** The family's subscription (threadBadge); null for a teacher or an unknown number. */
   badge: SubscriptionBadge | null;
-  /** At the end of the first row: the sales actions (SalesChatActions) or, on phones, the side sheet's opener. */
+  /**
+   * At the end of the first row: the sales actions (SalesChatActions) or, on phones, the side
+   * sheet's opener.
+   */
   action?: ReactNode;
   /** Sales: which children the chat is about (SalesFamilyLine), in the second row. */
   line?: ReactNode;
@@ -31,7 +34,9 @@ export interface ThreadHeaderProps {
 }
 
 /** Two rows that never wrap (W3); the chips row scrolls sideways. */
-export function ThreadHeader({ thread: th, listSearch, headingId, badge, action, line, lists, callable = false }: ThreadHeaderProps) {
+export function ThreadHeader({
+  thread: th, listSearch, headingId, badge, action, line, lists, callable = false,
+}: ThreadHeaderProps) {
   const kind = threadKind(th);
   const mode = useInboxMode();
   return (

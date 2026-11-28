@@ -3,7 +3,7 @@ import { isIntegrationKey } from '@ab/catalog';
 import { Ltr, t } from '@ab/web-kit';
 import { integrationText, optionText } from '@/features/platform/integrations/integrations-form';
 
-/** An unknown key name stays an LTR island that wraps at phone width (no horizontal page scroll). */
+/** An unknown key name stays an LTR island that wraps at phone width (no horizontal scroll). */
 const WRAP = 'whitespace-normal break-all';
 
 /** A key outside the registry is shown as written (docs/23a §E H3). */

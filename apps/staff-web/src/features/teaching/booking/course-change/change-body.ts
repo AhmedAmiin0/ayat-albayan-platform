@@ -18,7 +18,7 @@ export const picksReady = (course: Pick<BookedCourse, 'perWeek'>, picks: readonl
 export interface ChangeBodyInput {
   course: Pick<BookedCourse, 'subscriptionId' | 'tz'>;
   picks: readonly string[];
-  /** The form's first picks (currentPicks): one still picked keeps its day's own time (DST-safe). */
+  /** The form's first picks (currentPicks): one still picked keeps its day's time (DST-safe). */
   prefilled?: readonly PrefilledPick[] | undefined;
   requestId: string;
   /** The admin's reason to save over clashes (R-SCH-04). */

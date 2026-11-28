@@ -13,7 +13,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 
 const DUES = { currency: 'EGP', rows: [], totals: { earned: 900, paid: 300, owed: 600, teachers_owed: 2 } };
 const OWED = { rows: [], totals: [], total: 450, currency: 'SAR', fx_missing: [] };
-/** The dashboard's reads: work queue, today's lessons, the latest threads, money, else a summary. */
+/** The dashboard's reads: work queue, today's lessons, latest threads, money, else a summary. */
 function answer(path: string): unknown {
   if (path === '/dashboard/work') return WORK;
   if (path === '/teacher-earnings/summary') return DUES;

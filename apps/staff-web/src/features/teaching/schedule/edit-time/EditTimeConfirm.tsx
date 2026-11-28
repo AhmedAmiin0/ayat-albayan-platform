@@ -16,7 +16,7 @@ export interface EditTimeConfirmProps {
   canNotify: boolean;
   notify: boolean;
   onNotify: (on: boolean) => void;
-  /** The API refused the length change (approved / paid month): its payout warning no longer applies. */
+  /** The API refused the length change (approved / paid month): its payout warning is moot. */
   payoutLocked?: boolean;
 }
 

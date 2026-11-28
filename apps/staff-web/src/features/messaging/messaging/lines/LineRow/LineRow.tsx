@@ -33,7 +33,7 @@ const CREDENTIAL = {
 const known = (e: LineCheckView['errors'][number]): string | undefined =>
   e.credential ? CREDENTIAL[e.credential] : e.code === null ? undefined : ERRORS[String(e.code)];
 
-/** Do inbound messages reach us: one chip (wrapping, it is a sentence), then each subscribed app. */
+/** Do inbound messages reach us: one wrapping chip (a sentence), then each subscribed app. */
 function Webhook({ view }: { view: LineCheckView }) {
   const s = t.templates.settings.lines;
   const state = webhookState(view);

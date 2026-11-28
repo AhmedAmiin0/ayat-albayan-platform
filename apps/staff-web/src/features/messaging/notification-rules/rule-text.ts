@@ -59,7 +59,7 @@ export function timingText(key: string, timing: unknown, clock: Clock): string |
   return words ? words(timing, clock) : null;
 }
 
-/** The channels a row can use, in catalogue order: its defaults, its current ones and the optional ones. */
+/** The channels a row can use, in catalogue order: its defaults, current and optional ones. */
 export function availableChannels(entry: NotificationEntryView): NotificationChannel[] {
   const all = new Set<NotificationChannel>([
     ...entry.channels,

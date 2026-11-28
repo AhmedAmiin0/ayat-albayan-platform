@@ -17,7 +17,7 @@ import type { StudentProfile } from '@ab/shared';
 /** GET /students/:id returns every column; the gender preference is one of them (migration 070). */
 type ProfileWithPref = StudentProfile & { teacher_gender_pref?: Gender | null };
 
-/** A student's own wizard: their zone, program, preference, price currency and chat number prefill it. */
+/** A student's own wizard, prefilled: zone, program, preference, currency, chat number. */
 export function draftFromStudent(
   s: ProfileWithPref,
   guardian: GuardianDetail | undefined,
@@ -43,7 +43,7 @@ export function draftFromLead(search: BookSearch, lead: InboxLead | null): Booki
     kind: pkg === 'trial' ? 'trial' : 'package',
   });
   const { student, tz } = newStudentFromLead(lead, search);
-  // The chat the lead wrote from: where the invoice usually arrived, even if another guardian number is typed.
+  // The lead's chat: where the invoice usually arrived, whatever guardian number is typed.
   const leadPhone = normalizePhone(search.phone ?? '');
   return {
     ...base,

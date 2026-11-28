@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { inboxLive, useInboxRealtime } from '@/features/messaging/inbox/api/live/live';
 import { threadKeys } from '@/features/messaging/inbox/api/keys';
 
-// The web inbox over realtime (docs/12 §15): the admin / sales shells' nudge, throttled, polls kept.
+// The web inbox over realtime (docs/12 §15): the admin/sales shells' nudge, throttled; polls kept.
 
 const rt = vi.hoisted(() => {
   const hooks: { status?: (s: string) => void; event?: (m: { payload: unknown }) => void } = {};

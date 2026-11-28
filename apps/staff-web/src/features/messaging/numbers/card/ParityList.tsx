@@ -31,7 +31,8 @@ export function ParityList({ parity }: { parity: ParityView }) {
           {roles.map((r) => (
             <section key={r.role} aria-label={t.numbers.purpose[r.role]} className="grid gap-1 text-xs">
               <p className="font-semibold text-ink">
-                {t.numbers.purpose[r.role]} · {r.number_label ? <bdi>{r.number_label}</bdi> : p.noNumber}
+                {t.numbers.purpose[r.role]} ·{' '}
+                {r.number_label ? <bdi>{r.number_label}</bdi> : p.noNumber}
               </p>
               <ul className="grid gap-1">
                 {r.cells.map((cell) => (

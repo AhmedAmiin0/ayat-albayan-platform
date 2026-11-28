@@ -41,8 +41,11 @@ export interface EditTimeFieldsProps {
 }
 
 const weekday: Record<string, string> = t.enums.weekday;
-/** The four bookable lengths; a migrated lesson's odd one (40) stays visible so the select tells the truth. */
-const lengths = (current: number): number[] => (DURATIONS.some((d) => d === current) ? [...DURATIONS] : [...DURATIONS, current].sort((a, b) => a - b));
+/** The four bookable lengths; a migrated lesson's odd one (40) stays so the select is honest. */
+const lengths = (current: number): number[] =>
+  DURATIONS.some((d) => d === current)
+    ? [...DURATIONS]
+    : [...DURATIONS, current].sort((a, b) => a - b);
 const dayText = (date: string) => `${weekday[String(weekdayOf(date))] ?? ''} ${dayMonthLabel(date)}`;
 
 interface HintInput {
@@ -63,11 +66,14 @@ function viewerHint(p: HintInput, clock: Clock): string | undefined {
 }
 
 /** All picked, none typed (R-SCH-11); reason required for a correction; odd lengths flagged. */
-export function EditTimeFields({ mode, tz, value, onChange, times, days, reasonMissing }: EditTimeFieldsProps) {
+export function EditTimeFields(props: EditTimeFieldsProps) {
+  const { mode, tz, value, onChange, times, days, reasonMissing } = props;
   const clock = useClock();
   const viewer = useViewerTz();
   const move = mode === 'move';
   const offChip = !days.includes(value.date);
+  const lengthError = validLength(value.durationMin) ? undefined : t.lessons.timeEdit.pickLength;
+  const onReason = (e: { target: { value: string } }) => onChange({ reason: e.target.value });
   return (
     <div className="grid gap-4">
       {move ? (
@@ -98,14 +104,23 @@ export function EditTimeFields({ mode, tz, value, onChange, times, days, reasonM
       <div className="grid grid-cols-2 gap-3">
         <Field label={t.lessons.timeEdit.time.replace('{city}', tzCity(tz) ?? tz)} hint={viewerHint({ tz, viewer, date: value.date, time: value.time }, clock)}>
           {(p) => (
-            <Select {...p} dir={clockDir(clock)} value={value.time} onChange={(e) => onChange({ time: e.target.value })}>
+            <Select
+              {...p}
+              dir={clockDir(clock)}
+              value={value.time}
+              onChange={(e) => onChange({ time: e.target.value })}
+            >
               <ClockOptions times={times} />
             </Select>
           )}
         </Field>
-        <Field label={t.lessons.timeEdit.duration} error={validLength(value.durationMin) ? undefined : t.lessons.timeEdit.pickLength}>
+        <Field label={t.lessons.timeEdit.duration} error={lengthError}>
           {(p) => (
-            <Select {...p} value={value.durationMin} onChange={(e) => onChange({ durationMin: Number(e.target.value) })}>
+            <Select
+              {...p}
+              value={value.durationMin}
+              onChange={(e) => onChange({ durationMin: Number(e.target.value) })}
+            >
               {lengths(value.durationMin).map((d) => (
                 <option key={d} value={d}>{lengthText(d)}</option>
               ))}
@@ -119,7 +134,7 @@ export function EditTimeFields({ mode, tz, value, onChange, times, days, reasonM
         required={!move}
         error={reasonMissing ? t.lessons.error.reason_required : undefined}
       >
-        {(p) => <Input {...p} value={value.reason} maxLength={300} onChange={(e) => onChange({ reason: e.target.value })} />}
+        {(p) => <Input {...p} value={value.reason} maxLength={300} onChange={onReason} />}
       </Field>
     </div>
   );

@@ -14,7 +14,7 @@ function title(invoice: InvoiceView, clock: Clock): string {
     .join(' · ');
 }
 
-/** A stored invoice through a 1-hour signed URL: the image inline, a PDF in a frame (admin only). */
+/** A stored invoice via a 1-hour signed URL: the image inline, a PDF in a frame (admin only). */
 export function InvoiceDialog({ invoice, onClose }: { invoice: InvoiceView; onClose: () => void }) {
   const signed = useQuery({
     queryKey: invoiceKeys.download(invoice.id),

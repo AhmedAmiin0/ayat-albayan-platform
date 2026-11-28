@@ -22,11 +22,12 @@ import {
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;
 
+interface LinkProps { to: string; search: Record<string, string>; children: ReactNode }
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', () => ({
-  Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
+  Link: ({ to, search, children }: LinkProps) => (
     <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>
   ),
 }));
@@ -55,8 +56,9 @@ function renderBooking(search: BookSearch) {
     if (path.includes('/media/')) return { url: 'https://signed/photo', mime: 'image/jpeg', expires_at: SLOT };
     return respond(path);
   });
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider client={client}>
       <BookingPage search={search} onOpenStudent={vi.fn()} />
     </QueryClientProvider>,
   );

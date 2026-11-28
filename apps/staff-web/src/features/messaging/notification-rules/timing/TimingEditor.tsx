@@ -17,18 +17,31 @@ export interface TimingEditorProps {
   error: string | null;
 }
 
-function Fields({ draft, onChange, disabled, describedBy, invalid }: Omit<TimingEditorProps, 'error'> & { describedBy: string; invalid: boolean }) {
+type FieldsProps = Omit<TimingEditorProps, 'error'> & { describedBy: string; invalid: boolean };
+
+function Fields({ draft, onChange, disabled, describedBy, invalid }: FieldsProps) {
   const selectId = useId();
   const common = { disabled, describedBy, invalid };
   if (draft.kind === 'lesson_reminder') {
-    return <CountInput label={tm.minutesLabel} unit={tm.minutesUnit} value={draft.minutes} bounds={MINUTES} onChange={(minutes) => onChange({ ...draft, minutes })} {...common} />;
+    return (
+      <CountInput
+        label={tm.minutesLabel} unit={tm.minutesUnit} value={draft.minutes} bounds={MINUTES}
+        onChange={(minutes) => onChange({ ...draft, minutes })} {...common}
+      />
+    );
   }
   if (draft.kind === 'teacher_lesson_reminder') {
     return (
       <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-        <RuleCheck label={tm.sameAsFamily} checked={draft.same} disabled={disabled} onChange={(same) => onChange({ ...draft, same })} />
+        <RuleCheck
+          label={tm.sameAsFamily} checked={draft.same} disabled={disabled}
+          onChange={(same) => onChange({ ...draft, same })}
+        />
         {!draft.same && (
-          <CountInput label={tm.minutesLabel} unit={tm.minutesUnit} value={draft.minutes} bounds={MINUTES} onChange={(minutes) => onChange({ ...draft, minutes })} {...common} />
+          <CountInput
+            label={tm.minutesLabel} unit={tm.minutesUnit} value={draft.minutes} bounds={MINUTES}
+            onChange={(minutes) => onChange({ ...draft, minutes })} {...common}
+          />
         )}
       </span>
     );
@@ -57,7 +70,7 @@ const BOUNDS: Record<TimingDraft['kind'], string | null> = {
   follow_up_slots: `${tm.followUpBounds} · ${tm.slotsBounds}`,
 };
 
-/** A row's timing editor: selects and bounded numbers only, the bounds and the first problem under it. */
+/** A row's timing editor: selects and bounded numbers only, then the bounds and first problem. */
 export function TimingEditor({ draft, onChange, disabled, error }: TimingEditorProps) {
   const boundsId = useId();
   const errorId = useId();
@@ -65,7 +78,10 @@ export function TimingEditor({ draft, onChange, disabled, error }: TimingEditorP
   const describedBy = [bounds && boundsId, error && errorId].filter(Boolean).join(' ');
   return (
     <span className="grid gap-1">
-      <Fields draft={draft} onChange={onChange} disabled={disabled} describedBy={describedBy} invalid={error !== null} />
+      <Fields
+        draft={draft} onChange={onChange} disabled={disabled} describedBy={describedBy}
+        invalid={error !== null}
+      />
       {bounds && (
         <small id={boundsId} className="text-2xs text-ink-3">
           {bounds}

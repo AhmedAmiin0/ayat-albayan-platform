@@ -10,8 +10,8 @@ export interface CallPeerInput {
 }
 
 /**
- * The peer for a call (the browser's RTCPeerConnection): the microphone opened (or MicError), its track
- * added; never a microphone left on after a peer that could not be built. The SDP steps are
+ * The peer for a call (the browser's RTCPeerConnection): the microphone opened (or MicError), its
+ * track added; never a microphone left on after a peer that could not be built. The SDP steps are
  * @ab/client-core's callPeer.
  */
 export async function createCallPeer(input: CallPeerInput): Promise<CallPeer> {

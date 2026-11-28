@@ -16,10 +16,10 @@ export function draftPicks(d: PickFields): string[] {
   return d.kind === 'package' ? [d.startsAt, ...d.extra] : [d.startsAt];
 }
 
-/** The draft fields for these picks: the earliest becomes `startsAt` (@ab/client-core, docs/27 E5). */
+/** The draft fields for these picks: the earliest becomes `startsAt` (docs/27 E5). */
 export const withPicks: (picks: readonly string[]) => Pick<BookingDraft, 'startsAt' | 'extra'> = bookingPicksFrom;
 
-/** Tapping a slot: a package toggles it among the picks (togglePick), else it replaces the one lesson. */
+/** Tapping a slot: a package toggles it among the picks, else it replaces the one lesson. */
 export function pickPatch(d: ZonedPicks, slot: string): Pick<BookingDraft, 'startsAt' | 'extra'> {
   if (d.kind !== 'package') return { startsAt: slot, extra: [] };
   return withPicks(togglePick({ picks: draftPicks(d), slot, tz: d.tz }));
@@ -50,7 +50,7 @@ export function dayPicks(d: ZonedPicks): DayPick[] {
   );
 }
 
-/** The assistant's course: the local date of its last lesson, from the picks and the lesson count. */
+/** The assistant's course: its last lesson's local date, from the picks and the lesson count. */
 export function courseEnd(d: RulePicks): string | null {
   const rule = pickedRule(d);
   if (!rule || !d.course) return null;

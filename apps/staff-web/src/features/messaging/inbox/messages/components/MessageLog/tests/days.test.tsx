@@ -8,7 +8,7 @@ import { MessageLog } from '@/features/messaging/inbox/messages/components/Messa
 /** The cycle the suite reads times in (test-setup saves 24 h). */
 const C24 = { cycle: '24', locale } as const;
 
-// Day separators at every width; each bubble shows the clock only, the full date in its tooltip (W10).
+// Day separators at every width; each bubble shows the clock only, its tooltip the full date (W10).
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   ...(await orig<object>()),
   apiFetch: vi.fn(),

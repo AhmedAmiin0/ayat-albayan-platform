@@ -1,4 +1,4 @@
-/** A nav link as the shell needs it for the top bar's title: where it goes and what it is called. */
+/** A nav link as the top bar's title needs it: where it goes and what it is called. */
 export interface NavTitleItem {
   to: string;
   label: string;

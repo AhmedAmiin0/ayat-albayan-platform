@@ -7,7 +7,7 @@ import { usePickerKeys, type PickerKeys } from './use-picker-keys';
 
 export interface RepliesPicker {
   open: boolean;
-  /** Opened by «/» in the box (its text after the slash is the search) or by the button (its own search box). */
+  /** Opened by «/» in the box (the text after it is the search) or the button (own search box). */
   bySlash: boolean;
   tab: SavedReplyScope;
   setTab: (tab: SavedReplyScope) => void;
