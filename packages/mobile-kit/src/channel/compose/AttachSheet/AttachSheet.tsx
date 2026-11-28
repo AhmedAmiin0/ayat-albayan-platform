@@ -2,8 +2,8 @@ import { View } from 'react-native';
 import { AttachTile } from '../../../chat-ui/composer/AttachTile';
 import { CameraIcon, DocumentIcon, GalleryIcon } from '../../../chat-ui/icons/composer-icons';
 import { t } from '../../../lib/i18n/i18n';
-import { shape, type, useTheme } from '../../../theme';
-import { MenuSheet } from '../../../ui/feedback/MenuSheet';
+import { type, useTheme } from '../../../theme';
+import { Sheet } from '../../../ui/feedback/Sheet';
 import { AppText } from '../../../ui/primitives/AppText';
 
 /** Each source the app's port offers; absent → no tile. */
@@ -33,16 +33,7 @@ export function AttachSheet({ open, sources, onClose }: AttachSheetProps) {
     { key: 'pdf', label: m.document, Icon: DocumentIcon, action: sources.pdf },
   ];
   return (
-    <MenuSheet open={open} label={m.attach} testID="channel-attach" onClose={onClose}>
-      <View
-        style={{
-          alignSelf: 'center',
-          width: 32,
-          height: 4,
-          borderRadius: shape.radius.pill,
-          backgroundColor: color.rule,
-        }}
-      />
+    <Sheet open={open} label={m.attach} testID="channel-attach" onClose={onClose}>
       <View style={{ flexDirection: 'row', justifyContent: 'center', paddingVertical: 8 }}>
         {tiles.map(({ key, label, Icon, action }) =>
           action ? (
@@ -62,6 +53,6 @@ export function AttachSheet({ open, sources, onClose }: AttachSheetProps) {
       >
         {m.hint}
       </AppText>
-    </MenuSheet>
+    </Sheet>
   );
 }

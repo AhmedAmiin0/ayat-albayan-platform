@@ -7,7 +7,7 @@ import { t } from '../../../lib/i18n/i18n';
 import { locale } from '../../../lib/i18n/locale';
 import { useNow } from '../../../lib/time/use-now';
 import { useTheme } from '../../../theme';
-import { MenuSheet } from '../../../ui/feedback/MenuSheet';
+import { Sheet } from '../../../ui/feedback/Sheet';
 import { AppText } from '../../../ui/primitives/AppText';
 import { Button } from '../../../ui/primitives/Button';
 import type { ChannelRef } from '../../channel-api';
@@ -45,7 +45,13 @@ export function ReadsSheet({ refs, messageId, onClose }: ReadsSheetProps) {
   const data = reads.data ?? NOBODY;
   const r = t.studentChannel.reads;
   return (
-    <MenuSheet open={messageId !== null} label={r.title} testID="channel-reads" onClose={onClose}>
+    <Sheet
+      open={messageId !== null}
+      label={r.title}
+      testID="channel-reads"
+      onClose={onClose}
+      scroll
+    >
       {reads.isLoading ? (
         <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} />
       ) : null}
@@ -61,6 +67,6 @@ export function ReadsSheet({ refs, messageId, onClose }: ReadsSheetProps) {
         </View>
       ) : null}
       <Button variant="secondary" label={t.common.close} onPress={onClose} />
-    </MenuSheet>
+    </Sheet>
   );
 }
