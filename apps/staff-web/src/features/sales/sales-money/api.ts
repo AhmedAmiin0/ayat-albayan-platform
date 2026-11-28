@@ -1,6 +1,5 @@
 import type {
   SalesCourseView,
-  SalesFamilyView,
   SalesPaymentView,
   SalesReceiptCopied,
   SignedUpload,
@@ -9,7 +8,12 @@ import type { SubscriptionPricing } from '@ab/money';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import { pathKey, salesChatReceiptCalls, salesSubscribeCalls } from '@ab/client-core';
+import {
+  pathKey,
+  salesChatReceiptCalls,
+  salesMoneyFamilyCalls,
+  salesSubscribeCalls,
+} from '@ab/client-core';
 import { myMoneyKeys, salesMoneyKeys, salesSubscriptionKeys } from '@/features/sales/keys';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): /sales/money/*,
@@ -19,6 +23,7 @@ import { myMoneyKeys, salesMoneyKeys, salesSubscriptionKeys } from '@/features/s
 export type Bind = { phone?: string };
 const chatReceipts = salesChatReceiptCalls({ apiFetch, apiSend });
 const subscribe = salesSubscribeCalls({ apiFetch, apiSend });
+const families = salesMoneyFamilyCalls({ apiFetch, apiSend });
 
 /** Every sales money read lives under it (family, chat receipts, quotes). */
 export const SALES_MONEY_KEY = salesMoneyKeys.all;
@@ -27,8 +32,7 @@ export const SALES_MONEY_KEY = salesMoneyKeys.all;
 export const salesFamilyQuery = (phone: string) =>
   queryOptions({
     queryKey: salesMoneyKeys.family(phone),
-    queryFn: () =>
-      apiFetch<SalesFamilyView>(`/sales/money/family?phone=${encodeURIComponent(phone)}`),
+    queryFn: () => families.family({ phone }),
   });
 
 /** GET /sales/money/chat-receipts: the images / PDFs the family sent (metadata only). */

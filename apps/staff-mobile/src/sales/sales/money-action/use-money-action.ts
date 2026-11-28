@@ -1,6 +1,6 @@
-import type { SalesFamilyView } from '@ab/shared';
+import { salesMoneyFamilyCalls } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
-import { useHolds, apiFetch } from '@ab/mobile-kit';
+import { useHolds, apiFetch, apiSend } from '@ab/mobile-kit';
 import { inTree, useTreeBase } from '@/core/nav/tree-base';
 import { useSalesStudent } from '@/sales/sales/student/student-api';
 import { type MoneyAction, pickMoneyAction } from './money-action';
@@ -10,11 +10,12 @@ import { salesKeys } from '@/core/lib/keys';
  * GET /sales/money/family?phone under the chat money pills' own key (sales-subscribe lib/family.ts), so
  * both share one cache and its refresh after a transfer; read here because @/sales-subscribe imports @/sales.
  */
+const families = salesMoneyFamilyCalls({ apiFetch, apiSend });
+
 const useFamily = (phone: string, enabled: boolean) =>
   useQuery({
     queryKey: salesKeys.family(phone),
-    queryFn: () =>
-      apiFetch<SalesFamilyView>(`/sales/money/family?phone=${encodeURIComponent(phone)}`),
+    queryFn: () => families.family({ phone }),
     enabled: enabled && phone !== '',
   });
 

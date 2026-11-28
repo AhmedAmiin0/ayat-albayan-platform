@@ -1,9 +1,5 @@
-import { chosenOpen, familyPath, openPackages, ownStudents, withOpenPackage } from './family';
+import { chosenOpen, openPackages, ownStudents, withOpenPackage } from './family';
 import { familyOf, KID2, kid, openSub, SUB } from '@/sales-subscribe/testing/fixtures';
-
-test('the family path carries the E.164 number url-encoded', () => {
-  expect(familyPath('+966501112223')).toBe('/sales/money/family?phone=%2B966501112223');
-});
 
 test('open packages over all her students; the picked one, else the only one', () => {
   const other = openSub({ id: 'sub-2', student: { id: KID2, code: 'AB-0202', name: 'سلمى' } });

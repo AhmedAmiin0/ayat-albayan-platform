@@ -6198,11 +6198,6 @@
       "count": 4
     }
   },
-  "src/modules/sales/sales-money/reads/sales-money-reads.controller.ts": {
-    "ab/zod-inputs": {
-      "count": 1
-    }
-  },
   "src/modules/sales/sales-money/reads/sales-money.reads.ts": {
     "ab/module-boundaries": {
       "count": 2

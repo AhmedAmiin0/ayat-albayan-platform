@@ -21,8 +21,8 @@ function twoChildren(m: Mocks): void {
   resetMocks(m);
   salesDefaults(m);
   m.family.studentsOfPhone.mockResolvedValue([
-    { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'active' },
-    { id: SIBLING, code: 'AB-0184', name: 'أخوها', status: 'expired' },
+    { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'active', teacher_id: null },
+    { id: SIBLING, code: 'AB-0184', name: 'أخوها', status: 'expired', teacher_id: null },
   ]);
   m.subs.forStudent.mockResolvedValue([]);
 }

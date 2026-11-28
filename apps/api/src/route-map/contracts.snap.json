@@ -17952,6 +17952,237 @@
    ]
   }
  },
+ "GET /sales/money/family": {
+  "query": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "phone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "phone"
+   ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "properties": {
+    "students": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string"
+       },
+       "code": {
+        "type": "string"
+       },
+       "name": {
+        "type": "string"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "new",
+         "trial",
+         "pending_subscription",
+         "active",
+         "pending_renewal",
+         "expired",
+         "paused",
+         "churned"
+        ]
+       },
+       "mine": {
+        "type": "boolean"
+       },
+       "open": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "properties": {
+          "id": {
+           "type": "string"
+          },
+          "student": {
+           "type": "object",
+           "properties": {
+            "id": {
+             "type": "string"
+            },
+            "code": {
+             "type": "string"
+            },
+            "name": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "id",
+            "code",
+            "name"
+           ]
+          },
+          "package": {
+           "anyOf": [
+            {
+             "type": "string",
+             "enum": [
+              "4",
+              "8",
+              "12",
+              "16",
+              "20",
+              "28",
+              "trial"
+             ]
+            },
+            {
+             "type": "null"
+            }
+           ]
+          },
+          "duration": {
+           "type": "number",
+           "enum": [
+            30,
+            45,
+            60,
+            90
+           ]
+          },
+          "lessons_total": {
+           "type": "number"
+          },
+          "lessons_used_before": {
+           "type": "number"
+          },
+          "price": {
+           "type": "number"
+          },
+          "currency": {
+           "type": "string"
+          },
+          "starts_on": {
+           "type": "string"
+          },
+          "status": {
+           "type": "string",
+           "enum": [
+            "trial",
+            "active",
+            "paused",
+            "expired",
+            "unpaid",
+            "cancelled"
+           ]
+          },
+          "paid": {
+           "type": "number"
+          },
+          "due": {
+           "type": "number"
+          }
+         },
+         "required": [
+          "id",
+          "student",
+          "package",
+          "duration",
+          "lessons_total",
+          "price",
+          "currency",
+          "starts_on",
+          "status",
+          "paid",
+          "due"
+         ]
+        }
+       },
+       "renew_due": {
+        "type": "boolean"
+       },
+       "renewal": {
+        "type": "object",
+        "properties": {
+         "pkg": {
+          "type": "string",
+          "enum": [
+           "starter",
+           "standard",
+           "premium",
+           "bulk",
+           "weekly",
+           "monthly",
+           "custom"
+          ]
+         },
+         "count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60
+         },
+         "duration": {
+          "type": "number",
+          "enum": [
+           30,
+           45,
+           60
+          ]
+         },
+         "discount": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+         },
+         "country": {
+          "type": "string",
+          "enum": [
+           "SA",
+           "AE",
+           "QA",
+           "KW",
+           "OM",
+           ""
+          ]
+         }
+        },
+        "required": [
+         "pkg",
+         "count",
+         "duration",
+         "discount",
+         "country"
+        ]
+       },
+       "teacher_id": {
+        "type": [
+         "string",
+         "null"
+        ]
+       }
+      },
+      "required": [
+       "id",
+       "code",
+       "name",
+       "status",
+       "open",
+       "renew_due",
+       "renewal",
+       "teacher_id"
+      ]
+     }
+    }
+   },
+   "required": [
+    "students"
+   ]
+  }
+ },
  "GET /sales/packages/:id/cancel": {
   "params": {
    "$schema": "https://json-schema.org/draft/2020-12/schema",

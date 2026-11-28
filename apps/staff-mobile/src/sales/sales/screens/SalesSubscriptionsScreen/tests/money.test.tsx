@@ -1,5 +1,4 @@
-import type { SalesMoneySubscriptionView } from '@ab/shared';
-import { DEFAULT_RENEWAL_PRICING } from '@ab/money';
+import { salesFamilyStudent, salesOwedPackage } from '@ab/shared/testing';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { TreeBaseProvider } from '@/core/nav/tree-base';
 import { t } from '@ab/mobile-kit';
@@ -16,9 +15,11 @@ jest.mock('expo-router', () => ({ router: { push: (mockHref: unknown) => mockPus
 const PHONE = '+201001112223';
 const FAMILY = `/sales/money/family?phone=${encodeURIComponent(PHONE)}`;
 const unpaid = subscription({ id: 'p1', status: 'unpaid', student: { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد' } });
-const kid = { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', status: 'trial', renew_due: false, renewal: DEFAULT_RENEWAL_PRICING };
+const REF = { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد' };
+const kid = salesFamilyStudent(REF);
 
-function serve(open: Pick<SalesMoneySubscriptionView, 'id'>[]) {
+function serve(ids: string[]) {
+  const open = ids.map((id) => salesOwedPackage({ id, student: REF }));
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/auth/me') return { permissions: ['self.sales', 'self.sales_money'] };
     if (path === '/sales/students/st1') return details();
@@ -36,7 +37,7 @@ beforeEach(() => {
 });
 
 test('a pending row with its package owed: «تسجيل تحويل» on that package (the phone from the student details)', async () => {
-  serve([{ id: 'other' }, { id: 'p1' }]);
+  serve(['other', 'p1']);
   await render();
   await fireEvent.press(await screen.findByRole('button', { name: t.sales.money.transferFor.replace('{name}', 'يوسف أحمد') }));
   expect(mockApiFetch).toHaveBeenCalledWith('/sales/students/st1');

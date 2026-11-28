@@ -23,8 +23,8 @@ describe('GET /sales/money/family: renew_due and the renewal seed (owner 2026-10
     resetMocks(m);
     salesDefaults(m);
     m.family.studentsOfPhone.mockResolvedValue([
-      { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'active' },
-      { id: SIBLING, code: 'AB-0184', name: 'أخوها', status: 'expired' },
+      { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'active', teacher_id: null },
+      { id: SIBLING, code: 'AB-0184', name: 'أخوها', status: 'expired', teacher_id: null },
     ]);
     m.subs.forStudent.mockResolvedValue([subRow({ status: 'active', price_source: PREMIUM_AE as never, notes: 'x' })]);
   });
@@ -37,7 +37,7 @@ describe('GET /sales/money/family: renew_due and the renewal seed (owner 2026-10
     expect(m.subs.forStudent).not.toHaveBeenCalledWith(SIBLING);
     expect(student.renew_due).toBe(false);
     expect(student.renewal).toEqual({ pkg: 'premium', count: CUSTOM_COUNT_DEFAULT, duration: 60, discount: 10, country: 'AE' });
-    expect(Object.keys(student)).toEqual(['id', 'code', 'name', 'status', 'mine', 'open', 'renew_due', 'renewal']);
+    expect(Object.keys(student)).toEqual(['id', 'code', 'name', 'status', 'mine', 'open', 'renew_due', 'renewal', 'teacher_id']);
   });
 
   it('active at the threshold (settings.renewal_alert_remaining) is due; a higher threshold widens it', async () => {
@@ -49,13 +49,13 @@ describe('GET /sales/money/family: renew_due and the renewal seed (owner 2026-10
   });
 
   it('a package that ended (pending_renewal) is due whatever is left', async () => {
-    m.family.studentsOfPhone.mockResolvedValue([{ id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'pending_renewal' }]);
+    m.family.studentsOfPhone.mockResolvedValue([{ id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', status: 'pending_renewal', teacher_id: null }]);
     m.balances.forSubscriptions.mockResolvedValue(new Map([[SUB_ID, used(4)]]));
     expect((await family())[0].renew_due).toBe(true);
   });
 
   it('none of the family is hers: no package or setting is read', async () => {
-    m.family.studentsOfPhone.mockResolvedValue([{ id: SIBLING, code: 'AB-0184', name: 'أخوها', status: 'expired' }]);
+    m.family.studentsOfPhone.mockResolvedValue([{ id: SIBLING, code: 'AB-0184', name: 'أخوها', status: 'expired', teacher_id: null }]);
     expect(await family()).toEqual([]);
     expect(m.subs.forStudent).not.toHaveBeenCalled();
   });
