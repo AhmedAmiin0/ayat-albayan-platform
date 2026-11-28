@@ -2,17 +2,17 @@ import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, type ListRenderItemInfo } from 'react-native';
 import {
-  t,
-  useTheme,
   BackButton,
   EmptyState,
   ErrorState,
   FilterPills,
   Screen,
   ScreenHeader,
+  t,
+  useInsetRows,
   useTabBarInset,
+  useTheme,
 } from '@ab/mobile-kit';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
 import type { SalesSubscriptionKind, SalesSubscriptionView } from '@ab/shared';
 import { useSalesSubscriptions } from '@/sales/sales/lib/sales-api';
 import { SalesSubscriptionRow } from '@/sales/sales/components/SalesSubscriptionRow';

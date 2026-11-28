@@ -33,6 +33,7 @@ export {
   usePublicConfig,
   useUploadMaxBytes,
 } from './query/public-config';
+export { type InfinitePages, type Paged, usePagedQuery } from './query/paged-query';
 export { usePullRefresh } from './query/pull-refresh';
 export { persistOptions, queryClient } from './query/query-client';
 export { listKey, type ListParams, pathKey } from './query/query-keys';

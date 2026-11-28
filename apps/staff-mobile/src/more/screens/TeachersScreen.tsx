@@ -1,6 +1,5 @@
-import { t, EmptyState, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
+import { EmptyState, ErrorState, LazyList, Screen, ScreenHeader, t } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { TeacherRow } from '@/more/teachers/TeacherRow';
 import { teachers } from '@/more/teachers/teacher-calls';
 import type { TeacherListRow } from '@ab/shared';

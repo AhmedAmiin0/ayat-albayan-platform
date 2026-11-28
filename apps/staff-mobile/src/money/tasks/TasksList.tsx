@@ -1,8 +1,7 @@
 import type { AdminTaskView } from '@ab/money';
 import { ActivityIndicator } from 'react-native';
-import { t, useTheme, EmptyState, ErrorState } from '@ab/mobile-kit';
+import { EmptyState, ErrorState, LazyList, t, useTheme } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { TaskItem } from './TaskItem';
 
 const keyOf = (task: AdminTaskView) => task.id;
