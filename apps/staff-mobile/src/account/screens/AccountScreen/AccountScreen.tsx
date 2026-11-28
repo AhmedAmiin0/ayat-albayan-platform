@@ -1,5 +1,4 @@
 import { backWithin } from '@/core/nav/back-within';
-import { ScrollView } from 'react-native';
 import {
   t,
   type,
@@ -11,6 +10,7 @@ import {
   ScreenHeader,
   useMyProfile,
   PasswordSection,
+  KeyboardScroll,
 } from '@ab/mobile-kit';
 import { AccountSummary } from '@/account/components/AccountSummary';
 import { AvatarSection } from '@/account/sections/AvatarSection';
@@ -37,12 +37,10 @@ export function AccountScreen({ home }: AccountScreenProps) {
         leading={<BackButton onPress={back} />}
       />
       {data ? (
-        <ScrollView
+        <KeyboardScroll
           style={{ flex: 1 }}
           contentContainerStyle={{ gap: 16, paddingBottom: 32 }}
-          keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
-          automaticallyAdjustKeyboardInsets
         >
           <AccountSummary profile={data} />
           {/* Keyed by the user: a fresh profile after a save keeps what is typed in the other cards. */}
@@ -51,7 +49,7 @@ export function AccountScreen({ home }: AccountScreenProps) {
           <PhoneSection key={`phone-${data.id}`} profile={data} />
           <EmailSection key={`email-${data.id}`} profile={data} />
           <PasswordSection key={`password-${data.id}`} />
-        </ScrollView>
+        </KeyboardScroll>
       ) : profile.isError ? (
         <ErrorState message={t.account.loadError} onRetry={() => void profile.refetch()} />
       ) : (

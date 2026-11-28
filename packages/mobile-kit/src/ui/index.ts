@@ -22,6 +22,7 @@ export { LanguageRow } from './form/LanguageRow';
 export { SwitchRow } from './form/SwitchRow';
 export { ButtonRow } from './layout/ButtonRow';
 export { KeyboardFrame } from './layout/KeyboardFrame';
+export { KeyboardScroll } from './layout/KeyboardScroll';
 export { ListRow } from './layout/ListRow';
 export { FullScreenProvider, Screen } from './layout/Screen';
 export { ScreenHeader } from './layout/ScreenHeader';

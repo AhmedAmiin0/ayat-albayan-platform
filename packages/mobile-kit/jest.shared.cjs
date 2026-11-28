@@ -106,3 +106,10 @@ jest.mock('@expo/ui', () => {
     isPresented ? createElement(View, { testID: 'native-bottom-sheet', ...props }, children) : null;
   return { __esModule: true, BottomSheet };
 });
+
+// A native module: the library's own jest mock, but its KeyboardAvoidingView pads by the library's
+// formula against a fake keyboard (src/testing/keyboard-fake), so a test sees a frame clear it.
+jest.mock('react-native-keyboard-controller', () => ({
+  ...require('react-native-keyboard-controller/jest'),
+  KeyboardAvoidingView: require('./src/testing/keyboard-fake').FakeKeyboardAvoidingView,
+}));

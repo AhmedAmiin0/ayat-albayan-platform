@@ -4,3 +4,4 @@ export { freshQueryClient, queryWrapper, renderWithQuery, seedPublicConfig } fro
 export type * as AccessToken from '../lib/http/access-token';
 export type * as HttpApi from '../lib/http/api';
 export type * as ReadWithin from '../lib/http/read-within';
+export { keyboardAt, laidOut } from './keyboard-fake';
