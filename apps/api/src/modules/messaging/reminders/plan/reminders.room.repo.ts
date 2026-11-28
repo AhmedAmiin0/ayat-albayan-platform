@@ -10,7 +10,6 @@ import type { RoomCandidate } from './reminders.links';
 // in by (migration 191), so a removal from the room (classroom_blocks.join_link_id) holds either
 // way.
 
-
 /**
  * dedup_keys among `keys` already in messages: those links were minted and queued on an earlier
  * tick.
@@ -22,11 +21,13 @@ async function queuedKeys(db: Db, keys: readonly string[]): Promise<Set<string>>
 }
 
 async function findLink(db: Db, c: RoomCandidate): Promise<string | null> {
-  const data = maybe(await db
-    .from('lesson_join_links')
-    .select('id')
-    .match({ lesson_id: c.lessonId, student_id: c.studentId })
-    .maybeSingle());
+  const data = maybe(
+    await db
+      .from('lesson_join_links')
+      .select('id')
+      .match({ lesson_id: c.lessonId, student_id: c.studentId })
+      .maybeSingle(),
+  );
   return data?.id ?? null;
 }
 
@@ -39,7 +40,8 @@ async function saveToken(db: Db, c: RoomCandidate, hash: string): Promise<void> 
   const fields = { token_hash: hash, expires_at: c.expiresAt };
   let id = await findLink(db, c);
   if (!id) {
-    const { error } = await db.from('lesson_join_links').insert({ ...fields, lesson_id: c.lessonId, student_id: c.studentId });
+    const row = { ...fields, lesson_id: c.lessonId, student_id: c.studentId };
+    const { error } = await db.from('lesson_join_links').insert(row);
     if (!error) return;
     // A student-link join created the row meanwhile (student-link.queries.ts): take it over.
     id = isUniqueViolation(error) ? await findLink(db, c) : null;

@@ -3,14 +3,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { RulesSourceSettings } from '@/modules/messaging/notification-rules/rules-source.settings';
 import { DbRulesReader } from './rules.store';
-import type { RulesTable } from './rules.table';
+import type { RulesTableRepo } from './rules-table.repo';
 
 const ROW: NotificationRuleRow = { key: 'lesson_reminder', enabled: true, channels: null, timing: { minutes_before: 30 }, number_id: null, updated_at: 'x', updated_by: null };
 
 function reader(opts: { ttl?: number; source?: unknown } = {}) {
   const store = fakeSettings({ comms_source: opts.source as 'legacy' | undefined, reminder_minutes_before: 45 });
   const rows = vi.fn(async () => [ROW]);
-  const table = { rows } as unknown as RulesTable;
+  const table = { rows } as unknown as RulesTableRepo;
   return {
     r: new DbRulesReader(table, new RulesSourceSettings(store, opts.ttl ?? 30_000)),
     rows,

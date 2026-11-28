@@ -7,6 +7,7 @@ import {
   type RuleParityDiff,
   type RuleSettings,
 } from '@ab/shared';
+import { z } from 'zod';
 import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
 
 // The rules ↔ legacy keys mirror (docs/23b decisions 3, 5, 6): parity, the flip back to legacy and
@@ -14,11 +15,17 @@ import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store
 
 const MAPPED = Object.keys(RULE_LEGACY_MAP) as LegacyMappedKey[];
 
+const plainObject = z.record(z.string(), z.unknown());
+
+const sortedKeys = (_key: string, value: unknown): unknown => {
+  const object = plainObject.safeParse(value);
+  if (!object.success) return value;
+  return Object.fromEntries(Object.entries(object.data).sort(([a], [b]) => a.localeCompare(b)));
+};
+
 /** JSON with sorted object keys, so equal timings compare equal whatever their key order. */
 export function canonical(value: unknown): string {
-  return JSON.stringify(value ?? null, (_k, v: unknown) =>
-    v && typeof v === 'object' && !Array.isArray(v) ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => a.localeCompare(b))) : v,
-  );
+  return JSON.stringify(value ?? null, sortedKeys);
 }
 
 type RulesInput = Pick<RulesSnapshot, 'rows' | 'settings'>;
@@ -49,5 +56,8 @@ export function ruleDifferences(input: RulesInput): RuleParityDiff[] {
  * overlay).
  */
 export function moduleLegacyValues(input: RulesInput): Partial<RuleSettings> {
-  return Object.assign({}, ...MAPPED.map((key) => legacyValues(key, resolved(key, input, 'module')))) as Partial<RuleSettings>;
+  return Object.assign(
+    {},
+    ...MAPPED.map((key) => legacyValues(key, resolved(key, input, 'module'))),
+  ) as Partial<RuleSettings>;
 }

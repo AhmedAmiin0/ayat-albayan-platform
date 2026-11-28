@@ -57,8 +57,13 @@ describe('migration 20261024000632: notification_rules', () => {
   it('every coalesce default in the copy equals SETTING_DEFAULTS, one per RULE_SETTING_KEYS key', () => {
     const pins = [...code.matchAll(/\), ([^()]+?)\) as ([a-z0-9_]+),?\n/g)].map((m) => [m[2] ?? '', m[1] ?? ''] as const);
     expect(pins.map(([k]) => k).sort()).toEqual([...RULE_SETTING_KEYS].sort());
-    const parse = (s: string): unknown => (s.startsWith('array[') ? JSON.parse(s.slice(5)) : JSON.parse(s.replace(/^'(.*)'$/, '"$1"')));
-    for (const [key, sqlDefault] of pins) expect([key, parse(sqlDefault)]).toEqual([key, SETTING_DEFAULTS[key as (typeof RULE_SETTING_KEYS)[number]]]);
+    const parse = (s: string): unknown =>
+      s.startsWith('array[') ? JSON.parse(s.slice(5)) : JSON.parse(s.replace(/^'(.*)'$/, '"$1"'));
+    for (const [key, sqlDefault] of pins)
+      expect([key, parse(sqlDefault)]).toEqual([
+        key,
+        SETTING_DEFAULTS[key as (typeof RULE_SETTING_KEYS)[number]],
+      ]);
   });
 
   it('bounds in the copy equal the registry (the same malformed values read as the default)', () => {

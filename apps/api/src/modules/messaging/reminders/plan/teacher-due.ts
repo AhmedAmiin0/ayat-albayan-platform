@@ -1,5 +1,5 @@
 import { reminderDue } from '@ab/shared';
-import type { ReminderLesson } from './reminders.plan';
+import type { ReminderLesson } from './reminders.plan.types';
 import { staffReachable } from './staff-reachable';
 
 /** What decides when the teacher's same-day reminder is due. */

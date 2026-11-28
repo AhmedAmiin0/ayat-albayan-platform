@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { NumbersRepo } from '@/modules/messaging/numbers/numbers.repo';
 import { OwnNumbers } from './own-numbers';
+import { OwnTrafficRepo } from './own-traffic.repo';
 
 /**
  * Global: the webhook, the inbox, the leads, the follow-ups and the dashboard all ask
@@ -8,7 +9,7 @@ import { OwnNumbers } from './own-numbers';
  */
 @Global()
 @Module({
-  providers: [NumbersRepo, OwnNumbers],
+  providers: [NumbersRepo, OwnTrafficRepo, OwnNumbers],
   exports: [OwnNumbers],
 })
 export class OwnNumbersModule {}

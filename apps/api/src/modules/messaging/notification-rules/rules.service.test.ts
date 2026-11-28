@@ -1,5 +1,10 @@
 import { catalogueViews, NOTIFICATION_CATALOGUE, SETTING_DEFAULTS, TEMPLATE_KEYS } from '@ab/shared';
-import type { AcademySettings, TemplateStatus, WaLine } from '@ab/shared';
+import type {
+  AcademySettings,
+  NotificationEntryView,
+  TemplateStatus,
+  WaLine,
+} from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { AUTOMATIC_KEYS } from '@/modules/messaging/whatsapp/sender/send-stale';
@@ -101,6 +106,8 @@ describe('RulesService.overview (v1): today’s state', () => {
   });
 });
 
+const ruleOf = (byKey: Map<string, NotificationEntryView>, key: string) => byKey.get(key)?.rule;
+
 describe('RulesService.overview (v2)', () => {
   it('adds rule, approval, mode, reach and the classroom blocker', async () => {
     const settings = { ...SETTING_DEFAULTS, ...ALL_ON };
@@ -110,9 +117,9 @@ describe('RulesService.overview (v2)', () => {
     const byKey = new Map(view.entries.map((e) => [e.key, e]));
     expect(byKey.get('lesson_join_link')).toMatchObject({ blocker: 'classroom_off', approval: 'all' });
     expect(byKey.get('booking_confirmation')).toMatchObject({ state: 'off', blocker: 'row_off' });
-    expect(byKey.get('booking_confirmation')?.rule).toMatchObject({ enabled: false, editable: true, updated_by: rows[0]?.updated_by });
-    expect(byKey.get('reminder_failed')?.rule).toMatchObject({ enabled: true, editable: false, optional_channels: ['push'] });
-    expect(byKey.get('inbox_templates')?.rule?.editable).toBe(false);
+    expect(ruleOf(byKey, 'booking_confirmation')).toMatchObject({ enabled: false, editable: true, updated_by: rows[0]?.updated_by });
+    expect(ruleOf(byKey, 'reminder_failed')).toMatchObject({ enabled: true, editable: false, optional_channels: ['push'] });
+    expect(ruleOf(byKey, 'inbox_templates')?.editable).toBe(false);
     expect(byKey.get('new_lead')?.approval).toBeNull();
   });
 

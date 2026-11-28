@@ -1,5 +1,6 @@
 import { ruleOf, timingOf } from '@/common/rules/rule-of';
-import type { RulesSnapshot } from '@/modules/messaging/notification-rules/store/rules.reader';
+import type { EffectiveRule } from '@ab/shared';
+import type { RulesSnapshot } from '@/modules/messaging/notification-rules';
 
 /**
  * What one reminder tick needs from the notification rules (docs/23 §2c), resolved from ONE
@@ -30,18 +31,28 @@ export interface ReminderRules {
   confirmPush: boolean;
 }
 
+/** The same-day lead time: the rule's timing, else the legacy setting. */
+const sameDayMinutes = (snap: RulesSnapshot, rule: EffectiveRule): number =>
+  timingOf(rule, 'lesson_reminder')?.minutes_before ?? snap.settings.reminder_minutes_before;
+
+const dayBeforeAtOf = (rule: EffectiveRule): string | null =>
+  timingOf(rule, 'lesson_reminder_24h')?.send_at_local ?? null;
+
+const teacherMinutesOf = (rule: EffectiveRule, families: number): number =>
+  timingOf(rule, 'teacher_lesson_reminder')?.minutes_before ?? families;
+
 export function reminderRules(snap: RulesSnapshot): ReminderRules {
   const same = ruleOf(snap, 'lesson_reminder');
-  const minutesBefore = timingOf(same, 'lesson_reminder')?.minutes_before ?? snap.settings.reminder_minutes_before;
+  const minutesBefore = sameDayMinutes(snap, same);
   const dayBefore = ruleOf(snap, 'lesson_reminder_24h');
   const teacher = ruleOf(snap, 'teacher_lesson_reminder');
   return {
     minutesBefore,
     sameDay: same.enabled,
     dayBefore: dayBefore.enabled,
-    dayBeforeAt: timingOf(dayBefore, 'lesson_reminder_24h')?.send_at_local ?? null,
+    dayBeforeAt: dayBeforeAtOf(dayBefore),
     teacher: teacher.enabled,
-    teacherMinutesBefore: timingOf(teacher, 'teacher_lesson_reminder')?.minutes_before ?? minutesBefore,
+    teacherMinutesBefore: teacherMinutesOf(teacher, minutesBefore),
     joinLink: ruleOf(snap, 'lesson_join_link').enabled,
     confirmPush: ruleOf(snap, 'lesson_needs_confirmation').enabled,
   };

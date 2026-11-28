@@ -6,8 +6,10 @@ import { readerOf } from '@/common/settings/settings.fakes';
 import { fakePolicy, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import type { QueuedMessage } from './queued-row';
 import { RemindersJob } from './reminders.job';
+import { ReminderQueue } from './reminders.queue';
+import type { ReminderTeacherLinks } from './reminders.teacher-links';
 import type { RoomCandidate } from './plan/reminders.links';
-import type { ReminderLesson } from './plan/reminders.plan';
+import type { ReminderLesson } from './plan/reminders.plan.types';
 import type { TeacherLinks } from './plan/teacher-lesson.crm';
 import type { RemindersRepo } from './reminders.repo';
 import { RemindersSettings } from './reminders.settings';
@@ -64,7 +66,9 @@ export function fakeJob(opts: JobOpts = {}) {
     approved: vi.fn(async () => new Set(opts.approved ?? [])),
     queue: vi.fn(async (rows: readonly QueuedMessage[]) => queued.push(...rows)),
     pushedSubjects: vi.fn(async () => new Set(opts.pushed ?? [])),
-    roomLinks: vi.fn(async (candidates: readonly RoomCandidate[]) => (candidates.length > 0 ? (opts.room ?? []) : [])),
+    roomLinks: vi.fn(async (candidates: readonly RoomCandidate[]) =>
+      candidates.length > 0 ? (opts.room ?? []) : [],
+    ),
   };
   // Automatic messages ON unless a test says otherwise (default OFF, migration 162); a lesson
   // needs a confirmation (the confirmation push) unless a test turns it off (default since 11-02).
@@ -78,7 +82,10 @@ export function fakeJob(opts: JobOpts = {}) {
     fakePolicy({ ...opts.rules, settings: ruleSettingsOf(opts.settings) }),
   );
   // The property-injected signed links: none made unless a test gives some (signed-in pages go).
-  const teacherLinks = { build: vi.fn(async () => opts.teacherLinks ?? new Map<string, TeacherLinks>()) };
-  Object.assign(job, { teacherLinks });
+  const made = async () => opts.teacherLinks ?? new Map<string, TeacherLinks>();
+  const teacherLinks = { build: vi.fn(made) };
+  const repo = queries as unknown as RemindersRepo;
+  const links = teacherLinks as unknown as ReminderTeacherLinks;
+  Object.assign(job, { reminderQueue: new ReminderQueue(repo, links) });
   return { job, queries, queued, push, teacherLinks };
 }

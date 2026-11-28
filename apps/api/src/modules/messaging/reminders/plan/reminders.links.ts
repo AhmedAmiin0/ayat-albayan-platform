@@ -1,7 +1,8 @@
 import { reminderDue } from '@ab/shared';
 import { meetingModeOf, usesPlatform, type JoinWindowConfig } from '@ab/schedule';
 import { linkExpiry } from '@/modules/teaching/classroom/join/join-link.token';
-import { isOpen, type ReminderLesson } from './reminders.plan';
+import { isOpen } from './reminders.plan';
+import type { ReminderLesson } from './reminders.plan.types';
 
 // Which link the reminders carry, per lesson: its teacher's meeting_mode (migration 490), else the
 // academy default settings.meeting_link_auto. Pure, decided

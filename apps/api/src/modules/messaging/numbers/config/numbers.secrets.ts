@@ -21,12 +21,12 @@ export class NumbersSecrets {
 
   async set(target: SecretTarget, value: string): Promise<void> {
     const { error } = await this.db.rpc('wa_number_secret_set', { p_id: target.id, p_name: target.name, p_value: value });
-    if (error) throw new Error(`number secret ${target.name} not saved: ${error.code ?? 'error'}`);
+    if (error) throw new Error(`number secret ${target.name} not saved: ${error.code}`);
   }
 
   async clear(target: SecretTarget): Promise<boolean> {
     const { data, error } = await this.db.rpc('wa_number_secret_clear', { p_id: target.id, p_name: target.name });
-    if (error) throw new Error(`number secret ${target.name} not cleared: ${error.code ?? 'error'}`);
+    if (error) throw new Error(`number secret ${target.name} not cleared: ${error.code}`);
     return data;
   }
 
@@ -36,14 +36,14 @@ export class NumbersSecrets {
    */
   async copy(target: SecretTarget, key: string): Promise<boolean> {
     const { data, error } = await this.db.rpc('wa_number_secret_copy', { p_id: target.id, p_name: target.name, p_key: key });
-    if (error) throw new Error(`number secret ${target.name} not copied: ${error.code ?? 'error'}`);
+    if (error) throw new Error(`number secret ${target.name} not copied: ${error.code}`);
     return data;
   }
 
   /** number id → secret name → when it was set (no values). */
   async status(): Promise<SecretStatus> {
     const { data, error } = await this.db.rpc('wa_number_secret_status');
-    if (error) throw new Error(`number secrets status failed: ${error.code ?? 'error'}`);
+    if (error) throw new Error(`number secrets status failed: ${error.code}`);
     const out = new Map<string, Partial<Record<NumberSecretName, string>>>();
     for (const r of data) {
       if (isName(r.name)) out.set(r.number_id, { ...out.get(r.number_id), [r.name]: r.updated_at });
@@ -54,7 +54,7 @@ export class NumbersSecrets {
   /** The decrypted values of one number (service role). Never log the result. */
   async read(id: string): Promise<Partial<Record<NumberSecretName, string>>> {
     const { data, error } = await this.db.rpc('wa_number_secret_read', { p_id: id });
-    if (error) throw new Error(`number secrets read failed: ${error.code ?? 'error'}`);
+    if (error) throw new Error(`number secrets read failed: ${error.code}`);
     return Object.fromEntries(data.filter((r) => isName(r.name)).map((r) => [r.name, r.value]));
   }
 }

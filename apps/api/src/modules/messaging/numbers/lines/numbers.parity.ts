@@ -15,7 +15,7 @@ import { lineEnvs, lineNumbers, lineProvider, type Env, type GraphEnv, type What
 type Facts = Record<ParityField, string | null>;
 
 function tokenOf(line: GraphEnv): string {
-  return 'accessToken' in line ? line.accessToken : line.apiKey;
+  return line.provider === 'kapso' ? line.apiKey : line.accessToken;
 }
 
 type LineFacts = Pick<Facts, 'phone_number_id' | 'waba_id' | 'app_id' | 'api_base' | 'api_version' | 'access_token'>;
@@ -56,11 +56,17 @@ function factsOf(env: Env, role: WaLine): Facts {
   };
 }
 
+function stateOf(a: string | null, b: string | null): ParityCell['state'] {
+  if (a === b) return 'same';
+  return a === null || b === null ? 'missing' : 'different';
+}
+
+const masked = (v: string | null): string | null => (v === null ? null : 'set');
+const asIs = (v: string | null): string | null => v;
+
 function cell(field: ParityField, a: string | null, b: string | null): ParityCell {
-  const state = a === b ? 'same' : a === null || b === null ? 'missing' : 'different';
-  const secret = SECRET_PARITY_FIELDS.includes(field);
-  const shown = (v: string | null) => (secret ? (v === null ? null : 'set') : v);
-  return { field, state, legacy: shown(a), module: shown(b) };
+  const shown = SECRET_PARITY_FIELDS.includes(field) ? masked : asIs;
+  return { field, state: stateOf(a, b), legacy: shown(a), module: shown(b) };
 }
 
 /**

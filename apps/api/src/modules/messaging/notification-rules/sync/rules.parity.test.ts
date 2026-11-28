@@ -9,7 +9,7 @@ import { RulesJournal } from '@/modules/messaging/notification-rules/store/rules
 import { RulesParity } from './rules.parity';
 import { RulesPersist } from '@/modules/messaging/notification-rules/store/rules.persist';
 import { DbRulesReader } from '@/modules/messaging/notification-rules/store/rules.store';
-import type { RulesTable } from '@/modules/messaging/notification-rules/store/rules.table';
+import type { RulesTableRepo } from '@/modules/messaging/notification-rules/store/rules-table.repo';
 
 const ROWS: NotificationRuleRow[] = [
   { key: 'lesson_reminder', enabled: true, channels: null, timing: { minutes_before: 30 }, number_id: null, updated_at: 'x', updated_by: null },
@@ -17,7 +17,7 @@ const ROWS: NotificationRuleRow[] = [
 
 function setup(over: Partial<AcademySettings> = {}) {
   const store = fakeSettings({ comms_source: 'module', ...over });
-  const table = { rows: vi.fn(async () => ROWS) } as unknown as RulesTable;
+  const table = { rows: vi.fn(async () => ROWS) } as unknown as RulesTableRepo;
   const settings = new RulesSourceSettings(store, 30_000);
   const reader = new DbRulesReader(table, settings);
   const audit = { record: vi.fn(async () => undefined) };

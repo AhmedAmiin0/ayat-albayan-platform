@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LessonLinksModule } from '@/modules/teaching/lesson-links';
 import { RemindersJob } from './reminders.job';
+import { ReminderQueue } from './reminders.queue';
 import { RemindersRepo } from './reminders.repo';
 import { RemindersSettings } from './reminders.settings';
 import { ReminderTeacherLinks } from './reminders.teacher-links';
@@ -12,7 +13,7 @@ import { ReminderTeacherLinks } from './reminders.teacher-links';
  */
 @Module({
   imports: [LessonLinksModule],
-  providers: [RemindersRepo, RemindersSettings, ReminderTeacherLinks, RemindersJob],
+  providers: [RemindersRepo, RemindersSettings, ReminderTeacherLinks, ReminderQueue, RemindersJob],
   exports: [RemindersJob],
 })
 export class RemindersModule {}

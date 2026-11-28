@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { TeacherLessonLinks } from '@/modules/teaching/lesson-links';
-import { isOpen, type ReminderLesson } from './plan/reminders.plan';
+import { isOpen } from './plan/reminders.plan';
+import type { ReminderLesson } from './plan/reminders.plan.types';
 import { teacherReminderDue, type TeacherTiming } from './plan/teacher-due';
 import type { TeacherLinks } from './plan/teacher-lesson.crm';
 import type { RemindersRepo } from './reminders.repo';

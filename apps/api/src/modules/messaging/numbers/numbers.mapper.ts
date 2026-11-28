@@ -9,6 +9,7 @@ import {
 } from '@ab/shared';
 import { EVOLUTION_MODES, WA_PROVIDERS, type WaProvider } from '@ab/catalog';
 import type { Json } from '@ab/db';
+import { z } from 'zod';
 import { evolutionHookOf } from '@/config/env/whatsapp/env.evolution';
 import { displayE164 } from '@/modules/messaging/whatsapp/lines/line-health.store';
 import type { NumberRow } from './numbers.repo';
@@ -29,21 +30,25 @@ function evolutionOf(row: NumberRow): NumberEvolutionView | null {
   };
 }
 
-const isRecord = (v: Json | null): v is Record<string, Json | undefined> => typeof v === 'object' && v !== null && !Array.isArray(v);
-const str = (v: Json | undefined): string | null => (typeof v === 'string' ? v : null);
+const text = z.string().nullable().catch(null);
+
+/** Unknown fields or shapes read as null / empty, never a failed list. */
+const healthSchema = z.object({
+  ok: z.boolean().catch(false),
+  status: text,
+  quality_rating: text,
+  verified_name: text,
+  gaps: z
+    .array(z.unknown())
+    .catch([])
+    .transform((gaps) => gaps.filter((g): g is string => typeof g === 'string')),
+  errors: z.number().catch(0),
+});
 
 /** The stored health jsonb → its view (unknown shapes read as null fields). */
 export function healthOf(raw: Json | null): NumberHealth | null {
-  if (!isRecord(raw)) return null;
-  const gaps = Array.isArray(raw.gaps) ? raw.gaps.filter((g): g is string => typeof g === 'string') : [];
-  return {
-    ok: raw.ok === true,
-    status: str(raw.status),
-    quality_rating: str(raw.quality_rating),
-    verified_name: str(raw.verified_name),
-    gaps,
-    errors: typeof raw.errors === 'number' ? raw.errors : 0,
-  };
+  const parsed = healthSchema.safeParse(raw);
+  return parsed.success ? parsed.data : null;
 }
 
 export function numberView(row: NumberRow, status: SecretStatus): NumberView {

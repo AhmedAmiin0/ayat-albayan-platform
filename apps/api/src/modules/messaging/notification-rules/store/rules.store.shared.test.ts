@@ -3,13 +3,13 @@ import { fakeRedis, settle } from '@/common/infra/cache/cache.fakes';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { RulesSourceSettings } from '@/modules/messaging/notification-rules/rules-source.settings';
 import { DbRulesReader } from './rules.store';
-import type { RulesTable } from './rules.table';
+import type { RulesTableRepo } from './rules-table.repo';
 
 function copy(redis: ReturnType<typeof fakeRedis>) {
   const rows = vi.fn(async () => []);
   const settings = new RulesSourceSettings(fakeSettings({}), 30_000);
   return {
-    r: new DbRulesReader({ rows } as unknown as RulesTable, settings, redis.copy().cache),
+    r: new DbRulesReader({ rows } as unknown as RulesTableRepo, settings, redis.copy().cache),
     rows,
   };
 }

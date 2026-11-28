@@ -26,7 +26,8 @@ export {
   queuedRow,
   type QueuedRowInput,
 } from './queued-row';
-export { RemindersJob, type ReminderSummary } from './reminders.job';
+export { RemindersJob } from './reminders.job';
+export type { ReminderSummary } from './reminders.job.types';
 export { RemindersModule } from './reminders.module';
 export {
   approvedTemplates,

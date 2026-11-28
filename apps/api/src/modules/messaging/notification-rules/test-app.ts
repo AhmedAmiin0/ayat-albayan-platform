@@ -17,7 +17,8 @@ import type { AuthUser } from '@/common/auth/verify-token';
 import { SETTINGS_CACHE_MS, SettingsService } from '@/common/settings/settings.service';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { RulesRepo } from './rules.repo';
-import { RulesTable, type RuleRowWrite } from './store/rules.table';
+import { RulesTableRepo } from './store/rules-table.repo';
+import type { RuleRowWrite } from './store/rules-table.types';
 
 export const ADMIN_ID = 'a0000000-0000-4000-8000-000000000001';
 const LITE_ID = 'l0000000-0000-4000-8000-000000000004';
@@ -51,7 +52,7 @@ function statefulSettings(state: Partial<AcademySettings>) {
   };
 }
 
-/** RulesTable over a map; `fail` makes every read throw (fail-closed paths). */
+/** RulesTableRepo over a map; `fail` makes every read throw (fail-closed paths). */
 function memoryTable() {
   const rows = new Map<string, NotificationRuleRow>();
   const t = {
@@ -110,7 +111,7 @@ export async function rulesApp(initial: Partial<AcademySettings> = {}) {
     .useValue(m.gate)
     .overrideProvider(RulesRepo)
     .useValue(m.queries)
-    .overrideProvider(RulesTable)
+    .overrideProvider(RulesTableRepo)
     .useValue(table.fake)
     .overrideProvider(AuditService)
     .useValue(m.audit)

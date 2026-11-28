@@ -23,12 +23,10 @@ export interface NumberSource {
   secrets: Partial<Record<NumberSecretName, string>>;
 }
 
-/**
- * The row's sending values checked against their env schema keys; null = one of them is invalid.
- */
+/** The row's sending values checked against their env schema keys; null = one is invalid. */
 function checked({ row, secrets }: NumberSource, line: WaLine): Record<string, string> | null {
   const k = ROLE_KEYS[line];
-  let bad = false;
+  const invalid: string[] = [];
   const raw = {
     [k.provider]: row.provider,
     [k.phone_number_id]: row.phone_number_id,
@@ -36,10 +34,8 @@ function checked({ row, secrets }: NumberSource, line: WaLine): Record<string, s
     [k.app_id]: row.app_id ?? '',
     [k.access_token]: secrets.access_token ?? '',
   };
-  const values = validOverlay(raw, () => {
-    bad = true;
-  });
-  return bad ? null : values;
+  const values = validOverlay(raw, (key) => invalid.push(key));
+  return invalid.length > 0 ? null : values;
 }
 
 /**
@@ -53,15 +49,25 @@ export function numberEnv(source: NumberSource, env: Env): WhatsappEnv | null {
   if (!isWaLine(line)) return null;
   const v = source.row.enabled ? checked(source, line) : null;
   if (!v) return null;
-  const k = ROLE_KEYS[line];
   // crm: the CRM's base + key; evolution: the instance (docs/19). Neither sends a Meta id.
-  const own = OWN_ENV[v[k.provider] ?? ''];
+  const own = OWN_ENV[v[ROLE_KEYS[line].provider] ?? ''];
   if (own) return own(source, env);
+  return graphEnv({ values: v, line }, env);
+}
+
+/** Meta or Kapso: both need the number's phone id and WABA id. */
+function graphEnv(
+  input: { values: Record<string, string>; line: WaLine },
+  env: Env,
+): WhatsappEnv | null {
+  const v = input.values;
+  const k = ROLE_KEYS[input.line];
   const phoneNumberId = v[k.phone_number_id];
   const wabaId = v[k.waba_id];
   if (!phoneNumberId || !wabaId) return null;
   const ids = { phoneNumberId, wabaId };
-  return v[k.provider] === 'kapso' ? kapsoEnv(ids, env) : metaEnv({ ids, token: v[k.access_token], appId: v[k.app_id] }, env);
+  if (v[k.provider] === 'kapso') return kapsoEnv(ids, env);
+  return metaEnv({ ids, token: v[k.access_token], appId: v[k.app_id] }, env);
 }
 
 interface Ids { phoneNumberId: string; wabaId: string }
@@ -80,10 +86,7 @@ function kapsoEnv(ids: Ids, env: Env): KapsoLineEnv | null {
   return { provider: 'kapso', base, version: env.KAPSO_API_VERSION, ...ids, apiKey };
 }
 
-/**
- * The CRM: WACRM_API_BASE and the account-wide WACRM_API_KEY, like Kapso's project key; never a
- * Meta token.
- */
+/** The CRM: WACRM_API_BASE and the account-wide WACRM_API_KEY; never a Meta token. */
 function crmEnv(env: Env): WhatsappEnv | null {
   const base = env.WACRM_API_BASE?.replace(/\/+$/, '');
   const apiKey = env.WACRM_API_KEY;

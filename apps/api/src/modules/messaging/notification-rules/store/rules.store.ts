@@ -3,7 +3,7 @@ import { Injectable, Optional } from '@nestjs/common';
 import { SharedCache } from '@/common/infra/cache/shared-cache';
 import { RulesReader, type RulesSnapshot } from './rules.reader';
 import { RulesSourceSettings } from '@/modules/messaging/notification-rules/rules-source.settings';
-import { RulesTable } from './rules.table';
+import { RulesTableRepo } from './rules-table.repo';
 
 /**
  * The DB RulesReader (docs/23b): one snapshot = comms_source (exactly 'module', else legacy), every
@@ -16,7 +16,7 @@ export class DbRulesReader extends RulesReader {
   private cached: { at: number; value: Promise<RulesSnapshot> } | null = null;
 
   constructor(
-    private readonly table: RulesTable,
+    private readonly table: RulesTableRepo,
     private readonly settings: RulesSourceSettings,
     @Optional() private readonly shared?: SharedCache,
   ) {

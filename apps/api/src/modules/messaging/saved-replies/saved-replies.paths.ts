@@ -11,10 +11,14 @@ export function savedReplyPath(input: { actorId: string; mime: string }): string
   return `saved/${input.actorId}/${randomUUID()}.${extFor(input.mime)}`;
 }
 
+const NOT_FILES: ReadonlySet<string> = new Set(['', '.', '..']);
+
+const isFileName = (file: string | undefined): boolean =>
+  file !== undefined && !NOT_FILES.has(file);
+
 /** Was `path` signed for this actor? Exactly saved/{actor}/{file}, no traversal. */
 export function isSavedReplyPathOf(path: string, actorId: string): boolean {
   const parts = storageKeyOf(path).split('/');
   const [saved, actor, file] = parts;
-  return parts.length === 3 && saved === 'saved' && actor === actorId
-    && file !== undefined && file.length > 0 && file !== '..' && file !== '.';
+  return parts.length === 3 && saved === 'saved' && actor === actorId && isFileName(file);
 }

@@ -9,7 +9,7 @@ import { uploadMaxBytes } from '@ab/settings';
 import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { BUCKETS, chatOutPath } from '@/common/storage/storage.paths';
 import { StorageService } from '@/common/storage/storage.service';
-import { sniffMime, SNIFF_BYTES } from '@/modules/teaching/booking/invoice/invoice-sniff';
+import { sniffMime, SNIFF_BYTES } from '@/modules/teaching/booking';
 import { isSavedReplyPathOf, savedReplyPath } from './saved-replies.paths';
 import { SavedReplySettings } from './saved-replies.settings';
 import { httpError } from '@/common/http/errors';

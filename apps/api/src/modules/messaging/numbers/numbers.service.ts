@@ -3,7 +3,7 @@ import { callsNeedKapso, type NumberCreate, type NumberSecretName, type NumberUp
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { numberView } from './numbers.mapper';
 import { NumbersEffects } from './numbers.effects';
-import { numberPatch } from './numbers.patch';
+import { numberPatch, type NumberPatch } from './numbers.patch';
 import { NumbersRepo, type NumberRow } from './numbers.repo';
 import { NumbersSecrets } from './config/numbers.secrets';
 import { EvolutionNumbersRepo } from './evolution/evolution-numbers.repo';
@@ -20,6 +20,18 @@ function audited(row: NumberRow | null): Json {
 function assertKapsoCalls(next: { purpose: string; provider: string }): void {
   if (callsNeedKapso(next)) throw new ConflictException({ message: 'calls_need_kapso' });
 }
+
+/** Only an enabled number can become its role's default. */
+const cannotBeDefault = (isDefault: boolean | undefined, enabled: boolean): boolean =>
+  isDefault === true && !enabled;
+
+/** is_default false is a plain write; true goes through wa_number_make_default. */
+function patchOf(before: NumberRow, body: NumberUpdate): NumberPatch {
+  const { is_default: isDefault, ...rest } = body;
+  return { ...numberPatch(before, rest), ...(isDefault === false ? { is_default: false } : {}) };
+}
+
+const notEnabled = () => new ConflictException({ message: 'not_enabled' });
 
 const missing = (): never => {
   throw new NotFoundException({ message: 'number_not_found' });
@@ -60,23 +72,30 @@ export class NumbersService {
   async update(id: string, body: NumberUpdate, actorId: string): Promise<NumberView> {
     const before = (await this.queries.byId(id)) ?? missing();
     const { is_default: isDefault, ...rest } = body;
-    if (isDefault === true && !(rest.enabled ?? before.enabled)) throw new ConflictException({ message: 'not_enabled' });
+    if (cannotBeDefault(isDefault, rest.enabled ?? before.enabled)) throw notEnabled();
     assertKapsoCalls({ ...before, ...rest });
-    const patch = {
-      ...numberPatch(before, rest),
-      ...(isDefault === false ? { is_default: false as const } : {}),
-    };
-    let wrote = Object.keys(patch).length > 0;
-    if (wrote && !(await this.queries.update(id, { patch, actorId }))) missing();
+    const patch = patchOf(before, body);
+    let wrote = await this.writePatch(id, { patch, actorId });
     try {
       if (isDefault === true) {
-        if (!(await this.queries.makeDefault(id, actorId))) throw new ConflictException({ message: 'not_enabled' });
+        await this.makeDefault(id, actorId);
         wrote = true;
       }
     } finally {
       if (wrote) await this.updated({ id, before, actorId });
     }
     return this.view(id);
+  }
+
+  /** false = nothing to write; a row gone meanwhile is 404. */
+  private async writePatch(id: string, input: { patch: NumberPatch; actorId: string }) {
+    const wrote = Object.keys(input.patch).length > 0;
+    if (wrote && !(await this.queries.update(id, input))) missing();
+    return wrote;
+  }
+
+  private async makeDefault(id: string, actorId: string): Promise<void> {
+    if (!(await this.queries.makeDefault(id, actorId))) throw notEnabled();
   }
 
   private async updated(input: { id: string; before: NumberRow; actorId: string }): Promise<void> {

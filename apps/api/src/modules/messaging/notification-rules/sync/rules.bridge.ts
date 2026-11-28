@@ -27,7 +27,7 @@ export class RulesSettingsBridge extends SettingsRulesPort {
    * rules: unchanged.
    */
   async overlay(settings: AcademySettings): Promise<AcademySettings> {
-    if (settings?.comms_source !== 'module') return settings;
+    if (settings.comms_source !== 'module') return settings;
     try {
       const { rows } = await this.reader.snapshot();
       const values = moduleLegacyValues({ rows, settings: ruleSettingsOf(settings) });
