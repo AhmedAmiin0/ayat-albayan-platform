@@ -20,19 +20,6 @@ export interface ConfigEntryConflict {
   updatedByName: string | null;
 }
 
-/** One key whose legacy effective value (readSettings over the rows) differs from ConfigStore's. */
-export interface ConfigParityDiff {
-  key: string;
-  legacy: unknown;
-  store: unknown;
-}
-
-/** GET /admin/config/parity: empty `diffs` = both read paths agree (docs/26 §4 «Parity»). */
-export interface ConfigParityResponse {
-  diffs: ConfigParityDiff[];
-  checkedKeys: number;
-}
-
 /**
  * Does saving `value` over `prev` need the typed text (VALUE_CONFIRM 'typed' keys delete data)? Only when the
  * deleting starts (from OFF = null) or gets earlier (a shorter period); the server then wants the number of

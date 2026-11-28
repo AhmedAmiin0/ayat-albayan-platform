@@ -1,17 +1,7 @@
-import {
-  readSettings,
-  SETTING_KEYS,
-  type ConfigParityDiff,
-  type ConfigParityResponse,
-} from '@ab/settings';
-import { Controller, ForbiddenException, Get } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { readSettings, SETTING_KEYS } from '@ab/settings';
 import { isDeepStrictEqual } from 'node:util';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
-import type { AuthUser } from '@/common/auth/verify-token';
 import { decodeAll, GATE_KEYS } from '@/common/configuration/config-store/store/config-decode';
-import { ConfigStore } from '@/common/configuration/config-store/store/config-store.service';
-import { isAdmin } from '@/common/auth/roles';
+import type { ConfigParityDiff, ConfigParityResponse } from './config-parity.schemas';
 
 type Rows = readonly { key: string; value: unknown }[];
 
@@ -45,31 +35,14 @@ export function compareEffective(sides: ParitySides): ConfigParityDiff[] {
   const stored = new Map(sides.rows.map((r) => [r.key, r.value]));
   for (const key of RULE_KEYS) {
     const want = ruleValue(key, stored.get(key));
-    if (legacy[key] !== want || store[key] !== want) diffs.push({ key: `rule:${key}`, legacy: legacy[key], store: store[key] });
+    const broken = legacy[key] !== want || store[key] !== want;
+    if (broken) diffs.push({ key: `rule:${key}`, legacy: legacy[key], store: store[key] });
   }
   return diffs;
 }
 
-/** The legacy effective values (readSettings over the rows) vs ConfigStore's decode of the SAME rows. */
+/** Legacy effective values (readSettings) vs ConfigStore's decode, both over the same rows. */
 export function configParity(rows: Rows): ConfigParityResponse {
   const diffs = compareEffective({ legacy: readSettings(rows), store: decodeAll(rows), rows });
   return { diffs, checkedKeys: SETTING_KEYS.length };
-}
-
-/**
- * GET /admin/config/parity (docs/26 §4 «Parity»): run on staging and in CI on the e2e database; the
- * read switch waits for ≥ 1 week of empty `diffs`. Uncached rows, one select for both sides. Base admin.
- */
-@ApiTags('config')
-@ApiBearerAuth()
-@Permissions('settings.read')
-@Controller('admin/config/parity')
-export class ConfigParityController {
-  constructor(private readonly store: ConfigStore) {}
-
-  @Get()
-  async get(@CurrentUser() user: AuthUser): Promise<ConfigParityResponse> {
-    if (!isAdmin(user)) throw new ForbiddenException({ message: 'admin_only' });
-    return configParity((await this.store.fresh()).rows);
-  }
 }
