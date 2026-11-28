@@ -33,9 +33,7 @@ export function RowMenu({ label, items }: RowMenuProps) {
           {m.sorted.map((item, i) => (
             <button
               key={item.id}
-              ref={(el) => {
-                m.setItem(i, el);
-              }}
+              ref={(el) => m.setItem(i, el)}
               type="button"
               role="menuitem"
               tabIndex={-1}
