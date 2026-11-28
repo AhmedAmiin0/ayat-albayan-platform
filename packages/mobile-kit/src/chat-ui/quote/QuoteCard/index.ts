@@ -1,1 +1,2 @@
-export { QuoteCard, type QuoteCardProps } from './QuoteCard';
+export { QuoteCard } from './QuoteCard';
+export type { QuoteCardProps } from './QuoteCard.types';

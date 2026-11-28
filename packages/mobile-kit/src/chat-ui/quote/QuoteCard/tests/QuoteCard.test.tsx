@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet, Text } from 'react-native';
-import { palette } from '../../../theme';
-import { t } from '../../../lib/i18n/i18n';
-import { QuoteBar } from '../QuoteBar';
-import { QuoteCard } from './QuoteCard';
-import { QuoteUnavailable } from '../QuoteUnavailable';
+import { palette } from '../../../../theme';
+import { t } from '../../../../lib/i18n/i18n';
+import { QuoteBar } from '../../QuoteBar';
+import { QuoteCard } from '../QuoteCard';
+import { QuoteUnavailable } from '../../QuoteUnavailable';
 
 test('the card: sender and line read as one label; a tap jumps to the original', async () => {
   const onJump = jest.fn();

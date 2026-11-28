@@ -1,35 +1,13 @@
-import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
-import { type Palette, shape, type, useTheme } from '../../../theme';
+import { type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
 import { IconButton } from '../../../ui/primitives/IconButton';
 import { CloseIcon } from '../../icons/chat-glyphs';
 import { quoteLabel } from '../quote-style';
 import { QuoteText } from '../QuoteText';
-
-export interface QuoteBarProps {
-  /** Who sent the answered message; null hides it. */
-  sender: string | null;
-  text: string;
-  icon?: string | null;
-  /** A drawn file icon in place of the emoji (the student channel). */
-  glyph?: ReactNode;
-  /** The bar's and the sender's colour: the brand (default), or the sender's role ink. */
-  tone?: keyof Palette;
-  /** ✕: stop answering it. */
-  onCancel: () => void;
-}
-
-const BAR = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  minHeight: shape.control.touch,
-  paddingStart: 10,
-  borderStartWidth: 3,
-  borderRadius: shape.radius.sm,
-} as const;
-const LINE = { fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm) };
+import type { QuoteBarProps } from './QuoteBar.types';
+import { BAR, LINE } from './quote-bar.helpers';
 
 /**
  * Over the composer while she answers a message: ONE line (sender · first line) and ✕, 44pt in all,

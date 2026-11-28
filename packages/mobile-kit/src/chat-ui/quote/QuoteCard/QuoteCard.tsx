@@ -1,29 +1,11 @@
-import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { t } from '../../../lib/i18n/i18n';
-import { type Palette, type, useTheme } from '../../../theme';
+import { type, useTheme } from '../../../theme';
 import { AppText } from '../../../ui/primitives/AppText';
-import { QUOTE_BOX, QUOTE_LINE, quoteLabel } from '../quote-style';
+import { QUOTE_LINE, quoteLabel } from '../quote-style';
 import { QuoteText } from '../QuoteText';
-
-export interface QuoteCardProps {
-  /** The quoted message's id: its testID and what `onJump` gets. */
-  id: string;
-  /** Who sent it; null hides the line. */
-  sender: string | null;
-  /** Its first line (or a file's kind). */
-  text: string;
-  /** A file's emoji before the text. */
-  icon?: string | null;
-  /** A drawn file icon before the text, in place of the emoji (the student channel). */
-  glyph?: ReactNode;
-  /** The bar's and the sender's colour: the brand (default), or the sender's role ink. */
-  tone?: keyof Palette;
-  /** A photo's or PDF's thumb at the inline-end. */
-  thumb?: ReactNode;
-  /** Goes to the original; absent, the card is plain. */
-  onJump?: (id: string) => void;
-}
+import type { QuoteCardProps } from './QuoteCard.types';
+import { quoteBox } from './quote-card.helpers';
 
 /**
  * The message a bubble answers, on top of it as WhatsApp draws it: a bar at the
@@ -41,11 +23,7 @@ export function QuoteCard(p: QuoteCardProps) {
       accessibilityHint={t.inbox.reply.jump}
       disabled={!onJump}
       onPress={() => onJump?.(id)}
-      style={({ pressed }) => ({
-        ...QUOTE_BOX,
-        borderStartColor: color[tone],
-        backgroundColor: pressed ? color.neutralSoft : color.sunk,
-      })}
+      style={quoteBox(color[tone], { rest: color.sunk, pressed: color.neutralSoft })}
     >
       <View style={{ flex: 1, justifyContent: 'center' }}>
         {sender ? (
