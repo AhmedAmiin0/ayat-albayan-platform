@@ -1,4 +1,4 @@
-import { CALLS_KEY } from './calls-api';
+import { callsKeys } from './api';
 
 // A nudge, not a data path (docs/28 §4): a change to a wa_calls row the user may read (RLS) makes the
 // calls queries re-read through the API. The shapes are the part of supabase-js's realtime used here.
@@ -17,7 +17,7 @@ export interface RealtimeLike {
 
 /** The calls queries a change re-reads: all but the config. */
 export const isCallsData = (query: { queryKey: readonly unknown[] }): boolean =>
-  query.queryKey[0] === CALLS_KEY[0] && query.queryKey[1] !== 'config';
+  query.queryKey[0] === callsKeys.all[0] && query.queryKey[1] !== callsKeys.config[1];
 
 /**
  * Listens to wa_calls on a topic of its own (a quick resubscribe never reuses the channel still leaving);
@@ -27,7 +27,10 @@ export function subscribeCalls(realtime: RealtimeLike, onChange: () => void): ()
   let channel: RealtimeChannelLike | null = null;
   try {
     if (typeof realtime.channel !== 'function') return () => undefined;
-    channel = realtime.channel(`wa_calls:${Math.random().toString(36).slice(2)}`).on('postgres_changes', CHANGES, onChange).subscribe();
+    channel = realtime
+      .channel(`wa_calls:${Math.random().toString(36).slice(2)}`)
+      .on('postgres_changes', CHANGES, onChange)
+      .subscribe();
   } catch {
     channel = null;
   }
