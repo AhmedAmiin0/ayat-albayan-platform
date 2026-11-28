@@ -3,15 +3,22 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ScheduledMeetingDialog } from './ScheduledMeetingDialog';
+import { mockCall } from '@ab/testing/mock-call';
 
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({
+  ...(await orig<object>()),
+  locale: 'en',
+}));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
 
 describe('ScheduledMeetingDialog, English', () => {
   it('reads in English: the title, the fields, the tabs and the zone note', () => {
-    apiFetch.mockResolvedValue([]);
+    mockApi.onRead(() => []);
     render(
       <QueryClientProvider client={new QueryClient()}>
         <ScheduledMeetingDialog onClose={() => undefined} tz="Africa/Cairo" />

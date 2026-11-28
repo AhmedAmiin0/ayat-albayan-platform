@@ -4,16 +4,22 @@ import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils'
 import { t } from '@ab/web-kit';
 import { NUMBERS } from '@/features/messaging/numbers/numbers.fixture';
 import { NumbersPanel } from '@/features/messaging/numbers/NumbersPanel/NumbersPanel';
+import { mockCall } from '@ab/testing/mock-call';
 
-const apiFetch = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
-vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => true }) }));
+const mockApi = mockCall();
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  call: (request: unknown) => mockApi.call(request),
+}));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({
+  usePermissions: () => ({ permissions: [], can: () => true }),
+}));
 
-afterEach(() => apiFetch.mockReset());
+afterEach(() => mockApi.reset('read'));
 
 describe('«الأرقام» when the parity cannot be loaded', () => {
   it('says so instead of silently dropping the parity and the source switch', async () => {
-    apiFetch.mockImplementation(async (path: string) => {
+    mockApi.onRead(async ({ path }) => {
       if (path === '/admin/numbers') return NUMBERS;
       throw new Error('down');
     });
