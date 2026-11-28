@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ABRAR, next, pickSlot, pickTeacher, SLOT } from '@/features/teaching/booking/wizard-fixture';
@@ -12,7 +13,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
 
-const RESULT = { rule_id: 'r1', student_ids: ['s1'], guardian_ids: ['g1'], lessons: [{ id: 'l1', starts_at: SLOT, ends_at: SLOT }], message_ids: ['m1'] };
+const RESULT = { rule_id: 'r1', student_ids: ['s1'], guardian_ids: ['g1'], lessons: [{ id: uid('l1'), starts_at: SLOT, ends_at: SLOT }], message_ids: ['m1'] };
 const SLOTS = { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [{ starts_at: SLOT, ends_at: SLOT, conflicts: [] }] };
 
 function open(mode: InboxMode, patch: Parameters<typeof detail>[1] = {}) {
@@ -103,7 +104,7 @@ describe('«تسجيل طالب جديد» in a sales chat (R-ASST-01, docs/16)'
   });
 
   it.each([
-    ['a guardian', { guardian_id: 'g-1', lead_id: null, lead_status: null }],
+    ['a guardian', { guardian_id: uid('g-1'), lead_id: null, lead_status: null }],
     ['a converted lead', { lead_status: 'converted' as const }],
     ['a lost lead', { lead_status: 'lost' as const }],
   ])('no action on %s', async (_label, patch) => {

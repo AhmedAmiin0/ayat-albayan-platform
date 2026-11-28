@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { UNREAD_COUNT_KEY } from '@ab/client-core';
 import { InfiniteQueryObserver, QueryClient, QueryObserver } from '@tanstack/react-query';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -12,7 +13,7 @@ import { threadKeys } from './keys';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
-const held = message({ id: 'm1', created_at: '2026-11-07T10:00:00Z' });
+const held = message({ id: uid('m1'), created_at: '2026-11-07T10:00:00Z' });
 const listFn = vi.fn(async () => ({ items: [thread()], total: 1 }));
 const badgeFn = vi.fn(async () => 3);
 const chatReads = () =>
@@ -38,9 +39,9 @@ afterEach(() => vi.restoreAllMocks());
 
 it('a send: 1 newest-page read brings a row that landed before it', async () => {
   const { client, off } = await shown();
-  const inbound = message({ id: 'm2', created_at: '2026-11-07T10:01:00Z' });
+  const inbound = message({ id: uid('m2'), created_at: '2026-11-07T10:01:00Z' });
   const row = message({
-    id: 'm3',
+    id: uid('m3'),
     direction: 'outbound',
     status: 'queued',
     created_at: '2026-11-07T10:02:00Z',
@@ -67,7 +68,7 @@ it('a bubble action: its row takes the held one by id, never a second bubble', a
 
 it('a row of a chat not cached: only the lists and the badge read', async () => {
   const { client, off } = await shown();
-  showAnswer(client, message({ id: 'x', phone_e164: '+966500000001' }));
+  showAnswer(client, message({ id: uid('x'), phone_e164: '+966500000001' }));
   await vi.waitFor(() => expect(client.isFetching()).toBe(0));
   expect([chatReads(), listFn.mock.calls.length, badgeFn.mock.calls.length]).toEqual([0, 1, 1]);
   expect(client.getQueryData(threadQuery('+966500000001').queryKey)).toBeUndefined();

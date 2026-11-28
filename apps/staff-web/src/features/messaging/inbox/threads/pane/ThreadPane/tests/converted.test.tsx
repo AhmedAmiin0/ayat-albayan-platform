@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/test/settings-fixture';
@@ -12,7 +13,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features
 
 function renderLead(status: 'converted' | 'lost') {
   routeFetch(apiFetch, [
-    ['/threads/%2B966501234567', { ...detail([], { lead_status: status }), people: { guardian: null, lead: { id: 'lead-1', status }, students: [] } }],
+    ['/threads/%2B966501234567', { ...detail([], { lead_status: status }), people: { guardian: null, lead: { id: uid('lead-1'), status }, students: [] } }],
     ['/messaging/templates', []],
     ['/settings', SETTINGS],
     ['/leads?', { items: [lead({ status })], total: 1, page: 1, pageSize: 5 }],

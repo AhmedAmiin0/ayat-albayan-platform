@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -16,7 +17,7 @@ vi.mock('./api', async (orig) => ({
 }));
 
 const PATH = '/threads/%2B966501234567';
-const first = message({ id: 'm1', created_at: '2026-10-27T10:00:00Z' });
+const first = message({ id: uid('m1'), created_at: '2026-10-27T10:00:00Z' });
 const sent = message({ id: 'c0000000-0000-4000-8000-0000000000a1', direction: 'outbound', status: 'queued', created_at: new Date().toISOString() });
 
 function setup(delta: unknown) {
@@ -41,7 +42,7 @@ afterEach(() => {
 describe('useLiveThread: the open chat polls a delta between full reads', () => {
   it('asks for rows after the newest held with the moving sends, and merges new rows and ticks into the page', async () => {
     vi.spyOn(document, 'hasFocus').mockReturnValue(true);
-    const fresh = message({ id: 'm2', body: 'جديد', created_at: new Date(Date.now() + 1000).toISOString() });
+    const fresh = message({ id: uid('m2'), body: 'جديد', created_at: new Date(Date.now() + 1000).toISOString() });
     const { hook } = setup({ messages: [fresh], has_more: false, pending: [{ ...sent, status: 'sent' }] });
     await waitFor(() => expect(deltaCalls().length).toBeGreaterThan(0));
     const q = new URLSearchParams(deltaCalls()[0]?.split('?')[1]);

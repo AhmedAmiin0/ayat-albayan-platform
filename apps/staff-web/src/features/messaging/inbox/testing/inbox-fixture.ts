@@ -8,6 +8,7 @@ import type {
   ThreadView,
 } from '@ab/shared';
 import type { InboxLead } from '@/features/messaging/inbox/api/api';
+import { uid } from './uid';
 
 // Test rows shaped like the Phase 4 API (docs/12 §4). Not imported by app code.
 
@@ -71,7 +72,7 @@ export function pupil(
   sub?: Partial<ThreadSubscriptionView> | null,
 ): ThreadStudentView {
   const package8: ThreadSubscriptionView = {
-    id: 'sub-1',
+    id: uid('sub-1'),
     status: 'unpaid',
     package_size: '8',
     lessons_total: 8,
@@ -86,7 +87,7 @@ export function pupil(
   };
   const subscription = sub === null ? null : { ...package8, ...sub };
   return {
-    id: 's-1',
+    id: uid('s-1'),
     name: 'سهيلة',
     code: 'AB-0183',
     teacher_name: 'أبرار',

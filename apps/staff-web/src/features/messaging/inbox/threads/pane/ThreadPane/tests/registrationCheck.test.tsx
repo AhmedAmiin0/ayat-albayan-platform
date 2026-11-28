@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
@@ -16,7 +17,7 @@ const R = t.registrationCheck;
 
 function open(mode: InboxMode) {
   routeFetch(apiFetch, [
-    ['/threads/%2B966501234567', detail([], { guardian_id: 'g-1', lead_id: null, lead_status: null })],
+    ['/threads/%2B966501234567', detail([], { guardian_id: uid('g-1'), lead_id: null, lead_status: null })],
     ['/messaging/templates', []],
     ['/settings', {}],
     ['/sales/money/family', { students: [] }],

@@ -1,3 +1,4 @@
+import { uid } from '@/features/messaging/inbox/testing/uid';
 import type { ThreadDetail, ThreadPeople } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -12,11 +13,11 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
 
-const GUARDIAN = { guardian_id: 'g-1', lead_id: null, lead_status: null, display_name: 'أم سهيلة' } as const;
+const GUARDIAN = { guardian_id: uid('g-1'), lead_id: null, lead_status: null, display_name: 'أم سهيلة' } as const;
 const FAMILY: ThreadPeople = {
-  guardian: { id: 'g-1', name: 'أم سهيلة' },
+  guardian: { id: uid('g-1'), name: 'أم سهيلة' },
   lead: null,
-  students: [pupil(), pupil({ id: 's-2', name: 'جود', code: 'AB-0184' }, { status: 'expired', lessons_used: 8, lessons_remaining: 0, due_amount: 0 })],
+  students: [pupil(), pupil({ id: uid('s-2'), name: 'جود', code: 'AB-0184' }, { status: 'expired', lessons_used: 8, lessons_remaining: 0, due_amount: 0 })],
 };
 
 function renderThread(page: ThreadDetail) {
@@ -83,7 +84,7 @@ describe('subscription in the chat (R-SUB-01)', () => {
   });
 
   it('a lead: «غير مشترك» and «اشترك» opens the wizard with a regular package', async () => {
-    renderThread({ ...detail([]), people: { guardian: null, lead: { id: 'lead-1', status: 'new' }, students: [] } });
+    renderThread({ ...detail([]), people: { guardian: null, lead: { id: uid('lead-1'), status: 'new' }, students: [] } });
     const subscribe = await screen.findByRole('link', { name: t.inbox.subscription.subscribe });
     const search = new URLSearchParams({ leadId: 'lead-1', phone: PHONE, name: 'أم سهيلة', pkg: '8' });
     expect(subscribe.getAttribute('href')).toBe(`/admin/book?${search}`);
@@ -92,7 +93,7 @@ describe('subscription in the chat (R-SUB-01)', () => {
   });
 
   it('a teacher: no subscription chip and no subscribe buttons', async () => {
-    const teacher = thread({ lead_id: null, lead_status: null, teacher_id: 't-1', display_name: 'أبرار' });
+    const teacher = thread({ lead_id: null, lead_status: null, teacher_id: uid('t-1'), display_name: 'أبرار' });
     renderThread({ ...detail([]), thread: teacher });
     await screen.findByRole('heading', { name: 'أبرار' });
     for (const label of Object.values(t.inbox.subscription.badge))
