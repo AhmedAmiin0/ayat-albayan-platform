@@ -1,4 +1,5 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
+import { answered, uuidFor } from '@/today/testing/answered';
 import { ApiError, t } from '@ab/mobile-kit';
 import { done, muscat, pending } from './testing/fixtures';
 import { openSheet, openToday, inSheet } from './testing/today-sheet';
@@ -23,33 +24,42 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-
 test('the hero’s «تأكيد الحلقة» shows «مؤكدة» before the server answers, then sends POST /lessons/:id/confirm', async () => {
   let resolve: (v: unknown) => void = () => undefined;
   mockApiSend.mockReturnValue(new Promise((r) => (resolve = r)));
-  mockApiFetch.mockResolvedValue([done, pending, muscat]);
+  mockApiFetch.mockResolvedValue([done, pending, muscat].map(answered));
   await openToday();
 
   await fireEvent.press(screen.getByRole('button', { name: t.today.confirmLesson }));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/confirm', undefined);
+  expect(mockApiSend).toHaveBeenCalledWith(
+    'POST',
+    `/lessons/${uuidFor('l-pending')}/confirm`,
+    undefined,
+  );
   // The hero and the summary show it at once: none waits for confirmation now.
   expect(await screen.findByRole('button', { name: summary(0) })).toBeTruthy();
   expect(screen.getAllByText(t.enums.lessonStatus.confirmed)).toHaveLength(2);
   expect(screen.queryByRole('button', { name: t.today.confirmLesson })).toBeNull();
 
-  mockApiFetch.mockResolvedValue([done, { ...pending, status: 'confirmed' }, muscat]);
+  mockApiFetch.mockResolvedValue([done, { ...pending, status: 'confirmed' }, muscat].map(answered));
   resolve({ ...pending, status: 'confirmed' });
   expect(await screen.findByText(t.lessons.confirmed)).toBeTruthy();
 });
 
 test('a refused confirm from the sheet rolls back to «يحتاج تأكيد» and says why there', async () => {
-  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'invalid_transition', message: 'invalid_transition' }));
-  mockApiFetch.mockResolvedValue([done, pending, muscat]);
+  mockApiSend.mockRejectedValue(
+    new ApiError(409, { code: 'invalid_transition', message: 'invalid_transition' }),
+  );
+  mockApiFetch.mockResolvedValue([done, pending, muscat].map(answered));
   await openToday();
   await openSheet();
 
   await fireEvent.press(screen.getByRole('button', inSheet(t.today.confirm)));
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l-pending/confirm', undefined);
+  expect(mockApiSend).toHaveBeenCalledWith(
+    'POST',
+    `/lessons/${uuidFor('l-pending')}/confirm`,
+    undefined,
+  );
   expect((await screen.findAllByText(t.lessons.invalidTransition)).length).toBeGreaterThan(0);
   expect(screen.getAllByText(t.enums.lessonStatus.scheduled).length).toBeGreaterThan(0);
   expect(screen.getByRole('button', inSheet(t.today.confirm))).toBeTruthy();
@@ -57,14 +67,14 @@ test('a refused confirm from the sheet rolls back to «يحتاج تأكيد» a
 
 test('another failure gets the general error line', async () => {
   mockApiSend.mockRejectedValue(new ApiError(500));
-  mockApiFetch.mockResolvedValue([pending]);
+  mockApiFetch.mockResolvedValue([pending].map(answered));
   await openToday();
   await fireEvent.press(screen.getByRole('button', { name: t.today.confirmLesson }));
   expect(await screen.findByText(t.common.error)).toBeTruthy();
 });
 
 test('إلغاء in the sheet asks scope, who and why; nothing is sent until who and why are given', async () => {
-  mockApiFetch.mockResolvedValue([pending]);
+  mockApiFetch.mockResolvedValue([pending].map(answered));
   await openToday();
   await openSheet();
   await fireEvent.press(screen.getByRole('button', inSheet(t.today.cancel)));

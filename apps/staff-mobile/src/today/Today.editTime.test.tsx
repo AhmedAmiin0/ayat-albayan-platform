@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
+import { answered } from '@/today/testing/answered';
 import { GRID, held } from '@/edit-time/testing/fixtures';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
@@ -30,16 +31,18 @@ function serve(day: unknown[]) {
 const edit = (who: string) => ({ name: `${t.editTime.action} — ${who}` });
 
 test('the sheet of an open lesson offers «عدّل الوقت» beside «غيّر الموعد»; it opens the edit sheet', async () => {
-  serve([{ ...pending, time_edit_mode: 'move' }]);
+  serve([{ ...pending, time_edit_mode: 'move' }].map(answered));
   await renderWithQuery(<TodayScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));
-  expect(screen.getByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` })).toBeTruthy();
+  expect(
+    screen.getByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` }),
+  ).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', edit('يوسف أحمد')));
   expect(await screen.findByRole('header', { name: t.editTime.title })).toBeTruthy();
 });
 
 test('an ended lesson, unfolded, opens its sheet and the correction (R-SCH-11)', async () => {
-  serve([held]);
+  serve([held].map(answered));
   await renderWithQuery(<TodayScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: 'انتهت حلقة واحدة اليوم' }));
   await fireEvent.press(screen.getByRole('button', { name: /^10:00، جودى خالد/ }));
@@ -48,7 +51,7 @@ test('an ended lesson, unfolded, opens its sheet and the correction (R-SCH-11)',
 });
 
 test('without the API’s mode (a cache from before) the sheet has no «عدّل الوقت»', async () => {
-  serve([pending]);
+  serve([pending].map(answered));
   await renderWithQuery(<TodayScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.today.details }));
   await screen.findByRole('header', { name: 'يوسف أحمد' });

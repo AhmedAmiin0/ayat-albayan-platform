@@ -1,5 +1,6 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { uuidFor } from '@/today/testing/answered';
 import { calendarBackend, NOW } from '@/calendar/testing/flow-backend';
 import { t } from '@ab/mobile-kit';
 
@@ -15,7 +16,9 @@ test('Today → «التفاصيل» → «غيّر الموعد» → «هذه 
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
   // The running lesson is the hero; its actions are in the details sheet.
   await fireEvent.press(screen.getByRole('button', { name: t.today.details }));
-  await fireEvent.press(await screen.findByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` }));
+  await fireEvent.press(
+    await screen.findByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` }),
+  );
   expect(await screen.findByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy();
 
   await fireEvent.press(await screen.findByRole('radio', { name: t.lessons.scope.rule }));
@@ -28,11 +31,11 @@ test('Today → «التفاصيل» → «غيّر الموعد» → «هذه 
 
   expect(await screen.findByText(t.reschedule.seriesMoved)).toBeTruthy();
   const [post] = backend.sent('POST /lessons/:id/reschedule');
-  expect(post?.path).toBe('/lessons/l-pending/reschedule');
+  expect(post?.path).toBe(`/lessons/${uuidFor('l-pending')}/reschedule`);
   expect(post?.body).toEqual({
     scope: 'rule',
     newRule: {
-      teacherId: 't1',
+      teacherId: uuidFor('t1'),
       byday: [0],
       startTimeLocal: '17:00',
       tz: 'Asia/Riyadh',
@@ -40,7 +43,11 @@ test('Today → «التفاصيل» → «غيّر الموعد» → «هذه 
       startsOn: '2026-10-04',
     },
   });
-  expect(backend.sent('GET /booking/slots')[0]?.query).toMatchObject({ teacherId: 't1', durationMin: '45', studentIds: 's1' });
+  expect(backend.sent('GET /booking/slots')[0]?.query).toMatchObject({
+    teacherId: uuidFor('t1'),
+    durationMin: '45',
+    studentIds: uuidFor('s1'),
+  });
 
   await fireEvent.press(screen.getByRole('button', { name: t.reschedule.done }));
   await fireEvent.press(screen.getByRole('button', { name: t.common.close }));
