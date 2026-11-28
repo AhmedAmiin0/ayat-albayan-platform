@@ -109,13 +109,7 @@ export const paymentUpdateSchema = z.object({
   note: optionalText,
 });
 
-export const RECEIPT_MIMES = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-  'image/heic',
-  'application/pdf',
-] as const;
+export const RECEIPT_MIMES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf'] as const;
 /** Same as the receipts bucket limit (migration 122). */
 export const RECEIPT_MAX_BYTES = 10 * 1024 * 1024;
 

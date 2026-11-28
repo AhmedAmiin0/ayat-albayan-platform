@@ -24,10 +24,7 @@ const payment = {
 describe('subscriptionCreateSchema (R-SUB-01: priced from the catalog, never typed)', () => {
   const base = { studentId: SUB, startsOn: '2026-10-01', clientRequestId: SUB };
   it('a package: duration defaults to 45, discount to 0', () => {
-    const r = subscriptionCreateSchema.parse({
-      ...base,
-      pricing: { tier: 'starter', country: 'sa' },
-    });
+    const r = subscriptionCreateSchema.parse({ ...base, pricing: { tier: 'starter', country: 'sa' } });
     expect(r.pricing).toEqual({ tier: 'starter', country: 'SA', duration: 45, discount: 0 });
   });
 
@@ -73,17 +70,10 @@ describe('subscriptionCreateSchema (R-SUB-01: priced from the catalog, never typ
 
 // Rule 8: a write the server timed out on may still commit; only the same id makes a resend safe.
 describe.each([
-  [
-    'POST /subscriptions',
-    subscriptionCreateSchema,
-    { studentId: SUB, startsOn: '2026-10-01', pricing: { tier: 'starter' } },
-  ],
+  ['POST /subscriptions', subscriptionCreateSchema, { studentId: SUB, startsOn: '2026-10-01', pricing: { tier: 'starter' } }],
   ['POST /payments', paymentCreateSchema, payment],
 ] as const)('%s needs its clientRequestId', (_route, schema, body) => {
-  it.each([
-    ['missing', undefined],
-    ['not a uuid', 'x'],
-  ])('refuses an id that is %s', (_c, id) => {
+  it.each([['missing', undefined], ['not a uuid', 'x']])('refuses an id that is %s', (_c, id) => {
     expect(schema.safeParse({ ...body, clientRequestId: id }).success).toBe(false);
   });
 });
@@ -111,17 +101,10 @@ describe('paymentCreateSchema (R-PAY-01)', () => {
   });
 
   it('receipt upload: image or PDF up to 10 MB', () => {
-    expect(
-      receiptUploadSchema.safeParse({ subscriptionId: SUB, mime: 'image/jpeg', size: 2048 })
-        .success,
-    ).toBe(true);
+    expect(receiptUploadSchema.safeParse({ subscriptionId: SUB, mime: 'image/jpeg', size: 2048 }).success).toBe(true);
     const r = receiptUploadSchema.safeParse({ subscriptionId: SUB, mime: 'audio/mpeg', size: 10 });
     expect(r.error?.issues[0]?.message).toBe('receipt_type');
-    const big = receiptUploadSchema.safeParse({
-      subscriptionId: SUB,
-      mime: 'image/png',
-      size: 10 * 1024 * 1024 + 1,
-    });
+    const big = receiptUploadSchema.safeParse({ subscriptionId: SUB, mime: 'image/png', size: 10 * 1024 * 1024 + 1 });
     expect(big.error?.issues[0]?.message).toBe('receipt_too_large');
   });
 });

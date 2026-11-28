@@ -52,6 +52,9 @@ const among = <T>(list: readonly T[], v: unknown): T | undefined => list.find((x
 const clampCount = (n: number): number =>
   Math.min(CUSTOM_COUNT_MAX, Math.max(CUSTOM_COUNT_MIN, Math.round(n)));
 
+const durationOf = (quoted: PricingDuration | undefined, last: LastPackage): PricingDuration =>
+  quoted ?? among(PRICING_DURATIONS, last.duration) ?? DEFAULT_DURATION;
+
 /** The last package's tier (or count), duration, discount and country. */
 export function renewalPricing(last: LastPackage | null | undefined): RenewalPricing {
   if (!last) return DEFAULT_RENEWAL_PRICING;
@@ -61,7 +64,7 @@ export function renewalPricing(last: LastPackage | null | undefined): RenewalPri
   return {
     pkg: tier ?? 'custom',
     count: tier ? CUSTOM_COUNT_DEFAULT : clampCount(lessons),
-    duration: quote.duration ?? among(PRICING_DURATIONS, last.duration) ?? DEFAULT_DURATION,
+    duration: durationOf(quote.duration, last),
     discount: quote.discount,
     country: quote.country,
   };
