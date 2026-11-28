@@ -1,6 +1,7 @@
 import type { LeadRowView } from '@ab/shared';
 import { leadRow } from '@ab/shared/testing';
 import { ApiError } from '@ab/mobile-kit';
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { huda, page } from '@/inbox/shared/fixtures';
 import type { LeadProfile } from './queries';
 
@@ -48,7 +49,7 @@ const FOLLOW_UP_HOURS = [24, 72, 168];
 export function answer(row: LeadProfile | null) {
   return async (path: string) => {
     if (path.startsWith('/leads?')) return page(row ? [row] : []);
-    if (path === '/settings') return { follow_up_hours: FOLLOW_UP_HOURS };
+    if (path === '/settings') return { ...SETTING_DEFAULTS, follow_up_hours: FOLLOW_UP_HOURS };
     throw new ApiError(404);
   };
 }
