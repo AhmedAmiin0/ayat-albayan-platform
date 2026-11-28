@@ -20,6 +20,8 @@ export interface InfinitePages<P> {
   isFetchingNextPage: boolean;
   isError: boolean;
   isPending: boolean;
+  /** Pending and fetching: a disabled read stays pending but never loads. */
+  isLoading: boolean;
   fetchNextPage: () => Promise<unknown>;
   refetch: () => Promise<unknown>;
 }

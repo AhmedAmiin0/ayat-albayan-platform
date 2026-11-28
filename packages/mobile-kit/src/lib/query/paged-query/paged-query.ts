@@ -1,6 +1,8 @@
 import { usePullRefresh } from '../pull-refresh';
 import type { InfinitePages, Paged } from './paged-query.types';
 
+const idle = () => undefined;
+
 /**
  * A TanStack useInfiniteQuery result as a LazyList's `paged`: every page's rows in order, the next
  * page only when there is one and none is already on its way (FlashList calls onEndReached again
@@ -13,16 +15,16 @@ export function usePagedQuery<P, T>(
   const { refreshing, onRefresh } = usePullRefresh(query.refetch);
   const items = (query.data?.pages ?? []).flatMap(rowsOf);
   const canLoad = query.hasNextPage && !query.isFetchingNextPage;
-  const loadMore = () => {
-    if (canLoad) void query.fetchNextPage();
+  const fetchNext = () => {
+    void query.fetchNextPage();
   };
   return {
     items,
-    loadMore,
+    loadMore: canLoad ? fetchNext : idle,
     refresh: onRefresh,
     pulling: refreshing,
     loadingMore: query.isFetchingNextPage,
     failed: query.isError && items.length === 0,
-    loading: query.isPending,
+    loading: query.isLoading,
   };
 }
