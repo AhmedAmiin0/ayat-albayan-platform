@@ -4,10 +4,14 @@ import { mergeIntervals, type Interval } from '../intervals';
 import type { Occurrence } from '../occurrences';
 
 /** An occupying lesson already booked (status in OCCUPYING_LESSON_STATUSES). */
-export type BusyLesson = { id: string; starts_at: Date; ends_at: Date };
+export interface BusyLesson {
+  id: string;
+  starts_at: Date;
+  ends_at: Date;
+}
 export type StudentBusyLesson = BusyLesson & { student_id: string };
 
-export type ConflictInput = {
+export interface ConflictInput {
   /** What is about to be booked or moved (ruleOccurrences output, or one moved lesson). */
   proposed: readonly Occurrence[];
   /** The teacher's occupying lessons around the proposed span, minus the lesson being moved. */
@@ -17,9 +21,12 @@ export type ConflictInput = {
   /** The teacher's weekly grid (teacher_availability) and time off (teacher_time_off, UTC). */
   availability: readonly WeeklyRow[];
   timeOff: readonly TimeRange[];
-};
+}
 
-type Span = { starts_at: Date; ends_at: Date };
+interface Span {
+  starts_at: Date;
+  ends_at: Date;
+}
 const overlaps = (a: Span, b: Span) => a.starts_at < b.ends_at && b.starts_at < a.ends_at;
 
 /**

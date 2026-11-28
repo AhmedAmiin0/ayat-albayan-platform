@@ -1,14 +1,7 @@
-import {
-  DAY_MS,
-  dayInZone,
-  dayWallToUtc,
-  MINUTE_MS,
-  minutesOfHhmm,
-  weekdayOfDay,
-} from '@ab/time';
+import { DAY_MS, dayInZone, dayWallToUtc, MINUTE_MS, minutesOfHhmm, weekdayOfDay } from '@ab/time';
 
 /** The schedule_rules columns that decide when lessons happen; a Tables<'schedule_rules'> row fits. */
-export type OccurrenceTiming = {
+export interface OccurrenceTiming {
   /** 0 = Sunday ... 6 = Saturday. */
   byday: readonly number[];
   /** Wall-clock in `tz`, "HH:MM" or Postgres "HH:MM:SS". */
@@ -18,9 +11,15 @@ export type OccurrenceTiming = {
   /** Local calendar days in `tz`, inclusive ("YYYY-MM-DD"); ends_on null = open-ended. */
   starts_on: string;
   ends_on: string | null;
-};
-export type UtcWindow = { from: Date; to: Date };
-export type Occurrence = { starts_at: Date; ends_at: Date };
+}
+export interface UtcWindow {
+  from: Date;
+  to: Date;
+}
+export interface Occurrence {
+  starts_at: Date;
+  ends_at: Date;
+}
 
 const localDate = (iso: string): number => Date.parse(`${iso}T00:00:00Z`);
 

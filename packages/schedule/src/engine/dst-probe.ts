@@ -14,13 +14,13 @@ export function offsetChanges(tz: string, from: Date, days = 366): Date[] {
   return out;
 }
 
-export type ProbeInput = {
+export interface ProbeInput {
   timing: OccurrenceTiming;
   /** The rule's tz and the teacher's tz (availability is kept in the teacher's). */
   tzs: readonly string[];
   /** Horizon end: the generated lessons before it are checked already. */
   after: Date;
-};
+}
 
 /**
  * The rule's occurrences in the 8 days around every UTC-offset change of its tz or the teacher's

@@ -14,7 +14,13 @@ export type BookingKind = (typeof BOOKING_KINDS)[number];
  * 10 MB: the buckets' hard ceiling. The academy's own limit is settings.upload_max_mb (≤ 10),
  * checked by the API. Spelled out here because money/schemas imports scheduling, which imports this file.
  */
-export const INVOICE_MIMES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf'] as const;
+export const INVOICE_MIMES = [
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/heic',
+  'application/pdf',
+] as const;
 export const INVOICE_MAX_BYTES = 10 * 1024 * 1024;
 
 /** A client upload to the signed URL, or a WhatsApp file the server copies. */
@@ -99,14 +105,14 @@ export function makeupEligible(
   return Date.parse(original.startsAt) >= now.getTime() - windowDays * DAY_MS ? 'ok' : 'too_old';
 }
 
-type KindFacts = {
+interface KindFacts {
   kind?: BookingKind | undefined;
   package?: string | undefined;
   studentIds?: string[] | undefined;
   leadId?: string | undefined;
   newStudent?: unknown;
   makeupOfLessonId?: string | undefined;
-};
+}
 
 /** A makeup: one existing student (no lead, no new student) and the missed lesson it replaces. */
 function makeupProblems(req: KindFacts): string[] {
@@ -123,7 +129,8 @@ export function refineBookingKind(req: KindFacts, ctx: z.RefinementCtx): void {
   const kind = bookingKindOf(req);
   const found: string[] = [];
   if (kind === 'trial' && req.package !== 'trial') found.push('package:trial_package');
-  if (kind === 'package' && (req.package === undefined || req.package === 'trial')) found.push('package:package_size');
+  if (kind === 'package' && (req.package === undefined || req.package === 'trial'))
+    found.push('package:package_size');
   if (kind === 'makeup') found.push(...makeupProblems(req));
   else if (req.makeupOfLessonId !== undefined) found.push('makeupOfLessonId:makeup_only');
   for (const f of found) {

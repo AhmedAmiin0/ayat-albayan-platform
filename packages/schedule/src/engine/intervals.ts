@@ -1,5 +1,8 @@
 /** Half-open [start, end) in epoch ms (UTC). */
-export type Interval = { start: number; end: number };
+export interface Interval {
+  start: number;
+  end: number;
+}
 
 /** Sorts and unions overlapping or touching intervals; drops empty ones. */
 export function mergeIntervals(list: readonly Interval[]): Interval[] {

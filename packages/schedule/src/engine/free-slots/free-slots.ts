@@ -1,17 +1,18 @@
-import {
-  DAY_MS,
-  dayInZone,
-  dayWallToUtc,
-  MINUTE_MS,
-  minutesOfHhmm,
-  weekdayOfDay,
-} from '@ab/time';
+import { DAY_MS, dayInZone, dayWallToUtc, MINUTE_MS, minutesOfHhmm, weekdayOfDay } from '@ab/time';
 import { mergeIntervals, subtractIntervals, type Interval } from '../intervals';
 /** One weekly availability row, wall-clock in its own `tz` (teacher_availability). R-TCH-02. */
-export type WeeklyRow = { weekday: number; start_time: string; end_time: string; tz: string };
-export type TimeRange = { start: Date; end: Date };
+export interface WeeklyRow {
+  weekday: number;
+  start_time: string;
+  end_time: string;
+  tz: string;
+}
+export interface TimeRange {
+  start: Date;
+  end: Date;
+}
 
-export type FreeSlotsInput = {
+export interface FreeSlotsInput {
   from: Date;
   to: Date;
   durationMin: number;
@@ -22,7 +23,7 @@ export type FreeSlotsInput = {
   busy: readonly TimeRange[];
   /** Distance between candidate starts. TODO(R-SCH-06): confirm the wizard's grid step. */
   stepMin?: number;
-};
+}
 
 const toInterval = (r: TimeRange): Interval => ({ start: r.start.getTime(), end: r.end.getTime() });
 
@@ -34,7 +35,12 @@ const LAST_MINUTE = 23 * 60 + 59;
  * window, so findConflicts never reports outside_availability and freeSlots steps from midnight.
  */
 export function allDayRows(tz: string): WeeklyRow[] {
-  return [0, 1, 2, 3, 4, 5, 6].map((weekday) => ({ weekday, start_time: '00:00', end_time: '24:00', tz }));
+  return [0, 1, 2, 3, 4, 5, 6].map((weekday) => ({
+    weekday,
+    start_time: '00:00',
+    end_time: '24:00',
+    tz,
+  }));
 }
 
 /** Every occurrence of `row` whose local day is within `range` ±1 day (covers ±14h offsets). */
@@ -62,7 +68,8 @@ export function expandRow(row: WeeklyRow, range: Interval): Interval[] {
  */
 export function freeSlots(input: FreeSlotsInput): TimeRange[] {
   const stepMin = input.stepMin ?? input.durationMin;
-  if (input.durationMin <= 0 || stepMin <= 0) throw new RangeError('durationMin/stepMin must be > 0');
+  if (input.durationMin <= 0 || stepMin <= 0)
+    throw new RangeError('durationMin/stepMin must be > 0');
   const range = toInterval({ start: input.from, end: input.to });
   const windows = mergeIntervals(input.availability.flatMap((row) => expandRow(row, range)));
   const blocked = [...input.timeOff, ...input.busy].map(toInterval);

@@ -54,25 +54,16 @@
     }
   },
   "src/engine/conflicts/conflicts.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 3
-    },
     "complexity": {
       "count": 1
     }
   },
   "src/engine/dst-probe.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "max-depth": {
       "count": 1
     }
   },
   "src/engine/free-slots/free-slots.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 3
-    },
     "complexity": {
       "count": 1
     },
@@ -80,15 +71,7 @@
       "count": 1
     }
   },
-  "src/engine/horizon.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    }
-  },
   "src/engine/intervals.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "complexity": {
       "count": 1
     },
@@ -97,9 +80,6 @@
     }
   },
   "src/engine/occurrences/occurrences.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 3
-    },
     "stylistic/max-len": {
       "count": 1
     }
@@ -154,17 +134,11 @@
     "complexity": {
       "count": 2
     },
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 2
     }
   },
   "src/schemas/day-times.ts": {
-    "typescript/consistent-type-definitions": {
-      "count": 1
-    },
     "stylistic/max-len": {
       "count": 1
     }
