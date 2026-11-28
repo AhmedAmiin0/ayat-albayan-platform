@@ -13,11 +13,20 @@ export interface RangeWords {
 
 /** `{name}` slots filled from vars; an unknown slot stays as written. */
 export function fillSlots(template: string, vars: Record<string, string | number>): string {
-  return template.replace(/\{(\w+)\}/g, (slot, name: string) => (name in vars ? String(vars[name]) : slot));
+  return template.replace(/\{(\w+)\}/g, (slot, name: string) =>
+    name in vars ? String(vars[name]) : slot,
+  );
 }
 
-export function rangeLabel(range: SurahRange, opts: { words: Pick<RangeWords, 'rangeValue'>; lang: Locale }): string {
-  return fillSlots(opts.words.rangeValue, { surah: surahName(range.surah, opts.lang), from: range.from, to: range.to });
+export function rangeLabel(
+  range: SurahRange,
+  opts: { words: Pick<RangeWords, 'rangeValue'>; lang: Locale },
+): string {
+  return fillSlots(opts.words.rangeValue, {
+    surah: surahName(range.surah, opts.lang),
+    from: range.from,
+    to: range.to,
+  });
 }
 
 /** «562» or «562–563»: the range's pages. */
@@ -35,7 +44,14 @@ export function rangeMeta(range: SurahRange, words: RangeWords): string {
   return `${counted(words.ayahs, ayahs)} · ${page}`;
 }
 
-export function rangeSummary(range: SurahRange, words: { ayahs: RangeWords['ayahs']; summary: string }): string {
+export function rangeSummary(
+  range: SurahRange,
+  words: { ayahs: RangeWords['ayahs']; summary: string },
+): string {
   const info = rangeInfo(range);
-  return fillSlots(words.summary, { ayahs: counted(words.ayahs, info.ayahs), page: rangePages(range), juz: info.juz });
+  return fillSlots(words.summary, {
+    ayahs: counted(words.ayahs, info.ayahs),
+    page: rangePages(range),
+    juz: info.juz,
+  });
 }

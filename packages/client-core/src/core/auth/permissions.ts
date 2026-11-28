@@ -10,7 +10,9 @@ export interface PermissionsView {
   can: Can;
 }
 
-/** Has /auth/me answered? (undefined while loading, null when signed out). No list = holds nothing. */
+/**
+ * Has /auth/me answered? (undefined while loading, null when signed out). No list = holds nothing.
+ */
 export function meLoaded(me: unknown): me is object {
   return typeof me === 'object' && me !== null;
 }
@@ -24,10 +26,14 @@ export function permissionsOf(me: unknown): Permission[] {
 
 /**
  * The one permissions behaviour of web and mobile (docs/27 E2, D6): until /auth/me has answered
- * (loading, offline with nothing saved, signed out) nothing is granted, so actions stay hidden; then
- * only the listed keys. The API refuses anything not granted anyway.
+ * (loading, offline with nothing saved, signed out) nothing is granted, so actions stay hidden;
+ * then only the listed keys. The API refuses anything not granted anyway.
  */
 export function permissionsView(me: unknown): PermissionsView {
   const permissions = permissionsOf(me);
-  return { loaded: meLoaded(me), permissions, can: (permission) => permissions.includes(permission) };
+  return {
+    loaded: meLoaded(me),
+    permissions,
+    can: (permission) => permissions.includes(permission),
+  };
 }

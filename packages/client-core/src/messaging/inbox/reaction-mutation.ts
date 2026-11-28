@@ -20,7 +20,10 @@ export interface ReactionPorts {
   fail: (error: unknown) => void;
 }
 
-/** Ours at once; the server's answer wins; a refusal or a failed send puts the bubble back and says so. */
+/**
+ * Ours at once; the server's answer wins; a refusal or a failed send puts the bubble back and says
+ * so.
+ */
 export function reactionMutation(p: ReactionPorts) {
   return {
     mutationFn: p.send,
@@ -44,5 +47,7 @@ export function withReactions<D extends { pages: readonly { messages: readonly M
   data: D | undefined,
   edit: { id: string; reactions: MessageView['reactions'] },
 ): D | undefined {
-  return data ? { ...data, pages: patchMessage(data.pages, edit.id, { reactions: edit.reactions }) } : data;
+  return data
+    ? { ...data, pages: patchMessage(data.pages, edit.id, { reactions: edit.reactions }) }
+    : data;
 }

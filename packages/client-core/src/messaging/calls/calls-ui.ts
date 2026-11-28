@@ -1,7 +1,8 @@
 import type { CallConfigView } from '@ab/shared';
 import type { CallTarget } from './call-phase';
 
-// The calls UI both apps hand down through React context, and the small pure pieces their hooks use.
+// The calls UI both apps hand down through React context, and the small pure pieces their hooks
+// use.
 
 export interface CallsUi {
   config: CallConfigView;
@@ -15,13 +16,19 @@ export interface CallsUi {
  * The calls UI when it is on for this user (setting on, allowed to call); null outside the staff
  * shells, while the config loads or fails, and whenever whatsapp_calls_enabled is off.
  */
-export const usableCalls = (ui: CallsUi | null): CallsUi | null => (ui && ui.config.enabled && ui.config.canCall ? ui : null);
+export const usableCalls = (ui: CallsUi | null): CallsUi | null =>
+  ui && ui.config.enabled && ui.config.canCall ? ui : null;
 
 /** The calls log and the chat's call entries need only `enabled` (reading is inbox.read). */
 export const callsReadable = (ui: CallsUi | null): boolean => ui?.config.enabled === true;
 
-/** For an effect: rings while `ringing` (an inbound call waits for this user); the cleanup stops it. */
-export function ringWhile(ringing: boolean, start: () => { stop(): void }): (() => void) | undefined {
+/**
+ * For an effect: rings while `ringing` (an inbound call waits for this user); the cleanup stops it.
+ */
+export function ringWhile(
+  ringing: boolean,
+  start: () => { stop(): void },
+): (() => void) | undefined {
   if (!ringing) return undefined;
   const tone = start();
   return () => tone.stop();
@@ -47,5 +54,7 @@ export function secondClock() {
   };
 }
 
-/** The one clock of the call screens (the full screen and the minimised bar read the same second). */
+/**
+ * The one clock of the call screens (the full screen and the minimised bar read the same second).
+ */
 export const callClock = secondClock();

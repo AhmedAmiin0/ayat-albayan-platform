@@ -49,7 +49,11 @@ export function initialEditForm(d: UserDetail, options: readonly UserRoleOption[
 }
 
 /** The PATCH body: only what changed (null when nothing did). Call after editErrors is empty. */
-export function editBody(d: UserDetail, f: EditForm, options: readonly UserRoleOption[]): UserUpdate | null {
+export function editBody(
+  d: UserDetail,
+  f: EditForm,
+  options: readonly UserRoleOption[],
+): UserUpdate | null {
   const body: UserUpdate = {};
   const phone = f.phone.trim() ? normalizePhone(f.phone) : null;
   const e164 = phone?.ok ? phone.e164 : null;
