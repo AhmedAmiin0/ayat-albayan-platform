@@ -1,15 +1,8 @@
-import {
-  INBOX_LIST_REFRESH_MS,
-  liveInterval,
-  UNREAD_COUNT_KEY,
-  UNREAD_COUNT_PATH,
-  unreadTotal,
-} from '@ab/client-core';
+import { INBOX_LIST_REFRESH_MS, liveInterval, UNREAD_COUNT_KEY } from '@ab/client-core';
 import { useQuery } from '@tanstack/react-query';
 import { canOpen } from '@/core/auth/route-permissions';
-import { apiFetch } from '@ab/mobile-kit';
 import type { Can } from '@ab/mobile-kit';
-import { useInboxLive } from '@/inbox';
+import { threadReads, useInboxLive } from '@/inbox';
 import { badgeText } from './tab-badge';
 
 /**
@@ -21,7 +14,7 @@ export const badgePollMs = (live: boolean): number => liveInterval(live, INBOX_L
 
 /**
  * Badge text for the Inbox tab (R-MOB-02): threads with an unopened message, read from the chats
- * list's own summary (GET /threads, unread, one row; the web's key and path, client-core). Under
+ * list's own summary (GET /threads, unread, one row; the web's key and call, client-core). Under
  * ['threads', 'nav-count'], so every nudge that re-reads the list re-reads it too (refreshLists, a
  * realtime event, resumeInbox, the open chat stamping a message read). A brand-new lead is also an
  * unread thread, so new leads are not added. A role that cannot read the inbox requests nothing.
@@ -31,7 +24,7 @@ export function useInboxBadge(can: Can): string | undefined {
   const unread = useQuery({
     enabled: canOpen(can, 'inbox'),
     queryKey: [...UNREAD_COUNT_KEY],
-    queryFn: async ({ signal }) => unreadTotal(await apiFetch(UNREAD_COUNT_PATH, { signal })),
+    queryFn: async ({ signal }) => (await threadReads.unread(signal)).total,
     staleTime: 60_000,
     refetchInterval: badgePollMs(live),
   });

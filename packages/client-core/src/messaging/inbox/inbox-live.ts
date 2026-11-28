@@ -2,7 +2,6 @@
 // is closed, a slow poll as the fallback). The database broadcasts ONE event per changed phone on a
 // private topic; a client never reads data from it, it only re-reads the same API routes sooner.
 
-import { z } from 'zod';
 import { THREAD_FULL_MS } from '../channels';
 
 /** The private Broadcast topic (realtime.messages policy: admin and sales with inbox.read). */
@@ -62,18 +61,8 @@ export function catchUpPlan(key: LiveKey): LiveKey[] {
   return key === 'list' ? ['list', 'badge'] : [key];
 }
 
-/**
- * The unread badge (web nav, sales title, mobile tab) reads the chats list's own summary: GET
- * /threads (v_threads over thread_summaries, migration 20261106001100) filtered to unread, one row.
- */
-export const UNREAD_COUNT_PATH = '/threads?unread=true&page=1&pageSize=1';
 /** Its one cache key, under ['threads', 'nav-count']: a send, an open chat, an event refresh it. */
 export const UNREAD_COUNT_KEY = ['threads', 'nav-count', 'unread'] as const;
-
-const unreadPage = z.object({ total: z.number().int().min(0) });
-
-/** The badge's number from its GET answer (zod: a malformed answer throws, the query errors). */
-export const unreadTotal = (raw: unknown): number => unreadPage.parse(raw).total;
 
 /** A refresh interval: the slow fallback while realtime is up, else the caller's poll. */
 export function liveInterval(live: boolean, offline: number): number {
