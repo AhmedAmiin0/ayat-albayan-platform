@@ -113,9 +113,10 @@ describe('/i18n — dynamic translations', () => {
       await call('DELETE', '/i18n/fr/nav.leads', { token: 'admin' }),
       await call('GET', '/i18n/keys?page=0', { token: 'admin' }),
       await call('PUT', '/i18n/en/nav.leads', { token: 'admin', payload: {} }),
+      await call('GET', '/i18n/fr/overrides'),
     ];
     const answers = bad.map((r) => [r.statusCode, r.json<{ message: string }>().message]);
-    expect(answers).toEqual(Array.from({ length: 4 }, () => [400, 'validation_failed']));
+    expect(answers).toEqual(Array.from({ length: 5 }, () => [400, 'validation_failed']));
   });
 
   it('GET keys answers rows that fit the shared page schema', async () => {

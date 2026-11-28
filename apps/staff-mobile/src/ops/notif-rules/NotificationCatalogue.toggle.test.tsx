@@ -4,7 +4,7 @@ import { AccessibilityInfo } from 'react-native';
 import { t } from '@ab/mobile-kit';
 import { renderWithQuery } from '@/test/query';
 import { NotificationCatalogue } from '@/ops/settings/NotificationCatalogue';
-import { answer, catalogueV2, MANAGER, openAudience } from './testing/rules-fixtures';
+import { answer, catalogueV2, MANAGER, openAudience, savedRow } from './testing/rules-fixtures';
 import type { HttpApi } from '@ab/mobile-kit/testing';
 
 const mockApiFetch = jest.fn();
@@ -23,7 +23,7 @@ const catalogueReads = () => mockApiFetch.mock.calls.filter(([p]) => p === '/adm
 beforeEach(() => {
   jest.clearAllMocks();
   mockApiFetch.mockImplementation(answer(catalogueV2, MANAGER));
-  mockApiSend.mockResolvedValue({});
+  mockApiSend.mockImplementation(savedRow);
 });
 
 test('switching off a plain row saves at once, refetches the catalogue and announces it once', async () => {

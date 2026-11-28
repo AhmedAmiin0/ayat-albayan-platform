@@ -9217,6 +9217,16 @@
    "required": [
     "locale"
    ]
+  },
+  "response": {
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "type": "object",
+   "propertyNames": {
+    "type": "string"
+   },
+   "additionalProperties": {
+    "type": "string"
+   }
   }
  },
  "GET /i18n/keys": {

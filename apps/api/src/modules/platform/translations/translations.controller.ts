@@ -1,18 +1,16 @@
-import type { Locale } from '@ab/core';
 import {
   translationKeysPageSchema,
-  translationLocaleSchema,
+  translationOverridesSchema,
   translationRoutes as routes,
   type TranslationKeysPage,
   type TranslationOverrides,
 } from '@ab/i18n';
-import { Controller, Get, Headers, HttpCode, Res } from '@nestjs/common';
+import { Controller, Headers, HttpCode, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Public } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { asResponse } from '@/common/http/returns';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { ZodParam } from '@/common/http/zod-inputs';
 import { TranslationsService } from './translations.service';
 
 /** The bit of the Fastify reply used here (no direct `fastify` dependency). */
@@ -31,21 +29,20 @@ interface CacheReply {
 export class TranslationsController {
   constructor(private readonly translations: TranslationsService) {}
 
-  @Public()
-  @Get('i18n/:locale/overrides')
+  @Route(routes.overrides)
   overrides(
-    @ZodParam('locale', translationLocaleSchema) locale: Locale,
+    @RouteInput() { params }: RouteInputOf<typeof routes.overrides>,
     @Headers('if-none-match') ifNoneMatch: string | undefined,
     @Res({ passthrough: true }) reply: CacheReply,
   ): TranslationOverrides | undefined {
-    const snap = this.translations.overrides(locale);
+    const snap = this.translations.overrides(params.locale);
     reply.header('Cache-Control', 'public, max-age=60');
     reply.header('ETag', snap.etag);
     if (ifNoneMatch === snap.etag) {
       reply.status(304);
       return undefined;
     }
-    return snap.values;
+    return asResponse(translationOverridesSchema, snap.values);
   }
 
   @ApiBearerAuth()
