@@ -74,8 +74,21 @@ const TextInput = ({ value, modifiers, onChangeText, onFocus, onBlur, ...props }
   });
 };
 
+// Compose's Switch as React Native's: its semantics description becomes the label a test queries
+// by, `enabled` the disabled flag and a flip calls onCheckedChange. `compose` marks it.
+const ComposeSwitch = ({ value, enabled = true, onCheckedChange, colors, modifiers }) =>
+  createElement(RN.Switch, {
+    compose: true,
+    value,
+    colors,
+    disabled: !enabled,
+    accessibilityLabel: paramOf(modifiers, 'semantics')?.contentDescription,
+    onValueChange: (next) => onCheckedChange?.(next),
+  });
+
 module.exports = {
   universal: { __esModule: true, BottomSheet, Host, RNHostView, TextInput, useNativeState },
   swiftUiModifiers,
   composeModifiers,
+  jetpackCompose: { __esModule: true, Switch: ComposeSwitch },
 };

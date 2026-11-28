@@ -1,48 +1,25 @@
-import type { ReactNode } from 'react';
-import { Switch, View } from 'react-native';
-import { AppText } from '../../primitives/AppText';
-import { type, useTheme } from '../../../theme';
+import { Switch } from 'react-native';
+import { SwitchFrame } from './SwitchFrame';
+import type { SwitchRowProps } from './SwitchRow.types';
 
-interface SwitchRowProps {
-  /** The row's words, also the switch's spoken name. */
-  label: string;
-  value: boolean;
-  disabled?: boolean;
-  onChange: (on: boolean) => void;
-  testID?: string;
-  /** Under the label and switch: a note or hint. */
-  children?: ReactNode;
-}
-
-/** A 56pt settings row: the label, the system switch at the end, a note below. */
+/**
+ * A settings switch row. iOS keeps React Native's switch: it already is the system UISwitch, so a
+ * SwiftUI Toggle would look and work the same behind an extra host.
+ */
 export function SwitchRow({ label, value, disabled, onChange, testID, children }: SwitchRowProps) {
-  const ink = useTheme().color.ink;
   return (
-    <View
+    <SwitchFrame
+      label={label}
       testID={testID}
-      style={{ minHeight: 56, paddingHorizontal: 16, paddingVertical: 10, gap: 4 }}
-    >
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 12,
-        }}
-      >
-        <AppText
-          style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.sm, color: ink }}
-        >
-          {label}
-        </AppText>
+      note={children}
+      control={
         <Switch
           accessibilityLabel={label}
           value={value}
           disabled={disabled}
           onValueChange={onChange}
         />
-      </View>
-      {children}
-    </View>
+      }
+    />
   );
 }
