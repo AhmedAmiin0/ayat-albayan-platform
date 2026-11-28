@@ -1,25 +1,20 @@
-import type { AppearancePref } from '../../../lib/appearance/appearance';
-import { useAppearancePref } from '../../../lib/appearance/useAppearancePref';
-import { t } from '../../../lib/i18n/i18n';
 import { Section } from '../../surface/Section';
-import { type FilterPill, FilterPills } from '../FilterPills';
+import { FilterPills } from '../FilterPills';
+import { useAppearancePicker } from './use-appearance-picker';
 
-const appearancePills = (): readonly FilterPill<AppearancePref>[] => [
-  { value: 'auto', label: t.theme.auto },
-  { value: 'light', label: t.theme.light },
-  { value: 'dark', label: t.theme.dark },
-];
-
-/** Saved on the device. */
+/**
+ * The brand pills as radios. iOS keeps them too: its segmented control speaks its options as
+ * buttons, not as the radio group the pills are.
+ */
 export function AppearancePicker() {
-  const [pref, choose] = useAppearancePref();
+  const { pref, choose, items, label } = useAppearancePicker();
   return (
-    <Section title={t.theme.label}>
+    <Section title={label}>
       <FilterPills
-        items={appearancePills()}
+        items={items}
         value={pref}
         onChange={choose}
-        accessibilityLabel={t.theme.label}
+        accessibilityLabel={label}
         role="radiogroup"
       />
     </Section>
