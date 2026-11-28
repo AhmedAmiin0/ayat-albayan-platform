@@ -93,7 +93,7 @@ describe('after the 24 h window: approved templates only', () => {
     expect(apiSend).not.toHaveBeenCalled();
 
     apiSend.mockResolvedValue(message({ id: uid('m-t'), direction: 'outbound', status: 'queued' }));
-    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: 'l-1' } });
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: uid('l-1') } });
     expect(when.value).toBe('الأحد 4 أكتوبر 17:00');
     expect(screen.getByText('تم حجز حلقة سهيلة يوم الأحد 4 أكتوبر 17:00')).toBeTruthy(); // the preview
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
@@ -102,7 +102,7 @@ describe('after the 24 h window: approved templates only', () => {
         key: 'booking_confirmation_plain',
         params: { '1': 'سهيلة', '2': 'الأحد 4 أكتوبر 17:00' },
         clientRequestId: expect.any(String),
-        lessonId: 'l-1',
+        lessonId: uid('l-1'),
       }),
     );
   });
@@ -112,7 +112,7 @@ describe('after the 24 h window: approved templates only', () => {
     fireEvent.change(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate }), {
       target: { value: 'booking_confirmation_plain' },
     });
-    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: 'l-1' } });
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: uid('l-1') } });
     fireEvent.change(screen.getByLabelText(t.inbox.composer.paramNames.student_names), { target: { value: ' ' } });
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
     const name = t.inbox.composer.paramNames.student_names;

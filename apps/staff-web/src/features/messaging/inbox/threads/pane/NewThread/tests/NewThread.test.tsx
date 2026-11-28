@@ -77,10 +77,10 @@ describe('starting a conversation (no thread yet)', () => {
       </InboxModeContext.Provider>,
     );
     fireEvent.change(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate }), { target: { value: 'booking_confirmation_plain' } });
-    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: 'l-1' } });
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: uid('l-1') } });
     apiSend.mockResolvedValue(message({ id: uid('m-2'), direction: 'outbound', status: 'queued' }));
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `${PATH}/template`, expect.objectContaining({ key: 'booking_confirmation_plain', lessonId: 'l-1' })));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `${PATH}/template`, expect.objectContaining({ key: 'booking_confirmation_plain', lessonId: uid('l-1') })));
   });
 
   it('the admin gets the same first template', async () => {

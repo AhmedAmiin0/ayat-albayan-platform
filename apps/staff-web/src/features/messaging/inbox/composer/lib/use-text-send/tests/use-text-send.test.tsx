@@ -24,7 +24,7 @@ const PATH = '/threads/%2B966501234567';
 const ID = 'c0000000-0000-4000-8000-0000000000a1';
 const LIST = ['threads', 'list', 'page=1'];
 const at = (minute: number) => `2026-11-06T08:${String(minute).padStart(2, '0')}:00Z`;
-const row = (id: string, minute: number) => message({ id, created_at: at(minute) });
+const row = (id: string, minute: number) => message({ id: uid(id), created_at: at(minute) });
 const older = (m: MessageView): ThreadDetail => ({ ...detail([m]), has_more: true });
 const SERVER = uid('s1');
 const server = sentText({ id: SERVER, body: 'وصلت', created_at: at(50) });
@@ -82,7 +82,7 @@ describe('useTextSend: an optimistic send', () => {
     await waitFor(() => expect(s.cached()?.pages[0]?.messages.at(-1)?.status).toBe('sent'));
     expect(paths()).toEqual([PATH]);
     expect(s.cached()?.pages).toHaveLength(5);
-    expect(s.ids()).toEqual(['m01', 'm10', 'm20', 'm30', 'm40', SERVER]);
+    expect(s.ids()).toEqual([...['m01', 'm10', 'm20', 'm30', 'm40'].map(uid), SERVER]);
   });
 
   it('no double row when a read brought the server row in before the answer', async () => {

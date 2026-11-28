@@ -53,7 +53,7 @@ it('an older chat read in flight is never cancelled by a patch; the re-read supe
   const cancel = vi.spyOn(client, 'cancelQueries');
   patchLiveCaches(client, PHONE, [live('a', 'delivered')]);
   expect([cancel.mock.calls.length, first(client)?.status]).toEqual([0, 'delivered']);
-  const fresh = page(msg('a', 'delivered', { delivered_at: '2026-11-07T10:01' }));
+  const fresh = page(msg('a', 'delivered', { delivered_at: '2026-11-07T10:01:00Z' }));
   mockApiFetch.mockResolvedValueOnce(fresh);
   const next = reread(client, KEY);
   old.resolve(page(msg('a', 'sent')));

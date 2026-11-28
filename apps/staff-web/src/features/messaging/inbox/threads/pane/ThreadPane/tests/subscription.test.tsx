@@ -54,7 +54,7 @@ describe('subscription in the chat (R-SUB-01)', () => {
     renderThread({ ...detail([], GUARDIAN), people: FAMILY });
     const panel = within(await screen.findByRole('complementary', { name: t.inbox.subscription.title }));
     const link = panel.getByRole('link', { name: t.students.family.openStudent.replace('{name}', 'جود') });
-    expect(link.getAttribute('href')).toBe('/admin/students/s-2');
+    expect(link.getAttribute('href')).toBe(`/admin/students/${uid('s-2')}`);
     expect(panel.getAllByText(t.enums.studentStatus[FAMILY.students[1]?.status ?? 'active']).length).toBeGreaterThan(0);
   });
 
@@ -69,7 +69,7 @@ describe('subscription in the chat (R-SUB-01)', () => {
     expect(dialog.queryByRole('searchbox')).toBeNull(); // preset: no student picker
     const reads = apiFetch.mock.calls.length;
     fireEvent.click(dialog.getByRole('button', { name: t.common.save }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/subscriptions', expect.objectContaining({ studentId: 's-2' })));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/subscriptions', expect.objectContaining({ studentId: uid('s-2') })));
     expect(await screen.findByText(t.subscriptions.saved)).toBeTruthy();
     await waitFor(() => expect(apiFetch.mock.calls.length).toBeGreaterThan(reads));
   });
