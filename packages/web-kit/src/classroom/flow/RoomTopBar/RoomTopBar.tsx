@@ -1,17 +1,9 @@
 import { t } from '@ab/web-kit/lib/i18n/i18n';
 import { RecIndicator } from '@ab/web-kit/classroom/recordings/RecIndicator';
 import { RoomIcon } from '@ab/web-kit/classroom/room/components/room-icons';
-import type { RoomSnapshot } from '@ab/web-kit/classroom/room/components/room-types';
 import { ContextHeader } from '@ab/web-kit/classroom/flow/ContextHeader';
-import type { RoomContext } from '@ab/web-kit/classroom/flow/room-kit';
-
-interface Props {
-  snap: RoomSnapshot;
-  context: RoomContext | null;
-  onPeople: () => void;
-}
-
-const peopleIn = (snap: RoomSnapshot): number => snap.tiles.filter((x) => x.kind === 'camera').length;
+import type { Props } from './RoomTopBar.types';
+import { peopleIn } from './room-top-bar.helpers';
 
 export function RoomTopBar({ snap, context, onPeople }: Props) {
   const n = peopleIn(snap);
@@ -20,7 +12,9 @@ export function RoomTopBar({ snap, context, onPeople }: Props) {
     <div className="-mx-3 -mt-3 sm:-mx-4 sm:-mt-4">
       <ContextHeader context={context}>
         {snap.status === 'connecting' && (
-          <p role="status" className="text-xs text-ink-2">{t.classroom.joining}</p>
+          <p role="status" className="text-xs text-ink-2">
+            {t.classroom.joining}
+          </p>
         )}
         {snap.isRecording && <RecIndicator />}
         <button
