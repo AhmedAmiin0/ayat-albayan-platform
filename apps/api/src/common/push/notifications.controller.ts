@@ -4,15 +4,13 @@ import {
   type NotificationsPage,
   type WebPushKey,
 } from '@ab/shared';
-import { Body, Controller, HttpCode, Put, UnauthorizedException } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { parseOrThrow } from '@/common/http/http';
+import { Controller, HttpCode, UnauthorizedException } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { loadEnv, webPushEnv } from '@/config/env/env';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
 import { NotificationsRepo } from './notifications.repo';
-import { webPushSubscriptionSchema } from './web/web-push.endpoint';
 
 type BellInput<K extends keyof typeof meNotificationRoutes> = RouteInputOf<
   (typeof meNotificationRoutes)[K]
@@ -54,19 +52,15 @@ export class WebPushController {
     return { publicKey: webPushEnv(loadEnv())?.publicKey ?? null };
   }
 
-  /**
-   * PushSubscription.toJSON(); the endpoint must be a known push service (SSRF guard). Idempotent.
-   * Bound to the caller's session: 401 for a token without one (never a row nobody's session owns).
-   * No route object yet: the allow-list needs the URL global, which the shared package avoids.
-   */
-  @Put('me/web-push')
-  @ApiTags('me')
-  @Permissions('notifications.push')
+  /** Idempotent. 401 for a token without a session: never a row nobody's session owns. */
+  @Route(webPushRoutes.subscribe)
   @HttpCode(204)
-  async subscribe(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
-    const sub = parseOrThrow(webPushSubscriptionSchema, body);
+  async subscribe(
+    @RouteInput() { body }: PushInput<'subscribe'>,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
     if (!user.sessionId) throw new UnauthorizedException('no_session');
-    await this.queries.subscribe(user.id, sub, user.sessionId);
+    await this.queries.subscribe(user.id, body, user.sessionId);
   }
 
   @Route(webPushRoutes.unsubscribe)

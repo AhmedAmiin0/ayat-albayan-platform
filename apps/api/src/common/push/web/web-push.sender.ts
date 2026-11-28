@@ -1,4 +1,4 @@
-import { clipText } from '@ab/shared';
+import { clipText, pushEndpointAllowed } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pgError } from '@/common/db/errors';
@@ -6,7 +6,6 @@ import type { HttpFailure } from '@/common/infra/http/failure';
 import { createHttp } from '@/common/infra/http/http';
 import { encryptPayload } from './web-push.crypto';
 import { liveSessions } from '@/common/push/dispatch/push.sessions';
-import { pushEndpointAllowed } from './web-push.endpoint';
 import { vapidAuthorization, type VapidKeys } from './web-push.vapid';
 
 /** One POST to a push service; the status is all we read. Injectable: tests never reach the network. */
