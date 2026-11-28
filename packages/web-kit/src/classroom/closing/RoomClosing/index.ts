@@ -1,1 +1,2 @@
-export { type RejoinState, RoomClosing } from './RoomClosing';
+export { RoomClosing } from './RoomClosing';
+export type { RejoinState } from './RoomClosing.types';
