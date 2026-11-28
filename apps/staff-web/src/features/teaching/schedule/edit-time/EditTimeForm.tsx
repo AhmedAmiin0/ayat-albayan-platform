@@ -56,7 +56,10 @@ export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
         body: editBody({ mode, ...expected, choice, reason: value.reason, notify, override }),
       }),
     onSuccess: async (result) => {
-      if (needsFollowUp(result)) {  setDone(result);; return; }
+      if (needsFollowUp(result)) {
+        setDone(result);
+        return;
+      }
       await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
       onDone(savedMessage(result));
     },
@@ -120,7 +123,7 @@ export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
           onChangeSlot={() => save.reset()}
           onOverride={(reason) => save.mutate(reason)}
         />
-      ) : locked && lock ? (
+      ) : locked ? (
         <FormAlert>
           {lockedText(lock)}
           <span className="mt-1 block">{t.lessons.timeEdit.startOnly}</span>

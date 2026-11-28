@@ -78,7 +78,9 @@ describe('a bubble that answers a message shows its quote', () => {
     expect(scrollIntoView.mock.contexts[0]).toBe(original);
     expect(document.activeElement).toBe(original);
     expect(original?.hasAttribute('data-flash')).toBe(true);
-    act(() => vi.advanceTimersByTime(FLASH_MS));
+    act(() => {
+      vi.advanceTimersByTime(FLASH_MS);
+    });
     expect(original?.hasAttribute('data-flash')).toBe(false);
   });
 

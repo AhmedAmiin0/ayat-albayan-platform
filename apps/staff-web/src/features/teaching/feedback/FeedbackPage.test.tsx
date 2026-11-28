@@ -45,19 +45,19 @@ describe('FeedbackPage (admin)', () => {
   it('lists the answers with kind, rating and recommendation; a pending request says it has not answered', async () => {
     open();
     const rows = await screen.findAllByRole('row');
-    const done = rows.find((r) => r.textContent?.includes('سهيلة'));
+    const done = rows.find((r) => r.textContent.includes('سهيلة'));
     expect(done?.textContent).toContain(t.enums.feedbackKind.trial);
     expect(done?.textContent).toContain('+201001234567');
     expect(done?.textContent).toContain(t.feedback.outOf.replace('{n}', '5'));
     expect(done?.textContent).toContain(t.enums.feedbackRecommend.yes);
-    expect(rows.find((r) => r.textContent?.includes('جود'))?.textContent).toContain(t.feedback.pending);
+    expect(rows.find((r) => r.textContent.includes('جود'))?.textContent).toContain(t.feedback.pending);
   });
 
   it('folds the family’s number under the name, spells the date with its whole year, and gives a waiting row a hollow chip', async () => {
     open();
     const rows = await screen.findAllByRole('row');
-    const done = rows.find((r) => r.textContent?.includes('سهيلة'));
-    const wait = rows.find((r) => r.textContent?.includes('جود'));
+    const done = rows.find((r) => r.textContent.includes('سهيلة'));
+    const wait = rows.find((r) => r.textContent.includes('جود'));
     expect(done?.textContent).toContain('2026');
     expect(screen.queryByRole('columnheader', { name: t.feedback.contact })).toBeNull();
     expect(screen.getByRole('columnheader', { name: t.feedback.recommendShort })).toBeTruthy();

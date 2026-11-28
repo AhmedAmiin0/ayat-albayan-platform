@@ -42,7 +42,7 @@ export function PhoneInviteeInput({
           )}
         </Field>
       </div>
-      <Button type="button" variant="secondary" disabled={disabled || !phone.trim()} onClick={() => add()}>
+      <Button type="button" variant="secondary" disabled={disabled === true || !phone.trim()} onClick={() => add()}>
         {L.addPhone}
       </Button>
     </div>

@@ -8,7 +8,7 @@ export const Route = createFileRoute('/admin/settings/communications')({
   validateSearch: parseCommunicationsSearch,
   beforeLoad: ({ search }) => {
     const to = timingRedirect(search);
-    if (to) throw redirect(to);
+    if (to) redirect({ ...to, throw: true });
   },
   component: CommunicationsRoute,
 });

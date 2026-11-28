@@ -42,7 +42,7 @@ describe('FeedbackForm «رأيك يهمّنا»', () => {
       t.feedback.note,
       t.feedback.contact,
     ];
-    const text = document.body.textContent ?? '';
+    const text = document.body.textContent;
     const at = titles.map((x) => text.indexOf(x));
     expect(at.every((i) => i >= 0)).toBe(true);
     expect([...at].sort((a, b) => a - b)).toEqual(at);

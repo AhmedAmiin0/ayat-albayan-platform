@@ -66,7 +66,9 @@ describe('«ترتيب البديل»', () => {
   it('a refetched rank resets the input (no stale value)', async () => {
     const { client } = renderPanel(apiFetch);
     const c = await card();
-    act(() => client.setQueryData(numbersQuery.queryKey, [numberView({ fallback_rank: 42 })]));
+    act(() => {
+      client.setQueryData(numbersQuery.queryKey, [numberView({ fallback_rank: 42 })]);
+    });
     await waitFor(() => expect((c.getByRole<HTMLInputElement>('spinbutton', { name: r.label })).value).toBe('42'));
   });
 

@@ -40,7 +40,7 @@ describe('تقرير الحلقة: titles and order', () => {
       'الحضور',
       'رابط الاجتماع',
     ];
-    const text = identity.textContent ?? '';
+    const text = identity.textContent;
     const at = order.map((x) => text.indexOf(x));
     expect(at.every((i) => i >= 0)).toBe(true);
     expect([...at].sort((a, b) => a - b)).toEqual(at);

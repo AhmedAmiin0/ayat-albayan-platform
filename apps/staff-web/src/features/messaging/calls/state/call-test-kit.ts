@@ -33,16 +33,22 @@ export function fakeRtc(): RtcDeps & {
     remoteDescription: null as { sdp: string } | null,
     addTrack: vi.fn(),
     close: vi.fn(),
-    createOffer: async () => ({ type: 'offer', sdp: 'v=0 ours' }),
-    createAnswer: async () => ({ type: 'answer', sdp: 'v=0 answer' }),
-    setLocalDescription: async (d: { sdp: string }) => void (pc.localDescription = d),
-    setRemoteDescription: async (d: { sdp: string }) => void (pc.remoteDescription = d),
+    createOffer: () => Promise.resolve({ type: 'offer', sdp: 'v=0 ours' }),
+    createAnswer: () => Promise.resolve({ type: 'answer', sdp: 'v=0 answer' }),
+    setLocalDescription: (d: { sdp: string }) => {
+      pc.localDescription = d;
+      return Promise.resolve();
+    },
+    setRemoteDescription: (d: { sdp: string }) => {
+      pc.remoteDescription = d;
+      return Promise.resolve();
+    },
   });
   return {
     pc,
     track,
     createPeer: () => pc as unknown as RTCPeerConnection,
-    getMic: async () => stream as unknown as MediaStream,
+    getMic: () => Promise.resolve(stream as unknown as MediaStream),
   };
 }
 

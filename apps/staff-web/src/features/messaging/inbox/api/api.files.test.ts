@@ -80,7 +80,7 @@ describe('threadPdfPageQuery (owner 2026-10-29)', () => {
     vi.mocked(apiFetch).mockResolvedValue(page);
     const q = threadPdfPageQuery(PHONE, 'm-1', 3);
     expect(q.queryKey).toEqual(['thread-pdf', PHONE, 'm-1', 3]);
-    await expect(new QueryClient().fetchQuery(q)).resolves.toEqual(page);
+    await expect(new QueryClient().query(q)).resolves.toEqual(page);
     expect(apiFetch).toHaveBeenCalledWith('/threads/%2B966501234567/messages/m-1/pdf/3');
   });
 

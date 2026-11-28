@@ -23,7 +23,7 @@ export function GradePicker(props: GradePickerProps) {
   return (
     <fieldset
       disabled={disabled}
-      aria-invalid={invalid || undefined}
+      aria-invalid={invalid ? true : undefined}
       className={cn(
         'grid gap-1.5 border-b border-rule py-2.5 last:border-b-0 sm:grid-cols-[12rem_1fr] sm:items-center',
         emphasis && 'mt-3 border-t-2 border-t-rule-strong pt-4',

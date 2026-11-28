@@ -12,7 +12,7 @@ export interface RatingScaleProps {
 /** Native radios styled as 48px circles so a thumb hits them on a phone. */
 export function RatingScale({ value, onChange, invalid }: RatingScaleProps) {
   return (
-    <fieldset aria-invalid={invalid || undefined} className="grid gap-2">
+    <fieldset aria-invalid={invalid ? true : undefined} className="grid gap-2">
       <legend className="mb-1 text-sm font-semibold">
         {t.feedback.rating}
         <RequiredMark />

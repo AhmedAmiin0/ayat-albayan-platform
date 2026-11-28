@@ -32,5 +32,5 @@ export function useCrmStatus(onNotice: (notice: Notice) => void) {
     (tpl: TemplateView, status: CrmTemplateStatus) => mutate({ key: tpl.key, status }),
     [mutate],
   );
-  return { busyKey: save.isPending ? (save.variables?.key ?? null) : null, onSet };
+  return { busyKey: save.isPending ? save.variables.key : null, onSet };
 }

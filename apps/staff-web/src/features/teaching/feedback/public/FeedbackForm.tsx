@@ -42,7 +42,7 @@ export function FeedbackForm({ token, form, onDone }: FeedbackFormProps) {
   const [rating, setRating] = useState<FeedbackRating | null>(null);
   const [recommend, setRecommend] = useState<FeedbackRecommend | null>(null);
   const [note, setNote] = useState('');
-  const [phone, setPhone] = useState(form.contactPhone ?? '');
+  const [phone, setPhone] = useState(form.contactPhone);
   const [tried, setTried] = useState(false);
   const ref = useRef<HTMLFormElement>(null);
   const send = useMutation({

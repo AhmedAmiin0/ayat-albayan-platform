@@ -110,7 +110,7 @@ export function DataTable<T extends RowData>({
         />
       )}
       {/* `relative` keeps absolute sr-only text inside the scroll clip (phone width). */}
-      <div data-table-box={fill || undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>
+      <div data-table-box={fill ? true : undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>
         {/* An empty fixed-height box: the one «nothing here» row fills it, its text centred. */}
         <table aria-label={label} className={cn('w-full border-collapse text-sm', fill && rows.length === 0 && 'h-full')}>
           <DataTableHead table={table} sort={sort} />

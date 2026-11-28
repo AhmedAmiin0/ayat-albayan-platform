@@ -49,7 +49,7 @@ function renderRow(mode: InboxMode, patch: Parameters<typeof thread>[0]) {
 /** What a person can read or hear: text and every accessible name, never the route's href. */
 function readable(): string {
   const labels = [...document.querySelectorAll('[aria-label],[title],[placeholder]')].map(
-    (el) => `${el.getAttribute('aria-label')} ${el.getAttribute('title')} ${el.getAttribute('placeholder')}`,
+    (el) => `${el.getAttribute('aria-label') ?? ''} ${el.getAttribute('title') ?? ''} ${el.getAttribute('placeholder') ?? ''}`,
   );
   return `${document.body.textContent} ${labels.join(' ')}`;
 }

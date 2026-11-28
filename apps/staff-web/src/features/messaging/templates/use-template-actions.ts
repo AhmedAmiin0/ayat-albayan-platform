@@ -63,6 +63,6 @@ export function useTemplateActions() {
     submit,
     move,
     toggleStarter: starter.mutate,
-    savingStarter: starter.isPending ? (starter.variables?.key ?? null) : null,
+    savingStarter: starter.isPending ? starter.variables.key : null,
   };
 }

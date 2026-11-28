@@ -44,7 +44,7 @@ export function CountInput({
         value={value}
         disabled={disabled}
         aria-describedby={describedBy}
-        aria-invalid={invalid || undefined}
+        aria-invalid={invalid ? true : undefined}
         onChange={(e) => onChange(e.target.value)}
         className={cn('w-20 tabular-nums', NO_SPIN)}
       />

@@ -8,7 +8,7 @@ export const Route = createFileRoute('/admin')({
   beforeLoad: async ({ context, location }) => {
     const me = await requireRole(context.queryClient, 'admin');
     const to = adminRedirect(me, location.pathname);
-    if (to && to !== location.pathname) throw redirect({ to });
+    if (to && to !== location.pathname) redirect({ to, throw: true });
   },
   component: AdminShell,
 });

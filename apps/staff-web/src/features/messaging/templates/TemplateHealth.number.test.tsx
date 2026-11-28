@@ -29,7 +29,9 @@ async function renderNumbers(withPhones: boolean) {
   await screen.findByText(t.templates.names.booking_confirmation_plain);
   await screen.findAllByText('waba-c');
   if (!withPhones) return;
-  act(() => client.setQueryData(linesCheckQuery.queryKey, [checked('notifications', null), checked('chat', CHAT_PHONE)]));
+  act(() => {
+    client.setQueryData(linesCheckQuery.queryKey, [checked('notifications', null), checked('chat', CHAT_PHONE)]);
+  });
   await screen.findAllByText(CHAT_PHONE);
 }
 

@@ -64,8 +64,14 @@ beforeEach(() => {
   vi.spyOn(document, 'hasFocus').mockReturnValue(true);
   const add = document.addEventListener.bind(document);
   const remove = document.removeEventListener.bind(document);
-  vi.spyOn(document, 'addEventListener').mockImplementation((t, h, o) => (t === 'visibilitychange' && handlers.add(h), add(t, h, o)));
-  vi.spyOn(document, 'removeEventListener').mockImplementation((t, h, o) => (handlers.delete(h), remove(t, h, o)));
+  vi.spyOn(document, 'addEventListener').mockImplementation((t, h, o) => {
+    if (t === 'visibilitychange') handlers.add(h);
+    add(t, h, o);
+  });
+  vi.spyOn(document, 'removeEventListener').mockImplementation((t, h, o) => {
+    handlers.delete(h);
+    remove(t, h, o);
+  });
 });
 afterEach(() => {
   vi.useRealTimers();

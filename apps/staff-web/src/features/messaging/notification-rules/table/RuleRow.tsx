@@ -38,7 +38,7 @@ function RowView({ entry, lines, row }: ViewProps) {
     <>
       <tr
         data-key={entry.key}
-        aria-busy={row?.saving || undefined}
+        aria-busy={row?.saving ? true : undefined}
         className={cn(dirty && 'bg-lapis-wash')}
       >
         <th

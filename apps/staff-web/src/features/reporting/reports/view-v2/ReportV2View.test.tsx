@@ -23,7 +23,7 @@ describe('the admin reads a new-form report (read-only)', () => {
     });
     const report = { ...sent, content, grade_overall: 'very_good' as const, homework: 'مراجعة الملك', next_plan: 'الملك 23–29', notes: 'تحسّن واضح' };
     const article = await openV2({ apiFetch, role: 'admin', report });
-    const text = article.textContent ?? '';
+    const text = article.textContent;
     expect(screen.getByText(v2.admin.v2Badge)).toBeTruthy();
     expect(screen.getByText(v2.attendance.on_time)).toBeTruthy();
     expect(screen.getByText(`سورة الملك · الآيات 1–15 · ${t.enums.grade.excellent}`)).toBeTruthy();

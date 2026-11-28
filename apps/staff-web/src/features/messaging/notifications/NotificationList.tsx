@@ -23,7 +23,7 @@ export function NotificationList({ onPick }: { onPick: () => void }) {
       </div>
     );
   }
-  const items = list.data?.items ?? [];
+  const items = list.data.items;
   if (items.length === 0) return <p className="px-4 py-6 text-center text-ink-3">{t.bell.empty}</p>;
   return (
     <ul className="divide-y divide-rule">

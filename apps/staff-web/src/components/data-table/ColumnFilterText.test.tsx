@@ -13,11 +13,17 @@ describe('ColumnFilterText', () => {
     const box = screen.getByRole('searchbox', { name: 'الاسم' });
     expect(box.getAttribute('placeholder')).toBe(t.table.searchPlaceholder);
     fireEvent.change(box, { target: { value: 'سه' } });
-    act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS - 1));
+    act(() => {
+      vi.advanceTimersByTime(FILTER_DEBOUNCE_MS - 1);
+    });
     fireEvent.change(box, { target: { value: 'سهيلة ' } });
-    act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS - 1));
+    act(() => {
+      vi.advanceTimersByTime(FILTER_DEBOUNCE_MS - 1);
+    });
     expect(onChange).not.toHaveBeenCalled();
-    act(() => vi.advanceTimersByTime(1));
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
     expect(onChange).toHaveBeenCalledExactlyOnceWith('سهيلة');
   });
 
@@ -27,7 +33,9 @@ describe('ColumnFilterText', () => {
     const box = screen.getByRole('searchbox');
     fireEvent.change(box, { target: { value: 'هدى' } });
     fireEvent.blur(box);
-    act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS * 2));
+    act(() => {
+      vi.advanceTimersByTime(FILTER_DEBOUNCE_MS * 2);
+    });
     fireEvent.blur(box);
     expect(onChange).toHaveBeenCalledExactlyOnceWith('هدى');
   });
@@ -41,7 +49,9 @@ describe('ColumnFilterText', () => {
     fireEvent.change(box, { target: { value: ' هدى ' } });
     fireEvent.keyDown(box, { key: 'Enter' });
     expect(onChange).toHaveBeenCalledExactlyOnceWith('هدى');
-    act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS * 2));
+    act(() => {
+      vi.advanceTimersByTime(FILTER_DEBOUNCE_MS * 2);
+    });
     expect(onChange).toHaveBeenCalledOnce();
   });
 

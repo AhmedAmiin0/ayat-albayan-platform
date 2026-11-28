@@ -62,7 +62,9 @@ describe('DataTable filters', () => {
     fireEvent.change(screen.getByRole('searchbox', { name: by(t.students.name) }), {
       target: { value: 'فاطمة' },
     });
-    act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));
+    act(() => {
+      vi.advanceTimersByTime(FILTER_DEBOUNCE_MS);
+    });
     expect(names()).toEqual(['فاطمة', 'فاطمه علي']);
     openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by('الحالة') }), {
@@ -86,7 +88,9 @@ describe('DataTable filters', () => {
     );
     expect(names()).toHaveLength(3);
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'أحمد' } });
-    act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));
+    act(() => {
+      vi.advanceTimersByTime(FILTER_DEBOUNCE_MS);
+    });
     expect(onChange).toHaveBeenCalledWith('name', 'أحمد');
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'paused' } });
     expect(onChange).toHaveBeenLastCalledWith('st', 'paused');

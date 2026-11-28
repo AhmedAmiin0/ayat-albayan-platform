@@ -5,7 +5,7 @@ import { parsePayReturn, PayPage, stripeBuild } from '@/features/sales/payment-l
 export const Route = createFileRoute('/(public)/pay/$token')({
   validateSearch: parsePayReturn,
   beforeLoad: () => {
-    if (!stripeBuild()) throw notFound();
+    if (!stripeBuild()) notFound({ throw: true });
   },
   component: PayRoute,
 });

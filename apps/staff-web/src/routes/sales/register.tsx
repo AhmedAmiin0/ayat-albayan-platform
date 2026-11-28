@@ -4,6 +4,6 @@ import { registerRedirect } from '@/features/sales/sales/registration/register-r
 /** Old /sales/register links land on the inbox (that chat when known): registering starts there. */
 export const Route = createFileRoute('/sales/register')({
   beforeLoad: ({ search }) => {
-    throw redirect(registerRedirect(search));
+    redirect({ ...registerRedirect(search), throw: true });
   },
 });

@@ -54,4 +54,4 @@ export const pick = {
 
 /** Each side sits in its own nowrap span, so match on the paragraph's text. */
 export const confirmLine = (re: RegExp) =>
-  screen.getByText((_, el) => el?.tagName === 'P' && re.test(el.textContent ?? ''));
+  screen.getByText((_, el) => el?.tagName === 'P' && re.test(el.textContent));

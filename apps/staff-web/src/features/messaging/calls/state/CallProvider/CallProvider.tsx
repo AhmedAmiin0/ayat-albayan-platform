@@ -53,7 +53,7 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
 
   const call = async (target: CallTarget) => {
     try {
-      const p = await client.fetchQuery(callPermissionQuery(target.phone));
+      const p = await client.query(callPermissionQuery(target.phone));
       const sheet = askOf(target.phone, p);
       if (sheet) setAsk(sheet);
       else s.store.begin(target);
@@ -70,7 +70,10 @@ export function CallProvider({ children, showsPhone = true, rtc }: CallProviderP
         s={s}
         showsPhone={showsPhone}
         ask={ask}
-        onAsk={(next) => (setAsk(null), setSent(next === 'sent'))}
+        onAsk={(next) => {
+          setAsk(null);
+          setSent(next === 'sent');
+        }}
         onSilence={setSilenced}
       />
       {sent && <Toast message={t.calls.permission.requestSent} onDismiss={() => setSent(false)} />}

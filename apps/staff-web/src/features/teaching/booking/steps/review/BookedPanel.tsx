@@ -126,7 +126,10 @@ export function BookedPanel({
           invoiceId={invoice.id}
           student={subscribeFor}
           onClose={() => setPaying(false)}
-          onSaved={() => (setPaying(false), setPaid(true))}
+          onSaved={() => {
+            setPaying(false);
+            setPaid(true);
+          }}
         />
       )}
       {paid && <p className="font-semibold text-ok">{t.payments.saved}</p>}

@@ -7,7 +7,7 @@ export const Route = createFileRoute('/admin/settings/integrations')({
   validateSearch: parseOauthReturnSearch,
   beforeLoad: ({ search }) => {
     const to = oauthReturnRedirect(search);
-    if (to) throw redirect(to);
+    if (to) redirect({ ...to, throw: true });
   },
   component: IntegrationsPage,
 });
