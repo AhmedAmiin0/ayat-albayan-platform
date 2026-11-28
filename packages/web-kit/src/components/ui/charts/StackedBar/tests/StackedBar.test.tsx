@@ -50,6 +50,15 @@ describe('StackedBar', () => {
     expect(glyphs).toEqual(['fill', 'hollow', 'struck']);
   });
 
+  it('colours each legend glyph like its segment, so the key maps to the bar', () => {
+    const { container } = render(<StackedBar label="x" segments={SEGMENTS} />);
+    const ink = (key: string) =>
+      container.querySelector(`[data-segment="${key}"] [data-glyph]`)?.getAttribute('class');
+    expect(ink('held')).toMatch(/text-ink-3/);
+    expect(ink('planned')).toMatch(/text-ink-2/);
+    expect(ink('missed')).toMatch(/text-danger/);
+  });
+
   it('makes a legend entry a button only when its segment can be selected', () => {
     const onSelect = vi.fn();
     render(

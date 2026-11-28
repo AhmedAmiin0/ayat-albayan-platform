@@ -4,6 +4,7 @@ import type { DrawnSegment, ShareSegment } from './StackedBar.types';
 
 // Neutral segments alternate four inks; saffron and danger are kept for flagged ones (docs/66 §2).
 const NEUTRAL_FILLS = ['bg-ink-3', 'bg-ink-2', 'bg-rule-strong', 'bg-ink'] as const;
+const NEUTRAL_INKS = ['text-ink-3', 'text-ink-2', 'text-rule-strong', 'text-ink'] as const;
 
 const FLAG_FILL = z.record(shareFlagSchema, z.string()).readonly().decode({
   act: 'bg-act',
@@ -16,6 +17,10 @@ const FLAG_INK = z.record(shareFlagSchema, z.string()).readonly().decode({
 
 function neutralFill(index: number): string {
   return NEUTRAL_FILLS[index % NEUTRAL_FILLS.length] ?? 'bg-ink-3';
+}
+
+function neutralInk(index: number): string {
+  return NEUTRAL_INKS[index % NEUTRAL_INKS.length] ?? 'text-ink-3';
 }
 
 export function totalOf(segments: readonly ShareSegment[]): number {
@@ -32,7 +37,7 @@ export function drawSegments(segments: readonly ShareSegment[]): DrawnSegment[] 
       share,
       percent: `${Math.round(share * 100)}%`,
       fill: s.flag === undefined ? neutralFill(i) : FLAG_FILL[s.flag],
-      ink: s.flag === undefined ? 'text-ink-2' : FLAG_INK[s.flag],
+      ink: s.flag === undefined ? neutralInk(i) : FLAG_INK[s.flag],
     };
   });
 }
