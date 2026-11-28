@@ -1,1 +1,2 @@
-export { BubbleMeta, type BubbleMetaProps } from './BubbleMeta';
+export { BubbleMeta } from './BubbleMeta';
+export type { BubbleMetaProps } from './BubbleMeta.types';
