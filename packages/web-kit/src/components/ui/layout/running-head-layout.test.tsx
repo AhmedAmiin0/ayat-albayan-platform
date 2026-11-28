@@ -18,6 +18,7 @@ describe('RunningHead layouts', () => {
   it('wrap (default): the row wraps and the clocks show from 640px', () => {
     const { container } = render(<RunningHead crumbs={crumbs} />);
     expect(classesOf(container.firstElementChild)).toContain('flex-wrap');
+    expect(container.firstElementChild?.hasAttribute('data-running-head')).toBe(true);
     expect(classesOf(container.firstElementChild)).not.toContain('@container');
     expect(classesOf(dates())).toEqual(expect.arrayContaining(['hidden', 'sm:flex']));
     expect(classesOf(cities())).toEqual(expect.arrayContaining(['hidden', 'sm:flex']));

@@ -64,6 +64,7 @@ export function RunningHead({
   const head = formatRunningHead(useMinuteClock(), locale, useClock().cycle);
   return (
     <div
+      data-running-head
       className={cn(
         'flex min-h-[54px] flex-wrap items-center justify-between gap-x-5 gap-y-2 text-xs text-ink-3',
         ROW[layout],
