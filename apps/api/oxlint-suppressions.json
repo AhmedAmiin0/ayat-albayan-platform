@@ -1710,11 +1710,6 @@
       "count": 5
     }
   },
-  "src/modules/messaging/notification-rules/rules.migration.test.ts": {
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
   "src/modules/messaging/notification-rules/rules.repo.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -1750,16 +1745,6 @@
   },
   "src/modules/messaging/saved-replies/saved-replies.controller.ts": {
     "ab/zod-inputs": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/whatsapp/drivers/crm/crm.client.ts": {
-    "no-restricted-globals": {
-      "count": 1
-    }
-  },
-  "src/modules/messaging/whatsapp/messages/crm-history/crm-media.fetch.ts": {
-    "no-restricted-globals": {
       "count": 1
     }
   },
