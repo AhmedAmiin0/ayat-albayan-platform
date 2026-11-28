@@ -1,7 +1,7 @@
 import { defineRoute } from '@ab/core';
 import { z } from 'zod';
 
-const TAGS = ['webhooks'] as const;
+const ACCESS = { tags: ['webhooks'], isPublic: true } as const;
 
 const meAnswerSchema = z.object({
   data: z.object({
@@ -24,12 +24,12 @@ export const relayRoutes = {
     method: 'GET',
     path: '/script-relay/api/v1/me',
     response: meAnswerSchema,
-    tags: TAGS,
+    ...ACCESS,
   }),
   send: defineRoute({
     method: 'POST',
     path: '/script-relay/api/v1/messages',
     response: sentAnswerSchema,
-    tags: TAGS,
+    ...ACCESS,
   }),
 };

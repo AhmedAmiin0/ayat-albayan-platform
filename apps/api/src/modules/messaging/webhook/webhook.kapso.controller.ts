@@ -1,5 +1,4 @@
 import { Controller, Headers, HttpCode, Inject, Logger, Req, UnauthorizedException } from '@nestjs/common';
-import { Public } from '@/common/auth/decorators';
 import { Route } from '@/common/http/route';
 import { presentSignatureHeaders, verifyKapsoSignature, type KapsoSignedRequest } from '@/modules/messaging/webhook/parse/webhook.kapso-signature';
 import { RESPONSE_BUDGET_MS, WebhookService, within, type WebhookConfig } from './webhook.service';
@@ -19,7 +18,6 @@ interface RawRequest {
  * only (never a Meta app secret). Answers within RESPONSE_BUDGET_MS (Kapso gives up after 10 s,
  * retries 3 times and pauses a webhook that keeps failing).
  */
-@Public()
 @Controller()
 export class KapsoWebhookController {
   private readonly log = new Logger(KapsoWebhookController.name);
