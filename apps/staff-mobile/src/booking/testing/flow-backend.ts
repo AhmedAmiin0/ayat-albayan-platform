@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { huda, unnamed } from '@/inbox/shared/fixtures';
 import { FakeBackend } from '@/test/fake-backend';
 import { booked, SUN_17 } from './fixtures';
@@ -15,7 +16,7 @@ export function bookingBackend() {
       const items = state.leads.filter((l) => !query['status'] || l.status === query['status']);
       return { items, total: items.length, page: 1, pageSize: 25 };
     })
-    .on('GET /settings', () => ({ follow_up_hours: [2, 24, 72], renewal_alert_remaining: 2 }))
+    .on('GET /settings', () => ({ ...SETTING_DEFAULTS, follow_up_hours: [2, 24, 72] }))
     .on('GET /booking/teachers', ({ path }) => booking.fetch(path))
     .on('GET /booking/slots', ({ path }) => booking.fetch(path))
     .on('POST /booking', () => {

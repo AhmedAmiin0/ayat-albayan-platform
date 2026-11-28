@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { page, STUDENT, subscription } from '@/payments/fixtures';
@@ -30,7 +31,7 @@ const gone = subscription({
 
 beforeEach(() => {
   mockApiFetch.mockReset().mockImplementation(async (path: string) => {
-    if (path === '/settings') return { renewal_alert_remaining: 2 };
+    if (path === '/settings') return { ...SETTING_DEFAULTS, renewal_alert_remaining: 2 };
     if (path.startsWith('/admin-tasks')) return page([]);
     return page([mistake, gone]);
   });

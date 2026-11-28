@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t } from '@ab/mobile-kit';
 import { balanceOf, page, subscription, SUB_ID } from '@/payments/fixtures';
@@ -18,7 +19,7 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 function serve(balance: unknown) {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/students/s1/balance') return balance;
-    if (path === '/settings') return { renewal_alert_remaining: 2 };
+    if (path === '/settings') return { ...SETTING_DEFAULTS, renewal_alert_remaining: 2 };
     return page([]);
   });
 }

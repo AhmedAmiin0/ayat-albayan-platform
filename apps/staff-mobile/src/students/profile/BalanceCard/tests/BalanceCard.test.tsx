@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { screen, waitFor } from '@testing-library/react-native';
 import { ApiError, t, palette } from '@ab/mobile-kit';
 import { balanceOf, page, payment, subscription } from '@/payments/fixtures';
@@ -24,7 +25,7 @@ const left = (remaining: number) =>
 function serve(balance: unknown, threshold = 2) {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/students/s1/balance') return balance;
-    if (path === '/settings') return { renewal_alert_remaining: threshold };
+    if (path === '/settings') return { ...SETTING_DEFAULTS, renewal_alert_remaining: threshold };
     if (path.startsWith('/payments?')) return { ...page([payment()]), totals: [] };
     throw new ApiError(404);
   });

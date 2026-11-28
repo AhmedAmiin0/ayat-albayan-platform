@@ -6,7 +6,7 @@ import {
   type TranslationOverrides,
 } from '@ab/i18n';
 import { Controller, Headers, HttpCode, Res } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { asResponse } from '@/common/http/returns';
@@ -24,7 +24,6 @@ interface CacheReply {
  * needs it before sign-in), cached 60 s and revalidated by ETag; the editor routes are admin only.
  * Writes are recorded by the global ActivityInterceptor ('/i18n/:locale/:key').
  */
-@ApiTags('i18n')
 @Controller()
 export class TranslationsController {
   constructor(private readonly translations: TranslationsService) {}

@@ -1,3 +1,4 @@
+import { SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@ab/mobile-kit';
 import { balanceOf, page, subscription, SUB_ID } from '@/payments/fixtures';
@@ -23,7 +24,7 @@ function serve(me?: object) {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path === '/auth/me' && me) return me;
     if (path === '/students/s1/balance') return balanceOf(subscription({ starts_on: '2026-01-01' }));
-    if (path === '/settings') return { renewal_alert_remaining: 2 };
+    if (path === '/settings') return { ...SETTING_DEFAULTS, renewal_alert_remaining: 2 };
     if (path === STATE) return STATE_BODY;
     return page([]);
   });
