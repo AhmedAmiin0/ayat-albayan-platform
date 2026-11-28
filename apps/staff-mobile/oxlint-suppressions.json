@@ -12,11 +12,6 @@
       "count": 1
     }
   },
-  "app/_layout.tsx": {
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
   "src/account/components/AccountSummary.tsx": {
     "stylistic/max-len": {
       "count": 1

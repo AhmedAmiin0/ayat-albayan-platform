@@ -41,3 +41,12 @@ jest.mock('@expo/ui/community/datetime-picker', () => {
   const DateTimePicker = (props) => require('react').createElement(View, { testID: 'native-date-time-picker', ...props });
   return { __esModule: true, default: DateTimePicker, DateTimePicker };
 });
+
+// EAS Observe (src/core/root/observed-root): jest has no native ExpoObserve module.
+jest.mock('expo-observe', () =>
+  jest.requireActual('@ab/testing/expo-observe').observeModule({
+    fn: jest.fn,
+    createElement: jest.requireActual('react').createElement,
+    View: jest.requireActual('react-native').View,
+  }),
+);

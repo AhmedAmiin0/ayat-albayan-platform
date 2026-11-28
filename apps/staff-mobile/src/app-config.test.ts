@@ -43,8 +43,8 @@ test('LiveKit (docs/35): its expo plugin with the communication audio type, no s
   ]);
 });
 
-test('version 0.7.0, the APK with the biometric lock modules (an OTA never reaches 0.6.x); no forcesRTL', () => {
-  expect(app.expo.version).toBe('0.7.0');
+test('version 0.8.0, the APK with expo-observe (an OTA never reaches 0.7.x); no forcesRTL', () => {
+  expect(app.expo.version).toBe('0.8.0');
   expect(JSON.stringify(app)).not.toContain('forcesRTL');
 });
 
