@@ -7,7 +7,7 @@ import { profile as student } from '@/students/shared/test-data';
 
 export const CHILD = '44444444-4444-4444-8444-444444444444';
 export const SISTER = '55555555-5555-4555-8555-555555555555';
-export const GUARDIAN = '33333333-3333-4333-8333-333333333333';
+const GUARDIAN = '33333333-3333-4333-8333-333333333333';
 
 export const profile: StudentProfile = {
   ...student,
