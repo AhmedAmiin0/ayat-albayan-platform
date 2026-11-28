@@ -15,7 +15,10 @@ import { JoinLinkService } from './join/join-link.service';
 import { JoinLinkStaffService } from './join/join-link.staff.service';
 import { RoomJoinService } from './join/room-join.service';
 
-/** Online classroom, staff side. The service decides who may enter (admin, the lesson's teacher, an assigned assistant). */
+/**
+ * Online classroom, staff side. The service decides who may enter (admin, the lesson's teacher, an
+ * assigned assistant).
+ */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('classroom.join')

@@ -12,8 +12,9 @@ const DAY_MS = 86_400_000;
 
 /**
  * Recording clean-up: marks rows stuck in `recording` for over 6 hours as failed, and (only when
- * the owner set `recording_retention_days`) deletes the files of older recordings (internal-meeting recordings too) and keeps the
- * rows as `deleted`. Idempotent: both sweeps select only rows they have not handled.
+ * the owner set `recording_retention_days`) deletes the files of older recordings (internal-meeting
+ * recordings too) and keeps the rows as `deleted`. Idempotent: both sweeps select only rows they
+ * have not handled.
  */
 @Injectable()
 export class RecordingRetention {
@@ -25,7 +26,10 @@ export class RecordingRetention {
     private readonly eraser: RecordingEraser,
   ) {}
 
-  /** Whole days, or null = keep forever (unset, not a positive integer, or unreadable). Never throws. */
+  /**
+   * Whole days, or null = keep forever (unset, not a positive integer, or unreadable). Never
+   * throws.
+   */
   async days(): Promise<number | null> {
     try {
       const v = (await this.settings.read())[RETENTION_KEY];

@@ -47,7 +47,10 @@ export class BookingInvoices {
     private readonly queries: BookingRepo,
   ) {}
 
-  /** POST /booking/invoice-upload-url: a signed PUT for invoices/{clientRequestId}/{uuid}.{ext}; 400 invoice_too_large over maxBytes. */
+  /**
+   * POST /booking/invoice-upload-url: a signed PUT for invoices/{clientRequestId}/{uuid}.{ext}; 400
+   * invoice_too_large over maxBytes.
+   */
   uploadUrl(input: InvoiceUpload, maxBytes = INVOICE_MAX_BYTES): Promise<SignedUpload> {
     if (input.size > maxBytes) return Promise.reject(bad('invoice_too_large'));
     const path = invoicePath({ requestId: input.clientRequestId, name: uploadName(input.mime) });
@@ -56,9 +59,10 @@ export class BookingInvoices {
   }
 
   /**
-   * The invoice row to store, null for a trial (a stray invoice is dropped) or a waived one. 400 invoice_required /
-   * request_id_required / invoice_path / invoice_message / invoice_type, 410 media_expired, 413.
-   * A replay (the request already stored its invoice) returns that row and copies nothing.
+   * The invoice row to store, null for a trial (a stray invoice is dropped) or a waived one. 400
+   * invoice_required / request_id_required / invoice_path / invoice_message / invoice_type, 410
+   * media_expired, 413. A replay (the request already stored its invoice) returns that row and
+   * copies nothing.
    */
   async resolve(req: BookingRequest, scope: InvoiceScope): Promise<InvoiceRow | null> {
     const kind = bookingKindOf(req);

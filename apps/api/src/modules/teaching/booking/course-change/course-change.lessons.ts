@@ -20,7 +20,10 @@ interface CourseLesson extends CourseLessonFact {
 export class CourseLessonRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Every lesson of these rules of the student, any time and status: what the course uses (with ids). */
+  /**
+   * Every lesson of these rules of the student, any time and status: what the course uses (with
+   * ids).
+   */
   async ofCourse(input: {
     ruleIds: readonly string[];
     studentId: string;

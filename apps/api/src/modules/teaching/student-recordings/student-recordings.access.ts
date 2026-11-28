@@ -6,7 +6,9 @@ import type { ManageRule } from './student-recordings.mapper';
 import { StudentRecordingRepo } from './student-recordings.repo';
 import { isAdmin } from '@/common/auth/roles';
 
-/** Which of a student's lessons a login may see recordings of: `onlyTeacherId` null = all of them. */
+/**
+ * Which of a student's lessons a login may see recordings of: `onlyTeacherId` null = all of them.
+ */
 interface RecordingScope {
   onlyTeacherId: string | null;
   /** Which rows the login may show/hide from the student. */
@@ -16,8 +18,9 @@ interface RecordingScope {
 /**
  * Who may open a student's recordings (rule 9, the API being the gate): any admin; a teacher for
  * the lessons THEY taught, and for every lesson of a student currently assigned to them; an
- * assistant only for students assigned to them (student_assistants). Nobody else: another
- * teacher's student, an unassigned assistant, sales and guardians (the portal will add its own route and RLS policy).
+ * assistant only for students assigned to them (student_assistants). Nobody else: another teacher's
+ * student, an unassigned assistant, sales and guardians (the portal will add its own route and RLS
+ * policy).
  */
 @Injectable()
 export class StudentRecordingAccess {

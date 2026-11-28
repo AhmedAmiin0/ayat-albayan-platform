@@ -44,7 +44,9 @@ export class ScheduleRepo {
     return data.length;
   }
 
-  /** Active rules that can still produce lessons on or after `today` (local dates are ≤ 1 day off). */
+  /**
+   * Active rules that can still produce lessons on or after `today` (local dates are ≤ 1 day off).
+   */
   activeRuleIds(today: string): Promise<{ id: string }[]> {
     return readAll((from, to) =>
       this.db

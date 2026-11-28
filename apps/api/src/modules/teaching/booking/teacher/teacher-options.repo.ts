@@ -46,7 +46,10 @@ export class TeacherOptionsRepo {
     return (await this.settings.read()).meeting_link_auto;
   }
 
-  /** Teachers among `teacherIds` with at least one weekly availability row (all of them while 24/7 is on). */
+  /**
+   * Teachers among `teacherIds` with at least one weekly availability row (all of them while 24/7
+   * is on).
+   */
   async withAvailability(teacherIds: readonly string[]): Promise<Set<string>> {
     if ((await this.settings.read()).teachers_always_available) return new Set(teacherIds);
     const data = rows(

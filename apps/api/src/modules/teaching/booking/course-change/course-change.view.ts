@@ -29,7 +29,10 @@ interface Booked {
   course: BookedCourse | null;
 }
 
-/** GET /booking/course/change?subscriptionId= (the admin): the course's current days, for the change dialog. */
+/**
+ * GET /booking/course/change?subscriptionId= (the admin): the course's current days, for the change
+ * dialog.
+ */
 @Injectable()
 export class CourseChangeViews {
   constructor(

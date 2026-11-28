@@ -28,7 +28,10 @@ export class BookingService {
     return this.planner.conflicts(req, opts);
   }
 
-  /** `opts` is the server's (PrepareOptions: the assistant's course); the admin controller passes none. */
+  /**
+   * `opts` is the server's (PrepareOptions: the assistant's course); the admin controller passes
+   * none.
+   */
   async book(req: BookingRequest, actorId: string, opts?: PrepareOptions): Promise<BookingResult> {
     // The same request again (a retry, a double click) returns its booking before anything is
     // planned: its own lessons would otherwise show up as clashes.

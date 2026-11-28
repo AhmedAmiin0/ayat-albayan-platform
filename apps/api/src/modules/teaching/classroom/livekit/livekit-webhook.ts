@@ -55,7 +55,9 @@ interface EgressOutcome {
   status: 'done' | 'failed';
   endedAt: string;
   error: string | null;
-  /** The egress' room (`lesson-<id>` / `meeting-<id>`), to record again if people are still in it. */
+  /**
+   * The egress' room (`lesson-<id>` / `meeting-<id>`), to record again if people are still in it.
+   */
   room: string | null;
   /** The uploaded file's size in bytes, when the egress result carries it. */
   sizeBytes?: number;
@@ -98,7 +100,9 @@ function sizeOf(info: Record<string, unknown>): { sizeBytes: number } | Record<s
     : {};
 }
 
-/** egress_ended / egress_updated with a terminal status; camelCase (LiveKit) and snake_case read. */
+/**
+ * egress_ended / egress_updated with a terminal status; camelCase (LiveKit) and snake_case read.
+ */
 export function egressOutcome(event: unknown, now: Date): EgressOutcome | null {
   const info = egressInfoOf(event) ?? {};
   const egressId = str(info.egressId ?? info.egress_id);

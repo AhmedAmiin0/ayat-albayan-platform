@@ -75,7 +75,10 @@ function rowOf(l: TrialLesson, input: HistoryInput): TrialDateRow {
   };
 }
 
-/** GET {base}/trial-dates: the rows, the count, and whether a new date may be picked (and what it moves). */
+/**
+ * GET {base}/trial-dates: the rows, the count, and whether a new date may be picked (and what it
+ * moves).
+ */
 export function trialHistory(input: HistoryInput): TrialHistory {
   const { student, lessons } = input;
   const items = lessons.map((l) => rowOf(l, input));

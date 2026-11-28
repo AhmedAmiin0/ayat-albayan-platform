@@ -38,7 +38,10 @@ export class RecordingAdminRepo {
     );
   }
 
-  /** The file is already gone: the row stays as a record, hidden from students. A deleted row never changes again; returns how many rows changed (0 = someone else got there first). */
+  /**
+   * The file is already gone: the row stays as a record, hidden from students. A deleted row never
+   * changes again; returns how many rows changed (0 = someone else got there first).
+   */
   async markDeleted(id: string, at: string): Promise<number> {
     const data = rows(
       await this.db

@@ -36,10 +36,10 @@ export class PauseClashes {
 }
 
 /**
- * The lessons a resume (or a shortened pause) brings back (docs/11 §7b, R-SCH-04): the resumed rules are topped up
- * from now on their same days and times (the generator stores each clash on its new lesson), and the lessons the
- * RPC reopened or the student rejoined are clash-checked the same way (lessons.conflicts). Every clash is stored
- * and counted for the answer, never dropped.
+ * The lessons a resume (or a shortened pause) brings back (docs/11 §7b, R-SCH-04): the resumed
+ * rules are topped up from now on their same days and times (the generator stores each clash on its
+ * new lesson), and the lessons the RPC reopened or the student rejoined are clash-checked the same
+ * way (lessons.conflicts). Every clash is stored and counted for the answer, never dropped.
  */
 @Injectable()
 export class CoursePauseLessonsBack {
@@ -49,7 +49,10 @@ export class CoursePauseLessonsBack {
     private readonly events: LessonEvents,
   ) {}
 
-  /** How many clashes the lessons back have; then LessonEvents tells the balance alerts which lessons changed. */
+  /**
+   * How many clashes the lessons back have; then LessonEvents tells the balance alerts which
+   * lessons changed.
+   */
   async bookBack(out: RpcOut, actorId: string | null): Promise<number> {
     const found = (await this.regenerate(out, actorId)) + (await this.checkReopened(out));
     await this.events.changed(changedLessons(out));

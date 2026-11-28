@@ -7,7 +7,10 @@ import { SettingsService } from '@/common/settings/settings.service';
 const KEYS = ['auto_messages_enabled'] as const satisfies readonly SettingKey[];
 export type LessonRatingSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
-/** The lesson rating's academy settings (docs/25 §4), read by RatingQueue. One cached store.all(), only these keys. */
+/**
+ * The lesson rating's academy settings (docs/25 §4), read by RatingQueue. One cached store.all(),
+ * only these keys.
+ */
 @Injectable()
 export class LessonRatingSettings {
   constructor(private readonly store: SettingsService) {}

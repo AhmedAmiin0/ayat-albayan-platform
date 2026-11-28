@@ -7,7 +7,9 @@ import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/que
 const HOUR = 60 * 60_000;
 /** Lessons that started this long ago or less still get their rating (the job's look-back). */
 export const RATING_LOOKBACK_MS = 36 * HOUR;
-/** A rating still queued this long after the lesson started is failed «expired», never sent late. */
+/**
+ * A rating still queued this long after the lesson started is failed «expired», never sent late.
+ */
 const RATING_EXPIRES_MS = 72 * HOUR;
 
 export interface RatingGuardian {
@@ -35,7 +37,9 @@ export const ratingDedupKey = (lessonId: string, guardianId: string): string =>
 /** Attendance was recorded, never on a lesson only held automatically. */
 const recorded = (ls: RatingLessonStudent): boolean => ls.attendance !== null;
 
-/** The guardians of the students who attended (feedbackEligible), each with their children's names. */
+/**
+ * The guardians of the students who attended (feedbackEligible), each with their children's names.
+ */
 export function ratingFamilies(
   lesson: RatingLesson,
 ): { guardian: RatingGuardian; names: string[] }[] {
@@ -51,7 +55,9 @@ export function ratingFamilies(
   return [...byGuardian.values()];
 }
 
-/** The lesson took place (completed / late), started already, and not longer ago than the look-back. */
+/**
+ * The lesson took place (completed / late), started already, and not longer ago than the look-back.
+ */
 export function ratingDue(lesson: Pick<RatingLesson, 'starts_at' | 'status'>, now: Date): boolean {
   const age = now.getTime() - Date.parse(lesson.starts_at);
   return (

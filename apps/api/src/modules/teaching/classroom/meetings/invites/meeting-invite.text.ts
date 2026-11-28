@@ -6,7 +6,10 @@ import { INVITE_DEDUP_PREFIX } from './meeting-invitees.repo';
 // R-MEET-02: the invitation's words (ar.json meetingInvites.message, read per call so the admins'
 // overrides apply) and its dedup keys (rule 8). Pure.
 
-/** The instant a meeting's invitations are about: its start as ISO (a '+00:00' row reads the same), or «instant». */
+/**
+ * The instant a meeting's invitations are about: its start as ISO (a '+00:00' row reads the same),
+ * or «instant».
+ */
 export const whenKey = (startsAt: string | null): string =>
   startsAt ? new Date(startsAt).toISOString() : 'instant';
 
@@ -14,7 +17,10 @@ export const whenKey = (startsAt: string | null): string =>
 export const whenText = (startsAt: string | null, tz: string): string =>
   startsAt ? lessonWhenText(new Date(startsAt), tz) : ar.meetingInvites.message.now;
 
-/** The time an invitee reads; a number nobody knows also names the tz it is written in (the creator's). */
+/**
+ * The time an invitee reads; a number nobody knows also names the tz it is written in (the
+ * creator's).
+ */
 export function inviteeWhen(
   startsAt: string | null,
   i: { kind: string; tz: string; display_name: string; phone_e164: string | null },
@@ -33,7 +39,10 @@ export const invitationText = (v: { title: string; when: string; link: string })
 export const cancellationText = (v: { title: string; when: string }): string =>
   fill(ar.meetingInvites.message.cancelled, v);
 
-/** The bell row's subject: PushService keys it `meeting_invite:{meeting}:{startsAt|instant}:{profile}`. */
+/**
+ * The bell row's subject: PushService keys it
+ * `meeting_invite:{meeting}:{startsAt|instant}:{profile}`.
+ */
 export const inviteSubject = (meetingId: string, startsAt: string | null): string =>
   `${meetingId}:${whenKey(startsAt)}`;
 

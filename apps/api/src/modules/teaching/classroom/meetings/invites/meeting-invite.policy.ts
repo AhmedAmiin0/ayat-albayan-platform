@@ -17,7 +17,9 @@ import {
  *   as a link (window_closed, chat_not_allowed) and the creator copies the link and invitation.
  */
 export interface InvitePolicy {
-  /** admin / sales: every student, typed phones, a known guardian's name and the exact error codes. */
+  /**
+   * admin / sales: every student, typed phones, a known guardian's name and the exact error codes.
+   */
   seesAll: boolean;
   mayChat: (phone: string) => boolean;
   /** messages.sent_by_teacher_id of the texts this caller queues: a teacher's own id, else null. */
@@ -26,11 +28,17 @@ export interface InvitePolicy {
 
 export const CHAT_NOT_ALLOWED = 'chat_not_allowed';
 
-/** The AuthGuard always sets permissions; a bare AuthUser (an internal call) falls back to its system role's. */
+/**
+ * The AuthGuard always sets permissions; a bare AuthUser (an internal call) falls back to its
+ * system role's.
+ */
 const heldOf = (user: Pick<AuthUser, 'role' | 'permissions'>) =>
   user.permissions ?? (user.role ? systemPermissionsOf(user.role) : []);
 
-/** True when the inbox would let this teacher send to this phone (their families, never their own chat). */
+/**
+ * True when the inbox would let this teacher send to this phone (their families, never their own
+ * chat).
+ */
 export function teacherMaySend(scope: TeacherScope, phone: string): boolean {
   try {
     assertCanSend(scope, phone);

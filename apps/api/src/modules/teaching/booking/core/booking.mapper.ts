@@ -30,8 +30,8 @@ export type RuleRow = OccurrenceTiming & {
   subscription_id?: string | null;
 };
 /**
- * Another time of the same booking (migration 465): its own schedule_rules row with the first rule's
- * teacher, first_rule_id = the first rule, no client_request_id (create_booking fills both).
+ * Another time of the same booking (migration 465): its own schedule_rules row with the first
+ * rule's teacher, first_rule_id = the first rule, no client_request_id (create_booking fills both).
  */
 export interface SiblingRow {
   rule: Omit<RuleRow, 'teacher_id' | 'client_request_id'>;

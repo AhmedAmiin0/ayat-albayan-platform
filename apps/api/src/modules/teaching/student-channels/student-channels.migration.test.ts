@@ -5,7 +5,8 @@ import { PUSH_KINDS } from '@ab/catalog';
 import { describe, expect, it } from 'vitest';
 import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
-// Migrations 800–801 (docs/31 §2), read as text: no database in unit tests (checked on a local stack when written).
+// Migrations 800–801 (docs/31 §2), read as text: no database in unit tests (checked on a local
+// stack when written).
 const dir = MIGRATIONS_DIR;
 const strip = (sql: string) =>
   sql

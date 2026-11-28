@@ -27,12 +27,18 @@ export interface ChannelSummaryRow {
 export const COLUMNS =
   'id, body, sender_profile_id, sender_role, created_at, edited_at, deleted_at, kind, attachment_path, attachment_mime, attachment_size, attachment_name, attachment_duration_ms, reply_to_id, quote_body, quote_kind, quote_sender_name, quote_sender_role, client_id' as const;
 
-/** Student channel reads and writes (migration 800; service role, ChannelAccess decides who may ask). */
+/**
+ * Student channel reads and writes (migration 800; service role, ChannelAccess decides who may
+ * ask).
+ */
 @Injectable()
 export class ChannelRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** The student's channel id; opened here only if the trigger never ran for it (a read first, then an idempotent insert). */
+  /**
+   * The student's channel id; opened here only if the trigger never ran for it (a read first, then
+   * an idempotent insert).
+   */
   async channelOf(studentId: string): Promise<string> {
     const found = await this.db.from('student_channels').select('id').eq('student_id', studentId).maybeSingle();
     if (found.error) throw pgError(found.error);
@@ -90,7 +96,10 @@ export class ChannelRepo {
     done(await this.db.rpc('channel_mark_read', args));
   }
 
-  /** channelOpen, as channel_is_open (migration 971): subscribed (past the trial), a teacher assigned. */
+  /**
+   * channelOpen, as channel_is_open (migration 971): subscribed (past the trial), a teacher
+   * assigned.
+   */
   async isOpen(studentId: string): Promise<boolean> {
     const s = await this.gate(studentId);
     return s !== null && channelOpen(s);
@@ -122,7 +131,10 @@ export class ChannelRepo {
     return data;
   }
 
-  /** Unread (messages of `countRoles`, the other side) and last message per channel of these students. */
+  /**
+   * Unread (messages of `countRoles`, the other side) and last message per channel of these
+   * students.
+   */
   async summaries(input: { profileId: string; studentIds: readonly string[]; countRoles: readonly ChannelSenderRole[] }): Promise<ChannelSummaryRow[]> {
     if (input.studentIds.length === 0) return [];
     const args = { p_profile: input.profileId, p_student_ids: [...input.studentIds], p_count_roles: [...input.countRoles] };

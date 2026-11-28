@@ -5,7 +5,10 @@ import { planRatings, type RatingLesson } from '@/modules/teaching/lesson-rating
 import { RatingRepo } from '@/modules/teaching/lesson-rating/rating.repo';
 import { RatingReads } from '@/modules/teaching/lesson-rating/rating.reads';
 
-/** Why nothing was queued (mode_link = the lesson_rating rule is off; rules_unread = fail closed), or how many rows were new. */
+/**
+ * Why nothing was queued (mode_link = the lesson_rating rule is off; rules_unread = fail closed),
+ * or how many rows were new.
+ */
 export interface QueueResult {
   queued: number;
   skipped: 'mode_link' | 'rules_unread' | 'auto_off' | 'not_approved' | null;
@@ -34,7 +37,8 @@ export class RatingQueue {
     if (!settings.auto_messages_enabled) return { queued: 0, skipped: 'auto_off' };
     if (!(await this.queries.approved())) return { queued: 0, skipped: 'not_approved' };
     const queued = await this.queries.queue(planRatings({ lessons: await read(), now }));
-    // Not awaited: a lesson's status change never waits for WhatsApp (the sender logs its own errors).
+    // Not awaited: a lesson's status change never waits for WhatsApp (the sender logs its own
+    // errors).
     if (queued > 0) void this.sender.kick();
     return { queued, skipped: null };
   }

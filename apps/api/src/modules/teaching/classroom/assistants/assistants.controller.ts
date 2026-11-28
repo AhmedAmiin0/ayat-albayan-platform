@@ -15,7 +15,10 @@ import { CurrentUser, Permissions } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { AssistantsService } from './assistants.service';
 
-/** Teaching assistants: the admin assigns them per student; an assistant reads only their own sessions. */
+/**
+ * Teaching assistants: the admin assigns them per student; an assistant reads only their own
+ * sessions.
+ */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('assistants.read')

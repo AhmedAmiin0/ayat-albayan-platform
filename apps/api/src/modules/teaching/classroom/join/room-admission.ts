@@ -47,9 +47,10 @@ const removedFromRoom = (): HttpException =>
   );
 
 /**
- * The last step of every join, staff and guest alike, once the caller is known to belong: refuse
- * a removed principal, tell a trial lesson's room it has no text chat, mint the token (fresh identity), record the participant (a removal finds
- * them by identity), and make sure the lesson is being recorded.
+ * The last step of every join, staff and guest alike, once the caller is known to belong: refuse a
+ * removed principal, tell a trial lesson's room it has no text chat, mint the token (fresh
+ * identity), record the participant (a removal finds them by identity), and make sure the lesson is
+ * being recorded.
  */
 @Injectable()
 export class RoomAdmission {
@@ -91,7 +92,8 @@ export class RoomAdmission {
       ...principalColumns(input.principal),
     });
     this.record(lessonTarget(input.lessonId), now);
-    // chat: false in a trial lesson; the clients hide and drop the text chat (tools/livekit/README.md).
+    // chat: false in a trial lesson; the clients hide and drop the text chat
+    // (tools/livekit/README.md).
     return {
       url: config.url,
       token,

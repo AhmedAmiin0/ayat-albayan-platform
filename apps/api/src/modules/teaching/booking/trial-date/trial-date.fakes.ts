@@ -21,7 +21,10 @@ type LessonOver = Partial<NonNullable<TrialLessonRead['lesson']>> & {
   attendance?: TrialLessonRead['attendance'];
 };
 
-/** One trial lesson of S1 (rule package 'trial'), scheduled Mon 2026-10-05 14:00Z with the fakes' teacher. */
+/**
+ * One trial lesson of S1 (rule package 'trial'), scheduled Mon 2026-10-05 14:00Z with the fakes'
+ * teacher.
+ */
 export function trialRow(over: LessonOver = {}): TrialLessonRead {
   const { attendance = null, ...lesson } = over;
   return {

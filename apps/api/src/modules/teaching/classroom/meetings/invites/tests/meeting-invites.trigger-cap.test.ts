@@ -18,7 +18,8 @@ import {
   type MeetingServices,
 } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
-// Migration 414's race-safe daily cap fails only the recipient it hits (the 'never throws' contract).
+// Migration 414's race-safe daily cap fails only the recipient it hits (the 'never throws'
+// contract).
 let s: MeetingServices;
 const LIMIT = new Error('message enqueue failed: invite_limit');
 const pick = (id: string, phone: string) => ({

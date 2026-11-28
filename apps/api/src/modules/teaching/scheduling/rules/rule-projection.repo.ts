@@ -17,7 +17,9 @@ const DAY_MS = 86_400_000;
 const RULE_COLUMNS =
   'id, teacher_id, byday, start_time_local, duration_min, tz, starts_on, ends_on, schedule_rule_students(student_id)' as const;
 
-/** Loads the active rules of a teacher and of some students, and projects them (rule-projection). */
+/**
+ * Loads the active rules of a teacher and of some students, and projects them (rule-projection).
+ */
 @Injectable()
 export class RuleProjectionRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

@@ -20,7 +20,9 @@ import { MeetingInviteesRepo } from '@/modules/teaching/classroom/meetings/invit
 import { toInviteeView } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.mapper';
 import { scheduleTimes } from './meeting-schedule.rules';
 
-/** The services MeetingCreateService talks to (one injectable, so constructors stay at ≤ 3 params). */
+/**
+ * The services MeetingCreateService talks to (one injectable, so constructors stay at ≤ 3 params).
+ */
 @Injectable()
 export class MeetingCreateDeps {
   constructor(

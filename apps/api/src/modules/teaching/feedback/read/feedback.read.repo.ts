@@ -17,7 +17,9 @@ import type { FeedbackRow } from '@/modules/teaching/feedback/feedback.repo';
 const LIST_COLUMNS =
   'id, lesson_id, student_id, teacher_id, kind, requested_at, expires_at, rating, recommend, note, contact_phone, submitted_at, quick_rating, quick_rated_at, teachers(display_name_ar)' as const;
 
-/** R-NFR-08: allowlisted keys; unanswered rows (null) last either way; ties newest request first. */
+/**
+ * R-NFR-08: allowlisted keys; unanswered rows (null) last either way; ties newest request first.
+ */
 const FEEDBACK_SORT: SortSpec<FeedbackSortKey> = {
   columns: {
     teacher: { column: 'teachers(display_name_ar)' },
@@ -55,7 +57,10 @@ export type AverageRow = FeedbackAverage & { teacher_id: string };
 
 const EMPTY: FeedbackPage = { rows: [], total: 0 };
 
-/** GET /feedback, /feedback/summary and /teachers/me/feedback reads (service role; services scope by role). */
+/**
+ * GET /feedback, /feedback/summary and /teachers/me/feedback reads (service role; services scope by
+ * role).
+ */
 @Injectable()
 export class FeedbackReadRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -94,7 +99,9 @@ export class FeedbackReadRepo {
     return this.page({ filter: { ...input.filter, teacher: teacherId }, page: input.page });
   }
 
-  /** Per-teacher averages over answered rows (v_teacher_feedback_avg); `teacherId` limits to one. */
+  /**
+   * Per-teacher averages over answered rows (v_teacher_feedback_avg); `teacherId` limits to one.
+   */
   async averages(teacherId?: string): Promise<AverageRow[]> {
     const q = this.db
       .from('v_teacher_feedback_avg')

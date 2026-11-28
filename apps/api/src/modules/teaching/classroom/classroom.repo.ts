@@ -85,7 +85,10 @@ export class ClassroomRepo {
     return data.length > 0;
   }
 
-  /** Is the lesson in this salesperson's scope: booked from one of their leads, or a trial of one of their students? */
+  /**
+   * Is the lesson in this salesperson's scope: booked from one of their leads, or a trial of one of
+   * their students?
+   */
   salesOwnsLesson(profileId: string, lessonId: string): Promise<boolean> {
     return isSalesLesson(this.db, { profileId, lessonId });
   }

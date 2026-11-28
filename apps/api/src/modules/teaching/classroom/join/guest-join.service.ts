@@ -45,7 +45,10 @@ export class GuestJoinService {
     @Inject(JoinLinkResolver) private readonly links: JoinLinkResolver,
   ) {}
 
-  /** 404 link_invalid, 410 link_expired / join_closed / lesson_ended, 403 join_not_open_yet / removed_from_room, 429, 400, 503. */
+  /**
+   * 404 link_invalid, 410 link_expired / join_closed / lesson_ended, 403 join_not_open_yet /
+   * removed_from_room, 429, 400, 503.
+   */
   async join(
     input: { linkToken: string; ip: string; body: unknown },
     now = new Date(),

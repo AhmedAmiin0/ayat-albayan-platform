@@ -27,7 +27,10 @@ export interface ReopenedLesson {
 
 const PAUSE_SELECT =
   'id, student_id, from_date, until_date, reason, created_at, resumed_at, extended_days, creator:profiles!course_pauses_created_by_fkey(full_name)';
-/** Raised codes (migration 956) → 400 / 409 / 404; a lost race on the one-open index → already_paused. */
+/**
+ * Raised codes (migration 956) → 400 / 409 / 404; a lost race on the one-open index →
+ * already_paused.
+ */
 const PAUSE_ERRORS: PgErrorMap = {
   constraints: { course_pauses_one_open: () => conflict('already_paused') },
   raised: {

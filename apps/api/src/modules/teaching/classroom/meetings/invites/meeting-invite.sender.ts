@@ -27,7 +27,10 @@ interface ChatSend {
   body: string;
   dedupKey: string;
   actorId: string;
-  /** A teacher's text names them (messages.sent_by_teacher_id, like an inbox reply); admin / sales: null. */
+  /**
+   * A teacher's text names them (messages.sent_by_teacher_id, like an inbox reply); admin / sales:
+   * null.
+   */
   teacherId: string | null;
   /** The row is dropped (never sent late) after this instant. */
   expiresAt: string;
@@ -37,11 +40,11 @@ interface ChatSend {
 /**
  * The two channels of a meeting invitation (R-MEET-02). Staff: one bell row (+ push) through
  * PushService.notifyProfiles, kind meeting_invite, keyed by subject (rule 8). Others: a WhatsApp
- * SESSION TEXT queued like an inbox reply (the line replyLine picks, docs/12 §13.3; in module mode the number
- * replyNumber picks, docs/23c decision 6); never a template.
- * No thread or every window closed → window_closed, nothing queued. The queued row goes out through the
- * usual sender and its gates (WhatsApp configured, WA_ALLOWED_RECIPIENTS, settings.messaging_enabled).
- * Never throws: one recipient's failure never fails the others.
+ * SESSION TEXT queued like an inbox reply (the line replyLine picks, docs/12 §13.3; in module mode
+ * the number replyNumber picks, docs/23c decision 6); never a template. No thread or every window
+ * closed → window_closed, nothing queued. The queued row goes out through the usual sender and its
+ * gates (WhatsApp configured, WA_ALLOWED_RECIPIENTS, settings.messaging_enabled). Never throws: one
+ * recipient's failure never fails the others.
  */
 @Injectable()
 export class MeetingInviteSender {
@@ -68,7 +71,9 @@ export class MeetingInviteSender {
     return { status: 'sent', channel: 'in_app', error_code: null };
   }
 
-  /** Queues the chat text when a window is open; the sender is kicked once by the caller (kick()). */
+  /**
+   * Queues the chat text when a window is open; the sender is kicked once by the caller (kick()).
+   */
   async chat(s: ChatSend): Promise<DeliveryOutcome> {
     try {
       const thread = await this.threads.thread(s.phone);

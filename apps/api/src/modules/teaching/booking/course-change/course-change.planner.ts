@@ -59,8 +59,9 @@ export class CourseChangePlanner {
 
   /**
    * 400 starts_at_mismatch / date_in_past / starts_before_subscription / starts_before_course /
-   * no_change / days_count_mismatch / no_occurrences, 403 override_not_allowed, 409 custom_count_admin /
-   * course_finished / course_exists (the new days overlap another weekly course of the student).
+   * no_change / days_count_mismatch / no_occurrences, 403 override_not_allowed, 409
+   * custom_count_admin / course_finished / course_exists (the new days overlap another weekly
+   * course of the student).
    */
   async planned(
     req: CourseChangeRequest & { teacherId?: string },

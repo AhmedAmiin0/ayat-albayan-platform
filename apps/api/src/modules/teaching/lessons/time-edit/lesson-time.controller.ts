@@ -19,7 +19,9 @@ export class LessonTimeController {
     private readonly views: LessonViews,
   ) {}
 
-  /** The edited lesson plus what it set in motion (notice queued, payout draft stale, PDF refresh). */
+  /**
+   * The edited lesson plus what it set in motion (notice queued, payout draft stale, PDF refresh).
+   */
   @Patch(':id/time')
   @HttpCode(200)
   async edit(

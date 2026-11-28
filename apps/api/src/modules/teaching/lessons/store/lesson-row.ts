@@ -31,7 +31,10 @@ export interface LessonRow {
   instant?: boolean;
   /** The missed lesson this makeup booking replaces (R-SCH-10); optional in test fakes. */
   makeup_of_id?: string | null;
-  /** The missed lesson a makeup replaces, and the makeups booked for this lesson's misses (one per student). */
+  /**
+   * The missed lesson a makeup replaces, and the makeups booked for this lesson's misses (one per
+   * student).
+   */
   original?: { id: string; starts_at: string } | null;
   makeups?: {
     id: string;
@@ -41,11 +44,17 @@ export interface LessonRow {
   }[];
   /** Clashes stored when the daily job / extend generated it (Conflict[] as jsonb), or null. */
   conflicts: Json | null;
-  /** The last in-place time edit (R-SCH-11, migration 174) and the time it replaced; optional in test fakes. */
+  /**
+   * The last in-place time edit (R-SCH-11, migration 174) and the time it replaced; optional in
+   * test fakes.
+   */
   time_edited_at?: string | null;
   time_edit_reason?: string | null;
   time_edit_was?: Json | null;
-  /** meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in test fakes. */
+  /**
+   * meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in
+   * test fakes.
+   */
   teacher: {
     id: string;
     display_name_ar: string;

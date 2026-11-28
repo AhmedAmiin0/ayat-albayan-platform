@@ -22,7 +22,10 @@ interface AlertOver {
   rules?: Omit<FakePolicyInput, 'settings'>;
 }
 
-/** Tests only: a real TeacherAlert over vi.fn reads, push, a fake policy and sender; BookingFollowUps over it and a vi.fn trial status. */
+/**
+ * Tests only: a real TeacherAlert over vi.fn reads, push, a fake policy and sender;
+ * BookingFollowUps over it and a vi.fn trial status.
+ */
 export function fakeTeacherAlert(over: AlertOver = {}) {
   const queries = {
     lessons: vi.fn(async () => over.lessons ?? []),

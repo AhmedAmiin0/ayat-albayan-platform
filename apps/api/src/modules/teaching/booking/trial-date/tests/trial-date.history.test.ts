@@ -15,7 +15,10 @@ const STUDENT = {
 };
 const NEW = 'cccccccc-0000-4000-8000-000000000001';
 
-/** The first date (moved), the date that replaced it (upcoming), an older attended and an absent one. */
+/**
+ * The first date (moved), the date that replaced it (upcoming), an older attended and an absent
+ * one.
+ */
 const ROWS = [
   trialRow({ status: 'rescheduled', created_at: '2026-09-20T09:00:00+00:00' }),
   trialRow({

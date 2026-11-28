@@ -55,7 +55,10 @@ export class StudentLinkService {
     return { first_name: firstName(student.name), lesson: view };
   }
 
-  /** POST /public/student/:token/join. 404 link_invalid / no_lesson, 403 join_not_open_yet (opens_at) / removed_from_room, 410, 429, 503. */
+  /**
+   * POST /public/student/:token/join. 404 link_invalid / no_lesson, 403 join_not_open_yet
+   * (opens_at) / removed_from_room, 410, 429, 503.
+   */
   async join(call: PublicCall & { body: unknown }, now = new Date()): Promise<RoomJoinResult> {
     this.limit.assert({ ip: call.ip, token: call.token }, now.getTime());
     this.admission.livekit();

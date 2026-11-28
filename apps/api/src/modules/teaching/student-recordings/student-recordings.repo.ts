@@ -19,7 +19,10 @@ const RECORDING_ORDER: SortSpec<never> = {
 
 interface RecordingsPageInput {
   studentId: string;
-  /** Only lessons this teacher taught (a teacher who does not have the student assigned); null = all. */
+  /**
+   * Only lessons this teacher taught (a teacher who does not have the student assigned); null =
+   * all.
+   */
   onlyTeacherId: string | null;
   query: StudentRecordingsQuery;
 }
@@ -70,7 +73,10 @@ export class StudentRecordingRepo {
     return data !== null;
   }
 
-  /** The lessons of this student with a finished recording: ids only, nothing is signed (the report history's links). */
+  /**
+   * The lessons of this student with a finished recording: ids only, nothing is signed (the report
+   * history's links).
+   */
   async doneLessonIds(input: {
     studentId: string;
     onlyTeacherId: string | null;

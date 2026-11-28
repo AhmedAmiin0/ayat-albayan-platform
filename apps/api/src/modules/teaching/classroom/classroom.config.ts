@@ -14,7 +14,10 @@ export type ClassroomConfigSource = ClassroomConfig | (() => ClassroomConfig);
 export const classroomConfigOf = (source: ClassroomConfigSource): ClassroomConfig =>
   typeof source === 'function' ? source() : source;
 
-/** Injection token for the recording upload target (RECORDING_S3_*); null = lessons are not recorded. */
+/**
+ * Injection token for the recording upload target (RECORDING_S3_*); null = lessons are not
+ * recorded.
+ */
 export const RECORDING_CONFIG = Symbol('RECORDING_CONFIG');
 export type RecordingConfig = RecordingEnv | null;
 

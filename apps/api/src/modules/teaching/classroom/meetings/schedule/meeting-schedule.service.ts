@@ -15,9 +15,10 @@ import { rescheduleTimes } from './meeting-schedule.rules';
 const HOUR_MS = 3_600_000;
 
 /**
- * A family the cancellation may reach: its invitation found the window closed (it may be open now), or
- * one of its texts went out, whatever a later resend did (failed, invite_limit). Never a family that
- * never got the invitation (markStale only marks never-delivered phones, so a stale row never matches).
+ * A family the cancellation may reach: its invitation found the window closed (it may be open now),
+ * or one of its texts went out, whatever a later resend did (failed, invite_limit). Never a family
+ * that never got the invitation (markStale only marks never-delivered phones, so a stale row never
+ * matches).
  */
 const mayTell = (i: StoredInvitee, delivered: ReadonlySet<string>): boolean =>
   i.status === 'window_closed' || delivered.has(i.phone_e164 ?? '');
@@ -89,7 +90,10 @@ export class MeetingScheduleService {
     return (await this.deps.invitees.forMeeting(meetingId)).filter((i) => i.kind === 'staff' && i.status !== 'cancelled');
   }
 
-  /** A new time dropped these phones' queued texts: an invitee none of whose texts went out reads failed / stale. */
+  /**
+   * A new time dropped these phones' queued texts: an invitee none of whose texts went out reads
+   * failed / stale.
+   */
   private async markStale(meetingId: string, dropped: readonly string[]): Promise<void> {
     if (dropped.length === 0) return;
     const delivered = await this.deps.invitees.deliveredPhones(meetingId);
@@ -99,7 +103,10 @@ export class MeetingScheduleService {
     for (const i of stale) await this.deps.invitees.update(i.id, { status: 'failed', error_code: 'stale', sent_at: null });
   }
 
-  /** The cancellation chat text, only inside an open window (pickSendLine decides; a closed one sends nothing). */
+  /**
+   * The cancellation chat text, only inside an open window (pickSendLine decides; a closed one
+   * sends nothing).
+   */
   private async tellFamily(v: { row: MeetingRow; invitee: StoredInvitee; actorId: string; teacherId: string | null; now: Date }): Promise<boolean> {
     const phone = v.invitee.phone_e164 ?? '';
     const body = cancellationText({ title: v.row.title, when: inviteeWhen(v.row.starts_at, v.invitee) });

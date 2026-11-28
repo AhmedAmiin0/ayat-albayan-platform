@@ -71,7 +71,10 @@ export class CoursePauseService {
     return legacyResult(first);
   }
 
-  /** Also the daily job's (actor null). Idempotent: an already resumed pause changes nothing (the RPC answers resumed false). */
+  /**
+   * Also the daily job's (actor null). Idempotent: an already resumed pause changes nothing (the
+   * RPC answers resumed false).
+   */
   async resumePause(pauseId: string, actorId: string | null): Promise<CoursePauseResult> {
     const out = await this.queries.call('course_pause_resume', { pause_id: pauseId, actor: actorId });
     if (out.resumed === false) return this.result(out, 0);
@@ -80,7 +83,10 @@ export class CoursePauseService {
     return result;
   }
 
-  /** The hourly job: a pause from a later day begins on its from day (idempotent: started false changes nothing). */
+  /**
+   * The hourly job: a pause from a later day begins on its from day (idempotent: started false
+   * changes nothing).
+   */
   async beginPause(pauseId: string): Promise<void> {
     const out = await this.queries.call('course_pause_begin', { pause_id: pauseId, actor: null });
     if (!out.started) return;

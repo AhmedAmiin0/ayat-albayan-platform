@@ -74,7 +74,9 @@ function fakeAvailability() {
   };
 }
 
-/** Occupying lessons (BusyQueries) and not-yet-generated rule occurrences (RuleProjectionQueries). */
+/**
+ * Occupying lessons (BusyQueries) and not-yet-generated rule occurrences (RuleProjectionQueries).
+ */
 function fakeBusy() {
   return {
     busy: { teacherLessons: vi.fn().mockResolvedValue([]), studentLessons: vi.fn().mockResolvedValue([]), courseLessonIds: vi.fn().mockResolvedValue([]) },
@@ -93,7 +95,10 @@ export function fakeContext() {
   return { queries, availability, busy, context };
 }
 
-/** A real BookingPlanner + ConflictChecker over the fakes; 5-week horizon as seeded, `over` on the settings. */
+/**
+ * A real BookingPlanner + ConflictChecker over the fakes; 5-week horizon as seeded, `over` on the
+ * settings.
+ */
 export function fakePlanner(over: Partial<AcademySettings> = {}) {
   const queries = fakeQueries();
   const availability = fakeAvailability();

@@ -8,7 +8,8 @@ import { isAdmin } from '@/common/auth/roles';
 
 /**
  * PATCH /recordings/:id/visibility: admin any recording; a teacher only their own lessons'. A group
- * lesson's recording is one file of every student's session: it cannot be shown (409 recording_group_lesson).
+ * lesson's recording is one file of every student's session: it cannot be shown (409
+ * recording_group_lesson).
  */
 @Injectable()
 export class RecordingVisibilityService {

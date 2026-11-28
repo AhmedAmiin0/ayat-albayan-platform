@@ -44,7 +44,9 @@ export const isSameTime = (
   request.startsAt.getTime() === current.startsAt.getTime() &&
   request.durationMin === durationOf(current.startsAt, current.endsAt);
 
-/** The 400s of a move (date_in_past) and of a correction (future, cross-day, reason), in that order. */
+/**
+ * The 400s of a move (date_in_past) and of a correction (future, cross-day, reason), in that order.
+ */
 function validate(
   { mode, now, current, request, zones }: TimeEditInput,
   planned: { end: Date; reason: string | null },

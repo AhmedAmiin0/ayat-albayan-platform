@@ -13,7 +13,8 @@ export type ClassroomSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
 /**
  * The classroom's academy settings (docs/25 §4): ClassroomQueries, StudentLinkQueries,
- * InternalMeetingsQueries and RoomJoinService read them here. One cached store.all(), only these keys.
+ * InternalMeetingsQueries and RoomJoinService read them here. One cached store.all(), only these
+ * keys.
  */
 @Injectable()
 export class ClassroomSettings {

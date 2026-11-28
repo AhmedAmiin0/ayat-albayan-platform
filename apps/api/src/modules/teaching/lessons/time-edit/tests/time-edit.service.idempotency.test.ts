@@ -14,7 +14,8 @@ describe('LessonTimeService — replays and races (idempotency, rule 8)', () => 
   afterEach(() => vi.useRealTimers());
 
   it('a replay (the lesson already has that start and length) is a 200 that writes nothing', async () => {
-    // The first attempt succeeded: the row now holds the new time, the client retries with the old `expected`.
+    // The first attempt succeeded: the row now holds the new time, the client retries with the old
+    // `expected`.
     const moved = lessonRow({
       starts_at: '2026-10-05T14:00:00+00:00',
       ends_at: '2026-10-05T14:45:00+00:00',

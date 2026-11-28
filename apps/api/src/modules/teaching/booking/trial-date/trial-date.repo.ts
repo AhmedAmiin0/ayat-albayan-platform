@@ -30,7 +30,10 @@ const result = z.object({
   teacher_id: z.string(),
   moved_from_id: z.string().nullable(),
 });
-/** A move lost its trial (invalid_transition) or a booking found one booked meanwhile (trial_changed). */
+/**
+ * A move lost its trial (invalid_transition) or a booking found one booked meanwhile
+ * (trial_changed).
+ */
 const STALE = ['invalid_transition', 'trial_changed'];
 const iso = (t: string) => new Date(t).toISOString();
 
@@ -56,7 +59,10 @@ export class TrialDateRepo {
     return data;
   }
 
-  /** The student's trial lessons: a platform trial (rule package 'trial') or an imported one (as StudentTrialQueries). */
+  /**
+   * The student's trial lessons: a platform trial (rule package 'trial') or an imported one (as
+   * StudentTrialQueries).
+   */
   async trialLessons(studentId: string): Promise<TrialLessonRead[]> {
     const platform = await this.db
       .from('lesson_students')
@@ -96,7 +102,10 @@ export class TrialDateRepo {
     return data.map((r) => r.student_id);
   }
 
-  /** The date this request already picked for this student (trial_date_replay): a moved row's id is the request id; a new one's rule carries it. */
+  /**
+   * The date this request already picked for this student (trial_date_replay): a moved row's id is
+   * the request id; a new one's rule carries it.
+   */
   async replay(requestId: string, studentId: string): Promise<TrialDateResult | null> {
     const { data, error } = await this.db.rpc('trial_date_replay', {
       p_request: requestId,
@@ -106,7 +115,10 @@ export class TrialDateRepo {
     return data ? toTrialDateResult(data) : null;
   }
 
-  /** One transaction: 409 trial_date_subscribed (a payment came in), conflict / stale on a lost race. */
+  /**
+   * One transaction: 409 trial_date_subscribed (a payment came in), conflict / stale on a lost
+   * race.
+   */
   async pick(p: TrialPick): Promise<TrialDateResult> {
     const { data, error } = await this.db.rpc('pick_trial_date', { p: p as unknown as Json });
     if (error?.code === 'P0001' && error.message === 'trial_date_subscribed')

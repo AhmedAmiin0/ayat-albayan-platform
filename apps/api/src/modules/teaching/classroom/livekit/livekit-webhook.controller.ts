@@ -4,10 +4,14 @@ import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/common/auth/decorators';
 import { LivekitWebhookService } from './livekit-webhook.service';
 
-/** LiveKit posts `application/webhook+json`, which Fastify does not parse: kept as the raw bytes. */
+/**
+ * LiveKit posts `application/webhook+json`, which Fastify does not parse: kept as the raw bytes.
+ */
 export const LIVEKIT_WEBHOOK_TYPE = 'application/webhook+json';
 
-/** Registers the raw parser for LiveKit's content type (main.ts and the test harness, before init). */
+/**
+ * Registers the raw parser for LiveKit's content type (main.ts and the test harness, before init).
+ */
 export function registerLivekitWebhookParser(app: NestFastifyApplication): void {
   app
     .getHttpAdapter()
@@ -18,7 +22,9 @@ export function registerLivekitWebhookParser(app: NestFastifyApplication): void 
 }
 
 interface RawRequest {
-  /** A Buffer for application/webhook+json; parsed JSON otherwise (then rawBody holds the bytes). */
+  /**
+   * A Buffer for application/webhook+json; parsed JSON otherwise (then rawBody holds the bytes).
+   */
   body: unknown;
   rawBody?: Buffer;
 }

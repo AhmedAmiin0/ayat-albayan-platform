@@ -21,7 +21,9 @@ export interface ChangeFacts {
   durationMin: Duration;
   /** The course's zone (its rules'). */
   tz: string;
-  /** The course's lessons that count and do not move, plus those its old rules will still generate. */
+  /**
+   * The course's lessons that count and do not move, plus those its old rules will still generate.
+   */
   before: readonly CourseLessonFact[];
 }
 
@@ -57,9 +59,10 @@ interface StartFacts {
 }
 
 /**
- * 400 starts_before_subscription (before the subscription starts), 400 starts_before_course (before the
- * course's first rule starts), 400 no_change (the same weekdays and times as the rules running at the
- * change point, for a client that did not stop it; a new teacher is a change on the same days).
+ * 400 starts_before_subscription (before the subscription starts), 400 starts_before_course (before
+ * the course's first rule starts), 400 no_change (the same weekdays and times as the rules running
+ * at the change point, for a client that did not stop it; a new teacher is a change on the same
+ * days).
  */
 export function assertStart(req: CourseChangeRequest, facts: StartFacts): void {
   if (req.startsOn < facts.subStartsOn)
@@ -94,8 +97,8 @@ interface ChangePlanInput {
 /**
  * REMAINING = lessons_total − the course's lessons that count and stay (courseRemaining: the
  * balance views' rule); 409 course_finished when nothing is left. The new days carry exactly
- * REMAINING lessons: every new rule ends on the local date of the REMAINING-th one (400 no_occurrences
- * when a picked day has none). The teacher stays the course's (the caller fills it).
+ * REMAINING lessons: every new rule ends on the local date of the REMAINING-th one (400
+ * no_occurrences when a picked day has none). The teacher stays the course's (the caller fills it).
  */
 export function planChange({ req, facts, now, horizonWeeks }: ChangePlanInput): ChangePlan {
   const remaining = courseRemaining(facts.lessonsTotal, facts.before);

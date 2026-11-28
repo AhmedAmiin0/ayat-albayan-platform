@@ -8,7 +8,10 @@ import { AssistantsRepo } from './assistants.repo';
 
 const rangeSchema = z.object({ from: z.iso.datetime(), to: z.iso.datetime() });
 
-/** The admin's assistants manager and the assistant's own list. An assistant never sees another's students. */
+/**
+ * The admin's assistants manager and the assistant's own list. An assistant never sees another's
+ * students.
+ */
 @Injectable()
 export class AssistantsService {
   constructor(
