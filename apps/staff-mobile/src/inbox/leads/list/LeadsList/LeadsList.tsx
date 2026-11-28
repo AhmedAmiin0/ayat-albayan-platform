@@ -5,15 +5,15 @@ import { View } from 'react-native';
 import type { LeadView } from '@ab/shared';
 
 import {
-  t,
   EmptyState,
   ErrorState,
-  FilterPills,
   type FilterPill,
+  FilterPills,
+  LazyList,
   ScreenHeader,
+  t,
 } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { clockAt } from '@/inbox/shared/format';
 import { activeFilterCount, leadListParams, NO_FILTERS, type LeadFilters } from '@/inbox/leads/list/lead-filters';

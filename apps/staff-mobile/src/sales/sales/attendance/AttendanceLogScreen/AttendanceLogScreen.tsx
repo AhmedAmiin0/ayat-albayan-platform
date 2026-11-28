@@ -4,16 +4,16 @@ import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import {
   ApiError,
-  t,
   BackButton,
   EmptyState,
+  ErrorLine,
+  LazyList,
   Screen,
   ScreenHeader,
-  ErrorLine,
+  t,
 } from '@ab/mobile-kit';
 import { useClockCycle } from '@/core/lib/clock';
 import { useStudentHref, useTreeBase } from '@/core/nav/tree-base';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { SalesLoadScreen } from '@/sales/sales/components/SalesLoadScreen';
 import { AttendanceLogHead } from '@/sales/sales/attendance/AttendanceLogHead';
 import { AttendanceLogRow } from '@/sales/sales/attendance/AttendanceLogRow';

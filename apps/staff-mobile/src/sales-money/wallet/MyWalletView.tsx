@@ -1,7 +1,6 @@
 import type { MyCommissionRow } from '@ab/money';
-import { t } from '@ab/mobile-kit';
+import { LazyList, t } from '@ab/mobile-kit';
 import { usePagedList } from '@/core/lib/query/use-paged-list';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { useBellSignal } from '@/notifications';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useMyEarnings } from '@/sales-money/lib/my-api';

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import type { StudentListItem } from '@ab/shared';
 
-import { t, EmptyState, ErrorState, Screen, ScreenHeader } from '@ab/mobile-kit';
-import { LazyList } from '@/core/ui/lists/LazyList';
+import { EmptyState, ErrorState, LazyList, Screen, ScreenHeader, t } from '@ab/mobile-kit';
 import { SearchField } from '@/core/ui/form/SearchField';
 import { StudentFilterBar } from '@/students/list/StudentFilterBar';
 import { activeCount, listParams, NO_FILTERS, type StudentFilters } from '@/students/list/student-filters';

@@ -7,20 +7,20 @@ import { ActivityIndicator, View } from 'react-native';
 import { useLessonDetails, riyadhToday } from '@/calendar';
 import { SchedulePeriod } from '@/calendar/overview/SchedulePeriod';
 import {
-  t,
-  locale,
-  useTheme,
   BackButton,
   EmptyState,
   ErrorState,
   FilterPills,
+  LazyList,
+  locale,
   Screen,
   ScreenHeader,
-  usePullRefresh,
+  t,
   useNow,
+  usePullRefresh,
+  useTheme,
 } from '@ab/mobile-kit';
 import { useFollowingDay } from '@/core/lib/time/use-following-day';
-import { LazyList } from '@/core/ui/lists/LazyList';
 import { useSalesSchedule, useSalesTeachers } from '@/sales/sales/lib/sales-api';
 import { SalesLessonRow } from '@/sales/sales/components/SalesLessonRow';
 import { SalesLessonSheet } from '@/sales/sales/components/SalesLessonSheet';

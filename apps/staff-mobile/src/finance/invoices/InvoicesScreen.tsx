@@ -1,12 +1,11 @@
 import type { InvoiceView } from '@ab/schedule';
 import { router } from 'expo-router';
 import { View } from 'react-native';
-import { t, BackButton, Screen, ScreenHeader } from '@ab/mobile-kit';
+import { BackButton, LazyList, Screen, ScreenHeader, t } from '@ab/mobile-kit';
 import { Note } from '@/core/ui/feedback/Note';
 import { InvoiceRow } from './InvoiceRow';
 import { useInvoices } from '@/finance/shared/queries';
 import { StaleNote, StateNote } from '@/finance/shared/StateNote';
-import { LazyList } from '@/core/ui/lists/LazyList';
 
 const keyOf = (i: InvoiceView) => i.id;
 const renderRow = ({ item }: { item: InvoiceView }) => <InvoiceRow invoice={item} />;

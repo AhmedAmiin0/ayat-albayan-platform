@@ -1,7 +1,6 @@
 import type { MyStudentRow } from '@ab/money';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
-import { t, useTabBarInset } from '@ab/mobile-kit';
-import { useInsetRows } from '@/core/ui/surface/use-inset-rows';
+import { t, useInsetRows, useTabBarInset } from '@ab/mobile-kit';
 import { LoadState } from '@/sales-money/components/LoadState';
 import { useMyStudents } from '@/sales-money/lib/my-api';
 import { MyStudentItem } from '@/sales-money/components/MyStudentItem';
