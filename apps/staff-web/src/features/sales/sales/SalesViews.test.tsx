@@ -38,7 +38,7 @@ describe('«الطلاب» and «محفظتي»: one page each, the old pages ar
   });
 
   it('«محفظتي» shows my commissions; «الكشوف» and «مدفوعاتي» are its filters', async () => {
-    apiFetch.mockReturnValue(new Promise(() => {})); // the earnings stay loading: only the head is under test
+    apiFetch.mockReturnValue(new Promise(() => undefined)); // the earnings stay loading: only the head is under test
     const onView = vi.fn();
     const { unmount } = renderWithQuery(<SalesMoney view="earnings" onView={onView} />);
     expect(

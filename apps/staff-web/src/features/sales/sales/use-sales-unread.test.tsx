@@ -38,7 +38,7 @@ describe('useSalesUnread (W8)', () => {
   it('without inbox.read: no request, 0, the base title', async () => {
     total(5);
     const { result } = renderHook(() => useSalesUnread((p) => p !== 'inbox.read'), { wrapper });
-    await act(async () => {});
+    await act(() => Promise.resolve());
     expect(apiFetch).not.toHaveBeenCalled();
     expect(result.current).toBe(0);
     expect(document.title).toBe(t.app.name);
@@ -47,7 +47,10 @@ describe('useSalesUnread (W8)', () => {
   it('inbox.read lost mid-session: the cached count leaves the title at once', async () => {
     total(4);
     let reads = true;
-    const { result, rerender } = renderHook(() => useSalesUnread((p) => p !== 'inbox.read' || reads), { wrapper });
+    const { result, rerender } = renderHook(
+      () => useSalesUnread((p) => p !== 'inbox.read' || reads),
+      { wrapper },
+    );
     await waitFor(() => expect(result.current).toBe(4));
     expect(document.title).toBe(`(4) ${t.app.name}`);
     reads = false;

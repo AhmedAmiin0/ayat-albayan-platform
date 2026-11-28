@@ -102,7 +102,7 @@ describe('MyEarnings «الكشوف» of «محفظتي»', () => {
     const month = await screen.findByRole('heading', { level: 3 });
     expect(month.textContent).toMatch(/2026/);
     expect(screen.getByText(t.enums.payoutStatus.paid)).toBeTruthy();
-    const totals = screen.getAllByRole('list', { name: month.textContent ?? '' })[0] as HTMLElement;
+    const totals = screen.getAllByRole('list', { name: month.textContent })[0] as HTMLElement;
     expect(within(totals).getByText('2,300')).toBeTruthy();
     expect(screen.getByText(t.assistantPortal.earnings.line.commission.replace('{student}', 'يوسف'))).toBeTruthy();
   });
