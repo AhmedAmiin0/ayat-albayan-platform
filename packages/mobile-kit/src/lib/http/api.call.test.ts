@@ -1,8 +1,15 @@
+import { defineRoute, routePath } from '@ab/core';
 import { READ_TIMEOUT_MS, SEND_TIMEOUT_MS } from '@ab/client-core';
 import { z } from 'zod';
 import { connectivity } from '../connectivity/connectivity';
 import { call } from './api';
 import { supabase } from './supabase';
+
+const routes = {
+  me: defineRoute({ method: 'GET', path: '/auth/me', response: z.unknown() }),
+  thread: defineRoute({ method: 'GET', path: '/threads/x', response: z.unknown() }),
+  threadText: defineRoute({ method: 'POST', path: '/threads/x/text', response: z.unknown() }),
+};
 
 // jest.setup.cjs mocks Supabase and connectivity.
 jest.mock('./env', () => ({ env: { apiUrl: 'http://api' } }));
@@ -24,7 +31,7 @@ afterEach(() => jest.useRealTimers());
 
 test('call reads with the token and parses with the schema', async () => {
   mockFetch.mockResolvedValue(new Response('{"role":"admin","x":1}', { status: 200 }));
-  const me = await call({ path: '/auth/me', schema: z.object({ role: z.string() }) });
+  const me = await call({ path: routePath(routes.me), schema: z.object({ role: z.string() }) });
   expect(me).toEqual({ role: 'admin' });
   expect(new Headers(sentInit().headers).get('Authorization')).toBe('Bearer tok');
 });
@@ -32,7 +39,9 @@ test('call reads with the token and parses with the schema', async () => {
 test('a read through call ends at the read deadline and tells the connection state', async () => {
   jest.useFakeTimers();
   mockFetch.mockImplementation(never);
-  const settled = expect(call({ path: '/threads/x' })).rejects.toBeInstanceOf(TypeError);
+  const settled = expect(call({ path: routePath(routes.thread) })).rejects.toBeInstanceOf(
+    TypeError,
+  );
   await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS);
   await settled;
   expect(connectivity.reportFailure).toHaveBeenCalledTimes(1);
@@ -43,7 +52,7 @@ test('a write through call waits past the read deadline and stalls at the send o
   jest.useFakeTimers();
   mockFetch.mockImplementation(never);
   const onDone = jest.fn();
-  const send = call({ method: 'POST', path: '/threads/x/text', body: { text: 'hi' } });
+  const send = call({ method: 'POST', path: routePath(routes.threadText), body: { text: 'hi' } });
   void send.then(onDone, onDone);
   await jest.advanceTimersByTimeAsync(READ_TIMEOUT_MS);
   expect(onDone).not.toHaveBeenCalled();

@@ -1,4 +1,4 @@
-import { defineRoute } from '@ab/core';
+import { defineRoute, routePath } from '@ab/core';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { callWith, type ApiClient } from '../../../..';
@@ -19,7 +19,7 @@ describe('callWith over a client that has only the pair', () => {
     const { call, apiFetch, apiSend } = pairApi({ code: 'a' });
     const abort = new AbortController();
     const headers = { Accept: 'application/json' };
-    await call({ path: '/links/a', signal: abort.signal, headers });
+    await call({ path: routePath(read, { code: 'a' }), signal: abort.signal, headers });
     expect(apiFetch.mock.calls[0]).toEqual(['/links/a', { signal: abort.signal, headers }]);
     expect(apiSend).not.toHaveBeenCalled();
   });
@@ -46,7 +46,7 @@ describe('callWith over a client that has only the pair', () => {
 
   it('sends a path write with no body as a call with no body', async () => {
     const { call, apiSend } = pairApi(undefined);
-    await call({ method: 'DELETE', path: '/links/a' });
+    await call({ method: 'DELETE', path: routePath(read, { code: 'a' }) });
     expect(apiSend.mock.calls[0]).toEqual(['DELETE', '/links/a', undefined]);
   });
 });
