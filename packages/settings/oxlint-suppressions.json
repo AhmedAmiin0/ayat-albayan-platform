@@ -1,145 +1,17 @@
 {
-  "src/boundaries.test.ts": {
-    "typescript/no-unnecessary-template-expression": {
-      "count": 1
-    }
-  },
-  "src/custom-config/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/custom-config/public-config.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/custom-config/public.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/custom-config/schema.ts": {
     "no-nested-ternary": {
       "count": 2
-    }
-  },
-  "src/defs.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/domains/activity.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/domains/feedback.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/domains/finance/finance.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/domains/finance/payouts.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/domains/messaging.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    }
-  },
-  "src/domains/notifications.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
-  "src/domains/teaching/classroom.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/domains/teaching/recordings.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/domains/teaching/scheduling.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/gate.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/google-defs.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/groups.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/index.ts": {
-    "typescript/consistent-type-exports": {
-      "count": 1
-    }
-  },
-  "src/layout.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "src/ownership.ts": {
-    "stylistic/max-len": {
-      "count": 7
-    }
-  },
-  "src/read-settings.messaging.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/read-settings.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "src/registry.ts": {
     "no-nested-ternary": {
       "count": 1
     },
-    "stylistic/max-len": {
-      "count": 1
-    },
     "ab/no-shape-checks": {
       "count": 1
     },
     "typescript/no-unsafe-assignment": {
-      "count": 1
-    }
-  },
-  "src/seed/config-describe.migration.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/seed/entries.ts": {
-    "stylistic/max-len": {
-      "count": 6
-    }
-  },
-  "src/seed/seed-entries.sql-keys.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -151,15 +23,7 @@
       "count": 1
     }
   },
-  "src/seed/seed-entries.ts": {
-    "stylistic/max-len": {
-      "count": 4
-    }
-  },
   "src/seed/seed-payload.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    },
     "ab/no-shape-checks": {
       "count": 1
     }
@@ -167,36 +31,19 @@
   "src/seed/sql-defaults.migration.test.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/seed/sql-readers.ts": {
     "complexity": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/validation/patch.test.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
   "src/validation/patch.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "src/validation/schema/schema.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    },
     "typescript/no-unnecessary-condition": {
       "count": 1
     }
