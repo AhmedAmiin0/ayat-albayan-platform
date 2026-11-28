@@ -101,3 +101,31 @@ test('nothing in flight: one read; a list shown twice stays shown until both rel
   changeLists(client);
   expect(signals).toHaveLength(1); // hidden now: marked, not read
 });
+
+test('with a page-1 read: an idle list reads page 1 only, a change meanwhile one more page 1', async () => {
+  const { client, signals } = slowList();
+  const heads: (() => void)[] = [];
+  const head = () => new Promise<void>((resolve) => heads.push(() => resolve()));
+  const release = showList(KEY, head);
+  changeLists(client);
+  changeLists(client); // during the page-1 read
+  expect([heads.length, signals.length]).toEqual([1, 0]);
+  heads[0]?.();
+  await new Promise((r) => setTimeout(r, 0));
+  expect([heads.length, signals.length]).toEqual([2, 0]); // never a full read
+  release();
+});
+
+test('with a page-1 read: a full read in flight is joined, then page 1 (no second full read)', async () => {
+  const { client, signals, answer } = slowList();
+  const head = jest.fn(() => Promise.resolve());
+  const release = showList(KEY, head);
+  void client.refetchQueries({ queryKey: KEY }); // the safety poll, before the change
+  changeLists(client);
+  expect(head).not.toHaveBeenCalled();
+  await answer(0, 'all pages');
+  expect(head).toHaveBeenCalledTimes(1);
+  expect(signals).toHaveLength(1);
+  expect(signals[0]?.aborted).toBe(false);
+  release();
+});

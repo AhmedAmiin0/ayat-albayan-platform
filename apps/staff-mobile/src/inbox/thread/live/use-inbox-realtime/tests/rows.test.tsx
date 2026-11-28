@@ -2,6 +2,8 @@ import { chatLiveKey, type LiveRow } from '@ab/client-core';
 import { act, renderHook } from '@testing-library/react-native';
 import { AppState } from 'react-native';
 import { queryClient as client } from '@ab/mobile-kit';
+import { listCache, thread } from '@/inbox/shared/thread-fixtures';
+import type { ThreadListCache } from '@/inbox/thread/hooks/thread-list-cache';
 import { nudgeInboxStore, patchInboxStore } from '@/inbox/thread/local/store-session';
 import { inboxLive } from '@/inbox/thread/live/inbox-live';
 import { changeLists } from '@/inbox/thread/live/list-marks';
@@ -87,5 +89,16 @@ test('a failed patch never stops the re-read', async () => {
   await act(async () => jest.runAllTimersAsync());
   expect(nudgeInboxStore).toHaveBeenCalled();
   expect(changeLists).toHaveBeenCalled();
+  await act(async () => hook.unmount());
+});
+
+test('rows move the tick of every cached chats list at once, before any re-read', async () => {
+  const LIST = ['threads', 'list', { search: '', unread: false }];
+  client.setQueryData(LIST, listCache([{ ...thread, last_message_id: 'm1', last_status: 'sent' }]));
+  const { hook } = await mount();
+  await push([ROW]);
+  const listed = client.getQueryData<ThreadListCache>(LIST)?.pages[0]?.items[0];
+  expect(listed?.last_status).toBe('delivered');
+  client.removeQueries({ queryKey: LIST });
   await act(async () => hook.unmount());
 });
