@@ -2,9 +2,9 @@ import { Button } from '@ab/web-kit/components/ui/form/Button';
 import { Dialog } from '@ab/web-kit/components/ui/overlay/dialog';
 import { Toast } from '@ab/web-kit/components/ui/overlay/toast';
 import { t } from '@ab/web-kit/lib/i18n/i18n';
-import type { KickController } from '@ab/web-kit/classroom/kick/use-kick';
+import type { KickDialogProps } from './KickDialog.types';
 
-export function KickDialog({ kick }: { kick: KickController }) {
+export function KickDialog({ kick }: KickDialogProps) {
   const { target, toast } = kick;
   return (
     <>
@@ -29,7 +29,14 @@ export function KickDialog({ kick }: { kick: KickController }) {
           {null}
         </Dialog>
       )}
-      {toast && <Toast message={toast.message} tone={toast.tone} onDismiss={kick.dismiss} className="bottom-24" />}
+      {toast && (
+        <Toast
+          message={toast.message}
+          tone={toast.tone}
+          onDismiss={kick.dismiss}
+          className="bottom-24"
+        />
+      )}
     </>
   );
 }
