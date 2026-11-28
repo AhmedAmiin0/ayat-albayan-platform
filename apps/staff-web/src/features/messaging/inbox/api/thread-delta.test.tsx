@@ -50,9 +50,9 @@ describe('useLiveThread: the open chat polls a delta between full reads', () => 
     expect(q.get('pending')).toBe(sent.id);
     await waitFor(() =>
       expect(hook.result.current.data?.pages[0]?.messages.map((m) => [m.id, m.status])).toEqual([
-        ['m1', 'delivered'],
+        [uid('m1'), 'delivered'],
         [sent.id, 'sent'],
-        ['m2', 'delivered'],
+        [uid('m2'), 'delivered'],
       ]),
     );
     // The full read ran once (on open); everything after was a delta.

@@ -52,7 +52,7 @@ it('a send: 1 newest-page read brings a row that landed before it', async () => 
   await vi.waitFor(() => expect(chatReads()).toBe(1));
   expect([listFn.mock.calls.length, badgeFn.mock.calls.length]).toEqual([1, 1]);
   const ids = client.getQueryData(threadQuery(PHONE).queryKey)?.pages[0]?.messages.map((m) => m.id);
-  expect(ids).toEqual(['m1', 'm2', 'm3']);
+  expect(ids).toEqual([uid('m1'), uid('m2'), uid('m3')]);
   off();
 });
 
@@ -62,7 +62,7 @@ it('a bubble action: its row takes the held one by id, never a second bubble', a
   await vi.waitFor(() => expect(client.isFetching()).toBe(0));
   expect(chatReads()).toBe(0);
   const rows = client.getQueryData(threadQuery(PHONE).queryKey)?.pages[0]?.messages;
-  expect(rows?.map((m) => [m.id, m.status])).toEqual([['m1', 'sent']]);
+  expect(rows?.map((m) => [m.id, m.status])).toEqual([[uid('m1'), 'sent']]);
   off();
 });
 

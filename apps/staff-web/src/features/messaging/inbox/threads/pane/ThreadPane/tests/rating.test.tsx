@@ -30,7 +30,7 @@ function renderThread(input: {
   const last = new Date(Date.now() - input.lastInboundAgoMs).toISOString();
   const open = input.lastInboundAgoMs < 24 * HOUR;
   routeFetch(apiFetch, [
-    [PATH, detail([tap], { session_open: open, last_inbound_at: last, guardian_id: input.guardian === false ? null : 'g-1' })],
+    [PATH, detail([tap], { session_open: open, last_inbound_at: last, guardian_id: input.guardian === false ? null : uid('g-1') })],
     ['/messaging/templates', input.templates ?? [template(), RATING]],
     ['/messages/gate', { open: true, reason: null, queued: 0 }],
     ['/settings', SETTINGS],

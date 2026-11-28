@@ -54,7 +54,7 @@ it('an event whose delta merges: the new row lands in the chat', async () => {
   await waitFor(() => expect(hook.result.current.isSuccess).toBe(true));
   rereadChat(client, PHONE);
   await waitFor(() =>
-    expect(hook.result.current.data?.pages[0]?.messages.map((m) => m.id)).toEqual(['m1', 'm2']),
+    expect(hook.result.current.data?.pages[0]?.messages.map((m) => m.id)).toEqual([uid('m1'), uid('m2')]),
   );
 });
 
