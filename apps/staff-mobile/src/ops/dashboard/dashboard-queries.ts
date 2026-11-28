@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { dashboardCalls } from '@ab/client-core';
-import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
+import { apiFetch, apiSend } from '@ab/mobile-kit';
+import { dashboardRoutes } from '@ab/money';
 import { addDays, riyadhToday, weekStart } from '@/calendar/lib/week';
 
 const dashboard = dashboardCalls({ apiFetch, apiSend });
@@ -15,7 +16,7 @@ export function weekRange(now: Date): { from: string; to: string } {
 /** GET /dashboard/summary?from&to (admin): counts from statuses. */
 export function useSummary(range: { from: string; to: string }) {
   return useQuery({
-    queryKey: [...pathKey('/dashboard/summary'), range],
+    queryKey: dashboardRoutes.summary.key.of(range),
     queryFn: () => dashboard.summary(range),
   });
 }
@@ -23,7 +24,7 @@ export function useSummary(range: { from: string; to: string }) {
 /** GET /dashboard/work: pending reports, unpaid packages and open tasks, oldest first. */
 export function useWork() {
   return useQuery({
-    queryKey: pathKey('/dashboard/work'),
+    queryKey: dashboardRoutes.work.key.all,
     queryFn: dashboard.work,
   });
 }

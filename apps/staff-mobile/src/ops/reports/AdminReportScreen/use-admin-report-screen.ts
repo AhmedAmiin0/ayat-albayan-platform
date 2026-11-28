@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Linking } from 'react-native';
-import { pathKey } from '@ab/mobile-kit';
+import { reportRoutes } from '@ab/shared';
 import { reports } from '@/ops/reports/report-calls';
 import type { AdminReportScreenState } from './AdminReportScreen.types';
 
@@ -15,7 +15,7 @@ async function openPdfOf(id: string): Promise<void> {
 export function useAdminReportScreen(): AdminReportScreenState {
   const { reportId } = useLocalSearchParams<{ reportId: string }>();
   const query = useQuery({
-    queryKey: pathKey(`/reports/${reportId}`),
+    queryKey: reportRoutes.get.key.of({ id: reportId }),
     queryFn: () => reports.get({ id: reportId }),
   });
   const [pdfFailed, setPdfFailed] = useState(false);
