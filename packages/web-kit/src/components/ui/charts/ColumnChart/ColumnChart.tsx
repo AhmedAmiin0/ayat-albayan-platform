@@ -10,9 +10,17 @@ export function ColumnChart({ label, months, series, line }: ColumnChartProps) {
   const drawn = drawSeries(series);
   return (
     <div className="grid gap-2">
-      <div role="img" aria-label={label} className="relative flex h-48 items-end gap-1 border-b border-rule">
+      <div
+        role="img"
+        aria-label={label}
+        className="relative flex h-48 items-end gap-1 border-b border-rule"
+      >
         {months.map((m, i) => (
-          <div key={m.key} data-month={m.key} className="flex h-full min-w-0 flex-1 items-end justify-center gap-px">
+          <div
+            key={m.key}
+            data-month={m.key}
+            className="flex h-full min-w-0 flex-1 items-end justify-center gap-px"
+          >
             {drawn.map((s) => (
               <span
                 key={s.key}

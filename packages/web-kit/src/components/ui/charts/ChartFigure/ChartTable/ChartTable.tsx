@@ -1,6 +1,5 @@
 import type { ChartTableProps } from './ChartTable.types';
-
-const cellClass = 'border-b border-rule px-2 py-1.5 text-start tabular-nums';
+import { cellClass } from './chart-table.helpers';
 
 export function ChartTable({ caption, data }: ChartTableProps) {
   return (

@@ -46,10 +46,11 @@ describe('ChartFigure', () => {
     expect(screen.queryByTestId('chart')).toBeNull();
     const region = screen.getByRole('region', { name: 'حسب الشهر' });
     expect(region.getAttribute('tabindex')).toBe('0');
-    expect(within(region).getAllByRole('columnheader').map((h) => h.textContent)).toEqual([
-      'الشهر',
-      'الإيرادات',
-    ]);
+    expect(
+      within(region)
+        .getAllByRole('columnheader')
+        .map((h) => h.textContent),
+    ).toEqual(['الشهر', 'الإيرادات']);
     fireEvent.click(screen.getByRole('button', { name: 'رسم' }));
     expect(screen.getByTestId('chart')).toBeTruthy();
   });

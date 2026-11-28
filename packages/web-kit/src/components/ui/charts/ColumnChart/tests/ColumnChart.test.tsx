@@ -20,7 +20,9 @@ describe('ColumnChart', () => {
 
   it('keeps months in the given order, oldest first, so it sits at inline-start', () => {
     const { container } = render(<ColumnChart label="x" months={MONTHS} series={[IN]} />);
-    const keys = [...container.querySelectorAll('[data-month]')].map((m) => m.getAttribute('data-month'));
+    const keys = [...container.querySelectorAll('[data-month]')].map((m) =>
+      m.getAttribute('data-month'),
+    );
     expect(keys).toEqual(['2026-01', '2026-02']);
   });
 
@@ -41,8 +43,12 @@ describe('ColumnChart', () => {
   it('adds a mirrored line and its key only when a line is given', () => {
     const { container, rerender } = render(<ColumnChart label="x" months={MONTHS} series={[IN]} />);
     expect(container.querySelector('[data-series-line]')).toBeNull();
-    rerender(<ColumnChart label="x" months={MONTHS} series={[IN]} line={{ ...OUT, label: 'الهامش' }} />);
-    expect(container.querySelector('[data-series-line]')?.getAttribute('class')).toMatch(/rtl:-scale-x-100/);
+    rerender(
+      <ColumnChart label="x" months={MONTHS} series={[IN]} line={{ ...OUT, label: 'الهامش' }} />,
+    );
+    expect(container.querySelector('[data-series-line]')?.getAttribute('class')).toMatch(
+      /rtl:-scale-x-100/,
+    );
     expect(container.querySelector('[data-key-line]')?.textContent).toBe('الهامش');
   });
 

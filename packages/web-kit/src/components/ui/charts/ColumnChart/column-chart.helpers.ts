@@ -26,5 +26,8 @@ export function linePoints(values: readonly number[], max: number): string {
 }
 
 export function drawSeries(series: readonly ColumnSeries[]): DrawnSeries[] {
-  return series.map((s, i) => ({ ...s, fill: SERIES_FILLS[i % SERIES_FILLS.length] ?? 'bg-ink-3' }));
+  return series.map((s, i) => ({
+    ...s,
+    fill: SERIES_FILLS[i % SERIES_FILLS.length] ?? 'bg-ink-3',
+  }));
 }

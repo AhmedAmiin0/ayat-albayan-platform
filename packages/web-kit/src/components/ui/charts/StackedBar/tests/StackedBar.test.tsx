@@ -15,7 +15,9 @@ describe('StackedBar', () => {
   it('is a named group whose bar is hidden and whose legend prints value and percent', () => {
     const { container } = render(<StackedBar label="الحلقات حسب الحالة" segments={SEGMENTS} />);
     const group = screen.getByRole('group', { name: 'الحلقات حسب الحالة' });
-    expect(group.querySelector('[aria-hidden="true"]')).toBe(fillOf(container, 'held')?.parentElement);
+    expect(group.querySelector('[aria-hidden="true"]')).toBe(
+      fillOf(container, 'held')?.parentElement,
+    );
     const held = container.querySelector('[data-segment="held"]') as HTMLElement;
     expect(within(held).getByText('تمت')).toBeTruthy();
     expect(within(held).getByText('6')).toBeTruthy();
@@ -29,7 +31,10 @@ describe('StackedBar', () => {
   });
 
   it('keeps unflagged segments in neutral inks and only flagged ones in danger or saffron', () => {
-    const flagged = [...SEGMENTS, { key: 'late', label: 'متأخر', value: 1, glyph: 'half' as const, flag: 'act' as const }];
+    const flagged = [
+      ...SEGMENTS,
+      { key: 'late', label: 'متأخر', value: 1, glyph: 'half' as const, flag: 'act' as const },
+    ];
     const { container } = render(<StackedBar label="x" segments={flagged} />);
     expect(fillOf(container, 'held')?.className).toMatch(/bg-ink-3/);
     expect(fillOf(container, 'planned')?.className).toMatch(/bg-ink-2/);
@@ -39,13 +44,22 @@ describe('StackedBar', () => {
 
   it('marks each legend entry with its status glyph, not colour alone', () => {
     const { container } = render(<StackedBar label="x" segments={SEGMENTS} />);
-    const glyphs = [...container.querySelectorAll('[data-glyph]')].map((g) => g.getAttribute('data-glyph'));
+    const glyphs = [...container.querySelectorAll('[data-glyph]')].map((g) =>
+      g.getAttribute('data-glyph'),
+    );
     expect(glyphs).toEqual(['fill', 'hollow', 'struck']);
   });
 
   it('makes a legend entry a button only when its segment can be selected', () => {
     const onSelect = vi.fn();
-    render(<StackedBar label="x" segments={[{ ...SEGMENTS[1], key: 'p', label: 'مجدولة', value: 1, glyph: 'hollow', onSelect }]} />);
+    render(
+      <StackedBar
+        label="x"
+        segments={[
+          { ...SEGMENTS[1], key: 'p', label: 'مجدولة', value: 1, glyph: 'hollow', onSelect },
+        ]}
+      />,
+    );
     fireEvent.click(screen.getByRole('button', { name: 'مجدولة' }));
     expect(onSelect).toHaveBeenCalledOnce();
   });
@@ -55,7 +69,10 @@ describe('StackedBar', () => {
       <StackedBar
         label="x"
         empty="لا بيانات"
-        segments={[{ key: 'a', label: 'أ', value: 0, glyph: 'fill' }, { key: 'b', label: 'ب', value: -3, glyph: 'fill' }]}
+        segments={[
+          { key: 'a', label: 'أ', value: 0, glyph: 'fill' },
+          { key: 'b', label: 'ب', value: -3, glyph: 'fill' },
+        ]}
       />,
     );
     expect(screen.getByText('لا بيانات')).toBeTruthy();
@@ -66,7 +83,10 @@ describe('StackedBar', () => {
     const { container } = render(
       <StackedBar
         label="x"
-        segments={[{ key: 'a', label: 'أ', value: 4, glyph: 'fill' }, { key: 'b', label: 'ب', value: -4, glyph: 'fill' }]}
+        segments={[
+          { key: 'a', label: 'أ', value: 4, glyph: 'fill' },
+          { key: 'b', label: 'ب', value: -4, glyph: 'fill' },
+        ]}
       />,
     );
     expect(fillOf(container, 'a')?.style.inlineSize).toBe('100%');
