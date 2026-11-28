@@ -2855,9 +2855,6 @@
   "src/inbox/thread/hooks/thread-poll/thread-poll.ts": {
     "complexity": {
       "count": 1
-    },
-    "ab/no-untyped-api-calls": {
-      "count": 2
     }
   },
   "src/inbox/thread/hooks/thread-route.test.tsx": {
@@ -2876,11 +2873,6 @@
     },
     "typescript/no-confusing-void-expression": {
       "count": 4
-    }
-  },
-  "src/inbox/thread/hooks/use-thread.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
     }
   },
   "src/inbox/thread/live/inbox-live.test.tsx": {
