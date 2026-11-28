@@ -4,8 +4,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
-import { searchTerm } from './http';
-import { toLeadListPage } from './leads.mapper';
+import { searchTerm, toLeadListPage } from './http';
 import { LeadProfileService } from './lead-profile.service';
 import { LeadsService } from './leads.service';
 
