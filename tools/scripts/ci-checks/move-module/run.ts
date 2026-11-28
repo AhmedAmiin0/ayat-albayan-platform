@@ -58,6 +58,14 @@ function rewriteAll(r: Resolver, pairs: [string, string][], table: Map<string, s
   return count;
 }
 
+/** Rewrites every specifier and repo path for `pairs`, then renames the files on disk. */
+export function applyPairs(root: string, pairs: [string, string][]): number {
+  const r: Resolver = { root, aliases: loadAliases(root), renamed: new Map(pairs) };
+  const rewritten = rewriteAll(r, pairs, new Map());
+  moveFiles(root, pairs.filter(([from]) => existsSync(posix.join(root, from))));
+  return rewritten;
+}
+
 /** Applies one move map: rewrites every specifier, path reference and renamed identifier, moves the files, writes barrels. */
 export function runMap(root: string, mapFile: string): RunReport {
   const { map, pairs } = filesOf(root, mapFile);
