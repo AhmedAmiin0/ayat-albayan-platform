@@ -2,9 +2,18 @@ import { createMeetingSchema, mayInvitePhones, type MeetingCreateResult } from '
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { parseOrThrow } from '@/common/http/http';
-import { InternalMeetingsRepo, type MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
-import { hashMeetingToken, newMeetingToken } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
-import { chatCount, MeetingInviteFlow } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.flow';
+import {
+  InternalMeetingsRepo,
+  type MeetingRow,
+} from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
+import {
+  hashMeetingToken,
+  newMeetingToken,
+} from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
+import {
+  chatCount,
+  MeetingInviteFlow,
+} from '@/modules/teaching/classroom/meetings/invites/meeting-invite.flow';
 import { visibleView } from '@/modules/teaching/classroom/meetings/invites/meeting-invite.policy';
 import { MeetingInviteeResolver } from '@/modules/teaching/classroom/meetings/invites/meeting-invitee.resolver';
 import { MeetingInviteesRepo } from '@/modules/teaching/classroom/meetings/invites/meeting-invitees.repo';
@@ -34,7 +43,10 @@ export class MeetingCreateService {
     private readonly deps: MeetingCreateDeps,
   ) {}
 
-  async create(input: { user: AuthUser; body: unknown }, now = new Date()): Promise<MeetingCreateResult> {
+  async create(
+    input: { user: AuthUser; body: unknown },
+    now = new Date(),
+  ): Promise<MeetingCreateResult> {
     const { user } = input;
     const body = parseOrThrow(createMeetingSchema, input.body ?? {});
     const times = scheduleTimes(body, now);
@@ -43,13 +55,30 @@ export class MeetingCreateService {
     if (prior) return this.replay(prior, user);
     const invitees = await this.deps.resolver.resolve({ user, invitees: body.invitees ?? [] });
     const policy = await this.deps.resolver.policy(user);
-    await this.deps.flow.assertDailyLimit({ actorId: user.id, now, adding: chatCount(invitees, policy) });
+    await this.deps.flow.assertDailyLimit({
+      actorId: user.id,
+      now,
+      adding: chatCount(invitees, policy),
+    });
     const token = newMeetingToken();
     const title = body.title ?? (await this.queries.defaultTitle());
-    const row = await this.queries.insert({ title, createdBy: user.id, hash: hashMeetingToken(token), ...times, clientRequestId: requestId });
+    const row = await this.queries.insert({
+      title,
+      createdBy: user.id,
+      hash: hashMeetingToken(token),
+      ...times,
+      clientRequestId: requestId,
+    });
     if (!row) return this.replay(await this.byRequestOrFail(user.id, requestId), user);
     const win = await this.queries.joinWindow();
-    const results = await this.deps.flow.invite({ meeting: row, actorId: user.id, invitees, win, now, policy });
+    const results = await this.deps.flow.invite({
+      meeting: row,
+      actorId: user.id,
+      invitees,
+      win,
+      now,
+      policy,
+    });
     return { id: row.id, url: this.deps.flow.linkOf(token), invitees: results, replayed: false };
   }
 
@@ -58,7 +87,11 @@ export class MeetingCreateService {
     await this.queries.rotate(meeting.id, hashMeetingToken(token));
     const rows = await this.deps.invitees.forMeeting(meeting.id);
     const seesAll = mayInvitePhones(user.role);
-    const invitees = rows.map((r) => ({ ...visibleView(toInviteeView(r), seesAll), link: null, invitation_text: null }));
+    const invitees = rows.map((r) => ({
+      ...visibleView(toInviteeView(r), seesAll),
+      link: null,
+      invitation_text: null,
+    }));
     return { id: meeting.id, url: this.deps.flow.linkOf(token), invitees, replayed: true };
   }
 

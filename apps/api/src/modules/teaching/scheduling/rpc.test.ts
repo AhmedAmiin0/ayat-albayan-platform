@@ -10,7 +10,13 @@ const pgError = (code: string, message: string): PostgrestError =>
 
 describe('rpcError — lesson RPC errors → HTTP (docs/10 §3)', () => {
   it('raised invalid_transition / rule_not_active / stale_time / course_changed / teacher_clash → 409', () => {
-    const codes = ['invalid_transition', 'rule_not_active', 'stale_time', 'course_changed', 'teacher_clash'];
+    const codes = [
+      'invalid_transition',
+      'rule_not_active',
+      'stale_time',
+      'course_changed',
+      'teacher_clash',
+    ];
     for (const code of codes) {
       const e = rpcError(pgError('P0001', code));
       expect(e).toBeInstanceOf(ConflictException);
@@ -22,7 +28,9 @@ describe('rpcError — lesson RPC errors → HTTP (docs/10 §3)', () => {
   it('a unique violation on a generated slot → 409 slot_taken; other unique keys are not', () => {
     const slot = 'duplicate key value violates unique constraint "lessons_rule_date_uidx"';
     expect(errorCode(rpcError(pgError('23505', slot)))).toBe('slot_taken');
-    expect(errorCode(rpcError(pgError('23505', 'duplicate key "messages_dedup_key_key"')))).toBeUndefined();
+    expect(
+      errorCode(rpcError(pgError('23505', 'duplicate key "messages_dedup_key_key"'))),
+    ).toBeUndefined();
   });
 
   it('any other P0001 or unknown error is not dressed up as a domain error', () => {
@@ -37,7 +45,9 @@ describe('callRpc', () => {
     const db = {
       rpc: async (fn: string, args: unknown) => {
         calls.push([fn, args]);
-        return fn === 'generate_rule_lessons' ? { data: [1], error: null } : { data: null, error: pgError('P0001', 'rule_not_active') };
+        return fn === 'generate_rule_lessons'
+          ? { data: [1], error: null }
+          : { data: null, error: pgError('P0001', 'rule_not_active') };
       },
     } as unknown as Db;
     expect(await callRpc(db, 'generate_rule_lessons', { p: 1 })).toEqual([1]);

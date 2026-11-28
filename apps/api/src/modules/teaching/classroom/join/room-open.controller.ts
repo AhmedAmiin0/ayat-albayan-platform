@@ -16,7 +16,10 @@ export class RoomOpenController {
   /** 200 the new window; 403 not yours, 409 lesson_not_open, 410 join_closed. */
   @Post('open')
   @HttpCode(200)
-  open(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<RoomOpenResult> {
+  open(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<RoomOpenResult> {
     return this.opener.open({ user, lessonId: id });
   }
 }

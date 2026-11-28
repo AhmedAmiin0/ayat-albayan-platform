@@ -1,7 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { ADMIN, ASSISTANT, GUARDIAN, OTHER_TEACHER, SALES, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  ADMIN,
+  ASSISTANT,
+  GUARDIAN,
+  OTHER_TEACHER,
+  SALES,
+  TEACHER,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import { meetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
-import { canManageMeeting, hashMeetingToken, looksLikeMeetingToken, meetingRoleOf, newMeetingToken, roleOfIdentity } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
+import {
+  canManageMeeting,
+  hashMeetingToken,
+  looksLikeMeetingToken,
+  meetingRoleOf,
+  newMeetingToken,
+  roleOfIdentity,
+} from '@/modules/teaching/classroom/internal-meetings/internal-meetings.token';
 
 describe('meeting link token', () => {
   it('is 32 random bytes as 43 base64url characters, stored as a sha256 hex hash', () => {

@@ -33,7 +33,8 @@ interface Who {
 const NEVER = new Date(8.64e15);
 
 /** On the balance as migration 991 reads it: not cancelled, or cancelled as a stopped course. */
-const onBalance = (r: PackageRow): boolean => r.status !== 'cancelled' || r.cancel_kind === 'stopped';
+const onBalance = (r: PackageRow): boolean =>
+  r.status !== 'cancelled' || r.cancel_kind === 'stopped';
 
 const startOf = (r: PackageRow, tz: string): Date =>
   r.status === 'cancelled' ? NEVER : startOfLocalDay(r.starts_on, tz);

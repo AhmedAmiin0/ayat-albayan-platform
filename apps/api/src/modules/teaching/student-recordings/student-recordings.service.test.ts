@@ -15,7 +15,10 @@ const linksOf = async (rows: readonly { id: string; status: string }[]) =>
 const query = { page: 1, pageSize: 10 };
 const service = () =>
   new StudentRecordingsService(
-    new StudentRecordingAccess(q as unknown as StudentRecordingRepo, teachersFake() as unknown as TeachersRepo),
+    new StudentRecordingAccess(
+      q as unknown as StudentRecordingRepo,
+      teachersFake() as unknown as TeachersRepo,
+    ),
     q as unknown as StudentRecordingRepo,
     views as unknown as RecordingViews,
   );
@@ -69,7 +72,11 @@ describe('GET /students/:id/recordings', () => {
     q.taughtBy.mockResolvedValue(true);
     const filtered = { page: 2, pageSize: 5, from: '2026-10-01', teacherId: 'x' };
     await service().list({ user: TEACHER, studentId: STUDENT, query: filtered });
-    expect(q.page).toHaveBeenCalledWith({ studentId: STUDENT, onlyTeacherId: TEACHER_ID, query: filtered });
+    expect(q.page).toHaveBeenCalledWith({
+      studentId: STUDENT,
+      onlyTeacherId: TEACHER_ID,
+      query: filtered,
+    });
   });
 
   it('an assistant of the student lists; the access refusal stops before any recording query', async () => {
@@ -77,7 +84,9 @@ describe('GET /students/:id/recordings', () => {
     await service().list({ user: ASSISTANT, studentId: STUDENT, query });
     q.assists.mockResolvedValue(false);
     q.page.mockClear();
-    await expect(service().list({ user: ASSISTANT, studentId: STUDENT, query })).rejects.toBeInstanceOf(ForbiddenException);
+    await expect(
+      service().list({ user: ASSISTANT, studentId: STUDENT, query }),
+    ).rejects.toBeInstanceOf(ForbiddenException);
     expect(q.page).not.toHaveBeenCalled();
   });
 });
@@ -85,7 +94,8 @@ describe('GET /students/:id/recordings', () => {
 describe('can_manage: who may toggle visibility', () => {
   it('an admin on every row; a teacher only on the lessons they taught; an assistant on none', async () => {
     q.page.mockResolvedValue({ rows: [joinRow(), joinRow({}, 'teacher-9')], total: 2 });
-    const flags = async (user: typeof ADMIN) => (await service().list({ user, studentId: STUDENT, query })).items.map((i) => i.can_manage);
+    const flags = async (user: typeof ADMIN) =>
+      (await service().list({ user, studentId: STUDENT, query })).items.map((i) => i.can_manage);
     expect(await flags(ADMIN)).toEqual([true, true]);
     expect(await flags(TEACHER)).toEqual([true, false]);
     q.assists.mockResolvedValue(true);
@@ -102,7 +112,10 @@ describe('group lessons: the same recording is in EACH attending student’s fil
     const b = await service().list({ user: TEACHER, studentId: SIBLING, query });
     expect(a.items[0]?.id).toBe(b.items[0]?.id);
     expect(a.items[0]?.lesson_id).toBe(b.items[0]?.lesson_id);
-    expect(q.page.mock.calls.map(([i]) => (i as { studentId: string }).studentId)).toEqual([STUDENT, SIBLING]);
+    expect(q.page.mock.calls.map(([i]) => (i as { studentId: string }).studentId)).toEqual([
+      STUDENT,
+      SIBLING,
+    ]);
   });
 });
 
@@ -112,14 +125,18 @@ describe('GET /students/:id/recorded-lesson-ids', () => {
     expect(q.doneLessonIds).toHaveBeenCalledWith({ studentId: STUDENT, onlyTeacherId: null });
     expect(views.urlsOf).not.toHaveBeenCalled();
     q.doneLessonIds.mockClear();
-    await expect(service().recordedLessonIds({ user: GUARDIAN, studentId: STUDENT })).rejects.toBeInstanceOf(ForbiddenException);
+    await expect(
+      service().recordedLessonIds({ user: GUARDIAN, studentId: STUDENT }),
+    ).rejects.toBeInstanceOf(ForbiddenException);
     expect(q.doneLessonIds).not.toHaveBeenCalled();
   });
 });
 
 describe('a guardian has no recordings route', () => {
   it('is refused before any recording query (the portal will add its own)', async () => {
-    await expect(service().list({ user: GUARDIAN, studentId: STUDENT, query })).rejects.toBeInstanceOf(ForbiddenException);
+    await expect(
+      service().list({ user: GUARDIAN, studentId: STUDENT, query }),
+    ).rejects.toBeInstanceOf(ForbiddenException);
     expect(q.page).not.toHaveBeenCalled();
   });
 });

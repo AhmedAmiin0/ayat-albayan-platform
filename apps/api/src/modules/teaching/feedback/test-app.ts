@@ -6,19 +6,37 @@ import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { messagingRoot } from '@/common/infra/test-root';
 import { FeedbackModule } from './feedback.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { Outbox } from '@/modules/messaging/inbox/send/outbox';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { TemplateRegistry } from '@/modules/messaging/whatsapp/templates/catalog/template.registry';
 import { FEEDBACK_CONFIG } from './feedback.config';
-import { ADMIN, GUARDIAN, listRow, OTHER_TEACHER, SECRET, TEACHER, TEACHER_ID } from './feedback.fakes';
+import {
+  ADMIN,
+  GUARDIAN,
+  listRow,
+  OTHER_TEACHER,
+  SECRET,
+  TEACHER,
+  TEACHER_ID,
+} from './feedback.fakes';
 import { FeedbackRepo } from './feedback.repo';
 import { FeedbackReadRepo } from './read/feedback.read.repo';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
 
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, guardian: GUARDIAN };
+const USERS: Record<string, AuthUser> = {
+  admin: ADMIN,
+  teacher: TEACHER,
+  other: OTHER_TEACHER,
+  guardian: GUARDIAN,
+};
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
@@ -26,12 +44,30 @@ const verify: TokenVerifier = async (token) => {
 };
 
 type Token = keyof typeof USERS;
-export type Call = { method: 'GET' | 'POST'; url: string; token?: Token | null; body?: object; ip?: string };
+export interface Call {
+  method: 'GET' | 'POST';
+  url: string;
+  token?: Token | null;
+  body?: object;
+  ip?: string;
+}
 
 function mocks() {
   return {
-    queries: { requestContext: vi.fn(), find: vi.fn(), issue: vi.fn(), byTokenHash: vi.fn(), answer: vi.fn() },
-    reads: { page: vi.fn(), mine: vi.fn(), averages: vi.fn(), students: vi.fn(), teachers: vi.fn() },
+    queries: {
+      requestContext: vi.fn(),
+      find: vi.fn(),
+      issue: vi.fn(),
+      byTokenHash: vi.fn(),
+      answer: vi.fn(),
+    },
+    reads: {
+      page: vi.fn(),
+      mine: vi.fn(),
+      averages: vi.fn(),
+      students: vi.fn(),
+      teachers: vi.fn(),
+    },
     teachers: { idByProfile: vi.fn() },
     templates: { approved: vi.fn() },
     outbox: { send: vi.fn() },
@@ -42,14 +78,24 @@ function mocks() {
 export async function feedbackApp(secret: string | null = SECRET) {
   const m = mocks();
   const mod = await Test.createTestingModule({ imports: [messagingRoot(FeedbackModule)] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(FeedbackRepo).useValue(m.queries)
-    .overrideProvider(FeedbackReadRepo).useValue(m.reads)
-    .overrideProvider(TeachersRepo).useValue(m.teachers)
-    .overrideProvider(TemplateRegistry).useValue(m.templates)
-    .overrideProvider(Outbox).useValue(m.outbox)
-    .overrideProvider(FEEDBACK_CONFIG).useValue({ secret })
-    .overrideProvider(SettingsService).useValue(fakeSettings())
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(FeedbackRepo)
+    .useValue(m.queries)
+    .overrideProvider(FeedbackReadRepo)
+    .useValue(m.reads)
+    .overrideProvider(TeachersRepo)
+    .useValue(m.teachers)
+    .overrideProvider(TemplateRegistry)
+    .useValue(m.templates)
+    .overrideProvider(Outbox)
+    .useValue(m.outbox)
+    .overrideProvider(FEEDBACK_CONFIG)
+    .useValue({ secret })
+    .overrideProvider(SettingsService)
+    .useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
@@ -71,7 +117,9 @@ export async function feedbackApp(secret: string | null = SECRET) {
     m.reads.page.mockResolvedValue({ rows: [listRow()], total: 1 });
     m.reads.mine.mockResolvedValue({ rows: [listRow()], total: 1 });
     m.reads.averages.mockResolvedValue([]);
-    m.reads.students.mockResolvedValue([{ id: listRow().student_id, code: 'AB-0183', name: 'سهيلة' }]);
+    m.reads.students.mockResolvedValue([
+      { id: listRow().student_id, code: 'AB-0183', name: 'سهيلة' },
+    ]);
     m.reads.teachers.mockResolvedValue([{ id: TEACHER_ID, display_name_ar: 'أبرار' }]);
   };
   return { ...m, app, call, reset };

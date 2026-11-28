@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { cancelChange, CANCEL_EVENT, invalidTransition } from '@/modules/teaching/lessons/status/transition';
+import {
+  cancelChange,
+  CANCEL_EVENT,
+  invalidTransition,
+} from '@/modules/teaching/lessons/status/transition';
 
 const LESSON = { id: 'l1', status: 'confirmed' as const, starts_at: '2026-10-04T14:00:00Z' };
 const ctx = (over: Partial<Parameters<typeof cancelChange>[1]> = {}) => ({
@@ -38,7 +42,11 @@ describe('cancelChange — chargeable on cancel (R-SCH-07)', () => {
 
 describe('CANCEL_EVENT / invalidTransition', () => {
   it('maps who cancelled to the state-machine event', () => {
-    expect(CANCEL_EVENT).toEqual({ teacher: 'cancel_by_teacher', admin: 'cancel_by_admin', student: 'excuse' });
+    expect(CANCEL_EVENT).toEqual({
+      teacher: 'cancel_by_teacher',
+      admin: 'cancel_by_admin',
+      student: 'excuse',
+    });
   });
 
   it('409 body carries code, message, from and event', () => {

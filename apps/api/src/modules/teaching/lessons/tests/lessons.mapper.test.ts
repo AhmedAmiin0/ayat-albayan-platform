@@ -1,12 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';
-import { LESSON_ID, lessonRow, STUDENT_ID, TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import {
+  LESSON_ID,
+  lessonRow,
+  STUDENT_ID,
+  TEACHER_ID,
+} from '@/modules/teaching/lessons/lessons.fakes';
 
 const none = new Map<string, number>();
 
 describe('toLessonView (R-LES-01, R-LES-03, R-SCH-03)', () => {
   it('maps the row, normalising Postgres instants to ISO UTC', () => {
-    const view = toLessonView(lessonRow({ confirmed_at: '2026-10-03 09:00:00+00' }), { role: 'admin', seq: none });
+    const view = toLessonView(lessonRow({ confirmed_at: '2026-10-03 09:00:00+00' }), {
+      role: 'admin',
+      seq: none,
+    });
     expect(view).toMatchObject({
       id: LESSON_ID,
       teacher: { id: TEACHER_ID, display_name_ar: 'أبرار', tz: 'Africa/Cairo' },
@@ -14,13 +22,28 @@ describe('toLessonView (R-LES-01, R-LES-03, R-SCH-03)', () => {
       ends_at: '2026-10-04T14:45:00.000Z',
       confirmed_at: '2026-10-03T09:00:00.000Z',
       meeting_link: 'https://meet.jit.si/abrar',
-      students: [{ id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', tz: 'Asia/Riyadh', attendance: null, chargeable: true, seq: null }],
+      students: [
+        {
+          id: STUDENT_ID,
+          code: 'AB-0183',
+          name: 'سهيلة',
+          tz: 'Asia/Riyadh',
+          attendance: null,
+          chargeable: true,
+          seq: null,
+        },
+      ],
     });
   });
 
   it('carries the rule’s weekdays (a series reschedule keeps them); null for a one-off', () => {
-    expect(toLessonView(lessonRow({ rule: { byday: [0, 3] } }), { role: 'admin', seq: none }).rule_byday).toEqual([0, 3]);
-    expect(toLessonView(lessonRow({ rule_id: null, rule: null }), { role: 'admin', seq: none }).rule_byday).toBeNull();
+    expect(
+      toLessonView(lessonRow({ rule: { byday: [0, 3] } }), { role: 'admin', seq: none }).rule_byday,
+    ).toEqual([0, 3]);
+    expect(
+      toLessonView(lessonRow({ rule_id: null, rule: null }), { role: 'admin', seq: none })
+        .rule_byday,
+    ).toBeNull();
   });
 
   it('fills the lesson number from v_lesson_sequence for that (lesson, student)', () => {
@@ -69,14 +92,27 @@ describe('toLessonView (R-LES-01, R-LES-03, R-SCH-03)', () => {
   });
 
   it('a terminal lesson offers nothing', () => {
-    expect(toLessonView(lessonRow({ status: 'rescheduled' }), { role: 'admin', seq: none }).allowed_events).toEqual([]);
+    expect(
+      toLessonView(lessonRow({ status: 'rescheduled' }), { role: 'admin', seq: none })
+        .allowed_events,
+    ).toEqual([]);
   });
 
   it('sorts group students by Arabic name and tolerates a missing embed', () => {
     const row = lessonRow({
       lesson_students: [
-        { student_id: 's2', attendance: null, chargeable: true, student: { id: 's2', code: 'AB-0200', name: 'مريم', tz: 'Asia/Riyadh' } },
-        { student_id: 's1', attendance: 'on_time', chargeable: true, student: { id: 's1', code: null, name: 'أحمد', tz: 'Africa/Cairo' } },
+        {
+          student_id: 's2',
+          attendance: null,
+          chargeable: true,
+          student: { id: 's2', code: 'AB-0200', name: 'مريم', tz: 'Asia/Riyadh' },
+        },
+        {
+          student_id: 's1',
+          attendance: 'on_time',
+          chargeable: true,
+          student: { id: 's1', code: null, name: 'أحمد', tz: 'Africa/Cairo' },
+        },
       ],
       teacher: null,
     });

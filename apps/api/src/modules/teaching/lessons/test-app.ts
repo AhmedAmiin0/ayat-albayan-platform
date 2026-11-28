@@ -47,7 +47,7 @@ const verify: TokenVerifier = async (token) => {
 };
 
 type Token = keyof typeof USERS;
-export type InjectArgs = { method: 'GET' | 'POST' | 'PATCH'; url: string; token?: Token; body?: object };
+export interface InjectArgs { method: 'GET' | 'POST' | 'PATCH'; url: string; token?: Token; body?: object }
 
 function mocks() {
   return {

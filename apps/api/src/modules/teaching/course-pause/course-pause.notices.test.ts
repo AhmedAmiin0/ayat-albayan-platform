@@ -44,7 +44,11 @@ describe('CoursePauseService: the teacher and the family hear a pause or a resum
 
   it('extending a pause tells nobody', async () => {
     const { m, svc } = service();
-    await svc.setUntil({ studentId: STUDENT, body: { untilDate: '2026-12-01' }, actor: { id: 'u1' } });
+    await svc.setUntil({
+      studentId: STUDENT,
+      body: { untilDate: '2026-12-01' },
+      actor: { id: 'u1' },
+    });
     expect([m.follow.paused.mock.calls.length, m.follow.resumed.mock.calls.length]).toEqual([0, 0]);
   });
 });
@@ -59,7 +63,13 @@ describe('CoursePauseFollowUps.paused / resumed → LessonEvents.scheduleChanged
     await follow.paused(rpcOut({ cancelled: ['l1'], left: ['g1'] }), 'u1');
     await follow.resumed(rpcOut(), null);
     expect(seen).toEqual([
-      { kind: 'course_paused', pauseId: PAUSE, studentId: STUDENT, lessonIds: ['l1', 'g1'], actorId: 'u1' },
+      {
+        kind: 'course_paused',
+        pauseId: PAUSE,
+        studentId: STUDENT,
+        lessonIds: ['l1', 'g1'],
+        actorId: 'u1',
+      },
       { kind: 'course_resumed', pauseId: PAUSE, studentId: STUDENT, actorId: null },
     ]);
     expect(vi.isMockFunction(events.scheduleChanged)).toBe(false);

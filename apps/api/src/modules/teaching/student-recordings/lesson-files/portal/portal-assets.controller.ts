@@ -1,6 +1,9 @@
 import {
   portalLessonFileUrlQuerySchema,
-  type PortalFileUrl, type PortalLessonAssets, type PortalLessonFileUrlQuery, type PortalRecordings,
+  type PortalFileUrl,
+  type PortalLessonAssets,
+  type PortalLessonFileUrlQuery,
+  type PortalRecordings,
 } from '@ab/shared';
 import { Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';

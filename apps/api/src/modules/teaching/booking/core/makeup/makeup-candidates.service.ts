@@ -26,18 +26,23 @@ export class MakeupCandidates {
   async list(studentId: string): Promise<MakeupCandidate[]> {
     const { makeup_window_days: days } = await this.settings.read();
     const since = new Date(Date.now() - days * DAY_MS).toISOString();
-    const data = rows(await this.db
-      .from('lessons')
-      .select(SELECT)
-      .eq('lesson_students.student_id', studentId)
-      .eq('lesson_students.chargeable', true)
-      .in('status', ['no_show', 'excused'])
-      .gte('starts_at', since)
-      .is('makeup_of_id', null)
-      .order('starts_at', { ascending: false })
-      .limit(LIMIT * 2));
+    const data = rows(
+      await this.db
+        .from('lessons')
+        .select(SELECT)
+        .eq('lesson_students.student_id', studentId)
+        .eq('lesson_students.chargeable', true)
+        .in('status', ['no_show', 'excused'])
+        .gte('starts_at', since)
+        .is('makeup_of_id', null)
+        .order('starts_at', { ascending: false })
+        .limit(LIMIT * 2),
+    );
     const missed = data.filter((l) => l.rule?.package !== 'trial');
-    const taken = await this.taken(missed.map((l) => l.id), studentId);
+    const taken = await this.taken(
+      missed.map((l) => l.id),
+      studentId,
+    );
     return missed
       .filter((l) => !taken.has(l.id))
       .slice(0, LIMIT)
@@ -53,12 +58,14 @@ export class MakeupCandidates {
   /** Missed lessons that already have an active makeup for this student (a group's others still can). */
   private async taken(ids: string[], studentId: string): Promise<Set<string>> {
     if (ids.length === 0) return new Set();
-    const data = rows(await this.db
-      .from('lessons')
-      .select('makeup_of_id')
-      .in('makeup_of_id', ids)
-      .eq('makeup_student_id', studentId)
-      .not('status', 'in', INACTIVE));
+    const data = rows(
+      await this.db
+        .from('lessons')
+        .select('makeup_of_id')
+        .in('makeup_of_id', ids)
+        .eq('makeup_student_id', studentId)
+        .not('status', 'in', INACTIVE),
+    );
     return new Set(data.flatMap((r) => (r.makeup_of_id ? [r.makeup_of_id] : [])));
   }
 }

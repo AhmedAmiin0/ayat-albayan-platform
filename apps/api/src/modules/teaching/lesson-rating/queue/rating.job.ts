@@ -13,7 +13,12 @@ const MINUTE = 60_000;
 @Injectable()
 export class RatingJob extends TickerJob implements OnModuleInit {
   private readonly log = new Logger(RatingJob.name);
-  protected readonly ticker = new Ticker({ name: RatingJob.name, firstMs: 45_000, everyMs: 5 * MINUTE, run: () => this.runOnce() });
+  protected readonly ticker = new Ticker({
+    name: RatingJob.name,
+    firstMs: 45_000,
+    everyMs: 5 * MINUTE,
+    run: () => this.runOnce(),
+  });
 
   constructor(
     private readonly queue: RatingQueue,

@@ -27,6 +27,8 @@ describe('planBooking — the picked slot pins an ambiguous first lesson (DST fa
   });
 
   it('a startsAt at another wall time is ignored (the rule decides)', () => {
-    expect(first({ startsAt: '2026-10-29T19:00:00.000Z' })?.starts_at.toISOString()).toBe('2026-10-29T21:30:00.000Z');
+    expect(first({ startsAt: '2026-10-29T19:00:00.000Z' })?.starts_at.toISOString()).toBe(
+      '2026-10-29T21:30:00.000Z',
+    );
   });
 });

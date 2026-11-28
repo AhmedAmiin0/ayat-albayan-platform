@@ -38,14 +38,14 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 
-export type Call = {
+export interface Call {
   method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
   url: string;
   token?: keyof typeof USERS | null;
   body?: object | string;
   ip?: string;
   headers?: Record<string, string>;
-};
+}
 
 /** Boots its root with the mocks; `reset()` restores the happy-path defaults (in beforeEach). */
 export async function classroomApp(config: typeof CONFIG | null = CONFIG) {

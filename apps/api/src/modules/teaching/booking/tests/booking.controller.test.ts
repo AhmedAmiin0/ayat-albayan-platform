@@ -46,7 +46,9 @@ describe('BookingController (docs/10 §5 #12–14)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [bookingRoot()] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
       .overrideProvider(BookingService)
       .useValue(booking)
@@ -73,7 +75,7 @@ describe('BookingController (docs/10 §5 #12–14)', () => {
     booking.book.mockResolvedValue({ rule_id: 'R1' });
     const res = await call({ method: 'POST', url: '/booking', payload: BODY });
     expect(res.statusCode).toBe(201);
-    expect(booking.book).toHaveBeenCalledWith(expect.objectContaining({ package: '8', studentIds: [IDS.s1] }), USERS['admin']?.id);
+    expect(booking.book).toHaveBeenCalledWith(expect.objectContaining({ package: '8', studentIds: [IDS.s1] }), USERS.admin?.id);
   });
 
   it('POST 400 validation_failed for free-text times or both shapes at once', async () => {
@@ -119,7 +121,9 @@ describe('BookingController (docs/10 §5 #12–14)', () => {
     slots.slots.mockResolvedValue({ teacher_tz: 'Africa/Cairo', step_min: 15, slots: [] });
     const base = `/booking/slots?teacherId=${IDS.teacher}&from=2026-10-04T00:00:00Z&to=2026-10-05T00:00:00Z&durationMin=45&stepMin=15`;
     expect((await call({ url: `${base}&excludeLessonId=${IDS.s1}` })).statusCode).toBe(200);
-    expect(slots.slots).toHaveBeenCalledWith(expect.objectContaining({ stepMin: 15, excludeLessonId: IDS.s1 }));
+    expect(slots.slots).toHaveBeenCalledWith(
+      expect.objectContaining({ stepMin: 15, excludeLessonId: IDS.s1 }),
+    );
     expect((await call({ url: `${base}&excludeLessonId=nope` })).statusCode).toBe(400);
   });
 

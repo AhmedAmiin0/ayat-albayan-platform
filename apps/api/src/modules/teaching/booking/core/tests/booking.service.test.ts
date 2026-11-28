@@ -12,7 +12,9 @@ const RESULT = {
   rule_id: 'R1',
   student_ids: [IDS.s1, IDS.s2],
   guardian_ids: [IDS.g1],
-  lessons: [{ id: 'L1', starts_at: '2026-10-04T14:00:00.000Z', ends_at: '2026-10-04T14:45:00.000Z' }],
+  lessons: [
+    { id: 'L1', starts_at: '2026-10-04T14:00:00.000Z', ends_at: '2026-10-04T14:45:00.000Z' },
+  ],
   message_ids: ['M1'],
   invoice_id: 'I1',
 };
@@ -29,13 +31,21 @@ function setup() {
   deps.queries.createBooking.mockResolvedValue(RESULT);
   const { after, sender, trial } = fakeTeacherAlert();
   const invoices = { resolve: vi.fn().mockResolvedValue(INVOICE) };
-  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, invoices as unknown as BookingInvoices, after);
+  const writer = new BookingWriter(
+    deps.queries as unknown as BookingRepo,
+    invoices as unknown as BookingInvoices,
+    after,
+  );
   const service = new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo);
   return { ...deps, service, sender, invoices, trial };
 }
 type Queries = ReturnType<typeof setup>['queries'];
 const sentAudit = (queries: Queries) => queries.createBooking.mock.calls[0]?.[0]?.audit;
-const T1 = { id: 'T1', starts_at: new Date('2026-10-04T14:00:00Z'), ends_at: new Date('2026-10-04T14:45:00Z') };
+const T1 = {
+  id: 'T1',
+  starts_at: new Date('2026-10-04T14:00:00Z'),
+  ends_at: new Date('2026-10-04T14:45:00Z'),
+};
 
 describe('BookingService (R-SCH-06, R-SCH-04, R-NFR-03)', () => {
   beforeEach(() => vi.useFakeTimers({ now: NOW, toFake: ['Date'] }));
@@ -60,7 +70,14 @@ describe('BookingService (R-SCH-06, R-SCH-04, R-NFR-03)', () => {
     const { service, queries } = setup();
     await service.book(bookingRequest(), ACTOR);
     expect(sentAudit(queries)).toEqual({
-      after: { kind: 'package', package: '8', lead_id: null, override_reason: null, conflicts: [], invoice_source: 'upload' },
+      after: {
+        kind: 'package',
+        package: '8',
+        lead_id: null,
+        override_reason: null,
+        conflicts: [],
+        invoice_source: 'upload',
+      },
     });
   });
 
@@ -86,7 +103,11 @@ describe('BookingService (R-SCH-06, R-SCH-04, R-NFR-03)', () => {
     const { service, queries, invoices } = setup();
     const req = bookingRequest({ invoice: { source: 'upload', path: 'req/a.png' } });
     await service.book(req, ACTOR);
-    expect(invoices.resolve).toHaveBeenCalledWith(req, { phones: ['+966552147730'], maxBytes: 10 * 1024 * 1024, waived: false });
+    expect(invoices.resolve).toHaveBeenCalledWith(req, {
+      phones: ['+966552147730'],
+      maxBytes: 10 * 1024 * 1024,
+      waived: false,
+    });
     expect(queries.createBooking.mock.calls[0]?.[0]?.invoice).toEqual(INVOICE);
   });
 

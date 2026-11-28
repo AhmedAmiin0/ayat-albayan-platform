@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { Db } from '@/common/db/db.module';
-import { MaxDurationRepo, RUN_CAP } from '@/modules/teaching/classroom/max-duration/max-duration.repo';
+import {
+  MaxDurationRepo,
+  RUN_CAP,
+} from '@/modules/teaching/classroom/max-duration/max-duration.repo';
 
 type Call = [string, ...unknown[]];
 const READS = ['select', 'is', 'or', 'order', 'limit'];

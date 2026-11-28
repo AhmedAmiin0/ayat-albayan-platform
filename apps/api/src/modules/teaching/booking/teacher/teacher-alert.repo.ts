@@ -24,18 +24,27 @@ export class TeacherAlertRepo {
   async lessons(ids: readonly string[]): Promise<AlertLessonRow[]> {
     const { data, error } = await this.db
       .from('lessons')
-      .select('id, starts_at, ends_at, meeting_link, teacher:teachers(id, profile_id, phone_e164, tz, display_name_ar, status, meeting_mode, profile:profiles!teachers_profile_id_fkey(disabled_at))')
+      .select(
+        'id, starts_at, ends_at, meeting_link, teacher:teachers(id, profile_id, phone_e164, tz, display_name_ar, status, meeting_mode, profile:profiles!teachers_profile_id_fkey(disabled_at))',
+      )
       .in('id', [...ids]);
     if (error) throw pgError(error);
     return data;
   }
 
-  async students(ids: readonly string[]): Promise<{ id: string; name: string; code: string | null }[]> {
+  async students(
+    ids: readonly string[],
+  ): Promise<{ id: string; name: string; code: string | null }[]> {
     if (ids.length === 0) return [];
-    const { data, error } = await this.db.from('students').select('id, name, code').in('id', [...ids]);
+    const { data, error } = await this.db
+      .from('students')
+      .select('id, name, code')
+      .in('id', [...ids]);
     if (error) throw pgError(error);
     // The booking's order (the wizard's), not the database's.
-    return ids.flatMap((id) => data.filter((s) => s.id === id).map((s) => ({ id: s.id, name: s.name ?? '', code: s.code })));
+    return ids.flatMap((id) =>
+      data.filter((s) => s.id === id).map((s) => ({ id: s.id, name: s.name ?? '', code: s.code })),
+    );
   }
 
   /**

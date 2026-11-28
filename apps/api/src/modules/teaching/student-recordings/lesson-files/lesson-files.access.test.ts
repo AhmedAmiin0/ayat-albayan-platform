@@ -2,7 +2,15 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import type { TeachersRepo } from '@/modules/people/teachers';
 import { LessonFilesAccess } from './lesson-files.access';
-import { ADMIN, GUARDIAN, LESSON, lessonRef, OTHER_TEACHER, TEACHER, teachersFake } from './lesson-files.fakes';
+import {
+  ADMIN,
+  GUARDIAN,
+  LESSON,
+  lessonRef,
+  OTHER_TEACHER,
+  TEACHER,
+  teachersFake,
+} from './lesson-files.fakes';
 import type { LessonFilesRepo } from './lesson-files.repo';
 
 const access = (lesson = lessonRef() as ReturnType<typeof lessonRef> | null) => {

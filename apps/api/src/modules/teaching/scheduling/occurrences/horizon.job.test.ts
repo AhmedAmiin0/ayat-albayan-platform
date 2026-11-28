@@ -55,7 +55,12 @@ describe('HorizonJob — daily refresh of active rules (R-SCH-02)', () => {
 
   it('never throws, even when the rule list cannot be read', async () => {
     rules.activeRuleIds.mockRejectedValue(new Error('db down'));
-    await expect(job().runOnce(NOW)).resolves.toEqual({ rules: 0, inserted: 0, failed: 0, ended: 0 });
+    await expect(job().runOnce(NOW)).resolves.toEqual({
+      rules: 0,
+      inserted: 0,
+      failed: 0,
+      ended: 0,
+    });
   });
 
   it('first ends the rules whose end date is before UTC yesterday (R-SCH-07)', async () => {
@@ -68,7 +73,9 @@ describe('HorizonJob — daily refresh of active rules (R-SCH-02)', () => {
   it('first runs a few minutes after boot (not on boot), then daily, and stops on shutdown', async () => {
     vi.useFakeTimers();
     const j = job();
-    const run = vi.spyOn(j, 'runOnce').mockResolvedValue({ rules: 0, inserted: 0, failed: 0, ended: 0 });
+    const run = vi
+      .spyOn(j, 'runOnce')
+      .mockResolvedValue({ rules: 0, inserted: 0, failed: 0, ended: 0 });
     j.onApplicationBootstrap();
     expect(run).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(5 * 60_000);

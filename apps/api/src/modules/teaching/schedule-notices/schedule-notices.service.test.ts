@@ -61,26 +61,59 @@ describe('ScheduleNotices: idempotent, one notice per pause', () => {
 
   it('a pause that took three lessons sends ONE course_paused per recipient, no lesson_cancelled', async () => {
     const h = harness();
-    const at = (d: string, id: string): TakenLessonRow =>
-      ({ id, starts_at: d, teacher: teacher() });
-    h.repo.lessons.mockResolvedValue([at('2026-11-02T08:00:00Z', 'a'), at('2026-11-04T08:00:00Z', 'b'), at('2026-11-06T08:00:00Z', 'c')]);
-    await h.notices.handle({ kind: 'course_paused', pauseId: 'P1', studentId: 'S1', lessonIds: ['a', 'b', 'c'], actorId: 'pS' }, NOW);
+    const at = (d: string, id: string): TakenLessonRow => ({
+      id,
+      starts_at: d,
+      teacher: teacher(),
+    });
+    h.repo.lessons.mockResolvedValue([
+      at('2026-11-02T08:00:00Z', 'a'),
+      at('2026-11-04T08:00:00Z', 'b'),
+      at('2026-11-06T08:00:00Z', 'c'),
+    ]);
+    await h.notices.handle(
+      {
+        kind: 'course_paused',
+        pauseId: 'P1',
+        studentId: 'S1',
+        lessonIds: ['a', 'b', 'c'],
+        actorId: 'pS',
+      },
+      NOW,
+    );
     expect(h.queued()).toEqual(['course_paused:P1:t:T1', 'course_paused:P1:g:G1']);
     expect(h.repo.lessons).toHaveBeenCalledWith(['a', 'b', 'c']);
   });
 
   it('a resume names the first lesson back, read after the lessons are booked again', async () => {
     const h = harness();
-    h.repo.nextLesson.mockResolvedValue({ id: 'n1', starts_at: '2026-11-03T08:00:00Z', teacher: teacher() });
-    await h.notices.handle({ kind: 'course_resumed', pauseId: 'P1', studentId: 'S1', actorId: null }, NOW);
+    h.repo.nextLesson.mockResolvedValue({
+      id: 'n1',
+      starts_at: '2026-11-03T08:00:00Z',
+      teacher: teacher(),
+    });
+    await h.notices.handle(
+      { kind: 'course_resumed', pauseId: 'P1', studentId: 'S1', actorId: null },
+      NOW,
+    );
     expect(h.repo.pauseRules).toHaveBeenCalledWith('P1');
-    expect(h.repo.nextLesson).toHaveBeenCalledWith({ studentId: 'S1', ruleIds: ['R1'], after: NOW });
+    expect(h.repo.nextLesson).toHaveBeenCalledWith({
+      studentId: 'S1',
+      ruleIds: ['R1'],
+      after: NOW,
+    });
     expect(h.queued()).toEqual(['course_resumed:P1:t:T1', 'course_resumed:P1:g:G1']);
   });
 
   it('a move: one notice per new start; moving it again is a new notice', async () => {
     const h = harness();
-    const move = { kind: 'lesson_rescheduled', lessonId: 'L1', fromStartsAt: FROM.toISOString(), actorId: null, familyNotice: true } as const;
+    const move = {
+      kind: 'lesson_rescheduled',
+      lessonId: 'L1',
+      fromStartsAt: FROM.toISOString(),
+      actorId: null,
+      familyNotice: true,
+    } as const;
     await h.notices.handle(move, NOW);
     h.repo.lesson.mockResolvedValue(lessonRow({ starts_at: '2026-11-03T08:00:00Z' }));
     await h.notices.handle(move, NOW);

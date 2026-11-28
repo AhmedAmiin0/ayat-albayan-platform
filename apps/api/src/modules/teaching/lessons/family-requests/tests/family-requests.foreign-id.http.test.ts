@@ -53,7 +53,11 @@ describe('family requests answered by an assistant (lessons.reschedule)', () => 
   afterAll(() => app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    m.proposals.get.mockResolvedValue({ id: REQUEST, lesson_id: LESSON_ID, requested_by: 'family' });
+    m.proposals.get.mockResolvedValue({
+      id: REQUEST,
+      lesson_id: LESSON_ID,
+      requested_by: 'family',
+    });
     m.store.get.mockResolvedValue(lessonRow());
     m.owners.ownersOf.mockResolvedValue(ownedBy(OTHER_SALES));
     m.deciding.approve.mockResolvedValue(LESSON_ID);

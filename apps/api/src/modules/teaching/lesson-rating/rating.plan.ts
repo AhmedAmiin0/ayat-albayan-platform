@@ -36,7 +36,9 @@ export const ratingDedupKey = (lessonId: string, guardianId: string): string =>
 const recorded = (ls: RatingLessonStudent): boolean => ls.attendance !== null;
 
 /** The guardians of the students who attended (feedbackEligible), each with their children's names. */
-export function ratingFamilies(lesson: RatingLesson): { guardian: RatingGuardian; names: string[] }[] {
+export function ratingFamilies(
+  lesson: RatingLesson,
+): { guardian: RatingGuardian; names: string[] }[] {
   const byGuardian = new Map<string, { guardian: RatingGuardian; names: string[] }>();
   for (const ls of lesson.lesson_students) {
     const guardian = ls.student?.guardian;
@@ -52,11 +54,18 @@ export function ratingFamilies(lesson: RatingLesson): { guardian: RatingGuardian
 /** The lesson took place (completed / late), started already, and not longer ago than the look-back. */
 export function ratingDue(lesson: Pick<RatingLesson, 'starts_at' | 'status'>, now: Date): boolean {
   const age = now.getTime() - Date.parse(lesson.starts_at);
-  return (lesson.status === 'completed' || lesson.status === 'late') && age >= 0 && age <= RATING_LOOKBACK_MS;
+  return (
+    (lesson.status === 'completed' || lesson.status === 'late') &&
+    age >= 0 &&
+    age <= RATING_LOOKBACK_MS
+  );
 }
 
 /** lesson_rating rows for the lessons due; the dedup key makes a second pass a no-op. */
-export function planRatings(input: { lessons: readonly RatingLesson[]; now: Date }): QueuedMessage[] {
+export function planRatings(input: {
+  lessons: readonly RatingLesson[];
+  now: Date;
+}): QueuedMessage[] {
   const { now } = input;
   return input.lessons.flatMap((lesson) => {
     if (!ratingDue(lesson, now)) return [];
@@ -66,7 +75,12 @@ export function planRatings(input: { lessons: readonly RatingLesson[]; now: Date
         phone: guardian.phone_e164,
         guardianId: guardian.id,
         lessonId: lesson.id,
-        template: lessonRatingMessage({ lessonId: lesson.id, studentNames: names, startsAt, tz: guardian.tz }),
+        template: lessonRatingMessage({
+          lessonId: lesson.id,
+          studentNames: names,
+          startsAt,
+          tz: guardian.tz,
+        }),
         dedupKey: ratingDedupKey(lesson.id, guardian.id),
         now,
         expiresAt: new Date(startsAt.getTime() + RATING_EXPIRES_MS),

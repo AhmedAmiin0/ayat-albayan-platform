@@ -5,7 +5,7 @@ import type { Attendance, LessonStatus, PackageSize } from '@ab/catalog';
 // one transaction. snake_case like the columns; instants ISO-8601 UTC; dates local "YYYY-MM-DD".
 
 /** Compare-and-set of one lesson's status, plus its lesson_students columns. */
-export type LessonChange = {
+export interface LessonChange {
   id: string;
   from_status: LessonStatus;
   to_status: LessonStatus;
@@ -16,14 +16,24 @@ export type LessonChange = {
   chargeable?: boolean;
   /** Per-student outcome over the lesson-wide one (group / sibling lesson, R-STU-04). */
   students?: StudentOutcome[];
-};
+}
 
-export type StudentOutcome = { student_id: string; attendance: Attendance; chargeable: boolean };
+export interface StudentOutcome {
+  student_id: string;
+  attendance: Attendance;
+  chargeable: boolean;
+}
 
 /** audit_log row written inside the same transaction (R-NFR-03); actor = ChangeSet.actor. */
-export type AuditRow = { entity: string; entity_id: string; action: string; before?: Json; after?: Json };
+export interface AuditRow {
+  entity: string;
+  entity_id: string;
+  action: string;
+  before?: Json;
+  after?: Json;
+}
 
-export type NewLesson = {
+export interface NewLesson {
   id: string;
   rule_id: string | null;
   teacher_id: string;
@@ -33,9 +43,9 @@ export type NewLesson = {
   override_reason: string | null;
   rescheduled_from_id: string | null;
   student_ids: string[];
-};
+}
 
-export type NewRule = {
+export interface NewRule {
   id: string;
   teacher_id: string;
   duration_min: number;
@@ -52,20 +62,20 @@ export type NewRule = {
   /** The booking's first rule when this is one of its other times (migration 465). */
   first_rule_id: string | null;
   student_ids: string[];
-};
+}
 
 /** A queued outbound WhatsApp template (docs/10 §5.11); sending is Phase 4. */
-export type QueuedMessage = {
+export interface QueuedMessage {
   phone_e164: string;
   guardian_id: string;
   lesson_id: string;
   template_key: string;
   template_params: Record<string, string>;
   dedup_key: string;
-};
+}
 
 /** Payload of public.edit_lesson_time (migration 174, R-SCH-11): one lesson's time, in place. */
-export type TimeEditChange = {
+export interface TimeEditChange {
   actor: string;
   lesson_id: string;
   /** Compare-and-set: the row must still look like this, else 409 stale_time. */
@@ -79,9 +89,9 @@ export type TimeEditChange = {
   refresh_pdf: boolean;
   messages: QueuedMessage[];
   audit: AuditRow;
-};
+}
 
-export type ChangeSet = {
+export interface ChangeSet {
   /** auth.users id stored as created_by; null for jobs / guardian replies. */
   actor: string | null;
   /**
@@ -94,4 +104,4 @@ export type ChangeSet = {
   lessons?: NewLesson[];
   messages?: QueuedMessage[];
   audit?: AuditRow;
-};
+}

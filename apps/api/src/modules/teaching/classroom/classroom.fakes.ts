@@ -70,10 +70,10 @@ export function queries() {
   };
 }
 
-type Claims = {
+interface Claims {
   iss: string; sub: string; name: string; nbf: number; exp: number; metadata?: string;
   video: { roomJoin: boolean; room: string; canPublish: boolean; canSubscribe: boolean; canPublishData: boolean; canPublishSources?: string[] };
-};
+}
 
 /** Decodes a join token and checks its HS256 signature against `secret`. */
 export function decode(token: string, secret = CONFIG.apiSecret): Claims & { validSignature: boolean } {

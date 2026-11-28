@@ -32,38 +32,39 @@ export class ScheduleNoticesRepo {
 
   /** The lesson with its teacher and every student on it (and their guardian). */
   async lesson(id: string): Promise<NoticeLessonRow | null> {
-    const data = maybe(await this.db
-      .from('lessons')
-      .select(LESSON_SELECT)
-      .eq('id', id)
-      .maybeSingle());
+    const data = maybe(
+      await this.db.from('lessons').select(LESSON_SELECT).eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
   async student(id: string): Promise<NoticeStudent | null> {
-    const data = maybe(await this.db
-      .from('students')
-      .select(STUDENT_SELECT)
-      .eq('id', id)
-      .maybeSingle());
+    const data = maybe(
+      await this.db.from('students').select(STUDENT_SELECT).eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
   /** The lessons a pause took (cancelled, or left in a group), with their teachers. */
   async lessons(ids: readonly string[]): Promise<TakenLessonRow[]> {
     if (ids.length === 0) return [];
-    const { data, error } = await this.db.from('lessons').select(TAKEN_SELECT).in('id', [...ids]);
+    const { data, error } = await this.db
+      .from('lessons')
+      .select(TAKEN_SELECT)
+      .in('id', [...ids]);
     if (error) throw pgError(error);
     return data;
   }
 
   /** The rules a pause held: its own (rule_ids) and the group ones it took the student out of. */
   async pauseRules(pauseId: string): Promise<string[]> {
-    const data = maybe(await this.db
-      .from('course_pauses')
-      .select('rule_ids, shared_rule_ids')
-      .eq('id', pauseId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('course_pauses')
+        .select('rule_ids, shared_rule_ids')
+        .eq('id', pauseId)
+        .maybeSingle(),
+    );
     return data ? [...data.rule_ids, ...data.shared_rule_ids] : [];
   }
 

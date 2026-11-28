@@ -2,11 +2,21 @@ import { describe, expect, it } from 'vitest';
 import { GUARDIAN_ID, LESSON_ID, NOW } from './rating.fakes';
 import { ratingInserts, ratingPatch, type RatingTap } from './rating.rows';
 
-const tap: RatingTap = { lessonId: LESSON_ID, guardianId: GUARDIAN_ID, rating: 'needs_work', waMessageId: 'wamid.IN1', at: NOW };
+const tap: RatingTap = {
+  lessonId: LESSON_ID,
+  guardianId: GUARDIAN_ID,
+  rating: 'needs_work',
+  waMessageId: 'wamid.IN1',
+  at: NOW,
+};
 
 describe('rating rows (migration 195)', () => {
   it('the patch is only the three button columns (the form answer is never touched)', () => {
-    expect(ratingPatch(tap)).toEqual({ quick_rating: 'needs_work', quick_rated_at: NOW.toISOString(), quick_rating_wa_id: 'wamid.IN1' });
+    expect(ratingPatch(tap)).toEqual({
+      quick_rating: 'needs_work',
+      quick_rated_at: NOW.toISOString(),
+      quick_rating_wa_id: 'wamid.IN1',
+    });
   });
 
   it('a new row per child: made by the button, no link, kind and teacher from the lesson', () => {

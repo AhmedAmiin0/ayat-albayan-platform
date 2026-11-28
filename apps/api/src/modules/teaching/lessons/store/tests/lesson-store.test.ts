@@ -14,13 +14,25 @@ describe('LessonStore.commit — the audit row rides in the same transaction (R-
     const store = storeOf(writer, new LessonEvents());
     await store.commit({
       change: { actor: 'u1', changes: [] },
-      audit: { entity: 'lessons', entityId: 'L1', action: 'cancel', before: { status: 'scheduled' }, after: { by: 'admin' } },
+      audit: {
+        entity: 'lessons',
+        entityId: 'L1',
+        action: 'cancel',
+        before: { status: 'scheduled' },
+        after: { by: 'admin' },
+      },
       transition: { from: 'scheduled', event: 'cancel_by_admin' },
     });
     expect(writer.apply).toHaveBeenCalledWith({
       actor: 'u1',
       changes: [],
-      audit: { entity: 'lessons', entity_id: 'L1', action: 'cancel', before: { status: 'scheduled' }, after: { by: 'admin' } },
+      audit: {
+        entity: 'lessons',
+        entity_id: 'L1',
+        action: 'cancel',
+        before: { status: 'scheduled' },
+        after: { by: 'admin' },
+      },
     });
   });
 
@@ -31,7 +43,10 @@ describe('LessonStore.commit — the audit row rides in the same transaction (R-
     const writer = { apply: vi.fn().mockResolvedValue(undefined) };
     const store = storeOf(writer, events);
     const commit = {
-      change: { actor: 'u1', changes: [{ id: 'L1', from_status: 'scheduled' as const, to_status: 'completed' as const }] },
+      change: {
+        actor: 'u1',
+        changes: [{ id: 'L1', from_status: 'scheduled' as const, to_status: 'completed' as const }],
+      },
       audit: { entity: 'lessons', entityId: 'L1', action: 'status_change' },
       transition: { from: 'scheduled' as const, event: 'complete' as const },
     };

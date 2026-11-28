@@ -1,7 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { PushService } from '@/common/push/push.service';
-import { fakeStore, LESSON_ID, lessonRow, STUDENT_ID } from '@/modules/teaching/lessons/lessons.fakes';
-import { declineEvent, RequestDeclinePush } from '@/modules/teaching/lessons/proposals/request-decline.push';
+import {
+  fakeStore,
+  LESSON_ID,
+  lessonRow,
+  STUDENT_ID,
+} from '@/modules/teaching/lessons/lessons.fakes';
+import {
+  declineEvent,
+  RequestDeclinePush,
+} from '@/modules/teaching/lessons/proposals/request-decline.push';
 
 const senderOf = (push: object) =>
   new RequestDeclinePush(push as unknown as PushService, fakeStore(lessonRow()).store);

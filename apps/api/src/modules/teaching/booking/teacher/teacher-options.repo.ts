@@ -4,7 +4,7 @@ import { DB, type Db } from '@/common/db/db.module';
 import { pgError, rows } from '@/common/db/errors';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 
-type TeacherOptionRow = {
+interface TeacherOptionRow {
   id: string;
   display_name_ar: string;
   gender: Gender;
@@ -14,8 +14,11 @@ type TeacherOptionRow = {
   /** teachers.meeting_mode (migration 490): null = the academy default. */
   meeting_mode: string | null;
   max_students: number | null;
-};
-export type TeacherFilter = { program: Program; gender?: Gender };
+}
+export interface TeacherFilter {
+  program: Program;
+  gender?: Gender;
+}
 
 /** Reads behind GET /booking/teachers (R-SCH-06). */
 @Injectable()
@@ -46,10 +49,9 @@ export class TeacherOptionsRepo {
   /** Teachers among `teacherIds` with at least one weekly availability row (all of them while 24/7 is on). */
   async withAvailability(teacherIds: readonly string[]): Promise<Set<string>> {
     if ((await this.settings.read()).teachers_always_available) return new Set(teacherIds);
-    const data = rows(await this.db
-      .from('teacher_availability')
-      .select('teacher_id')
-      .in('teacher_id', teacherIds));
+    const data = rows(
+      await this.db.from('teacher_availability').select('teacher_id').in('teacher_id', teacherIds),
+    );
     return new Set(data.map((r) => r.teacher_id));
   }
 }

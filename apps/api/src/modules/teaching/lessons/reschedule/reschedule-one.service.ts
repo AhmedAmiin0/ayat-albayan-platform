@@ -6,7 +6,10 @@ import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { conflict } from '@/common/http/errors';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import { confirmationMessages, forMessages } from '@/modules/teaching/lessons/status/confirmation-messages';
+import {
+  confirmationMessages,
+  forMessages,
+} from '@/modules/teaching/lessons/status/confirmation-messages';
 import { studentIdsOf, type LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 import { LessonStore } from '@/modules/teaching/lessons/store/lesson-store';
 import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
@@ -41,7 +44,11 @@ const movedAway = (old: LessonRow, reason: string | undefined) => ({
   chargeable: false,
   ...(reason ? { cancel_reason: reason } : {}),
 });
-type RescheduleOneInput = { lessonId: string; body: One; actor: AuthUser };
+interface RescheduleOneInput {
+  lessonId: string;
+  body: One;
+  actor: AuthUser;
+}
 
 /**
  * Move one occurrence (R-SCH-07, docs/10 route 8 `one`): the old row becomes `rescheduled`

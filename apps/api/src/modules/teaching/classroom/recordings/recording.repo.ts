@@ -6,7 +6,6 @@ import { ownerColumns, type RoomTarget } from './recording-target';
 
 export type RecordingRow = Tables<'lesson_recordings'>;
 
-
 export interface FinishInput {
   status: 'done' | 'failed';
   endedAt: string;
@@ -24,10 +23,18 @@ export class RecordingRepo {
    * Claims the room's one running recording before LiveKit is asked. null = one is already running
    * (the unique partial indexes per lesson / per meeting, migrations 189 / 212), so nothing starts.
    */
-  async claim(input: { target: RoomTarget; filePath: string; startedAt: string }): Promise<string | null> {
+  async claim(input: {
+    target: RoomTarget;
+    filePath: string;
+    startedAt: string;
+  }): Promise<string | null> {
     const { data, error } = await this.db
       .from('lesson_recordings')
-      .insert({ ...ownerColumns(input.target), file_path: input.filePath, started_at: input.startedAt })
+      .insert({
+        ...ownerColumns(input.target),
+        file_path: input.filePath,
+        started_at: input.startedAt,
+      })
       .select('id')
       .single();
     if (isUniqueViolation(error)) return null;
@@ -51,36 +58,45 @@ export class RecordingRepo {
 
   /** The lesson's or the meeting's recordings, newest first (removed ones are not listed). */
   async forTarget(target: RoomTarget): Promise<RecordingRow[]> {
-    const data = rows(await this.db
-      .from('lesson_recordings')
-      .select('*')
-      .eq(target.kind === 'lesson' ? 'lesson_id' : 'meeting_id', target.id)
-      .neq('status', 'deleted')
-      .order('started_at', { ascending: false }));
+    const data = rows(
+      await this.db
+        .from('lesson_recordings')
+        .select('*')
+        .eq(target.kind === 'lesson' ? 'lesson_id' : 'meeting_id', target.id)
+        .neq('status', 'deleted')
+        .order('started_at', { ascending: false }),
+    );
     return data;
   }
 
   /** The egress of the room's running recording, if LiveKit has answered for it. */
   async runningEgress(target: RoomTarget): Promise<string | null> {
-    const data = maybe(await this.db
-      .from('lesson_recordings')
-      .select('egress_id')
-      .eq(target.kind === 'lesson' ? 'lesson_id' : 'meeting_id', target.id)
-      .eq('status', 'recording')
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('lesson_recordings')
+        .select('egress_id')
+        .eq(target.kind === 'lesson' ? 'lesson_id' : 'meeting_id', target.id)
+        .eq('status', 'recording')
+        .maybeSingle(),
+    );
     return data?.egress_id ?? null;
   }
 
-  private async finishWhere(where: { column: 'id' | 'egress_id'; value: string }, input: FinishInput): Promise<void> {
-    done(await this.db
-      .from('lesson_recordings')
-      .update({
-        status: input.status,
-        ended_at: input.endedAt,
-        error: input.error ?? null,
-        ...(input.sizeBytes !== undefined && { size_bytes: input.sizeBytes }),
-      })
-      .eq(where.column, where.value)
-      .eq('status', 'recording'));
+  private async finishWhere(
+    where: { column: 'id' | 'egress_id'; value: string },
+    input: FinishInput,
+  ): Promise<void> {
+    done(
+      await this.db
+        .from('lesson_recordings')
+        .update({
+          status: input.status,
+          ended_at: input.endedAt,
+          error: input.error ?? null,
+          ...(input.sizeBytes !== undefined && { size_bytes: input.sizeBytes }),
+        })
+        .eq(where.column, where.value)
+        .eq('status', 'recording'),
+    );
   }
 }

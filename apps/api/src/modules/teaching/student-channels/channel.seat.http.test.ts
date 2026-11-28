@@ -25,7 +25,11 @@ describe('the assistant seat of a student chat over HTTP', () => {
     const res = await t.put(SEAT, 'otherSales', {});
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({ holder: HUDA, mine: true, bringer: false, canTake: false });
-    expect(t.seats.repo.take).toHaveBeenCalledWith({ studentId: ST, profileId: 'p-sb', from: null });
+    expect(t.seats.repo.take).toHaveBeenCalledWith({
+      studentId: ST,
+      profileId: 'p-sb',
+      from: null,
+    });
   });
 
   it('taken: another assistant reads the holder by name and gets 409', async () => {
@@ -39,15 +43,25 @@ describe('the assistant seat of a student chat over HTTP', () => {
 
   it('the bringer takes it over from anyone (priority)', async () => {
     t.seats.seat.heldBy = 'p-sb';
-    expect((await t.call('GET', SEAT, 'sales')).json()).toMatchObject({ bringer: true, canTake: true });
+    expect((await t.call('GET', SEAT, 'sales')).json()).toMatchObject({
+      bringer: true,
+      canTake: true,
+    });
     const res = await t.put(SEAT, 'sales', {});
     expect(res.json()).toEqual({ holder: SARA, mine: true, bringer: true, canTake: false });
-    expect(t.seats.repo.take).toHaveBeenCalledWith({ studentId: ST, profileId: 'p-sa', from: 'p-sb' });
+    expect(t.seats.repo.take).toHaveBeenCalledWith({
+      studentId: ST,
+      profileId: 'p-sa',
+      from: 'p-sb',
+    });
   });
 
   it('a holder who is no longer an assistant counts as free', async () => {
     t.seats.seat.heldBy = 'p-gone';
-    expect((await t.call('GET', SEAT, 'otherSales')).json()).toMatchObject({ holder: null, canTake: true });
+    expect((await t.call('GET', SEAT, 'otherSales')).json()).toMatchObject({
+      holder: null,
+      canTake: true,
+    });
     const res = await t.put(SEAT, 'otherSales', {});
     expect(res.json()).toMatchObject({ holder: HUDA, mine: true });
     expect(t.seats.repo.take).toHaveBeenCalledWith(expect.objectContaining({ from: 'p-gone' }));
@@ -78,7 +92,9 @@ describe('the assistant seat of a student chat over HTTP', () => {
     const res = await t.post(`/sales/students/${ST}/channel/messages`, 'sales', { body: 'x' });
     expect([res.statusCode, res.json().code]).toEqual([404, 'student_not_found']);
     t.people.assistantId.mockResolvedValueOnce(null);
-    expect((await t.call('GET', `/sales/students/${ST}/channel/unread`, 'sales')).statusCode).toBe(404);
+    expect((await t.call('GET', `/sales/students/${ST}/channel/unread`, 'sales')).statusCode).toBe(
+      404,
+    );
     expect(t.queries.insert).not.toHaveBeenCalled();
   });
 
@@ -87,6 +103,8 @@ describe('the assistant seat of a student chat over HTTP', () => {
     expect((await t.call('GET', unknown, 'sales')).json().code).toBe('student_not_found');
     expect((await t.put(unknown, 'sales', {})).statusCode).toBe(404);
     expect((await t.put(SEAT, 'admin', {})).statusCode).toBe(403);
-    expect((await t.call('GET', `/students/${ST}/channel/messages`, 'admin')).json().read_only).toBe(true);
+    expect(
+      (await t.call('GET', `/students/${ST}/channel/messages`, 'admin')).json().read_only,
+    ).toBe(true);
   });
 });

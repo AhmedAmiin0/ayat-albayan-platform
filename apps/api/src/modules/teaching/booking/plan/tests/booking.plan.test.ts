@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { horizonWindow, planBooking, type PlanInput, type PlanRule } from '@/modules/teaching/booking/plan/booking.plan';
+import {
+  horizonWindow,
+  planBooking,
+  type PlanInput,
+  type PlanRule,
+} from '@/modules/teaching/booking/plan/booking.plan';
 
 // Thu 2026-10-01 11:00 Riyadh. Sundays ahead: Oct 4, 11, 18, 25, Nov 1 (5-week horizon ends Nov 5).
 const now = new Date('2026-10-01T08:00:00Z');
@@ -46,7 +51,9 @@ describe('planBooking — paid packages (R-SCH-02, R-SCH-06)', () => {
 
   it("skips today's slot once it has passed", () => {
     // Thursday 10:00 Riyadh already passed at 11:00 → the first is next Thursday.
-    expect(starts(input({ byday: [4], startTimeLocal: '10:00' }))[0]).toBe('2026-10-08T07:00:00.000Z');
+    expect(starts(input({ byday: [4], startTimeLocal: '10:00' }))[0]).toBe(
+      '2026-10-08T07:00:00.000Z',
+    );
   });
 
   it('returns nothing when startsOn is beyond the horizon', () => {
@@ -57,7 +64,9 @@ describe('planBooking — paid packages (R-SCH-02, R-SCH-06)', () => {
 describe('planBooking — trial (docs/10 invariant 4)', () => {
   it('is exactly the first occurrence, and the rule ends that local day', () => {
     const plan = planBooking(input({ single: true }));
-    expect(plan.occurrences.map((o) => o.starts_at.toISOString())).toEqual(['2026-10-04T14:00:00.000Z']);
+    expect(plan.occurrences.map((o) => o.starts_at.toISOString())).toEqual([
+      '2026-10-04T14:00:00.000Z',
+    ]);
     expect(plan.timing.ends_on).toBe('2026-10-04');
   });
 

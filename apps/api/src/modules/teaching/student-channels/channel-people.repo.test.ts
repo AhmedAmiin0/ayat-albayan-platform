@@ -14,8 +14,7 @@ const PROFILES = [
 function repo(holder: string | null) {
   const from = () => {
     const asked = { ids: [] as string[], role: '' };
-    const sales = () =>
-      PROFILES.filter((p) => asked.ids.includes(p.id) && p.role === asked.role);
+    const sales = () => PROFILES.filter((p) => asked.ids.includes(p.id) && p.role === asked.role);
     const q = {
       select: () => q,
       in: (_c: string, v: string[]) => {

@@ -8,7 +8,12 @@ const admin = { role: 'admin' as const, seq };
 
 describe('toLessonView — «عدّل الوقت» fields (R-SCH-11)', () => {
   it('time_edit_mode: move for open, correct for held, null for the closed statuses', () => {
-    const modes = Object.fromEntries(LESSON_STATUSES.map((status) => [status, toLessonView(lessonRow({ status }), admin).time_edit_mode]));
+    const modes = Object.fromEntries(
+      LESSON_STATUSES.map((status) => [
+        status,
+        toLessonView(lessonRow({ status }), admin).time_edit_mode,
+      ]),
+    );
     expect(modes).toEqual({
       scheduled: 'move',
       confirmed: 'move',
@@ -33,7 +38,10 @@ describe('toLessonView — «عدّل الوقت» fields (R-SCH-11)', () => {
       lessonRow({
         time_edited_at: '2026-10-02 09:00:00+00',
         time_edit_reason: 'الحلقة خدت ساعة',
-        time_edit_was: { starts_at: '2026-10-04T14:00:00+00:00', ends_at: '2026-10-04T14:45:00+00:00' },
+        time_edit_was: {
+          starts_at: '2026-10-04T14:00:00+00:00',
+          ends_at: '2026-10-04T14:45:00+00:00',
+        },
       }),
       admin,
     );
@@ -46,9 +54,19 @@ describe('toLessonView — «عدّل الوقت» fields (R-SCH-11)', () => {
 
   it('never edited, or an unreadable `was`, gives null; a missing reason is null', () => {
     expect(toLessonView(lessonRow(), admin).time_edit).toBeNull();
-    expect(toLessonView(lessonRow({ time_edited_at: '2026-10-02 09:00:00+00', time_edit_was: { nope: 1 } }), admin).time_edit).toBeNull();
+    expect(
+      toLessonView(
+        lessonRow({ time_edited_at: '2026-10-02 09:00:00+00', time_edit_was: { nope: 1 } }),
+        admin,
+      ).time_edit,
+    ).toBeNull();
     const was = { starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z' };
-    expect(toLessonView(lessonRow({ time_edited_at: '2026-10-02 09:00:00+00', time_edit_was: was }), admin).time_edit?.reason).toBeNull();
+    expect(
+      toLessonView(
+        lessonRow({ time_edited_at: '2026-10-02 09:00:00+00', time_edit_was: was }),
+        admin,
+      ).time_edit?.reason,
+    ).toBeNull();
   });
 
   it('an admin reason stays with admins; teachers and guardians see when and what it was', () => {
@@ -58,7 +76,10 @@ describe('toLessonView — «عدّل الوقت» fields (R-SCH-11)', () => {
       time_edit_was: { starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z' },
     });
     for (const role of ['teacher', 'guardian'] as const) {
-      expect(toLessonView(row, { role, seq }).time_edit).toMatchObject({ reason: null, was: { starts_at: '2026-10-04T14:00:00.000Z' } });
+      expect(toLessonView(row, { role, seq }).time_edit).toMatchObject({
+        reason: null,
+        was: { starts_at: '2026-10-04T14:00:00.000Z' },
+      });
     }
     expect(toLessonView(row, admin).time_edit?.reason).toBe('سبب داخلي');
   });

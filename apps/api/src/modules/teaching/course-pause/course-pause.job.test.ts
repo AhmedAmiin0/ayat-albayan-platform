@@ -4,9 +4,25 @@ import type { CoursePauseRepo } from './course-pause.repo';
 import type { CoursePauseService } from './course-pause.service';
 
 function job() {
-  const queries = { due: vi.fn(async () => ['p1', 'p2', 'p3']), dueStarts: vi.fn(async (): Promise<string[]> => []) };
-  const pauses = { beginPause: vi.fn(async () => undefined), resumePause: vi.fn(async (id: string) => { if (id === 'p2') throw new Error('boom'); return {}; }) };
-  return { queries, pauses, job: new CoursePauseJob(queries as unknown as CoursePauseRepo, pauses as unknown as CoursePauseService) };
+  const queries = {
+    due: vi.fn(async () => ['p1', 'p2', 'p3']),
+    dueStarts: vi.fn(async (): Promise<string[]> => []),
+  };
+  const pauses = {
+    beginPause: vi.fn(async () => undefined),
+    resumePause: vi.fn(async (id: string) => {
+      if (id === 'p2') throw new Error('boom');
+      return {};
+    }),
+  };
+  return {
+    queries,
+    pauses,
+    job: new CoursePauseJob(
+      queries as unknown as CoursePauseRepo,
+      pauses as unknown as CoursePauseService,
+    ),
+  };
 }
 
 describe('CoursePauseJob (automatic «استئناف» on the day after until)', () => {
@@ -15,7 +31,11 @@ describe('CoursePauseJob (automatic «استئناف» on the day after until)',
     // 22:00 UTC on the 10th is already the 11th in Riyadh.
     const summary = await t.job.runOnce(new Date('2026-11-10T22:00:00Z'));
     expect(t.queries.due).toHaveBeenCalledWith('2026-11-11');
-    expect(t.pauses.resumePause.mock.calls).toEqual([['p1', null], ['p2', null], ['p3', null]]);
+    expect(t.pauses.resumePause.mock.calls).toEqual([
+      ['p1', null],
+      ['p2', null],
+      ['p3', null],
+    ]);
     expect(summary).toEqual({ begun: 0, due: 3, resumed: 2, failed: 1 });
   });
 
@@ -23,7 +43,12 @@ describe('CoursePauseJob (automatic «استئناف» on the day after until)',
     const t = job();
     t.queries.dueStarts.mockResolvedValue(['f1']);
     t.queries.due.mockResolvedValue([]);
-    expect(await t.job.runOnce(new Date('2026-11-10T22:00:00Z'))).toEqual({ begun: 1, due: 0, resumed: 0, failed: 0 });
+    expect(await t.job.runOnce(new Date('2026-11-10T22:00:00Z'))).toEqual({
+      begun: 1,
+      due: 0,
+      resumed: 0,
+      failed: 0,
+    });
     expect(t.queries.dueStarts).toHaveBeenCalledWith('2026-11-11');
     expect(t.pauses.beginPause).toHaveBeenCalledWith('f1');
   });

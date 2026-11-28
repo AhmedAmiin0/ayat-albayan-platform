@@ -35,15 +35,19 @@ export function ruleRow(over: Partial<RuleWithLinks> = {}): RuleWithLinks {
   };
 }
 
-type StoredLesson = {
+interface StoredLesson {
   id: string;
   rule_id: string;
   starts_at: string;
   ends_at: string;
   status: string;
   meeting_link: string | null;
-};
-type Occ = { starts_at: string; ends_at: string; meeting_link: string | null };
+}
+interface Occ {
+  starts_at: string;
+  ends_at: string;
+  meeting_link: string | null;
+}
 
 /**
  * In-memory stand-in for public.generate_rule_lessons (migration 080): unique (rule_id, starts_at)
@@ -58,9 +62,9 @@ export function fakeLessonsDb(state: { ruleStatus: string } = { ruleStatus: 'act
     if (state.ruleStatus !== 'active') {
       return { data: null, error: { code: 'P0001', message: 'rule_not_active' } };
     }
-    const ruleId = String(args['p_rule']);
+    const ruleId = String(args.p_rule);
     const inserted: StoredLesson[] = [];
-    for (const o of args['p_lessons'] as Occ[]) {
+    for (const o of args.p_lessons as Occ[]) {
       const key = `${ruleId}:${new Date(o.starts_at).toISOString()}`;
       if (lessons.has(key)) continue;
       const row = { id: `lesson-${lessons.size + 1}`, rule_id: ruleId, status: 'scheduled', ...o };

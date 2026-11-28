@@ -1,8 +1,27 @@
 import { ForbiddenException } from '@nestjs/common';
 import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ADMIN, ASSISTANT, CLOSED, CONFIG, decode, EARLY, GUARDIAN, LESSON_ID, OPEN, OTHER_TEACHER, queries, TEACHER, TEACHER_ID } from '@/modules/teaching/classroom/classroom.fakes';
-import { admissionOf, moderation, recorder, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  ADMIN,
+  ASSISTANT,
+  CLOSED,
+  CONFIG,
+  decode,
+  EARLY,
+  GUARDIAN,
+  LESSON_ID,
+  OPEN,
+  OTHER_TEACHER,
+  queries,
+  TEACHER,
+  TEACHER_ID,
+} from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  admissionOf,
+  moderation,
+  recorder,
+  rolesOf,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RoomJoinService } from '@/modules/teaching/classroom/join/room-join.service';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
@@ -11,16 +30,25 @@ let q: ReturnType<typeof queries>;
 let teachers: { idByProfile: ReturnType<typeof vi.fn> };
 let mod: ReturnType<typeof moderation>;
 let rec: ReturnType<typeof recorder>;
-const service = (config: typeof CONFIG | null = CONFIG) => new RoomJoinService(rolesOf({ q, teachers }), admissionOf({ q, mod, rec, config }), readerOf(ClassroomSettings));
-const join = (user = TEACHER, now = OPEN, svc = service()) => svc.join({ user, lessonId: LESSON_ID }, now);
-const code = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+const service = (config: typeof CONFIG | null = CONFIG) =>
+  new RoomJoinService(
+    rolesOf({ q, teachers }),
+    admissionOf({ q, mod, rec, config }),
+    readerOf(ClassroomSettings),
+  );
+const join = (user = TEACHER, now = OPEN, svc = service()) =>
+  svc.join({ user, lessonId: LESSON_ID }, now);
+const code = async (p: Promise<unknown>) =>
+  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = queries();
   mod = moderation();
   rec = recorder();
   teachers = {
-    idByProfile: vi.fn(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null)),
+    idByProfile: vi.fn(async (id: string) =>
+      id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null,
+    ),
   };
 });
 
@@ -56,7 +84,9 @@ describe('who may join', () => {
 
   it('not a guardian, nor a login without a role', async () => {
     await expect(join(GUARDIAN)).rejects.toBeInstanceOf(ForbiddenException);
-    await expect(join({ id: 'x', email: null, role: null })).rejects.toBeInstanceOf(ForbiddenException);
+    await expect(join({ id: 'x', email: null, role: null })).rejects.toBeInstanceOf(
+      ForbiddenException,
+    );
   });
 
   it('a teacher whose login has no teachers row is refused', async () => {
@@ -73,7 +103,10 @@ describe('who may join', () => {
 describe('the window', () => {
   it('teachers and assistants wait for 15 minutes before the start (403 with opens_at)', async () => {
     for (const user of [TEACHER, ASSISTANT]) {
-      expect(await code(join(user, EARLY))).toMatchObject({ code: 'join_not_open_yet', opens_at: '2026-10-05T15:45:00.000Z' });
+      expect(await code(join(user, EARLY))).toMatchObject({
+        code: 'join_not_open_yet',
+        opens_at: '2026-10-05T15:45:00.000Z',
+      });
     }
   });
 
@@ -91,7 +124,9 @@ describe('the window', () => {
 
 describe('the token', () => {
   it('has a fresh identity on every call, even for the same person', async () => {
-    const subs = await Promise.all(Array.from({ length: 20 }, () => join(TEACHER))).then((rs) => rs.map((r) => decode(r.token).sub));
+    const subs = await Promise.all(Array.from({ length: 20 }, () => join(TEACHER))).then((rs) =>
+      rs.map((r) => decode(r.token).sub),
+    );
     expect(new Set(subs).size).toBe(20);
     expect(subs.every((s) => s.startsWith('teacher-'))).toBe(true);
   });
@@ -102,7 +137,9 @@ describe('the token', () => {
   });
 
   it('503 classroom_not_configured when LIVEKIT_* are not set', async () => {
-    const err = (await join(TEACHER, OPEN, service(null)).catch((e: HttpException) => e)) as HttpException;
+    const err = (await join(TEACHER, OPEN, service(null)).catch(
+      (e: HttpException) => e,
+    )) as HttpException;
     expect(err.getStatus()).toBe(503);
     expect(err.getResponse()).toMatchObject({ code: 'classroom_not_configured' });
   });

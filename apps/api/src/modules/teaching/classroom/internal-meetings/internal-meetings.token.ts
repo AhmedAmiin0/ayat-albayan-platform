@@ -8,7 +8,8 @@ import { isAdmin } from '@/common/auth/roles';
 
 const TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
 
-export const newMeetingToken = (bytes: (n: number) => Buffer = randomBytes): string => bytes(32).toString('base64url');
+export const newMeetingToken = (bytes: (n: number) => Buffer = randomBytes): string =>
+  bytes(32).toString('base64url');
 
 /** False for anything that cannot be one of ours: no database call is made for it. */
 export const looksLikeMeetingToken = (token: string): boolean => TOKEN_RE.test(token);
@@ -16,18 +17,24 @@ export const looksLikeMeetingToken = (token: string): boolean => TOKEN_RE.test(t
 export const hashMeetingToken = hashLinkToken;
 
 /** The creator or any admin may end the meeting and issue a new link. */
-export const canManageMeeting = (user: Pick<AuthUser, 'id' | 'role'>, meeting: { created_by: string | null }): boolean =>
-  isAdmin(user) || (meeting.created_by !== null && meeting.created_by === user.id);
+export const canManageMeeting = (
+  user: Pick<AuthUser, 'id' | 'role'>,
+  meeting: { created_by: string | null },
+): boolean => isAdmin(user) || (meeting.created_by !== null && meeting.created_by === user.id);
 
 /**
  * A staff login's role in a meeting's room: an admin stays admin; the creator hosts as `teacher`
  * (so canRemove lets them remove guests, assistants and salespeople); any other staff login joins
  * with its own role. null for a login with no staff role (a guardian): refused.
  */
-export function meetingRoleOf(user: Pick<AuthUser, 'id' | 'role'>, meeting: { created_by: string | null }): JoinRole | null {
+export function meetingRoleOf(
+  user: Pick<AuthUser, 'id' | 'role'>,
+  meeting: { created_by: string | null },
+): JoinRole | null {
   if (isAdmin(user)) return 'admin';
   if (meeting.created_by !== null && meeting.created_by === user.id) return 'teacher';
-  if (user.role === 'teacher' || user.role === 'assistant' || user.role === 'sales') return user.role;
+  if (user.role === 'teacher' || user.role === 'assistant' || user.role === 'sales')
+    return user.role;
   return null;
 }
 

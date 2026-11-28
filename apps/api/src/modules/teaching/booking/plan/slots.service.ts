@@ -21,7 +21,10 @@ const OUTSIDE_DAYS = 14;
 export const ALWAYS_STEP_MIN = 30;
 
 /** Pairs every candidate with its conflicts ([] = free). Pure. */
-export function slotViews(candidates: readonly Occurrence[], conflicts: readonly Conflict[]): SlotView[] {
+export function slotViews(
+  candidates: readonly Occurrence[],
+  conflicts: readonly Conflict[],
+): SlotView[] {
   const byStart = new Map<string, Conflict[]>();
   for (const c of conflicts) byStart.set(c.startsAt, [...(byStart.get(c.startsAt) ?? []), c]);
   return candidates.map((c) => {
@@ -53,12 +56,26 @@ export class SlotsService {
     if (!teacher) throw httpError(HttpStatus.NOT_FOUND, 'teacher_not_found');
     const studentIds = q.studentIds ?? [];
     const exclude = { excludeLessonId: q.excludeLessonId, excludeCourse: q.excludeCourse };
-    const rows = await this.context.load({ teacherId: teacher.id, studentIds, from, to, ...exclude });
+    const rows = await this.context.load({
+      teacherId: teacher.id,
+      studentIds,
+      from,
+      to,
+      ...exclude,
+    });
     const alwaysOpen = (await this.settings.read()).teachers_always_available;
     const stepMin = q.stepMin ?? (alwaysOpen ? ALWAYS_STEP_MIN : q.durationMin);
     const { durationMin } = q;
     // Candidates ignore time-off and lessons on purpose; findConflicts reports them per slot.
-    const grid = freeSlots({ from, to, durationMin, availability: rows.availability, timeOff: [], busy: [], stepMin });
+    const grid = freeSlots({
+      from,
+      to,
+      durationMin,
+      availability: rows.availability,
+      timeOff: [],
+      busy: [],
+      stepMin,
+    });
     const proposed = grid.map((s) => ({ starts_at: s.start, ends_at: s.end }));
     const conflicts = findConflicts({ proposed, ...rows });
     const slots = slotViews(proposed, conflicts);

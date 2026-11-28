@@ -3,7 +3,11 @@ import { CH, channelApp, messageRow, ST } from './channel.fakes';
 
 type App = Awaited<ReturnType<typeof channelApp>>;
 const SALES = `/sales/students/${ST}/channel`;
-const NAMES = new Map([['p-sa', 'سارة'], ['p-g', 'أم سلمى'], ['p-t1', 'أبرار']]);
+const NAMES = new Map([
+  ['p-sa', 'سارة'],
+  ['p-g', 'أم سلمى'],
+  ['p-t1', 'أبرار'],
+]);
 
 // The assistant in the chat's one seat writes there; any other assistant is 404
 // (channel.seat.http.test.ts takes and leaves it).
@@ -25,10 +29,15 @@ describe('the seated assistant in the student chat over HTTP', () => {
     const row = { channel_id: CH, sender_profile_id: 'p-sa', sender_role: 'sales' };
     expect(t.queries.insert).toHaveBeenCalledWith({ ...row, body: 'موعد التجديد غدًا' });
     expect(res.json()).toMatchObject({ sender_role: 'sales', sender_name: 'سارة', mine: true });
-    expect(t.queries.setReadMark).toHaveBeenCalledWith(expect.objectContaining({ profileId: 'p-sa' }));
-    expect(t.push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({
-      profileIds: ['p-t1', 'p-g', 'p-s'], vars: expect.objectContaining({ name: 'سارة' }),
-    }));
+    expect(t.queries.setReadMark).toHaveBeenCalledWith(
+      expect.objectContaining({ profileId: 'p-sa' }),
+    );
+    expect(t.push.notifyProfiles).toHaveBeenCalledWith(
+      expect.objectContaining({
+        profileIds: ['p-t1', 'p-g', 'p-s'],
+        vars: expect.objectContaining({ name: 'سارة' }),
+      }),
+    );
   });
 
   it('her page is not read-only; her bubbles are mine, the others named with their role', async () => {
@@ -39,17 +48,28 @@ describe('the seated assistant in the student chat over HTTP', () => {
     const page = (await t.call('GET', `${SALES}/messages`, 'sales')).json();
     expect(page.read_only).toBe(false);
     const seen = page.messages.map((m: { id: string; mine: boolean; sender_role: string }) => [
-      m.id, m.mine, m.sender_role,
+      m.id,
+      m.mine,
+      m.sender_role,
     ]);
-    expect(seen).toEqual([['m1', false, 'guardian'], ['b', true, 'sales']]);
+    expect(seen).toEqual([
+      ['m1', false, 'guardian'],
+      ['b', true, 'sales'],
+    ]);
   });
 
-  it('read marks and unread: hers counts everyone else\'s', async () => {
+  it("read marks and unread: hers counts everyone else's", async () => {
     expect((await t.post(`${SALES}/read`, 'sales', {})).statusCode).toBe(204);
-    expect(t.queries.setReadMark).toHaveBeenCalledWith(expect.objectContaining({ profileId: 'p-sa' }));
+    expect(t.queries.setReadMark).toHaveBeenCalledWith(
+      expect.objectContaining({ profileId: 'p-sa' }),
+    );
     expect((await t.call('GET', `${SALES}/unread`, 'sales')).json()).toEqual({ unread: 2 });
     const countRoles = ['teacher', 'guardian', 'student', 'sales'];
-    expect(t.queries.summaries).toHaveBeenLastCalledWith({ profileId: 'p-sa', studentIds: [ST], countRoles });
+    expect(t.queries.summaries).toHaveBeenLastCalledWith({
+      profileId: 'p-sa',
+      studentIds: [ST],
+      countRoles,
+    });
   });
 
   it('another assistant is 404 on every route; nothing stored or marked', async () => {
@@ -65,9 +85,13 @@ describe('the seated assistant in the student chat over HTTP', () => {
   });
 
   it('the admin stays a monitor: no post route of its own, the assistant route refused', async () => {
-    expect((await t.post(`/students/${ST}/channel/messages`, 'admin', { body: 'x' })).statusCode).toBe(404);
+    expect(
+      (await t.post(`/students/${ST}/channel/messages`, 'admin', { body: 'x' })).statusCode,
+    ).toBe(404);
     expect((await t.post(`${SALES}/messages`, 'admin', { body: 'x' })).statusCode).toBe(403);
-    expect((await t.call('GET', `/students/${ST}/channel/messages`, 'admin')).json().read_only).toBe(true);
+    expect(
+      (await t.call('GET', `/students/${ST}/channel/messages`, 'admin')).json().read_only,
+    ).toBe(true);
     expect(t.queries.insert).not.toHaveBeenCalled();
   });
 
@@ -80,7 +104,9 @@ describe('the seated assistant in the student chat over HTTP', () => {
   });
 
   it('a bad student id is 400; an empty body is 400', async () => {
-    expect((await t.post('/sales/students/nope/channel/messages', 'sales', { body: 'x' })).statusCode).toBe(400);
+    expect(
+      (await t.post('/sales/students/nope/channel/messages', 'sales', { body: 'x' })).statusCode,
+    ).toBe(400);
     expect((await t.post(`${SALES}/messages`, 'sales', { body: '  ' })).statusCode).toBe(400);
     expect(t.queries.insert).not.toHaveBeenCalled();
   });

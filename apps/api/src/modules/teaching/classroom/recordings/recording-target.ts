@@ -10,7 +10,8 @@ export const lessonTarget = (id: string): RoomTarget => ({ kind: 'lesson', id })
 export const meetingTarget = (id: string): RoomTarget => ({ kind: 'meeting', id });
 
 /** The LiveKit room: `lesson-<id>` or `meeting-<id>`. */
-export const roomNameOf = (t: RoomTarget): string => (t.kind === 'lesson' ? lessonRoomName(t.id) : meetingRoomName(t.id));
+export const roomNameOf = (t: RoomTarget): string =>
+  t.kind === 'lesson' ? lessonRoomName(t.id) : meetingRoomName(t.id);
 
 const ROOM = /^(lesson|meeting)-([0-9a-f-]{36})$/;
 

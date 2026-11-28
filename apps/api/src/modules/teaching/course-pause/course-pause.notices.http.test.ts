@@ -29,7 +29,10 @@ describe('course pause notices (owner 2026-10-30)', () => {
   const queued = () => t.m.notices.queue.mock.calls.flatMap(([rows]) => rows as Row[]);
 
   it('POST …/course-pause: one course_paused each, naming the first lesson taken', async () => {
-    t.m.notices.lessons.mockResolvedValue([lesson('l2', '2026-11-03T14:00:00Z'), lesson('l1', '2026-11-01T14:00:00Z')]);
+    t.m.notices.lessons.mockResolvedValue([
+      lesson('l2', '2026-11-03T14:00:00Z'),
+      lesson('l1', '2026-11-01T14:00:00Z'),
+    ]);
     expect((await t.post(URL, 'sales', { reason: 'سفر' })).statusCode).toBe(201);
     expect(t.m.notices.lessons).toHaveBeenCalledWith(['l1', 'l2', 'g1']);
     expect(queued().map((r) => [r.template_key, r.dedup_key])).toEqual([
@@ -37,17 +40,29 @@ describe('course pause notices (owner 2026-10-30)', () => {
       ['course_paused', `course_paused:${PAUSE}:g:G1`],
     ]);
     // The assistant made it: the teacher's and the guardian's bells, none to her.
-    expect(t.m.push.notifyProfiles.mock.calls.map(([p]) => p.profileIds[0])).toEqual(['pT1', 'pG1']);
+    expect(t.m.push.notifyProfiles.mock.calls.map(([p]) => p.profileIds[0])).toEqual([
+      'pT1',
+      'pG1',
+    ]);
     expect(t.m.push.notifyProfiles.mock.calls.every(([p]) => p.profileIds[0] !== SALES)).toBe(true);
   });
 
   it('POST …/course-pause/resume: one course_resumed each, with the first lesson back', async () => {
-    t.m.queries.call.mockResolvedValue(rpcOut({ resumed: true, cancelled: [], left: [], reopened: ['l3'] }));
+    t.m.queries.call.mockResolvedValue(
+      rpcOut({ resumed: true, cancelled: [], left: [], reopened: ['l3'] }),
+    );
     t.m.notices.nextLesson.mockResolvedValue(lesson('l3', '2026-11-05T14:00:00Z'));
     expect((await t.post(`${URL}/resume`, 'admin')).statusCode).toBe(200);
     expect(t.m.notices.pauseRules).toHaveBeenCalledWith(PAUSE);
-    expect(t.m.notices.nextLesson).toHaveBeenCalledWith({ studentId: STUDENT, ruleIds: ['R1'], after: NOW });
-    expect(queued().map((r) => r.dedup_key)).toEqual([`course_resumed:${PAUSE}:t:T1`, `course_resumed:${PAUSE}:g:G1`]);
+    expect(t.m.notices.nextLesson).toHaveBeenCalledWith({
+      studentId: STUDENT,
+      ruleIds: ['R1'],
+      after: NOW,
+    });
+    expect(queued().map((r) => r.dedup_key)).toEqual([
+      `course_resumed:${PAUSE}:t:T1`,
+      `course_resumed:${PAUSE}:g:G1`,
+    ]);
   });
 
   it('a resume replayed (already resumed): nothing again', async () => {

@@ -47,10 +47,12 @@ describe('the family join token (/join/<token> from the family app)', () => {
     expect(verifyFamilyJoin(SECRET, plain.replace('.', ''), before)).toBeNull();
   });
 
-  it.each(['garbage', '', 'abcdefghijklmnopqrstuvwxyz012345', `${'A'.repeat(48)}.${'A'.repeat(22)}`])(
-    'refuses the garbled token %j',
-    (bad) => {
-      expect(verifyFamilyJoin(SECRET, bad, before)).toBeNull();
-    },
-  );
+  it.each([
+    'garbage',
+    '',
+    'abcdefghijklmnopqrstuvwxyz012345',
+    `${'A'.repeat(48)}.${'A'.repeat(22)}`,
+  ])('refuses the garbled token %j', (bad) => {
+    expect(verifyFamilyJoin(SECRET, bad, before)).toBeNull();
+  });
 });

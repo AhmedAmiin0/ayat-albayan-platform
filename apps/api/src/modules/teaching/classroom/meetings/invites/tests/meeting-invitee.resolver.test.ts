@@ -9,10 +9,19 @@ import { OPEN_PHONE, pickQueries, STAFF_ID, STUDENT_A, teacherScopesFake } from 
 
 let picks: ReturnType<typeof pickQueries>;
 const resolver = () =>
-  new MeetingInviteeResolver(picks as unknown as MeetingInviteeRepo, new MeetingInvitePolicies(teacherScopesFake() as unknown as TeacherScopes));
+  new MeetingInviteeResolver(
+    picks as unknown as MeetingInviteeRepo,
+    new MeetingInvitePolicies(teacherScopesFake() as unknown as TeacherScopes),
+  );
 const typed = [{ kind: 'phone' as const, phone: OPEN_PHONE }];
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
-const student = { id: STUDENT_A, name: 'سهيلة', code: 'AB-0001', guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: OPEN_PHONE, tz: 'Asia/Riyadh' } };
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
+const student = {
+  id: STUDENT_A,
+  name: 'سهيلة',
+  code: 'AB-0001',
+  guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: OPEN_PHONE, tz: 'Asia/Riyadh' },
+};
 
 beforeEach(() => {
   picks = pickQueries();

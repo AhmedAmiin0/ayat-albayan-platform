@@ -1,9 +1,24 @@
 import { ForbiddenException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '@/common/storage/storage.service';
-import { ADMIN, ASSISTANT, LESSON_ID, OTHER_TEACHER, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
-import { recordingQueries, recordingRow, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
-import { RecordingListService, recordingView, RecordingViews } from '@/modules/teaching/classroom/recordings/recording-list.service';
+import {
+  ADMIN,
+  ASSISTANT,
+  LESSON_ID,
+  OTHER_TEACHER,
+  queries,
+  TEACHER,
+} from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  recordingQueries,
+  recordingRow,
+  rolesOf,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  RecordingListService,
+  recordingView,
+  RecordingViews,
+} from '@/modules/teaching/classroom/recordings/recording-list.service';
 import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
 
 let rq: ReturnType<typeof recordingQueries>;
@@ -11,7 +26,8 @@ const storage = { signedDownloads: vi.fn() };
 const SIGNED = 'https://signed.example.test/a.mp4';
 const signAll = async (input: { paths: readonly string[] }) =>
   new Map(input.paths.map((p) => [p, SIGNED]));
-const views = () => new RecordingViews(rq as unknown as RecordingRepo, storage as unknown as StorageService);
+const views = () =>
+  new RecordingViews(rq as unknown as RecordingRepo, storage as unknown as StorageService);
 const service = () => new RecordingListService(rolesOf({ q: queries() }), views());
 const list = (user = ADMIN) => service().list({ user, lessonId: LESSON_ID });
 
@@ -23,16 +39,28 @@ beforeEach(() => {
 describe('GET /lessons/:id/recordings', () => {
   it('done rows get a 1-hour signed link to their file in the recordings bucket', async () => {
     expect(await list()).toEqual([
-      { id: recordingRow().id, status: 'done', started_at: recordingRow().started_at, ended_at: recordingRow().ended_at, url: 'https://signed.example.test/a.mp4' },
+      {
+        id: recordingRow().id,
+        status: 'done',
+        started_at: recordingRow().started_at,
+        ended_at: recordingRow().ended_at,
+        url: 'https://signed.example.test/a.mp4',
+      },
     ]);
     const one = { bucket: 'recordings', paths: [recordingRow().file_path], seconds: 3600 };
     expect(storage.signedDownloads).toHaveBeenCalledWith(one);
   });
 
   it('running and failed rows have no link (and sign nothing)', async () => {
-    rq.forTarget.mockResolvedValue([recordingRow({ status: 'recording', ended_at: null }), recordingRow({ status: 'failed' })]);
+    rq.forTarget.mockResolvedValue([
+      recordingRow({ status: 'recording', ended_at: null }),
+      recordingRow({ status: 'failed' }),
+    ]);
     const views = await list();
-    expect(views.map((v) => [v.status, v.url])).toEqual([['recording', null], ['failed', null]]);
+    expect(views.map((v) => [v.status, v.url])).toEqual([
+      ['recording', null],
+      ['failed', null],
+    ]);
     expect(storage.signedDownloads).not.toHaveBeenCalled();
   });
 
@@ -62,6 +90,9 @@ describe('GET /lessons/:id/recordings', () => {
 
 describe('recordingView', () => {
   it('an unknown status reads as failed, without a link', () => {
-    expect(recordingView(recordingRow({ status: 'weird' }), 'u')).toMatchObject({ status: 'failed', url: null });
+    expect(recordingView(recordingRow({ status: 'weird' }), 'u')).toMatchObject({
+      status: 'failed',
+      url: null,
+    });
   });
 });

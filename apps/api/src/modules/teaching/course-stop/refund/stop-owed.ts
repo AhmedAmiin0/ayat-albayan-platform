@@ -1,4 +1,10 @@
-import { owedAmountProblem, owedByChoice, stopRefund, type StopOwe, type StopOweAsk } from '@ab/shared';
+import {
+  owedAmountProblem,
+  owedByChoice,
+  stopRefund,
+  type StopOwe,
+  type StopOweAsk,
+} from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { conflict } from '@/common/http/errors';
 import { CourseStopSettings } from './course-stop.settings';

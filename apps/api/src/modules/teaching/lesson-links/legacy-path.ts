@@ -5,7 +5,8 @@ import { localDayStart } from '@ab/shared';
 
 /** (a) our own v2 button suffix; (b) the old Apps Script's «AB-0004/<teacher>/<token>». */
 export type LegacyPath =
-  { kind: 'lesson'; lessonId: string } | { kind: 'pair'; code: string; teacherName: string };
+  | { kind: 'lesson'; lessonId: string }
+  | { kind: 'pair'; code: string; teacherName: string };
 
 const LESSON = /^teacher\/report\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
 const PAIR = /^(AB-\d{4,6})\/([^/]{1,120})\/[^/]+/i;

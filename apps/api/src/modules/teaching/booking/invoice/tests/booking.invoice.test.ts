@@ -1,7 +1,16 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { bookingRequest, IDS } from '@/modules/teaching/booking/booking.fakes';
-import { chat, code, MSG, paid, SCOPE, REQ, setup, upload } from '@/modules/teaching/booking/invoice/booking.invoice.fakes';
+import {
+  chat,
+  code,
+  MSG,
+  paid,
+  SCOPE,
+  REQ,
+  setup,
+  upload,
+} from '@/modules/teaching/booking/invoice/booking.invoice.fakes';
 import { makeupRequest } from '@/modules/teaching/booking/core/makeup/booking.makeup.fakes';
 
 describe('BookingInvoices.resolve — required unless trial (R-PAY-03)', () => {
@@ -10,7 +19,10 @@ describe('BookingInvoices.resolve — required unless trial (R-PAY-03)', () => {
     ['a makeup', makeupRequest({ invoice: undefined })],
   ])('%s without an invoice → 400 invoice_required', async (_name, req) => {
     const { invoices } = setup();
-    expect(await code(invoices.resolve(req, SCOPE))).toEqual({ status: 400, code: 'invoice_required' });
+    expect(await code(invoices.resolve(req, SCOPE))).toEqual({
+      status: 400,
+      code: 'invoice_required',
+    });
   });
 
   it('a trial needs none, and a stray invoice on it is dropped (never stored)', async () => {
@@ -24,12 +36,18 @@ describe('BookingInvoices.resolve — required unless trial (R-PAY-03)', () => {
   it('an invoice needs the clientRequestId (the folder and the replay key) → 400 request_id_required', async () => {
     const { invoices } = setup();
     const req = bookingRequest({ invoice: upload });
-    expect(await code(invoices.resolve(req, SCOPE))).toEqual({ status: 400, code: 'request_id_required' });
+    expect(await code(invoices.resolve(req, SCOPE))).toEqual({
+      status: 400,
+      code: 'request_id_required',
+    });
   });
 
   it('a makeup stores its kind', async () => {
     const { invoices } = setup();
-    const row = await invoices.resolve(makeupRequest({ clientRequestId: REQ, invoice: upload }), SCOPE);
+    const row = await invoices.resolve(
+      makeupRequest({ clientRequestId: REQ, invoice: upload }),
+      SCOPE,
+    );
     expect(row).toMatchObject({ kind: 'makeup', source: 'upload' });
   });
 });
@@ -41,7 +59,10 @@ describe('BookingInvoices.resolve — saved from the chat (R-MSG-06)', () => {
     const { invoices, storage } = setup();
     const row = await invoices.resolve(req(), SCOPE);
     const to = { bucket: 'invoices', path: `${REQ}/wa-${MSG}.png` };
-    expect(storage.copy).toHaveBeenCalledWith({ from: { bucket: 'wa-media', path: `${MSG}.png` }, to });
+    expect(storage.copy).toHaveBeenCalledWith({
+      from: { bucket: 'wa-media', path: `${MSG}.png` },
+      to,
+    });
     expect(row).toEqual({
       kind: 'package',
       path: to.path,
@@ -52,9 +73,12 @@ describe('BookingInvoices.resolve — saved from the chat (R-MSG-06)', () => {
     });
   });
 
-  it('a message from another family\'s chat → 400 invoice_message, nothing downloaded or copied', async () => {
+  it("a message from another family's chat → 400 invoice_message, nothing downloaded or copied", async () => {
     const { invoices, media, storage } = setup();
-    expect(await code(invoices.resolve(req(), { ...SCOPE, phones: ['+201001234567'] }))).toEqual({ status: 400, code: 'invoice_message' });
+    expect(await code(invoices.resolve(req(), { ...SCOPE, phones: ['+201001234567'] }))).toEqual({
+      status: 400,
+      code: 'invoice_message',
+    });
     expect(media.cache).not.toHaveBeenCalled();
     expect(storage.copy).not.toHaveBeenCalled();
   });
@@ -63,12 +87,22 @@ describe('BookingInvoices.resolve — saved from the chat (R-MSG-06)', () => {
     const { invoices, media } = setup();
     const gone = new HttpException({ code: 'media_expired' }, 410);
     media.cache.mockRejectedValue(gone);
-    expect(await code(invoices.resolve(req(), SCOPE))).toEqual({ status: 410, code: 'media_expired' });
+    expect(await code(invoices.resolve(req(), SCOPE))).toEqual({
+      status: 410,
+      code: 'media_expired',
+    });
   });
 
   it('a retry of the same booking is idempotent: the stored invoice returns, nothing is copied again', async () => {
     const { invoices, queries, media, storage } = setup();
-    const stored = { kind: 'package', path: `${REQ}/wa-${MSG}.png`, mime: 'image/png', size_bytes: 2048, source: 'whatsapp', message_id: MSG };
+    const stored = {
+      kind: 'package',
+      path: `${REQ}/wa-${MSG}.png`,
+      mime: 'image/png',
+      size_bytes: 2048,
+      source: 'whatsapp',
+      message_id: MSG,
+    };
     queries.invoiceByRequest.mockResolvedValue(stored);
     expect(await invoices.resolve(req(), SCOPE)).toEqual(stored);
     expect(media.load).not.toHaveBeenCalled();
@@ -79,13 +113,13 @@ describe('BookingInvoices.resolve — saved from the chat (R-MSG-06)', () => {
     const { invoices, storage } = setup();
     await invoices.resolve(req(), SCOPE);
     await invoices.resolve(req(), SCOPE);
-    const targets = storage.copy.mock.calls.map((c) => (c[0]).to.path);
+    const targets = storage.copy.mock.calls.map((c) => c[0].to.path);
     expect(new Set(targets).size).toBe(1);
   });
 });
 
 describe('BookingInvoices.uploadUrl', () => {
-  it('signs a PUT under the booking\'s own folder: invoices/{clientRequestId}/{uuid}.{ext}', async () => {
+  it("signs a PUT under the booking's own folder: invoices/{clientRequestId}/{uuid}.{ext}", async () => {
     const { invoices, storage } = setup();
     await invoices.uploadUrl({ clientRequestId: REQ, mime: 'application/pdf', size: 10 });
     const [ref] = storage.signedUpload.mock.calls[0] ?? [];

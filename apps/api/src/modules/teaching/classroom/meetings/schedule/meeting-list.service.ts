@@ -3,7 +3,10 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { InternalMeetingsRepo } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 import { MeetingListRepo } from './meeting-list.repo';
-import { orderMeetings, toMeetingView } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.mapper';
+import {
+  orderMeetings,
+  toMeetingView,
+} from '@/modules/teaching/classroom/meetings/invites/meeting-invites.mapper';
 import { isAdmin } from '@/common/auth/roles';
 
 const DAY_MS = 86_400_000;
@@ -28,7 +31,9 @@ export class MeetingListService {
     const invited = await this.lists.byIds(invites.map((i) => i.meeting_id));
     const rows = [...latest, ...upcoming, ...invited];
     const counts = await this.lists.counts([...new Set(rows.map((r) => r.id))]);
-    const mine = new Map<string, MyMeetingInvite>(invites.map((i) => [i.meeting_id, { status: i.status, channel: i.channel }]));
+    const mine = new Map<string, MyMeetingInvite>(
+      invites.map((i) => [i.meeting_id, { status: i.status, channel: i.channel }]),
+    );
     return orderMeetings(rows.map((r) => toMeetingView(r, { user, now, win, counts, mine })));
   }
 }

@@ -20,7 +20,10 @@ describe('BookingPlanner — per-teacher meeting mode', () => {
     const { planner, queries } = fakePlanner({ meeting_link_auto: true });
     queries.teacher.mockResolvedValue({ ...TEACHER, meeting_mode: 'static' });
     const { payload } = await planner.prepare(leadRequest());
-    expect(payload.messages[0]).toMatchObject({ template_key: 'booking_confirmation', template_params: { button: 'ab-abrar' } });
+    expect(payload.messages[0]).toMatchObject({
+      template_key: 'booking_confirmation',
+      template_params: { button: 'ab-abrar' },
+    });
   });
 
   it('a teacher who follows the academy (null) gets the academy default', async () => {

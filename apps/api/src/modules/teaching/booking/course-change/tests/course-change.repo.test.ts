@@ -16,7 +16,10 @@ const REF = { rule_id: 'ra', linked: false, clean: true, from_on: '2026-10-01', 
 
 describe('CourseChangeQueries', () => {
   it("rules: course_rules_of's ids, each with how it is attributed", async () => {
-    const t = fake({ data: [{ id: 'ra', status: 'active' }], error: null }, { data: [REF], error: null });
+    const t = fake(
+      { data: [{ id: 'ra', status: 'active' }], error: null },
+      { data: [REF], error: null },
+    );
     expect(await t.queries.rules('s1')).toEqual([{ id: 'ra', status: 'active', course: REF }]);
     expect(t.rpc).toHaveBeenCalledWith('course_rules_of', { p_subscription: 's1' });
     expect(t.q.in).toHaveBeenCalledWith('id', ['ra']);

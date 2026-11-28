@@ -7,17 +7,24 @@ import { LessonWriter, type GeneratedLesson } from './lesson-writer';
 import { resolveMeetingLink } from '@/modules/teaching/scheduling/meeting-link';
 import { ruleStudents, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
 
-type TopUpOptions = {
+interface TopUpOptions {
   /** Weeks ahead of now (settings.booking_horizon_weeks, resolved by the caller). */
   weeks: number;
   /** null for the daily job. */
   actorId: string | null;
   now?: Date;
-};
+}
 /** `conflicts`: clashes of the inserted rows, also stored on them (lessons.conflicts). */
-type TopUp = { until: Date; lessons: GeneratedLesson[]; conflicts: Conflict[] };
+interface TopUp {
+  until: Date;
+  lessons: GeneratedLesson[];
+  conflicts: Conflict[];
+}
 
-const toOccurrence = (l: GeneratedLesson) => ({ starts_at: new Date(l.starts_at), ends_at: new Date(l.ends_at) });
+const toOccurrence = (l: GeneratedLesson) => ({
+  starts_at: new Date(l.starts_at),
+  ends_at: new Date(l.ends_at),
+});
 
 /** OccurrenceGenerator (docs/04 §4): keeps a rule booked over the rolling horizon. R-SCH-02. */
 @Injectable()
@@ -50,7 +57,11 @@ export class OccurrenceGenerator {
       ends_at: o.ends_at.toISOString(),
       meeting_link: link,
     }));
-    const lessons = await this.writer.generate({ ruleId: rule.id, lessons: rows, actorId: opts.actorId });
+    const lessons = await this.writer.generate({
+      ruleId: rule.id,
+      lessons: rows,
+      actorId: opts.actorId,
+    });
     const conflicts = await this.checker.check({
       teacherId: rule.teacher_id,
       studentIds: students.ids,
@@ -65,7 +76,11 @@ export class OccurrenceGenerator {
         entity: 'schedule_rules',
         entityId: rule.id,
         action: 'extend',
-        after: { until: window.to.toISOString(), inserted: lessons.map((l) => l.id), conflicts: conflicts.length },
+        after: {
+          until: window.to.toISOString(),
+          inserted: lessons.map((l) => l.id),
+          conflicts: conflicts.length,
+        },
       });
     }
     return { until: window.to, lessons, conflicts };

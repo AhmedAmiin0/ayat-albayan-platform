@@ -45,23 +45,35 @@ export class MeetingInviteeRepo {
 
   /** Enabled staff profiles, by id (resolution) or by name (picker). */
   async staff(input: { ids?: readonly string[]; q?: string }): Promise<StaffPick[]> {
-    let query = this.db.from('profiles').select('id, full_name, role, tz').in('role', [...STAFF_ROLES]).is('disabled_at', null);
+    let query = this.db
+      .from('profiles')
+      .select('id, full_name, role, tz')
+      .in('role', [...STAFF_ROLES])
+      .is('disabled_at', null);
     if (input.ids) query = query.in('id', [...input.ids]);
     const name = input.q ? orFilterTerm(input.q) : '';
     if (name) query = query.ilike('full_name', `%${name}%`);
-    const { data, error } = await query.order('full_name').limit(input.ids ? input.ids.length : PICK_LIMIT);
+    const { data, error } = await query
+      .order('full_name')
+      .limit(input.ids ? input.ids.length : PICK_LIMIT);
     if (error) throw pgError(error);
     return data;
   }
 
   /** Students in the scope, by id (resolution, with the guardian) or by name / code (picker). */
-  async students(input: { scope: StudentScope; ids?: readonly string[]; q?: string }): Promise<StudentPick[]> {
+  async students(input: {
+    scope: StudentScope;
+    ids?: readonly string[];
+    q?: string;
+  }): Promise<StudentPick[]> {
     let query = this.db.from('students').select(STUDENT_COLUMNS);
     if (input.scope.kind === 'ids') query = query.in('id', [...input.scope.ids]);
     if (input.ids) query = query.in('id', [...input.ids]);
     const filter = input.q ? studentNameOrCodeFilter(input.q) : null;
     if (filter) query = query.or(filter);
-    const { data, error } = await query.order('name').limit(input.ids ? input.ids.length : PICK_LIMIT);
+    const { data, error } = await query
+      .order('name')
+      .limit(input.ids ? input.ids.length : PICK_LIMIT);
     if (error) throw pgError(error);
     return data;
   }
@@ -71,17 +83,27 @@ export class MeetingInviteeRepo {
    * teachers.profile_id; migration 20261015000441).
    */
   async teacherStudentIds(profileId: string): Promise<string[]> {
-    const { data: teacher, error } = await this.db.from('teachers').select('id').eq('profile_id', profileId).maybeSingle();
+    const { data: teacher, error } = await this.db
+      .from('teachers')
+      .select('id')
+      .eq('profile_id', profileId)
+      .maybeSingle();
     if (error) throw pgError(error);
     if (!teacher) return [];
-    const { data, error: e2 } = await this.db.from('students').select('id').eq('teacher_id', teacher.id).not('status', 'in', NOT_SUBSCRIBED);
+    const { data, error: e2 } = await this.db
+      .from('students')
+      .select('id')
+      .eq('teacher_id', teacher.id)
+      .not('status', 'in', NOT_SUBSCRIBED);
     if (e2) throw pgError(e2);
     return data.map((r) => r.id);
   }
 
   /** The students an assistant is assigned to (student_assistants). */
   async assistantStudentIds(profileId: string): Promise<string[]> {
-    const data = rows(await this.db.from('student_assistants').select('student_id').eq('profile_id', profileId));
+    const data = rows(
+      await this.db.from('student_assistants').select('student_id').eq('profile_id', profileId),
+    );
     return data.map((r) => r.student_id);
   }
 
@@ -95,7 +117,9 @@ export class MeetingInviteeRepo {
 
   /** The creator's tz: the time of an invitation to an unknown number reads in it. */
   async profileTz(profileId: string): Promise<string | null> {
-    const data = maybe(await this.db.from('profiles').select('tz').eq('id', profileId).maybeSingle());
+    const data = maybe(
+      await this.db.from('profiles').select('tz').eq('id', profileId).maybeSingle(),
+    );
     return data?.tz ?? null;
   }
 }

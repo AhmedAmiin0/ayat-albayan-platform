@@ -19,8 +19,18 @@ export class StudentLinkAdminService {
     const student = await this.queries.student(input.studentId);
     if (!student) throw notFound('student_not_found');
     const token = newLinkToken();
-    await this.queries.saveLink({ studentId: student.id, hash: hashLinkToken(token), actorId: input.actorId });
-    await this.audit.record({ actorId: input.actorId, entity: 'students', entityId: student.id, action: 'join_link_issued', after: {} });
+    await this.queries.saveLink({
+      studentId: student.id,
+      hash: hashLinkToken(token),
+      actorId: input.actorId,
+    });
+    await this.audit.record({
+      actorId: input.actorId,
+      entity: 'students',
+      entityId: student.id,
+      action: 'join_link_issued',
+      after: {},
+    });
     return { url: `${this.origin}/s/${token}` };
   }
 }

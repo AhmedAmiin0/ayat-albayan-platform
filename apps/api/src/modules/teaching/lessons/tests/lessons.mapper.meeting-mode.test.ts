@@ -5,9 +5,19 @@ import { toLessonView } from '@/modules/teaching/lessons/lessons.mapper';
 // LessonView.platform_classroom (migration 490): the lesson's own teacher decides (a substitute's
 // mode applies), else the academy default; clients show or hide the fixed link by it alone.
 
-const teacher = (meeting_mode: string | null) => ({ id: TEACHER_ID, display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo', meeting_mode });
+const teacher = (meeting_mode: string | null) => ({
+  id: TEACHER_ID,
+  display_name_ar: 'أبرار',
+  display_name_en: null,
+  tz: 'Africa/Cairo',
+  meeting_mode,
+});
 const view = (mode: string | null, academyAuto?: boolean) =>
-  toLessonView(lessonRow({ teacher: teacher(mode) }), { role: 'admin', seq: new Map(), academyAuto });
+  toLessonView(lessonRow({ teacher: teacher(mode) }), {
+    role: 'admin',
+    seq: new Map(),
+    academyAuto,
+  });
 
 describe('toLessonView — platform_classroom', () => {
   it("the teacher's mode wins; null follows the academy default (false when not given)", () => {
@@ -20,6 +30,11 @@ describe('toLessonView — platform_classroom', () => {
   it('the fixed link stays on the view and the teacher carries no meeting_mode', () => {
     const v = view('platform', true);
     expect(v.meeting_link).toBe('https://meet.jit.si/abrar');
-    expect(v.teacher).toEqual({ id: TEACHER_ID, display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' });
+    expect(v.teacher).toEqual({
+      id: TEACHER_ID,
+      display_name_ar: 'أبرار',
+      display_name_en: null,
+      tz: 'Africa/Cairo',
+    });
   });
 });

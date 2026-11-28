@@ -43,7 +43,10 @@ export class RoomJoinService {
     return this.admission.admit({ lessonId: lesson.id, role, name, principal }, now);
   }
 
-  private async assertWindow(ctx: { user: AuthUser; lesson: JoinLesson }, now: Date): Promise<void> {
+  private async assertWindow(
+    ctx: { user: AuthUser; lesson: JoinLesson },
+    now: Date,
+  ): Promise<void> {
     const check = windowCheckFor(await this.testFlagsOf(ctx.user, ctx.lesson.id));
     check(ctx.lesson, now, joinWindowConfig(await this.settings.read()));
   }

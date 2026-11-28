@@ -3,7 +3,10 @@ import type { BookingResult } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pgError, uniqueViolationMentions } from '@/common/db/errors';
-import { toBookingResult, type BookingPayload } from '@/modules/teaching/booking/core/booking.mapper';
+import {
+  toBookingResult,
+  type BookingPayload,
+} from '@/modules/teaching/booking/core/booking.mapper';
 
 /** The write of POST /lessons/instant: create_booking + the instant flags, in one transaction (migration 190). */
 @Injectable()

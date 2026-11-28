@@ -6,7 +6,7 @@ const CARD = `/sales/students/${S1}/course-card`;
 
 // Every assistant reads any student's card, as GET /sales/students/:id (docs/16 row 36); a
 // teacher or a family is refused before the student's package is looked up.
-describe('GET /sales/students/:id/course-card with someone else\'s student id', () => {
+describe("GET /sales/students/:id/course-card with someone else's student id", () => {
   let t: App;
   beforeAll(async () => {
     t = await profileApp();

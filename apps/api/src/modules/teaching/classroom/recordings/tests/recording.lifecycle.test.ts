@@ -3,7 +3,10 @@ import { CONFIG, LESSON_ID } from '@/modules/teaching/classroom/classroom.fakes'
 import type { FetchLike } from '@/common/infra/http/failure';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
-import { participantEventOf, peopleIn } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
+import {
+  participantEventOf,
+  peopleIn,
+} from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
 import { recordingQueries } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RecordingLifecycle } from '@/modules/teaching/classroom/recordings/recording.lifecycle';
 import type { RecordingRepo } from '@/modules/teaching/classroom/recordings/recording.repo';
@@ -17,7 +20,12 @@ let starter: { startFor: ReturnType<typeof vi.fn>; configured: boolean };
 const http = vi.fn<FetchLike>(async (url) =>
   twirpAnswer(200, url.endsWith('/ListParticipants') ? { participants: people } : {}),
 );
-const life = () => new RecordingLifecycle(new LivekitApi(CONFIG, http), rq as unknown as RecordingRepo, starter as unknown as RecordingStarter);
+const life = () =>
+  new RecordingLifecycle(
+    new LivekitApi(CONFIG, http),
+    rq as unknown as RecordingRepo,
+    starter as unknown as RecordingStarter,
+  );
 const methods = () => http.mock.calls.map(([url]) => url.split('/twirp/')[1]);
 
 beforeEach(() => {
@@ -51,9 +59,14 @@ describe('RecordingLifecycle', () => {
 
   it('the last person leaving stops the running egress', async () => {
     people = [EGRESS, { identity: 'guest-0123456789ab' }];
-    expect(await life().afterLeft({ room: `meeting-${LESSON_ID}`, identity: 'guest-0123456789ab' })).toBe('stopped');
+    expect(
+      await life().afterLeft({ room: `meeting-${LESSON_ID}`, identity: 'guest-0123456789ab' }),
+    ).toBe('stopped');
     expect(rq.runningEgress).toHaveBeenCalledWith({ kind: 'meeting', id: LESSON_ID });
-    expect(methods()).toEqual(['livekit.RoomService/ListParticipants', 'livekit.Egress/StopEgress']);
+    expect(methods()).toEqual([
+      'livekit.RoomService/ListParticipants',
+      'livekit.Egress/StopEgress',
+    ]);
     expect(sentBody(http.mock.calls[1]?.[1])).toEqual({ egress_id: 'EG_abc' });
   });
 
@@ -70,11 +83,35 @@ describe('RecordingLifecycle', () => {
 
 describe('webhook room helpers', () => {
   it('participant_left with a room; people without recorders', () => {
-    expect(participantEventOf({ event: 'participant_left', room: { name: 'r' }, participant: { identity: 'g' } })).toEqual({ kind: 'left', room: 'r', identity: 'g', at: null });
-    expect(participantEventOf({ event: 'participant_joined', room: { name: 'r' } })).toEqual({ kind: 'joined', room: 'r', identity: '', at: null });
+    expect(
+      participantEventOf({
+        event: 'participant_left',
+        room: { name: 'r' },
+        participant: { identity: 'g' },
+      }),
+    ).toEqual({ kind: 'left', room: 'r', identity: 'g', at: null });
+    expect(participantEventOf({ event: 'participant_joined', room: { name: 'r' } })).toEqual({
+      kind: 'joined',
+      room: 'r',
+      identity: '',
+      at: null,
+    });
     expect(participantEventOf({ event: 'participant_left', room: {} })).toBeNull();
     expect(participantEventOf({ event: 'room_started', room: { name: 'r' } })).toBeNull();
-    expect(peopleIn({ participants: [EGRESS, { identity: 'a', kind: 2 }, { identity: 'b' }, { identity: 'c' }, 'junk'] }, 'c')).toEqual(['b']);
+    expect(
+      peopleIn(
+        {
+          participants: [
+            EGRESS,
+            { identity: 'a', kind: 2 },
+            { identity: 'b' },
+            { identity: 'c' },
+            'junk',
+          ],
+        },
+        'c',
+      ),
+    ).toEqual(['b']);
     expect(peopleIn({})).toEqual([]);
   });
 });

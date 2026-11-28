@@ -28,9 +28,9 @@ import { StudentLinkRepo, type StudentLesson } from './student-link.repo';
 
 const MS = 1000;
 const ONE_DAY_S = 86_400;
-type PublicCall = { token: string; ip: string };
+interface PublicCall { token: string; ip: string }
 type PortalLesson = Omit<Resolved, 'lesson'> & { lesson: StudentLesson };
-type Resolved = { student: LinkStudent; lesson: StudentLesson | null; win: JoinWindowConfig };
+interface Resolved { student: LinkStudent; lesson: StudentLesson | null; win: JoinWindowConfig }
 
 /** The token is the whole credential; a rotated link is 404 like an unknown one; removal holds. */
 @Injectable()
@@ -112,10 +112,18 @@ export class StudentLinkService {
     }
   }
 
-  private async admitTo(input: { lesson: StudentLesson; student: LinkStudent; win: JoinWindowConfig; now: Date; name?: string }): Promise<RoomJoinResult> {
+  private async admitTo(input: {
+    lesson: StudentLesson;
+    student: LinkStudent;
+    win: JoinWindowConfig;
+    now: Date;
+    name?: string;
+  }): Promise<RoomJoinResult> {
     const { lesson, student, win, now } = input;
     const joinLinkId = await this.queries.lessonLinkId({ lesson, studentId: student.id });
-    const closesS = Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) - Math.floor(now.getTime() / MS);
+    const closesS =
+      Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) -
+      Math.floor(now.getTime() / MS);
     const shown = input.name?.slice(0, 30) ?? roomNameOfStudent(student.name);
     return this.admission.admit(
       { lessonId: lesson.id, role: 'guest', name: shown, principal: { joinLinkId }, ttlSeconds: Math.min(closesS, ONE_DAY_S) },

@@ -7,13 +7,21 @@ const deletes = (http: ReturnType<typeof jobWith>['lk']['http']) =>
 
 describe('MeetingMaxDurationJob', () => {
   it('ends an overdue meeting like «إنهاء» (ends_at + audit) and closes its room once', async () => {
-    const t = jobWith({ meetings: [overdue(M1)], rooms: [{ name: `meeting-${M1}`, minutesAgo: 30 }] });
+    const t = jobWith({
+      meetings: [overdue(M1)],
+      rooms: [{ name: `meeting-${M1}`, minutesAgo: 30 }],
+    });
     expect(await t.job.runOnce(NOW)).toEqual({ ended: 1, closed: 1, failed: 0 });
     expect(t.store.end).toHaveBeenCalledWith(M1, NOW.toISOString());
-    expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({
-      actorId: null, entity: 'meetings', entityId: M1, action: 'end',
-      after: { ends_at: NOW.toISOString(), reason: 'auto_max_duration' },
-    }));
+    expect(t.audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({
+        actorId: null,
+        entity: 'meetings',
+        entityId: M1,
+        action: 'end',
+        after: { ends_at: NOW.toISOString(), reason: 'auto_max_duration' },
+      }),
+    );
     expect(t.lk.deleted).toEqual([`meeting-${M1}`]);
     expect(deletes(t.lk.http)).toBe(1);
   });
@@ -39,7 +47,10 @@ describe('MeetingMaxDurationJob', () => {
   it('is idempotent: a second run calls DeleteRoom nowhere and writes no audit row', async () => {
     const t = jobWith({
       meetings: [overdue(M1)],
-      rooms: [{ name: `meeting-${M1}`, minutesAgo: 30 }, { name: `lesson-${L2}`, minutesAgo: 200 }],
+      rooms: [
+        { name: `meeting-${M1}`, minutesAgo: 30 },
+        { name: `lesson-${L2}`, minutesAgo: 200 },
+      ],
     });
     await t.job.runOnce(NOW);
     const later = new Date(NOW.getTime() + 300_000);
@@ -63,13 +74,19 @@ describe('MeetingMaxDurationJob', () => {
   });
 
   it('a failed meeting end still closes its room; a failed audit is counted', async () => {
-    const t = jobWith({ meetings: [overdue(M1)], rooms: [{ name: `meeting-${M1}`, minutesAgo: 30 }] });
+    const t = jobWith({
+      meetings: [overdue(M1)],
+      rooms: [{ name: `meeting-${M1}`, minutesAgo: 30 }],
+    });
     t.audit.record.mockRejectedValueOnce(new Error('db down'));
     expect(await t.job.runOnce(NOW)).toEqual({ ended: 0, closed: 1, failed: 1 });
   });
 
   it('stops a running recording before closing, so the file is kept', async () => {
-    const t = jobWith({ rooms: [{ name: `lesson-${L2}`, minutesAgo: 200 }], egress: { [L2]: 'EG_1' } });
+    const t = jobWith({
+      rooms: [{ name: `lesson-${L2}`, minutesAgo: 200 }],
+      egress: { [L2]: 'EG_1' },
+    });
     await t.job.runOnce(NOW);
     expect(t.lk.stopped).toEqual(['EG_1']);
     const order = t.lk.http.mock.calls.map(([url]) => url.split('/').pop());
@@ -77,7 +94,11 @@ describe('MeetingMaxDurationJob', () => {
   });
 
   it('does nothing when the setting is 0', async () => {
-    const t = jobWith({ minutes: 0, meetings: [overdue(M1)], rooms: [{ name: `lesson-${L2}`, minutesAgo: 900 }] });
+    const t = jobWith({
+      minutes: 0,
+      meetings: [overdue(M1)],
+      rooms: [{ name: `lesson-${L2}`, minutesAgo: 900 }],
+    });
     expect(await t.job.runOnce(NOW)).toEqual({ ended: 0, closed: 0, failed: 0 });
     expect(t.repo.overdueMeetings).not.toHaveBeenCalled();
     expect(t.lk.http).not.toHaveBeenCalled();

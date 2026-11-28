@@ -20,7 +20,14 @@ const MONTHS = [...new Set(goldenDates().map((d) => d.slice(0, 7)))];
 function occurrenceLines(zone: string): string[] {
   return STARTS.flatMap((start_time_local) =>
     ruleOccurrences(
-      { ...DAILY, start_time_local, duration_min: 45, tz: zone, starts_on: '2025-12-24', ends_on: '2027-01-07' },
+      {
+        ...DAILY,
+        start_time_local,
+        duration_min: 45,
+        tz: zone,
+        starts_on: '2025-12-24',
+        ends_on: '2027-01-07',
+      },
       WINDOW,
     ).map((o) => `${o.starts_at.toISOString()} ${o.ends_at.toISOString()}`),
   );

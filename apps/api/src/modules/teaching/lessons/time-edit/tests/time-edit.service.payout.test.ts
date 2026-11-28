@@ -1,21 +1,36 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TEACHER_ID } from '@/modules/teaching/lessons/lessons.fakes';
-import { body, correction, heldRow, NOW, retimed, timeSetup } from '@/modules/teaching/lessons/time-edit/time-edit.fakes';
+import {
+  body,
+  correction,
+  heldRow,
+  NOW,
+  retimed,
+  timeSetup,
+} from '@/modules/teaching/lessons/time-edit/time-edit.fakes';
 
 describe('LessonTimeService — payout lock (E3, R-PAY-02)', () => {
   beforeEach(() => vi.useFakeTimers({ now: NOW, toFake: ['Date'] }));
   afterEach(() => vi.useRealTimers());
 
-  it.each(['approved', 'paid'] as const)('a correction that re-prices a %s month is 409 payout_locked', async (locked) => {
-    const t = timeSetup(heldRow());
-    t.payouts.payoutStatus.mockResolvedValue(locked);
-    await expect(t.run(correction())).rejects.toMatchObject({
-      status: 409,
-      response: { code: 'payout_locked', message: 'payout_locked', month: '2026-10', status: locked },
-    });
-    expect(t.payouts.payoutStatus).toHaveBeenCalledWith(TEACHER_ID, '2026-10');
-    expect(t.writer.retime).not.toHaveBeenCalled();
-  });
+  it.each(['approved', 'paid'] as const)(
+    'a correction that re-prices a %s month is 409 payout_locked',
+    async (locked) => {
+      const t = timeSetup(heldRow());
+      t.payouts.payoutStatus.mockResolvedValue(locked);
+      await expect(t.run(correction())).rejects.toMatchObject({
+        status: 409,
+        response: {
+          code: 'payout_locked',
+          message: 'payout_locked',
+          month: '2026-10',
+          status: locked,
+        },
+      });
+      expect(t.payouts.payoutStatus).toHaveBeenCalledWith(TEACHER_ID, '2026-10');
+      expect(t.writer.retime).not.toHaveBeenCalled();
+    },
+  );
 
   it('a draft month is allowed: payout is draft_stale (press «احسب مستحقات الشهر» again)', async () => {
     const t = timeSetup(heldRow());
@@ -45,7 +60,9 @@ describe('LessonTimeService — payout lock (E3, R-PAY-02)', () => {
     expect(off.writer.retime).toHaveBeenCalledTimes(1);
     const on = timeSetup(heldRow({ status: 'late' }), { payout_count_late: true });
     on.payouts.payoutStatus.mockResolvedValue('approved');
-    await expect(on.run(correction())).rejects.toMatchObject({ response: { code: 'payout_locked' } });
+    await expect(on.run(correction())).rejects.toMatchObject({
+      response: { code: 'payout_locked' },
+    });
   });
 
   it('a move into a locked month is 409 payout_locked: the lesson could never be paid there', async () => {

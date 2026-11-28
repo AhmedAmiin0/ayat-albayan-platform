@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { assertConfirmed, assertTeacherMayCancel } from '@/modules/teaching/lessons/teacher-me/teacher-lesson.rules';
+import {
+  assertConfirmed,
+  assertTeacherMayCancel,
+} from '@/modules/teaching/lessons/teacher-me/teacher-lesson.rules';
 
 const now = new Date('2026-11-11T12:00:00Z');
 const code = (fn: () => void): string | null => {
@@ -14,12 +17,24 @@ const code = (fn: () => void): string | null => {
 
 describe('assertTeacherMayCancel (docs/46 D3)', () => {
   it('an open lesson ahead passes', () => {
-    expect(code(() => assertTeacherMayCancel({ status: 'confirmed', starts_at: '2026-11-11T13:00:00Z' }, now))).toBeNull();
+    expect(
+      code(() =>
+        assertTeacherMayCancel({ status: 'confirmed', starts_at: '2026-11-11T13:00:00Z' }, now),
+      ),
+    ).toBeNull();
   });
 
   it('started → lesson_started; closed → invalid_transition', () => {
-    expect(code(() => assertTeacherMayCancel({ status: 'scheduled', starts_at: '2026-11-11T12:00:00Z' }, now))).toBe('lesson_started');
-    expect(code(() => assertTeacherMayCancel({ status: 'completed', starts_at: '2026-11-12T12:00:00Z' }, now))).toBe('invalid_transition');
+    expect(
+      code(() =>
+        assertTeacherMayCancel({ status: 'scheduled', starts_at: '2026-11-11T12:00:00Z' }, now),
+      ),
+    ).toBe('lesson_started');
+    expect(
+      code(() =>
+        assertTeacherMayCancel({ status: 'completed', starts_at: '2026-11-12T12:00:00Z' }, now),
+      ),
+    ).toBe('invalid_transition');
   });
 });
 

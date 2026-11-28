@@ -6,8 +6,13 @@ import type { ChannelBellRepo } from './channel-bell.repo';
 
 const row = (over: Partial<ChannelMessageRow>) =>
   ({
-    id: 'm1', body: 'متى الحلقة؟', sender_profile_id: 'p-g', sender_role: 'guardian',
-    created_at: '', deleted_at: null, ...over,
+    id: 'm1',
+    body: 'متى الحلقة؟',
+    sender_profile_id: 'p-g',
+    sender_role: 'guardian',
+    created_at: '',
+    deleted_at: null,
+    ...over,
   }) as ChannelMessageRow;
 
 function bell(names: ReadonlyMap<string, string>) {

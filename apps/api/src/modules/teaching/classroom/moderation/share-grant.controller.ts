@@ -16,8 +16,8 @@ interface Target {
 
 /** 400 for an id that is not a uuid, 404 participant_not_found for an identity we never minted. */
 export async function targetOf(params: Record<string, string | undefined>): Promise<Target> {
-  const id = await uuid.transform(params['id'] ?? '', { type: 'param', data: 'id' });
-  const identity = params['identity'] ?? '';
+  const id = await uuid.transform(params.id ?? '', { type: 'param', data: 'id' });
+  const identity = params.identity ?? '';
   if (!IDENTITY.test(identity)) throw notFound('participant_not_found');
   return { id, identity };
 }

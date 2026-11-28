@@ -33,38 +33,55 @@ export class ClassroomRepo {
   }
 
   async lesson(id: string): Promise<JoinLesson | null> {
-    const data = maybe(await this.db.from('lessons').select(JOIN_COLUMNS).eq('id', id).maybeSingle());
+    const data = maybe(
+      await this.db.from('lessons').select(JOIN_COLUMNS).eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
   /** Stamps room_opened_at once; a second call keeps the first time. */
   async openRoom(id: string, at: string): Promise<JoinLesson | null> {
-    done(await this.db.from('lessons').update({ room_opened_at: at }).eq('id', id).is('room_opened_at', null));
+    done(
+      await this.db
+        .from('lessons')
+        .update({ room_opened_at: at })
+        .eq('id', id)
+        .is('room_opened_at', null),
+    );
     return this.lesson(id);
   }
 
   async teacherName(teacherId: string): Promise<string | null> {
-    const data = maybe(await this.db.from('teachers').select('display_name_ar').eq('id', teacherId).maybeSingle());
+    const data = maybe(
+      await this.db.from('teachers').select('display_name_ar').eq('id', teacherId).maybeSingle(),
+    );
     return data?.display_name_ar ?? null;
   }
 
   async profileName(profileId: string): Promise<string | null> {
-    const data = maybe(await this.db.from('profiles').select('full_name').eq('id', profileId).maybeSingle());
+    const data = maybe(
+      await this.db.from('profiles').select('full_name').eq('id', profileId).maybeSingle(),
+    );
     return data?.full_name ?? null;
   }
 
   /** Is the lesson one of an assigned student of this assistant? */
   async assistsLesson(profileId: string, lessonId: string): Promise<boolean> {
-    const mine = await this.db.from('student_assistants').select('student_id').eq('profile_id', profileId);
+    const mine = await this.db
+      .from('student_assistants')
+      .select('student_id')
+      .eq('profile_id', profileId);
     if (mine.error) throw pgError(mine.error);
     const ids = mine.data.map((r) => r.student_id);
     if (!ids.length) return false;
-    const data = rows(await this.db
-      .from('lesson_students')
-      .select('student_id')
-      .eq('lesson_id', lessonId)
-      .in('student_id', ids)
-      .limit(1));
+    const data = rows(
+      await this.db
+        .from('lesson_students')
+        .select('student_id')
+        .eq('lesson_id', lessonId)
+        .in('student_id', ids)
+        .limit(1),
+    );
     return data.length > 0;
   }
 
@@ -75,16 +92,31 @@ export class ClassroomRepo {
 
   /** null when the student is not on the lesson or has no guardian phone. */
   async sendContext(lessonId: string, studentId: string): Promise<SendContext | null> {
-    const on = await this.db.from('lesson_students').select('student_id').match({ lesson_id: lessonId, student_id: studentId }).maybeSingle();
+    const on = await this.db
+      .from('lesson_students')
+      .select('student_id')
+      .match({ lesson_id: lessonId, student_id: studentId })
+      .maybeSingle();
     if (on.error) throw pgError(on.error);
     if (!on.data) return null;
-    const student = await this.db.from('students').select('id, name, guardian_id').eq('id', studentId).maybeSingle();
+    const student = await this.db
+      .from('students')
+      .select('id, name, guardian_id')
+      .eq('id', studentId)
+      .maybeSingle();
     if (student.error) throw pgError(student.error);
     if (!student.data) return null;
-    const g = await this.db.from('guardians').select('id, phone_e164').eq('id', student.data.guardian_id).maybeSingle();
+    const g = await this.db
+      .from('guardians')
+      .select('id, phone_e164')
+      .eq('id', student.data.guardian_id)
+      .maybeSingle();
     if (g.error) throw pgError(g.error);
     if (!g.data?.phone_e164) return null;
-    return { student: { id: student.data.id, name: student.data.name }, guardian: { id: g.data.id, phone: g.data.phone_e164 } };
+    return {
+      student: { id: student.data.id, name: student.data.name },
+      guardian: { id: g.data.id, phone: g.data.phone_e164 },
+    };
   }
 
   async insertLink(row: TablesInsert<'lesson_join_links'>): Promise<JoinLinkRow> {
@@ -102,11 +134,9 @@ export class ClassroomRepo {
   }
 
   private async linkWhere(column: 'id' | 'token_hash', value: string): Promise<JoinLinkRow | null> {
-    const data = maybe(await this.db
-      .from('lesson_join_links')
-      .select('*')
-      .eq(column, value)
-      .maybeSingle());
+    const data = maybe(
+      await this.db.from('lesson_join_links').select('*').eq(column, value).maybeSingle(),
+    );
     return data;
   }
 }

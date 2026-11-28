@@ -1,15 +1,37 @@
 import { roleOfMeta } from '@ab/shared';
 import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { CONFIG, decode, LESSON_ID, OPEN, queries } from '@/modules/teaching/classroom/classroom.fakes';
-import { admissionOf, moderation, recorder } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  CONFIG,
+  decode,
+  LESSON_ID,
+  OPEN,
+  queries,
+} from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  admissionOf,
+  moderation,
+  recorder,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { GUEST_TOKEN_TTL_S } from '@/modules/teaching/classroom/join/room-admission';
 
 let mod: ReturnType<typeof moderation>;
 let rec: ReturnType<typeof recorder>;
-const admission = (config: typeof CONFIG | null = CONFIG) => admissionOf({ q: queries(), mod, rec, config });
-const staff = { lessonId: LESSON_ID, role: 'teacher' as const, name: 'أبرار', principal: { userId: 'u1' } };
-const guest = { lessonId: LESSON_ID, role: 'guest' as const, name: 'سهيلة', principal: { joinLinkId: 'l1' }, ttlSeconds: 3600 };
+const admission = (config: typeof CONFIG | null = CONFIG) =>
+  admissionOf({ q: queries(), mod, rec, config });
+const staff = {
+  lessonId: LESSON_ID,
+  role: 'teacher' as const,
+  name: 'أبرار',
+  principal: { userId: 'u1' },
+};
+const guest = {
+  lessonId: LESSON_ID,
+  role: 'guest' as const,
+  name: 'سهيلة',
+  principal: { joinLinkId: 'l1' },
+  ttlSeconds: 3600,
+};
 
 beforeEach(() => {
   mod = moderation();
@@ -19,7 +41,9 @@ beforeEach(() => {
 describe('RoomAdmission', () => {
   it('a blocked principal is refused 403 removed_from_room: no token, no participant row', async () => {
     mod.isBlocked.mockResolvedValue(true);
-    const err = (await admission().admit(staff, OPEN).catch((e: HttpException) => e)) as HttpException;
+    const err = (await admission()
+      .admit(staff, OPEN)
+      .catch((e: HttpException) => e)) as HttpException;
     expect(err.getStatus()).toBe(403);
     expect(err.getResponse()).toMatchObject({ code: 'removed_from_room' });
     expect(mod.isBlocked).toHaveBeenCalledWith(LESSON_ID, { userId: 'u1' });
@@ -45,7 +69,9 @@ describe('RoomAdmission', () => {
   it('records a guest with the link; the ttl is capped at 15 minutes (GUEST_TOKEN_TTL_S)', async () => {
     const r = await admission().admit(guest, OPEN);
     expect(mod.isBlocked).toHaveBeenCalledWith(LESSON_ID, { joinLinkId: 'l1' });
-    expect(mod.addParticipant).toHaveBeenCalledWith(expect.objectContaining({ role: 'guest', user_id: null, join_link_id: 'l1' }));
+    expect(mod.addParticipant).toHaveBeenCalledWith(
+      expect.objectContaining({ role: 'guest', user_id: null, join_link_id: 'l1' }),
+    );
     expect(decode(r.token).exp).toBe(OPEN.getTime() / 1000 + GUEST_TOKEN_TTL_S);
   });
 
@@ -65,7 +91,9 @@ describe('RoomAdmission', () => {
   });
 
   it('503 classroom_not_configured without LiveKit', async () => {
-    const err = (await admission(null).admit(staff, OPEN).catch((e: HttpException) => e)) as HttpException;
+    const err = (await admission(null)
+      .admit(staff, OPEN)
+      .catch((e: HttpException) => e)) as HttpException;
     expect(err.getStatus()).toBe(503);
   });
 });

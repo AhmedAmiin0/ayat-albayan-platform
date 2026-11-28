@@ -51,7 +51,8 @@ export async function writeAuto(
     await w.store.commit(autoCommit(lesson, to));
     return true;
   } catch (e) {
-    if (errorCode(e) !== 'invalid_transition') w.log.warn(`lesson ${lesson.id} not settled: ${errorMessage(e)}`);
+    if (errorCode(e) !== 'invalid_transition')
+      w.log.warn(`lesson ${lesson.id} not settled: ${errorMessage(e)}`);
     return false;
   }
 }

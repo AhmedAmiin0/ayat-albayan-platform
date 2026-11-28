@@ -39,8 +39,9 @@ export class LessonFilesService {
   async register(input: FileCall & { file: LessonFileRegister }): Promise<LessonFileView> {
     await this.access.lesson(input.user, input.id);
     const { file } = input;
-    const there = isPathOf(file.path, input.id)
-      && (await this.storage.exists({ bucket: BUCKETS.attachments, path: file.path }));
+    const there =
+      isPathOf(file.path, input.id) &&
+      (await this.storage.exists({ bucket: BUCKETS.attachments, path: file.path }));
     if (!there) throw badRequest('lesson_file_path');
     const row = await this.files.add({
       lesson_id: input.id,

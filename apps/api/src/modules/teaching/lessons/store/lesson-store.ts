@@ -3,7 +3,11 @@ import type { LessonEvent } from '@ab/schedule';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuditEntry } from '@/common/audit/audit.service';
 import { LessonEvents, type ScheduleChange } from '@/common/infra/events/lesson-events';
-import type { ChangeSet, QueuedMessage, TimeEditChange } from '@/modules/teaching/scheduling/change-set';
+import type {
+  ChangeSet,
+  QueuedMessage,
+  TimeEditChange,
+} from '@/modules/teaching/scheduling/change-set';
 import { errorCode } from '@/common/http/errors';
 import { LessonWriter } from '@/modules/teaching/scheduling/occurrences/lesson-writer';
 import type { LessonRow } from './lesson-row';
@@ -11,7 +15,7 @@ import { LessonsRepo } from '@/modules/teaching/lessons/lessons.repo';
 import { FamilyMoveNotice } from '@/modules/teaching/schedule-notices';
 import { invalidTransition } from '@/modules/teaching/lessons/status/transition';
 
-export type Commit = {
+export interface Commit {
   change: ChangeSet;
   /** Written by apply_lesson_changes in the same transaction; its actor is change.actor. */
   audit: Omit<AuditEntry, 'actorId'>;
@@ -22,7 +26,7 @@ export type Commit = {
    * (lesson_rescheduled): FamilyMoveNotice first chooses the family's one message for it.
    */
   notice?: ScheduleChange;
-};
+}
 
 /** Lesson reads + audited atomic writes, shared by the lesson services. R-NFR-03. */
 @Injectable()
@@ -47,7 +51,11 @@ export class LessonStore {
   async commit({ change, audit, transition, notice: asked }: Commit): Promise<void> {
     const { entity, entityId, action, before, after } = audit;
     const to = change.lessons?.find((l) => l.id === movedId(asked))?.starts_at;
-    const { notice, messages } = await this.family({ notice: asked, to, messages: change.messages });
+    const { notice, messages } = await this.family({
+      notice: asked,
+      to,
+      messages: change.messages,
+    });
     const applied = messages ? { ...change, messages } : change;
     const row = { entity, entity_id: entityId, action, before, after };
     try {

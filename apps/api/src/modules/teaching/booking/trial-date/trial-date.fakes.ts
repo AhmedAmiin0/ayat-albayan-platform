@@ -17,7 +17,9 @@ export const OTHER_TEACHER = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e22';
 export const OLD = 'aaaaaaaa-0000-4000-8000-000000000001';
 export const REQUEST = 'bbbbbbbb-0000-4000-8000-000000000001';
 
-type LessonOver = Partial<NonNullable<TrialLessonRead['lesson']>> & { attendance?: TrialLessonRead['attendance'] };
+type LessonOver = Partial<NonNullable<TrialLessonRead['lesson']>> & {
+  attendance?: TrialLessonRead['attendance'];
+};
 
 /** One trial lesson of S1 (rule package 'trial'), scheduled Mon 2026-10-05 14:00Z with the fakes' teacher. */
 export function trialRow(over: LessonOver = {}): TrialLessonRead {
@@ -47,21 +49,43 @@ export function trialRow(over: LessonOver = {}): TrialLessonRead {
 
 /** A trial for S1 alone: Sun 2026-10-04 17:00 Riyadh, 30 minutes, with the request id. */
 export const trialRequest = (over: Record<string, unknown> = {}) =>
-  bookingRequest({ package: 'trial', durationMin: 30, invoice: undefined, studentIds: [IDS.s1], clientRequestId: REQUEST, ...over });
+  bookingRequest({
+    package: 'trial',
+    durationMin: 30,
+    invoice: undefined,
+    studentIds: [IDS.s1],
+    clientRequestId: REQUEST,
+    ...over,
+  });
 
-type TrialSetup = { status?: StudentStatus; rows?: TrialLessonRead[]; lessonStudents?: string[] };
+interface TrialSetup {
+  status?: StudentStatus;
+  rows?: TrialLessonRead[];
+  lessonStudents?: string[];
+}
 
 export function fakeTrialDates(o: TrialSetup = {}) {
   const deps = fakePlanner();
   const queries = {
-    student: vi.fn(async (id: string) => ({ id, status: o.status ?? 'trial', tz: 'Asia/Riyadh', guardian: { tz: 'Europe/London' } })),
+    student: vi.fn(async (id: string) => ({
+      id,
+      status: o.status ?? 'trial',
+      tz: 'Asia/Riyadh',
+      guardian: { tz: 'Europe/London' },
+    })),
     trialLessons: vi.fn(async () => o.rows ?? []),
     names: vi.fn(async () => new Map([[ACTOR, 'سارة']])),
     lessonStudents: vi.fn(async () => o.lessonStudents ?? [IDS.s1]),
     replay: vi.fn(async (): Promise<unknown> => null),
     pick: vi.fn(async (p: TrialPick) => {
       const lesson = p.change?.lessons?.[0];
-      return { lesson_id: lesson?.id ?? 'L-new', starts_at: '2026-10-04T14:00:00.000Z', ends_at: '2026-10-04T14:30:00.000Z', teacher_id: p.teacher_id, moved_from_id: lesson ? OLD : null };
+      return {
+        lesson_id: lesson?.id ?? 'L-new',
+        starts_at: '2026-10-04T14:00:00.000Z',
+        ends_at: '2026-10-04T14:30:00.000Z',
+        teacher_id: p.teacher_id,
+        moved_from_id: lesson ? OLD : null,
+      };
     }),
   };
   const alert = fakeTeacherAlert();

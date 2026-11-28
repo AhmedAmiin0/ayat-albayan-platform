@@ -96,9 +96,20 @@ describe('courseFacts — previous (a renewal) and current (still running)', () 
 
 describe('currentCourse — the course «تغيير أيام الحلقات» changes (review fix 5)', () => {
   const running = rule({ subscription_id: 'old', starts_on: '2026-09-20', ends_on: '2026-11-03' });
-  const renewal = rule({ id: 'r5', subscription_id: 'new', starts_on: '2026-11-08', ends_on: '2026-12-01' });
-  const later = rule({ id: 'r6', subscription_id: 'later', starts_on: '2026-12-06', ends_on: '2027-01-01' });
-  const current = (rows: CourseRuleRow[], today: string) => currentCourse(rows, studentCourses(rows, at(today)), at(today))?.subscriptionId;
+  const renewal = rule({
+    id: 'r5',
+    subscription_id: 'new',
+    starts_on: '2026-11-08',
+    ends_on: '2026-12-01',
+  });
+  const later = rule({
+    id: 'r6',
+    subscription_id: 'later',
+    starts_on: '2026-12-06',
+    ends_on: '2027-01-01',
+  });
+  const current = (rows: CourseRuleRow[], today: string) =>
+    currentCourse(rows, studentCourses(rows, at(today)), at(today))?.subscriptionId;
 
   it('a renewal booked ahead never hides the course running today', () => {
     expect(current([running, renewal], '2026-10-18')).toBe('old');

@@ -19,10 +19,21 @@ import { pauseMocks, resetPauseMocks, verify } from './course-pause.fakes';
 import { CoursePauseLessonsBack } from './course-pause.lessons-back';
 import { CoursePauseRepo } from './course-pause.repo';
 
-const guardian = { id: 'G1', name: 'أم سهيلة', phone_e164: '+447700900001', tz: 'Europe/London', profile_id: 'pG1' };
+const guardian = {
+  id: 'G1',
+  name: 'أم سهيلة',
+  phone_e164: '+447700900001',
+  tz: 'Europe/London',
+  profile_id: 'pG1',
+};
 export const TEACHER = {
-  id: 'T1', profile_id: 'pT1', phone_e164: '+201000000001', tz: 'Africa/Cairo',
-  display_name_ar: 'أبرار', status: 'active' as const, profile: { disabled_at: null },
+  id: 'T1',
+  profile_id: 'pT1',
+  phone_e164: '+201000000001',
+  tz: 'Africa/Cairo',
+  display_name_ar: 'أبرار',
+  status: 'active' as const,
+  profile: { disabled_at: null },
 };
 const student = { id: 'S1', name: 'سهيلة', tz: 'Europe/London', profile_id: null, guardian };
 
@@ -31,7 +42,10 @@ const rules = { snapshot: async () => ({ mode: 'legacy', rows: new Map(), settin
 
 function noticeMocks() {
   return {
-    lesson: vi.fn(), student: vi.fn(async () => student), lessons: vi.fn(), nextLesson: vi.fn(),
+    lesson: vi.fn(),
+    student: vi.fn(async () => student),
+    lessons: vi.fn(),
+    nextLesson: vi.fn(),
     // The rules the pause held: the resumed course's first lesson back is read on them only.
     pauseRules: vi.fn(async () => ['R1']),
     approved: vi.fn(async () => true),
@@ -45,21 +59,36 @@ export async function pauseNoticesApp() {
   const mod = await Test.createTestingModule({
     imports: [messagingRoot(CoursePauseModule, ScheduleNoticesModule, EventsModule)],
   })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
-    .overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(CoursePauseRepo).useValue(m.queries)
-    .overrideProvider(CoursePauseLessonsBack).useValue({ bookBack: async () => 0 })
-    .overrideProvider(SubscriptionAlertsService).useValue({ evaluateStudents: async () => 0 })
-    .overrideProvider(AuditService).useValue({ record: async () => undefined })
-    .overrideProvider(SettingsService).useValue(fakeSettings())
-    .overrideProvider(NotificationPolicy).useValue(policy)
-    .overrideProvider(PushService).useValue(m.push)
-    .overrideProvider(ScheduleNoticesRepo).useValue(m.notices)
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(CoursePauseRepo)
+    .useValue(m.queries)
+    .overrideProvider(CoursePauseLessonsBack)
+    .useValue({ bookBack: async () => 0 })
+    .overrideProvider(SubscriptionAlertsService)
+    .useValue({ evaluateStudents: async () => 0 })
+    .overrideProvider(AuditService)
+    .useValue({ record: async () => undefined })
+    .overrideProvider(SettingsService)
+    .useValue(fakeSettings())
+    .overrideProvider(NotificationPolicy)
+    .useValue(policy)
+    .overrideProvider(PushService)
+    .useValue(m.push)
+    .overrideProvider(ScheduleNoticesRepo)
+    .useValue(m.notices)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   const post = (url: string, token: string, body: object = {}) =>
-    app.inject({ method: 'POST', url, headers: { authorization: `Bearer ${token}` }, payload: body });
+    app.inject({
+      method: 'POST',
+      url,
+      headers: { authorization: `Bearer ${token}` },
+      payload: body,
+    });
   return { app, post, m, reset: () => resetPauseMocks(m) };
 }

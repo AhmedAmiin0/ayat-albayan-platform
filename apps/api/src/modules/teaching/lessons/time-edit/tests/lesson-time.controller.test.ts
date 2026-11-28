@@ -5,9 +5,22 @@ import { lessonsApp } from '@/modules/teaching/lessons/test-app';
 
 type Harness = Awaited<ReturnType<typeof lessonsApp>>;
 const url = `/lessons/${LESSON_ID}/time`;
-const BODY = { expectedStartsAt: '2026-10-04T14:00:00Z', startsAt: '2026-10-05T14:00:00+00:00', durationMin: 45 };
-const HELD = { status: 'completed' as const, starts_at: '2026-10-01T14:00:00+00:00', ends_at: '2026-10-01T14:45:00+00:00' };
-const CLASH = { kind: 'student_busy', startsAt: '2026-10-05T14:00:00.000Z', endsAt: '2026-10-05T14:45:00.000Z', studentId: 's1' };
+const BODY = {
+  expectedStartsAt: '2026-10-04T14:00:00Z',
+  startsAt: '2026-10-05T14:00:00+00:00',
+  durationMin: 45,
+};
+const HELD = {
+  status: 'completed' as const,
+  starts_at: '2026-10-01T14:00:00+00:00',
+  ends_at: '2026-10-01T14:45:00+00:00',
+};
+const CLASH = {
+  kind: 'student_busy',
+  startsAt: '2026-10-05T14:00:00.000Z',
+  endsAt: '2026-10-05T14:45:00.000Z',
+  studentId: 's1',
+};
 
 describe('PATCH /lessons/:id/time — «عدّل الوقت» (docs/10 route 22, R-SCH-11)', () => {
   let h: Harness;
@@ -38,7 +51,12 @@ describe('PATCH /lessons/:id/time — «عدّل الوقت» (docs/10 route 22,
   it('a held lesson: correction with a reason → pdf_refresh true, a draft payout is flagged stale', async () => {
     h.lessons.get.mockResolvedValue(lessonRow(HELD));
     h.time.payoutStatus.mockResolvedValue('draft');
-    const body = { expectedStartsAt: HELD.starts_at.replace('+00:00', 'Z'), startsAt: '2026-10-01T14:00:00Z', durationMin: 60, reason: 'الحلقة خدت ساعة' };
+    const body = {
+      expectedStartsAt: HELD.starts_at.replace('+00:00', 'Z'),
+      startsAt: '2026-10-01T14:00:00Z',
+      durationMin: 60,
+      reason: 'الحلقة خدت ساعة',
+    };
     const res = await h.call({ method: 'PATCH', url, body });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toMatchObject({ notified: 0, payout: 'draft_stale', pdf_refresh: true });
@@ -52,10 +70,17 @@ describe('PATCH /lessons/:id/time — «عدّل الوقت» (docs/10 route 22,
   });
 
   it('400 for a bad body (free-text time, odd duration, long reason) or a bad id; 404 for an unknown lesson', async () => {
-    for (const bad of [{ ...BODY, startsAt: '17:00' }, { ...BODY, durationMin: 50 }, { ...BODY, reason: 'x'.repeat(301) }, {}]) {
+    for (const bad of [
+      { ...BODY, startsAt: '17:00' },
+      { ...BODY, durationMin: 50 },
+      { ...BODY, reason: 'x'.repeat(301) },
+      {},
+    ]) {
       expect((await h.call({ method: 'PATCH', url, body: bad })).statusCode).toBe(400);
     }
-    expect((await h.call({ method: 'PATCH', url: '/lessons/nope/time', body: BODY })).statusCode).toBe(400);
+    expect(
+      (await h.call({ method: 'PATCH', url: '/lessons/nope/time', body: BODY })).statusCode,
+    ).toBe(400);
     h.lessons.get.mockResolvedValue(null);
     expect((await h.call({ method: 'PATCH', url, body: BODY })).statusCode).toBe(404);
   });
@@ -75,8 +100,16 @@ describe('PATCH /lessons/:id/time — «عدّل الوقت» (docs/10 route 22,
     });
 
     h.lessons.get.mockResolvedValue(lessonRow());
-    const stale = await h.call({ method: 'PATCH', url, body: { ...BODY, expectedStartsAt: '2026-10-04T13:00:00Z' } });
-    expect(stale.json()).toMatchObject({ code: 'stale_time', starts_at: '2026-10-04T14:00:00.000Z', ends_at: '2026-10-04T14:45:00.000Z' });
+    const stale = await h.call({
+      method: 'PATCH',
+      url,
+      body: { ...BODY, expectedStartsAt: '2026-10-04T13:00:00Z' },
+    });
+    expect(stale.json()).toMatchObject({
+      code: 'stale_time',
+      starts_at: '2026-10-04T14:00:00.000Z',
+      ends_at: '2026-10-04T14:45:00.000Z',
+    });
 
     h.time.payoutStatus.mockResolvedValue('paid');
     expect((await h.call({ method: 'PATCH', url, body: BODY })).json()).toEqual({
@@ -90,8 +123,14 @@ describe('PATCH /lessons/:id/time — «عدّل الوقت» (docs/10 route 22,
 
   it('a lost race in the RPC (stale_time) and a taken generated slot map to 409 too', async () => {
     h.writer.retime.mockRejectedValueOnce(conflict('stale_time'));
-    expect((await h.call({ method: 'PATCH', url, body: BODY })).json()).toEqual({ code: 'stale_time', message: 'stale_time' });
+    expect((await h.call({ method: 'PATCH', url, body: BODY })).json()).toEqual({
+      code: 'stale_time',
+      message: 'stale_time',
+    });
     h.writer.retime.mockRejectedValueOnce(conflict('slot_taken'));
-    expect((await h.call({ method: 'PATCH', url, body: BODY })).json()).toEqual({ code: 'slot_taken', message: 'slot_taken' });
+    expect((await h.call({ method: 'PATCH', url, body: BODY })).json()).toEqual({
+      code: 'slot_taken',
+      message: 'slot_taken',
+    });
   });
 });

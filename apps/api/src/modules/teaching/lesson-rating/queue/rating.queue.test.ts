@@ -2,7 +2,10 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { LessonEvents } from '@/common/infra/events/lesson-events';
-import { fakePolicy, type FakePolicyInput } from '@/modules/messaging/notification-rules/policy/policy.fakes';
+import {
+  fakePolicy,
+  type FakePolicyInput,
+} from '@/modules/messaging/notification-rules/policy/policy.fakes';
 import type { MessageSender } from '@/modules/messaging/whatsapp/sender/message.sender';
 import { LessonRatingSettings } from '@/modules/teaching/lesson-rating/lesson-rating.settings';
 import { heldLesson, LESSON_ID, NOW } from '@/modules/teaching/lesson-rating/rating.fakes';
@@ -21,7 +24,10 @@ let rules: FakePolicyInput = {};
 function setup() {
   const queue = new RatingQueue(
     queries as unknown as RatingRepo,
-    new RatingReads(readerOf(LessonRatingSettings, settings), fakePolicy({ ...rules, settings: { feedback_mode: settings.feedback_mode } })),
+    new RatingReads(
+      readerOf(LessonRatingSettings, settings),
+      fakePolicy({ ...rules, settings: { feedback_mode: settings.feedback_mode } }),
+    ),
     sender as unknown as MessageSender,
   );
   const events = new LessonEvents();
@@ -45,8 +51,13 @@ describe('RatingQueue / RatingJob', () => {
   it('default (buttons, switch ON, approved): the sweep queues the rating and kicks the sender', async () => {
     expect(SETTING_DEFAULTS.feedback_mode).toBe('buttons');
     await expect(setup().job.runOnce(NOW)).resolves.toEqual({ queued: 1, skipped: null });
-    expect(queries.held).toHaveBeenCalledWith({ since: new Date(NOW.getTime() - 36 * 3_600_000), until: NOW });
-    expect(queries.queue.mock.calls[0]?.[0]).toEqual([expect.objectContaining({ template_key: 'lesson_rating', lesson_id: LESSON_ID })]);
+    expect(queries.held).toHaveBeenCalledWith({
+      since: new Date(NOW.getTime() - 36 * 3_600_000),
+      until: NOW,
+    });
+    expect(queries.queue.mock.calls[0]?.[0]).toEqual([
+      expect.objectContaining({ template_key: 'lesson_rating', lesson_id: LESSON_ID }),
+    ]);
     expect(sender.kick).toHaveBeenCalledTimes(1);
   });
 
@@ -61,7 +72,11 @@ describe('RatingQueue / RatingJob', () => {
   });
 
   it.each([
-    ['module mode, the lesson_rating row off', { mode: 'module' as const, rows: [{ key: 'lesson_rating', enabled: false }] }, 'mode_link'],
+    [
+      'module mode, the lesson_rating row off',
+      { mode: 'module' as const, rows: [{ key: 'lesson_rating', enabled: false }] },
+      'mode_link',
+    ],
     ['rules unreadable (fail closed)', { fail: true }, 'rules_unread'],
   ])('%s → nothing queued, no lesson read', async (_name, over, skipped) => {
     rules = over;

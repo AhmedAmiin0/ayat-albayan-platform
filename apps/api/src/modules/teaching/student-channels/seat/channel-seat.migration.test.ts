@@ -5,7 +5,11 @@ import { MIGRATIONS_DIR } from '@/common/db/repo-paths.test-util';
 
 // One assistant per chat seat, the one who brought the student first: read as text, no database
 // in unit tests.
-const strip = (sql: string) => sql.split('\n').filter((l) => !l.trim().startsWith('--')).join('\n');
+const strip = (sql: string) =>
+  sql
+    .split('\n')
+    .filter((l) => !l.trim().startsWith('--'))
+    .join('\n');
 const sql = strip(readFileSync(join(MIGRATIONS_DIR, '20261117090200_channel_seat.sql'), 'utf8'));
 /** The SQL between a function's two `$$` (its body). */
 const body = (fn: string): string => {
@@ -15,7 +19,9 @@ const body = (fn: string): string => {
 
 describe('migration 20261117090200: one assistant seat per student chat', () => {
   it('adds the seat: a profile, freed when the profile goes, indexed while held', () => {
-    expect(sql).toContain('add column if not exists assistant_id uuid references public.profiles (id)');
+    expect(sql).toContain(
+      'add column if not exists assistant_id uuid references public.profiles (id)',
+    );
     expect(sql).toContain('on delete set null');
     expect(sql).toContain('on public.student_channels (assistant_id)');
     expect(sql).toContain('where assistant_id is not null');
@@ -44,7 +50,9 @@ describe('migration 20261117090200: one assistant seat per student chat', () => 
   });
 
   it('keeps the grants: never anon or a client running the trigger function', () => {
-    expect(sql).toContain('revoke execute on function public.can_read_channel(uuid) from public, anon;');
+    expect(sql).toContain(
+      'revoke execute on function public.can_read_channel(uuid) from public, anon;',
+    );
     expect(sql).toContain(
       'revoke execute on function public.open_student_channel() from public, anon, authenticated;',
     );

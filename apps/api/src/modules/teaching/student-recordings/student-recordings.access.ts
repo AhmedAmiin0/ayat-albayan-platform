@@ -31,17 +31,25 @@ export class StudentRecordingAccess {
     const student = await this.queries.student(studentId);
     if (!student) throw notFound('student_not_found');
     if (isAdmin(user)) return { onlyTeacherId: null, manage: 'all' };
-    if (user.role === 'assistant' && (await this.queries.assists({ profileId: user.id, studentId }))) return { onlyTeacherId: null, manage: 'none' };
+    if (
+      user.role === 'assistant' &&
+      (await this.queries.assists({ profileId: user.id, studentId }))
+    )
+      return { onlyTeacherId: null, manage: 'none' };
     if (user.role === 'teacher') return this.teacherScope(user, student);
     throw new ForbiddenException();
   }
 
-  private async teacherScope(user: AuthUser, student: { id: string; teacher_id: string | null }): Promise<RecordingScope> {
+  private async teacherScope(
+    user: AuthUser,
+    student: { id: string; teacher_id: string | null },
+  ): Promise<RecordingScope> {
     const teacherId = await this.teachers.idByProfile(user.id);
     if (!teacherId) throw new ForbiddenException();
     const manage = { teacherId };
     if (student.teacher_id === teacherId) return { onlyTeacherId: null, manage };
-    if (await this.queries.taughtBy({ teacherId, studentId: student.id })) return { onlyTeacherId: teacherId, manage };
+    if (await this.queries.taughtBy({ teacherId, studentId: student.id }))
+      return { onlyTeacherId: teacherId, manage };
     throw new ForbiddenException();
   }
 }

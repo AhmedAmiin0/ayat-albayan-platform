@@ -1,6 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NOW } from '@/modules/teaching/booking/booking.fakes';
-import { ACTOR, fakeTrialDates, REQUEST, trialRequest, trialRow } from '@/modules/teaching/booking/trial-date/trial-date.fakes';
+import {
+  ACTOR,
+  fakeTrialDates,
+  REQUEST,
+  trialRequest,
+  trialRow,
+} from '@/modules/teaching/booking/trial-date/trial-date.fakes';
 
 // A trial's new date that MOVES its upcoming trial: ONE family WhatsApp (the owner's operator,
 // 2026-10-30), lesson_rescheduled when its template is usable, otherwise the booking confirmation.
@@ -21,13 +27,19 @@ describe('TrialDates: one family message per move', () => {
     const { s, messages } = await pick(true);
     expect(messages).toEqual([]);
     expect(s.events.scheduleChanged).toHaveBeenCalledWith(
-      expect.objectContaining({ kind: 'lesson_rescheduled', lessonId: REQUEST, familyNotice: true }),
+      expect.objectContaining({
+        kind: 'lesson_rescheduled',
+        lessonId: REQUEST,
+        familyNotice: true,
+      }),
     );
   });
 
   it('not usable: the booking confirmation stays, the notice leaves the family out', async () => {
     const { s, messages } = await pick(false);
-    expect(messages?.map((m) => m.template_key)).toEqual([expect.stringMatching(/^booking_confirmation/)]);
+    expect(messages?.map((m) => m.template_key)).toEqual([
+      expect.stringMatching(/^booking_confirmation/),
+    ]);
     const familyLeftOut = expect.objectContaining({ familyNotice: false });
     expect(s.events.scheduleChanged).toHaveBeenCalledWith(familyLeftOut);
   });

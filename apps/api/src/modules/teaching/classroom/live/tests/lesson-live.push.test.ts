@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { PushService } from '@/common/push/push.service';
-import { LessonLivePush, lessonLivePushes, type LiveLesson } from '@/modules/teaching/classroom/live/lesson-live.push';
+import {
+  LessonLivePush,
+  lessonLivePushes,
+  type LiveLesson,
+} from '@/modules/teaching/classroom/live/lesson-live.push';
 import type { LessonLiveRepo } from '@/modules/teaching/classroom/live/lesson-live.repo';
 
 const LESSON: LiveLesson = {

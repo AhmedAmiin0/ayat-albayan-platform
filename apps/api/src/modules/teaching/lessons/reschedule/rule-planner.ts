@@ -8,7 +8,11 @@ import type { LessonRow } from '@/modules/teaching/lessons/store/lesson-row';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 import { planNewRule, type RulePlan } from './rule-plan';
 
-type PlannedMove = { old: RuleWithLinks; plan: RulePlan; teacherLink: string | null };
+interface PlannedMove {
+  old: RuleWithLinks;
+  plan: RulePlan;
+  teacherLink: string | null;
+}
 
 /** Loads what a whole-rule reschedule needs and plans the replacement rule (R-SCH-07). */
 @Injectable()
@@ -30,7 +34,8 @@ export class RulePlanner {
     if (!old) throw badRequest('no_rule');
     if (old.status !== 'active') throw conflict('rule_not_active');
     if (next.startsOn < localDateOf(new Date(), next.tz)) throw badRequest('date_in_past');
-    if (next.startsOn < localDateOf(new Date(lesson.starts_at), next.tz)) throw badRequest('starts_before_lesson');
+    if (next.startsOn < localDateOf(new Date(lesson.starts_at), next.tz))
+      throw badRequest('starts_before_lesson');
     const teacherLink = await this.teacherLink(old, next.teacherId);
     const weeks = (await this.settings.read()).booking_horizon_weeks;
     const plan = planNewRule({ old, next, now: new Date(), weeks });

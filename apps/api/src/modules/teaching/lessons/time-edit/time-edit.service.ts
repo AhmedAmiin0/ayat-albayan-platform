@@ -17,7 +17,7 @@ import { isSameTime, planTimeEdit, type TimeEditInput, type TimeEditPlan } from 
 import { forMessages } from '@/modules/teaching/lessons/status/confirmation-messages';
 import { timeEditMessages } from './time-edit.messages';
 
-type TimeEditArgs = { lessonId: string; body: LessonTimeEdit; actor: AuthUser };
+interface TimeEditArgs { lessonId: string; body: LessonTimeEdit; actor: AuthUser }
 /** What the edit set in motion; the controller adds the lesson view. */
 type TimeEditEffects = Omit<TimeEditResult, 'lesson'>;
 
@@ -118,13 +118,13 @@ function movedNotice({ row, plan, actor }: NoticeInput): ScheduleChange | undefi
   return { kind: 'lesson_rescheduled', lessonId: row.id, fromStartsAt, actorId: actor.id };
 }
 
-type ChangeInput = {
+interface ChangeInput {
   row: LessonRow;
   plan: TimeEditPlan;
   actor: AuthUser;
   messages: TimeEditChange['messages'];
   overrideReason: string | null;
-};
+}
 
 function changeOf({ row, plan, actor, messages, overrideReason }: ChangeInput): TimeEditChange {
   const before = { starts_at: iso(new Date(row.starts_at)), ends_at: iso(new Date(row.ends_at)) };

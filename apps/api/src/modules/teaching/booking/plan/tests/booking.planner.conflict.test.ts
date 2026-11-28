@@ -66,15 +66,17 @@ describe('BookingPlanner — conflicts (R-SCH-04, issue B3)', () => {
     const reason = 'ولي الأمر طلب الميعاد ده بالذات';
     const { payload, conflicts } = await planner.prepare(bookingRequest({ override: { reason } }));
     expect(conflicts.map((c) => c.kind)).toEqual(['teacher_busy']);
-    expect(payload.lessons.filter((l) => l.override_reason === reason).map((l) => l.starts_at)).toEqual([
-      '2026-10-11T14:00:00.000Z',
-    ]);
+    expect(
+      payload.lessons.filter((l) => l.override_reason === reason).map((l) => l.starts_at),
+    ).toEqual(['2026-10-11T14:00:00.000Z']);
     expect(payload.lessons.filter((l) => l.override_reason === null)).toHaveLength(4);
   });
 
   it('conflicts() returns the same clashes without throwing (the wizard check before review)', async () => {
     const { planner, busy } = fakePlanner();
-    busy.teacherLessons.mockResolvedValue([lesson('T1', '2026-10-11T14:00:00Z', '2026-10-11T14:45:00Z')]);
+    busy.teacherLessons.mockResolvedValue([
+      lesson('T1', '2026-10-11T14:00:00Z', '2026-10-11T14:45:00Z'),
+    ]);
     expect((await planner.conflicts(bookingRequest())).map((c) => [c.kind, c.startsAt])).toEqual([
       ['teacher_busy', '2026-10-11T14:00:00.000Z'],
     ]);
@@ -82,7 +84,9 @@ describe('BookingPlanner — conflicts (R-SCH-04, issue B3)', () => {
 
   it('400 no_occurrences when startsOn is past the horizon', async () => {
     const { planner } = fakePlanner();
-    const { status, body } = await failure(planner.prepare(bookingRequest({ startsOn: '2027-01-03' })));
+    const { status, body } = await failure(
+      planner.prepare(bookingRequest({ startsOn: '2027-01-03' })),
+    );
     expect([status, body]).toEqual([400, { code: 'no_occurrences', message: 'no_occurrences' }]);
   });
 });

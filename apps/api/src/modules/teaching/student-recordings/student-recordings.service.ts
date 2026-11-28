@@ -3,7 +3,12 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { RecordingViews } from '@/modules/teaching/classroom/recordings/recording-list.service';
 import { StudentRecordingAccess } from './student-recordings.access';
-import { canManage, studentRecordingView, type ManageRule, type RecordingJoinRow } from './student-recordings.mapper';
+import {
+  canManage,
+  studentRecordingView,
+  type ManageRule,
+  type RecordingJoinRow,
+} from './student-recordings.mapper';
 import { StudentRecordingRepo } from './student-recordings.repo';
 
 /** GET /students/:id/recordings: the file of one student, newest first, 1-hour signed links. */
@@ -16,10 +21,23 @@ export class StudentRecordingsService {
   ) {}
 
   /** 404 student_not_found, 403 outside the login's scope (see StudentRecordingAccess). */
-  async list(input: { user: AuthUser; studentId: string; query: StudentRecordingsQuery }): Promise<StudentRecordingsPage> {
+  async list(input: {
+    user: AuthUser;
+    studentId: string;
+    query: StudentRecordingsQuery;
+  }): Promise<StudentRecordingsPage> {
     const { onlyTeacherId, manage } = await this.access.scopeFor(input.user, input.studentId);
-    const { rows, total } = await this.queries.page({ studentId: input.studentId, onlyTeacherId, query: input.query });
-    return { items: await this.signed(rows, manage), total, page: input.query.page, pageSize: input.query.pageSize };
+    const { rows, total } = await this.queries.page({
+      studentId: input.studentId,
+      onlyTeacherId,
+      query: input.query,
+    });
+    return {
+      items: await this.signed(rows, manage),
+      total,
+      page: input.query.page,
+      pageSize: input.query.pageSize,
+    };
   }
 
   /** GET /students/:id/recorded-lesson-ids: same access as list(), but no link is signed. */

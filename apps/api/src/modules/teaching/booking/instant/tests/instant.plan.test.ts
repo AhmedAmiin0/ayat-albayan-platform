@@ -26,7 +26,11 @@ describe('instantPlan', () => {
   it('uses the local date, not the UTC one, near midnight', () => {
     const late = new Date('2026-10-05T22:30:00Z'); // 01:30 on the 6th (Tuesday) in Riyadh
     const { timing } = instantPlan({ now: late, tz: 'Asia/Riyadh', durationMin: 30 });
-    expect(timing).toMatchObject({ starts_on: '2026-10-06', byday: [2], start_time_local: '01:30' });
+    expect(timing).toMatchObject({
+      starts_on: '2026-10-06',
+      byday: [2],
+      start_time_local: '01:30',
+    });
   });
 
   it.each(['Asia/Riyadh', 'Africa/Cairo', 'America/New_York', 'Europe/London'])(
@@ -53,14 +57,32 @@ describe('instantPayload', () => {
 
   it('has no package, lead, invoice, makeup or messages (nothing goes to WhatsApp)', () => {
     const p = instantPayload(base);
-    expect(p).toMatchObject({ lead: null, new_guardian: null, new_student: null, invoice: null, makeup_of: null, messages: [] });
-    expect(p.rule).toMatchObject({ package: null, teacher_id: 'T1', meeting_link: null, ends_on: '2026-10-05' });
+    expect(p).toMatchObject({
+      lead: null,
+      new_guardian: null,
+      new_student: null,
+      invoice: null,
+      makeup_of: null,
+      messages: [],
+    });
+    expect(p.rule).toMatchObject({
+      package: null,
+      teacher_id: 'T1',
+      meeting_link: null,
+      ends_on: '2026-10-05',
+    });
     expect(p.student_ids).toEqual(['S1', 'S2']);
     expect(p.audit.after).toMatchObject({ kind: 'instant' });
   });
 
   it('writes the one lesson, with the override reason on a clashing start', () => {
-    const conflicts = [{ kind: 'teacher_busy' as const, startsAt: '2026-10-05T13:07:00.000Z', endsAt: '2026-10-05T13:37:00.000Z' }];
+    const conflicts = [
+      {
+        kind: 'teacher_busy' as const,
+        startsAt: '2026-10-05T13:07:00.000Z',
+        endsAt: '2026-10-05T13:37:00.000Z',
+      },
+    ];
     const p = instantPayload({ ...base, conflicts, reason: 'طارئ' });
     expect(p.lessons).toEqual([
       {

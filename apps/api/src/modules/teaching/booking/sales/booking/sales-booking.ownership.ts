@@ -32,6 +32,10 @@ export class SalesBookingScope {
   /** docs/16 row 37: sales may reschedule any lesson. */
   async isLessonOf(lessonId: string, studentIds: readonly string[]): Promise<boolean> {
     const students = await this.lessons.lessonStudents(lessonId);
-    return students.length > 0 && students.length === studentIds.length && studentIds.every((id) => students.includes(id));
+    return (
+      students.length > 0 &&
+      students.length === studentIds.length &&
+      studentIds.every((id) => students.includes(id))
+    );
   }
 }

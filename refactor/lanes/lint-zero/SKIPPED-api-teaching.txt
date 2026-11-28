@@ -1,0 +1,11 @@
+apps/api/src/modules/teaching/classroom/classroom.public.controller.ts #1327
+apps/api/src/modules/teaching/classroom/internal-meetings/internal-meetings.controller.ts #1327
+apps/api/src/modules/teaching/classroom/livekit/livekit-webhook.controller.ts #1327
+apps/api/src/modules/teaching/classroom/livekit/livekit-webhook.routes.ts #1327
+apps/api/src/modules/teaching/classroom/livekit/tests/livekit-webhook.routes.test.ts #1327
+apps/api/src/modules/teaching/classroom/student-link/student-link.controller.ts #1327
+apps/api/src/modules/teaching/classroom/tests/classroom-public.access.test.ts #1327
+apps/api/src/modules/teaching/lesson-links/http/lesson-links.routes.test.ts #1327
+apps/api/src/modules/teaching/lesson-links/http/lesson-links.routes.ts #1327
+apps/api/src/modules/teaching/lesson-links/lesson-links.controller.ts #1327
+apps/api/src/modules/teaching/lesson-links/lesson-links.public.test.ts #1327

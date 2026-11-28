@@ -6,8 +6,13 @@ import { REPO_ROOT } from '@/common/db/repo-paths.test-util';
 
 // The lesson_join_link definition lives in migration 182 (seeded, not submitted, admin-initiated).
 const root = REPO_ROOT;
-const sql = readFileSync(join(root, 'packages/db/supabase/migrations/20261001000182_lesson_join_link_template.sql'), 'utf8');
-const ar: { templates: { names: Record<string, string> } } = JSON.parse(readFileSync(join(root, 'packages/shared/i18n/ar.json'), 'utf8'));
+const sql = readFileSync(
+  join(root, 'packages/db/supabase/migrations/20261001000182_lesson_join_link_template.sql'),
+  'utf8',
+);
+const ar: { templates: { names: Record<string, string> } } = JSON.parse(
+  readFileSync(join(root, 'packages/shared/i18n/ar.json'), 'utf8'),
+);
 
 describe('lesson_join_link template definition', () => {
   it('is a known key with a name in the template list', () => {
@@ -33,7 +38,10 @@ describe('lesson_join_link template definition', () => {
   });
 
   it('migration 330 rewrites the body in Modern Standard Arabic only while it was never submitted', () => {
-    const msa = readFileSync(join(root, 'packages/db/supabase/migrations/20261012000330_meeting_link_auto.sql'), 'utf8');
+    const msa = readFileSync(
+      join(root, 'packages/db/supabase/migrations/20261012000330_meeting_link_auto.sql'),
+      'utf8',
+    );
     expect(msa).toMatch(/where key = 'lesson_join_link'\s+and status = 'not_submitted'/);
     expect(msa).toContain('{{1}}');
     expect(msa).not.toContain('{{2}}');

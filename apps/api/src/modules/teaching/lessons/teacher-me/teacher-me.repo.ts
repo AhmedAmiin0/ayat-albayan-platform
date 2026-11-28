@@ -21,11 +21,13 @@ export class TeacherMeRepo {
    * platform_classroom (migration 490) tell the dashboard whether to show the fixed link.
    */
   async me(profileId: string): Promise<TeacherMe | null> {
-    const data = maybe(await this.db
-      .from('teachers')
-      .select('id, display_name_ar, gender, programs, tz, meeting_link, meeting_mode')
-      .eq('profile_id', profileId)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('teachers')
+        .select('id, display_name_ar, gender, programs, tz, meeting_link, meeting_mode')
+        .eq('profile_id', profileId)
+        .maybeSingle(),
+    );
     if (!data) return null;
     const auto = (await this.settings.read()).meeting_link_auto;
     return { ...withMeeting(data, auto), students: await this.students(data.id) };
@@ -48,7 +50,8 @@ export class TeacherMeRepo {
     if (rules.error) throw pgError(rules.error);
     const onRules = rules.data.flatMap((r) => r.schedule_rule_students.map((s) => s.student));
     const byId = new Map<string, MyStudent>();
-    for (const s of [...assigned.data, ...onRules]) if (s) byId.set(s.id, { ...s, code: s.code ?? '' });
+    for (const s of [...assigned.data, ...onRules])
+      if (s) byId.set(s.id, { ...s, code: s.code ?? '' });
     return [...byId.values()].sort((a, b) => a.name.localeCompare(b.name, 'ar'));
   }
 }

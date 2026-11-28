@@ -8,7 +8,7 @@ import { pgError } from '@/common/db/errors';
 import type { LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 
-export type OverviewTeacherRow = {
+export interface OverviewTeacherRow {
   id: string;
   display_name_ar: string;
   display_name_en: string | null;
@@ -20,10 +20,27 @@ export type OverviewTeacherRow = {
   status: TeacherStatus;
   /** The teacher's photo, signed with the rest in one call; absent in fakes. */
   avatar_url?: string | null;
-};
-export type OverviewSlotRow = { teacher_id: string; weekday: number; start_time: string; end_time: string; tz: string };
-export type OverviewCarryRow = { teacher_id: string; status: LessonStatus; starts_at: string; ends_at: string };
-export type OverviewTimeOffRow = { id: string; teacher_id: string; starts_at: string; ends_at: string; reason: string | null };
+}
+export interface OverviewSlotRow {
+  teacher_id: string;
+  weekday: number;
+  start_time: string;
+  end_time: string;
+  tz: string;
+}
+export interface OverviewCarryRow {
+  teacher_id: string;
+  status: LessonStatus;
+  starts_at: string;
+  ends_at: string;
+}
+export interface OverviewTimeOffRow {
+  id: string;
+  teacher_id: string;
+  starts_at: string;
+  ends_at: string;
+  reason: string | null;
+}
 
 /**
  * The three small batched reads behind GET /lessons/overview (R-SCH-09, R-NFR-08): every teacher,
@@ -39,7 +56,11 @@ export class OverviewRepo {
   ) {}
 
   async teachers(w: LessonWindow): Promise<OverviewTeacherRow[]> {
-    let q = this.db.from('teachers').select('id, display_name_ar, display_name_en, gender, programs, tz, meeting_link, max_students, status');
+    let q = this.db
+      .from('teachers')
+      .select(
+        'id, display_name_ar, display_name_en, gender, programs, tz, meeting_link, max_students, status',
+      );
     if (w.teacherId) q = q.eq('id', w.teacherId);
     const { data, error } = await q.order('display_name_ar').order('id');
     if (error) throw pgError(error);
@@ -59,7 +80,9 @@ export class OverviewRepo {
       if (error) throw pgError(error);
       return data.flatMap((t) => allDayRows(RIYADH_TZ).map((r) => ({ ...r, teacher_id: t.id })));
     }
-    let q = this.db.from('teacher_availability').select('teacher_id, weekday, start_time, end_time, tz');
+    let q = this.db
+      .from('teacher_availability')
+      .select('teacher_id, weekday, start_time, end_time, tz');
     if (w.teacherId) q = q.eq('teacher_id', w.teacherId);
     const { data, error } = await q.order('weekday').order('start_time');
     if (error) throw pgError(error);

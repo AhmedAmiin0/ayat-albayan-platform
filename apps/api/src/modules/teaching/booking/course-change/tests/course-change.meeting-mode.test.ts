@@ -5,7 +5,8 @@ import { BODY, SALES, setup } from '@/modules/teaching/booking/course-change/cou
 // Names the fixed link unless the teacher uses our classroom (migration 490).
 
 const templateOf = (apply: ReturnType<typeof setup>['writer']['apply']) =>
-  (apply.mock.calls[0]?.[0].payload as { messages: { template_key: string }[] }).messages[0]?.template_key;
+  (apply.mock.calls[0]?.[0].payload as { messages: { template_key: string }[] }).messages[0]
+    ?.template_key;
 
 describe('CourseChange — the course teacher’s meeting mode', () => {
   beforeEach(() => vi.useFakeTimers({ now: new Date('2026-10-18T08:00:00Z'), toFake: ['Date'] }));

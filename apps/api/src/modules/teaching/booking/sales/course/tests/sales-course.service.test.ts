@@ -38,8 +38,14 @@ function setup(sub: CourseSubscription | null = SUB, rules: CourseRule[] = []) {
     subscriptionBooked: vi.fn().mockResolvedValue(false),
     requested: vi.fn().mockResolvedValue(false),
   };
-  const scope = { of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }) };
-  const course = new SalesCourse(queries as unknown as SalesCourseRepo, scope as unknown as SalesBookingScope, noDrafts as unknown as CourseDraftRepo);
+  const scope = {
+    of: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }),
+  };
+  const course = new SalesCourse(
+    queries as unknown as SalesCourseRepo,
+    scope as unknown as SalesBookingScope,
+    noDrafts as unknown as CourseDraftRepo,
+  );
   return { queries, scope, course };
 }
 
@@ -62,8 +68,14 @@ describe('SalesCourse.options — the course guard (R-ASST-01, R-ASST-04)', () =
   });
 
   it('a problem is thrown with its code and status', async () => {
-    const rejected = async (sub: CourseSubscription | null, rules: CourseRule[] = [], over: object = {}) => {
-      const e: unknown = await setup(sub, rules).course.options(bookingRequestSchema.parse({ ...BODY, ...over })).catch((x: unknown) => x);
+    const rejected = async (
+      sub: CourseSubscription | null,
+      rules: CourseRule[] = [],
+      over: object = {},
+    ) => {
+      const e: unknown = await setup(sub, rules)
+        .course.options(bookingRequestSchema.parse({ ...BODY, ...over }))
+        .catch((x: unknown) => x);
       return errorCode(e);
     };
     expect(await rejected(null)).toBe('subscription_required');
@@ -91,7 +103,16 @@ describe('SalesCourse.view — GET /sales/booking/course', () => {
 
   it('her student: the subscription, 2 days a week, not blocked', async () => {
     const { course } = setup();
-    expect(await course.view(S1, USER)).toEqual({ student: STUDENT, subscription: SUB, perWeek: 2, blocked: null, previous: null, current: null, hold: false, draft: null });
+    expect(await course.view(S1, USER)).toEqual({
+      student: STUDENT,
+      subscription: SUB,
+      perWeek: 2,
+      blocked: null,
+      previous: null,
+      current: null,
+      hold: false,
+      draft: null,
+    });
   });
 
   it('a running course blocks (course_exists); no subscription → perWeek null, subscription_required', async () => {

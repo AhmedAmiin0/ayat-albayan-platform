@@ -46,7 +46,12 @@ describe('GET / POST /students/:id/course-extend', () => {
 
   it('the booking: the latest rules end on the new day, each one topped up', async () => {
     const res = await t().post('sales', URL, { subscriptionId: SUB_ID });
-    expect(res.json()).toEqual({ subscriptionId: SUB_ID, inserted: 2, endsOn: '2026-11-23', conflicts: 0 });
+    expect(res.json()).toEqual({
+      subscriptionId: SUB_ID,
+      inserted: 2,
+      endsOn: '2026-11-23',
+      conflicts: 0,
+    });
     expect(t().m.extendRepo.extendRules).toHaveBeenCalledWith(['ra', 'rb'], '2026-11-23');
     expect(t().m.ruleExtend.extend).toHaveBeenCalledTimes(2);
   });

@@ -40,7 +40,10 @@ describe('LessonsQueries (service role; docs/10 routes 1–5)', () => {
         { data: [lessonRow({ id: 'a' }), lessonRow({ id: 'b' })] },
       ],
     });
-    const page = await new LessonsRepo(db, readerOf(LessonsSettings)).studentPage(STUDENT_ID, { page: 1, pageSize: 25 });
+    const page = await new LessonsRepo(db, readerOf(LessonsSettings)).studentPage(STUDENT_ID, {
+      page: 1,
+      pageSize: 25,
+    });
     expect(page.items.map((r) => r.id)).toEqual(['b', 'a']);
     expect(page.total).toBe(2);
     expect(calls).toContainEqual({ table: 'lessons', method: 'eq', args: ['lesson_students.student_id', STUDENT_ID] });
@@ -95,11 +98,27 @@ describe('LessonsQueries (service role; docs/10 routes 1–5)', () => {
 
   it('meetingLinkAuto: a teacher without a mode follows settings.meeting_link_auto (off by default)', async () => {
     const t = { teacherId: 't1' };
-    expect(await new LessonsRepo(fakeDb({}).db, readerOf(LessonsSettings)).meetingLinkAuto(t)).toBe(false);
-    expect(await new LessonsRepo(fakeDb({}).db, readerOf(LessonsSettings, { meeting_link_auto: true })).meetingLinkAuto(t)).toBe(true);
+    expect(await new LessonsRepo(fakeDb({}).db, readerOf(LessonsSettings)).meetingLinkAuto(t)).toBe(
+      false,
+    );
+    expect(
+      await new LessonsRepo(
+        fakeDb({}).db,
+        readerOf(LessonsSettings, { meeting_link_auto: true }),
+      ).meetingLinkAuto(t),
+    ).toBe(true);
     const { db, calls } = fakeDb({ teachers: [{ data: { meeting_mode: null } }] });
-    expect(await new LessonsRepo(db, readerOf(LessonsSettings, { meeting_link_auto: true })).meetingLinkAuto(t)).toBe(true);
-    expect(methods(calls, 'teachers')).toEqual([['select', 'meeting_mode'], ['eq', 'id', 't1'], ['maybeSingle']]);
+    expect(
+      await new LessonsRepo(
+        db,
+        readerOf(LessonsSettings, { meeting_link_auto: true }),
+      ).meetingLinkAuto(t),
+    ).toBe(true);
+    expect(methods(calls, 'teachers')).toEqual([
+      ['select', 'meeting_mode'],
+      ['eq', 'id', 't1'],
+      ['maybeSingle'],
+    ]);
   });
 
   it("meetingLinkAuto: the teacher's own mode wins over the academy switch", async () => {

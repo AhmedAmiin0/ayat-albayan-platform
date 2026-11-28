@@ -18,9 +18,13 @@ export class JoinLinkService {
     private readonly outbox: Outbox,
   ) {}
 
-  async send(input: { lessonId: string; body: JoinLinkRequest; actorId: string }, now = new Date()): Promise<JoinLinkResult> {
+  async send(
+    input: { lessonId: string; body: JoinLinkRequest; actorId: string },
+    now = new Date(),
+  ): Promise<JoinLinkResult> {
     const { lessonId, body } = input;
-    if (!(await this.templates.approved(JOIN_LINK_TEMPLATE))) throw httpError(409, 'template_not_approved');
+    if (!(await this.templates.approved(JOIN_LINK_TEMPLATE)))
+      throw httpError(409, 'template_not_approved');
     const lesson = await this.queries.lesson(lessonId);
     if (!lesson) throw notFound('lesson_not_found');
     const ctx = await this.queries.sendContext(lessonId, body.studentId);
@@ -28,7 +32,13 @@ export class JoinLinkService {
     const token = newLinkToken();
     const expires_at = linkExpiry(lesson, await this.queries.joinWindow());
     const sentFor = { sent_for_student_id: ctx.student.id };
-    await this.queries.insertLink({ lesson_id: lessonId, token_hash: hashLinkToken(token), expires_at, created_by: input.actorId, ...sentFor });
+    await this.queries.insertLink({
+      lesson_id: lessonId,
+      token_hash: hashLinkToken(token),
+      expires_at,
+      created_by: input.actorId,
+      ...sentFor,
+    });
     // ponytail: a double press inside five minutes replays the first message; its second link row
     // is simply never used and dies with the lesson window.
     const bucket = Math.floor(now.getTime() / BUCKET_MS);

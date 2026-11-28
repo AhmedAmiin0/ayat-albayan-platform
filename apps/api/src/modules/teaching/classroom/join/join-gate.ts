@@ -37,7 +37,10 @@ export function assertWindowOpen(
   assertNotEnded(lesson);
   const w = joinWindow(lesson, now, win);
   if (w.state === 'early') {
-    throw new HttpException({ code: 'join_not_open_yet', message: 'join_not_open_yet', opens_at: w.opens_at }, HttpStatus.FORBIDDEN);
+    throw new HttpException(
+      { code: 'join_not_open_yet', message: 'join_not_open_yet', opens_at: w.opens_at },
+      HttpStatus.FORBIDDEN,
+    );
   }
   if (w.state === 'closed') throw gone('join_closed');
 }
@@ -55,4 +58,7 @@ export const windowCheckFor = (flags: TestFlags): WindowCheck =>
 
 /** 503 classroom_not_configured: LIVEKIT_* are not set on this server. */
 export const notConfigured = (): HttpException =>
-  new HttpException({ code: 'classroom_not_configured', message: 'classroom_not_configured' }, HttpStatus.SERVICE_UNAVAILABLE);
+  new HttpException(
+    { code: 'classroom_not_configured', message: 'classroom_not_configured' },
+    HttpStatus.SERVICE_UNAVAILABLE,
+  );

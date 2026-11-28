@@ -1,6 +1,12 @@
 import { HttpStatus } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { BOOKING, REQ, setup, SUB, USER } from '@/modules/teaching/booking/sales/course-draft/tests/course-draft.fakes';
+import {
+  BOOKING,
+  REQ,
+  setup,
+  SUB,
+  USER,
+} from '@/modules/teaching/booking/sales/course-draft/tests/course-draft.fakes';
 import { draftRequestId } from '@/modules/teaching/booking/sales/course-draft/course-draft.rules';
 import { httpError } from '@/common/http/errors';
 
@@ -18,7 +24,11 @@ describe('CourseDrafts — races with the payment', () => {
       return row;
     });
     expect(await t.drafts.save(REQ, USER)).toEqual({ state: 'booked', booking: BOOKING });
-    expect(t.env.booking.book).toHaveBeenCalledWith(keyed(read[0] ?? ''), USER.id, expect.anything());
+    expect(t.env.booking.book).toHaveBeenCalledWith(
+      keyed(read[0] ?? ''),
+      USER.id,
+      expect.anything(),
+    );
     expect(t.env.sales.book).not.toHaveBeenCalled();
     expect(t.rows.size).toBe(0);
   });

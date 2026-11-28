@@ -13,8 +13,15 @@ export type PlanRule = Pick<
   /** A trial or a makeup: exactly the first occurrence, the rule ends that local day (isSingleLesson). */
   single: boolean;
 };
-export type PlanInput = { rule: PlanRule; now: Date; horizonWeeks: number };
-export type Plan = { timing: OccurrenceTiming; occurrences: Occurrence[] };
+export interface PlanInput {
+  rule: PlanRule;
+  now: Date;
+  horizonWeeks: number;
+}
+export interface Plan {
+  timing: OccurrenceTiming;
+  occurrences: Occurrence[];
+}
 
 /** [max(now, startsOn 00:00 in tz), now + horizon weeks) — docs/10 §3 (R-SCH-02). */
 export function horizonWindow(input: PlanInput): UtcWindow {

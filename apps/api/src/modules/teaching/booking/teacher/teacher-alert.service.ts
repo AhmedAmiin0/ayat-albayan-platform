@@ -22,7 +22,10 @@ export class TeacherAlertDeps {
   ) {}
 }
 
-export type BookedEvent = { req: BookingRequest; result: BookingResult };
+export interface BookedEvent {
+  req: BookingRequest;
+  result: BookingResult;
+}
 
 /** The lessons whose teacher has new students (each teacher's first one names the time). */
 interface NewStudents {

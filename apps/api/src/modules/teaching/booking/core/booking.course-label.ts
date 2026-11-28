@@ -4,12 +4,12 @@ import type { PackageSize } from '@ab/catalog';
  * PR #113 review M3 / M4: the server owns a course's package (null = a custom count) and ties it to
  * its subscription.
  */
-export type CourseLabel = {
+export interface CourseLabel {
   package: PackageSize | null;
   subscriptionId: string;
   /** The earlier course a renewal follows, for the audit row; null = none. */
   follows?: string | null;
-};
+}
 
 /** rule.subscription_id only on an assistant course: every other payload is unchanged. */
 export const courseTie = (course: CourseLabel | undefined) =>

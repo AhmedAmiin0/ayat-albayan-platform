@@ -24,15 +24,20 @@ describe('student channel edit / delete: open channel, text only, bell rows', ()
     t.queries.isOpen.mockResolvedValue(false);
     const edit = await t.patch(PORTAL, 'guardian', { body: 'تعديل' });
     const del = await t.call('DELETE', PORTAL, 'guardian');
-    for (const res of [edit, del]) expect([res.statusCode, res.json().code]).toEqual([409, 'channel_not_open']);
+    for (const res of [edit, del])
+      expect([res.statusCode, res.json().code]).toEqual([409, 'channel_not_open']);
     expect(t.edits.edit).not.toHaveBeenCalled();
     expect(t.edits.remove).not.toHaveBeenCalled();
     // The admin's moderation still deletes on a closed channel.
-    expect((await t.call('DELETE', `/students/${ST}/channel/messages/${M}`, 'admin')).statusCode).toBe(200);
+    expect(
+      (await t.call('DELETE', `/students/${ST}/channel/messages/${M}`, 'admin')).statusCode,
+    ).toBe(200);
   });
 
   it('a photo, PDF or voice note is never edited (403 not_a_text_message), still deleted', async () => {
-    t.edits.message.mockResolvedValue(messageRow({ id: M, created_at: now(), kind: 'photo', body: '' }));
+    t.edits.message.mockResolvedValue(
+      messageRow({ id: M, created_at: now(), kind: 'photo', body: '' }),
+    );
     const res = await t.patch(PORTAL, 'guardian', { body: 'تعليق' });
     expect([res.statusCode, res.json().code]).toEqual([403, 'not_a_text_message']);
     expect((await t.call('DELETE', PORTAL, 'guardian')).statusCode).toBe(200);
@@ -42,7 +47,10 @@ describe('student channel edit / delete: open channel, text only, bell rows', ()
     await t.patch(PORTAL, 'guardian', { body: 'النص الجديد' });
     expect(t.bell.rewrite).toHaveBeenCalledWith({ messageId: M, body: 'أم سلمى: النص الجديد' });
     await t.call('DELETE', PORTAL, 'guardian');
-    expect(t.bell.rewrite).toHaveBeenLastCalledWith({ messageId: M, body: 'أم سلمى: تم حذف هذه الرسالة' });
+    expect(t.bell.rewrite).toHaveBeenLastCalledWith({
+      messageId: M,
+      body: 'أم سلمى: تم حذف هذه الرسالة',
+    });
   });
 
   it('a failing bell rewrite never fails the change', async () => {

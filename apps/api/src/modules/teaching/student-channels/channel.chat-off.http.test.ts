@@ -43,13 +43,15 @@ describe('family chat switch (settings.family_chat_enabled) over HTTP', () => {
     expect(t.push.notifyProfiles).not.toHaveBeenCalled();
   });
 
-  it('off: another family\'s student is still 404 (the scope is checked first)', async () => {
+  it("off: another family's student is still 404 (the scope is checked first)", async () => {
     const res = await t.call('GET', `/portal/students/${OTHER}/channel/messages`, 'guardian');
     expect([res.statusCode, res.json().code]).toEqual([404, 'student_not_found']);
   });
 
   it('off: the teacher side keeps its own switch and still reads', async () => {
-    expect((await t.call('GET', `/teachers/me/channels/${ST}/messages`, 'teacher')).statusCode).toBe(200);
+    expect(
+      (await t.call('GET', `/teachers/me/channels/${ST}/messages`, 'teacher')).statusCode,
+    ).toBe(200);
   });
 
   it('on: the family reads and posts as before', async () => {

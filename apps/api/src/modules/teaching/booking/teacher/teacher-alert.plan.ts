@@ -3,7 +3,10 @@ import type { BookingKind } from '@ab/schedule';
 import { ar } from '@/common/infra/i18n/server-text';
 import type { PushTarget } from '@/common/push/push.service';
 import { queuedRow, type QueuedMessage } from '@/modules/messaging/reminders/queued-row';
-import { staffReachable, type StaffOnRecord } from '@/modules/messaging/reminders/plan/staff-reachable';
+import {
+  staffReachable,
+  type StaffOnRecord,
+} from '@/modules/messaging/reminders/plan/staff-reachable';
 import { teacherLessonCrm, teacherLessonV3 } from '@/modules/messaging/reminders';
 import type { TeacherLessonTokens } from '@/modules/teaching/lesson-links';
 
@@ -57,15 +60,25 @@ interface TeacherAlertPlan {
 }
 
 /** Each distinct teacher with their first lesson of the booking. */
-function firstLessons(lessons: readonly AlertLesson[]): { teacher: AlertTeacher; lesson: AlertLesson }[] {
+function firstLessons(
+  lessons: readonly AlertLesson[],
+): { teacher: AlertTeacher; lesson: AlertLesson }[] {
   const byTeacher = new Map<string, { teacher: AlertTeacher; lesson: AlertLesson }>();
-  for (const lesson of [...lessons].sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at))) {
-    if (lesson.teacher && !byTeacher.has(lesson.teacher.id)) byTeacher.set(lesson.teacher.id, { teacher: lesson.teacher, lesson });
+  for (const lesson of [...lessons].sort(
+    (a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at),
+  )) {
+    if (lesson.teacher && !byTeacher.has(lesson.teacher.id))
+      byTeacher.set(lesson.teacher.id, { teacher: lesson.teacher, lesson });
   }
   return [...byTeacher.values()];
 }
 
-function teacherNewStudentMessage(input: { names: readonly string[]; startsAt: Date; tz: string; kind: BookingKind }): OutboundTemplate {
+function teacherNewStudentMessage(input: {
+  names: readonly string[];
+  startsAt: Date;
+  tz: string;
+  kind: BookingKind;
+}): OutboundTemplate {
   const kinds = ar.templates.teacherNewStudentKind;
   return {
     key: 'teacher_new_student',
@@ -117,17 +130,18 @@ export function teacherAlerts(input: AlertInput): TeacherAlertPlan[] {
       : null;
     const template = alertTemplate({ teacher, lesson, input, names });
     // Only the lesson's teacher's number on record, and only while they are still on staff.
-    const message = teacher.phone_e164 && staffReachable(teacher)
-      ? queuedRow({
-          phone: teacher.phone_e164,
-          lessonId: lesson.id,
-          template,
-          dedupKey: `teacher_new_student:${lesson.id}:${teacher.id}`,
-          now: input.now,
-          // About an upcoming lesson: never sent once it started (a send gate closed until then).
-          expiresAt: startsAt,
-        })
-      : null;
+    const message =
+      teacher.phone_e164 && staffReachable(teacher)
+        ? queuedRow({
+            phone: teacher.phone_e164,
+            lessonId: lesson.id,
+            template,
+            dedupKey: `teacher_new_student:${lesson.id}:${teacher.id}`,
+            now: input.now,
+            // About an upcoming lesson: never sent once it started (a send gate closed until then).
+            expiresAt: startsAt,
+          })
+        : null;
     return { push, message };
   });
 }

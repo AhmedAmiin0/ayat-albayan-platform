@@ -85,7 +85,9 @@ const upcoming = (m: MeetingView) => m.starts_at !== null && m.state === 'open';
  */
 export function orderMeetings(views: readonly MeetingView[]): MeetingView[] {
   const unique = [...new Map(views.map((v) => [v.id, v])).values()];
-  const next = unique.filter(upcoming).sort((a, b) => Date.parse(a.starts_at ?? '') - Date.parse(b.starts_at ?? ''));
+  const next = unique
+    .filter(upcoming)
+    .sort((a, b) => Date.parse(a.starts_at ?? '') - Date.parse(b.starts_at ?? ''));
   const key = (m: MeetingView) => Date.parse(m.starts_at ?? m.created_at);
   const rest = unique.filter((m) => !upcoming(m)).sort((a, b) => key(b) - key(a));
   return [...next, ...rest].slice(0, LIST_MAX);

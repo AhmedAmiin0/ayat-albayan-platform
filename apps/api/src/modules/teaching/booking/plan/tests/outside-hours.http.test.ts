@@ -1,5 +1,11 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { LIST, outsideApp, S1, S2, TEACHER } from '@/modules/teaching/booking/plan/tests/outside-hours.http.fakes';
+import {
+  LIST,
+  outsideApp,
+  S1,
+  S2,
+  TEACHER,
+} from '@/modules/teaching/booking/plan/tests/outside-hours.http.fakes';
 
 const grid = `outside-slots?teacherId=${TEACHER}&durationMin=45`;
 

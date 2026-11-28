@@ -37,20 +37,36 @@ describe('POST /sales/booking/course/change and /booking/course/change', () => {
   const sales = { ownership: vi.fn() };
   const checker = { check: vi.fn() };
   const writer = { replay: vi.fn(), apply: vi.fn() };
-  const queries = { subscription: vi.fn(), rules: vi.fn(), others: vi.fn(), contacts: vi.fn(), teacherLink: vi.fn(), teacherMode: vi.fn() };
+  const queries = {
+    subscription: vi.fn(),
+    rules: vi.fn(),
+    others: vi.fn(),
+    contacts: vi.fn(),
+    teacherLink: vi.fn(),
+    teacherMode: vi.fn(),
+  };
   const lessons = { ofCourse: vi.fn(), openFrom: vi.fn(), held: vi.fn() };
   const post = (token: string, url: string, body: object) =>
     app.inject({ method: 'POST', url, payload: body, headers: { authorization: `Bearer ${token}` } });
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [bookingRoot()] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(SalesRepo).useValue(sales)
-      .overrideProvider(SettingsService).useValue(fakeSettings({ sales_require_assignee: true }))
-      .overrideProvider(ConflictChecker).useValue(checker)
-      .overrideProvider(CourseChangeRepo).useValue(queries)
-      .overrideProvider(CourseLessonRepo).useValue(lessons)
-      .overrideProvider(CourseChangeWriter).useValue(writer)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(resolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(SalesRepo)
+      .useValue(sales)
+      .overrideProvider(SettingsService)
+      .useValue(fakeSettings({ sales_require_assignee: true }))
+      .overrideProvider(ConflictChecker)
+      .useValue(checker)
+      .overrideProvider(CourseChangeRepo)
+      .useValue(queries)
+      .overrideProvider(CourseLessonRepo)
+      .useValue(lessons)
+      .overrideProvider(CourseChangeWriter)
+      .useValue(writer)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

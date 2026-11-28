@@ -1,7 +1,13 @@
 import type { LessonView } from '@ab/schedule';
 import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '@/common/auth/verify-token';
-import { ADMIN, fakeStore, lessonRow, STUDENT_ID, TEACHER } from '@/modules/teaching/lessons/lessons.fakes';
+import {
+  ADMIN,
+  fakeStore,
+  lessonRow,
+  STUDENT_ID,
+  TEACHER,
+} from '@/modules/teaching/lessons/lessons.fakes';
 import type { LessonProposalRepo } from '@/modules/teaching/lessons/proposals/lesson-proposals.repo';
 import type { TeacherCancelRepo } from '@/modules/teaching/lessons/teacher-me/teacher-cancel.repo';
 import { FamilyRequestAccess } from '@/modules/teaching/lessons/family-requests/family-request.access';
@@ -32,20 +38,30 @@ describe('FamilyRequestAccess: admins and the owning assistant answer (owner 202
 
   it('the list keeps the lessons this user answers, the owners read once', async () => {
     owners.ownersOf.mockClear();
-    expect((await access().visible(SALES, [view('a'), view('b')])).map((l) => l.id)).toEqual(['a', 'b']);
+    expect((await access().visible(SALES, [view('a'), view('b')])).map((l) => l.id)).toEqual([
+      'a',
+      'b',
+    ]);
     expect(owners.ownersOf).toHaveBeenCalledTimes(1);
     expect(await access().visible(OTHER_SALES, [view('a')])).toEqual([]);
     expect(await access().visible(TEACHER, [view('a')])).toEqual([]);
   });
   it('an assistant answers only when every student on the lesson is hers', async () => {
-    owners.ownersOf.mockResolvedValueOnce(new Map([[STUDENT_ID, ['sa-1']], ['s-2', ['sa-2']]]));
+    owners.ownersOf.mockResolvedValueOnce(
+      new Map([
+        [STUDENT_ID, ['sa-1']],
+        ['s-2', ['sa-2']],
+      ]),
+    );
     expect(await access().mayAnswer(SALES, [STUDENT_ID, 's-2'])).toBe(false);
   });
 
   it("404 for an unknown id or a teacher's proposal; 403 not_your_student for another's family", async () => {
     await expect(access(null).assertRequest(ADMIN, 'p1')).rejects.toMatchObject({ status: 404 });
     const teachers = { ...FAMILY_ROW, requested_by: 'teacher' };
-    await expect(access(teachers).assertRequest(ADMIN, 'p1')).rejects.toMatchObject({ status: 404 });
+    await expect(access(teachers).assertRequest(ADMIN, 'p1')).rejects.toMatchObject({
+      status: 404,
+    });
     await expect(access().assertRequest(OTHER_SALES, 'p1')).rejects.toMatchObject({
       response: { code: 'not_your_student' },
     });

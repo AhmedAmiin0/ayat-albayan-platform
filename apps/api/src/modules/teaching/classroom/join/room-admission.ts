@@ -1,12 +1,23 @@
 import { lessonRoomName, type JoinRole, type RoomJoinResult } from '@ab/schedule';
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import type { LivekitEnv } from '@/config/env/env';
-import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from '@/modules/teaching/classroom/classroom.config';
+import {
+  CLASSROOM_CONFIG,
+  classroomConfigOf,
+  type ClassroomConfigSource,
+} from '@/modules/teaching/classroom/classroom.config';
 import { notConfigured } from './join-gate';
 import { mintToken, newIdentity } from '@/modules/teaching/classroom/livekit/livekit-token';
-import { ModerationRepo, principalColumns, type Principal } from '@/modules/teaching/classroom/moderation/moderation.repo';
+import {
+  ModerationRepo,
+  principalColumns,
+  type Principal,
+} from '@/modules/teaching/classroom/moderation/moderation.repo';
 import { RecordingStarter } from '@/modules/teaching/classroom/recordings/recording.starter';
-import { lessonTarget, type RoomTarget } from '@/modules/teaching/classroom/recordings/recording-target';
+import {
+  lessonTarget,
+  type RoomTarget,
+} from '@/modules/teaching/classroom/recordings/recording-target';
 
 interface Admission {
   lessonId: string;
@@ -24,11 +35,16 @@ export const GUEST_TOKEN_TTL_S = 15 * 60;
 
 /** The guest's lifetime is capped; a staff login's is what the caller asked (else the default). */
 const ttlOf = (input: Admission): number | undefined =>
-  input.role === 'guest' ? Math.min(input.ttlSeconds ?? GUEST_TOKEN_TTL_S, GUEST_TOKEN_TTL_S) : input.ttlSeconds;
+  input.role === 'guest'
+    ? Math.min(input.ttlSeconds ?? GUEST_TOKEN_TTL_S, GUEST_TOKEN_TTL_S)
+    : input.ttlSeconds;
 
 /** 403 removed_from_room: this login or link was removed from the lesson's room. */
 const removedFromRoom = (): HttpException =>
-  new HttpException({ code: 'removed_from_room', message: 'removed_from_room' }, HttpStatus.FORBIDDEN);
+  new HttpException(
+    { code: 'removed_from_room', message: 'removed_from_room' },
+    HttpStatus.FORBIDDEN,
+  );
 
 /**
  * The last step of every join, staff and guest alike, once the caller is known to belong: refuse
@@ -61,7 +77,11 @@ export class RoomAdmission {
     if (blocked) throw removedFromRoom();
     const room = lessonRoomName(input.lessonId);
     const identity = newIdentity(input.role);
-    const token = mintToken(config, { room, role: input.role, name: input.name, identity, ttlSeconds: ttlOf(input) }, now);
+    const token = mintToken(
+      config,
+      { room, role: input.role, name: input.name, identity, ttlSeconds: ttlOf(input) },
+      now,
+    );
     await this.moderation.addParticipant({
       lesson_id: input.lessonId,
       identity,
@@ -72,7 +92,14 @@ export class RoomAdmission {
     });
     this.record(lessonTarget(input.lessonId), now);
     // chat: false in a trial lesson; the clients hide and drop the text chat (tools/livekit/README.md).
-    return { url: config.url, token, room, role: input.role, recording: this.recordingState, chat: !trial };
+    return {
+      url: config.url,
+      token,
+      room,
+      role: input.role,
+      recording: this.recordingState,
+      chat: !trial,
+    };
   }
 
   /** 'off' when RECORDING_S3_* or LiveKit are missing: the room warns the admin. */
@@ -85,6 +112,8 @@ export class RoomAdmission {
    * (one running row per room). Fire and forget: the join never waits for (or fails on) it.
    */
   record(target: RoomTarget, now: Date): void {
-    this.recorder.startFor(target, now).catch((e: unknown) => this.log.warn(`recording: ${String(e)}`));
+    this.recorder
+      .startFor(target, now)
+      .catch((e: unknown) => this.log.warn(`recording: ${String(e)}`));
   }
 }

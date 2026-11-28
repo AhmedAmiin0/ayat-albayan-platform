@@ -21,6 +21,8 @@ describe('LivekitApi.deleteRoom', () => {
     const gone = http({ status: 404, body: { code: 'not_found' } });
     expect(await new LivekitApi(CONFIG, gone).deleteRoom('meeting-1', NOW)).toBe(false);
     const down = http({ status: 500, body: { code: 'internal' } });
-    await expect(new LivekitApi(CONFIG, down).deleteRoom('meeting-1', NOW)).rejects.toThrow('livekit 500');
+    await expect(new LivekitApi(CONFIG, down).deleteRoom('meeting-1', NOW)).rejects.toThrow(
+      'livekit 500',
+    );
   });
 });

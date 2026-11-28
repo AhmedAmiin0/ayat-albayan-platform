@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { CONFIG, decode } from '@/modules/teaching/classroom/classroom.fakes';
-import { grantsFor, mintToken, newIdentity, TOKEN_TTL_S } from '@/modules/teaching/classroom/livekit/livekit-token';
+import {
+  grantsFor,
+  mintToken,
+  newIdentity,
+  TOKEN_TTL_S,
+} from '@/modules/teaching/classroom/livekit/livekit-token';
 
 const NOW = new Date('2026-10-05T16:00:00Z');
 const nowS = NOW.getTime() / 1000;
@@ -10,7 +15,10 @@ describe('mintToken', () => {
   it('signs a three-part HS256 JWT with the API secret', () => {
     const token = mintToken(CONFIG, input, NOW);
     expect(token.split('.')).toHaveLength(3);
-    expect(JSON.parse(Buffer.from(token.split('.')[0] ?? '', 'base64url').toString())).toEqual({ alg: 'HS256', typ: 'JWT' });
+    expect(JSON.parse(Buffer.from(token.split('.')[0] ?? '', 'base64url').toString())).toEqual({
+      alg: 'HS256',
+      typ: 'JWT',
+    });
     expect(decode(token).validSignature).toBe(true);
     expect(decode(token, 'another-secret').validSignature).toBe(false);
   });
@@ -28,7 +36,9 @@ describe('mintToken', () => {
   });
 
   it('caps the lifetime at the default and floors it at five minutes', () => {
-    expect(decode(mintToken(CONFIG, { ...input, ttlSeconds: 99 * 3600 }, NOW)).exp).toBe(nowS + TOKEN_TTL_S);
+    expect(decode(mintToken(CONFIG, { ...input, ttlSeconds: 99 * 3600 }, NOW)).exp).toBe(
+      nowS + TOKEN_TTL_S,
+    );
     expect(decode(mintToken(CONFIG, { ...input, ttlSeconds: 3600 }, NOW)).exp).toBe(nowS + 3600);
     expect(decode(mintToken(CONFIG, { ...input, ttlSeconds: 1 }, NOW)).exp).toBe(nowS + 300);
   });
@@ -40,9 +50,18 @@ describe('mintToken', () => {
 });
 
 describe('role grants', () => {
-  it.each(['teacher', 'admin', 'assistant', 'sales'] as const)('%s publishes everything and may subscribe', (role) => {
-    expect(grantsFor(role, 'r')).toEqual({ roomJoin: true, room: 'r', canPublish: true, canSubscribe: true, canPublishData: true });
-  });
+  it.each(['teacher', 'admin', 'assistant', 'sales'] as const)(
+    '%s publishes everything and may subscribe',
+    (role) => {
+      expect(grantsFor(role, 'r')).toEqual({
+        roomJoin: true,
+        room: 'r',
+        canPublish: true,
+        canSubscribe: true,
+        canPublishData: true,
+      });
+    },
+  );
 
   it('a guest publishes camera and microphone only (no screen share), and may subscribe', () => {
     const g = grantsFor('guest', 'r');

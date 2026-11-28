@@ -55,7 +55,8 @@ export class MeetingInviteSender {
   ) {}
 
   async staff(n: StaffNotice): Promise<DeliveryOutcome> {
-    if (!n.invitee.profile_id) return { status: 'failed', channel: 'in_app', error_code: 'no_profile' };
+    if (!n.invitee.profile_id)
+      return { status: 'failed', channel: 'in_app', error_code: 'no_profile' };
     await this.push.notifyProfiles({
       kind: 'meeting_invite',
       subject: n.subject,
@@ -71,8 +72,13 @@ export class MeetingInviteSender {
   async chat(s: ChatSend): Promise<DeliveryOutcome> {
     try {
       const thread = await this.threads.thread(s.phone);
-      const picked = await pickSend({ thread, now: s.now, windows: () => this.threads.numberWindows(s.phone) });
-      if ('code' in picked) return { status: 'window_closed', channel: 'link', error_code: picked.code };
+      const picked = await pickSend({
+        thread,
+        now: s.now,
+        windows: () => this.threads.numberWindows(s.phone),
+      });
+      if ('code' in picked)
+        return { status: 'window_closed', channel: 'link', error_code: picked.code };
       await this.messages.enqueue({
         direction: 'outbound',
         status: 'queued',
@@ -89,7 +95,8 @@ export class MeetingInviteSender {
       return { status: 'sent', channel: 'whatsapp', error_code: null };
     } catch (e) {
       // The race-safe daily cap (migration 414's trigger): this recipient failed, the others go on.
-      if (e instanceof Error && /\binvite_limit\b/.test(e.message)) return { status: 'failed', channel: 'link', error_code: 'invite_limit' };
+      if (e instanceof Error && /\binvite_limit\b/.test(e.message))
+        return { status: 'failed', channel: 'link', error_code: 'invite_limit' };
       this.log.warn(`meeting invite chat failed: ${e instanceof Error ? e.message : String(e)}`);
       return { status: 'failed', channel: 'link', error_code: 'send_failed' };
     }

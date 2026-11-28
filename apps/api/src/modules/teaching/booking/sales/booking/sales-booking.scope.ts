@@ -4,7 +4,8 @@ import { HttpException } from '@nestjs/common';
 import { forbidden } from '@/common/http/errors';
 import type { SalesOwnership } from '@/modules/sales/sales/sales-ownership';
 
-const all = (ids: readonly string[], allowed: readonly string[]): boolean => ids.every((id) => allowed.includes(id));
+const all = (ids: readonly string[], allowed: readonly string[]): boolean =>
+  ids.every((id) => allowed.includes(id));
 
 /**
  * What /sales/booking checks ownership against (SalesBookingScope): her leads, families and
@@ -32,13 +33,20 @@ export type CourseGrant = boolean | 'any';
  * course), or (ON only) not_your_lead, not_your_student, not_your_family. canCourse 'any'
  * (sales.renew_any, docs/16 row 38): a course of ANY one student.
  */
-export function assertBookingScope(req: BookingRequest, own: BookingOwnership, canCourse: CourseGrant = false): void {
+export function assertBookingScope(
+  req: BookingRequest,
+  own: BookingOwnership,
+  canCourse: CourseGrant = false,
+): void {
   if (req.override) throw forbidden('override_not_allowed');
   const kind = bookingKindOf(req);
   if (kind === 'makeup' || (kind === 'package' && !canCourse)) throw forbidden('kind_not_allowed');
   if (req.meetingLink) throw forbidden('meeting_link_not_allowed');
   if (req.invoice) throw forbidden('invoice_not_allowed');
-  if (kind === 'package') return assertCourse(req, own, canCourse);
+  if (kind === 'package') {
+    assertCourse(req, own, canCourse);
+    return;
+  }
   if (own) assertOwned(req, own); // null = the rule does not enforce: any lead, family or student
 }
 
@@ -48,7 +56,8 @@ export function assertBookingScope(req: BookingRequest, own: BookingOwnership, c
  * complexity cap (10).
  */
 function assertCourse(req: BookingRequest, own: BookingOwnership, grant: CourseGrant): void {
-  if (!('studentIds' in req) || req.studentIds.length !== 1 || req.leadId) throw forbidden('course_one_student');
+  if (!('studentIds' in req) || req.studentIds.length !== 1 || req.leadId)
+    throw forbidden('course_one_student');
   assertOwnStudents(req.studentIds, grant === 'any' ? null : own);
 }
 
@@ -70,9 +79,16 @@ export function assertOwnStudents(ids: readonly string[], own: BookingOwnership)
   if (own && !all(ids, own.studentIds)) throw forbidden('not_your_student');
 }
 
-type Candidate = { id: string; name: string };
+interface Candidate {
+  id: string;
+  name: string;
+}
 const isCandidates = (v: unknown): v is Candidate[] =>
-  Array.isArray(v) && v.every((c) => typeof c === 'object' && c !== null && typeof c.id === 'string' && typeof c.name === 'string');
+  Array.isArray(v) &&
+  v.every(
+    (c) =>
+      typeof c === 'object' && c !== null && typeof c.id === 'string' && typeof c.name === 'string',
+  );
 
 /**
  * 409 duplicate_student names the guardian's children, as id and name only (never notes or the
@@ -83,9 +99,20 @@ const isCandidates = (v: unknown): v is Candidate[] =>
 export function scopeDuplicates(e: Error, own: BookingOwnership): Error {
   if (!(e instanceof HttpException) || e.getStatus() !== 409) return e;
   const body = e.getResponse();
-  if (typeof body !== 'object' || body === null || !('code' in body) || body.code !== 'duplicate_student') return e;
+  if (
+    typeof body !== 'object' ||
+    body === null ||
+    !('code' in body) ||
+    body.code !== 'duplicate_student'
+  )
+    return e;
   const raw = 'candidates' in body ? body.candidates : [];
   const mine = (c: Candidate): boolean => !own || own.studentIds.includes(c.id);
-  const candidates = (isCandidates(raw) ? raw : []).filter(mine).map(({ id, name }) => ({ id, name }));
-  return new HttpException({ code: 'duplicate_student', message: 'duplicate_student', candidates }, 409);
+  const candidates = (isCandidates(raw) ? raw : [])
+    .filter(mine)
+    .map(({ id, name }) => ({ id, name }));
+  return new HttpException(
+    { code: 'duplicate_student', message: 'duplicate_student', candidates },
+    409,
+  );
 }

@@ -1,7 +1,15 @@
 import { lessonWhenText } from '@ab/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CONTACT, GUARDIAN_ID, STUDENT_ID } from '@/modules/teaching/lessons/lessons.fakes';
-import { body, correction, heldRow, lessonRow, NOW, retimed, timeSetup } from '@/modules/teaching/lessons/time-edit/time-edit.fakes';
+import {
+  body,
+  correction,
+  heldRow,
+  lessonRow,
+  NOW,
+  retimed,
+  timeSetup,
+} from '@/modules/teaching/lessons/time-edit/time-edit.fakes';
 import { timeEditMessages } from '@/modules/teaching/lessons/time-edit/time-edit.messages';
 
 const NEW_START = '2026-10-05T14:00:00.000Z';
@@ -20,7 +28,11 @@ describe('«عدّل الوقت» guardian notice (admin action, R-MSG-01 bookin
         guardian_id: GUARDIAN_ID,
         lesson_id: expect.any(String),
         template_key: 'booking_confirmation',
-        template_params: { '1': 'سهيلة', '2': lessonWhenText(new Date(NEW_START), 'Asia/Riyadh'), button: 'abrar' },
+        template_params: {
+          '1': 'سهيلة',
+          '2': lessonWhenText(new Date(NEW_START), 'Asia/Riyadh'),
+          button: 'abrar',
+        },
         dedup_key: `booking_confirmation:${retimed(writer).lesson_id}:${GUARDIAN_ID}:${Date.parse(NEW_START)}`,
       },
     ]);
@@ -38,7 +50,9 @@ describe('«عدّل الوقت» guardian notice (admin action, R-MSG-01 bookin
     queries.meetingLinkAuto.mockResolvedValue(true);
     await run(body());
     expect(queries.meetingLinkAuto).toHaveBeenCalledWith({ teacherId: lessonRow().teacher_id });
-    expect(retimed(writer).messages[0]).toMatchObject({ template_key: 'booking_confirmation_plain' });
+    expect(retimed(writer).messages[0]).toMatchObject({
+      template_key: 'booking_confirmation_plain',
+    });
     expect(retimed(writer).messages[0]?.template_params).not.toHaveProperty('button');
   });
 
@@ -66,15 +80,28 @@ describe('«عدّل الوقت» guardian notice (admin action, R-MSG-01 bookin
     lonely.queries.contacts.mockResolvedValue([{ id: STUDENT_ID, name: 'سهيلة', guardian: null }]);
     expect((await lonely.run(body())).notified).toBe(0);
     const group = timeSetup(lessonRow());
-    group.queries.contacts.mockResolvedValue([CONTACT, { id: 's2', name: 'مريم', guardian: { id: 'g2', phone_e164: '+201001234567', tz: 'Africa/Cairo' } }]);
+    group.queries.contacts.mockResolvedValue([
+      CONTACT,
+      {
+        id: 's2',
+        name: 'مريم',
+        guardian: { id: 'g2', phone_e164: '+201001234567', tz: 'Africa/Cairo' },
+      },
+    ]);
     expect((await group.run(body())).notified).toBe(2);
   });
 
   it('timeEditMessages: the same template as a booking, one per guardian, a different key per start', () => {
     const a = timeEditMessages({ id: 'L', starts_at: NEW_START, meeting_link: null }, [CONTACT]);
-    const b = timeEditMessages({ id: 'L', starts_at: '2026-10-06T14:00:00.000Z', meeting_link: null }, [CONTACT]);
+    const b = timeEditMessages(
+      { id: 'L', starts_at: '2026-10-06T14:00:00.000Z', meeting_link: null },
+      [CONTACT],
+    );
     expect(a[0]?.template_key).toBe('booking_confirmation_plain');
     expect(a[0]?.dedup_key).not.toBe(b[0]?.dedup_key);
-    expect(timeEditMessages({ id: 'L', starts_at: NEW_START, meeting_link: null }, [CONTACT])[0]?.dedup_key).toBe(a[0]?.dedup_key);
+    expect(
+      timeEditMessages({ id: 'L', starts_at: NEW_START, meeting_link: null }, [CONTACT])[0]
+        ?.dedup_key,
+    ).toBe(a[0]?.dedup_key);
   });
 });

@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { bookingRequest, fakePlanner, NOW } from '@/modules/teaching/booking/booking.fakes';
 
-import { code, SCOPE, setup as invoiceSetup } from '@/modules/teaching/booking/invoice/booking.invoice.fakes';
+import {
+  code,
+  SCOPE,
+  setup as invoiceSetup,
+} from '@/modules/teaching/booking/invoice/booking.invoice.fakes';
 import type { BookingRepo } from '@/modules/teaching/booking/core/booking.repo';
 import { BookingService } from '@/modules/teaching/booking/core/booking.service';
 import { BookingWriter } from '@/modules/teaching/booking/core/booking.writer';
@@ -11,15 +15,30 @@ import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-ale
 // the request body has no way to ask for it, so the admin's POST /booking still needs an invoice.
 
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
-const RESULT = { rule_id: 'R1', student_ids: [], guardian_ids: [], lessons: [], message_ids: [], invoice_id: null };
+const RESULT = {
+  rule_id: 'R1',
+  student_ids: [],
+  guardian_ids: [],
+  lessons: [],
+  message_ids: [],
+  invoice_id: null,
+};
 
 function setup() {
   const deps = fakePlanner();
   deps.queries.createBooking.mockResolvedValue(RESULT);
   const { invoices } = invoiceSetup();
   const resolve = vi.spyOn(invoices, 'resolve');
-  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, invoices, fakeTeacherAlert().after);
-  return { ...deps, resolve, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo) };
+  const writer = new BookingWriter(
+    deps.queries as unknown as BookingRepo,
+    invoices,
+    fakeTeacherAlert().after,
+  );
+  return {
+    ...deps,
+    resolve,
+    service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo),
+  };
 }
 
 describe('BookingService.book — invoiceWaived (R-PAY-03, R-ASST-04)', () => {
@@ -28,14 +47,20 @@ describe('BookingService.book — invoiceWaived (R-PAY-03, R-ASST-04)', () => {
 
   it('without the option a package with no invoice is 400 invoice_required; nothing is written', async () => {
     const { service, queries } = setup();
-    expect(await code(service.book(bookingRequest({ invoice: undefined }), ACTOR))).toEqual({ status: 400, code: 'invoice_required' });
+    expect(await code(service.book(bookingRequest({ invoice: undefined }), ACTOR))).toEqual({
+      status: 400,
+      code: 'invoice_required',
+    });
     expect(queries.createBooking).not.toHaveBeenCalled();
   });
 
   it('with invoiceWaived the package is written with no invoice and an audit with no source', async () => {
     const { service, queries, resolve } = setup();
     await service.book(bookingRequest({ invoice: undefined }), ACTOR, { invoiceWaived: true });
-    expect(resolve).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ waived: true }));
+    expect(resolve).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ waived: true }),
+    );
     const [payload, actor] = queries.createBooking.mock.calls[0] ?? [];
     expect(actor).toBe(ACTOR);
     expect(payload?.invoice).toBeNull();
@@ -55,7 +80,10 @@ describe('BookingService.book — invoiceWaived (R-PAY-03, R-ASST-04)', () => {
     const { invoices, storage } = invoiceSetup();
     const req = bookingRequest({ invoice: undefined });
     expect(await invoices.resolve(req, { ...SCOPE, waived: true })).toBeNull();
-    expect(await code(invoices.resolve(req, { ...SCOPE, waived: false }))).toEqual({ status: 400, code: 'invoice_required' });
+    expect(await code(invoices.resolve(req, { ...SCOPE, waived: false }))).toEqual({
+      status: 400,
+      code: 'invoice_required',
+    });
     expect(storage.info).not.toHaveBeenCalled();
   });
 });

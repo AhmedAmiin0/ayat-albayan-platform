@@ -1,6 +1,10 @@
 import type { Conflict, CourseChangeRequest } from '@ab/schedule';
 import { randomUUID } from 'node:crypto';
-import { confirmationMessages, forMessages, type Contact } from '@/modules/teaching/lessons/status/confirmation-messages';
+import {
+  confirmationMessages,
+  forMessages,
+  type Contact,
+} from '@/modules/teaching/lessons/status/confirmation-messages';
 import { planLessons } from '@/modules/teaching/lessons/reschedule/rule-plan';
 import type { NewLesson, NewRule } from '@/modules/teaching/scheduling/change-set';
 import { addDays } from '@ab/time';
@@ -10,7 +14,7 @@ import type { ChangeRule, OpenCourseLesson } from './course-change.repo';
 
 // change_course's payload (migration 480): pure, so the whole write is unit-tested.
 
-export type PayloadInput = {
+export interface PayloadInput {
   req: CourseChangeRequest & { clientRequestId: string; teacherId?: string };
   actor: { id: string; role: ChangeRole };
   subscriptionId: string;
@@ -23,7 +27,7 @@ export type PayloadInput = {
   contacts: readonly Contact[];
   /** Lessons of the course before the change point that count (lessons_total − remaining). */
   counted: number;
-};
+}
 
 const changesTeacher = (input: PayloadInput, head: ChangeRule): boolean =>
   input.req.teacherId !== undefined && input.req.teacherId !== head.teacher_id;
@@ -118,7 +122,11 @@ export function changePayload(input: PayloadInput): Record<string, unknown> {
       entity: 'subscriptions',
       entity_id: input.subscriptionId,
       action: 'course_change',
-      before: { rule_ids: input.active.map((r) => r.id), ended_rule_ids: [...ended], ends_on: head.ends_on },
+      before: {
+        rule_ids: input.active.map((r) => r.id),
+        ended_rule_ids: [...ended],
+        ends_on: head.ends_on,
+      },
       after: {
         by: input.actor.role,
         teacher: { from: head.teacher_id, to: input.req.teacherId ?? head.teacher_id },

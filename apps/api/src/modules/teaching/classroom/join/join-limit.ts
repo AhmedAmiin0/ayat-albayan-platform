@@ -10,7 +10,8 @@ interface LimitKey {
 }
 
 /** A test login's calls are not counted (canSkip('rate_limits'), docs/56); nobody else's skip. */
-const notCounted = (key: LimitKey): boolean => canSkip('rate_limits', userOnlyFlags(key.userIsTest));
+const notCounted = (key: LimitKey): boolean =>
+  canSkip('rate_limits', userOnlyFlags(key.userIsTest));
 
 /**
  * The public join route's limit, per 10 minutes: 10 requests per link and IP, 60 per IP (the same
@@ -27,7 +28,8 @@ export class PublicJoinLimit {
   /** 429 too_many_requests when either bucket is full. */
   assert(input: LimitKey, now = Date.now()): void {
     if (notCounted(input)) return;
-    const ok = this.perIp.allow(input.ip, now) && this.perLink.allow(`${input.ip}|${input.token}`, now);
+    const ok =
+      this.perIp.allow(input.ip, now) && this.perLink.allow(`${input.ip}|${input.token}`, now);
     if (!ok) {
       throw tooMany();
     }
@@ -36,9 +38,15 @@ export class PublicJoinLimit {
   /** 429 too_many_requests for a page read (not a join). */
   assertRead(input: LimitKey, now = Date.now()): void {
     if (notCounted(input)) return;
-    const ok = this.readsPerIp.allow(input.ip, now) && this.readsPerLink.allow(`${input.ip}|${input.token}`, now);
+    const ok =
+      this.readsPerIp.allow(input.ip, now) &&
+      this.readsPerLink.allow(`${input.ip}|${input.token}`, now);
     if (!ok) throw tooMany();
   }
 }
 
-const tooMany = () => new HttpException({ code: 'too_many_requests', message: 'too_many_requests' }, HttpStatus.TOO_MANY_REQUESTS);
+const tooMany = () =>
+  new HttpException(
+    { code: 'too_many_requests', message: 'too_many_requests' },
+    HttpStatus.TOO_MANY_REQUESTS,
+  );

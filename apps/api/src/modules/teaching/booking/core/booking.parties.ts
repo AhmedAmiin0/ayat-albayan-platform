@@ -70,10 +70,17 @@ export class BookingParties {
     if (existing && !req.force) {
       const candidates = detectDuplicates(newStudent.name, existing.students);
       if (candidates.length > 0) {
-        throw httpError(HttpStatus.CONFLICT, 'duplicate_student', { guardian_id: existing.id, candidates });
+        throw httpError(HttpStatus.CONFLICT, 'duplicate_student', {
+          guardian_id: existing.id,
+          candidates,
+        });
       }
     }
-    const target = { id: existing?.id ?? null, phone_e164: guardian.phone_e164, tz: existing?.tz ?? guardian.tz };
+    const target = {
+      id: existing?.id ?? null,
+      phone_e164: guardian.phone_e164,
+      tz: existing?.tz ?? guardian.tz,
+    };
     return {
       student_ids: [],
       new_guardian: guardian,

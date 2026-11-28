@@ -16,7 +16,11 @@ import {
   familyLinks,
   WEB_ORIGIN,
 } from '@/modules/teaching/classroom/family-link/family-link.fakes';
-import { admissionOf, moderation, recorder } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  admissionOf,
+  moderation,
+  recorder,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { studentLinkQueries } from '@/modules/teaching/classroom/student-link/student-link.fakes';
 import type { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
 import { StudentLinkService } from '@/modules/teaching/classroom/student-link/student-link.service';

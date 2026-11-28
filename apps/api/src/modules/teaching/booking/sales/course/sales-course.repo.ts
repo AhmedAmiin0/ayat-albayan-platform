@@ -60,7 +60,10 @@ export class SalesCourseRepo {
    * taught on that course and look unbooked. null without any.
    */
   async subscription(studentId: string, only?: string): Promise<CourseSubscription | null> {
-    const [all, imported] = await Promise.all([this.openPackages(studentId), this.imported(studentId)]);
+    const [all, imported] = await Promise.all([
+      this.openPackages(studentId),
+      this.imported(studentId),
+    ]);
     // `only`: that package (a draft booked on its payment).
     const subs = only === undefined ? all : all.filter((r) => r.id === only);
     const row = (imported ? undefined : subs.find((r) => r.rules.length === 0)) ?? subs[0];
@@ -95,12 +98,18 @@ export class SalesCourseRepo {
 
   /** The student's active rules (schedule_rule_students → schedule_rules.status = 'active'). */
   async rules(studentId: string): Promise<CourseRule[]> {
-    const data = rows(await this.db
-      .from('schedule_rule_students')
-      .select('rule:schedule_rules!inner(starts_on, ends_on, package, status)')
-      .eq('student_id', studentId)
-      .eq('rule.status', 'active'));
-    return data.map(({ rule }) => ({ starts_on: rule.starts_on, ends_on: rule.ends_on, package: rule.package }));
+    const data = rows(
+      await this.db
+        .from('schedule_rule_students')
+        .select('rule:schedule_rules!inner(starts_on, ends_on, package, status)')
+        .eq('student_id', studentId)
+        .eq('rule.status', 'active'),
+    );
+    return data.map(({ rule }) => ({
+      starts_on: rule.starts_on,
+      ends_on: rule.ends_on,
+      package: rule.package,
+    }));
   }
 
   /**
@@ -123,7 +132,9 @@ export class SalesCourseRepo {
       .eq('schedule_rule_students.student_id', studentId)
       .not('subscription_id', 'is', null));
     return data.flatMap((r) =>
-      r.subscription_id && r.sub ? [{ ...pickRule(r), subscription_id: r.subscription_id, sub: r.sub }] : [],
+      r.subscription_id && r.sub
+        ? [{ ...pickRule(r), subscription_id: r.subscription_id, sub: r.sub }]
+        : [],
     );
   }
 

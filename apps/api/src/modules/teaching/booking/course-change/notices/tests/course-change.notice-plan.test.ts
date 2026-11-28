@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { addedLessons, courseChanges, courseMove, type CourseTold } from '@/modules/teaching/booking/course-change/notices/course-change.notice-plan';
+import {
+  addedLessons,
+  courseChanges,
+  courseMove,
+  type CourseTold,
+} from '@/modules/teaching/booking/course-change/notices/course-change.notice-plan';
 
 // Who hears a course change (both the teacher and the family are told).
 
@@ -50,7 +55,9 @@ describe('courseChanges: what ScheduleNotices hears after the commit', () => {
 
   it('a new teacher: the family’s lesson_rescheduled, the old teacher’s lesson_cancelled', () => {
     const changes = courseChanges(told({ teacherChanged: true }), false);
-    expect(changes.map((c) => [c.kind, c.audience, c.kind === 'lesson_cancelled' && c.lessonId])).toEqual([
+    expect(
+      changes.map((c) => [c.kind, c.audience, c.kind === 'lesson_cancelled' && c.lessonId]),
+    ).toEqual([
       ['lesson_rescheduled', 'family', false],
       ['lesson_cancelled', 'teacher', 'old-sun'],
     ]);

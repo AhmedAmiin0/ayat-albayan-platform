@@ -4,12 +4,27 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { messagingRoot } from '@/common/infra/test-root';
 import { StudentRecordingsModule } from './student-recordings.module';
 import { AuditService } from '@/common/audit/audit.service';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { StorageService } from '@/common/storage/storage.service';
 import { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
 import { RecordingAdminRepo } from './recording-admin.repo';
-import { ADMIN, OTHER_TEACHER, recording, REC_ID, STUDENT, studentQueries, TEACHER, TEACHER_ID, teachersFake } from './student-recordings.fakes';
+import {
+  ADMIN,
+  OTHER_TEACHER,
+  recording,
+  REC_ID,
+  STUDENT,
+  studentQueries,
+  TEACHER,
+  TEACHER_ID,
+  teachersFake,
+} from './student-recordings.fakes';
 import { StudentRecordingRepo } from './student-recordings.repo';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER };
@@ -22,7 +37,10 @@ const verify: TokenVerifier = async (token) => {
 describe('student recordings routes with another teacher’s ids', () => {
   const sq = studentQueries();
   const admin = {
-    byId: vi.fn(), setVisible: vi.fn(), markDeleted: vi.fn(), attendeeCount: vi.fn(),
+    byId: vi.fn(),
+    setVisible: vi.fn(),
+    markDeleted: vi.fn(),
+    attendeeCount: vi.fn(),
   };
   const storage = { signedDownloads: vi.fn(), remove: vi.fn() };
   const audit = { record: vi.fn() };
@@ -36,13 +54,20 @@ describe('student recordings routes with another teacher’s ids', () => {
     const mod = await Test.createTestingModule({
       imports: [messagingRoot(StudentRecordingsModule)],
     })
-      .overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
-      .overrideProvider(TeachersRepo).useValue(teachersFake())
-      .overrideProvider(StudentRecordingRepo).useValue(sq)
-      .overrideProvider(RecordingAdminRepo).useValue(admin)
-      .overrideProvider(StorageService).useValue(storage)
-      .overrideProvider(AuditService).useValue(audit)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TeachersRepo)
+      .useValue(teachersFake())
+      .overrideProvider(StudentRecordingRepo)
+      .useValue(sq)
+      .overrideProvider(RecordingAdminRepo)
+      .useValue(admin)
+      .overrideProvider(StorageService)
+      .useValue(storage)
+      .overrideProvider(AuditService)
+      .useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -73,7 +98,10 @@ describe('student recordings routes with another teacher’s ids', () => {
   it('a teacher who taught the student once reads only the ids of her own lessons', async () => {
     sq.taughtBy.mockResolvedValueOnce(true);
     expect((await call('GET', lessonIds, 'other')).statusCode).toBe(200);
-    expect(sq.doneLessonIds).toHaveBeenCalledWith({ studentId: STUDENT, onlyTeacherId: 'teacher-2' });
+    expect(sq.doneLessonIds).toHaveBeenCalledWith({
+      studentId: STUDENT,
+      onlyTeacherId: 'teacher-2',
+    });
   });
 
   it('deleting another teacher’s recording is 403 and nothing is erased or audited', async () => {

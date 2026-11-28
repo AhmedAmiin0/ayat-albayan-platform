@@ -8,24 +8,31 @@ import {
 import type { BookingKind } from '@ab/schedule';
 
 /** A booked student's guardian; id null = the guardian the RPC creates or reuses (lead path). */
-export type BookedGuardian = { id: string | null; phone_e164: string; tz: string };
-export type BookedStudent = { name: string; guardian: BookedGuardian };
+export interface BookedGuardian {
+  id: string | null;
+  phone_e164: string;
+  tz: string;
+}
+export interface BookedStudent {
+  name: string;
+  guardian: BookedGuardian;
+}
 
 /** One queued messages row before the RPC fills lesson_id, dedup_key and a null guardian_id. */
-export type MessageDraft = {
+export interface MessageDraft {
   guardian_id: string | null;
   phone_e164: string;
   template_key: BookingTemplateKey;
   template_params: Record<string, string>;
-};
+}
 
-type DraftInput = {
+interface DraftInput {
   students: readonly BookedStudent[];
   firstStart: Date;
   meetingLink: string | null;
   /** Omitted means a normal booking. */
   kind?: BookingKind;
-};
+}
 
 /** docs/10 §5.11, R-SCH-06, R-LES-02: one per guardian; makeups (R-SCH-10) reuse them. */
 export function confirmationDrafts(input: DraftInput): MessageDraft[] {

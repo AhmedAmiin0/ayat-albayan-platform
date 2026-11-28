@@ -43,7 +43,11 @@ export class CourseCardCourse {
       days: course.days,
       tz: course.tz,
       endsOn: course.endsOn,
-      lastAt: counted.map((l) => l.starts_at).sort().at(-1) ?? null,
+      lastAt:
+        counted
+          .map((l) => l.starts_at)
+          .sort()
+          .at(-1) ?? null,
       lessonsTotal: course.lessonsTotal,
       unbooked: Math.max(0, courseRemaining(course.lessonsTotal, lessons)),
     };

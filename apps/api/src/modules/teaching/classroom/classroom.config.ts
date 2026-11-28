@@ -28,4 +28,5 @@ export const CLASSROOM_WEB_ORIGIN = Symbol('CLASSROOM_WEB_ORIGIN');
 export const FAMILY_JOIN_SECRET = Symbol('FAMILY_JOIN_SECRET');
 
 /** The first origin of WEB_ORIGIN (a comma list), without a trailing slash. */
-export const firstWebOrigin = (webOrigin: string): string => (webOrigin.split(',')[0] ?? '').trim().replace(/\/+$/, '');
+export const firstWebOrigin = (webOrigin: string): string =>
+  (webOrigin.split(',')[0] ?? '').trim().replace(/\/+$/, '');

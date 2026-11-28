@@ -21,7 +21,7 @@ import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { assertNotPast, bookableConflicts } from './outside-hours';
 import { httpError } from '@/common/http/errors';
 
-export type Prepared = {
+export interface Prepared {
   payload: BookingPayload;
   conflicts: Conflict[];
   /** E.164 of every booked guardian: the only chats an invoice may be saved from (R-MSG-06). */
@@ -30,7 +30,7 @@ export type Prepared = {
   invoiceMaxBytes: number;
   /** The booking may go without an invoice (PrepareOptions.invoiceWaived). */
   invoiceWaived: boolean;
-};
+}
 
 /**
  * Server-side choices of the caller, never of the request body: the assistant's course of a
@@ -38,7 +38,7 @@ export type Prepared = {
  * subscription, decision 2) and ends on its N-th lesson (decision 1). The admin
  * passes none: invoice_required and open-ended rules, as before.
  */
-export type PrepareOptions = {
+export interface PrepareOptions {
   invoiceWaived?: boolean;
   /**
    * Every rule's ends_on (plannedCourseEnd): the whole course is planned and checked, nothing after
@@ -49,8 +49,8 @@ export type PrepareOptions = {
   course?: CourseLabel;
   /** The upcoming trial being moved. */
   excludeLessonIds?: readonly string[];
-};
-type Series = { plan: Plan; siblings: Plan[]; first: Occurrence; conflicts: Conflict[] };
+}
+interface Series { plan: Plan; siblings: Plan[]; first: Occurrence; conflicts: Conflict[] }
 
 /** Before the plan: a missing invoice is not a clash the admin can override away. */
 function assertInvoice(req: BookingRequest, invoiceWaived: boolean): void {
@@ -135,7 +135,7 @@ export class BookingPlanner {
   }
 }
 
-type SeriesContext = { teacher: BookingTeacher; who: Resolved; endsOn?: string | null | undefined; exclude?: readonly string[] | undefined };
+interface SeriesContext { teacher: BookingTeacher; who: Resolved; endsOn?: string | null | undefined; exclude?: readonly string[] | undefined }
 
 /** The plan's rule a week around each DST change after its last generated lesson. */
 function probeAfter(plan: Plan, tzs: readonly string[]): Occurrence[] {

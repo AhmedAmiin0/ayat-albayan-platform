@@ -1,14 +1,36 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN, ASSISTANT, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
-import { MEETING_ID, NOW, scheduledRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
-import { CLOSED_PHONE, OPEN_PHONE, openThread, STUDENT_A, stored } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
-import { meetingServices, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
+import {
+  MEETING_ID,
+  NOW,
+  scheduledRow,
+} from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import {
+  CLOSED_PHONE,
+  OPEN_PHONE,
+  openThread,
+  STUDENT_A,
+  stored,
+} from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
+import {
+  meetingServices,
+  type MeetingServices,
+} from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
 // The WhatsApp policy of invitations: who may queue a chat text, what the others get.
 let s: MeetingServices;
 const OTHER = '+201000000109';
-const pick = (phone: string) => ({ id: STUDENT_A, name: 'سهيلة', code: 'AB-0001', guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: phone, tz: 'Asia/Riyadh' } });
-const addStudent = (user = TEACHER) => s.invites.add({ user, id: MEETING_ID, body: { invitees: [{ kind: 'student', studentId: STUDENT_A }] } }, NOW);
+const pick = (phone: string) => ({
+  id: STUDENT_A,
+  name: 'سهيلة',
+  code: 'AB-0001',
+  guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: phone, tz: 'Asia/Riyadh' },
+});
+const addStudent = (user = TEACHER) =>
+  s.invites.add(
+    { user, id: MEETING_ID, body: { invitees: [{ kind: 'student', studentId: STUDENT_A }] } },
+    NOW,
+  );
 const REQ = '00000000-0000-4000-8000-0000000000bb';
 
 beforeEach(() => {
@@ -17,7 +39,9 @@ beforeEach(() => {
   s.m.picks.teacherStudentIds.mockResolvedValue([STUDENT_A]);
   s.m.picks.assistantStudentIds.mockResolvedValue([STUDENT_A]);
   s.m.picks.students.mockResolvedValue([pick(OPEN_PHONE)]);
-  s.m.threads.thread.mockImplementation(async (phone: string) => (phone === CLOSED_PHONE ? null : openThread(phone, NOW)));
+  s.m.threads.thread.mockImplementation(async (phone: string) =>
+    phone === CLOSED_PHONE ? null : openThread(phone, NOW),
+  );
 });
 
 describe('invitations: who may queue WhatsApp (R-MEET-02)', () => {
@@ -30,7 +54,11 @@ describe('invitations: who may queue WhatsApp (R-MEET-02)', () => {
   it('a family outside the teacher inbox scope: link to copy, nothing queued, not counted', async () => {
     s.m.picks.students.mockResolvedValue([pick(OTHER)]);
     const [r] = await addStudent();
-    expect(r).toMatchObject({ status: 'window_closed', channel: 'link', error_code: 'chat_not_allowed' });
+    expect(r).toMatchObject({
+      status: 'window_closed',
+      channel: 'link',
+      error_code: 'chat_not_allowed',
+    });
     expect(r?.link).toMatch(/\/m\//);
     expect(s.m.threads.enqueue).not.toHaveBeenCalled();
     expect(s.m.invitees.whatsappSince).not.toHaveBeenCalled();
@@ -40,16 +68,31 @@ describe('invitations: who may queue WhatsApp (R-MEET-02)', () => {
     s.mq.byId.mockResolvedValue(scheduledRow({ created_by: ASSISTANT.id }));
     const [r] = await addStudent(ASSISTANT);
     expect(s.m.invitees.insert.mock.calls[0]?.[0]?.[0]).toMatchObject({ channel: 'link' });
-    expect(r).toMatchObject({ status: 'window_closed', channel: 'link', error_code: 'chat_not_allowed' });
+    expect(r).toMatchObject({
+      status: 'window_closed',
+      channel: 'link',
+      error_code: 'chat_not_allowed',
+    });
     expect(r?.invitation_text).toContain(r?.link ?? 'x');
     expect(s.m.threads.enqueue).not.toHaveBeenCalled();
   });
 
   it('resend by a caller without the chat right: a fresh link, no queue lookup, nothing queued', async () => {
     s.mq.byId.mockResolvedValue(scheduledRow({ created_by: ASSISTANT.id }));
-    const fam = stored({ meeting_id: MEETING_ID, kind: 'student', student_id: STUDENT_A, phone_e164: OPEN_PHONE, display_name: 'سهيلة', channel: 'link', status: 'window_closed' });
+    const fam = stored({
+      meeting_id: MEETING_ID,
+      kind: 'student',
+      student_id: STUDENT_A,
+      phone_e164: OPEN_PHONE,
+      display_name: 'سهيلة',
+      channel: 'link',
+      status: 'window_closed',
+    });
     s.m.invitees.byId.mockResolvedValue(fam);
-    const r = await s.invites.resend({ user: ASSISTANT, id: MEETING_ID, inviteeId: fam.id, body: { clientRequestId: REQ } }, NOW);
+    const r = await s.invites.resend(
+      { user: ASSISTANT, id: MEETING_ID, inviteeId: fam.id, body: { clientRequestId: REQ } },
+      NOW,
+    );
     expect(r).toMatchObject({ error_code: 'chat_not_allowed' });
     expect(r.link).not.toBeNull();
     expect(s.m.invitees.queued).not.toHaveBeenCalled();
@@ -61,7 +104,10 @@ describe('invitations: who may queue WhatsApp (R-MEET-02)', () => {
     const [t] = await addStudent();
     expect(t?.error_code).toBe('session_closed');
     s.m.invitees.forMeeting.mockResolvedValue([]);
-    const [a] = await s.invites.add({ user: ADMIN, id: MEETING_ID, body: { invitees: [{ kind: 'phone', phone: CLOSED_PHONE }] } }, NOW);
+    const [a] = await s.invites.add(
+      { user: ADMIN, id: MEETING_ID, body: { invitees: [{ kind: 'phone', phone: CLOSED_PHONE }] } },
+      NOW,
+    );
     expect(a?.error_code).toBe('no_thread');
   });
 
@@ -69,7 +115,10 @@ describe('invitations: who may queue WhatsApp (R-MEET-02)', () => {
     await addStudent();
     expect(s.m.threads.enqueue.mock.calls[0]?.[0]).toMatchObject({ sent_by_teacher_id: 't1' });
     s.m.invitees.forMeeting.mockResolvedValue([]);
-    await s.invites.add({ user: ADMIN, id: MEETING_ID, body: { invitees: [{ kind: 'phone', phone: OTHER }] } }, NOW);
+    await s.invites.add(
+      { user: ADMIN, id: MEETING_ID, body: { invitees: [{ kind: 'phone', phone: OTHER }] } },
+      NOW,
+    );
     expect(s.m.threads.enqueue.mock.calls[1]?.[0]).toMatchObject({ sent_by_teacher_id: null });
   });
 });

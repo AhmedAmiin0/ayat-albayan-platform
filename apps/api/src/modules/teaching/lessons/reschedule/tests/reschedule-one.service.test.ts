@@ -13,7 +13,11 @@ const CLASH = { kind: 'teacher_busy', startsAt: '2026-10-05T14:00:00.000Z', ends
 
 function setup(row: LessonRow = lessonRow()) {
   const deps = fakeStore(row);
-  const service = new RescheduleOneService(deps.store, teachers as unknown as TeachersRepo, checker as unknown as ConflictChecker);
+  const service = new RescheduleOneService(
+    deps.store,
+    teachers as unknown as TeachersRepo,
+    checker as unknown as ConflictChecker,
+  );
   return { ...deps, service };
 }
 const one = (over: object = {}) => ({ scope: 'one' as const, startsAt: NEW_START, ...over });
@@ -70,7 +74,9 @@ describe('RescheduleOneService — move one occurrence (R-SCH-07, docs/10 route 
   it('a clash blocks with 409 conflict + the list; with an override reason it books and stores the reason', async () => {
     checker.check.mockResolvedValue([CLASH]);
     const blocked = setup();
-    await expect(blocked.service.reschedule({ lessonId: LESSON_ID, body: one(), actor: ADMIN })).rejects.toMatchObject({
+    await expect(
+      blocked.service.reschedule({ lessonId: LESSON_ID, body: one(), actor: ADMIN }),
+    ).rejects.toMatchObject({
       status: 409,
       response: { code: 'conflict', message: 'conflict', conflicts: [CLASH] },
     });
@@ -89,21 +95,38 @@ describe('RescheduleOneService — move one occurrence (R-SCH-07, docs/10 route 
   it("a substitute teacher brings their own link; an unknown one is 404", async () => {
     teachers.get.mockResolvedValueOnce({ id: OTHER_TEACHER_ID, meeting_link: 'https://meet.google.com/sub-code-xyz' });
     const { service, writer } = setup();
-    await service.reschedule({ lessonId: LESSON_ID, body: one({ teacherId: OTHER_TEACHER_ID }), actor: ADMIN });
-    expect(appliedChange(writer)?.lessons[0]).toMatchObject({ teacher_id: OTHER_TEACHER_ID, meeting_link: 'https://meet.google.com/sub-code-xyz' });
+    await service.reschedule({
+      lessonId: LESSON_ID,
+      body: one({ teacherId: OTHER_TEACHER_ID }),
+      actor: ADMIN,
+    });
+    expect(appliedChange(writer)?.lessons[0]).toMatchObject({
+      teacher_id: OTHER_TEACHER_ID,
+      meeting_link: 'https://meet.google.com/sub-code-xyz',
+    });
     expect(appliedChange(writer)?.messages[0]?.template_key).toBe('booking_confirmation_meet');
     teachers.get.mockResolvedValueOnce(null);
-    await expect(service.reschedule({ lessonId: LESSON_ID, body: one({ teacherId: OTHER_TEACHER_ID }), actor: ADMIN })).rejects.toMatchObject({ status: 404 });
+    await expect(
+      service.reschedule({
+        lessonId: LESSON_ID,
+        body: one({ teacherId: OTHER_TEACHER_ID }),
+        actor: ADMIN,
+      }),
+    ).rejects.toMatchObject({ status: 404 });
   });
 
   it('a closed lesson → 409 invalid_transition; a taken slot → 409 slot_taken', async () => {
     const closed = setup(lessonRow({ status: 'cancelled_by_teacher' }));
-    await expect(closed.service.reschedule({ lessonId: LESSON_ID, body: one(), actor: ADMIN })).rejects.toMatchObject({
+    await expect(
+      closed.service.reschedule({ lessonId: LESSON_ID, body: one(), actor: ADMIN }),
+    ).rejects.toMatchObject({
       response: { code: 'invalid_transition', event: 'reschedule' },
     });
     const taken = setup();
     taken.writer.apply.mockRejectedValue(conflict('slot_taken'));
-    await expect(taken.service.reschedule({ lessonId: LESSON_ID, body: one(), actor: ADMIN })).rejects.toMatchObject({
+    await expect(
+      taken.service.reschedule({ lessonId: LESSON_ID, body: one(), actor: ADMIN }),
+    ).rejects.toMatchObject({
       response: { code: 'slot_taken' },
     });
   });

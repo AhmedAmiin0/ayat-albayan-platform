@@ -8,17 +8,46 @@ import { TeacherAlertRepo } from '@/modules/teaching/booking/teacher/teacher-ale
 // The teacher must get the message: on a crm line teacher_new_student goes as the
 // CRM's teacher_lesson_v2, so the queue gate reads that template's status (template-gate.repo.ts).
 
-const T1 = { id: 'T1', profile_id: 'P1', phone_e164: '+201001234567', tz: 'Africa/Cairo', display_name_ar: 'أ. خالد' };
-const LESSONS = [{ id: 'L1', starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z', teacher: T1 }];
+const T1 = {
+  id: 'T1',
+  profile_id: 'P1',
+  phone_e164: '+201001234567',
+  tz: 'Africa/Cairo',
+  display_name_ar: 'أ. خالد',
+};
+const LESSONS = [
+  { id: 'L1', starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z', teacher: T1 },
+];
 const STUDENTS = [{ id: 's1', name: 'سهيلة', code: 'AB-0101' }];
 const REQ = bookingRequestSchema.parse({
-  teacherId: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11', byday: [0], startTimeLocal: '17:00', tz: 'Asia/Riyadh', durationMin: 45,
-  startsOn: '2026-10-04', package: 'trial', studentIds: ['11111111-1111-4111-8111-111111111111'],
+  teacherId: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11',
+  byday: [0],
+  startTimeLocal: '17:00',
+  tz: 'Asia/Riyadh',
+  durationMin: 45,
+  startsOn: '2026-10-04',
+  package: 'trial',
+  studentIds: ['11111111-1111-4111-8111-111111111111'],
 });
-const RESULT = { rule_id: 'R1', student_ids: ['s1'], guardian_ids: [], lessons: [{ id: 'L1', starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z' }], message_ids: [], invoice_id: null };
+const RESULT = {
+  rule_id: 'R1',
+  student_ids: ['s1'],
+  guardian_ids: [],
+  lessons: [{ id: 'L1', starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z' }],
+  message_ids: [],
+  invoice_id: null,
+};
 
-const OWN = templateRow({ key: 'teacher_new_student', meta_name: 'teacher_new_student', status: 'not_submitted' });
-const V2 = templateRow({ key: 'teacher_lesson_v2', meta_name: 'teacher_lesson_v2', status: 'approved' });
+const OWN = templateRow({
+  key: 'teacher_new_student',
+  meta_name: 'teacher_new_student',
+  status: 'not_submitted',
+});
+const V2 = templateRow({
+  key: 'teacher_lesson_v2',
+  meta_name: 'teacher_lesson_v2',
+  status: 'approved',
+});
 
 /** A real TeacherAlertRepo.sendable() over these message_templates rows; the other reads faked. */
 function alertOver(rows: unknown[], settings: { teacher_whatsapp_new_student?: boolean } = {}) {
@@ -32,14 +61,16 @@ function alertOver(rows: unknown[], settings: { teacher_whatsapp_new_student?: b
 
 afterEach(() => vi.unstubAllEnvs());
 
-describe('TeacherAlert: the approval gate by the line\'s driver', () => {
+describe("TeacherAlert: the approval gate by the line's driver", () => {
   it('crm line, teacher_lesson_v2 approved, teacher_new_student not_submitted: one row, with its crm values', async () => {
     vi.stubEnv('WA_PROVIDER', 'crm');
     const { alert, queries, calls } = alertOver([OWN, V2]);
     await alert.afterBooking({ req: REQ, result: RESULT });
     // The read does not filter teacher_new_student by its own status (the bug): the gate decides.
     const reads = calls.filter((c) => c.table === 'message_templates');
-    expect(reads.find((c) => c.method === 'or')?.args).toEqual(['status.eq.approved,key.in.(teacher_new_student)']);
+    expect(reads.find((c) => c.method === 'or')?.args).toEqual([
+      'status.eq.approved,key.in.(teacher_new_student)',
+    ]);
     expect(reads.some((c) => c.method === 'eq')).toBe(false);
     expect(queries.queue).toHaveBeenCalledTimes(1);
     const rows = queries.queue.mock.calls[0]?.[0] ?? [];
@@ -47,7 +78,9 @@ describe('TeacherAlert: the approval gate by the line\'s driver', () => {
     expect(rows[0]).toMatchObject({
       template_key: 'teacher_new_student',
       dedup_key: 'teacher_new_student:L1:T1',
-      template_params: { crm: { body: ['أ. خالد', 'سهيلة (AB-0101)', expect.any(String), '45 دقيقة'] } },
+      template_params: {
+        crm: { body: ['أ. خالد', 'سهيلة (AB-0101)', expect.any(String), '45 دقيقة'] },
+      },
     });
   });
 

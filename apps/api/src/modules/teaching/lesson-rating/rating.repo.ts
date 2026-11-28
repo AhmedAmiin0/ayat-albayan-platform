@@ -36,7 +36,10 @@ export class RatingRepo {
   /** These lessons (any status: the plan keeps the ones that took place). */
   async byIds(ids: readonly string[]): Promise<RatingLesson[]> {
     if (ids.length === 0) return [];
-    const { data, error } = await this.db.from('lessons').select(LESSON_SELECT).in('id', [...ids]);
+    const { data, error } = await this.db
+      .from('lessons')
+      .select(LESSON_SELECT)
+      .in('id', [...ids]);
     if (error) throw pgError(error);
     return data;
   }

@@ -10,7 +10,11 @@ export const REC_ID = '00000000-0000-4000-8000-0000000000aa';
 export const TEACHER_ID = 'teacher-1';
 const OTHER_TEACHER_ID = 'teacher-2';
 
-const user = (prefix: string, role: AuthUser['role']): AuthUser => ({ id: `${prefix}0000000-0000-4000-8000-000000000001`, email: null, role });
+const user = (prefix: string, role: AuthUser['role']): AuthUser => ({
+  id: `${prefix}0000000-0000-4000-8000-000000000001`,
+  email: null,
+  role,
+});
 export const ADMIN = user('a', 'admin');
 export const TEACHER = user('b', 'teacher');
 export const OTHER_TEACHER = user('f', 'teacher');
@@ -35,9 +39,16 @@ export const recording = (over: Partial<RecordingRow> = {}): RecordingRow => ({
   ...over,
 });
 
-export const joinRow = (over: Partial<RecordingRow> = {}, teacherId = TEACHER_ID): RecordingJoinRow => ({
+export const joinRow = (
+  over: Partial<RecordingRow> = {},
+  teacherId = TEACHER_ID,
+): RecordingJoinRow => ({
   ...recording(over),
-  lessons: { starts_at: '2026-10-05T16:00:00.000Z', teacher_id: teacherId, teachers: { id: teacherId, display_name_ar: 'أ. منى', display_name_en: 'Ms. Mona' } },
+  lessons: {
+    starts_at: '2026-10-05T16:00:00.000Z',
+    teacher_id: teacherId,
+    teachers: { id: teacherId, display_name_ar: 'أ. منى', display_name_en: 'Ms. Mona' },
+  },
 });
 
 /** Mocked StudentRecordingQueries: student s1 assigned to TEACHER_ID, one recording. */
@@ -52,5 +63,7 @@ export function studentQueries() {
 }
 
 export const teachersFake = () => ({
-  idByProfile: vi.fn(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? OTHER_TEACHER_ID : null)),
+  idByProfile: vi.fn(async (id: string) =>
+    id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? OTHER_TEACHER_ID : null,
+  ),
 });

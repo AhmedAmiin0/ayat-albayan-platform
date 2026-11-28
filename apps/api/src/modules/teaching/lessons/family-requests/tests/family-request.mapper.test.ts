@@ -8,10 +8,22 @@ const lesson = (requested_by?: 'family' | 'teacher') =>
     starts_at: '2026-11-17T15:30:00.000Z',
     ends_at: '2026-11-17T16:15:00.000Z',
     status: 'scheduled',
-    teacher: { id: 't1', display_name_ar: 'فاطمة', display_name_en: null, tz: 'Africa/Cairo', extra: 1 },
+    teacher: {
+      id: 't1',
+      display_name_ar: 'فاطمة',
+      display_name_en: null,
+      tz: 'Africa/Cairo',
+      extra: 1,
+    },
     students: [{ id: 's1', code: 'AB-0147', name: 'يوسف', tz: 'Africa/Cairo', chargeable: true }],
     pending_proposal: requested_by
-      ? { id: 'p1', proposed_starts_at: '2026-11-18T15:30:00.000Z', note: 'اختبار', created_at: 'c', requested_by }
+      ? {
+          id: 'p1',
+          proposed_starts_at: '2026-11-18T15:30:00.000Z',
+          note: 'اختبار',
+          created_at: 'c',
+          requested_by,
+        }
       : null,
   }) as unknown as LessonView;
 

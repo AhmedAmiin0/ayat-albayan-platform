@@ -4,13 +4,23 @@ import { wallParts, type CourseChangeRequest, startOfLocalDay } from '@ab/schedu
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { BookingSettings } from '@/modules/teaching/booking/booking.settings';
 import { CourseLessonRepo, type MovedLesson } from './course-change.lessons';
-import { assertChange, assertStart, planChange, type ChangePlan, type ChangeRole } from './course-change.plan';
+import {
+  assertChange,
+  assertStart,
+  planChange,
+  type ChangePlan,
+  type ChangeRole,
+} from './course-change.plan';
 import { unmaterialised } from './course-change.projection';
 import { CourseChangeRepo, type ChangeRule, type CourseSub } from './course-change.repo';
 import { courseOverlaps } from '@/modules/teaching/booking/sales/course/sales-course.rules';
 import { httpError } from '@/common/http/errors';
 
-export interface Loaded { sub: CourseSub; active: ChangeRule[]; all: ChangeRule[] }
+export interface Loaded {
+  sub: CourseSub;
+  active: ChangeRule[];
+  all: ChangeRule[];
+}
 export type Planned = Loaded & { plan: ChangePlan; counted: number; moved: MovedLesson[] };
 
 /**
@@ -31,7 +41,12 @@ function inPeriod<T extends { rule_id: string | null; local_date: string | null 
 }
 
 /** A lesson an old rule will still generate before the change point: booked, chargeable. */
-const PROJECTED: CourseLessonFact = { status: 'scheduled', chargeable: true, makeup: false, instant: false };
+const PROJECTED: CourseLessonFact = {
+  status: 'scheduled',
+  chargeable: true,
+  makeup: false,
+  instant: false,
+};
 
 /** The change point is max(start of startsOn in the course zone, now). */
 @Injectable()
@@ -55,19 +70,33 @@ export class CourseChangePlanner {
     const { sub, active, all } = loaded;
     const tz = active[0]?.tz ?? 'Asia/Riyadh';
     const now = new Date();
-    if (wallParts(req.startsAt, tz).date !== req.startsOn) throw httpError(HttpStatus.BAD_REQUEST, 'starts_at_mismatch');
+    if (wallParts(req.startsAt, tz).date !== req.startsOn)
+      throw httpError(HttpStatus.BAD_REQUEST, 'starts_at_mismatch');
     const durationMin = DURATIONS.find((d) => d === sub.duration);
-    if (durationMin === undefined) throw new Error(`subscription ${sub.id} has duration ${sub.duration}`);
-    const facts = { role, perWeek: courseDaysPerWeek(sub), lessonsTotal: courseLessonCount(sub), durationMin, tz };
+    if (durationMin === undefined)
+      throw new Error(`subscription ${sub.id} has duration ${sub.duration}`);
+    const facts = {
+      role,
+      perWeek: courseDaysPerWeek(sub),
+      lessonsTotal: courseLessonCount(sub),
+      durationMin,
+      tz,
+    };
     assertChange(req, { ...facts, before: [] }, now);
     const teacherChanged = req.teacherId !== undefined && req.teacherId !== active[0]?.teacher_id;
     assertStart(req, { subStartsOn: sub.starts_on, rules: all, teacherChanged });
     const cutoff = new Date(Math.max(startOfLocalDay(req.startsOn, tz).getTime(), now.getTime()));
-    const moved = await this.lessons.openFrom(all.map((r) => r.id), cutoff);
+    const moved = await this.lessons.openFrom(
+      all.map((r) => r.id),
+      cutoff,
+    );
     const before = await this.used({ loaded, moved, req, now });
     const horizonWeeks = (await this.settings.read()).booking_horizon_weeks;
     const plan = planChange({ req, facts: { ...facts, before }, now, horizonWeeks });
-    const others = await this.queries.others(sub, all.map((r) => r.id));
+    const others = await this.queries.others(
+      sub,
+      all.map((r) => r.id),
+    );
     if (courseOverlaps(others, { from: req.startsOn, to: plan.endsOn })) {
       throw httpError(HttpStatus.CONFLICT, 'course_exists');
     }
@@ -79,12 +108,28 @@ export class CourseChangePlanner {
    * time, that is not moved (a counted lesson after the change point stays counted), plus the
    * occurrences the old active rules will still generate before the change point.
    */
-  private async used(input: { loaded: Loaded; moved: readonly MovedLesson[]; req: CourseChangeRequest; now: Date }): Promise<CourseLessonFact[]> {
+  private async used(input: {
+    loaded: Loaded;
+    moved: readonly MovedLesson[];
+    req: CourseChangeRequest;
+    now: Date;
+  }): Promise<CourseLessonFact[]> {
     const { sub, active, all } = input.loaded;
     const movedIds = new Set(input.moved.map((m) => m.id));
-    const lessons = inPeriod(await this.lessons.ofCourse({ ruleIds: all.map((r) => r.id), studentId: sub.student_id }), all);
+    const lessons = inPeriod(
+      await this.lessons.ofCourse({ ruleIds: all.map((r) => r.id), studentId: sub.student_id }),
+      all,
+    );
     const held = await this.lessons.held(active.map((r) => r.id));
-    const projected = unmaterialised({ rules: active, held, now: input.now, startsOn: input.req.startsOn });
-    return [...lessons.filter((l) => !movedIds.has(l.id)), ...Array.from({ length: projected }, () => PROJECTED)];
+    const projected = unmaterialised({
+      rules: active,
+      held,
+      now: input.now,
+      startsOn: input.req.startsOn,
+    });
+    return [
+      ...lessons.filter((l) => !movedIds.has(l.id)),
+      ...Array.from({ length: projected }, () => PROJECTED),
+    ];
   }
 }

@@ -63,7 +63,11 @@ describe('course pause routes «إيقاف الدورة مؤقتًا» (owner 20
       studentId: STUDENT, start: new Date('2026-10-31T21:00:00Z'), end: new Date('2026-11-10T21:00:00Z'),
     });
     await t.call({ method: 'GET', url: `${URL}/preview`, token: 'sales' });
-    expect(t.m.queries.previewStarts).toHaveBeenLastCalledWith({ studentId: STUDENT, start: NOW, end: null });
+    expect(t.m.queries.previewStarts).toHaveBeenLastCalledWith({
+      studentId: STUDENT,
+      start: NOW,
+      end: null,
+    });
   });
 
   it('a past preview start is 400; an unknown student 404 student_not_found', async () => {
@@ -96,7 +100,11 @@ describe('course pause routes «إيقاف الدورة مؤقتًا» (owner 20
     const res = await t.call({ method: 'POST', url: `${URL}/resume`, token: 'admin' });
     expect([res.statusCode, res.json().cancelled, res.json().reopened]).toEqual([200, 0, 0]);
     expect(t.m.queries.liftLegacyPause).toHaveBeenCalledWith({ studentId: STUDENT });
-    expect(t.m.follow.liftedLegacy).toHaveBeenCalledWith({ studentId: STUDENT, subscriptionIds: [SUB, OLD_SUB], actorId: ADMIN });
+    expect(t.m.follow.liftedLegacy).toHaveBeenCalledWith({
+      studentId: STUDENT,
+      subscriptionIds: [SUB, OLD_SUB],
+      actorId: ADMIN,
+    });
     expect(t.m.queries.call).not.toHaveBeenCalled();
   });
 
@@ -106,7 +114,10 @@ describe('course pause routes «إيقاف الدورة مؤقتًا» (owner 20
     t.m.queries.liftLegacyPause.mockResolvedValue([OLD_SUB]);
     const old = await t.call({ method: 'POST', url: `${URL}/resume`, token: 'sales', body: { subscriptionId: OLD_SUB } });
     expect(old.statusCode).toBe(200);
-    expect(t.m.queries.liftLegacyPause).toHaveBeenCalledWith({ studentId: STUDENT, subscriptionId: OLD_SUB });
+    expect(t.m.queries.liftLegacyPause).toHaveBeenCalledWith({
+      studentId: STUDENT,
+      subscriptionId: OLD_SUB,
+    });
     expect(t.m.queries.call).toHaveBeenCalledTimes(1);
     t.m.queries.liftLegacyPause.mockResolvedValue([]);
     const none = await t.call({ method: 'POST', url: `${URL}/resume`, token: 'sales', body: { subscriptionId: OLD_SUB } });

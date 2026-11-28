@@ -18,13 +18,18 @@ export class RecordingVisibilityService {
     private readonly audit: AuditService,
   ) {}
 
-  async setVisibility(input: { user: AuthUser; id: string; visible: boolean }): Promise<{ id: string; visible_to_student: boolean }> {
+  async setVisibility(input: {
+    user: AuthUser;
+    id: string;
+    visible: boolean;
+  }): Promise<{ id: string; visible_to_student: boolean }> {
     const row = await this.queries.byId(input.id);
     if (!row) throw notFound('recording_not_found');
     await this.assertMay(input.user, row);
     if (row.status === 'deleted') throw conflict('recording_deleted');
     if (row.visible_to_student !== input.visible) {
-      if (input.visible && row.lesson_id && (await this.queries.attendeeCount(row.lesson_id)) > 1) throw conflict('recording_group_lesson');
+      if (input.visible && row.lesson_id && (await this.queries.attendeeCount(row.lesson_id)) > 1)
+        throw conflict('recording_group_lesson');
       await this.queries.setVisible(row.id, input.visible);
       await this.audit.record({
         actorId: input.user.id,

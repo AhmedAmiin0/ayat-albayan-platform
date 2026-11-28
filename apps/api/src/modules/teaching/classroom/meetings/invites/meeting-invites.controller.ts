@@ -1,5 +1,15 @@
 import type { MeetingInviteeOption, MeetingInviteeView, MeetingInviteResult } from '@ab/schedule';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';
@@ -40,7 +50,11 @@ export class MeetingInvitesController {
    */
   @Patch(':id')
   @HttpCode(204)
-  async update(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<void> {
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
     await this.schedule.update({ user, id, body });
   }
 
@@ -50,12 +64,18 @@ export class MeetingInvitesController {
    */
   @Post(':id/cancel')
   @HttpCode(204)
-  async cancel(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
+  async cancel(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<void> {
     await this.schedule.cancel({ user, id });
   }
 
   @Get(':id/invitees')
-  invitees(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MeetingInviteeView[]> {
+  invitees(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MeetingInviteeView[]> {
     return this.invites.list({ user, id });
   }
 
@@ -65,7 +85,11 @@ export class MeetingInvitesController {
    */
   @Post(':id/invitees')
   @HttpCode(200)
-  add(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<MeetingInviteResult[]> {
+  add(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MeetingInviteResult[]> {
     return this.invites.add({ user, id, body });
   }
 
@@ -75,7 +99,11 @@ export class MeetingInvitesController {
    */
   @Post(':id/invitees/:inviteeId/resend')
   @HttpCode(200)
-  resend(@Param() params: Record<string, string>, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<MeetingInviteResult> {
+  resend(
+    @Param() params: Record<string, string>,
+    @Body() body: unknown,
+    @CurrentUser() user: AuthUser,
+  ): Promise<MeetingInviteResult> {
     const { id, inviteeId } = parseOrThrow(RESEND_PARAMS, params);
     return this.invites.resend({ user, id, inviteeId, body });
   }

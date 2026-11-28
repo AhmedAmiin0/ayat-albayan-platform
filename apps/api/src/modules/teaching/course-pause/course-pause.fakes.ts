@@ -4,7 +4,12 @@ import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { messagingRoot } from '@/common/infra/test-root';
 import { CoursePauseModule } from './course-pause.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { fakeSettings } from '@/common/settings/settings.fakes';
 import { SettingsService } from '@/common/settings/settings.service';
@@ -34,19 +39,43 @@ export const verify: TokenVerifier = async (token) => {
 };
 
 const pauseRow = (over: Partial<PauseRow> = {}): PauseRow => ({
-  id: PAUSE, student_id: STUDENT, from_date: '2026-11-01', until_date: '2026-11-10', reason: 'سفر', created_at: '2026-10-28T09:00:00Z',
-  resumed_at: null, extended_days: null, creator: { full_name: 'سارة' }, ...over,
+  id: PAUSE,
+  student_id: STUDENT,
+  from_date: '2026-11-01',
+  until_date: '2026-11-10',
+  reason: 'سفر',
+  created_at: '2026-10-28T09:00:00Z',
+  resumed_at: null,
+  extended_days: null,
+  creator: { full_name: 'سارة' },
+  ...over,
 });
 
 export const rpcOut = (over: Partial<RpcOut> = {}): RpcOut => ({
-  id: PAUSE, student_id: STUDENT, cancelled: ['l1', 'l2'], left: ['g1'], reopened: [], rejoined: [], rule_ids: [], ...over,
+  id: PAUSE,
+  student_id: STUDENT,
+  cancelled: ['l1', 'l2'],
+  left: ['g1'],
+  reopened: [],
+  rejoined: [],
+  rule_ids: [],
+  ...over,
 });
 
 export function pauseMocks() {
   return {
     queries: {
-      call: vi.fn(), studentExists: vi.fn(), pauses: vi.fn(), pause: vi.fn(), openPause: vi.fn(), due: vi.fn(), dueStarts: vi.fn(), previewStarts: vi.fn(),
-      pausedBack: vi.fn(), lessons: vi.fn(), liftLegacyPause: vi.fn(),
+      call: vi.fn(),
+      studentExists: vi.fn(),
+      pauses: vi.fn(),
+      pause: vi.fn(),
+      openPause: vi.fn(),
+      due: vi.fn(),
+      dueStarts: vi.fn(),
+      previewStarts: vi.fn(),
+      pausedBack: vi.fn(),
+      lessons: vi.fn(),
+      liftLegacyPause: vi.fn(),
     },
     follow: { after: vi.fn(), liftedLegacy: vi.fn(), paused: vi.fn(), resumed: vi.fn() },
   };
@@ -58,28 +87,51 @@ export function resetPauseMocks(m: PauseMocks): void {
   m.queries.studentExists.mockResolvedValue(true);
   m.queries.call.mockResolvedValue(rpcOut());
   m.queries.pause.mockResolvedValue(pauseRow());
-  m.queries.pauses.mockResolvedValue([pauseRow(), pauseRow({ id: 'old', resumed_at: '2026-09-10T09:00:00Z', extended_days: 7 })]);
+  m.queries.pauses.mockResolvedValue([
+    pauseRow(),
+    pauseRow({ id: 'old', resumed_at: '2026-09-10T09:00:00Z', extended_days: 7 }),
+  ]);
   m.queries.openPause.mockResolvedValue({ id: PAUSE, subscription_id: SUB });
-  m.queries.previewStarts.mockResolvedValue(['2026-11-02T14:00:00Z', '2026-11-04T14:00:00Z', '2026-11-09T14:00:00Z']);
+  m.queries.previewStarts.mockResolvedValue([
+    '2026-11-02T14:00:00Z',
+    '2026-11-04T14:00:00Z',
+    '2026-11-09T14:00:00Z',
+  ]);
   m.queries.pausedBack.mockResolvedValue(['2026-11-04T14:00:00Z']);
   m.follow.after.mockResolvedValue(0);
   m.queries.liftLegacyPause.mockResolvedValue([]);
 }
 
-type Call = { method: 'GET' | 'POST' | 'PATCH'; url: string; token: keyof typeof USERS; body?: object };
+interface Call {
+  method: 'GET' | 'POST' | 'PATCH';
+  url: string;
+  token: keyof typeof USERS;
+  body?: object;
+}
 
 export async function pauseApp() {
   const m = pauseMocks();
   const mod = await Test.createTestingModule({ imports: [messagingRoot(CoursePauseModule)] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-    .overrideProvider(CoursePauseRepo).useValue(m.queries)
-    .overrideProvider(CoursePauseFollowUps).useValue(m.follow)
-    .overrideProvider(SettingsService).useValue(fakeSettings())
+    .overrideProvider(PERMISSION_RESOLVER)
+    .useValue(systemResolver)
+    .overrideProvider(TOKEN_VERIFIER)
+    .useValue(verify)
+    .overrideProvider(CoursePauseRepo)
+    .useValue(m.queries)
+    .overrideProvider(CoursePauseFollowUps)
+    .useValue(m.follow)
+    .overrideProvider(SettingsService)
+    .useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   const call = (c: Call) =>
-    app.inject({ method: c.method, url: c.url, headers: { authorization: `Bearer ${c.token}` }, ...(c.body ? { payload: c.body } : {}) });
+    app.inject({
+      method: c.method,
+      url: c.url,
+      headers: { authorization: `Bearer ${c.token}` },
+      ...(c.body ? { payload: c.body } : {}),
+    });
   return { app, call, m, reset: () => resetPauseMocks(m) };
 }

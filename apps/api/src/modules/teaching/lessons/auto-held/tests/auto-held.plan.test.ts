@@ -46,14 +46,20 @@ describe('currentPackageStart', () => {
   });
 
   it('a stopped course as the current package: nothing is ever closed onto it', () => {
-    const rows = [pkg('2026-09-01'), pkg('2026-10-20', { status: 'cancelled', cancel_kind: 'stopped' })];
+    const rows = [
+      pkg('2026-09-01'),
+      pkg('2026-10-20', { status: 'cancelled', cancel_kind: 'stopped' }),
+    ];
     expect(currentPackageStart(rows, who)?.getTime()).toBe(8.64e15);
     const lessons = [lesson('2026-10-31T10:00:00Z')];
     expect(dueLessons({ lessons, packages: rows, now: NOW })).toEqual([]);
   });
 
   it('an unused-cancelled package is ignored; the one before it is current', () => {
-    const rows = [pkg('2026-09-01'), pkg('2026-10-20', { status: 'cancelled', cancel_kind: 'unused' })];
+    const rows = [
+      pkg('2026-09-01'),
+      pkg('2026-10-20', { status: 'cancelled', cancel_kind: 'unused' }),
+    ];
     expect(currentPackageStart(rows, who)).toEqual(new Date('2026-08-31T21:00:00Z'));
   });
 

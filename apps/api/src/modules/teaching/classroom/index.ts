@@ -28,8 +28,4 @@ export {
   recordingView,
   RecordingViews,
 } from './recordings/recording-list.service';
-export {
-  type FinishInput,
-  RecordingRepo,
-  type RecordingRow,
-} from './recordings/recording.repo';
+export { type FinishInput, RecordingRepo, type RecordingRow } from './recordings/recording.repo';

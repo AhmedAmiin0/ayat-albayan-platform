@@ -25,9 +25,7 @@ describe('lesson event tables agree with the state machine (docs/62 part 2 §1)'
   });
 
   it('each correction event lands on its target', () => {
-    expect(CORRECT_TO.map((to) => LESSON_EVENT_TARGET[CORRECT_EVENT[to]])).toEqual([
-      ...CORRECT_TO,
-    ]);
+    expect(CORRECT_TO.map((to) => LESSON_EVENT_TARGET[CORRECT_EVENT[to]])).toEqual([...CORRECT_TO]);
   });
 
   it('each cancel event lands on the cancel status', () => {

@@ -1,15 +1,27 @@
 import { courseChangeCheckSchema } from '@ab/schedule';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { errorCode } from '@/common/http/errors';
-import { BODY, RULE_A, SALES, setup } from '@/modules/teaching/booking/course-change/course-change.fakes';
-import type { ChangeRule, CourseRuleRef } from '@/modules/teaching/booking/course-change/course-change.repo';
+import {
+  BODY,
+  RULE_A,
+  SALES,
+  setup,
+} from '@/modules/teaching/booking/course-change/course-change.fakes';
+import type {
+  ChangeRule,
+  CourseRuleRef,
+} from '@/modules/teaching/booking/course-change/course-change.repo';
 
 // PR #464 review B2 (migration 991): a course whose rule has no subscription_id (imported, calendar
 // handover, admin booking) is found through course_rules_of. Its lessons count only inside the
 // package's period; a rule it cannot attribute is 409 course_unattributed.
 
 const check = () => courseChangeCheckSchema.parse(BODY);
-const failed = (p: Promise<unknown>) => p.then(() => undefined, (e: unknown) => errorCode(e));
+const failed = (p: Promise<unknown>) =>
+  p.then(
+    () => undefined,
+    (e: unknown) => errorCode(e),
+  );
 const ref = (over: Partial<CourseRuleRef> = {}): CourseRuleRef => ({
   rule_id: 'ra',
   linked: false,

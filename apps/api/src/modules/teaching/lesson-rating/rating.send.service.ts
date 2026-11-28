@@ -22,11 +22,14 @@ export class RatingSendService {
   ) {}
 
   async send(input: RatingSend, now = new Date()): Promise<Sent> {
-    if (!(await this.templates.approved(RATING_TEMPLATE))) throw httpError(409, 'template_not_approved');
+    if (!(await this.templates.approved(RATING_TEMPLATE)))
+      throw httpError(409, 'template_not_approved');
     const guardian = await this.queries.guardianByPhone(input.phone);
     if (!guardian) throw httpError(404, 'not_a_guardian');
     const lesson = await this.queries.latestHeld({ guardianId: guardian.id, now });
-    const family = lesson ? ratingFamilies(lesson).find((f) => f.guardian.id === guardian.id) : undefined;
+    const family = lesson
+      ? ratingFamilies(lesson).find((f) => f.guardian.id === guardian.id)
+      : undefined;
     if (!lesson || !family) throw httpError(404, 'no_completed_lesson');
     const { key, params } = lessonRatingMessage({
       lessonId: lesson.id,
@@ -39,7 +42,11 @@ export class RatingSendService {
       guardian_id: guardian.id,
       lesson_id: lesson.id,
       template_key: key,
-      template_params: { '1': params['1'] ?? '', '2': params['2'] ?? '', payloads: params.payloads ?? [] },
+      template_params: {
+        '1': params['1'] ?? '',
+        '2': params['2'] ?? '',
+        payloads: params.payloads ?? [],
+      },
       dedup_key: `admin:${input.phone}:rating:${input.clientRequestId}`,
       created_by: input.actorId,
     });

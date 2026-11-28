@@ -7,15 +7,34 @@ import { sameInstant } from '@/modules/teaching/classroom/meetings/schedule/meet
 import { meetingServices, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
 let s: MeetingServices;
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
-const staff = stored({ meeting_id: MEETING_ID, kind: 'staff', profile_id: STAFF_ID, display_name: 'مريم', channel: 'in_app', status: 'sent', tz: 'Asia/Riyadh' });
-const family = (phone: string) => stored({ meeting_id: MEETING_ID, kind: 'phone', phone_e164: phone, display_name: phone, channel: 'whatsapp', status: 'sent' });
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
+const staff = stored({
+  meeting_id: MEETING_ID,
+  kind: 'staff',
+  profile_id: STAFF_ID,
+  display_name: 'مريم',
+  channel: 'in_app',
+  status: 'sent',
+  tz: 'Asia/Riyadh',
+});
+const family = (phone: string) =>
+  stored({
+    meeting_id: MEETING_ID,
+    kind: 'phone',
+    phone_e164: phone,
+    display_name: phone,
+    channel: 'whatsapp',
+    status: 'sent',
+  });
 
 beforeEach(() => {
   s = meetingServices();
   s.mq.byId.mockResolvedValue(scheduledRow());
   s.m.invitees.forMeeting.mockResolvedValue([staff, family(OPEN_PHONE), family(CLOSED_PHONE)]);
-  s.m.threads.thread.mockImplementation(async (phone: string) => (phone === OPEN_PHONE ? openThread(phone, NOW) : null));
+  s.m.threads.thread.mockImplementation(async (phone: string) =>
+    phone === OPEN_PHONE ? openThread(phone, NOW) : null,
+  );
 });
 
 describe('MeetingScheduleService.update (R-MEET-01)', () => {
@@ -43,12 +62,33 @@ describe('MeetingScheduleService.update (R-MEET-01)', () => {
 
   it('A→B→A rings every move (each move has its own subject)', async () => {
     const at = (iso: string) => new Date(iso);
-    await s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-06T08:00:00Z' } }, at('2026-10-05T10:00:00Z'));
-    s.mq.byId.mockResolvedValue(scheduledRow({ starts_at: '2026-10-06T08:00:00+00:00', planned_end_at: '2026-10-06T09:00:00+00:00' }));
-    await s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-05T12:00:00Z' } }, at('2026-10-05T10:01:00Z'));
-    s.mq.byId.mockResolvedValue(scheduledRow({ starts_at: '2026-10-05T12:00:00+00:00', planned_end_at: '2026-10-05T13:00:00+00:00' }));
-    await s.schedule.update({ user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-06T08:00:00Z' } }, at('2026-10-05T10:02:00Z'));
-    const subjects = s.m.push.notifyProfiles.mock.calls.map(([n]) => (n as { subject: string }).subject);
+    await s.schedule.update(
+      { user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-06T08:00:00Z' } },
+      at('2026-10-05T10:00:00Z'),
+    );
+    s.mq.byId.mockResolvedValue(
+      scheduledRow({
+        starts_at: '2026-10-06T08:00:00+00:00',
+        planned_end_at: '2026-10-06T09:00:00+00:00',
+      }),
+    );
+    await s.schedule.update(
+      { user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-05T12:00:00Z' } },
+      at('2026-10-05T10:01:00Z'),
+    );
+    s.mq.byId.mockResolvedValue(
+      scheduledRow({
+        starts_at: '2026-10-05T12:00:00+00:00',
+        planned_end_at: '2026-10-05T13:00:00+00:00',
+      }),
+    );
+    await s.schedule.update(
+      { user: TEACHER, id: MEETING_ID, body: { startsAt: '2026-10-06T08:00:00Z' } },
+      at('2026-10-05T10:02:00Z'),
+    );
+    const subjects = s.m.push.notifyProfiles.mock.calls.map(
+      ([n]) => (n as { subject: string }).subject,
+    );
     expect(new Set(subjects).size).toBe(3);
   });
 
@@ -63,7 +103,9 @@ describe('MeetingScheduleService.update (R-MEET-01)', () => {
     expect(s.mq.update).toHaveBeenCalledWith(MEETING_ID, { title: 'جديد' });
     expect(s.m.push.notifyProfiles).not.toHaveBeenCalled();
     s.mq.byId.mockResolvedValue(meetingRow());
-    const e = await fail(s.schedule.update({ user: ADMIN, id: MEETING_ID, body: { durationMin: 30 } }, NOW));
+    const e = await fail(
+      s.schedule.update({ user: ADMIN, id: MEETING_ID, body: { durationMin: 30 } }, NOW),
+    );
     expect(e.getResponse()).toMatchObject({ code: 'not_scheduled' });
   });
 

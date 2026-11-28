@@ -1,7 +1,10 @@
 import { SETTING_DEFAULTS } from '@ab/settings';
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { fakeSettings, readerOf } from '@/common/settings/settings.fakes';
-import { BookingSettings, type BookingSettingsValues } from '@/modules/teaching/booking/booking.settings';
+import {
+  BookingSettings,
+  type BookingSettingsValues,
+} from '@/modules/teaching/booking/booking.settings';
 
 /** Pinned by hand: every key the booking consumers read (BookingPlanner … BookingExtras). */
 const EXPECTED = [

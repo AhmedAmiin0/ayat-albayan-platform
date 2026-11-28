@@ -40,7 +40,10 @@ export class KickService {
     if (!target) throw notFound('participant_not_found');
     const targetRole = asJoinRole(target.role);
     if (!targetRole || !canRemove(role, targetRole)) {
-      throw new HttpException({ code: 'cannot_remove', message: 'cannot_remove' }, HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        { code: 'cannot_remove', message: 'cannot_remove' },
+        HttpStatus.FORBIDDEN,
+      );
     }
     const identities = await this.block({ lessonId: lesson.id, target, blockedBy: input.user.id });
     await this.disconnect(lessonRoomName(lesson.id), identities);
@@ -65,7 +68,8 @@ export class KickService {
     try {
       for (const identity of identities) await this.livekit.revokeAndRemove({ room, identity });
     } catch (e) {
-      if (e instanceof LivekitError) throw new BadGatewayException({ code: 'livekit_error', message: e.message });
+      if (e instanceof LivekitError)
+        throw new BadGatewayException({ code: 'livekit_error', message: e.message });
       throw e;
     }
   }

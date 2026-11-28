@@ -51,6 +51,9 @@ export class TeacherOptionsService {
     }
     const [student] = await this.queries.students([q.studentId]);
     if (!student) throw httpError(HttpStatus.NOT_FOUND, 'student_not_found');
-    return { program: student.program, gender: q.gender ?? student.teacher_gender_pref ?? undefined };
+    return {
+      program: student.program,
+      gender: q.gender ?? student.teacher_gender_pref ?? undefined,
+    };
   }
 }

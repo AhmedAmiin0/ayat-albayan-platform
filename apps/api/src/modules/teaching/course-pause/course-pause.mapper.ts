@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { asResponse } from '@/common/http/returns';
 
 /** A course_pauses row as read, with who paused it (profiles.full_name). */
-export type PauseRow = {
+export interface PauseRow {
   id: string;
   student_id: string;
   from_date: string;
@@ -13,7 +13,7 @@ export type PauseRow = {
   resumed_at: string | null;
   extended_days: number | null;
   creator: { full_name: string | null } | null;
-};
+}
 
 /** A write's answer: built from the row it just wrote, not checked (the write already ran). */
 export const pauseViewOf = (r: PauseRow): CoursePauseView => ({

@@ -16,10 +16,13 @@ export class FeedbackSender {
 
   /** 409 template_not_approved (as H4 answers) until Meta has approved lesson_feedback_request. */
   async assertApproved(): Promise<void> {
-    if (!(await this.templates.approved(FEEDBACK_TEMPLATE))) throw httpError(409, 'template_not_approved');
+    if (!(await this.templates.approved(FEEDBACK_TEMPLATE)))
+      throw httpError(409, 'template_not_approved');
   }
 
-  send(row: Omit<TablesInsert<'messages'>, 'direction' | 'status' | 'template_key'>): Promise<Sent> {
+  send(
+    row: Omit<TablesInsert<'messages'>, 'direction' | 'status' | 'template_key'>,
+  ): Promise<Sent> {
     return this.outbox.send({ ...row, template_key: FEEDBACK_TEMPLATE });
   }
 }

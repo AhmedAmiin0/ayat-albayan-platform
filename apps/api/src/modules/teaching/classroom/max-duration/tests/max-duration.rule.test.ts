@@ -71,8 +71,9 @@ describe('rooms', () => {
   });
 
   it('keeps only rooms the platform named, minus the ones already handled', () => {
-    const rooms = [`lesson-${L1}`, `meeting-${M1}`, 'standup', 'lesson-123', `x-lesson-${L1}`]
-      .map((name) => ({ name, createdAt: new Date(0) }));
+    const rooms = [`lesson-${L1}`, `meeting-${M1}`, 'standup', 'lesson-123', `x-lesson-${L1}`].map(
+      (name) => ({ name, createdAt: new Date(0) }),
+    );
     const owned = ownedRooms(rooms, new Set([`meeting-${M1}`]));
     expect(owned.map((r) => r.target)).toEqual([{ kind: 'lesson', id: L1 }]);
   });

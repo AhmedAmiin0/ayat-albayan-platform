@@ -12,7 +12,10 @@ const MAX_RANGE_MS = 31 * 86_400_000;
 
 const windowSchema = z
   .object({ from: instant, to: instant, teacherId: z.uuid().optional() })
-  .refine((q) => Date.parse(q.to) > Date.parse(q.from), { message: 'to_before_from', path: ['to'] });
+  .refine((q) => Date.parse(q.to) > Date.parse(q.from), {
+    message: 'to_before_from',
+    path: ['to'],
+  });
 
 const daySchema = z.object({ date: localDate, tz: timeZone.optional() });
 
@@ -28,7 +31,10 @@ export function parseWindow(query: unknown): LessonWindow {
  * `?date&tz` → that local day, [00:00, next 00:00) in tz (DST days are 23 or 25 h). No `tz` →
  * `defaultTz` (settings.academy_timezone).
  */
-export function parseDay(query: unknown, defaultTz: string = SETTING_DEFAULTS.academy_timezone): LessonWindow {
+export function parseDay(
+  query: unknown,
+  defaultTz: string = SETTING_DEFAULTS.academy_timezone,
+): LessonWindow {
   const { date, tz = defaultTz } = parseOrThrow(daySchema, query);
   return { from: startOfLocalDay(date, tz), to: startOfLocalDay(addDays(date, 1), tz) };
 }

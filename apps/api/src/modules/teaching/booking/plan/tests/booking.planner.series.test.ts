@@ -23,7 +23,12 @@ describe('BookingPlanner — a time per weekday (owner 2026-10-18, R-SCH-04, R-S
     const { planner } = fakePlanner();
     const { payload } = await planner.prepare(bookingRequest());
     expect(payload.siblings).toEqual([]);
-    expect(payload.rule).toMatchObject({ byday: [0], start_time_local: '17:00', ends_on: null, client_request_id: null });
+    expect(payload.rule).toMatchObject({
+      byday: [0],
+      start_time_local: '17:00',
+      ends_on: null,
+      client_request_id: null,
+    });
     expect(payload.lessons).toHaveLength(5);
     expect(payload.audit.after).not.toHaveProperty('day_times');
   });
@@ -32,7 +37,12 @@ describe('BookingPlanner — a time per weekday (owner 2026-10-18, R-SCH-04, R-S
     const { planner } = fakePlanner();
     const clientRequestId = 'c0000000-0000-4000-8000-0000000000c1';
     const { payload } = await planner.prepare(bookingRequest({ ...TWO_TIMES, clientRequestId }));
-    expect(payload.rule).toMatchObject({ byday: [0], start_time_local: '17:00', package: '8', client_request_id: clientRequestId });
+    expect(payload.rule).toMatchObject({
+      byday: [0],
+      start_time_local: '17:00',
+      package: '8',
+      client_request_id: clientRequestId,
+    });
     expect(payload.siblings).toHaveLength(1);
     const [sibling] = payload.siblings ?? [];
     expect(sibling?.rule).toEqual({
@@ -45,8 +55,13 @@ describe('BookingPlanner — a time per weekday (owner 2026-10-18, R-SCH-04, R-S
       meeting_link: null,
       package: '8',
     });
-    expect(sibling?.lessons[0]).toMatchObject({ starts_at: '2026-10-06T16:30:00.000Z', override_reason: null });
-    expect(payload.audit.after).toMatchObject({ day_times: [{ weekday: 2, start_time_local: '19:30' }] });
+    expect(sibling?.lessons[0]).toMatchObject({
+      starts_at: '2026-10-06T16:30:00.000Z',
+      override_reason: null,
+    });
+    expect(payload.audit.after).toMatchObject({
+      day_times: [{ weekday: 2, start_time_local: '19:30' }],
+    });
     // One confirmation per guardian, naming the first lesson of the whole booking.
     expect(payload.messages).toHaveLength(1);
   });
@@ -64,7 +79,10 @@ describe('BookingPlanner — a time per weekday (owner 2026-10-18, R-SCH-04, R-S
     const { planner } = fakePlanner();
     const req = bookingRequest({ ...TWO_TIMES, startsOn: '2026-10-04' });
     const { payload } = await planner.prepare(req, { endsOn: '2026-10-27' });
-    expect([payload.rule.ends_on, payload.siblings?.[0]?.rule.ends_on]).toEqual(['2026-10-27', '2026-10-27']);
+    expect([payload.rule.ends_on, payload.siblings?.[0]?.rule.ends_on]).toEqual([
+      '2026-10-27',
+      '2026-10-27',
+    ]);
     expect(payload.lessons.length + (payload.siblings?.[0]?.lessons.length ?? 0)).toBe(8);
     expect(await planner.conflicts(req, { endsOn: '2026-10-27' })).toEqual([]);
   });
@@ -72,9 +90,15 @@ describe('BookingPlanner — a time per weekday (owner 2026-10-18, R-SCH-04, R-S
   it('a clash on the sibling’s day is a 409 like any other', async () => {
     const { planner, busy } = fakePlanner();
     busy.teacherLessons.mockResolvedValue([
-      { id: 'T1', starts_at: new Date('2026-10-13T16:30:00Z'), ends_at: new Date('2026-10-13T17:15:00Z') },
+      {
+        id: 'T1',
+        starts_at: new Date('2026-10-13T16:30:00Z'),
+        ends_at: new Date('2026-10-13T17:15:00Z'),
+      },
     ]);
-    await expect(planner.prepare(bookingRequest(TWO_TIMES))).rejects.toMatchObject({ response: { code: 'conflict' } });
+    await expect(planner.prepare(bookingRequest(TWO_TIMES))).rejects.toMatchObject({
+      response: { code: 'conflict' },
+    });
   });
 
   it('a course past a 2-week horizon: all 8 lessons written and checked; a clash in week 4 → 409', async () => {
@@ -83,17 +107,31 @@ describe('BookingPlanner — a time per weekday (owner 2026-10-18, R-SCH-04, R-S
     const { payload } = await planner.prepare(req, { endsOn: '2026-10-27' });
     expect(payload.lessons.length + (payload.siblings?.[0]?.lessons.length ?? 0)).toBe(8);
     busy.teacherLessons.mockResolvedValue([
-      { id: 'T4', starts_at: new Date('2026-10-27T16:30:00Z'), ends_at: new Date('2026-10-27T17:15:00Z') },
+      {
+        id: 'T4',
+        starts_at: new Date('2026-10-27T16:30:00Z'),
+        ends_at: new Date('2026-10-27T17:15:00Z'),
+      },
     ]);
-    await expect(planner.prepare(req, { endsOn: '2026-10-27' })).rejects.toMatchObject({ response: { code: 'conflict' } });
+    await expect(planner.prepare(req, { endsOn: '2026-10-27' })).rejects.toMatchObject({
+      response: { code: 'conflict' },
+    });
   });
 
   it('a course: every rule carries the subscription and its package (null = custom), whatever the body says', async () => {
     const { planner } = fakePlanner();
     const req = bookingRequest({ ...TWO_TIMES, startsOn: '2026-10-04' });
-    const { payload } = await planner.prepare(req, { endsOn: '2026-10-27', course: { package: null, subscriptionId: 'sub1' } });
+    const { payload } = await planner.prepare(req, {
+      endsOn: '2026-10-27',
+      course: { package: null, subscriptionId: 'sub1' },
+    });
     const sibling = payload.siblings?.[0]?.rule;
-    expect([payload.rule.subscription_id, payload.rule.package, sibling?.subscription_id, sibling?.package]).toEqual(['sub1', null, 'sub1', null]);
+    expect([
+      payload.rule.subscription_id,
+      payload.rule.package,
+      sibling?.subscription_id,
+      sibling?.package,
+    ]).toEqual(['sub1', null, 'sub1', null]);
     expect('subscription_id' in (await planner.prepare(req)).payload.rule).toBe(false);
   });
 });

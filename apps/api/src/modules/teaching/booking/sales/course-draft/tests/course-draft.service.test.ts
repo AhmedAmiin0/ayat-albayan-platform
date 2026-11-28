@@ -1,6 +1,12 @@
 import { HttpStatus } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { BOOKING, REQ, setup, SUB, USER } from '@/modules/teaching/booking/sales/course-draft/tests/course-draft.fakes';
+import {
+  BOOKING,
+  REQ,
+  setup,
+  SUB,
+  USER,
+} from '@/modules/teaching/booking/sales/course-draft/tests/course-draft.fakes';
 import { draftRequestId } from '@/modules/teaching/booking/sales/course-draft/course-draft.rules';
 import { httpError } from '@/common/http/errors';
 
@@ -29,7 +35,12 @@ describe('CourseDrafts', () => {
     await t.drafts.save(REQ, USER);
     const draft = t.rows.get(SUB);
     await t.events.paid(SUB);
-    expect(t.env.course.options).toHaveBeenCalledWith(expect.objectContaining({ clientRequestId: draftRequestId(draft ?? { subscriptionId: SUB, savedAt: '' }) }), SUB);
+    expect(t.env.course.options).toHaveBeenCalledWith(
+      expect.objectContaining({
+        clientRequestId: draftRequestId(draft ?? { subscriptionId: SUB, savedAt: '' }),
+      }),
+      SUB,
+    );
     expect(t.env.booking.book).toHaveBeenCalledTimes(1);
     expect(t.env.booking.book).toHaveBeenCalledWith(expect.anything(), USER.id, expect.anything());
     expect(t.rows.size).toBe(0);

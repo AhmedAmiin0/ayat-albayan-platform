@@ -31,8 +31,7 @@ const service = () =>
   );
 const join = (now = OPEN) =>
   service().join({ linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } }, now);
-const fail = async (p: Promise<unknown>) =>
-  (await p.catch((e: unknown) => e)) as HttpException;
+const fail = async (p: Promise<unknown>) => (await p.catch((e: unknown) => e)) as HttpException;
 
 beforeEach(() => {
   q = queries();

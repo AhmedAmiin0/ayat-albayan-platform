@@ -4,7 +4,12 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { featureRoot } from '@/common/infra/test-root';
 import { SchedulingModule } from '@/modules/teaching/scheduling/scheduling.module';
-import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '@/common/auth/auth.guard';
+import {
+  PERMISSION_RESOLVER,
+  systemResolver,
+  TOKEN_VERIFIER,
+  type TokenVerifier,
+} from '@/common/auth/auth.guard';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { conflict } from '@/common/http/errors';
 import { RuleExtendService } from './rule-extend.service';
@@ -24,11 +29,18 @@ const extender = { extend: vi.fn() };
 describe('POST /schedule-rules/:id/extend (docs/10 route 11, R-SCH-02)', () => {
   let app: NestFastifyApplication;
   const post = (token: string, payload?: object, id = ID) =>
-    app.inject({ method: 'POST', url: `/schedule-rules/${id}/extend`, payload, headers: { authorization: `Bearer ${token}` } });
+    app.inject({
+      method: 'POST',
+      url: `/schedule-rules/${id}/extend`,
+      payload,
+      headers: { authorization: `Bearer ${token}` },
+    });
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [featureRoot(SchedulingModule)] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
       .overrideProvider(RuleExtendService)
       .useValue(extender)
@@ -51,13 +63,19 @@ describe('POST /schedule-rules/:id/extend (docs/10 route 11, R-SCH-02)', () => {
     const res = await post('admin');
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual(result);
-    expect(extender.extend).toHaveBeenCalledWith({ ruleId: ID, weeks: undefined, actorId: USERS['admin']?.id });
+    expect(extender.extend).toHaveBeenCalledWith({
+      ruleId: ID,
+      weeks: undefined,
+      actorId: USERS.admin?.id,
+    });
     await post('admin', { weeks: 8 });
     expect(extender.extend).toHaveBeenLastCalledWith(expect.objectContaining({ weeks: 8 }));
   });
 
   it('400 for weeks outside 1..12 or a non-uuid id', async () => {
-    expect((await post('admin', { weeks: 13 })).json()).toMatchObject({ message: 'validation_failed' });
+    expect((await post('admin', { weeks: 13 })).json()).toMatchObject({
+      message: 'validation_failed',
+    });
     expect((await post('admin', {}, 'nope')).statusCode).toBe(400);
   });
 

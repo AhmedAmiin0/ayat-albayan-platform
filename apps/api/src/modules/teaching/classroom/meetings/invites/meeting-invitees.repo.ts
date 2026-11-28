@@ -14,11 +14,13 @@ export interface StoredInvitee extends InviteeRow {
   tz: string;
 }
 
-const COLUMNS = 'id, meeting_id, kind, profile_id, student_id, phone_e164, display_name, tz, channel, status, error_code, sent_at';
+const COLUMNS =
+  'id, meeting_id, kind, profile_id, student_id, phone_e164, display_name, tz, channel, status, error_code, sent_at';
 /** Every meeting invitation's WhatsApp row carries this dedup prefix (the daily limit counts them). */
 export const INVITE_DEDUP_PREFIX = 'meeting_invite:';
 /** LIKE pattern of one meeting's invitation rows; `_` and `%` escaped (the prefix has a `_`). */
-export const invitesOf = (meetingId: string): string => `${INVITE_DEDUP_PREFIX}${meetingId}:`.replace(/[\\_%]/g, (c) => `\\${c}`) + '%';
+export const invitesOf = (meetingId: string): string =>
+  `${INVITE_DEDUP_PREFIX}${meetingId}:`.replace(/[\\_%]/g, (c) => `\\${c}`) + '%';
 /** Migration 414's trigger: more than 30 live invitees on one meeting (a race the fast check missed). */
 const tooMany = (e: { message: string }) => /\btoo_many_invitees\b/.test(e.message);
 
@@ -28,13 +30,24 @@ export class MeetingInviteesRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async forMeeting(meetingId: string): Promise<StoredInvitee[]> {
-    const { data, error } = await this.db.from('meeting_invitees').select(COLUMNS).eq('meeting_id', meetingId).order('created_at');
+    const { data, error } = await this.db
+      .from('meeting_invitees')
+      .select(COLUMNS)
+      .eq('meeting_id', meetingId)
+      .order('created_at');
     if (error) throw pgError(error);
     return data;
   }
 
   async byId(meetingId: string, id: string): Promise<StoredInvitee | null> {
-    const data = maybe(await this.db.from('meeting_invitees').select(COLUMNS).eq('meeting_id', meetingId).eq('id', id).maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('meeting_invitees')
+        .select(COLUMNS)
+        .eq('meeting_id', meetingId)
+        .eq('id', id)
+        .maybeSingle(),
+    );
     return data;
   }
 
@@ -42,7 +55,8 @@ export class MeetingInviteesRepo {
   async insert(rows: TablesInsert<'meeting_invitees'>[]): Promise<StoredInvitee[]> {
     if (rows.length === 0) return [];
     const { data, error } = await this.db.from('meeting_invitees').insert(rows).select(COLUMNS);
-    if (error && tooMany(error)) throw new BadRequestException({ code: 'too_many_invitees', message: 'too_many_invitees' });
+    if (error && tooMany(error))
+      throw new BadRequestException({ code: 'too_many_invitees', message: 'too_many_invitees' });
     if (error) throw pgError(error);
     return data;
   }
@@ -53,7 +67,12 @@ export class MeetingInviteesRepo {
 
   /** Cancelling the meeting: every personal guest link stops working at once. */
   async clearTokens(meetingId: string): Promise<void> {
-    done(await this.db.from('meeting_invitees').update({ token_hash: null }).eq('meeting_id', meetingId));
+    done(
+      await this.db
+        .from('meeting_invitees')
+        .update({ token_hash: null })
+        .eq('meeting_id', meetingId),
+    );
   }
 
   /** WhatsApp invitation rows the login queued since `since` (resends included): the daily limit. */
@@ -70,7 +89,9 @@ export class MeetingInviteesRepo {
 
   /** True when a WhatsApp row with this dedup key was already queued (a retried resend). */
   async queued(dedupKey: string): Promise<boolean> {
-    const data = maybe(await this.db.from('messages').select('id').eq('dedup_key', dedupKey).maybeSingle());
+    const data = maybe(
+      await this.db.from('messages').select('id').eq('dedup_key', dedupKey).maybeSingle(),
+    );
     return data !== null;
   }
 
@@ -82,7 +103,12 @@ export class MeetingInviteesRepo {
   async dropQueuedInvites(meetingId: string): Promise<string[]> {
     const { data, error } = await this.db
       .from('messages')
-      .update({ status: 'failed', error_code: 'stale', error_text: 'meeting changed', next_attempt_at: null })
+      .update({
+        status: 'failed',
+        error_code: 'stale',
+        error_text: 'meeting changed',
+        next_attempt_at: null,
+      })
       .eq('direction', 'outbound')
       .eq('status', 'queued')
       .like('dedup_key', invitesOf(meetingId))

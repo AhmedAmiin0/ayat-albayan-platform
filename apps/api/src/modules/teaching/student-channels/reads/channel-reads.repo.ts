@@ -14,10 +14,12 @@ export class ChannelReadsRepo {
 
   /** Every participant's read mark in this channel (the primary key's prefix). */
   async marks(channelId: string): Promise<ReadMark[]> {
-    const data = rows(await this.db
-      .from('channel_reads')
-      .select('profile_id, last_read_at')
-      .eq('channel_id', channelId));
+    const data = rows(
+      await this.db
+        .from('channel_reads')
+        .select('profile_id, last_read_at')
+        .eq('channel_id', channelId),
+    );
     return data;
   }
 }

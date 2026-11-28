@@ -20,8 +20,12 @@ const service = (limit = new PublicJoinLimit()) =>
   );
 const view = (now = OPEN, token = STUDENT_TOKEN) => service().view({ token, ip: '9.9.9.9' }, now);
 const join = (over: { now?: Date; body?: unknown; token?: string } = {}) =>
-  service().join({ token: over.token ?? STUDENT_TOKEN, ip: '9.9.9.9', body: over.body }, over.now ?? OPEN);
-const body = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
+  service().join(
+    { token: over.token ?? STUDENT_TOKEN, ip: '9.9.9.9', body: over.body },
+    over.now ?? OPEN,
+  );
+const body = async (p: Promise<unknown>) =>
+  ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = studentLinkQueries();

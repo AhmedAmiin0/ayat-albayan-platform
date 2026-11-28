@@ -16,14 +16,16 @@ export class MaxDurationRepo {
   /** Meetings neither ended nor cancelled whose start (else creation) is before `cutoff`. */
   async overdueMeetings(cutoff: Date): Promise<OverdueMeeting[]> {
     const at = cutoff.toISOString();
-    const data = rows(await this.db
-      .from('meetings')
-      .select('id, created_at, starts_at, ends_at, cancelled_at')
-      .is('ends_at', null)
-      .is('cancelled_at', null)
-      .or(`starts_at.lt.${at},and(starts_at.is.null,created_at.lt.${at})`)
-      .order('created_at', { ascending: true })
-      .limit(RUN_CAP));
+    const data = rows(
+      await this.db
+        .from('meetings')
+        .select('id, created_at, starts_at, ends_at, cancelled_at')
+        .is('ends_at', null)
+        .is('cancelled_at', null)
+        .or(`starts_at.lt.${at},and(starts_at.is.null,created_at.lt.${at})`)
+        .order('created_at', { ascending: true })
+        .limit(RUN_CAP),
+    );
     return data;
   }
 }

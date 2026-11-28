@@ -5,13 +5,13 @@ import type { UtcWindow } from '@ab/schedule';
 import { readAll } from '@/common/db/read-all';
 import { generatedKey, projectRules, type Projected, type ProjectedRule } from './rule-projection';
 
-export type ProjectionQuery = {
+export interface ProjectionQuery {
   teacherId: string;
   studentIds: readonly string[];
   span: UtcWindow;
   /** Rules that must not count (the rule being moved or topped up). */
   excludeRuleIds: readonly string[];
-};
+}
 
 const DAY_MS = 86_400_000;
 const RULE_COLUMNS =

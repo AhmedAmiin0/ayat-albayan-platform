@@ -21,11 +21,14 @@ describe('POST /students/:id/course-stop: the money choices', () => {
   it.each([
     ['unattended', 140, 150],
     ['paid', 290, 0],
-  ] as const)('refund %s → %d back; the course then owes the %d left paid (due 0)', async (choice, n, owed) => {
-    const res = await post({ ...BODY, refund: { choice } });
-    expect(res.json().refund).toEqual({ amount: n, card: 0, manual: n });
-    expect(owedSent()).toEqual({ amount: owed, choice: `refund_${choice}` });
-  });
+  ] as const)(
+    'refund %s → %d back; the course then owes the %d left paid (due 0)',
+    async (choice, n, owed) => {
+      const res = await post({ ...BODY, refund: { choice } });
+      expect(res.json().refund).toEqual({ amount: n, card: 0, manual: n });
+      expect(owedSent()).toEqual({ amount: owed, choice: `refund_${choice}` });
+    },
+  );
 
   it('a custom refund is planned as typed', async () => {
     await post({ ...BODY, refund: { choice: 'custom', amount: 20 } });
@@ -47,13 +50,16 @@ describe('POST /students/:id/course-stop: the money choices', () => {
     [{ choice: 'nothing' }, 0],
     [{ choice: 'custom', amount: 0 }, 0],
     [{ choice: 'custom', amount: 149.99 }, 149.99],
-  ])('below the default %o: the admin stores %d; sales (no refund key) 403, nothing stopped', async (owe, amount) => {
-    const denied = await post({ ...BODY, owe }, 'sales');
-    expect([denied.statusCode, denied.json().code]).toEqual([403, 'refund_not_allowed']);
-    expect(t.m.repo.stop).not.toHaveBeenCalled();
-    expect((await post({ ...BODY, owe })).statusCode).toBe(201);
-    expect(owedSent()).toEqual({ amount, choice: owe.choice });
-  });
+  ])(
+    'below the default %o: the admin stores %d; sales (no refund key) 403, nothing stopped',
+    async (owe, amount) => {
+      const denied = await post({ ...BODY, owe }, 'sales');
+      expect([denied.statusCode, denied.json().code]).toEqual([403, 'refund_not_allowed']);
+      expect(t.m.repo.stop).not.toHaveBeenCalled();
+      expect((await post({ ...BODY, owe })).statusCode).toBe(201);
+      expect(owedSent()).toEqual({ amount, choice: owe.choice });
+    },
+  );
 
   it('a custom owed amount above the price: 409 owed_exceeds_price, nothing stopped', async () => {
     const res = await post({ ...BODY, owe: { choice: 'custom', amount: 400.01 } });

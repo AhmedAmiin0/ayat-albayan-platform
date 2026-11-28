@@ -25,7 +25,11 @@ export class RecordingDeleteService {
       filePath: row.file_path,
       actorId: input.user.id,
       now,
-      audit: { action: 'delete', before: { status: row.status, visible_to_student: row.visible_to_student }, after: { status: 'deleted' } },
+      audit: {
+        action: 'delete',
+        before: { status: row.status, visible_to_student: row.visible_to_student },
+        after: { status: 'deleted' },
+      },
     });
   }
 }

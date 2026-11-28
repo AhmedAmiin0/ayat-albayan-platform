@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { participantEventOf, participantKindSchema } from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
+import {
+  participantEventOf,
+  participantKindSchema,
+} from '@/modules/teaching/classroom/livekit/livekit-webhook.room';
 
 describe("participantEventOf: presence in LiveKit's order", () => {
   it('reads createdAt (Unix seconds, string or number) as the event time', () => {

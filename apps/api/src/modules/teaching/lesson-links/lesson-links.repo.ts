@@ -28,55 +28,55 @@ export class LessonLinksRepo {
 
   /** The lesson with its teacher's meeting_mode; null when there is none. */
   async joinLesson(id: string): Promise<JoinLesson | null> {
-    const data = maybe(await this.db
-      .from('lessons')
-      .select('id, teacher_id, status, ends_at, meeting_link, teacher:teachers(meeting_mode)')
-      .eq('id', id)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('lessons')
+        .select('id, teacher_id, status, ends_at, meeting_link, teacher:teachers(meeting_mode)')
+        .eq('id', id)
+        .maybeSingle(),
+    );
     if (!data) return null;
     const { teacher, ...lesson } = data;
     return { ...lesson, meeting_mode: teacher.meeting_mode };
   }
 
   async lesson(id: string): Promise<LinkLesson | null> {
-    const data = maybe(await this.db
-      .from('lessons')
-      .select('id, teacher_id, ends_at, status')
-      .eq('id', id)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('lessons')
+        .select('id, teacher_id, ends_at, status')
+        .eq('id', id)
+        .maybeSingle(),
+    );
     return data;
   }
 
   /** The student with this code (AB-nnnn); null when none. */
   async studentByCode(code: string): Promise<string | null> {
-    const data = maybe(await this.db
-      .from('students')
-      .select('id')
-      .eq('code', code)
-      .maybeSingle());
+    const data = maybe(await this.db.from('students').select('id').eq('code', code).maybeSingle());
     return data?.id ?? null;
   }
 
   /** The teachers named exactly so (display_name_ar), at most two: one is the only answer used. */
   async teachersNamed(name: string): Promise<{ id: string; tz: string }[]> {
-    const data = rows(await this.db
-      .from('teachers')
-      .select('id, tz')
-      .eq('display_name_ar', name)
-      .limit(2));
+    const data = rows(
+      await this.db.from('teachers').select('id, tz').eq('display_name_ar', name).limit(2),
+    );
     return data;
   }
 
   /** The pair's reportable lessons that start inside the window. */
   async pairLessons(q: PairQuery): Promise<PairLesson[]> {
-    const data = rows(await this.db
-      .from('lessons')
-      .select('id, starts_at, lesson_students!inner(student_id)')
-      .eq('teacher_id', q.teacherId)
-      .eq('lesson_students.student_id', q.studentId)
-      .in('status', [...REPORTABLE_STATUSES])
-      .gte('starts_at', q.from.toISOString())
-      .lt('starts_at', q.to.toISOString()));
+    const data = rows(
+      await this.db
+        .from('lessons')
+        .select('id, starts_at, lesson_students!inner(student_id)')
+        .eq('teacher_id', q.teacherId)
+        .eq('lesson_students.student_id', q.studentId)
+        .in('status', [...REPORTABLE_STATUSES])
+        .gte('starts_at', q.from.toISOString())
+        .lt('starts_at', q.to.toISOString()),
+    );
     return data.map((l) => ({ id: l.id, starts_at: l.starts_at }));
   }
 }

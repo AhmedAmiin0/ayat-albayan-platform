@@ -24,11 +24,14 @@ describe('lesson room moderation with another teacher’s lesson id', () => {
     expect(h.http).not.toHaveBeenCalled();
   };
 
-  it.each(ROUTES)('another teacher’s lesson is 403 on $action; no participant read, nothing sent', async ({ action, body }) => {
-    const res = await h.call({ method: 'POST', url: room(action), token: 'other', body });
-    expect(res.statusCode).toBe(403);
-    expectUntouched();
-  });
+  it.each(ROUTES)(
+    'another teacher’s lesson is 403 on $action; no participant read, nothing sent',
+    async ({ action, body }) => {
+      const res = await h.call({ method: 'POST', url: room(action), token: 'other', body });
+      expect(res.statusCode).toBe(403);
+      expectUntouched();
+    },
+  );
 
   it('a salesperson cannot remove anyone from a lesson; nothing blocked or sent', async () => {
     h.queries.salesOwnsLesson.mockResolvedValue(false);
@@ -39,7 +42,12 @@ describe('lesson room moderation with another teacher’s lesson id', () => {
   });
 
   it('the lesson’s own teacher still grants a guest’s screen share', async () => {
-    const res = await h.call({ method: 'POST', url: room('share'), token: 'teacher', body: { allow: true } });
+    const res = await h.call({
+      method: 'POST',
+      url: room('share'),
+      token: 'teacher',
+      body: { allow: true },
+    });
     expect(res.statusCode).toBe(204);
     expect(h.http).toHaveBeenCalledTimes(1);
   });

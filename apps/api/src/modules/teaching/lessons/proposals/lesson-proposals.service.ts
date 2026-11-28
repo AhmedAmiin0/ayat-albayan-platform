@@ -15,8 +15,15 @@ import { invalidTransition } from '@/modules/teaching/lessons/status/transition'
 import { RequestDeclinePush } from './request-decline.push';
 import { isSales } from '@/common/auth/roles';
 
-type ProposeInput = { lessonId: string; body: LessonProposalRequest; actor: AuthUser };
-type DecideInput = { proposalId: string; actor: AuthUser };
+interface ProposeInput {
+  lessonId: string;
+  body: LessonProposalRequest;
+  actor: AuthUser;
+}
+interface DecideInput {
+  proposalId: string;
+  actor: AuthUser;
+}
 type ApproveInput = DecideInput & { body: ProposalApprove };
 /** `note`: the answer's note, the family reads it with the decline. */
 type RejectInput = DecideInput & { note?: string };
@@ -73,7 +80,10 @@ export class ProposalDecisionService {
   async approve({ proposalId, body, actor }: ApproveInput): Promise<string> {
     if (body.override && overrideRefused(actor)) throw forbidden('override_not_allowed');
     const proposal = await this.pending(proposalId);
-    const claimed = await this.proposals.decide(proposalId, { status: 'approved', decided_by: actor.id });
+    const claimed = await this.proposals.decide(proposalId, {
+      status: 'approved',
+      decided_by: actor.id,
+    });
     if (!claimed) throw conflict('proposal_decided');
     const newId = await this.move(proposal, { body, actor }).catch(async (e: unknown) => {
       await this.proposals.release(proposalId);

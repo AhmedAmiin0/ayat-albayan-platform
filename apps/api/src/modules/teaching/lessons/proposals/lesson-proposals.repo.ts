@@ -15,7 +15,7 @@ export interface ProposalRow {
   requested_by: string;
   created_by: string | null;
 }
-type NewProposal = {
+interface NewProposal {
   lesson_id: string;
   teacher_id: string;
   proposed_starts_at: string;
@@ -23,13 +23,13 @@ type NewProposal = {
   created_by: string;
   /** Absent: the teacher's (the column default). */
   requested_by?: ProposalRequester;
-};
-type Decision = {
+}
+interface Decision {
   status: 'approved' | 'rejected';
   decided_by: string;
   /** The answer's note, shown to the family. */
   decision_note?: string | null;
-};
+}
 
 const COLUMNS = 'id, lesson_id, proposed_starts_at, status, note, requested_by, created_by';
 
@@ -48,11 +48,9 @@ export class LessonProposalRepo {
   }
 
   async get(id: string): Promise<ProposalRow | null> {
-    const data = maybe(await this.db
-      .from('lesson_proposals')
-      .select(COLUMNS)
-      .eq('id', id)
-      .maybeSingle());
+    const data = maybe(
+      await this.db.from('lesson_proposals').select(COLUMNS).eq('id', id).maybeSingle(),
+    );
     return data;
   }
 
@@ -83,10 +81,9 @@ export class LessonProposalRepo {
 
   /** The approved proposal's moved lesson. */
   async link(id: string, newLessonId: string): Promise<void> {
-    done(await this.db
-      .from('lesson_proposals')
-      .update({ new_lesson_id: newLessonId })
-      .eq('id', id));
+    done(
+      await this.db.from('lesson_proposals').update({ new_lesson_id: newLessonId }).eq('id', id),
+    );
   }
 
   /** The asker's own pending request becomes withdrawn; false when there is none. */

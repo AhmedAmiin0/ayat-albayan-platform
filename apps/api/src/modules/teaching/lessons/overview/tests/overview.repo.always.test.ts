@@ -8,17 +8,35 @@ import { teacherSpans } from '@/modules/teaching/lessons/overview/free-windows';
 import { OverviewRepo } from '@/modules/teaching/lessons/overview/overview.repo';
 
 const WINDOW = { from: new Date('2026-10-03T21:00:00Z'), to: new Date('2026-10-10T21:00:00Z') };
-const SAVED = { teacher_id: 'A', weekday: 0, start_time: '16:00:00', end_time: '18:00:00', tz: 'Asia/Riyadh' };
+const SAVED = {
+  teacher_id: 'A',
+  weekday: 0,
+  start_time: '16:00:00',
+  end_time: '18:00:00',
+  tz: 'Asia/Riyadh',
+};
 const setup = (on: boolean) => {
-  const f = fakeDb({ teachers: [{ data: [{ id: 'A' }, { id: 'B' }] }], teacher_availability: [{ data: [SAVED] }] });
-  return { ...f, q: new OverviewRepo(f.db, readerOf(LessonsSettings, { teachers_always_available: on }), fakePhotos().photos) };
+  const f = fakeDb({
+    teachers: [{ data: [{ id: 'A' }, { id: 'B' }] }],
+    teacher_availability: [{ data: [SAVED] }],
+  });
+  return {
+    ...f,
+    q: new OverviewRepo(
+      f.db,
+      readerOf(LessonsSettings, { teachers_always_available: on }),
+      fakePhotos().photos,
+    ),
+  };
 };
 
 describe('OverviewQueries.slots — the calendar matches what booking accepts', () => {
   it('24/7 on: every teacher gets the all-day rows; the saved grid is not read', async () => {
     const { q, calls } = setup(true);
     const rows = await q.slots(WINDOW);
-    expect(rows).toEqual(['A', 'B'].flatMap((id) => allDayRows('Asia/Riyadh').map((r) => ({ ...r, teacher_id: id }))));
+    expect(rows).toEqual(
+      ['A', 'B'].flatMap((id) => allDayRows('Asia/Riyadh').map((r) => ({ ...r, teacher_id: id }))),
+    );
     expect(calls.filter((c) => c.table === 'teacher_availability')).toEqual([]);
   });
 
@@ -34,8 +52,16 @@ describe('OverviewQueries.slots — the calendar matches what booking accepts', 
   });
 
   it('all-day rows give a window over the whole week, free = window minus the lessons', () => {
-    const lesson = { start: new Date('2026-10-04T13:00:00Z'), end: new Date('2026-10-04T13:45:00Z') };
-    const spans = teacherSpans({ ...WINDOW, weekly: allDayRows('Asia/Riyadh'), timeOff: [], busy: [lesson] });
+    const lesson = {
+      start: new Date('2026-10-04T13:00:00Z'),
+      end: new Date('2026-10-04T13:45:00Z'),
+    };
+    const spans = teacherSpans({
+      ...WINDOW,
+      weekly: allDayRows('Asia/Riyadh'),
+      timeOff: [],
+      busy: [lesson],
+    });
     const [from, to] = [WINDOW.from.getTime(), WINDOW.to.getTime()];
     expect(spans.windows).toEqual([{ start: from, end: to }]);
     expect(spans.free).toEqual([

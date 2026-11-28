@@ -15,10 +15,22 @@ export const LESSON_ID = '00000000-0000-4000-8000-0000000000d1';
 export const GUARDIAN_ID = '00000000-0000-4000-8000-0000000000e1';
 export const OTHER_TEACHER_ID = '00000000-0000-4000-8000-0000000000b2';
 
-export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
-export const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
+export const ADMIN: AuthUser = {
+  id: 'a0000000-0000-4000-8000-000000000001',
+  email: null,
+  role: 'admin',
+};
+export const TEACHER: AuthUser = {
+  id: 'p0000000-0000-4000-8000-000000000002',
+  email: null,
+  role: 'teacher',
+};
 /** A guardian's portal login (the family's own lesson actions). */
-export const FAMILY_USER: AuthUser = { id: 'g0000000-0000-4000-8000-000000000003', email: null, role: 'guardian' };
+export const FAMILY_USER: AuthUser = {
+  id: 'g0000000-0000-4000-8000-000000000003',
+  email: null,
+  role: 'guardian',
+};
 
 /** Sunday 2026-10-04 17:00–17:45 Riyadh, scheduled, one student, teacher link. */
 export function lessonRow(over: Partial<LessonRow> = {}): LessonRow {
@@ -35,7 +47,12 @@ export function lessonRow(over: Partial<LessonRow> = {}): LessonRow {
     confirmed_at: null,
     rescheduled_from_id: null,
     conflicts: null,
-    teacher: { id: TEACHER_ID, display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' },
+    teacher: {
+      id: TEACHER_ID,
+      display_name_ar: 'أبرار',
+      display_name_en: null,
+      tz: 'Africa/Cairo',
+    },
     lesson_students: [
       {
         student_id: STUDENT_ID,
@@ -71,17 +88,37 @@ export function fakeStore(row: LessonRow | null = lessonRow()) {
   const writer = {
     apply: vi.fn(async (change: ChangeSet) => {
       const a = change.audit;
-      if (a) record({ actorId: change.actor, entity: a.entity, entityId: a.entity_id, action: a.action, before: a.before, after: a.after });
+      if (a)
+        record({
+          actorId: change.actor,
+          entity: a.entity,
+          entityId: a.entity_id,
+          action: a.action,
+          before: a.before,
+          after: a.after,
+        });
     }),
     retime: vi.fn(async (change: TimeEditChange) => {
       const a = change.audit;
-      record({ actorId: change.actor, entity: a.entity, entityId: a.entity_id, action: a.action, before: a.before, after: a.after });
+      record({
+        actorId: change.actor,
+        entity: a.entity,
+        entityId: a.entity_id,
+        action: a.action,
+        before: a.before,
+        after: a.after,
+      });
     }),
   };
   const events = new LessonEvents();
   // lesson_rescheduled unusable by default: a move's booking confirmation stays (FamilyMoveNotice).
   const family = fakeFamilyMove();
-  const store = new LessonStore(queries as unknown as LessonsRepo, writer as unknown as LessonWriter, events, family.move);
+  const store = new LessonStore(
+    queries as unknown as LessonsRepo,
+    writer as unknown as LessonWriter,
+    events,
+    family.move,
+  );
   return { store, queries, writer, record, events, family: family.gate };
 }
 

@@ -35,7 +35,11 @@ export class WindowCounter {
   }
 }
 
-export type LimitCall = { ip: string; token: string; windowMs?: number };
+export interface LimitCall {
+  ip: string;
+  token: string;
+  windowMs?: number;
+}
 
 /**
  * The public form's limit: 10 requests per token and IP, 60 per IP, each per
@@ -49,14 +53,18 @@ export class PublicFeedbackLimit {
 
   /** assert() with the window read from the settings (cached). */
   async check(input: { ip: string; token: string }, now = Date.now()): Promise<void> {
-    const minutes = this.settings ? (await this.settings.read()).feedback_rate_window_min : SETTING_DEFAULTS.feedback_rate_window_min;
+    const minutes = this.settings
+      ? (await this.settings.read()).feedback_rate_window_min
+      : SETTING_DEFAULTS.feedback_rate_window_min;
     this.assert({ ...input, windowMs: minutes * MIN_MS }, now);
   }
 
   /** 429 too_many_requests when either bucket is full. */
   assert(input: LimitCall, now = Date.now()): void {
     const { windowMs = WINDOW_MS } = input;
-    const ok = this.perIp.allow(input.ip, now, windowMs) && this.perToken.allow(`${input.ip}|${input.token}`, now, windowMs);
+    const ok =
+      this.perIp.allow(input.ip, now, windowMs) &&
+      this.perToken.allow(`${input.ip}|${input.token}`, now, windowMs);
     if (!ok) {
       throw new HttpException(
         { code: 'too_many_requests', message: 'too_many_requests' },

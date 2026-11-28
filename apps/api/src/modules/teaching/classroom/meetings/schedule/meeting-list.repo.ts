@@ -2,7 +2,10 @@ import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/schedule';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '@/common/db/db.module';
 import { pgError, rows } from '@/common/db/errors';
-import { MEETING_COLUMNS, type MeetingRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
+import {
+  MEETING_COLUMNS,
+  type MeetingRow,
+} from '@/modules/teaching/classroom/internal-meetings/internal-meetings.repo';
 
 const LIST_LIMIT = 20;
 
@@ -31,7 +34,11 @@ export class MeetingListRepo {
 
   /** Scheduled meetings whose planned end is after `since`, soonest first (created ones, or all for an admin). */
   async upcoming(input: { createdBy: string | null; since: string }): Promise<MeetingRow[]> {
-    let q = this.db.from('meetings').select(MEETING_COLUMNS).gt('planned_end_at', input.since).is('cancelled_at', null);
+    let q = this.db
+      .from('meetings')
+      .select(MEETING_COLUMNS)
+      .gt('planned_end_at', input.since)
+      .is('cancelled_at', null);
     if (input.createdBy !== null) q = q.eq('created_by', input.createdBy);
     const { data, error } = await q.order('starts_at', { ascending: true }).limit(LIST_LIMIT);
     if (error) throw pgError(error);
@@ -40,19 +47,30 @@ export class MeetingListRepo {
 
   /** The caller's own invitations (newest first), never a cancelled one. */
   async myInvites(profileId: string): Promise<MyInviteRow[]> {
-    const data = rows(await this.db
-      .from('meeting_invitees')
-      .select('meeting_id, status, channel')
-      .eq('profile_id', profileId)
-      .neq('status', 'cancelled')
-      .order('created_at', { ascending: false })
-      .limit(LIST_LIMIT));
-    return data.map((r) => ({ meeting_id: r.meeting_id, status: r.status as MeetingInviteStatus, channel: r.channel as MeetingInviteChannel }));
+    const data = rows(
+      await this.db
+        .from('meeting_invitees')
+        .select('meeting_id, status, channel')
+        .eq('profile_id', profileId)
+        .neq('status', 'cancelled')
+        .order('created_at', { ascending: false })
+        .limit(LIST_LIMIT),
+    );
+    return data.map((r) => ({
+      meeting_id: r.meeting_id,
+      status: r.status as MeetingInviteStatus,
+      channel: r.channel as MeetingInviteChannel,
+    }));
   }
 
   async byIds(ids: readonly string[]): Promise<MeetingRow[]> {
     if (ids.length === 0) return [];
-    const data = rows(await this.db.from('meetings').select(MEETING_COLUMNS).in('id', [...ids]));
+    const data = rows(
+      await this.db
+        .from('meetings')
+        .select(MEETING_COLUMNS)
+        .in('id', [...ids]),
+    );
     return data;
   }
 
@@ -60,7 +78,13 @@ export class MeetingListRepo {
   async counts(ids: readonly string[]): Promise<Map<string, number>> {
     const counts = new Map<string, number>();
     if (ids.length === 0) return counts;
-    const data = rows(await this.db.from('meeting_invitees').select('meeting_id').in('meeting_id', [...ids]).neq('status', 'cancelled'));
+    const data = rows(
+      await this.db
+        .from('meeting_invitees')
+        .select('meeting_id')
+        .in('meeting_id', [...ids])
+        .neq('status', 'cancelled'),
+    );
     for (const r of data) counts.set(r.meeting_id, (counts.get(r.meeting_id) ?? 0) + 1);
     return counts;
   }

@@ -3,7 +3,10 @@ import type * as Schedule from '@ab/schedule';
 import { probeOccurrences as scheduleProbe } from '@ab/schedule';
 import { probeOccurrences as sharedProbe } from '@ab/shared';
 import { bookingRequest, fakePlanner, IDS, NOW } from '@/modules/teaching/booking/booking.fakes';
-import { makeupRequest, missedLessonRow } from '@/modules/teaching/booking/core/makeup/booking.makeup.fakes';
+import {
+  makeupRequest,
+  missedLessonRow,
+} from '@/modules/teaching/booking/core/makeup/booking.makeup.fakes';
 
 // One spy behind both paths, so the planner is watched whichever one it imports.
 const probe = vi.hoisted(() => vi.fn<typeof Schedule.probeOccurrences>());

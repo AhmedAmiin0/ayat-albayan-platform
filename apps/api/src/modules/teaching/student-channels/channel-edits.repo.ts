@@ -29,23 +29,27 @@ export class ChannelEditsRepo {
 
   /** A message of this channel only (another channel's id reads as unknown). */
   async message(input: { channelId: string; id: string }): Promise<ChannelMessageRow | null> {
-    const data = maybe(await this.db
-      .from('channel_messages')
-      .select(COLUMNS)
-      .eq('channel_id', input.channelId)
-      .eq('id', input.id)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('channel_messages')
+        .select(COLUMNS)
+        .eq('channel_id', input.channelId)
+        .eq('id', input.id)
+        .maybeSingle(),
+    );
     return data;
   }
 
   /** Of these messages, the ones deleted for everyone (a reply's quote then shows deleted). */
   async deletedIds(ids: readonly string[]): Promise<Set<string>> {
     if (ids.length === 0) return new Set<string>();
-    const data = rows(await this.db
-      .from('channel_messages')
-      .select('id')
-      .in('id', [...new Set(ids)])
-      .not('deleted_at', 'is', null));
+    const data = rows(
+      await this.db
+        .from('channel_messages')
+        .select('id')
+        .in('id', [...new Set(ids)])
+        .not('deleted_at', 'is', null),
+    );
     return new Set(data.map((r) => r.id));
   }
 
@@ -62,13 +66,15 @@ export class ChannelEditsRepo {
   }
 
   private async apply(change: ChannelChange, op: { patch: object; kind: 'edit' | 'delete' }) {
-    const data = maybe(await this.db
-      .from('channel_messages')
-      .update(op.patch)
-      .eq('id', change.id)
-      .is('deleted_at', null)
-      .select(COLUMNS)
-      .maybeSingle());
+    const data = maybe(
+      await this.db
+        .from('channel_messages')
+        .update(op.patch)
+        .eq('id', change.id)
+        .is('deleted_at', null)
+        .select(COLUMNS)
+        .maybeSingle(),
+    );
     if (!data) return null;
     const history = {
       message_id: change.id,

@@ -25,8 +25,12 @@ describe('migration 991', () => {
 
   it('B1: a stopped package keeps only what it used at the stop (the next package never fills it)', () => {
     const view = until(sql.slice(sql.indexOf('view public.v_subscription_balance')), ';\n');
-    expect(view).toMatch(/when s\.cancel_kind = 'stopped' then coalesce\(s\.lessons_used_at_stop, s\.lessons_total\)/);
-    expect(view).toMatch(/sum\(s\.cap\) over \(w rows between unbounded preceding and 1 preceding\)/);
+    expect(view).toMatch(
+      /when s\.cancel_kind = 'stopped' then coalesce\(s\.lessons_used_at_stop, s\.lessons_total\)/,
+    );
+    expect(view).toMatch(
+      /sum\(s\.cap\) over \(w rows between unbounded preceding and 1 preceding\)/,
+    );
     const stop = until(body('stop_course'), 'end $$;');
     expect(stop).toMatch(/select least\(b\.lessons_used, s\.lessons_total\) into v_used/);
     expect(stop).toMatch(/stop_request_id = v_request, lessons_used_at_stop = /);
@@ -40,7 +44,9 @@ describe('migration 991', () => {
   });
 
   it('B2: the stop and change_course find the course through course_rules_of; 409 course_unattributed', () => {
-    expect(until(body('course_stop_plan'), '$$;')).toContain('public.course_rules_of(p_subscription)');
+    expect(until(body('course_stop_plan'), '$$;')).toContain(
+      'public.course_rules_of(p_subscription)',
+    );
     const change = until(body('change_course'), 'end $$;');
     expect(change).toContain('public.course_rules_of(v_sub)');
     expect(change).not.toMatch(/r\.subscription_id = v_sub/);
@@ -48,7 +54,13 @@ describe('migration 991', () => {
   });
 
   it('service role only for the new functions', () => {
-    for (const fn of ['course_rules_of(uuid)', 'course_stop_plan(uuid, timestamptz)', 'stop_course(jsonb)'])
-      expect(sql).toContain(`revoke execute on function public.${fn} from public, anon, authenticated`);
+    for (const fn of [
+      'course_rules_of(uuid)',
+      'course_stop_plan(uuid, timestamptz)',
+      'stop_course(jsonb)',
+    ])
+      expect(sql).toContain(
+        `revoke execute on function public.${fn} from public, anon, authenticated`,
+      );
   });
 });

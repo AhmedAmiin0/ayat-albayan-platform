@@ -6,14 +6,29 @@ import { BookingService } from '@/modules/teaching/booking/core/booking.service'
 import { BookingWriter } from '@/modules/teaching/booking/core/booking.writer';
 import { fakeTeacherAlert } from '@/modules/teaching/booking/teacher/teacher-alert.fakes';
 
-const FIRST = { rule_id: 'R1', student_ids: [IDS.s1], guardian_ids: [IDS.g1], lessons: [], message_ids: [], invoice_id: 'I1' };
+const FIRST = {
+  rule_id: 'R1',
+  student_ids: [IDS.s1],
+  guardian_ids: [IDS.g1],
+  lessons: [],
+  message_ids: [],
+  invoice_id: 'I1',
+};
 const REQUEST = 'c0000000-0000-4000-8000-0000000000c1';
 
 function setup() {
   const deps = fakePlanner();
   const alert = fakeTeacherAlert();
-  const writer = new BookingWriter(deps.queries as unknown as BookingRepo, { resolve: vi.fn() } as unknown as BookingInvoices, alert.after);
-  return { ...deps, alert, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo) };
+  const writer = new BookingWriter(
+    deps.queries as unknown as BookingRepo,
+    { resolve: vi.fn() } as unknown as BookingInvoices,
+    alert.after,
+  );
+  return {
+    ...deps,
+    alert,
+    service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingRepo),
+  };
 }
 
 describe('BookingService replay (rule 8)', () => {
@@ -24,8 +39,16 @@ describe('BookingService replay (rule 8)', () => {
     const { service, queries, busy } = setup();
     queries.replay.mockResolvedValue(FIRST);
     // The booking's own lessons now occupy the slot: planned again they would be a 409.
-    busy.teacherLessons.mockResolvedValue([{ id: 'L1', starts_at: new Date('2026-10-04T14:00:00Z'), ends_at: new Date('2026-10-04T14:45:00Z') }]);
-    expect(await service.book(bookingRequest({ clientRequestId: REQUEST }), 'actor')).toEqual(FIRST);
+    busy.teacherLessons.mockResolvedValue([
+      {
+        id: 'L1',
+        starts_at: new Date('2026-10-04T14:00:00Z'),
+        ends_at: new Date('2026-10-04T14:45:00Z'),
+      },
+    ]);
+    expect(await service.book(bookingRequest({ clientRequestId: REQUEST }), 'actor')).toEqual(
+      FIRST,
+    );
     expect(queries.replay).toHaveBeenCalledWith(REQUEST);
     expect(queries.createBooking).not.toHaveBeenCalled();
     expect(busy.teacherLessons).not.toHaveBeenCalled();

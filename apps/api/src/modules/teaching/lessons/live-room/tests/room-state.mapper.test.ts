@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import type { PresenceRow } from '@/modules/teaching/lessons/live-room/room-inside.repo';
-import { familyNamed, presenceRole, roomStateOf } from '@/modules/teaching/lessons/live-room/room-state.mapper';
+import {
+  familyNamed,
+  presenceRole,
+  roomStateOf,
+} from '@/modules/teaching/lessons/live-room/room-state.mapper';
 
 const row = (over: Partial<PresenceRow> = {}): PresenceRow => ({
   lesson_id: 'l1',

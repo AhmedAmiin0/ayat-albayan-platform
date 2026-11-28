@@ -77,10 +77,20 @@ export const pickQueries = () => ({
 
 /** A teacher's inbox scope: the two test families, not their own number. */
 export const teacherScopesFake = () => ({
-  of: vi.fn().mockResolvedValue({ teacherId: 't1', teacherName: 'مريم', phones: new Set([OPEN_PHONE, CLOSED_PHONE]), ownPhone: null }),
+  of: vi
+    .fn()
+    .mockResolvedValue({
+      teacherId: 't1',
+      teacherName: 'مريم',
+      phones: new Set([OPEN_PHONE, CLOSED_PHONE]),
+      ownPhone: null,
+    }),
 });
 
-const threadsFake = () => ({ thread: vi.fn().mockResolvedValue(null), enqueue: vi.fn().mockResolvedValue({ id: 'm1' }) });
+const threadsFake = () => ({
+  thread: vi.fn().mockResolvedValue(null),
+  enqueue: vi.fn().mockResolvedValue({ id: 'm1' }),
+});
 
 export function meetingInviteMocks() {
   return {
@@ -96,19 +106,31 @@ export function meetingInviteMocks() {
 type MeetingInviteMocks = ReturnType<typeof meetingInviteMocks>;
 
 /** The HTTP harness: every DB-facing piece of the invitations replaced by the mocks. */
-export const overrideMeetingInvites = (b: TestingModuleBuilder, m: MeetingInviteMocks): TestingModuleBuilder =>
+export const overrideMeetingInvites = (
+  b: TestingModuleBuilder,
+  m: MeetingInviteMocks,
+): TestingModuleBuilder =>
   b
-    .overrideProvider(MeetingListRepo).useValue(m.lists)
-    .overrideProvider(MeetingInviteesRepo).useValue(m.invitees)
-    .overrideProvider(MeetingInviteeRepo).useValue(m.picks)
-    .overrideProvider(ThreadsRepo).useValue(m.threads)
-    .overrideProvider(ThreadMessagesRepo).useValue(m.threads)
-    .overrideProvider(TeacherScopes).useValue(m.teacherScopes)
-    .overrideProvider(PushService).useValue(m.push)
-    .overrideProvider(MessageSender).useValue(m.sender);
+    .overrideProvider(MeetingListRepo)
+    .useValue(m.lists)
+    .overrideProvider(MeetingInviteesRepo)
+    .useValue(m.invitees)
+    .overrideProvider(MeetingInviteeRepo)
+    .useValue(m.picks)
+    .overrideProvider(ThreadsRepo)
+    .useValue(m.threads)
+    .overrideProvider(ThreadMessagesRepo)
+    .useValue(m.threads)
+    .overrideProvider(TeacherScopes)
+    .useValue(m.teacherScopes)
+    .overrideProvider(PushService)
+    .useValue(m.push)
+    .overrideProvider(MessageSender)
+    .useValue(m.sender);
 
 /** Back to the happy-path defaults (beforeEach, after vi.resetAllMocks). */
 export const resetMeetingInvites = (m: MeetingInviteMocks): void => {
   const fresh = meetingInviteMocks();
-  for (const key of Object.keys(fresh) as (keyof MeetingInviteMocks)[]) Object.assign(m[key], fresh[key]);
+  for (const key of Object.keys(fresh) as (keyof MeetingInviteMocks)[])
+    Object.assign(m[key], fresh[key]);
 };

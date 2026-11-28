@@ -7,7 +7,8 @@ const T0 = 1_000_000;
 describe('PublicJoinLimit', () => {
   it('lets 10 calls per link and IP through, the 11th is a 429', () => {
     const limit = new PublicJoinLimit();
-    for (let i = 0; i < 10; i++) expect(() => limit.assert({ ip: '1.1.1.1', token: 'a' }, T0 + i)).not.toThrow();
+    for (let i = 0; i < 10; i++)
+      expect(() => limit.assert({ ip: '1.1.1.1', token: 'a' }, T0 + i)).not.toThrow();
     try {
       limit.assert({ ip: '1.1.1.1', token: 'a' }, T0 + 11);
       expect.unreachable();

@@ -13,7 +13,10 @@ const checker = new ConflictChecker(
   projection as unknown as RuleProjectionRepo,
 );
 // Sunday 2026-10-04 17:00–17:45 Riyadh.
-const SLOT = { starts_at: new Date('2026-10-04T14:00:00Z'), ends_at: new Date('2026-10-04T14:45:00Z') };
+const SLOT = {
+  starts_at: new Date('2026-10-04T14:00:00Z'),
+  ends_at: new Date('2026-10-04T14:45:00Z'),
+};
 const SAME = { starts_at: SLOT.starts_at, ends_at: SLOT.ends_at };
 const ALL_SUNDAY = [{ weekday: 0, start_time: '00:00', end_time: '24:00', tz: 'Asia/Riyadh' }];
 
@@ -28,16 +31,29 @@ describe('ConflictChecker (R-SCH-04, issue B3)', () => {
   });
 
   it('nothing proposed → no queries, no conflicts', async () => {
-    expect(await checker.check({ teacherId: 't', studentIds: [], proposed: [], excludeIds: [] })).toEqual([]);
+    expect(
+      await checker.check({ teacherId: 't', studentIds: [], proposed: [], excludeIds: [] }),
+    ).toEqual([]);
     expect(busy.teacherLessons).not.toHaveBeenCalled();
   });
 
   it('loads busy lessons over the proposed span and reports teacher / student clashes', async () => {
     busy.teacherLessons.mockResolvedValue([{ id: 'a', ...SAME }]);
     busy.studentLessons.mockResolvedValue([{ id: 'b', student_id: 's1', ...SAME }]);
-    const res = await checker.check({ teacherId: 't', studentIds: ['s1'], proposed: [SLOT], excludeIds: [] });
-    expect(busy.teacherLessons).toHaveBeenCalledWith('t', { from: SLOT.starts_at, to: SLOT.ends_at });
-    expect(busy.studentLessons).toHaveBeenCalledWith(['s1'], { from: SLOT.starts_at, to: SLOT.ends_at });
+    const res = await checker.check({
+      teacherId: 't',
+      studentIds: ['s1'],
+      proposed: [SLOT],
+      excludeIds: [],
+    });
+    expect(busy.teacherLessons).toHaveBeenCalledWith('t', {
+      from: SLOT.starts_at,
+      to: SLOT.ends_at,
+    });
+    expect(busy.studentLessons).toHaveBeenCalledWith(['s1'], {
+      from: SLOT.starts_at,
+      to: SLOT.ends_at,
+    });
     expect(res.map((c) => [c.kind, c.lessonId])).toEqual([
       ['teacher_busy', 'a'],
       ['student_busy', 'b'],
@@ -47,7 +63,12 @@ describe('ConflictChecker (R-SCH-04, issue B3)', () => {
   it('ignores the excluded lessons (the moved one / the rows just generated)', async () => {
     busy.teacherLessons.mockResolvedValue([{ id: 'self', ...SAME }]);
     busy.studentLessons.mockResolvedValue([{ id: 'self', student_id: 's1', ...SAME }]);
-    const res = await checker.check({ teacherId: 't', studentIds: ['s1'], proposed: [SLOT], excludeIds: ['self'] });
+    const res = await checker.check({
+      teacherId: 't',
+      studentIds: ['s1'],
+      proposed: [SLOT],
+      excludeIds: ['self'],
+    });
     expect(res).toEqual([]);
   });
 
@@ -56,7 +77,12 @@ describe('ConflictChecker (R-SCH-04, issue B3)', () => {
     availability.listTimeOff.mockResolvedValue([
       { starts_at: '2026-10-04T00:00:00Z', ends_at: '2026-10-05T00:00:00Z' },
     ]);
-    const res = await checker.check({ teacherId: 't', studentIds: [], proposed: [SLOT], excludeIds: [] });
+    const res = await checker.check({
+      teacherId: 't',
+      studentIds: [],
+      proposed: [SLOT],
+      excludeIds: [],
+    });
     expect(res.map((c) => c.kind)).toEqual(['outside_availability', 'time_off']);
   });
 

@@ -2,11 +2,24 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 import type { ClassroomRepo } from '@/modules/teaching/classroom/classroom.repo';
-import { CONFIG, decode, LESSON_ID, LINK_TOKEN, OPEN, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  CONFIG,
+  decode,
+  LESSON_ID,
+  LINK_TOKEN,
+  OPEN,
+  queries,
+  TEACHER,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import { GuestJoinService } from '@/modules/teaching/classroom/join/guest-join.service';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
 import { resolverOf } from '@/modules/teaching/classroom/family-link/family-link.fakes';
-import { admissionOf, moderation, recorder, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  admissionOf,
+  moderation,
+  recorder,
+  rolesOf,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { RoomJoinService } from '@/modules/teaching/classroom/join/room-join.service';
 
 // In a trial lesson the family and the teacher do not text each other in the room.
@@ -14,17 +27,17 @@ let q: ReturnType<typeof queries>;
 let mod: ReturnType<typeof moderation>;
 const deps = () => ({ q, mod, rec: recorder(), config: CONFIG });
 const staffJoin = () =>
-  new RoomJoinService(rolesOf({ q }), admissionOf(deps()), readerOf(ClassroomSettings)).join({ user: TEACHER, lessonId: LESSON_ID }, OPEN);
+  new RoomJoinService(rolesOf({ q }), admissionOf(deps()), readerOf(ClassroomSettings)).join(
+    { user: TEACHER, lessonId: LESSON_ID },
+    OPEN,
+  );
 const guestJoin = () =>
   new GuestJoinService(
     q as unknown as ClassroomRepo,
     new PublicJoinLimit(),
     admissionOf(deps()),
     resolverOf(q),
-  ).join(
-    { linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } },
-    OPEN,
-  );
+  ).join({ linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } }, OPEN);
 
 beforeEach(() => {
   q = queries();

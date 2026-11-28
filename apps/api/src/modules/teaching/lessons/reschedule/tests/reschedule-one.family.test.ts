@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ScheduleChange } from '@/common/infra/events/lesson-events';
 import type { TeachersRepo } from '@/modules/people/teachers/teachers.repo';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import {
+  ADMIN,
+  appliedChange,
+  fakeStore,
+  LESSON_ID,
+} from '@/modules/teaching/lessons/lessons.fakes';
 import type { ConflictChecker } from '@/modules/teaching/scheduling/conflicts/conflict-checker';
 import { RescheduleOneService } from '@/modules/teaching/lessons/reschedule/reschedule-one.service';
 
@@ -18,7 +23,12 @@ function setup(usable: boolean) {
   s.events.onScheduleChange(heard);
   const checker = { check: vi.fn().mockResolvedValue([]) } as unknown as ConflictChecker;
   const service = new RescheduleOneService(s.store, {} as TeachersRepo, checker);
-  const run = () => service.reschedule({ lessonId: LESSON_ID, body: { scope: 'one', startsAt: NEW_START }, actor: ADMIN });
+  const run = () =>
+    service.reschedule({
+      lessonId: LESSON_ID,
+      body: { scope: 'one', startsAt: NEW_START },
+      actor: ADMIN,
+    });
   return { ...s, heard, run };
 }
 
@@ -37,7 +47,9 @@ describe('RescheduleOneService: one family message per move', () => {
   it('not usable: the booking confirmation is the one family message', async () => {
     const s = setup(false);
     await s.run();
-    expect(appliedChange(s.writer)?.messages.map((m) => m.template_key)).toEqual(['booking_confirmation']);
+    expect(appliedChange(s.writer)?.messages.map((m) => m.template_key)).toEqual([
+      'booking_confirmation',
+    ]);
     expect(s.heard).toHaveBeenCalledWith(expect.objectContaining({ familyNotice: false }));
   });
 });

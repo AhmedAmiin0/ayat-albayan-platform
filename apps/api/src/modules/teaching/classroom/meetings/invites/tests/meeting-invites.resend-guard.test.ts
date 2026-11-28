@@ -1,17 +1,50 @@
 import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN, ASSISTANT, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
-import { MEETING_ID, meetingRow, NOW, scheduledRow } from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
-import { OPEN_PHONE, openThread, STUDENT_A, STUDENT_B, stored } from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
-import { meetingServices, type MeetingServices } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
+import {
+  MEETING_ID,
+  meetingRow,
+  NOW,
+  scheduledRow,
+} from '@/modules/teaching/classroom/internal-meetings/internal-meetings.fakes';
+import {
+  OPEN_PHONE,
+  openThread,
+  STUDENT_A,
+  STUDENT_B,
+  stored,
+} from '@/modules/teaching/classroom/meetings/invites/meeting-invites.fakes';
+import {
+  meetingServices,
+  type MeetingServices,
+} from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
 // A resend reaches only whom add() would let the caller invite (R-MEET-02).
 let s: MeetingServices;
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 const REQ = '00000000-0000-4000-8000-0000000000dd';
-const phoneRow = stored({ meeting_id: MEETING_ID, kind: 'phone', phone_e164: OPEN_PHONE, display_name: 'أم سهيلة', channel: 'whatsapp', status: 'sent', created_by: ADMIN.id });
-const studentRow = (id: string) => stored({ meeting_id: MEETING_ID, kind: 'student', student_id: id, phone_e164: OPEN_PHONE, display_name: 'سهيلة', channel: 'link', status: 'window_closed' });
-const resend = (user = TEACHER, inviteeId = phoneRow.id) => s.invites.resend({ user, id: MEETING_ID, inviteeId, body: { clientRequestId: REQ } }, NOW);
+const phoneRow = stored({
+  meeting_id: MEETING_ID,
+  kind: 'phone',
+  phone_e164: OPEN_PHONE,
+  display_name: 'أم سهيلة',
+  channel: 'whatsapp',
+  status: 'sent',
+  created_by: ADMIN.id,
+});
+const studentRow = (id: string) =>
+  stored({
+    meeting_id: MEETING_ID,
+    kind: 'student',
+    student_id: id,
+    phone_e164: OPEN_PHONE,
+    display_name: 'سهيلة',
+    channel: 'link',
+    status: 'window_closed',
+  });
+const resend = (user = TEACHER, inviteeId = phoneRow.id) =>
+  s.invites.resend({ user, id: MEETING_ID, inviteeId, body: { clientRequestId: REQ } }, NOW);
 
 beforeEach(() => {
   s = meetingServices();
@@ -25,7 +58,10 @@ describe('MeetingInvitesService.resend guards', () => {
   it('a teacher resending an admin-added phone row: 403, token and status unchanged', async () => {
     s.m.invitees.byId.mockResolvedValue(phoneRow);
     const e = await fail(resend());
-    expect([e.getStatus(), e.getResponse()]).toEqual([403, expect.objectContaining({ code: 'phone_invite_not_allowed' })]);
+    expect([e.getStatus(), e.getResponse()]).toEqual([
+      403,
+      expect.objectContaining({ code: 'phone_invite_not_allowed' }),
+    ]);
     expect(s.m.invitees.update).not.toHaveBeenCalled();
     expect(s.m.threads.enqueue).not.toHaveBeenCalled();
   });
@@ -33,7 +69,10 @@ describe('MeetingInvitesService.resend guards', () => {
   it('a teacher resending a student outside their scope (a trial, another teacher): 404', async () => {
     s.m.invitees.byId.mockResolvedValue(studentRow(STUDENT_B));
     const e = await fail(resend(TEACHER, studentRow(STUDENT_B).id));
-    expect([e.getStatus(), e.getResponse()]).toEqual([404, expect.objectContaining({ code: 'student_not_found' })]);
+    expect([e.getStatus(), e.getResponse()]).toEqual([
+      404,
+      expect.objectContaining({ code: 'student_not_found' }),
+    ]);
     expect(s.m.invitees.update).not.toHaveBeenCalled();
   });
 

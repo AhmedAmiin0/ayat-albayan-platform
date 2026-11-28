@@ -1,10 +1,23 @@
 import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ADMIN, ASSISTANT, CONFIG, LESSON_ID, queries, TEACHER } from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  ADMIN,
+  ASSISTANT,
+  CONFIG,
+  LESSON_ID,
+  queries,
+  TEACHER,
+} from '@/modules/teaching/classroom/classroom.fakes';
 import { KickService } from '@/modules/teaching/classroom/moderation/kick.service';
 import { LivekitApi } from '@/modules/teaching/classroom/livekit/livekit-api';
 import { sentBody } from '@/modules/teaching/classroom/livekit/livekit.fakes';
-import { http, moderation, participantRow, roomPersons, rolesOf } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  http,
+  moderation,
+  participantRow,
+  roomPersons,
+  rolesOf,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import type { ModerationRepo } from '@/modules/teaching/classroom/moderation/moderation.repo';
 import type { RoomPersonRepo } from '@/modules/teaching/classroom/moderation/room-person.repo';
 
@@ -12,9 +25,16 @@ let mod: ReturnType<typeof moderation>;
 let h: ReturnType<typeof http>;
 let persons: ReturnType<typeof roomPersons>;
 const service = (config: typeof CONFIG | null = CONFIG) =>
-  new KickService(rolesOf({ q: queries() }), mod as unknown as ModerationRepo, new LivekitApi(config, h), persons as unknown as RoomPersonRepo);
-const kick = (user = ADMIN, identity = 'guest-0123456789ab', svc = service()) => svc.remove({ user, lessonId: LESSON_ID, identity });
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
+  new KickService(
+    rolesOf({ q: queries() }),
+    mod as unknown as ModerationRepo,
+    new LivekitApi(config, h),
+    persons as unknown as RoomPersonRepo,
+  );
+const kick = (user = ADMIN, identity = 'guest-0123456789ab', svc = service()) =>
+  svc.remove({ user, lessonId: LESSON_ID, identity });
+const fail = async (p: Promise<unknown>) =>
+  (await p.catch((e: HttpException) => e)) as HttpException;
 
 beforeEach(() => {
   mod = moderation();
@@ -34,16 +54,28 @@ describe('removing someone from the room', () => {
     });
     const [revoke, revokeInit] = h.mock.calls[0] ?? [];
     expect(revoke).toMatch(/\/twirp\/livekit\.RoomService\/UpdateParticipant$/);
-    expect(sentBody(revokeInit)).toMatchObject({ identity: 'guest-0123456789ab', permission: { can_subscribe: false, can_publish: false } });
+    expect(sentBody(revokeInit)).toMatchObject({
+      identity: 'guest-0123456789ab',
+      permission: { can_subscribe: false, can_publish: false },
+    });
     const [url, init] = h.mock.calls[1] ?? [];
     expect(url).toMatch(/\/twirp\/livekit\.RoomService\/RemoveParticipant$/);
     expect(sentBody(init)).toEqual({ room: `lesson-${LESSON_ID}`, identity: 'guest-0123456789ab' });
   });
 
   it('the lesson teacher removes an assistant: their login is blocked', async () => {
-    mod.participant.mockResolvedValue(participantRow({ identity: 'assistant-0123456789ab', role: 'assistant', user_id: ASSISTANT.id, join_link_id: null }));
+    mod.participant.mockResolvedValue(
+      participantRow({
+        identity: 'assistant-0123456789ab',
+        role: 'assistant',
+        user_id: ASSISTANT.id,
+        join_link_id: null,
+      }),
+    );
     await kick(TEACHER, 'assistant-0123456789ab');
-    expect(mod.block).toHaveBeenCalledWith(expect.objectContaining({ principal: { userId: ASSISTANT.id }, blockedBy: TEACHER.id }));
+    expect(mod.block).toHaveBeenCalledWith(
+      expect.objectContaining({ principal: { userId: ASSISTANT.id }, blockedBy: TEACHER.id }),
+    );
   });
 
   it('404 participant_not_found for an identity not in this lesson', async () => {
@@ -59,14 +91,17 @@ describe('removing someone from the room', () => {
     { actor: TEACHER, role: 'admin' },
     { actor: ADMIN, role: 'admin' },
     { actor: ASSISTANT, role: 'guest' },
-  ] as const)('403 cannot_remove: a $actor.role may not remove a $role', async ({ actor, role }) => {
-    mod.participant.mockResolvedValue(participantRow({ role, user_id: 'u', join_link_id: null }));
-    const err = await fail(kick(actor));
-    expect(err.getStatus()).toBe(403);
-    expect(err.getResponse()).toMatchObject({ code: 'cannot_remove' });
-    expect(mod.block).not.toHaveBeenCalled();
-    expect(h).not.toHaveBeenCalled();
-  });
+  ] as const)(
+    '403 cannot_remove: a $actor.role may not remove a $role',
+    async ({ actor, role }) => {
+      mod.participant.mockResolvedValue(participantRow({ role, user_id: 'u', join_link_id: null }));
+      const err = await fail(kick(actor));
+      expect(err.getStatus()).toBe(403);
+      expect(err.getResponse()).toMatchObject({ code: 'cannot_remove' });
+      expect(mod.block).not.toHaveBeenCalled();
+      expect(h).not.toHaveBeenCalled();
+    },
+  );
 
   it('an unknown role in the row is never removable', async () => {
     mod.participant.mockResolvedValue(participantRow({ role: 'ghost' }));
@@ -74,7 +109,9 @@ describe('removing someone from the room', () => {
   });
 
   it('a participant whose login is gone is still disconnected (nothing to block)', async () => {
-    mod.participant.mockResolvedValue(participantRow({ role: 'assistant', user_id: null, join_link_id: null }));
+    mod.participant.mockResolvedValue(
+      participantRow({ role: 'assistant', user_id: null, join_link_id: null }),
+    );
     await kick();
     expect(mod.block).not.toHaveBeenCalled();
     expect(h).toHaveBeenCalledTimes(2);

@@ -1,19 +1,29 @@
 import { describe, expect, it } from 'vitest';
-import { egressIdOf, egressRequest, recordingPath } from '@/modules/teaching/classroom/livekit/egress-request';
+import {
+  egressIdOf,
+  egressRequest,
+  recordingPath,
+} from '@/modules/teaching/classroom/livekit/egress-request';
 import { S3 } from '@/modules/teaching/classroom/moderation/moderation.fakes';
 
 const LESSON = '00000000-0000-4000-8000-0000000000d1';
 
 describe('recordingPath', () => {
   it('is lessons/<lesson>/<UTC timestamp>.mp3, safe as an object name', () => {
-    expect(recordingPath({ kind: 'lesson', id: LESSON }, new Date('2026-10-05T16:01:02.345Z'))).toBe(`lessons/${LESSON}/2026-10-05T16-01-02-345Z.mp3`);
-    expect(recordingPath({ kind: 'meeting', id: LESSON }, new Date('2026-10-05T16:01:02.345Z'))).toBe(`meetings/${LESSON}/2026-10-05T16-01-02-345Z.mp3`);
+    expect(
+      recordingPath({ kind: 'lesson', id: LESSON }, new Date('2026-10-05T16:01:02.345Z')),
+    ).toBe(`lessons/${LESSON}/2026-10-05T16-01-02-345Z.mp3`);
+    expect(
+      recordingPath({ kind: 'meeting', id: LESSON }, new Date('2026-10-05T16:01:02.345Z')),
+    ).toBe(`meetings/${LESSON}/2026-10-05T16-01-02-345Z.mp3`);
   });
 });
 
 describe('egressRequest', () => {
   it('mixes the whole room into one 64 kbps MP3 to the Storage S3 endpoint (path style)', () => {
-    expect(egressRequest({ room: `lesson-${LESSON}`, filepath: 'lessons/x/y.mp3', s3: S3 })).toEqual({
+    expect(
+      egressRequest({ room: `lesson-${LESSON}`, filepath: 'lessons/x/y.mp3', s3: S3 }),
+    ).toEqual({
       room_name: `lesson-${LESSON}`,
       audio_only: true,
       advanced: { audio_bitrate: 64 },

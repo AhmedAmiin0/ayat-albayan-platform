@@ -38,11 +38,18 @@ describe('booking routes for the invoice and the makeup (R-PAY-03, R-SCH-10)', (
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [bookingRoot()] })
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(BookingService).useValue(booking)
-      .overrideProvider(BookingInvoices).useValue(invoices)
-      .overrideProvider(MakeupCandidates).useValue(makeup)
-      .overrideProvider(SettingsService).useValue(fakeSettings())
+      .overrideProvider(PERMISSION_RESOLVER)
+      .useValue(systemResolver)
+      .overrideProvider(TOKEN_VERIFIER)
+      .useValue(verify)
+      .overrideProvider(BookingService)
+      .useValue(booking)
+      .overrideProvider(BookingInvoices)
+      .useValue(invoices)
+      .overrideProvider(MakeupCandidates)
+      .useValue(makeup)
+      .overrideProvider(SettingsService)
+      .useValue(fakeSettings())
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -100,7 +107,7 @@ describe('booking routes for the invoice and the makeup (R-PAY-03, R-SCH-10)', (
     expect(ok.statusCode).toBe(201);
     expect(booking.book).toHaveBeenCalledWith(
       expect.objectContaining({ kind: 'makeup', makeupOfLessonId: IDS.missed, invoice: { source: 'whatsapp', messageId: IDS.s3 } }),
-      USERS['admin']?.id,
+      USERS.admin?.id,
     );
     const two = await call({ method: 'POST', url: '/booking', payload: { ...makeupBody, studentIds: [IDS.s1, IDS.s2] } });
     expect(two.json().issues[0].message).toBe('makeup_one_student');

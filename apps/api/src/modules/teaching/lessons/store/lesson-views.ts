@@ -19,7 +19,9 @@ const withAutoHeld = (view: LessonView, held: ReadonlySet<string>): LessonView =
   held.has(view.id) ? { ...view, auto_held: true } : view;
 
 const withPhoto = (view: LessonView, photos: ReadonlyMap<string, string>): LessonView =>
-  photos.size ? { ...view, teacher: { ...view.teacher, avatar_url: photos.get(view.teacher.id) ?? null } } : view;
+  photos.size
+    ? { ...view, teacher: { ...view.teacher, avatar_url: photos.get(view.teacher.id) ?? null } }
+    : view;
 
 /**
  * Loads lesson rows + their lesson numbers and maps them to LessonView for a role. Students on an
@@ -47,7 +49,9 @@ export class LessonViews {
       this.lessons.seq(completed),
       this.flagged(upcomingStudentIds(rows, now)),
       Promise.all([this.lessons.academyAuto(), this.lessons.reportMinutes()]),
-      role === 'teacher' ? new Map<string, string>() : this.extras.photos.ofTeachers(rows.map((r) => r.teacher_id)),
+      role === 'teacher'
+        ? new Map<string, string>()
+        : this.extras.photos.ofTeachers(rows.map((r) => r.teacher_id)),
       role === 'teacher' ? new Set<string>() : this.correctable(settledIds(rows)),
       this.extras.rooms.of(rows, new Date(now)),
     ]);

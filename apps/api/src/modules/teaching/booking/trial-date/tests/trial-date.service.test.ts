@@ -5,7 +5,9 @@ import { ACTOR, fakeTrialDates, OLD, OTHER_TEACHER, REQUEST, trialRequest, trial
 
 const code = async (p: Promise<unknown>) => {
   const e = await p.catch((err: unknown) => err);
-  return e instanceof HttpException ? [e.getStatus(), (e.getResponse() as { code: string }).code] : e;
+  return e instanceof HttpException
+    ? [e.getStatus(), (e.getResponse() as { code: string }).code]
+    : e;
 };
 const pickOf = (s: ReturnType<typeof fakeTrialDates>) => s.trialQueries.pick.mock.calls[0]?.[0];
 

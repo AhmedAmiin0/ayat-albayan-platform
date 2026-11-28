@@ -5,13 +5,30 @@ import { maybe, pgError, raisedAs, rows, type PgErrorMap } from '@/common/db/err
 import { badRequest, conflict, notFound } from '@/common/http/errors';
 import { rpcOutSchema, type PauseRow, type RpcOut } from './course-pause.mapper';
 
-type RpcName = 'course_pause_start' | 'course_pause_begin' | 'course_pause_set_until' | 'course_pause_resume';
-type UntypedRpc = { rpc(fn: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: PostgrestError | null }> };
+type RpcName =
+  | 'course_pause_start'
+  | 'course_pause_begin'
+  | 'course_pause_set_until'
+  | 'course_pause_resume';
+interface UntypedRpc {
+  rpc(
+    fn: string,
+    args: Record<string, unknown>,
+  ): PromiseLike<{ data: unknown; error: PostgrestError | null }>;
+}
 /** The window the sheet previews: [start, end) UTC instants, end null = every future lesson. */
-type PreviewWindow = { studentId: string; start: Date; end: Date | null };
+interface PreviewWindow { studentId: string; start: Date; end: Date | null }
 /** A reopened lesson, for the clash check after a resume. */
-type OpenPause = { id: string; subscription_id: string | null };
-export type ReopenedLesson = { id: string; teacher_id: string; starts_at: string; ends_at: string };
+interface OpenPause {
+  id: string;
+  subscription_id: string | null;
+}
+export interface ReopenedLesson {
+  id: string;
+  teacher_id: string;
+  starts_at: string;
+  ends_at: string;
+}
 
 const PAUSE_SELECT = 'id, student_id, from_date, until_date, reason, created_at, resumed_at, extended_days, creator:profiles!course_pauses_created_by_fkey(full_name)';
 /** The RPCs' raised codes (migration 956) → 400 / 409 / 404; a lost race on the one-open index → already_paused. */

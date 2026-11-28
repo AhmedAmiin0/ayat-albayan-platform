@@ -26,7 +26,10 @@ export class RecordingLifecycle {
   ) {}
 
   /** A failed egress is not retried, so a broken recorder cannot loop; next join retries. */
-  async afterEgressEnded(input: { room: string | null; status: 'done' | 'failed' }): Promise<'restarted' | 'idle'> {
+  async afterEgressEnded(input: {
+    room: string | null;
+    status: 'done' | 'failed';
+  }): Promise<'restarted' | 'idle'> {
     const { room } = input;
     const target = targetOfRoom(room);
     if (input.status !== 'done' || !target || !room || !this.starter.configured) return 'idle';

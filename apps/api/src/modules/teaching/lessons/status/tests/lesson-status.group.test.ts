@@ -2,7 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import type { LessonAccess } from '@/modules/teaching/lessons/store/lesson-access';
 import { LessonStatusService } from '@/modules/teaching/lessons/status/lesson-status.service';
-import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, STUDENT_ID } from '@/modules/teaching/lessons/lessons.fakes';
+import {
+  ADMIN,
+  appliedChange,
+  fakeStore,
+  LESSON_ID,
+  lessonRow,
+  STUDENT_ID,
+} from '@/modules/teaching/lessons/lessons.fakes';
 import { LessonsSettings } from '@/modules/teaching/lessons/lessons.settings';
 
 const SISTER = '00000000-0000-4000-8000-0000000000c2';
@@ -16,7 +23,14 @@ const siblings = lessonRow({
 function setup() {
   const deps = fakeStore(siblings);
   const access = { assertCanTouch: vi.fn() } as unknown as LessonAccess;
-  return { ...deps, service: new LessonStatusService(deps.store, access, readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null })) };
+  return {
+    ...deps,
+    service: new LessonStatusService(
+      deps.store,
+      access,
+      readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: null }),
+    ),
+  };
 }
 
 describe('LessonStatusService.changeStatus — one outcome per sibling (R-STU-04, R-SCH-03)', () => {
@@ -28,8 +42,14 @@ describe('LessonStatusService.changeStatus — one outcome per sibling (R-STU-04
     const students = [{ studentId: SISTER, event: 'mark_no_show' as const }];
     await service.changeStatus({ lessonId: LESSON_ID, event: 'complete', students, actor: ADMIN });
     const [change] = appliedChange(writer)?.changes ?? [];
-    expect(change).toMatchObject({ to_status: 'completed', attendance: 'on_time', chargeable: true });
-    expect(change?.students).toEqual([{ student_id: SISTER, attendance: 'absent', chargeable: true }]);
+    expect(change).toMatchObject({
+      to_status: 'completed',
+      attendance: 'on_time',
+      chargeable: true,
+    });
+    expect(change?.students).toEqual([
+      { student_id: SISTER, attendance: 'absent', chargeable: true },
+    ]);
     expect(record).toHaveBeenCalledWith(
       expect.objectContaining({ after: expect.objectContaining({ students: change?.students }) }),
     );

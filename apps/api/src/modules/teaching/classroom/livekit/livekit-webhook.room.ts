@@ -33,7 +33,8 @@ const participantEventSchema = z.object({
   createdAt: createdAtSchema.optional(),
 });
 
-const obj = (v: unknown): Record<string, unknown> | null => (v && typeof v === 'object' ? (v as Record<string, unknown>) : null);
+const obj = (v: unknown): Record<string, unknown> | null =>
+  v && typeof v === 'object' ? (v as Record<string, unknown>) : null;
 const text = (v: unknown): string | null => (typeof v === 'string' && v ? v : null);
 
 function isoOf(seconds: string | number | undefined): string | null {
@@ -56,7 +57,14 @@ const RECORDER_KINDS: ReadonlySet<unknown> = new Set(['EGRESS', 2]);
 function personOf(p: unknown, except: string): string | null {
   const x = obj(p);
   const identity = text(x?.identity);
-  if (!x || !identity || identity === except || identity.startsWith('EG_') || RECORDER_KINDS.has(x.kind)) return null;
+  if (
+    !x ||
+    !identity ||
+    identity === except ||
+    identity.startsWith('EG_') ||
+    RECORDER_KINDS.has(x.kind)
+  )
+    return null;
   return identity;
 }
 

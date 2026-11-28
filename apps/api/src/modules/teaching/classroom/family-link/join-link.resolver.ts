@@ -3,7 +3,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClassroomRepo, type JoinLinkRow } from '@/modules/teaching/classroom/classroom.repo';
 import { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
 import { FamilyJoinLinks } from './family-join.links';
-import { hashLinkToken, looksLikeLinkToken } from '@/modules/teaching/classroom/join/join-link.token';
+import {
+  hashLinkToken,
+  looksLikeLinkToken,
+} from '@/modules/teaching/classroom/join/join-link.token';
 
 type TokenKind = 'random' | 'family' | 'none';
 type Resolve = (token: string, now: Date) => Promise<JoinLinkRow | null>;

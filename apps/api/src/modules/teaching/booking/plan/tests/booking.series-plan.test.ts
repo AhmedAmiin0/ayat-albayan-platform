@@ -14,8 +14,10 @@ const rule: SeriesRule = {
   startsOn: '2026-10-01',
   single: false,
 };
-const plan = (over: Partial<SeriesRule> = {}, endsOn?: string) => planSeries({ rule: { ...rule, ...over }, now, horizonWeeks: 5, endsOn });
-const starts = (p: { occurrences: { starts_at: Date }[] }) => p.occurrences.map((o) => o.starts_at.toISOString());
+const plan = (over: Partial<SeriesRule> = {}, endsOn?: string) =>
+  planSeries({ rule: { ...rule, ...over }, now, horizonWeeks: 5, endsOn });
+const starts = (p: { occurrences: { starts_at: Date }[] }) =>
+  p.occurrences.map((o) => o.starts_at.toISOString());
 const code = (fn: () => unknown): string | null => {
   try {
     fn();
@@ -28,10 +30,12 @@ const code = (fn: () => unknown): string | null => {
 describe('planSeries — one plan per start time (owner 2026-10-18, R-SCH-02)', () => {
   it('Sun 17:00 + Tue 19:30: two open-ended plans, each with its own days and time', () => {
     const plans = plan();
-    expect(plans.map((p) => [p.timing.start_time_local, p.timing.byday, p.timing.ends_on])).toEqual([
-      ['17:00', [0], null],
-      ['19:30', [2], null],
-    ]);
+    expect(plans.map((p) => [p.timing.start_time_local, p.timing.byday, p.timing.ends_on])).toEqual(
+      [
+        ['17:00', [0], null],
+        ['19:30', [2], null],
+      ],
+    );
     expect(starts(plans[0] ?? { occurrences: [] })[0]).toBe('2026-10-04T14:00:00.000Z');
     expect(starts(plans[1] ?? { occurrences: [] })[0]).toBe('2026-10-06T16:30:00.000Z');
   });

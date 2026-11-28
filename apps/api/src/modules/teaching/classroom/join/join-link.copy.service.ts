@@ -21,11 +21,17 @@ export class JoinLinkCopyService {
     const lesson = await this.queries.lesson(input.lessonId);
     if (!lesson) throw notFound('lesson_not_found');
     const { user } = input;
-    const own = user.role === 'teacher' && (await this.teachers.idByProfile(user.id)) === lesson.teacher_id;
+    const own =
+      user.role === 'teacher' && (await this.teachers.idByProfile(user.id)) === lesson.teacher_id;
     if (!isAdmin(user) && !own) throw new ForbiddenException();
     const token = newLinkToken();
     const expires_at = linkExpiry(lesson, await this.queries.joinWindow());
-    await this.queries.insertLink({ lesson_id: lesson.id, token_hash: hashLinkToken(token), expires_at, created_by: user.id });
+    await this.queries.insertLink({
+      lesson_id: lesson.id,
+      token_hash: hashLinkToken(token),
+      expires_at,
+      created_by: user.id,
+    });
     return { url: `${this.origin}/join/${token}`, expires_at };
   }
 }

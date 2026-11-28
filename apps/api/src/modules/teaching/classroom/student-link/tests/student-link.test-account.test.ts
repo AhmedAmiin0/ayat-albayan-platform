@@ -1,9 +1,22 @@
 import type { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { CONFIG, EARLY, LESSON_ID, queries, STUDENT_ID } from '@/modules/teaching/classroom/classroom.fakes';
-import { familyLinks, FAMILY_SECRET } from '@/modules/teaching/classroom/family-link/family-link.fakes';
+import {
+  CONFIG,
+  EARLY,
+  LESSON_ID,
+  queries,
+  STUDENT_ID,
+} from '@/modules/teaching/classroom/classroom.fakes';
+import {
+  familyLinks,
+  FAMILY_SECRET,
+} from '@/modules/teaching/classroom/family-link/family-link.fakes';
 import { PublicJoinLimit } from '@/modules/teaching/classroom/join/join-limit';
-import { admissionOf, moderation, recorder } from '@/modules/teaching/classroom/moderation/moderation.fakes';
+import {
+  admissionOf,
+  moderation,
+  recorder,
+} from '@/modules/teaching/classroom/moderation/moderation.fakes';
 import { studentLinkQueries } from '@/modules/teaching/classroom/student-link/student-link.fakes';
 import type { StudentLinkRepo } from '@/modules/teaching/classroom/student-link/student-link.repo';
 import { StudentLinkService } from '@/modules/teaching/classroom/student-link/student-link.service';
@@ -18,7 +31,12 @@ const service = () =>
     admissionOf({ q: queries(), mod: moderation(), rec: recorder(), config: CONFIG }),
     familyLinks(FAMILY_SECRET),
   );
-const input = (userIsTest: boolean) => ({ lessonId: LESSON_ID, studentId: STUDENT_ID, profileId: 'g-1', userIsTest });
+const input = (userIsTest: boolean) => ({
+  lessonId: LESSON_ID,
+  studentId: STUDENT_ID,
+  profileId: 'g-1',
+  userIsTest,
+});
 const studentIs = (isTest: boolean) =>
   q.student.mockResolvedValue({ id: STUDENT_ID, name: 'سهيلة محمد', is_test: isTest });
 const codeOf = async (p: Promise<unknown>) =>
@@ -31,23 +49,32 @@ beforeEach(() => {
 describe('portalJoin before the window (join_window)', () => {
   it('a test login on a test student enters', async () => {
     studentIs(true);
-    await expect(service().portalJoin(input(true), EARLY)).resolves.toMatchObject({ role: 'guest' });
+    await expect(service().portalJoin(input(true), EARLY)).resolves.toMatchObject({
+      role: 'guest',
+    });
   });
 
   it('a test login on a real student is refused join_not_open_yet', async () => {
     studentIs(false);
-    expect(await codeOf(service().portalJoin(input(true), EARLY))).toMatchObject({ code: 'join_not_open_yet' });
+    expect(await codeOf(service().portalJoin(input(true), EARLY))).toMatchObject({
+      code: 'join_not_open_yet',
+    });
   });
 
   it('a real login on a test student is refused join_not_open_yet', async () => {
     studentIs(true);
-    expect(await codeOf(service().portalJoin(input(false), EARLY))).toMatchObject({ code: 'join_not_open_yet' });
+    expect(await codeOf(service().portalJoin(input(false), EARLY))).toMatchObject({
+      code: 'join_not_open_yet',
+    });
   });
 });
 
 describe('portalRoomLink rate limit (rate_limits)', () => {
   const outcome = (p: Promise<unknown>) =>
-    p.then(() => 'ok', (e: unknown) => ((e as HttpException).getResponse() as { code: string }).code);
+    p.then(
+      () => 'ok',
+      (e: unknown) => ((e as HttpException).getResponse() as { code: string }).code,
+    );
   const burst = async (userIsTest: boolean) => {
     const svc = service();
     const codes: string[] = [];

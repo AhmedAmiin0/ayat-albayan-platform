@@ -8,9 +8,14 @@ import {
 import type { Interval } from '@ab/schedule';
 import type { LessonWindow } from '@/modules/teaching/lessons/lessons.repo';
 import { teacherSpans } from './free-windows';
-import type { OverviewCarryRow, OverviewSlotRow, OverviewTeacherRow, OverviewTimeOffRow } from './overview.repo';
+import type {
+  OverviewCarryRow,
+  OverviewSlotRow,
+  OverviewTeacherRow,
+  OverviewTimeOffRow,
+} from './overview.repo';
 
-export type OverviewParts = {
+export interface OverviewParts {
   window: LessonWindow;
   teachers: readonly OverviewTeacherRow[];
   slots: readonly OverviewSlotRow[];
@@ -21,12 +26,15 @@ export type OverviewParts = {
   loads: ReadonlyMap<string, number>;
   /** The window's lessons, every status, by starts_at. */
   lessons: readonly LessonView[];
-};
+}
 
 const OCCUPYING: ReadonlySet<string> = new Set(OCCUPYING_LESSON_STATUSES);
 const iso = (value: string | number): string => new Date(value).toISOString();
 const toSpan = (i: Interval): Span => ({ starts_at: iso(i.start), ends_at: iso(i.end) });
-const range = (r: { starts_at: string; ends_at: string }) => ({ start: new Date(r.starts_at), end: new Date(r.ends_at) });
+const range = (r: { starts_at: string; ends_at: string }) => ({
+  start: new Date(r.starts_at),
+  end: new Date(r.ends_at),
+});
 
 function byTeacher<T extends { teacher_id: string }>(rows: readonly T[]): Map<string, T[]> {
   const out = new Map<string, T[]>();
@@ -48,17 +56,32 @@ export function toOverview(p: OverviewParts): ScheduleOverview {
     .filter((t) => t.status === 'active' || lessons.has(t.id))
     .map((t): OverviewTeacher => {
       const off = timeOff.get(t.id) ?? [];
-      const busy = [...(carry.get(t.id) ?? []), ...(lessons.get(t.id) ?? [])].filter((l) => OCCUPYING.has(l.status)).map(range);
-      const spans = teacherSpans({ ...p.window, weekly: slots.get(t.id) ?? [], timeOff: off.map(range), busy });
+      const busy = [...(carry.get(t.id) ?? []), ...(lessons.get(t.id) ?? [])]
+        .filter((l) => OCCUPYING.has(l.status))
+        .map(range);
+      const spans = teacherSpans({
+        ...p.window,
+        weekly: slots.get(t.id) ?? [],
+        timeOff: off.map(range),
+        busy,
+      });
       return {
         ...t,
         students_count: p.loads.get(t.id) ?? 0,
         windows: spans.windows.map(toSpan),
-        time_off: off.map((o) => ({ id: o.id, reason: o.reason, starts_at: iso(o.starts_at), ends_at: iso(o.ends_at) })),
+        time_off: off.map((o) => ({
+          id: o.id,
+          reason: o.reason,
+          starts_at: iso(o.starts_at),
+          ends_at: iso(o.ends_at),
+        })),
         free: spans.free.map(toSpan),
       };
     })
-    .sort((a, b) => a.display_name_ar.localeCompare(b.display_name_ar, 'ar') || a.id.localeCompare(b.id));
+    .sort(
+      (a, b) =>
+        a.display_name_ar.localeCompare(b.display_name_ar, 'ar') || a.id.localeCompare(b.id),
+    );
   return {
     from: p.window.from.toISOString(),
     to: p.window.to.toISOString(),

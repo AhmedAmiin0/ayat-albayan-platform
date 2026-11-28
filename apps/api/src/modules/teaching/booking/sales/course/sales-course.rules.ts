@@ -11,15 +11,20 @@ import { HttpStatus } from '@nestjs/common';
 // read by SalesCourse (sales-course.service.ts). Local dates "YYYY-MM-DD" compare as strings.
 
 /** An active schedule_rules row of the student (schedule_rule_students). */
-export type CourseRule = { starts_on: string; ends_on: string | null; package: PackageSize | null };
+export interface CourseRule {
+  starts_on: string;
+  ends_on: string | null;
+  package: PackageSize | null;
+}
 
 /**
  * A weekly course: not a trial and not a one-day rule (a makeup or an instant lesson ends the day
  * it starts). An imported rule may have no package: it still counts.
  */
-export const isCourseRule = (r: CourseRule): boolean => r.package !== 'trial' && r.starts_on !== r.ends_on;
+export const isCourseRule = (r: CourseRule): boolean =>
+  r.package !== 'trial' && r.starts_on !== r.ends_on;
 
-export type CourseFacts = {
+export interface CourseFacts {
   req: Pick<BookingRequest, 'durationMin' | 'startsOn' | 'byday'>;
   /** The student's newest unpaid or active subscription. */
   sub: CourseSubscription | null;
@@ -29,8 +34,11 @@ export type CourseFacts = {
   endsOn: string | null;
   /** The subscription already has its course (a rule with its subscription_id, any status). */
   booked: boolean;
-};
-type CourseProblem = { status: HttpStatus; code: string };
+}
+interface CourseProblem {
+  status: HttpStatus;
+  code: string;
+}
 
 const problem = (status: HttpStatus, code: string): CourseProblem => ({ status, code });
 
@@ -38,11 +46,15 @@ const problem = (status: HttpStatus, code: string): CourseProblem => ({ status, 
  * The request against the subscription it books: kind of lessons, start and days a week (decision
  * 4).
  */
-function subscriptionProblem(req: CourseFacts['req'], sub: CourseSubscription): CourseProblem | null {
+function subscriptionProblem(
+  req: CourseFacts['req'],
+  sub: CourseSubscription,
+): CourseProblem | null {
   // The package is the subscription's whatever the client sent (review M4): only the length must
   // match.
   if (req.durationMin !== sub.duration) return problem(HttpStatus.BAD_REQUEST, 'course_mismatch');
-  if (req.startsOn < sub.starts_on) return problem(HttpStatus.BAD_REQUEST, 'starts_before_subscription');
+  if (req.startsOn < sub.starts_on)
+    return problem(HttpStatus.BAD_REQUEST, 'starts_before_subscription');
   const perWeek = courseDaysPerWeek(sub);
   if (perWeek === null) return problem(HttpStatus.CONFLICT, 'custom_count_admin');
   if (req.byday.length !== perWeek) return problem(HttpStatus.BAD_REQUEST, 'days_count_mismatch');
@@ -50,9 +62,15 @@ function subscriptionProblem(req: CourseFacts['req'], sub: CourseSubscription): 
 }
 
 /** Does a weekly course of the student run on any day of [from, to] (to null = open-ended)? */
-export function courseOverlaps(rules: readonly CourseRule[], span: { from: string; to: string | null }): boolean {
+export function courseOverlaps(
+  rules: readonly CourseRule[],
+  span: { from: string; to: string | null },
+): boolean {
   return rules.some(
-    (r) => isCourseRule(r) && (span.to === null || r.starts_on <= span.to) && (r.ends_on === null || r.ends_on >= span.from),
+    (r) =>
+      isCourseRule(r) &&
+      (span.to === null || r.starts_on <= span.to) &&
+      (r.ends_on === null || r.ends_on >= span.from),
   );
 }
 
@@ -64,17 +82,29 @@ export function courseOverlaps(rules: readonly CourseRule[], span: { from: strin
  * subscription already has its course, or a course of the student overlaps it; one starting after
  * the current one's last day is fine), 400 no_occurrences (a picked day has no lesson).
  */
-export function courseProblem({ req, sub, rules, endsOn, booked }: CourseFacts): CourseProblem | null {
+export function courseProblem({
+  req,
+  sub,
+  rules,
+  endsOn,
+  booked,
+}: CourseFacts): CourseProblem | null {
   if (!sub) return problem(HttpStatus.CONFLICT, 'subscription_required');
   const bad = subscriptionProblem(req, sub);
   if (bad) return bad;
   if (booked) return problem(HttpStatus.CONFLICT, 'course_exists');
   if (endsOn === null) return problem(HttpStatus.BAD_REQUEST, 'no_occurrences');
-  if (courseOverlaps(rules, { from: req.startsOn, to: endsOn })) return problem(HttpStatus.CONFLICT, 'course_exists');
+  if (courseOverlaps(rules, { from: req.startsOn, to: endsOn }))
+    return problem(HttpStatus.CONFLICT, 'course_exists');
   return null;
 }
 
-type BlockFacts = { sub: CourseSubscription | null; rules: readonly CourseRule[]; today: string; booked: boolean };
+interface BlockFacts {
+  sub: CourseSubscription | null;
+  rules: readonly CourseRule[];
+  today: string;
+  booked: boolean;
+}
 
 /**
  * The course wizard's gate before anything is picked (GET /sales/booking/course): no subscription,

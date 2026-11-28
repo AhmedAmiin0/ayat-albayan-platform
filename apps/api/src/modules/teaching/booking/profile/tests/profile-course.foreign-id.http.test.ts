@@ -1,6 +1,11 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { REQUIRE_ON } from '@/modules/sales/sales/rule/sales-ownership-rule.fakes';
-import { profileApp, S1, SALES, SUB_ID } from '@/modules/teaching/booking/profile/profile-course.fakes';
+import {
+  profileApp,
+  S1,
+  SALES,
+  SUB_ID,
+} from '@/modules/teaching/booking/profile/profile-course.fakes';
 
 // While the ownership rule enforces it, an assistant reads only her own students' course routes;
 // the reset ownership owns no student, so S1 is another assistant's student.

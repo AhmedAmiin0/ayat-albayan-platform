@@ -63,20 +63,36 @@ describe('TeacherOptionsService (R-SCH-06, docs/10 §5 #12)', () => {
 
   it('returns the load (students vs max) and whether the teacher has a grid', async () => {
     const { service } = setup();
-    const option = { id: ABRAR.id, display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo', meeting_link: null, max_students: 12 };
+    const option = {
+      id: ABRAR.id,
+      display_name_ar: 'أبرار',
+      gender: 'female',
+      programs: ['quran'],
+      tz: 'Africa/Cairo',
+      meeting_link: null,
+      max_students: 12,
+    };
     expect(await service.list({ program: 'quran' })).toEqual([
       { ...option, platform_classroom: false, students_count: 7, has_availability: true },
     ]);
   });
 
-  it('platform_classroom: the teacher\'s meeting_mode, else the academy default (migration 490)', async () => {
+  it("platform_classroom: the teacher's meeting_mode, else the academy default (migration 490)", async () => {
     const { service, options } = setup();
     options.academyAuto.mockResolvedValue(true);
-    options.active.mockResolvedValue([ABRAR, { ...ABRAR, id: 'e9999999-9999-4999-8999-999999999996', meeting_mode: 'static' }]);
-    expect((await service.list({ program: 'quran' })).map((t) => t.platform_classroom)).toEqual([true, false]);
+    options.active.mockResolvedValue([
+      ABRAR,
+      { ...ABRAR, id: 'e9999999-9999-4999-8999-999999999996', meeting_mode: 'static' },
+    ]);
+    expect((await service.list({ program: 'quran' })).map((t) => t.platform_classroom)).toEqual([
+      true,
+      false,
+    ]);
     options.academyAuto.mockResolvedValue(false);
     options.active.mockResolvedValue([{ ...ABRAR, meeting_mode: 'platform' }]);
-    expect((await service.list({ program: 'quran' }))[0]).toMatchObject({ platform_classroom: true });
+    expect((await service.list({ program: 'quran' }))[0]).toMatchObject({
+      platform_classroom: true,
+    });
     expect((await service.list({ program: 'quran' }))[0]).not.toHaveProperty('meeting_mode');
   });
 

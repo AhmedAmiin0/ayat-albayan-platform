@@ -5,7 +5,13 @@ import { LivekitApi, LivekitError } from '@/modules/teaching/classroom/livekit/l
 import { sentBody, twirpAnswer } from '@/modules/teaching/classroom/livekit/livekit.fakes';
 import { muteTrack, trackSidOf } from '@/modules/teaching/classroom/livekit/livekit-api.mute';
 
-const PARTICIPANT = { identity: 'guest-0123456789ab', tracks: [{ sid: 'TR_cam', source: 'CAMERA' }, { sid: 'TR_mic', source: 'MICROPHONE' }] };
+const PARTICIPANT = {
+  identity: 'guest-0123456789ab',
+  tracks: [
+    { sid: 'TR_cam', source: 'CAMERA' },
+    { sid: 'TR_mic', source: 'MICROPHONE' },
+  ],
+};
 
 /** Answers GetParticipant with `participant`, everything else with {}. */
 function twirp(participant: object | null) {
@@ -32,8 +38,13 @@ describe('trackSidOf', () => {
 describe('muteTrack', () => {
   it('looks the track up, then MutePublishedTrack {track_sid, muted: true}', async () => {
     const h = twirp(PARTICIPANT);
-    expect(await muteTrack(new LivekitApi(CONFIG, h), { ...INPUT, source: 'microphone' })).toBe('muted');
-    expect(h.mock.calls.map(([url]) => url.split('/').at(-1))).toEqual(['GetParticipant', 'MutePublishedTrack']);
+    expect(await muteTrack(new LivekitApi(CONFIG, h), { ...INPUT, source: 'microphone' })).toBe(
+      'muted',
+    );
+    expect(h.mock.calls.map(([url]) => url.split('/').at(-1))).toEqual([
+      'GetParticipant',
+      'MutePublishedTrack',
+    ]);
     expect(sentBody(h.mock.calls[1]?.[1])).toEqual({ ...INPUT, track_sid: 'TR_mic', muted: true });
   });
 
@@ -44,7 +55,10 @@ describe('muteTrack', () => {
   });
 
   it('a participant who left throws not_found', async () => {
-    const err = await muteTrack(new LivekitApi(CONFIG, twirp(null)), { ...INPUT, source: 'camera' }).catch((e: unknown) => e);
+    const err = await muteTrack(new LivekitApi(CONFIG, twirp(null)), {
+      ...INPUT,
+      source: 'camera',
+    }).catch((e: unknown) => e);
     expect(err).toBeInstanceOf(LivekitError);
     expect(err).toMatchObject({ code: 'not_found' });
   });

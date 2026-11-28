@@ -6,7 +6,13 @@ import {
   roomNameOf,
 } from '@/modules/teaching/classroom/recordings/recording-target';
 import { MaxDurationRepo } from './max-duration.repo';
-import { cutoffOf, meetingOverdue, openTooLong, ownedRooms, type OwnedRoom } from './max-duration.rule';
+import {
+  cutoffOf,
+  meetingOverdue,
+  openTooLong,
+  ownedRooms,
+  type OwnedRoom,
+} from './max-duration.rule';
 import { MaxDurationSettings } from './max-duration.settings';
 import { MeetingAutoEnd } from './meeting-auto-end';
 import { RoomCloser } from './room-closer';
@@ -16,7 +22,11 @@ const EVERY_MS = 5 * 60_000;
 const FIRST_RUN_MS = 2 * 60_000;
 
 /** Counts only: no names, phones or ids in the log. */
-interface MaxDurationSummary { ended: number; closed: number; failed: number }
+interface MaxDurationSummary {
+  ended: number;
+  closed: number;
+  failed: number;
+}
 
 const why = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 

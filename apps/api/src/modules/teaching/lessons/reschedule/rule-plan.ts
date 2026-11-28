@@ -5,13 +5,16 @@ import { horizonWindow, localDateOf, ruleOccurrences, type Occurrence } from '@a
 import { resolveMeetingLink } from '@/modules/teaching/scheduling/meeting-link';
 import { ruleStudents, type RuleWithLinks } from '@/modules/teaching/scheduling/schedule.repo';
 
-export type RulePlanInput = {
+export interface RulePlanInput {
   old: RuleWithLinks;
   next: WeeklyRule;
   now: Date;
   weeks: number;
-};
-export type RulePlan = { rule: NewRule; occurrences: Occurrence[] };
+}
+export interface RulePlan {
+  rule: NewRule;
+  occurrences: Occurrence[];
+}
 
 /**
  * The replacement rule of a whole-rule reschedule (R-SCH-07, docs/10 route 8 `rule`): same
@@ -61,16 +64,21 @@ export function planNewRule({ old, next, now, weeks }: RulePlanInput): RulePlan 
   };
 }
 
-export type LessonsPlanInput = {
+export interface LessonsPlanInput {
   plan: RulePlan;
   link: { teacherLink: string | null; overrides: readonly (string | null)[] };
   /** startsAt ISO strings of occurrences that clash; they carry the override reason. */
   clashes: ReadonlySet<string>;
   overrideReason: string | null;
-};
+}
 
 /** The new rule's lesson rows (ids generated here so the confirmation can point at the first). */
-export function planLessons({ plan, link, clashes, overrideReason }: LessonsPlanInput): NewLesson[] {
+export function planLessons({
+  plan,
+  link,
+  clashes,
+  overrideReason,
+}: LessonsPlanInput): NewLesson[] {
   const meetingLink = resolveMeetingLink({
     explicit: plan.rule.meeting_link,
     studentOverrides: link.overrides,

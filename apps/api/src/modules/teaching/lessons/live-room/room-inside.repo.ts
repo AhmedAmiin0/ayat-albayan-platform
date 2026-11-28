@@ -25,14 +25,16 @@ export class RoomInsideRepo {
   /** Everyone inside these lessons' rooms now, earliest arrival first. */
   async inside(lessonIds: readonly string[]): Promise<PresenceRow[]> {
     if (lessonIds.length === 0) return [];
-    const data = rows(await this.db
-      .from('classroom_participants')
-      .select(INSIDE)
-      .in('lesson_id', [...lessonIds])
-      .not('entered_at', 'is', null)
-      .is('left_at', null)
-      .order('entered_at')
-      .limit(LIMIT));
+    const data = rows(
+      await this.db
+        .from('classroom_participants')
+        .select(INSIDE)
+        .in('lesson_id', [...lessonIds])
+        .not('entered_at', 'is', null)
+        .is('left_at', null)
+        .order('entered_at')
+        .limit(LIMIT),
+    );
     return data;
   }
 }

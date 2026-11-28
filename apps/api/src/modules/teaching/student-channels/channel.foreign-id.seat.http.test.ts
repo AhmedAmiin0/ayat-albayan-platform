@@ -7,7 +7,7 @@ const FAMILY_AND_TEACHER: readonly Who[] = ['teacher', 'guardian', 'student'];
 
 // Any assistant reads any chat's seat by design (docs/31 §2: one seat, any assistant may take a
 // free one), so the denial is for every other login and for a student id that does not exist.
-describe('GET /sales/students/:id/channel/seat with someone else\'s student id', () => {
+describe("GET /sales/students/:id/channel/seat with someone else's student id", () => {
   let t: App;
   beforeAll(async () => {
     t = await channelApp();
@@ -25,7 +25,7 @@ describe('GET /sales/students/:id/channel/seat with someone else\'s student id',
     expect(t.seats.repo.read).not.toHaveBeenCalled();
   });
 
-  it('another assistant sees only the holder\'s name, never the seat as hers', async () => {
+  it("another assistant sees only the holder's name, never the seat as hers", async () => {
     const res = await t.call('GET', SEAT, 'otherSales');
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual({

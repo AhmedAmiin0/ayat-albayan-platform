@@ -51,7 +51,9 @@ describe('POST /teachers/me/lessons/:id/cancel — the teacher cancels one lesso
   });
 
   it('a completed lesson → 409, never the auto-held correction branch', async () => {
-    h.lessons.get.mockResolvedValue(lessonRow({ status: 'completed', starts_at: '2026-10-05T14:00:00+00:00' }));
+    h.lessons.get.mockResolvedValue(
+      lessonRow({ status: 'completed', starts_at: '2026-10-05T14:00:00+00:00' }),
+    );
     const res = await h.call({ method: 'POST', url, token: 'teacher', body: REASON });
     expect([res.statusCode, res.json().code]).toEqual([409, 'invalid_transition']);
     expect(h.writer.apply).not.toHaveBeenCalled();
@@ -66,7 +68,9 @@ describe('POST /teachers/me/lessons/:id/cancel — the teacher cancels one lesso
   });
 
   it('only teachers: a guardian is 403; an unlinked teacher 404', async () => {
-    expect((await h.call({ method: 'POST', url, token: 'guardian', body: REASON })).statusCode).toBe(403);
+    expect(
+      (await h.call({ method: 'POST', url, token: 'guardian', body: REASON })).statusCode,
+    ).toBe(403);
     const res = await h.call({ method: 'POST', url, token: 'unlinked', body: REASON });
     expect(res.statusCode).toBe(403);
     expect(h.writer.apply).not.toHaveBeenCalled();
