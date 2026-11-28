@@ -1,27 +1,4 @@
 {
-  "playwright.config.ts": {
-    "stylistic/max-len": {
-      "count": 5
-    }
-  },
-  "scripts/screens.ts": {
-    "typescript/restrict-template-expressions": {
-      "count": 2
-    }
-  },
-  "support/api-boot.ts": {
-    "typescript/no-confusing-void-expression": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "support/core/schedule.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "support/core/wa-stub.ts": {
     "ab/no-unchecked-json": {
       "count": 1
@@ -43,16 +20,10 @@
     },
     "ab/no-unchecked-json": {
       "count": 1
-    },
-    "typescript/no-misused-spread": {
-      "count": 1
     }
   },
   "support/finance/money.ts": {
     "no-restricted-properties": {
-      "count": 1
-    },
-    "typescript/no-unsafe-argument": {
       "count": 1
     }
   },
@@ -79,34 +50,11 @@
   "support/people/student-statuses.ts": {
     "ab/no-unchecked-json": {
       "count": 1
-    },
-    "typescript/no-unsafe-argument": {
-      "count": 1
-    }
-  },
-  "support/reporting/feedback.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "support/reporting/teacher-extra.ts": {
     "ab/no-unchecked-json": {
       "count": 1
-    }
-  },
-  "support/sales/assistant-api.ts": {
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "support/sales/assistant-journey.ts": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
-  "support/sales/assistant.ts": {
-    "stylistic/max-len": {
-      "count": 6
     }
   },
   "support/teaching/classroom-live.ts": {
@@ -117,25 +65,14 @@
       "count": 1
     }
   },
-  "tests/finance/assistant-statement.api.spec.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "tests/finance/course-pause.sql.spec.ts": {
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "tests/finance/exports.spec.ts": {
     "complexity": {
       "count": 1
-    },
-    "typescript/restrict-template-expressions": {
-      "count": 2
     }
   },
   "tests/finance/payouts.spec.ts": {
@@ -145,9 +82,6 @@
   },
   "tests/finance/teacher-corrections.sql.spec.ts": {
     "complexity": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-type-conversion": {
       "count": 1
     }
   },
@@ -196,11 +130,6 @@
       "count": 1
     }
   },
-  "tests/platform/config-expand.sql.spec.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "tests/platform/config-parity.api.spec.ts": {
     "ab/no-unchecked-json": {
       "count": 1
@@ -219,9 +148,6 @@
   "tests/platform/google-sync.spec.ts": {
     "complexity": {
       "count": 1
-    },
-    "typescript/restrict-template-expressions": {
-      "count": 3
     }
   },
   "tests/platform/mobile-form-sheets.spec.ts": {
@@ -236,11 +162,6 @@
   },
   "tests/platform/settings-gate.api.spec.ts": {
     "ab/no-unchecked-json": {
-      "count": 1
-    }
-  },
-  "tests/platform/shell-focus.spec.ts": {
-    "typescript/restrict-template-expressions": {
       "count": 1
     }
   },
@@ -259,24 +180,9 @@
       "count": 1
     }
   },
-  "tests/sales/assistant-reopen.sql.spec.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
   "tests/sales/assistant-scope.sql.spec.ts": {
     "complexity": {
       "count": 1
-    }
-  },
-  "tests/sales/assistant-terms.sql.spec.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "tests/sales/journey-7-assistant-cycle.spec.ts": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "tests/sales/leads-applicants.spec.ts": {
@@ -341,9 +247,6 @@
   "tests/teaching/student-recordings-api.spec.ts": {
     "complexity": {
       "count": 2
-    },
-    "typescript/no-unnecessary-condition": {
-      "count": 1
     }
   }
 }

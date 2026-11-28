@@ -17,14 +17,6 @@
   "src/db/target.ts": {
     "max-lines-per-function": {
       "count": 1
-    },
-    "no-empty-function": {
-      "count": 1
-    }
-  },
-  "src/delta/staging-delta.test.ts": {
-    "typescript/no-unnecessary-condition": {
-      "count": 1
     }
   },
   "src/hash.ts": {
@@ -32,26 +24,8 @@
       "count": 1
     }
   },
-  "src/map/leads/fixtures.ts": {
-    "typescript/no-redundant-type-constituents": {
-      "count": 3
-    }
-  },
-  "src/map/lessons/lessons.ts": {
-    "typescript/no-base-to-string": {
-      "count": 2
-    }
-  },
   "src/map/messages/messages.ts": {
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/map/money/heart.ts": {
-    "typescript/no-base-to-string": {
-      "count": 1
-    },
-    "typescript/restrict-template-expressions": {
       "count": 1
     }
   },
@@ -60,41 +34,13 @@
       "count": 1
     }
   },
-  "src/map/people/collect.ts": {
-    "typescript/restrict-template-expressions": {
-      "count": 1
-    }
-  },
-  "src/map/people/match.ts": {
-    "typescript/no-base-to-string": {
-      "count": 1
-    }
-  },
   "src/map/people/status/bookings.ts": {
     "ab/no-shape-checks": {
       "count": 1
     }
   },
-  "src/map/people/students.write.test.ts": {
-    "no-empty-function": {
-      "count": 1
-    }
-  },
-  "src/map/people/translit.ts": {
-    "typescript/no-misused-spread": {
-      "count": 1
-    },
-    "typescript/prefer-find": {
-      "count": 1
-    }
-  },
   "src/map/reports/parse.ts": {
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "src/map/reports/reports.test.ts": {
-    "no-empty-function": {
       "count": 1
     }
   },
@@ -118,65 +64,9 @@
       "count": 1
     }
   },
-  "src/pdf-import/match.ts": {
-    "typescript/no-base-to-string": {
-      "count": 1
-    }
-  },
-  "src/plan/apply.ts": {
-    "typescript/unbound-method": {
-      "count": 1
-    }
-  },
-  "src/plan/changes.test.ts": {
-    "typescript/restrict-template-expressions": {
-      "count": 1
-    }
-  },
-  "src/plan/codes.ts": {
-    "typescript/no-unnecessary-type-conversion": {
-      "count": 1
-    }
-  },
-  "src/plan/match/templates.target.ts": {
-    "typescript/no-base-to-string": {
-      "count": 1
-    }
-  },
-  "src/report/review.ts": {
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/sources/crm.ts": {
-    "typescript/no-unnecessary-condition": {
-      "count": 1
-    }
-  },
-  "src/sources/crm/rows.ts": {
-    "ab/no-shape-checks": {
-      "count": 1
-    },
-    "typescript/no-base-to-string": {
-      "count": 1
-    }
-  },
   "src/sources/extract-sheets.ts": {
     "ab/no-shape-checks": {
       "count": 1
-    }
-  },
-  "src/sources/rows.ts": {
-    "typescript/no-base-to-string": {
-      "count": 1
-    },
-    "typescript/no-misused-spread": {
-      "count": 1
-    }
-  },
-  "src/sources/sheets/cells.ts": {
-    "typescript/restrict-template-expressions": {
-      "count": 2
     }
   },
   "src/sources/teachers.dir.ts": {
@@ -192,14 +82,6 @@
   "src/time.ts": {
     "no-restricted-properties": {
       "count": 1
-    },
-    "typescript/restrict-template-expressions": {
-      "count": 3
-    }
-  },
-  "src/types.ts": {
-    "stylistic/max-len": {
-      "count": 5
     }
   }
 }

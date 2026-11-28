@@ -68,9 +68,6 @@
   "ci-checks/e2e-shards.mjs": {
     "ab/no-shape-checks": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   },
   "ci-checks/folder-cap.mjs": {
@@ -79,9 +76,6 @@
     },
     "ab/no-shape-checks": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 2
     }
   },
   "ci-checks/jscpd-gate.mjs": {
@@ -109,11 +103,6 @@
   },
   "ci-checks/lint/queries-gate.mjs": {
     "ab/no-shape-checks": {
-      "count": 1
-    }
-  },
-  "ci-checks/move-module.ts": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -270,14 +259,6 @@
     },
     "ab/no-shape-checks": {
       "count": 2
-    },
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "ci-checks/release-tags/release-tag.mjs": {
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "ci-checks/roll-fake.mjs": {
@@ -295,11 +276,6 @@
       "count": 1
     }
   },
-  "ci-checks/workflows-fast.test.mjs": {
-    "stylistic/max-len": {
-      "count": 2
-    }
-  },
   "ci-checks/workflows.test.mjs": {
     "complexity": {
       "count": 1
@@ -308,7 +284,7 @@
       "count": 3
     },
     "stylistic/max-len": {
-      "count": 5
+      "count": 1
     }
   },
   "env/deploy-baseline.mjs": {
@@ -317,9 +293,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 3
     }
   },
   "env/write-local-env.mjs": {

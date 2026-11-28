@@ -47,9 +47,6 @@
     },
     "complexity": {
       "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
     }
   },
   "src/lib/connectivity/connectivity.ts": {
@@ -90,9 +87,6 @@
   },
   "src/lib/i18n/locale-switch.ts": {
     "complexity": {
-      "count": 1
-    },
-    "typescript/no-unnecessary-condition": {
       "count": 1
     }
   },
@@ -142,32 +136,9 @@
       "count": 4
     }
   },
-  "src/ui/connecting/CheckBadge/CheckBadge.test.tsx": {
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    }
-  },
-  "src/ui/connecting/CheckBadge/CheckBadge.tsx": {
-    "stylistic/max-len": {
-      "count": 4
-    },
-    "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/ui/connecting/ConnectingBar/ConnectingBar.test.tsx": {
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 1
-    }
-  },
   "src/ui/connecting/ConnectingBar/ConnectingBar.tsx": {
     "ab/no-restricted-syntax": {
       "count": 2
-    }
-  },
-  "src/ui/connecting/ConnectingDots/ConnectingDots.test.tsx": {
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 1
     }
   },
   "src/ui/connecting/use-bar-reveal.ts": {
@@ -177,16 +148,6 @@
   },
   "src/ui/connecting/use-screen-focus.ts": {
     "ab/no-restricted-syntax": {
-      "count": 1
-    }
-  },
-  "src/ui/feedback/ErrorState/ErrorState.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/ui/feedback/StatusChip/StatusChip.tsx": {
-    "stylistic/max-len": {
       "count": 1
     }
   },
@@ -235,11 +196,6 @@
   },
   "src/ui/primitives/IconButton.tsx": {
     "no-nested-ternary": {
-      "count": 1
-    }
-  },
-  "src/ui/startup/StartupEmblem.test.tsx": {
-    "typescript/no-unnecessary-boolean-literal-compare": {
       "count": 1
     }
   },
