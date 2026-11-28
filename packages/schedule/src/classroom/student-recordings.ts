@@ -50,7 +50,7 @@ export const studentRecordingsQuerySchema = z.object({
   ...pageQuery({ size: 10 }),
   from: day.optional(),
   to: day.optional(),
-  teacherId: z.string().uuid().optional(),
+  teacherId: z.uuid().optional(),
   /** Only rows in this state; absent means every state. */
   status: z.enum(STUDENT_RECORDING_STATUSES).optional(),
 });

@@ -21,17 +21,23 @@ export interface ChargeableInput {
  * scheduled / confirmed keep the column default (true): nothing is consumed until an outcome.
  */
 export function isChargeable(input: ChargeableInput): boolean {
-  switch (input.status) {
-    case 'cancelled_by_teacher':
-    case 'cancelled_by_admin':
-    case 'rescheduled':
-      return false;
-    case 'excused':
-      return isLateCancel(input);
-    default:
-      return true;
-  }
+  return CHARGEABLE_BY_STATUS[input.status](input);
 }
+
+const charged = (): boolean => true;
+const free = (): boolean => false;
+
+const CHARGEABLE_BY_STATUS: Readonly<Record<LessonStatus, (i: ChargeableInput) => boolean>> = {
+  scheduled: charged,
+  confirmed: charged,
+  completed: charged,
+  late: charged,
+  no_show: charged,
+  excused: (i) => isLateCancel(i),
+  cancelled_by_teacher: free,
+  cancelled_by_admin: free,
+  rescheduled: free,
+};
 
 function isLateCancel({ startsAt, at, lateCancelHours }: ChargeableInput): boolean {
   if (lateCancelHours === null) return false;

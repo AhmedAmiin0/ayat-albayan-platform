@@ -37,6 +37,11 @@ export interface WindowLesson {
   room_opened_at?: string | null | undefined;
 }
 
+function stateAt(t: number, opens: number, closes: number): JoinState {
+  if (t < opens) return 'early';
+  return t > closes ? 'closed' : 'open';
+}
+
 /**
  * Window of a lesson at `now`. Edges are inclusive, so the boundary minute still joins. A room
  * opened early by staff opens at min(room_opened_at, starts_at − opensBeforeMin).
@@ -51,9 +56,8 @@ export function joinWindow(
   const opens = Number.isNaN(opened) ? usual : Math.min(opened, usual);
   const closes = Date.parse(lesson.ends_at) + win.closesAfterMin * MIN_MS;
   const t = now.getTime();
-  const state: JoinState = t < opens ? 'early' : t > closes ? 'closed' : 'open';
   return {
-    state,
+    state: stateAt(t, opens, closes),
     opens_at: new Date(opens).toISOString(),
     closes_at: new Date(closes).toISOString(),
   };

@@ -1,6 +1,11 @@
 import { clientRequestId } from '@ab/core';
 import { z } from 'zod';
-import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindow, type JoinWindowConfig } from './join-window';
+import {
+  DEFAULT_JOIN_WINDOW,
+  joinWindow,
+  type JoinWindow,
+  type JoinWindowConfig,
+} from './join-window';
 import {
   MAX_MEETING_INVITEES,
   meetingDurationSchema,
@@ -90,14 +95,18 @@ export function meetingWindow(
   return joinWindow({ starts_at: row.starts_at, ends_at: row.planned_end_at }, now, win);
 }
 
+function hasEnded(row: MeetingTimes, now: Date): boolean {
+  if (row.revoked || row.cancelled_at) return true;
+  return row.ends_at !== null && Date.parse(row.ends_at) <= now.getTime();
+}
+
 /** Ended once ends_at is stamped, cancelled or revoked, or a scheduled one's window closed. */
 export function meetingState(
   row: MeetingTimes,
   now: Date,
   win: JoinWindowConfig = DEFAULT_JOIN_WINDOW,
 ): MeetingState {
-  if (row.revoked || row.cancelled_at) return 'ended';
-  if (row.ends_at !== null && Date.parse(row.ends_at) <= now.getTime()) return 'ended';
+  if (hasEnded(row, now)) return 'ended';
   return meetingWindow(row, now, win)?.state === 'closed' ? 'ended' : 'open';
 }
 
@@ -115,7 +124,11 @@ export function canJoinMeeting(
 const DAY_MS = 86_400_000;
 
 /** null when fine; else the 400 code: starts_in_past | too_far_ahead. */
-export function scheduleProblem(startsAt: string, now: Date, maxDays: number): 'starts_in_past' | 'too_far_ahead' | null {
+export function scheduleProblem(
+  startsAt: string,
+  now: Date,
+  maxDays: number,
+): 'starts_in_past' | 'too_far_ahead' | null {
   const t = Date.parse(startsAt);
   if (t <= now.getTime()) return 'starts_in_past';
   return t - now.getTime() > maxDays * DAY_MS ? 'too_far_ahead' : null;

@@ -22,15 +22,18 @@ export function subtractIntervals(
   cuts: readonly Interval[],
 ): Interval[] {
   const blockers = mergeIntervals(cuts);
+  return mergeIntervals(base).flatMap((b) => subtractFrom(b, blockers));
+}
+
+/** One merged interval minus the merged, sorted `blockers`. */
+function subtractFrom(b: Interval, blockers: readonly Interval[]): Interval[] {
   const out: Interval[] = [];
-  for (const b of mergeIntervals(base)) {
-    let cursor = b.start;
-    for (const c of blockers) {
-      if (c.end <= cursor || c.start >= b.end) continue;
-      if (c.start > cursor) out.push({ start: cursor, end: c.start });
-      cursor = Math.max(cursor, c.end);
-    }
-    if (cursor < b.end) out.push({ start: cursor, end: b.end });
+  let cursor = b.start;
+  for (const c of blockers) {
+    if (c.end <= cursor || c.start >= b.end) continue;
+    if (c.start > cursor) out.push({ start: cursor, end: c.start });
+    cursor = Math.max(cursor, c.end);
   }
+  if (cursor < b.end) out.push({ start: cursor, end: b.end });
   return out;
 }

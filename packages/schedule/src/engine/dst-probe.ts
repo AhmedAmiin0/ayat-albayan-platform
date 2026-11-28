@@ -31,12 +31,13 @@ export interface ProbeInput {
 export function probeOccurrences(input: ProbeInput): Occurrence[] {
   const zones = [...new Set(input.tzs)];
   if (zones.length < 2) return [];
+  const around = (at: Date) => ({ from: at, to: new Date(at.getTime() + 8 * DAY_MS) });
+  const occurrences = zones
+    .flatMap((tz) => offsetChanges(tz, input.after))
+    .flatMap((at) => ruleOccurrences(input.timing, around(at)));
   const byStart = new Map<number, Occurrence>();
-  for (const at of zones.flatMap((tz) => offsetChanges(tz, input.after))) {
-    const window = { from: at, to: new Date(at.getTime() + 8 * DAY_MS) };
-    for (const o of ruleOccurrences(input.timing, window)) {
-      if (o.starts_at > input.after) byStart.set(o.starts_at.getTime(), o);
-    }
+  for (const o of occurrences) {
+    if (o.starts_at > input.after) byStart.set(o.starts_at.getTime(), o);
   }
   return [...byStart.values()].sort((a, b) => a.starts_at.getTime() - b.starts_at.getTime());
 }

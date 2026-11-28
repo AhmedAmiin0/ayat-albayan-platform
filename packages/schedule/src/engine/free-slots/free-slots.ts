@@ -73,13 +73,19 @@ export function freeSlots(input: FreeSlotsInput): TimeRange[] {
   const range = toInterval({ start: input.from, end: input.to });
   const windows = mergeIntervals(input.availability.flatMap((row) => expandRow(row, range)));
   const blocked = [...input.timeOff, ...input.busy].map(toInterval);
-  const duration = input.durationMin * MINUTE_MS;
+  const steps = { range, duration: input.durationMin * MINUTE_MS, step: stepMin * MINUTE_MS };
+  return subtractIntervals(windows, blocked).flatMap((free) => slotsIn(free, steps));
+}
+
+/** `duration` slots stepped from the free window's start, kept only if fully inside `range`. */
+function slotsIn(
+  free: Interval,
+  s: { range: Interval; duration: number; step: number },
+): TimeRange[] {
   const slots: TimeRange[] = [];
-  for (const free of subtractIntervals(windows, blocked)) {
-    for (let t = free.start; t + duration <= free.end; t += stepMin * MINUTE_MS) {
-      if (t >= range.start && t + duration <= range.end) {
-        slots.push({ start: new Date(t), end: new Date(t + duration) });
-      }
+  for (let t = free.start; t + s.duration <= free.end; t += s.step) {
+    if (t >= s.range.start && t + s.duration <= s.range.end) {
+      slots.push({ start: new Date(t), end: new Date(t + s.duration) });
     }
   }
   return slots;

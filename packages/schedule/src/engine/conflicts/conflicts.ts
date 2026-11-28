@@ -47,20 +47,21 @@ export function findConflicts(input: ConflictInput): Conflict[] {
 function conflictsAt(p: Occurrence, input: ConflictInput, windows: Interval[]): Conflict[] {
   const at = { startsAt: p.starts_at.toISOString(), endsAt: p.ends_at.toISOString() };
   const [s, e] = [p.starts_at.getTime(), p.ends_at.getTime()];
-  const out: Conflict[] = [];
-  if (!windows.some((w) => w.start <= s && e <= w.end)) {
-    out.push({ kind: 'outside_availability', ...at });
-  }
-  if (input.timeOff.some((t) => overlaps(p, { starts_at: t.start, ends_at: t.end }))) {
-    out.push({ kind: 'time_off', ...at });
-  }
-  for (const l of input.teacherLessons) {
-    if (overlaps(p, l)) out.push({ kind: 'teacher_busy', ...at, lessonId: l.id });
-  }
-  for (const l of input.studentLessons) {
-    if (overlaps(p, l)) {
-      out.push({ kind: 'student_busy', ...at, lessonId: l.id, studentId: l.student_id });
-    }
-  }
-  return out;
+  const outside = !windows.some((w) => w.start <= s && e <= w.end);
+  const off = input.timeOff.some((t) => overlaps(p, { starts_at: t.start, ends_at: t.end }));
+  const teacherBusy = input.teacherLessons.filter((l) => overlaps(p, l));
+  const studentBusy = input.studentLessons.filter((l) => overlaps(p, l));
+  return [
+    ...when(outside, { kind: 'outside_availability', ...at }),
+    ...when(off, { kind: 'time_off', ...at }),
+    ...teacherBusy.map((l): Conflict => ({ kind: 'teacher_busy', ...at, lessonId: l.id })),
+    ...studentBusy.map((l): Conflict => ({
+      kind: 'student_busy',
+      ...at,
+      lessonId: l.id,
+      studentId: l.student_id,
+    })),
+  ];
 }
+
+const when = (hit: boolean, c: Conflict): Conflict[] => (hit ? [c] : []);
