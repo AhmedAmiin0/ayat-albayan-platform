@@ -1,7 +1,10 @@
 import { Amount } from '@/features/finance/subscriptions/balance/Amount';
 import { cn } from '@ab/web-kit';
 
-type Props = { totals: Readonly<Record<string, number>>; className?: string };
+interface Props {
+  totals: Readonly<Record<string, number>>;
+  className?: string;
+}
 
 /** One amount per currency, one line each (SAR and EGP are never added together). */
 export function CurrencyList({ totals, className }: Props) {

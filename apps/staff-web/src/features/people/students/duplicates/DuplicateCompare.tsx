@@ -5,12 +5,12 @@ import type { CreateStudentValues } from '@/features/people/students/create/crea
 import { CompareRow, cell } from './CompareRow';
 import type { StudentProfile, StudentRef } from '@ab/shared';
 
-type DuplicateCompareProps = {
+interface DuplicateCompareProps {
   typed: CreateStudentValues;
   candidate: StudentRef;
   /** The candidate's profile; undefined while loading (or if it failed). */
   profile: StudentProfile | undefined;
-};
+}
 
 const sub = 'w-full text-2xs font-normal text-ink-3';
 
@@ -28,13 +28,17 @@ export function DuplicateCompare({ typed, candidate, profile }: DuplicateCompare
     >
       <div role="row" className="contents">
         <span role="columnheader" className={`${cell.head} max-sm:hidden`} />
-        <span role="columnheader" className={cell.head}>{t.students.compareNow}</span>
+        <span role="columnheader" className={cell.head}>
+          {t.students.compareNow}
+        </span>
         <span role="columnheader" className={`${cell.head} ${cell.existing}`}>
           <span>
             {t.students.compareExisting} <Ltr className="text-ink-2">{candidate.code}</Ltr>
           </span>
         </span>
-        <span role="columnheader" className={`${cell.head} max-sm:hidden`}>{t.students.compareResult}</span>
+        <span role="columnheader" className={`${cell.head} max-sm:hidden`}>
+          {t.students.compareResult}
+        </span>
       </div>
       <CompareRow
         label={t.students.name}
@@ -71,7 +75,11 @@ export function DuplicateCompare({ typed, candidate, profile }: DuplicateCompare
           profile && (
             <>
               <span>{t.enums.program[profile.program]}</span>
-              {teacher && <small className={sub}>{t.students.withTeacher.replace('{teacher}', teacher)}</small>}
+              {teacher && (
+                <small className={sub}>
+                  {t.students.withTeacher.replace('{teacher}', teacher)}
+                </small>
+              )}
             </>
           )
         }

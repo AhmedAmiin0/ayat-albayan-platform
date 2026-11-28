@@ -2,24 +2,29 @@ import type { StudentProfile } from '@ab/shared';
 import type { StudentStatus } from '@ab/catalog';
 import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@ab/web-kit';
-import { isStatusChanged, STUDENTS_KEY, studentQuery, updateStudent } from '@/features/people/students/api';
+import {
+  isStatusChanged,
+  STUDENTS_KEY,
+  studentQuery,
+  updateStudent,
+} from '@/features/people/students/api';
 import { toProfileValues, toStudentPatch, type ProfileValues } from './profile-form';
 
-export type SaveProfileOptions = {
+export interface SaveProfileOptions {
   student: StudentProfile;
   values: ProfileValues;
   /** The status the form loaded: sent as `expected_status` with a changed status. */
   loaded: StudentStatus;
   queryClient: QueryClient;
-};
+}
 
-export type SaveProfileResult = {
+export interface SaveProfileResult {
   message: { ok: boolean; text: string };
   /** Saved: reload the whole form from the PATCH response. */
   saved?: ProfileValues;
   /** 409 `status_changed`: the student's current status, to show instead of the stale one. */
   current?: StudentStatus;
-};
+}
 
 /** One profile save (R-STU-05): PATCH, then the form reloads from the answer or the fresh student. */
 export async function saveProfile(o: SaveProfileOptions): Promise<SaveProfileResult> {

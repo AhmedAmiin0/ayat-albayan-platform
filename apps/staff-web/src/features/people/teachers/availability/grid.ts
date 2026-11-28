@@ -5,7 +5,10 @@ import type { AvailabilitySlot } from '@ab/schedule';
 export { WEEK_ORDER } from '@ab/shared';
 
 /** Weekly availability editor model (R-TCH-02): weekday → wall-clock "HH:MM" ranges. */
-export type Range = { start: string; end: string };
+export interface Range {
+  start: string;
+  end: string;
+}
 export type Grid = Record<Weekday, Range[]>;
 export type DayProblem = 'endBeforeStart' | 'overlap' | null;
 

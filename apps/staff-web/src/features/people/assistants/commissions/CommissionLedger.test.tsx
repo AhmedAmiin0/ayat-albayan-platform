@@ -7,11 +7,32 @@ import { ASSISTANT, COMMISSION } from '@/features/people/assistants/fixtures';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+  apiSend,
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
+}));
 
-const EGP = { ...COMMISSION, id: 'c2', student: { id: 's2', code: 'AB-1002', name: 'جود' }, amount: 70, currency: 'EGP', base_currency: 'EGP', base_amount: 700 };
-const VOIDED = { ...COMMISSION, id: 'c3', student: { id: 's3', code: 'AB-1003', name: 'منى' }, status: 'voided' as const, amount: 30, void_reason: 'دُفع بالخطأ' };
+const EGP = {
+  ...COMMISSION,
+  id: 'c2',
+  student: { id: 's2', code: 'AB-1002', name: 'جود' },
+  amount: 70,
+  currency: 'EGP',
+  base_currency: 'EGP',
+  base_amount: 700,
+};
+const VOIDED = {
+  ...COMMISSION,
+  id: 'c3',
+  student: { id: 's3', code: 'AB-1003', name: 'منى' },
+  status: 'voided' as const,
+  amount: 30,
+  void_reason: 'دُفع بالخطأ',
+};
 
 function renderLedger(rows = [COMMISSION, EGP, VOIDED], canWrite = true) {
   apiFetch.mockResolvedValue(rows);
@@ -39,7 +60,9 @@ describe('CommissionLedger (R-ASST-02, R-ASST-05)', () => {
 
   it('shows the void reason on a voided row and offers «إلغاء العمولة» only on earned ones', async () => {
     renderLedger();
-    expect(await screen.findByText(`${t.assistants.ledger.voidedWhy.replace('{reason}', 'دُفع بالخطأ')}`)).toBeTruthy();
+    expect(
+      await screen.findByText(t.assistants.ledger.voidedWhy.replace('{reason}', 'دُفع بالخطأ')),
+    ).toBeTruthy();
     expect(screen.getAllByRole('button', { name: t.assistants.ledger.void })).toHaveLength(2);
   });
 
@@ -59,11 +82,23 @@ describe('CommissionLedger (R-ASST-02, R-ASST-05)', () => {
   it('the filters go to the API: assistant, month, status', async () => {
     renderLedger();
     await screen.findByText('سهيلة');
-    fireEvent.change(screen.getByLabelText(t.assistants.ledger.assistant), { target: { value: 'a1' } });
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions?assistantId=a1'));
-    fireEvent.change(screen.getByLabelText(t.assistants.ledger.month), { target: { value: '2026-09' } });
-    fireEvent.change(screen.getByLabelText(t.assistants.ledger.statusLabel), { target: { value: 'voided' } });
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions?assistantId=a1&status=voided&from=2026-09-01T00%3A00%3A00.000Z&to=2026-10-01T00%3A00%3A00.000Z'));
+    fireEvent.change(screen.getByLabelText(t.assistants.ledger.assistant), {
+      target: { value: 'a1' },
+    });
+    await vi.waitFor(() =>
+      expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions?assistantId=a1'),
+    );
+    fireEvent.change(screen.getByLabelText(t.assistants.ledger.month), {
+      target: { value: '2026-09' },
+    });
+    fireEvent.change(screen.getByLabelText(t.assistants.ledger.statusLabel), {
+      target: { value: 'voided' },
+    });
+    await vi.waitFor(() =>
+      expect(apiFetch).toHaveBeenCalledWith(
+        '/assistant-pay/commissions?assistantId=a1&status=voided&from=2026-09-01T00%3A00%3A00.000Z&to=2026-10-01T00%3A00%3A00.000Z',
+      ),
+    );
   });
 
   it('voiding needs a reason, then posts it', async () => {
@@ -74,9 +109,15 @@ describe('CommissionLedger (R-ASST-02, R-ASST-05)', () => {
     fireEvent.click(within(dialog).getByRole('button', { name: t.assistants.ledger.void }));
     expect(await within(dialog).findByText(t.finance.reasonRequired)).toBeTruthy();
     expect(apiSend).not.toHaveBeenCalled();
-    fireEvent.change(within(dialog).getByLabelText(t.finance.reason), { target: { value: 'اشتراك مسترد' } });
+    fireEvent.change(within(dialog).getByLabelText(t.finance.reason), {
+      target: { value: 'اشتراك مسترد' },
+    });
     fireEvent.click(within(dialog).getByRole('button', { name: t.assistants.ledger.void }));
-    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/assistant-pay/commissions/c1/void', { reason: 'اشتراك مسترد' }));
+    await vi.waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('POST', '/assistant-pay/commissions/c1/void', {
+        reason: 'اشتراك مسترد',
+      }),
+    );
   });
 
   it('an empty ledger says so', async () => {

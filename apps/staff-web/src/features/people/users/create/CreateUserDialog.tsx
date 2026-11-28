@@ -16,7 +16,7 @@ export interface CreateUserDialogProps {
   prefill?: Prefill;
 }
 
-type Issued = { credential: IssuedCredential | null };
+interface Issued { credential: IssuedCredential | null }
 
 /** On success the one-time password or link replaces the form. */
 export function CreateUserDialog({ onClose, prefill }: CreateUserDialogProps) {

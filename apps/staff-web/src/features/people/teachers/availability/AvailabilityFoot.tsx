@@ -1,13 +1,13 @@
 import { Button, NuqtaGlyph, t } from '@ab/web-kit';
 import { weeklyHoursLabel } from './track';
 
-type Props = {
+interface Props {
   hours: number;
   pending: boolean;
   failed: boolean;
   onCancel: () => void;
   onSave: () => void;
-};
+}
 
 /** Save stays enabled with errors: it is refused and focus goes to the first (docs/07 §8). */
 export function AvailabilityFoot({ hours, pending, failed, onCancel, onSave }: Props) {

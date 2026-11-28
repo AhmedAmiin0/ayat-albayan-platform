@@ -15,11 +15,11 @@ const students = studentCalls({ apiFetch, apiSend });
 export const STUDENTS_KEY = studentKeys.all;
 
 /** The list filters (R-STU-01), the column sort and text filters (R-NFR-08) of GET /students. */
-export type StudentListView = {
+export interface StudentListView {
   filters?: StudentsFilters;
   sort?: SortSearch;
   columns?: FilterSearch;
-};
+}
 
 /** GET /students: search + page, and the filters / sort when given. */
 export const studentListQuery = (search: string, page: number, view: StudentListView = {}) =>

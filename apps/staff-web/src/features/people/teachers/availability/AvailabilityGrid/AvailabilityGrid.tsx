@@ -6,10 +6,18 @@ import { availabilityQuery, saveAvailability } from '@/features/people/teachers/
 import { AvailabilityFoot } from '@/features/people/teachers/availability/AvailabilityFoot';
 import { AvailabilityHead } from '@/features/people/teachers/availability/AvailabilityHead';
 import { AvailabilityWeek } from '@/features/people/teachers/availability/AvailabilityWeek';
-import { gridFromRows, gridIsValid, gridToSlots } from '@/features/people/teachers/availability/grid';
+import {
+  gridFromRows,
+  gridIsValid,
+  gridToSlots,
+} from '@/features/people/teachers/availability/grid';
 import { weeklyHours } from '@/features/people/teachers/availability/track';
 
-type Props = { teacherId: string; tz: string; rows: readonly AvailabilitySlot[] };
+interface Props {
+  teacherId: string;
+  tz: string;
+  rows: readonly AvailabilitySlot[];
+}
 
 /** Weekday × time-ranges editor (docs/07 §8); Save replaces the whole weekly grid (PUT). R-TCH-02. */
 export function AvailabilityGrid({ teacherId, tz: savedTz, rows }: Props) {

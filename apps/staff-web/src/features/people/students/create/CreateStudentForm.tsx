@@ -17,14 +17,14 @@ import { AgeField, ContactIsSelfField, GenderField } from '@/features/people/stu
 import { ProgramField } from '@/features/people/students/profile/ProgramField';
 import { TeacherField } from '@/features/people/students/profile/TeacherField';
 
-type CreateStudentFormProps = {
+interface CreateStudentFormProps {
   onSubmit: (values: CreateStudentValues) => Promise<void>;
   onCancel: () => void;
   error: string | null;
   /** The thread's phone is read-only; program and source keep their values without a field. */
   initial?: Partial<CreateStudentValues>;
   title?: string;
-};
+}
 
 const TEXT_FIELDS = {
   name: { label: t.leads.studentName, check: requiredError },

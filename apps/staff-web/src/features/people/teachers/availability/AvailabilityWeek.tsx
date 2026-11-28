@@ -6,7 +6,11 @@ import { hatchStyle } from './DayTrack';
 import { WEEK_ORDER, type Grid, type Range } from './grid';
 import { AXIS_HOURS, trackPct, wallClock } from './track';
 
-type Props = { grid: Grid; tz: string; onDay: (day: Weekday, ranges: Range[]) => void };
+interface Props {
+  grid: Grid;
+  tz: string;
+  onDay: (day: Weekday, ranges: Range[]) => void;
+}
 
 const headClass = 'py-2 text-2xs font-semibold text-ink-3';
 
@@ -24,7 +28,9 @@ function Axis() {
             i > 0 && i < AXIS_HOURS.length - 1 && 'rtl:translate-x-1/2 ltr:-translate-x-1/2',
             i === AXIS_HOURS.length - 1 && 'end-0',
           )}
-          style={i === AXIS_HOURS.length - 1 ? undefined : { insetInlineStart: `${trackPct(h * 60)}%` }}
+          style={
+            i === AXIS_HOURS.length - 1 ? undefined : { insetInlineStart: `${trackPct(h * 60)}%` }
+          }
         >
           {String(h).padStart(2, '0')}
         </span>
@@ -36,8 +42,15 @@ function Axis() {
 /** Track key. Booked lessons join it with R-SCH-01. */
 function Legend() {
   const items = [
-    { label: t.availability.legendAvailable, swatch: 'h-3 w-[22px] rounded-[3px] border border-gold bg-gold-wash' },
-    { label: t.availability.legendOverlap, swatch: 'h-3 w-[22px] rounded-[3px] border-[1.5px] border-danger', hatch: true },
+    {
+      label: t.availability.legendAvailable,
+      swatch: 'h-3 w-[22px] rounded-[3px] border border-gold bg-gold-wash',
+    },
+    {
+      label: t.availability.legendOverlap,
+      swatch: 'h-3 w-[22px] rounded-[3px] border-[1.5px] border-danger',
+      hatch: true,
+    },
     { label: t.availability.legendNow, swatch: 'h-3.5 w-0.5 rounded-[1px] bg-ink' },
   ];
   return (
@@ -60,12 +73,23 @@ export const AvailabilityWeek = forwardRef<HTMLDivElement, Props>(function Avail
   const clock = wallClock(useMinuteClock(), tz);
   return (
     <>
-      <div ref={ref} role="table" aria-label={t.availability.title} className="border-y border-rule">
+      <div
+        ref={ref}
+        role="table"
+        aria-label={t.availability.title}
+        className="border-y border-rule"
+      >
         <div role="row" className={weekRowClass}>
-          <span role="columnheader" className={cn(cellClass, headClass, 'hidden @min-[640px]:flex')}>
+          <span
+            role="columnheader"
+            className={cn(cellClass, headClass, 'hidden @min-[640px]:flex')}
+          >
             {t.availability.weekday}
           </span>
-          <span role="columnheader" className={cn(cellClass, headClass, 'hidden @min-[1000px]:flex')}>
+          <span
+            role="columnheader"
+            className={cn(cellClass, headClass, 'hidden @min-[1000px]:flex')}
+          >
             {`${t.availability.from}${t.common.listSeparator}${t.availability.to}`}
           </span>
           <div aria-hidden="true" className={cn(trackCellClass, headClass, 'pb-2')}>

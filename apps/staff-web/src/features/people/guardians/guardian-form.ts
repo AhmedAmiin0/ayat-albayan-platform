@@ -5,13 +5,13 @@ import { t } from '@ab/web-kit';
 import type { GuardianDetail } from '@ab/shared';
 
 /** Inputs hold strings; '' means not set. */
-export type GuardianValues = {
+export interface GuardianValues {
   name: string;
   phone: string;
   country: string;
   source: LeadSource | '';
   notes: string;
-};
+}
 
 export type GuardianErrors = Partial<Record<keyof GuardianValues, string>>;
 export type GuardianPatchResult =
@@ -19,7 +19,13 @@ export type GuardianPatchResult =
   | { ok: false; errors: GuardianErrors };
 
 export function guardianValues(g: GuardianDetail): GuardianValues {
-  return { name: g.name, phone: g.phone_e164, country: g.country ?? '', source: g.source ?? '', notes: g.notes ?? '' };
+  return {
+    name: g.name,
+    phone: g.phone_e164,
+    country: g.country ?? '',
+    source: g.source ?? '',
+    notes: g.notes ?? '',
+  };
 }
 
 const orNull = (v: string) => (v.trim() ? v.trim() : null);

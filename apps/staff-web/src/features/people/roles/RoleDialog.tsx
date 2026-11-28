@@ -6,9 +6,20 @@ import { apiErrorText } from '@/features/finance/subscriptions';
 import { baseRoleLabel, deleteRole, ROLES_KEY, saveRole, type RoleView } from './api';
 import { PermissionMatrix } from './PermissionMatrix';
 import { RoleResetButton } from './RoleResetButton';
-import { fixedGrantsOf, resettableRole, roleBody, roleForm, toggleGroup, togglePermission, type RoleForm } from './role-form';
+import {
+  fixedGrantsOf,
+  resettableRole,
+  roleBody,
+  roleForm,
+  toggleGroup,
+  togglePermission,
+  type RoleForm,
+} from './role-form';
 
-type Props = { role: RoleView | null; onClose: () => void };
+interface Props {
+  role: RoleView | null;
+  onClose: () => void;
+}
 const P = t.permissions.page;
 
 /** Create or edit a role in the side panel: names, base role (fixed once created) and the matrix. */
@@ -41,11 +52,24 @@ export function RoleDialog({ role, onClose }: Props) {
       title={role ? P.editRole : P.newRole}
       onClose={onClose}
       wide
-      hint={fixed === 'admin' ? P.adminAll : fixed === 'portal' ? P.portalFixed : resettable ? P.systemEditable : undefined}
+      hint={
+        fixed === 'admin'
+          ? P.adminAll
+          : fixed === 'portal'
+            ? P.portalFixed
+            : resettable
+              ? P.systemEditable
+              : undefined
+      }
       actions={
         <>
           {role && !role.is_system && (
-            <Button type="button" variant={confirming ? 'danger' : 'danger-quiet'} disabled={remove.isPending} onClick={() => (confirming ? remove.mutate(role.id) : setConfirming(true))}>
+            <Button
+              type="button"
+              variant={confirming ? 'danger' : 'danger-quiet'}
+              disabled={remove.isPending}
+              onClick={() => (confirming ? remove.mutate(role.id) : setConfirming(true))}
+            >
               {confirming ? P.deleteConfirm : P.delete}
             </Button>
           )}
@@ -77,12 +101,29 @@ export function RoleDialog({ role, onClose }: Props) {
             )}
           </Field>
           <Field label={P.nameEn}>
-            {(p) => <Input {...p} dir="ltr" value={form.name_en} onChange={(e) => setForm({ ...form, name_en: e.target.value })} />}
+            {(p) => (
+              <Input
+                {...p}
+                dir="ltr"
+                value={form.name_en}
+                onChange={(e) => setForm({ ...form, name_en: e.target.value })}
+              />
+            )}
           </Field>
         </div>
         <Field label={P.baseRole} hint={role ? P.baseRoleFixed : P.baseRoleHint}>
           {(p) => (
-            <Select {...p} value={form.base_role} disabled={!!role} onChange={(e) => setForm({ ...form, base_role: STAFF_ROLES.find((r) => r === e.target.value) ?? 'admin' })}>
+            <Select
+              {...p}
+              value={form.base_role}
+              disabled={!!role}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  base_role: STAFF_ROLES.find((r) => r === e.target.value) ?? 'admin',
+                })
+              }
+            >
               {STAFF_ROLES.map((r) => (
                 <option key={r} value={r}>
                   {baseRoleLabel(r)}

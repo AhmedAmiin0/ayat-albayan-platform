@@ -5,7 +5,10 @@ import { Button, Dialog, Field, Input, t, FormAlert } from '@ab/web-kit';
 import { addTimeOff, timeOffQuery } from '@/features/people/teachers/api';
 import { emptyTimeOffDraft, toTimeOffBody, type TimeOffDraft } from './time-off';
 
-type Props = { teacherId: string; onClose: () => void };
+interface Props {
+  teacherId: string;
+  onClose: () => void;
+}
 
 /** Add one-off unavailability (R-TCH-02). Instants are sent as UTC (rule 6). */
 export function TimeOffDialog({ teacherId, onClose }: Props) {
@@ -51,11 +54,26 @@ export function TimeOffDialog({ teacherId, onClose }: Props) {
         {/* Whole days, picked (rule 6: never a typed time). Dates are LTR islands. */}
         <Field label={t.availability.startsAt}>
           {(p) => (
-            <Input {...p} data-autofocus type="date" dir="ltr" value={draft.from} onChange={(e) => set({ from: e.target.value })} />
+            <Input
+              {...p}
+              data-autofocus
+              type="date"
+              dir="ltr"
+              value={draft.from}
+              onChange={(e) => set({ from: e.target.value })}
+            />
           )}
         </Field>
         <Field label={t.availability.endsAt}>
-          {(p) => <Input {...p} type="date" dir="ltr" value={draft.to} onChange={(e) => set({ to: e.target.value })} />}
+          {(p) => (
+            <Input
+              {...p}
+              type="date"
+              dir="ltr"
+              value={draft.to}
+              onChange={(e) => set({ to: e.target.value })}
+            />
+          )}
         </Field>
         <div className="sm:col-span-2">
           <Field label={t.availability.reason}>

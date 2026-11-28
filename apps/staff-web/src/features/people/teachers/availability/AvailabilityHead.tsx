@@ -2,7 +2,10 @@ import { dateText, nextDstTransition } from '@ab/time';
 import { useId, useMemo } from 'react';
 import { Icon, Label, Ltr, TimeZoneSelect, tzCity, t, locale } from '@ab/web-kit';
 
-type Props = { tz: string; onTz: (tz: string) => void };
+interface Props {
+  tz: string;
+  onTz: (tz: string) => void;
+}
 
 /** An ar.json sentence with its `{tz}` / `{city}` slot filled by the city, or the LTR id. */
 function ZoneText({ template, tz }: { template: string; tz: string }) {
@@ -16,14 +19,16 @@ function ZoneText({ template, tz }: { template: string; tz: string }) {
   );
 }
 
-
 /** Shown when the zone shifts within 30 days (docs/07 §8). */
 function dstTemplate(tz: string): string | null {
   const shift = nextDstTransition(tz, new Date());
   if (!shift) return null;
   const weekday = dateText(shift.day, { tz, locale }, { weekday: 'long' });
   const date = `${weekday} ${dateText(shift.day, { tz, locale }, { day: 'numeric', month: 'long' })}`;
-  return (shift.dir === 'back' ? t.availability.dstBack : t.availability.dstForward).replace('{date}', date);
+  return (shift.dir === 'back' ? t.availability.dstBack : t.availability.dstForward).replace(
+    '{date}',
+    date,
+  );
 }
 
 /** The grid is saved in the teacher's zone (rule 6). */

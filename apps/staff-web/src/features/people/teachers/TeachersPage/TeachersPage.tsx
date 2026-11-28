@@ -19,12 +19,12 @@ import { TeacherDialog } from '@/features/people/teachers/form/TeacherDialog';
 import type { Teacher, TeacherListRow } from '@ab/shared';
 import type { Page } from '@ab/core';
 
-type Props = {
+interface Props {
   /** Page, column sort and filters, kept in the route search (R-NFR-08). */
   list: ListUrlState;
   onList: (next: ListUrlState) => void;
   onOpen: (teacherId: string) => void;
-};
+}
 
 type TableProps = Props & {
   data: Page<TeacherListRow>;
@@ -79,7 +79,9 @@ export function TeachersPage({ list: state, onList, onOpen }: Props) {
       <PageHead>
         <Cartouche>{t.teachers.title}</Cartouche>
         {total !== undefined && (
-          <span className="text-xs text-ink-3 tabular-nums">{t.teachers.count.replace('{n}', String(total))}</span>
+          <span className="text-xs text-ink-3 tabular-nums">
+            {t.teachers.count.replace('{n}', String(total))}
+          </span>
         )}
         <div className="ms-auto flex gap-2.5">
           <Button onClick={() => setEditing('new')}>
@@ -100,7 +102,10 @@ export function TeachersPage({ list: state, onList, onOpen }: Props) {
         />
       )}
       {editing && (
-        <TeacherDialog teacher={editing === 'new' ? null : editing} onClose={() => setEditing(null)} />
+        <TeacherDialog
+          teacher={editing === 'new' ? null : editing}
+          onClose={() => setEditing(null)}
+        />
       )}
     </>
   );

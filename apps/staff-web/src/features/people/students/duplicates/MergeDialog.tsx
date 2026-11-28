@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { Button, Dialog, Ltr, t, FormAlert } from '@ab/web-kit';
 
-type Named = { name: string; code?: string | null };
+interface Named { name: string; code?: string | null }
 
-export type MergeDialogProps = {
+export interface MergeDialogProps {
   /** Survives the merge (keeps its code and history). */
   kept: Named;
   /** Folded into `kept`; its row is snapshotted into the merge history (R-STU-03). */
   merged: Named;
   onConfirm: () => Promise<void>;
   onCancel: () => void;
-};
+}
 
 const label = (s: Named) => (s.code ? `${s.name} (${s.code})` : s.name);
 

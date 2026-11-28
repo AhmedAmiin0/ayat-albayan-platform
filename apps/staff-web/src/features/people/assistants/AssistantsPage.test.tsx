@@ -8,13 +8,27 @@ import { ASSISTANT, COMMISSION, STATEMENT, termsRowOf } from './fixtures';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const held = vi.hoisted(() => ({ list: [] as string[] }));
-vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  apiFetch,
+}));
 vi.mock('@ab/web-kit/auth/use-permissions', () => ({
   usePermissions: () => ({ permissions: held.list, can: (p: string) => held.list.includes(p) }),
 }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/reporting/dashboard/link-mock')).Link }));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/reporting/dashboard/link-mock')).Link,
+}));
 
-const NEW = { id: 'a2', name: 'سارة', terms: { assistant_id: 'a2', salary: null, commission: { type: 'fixed' as const, value: 50, currency: 'SAR', starts_on: '2026-10-01' }, renewal_share_percent: 50 } };
+const NEW = {
+  id: 'a2',
+  name: 'سارة',
+  terms: {
+    assistant_id: 'a2',
+    salary: null,
+    commission: { type: 'fixed' as const, value: 50, currency: 'SAR', starts_on: '2026-10-01' },
+    renewal_share_percent: 50,
+  },
+};
 
 function wrap(ui: React.ReactNode) {
   apiFetch.mockImplementation(async (path: string) => {
@@ -65,7 +79,11 @@ describe('AssistantDetailPage', () => {
     await screen.findByText('سهيلة');
     expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions?assistantId=a1');
     await vi.waitFor(() =>
-      expect(apiFetch.mock.calls.some(([p]) => /^\/assistant-pay\/statements\?assistantId=a1&month=/.test(String(p)))).toBe(true),
+      expect(
+        apiFetch.mock.calls.some(([p]) =>
+          String(p).startsWith('/assistant-pay/statements?assistantId=a1&month='),
+        ),
+      ).toBe(true),
     );
   });
 

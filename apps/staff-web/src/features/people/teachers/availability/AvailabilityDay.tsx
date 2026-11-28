@@ -19,23 +19,33 @@ import { overlaps } from './track';
 /** Shared by the header row and every day row so the columns line up (container queries). */
 export const weekRowClass =
   'grid grid-cols-1 @min-[640px]:grid-cols-[92px_minmax(0,1fr)] @min-[1000px]:grid-cols-[92px_452px_minmax(0,1fr)]';
-export const cellClass = 'flex min-w-0 items-center px-0 py-1.5 @min-[640px]:px-2.5 @min-[640px]:py-[9px]';
-export const trackCellClass = cn(cellClass, 'pb-3 @min-[640px]:col-start-2 @min-[1000px]:col-start-3 @min-[1000px]:row-start-1');
+export const cellClass =
+  'flex min-w-0 items-center px-0 py-1.5 @min-[640px]:px-2.5 @min-[640px]:py-[9px]';
+export const trackCellClass = cn(
+  cellClass,
+  'pb-3 @min-[640px]:col-start-2 @min-[1000px]:col-start-3 @min-[1000px]:row-start-1',
+);
 
-type Props = {
+interface Props {
   day: Weekday;
   ranges: Range[];
   /** Minute of the day when this row is today (in the grid tz), else null. */
   now: number | null;
   onChange: (ranges: Range[]) => void;
-};
+}
 
 /** One inline run (docs/07 §14.3). */
-function problemText(problem: 'endBeforeStart' | 'overlap', ranges: readonly Range[], clock: Clock): string {
+function problemText(
+  problem: 'endBeforeStart' | 'overlap',
+  ranges: readonly Range[],
+  clock: Clock,
+): string {
   if (problem === 'endBeforeStart') return t.common.endBeforeStart;
   const clash = overlaps(ranges)[0];
   if (!clash) return t.availability.overlap;
-  const span = t.availability.overlapSpan.replace('{from}', hhmmText(clash.start, clock)).replace('{to}', hhmmText(clash.end, clock));
+  const span = t.availability.overlapSpan
+    .replace('{from}', hhmmText(clash.start, clock))
+    .replace('{to}', hhmmText(clash.end, clock));
   return `${t.availability.overlap}${t.common.listSeparator}${span}`;
 }
 
@@ -65,10 +75,15 @@ export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
     >
       <div
         role="rowheader"
-        className={cn(cellClass, 'gap-2 pt-3 font-semibold @min-[640px]:flex-col @min-[640px]:items-start @min-[640px]:justify-center @min-[640px]:gap-0 @min-[640px]:leading-tight')}
+        className={cn(
+          cellClass,
+          'gap-2 pt-3 font-semibold @min-[640px]:flex-col @min-[640px]:items-start @min-[640px]:justify-center @min-[640px]:gap-0 @min-[640px]:leading-tight',
+        )}
       >
         <span>{dayName}</span>
-        {now !== null && <span className="text-2xs font-semibold text-ink-3">{t.availability.today}</span>}
+        {now !== null && (
+          <span className="text-2xs font-semibold text-ink-3">{t.availability.today}</span>
+        )}
       </div>
       <div role="cell" className={cn(cellClass, 'flex-wrap gap-x-2.5 gap-y-1.5')}>
         {ranges.map((range, i) => (
@@ -89,7 +104,12 @@ export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
         {ranges.length === 0 ? (
           <>
             <span className="me-1.5 text-xs text-ink-3">{t.availability.empty}</span>
-            <Button variant="ghost" size="sm" aria-label={addLabel} onClick={() => onChange(addRange(ranges))}>
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-label={addLabel}
+              onClick={() => onChange(addRange(ranges))}
+            >
               <Icon name="plus" />
               {t.availability.addSlot}
             </Button>
@@ -104,7 +124,11 @@ export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
           </IconButton>
         )}
         {problem && (
-          <p id={errorId} role="alert" className="flex basis-full items-center gap-1.5 text-xs text-danger">
+          <p
+            id={errorId}
+            role="alert"
+            className="flex basis-full items-center gap-1.5 text-xs text-danger"
+          >
             <NuqtaGlyph shape="struck" />
             <span>{problemText(problem, ranges, clock)}</span>
           </p>

@@ -72,7 +72,10 @@ export function toTeacherForm(teacher: Teacher): TeacherForm {
 
 const blankToNull = (v: string) => (v.trim() === '' ? null : v.trim());
 
-type Issue = { path: string; message: string };
+interface Issue {
+  path: string;
+  message: string;
+}
 export type FormResult = { ok: true; payload: TeacherCreate } | { ok: false; error: string };
 
 /** Validates with the shared schema (same rules as the API) → payload or Arabic message. */
@@ -87,7 +90,10 @@ export function validateTeacher(form: TeacherForm): FormResult {
   const result = teacherCreateSchema.safeParse(input);
   if (result.success) return { ok: true, payload: result.data };
   const first = result.error.issues[0];
-  return { ok: false, error: issueMessage({ path: String(first?.path[0] ?? ''), message: first?.message ?? '' }) };
+  return {
+    ok: false,
+    error: issueMessage({ path: String(first?.path[0] ?? ''), message: first?.message ?? '' }),
+  };
 }
 
 const PHONE_ERRORS: Record<string, string | undefined> = t.common.phoneErrors;

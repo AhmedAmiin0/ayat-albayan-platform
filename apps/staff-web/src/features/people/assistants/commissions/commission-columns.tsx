@@ -11,10 +11,14 @@ import { commissionStatusStyle } from '@/features/people/assistants/status';
 const col = createColumnHelper<DataTableFeatures, AssistantCommissionView>();
 const L = t.assistants.ledger;
 
-type Handlers = { canWrite: boolean; onVoid: (c: AssistantCommissionView) => void };
+interface Handlers {
+  canWrite: boolean;
+  onVoid: (c: AssistantCommissionView) => void;
+}
 
 /** A renewal earns only its share percent of the full first-subscription commission. */
-const kindText = (c: AssistantCommissionView): string => (c.kind === 'renewal' ? L.kind.renewal.replace('{n}', String(c.share_percent)) : L.kind.first);
+const kindText = (c: AssistantCommissionView): string =>
+  c.kind === 'renewal' ? L.kind.renewal.replace('{n}', String(c.share_percent)) : L.kind.first;
 
 /** Commission ledger: who earned what on which student's subscription (first or renewal); void with a reason. */
 export function commissionColumns({ canWrite, onVoid }: Handlers) {
@@ -26,7 +30,11 @@ export function commissionColumns({ canWrite, onVoid }: Handlers) {
         const { student } = c.row.original;
         return (
           <div className="grid">
-            <Link to="/admin/students/$studentId" params={{ studentId: student.id }} className="font-semibold text-ink hover:underline">
+            <Link
+              to="/admin/students/$studentId"
+              params={{ studentId: student.id }}
+              className="font-semibold text-ink hover:underline"
+            >
               {student.name}
             </Link>
             <Ltr className="text-2xs text-ink-3">{student.code}</Ltr>
@@ -35,8 +43,18 @@ export function commissionColumns({ canWrite, onVoid }: Handlers) {
       },
       meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]', filter: { kind: 'text' } },
     }),
-    col.accessor(kindText, { id: 'kind', header: () => L.kindLabel, cell: (c) => c.getValue(), meta: { className: 'max-sm:order-3' } }),
-    col.accessor((c) => c.assistant.name, { id: 'assistant', header: () => L.assistant, cell: (c) => c.getValue(), meta: { className: 'max-sm:order-3' } }),
+    col.accessor(kindText, {
+      id: 'kind',
+      header: () => L.kindLabel,
+      cell: (c) => c.getValue(),
+      meta: { className: 'max-sm:order-3' },
+    }),
+    col.accessor((c) => c.assistant.name, {
+      id: 'assistant',
+      header: () => L.assistant,
+      cell: (c) => c.getValue(),
+      meta: { className: 'max-sm:order-3' },
+    }),
     col.accessor('base_amount', {
       header: () => L.base,
       cell: (c) => <Amount amount={c.getValue()} currency={c.row.original.base_currency} />,
@@ -44,12 +62,23 @@ export function commissionColumns({ canWrite, onVoid }: Handlers) {
     }),
     col.accessor('rate', {
       header: () => L.rate,
-      cell: (c) => (c.row.original.type === 'percent' ? <Ltr>{L.ratePercent.replace('{value}', formatAmount(c.getValue()))}</Ltr> : L.rateFixed),
+      cell: (c) =>
+        c.row.original.type === 'percent' ? (
+          <Ltr>{L.ratePercent.replace('{value}', formatAmount(c.getValue()))}</Ltr>
+        ) : (
+          L.rateFixed
+        ),
       meta: { className: 'max-sm:order-5' },
     }),
     col.accessor('amount', {
       header: () => L.amount,
-      cell: (c) => <Amount amount={c.getValue()} currency={c.row.original.currency} className="font-semibold" />,
+      cell: (c) => (
+        <Amount
+          amount={c.getValue()}
+          currency={c.row.original.currency}
+          className="font-semibold"
+        />
+      ),
       meta: { className: 'max-sm:order-2' },
     }),
     col.accessor('earned_at', {
@@ -61,8 +90,16 @@ export function commissionColumns({ canWrite, onVoid }: Handlers) {
       header: () => L.statusLabel,
       cell: (c) => (
         <div className="grid justify-items-start gap-0.5">
-          <StatusChip size="sm" {...commissionStatusStyle[c.getValue()]} label={L.status[c.getValue()]} />
-          {c.row.original.void_reason && <span className="text-2xs text-ink-3">{L.voidedWhy.replace('{reason}', c.row.original.void_reason)}</span>}
+          <StatusChip
+            size="sm"
+            {...commissionStatusStyle[c.getValue()]}
+            label={L.status[c.getValue()]}
+          />
+          {c.row.original.void_reason && (
+            <span className="text-2xs text-ink-3">
+              {L.voidedWhy.replace('{reason}', c.row.original.void_reason)}
+            </span>
+          )}
         </div>
       ),
       meta: { className: 'max-sm:order-7' },
@@ -72,7 +109,12 @@ export function commissionColumns({ canWrite, onVoid }: Handlers) {
       header: () => t.common.actions,
       cell: (c) =>
         canWrite && c.row.original.status === 'earned' ? (
-          <Button type="button" variant="danger-quiet" size="sm" onClick={() => onVoid(c.row.original)}>
+          <Button
+            type="button"
+            variant="danger-quiet"
+            size="sm"
+            onClick={() => onVoid(c.row.original)}
+          >
             {L.void}
           </Button>
         ) : null,

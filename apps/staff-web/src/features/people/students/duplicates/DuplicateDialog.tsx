@@ -7,7 +7,7 @@ import { DuplicateCompare } from './DuplicateCompare';
 import { SiblingsStrip } from './SiblingsStrip';
 import type { StudentRef } from '@ab/shared';
 
-export type DuplicateDialogProps = {
+export interface DuplicateDialogProps {
   typed: CreateStudentValues;
   /** From the 409 body; never empty. */
   candidates: StudentRef[];
@@ -16,7 +16,7 @@ export type DuplicateDialogProps = {
   onClose: () => void;
   onMerge: (candidate: StudentRef) => void;
   onCreateAnyway: () => void;
-};
+}
 
 /**
  * R-STU-03 duplicate warning (docs/07 §6 Dialog): calm saffron hollow glyph, no red. The typed
@@ -27,13 +27,20 @@ export function DuplicateDialog(props: DuplicateDialogProps) {
   const { typed, candidates, error, focusMerge, onClose, onMerge, onCreateAnyway } = props;
   const [pickedId, setPickedId] = useState(candidates[0]?.id ?? '');
   const candidate = candidates.find((c) => c.id === pickedId) ?? candidates[0];
-  const { data: profile } = useQuery({ ...studentQuery(candidate?.id ?? ''), enabled: !!candidate });
+  const { data: profile } = useQuery({
+    ...studentQuery(candidate?.id ?? ''),
+    enabled: !!candidate,
+  });
   if (!candidate) return null;
 
   const actions = (
     <>
-      <Button variant="ghost" onClick={onClose}>{t.common.cancel}</Button>
-      <Button variant="secondary" onClick={onCreateAnyway}>{t.students.createAnyway}</Button>
+      <Button variant="ghost" onClick={onClose}>
+        {t.common.cancel}
+      </Button>
+      <Button variant="secondary" onClick={onCreateAnyway}>
+        {t.students.createAnyway}
+      </Button>
       <Button data-autofocus={focusMerge || undefined} onClick={() => onMerge(candidate)}>
         {t.students.merge}
       </Button>

@@ -4,7 +4,11 @@ import type { SetField, TeacherForm } from './teacher-form';
 import { TeacherMeetingModeField } from './TeacherMeetingModeField';
 import type { Teacher } from '@ab/shared';
 
-type Props = { form: TeacherForm; set: SetField; teacher?: Teacher | null };
+interface Props {
+  form: TeacherForm;
+  set: SetField;
+  teacher?: Teacher | null;
+}
 
 /** R-TCH-01: phone and link are LTR islands. */
 export function TeacherFormFields({ form, set, teacher = null }: Props) {
@@ -26,7 +30,12 @@ export function TeacherFormFields({ form, set, teacher = null }: Props) {
       </Field>
       <Field label={t.teachers.displayNameEn}>
         {(p) => (
-          <Input {...p} dir="ltr" value={form.display_name_en} onChange={(e) => set('display_name_en', e.target.value)} />
+          <Input
+            {...p}
+            dir="ltr"
+            value={form.display_name_en}
+            onChange={(e) => set('display_name_en', e.target.value)}
+          />
         )}
       </Field>
       <Field label={t.teachers.gender}>
@@ -34,7 +43,9 @@ export function TeacherFormFields({ form, set, teacher = null }: Props) {
           <Select
             {...p}
             value={form.gender}
-            onChange={(e) => set('gender', GENDERS.find((g) => g === e.target.value) ?? form.gender)}
+            onChange={(e) =>
+              set('gender', GENDERS.find((g) => g === e.target.value) ?? form.gender)
+            }
           >
             {GENDERS.map((g) => (
               <option key={g} value={g}>
@@ -77,7 +88,13 @@ export function TeacherFormFields({ form, set, teacher = null }: Props) {
       </Field>
       <Field label={t.teachers.meetingLink}>
         {(p) => (
-          <Input {...p} type="url" dir="ltr" value={form.meeting_link} onChange={(e) => set('meeting_link', e.target.value)} />
+          <Input
+            {...p}
+            type="url"
+            dir="ltr"
+            value={form.meeting_link}
+            onChange={(e) => set('meeting_link', e.target.value)}
+          />
         )}
       </Field>
       <TeacherMeetingModeField form={form} set={set} teacher={teacher} />

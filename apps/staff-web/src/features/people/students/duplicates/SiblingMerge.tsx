@@ -7,7 +7,10 @@ import { MergeDialog } from './MergeDialog';
 import { SavedNote } from '@/features/people/students/profile/SavedNote';
 import type { StudentRef } from '@ab/shared';
 
-type SiblingMergeProps = { student: StudentRef; siblings: StudentRef[] };
+interface SiblingMergeProps {
+  student: StudentRef;
+  siblings: StudentRef[];
+}
 
 /**
  * Merge tool on the profile (R-STU-03): fold another student on the same guardian phone into
@@ -32,10 +35,17 @@ export function SiblingMerge({ student, siblings }: SiblingMergeProps) {
       {done && <SavedNote>{t.students.mergeDone}</SavedNote>}
       <ul>
         {siblings.map((s) => (
-          <li key={s.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-rule py-2.5">
+          <li
+            key={s.id}
+            className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-rule py-2.5"
+          >
             <span className="font-semibold">{s.name}</span>
             <Ltr className="text-xs text-ink-2">{s.code}</Ltr>
-            <StatusChip {...studentStatusStyle[s.status]} label={t.enums.studentStatus[s.status]} size="sm" />
+            <StatusChip
+              {...studentStatusStyle[s.status]}
+              label={t.enums.studentStatus[s.status]}
+              size="sm"
+            />
             <Button size="sm" variant="secondary" className="ms-auto" onClick={() => setMerging(s)}>
               {t.students.mergeIntoThis}
             </Button>

@@ -12,12 +12,12 @@ import { FilterBar, type Filter } from '@/features/people/assistants/students/Fi
 import { VoidCommissionDialog } from './VoidCommissionDialog';
 import type { AssistantRow } from '@ab/client-core';
 
-type Props = {
+interface Props {
   /** The list for the filter; omit on one assistant's page and pass `assistantId`. */
   assistants?: readonly AssistantRow[] | undefined;
   assistantId?: string;
   canWrite: boolean;
-};
+}
 
 const STATUSES = ASSISTANT_COMMISSION_STATUSES.map((value) => ({ value, label: t.assistants.ledger.status[value] }));
 

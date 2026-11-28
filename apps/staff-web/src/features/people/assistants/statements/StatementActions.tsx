@@ -3,12 +3,15 @@ import { Button, t } from '@ab/web-kit';
 import type { AssistantStatementView } from '@/features/people/assistants/api';
 
 export type { StatementAction, StatementCan };
-type Props = {
+interface Props {
   statement: AssistantStatementView;
   can: StatementCan;
   onAction: (action: StatementAction) => void;
-};
-type Look = { label: () => string; variant: 'secondary' | 'ghost' };
+}
+interface Look {
+  label: () => string;
+  variant: 'secondary' | 'ghost';
+}
 
 const LOOK = {
   details: { label: () => t.assistants.statements.details, variant: 'ghost' },
@@ -24,7 +27,13 @@ export function StatementActions({ statement, can, onAction }: Props) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {statementActions(statement, can).map((action) => (
-        <Button key={action} type="button" variant={LOOK[action].variant} size="sm" onClick={() => onAction(action)}>
+        <Button
+          key={action}
+          type="button"
+          variant={LOOK[action].variant}
+          size="sm"
+          onClick={() => onAction(action)}
+        >
           {LOOK[action].label()}
         </Button>
       ))}

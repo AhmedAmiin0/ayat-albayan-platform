@@ -2,19 +2,26 @@ import { TEACHER_STATUSES } from '@ab/catalog';
 import { Field, Input, Select, TimeZoneSelect, t } from '@ab/web-kit';
 import { RATE_FIELDS, type SetField, type TeacherForm } from './teacher-form';
 
-type Props = { form: TeacherForm; set: SetField };
+interface Props {
+  form: TeacherForm;
+  set: SetField;
+}
 
 /** Time zone, status, capacity (one row of three) and per-duration rates (R-TCH-01, rule 6). */
 export function TeacherWorkFields({ form, set }: Props) {
   return (
     <div className="grid gap-4 sm:grid-cols-3">
-      <Field label={t.teachers.tz}>{(p) => <TimeZoneSelect {...p} value={form.tz} onValue={(tz) => set('tz', tz)} />}</Field>
+      <Field label={t.teachers.tz}>
+        {(p) => <TimeZoneSelect {...p} value={form.tz} onValue={(tz) => set('tz', tz)} />}
+      </Field>
       <Field label={t.teachers.status}>
         {(p) => (
           <Select
             {...p}
             value={form.status}
-            onChange={(e) => set('status', TEACHER_STATUSES.find((s) => s === e.target.value) ?? form.status)}
+            onChange={(e) =>
+              set('status', TEACHER_STATUSES.find((s) => s === e.target.value) ?? form.status)
+            }
           >
             {TEACHER_STATUSES.map((s) => (
               <option key={s} value={s}>

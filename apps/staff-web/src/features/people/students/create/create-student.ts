@@ -3,7 +3,7 @@ import { normalizePhone } from '@ab/core';
 import { t } from '@ab/web-kit';
 import type { StudentCreateBody } from '@ab/client-core';
 
-export type CreateStudentValues = {
+export interface CreateStudentValues {
   guardianPhone: string;
   guardianName: string;
   name: string;
@@ -18,7 +18,7 @@ export type CreateStudentValues = {
   teacher_id: string;
   /** False means the number belongs to the guardian, the default (docs/30 §1). */
   contactIsSelf: boolean;
-};
+}
 
 export const EMPTY_STUDENT: CreateStudentValues = {
   guardianPhone: '',

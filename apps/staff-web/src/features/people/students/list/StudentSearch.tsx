@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Icon, IconButton, Input, t } from '@ab/web-kit';
 
-type StudentSearchProps = {
+interface StudentSearchProps {
   initial: string;
   onSearch: (term: string) => void;
   /** Search while typing (300 ms after the last key) instead of only on Enter / the icon. */
   live?: boolean;
-};
+}
 
 /** Name / phone / code search; the search icon is the submit button (R-STU-01). */
 export function StudentSearch({ initial, onSearch, live = false }: StudentSearchProps) {
@@ -32,7 +32,11 @@ export function StudentSearch({ initial, onSearch, live = false }: StudentSearch
         onChange={(e) => setTerm(e.target.value)}
         className="ps-10"
       />
-      <IconButton type="submit" label={t.common.search} className="absolute inset-y-0 start-1 my-auto">
+      <IconButton
+        type="submit"
+        label={t.common.search}
+        className="absolute inset-y-0 start-1 my-auto"
+      >
         <Icon name="search" />
       </IconButton>
     </form>
