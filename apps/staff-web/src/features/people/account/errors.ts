@@ -1,7 +1,15 @@
 import { ApiError, t } from '@ab/web-kit';
 
 /** `form` is the form-level alert. */
-export type AccountField = 'full_name' | 'phone_e164' | 'email' | 'current_password' | 'new_password' | 'confirm' | 'avatar' | 'form';
+export type AccountField =
+  | 'full_name'
+  | 'phone_e164'
+  | 'email'
+  | 'current_password'
+  | 'new_password'
+  | 'confirm'
+  | 'avatar'
+  | 'form';
 export type AccountErrors = Partial<Record<AccountField, string>>;
 
 const MESSAGES: Record<string, string | undefined> = t.account.errors;
@@ -29,7 +37,7 @@ const PHONE_REASONS = new Set(['empty', 'not_a_number', 'invalid_length', 'missi
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 
-/** The message of one code (a phone reason reads as invalid_phone); the generic one when unknown. */
+/** One code's message (a phone reason reads as invalid_phone); the generic one when unknown. */
 export function accountMessage(code: string): string {
   return MESSAGES[PHONE_REASONS.has(code) ? 'invalid_phone' : code] ?? t.account.errors.generic;
 }
@@ -69,7 +77,8 @@ function fromIssues(issues: unknown[]): AccountErrors {
 export function accountErrors(error: unknown): AccountErrors {
   const body = error instanceof ApiError && isRecord(error.body) ? error.body : null;
   if (!body) return { form: t.account.errors.generic };
-  if (body.message === 'validation_failed' && Array.isArray(body.issues)) return fromIssues(body.issues);
+  if (body.message === 'validation_failed' && Array.isArray(body.issues))
+    return fromIssues(body.issues);
   const code = typeof body.code === 'string' ? body.code : '';
   return { [FIELD_OF[code] ?? 'form']: accountMessage(code) };
 }

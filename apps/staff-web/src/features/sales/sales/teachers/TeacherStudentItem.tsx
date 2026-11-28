@@ -3,7 +3,7 @@ import { studentStatusStyle } from '@ab/money';
 import { Ltr, StatusChip, useClock, t, useViewerTz } from '@ab/web-kit';
 import { viewerWhen } from './teacher-view';
 
-/** One student of the teacher: name, code (LTR island), program, status (trial included), next lesson. */
+/** One student of the teacher: name, code (LTR), program, status (trial included), next lesson. */
 export function TeacherStudentItem({ student }: { student: SalesTeacherStudent }) {
   const { cycle } = useClock();
   const tz = useViewerTz();
@@ -12,7 +12,11 @@ export function TeacherStudentItem({ student }: { student: SalesTeacherStudent }
       <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span className="font-semibold">{student.name}</span>
         <Ltr className="text-xs text-ink-3">{student.code}</Ltr>
-        <StatusChip {...studentStatusStyle[student.status]} size="sm" label={t.enums.studentStatus[student.status]} />
+        <StatusChip
+          {...studentStatusStyle[student.status]}
+          size="sm"
+          label={t.enums.studentStatus[student.status]}
+        />
       </span>
       <span className="text-xs text-ink-2">{t.enums.program[student.program]}</span>
       <span className="text-xs text-ink-2">

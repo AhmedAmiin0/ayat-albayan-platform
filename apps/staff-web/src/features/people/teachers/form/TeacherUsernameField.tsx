@@ -2,11 +2,7 @@ import { tidyUsername } from '@ab/client-core';
 import { Field, Input, t } from '@ab/web-kit';
 import type { Teacher } from '@ab/shared';
 
-interface Props {
-  teacher: Teacher;
-  value: string;
-  onChange: (value: string) => void;
-}
+interface Props { teacher: Teacher; value: string; onChange: (value: string) => void }
 
 /** Without a login (profile_id null) it is disabled (docs/30 §7). */
 export function TeacherUsernameField({ teacher, value, onChange }: Props) {

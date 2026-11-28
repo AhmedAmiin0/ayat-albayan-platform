@@ -12,6 +12,7 @@ export function avatarFileProblem(file: Pick<File, 'type' | 'size'>): AccountErr
 /** The `accept` of the file input: the same three types. */
 export const AVATAR_ACCEPT = AVATAR_MIMES.join(',');
 
-/** The initials' tone seed of the signed-in user: the linked teacher's id (avatar_seed), else the profile's. */
-export const avatarSeed = (profile: Pick<AccountProfile, 'id' | 'avatar_seed'> | undefined): string | undefined =>
-  profile?.avatar_seed ?? profile?.id;
+/** The initials' tone seed: the linked teacher's id (avatar_seed), else the profile's. */
+export const avatarSeed = (
+  profile: Pick<AccountProfile, 'id' | 'avatar_seed'> | undefined,
+): string | undefined => profile?.avatar_seed ?? profile?.id;

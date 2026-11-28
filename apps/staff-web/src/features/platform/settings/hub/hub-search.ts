@@ -1,12 +1,12 @@
 import { OWNED_VALUE_GROUPS, SETTING_KEYS, VALUE_GROUPS, type SettingKey } from '@ab/settings';
 import { matchesSetting, matchesText } from '@/components/settings/search/settings-search';
 import { settingText } from '@/components/settings/search/setting-text';
-import { groupsMatch, INTEGRATIONS_PAGE_GROUPS, LEGACY_LINE_GROUPS, SAFETY_GROUPS } from '@/features/platform/integrations/integration-places';
-import { linesMatch } from '@/features/messaging/messaging/lines/lines-match';
-import { catalogueMatch } from '@/features/messaging/notification-catalogue/catalogue-match';
-import { numbersMatch } from '@/features/messaging/numbers/numbers-section';
+import { groupsMatch, INTEGRATIONS_PAGE_GROUPS, LEGACY_LINE_GROUPS, SAFETY_GROUPS } from '@/features/platform/integrations';
+import { linesMatch } from '@/features/messaging/messaging';
+import { catalogueMatch } from '@/features/messaging/notification-catalogue';
+import { numbersMatch } from '@/features/messaging/numbers';
 import { appearanceMatch } from '@/features/platform/settings/sections/AppearanceSection';
-import { templatesMatch } from '@/features/messaging/templates/templates-match';
+import { templatesMatch } from '@/features/messaging/templates';
 import { t } from '@ab/web-kit';
 import { HUB_PATHS } from './hub-paths';
 
@@ -76,7 +76,7 @@ const MODULES: readonly ModuleEntry[] = [
   { id: 'appearance', label: t.settings.theme, where: t.settings.sections.appearance, href: HUB_PATHS.appearance, matches: appearanceMatch },
 ];
 
-/** Every hit for the search, settings first (registry order), then module pages; none for an empty search. */
+/** Every hit, settings first (registry order), then module pages; none for an empty search. */
 export function searchHub(query: string): HubHit[] {
   if (query.trim() === '') return [];
   const settings = SETTING_KEYS.filter((k) => matchesSetting(k, query)).map((k) =>

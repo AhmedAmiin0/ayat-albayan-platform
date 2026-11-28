@@ -4,14 +4,14 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { useMemo } from 'react';
 import { DataTable, type DataTableFeatures } from '@/components/data-table/DataTable';
 import { FormAlert, t } from '@ab/web-kit';
-import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { monthLabel } from '@/features/finance/payouts';
+import { Amount } from '@/features/finance/subscriptions';
 import { categoriesQuery, categoryLabel, expenseYearQuery } from './api';
 
 type Month = ExpenseYearView['months'][number];
 const col = createColumnHelper<DataTableFeatures, Month>();
 
-/** Month, one column per category, the month's total: every column sorts (e.g. the dearest month first). */
+/** Month, one column per category, the month's total: every column sorts. */
 function yearColumns(input: {
   categories: string[];
   label: (key: string) => string;
@@ -48,15 +48,26 @@ export function ExpenseYearTable({ year }: { year: string }) {
   const categories = useQuery(categoriesQuery);
   const v = q.data;
   const columns = useMemo(
-    () => yearColumns({ categories: v?.categories ?? [], label: (c) => categoryLabel(categories.data, c), currency: v?.currency ?? '' }),
+    () =>
+      yearColumns({
+        categories: v?.categories ?? [],
+        label: (c) => categoryLabel(categories.data, c),
+        currency: v?.currency ?? '',
+      }),
     [v, categories.data],
   );
   if (q.isError) return <FormAlert>{t.common.error}</FormAlert>;
   if (!v) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
   return (
     <div className="grid gap-3">
-      {v.fx_missing.length > 0 && <FormAlert>{t.finance.fxMissing.replace('{currencies}', v.fx_missing.join(t.common.listSeparator))}</FormAlert>}
-      <p className="text-xs text-ink-3">{t.finance.convertedTo.replace('{currency}', v.currency)}</p>
+      {v.fx_missing.length > 0 && (
+        <FormAlert>
+          {t.finance.fxMissing.replace('{currencies}', v.fx_missing.join(t.common.listSeparator))}
+        </FormAlert>
+      )}
+      <p className="text-xs text-ink-3">
+        {t.finance.convertedTo.replace('{currency}', v.currency)}
+      </p>
       <DataTable clientSort columns={columns} data={v.months} getRowId={(m) => m.month} />
       <p className="flex justify-end gap-2 border-t-[3px] border-double border-gold pt-2 text-sm">
         <span className="text-ink-3">{t.expenses.total}</span>

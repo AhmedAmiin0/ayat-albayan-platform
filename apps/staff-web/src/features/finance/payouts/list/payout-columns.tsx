@@ -6,8 +6,8 @@ import { StatusChip, t, teacherLabel } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
 import { LedgerPaid } from '@/features/finance/payouts/shared/LedgerPaid';
 import { PayoutActions } from './PayoutActions';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
-import { durationLabel } from '@/features/finance/pricing/format';
+import { Amount } from '@/features/finance/subscriptions';
+import { durationLabel } from '@/features/finance/pricing';
 import { moneyText } from '@/features/finance/subscriptions';
 import type { PayoutView } from '@/features/finance/payouts/api';
 

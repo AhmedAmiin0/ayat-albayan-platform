@@ -30,7 +30,7 @@ export const ASSISTANTS_KEY = assistantPayKeys.all;
 
 const calls = assistantPayCalls({ apiFetch, apiSend });
 
-/** GET /assistant-pay/terms: every assistant (base role sales) with their terms, reshaped to the list's row. */
+/** GET /assistant-pay/terms: every assistant (base role sales) with terms, as the list's rows. */
 export const assistantsQuery = queryOptions({
   queryKey: assistantPayKeys.assistants(),
   queryFn: async (): Promise<AssistantRow[]> => {
@@ -47,8 +47,8 @@ const qs = (params: Record<string, string>) => {
   return q.size ? `?${q}` : '';
 };
 
-// ponytail: the ledger filters by `from`/`to` instants; a month is cut at UTC midnight (statements cut it
-// in the assistant's zone), so a commission at a month's edge can show in the neighbouring month here.
+// The ledger filters by `from`/`to` instants cut at UTC midnight (statements cut in the assistant's
+// zone), so a commission at a month's edge can show in the neighbouring month here.
 export const ledgerMonthRange = (month: string): Record<string, string> => {
   if (!month) return {};
   const { from, to } = monthRangeIn(month, 'UTC');
@@ -77,7 +77,7 @@ export const statementsQuery = (f: StatementFilter) =>
     queryFn: () => apiFetch<AssistantStatementView[]>(`/assistant-pay/statements${qs({ ...f })}`),
   });
 
-/** Builds or rebuilds the DRAFT of one assistant's month (idempotent; a frozen one answers invalid_transition). */
+/** Builds or rebuilds a month's DRAFT (idempotent; a frozen one answers invalid_transition). */
 export const generateStatement = (input: { assistantId: string; month: string }) =>
   apiSend<AssistantStatementView>('POST', '/assistant-pay/statements', input);
 
@@ -101,7 +101,7 @@ export const payStatement = (input: { id: string; body: PayStatementBody }) =>
 export const statementReceiptUrl = (id: string) =>
   apiFetch<SignedDownload>(`/assistant-pay/statements/${id}/receipt`);
 
-/** Straight to the private bucket through a one-off signed URL; the path is then sent with the pay. */
+/** To the private bucket through a one-off signed URL; the path is then sent with the pay. */
 export async function uploadStatementReceipt(file: File, assistantId: string): Promise<string> {
   const signed = await apiSend<SignedUpload>('POST', '/assistant-pay/receipt-upload-url', {
     assistantId,

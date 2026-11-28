@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
+import { ConfirmDialog } from '@/features/finance/payments';
 import { t } from '@ab/web-kit';
 import {
   ASSISTANTS_KEY,
@@ -16,7 +16,7 @@ export interface StatementDialog {
   kind: 'details' | 'pay' | 'reopen' | 'unpay';
 }
 
-/** The dialog behind a statement row action: details, pay (receipt), reopen, un-pay (with a reason). */
+/** The dialog behind a statement action: details, pay (receipt), reopen, un-pay (with reason). */
 export function StatementDialogs({
   open,
   onClose,

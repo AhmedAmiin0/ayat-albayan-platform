@@ -8,7 +8,7 @@ vi.mock('@tanstack/react-router', () => ({ useRouter: () => router.current }));
 
 const HREF = '/admin/settings/communications?tab=templates';
 
-/** After React's handler (document, past the root): records whether it prevented, then stops jsdom navigating. */
+/** After React's handler: records whether it prevented, then stops jsdom navigating. */
 function stopNavigation(): boolean[] {
   const seen: boolean[] = [];
   const listener = (e: Event) => {

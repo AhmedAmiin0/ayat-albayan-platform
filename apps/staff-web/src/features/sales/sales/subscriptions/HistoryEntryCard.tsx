@@ -2,14 +2,14 @@ import type { SalesHistoryEntry } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Ltr, t, cn } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const status = (s: string | null): string => (s ? (STATUS[s] ?? s) : '—');
 const fill = (text: string, values: Record<string, string>): string =>
   Object.entries(values).reduce((out, [k, v]) => out.replace(`{${k}}`, v), text);
 
-/** One subscription in the history: package, status, dates, lessons, status changes and payments (date, kind, amount). */
+/** One subscription: package, status, dates, lessons, status changes and payments. */
 interface HistoryEntryCardProps {
   entry: SalesHistoryEntry;
   current: boolean;

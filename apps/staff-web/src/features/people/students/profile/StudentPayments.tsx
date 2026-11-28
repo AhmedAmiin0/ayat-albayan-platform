@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { QueryState, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
-import { paymentsQuery } from '@/features/finance/payments/api';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { paymentsQuery } from '@/features/finance/payments';
+import { Amount } from '@/features/finance/subscriptions';
 import { moneyText } from '@/features/finance/subscriptions';
 
 const row = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2 text-sm';

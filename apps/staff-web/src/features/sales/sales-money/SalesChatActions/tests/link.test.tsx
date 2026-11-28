@@ -9,9 +9,15 @@ import { SalesChatActions } from '@/features/sales/sales-money/SalesChatActions/
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 const granted = vi.hoisted(() => new Set<string>());
-vi.mock('@ab/web-kit/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }) }));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({
+  usePermissions: () => ({ permissions: [], can: (p: string) => granted.has(p) }),
+}));
 
 const L = t.inbox.linkFamily;
 const MATCH = { name: 'سهيلة', code: 'AB-0183', status: 'active', teacher_name: null };
@@ -39,16 +45,19 @@ describe('«ربط بطالب موجود» in the sales chat’s «المزيد�
     granted.add('students.check_registration');
   });
 
-  it.each(['new', 'converted', 'lost'] as const)('a %s lead chat with leads.link_family: in the menu, never the visible action', (status) => {
-    renderActions(thread({ lead_status: status }));
-    expect(screen.queryByRole('button', { name: L.action })).toBeNull();
-    openMenu();
-    expect(screen.getByRole('button', { name: L.action })).toBeTruthy();
-  });
+  it.each(['new', 'converted', 'lost'] as const)(
+    'a %s lead chat with leads.link_family: in the menu, never the visible action',
+    (status) => {
+      renderActions(thread({ lead_status: status }));
+      expect(screen.queryByRole('button', { name: L.action })).toBeNull();
+      openMenu();
+      expect(screen.getByRole('button', { name: L.action })).toBeTruthy();
+    },
+  );
 
   it.each([
     ['without leads.link_family', thread(), 'leads.link_family'],
-    // The picker searches with GET /sales/registration-check: without it the search could only fail.
+    // The picker searches with GET /sales/registration-check: without it the search only fails.
     ['without students.check_registration', thread(), 'students.check_registration'],
     ['on a family chat', thread({ guardian_id: 'g-1', guardian_name: 'أم سهيلة' }), null],
     ['on a teacher’s chat', thread({ teacher_id: 't-1', teacher_name: 'أ. أبرار' }), null],
@@ -65,7 +74,9 @@ describe('«ربط بطالب موجود» in the sales chat’s «المزيد�
     openMenu();
     fireEvent.click(screen.getByRole('button', { name: L.action }));
     const dialog = within(screen.getByRole('dialog', { name: L.title }));
-    fireEvent.change(dialog.getByLabelText(t.registrationCheck.query), { target: { value: 'AB-0183' } });
+    fireEvent.change(dialog.getByLabelText(t.registrationCheck.query), {
+      target: { value: 'AB-0183' },
+    });
     fireEvent.click(screen.getByRole('button', { name: t.common.search }));
     fireEvent.click(await dialog.findByRole('button', { name: /AB-0183/ }));
     fireEvent.click(screen.getByRole('button', { name: L.submit }));

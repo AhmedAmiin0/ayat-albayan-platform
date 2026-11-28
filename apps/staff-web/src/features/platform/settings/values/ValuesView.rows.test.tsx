@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { answerPatch } from '@/test/entries-fixture';
 import { SETTINGS } from '@/test/settings-fixture';
-import { findRow, renderValues } from './values-test-utils';
+import { findRow, renderValues } from '@/features/platform/settings/values/testing/values-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

@@ -12,7 +12,7 @@ import { apiFetch, apiSend } from '@ab/web-kit';
 import { z } from 'zod';
 import type { SortSearch } from '@/lib/list/list-search';
 import { uploadSigned } from '@/lib/storage/upload-slot';
-import { PAGE_SIZE } from '@/features/finance/subscriptions/api';
+import { PAGE_SIZE } from '@/features/finance/subscriptions';
 import { financeFileKeys, moneyKeys } from '@/features/finance/keys';
 
 // apps/api/src/modules/payments (docs/11 §7, R-PAY-01).
@@ -46,7 +46,7 @@ function listQuery(page: number, f: PaymentFilters, s: SortSearch): PaymentListQ
   return { ...filters, method: f.method, kind: f.kind, sort, dir, page, pageSize: PAGE_SIZE };
 }
 
-/** GET /payments: one page, filtered and (R-NFR-08) sorted server-side; default newest paid first. */
+/** GET /payments: one page, filtered and sorted server-side (R-NFR-08); newest paid first. */
 export const paymentsQuery = (page: number, filters: PaymentFilters = {}, sort: SortSearch = {}) =>
   queryOptions({
     queryKey: moneyKeys.payments({ page, filters, sort }),

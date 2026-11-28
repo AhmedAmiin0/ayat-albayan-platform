@@ -50,7 +50,7 @@ export const salesLiveQuery = queryOptions({
   refetchInterval: LIVE_REFRESH_MS,
 });
 
-/** GET /sales/schedule?date&teacherId — one Riyadh day of the academy, read-only; re-read every minute (now moves). */
+/** GET /sales/schedule: one Riyadh day of the academy, read-only; re-read every minute. */
 export const salesScheduleQuery = (q: { date: string; teacherId?: string | undefined }) =>
   queryOptions({
     queryKey: salesKeys.scheduleDay(q),

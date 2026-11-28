@@ -13,7 +13,7 @@ export function useSalesUnread(can: (permission: Permission) => boolean): number
   const enabled = can('inbox.read');
   useInboxLive();
   const q = useQuery(unreadCountQuery(enabled));
-  // inbox.read lost mid-session: the disabled query keeps its cached count, which must leave the title.
+  // inbox.read lost mid-session: the disabled query keeps its cached count, which must leave.
   const n = enabled ? (q.data ?? 0) : 0;
   useEffect(() => {
     document.title = unreadTitle(n);

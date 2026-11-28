@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Toast, t } from '@ab/web-kit';
-import { INTEGRATIONS_PAGE_GROUPS } from '@/features/platform/integrations/integration-places';
-import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
+import { INTEGRATIONS_PAGE_GROUPS } from '@/features/platform/integrations';
+import { IntegrationsPanel } from '@/features/platform/integrations';
 import { ModuleHead } from './ModuleHead';
 
 const h = t.communicationsHub;

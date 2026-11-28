@@ -8,9 +8,9 @@ export interface CancelBody { reason?: string }
 
 interface Props {
   label: string;
-  /** POST /subscriptions/:id/cancel (admin) or POST /sales/subscriptions/:id/cancel (her own student's). */
+  /** POST /subscriptions/:id/cancel (admin) or /sales/subscriptions/:id/cancel (own student). */
   cancel: (body: CancelBody) => Promise<unknown>;
-  /** What a cancel makes stale (default MONEY_KEY: the admin's money; the sales chat passes its own). */
+  /** What a cancel makes stale (default MONEY_KEY; the sales chat passes its own). */
   staleKey?: readonly unknown[];
   onClose: () => void;
   onDone: () => void;

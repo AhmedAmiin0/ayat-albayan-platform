@@ -13,8 +13,8 @@ import {
   t,
   teacherLabel,
 } from '@ab/web-kit';
-import { downloadCsv } from '@/features/reporting/exports/api';
-import { currentMonth } from '@/features/finance/payouts/api';
+import { downloadCsv } from '@/features/reporting/exports';
+import { currentMonth } from '@/features/finance/payouts';
 import { balanceQuery, type Scope } from './api';
 import { EarningsCards } from './EarningsCards';
 import { PayDialog } from './payments/PayDialog';

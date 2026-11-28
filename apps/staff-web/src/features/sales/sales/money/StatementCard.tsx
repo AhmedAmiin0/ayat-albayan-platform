@@ -5,8 +5,8 @@ import {
 } from '@ab/money';
 import { StatusChip, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
-import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { monthLabel } from '@/features/finance/payouts';
+import { Amount } from '@/features/finance/subscriptions';
 import { CurrencyTotalsList } from './CurrencyTotalsList';
 
 const p = t.assistantPortal.earnings;
@@ -21,7 +21,7 @@ function lineText(l: AssistantStatementLineView): string {
   return p.line.adjustment.replace('{reason}', l.reason ?? '');
 }
 
-/** One month's statement: status, the totals per currency, and its lines (salary, commissions, adjustments). */
+/** One month's statement: status, totals per currency, and its lines. */
 export function StatementCard({ statement: s }: { statement: AssistantStatementView }) {
   const when = s.paid_at
     ? p.paidAt.replace('{date}', formatDate(s.paid_at))
@@ -32,7 +32,11 @@ export function StatementCard({ statement: s }: { statement: AssistantStatementV
     <li className="grid gap-3 border-b border-rule py-4">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <h3 className="font-semibold">{monthLabel(s.month.slice(0, 7))}</h3>
-        <StatusChip size="sm" {...payoutStatusStyle[s.status]} label={t.enums.payoutStatus[s.status]} />
+        <StatusChip
+          size="sm"
+          {...payoutStatusStyle[s.status]}
+          label={t.enums.payoutStatus[s.status]}
+        />
         {when && <span className="text-2xs text-ink-3">{when}</span>}
       </div>
       <CurrencyTotalsList totals={s.totals} label={monthLabel(s.month.slice(0, 7))} />

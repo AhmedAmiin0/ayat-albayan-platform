@@ -2,9 +2,9 @@ import { uploadOnce } from '@ab/client-core';
 import type { PaymentMethod } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { paidAtFor } from '@/features/finance/payments/api';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { uploadTeacherReceipt } from '@/features/finance/teacher-earnings/api';
+import { paidAtFor } from '@/features/finance/payments';
+import { MONEY_KEY } from '@/features/finance/subscriptions';
+import { uploadTeacherReceipt } from '@/features/finance/teacher-earnings';
 import { payPayout, type PayoutView } from '@/features/finance/payouts/api';
 
 export interface PayPayoutInput {

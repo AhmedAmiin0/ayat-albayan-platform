@@ -69,7 +69,7 @@ export function StudentProfileForm({ student, chatPhone }: StudentProfileFormPro
     ],
   };
 
-  // The status the form shows as loaded (not picked by the admin): sent as expected_status (R-STU-05).
+  // The status the form loaded (not picked by the admin): sent as expected_status (R-STU-05).
   const loaded = useRef(student.status);
   const form = useForm({
     defaultValues: toProfileValues(student),

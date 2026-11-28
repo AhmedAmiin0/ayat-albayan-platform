@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ReactElement } from 'react';
 import { StatusChip, t, readThemePref } from '@ab/web-kit';
-import { googleStatusQuery } from '@/features/platform/google-sync/google-api';
-import { fill } from '@/features/platform/google-sync/google-format';
-import { integrationsQuery } from '@/features/platform/integrations/integrations-api';
-import { sendGateQuery } from '@/features/messaging/messaging/api';
-import { sendingChip } from '@/features/messaging/messaging/sending-chip';
+import { googleStatusQuery } from '@/features/platform/google-sync';
+import { fill } from '@/features/platform/google-sync';
+import { integrationsQuery } from '@/features/platform/integrations';
+import { sendGateQuery } from '@/features/messaging/messaging';
+import { sendingChip } from '@/features/messaging/messaging';
 import { settingsQuery } from '@/lib/settings/settings-api';
 import { googleChips, integrationChips, valuesSummary, type HubChip } from './hub-status';
 import type { HubDestination } from './hub-paths';

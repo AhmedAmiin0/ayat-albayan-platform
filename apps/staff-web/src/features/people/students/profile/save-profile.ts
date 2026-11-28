@@ -26,7 +26,7 @@ export interface SaveProfileResult {
   current?: StudentStatus;
 }
 
-/** One profile save (R-STU-05): PATCH, then the form reloads from the answer or the fresh student. */
+/** One profile save (R-STU-05): PATCH, then the form reloads from the answer or the student. */
 export async function saveProfile(o: SaveProfileOptions): Promise<SaveProfileResult> {
   const r = toStudentPatch(o.values, o.loaded);
   if (!r.ok) return { message: { ok: false, text: r.error } };

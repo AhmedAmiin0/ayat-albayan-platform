@@ -33,13 +33,17 @@ export const createPaymentLink = (body: PaymentLinkCreate) => links.create(body)
 
 export const cancelPaymentLink = (id: string) => links.cancel(id);
 
-/** GET /pay/:token (public, no login) as JSON: without the Accept header the API answers its own HTML page. */
+/** GET /pay/:token (public) as JSON: without the Accept header the API answers its HTML page. */
 export const publicLinkQuery = (token: string) =>
   queryOptions({
     queryKey: publicLinkKeys.link(token),
-    queryFn: () => apiFetch<PublicPaymentLink>(`/pay/${encodeURIComponent(token)}`, { headers: { Accept: 'application/json' } }),
+    queryFn: () =>
+      apiFetch<PublicPaymentLink>(`/pay/${encodeURIComponent(token)}`, {
+        headers: { Accept: 'application/json' },
+      }),
     retry: false,
   });
 
 /** Pay now is a browser navigation (303 to Stripe Checkout or back), never a fetch. */
-export const checkoutUrl = (token: string): string => `${env.apiUrl}/pay/${encodeURIComponent(token)}/checkout`;
+export const checkoutUrl = (token: string): string =>
+  `${env.apiUrl}/pay/${encodeURIComponent(token)}/checkout`;

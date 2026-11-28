@@ -13,7 +13,7 @@ export interface CredentialPickerProps {
   error?: string | undefined;
 }
 
-/** How the user gets a password: typed here, generated (shown once) or an invite link (shown once). */
+/** The password: typed here, generated (shown once) or an invite link (shown once). */
 export function CredentialPicker({
   name,
   mode,
@@ -32,8 +32,20 @@ export function CredentialPicker({
         onChange={onMode}
       />
       {mode === 'set' && (
-        <Field label={C.password} required error={error} hint={C.hint.replace('{n}', String(DEFAULT_PASSWORD_MIN))}>
-          {(p) => <PasswordInput {...p} autoComplete="new-password" value={password} onValue={onPassword} />}
+        <Field
+          label={C.password}
+          required
+          error={error}
+          hint={C.hint.replace('{n}', String(DEFAULT_PASSWORD_MIN))}
+        >
+          {(p) => (
+            <PasswordInput
+              {...p}
+              autoComplete="new-password"
+              value={password}
+              onValue={onPassword}
+            />
+          )}
         </Field>
       )}
     </div>

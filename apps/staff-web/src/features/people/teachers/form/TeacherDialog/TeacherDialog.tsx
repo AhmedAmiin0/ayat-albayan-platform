@@ -23,7 +23,7 @@ interface Props {
 /** The POST / PATCH body; `username` only when it changed (docs/30). */
 type Payload = TeacherCreate & { username?: string | null };
 
-/** Create (teacher = null) or edit a teacher (R-TCH-01); editing also sets the login's username (docs/30). */
+/** Create (teacher = null) or edit a teacher (R-TCH-01); edit also sets the username (docs/30). */
 export function TeacherDialog({ teacher, onClose }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();

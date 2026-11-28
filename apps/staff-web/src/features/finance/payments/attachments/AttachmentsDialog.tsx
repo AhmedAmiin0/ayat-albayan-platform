@@ -5,7 +5,7 @@ import { attachmentsQuery } from '@/features/finance/payments/api';
 import { attachmentLabels } from './attachments';
 
 interface Props {
-  /** GET …/attachments: /payments/:id/attachments (admin) or /sales/me/payments/:id/attachments (her own). */
+  /** GET /payments/:id/attachments (admin) or /sales/me/payments/:id/attachments (her own). */
   path: string;
   /** Whose payment (the student). */
   description: string;

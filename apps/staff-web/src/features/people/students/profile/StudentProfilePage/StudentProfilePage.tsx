@@ -15,14 +15,14 @@ import {
   FormAlert,
   HeadActions,
 } from '@ab/web-kit';
-import { EntityActivity } from '@/features/reporting/activity/EntityActivity';
-import { BroughtByField } from '@/features/people/assistants/students/BroughtByField';
-import { AssistantsManager } from '@/features/teaching/classroom/sessions/AssistantsManager';
-import { StudentJoinLink } from '@/features/teaching/classroom/student-link/StudentJoinLink';
-import { GuardianEditDialog } from '@/features/people/guardians/GuardianEditForm';
+import { EntityActivity } from '@/features/reporting/activity';
+import { BroughtByField } from '@/features/people/assistants';
+import { AssistantsManager } from '@/features/teaching/classroom';
+import { StudentJoinLink } from '@/features/teaching/classroom';
+import { GuardianEditDialog } from '@/features/people/guardians';
 import { studentQuery } from '@/features/people/students/api';
-import { BalanceCard } from '@/features/finance/subscriptions/balance/BalanceCard';
-import { RenewSubscriptionButton } from '@/features/finance/subscriptions/create/RenewSubscriptionButton';
+import { BalanceCard } from '@/features/finance/subscriptions';
+import { RenewSubscriptionButton } from '@/features/finance/subscriptions';
 import { SiblingMerge } from '@/features/people/students/duplicates/SiblingMerge';
 import { StudentInvoices } from '@/features/people/students/profile/StudentInvoices';
 import { StudentPayments } from '@/features/people/students/profile/StudentPayments';
@@ -31,8 +31,8 @@ import { StudentMeta } from '@/features/people/students/profile/StudentMeta';
 import { StudentFamily } from '@/features/people/students/family/StudentFamily';
 import { PeopleEditActions, RemovedStudent } from '@/features/people/students/people-edit';
 import { StudentRecordings } from '@/features/people/students/recordings/StudentRecordings';
-import { CreateAccountButton } from '@/features/people/users/create/CreateAccountButton';
-import { TrialDatesSection } from '@/features/teaching/booking/trial-date/TrialDatesSection';
+import { CreateAccountButton } from '@/features/people/users';
+import { TrialDatesSection } from '@/features/teaching/booking';
 import { MonitorChannel } from '@/features/teaching/student-channel';
 import { usePermissions } from '@/features/people/auth';
 import { CourseCardPanel } from '@/features/teaching/course-actions';

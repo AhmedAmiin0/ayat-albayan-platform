@@ -6,7 +6,7 @@ import { controlClass, Input, NuqtaGlyph, t, cn } from '@ab/web-kit';
 import { str, shapeId } from './settings-form';
 import type { SettingsFormState } from './use-settings-form';
 
-/** An object setting (contact, consent notice): one labelled box per field, one error for the whole setting. */
+/** An object setting (contact, consent notice): a box per field, one error for the setting. */
 export function ShapeRow({ settingKey, state, extras }: { settingKey: SettingKey; state: SettingsFormState; extras: RowExtras }) {
   const id = useId();
   const def = settingDef(settingKey);

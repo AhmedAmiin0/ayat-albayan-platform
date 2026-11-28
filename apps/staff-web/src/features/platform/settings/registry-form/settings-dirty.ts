@@ -3,7 +3,7 @@ import { onKey, settingsForm, shapeId, type SettingsForm } from './settings-form
 
 const defaults = settingsForm(SETTING_DEFAULTS);
 
-/** The form fields behind one setting: its own, `<field>On` (a number that can be OFF), or a json shape's boxes. */
+/** A setting's form fields: its own, `<field>On` (a number that can be OFF), or a shape's boxes. */
 export function fieldIds(key: SettingKey): string[] {
   const def = settingDef(key);
   const field = SETTING_FIELD_OF[key];

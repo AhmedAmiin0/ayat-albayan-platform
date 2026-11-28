@@ -5,8 +5,8 @@ import {
   KAPSO_GROUPS,
   SAFETY_GUARD_GROUPS,
   WACRM_GROUPS,
-} from '@/features/platform/integrations/integration-places';
-import { IntegrationsPanel } from '@/features/platform/integrations/IntegrationsPanel';
+} from '@/features/platform/integrations';
+import { IntegrationsPanel } from '@/features/platform/integrations';
 import { t } from '@ab/web-kit';
 import { CrmCutoverCard } from '@/features/platform/settings/pages/communications/CrmCutoverCard';
 
@@ -32,10 +32,20 @@ export function SafetyTab({
           intro={t.communicationsHub.safetyIntro}
         />
       </div>
-      {/* Each section heading names its driver already: the group heading stays for screen readers only. */}
+      {/* Each section heading names its driver: the group heading is for screen readers only. */}
       <div className="grid min-w-0 gap-6 [&_[role=group]>h3]:sr-only">
-        <IntegrationsPanel query="" onSaved={onNote} groups={KAPSO_GROUPS} title={t.integrations.groups.kapso} />
-        <IntegrationsPanel query="" onSaved={onNote} groups={WACRM_GROUPS} title={t.integrations.groups.wacrm} />
+        <IntegrationsPanel
+          query=""
+          onSaved={onNote}
+          groups={KAPSO_GROUPS}
+          title={t.integrations.groups.kapso}
+        />
+        <IntegrationsPanel
+          query=""
+          onSaved={onNote}
+          groups={WACRM_GROUPS}
+          title={t.integrations.groups.wacrm}
+        />
         <IntegrationsPanel
           query=""
           onSaved={onNote}

@@ -1,8 +1,8 @@
 import { courseOpensOn, inWeekOrder, prefillDays, type SalesCourseView } from '@ab/shared';
 import { counted } from '@ab/core';
-import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
-import { dayAtText } from '@/features/teaching/booking/steps/slots/DayTimesList';
-import type { BookHint } from '@/features/teaching/booking/hint';
+import type { BookingDraft } from '@/features/teaching/booking';
+import { dayAtText } from '@/features/teaching/booking';
+import type { BookHint } from '@/features/teaching/booking';
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit';
 import { courseDraft } from './course-draft';

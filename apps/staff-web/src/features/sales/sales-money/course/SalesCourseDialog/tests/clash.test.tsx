@@ -1,21 +1,37 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ABRAR, next, pickSlot, pickWednesday, SLOT } from '@/features/teaching/booking/wizard-fixture';
+import {
+  ABRAR,
+  next,
+  pickSlot,
+  pickWednesday,
+  SLOT,
+} from '@/features/teaching/booking/wizard-fixture';
 import { ApiError, t } from '@ab/web-kit';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { COURSE_STUDENT_ID, routeCourse, routeCourseSend } from '@/features/sales/sales-money/course/course-fixture';
+import {
+  COURSE_STUDENT_ID,
+  routeCourse,
+  routeCourseSend,
+} from '@/features/sales/sales-money/course/course-fixture';
 import { SalesCourseDialog } from '@/features/sales/sales-money/course/SalesCourseDialog/SalesCourseDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
 const nextButton = () => screen.getByRole('button', { name: t.booking.next });
 const submit = () => screen.getByRole('button', { name: t.booking.submit });
 const CLASH = { kind: 'teacher_busy', startsAt: SLOT, endsAt: SLOT };
 
-/** Open the dialog, wait for the preselected teacher, then pick Sunday 17:00 and Wednesday 19:30. */
+/** Open the dialog, wait for the preselected teacher, pick Sunday 17:00 and Wednesday 19:30. */
 async function pickBothDays(): Promise<void> {
   renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
   const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });

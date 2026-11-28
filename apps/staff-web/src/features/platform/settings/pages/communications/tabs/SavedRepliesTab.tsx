@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useId } from 'react';
 import { Button, FormAlert, Icon, Skeleton, usePermissions, t } from '@ab/web-kit';
-import { savedRepliesQuery } from '@/features/messaging/inbox/saved-replies/lib/api';
-import { useReplyDialogs } from '@/features/messaging/inbox/saved-replies/hooks/use-reply-dialogs';
+import { savedRepliesQuery } from '@/features/messaging/inbox';
+import { useReplyDialogs } from '@/features/messaging/inbox';
 import { SavedRepliesTable } from './SavedRepliesTable';
 
 const S = t.savedReplies;

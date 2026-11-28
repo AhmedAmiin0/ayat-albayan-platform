@@ -1,13 +1,18 @@
 import type { SettingKey } from '@ab/settings';
 import { useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
-import { cachedEntry, configEntriesQuery, patchConfigEntry, storeEntry } from '@/lib/settings/config-entries-api';
+import {
+  cachedEntry,
+  configEntriesQuery,
+  patchConfigEntry,
+  storeEntry,
+} from '@/lib/settings/config-entries-api';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 import { IDLE, saveFailure, type RowStatus, type SaveEnd } from './entry-save-result';
 
 export type { RowStatus, SaveEnd };
 
-/** One row's save: the value, the typed confirmation if asked, and the version to send (else the row's). */
+/** One row's save: the value, the typed confirmation if asked, and the version to send. */
 export interface SaveInput {
   value: unknown;
   confirmText?: string | undefined;
@@ -17,7 +22,7 @@ export interface SaveInput {
 
 export interface RowSaves {
   status: (key: SettingKey) => RowStatus;
-  /** One PATCH /config/entries/:key with the row's version; rows save independently of each other. */
+  /** One PATCH /config/entries/:key with the row's version; rows save independently. */
   run: (key: SettingKey, input: SaveInput) => Promise<SaveEnd>;
   /** Forgets a failed save so no stale retry stays. */
   clearFailed: (key: SettingKey) => void;
@@ -25,7 +30,7 @@ export interface RowSaves {
   clear: (key: SettingKey) => void;
 }
 
-/** The row's version: the cached entry's, else the entries read now (a failed read fails the save). */
+/** The cached entry's version, else the entries read now (a failed read fails the save). */
 async function versionOf(client: QueryClient, key: SettingKey): Promise<number> {
   const hit =
     cachedEntry(client, key) ??
@@ -88,6 +93,9 @@ export function useRowSaves(): RowSaves {
     [],
   );
   const clearFailed = useCallback((key: SettingKey) => clearWhen(key, ['failed']), [clearWhen]);
-  const clear = useCallback((key: SettingKey) => clearWhen(key, ['failed', 'conflict']), [clearWhen]);
+  const clear = useCallback(
+    (key: SettingKey) => clearWhen(key, ['failed', 'conflict']),
+    [clearWhen],
+  );
   return { status: (key) => statuses[key] ?? IDLE, run, clearFailed, clear };
 }

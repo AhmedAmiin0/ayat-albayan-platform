@@ -6,7 +6,7 @@ import {
 } from '@ab/shared';
 import type { StartValue } from './SalesStartField';
 
-/** The start fields of POST /sales/subscriptions: none without the permission (the API's default day). */
+/** The start fields of POST /sales/subscriptions: none without the permission (API's default). */
 export interface StartBody {
   startsOn?: string;
   alreadyStarted?: true;
@@ -22,8 +22,8 @@ interface StartOpts {
 
 /**
  * The same rules as the API (salesStartDate, usedBeforeProblem) before posting: without
- * subscriptions.set_start_date nothing is sent; with it the day, plus `alreadyStarted` only when ticked,
- * and `lessonsUsedBefore` only then and when > 0.
+ * subscriptions.set_start_date nothing is sent; with it the day, plus `alreadyStarted` only when
+ * ticked, and `lessonsUsedBefore` only then and when > 0.
  */
 export function startBody(
   value: StartValue,

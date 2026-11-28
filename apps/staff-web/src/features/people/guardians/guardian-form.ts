@@ -1,6 +1,6 @@
 import { guardianUpdateSchema, type GuardianUpdate } from '@ab/shared';
 import type { LeadSource } from '@ab/catalog';
-import { phoneError, requiredError } from '@/features/people/students/create/create-student';
+import { phoneError, requiredError } from '@/features/people/students';
 import { t } from '@ab/web-kit';
 import type { GuardianDetail } from '@ab/shared';
 

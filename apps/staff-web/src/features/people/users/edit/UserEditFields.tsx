@@ -16,7 +16,7 @@ export interface UserEditFieldsProps {
   roleLocked: boolean;
 }
 
-/** The edit panel's fields: identity, language, zone and role. Everything is disabled without users.write. */
+/** Identity, language, zone and role; all disabled without users.write. */
 export function UserEditFields({ form, onChange, errors, options, readOnly, roleLocked }: UserEditFieldsProps) {
   const set = (patch: Partial<EditForm>) => onChange({ ...form, ...patch });
   return (

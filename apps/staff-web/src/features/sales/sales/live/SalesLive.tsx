@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { Button, Cartouche, EmptyState, FormAlert, PageHead, ListSkeleton, t } from '@ab/web-kit';
-import { AssistantLessonRow } from '@/features/teaching/classroom/sessions/AssistantLessonRow';
+import { AssistantLessonRow } from '@/features/teaching/classroom';
 import { salesLiveQuery } from '@/features/sales/sales/academy-api';
 
 /** Every lesson running now (start <= now < end); POST /lessons/:id/room/join lets her in. */

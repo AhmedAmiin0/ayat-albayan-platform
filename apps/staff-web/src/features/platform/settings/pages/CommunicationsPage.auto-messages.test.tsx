@@ -2,7 +2,7 @@ import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/re
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { SETTINGS } from '@/test/settings-fixture';
-import { renderCommunications } from './communications-test-kit';
+import { renderCommunications } from '@/features/platform/settings/pages/testing/communications-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

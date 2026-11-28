@@ -1,16 +1,25 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { findRow, renderValues } from './values-test-utils';
+import { findRow, renderValues } from '@/features/platform/settings/values/testing/values-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 const granted = vi.hoisted(() => ({ write: true }));
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@ab/web-kit/auth/use-permissions', () => ({
-  usePermissions: () => ({ permissions: [], can: (p: string) => p !== 'settings.write' || granted.write }),
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
 }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@ab/web-kit/auth/use-permissions', () => ({
+  usePermissions: () => ({
+    permissions: [],
+    can: (p: string) => p !== 'settings.write' || granted.write,
+  }),
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
 const v = t.settingsValues;
 const ts = t.templates.settings;
@@ -31,11 +40,13 @@ describe('«القيم» — read-only and module-owned rows', () => {
     const table = screen.getByRole('table');
     expect(within(table).queryByRole('spinbutton')).toBeNull();
     expect(within(table).queryByRole('switch')).toBeNull();
-    // The one kind of button left: the description line, which opens the text to read (states.html).
+    // The one button left: the description line, which opens the text to read (states.html).
     const buttons = within(table).queryAllByRole('button');
     expect(buttons.length).toBeGreaterThan(0);
     expect(buttons.every((b) => b.getAttribute('aria-haspopup') === 'dialog')).toBe(true);
-    expect(within(table).queryByRole('button', { name: new RegExp(v.menu.replace('{name}', '')) })).toBeNull();
+    expect(
+      within(table).queryByRole('button', { name: new RegExp(v.menu.replace('{name}', '')) }),
+    ).toBeNull();
     expect(screen.queryByRole('button', { name: new RegExp(t.config.custom.add) })).toBeNull();
   });
 
@@ -43,14 +54,19 @@ describe('«القيم» — read-only and module-owned rows', () => {
     renderValues(apiFetch, { search: { group: 'notifications' } });
     const row = await findRow(ts.reminderMinutesBefore);
     expect(within(row).queryByRole('spinbutton')).toBeNull();
-    expect(within(row).getByRole('link', { name: v.editFrom.communications }).getAttribute('href')).toBe('/admin/settings/communications?tab=catalogue');
+    expect(
+      within(row).getByRole('link', { name: v.editFrom.communications }).getAttribute('href'),
+    ).toBe('/admin/settings/communications?tab=catalogue');
     const table = screen.getByRole('table');
     expect(within(table).queryByRole('switch')).toBeNull();
     expect(within(table).queryByRole('textbox')).toBeNull();
   });
 
   it('«مزامنة Google» shows the three values from the Google status, linked to its page', async () => {
-    renderValues(apiFetch, { search: { group: 'google' }, google: { enabled: true, mode: 'live', window_days: 30 } });
+    renderValues(apiFetch, {
+      search: { group: 'google' },
+      google: { enabled: true, mode: 'live', window_days: 30 },
+    });
     const row = await findRow(t.googleSync.switches.enabled);
     await waitFor(() => expect(within(row).getByText(t.googleSync.switches.on)).toBeTruthy());
     expect(
@@ -63,7 +79,14 @@ describe('«القيم» — read-only and module-owned rows', () => {
   });
 
   it('«قيم مخصصة»: one row per entry, its menu edits and deletes', async () => {
-    const entry = { key: 'promo.banner', value: { a: 1 }, description: 'نص الترحيب', isPublic: true, updatedAt: '2026-10-05T10:00:00Z', updatedBy: null };
+    const entry = {
+      key: 'promo.banner',
+      value: { a: 1 },
+      description: 'نص الترحيب',
+      isPublic: true,
+      updatedAt: '2026-10-05T10:00:00Z',
+      updatedBy: null,
+    };
     renderValues(apiFetch, { search: { group: 'custom' }, custom: [entry] });
     const row = await findRow('نص الترحيب');
     expect(within(row).getByText('{"a":1}')).toBeTruthy();

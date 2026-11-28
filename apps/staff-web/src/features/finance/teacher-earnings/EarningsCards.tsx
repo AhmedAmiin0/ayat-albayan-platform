@@ -1,14 +1,9 @@
 import type { TeacherEarningsBalanceView } from '@ab/money';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t, cn } from '@ab/web-kit';
 
-interface CardProps {
-  label: string;
-  amount: number;
-  hint?: string;
-  strong?: boolean;
-}
+interface CardProps { label: string; amount: number; hint?: string; strong?: boolean }
 
 function Card({ label, amount, hint, strong }: CardProps) {
   return (

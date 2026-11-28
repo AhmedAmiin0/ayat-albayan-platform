@@ -6,11 +6,7 @@ import { hatchStyle } from './DayTrack';
 import { WEEK_ORDER, type Grid, type Range } from './grid';
 import { AXIS_HOURS, trackPct, wallClock } from './track';
 
-interface Props {
-  grid: Grid;
-  tz: string;
-  onDay: (day: Weekday, ranges: Range[]) => void;
-}
+interface Props { grid: Grid; tz: string; onDay: (day: Weekday, ranges: Range[]) => void }
 
 const headClass = 'py-2 text-2xs font-semibold text-ink-3';
 

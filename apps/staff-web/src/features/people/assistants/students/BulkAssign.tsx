@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState } from 'react';
 import { Button, Dialog, Field, FormAlert, Input, Select, t } from '@ab/web-kit';
-import { paidAtDay } from '@/features/finance/payments/record/pay-day';
+import { paidAtDay } from '@/features/finance/payments';
 import { ASSISTANTS_KEY, assistantsQuery, setBroughtBy } from '@/features/people/assistants/api';
 import { broughtAtOf } from './brought-at';
 import { errorText } from '@/features/people/assistants/status';

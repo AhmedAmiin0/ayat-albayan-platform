@@ -6,7 +6,7 @@ import { removeStaffPhoto, uploadStaffPhoto } from './api';
 import type { StaffPhotoTarget } from './staff-photo.schemas';
 import { photoErrorText } from './photo-error';
 
-/** Every list or page that shows staff photos (a teacher is also a login; the admin may be editing their own). */
+/** Every list or page with staff photos (a teacher is also a login; an admin may edit theirs). */
 const PHOTO_KEYS = [
   ['teachers'],
   ['users'],

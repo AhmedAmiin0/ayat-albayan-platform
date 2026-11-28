@@ -1,10 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { usePermissions } from '@ab/web-kit';
 
-export interface PickColumn {
-  isPicked: (id: string) => boolean;
-  toggle: (id: string) => void;
-}
+export interface PickColumn { isPicked: (id: string) => boolean; toggle: (id: string) => void }
 
 export interface StudentPick {
   /** Only an admin who may write assistant pay can pick. */

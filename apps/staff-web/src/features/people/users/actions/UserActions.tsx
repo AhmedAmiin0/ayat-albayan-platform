@@ -14,7 +14,7 @@ export interface UserActionsProps {
   onDone: (message: string) => void;
 }
 
-/** The account actions (users.write): disable / enable, reset password, sign out everywhere, delete. */
+/** Account actions (users.write): disable / enable, reset password, sign out everywhere, delete. */
 export function UserActions({ user, onMode, onDone }: UserActionsProps) {
   const queryClient = useQueryClient();
   const enable = useMutation({

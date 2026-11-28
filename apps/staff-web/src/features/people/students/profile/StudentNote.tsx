@@ -1,9 +1,6 @@
 import { NuqtaGlyph, cn } from '@ab/web-kit';
 
-interface StudentNoteProps {
-  text: string | null;
-  className?: string;
-}
+interface StudentNoteProps { text: string | null; className?: string }
 
 /** docs/07 §6 hamish note style. */
 export function StudentNote({ text, className }: StudentNoteProps) {

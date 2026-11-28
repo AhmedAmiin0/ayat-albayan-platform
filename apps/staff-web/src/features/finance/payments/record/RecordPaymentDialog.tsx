@@ -2,9 +2,9 @@ import type { PaymentKind } from '@ab/catalog';
 import { CURRENCY_ISOS, dueOf, owedFor, parseAmount } from '@ab/money';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button, Dialog, Field, FormAlert, Select, t, useUploadMaxBytes } from '@ab/web-kit';
-import type { SubscriptionView } from '@/features/finance/subscriptions/api';
+import type { SubscriptionView } from '@/features/finance/subscriptions';
 import { apiErrorText, currencySymbol, moneyText, packageName, studentLabel } from '@/features/finance/subscriptions';
-import type { PickedStudent } from '@/features/finance/subscriptions/create/StudentPicker';
+import type { PickedStudent } from '@/features/finance/subscriptions';
 import { AttachmentsField } from '@/features/finance/payments/attachments/AttachmentsField';
 import { paidAtDay } from './pay-day';
 import { PaymentFields, type PaymentForm } from './PaymentFields';
@@ -110,8 +110,8 @@ export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment',
 }
 
 /**
- * A storage failure (not an ApiError) is the upload; no answer at all (fetch's TypeError) may
- * still have been recorded, so it says so (a retry is safe); anything else maps through payments.error.
+ * A storage failure (not an ApiError) is the upload; no answer at all (fetch's TypeError) may still
+ * have been recorded, so it says so (a retry is safe); anything else maps through payments.error.
  */
 function uploadOrApiError(e: unknown): string {
   if (e instanceof TypeError) return t.payments.mobile.offline;

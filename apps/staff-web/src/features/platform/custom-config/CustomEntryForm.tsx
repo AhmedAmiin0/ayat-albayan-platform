@@ -22,7 +22,7 @@ function Err({ id, message }: { id: string; message?: string | undefined }) {
   ) : null;
 }
 
-/** Add or edit one custom entry: key, JSON value, description, public flag; validated before it is sent. */
+/** Add or edit a custom entry: key, JSON value, description, public flag; validated first. */
 export function CustomEntryForm({
   initial,
   editing,

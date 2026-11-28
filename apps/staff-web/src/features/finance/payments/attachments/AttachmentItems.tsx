@@ -1,18 +1,8 @@
 import { Button } from '@ab/web-kit';
 
-export interface AttachmentItem {
-  key: string;
-  name: string;
-}
-interface Texts {
-  attachmentN: string;
-  attachmentRemove: string;
-}
-interface Props {
-  items: AttachmentItem[];
-  texts: Texts;
-  onRemove: (index: number) => void;
-}
+export interface AttachmentItem { key: string; name: string }
+interface Texts { attachmentN: string; attachmentRemove: string }
+interface Props { items: AttachmentItem[]; texts: Texts; onRemove: (index: number) => void }
 
 export function AttachmentItems({ items, texts, onRemove }: Props) {
   if (items.length === 0) return null;

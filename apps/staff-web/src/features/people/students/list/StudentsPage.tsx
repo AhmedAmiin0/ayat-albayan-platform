@@ -4,8 +4,8 @@ import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
 import { Button, Cartouche, EmptyState, Icon, PageHead, Pager, Toast, t } from '@ab/web-kit';
 import { studentListQuery, studentStatusCountsQuery } from '@/features/people/students/api';
-import { BulkAssign } from '@/features/people/assistants/students/BulkAssign';
-import { useStudentPick } from '@/features/people/assistants/students/use-student-pick';
+import { BulkAssign } from '@/features/people/assistants';
+import { useStudentPick } from '@/features/people/assistants';
 import { CreateStudentDialog } from '@/features/people/students/create/CreateStudentDialog';
 import { setFilter } from './filters';
 import { isUnfiltered, studentTableControls, type StudentsSearch } from './search';
@@ -39,7 +39,7 @@ export function StudentsPage({
     studentListQuery(search, page, { filters, sort, columns: colFilters }),
   );
   const counts = useQuery(studentStatusCountsQuery({ ...filters, status: undefined }));
-  // The counts know the R-STU-01 filters only: under a search or a column filter they would not match the list.
+  // The counts know only the R-STU-01 filters: under a search or column filter they mismatch.
   const narrowed = Boolean(search) || Object.values(colFilters ?? {}).some(Boolean);
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -50,7 +50,11 @@ export function StudentsPage({
   const none = data?.total === 0 && isUnfiltered(view);
   const controls = studentTableControls(view, onChange);
   const kinds = (
-    <StudentKindSwitch status={filters.status} counts={narrowed ? undefined : counts.data} onChange={(st) => onChange({ ...view, filters: setFilter(filters, 'status', st) })} />
+    <StudentKindSwitch
+      status={filters.status}
+      counts={narrowed ? undefined : counts.data}
+      onChange={(st) => onChange({ ...view, filters: setFilter(filters, 'status', st) })}
+    />
   );
   const extra = useStudentFilters({
     value: filters,
@@ -65,7 +69,9 @@ export function StudentsPage({
         <Cartouche>{t.students.title}</Cartouche>
         {data && (
           // One count form for every n; Arabic plural forms come when copy needs them.
-          <span className="text-sm text-ink-3 tabular-nums">{t.students.count.replace('{n}', String(data.total))}</span>
+          <span className="text-sm text-ink-3 tabular-nums">
+            {t.students.count.replace('{n}', String(data.total))}
+          </span>
         )}
         <div className="ms-auto flex gap-2.5 max-sm:w-full max-sm:[&>*]:flex-1">
           <BulkAssign pick={pick} onDone={setNotice} />

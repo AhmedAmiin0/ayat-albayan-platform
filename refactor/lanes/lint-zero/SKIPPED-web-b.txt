@@ -1,6 +1,6 @@
 apps/staff-web/src/features/finance/payouts/api.ts #1338
 apps/staff-web/src/features/finance/payouts/list/PayoutsPage/tests/helpers.test.tsx #1338
-apps/staff-web/src/features/people/account/AccountPage/tests/appearance.test.tsx #1338 #1325
+apps/staff-web/src/features/people/account/AccountPage/tests/appearance.test.tsx #1338
 apps/staff-web/src/features/people/account/sections/AccountAppearance/AccountAppearance.tsx #1325
 apps/staff-web/src/features/people/students/create/CreateStudentDialog/tests/initial.test.tsx #1338
 apps/staff-web/src/features/people/teachers/availability/AvailabilityGrid/tests/AvailabilityGrid.test.tsx #1325

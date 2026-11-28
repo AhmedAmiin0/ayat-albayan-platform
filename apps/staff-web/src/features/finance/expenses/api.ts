@@ -63,7 +63,7 @@ export const deleteExpense = calls.remove;
 
 export const expenseReceiptUrl = calls.receipt;
 
-/** Straight to receipts/expenses/… through a one-off signed URL; the path is then saved with the expense. */
+/** To receipts/expenses/… through a one-off signed URL; the path is then saved with the expense. */
 export async function uploadExpenseReceipt(file: File): Promise<string> {
   const slot = expenseReceiptUploadSchema.parse({ mime: file.type, size: file.size });
   const signed = await calls.receiptUploadUrl(slot);
@@ -73,7 +73,9 @@ export async function uploadExpenseReceipt(file: File): Promise<string> {
 }
 
 /** One total per currency (amounts are never mixed or converted here); drafts are not counted. */
-export function totalsByCurrency(rows: readonly Pick<ExpenseView, 'amount' | 'currency' | 'is_draft'>[]): [string, number][] {
+export function totalsByCurrency(
+  rows: readonly Pick<ExpenseView, 'amount' | 'currency' | 'is_draft'>[],
+): [string, number][] {
   const sums = new Map<string, number>();
   for (const r of rows)
     if (!r.is_draft) sums.set(r.currency, round2((sums.get(r.currency) ?? 0) + r.amount));

@@ -37,7 +37,13 @@ const NameCell = memo(function NameCell({
 }) {
   return (
     <span className="flex items-center gap-2.5">
-      <Avatar name={user.full_name} id={user.avatar_seed ?? user.id} src={user.avatar_url} size="sm" decorative />
+      <Avatar
+        name={user.full_name}
+        id={user.avatar_seed ?? user.id}
+        src={user.avatar_url}
+        size="sm"
+        decorative
+      />
       <button
         type="button"
         className="block min-w-0 cursor-pointer text-start font-semibold text-ink hover:underline max-sm:min-h-11"
@@ -53,7 +59,7 @@ const NameCell = memo(function NameCell({
   );
 });
 
-/** The users table. The name is a button (keyboard path to the panel); a click on the row opens it too. */
+/** The name is a button (keyboard path to the panel); a click on the row opens it too. */
 export function usersColumns(onOpen: (userId: string) => void) {
   return col.columns([
     col.accessor('full_name', {
@@ -104,7 +110,13 @@ export function usersColumns(onOpen: (userId: string) => void) {
     }),
     col.accessor('status', {
       header: () => C.status,
-      cell: (c) => <StatusChip tone={c.getValue() === 'active' ? 'ok' : 'bad'} glyph={c.getValue() === 'active' ? 'fill' : 'struck'} label={t.users.status[c.getValue()]} />,
+      cell: (c) => (
+        <StatusChip
+          tone={c.getValue() === 'active' ? 'ok' : 'bad'}
+          glyph={c.getValue() === 'active' ? 'fill' : 'struck'}
+          label={t.users.status[c.getValue()]}
+        />
+      ),
       meta: { className: stacked.status },
     }),
     col.accessor('last_sign_in_at', {

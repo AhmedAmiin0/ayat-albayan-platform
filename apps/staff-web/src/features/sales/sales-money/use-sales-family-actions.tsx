@@ -2,9 +2,9 @@ import { canLinkFamily, canPickTrialDate, type SalesFamilyStudent, type SalesStu
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { Button, Toast, usePermissions, t } from '@ab/web-kit';
-import { RegistrationCheckTrigger } from '@/features/sales/sales/registration/RegistrationCheckButton';
-import { RegistrationCheckDialog } from '@/features/sales/sales/registration/RegistrationCheckDialog';
-import { TrialDateDialog } from '@/features/teaching/booking/trial-date/dialog/TrialDateDialog';
+import { RegistrationCheckTrigger } from '@/features/sales/sales';
+import { RegistrationCheckDialog } from '@/features/sales/sales';
+import { TrialDateDialog } from '@/features/teaching/booking';
 import { LinkFamilyDialog } from '@/features/messaging/inbox';
 import { useInboxMode } from '@/features/messaging/inbox';
 import { SalesRegisterButton, SalesRegisterDialog } from '@/features/messaging/inbox';
@@ -102,7 +102,7 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const due = students.filter((s) => s.renew_due);
   const single = due.length === 1 ? due[0] : undefined;
   const renew = () => setOpened({ start: 'subscribe', renew: true, ...(single ? { studentId: single.id } : {}) });
-  // One entry per action: the only child opens it straight away, several are picked in ChildChoiceDialog.
+  // One entry per action: an only child opens it at once; several are picked in ChildChoiceDialog.
   const entry = (kind: Choice) => {
     const { title, list, open } = choices[kind];
     const [only] = list;

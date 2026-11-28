@@ -15,7 +15,11 @@ export type ValuesGroupId = ValueGroupId | 'custom' | OwnedValueGroupId;
 export const OWNED_GROUP_IDS: readonly OwnedValueGroupId[] = ['notifications', 'sending', 'google'];
 
 /** Every group in list order. */
-export const GROUP_IDS: readonly ValuesGroupId[] = [...VALUE_GROUP_IDS, 'custom', ...OWNED_GROUP_IDS];
+export const GROUP_IDS: readonly ValuesGroupId[] = [
+  ...VALUE_GROUP_IDS,
+  'custom',
+  ...OWNED_GROUP_IDS,
+];
 
 export const isOwnedGroup = (id: ValuesGroupId): id is OwnedValueGroupId =>
   (OWNED_GROUP_IDS as readonly string[]).includes(id);
@@ -60,7 +64,7 @@ export function groupKeys(id: ValuesGroupId): readonly SettingKey[] {
   return VALUE_GROUPS[id];
 }
 
-/** Where a module-owned group is edited (the page, and its tab when it has one), and the link's words. */
+/** Where a module-owned group is edited (the page, and its tab if any), and the link's words. */
 export const OWNER_PAGE: Record<
   OwnedValueGroupId,
   { to: string; search?: Record<string, string>; label: string }
@@ -70,7 +74,10 @@ export const OWNER_PAGE: Record<
     search: { tab: 'catalogue' },
     label: t.settingsValues.editFrom.communications,
   },
-  sending: { to: '/admin/settings/communications', label: t.settingsValues.editFrom.communications },
+  sending: {
+    to: '/admin/settings/communications',
+    label: t.settingsValues.editFrom.communications,
+  },
   google: { to: '/admin/settings/google', label: t.settingsValues.editFrom.google },
 };
 

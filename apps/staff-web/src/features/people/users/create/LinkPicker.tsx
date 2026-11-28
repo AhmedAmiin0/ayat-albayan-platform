@@ -2,7 +2,7 @@ import type { LinkCandidate, LinkKind } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button, Field, Input, Ltr, t } from '@ab/web-kit';
-import { useDebounced } from '@/features/finance/pricing/use-debounced';
+import { useDebounced } from '@/features/finance/pricing';
 import { candidatesQuery } from '@/features/people/users/api';
 
 const L = t.users.link;

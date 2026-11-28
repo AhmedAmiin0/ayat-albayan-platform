@@ -1,8 +1,13 @@
 import type { GoogleStatusView } from '@ab/catalog';
 import type { Mock } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/messaging/inbox/testing/test-utils';
-import { googleItems, googleStatus, googleStudents, googleTeachers } from './google.fixture';
-import { GoogleSection } from './GoogleSection';
+import {
+  googleItems,
+  googleStatus,
+  googleStudents,
+  googleTeachers,
+} from '@/features/platform/google-sync/google.fixture';
+import { GoogleSection } from '@/features/platform/google-sync/GoogleSection';
 
 // Shared by the Google section's component tests (not app code).
 

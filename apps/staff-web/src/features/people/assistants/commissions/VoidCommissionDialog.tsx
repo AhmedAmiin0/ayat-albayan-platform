@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
+import { ConfirmDialog } from '@/features/finance/payments';
 import { moneyText } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';
 import {
@@ -14,7 +14,7 @@ interface Props {
   onClose: () => void;
 }
 
-/** Voiding asks for a reason (audited); the money side effects are the database's (a reversal in a frozen statement). */
+/** A void needs a reason (audited); the database does the money side (reversal if frozen). */
 export function VoidCommissionDialog({ commission, onClose }: Props) {
   const queryClient = useQueryClient();
   const run = useMutation({

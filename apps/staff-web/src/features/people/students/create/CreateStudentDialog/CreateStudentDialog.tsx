@@ -21,7 +21,7 @@ interface CreateStudentDialogProps {
   onDone: (notice: string) => void;
   /** Pre-filled values; given → the compact form (see CreateStudentForm). */
   initial?: Partial<CreateStudentValues>;
-  /** The inbox lead this registration converts (R-LEAD-06); sent on every create, merge included. */
+  /** The inbox lead this registration converts (R-LEAD-06); sent on every create and merge. */
   leadId?: string;
   title?: string;
 }

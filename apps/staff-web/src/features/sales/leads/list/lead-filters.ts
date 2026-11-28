@@ -15,13 +15,16 @@ export interface LeadChipsOptions {
 }
 
 /** The salesperson's id is never shown. */
-function assigneeText(assignee: string | undefined, people: LeadChipsOptions['people']): string | undefined {
+function assigneeText(
+  assignee: string | undefined,
+  people: LeadChipsOptions['people'],
+): string | undefined {
   if (!assignee) return undefined;
   if (assignee === NO_ASSIGNEE) return t.sales.assign.none;
   return people.find((p) => p.id === assignee)?.name ?? t.common.loading;
 }
 
-/** The set source, assignee and order of the inbox as removable chips (the status is the fihris beside the list). */
+/** The inbox's source, assignee and order as removable chips (status is the fihris). */
 export function leadFilterChips({ search, people, onFilter }: LeadChipsOptions): FilterChip[] {
   const sort = leadSortValue(search);
   return [

@@ -22,7 +22,9 @@ const LIST = new Intl.ListFormat(intlLocale(locale), { style: 'long', type: 'con
 export const listOf = (names: readonly string[]): string => LIST.format(names);
 
 export function fill(template: string, vars: Record<string, string | number>): string {
-  return template.replace(/\{(\w+)\}/g, (whole, key: string) => (key in vars ? String(vars[key]) : whole));
+  return template.replace(/\{(\w+)\}/g, (whole, key: string) =>
+    key in vars ? String(vars[key]) : whole,
+  );
 }
 
 export interface ChipStyle {
@@ -44,7 +46,7 @@ export const stateStyle: Record<GoogleSyncState, ChipStyle> = {
   skipped: { tone: 'neutral', glyph: 'hollow' },
 };
 
-/** The states an admin can send back to the queue (never `gone`: deleted in Google stays deleted, docs/24 §2.4). */
+/** States an admin can requeue; never `gone`: deleted in Google stays deleted (docs/24 §2.4). */
 export const RETRYABLE: ReadonlySet<GoogleSyncState> = new Set(['failed', 'skipped']);
 
 /** Why an item was skipped, in words (the import guard has its own web string). */
@@ -58,7 +60,9 @@ export const errorText = (code: string): string =>
   fill(t.googleSync.errors[googleErrorKey(code)], { code });
 
 /** The OAuth return (?google=connected | ?google=error&reason=…) as a toast, or null. */
-export function oauthReturnNote(search: string): { message: string; tone: 'info' | 'error' } | null {
+export function oauthReturnNote(
+  search: string,
+): { message: string; tone: 'info' | 'error' } | null {
   const params = new URLSearchParams(search);
   const google = params.get('google');
   if (google === 'connected') return { message: t.googleSync.connection.connected, tone: 'info' };

@@ -17,7 +17,7 @@ function Harness({ start, teacher }: { start: Partial<TeacherForm>; teacher: Tea
 }
 
 export interface ShowOptions {
-  /** settings.meeting_link_auto; 'pending' = GET /settings/public never answers, 'error' = it fails. */
+  /** settings.meeting_link_auto; 'pending' = GET /settings/public never answers, 'error' fails. */
   auto?: boolean | 'pending' | 'error';
   /** lesson_join_link's row status; null = the list has no such row; 'error' = the list fails. */
   status?: TemplateStatus | null | 'error';
@@ -29,15 +29,20 @@ export interface ShowOptions {
 const fail = () => Promise.reject(new Error('403'));
 
 function answer(path: string, o: Required<ShowOptions>): Promise<unknown> {
-  if (path === '/settings/public') return o.auto === 'pending' ? new Promise(() => undefined) : fail();
+  if (path === '/settings/public')
+    return o.auto === 'pending' ? new Promise(() => undefined) : fail();
   if (path === '/messaging/templates') {
     if (o.status === 'error') return fail();
-    return Promise.resolve(o.status === null ? [] : [{ key: 'lesson_join_link', status: o.status }]);
+    return Promise.resolve(
+      o.status === null ? [] : [{ key: 'lesson_join_link', status: o.status }],
+    );
   }
   if (path === '/settings/integrations') {
     if (o.livekit === 'error') return fail();
     const keys = ['LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET'];
-    return Promise.resolve(keys.map((key, i) => ({ key, set: o.livekit || i === 0, source: 'env' })));
+    return Promise.resolve(
+      keys.map((key, i) => ({ key, set: o.livekit || i === 0, source: 'env' })),
+    );
   }
   return Promise.resolve([]);
 }

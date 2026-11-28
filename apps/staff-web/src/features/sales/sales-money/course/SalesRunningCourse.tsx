@@ -1,14 +1,14 @@
-import { type BookedCourse, type SalesCourseView } from '@ab/shared';
+import type { BookedCourse, SalesCourseView } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { Button, t } from '@ab/web-kit';
-import { CourseChangeForm } from '@/features/teaching/booking/course-change/CourseChangeForm';
-import { BookingModeContext } from '@/features/teaching/booking/mode';
+import { CourseChangeForm } from '@/features/teaching/booking';
+import { BookingModeContext } from '@/features/teaching/booking';
 import { SalesCourseActions } from './SalesCourseActions';
 
 export interface SalesRunningCourseProps {
   view: SalesCourseView;
   current: BookedCourse;
-  /** What the dialog shows besides the change (the renewal's choice, the wizard, a refusal); absent = only the change. */
+  /** What shows besides the change (renewal choice, wizard, refusal); absent = only the change. */
   children?: ReactNode;
 }
 
@@ -44,7 +44,11 @@ export function SalesRunningCourse({ view, current, children }: SalesRunningCour
         <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">
           {ahead ? t.booking.courseChange.upcoming : t.booking.courseChange.running}
         </p>
-        <Button type="button" variant={children ? 'secondary' : 'primary'} onClick={() => setStage('change')}>
+        <Button
+          type="button"
+          variant={children ? 'secondary' : 'primary'}
+          onClick={() => setStage('change')}
+        >
           {t.booking.courseChange.changeDays}
         </Button>
         <SalesCourseActions studentId={id} subscriptionId={current.subscriptionId} />

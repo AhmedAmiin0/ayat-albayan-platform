@@ -9,7 +9,13 @@ export const COURSE_STUDENT_ID = '0b6a7c1e-2222-4a8e-9b00-000000000002';
 const SUB_0 = 'e0000000-0000-4000-8000-0000000000a0';
 const SUB_1 = 'e0000000-0000-4000-8000-0000000000a1';
 
-export const COURSE_SUB: CourseSubscription = { id: SUB_1, package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-03' };
+export const COURSE_SUB: CourseSubscription = {
+  id: SUB_1,
+  package: '8',
+  duration: 45,
+  lessons_total: 8,
+  starts_on: '2026-10-03',
+};
 
 export const COURSE_VIEW: SalesCourseView = {
   student: {
@@ -35,12 +41,19 @@ export const BOOKED = {
   invoice_id: null,
 };
 
-/** apiFetch for the course dialog: the view, her teachers (ABRAR) and two free slots (Sun 17:00, Wed 19:30). */
+/** apiFetch for the course dialog: the view, her teachers (ABRAR), slots Sun 17:00, Wed 19:30. */
 export function routeCourse(apiFetch: Mock, view: SalesCourseView = COURSE_VIEW): void {
   const routes: [string, unknown][] = [
     ['/sales/booking/course', view],
     ['/sales/booking/teachers', [ABRAR]],
-    ['/sales/booking/slots', { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [SLOT, WED_SLOT].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] })) }],
+    [
+      '/sales/booking/slots',
+      {
+        teacher_tz: 'Africa/Cairo',
+        step_min: 45,
+        slots: [SLOT, WED_SLOT].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] })),
+      },
+    ],
   ];
   apiFetch.mockImplementation((path: string) => {
     const hit = routes.find(([prefix]) => path.startsWith(prefix));
@@ -50,7 +63,9 @@ export function routeCourse(apiFetch: Mock, view: SalesCourseView = COURSE_VIEW)
 
 /** apiSend: the series check answers `check` (clean by default), the booking BOOKED. */
 export function routeCourseSend(apiSend: Mock, check: unknown = { conflicts: [] }): void {
-  apiSend.mockImplementation((_m: string, path: string) => Promise.resolve(path === '/sales/booking/check' ? check : BOOKED));
+  apiSend.mockImplementation((_m: string, path: string) =>
+    Promise.resolve(path === '/sales/booking/check' ? check : BOOKED),
+  );
 }
 
 // A renewal: the previous course ran Sunday 17:00 + Wednesday 19:30 until Saturday
@@ -81,7 +96,7 @@ export const NEXT_SUN = '2026-10-11T14:00:00.000Z'; // Sunday 17:00 Riyadh
 export const NEXT_SUN_LATER = '2026-10-11T15:00:00.000Z'; // Sunday 18:00
 export const NEXT_WED = '2026-10-14T16:30:00.000Z'; // Wednesday 19:30
 
-/** apiFetch for a renewal: the view, her teachers (ABRAR by default), and the week of 10 October's free slots. */
+/** apiFetch for a renewal: the view, her teachers (ABRAR default), 10 October's week of slots. */
 export function routeRenewal(
   apiFetch: Mock,
   view: SalesCourseView = RENEWAL_VIEW,

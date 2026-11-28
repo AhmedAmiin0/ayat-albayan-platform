@@ -29,7 +29,7 @@ export function frequencyOf(id: Quote['package']): string | null {
   return id === 'custom' ? null : t.pricing.frequencies[id];
 }
 
-/** The line under a USD price (docs/08 §4): the peg fallback, an older stored rate, or the rate's date. */
+/** The line under a USD price (docs/08 §4): the peg fallback, an older rate, or the rate's date. */
 export function fxLine(fx: FxRate): string {
   if (fx.fallback) return t.pricing.fx.fallback;
   const line = fx.ageHours === null ? t.pricing.fx.rateDate : t.pricing.fx.stale;

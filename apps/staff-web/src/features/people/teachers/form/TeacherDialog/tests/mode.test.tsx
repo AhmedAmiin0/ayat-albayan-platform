@@ -9,13 +9,30 @@ import { teacherFixture } from '@ab/shared/testing';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
 
 const T = t.teachers;
 const SARA: Teacher = teacherFixture({
-  id: 't1', display_name_ar: 'أ. سارة', display_name_en: null, gender: 'female', programs: ['quran'], phone_e164: null,
-  meeting_link: 'https://meet.google.com/xqa-ngdu-fpe', meeting_mode: 'platform', platform_classroom: true,
-  rate_30: null, rate_45: null, rate_60: null, rate_90: null, max_students: null, status: 'active', tz: 'Africa/Cairo',
+  id: 't1',
+  display_name_ar: 'أ. سارة',
+  display_name_en: null,
+  gender: 'female',
+  programs: ['quran'],
+  phone_e164: null,
+  meeting_link: 'https://meet.google.com/xqa-ngdu-fpe',
+  meeting_mode: 'platform',
+  platform_classroom: true,
+  rate_30: null,
+  rate_45: null,
+  rate_60: null,
+  rate_90: null,
+  max_students: null,
+  status: 'active',
+  tz: 'Africa/Cairo',
 });
 
 function open(teacher: Teacher | null) {
@@ -49,25 +66,36 @@ describe('teacher dialog sends meeting_mode (owner 2026-10-19)', () => {
     open(null);
     fireEvent.change(screen.getByLabelText(T.displayNameAr), { target: { value: 'أ. منى' } });
     save();
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/teachers', expect.anything()));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('POST', '/teachers', expect.anything()),
+    );
     expect(sent()).toHaveProperty('meeting_mode', null);
   });
 
   it('editing keeps the teacher mode, and a new choice is sent (the fixed-link note does not block)', async () => {
     open(SARA);
-    expect(screen.getByRole('radio', { name: T.meetingModeOption.platform })).toHaveProperty('checked', true);
+    expect(screen.getByRole('radio', { name: T.meetingModeOption.platform })).toHaveProperty(
+      'checked',
+      true,
+    );
     fireEvent.change(screen.getByLabelText(T.meetingLink), { target: { value: '' } });
     fireEvent.click(screen.getByRole('radio', { name: T.meetingModeOption.static }));
-    // The note waits until the templates and integrations lists answered (no flash on a ready academy).
+    // The note waits for the templates and integrations lists (no flash on a ready academy).
     expect(await screen.findByText(T.meetingModeNoLink)).toBeTruthy();
     save();
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/teachers/t1', expect.anything()));
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('PATCH', '/teachers/t1', expect.anything()),
+    );
     expect(sent()).toMatchObject({ meeting_mode: 'static', meeting_link: null });
   });
 
   it('back to the academy option sends null', async () => {
     open(SARA);
-    fireEvent.click(screen.getByRole('radio', { name: `${T.meetingModeOption.academy} ${T.meetingModeResolves.static}` }));
+    fireEvent.click(
+      screen.getByRole('radio', {
+        name: `${T.meetingModeOption.academy} ${T.meetingModeResolves.static}`,
+      }),
+    );
     save();
     await waitFor(() => expect(sent()).toHaveProperty('meeting_mode', null));
   });

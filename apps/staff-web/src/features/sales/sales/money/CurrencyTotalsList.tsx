@@ -1,5 +1,5 @@
 import type { CurrencyTotals } from '@ab/money';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';
 
 const PARTS = ['salary', 'commissions', 'adjustments', 'total'] as const;

@@ -1,8 +1,8 @@
 import { continueFits, type SalesCourseView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Button, FormAlert, t, useClock, useViewerTz } from '@ab/web-kit';
-import { bookingTeachersQuery } from '@/features/teaching/booking/api';
-import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
+import { bookingTeachersQuery } from '@/features/teaching/booking';
+import type { BookingDraft } from '@/features/teaching/booking';
 import { adjustText, continueText } from './course-continue';
 
 export interface ContinueChoiceProps {

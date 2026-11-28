@@ -22,7 +22,7 @@ type Drafts = Partial<Record<SettingKey, SettingsForm>>;
 const without = (all: Drafts, key: SettingKey): Drafts =>
   Object.fromEntries(Object.entries(all).filter(([k]) => k !== key));
 
-/** Sets the row's draft, or drops it when it holds the stored value (a draft is only ever an edit). */
+/** Sets the row's draft, or drops it when it equals the stored value (a draft is an edit). */
 export function placeDraft(
   all: Drafts,
   key: SettingKey,
@@ -33,7 +33,7 @@ export function placeDraft(
     : without(all, key);
 }
 
-/** Drops the drafts that now equal the stored value (another save, a refetch); the same object when none do. */
+/** Drops drafts that now equal the stored value (another save, a refetch); same object if none. */
 export function pruneDrafts(all: Drafts, settings: AcademySettings): Drafts {
   const keys = Object.keys(all) as SettingKey[];
   const stale = keys.filter((k) => {

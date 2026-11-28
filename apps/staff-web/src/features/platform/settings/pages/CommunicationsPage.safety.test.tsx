@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { integrationItems } from '@/features/platform/integrations/integrations.fixture';
 import { t } from '@ab/web-kit';
 import { SETTINGS } from '@/test/settings-fixture';
-import { renderCommunications } from './communications-test-kit';
+import { renderCommunications } from '@/features/platform/settings/pages/testing/communications-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());

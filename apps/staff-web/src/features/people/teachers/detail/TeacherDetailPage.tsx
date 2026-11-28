@@ -17,7 +17,7 @@ import {
   teacherLabel,
 } from '@ab/web-kit';
 import { StaffPhotoControl } from '@/features/people/staff-photo';
-import { EntityActivity } from '@/features/reporting/activity/EntityActivity';
+import { EntityActivity } from '@/features/reporting/activity';
 import { TeacherCalendarOwner } from '@/features/platform/google-sync';
 import { availabilityQuery, teacherQuery } from '@/features/people/teachers/api';
 import { AvailabilityGrid } from '@/features/people/teachers/availability/AvailabilityGrid';
@@ -63,7 +63,7 @@ function AvailabilityPanel({ teacher }: { teacher: Teacher }) {
   );
 }
 
-/** Teacher profile (R-TCH-01, R-TCH-02): photo, cartouche name + status, meta line, the admin's photo control, tabs. */
+/** Teacher profile (R-TCH-01, R-TCH-02): photo, name, status, meta line, photo control, tabs. */
 export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
   const teacher = useQuery(teacherQuery(teacherId));
   const [tab, setTab] = useState<Tab>('availability');

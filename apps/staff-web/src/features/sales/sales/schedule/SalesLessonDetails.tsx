@@ -10,11 +10,11 @@ import {
   useViewerTz,
   useLessonStatusText,
 } from '@ab/web-kit';
-import { DetailRow } from '@/features/teaching/schedule/lesson/DetailRow';
-import { durationMin, timeInCity } from '@/features/teaching/schedule/lesson/lessons';
-import { LessonTags } from '@/features/teaching/schedule/lesson/LessonTags';
+import { DetailRow } from '@/features/teaching/schedule';
+import { durationMin, timeInCity } from '@/features/teaching/schedule';
+import { LessonTags } from '@/features/teaching/schedule';
 import { TeacherConfirmedTag } from '@/features/teaching/schedule';
-import { lengthText } from '@/features/teaching/schedule/edit-time/edit-time-text';
+import { lengthText } from '@/features/teaching/schedule';
 import { LessonMeetingLink } from './LessonMeetingLink';
 
 /** Each line only when its clock differs from the viewer's (`clock.tz`) at that instant. */
@@ -27,17 +27,22 @@ export function salesClockLines(
   const other = (tz: string | null | undefined): tz is string =>
     !!tz && !sameClockAt(at, { a: tz, b: viewer });
   const zones = [...new Set(lesson.students.map((s) => s.tz))].filter(other);
-  const lines = zones.map((tz) => t.schedule.studentTime.replace('{time}', timeInCity(lesson.starts_at, tz, clock)));
+  const lines = zones.map((tz) =>
+    t.schedule.studentTime.replace('{time}', timeInCity(lesson.starts_at, tz, clock)),
+  );
   const teacherTz = lesson.teacher.tz;
-  if (other(teacherTz)) lines.push(t.schedule.teacherTime.replace('{time}', timeInCity(lesson.starts_at, teacherTz, clock)));
+  if (other(teacherTz))
+    lines.push(
+      t.schedule.teacherTime.replace('{time}', timeInCity(lesson.starts_at, teacherTz, clock)),
+    );
   return lines;
 }
 
 /**
- * The admin drawer's details, read-only for sales (docs/16): status and tags, the viewer's time with
- * each student's and the teacher's own clock, the length, the teacher and the students with their
- * codes, and the lesson's link. Sales' lesson never carries a reason, a flag or
- * money, so none of them is shown.
+ * The admin drawer's details, read-only for sales (docs/16): status and tags, the viewer's time
+ * with each student's and the teacher's own clock, the length, the teacher and the students with
+ * their codes, and the lesson's link. Sales' lesson never carries a reason, a flag or money, so
+ * none of them is shown.
  */
 export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) {
   const clock = useClock();
@@ -54,7 +59,9 @@ export function SalesLessonDetails({ lesson }: { lesson: SalesScheduleLesson }) 
         <DetailRow label={t.schedule.time}>
           <span className="block">{`${lessonWhenAt(new Date(lesson.starts_at), { tz, ...clock })} ${t.schedule.viewerTime}`}</span>
           {salesClockLines(lesson, { ...clock, tz }).map((line) => (
-            <span key={line} className="block text-xs text-ink-2">{line}</span>
+            <span key={line} className="block text-xs text-ink-2">
+              {line}
+            </span>
           ))}
         </DetailRow>
         <DetailRow label={t.schedule.duration}>{lengthText(durationMin(lesson))}</DetailRow>

@@ -3,10 +3,15 @@ import type { IntegrationConfigItem, TemplateStatus } from '@ab/catalog';
 export const JOIN_TEMPLATE = 'lesson_join_link';
 const LIVEKIT_KEYS = ['LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET'] as const;
 
-export type MeetingModeNote = 'livekitUnset' | 'templateNotApproved' | 'templatePending' | 'templatePaused' | 'noLink';
+export type MeetingModeNote =
+  | 'livekitUnset'
+  | 'templateNotApproved'
+  | 'templatePending'
+  | 'templatePaused'
+  | 'noLink';
 
 export interface NotesInput {
-  /** The effective mode: usesPlatform(form mode, academy default); null = not known yet (no notes). */
+  /** The effective mode: usesPlatform(form mode, academy default); null = not known (no notes). */
   platform: boolean | null;
   /** The form's fixed link, as typed. */
   link: string;
@@ -14,7 +19,7 @@ export interface NotesInput {
   join: TemplateStatus | null;
   /** LIVEKIT_* all set; null = unknown (loading, failed or forbidden). */
   livekit: boolean | null;
-  /** Both lists answered (or failed): until then the fixed-link note waits, so it never flashes on a ready academy. */
+  /** Both lists answered or failed: until then the fixed-link note waits, so it never flashes. */
   settled: boolean;
 }
 
@@ -40,12 +45,14 @@ export function joinStatus(
 }
 
 /**
- * Whether the reminders job will find LiveKit configured. reminders.job.ts reads livekitEnv(loadEnv()),
- * and loadEnv() with no argument lays the database's integration values over process.env (the
- * overlay IntegrationConfigService loads), so a key set from the settings page counts exactly like
- * one in the server env: `set` (source 'db' or 'env') is what the job uses. null = no list to read.
+ * Whether the reminders job will find LiveKit configured: its livekitEnv(loadEnv()) lays the
+ * database's integration values over process.env (IntegrationConfigService's overlay), so a key
+ * set from the settings page counts like one in the server env: `set` (source 'db' or 'env') is
+ * what the job uses. null = no list to read.
  */
-export function livekitConfigured(items: readonly Pick<IntegrationConfigItem, 'key' | 'set'>[] | undefined): boolean | null {
+export function livekitConfigured(
+  items: readonly Pick<IntegrationConfigItem, 'key' | 'set'>[] | undefined,
+): boolean | null {
   if (!items) return null;
   return LIVEKIT_KEYS.every((key) => items.some((x) => x.key === key && x.set));
 }

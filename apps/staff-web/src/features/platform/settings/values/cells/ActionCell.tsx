@@ -1,9 +1,16 @@
 import type { SettingKey } from '@ab/settings';
 import { settingText } from '@/components/settings/search/setting-text';
 import { Button, t } from '@ab/web-kit';
-import { defaultForm, isModified, rowForm } from '@/features/platform/settings/registry-form/row-form';
+import {
+  defaultForm,
+  isModified,
+  rowForm,
+} from '@/features/platform/settings/registry-form/row-form';
 import { isDirty } from '@/features/platform/settings/registry-form/settings-dirty';
-import { describeItem, settingTarget } from '@/features/platform/settings/values/description/row-description';
+import {
+  describeItem,
+  settingTarget,
+} from '@/features/platform/settings/values/description/row-description';
 import { RowMenu, type RowMenuItem } from '@/features/platform/settings/values/sheet/RowMenu';
 import { valueText } from '@/features/platform/settings/values/lib/value-format';
 import type { ValuesApi } from '@/features/platform/settings/values/hooks/use-values-controller.types';
@@ -15,10 +22,15 @@ const v = t.settingsValues;
 /** The visible word first, then the row name, as an aria-label so every browser reads it alike. */
 export const rowActionName = (word: string, name: string): string => `${word}: ${name}`;
 
-/** The «⋯» items: the description, the default, the value the last save replaced (same checks and confirmation), the key. */
+/** The «⋯» items: description, default, the value the last save replaced (same checks), key. */
 export function rowMenuItems(api: ValuesApi, key: SettingKey): RowMenuItem[] {
   const items: RowMenuItem[] = [describeItem(api, settingTarget(key))];
-  if (isModified(key, api.settings)) items.push({ id: 'reset', label: v.resetDefault, onSelect: () => api.apply(key, defaultForm(key)) });
+  if (isModified(key, api.settings))
+    items.push({
+      id: 'reset',
+      label: v.resetDefault,
+      onSelect: () => api.apply(key, defaultForm(key)),
+    });
   const prev = api.previous(key);
   if (prev && isDirty(key, rowForm(key, prev.value), rowForm(key, api.settings[key]))) {
     items.push({
@@ -57,7 +69,12 @@ export function ActionCell({ settingKey }: { settingKey: SettingKey }) {
         >
           {t.common.save}
         </Button>
-        <Button size="sm" variant="ghost" aria-label={rowActionName(v.undo, name)} onClick={() => api.drafts.discard(settingKey)}>
+        <Button
+          size="sm"
+          variant="ghost"
+          aria-label={rowActionName(v.undo, name)}
+          onClick={() => api.drafts.discard(settingKey)}
+        >
           {v.undo}
         </Button>
       </span>

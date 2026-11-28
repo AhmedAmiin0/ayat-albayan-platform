@@ -39,7 +39,11 @@ export const isModified = (key: SettingKey, settings: AcademySettings): boolean 
   isDirty(key, rowForm(key, settings[key]), defaultForm(key));
 
 const num = (v: string): number => (v.trim() === '' ? Number.NaN : Number(v.trim()));
-const list = (v: string): number[] => v.split(/[\s,،]+/).filter(Boolean).map(Number);
+const list = (v: string): number[] =>
+  v
+    .split(/[\s,،]+/)
+    .filter(Boolean)
+    .map(Number);
 
 function shapeValue(key: SettingKey, form: SettingsForm): Record<string, string> | null {
   const def = settingDef(key);
@@ -53,7 +57,7 @@ function shapeValue(key: SettingKey, form: SettingsForm): Record<string, string>
   return def.nullable && Object.keys(out).length === 0 ? null : out;
 }
 
-/** The fields → the value PATCH /settings takes (a phone typed locally becomes E.164 when it can). */
+/** Fields → the PATCH /settings value (a phone typed locally becomes E.164 when it can). */
 export function rowValue(key: SettingKey, form: SettingsForm): unknown {
   const def = settingDef(key);
   const field = SETTING_FIELD_OF[key];
@@ -77,7 +81,8 @@ export function rowError(def: SettingDef, message: string): string {
   const v = t.settingsValues;
   if (message === 'not_ascending') return t.settings.notAscending;
   if (def.type === 'int' || def.type === 'int_list') return fill(v.invalidRange, def);
-  if (def.type === 'string') return fill(v.invalidLength, { min: def.minLength, max: def.maxLength });
+  if (def.type === 'string')
+    return fill(v.invalidLength, { min: def.minLength, max: def.maxLength });
   if (def.type === 'e164') return t.settings.invalidPhone;
   return t.settings.invalidText;
 }

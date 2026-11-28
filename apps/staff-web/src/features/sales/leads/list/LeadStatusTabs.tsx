@@ -18,7 +18,7 @@ export interface LeadStatusTabsProps {
   onChange: (value: LeadStatus | undefined) => void;
 }
 
-/** Status filter as a vertical fihris beside the list; chips under 900px (R-LEAD-02, docs/07 §9). */
+/** Status filter as a vertical fihris beside the list; chips under 900px (R-LEAD-02, docs/07). */
 export function LeadStatusTabs({ value, onChange }: LeadStatusTabsProps) {
   return (
     <div className={cn('min-w-0', paneScroll)}>

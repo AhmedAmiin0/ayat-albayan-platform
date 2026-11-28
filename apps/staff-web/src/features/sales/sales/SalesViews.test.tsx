@@ -18,7 +18,9 @@ describe('«الطلاب» and «محفظتي»: one page each, the old pages ar
     const onView = vi.fn();
     renderWithQuery(<SalesStudents view="all" onView={onView} />);
     expect(screen.getByRole('heading', { level: 1, name: t.sales.nav.allStudents })).toBeTruthy();
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/sales/students/all?page=1&pageSize=25'));
+    await vi.waitFor(() =>
+      expect(apiFetch).toHaveBeenCalledWith('/sales/students/all?page=1&pageSize=25'),
+    );
     expect(views(t.sales.views.students)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.assistantPortal.nav.students }));
     expect(onView).toHaveBeenCalledWith('mine');
@@ -28,17 +30,25 @@ describe('«الطلاب» and «محفظتي»: one page each, the old pages ar
     apiFetch.mockResolvedValue([]);
     renderWithQuery(<SalesStudents view="mine" onView={vi.fn()} />);
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/sales/me/students'));
-    expect(screen.getByRole('button', { name: t.assistantPortal.nav.students }).getAttribute('aria-pressed')).toBe('true');
+    expect(
+      screen
+        .getByRole('button', { name: t.assistantPortal.nav.students })
+        .getAttribute('aria-pressed'),
+    ).toBe('true');
   });
 
   it('«محفظتي» shows my commissions; «الكشوف» and «مدفوعاتي» are its filters', async () => {
     apiFetch.mockReturnValue(new Promise(() => {})); // the earnings stay loading: only the head is under test
     const onView = vi.fn();
     const { unmount } = renderWithQuery(<SalesMoney view="earnings" onView={onView} />);
-    expect(screen.getByRole('heading', { level: 1, name: t.assistantPortal.nav.earnings })).toBeTruthy();
+    expect(
+      screen.getByRole('heading', { level: 1, name: t.assistantPortal.nav.earnings }),
+    ).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.assistantPortal.nav.payments }));
     expect(onView).toHaveBeenCalledWith('payments');
-    fireEvent.click(screen.getByRole('button', { name: t.assistantPortal.wallet.views.statements }));
+    fireEvent.click(
+      screen.getByRole('button', { name: t.assistantPortal.wallet.views.statements }),
+    );
     expect(onView).toHaveBeenCalledWith('statements');
     unmount();
     apiFetch.mockResolvedValue([]);

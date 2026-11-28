@@ -3,7 +3,7 @@ import type { MyPaymentRow } from '@ab/money';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { formatDate } from '@/features/sales/leads';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';
 import { MyPaymentActions, type MyPaymentHandlers } from './MyPaymentActions';
 import { StudentCell } from './StudentCell';

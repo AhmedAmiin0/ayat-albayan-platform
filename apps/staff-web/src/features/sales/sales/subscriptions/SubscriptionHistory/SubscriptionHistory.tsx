@@ -12,7 +12,7 @@ export interface SubscriptionHistoryProps {
   onClose: () => void;
 }
 
-/** The history of one confirmed subscription: the student's subscriptions oldest first, the opened one marked. */
+/** One confirmed subscription's history: the student's subscriptions oldest first, it marked. */
 /** The student's current package (newest active, else newest not cancelled): the editable one. */
 const currentOf = (oldestFirst: readonly SalesHistoryEntry[]): string | null =>
   currentPackage([...oldestFirst].reverse())?.id ?? null;
@@ -23,7 +23,9 @@ export function SubscriptionHistory({ id, onClose }: SubscriptionHistoryProps) {
   return (
     <section aria-label={t.sales.history.title.replace('{name}', name)} className="mb-4 grid gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="font-display text-h3 font-bold">{t.sales.history.title.replace('{name}', name)}</h2>
+        <h2 className="font-display text-h3 font-bold">
+          {t.sales.history.title.replace('{name}', name)}
+        </h2>
         <Button type="button" variant="ghost" size="sm" onClick={onClose}>
           {t.sales.history.close}
         </Button>

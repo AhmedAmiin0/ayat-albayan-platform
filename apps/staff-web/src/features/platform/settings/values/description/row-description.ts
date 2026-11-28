@@ -13,7 +13,7 @@ export const settingTarget = (key: SettingKey): DescribeTarget => ({
   hintKey: settingDef(key).hintKey ?? null,
 });
 
-/** The row's muted line: the shown description (docs/26 §3 order), else `fallback` (the code's hint). */
+/** The row's muted line: the shown description (docs/26 §3), else `fallback` (the code's hint). */
 export function rowDescription(
   api: ValuesApi,
   target: DescribeTarget,

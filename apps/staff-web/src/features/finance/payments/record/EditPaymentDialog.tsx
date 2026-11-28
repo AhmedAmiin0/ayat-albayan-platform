@@ -2,7 +2,7 @@ import { amountFromStripe, parseAmount } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button, Dialog, FormAlert, t } from '@ab/web-kit';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
+import { MONEY_KEY } from '@/features/finance/subscriptions';
 import { apiErrorText, studentLabel } from '@/features/finance/subscriptions';
 import { paidAtFor, updatePayment, type PaymentView } from '@/features/finance/payments/api';
 import { paidAtDay } from './pay-day';

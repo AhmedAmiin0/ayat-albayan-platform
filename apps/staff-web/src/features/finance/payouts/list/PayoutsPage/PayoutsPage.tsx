@@ -3,9 +3,9 @@ import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
 import { Button, Cartouche, EmptyState, FormAlert, PageHead, QueryState, t } from '@ab/web-kit';
-import { downloadCsv } from '@/features/reporting/exports/api';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { downloadCsv } from '@/features/reporting/exports';
+import { MONEY_KEY } from '@/features/finance/subscriptions';
+import { Amount } from '@/features/finance/subscriptions';
 import { apiErrorText } from '@/features/finance/subscriptions';
 import {
   approvePayout,
@@ -27,7 +27,7 @@ interface Props {
   onMonth: (month: string) => void;
 }
 
-/** /admin/payouts (R-PAY-02, R-TCH-04, E3): what every teacher is owed, then a month's drafts, approve, pay, correct, CSV. */
+/** /admin/payouts (R-PAY-02, R-TCH-04, E3): what each teacher is owed, then a month's drafts. */
 export function PayoutsPage({ month, onMonth }: Props) {
   const queryClient = useQueryClient();
   const list = useQuery(payoutsQuery(month));

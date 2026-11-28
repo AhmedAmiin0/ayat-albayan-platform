@@ -38,10 +38,11 @@ export function parseStudentsSearch(s: Record<string, unknown>): StudentsUrlSear
 }
 
 /** URL search → the page's state. */
-export function fromStudentsUrl(url: Record<string, unknown>): StudentsSearch {
-  const { search = '', page = 1 } = parseStudentsSearch(url);
+export function fromStudentsUrl(search: StudentsUrlSearch): StudentsSearch {
+  const url: Record<string, unknown> = { ...search };
+  const { search: text = '', page = 1 } = parseStudentsSearch(url);
   return {
-    search,
+    search: text,
     page,
     filters: parseStudentFilters(url),
     sort: parseSortSearch(url, STUDENT_SORT_KEYS),

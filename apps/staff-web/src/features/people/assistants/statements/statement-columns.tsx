@@ -3,7 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { StatusChip, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
-import { monthLabel } from '@/features/finance/payouts/shared/MonthSelect';
+import { monthLabel } from '@/features/finance/payouts';
 import type { AssistantStatementView } from '@/features/people/assistants/api';
 import { StatementActions, type StatementAction, type StatementCan } from './StatementActions';
 import { StatementTotals } from './StatementTotals';
@@ -16,7 +16,7 @@ interface Handlers {
   onAction: (s: AssistantStatementView, action: StatementAction) => void;
 }
 
-/** Statements of a month: assistant, per-currency totals, status (draft → approved → paid), actions. */
+/** A month's statements: assistant, totals per currency, status (draft → approved → paid). */
 export function statementColumns({ can, onAction }: Handlers) {
   return col.columns([
     col.accessor((s) => s.assistant.name, {

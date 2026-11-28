@@ -72,10 +72,7 @@ export function toTeacherForm(teacher: Teacher): TeacherForm {
 
 const blankToNull = (v: string) => (v.trim() === '' ? null : v.trim());
 
-interface Issue {
-  path: string;
-  message: string;
-}
+interface Issue { path: string; message: string }
 export type FormResult = { ok: true; payload: TeacherCreate } | { ok: false; error: string };
 
 /** Validates with the shared schema (same rules as the API) → payload or Arabic message. */

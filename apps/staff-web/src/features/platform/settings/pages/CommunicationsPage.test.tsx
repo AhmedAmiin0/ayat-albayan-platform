@@ -3,7 +3,7 @@ import { SETTING_DEFAULTS } from '@ab/settings';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
-import { renderCommunications } from './communications-test-kit';
+import { renderCommunications } from '@/features/platform/settings/pages/testing/communications-test-kit';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));

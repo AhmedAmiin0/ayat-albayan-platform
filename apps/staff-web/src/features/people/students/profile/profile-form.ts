@@ -62,9 +62,9 @@ export function toProfileValues(p: StudentProfile): ProfileValues {
 export type PatchResult = { ok: true; patch: StudentUpdate } | { ok: false; error: string };
 
 /**
- * Values → PATCH body, validated with the shared schema the API uses. `status` goes out only when the
- * admin changed it from `loaded` (the status the form loaded), together with `expected_status: loaded`:
- * a stale form must never undo an automatic move (payment, expiry, attendance) (R-STU-05).
+ * Values → PATCH body, validated with the shared schema the API uses. `status` goes out only when
+ * the admin changed it from `loaded` (the status the form loaded), together with `expected_status:
+ * loaded`: a stale form must never undo an automatic move (payment, expiry, attendance) (R-STU-05).
  */
 export function toStudentPatch(values: ProfileValues, loaded: StudentStatus): PatchResult {
   const age = parseAge(values.age);

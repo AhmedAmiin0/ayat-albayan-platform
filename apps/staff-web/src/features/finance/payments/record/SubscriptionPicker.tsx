@@ -5,12 +5,12 @@ import { Field, Select, t } from '@ab/web-kit';
 import {
   studentSubscriptionsQuery,
   type SubscriptionView,
-} from '@/features/finance/subscriptions/api';
+} from '@/features/finance/subscriptions';
 import { moneyText, packageName } from '@/features/finance/subscriptions';
 import {
   StudentPicker,
   type PickedStudent,
-} from '@/features/finance/subscriptions/create/StudentPicker';
+} from '@/features/finance/subscriptions';
 
 interface Props {
   student: PickedStudent | null;
@@ -27,8 +27,8 @@ const optionText = (s: SubscriptionView) =>
 
 /**
  * Any package of any student, not only the first 100 unpaid ones: search the student (name, phone
- * or code), then choose among their packages that have not ended (unpaid, active, paused; a stopped one still
- * owes, an unused-cancelled one never: countsForMoney). The one that still owes is chosen first.
+ * or code), then choose among their packages that have not ended (unpaid, active, paused; a stopped
+ * one owes, an unused-cancelled one never: countsForMoney). The one that still owes comes first.
  */
 export function SubscriptionPicker({ student, onStudent, picked, onPick }: Props) {
   const list = useQuery({

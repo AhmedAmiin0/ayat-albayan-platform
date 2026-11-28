@@ -19,7 +19,7 @@ import { teacherOptionsQuery } from '@/features/people/students/api';
 
 const R = t.studentRecordings;
 
-/** The teachers to filter by: every teacher for an admin, else those on the loaded page (plus the chosen one). */
+/** Teachers to filter by: all for an admin, else those on the loaded page plus the chosen one. */
 function choices(items: StudentRecordingView[], all: TeacherChoice[]): TeacherChoice[] {
   const seen = new Map(all.map((x) => [x.id, x.name]));
   for (const i of items) if (i.teacher) seen.set(i.teacher.id, teacherLabel(i.teacher));

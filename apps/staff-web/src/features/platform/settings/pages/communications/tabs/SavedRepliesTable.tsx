@@ -1,7 +1,7 @@
 import type { SavedReply } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button, FormAlert, Icon, IconButton, t, cn } from '@ab/web-kit';
-import { moveReply, refreshReplies, replyErrorText, SAVED_REPLIES_KEY } from '@/features/messaging/inbox/saved-replies/lib/api';
+import { moveReply, refreshReplies, replyErrorText, SAVED_REPLIES_KEY } from '@/features/messaging/inbox';
 import { CELL, TH } from '@/features/platform/settings/pages/communications/overview/overview-table';
 
 const S = t.savedReplies;
@@ -17,7 +17,7 @@ export interface SavedRepliesTableProps {
   onDelete: (reply: SavedReply) => void;
 }
 
-/** One row per shared reply: order (up / down, no drag), title, the text on one line, file, actions. */
+/** One row per shared reply: order (up / down, no drag), title, text on one line, file, actions. */
 export function SavedRepliesTable({
   labelledBy,
   replies,

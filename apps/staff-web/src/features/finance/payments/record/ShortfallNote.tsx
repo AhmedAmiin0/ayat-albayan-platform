@@ -17,7 +17,7 @@ export function shortfallText(input: {
 interface Props {
   /** The amount field as typed (Arabic digits too). */
   amount: string;
-  /** What the package still owes: price − net paid; null = nothing to compare (a refund, another currency). */
+  /** What the package still owes: price − net paid; null = nothing to compare. */
   due: number | null;
   /** The package currency as shown (currencySymbol). */
   currencyLabel: string;

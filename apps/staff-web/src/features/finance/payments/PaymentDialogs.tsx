@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
+import { MONEY_KEY } from '@/features/finance/subscriptions';
 import { apiErrorText, moneyText, studentLabel } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';
 import { deletePayment, type PaymentView } from './api';

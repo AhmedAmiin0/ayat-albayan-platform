@@ -1,7 +1,7 @@
 import type { UserRoleOption } from '@ab/shared';
 import { USER_ROLES, type UserRole } from '@ab/catalog';
 import { Field, Select, t } from '@ab/web-kit';
-import { roleName } from '@/features/people/roles/api';
+import { roleName } from '@/features/people/roles';
 
 const F = t.users.form;
 

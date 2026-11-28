@@ -1,10 +1,10 @@
-import { type CourseSubscription, type SalesCourseView } from '@ab/shared';
+import type { CourseSubscription, SalesCourseView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Dialog, FormAlert, t } from '@ab/web-kit';
-import { BookingWizard } from '@/features/teaching/booking/BookingWizard';
-import type { BookingDraft } from '@/features/teaching/booking/draft/draft';
-import { BookingModeContext, ChatReturnContext, CourseHeldContext } from '@/features/teaching/booking/mode';
+import { BookingWizard } from '@/features/teaching/booking';
+import type { BookingDraft } from '@/features/teaching/booking';
+import { BookingModeContext, ChatReturnContext, CourseHeldContext } from '@/features/teaching/booking';
 import { lessonErrorText } from '@/features/teaching/schedule';
 import { refreshAfterSalesWrite, salesCourseQuery } from '@/features/sales/sales-money/api';
 import { continuePlan, type ContinuePlan } from '@/features/sales/sales-money/course/course-continue';
@@ -30,7 +30,7 @@ function CourseBlocked({ view }: { view: SalesCourseView }) {
 }
 
 
-/** The previous days prefilled when she continues (or adjusts them); else null (the empty picker). */
+/** The previous days prefilled when she continues or adjusts them; else null (empty picker). */
 const wizardStart = (plan: ContinuePlan | null, continuing: boolean): ContinuePlan | null =>
   continuing ? plan : null;
 

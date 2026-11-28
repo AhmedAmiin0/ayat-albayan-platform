@@ -83,7 +83,7 @@ export function timeOptions(current: string): string[] {
   return !current || all.includes(current) ? all : [...all, current].sort();
 }
 
-/** Range the day's problem points at: the inverted one, else the later of an overlap; -1 if none. */
+/** The range a day's problem points at: the inverted one, else an overlap's later; -1 if none. */
 export function problemIndex(ranges: readonly Range[]): number {
   const inverted = ranges.findIndex((r) => !r.start || !r.end || r.start >= r.end);
   if (inverted >= 0) return inverted;

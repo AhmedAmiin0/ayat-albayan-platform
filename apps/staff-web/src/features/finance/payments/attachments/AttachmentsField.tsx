@@ -5,11 +5,7 @@ import { AttachmentItems } from './AttachmentItems';
 import { AttachmentPicker } from './AttachmentPicker';
 import { addAttachments, type AttachmentProblem } from './attachments';
 
-interface Props {
-  files: File[];
-  onChange: (files: File[]) => void;
-  maxBytes: number;
-}
+interface Props { files: File[]; onChange: (files: File[]) => void; maxBytes: number }
 
 /** Bank payments only, up to five images or PDFs, uploaded on save. */
 export function AttachmentsField({ files, onChange, maxBytes }: Props) {

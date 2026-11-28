@@ -8,10 +8,7 @@ interface Props {
   can: StatementCan;
   onAction: (action: StatementAction) => void;
 }
-interface Look {
-  label: () => string;
-  variant: 'secondary' | 'ghost';
-}
+interface Look { label: () => string; variant: 'secondary' | 'ghost' }
 
 const LOOK = {
   details: { label: () => t.assistants.statements.details, variant: 'ghost' },

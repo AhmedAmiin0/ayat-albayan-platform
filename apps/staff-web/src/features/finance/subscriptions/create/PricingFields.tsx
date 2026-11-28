@@ -7,13 +7,13 @@ import {
 } from '@ab/money';
 import type { ReactNode } from 'react';
 import { Field, Input, Select, SegmentedControl, t } from '@ab/web-kit';
-import { durationLabel, packageCopy } from '@/features/finance/pricing/format';
+import { durationLabel, packageCopy } from '@/features/finance/pricing';
 import type { PricingForm } from './pricing-form';
 
 interface Props {
   form: PricingForm;
   set: (patch: Partial<PricingForm>) => void;
-  /** Only these discounts as pills (sales: the site's 0/5/10/15 %); omitted = a free 0–100 number. */
+  /** Only these discounts as pills (sales: 0/5/10/15 %); omitted = a free 0–100 number. */
   discounts?: readonly number[];
   discountExtra?: ReactNode;
 }

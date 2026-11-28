@@ -2,7 +2,11 @@ import { integrationEnum, type IntegrationConfigItem } from '@ab/catalog';
 import { SettingRow } from '@/components/settings/fields/SettingRow';
 import { Input, Select, t } from '@ab/web-kit';
 import { DeveloperKey } from './DeveloperKey';
-import { enumEmptyLabel, integrationText, optionText } from '@/features/platform/integrations/integrations-form';
+import {
+  enumEmptyLabel,
+  integrationText,
+  optionText,
+} from '@/features/platform/integrations/integrations-form';
 import { IntegrationSourceNote } from '@/features/platform/integrations/IntegrationSourceNote';
 
 interface Props {
@@ -12,7 +16,7 @@ interface Props {
   onChange: (value: string) => void;
 }
 
-/** Free text is LTR code (ids, URLs): monospace. The select shows Arabic labels: never font-mono. */
+/** Free text is LTR code (ids, URLs): monospace. The select shows Arabic labels: no mono. */
 const fieldClass = 'w-full font-mono text-sm sm:w-[300px]';
 const selectClass = 'w-full text-sm sm:w-[300px]';
 

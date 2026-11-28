@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { invoicesQuery } from '@/features/teaching/booking/invoice/api.invoice';
-import { InvoiceButton } from '@/features/teaching/booking/invoice/InvoiceDialog';
-import { fullTime } from '@/features/messaging/inbox/format';
+import { invoicesQuery } from '@/features/teaching/booking';
+import { InvoiceButton } from '@/features/teaching/booking';
+import { fullTime } from '@/features/messaging/inbox';
 import { t, useClock } from '@ab/web-kit';
 
 /** Nothing while there are none (a trial has no invoice) or for a refused role (R-PAY-03). */

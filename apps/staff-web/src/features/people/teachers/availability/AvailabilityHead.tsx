@@ -2,10 +2,7 @@ import { dateText, nextDstTransition } from '@ab/time';
 import { useId, useMemo } from 'react';
 import { Icon, Label, Ltr, TimeZoneSelect, tzCity, t, locale } from '@ab/web-kit';
 
-interface Props {
-  tz: string;
-  onTz: (tz: string) => void;
-}
+interface Props { tz: string; onTz: (tz: string) => void }
 
 /** An ar.json sentence with its `{tz}` / `{city}` slot filled by the city, or the LTR id. */
 function ZoneText({ template, tz }: { template: string; tz: string }) {

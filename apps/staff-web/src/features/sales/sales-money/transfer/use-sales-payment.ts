@@ -2,14 +2,9 @@ import type { SalesMoneySubscriptionView, SalesPaymentView } from '@ab/shared';
 import { parseAmount } from '@ab/money';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { paidAtFor } from '@/features/finance/payments/api';
-import { useUploadOnce } from '@/features/finance/payments/attachments/attachments';
-import {
-  recordSalesPayment,
-  refreshAfterSalesWrite,
-  uploadSalesReceipt,
-  type Bind,
-} from '@/features/sales/sales-money/api';
+import { paidAtFor } from '@/features/finance/payments';
+import { useUploadOnce } from '@/features/finance/payments';
+import { recordSalesPayment, refreshAfterSalesWrite, uploadSalesReceipt, type Bind } from '@/features/sales/sales-money/api';
 import type { ReceiptChoice } from './receipt';
 
 export interface TransferForm {

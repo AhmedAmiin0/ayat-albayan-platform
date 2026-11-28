@@ -2,23 +2,18 @@ import { uploadOnce } from '@ab/client-core';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button, Dialog, FormAlert, t, useUploadMaxBytes } from '@ab/web-kit';
-import { paidAtDay } from '@/features/finance/payments/record/pay-day';
-import { ReceiptField, receiptProblem } from '@/features/finance/payments/attachments/ReceiptField';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
+import { paidAtDay } from '@/features/finance/payments';
+import { ReceiptField, receiptProblem } from '@/features/finance/payments';
+import { MONEY_KEY } from '@/features/finance/subscriptions';
 import { apiErrorText } from '@/features/finance/subscriptions';
 import { categoriesQuery, saveExpense, uploadExpenseReceipt, type ExpenseView } from './api';
 import { AddCategory } from './AddCategory';
 import { expenseBody, expenseForm, type ExpenseForm } from './expense-form';
 import { ExpenseFields } from './ExpenseFields';
 
-interface Props {
-  month: string;
-  expense: ExpenseView | null;
-  onClose: () => void;
-  onSaved: () => void;
-}
+interface Props { month: string; expense: ExpenseView | null; onClose: () => void; onSaved: () => void }
 
-/** Add or edit an expense (R-RPT-02): category, amount, currency, paid day, vendor, method, receipt, note, repeat. */
+/** Add or edit an expense (R-RPT-02). */
 export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();

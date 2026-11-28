@@ -12,12 +12,12 @@ import {
   ListSkeleton,
   t,
 } from '@ab/web-kit';
-import { downloadCsv } from '@/features/reporting/exports/api';
-import { ConfirmDialog } from '@/features/finance/payments/record/ConfirmDialog';
-import { currentMonth } from '@/features/finance/payouts/api';
-import { MonthSelect } from '@/features/finance/payouts/shared/MonthSelect';
-import { MONEY_KEY } from '@/features/finance/subscriptions/api';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { downloadCsv } from '@/features/reporting/exports';
+import { ConfirmDialog } from '@/features/finance/payments';
+import { currentMonth } from '@/features/finance/payouts';
+import { MonthSelect } from '@/features/finance/payouts';
+import { MONEY_KEY } from '@/features/finance/subscriptions';
+import { Amount } from '@/features/finance/subscriptions';
 import { categoriesQuery, categoryLabel, confirmDraft, deleteExpense, expenseReceiptUrl, expensesQuery, totalsByCurrency, type ExpenseView } from '@/features/finance/expenses/api';
 import { ExpenseDialog } from '@/features/finance/expenses/ExpenseDialog';
 import type { ExpenseAction } from '@/features/finance/expenses/ExpenseActions';
@@ -27,7 +27,7 @@ import { TableBox } from '@/components/data-table/TableBox';
 
 interface Props { month: string; onMonth: (month: string) => void }
 
-/** /admin/expenses (R-RPT-02, E4): a month's expenses (drafts to confirm; every column sorts/filters), or the 12-month table; CSV. */
+/** /admin/expenses (R-RPT-02, E4): a month's expenses (drafts to confirm) or the 12-month table. */
 export function ExpensesPage({ month, onMonth }: Props) {
   const queryClient = useQueryClient();
   const list = useQuery(expensesQuery(month));

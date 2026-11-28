@@ -14,10 +14,10 @@ export interface DeleteUserDialogProps {
   onDone: (message: string) => void;
 }
 
-/** Confirms the delete; a user with history (409) lists the tables and offers to disable instead. */
+/** Confirms the delete; a user with history (409) lists the tables and offers to disable. */
 export function DeleteUserDialog({ user, onBack, onDone }: DeleteUserDialogProps) {
   const queryClient = useQueryClient();
-  // Close first: refetching the open detail of a deleted user would 404 and retry before the dialog could close.
+  // Close first: refetching a deleted user's open detail would 404 and retry before the close.
   const finish = (message: string) => {
     onDone(message);
     queryClient.removeQueries({ queryKey: userKeys.detail(user.id) });

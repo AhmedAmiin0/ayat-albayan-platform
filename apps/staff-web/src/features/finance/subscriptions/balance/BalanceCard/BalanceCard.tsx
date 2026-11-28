@@ -2,7 +2,7 @@ import { cancelOffered, owesMore, subscriptionStatusStyle } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button, FormAlert, StatusChip, Toast, t } from '@ab/web-kit';
-import { RecordPaymentDialog } from '@/features/finance/payments/record/RecordPaymentDialog';
+import { RecordPaymentDialog } from '@/features/finance/payments';
 import { cancelSubscription, studentBalanceQuery } from '@/features/finance/subscriptions/api';
 import { CancelPackageDialog } from '@/features/finance/subscriptions/cancel/CancelPackageDialog';
 import { BalanceDetails } from '@/features/finance/subscriptions/balance/BalanceDetails';

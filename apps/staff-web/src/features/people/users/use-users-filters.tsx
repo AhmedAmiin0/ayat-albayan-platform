@@ -7,10 +7,16 @@ import { t } from '@ab/web-kit';
 import type { UsersPageView } from './api';
 
 const F = t.users.filters;
-const ROLE_OPTIONS: FilterOption[] = [{ value: '', label: F.all }, ...USER_ROLES.map((r) => ({ value: r, label: t.activity.roles[r] }))];
-const STATUS_OPTIONS: FilterOption[] = [{ value: '', label: F.all }, ...USER_STATUSES.map((s) => ({ value: s, label: t.users.status[s] }))];
+const ROLE_OPTIONS: FilterOption[] = [
+  { value: '', label: F.all },
+  ...USER_ROLES.map((r) => ({ value: r, label: t.activity.roles[r] })),
+];
+const STATUS_OPTIONS: FilterOption[] = [
+  { value: '', label: F.all },
+  ...USER_STATUSES.map((s) => ({ value: s, label: t.users.status[s] })),
+];
 
-/** Role and status as the table toolbar's extra filters (fields in the panel, chips under the bar). */
+/** Role and status as the toolbar's extra filters (fields in the panel, chips under the bar). */
 export function usersFilters(
   view: UsersPageView,
   onChange: (next: UsersPageView) => void,
@@ -19,8 +25,15 @@ export function usersFilters(
   const chips: FilterChip[] = [];
   const role = ROLE_OPTIONS.find((o) => o.value === view.role && o.value);
   const status = STATUS_OPTIONS.find((o) => o.value === view.status && o.value);
-  if (role) chips.push({ id: 'role', label: F.role, value: role.label, onRemove: () => set({ role: '' }) });
-  if (status) chips.push({ id: 'status', label: F.status, value: status.label, onRemove: () => set({ status: '' }) });
+  if (role)
+    chips.push({ id: 'role', label: F.role, value: role.label, onRemove: () => set({ role: '' }) });
+  if (status)
+    chips.push({
+      id: 'status',
+      label: F.status,
+      value: status.label,
+      onRemove: () => set({ status: '' }),
+    });
   return {
     fields: (
       <>

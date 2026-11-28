@@ -7,7 +7,7 @@ import { receiptProblem } from './ReceiptField';
 
 export type AttachmentProblem = 'receipt_type' | 'receipt_too_large' | 'too_many_attachments';
 
-/** The picked files added to the list (as `wrap` turns them into items); bad files are left out, the first problem returned. */
+/** Picked files added as `wrap` makes them; bad files left out, the first problem returned. */
 export function addAttachments<T>(
   list: readonly T[],
   picked: readonly File[],
@@ -27,14 +27,16 @@ export function addAttachments<T>(
 /** The legacy receipt comes first. */
 export function attachmentLabels(rows: readonly PaymentAttachmentView[]): string[] {
   let n = 0;
-  return rows.map((r) => (r.legacy ? t.payments.legacyReceipt : t.payments.attachmentN.replace('{n}', String((n += 1)))));
+  return rows.map((r) =>
+    r.legacy ? t.payments.legacyReceipt : t.payments.attachmentN.replace('{n}', String((n += 1))),
+  );
 }
 
 export type Uploader = (input: { subscriptionId: string; file: File }) => Promise<string>;
 
 /**
- * Uploads each file once per package: the retry after a lost reply re-sends the same paths instead of
- * uploading the files again (the clientRequestId then returns the payment already recorded).
+ * Uploads each file once per package: the retry after a lost reply re-sends the same paths instead
+ * of uploading the files again (the clientRequestId then returns the payment already recorded).
  */
 export function useUploadOnce(
   upload: Uploader,

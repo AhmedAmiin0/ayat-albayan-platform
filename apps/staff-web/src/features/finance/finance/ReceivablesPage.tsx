@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button, Cartouche, QueryState, FormAlert, PageHead, t } from '@ab/web-kit';
-import { downloadCsv } from '@/features/reporting/exports/api';
+import { downloadCsv } from '@/features/reporting/exports';
 import { receivablesQuery } from './api';
 import { ReceivablesBody } from './ReceivablesBody';
 

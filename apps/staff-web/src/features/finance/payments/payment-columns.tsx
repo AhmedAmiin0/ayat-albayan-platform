@@ -3,7 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button, Ltr, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 import { moneyText } from '@/features/finance/subscriptions';
 import type { PaymentView } from './api';
 import { amountEditable } from './amount/amount-check';

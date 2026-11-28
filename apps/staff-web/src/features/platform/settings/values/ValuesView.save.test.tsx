@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError, t } from '@ab/web-kit';
 import { answerPatch, entryOf } from '@/test/entries-fixture';
-import { findRow, renderValues } from './values-test-utils';
+import { findRow, renderValues } from '@/features/platform/settings/values/testing/values-test-utils';
 import { CONFIG_QUERY_KEYS } from '@/lib/settings/query-keys';
 
 const apiFetch = vi.hoisted(() => vi.fn());

@@ -7,11 +7,14 @@ import type { SalesSubscriptionKind } from '@ab/shared';
 import { SalesSubscriptions } from '@/features/sales/sales/subscriptions/SalesSubscriptions/SalesSubscriptions';
 
 vi.mock('@ab/web-kit/lib/i18n/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
-vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
+vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({
+  ...(await orig<object>()),
+  locale: 'en',
+}));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
-/** The route's `kind` as local state, so the tabs swap the list as they do on /sales/subscriptions. */
+/** The route's `kind` as local state, so the tabs swap the list as on /sales/subscriptions. */
 function Harness() {
   const [kind, setKind] = useState<SalesSubscriptionKind>('pending');
   return <SalesSubscriptions kind={kind} onKind={setKind} />;
@@ -19,7 +22,14 @@ function Harness() {
 
 describe('SalesSubscriptions, English', () => {
   it('two separate tabs, a row and an empty confirmed list read in English', async () => {
-    const row = { id: 'p1', student: { id: 's1', code: 'AB-0183', name: 'Suhaila' }, package: '8 lessons', status: 'unpaid', starts_on: null, lessons_total: 8 };
+    const row = {
+      id: 'p1',
+      student: { id: 's1', code: 'AB-0183', name: 'Suhaila' },
+      package: '8 lessons',
+      status: 'unpaid',
+      starts_on: null,
+      lessons_total: 8,
+    };
     apiFetch.mockImplementation(async (path: string) => (path.endsWith('confirmed') ? [] : [row]));
     render(
       <QueryClientProvider client={new QueryClient()}>

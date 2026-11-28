@@ -19,7 +19,7 @@ interface Props {
   rows: readonly AvailabilitySlot[];
 }
 
-/** Weekday × time-ranges editor (docs/07 §8); Save replaces the whole weekly grid (PUT). R-TCH-02. */
+/** Weekday × time-ranges editor (docs/07 §8); Save replaces the weekly grid (PUT). R-TCH-02. */
 export function AvailabilityGrid({ teacherId, tz: savedTz, rows }: Props) {
   const queryClient = useQueryClient();
   const table = useRef<HTMLDivElement>(null);

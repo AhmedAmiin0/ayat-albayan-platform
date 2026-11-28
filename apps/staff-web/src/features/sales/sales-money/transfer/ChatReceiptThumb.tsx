@@ -9,8 +9,8 @@ interface Props {
 }
 
 /**
- * One chat file's thumbnail: an image asks for its short-lived signed URL only when shown (one request
- * per item, GET /sales/money/chat-receipts/:messageId); a PDF or an expired file shows its kind only.
+ * A chat file's thumbnail: an image asks for its short-lived signed URL only when shown (one
+ * request each, GET /sales/money/chat-receipts/:messageId); a PDF or expired file shows its kind.
  */
 export function ChatReceiptThumb({ studentId, receipt, bind }: Props) {
   const image = receipt.mime.startsWith('image/') && !receipt.expired;

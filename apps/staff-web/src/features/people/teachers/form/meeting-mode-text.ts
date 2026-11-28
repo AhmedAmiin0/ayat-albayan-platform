@@ -28,7 +28,7 @@ export function knownAcademyAuto(
   return teacher?.meeting_mode === null ? teacher.platform_classroom : null;
 }
 
-/** usesPlatform with an unknown academy default: a set mode needs no setting; null follows `academy`. */
+/** usesPlatform with an unknown academy default: a set mode needs no setting; null follows. */
 export const effectivePlatform = (
   mode: TeacherMeetingMode | null,
   academy: boolean | null,

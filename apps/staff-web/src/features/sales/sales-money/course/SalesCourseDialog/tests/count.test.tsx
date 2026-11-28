@@ -2,22 +2,38 @@ import { counted } from '@ab/core';
 import { pickProgress } from '@ab/schedule';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ABRAR, fillRow, next, pickSlot, pickWednesday } from '@/features/teaching/booking/wizard-fixture';
+import {
+  ABRAR,
+  fillRow,
+  next,
+  pickSlot,
+  pickWednesday,
+} from '@/features/teaching/booking/wizard-fixture';
 import { dateLabel } from '@/features/teaching/schedule';
 import { t } from '@ab/web-kit';
 import { renderWithClient } from '@/features/messaging/inbox/testing/test-utils';
-import { COURSE_STUDENT_ID, routeCourse, routeCourseSend } from '@/features/sales/sales-money/course/course-fixture';
+import {
+  COURSE_STUDENT_ID,
+  routeCourse,
+  routeCourseSend,
+} from '@/features/sales/sales-money/course/course-fixture';
 import { SalesCourseDialog } from '@/features/sales/sales-money/course/SalesCourseDialog/SalesCourseDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
-vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink }));
+vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
+  ...(await orig<object>()),
+  apiFetch,
+  apiSend,
+}));
+vi.mock('@tanstack/react-router', async () => ({
+  Link: (await import('@/features/messaging/inbox/testing/test-utils')).MockLink,
+}));
 
 const nextButton = () => screen.getByRole('button', { name: t.booking.next });
 const submit = () => screen.getByRole('button', { name: t.booking.submit });
 
-/** Open the dialog, wait for the preselected teacher, then on to the slot step (its Sunday 17:00 picked). */
+/** Open the dialog, wait for the preselected teacher, go to the slots (Sunday 17:00 picked). */
 async function toSlotStep(): Promise<void> {
   renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
   const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });
@@ -51,9 +67,19 @@ describe('the assistant’s course: exactly the plan’s days, each with its tim
     next();
 
     const review = within(screen.getByRole('region', { name: t.booking.steps.review }));
-    expect(review.getByText(t.booking.dayAt.replace('{day}', t.enums.weekday[0]).replace('{time}', '17:00'))).toBeTruthy();
-    expect(review.getByText(t.booking.dayAt.replace('{day}', t.enums.weekday[3]).replace('{time}', '19:30'))).toBeTruthy();
-    expect(review.getByText(counted(t.booking.courseEnds, 8).replace('{date}', dateLabel('2026-10-28')))).toBeTruthy();
+    expect(
+      review.getByText(
+        t.booking.dayAt.replace('{day}', t.enums.weekday[0]).replace('{time}', '17:00'),
+      ),
+    ).toBeTruthy();
+    expect(
+      review.getByText(
+        t.booking.dayAt.replace('{day}', t.enums.weekday[3]).replace('{time}', '19:30'),
+      ),
+    ).toBeTruthy();
+    expect(
+      review.getByText(counted(t.booking.courseEnds, 8).replace('{date}', dateLabel('2026-10-28'))),
+    ).toBeTruthy();
     expect(review.queryByText(t.booking.meetingLink)).toBeNull();
     expect(review.queryByText(t.booking.invoice.label)).toBeNull();
 
@@ -85,6 +111,8 @@ describe('the assistant’s course: exactly the plan’s days, each with its tim
     fillRow(2, '2026-10-07', '');
     expect(nextButton().hasAttribute('disabled')).toBe(true);
     expect(screen.queryByText(t.booking.seriesFree)).toBeNull(); // no picks, so no series check
-    expect(screen.queryByRole('button', { name: new RegExp(t.booking.removeDay.replace('{day}', '')) })).toBeNull();
+    expect(
+      screen.queryByRole('button', { name: new RegExp(t.booking.removeDay.replace('{day}', '')) }),
+    ).toBeNull();
   });
 });

@@ -5,7 +5,7 @@ import { RegistryField } from '@/features/platform/settings/registry-form/Regist
 import { FORM_KEYS } from '@/features/platform/settings/registry-form/settings-form';
 import type { SettingsFormState } from '@/features/platform/settings/registry-form/use-settings-form';
 
-/** The registry's form fields of one section, in page order (SETTINGS_LAYOUT; nothing when it has none). */
+/** The registry's fields of one section, in page order (SETTINGS_LAYOUT; none when it has none). */
 export function SectionFields({ id, state }: { id: SettingsSectionId; state: SettingsFormState }) {
   const { query } = useSettingsView();
   const keys = FORM_KEYS.filter((k) => settingSection(k) === id && matchesSetting(k, query));

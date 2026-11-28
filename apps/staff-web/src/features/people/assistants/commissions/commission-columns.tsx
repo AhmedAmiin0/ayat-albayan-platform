@@ -4,7 +4,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/data-table/DataTable';
 import { Button, Ltr, StatusChip, t } from '@ab/web-kit';
 import { formatDate } from '@/features/sales/leads';
-import { Amount } from '@/features/finance/subscriptions/balance/Amount';
+import { Amount } from '@/features/finance/subscriptions';
 import type { AssistantCommissionView } from '@/features/people/assistants/api';
 import { commissionStatusStyle } from '@/features/people/assistants/status';
 
@@ -20,7 +20,7 @@ interface Handlers {
 const kindText = (c: AssistantCommissionView): string =>
   c.kind === 'renewal' ? L.kind.renewal.replace('{n}', String(c.share_percent)) : L.kind.first;
 
-/** Commission ledger: who earned what on which student's subscription (first or renewal); void with a reason. */
+/** Who earned what on which student's subscription (first or renewal); void with a reason. */
 export function commissionColumns({ canWrite, onVoid }: Handlers) {
   return col.columns([
     col.accessor((c) => c.student.name, {

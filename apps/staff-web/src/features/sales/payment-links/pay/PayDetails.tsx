@@ -5,11 +5,7 @@ import { fillText, moneySlots } from '@/features/sales/payment-links/link-text';
 
 const P = t.paymentLinks.pay;
 
-interface Props {
-  token: string;
-  link: PublicPaymentLink;
-  payable: boolean;
-}
+interface Props { token: string; link: PublicPaymentLink; payable: boolean }
 
 /** Pay now while payable is a navigation to the API's checkout. */
 export function PayDetails({ token, link, payable }: Props) {

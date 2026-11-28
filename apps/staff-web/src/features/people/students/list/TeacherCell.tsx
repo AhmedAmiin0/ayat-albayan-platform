@@ -1,10 +1,7 @@
 import { t } from '@ab/web-kit';
 import type { StudentListItem } from '@ab/shared';
 
-interface TeacherCellProps {
-  row: StudentListItem;
-  onOpen: (studentId: string) => void;
-}
+interface TeacherCellProps { row: StudentListItem; onOpen: (studentId: string) => void }
 
 export function TeacherCell({ row, onOpen }: TeacherCellProps) {
   if (row.teacher_name) return <span>{row.teacher_name}</span>;
