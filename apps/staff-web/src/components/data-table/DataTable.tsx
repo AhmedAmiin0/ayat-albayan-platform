@@ -20,7 +20,7 @@ export * from './data-table-features';
 
 /** Hamish (marginal note) column: after a double gold-soft rule; folds away in narrow pages. */
 const hamishHeadClass = 'border-s border-s-rule ps-3.5 @max-[940px]:hidden';
-const hamishClass = `${hamishHeadClass} text-xs text-ink-2`;
+const hamishClass = `${hamishHeadClass} min-w-40 whitespace-normal text-xs text-ink-2`;
 /** The hamish column's `meta`: the double rule sits on the head and on the cells. */
 export const hamishMeta: DataTableColumnMeta = {
   className: hamishClass,
