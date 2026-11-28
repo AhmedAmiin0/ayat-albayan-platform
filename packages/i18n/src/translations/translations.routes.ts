@@ -3,12 +3,17 @@ import {
   translationKeyParamsSchema,
   translationKeysPageSchema,
   translationKeysQuerySchema,
+  translationLocaleParamsSchema,
+  translationOverridesSchema,
   translationValueSchema,
 } from './translations.schemas';
 
 const access = { permissions: ['translations.manage'], tags: ['i18n'] } as const;
 
-/** The admin translations editor: every bundled key, and one locale's override saved or removed. */
+/**
+ * The admin translations editor (every bundled key, one locale's override saved or removed) and
+ * the public overrides map the apps read at boot, before sign-in.
+ */
 export const translationRoutes = {
   keys: defineRoute({
     method: 'GET',
@@ -31,5 +36,13 @@ export const translationRoutes = {
     params: translationKeyParamsSchema,
     response: 'empty',
     ...access,
+  }),
+  overrides: defineRoute({
+    method: 'GET',
+    path: '/i18n/:locale/overrides',
+    params: translationLocaleParamsSchema,
+    response: translationOverridesSchema,
+    tags: ['i18n'],
+    isPublic: true,
   }),
 };
