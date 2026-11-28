@@ -2,10 +2,20 @@ import type { Page } from '@playwright/test';
 import { makeAssistant } from '../../support/sales/assistant-api';
 import { ar, expect, test } from '../../support/core/fixtures';
 import { listedKeys } from '../../support/messaging/restricted-templates';
-import { CHAT_WABA, RESCHEDULE, rescheduleRow, seedReschedule } from '../../support/messaging/reschedule-template';
+import {
+  CHAT_WABA,
+  RESCHEDULE,
+  rescheduleRow,
+  seedReschedule,
+} from '../../support/messaging/reschedule-template';
 import { withSql } from '../../support/core/schedule';
 import { numberBlock, syncNumber } from '../../support/messaging/template-numbers';
-import { restoreTemplates, snapshotTemplates, stubTemplates, type TemplateRow } from '../../support/messaging/template-registry';
+import {
+  restoreTemplates,
+  snapshotTemplates,
+  stubTemplates,
+  type TemplateRow,
+} from '../../support/messaging/template-registry';
 import { SINGLE_LINE } from '../../support/messaging/wa-lines';
 import { stubReset, stubTemplateStatus } from '../../support/core/wa-stub';
 
@@ -26,7 +36,12 @@ async function openSettings(page: Page): Promise<void> {
 }
 
 const lineOf = async (key: string) =>
-  withSql(async (sql) => (await sql<{ line: string }[]>`select line from public.message_templates where key = ${key}`)[0]?.line);
+  withSql(
+    async (sql) =>
+      (
+        await sql<{ line: string }[]>`select line from public.message_templates where key = ${key}`
+      )[0]?.line,
+  );
 
 test.describe('templates per number (owner 2026-10-18)', () => {
   test.skip(SINGLE_LINE, 'E2E_LINES=single: no chat number to sync, move to or submit to');
@@ -37,15 +52,22 @@ test.describe('templates per number (owner 2026-10-18)', () => {
     await seedReschedule();
   });
   test.afterEach(async () => {
-    await withSql((sql) => sql`update public.message_templates set line = 'notifications' where key = 'booking_confirmation'`);
+    await withSql(
+      (sql) =>
+        sql`update public.message_templates set line = 'notifications' where key = 'booking_confirmation'`,
+    );
     await restoreTemplates(saved);
     await seedReschedule();
     await stubReset();
   });
 
-  test('the chat number syncs alone and shows what it found; the notifications rows are not touched', async ({ asRole }) => {
-    const before = await withSql((sql) => sql<{ last_checked_at: Date | null }[]>`
-      select last_checked_at from public.message_templates where key = 'booking_confirmation'`);
+  test('the chat number syncs alone and shows what it found; the notifications rows are not touched', async ({
+    asRole,
+  }) => {
+    const before = await withSql(
+      (sql) => sql<{ last_checked_at: Date | null }[]>`
+      select last_checked_at from public.message_templates where key = 'booking_confirmation'`,
+    );
     const admin = await asRole('admin');
     await openSettings(admin);
     // The boot sync may already have filled the notifications block: it must not change now.
@@ -57,21 +79,29 @@ test.describe('templates per number (owner 2026-10-18)', () => {
     await expect(block).toContainText(p.metaCount);
     await expect(block).toContainText(p.lastSync.replace('{time}', '').trim());
     expect(await notif.innerText()).toBe(notifBefore);
-    const after = await withSql((sql) => sql<{ last_checked_at: Date | null }[]>`
-      select last_checked_at from public.message_templates where key = 'booking_confirmation'`);
+    const after = await withSql(
+      (sql) => sql<{ last_checked_at: Date | null }[]>`
+      select last_checked_at from public.message_templates where key = 'booking_confirmation'`,
+    );
     expect(after).toEqual(before);
   });
 
-  test('a template moves to the other number after the confirm; a producer’s confirm warns first', async ({ asRole }) => {
+  test('a template moves to the other number after the confirm; a producer’s confirm warns first', async ({
+    asRole,
+  }) => {
     const admin = await asRole('admin');
     await openSettings(admin);
-    await admin.getByRole('button', { name: t.moveFor.replace('{name}', t.names.booking_confirmation) }).click();
+    await admin
+      .getByRole('button', { name: t.moveFor.replace('{name}', t.names.booking_confirmation) })
+      .click();
     const warn = admin.getByRole('dialog', { name: t.moveTitle });
     await expect(warn.getByRole('note')).toHaveText(t.moveProducerWarning);
     await warn.getByRole('button', { name: ar.common.cancel }).click();
     expect(await lineOf('booking_confirmation')).toBe('notifications');
 
-    await row(admin).getByRole('button', { name: t.moveFor.replace('{name}', NAME) }).click();
+    await row(admin)
+      .getByRole('button', { name: t.moveFor.replace('{name}', NAME) })
+      .click();
     const dialog = admin.getByRole('dialog', { name: t.moveTitle });
     await expect(dialog.getByRole('note')).toHaveCount(0);
     await dialog.getByRole('button', { name: t.moveYes }).click();
@@ -80,7 +110,9 @@ test.describe('templates per number (owner 2026-10-18)', () => {
     expect(await rescheduleRow()).toMatchObject({ line: 'notifications', status: 'not_submitted' });
   });
 
-  test('trial_reschedule is submitted to the chat number’s WABA; approved there, a restricted role lists it', async ({ asRole }) => {
+  test('trial_reschedule is submitted to the chat number’s WABA; approved there, a restricted role lists it', async ({
+    asRole,
+  }) => {
     const admin = await asRole('admin');
     await openSettings(admin);
     await row(admin).getByRole('button', { name: t.submit }).click();

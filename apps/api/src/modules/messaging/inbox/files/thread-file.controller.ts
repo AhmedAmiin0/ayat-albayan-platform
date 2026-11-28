@@ -1,11 +1,5 @@
 import { PDF_PREVIEW_PAGES, type ThreadFile, type ThreadPdfPage } from '@ab/shared';
-import {
-  type ArgumentMetadata,
-  Controller,
-  Get,
-  HttpStatus,
-  ParseUUIDPipe,
-} from '@nestjs/common';
+import { type ArgumentMetadata, Controller, Get, HttpStatus, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '@/common/auth/decorators';

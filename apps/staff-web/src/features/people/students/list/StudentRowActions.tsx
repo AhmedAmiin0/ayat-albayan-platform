@@ -3,7 +3,10 @@ import { clickToChatLink } from '@ab/core';
 import { Icon, IconButton, iconButtonClass, t } from '@ab/web-kit';
 import type { StudentListItem } from '@ab/shared';
 
-interface StudentRowActionsProps { row: StudentListItem; onOpen: (studentId: string) => void }
+interface StudentRowActionsProps {
+  row: StudentListItem;
+  onOpen: (studentId: string) => void;
+}
 
 /** Row clicks open the profile; the actions must not trigger it too. */
 const own = (e: MouseEvent) => e.stopPropagation();

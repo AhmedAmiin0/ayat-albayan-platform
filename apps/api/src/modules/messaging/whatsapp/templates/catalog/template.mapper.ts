@@ -64,7 +64,10 @@ export function withNumbers(
   approvals: readonly ApprovalRow[],
 ): TemplateView[] {
   return rows.map((row) =>
-    toTemplateView(row, approvals.filter((a) => a.template_key === row.key)),
+    toTemplateView(
+      row,
+      approvals.filter((a) => a.template_key === row.key),
+    ),
   );
 }
 

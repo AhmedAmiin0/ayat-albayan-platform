@@ -17,7 +17,10 @@ import { ReportGate } from '@/modules/reporting/reports/shared/report-gate';
 import { callerActor, type ReportCaller } from '@/modules/reporting/reports/shared/report-access';
 
 /** A signed-in user, or the lesson's teacher through their report link. */
-interface FileRef { id: string; user: ReportCaller }
+interface FileRef {
+  id: string;
+  user: ReportCaller;
+}
 type AttachmentRef = FileRef & { attachmentId: string };
 
 /** Report files through signed URLs: the PDF (R6) and attachments (R7–R10; R-REP-02/03). */

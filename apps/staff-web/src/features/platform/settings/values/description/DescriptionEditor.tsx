@@ -55,7 +55,10 @@ export function DescriptionEditor({
     e.preventDefault();
     setTried(true);
     if (empty) return;
-    if (text.trim() === start.trim()) {  onClose();; return; }
+    if (text.trim() === start.trim()) {
+      onClose();
+      return;
+    }
     send(text.trim(), d.saved);
   };
   const count = d.count

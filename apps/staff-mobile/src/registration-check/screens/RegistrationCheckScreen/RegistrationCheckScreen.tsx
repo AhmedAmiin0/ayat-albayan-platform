@@ -15,8 +15,7 @@ import { RegistrationForm } from '@/registration-check/components/RegistrationFo
 import { RegistrationResults } from '@/registration-check/components/RegistrationResults';
 
 /** The chat's number (from the thread header), checked at once. */
-type ParamKey =
-  | 'phone';
+type ParamKey = 'phone';
 
 type Params = Partial<Record<ParamKey, string>>;
 

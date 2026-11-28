@@ -56,7 +56,8 @@ export const importNumbers = (dryRun: boolean) =>
   apiSend<ImportResult>('POST', '/admin/numbers/import', { dryRun });
 
 /** POST /admin/communications/source: 409 parity_not_empty while a difference remains (module). */
-export const setCommsSource = (source: CommsSource) => apiSend<CommsSourceView>('POST', '/admin/communications/source', { source });
+export const setCommsSource = (source: CommsSource) =>
+  apiSend<CommsSourceView>('POST', '/admin/communications/source', { source });
 
 /** POST /admin/numbers/:id/templates/sync (templates.manage): its WABA list → its approvals. */
 export const syncNumberTemplates = (id: string) =>

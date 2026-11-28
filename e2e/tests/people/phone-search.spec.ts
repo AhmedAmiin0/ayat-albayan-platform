@@ -1,6 +1,12 @@
 import type { Page } from '@playwright/test';
 import { bearer, API } from '../../support/core/messages';
-import { dropPeople, people, seedPeople, type Kind, type Person } from '../../support/people/admin-extra-phone';
+import {
+  dropPeople,
+  people,
+  seedPeople,
+  type Kind,
+  type Person,
+} from '../../support/people/admin-extra-phone';
 import { ar, expect, test } from '../../support/core/fixtures';
 
 // A14, phone search (searchDigits): the list endpoints of inbox, leads, students, job applicants
@@ -49,11 +55,18 @@ test.describe('phone search (searchDigits)', () => {
     await dropPeople(LIST, state.teacherId);
   });
 
-  test('API: every number format finds exactly its own person; two digits fall back to the name', async ({ asRole }, info) => {
+  test('API: every number format finds exactly its own person; two digits fall back to the name', async ({
+    asRole,
+  }, info) => {
     test.skip(info.project.name === 'mobile', 'pure API checks run once, on desktop');
     const page = await asRole('admin');
     await page.goto('/admin');
-    const all = [...(['guardian', 'lead', 'applicant', 'teacher'] as const).map((k) => [ENDPOINT[k], person(k)] as const), ['/threads?search=', person('lead')] as const];
+    const all = [
+      ...(['guardian', 'lead', 'applicant', 'teacher'] as const).map(
+        (k) => [ENDPOINT[k], person(k)] as const,
+      ),
+      ['/threads?search=', person('lead')] as const,
+    ];
     for (const [path, p] of all) {
       for (const [label, term] of Object.entries(variants(p))) {
         const r = await found(page, `${path}${encodeURIComponent(term)}`);

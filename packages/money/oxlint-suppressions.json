@@ -9,11 +9,6 @@
       "count": 3
     }
   },
-  "src/assistant/renewal.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/assistant/schemas.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -46,7 +41,7 @@
   },
   "src/ledger/schemas.ts": {
     "stylistic/max-len": {
-      "count": 5
+      "count": 3
     },
     "ab/module-boundaries": {
       "count": 1

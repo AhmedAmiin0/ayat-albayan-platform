@@ -2,7 +2,10 @@ import { TEACHER_STATUSES } from '@ab/catalog';
 import { Field, Input, Select, TimeZoneSelect, t } from '@ab/web-kit';
 import { RATE_FIELDS, type SetField, type TeacherForm } from './teacher-form';
 
-interface Props { form: TeacherForm; set: SetField }
+interface Props {
+  form: TeacherForm;
+  set: SetField;
+}
 
 /** Time zone, status, capacity (one row of three) and per-duration rates (R-TCH-01, rule 6). */
 export function TeacherWorkFields({ form, set }: Props) {

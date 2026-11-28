@@ -50,8 +50,14 @@ export const SETTINGS_LAYOUT = {
     'calls_permission_template',
   ],
   schedule: SCHEDULE_KEYS,
-  classroom: ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title', 'meeting_max_minutes',
-    'meeting_link_auto', 'meetings_in_app'],
+  classroom: [
+    'join_opens_before_min',
+    'join_closes_after_min',
+    'default_meeting_title',
+    'meeting_max_minutes',
+    'meeting_link_auto',
+    'meetings_in_app',
+  ],
   reports: ['report_teacher_edit_minutes', 'report_teacher_edit_hours', 'report_form_v2'],
   accounts: [
     'reporting_currency',
@@ -83,7 +89,12 @@ export const SETTINGS_LAYOUT = {
     ...TEACHER_PAGE_KEYS,
     'maintenance_mode',
   ],
-  sales: ['sales_auto_assign', 'sales_require_assignee', 'renewal_commission_enabled', 'renewal_commission_percent'],
+  sales: [
+    'sales_auto_assign',
+    'sales_require_assignee',
+    'renewal_commission_enabled',
+    'renewal_commission_percent',
+  ],
   appearance: [],
 } as const satisfies Record<SettingsSectionId, readonly SettingKey[]>;
 

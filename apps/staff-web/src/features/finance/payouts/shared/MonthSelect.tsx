@@ -14,7 +14,12 @@ export function monthOptions(latest: string, opts: { count: number; value: strin
   return months.includes(opts.value) ? months : [...months, opts.value];
 }
 
-interface Props { label: string; value: string; latest: string; onChange: (month: string) => void }
+interface Props {
+  label: string;
+  value: string;
+  latest: string;
+  onChange: (month: string) => void;
+}
 
 /** A month picker as a select (rule 6: no free-text dates; Safari has no `type=month`). */
 export function MonthSelect({ label, value, latest, onChange }: Props) {

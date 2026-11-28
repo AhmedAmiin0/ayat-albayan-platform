@@ -10,17 +10,27 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 export const MAX = 12;
 const CODE = /\.[cm]?[jt]sx?$/;
 const TEST = /\.(test|spec)\.[cm]?[jt]sx?$/;
-const SKIP = new Set(['node_modules', 'dist', 'build', 'coverage', '.turbo', '.expo', '__snapshots__']);
+const SKIP = new Set([
+  'node_modules',
+  'dist',
+  'build',
+  'coverage',
+  '.turbo',
+  '.expo',
+  '__snapshots__',
+]);
 
 const dirs = (root, rel) =>
   existsSync(join(root, rel))
-    ? readdirSync(join(root, rel), { withFileTypes: true })
-      .filter((d) => d.isDirectory() && !SKIP.has(d.name))
+    ? readdirSync(join(root, rel), { withFileTypes: true }).filter(
+        (d) => d.isDirectory() && !SKIP.has(d.name),
+      )
     : [];
 
 /** The scanned roots of each app; packages and tools are lane D. */
 export function appRoots(root) {
-  const under = (group, sub) => dirs(root, group).map((d) => join(group, d.name, sub).replace(/\/$/, ''));
+  const under = (group, sub) =>
+    dirs(root, group).map((d) => join(group, d.name, sub).replace(/\/$/, ''));
   return {
     api: ['apps/api/src'],
     web: ['apps/staff-web/src', 'apps/family-web/src'],
@@ -56,12 +66,15 @@ export function check(counts, allow) {
   const problems = [];
   for (const [folder, c] of Object.entries(crowded(counts))) {
     const ok = allow[folder];
-    if (ok === undefined) problems.push(`new: ${folder} has ${c.files} code files, ${c.dirs} folders (max ${MAX})`);
-    else if (c.files > ok.files || c.dirs > ok.dirs) problems.push(`grew: ${folder} ${ok.files}/${ok.dirs} → ${c.files}/${c.dirs}`);
+    if (ok === undefined)
+      problems.push(`new: ${folder} has ${c.files} code files, ${c.dirs} folders (max ${MAX})`);
+    else if (c.files > ok.files || c.dirs > ok.dirs)
+      problems.push(`grew: ${folder} ${ok.files}/${ok.dirs} → ${c.files}/${c.dirs}`);
   }
   for (const folder of Object.keys(allow)) {
     const c = counts[folder];
-    if (c === undefined || (c.files <= MAX && c.dirs <= MAX)) problems.push(`stale: ${folder} is within the cap; remove it from the allow-list`);
+    if (c === undefined || (c.files <= MAX && c.dirs <= MAX))
+      problems.push(`stale: ${folder} is within the cap; remove it from the allow-list`);
   }
   return problems;
 }
@@ -75,11 +88,14 @@ function main(args) {
   let total = 0;
   for (const [app, rels] of Object.entries(roots)) {
     const counts = Object.assign({}, ...rels.map((r) => measure(root, r)));
-    if (write.includes(app)) writeFileSync(allowFile(root, app), `${JSON.stringify(crowded(counts), null, 2)}\n`);
+    if (write.includes(app))
+      writeFileSync(allowFile(root, app), `${JSON.stringify(crowded(counts), null, 2)}\n`);
     const file = allowFile(root, app);
     const allow = existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {};
     const problems = check(counts, allow);
-    console.log(`folder-cap ${app}: ${Object.keys(crowded(counts)).length} crowded folders, ${Object.keys(allow).length} allow-listed`);
+    console.log(
+      `folder-cap ${app}: ${Object.keys(crowded(counts)).length} crowded folders, ${Object.keys(allow).length} allow-listed`,
+    );
     for (const p of problems) console.log(`  ${p}`);
     total += problems.length;
   }

@@ -7,8 +7,15 @@ import { attendanceSheetName, studentFolderName } from './pdf-name';
 import { brandStyle } from '@/modules/platform/google-sync/writers/sheets/sheet-style';
 
 /** A confirmed student's folder and attendance sheet; `null` = not confirmed / no Drive root. */
-interface StudentDrive { folderId: string; sheetId: string }
-type DriveNeed = { kind: 'ready'; drive: StudentDrive } | { kind: 'create'; folder: boolean; sheet: boolean; rootId: string | null } | { kind: 'unmapped' } | { kind: 'no_root' };
+interface StudentDrive {
+  folderId: string;
+  sheetId: string;
+}
+type DriveNeed =
+  | { kind: 'ready'; drive: StudentDrive }
+  | { kind: 'create'; folder: boolean; sheet: boolean; rootId: string | null }
+  | { kind: 'unmapped' }
+  | { kind: 'no_root' };
 
 /** docs/24 §3: each new id is recorded at once, so a retry never makes a twin. */
 @Injectable()

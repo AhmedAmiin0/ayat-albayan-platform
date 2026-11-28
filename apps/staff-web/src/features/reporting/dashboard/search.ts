@@ -5,7 +5,11 @@ import { addCalendarMonths, addDays, riyadhToday, weekStart } from '@ab/time';
 export type DayRange = DashboardSummary['range'];
 
 /** /admin URL state; defaults (the last 6 months, the reports queue) stay out of the URL. */
-export interface DashboardSearch { from?: string; to?: string; work?: WorkTab }
+export interface DashboardSearch {
+  from?: string;
+  to?: string;
+  work?: WorkTab;
+}
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const day = (v: unknown) =>

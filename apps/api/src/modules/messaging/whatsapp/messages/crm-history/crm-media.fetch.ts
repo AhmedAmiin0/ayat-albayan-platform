@@ -10,7 +10,11 @@ export const CRM_FETCH_TIMEOUT_MS = 10_000;
  */
 export const CRM_UNREACHABLE = 'crm_unreachable';
 
-interface CrmFetchInput { url: URL; mime: string; maxBytes: number }
+interface CrmFetchInput {
+  url: URL;
+  mime: string;
+  maxBytes: number;
+}
 
 const gone = (): Error => httpError(HttpStatus.GONE, 'media_expired');
 const tooBig = (): Error => httpError(HttpStatus.PAYLOAD_TOO_LARGE, 'invoice_too_large');

@@ -1,6 +1,9 @@
 import { ACCOUNT_CODE_TEMPLATE } from '@ab/shared';
 import { Inject, Injectable, Optional } from '@nestjs/common';
-import { overlayNumbers, type OverlayNumber } from '@/common/configuration/integrations/numbers-overlay';
+import {
+  overlayNumbers,
+  type OverlayNumber,
+} from '@/common/configuration/integrations/numbers-overlay';
 import { lineProvider, loadEnv } from '@/config/env/env';
 import { SendGate } from '@/modules/messaging/whatsapp/gate/send-gate';
 import { routeOf } from '@/modules/messaging/whatsapp/numbers/number-route';
@@ -17,7 +20,10 @@ import { WaError, type TemplateRow } from '@/modules/messaging/whatsapp/whatsapp
 const CODE_LINE = 'chat' as const;
 
 /** sent | unavailable (gate closed, not approved, no line / number can send it) | failed. */
-type CodeSendResult = { status: 'sent' } | { status: 'unavailable' } | { status: 'failed'; error: string };
+type CodeSendResult =
+  | { status: 'sent' }
+  | { status: 'unavailable' }
+  | { status: 'failed'; error: string };
 
 /**
  * The sign-in / password code (docs/30 §4): ONE authentication-template send, now, through the same
@@ -114,7 +120,11 @@ export class CodeSend {
  * An in-memory row for the dispatch: the code fills {{1}} and the copy-code button; nothing is
  * stored.
  */
-export function codeRow(input: { phone: string; code: string; template: Pick<TemplateRow, 'key'> }): DueMessage {
+export function codeRow(input: {
+  phone: string;
+  code: string;
+  template: Pick<TemplateRow, 'key'>;
+}): DueMessage {
   return {
     id: 'account-code',
     phone_e164: input.phone,

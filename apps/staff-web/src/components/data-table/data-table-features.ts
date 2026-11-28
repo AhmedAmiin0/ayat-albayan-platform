@@ -11,7 +11,10 @@ import {
 import { compareValues, matchesFilter } from './client-sort';
 
 export type SortDir = 'asc' | 'desc';
-export interface FilterOption { value: string; label: string }
+export interface FilterOption {
+  value: string;
+  label: string;
+}
 export type ColumnFilterDef = { kind: 'text' } | { kind: 'select'; options: FilterOption[] };
 
 /** Per-column classes: `className` styles the body cells, `headClassName` the <th>. */

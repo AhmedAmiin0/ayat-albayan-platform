@@ -14,7 +14,8 @@ const at = args.indexOf('--root');
 const base = at >= 0 ? posix.resolve(args[at + 1] ?? '.') : root;
 const maps = args.filter((a, i) => !a.startsWith('--') && args[i - 1] !== '--root');
 
-const print = (r: RunReport): void => console.log(`${r.id}: ${r.moved} moved, ${r.rewritten} files rewritten`);
+const print = (r: RunReport): void =>
+  console.log(`${r.id}: ${r.moved} moved, ${r.rewritten} files rewritten`);
 
 if (args.includes('--replay')) replay(base).forEach(print);
 else if (maps.length > 0) maps.forEach((m) => print(runMap(base, m)));

@@ -2,15 +2,9 @@ import { countsForMoney, dueOf, owedFor } from '@ab/money';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Field, Select, t } from '@ab/web-kit';
-import {
-  studentSubscriptionsQuery,
-  type SubscriptionView,
-} from '@/features/finance/subscriptions';
+import { studentSubscriptionsQuery, type SubscriptionView } from '@/features/finance/subscriptions';
 import { moneyText, packageName } from '@/features/finance/subscriptions';
-import {
-  StudentPicker,
-  type PickedStudent,
-} from '@/features/finance/subscriptions';
+import { StudentPicker, type PickedStudent } from '@/features/finance/subscriptions';
 
 interface Props {
   student: PickedStudent | null;

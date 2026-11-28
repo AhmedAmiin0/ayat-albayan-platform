@@ -13,5 +13,7 @@ export type AppTextNode = Text;
  * «Needs / confirmation»); «simple» measures and draws alike (iOS ignores the prop).
  */
 export function AppText({ style, ref, ...props }: TextProps & { ref?: Ref<AppTextNode> }) {
-  return <Text textBreakStrategy="simple" {...props} ref={ref} style={[{ textAlign: 'left' }, style]} />;
+  return (
+    <Text textBreakStrategy="simple" {...props} ref={ref} style={[{ textAlign: 'left' }, style]} />
+  );
 }

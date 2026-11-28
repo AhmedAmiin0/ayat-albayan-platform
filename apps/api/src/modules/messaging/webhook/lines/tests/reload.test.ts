@@ -22,19 +22,15 @@ function setup(fail = false) {
 }
 
 describe('WebhookConfigReload.once', () => {
-  it(
-    'reloads the integration overlay, then the numbers config; at most once per RELOAD_GAP_MS',
-    async () => {
-      const { integration, numbers, reload } = setup();
-      expect(await reload.once(0)).toBe(true);
-      expect(await reload.once(RELOAD_GAP_MS - 1)).toBe(false);
-      expect(await reload.once(RELOAD_GAP_MS)).toBe(true);
-      expect([
-        integration.reloadHere.mock.calls.length,
-        numbers.reload.mock.calls.length,
-      ]).toEqual([2, 2]);
-    },
-  );
+  it('reloads the integration overlay, then the numbers config; at most once per RELOAD_GAP_MS', async () => {
+    const { integration, numbers, reload } = setup();
+    expect(await reload.once(0)).toBe(true);
+    expect(await reload.once(RELOAD_GAP_MS - 1)).toBe(false);
+    expect(await reload.once(RELOAD_GAP_MS)).toBe(true);
+    expect([integration.reloadHere.mock.calls.length, numbers.reload.mock.calls.length]).toEqual([
+      2, 2,
+    ]);
+  });
 
   it('concurrent callers share one reload; a failed step never stops the next', async () => {
     vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);

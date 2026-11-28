@@ -15,9 +15,16 @@ const code = sql
 
 describe('migration 640: the crm driver', () => {
   it('is followed by the calls migration (740) as the next integration_secret_key_ok', () => {
-    const defines = (f: string) => readFileSync(join(dir, f), 'utf8').includes('function public.integration_secret_key_ok(');
-    const defining = readdirSync(dir).filter((f) => f.endsWith('.sql')).sort().filter(defines);
-    expect(defining.slice(defining.indexOf(FILE), defining.indexOf(FILE) + 2)).toEqual([FILE, '20261026000740_wa_calls.sql']);
+    const defines = (f: string) =>
+      readFileSync(join(dir, f), 'utf8').includes('function public.integration_secret_key_ok(');
+    const defining = readdirSync(dir)
+      .filter((f) => f.endsWith('.sql'))
+      .sort()
+      .filter(defines);
+    expect(defining.slice(defining.indexOf(FILE), defining.indexOf(FILE) + 2)).toEqual([
+      FILE,
+      '20261026000740_wa_calls.sql',
+    ]);
   });
 
   it('integration_secret_key_ok lists the shared secret keys of its day, the two CRM keys included', () => {

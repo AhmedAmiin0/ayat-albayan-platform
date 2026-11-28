@@ -36,7 +36,12 @@ describe('LiveWhatsappClient across drivers', () => {
       'http://127.0.0.1:4010/v21.0/p1/messages',
     ]);
     const headers = f.requests.map((r) => r.init.headers as Record<string, string>);
-    expect(headers.map((h) => h.authorization ?? h['x-api-key'])).toEqual(['Bearer token-a', 'key-a', 'key-b', 'Bearer token-a']);
+    expect(headers.map((h) => h.authorization ?? h['x-api-key'])).toEqual([
+      'Bearer token-a',
+      'key-a',
+      'key-b',
+      'Bearer token-a',
+    ]);
     expect(headers[1]).not.toHaveProperty('authorization');
   });
 

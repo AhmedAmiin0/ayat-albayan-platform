@@ -7,7 +7,10 @@ import {
   TeacherShell,
 } from '@/components/shell/nav/SectionShells/SectionShells';
 
-interface Shell { nav?: ReactNode; topNav?: ReactNode }
+interface Shell {
+  nav?: ReactNode;
+  topNav?: ReactNode;
+}
 const inboxRealtime = vi.hoisted(() => vi.fn<(enabled: boolean) => void>());
 const appShell = vi.hoisted(() => vi.fn((props: Shell) => <div>{props.nav ?? props.topNav}</div>));
 const perms = vi.hoisted(() => ({ loaded: false }));

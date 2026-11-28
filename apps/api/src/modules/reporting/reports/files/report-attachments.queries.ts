@@ -14,7 +14,11 @@ interface NewAttachment {
   created_by: string | null;
 }
 
-interface PdfNameInput { code: string; startsAt: Date; tz: string }
+interface PdfNameInput {
+  code: string;
+  startsAt: Date;
+  tz: string;
+}
 
 /** report_attachments rows (R-REP-02); the objects live in the report-attachments bucket. */
 @Injectable()

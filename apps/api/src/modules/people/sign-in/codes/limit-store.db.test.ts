@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest';
 import type { Db } from '@/common/db/db.module';
 import { bucketDigest, DbLimitStore } from './limit-store.db';
 
-interface Answer { data: unknown; error: { message: string } | null }
+interface Answer {
+  data: unknown;
+  error: { message: string } | null;
+}
 
 function fakeDb(answer: Answer) {
   const calls: { fn: string; args: unknown }[] = [];

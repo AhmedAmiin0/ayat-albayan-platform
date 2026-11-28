@@ -60,7 +60,9 @@ describe('CommissionLedger (R-ASST-02, R-ASST-05)', () => {
 
   it('shows the void reason on a voided row and offers «إلغاء العمولة» only on earned ones', async () => {
     renderLedger();
-    expect(await screen.findByText((t.assistants.ledger.voidedWhy.replace('{reason}', 'دُفع بالخطأ')))).toBeTruthy();
+    expect(
+      await screen.findByText(t.assistants.ledger.voidedWhy.replace('{reason}', 'دُفع بالخطأ')),
+    ).toBeTruthy();
     expect(screen.getAllByRole('button', { name: t.assistants.ledger.void })).toHaveLength(2);
   });
 

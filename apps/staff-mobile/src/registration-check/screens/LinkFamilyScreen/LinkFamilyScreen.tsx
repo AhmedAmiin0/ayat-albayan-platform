@@ -32,9 +32,7 @@ import {
 } from '@/registration-check/lib/registration-check';
 
 /** The chat's number and its lead (ThreadView.lead_id), from the chat's «⋮» menu. */
-type ParamKey =
-  | 'phone'
-  | 'leadId';
+type ParamKey = 'phone' | 'leadId';
 
 type Params = Partial<Record<ParamKey, string>>;
 

@@ -1,7 +1,12 @@
 import { PAYMENT_KINDS, PAYMENT_METHODS, type PaymentKind, type PaymentMethod } from '@ab/catalog';
 import { PAYMENT_SORT_KEYS } from '@ab/money';
 import { parsePage } from '@/features/finance/subscriptions';
-import { parseFilterSearch, parseSortSearch, type SortDir, type SortSearch } from '@/lib/list/list-search';
+import {
+  parseFilterSearch,
+  parseSortSearch,
+  type SortDir,
+  type SortSearch,
+} from '@/lib/list/list-search';
 import type { PaymentFilters } from './api';
 
 // URL state of /admin/payments: the bar's student/range/kind, the table's sort and method filter.

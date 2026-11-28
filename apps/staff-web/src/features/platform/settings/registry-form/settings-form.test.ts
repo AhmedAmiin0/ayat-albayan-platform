@@ -89,10 +89,10 @@ describe('settings form (generated from the settings registry)', () => {
       late_cancel_hours: 6,
       join_closes_after_min: 30,
     });
-    expect([
-      form.lateCancelHoursOn,
-      form.lateCancelHours,
-      form.joinClosesAfterMin,
-    ]).toEqual([true, '6', '30']);
+    expect([form.lateCancelHoursOn, form.lateCancelHours, form.joinClosesAfterMin]).toEqual([
+      true,
+      '6',
+      '30',
+    ]);
   });
 });

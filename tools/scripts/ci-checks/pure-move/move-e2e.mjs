@@ -11,7 +11,8 @@ import { pathToFileURL } from 'node:url';
 import { parseNameStatus } from './git.mjs';
 
 const MAP = /^refactor\/moves\/[^/]+\.json$/;
-const STARTUP = /^(e2e\/|\.github\/)|(^|\/)([^/]+\.config\.[cm]?[jt]s|tsconfig[^/]*\.json|routeTree\.gen\.ts)$/;
+const STARTUP =
+  /^(e2e\/|\.github\/)|(^|\/)([^/]+\.config\.[cm]?[jt]s|tsconfig[^/]*\.json|routeTree\.gen\.ts)$/;
 const ROUTES = /^apps\/staff-web\/src\/routes\//;
 
 /** Map text → number of identifier renames (a `renames` that is not an object counts as one). */
@@ -26,9 +27,12 @@ export function moveVerdict(entries, readMap) {
   if (maps.length === 0) return { skip: false, reason: 'no move map in the diff' };
   for (const e of entries) {
     const files = [e.from, e.to];
-    if (files.some((f) => STARTUP.test(f))) return { skip: false, reason: `${e.to} is read when e2e starts` };
-    if (e.status.startsWith('R') && posix.basename(e.from) !== posix.basename(e.to)) return { skip: false, reason: `${e.from} changes its name` };
-    if (e.status.startsWith('R') && files.some((f) => ROUTES.test(f))) return { skip: false, reason: `route ${e.from} moves` };
+    if (files.some((f) => STARTUP.test(f)))
+      return { skip: false, reason: `${e.to} is read when e2e starts` };
+    if (e.status.startsWith('R') && posix.basename(e.from) !== posix.basename(e.to))
+      return { skip: false, reason: `${e.from} changes its name` };
+    if (e.status.startsWith('R') && files.some((f) => ROUTES.test(f)))
+      return { skip: false, reason: `route ${e.from} moves` };
   }
   const renames = maps.reduce((n, e) => n + renamesIn(readMap(e.to)), 0);
   if (renames > 0) return { skip: false, reason: `${renames} identifier rename(s)` };

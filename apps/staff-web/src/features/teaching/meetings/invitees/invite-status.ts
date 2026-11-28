@@ -34,7 +34,11 @@ export const copyPayload = (i: {
   invitation_text: string | null;
 }): string | null => (i.link === null ? null : (i.invitation_text ?? i.link));
 
-interface Row { kind: MeetingInviteeKind; display_name: string; status: MeetingInviteStatus }
+interface Row {
+  kind: MeetingInviteeKind;
+  display_name: string;
+  status: MeetingInviteStatus;
+}
 
 /** Never staff or a cancelled row; a typed phone for admin and sales only (the API answers 403). */
 export const mayResend = (i: Row, mayInvitePhones: boolean): boolean =>

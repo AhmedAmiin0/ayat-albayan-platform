@@ -75,6 +75,7 @@ export function statusValue(o: StatusOpts): object {
     s.conversation = { id: 'conv-966501234567', origin: { type: 'utility' } };
     s.pricing = { billable: true, pricing_model: 'PMP', category: 'utility' };
   }
-  if (o.status === 'failed') s.errors = [{ code: o.errorCode ?? 131026, title: 'Message undeliverable' }];
+  if (o.status === 'failed')
+    s.errors = [{ code: o.errorCode ?? 131026, title: 'Message undeliverable' }];
   return { statuses: [s] };
 }

@@ -51,7 +51,10 @@ export function TranslationEditor({ row, onClose, onDone }: TranslationEditorPro
     e.preventDefault();
     const changes = changesFor(row, drafts);
     if (Object.keys(problems).length > 0) return;
-    if (changes.length === 0) {  onClose();; return; }
+    if (changes.length === 0) {
+      onClose();
+      return;
+    }
     change.mutate(changes, { onSuccess: done(t.translations.saved) });
   };
   const restore = (locale: Locale) => () =>

@@ -65,7 +65,10 @@ function graphEnv(
   return metaEnv({ ids, token: v[k.access_token], appId: v[k.app_id] }, env);
 }
 
-interface Ids { phoneNumberId: string; wabaId: string }
+interface Ids {
+  phoneNumberId: string;
+  wabaId: string;
+}
 
 /** The drivers whose number config is not Graph ids + a credential. */
 const OWN_ENV: Partial<Record<string, (s: NumberSource, env: Env) => WhatsappEnv | null>> = {

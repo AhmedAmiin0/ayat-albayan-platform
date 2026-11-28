@@ -10,10 +10,26 @@ import { errorCode } from '../../support/core/db-error';
 // null-newest case would flake.
 
 const OLD_COLUMNS = [
-  'phone_e164', 'last_message_id', 'last_direction', 'last_body', 'last_template_key', 'last_status',
-  'last_media_mime', 'last_message_at', 'last_inbound_at', 'unread_count', 'lead_id', 'lead_name',
-  'lead_status', 'lead_source', 'guardian_id', 'guardian_name', 'guardian_tz', 'teacher_id',
-  'teacher_name', 'display_name',
+  'phone_e164',
+  'last_message_id',
+  'last_direction',
+  'last_body',
+  'last_template_key',
+  'last_status',
+  'last_media_mime',
+  'last_message_at',
+  'last_inbound_at',
+  'unread_count',
+  'lead_id',
+  'lead_name',
+  'lead_status',
+  'lead_source',
+  'guardian_id',
+  'guardian_name',
+  'guardian_tz',
+  'teacher_id',
+  'teacher_name',
+  'display_name',
 ];
 
 const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', errorCode);
@@ -41,7 +57,9 @@ async function lastLine(tx: Tx, phone: string): Promise<Line | undefined> {
 }
 
 test.describe('v_threads.last_inbound_line (migration 290, R-MSG-04)', () => {
-  test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
+  test.beforeEach(() =>
+    test.skip(test.info().project.name !== 'desktop', 'database only: one run'),
+  );
 
   test('history only (every line null) → null', async () => {
     await rolledBack(async (tx) => {
@@ -95,8 +113,16 @@ test.describe('v_threads.last_inbound_line (migration 290, R-MSG-04)', () => {
         select column_name from information_schema.columns
         where table_schema = 'public' and table_name = 'v_threads' order by ordinal_position`;
       const activity = ['last_family_read_at', 'last_activity_at'];
-      expect(cols.map((c) => c.column_name)).toEqual([...OLD_COLUMNS, 'last_inbound_line', 'last_chat_inbound_at', 'last_notifications_inbound_at', ...activity]);
-      const [type] = await tx<{ udt_name: string; is_nullable: string; column_default: string | null }[]>`
+      expect(cols.map((c) => c.column_name)).toEqual([
+        ...OLD_COLUMNS,
+        'last_inbound_line',
+        'last_chat_inbound_at',
+        'last_notifications_inbound_at',
+        ...activity,
+      ]);
+      const [type] = await tx<
+        { udt_name: string; is_nullable: string; column_default: string | null }[]
+      >`
         select udt_name, is_nullable, column_default from information_schema.columns
         where table_schema = 'public' and table_name = 'messages' and column_name = 'line'`;
       expect(type).toEqual({ udt_name: 'wa_line', is_nullable: 'YES', column_default: null });
@@ -107,12 +133,17 @@ test.describe('v_threads.last_inbound_line (migration 290, R-MSG-04)', () => {
     await rolledBack(async (tx) => {
       for (const role of ['anon', 'authenticated']) {
         await tx.unsafe(`set local role ${role}`);
-        expect([role, await code(tx, () => tx`select last_inbound_line from public.v_threads limit 1`)]).toEqual([role, '42501']);
+        expect([
+          role,
+          await code(tx, () => tx`select last_inbound_line from public.v_threads limit 1`),
+        ]).toEqual([role, '42501']);
         await tx`reset role`;
       }
       await tx`select set_config('request.jwt.claims', ${JSON.stringify({ role: 'service_role' })}, true)`;
       await tx`set local role service_role`;
-      expect(await code(tx, () => tx`select last_inbound_line from public.v_threads limit 1`)).toBe('ok');
+      expect(await code(tx, () => tx`select last_inbound_line from public.v_threads limit 1`)).toBe(
+        'ok',
+      );
       await tx`reset role`;
     });
   });

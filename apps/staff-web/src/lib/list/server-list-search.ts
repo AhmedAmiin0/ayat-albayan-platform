@@ -13,7 +13,10 @@ import {
 // A paged, server-sorted list's whole URL state (R-NFR-08): `page`, `sort`, `dir`, `f_<key>`.
 // Routes use `parseServerListSearch` as `validateSearch`; pages read `serverListState`.
 
-export type ServerListSearch = { page?: number; sort?: string; dir?: SortDir } & Record<`f_${string}`, string | undefined>;
+export type ServerListSearch = { page?: number; sort?: string; dir?: SortDir } & Record<
+  `f_${string}`,
+  string | undefined
+>;
 /** A route-search patch: undefined drops a key. */
 export type ServerListPatch = Record<string, string | number | undefined>;
 

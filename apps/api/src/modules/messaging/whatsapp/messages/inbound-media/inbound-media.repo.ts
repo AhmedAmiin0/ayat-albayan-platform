@@ -8,17 +8,24 @@ import type { CachedMedia, MediaMessage } from './inbound-media.types';
 
 export type { CachedMedia, MediaMessage, MediaNumber } from './inbound-media.types';
 
-const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, media_refusal, body, media_name, interactive_payload, created_at, line, hidden_at, number:wa_numbers(id, provider, purpose)';
+const COLUMNS =
+  'id, phone_e164, direction, media_id, media_mime, media_path, media_refusal, body, media_name, interactive_payload, created_at, line, hidden_at, number:wa_numbers(id, provider, purpose)';
 
 /** The filters `cached` adds (a select or an update on messages). */
-interface Filterable<Q> { eq(column: 'direction', value: string): Q; not(column: string, op: string, value: unknown): Q }
+interface Filterable<Q> {
+  eq(column: 'direction', value: string): Q;
+  not(column: string, op: string, value: unknown): Q;
+}
 
 /**
  * PostgREST `or`: exactly a PLAYABLE_MIMES base type, bare or with parameters («; codecs=opus»).
  * Not a bare prefix: `audio/mp4*` also matched audio/mp4a-latm, which the job skips and never
  * clears, so a run of them at the old end would stop every later purge.
  */
-export const PLAYABLE_FILTER = PLAYABLE_MIMES.flatMap((m) => [`media_mime.ilike.${m}`, `media_mime.ilike.${m};*`]).join(',');
+export const PLAYABLE_FILTER = PLAYABLE_MIMES.flatMap((m) => [
+  `media_mime.ilike.${m}`,
+  `media_mime.ilike.${m};*`,
+]).join(',');
 
 /**
  * DB touches of InboundMedia and of the chat's file picker (service role; the callers are
@@ -29,7 +36,11 @@ export class InboundMediaRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async message(id: string): Promise<MediaMessage | null> {
-    const { data, error } = await this.db.from('messages').select(COLUMNS).eq('id', id).maybeSingle();
+    const { data, error } = await this.db
+      .from('messages')
+      .select(COLUMNS)
+      .eq('id', id)
+      .maybeSingle();
     if (error) throw pgError(error);
     return data;
   }
@@ -57,7 +68,11 @@ export class InboundMediaRepo {
 
   /** Only where it is still empty: two admins opening the same file keep the first path. */
   async setPath(id: string, path: string): Promise<void> {
-    const { error } = await this.db.from('messages').update({ media_path: path }).eq('id', id).is('media_path', null);
+    const { error } = await this.db
+      .from('messages')
+      .update({ media_path: path })
+      .eq('id', id)
+      .is('media_path', null);
     if (error) throw pgError(error);
   }
 
@@ -102,7 +117,13 @@ export class InboundMediaRepo {
    */
   async clearPaths(ids: readonly string[], echoes = false): Promise<void> {
     if (!ids.length) return;
-    const { error } = await this.cached(this.db.from('messages').update({ media_path: null }).in('id', [...ids]), echoes);
+    const { error } = await this.cached(
+      this.db
+        .from('messages')
+        .update({ media_path: null })
+        .in('id', [...ids]),
+      echoes,
+    );
     if (error) throw pgError(error);
   }
 
@@ -112,6 +133,10 @@ export class InboundMediaRepo {
    */
   private cached<Q extends Filterable<Q>>(q: Q, echoes = false): Q {
     if (!echoes) return q.eq('direction', 'inbound').not('media_id', 'is', null);
-    return q.eq('direction', 'outbound').not('media_id', 'is', null).not('media_path', 'like', 'out/%').not('media_path', 'like', 'minio:out/%');
+    return q
+      .eq('direction', 'outbound')
+      .not('media_id', 'is', null)
+      .not('media_path', 'like', 'out/%')
+      .not('media_path', 'like', 'minio:out/%');
   }
 }

@@ -41,7 +41,12 @@ function setup(o: SetupOpts = {}) {
   );
   return { s, statuses, queries, listeners };
 }
-interface Audited { from: string; to: string; reason: string; actorId?: string | null }
+interface Audited {
+  from: string;
+  to: string;
+  reason: string;
+  actorId?: string | null;
+}
 const audit = ({ from, to, reason, actorId = 'a1' }: Audited) => [
   { studentId: 's1', from, to },
   { actorId, after: { via: 'trial', from, to, reason } },

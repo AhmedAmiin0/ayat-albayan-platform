@@ -55,7 +55,8 @@ export function pickOtaBase(runs) {
 }
 
 const familyRun = (action) => (r) =>
-  onDevelop(r) && new RegExp(`^mobile (${action}|both) family-preview$`).test(String(r.display_title));
+  onDevelop(r) &&
+  new RegExp(`^mobile (${action}|both) family-preview$`).test(String(r.display_title));
 const shaOf = (run) => (run && SHA.test(run.head_sha) ? run.head_sha : '');
 
 /** The family app's own bases: its newest green preview OTA and its newest green preview build. */

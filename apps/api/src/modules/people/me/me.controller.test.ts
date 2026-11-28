@@ -44,7 +44,12 @@ beforeAll(async () => {
 });
 afterAll(() => app.close());
 
-interface Call { method: 'PUT' | 'DELETE'; url: string; token?: string; body?: object }
+interface Call {
+  method: 'PUT' | 'DELETE';
+  url: string;
+  token?: string;
+  body?: object;
+}
 const call = ({ method, url, token = 'admin', body }: Call) =>
   app.inject({ method, url, headers: { authorization: `Bearer ${token}` }, payload: body });
 

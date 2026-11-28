@@ -2,7 +2,10 @@ import { Button, t } from '@ab/web-kit';
 import type { PayoutView } from '@/features/finance/payouts/api';
 import type { PayoutAction } from './payout-columns';
 
-interface Props { payout: PayoutView; onAction: (action: PayoutAction) => void }
+interface Props {
+  payout: PayoutView;
+  onAction: (action: PayoutAction) => void;
+}
 
 export function PayoutActions({ payout, onAction }: Props) {
   const btn = (

@@ -62,7 +62,10 @@ export interface PrefillContext extends TemplatePrefill {
  * What the thread already knows: the student's, the teacher's or the recipient's name (still
  * editable; shared with mobile).
  */
-export const prefillParams = (tpl: Pick<TemplateView, 'params'>, ctx: PrefillContext): ParamValues => prefillTemplateParams(tpl, ctx);
+export const prefillParams = (
+  tpl: Pick<TemplateView, 'params'>,
+  ctx: PrefillContext,
+): ParamValues => prefillTemplateParams(tpl, ctx);
 
 /** The picked lesson's values: its time in the recipient's tz, the names, the meeting code. */
 export const lessonValues = (

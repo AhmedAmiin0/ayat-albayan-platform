@@ -1,10 +1,7 @@
 import { waIdToE164, type CallEvent } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { z } from 'zod';
-import type {
-  CallPermissionReplyEvent,
-  CallWebhookEvent,
-} from '@/modules/messaging/webhook';
+import type { CallPermissionReplyEvent, CallWebhookEvent } from '@/modules/messaging/webhook';
 import { CallsGate } from '@/modules/messaging/calls/access/calls-gate';
 import { callingLine, type CallingLine } from '@/modules/messaging/calls/kapso/calling-line';
 import type { CallRow } from '@/modules/messaging/calls/store/call-row';

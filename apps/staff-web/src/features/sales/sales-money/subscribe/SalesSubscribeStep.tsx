@@ -79,7 +79,10 @@ export function SalesSubscribeStep(props: SalesSubscribeStepProps) {
     const custom = price.check();
     if (!checked.ok || !custom) return;
     // The link never carries the chat's phone: online is for her own children only.
-    if (online) {  pay.submit({ ...checked.body, ...teacher.body });; return; }
+    if (online) {
+      pay.submit({ ...checked.body, ...teacher.body });
+      return;
+    }
     const body = { studentId, pricing, ...custom, ...checked.body, ...teacher.body, ...bind };
     save.mutate({ ...body, clientRequestId: requestId(body) });
   };

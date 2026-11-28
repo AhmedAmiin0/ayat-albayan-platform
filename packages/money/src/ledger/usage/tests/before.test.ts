@@ -7,9 +7,23 @@ let seq = 0;
 function done(day: string): PackageLesson {
   seq += 1;
   const lessonId = `b${String(seq).padStart(3, '0')}`;
-  return { lessonId, startsAt: `${day}T07:00:00Z`, localDate: day, status: 'completed', chargeable: true, trial: false, makeup: false };
+  return {
+    lessonId,
+    startsAt: `${day}T07:00:00Z`,
+    localDate: day,
+    status: 'completed',
+    chargeable: true,
+    trial: false,
+    makeup: false,
+  };
 }
-const A = { id: 'A', lessonsTotal: 8, lessonsUsedBefore: 1, startsOn: '2026-10-27', createdAt: '2026-10-27T00:00:00Z' };
+const A = {
+  id: 'A',
+  lessonsTotal: 8,
+  lessonsUsedBefore: 1,
+  startsOn: '2026-10-27',
+  createdAt: '2026-10-27T00:00:00Z',
+};
 const B = { id: 'B', lessonsTotal: 8, startsOn: '2026-11-20', createdAt: '2026-11-20T00:00:00Z' };
 
 describe('subscriptionBalances with lessonsUsedBefore', () => {

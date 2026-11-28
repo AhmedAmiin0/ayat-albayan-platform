@@ -13,7 +13,11 @@ const RECEIPT_DELAY_MS = 15 * MINUTE;
 /** … they are cleared after 24 hours. */
 const RECEIPT_TTL_MS = 24 * 60 * MINUTE;
 
-interface ReceiptsSummary { rows: number; settled: number; pruned: number }
+interface ReceiptsSummary {
+  rows: number;
+  settled: number;
+  pruned: number;
+}
 
 /**
  * R-MOB-01 push receipts (completes common/push, which prunes on ticket errors): every 15 minutes,

@@ -18,10 +18,7 @@ import { useSalesFamily } from '@/sales-subscribe/lib/family';
 import { SalesSubscribeForm } from '@/sales-subscribe/components/SalesSubscribeForm';
 
 /** A zone in the link is ignored (academy day rules); `renew` '1' opens the last package. */
-type ParamKey =
-  | 'phone'
-  | 'studentId'
-  | 'renew';
+type ParamKey = 'phone' | 'studentId' | 'renew';
 
 type Params = Partial<Record<ParamKey, string>>;
 

@@ -17,7 +17,8 @@ export function draftPicks(d: PickFields): string[] {
 }
 
 /** The draft fields for these picks: the earliest becomes `startsAt` (docs/27 E5). */
-export const withPicks: (picks: readonly string[]) => Pick<BookingDraft, 'startsAt' | 'extra'> = bookingPicksFrom;
+export const withPicks: (picks: readonly string[]) => Pick<BookingDraft, 'startsAt' | 'extra'> =
+  bookingPicksFrom;
 
 /** Tapping a slot: a package toggles it among the picks, else it replaces the one lesson. */
 export function pickPatch(d: ZonedPicks, slot: string): Pick<BookingDraft, 'startsAt' | 'extra'> {

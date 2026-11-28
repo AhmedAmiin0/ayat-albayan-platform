@@ -13,4 +13,5 @@ export const GOOGLE_ERROR_KEYS = [
 ] as const;
 export type GoogleErrorKey = (typeof GOOGLE_ERROR_KEYS)[number] | 'other';
 
-export const googleErrorKey = (code: string): GoogleErrorKey => GOOGLE_ERROR_KEYS.find((k) => k === code) ?? 'other';
+export const googleErrorKey = (code: string): GoogleErrorKey =>
+  GOOGLE_ERROR_KEYS.find((k) => k === code) ?? 'other';

@@ -79,7 +79,11 @@ describe('AssistantDetailPage', () => {
     await screen.findByText('سهيلة');
     expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions?assistantId=a1');
     await vi.waitFor(() =>
-      expect(apiFetch.mock.calls.some(([p]) => String(p).startsWith("/assistant-pay/statements?assistantId=a1&month="))).toBe(true),
+      expect(
+        apiFetch.mock.calls.some(([p]) =>
+          String(p).startsWith('/assistant-pay/statements?assistantId=a1&month='),
+        ),
+      ).toBe(true),
     );
   });
 

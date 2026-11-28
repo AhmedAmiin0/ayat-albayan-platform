@@ -13,7 +13,10 @@ export const PDF_RUN = 5;
  */
 const PDF_PAGES_MAX = 100_000;
 
-export interface PageRange { first: number; last: number }
+export interface PageRange {
+  first: number;
+  last: number;
+}
 
 /**
  * Page 1 alone (the bubble's thumb), else the run of PDF_RUN it falls in, cut at the page count and

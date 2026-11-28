@@ -17,7 +17,10 @@ type Asking = 'family-on' | 'family-off' | 'essential-off' | null;
 
 /** A switch press asks first: family ON says whom it reaches; essential OFF is typed; family OFF
  * is a plain dialog. */
-export function askFor(entry: Pick<NotificationEntryView, 'audience' | 'essential'>, on: boolean): Asking {
+export function askFor(
+  entry: Pick<NotificationEntryView, 'audience' | 'essential'>,
+  on: boolean,
+): Asking {
   if (!on && entry.essential) return 'essential-off';
   if (!isFamilyFacing(entry)) return null;
   return on ? 'family-on' : 'family-off';

@@ -4,7 +4,11 @@ import type { SetField, TeacherForm } from './teacher-form';
 import { TeacherMeetingModeField } from './TeacherMeetingModeField';
 import type { Teacher } from '@ab/shared';
 
-interface Props { form: TeacherForm; set: SetField; teacher?: Teacher | null }
+interface Props {
+  form: TeacherForm;
+  set: SetField;
+  teacher?: Teacher | null;
+}
 
 /** R-TCH-01: phone and link are LTR islands. */
 export function TeacherFormFields({ form, set, teacher = null }: Props) {

@@ -6,7 +6,11 @@ import type { Bind } from '@/features/sales/sales-money/api';
 import { salesErrorText } from '@/features/sales/sales-money/errors';
 import { useSalesQuote } from './use-sales-quote';
 
-interface Props { studentId: string; pricing: SubscriptionPricing; bind?: Bind | undefined }
+interface Props {
+  studentId: string;
+  pricing: SubscriptionPricing;
+  bind?: Bind | undefined;
+}
 
 /** The price the create will store, in the family's currency; shown, never typed. */
 export function SalesQuotePreview({ studentId, pricing, bind }: Props) {

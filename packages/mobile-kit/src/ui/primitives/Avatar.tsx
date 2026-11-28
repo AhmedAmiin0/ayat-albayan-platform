@@ -49,7 +49,17 @@ const frameOf = (theme: Theme, d: number) => ({
 
 function PersonGlyph({ size, color }: { size: number; color: string }) {
   return (
-    <Svg testID="avatar-glyph" viewBox="0 0 20 20" width={size} height={size} fill="none" stroke={color} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+    <Svg
+      testID="avatar-glyph"
+      viewBox="0 0 20 20"
+      width={size}
+      height={size}
+      fill="none"
+      stroke={color}
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <Path d={PERSON} />
     </Svg>
   );
@@ -86,12 +96,21 @@ function Letters({ name, size, theme }: { name: string; size: AvatarSize; theme:
  * way, so a photo that loads or fails never moves the row; a photo that fails falls back to the
  * initials, a name with no letter shows the person glyph.
  */
-export const Avatar = memo(function Avatar({ name, id, src, size = 'md', decorative = false }: AvatarProps) {
+export const Avatar = memo(function Avatar({
+  name,
+  id,
+  src,
+  size = 'md',
+  decorative = false,
+}: AvatarProps) {
   const theme = useTheme();
   const [failed, setFailed] = useState<string | null>(null);
   const frame = frameOf(theme, DIAMETER[size]);
   const a11y = decorative
-    ? { accessibilityElementsHidden: true, importantForAccessibility: 'no-hide-descendants' as const }
+    ? {
+        accessibilityElementsHidden: true,
+        importantForAccessibility: 'no-hide-descendants' as const,
+      }
     : { accessible: true, accessibilityRole: 'image' as const, accessibilityLabel: name };
   if (src && failed !== src) {
     return (
@@ -109,7 +128,14 @@ export const Avatar = memo(function Avatar({ name, id, src, size = 'md', decorat
   const tones = avatarTones[theme.name];
   const background = tones[avatarTone(id || name)] ?? tones[0];
   return (
-    <View {...a11y} testID="avatar-initials" style={[frame, { backgroundColor: background, alignItems: 'center', justifyContent: 'center' }]}>
+    <View
+      {...a11y}
+      testID="avatar-initials"
+      style={[
+        frame,
+        { backgroundColor: background, alignItems: 'center', justifyContent: 'center' },
+      ]}
+    >
       <Letters name={name} size={size} theme={theme} />
     </View>
   );

@@ -7,7 +7,11 @@ export interface FakeResult {
   error?: { code?: string; message: string } | null;
   count?: number | null;
 }
-interface FakeCall { table: string; method: string; args: unknown[] }
+interface FakeCall {
+  table: string;
+  method: string;
+  args: unknown[];
+}
 
 /**
  * Every builder method is recorded and chains; awaiting a query on `table` resolves to the

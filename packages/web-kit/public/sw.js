@@ -9,7 +9,9 @@ const ICON = '/icon-192.png';
 function safeUrl(url) {
   try {
     const target = new URL(typeof url === 'string' ? url : '/', self.location.origin);
-    return target.origin === self.location.origin ? target.href : new URL('/', self.location.origin).href;
+    return target.origin === self.location.origin
+      ? target.href
+      : new URL('/', self.location.origin).href;
   } catch {
     return new URL('/', self.location.origin).href;
   }

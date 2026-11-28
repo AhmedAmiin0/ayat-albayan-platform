@@ -11,7 +11,12 @@ import { AddCategory } from './AddCategory';
 import { expenseBody, expenseForm, type ExpenseForm } from './expense-form';
 import { ExpenseFields } from './ExpenseFields';
 
-interface Props { month: string; expense: ExpenseView | null; onClose: () => void; onSaved: () => void }
+interface Props {
+  month: string;
+  expense: ExpenseView | null;
+  onClose: () => void;
+  onSaved: () => void;
+}
 
 /** Add or edit an expense (R-RPT-02). */
 export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {

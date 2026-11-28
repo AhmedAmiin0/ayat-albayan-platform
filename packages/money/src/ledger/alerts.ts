@@ -18,7 +18,8 @@ export function alertFor(input: {
   threshold: number;
   status?: SubscriptionStatus;
 }): BalanceAlert | null {
-  if (input.status === 'paused' || input.status === 'trial' || input.status === 'cancelled') return null;
+  if (input.status === 'paused' || input.status === 'trial' || input.status === 'cancelled')
+    return null;
   if (input.remaining <= 0) return 'unpaid';
   if (input.remaining <= input.threshold) return 'renewal';
   return null;

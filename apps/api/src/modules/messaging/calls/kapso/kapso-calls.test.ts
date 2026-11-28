@@ -53,17 +53,37 @@ describe('KapsoCallsApi (the stub-only fake fetch: no hosted call)', () => {
     await kapso.accept(LINE, { waCallId: 'w1', sdp: 'v=0 a', ref: 'c1' });
     await kapso.reject(LINE, 'w2');
     await kapso.terminate(LINE, 'w3');
-    expect([0, 1, 2, 3].map((i) => bodyOf(fetch, i).action)).toEqual(['pre_accept', 'accept', 'reject', 'terminate']);
-    expect(bodyOf(fetch, 1)).toMatchObject({ call_id: 'w1', session: { sdp_type: 'answer', sdp: 'v=0 a' }, biz_opaque_callback_data: 'c1' });
+    expect([0, 1, 2, 3].map((i) => bodyOf(fetch, i).action)).toEqual([
+      'pre_accept',
+      'accept',
+      'reject',
+      'terminate',
+    ]);
+    expect(bodyOf(fetch, 1)).toMatchObject({
+      call_id: 'w1',
+      session: { sdp_type: 'answer', sdp: 'v=0 a' },
+      biz_opaque_callback_data: 'c1',
+    });
   });
 
   it('permission: start_call / send_call_permission_request, expiry as UTC', async () => {
-    const { fetch, kapso } = api(json({
-      permission: { status: 'temporary', expiration_time: 1793000000 },
-      actions: [{ action_name: 'start_call', can_perform_action: true }, { action_name: 'send_call_permission_request', can_perform_action: false }],
-    }));
-    await expect(kapso.permission(LINE, '+201001234567')).resolves.toEqual({ canCall: true, canRequest: false, expiresAt: new Date(1793000000 * 1000).toISOString() });
-    expect(fetch.mock.calls[0]?.[0] ?? '').toContain('chat-pn/call_permissions?user_wa_id=201001234567');
+    const { fetch, kapso } = api(
+      json({
+        permission: { status: 'temporary', expiration_time: 1793000000 },
+        actions: [
+          { action_name: 'start_call', can_perform_action: true },
+          { action_name: 'send_call_permission_request', can_perform_action: false },
+        ],
+      }),
+    );
+    await expect(kapso.permission(LINE, '+201001234567')).resolves.toEqual({
+      canCall: true,
+      canRequest: false,
+      expiresAt: new Date(1793000000 * 1000).toISOString(),
+    });
+    expect(fetch.mock.calls[0]?.[0] ?? '').toContain(
+      'chat-pn/call_permissions?user_wa_id=201001234567',
+    );
   });
 
   it("Meta's error body becomes a WaError with its code (131042 billing)", async () => {

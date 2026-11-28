@@ -36,7 +36,11 @@ describe('settings-scope (a page sends only what it changed)', () => {
 
   it('afterSave: what was sent becomes the baseline of the written keys; a later edit stays dirty', () => {
     const sentForm = { ...base, bookingHorizonWeeks: '9' };
-    const pair = afterSave({ form: { ...sentForm, bookingHorizonWeeks: '10' }, initial: base }, ['booking_horizon_weeks'], sentForm);
+    const pair = afterSave(
+      { form: { ...sentForm, bookingHorizonWeeks: '10' }, initial: base },
+      ['booking_horizon_weeks'],
+      sentForm,
+    );
     expect(pair.initial.bookingHorizonWeeks).toBe('9');
     expect(pair.form.bookingHorizonWeeks).toBe('10');
   });

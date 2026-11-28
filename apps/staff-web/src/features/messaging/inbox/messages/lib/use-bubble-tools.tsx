@@ -6,7 +6,10 @@ import { errorCode } from '@/features/teaching/schedule';
 import { threadFileDownload } from '@/features/messaging/inbox/api/api';
 import { copyText, saveUrl } from './save-file';
 
-interface Said { text: string; tone: 'info' | 'error' }
+interface Said {
+  text: string;
+  tone: 'info' | 'error';
+}
 
 export interface BubbleTools {
   copy: (m: MessageView) => void;

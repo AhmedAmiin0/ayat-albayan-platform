@@ -107,7 +107,11 @@ test('the app logs survive a deploy: journald, tagged by container, readable by 
 });
 
 test('the shared cache: every app process on ayat-redis, never published, started before the roll', () => {
-  for (const name of APPS) assert.equal(services[name].environment.REDIS_URL, 'redis://ayat-redis:6379', name);
+  for (const name of APPS)
+    assert.equal(services[name].environment.REDIS_URL, 'redis://ayat-redis:6379', name);
   assert.equal(services['ayat-redis'].ports, undefined);
-  assert.ok(roll.search(/^dc up -d --no-deps ayat-redis$/m) < roll.search(/^\s+roll ayat-/m), 'Redis before the first roll');
+  assert.ok(
+    roll.search(/^dc up -d --no-deps ayat-redis$/m) < roll.search(/^\s+roll ayat-/m),
+    'Redis before the first roll',
+  );
 });

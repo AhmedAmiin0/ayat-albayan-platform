@@ -19,14 +19,16 @@ function env(name: string): string {
  */
 export async function resetDb(): Promise<void> {
   const url = env('DATABASE_URL');
-  if (!/127\.0\.0\.1|localhost/.test(url)) throw new Error(`refusing to reset non-local DB: ${url}`);
+  if (!/127\.0\.0\.1|localhost/.test(url))
+    throw new Error(`refusing to reset non-local DB: ${url}`);
   const sql = postgres(url, { max: 1, onnotice: () => undefined });
   try {
     const rows = await sql<{ t: string }[]>`
       select format('%I.%I', schemaname, tablename) as t from pg_tables
       where schemaname = 'public'
         and tablename not in ('message_templates', 'expense_categories', 'roles', 'role_permissions', 'wa_numbers')`;
-    if (rows.length) await sql.unsafe(`truncate ${rows.map((r) => r.t).join(', ')} restart identity cascade`);
+    if (rows.length)
+      await sql.unsafe(`truncate ${rows.map((r) => r.t).join(', ')} restart identity cascade`);
     await sql`delete from public.wa_numbers`;
     await sql`delete from auth.users`;
     await sql`delete from public.roles where not is_system`;

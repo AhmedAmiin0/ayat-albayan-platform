@@ -78,7 +78,10 @@ describe('/me/notifications (R-NOT-01)', () => {
   });
 
   it('marks the given ids or all, always for the caller only', async () => {
-    expect((await call({ method: 'POST', url: '/me/notifications/read', payload: { ids: [ID] } })).statusCode).toBe(204);
+    expect(
+      (await call({ method: 'POST', url: '/me/notifications/read', payload: { ids: [ID] } }))
+        .statusCode,
+    ).toBe(204);
     expect(q.readMine).toHaveBeenCalledWith(USERS.teacher?.id, [ID]);
     expect((await call({ method: 'POST', url: '/me/notifications/read' })).statusCode).toBe(204);
     expect(q.readMine).toHaveBeenLastCalledWith(USERS.teacher?.id, undefined);

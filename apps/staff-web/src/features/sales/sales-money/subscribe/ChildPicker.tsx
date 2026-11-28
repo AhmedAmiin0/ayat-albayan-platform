@@ -2,7 +2,11 @@ import type { SalesFamilyStudent } from '@ab/shared';
 import { Field, Select, t } from '@ab/web-kit';
 import { studentLabel } from '@/features/finance/subscriptions';
 
-interface Props { students: SalesFamilyStudent[]; value: string; onChange: (id: string) => void }
+interface Props {
+  students: SalesFamilyStudent[];
+  value: string;
+  onChange: (id: string) => void;
+}
 
 /** Only her students of this family (the API's family view). */
 export function ChildPicker({ students, value, onChange }: Props) {

@@ -5,7 +5,13 @@ import { DataTable } from '@/components/data-table/DataTable';
 import { TableBox } from '@/components/data-table/TableBox';
 import { Button, EmptyState, FormAlert, ListSkeleton, t } from '@ab/web-kit';
 import { currentMonth } from '@/features/finance/payouts';
-import { ASSISTANTS_KEY, approveStatement, generateStatement, statementReceiptUrl, statementsQuery } from '@/features/people/assistants/api';
+import {
+  ASSISTANTS_KEY,
+  approveStatement,
+  generateStatement,
+  statementReceiptUrl,
+  statementsQuery,
+} from '@/features/people/assistants/api';
 import { FilterBar } from '@/features/people/assistants/students/FilterBar';
 import { generateTargets } from './generate-targets';
 import { statementColumns } from './statement-columns';

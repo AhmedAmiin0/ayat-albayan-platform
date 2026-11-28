@@ -49,4 +49,5 @@ export function commissionKindOf(
   return subs.some((o) => o.id !== id && counts(o) && before(o, sub)) ? 'renewal' : 'first';
 }
 
-export const isCommissionKind = (v: string): v is AssistantCommissionKind => v === 'first' || v === 'renewal';
+export const isCommissionKind = (v: string): v is AssistantCommissionKind =>
+  v === 'first' || v === 'renewal';

@@ -11,7 +11,10 @@ import { PDF_SOCKET, readCapped } from './pdf-wire';
 // no socket (local dev, tests, CI) is PdfToolError('unavailable'), a 503 pdf_unavailable.
 
 /** `socket`: tests listen on a temp path; `timeoutMs`: tests wait less. */
-interface SandboxOpts { socket?: string; timeoutMs?: number }
+interface SandboxOpts {
+  socket?: string;
+  timeoutMs?: number;
+}
 
 /**
  * Whole call, queue included: the other copy's 20 s render ahead of ours, then our own 20 s, plus
@@ -99,7 +102,12 @@ const toolError = (e: unknown): PdfToolError => {
   return new PdfToolError(unreachable ? 'unavailable' : 'failed');
 };
 
-interface Post { socketPath: string; path: string; bytes: Uint8Array; timeoutMs: number }
+interface Post {
+  socketPath: string;
+  path: string;
+  bytes: Uint8Array;
+  timeoutMs: number;
+}
 
 /**
  * One POST on a fresh connection, aborted as a whole after `timeoutMs` (a slow trickle cannot hold

@@ -12,7 +12,11 @@ import {
   mediaExpired,
   servable,
 } from './inbound-media.gate';
-import { keepingRefusal, rejectStored, withinCap } from '@/modules/messaging/whatsapp/messages/media-refusal/media-refusal';
+import {
+  keepingRefusal,
+  rejectStored,
+  withinCap,
+} from '@/modules/messaging/whatsapp/messages/media-refusal/media-refusal';
 import { mediaSource } from '@/modules/messaging/whatsapp/numbers/media-client';
 import { NumberClients } from '@/modules/messaging/whatsapp/numbers/number-clients';
 import { CRM_NO_MEDIA, mediaHttpError } from '@/modules/messaging/whatsapp/drivers/media-errors';
@@ -26,7 +30,11 @@ import { httpError } from '@/common/http/errors';
 
 export { CRM_NO_MEDIA };
 
-export interface InboundFile { bucket: typeof BUCKETS.waMedia; path: string; mime: string }
+export interface InboundFile {
+  bucket: typeof BUCKETS.waMedia;
+  path: string;
+  mime: string;
+}
 
 /** «image/jpeg; codecs=…» → «image/jpeg» (shared). */
 export { baseMime };
@@ -104,7 +112,8 @@ export class InboundMedia {
 
   private fetch(msg: MediaMessage): Promise<{ bytes: Uint8Array }> {
     if (fromCrmStorage(msg) && this.crm) return this.crm.download(msg);
-    if (mediaExpired(msg, new Date()) || !msg.media_id) throw httpError(HttpStatus.GONE, 'media_expired');
+    if (mediaExpired(msg, new Date()) || !msg.media_id)
+      throw httpError(HttpStatus.GONE, 'media_expired');
     return this.download(msg, msg.media_id);
   }
 

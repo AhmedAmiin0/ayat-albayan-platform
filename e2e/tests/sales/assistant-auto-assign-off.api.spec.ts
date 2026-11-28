@@ -1,8 +1,23 @@
 import { expect, test } from '@playwright/test';
 import type { BookingResult } from '@ab/schedule';
-import { call, family, freshPhone, leadOf, makeAssistant, trialBody, type Assistant } from '../../support/sales/assistant-api';
+import {
+  call,
+  family,
+  freshPhone,
+  leadOf,
+  makeAssistant,
+  trialBody,
+  type Assistant,
+} from '../../support/sales/assistant-api';
 import { seedLead, setSetting } from '../../support/core/messages';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../../support/core/schedule';
+import {
+  addDays,
+  nextWeekSaturday,
+  resetAbrar,
+  riyadh,
+  setAvailability,
+  withSql,
+} from '../../support/core/schedule';
 
 // settings.sales_auto_assign OFF (docs/16 row 13), through the REAL API and database: a salesperson
 // registers from any chat, a lead of another salesperson or of nobody (new leads stay unassigned
@@ -15,7 +30,8 @@ const need = <T>(v: T | undefined): T => {
   return v;
 };
 
-test.describe.serial('sales auto-assign OFF: registration without the ownership check (API + DB)', () => {
+test.describe
+  .serial('sales auto-assign OFF: registration without the ownership check (API + DB)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'API only: one run'));
   let teacher = '';
   let a: Assistant | undefined;
@@ -32,16 +48,27 @@ test.describe.serial('sales auto-assign OFF: registration without the ownership 
 
   const facts = (student: string, lead: string) =>
     withSql(async (sql) => {
-      const [s] = await sql<{ brought_by: string | null }[]>`select brought_by from public.students where id = ${student}`;
-      const [l] = await sql<{ assigned_to: string | null }[]>`select assigned_to from public.leads where id = ${lead}`;
+      const [s] = await sql<
+        { brought_by: string | null }[]
+      >`select brought_by from public.students where id = ${student}`;
+      const [l] = await sql<
+        { assigned_to: string | null }[]
+      >`select assigned_to from public.leads where id = ${lead}`;
       return { broughtBy: s?.brought_by, assignedTo: l?.assigned_to };
     });
 
-  test('A registers a student from a lead assigned to C: 201, credited to A, the lead stays assigned to C', async ({ request }) => {
+  test('A registers a student from a lead assigned to C: 201, credited to A, the lead stays assigned to C', async ({
+    request,
+  }) => {
     const me = need(a);
     const phone = freshPhone();
     const lead = await leadOf(need(c).id, phone);
-    const res = await call<BookingResult>(request, { token: me.token, method: 'POST', path: '/sales/booking', body: trialBody({ teacherId: teacher, leadId: lead, phone, name: 'سارة', time: '17:00' }) });
+    const res = await call<BookingResult>(request, {
+      token: me.token,
+      method: 'POST',
+      path: '/sales/booking',
+      body: trialBody({ teacherId: teacher, leadId: lead, phone, name: 'سارة', time: '17:00' }),
+    });
     expect(res.status, JSON.stringify(res.body)).toBe(201);
     expect(await facts(need(res.body.student_ids[0]), lead)).toEqual({
       broughtBy: me.id,
@@ -49,11 +76,18 @@ test.describe.serial('sales auto-assign OFF: registration without the ownership 
     });
   });
 
-  test('A registers a student from an unassigned lead (the normal case while OFF): 201, credited to A, still unassigned', async ({ request }) => {
+  test('A registers a student from an unassigned lead (the normal case while OFF): 201, credited to A, still unassigned', async ({
+    request,
+  }) => {
     const me = need(a);
     const phone = freshPhone();
     const lead = await seedLead({ phone });
-    const res = await call<BookingResult>(request, { token: me.token, method: 'POST', path: '/sales/booking', body: trialBody({ teacherId: teacher, leadId: lead, phone, name: 'ريم', time: '18:00' }) });
+    const res = await call<BookingResult>(request, {
+      token: me.token,
+      method: 'POST',
+      path: '/sales/booking',
+      body: trialBody({ teacherId: teacher, leadId: lead, phone, name: 'ريم', time: '18:00' }),
+    });
     expect(res.status, JSON.stringify(res.body)).toBe(201);
     expect(await facts(need(res.body.student_ids[0]), lead)).toEqual({
       broughtBy: me.id,
@@ -61,23 +95,48 @@ test.describe.serial('sales auto-assign OFF: registration without the ownership 
     });
   });
 
-  test('the wizard reads may name a student brought by C: teachers and slots answer 200 to A', async ({ request }) => {
+  test('the wizard reads may name a student brought by C: teachers and slots answer 200 to A', async ({
+    request,
+  }) => {
     const theirs = await family(need(c).id, 'لمى');
     const token = need(a).token;
     const day = nextWeekSaturday();
     const range = `from=${riyadh(day, '00:00').toISOString()}&to=${riyadh(addDays(day, 1), '00:00').toISOString()}`;
-    const teachers = await call(request, { token, method: 'GET', path: `/sales/booking/teachers?studentId=${theirs.student}` });
-    const slots = await call(request, { token, method: 'GET', path: `/sales/booking/slots?teacherId=${teacher}&${range}&durationMin=30&studentIds=${theirs.student}` });
+    const teachers = await call(request, {
+      token,
+      method: 'GET',
+      path: `/sales/booking/teachers?studentId=${theirs.student}`,
+    });
+    const slots = await call(request, {
+      token,
+      method: 'GET',
+      path: `/sales/booking/slots?teacherId=${teacher}&${range}&durationMin=30&studentIds=${theirs.student}`,
+    });
     expect([teachers.status, slots.status]).toEqual([200, 200]);
   });
 
-  test('a package from a lead is not a course of her student (403 course_one_student), nothing booked', async ({ request }) => {
+  test('a package from a lead is not a course of her student (403 course_one_student), nothing booked', async ({
+    request,
+  }) => {
     const phone = freshPhone();
     const lead = await seedLead({ phone });
-    const body = { ...trialBody({ teacherId: teacher, leadId: lead, phone, name: 'هند', time: '19:00' }), package: '8' };
-    const res = await call(request, { token: need(a).token, method: 'POST', path: '/sales/booking', body });
+    const body = {
+      ...trialBody({ teacherId: teacher, leadId: lead, phone, name: 'هند', time: '19:00' }),
+      package: '8',
+    };
+    const res = await call(request, {
+      token: need(a).token,
+      method: 'POST',
+      path: '/sales/booking',
+      body,
+    });
     expect([res.status, res.body]).toMatchObject([403, { code: 'course_one_student' }]);
-    const [row] = await withSql((sql) => sql<{ n: number }[]>`select count(*)::int as n from public.students s join public.guardians g on g.id = s.guardian_id where g.phone_e164 = ${phone}`);
+    const [row] = await withSql(
+      (sql) =>
+        sql<
+          { n: number }[]
+        >`select count(*)::int as n from public.students s join public.guardians g on g.id = s.guardian_id where g.phone_e164 = ${phone}`,
+    );
     expect(row?.n).toBe(0);
   });
 });

@@ -54,7 +54,9 @@ export function expenseCsv(rows: readonly ExpenseIn[]): Cell[][] {
   ];
 }
 
-interface Named { teacher: { display_name_ar: string } | null }
+interface Named {
+  teacher: { display_name_ar: string } | null;
+}
 export type SessionIn = Named & {
   starts_at: string;
   minutes: number;

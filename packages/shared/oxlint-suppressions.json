@@ -10,9 +10,6 @@
     },
     "ab/module-boundaries": {
       "count": 1
-    },
-    "typescript/consistent-type-definitions": {
-      "count": 1
     }
   },
   "src/messaging/chat/chat-lists.ts": {
@@ -140,11 +137,6 @@
       "count": 2
     }
   },
-  "src/notifications/catalogue/catalogue-state/tests/rules.test.ts": {
-    "stylistic/max-len": {
-      "count": 6
-    }
-  },
   "src/notifications/catalogue/catalogue.types.ts": {
     "ab/module-boundaries": {
       "count": 1
@@ -254,11 +246,6 @@
       "count": 1
     }
   },
-  "src/sales/payment-link/schemas.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
   "src/sales/qualification-form.ts": {
     "no-nested-ternary": {
       "count": 1
@@ -317,11 +304,6 @@
   "src/settings/exports.test.ts": {
     "stylistic/max-len": {
       "count": 3
-    }
-  },
-  "src/settings/layout.test.ts": {
-    "stylistic/max-len": {
-      "count": 1
     }
   }
 }

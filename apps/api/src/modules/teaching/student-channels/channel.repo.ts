@@ -52,10 +52,7 @@ export class ChannelRepo {
   }
 
   /** CHANNEL_PAGE_SIZE + 1 messages older than `before` (all when absent), newest first. */
-  async page(input: {
-    channelId: string;
-    before?: string | undefined;
-  }): Promise<ChannelMessageRow[]> {
+  async page(input: { channelId: string; before?: string | undefined }): Promise<ChannelMessageRow[]> {
     let q = this.db.from('channel_messages').select(COLUMNS).eq('channel_id', input.channelId);
     if (input.before) q = q.lt('created_at', input.before);
     const { data, error } = await q.order('created_at', { ascending: false }).limit(CHANNEL_PAGE_SIZE + 1);
@@ -134,18 +131,13 @@ export class ChannelRepo {
     return data;
   }
 
-  /** Unread (messages of `countRoles`, the other side) and last message per channel of these students. */
-  async summaries(input: {
-    profileId: string;
-    studentIds: readonly string[];
-    countRoles: readonly ChannelSenderRole[];
-  }): Promise<ChannelSummaryRow[]> {
+  /**
+   * Unread (messages of `countRoles`, the other side) and last message per channel of these
+   * students.
+   */
+  async summaries(input: { profileId: string; studentIds: readonly string[]; countRoles: readonly ChannelSenderRole[] }): Promise<ChannelSummaryRow[]> {
     if (input.studentIds.length === 0) return [];
-    const args = {
-      p_profile: input.profileId,
-      p_student_ids: [...input.studentIds],
-      p_count_roles: [...input.countRoles],
-    };
+    const args = { p_profile: input.profileId, p_student_ids: [...input.studentIds], p_count_roles: [...input.countRoles] };
     const { data, error } = await this.db.rpc('channel_summaries', args);
     if (error) throw pgError(error);
     return data;

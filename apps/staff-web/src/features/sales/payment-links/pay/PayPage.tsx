@@ -17,7 +17,10 @@ const LINE: Record<Exclude<PayScreen, 'open'>, { text: string; tone: 'ok' | 'act
   cancelled: { text: P.cancelled, tone: 'act' },
 };
 
-interface Props { token: string; back: PayReturn }
+interface Props {
+  token: string;
+  back: PayReturn;
+}
 
 /** A wrong token (404 link_not_found) gets its own line; anything else the generic one. */
 const loadErrorText = (e: unknown): string =>

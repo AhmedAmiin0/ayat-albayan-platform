@@ -3,7 +3,11 @@ import type { PaymentMethod } from '@ab/catalog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { paidAtFor } from '@/features/finance/payments';
-import { ASSISTANTS_KEY, payStatement, uploadStatementReceipt } from '@/features/people/assistants/api';
+import {
+  ASSISTANTS_KEY,
+  payStatement,
+  uploadStatementReceipt,
+} from '@/features/people/assistants/api';
 
 export interface PayStatementInput {
   day: string;

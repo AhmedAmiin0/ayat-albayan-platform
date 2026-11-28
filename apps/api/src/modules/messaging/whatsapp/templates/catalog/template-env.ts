@@ -1,6 +1,13 @@
 import type { TemplateLineFacts } from '@ab/shared';
 import type { WaLine } from '@ab/catalog';
-import { isGraphEnv, lineEnvs, lineProvider, loadEnv, type Env, type GraphEnv } from '@/config/env/env';
+import {
+  isGraphEnv,
+  lineEnvs,
+  lineProvider,
+  loadEnv,
+  type Env,
+  type GraphEnv,
+} from '@/config/env/env';
 import { graphHttpError } from './template.mapper';
 import { NotFoundException } from '@nestjs/common';
 import {
@@ -14,7 +21,7 @@ import type { TemplatesRepo } from './templates.repo';
 // What every registry action checks first (docs/12 §3.4, §13.9).
 
 /** Read per call, so tests can vi.stubEnv it. */
-export const syncOn = (): boolean =>  loadEnv().WA_TEMPLATE_SYNC;
+export const syncOn = (): boolean => loadEnv().WA_TEMPLATE_SYNC;
 
 /**
  * WA_TEMPLATE_SYNC=false (docs/12 §13.9): staging on Meta TEST credentials must not touch the
@@ -30,7 +37,8 @@ export async function requireTemplate(
   key: string,
 ): Promise<TemplateRow> {
   const row = await queries.get(key);
-  if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
+  if (!row)
+    throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
   return row;
 }
 

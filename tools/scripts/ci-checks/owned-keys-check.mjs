@@ -19,7 +19,8 @@ export const OWNED_KEYS = [
 // insert (incl. on conflict upserts), update, delete or merge on public.settings / settings.
 // A write into settings (also "public"."settings", the Studio / db diff form) or a call of the
 // security-definer writers from migration 630 (config_set / config_seed).
-const WRITE = /\b(insert\s+into|update(\s+only)?|delete\s+from|merge\s+into)\s+("?public"?\s*\.\s*)?"?settings"?(?![\w$])|\bconfig_(set|seed)\s*\(/i;
+const WRITE =
+  /\b(insert\s+into|update(\s+only)?|delete\s+from|merge\s+into)\s+("?public"?\s*\.\s*)?"?settings"?(?![\w$])|\bconfig_(set|seed)\s*\(/i;
 // COPY puts its rows after the `;`, so the key is never in the same statement: any COPY into
 // settings fails.
 const COPY = /\bcopy\s+("?public"?\s*\.\s*)?"?settings"?(?![\w$])[\s\S]*?\bfrom\b/i;
@@ -96,7 +97,9 @@ export function writtenKeys(stmt) {
   if (COPY.test(stmt)) return ['<copy into settings>'];
   if (!WRITE.test(stmt)) return [];
   // Any quoting (SQL '', JSON "" inside a literal) and any case.
-  return OWNED_KEYS.filter((k) => new RegExp(`(?<![A-Za-z0-9_])${k}(?![A-Za-z0-9_])`, 'i').test(stmt));
+  return OWNED_KEYS.filter((k) =>
+    new RegExp(`(?<![A-Za-z0-9_])${k}(?![A-Za-z0-9_])`, 'i').test(stmt),
+  );
 }
 
 /** Every owned key the migration writes, as `<file>: …` messages (empty = fine). */
@@ -110,14 +113,21 @@ export function checkMigration(name, sql) {
 
 /** The files above the cutoff and what each one writes. */
 export function checkDir(dir = DIR, cutoff = CUTOFF) {
-  const files = readdirSync(dir).filter((f) => f.endsWith('.sql') && newerThan(f, cutoff)).sort();
-  return { files, errors: files.flatMap((f) => checkMigration(f, readFileSync(`${dir}/${f}`, 'utf8'))) };
+  const files = readdirSync(dir)
+    .filter((f) => f.endsWith('.sql') && newerThan(f, cutoff))
+    .sort();
+  return {
+    files,
+    errors: files.flatMap((f) => checkMigration(f, readFileSync(`${dir}/${f}`, 'utf8'))),
+  };
 }
 
 function main() {
   const { files, errors } = checkDir(process.argv[2] ?? DIR);
   for (const e of errors) console.error(`::error::${e}`);
-  console.log(`${files.length} migrations after ${CUTOFF} checked for owned settings keys, ${errors.length} problems`);
+  console.log(
+    `${files.length} migrations after ${CUTOFF} checked for owned settings keys, ${errors.length} problems`,
+  );
   process.exit(errors.length ? 1 : 0);
 }
 

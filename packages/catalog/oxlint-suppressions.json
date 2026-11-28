@@ -22,9 +22,6 @@
   "src/theme/theme.ts": {
     "typescript/explicit-module-boundary-types": {
       "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 1
     }
   }
 }

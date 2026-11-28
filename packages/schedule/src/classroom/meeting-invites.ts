@@ -13,7 +13,13 @@ export type MeetingInviteeKind = (typeof MEETING_INVITEE_KINDS)[number];
 export const MEETING_INVITE_CHANNELS = ['in_app', 'whatsapp', 'link'] as const;
 export type MeetingInviteChannel = (typeof MEETING_INVITE_CHANNELS)[number];
 
-export const MEETING_INVITE_STATUSES = ['pending', 'sent', 'window_closed', 'failed', 'cancelled'] as const;
+export const MEETING_INVITE_STATUSES = [
+  'pending',
+  'sent',
+  'window_closed',
+  'failed',
+  'cancelled',
+] as const;
 export type MeetingInviteStatus = (typeof MEETING_INVITE_STATUSES)[number];
 
 /** At most 30 invitees per meeting (one request and in total). */
@@ -27,7 +33,8 @@ export const DEFAULT_MEETING_DURATION = 60;
 export const MEETING_MAX_AHEAD_DAYS = 90;
 
 /** Only admin and sales may invite any phone and see every student; others get 403. */
-export const mayInvitePhones = (role: string | null | undefined): boolean => role === 'admin' || role === 'sales';
+export const mayInvitePhones = (role: string | null | undefined): boolean =>
+  role === 'admin' || role === 'sales';
 
 /**
  * One invitee as the client picks it: a staff profile, a student (→ the guardian) or a typed phone.
@@ -52,7 +59,9 @@ export const updateMeetingSchema = z
     startsAt: z.iso.datetime({ offset: true }).optional(),
     durationMin: meetingDurationSchema.optional(),
   })
-  .refine((v) => v.title !== undefined || v.startsAt !== undefined || v.durationMin !== undefined, { message: 'empty' });
+  .refine((v) => v.title !== undefined || v.startsAt !== undefined || v.durationMin !== undefined, {
+    message: 'empty',
+  });
 export type UpdateMeeting = z.output<typeof updateMeetingSchema>;
 
 /** POST /meetings/:id/invitees: more invitees on an existing meeting. */
