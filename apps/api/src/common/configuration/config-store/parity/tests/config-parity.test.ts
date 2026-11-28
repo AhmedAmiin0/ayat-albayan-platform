@@ -1,7 +1,10 @@
 import { SETTING_KEYS } from '@ab/settings';
 import { describe, expect, it } from 'vitest';
 import { decodeAll } from '@/common/configuration/config-store/store/config-decode';
-import { compareEffective, configParity } from './config-parity';
+import {
+  compareEffective,
+  configParity,
+} from '@/common/configuration/config-store/parity/config-parity';
 
 const row = (key: string, value: unknown) => ({ key, value });
 
@@ -47,7 +50,8 @@ describe('configParity (docs/26 §4 «Parity rules»)', () => {
 describe('compareEffective (the diff itself)', () => {
   const base = decodeAll([]);
   it('reports a key whose values differ; deep-equal values are not diffs', () => {
-    const store = { ...base, upload_max_mb: 4, follow_up_hours: [...(base['follow_up_hours'] as number[])] };
+    const hours = [...(base.follow_up_hours as number[])];
+    const store = { ...base, upload_max_mb: 4, follow_up_hours: hours };
     expect(compareEffective({ legacy: base, store, rows: [] })).toEqual([{ key: 'upload_max_mb', legacy: 10, store: 4 }]);
   });
 
