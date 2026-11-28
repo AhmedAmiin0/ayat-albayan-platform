@@ -38,3 +38,17 @@ test('the viewer: its meta line, the page in view, a page per number from the ca
   await fireEvent.press(screen.getByLabelText(t.common.close));
   expect(onClose).toHaveBeenCalled();
 });
+
+test('the spinner stays until the image loads, and a broken image fails and asks again', async () => {
+  const onRetry = jest.fn();
+  await render(<PdfPage {...page} url="https://x/p2.png" failed={false} onRetry={onRetry} />);
+  const image = screen.getByTestId('pdf-page-image-2');
+  expect(screen.getByLabelText(t.common.loading)).toBeTruthy();
+  await fireEvent(image, 'load', { nativeEvent: { source: { width: 100, height: 200 } } });
+  expect(screen.queryByLabelText(t.common.loading)).toBeNull();
+  await fireEvent(image, 'error');
+  expect(screen.queryByTestId('pdf-page-image-2')).toBeNull();
+  await fireEvent.press(screen.getByLabelText(t.inbox.pdf.pageFailed));
+  expect(onRetry).toHaveBeenCalled();
+  expect(screen.getByTestId('pdf-page-image-2')).toBeTruthy();
+});
