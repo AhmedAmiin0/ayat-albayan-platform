@@ -49,7 +49,8 @@ export function createConnectivity(deps: ConnectivityDeps): ConnectivityStore {
   };
   const schedule = () => {
     stopTimer();
-    if (state.status === 'connecting' && state.active) timer = setTimeout(probe, backoffMs(state.attempt));
+    if (state.status === 'connecting' && state.active)
+      timer = setTimeout(probe, backoffMs(state.attempt));
   };
   async function probe(): Promise<void> {
     stopTimer();
@@ -60,9 +61,13 @@ export function createConnectivity(deps: ConnectivityDeps): ConnectivityStore {
     probing = false;
     // Overtaken while in flight (a request answered, or a new failure started its own loop): stale.
     if (state.status !== asked.status || state.since !== asked.since) return;
-    if (ok) return state.status === 'connecting' ? store.reportReached() : undefined;
+    if (ok && state.status === 'connecting') store.reportReached();
+    if (ok) return;
     // Online, this was the foreground check: its failure is the one that starts `connecting`.
-    if (state.status === 'online') return store.reportFailure();
+    if (state.status === 'online') {
+      store.reportFailure();
+      return;
+    }
     dispatch({ type: 'probeFailed' });
     schedule();
   }
@@ -86,7 +91,8 @@ export function createConnectivity(deps: ConnectivityDeps): ConnectivityStore {
       if (active === state.active) return;
       if (!active) {
         stopTimer();
-        return dispatch({ type: 'background', at: now() });
+        dispatch({ type: 'background', at: now() });
+        return;
       }
       const check = probeOnForeground(state, now());
       dispatch({ type: 'foreground' });

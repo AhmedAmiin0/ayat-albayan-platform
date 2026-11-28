@@ -8,7 +8,11 @@ export { PERMISSION_AREAS, PERMISSION_ROWS, type PermissionArea } from './catalo
 
 export type Permission = (typeof PERMISSION_ROWS)[number]['key'];
 
-type Row = { key: Permission; area: PermissionArea; grants: readonly UserRole[] };
+interface Row {
+  key: Permission;
+  area: PermissionArea;
+  grants: readonly UserRole[];
+}
 const ROWS: readonly Row[] = PERMISSION_ROWS;
 
 /** Every permission key, catalog order. */
@@ -16,7 +20,9 @@ export const PERMISSIONS: readonly Permission[] = ROWS.map((r) => r.key);
 export const permissionSchema = z.enum(PERMISSIONS);
 
 /** What a role may be granted in the matrix: everything but the `self.*` scope keys. */
-export const GRANTABLE_PERMISSIONS: readonly Permission[] = ROWS.filter((r) => r.area !== 'self').map((r) => r.key);
+export const GRANTABLE_PERMISSIONS: readonly Permission[] = ROWS.filter(
+  (r) => r.area !== 'self',
+).map((r) => r.key);
 
 export function isPermission(value: unknown): value is Permission {
   return permissionSchema.validate(value);
@@ -67,7 +73,11 @@ export function effectivePermissions(input: EffectiveInput): Permission[] {
 
 /** The system roles' effective sets: what the parity test compares with the old @Roles table. */
 export function systemPermissionsOf(role: UserRole): Permission[] {
-  return effectivePermissions({ baseRole: role, granted: defaultGrantsOf(role), allGrantable: role === 'admin' });
+  return effectivePermissions({
+    baseRole: role,
+    granted: defaultGrantsOf(role),
+    allGrantable: role === 'admin',
+  });
 }
 
 /** Matrix sections (self.* left out), in PERMISSION_AREAS order. */
@@ -79,7 +89,11 @@ export function permissionGroups(): PermissionGroup[] {
 }
 
 /** Built-in roles whose grants the admin may change and restore; the system admin stays fixed. */
-export const EDITABLE_SYSTEM_ROLES = ['teacher', 'assistant', 'sales'] as const satisfies readonly UserRole[];
+export const EDITABLE_SYSTEM_ROLES = [
+  'teacher',
+  'assistant',
+  'sales',
+] as const satisfies readonly UserRole[];
 export type EditableSystemRole = (typeof EDITABLE_SYSTEM_ROLES)[number];
 
 export function isEditableSystemRole(key: string): key is EditableSystemRole {

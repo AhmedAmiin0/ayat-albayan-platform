@@ -23,8 +23,8 @@ const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'obj
 
 /** app.json `extra.eas.projectId` (EAS project @holdmycup/ayat-albayan-admin); null if unlinked. */
 export function easProjectId(extra: unknown): string | null {
-  const eas = isRecord(extra) ? extra['eas'] : undefined;
-  const id = isRecord(eas) ? eas['projectId'] : undefined;
+  const eas = isRecord(extra) ? extra.eas : undefined;
+  const id = isRecord(eas) ? eas.projectId : undefined;
   return typeof id === 'string' && id ? id : null;
 }
 
@@ -33,9 +33,9 @@ const mayRegister = async (): Promise<boolean> =>
   (await hasLiveSession()) && !(await pushOptedOut());
 
 /**
- * On every admin start: real device + EAS project + permission (re-asked weekly) → Expo push token →
- * PUT /me/push-tokens (idempotent). Best effort: Expo Go, offline or a refused prompt skip silently
- * and the next start tries again. Never throws.
+ * On every admin start: real device + EAS project + permission (re-asked weekly) → Expo push token
+ * → PUT /me/push-tokens (idempotent). Best effort: Expo Go, offline or a refused prompt skip
+ * silently and the next start tries again. Never throws.
  */
 export async function registerPush(): Promise<void> {
   if (!Device.isDevice) return;

@@ -24,13 +24,13 @@ describe('theme preference', () => {
     setThemePref('dark');
     expect(localStorage.getItem(THEME_KEY)).toBe('dark');
     expect(readThemePref()).toBe('dark');
-    expect(document.documentElement.dataset['theme']).toBe('dark');
+    expect(document.documentElement.dataset.theme).toBe('dark');
   });
 
   it('auto clears the stored choice and resolves (no matchMedia in jsdom → light)', () => {
     setThemePref('dark');
     setThemePref('auto');
     expect(localStorage.getItem(THEME_KEY)).toBeNull();
-    expect(document.documentElement.dataset['theme']).toBe('light');
+    expect(document.documentElement.dataset.theme).toBe('light');
   });
 });

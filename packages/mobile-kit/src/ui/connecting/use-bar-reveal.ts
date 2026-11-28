@@ -22,7 +22,10 @@ interface Run {
   opacity: Animated.Value;
 }
 
-/** One open or close: the slide (height on the JS driver, opacity native), or under Reduce Motion the fade. */
+/**
+ * One open or close: the slide (height on the JS driver, opacity native), or under Reduce Motion
+ * the fade.
+ */
 function revealRun({ open, content, still, height, opacity }: Run): Animated.CompositeAnimation {
   const toValue = open ? content : 0;
   const fade = (duration: number, easing: (v: number) => number) =>
@@ -39,8 +42,8 @@ function revealRun({ open, content, still, height, opacity }: Run): Animated.Com
 }
 
 /**
- * Opening: height 0 → content with opacity 0 → 1 over 260 ms ease-out; closing is the reverse. A bar
- * that mounts already open (a screen pushed mid-outage) shows at once, without the slide.
+ * Opening: height 0 → content with opacity 0 → 1 over 260 ms ease-out; closing is the reverse. A
+ * bar that mounts already open (a screen pushed mid-outage) shows at once, without the slide.
  * Reduce Motion: the height jumps, the opacity fades over 150 ms.
  */
 export function useBarReveal({ open, content, still, onClosed }: RevealOptions) {
@@ -50,7 +53,10 @@ export function useBarReveal({ open, content, still, onClosed }: RevealOptions) 
   const revealed = useRef(false);
   useEffect(() => {
     if (!open) mountedOpen.current = false;
-    if (!open && !revealed.current) return onClosed(); // never revealed (not measured yet)
+    if (!open && !revealed.current) {
+      onClosed();
+      return;
+    } // never revealed (not measured yet)
     if (open && content === 0) return undefined; // not measured yet
     revealed.current = true;
     const jump = open && mountedOpen.current;

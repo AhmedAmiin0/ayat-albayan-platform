@@ -5,7 +5,7 @@ export * from './registry';
 export * from './validation/schema/schema';
 export * from './validation/validate';
 export * from './public';
-export * from './meta';
+export type * from './meta';
 export * from './domains';
 export * from './ownership';
 export * from './gate';

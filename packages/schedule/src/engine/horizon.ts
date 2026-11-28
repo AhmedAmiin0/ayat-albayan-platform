@@ -15,7 +15,12 @@ export const localDateOf = (instant: Date, tz: string): string =>
 export const startOfLocalDay = (date: string, tz: string): Date =>
   new Date(dayWallToUtc(dayOf(date), 0, tz));
 
-export type HorizonInput = { now: Date; startsOn: string; tz: string; weeks: number };
+export interface HorizonInput {
+  now: Date;
+  startsOn: string;
+  tz: string;
+  weeks: number;
+}
 
 /**
  * Rolling booking horizon (R-SCH-02, docs/10 §3): from = max(now, local midnight of startsOn),

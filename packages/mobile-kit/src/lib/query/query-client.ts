@@ -63,12 +63,14 @@ export const persistOptions: Omit<PersistQueryClientOptions, 'queryClient'> = {
   // `meta.noPersist`: signed URLs (booking invoices) would be dead after a restart.
   dehydrateOptions: {
     shouldDehydrateQuery: (query) =>
-      query.state.data !== undefined && query.meta?.['noPersist'] !== true,
+      query.state.data !== undefined && query.meta?.noPersist !== true,
   },
 };
 
 let markRestored: () => void = () => undefined;
-/** Settles once PersistQueryClientProvider has put the saved cache back (or given up): app/_layout. */
+/**
+ * Settles once PersistQueryClientProvider has put the saved cache back (or given up): app/_layout.
+ */
 export const cacheRestored = new Promise<void>((resolve) => {
   markRestored = resolve;
 });

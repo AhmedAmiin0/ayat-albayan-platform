@@ -2,7 +2,13 @@ import type { JoinRole } from '@ab/schedule';
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
 import type { DataPacketIn, RoomStatus } from '@ab/web-kit/classroom/room/components/room-types';
 import type { RoomController } from '@ab/web-kit/classroom/room/livekit/use-room';
-import { BOARD_TOPIC, decodeMessage, encodeMessage, syncMessages, type BoardMessage } from './model/messages';
+import {
+  BOARD_TOPIC,
+  decodeMessage,
+  encodeMessage,
+  syncMessages,
+  type BoardMessage,
+} from './model/messages';
 import type { BoardState } from './model/model';
 import { shouldAnswerSync, type BoardInput } from './model/reducer';
 
@@ -33,7 +39,10 @@ export function useBoardSync({ room, status, me, state, dispatch }: BoardSyncOpt
       if (packet.topic !== BOARD_TOPIC) return;
       const msg = decodeMessage(packet.bytes);
       if (!msg) return;
-      if (msg.t !== 'sync-request') return dispatch({ msg, from: packet.from });
+      if (msg.t !== 'sync-request') {
+        dispatch({ msg, from: packet.from });
+        return;
+      }
       const now = state.current;
       if (shouldAnswerSync(now, role)) {
         syncMessages(now).forEach((m) => send(m, [packet.from.identity]));

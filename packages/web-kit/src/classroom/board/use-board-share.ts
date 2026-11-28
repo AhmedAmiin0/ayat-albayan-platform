@@ -15,7 +15,8 @@ export function captureBoard(
 }
 
 export const canCaptureBoard = (): boolean =>
-  typeof HTMLCanvasElement !== 'undefined' && typeof HTMLCanvasElement.prototype.captureStream === 'function';
+  typeof HTMLCanvasElement !== 'undefined' &&
+  typeof HTMLCanvasElement.prototype.captureStream === 'function';
 
 export interface BoardShare {
   sharing: boolean;
@@ -53,7 +54,10 @@ export function useBoardShare(
     sharing,
     supported: canCaptureBoard(),
     toggle: () => {
-      if (sharing) return room.setBoardTrack(null);
+      if (sharing) {
+        room.setBoardTrack(null);
+        return;
+      }
       const el = canvas.current;
       const track = captureBoard(el);
       if (!el || !track) return;

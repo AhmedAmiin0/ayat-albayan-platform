@@ -92,7 +92,8 @@ export function useShareRequests({ room, role, grant, board }: ShareRequestOptio
     const tile = people.find((x) => x.identity === identity);
     return tile && !answered[what](tile) && (what !== 'screen' || grant) ? [{ tile, what }] : [];
   });
-  const settle = (identity: string, what: RequestKind) => dispatch({ kind: 'settled', identity, what });
+  const settle = (identity: string, what: RequestKind) =>
+    dispatch({ kind: 'settled', identity, what });
   const share = (tile: TileView, on: boolean) => {
     settle(tile.identity, 'screen');
     grant?.({ identity: tile.identity, allow: on }).catch((e: unknown) =>
@@ -106,7 +107,9 @@ export function useShareRequests({ room, role, grant, board }: ShareRequestOptio
     canRequest: role === 'guest',
     pending: canGrant ? pending : [],
     granted: canGrant && grant ? people.filter((x) => x.role === 'guest' && x.shareAllowed) : [],
-    drawers: canGrant ? people.filter((x) => x.role === 'guest' && allowed.includes(x.identity)) : [],
+    drawers: canGrant
+      ? people.filter((x) => x.role === 'guest' && allowed.includes(x.identity))
+      : [],
     mine: state.mine,
     notice: notice ?? (deniedKind ? REQUEST_TEXT[deniedKind].denied : null),
     request: (what) => {
@@ -115,10 +118,14 @@ export function useShareRequests({ room, role, grant, board }: ShareRequestOptio
       send({ t: 'request', what });
     },
     allow: ({ tile, what }) => {
-      if (what === 'screen') return share(tile, true);
+      if (what === 'screen') {
+        share(tile, true);
+        return;
+      }
       if (what === 'draw') {
         settle(tile.identity, what);
-        return board.allowDrawer(tile.identity, true);
+        board.allowDrawer(tile.identity, true);
+        return;
       }
       // Opening the board answers every open-board request at once.
       state.pending.filter((p) => p.what === 'open').forEach((p) => settle(p.identity, 'open'));

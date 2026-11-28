@@ -18,7 +18,7 @@ export * from './sales/academy';
 export * from './sales/schedule';
 export * from './sales/teacher-filter/teacher-filter';
 export * from './sales/money';
-export * from './sales/money-views';
+export type * from './sales/money-views';
 export * from './sales/payment-link';
 export * from './sales/registration';
 export * from './sales/family-link';

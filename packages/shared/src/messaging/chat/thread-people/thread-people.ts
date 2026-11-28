@@ -47,31 +47,42 @@ export interface ThreadPeople {
 
 export type SubscriptionBadge = 'subscribed' | 'expired' | 'none';
 
-export type BadgeStudent = {
+export interface BadgeStudent {
   subscription: Pick<ThreadSubscriptionView, 'status' | 'lessons_remaining'> | null;
-};
+}
 
 /** Subscribed while any child's newest package runs with lessons left; trial-only is none. */
 export function subscriptionBadge(students: readonly BadgeStudent[]): SubscriptionBadge {
-  const packages = students.flatMap((s) => (s.subscription && s.subscription.status !== 'trial' && s.subscription.status !== 'cancelled' ? [s.subscription] : []));
+  const packages = students.flatMap((s) =>
+    s.subscription && s.subscription.status !== 'trial' && s.subscription.status !== 'cancelled'
+      ? [s.subscription]
+      : [],
+  );
   if (packages.some((p) => p.status !== 'expired' && p.lessons_remaining > 0)) return 'subscribed';
   return packages.length > 0 ? 'expired' : 'none';
 }
 
 /** A lead is not subscribed; a converted lead without a guardian, a teacher or unknown is null. */
-export function threadBadge(people: Pick<ThreadPeople, 'guardian' | 'lead' | 'students'>): SubscriptionBadge | null {
+export function threadBadge(
+  people: Pick<ThreadPeople, 'guardian' | 'lead' | 'students'>,
+): SubscriptionBadge | null {
   if (people.guardian) return subscriptionBadge(people.students);
   return people.lead && people.lead.status !== 'converted' ? 'none' : null;
 }
 
 /** Unpaid when a child's newest package still runs and owes money. */
 export function familyUnpaid(students: readonly BadgeStudent[]): boolean {
-  return students.some((s) => s.subscription?.status === 'unpaid' && s.subscription.lessons_remaining > 0);
+  return students.some(
+    (s) => s.subscription?.status === 'unpaid' && s.subscription.lessons_remaining > 0,
+  );
 }
 
 /** A paid package that only ran out stays `unpaid` in the DB but must not read unpaid. */
-export function packageChip(sub: Pick<ThreadSubscriptionView, 'status' | 'lessons_remaining' | 'due_amount'>): SubscriptionStatus {
-  if (sub.status === 'paused' || sub.status === 'trial' || sub.status === 'cancelled') return sub.status;
+export function packageChip(
+  sub: Pick<ThreadSubscriptionView, 'status' | 'lessons_remaining' | 'due_amount'>,
+): SubscriptionStatus {
+  if (sub.status === 'paused' || sub.status === 'trial' || sub.status === 'cancelled')
+    return sub.status;
   if (sub.status === 'expired' || sub.lessons_remaining <= 0) return 'expired';
   return sub.due_amount > 0 ? 'unpaid' : 'active';
 }

@@ -11,7 +11,10 @@ export const FORWARD_MAX_TARGETS = 5;
 /** How much of the quoted text the API sends; the clients show its first line. */
 export const QUOTE_BODY_MAX = 200;
 
-/** POST /threads/forward: one message copied to 1–5 other chats; the id makes a retry return the same rows. */
+/**
+ * POST /threads/forward: one message copied to 1–5 other chats; the id makes a retry return the
+ * same rows.
+ */
 export const threadForwardSchema = z.object({
   messageId: z.uuid(),
   targets: z
@@ -66,7 +69,10 @@ export interface ForwardResponse {
   results: ForwardResult[];
 }
 
-type Quotable = { replyable?: boolean; template_key: string | null };
+interface Quotable {
+  replyable?: boolean;
+  template_key: string | null;
+}
 
 /** A message WhatsApp knows (has a wamid), template or not. */
 export const canReply = (m: Pick<Quotable, 'replyable'>): boolean => m.replyable === true;

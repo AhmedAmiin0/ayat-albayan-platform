@@ -7,11 +7,12 @@ import {
   type AssistantTermsView,
 } from '@ab/money';
 
-// The assistant terms editor of both apps (docs/27 E5): the same state, the shared schema and the start-day rule.
-// Each app passes its own "today" (YYYY-MM-DD, Riyadh); the app modules keep their old default.
+// The assistant terms editor of both apps (docs/27 E5): the same state, the shared schema and the
+// start-day rule. Each app passes its own "today" (YYYY-MM-DD, Riyadh); the app modules keep their
+// old default.
 
 /** The terms editor's state: every field a string, so half-typed input never throws. */
-export type TermsForm = {
+export interface TermsForm {
   salaryAmount: string;
   salaryCurrency: string;
   salaryStartsOn: string;
@@ -19,7 +20,7 @@ export type TermsForm = {
   commValue: string;
   commCurrency: string;
   commStartsOn: string;
-};
+}
 
 export type TermsField = keyof TermsForm;
 /** Error keys of t.assistants.error, per field. */
@@ -54,10 +55,19 @@ const FIELD_OF: Record<string, TermsField> = {
   'commission.startsOn': 'commStartsOn',
 };
 
-/** What the start days are checked against: the saved terms (null = none yet) and today (YYYY-MM-DD, Riyadh). */
-export type TermsRules = { current: AssistantTermsView | null; today: string };
+/**
+ * What the start days are checked against: the saved terms (null = none yet) and today (YYYY-MM-DD,
+ * Riyadh).
+ */
+export interface TermsRules {
+  current: AssistantTermsView | null;
+  today: string;
+}
 
-/** The earliest start day each part accepts now: its saved day, or today for a part that is not set yet. */
+/**
+ * The earliest start day each part accepts now: its saved day, or today for a part that is not set
+ * yet.
+ */
 export const termStartMins = ({ current, today }: TermsRules) => ({
   salary: earliestTermStart(current?.salary?.starts_on, today),
   commission: earliestTermStart(current?.commission?.starts_on, today),
@@ -65,27 +75,48 @@ export const termStartMins = ({ current, today }: TermsRules) => ({
 
 const isDay = (v: string) => /^\d{4}-\d{2}-\d{2}$/.test(v);
 
-/** Nothing is retroactive (termStartError, as the API's RPC): keys of t.assistants.error, per start field. */
+/**
+ * Nothing is retroactive (termStartError, as the API's RPC): keys of t.assistants.error, per start
+ * field.
+ */
 function startErrors(f: TermsForm, { current, today }: TermsRules): TermsErrors {
   const out: TermsErrors = {};
-  const salary = f.salaryAmount.trim() !== '' && isDay(f.salaryStartsOn) ? termStartError(f.salaryStartsOn, current?.salary?.starts_on, today) : null;
+  const salary =
+    f.salaryAmount.trim() !== '' && isDay(f.salaryStartsOn)
+      ? termStartError(f.salaryStartsOn, current?.salary?.starts_on, today)
+      : null;
   if (salary) out.salaryStartsOn = `salary_${salary}`;
-  const commission = f.commType !== '' && isDay(f.commStartsOn) ? termStartError(f.commStartsOn, current?.commission?.starts_on, today) : null;
+  const commission =
+    f.commType !== '' && isDay(f.commStartsOn)
+      ? termStartError(f.commStartsOn, current?.commission?.starts_on, today)
+      : null;
   if (commission) out.commStartsOn = `commission_${commission}`;
   return out;
 }
 
 /**
  * Form → the PUT body. An empty salary amount or no commission type clears that part. Validation is
- * the shared schema (percent ≤ 100 and no currency, fixed needs one, two decimals) and, with `rules`, the
- * start-day rule (a new part not in the past, a saved day never earlier), so the API agrees.
+ * the shared schema (percent ≤ 100 and no currency, fixed needs one, two decimals) and, with
+ * `rules`, the start-day rule (a new part not in the past, a saved day never earlier), so the API
+ * agrees.
  */
-export function termsToInput(f: TermsForm, rules?: TermsRules): { value: AssistantTermsInput } | { errors: TermsErrors } {
-  const salary = f.salaryAmount.trim() === '' ? null : { amount: num(f.salaryAmount), currency: f.salaryCurrency, startsOn: f.salaryStartsOn };
+export function termsToInput(
+  f: TermsForm,
+  rules?: TermsRules,
+): { value: AssistantTermsInput } | { errors: TermsErrors } {
+  const salary =
+    f.salaryAmount.trim() === ''
+      ? null
+      : { amount: num(f.salaryAmount), currency: f.salaryCurrency, startsOn: f.salaryStartsOn };
   const commission =
     f.commType === ''
       ? null
-      : { type: f.commType, value: num(f.commValue), currency: f.commType === 'fixed' ? f.commCurrency : null, startsOn: f.commStartsOn };
+      : {
+          type: f.commType,
+          value: num(f.commValue),
+          currency: f.commType === 'fixed' ? f.commCurrency : null,
+          startsOn: f.commStartsOn,
+        };
   const parsed = assistantTermsSchema.safeParse({ salary, commission });
   const errors: TermsErrors = rules ? startErrors(f, rules) : {};
   if (parsed.success && Object.keys(errors).length === 0) return { value: parsed.data };

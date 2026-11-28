@@ -29,13 +29,16 @@ const otherApp = z
   .parse(import.meta.env);
 
 /** One override for every inbox interval (e2e: 1 s). */
-const REFRESH = import.meta.env['VITE_INBOX_REFRESH_MS'];
+const REFRESH = import.meta.env.VITE_INBOX_REFRESH_MS;
 
 export const env = {
-  supabaseUrl: required('VITE_SUPABASE_URL', import.meta.env['VITE_SUPABASE_URL']),
-  supabaseAnonKey: required('VITE_SUPABASE_ANON_KEY', import.meta.env['VITE_SUPABASE_ANON_KEY']),
-  apiUrl: required('VITE_API_URL', import.meta.env['VITE_API_URL']),
-  /** The open chat's delta poll (default 10 s); e2e sets 1 s so a status chip shows without a 10 s wait. */
+  supabaseUrl: required('VITE_SUPABASE_URL', import.meta.env.VITE_SUPABASE_URL),
+  supabaseAnonKey: required('VITE_SUPABASE_ANON_KEY', import.meta.env.VITE_SUPABASE_ANON_KEY),
+  apiUrl: required('VITE_API_URL', import.meta.env.VITE_API_URL),
+  /**
+   * The open chat's delta poll (default 10 s); e2e sets 1 s so a status chip shows without a 10 s
+   * wait.
+   */
   inboxRefreshMs: intervalMs(REFRESH, INBOX_REFRESH_MS),
   /** The chats list (default 15 s; the e2e value when set). */
   inboxListRefreshMs: intervalMs(REFRESH, INBOX_LIST_REFRESH_MS),

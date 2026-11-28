@@ -14,14 +14,16 @@ export const dayTimeSchema = z.object({
 /** Optional: absent = every byday at startTimeLocal (old clients behave exactly as before). */
 export const dayTimesSchema = z.array(dayTimeSchema).max(7).optional();
 
-type DayTimeFacts = {
+interface DayTimeFacts {
   kind?: BookingKind | undefined;
   package?: string | undefined;
   byday: number[];
   dayTimes?: { weekday: number }[] | undefined;
-};
+}
 
-/** day_not_in_byday, duplicate_day, package_only (a trial or a makeup is one lesson at one time). */
+/**
+ * day_not_in_byday, duplicate_day, package_only (a trial or a makeup is one lesson at one time).
+ */
 export function refineDayTimes(req: DayTimeFacts, ctx: z.RefinementCtx): void {
   const days = req.dayTimes ?? [];
   if (days.length === 0) return;

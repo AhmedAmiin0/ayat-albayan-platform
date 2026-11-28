@@ -55,8 +55,14 @@ export function useForgot(side: CodesSide = 'staff') {
   const reset = async ({ code, password, confirm }: NewPassword) => {
     // Arabic-Indic digits and spaces fold the way the API folds them, so pasted codes work.
     const digits = loginCode.safeParse(code);
-    if (!digits.success) return setError(t.familyAuth.errors.code_incomplete);
-    if (password !== confirm) return setError(t.familyAuth.passwordsDiffer);
+    if (!digits.success) {
+      setError(t.familyAuth.errors.code_incomplete);
+      return;
+    }
+    if (password !== confirm) {
+      setError(t.familyAuth.passwordsDiffer);
+      return;
+    }
     await run(async () => {
       await authApi.reset({ identifier: identifier.trim(), code: digits.data, password });
       setStep('done');

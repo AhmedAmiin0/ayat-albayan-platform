@@ -3,7 +3,8 @@ import { Animated } from 'react-native';
 import { palette } from '../../../theme';
 import { CheckBadge } from './CheckBadge';
 
-// The 20 pt badge pops (0.6 → 1.12 → 1 in 320 ms) while the tick draws (24 → 0, 360 ms after 120 ms).
+// The 20 pt badge pops (0.6 → 1.12 → 1 in 320 ms) while the tick draws (24 → 0, 360 ms after 120
+// ms).
 jest.useFakeTimers();
 const timing = jest.spyOn(Animated, 'timing');
 const badge = (id: string) => screen.getByTestId(id, { includeHiddenElements: true });

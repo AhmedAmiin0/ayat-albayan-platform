@@ -8,13 +8,19 @@ describe('StatusChip', () => {
   it('shows the nuqta glyph AND the ar.json word, coloured by tone', () => {
     render(<StatusChip {...leadStatusStyle.new} label={t.enums.leadStatus.new} />);
     const chip = screen.getByText(t.enums.leadStatus.new).parentElement as HTMLElement;
-    expect(chip.dataset['tone']).toBe('act');
+    expect(chip.dataset.tone).toBe('act');
     expect(chip.className).toContain('text-act');
     expect(chip.querySelector('[data-glyph]')?.getAttribute('data-glyph')).toBe('hollow');
   });
 
   it('stopped states are struck; sm is 22px', () => {
-    render(<StatusChip {...studentStatusStyle.churned} label={t.enums.studentStatus.churned} size="sm" />);
+    render(
+      <StatusChip
+        {...studentStatusStyle.churned}
+        label={t.enums.studentStatus.churned}
+        size="sm"
+      />,
+    );
     const chip = screen.getByText(t.enums.studentStatus.churned).parentElement as HTMLElement;
     expect(chip.className).toContain('h-[22px]');
     expect(chip.querySelector('[data-glyph]')?.getAttribute('data-glyph')).toBe('struck');
@@ -23,7 +29,9 @@ describe('StatusChip', () => {
   it('grades render ordinal pips, filled first', () => {
     render(<StatusChip {...gradeStyle.very_good} label={t.enums.grade.very_good} />);
     const chip = screen.getByText(t.enums.grade.very_good).parentElement as HTMLElement;
-    const glyphs = [...chip.querySelectorAll('[data-glyph]')].map((g) => g.getAttribute('data-glyph'));
+    const glyphs = [...chip.querySelectorAll('[data-glyph]')].map((g) =>
+      g.getAttribute('data-glyph'),
+    );
     expect(glyphs).toEqual(['fill', 'fill', 'fill', 'fill', 'hollow']);
   });
 
