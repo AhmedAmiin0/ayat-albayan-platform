@@ -31,11 +31,6 @@
       "count": 1
     }
   },
-  "src/auth/forgot/use-forgot.ts": {
-    "typescript/no-confusing-void-expression": {
-      "count": 2
-    }
-  },
   "src/auth/login-notice.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -44,9 +39,6 @@
   "src/auth/role-claim.ts": {
     "ab/no-shape-checks": {
       "count": 2
-    },
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "src/auth/sign-in.ts": {
@@ -62,9 +54,6 @@
   "src/auth/use-auth-gate.ts": {
     "stylistic/max-len": {
       "count": 4
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
     }
   },
   "src/auth/use-permissions.ts": {
@@ -97,9 +86,6 @@
     },
     "typescript/no-misused-promises": {
       "count": 1
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 3
     }
   },
   "src/lib/connectivity/connectivity.ts": {
@@ -144,9 +130,6 @@
   "src/lib/http/env.ts": {
     "typescript/no-unsafe-assignment": {
       "count": 3
-    },
-    "typescript/dot-notation": {
-      "count": 3
     }
   },
   "src/lib/http/supabase.ts": {
@@ -183,9 +166,6 @@
   "src/lib/query/query-client.ts": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/dot-notation": {
-      "count": 1
     }
   },
   "src/lib/query/query-keys.test.ts": {
@@ -221,9 +201,6 @@
       "count": 1
     },
     "ab/no-shape-checks": {
-      "count": 2
-    },
-    "typescript/dot-notation": {
       "count": 2
     }
   },
@@ -313,9 +290,6 @@
     },
     "stylistic/max-len": {
       "count": 2
-    },
-    "typescript/no-confusing-void-expression": {
-      "count": 1
     }
   },
   "src/ui/connecting/use-screen-focus.ts": {

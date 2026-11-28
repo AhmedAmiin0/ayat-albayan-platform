@@ -23,8 +23,8 @@ const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'obj
 
 /** app.json `extra.eas.projectId` (EAS project @holdmycup/ayat-albayan-admin); null if unlinked. */
 export function easProjectId(extra: unknown): string | null {
-  const eas = isRecord(extra) ? extra['eas'] : undefined;
-  const id = isRecord(eas) ? eas['projectId'] : undefined;
+  const eas = isRecord(extra) ? extra.eas : undefined;
+  const id = isRecord(eas) ? eas.projectId : undefined;
   return typeof id === 'string' && id ? id : null;
 }
 

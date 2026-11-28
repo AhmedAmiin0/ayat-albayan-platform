@@ -27,7 +27,10 @@ export async function resolveGate(
   session: Session | null,
   set: (status: GateStatus) => void,
 ): Promise<void> {
-  if (session) return set(await verifyRole(session, set));
+  if (session) {
+    set(await verifyRole(session, set));
+    return;
+  }
   // Before the login screen shows; registerPush also waits for a slower one (silenceSettled).
   await Promise.race([
     silencePush(),

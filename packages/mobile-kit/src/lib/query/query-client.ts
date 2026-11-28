@@ -63,7 +63,7 @@ export const persistOptions: Omit<PersistQueryClientOptions, 'queryClient'> = {
   // `meta.noPersist`: signed URLs (booking invoices) would be dead after a restart.
   dehydrateOptions: {
     shouldDehydrateQuery: (query) =>
-      query.state.data !== undefined && query.meta?.['noPersist'] !== true,
+      query.state.data !== undefined && query.meta?.noPersist !== true,
   },
 };
 

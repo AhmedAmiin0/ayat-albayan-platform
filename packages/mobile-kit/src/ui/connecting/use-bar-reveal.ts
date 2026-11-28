@@ -50,7 +50,10 @@ export function useBarReveal({ open, content, still, onClosed }: RevealOptions) 
   const revealed = useRef(false);
   useEffect(() => {
     if (!open) mountedOpen.current = false;
-    if (!open && !revealed.current) return onClosed(); // never revealed (not measured yet)
+    if (!open && !revealed.current) {
+      onClosed();
+      return;
+    } // never revealed (not measured yet)
     if (open && content === 0) return undefined; // not measured yet
     revealed.current = true;
     const jump = open && mountedOpen.current;

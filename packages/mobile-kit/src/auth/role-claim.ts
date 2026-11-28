@@ -37,7 +37,9 @@ export function roleClaim(accessToken: string): AppRole | null {
   try {
     const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
     const json: unknown = JSON.parse(atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, '=')));
-    return typeof json === 'object' && json !== null ? appRole((json as Record<string, unknown>)['user_role']) : null;
+    return typeof json === 'object' && json !== null
+      ? appRole((json as Record<string, unknown>).user_role)
+      : null;
   } catch {
     return null;
   }
