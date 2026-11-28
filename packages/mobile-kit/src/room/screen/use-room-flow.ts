@@ -37,7 +37,7 @@ function chatControl(chat: RoomChat | null, locked: boolean, explain: () => void
 }
 
 /** Leaving stays on the screen; only back exits. */
-export function useRoomScreen(props: RoomScreenInput) {
+export function useRoomFlow(props: RoomScreenInput) {
   const { onExit, host, chat, presence, backSource, onBrowser, ...input } = props;
   const session = useRoomSession(input);
   const [sheet, setSheet] = useState<SheetName | null>(null);

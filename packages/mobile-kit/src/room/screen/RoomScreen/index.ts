@@ -1,1 +1,2 @@
-export { type RoomChat, RoomScreen, type RoomScreenProps } from './RoomScreen';
+export { RoomScreen } from './RoomScreen';
+export type { RoomChat, RoomScreenProps } from './RoomScreen.types';

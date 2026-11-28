@@ -11,6 +11,8 @@ export interface ClosedLook {
   icon: (ink: string) => ReactNode;
 }
 
+export type ClosedPhase = Extract<RoomPhase, { step: 'closed' }>;
+
 export interface RoomEndProps {
   phase: Extract<RoomPhase, { step: 'failed' | 'closed' }>;
   kind: RoomKind;

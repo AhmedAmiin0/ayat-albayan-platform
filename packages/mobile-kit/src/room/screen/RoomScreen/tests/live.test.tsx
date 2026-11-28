@@ -9,7 +9,7 @@ import {
 } from '../../../state/room-test-kit';
 import { palette } from '../../../../theme';
 import { t } from '../../../../lib/i18n/i18n';
-import type { RoomChat } from '../RoomScreen';
+import type { RoomChat } from '../RoomScreen.types';
 import { RoomScreen } from '../RoomScreen';
 
 const R = t.mobileRoom;

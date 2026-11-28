@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { RoomNotice } from '../RoomNotice';
+import { RoomNotice } from './RoomNotice';
 
 test('a wait shows the message and a spinner, and no buttons', async () => {
   const again = { label: 'again', onPress: jest.fn() };
@@ -22,4 +22,9 @@ test('no detail, presence or icon: only the message', async () => {
   await render(<RoomNotice testID="n" message="m" presence={null} />);
   expect(screen.getByRole('header', { name: 'm' })).toBeTruthy();
   expect(screen.queryByRole('button')).toBeNull();
+});
+
+test('the buttons show under the message when it is not a wait', async () => {
+  await render(<RoomNotice testID="n" message="m" onBack={jest.fn()} />);
+  expect(screen.getAllByRole('button')).toHaveLength(1);
 });
