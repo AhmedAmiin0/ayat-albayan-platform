@@ -1,4 +1,4 @@
-import { leadReadRoutes as routes } from '@ab/shared';
+import { leadReadRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../core/http';
 import type { LeadReadCalls } from './leads-api.types';
 
@@ -6,6 +6,6 @@ import type { LeadReadCalls } from './leads-api.types';
 export function leadReadCalls(client: ApiClient): LeadReadCalls {
   const call = callWith(client);
   return {
-    list: (query) => call({ route: routes.list, query }),
+    list: (query) => call({ route: leadReadRoutes.list, query }),
   };
 }
