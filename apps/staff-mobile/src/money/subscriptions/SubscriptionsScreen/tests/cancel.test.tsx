@@ -12,8 +12,6 @@ jest.mock('@ab/mobile-kit/lib/http/api', () => ({
   ...jest.requireActual('@ab/mobile-kit/lib/http/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
-  call: (r: { method: string; path: string; body: unknown }) =>
-    mockApiSend(r.method, r.path, r.body),
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 

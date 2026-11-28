@@ -3508,11 +3508,6 @@
       "count": 2
     }
   },
-  "src/ops/notif-rules/hooks/use-catalogue.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/ops/notif-rules/hooks/use-focus-on-open.ts": {
     "stylistic/max-len": {
       "count": 1
