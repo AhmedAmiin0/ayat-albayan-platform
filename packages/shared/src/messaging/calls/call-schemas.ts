@@ -33,3 +33,4 @@ export const callListQuerySchema = z.object({
   phone: phoneE164.optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50),
 });
+export type CallListQueryInput = z.input<typeof callListQuerySchema>;

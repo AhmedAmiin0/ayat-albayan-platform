@@ -1,8 +1,7 @@
-import { isCallsData, subscribeCalls } from '@ab/client-core';
+import { callsKeys, isCallsData, subscribeCalls } from '@ab/client-core';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { supabase } from '@ab/mobile-kit';
-import { CALLS_KEY } from './calls-api';
 
 /**
  * A nudge, not a data path (docs/28 §4): a change to a wa_calls row the user may read (RLS) makes the
@@ -16,7 +15,7 @@ export function useCallsRealtime(input: { enabled: boolean; active: boolean }): 
     if (!on) return;
     return subscribeCalls(
       supabase,
-      () => void client.invalidateQueries({ queryKey: CALLS_KEY, predicate: isCallsData }),
+      () => void client.invalidateQueries({ queryKey: callsKeys.all, predicate: isCallsData }),
     );
   }, [on, client]);
 }

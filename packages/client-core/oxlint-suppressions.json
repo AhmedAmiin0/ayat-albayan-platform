@@ -128,22 +128,6 @@
       "count": 2
     }
   },
-  "src/messaging/calls/calls-api.test.ts": {
-    "stylistic/max-len": {
-      "count": 3
-    }
-  },
-  "src/messaging/calls/calls-api.ts": {
-    "typescript/explicit-module-boundary-types": {
-      "count": 11
-    },
-    "no-nested-ternary": {
-      "count": 1
-    },
-    "stylistic/max-len": {
-      "count": 6
-    }
-  },
   "src/messaging/calls/calls-realtime.ts": {
     "stylistic/max-len": {
       "count": 3
