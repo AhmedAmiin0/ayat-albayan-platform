@@ -1,5 +1,5 @@
 import { isPendingMessage, PENDING_IDS_MAX, type MessageView, type ThreadDelta, type ThreadDetail } from '@ab/shared';
-import type { ThreadDeltaQuery } from '../thread-sync/reads-api';
+import type { ThreadDeltaQuery } from '../thread-sync';
 
 /** An open chat's cache (TanStack's InfiniteData<ThreadDetail>): pages[0] is the newest page. */
 export interface ThreadPages {

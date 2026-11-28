@@ -2,7 +2,6 @@ import {
   normaliseTemplateParams,
   type FollowUpNote,
   type LeadQualification,
-  type ThreadDetail,
   type ThreadRating,
   type ThreadTemplate,
   type ThreadText,

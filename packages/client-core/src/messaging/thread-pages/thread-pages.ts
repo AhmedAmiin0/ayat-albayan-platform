@@ -1,5 +1,5 @@
 import type { ThreadDetail } from '@ab/shared';
-import type { ThreadPageQuery, ThreadReadCalls } from '../thread-sync/reads-api';
+import type { ThreadPageQuery, ThreadReadCalls } from '../thread-sync';
 
 // A chat's pages (docs/37 NEW 3/4), shared by web and mobile: the compound keyset back
 // (before + before_id: rows sharing a time are never skipped) and the anchored window around one
