@@ -29,6 +29,7 @@ describe('lessonRoomRoutes (R-LES-01)', () => {
     const route = routes.studentLink;
     expect(`${route.method} ${route.path}`).toBe('GET /public/student/:token');
     expect(route).not.toHaveProperty('permissions');
+    expect(route.isPublic).toBe(true);
     expect(route.tags).toEqual(['classroom']);
   });
 

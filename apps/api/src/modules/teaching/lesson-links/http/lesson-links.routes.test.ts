@@ -8,7 +8,10 @@ describe('lessonLinkRoutes', () => {
       ['GET', '/join/:token', 'redirect', ['lesson-links']],
       ['GET', '/report-link/legacy/*', 'redirect', ['lesson-links']],
     ]);
-    for (const route of Object.values(routes)) expect(route).not.toHaveProperty('permissions');
+    for (const route of Object.values(routes)) {
+      expect(route).not.toHaveProperty('permissions');
+      expect(route.isPublic).toBe(true);
+    }
   });
 
   it('takes any join token text up to 100 characters', () => {

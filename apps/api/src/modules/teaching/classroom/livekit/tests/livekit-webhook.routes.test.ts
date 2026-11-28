@@ -15,5 +15,6 @@ describe('livekitWebhookRoutes', () => {
     expect(routes.receive.response).toBe('empty');
     expect(routes.receive).not.toHaveProperty('body');
     expect(routes.receive).not.toHaveProperty('permissions');
+    expect(routes.receive.isPublic).toBe(true);
   });
 });
