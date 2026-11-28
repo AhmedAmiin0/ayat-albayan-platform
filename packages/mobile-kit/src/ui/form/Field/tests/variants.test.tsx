@@ -1,6 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { Platform } from 'react-native';
 import { t } from '../../../../lib/i18n/i18n';
 import { Field } from '../Field';
+
+afterEach(() => jest.restoreAllMocks());
 
 test('a password field stays on the React Native input (system password autofill pairing)', async () => {
   await render(<Field label={t.auth.password} secureTextEntry value="pw" />);
@@ -27,4 +30,12 @@ test('the React Native input calls onFocus, onBlur and onSubmitEditing too', asy
   await fireEvent(screen.getByLabelText(t.auth.password), 'blur');
   expect(onSubmitEditing).toHaveBeenCalledTimes(1);
   expect(onBlur).toHaveBeenCalledTimes(1);
+});
+
+// The keyboard library tracks only an Android EditText: a Compose field would stay under the
+// keyboard in a KeyboardScroll form.
+test('on Android every field stays on the React Native input', async () => {
+  jest.replaceProperty(Platform, 'OS', 'android');
+  await render(<Field label={t.auth.email} value="a@b.c" />);
+  expect(screen.getByLabelText(t.auth.email)).not.toHaveProp('expoUi', true);
 });

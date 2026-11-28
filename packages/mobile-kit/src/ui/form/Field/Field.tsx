@@ -11,8 +11,8 @@ import { useField } from './use-field';
  * Edge is the 3:1 ruleInput; focus turns it a 2px lapis ring without moving the text.
  * The label starts at the inline-start (AppText). Free text aligns by what is typed (no textAlign,
  * no writingDirection); an `ltr` field and a password are LTR islands.
- * The input is @expo/ui's native text input; a password or a cursor-tracking field keeps React
- * Native's (use-field.ts says why).
+ * On iOS the input is @expo/ui's native text input; a password or a cursor-tracking field, and
+ * every Android field, keeps React Native's (use-field.ts and field-input.registry.ts say why).
  */
 export function Field(props: FieldProps) {
   const { color } = useTheme();
