@@ -49,11 +49,6 @@
       "count": 1
     }
   },
-  "src/auth/sign-in.ts": {
-    "ab/no-untyped-api-calls": {
-      "count": 1
-    }
-  },
   "src/auth/sign-in.username.test.ts": {
     "stylistic/max-len": {
       "count": 1
@@ -117,11 +112,6 @@
   },
   "src/lib/http/api.connectivity.test.ts": {
     "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/lib/http/api.test.ts": {
-    "typescript/no-confusing-void-expression": {
       "count": 1
     }
   },
