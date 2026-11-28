@@ -5,7 +5,10 @@ import { SENDING } from '@/modules/messaging/whatsapp/sender/send-plan';
 import { done, maybe, pgError } from '@/common/db/errors';
 import type { InviteeRow } from './meeting-invites.mapper';
 
-/** The server's view of an invitee: the phone and profile too (never sent to a client), never the hash. */
+/**
+ * The server's view of an invitee: the phone and profile too (never sent to a client), never the
+ * hash.
+ */
 export interface StoredInvitee extends InviteeRow {
   meeting_id: string;
   profile_id: string | null;
@@ -16,12 +19,17 @@ export interface StoredInvitee extends InviteeRow {
 
 const COLUMNS =
   'id, meeting_id, kind, profile_id, student_id, phone_e164, display_name, tz, channel, status, error_code, sent_at';
-/** Every meeting invitation's WhatsApp row carries this dedup prefix (the daily limit counts them). */
+/**
+ * Every meeting invitation's WhatsApp row carries this dedup prefix (the daily limit counts them).
+ */
 export const INVITE_DEDUP_PREFIX = 'meeting_invite:';
 /** LIKE pattern of one meeting's invitation rows; `_` and `%` escaped (the prefix has a `_`). */
 export const invitesOf = (meetingId: string): string =>
   `${INVITE_DEDUP_PREFIX}${meetingId}:`.replace(/[\\_%]/g, (c) => `\\${c}`) + '%';
-/** Migration 414's trigger: more than 30 live invitees on one meeting (a race the fast check missed). */
+/**
+ * Migration 414's trigger: more than 30 live invitees on one meeting (a race the fast check
+ * missed).
+ */
 const tooMany = (e: { message: string }) => /\btoo_many_invitees\b/.test(e.message);
 
 /** public.meeting_invitees (migration 411; service role, the services guard). */
@@ -75,7 +83,9 @@ export class MeetingInviteesRepo {
     );
   }
 
-  /** WhatsApp invitation rows the login queued since `since` (resends included): the daily limit. */
+  /**
+   * WhatsApp invitation rows the login queued since `since` (resends included): the daily limit.
+   */
   async whatsappSince(createdBy: string, since: string): Promise<number> {
     const { count, error } = await this.db
       .from('messages')
@@ -98,7 +108,8 @@ export class MeetingInviteesRepo {
   /**
    * Cancel or a new time: this meeting's invitation texts still waiting in the queue are dropped
    * (failed / stale), never sent late with a dead link or the old time. A row the sender already
-   * claimed (error_code SENDING) is left alone, like SenderQueries.holdAutomatic. Answers their phones.
+   * claimed (error_code SENDING) is left alone, like SenderQueries.holdAutomatic. Answers their
+   * phones.
    */
   async dropQueuedInvites(meetingId: string): Promise<string[]> {
     const { data, error } = await this.db
@@ -118,7 +129,9 @@ export class MeetingInviteesRepo {
     return [...new Set(data.map((r) => r.phone_e164))];
   }
 
-  /** The phones this meeting's invitation texts reached or may still reach (any status but failed). */
+  /**
+   * The phones this meeting's invitation texts reached or may still reach (any status but failed).
+   */
   async deliveredPhones(meetingId: string): Promise<Set<string>> {
     const { data, error } = await this.db
       .from('messages')

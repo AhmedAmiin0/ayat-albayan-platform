@@ -8,7 +8,10 @@ import {
   type BookingPayload,
 } from '@/modules/teaching/booking/core/booking.mapper';
 
-/** The write of POST /lessons/instant: create_booking + the instant flags, in one transaction (migration 190). */
+/**
+ * The write of POST /lessons/instant: create_booking + the instant flags, in one transaction
+ * (migration 190).
+ */
 @Injectable()
 export class InstantRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -17,7 +20,8 @@ export class InstantRepo {
     const p_booking = payload as unknown as Json; // typed payload; create_booking validates it in SQL
     const call = () => this.db.rpc('create_instant_lesson', { p_booking, p_actor: actorId });
     let { data, error } = await call();
-    // Two replays at once: the loser hits client_request_id's unique key; the retry returns the winner's.
+    // Two replays at once: the loser hits client_request_id's unique key; the retry returns the
+    // winner's.
     if (uniqueViolationMentions(error, 'client_request_id')) ({ data, error } = await call());
     if (error) throw pgError(error);
     return toBookingResult(data);

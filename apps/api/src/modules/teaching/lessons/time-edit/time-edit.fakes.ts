@@ -23,7 +23,9 @@ export const body = (over: Partial<LessonTimeEdit> = {}): LessonTimeEdit => ({
   ...over,
 });
 
-/** A completed lesson on Thu 2026-10-01 14:00–14:45Z and the correction request for it (45 → 60). */
+/**
+ * A completed lesson on Thu 2026-10-01 14:00–14:45Z and the correction request for it (45 → 60).
+ */
 export const heldRow = (over: Partial<LessonRow> = {}): LessonRow =>
   lessonRow({
     status: 'completed',
@@ -46,7 +48,9 @@ export const CLASH = {
   lessonId: 'x',
 };
 
-/** `over`: the academy settings on top of the registry defaults (payout_count_late / _no_show off). */
+/**
+ * `over`: the academy settings on top of the registry defaults (payout_count_late / _no_show off).
+ */
 export function timeSetup(
   row: LessonRow | null = lessonRow(),
   over: Partial<AcademySettings> = {},

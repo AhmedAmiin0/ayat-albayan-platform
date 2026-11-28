@@ -28,7 +28,10 @@ export interface PublicContext {
   guardianPhone: string;
 }
 
-/** lesson_feedback reads and writes for the request and the public form (service role; callers guard). */
+/**
+ * lesson_feedback reads and writes for the request and the public form (service role; callers
+ * guard).
+ */
 @Injectable()
 export class FeedbackRepo {
   constructor(@Inject(DB) private readonly db: Db) {}

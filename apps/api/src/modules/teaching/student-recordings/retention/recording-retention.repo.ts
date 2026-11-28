@@ -9,7 +9,10 @@ export const STUCK_ERROR = 'stuck_recording';
 export class RecordingRetentionRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Rows still `recording` that started before `cutoff` become `failed`; returns how many. A second run finds none. */
+  /**
+   * Rows still `recording` that started before `cutoff` become `failed`; returns how many. A second
+   * run finds none.
+   */
   async failStuck(input: { cutoff: string; now: string }): Promise<number> {
     const data = rows(
       await this.db

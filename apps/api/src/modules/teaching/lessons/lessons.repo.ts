@@ -71,7 +71,8 @@ export class LessonsRepo {
 
   /**
    * The teacher's lessons go out with our classroom: usesPlatform(teachers.meeting_mode,
-   * settings.meeting_link_auto) (migration 490). true = a confirmation names no fixed link (forMessages).
+   * settings.meeting_link_auto) (migration 490). true = a confirmation names no fixed link
+   * (forMessages).
    */
   async meetingLinkAuto(opts: { teacherId: string }): Promise<boolean> {
     const [auto, { data, error }] = await Promise.all([
@@ -124,9 +125,9 @@ export class LessonsRepo {
   }
 
   /**
-   * Lesson numbers (R-LES-03) for completed lessons, in chunks so the URL stays short; the chunks are
-   * read in parallel (one round trip, not one per 100 lessons).
-   * TODO(R-LES-03): v_lesson_sequence counts `completed` only; owner to confirm whether `late` counts.
+   * Lesson numbers (R-LES-03) for completed lessons, in chunks so the URL stays short; the chunks
+   * are read in parallel (one round trip, not one per 100 lessons). TODO(R-LES-03):
+   * v_lesson_sequence counts `completed` only; owner to confirm whether `late` counts.
    */
   async seq(lessonIds: readonly string[]): Promise<SeqMap> {
     const out = new Map<string, number>();

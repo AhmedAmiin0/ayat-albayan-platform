@@ -4,7 +4,9 @@ import { describe, expect, it } from 'vitest';
 import { readerOf } from '@/common/settings/settings.fakes';
 import { ClassroomSettings } from '@/modules/teaching/classroom/classroom.settings';
 
-/** What the four classroom consumers read before the reader existed: the reader lists exactly these. */
+/**
+ * What the four classroom consumers read before the reader existed: the reader lists exactly these.
+ */
 const BEFORE = ['join_opens_before_min', 'join_closes_after_min', 'default_meeting_title'] as const;
 
 describe('ClassroomSettings', () => {

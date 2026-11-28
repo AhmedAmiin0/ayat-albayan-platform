@@ -32,7 +32,10 @@ export class MeetingListRepo {
     return data;
   }
 
-  /** Scheduled meetings whose planned end is after `since`, soonest first (created ones, or all for an admin). */
+  /**
+   * Scheduled meetings whose planned end is after `since`, soonest first (created ones, or all for
+   * an admin).
+   */
   async upcoming(input: { createdBy: string | null; since: string }): Promise<MeetingRow[]> {
     let q = this.db
       .from('meetings')

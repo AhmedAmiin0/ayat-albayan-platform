@@ -71,8 +71,9 @@ export class LessonWriter {
   }
 
   /**
-   * Applies a change set atomically (migration 100); 409 invalid_transition / rule_not_active / slot_taken.
-   * Its booking_confirmation* rows only while that notification rule is on (gateConfirmations).
+   * Applies a change set atomically (migration 100); 409 invalid_transition / rule_not_active /
+   * slot_taken. Its booking_confirmation* rows only while that notification rule is on
+   * (gateConfirmations).
    */
   async apply(change: ChangeSet): Promise<void> {
     const p = change.messages

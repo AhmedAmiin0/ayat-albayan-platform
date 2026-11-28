@@ -24,7 +24,10 @@ export const CANCEL_EVENT = z.record(cancelBySchema, lessonEventSchema).readonly
 
 export interface CancelContext {
   by: CancelBy;
-  /** Null: a salesperson's cancellation without a reason (POST /sales/lessons/:id/cancel); the column stays as it was. */
+  /**
+   * Null: a salesperson's cancellation without a reason (POST /sales/lessons/:id/cancel); the
+   * column stays as it was.
+   */
   reason: string | null;
   now: Date;
   /** settings.late_cancel_hours; null = OFF (a student's cancellation never consumes). */

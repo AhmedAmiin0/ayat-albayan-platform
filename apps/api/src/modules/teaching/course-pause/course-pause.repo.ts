@@ -31,7 +31,10 @@ export interface ReopenedLesson {
 }
 
 const PAUSE_SELECT = 'id, student_id, from_date, until_date, reason, created_at, resumed_at, extended_days, creator:profiles!course_pauses_created_by_fkey(full_name)';
-/** The RPCs' raised codes (migration 956) → 400 / 409 / 404; a lost race on the one-open index → already_paused. */
+/**
+ * The RPCs' raised codes (migration 956) → 400 / 409 / 404; a lost race on the one-open index →
+ * already_paused.
+ */
 const PAUSE_ERRORS: PgErrorMap = {
   constraints: { course_pauses_one_open: () => conflict('already_paused') },
   raised: {
@@ -43,7 +46,10 @@ const PAUSE_ERRORS: PgErrorMap = {
 
 export const pauseRpcError = (error: PostgrestError): Error => pgError(error, PAUSE_ERRORS);
 
-/** course_pauses reads and the three RPCs (service role; the routes check courses.pause). docs/11 §7b. */
+/**
+ * course_pauses reads and the three RPCs (service role; the routes check courses.pause). docs/11
+ * §7b.
+ */
 @Injectable()
 export class CoursePauseRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -85,7 +91,10 @@ export class CoursePauseRepo {
     return data.map((r) => r.id);
   }
 
-  /** Open pauses from a later day whose from day has come (Riyadh `today`): the hourly job begins them. */
+  /**
+   * Open pauses from a later day whose from day has come (Riyadh `today`): the hourly job begins
+   * them.
+   */
   async dueStarts(today: string): Promise<string[]> {
     const data = rows(await this.db.from('course_pauses').select('id').is('started_at', null).is('resumed_at', null)
       .lte('from_date', today).order('id').limit(500));

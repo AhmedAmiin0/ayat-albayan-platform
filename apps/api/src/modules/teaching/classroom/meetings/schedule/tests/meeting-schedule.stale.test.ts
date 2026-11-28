@@ -16,7 +16,8 @@ import {
   type MeetingServices,
 } from '@/modules/teaching/classroom/meetings/schedule/meeting-services.fakes';
 
-// A reschedule drops the queued invitation texts: a family whose text never went out must not read «sent».
+// A reschedule drops the queued invitation texts: a family whose text never went out must not read
+// «sent».
 let s: MeetingServices;
 const staff = stored({
   meeting_id: MEETING_ID,

@@ -1,4 +1,5 @@
-// Test fixtures for the student's long-lived link (not shipped; excluded from the build by *.fakes.ts).
+// Test fixtures for the student's long-lived link (not shipped; excluded from the build by
+// *.fakes.ts).
 import { DEFAULT_JOIN_WINDOW } from '@ab/schedule';
 import { vi } from 'vitest';
 import { LESSON, STUDENT_ID } from '@/modules/teaching/classroom/classroom.fakes';

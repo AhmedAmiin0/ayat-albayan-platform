@@ -46,7 +46,10 @@ export function studentRecordingView(
   };
 }
 
-/** Who may toggle visibility on this file's rows: every row for an admin, the lesson's own teacher otherwise. */
+/**
+ * Who may toggle visibility on this file's rows: every row for an admin, the lesson's own teacher
+ * otherwise.
+ */
 export type ManageRule = 'all' | { teacherId: string } | 'none';
 
 export function canManage(rule: ManageRule, row: RecordingJoinRow): boolean {

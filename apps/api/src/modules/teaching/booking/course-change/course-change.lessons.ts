@@ -20,7 +20,10 @@ interface CourseLesson extends CourseLessonFact {
 export class CourseLessonRepo {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Every lesson of these rules of the student, any time and status: what the course uses (with ids). */
+  /**
+   * Every lesson of these rules of the student, any time and status: what the course uses (with
+   * ids).
+   */
   async ofCourse(input: {
     ruleIds: readonly string[];
     studentId: string;
@@ -68,8 +71,8 @@ export class CourseLessonRepo {
   }
 
   /**
-   * `${rule_id}:${local_date}` of every generated row of these rules (any status), as the generator and
-   * RuleProjectionQueries key them: a date a rule already holds is never generated again.
+   * `${rule_id}:${local_date}` of every generated row of these rules (any status), as the generator
+   * and RuleProjectionQueries key them: a date a rule already holds is never generated again.
    */
   async held(ruleIds: readonly string[]): Promise<Set<string>> {
     const rows = await readAll((from, to) =>

@@ -36,7 +36,10 @@ export function grantsFor(role: JoinRole, room: string): VideoGrant {
   return role === 'guest' ? { ...base, canPublishSources: ['camera', 'microphone'] } : base;
 }
 
-/** One token = one identity (the same identity in two windows kicks the first), so every call gets a fresh one. */
+/**
+ * One token = one identity (the same identity in two windows kicks the first), so every call gets a
+ * fresh one.
+ */
 export const newIdentity = (role: JoinRole, bytes: (n: number) => Buffer = randomBytes): string =>
   `${role}-${bytes(6).toString('hex')}`;
 

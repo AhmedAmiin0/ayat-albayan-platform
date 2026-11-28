@@ -15,7 +15,10 @@ export class TimeEditPayout {
     private readonly queries: TimeEditRepo,
   ) {}
 
-  /** 409 `payout_locked { month, status }`, else `draft_stale` for a corrected lesson in a draft month. */
+  /**
+   * 409 `payout_locked { month, status }`, else `draft_stale` for a corrected lesson in a draft
+   * month.
+   */
   async check(row: LessonRow, plan: TimeEditPlan): Promise<TimeEditResult['payout']> {
     const scope = payoutScope({
       plan,

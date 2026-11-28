@@ -55,7 +55,8 @@ describe('bookedCourse — a course from its rules (owner 2026-10-18)', () => {
     expect(bookedCourse(rows, NOW)?.days).toEqual([{ weekday: 3, startTimeLocal: '18:00' }]);
   });
   it('booked ahead + pending change: opensOn is the old rules\' first day, before the new set (startsOn)', () => {
-    // A renewal from Sun 8 Nov, Sunday swapped for Monday from Mon 9 Nov before it starts: Sun 8 stays.
+    // A renewal from Sun 8 Nov, Sunday swapped for Monday from Mon 9 Nov before it starts: Sun 8
+    // stays.
     const rows = [
       rule({ id: 'sun', starts_on: '2026-11-08', ends_on: '2026-11-08' }),
       rule({ id: 'mon', byday: [1], starts_on: '2026-11-09', ends_on: '2026-12-07' }),

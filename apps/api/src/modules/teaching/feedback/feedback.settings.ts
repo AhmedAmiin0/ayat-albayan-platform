@@ -7,7 +7,10 @@ import { SettingsService } from '@/common/settings/settings.service';
 const KEYS = ['feedback_rate_window_min'] as const satisfies readonly SettingKey[];
 export type FeedbackSettingsValues = SettingsSlice<(typeof KEYS)[number]>;
 
-/** The feedback module's academy settings (docs/25 §4), read by PublicFeedbackLimit. One cached store.all(), only these keys. */
+/**
+ * The feedback module's academy settings (docs/25 §4), read by PublicFeedbackLimit. One cached
+ * store.all(), only these keys.
+ */
 @Injectable()
 export class FeedbackSettings {
   constructor(private readonly store: SettingsService) {}

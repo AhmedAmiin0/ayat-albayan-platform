@@ -42,7 +42,10 @@ export function bookPick({ payload, actorId }: PickInput): TrialPick {
   };
 }
 
-/** The booking's confirmations for the new lesson (existing guardians only; the lead path never moves). */
+/**
+ * The booking's confirmations for the new lesson (existing guardians only; the lead path never
+ * moves).
+ */
 function queued(drafts: readonly MessageDraft[], lessonId: string): QueuedMessage[] {
   return drafts.flatMap((m) =>
     m.guardian_id
@@ -60,7 +63,9 @@ function queued(drafts: readonly MessageDraft[], lessonId: string): QueuedMessag
 
 type MoveInput = PickInput & { old: MovedTrial; lessonId: string };
 
-/** The upcoming trial moves: `lessonId` (the request id) is the new row's id, so a replay finds it. */
+/**
+ * The upcoming trial moves: `lessonId` (the request id) is the new row's id, so a replay finds it.
+ */
 export function movePick({ payload, actorId, old, lessonId }: MoveInput): TrialPick | null {
   const [lesson] = payload.lessons;
   if (!lesson) return null;

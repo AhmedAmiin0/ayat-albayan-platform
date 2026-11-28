@@ -38,7 +38,10 @@ export function meetingRoleOf(
   return null;
 }
 
-/** The role inside a server-minted identity (`<role>-<12 hex>`, newIdentity); null when it is none of ours. */
+/**
+ * The role inside a server-minted identity (`<role>-<12 hex>`, newIdentity); null when it is none
+ * of ours.
+ */
 export function roleOfIdentity(identity: string): JoinRole | null {
   const m = /^([a-z]+)-[0-9a-f]{12}$/.exec(identity);
   return JOIN_ROLES.find((r) => r === m?.[1]) ?? null;

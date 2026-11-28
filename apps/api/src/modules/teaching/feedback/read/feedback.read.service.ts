@@ -48,7 +48,10 @@ export class FeedbackReadService {
       .sort((a, b) => b.avg_rating - a.avg_rating || b.n - a.n);
   }
 
-  /** GET /teachers/me/feedback: own rows (sorted/filtered like the admin's) plus the teacher's own average. The login is the scope. */
+  /**
+   * GET /teachers/me/feedback: own rows (sorted/filtered like the admin's) plus the teacher's own
+   * average. The login is the scope.
+   */
   async mine(
     user: AuthUser,
     input: { filter: FeedbackQuery; page: PageQuery },

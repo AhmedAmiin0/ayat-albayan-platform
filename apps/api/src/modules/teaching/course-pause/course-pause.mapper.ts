@@ -32,7 +32,9 @@ export const toPauseView = (r: PauseRow): CoursePauseView =>
 
 const ids = z.array(z.string()).default([]);
 
-/** What course_pause_start / _set_until / _resume answer (migration 956); absent lists are empty. */
+/**
+ * What course_pause_start / _set_until / _resume answer (migration 956); absent lists are empty.
+ */
 export const rpcOutSchema = z.object({
   id: z.string(),
   student_id: z.string(),
@@ -47,7 +49,9 @@ export const rpcOutSchema = z.object({
 });
 export type RpcOut = z.infer<typeof rpcOutSchema>;
 
-/** The lessons whose charge or attendance changed (LessonEvents: the balance alerts re-read them). */
+/**
+ * The lessons whose charge or attendance changed (LessonEvents: the balance alerts re-read them).
+ */
 export const changedLessons = (out: RpcOut): string[] => [
   ...new Set([...out.cancelled, ...out.left, ...out.reopened, ...out.rejoined]),
 ];

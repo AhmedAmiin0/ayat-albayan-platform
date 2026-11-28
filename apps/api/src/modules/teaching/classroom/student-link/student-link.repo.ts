@@ -24,7 +24,10 @@ type LessonEmbed = Pick<Tables<'lessons'>, LessonTimes> & {
 
 const AHEAD = 20;
 
-/** Reads and writes of the student's long-lived link (migration 191; service role, the services guard). */
+/**
+ * Reads and writes of the student's long-lived link (migration 191; service role, the services
+ * guard).
+ */
 @Injectable()
 export class StudentLinkRepo {
   constructor(
@@ -45,7 +48,9 @@ export class StudentLinkRepo {
     return data;
   }
 
-  /** Creates the student's link, or rotates it: the new hash replaces the old one (which then dies). */
+  /**
+   * Creates the student's link, or rotates it: the new hash replaces the old one (which then dies).
+   */
   async saveLink(input: { studentId: string; hash: string; actorId: string }): Promise<void> {
     const row = {
       student_id: input.studentId,
@@ -68,7 +73,10 @@ export class StudentLinkRepo {
     return data;
   }
 
-  /** The student's open lessons whose room has not closed yet (ended at most closesAfterMin ago), by start. */
+  /**
+   * The student's open lessons whose room has not closed yet (ended at most closesAfterMin ago), by
+   * start.
+   */
   async lessonsAhead(studentId: string, now: Date): Promise<StudentLesson[]> {
     const { closesAfterMin } = await this.joinWindow();
     const since = new Date(now.getTime() - closesAfterMin * 60_000).toISOString();
@@ -96,9 +104,10 @@ export class StudentLinkRepo {
   }
 
   /**
-   * The lesson_join_links row a student-link join goes in by: one per (lesson, student), so a removal
-   * from the room (classroom_blocks.join_link_id) holds on every later join. Its token is never handed
-   * out (the student's own link is the credential); it only exists because the row needs one.
+   * The lesson_join_links row a student-link join goes in by: one per (lesson, student), so a
+   * removal from the room (classroom_blocks.join_link_id) holds on every later join. Its token is
+   * never handed out (the student's own link is the credential); it only exists because the row
+   * needs one.
    */
   async lessonLinkId(input: { lesson: LinkLesson; studentId: string }): Promise<string> {
     const found = await this.findLessonLink(input.lesson.id, input.studentId);

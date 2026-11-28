@@ -7,13 +7,19 @@ import { httpError } from '@/common/http/errors';
 
 // A new trial date is for one existing student with no invoice and no running subscription.
 
-/** The request with its id fixed (a move's new lesson id) and, for a move, every student of that trial. */
+/**
+ * The request with its id fixed (a move's new lesson id) and, for a move, every student of that
+ * trial.
+ */
 export interface TrialTarget {
   req: BookingRequest & { studentIds: string[]; clientRequestId: string };
   old: MovedTrial | null;
 }
 
-/** 400 trial_date_invalid unless the body is one existing student's trial; returns that student's id. */
+/**
+ * 400 trial_date_invalid unless the body is one existing student's trial; returns that student's
+ * id.
+ */
 export function trialStudentId(req: BookingRequest): string {
   const one = 'studentIds' in req && req.studentIds.length === 1 ? req.studentIds[0] : undefined;
   if (!one || bookingKindOf(req) !== 'trial' || req.leadId || req.invoice)
@@ -21,7 +27,10 @@ export function trialStudentId(req: BookingRequest): string {
   return one;
 }
 
-/** 404 student_not_found; 409 trial_date_subscribed for a running subscription (they change their course instead). */
+/**
+ * 404 student_not_found; 409 trial_date_subscribed for a running subscription (they change their
+ * course instead).
+ */
 export function assertCanPick(student: TrialStudent | null): TrialStudent {
   if (!student) throw httpError(HttpStatus.NOT_FOUND, 'student_not_found');
   if (!canPickTrialDate(student.status))
@@ -36,7 +45,10 @@ interface TargetInput {
   requestId: string;
 }
 
-/** A move books the trial's own students (siblings of one trial lesson move together, like a reschedule). */
+/**
+ * A move books the trial's own students (siblings of one trial lesson move together, like a
+ * reschedule).
+ */
 export function targetOf({ req, studentId, old, requestId }: TargetInput): TrialTarget {
   const studentIds = old ? old.student_ids : [studentId];
   return { req: { ...req, studentIds, clientRequestId: req.clientRequestId ?? requestId }, old };

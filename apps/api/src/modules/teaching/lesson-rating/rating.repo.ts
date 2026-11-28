@@ -45,15 +45,18 @@ export class RatingRepo {
   }
 
   /**
-   * The family whose number (main or second, familyOfPhone) this is; null for a lead, a teacher or an unknown
-   * number. The rating goes to the chat it was asked from (RatingSendService sends to that phone).
+   * The family whose number (main or second, familyOfPhone) this is; null for a lead, a teacher or
+   * an unknown number. The rating goes to the chat it was asked from (RatingSendService sends to
+   * that phone).
    */
   async guardianByPhone(phone: string): Promise<RatingGuardian | null> {
     const family = await familyOfPhone(this.db, phone);
     return family && { id: family.id, phone_e164: family.phone_e164, tz: family.tz };
   }
 
-  /** The newest lesson of this guardian's children that took place and has started (null: none yet). */
+  /**
+   * The newest lesson of this guardian's children that took place and has started (null: none yet).
+   */
   async latestHeld(input: { guardianId: string; now: Date }): Promise<RatingLesson | null> {
     const { data, error } = await this.db
       .from('lessons')

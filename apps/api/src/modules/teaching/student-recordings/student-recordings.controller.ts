@@ -25,7 +25,10 @@ export class StudentRecordingsController {
     private readonly deletion: RecordingDeleteService,
   ) {}
 
-  /** Newest first, paginated; admin, the teacher (own lessons or assigned student), an assigned assistant. */
+  /**
+   * Newest first, paginated; admin, the teacher (own lessons or assigned student), an assigned
+   * assistant.
+   */
   @Get('students/:id/recordings')
   list(
     @Param('id', ParseUUIDPipe) id: string,
@@ -35,7 +38,10 @@ export class StudentRecordingsController {
     return this.recordings.list({ user, studentId: id, query });
   }
 
-  /** Lesson ids with a finished recording, for the report history's links: no signed URLs. Same access as the list. */
+  /**
+   * Lesson ids with a finished recording, for the report history's links: no signed URLs. Same
+   * access as the list.
+   */
   @Get('students/:id/recorded-lesson-ids')
   recordedLessonIds(
     @Param('id', ParseUUIDPipe) id: string,
@@ -44,7 +50,9 @@ export class StudentRecordingsController {
     return this.recordings.recordedLessonIds({ user, studentId: id });
   }
 
-  /** Show or hide one recording from the student (off by default); admin, or the lesson's teacher. */
+  /**
+   * Show or hide one recording from the student (off by default); admin, or the lesson's teacher.
+   */
   @Patch('recordings/:id/visibility')
   @Permissions('recordings.manage')
   visibility(
