@@ -6,6 +6,8 @@ import type { SalesStudentFileCalls, StudentAttendanceCalls } from './student-fi
 export function salesStudentFileCalls(client: ApiClient): SalesStudentFileCalls {
   const call = callWith(client);
   return {
+    details: (studentId) =>
+      call({ route: salesStudentFileRoutes.details, params: { id: studentId } }),
     reportPdf: ({ studentId, reportId }) =>
       call({ route: salesStudentFileRoutes.reportPdf, params: { id: studentId, reportId } }),
     attendance: ({ studentId, month }) =>

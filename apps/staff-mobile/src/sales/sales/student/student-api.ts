@@ -4,7 +4,7 @@ import {
   salesPackageCancelKey,
   salesStudentFileCalls,
 } from '@ab/client-core';
-import type { SalesCourseView, SalesStudentDetails } from '@ab/shared';
+import type { SalesCourseView } from '@ab/shared';
 import { useQuery, type QueryKey } from '@tanstack/react-query';
 import { apiFetch, apiSend, pathKey } from '@ab/mobile-kit';
 import { useSalesCourse } from '@/sales-course';
@@ -17,7 +17,7 @@ const packageCancel = salesPackageCancelCalls({ apiFetch, apiSend });
 export const useSalesStudent = (id: string) =>
   useQuery({
     queryKey: pathKey(`/sales/students/${id}`),
-    queryFn: () => apiFetch<SalesStudentDetails>(`/sales/students/${id}`),
+    queryFn: () => studentFile.details(id),
     enabled: id !== '',
   });
 

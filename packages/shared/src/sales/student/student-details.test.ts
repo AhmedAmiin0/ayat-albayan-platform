@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import {
-  ATTENDANCE_KINDS,
-  attendanceKind,
-  attendanceKindSchema,
-  attendanceTotals,
-} from './student-details';
+import { attendanceKind, attendanceTotals } from './student-details';
+import { ATTENDANCE_KINDS, attendanceKindSchema } from './details-answer.schemas';
 
 describe('attendanceKind', () => {
   it.each([

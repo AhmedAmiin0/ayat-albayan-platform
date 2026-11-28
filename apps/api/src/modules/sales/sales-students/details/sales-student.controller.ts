@@ -1,7 +1,7 @@
-import { salesStudentFileRoutes as routes, type SalesStudentDetails } from '@ab/shared';
-import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Permissions } from '@/common/auth/decorators';
+import { salesStudentFileRoutes as routes } from '@ab/shared';
+import { Controller } from '@nestjs/common';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser } from '@/common/auth/decorators';
 import type { AuthUser } from '@/common/auth/verify-token';
 import { asResponse } from '@/common/http/returns';
 import { Route, RouteInput, type RouteInputOf } from '@/common/http/route';
@@ -14,14 +14,12 @@ export class SalesStudentController {
   constructor(private readonly students: SalesStudentService) {}
 
   /** Any student; 404 student_not_found. */
-  @Get('sales/students/:id')
-  @ApiTags('sales')
-  @Permissions('self.sales_academy')
-  details(
-    @Param('id', ParseUUIDPipe) id: string,
+  @Route(routes.details)
+  async details(
+    @RouteInput() { params }: RouteInputOf<typeof routes.details>,
     @CurrentUser() user: AuthUser,
-  ): Promise<SalesStudentDetails> {
-    return this.students.details(user, id);
+  ) {
+    return asResponse(routes.details.response, await this.students.details(user, params.id));
   }
 
   @Route(routes.reportPdf)

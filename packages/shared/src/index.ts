@@ -37,6 +37,7 @@ export * from './sales/student/teacher-attendance';
 export * from './sales/student/teacher-course';
 export * from './sales/student/teacher-board-lessons';
 export * from './sales/student/student-details';
+export * from './sales/student/details-answer.schemas';
 export * from './sales/student/student-family';
 export * from './sales/student/student-schedule';
 export * from './sales/student/student-roster';
