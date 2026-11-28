@@ -413,9 +413,6 @@
   "src/ui/startup/StartupEmblem/StartupEmblem.test.tsx": {
     "stylistic/max-len": {
       "count": 1
-    },
-    "typescript/no-unnecessary-boolean-literal-compare": {
-      "count": 1
     }
   },
   "src/ui/startup/StartupOverlay/StartupOverlay.tsx": {
@@ -424,11 +421,6 @@
     }
   },
   "src/ui/startup/StartupScreen/StartupScreen.test.tsx": {
-    "stylistic/max-len": {
-      "count": 1
-    }
-  },
-  "src/ui/startup/StartupScreen/StartupScreen.tsx": {
     "stylistic/max-len": {
       "count": 1
     }

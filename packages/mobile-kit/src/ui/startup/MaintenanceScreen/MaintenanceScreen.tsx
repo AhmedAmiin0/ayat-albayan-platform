@@ -1,11 +1,11 @@
 import { View } from 'react-native';
 import { ConnectingDots } from '../../connecting/ConnectingDots';
-import { AppText } from '../../primitives/AppText';
 import { type, useTheme } from '../../../theme';
 import type { MaintenanceScreenProps } from './MaintenanceScreen.types';
 import { RetryButton } from '../RetryButton';
 import { StartupEmblem } from '../StartupEmblem';
-import { S, TITLE, BODY } from './maintenance-screen.helpers';
+import { S } from './maintenance-screen.helpers';
+import { MaintenanceWords } from './MaintenanceWords';
 import { useMaintenanceScreen } from './use-maintenance-screen';
 
 export function MaintenanceScreen(props: MaintenanceScreenProps) {
@@ -23,35 +23,7 @@ export function MaintenanceScreen(props: MaintenanceScreenProps) {
       }}
     >
       <StartupEmblem still={still || !outage} />
-      <View
-        accessible
-        accessibilityLiveRegion="polite"
-        style={{ marginTop: 24, alignItems: 'center', gap: 8 }}
-      >
-        <AppText
-          accessibilityRole="header"
-          style={{
-            textAlign: 'center',
-            color: color.coverInk,
-            fontFamily: font(type.display),
-            fontSize: TITLE,
-            lineHeight: type.lineHeight(TITLE, true),
-          }}
-        >
-          {words.title}
-        </AppText>
-        <AppText
-          style={{
-            textAlign: 'center',
-            color: color.ink2,
-            fontFamily: font(type.ui[400]),
-            fontSize: BODY,
-            lineHeight: type.lineHeight(BODY),
-          }}
-        >
-          {words.body}
-        </AppText>
-      </View>
+      <MaintenanceWords title={words.title} body={words.body} font={font} />
       <View style={{ height: 24, justifyContent: 'center' }}>
         {outage ? <ConnectingDots color={color.gold} still={still} /> : null}
       </View>
